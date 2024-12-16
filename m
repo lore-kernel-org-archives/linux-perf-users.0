@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F55129D19
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 01:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0577A80C0C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 01:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734313614; cv=none; b=UAZqpcIs+u2L1MKFfr9kGm2NrozSHLID8xhRkuA5ZuiFEV7qcd4WXu0v8OIxOshASNDGn9CIPsF1GSKqFYEdcaweUFxLaYetoVif0gz8jWpJJ6SrUEgNSgxw3ACj5YiHWmKo3a16ddBBwcjhgxw3Lr3/M7thxkA2VaXNRXJ/u9w=
+	t=1734313617; cv=none; b=u6Fke1vnuDumNtZ5KMm8AJ2JBPKjTo4IKQ0ZP+cX8UrAtx98tpCFWlY0B/ZllzNFTePRr5RAW5AFpZRfZR9pRcYhwLWBK4F7PDOAgj+tbnJnb6csPwsKmluPYGYk6t7cwdRCOQgxVHXGWJK2PqgpZdz5U4hjatWp0zeQeW9lxuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734313614; c=relaxed/simple;
-	bh=BrUJvr7HXzMJyoNYnziI4wlrd5p8WOXp8dhXnVgi80k=;
+	s=arc-20240116; t=1734313617; c=relaxed/simple;
+	bh=6N1g9uANonuB1X5ujQfQoFLZ8OgRQZPDGmKT28hZDMg=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=YSQyI7sjaUQJd6IQnSncy38YjOUjKpJlo1D+3gCjFQXZGI+Po5//m+kMHTJUKDQBO/aXpKR9HfOH46qTMzQt68vxVSbiPU4aMb1dHwf0qQ+OKk/F8m1G4wfzjOD/2GlUSUoUKOJ7+r+rGyAA0pskPJTBg1FX8FHa867uPYltjWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HtVt+Ncb; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=gHbLdy7/YcbmbdkacnzDKgDQ3yLwsOZmNpoHAH6ADu4YqcteYHX1cbrfMUQapo0T4sOh4wX1Qv8B3xH6TJ0ow52c+bgSRavcM1gAaZIRaQR5J6Q0NE/+XtDsYzM3Ilsgq+M1w08XyOQM34FuutwkFuuoAJ8NVhbDkW2Wvuxr6AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fqCXimzf; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HtVt+Ncb"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f28f5f2c5eso17487867b3.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Dec 2024 17:46:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqCXimzf"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3c61a11a40so5250112276.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Dec 2024 17:46:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734313612; x=1734918412; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1734313614; x=1734918414; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cLJ1stvpEh/i9mxehEqquhSJV82oFfMq3Eq8V809bTo=;
-        b=HtVt+Ncbj0ke2mXvsTWPVqooTA7cR4aTCPPleArCr0mDd/Y7K13uzqxpHWD3XIkmrY
-         JDKMb8T9XdBbvZwoSSxT5tIBWxDuUOS4Jy9Emb4b/3XUhfE+VFxHPz8A4yNUJoc9UZJc
-         00UjjDvXY2u/MDFnEtJ9JX7Bt9wlQE3puVXCjEDUzm/ICzhI6cSsRVcgKkKxwSXPepBr
-         SXR8kqvkI9EMQT2VLvUEmEA3qjmkHfiBcSIF/Gr36YRxAER8wQT5lh/7rDyqvERyCeei
-         D2upK1zEh/ryGCZeI9T1FJEe4OeKe+tHSM1J0emSPhFpl3euwncPt/D+Edm2quLS8J+a
-         1fyg==
+        bh=ZvACGcoM6KJ0hrZi/+tcGlPsYcMWSS3N/4SFXVszCzA=;
+        b=fqCXimzfZNOpAJwcasNf/cGSulePMvyaVFsQv39RcXGS9L901P/0NdyqMWkmLPFCcJ
+         M4ZtoHiPJHLaxu0sj2Q8eZRt6tTJA65WSMOiJA2i1HRL6qFNJKskrEwkCNq4msq8Ye6t
+         B6CuDkh0fr6/DHFKxEiOt9cpd3hnFaEZ2a0EbLucoTPnuBGStpIWVRbngSe5rIrbyA5G
+         DJ+wOmslVOYeD5jkgoAsR7Jeq7VC4qtA6mxvodX8z38id4ecykoMBhZi+bekt4AAOuxT
+         DHJs/g7Wigy0fQ9dVw9RQQdokPKgOsQeVbgPtzXu4jcI66XHswzudMG41LAeBryX0wfM
+         RwUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734313612; x=1734918412;
+        d=1e100.net; s=20230601; t=1734313614; x=1734918414;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cLJ1stvpEh/i9mxehEqquhSJV82oFfMq3Eq8V809bTo=;
-        b=wA/Kij8Qs7+VCCkfmjt+OZ+aYXULv/R7fFAfMgvzYNUkZY2i4rhjESNUy1JhaOuQlO
-         XQEnKT7DBdt91EGwiKvzspnjr4i0Zdiip2bjD+LK5bJf+sHYdA9hAYUapgZBvqzX3RfE
-         u8CzQusek8ug9rrGfrgWy8HJf05CR0+DbiW9xNVe2oWoT3wqM6ogh1V7r6xUI9f2xyVf
-         nyeVofTh8nA+FOWfvyy2E0LUfUNOl0LU4Z2Q7LSUcT43T64JskIUDIRFKHzy54cMvUHk
-         0ygasB+GG/gOEMTergMLUs1ubwaZgcVYLXGT04IR4htpZvWpttJeVGhXJfv/DlhPVxkL
-         G4+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUi1MW2z8lVvs190mRNNIE0rKoKmohv+pASOg2LokxC4ho/tjti7+EbisaCiBMVLskmmyLz2z1iB5xV/A+Xgg4E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx822UQzkljiPjvYCm8/Jm1/OiN0xCECQBsNUIL/alc0RjodVIQ
-	1p6+RlefK4wyAXjPITrVgbPBjJ2df177HCLxLzTMkitDC5MA9x4ZvOkpwxScwv1KdDsGRsGyIK+
-	En+qqRw==
-X-Google-Smtp-Source: AGHT+IH2cUWwsL9JMjl42pSLLJeRpiHnjnnVLW9VC1RCfNNSRe+MuZYjvNjozP5TUM4BheqLIjfDT3IzB3go
+        bh=ZvACGcoM6KJ0hrZi/+tcGlPsYcMWSS3N/4SFXVszCzA=;
+        b=XrSR+aJGY4mxUYbZb2Z+ArtoQ/H6AfCHz1oMhDZxuND/yv7K614EVAkDFZ3UE9srap
+         SRAo9t/ha7a3r+eykxrtfuZYjNu9d2J32AdzHw2LUvEnwsRCh+x/MBnajxzqNhq7+nkU
+         rs+sjpI2oNe4S4Ez3XK3GGuIUwrlaJt4WuZE9+1A2tw0wWtqbF04wXyYHzel2rKRH5Ku
+         nnCx+FiWKJoJ31sDEW81B62YEoDNrA1F5njVusse8l0liR/AVqQVWQp16AtxiJ1M6Por
+         apt5/sedH0cKC1K+40PLRaTNXLhnu7aY/boFKPLWmUYtYMm9rh8iLlIsgaSA1mQUb5fN
+         CBzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiH32duNgHAb2OTrx4g78SOX5Gc21zVto5OQjhaIm5H8t/v6D0+hlP+V1OxUM53CXXVhGHPqpeRb69HooHyRCh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgS35UUllfBgB7DZ28+VIn6CNZpHXz6cM9zRfXwndwIu+G7luw
+	JpQxeLuxnQ1xNhhD8S6OdV/SgqQYs6/aBetc9CeBJM1FQkQNWOopVkXJQ84l9fxPwnE8j2mTosW
+	iZaY2Nw==
+X-Google-Smtp-Source: AGHT+IEJI4OnjwPwIbrmZcw/cre+ES3OYknRsW/w05Ns/lgKMyEqnXJlq9KI1hfL6zbr00Cql871xgXmUp+t
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:175d:4db2:deb4:d450])
- (user=irogers job=sendgmr) by 2002:a0d:d107:0:b0:6e3:d670:f603 with SMTP id
- 00721157ae682-6f279ba2810mr1250687b3.3.1734313611808; Sun, 15 Dec 2024
- 17:46:51 -0800 (PST)
-Date: Sun, 15 Dec 2024 17:46:35 -0800
+ (user=irogers job=sendgmr) by 2002:a25:adc1:0:b0:e3a:512a:dca7 with SMTP id
+ 3f1490d57ef6-e4349ba1ccemr5441276.3.1734313614042; Sun, 15 Dec 2024 17:46:54
+ -0800 (PST)
+Date: Sun, 15 Dec 2024 17:46:36 -0800
 In-Reply-To: <20241216014637.304761-1-irogers@google.com>
-Message-Id: <20241216014637.304761-3-irogers@google.com>
+Message-Id: <20241216014637.304761-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241216014637.304761-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v2 2/4] perf synthetic-events: Ensure features are aligned
+Subject: [PATCH v2 3/4] perf machine: Avoid UB by delaying computing branch entries
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,54 +72,36 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Features like hostname have arbitrary size and break the assumed
-8-byte alignment of perf events. Pad all feature events until 8-byte
-alignment is restored.
-
-Rather than invent a new mechanism, reuse write_padded but pass an
-empty buffer as what to write. As no alignment may be necessary,
-update write_padded to be tolerant of 0 as a count and count_aligned
-value.
+If the branch_stack is NULL then perf_sample__branch_entries may
+return NULL+1 which triggers ubsan (undefined behavior
+sanitizer). Avoid this by making the computation conditional on branch
+existing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c           | 7 ++++---
- tools/perf/util/synthetic-events.c | 2 ++
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/machine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 03e43a9894d4..d10703090e83 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -168,11 +168,12 @@ int write_padded(struct feat_fd *ff, const void *bf,
- 		 size_t count, size_t count_aligned)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 84661d950104..7b1e1c254c17 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2670,7 +2670,6 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 					    bool symbols)
  {
- 	static const char zero_buf[NAME_ALIGN];
--	int err = do_write(ff, bf, count);
-+	int err = count > 0 ? do_write(ff, bf, count) : 0;
+ 	struct branch_stack *branch = sample->branch_stack;
+-	struct branch_entry *entries = perf_sample__branch_entries(sample);
+ 	struct ip_callchain *chain = sample->callchain;
+ 	int chain_nr = 0;
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
+@@ -2712,6 +2711,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 	 */
  
--	if (!err)
-+	if (!err && count_aligned > count) {
-+		assert(count_aligned - count < sizeof(zero_buf));
- 		err = do_write(ff, zero_buf, count_aligned - count);
--
-+	}
- 	return err;
- }
- 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index f8ac2ac2da45..ee6e9c2fb11b 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2401,6 +2401,8 @@ int perf_event__synthesize_features(const struct perf_tool *tool, struct perf_se
- 			pr_debug("Error writing feature\n");
- 			continue;
- 		}
-+		write_padded(&ff, /*bf=*/NULL, /*count=*/0,
-+			     /*count_aligned=*/PERF_ALIGN(ff.offset, sizeof(u64)) - ff.offset);
- 		/* ff.buf may have changed due to realloc in do_write() */
- 		fe = ff.buf;
- 		memset(fe, 0, sizeof(*fe));
+ 	if (branch && callchain_param.branch_callstack) {
++		struct branch_entry *entries = perf_sample__branch_entries(sample);
+ 		int nr = min(max_stack, (int)branch->nr);
+ 		struct branch_entry be[nr];
+ 		struct iterations iter[nr];
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
