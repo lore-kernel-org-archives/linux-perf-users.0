@@ -1,101 +1,187 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB791DDA34
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 23:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A7146A6C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Dec 2024 04:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734391516; cv=none; b=sVLYj9E+0VFXZ7cve2EbEXslV9Re16F/U04SDi0l+X02BJdb6arQ36l6JLDnWl+lhKDX0uiucAjG6HqhENe5PH8HRi2zSchJqzzWNglY67RGFhGux0te5GqlP45bXLqBVyi8PqrO4zFhgXDSDmfFNo5NZiJsYWAmtVXB3OaqjCk=
+	t=1734411456; cv=none; b=FvtPb6NezBv+6A/dfTBSivGFl4cUMs3n7OV1Ol3UAHDnE762SdJ/+CUUApePuw1ve7DtrzQ/3qphNDHfSZtZw7nWacOpAjL68/8iiffgRoqjkuR8tEnDUfAR9repYxyV07nxelTVmWPhBpdxGhyokKl3Z3Pi+IgebFH1WkeQ2X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734391516; c=relaxed/simple;
-	bh=iEVYgx/hxX84VyoDEpscAjkrNLwDJylilFK5OuBYN9g=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=N6CV8uGZ/q6ajoeKe6liOHTcxdKEtew1kiCrSAaD/qQPc9+ZGrjSxgzFeCqYn4eEsQ2SnhWv8kQhK17i3k1F58DZSBXCu43mCUB3GuMyxmeqdvZQp6RRfmccTFLQe36vGYXYdRWh6UnLWek56nISZy4sZHMMewDf+d+NUbsSBcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ySu7h231; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1734411456; c=relaxed/simple;
+	bh=fAZh6YN7BDxWYSlX0Fp1Tgj9S+0JUp7/sHCKRiQuiUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C3uXcYVJ+WWKx7hmfL4rOxDJoO7/6l4RczDEQJVcPql7hmpHFNndWrAifgYBCHxABt4dkRck2AJuee9MUlkUc3s+vquSW2dCNtCf1wYwzqDGiMCzx24ehP5BBt9xVWjnl2wTssNPljjWgW7s6g/BLQbqIvQrJC37UYdWeqd+mwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LIiIl06d; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ySu7h231"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3fea893dc5so5686910276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 15:25:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LIiIl06d"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso61275ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Dec 2024 20:57:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734391514; x=1734996314; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FTHl2TPsCH6LymZInluDoB5DdWMc8GssygaKpaKL3WI=;
-        b=ySu7h23181UwWbX3I1NG9aj9Z7WJvw5rfzZVCunSWu6M5wRL/3MKid1z1Jq1mQF8ss
-         IxdyVPzfn5k25QW60zLy6oMWzCYMrT8VgEB3d4k8OkWkHkj4zaS91IEtyYaFzq46NEH6
-         HYG6YhjSM4J2U5jhQhJYtfbMYlnzfg6JCiDIMzBhBN5rbep3+bLRpMTtyhQoCiGyVlln
-         3wBKCUZqGFlt++BgOnjugtoSPLv85LnUvqH9QosH1VfafJLIK3Q33c5ERQ643iwTCYGq
-         buY/lvfTV7n+P2xfEKoriDujBnvgWhBidSLVu29qRc4PRY8pom/rYVj0B/278AEMLL+M
-         syaQ==
+        d=google.com; s=20230601; t=1734411452; x=1735016252; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=362/6wPaNoggwJpGGOdG6RgZlj612Z1MukeYbnnzsUo=;
+        b=LIiIl06dWR6lg0bJDxXMf0QxMv6IEm6+lKoJUB6Xs4TcTmqzDGu89+bgKhz5CBR3zy
+         TGu1U7Y5LzgRGTnguXltIq9dILKNum/+/p5FhlYdE2Z36bnr5fj2WPjuDR2FQRVxIwAd
+         tSBquImO50nGkfkXwXGdxE7NGvq6ZJlEuwZxd8xmvgkkp1fHhELH13tyTFhNmc0ckB8P
+         Hso9ZVxNryXJcnlppwRxGXWh8h5/r2N8DshePIUxLiZyUw0ybfjc2B8ehBf9/0xHvODI
+         p8++Q2QcgMBik3XHirRr3jdJL5lR8iYKO0oz9G2LbTJj/1EIY/HAlfCWiBqu3S2Zxc/5
+         YZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734391514; x=1734996314;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FTHl2TPsCH6LymZInluDoB5DdWMc8GssygaKpaKL3WI=;
-        b=pa2sBNtDmaxGUmXnbz4/VzJihjEsF5WHNEo/bo5vWtbGb+9dlkQLDMlIV9L4ySjk2R
-         pgLJgcZJMecd7iT2EVUpEWzqR0R7eN0qzCDGAVxtedwJSRnoi/pNmHbc49Vvsx++AiXx
-         fveNLBDOb/f54O88xVF7yf6jordfKKiGlFbtqypDzUnzqJQToybuxVAGqPn2hPBzWBCs
-         TcdIlIxzbm9PQBFzqhqtbvOwQLaJPMMGM3Yh/e8Jl2kF2KJQLeGlL/BPDQ+dXag2pDOe
-         lYiQ4qXqgBD+EsRf1aTlevYFm9hSQ6aOkJOaGDuk22f2ZZqEgT4dVUTjNgFMLnyJRXZ9
-         Ho+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWdnJg8aRSiyRrxk7A81ugrCvrvVqf85nThdMqQ2NVIyeOiqajmT0Pb7mekFwmzS7CaivYiCMTzJhq535FQe7Gt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEW4klL36dxC55Mx9506I69u4IUHzTLcsjAaDBFf0i+p5A5z0B
-	zcB/p4mUFGH//O7aHkwCW6eVhImh+44/mi7Bo8w6SxavmKlxEMGHfxdtM+HxuVXmvnZyKH/zblX
-	+g6yZeQ==
-X-Google-Smtp-Source: AGHT+IFd1yidZo4+PCjzzLBKzlvBgB+iWRLxaQKGvW8aqa9jBsNOiHI2lkdQ9omQXubeZJj1mM0cO/8DOG7P
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:b850:b916:18b9:17a7])
- (user=irogers job=sendgmr) by 2002:a25:aa51:0:b0:e38:9694:4c6e with SMTP id
- 3f1490d57ef6-e5325f97ca3mr554276.2.1734391514479; Mon, 16 Dec 2024 15:25:14
- -0800 (PST)
-Date: Mon, 16 Dec 2024 15:24:59 -0800
-In-Reply-To: <20241216232459.427642-1-irogers@google.com>
-Message-Id: <20241216232459.427642-6-irogers@google.com>
+        d=1e100.net; s=20230601; t=1734411452; x=1735016252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=362/6wPaNoggwJpGGOdG6RgZlj612Z1MukeYbnnzsUo=;
+        b=VPwk0F8XsPJc5oHuhL+xTaFeSy2LWCOZSoeuwN+mXB3S9M2diC5/JHvWGfKy5QY+Jm
+         3+uaGCPLesJeKGEkGXPMzC+nLbif80hJWo0T1OZHZEPptJjraKSL2oLCECcA2pQEu9I7
+         TDaGyTzQORY39O13a/WzQZ2QRcDtCRB811TfLO0dysx4eXFEnYAxr66qf5AyKI/4SQoZ
+         9TleSJuBrRwAiwYi/8OzI1M7HiPHami2puRLil4kvYEoyW8vlfF4EcKN9AxNZqGbzORn
+         fjII5WIWGCbiHHBxRuBjZtom2POH8I/jaJmwgRkSt48Av4khodg+NIQrLqbXdw9kegmS
+         p9ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXPO5+RoY6UZH5Q/8dt5q3Lr7lmIjhntcp4AAkL42fCOOrmJNmzxiwbRXFMr5zmOaJpjPlJvjsPODLqIKfViYI3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk/Sp2ned5TBMCRCSYj8DHTSf2hv5AWRSlVjVlxZ4y4uNmpUWT
+	lu+TTZEJl6Rwh5eO2/XtXXHU/aZGJS2h5xUJl1sSV4624VRt6rz7609Ghz8q6owc462wrNNORQ3
+	AWa/bu1/NDc3rwM5A8KbTTqgm9p54bhPU94WX
+X-Gm-Gg: ASbGncvkMOpUpJ+pzkzBDC1dc09GHYLkAMPWc4g5h31oxjo/zL8Ck/ukw8Tl8y9QMfd
+	YVyixeV3k7S77gvLsCytomJm8T+cZaXTmS+shtGU=
+X-Google-Smtp-Source: AGHT+IEon0H5P/SgKkxsKeFtvxthHZIZFm7pK/6IZOgc7rOanq4HBnSG1t4asn1594qBhXnfuxhIF4Hwq5/vBKcKGhQ=
+X-Received: by 2002:a92:ccc4:0:b0:3a7:ddbb:1b19 with SMTP id
+ e9e14a558f8ab-3bb8430e0d7mr995405ab.27.1734411452091; Mon, 16 Dec 2024
+ 20:57:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241216232459.427642-1-irogers@google.com>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v3 5/5] perf record: Assert synthesized events are 8-byte aligned
+MIME-Version: 1.0
+References: <20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com>
+ <20241216-perf_fix_riscv_obj_reading-v1-2-b75962660a9b@rivosinc.com>
+In-Reply-To: <20241216-perf_fix_riscv_obj_reading-v1-2-b75962660a9b@rivosinc.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Mon, 16 Dec 2024 20:57:20 -0800
+Message-ID: <CAP-5=fVvLv-OtkK57ri1EpM_v=PQZDZijYBpGv_9Smyz8EOm2g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tools: perf: tests: Fix code reading for riscv
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nelson Chu <nelson@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	llvm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Capture that events are 8-byte aligned and avoid later misaligned
-event problems.
+On Mon, Dec 16, 2024 at 3:13=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> After binutils commit e43d876 which was first included in binutils 2.41,
+> riscv no longer supports dumping in the middle of instructions. Increase
+> the objdump window by 2-bytes to ensure that any instruction that sits
+> on the boundary of the specified stop-address is not cut in half.
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/riscv/Kconfig              |  5 +++++
+>  tools/perf/tests/code-reading.c | 17 ++++++++++++++++-
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-record.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Files under tools use a different Build system than the kernel. The
+Kconfig value won't have an effect. Check out Makefile.config:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/Makefile.config?h=3Dperf-tools-next
+which is included into the build here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/Makefile.perf?h=3Dperf-tools-next#n313
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index adbaf80b398c..a5689d0e93ad 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -624,7 +624,10 @@ static int process_synthesized_event(const struct perf_tool *tool,
- 				     struct machine *machine __maybe_unused)
- {
- 	struct record *rec = container_of(tool, struct record, tool);
--	return record__write(rec, NULL, event, event->header.size);
-+	size_t size = event->header.size;
-+
-+	assert(PERF_ALIGN(size, sizeof(u64)) == size);
-+	return record__write(rec, NULL, event, size);
- }
- 
- static struct mutex synth_lock;
--- 
-2.47.1.613.gc27f4b7a9f-goog
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index d4a7ca0388c071b536df59c0eb11d55f9080c7cd..f164047471267936bc62389b7=
+d7d9a7cbdca8f97 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -229,6 +229,11 @@ config GCC_SUPPORTS_DYNAMIC_FTRACE
+>         def_bool CC_IS_GCC
+>         depends on $(cc-option,-fpatchable-function-entry=3D8)
+>
+> +config RISCV_OBJDUMP_SUPPORTS_SPLIT_INSTRUCTION
+> +       # Some versions of objdump do not support dumping partial instruc=
+tions
+> +       def_bool y
+> +       depends on !(OBJDUMP_IS_GNU && OBJDUMP_VERSION > 24100)
+> +
+>  config HAVE_SHADOW_CALL_STACK
+>         def_bool $(cc-option,-fsanitize=3Dshadow-call-stack)
+>         # https://github.com/riscv-non-isa/riscv-elf-psabi-doc/commit/a48=
+4e843e6eeb51f0cb7b8819e50da6d2444d769
+> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-read=
+ing.c
+> index 27c82cfb7e7de42284bf5af9cf7594a3a963052e..605f4a8e1dbc00d8a572503f4=
+5053c2f30ad19e3 100644
+> --- a/tools/perf/tests/code-reading.c
+> +++ b/tools/perf/tests/code-reading.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <errno.h>
+> +#include <linux/kconfig.h>
+>  #include <linux/kernel.h>
+>  #include <linux/types.h>
+>  #include <inttypes.h>
+> @@ -183,9 +184,23 @@ static int read_via_objdump(const char *filename, u6=
+4 addr, void *buf,
+>         const char *fmt;
+>         FILE *f;
+>         int ret;
+> +       u64 stop_address =3D addr + len;
+> +
+> +       if (IS_ENABLED(__riscv) && !IS_ENABLED(CONFIG_RISCV_OBJDUMP_SUPPO=
+RTS_SPLIT_INSTRUCTION)) {
 
+It would be nice if this could be a runtime rather than build time detected=
+.
+
+Thanks,
+Ian
+
+> +               /*
+> +                * On some versions of riscv objdump, dumping in the midd=
+le of
+> +                * instructions is not supported. riscv instructions are =
+aligned along
+> +                * 2-byte intervals and can be either 2-bytes or 4-bytes.=
+ This makes it
+> +                * possible that the stop-address lands in the middle of =
+a 4-byte
+> +                * instruction. Increase the stop_address by two to ensur=
+e an
+> +                * instruction is not cut in half, but leave the len as-i=
+s so only the
+> +                * expected number of bytes are collected.
+> +                */
+> +               stop_address +=3D 2;
+> +       }
+>
+>         fmt =3D "%s -z -d --start-address=3D0x%"PRIx64" --stop-address=3D=
+0x%"PRIx64" %s";
+> -       ret =3D snprintf(cmd, sizeof(cmd), fmt, test_objdump_path, addr, =
+addr + len,
+> +       ret =3D snprintf(cmd, sizeof(cmd), fmt, test_objdump_path, addr, =
+stop_address,
+>                        filename);
+>         if (ret <=3D 0 || (size_t)ret >=3D sizeof(cmd))
+>                 return -1;
+>
+> --
+> 2.34.1
+>
