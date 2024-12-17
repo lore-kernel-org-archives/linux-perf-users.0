@@ -1,122 +1,112 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C1742A9B;
-	Tue, 17 Dec 2024 20:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD801EC017
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Dec 2024 20:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734467374; cv=none; b=ZyzkZm1GCOF5zLyS0NT+QX805CieQ5jELK3ak5p/oFPRINuGYDeX//m7NQpnOO+O7KePMFT5brx5u7hNv/KuPhdw8jGWETKucsJXJK9UakLziS5x0+lPAa8orGvABrckk7auPb2FGA8VJUkJxNFJa+Wiw2Rl/UuZut7Tl8TF0Cs=
+	t=1734468287; cv=none; b=ZL9HYba4UjBeNU7AaKOgNMVBDQxUcjP/ZKxX1uOV56BuRFJNFRTO29Cmdb/lqnydc+zbhgXY05wWSGMVI4fdvopKAON9xh9GJ4ZYEbhjINDPHLTMt9nNHH4DQgF7rx1ZKpewUFIdPqMGwZoQdqYv1HaTkKRSh8g1jwj4+PBd49c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734467374; c=relaxed/simple;
-	bh=eWeXh3padBIVZXFXGw3YT3LPGZ55w+pqerK1il1z0tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jZpJaxUmx3TM3MJ0Pi6q97Jolri1PX9G/+hPn0550r9auUGFhZgLXvIi2XOqvuxTIkFS4i9MSt0a6aJVjC+F1ZCV3AqUjmFl+5+49dDtHSXl5xbGwIQYzCJDGZQ/8HWkCF+xKTLyV4PJTQXxZR7zBcU/h5FwwNGa8nWm0fJhcUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jb2OFox3; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1734468287; c=relaxed/simple;
+	bh=sEYuhrUmxdWTwXMe3OJmJrKPoDvafPRpDMo8a2TOxEM=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=YC+P/XKzlU95Lx4+u2jkNe1NbZ6vnmbW2YZpzs0qkYI6/dPIgGOoFQIsQerD5KpfR+8JxXV0PkyO79Wuqn73e985mUMNkdvk4VG2VduqExNd5ypI4tF43ezrUTfTI0O2DXtg5TcnIVuwyBD0dRq09tKtju4vn2j9wQwkVZXfv7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=NzVXOB2P; arc=none smtp.client-ip=212.27.42.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jb2OFox3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9aP9Zr26Vzamj4jtRSpIPXMz4aO8AxXiYD0Uc3A2+XE=; b=jb2OFox3hZo7o9puh+LWtE5Jb3
-	P6Al/CjbtuMEQocNsx6yVFICPnT1E51ZDaylvqpJLqeQ1+CrTLH747PwMhgo1d8z5aOcRRNz4Q8i7
-	23kEnQSqwp6N2YK5Er+D/dn4bfz2Vmb1ar6qLilQ2BWRupaveCy45gF9/fPliUW90N5cjeMODEEzp
-	6/Yfu7hnAbNfEKXN4EHmJlcghpkrg6dPzGfEzTOdqfs68sn93XZUadpLdeib88HN/GqW6ZHaOuduG
-	ju4z2+a0wmm0LK6XVom3+iL3zUSNus7XnodFm1GzI4hEIkrRXiMj2kpKQCUepZtWwhRg1RncEP939
-	2zTT/BVQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tNeC1-000000057tn-0ddm;
-	Tue, 17 Dec 2024 20:29:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D92CD3003E1; Tue, 17 Dec 2024 21:29:19 +0100 (CET)
-Date: Tue, 17 Dec 2024 21:29:19 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-	eranian@google.com
-Subject: Re: [PATCH V5 4/4] perf/x86/intel: Support PEBS counters snapshotting
-Message-ID: <20241217202919.GG11133@noisy.programming.kicks-ass.net>
-References: <20241216204505.748363-1-kan.liang@linux.intel.com>
- <20241216204505.748363-4-kan.liang@linux.intel.com>
- <20241217133707.GB2354@noisy.programming.kicks-ass.net>
- <96cb859f-8265-4f5a-99bb-44cfdcd25b9e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="NzVXOB2P"
+Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 4AF22428AF9
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Dec 2024 21:44:35 +0100 (CET)
+Received: from [IPV6:2a01:e34:ec24:52e0:cf9c:36b4:9e31:5a4e] (unknown [IPv6:2a01:e34:ec24:52e0:cf9c:36b4:9e31:5a4e])
+	(Authenticated sender: marc.w.gonzalez@free.fr)
+	by smtp3-g21.free.fr (Postfix) with ESMTPSA id 780CF13F879;
+	Tue, 17 Dec 2024 21:44:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1734468267;
+	bh=sEYuhrUmxdWTwXMe3OJmJrKPoDvafPRpDMo8a2TOxEM=;
+	h=Date:To:From:Subject:Cc:From;
+	b=NzVXOB2Pfr2bbdH7hrY0dbuPEBFTcVcgnqsxXT6R2fN3KWvTnTuTn9aMBP1ZaCdcF
+	 dXaTyHUJ/jhUb4Dxf1EaCAfxNowKwJ4Lqwfcyap6/wFpWa6l3NUn3GgYuigg7rY+h4
+	 nh5Wk86phgPWRKNhDGwS20OQrMMoROtcCsrjQu0UVt04c+Swj3Aumoxu5sBio0FZwb
+	 AhKFNldAi2HA2TQgGjLDnMmaYQfG98NfIFnXk2sIiBs4OPp5osgxSb8Sg9Iy3L/ITd
+	 3ZBIKNYOA7qcz5oe4nxkLgW70zyUXHTxye5omN6bBLWU3MsPdsgmzzQOm0nXZnNd/Y
+	 XzWzoXnx9D5mA==
+Message-ID: <fe0d6e93-d134-4279-9739-74b4d786038e@free.fr>
+Date: Tue, 17 Dec 2024 21:44:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96cb859f-8265-4f5a-99bb-44cfdcd25b9e@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+To: linux-perf-users@vger.kernel.org
+Content-Language: fr, en-US
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: Unexpected results from perf on haswell
+Cc: mccalpin@tacc.utexas.edu, agner@agner.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 17, 2024 at 12:45:56PM -0500, Liang, Kan wrote:
+Hello everyone,
+
+I'm running v5.15 on Haswell (i5-4590)
+
+I've been experimenting with some micro-benchmarks, to better
+understand a few limitations in an actual program of mine.
+
+Some of the events to count stalls are returning unexpected
+results (unexpected by me).
+
+Performance counter stats for './ubench01-1G':
+
+    69 992 394 294      cycles
+   257 046 635 675      uops_executed.core
+   257 046 635 675      uops_executed.core_cycles_none
+        38 249 144      cycle_activity.cycles_no_execute
+        38 250 365      uops_executed.stall_cycles
+
+      19,007025539 seconds time elapsed
+
+      18,979117000 seconds user
+       0,007997000 seconds sys
+
+'uops_executed.core_cycles_none' is defined as
+"Cycles with no micro-ops executed from any thread on physical core
+Spec update: HSD30, HSM31"
+
+However, it clearly seems to be counting all cycles, not just stalled cycles.
+Am I misunderstanding something?
+
+No big deal, I can use one of the other 2 events.
+
+'cycle_activity.cycles_no_execute'
+"This event increments by 1 for every cycle where there was no execute for this thread"
+
+'uops_executed.stall_cycles'
+"Counts number of cycles no uops were dispatched to be executed on this thread
+Spec update: HSD144, HSD30, HSM31"
+
+Not sure why the 2 latter events are not equal?
+(However, "within 32ppm" might be close enough to "equal")
+
+Somewhat relevant discussion:
+https://community.intel.com/t5/Software-Tuning-Performance/Counting-number-of-uops/td-p/1101619
+https://www.agner.org/optimize/blog/read.php?i=452&v=t%C2%A0%C2%A0
+
+For completeness, my micro-benchmark is:
+
+#define LOOP_BODY \
+	add %eax, %eax ;\
+	add %ebx, %ebx ;\
+	add %ecx, %ecx ;\
+	add %edx, %edx ;\
+
+main:
+	movq $(LOOP_COUNT), %rsi
+1:	UNROLL6 // 2**6 copies of LOOP_BODY
+	dec %rsi
+	jnz 1b
 
 
-> > Why can't you use something like the below -- that gives you a count
-> > value matching the pmc value you put in, as long as it is 'near' the
-> > current value.
-> > 
-> > ---
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 8f218ac0d445..3cf8b4f2b2c1 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -154,6 +154,26 @@ u64 x86_perf_event_update(struct perf_event *event)
-> >  	return new_raw_count;
-> >  }
-> >  
-> > +u64 x86_perf_event_pmc_to_count(struct perf_event *event, u64 pmc)
-> > +{
-> > +	struct hw_perf_event *hwc = &event->hw;
-> > +	int shift = 64 - x86_pmu.cntval_bits;
-> > +	u64 prev_pmc, prev_count;
-> > +	u64 delta;
-> > +
-> > +	do {
-> > +		prev_pmc = local64_read(&hwc->prev_count);
-> > +		barrier();
-> > +		prev_count = local64_read(&event->count);
-> > +		barrier();
-> > +	} while (prev_pmc != local64_read(&hwc->prev_count));
-> 
-> Is the "while()" to handle PMI? But there should be no PMI, since the
-> PMU has been disabled when draining the PEBS buffer.
-
-Perhaps not in your case, but this way the function is more widely
-usable.
-
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index e06ac9a3cdf8..7f0b850f7277 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -1969,6 +1969,23 @@ static void adaptive_pebs_save_regs(struct
-> pt_regs *regs,
-> 
->  #define PEBS_LATENCY_MASK			0xffff
-> 
-> +void intel_perf_event_pmc_to_count(struct perf_event *event, u64 pmc)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	int shift = 64 - x86_pmu.cntval_bits;
-> +	u64 prev_pmc;
-> +	u64 delta;
-> +
-> +	prev_pmc = local64_read(&hwc->prev_count);
-> +
-> +	delta = (pmc << shift) - (prev_pmc << shift);
-> +	delta >>= shift;
-> +
-> +	local64_add(delta, &event->count);
-> +	local64_sub(delta, &hwc->period_left);
-> +	local64_set(&hwc->prev_count, pmc);
-> +}
-
-This seems very fragile, at least keep the same store order and assert
-you're in NMI/PMI context.
+Regards
 
