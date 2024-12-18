@@ -1,175 +1,150 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1838315855E
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 19:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AD31FAC51
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 20:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734551243; cv=none; b=bB5zbWdt9BpB7ZvMgxyBKcvk7yfaqNsynzfDtSIagAWvC8Q41I9j5I5C1d9z4ESyTuxnGoCJZLAK3p5BbRgtC8LMFt+ZUntaN0jTkJa8xWxFBO3/EoWrB+4IWFEwm7SYwpZHfbPwkiZIb3GIEy1rEyV8NUG6eFgr7ZbUd2vqzXI=
+	t=1734555462; cv=none; b=f73lYo9zdrRavKFm5Tw28BlpqXq96lBFWrAtMqFZjOA0EUVYE1DhblYjjajT8k7Hhw7pVMf4IGWo0vR3CXoZMegGGE8bqbsZp9mwq9csnbwQxxDSVxmFPcmlEcBfbNupLVzoD3/lsWg55bY1qlOFNZIJgTS8RYOfZJ0ILwT+liE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734551243; c=relaxed/simple;
-	bh=JLLZg3e+a0WIwpalzBkE8TPpMoH9GNLJox+8xsNqstk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G2dcYqkW/RRRY00bd4nD1/iPjU/EaxKA+IDdnvWbyvfOUt7WMz+roo4kZFyP0V7nSEvzmctqE28aQ88Fg6HP0dsBq9A/Lwgahwy47okwPAjpbLHM1MLnJHu+B2aUdkfUjePOYsSPgjRgB2dxSL3nL5ytkHFiZiNBUiZ4L1OYQ5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hMqbocoh; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734555462; c=relaxed/simple;
+	bh=8H3wMQ/MbfGoC09L1FK6owB/PgM/HCZEYV5FlSKzB9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A0ObmZxUKUii9PSUiHK3OEHm4/Klp1txKnNpFzLyygTclprOTJImy/5OFb9AKBSTD74j6nYGHKdFlSiXzJmUqUoQME7Irhsz7UJUcYBbzkD2Zz+nmd/RDtOfDRyO+hQWLnDtI6anWmdD7hF1VPEPMuFwXai8kB9us8JwUrTuL5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aUsulFri; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMqbocoh"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so16985ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 11:47:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aUsulFri"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-216728b1836so1124365ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 12:57:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734551241; x=1735156041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mEIz13Q/pX/IO5J/PJ0QFTU3dk8boWRXFmG3LFxMs+o=;
-        b=hMqbocohUI5EvhFWJPTsHbyf8Bg3c2b8FatjQbaowNQXLgAMcmgo66V7naIIPh2f7q
-         iavz5oaKznHdbapQK40k+BaZobvakO+DR4UTuOJqypDBGHI4h+Et84slm20QVKflqP69
-         DyLGso3Dt7Nqyxb554jxasiFE4kdBqjugrD7Mu1Z3FTKevbqj7gblXYUD3quIiJGckv5
-         4uCBm/lZ5Uozaz//HT2lgjs+7aOx7HeIgZdjaQ9jF8COCJsZa3zWmof09MUp/FjHyB0c
-         7D5iSlxnQ2gO/HWDiUbQgLKYudJN+9OomNld1dma02ws2pnUgI82DLTQcnDFQ63pt/nJ
-         89Mg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1734555460; x=1735160260; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DnlzBZ1bNkNrCyadScSxNwpP2f0bFLt+gzSGc7X//Xk=;
+        b=aUsulFriOiUJHlAIMnRUPoQ+THfbjjbAh35BHX5+D288HYeeU1MOk1t8G89qb90YQI
+         t3Q4bkmhJtuBlOZgzUhODG+21ZAzgwEnzgyOoIuM1B3c47wqUH7rfI0PCCLYlPLSuLJF
+         5dDjQsP3VAY+a+vLV/4KXm2+cpLceLZHTunP3d5tXBrnXkHyYZctm5IGk0AKdNpCfRGy
+         R6jOIDf1nyleZlb4dkaEeUeO0DwZCVQ0Ya30mjKB75vUNCGEaSlAXciHgVHCKEjON+7h
+         mwZuQYJPZg8XVMuq0rG8/lfQPzYzeeWkDqHLmGo2/ZhlCQPFAa0kKuG3i88tZMxNceR7
+         ui+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734551241; x=1735156041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mEIz13Q/pX/IO5J/PJ0QFTU3dk8boWRXFmG3LFxMs+o=;
-        b=W4AghCGXDR80KmS14puIws4ncDaewyJQGVEfMFzqn7OYZhaCXdHCEJBZxOSok17aWq
-         M8LwtV7+ZqfZuyJbUOgvQNRnzVFDyvzcyHOldp8Yb5G/l9mICdepEiOitm0Y0jfs3KSN
-         T1jjIDZ6Drug9qda3cFFxj20fL1BGoH4xkDmdTmf+lLe44KXi1kEsW/Zz+AwhoBZ0Ju8
-         QDhNbhbG49xSRkiyTBm2QKnOPAa1iCo/pnfJpQnRRB08lF7V4bIaJPj0itl+rw9bsOWH
-         k35McZWhtc2U5AUPo1+2llRZm5wMJxfxqvEg/y7q6rkeoawv4D+e2LlUc1ySkqL7+R58
-         D80A==
-X-Forwarded-Encrypted: i=1; AJvYcCU9F+6jf7bymDah87K6i5X5eszEgw4kVli8iODpXfLkI0izNE2GXnvj+7jh9NzCPiGiNGa5VZy0sJWWf0E7piDP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9nNX867oiqB/LA7uWhiA1KqFMQ9NwwgoI2YB6BgpwjNKcGUKb
-	riWbq+s4CF4adf/Wfhy4rGeypgNuYPSG8ZhIRdU4r1PMBSxfxLYO9h/91qcQ2uHorE+JEpDLc/V
-	3xFPyesZ3HGoKku24GhcHQ/FMT9yi4M/qzJ7a
-X-Gm-Gg: ASbGncthFnEnS5X96j+R+mDwdtSL1ap+y2PvSx0el8LnOSJRlCtSzRN8ubDv9VQVstu
-	+LGr5e8T2Zya6LlT6D9yUhLsCz9lIwwJ5gxiC0Rk=
-X-Google-Smtp-Source: AGHT+IG9HMLA2DZQdt0++217X1MrHCxsIDtlyjTzOXdQZIizZh8ClUQJQcagloMoINGz2IdswyylFE3OGbzaZct2+iQ=
-X-Received: by 2002:a92:dc02:0:b0:3a7:28e3:268e with SMTP id
- e9e14a558f8ab-3c0579abc0amr359345ab.12.1734551240983; Wed, 18 Dec 2024
- 11:47:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734555460; x=1735160260;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnlzBZ1bNkNrCyadScSxNwpP2f0bFLt+gzSGc7X//Xk=;
+        b=WUjiwAs5v8YIbXC5PGDExlgdd/KTvbRRsPoGMwXmu8dJAPLRZ0fc3tbWQzpqtfvxbx
+         z8+ZIlxp/RR1aJ5poX6zd/IgQSG4CT6gR1/XjjD0zeCRLOsdUHl2FqdpAdx4slScQN7v
+         HgDUjHEW/LXYiqkSyO7bFxAqW60YiMsO+uknazGHzp8LMOldrPZwssZKkHXvn3BKYJUT
+         yVTg8eXq82cvJVt3+BAWeb0M6bWtVpeJKMGC9IUCqYJVOJ5RJzeT6lOMAWduxNqCx2jY
+         wwYggL/1tBOXA+TF4kpFEqvngvPOpxplYpZZ1Xp5dfnmS+NirtxKYGrBqb3i7F3fDLz9
+         kL+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVh2RMQS4CYhA3jRya9wSpURW1y0w8i84yheLjzZwnBFjpUPbdBs89z1AoTme9pBX9Gf9pPGoQ9Jp1giOdPK0z2@vger.kernel.org
+X-Gm-Message-State: AOJu0YydIJMDImbEqetuFlLI84ZVGh7hsHVC+DR8Nx+t2RTwDQx4O8yi
+	GZHXAL6J0IAK4RQ9+tKNoVMaRjnLtE7IkMUdXaB5nan3o6ng2FdB7JeC1NkM1aQ=
+X-Gm-Gg: ASbGncuKEM+5R7rjgG6KWlqmyID/0BFQqRty4XEIXI+r3BiYNifH/fUPB6u5cy1DTvb
+	VVU8ahWtW84m6keHswvWN+L3OrEyWiGzb+PC6nM3+GQ2lDRQTS7h7H9FwmV/V47dg+NFR50R3ok
+	L/qrNz8mOS064X5U8Fp13tVO3jZlQQcfLRinPh+CQHKZzeZr8eTuzaxfCbDOTFQ8B7WchCw03uF
+	kH6x0QIG/6TGgmZQufB0tfbJ/tIyNwCJ/oRu8ZgB/3JwaE=
+X-Google-Smtp-Source: AGHT+IFbrr3Ugx9sJuxckBLXykfeFQB9mdy4wgUJpUjJFCoKZYBQ4+1F1qUWmiA9nhDeXvGo84jWaQ==
+X-Received: by 2002:a17:902:e741:b0:216:386e:dbc with SMTP id d9443c01a7336-218d6fdfd08mr57672385ad.13.1734555459502;
+        Wed, 18 Dec 2024 12:57:39 -0800 (PST)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1e5437asm80558955ad.162.2024.12.18.12.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2024 12:57:38 -0800 (PST)
+Date: Wed, 18 Dec 2024 12:57:36 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2] tools: perf: tests: Fix code reading for riscv
+Message-ID: <Z2M3QNqQ_Sl1ZKtm@ghost>
+References: <20241217-perf_fix_riscv_obj_reading-v2-1-58f81b7b4c7d@rivosinc.com>
+ <CAP-5=fXK6HRzBKHzF=T_w9cn7ohWOdmZNRMXvJzN6QG11HE6tA@mail.gmail.com>
+ <Z2IXl5cuKQJInJb0@ghost>
+ <Z2MXXFhUzoQmW4xV@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241217115610.371755-1-james.clark@linaro.org>
- <20241217115610.371755-6-james.clark@linaro.org> <CAP-5=fU7RNzvzxBcAQy3RT9Ge3YtqPhDonupNWS7Wgb8HGQkGg@mail.gmail.com>
- <8c15786c-47b6-47ff-b1dc-ecbf32d582fb@linaro.org>
-In-Reply-To: <8c15786c-47b6-47ff-b1dc-ecbf32d582fb@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 18 Dec 2024 11:47:09 -0800
-Message-ID: <CAP-5=fXV6LXrUtvgRKuyurmu5SoSZLTf6MN=+BBXkqv7drvOjg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] perf docs: arm_spe: Document new discard mode
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Graham Woodward <graham.woodward@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z2MXXFhUzoQmW4xV@x1>
 
-On Wed, Dec 18, 2024 at 2:07=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> On 18/12/2024 12:54 am, Ian Rogers wrote:
-> > On Tue, Dec 17, 2024 at 3:56=E2=80=AFAM James Clark <james.clark@linaro=
-.org> wrote:
-> >>
-> >> Document the flag, hint what it's used for and give an example with
-> >> other useful options to get minimal output.
-> >>
-> >> Signed-off-by: James Clark <james.clark@linaro.org>
-> >> ---
-> >>   tools/perf/Documentation/perf-arm-spe.txt | 11 +++++++++++
-> >>   1 file changed, 11 insertions(+)
-> >>
-> >> diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Do=
-cumentation/perf-arm-spe.txt
-> >> index de2b0b479249..588eead438bc 100644
-> >> --- a/tools/perf/Documentation/perf-arm-spe.txt
-> >> +++ b/tools/perf/Documentation/perf-arm-spe.txt
-> >> @@ -150,6 +150,7 @@ arm_spe/load_filter=3D1,min_latency=3D10/'
-> >>     pct_enable=3D1        - collect physical timestamp instead of virt=
-ual timestamp (PMSCR.PCT) - requires privilege
-> >>     store_filter=3D1      - collect stores only (PMSFCR.ST)
-> >>     ts_enable=3D1         - enable timestamping with value of generic =
-timer (PMSCR.TS)
-> >> +  discard=3D1           - enable SPE PMU events but don't collect sam=
-ple data - see 'Discard mode' (PMBLIMITR.FM =3D DISCARD)
-> >>
-> >>   +++*+++ Latency is the total latency from the point at which samplin=
-g started on that instruction, rather
-> >>   than only the execution latency.
-> >> @@ -220,6 +221,16 @@ Common errors
-> >>
-> >>      Increase sampling interval (see above)
-> >>
-> >> +Discard mode
-> >> +~~~~~~~~~~~~
-> >> +
-> >> +SPE PMU events can be used without the overhead of collecting sample =
-data if
-> >> +discard mode is supported (optional from Armv8.6). First run a system=
- wide SPE
-> >> +session (or on the core of interest) using options to minimize output=
-. Then run
-> >> +perf stat:
-> >> +
-> >> +  perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev=
-/null &
-> >> +  perf stat -e SAMPLE_FEED_LD
-> >
-> > Perhaps clarify this should be an ARM SPE event? It seems strange to
-> > have one perf command affect a later one, the purpose of things like
-> > event multiplexing is to hide the hardware limits. I'd prefer if the
-> > last bit was like:
-> > ```
-> > Then run perf stat with an SPE event on the same PMU:
-> >
-> > perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/nul=
-l &
-> > perf stat -e arm_spe/SAMPLE_FEED_LD/
-> > ``
-> >
-> > Thanks,
-> > Ian
->
-> Hi Ian,
->
-> Confusingly this isn't an SPE event, it is a normal PMU event. The fact
-> that one Perf command affects the other is because these events only
-> count when SPE is enabled. When it's enabled it has an effect on a
-> per-core level which is why in the example I made it simpler by enabling
-> SPE system wide.
->
-> SPE is an exclusive PMU like Coresight and some others so it can't be
-> affected by multiplexing or anything like that. The SAMPLE_FEED_LD PMU
-> would be, but as long as SPE stays enabled it will count the right thing
-> regardless of multiplexing.
+On Wed, Dec 18, 2024 at 03:41:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Dec 17, 2024 at 04:30:15PM -0800, Charlie Jenkins wrote:
+> > On Tue, Dec 17, 2024 at 04:18:32PM -0800, Ian Rogers wrote:
+> > > On Tue, Dec 17, 2024 at 3:52 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > After binutils commit e43d876 which was first included in binutils 2.41,
+> > > > riscv no longer supports dumping in the middle of instructions. Increase
+> > > > the objdump window by 2-bytes to ensure that any instruction that sits
+> > > > on the boundary of the specified stop-address is not cut in half.
+> 
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> 
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> > > > A binutils patch has been sent as well to fix this in objdump [1].
+> 
+> > > > Link: https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
+> 
+> > > > Changes in v2:
+> > > > - Do objdump version detection at runtime (Ian)
+> > > > - Link to v1: https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com
+> 
+> > > > --- a/tools/perf/tests/code-reading.c
+> > > > @@ -183,9 +244,30 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
+> > > >         const char *fmt;
+> > > >         FILE *f;
+> > > >         int ret;
+> > > > +       u64 stop_address = addr + len;
+> > > > +
+> > > > +       if (IS_ENABLED(__riscv)) {
+> 
+> > > Not sure if there is a consistency issue here. Elsewhere we're just
+> > > using ifdef, such as:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n69
+>  
+> > I don't have any strong feelings about that. I can change it to be an
+> > ifdef. On other lists I have been told to use IS_ENABLED whenever
+> > possible, but it's only a small difference.
+> 
+> Can't we just use uname here?
+> 
+> So that we don't use kconfig.h since its not used in tools/perf/ and
+> makes it looks like perf is in lockstep with the kernel source tree
+> version it was compiled from?
+> 
+> $ git grep kconfig.h tools/perf/
+> $
+> 
+> BTW, what would happen if I collected a perf.data file on x86_64 and
+> would read it in a RiscV machine with such a objdump version? The same
+> problem?
 
-Thanks James, sorry for my SPE ignorance. I'm smiling about the use of
-the word exclusive. When I was trying to make the tests run in
-parallel I used a file lock - so shared and exclusive. There were a
-lot of issues with that, hence switching to 2 phases in the test,
-parallel then sequential but I kept the "exclusive" tag for want of a
-better word. Perhaps the notion of an exclusive PMU existed previously
-but maybe I've accidentally invented the term by way of a failed file
-lock experiment :-)
+Yes that's a good point, we should be detecting riscv at runtime too.
 
-Presumably the two PMUs side-effecting each other is a known thing. I
-wonder if we can capture this in the documentation. When you say
-"normal PMU event" you mean core PMU events?
+- Charlie
 
-Thanks,
-Ian
+> 
+> - Arnaldo
