@@ -1,139 +1,173 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2059.outbound.protection.outlook.com [40.107.92.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8214A1946C7
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 12:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734523448; cv=none; b=dt0Er4/WB8o5kppnglNTdWiI6svmN0XgO3qD1DuLqWTV+GxcrHkwC5dUJB4Fm4w8yAiaTKFieej/z+K03KrmKx5+k860wUddAj5liw5iB3WhKSAyWscW1G+F2STIpmNCwLhWEsnFpB27IS1QVvJc0UrigtVLmEHg/3+Zz/NCiLI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734523448; c=relaxed/simple;
-	bh=S1dZ7REYJvvKLV4kXaRfkTSGb+kFtWJjWR5CNqP70fE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=FlqsFF7aVt38U85rS7lG6klflPUZvURU2nLzvbmt7mhRTXZeTY3L6M4n0wuYmfd3Cqzz4KGrcQMD3JSFx3ig2hW9kAksdl/FH/VibISnwD6+2eS+JCWZHvKhwuZSPtvqLeLFDp3QK/R3XZJ1WMPlBih/+DW0s9UZXrOpGxB09FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SoWvV6a1; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9038A1991A8;
+	Wed, 18 Dec 2024 12:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734524274; cv=fail; b=R78nIeWbchr3E9PEK819ocEa+sAwjYcsJwCD127siFfDOeuImhfoNrHP6X5kmu0NmBZHLojOvqtboLeYAdNm/L5ktPZdWZNoV/iGBuORH+1I5zWTauSlPVepe9yW6GlRLCMRNxf/BG3eEdd/UHak/AyRv8hiGJOGRS18AyjT8AQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734524274; c=relaxed/simple;
+	bh=/pnioMpLpqitkahhk7TaNM8LftpxuxIblfifgyu2o00=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=alt7wXTCAugOYvl6jUhCYDvrwYT2kIpUfFgI7NKZ6miRpu5mdE4kqW+tiDlqw4auACWWSwImaaWWyBBk1VJfSdgxi8Z3az58WtP810CVkzPP2HrNEpalY7gOR0ziVjfShVkJJ4/khXmcYNiuKfQatHF3TlnhysDQWYrDIqYNCqo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qEUlcTdK; arc=fail smtp.client-ip=40.107.92.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SoWvV6a1"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9e44654ae3so988302266b.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 04:04:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734523445; x=1735128245; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3KtNhOq23ExUq/9KecQTGduTg9YM5UXK2XCKNylBnoc=;
-        b=SoWvV6a16Zn+r7qPywgbkWc9D2/GgmCygRBmTZBdsSG0EeGalTJDEhNT1UEnav1mKb
-         Bif+80+RJJR7o4LyaUNLJ9DT1sLuCMRywfWuek1su+W64GGMzP+mYl6y7gPUIE3jrmcy
-         SnZlab2+ITVTRklEbBZ1y+Qr6VBKYX2kINsK+3u/4T1brW/CAYl7vC9AyNBsySVQTueu
-         qog+uLcFJpNkPdiiIB5s3rGSzYlwWJijZnf57oVah6VfTPfyYjq+oYD6DAX5xHKsVlI/
-         tcq/xdR9OaWdjznYLTvLDCKu6bRYRRoTNKhVatZLidEiFL96ObgZsb/eiAvuea3YVGJr
-         6FgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734523445; x=1735128245;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3KtNhOq23ExUq/9KecQTGduTg9YM5UXK2XCKNylBnoc=;
-        b=hiHLKW2E0h8f5c9McUtiQQvZjndMG7BOcPK7eU9MIyDJ5765v8y+WHI25Bky6QBKrU
-         dHyIjTD1BL089FQRbVc/QWTPbzOIO8h/rfsCqdNeT0neVTjfOyuNpiqaZIZyCQPV8e1G
-         eE8i+yhtzUu8yaSSlPsWdtInfIlufTesuu8BY5FNYSJDBgsvdSY9rFgogiyn6IUNPzSg
-         TeKSCditeCrhFycNWAx7XKfOUSPqLM2BXw54RGJ4xNCkRQ46jQjzwYASZrDOjQv0CUUS
-         J55qJgPx8NNeBZHJgLODnZBT8Imf7dSebXfg1abPcUlI2Qj1HTjOCY2AzTZDYpoKEhM2
-         373w==
-X-Forwarded-Encrypted: i=1; AJvYcCX0SRi7nFeuXchzt3CDB5TO+V4QT/Suuest22ohBe1il1YohDSBAjQYhLkl00rJcYxCeEljD7KdrR/8aTdu4YX0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrtDlFg+Dl/lBWmw3T1l3KU9LP6z22VQjSMu8Ws/8Ze4zavdtZ
-	/BMMykVqBnByRSa1Wl8d1m8E2QKZjEcPJ6+ukoDy90+Htw3WnDvUBnjynJpTcVsPqz2iTIEW/wg
-	M
-X-Gm-Gg: ASbGnctNjIUjsE7UJK+or9mgZp9Xrgc93eu85ZP/pvC6DA0UjPW+X6i1vXInMGb1l3/
-	tjmWlLApflAkCyj/GV7al0y3zRJ8Y2YN7GWIYkqMaOEzv5FENGudkmW/TYkZxO8Iwmo6QdDCmpV
-	AIk8hpxchJu79f6OblkAcLAV0NUNtvFxsD4GL9q59t7xKN5g8FmwNE0VxGHoJbC+k47yYPki/Kk
-	EK0zG0PTzIS2L4LhdZXCh74WvIxll5SUxWin3+FGUDfH/0naIHPg1FZY6kusVaKN1U=
-X-Google-Smtp-Source: AGHT+IEIploq19qvtSVx5i1P6HWfUUlzgeSE4IAvQCe4cHTY3KR53cmUJ0tS0/78VyTR917XQYwDIA==
-X-Received: by 2002:a17:907:7801:b0:aa6:7ec4:8bac with SMTP id a640c23a62f3a-aabf474fa3amr201644266b.17.1734523444882;
-        Wed, 18 Dec 2024 04:04:04 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.66.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab963b2672sm544593566b.177.2024.12.18.04.04.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2024 04:04:04 -0800 (PST)
-Message-ID: <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org>
-Date: Wed, 18 Dec 2024 12:04:02 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qEUlcTdK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=POoFwDGJkpMiYAjM6ZSF0cxK+ENyryj754Vf1/T/eVo3pkGdK/NRVlMtNaEVF6G6okKaAh15JaKdwl0YPkOhTM7kj7TbnrkgZBDtxcuMRtWsbA4igitcsKGoSyr49C7YTQy5iIkoBcWfuLjBFB6n5wh1FYm/6Pbrp9DWXbi28ez0vVWpm+w4iNsoBYhri84MNIw9nZ6VuUzoP7KSF6H5V5uYt+xc6oiMtGsyMYFM5V5a6P+SqteEbJejonRzkj74qr/ZjjdNWZK5bWLXug1AMc0llrxO0XkChYnwJCkGWfD/Yp3G4DPCvgm89DM6DiZcf4BXortqmCbzYFUa/bDQLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CBpQqSqELpFUH1KEd3jQYG90BGFRR/FPV4WM/zrGOzk=;
+ b=mpHy+HGGERpUU1YfvIbv8nGFmWikwEuhFaBNdsZW9h+yHigLJ6RoUK/niW96lId8oT2DrgwlX2DJ55YLB97H5vlfqQG7ApbuhMCzrI8xdrOc7uJa2Qw0pXBXRH+v0yi5X2zy/ZNwLP0vdJqdNMNhAxQpMcmdSdLlTxSln/ZzTc6d60vyropNhkOTqWSp6LT7inl+b1wRqHlLeeIetRtTYJnOccjNMh+oVMYCpG006DFVoGWpzWEwh0WXbxtkio5gsJ8tfkyO1g3VNXUQbXIM8cn+ameqGUDKBbZ5awYAQuP0n2EMX6T9wqJ+iZ0au54oJp7OIwVQZxvh7/Szvzo4NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CBpQqSqELpFUH1KEd3jQYG90BGFRR/FPV4WM/zrGOzk=;
+ b=qEUlcTdK9ghvWMTgOMTpApzTjum2vpyfQ6mlrRTYwM4Npu13So19QooglKdGFNDwtxiTZYi1TXhhwafrmy9Co7aCbtZAkDTRPa8O8ntHugBr4Bi/c44H+DtG95d3gypBlRKkBlpVd3HqffPBXrACVOoVvFvNbk6ZcwZiEp6KK2A=
+Received: from DS7P222CA0011.NAMP222.PROD.OUTLOOK.COM (2603:10b6:8:2e::18) by
+ IA1PR12MB6089.namprd12.prod.outlook.com (2603:10b6:208:3ef::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8272.13; Wed, 18 Dec 2024 12:17:47 +0000
+Received: from CY4PEPF0000EDD5.namprd03.prod.outlook.com
+ (2603:10b6:8:2e:cafe::28) by DS7P222CA0011.outlook.office365.com
+ (2603:10b6:8:2e::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.22 via Frontend Transport; Wed,
+ 18 Dec 2024 12:17:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD5.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8251.15 via Frontend Transport; Wed, 18 Dec 2024 12:17:47 +0000
+Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 18 Dec
+ 2024 06:17:42 -0600
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>
+CC: <ravi.bangoria@amd.com>, <acme@kernel.org>, <eranian@google.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <kan.liang@linux.intel.com>,
+	<bp@alien8.de>, <x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v2 0/6] perf/amd/ibs: Add Zen5 support
+Date: Wed, 18 Dec 2024 12:14:31 +0000
+Message-ID: <20241218121437.1717-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] perf cpumap: If the die_id is missing use
- socket/physical_package_id
-To: Ian Rogers <irogers@google.com>
-References: <20241216232459.427642-1-irogers@google.com>
- <20241216232459.427642-2-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241216232459.427642-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD5:EE_|IA1PR12MB6089:EE_
+X-MS-Office365-Filtering-Correlation-Id: 14b597be-413f-4ddc-3221-08dd1f5dfbc5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+nD66rcxeSFbYdxdhLhEnBC6YMrzxTspGDNxJatJNxHQmqKEt8EdXExpzVSO?=
+ =?us-ascii?Q?WkRAK1Wr8wruOb1T5kmDcl47DHFVKSAJtz2QdpewsAfrLZaL52bju6R6r8Z6?=
+ =?us-ascii?Q?uT6SuG8YpcWfqALYQozjHBhAjVmfZF8W6ifpjK27OkLuguuoakWfEH+X5G2U?=
+ =?us-ascii?Q?ncQz/mgnhxivWpoCTSPK13J7tMhG6vGjqvJupkqi6ENDM+5+fYPWRWRUeZlg?=
+ =?us-ascii?Q?ao6ccFiO4ki5xTnQX2ThBjCin6RSrWLRx0LiTe0L6E0wYbyCGqxi1mQDiis2?=
+ =?us-ascii?Q?Vj5L1twZkmNayTgQd92pcBliqhRR1/oYq89dTnQMiYuGU5z01oa36aXBuMtM?=
+ =?us-ascii?Q?UUlKJbdEq2LBHfPEiJPNGiEb7mUalWKrjKniD//ChpXNuuheifdOHvwIsnGu?=
+ =?us-ascii?Q?8RBGWhmjaJRIE4g40gJ/pjJ8zgvkw1qh+BZ7ap8jauzDCJilViZI+FBNzoVA?=
+ =?us-ascii?Q?7/EKxMty6UeUln6RxxHdP0CkjfLeCbi964Rn6yyW3hF0JuiGgh/prV8yh9L9?=
+ =?us-ascii?Q?lFTLdITLWJFeBwiROfatODC5nK+zx85exhX/s4Lydw8xc08+RNXMZ8uRm/lA?=
+ =?us-ascii?Q?lhvSi5/6Zh/ErUu3YInO/LRcOfJ5DElB9xfgWPfHWp/ZpJntG2OgyQWaVyEv?=
+ =?us-ascii?Q?cA0Bxe1tNFNZRKr5VSY3d04ltV6Q4PK/A6mjsvtejNjd9UOCXH1+ZtuMYCtK?=
+ =?us-ascii?Q?ESsVl5C1tcv6u2cZqXDNW8tnOmva8Xf5wNYlB78yETzU4BtxkS+smyK7OHdn?=
+ =?us-ascii?Q?Pnx2/86jQ3CShlBihSKyXQqYDtwh2nAtTJkd7AyXVQdNmRI4yZZtCcqMkbxN?=
+ =?us-ascii?Q?p7caIDTqmoY2JXjk22TU1sV7if8hBCZHmR5N6Kygh1FL4XtXDY8tAngrE/ED?=
+ =?us-ascii?Q?tCr79Bupl3q7Ept2UXxBKYEbmHMJx8nLWCZmPu21J2FUOd0EpDsyzhOQy+8c?=
+ =?us-ascii?Q?FbgjPseb0Tgp782NjaHc0bo2NHfPx8VgzSBv8HtRVqG6mzYCGHwmUS6HIyac?=
+ =?us-ascii?Q?Rh4/I+JefjPYoxR7N6K5CNWpgX+N8wu4F0Kt89UyGKGjiZsJyXfHy9oBnTtk?=
+ =?us-ascii?Q?U2RZBtxYc4KaHT++cFzjAgiy74qP6xPjvAVTeXCEKJVqHhpiZJV9pQzoy9NA?=
+ =?us-ascii?Q?ryssJbfm6BpBy3JOaWVE0TAiRUSLcNLJYXh6nfpAHeeBXdjDR51a5OlPpn90?=
+ =?us-ascii?Q?OBxa/HvIKYBw3qVcLWNCvgQ2S1oGHw2SQdVdpyRprXCG7F6AMqWq1QLsDFOP?=
+ =?us-ascii?Q?/PvQvlfVWyotc0kw3AZDjWX3WQnuLFMVWsbzjGiTCMpcUcIpN87faQjQiL1k?=
+ =?us-ascii?Q?1nQtpjH7BOksVyz9WpBRbsSXSwACKqbJ01D6VCYO026xN/smC5UVRkjxNq4c?=
+ =?us-ascii?Q?l9seZsOKST5TsJhBmYMbUjpeImGBSedLjMFexhZQiDO70sSNNlogvpiQLHe7?=
+ =?us-ascii?Q?sRj6IZqabcHI0pNKuzUzTnVGNnd6/mhc2EUbyEXeecahQS5U6Kpzu8tuXBnt?=
+ =?us-ascii?Q?5tJadbv/3vCQUuM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 12:17:47.1183
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14b597be-413f-4ddc-3221-08dd1f5dfbc5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6089
 
+IBS on Zen5:
+- introduced Load Latency filtering capability.
+- shows DTLB and page size information differently from prior generations.
 
+Incorporate these changes into IBS kernel driver as well as perf tool.
 
-On 16/12/2024 11:24 pm, Ian Rogers wrote:
-> An error value for a missing die_id may be written into things like
-> the cpu_topology_map. As the topology needs to be fully written out,
-> including the die_id, to allow perf.data file features to be aligned
-> we can't allow error values to be written out. Instead base the
-> missing die_id value off of the socket/physical_package_id assuming
-> they correlate 1:1.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/cpumap.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 27094211edd8..d362272f8466 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -283,7 +283,8 @@ int cpu__get_die_id(struct perf_cpu cpu)
->   {
->   	int value, ret = cpu__get_topology_int(cpu.cpu, "die_id", &value);
->   
-> -	return ret ?: value;
-> +        /* If die_id is missing fallback on using the socket/physical_package_id. */
-> +	return ret || value < 0 ? cpu__get_socket_id(cpu) : value;
->   }
->   
->   struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
+Patches are prepared on tip/perf/core (02c56362a7d3).
 
-Hi Ian,
+Note: IBS sample period cleanup patches are pre-req for this.
+      https://lore.kernel.org/r/20241210093449.1662-1-ravi.bangoria@amd.com
 
-I sent a fix for the same or a similar problem here [1]. For this one 
-I'm not sure why we'd want to use the socket ID for die when it's always 
-been 0 for not present. I wonder if this change is mingling two things: 
-fixing the negative error value appearing and replacing die with socket ID.
+v1: https://lore.kernel.org/r/20241010050815.751-1-ravi.bangoria@amd.com
+v1->v2:
+ - There were some conflicts with Namhyung's IBS patches[1] which are now
+   in the tip tree, so rebase the series on tip/perf/core (02c56362a7d3).
+ - v1 covered only Load Latency support. But there are few other IBS
+   enhancements in Zen5. So cover all of them in a single series.
 
-Personally I would prefer to keep the 0 to fix the error value, that way 
-nobody gets surprised by the change.
+[1]: https://lore.kernel.org/r/20241203180441.1634709-1-namhyung@kernel.org
 
-Also it looks like cpu__get_cluster_id() can suffer from the same issue, 
-and if we do it this way we should drop these as they aren't valid anymore:
+Ravi Bangoria (6):
+  perf/amd/ibs: Add support for OP Load Latency Filtering
+  perf/amd/ibs: Update DTLB/PageSize decode logic
+  perf amd ibs: Sync arch/x86/include/asm/amd-ibs.h header with the
+    kernel
+  perf amd ibs: Add Load Latency bits in raw dump
+  perf amd ibs: Incorporate Zen5 DTLB and PageSize information
+  perf mem/c2c amd: Add ldlat support
 
-	/* There is no die_id on legacy system. */
-	if (die < 0)
-		die = 0;
+ arch/x86/events/amd/ibs.c                  | 116 +++++++++++++++++++--
+ arch/x86/include/asm/amd-ibs.h             |   3 +-
+ arch/x86/include/asm/perf_event.h          |   4 +
+ tools/arch/x86/include/asm/amd-ibs.h       |   3 +-
+ tools/perf/Documentation/perf-amd-ibs.txt  |   9 ++
+ tools/perf/Documentation/perf-c2c.txt      |  10 +-
+ tools/perf/Documentation/perf-mem.txt      |  12 ++-
+ tools/perf/arch/x86/util/mem-events.c      |   6 ++
+ tools/perf/arch/x86/util/mem-events.h      |   1 +
+ tools/perf/arch/x86/util/pmu.c             |  20 +++-
+ tools/perf/tests/shell/test_data_symbol.sh |  29 +++++-
+ tools/perf/util/amd-sample-raw.c           |  77 +++++++++++---
+ tools/perf/util/pmu.c                      |  11 ++
+ tools/perf/util/pmu.h                      |   2 +
+ 14 files changed, 269 insertions(+), 34 deletions(-)
 
-And last minor comment this could do with a fixes: 05be17eed774
-
-[1]: 
-https://lore.kernel.org/linux-perf-users/20241218115552.912517-1-james.clark@linaro.org/T/#u
+-- 
+2.43.0
 
