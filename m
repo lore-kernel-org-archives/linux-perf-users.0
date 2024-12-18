@@ -1,46 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670C21B0430;
-	Wed, 18 Dec 2024 12:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFAC1ACEC6;
+	Wed, 18 Dec 2024 12:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734524281; cv=fail; b=TaRwPaWMB4WM6oevFK/kzDPaBMV6b/Hlnjhr5xKIwAL0YqZQGv531COCSCJFHb/pZd3taig6dDTLygef0g2WLc4oZYTgva4ubseaEFg0zxm89NoKrjW3dsSZ0WsO/Lni3/l47VHHlOzIoyJqCDIV9pRIRfZhG0XXuK5nmHrxpYA=
+	t=1734524287; cv=fail; b=nJqxkjgXdWxveYz/DpQ0furqvxohhSkuKdgNdVfgiUaLMDgfbaT3wbBJ+OvSWRnfihpbLggACjVxM9KD7FXHMBCj2/OHsvYBEQE7aCf2vZi+Mj15t9Kzfn0CDXXaKL+mc0EQ61EesMPg9XqqJxn7trpH5FBsDBNyFiv46tuhN3k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734524281; c=relaxed/simple;
-	bh=5H4aaK7MMeHxJWvrF8gGZe5U9m2EzxnpbACQVf+qZGY=;
+	s=arc-20240116; t=1734524287; c=relaxed/simple;
+	bh=+VjtZVc0lZftn8rygY1z2AsE+iSg3suYjUAiojvr8mw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjuTuPlbwjzqgy6AVQVS6KyikdsSvOaGSZCdhfG0uYGlGPB0u2zStVb9Fr/9vdIkwg9oyxgGJJFrBvjhfhkC3I/NOdeZSSmNELUmS/dfAsHxKGZY/W0AqMEQCkG8Ut3G9kvWMdr44DZ+FMaaXQEKGakPjYPjP7e1/fAJaVHdRNM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mXn1A857; arc=fail smtp.client-ip=40.107.92.69
+	 MIME-Version:Content-Type; b=t5tdpBmE8r7w4SeBN0N5sRXxWvLS0J0S2Jy2xCdQenQsscLrMCHEPG/G1YoLmSPh4YjweC2YlWzGqZqcLMJAU+DS4Yq/fiNKSha3LU0Tr8n7xDN/YLkdxJQct1yY58PuQUDVm9gVT27tioJtjkGGodvaE/mivErZEYQsJJGzQTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zW3vFBNT; arc=fail smtp.client-ip=40.107.223.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mXn1A857"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zW3vFBNT"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w1NKhzV2wESfWKSu+27MVuEJ7C4lHkWh0efCwY8P69G1pmqKNweg/zOnQQ2sbZIivkBCmRx1lp3DhR2SCPYroumbL8aRoKSUcJKXVCIHxzctCTh+INOPSC43ooCdRrKyeFCIdSBzLe9GEKDDgoBmQt7n5SFQ94L+m7renRJpYyckihNpNMtRn/MzWhbvUqRscnRvuHJcdLZFzED/ccgQ1BP8XwfrVMzm2y9CAjGLUDF5SJArX0ZyS2DCcc5NO2ZoUVJxAoSfFcRGxn+to5yqe/m31y4h2GliFj+fqY55u46A3mupFgwVDDRMbxySIQUJ+VVlGPc7wW2NhRIoYPXcqg==
+ b=uKbCgp7fgVytuRn6UY4zwK1ovSYZuc5DYOqxtzOakbIyStlSVcaUIGQ3kKL5lIBSj2CpwI8C7sgjalO4duVzqOa5oamyhGWAle7WugfJcnERKlDDYf/Yeg2+xMVsgDfFQ+08VY/EWbIWTZNlg7eNeNe53iSsN9iuLwNcJwgFdyu9ZL5oalK1nG0Bexq0vvoQ+G/+xoooFEt7o6MA2tyUE8vSinqEPRD3WIIsN7LzxnY7Z3XjRWXqO+nzB+86G251ooThPfV3k0tGNY/IA0glF2h+s2QQsZe1RRAOdBMqT3V3FoAKHvj5L//dDh+Z2zFiTanJlxyCe5iS2VVJAzekGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yit8ExoDssyKLvTbzh30wIKQdHDm6Y4bagXAqxyTgcQ=;
- b=kEb8XkjTxTeBxVGXhNsAF8DbieYQCWQIyALy9iqGa9G6GfRvdcwiiTgSbVnn6Ub3EDJnnUkdHrTDuYXKuRVvZ2cZ0t6yAcrIe0A1I9mrgp1O8cf6rG+fylom65tjO89aVePhAErI96YaDB/i7dc5KXboQXNObF5mnICFBAevZIkeWn8HaotAWPMCwVBn38/nA2WKa6865psE628pZBZzjRui+8zRjuUnju7LPGZlRsZDSt4AwWm3vVUBMd3qWb7qtHsNvAhOVfylR1Uy1lD/PpT3yTHEWLK013Zx4mBR2O9iYMR5mftLzQ9NvfWkWN3lnLHSxpiRmEuYczLj616AcA==
+ bh=QmwvAg8UxCNiKkZk2vTiQafUWT/8fxaOyCkOZh8Wdnc=;
+ b=Wwq8KQGeiF8tgcdOoe/wbkm9f4UiFk1APNDRu2dCEEc3JE1VbDRouPgsUI+wA75VfJjjOnK8+z+/i4oEs0e+qBIRSfSYOmjqbzKbrHp5M034L3IPJoM2PejA6HRqF95enxeDOvTfaEu7O3B3UuCT/Z/3bxR/cgQp50sj4QGV8KKAPcu1CO1PvPa8+FU3VlrWC+Iem97hXrtHfQv7eHKYDUntJ5RD/0Ffxp/t7XhGqLJdR4n6L9SChXsJuw3eVQWaemNpvA/ylVVCCHGYZ08HL7797k2qkA6Hn1vWVi21Zch3s6Rk/q4+bLm6u4MfBQfalj30Zw6Q9GhdDdoexD5e7w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yit8ExoDssyKLvTbzh30wIKQdHDm6Y4bagXAqxyTgcQ=;
- b=mXn1A857Kshyrr3PgPKg8ELdDbKG1RywXtcIrRWVp05TcFebbD67JU6LKqeVmU6Bnbs22dvEacyAS+bzgKuK8JE3MOOV3YorAdza60baqIS+ksivVLIWIdUgQRpZV+csgenzv1WmreLExBO4UtB+5okjvbvVcxbqtJeUMnxrLfk=
-Received: from PH7PR13CA0018.namprd13.prod.outlook.com (2603:10b6:510:174::22)
- by CY5PR12MB9053.namprd12.prod.outlook.com (2603:10b6:930:37::13) with
+ bh=QmwvAg8UxCNiKkZk2vTiQafUWT/8fxaOyCkOZh8Wdnc=;
+ b=zW3vFBNTIr51S74zuRsRnxq9SehobDS4cgr0X5YayW36K6MWyLfpYnnp0eltUZxbHi7mmas2B/+eX9ZQ29DW1/92ACo/KPeMveZqr+Wh5QfHzsskxWo2Ktx1e+eugI/FBosYt7ZWI6mKy8xl8vUouWZglvFyZ2X5JkANErJJH8k=
+Received: from PH7PR13CA0017.namprd13.prod.outlook.com (2603:10b6:510:174::13)
+ by CH2PR12MB4040.namprd12.prod.outlook.com (2603:10b6:610:ac::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.21; Wed, 18 Dec
- 2024 12:17:56 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
+ 2024 12:18:01 +0000
 Received: from CY4PEPF0000EDD4.namprd03.prod.outlook.com
- (2603:10b6:510:174:cafe::b1) by PH7PR13CA0018.outlook.office365.com
- (2603:10b6:510:174::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8272.12 via Frontend Transport; Wed,
- 18 Dec 2024 12:17:56 +0000
+ (2603:10b6:510:174:cafe::8f) by PH7PR13CA0017.outlook.office365.com
+ (2603:10b6:510:174::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8272.7 via Frontend Transport; Wed,
+ 18 Dec 2024 12:18:01 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CY4PEPF0000EDD4.mail.protection.outlook.com (10.167.241.200) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8251.15 via Frontend Transport; Wed, 18 Dec 2024 12:17:55 +0000
+ 15.20.8251.15 via Frontend Transport; Wed, 18 Dec 2024 12:18:00 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 18 Dec
- 2024 06:17:51 -0600
+ 2024 06:17:56 -0600
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>
 CC: <ravi.bangoria@amd.com>, <acme@kernel.org>, <eranian@google.com>,
@@ -62,9 +62,9 @@ CC: <ravi.bangoria@amd.com>, <acme@kernel.org>, <eranian@google.com>,
 	<bp@alien8.de>, <x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
 	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v2 2/6] perf/amd/ibs: Update DTLB/PageSize decode logic
-Date: Wed, 18 Dec 2024 12:14:33 +0000
-Message-ID: <20241218121437.1717-3-ravi.bangoria@amd.com>
+Subject: [PATCH v2 3/6] perf amd ibs: Sync arch/x86/include/asm/amd-ibs.h header with the kernel
+Date: Wed, 18 Dec 2024 12:14:34 +0000
+Message-ID: <20241218121437.1717-4-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241218121437.1717-1-ravi.bangoria@amd.com>
 References: <20241218121437.1717-1-ravi.bangoria@amd.com>
@@ -80,173 +80,73 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD4:EE_|CY5PR12MB9053:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01284a09-adbd-4ccc-cf84-08dd1f5e010b
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD4:EE_|CH2PR12MB4040:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8329d820-7708-48ab-7243-08dd1f5e03f8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cZnUS3TB7iWdlFi76DVIV+Z7poAC04qU/vM7eFTP/b08+L4dRZ2/kGmVulMN?=
- =?us-ascii?Q?SloBruurz5+D49Q9U9v/UxcWikCWWZ1cX+WPPudywnB8G+pWThINcQ+KCodj?=
- =?us-ascii?Q?6wY1K8R2DPYd9TRGDMbJtU9BmsaxMq3pqNHqXhuDDnY4YGQ/DwJh/HZsUt+J?=
- =?us-ascii?Q?YHayOfy8VR9fByMhPSDdzv7VCOE/8OYG++vR4fCQZUAs+Z5whyqiWSdIVT5j?=
- =?us-ascii?Q?oWptyYHjshP5BWWXtwydtjYR3t2RrsAS32jgG7jT+DpHfAmiDoSXZNm66i7m?=
- =?us-ascii?Q?1EFPbhgPAZmlhmes1nhC7dsP+3imIBKi+9ree1P6gE4n/E8bCyRXBw/6uPWN?=
- =?us-ascii?Q?3f0OGG72SYfwIqMeyL/IKAqbsXSC//qjc3kzLD2X4znde0iY68ZEvyog9mnh?=
- =?us-ascii?Q?jBgJrNvgYO/qwCu6Oj773yNcRWW9L9Wdso3+FRPs9PbRgGvO+B9qsmvaDj+N?=
- =?us-ascii?Q?ukPLa5cAcaZVJW/NDTGHyifCT60U04q5/dksI4EoxycLSVTtdb/ttMdnSmf2?=
- =?us-ascii?Q?j1uXKS+WJhCvH/TBJ2NwM9D/4/aSIkNJI/E++1hMYWSb3AFnzXG8hqhTyBnn?=
- =?us-ascii?Q?qZV6HqKaQJMH4CjdZyxW7AvxdL3t83+10+7cXN1S7jG68OyE20EhHeUgu3ki?=
- =?us-ascii?Q?EqAbX6nt0xSOfoPj07lu0KN7LPePJyhxXgHIESTlFOmMtN4omFxGfJmYjfcE?=
- =?us-ascii?Q?2MPcY73M6HprwWqBehz9xB8taagwfWFOoNcB/PWdmnvM7ozUTDtS4uTwWS0j?=
- =?us-ascii?Q?ARbu7r+2S8Yfsdku+MwkiM+wxO7nIS/968SFGYrl7Xr0lhyoxA3TpJeql8cT?=
- =?us-ascii?Q?+cntuDS867cJ0sszVwrWzjL+Azsh2nZzf1fQ3iCFbDxeolZ09N4r3XApIf0I?=
- =?us-ascii?Q?P880l8TZLDxUEzdU9P4v1TAoD3qz77bQfyETrt54qS1NJuM2+NTW11gKGWgG?=
- =?us-ascii?Q?d8O94lEaXgqzXI8CvUt2lsNx6WrwezxaOhoRJdlE9oUmw7Wb9V9gM9/+sjfx?=
- =?us-ascii?Q?nAcxox2DpSmjZOoVXy/Dg02DR8WMYKcGTWnsWJQCDHn2v6UvYuwwUpasgHIY?=
- =?us-ascii?Q?PMMDdivBQytclVYSwuZjgCLMpcJUIa8G0X3JlXZvnln86SYMJip1+KhZyYr5?=
- =?us-ascii?Q?ayso3wfNMt+RfTg1c9mEySFNoSgsCCuUF9nvrHUSoke2r9XbbRM/MTMy4gtW?=
- =?us-ascii?Q?hnMuwz5bR3WG3t8bptFMJuJ4xe7zzYRxxfopWNpyfgvN8iWUrf42erKD+Mr4?=
- =?us-ascii?Q?18BOi4uZC6qO928qj5025wAGBqJio6gDlQjRA0+OlNOmpjSU85h6eyoUOrsE?=
- =?us-ascii?Q?KwkXgWv9HS0mW5s0NVFo1eZXzn/hVFNSfUkjyT/kOv5ZF9Yflfa49i2y1wv9?=
- =?us-ascii?Q?49d5iSvG2036t2laMnCErIb7wHGPKVNxiUCWgrz+UYAyvrzfP4DutVQq/82U?=
- =?us-ascii?Q?kNnkx+qx7wXJFodIT/8dpXtkiDYrZBPk6a/TLdqqKBfRNUO1hTG+sQ=3D=3D?=
+	=?us-ascii?Q?Z6xlo6omEd2B9AWvR9XLQiuFk0LDyPXv9mStulhtn489P0fqFpOM+PJqi+QU?=
+ =?us-ascii?Q?tR8mGaFvRxHbsz1mSHVbNVA7Ir+uFu9JIZjhdguhwnO6CzyObdRVvJ8T967A?=
+ =?us-ascii?Q?7dd87qf+sVlqaVryAeLHXa4FBFWrxPUO51YxYRPaH1FlGh2oNVDlR5gSWlb7?=
+ =?us-ascii?Q?0BozkRHq55GNVaVHPjLKJEY0EUgTIWLFH52klgR5kySH2lwba7EDbi/1FM7A?=
+ =?us-ascii?Q?TmwR62oMW9DqONALw04B9f+0lSvEr5rgsoxbe9zci98XALLQJuNHk4dst+Pd?=
+ =?us-ascii?Q?8cH9WyTy64B9eFWAO827k6/HDQ7SIGl91+DnicZnQ3TML6ojHiEJcJMFIxTm?=
+ =?us-ascii?Q?VbX7JyjxDd1IxTtd9WLbedSFut1PoggbWVCGajWDmDKmCu1hVai8frc+grFg?=
+ =?us-ascii?Q?wh50s+AiAJgC+QxO1imyTfxPvP81yJlErkFCz5zHxjwohYrGXxswlL/FZZ9h?=
+ =?us-ascii?Q?JRAiq/yCDV0+EbVcywyvi91Jtp+MVpbyNeRiqeQ38Z/I1vySrkYL+UhWAEcE?=
+ =?us-ascii?Q?QnTpM5A1umC67+6H89wXvRGmCAqYGHg3ZdDL99eA07QUcLyaMm8HhXpT8Tv3?=
+ =?us-ascii?Q?yiZtwsG81m32LEVUZPBI8uF9sEhZBC5oxiHIPokDTaOWlz3jD0dRYkWYVw48?=
+ =?us-ascii?Q?FYTbBeZk1BO+4MmpB2aTuZ1qLy/7umk43i+9w84vjR6/HaNDRauzu6tNiOQd?=
+ =?us-ascii?Q?XxYOyRi0JUHZjK369+34ZMAsxf7k7qujwxRuD3PR/g8T5oBgbdh8fiiapwdZ?=
+ =?us-ascii?Q?9oX35jovSLs+yx8typyjhDxIwTcrDd8hC7S3CwvquSJxU/lQqrfUSsJIjx+J?=
+ =?us-ascii?Q?5vdhehJu+IUNg0Xn8VNno9uKc0fp2bVRvx+5jzH5ze2/32jeTx4/gplLbLbv?=
+ =?us-ascii?Q?Y6lb9IMrxnFyfPLADZRMNMomTIUUYF56iNT6QB2D4CRaftO/WswNnju76opQ?=
+ =?us-ascii?Q?4M+J7xzM2RiZtXNX3+M09E6Zt8qOKQodxPU/X0HPaPaxUdLI8dKTKNdvvJPr?=
+ =?us-ascii?Q?/znlHiBRkkMQbbF+zWk5+tGin/saU8I5kc7c79/WM93DfhgV/Z7A7Jfw4YB8?=
+ =?us-ascii?Q?OHc9Z8HMsAEMWGF+GEh2BhpNIKgNyd8SyhVNhQwgdTZ6nMwH+HyR75S/gBYt?=
+ =?us-ascii?Q?Dp7Ogj+TBrnZeU3atQQakOliEWcL1oGa3ux4xfl6a7Y3WfbYROdLau45YLgs?=
+ =?us-ascii?Q?17TnIYzI9MNpiwA1I89CEyRjc9W0lNXsidpZaID4fSjSUFo4wX1TQ9wkvlnn?=
+ =?us-ascii?Q?V3Saal/0zqZK6VBecsS+83JJuF4cFsVaRgpg7VRc2CtVNY52e8H0/cHuckGs?=
+ =?us-ascii?Q?qnn6qNZJF7VYjOFA1zGQN7szytF20vuqqRgmrNa9q0LoBhYslYv8ZeuUdV8W?=
+ =?us-ascii?Q?GrhMuKZBr5BWJbJWiEEPsDN1C8Rn7W2CGBY99YRHupap1rPvNHCjghipsSAx?=
+ =?us-ascii?Q?CQaZrr8qqUi9Dk/sO1Uaw6+necfHssZQfC+4D9jjGGeGBSIR6/UpOQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 12:17:55.9697
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 12:18:00.8760
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01284a09-adbd-4ccc-cf84-08dd1f5e010b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8329d820-7708-48ab-7243-08dd1f5e03f8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000EDD4.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB9053
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4040
 
-IBS Op PMU on Zen5 reports DTLB and page size information differently
-compared to prior generation. The change is enumerated by
-CPUID_Fn8000001B_EAX[19].
-
-  IBS_OP_DATA3     Zen3/4                 Zen5
-  ----------------------------------------------------------------
-  19               IbsDcL2TlbHit1G        Reserved
-  ----------------------------------------------------------------
-   6               IbsDcL2tlbHit2M        Reserved
-  ----------------------------------------------------------------
-   5               IbsDcL1TlbHit1G        PageSize:
-   4               IbsDcL1TlbHit2M          0 - 4K
-                                            1 - 2M
-                                            2 - 1G
-                                            3 - Reserved
-                                          Valid only if
-                                            IbsDcPhyAddrValid = 1
-  ----------------------------------------------------------------
-   3               IbsDcL2TlbMiss         IbsDcL2TlbMiss
-                                          Valid only if
-                                            IbsDcPhyAddrValid = 1
-  ----------------------------------------------------------------
-   2               IbsDcL1tlbMiss         IbsDcL1tlbMiss
-                                          Valid only if
-                                            IbsDcPhyAddrValid = 1
-  ----------------------------------------------------------------
-
-o Currently, only bit 2 and 3 are interpreted by IBS NMI handler for
-  PERF_SAMPLE_DATA_SRC. Add dependency on IbsDcPhyAddrValid for those
-  bits.
-
-o Introduce new IBS Op PMU capability and expose it to userspace via
-  PMU's sysfs directory.
+Sync load latency related bit fields into the tool's header copy
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/events/amd/ibs.c         | 23 +++++++++++++++++++++++
- arch/x86/include/asm/perf_event.h |  1 +
- 2 files changed, 24 insertions(+)
+ tools/arch/x86/include/asm/amd-ibs.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 62fdb9b8d34f..231998f01270 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -635,6 +635,7 @@ PMU_EVENT_ATTR_STRING(l3missonly, op_l3missonly, "config:16");
- PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_format, "config1:0-11");
- PMU_EVENT_ATTR_STRING(zen4_ibs_extensions, zen4_ibs_extensions, "1");
- PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_cap, "1");
-+PMU_EVENT_ATTR_STRING(dtlb_pgsize, ibs_op_dtlb_pgsize_cap, "1");
- 
- static umode_t
- zen4_ibs_extensions_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-@@ -648,6 +649,12 @@ ibs_op_ldlat_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- 	return ibs_caps & IBS_CAPS_OPLDLAT ? attr->mode : 0;
- }
- 
-+static umode_t
-+ibs_op_dtlb_pgsize_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	return ibs_caps & IBS_CAPS_OPDTLBPGSIZE ? attr->mode : 0;
-+}
-+
- static struct attribute *fetch_attrs[] = {
- 	&format_attr_rand_en.attr,
- 	&format_attr_swfilt.attr,
-@@ -669,6 +676,11 @@ static struct attribute *ibs_op_ldlat_cap_attrs[] = {
- 	NULL,
+diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
+index 93807b437e4d..cb1740bc3da2 100644
+--- a/tools/arch/x86/include/asm/amd-ibs.h
++++ b/tools/arch/x86/include/asm/amd-ibs.h
+@@ -64,7 +64,8 @@ union ibs_op_ctl {
+ 			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
+ 			reserved0:5,	/* 27-31: reserved */
+ 			opcurcnt:27,	/* 32-58: periodic op counter current count */
+-			reserved1:5;	/* 59-63: reserved */
++			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
++			ldlat_en:1;	/* 63: Load Latency enabled */
+ 	};
  };
  
-+static struct attribute *ibs_op_dtlb_pgsize_cap_attrs[] = {
-+	&ibs_op_dtlb_pgsize_cap.attr.attr,
-+	NULL,
-+};
-+
- static struct attribute_group group_fetch_formats = {
- 	.name = "format",
- 	.attrs = fetch_attrs,
-@@ -692,6 +704,12 @@ static struct attribute_group group_ibs_op_ldlat_cap = {
- 	.is_visible = ibs_op_ldlat_is_visible,
- };
- 
-+static struct attribute_group group_ibs_op_dtlb_pgsize_cap = {
-+	.name = "caps",
-+	.attrs = ibs_op_dtlb_pgsize_cap_attrs,
-+	.is_visible = ibs_op_dtlb_pgsize_is_visible,
-+};
-+
- static const struct attribute_group *fetch_attr_groups[] = {
- 	&group_fetch_formats,
- 	&empty_caps_group,
-@@ -765,6 +783,7 @@ static const struct attribute_group *op_attr_update[] = {
- 	&group_zen4_ibs_extensions,
- 	&group_ibs_op_ldlat_cap,
- 	&group_ibs_op_ldlat_format,
-+	&group_ibs_op_dtlb_pgsize_cap,
- 	NULL,
- };
- 
-@@ -1015,6 +1034,10 @@ static void perf_ibs_get_tlb_lvl(union ibs_op_data3 *op_data3,
- 	if (!op_data3->dc_lin_addr_valid)
- 		return;
- 
-+	if ((ibs_caps & IBS_CAPS_OPDTLBPGSIZE) &&
-+	    !op_data3->dc_phy_addr_valid)
-+		return;
-+
- 	if (!op_data3->dc_l1tlb_miss) {
- 		data_src->mem_dtlb = PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT;
- 		return;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index b6af58e743b4..701a59a90d30 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -484,6 +484,7 @@ struct pebs_xmm {
- #define IBS_CAPS_OPDATA4		(1U<<10)
- #define IBS_CAPS_ZEN4			(1U<<11)
- #define IBS_CAPS_OPLDLAT		(1U<<12)
-+#define IBS_CAPS_OPDTLBPGSIZE		(1U<<19)
- 
- #define IBS_CAPS_DEFAULT		(IBS_CAPS_AVAIL		\
- 					 | IBS_CAPS_FETCHSAM	\
 -- 
 2.43.0
 
