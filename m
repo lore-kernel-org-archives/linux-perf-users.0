@@ -1,149 +1,113 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DCC1B4233
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 17:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B169C1547FE;
+	Wed, 18 Dec 2024 18:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734543762; cv=none; b=Q0sIUsh/UWSRaOF87i4dsHbIMS1osfdnXSY78Wx7Y7A7vLrwVeCNdXXXATSmpYkJQyf3VURexu5tmk4+dl72diZlXs1aVpWXLkyn70QpYZtFKlS7ABhgn1se7ZN/VdtSw7u/iK6qQ85nPoMxQiHp4TGGMJ+zGw7RGqZmOvFmWkg=
+	t=1734547295; cv=none; b=YcptEybVpCOoHKw+hb+lsh3OgXtK5JST/llLQ/k6LfKVTH26zYuhSPXKZg24wIrzqwRdkuSZU2l8g38p8M4c55DEjhEdqIjEHeg/Y+HkxvBWcAlFqeQVq/tVucm0WJf4BcvLqjT0Q8RissR3rYDvwO+wJEq+h1/lXm0gwe46Dd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734543762; c=relaxed/simple;
-	bh=a5BIMZ9/WZQypogs7JCenGm61s9RheV53Xhp4lOgWHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uQ4fp4goGRnemUVUdFsSr+Nk5D9f14CRuxFXqtwgK6mv+b5wX+ty6slhOuhqzJYDaSXclxRvXxcLagqT7QmgdfWaqI+BlmvyUD5SXPzZ5nQBa/nREysymtrjVnvAuKYka4ciVOPX94r00ESGz0hgZKiPwX1c3rpCC886WW+HURA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G/xuraVQ; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734547295; c=relaxed/simple;
+	bh=1Pk+Poo09suXrcvpVp1oeGmHxV7JSee/hgW3Otg+GAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=of1cLxemnEEOiiOQd9hKFeA2ZG+thQASR3sas1c0mP4XYxj/efCEgvSKoxiBWy/VQe2LEnUSwFPtuS1TYygGLJZnSsRl3c3Pyd8Vu1n6EvdjcF1RGLDC6eLd8BgC5E8aBwGTZpwfjPTqx/ooEAn30ewrJ47ttkSfelNOHasf30M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uy330i6b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/xuraVQ"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so105ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 09:42:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734543760; x=1735148560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ovwOzVqRNTlJWmdVUvDuHkd2o0TqMMKPC2vbVMPNCyE=;
-        b=G/xuraVQ+RgMB6UvrsJQcAGah43H/Tqo1grKZAMI5sSwki9o316CgkNXZqxdDDJosx
-         b4PjnR4mPvFSvTMIhJJW6G8hMdIIMXIWrOPc84yn39AJ0egqziPpMqHIqxMrf0o6ZzA7
-         EWV9dE+ivarTqnjTZuQt3ixmpkFRtMMR8zyyLn/G7AZQqpKuUEOmgcGSmWGqi6nKGcKu
-         +onQacKyMQlQk7kZEBP6+Po3M04lMzx5nDQ3IIK6dqA4xZcUzX7Us7ckcnX8Nt4hE3T+
-         njE7EvGLpyaxFwhwWdkofOKglUBbTh3inn7yaD2+plQxiUeM/XdUSfvUqwPQVkktcQSG
-         xGRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734543760; x=1735148560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ovwOzVqRNTlJWmdVUvDuHkd2o0TqMMKPC2vbVMPNCyE=;
-        b=g60jJVq9c6bNQdozYUlXUdHuhX0/38dpOeTqmft7LYLSXAK8cF2MOD2hu6w+PYy95A
-         699iniJjGoSAb08W3vJg/1tCwDvvH2t8MiKR65AGPPuXLn0hkTcor2592mxjDEZkR3Eq
-         FDrEO9ASPKcnkoqbveYYgB7q35XumyBr21tSlJ96RH0O1wAlYqsygVdkM7oVkjOebe5/
-         ArNk0Pf9hkpQ8F6gLsP7bwdRh9uO5W/xz5NYOYUVyW0sNiTdNuY9+1BB7jo3C7bFvQ2A
-         52kQDNbVcVyQZM8tJqiZ/ITtfkEMCnkP5pCfG82N2fwh25lAD35rIdt6zP/LqrHEwgIE
-         ud8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUWMYFIBRQHcb8AztpN5/EfDyhsr5eyMqvt+NfB9qxQ93PV6KywtoLJO+HFeWU/US/xiCxzHBUb1DC+TsCBtxY+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx4sWTk4T6ano8g2TtPDIbxdns/W2SwiXYNmNfgsai9sH4LmHg
-	eb14pFG0mc+aJM2pnd6tTk0eJi6Q0iN6W1xaUNcymfWroRgR1dh2kooTQk1csxxv1YSd7CEj2q4
-	HIAcVcnkLFUjEHRjrKEWMfG3UROS+LUuOWAH2
-X-Gm-Gg: ASbGncuBoRYMb0M6vbHRw/dewM4PQKc9/NUJ7liJ+f3lssU5bgIRxbVl/vvcJOES9CK
-	ibpNGV/9ReUP+D7yP5IhZ5DvPd5VGiGz0IOph8co=
-X-Google-Smtp-Source: AGHT+IEIh+1suEOmUuJeuZwlcjORjarBOMSXJYpqt7YiNZc5E2Z7kISPr4a7ZfB4ARdidQdmLArR84x2VBkGviYd7x4=
-X-Received: by 2002:a05:6e02:216f:b0:3a7:e616:8d2f with SMTP id
- e9e14a558f8ab-3be373b35e7mr3070475ab.7.1734543759435; Wed, 18 Dec 2024
- 09:42:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uy330i6b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9084FC4CECD;
+	Wed, 18 Dec 2024 18:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734547295;
+	bh=1Pk+Poo09suXrcvpVp1oeGmHxV7JSee/hgW3Otg+GAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uy330i6btvqwZgD3agJyLdpKiwp+PX1tQV0zDq654AyMEhBdyQm/UEzu8RrjK4RLB
+	 7yT8BbG7fFfUcVyRZ6KSRe8bBpM/uPoVL/JNstJi/clCMSjO/C23S4q9Q0pwWfoMZa
+	 /uM2ofy+8XL3Xf6Ytbedoi3zgGU0YyRIlY37c/AI1JeJwXdTRvwkss2UkqjETmbexE
+	 T+kv6sITMUtX0NeLDbFdKv0cH5uY43wx/jXrgd+z4V57L+/AHPiROUog9JbuOcWfjb
+	 av1xFUrtzpAt7r4YmRzkhTEiC2FLWU2lOn/zYQporOQJUHJpA2dCL1zA91sM+YFWYh
+	 QT3q8QjhL1CLQ==
+Date: Wed, 18 Dec 2024 15:41:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2] tools: perf: tests: Fix code reading for riscv
+Message-ID: <Z2MXXFhUzoQmW4xV@x1>
+References: <20241217-perf_fix_riscv_obj_reading-v2-1-58f81b7b4c7d@rivosinc.com>
+ <CAP-5=fXK6HRzBKHzF=T_w9cn7ohWOdmZNRMXvJzN6QG11HE6tA@mail.gmail.com>
+ <Z2IXl5cuKQJInJb0@ghost>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241216232459.427642-1-irogers@google.com> <20241216232459.427642-2-irogers@google.com>
- <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org>
-In-Reply-To: <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 18 Dec 2024 09:42:27 -0800
-Message-ID: <CAP-5=fVeW+XARtWtdR=XX47w-ZznKiGdhxDBy=Le_QTS=R6SQA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] perf cpumap: If the die_id is missing use socket/physical_package_id
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, Yanteng Si <siyanteng@loongson.cn>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z2IXl5cuKQJInJb0@ghost>
 
-On Wed, Dec 18, 2024 at 4:04=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 16/12/2024 11:24 pm, Ian Rogers wrote:
-> > An error value for a missing die_id may be written into things like
-> > the cpu_topology_map. As the topology needs to be fully written out,
-> > including the die_id, to allow perf.data file features to be aligned
-> > we can't allow error values to be written out. Instead base the
-> > missing die_id value off of the socket/physical_package_id assuming
-> > they correlate 1:1.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/util/cpumap.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> > index 27094211edd8..d362272f8466 100644
-> > --- a/tools/perf/util/cpumap.c
-> > +++ b/tools/perf/util/cpumap.c
-> > @@ -283,7 +283,8 @@ int cpu__get_die_id(struct perf_cpu cpu)
-> >   {
-> >       int value, ret =3D cpu__get_topology_int(cpu.cpu, "die_id", &valu=
-e);
-> >
-> > -     return ret ?: value;
-> > +        /* If die_id is missing fallback on using the socket/physical_=
-package_id. */
-> > +     return ret || value < 0 ? cpu__get_socket_id(cpu) : value;
-> >   }
-> >
-> >   struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
->
-> Hi Ian,
->
-> I sent a fix for the same or a similar problem here [1]. For this one
-> I'm not sure why we'd want to use the socket ID for die when it's always
-> been 0 for not present. I wonder if this change is mingling two things:
-> fixing the negative error value appearing and replacing die with socket I=
-D.
->
-> Personally I would prefer to keep the 0 to fix the error value, that way
-> nobody gets surprised by the change.
->
-> Also it looks like cpu__get_cluster_id() can suffer from the same issue,
-> and if we do it this way we should drop these as they aren't valid anymor=
-e:
->
->         /* There is no die_id on legacy system. */
->         if (die < 0)
->                 die =3D 0;
+On Tue, Dec 17, 2024 at 04:30:15PM -0800, Charlie Jenkins wrote:
+> On Tue, Dec 17, 2024 at 04:18:32PM -0800, Ian Rogers wrote:
+> > On Tue, Dec 17, 2024 at 3:52 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > After binutils commit e43d876 which was first included in binutils 2.41,
+> > > riscv no longer supports dumping in the middle of instructions. Increase
+> > > the objdump window by 2-bytes to ensure that any instruction that sits
+> > > on the boundary of the specified stop-address is not cut in half.
 
-I think this breaks the assumption here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/expr.c?h=3Dperf-tools-next#n244
-hence using the number of packages. I think we need to make sure there
-is order otherwise we'll end up with "if no dies value present" or "if
-dies value is 0 ignore" everywhere. What is strange to me is that ARM
-may have the die_id present but have it contain the value -1.
+> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
-> And last minor comment this could do with a fixes: 05be17eed774
+> > Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+> > > A binutils patch has been sent as well to fix this in objdump [1].
 
-> [1]:
-> https://lore.kernel.org/linux-perf-users/20241218115552.912517-1-james.cl=
-ark@linaro.org/T/#u
->
+> > > Link: https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
+
+> > > Changes in v2:
+> > > - Do objdump version detection at runtime (Ian)
+> > > - Link to v1: https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com
+
+> > > --- a/tools/perf/tests/code-reading.c
+> > > @@ -183,9 +244,30 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
+> > >         const char *fmt;
+> > >         FILE *f;
+> > >         int ret;
+> > > +       u64 stop_address = addr + len;
+> > > +
+> > > +       if (IS_ENABLED(__riscv)) {
+
+> > Not sure if there is a consistency issue here. Elsewhere we're just
+> > using ifdef, such as:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n69
+ 
+> I don't have any strong feelings about that. I can change it to be an
+> ifdef. On other lists I have been told to use IS_ENABLED whenever
+> possible, but it's only a small difference.
+
+Can't we just use uname here?
+
+So that we don't use kconfig.h since its not used in tools/perf/ and
+makes it looks like perf is in lockstep with the kernel source tree
+version it was compiled from?
+
+$ git grep kconfig.h tools/perf/
+$
+
+BTW, what would happen if I collected a perf.data file on x86_64 and
+would read it in a RiscV machine with such a objdump version? The same
+problem?
+
+- Arnaldo
