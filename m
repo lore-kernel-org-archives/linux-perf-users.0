@@ -1,122 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63ECC1917F1;
-	Thu, 19 Dec 2024 05:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7498221472
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 10:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734587312; cv=none; b=aGRm4c4Xl+Ey6UcxNpEQ2o9aRIr76AQSu3Mveo0O3z+l99zsLPHNFw7SxgnQomoOiuJnlwEkq+1ilEsD7N2TDO0brh959gI+LglILgr3wHKtvdXhUyRG6dkFepAs1Mf2Pf22Sr0P4idbFqulcsGtnETyKm9bvbtuvVOGyOSM3P4=
+	t=1734603064; cv=none; b=fgRn9jgOlPNjYtvGRfzzj0r2IbzXDZwQdi4n2PYPs5xx5pNgLc2/SMU4FUkUaaqHW7Ay2/BrJUMM8v+gBYdLugbKTio6qFkGFhb2A9Y5Z04vySpBq7Of5G7s4beKjwjJZv2JEcUu7HIjSKQ+HFuNsVhpwgMmXlJ5TQLNrJd9yjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734587312; c=relaxed/simple;
-	bh=5Xj3Up9XP9UelnN4ePQmTVs4Z9YVeW22pZctLuEhWtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Neq8wLg818cww9kCQLP08N0KBpykLMb/FWILz/d2OVtsWsjklHQ+IwwNvQ41cU3hRsoNeAhf9zlHTgfIvP6y1AFusjknasu37MWV/jEli6cG94WWEQdRt7WttAQl104JDjzNFojs8gpkPaNqDgAxJomLgDpwzSbdOKnmB2RuIPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hmFmEjDh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734603064; c=relaxed/simple;
+	bh=U2uamB7nvDggxJyjYA4InvO7fuIdtfjFlCEbaOFWfT0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uvYw7yjgJHXGCbYem1T+cEx48w+QZcRTDDPXtCAxa9IlqveoaFmwb3vNBIhRJX5DFN0znWvqsYRWJV1GtwCIlBcV7bYjOo8V0MWCOLcJa+zPjzxd5RLXlle2HyJC+nlOj3TQ+2soropKP1tTBfAUJlqU5BIk6H7tzguN41t8BLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f2o6FXGQ; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hmFmEjDh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610F7C4CECE;
-	Thu, 19 Dec 2024 05:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734587311;
-	bh=5Xj3Up9XP9UelnN4ePQmTVs4Z9YVeW22pZctLuEhWtc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hmFmEjDh25ldQyYzuRRWwNfwY/1s/byJShB9ImV9A5PHIFaxUNfwWGX43ueHGxgb0
-	 NIxPNoq2dAteZ+1pHtKdcVZ3FxMe9xKDgZO6S0VA1ibC6q0ZXeRcgSIHdwGlmPnX6d
-	 n9P+z381MXj0leHzTQ+MsMtWsl5+PznsndzIFN2G1mdKRAuoejPhn0C3j5367lZ5ac
-	 q8I+3g3EPo5pl2HcgzrN2BaDMpfLpdZkteZOv49hhengm7AbZgnU85hhq9MxNh/lfw
-	 Y3y0l1vQC5hajZgLcIyN2c3PrZVnQaRs17am4qQeyEw9iPZ7Dchn1zXBOG6Kpz+UlV
-	 /bgNTsXy52GTA==
-Date: Wed, 18 Dec 2024 21:48:29 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: test: Speed up running brstack test
-Message-ID: <Z2OzrfsiTaHagLt-@google.com>
-References: <20241213231312.2640687-2-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f2o6FXGQ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso3908085e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 02:11:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734603061; x=1735207861; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9u8s/FXYIijQ9RtDony/lgbfJqNEodPUwkBuIae3j3U=;
+        b=f2o6FXGQyU7Vr0tjU5WTJUm6RFmMl4S2Di4qRcpW6tfl4gV6jVxLUUbtLVtwB0cGGg
+         JJ2NpfsuVtK2HI6HKuXFIutcceeTR8rozCn/IA/xAbPRvv6u85Px1KcMiVUAFZJpDvfE
+         BPtR9v+D2taW0lAGsw8wFWPlqseYrPYCN9HZ1Pr7j2JlIVhrMFWTMlHtKs4XEx3+qMH1
+         zvWvjJElNRXKtKtU/mR7VNfy2l6smU6NP+0EWLVRcvxI36HDZESOJ57HxwhWdJYnCviO
+         QXZ8yARme3hB9ueM1ev2M6TvxsIUbdjCpnjfri73HEIA0uGy9EN8l+kOL66oo9veUXja
+         xhjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734603061; x=1735207861;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9u8s/FXYIijQ9RtDony/lgbfJqNEodPUwkBuIae3j3U=;
+        b=knthvwDGjdAoan9s2B7J3RL500nVL/JJMI5t730809Mi5xds9Du2+VWDwGtRAH2aZ2
+         zyYTaacHG8Nfla5KiC8r6HY9NHz2bUT7YuRJNhpObqtvBTIOIdGrVJ/si1DowmhLHrmM
+         ghLXwB2tYFb2wgyW03p8MK8lJoQintTqyQZlWDNByjHHmLbLzmhBQO+IN6EeFQwMQ8YO
+         KMj6MAj+fM4BBpZyQ926cFDLpzwrtih8Lmel038rGc3s1dhjFAxHzq0YN8MiT2GOt4R0
+         +jfcrXY9FqY5jwf00kdFzeXXS9B+0qeKjFyVonLG8Rf+WAeC24GfEE9IqbMQ5I2BwztG
+         HEIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkYp0jJX/XifmY0AK1HWg/nVLjUm8Wyu12eJ6qPnlsXpiQI8su2enM9/r1FT1MI8VwfOrmbN71MecoTsSAvEQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxleWfbyIU091rp8x4Rt29UXGKwpCGsyvf9KLGdD87iij9JbUhW
+	q0xtC3XrWkdHuQLqkMj2dcnjklemAFWzw4fq+ixBE0QZoMv6wedpPNo7pez53hYSYB2TLoFE5Or
+	8
+X-Gm-Gg: ASbGncs9qnrFa2MCaM6JPph5Uy6UdX+/7216X4QXaSB5ba/pDFXm3R4n7e+lpGLLFZJ
+	+OJsUfHN2gZQW7wi1Y6btQY6GgLHN1JtEa79a6/WBvZY9CgZFsj9K9ZqnMHKSeMeNwsAxqCCog6
+	gMLfriEAZWHOoEY7odBV/Rt/lE6OtiRMy/Nfua6lTHAa+0ZwACfnuBcCutqk0g96tF2HLikCggR
+	8H8qoECdEKgMkfpWBaNXtmEz0DqjWVw9ZAQ/UsgVN18F9aWxrWTHP7fTpIPUSneJ1g=
+X-Google-Smtp-Source: AGHT+IHleph6k9/mQwCrpZsyxPVz/5yDa2XHM6jxz3peZNrApOtdEHBZH0tR130iLzOcT4cQ/NPTfg==
+X-Received: by 2002:a05:600c:1c97:b0:42a:a6d2:3270 with SMTP id 5b1f17b1804b1-4365c7c8344mr21521065e9.21.1734603061157;
+        Thu, 19 Dec 2024 02:11:01 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.66.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4364b14f241sm68213505e9.1.2024.12.19.02.10.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2024 02:11:00 -0800 (PST)
+Message-ID: <4f0bcc19-807c-40b0-a30c-309ba775693b@linaro.org>
+Date: Thu, 19 Dec 2024 10:10:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241213231312.2640687-2-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] perf docs: arm_spe: Document new discard mode
+To: Ian Rogers <irogers@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Graham Woodward <graham.woodward@arm.com>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20241217115610.371755-1-james.clark@linaro.org>
+ <20241217115610.371755-6-james.clark@linaro.org>
+ <CAP-5=fU7RNzvzxBcAQy3RT9Ge3YtqPhDonupNWS7Wgb8HGQkGg@mail.gmail.com>
+ <8c15786c-47b6-47ff-b1dc-ecbf32d582fb@linaro.org>
+ <CAP-5=fXV6LXrUtvgRKuyurmu5SoSZLTf6MN=+BBXkqv7drvOjg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fXV6LXrUtvgRKuyurmu5SoSZLTf6MN=+BBXkqv7drvOjg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 13, 2024 at 05:13:12PM -0600, Rob Herring (Arm) wrote:
-> From: James Clark <james.clark@arm.com>
-> 
-> The brstack test runs quite slowly in software models. Part of the reason
-> is "xargs -n1" is quite inefficient in replacing spaces with newlines.
-> While that's not noticeable on normal machines, it is on software models.
-> Use "tr -s ' ' '\n'" instead which can do the same transformation, but is
-> much faster. For comparison on an M1 Macbook Pro:
-> 
-> $ time seq -s ' ' 10000 | xargs -n1 > /dev/null
-> 
-> real    0m2.729s
-> user    0m2.009s
-> sys     0m0.914s
-> $ time seq -s ' ' 10000 | tr -s ' ' '\n' | grep '.' > /dev/null
-> 
-> real    0m0.002s
-> user    0m0.001s
-> sys     0m0.001s
-> 
-> The "grep '.'" is also needed to remove any remaining blank lines.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> [robh: Drop changing loop iterations on arm64. Squash blank line fix and redo commit msg]
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks,
-Namhyung
+On 18/12/2024 7:47 pm, Ian Rogers wrote:
+> On Wed, Dec 18, 2024 at 2:07 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>> On 18/12/2024 12:54 am, Ian Rogers wrote:
+>>> On Tue, Dec 17, 2024 at 3:56 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>> Document the flag, hint what it's used for and give an example with
+>>>> other useful options to get minimal output.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>    tools/perf/Documentation/perf-arm-spe.txt | 11 +++++++++++
+>>>>    1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
+>>>> index de2b0b479249..588eead438bc 100644
+>>>> --- a/tools/perf/Documentation/perf-arm-spe.txt
+>>>> +++ b/tools/perf/Documentation/perf-arm-spe.txt
+>>>> @@ -150,6 +150,7 @@ arm_spe/load_filter=1,min_latency=10/'
+>>>>      pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
+>>>>      store_filter=1      - collect stores only (PMSFCR.ST)
+>>>>      ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
+>>>> +  discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
+>>>>
+>>>>    +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
+>>>>    than only the execution latency.
+>>>> @@ -220,6 +221,16 @@ Common errors
+>>>>
+>>>>       Increase sampling interval (see above)
+>>>>
+>>>> +Discard mode
+>>>> +~~~~~~~~~~~~
+>>>> +
+>>>> +SPE PMU events can be used without the overhead of collecting sample data if
+>>>> +discard mode is supported (optional from Armv8.6). First run a system wide SPE
+>>>> +session (or on the core of interest) using options to minimize output. Then run
+>>>> +perf stat:
+>>>> +
+>>>> +  perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
+>>>> +  perf stat -e SAMPLE_FEED_LD
+>>>
+>>> Perhaps clarify this should be an ARM SPE event? It seems strange to
+>>> have one perf command affect a later one, the purpose of things like
+>>> event multiplexing is to hide the hardware limits. I'd prefer if the
+>>> last bit was like:
+>>> ```
+>>> Then run perf stat with an SPE event on the same PMU:
+>>>
+>>> perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
+>>> perf stat -e arm_spe/SAMPLE_FEED_LD/
+>>> ``
+>>>
+>>> Thanks,
+>>> Ian
+>>
+>> Hi Ian,
+>>
+>> Confusingly this isn't an SPE event, it is a normal PMU event. The fact
+>> that one Perf command affects the other is because these events only
+>> count when SPE is enabled. When it's enabled it has an effect on a
+>> per-core level which is why in the example I made it simpler by enabling
+>> SPE system wide.
+>>
+>> SPE is an exclusive PMU like Coresight and some others so it can't be
+>> affected by multiplexing or anything like that. The SAMPLE_FEED_LD PMU
+>> would be, but as long as SPE stays enabled it will count the right thing
+>> regardless of multiplexing.
+> 
+> Thanks James, sorry for my SPE ignorance. I'm smiling about the use of
+> the word exclusive. When I was trying to make the tests run in
+> parallel I used a file lock - so shared and exclusive. There were a
+> lot of issues with that, hence switching to 2 phases in the test,
+> parallel then sequential but I kept the "exclusive" tag for want of a
+> better word. Perhaps the notion of an exclusive PMU existed previously
 
-> ---
-> Originally part of this series[1], but I've dropped any Arm specifics, 
-> and it stands on its own. No reason this needs to wait on Arm BRBE 
-> support (which I'm working on now). I don't expect to have other changes 
-> to this test related to BRBE anymore.
+Yeah, see PERF_PMU_CAP_EXCLUSIVE. Hopefully it doesn't cause too much 
+confusion, the context of test vs PMU should make it clear.
+
+> but maybe I've accidentally invented the term by way of a failed file
+> lock experiment :-)
 > 
-> [1] https://lore.kernel.org/all/20240613061731.3109448-8-anshuman.khandual@arm.com/
+> Presumably the two PMUs side-effecting each other is a known thing. I
+> wonder if we can capture this in the documentation. When you say
+> "normal PMU event" you mean core PMU events?
 > 
->  tools/perf/tests/shell/test_brstack.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> index 5f14d0cb013f..e01df7581393 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -30,7 +30,7 @@ test_user_branches() {
->  	echo "Testing user branch stack sampling"
->  
->  	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
-> -	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
-> +	perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' '\n' > $TMPDIR/perf.script
->  
->  	# example of branch entries:
->  	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
-> @@ -59,7 +59,7 @@ test_filter() {
->  	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
->  
->  	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
-> -	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
-> +	perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n' | grep '.' > $TMPDIR/perf.script
->  
->  	# fail if we find any branch type that doesn't match any of the expected ones
->  	# also consider UNKNOWN branch types (-)
-> -- 
-> 2.45.2
-> 
+> Thanks,
+> Ian
+
+It should be a known thing yes, discard mode doesn't change this 
+behavior anyway but just makes one use case of it better. I can add 
+another section to this SPE manpage about it in a v2, that's probably 
+the best place for it.
+
+And yes, I meant core PMU event. I can clarify that the second example 
+command is for a core PMU to avoid any doubt.
+
+Thanks
+James
+
