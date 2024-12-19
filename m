@@ -1,154 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB021A7255;
-	Thu, 19 Dec 2024 21:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AFC17799F;
+	Thu, 19 Dec 2024 21:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734643068; cv=none; b=GZiywSzMvdJq7eEi25/zD2qVXg2nRsgsuc5Qq142OiQ522gsQJ8YjdwAZdX3E3/MhFtJ0rJFxjNmJR0b4bWj6j4XeKfYxoSJPSSd522vj5Pu9uZpmoaPGWp/KvzEE0GfWq55sNCXUkaNGgaOb13FRZy0T7QIbuhQBCNx8BoRWgs=
+	t=1734644613; cv=none; b=XEhh1xxyBTv1Uw508BJAi1LDYC2oT3UF2/Uvks+0AA/6JbwBoGb9yyWsEr5udzJgUfkGE4SY/rCYJwYF65ECN2ZXayKdtRzoBKUylbxm5TvadBq0zySiiydc33kCmCdCqt9fj3jANzwY4lLGr5/CJZDCAjNrKiwxxXIJhftm1+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734643068; c=relaxed/simple;
-	bh=Xguiim+qILjVCBoVe+8bY4ysCx9+X2qr0I572pnLh7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HOAjecv+1BCimS2R56oFDMA7A+1qYzpvhcqNB9aH/hViEjtG/jG2cmFk0eh2cs0AXCDpeA2eLOY3qBPZQq5DtIgy39wRLXMYIpLyGwbbbyx2p9faWCndmsLBGeUcK2LS3K6ucpfzc5Iet/sEqmIgTjjCiSUozX2YmwELvsl/G7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYVE9t/A; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1734644613; c=relaxed/simple;
+	bh=weeODoNx4xsZOFMi7h8qbuiVjsP+sm5nfIcQUHWqF9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=t6IC3GG+C/6bFqiTZpCvyp3v4aUzL+UlOaLs7SE4B+zl5xaxEhHsnlBk1+JuM11BLI+2S6ccJObd7m+O2cbn6af3d2fgLAFVpVIFyQfMKUZjN5ZUl8JqdTRQ00WnzNxvClz2VLPFazjdLGqHP3JOigpLGpbJuszGugXW+JoLjOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFfDm7T4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYVE9t/A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734643067; x=1766179067;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Xguiim+qILjVCBoVe+8bY4ysCx9+X2qr0I572pnLh7c=;
-  b=fYVE9t/A2vJ9OhHgfpU74fyLCE3bJyFcz50ge3dDU2dpNS8XtTEuNqYO
-   Eqyl2Fi0me3mTG2KIwNe3wygWyMTdjQsZzIRObz5iHpi6hkWPgUki1GYW
-   2+QukbDNCgXHfeS57IgYOgOE6HCqHqJJ4weUmmSklzkYVRrJzJGyNEqD1
-   KwpxfEAXeMPxQkvlnkS7SobGMjlmVqHBYWiQp3KT1HpDMafKJhbmu4JZA
-   cuYlYeVk0nnY+ouE5bZYdUeMjWm2D4gYB8aM9EDIgFL5Fu2/o/lnPczgl
-   BeeY3zjXgLLm4Ht0pbYCSfWP54x7M0XQh6uJBUgG3gze/hYgNpW3TMu86
-   w==;
-X-CSE-ConnectionGUID: Mt26tJGHQkec5ygUVrLHnQ==
-X-CSE-MsgGUID: 20zOACnzRDyXyVNoOu1B0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11291"; a="57652142"
-X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
-   d="scan'208";a="57652142"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 13:17:47 -0800
-X-CSE-ConnectionGUID: RauDh5uKSuuwqQTb6+sHXQ==
-X-CSE-MsgGUID: GgmwH8RYQ9KOiVL+mPM19A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
-   d="scan'208";a="129141533"
-Received: from bswapp-mobl.amr.corp.intel.com (HELO [10.124.12.64]) ([10.124.12.64])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 13:17:45 -0800
-Message-ID: <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
-Date: Thu, 19 Dec 2024 13:17:44 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFfDm7T4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D873DC4CED0;
+	Thu, 19 Dec 2024 21:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734644613;
+	bh=weeODoNx4xsZOFMi7h8qbuiVjsP+sm5nfIcQUHWqF9Q=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tFfDm7T4Frx5F1TWggzo1sJB1XEkrnMBe/ycUdEb1cQumANOtN8DNdvGsIOMO3iba
+	 R+cedahbogj/qeO5P+5jaM7JmehYfSs3t2za0/fEn4UT1Rb5S+jcOrhqSTHUAew6Zv
+	 8mu9Lmwhexb/OVsKYK66g6OvCODJTSLhW+LXMuU1xPYDrDzssLNaAosSR9yp83sg7u
+	 jINQN6NHAPyGVVEl74Dyivdtfd5ga0wFi0mkLdVCs8HCqDZi7EL5WPMZPejQwWJm5A
+	 QzIh0jU8S/+qRan+mFDIIxs0P/TfyypvdIT0NO9gH2eQ3uQ4ZZ6AmwMDS4zsd0d3oV
+	 wf/lddJ3+pPBw==
+Date: Thu, 19 Dec 2024 13:43:31 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [BUG] perf trace: Unaligned access in timespec
+Message-ID: <Z2STgyD1p456Qqhg@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: map pages in advance
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
- Yi Lai <yi1.lai@linux.intel.com>
-References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
+Hello,
 
+I found perf trace is getting core dump due to illegal instruction by
+misaligned pointer access.  It seems to come with the new clang changes
+and I got this UBsan message.
 
-On 12/5/2024 12:29 AM, Lorenzo Stoakes wrote:
-> We are adjusting struct page to make it smaller, removing unneeded fields
-> which correctly belong to struct folio.
-> 
-> Two of those fields are page->index and page->mapping. Perf is currently
-> making use of both of these. This is unnecessary. This patch eliminates
-> this.
-> 
-> Perf establishes its own internally controlled memory-mapped pages using
-> vm_ops hooks. The first page in the mapping is the read/write user control
-> page, and the rest of the mapping consists of read-only pages.
-> 
-> The VMA is backed by kernel memory either from the buddy allocator or
-> vmalloc depending on configuration. It is intended to be mapped read/write,
-> but because it has a page_mkwrite() hook, vma_wants_writenotify() indicates
-> that it should be mapped read-only.
-> 
-> When a write fault occurs, the provided page_mkwrite() hook,
-> perf_mmap_fault() (doing double duty handing faults as well) uses the
-> vmf->pgoff field to determine if this is the first page, allowing for the
-> desired read/write first page, read-only rest mapping.
-> 
-> For this to work the implementation has to carefully work around faulting
-> logic. When a page is write-faulted, the fault() hook is called first, then
-> its page_mkwrite() hook is called (to allow for dirty tracking in file
-> systems).
-> 
-> On fault we set the folio's mapping in perf_mmap_fault(), this is because
-> when do_page_mkwrite() is subsequently invoked, it treats a missing mapping
-> as an indicator that the fault should be retried.
-> 
-> We also set the folio's index so, given the folio is being treated as faux
-> user memory, it correctly references its offset within the VMA.
-> 
-> This explains why the mapping and index fields are used - but it's not
-> necessary.
-> 
-> We preallocate pages when perf_mmap() is called for the first time via
-> rb_alloc(), and further allocate auxiliary pages via rb_aux_alloc() as
-> needed if the mapping requires it.
-> 
-> This allocation is done in the f_ops->mmap() hook provided in perf_mmap(),
-> and so we can instead simply map all the memory right away here - there's
-> no point in handling (read) page faults when we don't demand page nor need
-> to be notified about them (perf does not).
-> 
-> This patch therefore changes this logic to map everything when the mmap()
-> hook is called, establishing a PFN map. It implements vm_ops->pfn_mkwrite()
-> to provide the required read/write vs. read-only behaviour, which does not
-> require the previously implemented workarounds.
-> 
-> While it is not ideal to use a VM_PFNMAP here, doing anything else will
-> result in the page_mkwrite() hook need to be provided, which requires the
-> same page->mapping hack this patch seeks to undo.
-> 
-> It will also result in the pages being treated as folios and placed on the
-> rmap, which really does not make sense for these mappings.
-> 
-> Semantically it makes sense to establish this as some kind of special
-> mapping, as the pages are managed by perf and are not strictly user pages,
-> but currently the only means by which we can do so functionally while
-> maintaining the required R/W and R/O behaviour is a PFN map.
-> 
-> There should be no change to actual functionality as a result of this
-> change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+  $ sudo ./perf trace -a sleep 1
+  ...
+  tools/perf/trace/beauty/timespec.c:10:64: runtime error: member access within misaligned address
+  					  0x7f57636105e4 for type 'struct augmented_arg',
+  					  which requires 8 byte alignment
+  0x7f57636105e4: note: pointer points here
+    ad 7f 00 00 10 00 00 00  00 00 00 00 01 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+                ^ 
+      #0 0x5637d68d0ed7 in syscall_arg__scnprintf_augmented_timespec tools/perf/trace/beauty/timespec.c:10:64
+      #1 0x5637d68d0ed7 in syscall_arg__scnprintf_timespec tools/perf/trace/beauty/timespec.c:18:10
+      #2 0x5637d688dfef in syscall_arg_fmt__scnprintf_val tools/perf/builtin-trace.c:2316:10
+      #3 0x5637d688dfef in syscall__scnprintf_args tools/perf/builtin-trace.c:2394:15
+      #4 0x5637d68838ee in trace__sys_enter tools/perf/builtin-trace.c:2675:13
+      #5 0x5637d688ec8c in trace__handle_event tools/perf/builtin-trace.c:3495:3
+      #6 0x5637d688ec8c in __trace__deliver_event tools/perf/builtin-trace.c:4045:3
+      #7 0x5637d6886841 in trace__deliver_event tools/perf/builtin-trace.c:4072:10
+      #8 0x5637d6886841 in trace__run tools/perf/builtin-trace.c:4432:10
+      #9 0x5637d688112b in cmd_trace tools/perf/builtin-trace.c:5521:9
+      #10 0x5637d67af002 in run_builtin tools/perf/perf.c:351:11
+      #11 0x5637d67aee36 in handle_internal_command tools/perf/perf.c:404:8
+      #12 0x5637d67ae76e in run_argv tools/perf/perf.c:448:2
+      #13 0x5637d67ae76e in main tools/perf/perf.c:562:3
+      #14 0x7f576498a3d3 in __libc_start_main (/usr/lib64/libc.so.6+0x613d3)
+      #15 0x5637d6793f69 in _start /usr/src/csu/../sysdeps/x86_64/start.S:120
+  
+  SUMMARY: UndefinedBehaviorSanitizer: misaligned-pointer-use tools/perf/trace/beauty/timespec.c:10:64
 
-With this patch, it seems perf tool has some problems in capturing the
-kernel data with Intel PT.
-
-Running the following commands, the size of perf.data is very small, and
-perf script can't find any valid records.
-
-perf record -e intel_pt//u -- /bin/ls
-perf script --insn-trace
-
+Thanks,
+Namhyung
 
