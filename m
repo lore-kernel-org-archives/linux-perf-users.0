@@ -1,245 +1,178 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1A41A08C5
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 01:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DDD1FCFE9
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 05:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734573150; cv=none; b=LP6Qvs/gRwFxDPOY+xuUOoGSID421nHMxVp0abAg6vtXQUeZ4YroUxnmgjAf5soMIoV528u36XiaNrMJDlEVXpFt4oDOcg+048JnioxNLaqjRrAKsa+ZgosZ/LfwAWMqg42ctuEHOqp/xJmEP+FzaGq1cRBLgnS76tyY4dqbXuA=
+	t=1734584980; cv=none; b=lspQ6VEHDWbDKGuZELvUQGRlMnStqbPO1+iUD7zujgfC2YMqOjia5IkEXVgyKvoSM2L/mN7Q7kf2P5A24XYZ/kWM/RtrpzGOmBK1B2tfI+s8or6z7Ers5Z4dr5icrDNy681Bjm2ux52agPWWNWghZ0XJY5yFwJw7ucznDP379HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734573150; c=relaxed/simple;
-	bh=TffHVOo4qZ8y2qh3SIIszbhor2cAv2iwa3OVur5ndNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C466hzMmTwARmtx3OKwiE7AcIm/tzW/GOKq54ANN/LtWfh/ZwHrBbHYKzIp4K7MOmf4jTU62LpmzFY03dsDuBCwdgFjc6/dERMT/31QaFs8YSM2f7Bl3rs957mL0TJDWhaxztK1qcE4+38D3YBUqh7DJjGj/R9isRKmgQA3lR5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IubEnUzR; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1734584980; c=relaxed/simple;
+	bh=1upYpg7JeHbyxHj3GHuMzZsoO9ypm9IhxyN2Fjy2hEw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dPvw9KduI+eiojcoeVweF5nLCXdtyAo4T1oA2lQG1VSGEdkEOBOcdHAjHilsGWghgfNos/BYgZJ3rguYedntKgHgG/JIH3pXY8tw7e3qk6ubEUwkSkpHO9k/LaMjZeJ+tYxoeD1IG41h+QTJdt8CCeV2jO7VcXavS4Y8P/JbYqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Q3WRC20; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IubEnUzR"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-728e1799d95so360405b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 17:52:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Q3WRC20"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a814c54742so78045ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 21:09:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1734573148; x=1735177948; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0hIoYn7mPi3FgUS2MCNd0c4MX2xpkvKX7vy1y9aMeMY=;
-        b=IubEnUzRvswRJCUebbUyswgw8VgWXlZaO6FXaCSnPiP4/9nVJdOmSAFi86lE3Q8zMU
-         Xz+AYgcDkfiPAB+goXxaFbWDVQIHfVWHj36rx4NqIC604aextRVB8g3zIHBuF8cDzyW7
-         zMODwNMghKd4QYkPZFdpVJcPonCWM7N93v7nKBnATgKpU5BWO0O1H8ZnKkjvmWgRVgJ5
-         DHm9OE2SbxZrfo7IReXto2T860sts/irkYt9MuBLlxMX9LCSiq/0zwj+87AM5y6T5NbQ
-         1744q0H+tboGVl9WqIbuGLHg8Au/uu1B5UTRtgRkYFsLeUKlnY0T1VH89+yExitl9Km1
-         IsrA==
+        d=google.com; s=20230601; t=1734584978; x=1735189778; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTOx6e8aU3t1b8KFY3+B5yvmmNYJx0HN6CrXY+bLQ+8=;
+        b=0Q3WRC20Zgi+7X9A7nNReOKMO1a9GOB+II+RWaxLQbi4vUnCXmfY5xlBJwRcplSNue
+         dxJWr6cWo7kcVbsalGRpEO4JJEVi0Ei0AzFt4sIzrkzpeJM5qmEnXQQ0/C/QzvVuZjGg
+         8oGYcleq8CobXjeCRWbbmECVHAQsW8H5mPwFcc6qJxJ1JhDJyNLWDczf/g/n62BUsC96
+         IL7MlSpOnNUfqnq0mKYD/+1Itb/Gab+/S3eyojXgZPQKZtncxfrcfCX9STY/9JxAwv5H
+         4TSDWzQPJIoCcCm77qZC8eLx4qy1TIj2DkQttXx0iNAUM537qe7dLhaHHDVXd5ygIzmj
+         n68Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734573148; x=1735177948;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0hIoYn7mPi3FgUS2MCNd0c4MX2xpkvKX7vy1y9aMeMY=;
-        b=ZiKnuC/w0wxkgTG0f5tPcgligZmy3RnG0I7EqH7cQtzs8XLlaGK61UeIgNQfy3cBB2
-         LhLZh1uHQq7VsYAgAilb4kMnuL/jR2litdPU5tgmySHnXCnJdMHQrdyJZXXMctiTE09P
-         PW2CgavfU9O0kUxaXvbo2pFtcpyzinlUFZUj1TQItZJ0uIMhEgj5iOQtn3gzJPpHkMTY
-         KisV7bPLphGLCsJGIfgqXhx0uVp3LsddsID9Yk5lorz9CTSAhTid5oteAWS4xz4tESQE
-         YgGqRgkSklerZ7sJYTeAz8t8txWnF8wA1fHQPNwQP0R+7es3pEVtSHYHuo6y4K+v1Ogf
-         AS+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWdF4iG3789C74fph587zr2Mz+nLj0zruTuySyhCSJDjB0BOIREC6PP/hp3u3ry0VKUDcfGGNu6KSaYe2borgLr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9U7GAUA2zJGLBzJn4yfjLNyeFbEFRxuvJFrfmzwJM0ci5wbup
-	wEpEjsXXuL2iitpH579EhZY0ONlS9w1Qwv3pYgUfP2YTuFmRdUl1jpPV2c9vAYo=
-X-Gm-Gg: ASbGncvJwa0pwefIvFdxGf1WLp4US2vhXO3N0VfV+HlxKT8pe1bIodSnBziBe+PAr+l
-	hU//5UAQPxXg86FFOANNaunJzHkr6sVyS41BOxKz0IAvBc2FauOdd1YQvfbN1dg4kSTw7KFAOVZ
-	i6zj6TYZg2bgKgAnolHCMDDv0AFGM/hiPbAZg/HfAK6JkPXh/plpyGFM8jLhGGaApn0NRtU4vQ6
-	ASXUHBX9k30OeRkYpnYgNoAIPLMmH46BKrAfhSEo9j/OOg=
-X-Google-Smtp-Source: AGHT+IGt+ZCDcVVFAePqIYU9RjJQ0k+diPgN8DgjguNeNHG5ckZLUG4P896wZazyc+1vhNXeSRFBkg==
-X-Received: by 2002:a05:6a20:c799:b0:1e0:dc34:2e7d with SMTP id adf61e73a8af0-1e5b45ff9eamr7878142637.5.1734573147826;
-        Wed, 18 Dec 2024 17:52:27 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dbb70sm135039b3a.98.2024.12.18.17.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2024 17:52:26 -0800 (PST)
-Date: Wed, 18 Dec 2024 17:52:24 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2] tools: perf: tests: Fix code reading for riscv
-Message-ID: <Z2N8WLTmh0ojIzhF@ghost>
-References: <20241217-perf_fix_riscv_obj_reading-v2-1-58f81b7b4c7d@rivosinc.com>
- <CAP-5=fXK6HRzBKHzF=T_w9cn7ohWOdmZNRMXvJzN6QG11HE6tA@mail.gmail.com>
- <Z2IXl5cuKQJInJb0@ghost>
- <Z2MXXFhUzoQmW4xV@x1>
- <CAP-5=fXPPfHHVPh0nYgR96VM+smuZKepO+GoE4X+aZsQE4tHSw@mail.gmail.com>
- <Z2M4ZparbNRvRHpz@ghost>
- <CAP-5=fXL6YaEq1cvBh2iESmQ_kqfm5VH5thJ0zrkOCcaWv5s+Q@mail.gmail.com>
- <Z2NNcy1jCLqb62h2@ghost>
- <CAP-5=fUBcu=Kd7StJvwdM_ArnSdOjmAcgR7NzDd+Ep8LrNMhyw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1734584978; x=1735189778;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tTOx6e8aU3t1b8KFY3+B5yvmmNYJx0HN6CrXY+bLQ+8=;
+        b=KFVx75mvQvhrI8tl/w5hnvaWGLcChOxBCAYSu0yne123xr5OtDJ9/gGhmYM8JW1pp6
+         F+UDCgdwX/Z+gm66psn/QB4xr6OLDCc4ljaUvuYEYOCU0I9uObsLKIb/dQ9jwZzpeXaa
+         gqsibB2Ea05eZsSnJkqv76hPzL1IM9z5/o4VHP935MVYN2DvcPKB7AXxps0TXQJKuyue
+         v9TTAlkVInXpSr+YzRb/7f0kpQfG+KV4Gkv6y/IAo/ww1OOqrvQqzLgVFasRB+npHeRI
+         Nwtj3iUKsKnS/y9dBl2jTkAzN0DStJs8LzD+aTM4KyWErUG41wryqL5OoBIgkW32pEHD
+         z/jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkK/VyvOP8wNa/QfpuIlJ8KxqzKTgBSI44rECOhC7vcVZhqoedEuUSDQMjFLoSnMPGFteKvz13/JM788YH9g/R@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyeE0e4WbCt5EHSrXIp7Yit1OVS4rpkPI7dTE0PRWqI/3hnV3I
+	E9ZfV62SZqR6Xr1DH2BCQ5/fBaMDZLorfj60IT5GRyjS4L3MReF/E0ch990/c6brAGVeyd2qGB9
+	ECVAMTT/NKM9nYOtoS92A7eXQOkURvJMmTThu
+X-Gm-Gg: ASbGncu+u1I8+e4Gltq4rQjOlWCN7R42sUehm9vbLnxpDuscTKMP634sTz/OuSwINPp
+	CxCyntbmzPsP9AC116YQg3uSjvKpUnq3a8MEUsmM=
+X-Google-Smtp-Source: AGHT+IFA+gCChHQIKWjd1MMBd92uqQzfvWnU9JJErwNjQQjUEfn5NvlqHNUTddNldGRFuM4NRXHa1HR+qLLEuxUzfr4=
+X-Received: by 2002:a05:6e02:190d:b0:3a7:c962:95d1 with SMTP id
+ e9e14a558f8ab-3c0aa480224mr1327435ab.5.1734584977502; Wed, 18 Dec 2024
+ 21:09:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUBcu=Kd7StJvwdM_ArnSdOjmAcgR7NzDd+Ep8LrNMhyw@mail.gmail.com>
+References: <20241113011956.402096-1-irogers@google.com> <0ED8731D-B183-49A5-86C3-7048D190774F@ibm.com>
+In-Reply-To: <0ED8731D-B183-49A5-86C3-7048D190774F@ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Dec 2024 21:09:26 -0800
+Message-ID: <CAP-5=fW8DfYJqT2WF_VbmAZUSY5Twozm9VdjZPaX6B0J-9Mn7g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Prefer sysfs/JSON events also when no PMU is provided
+To: Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Junhao He <hejunhao3@huawei.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 18, 2024 at 05:20:15PM -0800, Ian Rogers wrote:
-> On Wed, Dec 18, 2024 at 2:32 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+On Wed, Nov 27, 2024 at 4:36=E2=80=AFAM Aditya Bodkhe <Aditya.Bodkhe1@ibm.c=
+om> wrote:
+>
+>
+>
+> > On 13 Nov 2024, at 6:49=E2=80=AFAM, Ian Rogers <irogers@google.com> wro=
+te:
 > >
-> > On Wed, Dec 18, 2024 at 02:13:20PM -0800, Ian Rogers wrote:
-> > > On Wed, Dec 18, 2024 at 1:02 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > >
-> > > > On Wed, Dec 18, 2024 at 11:23:51AM -0800, Ian Rogers wrote:
-> > > > > On Wed, Dec 18, 2024 at 10:41 AM Arnaldo Carvalho de Melo
-> > > > > <acme@kernel.org> wrote:
-> > > > > >
-> > > > > > On Tue, Dec 17, 2024 at 04:30:15PM -0800, Charlie Jenkins wrote:
-> > > > > > > On Tue, Dec 17, 2024 at 04:18:32PM -0800, Ian Rogers wrote:
-> > > > > > > > On Tue, Dec 17, 2024 at 3:52 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > > > > > > > After binutils commit e43d876 which was first included in binutils 2.41,
-> > > > > > > > > riscv no longer supports dumping in the middle of instructions. Increase
-> > > > > > > > > the objdump window by 2-bytes to ensure that any instruction that sits
-> > > > > > > > > on the boundary of the specified stop-address is not cut in half.
-> > > > > >
-> > > > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > > > >
-> > > > > > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > > > >
-> > > > > > > > > A binutils patch has been sent as well to fix this in objdump [1].
-> > > > > >
-> > > > > > > > > Link: https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
-> > > > > >
-> > > > > > > > > Changes in v2:
-> > > > > > > > > - Do objdump version detection at runtime (Ian)
-> > > > > > > > > - Link to v1: https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com
-> > > > > >
-> > > > > > > > > --- a/tools/perf/tests/code-reading.c
-> > > > > > > > > @@ -183,9 +244,30 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
-> > > > > > > > >         const char *fmt;
-> > > > > > > > >         FILE *f;
-> > > > > > > > >         int ret;
-> > > > > > > > > +       u64 stop_address = addr + len;
-> > > > > > > > > +
-> > > > > > > > > +       if (IS_ENABLED(__riscv)) {
-> > > > > >
-> > > > > > > > Not sure if there is a consistency issue here. Elsewhere we're just
-> > > > > > > > using ifdef, such as:
-> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n69
-> > > > > >
-> > > > > > > I don't have any strong feelings about that. I can change it to be an
-> > > > > > > ifdef. On other lists I have been told to use IS_ENABLED whenever
-> > > > > > > possible, but it's only a small difference.
-> > > > > >
-> > > > > > Can't we just use uname here?
-> > > > > >
-> > > > > > So that we don't use kconfig.h since its not used in tools/perf/ and
-> > > > > > makes it looks like perf is in lockstep with the kernel source tree
-> > > > > > version it was compiled from?
-> > > > > >
-> > > > > > $ git grep kconfig.h tools/perf/
-> > > > > > $
-> > > > > >
-> > > > > > BTW, what would happen if I collected a perf.data file on x86_64 and
-> > > > > > would read it in a RiscV machine with such a objdump version? The same
-> > > > > > problem?
-> > > > >
-> > > > > This code is in tests hence thinking that a separate fix is needed for
-> > > > > that problem. Hopefully the use of elf machine/flags tackles it:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n25
-> > > > > We are getting somewhat disassembler heavy. We have llvm as a library,
-> > > > > capstone as a library, binutils objdump and llvm objdump. Given the
-> > > > > pain with parsing text, could we lose the objdumps? Similarly for
-> > > > > addr2line?
-> > > >
-> > > > Are you suggesting to remove this test case entirely to get rid of the
-> > > > objdump dependency? The goal of this test case seems to be to check
-> > > > objdump and perf return the same data, so it doesn't seem like there
-> > > > would be an alternative to using objdump.
-> > >
-> > > I can imagine having an objdump dependency for a test but not for some
-> > > more core like `perf annotate`. We have to do weird things when
-> > > parsing text, like this code I'm not proud of:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/srcline.c?h=perf-tools-next#n523
-> > > The issue with that code is that LLVM objdump has changed its output
-> > > in newer versions to be closer to binutils objdump. Did that break
-> > > perf? Maybe it just broke what our variables think is an LLVM objdump,
-> > > but things aren't really broken. This kind of issue doesn't occur with
-> > > a library, although the differing needs of library versions is a real
-> > > thing.
+> > At the RISC-V summit the topic of avoiding event data being in the
+> > RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+> > events being the priority when no PMU is provided so that legacy
+> > events maybe supported via json. Originally Mark Rutland also
+> > expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+> > M? processors, but James Clark more recently tested this and believes
+> > the driver issues there may not have existed or have been resolved. In
+> > any case, it is inconsistent that with a PMU event names avoid legacy
+> > encodings, but when wildcarding PMUs (ie without a PMU with the event
+> > name) the legacy encodings have priority.
 > >
-> > Yeah doing the parsing of the text output is not ideal... For this test
-> > case it should be possible to dynamically link against libbfd.
-> 
-> I need to write the patch set to delete libbfd from perf. IANAL but
-> the issue is that libbfd is part of binutils and GPLv3, while perf is
-> part of the Linux kernel and largely GPLv2. GPLv3 is incompatible with
-> GPLv2:
-> https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility
-> While using dlopen means we're not linking against libbfd, we may
-> effectively be using it as a plugin which again GPLv3 (in my IANAL
-> opinion) wouldn't allow:
-> https://www.gnu.org/licenses/gpl-faq.en.html#GPLPlugins
-> Currently to get libbfd support in perf you need to be building the
-> binary yourself and add to the build BUILD_NONDISTRO=1. We do this as
-> part of our build testing but having all the #ifdef-ed libbfd code if
-> nothing else makes the code harder to understand.
+> > The patch doing this work was reverted in a v6.10 release candidate
+> > as, even though the patch was posted for weeks and had been on
+> > linux-next for weeks without issue, Linus was in the habit of using
+> > explicit legacy events with unsupported precision options on his
+> > Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+> > where ARM decided to call the events bus_cycles and cycles, the latter
+> > being also a legacy event name. ARM haven't renamed the cycles event
+> > to a more consistent cpu_cycles and avoided the problem. With these
+> > changes the problematic event will now be skipped, a large warning
+> > produced, and perf record will continue for the other PMU events. This
+> > solution was proposed by Arnaldo.
+> >
+> > Two minor changes have been added to help with the error message and
+> > to work around issues occurring with "perf stat metrics (shadow stat)
+> > test".
+> >
+> > The patches have only been tested on my x86 non-hybrid laptop.
+>
+> Hi,
+> After applying this patch series,we observed a regression while running t=
+he perf test suite on powerpc system. Specifically, test case for "Check br=
+anch stack sampling" now fails.
+> Upon investigation, identified that patch "perf record: Skip don't fail f=
+or events that don't open"  is causing the breakage. This test case uses br=
+anch-filter as "save_type" and it is supposed to be skipped in powerpc.
+> Snippet of code:
+>
+> skip the test if the hardware doesn't support branch stack sampling
+>  and if the architecture doesn't support filter types: any,save_type,u
+> if ! perf record -o- --no-buildid --branch-filter any,save_type,u -- true=
+ > /dev/null 2>&1 ; then
+>     echo "skip: system doesn't support filter types: any,save_type,u"
+>     exit 2
+> fi
+>
+> Before applying the patch, running the command:
+> ./perf record -o- --no-buildid --branch-filter any,save_type,u -- true
+> cycles:PH: PMU Hardware or event type doesn't support branch stack sampli=
+ng.
+> # echo $?
+> 255
+>
+> would return 255 (indicating not supported) with the error.
+> After applying the patch, the same command now returns 0, which is incorr=
+ect. The output is as follows:
+>
+> # ./perf record -o- --no-buildid --branch-filter any,save_type,u -- true
+> Lowering default frequency rate from 4000 to 2000.
+> Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+> Error:
+> Failure to open event 'cycles:PH' on PMU 'cpu' which will be removed.
+> cycles:PH: PMU Hardware or event type doesn't support branch stack sampli=
+ng.
+> libperf: Miscounted nr_mmaps 0 vs 8
+> WARNING: No sample_id_all support, falling back to unordered processing
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.008 MB - ]
+> # echo $?
+> 0
+>
+> Also there were some junk result in the output which I have skipped in ab=
+ove result. The patch appears to alter behavior such that the unsupported o=
+r failed event open still proceeds and leading to this.
+>
+> Ian ,
+> Is this behaviour expected ?
 
-Licensing is fun ;)
+Thanks Aditya, sorry for my slow response! Breaking tests isn't
+expected (thanks for the report!), warning when encountering an event
+that won't be recorded is expected. James Clark mentioned that we
+should probably make perf record fail if it has no events to record,
+my issue there was that the dummy event (for sideband things like mmap
+events) is always opened and I was worried about turning "perf record
+-e dummy .." into a failure. We should be able to determine if the
+dummy event was created by the tool or specified the user, so I should
+look to add that to the patch series and it should address this test
+regression.
 
-> 
-> > I would
-> > guess something similar could be done with llvm-objdump but I am less
-> > familiar with that. I don't know if that's a good path to go down
-> > though.
-> 
-> In the past I perceived there was hostility toward LLVM from the Linux
-> kernel community. I guess GPL was considered the special sauce as to
-> why Linux won and the BSDs hadn't, so the preference was to favor a
-> compiler that used the same license. I don't think that's true any
-> more and I think there's a lot of sense in using LLVM's libraries
-> rather than reinventing them in the perf tool, or using perhaps less
-> orthodox sources like libcapstone. I'm not a fan of the text output
-> processing stuff so getting rid of objdump and llvm-objdump support
-> would be good imo.
-
-Yeah I agree. This test case did end up being interesting though as it
-unconvered this change in behavior of objdump on riscv, but that's
-tangential to the purpose of this test case. We need this patch on riscv
-to stop this test from failing, but it is also reasonable to approach
-this differently and not use objdump at all.
-
-> 
-> Another area where I think we could lose a lot of code baggage is with
-> libunwind, as BPF support requires libelf which brings with it
-> libdwarves which when present means we don't use libunwind. I've heard
-> reports that libdwarves is slower, but I'm sure we can add caches to
-> speed it up which would likely benefit a range of people. I was kind
-> of hoping with all that deleted we may be able to get rid of the
-> majority of the arch directory, but the syscalltbl work is adding to
-> that directory :-)
-
-Yeah... The syscalltbl work will add some extra parts to the arch
-directory. A lot of the additions are generic and a chunk of
-arch-specific ifdefs were able to be removed, but we still have the
-"problem" that not every architecture uses the shared syscall table and
-supports different syscalls.
-
-- Charlie
-
-> 
-> Thanks,
-> Ian
+Thanks!
+Ian
