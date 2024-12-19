@@ -1,159 +1,260 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D01A38F9
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 17:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E112435948;
+	Thu, 19 Dec 2024 18:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734628853; cv=none; b=MqhdjTruYDjLFIPXru7s43S0hhBlVjuvjNLD+G3v31APkfWMBQul+taUqTmlTzbCObQe7rXRz59HEDuheM+tYsqjNF1tc34IPdBKsQTFPV7z3wblmfxF9SwuzDA+uszCl6uDELqckw/+FUEAkHg79f5Uq2xAXWwG4QvCc7ylpEs=
+	t=1734633242; cv=none; b=lP36E+9+zrB9lXNRpHhrNvdxjgCCNw0PRXgidlRhLOUQej5oFQqRLlO9W1LU6PckbdQATJMZ6iBnB7dGidglX965xwJMFx0FTbe/uC9BAz4foYIX37BVCgAaRJWGUNHzgcVZ12b9NoKAPLwru4OjE3wmg2oHU0aIGuqiHkNHuqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734628853; c=relaxed/simple;
-	bh=7HAnDvaOJzeCFEh0r+1gzgJRV7lxBVpdVn3iI9CEJE8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZL2lZIOSRU7zamhq7fEi6ZsJQvJWOGnZtUbxWu2Gy7erhYih1uTJkKFpXOOvaNt9e8oGHBlBVNOtveQr+y3IZLrYBgnLusrDqEKAYJUSyqfUSK3+ZzYxwy4wirX3G0pu7yVCCu8JWFbnU53jn4AQ/GH3hWrP1G6GvUY3WbWqNI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VeqG6sC8; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734633242; c=relaxed/simple;
+	bh=Uuu5Fj97LtLZwaiqztN4Om/PRbSY7pifs5mL0yqLYI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AWHouKVyUvCqE8BuBo3kDZESGMO+S4IvOkVleGOjuG0uyxGLc+fhbUM/HW35sQCwUWljZRVnTl8XEB/iO6nvpN76AF1fPTPZKkW4GYvC77c2mALwpsURO/U1hV1duQsizK6Hrl52K8qS5Rrlo5Dzoo6DhOAnoQJtmhTjoBaKR9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndfGdQEb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VeqG6sC8"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so197605ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 09:20:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734628851; x=1735233651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ff+DryC3F8b2bbubAwGiNOQv5h7iNKcJnTsSYM4t/00=;
-        b=VeqG6sC8CU7BFO3PENOIUMQDJqOOXzpfoZFU1l3icrQdYGba+sTOvZO63f+sMDZhOm
-         6Tz5ZjA+K+IOGgNijlzVqxiljBLul5BLD48vIE/VnRGjxp5qSSW+BWnN0mbyrtQD/zqe
-         19alQiSOd9m18oTRrbGCi7IGzTp/i791mNrGsxnMvwJxoqZPwgg/0SAGmzMwM2YDPZzx
-         Luem4KRDu77FojBJBhQgwKC4z5aKVm9DsV7P6ZGBNYr2bYooKDUStsTcLJf7sbqUrQkN
-         /Z7HKaKlpjhk6PPenn4XvuMlrFuHkN1HFT4+iIBxaYCZUxsQcibM3ikhqTo7+RQKQA6o
-         SZ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734628851; x=1735233651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ff+DryC3F8b2bbubAwGiNOQv5h7iNKcJnTsSYM4t/00=;
-        b=KIszp21+0l6eqglBtKOHaFYKWvNeHvcKu4KqnU65Oivv4gq44/XM6UH1hcOu1RKY9L
-         Y/AqerX63805WQq1tTZQyvEpr1kkqXc7nM1lG4z2DuclCIsNvxjrKmnz2fgGUrwQr7uV
-         luSllSEQ11bsKV8qpdnXQXhTd7iKh+ZUNW5fGMViOeaXq3CmTHjjUX3A4TMDHZFDQvp0
-         0JXSV6KDZQTMBrV/xMkFPEa0alSoRynLHxt7Mvv2wwJ03z+3RL8PsB4etpTBAtGnyv5D
-         5gy6b5y0ntN+6KRZopztt/o4Yadp7rDr38fj5J3DFin60Bvv80vbD2oEY9c09dlATtVt
-         P7GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj1h3heqNeX2Mx/cParzzYrf8TKraDRrGV+AqsElOWH23JNChZU3Ld2W923N6ZoF6Thu741NFhU2yAIVyK249i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9CvsRW7ailcuwglQYlsrmh5PbwmwS7QxwGu+mm/NqjHQe9NHX
-	/iSW/iMXrbcF9KIzLO4UCOYHUwsYNhXF5vQtaTQUBej92sfBmrBYduYw98s1Ze6o++xSSW5JWn2
-	0JRSp/gNQ8vSg8xqjbTRkyjs7lIsTCGSQnLDO
-X-Gm-Gg: ASbGncsUM3jiYMDCRvhYpa52CDZkWxE//O+0K0OJhztnK6bD8qg73p1OqkhZcuydU6E
-	SQKzsf5GKbgY4sU1cCgCmJelD+ELXyV5cHfOQumo=
-X-Google-Smtp-Source: AGHT+IHqAlKRi+zPxPn3WrKiXg7xM0dTLcxXA6OmzRrDqhsnWQac1LZwxwEdESjSzmTJSaN/TYKZDNeTx1u1WOQED0U=
-X-Received: by 2002:a05:6e02:3cc7:b0:3a7:6126:ca3 with SMTP id
- e9e14a558f8ab-3c05c1aa61bmr4392535ab.24.1734628850727; Thu, 19 Dec 2024
- 09:20:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndfGdQEb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27949C4CECE;
+	Thu, 19 Dec 2024 18:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734633241;
+	bh=Uuu5Fj97LtLZwaiqztN4Om/PRbSY7pifs5mL0yqLYI4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ndfGdQEbBNRiIt9ca7Fmoytl0TvLOxpj46lrad5pqhVDRq8y9iIy/hAXOESFTxoON
+	 Lkhx7FbA8FiPjGcUJImsVPHJn8McpCP5A0kwIDOdX8rqX2PKH3FbDNMp4Srzocq2Xu
+	 Jmhmec2KyGSaiUJxIm7qsM3nuUuA2rQc+E+tMIFV2/xjl8Le8LjxI4pEPmmqBAQHop
+	 lFuGvy2h2xm3mACpv6OZdaqTvdzJt3OHutrRoS4N3P+phewRlcCabOE+ZjF2FwUgpB
+	 pGJzDU7b6PygLyZ795fkPCkBze4VDLHzhvQKsefkW4Wf6WU3lRi5bqy9evYM6ODVjO
+	 nEy4Bb1T/o4Lw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [PATCH v2] perf trace: Add --syscall-sample option
+Date: Thu, 19 Dec 2024 10:34:00 -0800
+Message-ID: <20241219183400.350308-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241216232459.427642-1-irogers@google.com> <20241216232459.427642-2-irogers@google.com>
- <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org> <CAP-5=fVeW+XARtWtdR=XX47w-ZznKiGdhxDBy=Le_QTS=R6SQA@mail.gmail.com>
- <Z2Ov2Gy99KOtctPT@google.com>
-In-Reply-To: <Z2Ov2Gy99KOtctPT@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 19 Dec 2024 09:20:39 -0800
-Message-ID: <CAP-5=fUUUZcE8D3q3iNkrym=9g6UQxgfDihC24+1J879fj4kww@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] perf cpumap: If the die_id is missing use socket/physical_package_id
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, Yanteng Si <siyanteng@loongson.cn>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 18, 2024 at 9:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Dec 18, 2024 at 09:42:27AM -0800, Ian Rogers wrote:
-> > On Wed, Dec 18, 2024 at 4:04=E2=80=AFAM James Clark <james.clark@linaro=
-.org> wrote:
-> > >
-> > >
-> > >
-> > > On 16/12/2024 11:24 pm, Ian Rogers wrote:
-> > > > An error value for a missing die_id may be written into things like
-> > > > the cpu_topology_map. As the topology needs to be fully written out=
-,
-> > > > including the die_id, to allow perf.data file features to be aligne=
-d
-> > > > we can't allow error values to be written out. Instead base the
-> > > > missing die_id value off of the socket/physical_package_id assuming
-> > > > they correlate 1:1.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >   tools/perf/util/cpumap.c | 3 ++-
-> > > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> > > > index 27094211edd8..d362272f8466 100644
-> > > > --- a/tools/perf/util/cpumap.c
-> > > > +++ b/tools/perf/util/cpumap.c
-> > > > @@ -283,7 +283,8 @@ int cpu__get_die_id(struct perf_cpu cpu)
-> > > >   {
-> > > >       int value, ret =3D cpu__get_topology_int(cpu.cpu, "die_id", &=
-value);
-> > > >
-> > > > -     return ret ?: value;
-> > > > +        /* If die_id is missing fallback on using the socket/physi=
-cal_package_id. */
-> > > > +     return ret || value < 0 ? cpu__get_socket_id(cpu) : value;
-> > > >   }
-> > > >
-> > > >   struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *da=
-ta)
-> > >
-> > > Hi Ian,
-> > >
-> > > I sent a fix for the same or a similar problem here [1]. For this one
-> > > I'm not sure why we'd want to use the socket ID for die when it's alw=
-ays
-> > > been 0 for not present. I wonder if this change is mingling two thing=
-s:
-> > > fixing the negative error value appearing and replacing die with sock=
-et ID.
-> > >
-> > > Personally I would prefer to keep the 0 to fix the error value, that =
-way
-> > > nobody gets surprised by the change.
-> > >
-> > > Also it looks like cpu__get_cluster_id() can suffer from the same iss=
-ue,
-> > > and if we do it this way we should drop these as they aren't valid an=
-ymore:
-> > >
-> > >         /* There is no die_id on legacy system. */
-> > >         if (die < 0)
-> > >                 die =3D 0;
-> >
-> > I think this breaks the assumption here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/expr.c?h=3Dperf-tools-next#n244
->
-> Hmm.. I'm not sure how it worked before.  The code is already there and
-> it just changed the condition from =3D=3D -1 to < 0, right?
+This option is to implement the event sampling for system calls in BPF.
+When it's used, it picks up a syscall in the given sampling period and
+discard others.  The period is in msec as it shows the time in msec.
 
-You'd need to be testing on a multi-socket machine to see the issue.
-If you had say a dual socket Ampere chip and the die_id was missing,
-does it make sense for there to be two sockets/packages but only 1
-die? I think it is best we assume 1 die per socket when the die_id is
-missing, and to some crippled extent (because of the s390 workaround)
-the expr test is doing the sanity check.
+  # perf trace -C 0 --syscall-sample 100 sleep 1
+           ? (         ): fleetspeakd/1828559  ... [continued]: futex())                                            = -1 ETIMEDOUT (Connection timed out)
+       0.050 (100.247 ms): gnome-shell/572531 recvmsg(fd: 10<socket:[3355761]>, msg: 0x7ffef8b39d20)                = 40
+     100.357 (100.149 ms): pipewire-pulse/572245 read(fd: 5<anon_inode:[eventfd]>, buf: 0x7ffc0b9dc8f0, count: 8)      = 8
+     200.553 (100.268 ms): NetworkManager/3424 epoll_wait(epfd: 19<anon_inode:[eventpoll]>, events: 0x5607b85bb880, maxevents: 6) = 0
+     300.876 (         ): mon/4932 poll(ufds: 0x7fa392784df0, nfds: 1, timeout_msecs: 100)            ...
+     400.901 ( 0.025 ms): TaskCon~ller #/620145 futex(uaddr: 0x7f3fc596fa00, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+     300.876 (100.123 ms): mon/4932  ... [continued]: poll())                                             = 0 (Timeout)
+     500.901 ( 0.012 ms): evdefer/2/2335122 futex(uaddr: 0x5640baac5198, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+     602.701 ( 0.017 ms): Compositor/1992200 futex(uaddr: 0x7f1a51dfdd40, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+     705.589 ( 0.017 ms): JS Watchdog/947933 futex(uaddr: 0x7f4cac1d4240, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+     812.667 ( 0.027 ms): fix/1985151 futex(uaddr: 0xc0008f7148, op: WAKE|PRIVATE_FLAG, val: 1)             = 1
+     912.807 ( 0.017 ms): Xorg/572315 setitimer(value: 0x7ffc375d6ba0)                                      = 0
 
-Thanks,
-Ian
+The timestamp is kept in a per-cpu array and the allowed task is saved
+in a BPF hash map.  For non-BPF use cases, it won't work so an error
+message would be displayed.
+
+  # perf trace --syscall-sample 100 sleep 1
+  ERROR: --syscall-sample works only for BPF
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2 changes)
+* rename to --syscall-sample and update the description
+* print error when BPF is not available  (Arnaldo)
+* rename to sample_period_ns  (Ian)
+
+ tools/perf/Documentation/perf-trace.txt       |  6 ++
+ tools/perf/builtin-trace.c                    | 11 +++
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 67 ++++++++++++++++++-
+ 3 files changed, 82 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index 6e0cc50bbc13fc7f..e8a38ecc5eddab1c 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -241,6 +241,12 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	printing using the existing 'perf trace' syscall arg beautifiers to map integer
+ 	arguments to strings (pid to comm, syscall id to syscall name, etc).
+ 
++--syscall-sample=<period>::
++	Enable sampling of system calls with a given period in msec.
++	The sampling frequency would be 1 / period, in other words,
++	it will trace a system call only after the given period of
++	time is passed.  The sampling period is tracked per CPU.
++
+ 
+ PAGEFAULTS
+ ----------
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6a1a128fe645014d..e70e634fbfaf33f5 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -185,6 +185,7 @@ struct trace {
+ 	} stats;
+ 	unsigned int		max_stack;
+ 	unsigned int		min_stack;
++	unsigned long		sample_period_ms;
+ 	int			raw_augmented_syscalls_args_size;
+ 	bool			raw_augmented_syscalls;
+ 	bool			fd_path_disabled;
+@@ -5186,6 +5187,7 @@ int cmd_trace(int argc, const char **argv)
+ 		     "start"),
+ 	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
+ 		       "to customized ones"),
++	OPT_ULONG(0, "syscall-sample", &trace.sample_period_ms, "syscall sampling period in ms"),
+ 	OPTS_EVSWITCH(&trace.evswitch),
+ 	OPT_END()
+ 	};
+@@ -5293,6 +5295,9 @@ int cmd_trace(int argc, const char **argv)
+ 				bpf_program__set_autoattach(prog, /*autoattach=*/false);
+ 		}
+ 
++		if (trace.sample_period_ms)
++			trace.skel->rodata->sample_period_ns = trace.sample_period_ms * NSEC_PER_MSEC;
++
+ 		err = augmented_raw_syscalls_bpf__load(trace.skel);
+ 
+ 		if (err < 0) {
+@@ -5313,6 +5318,12 @@ int cmd_trace(int argc, const char **argv)
+ 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
+ 	assert(evsel__name_is(trace.syscalls.events.bpf_output, "__augmented_syscalls__"));
+ skip_augmentation:
++#else
++	if (trace.sample_period_ms) {
++		pr_err("ERROR: --syscall-sample works only for BPF\n");
++		err = -EINVAL;
++		goto out;
++	}
+ #endif
+ 	err = -1;
+ 
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 4a62ed593e84edf8..7027bec55298191d 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -113,6 +113,22 @@ struct pids_filtered {
+ 	__uint(max_entries, 64);
+ } pids_filtered SEC(".maps");
+ 
++struct sample_timestamp {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__type(key, int);
++	__type(value, __u64);
++	__uint(max_entries, 1);
++} sample_timestamp SEC(".maps");
++
++struct sample_filtered {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__type(key, pid_t);
++	__type(value, bool);
++	__uint(max_entries, MAX_CPUS);
++} sample_filtered SEC(".maps");
++
++const volatile __u64 sample_period_ns;
++
+ struct augmented_args_payload {
+ 	struct syscall_enter_args args;
+ 	struct augmented_arg arg, arg2; // We have to reserve space for two arguments (rename, etc)
+@@ -428,6 +444,44 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
+ 	return bpf_map_lookup_elem(pids, &pid) != NULL;
+ }
+ 
++static bool sample_filter__allow_enter(__u64 timestamp, pid_t pid)
++{
++	int idx = 0;
++	__u64 *prev_ts;
++	bool ok = true;
++
++	/* default behavior */
++	if (sample_period_ns == 0)
++		return true;
++
++	prev_ts = bpf_map_lookup_elem(&sample_timestamp, &idx);
++
++	if (prev_ts) {
++		if ((*prev_ts + sample_period_ns) > timestamp)
++			return false;
++		*prev_ts = timestamp;
++	} else {
++		bpf_map_update_elem(&sample_timestamp, &idx, &timestamp, BPF_ANY);
++	}
++
++	bpf_map_update_elem(&sample_filtered, &pid, &ok, BPF_ANY);
++
++	return true;
++}
++
++static bool sample_filter__allow_exit(pid_t pid)
++{
++	/* default behavior */
++	if (sample_period_ns == 0)
++		return true;
++
++	if (!bpf_map_lookup_elem(&sample_filtered, &pid))
++		return false;
++
++	bpf_map_delete_elem(&sample_filtered, &pid);
++	return true;
++}
++
+ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+ {
+ 	bool augmented, do_output = false;
+@@ -526,7 +580,9 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+ SEC("tp/raw_syscalls/sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
++	pid_t pid = getpid();
+ 	struct augmented_args_payload *augmented_args;
++
+ 	/*
+ 	 * We start len, the amount of data that will be in the perf ring
+ 	 * buffer, if this is not filtered out by one of pid_filter__has(),
+@@ -537,7 +593,10 @@ int sys_enter(struct syscall_enter_args *args)
+ 	 * initial, non-augmented raw_syscalls:sys_enter payload.
+ 	 */
+ 
+-	if (pid_filter__has(&pids_filtered, getpid()))
++	if (pid_filter__has(&pids_filtered, pid))
++		return 0;
++
++	if (!sample_filter__allow_enter(bpf_ktime_get_ns(), pid))
+ 		return 0;
+ 
+ 	augmented_args = augmented_args_payload();
+@@ -561,9 +620,13 @@ int sys_enter(struct syscall_enter_args *args)
+ SEC("tp/raw_syscalls/sys_exit")
+ int sys_exit(struct syscall_exit_args *args)
+ {
++	pid_t pid = getpid();
+ 	struct syscall_exit_args exit_args;
+ 
+-	if (pid_filter__has(&pids_filtered, getpid()))
++	if (pid_filter__has(&pids_filtered, pid))
++		return 0;
++
++	if (!sample_filter__allow_exit(pid))
+ 		return 0;
+ 
+ 	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+-- 
+2.47.1.613.gc27f4b7a9f-goog
+
