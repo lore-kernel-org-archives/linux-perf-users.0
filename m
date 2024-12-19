@@ -1,260 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E112435948;
-	Thu, 19 Dec 2024 18:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB021A7255;
+	Thu, 19 Dec 2024 21:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734633242; cv=none; b=lP36E+9+zrB9lXNRpHhrNvdxjgCCNw0PRXgidlRhLOUQej5oFQqRLlO9W1LU6PckbdQATJMZ6iBnB7dGidglX965xwJMFx0FTbe/uC9BAz4foYIX37BVCgAaRJWGUNHzgcVZ12b9NoKAPLwru4OjE3wmg2oHU0aIGuqiHkNHuqw=
+	t=1734643068; cv=none; b=GZiywSzMvdJq7eEi25/zD2qVXg2nRsgsuc5Qq142OiQ522gsQJ8YjdwAZdX3E3/MhFtJ0rJFxjNmJR0b4bWj6j4XeKfYxoSJPSSd522vj5Pu9uZpmoaPGWp/KvzEE0GfWq55sNCXUkaNGgaOb13FRZy0T7QIbuhQBCNx8BoRWgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734633242; c=relaxed/simple;
-	bh=Uuu5Fj97LtLZwaiqztN4Om/PRbSY7pifs5mL0yqLYI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AWHouKVyUvCqE8BuBo3kDZESGMO+S4IvOkVleGOjuG0uyxGLc+fhbUM/HW35sQCwUWljZRVnTl8XEB/iO6nvpN76AF1fPTPZKkW4GYvC77c2mALwpsURO/U1hV1duQsizK6Hrl52K8qS5Rrlo5Dzoo6DhOAnoQJtmhTjoBaKR9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndfGdQEb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734643068; c=relaxed/simple;
+	bh=Xguiim+qILjVCBoVe+8bY4ysCx9+X2qr0I572pnLh7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HOAjecv+1BCimS2R56oFDMA7A+1qYzpvhcqNB9aH/hViEjtG/jG2cmFk0eh2cs0AXCDpeA2eLOY3qBPZQq5DtIgy39wRLXMYIpLyGwbbbyx2p9faWCndmsLBGeUcK2LS3K6ucpfzc5Iet/sEqmIgTjjCiSUozX2YmwELvsl/G7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYVE9t/A; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndfGdQEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27949C4CECE;
-	Thu, 19 Dec 2024 18:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734633241;
-	bh=Uuu5Fj97LtLZwaiqztN4Om/PRbSY7pifs5mL0yqLYI4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ndfGdQEbBNRiIt9ca7Fmoytl0TvLOxpj46lrad5pqhVDRq8y9iIy/hAXOESFTxoON
-	 Lkhx7FbA8FiPjGcUJImsVPHJn8McpCP5A0kwIDOdX8rqX2PKH3FbDNMp4Srzocq2Xu
-	 Jmhmec2KyGSaiUJxIm7qsM3nuUuA2rQc+E+tMIFV2/xjl8Le8LjxI4pEPmmqBAQHop
-	 lFuGvy2h2xm3mACpv6OZdaqTvdzJt3OHutrRoS4N3P+phewRlcCabOE+ZjF2FwUgpB
-	 pGJzDU7b6PygLyZ795fkPCkBze4VDLHzhvQKsefkW4Wf6WU3lRi5bqy9evYM6ODVjO
-	 nEy4Bb1T/o4Lw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: [PATCH v2] perf trace: Add --syscall-sample option
-Date: Thu, 19 Dec 2024 10:34:00 -0800
-Message-ID: <20241219183400.350308-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYVE9t/A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734643067; x=1766179067;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Xguiim+qILjVCBoVe+8bY4ysCx9+X2qr0I572pnLh7c=;
+  b=fYVE9t/A2vJ9OhHgfpU74fyLCE3bJyFcz50ge3dDU2dpNS8XtTEuNqYO
+   Eqyl2Fi0me3mTG2KIwNe3wygWyMTdjQsZzIRObz5iHpi6hkWPgUki1GYW
+   2+QukbDNCgXHfeS57IgYOgOE6HCqHqJJ4weUmmSklzkYVRrJzJGyNEqD1
+   KwpxfEAXeMPxQkvlnkS7SobGMjlmVqHBYWiQp3KT1HpDMafKJhbmu4JZA
+   cuYlYeVk0nnY+ouE5bZYdUeMjWm2D4gYB8aM9EDIgFL5Fu2/o/lnPczgl
+   BeeY3zjXgLLm4Ht0pbYCSfWP54x7M0XQh6uJBUgG3gze/hYgNpW3TMu86
+   w==;
+X-CSE-ConnectionGUID: Mt26tJGHQkec5ygUVrLHnQ==
+X-CSE-MsgGUID: 20zOACnzRDyXyVNoOu1B0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11291"; a="57652142"
+X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
+   d="scan'208";a="57652142"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 13:17:47 -0800
+X-CSE-ConnectionGUID: RauDh5uKSuuwqQTb6+sHXQ==
+X-CSE-MsgGUID: GgmwH8RYQ9KOiVL+mPM19A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
+   d="scan'208";a="129141533"
+Received: from bswapp-mobl.amr.corp.intel.com (HELO [10.124.12.64]) ([10.124.12.64])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 13:17:45 -0800
+Message-ID: <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
+Date: Thu, 19 Dec 2024 13:17:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf: map pages in advance
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
+ Yi Lai <yi1.lai@linux.intel.com>
+References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This option is to implement the event sampling for system calls in BPF.
-When it's used, it picks up a syscall in the given sampling period and
-discard others.  The period is in msec as it shows the time in msec.
 
-  # perf trace -C 0 --syscall-sample 100 sleep 1
-           ? (         ): fleetspeakd/1828559  ... [continued]: futex())                                            = -1 ETIMEDOUT (Connection timed out)
-       0.050 (100.247 ms): gnome-shell/572531 recvmsg(fd: 10<socket:[3355761]>, msg: 0x7ffef8b39d20)                = 40
-     100.357 (100.149 ms): pipewire-pulse/572245 read(fd: 5<anon_inode:[eventfd]>, buf: 0x7ffc0b9dc8f0, count: 8)      = 8
-     200.553 (100.268 ms): NetworkManager/3424 epoll_wait(epfd: 19<anon_inode:[eventpoll]>, events: 0x5607b85bb880, maxevents: 6) = 0
-     300.876 (         ): mon/4932 poll(ufds: 0x7fa392784df0, nfds: 1, timeout_msecs: 100)            ...
-     400.901 ( 0.025 ms): TaskCon~ller #/620145 futex(uaddr: 0x7f3fc596fa00, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-     300.876 (100.123 ms): mon/4932  ... [continued]: poll())                                             = 0 (Timeout)
-     500.901 ( 0.012 ms): evdefer/2/2335122 futex(uaddr: 0x5640baac5198, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-     602.701 ( 0.017 ms): Compositor/1992200 futex(uaddr: 0x7f1a51dfdd40, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-     705.589 ( 0.017 ms): JS Watchdog/947933 futex(uaddr: 0x7f4cac1d4240, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-     812.667 ( 0.027 ms): fix/1985151 futex(uaddr: 0xc0008f7148, op: WAKE|PRIVATE_FLAG, val: 1)             = 1
-     912.807 ( 0.017 ms): Xorg/572315 setitimer(value: 0x7ffc375d6ba0)                                      = 0
 
-The timestamp is kept in a per-cpu array and the allowed task is saved
-in a BPF hash map.  For non-BPF use cases, it won't work so an error
-message would be displayed.
+On 12/5/2024 12:29 AM, Lorenzo Stoakes wrote:
+> We are adjusting struct page to make it smaller, removing unneeded fields
+> which correctly belong to struct folio.
+> 
+> Two of those fields are page->index and page->mapping. Perf is currently
+> making use of both of these. This is unnecessary. This patch eliminates
+> this.
+> 
+> Perf establishes its own internally controlled memory-mapped pages using
+> vm_ops hooks. The first page in the mapping is the read/write user control
+> page, and the rest of the mapping consists of read-only pages.
+> 
+> The VMA is backed by kernel memory either from the buddy allocator or
+> vmalloc depending on configuration. It is intended to be mapped read/write,
+> but because it has a page_mkwrite() hook, vma_wants_writenotify() indicates
+> that it should be mapped read-only.
+> 
+> When a write fault occurs, the provided page_mkwrite() hook,
+> perf_mmap_fault() (doing double duty handing faults as well) uses the
+> vmf->pgoff field to determine if this is the first page, allowing for the
+> desired read/write first page, read-only rest mapping.
+> 
+> For this to work the implementation has to carefully work around faulting
+> logic. When a page is write-faulted, the fault() hook is called first, then
+> its page_mkwrite() hook is called (to allow for dirty tracking in file
+> systems).
+> 
+> On fault we set the folio's mapping in perf_mmap_fault(), this is because
+> when do_page_mkwrite() is subsequently invoked, it treats a missing mapping
+> as an indicator that the fault should be retried.
+> 
+> We also set the folio's index so, given the folio is being treated as faux
+> user memory, it correctly references its offset within the VMA.
+> 
+> This explains why the mapping and index fields are used - but it's not
+> necessary.
+> 
+> We preallocate pages when perf_mmap() is called for the first time via
+> rb_alloc(), and further allocate auxiliary pages via rb_aux_alloc() as
+> needed if the mapping requires it.
+> 
+> This allocation is done in the f_ops->mmap() hook provided in perf_mmap(),
+> and so we can instead simply map all the memory right away here - there's
+> no point in handling (read) page faults when we don't demand page nor need
+> to be notified about them (perf does not).
+> 
+> This patch therefore changes this logic to map everything when the mmap()
+> hook is called, establishing a PFN map. It implements vm_ops->pfn_mkwrite()
+> to provide the required read/write vs. read-only behaviour, which does not
+> require the previously implemented workarounds.
+> 
+> While it is not ideal to use a VM_PFNMAP here, doing anything else will
+> result in the page_mkwrite() hook need to be provided, which requires the
+> same page->mapping hack this patch seeks to undo.
+> 
+> It will also result in the pages being treated as folios and placed on the
+> rmap, which really does not make sense for these mappings.
+> 
+> Semantically it makes sense to establish this as some kind of special
+> mapping, as the pages are managed by perf and are not strictly user pages,
+> but currently the only means by which we can do so functionally while
+> maintaining the required R/W and R/O behaviour is a PFN map.
+> 
+> There should be no change to actual functionality as a result of this
+> change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-  # perf trace --syscall-sample 100 sleep 1
-  ERROR: --syscall-sample works only for BPF
+With this patch, it seems perf tool has some problems in capturing the
+kernel data with Intel PT.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2 changes)
-* rename to --syscall-sample and update the description
-* print error when BPF is not available  (Arnaldo)
-* rename to sample_period_ns  (Ian)
+Running the following commands, the size of perf.data is very small, and
+perf script can't find any valid records.
 
- tools/perf/Documentation/perf-trace.txt       |  6 ++
- tools/perf/builtin-trace.c                    | 11 +++
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 67 ++++++++++++++++++-
- 3 files changed, 82 insertions(+), 2 deletions(-)
+perf record -e intel_pt//u -- /bin/ls
+perf script --insn-trace
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index 6e0cc50bbc13fc7f..e8a38ecc5eddab1c 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -241,6 +241,12 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	printing using the existing 'perf trace' syscall arg beautifiers to map integer
- 	arguments to strings (pid to comm, syscall id to syscall name, etc).
- 
-+--syscall-sample=<period>::
-+	Enable sampling of system calls with a given period in msec.
-+	The sampling frequency would be 1 / period, in other words,
-+	it will trace a system call only after the given period of
-+	time is passed.  The sampling period is tracked per CPU.
-+
- 
- PAGEFAULTS
- ----------
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6a1a128fe645014d..e70e634fbfaf33f5 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -185,6 +185,7 @@ struct trace {
- 	} stats;
- 	unsigned int		max_stack;
- 	unsigned int		min_stack;
-+	unsigned long		sample_period_ms;
- 	int			raw_augmented_syscalls_args_size;
- 	bool			raw_augmented_syscalls;
- 	bool			fd_path_disabled;
-@@ -5186,6 +5187,7 @@ int cmd_trace(int argc, const char **argv)
- 		     "start"),
- 	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
- 		       "to customized ones"),
-+	OPT_ULONG(0, "syscall-sample", &trace.sample_period_ms, "syscall sampling period in ms"),
- 	OPTS_EVSWITCH(&trace.evswitch),
- 	OPT_END()
- 	};
-@@ -5293,6 +5295,9 @@ int cmd_trace(int argc, const char **argv)
- 				bpf_program__set_autoattach(prog, /*autoattach=*/false);
- 		}
- 
-+		if (trace.sample_period_ms)
-+			trace.skel->rodata->sample_period_ns = trace.sample_period_ms * NSEC_PER_MSEC;
-+
- 		err = augmented_raw_syscalls_bpf__load(trace.skel);
- 
- 		if (err < 0) {
-@@ -5313,6 +5318,12 @@ int cmd_trace(int argc, const char **argv)
- 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
- 	assert(evsel__name_is(trace.syscalls.events.bpf_output, "__augmented_syscalls__"));
- skip_augmentation:
-+#else
-+	if (trace.sample_period_ms) {
-+		pr_err("ERROR: --syscall-sample works only for BPF\n");
-+		err = -EINVAL;
-+		goto out;
-+	}
- #endif
- 	err = -1;
- 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index 4a62ed593e84edf8..7027bec55298191d 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -113,6 +113,22 @@ struct pids_filtered {
- 	__uint(max_entries, 64);
- } pids_filtered SEC(".maps");
- 
-+struct sample_timestamp {
-+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-+	__type(key, int);
-+	__type(value, __u64);
-+	__uint(max_entries, 1);
-+} sample_timestamp SEC(".maps");
-+
-+struct sample_filtered {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__type(key, pid_t);
-+	__type(value, bool);
-+	__uint(max_entries, MAX_CPUS);
-+} sample_filtered SEC(".maps");
-+
-+const volatile __u64 sample_period_ns;
-+
- struct augmented_args_payload {
- 	struct syscall_enter_args args;
- 	struct augmented_arg arg, arg2; // We have to reserve space for two arguments (rename, etc)
-@@ -428,6 +444,44 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
- 	return bpf_map_lookup_elem(pids, &pid) != NULL;
- }
- 
-+static bool sample_filter__allow_enter(__u64 timestamp, pid_t pid)
-+{
-+	int idx = 0;
-+	__u64 *prev_ts;
-+	bool ok = true;
-+
-+	/* default behavior */
-+	if (sample_period_ns == 0)
-+		return true;
-+
-+	prev_ts = bpf_map_lookup_elem(&sample_timestamp, &idx);
-+
-+	if (prev_ts) {
-+		if ((*prev_ts + sample_period_ns) > timestamp)
-+			return false;
-+		*prev_ts = timestamp;
-+	} else {
-+		bpf_map_update_elem(&sample_timestamp, &idx, &timestamp, BPF_ANY);
-+	}
-+
-+	bpf_map_update_elem(&sample_filtered, &pid, &ok, BPF_ANY);
-+
-+	return true;
-+}
-+
-+static bool sample_filter__allow_exit(pid_t pid)
-+{
-+	/* default behavior */
-+	if (sample_period_ns == 0)
-+		return true;
-+
-+	if (!bpf_map_lookup_elem(&sample_filtered, &pid))
-+		return false;
-+
-+	bpf_map_delete_elem(&sample_filtered, &pid);
-+	return true;
-+}
-+
- static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- {
- 	bool augmented, do_output = false;
-@@ -526,7 +580,9 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- SEC("tp/raw_syscalls/sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
-+	pid_t pid = getpid();
- 	struct augmented_args_payload *augmented_args;
-+
- 	/*
- 	 * We start len, the amount of data that will be in the perf ring
- 	 * buffer, if this is not filtered out by one of pid_filter__has(),
-@@ -537,7 +593,10 @@ int sys_enter(struct syscall_enter_args *args)
- 	 * initial, non-augmented raw_syscalls:sys_enter payload.
- 	 */
- 
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (pid_filter__has(&pids_filtered, pid))
-+		return 0;
-+
-+	if (!sample_filter__allow_enter(bpf_ktime_get_ns(), pid))
- 		return 0;
- 
- 	augmented_args = augmented_args_payload();
-@@ -561,9 +620,13 @@ int sys_enter(struct syscall_enter_args *args)
- SEC("tp/raw_syscalls/sys_exit")
- int sys_exit(struct syscall_exit_args *args)
- {
-+	pid_t pid = getpid();
- 	struct syscall_exit_args exit_args;
- 
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (pid_filter__has(&pids_filtered, pid))
-+		return 0;
-+
-+	if (!sample_filter__allow_exit(pid))
- 		return 0;
- 
- 	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
--- 
-2.47.1.613.gc27f4b7a9f-goog
 
