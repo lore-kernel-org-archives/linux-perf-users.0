@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320732AE69;
-	Thu, 19 Dec 2024 00:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E15B79FD;
+	Thu, 19 Dec 2024 01:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734569138; cv=none; b=rIewm680sA3SofR41Mno3yHEw8gnd1NIj91drvpyfCDzb9gBCSHW7aQ9l2Ab29kn3gZM6cO3wfQYZBKw01MwHUzsCMjtGjz9XtrR6XAiM4yETnJ4S0OVDwG7KqULFAYOgM1ZuyiBZXIjeGEC9DKl4wqEheqbKhllkf5oxJAJ9DE=
+	t=1734570502; cv=none; b=mEaNUZmHGrij9uq3iLfYwV7WbDrLVfH0Ji7LZVnPgXTXVgIRsXKuXb2TUlm4qjYZg8s1N1hkNNPybkrVZTsZzEWsm4byaNXgLTZMLfPJCmD8M8hdC1RVduJo8scIGahWJgyPrGM6NMMA4dilIgVG+nodaQI3SvFPJ6UQmI9ji/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734569138; c=relaxed/simple;
-	bh=NfGSrSA6c7Rz1v57O0PePirVcten9a7VWF+RVUmZxv8=;
+	s=arc-20240116; t=1734570502; c=relaxed/simple;
+	bh=QZ4z8fjBWTcf3il0BH2jZzxoBzP4WVaws/GscSyURNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mg71jji28nta9CWSNqssfQRkSpi74mbVR0he9RiyS+pdRZMEWu2uGOjZpFGYQlAZZhw3aOkhNK5kXZ/bDuHY6f6mH+sJcyIhisyMEb72pZv6r08yX3+i7vBWKtZu+onkEASbMgsVrplC0MXFDiMSkYKgGQlsmFa3Xro7pBJZnek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCE9H41c; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLxe98G0Kn9OibYR3thxzRBIsUjQeJOxyPK1wT/0h6Dp2Y8saQdOLxkPpbSTxw1lyMQEYcPeLuXyfS68A7KsnJ2bUqtHnyUpxjeW8ayIg3oVJeu1KKItMJYAw1mEwA0Xjn1z7Yz8PoSVvRnh6qFLoQaM+OJ3WX+ILVwrmsGABQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENhMPHg1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCE9H41c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5693BC4CECD;
-	Thu, 19 Dec 2024 00:45:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENhMPHg1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4319CC4CECD;
+	Thu, 19 Dec 2024 01:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734569137;
-	bh=NfGSrSA6c7Rz1v57O0PePirVcten9a7VWF+RVUmZxv8=;
+	s=k20201202; t=1734570501;
+	bh=QZ4z8fjBWTcf3il0BH2jZzxoBzP4WVaws/GscSyURNg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GCE9H41cV7fYOwdiF/Hya2A8sxOxvzCWRhSwUd+Ic5O4Kvy5cFZt8KiGgAbM4F+Xw
-	 CjPInymjlJKTsX4XOyPipYekBHEbSobcbMqa5tlXIVVesx5yI6muzAOkIYYmU/rzVm
-	 DeD45zEQKYHyyT7kq5L+h8f1pq31otbngjuHvsg55ir4mgDOEqwWlQK1BoPBp+B4IX
-	 6WxHvL2JxPA97RdDMKoNKk/u3/khGBFCP/DAeBNWhQfn9seSLP/NmvddI/eLGP6rjN
-	 F0biUa+5bC/TBgO2vovz9Sjgfw6BpxzHJz91H1GOHXQI76D1iqCkHpGRV3POPSFEcd
-	 N0gEe9uvhTPFw==
-Date: Wed, 18 Dec 2024 16:45:35 -0800
+	b=ENhMPHg1VrFPFSGz+vbM+Yh2LPcDCSGXGLo2vJ7olQhZxsVUBfCCcEBBVx4BdS9EI
+	 1RWVEfDicylpJ/qx61nzEWglLLvZtKowJKVgGFDlsrMWjsAswRKD9ah2C7hBUQXGja
+	 UK6v7YEPWNbrcoU0831kDW+FOqnM6j1ewhPk4VJjAPnX+jfwaueGedgo0D0DxoG8qm
+	 /KXRE8sU+jmmd+rlXImGOh/voD6ZKhIL9jxt7x7AAIUepf2y+IMKzvuJ3/CZrK8GlO
+	 tdAjgWXi0hKLeCVnqt5pVrdu+wJgfG2J4GSjxgowirDuCu0Olf5HndT28PPwt8Rslp
+	 qXAIGE92iWIlw==
+Date: Wed, 18 Dec 2024 17:08:19 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix BPF loading failure (-E2BIG)
-Message-ID: <Z2Nsr2ar6i-1LqKT@google.com>
-References: <20241213023047.541218-1-howardchu95@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] perf synthetic-events: Ensure features are aligned
+Message-ID: <Z2NyAxRzKaIw2qaB@google.com>
+References: <20241216232459.427642-1-irogers@google.com>
+ <20241216232459.427642-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,92 +51,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241213023047.541218-1-howardchu95@gmail.com>
+In-Reply-To: <20241216232459.427642-4-irogers@google.com>
 
-Hello,
+On Mon, Dec 16, 2024 at 03:24:57PM -0800, Ian Rogers wrote:
+> Features like hostname have arbitrary size and break the assumed
+> 8-byte alignment of perf events. Pad all feature events until 8-byte
+> alignment is restored.
 
-On Thu, Dec 12, 2024 at 06:30:47PM -0800, Howard Chu wrote:
-> As reported by Namhyung Kim and acknowledged by Qiao Zhao (link:
-> https://lore.kernel.org/linux-perf-users/20241206001436.1947528-1-namhyung@kernel.org/),
-> on certain machines, perf trace failed to load the BPF program into the
-> kernel. The verifier runs perf trace's BPF program for up to 1 million
-> instructions, returning an E2BIG error, whereas the perf trace BPF
-> program should be much less complex than that. This patch aims to fix
-> the issue described above.
-> 
-> The E2BIG problem from clang-15 to clang-16 is cause by this line:
->  } else if (size < 0 && size >= -6) { /* buffer */
-> 
-> Specifically this check: size < 0. seems like clang generates a cool
-> optimization to this sign check that breaks things.
-> 
-> Making 'size' s64, and use
->  } else if ((int)size < 0 && size >= -6) { /* buffer */
-> 
-> Solves the problem. This is some Hogwarts magic.
-> 
-> And the unbounded access of clang-12 and clang-14 (clang-13 works this
-> time) is fixed by making variable 'aug_size' s64.
-> 
-> As for this:
-> -if (aug_size > TRACE_AUG_MAX_BUF)
-> -	aug_size = TRACE_AUG_MAX_BUF;
-> +aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
-> 
-> This makes the BPF skel generated by clang-18 work. Yes, new clangs
-> introduce problems too.
-> 
-> Sorry, I only know that it works, but I don't know how it works. I'm not
-> an expert in the BPF verifier. I really hope this is not a kernel
-> version issue, as that would make the test case (kernel_nr) *
-> (clang_nr), a true horror story. I will test it on more kernel versions
-> in the future.
-> 
-> Fixes: 395d38419f18: ("perf trace augmented_raw_syscalls: Add more check s to pass the verifier")
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+But it seems write_hostname() and others use do_write_string() which
+handles the padding already.
 
-Thanks for the fix!
+thanks,
+Namhyung
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-
+> 
+> Rather than invent a new mechanism, reuse write_padded but pass an
+> empty buffer as what to write. As no alignment may be necessary,
+> update write_padded to be tolerant of 0 as a count and count_aligned
+> value.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+>  tools/perf/util/header.c           | 7 ++++---
+>  tools/perf/util/synthetic-events.c | 2 ++
+>  2 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> index 4a62ed593e84..e4352881e3fa 100644
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> @@ -431,9 +431,9 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
->  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 03e43a9894d4..d10703090e83 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -168,11 +168,12 @@ int write_padded(struct feat_fd *ff, const void *bf,
+>  		 size_t count, size_t count_aligned)
 >  {
->  	bool augmented, do_output = false;
-> -	int zero = 0, size, aug_size, index,
-> -	    value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
-> +	int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
->  	u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
-> +	s64 aug_size, size;
->  	unsigned int nr, *beauty_map;
->  	struct beauty_payload_enter *payload;
->  	void *arg, *payload_offset;
-> @@ -484,14 +484,11 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
->  		} else if (size > 0 && size <= value_size) { /* struct */
->  			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
->  				augmented = true;
-> -		} else if (size < 0 && size >= -6) { /* buffer */
-> +		} else if ((int)size < 0 && size >= -6) { /* buffer */
->  			index = -(size + 1);
->  			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
->  			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
-> -			aug_size = args->args[index];
-> -
-> -			if (aug_size > TRACE_AUG_MAX_BUF)
-> -				aug_size = TRACE_AUG_MAX_BUF;
-> +			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+>  	static const char zero_buf[NAME_ALIGN];
+> -	int err = do_write(ff, bf, count);
+> +	int err = count > 0 ? do_write(ff, bf, count) : 0;
 >  
->  			if (aug_size > 0) {
->  				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
+> -	if (!err)
+> +	if (!err && count_aligned > count) {
+> +		assert(count_aligned - count < sizeof(zero_buf));
+>  		err = do_write(ff, zero_buf, count_aligned - count);
+> -
+> +	}
+>  	return err;
+>  }
+>  
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index f8ac2ac2da45..ee6e9c2fb11b 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2401,6 +2401,8 @@ int perf_event__synthesize_features(const struct perf_tool *tool, struct perf_se
+>  			pr_debug("Error writing feature\n");
+>  			continue;
+>  		}
+> +		write_padded(&ff, /*bf=*/NULL, /*count=*/0,
+> +			     /*count_aligned=*/PERF_ALIGN(ff.offset, sizeof(u64)) - ff.offset);
+>  		/* ff.buf may have changed due to realloc in do_write() */
+>  		fe = ff.buf;
+>  		memset(fe, 0, sizeof(*fe));
 > -- 
-> 2.43.0
+> 2.47.1.613.gc27f4b7a9f-goog
 > 
