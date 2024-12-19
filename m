@@ -1,89 +1,42 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3438C35948
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 22:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320732AE69;
+	Thu, 19 Dec 2024 00:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734561145; cv=none; b=tMX2cTvz4rpVeWgtz6NgqYBQvVN34IiwAHp6sM/0zKlpCsP6YZ33adi8rO6evGro8wS185i33hhz7kdIo9P38C6t4nrgQXyC1PVLkoJBjiv8EQBBfEYstEM1NnXnBoTrNQwyN7j9XC3/dhXJFP0JnqTRkl149c1EsYN57j81BRI=
+	t=1734569138; cv=none; b=rIewm680sA3SofR41Mno3yHEw8gnd1NIj91drvpyfCDzb9gBCSHW7aQ9l2Ab29kn3gZM6cO3wfQYZBKw01MwHUzsCMjtGjz9XtrR6XAiM4yETnJ4S0OVDwG7KqULFAYOgM1ZuyiBZXIjeGEC9DKl4wqEheqbKhllkf5oxJAJ9DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734561145; c=relaxed/simple;
-	bh=vUAWp67MOThBgSGXEmUuoJl/4RAoHlEyQjf1TQeDOPY=;
+	s=arc-20240116; t=1734569138; c=relaxed/simple;
+	bh=NfGSrSA6c7Rz1v57O0PePirVcten9a7VWF+RVUmZxv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I08fbt2aauLXwXYkT7LGgNI7EXIw9skpozFQpSDtWOyXLzV2sxCMjfKwEm+AvdodvL7KX1ohYtnB6ZgoCmF9V0E0IGSmcY9fy6C18GfJOSsZbluIUwNNT5UZB6ANhuvmsIdyW8+EowDIb92mPgMsM5yWSWeiY2OodLdBqqssxQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BTXUFDGZ; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mg71jji28nta9CWSNqssfQRkSpi74mbVR0he9RiyS+pdRZMEWu2uGOjZpFGYQlAZZhw3aOkhNK5kXZ/bDuHY6f6mH+sJcyIhisyMEb72pZv6r08yX3+i7vBWKtZu+onkEASbMgsVrplC0MXFDiMSkYKgGQlsmFa3Xro7pBJZnek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCE9H41c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BTXUFDGZ"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-728eedfca37so196277b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Dec 2024 14:32:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1734561142; x=1735165942; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tR2taGENppW/iUu90JVKcmqf0YwVCgPjkxt8Ee6iXLM=;
-        b=BTXUFDGZ5h9UbOHuBjO15xbG6lPmiYW6/1iGI2Aa1a5oJBwA+9Pefl2uw2FAXG9MSJ
-         WbyCZKa0TJN3jEAijKunQo+Epbx90eGRZPe9tvrZjm0DtHCGZtjmufBifJKPAlVW+AVm
-         90ITee6DaQLKuXqYII74uhNvUJ6QQW/O/ACcOHMKtCMal8NvRA1l3YQ+yhrli/RbPY40
-         2ZszCknEQiadF7kcwaP2CNqE+3IRUe2Hh5yqbWMBDoLQUhsDSHtDWMR3hi1whi363Hxo
-         DPl8yrYsT/ZDl0moi/kuuhcuahD35vYK0MLtQG1MvzK4QJFznnMNSkZ7o34dAJH5ANsu
-         qiQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734561142; x=1735165942;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tR2taGENppW/iUu90JVKcmqf0YwVCgPjkxt8Ee6iXLM=;
-        b=SHUvn0QfkaTuii3Tx/8lhPs4PjRUVkNjKpnhvfbSfFINrBbWeO5bYN496W91kv/5to
-         wMjGtcYvPaGDUmqp4ERjdN0JimFa1MtvMtPa3aiTW/BJGtHv8PvnSkxYPqTqVEN8U93I
-         0w4ucYWHCtv4VhEUjjTD7ph+Bp66G6VzIQLSpQbv0jMEGFk6BMclD7hThT6OTxhh1dE1
-         VNXQ5+f3TUCnaskWwkT1gQOTWmVzKR3dZtjD71cNgJpP3OA4yT7KzIvRBaRpAi1FwNoR
-         UJwCJBtL0MgsXQ6sD2uXAaCJOILODL08JMX56GPH6XyTb9izjjzpq0D/OA6fhIZ0JYef
-         HhIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSXee0sX0BMqn7VSm1OxXf7+TCPXEh8WHPN3WzjKd/ug4GLPwAB+NTtayJFGjkVGU2lAOBJ6PHFNfBj6SWQbz+@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl6K1vpALuQYHDZwKqhdUsau4B2bwpUCU6Ah8EI83COz94H0tQ
-	VIWbTLeKbQtlqvj8njVXEZ1K4dfAnaSce9ysh1i2U1AUCmUVjouYpcYpwDcHRMo=
-X-Gm-Gg: ASbGncvDKmoO36TFGZYxJaba87IqP//Tvww/BQPknqGFpIZ8XwiJhNSoQx+VMFjUdcf
-	WzTaYesxaick1Oog90cvTblToSA8skDorx+JTwDGoeWUkfr6WXabIxallutfjq7ic5fTJBoEN3T
-	ugslaH1QHIYKF//whEqF7kF1/4YE98n7qZ6KDY1V4+IHwY9YqYaBSrHxm61WOANctK9k1QdarfA
-	Gns//cQCCjLXMpoUpp9uXXFMyN7EikKgyYfspYfhDwyC5w=
-X-Google-Smtp-Source: AGHT+IHkiFcBa5uPuKT7UiL19eDTHUTi6KXt8+yHtGVZYu79llIqo/wEI2THlg8fTSaZjVFrzOex2Q==
-X-Received: by 2002:a05:6a20:7487:b0:1db:ec6b:ba13 with SMTP id adf61e73a8af0-1e5c7527e1emr1560271637.12.1734561142517;
-        Wed, 18 Dec 2024 14:32:22 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918ac52bfsm9384916b3a.26.2024.12.18.14.32.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2024 14:32:21 -0800 (PST)
-Date: Wed, 18 Dec 2024 14:32:19 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2] tools: perf: tests: Fix code reading for riscv
-Message-ID: <Z2NNcy1jCLqb62h2@ghost>
-References: <20241217-perf_fix_riscv_obj_reading-v2-1-58f81b7b4c7d@rivosinc.com>
- <CAP-5=fXK6HRzBKHzF=T_w9cn7ohWOdmZNRMXvJzN6QG11HE6tA@mail.gmail.com>
- <Z2IXl5cuKQJInJb0@ghost>
- <Z2MXXFhUzoQmW4xV@x1>
- <CAP-5=fXPPfHHVPh0nYgR96VM+smuZKepO+GoE4X+aZsQE4tHSw@mail.gmail.com>
- <Z2M4ZparbNRvRHpz@ghost>
- <CAP-5=fXL6YaEq1cvBh2iESmQ_kqfm5VH5thJ0zrkOCcaWv5s+Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCE9H41c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5693BC4CECD;
+	Thu, 19 Dec 2024 00:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734569137;
+	bh=NfGSrSA6c7Rz1v57O0PePirVcten9a7VWF+RVUmZxv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GCE9H41cV7fYOwdiF/Hya2A8sxOxvzCWRhSwUd+Ic5O4Kvy5cFZt8KiGgAbM4F+Xw
+	 CjPInymjlJKTsX4XOyPipYekBHEbSobcbMqa5tlXIVVesx5yI6muzAOkIYYmU/rzVm
+	 DeD45zEQKYHyyT7kq5L+h8f1pq31otbngjuHvsg55ir4mgDOEqwWlQK1BoPBp+B4IX
+	 6WxHvL2JxPA97RdDMKoNKk/u3/khGBFCP/DAeBNWhQfn9seSLP/NmvddI/eLGP6rjN
+	 F0biUa+5bC/TBgO2vovz9Sjgfw6BpxzHJz91H1GOHXQI76D1iqCkHpGRV3POPSFEcd
+	 N0gEe9uvhTPFw==
+Date: Wed, 18 Dec 2024 16:45:35 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix BPF loading failure (-E2BIG)
+Message-ID: <Z2Nsr2ar6i-1LqKT@google.com>
+References: <20241213023047.541218-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -92,98 +45,92 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXL6YaEq1cvBh2iESmQ_kqfm5VH5thJ0zrkOCcaWv5s+Q@mail.gmail.com>
+In-Reply-To: <20241213023047.541218-1-howardchu95@gmail.com>
 
-On Wed, Dec 18, 2024 at 02:13:20PM -0800, Ian Rogers wrote:
-> On Wed, Dec 18, 2024 at 1:02 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >
-> > On Wed, Dec 18, 2024 at 11:23:51AM -0800, Ian Rogers wrote:
-> > > On Wed, Dec 18, 2024 at 10:41 AM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Tue, Dec 17, 2024 at 04:30:15PM -0800, Charlie Jenkins wrote:
-> > > > > On Tue, Dec 17, 2024 at 04:18:32PM -0800, Ian Rogers wrote:
-> > > > > > On Tue, Dec 17, 2024 at 3:52 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > > > > > After binutils commit e43d876 which was first included in binutils 2.41,
-> > > > > > > riscv no longer supports dumping in the middle of instructions. Increase
-> > > > > > > the objdump window by 2-bytes to ensure that any instruction that sits
-> > > > > > > on the boundary of the specified stop-address is not cut in half.
-> > > >
-> > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > >
-> > > > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > > > > A binutils patch has been sent as well to fix this in objdump [1].
-> > > >
-> > > > > > > Link: https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
-> > > >
-> > > > > > > Changes in v2:
-> > > > > > > - Do objdump version detection at runtime (Ian)
-> > > > > > > - Link to v1: https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com
-> > > >
-> > > > > > > --- a/tools/perf/tests/code-reading.c
-> > > > > > > @@ -183,9 +244,30 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
-> > > > > > >         const char *fmt;
-> > > > > > >         FILE *f;
-> > > > > > >         int ret;
-> > > > > > > +       u64 stop_address = addr + len;
-> > > > > > > +
-> > > > > > > +       if (IS_ENABLED(__riscv)) {
-> > > >
-> > > > > > Not sure if there is a consistency issue here. Elsewhere we're just
-> > > > > > using ifdef, such as:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n69
-> > > >
-> > > > > I don't have any strong feelings about that. I can change it to be an
-> > > > > ifdef. On other lists I have been told to use IS_ENABLED whenever
-> > > > > possible, but it's only a small difference.
-> > > >
-> > > > Can't we just use uname here?
-> > > >
-> > > > So that we don't use kconfig.h since its not used in tools/perf/ and
-> > > > makes it looks like perf is in lockstep with the kernel source tree
-> > > > version it was compiled from?
-> > > >
-> > > > $ git grep kconfig.h tools/perf/
-> > > > $
-> > > >
-> > > > BTW, what would happen if I collected a perf.data file on x86_64 and
-> > > > would read it in a RiscV machine with such a objdump version? The same
-> > > > problem?
-> > >
-> > > This code is in tests hence thinking that a separate fix is needed for
-> > > that problem. Hopefully the use of elf machine/flags tackles it:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/include/dwarf-regs.h?h=perf-tools-next#n25
-> > > We are getting somewhat disassembler heavy. We have llvm as a library,
-> > > capstone as a library, binutils objdump and llvm objdump. Given the
-> > > pain with parsing text, could we lose the objdumps? Similarly for
-> > > addr2line?
-> >
-> > Are you suggesting to remove this test case entirely to get rid of the
-> > objdump dependency? The goal of this test case seems to be to check
-> > objdump and perf return the same data, so it doesn't seem like there
-> > would be an alternative to using objdump.
+Hello,
+
+On Thu, Dec 12, 2024 at 06:30:47PM -0800, Howard Chu wrote:
+> As reported by Namhyung Kim and acknowledged by Qiao Zhao (link:
+> https://lore.kernel.org/linux-perf-users/20241206001436.1947528-1-namhyung@kernel.org/),
+> on certain machines, perf trace failed to load the BPF program into the
+> kernel. The verifier runs perf trace's BPF program for up to 1 million
+> instructions, returning an E2BIG error, whereas the perf trace BPF
+> program should be much less complex than that. This patch aims to fix
+> the issue described above.
 > 
-> I can imagine having an objdump dependency for a test but not for some
-> more core like `perf annotate`. We have to do weird things when
-> parsing text, like this code I'm not proud of:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/srcline.c?h=perf-tools-next#n523
-> The issue with that code is that LLVM objdump has changed its output
-> in newer versions to be closer to binutils objdump. Did that break
-> perf? Maybe it just broke what our variables think is an LLVM objdump,
-> but things aren't really broken. This kind of issue doesn't occur with
-> a library, although the differing needs of library versions is a real
-> thing.
-
-Yeah doing the parsing of the text output is not ideal... For this test
-case it should be possible to dynamically link against libbfd. I would
-guess something similar could be done with llvm-objdump but I am less
-familiar with that. I don't know if that's a good path to go down
-though.
-
-- Charlie
-
+> The E2BIG problem from clang-15 to clang-16 is cause by this line:
+>  } else if (size < 0 && size >= -6) { /* buffer */
 > 
-> Thanks,
-> Ian
+> Specifically this check: size < 0. seems like clang generates a cool
+> optimization to this sign check that breaks things.
+> 
+> Making 'size' s64, and use
+>  } else if ((int)size < 0 && size >= -6) { /* buffer */
+> 
+> Solves the problem. This is some Hogwarts magic.
+> 
+> And the unbounded access of clang-12 and clang-14 (clang-13 works this
+> time) is fixed by making variable 'aug_size' s64.
+> 
+> As for this:
+> -if (aug_size > TRACE_AUG_MAX_BUF)
+> -	aug_size = TRACE_AUG_MAX_BUF;
+> +aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+> 
+> This makes the BPF skel generated by clang-18 work. Yes, new clangs
+> introduce problems too.
+> 
+> Sorry, I only know that it works, but I don't know how it works. I'm not
+> an expert in the BPF verifier. I really hope this is not a kernel
+> version issue, as that would make the test case (kernel_nr) *
+> (clang_nr), a true horror story. I will test it on more kernel versions
+> in the future.
+> 
+> Fixes: 395d38419f18: ("perf trace augmented_raw_syscalls: Add more check s to pass the verifier")
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+
+Thanks for the fix!
+
+Tested-by: Namhyung Kim <namhyung@kernel.org>
+
+> ---
+>  tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index 4a62ed593e84..e4352881e3fa 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -431,9 +431,9 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
+>  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  {
+>  	bool augmented, do_output = false;
+> -	int zero = 0, size, aug_size, index,
+> -	    value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+> +	int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+>  	u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
+> +	s64 aug_size, size;
+>  	unsigned int nr, *beauty_map;
+>  	struct beauty_payload_enter *payload;
+>  	void *arg, *payload_offset;
+> @@ -484,14 +484,11 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  		} else if (size > 0 && size <= value_size) { /* struct */
+>  			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
+>  				augmented = true;
+> -		} else if (size < 0 && size >= -6) { /* buffer */
+> +		} else if ((int)size < 0 && size >= -6) { /* buffer */
+>  			index = -(size + 1);
+>  			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
+>  			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
+> -			aug_size = args->args[index];
+> -
+> -			if (aug_size > TRACE_AUG_MAX_BUF)
+> -				aug_size = TRACE_AUG_MAX_BUF;
+> +			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+>  
+>  			if (aug_size > 0) {
+>  				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
+> -- 
+> 2.43.0
+> 
