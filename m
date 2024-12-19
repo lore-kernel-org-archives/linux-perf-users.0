@@ -1,250 +1,135 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50BA17E00E
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 21:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B32F1D79B8;
+	Thu, 19 Dec 2024 21:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734644681; cv=none; b=mCOUEOhxNmI4cNPyEsxyA5O3jy9gxHdUuSsntYgSDPdI/+N7MPd/UA92BhGlNbKgl6nPQo+RAxRourw1KO7q/sLPLDI/6LvyfJa+wIqYEkjwVXvPEubO4DP0tnMyjNyiuWyjmCpCp6QdpcY1oGEAvyhxeMBstRxgEOsvCbh772M=
+	t=1734645211; cv=none; b=aRwR+XLL1bTxx359vaDXk7dU92KE3HdKOYjXSVpJ317tXZX6s2V3mokBvcWahi/kdjdmRg0k9CWt+xdqeYgXZKqX2ePCuQGl0onv1IHWiSX8FuaAI06I7a3xY9Kn/KRKbSCW26juDb5C6ZeUCfFmk4vME0PfjBBNPuzcqJ/BbKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734644681; c=relaxed/simple;
-	bh=wWyB3e6Pwb2xRIuVd33jnwwDT6+K1bV7pj/iZQhcDZo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KbgWRNMbPI9He6t5+jbDjD1OKJxpwi1lKoMYMYc0YvxevLYQ+j7jUv5jC/5EtWVL+dCQwOL0LGVdJLbvQ+YqxgZRr8PcmPRY/QNYiUjoGB1YvKyC/IfXAoKpV+oT28bhqJZlVRpYVaNmr+a9qMltOpvcsq9q8//vj5ocHLRd9D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=YVeHqLmu; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1734645211; c=relaxed/simple;
+	bh=7B4Q3T7E9hVqf4DvlC6aKwoon/lRu//MvzyEQ3OCecc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4c8wqDq+M/gZVpZ3UZZ1bKWOFcG0RBWcS+4RhPifiraV3YpCYXxQswy/P7KI0cpvpuSR5hjnlyCVIXBO9mFJYAXCKXw7vL+VFOk9PWTi5ha3U3w/SrZOkiSQ690nUPm3ZgzvQkDBCwhLkSfVQGhoT23DSXxjjONoxApAScwqHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPscYlQl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="YVeHqLmu"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21680814d42so12187885ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Dec 2024 13:44:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1734644678; x=1735249478; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VYEfqfk8DGuXJ+bqhaUnePdNAvFx/LugbO7a0lVFtTw=;
-        b=YVeHqLmu/1lwKs12eYz27n7DeJTWKZaDRRixkYzx4JftC9+UjhhwZi9/nzlJ3jgQYp
-         kBgxsgE1tYSV8YquAxw5Y9MJanQFxV/EtP6DCNbNSL+dDBhRG3b4E6M47lj/oQVBCWDK
-         oBaGadmi1+FUw7eCVMUa2IUDlhd54/Bq8sEKCF5BtaGni08hgQpruDk2tyLZleLMyaFb
-         5sqyaGlJkNm1WxDOfQD6CnIRyNvS4Rl5J37QbFiDE7e4wcCzKC6w5Mj9Y1zpJHfSDkhj
-         1Ouq43KoBNXZXjgUFIvNI+2+XbjKcYJVhYuSUU3s/lg23AlJ5WJcf3bumHjPTTEejf8K
-         +3uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734644678; x=1735249478;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VYEfqfk8DGuXJ+bqhaUnePdNAvFx/LugbO7a0lVFtTw=;
-        b=R69ZwL09MKdl8Vgi/6rAsIyYFKQNt7BSFe89K7zbNvw4zieeqyS8BX8fON6tejPIfp
-         rTBKLexjiIujzTzaulLZAG4jvNggg8Xkxnbn33dUBb/dZnrRgny604iLf757f92Ju/f6
-         tWtrHjCEL9sqG4hyX208McN2SXAkGpquo+PmUbLwUNpUDRUd5eY4L0SrnspBWOeNa8ZH
-         39gMLhJRhtzNIlLggcytdzoev4acYFO0f+T+OAnB+VsP8CAF5tj35jiB/kDOmD1Nmj6d
-         rcP1KJWkdQ+uqniHKMpqbbJvanC/2nm+tH7yaA0CdwpTZbY3CTwN8EQX6HZv0PrimR7W
-         Oy7g==
-X-Gm-Message-State: AOJu0Yws4gwpOxdjQ4cCnQl45hiRa4EjGUJSpxG0YiImycNQaT4xcylX
-	4p8nrM5gHGuVNNZWzxvM42qPhDAErwMNLGAszr83Bx/fYqvxQq8TcJJqf633zas=
-X-Gm-Gg: ASbGnctWk4guhJVirsb/AU3b2mU9ysv7FWKehM8GO6k5/+2m1SpzrtTDHceo2lYDc/D
-	6EUkqCFTF8cyPcm4N2ukDSOIdOf7AueWkChwMf3HVK1JvsKE6loXteffZBeKCnbR9BPf2Tl8Lnf
-	O9NpnVkBdyWo1TwGeOKxZgeAFHgCwrswReKehfXoQ6uP6A8Qt18CRq60p9RWFOYsZVMX8WK6puf
-	RNhx3Vfv/YfTRx671Wc5HYJuEhZY4eYPnvIYtT+jTtuiQACyVZWKFecvx5G83cOIar1gr3I
-X-Google-Smtp-Source: AGHT+IH3kYwgtQW1aXJARuWrTfbyWFEx2W9Kj5c944+awCZK4morLQyWo6rMAMCN9RkSh+qEbRce9w==
-X-Received: by 2002:a17:90b:538e:b0:2ee:fc08:1bc1 with SMTP id 98e67ed59e1d1-2f452eeb5aemr855129a91.37.1734644677918;
-        Thu, 19 Dec 2024 13:44:37 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f2ed52d27esm3847949a91.10.2024.12.19.13.44.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2024 13:44:36 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 19 Dec 2024 13:44:25 -0800
-Subject: [PATCH v3] tools: perf: tests: Fix code reading for riscv
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPscYlQl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F62BC4CED4;
+	Thu, 19 Dec 2024 21:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734645210;
+	bh=7B4Q3T7E9hVqf4DvlC6aKwoon/lRu//MvzyEQ3OCecc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nPscYlQlEWmbsilrlG7e0uZ7ZKfgAhgzPYIp1ZgBSVjSJcXU/ZKmS6+BO9sNYGsm2
+	 usmhllApfrqFqjgV9LX7bKYGUlEOME0R3NKsLqsJQSK1vkyivhC86fTR0CINoveT/M
+	 OpiYa4kfLqtJBCHHrnooNL2rcsa08F/ulqEzc3GWS/Xl2WX54oInLlZLQYu6qd2En4
+	 puDpLXeCPqW+7PysQX9Txb6AC+4Kfyudy0F7gkhfBlNvZ8wVCM1Q+jRz5xG8Hpjway
+	 gwCWEXSEHZcroqZ4W9y1HmOkRfl9uTVU/iSq4k9qdxb5Tmo/AfN1nu0r30c2BjB1su
+	 /n089VCu0sd/Q==
+Date: Thu, 19 Dec 2024 13:53:28 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] perf cpumap: If the die_id is missing use
+ socket/physical_package_id
+Message-ID: <Z2SV2A9C6V65YL3x@google.com>
+References: <20241216232459.427642-1-irogers@google.com>
+ <20241216232459.427642-2-irogers@google.com>
+ <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org>
+ <CAP-5=fVeW+XARtWtdR=XX47w-ZznKiGdhxDBy=Le_QTS=R6SQA@mail.gmail.com>
+ <Z2Ov2Gy99KOtctPT@google.com>
+ <CAP-5=fUUUZcE8D3q3iNkrym=9g6UQxgfDihC24+1J879fj4kww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241219-perf_fix_riscv_obj_reading-v3-1-a7d644dcfa50@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIALiTZGcC/33N0QrCIBTG8VcJrzPUbbp11XtEiDrdTpAODSnG3
- j03CKKLXf4/Dr8zo2Qj2ITOhxlFmyFB8CWq4wGZUfnBYuhLI0ZYTRmt8GSjkw5eMkIyWQZ9l9G
- qHvyAjdKOMG0r0zaoAFO05XDDr7fSI6RniO/tV6br+mX5HpspJliLpuOMc6I6fYmQQwJvTiY80
- Cpn9quJXY1hipvWtVQLXRvR/2nLsnwAxBQauxUBAAA=
-X-Change-ID: 20241213-perf_fix_riscv_obj_reading-cabf02be3c85
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4747; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=wWyB3e6Pwb2xRIuVd33jnwwDT6+K1bV7pj/iZQhcDZo=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ3rK5L1hex84vCmuenXW62S0/v5jDz8cWPAsouaTyOVom
- ZNvu3pSO0pZGMQ4GGTFFFl4rjUwt97RLzsqWjYBZg4rE8gQBi5OAZiIkhLD/xj3KdP1NK0+eh9q
- u5bs1HWwUkFhK6P3pJP8j7N9Ze8ynWRkuCp0uNNb9rbNc9n4UP49Go+2r+hbrJTVWduqOZtBQOI
- gJwA=
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUUUZcE8D3q3iNkrym=9g6UQxgfDihC24+1J879fj4kww@mail.gmail.com>
 
-After binutils commit e43d876 which was first included in binutils 2.41,
-riscv no longer supports dumping in the middle of instructions. Increase
-the objdump window by 2-bytes to ensure that any instruction that sits
-on the boundary of the specified stop-address is not cut in half.
+On Thu, Dec 19, 2024 at 09:20:39AM -0800, Ian Rogers wrote:
+> On Wed, Dec 18, 2024 at 9:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, Dec 18, 2024 at 09:42:27AM -0800, Ian Rogers wrote:
+> > > On Wed, Dec 18, 2024 at 4:04 AM James Clark <james.clark@linaro.org> wrote:
+> > > >
+> > > >
+> > > >
+> > > > On 16/12/2024 11:24 pm, Ian Rogers wrote:
+> > > > > An error value for a missing die_id may be written into things like
+> > > > > the cpu_topology_map. As the topology needs to be fully written out,
+> > > > > including the die_id, to allow perf.data file features to be aligned
+> > > > > we can't allow error values to be written out. Instead base the
+> > > > > missing die_id value off of the socket/physical_package_id assuming
+> > > > > they correlate 1:1.
+> > > > >
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > ---
+> > > > >   tools/perf/util/cpumap.c | 3 ++-
+> > > > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> > > > > index 27094211edd8..d362272f8466 100644
+> > > > > --- a/tools/perf/util/cpumap.c
+> > > > > +++ b/tools/perf/util/cpumap.c
+> > > > > @@ -283,7 +283,8 @@ int cpu__get_die_id(struct perf_cpu cpu)
+> > > > >   {
+> > > > >       int value, ret = cpu__get_topology_int(cpu.cpu, "die_id", &value);
+> > > > >
+> > > > > -     return ret ?: value;
+> > > > > +        /* If die_id is missing fallback on using the socket/physical_package_id. */
+> > > > > +     return ret || value < 0 ? cpu__get_socket_id(cpu) : value;
+> > > > >   }
+> > > > >
+> > > > >   struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > I sent a fix for the same or a similar problem here [1]. For this one
+> > > > I'm not sure why we'd want to use the socket ID for die when it's always
+> > > > been 0 for not present. I wonder if this change is mingling two things:
+> > > > fixing the negative error value appearing and replacing die with socket ID.
+> > > >
+> > > > Personally I would prefer to keep the 0 to fix the error value, that way
+> > > > nobody gets surprised by the change.
+> > > >
+> > > > Also it looks like cpu__get_cluster_id() can suffer from the same issue,
+> > > > and if we do it this way we should drop these as they aren't valid anymore:
+> > > >
+> > > >         /* There is no die_id on legacy system. */
+> > > >         if (die < 0)
+> > > >                 die = 0;
+> > >
+> > > I think this breaks the assumption here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/expr.c?h=perf-tools-next#n244
+> >
+> > Hmm.. I'm not sure how it worked before.  The code is already there and
+> > it just changed the condition from == -1 to < 0, right?
+> 
+> You'd need to be testing on a multi-socket machine to see the issue.
+> If you had say a dual socket Ampere chip and the die_id was missing,
+> does it make sense for there to be two sockets/packages but only 1
+> die? I think it is best we assume 1 die per socket when the die_id is
+> missing, and to some crippled extent (because of the s390 workaround)
+> the expr test is doing the sanity check.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
-A binutils patch has been sent as well to fix this in objdump [1].
+AFAICS die ID is always used with socket ID already so I guess it means
+an ID inside a socket.
 
-Link:
-https://sourceware.org/pipermail/binutils/2024-December/138139.html [1]
----
-Changes in v3:
-- Dynamically detect riscv for objdump change (Arnaldo)
-- Link to v2: https://lore.kernel.org/r/20241217-perf_fix_riscv_obj_reading-v2-1-58f81b7b4c7d@rivosinc.com
-
-Changes in v2:
-- Do objdump version detection at runtime (Ian)
-- Link to v1: https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com
----
- tools/perf/tests/code-reading.c | 92 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 91 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 27c82cfb7e7de42284bf5af9cf7594a3a963052e..b1abb34d7818d8a9ac963e2185ec3e7d9bf8d387 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
-+#include <linux/kconfig.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <inttypes.h>
-@@ -8,6 +9,7 @@
- #include <stdio.h>
- #include <string.h>
- #include <sys/param.h>
-+#include <sys/utsname.h>
- #include <perf/cpumap.h>
- #include <perf/evlist.h>
- #include <perf/mmap.h>
-@@ -176,16 +178,104 @@ static int read_objdump_output(FILE *f, void *buf, size_t *len, u64 start_addr)
- 	return err;
- }
- 
-+/*
-+ * Only gets GNU objdump version. Returns 0 for llvm-objdump.
-+ */
-+static int objdump_version(void)
-+{
-+	size_t line_len;
-+	char cmd[PATH_MAX * 2];
-+	char *line = NULL;
-+	const char *fmt;
-+	FILE *f;
-+	int ret;
-+
-+	int version_tmp, version_num = 0;
-+	char *version = 0, *token;
-+
-+	fmt = "%s --version";
-+	ret = snprintf(cmd, sizeof(cmd), fmt, test_objdump_path);
-+	if (ret <= 0 || (size_t)ret >= sizeof(cmd))
-+		return -1;
-+	/* Ignore objdump errors */
-+	strcat(cmd, " 2>/dev/null");
-+	f = popen(cmd, "r");
-+	if (!f) {
-+		pr_debug("popen failed\n");
-+		return -1;
-+	}
-+	/* Get first line of objdump --version output */
-+	ret = getline(&line, &line_len, f);
-+	pclose(f);
-+	if (ret < 0) {
-+		pr_debug("getline failed\n");
-+		return -1;
-+	}
-+
-+	token = strsep(&line, " ");
-+	if (token != NULL && !strcmp(token, "GNU")) {
-+		// version is last part of first line of objdump --version output.
-+		while ((token = strsep(&line, " ")))
-+			version = token;
-+
-+		// Convert version into a format we can compare with
-+		token = strsep(&version, ".");
-+		version_num = atoi(token);
-+		if (version_num)
-+			version_num *= 10000;
-+
-+		token = strsep(&version, ".");
-+		version_tmp = atoi(token);
-+		if (token)
-+			version_num += version_tmp * 100;
-+
-+		token = strsep(&version, ".");
-+		version_tmp = atoi(token);
-+		if (token)
-+			version_num += version_tmp;
-+	}
-+
-+	return version_num;
-+}
-+
- static int read_via_objdump(const char *filename, u64 addr, void *buf,
- 			    size_t len)
- {
-+	u64 stop_address = addr + len;
-+	struct utsname uname_buf;
- 	char cmd[PATH_MAX * 2];
- 	const char *fmt;
- 	FILE *f;
- 	int ret;
- 
-+	ret = uname(&uname_buf);
-+	if (ret) {
-+		pr_debug("uname failed\n");
-+		return -1;
-+	}
-+
-+	if (!strncmp(uname_buf.machine, "riscv", 5)) {
-+		int version = objdump_version();
-+
-+		/* Default to this workaround if version parsing fails */
-+		if (version < 0 || version > 24100) {
-+			/*
-+			 * Starting at riscv objdump version 2.41, dumping in
-+			 * the middle of an instruction is not supported. riscv
-+			 * instructions are aligned along 2-byte intervals and
-+			 * can be either 2-bytes or 4-bytes. This makes it
-+			 * possible that the stop-address lands in the middle of
-+			 * a 4-byte instruction. Increase the stop_address by
-+			 * two to ensure an instruction is not cut in half, but
-+			 * leave the len as-is so only the expected number of
-+			 * bytes are collected.
-+			 */
-+			stop_address += 2;
-+		}
-+	}
-+
- 	fmt = "%s -z -d --start-address=0x%"PRIx64" --stop-address=0x%"PRIx64" %s";
--	ret = snprintf(cmd, sizeof(cmd), fmt, test_objdump_path, addr, addr + len,
-+	ret = snprintf(cmd, sizeof(cmd), fmt, test_objdump_path, addr, stop_address,
- 		       filename);
- 	if (ret <= 0 || (size_t)ret >= sizeof(cmd))
- 		return -1;
-
----
-base-commit: 233157785a34612e5899be6edcc6a53ea682d379
-change-id: 20241213-perf_fix_riscv_obj_reading-cabf02be3c85
--- 
-- Charlie
+Thanks,
+Namhyung
 
