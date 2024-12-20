@@ -1,116 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E150482CD;
-	Fri, 20 Dec 2024 19:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0259222594;
+	Fri, 20 Dec 2024 19:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734723378; cv=none; b=lhI2F3g+o4GTyv/TRM3axVbIo28aFM+P/lZopR8vAEbPMoATknsuWSU2v2LjS1cvb17/N6y1WIRmbg9ryOVb4UnJRIqeVPjhoc37lWA/IUcML6xNUO7xWBZtNUHqzRkDa8Yy3cLN3UeF9NAm0jK8BeW5tUqcDfy1rfB70b+arIw=
+	t=1734723725; cv=none; b=YaFPcBW/B+G50bIWkxynR4rXbHPP4lOAlHvXgfgn+E/YRp5wSE14gwdqLgc+bbFihmRqcKK3AhheysbAndXoV/+VvgkB9ihW8btdv/GKgTq3Va3dEFYk98ABcGB9TkQ/PUVCjPk+k9MGc+lZZyYEP+Vw84xve39RKjEeQh5b7ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734723378; c=relaxed/simple;
-	bh=6jTJd9J16ZjQkqne3jRNNL0bVsInVxBnf0unHWuxKbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ilul0IMiP2+hYUgRNv91u9gB69znB1BajSHQGhEiBZwpU4H4o/8S82Quu3ZJ6Nd9d8GJ7+eK2AAXEdRiWHlC0r7TRtjkDU2xpYZlnjwcFZIc7lL4xJqviPBfP1hx5TLk45lkVZfL9r4fTizgSh6UlOrV1AsmaJcgEixdMFHsh20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JskPITrt; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1734723725; c=relaxed/simple;
+	bh=Pu6jjQKtTSjApmbuZTSmOj7e9RuHb1Dp9oD9rdWQzLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bu3gn/1bmlKl43qSrLH+Cv/TSLEju7WAZrti2uiV3DqHMiO6AiiJwjQHmZ8piombbR2ewqwoDFN0J6hd6ESULlMaRcAGzVkiaQy7ZHHBE6CV9uqyl4NKHkVcr2/Tl6TFDSQh+ayoe5jcl5K62ZOuA1uijSM+vrLIzUWXBLNWoYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kakiW+RA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JskPITrt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734723376; x=1766259376;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6jTJd9J16ZjQkqne3jRNNL0bVsInVxBnf0unHWuxKbg=;
-  b=JskPITrtTXhVOOuaEi2my/t2g1Ij3lZzGmgrEc301+jacyMgeOaR5hNQ
-   KDRtKeVc9jZOL4znLTxRV0NoT7NgH4Q5hz8KRNnTGv/o574RmO/sOXJZC
-   8AwgpQ1m7KW+B8Xsyx5UjBSjHvJlnK7fzNABAKFPs1RS8rE33oHIhwIai
-   JHrDqr/NrdRAomIRWRkEuWLwgzK7i45qO398t1w/Iduw5HkrBP6EdzNJu
-   xOsAf0+GblbYbYVZp62Feo0+f8Ay6+mg3+BW7CRoOGBGk+XUmDq0LZr3H
-   8J9jUAUgnTAzaW55kofEbOQA+klNshWXFNv6ofqSiz/wz4bIhEeO25eHo
-   A==;
-X-CSE-ConnectionGUID: 4iKisNB5S/qc3UlrsaGLKA==
-X-CSE-MsgGUID: R+rjQZ6HSQOjSUT+8MwySQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="57754588"
-X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
-   d="scan'208";a="57754588"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 11:36:16 -0800
-X-CSE-ConnectionGUID: 9QiSxdOMSHOFInRjyOlQwg==
-X-CSE-MsgGUID: hVvxZSH3TeaNo+T7DyIaxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135944371"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.24.8.90]) ([10.24.8.90])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 11:36:16 -0800
-Message-ID: <74fd8a75-66c6-40a8-9ec3-d7aa74469755@intel.com>
-Date: Fri, 20 Dec 2024 11:36:15 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kakiW+RA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4F0C4CED6;
+	Fri, 20 Dec 2024 19:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734723725;
+	bh=Pu6jjQKtTSjApmbuZTSmOj7e9RuHb1Dp9oD9rdWQzLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kakiW+RAO6DhS5rD9nbrqeJj7uEYukiEeHIKtax8rlVEj3dlWnlZF3ib3AaixCsyG
+	 YJ0FYlUc8xfJxpAcwWX356qiuh/wDefheTvT7srCa0jsrzdPY8d/Rmhg2xjBOihNIe
+	 +HHMl6L8XXCn8rtg95CDX3/hQ12u6bnG34Y+sWqb0o5rtYON+SoQdllcNHwYicnwQM
+	 89wedKGQOeGQo7ebiyV7zwx/KWf6MOSLSuOlz1YeZOVhY9mMvfciMPlI20jJGbBWNT
+	 NiSEsnjpcnjQtB1COgrzKEgbcVxZ2FCyHusdgF8Z4yalZSVrQUZT0dmSlrxAOtOYoh
+	 A/M3OcFWTKPJw==
+Date: Fri, 20 Dec 2024 16:42:02 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tuan Phan <tuanphan@os.amperecomputing.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Bhaskara Budiredla <bbudiredla@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@arm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming
+ convention
+Message-ID: <Z2XIitYfFaZJltul@x1>
+References: <20240606044959.335715-1-irogers@google.com>
+ <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
+ <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
+ <060b220d-f7d6-4594-9b2b-e878a2ba98c6@arm.com>
+ <CAP-5=fU+pigNLi+cTFwEmyG5tO+JHTGDgWh1sYbCiX5TppdLnQ@mail.gmail.com>
+ <CAP-5=fVBsCxHbqQkEbG2zzATDYfN8bP6mN9ixkae7o9eNB5w+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: map pages in advance
-To: David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Matthew Wilcox <willy@infradead.org>, Yi Lai <yi1.lai@linux.intel.com>
-References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
- <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
- <4ded2d63-03dd-498e-9810-690a9eff0c22@lucifer.local>
- <860a1ef0-678d-414d-8511-9695b90c3ca0@redhat.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <860a1ef0-678d-414d-8511-9695b90c3ca0@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVBsCxHbqQkEbG2zzATDYfN8bP6mN9ixkae7o9eNB5w+Q@mail.gmail.com>
 
-
-
-On 12/20/2024 1:56 AM, David Hildenbrand wrote:
-> On 20.12.24 10:31, Lorenzo Stoakes wrote:
->> On Thu, Dec 19, 2024 at 01:17:44PM -0800, Chen, Zide wrote:
->>
->>> With this patch, it seems perf tool has some problems in capturing the
->>> kernel data with Intel PT.
->>>
->>> Running the following commands, the size of perf.data is very small, and
->>> perf script can't find any valid records.
->>>
->>> perf record -e intel_pt//u -- /bin/ls
->>> perf script --insn-trace
->>>
->>>
->>
->> Hi,
->>
->> I'm on leave (and should really go back to relaxing :>), returning on 2nd
->> Jan so can't really dig into this.
->>
->> But I tried it on my intel box and it 'works on my machine' with and
->> without patch with commands provided, so I'm not sure this is actually a
->> product of this change (which shouldn't impact this).
+On Fri, Dec 20, 2024 at 11:16:46AM -0800, Ian Rogers wrote:
+> On Wed, Oct 23, 2024 at 9:21 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Wed, Oct 23, 2024 at 2:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > >
+> > > On 2024-10-23 5:06 am, Ian Rogers wrote:
+> > > > On Thu, Jun 6, 2024 at 11:15 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > > >>
+> > > >>
+> > > >>
+> > > >> On 2024-06-06 12:49 a.m., Ian Rogers wrote:
+> > > >>> It is an existing convention to use suffixes with PMU names. Try to
+> > > >>> capture that convention so that future PMU devices may adhere to it.
+> > > >>>
+> > > >>> The name of the file and date within the file try to follow existing
+> > > >>> conventions, particularly sysfs-bus-event_source-devices-events.
+> > > >>>
+> > > >>> Signed-off-by: Ian Rogers <irogers@google.com>
+> > > >>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> > > >>> ---
+> > > >>>   .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
+> > > >>>   1 file changed, 24 insertions(+)
+> > > >>>   create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
+> > > >>>
+> > > >>
+> > > >> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> > > >
+> > > > Thanks for all the reviews. Could we land this?
+> > >
+> > > Hmm, it's not always going to be strictly true as written though - we
+> > > will also have cases where multiple PMU instances owned by the same
+> > > driver don't all support the same events/filters/etc., and/or are
+> > > entirely unrelated such that the same event encoding may mean completely
+> > > different things. I've just landed a driver where not only are the
+> > > instances going to be heterogeneous (since it's for arbitrary bits of
+> > > interconnect), but for hierarchy reasons the most logical place to put
+> > > the instance ID in the name wasn't even at the end :(
+> >
+> > Right, I was trying to capture what the tool is doing and trying to
+> > encompass the problems hex suffix create. Another example of that
+> > problem recently burning us is ARM's PMU naming of armv8_pmuv3_a53
+> > means the a53 looks like a hex suffix. When ARM release a model with a
+> > 3 digit number will the naming break? Wrt filters, I wonder if there
+> > should be testing, bugs, etc. The wildcard matching will likely do its
+> > thing and I think the failures should be predictable and descriptive,
+> > like an event used a format that a PMU doesn't support, but I'm not
+> > sure if we should do improvements in `perf list` where we try to
+> > deduplicate PMUs. Perhaps the deduplication should be smarter.
+> >
+> >
+> > > FWIW I think if we want to nail down a strict ABI, it would seem more
+> > > robust to have an explicit attribute to describe underlying PMU
+> > > properties like whether instances do represent identical "slices" or
+> > > not. The hex suffix thing is already proving how fragile names alone are
+> > > liable to be.
+> >
+> > Agreed. Does this mean we shouldn't land this? I worry that LKML is
+> > the home of bike shedding conversations and we're likely to bike shed
+> > trying to achieve 'perfect' while something 'good' would have value
+> > today.
 > 
-> Zide Chen, can you try with and without this patch to see if it
-> introduces the issue?
+> Ping.
 
-Yes, I re-did the test on a SPR server, and the result is same. Without
-the patch, it went well; But with it, "perf script --insn-trace" doesn't
-show valid records.
+Thanks, applied to perf-tools-next,
 
-This time I tested it on the clean 6.13-rc1 tag, base commit
-40384c840ea1944d7c5a392e8975ed088ecf0b37
-
-Also, with this patch, running tools/perf/tests/shell/test_intel_pt.sh:
-
-Error:
-The - data has no samples!
+- Arnaldo
