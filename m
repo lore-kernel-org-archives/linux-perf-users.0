@@ -1,310 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC361ACECC;
-	Fri, 20 Dec 2024 06:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734674414; cv=none; b=r6ROEQ0o8HkvhRySKW4tqJnWbFWVzPXv+A7VxIyf+eCR8pse1dBktHeeCJXJf5qADkJcfN83cbEAE3X3eMAikWcU0+EH8houy9NdxMigSvFrVelcQqe4CeTBc/bHQG1sGqF4YfiMCh8g6LkgrWLsyGzIC3/IjsS95rzUPzb3TRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734674414; c=relaxed/simple;
-	bh=uh5tUXshVpXpiclsKqI9+nLz5ONf5ED1fQDla3DobhM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bidFIMmBMRghXxYbg6U4FGRpwPQzSK4FAcrLpaTpeDp4zC3cCeTUV+ITCqBfWmirYk5LbaAtGFvj91XK7BHBVzpebLxCt+LibaepDREvbyrMNvFNxUn0wWUu/Q9NlwTXb5VaC1NcGtUGORivGbitbsFJYjK90lHTV3lM9mFW99g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0mX5n0D; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2CD19F42F;
+	Fri, 20 Dec 2024 09:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734687113; cv=fail; b=id/y1p0McBJK/3w0WDtJHvIyAB/F14PKlEYKpb18DsBLH7rI9gwenS/HyflKq0trFIp9heLQVWb1Je3rRunjJi0Ady+296bErOwebkdJh/H2IO2RKvKT4kQNfqxpftwy7TnsHMb2dCDXOEe3wwYuHsLotbn0gKcPvfuNL2NCvIU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734687113; c=relaxed/simple;
+	bh=iUnEjgni/q3vii0lIE9ZhBm73bkhmpGYgsefjNIbZ3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kEXraVl8sqmiayRG9vE4oR+cI/PgklBJ6UWZa/XydJLks3HpQQZOONNwL7A0E094Ll3kTM/wo/Cq85Tj06VZJqG78nf2Y57igSMOzcuxuJzp1cFAtL4OMvnQZo6f6c+tIgW54z2Tisqq1Hrbaxe6V6sIzTI+AphUpLtXrB3z8y0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ItrvzxNS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=A6IZO6xe; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0mX5n0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8D0C4AF0E;
-	Fri, 20 Dec 2024 06:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734674414;
-	bh=uh5tUXshVpXpiclsKqI9+nLz5ONf5ED1fQDla3DobhM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l0mX5n0DNxmK6aBQSBczcweu+cgPi7ZKt/sF0tEsRYhjjqTQ+8df9/tw69j6S6CJ7
-	 mu0XxZrnrlXDfvs1TPAhoEzWePU+9xGo/pYPSiMgSXh9kQ132aBBEoNcILN6vjqvyc
-	 GRK0gp1vR27IEUUl+ud0XDel4p1cKHTSLHvZ1ksPM80t7mnoXnaatG8TJRsg2GDaHG
-	 b9TqAGbOWKfvBAkJ08bK5kc22UHohYaWXVHNHM6eN6sQqkIkM3jgIpHWWWgc8xTkuI
-	 B4ni/A3sJDmClJZx9tw3e/Vj9kKBmH1xNu7lsx5oK6b6Yxp9ibA6/L0pMwDnYsxCaB
-	 7mJyf5zuD7c1Q==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	Chun-Tse Shao <ctshao@google.com>
-Subject: [PATCH v3 4/4] perf lock contention: Handle slab objects in -L/--lock-filter option
-Date: Thu, 19 Dec 2024 22:00:09 -0800
-Message-ID: <20241220060009.507297-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-In-Reply-To: <20241220060009.507297-1-namhyung@kernel.org>
-References: <20241220060009.507297-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ItrvzxNS";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="A6IZO6xe"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK3u22f010442;
+	Fri, 20 Dec 2024 09:31:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=iUnEjgni/q3vii0lIE
+	9ZhBm73bkhmpGYgsefjNIbZ3Y=; b=ItrvzxNSX4hrCOWST4LWhKAdkYLPzTx+Zo
+	lxFgxepkHRj+9XaPOllQ0eJfosIDJbzugMZVRQU3Se4om4KWW2jANUWzcn1cg+fJ
+	n710wukPHOe5fyUREmy0yBSQuC0NN9Zg5zQQWp4Q3S/8RyzOfaXfF3m6gcLFDqiD
+	u2x4op/jQrj/umkMUBRjhSVIHRcIlSSz3W/3mkVMRaEXBv6bqS8DurQuJvfa8rfC
+	X+YEK45zUXZ6k+axEE1+6oRmpenANkTk3D1otAoHQoitnuL1LzlYevfyNO95jbdi
+	Zj/gSXLcu9siUN0gGDsOXvt8Bw2kU5i9RjtzbRfxIVeakr0auX0g==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h2jtd0sg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Dec 2024 09:31:30 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK7FtJT035494;
+	Fri, 20 Dec 2024 09:31:17 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2042.outbound.protection.outlook.com [104.47.58.42])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43h0fc9h2r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Dec 2024 09:31:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qbo9a2CSS02cbzOOjegsAsLeWmJS9b5GJy3F7Y6Sj6u/8Wz/XAH6nsV4BJH8BVg948h4ChyVj1GBZN1LOKQtQpBvTjYJgAYLDsPom6m2GvewaxvlIpkdY5QY5305UegmgiSCb2PA1Ri3abIqwg6/HxMyY3fHhvnR+gJVZFTkPrBU/6Fq7C8qqYyJcG7Azpwd35WIxER+vNj7QSlK8EfW1/X7lLlWDVKsvg1m3eRe3YZmeWSQrLxMQlXjYRQ8AwkvO4kX1jCJksozkoMMakd1Pwc2JF19FOueVSNPORdiM34QDWNLzGSebrGWhxMVxHIpjrEvXaIOBrZLsor4ZcPnIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iUnEjgni/q3vii0lIE9ZhBm73bkhmpGYgsefjNIbZ3Y=;
+ b=udyF06secyFSV2f4rfTvY7s79lT/l7Q8EvnCJMAGLHvG20L3mARRsPBDCuxmUUyCKleuGovCjucUbLgzwlYX+Wn1FHR3n4pYaoJt04xEO2EySraJf1Z/+Hn+nC8IyTDI+Tza4RC26BkPEaeVwZcKXUqIDNbnZQkVwIvKUWc+0VJPn6cojKCccwyj2P3h01ME7vTCPkgXE+SAliNd4qzEvprFz+bzS/bRSz7uzCdu4YR+j/euze59hX8VsFbdEe5Cnf3Z8TZcizfKPUszYjjy97F8PODzch3x0kSWVcWPv2LHE7PqQtzw9aO3VqxEakQst1eneiWYiErOaynFlBiKyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUnEjgni/q3vii0lIE9ZhBm73bkhmpGYgsefjNIbZ3Y=;
+ b=A6IZO6xegu5V2sv3hH2XSW+akb8+2u4BCYu5n3pOYBAvOwTHGbYimG1Tpsym6neydOrHt/dMK8vKQHtfdXCthFcRZ+U5SKvotshaIrc0rl1PZutJ8FaDTyDxUWol8+gkP8gO+GY4nEQqRLqP4GTrY2A5jho4hbwSG7+Y5BlG4V4=
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
+ by DS7PR10MB4959.namprd10.prod.outlook.com (2603:10b6:5:3a0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
+ 2024 09:31:14 +0000
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9%7]) with mapi id 15.20.8272.005; Fri, 20 Dec 2024
+ 09:31:13 +0000
+Date: Fri, 20 Dec 2024 09:31:07 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: "Chen, Zide" <zide.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>, Yi Lai <yi1.lai@linux.intel.com>
+Subject: Re: [PATCH v3] perf: map pages in advance
+Message-ID: <4ded2d63-03dd-498e-9810-690a9eff0c22@lucifer.local>
+References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
+ <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
+X-ClientProxiedBy: LO2P265CA0368.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::20) To BYAPR10MB3366.namprd10.prod.outlook.com
+ (2603:10b6:a03:14f::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|DS7PR10MB4959:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94231f2b-4da5-49b9-9928-08dd20d90bf7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2yy6qv8CCmfw4oybGO05nFIIZkOm7+La+LuWx00C1tjXmms4nj5hYc2co+lP?=
+ =?us-ascii?Q?MHyka07SfwUKKGOvtiusSbN79Nt4UI8zfc6coCIms5PWd1zt/PDmm4OXwoTK?=
+ =?us-ascii?Q?KE5bZAo8ORBgTNr2ImFP33vE1YrYqlF0JKyyQTt8cm/cQOUUvZMsTKI5ckOZ?=
+ =?us-ascii?Q?W3279N/06G1faoXHrHWgZLmIagp41vePd6AzSyh49trw0b+jqgbvZUzu+RZ1?=
+ =?us-ascii?Q?04BsmHsBueHzdbcjasNEmJL7Ivmeq8FFBbFF/jmU3huLP5/h3R5IZpcnl1SE?=
+ =?us-ascii?Q?SXC7PZh0cFeGWOlQ9kJB/nHEZGPM+aZ/x0FR2Se1a3aewzevV4cJOkJgeScC?=
+ =?us-ascii?Q?5ZtuIYs7gdgcOozdqSiOorktjvLyXsCOYKullrKGx8bZ2WLcI3pK1plTiGfv?=
+ =?us-ascii?Q?sw6swHjJSl645fqreUw2TZo3sf25yE3n0fohvQx6o+weSPatVGkS/HEdRWmP?=
+ =?us-ascii?Q?cmEb7/MF4s/KWfq0lU/CZNXoRqkYgEnhVXD8nO1Ok9j1w7eLVFVuRqFiQwzh?=
+ =?us-ascii?Q?HbAhYpERJ9hPOFZvcWCHtvqN5TdaZqSYRmy6fByNm5lkTD2OBnsZX4diOcda?=
+ =?us-ascii?Q?ch05rkaZ8+mk2UldlEcORGdm0jpJ9OxBe6Q7mRx0q6K1DpgT1xk0OYrYJ1gP?=
+ =?us-ascii?Q?p6q8U6HyUmOE7h+5H0nxItO4E7x9EYdQm1sEwS2L4AfR+7LTz9BclLvgWdFO?=
+ =?us-ascii?Q?xHQW9VoujI/glYhePyTL2cBAmtSJfeTn9XpiIj+eLxd8HFsAsKvSpZF4MgkF?=
+ =?us-ascii?Q?A4bZty2SP5/gW/5TgA5uB/OkH5+ISenQgdY70YZxMYxdnWG0SO4Rd28b6OtN?=
+ =?us-ascii?Q?GsbKBtmnoJaCHvsCsXt1tB2J2M3fqaES0mbSStdtCg43CRvnGECdmxYFBc4S?=
+ =?us-ascii?Q?tQ+TqYzWAEPhKupKdGCmblBXALkwym5wnIwdWAfgiQnZXina6d4T5LtUunc1?=
+ =?us-ascii?Q?6y3PZrrsUkIOJEFWx6hxOdoD1Yf6YQ8piIN+6iShxGs5K7TImVFG+/giqIgU?=
+ =?us-ascii?Q?aRFRqPCN50RYaYXwOuJNHelWQtWmLzOVM+RhV5apyJwWZIe/UOlKttrLqDsu?=
+ =?us-ascii?Q?oT5dFXyfnwujo+GsjKF8Y7TywouqjWpvpiuTp730+Ox+HeQcqldJxQD7eDtg?=
+ =?us-ascii?Q?+dy2tqgCyIaHZfma1xcciXrFMLIy726mWjtVxazqGB9fKbAt90amAOs54Ov7?=
+ =?us-ascii?Q?5VNd51V2N28KV0eBjVJLdugfS7ziaZkmw90EHiRplONO1y1zOoxZ0jU1CZuL?=
+ =?us-ascii?Q?8tVeYQ0ydUyxespao+vBV/9BI3X7AojO7CXHEcD48DqiPUf2G6LaFw6ZOzTO?=
+ =?us-ascii?Q?oAjiRC2RvLunl5fMqPOeXFXlnf7jnrZHW2mpx76rvV68ogDjVvE3Zv/zPS09?=
+ =?us-ascii?Q?VAp1GH1gkSpmu8ClhxkGY8b1cohJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kd6nGaf17ZkOkIY/SVqCUStYqkMJ1wT3T9CJOcaUFqFFQ8iThE2qt/l+hss7?=
+ =?us-ascii?Q?m0cczOLthl/tRoFuSC90mixf2uDbNnYyyLe5xMC1Jlkh0xce/StxFSvZMc4h?=
+ =?us-ascii?Q?kUL97qry9oNod8opFBU3kfZ4BTtctZz3jDYA2gOSPy/ROmB8Mra2U09G+vWF?=
+ =?us-ascii?Q?l78+F/ZWQ0fgEL1p5I/Nvmhp9z5OPueYFd2+OEd5Hx2ZXB8ygkvQQQusoELl?=
+ =?us-ascii?Q?CbQ+EE8d/o4MkooSVfTpK6cgaTabxUOmOoVcDj7B7o1gSzWs9DxINqhek2SU?=
+ =?us-ascii?Q?Pw2TKwzLAUBryFPg0VKQwnVtfbNnoagYTH8YK8eEadkOih5aMOtvuPeZ46J9?=
+ =?us-ascii?Q?RrXEO2ied8+wEqEd8LQ5nREvSaUS1gLhjwd3NdXoTvPvmVVeRUa8KjwDTtmL?=
+ =?us-ascii?Q?6/D+X+XHOLQOvXdwB05OnB3ZvJWGgmtE6TPiYwWL1QUtRFYgGmDfzHC4fPpi?=
+ =?us-ascii?Q?sFtgAuzbHPUob4n0H4m+m33Dc9jVgbvmBP3CWr7sUC6W7PQpeLxgRz3ghF5P?=
+ =?us-ascii?Q?48ZEY9BdIVqz1PjGNZqCVdIFn6fzkPwSu+vzuWDmb5UpQPM1QutgzM6KEgRL?=
+ =?us-ascii?Q?PdgTsb/JALt/Zilm3HwFKzq02+dF7Aa7i5JRf5loGd6OIAKkyRwBmzrsfqpb?=
+ =?us-ascii?Q?32lWkhN2iHKwMbu43lPD5yw5hsss5eisMAEWOKCDs9gINXCT0CyThpUfQBSY?=
+ =?us-ascii?Q?/PXQExYT2lkcLeQfOXg132FdjMhp3Wb1XH3Tb2sLqOnFPZrFG6QArJIKeewl?=
+ =?us-ascii?Q?JWvrqnlZfsQivkrXJjCUYOhBFKInT4g1muXDkcOuo9gmDpxpkawk4iJekt/v?=
+ =?us-ascii?Q?0VlSOQygEJQ6L5oDNILvyTpVSFGQFB9DcR2vupL19M4yKVR1tAv6RqLY5CXQ?=
+ =?us-ascii?Q?K0sfGNRit204LhLAcmzM3jE7jq2oou2VW7UoCI/L1O1hGBgFIiBaeOLArZmD?=
+ =?us-ascii?Q?eTfw+jsqz4PJMiKmBXSMBxqaPbxIcBBJsozkeAM0nYmMeo2HARlBCfmTcaOo?=
+ =?us-ascii?Q?QqIrl5/RPXbIdpXZ5T3J5w+BZPJmwJ9yvHkI6xuFOvtL5k60jN+3l6izsC1C?=
+ =?us-ascii?Q?obIMOOHwLGHKQgZALB+gxQOxq1cteTdJbAGk+eYNcxRpSl2Q36zq7/rxFBnt?=
+ =?us-ascii?Q?vC9kk0wmy8n0HBrNpJCYmwX7ZFbVXmLAqntk1KQYy4mOJn693qxaZKuaM3jk?=
+ =?us-ascii?Q?wuHT+oC2m50dtIT9wcyPUPo/UTjpSPl7JQmvJZfJroLwI8sTytBYxk9ID4ad?=
+ =?us-ascii?Q?FgtGLtOGfIlvr+wGUaiLlpm0A7AJuAi+aMSCcOnTOuaAugxEFXGjU/qL75iq?=
+ =?us-ascii?Q?w17rDKx1l0ujWFpwCyy7fr0qV8taQPqESSdsmzcfLhitEf8DU44X+RE3CmnI?=
+ =?us-ascii?Q?XVs/VMAqxTbyp5B1I19HIiww+6gtOL/y/N46mM12EK4apNO9LXlfXCHVdRDg?=
+ =?us-ascii?Q?2r3BgdWbkVk6uvmPeO2yKip3WTu/T1AEaAREeuhgRmMjF6PQTG3t5DuyT3Qv?=
+ =?us-ascii?Q?AJA6cU6EPJW+LGC3lxKS6KagWxrNSxQBzfUCMvz+km1xEsAQz1NjclXpieWB?=
+ =?us-ascii?Q?n4bNIw0A81Ix/nZ1r7cclbP3NfdJhJ4pwzpgudTH4l2pbKk8MtfN012Akx/e?=
+ =?us-ascii?Q?PQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	S10aXBWhUgZYmRJXxrDc6i155AWVdxFIUhi3lfu1OAlzyxN2CCCVCszf4DRQfuyzOw0WqNv3zUGKgEAMw0oX+dDMajm4vyIU3XxJR5wSbSmC1jFMYk22ZlwNl6PODZvDLu2trD1Ii/2/fJlJQOi+lSRO3GIUvofrLHCs5KcilpzwD+dwjhKyJcqKv9l1TyaIv2lwygsd/Q52/ywoNDRRv/C/kD5UBCAJjVCyhje9vbLCm6GGqNWV0HhR8xASiui6ugRu3jMmzwhm+EoxLuSiD9C9mGL8EgX8+F7xOQie7iphAYv9nyCmgrmqJC+h5q/34svp9t0jYc1wkugnEBQU1W5ZRLJ6WIYgkxDFg3HDavrmDNgMpSWIWMEk+OsIk5ENgWuga6HuPiuklTKgJccB9k85uAtU3/gt0nvse53BnIgWNAcXTyGAxCB5HngYduhiY65063s8M/L8/0RKneZW6/vSe2xoJiE5hraGyxbDhXvRovquddm6F9YDpjGFDHHQptubgG6IXdjQv2XWn171RPJDi45GxWqSE7Jg5LYyF1/lNPN7ngDJouZciso2qvqRwpXCPxbkerMT1IkPnd7XvUVWNkQz8oeXysXMGpclGE4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94231f2b-4da5-49b9-9928-08dd20d90bf7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 09:31:13.8642
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oXFuAyCB3vojsEq7C2BBezTrvMznfXauFcy9ELJm6LdZKcyDlkZhd+d/QAKbx5/uPrN0iVy4GaCVnbQtbTsYi+GzFbnPBqDfEJ22VSQaLxc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4959
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-20_03,2024-12-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2412200078
+X-Proofpoint-GUID: 3e-GjztJABItLRyeqPMntp1ELKDB_Ya7
+X-Proofpoint-ORIG-GUID: 3e-GjztJABItLRyeqPMntp1ELKDB_Ya7
 
-This is to filter lock contention from specific slab objects only.
-Like in the lock symbol output, we can use '&' prefix to filter slab
-object names.
+On Thu, Dec 19, 2024 at 01:17:44PM -0800, Chen, Zide wrote:
 
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl sleep 1
-   contended   total wait     max wait     avg wait            address   symbol
+> With this patch, it seems perf tool has some problems in capturing the
+> kernel data with Intel PT.
+>
+> Running the following commands, the size of perf.data is very small, and
+> perf script can't find any valid records.
+>
+> perf record -e intel_pt//u -- /bin/ls
+> perf script --insn-trace
+>
+>
 
-           3     14.99 us     14.44 us      5.00 us   ffffffff851c0940   pack_mutex (mutex)
-           2      2.75 us      2.56 us      1.38 us   ffff98d7031fb498   &task_struct (mutex)
-           4      1.42 us       557 ns       355 ns   ffff98d706311400   &kmalloc-cg-512 (mutex)
-           2       953 ns       714 ns       476 ns   ffffffff851c3620   delayed_uprobe_lock (mutex)
-           1       929 ns       929 ns       929 ns   ffff98d7031fb538   &task_struct (mutex)
-           3       561 ns       210 ns       187 ns   ffffffff84a8b3a0   text_mutex (mutex)
-           1       479 ns       479 ns       479 ns   ffffffff851b4cf8   tracepoint_srcu_srcu_usage (mutex)
-           2       320 ns       195 ns       160 ns   ffffffff851cf840   pcpu_alloc_mutex (mutex)
-           1       212 ns       212 ns       212 ns   ffff98d7031784d8   &signal_cache (mutex)
-           1       177 ns       177 ns       177 ns   ffffffff851b4c28   tracepoint_srcu_srcu_usage (mutex)
+Hi,
 
-With the filter, it can show contentions from the task_struct only.
+I'm on leave (and should really go back to relaxing :>), returning on 2nd
+Jan so can't really dig into this.
 
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -abl -L '&task_struct' sleep 1
-   contended   total wait     max wait     avg wait            address   symbol
+But I tried it on my intel box and it 'works on my machine' with and
+without patch with commands provided, so I'm not sure this is actually a
+product of this change (which shouldn't impact this).
 
-           2      1.97 us      1.71 us       987 ns   ffff98d7032fd658   &task_struct (mutex)
-           1      1.20 us      1.20 us      1.20 us   ffff98d7032fd6f8   &task_struct (mutex)
+I'm afraid I can't really reply any further until the new year, however (I
+really shouldn't even be replying here ;).
 
-It can work with other aggregation mode:
-
-  root@virtme-ng:/home/namhyung/project/linux# tools/perf/perf lock con -ab -L '&task_struct' sleep 1
-   contended   total wait     max wait     avg wait         type   caller
-
-           1     25.10 us     25.10 us     25.10 us        mutex   perf_event_exit_task+0x39
-           1     21.60 us     21.60 us     21.60 us        mutex   futex_exit_release+0x21
-           1      5.56 us      5.56 us      5.56 us        mutex   futex_exec_release+0x21
-
-Acked-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-lock.c                     | 35 ++++++++++++++++
- tools/perf/util/bpf_lock_contention.c         | 40 ++++++++++++++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 21 +++++++++-
- tools/perf/util/lock-contention.h             |  2 +
- 4 files changed, 95 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d9f3477d2b02b612..208c482daa56ef93 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1539,6 +1539,12 @@ static void lock_filter_finish(void)
- 
- 	zfree(&filters.cgrps);
- 	filters.nr_cgrps = 0;
-+
-+	for (int i = 0; i < filters.nr_slabs; i++)
-+		free(filters.slabs[i]);
-+
-+	zfree(&filters.slabs);
-+	filters.nr_slabs = 0;
- }
- 
- static void sort_contention_result(void)
-@@ -2305,6 +2311,27 @@ static bool add_lock_sym(char *name)
- 	return true;
- }
- 
-+static bool add_lock_slab(char *name)
-+{
-+	char **tmp;
-+	char *sym = strdup(name);
-+
-+	if (sym == NULL) {
-+		pr_err("Memory allocation failure\n");
-+		return false;
-+	}
-+
-+	tmp = realloc(filters.slabs, (filters.nr_slabs + 1) * sizeof(*filters.slabs));
-+	if (tmp == NULL) {
-+		pr_err("Memory allocation failure\n");
-+		return false;
-+	}
-+
-+	tmp[filters.nr_slabs++] = sym;
-+	filters.slabs = tmp;
-+	return true;
-+}
-+
- static int parse_lock_addr(const struct option *opt __maybe_unused, const char *str,
- 			   int unset __maybe_unused)
- {
-@@ -2328,6 +2355,14 @@ static int parse_lock_addr(const struct option *opt __maybe_unused, const char *
- 			continue;
- 		}
- 
-+		if (*tok == '&') {
-+			if (!add_lock_slab(tok + 1)) {
-+				ret = -1;
-+				break;
-+			}
-+			continue;
-+		}
-+
- 		/*
- 		 * At this moment, we don't have kernel symbols.  Save the symbols
- 		 * in a separate list and resolve them to addresses later.
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index a31ace04cb5e7a8f..fc8666222399c995 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -112,7 +112,7 @@ static void exit_slab_cache_iter(void)
- int lock_contention_prepare(struct lock_contention *con)
- {
- 	int i, fd;
--	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1;
-+	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1, nslabs = 1;
- 	struct evlist *evlist = con->evlist;
- 	struct target *target = con->target;
- 
-@@ -201,6 +201,13 @@ int lock_contention_prepare(struct lock_contention *con)
- 
- 	check_slab_cache_iter(con);
- 
-+	if (con->filters->nr_slabs && has_slab_iter) {
-+		skel->rodata->has_slab = 1;
-+		nslabs = con->filters->nr_slabs;
-+	}
-+
-+	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
-+
- 	if (lock_contention_bpf__load(skel) < 0) {
- 		pr_err("Failed to load lock-contention BPF skeleton\n");
- 		return -1;
-@@ -271,6 +278,36 @@ int lock_contention_prepare(struct lock_contention *con)
- 	bpf_program__set_autoload(skel->progs.collect_lock_syms, false);
- 
- 	lock_contention_bpf__attach(skel);
-+
-+	/* run the slab iterator after attaching */
-+	run_slab_cache_iter();
-+
-+	if (con->filters->nr_slabs) {
-+		u8 val = 1;
-+		int cache_fd;
-+		long key, *prev_key;
-+
-+		fd = bpf_map__fd(skel->maps.slab_filter);
-+
-+		/* Read the slab cache map and build a hash with its address */
-+		cache_fd = bpf_map__fd(skel->maps.slab_caches);
-+		prev_key = NULL;
-+		while (!bpf_map_get_next_key(cache_fd, prev_key, &key)) {
-+			struct slab_cache_data data;
-+
-+			if (bpf_map_lookup_elem(cache_fd, &key, &data) < 0)
-+				break;
-+
-+			for (i = 0; i < con->filters->nr_slabs; i++) {
-+				if (!strcmp(con->filters->slabs[i], data.name)) {
-+					bpf_map_update_elem(fd, &key, &val, BPF_ANY);
-+					break;
-+				}
-+			}
-+			prev_key = &key;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -396,7 +433,6 @@ static void account_end_timestamp(struct lock_contention *con)
- 
- int lock_contention_start(void)
- {
--	run_slab_cache_iter();
- 	skel->bss->enabled = 1;
- 	return 0;
- }
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 7182eb559496e34e..6c771ef751d83b43 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -100,6 +100,13 @@ struct {
- 	__uint(max_entries, 1);
- } cgroup_filter SEC(".maps");
- 
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(key_size, sizeof(long));
-+	__uint(value_size, sizeof(__u8));
-+	__uint(max_entries, 1);
-+} slab_filter SEC(".maps");
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_HASH);
- 	__uint(key_size, sizeof(long));
-@@ -131,6 +138,7 @@ const volatile int has_task;
- const volatile int has_type;
- const volatile int has_addr;
- const volatile int has_cgroup;
-+const volatile int has_slab;
- const volatile int needs_callstack;
- const volatile int stack_skip;
- const volatile int lock_owner;
-@@ -213,7 +221,7 @@ static inline int can_record(u64 *ctx)
- 		__u64 addr = ctx[0];
- 
- 		ok = bpf_map_lookup_elem(&addr_filter, &addr);
--		if (!ok)
-+		if (!ok && !has_slab)
- 			return 0;
- 	}
- 
-@@ -226,6 +234,17 @@ static inline int can_record(u64 *ctx)
- 			return 0;
- 	}
- 
-+	if (has_slab && bpf_get_kmem_cache) {
-+		__u8 *ok;
-+		__u64 addr = ctx[0];
-+		long kmem_cache_addr;
-+
-+		kmem_cache_addr = (long)bpf_get_kmem_cache(addr);
-+		ok = bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
-+		if (!ok)
-+			return 0;
-+	}
-+
- 	return 1;
- }
- 
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index bd71fb73825aa8e1..a09f7fe877df8184 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -10,10 +10,12 @@ struct lock_filter {
- 	int			nr_addrs;
- 	int			nr_syms;
- 	int			nr_cgrps;
-+	int			nr_slabs;
- 	unsigned int		*types;
- 	unsigned long		*addrs;
- 	char			**syms;
- 	u64			*cgrps;
-+	char			**slabs;
- };
- 
- struct lock_stat {
--- 
-2.47.1.613.gc27f4b7a9f-goog
-
+Happy holidays, Lorenzo
