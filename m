@@ -1,174 +1,104 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B891A21C17F
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 18:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7C0219A69
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 18:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734720734; cv=none; b=CJX9CY5pYZNZojR+ean9+DwPO8+MlO+4PoD643utTlk91hp/fdofohGoOzROWEbbDRiQekf6LyCw/6+jq83jZxrhUQuxOCQPIkC51Y4E53QcbdukBc5zLYk075UuvA580MFBqLjfvqvP2elDPrrKdIQNDes0qC0TRhl7w/XlqSU=
+	t=1734721092; cv=none; b=k4V445K4lGxu6luv59iyO9Du+KmaC9oL+wGsFA88U8DUKyB83qgt87Qcz1CWzgOKru2MU9h8lAlrLtcHinTUOPF0nx+PXBeOOKwMWvA7ts/XlH8O7CbFyxMD531TXvdvKRtQGeGKV1JKndkio7jqfxg2UE/qOFaCCqhB7+9ddLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734720734; c=relaxed/simple;
-	bh=DUYLUfquG98uQq+kXpeAFU3xFpmomSDyKuleQtmrMEE=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ZdmbGcD0zsR1rE3uBTMqS0G9WsEIbJdFE7wGQlGqininnVSAd/p4a1xGHGQs85c0SsFvSTXbgZklQC3QQWzMZNmNpbgNlrLzYcR/ZzGCfhr/LtRwJbO0ft7lomii7Do6tPYHFBsw6qillS93MPXoxXg1IWjeU7wKX1Eoi+A/jls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a994VDSO; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1734721092; c=relaxed/simple;
+	bh=eQNf0lehN9bu6pzS2nXqn+cmD4eNslzOIzOKkjAUAkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T1BGG+w6KremN82oDg4TkpX9L6fsvrPM6+AU2a546fPiBvKdHUA1MZ4CjZjl8QLJRVJosb8ZDW43jaAQdNTk0124bftiecoSBRcGBjArjWzrSBdh/KJcC9D5x8vuSOOtrdZZr79MHtu72gAksCWXkVJGKaciCVagxTpzWDFM8js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MH+SlS3n; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a994VDSO"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2bdb560ecso28700037b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 10:52:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MH+SlS3n"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a814c54742so202345ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 10:58:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734720731; x=1735325531; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3RjYZWYjU7P3d8ZH5N5N+LTCqyHJ1b2TYWiGLWSmoA4=;
-        b=a994VDSOt1lmfscTiVHLGczfnUksxGdVGLxizjSlipDX2MBzF0ypLprLssSVTuz0BC
-         D9BUdQzwuERsxhgnV6LvW0VKgW4ZFzaJfRmQcWIB2vMFbUmFOSFye18XTJ9eAoLoT/wp
-         Nn24dVDYCSE8FFSyESxRPvO45YMt3hAdmLmK9jUTO3rXnUBURrF5NrKUKZoXQXMeYWCR
-         T/Ae0RfmveUJoiYrXv+ShZsLT/LAcY6ygv/weeLhDqdjY1EzrYPAOxzXFM2zTa5a91pq
-         MbXhUfxeO0Wt/Dvq2CTDs/y9+dbCL11B2SEAWVcGTpc8lusot+1wbhWsxCjfIKB3gJyS
-         o1Sw==
+        d=google.com; s=20230601; t=1734721090; x=1735325890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3T6I6yTFYH8S6DxobwgqkBfUF81QdpsYlHmc2eOu2U=;
+        b=MH+SlS3nz2D8g0+vEblrrbtIU7qlT6hMO6OMUgp5jAzbQRVh+Jz2em9sr3rJok8dwZ
+         vxbRIsdUYV5YXfZLODEJ6kApMlGZhJSbuIB6JhYZaRj0exK2MELIowKKT9Ap4G5TWlBV
+         pGdoWMsAoj1N2Hq2Rvt9wJBtAsp4JavIfpEsAtWCbNGTfOuTeOuWM+7iUUObVUTo3LAd
+         q7z1jtU3lxCtri7U+xPYYrllB2zBYkJKZqn91zGiaPMT1bxXE6dqBTH/8aG293NcHytH
+         mxT4FUQetbCJ2JX8hFkM+a7luZefHnHQRD79mOe92q5ARL33vNwnB6Xh0YvjuSGpdhi+
+         ve/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734720731; x=1735325531;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3RjYZWYjU7P3d8ZH5N5N+LTCqyHJ1b2TYWiGLWSmoA4=;
-        b=aZd6A5HCKyrlyT/IvBUymC5/GdEuljvAWTOaQfJldxHnvDuYyItnNMtXUuH4ws8OYK
-         zAUS5RGaC1Kfcm9mn18/s2yQaH/jhq4JeD5a6kJiYcgZZnySeJKISqe2f4x6IFS1a2zK
-         AqG2Ab1bmIcHaKB/qi5SltO90trN3jFHAWZ2rm6Y+Upl4IkTIVmXVeEyIvfLmp4At0PF
-         3Nwus8y7V9xJ3qXIKOX2hpDGcF47XqFVGIvrLF8J9dxcYYki1mg5ZLwVVY8LL9FfLlvT
-         HsxAi5a0gLmFTcNPKA3jS0DeyhoW4B7Ic8ZRwbxq/z6MqEXOS9zZpSo0DFXsQSKhAj4N
-         AqRw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5JQNfWOBu2bl2wuUIlxQ5LpikdwJXuBFW6t4MWcumwRriMv+5+s1MIoViuHyVe+vtdWVlwwSYhLSTTca/cBsb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWcFXbfIYTpzbdYhiq2EtUslyd4ELvFI6J1sVGtKHwbz/G44PW
-	dQYMT2YK6RTHZrVX3VdrhmAzdFrsA1O4WblO/n1L6eQ9APyzd2GDtSL4o1ABcaZkens00KgMrFS
-	uS6mBUg==
-X-Google-Smtp-Source: AGHT+IEtRVmaAuKRfic+UiyV02GKALJgnkq9gQfUbfzzW8ptoa0HAMbGM1hEnduwrk/PNQXb3sU2j16Vdtdy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:2801:ca8b:1bd0:e38d])
- (user=irogers job=sendgmr) by 2002:a05:690c:ed4:b0:6e3:b08:92c7 with SMTP id
- 00721157ae682-6f3f7f26de6mr93897b3.0.1734720730748; Fri, 20 Dec 2024 10:52:10
- -0800 (PST)
-Date: Fri, 20 Dec 2024 10:52:07 -0800
-Message-Id: <20241220185207.106161-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1734721090; x=1735325890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m3T6I6yTFYH8S6DxobwgqkBfUF81QdpsYlHmc2eOu2U=;
+        b=j76FwYxOzaZ/j0kbHboND80Y8eyh2I0mOdNBX9igegvJ5kmrDYixcl6b7lRF4g0cNl
+         r+oTVlHUBbvsFwzPWG2tJE/jbMz0ShYG3r5axOYzmGv8NuiuEc80++qwdlsX1Eq7d3cc
+         PgTBpVC04an89sELNCwTaC2QrntWiYr0MQOEYzfTARMDOjXeli0dvcxuozhIomg43YGG
+         rJner0EzQaQss7CxiWLGfqC3gTOETDa8RKIWzzvEE9API7Cttgjx+mWwNm5fOsvYNG1c
+         jiv63b3gvLiEzx5DYGGxActDkj6/a9OtoM0ythcI/VjYBb3E+myMv0+fNbMUyP4QOsVC
+         BTGg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0FReuXc9xYkW7yvgfVizwxsEjxX70OZi09DhID7RLbohgsgs6CeNfkChv3BDjWO2PnnVswJO/Ei1tpJcjtiac@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5zNMwVDjfKaWi9Lw/1H9WJJyzo2YM/gUGOIW2xYf4uC6h6bVV
+	m4JKD/3YfuCxbvcxuopz188IzWMPFRgVt2oyVH3z3SdGFhb+6k09oZ2X2LXMw7+W8ffxqy/ogpF
+	sikz8P1TD69j5g4QQMEHKhjZUun9KiFUDlYGB
+X-Gm-Gg: ASbGnctEwZrXEBvLI8CZC4bgY7WHJuLEHdXEGokUDyQkKWnWEF0EebP57yVFljaWZch
+	Nywrlcej2P2Vy2RBWOKDGGkKopolv0UMMJJnN3vI=
+X-Google-Smtp-Source: AGHT+IHikTcVQ+NPdRAIGv8ZQQ8Oj5vgYEoofX6mJwa8r7Hji1aTptVSp3qh5lD8sX0rYg3FXzVWMNY/jA5joJUApZw=
+X-Received: by 2002:a92:d205:0:b0:3a7:cd21:493f with SMTP id
+ e9e14a558f8ab-3c2e43f2c78mr3636515ab.26.1734721089684; Fri, 20 Dec 2024
+ 10:58:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v2] perf cpumap: Reduce cpu size from int to int16_t
+MIME-Version: 1.0
+References: <20241114230713.330701-1-irogers@google.com> <Z1zNuQaqtDDoQhP6@google.com>
+In-Reply-To: <Z1zNuQaqtDDoQhP6@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Fri, 20 Dec 2024 10:57:58 -0800
+Message-ID: <CAP-5=fXOdoyuXwTC2coFUAg_ruaYqj3KVe27YjcBtHCAFt_NeA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Prefer evsel over evsel->core.idx
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Tim Chen <tim.c.chen@linux.intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
-	Kyle Meyer <kyle.meyer@hpe.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, 
+	=?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>, 
+	Chen Ni <nichen@iscas.ac.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fewer than 32k logical CPUs are currently supported by perf. A cpumap
-is indexed by an integer (see perf_cpu_map__cpu) yielding a perf_cpu
-that wraps a 4-byte int for the logical CPU - the wrapping is done
-deliberately to avoid confusing a logical CPU with an index into a
-cpumap. Using a 4-byte int within the perf_cpu is larger than required
-so this patch reduces it to the 2-byte int16_t. For a cpumap
-containing 16 entries this will reduce the array size from 64 to 32
-bytes. For very large servers with lots of logical CPUs the size
-savings will be greater.
+On Fri, Dec 13, 2024 at 4:13=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Nov 14, 2024 at 03:07:10PM -0800, Ian Rogers wrote:
+> > James Clark's patches fixing evsel->core.idx [1] reminded me that we
+> > pass the int value around unnecessarily. Passing the evsel avoids
+> > issues if the evlist is reordered but paired with sanitizers we can
+> > also know when something is used when it shouldn't be. These patches
+> > do some initial work reducing the use of evsel->core.idx or reducing
+> > the API to pass evsels and not their interior index.
+> >
+> > [1] https://lore.kernel.org/lkml/20241114160450.295844-2-james.clark@li=
+naro.org/
+> >
+> > Ian Rogers (3):
+> >   perf stream: Use evsel rather than evsel->idx
+> >   perf values: Use evsel rather than evsel->idx
+> >   perf annotate: Prefer passing evsel to evsel->core.idx
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
----
-v2. Rebase and tweak commit message.
----
- tools/lib/perf/include/perf/cpumap.h |  3 ++-
- tools/perf/util/cpumap.c             | 13 ++++++++-----
- tools/perf/util/env.c                |  2 +-
- 3 files changed, 11 insertions(+), 7 deletions(-)
+Ping.
 
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 188a667babc6..8c1ab0f9194e 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -4,10 +4,11 @@
- 
- #include <perf/core.h>
- #include <stdbool.h>
-+#include <stdint.h>
- 
- /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
- struct perf_cpu {
--	int cpu;
-+	int16_t cpu;
- };
- 
- struct perf_cache {
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 27094211edd8..85e224d8631b 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
- {
- 	const char *mnt;
- 	char path[PATH_MAX];
--	int ret = -1;
-+	int max, ret = -1;
- 
- 	/* set up default */
- 	max_cpu_num.cpu = 4096;
-@@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
- 		goto out;
- 	}
- 
--	ret = get_max_num(path, &max_cpu_num.cpu);
-+	ret = get_max_num(path, &max);
- 	if (ret)
- 		goto out;
- 
-+	max_cpu_num.cpu = max;
-+
- 	/* get the highest present cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
- 	if (ret >= PATH_MAX) {
-@@ -455,8 +457,9 @@ static void set_max_cpu_num(void)
- 		goto out;
- 	}
- 
--	ret = get_max_num(path, &max_present_cpu_num.cpu);
--
-+	ret = get_max_num(path, &max);
-+	if (!ret)
-+		max_present_cpu_num.cpu = max;
- out:
- 	if (ret)
- 		pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.cpu);
-@@ -606,7 +609,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- #define COMMA first ? "" : ","
- 
- 	for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
--		struct perf_cpu cpu = { .cpu = INT_MAX };
-+		struct perf_cpu cpu = { .cpu = INT16_MAX };
- 		bool last = i == perf_cpu_map__nr(map);
- 
- 		if (!last)
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 610c57da5b37..961a92545039 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -543,7 +543,7 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
- 
- 		for (i = 0; i < env->nr_numa_nodes; i++) {
- 			nn = &env->numa_nodes[i];
--			nr = max(nr, perf_cpu_map__max(nn->map).cpu);
-+			nr = max(nr, (int)perf_cpu_map__max(nn->map).cpu);
- 		}
- 
- 		nr++;
--- 
-2.47.1.613.gc27f4b7a9f-goog
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: James Clark <james.clark@linaro.org>
 
+Thanks,
+Ian
