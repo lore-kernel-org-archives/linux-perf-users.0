@@ -1,156 +1,142 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E45D220687
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 19:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70552210C0;
+	Fri, 20 Dec 2024 19:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734722219; cv=none; b=uBD/hTQY1hZ9Q/HwUIDiNWCNwaXk6rGeGYS5b8CsfPbawJMJBIXAzozzOl+sHUIiFqbaX+RphNs43sq7HChq7i+Ws117gBjemw35tST2w9pGiWE9h97+nqtVXWqET05JJdmzaxCKcI49e76mva8PGS3zDvISR0Mi3Qu7A/LfCD4=
+	t=1734722440; cv=none; b=kyw6Z3GOU3i0RiSFEtHtoWr4Q+DnS473ElPAdK4xXgyT+veKr5DbX0vG9TcldinvLLQYdN9UjtIYhKtscuiOTt4dM9FQGXPw6Ldwt5/kh+H56eNm1NBq5vRtMAyhsgXmVOMng8v5X4kPPMDO6dH3Xu0X+TX8wUSpsyTQ03KL32c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734722219; c=relaxed/simple;
-	bh=wWd7d2Htnbc0S0HvlUr/U/zr0ral5q90y0xwVom9jDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=En6jWobqU87TkGSm/x6ntZAUH3V21qteH/BJLTgGWrvH2l1xPfwONF9xjlm/0Bqnp6SBt612J1PhE3h6kLw+Lg2U/z/c/j9tQ3TetDEBk6X+YNlmny03yLn3wlhkyK3vgFn8ERw0oBM0bXmXfRuJE0ebsK81qRlAz6GCYan9zek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EjUy3J+r; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734722440; c=relaxed/simple;
+	bh=8XbdBcK3RoQ29Q3VwBSaVOI51Tab2e3sofg0RlarLnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YcFwd/tx6KKF9Ds1CDdUtoqyjfW39R2iB1K0qxx4p+xM7Yfbrfwz3nOY6yol31Uxg5MQ/kw5xZ4Mcp17LHQVhvbOA2ggHXlC086725AThTaG0E/bQ50vJY3Xcbnug5aDgwTuonqE9Js7veSot+W2lK66TZgnI3lSb4iSJZx9bLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H++3vzxz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EjUy3J+r"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso178145ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 11:16:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734722217; x=1735327017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N82YQ2umVETAfBP08xivuLzlfhvpXA6F9FtDVd6PLw4=;
-        b=EjUy3J+rbEtqWcD3+otxS0KQAANEYwGs9UUgdPqBVa4iM3WpBdHXrMkOa2ntQu3Ed0
-         CFBG1BTrDxG78/XefVX1Na5perYNk7r/s58RIr3uCvJSza74TPVKe2MZXNN8WNEYLJjt
-         fO8CLA7++qb214frx/5E/eOZYm5LymIAfxQNmbHA4eQ+0kVg5D4pnaR/+QSsl8rWTdZk
-         zCkhX57ZbplPmYZ6HWAVWvRO5eQGZYzwFUPUax0BC0/diwfMrTZX+Ik5yAncLp7rhwXR
-         ThnZsq/SvQXbE9izki7ocZ9wSafKEgz8KYiqBKS9RLt1ZiyVJrompruigzO1TWI9uW+N
-         UsTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734722217; x=1735327017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N82YQ2umVETAfBP08xivuLzlfhvpXA6F9FtDVd6PLw4=;
-        b=JWejAnzY7Kb4OCZGadP5u1M1Dt5FbDtluJVJgRf7cZYXGQYGiL0Go4WaK6OLX64wK8
-         I+9Tf2cC1xpD2kQh8aXrpyeJoMU6gxW69osv1OMUpVVuAROS68O5uGQBZWyIfe2th7cI
-         PAygt8fXoyrXKql4T9N79+rMibbVa+i9mLA66gl/6NeWYNvIh+tj3QilzCQpm91O2cmE
-         g7IXIoFYyz4C37xTxrPX9autZ+aTTAFe/jceWlsJ4rzCpeIXBJfvv/XRnFIil4ty64+m
-         phnYi/Vzk++qM8wkDolfxAQN89lx/OU9DQJcLuapj8TdYECyiX2eOyWLjk2Td9HqdzOI
-         DG3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWzIwkUvv4pZlvpVc5Vcyz9ekoaBUlbZWG5uodZ9fSWNjuxxMYqYAPrjtEImKC5XERgqz3uri5EVoD4Mf8ic7Dy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDzFinzgz1jqYMP6OnPNg73JCC8xhCBz/t+AiKwNWfUdTPTJcu
-	sREBFBxrg8YumgBfgX8qIJChEM+tZBtwpSrQQIEXqnyOxQvLYYxDWFacoEAQIesAIDmLkkgAeQg
-	xe1VWtPaR1vuaqOpWDlUEvp2z/Zmo23rAJaNd
-X-Gm-Gg: ASbGncuOUWJqGABrJYg86/d+72d6VvrjWWhAo4+9p/HSXUIMmx9uNWirYgRn65QkwXr
-	6JkdnWoyia68PdKZokIzQAxR1I+4pyT9u4iQMVKc=
-X-Google-Smtp-Source: AGHT+IHOg1KTizx6KXRiG8cpCl/aA6WE1DTbo1PP2+mTzFKwUfVq36r184m4NtN51mqFGkB0LyonTipGbY+RNtvwNM4=
-X-Received: by 2002:a92:d785:0:b0:3a7:dea7:87a6 with SMTP id
- e9e14a558f8ab-3c331d3c64dmr2798245ab.29.1734722217216; Fri, 20 Dec 2024
- 11:16:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H++3vzxz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384F5C4CECD;
+	Fri, 20 Dec 2024 19:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734722440;
+	bh=8XbdBcK3RoQ29Q3VwBSaVOI51Tab2e3sofg0RlarLnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H++3vzxzY6lrc9JZ87oEZGsCSBoH2fPiwmDg/zOlK1d3G6zDy2tXm/wiNw5myOerx
+	 NvEEzKA6zbeZvNy9hXwePCGVHjR0B5uAW2K/tZ7ccwXsRxuzXSfnQWeomH7rY+Cs0U
+	 RomiXeA4uGcoCPLbeXbuhvZ2Sqboov9dBjeh4zy5P/EAdzZ9ezyG/zSG3nMiki+747
+	 E5tSrKx+mYBjCfWBNz96lxv6HNOzTgwHguvASpWnpDUKEcr3lJxDZj8C3JbAWMyPYm
+	 WpA46tlvK5HIOnQrNKBT2RbqdlBa9AxKiacP61E4vDpxv2u0oBlYaQ8kSmIOjy1DLM
+	 2n2mgFCIQ43+w==
+Date: Fri, 20 Dec 2024 16:20:37 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>,
+	Chun-Tse Shao <ctshao@google.com>
+Subject: Re: [PATCH v3 0/4] perf lock contention: Symbolize locks using slab
+ cache names
+Message-ID: <Z2XDhXZsfUVtU7MY@x1>
+References: <20241220060009.507297-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606044959.335715-1-irogers@google.com> <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
- <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
- <060b220d-f7d6-4594-9b2b-e878a2ba98c6@arm.com> <CAP-5=fU+pigNLi+cTFwEmyG5tO+JHTGDgWh1sYbCiX5TppdLnQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fU+pigNLi+cTFwEmyG5tO+JHTGDgWh1sYbCiX5TppdLnQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 20 Dec 2024 11:16:46 -0800
-Message-ID: <CAP-5=fVBsCxHbqQkEbG2zzATDYfN8bP6mN9ixkae7o9eNB5w+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming convention
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tuan Phan <tuanphan@os.amperecomputing.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Bhaskara Budiredla <bbudiredla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241220060009.507297-1-namhyung@kernel.org>
 
-On Wed, Oct 23, 2024 at 9:21=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Oct 23, 2024 at 2:34=E2=80=AFAM Robin Murphy <robin.murphy@arm.co=
-m> wrote:
-> >
-> > On 2024-10-23 5:06 am, Ian Rogers wrote:
-> > > On Thu, Jun 6, 2024 at 11:15=E2=80=AFAM Liang, Kan <kan.liang@linux.i=
-ntel.com> wrote:
-> > >>
-> > >>
-> > >>
-> > >> On 2024-06-06 12:49 a.m., Ian Rogers wrote:
-> > >>> It is an existing convention to use suffixes with PMU names. Try to
-> > >>> capture that convention so that future PMU devices may adhere to it=
-.
-> > >>>
-> > >>> The name of the file and date within the file try to follow existin=
-g
-> > >>> conventions, particularly sysfs-bus-event_source-devices-events.
-> > >>>
-> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> > >>> ---
-> > >>>   .../testing/sysfs-bus-event_source-devices    | 24 ++++++++++++++=
-+++++
-> > >>>   1 file changed, 24 insertions(+)
-> > >>>   create mode 100644 Documentation/ABI/testing/sysfs-bus-event_sour=
-ce-devices
-> > >>>
-> > >>
-> > >> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > >
-> > > Thanks for all the reviews. Could we land this?
-> >
-> > Hmm, it's not always going to be strictly true as written though - we
-> > will also have cases where multiple PMU instances owned by the same
-> > driver don't all support the same events/filters/etc., and/or are
-> > entirely unrelated such that the same event encoding may mean completel=
-y
-> > different things. I've just landed a driver where not only are the
-> > instances going to be heterogeneous (since it's for arbitrary bits of
-> > interconnect), but for hierarchy reasons the most logical place to put
-> > the instance ID in the name wasn't even at the end :(
->
-> Right, I was trying to capture what the tool is doing and trying to
-> encompass the problems hex suffix create. Another example of that
-> problem recently burning us is ARM's PMU naming of armv8_pmuv3_a53
-> means the a53 looks like a hex suffix. When ARM release a model with a
-> 3 digit number will the naming break? Wrt filters, I wonder if there
-> should be testing, bugs, etc. The wildcard matching will likely do its
-> thing and I think the failures should be predictable and descriptive,
-> like an event used a format that a PMU doesn't support, but I'm not
-> sure if we should do improvements in `perf list` where we try to
-> deduplicate PMUs. Perhaps the deduplication should be smarter.
->
->
-> > FWIW I think if we want to nail down a strict ABI, it would seem more
-> > robust to have an explicit attribute to describe underlying PMU
-> > properties like whether instances do represent identical "slices" or
-> > not. The hex suffix thing is already proving how fragile names alone ar=
-e
-> > liable to be.
->
-> Agreed. Does this mean we shouldn't land this? I worry that LKML is
-> the home of bike shedding conversations and we're likely to bike shed
-> trying to achieve 'perfect' while something 'good' would have value
-> today.
+On Thu, Dec 19, 2024 at 10:00:05PM -0800, Namhyung Kim wrote:
+> Hello,
+> 
+> This is to support symbolization of dynamic locks using slab
+> allocator's metadata.  The kernel support is merged to v6.13.
+> 
+> It provides the new "kmem_cache" BPF iterator and "bpf_get_kmem_cache"
+> kfunc to get the information from an address.  The feature detection is
+> done using BTF type info and it won't have any effect on old kernels.
+> 
+> v3 changes)
+> 
+>  * fix build error with GEN_VMLINUX_H=1  (Arnaldo)
 
-Ping.
+Thanks, applied to perf-tools-next,
 
-Thanks,
-Ian
+- Arnaldo
+
+>  * update comment to explain slab cache ID  (Vlastimil)
+>  * add Ian's Acked-by
+> 
+> v2) https://lore.kernel.org/linux-perf-users/20241108061500.2698340-1-namhyung@kernel.org
+> 
+>  * don't use libbpf_get_error()  (Andrii)
+> 
+> v1) https://lore.kernel.org/linux-perf-users/20241105172635.2463800-1-namhyung@kernel.org
+> 
+> With this change, it can show locks in a slab object like below.  I
+> added "&" sign to distinguish them from global locks.
+> 
+>     # perf lock con -abl sleep 1
+>      contended   total wait     max wait     avg wait            address   symbol
+> 
+>              2      1.95 us      1.77 us       975 ns   ffff9d5e852d3498   &task_struct (mutex)
+>              1      1.18 us      1.18 us      1.18 us   ffff9d5e852d3538   &task_struct (mutex)
+>              4      1.12 us       354 ns       279 ns   ffff9d5e841ca800   &kmalloc-cg-512 (mutex)
+>              2       859 ns       617 ns       429 ns   ffffffffa41c3620   delayed_uprobe_lock (mutex)
+>              3       691 ns       388 ns       230 ns   ffffffffa41c0940   pack_mutex (mutex)
+>              3       421 ns       164 ns       140 ns   ffffffffa3a8b3a0   text_mutex (mutex)
+>              1       409 ns       409 ns       409 ns   ffffffffa41b4cf8   tracepoint_srcu_srcu_usage (mutex)
+>              2       362 ns       239 ns       181 ns   ffffffffa41cf840   pcpu_alloc_mutex (mutex)
+>              1       220 ns       220 ns       220 ns   ffff9d5e82b534d8   &signal_cache (mutex)
+>              1       215 ns       215 ns       215 ns   ffffffffa41b4c28   tracepoint_srcu_srcu_usage (mutex)
+> 
+> The first two were from "task_struct" slab cache.  It happened to
+> match with the type name of object but there's no guarantee.  We need
+> to add type info to slab cache to resolve the lock inside the object.
+> Anyway, the third one has no dedicated slab cache and was allocated by
+> kmalloc.
+> 
+> Those slab objects can be used to filter specific locks using -L or
+>  --lock-filter option.  (It needs quotes to avoid special handling in
+> the shell).
+> 
+>     # perf lock con -ab -L '&task_struct' sleep 1
+>        contended   total wait     max wait     avg wait         type   caller
+> 
+>                1     25.10 us     25.10 us     25.10 us        mutex   perf_event_exit_task+0x39
+>                1     21.60 us     21.60 us     21.60 us        mutex   futex_exit_release+0x21
+>                1      5.56 us      5.56 us      5.56 us        mutex   futex_exec_release+0x21
+> 
+> The code is available at 'perf/lock-slab-v3' branch in my tree
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (4):
+>   perf lock contention: Add and use LCB_F_TYPE_MASK
+>   perf lock contention: Run BPF slab cache iterator
+>   perf lock contention: Resolve slab object name using BPF
+>   perf lock contention: Handle slab objects in -L/--lock-filter option
+> 
+>  tools/perf/builtin-lock.c                     |  39 ++++-
+>  tools/perf/util/bpf_lock_contention.c         | 140 +++++++++++++++++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  95 +++++++++++-
+>  tools/perf/util/bpf_skel/lock_data.h          |  15 +-
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |   8 +
+>  tools/perf/util/lock-contention.h             |   2 +
+>  6 files changed, 292 insertions(+), 7 deletions(-)
+> 
+> -- 
+> 2.47.1.613.gc27f4b7a9f-goog
