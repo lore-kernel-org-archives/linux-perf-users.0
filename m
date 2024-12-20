@@ -1,140 +1,218 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAE921B19F
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 17:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458C2218EB9
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 17:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734714986; cv=none; b=eencfMVtTEhr8jPGgrOi8FIcD6nbnsrZ44u6bL+fmMHGrne4x9izLb8WQNL5Y+Cj/1k2/67AnH9M5qev24cIAQo8A7tgFDDXCDclBj71aIA9WW4GGdXp+bREoTfkH/vbJIrle2TeklfJXXye5ZbnTrM6ez/ZAPKb6KSoHssSe7A=
+	t=1734716738; cv=none; b=RxTAdt46QGiQnSH1WorPSoBZPckH3qHbb9Il08KRMlw1ePLolBO+4ZZ6v4exEjhjSXu+i56k5SxYqAHi0kBspsgAjHH+iaZgGSlc25ehEgCX5HASMU+Ru4v1UgBjV8fyV2iXpCVNXaJfpUA64dPyhQBu2XqhfYuqETwWUWwuD/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734714986; c=relaxed/simple;
-	bh=n8b41AHa3RgNdF/44j6nDwaehIKPuCDpJKbuVqrYhMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2NUP+kmp2R4FL+eVEd3i661hMuTwgUxUSUJR/fWEgiTjRugfH0MwCOMnKlRe144Tzn1x/u6F1n2Bbp0dNfC5sbZWLsMNYAn99UzJOxivm1Hk/oqpLcuKFPialxVqUuu7pEzfnPDQ72wTp6PxOnfu38GL+qtzZ6MxWMoq4PvOTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SWNDpO6k; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1734716738; c=relaxed/simple;
+	bh=xRj8G4EjlcmKYnpMofuE05vY1j3af20AEdLsymFjdWo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oq7gSewkZPW8IhiiuvfRaKSHT/2UDjtec7LT0EEnh03KXlOG7YBLhiYDuCkMnoY6cqKg3cHhTscYdRfMnJdn/LxtnElk0mMiczUnkV3Cu+DSa7mdYrf0n0LtLy7A96pQx6U4I7tQJsbDyDfM9pngL4Tny4YkIE6IGaCqAMym38U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yVGH8MES; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SWNDpO6k"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43635796b48so14051985e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 09:16:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yVGH8MES"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so167175ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 09:45:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734714983; x=1735319783; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aWkEtC1JATIn6qXREPnlwjqS9TBnknDlIdxobBNl7k8=;
-        b=SWNDpO6kjfc13QEy+DaVPFtG+/svjShiF8OBVB2GZ9+9J0wyz5/qtc/4NCukD5rPHp
-         Ajskx6/S5egx+vtacpmYtBmYuLdfdP0DaapNpL098850cY+wNTuL+mcjE+vHsQZmbN4V
-         2UF6MGwuoT3mE2vPQC4guK8iEd3xfVNePh5FkAbPt2ARzHFWcVZCVBcQOWYyMkEwqPLE
-         CuigiHBIKPxgBWD9+M6T07GL+gET+ZW0OiyOaZ8zzftMHVc6eH/8Mr6DQHoVnZquErEM
-         2yjdUjd9Td7gO6K4GBn3XUWbgLR5RTL2uyAnPKANjL/YLJlqL5UHd7rK+4Q3YlgIkUDO
-         VIqg==
+        d=google.com; s=20230601; t=1734716735; x=1735321535; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NkcqAcacYqnvyS0wA261MKEN0iedOofRrvEiEcu4Jo8=;
+        b=yVGH8MESz4MehdVS3QVHF/HFhUdluMRt9OzlpF1/Id9yCI2s4MXcvR66zzisCowSB5
+         xmz53moSrcTTW0WbxkADdBqGseyB+DNSlYeFterYDIozm1BGzvznZZm8H/t8Myg08Tyn
+         fyE5C36ifNeMoNPjTW6hr898e/G7B/xkUjxIipYGuewp4wZ+NqxnpKCMyZEDMs3PHCOb
+         wD3+1JyBxCw4FII/Ppr19tRwfpY63tu4MENx2y/uCIHhegY4SmxdvFWXWrv4AIl19A2q
+         Rz9u5/vrq6oMclKXrruDBRHj1a3m7131/x4uZV+8JUzPZMCCawU3sC3Q8rEgsFp3LZzY
+         Hx6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734714983; x=1735319783;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aWkEtC1JATIn6qXREPnlwjqS9TBnknDlIdxobBNl7k8=;
-        b=XGakIuEhhN7I4vD+t3DxsEup6/vM/Lbb4d3A0CjUmzmpLX8fvgKZfQ2GapLyD1p7BO
-         drN8Le6hC/1CJR1sk5o+35GdzgYHuFx9zzzDy6EK/axW89Vq2sOZlO8Dtn7hpuJCjUHH
-         vwxwY613A1CHHAsXLWldnQBYvKak/zTbCc7lwJ061wr0/ID007w3BcVjKfk0wndAJZ9m
-         PSyF2CIloGFjcHer5ck1ixLVGyrQWwK5x41kg+MnAGvyJoUrDbMc2SzHb199MjeunXDt
-         GX8sGRPVydSxPXD3BuxjRqfQ8cf/edNz32cpfAZ0pnHUefY2tPFjX2lDcULGafv4+SKp
-         iL7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWJZNtZ0pcSAOdlvVDEuRrY1X1eu5f1S8poJffc62AMlB/YThJvf9iXQDrImNWhU+fgNflFMujF+DFRjkPuarJk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMkpjG8cRj6NgLyhQ6/DdInlh81tQqXGRMWVp79Dk01gCYU0z1
-	Zhdy52EojpWoyOG8jP2C75NPP8J8x+nEXtwjLeVoGrLPGRMyzlJMYgvvuUaPlhg=
-X-Gm-Gg: ASbGncvOsDAl8ownm4V7qPk+T0ZGyxVA4Lu2oezYzD4rrGr/9HGaqA+rUOtvf2eyZnM
-	ID+re+dcP8qhMY+2CY9OYHVshMPdse88OJanoku3cxqFmV0PMdh9qW6JVtyoZLANscSP88XhbW0
-	wyu1eqgWQTy3JL9zDvgJCKJa+WPy5tYY9/HBsYRrm53Sy85lBKYoa2yiTchYkfZTG/VqSOIjGgy
-	dib8IOri3RqPAPtCAET4flJs2livWiv5VFsRYsQPU0rGEGmcOpdFNo7I/HT2mnBSBA=
-X-Google-Smtp-Source: AGHT+IGn2bSuOD+eQ1Kw77ReARBTW+Z43faAGpGgYHNzLywWOzDLSMMRJx0svPo2NgeJxp9j9ds7vQ==
-X-Received: by 2002:a05:600c:746:b0:436:185f:dfae with SMTP id 5b1f17b1804b1-4365c770940mr76361555e9.6.1734714983179;
-        Fri, 20 Dec 2024 09:16:23 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.65.105])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4366127c4bbsm50677985e9.32.2024.12.20.09.16.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2024 09:16:22 -0800 (PST)
-Message-ID: <c98e8399-1471-4d38-b314-4fbcb8dcb27d@linaro.org>
-Date: Fri, 20 Dec 2024 17:16:21 +0000
+        d=1e100.net; s=20230601; t=1734716735; x=1735321535;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NkcqAcacYqnvyS0wA261MKEN0iedOofRrvEiEcu4Jo8=;
+        b=DyArlrL5eROd5waPwO/HUsG2jVsGlIYTY7ylJVyBePRCJQQPSMKdCdL2ngvEsRIwFb
+         jBsudyMrCxCWY7QP9z4sCZwqtLtzE3/qnvqnsUvPZ+EI26OJXzwk6KT1HX+ctyR/k0g3
+         /WdSPeVOINpHsDgqXkGKfzAzECrxxqAP3Gl39Tls56LBTydZOKzaQCEVSU6A9jMLUpQm
+         4C+BTdmB3vHvSN6VDJ7AnfdlMpS7Aop54o0SgpZhIl1B5qAx97mC6ItaXC7iwXZSilWc
+         CLlRYF1C1RH5kPps7TWawSrl/rYk9DK3nVrf/166W7rgPpB1Wx8AVZAvLBL1Tpluqj5c
+         HQ6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRpSscy+ffAL6QI0Avc6s9hpNHk0HV8hRCvjqobDAAxTOMEc+JRRA8pZw0aXjuzFjDxE6l2aNaJhuwf8GCMFXL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6znamsUdCfSds/Mn/QaLINexX3lvTdvDuz5U+nDX/xkQfYkTT
+	/4aTZBgZhCBC6dFV+DaLzCvPLT6r8wvlBucgbkz8i3ZAau16lW2S8wAOd+JBTY8s+0Tb2zu5qvJ
+	Xb1ODTXCYuhg9P0Beb36+L89CLMfD7jxeYn+m
+X-Gm-Gg: ASbGncugJReUnMKNN5IcrRuRCzUPUidxGvQR0n/4KU4z+XBn1wQhXk4YB/kzrEiYwWl
+	gnapYPPvW5TkmtLet4ozLiyPEOOGEBR01f+yfBiA=
+X-Google-Smtp-Source: AGHT+IFGFZvsVH9e4yHJZau82GW4QZ9dnkmslWvic9jc+oid7kJzUHrCifNkINdulLRyOLSkr41VDqRlAS1OzyUpINw=
+X-Received: by 2002:a05:6e02:97:b0:3a7:91c2:c28d with SMTP id
+ e9e14a558f8ab-3c2e43f2a30mr4018065ab.28.1734716735123; Fri, 20 Dec 2024
+ 09:45:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: arm-spe: Fix null-ptr-deref in
- arm_spe__alloc_metadata()
-To: Nihar Chaithanya <niharchaithanya@gmail.com>, Leo Yan <leo.yan@arm.com>
-Cc: skhan@linuxfoundation.org, john.g.garry@oracle.com, will@kernel.org,
- mike.leach@linaro.org, leo.yan@linux.dev, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- graham.woodward@arm.com, bwicaksono@nvidia.com,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241220145659.66066-1-niharchaithanya@gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241220145659.66066-1-niharchaithanya@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241216232459.427642-1-irogers@google.com> <20241216232459.427642-2-irogers@google.com>
+ <855f50a5-f397-4a08-8298-78bd040e5328@linaro.org> <CAP-5=fVeW+XARtWtdR=XX47w-ZznKiGdhxDBy=Le_QTS=R6SQA@mail.gmail.com>
+ <Z2Ov2Gy99KOtctPT@google.com> <CAP-5=fUUUZcE8D3q3iNkrym=9g6UQxgfDihC24+1J879fj4kww@mail.gmail.com>
+ <Z2SV2A9C6V65YL3x@google.com> <462b0262-305b-4ed2-9c1c-2afeaec8646e@linaro.org>
+In-Reply-To: <462b0262-305b-4ed2-9c1c-2afeaec8646e@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 20 Dec 2024 09:45:23 -0800
+Message-ID: <CAP-5=fV=aQs7X6ROjDP9x2-Nx0YBdpvEbzXEjur4gGHb-=a_fQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] perf cpumap: If the die_id is missing use socket/physical_package_id
+To: James Clark <james.clark@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, Yanteng Si <siyanteng@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Dec 20, 2024 at 2:28=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> On 19/12/2024 9:53 pm, Namhyung Kim wrote:
+> > On Thu, Dec 19, 2024 at 09:20:39AM -0800, Ian Rogers wrote:
+> >> On Wed, Dec 18, 2024 at 9:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> >>>
+> >>> On Wed, Dec 18, 2024 at 09:42:27AM -0800, Ian Rogers wrote:
+> >>>> On Wed, Dec 18, 2024 at 4:04=E2=80=AFAM James Clark <james.clark@lin=
+aro.org> wrote:
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> On 16/12/2024 11:24 pm, Ian Rogers wrote:
+> >>>>>> An error value for a missing die_id may be written into things lik=
+e
+> >>>>>> the cpu_topology_map. As the topology needs to be fully written ou=
+t,
+> >>>>>> including the die_id, to allow perf.data file features to be align=
+ed
+> >>>>>> we can't allow error values to be written out. Instead base the
+> >>>>>> missing die_id value off of the socket/physical_package_id assumin=
+g
+> >>>>>> they correlate 1:1.
+> >>>>>>
+> >>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+> >>>>>> ---
+> >>>>>>    tools/perf/util/cpumap.c | 3 ++-
+> >>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> >>>>>> index 27094211edd8..d362272f8466 100644
+> >>>>>> --- a/tools/perf/util/cpumap.c
+> >>>>>> +++ b/tools/perf/util/cpumap.c
+> >>>>>> @@ -283,7 +283,8 @@ int cpu__get_die_id(struct perf_cpu cpu)
+> >>>>>>    {
+> >>>>>>        int value, ret =3D cpu__get_topology_int(cpu.cpu, "die_id",=
+ &value);
+> >>>>>>
+> >>>>>> -     return ret ?: value;
+> >>>>>> +        /* If die_id is missing fallback on using the socket/phys=
+ical_package_id. */
+> >>>>>> +     return ret || value < 0 ? cpu__get_socket_id(cpu) : value;
+> >>>>>>    }
+> >>>>>>
+> >>>>>>    struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *=
+data)
+> >>>>>
+> >>>>> Hi Ian,
+> >>>>>
+> >>>>> I sent a fix for the same or a similar problem here [1]. For this o=
+ne
+> >>>>> I'm not sure why we'd want to use the socket ID for die when it's a=
+lways
+> >>>>> been 0 for not present. I wonder if this change is mingling two thi=
+ngs:
+> >>>>> fixing the negative error value appearing and replacing die with so=
+cket ID.
+> >>>>>
+> >>>>> Personally I would prefer to keep the 0 to fix the error value, tha=
+t way
+> >>>>> nobody gets surprised by the change.
+> >>>>>
+> >>>>> Also it looks like cpu__get_cluster_id() can suffer from the same i=
+ssue,
+> >>>>> and if we do it this way we should drop these as they aren't valid =
+anymore:
+> >>>>>
+> >>>>>          /* There is no die_id on legacy system. */
+> >>>>>          if (die < 0)
+> >>>>>                  die =3D 0;
+> >>>>
+> >>>> I think this breaks the assumption here:
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next=
+.git/tree/tools/perf/tests/expr.c?h=3Dperf-tools-next#n244
+>  >>>>>> Hmm.. I'm not sure how it worked before.  The code is already
+> there and
+> >>> it just changed the condition from =3D=3D -1 to < 0, right?
+> >>
+> >> You'd need to be testing on a multi-socket machine to see the issue.
+> >> If you had say a dual socket Ampere chip and the die_id was missing,
+> >> does it make sense for there to be two sockets/packages but only 1
+> >> die? I think it is best we assume 1 die per socket when the die_id is
+> >> missing, and to some crippled extent (because of the s390 workaround)
+> >> the expr test is doing the sanity check.
+> >
+> > AFAICS die ID is always used with socket ID already so I guess it means
+> > an ID inside a socket.
+> >
+> > Thanks,
+> > Namhyung
+> >
+>
+> Don't we then need to update has_die_topology() to always return true if
+> we're using socket ID as a placeholder? And the #num_dies expression
+> should potentially become non-zero for consistency?
+>
+> Seems like there are two options:
+>
+>   - Fully support "no die reported"
+>    * -errno is saved into the topology header, but it's still converted
+>      to 0 for Perf stat aggregation and display
+>    * #num_dies =3D=3D 0 as it currently is
+>    * Anywhere else die is used it's checked for error values first
+>
+>   - Replace die with package
+>     * #num_dies =3D=3D #num_packages
+>     * has_die_topology() =3D=3D true
+>     * delete code to display die as 0 in perf stat
+>
+> With this patch we get somewhere between the two.
 
+Thanks James, I'll try to do a larger cleanup in this area. My purpose
+for sending the patches was the unaligned feature fields such as CPU
+topology cause data alignment issues in the perf.data file. When these
+occur we have builds that turn undefined behavior (such as bad
+alignment) into illegal instructions and we see widespread test
+regressions. The extended pipe tests in v6.12 did this. So the rough
+flow of what I've been going through is:
+1) CPU topology has perf.data file alignment issues.
+2) aligning the CPU topology breaks "old" perf.data files as the size
+of the feature is used to detect whether die_id, etc. are present.
+3) I've discovered a latent issue that ARM and S390 aren't exposing
+die_id and falling into the "old" perf.data file case.
+4) let's write out everything in the CPU topology even on ARM and S390
+so that the old file test can be just that, but new files have all the
+topology.
+5) the CPU topology is a mish-mash of skipped tests and things working
+not particularly by design.
+6) we need to come up with values for die_id, etc. to fix the topology
+but these things aren't well defined. I'm reminded of past discussions
+of logical ids (unique per core/die/..) vs the normal ids perf users
+which may be duplicated across cores.
+Anyway, I'll see what I can do make this have a better API, etc.
+inspired from your and Namhyung's feedback.
 
-On 20/12/2024 2:57 pm, Nihar Chaithanya wrote:
-> When metadata is allocated using arm_spe__alloc_metadata(), if the
-> metadata version is 1, metadata is returned as NULL. This value
-> is dereferenced later in arm_spe__free_metadata() and it can cause
-> null-ptr-deref.
-> 
-> Modify the NULL check for metadata to return -EINVAL even when
-> metadata_ver == 1.
-> 
-
-Hi Nihar,
-
-I don't think this is the right fix. Doesn't that mean we can't open 
-files with V1 anymore? Did you test opening an old SPE file on a new 
-version of Perf? I actually thought I tested this before but maybe not 
-if there's a NULL deref.
-
-Seems like the correct fix is to not dereference anything if metadata is 
-NULL, or make a fake placeholder one.
-
-
-> This issue was reported by Coverity scan [1].
-> [1] https://scan5.scan.coverity.com/#/project-view/63616/10063?selectedIssue=1636359
-> 
-
-Is this supposed to be publicly accessible? It goes to a login page for me.
-
-> Closes: https://scan5.scan.coverity.com/#/project-view/63616/10063?selectedIssue=1636359
-> Signed-off-by: Nihar Chaithanya <niharchaithanya@gmail.com>
-
-Probably needs a fixes: tag too for the commit that introduced the issue.
-
-Thanks
-James
-
-> ---
->   tools/perf/util/arm-spe.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index dbf13f47879c..55827d8ce133 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -1497,7 +1497,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->   
->   	metadata = arm_spe__alloc_metadata(auxtrace_info, &metadata_ver,
->   					   &nr_cpu);
-> -	if (!metadata && metadata_ver != 1) {
-> +	if (!metadata) {
->   		pr_err("Failed to parse Arm SPE metadata.\n");
->   		return -EINVAL;
->   	}
-
+Thanks,
+Ian
