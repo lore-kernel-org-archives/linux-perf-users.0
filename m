@@ -1,162 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23D1218EA6;
-	Fri, 20 Dec 2024 16:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0B1853;
+	Fri, 20 Dec 2024 17:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734713202; cv=none; b=ByZIM1FiHBVH2OOwmWUQ6TReqPOccy1D+XaHb6RmldZHh4PMQ44zH5kZNWkxexb0IGib7yxFQfVdv3rWuh/Mmxn1Xxvo8u2AlhnFu7l/XainwrsGQsP0Acs+j3tUvzm+jZ2yQlW8din9dxGBrgeK5xCRIxqCIgQ2WrD+f3dBFIU=
+	t=1734714693; cv=none; b=VyEZOMD9hDZL1ogadp5xg+D4KSBf0Drsz/qrpG7kOYVAKINl3Pb3f8zz+gqz1FocHUF3583Wc3UwEDnrBS0ngYZdCQwMyqBlfJpXGmqz8JN4HsYalkzrK8WaEAm3io2nX9BFC+DZxSppjVJU/Gzf623vWZB5OlqkXs5IEMyMjas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734713202; c=relaxed/simple;
-	bh=4X/zCswAT/8Qh+e3XG+o14wfxZw/Q6XKqERER1PXQnI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=herHvIo15hFpziSkAOtwFoatB92/YxU1qsk5Ue4KPniByKhfvee/TdMKzLqFnXwMnNSAUwl4IHeRsF6I2zU9RkenWxPcoig64oOTxIqD0Jwo88+vaALyAYm3iFmkKYeXO4MThpAkeCe3Uf2O9Df9fOHQ4REGzTwL9FlVDcC8Yvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A81571480;
-	Fri, 20 Dec 2024 08:47:01 -0800 (PST)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ACD283F528;
-	Fri, 20 Dec 2024 08:46:31 -0800 (PST)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterz@infradead.org,
+	s=arc-20240116; t=1734714693; c=relaxed/simple;
+	bh=a/mmhGrEzb5373DDRY9uU4VV1DaUT4hipb16YyZfKW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H20Z2Ey3UFFLFIR6440X2/Xl4KAEOStM2CuH0S2wS/MeesJMfdo/Ki8FfZrjTUFNUeUhVchijuk8EhwhedFvmelo2zncgrSdUBfdFPQ7N0WLzHw/xM1TTymWYW2xbYWYFS4J+zpx/+zlgdqXdDuMht/2RLMAEUI5On6C2I9utvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EU47C78d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EU47C78d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DAEC4CECD;
+	Fri, 20 Dec 2024 17:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734714693;
+	bh=a/mmhGrEzb5373DDRY9uU4VV1DaUT4hipb16YyZfKW0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EU47C78dPWmmqI39Q0nMCprd1lKBw8niW1uE+jqb9Z3K4VVXrfZJQBTCUBSsuW+tJ
+	 wZm4GguVDeId8jre8RQeL1xgGCNXU/cqSIVJw1xN5+r+NI+uo0U0Uv/ILWtQn/MsYG
+	 Cvx5ZcXAbTlRlG/CjuMH9G73SBuHY5DEJdqS/g4O42mmFvC8g5o+eCW06B25MTC9PS
+	 0qCDKRw8NzqSSLIbr4tw0+4Udm4i7c4JzMGtEoXEMF2YnudEE/yEhejKKJpdbkoTOe
+	 s7uvGtVFPTumM8jnzFnL1dcMQTW3uEvdd6Pnh4RjDCpmPG3M/5hbyEjh2Ulw3wWqe0
+	 iU/dtbtLY6fgA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sasha Levin <sashal@kernel.org>,
 	mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v3] events/core: fix acoount failure for event's child_total_enable_time at task exit
-Date: Fri, 20 Dec 2024 16:46:28 +0000
-Message-Id: <20241220164628.1079271-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 01/29] perf/x86/intel: Add Arrow Lake U support
+Date: Fri, 20 Dec 2024 12:11:02 -0500
+Message-Id: <20241220171130.511389-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.6
 Content-Transfer-Encoding: 8bit
 
-The perf core code fails to account for total_enable_time of event
-when its state is inactive.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Here is the error case for failure to account for total_enable_time for
-core event:
+[ Upstream commit 4e54ed496343702837ddca5f5af720161c6a5407 ]
 
-sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
-...
+From PMU's perspective, the new Arrow Lake U is the same as the
+Meteor Lake.
 
-/*
- * three number represetns each
- *   scaled count / total_enable_time / total_total_running_time
- */
-armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
-                                      ^^^^^^^^^^
-armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
-                                      ^^^^^^^^^^
-
- Performance counter stats for 'stress-ng --pthread=2 -t 2s':
-
-     1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
-     1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
-
-Since above two events are belong to the same task context and
-mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
-the total_enable_time should be the same (marked with ^^^^^^^^^^^)
-and the summation of ratio should be 100%.
-
-This account failure of total_enable_time because of
-account failure of child_total_enable_time of child event when
-child task exit.
-
-Below table explains how the child_total_enable_time is failed to account at
-exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
-
- - in means sched_in.
- - out means sched_out.
- - exit means at the exit of child task.
-   NOTE: the value is before calling list_del_event(). which mean
-         the value at exit column will be added at parent event's
-          child_total_enable_time when child task exit.
- - ctx is the child_task_ctx,
- - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
-   added in CPU0,
- - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
-   added in CPU1,
- - e0 and e1 belongs to same child_task_ctx.
-
-          CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
-          |  in | out |       | in  | out     |       | in      | exit        |
-------------------------------------------------------------------------------
-ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
-------------------------------------------------------------------------------
-e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
-------------------------------------------------------------------------------
-e0->run   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t3     |
-------------------------------------------------------------------------------
-e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
-------------------------------------------------------------------------------
-e1->run   |  0  | 0  *|       | 0   | t2      |       | t1 + t2 | t2         X|
-------------------------------------------------------------------------------
-
-The value marked with * means it doesn't updates since event->state was
-INACTIVE.
-
-Please see the last CPU0's column with exit (marked with X).
-Since e1's state is INACTIVE its total_enable_time doesn't update
-and it remains with former value without accounting t3 time.
-
-In this situation, at __perf_remove_from_context() while exit child_task,
-sync_child_event() where adds child_event's total_enable_time to
-parent event's child_total_enable_time is called before
-list_del_event() in which event time is updated by setting the event state
-as OFF. that means child_total_enable_time is added with missing
-amount of last enable time -- t3.
-
-In case of parent event's total_enable_time is updated properly in
-list_del_event() when the task exit,
-However the child_total_enable_time is missed when child_task exited,
-the perf prints error amount of enable_time (which is summation of
-total_enable_time + child_total_enable_time).
-
-To address this, before updating child_total_enable_time of parent's
-event. update event time.
-
-After this patch, this problem is gone like:
-
-sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
-...
-armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
-armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
-
- Performance counter stats for 'stress-ng --pthread=2 -t 10s':
-
-    15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
-    22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
-
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20241121180526.2364759-1-kan.liang@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 1 +
+ arch/x86/events/intel/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 065f9188b44a..d27717c44924 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13337,6 +13337,7 @@ static void sync_child_event(struct perf_event *child_event)
- 	}
-
- 	child_val = perf_event_count(child_event, false);
-+	perf_event_update_time(child_event);
-
- 	/*
- 	 * Add back the child's count to the parent's count:
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index d879478db3f5..5e6dc07c298c 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -7057,6 +7057,7 @@ __init int intel_pmu_init(void)
+ 
+ 	case INTEL_METEORLAKE:
+ 	case INTEL_METEORLAKE_L:
++	case INTEL_ARROWLAKE_U:
+ 		intel_pmu_init_hybrid(hybrid_big_small);
+ 
+ 		x86_pmu.pebs_latency_data = cmt_latency_data;
+-- 
+2.39.5
 
