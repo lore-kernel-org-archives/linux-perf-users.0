@@ -1,128 +1,155 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686EC646;
-	Sat, 21 Dec 2024 10:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9403570825;
+	Sat, 21 Dec 2024 15:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734777334; cv=none; b=Rqbj00k7D6E8/NL8pgzgjVcIpWhCKpGuDo8seiB5JJx55JCiHA0f9vfAZLQ8RuDZmYyMGCyBfOI84M4A7nG0lpXOlL3W4TwvVTghxKYxoVGob5tdb9jHoj8D+u3BLQi6Cz38VfILxGHeH+W+WtYf/ScnXcWn7+GlNruH3SdJfm0=
+	t=1734796000; cv=none; b=eSaV+YOqzioLIKssNFza2RLbC+nd2/bbMfiWgxev/eno6zsHbe2IqS6ZDoJhD4Wi8mdN2GBOXcgn9MHj0hTbK96DZOvrgYuDeS56XzBUwZ8RUGxjaLUkUAb8RqWd+MgmmWju4MzClof4bxzYgxeOzBAL7TC4LohgltPusblqUpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734777334; c=relaxed/simple;
-	bh=eB6lS9ha1kYv9GEm8TgMPYt6fXjYLVzRJ3TXpfXP/rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N2xoGVFpvXdxCV9g+ezqOK8NrWOxVXTHYZIhWJ1FRho0FgcrHG6zadOsGUem7PlCrG5fcrUkPQ0xNPdlqO5CZo41mhJu/YDDfp4wFbTw7Qn2Qas2qf6YSKkAiVUY/NS//HOkTRTTHGKF5j8Y1rbywZ/XF3B/+vvb+rLzbi+4bVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6uqDtjN; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734796000; c=relaxed/simple;
+	bh=FGXqX8c+4+h8QZw+AQai0FPyeo5pX23WL62uroP4DsA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V4NCbpvYvupbqXcxY8sEGyEgnHTsl/AL9aOZ8c3u/tjTk+Dj+zuM4ma2QU241R2i1oWp/Ru4v1vAN1N9+WRegm8csyAJDknahRLjMr3KUEnOWUm5nNUvOt5XvQp6pK4WHcU09Lie96Rh3JXvDbOvNRYR6slCijNm9BWeFjy5FG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gzlpuwzS; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6uqDtjN"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so30188765e9.0;
-        Sat, 21 Dec 2024 02:35:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734777330; x=1735382130; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WV4MfTOnPXGCM6//LL3weM7ThasmfUOU7e3taojJq6o=;
-        b=A6uqDtjNGu19eeNwCPRUBZN+mXmNC/rKe2tofhNIDUYn8Zq8dP1FEGkgIkj63XsC2o
-         2gN74ZsoZjwfyVKxSNgkB7Bo1wMvI5FpaeOJ1Wzgf7uRFNSyVE0kE7fxI4ZvHWPLlxZO
-         VFWfzCmoSuH7muyMWS9KUCVAXteEpQl0BEasbQsXQgByKvHRogB3T3ZO+FPqnGdyp5X8
-         lkZhtdVf12UgZbZFGzxuBnpELuMokYGNrI7LExZHzCPmkJ6FZs2tRRO8pYnePsj6Im7Q
-         ZQuvUtF/0/r0ruVHG3hFjo4JrcU4tplSsswb83cBFMzkw9tm4a60SgnzFn20A+INKIOS
-         pvHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734777330; x=1735382130;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WV4MfTOnPXGCM6//LL3weM7ThasmfUOU7e3taojJq6o=;
-        b=UcbRa4pmYXQIZQhTQZumw6GHY+7599BPDflcnyiq+4ZDumU5o3pccOdOGdSocP0xWF
-         0ILFazvyFCZ0PH+iXrx7aSDlNfoaFKVylg2evNcYnqgSbXIFH+i8GoXmfQITC8V+ESNi
-         50tdE8TyzhD1wMxdFg5SW7OWWsH42z46YwKU3IgSvo6Ec9uYdY2aXP32HWoND61wH1fv
-         Q2ALAUD009tvaYGaFc/YsVJLWqrKBZYhN4KxFnXttfE6tjlEqjMB4N8ZeW39+7ct93qQ
-         T/oXfYfv06w8ZYl3qZBE7w+mngGbOLFltrJ0x5XE9ikdm0fni5M3tC+Ccj+LmhHFmqZ0
-         /PRw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1kIp9Fx0NbMyYhqRBE0d/hX88lcG6C5e0uOfzbtqPOMigNCf/4tYgjyB+v27oTA8gwNNMglvD70krxa+jJuo4Jg==@vger.kernel.org, AJvYcCVw0QEoJVbiJ55u/s7phG5UNSubHJN4D2VlD2ASq01eTlP9wapa8fcqQgTc1UHkpzbKbzPK+XPpddFo@vger.kernel.org, AJvYcCWSOTUv8FdlqnctxHe+FC8bzAjn64liBR1+ja8HTWV9WFq68wR2kWySn+s7NXUjZVkW9z6G+G4fjXZyXRw=@vger.kernel.org, AJvYcCWWF/WB962KSD8tApfschbjI84kJVup/jHQAfso6Wp9+cJzQbYGXZbZo+/OpPaLmrg2YfodVxs2L/wuFwxr@vger.kernel.org, AJvYcCWytv8p3s/ma2a6y860IKMHQytTZsMJMyhq8Iafo5PZXFWRtPNCrQtHCTYGC2sOFzy1ctIHOOVAdXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9iXY89CNG9AdQi+KUmRAnmywDEp8M9PtF2lg3ZoC2Ya9NryMm
-	1bPDrvJWeQ1Q0dfGiHNc3gnb2Jsj4x5rX6S6hRf4jy0s1IavAho7W78Axeco
-X-Gm-Gg: ASbGncsYaB7GaajyF8BZoQXGrur3jRedjfIb1JHESi97U6fxnxeTpaLaS5z259eMOLk
-	3Jdno/PBM6wtgRNU35CLG/dpZPWY4KvSjMBPDuyuo/H+L8S7IWov/8jCotM5GnsOgeaYo9B8KsR
-	dpJM+0uq5zWFRipPUMitC01T1m1vLkxpqx/vrLRhRRVhaNfqa5ZbRCLkGIHxzf9FhivvEBB01WR
-	1fsiSsuZx1OYrt0oYMyxJH/D9f6aCztozTu78ybyIdUuy1Y5xGziKES1McMwYu7y8DUl3KgfiOI
-	MCVb+F/LY75+Cr1ORg5SuMg=
-X-Google-Smtp-Source: AGHT+IGgVKTc2GXw31nd/5D+nzQxbCxuAoRXwAk8jEc+q1KPL4Ec54RHeXe32ocbmwCEGiCG3kankQ==
-X-Received: by 2002:a05:6000:2af:b0:385:e1a8:e28e with SMTP id ffacd0b85a97d-38a221e1e76mr5578757f8f.10.1734777330425;
-        Sat, 21 Dec 2024 02:35:30 -0800 (PST)
-Received: from dsl-u17-10 (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c89e261sm6251002f8f.76.2024.12.21.02.35.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 21 Dec 2024 02:35:29 -0800 (PST)
-Date: Sat, 21 Dec 2024 10:35:28 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck
- <tony.luck@intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Thomas
- Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter
- Anvin" <hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
- <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Viresh Kumar
- <viresh.kumar@linaro.org>, Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare
- <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui
- <rui.zhang@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [RFC PATCH 08/15] x86/cpu/intel: Replace early family 6 checks
- with VFM ones
-Message-ID: <20241221103528.2ca530a5@dsl-u17-10>
-In-Reply-To: <20241220213711.1892696-9-sohil.mehta@intel.com>
-References: <20241220213711.1892696-1-sohil.mehta@intel.com>
-	<20241220213711.1892696-9-sohil.mehta@intel.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gzlpuwzS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734795998; x=1766331998;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FGXqX8c+4+h8QZw+AQai0FPyeo5pX23WL62uroP4DsA=;
+  b=gzlpuwzSX/3JvVvB8pHD2PAo0kahzkh8WF9SD6DE9xd5KzVzfVmpoq4t
+   CKS1HABU5ccQQR84DmPTKwAkzdwEnL2ZYqM73eSgg/QFVT2dMizsld/0z
+   A5YNQHX7uQXPMpMYA2+/M2tGNARHXFLwcvycmzFzH82sOkBjQBq/gXuJ6
+   skDTEGwtJenDodJ5qAUgTUMAgFxm9poBdKRiteLCan3DTSCpDBSEWxRq5
+   TSoYs8WYdEFXrWvyJwr1+eIYzbwxPAAj+5b75XYA02Em+fvNPyapUpv40
+   vU/Bv0fa0OHnhCJB0qPykj9XGVtsIRWN5buKNV/zIAytRnZ+YZAzLnVpt
+   A==;
+X-CSE-ConnectionGUID: gYEnuNVUTYqOlsJjvJ6a6g==
+X-CSE-MsgGUID: DjCTD0+rTNuh9gP5wF48UA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11293"; a="39008702"
+X-IronPort-AV: E=Sophos;i="6.12,253,1728975600"; 
+   d="scan'208";a="39008702"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2024 07:46:37 -0800
+X-CSE-ConnectionGUID: oSNbd3n7T5+cVRUbqwAzZQ==
+X-CSE-MsgGUID: inBbh5fnR1aNcervFm8OXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="102893745"
+Received: from msangele-mobl.amr.corp.intel.com (HELO [10.124.222.45]) ([10.124.222.45])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2024 07:46:34 -0800
+Message-ID: <1f3524fb-079d-463d-b6fa-68fda2d5cd22@intel.com>
+Date: Sat, 21 Dec 2024 07:46:33 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 06/15] x86/microcode: Update the Intel processor flag
+ scan check
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20241220213711.1892696-1-sohil.mehta@intel.com>
+ <20241220213711.1892696-7-sohil.mehta@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20241220213711.1892696-7-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Dec 2024 21:37:03 +0000
-Sohil Mehta <sohil.mehta@intel.com> wrote:
-
-> Introduce names for some old pentium models and replace with VFM based
-> checks.
-> 
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h |  3 +++
->  arch/x86/kernel/cpu/intel.c         | 13 ++++++-------
->  2 files changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 6d7b04ffc5fd..41278093bcd4 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -46,6 +46,9 @@
->  #define INTEL_ANY			IFM(X86_FAMILY_ANY, X86_MODEL_ANY)
+On 12/20/24 13:37, Sohil Mehta wrote:
+> --- a/arch/x86/kernel/cpu/microcode/intel.c
+> +++ b/arch/x86/kernel/cpu/microcode/intel.c
+> @@ -74,7 +74,8 @@ void intel_collect_cpu_info(struct cpu_signature *sig)
+>  	sig->pf = 0;
+>  	sig->rev = intel_get_microcode_revision();
 >  
->  #define INTEL_PENTIUM_PRO		IFM(6, 0x01)
-> +#define INTEL_PENTIUM_II_KLAMATH	IFM(6, 0x03)
-> +#define INTEL_PENTIUM_III_TUALATIN	IFM(6, 0x0B)
-> +#define INTEL_PENTIUM_M_DOTHAN		IFM(6, 0x0D)
+> -	if (x86_model(sig->sig) >= 5 || x86_family(sig->sig) > 6) {
+> +	/* TODO: Simplify this using a VFM check? */
+> +	if ((x86_family(sig->sig) == 6 && x86_model(sig->sig) >= 5) || x86_family(sig->sig) > 6) {
+>  		unsigned int val[2];
 >  
->  #define INTEL_CORE_YONAH		IFM(6, 0x0E)
+>  		/* get processor flags from MSR 0x17 */
 
-I think I'd add all the extra defines in one patch.
+I suspect this code is kinda bogus in the first place. sig->sig is just
+cpuid_eax(1) and:
 
-Isn't the order 'funny' as well.
-I think it ends up being neither numeric or date order.
-Increasing family order is probably best, but the headings for each
-'family' probably need to be a bit more descriptive (esp 15 - all P4
-netburst).
+	void cpu_detect(struct cpuinfo_x86 *c)
+	{
+		...
+                cpuid(0x00000001, &tfms, &misc, &junk, &cap0);
+                c->x86          = x86_family(tfms);
 
-	David
+So I'm not quite sure why this code feels the need to redo CPUID and
+re-parse it. Other bits of the microcode update may need 'sig' in its
+unparsed form to conveniently compare with parts of the microcode image,
+but that's no reason to re-parse it too.
+
+I _think_ this code can just use good old cpu_data() and the existing
+VFM mechanism.
+
