@@ -1,186 +1,165 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BED613D521
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Dec 2024 17:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F96E13541B;
+	Sat, 21 Dec 2024 17:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734801022; cv=none; b=Gi3skRy4/qDu2CZ5wlK0CCpbuRg1E9veAmgi8B7yxekm595YMMMKOp7kpFwUMRaUU6C+hPxo4/6ADheRXTmowBfpYxhOPAXFgdVb0WLKRV8tzofyZwvaIm0e7Jeu1FpTaAyj+kf4iRcJYM1c8zKKH90KSkGlcV/kqR0c/QjWls8=
+	t=1734802072; cv=none; b=g6Kmm0ECHHNiewQzVd5wOIVMff+FwML6JVAR7+LlzOdcj1bXxER/PgyrKe8TXuEql2GIrqFdaymFPKe0dmXYx46/EABbAwyF3QfznHRlUtBuNfWKsz3s0s6BEZ5MK0aHx/2v5YWyoOjVUJfcW2UOBTfg1Bv3LtiqW8WZL1r1UF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734801022; c=relaxed/simple;
-	bh=tqgHSbvRKdxXnSPWyjYOYpuio6QQSn7kWDbj2OAVc5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pw6Vai2H8EgBJGKWFyV+iOOmW8FnW14KB6d4eeP/xILr01MsO2yKDamiIISVLWvDGcE5CqeXk4Y7mkPWBXLw4irKE4LbQkjamx5byaYZr8J9LDtoKBpj9jamrkomrgClnKWSG4sJXe350gFsv2HoqzUoRzKZiyNdnTln5mmSKDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YJ3izos3; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734802072; c=relaxed/simple;
+	bh=rFLdyA/GOjbE6nESnRW88V+E/E4ubmnsnUdy4Cshh6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g3/JVcC7tixc+Lsrf8NxLndc9t8doCXJfVEYnhaXBA0kgdOtDCTIz/fHEcfk/8I1Xp1AIoQYhW5//esag5bc5McwnoRgc0BNZk4RGRfr6ifGr6E7Mnmvr+ftZB1mLvoW5zwWnAwVjRSQwfbbP+LsinbYDWPyC0l3cj92w7IRtLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvwyCAtd; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJ3izos3"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so329125ab.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 Dec 2024 09:10:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvwyCAtd"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-218c80a97caso25520645ad.0;
+        Sat, 21 Dec 2024 09:27:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734801020; x=1735405820; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qLmKsV/RWaRLBbqJb1Z1njuLAOUOlvnE81C/TcIrFFQ=;
-        b=YJ3izos3PgVuYOpQLOu8BYaI5/tlBMMWlf/cqp+txa5o+ZKd2t1vQmOXf9MseRBccL
-         7yQDrjZiDhOpxlODucwHh1euW/SBGhJJebfpu2zvDR8wEv57VClBCLhPVcksAdpq6iZC
-         EESlde3SC03mK521OTitWyvcMWZeDIgnc5/774MZ7HK2B0uQA5+YyBxWLTnIX75Zqmkh
-         XqIFyncAtG0bRs10t+IHYXegAiFapgs7jHJIFYj0CVz6e2BKZBaTS60+bUXDY3unGDwV
-         ik5OxPgnBr5EhPb6BA0agE8hFwSxgTcvsyRIR+JssA04Pj6GHKZSS7wexa8ai+tcsqJD
-         RDJQ==
+        d=gmail.com; s=20230601; t=1734802070; x=1735406870; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=0wZIbw8DQUJgofqHZdyFwS6NpDifTEgbiVWDtrNO6dw=;
+        b=EvwyCAtduYtvMQOgmqLVY9HjED4bgjUhucBLsf2TwfYwl3jv0xQM0dODW6zGhkDxEM
+         YD+u2iUdgQYa+bWfWPUjdTkJCa8VDr71EmY/DuVJzW/6tlLFo7K5QKaKCX9k/JB1pFQ+
+         P1xi3lkhUDf4I3rJp8XpBOftrPFxdqa+QY9YiztCm4JR9GooThwY1tsY1Sly3fenAvt0
+         HLOKSYuw2y8l1XdnanXYAY1eNzAoplAnv1A8nrDmdSeYNuHfXVu91vCcj/7Naof85aEC
+         PqsckOoWEYqgrkm+hsEBlnrIw1GutiObbW2jo2qyoR71IZqjO8fcsb3uxn3SWvKUhAQy
+         eyrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734801020; x=1735405820;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qLmKsV/RWaRLBbqJb1Z1njuLAOUOlvnE81C/TcIrFFQ=;
-        b=c74lZJcASZpxQHmcSAKGnGmthBHUDbuLMNAgluFwILiBc4GjidEtxQ3M7LFvy5at9g
-         jCATJZl565zwa+rLgTuWrxK9pf/NW3g1TtssxcWK80gse+WrINKiT5Jhy1PxUHfzRlkJ
-         oKqIoCsFc9BYr3RaPtdXZJ0Gxu7ABmBD/Cb9ITX2NOBZUPZ4FSDjpxNrKMSE6+Ei008k
-         /oQVhJG2fXnLC2xBKta4yoVUmaBJhJ2ISeVHDjrnaQ90Fxo2JOmgfTyOB7ggajk29gJx
-         v/tBvAnimqhEnU2kDHqZpy+jKUdb9pUk+zkfNyvAmA/3jbM6Ud9g2zKskumBNGqqPRMS
-         kgBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpLCKIqcpamKFfHFIqmaQqtErt4OtaouTLOQ/LaVVz2xZM3Om+fVuyw5kCaNDOhK6Eocej4kHPAIiJafzqNlny@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW8Wa3yQgx57t6UvYd6P5xo0REQnoMOtlWD+iVaQ2rxkmjFHsg
-	k8xb9iI8zp9bYWC6TphLprsV7wxxFqif4zNHzcZoPEkDN8p/sZELQEKbsSEy9KjjNb9oIhSew0d
-	hMo9BacXpzzQByd3lGBVg/CkHpWeE9chCxjqPbJhAxAY0LO2JaF7fN+E=
-X-Gm-Gg: ASbGncsQYHr9SljOgj7EQHuTcC79f179h6s2qFLDqBNiZqhpWEWY9R/vB0fvgJs83aW
-	isQIH+OeBe2jIQKm5FHiDrC/XmkP+CIfzxzsHo0Q=
-X-Google-Smtp-Source: AGHT+IGrRHybQh/aur9GJ8vVi28AsUwCbp3ZCmsIhbcUOMxxOXLFLjFa5VFGKP7sPPJLH8+lCdFKWyLkV5iiR+1KNxc=
-X-Received: by 2002:a92:c569:0:b0:3a0:9f85:d768 with SMTP id
- e9e14a558f8ab-3c33139a32cmr5379575ab.11.1734801020409; Sat, 21 Dec 2024
- 09:10:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734802070; x=1735406870;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0wZIbw8DQUJgofqHZdyFwS6NpDifTEgbiVWDtrNO6dw=;
+        b=cUSBIKR75WK/yG/qbktxcoY+UW2wQSPZ+C59iMb6w/D7fZnXqknoPIQtqy5hN8SlN/
+         w99TYOTEr0kvTlTTHOsdr1hCm+FnJKKoSbHSGyiwN/IClBoOWiSZBt9pC03argUo2oAZ
+         0B/Y38OfpFokGTnSxdS3TvbR9SQPKoKviD6lA0ByAC0wgbgZxRs2zY0WFZBgbLMukl+9
+         FfZ6BNye2PGt4FwjEEKqToYpymguLH+//h2hvnEQsJCHEEIDNTsai3dD2ZeFJziXkmYu
+         Q8jBTWC2Uw2jZPqeRyR4BJAXNTwLgrsYmCG/SkG6b+C+MgBkj3lB41fa/wEyFdcGknyM
+         ps2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUr2aFIWOyw69z/88g6a88fQDayrjt2Kx6+ISvnEaJL2WkLZEjTem1DTw7jV9Ankag4AuVY5i234Bx3MSS7@vger.kernel.org, AJvYcCV1zfPFPyJtT/0lIfskJP57SsLRwiF7nByqz8taWcR2RGwcSZkFlPrcnL+t1QLfWhXJo4pZFcw+O6Hg4oA=@vger.kernel.org, AJvYcCVSPLG8Wnsq+agfKQykUENf0fsSl8PtMlwFg0YS49oyqqcUfFEr30BxiTehM4demZ+OutmjSWJiWbE=@vger.kernel.org, AJvYcCVUhJsJ2pOKSp3GAHFLxgoQelwZI/1MR9vjTOe9SY3vDA7K/albxdtgVxbexHCsy2gP1aLFVrLTw9hhJWUvHPzHaA==@vger.kernel.org, AJvYcCWuDYhETKDq9tAAuKWN1YJuhE2gP4YdRjFG0vf88GQOzPatHX/Bh72Zdy3rqf0A6iZ+CLXHO153OuCy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2SLnF1iPaC0dSO0/C6pGKqKjpmmmT6bfMeWRFf1rrNPwj168D
+	nJgRUVG6MdJNzkNeKR6hDwmB6HSm7/NI4Yqq36gIJWnWsApDa/Ce
+X-Gm-Gg: ASbGncu67ZcV38Dx0qbLJoKBvAqX7pTO4uXAtU6uZ156Qm5G1KJVz+9WAGYoAT034f7
+	gRv9AuRJz9eEsqm1Su51IgbzyH/jcEp0deLoBNhfWlkmUt6+szOxWahj/+sUJr6Vx+Wc1lgl6+f
+	Aac/1Q7xm/ZksRg1f2GsLCrwSFTr54wTnYIFhePNYHH8Pywh1/k4NcB0cAAIcqSO7Mj22xRbkSa
+	mbhX0xSbvjTyOMsyR9GJvHuazj03XeqQsGVomcf4oLXY5pQdOJgkf1oQTQEKCMiyg4oYPNTmOCB
+	6Fpw54cKPKLdZ13ah4G75XGb8VD+cw==
+X-Google-Smtp-Source: AGHT+IGPmDpTWJ8Te3ChVKErxWyPnJNpgHf9psC8wOhm23v6t2tySUgVkbX+UIHh9R7X1L7NmxpKgw==
+X-Received: by 2002:a17:902:ea03:b0:216:5e6e:68ae with SMTP id d9443c01a7336-219e6ebaf33mr102894905ad.31.1734802070519;
+        Sat, 21 Dec 2024 09:27:50 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97432dsm46389995ad.110.2024.12.21.09.27.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2024 09:27:49 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <cdece644-385d-408c-bb8c-c8fbb17c1372@roeck-us.net>
+Date: Sat, 21 Dec 2024 09:27:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241216070244.14450-1-adrian.hunter@intel.com> <20241216070244.14450-8-adrian.hunter@intel.com>
-In-Reply-To: <20241216070244.14450-8-adrian.hunter@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 21 Dec 2024 09:10:09 -0800
-Message-ID: <CAP-5=fUwjYH8uvmsgSN=1exN1FEEBEPQHFYwgq4cJEeOApFNQg@mail.gmail.com>
-Subject: Re: [PATCH V16 7/7] perf intel-pt: Add a test for pause / resume
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 05/15] hwmon: Fix Intel family checks to include
+ extended family numbers
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+ Zhang Rui <rui.zhang@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20241220213711.1892696-1-sohil.mehta@intel.com>
+ <20241220213711.1892696-6-sohil.mehta@intel.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20241220213711.1892696-6-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Dec 15, 2024 at 11:03=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
-.com> wrote:
->
-> Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-> check pause / resume.
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/s=
-hell/test_intel_pt.sh
-> index e6f0070975f6..f3a9a040bacc 100755
-> --- a/tools/perf/tests/shell/test_intel_pt.sh
-> +++ b/tools/perf/tests/shell/test_intel_pt.sh
-> @@ -644,6 +644,33 @@ test_pipe()
->         return 0
->  }
->
-> +test_pause_resume()
-> +{
-> +       echo "--- Test with pause / resume ---"
-> +       if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-a=
-ction=3Dstart-paused/u uname ; then
-> +               echo "SKIP: pause / resume is not supported"
-> +               return 2
-> +       fi
-> +       if ! perf_record_no_bpf -o "${perfdatafile}" \
-> +                       -e intel_pt/aux-action=3Dstart-paused/u \
-> +                       -e instructions/period=3D50000,aux-action=3Dresum=
-e,name=3DResume/u \
-> +                       -e instructions/period=3D100000,aux-action=3Dpaus=
-e,name=3DPause/u uname  ; then
-> +               echo "perf record with pause / resume failed"
-> +               return 1
-> +       fi
-> +       if ! perf script -i "${perfdatafile}" --itrace=3Db -Fperiod,event=
- | \
-> +                       awk 'BEGIN {paused=3D1;branches=3D0}
-> +                            /Resume/ {paused=3D0}
-> +                            /branches/ {if (paused) exit 1;branches=3D1}
-> +                            /Pause/ {paused=3D1}
-> +                            END {if (!branches) exit 1}' ; then
-> +               echo "perf record with pause / resume failed"
-> +               return 1
-> +       fi
-> +       echo OK
+On 12/20/24 13:37, Sohil Mehta wrote:
+> The current Intel family-model checks in the coretemp driver seem to
+> implicitly assume family 6. Extend the checks to include the extended
+> family numbers beyond 15 as well.
+> 
+> Also, add explicit checks for family 6 in places where it is assumed
+> implicitly.
+> 
+> x86_model checks seem inconsistent and scattered throughout the driver.
+> Consolidating and converting them to VFM ones would be a useful addition
+> in future.
+> 
 
-Hi,
+That seems to be irrelevant for the patch description.
 
-this new test is now constantly making "Miscellaneous Intel PT testing" fai=
-l:
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 
-```
-...
---- Test with pause / resume ---
-Error:
-Failure to open event 'intel_pt/aux-action=3Dstart-paused/u' on PMU
-'intel_pt' which will be removed.
-The 'aux_action' feature is not supported, update the kernel.
-Linux
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.003 MB
-/tmp/perf-test-intel-pt-sh.Hs8jcq0ADc/test-perf.data ]
-Error:
-Failure to open event 'intel_pt/aux-action=3Dstart-paused/u' on PMU
-'intel_pt' which will be removed.
-The 'aux_action' feature is not supported, update the kernel.
-Error:
-Failure to open event 'Resume' on PMU 'cpu' which will be removed.
-The 'aux_action' feature is not supported, update the kernel.
-Error:
-Failure to open event 'Pause' on PMU 'cpu' which will be removed.
-The 'aux_action' feature is not supported, update the kernel.
-Linux
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.005 MB
-/tmp/perf-test-intel-pt-sh.Hs8jcq0ADc/test-perf.data ]
-perf record with pause / resume failed
---- Cleaning up ---
-...
-```
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Should the fail be turned into a skip for missing kernel support?
+The patch is independent, but since it is submitted as part of a series
+and there is no comment suggesting otherwise, I assume that it is expected
+to be pushed together with that series, and I won't take it into the hwmon
+branch.
 
-Thanks,
-Ian
+Guenter
 
-> +       return 0
-> +}
-> +
->  count_result()
->  {
->         if [ "$1" -eq 2 ] ; then
-> @@ -672,6 +699,7 @@ test_power_event                    || ret=3D$? ; cou=
-nt_result $ret ; ret=3D0
->  test_no_tnt                            || ret=3D$? ; count_result $ret ;=
- ret=3D0
->  test_event_trace                       || ret=3D$? ; count_result $ret ;=
- ret=3D0
->  test_pipe                              || ret=3D$? ; count_result $ret ;=
- ret=3D0
-> +test_pause_resume                      || ret=3D$? ; count_result $ret ;=
- ret=3D0
->
->  cleanup
->
-> --
-> 2.43.0
->
