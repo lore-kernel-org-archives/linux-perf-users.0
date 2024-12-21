@@ -1,185 +1,119 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC51EC4D1
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Dec 2024 07:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84281EC4C5;
+	Sat, 21 Dec 2024 09:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734766726; cv=none; b=It6X0GNgXaDrVrnLLY/6dx8AqmlD0NgCG10dC9Gs6kDLRPRfi2HS3oGs9JtuiU5Be7uEjVih4shw45isVW5loCEe9n9iupQySYv9gLPN4xj498snUSfP/Xae5mWy0gigPjKsaGRhNPwOug5/bz6W+O3jHrINrBzwpByeT/4Ef44=
+	t=1734772315; cv=none; b=uBXEl9x0yea/MobTKbNU1MjHgiWif5MF8yiwty30dF8WeH4MIDG/7TyHu47nS0iy3cldEQDPfBuGG1j8to3WKEbtWtOrix2TNjW09HgYkIyBvInz6Wfr9AZ/LKmL4nCJTp8zBMHLKM+3x6EaeShSBEWluVCbCf1719C30eCp+Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734766726; c=relaxed/simple;
-	bh=V9V0wD30MNHafW61iOW4zwhwo+Sw4UTD/e8UZwnYXpg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dLpGcC4/Hz6W/PiuBeoj9jxxzviCWitxGPRwrsV133tILbtnXZLcDQ5So2lbLu9JwJLe6pMC0r3W3/9Ms7CzKvAlYhOsZUCTTbs0XHDowKTzLlcNCFOUMnQJ3nW7MLvjGkLfLwKFYwJsWnvDoHWLNvbj+0sdQYB0piD8XqYpLAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fmDtZykF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1734772315; c=relaxed/simple;
+	bh=En7ijAPoJHn5JUBnJu37901ne4hKj2S5Qwc8XbxaPrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PM7zfZKU01DI6gJzStZ+hDlWFFJKoiI65E600uCeF9XOAMWNJYs1X11runAyFylaCHTth20T1V6oILJI3dsQbv2XwgsXoEP2+clUgTGR07cTu/gYiU9lnWk7o/2i2PqyhwAhHXzaUpYeTpfaUq3hPQS5oLFeSSoJPBf17WIw2zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=byaljubt; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fmDtZykF"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BL5Hl6q004157;
-	Sat, 21 Dec 2024 07:38:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=oCjUOYL9q8FOjqVWX
-	Ghy+C/QL7HNYwUuASxwDMeio1Y=; b=fmDtZykFjfU3lhsCfTmhug5E3Epe598b6
-	yx0pokg/2biNYJSzEmGtXohyvWmjXnz4DfC6jK8+5OvsceNGiXwn1Xx2Cqy7vvOS
-	XGEHlQThGe8t2RBPYYwrEOrYXwHkKubg848vd7sUEh1AnMnHq8viWsV4JVmC5UrU
-	PQpqqwEFudfMqmfRxb0gk7jnlBtQmwKXRmW4/3BHcjlnOhAkBhQ11kGP+FOMtQQK
-	/Bt947/fVvAYFupUveENr079VNsErcg0CSPxVlzrK+YaRrIlKSUtn551WHkQdtwg
-	vsROZMKxdChhX49dF8M+0o116RUzVhIPQzyf6mMPvLsRVF9S0h4PQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43nqd1ra1x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 21 Dec 2024 07:38:40 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BL4sPGN014451;
-	Sat, 21 Dec 2024 07:38:39 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 43hq225dtk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 21 Dec 2024 07:38:39 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BL7catq47448468
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 21 Dec 2024 07:38:36 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 394A720043;
-	Sat, 21 Dec 2024 07:38:36 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CAA620040;
-	Sat, 21 Dec 2024 07:38:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.244.52])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 21 Dec 2024 07:38:31 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, hbathini@linux.ibm.com
-Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 4/4] selftests/powerpc/pmu: Add interface test for extended reg support
-Date: Sat, 21 Dec 2024 13:08:10 +0530
-Message-Id: <20241221073810.65802-4-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20241221073810.65802-1-atrajeev@linux.vnet.ibm.com>
-References: <20241221073810.65802-1-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="byaljubt"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7949740E015F;
+	Sat, 21 Dec 2024 09:11:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id j9QJuJMhsvRi; Sat, 21 Dec 2024 09:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1734772298; bh=qGNQ2BA6S2S+aM5v5bqTEJnygVFVuoTIinMCLQtEBwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=byaljubtrLS5ejAU3uz2kLzofDFixHGYukj0vRX6SgmQsdKQ2kCtfjimqzqG02duD
+	 y43ZI3lDoLW7cGvNMIToGNSWvEeh/p7UJAoQRd3L5RTYbUSZW8kkocwN5GE6Y6R1yz
+	 vwI8OeTEEroakcGN8rBwHm5x2V3rfvD1M0JbEo751PvTAaT5rhdXfytTEbOCzuR1m2
+	 NT/GtMrX0NgRCWOJ7tUnABArk86SnP4eUQWPY++i4ksqnyyXbTFL4P1w2XeNTuRX6p
+	 8XIfIbljIuaWjOrE8gjuhSw5kRFEZU8yKrVxf823d2PaDyo3ISa2vZdE9N/ScBAQwx
+	 yJ1tiGZRC3I21U/Jv4Hd979mZZ8AAsryOQ3tw8ZlpxB+4eWGU1OhnQqlIpBCiavvpi
+	 oDPZZzc0NXSdSxwICSHFKuF14I9C+J9fVbe7MS67KjwpooP2ljgxIXmPETdY0DZoLX
+	 bso6YsvLMG1O+MOy4KeqZQXuUux9H/OqwzgqSlaM5aBPm7IpqV9qYAIOP7esJWb6jV
+	 PbiAJZmXIG23yMAIpyvBylaG0zwuduj7vavzqaBxuNfDwVF8oJrjsIDLgh7e5H30E7
+	 YBRDIF6bK2hcxW/I0aHbOHsO/b0QeXvgQZEFuaXSJsEECvC+nx43KRhBzTTgHvSFO7
+	 Jrso1g99qMbOlbLfpwUo7YuU=
+Received: from nazgul.tnic (dynamic-176-005-148-127.176.5.pool.telefonica.de [176.5.148.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A3E240E0269;
+	Sat, 21 Dec 2024 09:11:07 +0000 (UTC)
+Date: Sat, 21 Dec 2024 10:11:04 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [RFC PATCH 06/15] x86/microcode: Update the Intel processor flag
+ scan check
+Message-ID: <20241221091104.GBZ2aGKIXUMlpmrbQW@fat_crate.local>
+References: <20241220213711.1892696-1-sohil.mehta@intel.com>
+ <20241220213711.1892696-7-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ow1wGZN5Ht6mbSiFZpNVZs92woiQjs8K
-X-Proofpoint-ORIG-GUID: Ow1wGZN5Ht6mbSiFZpNVZs92woiQjs8K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412210063
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241220213711.1892696-7-sohil.mehta@intel.com>
 
-From: Kajol Jain <kjain@linux.ibm.com>
+On Fri, Dec 20, 2024 at 09:37:01PM +0000, Sohil Mehta wrote:
+> The check whether to read IA32_PLATFORM_ID MSR is misleading. It doesn't
+> seem to consider family while comparing the model number. This works
+> because init_intel_microcode() bails out if the processor family is less
+> than 6. It is better to update the current check to specifically include
+> family 6.
+> 
+> Ideally, a VFM check would make it more readable. But, there isn't a
+> macro to derive VFM from sig.
+> 
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> ---
+>  arch/x86/kernel/cpu/microcode/intel.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+> index f3d534807d91..734819a12d5f 100644
+> --- a/arch/x86/kernel/cpu/microcode/intel.c
+> +++ b/arch/x86/kernel/cpu/microcode/intel.c
+> @@ -74,7 +74,8 @@ void intel_collect_cpu_info(struct cpu_signature *sig)
+>  	sig->pf = 0;
+>  	sig->rev = intel_get_microcode_revision();
+>  
+> -	if (x86_model(sig->sig) >= 5 || x86_family(sig->sig) > 6) {
+> +	/* TODO: Simplify this using a VFM check? */
 
-The testcase uses check_extended_regs_support and
-perf_get_platform_reg_mask function to check if the
-platform has extended reg support. This will help to
-check if sampling pmu selftest is enabled or not for
-a given platform.
+No TODOs. Take your time and do it right from the get-go please.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- .../powerpc/pmu/sampling_tests/Makefile       |  3 +-
- .../sampling_tests/check_extended_reg_test.c  | 35 +++++++++++++++++++
- .../powerpc/pmu/sampling_tests/misc.c         |  2 +-
- .../powerpc/pmu/sampling_tests/misc.h         |  2 ++
- 4 files changed, 40 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/powerpc/pmu/sampling_tests/check_extended_reg_test.c
-
-diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/Makefile b/tools/testing/selftests/powerpc/pmu/sampling_tests/Makefile
-index 9f79bec5fce7..0c4ed299c3b8 100644
---- a/tools/testing/selftests/powerpc/pmu/sampling_tests/Makefile
-+++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/Makefile
-@@ -5,7 +5,8 @@ TEST_GEN_PROGS := mmcr0_exceptionbits_test mmcr0_cc56run_test mmcr0_pmccext_test
- 		   mmcr3_src_test mmcra_thresh_marked_sample_test mmcra_thresh_cmp_test \
- 		   mmcra_bhrb_ind_call_test mmcra_bhrb_any_test mmcra_bhrb_cond_test \
- 		   mmcra_bhrb_disable_test bhrb_no_crash_wo_pmu_test intr_regs_no_crash_wo_pmu_test \
--		   bhrb_filter_map_test mmcr1_sel_unit_cache_test mmcra_bhrb_disable_no_branch_test
-+		   bhrb_filter_map_test mmcr1_sel_unit_cache_test mmcra_bhrb_disable_no_branch_test \
-+		   check_extended_reg_test
- 
- top_srcdir = ../../../../../..
- include ../../../lib.mk
-diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/check_extended_reg_test.c b/tools/testing/selftests/powerpc/pmu/sampling_tests/check_extended_reg_test.c
-new file mode 100644
-index 000000000000..865bc69f920c
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/check_extended_reg_test.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2024, Kajol Jain, IBM Corp.
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+
-+#include "../event.h"
-+#include "misc.h"
-+#include "utils.h"
-+
-+/*
-+ * A perf sampling test to check extended
-+ * reg support.
-+ */
-+static int check_extended_reg_test(void)
-+{
-+	/* Check for platform support for the test */
-+	SKIP_IF(!have_hwcap2(PPC_FEATURE2_ARCH_3_00));
-+
-+	 /* Skip for Generic compat PMU */
-+	SKIP_IF(check_for_generic_compat_pmu());
-+
-+	/* Check if platform supports extended regs */
-+	platform_extended_mask = perf_get_platform_reg_mask();
-+	FAIL_IF(check_extended_regs_support());
-+
-+	return 0;
-+}
-+
-+int main(void)
-+{
-+	return test_harness(check_extended_reg_test, "check_extended_reg_test");
-+}
-diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.c b/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.c
-index c52d8bc2a5dc..1ba675802ee9 100644
---- a/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.c
-+++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.c
-@@ -92,7 +92,7 @@ static void init_ev_encodes(void)
- }
- 
- /* Return the extended regs mask value */
--static u64 perf_get_platform_reg_mask(void)
-+u64 perf_get_platform_reg_mask(void)
- {
- 	if (have_hwcap2(PPC_FEATURE2_ARCH_3_1))
- 		return PERF_POWER10_MASK;
-diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.h b/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.h
-index 09c5abe237af..357e9f0fc0f7 100644
---- a/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.h
-+++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/misc.h
-@@ -39,6 +39,8 @@ extern int pvr;
- extern u64 platform_extended_mask;
- extern int check_pvr_for_sampling_tests(void);
- extern int platform_check_for_tests(void);
-+extern int check_extended_regs_support(void);
-+extern u64 perf_get_platform_reg_mask(void);
- 
- /*
-  * Event code field extraction macro.
 -- 
-2.43.5
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
