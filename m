@@ -1,154 +1,224 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489B38837
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Dec 2024 00:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0408837;
+	Sat, 21 Dec 2024 06:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734740954; cv=none; b=edERABUXiCuR46BT91s01BcpRvhnv/xwVmsClGBXF7IiX1KyjNEKLkfzhPlqTnqapThFrZu7kKxmfagxsN76n+1UAseEkQna3HcJlomMjbFtd39mzGXkW8VKGSwccp55HFNfDhtGHIU3msLlikyuH7AB79vhwJ3shUS1W1ANXEo=
+	t=1734763806; cv=none; b=rfJ/5VGHlyMOIPMp39f3+8jbolPmYqqHbF35z0SLnKO/FBfONKM4W+IQcVASyb6OedFYi0osZajx6XUypQvctQTU/NHBHD6z7yeSGqGUYC2WqKYDEmSFVKNQsh+Msttj4eeffUdoqsJyfmk9p6gqhvDDwYpqtWSoZtNGNUASAQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734740954; c=relaxed/simple;
-	bh=JOubcB4G4WGgdMvQDT82hSZMzQsiikON5vuT/uzQEJI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=cM+PwIja+MiMtCw29MmmSTOaWNBX3g0VSvsxfgim0Vu81/FDZt1umIhHqPd/MAB5uMBRlnUl0YLJZo6mKEDh10/HQXiOWUP+/iOGZ9Tuo04Scyy9kuUG/l8W++et00nwD7ZKYET1xFMWU2Hnt/q34Z6kLYZq+0M9J26DyPsXbcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=iX4vmOue; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1734763806; c=relaxed/simple;
+	bh=aPT/vUsqDrr6wIqMaA6El9GyLb63i2nePKY/bbBGnZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q2eBGe3FnOOy11QHzf08CNF5BKq4rViKvyvMZIt3otY8AyB2m2fyRzVqKqYfmgmLLXF8HDbqpLrmF/ht0KWq1HxBkVY7CElvYGor91Wi0YEGVgkS6XrrgqOPkDJFFwyXeM9C+Zyk+feIojsp3OzmsPVzcUpGh1k6VbL1G5ZaPyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOHUEYf3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="iX4vmOue"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso17002105e9.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Dec 2024 16:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1734740951; x=1735345751; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jJhtITZ4lAQh7K0AUG62aoM5fzqsK11mdNKPUcHR19E=;
-        b=iX4vmOue1AGfuJOVQNaVZnCXVAiumNVv5T4cpMj/+72wW+s9DJpEp6p1TKIN/olAO4
-         Mlwa25KS9IU8jrEkctCb5v3ewmIGXr5zNlKEOEMjQ8FhtC5rVmI0G6ACTTw+XAkagQWa
-         lZotuL6g6XOPtbH153xUowq/OmN9AKSOBLdPU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734740951; x=1735345751;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJhtITZ4lAQh7K0AUG62aoM5fzqsK11mdNKPUcHR19E=;
-        b=kAtq1cDs/KloQ7qCk5TvU1DFB7koGLWSaciFYMoZIF/PH0U1Ci3feCuRc7+hXbaEgq
-         +Rv0KGButcg3jeV2Pw19+7xt/AqhSuEEo8+ooEk2jDYNnxUsSAeGIMB5h9XhkZkDg3Xz
-         lfqTJNEyR02/fGYYQZAY5vrGQ3g3I0Tz0kYmlY3ds6G1kEoqENlzn4cToxhtCjdKKvpY
-         i7XfGSykSWEPkdxiraVJ2SRU8p012vI4puiwFneB48CzQb9ODgG7f5sgC3YfeOt4aFZf
-         ASlcD7at/QxVuwhq/oz/o5EqKeNb8wQDYZ+ek55htsmUjAXL3NITFJAC/+SfG4fuUIUW
-         A1GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNf2rFJvtpqIDlWj5qslHXMDAMJBdRRR9h2zvnfa42mkS8HGJLlVb1dkJeVt9Gscc3DPYbokitFUhTPJDVQ2fF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIcGYi0av4r/Ec+834lzRdFKXUGR7WkpTYE6SxO8Qsj6Un5GuB
-	991xxAD8lBh8twjA36zmaN4PeH4xk9EqMOLUYC5SqoIsR7dMF0ic/gafWXp3rbs=
-X-Gm-Gg: ASbGnctxlPJTXcpx2m8XcCkXg3o82Upi1DtzBcgvNraZTHLyD/FLl2P7gRD20hnNxT3
-	QVDuzZ5WW1W601od2iX9zb4tzRvMzlH8BMljXotaaliOcL0WiBuqkya7uQ5zM2nsrvPiVhfNSs5
-	FXSxLYAbOXQxcaVx7o4cUgDRixwwZmthTtsrHVo2HBIEFwETAOV8CnvH7wKQHMoE+bECUYnS7qz
-	1r6dMpDKAb2UwxlU/83EgAtrDPmUvsLDRoDwJhE+M2NdUvKtFZYgsfdXcaEXy0PDVZekGq8U4yG
-	pKE91RiVquxlWcZ6Z0D/
-X-Google-Smtp-Source: AGHT+IECeMNav5CpQtcaNYfvmITM4dOtdZrobWjXidFoGQgpul8V7Zd2a6z5unpSRoQUQqmPQIqoPQ==
-X-Received: by 2002:a05:600c:45cf:b0:434:f739:7ce3 with SMTP id 5b1f17b1804b1-436686430aemr41364475e9.8.1734740951619;
-        Fri, 20 Dec 2024 16:29:11 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b3b1f6sm94687385e9.31.2024.12.20.16.29.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2024 16:29:11 -0800 (PST)
-Message-ID: <f97c1228-7fca-4487-814c-6dd6ba581721@citrix.com>
-Date: Sat, 21 Dec 2024 00:29:10 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOHUEYf3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59052C4CECE;
+	Sat, 21 Dec 2024 06:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734763805;
+	bh=aPT/vUsqDrr6wIqMaA6El9GyLb63i2nePKY/bbBGnZI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vOHUEYf3dUmiv8aabb+OoJ8GPvs3bM6R9YurvOddHC6HLfe1LCZ6Zy/b8eCdccSOR
+	 SiHeaILbk3z+uriQR5Q9Etf/2xvHROPG6KB4NU47UeD51GwcrAdFQOpQE22SN7zc2C
+	 j+HkIR63OpcM3yxt0zhm7QpAg2xQ2kXASg3JyT5Lp50D4EiZF+odZvERc1PUMVaI2W
+	 cf42rhdoUOGTc2ry7O0snqKPlqIsR1acD/9hqAVSXfXPiUPF+n0ta2DSVRhVmtetPr
+	 3ncEuZwQHbK5JbzZFd62LXWJxZx5P0o/Cy+G/527ZP8ir252uBl+ggjctH3IPUSf/T
+	 1FJp8fibmJGJA==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53e3a5fa6aaso3992891e87.0;
+        Fri, 20 Dec 2024 22:50:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUNmQezMALiKz5TntshTDDJEh1JdzUiW67dsiSRhVmcHJXbrfi2PSg0cT1Gr+kmJswJ1eoQe/pT088b3D0=@vger.kernel.org, AJvYcCWI5sHcd0srxBOmz2JLQxLvRX9o0xn3x85FENBquyZD3mtvZ9dNHiPTWYBcK39kmdqnh9Rw773d73RCMYwU//vFBJ7PWhjU@vger.kernel.org, AJvYcCWwx8Imy7fM7rFWtDNV18/9Hsmd+Oft5R8G2xzyrOUE4eVSh/+vTe5CU0Hvqb/gmVa+g5BqeftHhwsYBN2TibUgyg==@vger.kernel.org, AJvYcCXUvruB0kymeqlCYcTERxTw+AKSookalEIq7WSQ6mUrv59hmvNJyakgtnJ5n2nlzPnffi/TewjbzQXhxk9z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXEitgF5LX9mtXtamN7CjWj3z5NC8ZSur3tuTV5ZOUQtheQPQr
+	k4J1lB4S3H80LKTlg6A7z5zTH8u1xhnkoNPmE9M+b8wNW6hXVkbr/gyR9lk451M7OxEIAZX93tS
+	MsNxewUG/5wD+YcEdRlU/vMGQhVI=
+X-Google-Smtp-Source: AGHT+IEXQFYdtx5Oa0faHkLlK/I2FTVMe0Q27gL7GyYlEMngAiJ96rXV/jhes7CRQcuUuc1jLOX6TQVuUn3WEN3gSQw=
+X-Received: by 2002:a05:6512:159d:b0:540:2fd2:6b85 with SMTP id
+ 2adb3069b0e04-542294509efmr1870468e87.13.1734763804035; Fri, 20 Dec 2024
+ 22:50:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: sohil.mehta@intel.com
-Cc: acme@kernel.org, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, bp@alien8.de,
- dave.hansen@linux.intel.com, fenghua.yu@intel.com, hpa@zytor.com,
- irogers@google.com, jdelvare@suse.com, jolsa@kernel.org,
- kan.liang@linux.intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
- linux@roeck-us.net, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
- namhyung@kernel.org, peterz@infradead.org, rafael@kernel.org,
- rui.zhang@intel.com, tglx@linutronix.de, tony.luck@intel.com,
- viresh.kumar@linaro.org, x86@kernel.org
-References: <20241220213711.1892696-1-sohil.mehta@intel.com>
-Subject: Re: [RFC PATCH 00/15] Prepare for new Intel family models
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20241220213711.1892696-1-sohil.mehta@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20241216-perf_fix_riscv_obj_reading-v1-0-b75962660a9b@rivosinc.com>
+ <20241216-perf_fix_riscv_obj_reading-v1-1-b75962660a9b@rivosinc.com>
+In-Reply-To: <20241216-perf_fix_riscv_obj_reading-v1-1-b75962660a9b@rivosinc.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 21 Dec 2024 15:49:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASZLu89uSFrt9=_kEqWpZra_06VDQgOKuKKUiNqM9NJqg@mail.gmail.com>
+Message-ID: <CAK7LNASZLu89uSFrt9=_kEqWpZra_06VDQgOKuKKUiNqM9NJqg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kbuild: Check version of objdump
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nelson Chu <nelson@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	llvm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> ---Noteworthy quirks---
-> Pentium II Overdrive - A unique family number:
->   Wikipedia says[2], In Intel's "Family/Model/Stepping" scheme, the Pentium II
->   OverDrive CPU identifies itself as family 6, model 3, though this is 
->   misleading, as it is not based on the family 6/model 3 Klamath core. As 
->   mentioned in the Pentium II Processor update documentation from Intel, 
->   "although this processor has a CPUID of 163xh, it uses a Pentium II processor 
->   CPUID 065xh processor core."
+On Tue, Dec 17, 2024 at 8:13=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
 >
->   A dump of the microcode file 06-03-02 shows:
->     001/001: sig 0x00001632, pf_mask 0x00, 1998-06-10, rev 0x0002, size 2048
->   An archived CPUID dump [3] also says:
->     CPUID 00000001: 00001632-00000000-00000000-0183FBFF
+> Similar to ld-version, add a way to check the version of objdump. This
+> should most of the time end up being the binutils version or the llvm
+> version.
 >
->   That would translate to a family number of 22 (0x16). This aberration is 
->   not explicitly handled anywhere in the kernel so the platform might already 
->   be broken. This series might make it worse for the platform if the latest 
->   kernel works on it by chance.
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
-Are you sure?  Bits 13:12 are the type field, and the 0x1 you've got is
-for an OverDrive processor.
+This patch has no point because 2/2 includes CONFIG option
+from the userspace "perf".
 
-x86_family() will consider this to be family 6 as far as I can see.
 
-~Andrew
+
+
+> ---
+>  init/Kconfig               | 10 +++++++
+>  scripts/Kconfig.include    |  6 ++++
+>  scripts/objdump-version.sh | 69 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 85 insertions(+)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a20e6efd3f0fbdd7f0df2448854cc30734a0ee4f..0b5d36f939e1de89c12ebdd61=
+e4815015314d4f1 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -60,6 +60,16 @@ config LLD_VERSION
+>         default $(ld-version) if LD_IS_LLD
+>         default 0
+>
+> +config OBJDUMP_IS_GNU
+> +       def_bool $(success,test "$(objdump-name)" =3D objdump)
+> +
+> +config OBJDUMP_IS_LLVM
+> +       def_bool $(success,test "$(objdump-name)" =3D llvm-objdump)
+> +
+> +config OBJDUMP_VERSION
+> +       int
+> +       default $(objdump-version)
+> +
+>  config RUSTC_VERSION
+>         int
+>         default $(rustc-version)
+> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+> index 33193ca6e8030e659d6b321acaea1acd42c387a4..cb3e2d2564fea8cce780adb3b=
+e672c9596b7ccf2 100644
+> --- a/scripts/Kconfig.include
+> +++ b/scripts/Kconfig.include
+> @@ -58,6 +58,12 @@ $(error-if,$(success,test -z "$(ld-info)"),Sorry$(comm=
+a) this linker is not supp
+>  ld-name :=3D $(shell,set -- $(ld-info) && echo $1)
+>  ld-version :=3D $(shell,set -- $(ld-info) && echo $2)
+>
+> +# Get the objdump name, version, and error out if it is not supported.
+> +objdump-info :=3D $(shell,$(srctree)/scripts/objdump-version.sh $(OBJDUM=
+P))
+> +$(error-if,$(success,test -z "$(objdump-info)"),Sorry$(comma) this objdu=
+mp is not supported.)
+> +objdump-name :=3D $(shell,set -- $(objdump-info) && echo $1)
+> +objdump-version :=3D $(shell,set -- $(objdump-info) && echo $2)
+> +
+>  # machine bit flags
+>  #  $(m32-flag): -m32 if the compiler supports it, or an empty string oth=
+erwise.
+>  #  $(m64-flag): -m64 if the compiler supports it, or an empty string oth=
+erwise.
+> diff --git a/scripts/objdump-version.sh b/scripts/objdump-version.sh
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..fa24f8dc2d3c42fd1195fceb3=
+c96b27f7127db25
+> --- /dev/null
+> +++ b/scripts/objdump-version.sh
+> @@ -0,0 +1,69 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Print the objdump name and its version in a 5 or 6-digit form.
+> +# Also, perform the minimum version check.
+> +
+> +set -e
+> +
+> +# Convert the version string x.y.z to a canonical 5 or 6-digit form.
+> +get_canonical_version()
+> +{
+> +       IFS=3D.
+> +       set -- $1
+> +
+> +       # If the 2nd or 3rd field is missing, fill it with a zero.
+> +       #
+> +       # The 4th field, if present, is ignored.
+> +       # This occurs in development snapshots as in 2.35.1.20201116
+> +       echo $((10000 * $1 + 100 * ${2:-0} + ${3:-0}))
+> +}
+> +
+> +orig_args=3D"$@"
+> +
+> +# Get the first line of the --version output.
+> +IFS=3D'
+> +'
+> +set -- $(LC_ALL=3DC "$@" --version)
+> +
+> +# Split the line on spaces.
+> +IFS=3D' '
+> +set -- $1
+> +
+> +min_tool_version=3D$(dirname $0)/min-tool-version.sh
+> +
+> +if [ "$1" =3D GNU -a "$2" =3D objdump ]; then
+> +       shift $(($# - 1))
+> +       version=3D$1
+> +       min_version=3D$($min_tool_version binutils)
+> +       disp_name=3D"GNU objdump"
+> +else
+> +       while [ $# -gt 1 -a "$1" !=3D "LLVM" ]; do
+> +               shift
+> +       done
+> +
+> +       if [ "$1" =3D LLVM ]; then
+> +               version=3D$3
+> +               min_version=3D$($min_tool_version llvm)
+> +               disp_name=3D"llvm-objdump"
+> +       else
+> +               echo "$orig_args: unknown objdump" >&2
+> +               exit 1
+> +       fi
+> +fi
+> +
+> +version=3D${version%%[!0-9.]*}
+> +
+> +cversion=3D$(get_canonical_version $version)
+> +min_cversion=3D$(get_canonical_version $min_version)
+> +
+> +if [ "$cversion" -lt "$min_cversion" ]; then
+> +       echo >&2 "***"
+> +       echo >&2 "*** objdump is too old."
+> +       echo >&2 "***   Your $disp_name version:    $version"
+> +       echo >&2 "***   Minimum $disp_name version: $min_version"
+> +       echo >&2 "***"
+> +       exit 1
+> +fi
+> +
+> +echo objdump $cversion
+>
+> --
+> 2.34.1
+>
+
+
+--
+Best Regards
+
+
+Masahiro Yamada
