@@ -1,243 +1,283 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BE01BB6B8
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 21:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734988371; cv=none; b=tIqycNF21H8xbLAyWqHYbtxlP41TxNiiNf4bTfI7JMNtCUCoq+NpG9avVSSQBOHJ4Lzscm81uFa1OyvuRZCKB27caceJ2MUWxDjasuF52qxKHu7nFce/hwpo+shCGdaleTnozeSovoIV+mQPBk4pr6bwicuEkCFAC0YH5eLZEqQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734988371; c=relaxed/simple;
-	bh=3FBe+74ZYrbMc0g3gI3D9fIdZxiaLiTQWBRK/AVf8F4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xhv3M5v9Tre6jxAB07YxSEhxHsSL9VUA/5HGP+QBZXh3EYttqVB2gy6S5sokgZfHJT165oWKqvxN7KRo09TpzNvWiJ56NzMBU/3+m9hB3E2XPYar0IIBiLyCSV0zBTqGT6TVfohjSyaLnAU5DDGXiInRLbCT6RRm26qoGEXBgL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aVZUtFVO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE521422AB;
+	Mon, 23 Dec 2024 21:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734990961; cv=fail; b=JVasysNic+CGx/HSZuQpJ4mYeaxvNzRAFDUh4ylZ+PbphOtIEN/ruGf4KqstW8J+CX/XFKcvEwGjNGwKHCbR9mhZVdrFRCd2mBeaa6doq9Cl2WflRrgfUTPkFRJY68SlOVQLPOQG9uZ7I5J5K8E3v1qwyncewxqr+Cnvz5v2MYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734990961; c=relaxed/simple;
+	bh=MQ67PYv8lvq/UQQPyKSNLkERn1rbLC+M8s0DKPu0xIw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PJnnmXCvomB15o6o5pbZLixr8VkMf/z55wEuoucZ8r4gqpT8fGRcLyukzpx4ymV66zGKPbc3muyTD3sAJnEIc7zJ553sB1AH8VeqarCX8oDUzn4Hc4yjNWtueYXtAxAjlKWfZIHwpk+HOecFN++eJAZDUViEj3TaA+gqRc4bLa8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l8t1uh/2; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVZUtFVO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734988368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qV4g1N2gf0daZJQR0ABPMd160qh+3HZVnupXaQK9pGo=;
-	b=aVZUtFVOrJxA4gC5dyPIKUgof7L0WC2mTSDygue0kH5pXEXTk7ArWdh7teFjPo1NOely9x
-	rQBzfwTC5u05yxz2ObPu0TftX9MHSvl3c0kFltArpFfTDIR3q4uAegLgQOZPVRQcuUbsh0
-	zFrwPQNHespNOVbycY7vq/O9znlk3Us=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-XFKLJ_mzOkmsTFpBe46GXQ-1; Mon, 23 Dec 2024 16:12:46 -0500
-X-MC-Unique: XFKLJ_mzOkmsTFpBe46GXQ-1
-X-Mimecast-MFC-AGG-ID: XFKLJ_mzOkmsTFpBe46GXQ
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-385d52591d6so2158651f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 13:12:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734988365; x=1735593165;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qV4g1N2gf0daZJQR0ABPMd160qh+3HZVnupXaQK9pGo=;
-        b=oAqKHU4akBLVvaobyqP0hM837b+YKYb8kVgH46D+p0noJ0Ws7xM7dIyRYxZMTGRleN
-         kCdthGIk5TBDNT4Hs6HYdwy3Wz8urd79zTICBpYE2N8R0dM/0dX6lQl5gTe+0zdIOAqL
-         t7ihhVJq3tY80qHg1ECIDONBlPeIXmlcwGRTHCKp92/jfTH98iJJ1Lo9ub5g87v1LTql
-         IEhqC0DSnHc9uHBL8qAku0CgvEF1hycC+8T2tg8KlxLnuxGYGnfEskHyXl966F+dpOlA
-         FTcAF8F8TzW7xiGadB0IxxjcPQvSlK6i23oSYNv+jD4++GwXSHr6rVHP/wBqD5FT7rNi
-         n3qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFuXdYSa4Lg8akurKvzrNuLoSZZ7d5gO1SPJFrpKB8mPWDybmnUesOiEen/BwhVyg/n6jCe/8L2rf/0syHvl4E@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBdLT5w4Ink2z5Alm09IA/1PEpnlLlleaODDz5fX29tLzMVEd2
-	TCc4IgEvpm5KQsqhQa/mwcybOnrLbsn/qL1X05TdYVAGKG8hrbp1LSO9jlYEHXhzeJC9QFihuRm
-	RkHOJO9Am+pe8ePDWhu95QmK7t/ltbmS/wkpPyg7Lg3vTVulA3RKxDZAFbFxGSFuQHBQ=
-X-Gm-Gg: ASbGncvwJ7DSxcI/9/Sqfqz7DAhk3KiwY24lN6k+L84uKvTGCZKcRwpW8lGA89Hv+yX
-	TZilDK5eY0bRCjxqJfMpqwg3lUSFWs26fxK6Nd7Sm3G5ws545DtKaTiGk6hE26baPbZb5+nyAMh
-	i/IgbgjS9hWkgY+v/oEFHvAHrRWSfg6FfXUyAeAU5Jp/lakOSGTS0avszmXkkBrNEbUfR9T0/oZ
-	InvCi1eEL6CTJ3XvrFPzvygb0DcWMhwDjnn+P2U0jE8wQEMpcFqfDa7KIBFgXUWUJEuecazW/fA
-	zjREbXb2M2DzCDv1GmTzmijizTG+GAz4nZMHTu4cSWTRNLH9SXzmsdd/pWi576B2fMShd//3irq
-	oRPpSDyV3
-X-Received: by 2002:a05:6000:2202:b0:385:e90a:b7de with SMTP id ffacd0b85a97d-38a229ec5a5mr12856593f8f.5.1734988365269;
-        Mon, 23 Dec 2024 13:12:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+/QHtx6mWa9o3JeVN7Ppn1qmmS6hUpnJonWPcYL7fOb2Pclz5/Qru/ji9uOQleuruwNbj6g==
-X-Received: by 2002:a05:6000:2202:b0:385:e90a:b7de with SMTP id ffacd0b85a97d-38a229ec5a5mr12856585f8f.5.1734988364827;
-        Mon, 23 Dec 2024 13:12:44 -0800 (PST)
-Received: from ?IPV6:2003:cb:c721:5a00:7b5b:9007:4395:ac65? (p200300cbc7215a007b5b90074395ac65.dip0.t-ipconnect.de. [2003:cb:c721:5a00:7b5b:9007:4395:ac65])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8a636asm12616261f8f.88.2024.12.23.13.12.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2024 13:12:44 -0800 (PST)
-Message-ID: <2cb3d067-fe92-4bdf-ae79-b24810a4bc2e@redhat.com>
-Date: Mon, 23 Dec 2024 22:12:42 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l8t1uh/2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734990959; x=1766526959;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MQ67PYv8lvq/UQQPyKSNLkERn1rbLC+M8s0DKPu0xIw=;
+  b=l8t1uh/2R+eOirMqKxkPCVQT8wATSndEqjGEI4dhKb9k1Tw3pceCE6o4
+   wXN/CHoFjSAN+toqW4xNdyvqyGl5DXHy4PtW0S7oPqpbu2s60NwEE+lxg
+   SWz5dOivBelhnJGZleQtWOHVsRUIF8dlpjbz8XYOgIDCDSaOs/+IZs/mX
+   vPwe+SdGxmtOxdcxQnO6nCQMOdyJmXlC9urXobwykvHAVQkUUYBap2jj+
+   bWLeb7N3IOjoSNNw92dhS+P1b3y5Vu9bsrLqADgCUifKypOnvjqu/9OaF
+   s+k3cYj20i0Ih3a7V2tI7244jYc9PIMngwhLBNahL1tmINAW3bn33jZV7
+   A==;
+X-CSE-ConnectionGUID: OXn3MeY8RoqpCixuV26PRA==
+X-CSE-MsgGUID: DMjgxF8ESxacWFVldcgpBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11295"; a="52993611"
+X-IronPort-AV: E=Sophos;i="6.12,258,1728975600"; 
+   d="scan'208";a="52993611"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2024 13:55:58 -0800
+X-CSE-ConnectionGUID: 88EWWelIQSy0guwuucR0bg==
+X-CSE-MsgGUID: uLVlwrhcQVuwZrxfuu5C5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,258,1728975600"; 
+   d="scan'208";a="99069011"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Dec 2024 13:55:58 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 23 Dec 2024 13:55:57 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Mon, 23 Dec 2024 13:55:57 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 23 Dec 2024 13:55:57 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rWU3Sh+aNRiaOiNpBqdbe8j4KUInKJRa/1jrfKU9M/Chmb8r091yPn13xXDhwS2l5Pu7vtS+/F7D58flsnTmRx4VhvOnpF3XxdXYFodQOMnPmdYIIxlgjk9ebvFc9pmzvicx3qbMcsQhcQeMdNFmSQtE6+uoOK9l80PGoGHkSYk0XzGNYNICfp10X1RjELXUoCYwBXzo53BFX02wus7LS+mBPxPma+hpRleARpTWHPSjxkji+Yw4BO9mcnOs88YOhUr4wloC+Kriou5HeUyH5LUc5BZnZTcBLKj+zSe6XTpG/zEAuZ7xM9AzF3jvwECTDZXbmlLmrU9F9/2B9LrMFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4OngykJymkd2KWGAQlCcdKYaALTMj23aG6yeI9OgDK8=;
+ b=drtcs7wbqjx9Zsu3U6KXxhb/JN0hvYRt4LcCy/1xlm3IhixS0HfLk7Cvqmr80cGyOtn50RLp2H4/qj3AWc80c9MEeJKDCH0kV/8/rszn6/usQ08uVtjCUlEfvPmJ+1UvEec8MwTyCDyk7KOn0xE3aKY4MlWBhI7O3U/9SvKDlRdhT8ZbXHdu8rfjKOOVNlhIO/wkWte9bzJiUTwr/pbGfEeoyrz//41M/Bib9KpZi/Ls5y5UEWTPgZ71IrJ4fyMGmC3rKkyPqAeQEfx7QhMezTpNTXAtUnQ/lSh3urCJpm6zpp7kkXj/U76pZbClmUpm1L8cSk22XRXs8/aUIHtABQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB3322.namprd11.prod.outlook.com (2603:10b6:5:55::19) by
+ PH7PR11MB6794.namprd11.prod.outlook.com (2603:10b6:510:1b8::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8272.20; Mon, 23 Dec 2024 21:55:11 +0000
+Received: from DM6PR11MB3322.namprd11.prod.outlook.com
+ ([fe80::fca4:6188:1cda:9c1e]) by DM6PR11MB3322.namprd11.prod.outlook.com
+ ([fe80::fca4:6188:1cda:9c1e%5]) with mapi id 15.20.8272.013; Mon, 23 Dec 2024
+ 21:55:11 +0000
+Message-ID: <74e6ec51-4475-40ec-9803-633378a5dcf2@intel.com>
+Date: Mon, 23 Dec 2024 13:55:07 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 02/15] x86/apic: Fix smp init delay for extended Intel
+ families
+To: Dave Hansen <dave.hansen@intel.com>, <x86@kernel.org>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Kan Liang" <kan.liang@linux.intel.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin"
+	<hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Viresh Kumar
+	<viresh.kumar@linaro.org>, Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare
+	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui
+	<rui.zhang@intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-hwmon@vger.kernel.org>
+References: <20241220213711.1892696-1-sohil.mehta@intel.com>
+ <20241220213711.1892696-3-sohil.mehta@intel.com>
+ <0875ab7b-0595-4195-924c-66da28074ef6@intel.com>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <0875ab7b-0595-4195-924c-66da28074ef6@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW4PR04CA0279.namprd04.prod.outlook.com
+ (2603:10b6:303:89::14) To DM6PR11MB3322.namprd11.prod.outlook.com
+ (2603:10b6:5:55::19)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: map pages in advance
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: "Chen, Zide" <zide.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Matthew Wilcox <willy@infradead.org>, Yi Lai <yi1.lai@linux.intel.com>
-References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
- <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
- <4ded2d63-03dd-498e-9810-690a9eff0c22@lucifer.local>
- <860a1ef0-678d-414d-8511-9695b90c3ca0@redhat.com>
- <74fd8a75-66c6-40a8-9ec3-d7aa74469755@intel.com>
- <ebaa9d2e-c5f3-4a93-9def-caadae92acc6@redhat.com>
- <e489e48d-f9ef-453d-9b88-91368b9534d7@redhat.com>
- <f4299bff-3448-4095-b573-243f1fca834c@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f4299bff-3448-4095-b573-243f1fca834c@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3322:EE_|PH7PR11MB6794:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ef23da4-4ed1-40e3-c761-08dd239c7903
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?T0NhSmFVNWc2R2tuTTQwSnVNbHlKV01BbWRyYWJuWkx2VzkyRVJHZnJKbzk2?=
+ =?utf-8?B?RDBxclRJcW0vZVRLS3ZBNjJ0Vkg4N2Q0bWtSbVJjb0JzWFlqdDhvQU1TS0dL?=
+ =?utf-8?B?VGk2M3lueDlrSWorOWhzRDM3Q0JBbUVidnFBQUxnVjNxMnRlcnNyQUtQMVZ1?=
+ =?utf-8?B?aEMycWM1ejRHZExXM1BMcndMeU56U1BxYjhSbWxoNVVMZzloczJsUUxpTVFs?=
+ =?utf-8?B?dWdoSEZ3aUxxa0ZhanRkck1paFREWjFEUThYUkNESlJJbHRGeWh4Uk5IQmhP?=
+ =?utf-8?B?eGFDeE0wcWJlemhNWkRuVmx4ZDBNcTRoQUpwSjVUVXJPdGJCS1hCa1lWMVpz?=
+ =?utf-8?B?RWFGSHQ2SkxnMHI5TXBZUHB3L3JMRDBtL1FUZjhZaVRLWnJ3SUxVRVZhM2Vx?=
+ =?utf-8?B?RURFZC9CZmhrWG1qK2d3aDBTbGNoQlhuMHh1ZERIWktLOHdYTUtOdUhLQk9C?=
+ =?utf-8?B?TnRYZnB2My9NbkQ2cWdIeCszWktRcjBTTmlpMyttbFRhZmR0T0xYM3lpUE10?=
+ =?utf-8?B?b1hTU1p0NHp5Z1RpRmFmeEhPU2VKNGVNVGIrMS9jeFhkY2FRTXV4NXJOMmdV?=
+ =?utf-8?B?aExvV0V5ZTNMLzEwcnFDd1VrZDFVSnBIWWd6eDVxRnpwTHNWMzhBWEpqUy9q?=
+ =?utf-8?B?eWkrMWhocjFHY2ZTM09lYldYYVdsNjBoLzFrU3hjRG9ZZ3RlSFhlMmZQZWM0?=
+ =?utf-8?B?YWNKSWI0RkRFYzVvWTJQZnJVeHFTOWZJQUR5WHQ3bTJyVGpNVUp6aThyeVZO?=
+ =?utf-8?B?dnBGcS9mS1RLM2FaTEtjZDdkWVYwckdsNUZsNW9UeDkrN1lVMG00a2YyNWpS?=
+ =?utf-8?B?bXg3Y1MvNFRHMi9PbFhaQnI3ZHI1YkVrd25hS0JLVnF6NmxKa3RVS2lOYTZJ?=
+ =?utf-8?B?bitsaXRxU1hYQWdBekVEZ0FKVTY4OUNzVVNqSE03RENPRHJsSE9zV2NUK0R3?=
+ =?utf-8?B?MmFlTXBhSWRVMDVadG5kS2VCU2dsWHpjMms3RG9wQis2QSszZ1RUTThxMVVG?=
+ =?utf-8?B?c2JFZ09PQmZoS1lldlRYUnM0dFdwYW9OdkE1d3BTWmRWak5QZ2RHanVJYXEv?=
+ =?utf-8?B?N290anVZUW5RWGpabFV3RURJdkRRRUYyRktDYWlxK2VtVUFPdWVFN2FPTlRY?=
+ =?utf-8?B?bHlrRzU5OUx4RWhYK0hZN1dJZm5YMlZ6Z1NoSXBKanN1YTZXcldIb2NOblVT?=
+ =?utf-8?B?UFRyWXhZZkZOOEVwVTBwZy9Id1Nac2NkWjVLMjhZcjZyVTVRVXBZM3F2ZHJM?=
+ =?utf-8?B?L0ZyTmI4dkp4UDFTN2RhNzZWS21od0hFNUNPdVhoakdOWVkyZHdrWUF1aXpm?=
+ =?utf-8?B?Z3BWTkU5dFFmYVg3bElaSEs4THpZWlNMTGd5M2s2RU5oUEVKMkJLQVlqKzJU?=
+ =?utf-8?B?aVdha1FvK0FVVStUK0krc1pPVG1HLzErRW9JUk9lUHkrMy9yTk82NW1RMG5J?=
+ =?utf-8?B?T0UzSEVsVS84RmNWVE5KUzlUWHdFNnlhanl1alZ2eHAycG0vWVRnR1Y2cW1O?=
+ =?utf-8?B?TmJPb0U3UTBpMUN1cDhVa3M4VGdMb0VudEYrL1lxU0ViOGN2MGJIUjdiOFNW?=
+ =?utf-8?B?UXk0YmE3REdxQXZkUFZRMjlsMk9ZQjB4WlExeFYrK0FrQWlkTHBRVWRHeThv?=
+ =?utf-8?B?bktZMXMzandtTW9ZMnhDZFJEb2dZR0J2MlFTeXZhbCtieVN1OVg2V2MzUjla?=
+ =?utf-8?B?SEhIRTdlSDl5cVRmeVJhcmZ0d1l4TkRsMVVsd2QvV29pa00ybUhRKzdhT2FK?=
+ =?utf-8?B?b0l1NXlSY2FSMzRwelUrd2hGL1R3YXlSU05rNEdOYWJrSnJ3T0NqWFppS2t4?=
+ =?utf-8?B?eFI0cm9RTVdHT0lOeCtOSWhBWm41alQrQTAxTCtNTjNROStHRFFESWRmQTN5?=
+ =?utf-8?Q?N3a6kWoIQCdBf?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3322.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NnpPYmlBckNjS1dwZndBK2MzVTBrcFNROGdFUUZ6VFNlY0VsdkFVUklKdlNG?=
+ =?utf-8?B?d3ZCcTZYMlQ0SGFiNzUyMkt6S0xaZDVZT1B5bjhoeWhxTEhqbUg3TFFJaHJr?=
+ =?utf-8?B?d0hJTTRvUVF1b2xUWGFEWlBubWdUQUFrdDFlZ3VxN1hQY05TeEV6eXR4bi9X?=
+ =?utf-8?B?eVc0aWpSU2dVUGFUOUluWFZLOE8zWWdWVWJTb1ZQclNXd3pXUnZJbmN2TWcz?=
+ =?utf-8?B?NzFpL2l5Y2ZSbHlWZ21kOU8zMU9mMGVJQ3R1VDA3bDM5Q2QyUDBBWkpjdlBp?=
+ =?utf-8?B?RUJkc2pWTDQwMEZoM1hqdHJTVTUzV2FodmZRckE2dCtKclcyQjExRXdRcTNK?=
+ =?utf-8?B?K0VxQVQwSjFscEwyYlZCMXI1NmJQMnpSVno0YmJoRWxrbXllUGdSWWEzQzFC?=
+ =?utf-8?B?WTFwSFdyeEhiVzB5Zk56YWF5ZWsxa1dIam1EZDBQZkhRNFZjaHV6RWxKRTE2?=
+ =?utf-8?B?cy8yL1F0T0FwUWVlZUp0SFNvYlZtWjd1YmRndnIzeklUZDlhZHkycnAybU1Y?=
+ =?utf-8?B?dENaUWdYY0I3dHcxTzVnWTdEKytVLzZJM0pWbmNpODZEVktaaUFTZ1JYWHM3?=
+ =?utf-8?B?djZRRTZOUnZJejJyUmhiSTZkU2xmYWVwSmxZRXgxTVpVZ2ZSQmIvTndjclVI?=
+ =?utf-8?B?NDdEa3ZjdHh6UUV1dUx2OXUzcElMZThuSmJMT2tGZDJKU21uZi9sZENwS0RN?=
+ =?utf-8?B?K3BCeC96enlteGEvUkIrUXlkZE84VW1QY2hSUCtoYlpMQ0dxSVdVdCtTQkdk?=
+ =?utf-8?B?cHdiNEc3MDdYZVdrTDNXZ3NHaUsyUTZvRTd5bnAyblpYVGpFYjE4QzJpRlpS?=
+ =?utf-8?B?ZWRLY2gvVVl6YWp5ZWY0TERTdXhXd2FDUWUrSXZBWk9BTTFBUCtvMzFVcUhI?=
+ =?utf-8?B?Y1dpc3h2SVB5OTE0ZDhLaUhoS0g5UWpNVkhzMUpvTUN1NUR2TDNqdlh3VHBC?=
+ =?utf-8?B?Nk1wTkhyeUhKVXk0VU1JU0hRdk5rVmNqNE1LRWRRajAvNkxwTlBYM2crMFBr?=
+ =?utf-8?B?emN6L3lwSXhxYVU4d3AwVnlORXp2N1J3aGd4N0FWeHYyUk5sU3U2UEdZZmdl?=
+ =?utf-8?B?YmVUeGs5Rng1WWd6Z2lBVCtNc2hUSVR5SGl3bE1GSFlZaDBKZU5XbnhNM2NV?=
+ =?utf-8?B?UE54OUpsbzlTZHppQUUzRW5XZDV5YXQzQTFEN3Zwci9GNVRVS20weUZSQXJi?=
+ =?utf-8?B?Ni9lTCtjaW9DbDRCbWtDZzEyQ09yZHdIU3RGeGRvaC9zZmYvNW9aUUNZUFBx?=
+ =?utf-8?B?ZHEyUWlydytZdkZmaThSTjNCUm14dWUwSm9laDRqN25ncWtuSkRaT2ZWd3Bh?=
+ =?utf-8?B?Y0ZQbEprRHdMRURtQWNTSTRXdDZWbnZmSm5PcmVnT0l2RTRzdVpINXBTNTJZ?=
+ =?utf-8?B?Ym54YkZ6MjlwSTV0QmY3MTB5SHVDRDg0RFBUVXBzdlFrMW1naXc4dCtFMnhR?=
+ =?utf-8?B?UWFpRGtWV3pybUJNV1BJRC9ia29hR3cxVXFSbklxMU1mNHRvcmptdDJnVERx?=
+ =?utf-8?B?b1Q2MkRjclJNZ3RZbGMvMldXSVVkSU1hemhMOHBtdXIraXFPTlVPT1d1elN5?=
+ =?utf-8?B?Y241TVdXakg0S3JpOENjbHZhNjhDSFV6TUltUUd3alg5MmRweUtEM0d4Z2Rs?=
+ =?utf-8?B?VUp0OXU5L29DbDZydmw2d1FwY01ubHZlZEFsOGNBT2UrWnpCTVZ0VjRab0lI?=
+ =?utf-8?B?SnFvZEViZGZ1ekh3UFk0R05ORE8wVkRPYVlsakJ2bmtIOXQvaUZnZHA3NU5Z?=
+ =?utf-8?B?WjVFRE5ML1FUcE52UEJpa2Y5bkRaOWczZXdjNWU2VG04L0g2MlpaUE9qZGIz?=
+ =?utf-8?B?ckJNaTEzdHNCcXBiODUwTVhtLzdKdlcxWXJBT2ZYdVFJdG82cXlnOVNxelRW?=
+ =?utf-8?B?TDBVdDd1aDBMeVFvQm1mcm5RM0prUHVsS3lzU2FoY05ONENqd0huRjhUT3VN?=
+ =?utf-8?B?YmN4bENHbDAwUnRHdlc3S3l3WS8yVU4wSUVnVjEzMjFPZVRQWnI5TnJWTXlq?=
+ =?utf-8?B?R20va1BEV29HcFdxdUZ1alBvb2tKUS9iVWY3UjZSbWQvRWpOQ0xFMmppbnM4?=
+ =?utf-8?B?MDZ3ams2V1BieUVSbE81L2U0TGMwTnlTOTZMeHFQQTlrZTEvU1lNenMrRWhT?=
+ =?utf-8?Q?XNbG5XIA90hbTaIAQUD3WgNu3?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ef23da4-4ed1-40e3-c761-08dd239c7903
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3322.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2024 21:55:11.0660
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A2TVYiXJ4pTh/fn1UEq64ku3BQLRBBWVZ3qsou9kj9792PqM1fXPYlakYK5PIUSZp7LOB7PzWR98MYsBe8Z/Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6794
+X-OriginatorOrg: intel.com
 
-On 23.12.24 12:10, Lorenzo Stoakes wrote:
-> Peter - could you drop this patch for now until I have a chance to take a
-> look at this issue on my return on 2nd Jan?
+On 12/20/2024 3:20 PM, Dave Hansen wrote:
+> On 12/20/24 13:36, Sohil Mehta wrote:
+>> The MP specification version 1.4 references the i486 and early Pentium
+>> processors in family 5. 
 > 
-> On Fri, Dec 20, 2024 at 10:53:14PM +0100, David Hildenbrand wrote:
->> On 20.12.24 22:29, David Hildenbrand wrote:
->>> On 20.12.24 20:36, Chen, Zide wrote:
->>>>
->>>>
->>>> On 12/20/2024 1:56 AM, David Hildenbrand wrote:
->>>>> On 20.12.24 10:31, Lorenzo Stoakes wrote:
->>>>>> On Thu, Dec 19, 2024 at 01:17:44PM -0800, Chen, Zide wrote:
->>>>>>
->>>>>>> With this patch, it seems perf tool has some problems in capturing the
->>>>>>> kernel data with Intel PT.
->>>>>>>
->>>>>>> Running the following commands, the size of perf.data is very small, and
->>>>>>> perf script can't find any valid records.
->>>>>>>
->>>>>>> perf record -e intel_pt//u -- /bin/ls
->>>>>>> perf script --insn-trace
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> I'm on leave (and should really go back to relaxing :>), returning on 2nd
->>>>>> Jan so can't really dig into this.
->>>>>>
->>>>>> But I tried it on my intel box and it 'works on my machine' with and
->>>>>> without patch with commands provided, so I'm not sure this is actually a
->>>>>> product of this change (which shouldn't impact this).
->>>>>
->>>>> Zide Chen, can you try with and without this patch to see if it
->>>>> introduces the issue?
->>>>
->>>> Yes, I re-did the test on a SPR server, and the result is same. Without
->>>> the patch, it went well; But with it, "perf script --insn-trace" doesn't
->>>> show valid records.
->>>>
->>>> This time I tested it on the clean 6.13-rc1 tag, base commit
->>>> 40384c840ea1944d7c5a392e8975ed088ecf0b37
->>>>
->>>> Also, with this patch, running tools/perf/tests/shell/test_intel_pt.sh:
->>>>
->>>> Error:
->>>> The - data has no samples!
->>>
->>> I just tested it on 6.13-rc1  vs. 6.13-rc1  with this patch.
->>>
->>> Indeed, there is quite difference. Below are the main parts that changed, only.
->>>
->>> We seem to be recording data, but maybe what we record gets corrupted somehow?
+> Can you please elaborate on how this reference is relevant to the patch
+> at hand?
+> 
+
+The comment above UDELAY_10MS_DEFAULT which references the MP
+specification seems to be the basis of all the cpu_init_delay quirks.
+
+I wanted to use that reference to justify that family 15 doesn't need
+the 10 msec delay since it is not explicitly mentioned there. I realize
+now that it's moot since the Pentium 4 wasn't released until 3 years
+after it's publication.
+
+I referred the latest MP initialization specification but that doesn't
+say explicitly when the delay is needed vs not needed. However it does
+say that later Family 6 models and Family 15 models have similar
+initialization protocols.
+
+"The selection of the BSP and APs is handled through a special system
+bus cycle, without using BIPI and FIPI message arbitration (see Section
+9.4.3, “MP Initialization Protocol Algorithm for MP Systems”). These
+processor generations have CPUID signatures of family=0FH with
+(model=0H, stepping>=0AH) or (model >0, all steppings); or family=06H,
+extended_model=0, model>=0EH."
+
+>> However, all processors starting with family 6 likely do not need the
+>> 10 msec INIT delay. The omission of the Pentium 4s (family 15) seems
+>> like an oversight in the original check.
 >>
->> Huge parts of the new file are full of 0s. Either we are mapping the wrong
->> pages, or reading from the pages (via PFNMAP) does not work as expected.
->>
+>> With some risk, choose a simpler check and extend the quirk to all
+>> recent and upcoming Intel processors.
 > 
-> Thanks David, and apologies Zide, appears there is an issue here clearly.
+> I'm struggling to follow this a bit.
 > 
-> Could you try this with sudo operations? I was doing this locally and I
-> wonder if there is now a permissioning error?
 
-I ran it under root.
+Because my interpretation of the code and the related comments is
+opposite to yours. The usage of "quirk" in this context seems to be
+inverted due to how this check has evolved over time.
 
+> I think these are the facts that matter:
 > 
-> I'd be surprised if pfn map would cause an issue here as it should just
-> directly map the kernel memory, however if the PT code assumes there will
-> be faults there could be an issue. I did take a brief look at this last
-> week and it seems the PT stuff relies on the aux functionality, so that
-> could also be a source of problems here.
 
-I started a bit at that code, no clue yet what's happening.
+The code says this:
 
-I was wondering if we end up mapping the wrong pages, meaning: the pages 
-at mmap time end up being different to the pages later at fault time. 
-The code is a bit confusing, but I thought we cannot change the 
-effective event/pages while we have an active mmap. Maybe there is some 
-corner case ...
+/* if modern processor, use no delay */
+	init_udelay = 0;
+/* else, use legacy delay */
+	init_udelay = UDELAY_10MS_DEFAULT;
 
-Nothing else really jumped at me ... moving the mapping og pages after 
-the event_mapped() callback also didn't change anything.
 
+The legacy/default delay is 10 msec and then the quirk applies to the
+modern processors to remove the delay. This is the comment above
+UDELAY_10MS_DEFAULT:
+
+ * Modern processor families are quirked to remove the delay entirely.
+
+>  * init_udelay=0 means "no quirk"
+>  * Modern CPUs don't have the quirk
+>  * The current check says "only family 6 is modern"
+>  * Family 15 is _probably_ modern and just forgotten about
 > 
-> I am on leave at the moment returning on 2nd Jan, I will look at this as a
-> priority when I return, as you can see above I've asked Peter to drop this
-> for now.
+> And this is what you're doing in the end:
+> 
+> Consider everything PPro and later to be modern, including all of
+> families 6, 15 and the new 18/19 CPUs.
+> 
 
-Enjoy your time off an Happy Holidays!
+That's right. We consider these CPUs to be modern and do not apply the
+10 msec delay but the usage of "quirk" is confusing here.
 
--- 
-Cheers,
+I'll clarify the changelog without using "quirk" to avoid confusion.
 
-David / dhildenb
+Am I interpreting this wrong?
+
 
