@@ -1,115 +1,153 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E552519006B;
-	Mon, 23 Dec 2024 06:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CD518A6B5;
+	Mon, 23 Dec 2024 09:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734937075; cv=none; b=jZUcDW94Vl0V3nhwcqHH7+2JbhXvjhlswwXYtsVMKzzGW4h9vl94rQWtqqspUNWq6fw4+X0zmddOvfAuxt5jiL2qnKwk503znHdeD1DNFrTJhJZJvP04Gq/QxaSJwbkG6LSP76KTqjON3MZxGCmniXEi0LcpG/CK+R49eBE/ea0=
+	t=1734944682; cv=none; b=TFY+74F45NMqWjdls9mImq+W9yi36MlBhFRWvkFHsiW9Wkh/FFgcRxbG5xipFgtV6YCMFCWpByZ9LyCNTkY5iLJMVgaLuvbXfagXEQnvksmLfuAgJ+BEiEavoQXhCHD3WC3bNmRM0MRVRQo4Vitn7g/LwHCr/MnwXB6og3sHBQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734937075; c=relaxed/simple;
-	bh=iM223PkQZDqo/Te4I4lOt5OkAiDiGHc6wnKJ/ZHtVE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mu6mjKu71jcXdUBSJ/kgkdi6MGnIQrr6iCeMJA8L0+t4f5njmKXs1Zpc2lOj7NU4IASa+lKgxqhLHRqzl9Ew6/EiNuyujAww6m7X8ExWB/Bm4lJ61PnGmZ/YQiABrhQwFs7gk41U6lfI36b7E1+8eQXNqrBOO70dzyfYgWjpdSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YGpjx4Fn2z4f3kFj;
-	Mon, 23 Dec 2024 14:57:25 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 392441A018C;
-	Mon, 23 Dec 2024 14:57:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgC33oLoCWlnoBWSFQ--.8658S6;
-	Mon, 23 Dec 2024 14:57:44 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	will@kernel.org,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	stephen.smalley.work@gmail.com,
-	omosnace@redhat.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	selinux@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH linux-next 2/2] perf: Return EACCESS when need perfmon capability
-Date: Mon, 23 Dec 2024 07:06:50 +0000
-Message-Id: <20241223070650.2810747-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
-References: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1734944682; c=relaxed/simple;
+	bh=qDbsIV88b/IbUTi8Tebj4V3sLqa8RIcuToSG7703uus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GypUOqjUyGjVWI0td5rKz4zfIVaiiB1BaxC6ILqFSs8rNSL4BoXnNJkNn0C4ypuyaPbrjKz6wtSzZIFgbxBJWzYvgk++zU6YmFaZnEqphvcFafzV/ST5m+dbGvZtkRNMu/LBM4H50T75Ye1zhSB6vlhum6x+X2iq6MpsqST5seE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F94eL4UX; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F94eL4UX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734944680; x=1766480680;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qDbsIV88b/IbUTi8Tebj4V3sLqa8RIcuToSG7703uus=;
+  b=F94eL4UXYa4l2U5qjLMx5xBQGMF3hyUYmmaK9hs2XGcP8QOxgW04rXqp
+   I8e+QNc5LFeX0ETz5jSWn3HJDLqc2R4ZkdY42Hnlxx1kn5GEyu8wWEffJ
+   38pFckieM//7cWTsHX+6RAsdxSjm4MrchDOaxlGe8Uiva4TBCETQoMmdy
+   0DNtbMttQSGcY5ymYj/jSrRI4gpPYG4niaPhGuqEGc4R0vwix3yzRkoY1
+   Fs24ihddPSHKisRhK6kh5TfpPuNsZVAS2MJhLcaPAPiU40J98EHNV2UPc
+   r5sy943F6FlmY+gG40C6cpFI5OZKIKrZ6p87DrzLVOnIMES/3MHG+tPLp
+   Q==;
+X-CSE-ConnectionGUID: S6wbN0GUS4WiviscWGSB4A==
+X-CSE-MsgGUID: yQtA3vttR8qXyQ3SeK/BHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11294"; a="46097651"
+X-IronPort-AV: E=Sophos;i="6.12,256,1728975600"; 
+   d="scan'208";a="46097651"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2024 01:04:40 -0800
+X-CSE-ConnectionGUID: /ky/PTxrSh283ciuKWu1jw==
+X-CSE-MsgGUID: fj79NWw/TwOVifKAiyWCkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="103768650"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2024 01:04:36 -0800
+Message-ID: <8a89ba95-22cb-4e69-a776-3c927e80f5df@linux.intel.com>
+Date: Mon, 23 Dec 2024 17:04:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tests: Make leader sampling test work without branch
+ event
+To: Ian Rogers <irogers@google.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Veronika Molnarova <vmolnaro@redhat.com>, linux-kernel@vger.kernel.org
+References: <20241115161600.228994-1-james.clark@linaro.org>
+ <CAP-5=fUq1JLCVLQerQbK+itNg2RZaP9zCo9RUTgKoGqTQi3yYQ@mail.gmail.com>
+ <ZzjyVgnEUOYknN1k@x1>
+ <CAP-5=fUDnBii8T2hH3o+J=DXMe7xxHXP7Kno5fz4OjBestObwg@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fUDnBii8T2hH3o+J=DXMe7xxHXP7Kno5fz4OjBestObwg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC33oLoCWlnoBWSFQ--.8658S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF13ZFy5ur43urW3Jr4UXFb_yoW3trg_u3
-	WxJrn2vr1kWF12q3y7Jw1xtr15Ww1rG3WFvrn5G347Cr90gws5A34rJryDtrW7CFs7ursr
-	Kw18Wr97Zr1Y9jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbkAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRNrcTDUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-For perf_allow_kernel and perf_allow_cpu, both return EACCES when require
-CAP_PERFMON or CAP_SYS_ADMIN permissions, so update perf_allow_tracepoint
-to keep them the same.
 
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- include/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 12/21/2024 3:08 PM, Ian Rogers wrote:
+> On Sat, Nov 16, 2024 at 11:28 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>> On Fri, Nov 15, 2024 at 10:54:43AM -0800, Ian Rogers wrote:
+>>> On Fri, Nov 15, 2024 at 8:16 AM James Clark <james.clark@linaro.org> wrote:
+>>>> Arm a57 only has speculative branch events so this test fails there. The
+>>>> test doesn't depend on branch instructions so change it to instructions
+>>>> which is pretty much guaranteed to be everywhere. The
+>>>> test_branch_counter() test above already tests for the existence of the
+>>>> branches event and skips if its not present.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>> Reviewed-by: Ian Rogers <irogers@google.com>
+>> Thanks, applied to perf-tools-next,
+> Rebasing on perf-tools-next I see this failing on my Intel Tigerlake
+> laptop. An example script output for:
+> ```
+>  perf record -o "${perfdata}" -e "{instructions,instructions}:Su"
+> ```
+> is:
+> ```
+>             perf  352917 49604.160314:          3 instructions:
+> 7f155caca323 [unknown]
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.160314:          3 instructions:
+> 7f155caca323 [unknown]
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.160317:         18 instructions:
+> 7f155cacaf3d _dl_start+0x3d
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.160317:         18 instructions:
+> 7f155cacaf3d _dl_start+0x3d
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.160319:          3 instructions:
+> 7f155cacaf44 _dl_start+0x44
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.160319:          3 instructions:
+> 7f155cacaf44 _dl_start+0x44
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.161099:        120 instructions:
+> ffffffff8ce00080 [unknown] ([unknown])
+>             perf  352917 49604.161099:     181013 instructions:
+> ffffffff8ce00080 [unknown] ([unknown])
+>             perf  352917 49604.161115:       8811 instructions:
+> 7f155cad22d0 strcmp+0x8b0
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.161115:       8811 instructions:
+> 7f155cad22d0 strcmp+0x8b0
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.161130:      10483 instructions:
+> 7f155caba508 _dl_new_object+0x198
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.161130:      10483 instructions:
+> 7f155caba508 _dl_new_object+0x198
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.165156:     177355 instructions:
+> 7f155cab90a4 _dl_lookup_symbol_x+0x44
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>             perf  352917 49604.165156:   13313598 instructions:
+> 7f155cab90a4 _dl_lookup_symbol_x+0x44
+> (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> ...
+> ```
+>
+> Dapeng/Kan, any thoughts why the counts don't match for instructions
+> but did for branches?
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 5d2ec4283ebf..c1bc0d7a275b 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1685,7 +1685,7 @@ static inline int perf_allow_cpu(void)
- static inline int perf_allow_tracepoint(void)
- {
- 	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
--		return -EPERM;
-+		return -EACCES;
- 
- 	return security_perf_event_open(PERF_SECURITY_TRACEPOINT);
- }
--- 
-2.34.1
 
+That looks strange,  what's your kernel version and perf-tool version? I
+just tried the latest perf-tools-next branch, but I don't see this issue.
+
+
+
+>
+> Thanks,
+> Ian
