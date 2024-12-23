@@ -1,149 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B407199FA4;
-	Mon, 23 Dec 2024 13:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F6E1AE003
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 15:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734962317; cv=none; b=g1dcubbDbOYmirVrdmisWl785dLxESqaDb+V97vgsQQSEWGlKoud1AoGi6I9ugrcILbls3KjJnwo5MGOJ2U4OhnKo9WBpge+x4HAvs+knuwU4O0tFv7AQmaHJyQ7UodllbBOmbwPQRtphpQqfL5MQtJa7Qbjp0dU9OLoxqJpJ9M=
+	t=1734966577; cv=none; b=GsYU6ChMYYfoAcNC1BMHQPJvDCUsl64obgP1OQPJyS3+Zk4TVQntebyXDLco3zwXeoAjAUE6qzFwCLZn9QVqtARKPmtP+6dxIasKBvAJ3UMFZmxQ3txneijFqiaa43uvXeJMGWwmoscR+5ScngMixu+kbL7LhNvCYqULD2xLQAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734962317; c=relaxed/simple;
-	bh=q8LfM2A6UC5rg5fRCN5adzDgn1vFv24cM90fwZwoU3A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=djqZeByBbhr3KZi7EaJYvDA12clfAU+Npv+CTqmcoNZCe41xr9y99QEcVttM3DouOdxStuie2/J+XRf9bGQuaceXiNSipstd1irf42rW8rlOtKZxtEtpX0eRoZfLCf4/RRS1XzMet3izxdfgH9F9/IkG533DChSC2rh4AWY3oFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q1g373r6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1734966577; c=relaxed/simple;
+	bh=76U6HkgjRjNLku/D4JgCgXyboh1fQrfuSeI3ikxCPoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=OppvuYwm0l5mdnPoxkL050jZYYR36KlSVNsSkfRUhwWdv1k52qra7d9caE4DcSCx+Tc2mFVOWcv+eTk1Qv0WMerjVahd8dXaKJGpkAgLcH0NQaJFvNHUJ+sMsurE3WbjE7nXH0OvyKnc+4FrW4bEP6HG/QibDEaE438I4rRqAl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mTFKLRRD; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q1g373r6"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BN85pL9003922;
-	Mon, 23 Dec 2024 13:58:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=dgbh9h7yq+bf4IZ36hv9AeouFq+D3Q11BMyETjj4Z
-	JE=; b=Q1g373r6WzYBmNTQ4SK7VtCJc/qnDGkblrI577wogW7nAChWRC1fTo9X+
-	HAUxgBQinfjUD7bnkyXPJ5KT+TvDQiwDdA/jChDUYjq1OuchIVxBHXTxCA+iD62K
-	BBZ6gnrwRAHeI2szXPSaXKeisDF5/ilBxOlzpNddfVAS182GCYRNuaZj3EzG+jDl
-	CEI/o8tuaGHTtBpu3UJ5Q+OEccLDsAk/G3K84K+0fP0pjkDEd864GyX+SyGXQyJh
-	TFL2OcNL/EGh62IffZ2j0bHnRTInIf3Ubom/EYDlyZZWbQ+tqlkkRiZmmN0JdPEf
-	pN+0zNMs1es3Yj0RUFlOv0klx5Z5g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43q422hb8p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Dec 2024 13:58:27 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BNDwQHg001932;
-	Mon, 23 Dec 2024 13:58:26 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43q422hb8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Dec 2024 13:58:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BN9u9SY020189;
-	Mon, 23 Dec 2024 13:58:26 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43p8cy5yux-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Dec 2024 13:58:26 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BNDwM9b65274184
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Dec 2024 13:58:22 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5173620043;
-	Mon, 23 Dec 2024 13:58:22 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A19462004B;
-	Mon, 23 Dec 2024 13:58:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.252.112])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Dec 2024 13:58:16 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org, hbathini@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH] tools/perf: Fix segfault during perf record --off-cpu when debuginfo is not enabled
-Date: Mon, 23 Dec 2024 19:28:13 +0530
-Message-Id: <20241223135813.8175-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mTFKLRRD"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso29343425e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 07:09:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734966574; x=1735571374; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BY/WWy80pG3WuBi+kOO4a1NzH1bFT0KS2qVRi1aDXEE=;
+        b=mTFKLRRDmaLaSNH/U3Oxjn7Q5NmGOoZtbQwSHcSjyi4V7RRrIdSgj79p1doWbRPROF
+         5aVCCl3fTo4J4O/MD4CMMIqcsz0YPdINteMbjk0mTrN1Pr10PeSg85APB67b7okvkPPr
+         qZIz3NUJg7+JdI2diGX1pkBvrj6nEhs4gYkVLctqBjiUpatMvPLt/HbIMutOiSJFDi9K
+         wW5Zlvx/zMw1GHOQtK7wIrrglbkyP5vDRzd3yowDnwC5b7V1MreOS4yKx8gI/TzAiv54
+         l/DZ1pNTgalwHGw/JeC5Gu3WqkJBGweP3qbVcmBIcnwvvRCBzoc6TVj9pd7LYuRoK7SO
+         rksA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734966574; x=1735571374;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BY/WWy80pG3WuBi+kOO4a1NzH1bFT0KS2qVRi1aDXEE=;
+        b=gqDJWFkQ+FP9VeIh2vnlyOjOEqH3e8qNAO6hmoVAew5Xz6evrYfasdKI06P1gv19KX
+         GBBtOQ/m2MP6eam0XFHWIOnp6+PQpU7pwJhP8nJ0zH56RPhQB1dx9rhhuEU6qkxYI21s
+         EjExu6senmpvFNNYripYbrVvBl6pgQDBCKN1a3EUxappGFBtGDbMLyGBlPROZwSzwZUj
+         XI/Rj1CELOkd52m/hkgy2Y5dDRCAfxh8ujfSmbyFUmMvH2ZIActBqKL+qUcif+qh/q7Y
+         jAeMx5xblxwUQ8WWiNndccXGPrfqSykkYShKbaLz9W4g0KOgm/8hStAAQL4p+knX1nBD
+         Rfdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXx6esaznEE3UYcdDefdqQUbLSeHDkMdEsA64XIX9YFK30j23NltXLtg9CDQtAkJki4n4OMV5N0OFJg1ernxxSB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7++6+HSweieX8tOPfaIxyB0HPNQPaoqutdHc5iZaQu3//JCqj
+	3KODB8GiVQCdOCa/PQG+d6BVRZOUW/q8vyJvuMfawAfmTJ/iIzDr7BUVIS781Dc=
+X-Gm-Gg: ASbGnct0IAS7ogzdXuajKR2RluQnAhPHcO0Iqmiru/36ZwayFDawSFvtJLOTaDmaVEZ
+	NogLvcYock/2baTEYkDefIERfNqO3xHterCoRvPL3kVrEBLzJ4E8Hkv7vUpx8ePpkN5ofRH8hwa
+	2xkA9CjgoBdfDvNJ8/JtOUvJqnTYKJd7sjKWg6nrhjloC7q5RF6HsNocQx3F8ZJ6NfMq0cigpcV
+	rEi4aOwAXYSyaiGNbShgiyWCZYllB5uhNSi+NilHfATs70Q+hAEz8tTk956HNkLtg==
+X-Google-Smtp-Source: AGHT+IGvSykJ3Jr3HdejhQmZCMrMy6Nzrqa9tGmG7zFDpNO//SXq9aLM82WgR7OFyor8uzFKKp4NGg==
+X-Received: by 2002:a05:6000:1542:b0:385:e43a:4dd8 with SMTP id ffacd0b85a97d-38a221e1832mr10213524f8f.4.1734966573864;
+        Mon, 23 Dec 2024 07:09:33 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.66.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a2e25edbbsm4185927f8f.110.2024.12.23.07.09.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2024 07:09:33 -0800 (PST)
+Message-ID: <823e66dc-9ff4-4168-be54-2e800aef0b28@linaro.org>
+Date: Mon, 23 Dec 2024 15:09:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _Usv8j7BfTmHTlu8xyb9b-9efpx3QpCE
-X-Proofpoint-ORIG-GUID: joqh_Ar9x7orU_mJvjEJVY4aRvvpwQBU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- impostorscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 phishscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412230121
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] Prefer sysfs/JSON events also when no PMU is
+ provided
+To: Ian Rogers <irogers@google.com>
+References: <20241221192654.94344-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
+ Weilin Wang <weilin.wang@intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+ Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241221192654.94344-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When kernel is built without debuginfo, running perf record with
---off-cpu results in segfault as below:
 
-   ./perf record --off-cpu -e dummy sleep 1
-   libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-   libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
-   libbpf: failed to find valid kernel BTF
-   Segmentation fault (core dumped)
 
-The backtrace pointed to:
+On 21/12/2024 7:26 pm, Ian Rogers wrote:
+> At the RISC-V summit the topic of avoiding event data being in the
+> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+> events being the priority when no PMU is provided so that legacy
+> events maybe supported via json. Originally Mark Rutland also
+> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+> M? processors, but James Clark more recently tested this and believes
+> the driver issues there may not have existed or have been resolved. In
+> any case, it is inconsistent that with a PMU event names avoid legacy
+> encodings, but when wildcarding PMUs (ie without a PMU with the event
+> name) the legacy encodings have priority.
+> 
+> The patch doing this work was reverted in a v6.10 release candidate
+> as, even though the patch was posted for weeks and had been on
+> linux-next for weeks without issue, Linus was in the habit of using
+> explicit legacy events with unsupported precision options on his
+> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+> where ARM decided to call the events bus_cycles and cycles, the latter
+> being also a legacy event name. ARM haven't renamed the cycles event
+> to a more consistent cpu_cycles and avoided the problem. With these
+> changes the problematic event will now be skipped, a large warning
+> produced, and perf record will continue for the other PMU events. This
+> solution was proposed by Arnaldo.
+> 
+> Two minor changes have been added to help with the error message and
+> to work around issues occurring with "perf stat metrics (shadow stat)
+> test".
+> 
+> The patches have only been tested on my x86 non-hybrid laptop.
+> 
+> v3: Make no events opening for perf record a failure as suggested by
+>      James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
+>      rebase.
 
-   #0  0x00000000100fb17c in btf.type_cnt ()
-   #1  0x00000000100fc1a8 in btf_find_by_name_kind ()
-   #2  0x00000000100fc38c in btf.find_by_name_kind ()
-   #3  0x00000000102ee3ac in off_cpu_prepare ()
-   #4  0x000000001002f78c in cmd_record ()
-   #5  0x00000000100aee78 in run_builtin ()
-   #6  0x00000000100af3e4 in handle_internal_command ()
-   #7  0x000000001001004c in main ()
+Looks like this could be interacting with the dummy event for itrace 
+events which I must have missed before. Now it "fails" but the exit code 
+is 0 which some of the tests rely on. I noticed "Miscellaneous Intel PT 
+testing" is failing because its skip mechanism is broken:
 
-Code sequence is:
-   static void check_sched_switch_args(void)
-   {
-        struct btf *btf = btf__load_vmlinux_btf();
-        const struct btf_type *t1, *t2, *t3;
-        u32 type_id;
+$ sudo perf record -e intel_pt/aux-action=start-paused/u
+Error:
+Failure to open event 'intel_pt/aux-action=start-paused/u' on PMU 
+'intel_pt' which will be removed.
 
-        type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
-                                         BTF_KIND_TYPEDEF);
+$ echo $?
+0
 
-btf__load_vmlinux_btf fails when CONFIG_DEBUG_INFO_BTF is not enabled.
-Here bpf__find_by_name_kind calls btf__type_cnt with NULL btf
-value and results in segfault. To fix this, add a check to see if
-btf is not NULL before invoking bpf__find_by_name_kind
+So the test thinks it has the aux-action feature but it doesn't.
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/util/bpf_off_cpu.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index a590a8ac1f9d..4269b41d1771 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -100,6 +100,11 @@ static void check_sched_switch_args(void)
- 	const struct btf_type *t1, *t2, *t3;
- 	u32 type_id;
- 
-+	if (!btf) {
-+		pr_debug("Missing btf, check if CONFIG_DEBUG_INFO_BTF is enabled\n");
-+		goto cleanup;
-+	}
-+
- 	type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
- 					 BTF_KIND_TYPEDEF);
- 	if ((s32)type_id < 0)
--- 
-2.43.5
+> v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
+>      Patra who have tested on RISC-V and ARM CPUs, including the
+>      problem case from before.
+> 
+> Ian Rogers (4):
+>    perf evsel: Add pmu_name helper
+>    perf stat: Fix find_stat for mixed legacy/non-legacy events
+>    perf record: Skip don't fail for events that don't open
+>    perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
+>      legacy"
+> 
+>   tools/perf/builtin-record.c    | 34 ++++++++++++---
+>   tools/perf/util/evsel.c        | 10 +++++
+>   tools/perf/util/evsel.h        |  1 +
+>   tools/perf/util/parse-events.c | 26 +++++++++---
+>   tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
+>   tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
+>   tools/perf/util/pmus.c         | 20 +++++++--
+>   tools/perf/util/stat-shadow.c  |  3 +-
+>   8 files changed, 156 insertions(+), 74 deletions(-)
+> 
 
