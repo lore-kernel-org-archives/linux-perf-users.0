@@ -1,84 +1,101 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE2419D074
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 15:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8765354F81;
+	Mon, 23 Dec 2024 16:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734968669; cv=none; b=GpiGLP1W3UIeYZzLjz1gO7CnCnm/DPEM6EigzLlXcn+OWhK8Oyg7L/CSUV4YdMoJzOwV/u4BcyZ09qlMelt/TkmTXt6gZ5E89abji/w5Uvj/Es0ypflOP6tvaaRfPDqEXuzn5zxTN+6YHMNUs/VDd9+Uqvg38axC98c3FM3ayu8=
+	t=1734971535; cv=none; b=CW88nUK37IOnBcgQZ2OOT5+YG/irfD5/gAsPmOe/zsNEJANlzwouW+djJdObyh3XmrD3em04aqv1O4Pom+zpW6gB56oegKSS3GmQdcegx5nHX0aEkswNTLRJ+iZ0urqtKC0adVXOy6cyGrWaQGj047VBXEdX7OpKvMxM22OOmLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734968669; c=relaxed/simple;
-	bh=5NLJ99Gyljg0uFuQ5bu7iJWb7iRs3i1/s1eeQx4G06Y=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T0vKDtGxYdViaPxv6EioMIE+CcEsvHNBMCjizd/oYb6fDls2s2z0GHVQP6T7HFxWvKF/T4hNA4vdjBhMiyME+5zwZGqiCNmf8/oCe5WZWJ6U6cY4yijhNFFWkGeCC88AvCsEfegjdQd9LalSMT2WZ1E+ZRj1R1TxUy/7lC4lfr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-847500c9b9aso725885239f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Dec 2024 07:44:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734968665; x=1735573465;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TcdsPKFYByiovKX68z0xgcihKbtIEFlziW5TpN/xnD8=;
-        b=AvOAppi3frZx+s4L3/88RzR2Xu7thWtWWaz9w/VA1FWBlvx3GK5NofqmQj2aG95QBP
-         q6oGVztSKRAe4SqgAMV0oS/+UALKcrQXFA4NlUbpDzlfWxizz5NJcRfWpRFpB4iCba67
-         nScEhCOHtGzvdw9z6Xpi7qe1jCDfGD37yCIFtHBAxKw9y7TMylB3MMbikrOhTMxXvU1z
-         l1ymzo4+t/BcdEi013+286RVeOIPvOrYlw7J7+nzMeLS1khcrbqp91KFhFRn3AnB39Ol
-         b7+A0MQEMpWtvBVJdDEDZrIBSIWRdDgj7dksAFTN1bsVf9kqQ9Ke3aCRzbkKeL4ZKRtL
-         VpjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrBu10cphO+ilw113lIqzl4YWSU3bX0pYF0RcxX2EKATJNXedpHXTBVRyWDI2MKJt3ohpWwkCjhEZj2Ybh7hfJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4FvwnaeViwAxULFfOe99SU2e9XnmMdvcEl9PsMRuLsRgo40Ch
-	EYjs5NMW7EO+W8t7VEdlypo+oRwcI1d3MR4W10rK8AH/whT7V/vlStJw2l5BbK0W/RhEx59nU86
-	jQ/mpJlojYihacVP8wl2Vya8IvBZ1avYePutv9UgcrVfKolG37o+PTJ4=
-X-Google-Smtp-Source: AGHT+IH3GZt7eYpHoT4oz+h017L9p2eXMJdug4Rc50LGpucp2Y3hGBGeR38/urLtVUWNiYPFeoIpweiQjsD3qxlOYiukemvxuwNE
+	s=arc-20240116; t=1734971535; c=relaxed/simple;
+	bh=7XMq0jhnOR66Hv7p/l4b8inDvTNTBeDT4xndXKIadFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=COz0mZ/Rk/IxEdz6lGDpU1bfTwh5SkYip4CB3aNRAv9BqI7Dz2bd62iGRfj5S0GLARi22FPUH9XKwtfVx1fnkG0iMC3vdOI/HL8m/QJf6POhMsD4sN3EgOfUNbhzTDV1RcsKNWe3kcfsFWwI6tccChAgO3sf/PlqF8pU0FPPm0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoDdaUat; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoDdaUat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CDFC4CED3;
+	Mon, 23 Dec 2024 16:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734971535;
+	bh=7XMq0jhnOR66Hv7p/l4b8inDvTNTBeDT4xndXKIadFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EoDdaUat1iDq58RrBVUMFFnOEy/j9DESOGiia3dJIW8dgwSlSNI4yT1Vz3qkRedgd
+	 k/BP99mdETBZcygu+Xozpdf9UQSPdnKgmZZ9E4KhVCf+2YkAwLE6Sh8JkRCCf+qCIc
+	 P2LW0zkc0ZhFIkIe2S/Wi6WRrLBQT9hNPIf/kvN1J/lhWzwRcgNjEPP0BEN+TcNJKM
+	 J8EoS6jCR7jmZ8B7IBhlx/fCPUB7+OoNWl5jgP65733n5hlE/xAoeZS+ymatiqbnMd
+	 6bwc9Io4sb3LY1gHviyoXNw3U47N1/KS+ptzhh3JGeWGSgLLkJdLAt1YNO37lhjyME
+	 ntyP8/Uze6WfQ==
+Date: Mon, 23 Dec 2024 13:32:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux@treblig.org
+Cc: irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Remove unused is_executable_file
+Message-ID: <Z2mQjAIwBcx4_Pm0@x1>
+References: <20241222215831.283248-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1ca5:b0:3a7:88f2:cfa9 with SMTP id
- e9e14a558f8ab-3c2d2d50b1emr107712225ab.11.1734968665556; Mon, 23 Dec 2024
- 07:44:25 -0800 (PST)
-Date: Mon, 23 Dec 2024 07:44:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67698559.050a0220.226966.003e.GAE@google.com>
-Subject: [syzbot] Monthly perf report (Dec 2024)
-From: syzbot <syzbot+list1fa3bf11743ecbf5f93b@syzkaller.appspotmail.com>
-To: acme@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241222215831.283248-1-linux@treblig.org>
 
-Hello perf maintainers/developers,
+On Sun, Dec 22, 2024 at 09:58:31PM +0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> is_executable_file()  has been unused since 2022's
+> commit 7391db645938 ("perf test: Refactor shell tests allowing subdirs")
+> 
+> Remove it.
 
-This is a 31-day syzbot report for the perf subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/perf
+Did you patch this on:
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 4 issues are still open and 23 have already been fixed.
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
 
-Some of the still happening issues:
+?
 
-Ref Crashes Repro Title
-<1> 4261    Yes   WARNING: suspicious RCU usage in get_callchain_entry
-                  https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
-<2> 6       No    KCSAN: data-race in _free_event / perf_pending_task (2)
-                  https://syzkaller.appspot.com/bug?extid=e75157f5b04f8ff40e17
-<3> 2       Yes   INFO: task hung in _free_event
-                  https://syzkaller.appspot.com/bug?extid=3c4321e10eea460eb606
+That function is still there, so I'll fixup your patch, keep your
+credits and test it all.
 
+Thanks,
+
+- Arnaldo
+
+⬢ [acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers 20241222215831.283248-1-linux@treblig.org
+Grabbing thread from lore.kernel.org/all/20241222215831.283248-1-linux@treblig.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Checking attestation on all messages, may take a moment...
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+  ✓ [PATCH] perf tools: Remove unused is_executable_file
+    + Link: https://lore.kernel.org/r/20241222215831.283248-1-linux@treblig.org
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ---
+  ✓ Signed: DKIM/treblig.org
+---
+Total patches: 1
+---
+ Link: https://lore.kernel.org/r/20241222215831.283248-1-linux@treblig.org
+ Base: not specified
+       git am ./20241222_linux_perf_tools_remove_unused_is_executable_file.mbx
+⬢ [acme@toolbox perf-tools-next]$        git am ./20241222_linux_perf_tools_remove_unused_is_executable_file.mbx
+Applying: perf tools: Remove unused is_executable_file
+error: patch failed: tools/perf/util/path.h:12
+error: tools/perf/util/path.h: patch does not apply
+Patch failed at 0001 perf tools: Remove unused is_executable_file
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
+⬢ [acme@toolbox perf-tools-next]$
