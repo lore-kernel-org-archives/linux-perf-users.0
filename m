@@ -1,103 +1,129 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8686C156960;
-	Sun, 22 Dec 2024 21:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B61B59A;
+	Mon, 23 Dec 2024 03:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734904732; cv=none; b=n7HEWx2rxLOotA5pEQbCoLiMCTL2lyfGEjFKe41eIKhaGDbf0yHQTLyaFdTx7ldbZya1ZQKo6v0stCe9gERtizshrP7Slp9yYFvZHotyXU1Gp8pdaGJfb+VuvU6oPu93hYR/QpL/c8Srz0sXRCfsAM/0iUT8bV4AHda7duPLIHs=
+	t=1734923209; cv=none; b=tJMGI+rYd7mG0RJ4dBqlWLTB9XU35bnKF6Hv30WUMOHtnbRmYrQaQtuErfyJKk6NRX1hlztQjufx9smVJCjXOoUwPH9+KAwFuYpWH0oAAO8ib2NXQpu+PN3b7PhnTu3E6KsJWe8JRx39Po59aDM3pTYyFLECFzRYOYjJjATN9Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734904732; c=relaxed/simple;
-	bh=3oaUspyawN+MJCI+lJw7VBzvKzHFveDLpQzm3FOl/RE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G7wq9mZ4tLmtVxQlsa+pffvgmgxWzTpyVTiyH7O/EKGPYAh9LSLZpTBgLg5e7im1JJ3VG7vut8Ds3zcgrlVggWy0EsVaEvMXdc8tPnU1HT1V0oaBAYCpGFGPhPWUBWwBieFPt2Uzg9SIH5OmBxiPx6oo2P6oVVsL8mkF38GmbEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=OvMf8JXK; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1734923209; c=relaxed/simple;
+	bh=/5cOQIV5EO+wRwZFloIhQyJWz25gsXLcTMOzxnXDMnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PcE1CBo/tZvTg7cufZyYjBYBI0nt4fFG80nICDh0KpZEetBQiMVGNuoqOnVo1p5Lz5TyaEbVAe49FjOAFO1WNi3Jc9Ou4D3J7ojXKQ/uZ6Wz0PtxD1UNiTOVwUXxLKyBxIYJ0WS21SQu4Som9ztOwxe2i+OQaDTlQ5QvvwuxbPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGSdXo3T; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="OvMf8JXK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=kR/rUxf6ip8ljCUjY54g8WqRUDw7MQ5ajjSnfvfK7j0=; b=OvMf8JXKcpdRuTiH
-	8aImHRx8NDGp6h5XzFu8e4JolvaYuqLIL9BQyGPJZPTx+bi9pWKF9e91Ej1+gXhPDwq+ELReAlWIO
-	sA973Bh50AVMpA/zjqRiUNuR/fdk+adkli2K07JFj1u9IsaU4Xu86wKop6ku/eOgPCFtZEDqalmwq
-	+gUlvxRR8cj01lWvJv+dlaegZ/l/0wfO5tPJS/l6+dnOprGu+y4zlXG67U6ZyvquLGCpKdHe4WM3A
-	8rSCzIqdttPmlIxx6nqrMzYbeIwkv+nDvMup9PCRXm1sGLpTeVgqxLm0dN9oiR9qtqsF3Kkn4fs4j
-	c0JkpkUwLMudkJdZxw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tPTy4-006nQI-1P;
-	Sun, 22 Dec 2024 21:58:32 +0000
-From: linux@treblig.org
-To: irogers@google.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] perf tools: Remove unused is_executable_file
-Date: Sun, 22 Dec 2024 21:58:31 +0000
-Message-ID: <20241222215831.283248-1-linux@treblig.org>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGSdXo3T"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6efe5c1dea4so27862237b3.3;
+        Sun, 22 Dec 2024 19:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734923207; x=1735528007; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oDLS+F1yQuD2upk7EmeHo5UCz999emMAB0fBft9hjxg=;
+        b=MGSdXo3TuDZz3VZdXydrYadXmoP8I5NmqnXWNcr7MWm5/W0DmWFoTa9i0uu/jecEnz
+         jNV7XnYLbhlFzm01VZlv90lcylLuiHsz6ueI8ETaSjMSJbcpUB/oeNKXTdJwAQ/jmqbv
+         wt3KtP5OBxEA54cfPI7XZrrMVkT7kQV+AvmvRUIqpvy3FH1QdOgymV6ijPs36fRY5l1N
+         J9D5IHlk6P/YTyOa9brKkTzHoFxEFxsYlJ/ouJl7g1i98ppCl+JYA9R+LIIFqjzwDf+O
+         HoweciBrEXNvqBD5Ugizk12TBGIvrkRHCtHrvEkZjbXYNnU1Io2ozE5uynHu+wIRtDUo
+         20Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734923207; x=1735528007;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oDLS+F1yQuD2upk7EmeHo5UCz999emMAB0fBft9hjxg=;
+        b=ootoZWu5dROmvApmoiUaxhWYfdKHRT4Xcok70gNMbKaQx2OhV/soBiSyMG5ss1FNrc
+         7oMrI080S8s+yE76Ql8zsP8aAL6Jor9OYVMI7W3isCNQubcEsdyCc3y8JR9nG27P+tD1
+         mRwvSlCQsCqqQyxqoqwRelJM5Ft5wjzwxKoxRiMJT6tUaAp5VewvXh0K/u7L+cBy47J/
+         +wJICfwAsOFKHQZ8pLjyAWELXYfIwF2RMyUulhkgh2VmdTfKpy2b6rf9rgCbg7vXPCeR
+         oEldXXFT8dfL88H7rsIUfM4kWlbai+zO1XaNwL5ADyR7M1qGUaHFIbMfC0sXQXoNajtX
+         3CpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFKbAiA5hEKqAxS36S1oTpSO37gywUgXKTmC40V21Sgmd52dL8me6RGebE6jO915WudqwLIuQAypyrIZcJ@vger.kernel.org, AJvYcCVeGufW4z4CADHHTyTGv0/WyHZEYUA5k98w0cPEw5AHp9JOuWc6V/1z/rVA1dCCMHHYLBzW7cXOcFa7CjFyDayBXA==@vger.kernel.org, AJvYcCVnRok4EeQd84DQ652GcHtKk7KHJ1e69dAhGSXzyHrc/MTGZ965iZ3nfM2IYdcjKbfvCHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6FxcYdN+ObJPSv2psErKLh9t3f5OTiGwjhjW102usHLSPGTyA
+	uQtfLEVbtPpbNkL6mwUmtGSy6/njS3IEPZT6kRzV0IIDSE3t6gdUV7pF4sUNyJBz7zpWawVtSYT
+	osreb5mL+a5U7T7v7qrOMlzztUME=
+X-Gm-Gg: ASbGncutXSALH7KXgybvzXDN1GwU6E1CaFcsEj90mD9Nkm8wPQum4etDvCHzI3sjBXV
+	idF6eF5l5iFkcBeLDz59A+VqEo+3PnJQHukME
+X-Google-Smtp-Source: AGHT+IFyHmlBFyKSpebsq2R1VBIC7wC1QEihc9xcEcoIDXS+5NhDWO0utAKyr0yDMx3ndLs5JtCDSE6d6LCG2StTXsI=
+X-Received: by 2002:a05:690c:6911:b0:6ef:96f9:2f48 with SMTP id
+ 00721157ae682-6f3f823eb81mr90934647b3.37.1734923206592; Sun, 22 Dec 2024
+ 19:06:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241219183400.350308-1-namhyung@kernel.org>
+In-Reply-To: <20241219183400.350308-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Sun, 22 Dec 2024 19:06:35 -0800
+Message-ID: <CAH0uvohROTgAN2ugPmSTLzEp-09LcZimCAsB4UbyCYpnwQhOEA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf trace: Add --syscall-sample option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Hello Namhyung,
 
-is_executable_file()  has been unused since 2022's
-commit 7391db645938 ("perf test: Refactor shell tests allowing subdirs")
+On Thu, Dec 19, 2024 at 10:34=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> This option is to implement the event sampling for system calls in BPF.
+> When it's used, it picks up a syscall in the given sampling period and
+> discard others.  The period is in msec as it shows the time in msec.
+>
+>   # perf trace -C 0 --syscall-sample 100 sleep 1
+>            ? (         ): fleetspeakd/1828559  ... [continued]: futex()) =
+                                           =3D -1 ETIMEDOUT (Connection tim=
+ed out)
+>        0.050 (100.247 ms): gnome-shell/572531 recvmsg(fd: 10<socket:[3355=
+761]>, msg: 0x7ffef8b39d20)                =3D 40
+>      100.357 (100.149 ms): pipewire-pulse/572245 read(fd: 5<anon_inode:[e=
+ventfd]>, buf: 0x7ffc0b9dc8f0, count: 8)      =3D 8
+>      200.553 (100.268 ms): NetworkManager/3424 epoll_wait(epfd: 19<anon_i=
+node:[eventpoll]>, events: 0x5607b85bb880, maxevents: 6) =3D 0
+>      300.876 (         ): mon/4932 poll(ufds: 0x7fa392784df0, nfds: 1, ti=
+meout_msecs: 100)            ...
+>      400.901 ( 0.025 ms): TaskCon~ller #/620145 futex(uaddr: 0x7f3fc596fa=
+00, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
+>      300.876 (100.123 ms): mon/4932  ... [continued]: poll())            =
+                                 =3D 0 (Timeout)
+>      500.901 ( 0.012 ms): evdefer/2/2335122 futex(uaddr: 0x5640baac5198, =
+op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
+>      602.701 ( 0.017 ms): Compositor/1992200 futex(uaddr: 0x7f1a51dfdd40,=
+ op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
+>      705.589 ( 0.017 ms): JS Watchdog/947933 futex(uaddr: 0x7f4cac1d4240,=
+ op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
+>      812.667 ( 0.027 ms): fix/1985151 futex(uaddr: 0xc0008f7148, op: WAKE=
+|PRIVATE_FLAG, val: 1)             =3D 1
+>      912.807 ( 0.017 ms): Xorg/572315 setitimer(value: 0x7ffc375d6ba0)   =
+                                   =3D 0
+>
+> The timestamp is kept in a per-cpu array and the allowed task is saved
+> in a BPF hash map.  For non-BPF use cases, it won't work so an error
+> message would be displayed.
+>
+>   # perf trace --syscall-sample 100 sleep 1
+>   ERROR: --syscall-sample works only for BPF
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v2 changes)
+> * rename to --syscall-sample and update the description
+> * print error when BPF is not available  (Arnaldo)
+> * rename to sample_period_ns  (Ian)
 
-Remove it.
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- tools/perf/util/path.c | 12 ------------
- tools/perf/util/path.h |  1 -
- 2 files changed, 13 deletions(-)
-
-diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-index 00adf872bf00..e923e2d9e8ad 100644
---- a/tools/perf/util/path.c
-+++ b/tools/perf/util/path.c
-@@ -67,15 +67,3 @@ bool is_directory(const char *base_path, const struct dirent *dent)
- 
- 	return S_ISDIR(st.st_mode);
- }
--
--bool is_executable_file(const char *base_path, const struct dirent *dent)
--{
--	char path[PATH_MAX];
--	struct stat st;
--
--	snprintf(path, sizeof(path), "%s/%s", base_path, dent->d_name);
--	if (stat(path, &st))
--		return false;
--
--	return !S_ISDIR(st.st_mode) && (st.st_mode & S_IXUSR);
--}
-diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
-index d94902c22222..083429b7efa3 100644
---- a/tools/perf/util/path.h
-+++ b/tools/perf/util/path.h
-@@ -12,6 +12,5 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
- 
- bool is_regular_file(const char *file);
- bool is_directory(const char *base_path, const struct dirent *dent);
--bool is_executable_file(const char *base_path, const struct dirent *dent);
- 
- #endif /* _PERF_PATH_H */
--- 
-2.47.1
-
+Thanks,
+Howard
