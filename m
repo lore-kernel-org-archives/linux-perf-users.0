@@ -1,53 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A3712C544;
-	Mon, 23 Dec 2024 16:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC341A8F83;
+	Mon, 23 Dec 2024 16:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734971901; cv=none; b=kKUlq5e8I8f5Wph1cqZ1HWGankNsRDq06D8pY7oxGQCt2Wjw8pQ9joup4BhREr64A3L/lVZQnIjQoLbH7ri7UXX0/LOrO7RqsoUwS7E/MmfcQWFRIEr8/OgmWk7oN0yXh6soN/K/7xRcK0PJoKFbNjbVqMyKLk9mrUdYjyDRnFI=
+	t=1734972088; cv=none; b=cZDy5/XLWYedtsBze2nUIYcErYoRPp0rNEcCFQVtWOIUx9SwSLh/xhYiucC3uHoUqtno84lvc24PeS2sHYx050BARdv3Em2jOKy/AyTususwDiMjclAVlnbiLknmeFuuVsgEESDE7LEich7oV7tvqAs3azv2QwAcebB93Xv4vZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734971901; c=relaxed/simple;
-	bh=4C3hD57TU0AeYPwwfm3/2pwkbpPtKf/jt6Q/NWlFPuw=;
+	s=arc-20240116; t=1734972088; c=relaxed/simple;
+	bh=HjB6wLSyLiTj2lwjl2TPxriL0U+ZMW5FXC2Ak9YSinQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iD1JscUIBpHLfosnIYipNfK5aYbSRoyf/b1St901zZn8q/b2rNJg5TsTCXiKSfAJpc6y9kERj/tuMw5Sm1ut3xpsSdKd8/mJvZ8GQOkUM0KdgQXE/hdO+eiYUYP60bupGVf1gQuMEEqzs4Zn+vC0eluR+XnimpJIGW7Qq0jOpeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFSqSvYg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ng25K6LNlkmLjAhsZ/nkiqEuouXAsHnopIVXqJdLrg6dM9uy2S+dI4gYmbpWXNbVoFjj12k6HMDQbu1i2tYc2/I6yKvrzCHDShsgccBuYbOLL7yAQtCOzf96JA1T2voPLh6R+kL8Q8ENFJCx2MPlH+Ug/DR6KofLmAQDbAWencc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dfmfN5Q3; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFSqSvYg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BEFC4CED3;
-	Mon, 23 Dec 2024 16:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734971901;
-	bh=4C3hD57TU0AeYPwwfm3/2pwkbpPtKf/jt6Q/NWlFPuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KFSqSvYgNPKFMPDGHJo3iL8X/N/K6/2zrBGht9rL280lml8hWguzV8sfEQ+PNnDsm
-	 lW5uMquSM0cME9+js7vnOsdcsQqdHSGWabVGrtq0DmzjXbF5IeeExEac5UQ/AbDmvh
-	 867icruXvirkzdpmG5IUOAA+U/Z/UXTx6RhgCDn5QLfqTW5sa6auspI3VFrpIgb42P
-	 mpD4bfGUNR5L+GMfmgrshXtu43tBZhZhyFNomWSpip9WqPEXbLB/QflJa11Ifyus3r
-	 2O64r9G2XvW5GFOdg5qRivyh4hbBjDSgIaRVB3mb+HIt7kU8c5ldsEklAkzHSy100U
-	 1Gkm8vjcVhJ/Q==
-Date: Mon, 23 Dec 2024 13:38:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
-	bpf <bpf@vger.kernel.org>, Stephane Eranian <eranian@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Kees Cook <kees@kernel.org>,
-	Chun-Tse Shao <ctshao@google.com>
-Subject: Re: [PATCH v3 2/4] perf lock contention: Run BPF slab cache iterator
-Message-ID: <Z2mR-o9I3CobBoNB@x1>
-References: <20241220060009.507297-1-namhyung@kernel.org>
- <20241220060009.507297-3-namhyung@kernel.org>
- <CAADnVQLm-jA5-39-LUKybO2oGbDRr2RgPtJH5iXoeKnYqdJUuw@mail.gmail.com>
- <Z2dVdH3o5iF-KrWj@google.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dfmfN5Q3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=Mr+P6kfbfUI/3ukImnvatiC+T2rngIi46bkm82WFobY=; b=dfmfN5Q3ucK7jWbk
+	WH3cFb0bscPc3M5aDWeekGYnIifQBRujYPWLb8mAR3QL0vjO1YnBw/6O00pFlPTQrWZQ3kK+5c88v
+	c/Or49F4OVcMUumTtT6RXAMGijqpuWpEbuNCrh0c2oDr815OsGtgO7p63a4V/mJiTONHRcC/P0c6m
+	7QNadIpAiMhS0JZQyPiLTRB8v8GcxS8pg0ADaBJMszEJ47QiJcSdIHMPD1tg98yKp6IPYj2z6ox5+
+	3SKe2lTVNqT7bIeoXDp4SajR1BdVXJH7mWN7E22RVZyAZPCpURTAqfmR80rzI/MP0s/xKf8/3dmnL
+	IeWIim7GRZLJ+ZEtfg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tPlUZ-006tmg-2N;
+	Mon, 23 Dec 2024 16:41:15 +0000
+Date: Mon, 23 Dec 2024 16:41:15 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Remove unused is_executable_file
+Message-ID: <Z2mSq4LuLgvF4MwZ@gallifrey>
+References: <20241222215831.283248-1-linux@treblig.org>
+ <Z2mQjAIwBcx4_Pm0@x1>
+ <Z2mQ4RdSE_EfbGyO@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,73 +50,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z2dVdH3o5iF-KrWj@google.com>
+In-Reply-To: <Z2mQ4RdSE_EfbGyO@x1>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 16:40:52 up 229 days,  3:54,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Sat, Dec 21, 2024 at 03:55:32PM -0800, Namhyung Kim wrote:
-> Hi Alexei,
-> 
-> On Fri, Dec 20, 2024 at 03:52:36PM -0800, Alexei Starovoitov wrote:
-> > On Thu, Dec 19, 2024 at 10:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > +struct bpf_iter__kmem_cache___new {
-> > > +       struct kmem_cache *s;
-> > > +} __attribute__((preserve_access_index));
-> > > +
-> > > +SEC("iter/kmem_cache")
-> > > +int slab_cache_iter(void *ctx)
-> > > +{
-> > > +       struct kmem_cache *s = NULL;
-> > > +       struct slab_cache_data d;
-> > > +       const char *nameptr;
-> > > +
-> > > +       if (bpf_core_type_exists(struct bpf_iter__kmem_cache)) {
-> > > +               struct bpf_iter__kmem_cache___new *iter = ctx;
-> > > +
-> > > +               s = BPF_CORE_READ(iter, s);
-> > > +       }
-> > > +
-> > > +       if (s == NULL)
-> > > +               return 0;
-> > > +
-> > > +       nameptr = BPF_CORE_READ(s, name);
+* Arnaldo Carvalho de Melo (acme@kernel.org) wrote:
+> On Mon, Dec 23, 2024 at 01:32:15PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Sun, Dec 22, 2024 at 09:58:31PM +0000, linux@treblig.org wrote:
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > 
+> > > is_executable_file()  has been unused since 2022's
+> > > commit 7391db645938 ("perf test: Refactor shell tests allowing subdirs")
+> > > 
+> > > Remove it.
 > > 
-> > since the feature depends on the latest kernel please use
-> > direct access. There is no need to use BPF_CORE_READ() to
-> > be compatible with old kernels.
-> > Just iter->s and s->name will work and will be much faster.
-> > Underneath these loads will be marked with PROBE_MEM flag and
-> > will be equivalent to probe_read_kernel calls, but faster
-> > since the whole thing will be inlined by JITs.
+> > Did you patch this on:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+> > 
+> > ?
+> > 
+> > That function is still there, so I'll fixup your patch, keep your
+> > credits and test it all.
 > 
-> Oh, thanks for your review.  I thought it was requried, but it'd
-> be definitely better if we can access them directly.  I'll fold
-> the below to v4, unless Arnaldo does it first. :)
+> FYI, it fails on the .h file:
 
-I'll check and adjust, thanks everybody :-)
+Ah, it's because of the new 'is_directory_at' is added just above.
 
-- Arnaldo
- 
-> Thanks,
-> Namhyung
+Dave
+
+> ⬢ [acme@toolbox perf-tools-next]$ patch -p1 < ./20241222_linux_perf_tools_remove_unused_is_executable_file.mbx
+> patching file tools/perf/util/path.c
+> Hunk #1 succeeded at 77 (offset 10 lines).
+> patching file tools/perf/util/path.h
+> Hunk #1 FAILED at 12.
+> 1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/path.h.rej
+> ⬢ [acme@toolbox perf-tools-next]$ git diff
+> diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
+> index 9712466c51e2f30e..2e62f272fda8671a 100644
+> --- a/tools/perf/util/path.c
+> +++ b/tools/perf/util/path.c
+> @@ -77,15 +77,3 @@ bool is_directory_at(int dir_fd, const char *path)
+>  
+>         return S_ISDIR(st.st_mode);
+>  }
+> -
+> -bool is_executable_file(const char *base_path, const struct dirent *dent)
+> -{
+> -       char path[PATH_MAX];
+> -       struct stat st;
+> -
+> -       snprintf(path, sizeof(path), "%s/%s", base_path, dent->d_name);
+> -       if (stat(path, &st))
+> -               return false;
+> -
+> -       return !S_ISDIR(st.st_mode) && (st.st_mode & S_IXUSR);
+> -}
+> ⬢ [acme@toolbox perf-tools-next]$
 > 
+> ⬢ [acme@toolbox perf-tools-next]$ cat tools/perf/util/path.h.rej
+> --- tools/perf/util/path.h
+> +++ tools/perf/util/path.h
+> @@ -12,6 +12,5 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
+>  
+>  bool is_regular_file(const char *file);
+>  bool is_directory(const char *base_path, const struct dirent *dent);
+> -bool is_executable_file(const char *base_path, const struct dirent *dent);
+>  
+>  #endif /* _PERF_PATH_H */
+> ⬢ [acme@toolbox perf-tools-next]$ 
 > 
-> ---8<---
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 6c771ef751d83b43..6533ea9b044c71d1 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -635,13 +635,13 @@ int slab_cache_iter(void *ctx)
->         if (bpf_core_type_exists(struct bpf_iter__kmem_cache)) {
->                 struct bpf_iter__kmem_cache___new *iter = ctx;
->  
-> -               s = BPF_CORE_READ(iter, s);
-> +               s = iter->s;
->         }
->  
->         if (s == NULL)
->                 return 0;
->  
-> -       nameptr = BPF_CORE_READ(s, name);
-> +       nameptr = s->name;
->         bpf_probe_read_kernel_str(d.name, sizeof(d.name), nameptr);
->  
->         d.id = ++slab_cache_id << LCB_F_SLAB_ID_SHIFT;
+> Fixed up, thanks.
+> 
+> - Arnaldo
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
