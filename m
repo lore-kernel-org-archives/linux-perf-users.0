@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C367A1B3948;
-	Mon, 23 Dec 2024 19:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CE1AF0C2;
+	Mon, 23 Dec 2024 19:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734980776; cv=none; b=XO96hCxPoD56rZk4/eAB3KcdI633MpviznDI3ZME5EoCBiKh/u8gnF138ES7cBmyb3l9Aoave2Gxf1YEmEvm40EfC+zzM7znLZSPGrERMjYAhffApdgYbD36uratH4EiVHqWars2vu48D60eLpsSz01ziPRM52bCvMe5hgA9y50=
+	t=1734982830; cv=none; b=nwkOMFFyxJfLIiVf9kYNBY4mWwwV9X/U1FotlBznlkBIGpbPwfWte7CsylBSB+3bv3bQxLi6meQejSMGhnNTDpsh3xryL9tfRCcKMqxZHwq2FbSF5cdENFLwJ3yE2wrnNfznwkmZweXwqzjP1SRCln8n/GrCFllf/ipoM3m9FIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734980776; c=relaxed/simple;
-	bh=UO1Dtfyg+/NWHFYt+qGK8e5Yf/2oj/ZCsonw/gi9Z0k=;
+	s=arc-20240116; t=1734982830; c=relaxed/simple;
+	bh=aDrX5GK4Z9XFeu9FdRLyGBtnq1fu4S+7J7BT0Z8jOlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cZ4v9IP/hejEcJZ1rfXK5Li55n1GUu/GcHDB1rxlhVhfpg1FXJhlKov663ErxjgwOM78VkJu5aB75weNsGlglmphc21HRkmxvTZL7iHzGdBXA/yusFeMWNwnawu1aK3jx427ULOO9PgW1TLEbeB0I6GYKn5BMlKrH7GponDUwY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fb11hK3M; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lczQccY8Qw0Afz4r1k8Eq4EE6yz1oAQOg1PyWMx0LsDU3mV6sZx9okPQD+ZrzqvzHNO+Qewz7mRuNaNfWX/9D7r7lkZIe9js81mVXUWl93X/9RCbwCop12xwxj+pkYh5qjXPfsn6wREw42A+u4vvChlMLiPs2l3fyYLk8sTcLgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmiliiiJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fb11hK3M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B28C4CED3;
-	Mon, 23 Dec 2024 19:06:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmiliiiJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747BEC4CED3;
+	Mon, 23 Dec 2024 19:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734980776;
-	bh=UO1Dtfyg+/NWHFYt+qGK8e5Yf/2oj/ZCsonw/gi9Z0k=;
+	s=k20201202; t=1734982830;
+	bh=aDrX5GK4Z9XFeu9FdRLyGBtnq1fu4S+7J7BT0Z8jOlM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fb11hK3MUzlVOyop/1JCfEGKjdY2fAXf7bXY/ca4NHbBRy8HyftwhicC0s+KUEGXh
-	 6uUfIxmvxuHOHImWyMhvHkFYIRNXucwHh90OAd8e4yycaMJSNzYMvSISUd9JKTYrbv
-	 lTePac1c1SFkjC8Fdp7u3UUFl0F2+kaIO4K2Ig62pFhKg6cfYvZPMsZjq+yRqonBCV
-	 wexhhXmdz39W0BA3BXuYPlvgZkiLLzv+bSTcEOuYaIWPvyqC2uvIhfeRwCbW0p0UtU
-	 vmtHoSuVoOKRCONLYcRwDdIwTtLvk32BxA4BIWnPsfMIEXDP8y09f/nrdBhzvTX9a6
-	 r6gbn6zUQbjVQ==
-Date: Mon, 23 Dec 2024 16:06:13 -0300
+	b=JmiliiiJ1gQNgOskNrcN09MMW3hLqULcA0gkGGFHjimE677lJPXx3DB2bLbqNdaBy
+	 juc+3keuDMh+Bf936HbvqY/Wy2UW3HWdfbCjvfFgMoRgUObETYJT4yndLDybTVb7CZ
+	 2D2qA+w3w2mAC8hkIgAf8qzJVb+QRDVFFh2JVkGC+joZExexxv9dUn664ySQZOrIDy
+	 RnKO/kPODxqYJOuP5p52bdqP2ymY7meKhghOMLdtBAr19vuNPjFl8uzICkaBhyj32P
+	 vii+bWKZvmkF2tE9+tbESMEu2Zp6SRO3tFdNlWjzkNown5GbGlYWlVQ/Zjddl7zBHw
+	 RIGHAS6jfhnHg==
+Date: Mon, 23 Dec 2024 16:40:27 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: namhyung@kernel.org, mark.rutland@arm.com,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
 	irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] perf docs: Add documentation for --force-btf
- option
-Message-ID: <Z2m0pWiQgZNXhvxK@x1>
+Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
+ trace
+Message-ID: <Z2m8qzyLdm1BEYuF@x1>
 References: <20241215190712.787847-1-howardchu95@gmail.com>
- <20241215190712.787847-3-howardchu95@gmail.com>
+ <Z2CGdi5xpJy6C6sv@google.com>
+ <Z2mzzytPOpjF0Hxe@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,42 +48,65 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241215190712.787847-3-howardchu95@gmail.com>
+In-Reply-To: <Z2mzzytPOpjF0Hxe@x1>
 
-On Sun, Dec 15, 2024 at 11:07:11AM -0800, Howard Chu wrote:
-> The --force-btf option is intended for debugging purposes and is
-> currently undocumented. Add documentation for it.
+On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
+> > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
+> > > Changes in v4:
+> > >  - Use if -f to check the existence of vmlinux BTF, and exit if it
+> > >    doesn't, so trace_test_string will not overwrite $err, and keep
+> > >    running the test.
+> > > 
+> > > Changes in v3:
+> > >  - Add vmlinux BTF check, and skip the tests if it doesn't exist
+> > > 
+> > > v1, v2:
+> > > 
+> > > The previous version of the perf trace BTF general augmentation tests
+> > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> for pointing this out), this version uses bash instead
+> > > of POSIX shell to pass Shellcheck.
+> > > 
+> > > This patch series also adds documentation for the new option
+> > > --force-btf, which is used in the tests.
+> > > 
+> > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
+> > > 
+> > > Howard Chu (2):
+> > >   perf trace: Add tests for BTF general augmentation
+> > >   perf docs: Add documentation for --force-btf option
+> > 
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/Documentation/perf-trace.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-> index 6e0cc50bbc13..fb3d2af33844 100644
-> --- a/tools/perf/Documentation/perf-trace.txt
-> +++ b/tools/perf/Documentation/perf-trace.txt
-> @@ -241,6 +241,11 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
->  	printing using the existing 'perf trace' syscall arg beautifiers to map integer
->  	arguments to strings (pid to comm, syscall id to syscall name, etc).
->  
-> +--force-btf::
-> +	Use btf_dump to pretty print syscall argument data, instead of using hand-crafted pretty
-> +	printers. This option is intended for testing BTF integration in perf trace. btf_dump-based
-> +	pretty-printing serves as a fallback to hand-crafted pretty printers, as the latter can
-> +	better pretty-print integer flags and struct pointers.
+> Thanks, applied to perf-tools-next,
 
-Applied, but for the casual reader the "btf_dump" reference is vague, it
-would be interesting to mention that it is part of libbpf and uses
-only what is available in the BTF format.
+It fails when running in parallel mode, sometimes:
 
-Then talking about the "hand-crafted" pretty printers, it is not all the
-time "hand crafted", but automated by all those shell scripts that
-convert kernel source code that doesn't get converted into BTF info
-(defines) to create tables that then get associated with those syscall
-args or even struct members.
+109: perf trace BTF general tests                                    : FAILED!
 
-But that is something for a followup paches, I'm applying it as is as it
-improves the current documentation.
+Then:
+
+root@number:~# perf stat --null -r 10 perf test "BTF general"
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : FAILED!
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : FAILED!
+109: perf trace BTF general tests                                    : Ok
+109: perf trace BTF general tests                                    : Ok
+
+ Performance counter stats for 'perf test BTF general' (10 runs):
+
+             2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
+
+root@number:~#
+
+
+So its not just when running in paralell, anyway, its merged, we can go
+on from what we got there.
 
 - Arnaldo
