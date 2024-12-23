@@ -1,129 +1,109 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B61B59A;
-	Mon, 23 Dec 2024 03:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F4F13F43A;
+	Mon, 23 Dec 2024 06:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734923209; cv=none; b=tJMGI+rYd7mG0RJ4dBqlWLTB9XU35bnKF6Hv30WUMOHtnbRmYrQaQtuErfyJKk6NRX1hlztQjufx9smVJCjXOoUwPH9+KAwFuYpWH0oAAO8ib2NXQpu+PN3b7PhnTu3E6KsJWe8JRx39Po59aDM3pTYyFLECFzRYOYjJjATN9Rc=
+	t=1734937070; cv=none; b=Zlj5gHfZ7SgnSWzNIhSriZXqIZX2nJ4LtA0OdvX9rXULHP0QrFzjxGeCbCT9y7PF2C75bjMejAetLQB+vL0o0CTPnILYUzxPeiHieBcRMYIC7g7Lvumxwlo2kQHO4A8Lu9b1UleR8vkuhEmZ4jj/X3yMKNy2ffWzfdKUYboLBXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734923209; c=relaxed/simple;
-	bh=/5cOQIV5EO+wRwZFloIhQyJWz25gsXLcTMOzxnXDMnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PcE1CBo/tZvTg7cufZyYjBYBI0nt4fFG80nICDh0KpZEetBQiMVGNuoqOnVo1p5Lz5TyaEbVAe49FjOAFO1WNi3Jc9Ou4D3J7ojXKQ/uZ6Wz0PtxD1UNiTOVwUXxLKyBxIYJ0WS21SQu4Som9ztOwxe2i+OQaDTlQ5QvvwuxbPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGSdXo3T; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGSdXo3T"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6efe5c1dea4so27862237b3.3;
-        Sun, 22 Dec 2024 19:06:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734923207; x=1735528007; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oDLS+F1yQuD2upk7EmeHo5UCz999emMAB0fBft9hjxg=;
-        b=MGSdXo3TuDZz3VZdXydrYadXmoP8I5NmqnXWNcr7MWm5/W0DmWFoTa9i0uu/jecEnz
-         jNV7XnYLbhlFzm01VZlv90lcylLuiHsz6ueI8ETaSjMSJbcpUB/oeNKXTdJwAQ/jmqbv
-         wt3KtP5OBxEA54cfPI7XZrrMVkT7kQV+AvmvRUIqpvy3FH1QdOgymV6ijPs36fRY5l1N
-         J9D5IHlk6P/YTyOa9brKkTzHoFxEFxsYlJ/ouJl7g1i98ppCl+JYA9R+LIIFqjzwDf+O
-         HoweciBrEXNvqBD5Ugizk12TBGIvrkRHCtHrvEkZjbXYNnU1Io2ozE5uynHu+wIRtDUo
-         20Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734923207; x=1735528007;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oDLS+F1yQuD2upk7EmeHo5UCz999emMAB0fBft9hjxg=;
-        b=ootoZWu5dROmvApmoiUaxhWYfdKHRT4Xcok70gNMbKaQx2OhV/soBiSyMG5ss1FNrc
-         7oMrI080S8s+yE76Ql8zsP8aAL6Jor9OYVMI7W3isCNQubcEsdyCc3y8JR9nG27P+tD1
-         mRwvSlCQsCqqQyxqoqwRelJM5Ft5wjzwxKoxRiMJT6tUaAp5VewvXh0K/u7L+cBy47J/
-         +wJICfwAsOFKHQZ8pLjyAWELXYfIwF2RMyUulhkgh2VmdTfKpy2b6rf9rgCbg7vXPCeR
-         oEldXXFT8dfL88H7rsIUfM4kWlbai+zO1XaNwL5ADyR7M1qGUaHFIbMfC0sXQXoNajtX
-         3CpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFKbAiA5hEKqAxS36S1oTpSO37gywUgXKTmC40V21Sgmd52dL8me6RGebE6jO915WudqwLIuQAypyrIZcJ@vger.kernel.org, AJvYcCVeGufW4z4CADHHTyTGv0/WyHZEYUA5k98w0cPEw5AHp9JOuWc6V/1z/rVA1dCCMHHYLBzW7cXOcFa7CjFyDayBXA==@vger.kernel.org, AJvYcCVnRok4EeQd84DQ652GcHtKk7KHJ1e69dAhGSXzyHrc/MTGZ965iZ3nfM2IYdcjKbfvCHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6FxcYdN+ObJPSv2psErKLh9t3f5OTiGwjhjW102usHLSPGTyA
-	uQtfLEVbtPpbNkL6mwUmtGSy6/njS3IEPZT6kRzV0IIDSE3t6gdUV7pF4sUNyJBz7zpWawVtSYT
-	osreb5mL+a5U7T7v7qrOMlzztUME=
-X-Gm-Gg: ASbGncutXSALH7KXgybvzXDN1GwU6E1CaFcsEj90mD9Nkm8wPQum4etDvCHzI3sjBXV
-	idF6eF5l5iFkcBeLDz59A+VqEo+3PnJQHukME
-X-Google-Smtp-Source: AGHT+IFyHmlBFyKSpebsq2R1VBIC7wC1QEihc9xcEcoIDXS+5NhDWO0utAKyr0yDMx3ndLs5JtCDSE6d6LCG2StTXsI=
-X-Received: by 2002:a05:690c:6911:b0:6ef:96f9:2f48 with SMTP id
- 00721157ae682-6f3f823eb81mr90934647b3.37.1734923206592; Sun, 22 Dec 2024
- 19:06:46 -0800 (PST)
+	s=arc-20240116; t=1734937070; c=relaxed/simple;
+	bh=WGufmhjNmDMIR/IZ6GWBQmeQvvOu3n8Pl5/epJptMHU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D83UG/f0DdIzYBSIICSWBDZ3CW+O6e786IsD6pVQSSASR9aqJ1Mn+FwOmy3so17TkIwsPv4wiu0BsMm1qqeEOBviAuVSKQkNsuj7efKmfWJM8r3/i/G1UCQPWH0jZVIpGkpbcHAOcQEYhqSVux+1djyx3BRdUhPAvUUfd1m71A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YGpjw0zGmz4f3lfV;
+	Mon, 23 Dec 2024 14:57:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CCB601A06DA;
+	Mon, 23 Dec 2024 14:57:44 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgC33oLoCWlnoBWSFQ--.8658S4;
+	Mon, 23 Dec 2024 14:57:44 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	will@kernel.org,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	stephen.smalley.work@gmail.com,
+	omosnace@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	selinux@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH linux-next 0/2] Fix perf security check problem
+Date: Mon, 23 Dec 2024 07:06:48 +0000
+Message-Id: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241219183400.350308-1-namhyung@kernel.org>
-In-Reply-To: <20241219183400.350308-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Sun, 22 Dec 2024 19:06:35 -0800
-Message-ID: <CAH0uvohROTgAN2ugPmSTLzEp-09LcZimCAsB4UbyCYpnwQhOEA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf trace: Add --syscall-sample option
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgC33oLoCWlnoBWSFQ--.8658S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1DtryDKF45AF4DCrWkCrg_yoWxCrX_CF
+	97Aa4kJrsYvFySva4xAFs2vFyj9rW0vw1FqF93tr98XrnIqw1UKF1xtayIqry3XF48WryU
+	tFnxWry8XF1YgjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRQAwsUUUUU=
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Hello Namhyung,
+From: Luo Gengkun <luogengkun2@huawei.com>
 
-On Thu, Dec 19, 2024 at 10:34=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> This option is to implement the event sampling for system calls in BPF.
-> When it's used, it picks up a syscall in the given sampling period and
-> discard others.  The period is in msec as it shows the time in msec.
->
->   # perf trace -C 0 --syscall-sample 100 sleep 1
->            ? (         ): fleetspeakd/1828559  ... [continued]: futex()) =
-                                           =3D -1 ETIMEDOUT (Connection tim=
-ed out)
->        0.050 (100.247 ms): gnome-shell/572531 recvmsg(fd: 10<socket:[3355=
-761]>, msg: 0x7ffef8b39d20)                =3D 40
->      100.357 (100.149 ms): pipewire-pulse/572245 read(fd: 5<anon_inode:[e=
-ventfd]>, buf: 0x7ffc0b9dc8f0, count: 8)      =3D 8
->      200.553 (100.268 ms): NetworkManager/3424 epoll_wait(epfd: 19<anon_i=
-node:[eventpoll]>, events: 0x5607b85bb880, maxevents: 6) =3D 0
->      300.876 (         ): mon/4932 poll(ufds: 0x7fa392784df0, nfds: 1, ti=
-meout_msecs: 100)            ...
->      400.901 ( 0.025 ms): TaskCon~ller #/620145 futex(uaddr: 0x7f3fc596fa=
-00, op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->      300.876 (100.123 ms): mon/4932  ... [continued]: poll())            =
-                                 =3D 0 (Timeout)
->      500.901 ( 0.012 ms): evdefer/2/2335122 futex(uaddr: 0x5640baac5198, =
-op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->      602.701 ( 0.017 ms): Compositor/1992200 futex(uaddr: 0x7f1a51dfdd40,=
- op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->      705.589 ( 0.017 ms): JS Watchdog/947933 futex(uaddr: 0x7f4cac1d4240,=
- op: WAKE|PRIVATE_FLAG, val: 1)           =3D 0
->      812.667 ( 0.027 ms): fix/1985151 futex(uaddr: 0xc0008f7148, op: WAKE=
-|PRIVATE_FLAG, val: 1)             =3D 1
->      912.807 ( 0.017 ms): Xorg/572315 setitimer(value: 0x7ffc375d6ba0)   =
-                                   =3D 0
->
-> The timestamp is kept in a per-cpu array and the allowed task is saved
-> in a BPF hash map.  For non-BPF use cases, it won't work so an error
-> message would be displayed.
->
->   # perf trace --syscall-sample 100 sleep 1
->   ERROR: --syscall-sample works only for BPF
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> v2 changes)
-> * rename to --syscall-sample and update the description
-> * print error when BPF is not available  (Arnaldo)
-> * rename to sample_period_ns  (Ian)
 
-Acked-by: Howard Chu <howardchu95@gmail.com>
+Luo Gengkun (2):
+  perf: Remove unnecessary parameter of security check
+  perf: Return EACCESS when need perfmon capability
 
-Thanks,
-Howard
+ arch/x86/events/intel/bts.c     |  2 +-
+ arch/x86/events/intel/core.c    |  2 +-
+ arch/x86/events/intel/p4.c      |  2 +-
+ drivers/perf/arm_spe_pmu.c      |  4 ++--
+ include/linux/lsm_hook_defs.h   |  2 +-
+ include/linux/perf_event.h      | 12 ++++++------
+ include/linux/security.h        |  5 ++---
+ kernel/events/core.c            | 14 +++++++-------
+ kernel/trace/trace_event_perf.c |  4 ++--
+ security/security.c             |  5 ++---
+ security/selinux/hooks.c        |  2 +-
+ 11 files changed, 26 insertions(+), 28 deletions(-)
+
+-- 
+2.34.1
+
