@@ -1,115 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467181B86CC;
-	Mon, 23 Dec 2024 16:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ABF86250;
+	Mon, 23 Dec 2024 16:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734971621; cv=none; b=IUwK28/yk53D8vDOADUGujWMNNYVUS/e0yQTDhobQdXaV7YKsUJViVJSSCVAsGI8soNbhxl0+MDd+kleu9EksAxIsghJ/Vw7T42B7b/adGTWw/LCq4XFRTlwl8cjKKiW0E2KZOgSM8JLvmhjjIPVm4H/5hD2B7Ad5UQTLAb49ck=
+	t=1734971659; cv=none; b=dEmoquOkxaVxqNNg53CAiuD+kvgLy4LSqdks72ZhReKYcNID6oeRmNRpBlzqB2ShEPnzaDxxyNF5t1U9ku9MuwFoECpBTWgNInIz+IlVVzFij8lPZyNHGDnTK8lVl//iKzBJN9cAz1lnEtSeFe+ChTVWSaV+qRab+iVzpuX9hQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734971621; c=relaxed/simple;
-	bh=17rVlQwf4XR80Oud5cWztwTZKX7iBRXF/AokYsu4ZUM=;
+	s=arc-20240116; t=1734971659; c=relaxed/simple;
+	bh=lLHUtomYo0uJ2lWl63orMc7OIV1mem3W2iJoTi1vV48=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PO4ozPkq4JsafkEt6XiE5HZ9a63wtPrLfIJ43T/cBhBMUvcSXK9mWZAawB6p3Vu8cURTf4hgmiyxu73PGMVRTo2OuDLehWgEjAoRPzc88vGEPQphbcz5bq3hY9MREQYfw2NhGd7M6NMH2iJq5qF8criKMmhNQfgsBFJeAQk0ea4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5rRY8ow; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NcbhJgXS9Q9xJ4xlG46KvgmkTYULvtqxX5TSeGk4TFmcdARhHvxzo5RQe+YuyyKEoDLnzBnAdKSnMAzrmR/RdYhQyoJKmpRdUK2TxeWRRhmzH28JbGXaF952y8qMtIP6Dw1ycX7zNUkHulO7E0SE5fS7TviVM8JMQdkj4E9m9ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OH1QyTBV; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5rRY8ow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAF5C4CED3;
-	Mon, 23 Dec 2024 16:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734971620;
-	bh=17rVlQwf4XR80Oud5cWztwTZKX7iBRXF/AokYsu4ZUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D5rRY8ow4QACbYk15jqOZreXFbTKR4bVDLo21UUM8T+VpildkufPClH9CInRIww51
-	 mSzUM8lGRQpKtHREuc58kiVk3+LUeRlPXsU795aKxbhaj2ozZJHGIHQKwOwOaklywp
-	 IujR0sWVIB7HMgiWBlbWG3xxCmfQ48wCGNtScTIcZjV7D7F18qQjqzmIYoL3RTxZV7
-	 C0XlZqhKyIszzM1pC6X32jiwcUscF3Ptt3PlYp44T4JXi1C+EwL0UQ17AkJLBFJL8C
-	 tCtkDCD0k+WQyCS0zFQwI8s5Rqfi9IGtTeOL3vWXYvtYq8O0WTEj4DD85qiIY3i92p
-	 xw0C7iHTeoaAA==
-Date: Mon, 23 Dec 2024 13:33:37 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux@treblig.org
-Cc: irogers@google.com, peterz@infradead.org, mingo@redhat.com,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Remove unused is_executable_file
-Message-ID: <Z2mQ4RdSE_EfbGyO@x1>
-References: <20241222215831.283248-1-linux@treblig.org>
- <Z2mQjAIwBcx4_Pm0@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OH1QyTBV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734971658; x=1766507658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lLHUtomYo0uJ2lWl63orMc7OIV1mem3W2iJoTi1vV48=;
+  b=OH1QyTBVocqYMN7u8Ws+QPQvGcADH4LIq9GxocfJzp4lcz+J/iA9xIwp
+   nxFs4tU3SiOlMvp8OnjLSXTGha05QRUvpk96KpXX9x4wjhVpHaMcRJcWz
+   CkWIDkOD/Fnxy5mZHmwrtneflj1qWmXboX63uwrxkEFIF+NxENneRaHDf
+   TxRsng0xv4FSQuB66r4glP6HJx38KlSgknSiVQpAhq+Qg1zJFfhzWh4+L
+   c6YK6bNkD/lmdbJuTcYjZC764JswCKyAUFfPEOQfhF8mSOYbHoFSkU3YB
+   lO4xLKiL8VWkmmv0i7Ub2KIkFSuSEDRfV+js1mTtrkAJTv/MpBZOPvyPj
+   A==;
+X-CSE-ConnectionGUID: 4sf78nHLSVi3kXpgtF00Cg==
+X-CSE-MsgGUID: 0IRcfiqNQEqUVTWaidwkNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11295"; a="39380459"
+X-IronPort-AV: E=Sophos;i="6.12,257,1728975600"; 
+   d="scan'208";a="39380459"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2024 08:34:07 -0800
+X-CSE-ConnectionGUID: XdRGSdj9Rbq4Wx7Zhu/XFA==
+X-CSE-MsgGUID: qBvnqr35TMuOJNi26sfluA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="104239275"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 23 Dec 2024 08:34:01 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tPlNW-0000TX-31;
+	Mon, 23 Dec 2024 16:33:58 +0000
+Date: Tue, 24 Dec 2024 00:33:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Charlie Jenkins <charlie@rivosinc.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Nelson Chu <nelson@rivosinc.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH 1/2] kbuild: Check version of objdump
+Message-ID: <202412240044.wVXW8Eg1-lkp@intel.com>
+References: <20241216-perf_fix_riscv_obj_reading-v1-1-b75962660a9b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z2mQjAIwBcx4_Pm0@x1>
+In-Reply-To: <20241216-perf_fix_riscv_obj_reading-v1-1-b75962660a9b@rivosinc.com>
 
-On Mon, Dec 23, 2024 at 01:32:15PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sun, Dec 22, 2024 at 09:58:31PM +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > is_executable_file()  has been unused since 2022's
-> > commit 7391db645938 ("perf test: Refactor shell tests allowing subdirs")
-> > 
-> > Remove it.
-> 
-> Did you patch this on:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-> 
-> ?
-> 
-> That function is still there, so I'll fixup your patch, keep your
-> credits and test it all.
+Hi Charlie,
 
-FYI, it fails on the .h file:
+kernel test robot noticed the following build errors:
 
-⬢ [acme@toolbox perf-tools-next]$ patch -p1 < ./20241222_linux_perf_tools_remove_unused_is_executable_file.mbx
-patching file tools/perf/util/path.c
-Hunk #1 succeeded at 77 (offset 10 lines).
-patching file tools/perf/util/path.h
-Hunk #1 FAILED at 12.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/path.h.rej
-⬢ [acme@toolbox perf-tools-next]$ git diff
-diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-index 9712466c51e2f30e..2e62f272fda8671a 100644
---- a/tools/perf/util/path.c
-+++ b/tools/perf/util/path.c
-@@ -77,15 +77,3 @@ bool is_directory_at(int dir_fd, const char *path)
- 
-        return S_ISDIR(st.st_mode);
- }
--
--bool is_executable_file(const char *base_path, const struct dirent *dent)
--{
--       char path[PATH_MAX];
--       struct stat st;
--
--       snprintf(path, sizeof(path), "%s/%s", base_path, dent->d_name);
--       if (stat(path, &st))
--               return false;
--
--       return !S_ISDIR(st.st_mode) && (st.st_mode & S_IXUSR);
--}
-⬢ [acme@toolbox perf-tools-next]$
+[auto build test ERROR on fac04efc5c793dccbd07e2d59af9f90b7fc0dca4]
 
-⬢ [acme@toolbox perf-tools-next]$ cat tools/perf/util/path.h.rej
---- tools/perf/util/path.h
-+++ tools/perf/util/path.h
-@@ -12,6 +12,5 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
- 
- bool is_regular_file(const char *file);
- bool is_directory(const char *base_path, const struct dirent *dent);
--bool is_executable_file(const char *base_path, const struct dirent *dent);
- 
- #endif /* _PERF_PATH_H */
-⬢ [acme@toolbox perf-tools-next]$ 
+url:    https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/kbuild-Check-version-of-objdump/20241217-071632
+base:   fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+patch link:    https://lore.kernel.org/r/20241216-perf_fix_riscv_obj_reading-v1-1-b75962660a9b%40rivosinc.com
+patch subject: [PATCH 1/2] kbuild: Check version of objdump
+config: x86_64-randconfig-003-20241223 (attached as .config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241224/202412240044.wVXW8Eg1-lkp@intel.com/reproduce)
 
-Fixed up, thanks.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412240044.wVXW8Eg1-lkp@intel.com/
 
-- Arnaldo
+All errors (new ones prefixed by >>):
+
+   ***
+   *** objdump is too old.
+   ***   Your llvm-objdump version:    
+   ***   Minimum llvm-objdump version: 13.0.1
+   ***
+>> scripts/Kconfig.include:63: Sorry, this objdump is not supported.
+   make[3]: *** [scripts/kconfig/Makefile:85: oldconfig] Error 1 shuffle=1831414175
+   make[2]: *** [Makefile:733: oldconfig] Error 2 shuffle=1831414175
+   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=1831414175
+   make[1]: Target 'oldconfig' not remade because of errors.
+   make: *** [Makefile:251: __sub-make] Error 2 shuffle=1831414175
+   make: Target 'oldconfig' not remade because of errors.
+--
+   ***
+   *** objdump is too old.
+   ***   Your llvm-objdump version:    
+   ***   Minimum llvm-objdump version: 13.0.1
+   ***
+>> scripts/Kconfig.include:63: Sorry, this objdump is not supported.
+   make[3]: *** [scripts/kconfig/Makefile:85: olddefconfig] Error 1 shuffle=1831414175
+   make[2]: *** [Makefile:733: olddefconfig] Error 2 shuffle=1831414175
+   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=1831414175
+   make[1]: Target 'olddefconfig' not remade because of errors.
+   make: *** [Makefile:251: __sub-make] Error 2 shuffle=1831414175
+   make: Target 'olddefconfig' not remade because of errors.
+
+
+vim +63 scripts/Kconfig.include
+
+    60	
+    61	# Get the objdump name, version, and error out if it is not supported.
+    62	objdump-info := $(shell,$(srctree)/scripts/objdump-version.sh $(OBJDUMP))
+  > 63	$(error-if,$(success,test -z "$(objdump-info)"),Sorry$(comma) this objdump is not supported.)
+    64	objdump-name := $(shell,set -- $(objdump-info) && echo $1)
+    65	objdump-version := $(shell,set -- $(objdump-info) && echo $2)
+    66	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
