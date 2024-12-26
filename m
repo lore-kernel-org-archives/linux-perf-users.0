@@ -1,59 +1,59 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C60C450F2;
-	Thu, 26 Dec 2024 08:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEB9450F2;
+	Thu, 26 Dec 2024 08:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735203141; cv=none; b=JiWRCcHBCwZkIKaCF8S7uCawAtSpRgdqk+TW37FGPLg1EHz09+XtLSlOUNT0OoE4boYxA9GFosY/FjIkc17mbd5QxoGfHbh5oSeninfty8U6zralwGf8irAIREdfdPx3QcoxyxTa9Ex6mgWcBlkped1KdZMF6PUc9lrOQXaVgO4=
+	t=1735203383; cv=none; b=ASKkr9PDISD72+R9dvlK/JcAd4IXhDQFXc/iewIVbsIhMeGw72p4I/sg6awgGjpkaTyOlDyjgBuQAY6RiSXHuxNgtT+QeOqpelF8HZ5pYCIPDfmiFjyYXo6IiSQrunTYnX7TKQhCo8kn+i0qRFk1Cqor03Qa7NPo4z367BEcx+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735203141; c=relaxed/simple;
-	bh=y3MDnf9APRyVNkUWNScj2N/lT/NU+GSm/yqDaOzdfQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BgY+jKSu+59P8hbL+iI0kdNglVtBG8cVtADYc9crnMYfn/889xwHgvYz5RMv9lP20yl5yBoYY19BgoQGZOOB5bvHTBCMWZnpZpV8UWeZ+9QY6ttEgnA8JNH6PN2UdC98pTTo9cBidqMefOBllUfpfIJHWgL4WD+6r14H3z50YJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BEMonk+o; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1735203383; c=relaxed/simple;
+	bh=Gdzkc8YO+AQMkD9HCVotRR6ywl2H7b0Cj3tewfCIt8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FXdZIr+7wLcRcYV2N9zJ/M5ATCAdsKJ7z1lSX6UGzEgM2QEiqkXxxeY9zu5YsQvUtZzPqmIfLn0EEMm04qWh5urweK6qIe485E99yEHGBHtBTm+ro3gKBsKub2+OT2FtR/B1z2GCCbDK43nYPsiUjQdmgpJ90euqYLCoEyyBgbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kt4W/CYS; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BEMonk+o"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2166651f752so80275505ad.3;
-        Thu, 26 Dec 2024 00:52:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kt4W/CYS"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21654fdd5daso68651325ad.1;
+        Thu, 26 Dec 2024 00:56:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735203139; x=1735807939; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735203381; x=1735808181; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/FHK21TiSzpXyc84+XjMopVnuyAMmvHiyjJ+iz1woo=;
-        b=BEMonk+oqlwjZX3bt9ql43rap5703g3Efm3pO5x7832nU29HH0mRS/c3cG5BIbmlS5
-         YQOfzD1XoAAMxI5GzOzcO6jOTdjdMg0PMnedHH9pwNxTroENihQu/i7KWU+yCgJEzkZS
-         vQw6uvSPDS3q6Z7P5MyBMH+7/hNls2lUT70EiUrf+vKKBNXKAEnhFZa1InKYKdVAQqj/
-         QWwGnwDxY+OAie6Tfa+uNe3x1rFPJNu5u0KSCO6pkpN3xGGJVK+uUVpUFKJicq6Xyeth
-         zy1RyzWb7BUOCEfChmwrndVVptKxBGXkRoxX1/fBXKIz7YRvk3JPozZr9LyI8P0gCwcl
-         LejA==
+        bh=P7Wvv7dKnyaUeD8bChj8xncjRrQ43eRpR2zwJY0CY0w=;
+        b=Kt4W/CYSe4jV+4eJMCLPIqkLM0amE1FbA0rorGWFJb41P8JEXGWjb9Yz8gjjUa8jFS
+         SpmXLFWENsFMwL/LdRex2iYLA0L+xDn1uXqzKMoQURdWvvhh96XSUDPHGPTW4rhXVFNg
+         pMVYe+w9GS4IHDsvd8MfcrK5xjOTwVRs9N1/hkaw1HrPIqZMgrWcGRFb0k+BwCwyqoVR
+         qg6KGnW50vHzAZe8afBp/DXjfjnSUlXzNMt2O2PEZ/j/8VokdB79wr5euEc5n2Lz+GCC
+         7hCAd8R7X8trinv+EAt0JLCHc+nk6HvUp7AcbAOSc/yJ8UXuCPtnfgUX3AiQLdqydAub
+         9zRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735203139; x=1735807939;
+        d=1e100.net; s=20230601; t=1735203381; x=1735808181;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1/FHK21TiSzpXyc84+XjMopVnuyAMmvHiyjJ+iz1woo=;
-        b=iNKcrRWpyJ9Ha2IpYZkK62iAh6omrxBP4f5YtxDseaNnriWeU8rhdTFT5K5RYQ+LQf
-         oZqRJXm/HyWXT+TCKCyC4y8ROlus9Nz5CuyYFkjM8DfBH69yscBteh0fNcg1HDq+UDTW
-         vZGZ1LVp3tEvlPk3QDNPopm8LFdsYj460GNfj6efE6Zn1tDFkYctcZIvHa5c/gBiC7x+
-         vIr7ou4sLiE2Rd5JxLqZmDsWEnkBs7QuB1S6uwabWTQIse9M9YuCVZUqSEL4CJrVm+FK
-         g48xpiy8qmYgZgYXYeWnDk374R5RP02lbOmU2yRnd5q8CH1JJ8VTaKgSQbqnMF0BuNhQ
-         TOIQ==
-X-Gm-Message-State: AOJu0YySw1hEjYAxw0n4xaQ6mZZNBQHXFUiXZff8KpmqkV8z9fMcbpim
-	CSqFs1CiYIQ/QMBEpYzEe23rUOJzd9aqV+i/POnqTJmJMoYlAIsF+I9tjCKGdPB+Jg==
-X-Gm-Gg: ASbGncv80HPw96asUMTphrt+kvs4RnBHlP5uGBY5dlc51/9zUHnNlpgikxMtIAtZ+rK
-	yEpKDoMcjfa1VfgXTik+PO3WINoYada1QpsMapKW34BnQyIbR2cHa9pGREVPB+XMNfm8TB4EqI4
-	eH3zwyhdesDpYaMKKxisFxSargwBYz1I1glRi0YRuccZOHiT1s0Hdc9c1lVwm7afv0npQSsydbX
-	ktASUV52Y96mv144PkoGLjJhtjIRFAHzBdAtW9Rc8I/MJbk3gWrx1QhrevPs0TlVoF/9TtWJ21F
-	I2nViirtCGgw29LF9kLF8mdKEyJbSfGF
-X-Google-Smtp-Source: AGHT+IGXtdDx9kJp5+dCkDVMifd6pDRRWa3JBPmpgvM4tfgi3HZjepBGCXQ07+C72hp3KImSpH5BcQ==
-X-Received: by 2002:a05:6a20:6a20:b0:1e0:d99f:7ad3 with SMTP id adf61e73a8af0-1e5e084b3f5mr35687006637.44.1735203139360;
-        Thu, 26 Dec 2024 00:52:19 -0800 (PST)
+        bh=P7Wvv7dKnyaUeD8bChj8xncjRrQ43eRpR2zwJY0CY0w=;
+        b=EYLXJKBBnTyAE5ZbaPp4jj1QVxNbf2vkSXbd5lvqZU9Pnts1DOxVW0hOevt4O1Qyty
+         BE9KtHM9lqjRqsaHgX+Ird2ihkgZGWxLe2t1+bHFIqlFoojzHxKM2RB4TKh6ZHspLMuj
+         U/P1fGVs8Ppxyy7B2q/zR9iy07/agJkpaItPS1/E66bUsN0/KdsKrKWV0Ms7JEZeuGd9
+         qpMQj0dOjmNY9bByy8iKu6UgS6eJghu7T5lm6xrV90h7tiaJUaOa9sW9RuC3YJ6EShTq
+         mpQXNtmPLL6JuQoQ/1TTmkap+e+Kd9N7b6Jc23ct+RpR0u9hIKCeQC5NkXnWwlA0f9Q2
+         FPQA==
+X-Gm-Message-State: AOJu0YzUlVAj1eqyyIZ8X6lalnKC9LrUgnxGCvZeHSe+kmV1/8j9WkLV
+	PtK77vv2EAFpeRRfRx4fqruUfcLq++F23jbvAcwMkWry29FayoMi2s2AyEdHFMYSuw==
+X-Gm-Gg: ASbGncu/K31O7Aqei73IsiKAqI1GKwA2hvFA1nq2B8FxNeB8AklYJkKkuYf4LZZrcKX
+	F6iWlB2xLSKhY4JaZ9D5ogQDRYRV2QdAJbNKpEhty44rmrB8IVgCXNrmU3X8q2mrzYpUed1ipk8
+	53G+vmasua6exRBV+NMttWQs44NVnb4CHoTtIQrreYXNM1zPwDKiUV72T5OVfrSqctFDzoprgBT
+	1lQUxc6S1ODe8MmlmMNJD4G2q26e0Pb205p37XyKhBh+Z7RZudCiXIL5MZmqJ8qh5Q3uYpMcSjE
+	wBPtYa6ksV0nfDCJic7NqRxaBjse2y60
+X-Google-Smtp-Source: AGHT+IFgxUUyF7PackzMfPH022L/+ISgHeLSVxmfpgpyZIHG1egKq1NkwMEK1enqHYGt3reY0AEQSA==
+X-Received: by 2002:a05:6a00:1909:b0:725:db34:6a7d with SMTP id d2e1a72fcca58-72abdeb4e6emr34692258b3a.23.1735203380848;
+        Thu, 26 Dec 2024 00:56:20 -0800 (PST)
 Received: from victoryang00-ASUS-Zenbook-S-14-UX5406SA-UX5406SA.. ([101.87.29.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad90b2dcsm12419474b3a.171.2024.12.26.00.52.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dba78sm12820405b3a.129.2024.12.26.00.56.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2024 00:52:19 -0800 (PST)
+        Thu, 26 Dec 2024 00:56:20 -0800 (PST)
 From: Yiwei Yang <yangyiwei2000@gmail.com>
 X-Google-Original-From: Yiwei Yang <victoryang00@ucsc.edu>
 To: linux-kernel@vger.kernel.org
@@ -73,8 +73,8 @@ Cc: linux-perf-users@vger.kernel.org,
 	peterz@infradead.org,
 	Yiwei Yang <victoryang00@ucsc.edu>
 Subject: [PATCH] Add support for pebs fmt6(Lunar Lake)
-Date: Thu, 26 Dec 2024 16:52:11 +0800
-Message-ID: <20241226085211.42872-1-victoryang00@ucsc.edu>
+Date: Thu, 26 Dec 2024 16:56:05 +0800
+Message-ID: <20241226085605.43208-1-victoryang00@ucsc.edu>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -85,24 +85,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Yiwei Yang <victoryang00@ucsc.edu>
----
- arch/x86/events/intel/ds.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 1a4b326ca..0c001844d 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2516,7 +2516,8 @@ void __init intel_ds_init(void)
- 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_nhm;
- 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 			break;
--
-+			
-+		case 6:
- 		case 5:
- 			x86_pmu.pebs_ept = 1;
- 			fallthrough;
--- 
-2.47.1
+Lunar lake's pebs is not kernel ready. in dmesg I found
+
+victoryang00@victoryang00-ASUS-Zenbook-S-14-UX5406SA-UX5406SA:~$ sudo dmesg|grep PMU
+[sudo] password for victoryang00: 
+[    0.107418] Performance Events: XSAVE Architectural LBR, no PEBS fmt6+,  AnyThread deprecated, Lunarlake Hybrid events, 32-deep LBR, full-width counters, Intel PMU driver.
+[    0.107418] core: cpu_core PMU driver: 
+[    0.107418] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    0.007380] core: cpu_atom PMU driver: 
+[    2.802582] RAPL PMU: API unit is 2^-32 Joules, 4 fixed counters, 655360 ms ovfl timer
+[    2.802585] RAPL PMU: hw unit of domain pp0-core 2^-14 Joules
+[    2.802586] RAPL PMU: hw unit of domain package 2^-14 Joules
+[    2.802587] RAPL PMU: hw unit of domain dram 2^-14 Joules
+[    2.802587] RAPL PMU: hw unit of domain pp1-gpu 2^-14 Joules
+
+But lunar lake has the pebs extension in lscpu
+
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge m
+                          ca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 s
+                          s ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc 
+                          art arch_perfmon pebs bts rep_good nopl xtopology nons
+                          top_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq 
+                          dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma c
+                          x16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt t
+                          sc_deadline_timer aes xsave avx f16c rdrand lahf_lm ab
+                          m 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp i
+                          brs_enhanced tpr_shadow flexpriority ept vpid ept_ad f
+                          sgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rd
+                          t_a rdseed adx smap clflushopt clwb intel_pt sha_ni xs
+                          aveopt xsavec xgetbv1 xsaves split_lock_detect avx_vnn
+                          i lam wbnoinvd dtherm ida arat pln pts hwp hwp_notify 
+                          hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku o
+                          spke waitpkg gfni vaes vpclmulqdq rdpid bus_lock_detec
+                          t movdiri movdir64b fsrm md_clear serialize pconfig ar
+                          ch_lbr ibt flush_l1d arch_capabilities
+
+
+But I found implementation [1] and [2].
+
+The code in the kernel seems not updated [3].
+
+[1] https://github.com/search?q=repo%3Atorvalds%2Flinux%20MSR_IA32_PMC_V6_FX0_CTR&type=code 
+[2] https://lwn.net/ml/all/20240625182256.291914-9-kan.liang@linux.intel.com/
+[3] https://elixir.bootlin.com/linux/v6.13-rc3/source/arch/x86/events/intel/ds.c#L2480
 
