@@ -1,87 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD2B1E505;
-	Thu, 26 Dec 2024 15:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DBF1876
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Dec 2024 15:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735226436; cv=none; b=a2YImLL2rSBgzu+EtsJQd21gyYD8f1quRV69jVQSDcMLmoNIq0KXPiUnbjXowQ0ah1hzouAncHLFQo1SBTLRs8sPE/+ZTo5srf3vbDNEDtsx6fZlZSrKvgVLW/I+8YmymFgPAx4v/ytTYfnA0EXc8j4N8g44q6ML74zZ+yu9u9E=
+	t=1735228284; cv=none; b=MX15bViptKdsNrRg6vJxg/324LnKwlwuCS6hdKIDnTr8VgM+Le9JCxGhF9Sgd6HcyKpN/pydXXBmsEt8Yw7Om3ISHz9UChdp3WVOeP0ZGQNQQt6LH8/HyBn+hrNmDiLUNAck2DhIfwaVDRdzh44kQgvTQX6lfxP+i/RYWwosN48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735226436; c=relaxed/simple;
-	bh=wdWlOCG/vdIhpcrpAyZ9IiU5paF/RaUWXnzNEPEcU3w=;
+	s=arc-20240116; t=1735228284; c=relaxed/simple;
+	bh=BM5I1T8tBr9/OVyBQAgRb8HlVRYgiLJlNRBGvI7mznE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6OUWvvaVQNysZOU5yGMsffDVnSfUp2HBO0TtQ9Al7XoFQAE7iXbHQg1atyTmDIfmeLUK0wgU0qwqICha5GyelQjitfPodkog+kJSmjXqqTJZK5eYIk67vdoIf2bxuF7QUl8Pj3TZsDLXlwzLvg4RCI0kGE87xNafmqYUmc2Mc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LncoSS08; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IiDVx1kDNQ6qbIWai6nYp+srkmG0QlWhTlk44+uEio82IaJZK7QdwjaleRGtKFC4amXPsQ0VqcT91Z1a4uXj0oZP5RR33typeDgoZ671pi80zAPJ/w/Gt/lSwGk892Sr9A67UHHl/hP0/tSTgVb+79G8ylSTlMiXdFpXxnvDg88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idDxC0TG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LncoSS08"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30211C4CED1;
-	Thu, 26 Dec 2024 15:20:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idDxC0TG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5663C4CED1;
+	Thu, 26 Dec 2024 15:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735226435;
-	bh=wdWlOCG/vdIhpcrpAyZ9IiU5paF/RaUWXnzNEPEcU3w=;
+	s=k20201202; t=1735228284;
+	bh=BM5I1T8tBr9/OVyBQAgRb8HlVRYgiLJlNRBGvI7mznE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LncoSS08voFAyE28TWvAxiDppHSuXpJuGaRg1R1onkvAu7DqQaTxB7QlAeJf4S/+n
-	 RuTWQ7qv51oCuhr5XQPpqEWbJ50rutpn17jJMuAAcV3jH4f6hRfNfcdX+xtu7zmSGD
-	 EwU0YY4cWTrR5r/bj8KjvF7+vQmRK6Eq6I2fagLSb0Hm0201vtopaa4Z/WjQXW14Oq
-	 JvD/bVQUTpY1AC64+EDrwXAN36F+TS0DYM58+EbzQyVvpVMgnw/Cbdfo3BcrVyidSn
-	 VnSb90DGfdE8EKsbiHAf72lCqI91jIcPxzUEoYRJENwdNv75+4WXVU7wxg/fnXyuyK
-	 AiuvYtsUNPuZw==
-Date: Thu, 26 Dec 2024 12:20:32 -0300
+	b=idDxC0TGhcelPgsLzCxu3eNJxgTvzYvcezgBxnvBEurNCGB8RYTfJHSLm1FWkr5VC
+	 9pABC8aEvpXzrd94hXLtjcLEzVENe7Doy5SB3lU3URzAgD82tu9j5RovGIduiw29R5
+	 pUnyyZGKYTa9HTXpZ2CYlaEzpOLlr1324mV8QGubQ4lfb3sghXMFYQP6eTKwM4zLHO
+	 t078yNy3Tbd47n7NT12LSaxeGrFZWegTU0X3CW6EIAF/n9lVYAYvgbD3SkBeqP0PL5
+	 JPiyAyORi/RXAfjLNuglEqbdeW3LXDaTGtbWKUJB0eozyKfCKZrY6TbRVXsqiD+s4c
+	 eYl3rH2Bxe/vQ==
+Date: Thu, 26 Dec 2024 12:51:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org, tim.c.chen@linux.intel.com,
+To: James Clark <james.clark@linaro.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] perf stat: Fix trailing comma when there is no
- metric unit
-Message-ID: <Z210QHEkCXUlekN8@x1>
-References: <20241112160048.951213-1-james.clark@linaro.org>
- <Z1iLqNmDyNH7fDpa@x1>
- <CAP-5=fUfPnkS0HS1dMx2uR-a4GPfk4E4nD85rUtRUbVcETtY9g@mail.gmail.com>
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Perf doesn't display kernel symbols anymore (bisected commit
+ 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for
+ addresses"))
+Message-ID: <Z217eBsXIaSgKuSs@x1>
+References: <719a89a5-8dff-48a0-ba8f-802c740a00a6@csgroup.eu>
+ <53f3abe5-dd22-4a1a-82e6-bc88e91d1869@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUfPnkS0HS1dMx2uR-a4GPfk4E4nD85rUtRUbVcETtY9g@mail.gmail.com>
+In-Reply-To: <53f3abe5-dd22-4a1a-82e6-bc88e91d1869@linaro.org>
 
-On Thu, Dec 12, 2024 at 12:01:00AM -0800, Ian Rogers wrote:
-> On Tue, Dec 10, 2024 at 10:42 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Nov 12, 2024 at 04:00:40PM +0000, James Clark wrote:
-> > > The first commit is failing on Arm and I think the fix should stop more
-> > > trailing comma issues which keep happening.
-> > >
-> > > The second one I just noticed when looking at it. I don't feel strongly
-> > > about it so not sure if we should do it or not, but seems like the empty
-> > > metric-units exclusion from the JSON should be consistent if we're going
-> > > to have it at all.
-> > >
-> > > Changes since v2:
-> > >   * Do more documentation and tidyups around struct outstate
-> >
-> > Ian, have you had the chance of going over this series?
-> 
-> It looks good to me, I particularly appreciate the additional
+On Tue, Dec 17, 2024 at 02:18:07PM +0000, James Clark wrote:
+> On 16/12/2024 7:01 am, Christophe Leroy wrote:
+> > I noticed with 6.12 LTS Kernel that perf top and perf record/report
+> > don't display kernel symbols anymore, instead it displays the raw
+> > address with [unknown] as object.
 
-Indeed.
+> > After bisect I see that the problem appears with commit 659ad3492b91
+> > ("perf maps: Switch from rbtree to lazily sorted array for addresses").
+ 
+> You might want to try applying 0b90dfda222e3 as it claims to fix this
+> commit. I doubt that will fix your issue but it's worth being sure.
+ 
+> There was also another fix recently that could be related: 23c44f6c83
+ 
+> Did you try the perf-tools-next branch? Maybe something that's already fixed
+> needs to be backported.
 
-> comments/documentation. Tested with sanitizers.
-> 
-> Tested-by: Ian Rogers <irogers@google.com>
+Right, I tried reproducing this on perf-tools-next and couldn't, so
+please test it there.
 
-Thanks, applied to perf-tools-next,
+Thanks,
 
 - Arnaldo
+
+
