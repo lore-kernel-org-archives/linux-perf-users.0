@@ -1,207 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C89B26281;
-	Fri,  3 Jan 2025 20:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446DA1AAA3D;
+	Fri,  3 Jan 2025 22:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735936614; cv=none; b=oA+xjnghF++Q3TgHxVCQKS8DbHlkDLjIoAw6msmAMEGpejynIHp0270AJ4QxFzip2+MuA3zw7yIfQlxEn63Vf1TQm4dqpdEW/5b1OIxxLWT46pHKJxQjpJca3aoGru97FfyWyXN/UO37TbnU0pzmlOh7aNF7DWFjE7IGXkW13D0=
+	t=1735944312; cv=none; b=sqxPiSpeB4UcsLj/F6MGCjj6/e2nLdSkr4PXvKM1Ir0F4lBISn9Q2ppYXqlbHaek0Q57B3NkhF0wBkkyGodSOhENlcDIb2/H5ftkCkuOijFe5Bgjn88RnOmTKDEEiM+cgPF12H6BVva0w2mozyI6S52aCawbPYb5YBktXJbWOFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735936614; c=relaxed/simple;
-	bh=mCtfy5uJAaCajLUrE5G8vQyO2NpDsuY9wDS9hBQpVCg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L+/W4K2wGhldIpnoaxs1shY0RsVSnz+unc9KFv9voE+f9NmIUHDTUcf2IpxSSOcpG0bc+8HpRy/FPepGAdfHH3XI1QZHveXbfXCuGM6lYHJBIQ6hTk4rHvf1H9clG5+5bfevN61t0rbpCJpQVb2pkrKOCxZh67BTSkdHDq8c2/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7SY43V0; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1735944312; c=relaxed/simple;
+	bh=Q/DaSiESjGtpFhy27n7ZlGMDfUDTC0jqUYc7sOcgvzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Trs40ztDaIJbUDNRV5ra19ayugZo+77eRrcsGRrfx19nr6uvjPUUc4+l0LmmIlSAESeDvhJ5J70cbDu2ur3GUEEbFOn/sCP5xX9v4sJVMGRlwRQhdVUxEofzU4SQtQA5J2gQRrIOH+GWxJ4JmWQjWGckUkMEsI3Amb2OWMIaCcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TsF85MXt; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7SY43V0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735936612; x=1767472612;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mCtfy5uJAaCajLUrE5G8vQyO2NpDsuY9wDS9hBQpVCg=;
-  b=e7SY43V0gg1bKsG/FXsMPcXJMY0ykLkPdyIndDy5ct3N927FKGoN6Fu2
-   AvEKjf7JTKlyjPhutzjp2V757TBlHEH3Ue0b8IGhwkGwDrM5mc4T4knjL
-   ZgbC3+qu7PbWNy5SHGvms7qJNz6tGjxqye0qfhhpsykJTIg7AdtzmXCjs
-   NQpecHFD7Fwp8nfHv0r5gCxkw9YlHEbbqjdtvoDB9hMpZjuTVYhi9QE0V
-   r/VYyB7dWvIfblEJFmV9+OtvnVOFuXs2bI5aPDAqJTyaijCPj5g22vwkE
-   R7rK6hgpOADQXS8VrSs9C5bNL6xzFIV05+Hl8oaK1vDdWFbEDBKRbDYFQ
-   w==;
-X-CSE-ConnectionGUID: Ilebsl2PRqSe+WeKrlHi3g==
-X-CSE-MsgGUID: YXdlp/0tR4qHnmiHjgZFfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="35426431"
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="35426431"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 12:36:51 -0800
-X-CSE-ConnectionGUID: YN/5v/1XSEmBWLeUXna3JA==
-X-CSE-MsgGUID: M8g81aPcQ0mX/8DJq0Q3MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="106921252"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.24.8.92]) ([10.24.8.92])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 12:36:51 -0800
-Message-ID: <a4ef5e31-551e-481e-8da1-1476ca827f97@intel.com>
-Date: Fri, 3 Jan 2025 12:36:52 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsF85MXt"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-385eed29d17so6030794f8f.0;
+        Fri, 03 Jan 2025 14:45:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735944308; x=1736549108; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=boMl+pQfQXmWyNrT8S/sXSE44nQ4kGiKGrjt5KgwhTg=;
+        b=TsF85MXtMUNfq1iEIDm3pi4c5Red6mDjmKdnd+NJ6jHyKUwPD86wvWeYorltT4FBTG
+         br1HdehDXYdG232w4EgAAAuxFcWMrizjiQBrgblT/0X1knZmxqShatB5FkgD+c/bnOky
+         fv5JsuJ68obh+I2my0seZ7Y/hOx6kC+oqdTpMmoRhT8WCK0RpHC7KiTZRekodrie0Do7
+         lziyTHeriyv908UJ01dqc0SafsYHC3uLvlKu70njJaD+YZeoGZd1TnUfiReAbw9ZfrEg
+         Nh/Lnyh+mrhnWZDAb1HfjB6KH9j3fT2f4iUdskjoRWTW27ypOvcX4xRv2Si1KakdX0Qy
+         qjKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735944308; x=1736549108;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=boMl+pQfQXmWyNrT8S/sXSE44nQ4kGiKGrjt5KgwhTg=;
+        b=r99imP7SN/LCE56gk51JphAsg06RY/OcYZYC74y3tZVxVfVoY1dqXzKMXF7E4F806F
+         uzmiEd6YdQfxEdzb5/X8l8E3JXMqvcE1vuPQsvrjZuNiypUCq9ywwM5g8fvo3/ExMcWz
+         t/0EzPormnkXATfJp0WgeFaaWnY/j999+7fDeJ0v4UxIxy4N0lH1PGVYEmYYEKj3KaIs
+         3JR4E3SIYDuCh8TZ7DkHzToDFMmhUx+qTihghQ2sw4f1yMh/x6yg3WDYmEsWRHuLZI3t
+         gQ6jOkoGBaUFg8xX0nzWejild0I3Vw2HsEEwBbEuHe/cu0hRrlGHfRuN+WLQdsbiM5ON
+         qX/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCULWH6PKHH0b/0Jt94oWL2bUj5ibewCAF3/QL/13jl4jvCv9ZnMUdCk7W340mFI/ypE1zpBWrOt+mIFG9FCzUq1lw==@vger.kernel.org, AJvYcCXMtdWwQr+MNdiNyKMHlPD006FR+F5JhqllXTBbEhwpzfkA+z52I48MPAWyGTk+KgFOpO/iXetAD2UuFlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4bM/WWkIRi3sH0TfTADZ5KMcFt4ytoTd/N3T13io3sDk8W20g
+	gA6lZ93Ncm7JgXpPXJ037+GmvDBAIXwLp+DyxbtJWOlb+9zEj2L2
+X-Gm-Gg: ASbGncusYKiCmiSkcJIF/R8jnN8RiWFgHP/Knpc2D9Fvg1BeDr6Cj3D1yUA8F8ZEtOH
+	ZsTJNtC0eJEnYhT2tGfl7JrgsUFs4KDLrWDoiQaYVYVvPXjMAbMAvKXK8XVNH+IjGbLdkI4XX70
+	DO2lsr5fw1bcikW+3ZmrCyD7x415rQ8zcnEOGMjmyFLzLSL+GUy42/JtxGEpOJgj7rCtN6SP7ho
+	9q3DsPXkKS8nMF0JEcPTrdRzQOg5zqZ+GjWdm7Atp3/cby7wtPJmBIWrYA+edkHcwQrKiknmg/F
+	erWZfdi2NTbuItqAybk=
+X-Google-Smtp-Source: AGHT+IHnRR/++feo4NRrs4NGA9okrxH82KblpUqEIW50prBNz1R/GTZcDSGawtloXg6ammwWdwMceg==
+X-Received: by 2002:a5d:6f01:0:b0:386:3dad:8147 with SMTP id ffacd0b85a97d-38a221f9ed6mr36147508f8f.32.1735944308341;
+        Fri, 03 Jan 2025 14:45:08 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436611fc762sm493424935e9.11.2025.01.03.14.45.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2025 14:45:07 -0800 (PST)
+Date: Fri, 3 Jan 2025 22:45:06 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+ <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, Tim Chen
+ <tim.c.chen@linux.intel.com>, Yicong Yang <yangyicong@hisilicon.com>, Ravi
+ Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kyle Meyer <kyle.meyer@hpe.com>
+Subject: Re: [PATCH v2] perf cpumap: Reduce cpu size from int to int16_t
+Message-ID: <20250103224506.185cc746@pumpkin>
+In-Reply-To: <20250103182532.GB781381@e132581.arm.com>
+References: <20241220185207.106161-1-irogers@google.com>
+	<20250103182532.GB781381@e132581.arm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: map pages in advance
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Matthew Wilcox <willy@infradead.org>, Yi Lai <yi1.lai@linux.intel.com>
-References: <20241205082948.56212-1-lorenzo.stoakes@oracle.com>
- <65a04f0d-668b-47b6-a532-d1e11ef4835a@intel.com>
- <4ded2d63-03dd-498e-9810-690a9eff0c22@lucifer.local>
- <860a1ef0-678d-414d-8511-9695b90c3ca0@redhat.com>
- <74fd8a75-66c6-40a8-9ec3-d7aa74469755@intel.com>
- <ebaa9d2e-c5f3-4a93-9def-caadae92acc6@redhat.com>
- <e489e48d-f9ef-453d-9b88-91368b9534d7@redhat.com>
- <f4299bff-3448-4095-b573-243f1fca834c@lucifer.local>
- <2cb3d067-fe92-4bdf-ae79-b24810a4bc2e@redhat.com>
- <0d99b80e-0ae1-4d74-97b9-68fdc0029fb5@lucifer.local>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <0d99b80e-0ae1-4d74-97b9-68fdc0029fb5@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Fri, 3 Jan 2025 18:25:32 +0000
+Leo Yan <leo.yan@arm.com> wrote:
 
+> On Fri, Dec 20, 2024 at 10:52:07AM -0800, Ian Rogers wrote:
+> > 
+> > Fewer than 32k logical CPUs are currently supported by perf. A cpumap
+> > is indexed by an integer (see perf_cpu_map__cpu) yielding a perf_cpu
+> > that wraps a 4-byte int for the logical CPU - the wrapping is done
+> > deliberately to avoid confusing a logical CPU with an index into a
+> > cpumap. Using a 4-byte int within the perf_cpu is larger than required
+> > so this patch reduces it to the 2-byte int16_t. For a cpumap
+> > containing 16 entries this will reduce the array size from 64 to 32
+> > bytes. For very large servers with lots of logical CPUs the size
+> > savings will be greater.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+> > ---
+> > v2. Rebase and tweak commit message.
+> > ---
+> >  tools/lib/perf/include/perf/cpumap.h |  3 ++-
+> >  tools/perf/util/cpumap.c             | 13 ++++++++-----
+> >  tools/perf/util/env.c                |  2 +-
+> >  3 files changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> > index 188a667babc6..8c1ab0f9194e 100644
+> > --- a/tools/lib/perf/include/perf/cpumap.h
+> > +++ b/tools/lib/perf/include/perf/cpumap.h
+> > @@ -4,10 +4,11 @@
+> > 
+> >  #include <perf/core.h>
+> >  #include <stdbool.h>
+> > +#include <stdint.h>
+> > 
+> >  /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
+> >  struct perf_cpu {
+> > -       int cpu;
+> > +       int16_t cpu;
+> >  };
+> > 
+> >  struct perf_cache {
+> > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> > index 27094211edd8..85e224d8631b 100644
+> > --- a/tools/perf/util/cpumap.c
+> > +++ b/tools/perf/util/cpumap.c
+> > @@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
+> >  {
+> >         const char *mnt;
+> >         char path[PATH_MAX];
+> > -       int ret = -1;
+> > +       int max, ret = -1;
+> > 
+> >         /* set up default */
+> >         max_cpu_num.cpu = 4096;
+> > @@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
+> >                 goto out;
+> >         }
+> > 
+> > -       ret = get_max_num(path, &max_cpu_num.cpu);
+> > +       ret = get_max_num(path, &max);
+> >         if (ret)
+> >                 goto out;
+> > 
+> > +       max_cpu_num.cpu = max;  
+> 
+> I am concerned for the data conversion from int type to int16_t type.
+> 
+> The GCC option "-Wconversion" is not enabled in perf Makefile, unsafe
+> data conversion is allowed.  A better way is to update argument type for
+> get_max_num() for reading CPU number with int16_t type.
 
-On 1/3/2025 6:45 AM, Lorenzo Stoakes wrote:
-> On Mon, Dec 23, 2024 at 10:12:42PM +0100, David Hildenbrand wrote:
->> On 23.12.24 12:10, Lorenzo Stoakes wrote:
->>> Peter - could you drop this patch for now until I have a chance to take a
->>> look at this issue on my return on 2nd Jan?
->>>
->>> On Fri, Dec 20, 2024 at 10:53:14PM +0100, David Hildenbrand wrote:
->>>> On 20.12.24 22:29, David Hildenbrand wrote:
->>>>> On 20.12.24 20:36, Chen, Zide wrote:
->>>>>>
->>>>>>
->>>>>> On 12/20/2024 1:56 AM, David Hildenbrand wrote:
->>>>>>> On 20.12.24 10:31, Lorenzo Stoakes wrote:
->>>>>>>> On Thu, Dec 19, 2024 at 01:17:44PM -0800, Chen, Zide wrote:
->>>>>>>>
->>>>>>>>> With this patch, it seems perf tool has some problems in capturing the
->>>>>>>>> kernel data with Intel PT.
->>>>>>>>>
->>>>>>>>> Running the following commands, the size of perf.data is very small, and
->>>>>>>>> perf script can't find any valid records.
->>>>>>>>>
->>>>>>>>> perf record -e intel_pt//u -- /bin/ls
->>>>>>>>> perf script --insn-trace
->>>>>>>>>
->>>>>>>>>
->>>>>>>>
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> I'm on leave (and should really go back to relaxing :>), returning on 2nd
->>>>>>>> Jan so can't really dig into this.
->>>>>>>>
->>>>>>>> But I tried it on my intel box and it 'works on my machine' with and
->>>>>>>> without patch with commands provided, so I'm not sure this is actually a
->>>>>>>> product of this change (which shouldn't impact this).
->>>>>>>
->>>>>>> Zide Chen, can you try with and without this patch to see if it
->>>>>>> introduces the issue?
->>>>>>
->>>>>> Yes, I re-did the test on a SPR server, and the result is same. Without
->>>>>> the patch, it went well; But with it, "perf script --insn-trace" doesn't
->>>>>> show valid records.
->>>>>>
->>>>>> This time I tested it on the clean 6.13-rc1 tag, base commit
->>>>>> 40384c840ea1944d7c5a392e8975ed088ecf0b37
->>>>>>
->>>>>> Also, with this patch, running tools/perf/tests/shell/test_intel_pt.sh:
->>>>>>
->>>>>> Error:
->>>>>> The - data has no samples!
->>>>>
->>>>> I just tested it on 6.13-rc1  vs. 6.13-rc1  with this patch.
->>>>>
->>>>> Indeed, there is quite difference. Below are the main parts that changed, only.
->>>>>
->>>>> We seem to be recording data, but maybe what we record gets corrupted somehow?
->>>>
->>>> Huge parts of the new file are full of 0s. Either we are mapping the wrong
->>>> pages, or reading from the pages (via PFNMAP) does not work as expected.
->>>>
->>>
->>> Thanks David, and apologies Zide, appears there is an issue here clearly.
->>>
->>> Could you try this with sudo operations? I was doing this locally and I
->>> wonder if there is now a permissioning error?
->>
->> I ran it under root.
->>
->>>
->>> I'd be surprised if pfn map would cause an issue here as it should just
->>> directly map the kernel memory, however if the PT code assumes there will
->>> be faults there could be an issue. I did take a brief look at this last
->>> week and it seems the PT stuff relies on the aux functionality, so that
->>> could also be a source of problems here.
->>
->> I started a bit at that code, no clue yet what's happening.
->>
->> I was wondering if we end up mapping the wrong pages, meaning: the pages at
->> mmap time end up being different to the pages later at fault time. The code
->> is a bit confusing, but I thought we cannot change the effective event/pages
->> while we have an active mmap. Maybe there is some corner case ...
-> 
-> OK I figured it out... it's a very silly mistake on my part (oh how this is so
-> often the case :).
-> 
-> When we map the pages, we do not offset by vma->vm_pgoff when looking up the
-> page, so if you map with an offset (as presumably the intel pt stuff is), it is
-> then retrieving the wrong pages).
-> 
-> This also resolves the apparent need for sudo...
-> 
-> Very silly mistake. Apologies :>)
-> 
-> I will send a v4 in a second.
-> 
-> Zide - could you give v4 a test when I send it out just to confirm it resolves
-> your issue? I will cc- you on this.
-> 
-> Thanks again for your report, and apologies for the noise!
+Or just avoid passing &int_var by using the return value instead.
+It'll generate smaller, faster code.
 
-I can confirm that v4 works for my Intel PT tests!
-
--Zide
-
-
->>
->> Nothing else really jumped at me ... moving the mapping og pages after the
->> event_mapped() callback also didn't change anything.
->>
->>>
->>> I am on leave at the moment returning on 2nd Jan, I will look at this as a
->>> priority when I return, as you can see above I've asked Peter to drop this
->>> for now.
->>
->> Enjoy your time off an Happy Holidays!
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
-> 
-> Cheers, Lorenzo
+	David
 
