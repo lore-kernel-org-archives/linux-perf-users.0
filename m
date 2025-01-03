@@ -1,43 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C00EFBE4F;
-	Fri,  3 Jan 2025 18:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C3A1F9F58
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jan 2025 19:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735928740; cv=none; b=GoEBRo/9BweyiCgdT+IjQBodt49WJPQLwpAAz53+GBsh70x9GbPcku7b2kpBzmGJSb+haRJl+dZuG8Y10GWCKNSkhEB08LjjeW3chs+JLynFEW4hMI/xVl0uJsAH3Eht5zf++GFYsz4js+kOfiBdunBk+1jXAa+6Pg74o8NJ+10=
+	t=1735931728; cv=none; b=Kist7cjSiTcpRl+mTnCHN82FlI3rTF2KGbdElWL+KHqU42zPAykXwY0D1+10jqcx7Kx+uwUI/q+w5te7PgUUUYna+p/RdpZid5D6dzEQFLF/75L4M2SglyNjXgHV5yy95fy+ksYagSQx85wUIqYHgSwMdbVcLBhf7NftF7oF+Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735928740; c=relaxed/simple;
-	bh=yhYop0t7zIXcq046uMbJILigP7MWDipnkAanX7dug5k=;
+	s=arc-20240116; t=1735931728; c=relaxed/simple;
+	bh=HHwL+5SpFOMyo+dWaVwTT9ZG/HsdAaRzZjq78yXwUiY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0RqsQ54zvGkEwnH3DzqZsuE60atBXlk6xSthDvcoK4nm5YONA2zdSRwZmivh/gLDUgwmgq0/N6u28L3OaTb1BrtnjYwSxPhxwEUIRfvYnirmO7SOkaajKlEWy+pqP27AUiz5AZ5b/rn93lqbS4t1H90iYXAORMrZna1qLwfxGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 558951480;
-	Fri,  3 Jan 2025 10:26:06 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63A33F673;
-	Fri,  3 Jan 2025 10:25:37 -0800 (PST)
-Date: Fri, 3 Jan 2025 18:25:32 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkZqcVzGLnCbu0m/6b2efj2yawc+ETEzl2Aa5nGqvBd27lOca2aLT/8dOv9cOOoAjeh+8mGK/9j49U06xlebJxtNQg/oLhzBRQTLEtqDsKTFqikuVKO6Lx9l5QPvLv+dtKMj55kRCci5ISRw4TFrSO8plzxiET1mGIutOScDORA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=W4LVVFcX; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="W4LVVFcX"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21669fd5c7cso178012545ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jan 2025 11:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1735931725; x=1736536525; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADhotle/1TQemJtHksRH5tzPPxcFcmn+moP8E9RHhKE=;
+        b=W4LVVFcXr5zGTWUWG9ofYYXtxrj3+9d9qQ3YyY1AH7CPDK92tItDxIK5sAV4p1p9h6
+         y8UGX75k7a+2V2NjaWTkNqFuMbA/uA559G7oQwwZD3aMkU9GylwyWT4qwuE6MCgYA1Tb
+         KtNm9+w7Q3W0gXJd5riQSHB4w+4cvesh9Pfq5xZitmDUh26X3dvuhEvdz5vNrfrI3DU6
+         6gPsCk2V48Hv+Q5mfWk4hsCCfEDF+aYTbEfySLcIy8xXeHSbZFomg4DmwxRfvDnFbYt3
+         KUcNOX1QqAhjObwpcH9ZOFnjmZSLmpj/fmACKHG1ue1vS6M0Ep+8Jqfp+LbPMzEQmL//
+         VkXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735931725; x=1736536525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ADhotle/1TQemJtHksRH5tzPPxcFcmn+moP8E9RHhKE=;
+        b=LRyaIsBeLFnrbjm1zPb+lN+FZCLlOD10TB3zBg05ocyI5cGvL/338NVPFJsHtfygLb
+         Ey5kTJEKx8hHu5pBRdYrsIpgvzMFpEoCVFR/Gq3Tj52AcVRY8V51KhzQl7nsHL3OLlWP
+         zo9GV+zoUjZQsQpzv7DTtGKNRtwsJXt5ErRa6ZwOz2Bkfl+8bTMeQ/+KfJRhZmM7mf8u
+         pdFKo1FWZaFZoXHbhDpIGjvWS8mMES61r5Htc05fFX2Wf515M7+5cDw8N8AtuD7C6nha
+         w7r0f9zrMEVEF+8amWmQ321COFrotyBxlUhcZ8FQ7zQeNjnAYTYl+7FROfkCS/L5BCB3
+         Ze7g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6A7C5moCoCuYHu7Dbr0zYqgqWPdermCRH++Gux9KQTb4xJ5GjwWFmZ+q8tFS2yQSO2huQDWDURLuFmvAUgoDT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgsgASwVf08fGLsN4vK8gy8puOcZ2xKcerxVrkq6koupuzHpd7
+	tq/TQ3pZmpxsZhI4pGkuWZpChYL6jpr9fDp8kUvd8y6ZMq5hAFx/AjQcjwtwtHE=
+X-Gm-Gg: ASbGncs1NVxOuhoWTpkF4RyC9UzJ5F/hAp0MsQSBnbu145XjuqFBK19uWZ3I24Ov//K
+	MUI9R1oInHpWYZf+d1jyD6CESuYhJHTH/UBLy6N6efvXjmAY7OxTGWduyA3AV+7/r6PPU4sa7R8
+	e9D78i2R5/cRRCxXmpm5bG9qP0RTadwFxTgvXXmsGwJK4kosBj33vwcCjIUoshQrPA3EIGlBkV/
+	wPGN0Vps0Eke8Zfx5Y9km/0z9QZajwN/YVAaHIQSmzhG2ZzHJo=
+X-Google-Smtp-Source: AGHT+IHaGUpdPP/4NVVkV9pM3dpsY14vT8nNjSq+/lATASDlWQ+Up7g3TCX6COowkeiTogzmOyYEVw==
+X-Received: by 2002:a05:6a21:9007:b0:1e0:c954:ea7c with SMTP id adf61e73a8af0-1e5e049a0b9mr71239375637.27.1735931725624;
+        Fri, 03 Jan 2025 11:15:25 -0800 (PST)
+Received: from ghost ([2600:1010:b0be:4797:42a0:3cad:ff5:6bb5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8dba99sm26335019b3a.92.2025.01.03.11.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2025 11:15:24 -0800 (PST)
+Date: Fri, 3 Jan 2025 11:15:22 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kyle Meyer <kyle.meyer@hpe.com>
-Subject: Re: [PATCH v2] perf cpumap: Reduce cpu size from int to int16_t
-Message-ID: <20250103182532.GB781381@e132581.arm.com>
-References: <20241220185207.106161-1-irogers@google.com>
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2] tools: perf: tests: Fix code reading for riscv
+Message-ID: <Z3g3SrBwQcXWdbRr@ghost>
+References: <Z2IXl5cuKQJInJb0@ghost>
+ <Z2MXXFhUzoQmW4xV@x1>
+ <CAP-5=fXPPfHHVPh0nYgR96VM+smuZKepO+GoE4X+aZsQE4tHSw@mail.gmail.com>
+ <Z2M4ZparbNRvRHpz@ghost>
+ <CAP-5=fXL6YaEq1cvBh2iESmQ_kqfm5VH5thJ0zrkOCcaWv5s+Q@mail.gmail.com>
+ <Z2NNcy1jCLqb62h2@ghost>
+ <CAP-5=fUBcu=Kd7StJvwdM_ArnSdOjmAcgR7NzDd+Ep8LrNMhyw@mail.gmail.com>
+ <Z2N8WLTmh0ojIzhF@ghost>
+ <Z3dBGM5L41v0RlZf@ghost>
+ <Z3gVrzFd_2cacOFD@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,118 +93,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241220185207.106161-1-irogers@google.com>
+In-Reply-To: <Z3gVrzFd_2cacOFD@x1>
 
-On Fri, Dec 20, 2024 at 10:52:07AM -0800, Ian Rogers wrote:
+On Fri, Jan 03, 2025 at 01:51:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jan 02, 2025 at 05:44:56PM -0800, Charlie Jenkins wrote:
+> > On Wed, Dec 18, 2024 at 05:52:24PM -0800, Charlie Jenkins wrote:
+> > > On Wed, Dec 18, 2024 at 05:20:15PM -0800, Ian Rogers wrote:
+> > > Yeah I agree. This test case did end up being interesting though as it
+> > > unconvered this change in behavior of objdump on riscv, but that's
+> > > tangential to the purpose of this test case. We need this patch on riscv
+> > > to stop this test from failing, but it is also reasonable to approach
+> > > this differently and not use objdump at all.
+>  
+> > What's the next step here? Would you prefer to get rid of this test
+> > entirely? I sent out a v3 that uses uname [1].
+>  
+> > Link
+> > https://lore.kernel.org/lkml/20241219-perf_fix_riscv_obj_reading-v3-1-a7d644dcfa50@rivosinc.com/
+> > [1]
 > 
-> Fewer than 32k logical CPUs are currently supported by perf. A cpumap
-> is indexed by an integer (see perf_cpu_map__cpu) yielding a perf_cpu
-> that wraps a 4-byte int for the logical CPU - the wrapping is done
-> deliberately to avoid confusing a logical CPU with an index into a
-> cpumap. Using a 4-byte int within the perf_cpu is larger than required
-> so this patch reduces it to the 2-byte int16_t. For a cpumap
-> containing 16 entries this will reduce the array size from 64 to 32
-> bytes. For very large servers with lots of logical CPUs the size
-> savings will be greater.
+> I'm ok with this latest version and added it to perf-tools-next,
+> changing the patch subject line to:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> ---
-> v2. Rebase and tweak commit message.
-> ---
->  tools/lib/perf/include/perf/cpumap.h |  3 ++-
->  tools/perf/util/cpumap.c             | 13 ++++++++-----
->  tools/perf/util/env.c                |  2 +-
->  3 files changed, 11 insertions(+), 7 deletions(-)
+>   perf tests code-reading: Handle change in objdump output from binutils >= 2.41 on riscv
 > 
-> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-> index 188a667babc6..8c1ab0f9194e 100644
-> --- a/tools/lib/perf/include/perf/cpumap.h
-> +++ b/tools/lib/perf/include/perf/cpumap.h
-> @@ -4,10 +4,11 @@
-> 
->  #include <perf/core.h>
->  #include <stdbool.h>
-> +#include <stdint.h>
-> 
->  /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
->  struct perf_cpu {
-> -       int cpu;
-> +       int16_t cpu;
->  };
-> 
->  struct perf_cache {
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 27094211edd8..85e224d8631b 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
->  {
->         const char *mnt;
->         char path[PATH_MAX];
-> -       int ret = -1;
-> +       int max, ret = -1;
-> 
->         /* set up default */
->         max_cpu_num.cpu = 4096;
-> @@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
->                 goto out;
->         }
-> 
-> -       ret = get_max_num(path, &max_cpu_num.cpu);
-> +       ret = get_max_num(path, &max);
->         if (ret)
->                 goto out;
-> 
-> +       max_cpu_num.cpu = max;
+> Ok?
 
-I am concerned for the data conversion from int type to int16_t type.
+Yes that is perfect, thank you!
 
-The GCC option "-Wconversion" is not enabled in perf Makefile, unsafe
-data conversion is allowed.  A better way is to update argument type for
-get_max_num() for reading CPU number with int16_t type.
+- Charlie
 
-Thanks,
-Leo
-
-> +
->         /* get the highest present cpu number for a sparse allocation */
->         ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
->         if (ret >= PATH_MAX) {
-> @@ -455,8 +457,9 @@ static void set_max_cpu_num(void)
->                 goto out;
->         }
 > 
-> -       ret = get_max_num(path, &max_present_cpu_num.cpu);
-> -
-> +       ret = get_max_num(path, &max);
-> +       if (!ret)
-> +               max_present_cpu_num.cpu = max;
->  out:
->         if (ret)
->                 pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.cpu);
-> @@ -606,7 +609,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
->  #define COMMA first ? "" : ","
-> 
->         for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
-> -               struct perf_cpu cpu = { .cpu = INT_MAX };
-> +               struct perf_cpu cpu = { .cpu = INT16_MAX };
->                 bool last = i == perf_cpu_map__nr(map);
-> 
->                 if (!last)
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 610c57da5b37..961a92545039 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -543,7 +543,7 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
-> 
->                 for (i = 0; i < env->nr_numa_nodes; i++) {
->                         nn = &env->numa_nodes[i];
-> -                       nr = max(nr, perf_cpu_map__max(nn->map).cpu);
-> +                       nr = max(nr, (int)perf_cpu_map__max(nn->map).cpu);
->                 }
-> 
->                 nr++;
-> --
-> 2.47.1.613.gc27f4b7a9f-goog
-> 
+> - Arnaldo
