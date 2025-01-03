@@ -1,179 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1A21FBCB5;
-	Fri,  3 Jan 2025 16:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B217F4F6
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jan 2025 16:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735920932; cv=none; b=Xp/BaOXgJrzCG4x5loj+DcrQnCKMmsAJc7Dp7y/ugKgwE77qfcNNG8J+7cdwCSEEihgViJ1SeSe/HSzcLqMg7Mu0gRGzo2R1Iz/HfldhcpWV6w8+cJmTjHDBhbBEaN9ZF/aq8sxdyLBWkLb3cUcH+SaVDu32USpwXZwkTl2eSQA=
+	t=1735921568; cv=none; b=UhilWEtRwmS5/kmG/xFPgpVeQb0i5rV+IsKVy6IXY+yOY5QfLL/HIwMEwMtTyYySmN+Qx/9umlkMefhySAFcnIY/LJXm3Q0d7UPz8sRPGFqikUx0Wz9/qhUpCzKnlEfjKYAZ2oLbd2arp6bLJjoCS7FX8O3PppeZ7Pk+rykFUMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735920932; c=relaxed/simple;
-	bh=GVe37z/JcTqiYqP9DG+ieaVOSmdbdYuDfynP4+renwg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FYrTCem3XaK5EWci/w0Ifvvvex8ONZds/tnXM8k/tilBJ9kpnI2cLH18LVkTL+mtaaBOTZhOrFTk6MCV7Vif3riPHX5vf4JLNuU0GZ3OnpyoW/6nwPNs1VnmTyCAVi4cZUQO8aba8YXfkA9yMElfU4SOGGh7Izs2o1Bfk41KI2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKCHMS29; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1735921568; c=relaxed/simple;
+	bh=FNO1aPu3maetdCOeeSVReiHOM/AJcCD967TpylWGtNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kE4GNSd/wZiYK4EOaHFmUzuAYgmF53GCsjv9XNPSKtdaVrQvP+ptEboyQa3uP1GALhIsvwGIp46jqdmGv9WSoRvqRP/d1WEYMSKQUH6iGWuJwLQTSpZqcQXsCWDo4NYw86H4o8oBiK+mWavuK9S3NPYlF/niOI/LQT0dG9MihyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raK2CMNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKCHMS29"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735920931; x=1767456931;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GVe37z/JcTqiYqP9DG+ieaVOSmdbdYuDfynP4+renwg=;
-  b=mKCHMS291z5WHKBn5DnJd9wYvsTv1LrNnVDQMyCgGevlD/5R+APjOc8g
-   8dYEL2amHiyZgHcoKgQzFHnj+l481JafmkTMlWsuCAWiC0YvP1J5vaLI4
-   ymyBdxoBaqsdNbeoiCTc88hJoEEAlmJFq0N77yEg9uwM3PTq63k8XsjMu
-   U5uiYcikbD8IZdflDKVgtBizYIJHOFFjHBkMI0R92bcggL/KAJ/TeNPya
-   qkn6QxzEcywFNXkrUEchIdFYLokq1+iLf5NOoprMyzUaGTVAS0A1wtztp
-   o4TjhX0IjynhvvNXd0a1UBbNqpPVEyiOECYl7FXNCHnhEHvfLm5FBjSPQ
-   g==;
-X-CSE-ConnectionGUID: vFJ1/b4DSwu11IYK1julpw==
-X-CSE-MsgGUID: sGuqgWBdRWmB0F0QFi85fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="53581863"
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="53581863"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 08:15:30 -0800
-X-CSE-ConnectionGUID: 6wMKRm67TPCApTiDBP/NJg==
-X-CSE-MsgGUID: nVbhkEWcR0+5OjCziFsVGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="102011115"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 08:15:28 -0800
-Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B2B5420B5713;
-	Fri,  3 Jan 2025 08:15:27 -0800 (PST)
-Message-ID: <5005ace4-6432-41d4-8b36-47ae3d851552@linux.intel.com>
-Date: Fri, 3 Jan 2025 11:15:26 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raK2CMNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A7CC4CECE;
+	Fri,  3 Jan 2025 16:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735921568;
+	bh=FNO1aPu3maetdCOeeSVReiHOM/AJcCD967TpylWGtNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=raK2CMNtpTCknYHkbdsmzLKP0TtHuNpjqa+WmyzJgF4EzR1l14zQ4DpHwxzx077a4
+	 U1TKOwTsNrdprShmPozXwer+bY3J7PXMUNJwRxCcRkZWeISHZriwseX/CkKYVkLrb5
+	 sTdGN3eFYWfm0mUXMyvlsbVSgc4kNN+/Y7XhanG/DqoPykOS3xRsg4O7LbfH9rHER/
+	 LakRUgbhAjqVPzCO0HrgDT+HMW8FCR0m8h7e0tUcVwn2y8dChZ0S+TaaGWfBqf2PxA
+	 W0RAorDoq0/7AfFjjtqAn8dz6ZxZ41A7iumyte1LZF72KYuGVqvC1H5z91swS5IhNx
+	 x+UqS74oZEgxw==
+Date: Fri, 3 Jan 2025 13:26:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: James Clark <james.clark@linaro.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: Perf doesn't display kernel symbols anymore (bisected commit
+ 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for
+ addresses"))
+Message-ID: <Z3gPncBcCnZiNy57@x1>
+References: <719a89a5-8dff-48a0-ba8f-802c740a00a6@csgroup.eu>
+ <53f3abe5-dd22-4a1a-82e6-bc88e91d1869@linaro.org>
+ <Z217eBsXIaSgKuSs@x1>
+ <5217124a-f033-4085-b9f5-a477c96728d6@csgroup.eu>
+ <Z3bYltoidQpqtyJ_@x1>
+ <48724052-4003-4140-8106-f9ea098cedcb@csgroup.eu>
+ <Z3c4nupM-UENN5LM@x1>
+ <5b8ec160-4b50-4736-8012-30ae35c45028@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 3/3] perf/x86/intel: Support PEBS counters snapshotting
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
- dapeng1.mi@linux.intel.com
-References: <20241218151643.1031659-1-kan.liang@linux.intel.com>
- <20241218151643.1031659-3-kan.liang@linux.intel.com>
- <20241220142221.GN11133@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20241220142221.GN11133@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b8ec160-4b50-4736-8012-30ae35c45028@csgroup.eu>
 
-Hi Peter,
+On Fri, Jan 03, 2025 at 01:40:24PM +0100, Christophe Leroy wrote:
+> Le 03/01/2025 à 02:08, Arnaldo Carvalho de Melo a écrit :
+> > >     PerfTop:     524 irqs/sec  kernel:51.1%  exact:  0.0% lost: 0/0 drop: 0/0
+> > > [4000Hz cpu-clock:ppp],  (all, 1 CPU)
+> > > -------------------------------------------------------------------------------
 
-Sorry for the late response. I was on vacation.
+> > >      17.18%  [unknown]      [k] 0xc0891c14
+> > >       7.63%  [unknown]      [k] 0xc005f11c
 
-On 2024-12-20 9:22 a.m., Peter Zijlstra wrote:
-> On Wed, Dec 18, 2024 at 07:16:43AM -0800, kan.liang@linux.intel.com wrote:
+> > I think I hadn't notice this '[unknown]' one bit before :-\ the [k] is
+> > there, so having unknown is odd
+ 
+> Problem found, it's in maps__find_next_entry(), this leads to both
+> map->start and map->end of kernel map being set to 0xc0000000, which leads
+> to the failure of bsearch() in maps__find().
+
+Right, and since you don't have any module (CONFIG_MODULES not set),
+and most machines do, that is when the buggy function is called:
+
+machine__create_kernel_maps()
+	if (!machine__get_running_kernel_start(machine, &name, &start, &end))
+<SNIP>
+        if (end == ~0ULL) {
+                /* update end address of the kernel map using adjacent module address */
+                struct map *next = maps__find_next_entry(machine__kernel_maps(machine),
+                                                         machine__kernel_map(machine));
+
+                if (next) {
+                        machine__set_kernel_mmap(machine, start, map__start(next));
+                        map__put(next);
+                }
+        }
+<SNIP>
+
+So machine__get_running_kernel_start() doesn't manage to fill end with
+either because it doesn't find the ref_reloc_sym, one of:
+
+const char *ref_reloc_sym_names[] = {"_text", "_stext", NULL}
+
+And returns -1, so that first if block fails, and then start also
+doesn't get set and remains 0, which doesn't seem to be the case, as you
+get 0xc0000000 in it, or this fails:
+
+        err = kallsyms__get_symbol_start(filename, "_edata", &addr);
+        if (err)
+                err = kallsyms__get_function_start(filename, "_etext", &addr);
+        if (!err)
+                *end = addr;
+
+So machine->vmlinux_map->start is set to 0xc0000000 and
+machine->vmlinux_map->end has ~0ULL, as
+
+   ret = machine__update_kernel_mmap(machine, start, end);
+
+Was called and it calls
+
+  machine__set_kernel_mmap(machine, start, end);
+
+With 'end' equal to ~0ULL.
+
+Now with your patch maps__find_next_entry() returns NULL and ->end
+doesn't get set to ->start, remaining at ~0ULL, which makes the search
+to work with just one map, the machine->vmlinux_nmap, got it.
+
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ 
+> Second problem is a build issue in perf-tools-next due to commit
+> e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS"), see
+> commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at compile
+> time") to know why this is needed.
+ 
+> By the way I'm wondering why we need a duplicated definition of MAX_NR_CPUS
+> with different values. Second definition was added by commit 9c3516d1b850
+> ("libperf: Add perf_cpu_map__new()/perf_cpu_map__read() functions")
+
+I think that Ian's intention is to clean this up from what I can
+remember from the discussion that lead to this initial set of patches.
+
+I was going to work on this to make everything dynamic, i.e. not use a
+MAX_NR_CPUS define but instead get the number of possible processors on
+the machine and use it instead, but since Ian started working on it I
+moved to other stuff.
+
+Now we need to have this patch from you turned into two patches and with
+a summary of the above analysis, would you do it, please?
+
+The Reviewed-by tag I provided above applies to both patches,
+
+Namhyung, I think this can go via perf-tools-next, as it is for a rare
+situation, i.e. no CONFIG_MODULES and has been in the codebase since:
+
+⬢ [acme@toolbox perf-tools-next]$ git tag --contains 659ad3492b913c903 | grep '^v6.[[:digit:]]$'
+v6.9
+⬢ [acme@toolbox perf-tools-next]$
+
+I.e. its not a regression added in this cycle, ok?
+
+Thanks!
+
+- Arnaldo
+ 
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index fcc47214062a..12eaa6955121 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -13,7 +13,9 @@
+>  #include "internal.h"
+>  #include <api/fs/fs.h>
 > 
->> @@ -3109,6 +3116,27 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  		if (!test_bit(bit, cpuc->active_mask))
->>  			continue;
->>  
+> +#ifndef MAX_NR_CPUS
+>  #define MAX_NR_CPUS 4096
+> +#endif
 > 
->> +		if (is_pebs_counter_event(event))
->> +			x86_pmu.drain_pebs(regs, &data);
->> +
->>  		if (!intel_pmu_save_and_restart(event))
->>  			continue;
->>  
->> @@ -4056,6 +4084,23 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>  		event->hw.flags |= PERF_X86_EVENT_PEBS_VIA_PT;
->>  	}
->>  
->> +	if ((event->attr.sample_type & PERF_SAMPLE_READ) &&
->> +	    (x86_pmu.intel_cap.pebs_format >= 6)) {
+>  void perf_cpu_map__set_nr(struct perf_cpu_map *map, int nr_cpus)
+>  {
+> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+> index 432399cbe5dd..d39bf27a5fdd 100644
+> --- a/tools/perf/util/maps.c
+> +++ b/tools/perf/util/maps.c
+> @@ -1137,7 +1137,7 @@ struct map *maps__find_next_entry(struct maps *maps,
+> struct map *map)
 > 
-> Right, so the event that has SAMPLE_READ on is 'event'
+>  	down_read(maps__lock(maps));
+>  	i = maps__by_address_index(maps, map);
+> -	if (i < maps__nr_maps(maps))
+> +	if (++i < maps__nr_maps(maps))
+>  		result = map__get(maps__maps_by_address(maps)[i]);
 > 
->> +		struct perf_event *leader = event->group_leader;
->> +		bool slots_leader = is_slots_event(leader);
->> +
->> +		if (slots_leader)
->> +			leader = list_next_entry(leader, sibling_list);
+>  	up_read(maps__lock(maps));
 > 
-> Uh, what, why?
-
-This was to specially handle the perf metric topdown group.
-
 > 
->> +
->> +		if (leader->attr.precise_ip) {
->> +			event->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
->> +			if (slots_leader) {
->> +				leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
->> +				event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
->> +			}
->> +		}
-> 
-> And this is more confusion. You want event to be a PEBS event, not the
-> leader, you don't care about the leader.
-
-Right
-
-> >
->> +	}
->> +
->>  	if ((event->attr.type == PERF_TYPE_HARDWARE) ||
->>  	    (event->attr.type == PERF_TYPE_HW_CACHE))
->>  		return 0;
-> 
->> +static inline bool is_pebs_counter_event(struct perf_event *event)
->> +{
->> +	return event->hw.flags & PERF_X86_EVENT_PEBS_CNTR;
->> +}
-> 
-> For that drain_pebs() thing, you want all group members to have
-> PEBS_CNTR set.
-> 
-> That is, if PEBS>=6 and event is PEBS and event has SAMPLE_READ, then
-> mark the whole group with PEBS_CNTR
-
-Yes, that was the design.
-
-> 
-> SAMPLE_READ doesn't particularly care who's the leader, the event that
-> has SAMPLE_READ will read the whole group. Heck they could all have
-> SAMPLE_READ and then all their samples will read each-other.
-
-Right. It should be good enough to only set the flag for the
-event->group_leader, since there is only one sampling event for a
-SAMPLE_READ group.
-
-The hw_config check can be simplified as below.
-
-	if ((event->attr.sample_type & PERF_SAMPLE_READ) &&
-	    (x86_pmu.intel_cap.pebs_format >= 6) &&
-	    is_sampling_event(event) &&
-	    event->attr.precise_ip)
-		event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
-
-Also, Only need to check the leader's flag to indicate the event in a
-SAMPLE_READ group.
-
--static inline bool is_pebs_counter_event(struct perf_event *event)
-+static inline bool is_pebs_counter_event_group(struct perf_event *event)
- {
--       return event->hw.flags & PERF_X86_EVENT_PEBS_CNTR;
-+       return event->group_leader->hw.flags & PERF_X86_EVENT_PEBS_CNTR;
- }
-
-
-Thanks,
-Kan
-
-
+> Christophe
