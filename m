@@ -1,43 +1,43 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F43A1FCF4F;
-	Fri,  3 Jan 2025 17:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C00EFBE4F;
+	Fri,  3 Jan 2025 18:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735926481; cv=none; b=A57wAEFC9F05xEjHo8F0PfVGpzjq61LNRP8UW0R93YzUAVK/BUHL+HB8LpnxFmau1vswMlsWDgOuzEeNgbLSt3a5s7/5Qz05VXwdN+SGxZZn3sc5bJTDg3gS7TjtF2ZX/FbYvaWn0uN7GNRH5x0zhwMCaIRJHvXYKdTP3cR2j0Q=
+	t=1735928740; cv=none; b=GoEBRo/9BweyiCgdT+IjQBodt49WJPQLwpAAz53+GBsh70x9GbPcku7b2kpBzmGJSb+haRJl+dZuG8Y10GWCKNSkhEB08LjjeW3chs+JLynFEW4hMI/xVl0uJsAH3Eht5zf++GFYsz4js+kOfiBdunBk+1jXAa+6Pg74o8NJ+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735926481; c=relaxed/simple;
-	bh=bc2M8yWpQL/mZ1Ab3rnvVOxKxrLXJ/WK4tDr/jdYdGc=;
+	s=arc-20240116; t=1735928740; c=relaxed/simple;
+	bh=yhYop0t7zIXcq046uMbJILigP7MWDipnkAanX7dug5k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dE9pPEF6RZzjqNDnkVj7Op/6gX5oWenL8COcJ2YdHKUAYoepVcVqDJCzu27T24Qq7obkdfiW2NFc7NuzlJ0XB+ugzj0kkjYvW9l9gFFWHZpEOD2+xuH0NVrhkTwiQ5QPKizS+WNmE4wsV3/uJjqFYRZnvU1v07n939/nUp+Xey0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0RqsQ54zvGkEwnH3DzqZsuE60atBXlk6xSthDvcoK4nm5YONA2zdSRwZmivh/gLDUgwmgq0/N6u28L3OaTb1BrtnjYwSxPhxwEUIRfvYnirmO7SOkaajKlEWy+pqP27AUiz5AZ5b/rn93lqbS4t1H90iYXAORMrZna1qLwfxGc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFF2E1480;
-	Fri,  3 Jan 2025 09:48:22 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 558951480;
+	Fri,  3 Jan 2025 10:26:06 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CFC63F673;
-	Fri,  3 Jan 2025 09:47:54 -0800 (PST)
-Date: Fri, 3 Jan 2025 17:47:47 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63A33F673;
+	Fri,  3 Jan 2025 10:25:37 -0800 (PST)
+Date: Fri, 3 Jan 2025 18:25:32 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH v2] perf test record+probe_libc_inet_pton: Make test
- resilient
-Message-ID: <20250103174747.GA781381@e132581.arm.com>
-References: <20241202111958.553403-1-leo.yan@arm.com>
- <2b3bc88a-e435-4ccc-a543-c8f8566dd306@linux.ibm.com>
- <Z04YU78EMUWhHtXL@google.com>
+	Kyle Meyer <kyle.meyer@hpe.com>
+Subject: Re: [PATCH v2] perf cpumap: Reduce cpu size from int to int16_t
+Message-ID: <20250103182532.GB781381@e132581.arm.com>
+References: <20241220185207.106161-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,157 +46,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z04YU78EMUWhHtXL@google.com>
+In-Reply-To: <20241220185207.106161-1-irogers@google.com>
 
-Hi all,
-
-Happy new year!
-
-On Mon, Dec 02, 2024 at 12:28:03PM -0800, Namhyung Kim wrote:
+On Fri, Dec 20, 2024 at 10:52:07AM -0800, Ian Rogers wrote:
 > 
-> Hello,
+> Fewer than 32k logical CPUs are currently supported by perf. A cpumap
+> is indexed by an integer (see perf_cpu_map__cpu) yielding a perf_cpu
+> that wraps a 4-byte int for the logical CPU - the wrapping is done
+> deliberately to avoid confusing a logical CPU with an index into a
+> cpumap. Using a 4-byte int within the perf_cpu is larger than required
+> so this patch reduces it to the 2-byte int16_t. For a cpumap
+> containing 16 entries this will reduce the array size from 64 to 32
+> bytes. For very large servers with lots of logical CPUs the size
+> savings will be greater.
 > 
-> On Mon, Dec 02, 2024 at 02:48:01PM +0100, Thomas Richter wrote:
-> > On 12/2/24 12:19, Leo Yan wrote:
-> > > The test failed back and forth due to the call chain being heavily
-> > > impacted by the libc, which varies across different architectures and
-> > > distros.
-> > >
-> >
-> > For s390 using 6.13.0.rc1
-> >
-> > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+> ---
+> v2. Rebase and tweak commit message.
+> ---
+>  tools/lib/perf/include/perf/cpumap.h |  3 ++-
+>  tools/perf/util/cpumap.c             | 13 ++++++++-----
+>  tools/perf/util/env.c                |  2 +-
+>  3 files changed, 11 insertions(+), 7 deletions(-)
 > 
-> Thanks for the test, but I think the patch excludes s390 to be safe.
-> And I think we can test s390 in the same way.  If you're willing to do
-> some more tests, Leo can update the patch to include s390 as well.
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index 188a667babc6..8c1ab0f9194e 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -4,10 +4,11 @@
+> 
+>  #include <perf/core.h>
+>  #include <stdbool.h>
+> +#include <stdint.h>
+> 
+>  /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
+>  struct perf_cpu {
+> -       int cpu;
+> +       int16_t cpu;
+>  };
+> 
+>  struct perf_cache {
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 27094211edd8..85e224d8631b 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -427,7 +427,7 @@ static void set_max_cpu_num(void)
+>  {
+>         const char *mnt;
+>         char path[PATH_MAX];
+> -       int ret = -1;
+> +       int max, ret = -1;
+> 
+>         /* set up default */
+>         max_cpu_num.cpu = 4096;
+> @@ -444,10 +444,12 @@ static void set_max_cpu_num(void)
+>                 goto out;
+>         }
+> 
+> -       ret = get_max_num(path, &max_cpu_num.cpu);
+> +       ret = get_max_num(path, &max);
+>         if (ret)
+>                 goto out;
+> 
+> +       max_cpu_num.cpu = max;
 
-This case continuously fails on Arm64, so let's not forget to land the
-fix.
+I am concerned for the data conversion from int type to int16_t type.
 
-I agreed with Namhyung for consolidation the test as possible.
-
-@Thomas, could you test on s390 for below change?  And if you could
-confirm the 'fp' mode for callgraph is supported on s390, then we even
-can unify the event attribute:
-
-  eventattr='max-stack=4'
+The GCC option "-Wconversion" is not enabled in perf Makefile, unsafe
+data conversion is allowed.  A better way is to update argument type for
+get_max_num() for reading CPU number with int16_t type.
 
 Thanks,
 Leo
 
-
----8<---
-
-From 71bb457c7b5370693081856e7804ebe62c214301 Mon Sep 17 00:00:00 2001
-From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 2 Dec 2024 11:19:58 +0000
-Subject: [PATCH] perf test record+probe_libc_inet_pton: Make test resilient
-
-The test failed back and forth due to the call chain being heavily
-impacted by the libc, which varies across different architectures and
-distros.
-
-The libc contains the symbols for "gaih_inet" and "getaddrinfo" in some
-cases, but not always.  Moreover, these symbols can be either normal
-symbols or dynamic symbols, making it difficult to decide the call chain
-entries due to the symbols are inconsistent.
-
-To fix the issue, this commit identifies three call chain entries are
-always present.  These entries are matched by iterating through the
-lines in the "perf script" result.  The recording attribute max-stack is
-set to 4 for the possible maximum call chain depth.
-
-After:
-
-  # perf test -vF pton
-  --- start ---
-  Pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-  Pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib/aarch64-linux-gnu/libc-2.31.so|inlined\)$
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-    Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-  Pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
-    Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
-    Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-    Matching: ffffa1488040 getaddrinfo+0xe8 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
-    Matching: aaaab8672da4 [unknown] (/usr/bin/ping)
-  ---- end ----
-   82: probe libc's inet_pton & backtrace it with ping                 : Ok
-
-Reported-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Closes: https://lore.kernel.org/linux-perf-users/1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com/
-Reported-by: Guilherme Amadio <amadio@gentoo.org>
-Closes: https://lore.kernel.org/linux-perf-users/Z0X3AYUWkAgfPpWj@x1/T/#m57327e135b156047e37d214a0d453af6ae1e02be
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../shell/record+probe_libc_inet_pton.sh      | 39 ++++++++++---------
- 1 file changed, 20 insertions(+), 19 deletions(-)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 47a26f25db9f..326d924641e0 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -37,24 +37,14 @@ trace_libc_inet_pton_backtrace() {
- 
- 	echo "ping[][0-9 \.:]+$event_name: \([[:xdigit:]]+\)" > $expected
- 	echo ".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
-+	echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+
- 	case "$(uname -m)" in
- 	s390x)
- 		eventattr='call-graph=dwarf,max-stack=4'
--		echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
--		echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlined|.*/bin/ping.*\)$" >> $expected
--		;;
--	ppc64|ppc64le)
--		eventattr='max-stack=4'
--		# Add gaih_inet to expected backtrace only if it is part of libc.
--		if nm $libc | grep -F -q gaih_inet.; then
--			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		fi
--		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	*)
--		eventattr='max-stack=3'
--		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		eventattr='max-stack=4'
- 		;;
- 	esac
- 
-@@ -76,14 +66,25 @@ trace_libc_inet_pton_backtrace() {
- 	fi
- 	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
- 
--	exec 3<$perf_script
- 	exec 4<$expected
--	while read line <&3 && read -r pattern <&4; do
-+	while read -r pattern <&4; do
-+		echo "Pattern: $pattern"
- 		[ -z "$pattern" ] && break
--		echo $line
--		echo "$line" | grep -E -q "$pattern"
--		if [ $? -ne 0 ] ; then
--			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
-+
-+		found=0
-+
-+		# Search lines in the perf script result
-+		exec 3<$perf_script
-+		while read line <&3; do
-+			[ -z "$line" ] && break
-+			echo "  Matching: $line"
-+			! echo "$line" | grep -E -q "$pattern"
-+			found=$?
-+			[ $found -eq 1 ] && break
-+		done
-+
-+		if [ $found -ne 1 ] ; then
-+			printf "FAIL: Didn't find the expected backtrace entry \"%s\"\n" "$pattern"
- 			return 1
- 		fi
- 	done
--- 
-2.25.1
-
+> +
+>         /* get the highest present cpu number for a sparse allocation */
+>         ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
+>         if (ret >= PATH_MAX) {
+> @@ -455,8 +457,9 @@ static void set_max_cpu_num(void)
+>                 goto out;
+>         }
+> 
+> -       ret = get_max_num(path, &max_present_cpu_num.cpu);
+> -
+> +       ret = get_max_num(path, &max);
+> +       if (!ret)
+> +               max_present_cpu_num.cpu = max;
+>  out:
+>         if (ret)
+>                 pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.cpu);
+> @@ -606,7 +609,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
+>  #define COMMA first ? "" : ","
+> 
+>         for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
+> -               struct perf_cpu cpu = { .cpu = INT_MAX };
+> +               struct perf_cpu cpu = { .cpu = INT16_MAX };
+>                 bool last = i == perf_cpu_map__nr(map);
+> 
+>                 if (!last)
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 610c57da5b37..961a92545039 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -543,7 +543,7 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
+> 
+>                 for (i = 0; i < env->nr_numa_nodes; i++) {
+>                         nn = &env->numa_nodes[i];
+> -                       nr = max(nr, perf_cpu_map__max(nn->map).cpu);
+> +                       nr = max(nr, (int)perf_cpu_map__max(nn->map).cpu);
+>                 }
+> 
+>                 nr++;
+> --
+> 2.47.1.613.gc27f4b7a9f-goog
+> 
