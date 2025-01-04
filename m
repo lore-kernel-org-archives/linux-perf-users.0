@@ -1,91 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9691C460C;
-	Fri,  3 Jan 2025 23:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794722914;
+	Sat,  4 Jan 2025 01:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735946193; cv=none; b=fvfiEABx5DDlueH8FeUikhcIR066nLtp/gLHI4ofph9P5p3z/opAfQBt6inTyDcot3x0ZF6mGyBaxitaNilYn0yFq+lBYZ4uqiQPJQignVOzJJSgXIJNvUnzNHnwAs4/V8menT9aDpuXuYlJgp7vSEB+Rc5wZVJiDOgFOhSBXP0=
+	t=1735953287; cv=none; b=qSm8/oLtF/yBJs+Hrvyaf4FAy+wgn4w5g831Wfr1WsjKf3J3qQCErtCe/vZJc7WLCdXpK9MQymXzh5hom4wIvZTHtts/emwOCyMH8X/8DesYKFmgVRw9iSBo673qxiIGOBZ861vOE22uw7oyowgJSYtPdvm+obmYJnsVSodgxmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735946193; c=relaxed/simple;
-	bh=Oe1lnciNltoLtMzXVpER/I/Nsg1x+65CD/ZJTAHEw2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X1dGQxMxgQyBBrTvPIGux/SGTmG3fjLb+wMFg/QK5Zu49hfCB2IIdaenJ4hfYAb9Cm/qeO+kslM1JWBgLlwoygR21PgU6B9c6zKu/C/V2jNRVa2WF7poxVxbCRD0RjYaf471WGxAqJjI5n3HNk18OVbf4TFO+OfD93syYZEPiHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpLyOCCB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735953287; c=relaxed/simple;
+	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyweEh6v00QCRbtaZRoItRjrUnrDVhHsWS0wm6NW3OgRB732v2A1Rcx4dRXRTpPJYfPSRdNv7cheTMmPlt8iUSicG1n9L4GGk8lucU0m6hdXPJYn05bmV4fZGRUOvqRKpKic7j4NCkjvnGj6sj5iVmm7YvcUVGmJPsxB5NNhBo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIuP2oMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpLyOCCB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088E1C4CEE1;
-	Fri,  3 Jan 2025 23:16:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIuP2oMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE168C4CED6;
+	Sat,  4 Jan 2025 01:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735946192;
-	bh=Oe1lnciNltoLtMzXVpER/I/Nsg1x+65CD/ZJTAHEw2A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QpLyOCCBmQqKL2YhTTPHsjHdaaL4PRFtxZ0S/wigMxu2B+oy8vuLkYVLx0W4O1Dz3
-	 7TIl6uSZEjR0BIwVbkjfcyVPtmCyAdp0SCQkUEdzv+y+oxJiH9mtlrfmkFS8Fl1fmB
-	 Mq8f472gzqO4mRdmP8PS2wVCv09gZ47WdUFxuLO3vl9dEUDGn74yrco6GqwYKZaZm7
-	 JVE7eBCfnC2NJ5SIseuPbz67W3lddrK7bxr7TKqlLi/VTlYIt1i0l5Y+U79Xip0P+n
-	 hGSK6X7hSmPt9LSnZfefTyVBWYCubMDx8mlJjGED2XtzqrA9oBcBm9++Q+3ejcPf7N
-	 r4Hl+yrnaSRUQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 3/3] perf test: Update ftrace test to use --graph-opts
-Date: Fri,  3 Jan 2025 15:16:30 -0800
-Message-ID: <20250103231630.928815-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-In-Reply-To: <20250103231630.928815-1-namhyung@kernel.org>
-References: <20250103231630.928815-1-namhyung@kernel.org>
+	s=k20201202; t=1735953287;
+	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=XIuP2oMSsVWXiLxYzNoQGMuC4qMCRshpF6qTi2JJ3qACIOb2IKTQjNQrbwb8wMdtS
+	 sGFAeSm16WOJtwB549GgpdbzMaa4r/mUQ45zD20TXqYeWP8EhZlVeQX9EppQvkhfBi
+	 WNIWMBHDwqFqTZAR82KIqXSlu1oS7+4q8uJ3jLx8PWQ7z9gnhjslsK57Xazs2fbTsZ
+	 olGL7hzBZWo0uv9uYyAhQTtDJTnTma5RhRtj4zDUVv+5f0prHHLJLqIOxiafsC+4jL
+	 teBdItwI+wivDTsqZ+HpGNJ3YwAPXu0X0cdAxmSnkV2N2wU960sndQJjauveFtttc4
+	 QdNhqS1Y+TXZA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 9767CCE3844; Fri,  3 Jan 2025 17:14:46 -0800 (PST)
+Date: Fri, 3 Jan 2025 17:14:46 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: syzbot <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com>,
+	acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+	oleg@redhat.com, peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com, RCU <rcu@vger.kernel.org>
+Subject: Re: [syzbot] [perf?] [trace?] KCSAN: assert: race in
+ srcu_gp_start_if_needed
+Message-ID: <77c8887d-e69c-4554-9c9f-c9d755c7aff5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
+ <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
 
-I found it failed on machines with limited memory because 16M byte
-per-cpu buffer is too big.  The reason it added the option is not to
-miss tracing data.  Thus we can limit the data size by reducing the
-function call depth instead of increasing the buffer size to handle the
-whole data.
+On Sun, Nov 24, 2024 at 11:48:46PM +0100, Marco Elver wrote:
+> +Cc RCU
+> 
+> On Sun, 24 Nov 2024 at 23:47, syzbot
+> <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    42d9e8b7ccdd Merge tag 'powerpc-6.13-1' of git://git.kerne..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10a00778580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7fd5be0e73b8b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=16a19b06125a2963eaee
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/ef231513adc7/disk-42d9e8b7.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/54caaac5960b/vmlinux-42d9e8b7.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/85b5a6566143/bzImage-42d9e8b7.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: assert: race in srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
+> > BUG: KCSAN: assert: race in srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
+> > BUG: KCSAN: assert: race in srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
 
-As it used the same option in the test_ftrace_trace() and it was able
-to find the sleep function, it should work with the profile subcommand.
+Hmmm...  All of those are from slow paths, so locking looks to be the
+best approach.
 
-Get rid of other grep commands which might be affected by the depth
-change.
+A very lightly tested prototype patch is shown below (for which feedback
+is most welcome), and thank you all for your testing efforts!
 
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/ftrace.sh | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+							Thanx, Paul
 
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-index 2df05052c324a21c..c243731d2fbf67aa 100755
---- a/tools/perf/tests/shell/ftrace.sh
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -67,11 +67,8 @@ test_ftrace_latency() {
+------------------------------------------------------------------------
+
+commit a955c6a7168f7b204784e4ef7e4db9d017043f73
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Fri Jan 3 17:04:49 2025 -0800
+
+    srcu: Force synchronization for srcu_get_delay()
+    
+    Currently, srcu_get_delay() can be called concurrently, for example,
+    by a CPU that is the first to request a new grace period and the CPU
+    processing the current grace period.  Although concurrent access is
+    harmless, it unnecessarily expands the state space.  Additionally,
+    all calls to srcu_get_delay() are from slow paths.
+    
+    This commit therefore protects all calls to srcu_get_delay() with
+    ssp->srcu_sup->lock, which is already held on the invocation from the
+    srcu_funnel_gp_start() function.  While in the area, this commit also
+    adds a lockdep_assert_held() to srcu_get_delay() itself.
+    
+    Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index 7c7304dee6457..a60acc9cf2f32 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -648,6 +648,7 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
+ 	unsigned long jbase = SRCU_INTERVAL;
+ 	struct srcu_usage *sup = ssp->srcu_sup;
  
- test_ftrace_profile() {
-     echo "perf ftrace profile test"
--    perf ftrace profile -m 16M sleep 0.1 > "${output}"
-+    perf ftrace profile --graph-opts depth=5 sleep 0.1 > "${output}"
-     grep ^# "${output}"
--    grep sleep "${output}"
--    grep schedule "${output}"
--    grep execve "${output}"
-     time_re="[[:space:]]+1[[:digit:]]{5}\.[[:digit:]]{3}"
-     # 100283.000 100283.000 100283.000          1   __x64_sys_clock_nanosleep
-     # Check for one *clock_nanosleep line with a Count of just 1 that takes a bit more than 0.1 seconds
--- 
-2.47.1.613.gc27f4b7a9f-goog
-
++	lockdep_assert_held(&ACCESS_PRIVATE(ssp->srcu_sup, lock));
+ 	if (srcu_gp_is_expedited(ssp))
+ 		jbase = 0;
+ 	if (rcu_seq_state(READ_ONCE(sup->srcu_gp_seq))) {
+@@ -675,9 +676,13 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
+ void cleanup_srcu_struct(struct srcu_struct *ssp)
+ {
+ 	int cpu;
++	unsigned long delay;
+ 	struct srcu_usage *sup = ssp->srcu_sup;
+ 
+-	if (WARN_ON(!srcu_get_delay(ssp)))
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
++	delay = srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
++	if (WARN_ON(!delay))
+ 		return; /* Just leak it! */
+ 	if (WARN_ON(srcu_readers_active(ssp)))
+ 		return; /* Just leak it! */
+@@ -1100,7 +1105,9 @@ static bool try_check_zero(struct srcu_struct *ssp, int idx, int trycount)
+ {
+ 	unsigned long curdelay;
+ 
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
+ 	curdelay = !srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
+ 
+ 	for (;;) {
+ 		if (srcu_readers_active_idx_check(ssp, idx))
+@@ -1849,7 +1856,9 @@ static void process_srcu(struct work_struct *work)
+ 	ssp = sup->srcu_ssp;
+ 
+ 	srcu_advance_state(ssp);
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
+ 	curdelay = srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
+ 	if (curdelay) {
+ 		WRITE_ONCE(sup->reschedule_count, 0);
+ 	} else {
