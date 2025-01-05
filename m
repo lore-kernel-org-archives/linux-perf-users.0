@@ -1,167 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794722914;
-	Sat,  4 Jan 2025 01:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACE75473C
+	for <linux-perf-users@vger.kernel.org>; Sun,  5 Jan 2025 02:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735953287; cv=none; b=qSm8/oLtF/yBJs+Hrvyaf4FAy+wgn4w5g831Wfr1WsjKf3J3qQCErtCe/vZJc7WLCdXpK9MQymXzh5hom4wIvZTHtts/emwOCyMH8X/8DesYKFmgVRw9iSBo673qxiIGOBZ861vOE22uw7oyowgJSYtPdvm+obmYJnsVSodgxmM=
+	t=1736045120; cv=none; b=VdNuZvTl5c62GWcBuTg/THvnzppItF5GD5MRVCTJK7pMrTkACY93Sltd84RNhII2WIBFg2jc+032NNFJ4upulS0lgydZJZWTKSov/iQbcW6o2RTWsy/LftLagXnZiMsW5CfEDYlZT/hAQ6twO2+EM6+/p8r1oxhwMWjuYYsp/xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735953287; c=relaxed/simple;
-	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyweEh6v00QCRbtaZRoItRjrUnrDVhHsWS0wm6NW3OgRB732v2A1Rcx4dRXRTpPJYfPSRdNv7cheTMmPlt8iUSicG1n9L4GGk8lucU0m6hdXPJYn05bmV4fZGRUOvqRKpKic7j4NCkjvnGj6sj5iVmm7YvcUVGmJPsxB5NNhBo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIuP2oMS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736045120; c=relaxed/simple;
+	bh=2niM7QSDO7vIA7tySXm3RyrEBzfXKmBzlRoR6+V8WhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TRPYm7pWsVrjY/grDWpw0AJW8n56/w92oPJs4ZkJZSaFGI96RTJ7bSvgE+5wljvi5PjOtRGs2ivAnZVfnaGTxU9qU7wdWPIRq3BryW3A/J5D5d5ANnbvCJRsd51SaZgwjd6sLZYV1u03Kp+9rcMHVwQtgBiIzL6EDCda7YhG+ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=bsfY9nbF; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIuP2oMS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE168C4CED6;
-	Sat,  4 Jan 2025 01:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735953287;
-	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=XIuP2oMSsVWXiLxYzNoQGMuC4qMCRshpF6qTi2JJ3qACIOb2IKTQjNQrbwb8wMdtS
-	 sGFAeSm16WOJtwB549GgpdbzMaa4r/mUQ45zD20TXqYeWP8EhZlVeQX9EppQvkhfBi
-	 WNIWMBHDwqFqTZAR82KIqXSlu1oS7+4q8uJ3jLx8PWQ7z9gnhjslsK57Xazs2fbTsZ
-	 olGL7hzBZWo0uv9uYyAhQTtDJTnTma5RhRtj4zDUVv+5f0prHHLJLqIOxiafsC+4jL
-	 teBdItwI+wivDTsqZ+HpGNJ3YwAPXu0X0cdAxmSnkV2N2wU960sndQJjauveFtttc4
-	 QdNhqS1Y+TXZA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 9767CCE3844; Fri,  3 Jan 2025 17:14:46 -0800 (PST)
-Date: Fri, 3 Jan 2025 17:14:46 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: syzbot <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com>,
-	acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	jolsa@kernel.org, kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-	oleg@redhat.com, peterz@infradead.org,
-	syzkaller-bugs@googlegroups.com, RCU <rcu@vger.kernel.org>
-Subject: Re: [syzbot] [perf?] [trace?] KCSAN: assert: race in
- srcu_gp_start_if_needed
-Message-ID: <77c8887d-e69c-4554-9c9f-c9d755c7aff5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
- <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="bsfY9nbF"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e46ebe19489so16694111276.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 04 Jan 2025 18:45:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1736045116; x=1736649916; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GUhUFqDCLLYcCKnTvKrRzZf5y8VDBYHwWNIj7mYbRr8=;
+        b=bsfY9nbFARMvkb1N/MALpH9KXMi78I91FMkxsnz+qHOS6IG4tNJpDRWr6ESQhX0MxF
+         T8Jvan12nnhMkqtDC5xblfEbvCOh3TfamTLQlkeJTAodek3qanTvZwP8WBk9A2rCjwFF
+         T9Oc9bN1Bm112n/wlUpaF0isvHiqfQuegGWip84hynRWzuJ3tTPDvtuOIgyKLERvhNzP
+         K1OxIzlcneyobBD6Jft+D7Cl5YkSHgrYXjxoQcA21UStVnfOSkFQyDZhdg0nU2r7Lz+x
+         S+avvDgG4boTYB3m8Xjvql+EbOQhQ/b8464iP8yM7dQ+hVtzV+wuEQY4UN0gcMquXqbA
+         vqog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736045116; x=1736649916;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GUhUFqDCLLYcCKnTvKrRzZf5y8VDBYHwWNIj7mYbRr8=;
+        b=FIVHju+b6XVBBCCg5NhZvkKvhCfXQLGvzRU4QNRUDDC15ryVXF7Z13IG6nysTTRP50
+         T/kCvRorzKOxhKV1gFGvT6SKQleuwpaxfzu3xAjEekW1A4tjknL3ltKwgSnVv0p//mIE
+         5JRxGZW1N7ngIZRuofCGTIeGkehN7geA8d24281Y6CeCddXQJz4Ctj/8UvRQ3PO06utV
+         iPEy24rdCZJohV/rJDoc0E5HYsS58RlMI47yCG4LFkdRSM87uj5Xef+r0tX1wm7uw6TZ
+         9WPiVggpSJ8epLgN0pxGbhQXxoJIqq8X4LUmzuBzA1fGwsR3zjKOs/8P/44jzYFI7uud
+         zzqw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3MXigj/+cEXq5TswsX08Df5zkuEUSZJ9lTWMD2E6dJ4rj3POjQB4kavE5pkIWzYhQ1dDwYL/DljSv9E5OlbW0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2D8OKz+j4LQ5T5tyIGwaKHwFlfQ4g+vlzBKrzxly3rR/Wivyk
+	32qp6Udj6bYiZ4Nz3GpknK3buaZSf/EWyfsZmLcrERO5hqBNofTUDAnSu3zJrN9iYfknMIsiS1A
+	zKAb18ofI+tFMIxNjoqUTHd77o+bpdu5sfbPf
+X-Gm-Gg: ASbGnctQlJlpmQ/VQ+VSRck9Hcyo1FthUuiU+lhv8pOwtXw31NOXKCgPOGB6AhVv27M
+	sbm/1tKVRRVrJhFMgjg7HQMbpYMdmfA4GYbBA
+X-Google-Smtp-Source: AGHT+IGThgi8HmQDrrdLZKo7/6iXHtT/+1efSKbFMBP4wTU/9vzStB4XDWagUs38rOJg1HKyWbfdsUnbP2IRzhgHd+w=
+X-Received: by 2002:a05:690c:4b05:b0:6ef:801f:437d with SMTP id
+ 00721157ae682-6f3f820e12amr435589197b3.26.1736045115828; Sat, 04 Jan 2025
+ 18:45:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
+References: <20241223070650.2810747-1-luogengkun@huaweicloud.com> <20241223070650.2810747-2-luogengkun@huaweicloud.com>
+In-Reply-To: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sat, 4 Jan 2025 21:45:05 -0500
+Message-ID: <CAHC9VhRRu-UYEV_-0-QgOZ3ByVwp-ZdEphmsvy4NcdqynH_tDg@mail.gmail.com>
+Subject: Re: [PATCH linux-next 1/2] perf: Remove unnecessary parameter of
+ security check
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, 
+	jmorris@namei.org, serge@hallyn.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, stephen.smalley.work@gmail.com, 
+	omosnace@redhat.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 24, 2024 at 11:48:46PM +0100, Marco Elver wrote:
-> +Cc RCU
-> 
-> On Sun, 24 Nov 2024 at 23:47, syzbot
-> <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    42d9e8b7ccdd Merge tag 'powerpc-6.13-1' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10a00778580000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7fd5be0e73b8b
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=16a19b06125a2963eaee
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/ef231513adc7/disk-42d9e8b7.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/54caaac5960b/vmlinux-42d9e8b7.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/85b5a6566143/bzImage-42d9e8b7.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: assert: race in srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
-> > BUG: KCSAN: assert: race in srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
-> > BUG: KCSAN: assert: race in srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
+On Mon, Dec 23, 2024 at 1:57=E2=80=AFAM Luo Gengkun <luogengkun@huaweicloud=
+.com> wrote:
+>
+> It seems that the attr parameter was never been used in security
+> checks since it was first introduced by:
+>
+> commit da97e18458fb ("perf_event: Add support for LSM and SELinux checks"=
+)
+>
+> so remove it.
+>
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> ---
+>  arch/x86/events/intel/bts.c     |  2 +-
+>  arch/x86/events/intel/core.c    |  2 +-
+>  arch/x86/events/intel/p4.c      |  2 +-
+>  drivers/perf/arm_spe_pmu.c      |  4 ++--
+>  include/linux/lsm_hook_defs.h   |  2 +-
+>  include/linux/perf_event.h      | 10 +++++-----
+>  include/linux/security.h        |  5 ++---
+>  kernel/events/core.c            | 14 +++++++-------
+>  kernel/trace/trace_event_perf.c |  4 ++--
+>  security/security.c             |  5 ++---
+>  security/selinux/hooks.c        |  2 +-
+>  11 files changed, 25 insertions(+), 27 deletions(-)
 
-Hmmm...  All of those are from slow paths, so locking looks to be the
-best approach.
+This patch seems fine to me from a LSM and SELinux perspective, but
+I'd want to see an ACK from the perf folks before I merge this.
 
-A very lightly tested prototype patch is shown below (for which feedback
-is most welcome), and thank you all for your testing efforts!
+I'll also leave patch 2/2 for the perf folks as it seems largely
+unrelated to this patch.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit a955c6a7168f7b204784e4ef7e4db9d017043f73
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Fri Jan 3 17:04:49 2025 -0800
-
-    srcu: Force synchronization for srcu_get_delay()
-    
-    Currently, srcu_get_delay() can be called concurrently, for example,
-    by a CPU that is the first to request a new grace period and the CPU
-    processing the current grace period.  Although concurrent access is
-    harmless, it unnecessarily expands the state space.  Additionally,
-    all calls to srcu_get_delay() are from slow paths.
-    
-    This commit therefore protects all calls to srcu_get_delay() with
-    ssp->srcu_sup->lock, which is already held on the invocation from the
-    srcu_funnel_gp_start() function.  While in the area, this commit also
-    adds a lockdep_assert_held() to srcu_get_delay() itself.
-    
-    Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 7c7304dee6457..a60acc9cf2f32 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -648,6 +648,7 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
- 	unsigned long jbase = SRCU_INTERVAL;
- 	struct srcu_usage *sup = ssp->srcu_sup;
- 
-+	lockdep_assert_held(&ACCESS_PRIVATE(ssp->srcu_sup, lock));
- 	if (srcu_gp_is_expedited(ssp))
- 		jbase = 0;
- 	if (rcu_seq_state(READ_ONCE(sup->srcu_gp_seq))) {
-@@ -675,9 +676,13 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
- void cleanup_srcu_struct(struct srcu_struct *ssp)
- {
- 	int cpu;
-+	unsigned long delay;
- 	struct srcu_usage *sup = ssp->srcu_sup;
- 
--	if (WARN_ON(!srcu_get_delay(ssp)))
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
-+	delay = srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
-+	if (WARN_ON(!delay))
- 		return; /* Just leak it! */
- 	if (WARN_ON(srcu_readers_active(ssp)))
- 		return; /* Just leak it! */
-@@ -1100,7 +1105,9 @@ static bool try_check_zero(struct srcu_struct *ssp, int idx, int trycount)
- {
- 	unsigned long curdelay;
- 
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
- 	curdelay = !srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
- 
- 	for (;;) {
- 		if (srcu_readers_active_idx_check(ssp, idx))
-@@ -1849,7 +1856,9 @@ static void process_srcu(struct work_struct *work)
- 	ssp = sup->srcu_ssp;
- 
- 	srcu_advance_state(ssp);
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
- 	curdelay = srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
- 	if (curdelay) {
- 		WRITE_ONCE(sup->reschedule_count, 0);
- 	} else {
+--=20
+paul-moore.com
