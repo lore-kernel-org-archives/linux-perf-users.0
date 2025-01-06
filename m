@@ -1,121 +1,120 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178958632D;
-	Mon,  6 Jan 2025 02:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EAC7603F;
+	Mon,  6 Jan 2025 07:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736129809; cv=none; b=Qh3EaPXEfO1SQ4PhsOg9Jf/Z3jY7W+Xky43hdLX5abyFkJFImD3mn/oTZJQjs89RVptA9MGsIP0ovlNeVlm72dus+tPq1wLccP0JJchfWxHzohF3HI4+8Fw9HKleYXslJ/MD8VIRANTckz4jlz1e0ENNgC4QcU8cq+nyBwWjA/s=
+	t=1736147476; cv=none; b=nlr+rT4KBiEvg3BVxluTQRqdUrJp0yrzQN4IW5H7AXX+vYl9oxauEpnKDCwN2n5rYZ3n0CrrY1NLHPKXlxIEcthnlZBa3LsdzBaT4kSlz/miQIeilqRaJe4T0RKEGJpO6Fjg+MlgkzYwc8PuskDXvuqH76QDHOctdYiD4QdaJWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736129809; c=relaxed/simple;
-	bh=wQs5xHQATXqeFETShg0xGXGS8irysaRgUHCxYxNlxQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BLyZvEzccd4JeeNMPAq89OIBcRSpsOR6hEgWbhEGurc4lFo6hxGkVQSFi2RwTDZ9gLYgOdS885h09CgEaldPuTDa3byBLPz9szBGbc3La0Ck8hGsmZB6mQtCVGfUiqCivh3NgRc2kdOyu1aVlOu2fvjoh/Cc0HgK3mKzULNWvww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V5ClR37f; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1736147476; c=relaxed/simple;
+	bh=vURgG34GrHdYjB3buk5HlnegJCTaxHYf/0eFMWCO8VY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GoZX8jR3DMchrv0CrIf90tM1LYnmSrPRsPoIIzgBruhEBO+GRWnwLFdQ6W6EuhittLB03SgEjENQky9J1eNvn0juBuzfKDeWQszjZwiiM0hoq7YyAMtNxqEq90Ni08dndXT9s3EjRHL2GgrIJ02K90X/dSvLbsjJ/0KNo6nNtpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=iqOwybmd; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V5ClR37f"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736129798; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=2t7wT64nZSxGkh3kLB0GS/20dZAugyGd+MYVrVrOZv4=;
-	b=V5ClR37fTPg8qKzD7M9H3gtm+363IHHvAnzn6njwkFk6MhFvYSr97yCELN9iUUh1yKM+jUt7Ofs4KKAXcQ20tQGCerdA0Vj7g3AZFyFc+jx7OpXW1YH9qFo2jyRw3LAfXss8UTt3HY1y/M1pSPz8cAN64tTjwdAT3WNWunpjnro=
-Received: from 30.221.145.122(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0WMzmDQ._1736129796 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 06 Jan 2025 10:16:37 +0800
-Message-ID: <9f233d6e-ee4b-4ea3-96ee-397bba1b73b0@linux.alibaba.com>
-Date: Mon, 6 Jan 2025 10:16:34 +0800
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iqOwybmd"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677RpE3211026
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Sun, 5 Jan 2025 23:07:37 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677RpE3211026
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024121701; t=1736147258;
+	bh=Re3MfHtuLBMHpeFVMue+szaKAp0SHaPCUZaQZ+mtJkU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iqOwybmdV2PNIuYs7/ayZms6/Pm/dBp8Tr0tFnD+zBzeixMvuzn5irzOsCtkUq6Sl
+	 Pd6JXuoT9UVNM9AirliJcuet6j4PonWCbvE00g6TFhGwwR7hIQGt3gZygXNvFIOp8y
+	 iZhwEkfQ6G83sd/eVvHTyLUVA3qMtQNsGOjCes1mkfStr4JQC/gmz2R5nOcz5DtU7A
+	 hKzH877fPowLTCULFLB8vlSkVtvwb3AKaoHwwwEUV7Yi0MGDKxfDjLmyH9k2h169eK
+	 MLS8v6hzMh7/w0QL8AQb6YR4Rehqz5TeZQt04rkWrzHvYEH86qJLEa3Jr72aA9bd6n
+	 ghlrtXLfKVoQA==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
+        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: [PATCH v5 5/5] x86/cpufeatures: Add the CPU feature bit for MSR immediate form instructions
+Date: Sun,  5 Jan 2025 23:07:27 -0800
+Message-ID: <20250106070727.3211006-6-xin@zytor.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
+References: <20250106070727.3211006-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/uncore: Fix the lack of ch_mask format for
- SPR
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <1735542672-113067-1-git-send-email-renyu.zj@linux.alibaba.com>
- <7e5376f1-ee87-458b-b55e-759125d251a2@linux.intel.com>
-From: Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <7e5376f1-ee87-458b-b55e-759125d251a2@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+The immediate form of MSR access instructions are primarily motivated by
+performance, not code size: by having the MSR number in an immediate, it
+is available *much* earlier in the pipeline, which allows the hardware
+much more leeway about how a particular MSR is handled.
 
+Add a new CPU feature word for CPUID.7.1.ECX and then the CPU feature bit
+for MSR immediate form.
 
-在 2025/1/3 上午3:02, Liang, Kan 写道:
-> 
-> 
-> On 2024-12-30 2:11 a.m., Jing Zhang wrote:
->> perf stat errors out with UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL event
->> because of lack of ch_mask format in drivers, and perf test "104: perf
->> all PMU test (exclusive)" failed.
->>
->> $perf stat -e perf stat -e UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL
->> sleep 1
->>
->> Initial error:
->> event syntax error: 'UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL'
->>                                 \___ unknown term 'ch_mask' for pmu 'uncore_cha_0'
->>
->> 104: perf all PMU test (exclusive)                                   : FAILED!
->>
->> Add ch_mask format for SPR to fix it.
->>
-> 
-> I don't think there is a ch_mask. It should be extended umask.
-> The issue of the CHA extended umask should has been fixed by
-> https://lore.kernel.org/lkml/172052531679.2215.16140288595428337453.tip-bot2@tip-bot2/
-> 
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+ arch/x86/include/asm/cpufeature.h  | 1 +
+ arch/x86/include/asm/cpufeatures.h | 5 ++++-
+ arch/x86/kernel/cpu/common.c       | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-I think it is not the same issue. I have this patch but still error.
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index b829a12eda8a..9a2991e7b21b 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -35,6 +35,7 @@ enum cpuid_leafs
+ 	CPUID_8000_001F_EAX,
+ 	CPUID_8000_0021_EAX,
+ 	CPUID_LNX_5,
++	CPUID_7_1_ECX,
+ 	NR_CPUID_WORDS,
+ };
+ 
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index d5985e8eef29..59aa04915032 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -5,7 +5,7 @@
+ /*
+  * Defines x86 CPU feature bits
+  */
+-#define NCAPINTS			22	   /* N 32-bit words worth of info */
++#define NCAPINTS			23	   /* N 32-bit words worth of info */
+ #define NBUGINTS			2	   /* N 32-bit bug flags */
+ 
+ /*
+@@ -476,6 +476,9 @@
+ #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
+ 
++/* Intel-defined CPU features, CPUID level 0x00000007:1 (ECX), word 22 */
++#define X86_FEATURE_MSR_IMM		(22*32+ 5) /* "msr_imm" MSR immediate form instructions */
++
+ /*
+  * BUG word(s)
+  */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 7cce91b19fb2..13d270eabd09 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -997,6 +997,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		if (eax >= 1) {
+ 			cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
+ 			c->x86_capability[CPUID_7_1_EAX] = eax;
++			c->x86_capability[CPUID_7_1_ECX] = ecx;
+ 		}
+ 	}
+ 
+-- 
+2.47.1
 
-in "tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json",
-the event "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL" is described as:
-{
-        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL",
-        "Counter": "0,1,2,3",
-        "EventCode": "0x35",
-        "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL",
-        "Experimental": "1",
-        "PerPkg": "1",
-        "PortMask": "0x000",
-        "UMask": "0x10c0008101",
-        "Unit": "CHA"
-},
-
-the PortMask is ch_mask, but driver not output ch_mask on SPR, it causes error.
-
-Thanks,
-Jing
-
-> Thanks,
-> Kan
-
-
-
-
->> Fixes: 949b11381f81 ("perf/x86/intel/uncore: Add Sapphire Rapids server CHA support")
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>  arch/x86/events/intel/uncore_snbep.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->> index ca98744..e537623 100644
->> --- a/arch/x86/events/intel/uncore_snbep.c
->> +++ b/arch/x86/events/intel/uncore_snbep.c
->> @@ -5967,6 +5967,7 @@ static int spr_cha_hw_config(struct intel_uncore_box *box, struct perf_event *ev
->>  	&format_attr_inv.attr,
->>  	&format_attr_thresh8.attr,
->>  	&format_attr_filter_tid5.attr,
->> +	&format_attr_ch_mask.attr,
->>  	NULL,
->>  };
->>  static const struct attribute_group spr_uncore_chabox_format_group = {
