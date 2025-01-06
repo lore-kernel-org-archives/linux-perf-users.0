@@ -1,116 +1,121 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACE75473C
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 Jan 2025 02:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178958632D;
+	Mon,  6 Jan 2025 02:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736045120; cv=none; b=VdNuZvTl5c62GWcBuTg/THvnzppItF5GD5MRVCTJK7pMrTkACY93Sltd84RNhII2WIBFg2jc+032NNFJ4upulS0lgydZJZWTKSov/iQbcW6o2RTWsy/LftLagXnZiMsW5CfEDYlZT/hAQ6twO2+EM6+/p8r1oxhwMWjuYYsp/xw=
+	t=1736129809; cv=none; b=Qh3EaPXEfO1SQ4PhsOg9Jf/Z3jY7W+Xky43hdLX5abyFkJFImD3mn/oTZJQjs89RVptA9MGsIP0ovlNeVlm72dus+tPq1wLccP0JJchfWxHzohF3HI4+8Fw9HKleYXslJ/MD8VIRANTckz4jlz1e0ENNgC4QcU8cq+nyBwWjA/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736045120; c=relaxed/simple;
-	bh=2niM7QSDO7vIA7tySXm3RyrEBzfXKmBzlRoR6+V8WhI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TRPYm7pWsVrjY/grDWpw0AJW8n56/w92oPJs4ZkJZSaFGI96RTJ7bSvgE+5wljvi5PjOtRGs2ivAnZVfnaGTxU9qU7wdWPIRq3BryW3A/J5D5d5ANnbvCJRsd51SaZgwjd6sLZYV1u03Kp+9rcMHVwQtgBiIzL6EDCda7YhG+ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=bsfY9nbF; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1736129809; c=relaxed/simple;
+	bh=wQs5xHQATXqeFETShg0xGXGS8irysaRgUHCxYxNlxQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BLyZvEzccd4JeeNMPAq89OIBcRSpsOR6hEgWbhEGurc4lFo6hxGkVQSFi2RwTDZ9gLYgOdS885h09CgEaldPuTDa3byBLPz9szBGbc3La0Ck8hGsmZB6mQtCVGfUiqCivh3NgRc2kdOyu1aVlOu2fvjoh/Cc0HgK3mKzULNWvww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V5ClR37f; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="bsfY9nbF"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e46ebe19489so16694111276.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 04 Jan 2025 18:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1736045116; x=1736649916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GUhUFqDCLLYcCKnTvKrRzZf5y8VDBYHwWNIj7mYbRr8=;
-        b=bsfY9nbFARMvkb1N/MALpH9KXMi78I91FMkxsnz+qHOS6IG4tNJpDRWr6ESQhX0MxF
-         T8Jvan12nnhMkqtDC5xblfEbvCOh3TfamTLQlkeJTAodek3qanTvZwP8WBk9A2rCjwFF
-         T9Oc9bN1Bm112n/wlUpaF0isvHiqfQuegGWip84hynRWzuJ3tTPDvtuOIgyKLERvhNzP
-         K1OxIzlcneyobBD6Jft+D7Cl5YkSHgrYXjxoQcA21UStVnfOSkFQyDZhdg0nU2r7Lz+x
-         S+avvDgG4boTYB3m8Xjvql+EbOQhQ/b8464iP8yM7dQ+hVtzV+wuEQY4UN0gcMquXqbA
-         vqog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736045116; x=1736649916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GUhUFqDCLLYcCKnTvKrRzZf5y8VDBYHwWNIj7mYbRr8=;
-        b=FIVHju+b6XVBBCCg5NhZvkKvhCfXQLGvzRU4QNRUDDC15ryVXF7Z13IG6nysTTRP50
-         T/kCvRorzKOxhKV1gFGvT6SKQleuwpaxfzu3xAjEekW1A4tjknL3ltKwgSnVv0p//mIE
-         5JRxGZW1N7ngIZRuofCGTIeGkehN7geA8d24281Y6CeCddXQJz4Ctj/8UvRQ3PO06utV
-         iPEy24rdCZJohV/rJDoc0E5HYsS58RlMI47yCG4LFkdRSM87uj5Xef+r0tX1wm7uw6TZ
-         9WPiVggpSJ8epLgN0pxGbhQXxoJIqq8X4LUmzuBzA1fGwsR3zjKOs/8P/44jzYFI7uud
-         zzqw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3MXigj/+cEXq5TswsX08Df5zkuEUSZJ9lTWMD2E6dJ4rj3POjQB4kavE5pkIWzYhQ1dDwYL/DljSv9E5OlbW0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2D8OKz+j4LQ5T5tyIGwaKHwFlfQ4g+vlzBKrzxly3rR/Wivyk
-	32qp6Udj6bYiZ4Nz3GpknK3buaZSf/EWyfsZmLcrERO5hqBNofTUDAnSu3zJrN9iYfknMIsiS1A
-	zKAb18ofI+tFMIxNjoqUTHd77o+bpdu5sfbPf
-X-Gm-Gg: ASbGnctQlJlpmQ/VQ+VSRck9Hcyo1FthUuiU+lhv8pOwtXw31NOXKCgPOGB6AhVv27M
-	sbm/1tKVRRVrJhFMgjg7HQMbpYMdmfA4GYbBA
-X-Google-Smtp-Source: AGHT+IGThgi8HmQDrrdLZKo7/6iXHtT/+1efSKbFMBP4wTU/9vzStB4XDWagUs38rOJg1HKyWbfdsUnbP2IRzhgHd+w=
-X-Received: by 2002:a05:690c:4b05:b0:6ef:801f:437d with SMTP id
- 00721157ae682-6f3f820e12amr435589197b3.26.1736045115828; Sat, 04 Jan 2025
- 18:45:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V5ClR37f"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1736129798; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2t7wT64nZSxGkh3kLB0GS/20dZAugyGd+MYVrVrOZv4=;
+	b=V5ClR37fTPg8qKzD7M9H3gtm+363IHHvAnzn6njwkFk6MhFvYSr97yCELN9iUUh1yKM+jUt7Ofs4KKAXcQ20tQGCerdA0Vj7g3AZFyFc+jx7OpXW1YH9qFo2jyRw3LAfXss8UTt3HY1y/M1pSPz8cAN64tTjwdAT3WNWunpjnro=
+Received: from 30.221.145.122(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0WMzmDQ._1736129796 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 06 Jan 2025 10:16:37 +0800
+Message-ID: <9f233d6e-ee4b-4ea3-96ee-397bba1b73b0@linux.alibaba.com>
+Date: Mon, 6 Jan 2025 10:16:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241223070650.2810747-1-luogengkun@huaweicloud.com> <20241223070650.2810747-2-luogengkun@huaweicloud.com>
-In-Reply-To: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Sat, 4 Jan 2025 21:45:05 -0500
-Message-ID: <CAHC9VhRRu-UYEV_-0-QgOZ3ByVwp-ZdEphmsvy4NcdqynH_tDg@mail.gmail.com>
-Subject: Re: [PATCH linux-next 1/2] perf: Remove unnecessary parameter of
- security check
-To: Luo Gengkun <luogengkun@huaweicloud.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, 
-	jmorris@namei.org, serge@hallyn.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, stephen.smalley.work@gmail.com, 
-	omosnace@redhat.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix the lack of ch_mask format for
+ SPR
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1735542672-113067-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <7e5376f1-ee87-458b-b55e-759125d251a2@linux.intel.com>
+From: Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <7e5376f1-ee87-458b-b55e-759125d251a2@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 23, 2024 at 1:57=E2=80=AFAM Luo Gengkun <luogengkun@huaweicloud=
-.com> wrote:
->
-> It seems that the attr parameter was never been used in security
-> checks since it was first introduced by:
->
-> commit da97e18458fb ("perf_event: Add support for LSM and SELinux checks"=
-)
->
-> so remove it.
->
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> ---
->  arch/x86/events/intel/bts.c     |  2 +-
->  arch/x86/events/intel/core.c    |  2 +-
->  arch/x86/events/intel/p4.c      |  2 +-
->  drivers/perf/arm_spe_pmu.c      |  4 ++--
->  include/linux/lsm_hook_defs.h   |  2 +-
->  include/linux/perf_event.h      | 10 +++++-----
->  include/linux/security.h        |  5 ++---
->  kernel/events/core.c            | 14 +++++++-------
->  kernel/trace/trace_event_perf.c |  4 ++--
->  security/security.c             |  5 ++---
->  security/selinux/hooks.c        |  2 +-
->  11 files changed, 25 insertions(+), 27 deletions(-)
 
-This patch seems fine to me from a LSM and SELinux perspective, but
-I'd want to see an ACK from the perf folks before I merge this.
 
-I'll also leave patch 2/2 for the perf folks as it seems largely
-unrelated to this patch.
+在 2025/1/3 上午3:02, Liang, Kan 写道:
+> 
+> 
+> On 2024-12-30 2:11 a.m., Jing Zhang wrote:
+>> perf stat errors out with UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL event
+>> because of lack of ch_mask format in drivers, and perf test "104: perf
+>> all PMU test (exclusive)" failed.
+>>
+>> $perf stat -e perf stat -e UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL
+>> sleep 1
+>>
+>> Initial error:
+>> event syntax error: 'UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL'
+>>                                 \___ unknown term 'ch_mask' for pmu 'uncore_cha_0'
+>>
+>> 104: perf all PMU test (exclusive)                                   : FAILED!
+>>
+>> Add ch_mask format for SPR to fix it.
+>>
+> 
+> I don't think there is a ch_mask. It should be extended umask.
+> The issue of the CHA extended umask should has been fixed by
+> https://lore.kernel.org/lkml/172052531679.2215.16140288595428337453.tip-bot2@tip-bot2/
+> 
 
---=20
-paul-moore.com
+I think it is not the same issue. I have this patch but still error.
+
+in "tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json",
+the event "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL" is described as:
+{
+        "BriefDescription": "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL",
+        "Counter": "0,1,2,3",
+        "EventCode": "0x35",
+        "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL",
+        "Experimental": "1",
+        "PerPkg": "1",
+        "PortMask": "0x000",
+        "UMask": "0x10c0008101",
+        "Unit": "CHA"
+},
+
+the PortMask is ch_mask, but driver not output ch_mask on SPR, it causes error.
+
+Thanks,
+Jing
+
+> Thanks,
+> Kan
+
+
+
+
+>> Fixes: 949b11381f81 ("perf/x86/intel/uncore: Add Sapphire Rapids server CHA support")
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>>  arch/x86/events/intel/uncore_snbep.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+>> index ca98744..e537623 100644
+>> --- a/arch/x86/events/intel/uncore_snbep.c
+>> +++ b/arch/x86/events/intel/uncore_snbep.c
+>> @@ -5967,6 +5967,7 @@ static int spr_cha_hw_config(struct intel_uncore_box *box, struct perf_event *ev
+>>  	&format_attr_inv.attr,
+>>  	&format_attr_thresh8.attr,
+>>  	&format_attr_filter_tid5.attr,
+>> +	&format_attr_ch_mask.attr,
+>>  	NULL,
+>>  };
+>>  static const struct attribute_group spr_uncore_chabox_format_group = {
