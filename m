@@ -1,37 +1,36 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454FB1D6DB7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1828B1D5CCD;
 	Mon,  6 Jan 2025 07:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736147484; cv=none; b=CF1OxQFhi2CITSZy/+n/ecUTm7xmVZlRhTl/slabIcO0y9PMaoKlacu2v3C/WuhQmkjwGCDQCRWevIEjcFRh7a+oCpXTnzavX0etGtXZoq4bCtyIfSEMKqJVpQ9h6J/rRBvZjSbE/F8EQqK/iddg0CnSDYeN+lBuZwqxpFoaHvY=
+	t=1736147484; cv=none; b=SJkocai8gGTow4rjdpoVhDGB0mFVqSxSHMokEIgAPxm2XryPOlWMqaYeeChRKrdal1lNDD6isPL1WS+QSYt5+zUD1AFLrSG9YGiRA4bcmFjuoirGz7FwKybsoJ/G076ThwOaE3nijiRZ9l0ReUDBlSQlap/GZCCRzkjhm9LZagM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736147484; c=relaxed/simple;
-	bh=zXRPBBDKU65E0vCbNuT01VbPPYNVJuK3jM4A56BAqNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGKJSKEHaVTRbakwJLVScU5/bettm5bOjvCXGDEVdkTA+3WDeQOC1aIt6FlWQJ8B+I/NlyIcYWaE/xOOZ7EU4sLQXlG7t3M+s4zi9SGU/fAadIacqMNiSbqXPnrB7CofBVTORE7Wro1y4OQ5xPSVyQvwyg6zn8wpGt5eiKTXehE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=M12ilnkp; arc=none smtp.client-ip=198.137.202.136
+	bh=/GDhJnOK0EkxOF67eXXdSHrVKFil2YfOql/F1iwFY5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iC7x7ThqS5dFmAKGiL0fBPt1tH0K/Iby4vRQ87ik7wiIHU//aan1agIOGk5yzNRzzc4DUjw0TJBTLTd+V5p/TSFvzyXAQrAkOXu3nTRVg4y0qUPh4h9Z6S/NnL6zfGDvPe3s8FFyBgTkHXqOlPa1QRijWwvDfDB9aiUbfITWgrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gI+1W/NK; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="M12ilnkp"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gI+1W/NK"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677RpD3211026
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677Rp93211026
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 5 Jan 2025 23:07:36 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677RpD3211026
+	Sun, 5 Jan 2025 23:07:31 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677Rp93211026
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024121701; t=1736147256;
-	bh=BYb6ylOz78GzLuNZAC7ix6eMFnpD2g9MHChDW+DgETM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M12ilnkphAKnFYw18Dl99TXRsRcpJxk4MVxjD6ecwAPcSrMBTcoN/q00rHvLZ6vZv
-	 Hp9YobzuHIyd1yvGjUgxCRFRNKUlLBzuU2jZttP/gF3KusEp4BBRq0SalcDFBsOBRk
-	 cUmolP+keM7qVluAFU2aX4Di3cJI9Kg5PEUQ447rblWd/KU97uF3zvyiZyYdqLFTMU
-	 E1RQhXuhxxLizAiKnidMUwYIE2ctq7KqArH27tbMHvsKqPjkqsYhSU7a28PRFMbLEE
-	 SlkNRayW3Jy/aiwXtvzvQOzd17ASk1IwKZvxALUFMtqo5PSnIZdoQJGPdCXH866WeK
-	 YaR+YyIwR8Q3A==
+	s=2024121701; t=1736147252;
+	bh=JKas4NsBYT1pnURi4LNJU6Yf74fa71a42En+rq+V+BY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gI+1W/NKzNWNxmIoyahQR0VyhSQ+MgAJsvzoljs53qgxycQQ7gXMukaG5qhPHj9K7
+	 CNoyxnTSyjxuZr0Y0QfMKMX3iTdvCxOS+/Tt1I9WYlRK+eQxXMcVGLROOqoBdl2U+d
+	 hCN1H7xdguKzq5owuhTY3aN2/ZC74TVh2R4CrAFn3wc6oxLEPQhbe0uPU6RIzLwc69
+	 V3I+a2KE4x2Op/JumfQtg5XqA7UEHUN3ieeuWCr451327Ry6I6+AFhiN4wPWFuICyR
+	 qKLO7kHxxgIlri9oS2Vwl+6/dnH2TTQoBRNK60bgegUne8386NY2Bo3fciVRNumFiI
+	 eHNmljYkhicRQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -39,12 +38,10 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
         akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
         brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: [PATCH v5 4/5] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
-Date: Sun,  5 Jan 2025 23:07:26 -0800
-Message-ID: <20250106070727.3211006-5-xin@zytor.com>
+Subject: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required and disabled feature masks
+Date: Sun,  5 Jan 2025 23:07:22 -0800
+Message-ID: <20250106070727.3211006-1-xin@zytor.com>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
-References: <20250106070727.3211006-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,124 +50,94 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
-script that generates the required and disabled feature mask header.
+The x86 build process first generates required and disabled feature
+masks based on current build config, and then uses these generated
+masks to compile the source code.  When a CPU feature is not enabled
+in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
+flag, i.e., DISABLE_FRED, needs to be properly defined and added to
+a specific disabled CPU features mask in <asm/disabled-features.h>,
+as the following patch does:
+https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
+As a result, the FRED feature bit is surely cleared in the generated
+kernel binary when CONFIG_X86_FRED=n.
 
-Suggested-by: Brian Gerst <brgerst@gmail.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Reviewed-by: Brian Gerst <brgerst@gmail.com>
----
+Recently there is another case to repeat the same exercise for the
+AMD SEV-SNP CPU feature:
+https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
+https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
 
-Changes since v3:
-* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
-* Checking NCAPINTS isn't necessary anymore.  It was needed when these
-  macros had to be manually updated, but now if cpufeatures.h changes
-  this header will be regenerated (Brian Gerst).
----
- arch/x86/include/asm/cpufeature.h | 69 -------------------------------
- arch/x86/tools/featuremasks.awk   |  9 +++-
- 2 files changed, 8 insertions(+), 70 deletions(-)
+It was one thing when there were four of CPU feature masks, but with
+over 20 it is going to cause mistakes, e.g.,
+https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 077a5bbd1cc5..b829a12eda8a 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- #define test_cpu_cap(c, bit)						\
- 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
- 
--/*
-- * There are 32 bits/features in each mask word.  The high bits
-- * (selected with (bit>>5) give us the word number and the low 5
-- * bits give us the bit/feature number inside the word.
-- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
-- * see if it is set in the mask word.
-- */
--#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
--	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
--
--/*
-- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
-- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
-- * header macros which use NCAPINTS need to be changed. The duplicated macro
-- * use causes the compiler to issue errors for all headers so that all usage
-- * sites can be corrected.
-- */
--#define REQUIRED_MASK_BIT_SET(feature_bit)		\
--	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
--	   REQUIRED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
--#define DISABLED_MASK_BIT_SET(feature_bit)				\
--	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
--	   DISABLED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
- #define cpu_has(c, bit)							\
- 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
- 	 test_cpu_cap(c, bit))
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-index dfac56a697fc..01e47b31e187 100755
---- a/arch/x86/tools/featuremasks.awk
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -74,7 +74,14 @@ END {
- 		for (i = 0; i < ncapints; i++)
- 			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
- 
--		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
-+		printf "\t((\t\t\t\t\t";
-+		for (i = 0; i < ncapints; i++) {
-+			if (masks[i])
-+				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
-+		}
-+		printf " 0\t\\\n";
-+		printf "\t) & (1U << ((x) & 31)))\n\n";
- 	}
- 
- 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+We want to eliminate the stupidly repeated exercise to manually assign
+features to CPU feature words through introducing an AWK script to
+automatically generate a header with required and disabled CPU feature
+masks based on current build config, and this patch set does that.
+
+Recently when working on the immediate form of MSR access instructions,
+I needed to add a new CPU feature word for CPUID.7.1.ECX, and I had to
+replace the same check "(NCAPINTS != 22)" with (NCAPINTS != 23) in 3
+different files as
+https://github.com/xinli-intel/linux-fred-public/commit/aa80536927fcd293be8ae54e1d5e4d886cf83f21
+Obviously these replacements could be saved if the patch to add a new
+CPU feature word is reworked on top of this patch set.
+
+So this seems a good opportunity to demonstrate the convenience out of
+this patch set, and here comes v5 with just one more patch on top of v4
+that adds a new CPU feature word for CPUID.7.1.ECX and uses it for the
+immediate form of MSR access feature.
+
+Link to v4:
+https://lore.kernel.org/lkml/20240628174544.3118826-1-xin@zytor.com/
+
+
+H. Peter Anvin (Intel) (2):
+  x86/cpufeatures: Add {required,disabled} feature configs
+  x86/cpufeatures: Generate a feature mask header based on build config
+
+Xin Li (Intel) (3):
+  x86/cpufeatures: Remove {disabled,required}-features.h
+  x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+  x86/cpufeatures: Add the CPU feature bit for MSR immediate form
+    instructions
+
+ arch/x86/Kconfig                              |   4 +-
+ arch/x86/Kconfig.cpu                          |  12 +-
+ arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
+ arch/x86/Makefile                             |  17 +-
+ arch/x86/boot/cpucheck.c                      |   3 +-
+ arch/x86/boot/cpuflags.c                      |   1 -
+ arch/x86/boot/mkcpustr.c                      |   3 +-
+ arch/x86/include/asm/Kbuild                   |   1 +
+ arch/x86/include/asm/asm-prototypes.h         |   2 +-
+ arch/x86/include/asm/atomic64_32.h            |   2 +-
+ arch/x86/include/asm/bitops.h                 |   4 +-
+ arch/x86/include/asm/cmpxchg_32.h             |   2 +-
+ arch/x86/include/asm/cpufeature.h             |  71 +------
+ arch/x86/include/asm/cpufeatures.h            |  13 +-
+ arch/x86/include/asm/disabled-features.h      | 161 --------------
+ arch/x86/include/asm/required-features.h      | 105 ----------
+ arch/x86/kernel/cpu/common.c                  |   1 +
+ arch/x86/kernel/verify_cpu.S                  |   4 +
+ arch/x86/lib/Makefile                         |   2 +-
+ arch/x86/lib/cmpxchg8b_emu.S                  |   2 +-
+ arch/x86/tools/featuremasks.awk               |  88 ++++++++
+ lib/atomic64_test.c                           |   2 +-
+ tools/arch/x86/include/asm/cpufeatures.h      |   8 -
+ .../arch/x86/include/asm/disabled-features.h  | 161 --------------
+ .../arch/x86/include/asm/required-features.h  | 105 ----------
+ tools/perf/check-headers.sh                   |   2 -
+ 26 files changed, 327 insertions(+), 646 deletions(-)
+ create mode 100644 arch/x86/Kconfig.cpufeatures
+ delete mode 100644 arch/x86/include/asm/disabled-features.h
+ delete mode 100644 arch/x86/include/asm/required-features.h
+ create mode 100755 arch/x86/tools/featuremasks.awk
+ delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
+ delete mode 100644 tools/arch/x86/include/asm/required-features.h
+
+
+base-commit: af2c8596bd2e455ae350ba1585bc938ee85aa38d
 -- 
 2.47.1
 
