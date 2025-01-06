@@ -1,111 +1,128 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D22360;
-	Mon,  6 Jan 2025 19:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E461D5CF4
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 20:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736193010; cv=none; b=QzB11J2Ojy8hV9LW/0D7HmR0v4b7zK2WVr/4nNu9MbtWiFNbhK66Ei+4Y47DFi73Y9iuFW9VhHDQg58GN257ND3pl1uPSTd36XaTLnMetPxav3ggSDk8BShY43mF8llnousvimFXvlprUAJXddBPc5QafEXCtRnnre+dAXTgsgM=
+	t=1736193965; cv=none; b=IUeAk/QhjTRlDnk9qmLUdrp/OE+codZO96VN/wWRuNVOYPKu5QxgxxsXhNAHlE54Vc4jKB2erD3vMGgkLkrDqKMsBR4AEuYCIogADrDWbh0tRZFzkeZjWdvQr5u/9+tN+aP2pUB1M/lfttv1uZcjQbvImtCEqWP+wf4JtrA8Gik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736193010; c=relaxed/simple;
-	bh=IZC+Ucm7AU9piK1OfxvR+u81ZkjwnuBAOrtHh5CBEKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eDFVGcDJu0hKYk10rMN5guZ3hERgUgZN3HEgUnh3FuI333Yy3UPOb6vBM2RQ/cBo9XtNdTSRoQdN74orcN2/DXm3a4pU/W3ZdiQn6gDN34wlPv7SSmOakVwouG20t6yoYmEsnalo+1eVJf54ln3c7QV7trbtZGH1Y7BRlb3dfk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YRkxw3VvCz9sRk;
-	Mon,  6 Jan 2025 20:38:44 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Xx50HgpFI3Gi; Mon,  6 Jan 2025 20:38:44 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YRkxw2dmJz9rvV;
-	Mon,  6 Jan 2025 20:38:44 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3776D8B779;
-	Mon,  6 Jan 2025 20:38:44 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id c7EvnHz87GyX; Mon,  6 Jan 2025 20:38:44 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D4C78B781;
-	Mon,  6 Jan 2025 20:38:43 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH] perf: Fix display of kernel symbols
-Date: Mon,  6 Jan 2025 20:38:29 +0100
-Message-ID: <3fda227e6ff229b5063d4181ecf75567ca016c18.1736188475.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
-References: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1736193965; c=relaxed/simple;
+	bh=0y1e3gtN4uMu/FqHv0tN/QNvmxvsOx5MFQ+M0bKJWTo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pLiTk+5hGgnwBFSP+ZF/6EdCu+XFKSyEF/zwkkm9d0UEnz192AubPk8ay3FqaK3hq/uaUAM/QMszoPg9s20n1/sNgmWm6gqcgEObzKi2ZtbVYwGg5CBwyuKGpJ8irD7CloEzPKTHYKZjB5tgBhhGQf8SyEWl217JqlmClFBArgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wZeBN4YW; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wZeBN4YW"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so17045ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jan 2025 12:06:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736193963; x=1736798763; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=89rhBgQRnXcKMVrwWMHxN9A0BmutKC2XU/2aaVYlH08=;
+        b=wZeBN4YWi/7x5Vv8bVowPb2YQ/MhDgjwi4pcuHoGUdPOd7Ld+dgEwEBVxPfK5wRR9x
+         Ae61k3dBzdkwCaBjt+x2TSRY8Jc+DBJBrkXNCMucYrATTqA3HCt+h3VmGmPURhVLquef
+         w+TTzt7eXxKSplpLNOhnFX2anbpyE2R/mbch6Wfxv70qI1gnBufy+SF17TWI4SsEbZuu
+         QBpG7MmIhsXyC4t9Z2CZsZZmyjt3tMln7iN1FJ9mTECH5K7Nw5fOD0ubN6Qxva5atJaA
+         7dizQ9jgo4u+hiI/600lZQf/mhzLi44xaFoAJUhb2WxO6AHkxDW4p3U4m4U7VvZxgIgH
+         LEHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736193963; x=1736798763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=89rhBgQRnXcKMVrwWMHxN9A0BmutKC2XU/2aaVYlH08=;
+        b=eQNb6YTM4WsYcHZs/mJMSUabiN/vEoNudFTEfMyArr7c616oYYl4jZNUXgPG4FxnWr
+         bRcG7zNq2HI4npTMO63aXJUV67WhJNj0I2DrF7STjYrIkW1cyOAIrvNJ75Hu7NtVr0/A
+         tFjeyvriClBXIf/+3+UM3IzT6kfDb6vCsYyizc/sfHOh1KEvx4WP+nKrpbxwDkaAOTes
+         w8JZmL1zyLOoQarqqL/jRCfMeWK3rYc5CliPBMtdNpq8FQKKCcVrjKgIOjveCtnIGqjU
+         fRfuoOjULZKLD3OqQEwvHIVdL/6cKCkZNlUwu+qjAy4YTGpF+Idj0Zk+s3UGQIT5QJtU
+         Xc8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVm8J/71W1mk0AUBUH17goH85e4So0As5C20gCPq2Ed2p+YQPKt52+agsFQs8Dts0FRZ5Dx1B1s2yiP6siU3rBl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOKVjpEl2fZZB80xmRypuIroTjVbEaBt+nUg37BGvCC0OLz4yp
+	ExbXa2kHeNIvxJwgdNPBWCS8zd+csKTscJQSKqlRWDzjavwqyLORjkzZ51ZBuza5cTPepglktGb
+	h53sLNdkdowSOsNBOGENYmCqB4KlJ0ZAHSw/9
+X-Gm-Gg: ASbGnct6zPmfBTSSeOKkV0GPT+7fmcwjqFh4K1MCIx9mTtN5krcVma0/UW1aicrhXD+
+	l1r4LukxBotL9cBmJsD7/F3SkEwK1Q2+O8TKJ1JvyQQxaHi7VNBJoUOuOz12iOxUyD1mC
+X-Google-Smtp-Source: AGHT+IGLsDBrotQ8nYPvuMsyL75xnUrfiLQrTOomCApfYA934d/pM85xLj/qkn+OogjKmro8tOx+xHZtdXaJ9M7nvYE=
+X-Received: by 2002:a92:cac9:0:b0:3a7:91c2:c28d with SMTP id
+ e9e14a558f8ab-3ce32470286mr383485ab.28.1736193962916; Mon, 06 Jan 2025
+ 12:06:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1736192308; l=1838; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=IZC+Ucm7AU9piK1OfxvR+u81ZkjwnuBAOrtHh5CBEKk=; b=qKg2BDod6CEGJ0IHAxSluXn8fNvV2JKvDgvHH+WujAxVHXaqYD20W7XM/907bzJGYJbnawM1N U/m7HeRSm6/Ascmu0OWMMe/cdHzEmS9W6Vw+g1IK5JHkwh4+mvOfNj/
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 6 Jan 2025 12:05:51 -0800
+Message-ID: <CAP-5=fWVHaVpJbDf=afn5MhZ972uEq=sGEmsULoD=LRff2Vouw@mail.gmail.com>
+Subject: Re: [PATCH] libperf: Add back guard on MAX_NR_CPUS
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 659ad3492b91 ("perf maps: Switch from rbtree to lazily
-sorted array for addresses"), perf doesn't display anymore kernel
-symbols on powerpc, allthough it still detects them as kernel addresses.
+On Mon, Jan 6, 2025 at 11:38=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+> Building perf with EXTRA_CFLAGS=3D"-DMAX_NR_CPUS=3D1" fails:
+>
+>           CC      /home/chleroy/linux-powerpc/tools/perf/libperf/cpumap.o
+>         cpumap.c:16: error: "MAX_NR_CPUS" redefined [-Werror]
+>            16 | #define MAX_NR_CPUS 4096
+>               |
+>         <command-line>: note: this is the location of the previous defini=
+tion
+>
+> Commit e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
+> moved definition of MAX_NR_CPUS from lib/perf/include/internal/cpumap.h
+> to lib/perf/cpumap.c but the guard surrounding that definition got lost
+> in the move.
+>
+> See commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at
+> compile time") to see why it is needed.
+>
+> Note that MAX_NR_CPUS was initialy defined in perf/perf.h and a
+> redundant definition was added by commit 9c3516d1b850 ("libperf:
+> Add perf_cpu_map__new()/perf_cpu_map__read() functions").
+>
+> A cleaner fix would be to remove that duplicate but for the time
+> being fix the problem by bringing back the guard for when MAX_NR_CPUS
+> is already defined.
+>
+> Fixes: e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	# Overhead  Command     Shared Object  Symbol
-	# ........  ..........  ............. ......................................
-	#
-	    80.49%  Coeur main  [unknown]      [k] 0xc005f0f8
-	     3.91%  Coeur main  gau            [.] engine_loop.constprop.0.isra.0
-	     1.72%  Coeur main  [unknown]      [k] 0xc005f11c
-	     1.09%  Coeur main  [unknown]      [k] 0xc01f82c8
-	     0.44%  Coeur main  libc.so.6      [.] epoll_wait
-	     0.38%  Coeur main  [unknown]      [k] 0xc0011718
-	     0.36%  Coeur main  [unknown]      [k] 0xc01f45c0
+Hello,
 
-This is because function maps__find_next_entry() now returns current
-entry instead of next entry, leading to kernel map end address
-getting mis-configured with its own start address instead of the
-start address of the following map.
+I believe this change might be unnecessary. The only use of
+MAX_NR_CPUS is in a warning message within perf_cpu_map__new, which
+takes a string and produces a perf_cpu_map. Other similar functions
+like cpu_map__new_sysconf don't check MAX_NR_CPUS. Therefore,
+specifying a -DMAX_NR_CPUS value on the build command line has little
+effect=E2=80=94it only impacts a warning message for certain kinds of
+perf_cpu_map creation. It's also unclear what the intended outcome is
+on the build command line.
 
-Fix it by really taking the next entry.
+Given that specifying the value doesn't seem to have a clear purpose,
+allowing the build to break might be the best option. This would alert
+the person building perf that they are doing something that doesn't
+make sense.
 
-Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/maps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 432399cbe5dd..d39bf27a5fdd 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -1137,7 +1137,7 @@ struct map *maps__find_next_entry(struct maps *maps, struct map *map)
- 
- 	down_read(maps__lock(maps));
- 	i = maps__by_address_index(maps, map);
--	if (i < maps__nr_maps(maps))
-+	if (++i < maps__nr_maps(maps))
- 		result = map__get(maps__maps_by_address(maps)[i]);
- 
- 	up_read(maps__lock(maps));
--- 
-2.47.0
-
+Thanks,
+Ian
