@@ -1,125 +1,112 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9582116A930
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 15:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD1B78F44
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 16:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736179191; cv=none; b=rZ0SZXnlNU6xD19nYkGc8NEUdi629a2FaYfp6fhdgfoTshWfRqCXB7eOJtdj05XsRQiLjLfTvILsBEv993CyVIjhyW5lPGgOse/94kKqU8V8PXWzvk1m/ulg3F3NUf71O2PsFNyy4Ryy1JR9kibmi6sDZ4n5EBbJ+8WEqM9equY=
+	t=1736181819; cv=none; b=uiCtz2Jsv1lFsUPJHd/M4FepEhJcWvKcpQQkpOlhA78+lqdeDzVI0clAfi66AOxrvJw4N/3GCuoEmgG/EI8j4R1qpYyNVOSBrRYyA/aPChaCuZQGedPsojY/vMsfRi5i7tDaVn/H181fZSPSG95WPNFonxId0ccd1pRpul/WWIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736179191; c=relaxed/simple;
-	bh=6gnDGMIOxppdGHB/yf8LoNP9GKGmL4ydJ7hG20q8fZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3D/eHOPrfVvRGGTtUFb5YbYC6TG8Yseg5wvoixwTUu2BeZXeb7peCwl0RsJ+QnEKoG85jy96xlh/cBOtAVBzDg30qQyd4Kb3ytmfLgLgZ596XT0PRWnBhFzpOWzntz7Re4WJArMSvX7CYGUeUiIDT9MO9Z+pA4PKW3r1k30jIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EtwJuadq; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1736181819; c=relaxed/simple;
+	bh=TtyN2+z5LlFIe10Zsn9B1EQfthxpye3NQhfKkY61Lps=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oYQ1QBFpclpEtFitg28yXnjGJHHNZG4gIojmtaV4qRtz9aykmPXKKjDZeqbnzoux0FSZG+94+GTyjAB0bEg6q9oEHwhQcNUoHjd6xEBWJsbslKnQ3tWIcCDIFR5fcWYvAcDLzEfKB5zXH651RbTPM1Jb01J84SuQkXug+kjRG1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L12dFIkD; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EtwJuadq"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-436345cc17bso105364555e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jan 2025 07:59:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L12dFIkD"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso145336215e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jan 2025 08:43:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736179187; x=1736783987; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cL83fy9fUiyWAQO9Y10o5TV/KydC3Qa+Hru6k+93+SU=;
-        b=EtwJuadquAmIwoOQBgAyqg6C4/KcuTxVUKV0MVvos3gZawxL8Ao2LnTu4BJh2viBLQ
-         yTMDQh/fR1MtAJGQhtzEwfOHe+bKpVqgRf0PoekBrJwVpNUHmZgYwSQ9019qB6rVVO1b
-         qRjD4LKCvCvjjDXJA/dFywIySAl4Ettp3X/L4Cyrmz0gJ55mDUeZjJnb6rj9oHkj1Vtl
-         o8NoUWgIwmqaPeIdVM/GUClMzBu45BEO8MBSPwgL2c1V7gcCpAx00Htxro5auZ2HBYs3
-         Zm4pr8oaT05eXu4M0jOyGe3gP6gZKXde5Drybyj8joAkk8BJAw3xajBgrgAyij1wwUQM
-         1h+A==
+        d=linaro.org; s=google; t=1736181815; x=1736786615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SMUGHCBb0ppaxEHLWQn7OHwMJlFKEmQAiaAFgySReus=;
+        b=L12dFIkDNU8VYkZqG/HFG53zhxkoZu2bTGdiwUNcPnoLf0pxbq13uTZRcpp5CPaeFT
+         m+fNsjIiMXof5e1PgYwKHCDN6HXrWB5op1a77bWIBX1bCejhTTiXd1hKPGWBu71SiKnV
+         OYDF6EZB1yJKavMz0krYKe/JGbbIxniJRAL4EXwxjOhp6+2kjSAnjSp4ry+E1olK10gS
+         Q6EH7/yYVA7LfjcAsyPzNGayoD43yRkzAj+c47PiQr05grIhXY6akU4/kzL+BwY09ATi
+         Y3XNgdzpwW5k5yvuYpcLQeEZsAXZCJSFyH0ksmnLqXhRt8rhgy6RQOY/TvJLWQrU4DLq
+         sl9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736179187; x=1736783987;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cL83fy9fUiyWAQO9Y10o5TV/KydC3Qa+Hru6k+93+SU=;
-        b=lPsQ1r41JoEmZaC92GeJMbNGotUmv43XpPjefEo20n6wiTg7EH91/cd2NLxn9kXfV1
-         T4gjKd9lzoBw6n9XVDZlbLyuE7HnAsTP7HTVjn2DC4eVXCxCFQR56mK1fTPGrQP4KD8t
-         fgRLNXEG6gb83uIdMTGvvPRGaMFwFEVeSi0l706+HDh3VQujhwLze0udtGjvqgurHo6l
-         FJVNJL6V1lmy+uMJxiTNoQKhKxln1BNl+u9BW+DrbnIGR6GmZRggsZcwu9YyTbU4QaWv
-         BUTes2raSYnmdAvv8kskyvlVLudDqRuLklrYOt59kV/k31h9rjIB8wrxSr5O2DWNEYRH
-         O5pA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXVOGbFxD2gbEQeH7uEkMJtWzrNAFRK/IstfmvAKQzu9F/jHwq9WCDaJmzohePr29ysZ3CargiG2tWqF+4nUbg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2+NvQ7XE3Aw6DxGgVg/3CA1yDIJpIeHSpOOaNsmiAfVI6ObzV
-	2cEP4gQn/7naxUjEnfMcqk0Vb6X3MLQlFzmvyOl8vcPpgvw1nlzHphSPo0HNQe0=
-X-Gm-Gg: ASbGncuL9GE7aUM8OEfjlXxvOYL7DiMySxu1dhpdwjGxdHZejiN1BIh8ifaMzPURrPD
-	V74Yr0qs4ALWd6Fz8xGwvumFAaEABQ9hLWmKok30KUzSeRGKLO1V3aZxorvDZhMz223H3cNgGjz
-	GtYM9K3tBkTwOdCsdbIPBcCXBahTocB32GIyA6mBX2HutANXhwVbzsDkQuNuAf7AixZz2SYPUjy
-	PyTLvHSkuk/T6ULLoxAyEplXYxV9+/wqdMKXs2tqZ9VLvPU3oJr5J9MOBNIcqCLf/I=
-X-Google-Smtp-Source: AGHT+IFuwfTtqezqCyqXjnvoll9stdZwnDMHbjcpJGGm/Jkum+CB4+ty+n/TPU5uXnz6f5z8AKwJSA==
-X-Received: by 2002:a05:600c:1d1d:b0:431:5044:e388 with SMTP id 5b1f17b1804b1-43668b5e172mr471554025e9.22.1736179186712;
-        Mon, 06 Jan 2025 07:59:46 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.66.180])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4364b14f241sm535958045e9.1.2025.01.06.07.59.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2025 07:59:46 -0800 (PST)
-Message-ID: <57627eec-10b5-4eb0-bfe2-f404a3492eee@linaro.org>
-Date: Mon, 6 Jan 2025 15:59:43 +0000
+        d=1e100.net; s=20230601; t=1736181815; x=1736786615;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SMUGHCBb0ppaxEHLWQn7OHwMJlFKEmQAiaAFgySReus=;
+        b=XolGjtBuxZtgqtliIF5AQoQfYfHHgm4q3G3w4jDWRoFXdZMdnS2ZBpO1eO70MUPdgA
+         nD32VouGe5CL3olOYliLZOuj2+B+VmAoY2lVrhm/5geDJ7ZelnN4vXnQ2+/YU+EK5PpK
+         DU+TdnXjZ+pWQoVzR5AZndY6odNdak8IapKyBfoWQ3kZxPxKjt3GK3c1S9Hsckz/JaRP
+         9LbSkpud+cIuP2i7OrvutBSN7vlSBAa3ti3TXf24iKkAQ2tBOm6uRYWvJhF1wDjx0DGk
+         Fh4TrsKpSOtHs6d36SHymgfRv8l1WnxdYm4+Vas5muL2GTs+P8UO07Cw99TG51x0O3oR
+         Q3xA==
+X-Gm-Message-State: AOJu0YwE9eKLLmQ6tqPSZdLwscrPBoD+lKwkM8dubfXyZKlUp2mRx7Mo
+	YNwtLA0ujGYFu8R68Ifa3C0rADyUDdsqb3SNNfEqLlhiSw2kFYestNgBtLYx1cavdaYI5usNg98
+	r
+X-Gm-Gg: ASbGncu4mubqf1sb8bCK93o8zc/s8QiWs9d3IHE7bASbmdM6NdINi+NsgA6AUkYxMmW
+	rO07k2nJZyvVGZB/p+eQxI6Wv0ROfKhdONgt7FnyFUerHBmYR8rdf0PYNa7rvuHN6xJfWzN6h2L
+	FYzw5+KGKnj1xuoor7vSgCFA3weLvkJmnhgRKQgLJKOWUe+JYQVOU3sDh0w/0U+PzZLP4/99tUj
+	DiK4mm/x0DC/twxRENPmVyTBDUt9BEf4wQ8hjyhLJgKhY2Eke6PYEUI
+X-Google-Smtp-Source: AGHT+IFHMZMx9rpG+W22u2mopwgsbt3ogFJyG4r1C2V4APK0buHzshmZEf55ewaupVi3mhJJ5P09Ww==
+X-Received: by 2002:a05:600c:4fd4:b0:436:1bbe:f686 with SMTP id 5b1f17b1804b1-43668b48084mr445238505e9.21.1736181815361;
+        Mon, 06 Jan 2025 08:43:35 -0800 (PST)
+Received: from pop-os.. ([145.224.66.180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8474b6sm48322701f8f.51.2025.01.06.08.43.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2025 08:43:35 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org,
+	acme@kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf test trace_btf_general: Fix shellcheck warning
+Date: Mon,  6 Jan 2025 16:42:58 +0000
+Message-Id: <20250106164300.734202-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next 2/2] perf: Return EACCESS when need perfmon
- capability
-To: Luo Gengkun <luogengkun@huaweicloud.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, will@kernel.org, paul@paul-moore.com,
- jmorris@namei.org, serge@hallyn.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- stephen.smalley.work@gmail.com, omosnace@redhat.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-References: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
- <20241223070650.2810747-3-luogengkun@huaweicloud.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241223070650.2810747-3-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Shellcheck versions < v0.7.2 can't follow this path so add the helper to
+fix the following warning:
 
+  tests/shell/trace_btf_general.sh line 8:
+  . "$(dirname $0)"/lib/probe.sh
+  ^--------------------------^ SC1090: Can't follow non-constant source.
+  Use a directive to specify location.
 
-On 23/12/2024 7:06 am, Luo Gengkun wrote:
-> For perf_allow_kernel and perf_allow_cpu, both return EACCES when require
-> CAP_PERFMON or CAP_SYS_ADMIN permissions, so update perf_allow_tracepoint
-> to keep them the same.
-> 
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> ---
->   include/linux/perf_event.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 5d2ec4283ebf..c1bc0d7a275b 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1685,7 +1685,7 @@ static inline int perf_allow_cpu(void)
->   static inline int perf_allow_tracepoint(void)
->   {
->   	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
-> -		return -EPERM;
-> +		return -EACCES;
->   
+Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/tests/shell/trace_btf_general.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-Is this necessary other than for consistency? If not it might be best to 
-leave it inconsistent even if it's wrong. I see quite a few "if EPERM do 
-this..." type things in Perf, so changing this would break error 
-messages being shown to users.
-
-If anything, EPERM seems more correct because EACCESS is more about file 
-access.
-
-Thanks
-James
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+index 005c93e6c770..e9ee727f3433 100755
+--- a/tools/perf/tests/shell/trace_btf_general.sh
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -5,6 +5,7 @@
+ err=0
+ set -e
+ 
++# shellcheck source=lib/probe.sh
+ . "$(dirname $0)"/lib/probe.sh
+ 
+ file1=$(mktemp /tmp/file1_XXXX)
+-- 
+2.34.1
 
