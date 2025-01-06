@@ -1,88 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1A41E04A1;
-	Mon,  6 Jan 2025 21:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7869F1DFDB8
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 21:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736200039; cv=none; b=rN4Q9pwnMtYoDp57CsrCFkcBzHJTGG+OM86NCM3mI4RWXjc+pwH2ez0YJ9Cznj1gvlOzqvmq9tB8+ZqVVTbR8mzNRJvmUp2lUjLhaZAnHKoFtcJCXeLW3RbgZmn/QUAnaiWElWQI6BsxLyoYJVNUm6B3uYAo+b28JtYbhR8COAY=
+	t=1736200498; cv=none; b=SYa1nHKvrXLIuEzUerbyv5xzLmFJR72mN5pkF+zdCSksNBD2j6NCKIMEO6k62ia2Rh0IVsHa1fRMvXBwbpbNjGn3eIYaLKOh9kx2+j3pIWWTS8qbCggrFTYhYXIh3s92CMQ2c+iGdp/F7VguxaB1YGqBrAkGzGbc7VH4srlGx8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736200039; c=relaxed/simple;
-	bh=z/VadocUdUdIq55MhvoMTnhfHHh4oQRzsFA/UPTb7nc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3FDQrmBsDOnZPiN5JQrTuxOqm22vgSUhkpn+Eu+1V0x+Zv9NwdlfS1dpKu9VT0kE4H5C9AYuZ2Q5+RIp3izcN8G8GY8YdWJHmEDiRpDL7kgr84wo4Ei6bSOloCfLhdi3O41VSkrk5spLD0Dr1y7PCbF7zMRZ+6slJCOlvpbnWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHHnM/nQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736200498; c=relaxed/simple;
+	bh=sRXqLyS08FKNyNXeLLqR2Uqp92xRYnK/WmwVCzkZZM8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=SI4YA+3wgXop3URFWSO1aaTk0kx/l1iAM0A9jOc+cBrI80RV4EHqrnfjNr4BpBGZdw1GVAAAJ9eJ+eE6cEPBnaDhlte644av5skgEUjIL4rnwbVQmf322Rj+6NPuHAVqSDbwmwsqj3KV/WL85YcT5ydr+wdE5XSrdYGJ1/WsL8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UTN9JNVZ; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHHnM/nQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07880C4CED2;
-	Mon,  6 Jan 2025 21:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736200038;
-	bh=z/VadocUdUdIq55MhvoMTnhfHHh4oQRzsFA/UPTb7nc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cHHnM/nQbk1oAv8v5AOBl4xxOCqvseZqJ7vK1FK1gCAo3XQz6kGOWNThBQRWM7r+X
-	 klGkGTx65ryM+XJnFZzdaZJg4ecDWy6rRteFMkSW2z/8hIwJ4C4iAFUGBHzZ4No6Kf
-	 cgN5ZproSd1ReD0sIH8ZZmliM7DhDuahkoFu+fgF2pVDYH/EAglbaaP0ca2jxHf+Mr
-	 k31G+HI0W/xiKuq8TkFganfdp4N1XQoPFFUi0YPDYvK4mso6Ou6q9BZzc0Pk971Prb
-	 eYeCiyZ8QgEdP9O36PYbiXHsoNvCTOHwtXdbwdOFbhJt/zNvX/YvmIIWnZKJUZVC6L
-	 XZ796LjJ4IIGg==
-Date: Mon, 6 Jan 2025 13:47:15 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test trace_btf_general: Fix shellcheck warning
-Message-ID: <Z3xPY-z0uXQNy6a3@google.com>
-References: <20250106164300.734202-1-james.clark@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UTN9JNVZ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e544a56f461so13118055276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jan 2025 13:54:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736200495; x=1736805295; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wwbv0eBjXSqz5JyL8D/QAxclSgEvZsMWK7PCNFEcUhM=;
+        b=UTN9JNVZxPyVZE8nT8QyFD5ej8eXRxYypxfyon7pXdY1TxaIz0yXJthxxNRB6hyM+j
+         iU7YAqcGfgMA/Sgw0k4ocg5rBJbuG2cIocV3ooV9YcJg66dhc3d1zdVgWr6OT07HCtXw
+         7+f7Ira7HEcoqvuvf+6UG8QAj4JdD32uBfUS2R5ulbxdHf8DwGM8zHC5Pmz5Km4STd4G
+         taaftzZlLe5u1D8CHBW9uoq+BHQcJzGWougqpmjf6s0//3z2tD5mPXMbFBzO/8aAz62t
+         dsJV5Bz4OusvserZ5YwmGjvFYKSlXjasB8oHhzAY+K1EdmQ5aI+WUPMa0sfF1NnLcuXL
+         hwBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736200495; x=1736805295;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wwbv0eBjXSqz5JyL8D/QAxclSgEvZsMWK7PCNFEcUhM=;
+        b=E35koTgaBdS9pbOy+zoeV5cFl+4pefdbVKWkcgPS0pT879WIcbhywj5NUHKvuJBe9+
+         VxWpq9h3PFXgKGA8wwBp68RjTbISvkGWSnUZFdQJLPl/vncNo3xyW6wWoh6WelSyhbSX
+         I76HUvpLj1yB7YReit95OKtX+CZWVpvibRJUlPsLk6uyV+Xoi76fFu3Se0rPfaCNH3d/
+         pHsyzMLS08h0v6SGqMsrm9hsxncXRjRChyC5xm0B+AnQE4T2G5x2gpLkjFh/zsTSbT0b
+         6Bnja8e5NPdx0Uo9HkzT6mif0zuhPg8vn+1GumXtSPrlBpSs6+nI0tztOYsZq7jw8Gyy
+         XT+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU6xggITyOte7WR56SxwiDrljQK2onCrEMmjh2kN5G7dp9f8WXN2kp+BYQxAEccTSkxW4lrEgjiknnt0EiX2D0r@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYd9t3J7rYowMdxmkLcGutGduPEsJYGpZ1lYBtgQNCjm9eN0Zn
+	3uNF8BxS4CYYS/E521beQOEoIRL7aLDyHj7tYjcrGHyyg37gV7UEkE1d4trrpw93XYFATgN/+bv
+	bBIbr5g==
+X-Google-Smtp-Source: AGHT+IE64pOhFEk2+u849QZKBcx8pDByl5WTcbQqlErdPCsQ1+glVFWCoU4GnGilavMrM1gmfnnTIY3k1Ojn
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ede7:40c7:c970:8d77])
+ (user=irogers job=sendgmr) by 2002:a05:690c:2e0b:b0:6ef:7c9e:9232 with SMTP
+ id 00721157ae682-6f3f8208468mr1348377b3.4.1736200495480; Mon, 06 Jan 2025
+ 13:54:55 -0800 (PST)
+Date: Mon,  6 Jan 2025 13:54:42 -0800
+Message-Id: <20250106215443.198633-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250106164300.734202-1-james.clark@linaro.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v1] tools build: Fix a number of Wconversion warnings
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 06, 2025 at 04:42:58PM +0000, James Clark wrote:
-> Shellcheck versions < v0.7.2 can't follow this path so add the helper to
-> fix the following warning:
-> 
->   tests/shell/trace_btf_general.sh line 8:
->   . "$(dirname $0)"/lib/probe.sh
->   ^--------------------------^ SC1090: Can't follow non-constant source.
->   Use a directive to specify location.
-> 
-> Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
+There's some expressed interest in having the compiler flag
+-Wconversion detect at build time certain kinds of potential problems:
+https://lore.kernel.org/lkml/20250103182532.GB781381@e132581.arm.com/
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+As feature detection passes -Wconversion from CFLAGS when set, the
+feature detection compile tests need to not fail because of
+-Wconversion as the failure will be interpretted as a missing
+feature. Switch various types to avoid the -Wconversion issue, the
+exact meaning of the code is unimportant as it is typically looking
+for header file definitions.
 
-Thanks,
-Namhyung
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/build/feature/test-backtrace.c           | 2 +-
+ tools/build/feature/test-bpf.c                 | 2 +-
+ tools/build/feature/test-glibc.c               | 2 +-
+ tools/build/feature/test-libdebuginfod.c       | 2 +-
+ tools/build/feature/test-libdw.c               | 2 +-
+ tools/build/feature/test-libelf-gelf_getnote.c | 2 +-
+ tools/build/feature/test-libelf.c              | 2 +-
+ tools/build/feature/test-lzma.c                | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
->  tools/perf/tests/shell/trace_btf_general.sh | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index 005c93e6c770..e9ee727f3433 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -5,6 +5,7 @@
->  err=0
->  set -e
->  
-> +# shellcheck source=lib/probe.sh
->  . "$(dirname $0)"/lib/probe.sh
->  
->  file1=$(mktemp /tmp/file1_XXXX)
-> -- 
-> 2.34.1
-> 
+diff --git a/tools/build/feature/test-backtrace.c b/tools/build/feature/test-backtrace.c
+index e9ddd27c69c3..7962fbad6401 100644
+--- a/tools/build/feature/test-backtrace.c
++++ b/tools/build/feature/test-backtrace.c
+@@ -5,7 +5,7 @@
+ int main(void)
+ {
+ 	void *backtrace_fns[10];
+-	size_t entries;
++	int entries;
+ 
+ 	entries = backtrace(backtrace_fns, 10);
+ 	backtrace_symbols_fd(backtrace_fns, entries, 1);
+diff --git a/tools/build/feature/test-bpf.c b/tools/build/feature/test-bpf.c
+index 727d22e34a6e..e7a405f83af6 100644
+--- a/tools/build/feature/test-bpf.c
++++ b/tools/build/feature/test-bpf.c
+@@ -44,5 +44,5 @@ int main(void)
+ 	 * Test existence of __NR_bpf and BPF_PROG_LOAD.
+ 	 * This call should fail if we run the testcase.
+ 	 */
+-	return syscall(__NR_bpf, BPF_PROG_LOAD, &attr, sizeof(attr));
++	return syscall(__NR_bpf, BPF_PROG_LOAD, &attr, sizeof(attr)) == 0;
+ }
+diff --git a/tools/build/feature/test-glibc.c b/tools/build/feature/test-glibc.c
+index 9ab8e90e7b88..20a250419f31 100644
+--- a/tools/build/feature/test-glibc.c
++++ b/tools/build/feature/test-glibc.c
+@@ -16,5 +16,5 @@ int main(void)
+ 	const char *version = XSTR(__GLIBC__) "." XSTR(__GLIBC_MINOR__);
+ #endif
+ 
+-	return (long)version;
++	return version == NULL;
+ }
+diff --git a/tools/build/feature/test-libdebuginfod.c b/tools/build/feature/test-libdebuginfod.c
+index da22548b8413..823f9fa9391d 100644
+--- a/tools/build/feature/test-libdebuginfod.c
++++ b/tools/build/feature/test-libdebuginfod.c
+@@ -4,5 +4,5 @@
+ int main(void)
+ {
+ 	debuginfod_client* c = debuginfod_begin();
+-	return (long)c;
++	return !!c;
+ }
+diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/test-libdw.c
+index 2fb59479ab77..aabd63ca76b4 100644
+--- a/tools/build/feature/test-libdw.c
++++ b/tools/build/feature/test-libdw.c
+@@ -9,7 +9,7 @@ int test_libdw(void)
+ {
+ 	Dwarf *dbg = dwarf_begin(0, DWARF_C_READ);
+ 
+-	return (long)dbg;
++	return dbg == NULL;
+ }
+ 
+ int test_libdw_unwind(void)
+diff --git a/tools/build/feature/test-libelf-gelf_getnote.c b/tools/build/feature/test-libelf-gelf_getnote.c
+index 075d062fe841..e06121161161 100644
+--- a/tools/build/feature/test-libelf-gelf_getnote.c
++++ b/tools/build/feature/test-libelf-gelf_getnote.c
+@@ -4,5 +4,5 @@
+ 
+ int main(void)
+ {
+-	return gelf_getnote(NULL, 0, NULL, NULL, NULL);
++	return gelf_getnote(NULL, 0, NULL, NULL, NULL) == 0;
+ }
+diff --git a/tools/build/feature/test-libelf.c b/tools/build/feature/test-libelf.c
+index 905044127d56..2dbb6ea870f3 100644
+--- a/tools/build/feature/test-libelf.c
++++ b/tools/build/feature/test-libelf.c
+@@ -5,5 +5,5 @@ int main(void)
+ {
+ 	Elf *elf = elf_begin(0, ELF_C_READ, 0);
+ 
+-	return (long)elf;
++	return !!elf;
+ }
+diff --git a/tools/build/feature/test-lzma.c b/tools/build/feature/test-lzma.c
+index 78682bb01d57..b57103774e8e 100644
+--- a/tools/build/feature/test-lzma.c
++++ b/tools/build/feature/test-lzma.c
+@@ -4,7 +4,7 @@
+ int main(void)
+ {
+ 	lzma_stream strm = LZMA_STREAM_INIT;
+-	int ret;
++	lzma_ret ret;
+ 
+ 	ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
+ 	return ret ? -1 : 0;
+-- 
+2.47.1.613.gc27f4b7a9f-goog
+
