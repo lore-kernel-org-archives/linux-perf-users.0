@@ -1,193 +1,200 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E34591DE2BA;
-	Mon,  6 Jan 2025 12:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CE41DE2DB
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 12:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736164985; cv=none; b=G7x8+CfAmJYtEkt75Xx9YJfRo3xcXkLivPKUf1O+U5oo80yMu+Rh6OS7lKQiyg+0jzfXv5F0Bzpq7hwltw9n0Pxu1rzNGLUFMWJoCr94SORh69gS3LGF22YuGwZ6SEcAiA4cn1xr7Tz8JfmwQRAy1LlvLTdNNqjWiKtoGSTXa04=
+	t=1736167805; cv=none; b=C4zArXJbTjHnwiJO9+sA+IXj5OxsqzsuY8zotKJd3HjSNT0+NssSmdSFYYC5RbNCXYNdihGKsg0o3fp53dQskvB60sVrprlH9MzzK+tvstROIwiJzPmsJSXDs6Jmwy+aM+wS2afntagoW74/uChmjCGoS78jUV/GcAfobOfHyHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736164985; c=relaxed/simple;
-	bh=QfjadAsOVGZdCZmos6AA6yoX0eSz38bXvekBEfA5Pzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r3XtVF3t5rBiXX06ncdRCTWmOuP2fs/1Pas6OgHYs3+TIPGWCq7SeIfCmTPeqQXq2D1yocYlns+gIXydgo719HDITwPVfcKv2iFHMyi7k43WATrru3hH+Ci3/eeoVcsKHuUKJLeW0nYf8fyYbysjOb0Hhez3ooDj3yDAsNoC1yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B49E22D7;
-	Mon,  6 Jan 2025 04:03:30 -0800 (PST)
-Received: from e128066.arm.com (unknown [10.57.93.133])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11B743F673;
-	Mon,  6 Jan 2025 04:02:57 -0800 (PST)
-From: mark.barnett@arm.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com
-Cc: ben.gainey@arm.com,
-	deepak.surti@arm.com,
-	ak@linux.intel.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mark Barnett <mark.barnett@arm.com>
-Subject: [PATCH v2 5/5] perf: Record sample last_period before updating
-Date: Mon,  6 Jan 2025 12:01:56 +0000
-Message-Id: <20250106120156.227273-6-mark.barnett@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250106120156.227273-1-mark.barnett@arm.com>
-References: <20250106120156.227273-1-mark.barnett@arm.com>
+	s=arc-20240116; t=1736167805; c=relaxed/simple;
+	bh=tekkDN89VKqc4PjOMOIsCJEoUReT6b4y1qLe4BurqyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m1iZUlJG95KGzAuUrEPSoWReVFm80HhrKh+747V9IvFIQpgrrP++VkIpNwc5o1tIfn69Nm6lv9bS7v3bJU3/9EFI8ajwc4T8JdD+RQrRDUZLnmvBRj1gY31XIgKmTkrnEOoLwVMh5foQ2F6a/3DF6hFGBkw0Ol8ybbLaGVt3vKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YRYdT2hXyz9sPd;
+	Mon,  6 Jan 2025 13:38:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id FVLpbuyQA70k; Mon,  6 Jan 2025 13:38:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YRYdT1g9Gz9rvV;
+	Mon,  6 Jan 2025 13:38:53 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 25DFC8B76D;
+	Mon,  6 Jan 2025 13:38:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id BJWV85ZgAz44; Mon,  6 Jan 2025 13:38:53 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id AB4BF8B763;
+	Mon,  6 Jan 2025 13:38:52 +0100 (CET)
+Message-ID: <752a31b0-4370-4f52-b7cc-45f0078c1d6c@csgroup.eu>
+Date: Mon, 6 Jan 2025 13:38:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Perf doesn't display kernel symbols anymore (bisected commit
+ 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for
+ addresses"))
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <719a89a5-8dff-48a0-ba8f-802c740a00a6@csgroup.eu>
+ <53f3abe5-dd22-4a1a-82e6-bc88e91d1869@linaro.org> <Z217eBsXIaSgKuSs@x1>
+ <5217124a-f033-4085-b9f5-a477c96728d6@csgroup.eu> <Z3bYltoidQpqtyJ_@x1>
+ <48724052-4003-4140-8106-f9ea098cedcb@csgroup.eu> <Z3c4nupM-UENN5LM@x1>
+ <5b8ec160-4b50-4736-8012-30ae35c45028@csgroup.eu> <Z3gPncBcCnZiNy57@x1>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <Z3gPncBcCnZiNy57@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Mark Barnett <mark.barnett@arm.com>
 
-This change alters the PowerPC and x86 driver implementations to record
-the last sample period before the event is updated for the next period.
 
-A common pattern in PMU driver implementations is to have a
-"*_event_set_period" function which takes care of updating the various
-period-related fields in a perf_event structure. In most cases, the
-drivers choose to call this function after initializing a sample data
-structure with perf_sample_data_init. The x86 and PowerPC drivers
-deviate from this, choosing to update the period before initializing the
-sample data. When using an event with an alternate sample period, this
-causes an incorrect period to be written to the sample data that gets
-reported to userspace.
+Le 03/01/2025 à 17:26, Arnaldo Carvalho de Melo a écrit :
+> On Fri, Jan 03, 2025 at 01:40:24PM +0100, Christophe Leroy wrote:
+>> Le 03/01/2025 à 02:08, Arnaldo Carvalho de Melo a écrit :
+>>>>      PerfTop:     524 irqs/sec  kernel:51.1%  exact:  0.0% lost: 0/0 drop: 0/0
+>>>> [4000Hz cpu-clock:ppp],  (all, 1 CPU)
+>>>> -------------------------------------------------------------------------------
+> 
+>>>>       17.18%  [unknown]      [k] 0xc0891c14
+>>>>        7.63%  [unknown]      [k] 0xc005f11c
+> 
+>>> I think I hadn't notice this '[unknown]' one bit before :-\ the [k] is
+>>> there, so having unknown is odd
+>   
+>> Problem found, it's in maps__find_next_entry(), this leads to both
+>> map->start and map->end of kernel map being set to 0xc0000000, which leads
+>> to the failure of bsearch() in maps__find().
+> 
+> Right, and since you don't have any module (CONFIG_MODULES not set),
+> and most machines do, that is when the buggy function is called:
+> 
+> machine__create_kernel_maps()
+> 	if (!machine__get_running_kernel_start(machine, &name, &start, &end))
+> <SNIP>
+>          if (end == ~0ULL) {
+>                  /* update end address of the kernel map using adjacent module address */
+>                  struct map *next = maps__find_next_entry(machine__kernel_maps(machine),
+>                                                           machine__kernel_map(machine));
+> 
+>                  if (next) {
+>                          machine__set_kernel_mmap(machine, start, map__start(next));
+>                          map__put(next);
+>                  }
+>          }
+> <SNIP>
+> 
+> So machine__get_running_kernel_start() doesn't manage to fill end with
+> either because it doesn't find the ref_reloc_sym, one of:
+> 
+> const char *ref_reloc_sym_names[] = {"_text", "_stext", NULL}
+> 
+> And returns -1, so that first if block fails, and then start also
+> doesn't get set and remains 0, which doesn't seem to be the case, as you
+> get 0xc0000000 in it, or this fails:
+> 
+>          err = kallsyms__get_symbol_start(filename, "_edata", &addr);
+>          if (err)
+>                  err = kallsyms__get_function_start(filename, "_etext", &addr);
+>          if (!err)
+>                  *end = addr;
+> 
 
-Signed-off-by: Mark Barnett <mark.barnett@arm.com>
----
- arch/powerpc/perf/core-book3s.c  | 3 ++-
- arch/powerpc/perf/core-fsl-emb.c | 3 ++-
- arch/x86/events/core.c           | 4 +++-
- arch/x86/events/intel/core.c     | 3 ++-
- arch/x86/events/intel/knc.c      | 3 ++-
- 5 files changed, 11 insertions(+), 5 deletions(-)
+Indeed yes that one fails, because:
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 2b79171ee185..234803441caa 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2231,6 +2231,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 			       struct pt_regs *regs)
- {
- 	u64 period = event->hw.sample_period;
-+	const u64 last_period = event->hw.last_period;
- 	s64 prev, delta, left;
- 	int record = 0;
- 
-@@ -2296,7 +2297,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 	if (record) {
- 		struct perf_sample_data data;
- 
--		perf_sample_data_init(&data, ~0ULL, event->hw.last_period);
-+		perf_sample_data_init(&data, ~0ULL, last_period);
- 
- 		if (event->attr.sample_type & PERF_SAMPLE_ADDR_TYPE)
- 			perf_get_data_addr(event, regs, &data.addr);
-diff --git a/arch/powerpc/perf/core-fsl-emb.c b/arch/powerpc/perf/core-fsl-emb.c
-index 1a53ab08447c..d2ffcc7021c5 100644
---- a/arch/powerpc/perf/core-fsl-emb.c
-+++ b/arch/powerpc/perf/core-fsl-emb.c
-@@ -590,6 +590,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 			       struct pt_regs *regs)
- {
- 	u64 period = event->hw.sample_period;
-+	const u64 last_period = event->hw.last_period;
- 	s64 prev, delta, left;
- 	int record = 0;
- 
-@@ -632,7 +633,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 	if (record) {
- 		struct perf_sample_data data;
- 
--		perf_sample_data_init(&data, 0, event->hw.last_period);
-+		perf_sample_data_init(&data, 0, last_period);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			fsl_emb_pmu_stop(event, 0);
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index c75c482d4c52..39891fef4395 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1673,6 +1673,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 	struct cpu_hw_events *cpuc;
- 	struct perf_event *event;
- 	int idx, handled = 0;
-+	u64 last_period;
- 	u64 val;
- 
- 	cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -1692,6 +1693,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 			continue;
- 
- 		event = cpuc->events[idx];
-+		last_period = event->hw.last_period;
- 
- 		val = static_call(x86_pmu_update)(event);
- 		if (val & (1ULL << (x86_pmu.cntval_bits - 1)))
-@@ -1705,7 +1707,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 		if (!static_call(x86_pmu_set_period)(event))
- 			continue;
- 
--		perf_sample_data_init(&data, 0, event->hw.last_period);
-+		perf_sample_data_init(&data, 0, last_period);
- 
- 		if (has_branch_stack(event))
- 			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2e1e26846050..17d8c9b8738f 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3103,6 +3103,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 
- 	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
- 		struct perf_event *event = cpuc->events[bit];
-+		const u64 last_period = event->hw.last_period;
- 
- 		handled++;
- 
-@@ -3112,7 +3113,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 		if (!intel_pmu_save_and_restart(event))
- 			continue;
- 
--		perf_sample_data_init(&data, 0, event->hw.last_period);
-+		perf_sample_data_init(&data, 0, last_period);
- 
- 		if (has_branch_stack(event))
- 			intel_pmu_lbr_save_brstack(&data, cpuc, event);
-diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
-index 034a1f6a457c..e8720ac5200b 100644
---- a/arch/x86/events/intel/knc.c
-+++ b/arch/x86/events/intel/knc.c
-@@ -241,6 +241,7 @@ static int knc_pmu_handle_irq(struct pt_regs *regs)
- 
- 	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
- 		struct perf_event *event = cpuc->events[bit];
-+		const u64 last_period = event->hw.last_period;
- 
- 		handled++;
- 
-@@ -250,7 +251,7 @@ static int knc_pmu_handle_irq(struct pt_regs *regs)
- 		if (!intel_pmu_save_and_restart(event))
- 			continue;
- 
--		perf_sample_data_init(&data, 0, event->hw.last_period);
-+		perf_sample_data_init(&data, 0, last_period);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			x86_pmu_stop(event, 0);
--- 
-2.43.0
+~# grep -e _stext -e _etext -e _edata /proc/kallsyms
+c0000000 T _stext
+c08b8000 D _etext
 
+So there is no _edata and _etext is not text
+
+$ ppc-linux-objdump -x vmlinux | grep -e _stext -e _etext -e _edata
+c0000000 g       .head.text	00000000 _stext
+c08b8000 g       .rodata	00000000 _etext
+c1378000 g       .sbss	00000000 _edata
+
+Changing
+
+	kallsyms__get_function_start(filename, "_etext", &addr);
+
+to
+
+	kallsyms__get_symbol_start(filename, "_etext", &addr);
+
+works.
+
+
+The following change works as well:
+
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S 
+b/arch/powerpc/kernel/vmlinux.lds.S
+index b4c9decc7a75..b7b2cd7e2a20 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -123,10 +123,11 @@ SECTIONS
+  		 */
+  		*(.sfpr);
+  		*(.text.asan.* .text.tsan.*)
++
++		. = ALIGN(PAGE_SIZE);
++		_etext = .;
+  	} :text
+
+-	. = ALIGN(PAGE_SIZE);
+-	_etext = .;
+  	PROVIDE32 (etext = .);
+
+  	/* Read-only data */
+
+As it leads to:
+
+~# grep -e _stext -e _etext -e _edata /proc/kallsyms
+c0000000 T _stext
+c08b8000 T _etext
+
+$ ppc-linux-objdump -x vmlinux | grep -e _stext -e _etext -e _edata
+c0000000 g       .head.text	00000000 _stext
+c08b8000 g       .text	00000000 _etext
+c1378000 g       .sbss	00000000 _edata
+
+So what is the most correct fix ? Change architectures link script or 
+make perf _etext lookup more flexible, allowing non-text ?
+
+Looking at vmlinux.lds.S from various architectures, I have the feeling 
+several of them are affected.
+
+Now, regarding _edata, what I see is:
+
+~# tail -2 /proc/kallsyms
+c136a000 D __start___bug_table
+c1377c14 D __stop___bug_table
+
+And in System.map I have:
+
+c136a000 D __start___bug_table
+c1377c14 D __stop___bug_table
+c1378000 B __bss_start
+c1378000 B _edata
+c1378000 B initcall_debug
+c1378004 B reset_devices
+
+Should perf try to locate the very last symbol when it doesn't find 
+_edata ? Or should architecture's link script be modified ? Otherwise 
+commit 69a87a32f5cd ("perf machine: Include data symbols in the kernel 
+map") is just pointless.
+
+Christophe
