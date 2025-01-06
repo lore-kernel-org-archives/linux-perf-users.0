@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9811E0B80;
-	Mon,  6 Jan 2025 21:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089961DF983;
+	Mon,  6 Jan 2025 21:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736198125; cv=none; b=tv7qD5U1ldXj93rbncboOaOYnken01SBxk5goWg3dj8o8atkCxJQ+fVeuWIhLK5LWQagJfmj+rZGYeHUFkVdOcp3bgvYOnJrkkLogFGjN/6DbnrU33n4gSnViVPuaePTfITP6laKieMwDHx7HaXMy+kInWxZZVUCy92Fz/ETXS8=
+	t=1736198735; cv=none; b=NXWjBh2b/zr/Sh89G2F49AFOO4YKV/pmN++XsuHq7ZY4rwf87+oQhbu6aYhPhX3IRq6fcMx4tomfHjez4wlMis386W4Kwamtgif1IXGg2t8T//deumWNsqyLHAl6Vw5vN8sSMfiNkRDDby2KkCpAjZz8DKbnsSQQhb3YDP4xN44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736198125; c=relaxed/simple;
-	bh=IlUoArd3cgICxTGfsWTXC+9GlSm6A1FG5iyMIObahC0=;
+	s=arc-20240116; t=1736198735; c=relaxed/simple;
+	bh=hi1GMaWRkgQ+46UxxVoQ3+2NmjCT2Y5rvyleUJPSy0s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m1vhSgRetZr0orTbKSSEJI7o0XkK7D67vcs0gLeExzl1WgKg1z53Jk6egFGP1/K8iORp4rZa+QPSerwdPXOJjQ89mJDpzjlZo/c5EVdMeGOoRrYU/5InRSaqEI0n1P+FwUJBASdGDOM87j4abdkrpOH3I9V+lek9JfYlsRNdsSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwGagPV4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxFzJVHJ9L7xXFJ3bgQ0hQsazIfNYF8dpVkT7wuVgBFQcb2X2Zqa5Rub1Rv0/XVi0GP94zoYn9LfzTbdzSNKyX9Ieg50iS0kEUaxdvqT63977lyF5qi671dkNWIlasT0hK2fZj1V4J0Tbzp8JjbOhsiasoTeVAPx9CsuzEXLM60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2gJQqCa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwGagPV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D953C4CED2;
-	Mon,  6 Jan 2025 21:15:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2gJQqCa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09358C4CED2;
+	Mon,  6 Jan 2025 21:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736198124;
-	bh=IlUoArd3cgICxTGfsWTXC+9GlSm6A1FG5iyMIObahC0=;
+	s=k20201202; t=1736198734;
+	bh=hi1GMaWRkgQ+46UxxVoQ3+2NmjCT2Y5rvyleUJPSy0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dwGagPV4zLkJa5iQxsPetExJbd2Anx2BZkFgd93Zg9A4i6J9V03AAp8GtT14zgXy2
-	 fBqK0+rm6zyUhARLe6/oaTN6y6IG2Tx4SnBSir04ItlTfdwGBC4CDH+SdWQ4gJes3G
-	 RWpAEPrAHGH2dn6sFTadTjz2L05Reo9/6n9tF4MiWFiPE2E1o4EqHKfXIKLh/+LwEH
-	 DDIPupJY7U0qRZ8It5lESknB8k/g0b9GSyCEldvE9FFg5Iuu5Wsd2z7SYmDsT4PZGy
-	 QxwjJcWjzNkX1ypXCbxL8VnuyLlPPSBt1i0f+CE9zrJ4wR8Gftrz0Q0U1T9DiRmVe5
-	 ZJMUtFO1VYqIQ==
-Date: Mon, 6 Jan 2025 13:15:22 -0800
+	b=t2gJQqCaXjOVITG6+z2iI7AUZ1q5sJ+NaMpfM3nks3w42avbACcCaVuKGG3FHpMIh
+	 KYlNRBYYYaI/yo6n7bRcgAq6Y3gG5nHBPtYVqos9+Wy9SKm33PIsfSxH+jdR4XRRBr
+	 iBGGzgGEHcu/P9d1VClrMQTt7A/pdbnXXtKQgXx4clkCemiw5GTjmslFlnhn8dXa+h
+	 fDWN3c/07GcMYEm8e5pVo64g1G1SRNVX6xqmNrNgafudSHv5ZxITmop66fOJj7ANGP
+	 8+UsNNDKVsY7jszAY4G96rzt+fMn5XM+jJPhirQHDTQaEwJJgynY1hNkPSUV62OLsI
+	 98oAfaD4qAV1A==
+Date: Mon, 6 Jan 2025 13:25:32 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH] tools/perf: Fix return code for lock_contention_prepare
-Message-ID: <Z3xH6kCK9zj5ttZM@google.com>
-References: <20241223135655.8042-1-atrajeev@linux.vnet.ibm.com>
+	irogers@google.com, hbathini@linux.ibm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH] tools/perf: Fix segfault during perf record --off-cpu
+ when debuginfo is not enabled
+Message-ID: <Z3xKTKkVSf7tWCtD@google.com>
+References: <20241223135813.8175-1-atrajeev@linux.vnet.ibm.com>
+ <409D0233-93FF-40D6-BC2E-B7625E4E1B97@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,59 +47,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241223135655.8042-1-atrajeev@linux.vnet.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <409D0233-93FF-40D6-BC2E-B7625E4E1B97@linux.vnet.ibm.com>
 
-Hello,
+On Fri, Dec 27, 2024 at 04:18:32PM +0530, Athira Rajeev wrote:
+> 
+> 
+> > On 23 Dec 2024, at 7:28 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
+> > 
+> > When kernel is built without debuginfo, running perf record with
+> > --off-cpu results in segfault as below:
+> > 
+> >   ./perf record --off-cpu -e dummy sleep 1
+> >   libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
+> >   libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
+> >   libbpf: failed to find valid kernel BTF
+> >   Segmentation fault (core dumped)
+> > 
+> > The backtrace pointed to:
+> > 
+> >   #0  0x00000000100fb17c in btf.type_cnt ()
+> >   #1  0x00000000100fc1a8 in btf_find_by_name_kind ()
+> >   #2  0x00000000100fc38c in btf.find_by_name_kind ()
+> >   #3  0x00000000102ee3ac in off_cpu_prepare ()
+> >   #4  0x000000001002f78c in cmd_record ()
+> >   #5  0x00000000100aee78 in run_builtin ()
+> >   #6  0x00000000100af3e4 in handle_internal_command ()
+> >   #7  0x000000001001004c in main ()
+> > 
+> > Code sequence is:
+> >   static void check_sched_switch_args(void)
+> >   {
+> >        struct btf *btf = btf__load_vmlinux_btf();
+> >        const struct btf_type *t1, *t2, *t3;
+> >        u32 type_id;
+> > 
+> >        type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
+> >                                         BTF_KIND_TYPEDEF);
+> > 
+> > btf__load_vmlinux_btf fails when CONFIG_DEBUG_INFO_BTF is not enabled.
+> > Here bpf__find_by_name_kind calls btf__type_cnt with NULL btf
+> > value and results in segfault. To fix this, add a check to see if
+> > btf is not NULL before invoking bpf__find_by_name_kind
+> > 
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-On Mon, Dec 23, 2024 at 07:26:55PM +0530, Athira Rajeev wrote:
-> perf lock contention returns zero exit value even if the lock contention
-> BPF setup failed.
-> 
->    # ./perf lock con -b true
->    libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
->    libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
->    libbpf: failed to find valid kernel BTF
->    libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
->    libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
->    libbpf: failed to find valid kernel BTF
->    libbpf: Error loading vmlinux BTF: -ESRCH
->    libbpf: failed to load object 'lock_contention_bpf'
->    libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
->    Failed to load lock-contention BPF skeleton
->    lock contention BPF setup failed
->    # echo $?
->     0
-> 
-> Fix this by saving the return code for lock_contention_prepare
-> so that command exits with proper return code
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Thanks for the fix, the change itself looks good but I think we need the
-same for setup_output_field() and select_key() as well.
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
-> ---
->  tools/perf/builtin-lock.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> > ---
+> > tools/perf/util/bpf_off_cpu.c | 5 +++++
+> > 1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+> > index a590a8ac1f9d..4269b41d1771 100644
+> > --- a/tools/perf/util/bpf_off_cpu.c
+> > +++ b/tools/perf/util/bpf_off_cpu.c
+> > @@ -100,6 +100,11 @@ static void check_sched_switch_args(void)
+> > const struct btf_type *t1, *t2, *t3;
+> > u32 type_id;
+> > 
+> > + if (!btf) {
+> > + pr_debug("Missing btf, check if CONFIG_DEBUG_INFO_BTF is enabled\n");
+> > + goto cleanup;
+> > + }
+> > +
 > 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 208c482daa56..2226c7dd4ae6 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -2049,7 +2049,8 @@ static int __cmd_contention(int argc, const char **argv)
->  				goto out_delete;
->  		}
->  
-> -		if (lock_contention_prepare(&con) < 0) {
-> +		err = lock_contention_prepare(&con);
-> +		if (err < 0) {
->  			pr_err("lock contention BPF setup failed\n");
->  			goto out_delete;
->  		}
-> -- 
-> 2.43.5
+> Hi,
+> 
+> Looking for review comments on this
+> 
+> Athira
+> > type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
+> > BTF_KIND_TYPEDEF);
+> > if ((s32)type_id < 0)
+> > -- 
+> > 2.43.5
+> > 
 > 
