@@ -1,129 +1,90 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BE61DE3CA
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jan 2025 17:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFDD4A0C;
+	Mon,  6 Jan 2025 17:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736183830; cv=none; b=hSZrAbwAbMK2P0oz9AB+vl8q5iDZPceXUshSqLNDXyBS6x18JyPBnNJqK5gMtMwT4UZb1IMd2XRKveF5XALptek3O5fMnsRpA5o+GLyjHf4Fsk7/RRL17TRIikyLalPjU6Ph4v+t7MfJ36bBusqxo5qxtB+TlxTKJnwtsKeThzE=
+	t=1736185855; cv=none; b=rIb4+h67U3D/p9bXfS4yh2JZJ4IUG0dWzYMK6Tx7RGbuTFuRoi+v8KtqchOfe7el83rN0B9gSh2bvFNaU/pBjmZFSZKM9n2nBlEQNNc1cNLSsCxy6Yf+KSD4wZPIZgrkhQ0m+eVBTPvDZwsUJRD3+kbpd+8CVFZjgggYb/EoPFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736183830; c=relaxed/simple;
-	bh=xhn3nqer+Yv1wd1X4//8Y3M3zQrwl6kxv7xqijPdrgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M32QKE1NAaK8a/O33UaulUH3tm1oZC+QEeIX7ONXk88Jzf2wqOAj2xV81iOKb5EqOkeNgH5HFWBQOA8vn8U2thUPljtVGP+NRzx0kFVmEfG/8Eahj8s+/9wxCudq70lFNTrBM04CX+XEFgVqrXr/vEfWxBu4DVyVUqFSgX3Go+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Du1Soh9N; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736185855; c=relaxed/simple;
+	bh=TRtW8/9BwFZwtdlWRGqcUKIsNHklKQHW+AZk0cQ0up4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D62R2U0eeHHNjwK4ouKXK9c3Fh11Hpw1Kw3z0WWfTWvftV+banxwkyw603RYX7FxpZnnCAZTMyuF9orIouRXnHDiO9/hUqw9qx2fENsNsFfdwaoDtaD3hA7Yk36vGyqSskDiJ6nhkzhgNd+whP2ZuTao/McFIILyfD9yGNXPRD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4cd8LWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Du1Soh9N"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so287375ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jan 2025 09:17:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736183828; x=1736788628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xhn3nqer+Yv1wd1X4//8Y3M3zQrwl6kxv7xqijPdrgk=;
-        b=Du1Soh9NJZAZWBgyywgAKvd0oryInDeeI3BtklgZJLpKGKaMESSEiWTos/PzxH/dKP
-         hQa4edDYdo23V6gAgTnKXCeDrNUctYmfgGg12rJ2nLPFa+WhES7Fh5ovPhY6yswLm5pt
-         +VzlcbyUx1y/MeLh5rvpGNw4t9tJZysZsa3eOcOjUv93hcsYTVs7TCvALn/nkbASzag+
-         v7HlUajPUWN3eWIFQGxzSIfXNTh9uQ7n59s8xN9DFe8pIgDwuIBb/bDnu+XEsv2LzKMB
-         l0IV0glQJ7zUaiRcRXuMDHT+XXDnrT/mYBUo+mCRe2LzEE3B6tRQSp4JRRrUvInW+G9+
-         avzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736183828; x=1736788628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xhn3nqer+Yv1wd1X4//8Y3M3zQrwl6kxv7xqijPdrgk=;
-        b=exP7fUPAOIjV69k0aDN/dAI/S7P4S7sev7Lv6kSAcknlfXa6pYvRqUOB7gj6Z/oIcK
-         kimabWFxaPklmc2g1HuXeZgnMAJkgXGMOa3qg5b9hVrt7uS9LGSzjYAqsLcQjn1qh+xn
-         fk/lqHyYmHTWfJnHtrhWCvZhLTKhKInbYX3iblJIC2a69RAYrwM+Ja931ODBvDzllcnr
-         qa7Q5GwSPbx0Ja01RC2blWGGKOf4Ia1Pdc6wB5rDfQ53AGc8/HYSC6p+6D/IPHOzKunC
-         Y9gvF+6R5I13vPrb36GUwrHlC380Pq3Gbuj8tBrcVsE7Ov699ZY1sz+ksqrLSZKOZfuG
-         JXbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXe7c8+KKNlbegCreHOKlSF/sVT/ZXD+CyzhGCzAtdDYonOK1niNkMy4O4nurb5rwITJua43EQZUnS8IGhsXm8t@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOZZVe9wXrhnj/6tjICJDnHPc0SuKLFX5nUkJciY0lcJsI8aA1
-	O0Jh6LnODfZxmRe7tkOTto1XNrHJbo1bGiiqu5sXHu6kDkdHP/n5cXrLm7a6quW3v78W6MPV//B
-	eG0XvimjOcZ6gFFvenNvTCmA5ktapZYVFaBd+
-X-Gm-Gg: ASbGncv3d1BIX6ZAFvplCSTr9kLnrEsxxGjLGkQZ0pA6QNENro8oX1uS7CghG3oiOKw
-	WJGESdmqCdSvt9ckc2ukfW56jgFImvYhlRdwOdTKBZtLyR4D5mHHRT3XThcBwnDcq51yg
-X-Google-Smtp-Source: AGHT+IHXjvHAqCctEeQaoW76FWJw4OftTUEn7E/9S8G3CETYtw+ZenqNrzEnUTiAfQPVvyuVGbddSh4V8qMvqfGNOkw=
-X-Received: by 2002:a05:6e02:1b06:b0:3a7:c721:57e2 with SMTP id
- e9e14a558f8ab-3cde2c2154dmr4802935ab.21.1736183827684; Mon, 06 Jan 2025
- 09:17:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4cd8LWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 226B4C4CED2;
+	Mon,  6 Jan 2025 17:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736185854;
+	bh=TRtW8/9BwFZwtdlWRGqcUKIsNHklKQHW+AZk0cQ0up4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V4cd8LWTiSKmGe6np3Mjbef/eZ6S31mr3fOwTSabLHtzuYaEJdiAQFAB0YVSNPhcj
+	 wYpVSe7dsJ1e6LzJ6+v53TWKJ/Ovd38GUfsHKE/WdhZK7Xf5apHpUu//Qy+/jfbFG3
+	 LvMYWLSdyzLu6J4B1Y0dp8vojlPZGVhhEPRtBZJ5/pEtMXu8xIV2MYTY4dxRhKmv+/
+	 r81OieoOYwHSQK81ByWG359MyGB5YNewtTHydEXPEWAvLUBCIcD8vCRG3nC0tOw8kW
+	 htvX7LOZrGT1jGmRJM1oK6U2nuaX40i8NA9I1OZD42DFuCdH/VsEgTffubrWzu4CXr
+	 momx+7ZMEDWNw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH bpf-next 1/2] bpf: Return error for missed kprobe multi bpf program execution
+Date: Mon,  6 Jan 2025 18:50:47 +0100
+Message-ID: <20250106175048.1443905-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241209222800.296000-1-irogers@google.com> <CAP-5=fWr9R74-NbKbW96otG6KitQYaQng4D40Bv4z9ov9yvNJA@mail.gmail.com>
- <Z1iQhL4WXFL4Wf27@x1> <2ae362c8-b8f4-453e-9c92-a25ad989ffe4@linux.intel.com>
-In-Reply-To: <2ae362c8-b8f4-453e-9c92-a25ad989ffe4@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 6 Jan 2025 09:16:56 -0800
-Message-ID: <CAP-5=fUTXzZfRqre0Vai_5pxue_mAvb9oh-Ea9Sgr7U=Lrm_Nw@mail.gmail.com>
-Subject: Re: [PATCH v1 00/22] Intel vendor events and TMA 5.01 metrics
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 11, 2024 at 8:24=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-12-10 2:03 p.m., Arnaldo Carvalho de Melo wrote:
-> > On Mon, Dec 09, 2024 at 04:44:27PM -0800, Ian Rogers wrote:
-> >> On Mon, Dec 9, 2024 at 2:28=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> >>>
-> >>> Update the Intel vendor events to the latest.
-> >>> Update the metrics to TMA 5.01.
-> >>> Add Arrowlake support.
-> >>> Add metrics for LNL and GNR.
-> >>> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
-> >>>
-> >>> The perf json was generated using the script:
-> >>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.p=
-y
-> >>> with the generated json being in:
-> >>> https://github.com/intel/perfmon/tree/main/scripts/perf
-> >>>
-> >>> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> >>> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
-> >>> Weilin Wang <weilin.wang@intel.com> for helping get this patch series
-> >>> together.
-> >>
-> >> I should have also said, this series requires:
-> >> https://lore.kernel.org/all/20241113165558.628856-1-irogers@google.com=
-/
-> >
-> > Applying that one now to perf-tools-next,
-> >
-> > Kan, can I have your Acked-by or Reviewed-by?
-> >
->
-> Thanks Ian for the series!
->
-> Sure.
->
-> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+When kprobe multi bpf program can't be executed due to recursion check,
+we currently return 0 (success) to fprobe layer where it's ignored for
+standard kprobe multi probes.
 
-Happy new year and thanks Kan! Arnaldo, Namhyung please let me know if
-there is anything more necessary for this series. I don't believe it
-needs a rebase.
+For kprobe session the success return value will make fprobe layer to
+install return probe and try to execute it as well.
 
-Thanks,
-Ian
+But the return session probe should not get executed, because the entry
+part did not run. FWIW the return probe bpf program most likely won't get
+executed, because its recursion check will likely fail as well, but we
+don't need to run it in the first place.. also we can make this clear
+and obvious.
+
+It also affects missed counts for kprobe session program execution, which
+are now doubled (extra count for not executed return probe).
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ kernel/trace/bpf_trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 48db147c6c7d..1f3d4b72a3f2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2797,7 +2797,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 
+ 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+ 		bpf_prog_inc_misses_counter(link->link.prog);
+-		err = 0;
++		err = 1;
+ 		goto out;
+ 	}
+ 
+-- 
+2.47.0
+
