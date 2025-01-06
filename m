@@ -1,667 +1,273 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4712A1D88CA;
-	Mon,  6 Jan 2025 07:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DAD4A04;
+	Mon,  6 Jan 2025 08:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736147499; cv=none; b=e3cOGEuGepRhIS3FZTSRqcttvg2uyX0Ip49yAFZHHTHMnmjQAeUutoCvuTF9+vuMHmKy6i1i5hH48zMNMhp95pYFwQDZWLpH+7SqbsjhqjP3QvNIvaCGefVRvyCBhmLVnDIHzsdPAwN86Ppb5h9Rc54+0iSzvREFsaTvaUBVrL0=
+	t=1736151625; cv=none; b=H9sYJBZNAM9ttHKlzl02deLOOrwLq3OzmkTelwL8tn+ELi5xUZBobV5a4jBOqZAyq9W4pnCWtekcJmS9VVrqWkphj2bSF2+nI1j5RdyRoTj1mF2LVOwmh/zSHQ9SxSHXxPVUzZG6INbVopH3RSVD6r1b1iNmtS1x2Wq91CsSZtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736147499; c=relaxed/simple;
-	bh=4esfJbr/ndRCBg3Oid0nWCBjXuYq0eF4TjvWg7Jum4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=inHw1qAZLoWIScNkfkWJK82DxcMcfrxIbDdEtRGlpoIIXw4/aTg90cSyu8xDcId8I8hoTnvUzwC5ekUqwkHCbxG8fFB4ncR+k9LSzFhZ7vQk2O9Hy2W3D34DDhpDAbPdPErrb25BVpAxiGir+txL7ga0wnEhYsTBdEpwSIqloNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=vbTMruI2; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1736151625; c=relaxed/simple;
+	bh=6GixmoG+3+b+D0THHE18JyNslvfoVFs48o9nkhfIygY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kRSGHUhrf1cO5VHN1cFp/rODqX7QBksOP5mnSLyQA8H7IWWCrnHxJazuVPWIskhi8AXmcQVa6k3cJo1r7+H2B/GM97DN5sRjZJRNifOz6Ad76CGMpEcNkGScSzO2of9MhzA4AkIvnLlaRjEJH1zO7983Ad/QA+lIU31P1T/zD3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ovf+6V3k; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vbTMruI2"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677RpC3211026
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 5 Jan 2025 23:07:35 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677RpC3211026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024121701; t=1736147255;
-	bh=uEySWffycqEazA32XLvE6c2V3ji21ymDL0KmEs62lgE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vbTMruI2ojkR6CbeyrPrFKqNHfZuFL4xVbemKF95YA2Brt0ShTaeZBjcusxbbX22j
-	 H+PNQz0LfiyhtpFudp5D3SLwBB99jPlA5v1TRoIZ20ht3I9RtAydq+RI+fVkE08mf5
-	 uUHbYd5VaznNMaUsJYi1x1V3L5SAu4cGEFwU8fg9ZwHUl7QWRY6Gfp+H26zkjHPNg2
-	 Yg3XjebSTlmgp9emSUvQ5KELlo8BzzVtVPAexNhWT47MfY/MJg0Ck5ik5LoKKN0m3E
-	 t3koqkdnxF5tPnjQX0QprMqWIHPajk/MsmHQ69Ll9Hx8WIvjLrwLrz0ZHrUl41wwc4
-	 1/o4O9iIKpO5w==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: [PATCH v5 3/5] x86/cpufeatures: Remove {disabled,required}-features.h
-Date: Sun,  5 Jan 2025 23:07:25 -0800
-Message-ID: <20250106070727.3211006-4-xin@zytor.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
-References: <20250106070727.3211006-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ovf+6V3k"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e3fd6cd9ef7so19403135276.1;
+        Mon, 06 Jan 2025 00:20:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736151623; x=1736756423; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A162jcE+dcZbXBQ3NVUikao2g+sNPSwsAqt9k6Pv4f0=;
+        b=Ovf+6V3kUrewOUCUnDMEvK17gJl7IqLDchAg8i5HRqA7+DBxxTjq0dzOB9KIduVlaB
+         LHZDswaqr4+SQEzyi+rNnBd8U79Ud9cjhFGmScieRejTOv6DyyQhtnsYI1MaJwsKo/iV
+         Nm5XbBy/NE594Jusko/PXYrujxmL4rxXGWuPcXGOvCf9ey3LN0bT8kId4e9tti1+l+pU
+         ONsq8DN8gQV1e3zSjTD2+kp1cuPhH/gk/4kbqsU2WsS5hdtGK0ODeLcgsi7XCxQ6SP83
+         mOuQ427xAM/e6iB91IAzFjTGwRkInBE+cwJ/o4zqSkIx0JJgpSaP8QUc30LogtLrne5w
+         ZJZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736151623; x=1736756423;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A162jcE+dcZbXBQ3NVUikao2g+sNPSwsAqt9k6Pv4f0=;
+        b=S4E9bwCNlkgttD4thTA5PmtEo2dU6VdCSPmTCTY9MorQRnSAzv4g8n7mEGG2tMie8O
+         LdzgKrq1FTn6yplZ+YUZX8Urz0+D5FVdb18plaP9x9Ts/qEEum7zBFK/6v8cv2xcCAjZ
+         dagnNLNvcWJ4IBgTLCdWte/CvpYSGkwNb/JrGvn4sXv3SGL6y+FsXy+rAy0fE2CLeZJw
+         oR/KrbsVY6+8wTMwR7gG/Dr3+BCl5ouIZxpmP9tJcVjasD1CtOXkYgaYOzLZYXLmrHiv
+         +mY4s5rezLBO6JqzfQNqLWFkoBL8Ysni4PrfTth7I/+oRxZthV7xUlk19LQeCy7uX4fk
+         XG1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUOig2HrtBZJuO6nTY5iUvv2CsvH5goa7Aovj756m/tWd0Nfrcbu2I/M/CfeMkS+1X+Xpw=@vger.kernel.org, AJvYcCWuQFNQ0WHzH5ly5CWlH1SFlZWRk1KTyovyVof6jmc1tkhpnDwaHtKx1k8ggfrOjTRPqrgNs4geHGZvLt+O@vger.kernel.org, AJvYcCXwqgojB3z8bhvTNcXGd1h4WgXjiGOncy/4PE+rRQgr/p6EF93AQRDmGaOhNxQfhKYvL7QZaz8LGd6tIemN6nkmQw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuj3zNhxzKiwhKmLjv8iVEWrSjTa9rKoZDb4YUiuUGpYgoXCj3
+	Qo7GnzUo1+2u6yHNXYYeXFflMH1EtJZRpN+cRk7WlfLDeD2TpKffFimfT2nFS3YBRLG0FRTFG7C
+	GNxUnWX2gnLlN++G6gDp+aYEkQe8=
+X-Gm-Gg: ASbGnctwgOksIPckuUDM8Wh0i3IU7mMfmKexVH/KPZAsMLAM+5qxwBVU/qUUf7+EZLa
+	Fg8H7e9OE3+lHEs22LlauPUcS7BR9feH5c38V
+X-Google-Smtp-Source: AGHT+IEYAJMaykbg1DUSBx3whgCODzUTMb02CArEp3mxJe5MnRzaAxUAt9ecr3Z+Ybu9+xQmFDb64GdR/wIQwMV2478=
+X-Received: by 2002:a05:690c:3687:b0:6f0:301:5fea with SMTP id
+ 00721157ae682-6f3e2ac4f92mr405375757b3.12.1736151622856; Mon, 06 Jan 2025
+ 00:20:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250102201248.790841-1-namhyung@kernel.org>
+In-Reply-To: <20250102201248.790841-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Mon, 6 Jan 2025 00:20:11 -0800
+Message-ID: <CAH0uvogzMcLXmr9KLT8CzmC0u4UgQ_2QGrpdOCzWWDjQbCL=Uw@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Fix unaligned access for augmented args
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The functionalities of {disabled,required}-features.h are replaced
-with the auto-generated header cpufeature_masks.h. Thus they are no
-longer needed. So delete them.
+Hello Namhyung,
 
-None of the macros defined in {disabled,required}-features.h is used
-in tools, delete them too.
+Thanks for the fix, and sorry for the delay and for making you do
+this. I should've done it myself earlier. This bug is present in the
+commit without the whole BTF thing.
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/include/asm/disabled-features.h      | 161 ------------------
- arch/x86/include/asm/required-features.h      | 105 ------------
- tools/arch/x86/include/asm/cpufeatures.h      |   8 -
- .../arch/x86/include/asm/disabled-features.h  | 161 ------------------
- .../arch/x86/include/asm/required-features.h  | 105 ------------
- tools/perf/check-headers.sh                   |   2 -
- 6 files changed, 542 deletions(-)
- delete mode 100644 arch/x86/include/asm/disabled-features.h
- delete mode 100644 arch/x86/include/asm/required-features.h
- delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
- delete mode 100644 tools/arch/x86/include/asm/required-features.h
+Here is the commit before '45a0c928e7aa perf trace: BTF-based enum
+pretty printing for syscall args'
 
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-deleted file mode 100644
-index c492bdc97b05..000000000000
---- a/arch/x86/include/asm/disabled-features.h
-+++ /dev/null
-@@ -1,161 +0,0 @@
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#define _ASM_X86_DISABLED_FEATURES_H
--
--/* These features, although they might be available in a CPU
-- * will not be used because the compile options to support
-- * them are not present.
-- *
-- * This code allows them to be checked and disabled at
-- * compile time without an explicit #ifdef.  Use
-- * cpu_feature_enabled().
-- */
--
--#ifdef CONFIG_X86_UMIP
--# define DISABLE_UMIP	0
--#else
--# define DISABLE_UMIP	(1<<(X86_FEATURE_UMIP & 31))
--#endif
--
--#ifdef CONFIG_X86_64
--# define DISABLE_VME		(1<<(X86_FEATURE_VME & 31))
--# define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
--# define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
--# define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
--# define DISABLE_PCID		0
--#else
--# define DISABLE_VME		0
--# define DISABLE_K6_MTRR	0
--# define DISABLE_CYRIX_ARR	0
--# define DISABLE_CENTAUR_MCR	0
--# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
--#endif /* CONFIG_X86_64 */
--
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
--# define DISABLE_PKU		0
--# define DISABLE_OSPKE		0
--#else
--# define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
--# define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
--
--#ifdef CONFIG_X86_5LEVEL
--# define DISABLE_LA57	0
--#else
--# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
--# define DISABLE_PTI		0
--#else
--# define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETPOLINE
--# define DISABLE_RETPOLINE	0
--#else
--# define DISABLE_RETPOLINE	((1 << (X86_FEATURE_RETPOLINE & 31)) | \
--				 (1 << (X86_FEATURE_RETPOLINE_LFENCE & 31)))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETHUNK
--# define DISABLE_RETHUNK	0
--#else
--# define DISABLE_RETHUNK	(1 << (X86_FEATURE_RETHUNK & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_UNRET_ENTRY
--# define DISABLE_UNRET		0
--#else
--# define DISABLE_UNRET		(1 << (X86_FEATURE_UNRET & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
--# define DISABLE_CALL_DEPTH_TRACKING	0
--#else
--# define DISABLE_CALL_DEPTH_TRACKING	(1 << (X86_FEATURE_CALL_DEPTH & 31))
--#endif
--
--#ifdef CONFIG_ADDRESS_MASKING
--# define DISABLE_LAM		0
--#else
--# define DISABLE_LAM		(1 << (X86_FEATURE_LAM & 31))
--#endif
--
--#ifdef CONFIG_INTEL_IOMMU_SVM
--# define DISABLE_ENQCMD		0
--#else
--# define DISABLE_ENQCMD		(1 << (X86_FEATURE_ENQCMD & 31))
--#endif
--
--#ifdef CONFIG_X86_SGX
--# define DISABLE_SGX	0
--#else
--# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
--#endif
--
--#ifdef CONFIG_XEN_PV
--# define DISABLE_XENPV		0
--#else
--# define DISABLE_XENPV		(1 << (X86_FEATURE_XENPV & 31))
--#endif
--
--#ifdef CONFIG_INTEL_TDX_GUEST
--# define DISABLE_TDX_GUEST	0
--#else
--# define DISABLE_TDX_GUEST	(1 << (X86_FEATURE_TDX_GUEST & 31))
--#endif
--
--#ifdef CONFIG_X86_USER_SHADOW_STACK
--#define DISABLE_USER_SHSTK	0
--#else
--#define DISABLE_USER_SHSTK	(1 << (X86_FEATURE_USER_SHSTK & 31))
--#endif
--
--#ifdef CONFIG_X86_KERNEL_IBT
--#define DISABLE_IBT	0
--#else
--#define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
--#endif
--
--#ifdef CONFIG_X86_FRED
--# define DISABLE_FRED	0
--#else
--# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
--#endif
--
--#ifdef CONFIG_KVM_AMD_SEV
--#define DISABLE_SEV_SNP		0
--#else
--#define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
--#endif
--
--/*
-- * Make sure to add features to the correct mask
-- */
--#define DISABLED_MASK0	(DISABLE_VME)
--#define DISABLED_MASK1	0
--#define DISABLED_MASK2	0
--#define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
--#define DISABLED_MASK4	(DISABLE_PCID)
--#define DISABLED_MASK5	0
--#define DISABLED_MASK6	0
--#define DISABLED_MASK7	(DISABLE_PTI)
--#define DISABLED_MASK8	(DISABLE_XENPV|DISABLE_TDX_GUEST)
--#define DISABLED_MASK9	(DISABLE_SGX)
--#define DISABLED_MASK10	0
--#define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
--			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
--#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
--#define DISABLED_MASK13	0
--#define DISABLED_MASK14	0
--#define DISABLED_MASK15	0
--#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
--			 DISABLE_ENQCMD)
--#define DISABLED_MASK17	0
--#define DISABLED_MASK18	(DISABLE_IBT)
--#define DISABLED_MASK19	(DISABLE_SEV_SNP)
--#define DISABLED_MASK20	0
--#define DISABLED_MASK21	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
--
--#endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
-deleted file mode 100644
-index cef8104c103c..000000000000
---- a/arch/x86/include/asm/required-features.h
-+++ /dev/null
-@@ -1,105 +0,0 @@
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#define _ASM_X86_REQUIRED_FEATURES_H
--
--/* Define minimum CPUID feature set for kernel These bits are checked
--   really early to actually display a visible error message before the
--   kernel dies.  Make sure to assign features to the proper mask!
--
--   Some requirements that are not in CPUID yet are also in the
--   CONFIG_X86_MINIMUM_CPU_FAMILY which is checked too.
--
--   The real information is in arch/x86/Kconfig.cpu, this just converts
--   the CONFIGs into a bitmask */
--
--#ifndef CONFIG_MATH_EMULATION
--# define NEED_FPU	(1<<(X86_FEATURE_FPU & 31))
--#else
--# define NEED_FPU	0
--#endif
--
--#if defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
--# define NEED_PAE	(1<<(X86_FEATURE_PAE & 31))
--#else
--# define NEED_PAE	0
--#endif
--
--#ifdef CONFIG_X86_REQUIRED_FEATURE_CX8
--# define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
--#else
--# define NEED_CX8	0
--#endif
--
--#if defined(CONFIG_X86_REQUIRED_FEATURE_CMOV) || defined(CONFIG_X86_64)
--# define NEED_CMOV	(1<<(X86_FEATURE_CMOV & 31))
--#else
--# define NEED_CMOV	0
--#endif
--
--# define NEED_3DNOW	0
--
--#if defined(CONFIG_X86_P6_NOP) || defined(CONFIG_X86_64)
--# define NEED_NOPL	(1<<(X86_FEATURE_NOPL & 31))
--#else
--# define NEED_NOPL	0
--#endif
--
--#ifdef CONFIG_MATOM
--# define NEED_MOVBE	(1<<(X86_FEATURE_MOVBE & 31))
--#else
--# define NEED_MOVBE	0
--#endif
--
--#ifdef CONFIG_X86_64
--#ifdef CONFIG_PARAVIRT_XXL
--/* Paravirtualized systems may not have PSE or PGE available */
--#define NEED_PSE	0
--#define NEED_PGE	0
--#else
--#define NEED_PSE	(1<<(X86_FEATURE_PSE) & 31)
--#define NEED_PGE	(1<<(X86_FEATURE_PGE) & 31)
--#endif
--#define NEED_MSR	(1<<(X86_FEATURE_MSR & 31))
--#define NEED_FXSR	(1<<(X86_FEATURE_FXSR & 31))
--#define NEED_XMM	(1<<(X86_FEATURE_XMM & 31))
--#define NEED_XMM2	(1<<(X86_FEATURE_XMM2 & 31))
--#define NEED_LM		(1<<(X86_FEATURE_LM & 31))
--#else
--#define NEED_PSE	0
--#define NEED_MSR	0
--#define NEED_PGE	0
--#define NEED_FXSR	0
--#define NEED_XMM	0
--#define NEED_XMM2	0
--#define NEED_LM		0
--#endif
--
--#define REQUIRED_MASK0	(NEED_FPU|NEED_PSE|NEED_MSR|NEED_PAE|\
--			 NEED_CX8|NEED_PGE|NEED_FXSR|NEED_CMOV|\
--			 NEED_XMM|NEED_XMM2)
--#define SSE_MASK	(NEED_XMM|NEED_XMM2)
--
--#define REQUIRED_MASK1	(NEED_LM|NEED_3DNOW)
--
--#define REQUIRED_MASK2	0
--#define REQUIRED_MASK3	(NEED_NOPL)
--#define REQUIRED_MASK4	(NEED_MOVBE)
--#define REQUIRED_MASK5	0
--#define REQUIRED_MASK6	0
--#define REQUIRED_MASK7	0
--#define REQUIRED_MASK8	0
--#define REQUIRED_MASK9	0
--#define REQUIRED_MASK10	0
--#define REQUIRED_MASK11	0
--#define REQUIRED_MASK12	0
--#define REQUIRED_MASK13	0
--#define REQUIRED_MASK14	0
--#define REQUIRED_MASK15	0
--#define REQUIRED_MASK16	0
--#define REQUIRED_MASK17	0
--#define REQUIRED_MASK18	0
--#define REQUIRED_MASK19	0
--#define REQUIRED_MASK20	0
--#define REQUIRED_MASK21	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
--
--#endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 17b6590748c0..c691481d59ce 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
- /*
-  * Defines x86 CPU feature bits
-  */
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-deleted file mode 100644
-index c492bdc97b05..000000000000
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ /dev/null
-@@ -1,161 +0,0 @@
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#define _ASM_X86_DISABLED_FEATURES_H
--
--/* These features, although they might be available in a CPU
-- * will not be used because the compile options to support
-- * them are not present.
-- *
-- * This code allows them to be checked and disabled at
-- * compile time without an explicit #ifdef.  Use
-- * cpu_feature_enabled().
-- */
--
--#ifdef CONFIG_X86_UMIP
--# define DISABLE_UMIP	0
--#else
--# define DISABLE_UMIP	(1<<(X86_FEATURE_UMIP & 31))
--#endif
--
--#ifdef CONFIG_X86_64
--# define DISABLE_VME		(1<<(X86_FEATURE_VME & 31))
--# define DISABLE_K6_MTRR	(1<<(X86_FEATURE_K6_MTRR & 31))
--# define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
--# define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
--# define DISABLE_PCID		0
--#else
--# define DISABLE_VME		0
--# define DISABLE_K6_MTRR	0
--# define DISABLE_CYRIX_ARR	0
--# define DISABLE_CENTAUR_MCR	0
--# define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
--#endif /* CONFIG_X86_64 */
--
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
--# define DISABLE_PKU		0
--# define DISABLE_OSPKE		0
--#else
--# define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
--# define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
--
--#ifdef CONFIG_X86_5LEVEL
--# define DISABLE_LA57	0
--#else
--# define DISABLE_LA57	(1<<(X86_FEATURE_LA57 & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
--# define DISABLE_PTI		0
--#else
--# define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETPOLINE
--# define DISABLE_RETPOLINE	0
--#else
--# define DISABLE_RETPOLINE	((1 << (X86_FEATURE_RETPOLINE & 31)) | \
--				 (1 << (X86_FEATURE_RETPOLINE_LFENCE & 31)))
--#endif
--
--#ifdef CONFIG_MITIGATION_RETHUNK
--# define DISABLE_RETHUNK	0
--#else
--# define DISABLE_RETHUNK	(1 << (X86_FEATURE_RETHUNK & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_UNRET_ENTRY
--# define DISABLE_UNRET		0
--#else
--# define DISABLE_UNRET		(1 << (X86_FEATURE_UNRET & 31))
--#endif
--
--#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
--# define DISABLE_CALL_DEPTH_TRACKING	0
--#else
--# define DISABLE_CALL_DEPTH_TRACKING	(1 << (X86_FEATURE_CALL_DEPTH & 31))
--#endif
--
--#ifdef CONFIG_ADDRESS_MASKING
--# define DISABLE_LAM		0
--#else
--# define DISABLE_LAM		(1 << (X86_FEATURE_LAM & 31))
--#endif
--
--#ifdef CONFIG_INTEL_IOMMU_SVM
--# define DISABLE_ENQCMD		0
--#else
--# define DISABLE_ENQCMD		(1 << (X86_FEATURE_ENQCMD & 31))
--#endif
--
--#ifdef CONFIG_X86_SGX
--# define DISABLE_SGX	0
--#else
--# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
--#endif
--
--#ifdef CONFIG_XEN_PV
--# define DISABLE_XENPV		0
--#else
--# define DISABLE_XENPV		(1 << (X86_FEATURE_XENPV & 31))
--#endif
--
--#ifdef CONFIG_INTEL_TDX_GUEST
--# define DISABLE_TDX_GUEST	0
--#else
--# define DISABLE_TDX_GUEST	(1 << (X86_FEATURE_TDX_GUEST & 31))
--#endif
--
--#ifdef CONFIG_X86_USER_SHADOW_STACK
--#define DISABLE_USER_SHSTK	0
--#else
--#define DISABLE_USER_SHSTK	(1 << (X86_FEATURE_USER_SHSTK & 31))
--#endif
--
--#ifdef CONFIG_X86_KERNEL_IBT
--#define DISABLE_IBT	0
--#else
--#define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
--#endif
--
--#ifdef CONFIG_X86_FRED
--# define DISABLE_FRED	0
--#else
--# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
--#endif
--
--#ifdef CONFIG_KVM_AMD_SEV
--#define DISABLE_SEV_SNP		0
--#else
--#define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
--#endif
--
--/*
-- * Make sure to add features to the correct mask
-- */
--#define DISABLED_MASK0	(DISABLE_VME)
--#define DISABLED_MASK1	0
--#define DISABLED_MASK2	0
--#define DISABLED_MASK3	(DISABLE_CYRIX_ARR|DISABLE_CENTAUR_MCR|DISABLE_K6_MTRR)
--#define DISABLED_MASK4	(DISABLE_PCID)
--#define DISABLED_MASK5	0
--#define DISABLED_MASK6	0
--#define DISABLED_MASK7	(DISABLE_PTI)
--#define DISABLED_MASK8	(DISABLE_XENPV|DISABLE_TDX_GUEST)
--#define DISABLED_MASK9	(DISABLE_SGX)
--#define DISABLED_MASK10	0
--#define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
--			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
--#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
--#define DISABLED_MASK13	0
--#define DISABLED_MASK14	0
--#define DISABLED_MASK15	0
--#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
--			 DISABLE_ENQCMD)
--#define DISABLED_MASK17	0
--#define DISABLED_MASK18	(DISABLE_IBT)
--#define DISABLED_MASK19	(DISABLE_SEV_SNP)
--#define DISABLED_MASK20	0
--#define DISABLED_MASK21	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
--
--#endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
-deleted file mode 100644
-index cef8104c103c..000000000000
---- a/tools/arch/x86/include/asm/required-features.h
-+++ /dev/null
-@@ -1,105 +0,0 @@
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#define _ASM_X86_REQUIRED_FEATURES_H
--
--/* Define minimum CPUID feature set for kernel These bits are checked
--   really early to actually display a visible error message before the
--   kernel dies.  Make sure to assign features to the proper mask!
--
--   Some requirements that are not in CPUID yet are also in the
--   CONFIG_X86_MINIMUM_CPU_FAMILY which is checked too.
--
--   The real information is in arch/x86/Kconfig.cpu, this just converts
--   the CONFIGs into a bitmask */
--
--#ifndef CONFIG_MATH_EMULATION
--# define NEED_FPU	(1<<(X86_FEATURE_FPU & 31))
--#else
--# define NEED_FPU	0
--#endif
--
--#if defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
--# define NEED_PAE	(1<<(X86_FEATURE_PAE & 31))
--#else
--# define NEED_PAE	0
--#endif
--
--#ifdef CONFIG_X86_REQUIRED_FEATURE_CX8
--# define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
--#else
--# define NEED_CX8	0
--#endif
--
--#if defined(CONFIG_X86_REQUIRED_FEATURE_CMOV) || defined(CONFIG_X86_64)
--# define NEED_CMOV	(1<<(X86_FEATURE_CMOV & 31))
--#else
--# define NEED_CMOV	0
--#endif
--
--# define NEED_3DNOW	0
--
--#if defined(CONFIG_X86_P6_NOP) || defined(CONFIG_X86_64)
--# define NEED_NOPL	(1<<(X86_FEATURE_NOPL & 31))
--#else
--# define NEED_NOPL	0
--#endif
--
--#ifdef CONFIG_MATOM
--# define NEED_MOVBE	(1<<(X86_FEATURE_MOVBE & 31))
--#else
--# define NEED_MOVBE	0
--#endif
--
--#ifdef CONFIG_X86_64
--#ifdef CONFIG_PARAVIRT_XXL
--/* Paravirtualized systems may not have PSE or PGE available */
--#define NEED_PSE	0
--#define NEED_PGE	0
--#else
--#define NEED_PSE	(1<<(X86_FEATURE_PSE) & 31)
--#define NEED_PGE	(1<<(X86_FEATURE_PGE) & 31)
--#endif
--#define NEED_MSR	(1<<(X86_FEATURE_MSR & 31))
--#define NEED_FXSR	(1<<(X86_FEATURE_FXSR & 31))
--#define NEED_XMM	(1<<(X86_FEATURE_XMM & 31))
--#define NEED_XMM2	(1<<(X86_FEATURE_XMM2 & 31))
--#define NEED_LM		(1<<(X86_FEATURE_LM & 31))
--#else
--#define NEED_PSE	0
--#define NEED_MSR	0
--#define NEED_PGE	0
--#define NEED_FXSR	0
--#define NEED_XMM	0
--#define NEED_XMM2	0
--#define NEED_LM		0
--#endif
--
--#define REQUIRED_MASK0	(NEED_FPU|NEED_PSE|NEED_MSR|NEED_PAE|\
--			 NEED_CX8|NEED_PGE|NEED_FXSR|NEED_CMOV|\
--			 NEED_XMM|NEED_XMM2)
--#define SSE_MASK	(NEED_XMM|NEED_XMM2)
--
--#define REQUIRED_MASK1	(NEED_LM|NEED_3DNOW)
--
--#define REQUIRED_MASK2	0
--#define REQUIRED_MASK3	(NEED_NOPL)
--#define REQUIRED_MASK4	(NEED_MOVBE)
--#define REQUIRED_MASK5	0
--#define REQUIRED_MASK6	0
--#define REQUIRED_MASK7	0
--#define REQUIRED_MASK8	0
--#define REQUIRED_MASK9	0
--#define REQUIRED_MASK10	0
--#define REQUIRED_MASK11	0
--#define REQUIRED_MASK12	0
--#define REQUIRED_MASK13	0
--#define REQUIRED_MASK14	0
--#define REQUIRED_MASK15	0
--#define REQUIRED_MASK16	0
--#define REQUIRED_MASK17	0
--#define REQUIRED_MASK18	0
--#define REQUIRED_MASK19	0
--#define REQUIRED_MASK20	0
--#define REQUIRED_MASK21	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
--
--#endif /* _ASM_X86_REQUIRED_FEATURES_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index a05c1c105c51..67d4e9fc4d36 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -26,8 +26,6 @@ FILES=(
-   "include/linux/hash.h"
-   "include/linux/list-sort.h"
-   "include/uapi/linux/hw_breakpoint.h"
--  "arch/x86/include/asm/disabled-features.h"
--  "arch/x86/include/asm/required-features.h"
-   "arch/x86/include/asm/cpufeatures.h"
-   "arch/x86/include/asm/inat_types.h"
-   "arch/x86/include/asm/emulate_prefix.h"
--- 
-2.47.1
+$ git log --oneline
+bfa54a793ba7 (HEAD) driver core: bus: Fix double free in driver API
+bus_register()
 
+perf $ UBSAN_OPTIONS=3Dprint_stacktrace=3D1 ./perf trace -- sleep 1
+builtin-trace.c:1715:35: runtime error: index 6 out of bounds for type
+'syscall_arg_fmt [6]'
+    #0 0x5d0994789a74 in syscall__alloc_arg_fmts
+/root/hw/linux-perf/tools/perf/builtin-trace.c:1715
+    #1 0x5d099478b72c in trace__read_syscall_info
+/root/hw/linux-perf/tools/perf/builtin-trace.c:1868
+    #2 0x5d099478e571 in trace__syscall_info
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2179
+    #3 0x5d099479ac81 in trace__init_syscall_bpf_progs
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3333
+    #4 0x5d099479c28c in trace__init_syscalls_bpf_prog_array_maps
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3466
+    #5 0x5d09947a0098 in trace__run
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3932
+    #6 0x5d09947aa62d in cmd_trace
+/root/hw/linux-perf/tools/perf/builtin-trace.c:5073
+    #7 0x5d09947b6eed in run_builtin /root/hw/linux-perf/tools/perf/perf.c:=
+350
+    #8 0x5d09947b7518 in handle_internal_command
+/root/hw/linux-perf/tools/perf/perf.c:403
+    #9 0x5d09947b77ef in run_argv /root/hw/linux-perf/tools/perf/perf.c:447
+    #10 0x5d09947b7d5e in main /root/hw/linux-perf/tools/perf/perf.c:561
+    #11 0x7ec47642a1c9 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
+    #12 0x7ec47642a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #13 0x5d0994615d34 in _start
+(/root/hw/linux-perf/tools/perf/perf+0x4bdd34) (BuildId:
+791904aaae2afa7e7ad7e3aa80a32b71e824abcf)
+
+         ? (         ): sleep/180215  ... [continued]: execve())
+                                    =3D 0
+     0.039 ( 0.002 ms): sleep/180215 brk()
+                                    =3D 0x604c45ccb000
+     0.075 ( 0.005 ms): sleep/180215 mmap(len: 8192, prot: READ|WRITE,
+flags: PRIVATE|ANONYMOUS)           =3D 0x7ff6de94d000
+
+builtin-trace.c:1531:55: runtime error: member access within
+misaligned address 0x7ec47192343c for type 'struct augmented_arg',
+which requires 8 byte alignment
+0x7ec47192343c: note: pointer points here
+  f6 7f 00 00 13 00 00 00  2f 65 74 63 2f 6c 64 2e  73 6f 2e 70 72 65
+6c 6f  61 64 00 00 00 00 00 00
+              ^
+    #0 0x5d0994788527 in syscall_arg__scnprintf_augmented_string
+/root/hw/linux-perf/tools/perf/builtin-trace.c:1531
+    #1 0x5d09947887ca in syscall_arg__scnprintf_filename
+/root/hw/linux-perf/tools/perf/builtin-trace.c:1545
+    #2 0x5d099478d436 in syscall_arg_fmt__scnprintf_val
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2044
+    #3 0x5d099478dd8b in syscall__scnprintf_args
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2106
+    #4 0x5d0994790c44 in trace__sys_enter
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2387
+    #5 0x5d0994799ba5 in trace__handle_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3198
+    #6 0x5d099479d3eb in __trace__deliver_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3635
+    #7 0x5d099479d6c9 in trace__deliver_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3662
+    #8 0x5d09947a0cc4 in trace__run
+/root/hw/linux-perf/tools/perf/builtin-trace.c:4010
+    #9 0x5d09947aa62d in cmd_trace
+/root/hw/linux-perf/tools/perf/builtin-trace.c:5073
+    #10 0x5d09947b6eed in run_builtin /root/hw/linux-perf/tools/perf/perf.c=
+:350
+    #11 0x5d09947b7518 in handle_internal_command
+/root/hw/linux-perf/tools/perf/perf.c:403
+    #12 0x5d09947b77ef in run_argv /root/hw/linux-perf/tools/perf/perf.c:44=
+7
+    #13 0x5d09947b7d5e in main /root/hw/linux-perf/tools/perf/perf.c:561
+    #14 0x7ec47642a1c9 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
+    #15 0x7ec47642a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #16 0x5d0994615d34 in _start
+(/root/hw/linux-perf/tools/perf/perf+0x4bdd34) (BuildId:
+791904aaae2afa7e7ad7e3aa80a32b71e824abcf)
+
+     <snip>
+
+trace/beauty/timespec.c:12:9: runtime error: member access within
+misaligned address 0x7ec4719264b4 for type 'struct timespec', which
+requires 8 byte alignment
+0x7ec4719264b4: note: pointer points here
+  00 00 00 00 01 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+00 00  00 00 00 00 00 00 00 00
+              ^
+    #0 0x5d09947b02e7 in syscall_arg__scnprintf_augmented_timespec
+trace/beauty/timespec.c:12
+    #1 0x5d09947b0417 in syscall_arg__scnprintf_timespec
+trace/beauty/timespec.c:18
+    #2 0x5d099478d436 in syscall_arg_fmt__scnprintf_val
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2044
+    #3 0x5d099478dd8b in syscall__scnprintf_args
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2106
+    #4 0x5d0994790c44 in trace__sys_enter
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2387
+    #5 0x5d0994799ba5 in trace__handle_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3198
+    #6 0x5d099479d3eb in __trace__deliver_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3635
+    #7 0x5d099479d6c9 in trace__deliver_event
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3662
+    #8 0x5d09947a0cc4 in trace__run
+/root/hw/linux-perf/tools/perf/builtin-trace.c:4010
+    #9 0x5d09947aa62d in cmd_trace
+/root/hw/linux-perf/tools/perf/builtin-trace.c:5073
+    #10 0x5d09947b6eed in run_builtin /root/hw/linux-perf/tools/perf/perf.c=
+:350
+    #11 0x5d09947b7518 in handle_internal_command
+/root/hw/linux-perf/tools/perf/perf.c:403
+    #12 0x5d09947b77ef in run_argv /root/hw/linux-perf/tools/perf/perf.c:44=
+7
+    #13 0x5d09947b7d5e in main /root/hw/linux-perf/tools/perf/perf.c:561
+    #14 0x7ec47642a1c9 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
+    #15 0x7ec47642a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #16 0x5d0994615d34 in _start
+(/root/hw/linux-perf/tools/perf/perf+0x4bdd34) (BuildId:
+791904aaae2afa7e7ad7e3aa80a32b71e824abcf)
+
+As seen above, I encountered the same runtime error of misalignment as
+you did in https://lore.kernel.org/all/Z2STgyD1p456Qqhg@google.com/,
+not just in time_spec.c, but also in the access of augmented_arg in
+builtin-trace.c.
+
+On Thu, Jan 2, 2025 at 12:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Some version of compilers reported unaligned accesses in perf trace when
+> undefined-behavior sanitizer is on.  I found that it uses raw data in the
+> sample directly and assuming it's properly aligned.
+>
+> Unlike other sample fields, the raw data is not 8-byte aligned because
+> there's a size field (u32) before the actual data.  So I added a static
+> buffer in syscall__augmented_args() and return it instead.  This is not
+> ideal but should work well as perf trace is single-threaded.
+>
+> A better approach would be aligning the raw data by adding a 4-byte data
+> before the augmented args but I'm afraid it'd break the backward
+> compatibility.
+
+Can you explain backward compatibility? Do you mean the 'perf trace
+record' and its perf data file?
+
+With your patch attached:
+
+perf $ UBSAN_OPTIONS=3Dprint_stacktrace=3D1 ./perf trace -e
+clock_nanosleep -- sleep 1
+builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type
+'syscall_arg_fmt [6]'
+    #0 0x577f3fc3d18c in syscall__alloc_arg_fmts
+/root/hw/linux-perf/tools/perf/builtin-trace.c:1966
+    #1 0x577f3fc3f0c1 in trace__read_syscall_info
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2129
+    #2 0x577f3fc422ff in trace__syscall_info
+/root/hw/linux-perf/tools/perf/builtin-trace.c:2466
+    #3 0x577f3fc51b30 in trace__init_syscalls_bpf_prog_array_maps
+/root/hw/linux-perf/tools/perf/builtin-trace.c:3927
+    #4 0x577f3fc5591c in trace__run
+/root/hw/linux-perf/tools/perf/builtin-trace.c:4365
+    #5 0x577f3fc5fd48 in cmd_trace
+/root/hw/linux-perf/tools/perf/builtin-trace.c:5532
+    #6 0x577f3fc6c697 in run_builtin /root/hw/linux-perf/tools/perf/perf.c:=
+351
+    #7 0x577f3fc6ccc2 in handle_internal_command
+/root/hw/linux-perf/tools/perf/perf.c:404
+    #8 0x577f3fc6cf99 in run_argv /root/hw/linux-perf/tools/perf/perf.c:448
+    #9 0x577f3fc6d503 in main /root/hw/linux-perf/tools/perf/perf.c:560
+    #10 0x72edf8a2a1c9 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
+    #11 0x72edf8a2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #12 0x577f3fac12c4 in _start
+(/root/hw/linux-perf/tools/perf/perf+0x4e82c4) (BuildId:
+bca8e50b69a43c91b4d187140c12c6608770d99e)
+
+     0.000 (1000.225 ms): sleep/330971 clock_nanosleep(rqtp: {
+.tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7fff11ba9dc0) =3D 0
+
+No more misalignment, and I'll fix the index-out-of-bound bug.
+
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
+
+Thanks
+Howard
