@@ -1,37 +1,37 @@
 Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EAC7603F;
-	Mon,  6 Jan 2025 07:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454FB1D6DB7;
+	Mon,  6 Jan 2025 07:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736147476; cv=none; b=nlr+rT4KBiEvg3BVxluTQRqdUrJp0yrzQN4IW5H7AXX+vYl9oxauEpnKDCwN2n5rYZ3n0CrrY1NLHPKXlxIEcthnlZBa3LsdzBaT4kSlz/miQIeilqRaJe4T0RKEGJpO6Fjg+MlgkzYwc8PuskDXvuqH76QDHOctdYiD4QdaJWQ=
+	t=1736147484; cv=none; b=CF1OxQFhi2CITSZy/+n/ecUTm7xmVZlRhTl/slabIcO0y9PMaoKlacu2v3C/WuhQmkjwGCDQCRWevIEjcFRh7a+oCpXTnzavX0etGtXZoq4bCtyIfSEMKqJVpQ9h6J/rRBvZjSbE/F8EQqK/iddg0CnSDYeN+lBuZwqxpFoaHvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736147476; c=relaxed/simple;
-	bh=vURgG34GrHdYjB3buk5HlnegJCTaxHYf/0eFMWCO8VY=;
+	s=arc-20240116; t=1736147484; c=relaxed/simple;
+	bh=zXRPBBDKU65E0vCbNuT01VbPPYNVJuK3jM4A56BAqNo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GoZX8jR3DMchrv0CrIf90tM1LYnmSrPRsPoIIzgBruhEBO+GRWnwLFdQ6W6EuhittLB03SgEjENQky9J1eNvn0juBuzfKDeWQszjZwiiM0hoq7YyAMtNxqEq90Ni08dndXT9s3EjRHL2GgrIJ02K90X/dSvLbsjJ/0KNo6nNtpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=iqOwybmd; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=fGKJSKEHaVTRbakwJLVScU5/bettm5bOjvCXGDEVdkTA+3WDeQOC1aIt6FlWQJ8B+I/NlyIcYWaE/xOOZ7EU4sLQXlG7t3M+s4zi9SGU/fAadIacqMNiSbqXPnrB7CofBVTORE7Wro1y4OQ5xPSVyQvwyg6zn8wpGt5eiKTXehE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=M12ilnkp; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iqOwybmd"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="M12ilnkp"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677RpE3211026
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50677RpD3211026
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 5 Jan 2025 23:07:37 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677RpE3211026
+	Sun, 5 Jan 2025 23:07:36 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50677RpD3211026
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024121701; t=1736147258;
-	bh=Re3MfHtuLBMHpeFVMue+szaKAp0SHaPCUZaQZ+mtJkU=;
+	s=2024121701; t=1736147256;
+	bh=BYb6ylOz78GzLuNZAC7ix6eMFnpD2g9MHChDW+DgETM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iqOwybmdV2PNIuYs7/ayZms6/Pm/dBp8Tr0tFnD+zBzeixMvuzn5irzOsCtkUq6Sl
-	 Pd6JXuoT9UVNM9AirliJcuet6j4PonWCbvE00g6TFhGwwR7hIQGt3gZygXNvFIOp8y
-	 iZhwEkfQ6G83sd/eVvHTyLUVA3qMtQNsGOjCes1mkfStr4JQC/gmz2R5nOcz5DtU7A
-	 hKzH877fPowLTCULFLB8vlSkVtvwb3AKaoHwwwEUV7Yi0MGDKxfDjLmyH9k2h169eK
-	 MLS8v6hzMh7/w0QL8AQb6YR4Rehqz5TeZQt04rkWrzHvYEH86qJLEa3Jr72aA9bd6n
-	 ghlrtXLfKVoQA==
+	b=M12ilnkphAKnFYw18Dl99TXRsRcpJxk4MVxjD6ecwAPcSrMBTcoN/q00rHvLZ6vZv
+	 Hp9YobzuHIyd1yvGjUgxCRFRNKUlLBzuU2jZttP/gF3KusEp4BBRq0SalcDFBsOBRk
+	 cUmolP+keM7qVluAFU2aX4Di3cJI9Kg5PEUQ447rblWd/KU97uF3zvyiZyYdqLFTMU
+	 E1RQhXuhxxLizAiKnidMUwYIE2ctq7KqArH27tbMHvsKqPjkqsYhSU7a28PRFMbLEE
+	 SlkNRayW3Jy/aiwXtvzvQOzd17ASk1IwKZvxALUFMtqo5PSnIZdoQJGPdCXH866WeK
+	 YaR+YyIwR8Q3A==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -39,9 +39,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
         akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
         brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: [PATCH v5 5/5] x86/cpufeatures: Add the CPU feature bit for MSR immediate form instructions
-Date: Sun,  5 Jan 2025 23:07:27 -0800
-Message-ID: <20250106070727.3211006-6-xin@zytor.com>
+Subject: [PATCH v5 4/5] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+Date: Sun,  5 Jan 2025 23:07:26 -0800
+Message-ID: <20250106070727.3211006-5-xin@zytor.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
 References: <20250106070727.3211006-1-xin@zytor.com>
@@ -53,68 +53,124 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The immediate form of MSR access instructions are primarily motivated by
-performance, not code size: by having the MSR number in an immediate, it
-is available *much* earlier in the pipeline, which allows the hardware
-much more leeway about how a particular MSR is handled.
+Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+script that generates the required and disabled feature mask header.
 
-Add a new CPU feature word for CPUID.7.1.ECX and then the CPU feature bit
-for MSR immediate form.
-
+Suggested-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Reviewed-by: Brian Gerst <brgerst@gmail.com>
 ---
- arch/x86/include/asm/cpufeature.h  | 1 +
- arch/x86/include/asm/cpufeatures.h | 5 ++++-
- arch/x86/kernel/cpu/common.c       | 1 +
- 3 files changed, 6 insertions(+), 1 deletion(-)
+
+Changes since v3:
+* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
+* Checking NCAPINTS isn't necessary anymore.  It was needed when these
+  macros had to be manually updated, but now if cpufeatures.h changes
+  this header will be regenerated (Brian Gerst).
+---
+ arch/x86/include/asm/cpufeature.h | 69 -------------------------------
+ arch/x86/tools/featuremasks.awk   |  9 +++-
+ 2 files changed, 8 insertions(+), 70 deletions(-)
 
 diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index b829a12eda8a..9a2991e7b21b 100644
+index 077a5bbd1cc5..b829a12eda8a 100644
 --- a/arch/x86/include/asm/cpufeature.h
 +++ b/arch/x86/include/asm/cpufeature.h
-@@ -35,6 +35,7 @@ enum cpuid_leafs
- 	CPUID_8000_001F_EAX,
- 	CPUID_8000_0021_EAX,
- 	CPUID_LNX_5,
-+	CPUID_7_1_ECX,
- 	NR_CPUID_WORDS,
- };
+@@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ #define test_cpu_cap(c, bit)						\
+ 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
  
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index d5985e8eef29..59aa04915032 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -5,7 +5,7 @@
- /*
-  * Defines x86 CPU feature bits
-  */
--#define NCAPINTS			22	   /* N 32-bit words worth of info */
-+#define NCAPINTS			23	   /* N 32-bit words worth of info */
- #define NBUGINTS			2	   /* N 32-bit bug flags */
+-/*
+- * There are 32 bits/features in each mask word.  The high bits
+- * (selected with (bit>>5) give us the word number and the low 5
+- * bits give us the bit/feature number inside the word.
+- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
+- * see if it is set in the mask word.
+- */
+-#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
+-	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
+-
+-/*
+- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
+- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
+- * header macros which use NCAPINTS need to be changed. The duplicated macro
+- * use causes the compiler to issue errors for all headers so that all usage
+- * sites can be corrected.
+- */
+-#define REQUIRED_MASK_BIT_SET(feature_bit)		\
+-	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
+-	   REQUIRED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+-#define DISABLED_MASK_BIT_SET(feature_bit)				\
+-	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
+-	   DISABLED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+ #define cpu_has(c, bit)							\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+ 	 test_cpu_cap(c, bit))
+diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
+index dfac56a697fc..01e47b31e187 100755
+--- a/arch/x86/tools/featuremasks.awk
++++ b/arch/x86/tools/featuremasks.awk
+@@ -74,7 +74,14 @@ END {
+ 		for (i = 0; i < ncapints; i++)
+ 			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
  
- /*
-@@ -476,6 +476,9 @@
- #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
- 
-+/* Intel-defined CPU features, CPUID level 0x00000007:1 (ECX), word 22 */
-+#define X86_FEATURE_MSR_IMM		(22*32+ 5) /* "msr_imm" MSR immediate form instructions */
-+
- /*
-  * BUG word(s)
-  */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7cce91b19fb2..13d270eabd09 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -997,6 +997,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 		if (eax >= 1) {
- 			cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
- 			c->x86_capability[CPUID_7_1_EAX] = eax;
-+			c->x86_capability[CPUID_7_1_ECX] = ecx;
- 		}
+-		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
++		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
++		printf "\t((\t\t\t\t\t";
++		for (i = 0; i < ncapints; i++) {
++			if (masks[i])
++				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
++		}
++		printf " 0\t\\\n";
++		printf "\t) & (1U << ((x) & 31)))\n\n";
  	}
  
+ 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
 -- 
 2.47.1
 
