@@ -1,63 +1,64 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4A21E1C3B
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 14:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47EE1537C3
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 14:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736261344; cv=none; b=gLgvuRo+5F3D7jg3+lRYoolVmHYuYIjUtw1rcCAh3t1CYHJlDW8FPdleydPJVWiy7ZhVBCbXsktH/cJc1HSD9/1MK+XVA0Tf9VTeT1QQFcow+GCO4nriTP7KygXAitEWbc88w1gTJHQpUQMTSM47DPtRCObXjPVDhvkkbsoFDe4=
+	t=1736261389; cv=none; b=oNzohbg1QFiu5dPrHrHVvjiRBF5sx9KTFyLl0xS40LAQao/gg40RMvS9jioPZARyLUTS2jU45WNXqYHidu+PfQqUm271ny+L2f1oB+rVpxLLnsbc3aCSDNIFHVOBiZ8AUDxfsUxzwrgT39hJuw03ijK9c4WuhohOpzisPCBcLlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736261344; c=relaxed/simple;
-	bh=EjiYzwCYUsiOGfwWNrpzVHPjRE3x003vhyNLulMyfKU=;
+	s=arc-20240116; t=1736261389; c=relaxed/simple;
+	bh=QEG4Lt3mn+Wq0xsRQRMvQJKA2t4dMpLwC9XZ0QsUKgg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pqsnhfIMO+/jh0D1TiR46AjVc2bPie444GkigcvqhSKsJgJFLCAim8HggqJ/3/QaKNO5D1J6yzXwjPnFz6BhPH7b5Ebi5BrQc/ociUX4Pmq7m4BUo2rq77Ky2HzxQLyHnDCh/+TIG8xZP7W88i5XgJuWAj9ikujdkrdSTcFoUUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T7A4szNC; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:Content-Type; b=d1V4hdKPqaoki1+Q6gxEQhwXBL2LUoz/61eX3RYMNTYIKjD7KU93v33sUzXfN4v+007Feg8WKbStz1mPmsXKylq5ORtbC7OPwe4tr/sdN6qIqfLZH8v1/jMEi/XvKjJdCRuN+jRNxU2/BQBa89rxgCsbzGgAlsMG7LI728lr1r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AoktLoBd; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7A4szNC"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso94468025e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 06:49:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AoktLoBd"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436a03197b2so59539225e9.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 06:49:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736261339; x=1736866139; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1736261382; x=1736866182; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bxa1pkfDOEIXCCO+s7+UGe3S6KIxpA4ZbmC+QKaQqYA=;
-        b=T7A4szNCAzNuFBAg8ZwrogsD8oKy5X/qi+qGFz+KVp2Qlo8iQixBiK+7jOgf6OYAmC
-         e3HtNW25HEKCnBuhmjINIqgKVf/SbsLZ8/6LiO4uqU2uONIOSMUs7ULbhOjWI8KrCY8r
-         ss1LCbpSjmG6wf3mi7P9CqJPoSxSv/pPhGMjyZO/p+sVf24yXtBwN/QpZyg/2ONkAqrp
-         B6WTU2IxeBbhd45Tt/6eEivG8lQAcd9ru1bJzhkmI2ctuxzh9JJoWD87b1Wkb1d+WnO/
-         hRQunjFKhgdEuTlALSHjlkihs9h3plGhvl0E5TUzq99/ScNUPm9BgvwzHFZ1xgvqLzdI
-         OsSg==
+        bh=K3u/NmEcbizgpdqDtJODTjPeBG7JBU/0LlN4PU1so0U=;
+        b=AoktLoBdRxn2k2l8cQA27v1UUvDErCQDRqwswWyInVEC0rj04Rd4USJqq+fBK6ey4U
+         NBDZbOM6rSx0N7iYoYHxHaiGOI1lI0fSWMsMTiml8e8v7UmD9dTrRwJ3yPWzhcSC+sDW
+         LX8+hzuX6PKTpWgSgGOpGbJen6DsjXLHG1IW1+SyMywhrkREy0ZWXFDQNSKq+iw6hUt6
+         oQWuNjNpgZDrB35o5IhuE5EB12Lu9vriRhjYbQK9xkXg4+5ccRqMNAovgD7uaYwxRNIU
+         3X3kLxHYfu6hxo/gIIKHOr7zw1gK1bTJE2vY6XrAy4MpvYLfPrvJHp3RteE0icgrS5Ij
+         batA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736261339; x=1736866139;
+        d=1e100.net; s=20230601; t=1736261382; x=1736866182;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxa1pkfDOEIXCCO+s7+UGe3S6KIxpA4ZbmC+QKaQqYA=;
-        b=GdrwLq1cOSGUB/Ile2172gA7rC50wL3fGYpzuFQdbJamRuB0p7J4DVvS4gz0t/hYOw
-         N9Nhsm5YyaTwFwF9f+omXoqv4B/30n7j09ouR8mKrwHz1IRKZUDqkf6pyk7Mzh+QV8Kd
-         RgyuraRN8kSLdhelB6t+pakSN6a9Z1qtRItuzWmz2f7IV6zVARzzX2G/iFRqouYCosqa
-         TBSkvAN8NKmM+/pKshK/gNKr62VtDFrtoE3z1F8k1/QP5CHozqgQpcg985vOcNKvAaOq
-         DTGOFT3lB7Os/y0/M9ky3SP1WYjBH+VgKdRQibJMId0+ZUU0inmmXWHDYCH/C79ioksb
-         TCjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEvVs8r9hPSMv6soWd3CzV/eB/NTbSy1aP8ObPs/nCVDx365ZBB2c6YSeWnbnCwA+c6zym7i9DWb38xC+Y4yHE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY1Tjj3l0mTz68l1EIdhe2xez0EEFbmDs/SUTmZuGej1W59DX+
-	DvitfCUf8q517XlY7HSRYpRQbvoO1NJIzaT/AbQMjXstXnU1GkUEkQ6v9I5Fz6c=
-X-Gm-Gg: ASbGncsgKGrHKux6c5+xQRjsS1R4zY+s3iPhm7ZfE9eHkuhHx0/O2IjjDSM42urHVJo
-	rr6j0ipDaskyjA9mswO0VwPtRMMwZeSkoTj3C7idJUordp5MsMiyS5jZuuoLxfJcg+zqZkKPlMw
-	4CL8hsJNJc0U6syGqQCucxSQFxMWlArBbGhAFDM7/DH4njYIUXNkmBQYK1SnUghB0KT02oKDbna
-	b9nl0iN5HHBX9vpGP/hO3+noFsfVZluBOTCRmb8zE4DvjD+QgnAOvMmvXUa8Y2q2nA=
-X-Google-Smtp-Source: AGHT+IGxTgtGr0awthP0xG6hue3tpPsHrFGlHGB17oood49NCvoIfY8p2CUZU7ckMGhhD9yqkL+3Sw==
-X-Received: by 2002:a05:600c:1d12:b0:436:1b86:f05 with SMTP id 5b1f17b1804b1-436dc20b0c1mr27910445e9.11.1736261339591;
-        Tue, 07 Jan 2025 06:48:59 -0800 (PST)
+        bh=K3u/NmEcbizgpdqDtJODTjPeBG7JBU/0LlN4PU1so0U=;
+        b=EpcrVaENxgaOoWO8+CQBgBxjyJEWgcMICBOT5evD+v9x1UJNVIdmb5S1dD77TeM5qM
+         nh63+TV9z94ZJm1OeGR5WJxz/5Wz5v7Sc8X46I1TRdzwcH0dZ70+j+Fd9NKO9hQ4ZIo2
+         8IpiZ+S/ooyjrTfxiK2B+aVfB+flD3TosMz//tep8Alb5WtN3BTe6MFUvD/NyBCr/iou
+         dTvvAJtgDUTIBDBiKDyxBFKFftlQ1rzqGZU7xw0aRmEFopoYfCWo0Lt8/VD48+b+Gjw0
+         PIpXdMkMuzv71/l9PnYwLhnSnJIV6Hf+CuHapb62VzJETmgVoXgZ+1yqxzdz4T9vr1vo
+         S1jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjaE3iQrjg6pKOtR5srV6/9LAV1cf4OZ1c0AdboaJlg36LGI850hjYAsUf257f3vsRVY6ONOqoqYUlse2nwwlN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+meo1BW1Dds1DX1nx97BTOG92dJ2DPL7tCLb3tQRruonSSrYG
+	v2F00Clf1Tcaag4W+4FLde4FyDINnfI8dMJxd7cEJDCvKFpeNjUudFxT3Tn8wmYELqUvV6f3NIs
+	1
+X-Gm-Gg: ASbGncuyjkB0JSxzztK9AMgYxv97RbaiNIwwaRv2pK+up5qWHY5CMlUUByGcCZCjB/m
+	8EMnewKMpYWlcVXi/jQM3IVZDafZTzD2jLiTvYYsU0Z7grJvRJmqcUajeLnvmvTRlywQVjBiSQM
+	RWFBzlpV2JI/Ovk/GJO6mswE4Ye2mt1cXv8rwgoDKthxS+NrSxheA3u3E04b0jtDkCupmzSwrIQ
+	rDRGMG6eSAGsizho7EQY/nPUHVh7/PptLcdL39EsUF/bJdKNe1Isrnxuo2XEKL49zw=
+X-Google-Smtp-Source: AGHT+IFGvFPkSlYeeurN8gZ+h8Ez+4npmK5Z8xyVNs2V2PckDfXpluAxmlP4Ufddd+X9OkHCgV4ZkA==
+X-Received: by 2002:a05:600c:3b24:b0:436:2923:d23a with SMTP id 5b1f17b1804b1-43668b7a683mr422892985e9.33.1736261382081;
+        Tue, 07 Jan 2025 06:49:42 -0800 (PST)
 Received: from [192.168.68.163] ([145.224.66.180])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b3b2a4sm634498665e9.27.2025.01.07.06.48.58
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436dd11d8b4sm15046065e9.1.2025.01.07.06.49.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2025 06:48:59 -0800 (PST)
-Message-ID: <d6cc9e4b-7a38-4673-9c2a-d97301a7fdfa@linaro.org>
-Date: Tue, 7 Jan 2025 14:48:58 +0000
+        Tue, 07 Jan 2025 06:49:41 -0800 (PST)
+Message-ID: <f0828c16-8892-47c6-91ea-954101ed7dda@linaro.org>
+Date: Tue, 7 Jan 2025 14:49:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,81 +66,61 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf ftrace: Add --graph-opts option to profile
- subcommand
+Subject: Re: [PATCH 3/3] perf test: Update ftrace test to use --graph-opts
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
  LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Thomas Richter <tmricht@linux.ibm.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
  Kan Liang <kan.liang@linux.intel.com>
 References: <20250103231630.928815-1-namhyung@kernel.org>
- <20250103231630.928815-2-namhyung@kernel.org>
+ <20250103231630.928815-3-namhyung@kernel.org>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250103231630.928815-2-namhyung@kernel.org>
+In-Reply-To: <20250103231630.928815-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 03/01/2025 11:16 pm, Namhyung Kim wrote:
-> Like trace subcommand, it should be able to pass some options to control
-> the tracing behavior for the function graph tracer.  But some options
-> are limited in order to maintain the internal behavior.
+> I found it failed on machines with limited memory because 16M byte
+> per-cpu buffer is too big.  The reason it added the option is not to
+> miss tracing data.  Thus we can limit the data size by reducing the
+> function call depth instead of increasing the buffer size to handle the
+> whole data.
 > 
-> For example, it can limit the function call depth like below:
+> As it used the same option in the test_ftrace_trace() and it was able
+> to find the sleep function, it should work with the profile subcommand.
 > 
->    # perf ftrace profile --graph-opts depth=5 -- myprog
+> Get rid of other grep commands which might be affected by the depth
+> change.
 > 
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->   tools/perf/Documentation/perf-ftrace.txt | 8 ++++++++
->   tools/perf/builtin-ftrace.c              | 4 ++++
->   2 files changed, 12 insertions(+)
+>   tools/perf/tests/shell/ftrace.sh | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
 > 
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index 16b067eb5d84746d..4a69a1135f07341b 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -205,6 +205,14 @@ OPTIONS for 'perf ftrace profile'
->   	Sort the result by the given field.  Available values are:
->   	total, avg, max, count, name.  Default is 'total'.
+> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
+> index 2df05052c324a21c..c243731d2fbf67aa 100755
+> --- a/tools/perf/tests/shell/ftrace.sh
+> +++ b/tools/perf/tests/shell/ftrace.sh
+> @@ -67,11 +67,8 @@ test_ftrace_latency() {
 >   
-> +--graph-opts::
-> +	List of options allowed to set:
-> +
-> +	  - nosleep-time - Measure on-CPU time only for function_graph tracer.
-> +	  - noirqs       - Ignore functions that happen inside interrupt.
-> +	  - thresh=<n>   - Setup trace duration threshold in microseconds.
-> +	  - depth=<n>    - Set max depth for function graph tracer to follow.
-> +
->   
->   SEE ALSO
->   --------
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 0ac2b20b272bd790..d747cca2403e494e 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -1072,6 +1072,7 @@ static int prepare_func_profile(struct perf_ftrace *ftrace)
->   {
->   	ftrace->tracer = "function_graph";
->   	ftrace->graph_tail = 1;
-> +	ftrace->graph_verbose = 0;
->   
->   	ftrace->profile_hash = hashmap__new(profile_hash, profile_equal, NULL);
->   	if (ftrace->profile_hash == NULL)
-> @@ -1660,6 +1661,9 @@ int cmd_ftrace(int argc, const char **argv)
->   	OPT_CALLBACK('s', "sort", &profile_sort, "key",
->   		     "Sort result by key: total (default), avg, max, count, name.",
->   		     parse_sort_key),
-> +	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
-> +		     "Graph tracer options, available options: nosleep-time,noirqs,thresh=<n>,depth=<n>",
-> +		     parse_graph_tracer_opts),
->   	OPT_PARENT(common_options),
->   	};
->   	const struct option *options = ftrace_options;
+>   test_ftrace_profile() {
+>       echo "perf ftrace profile test"
+> -    perf ftrace profile -m 16M sleep 0.1 > "${output}"
+> +    perf ftrace profile --graph-opts depth=5 sleep 0.1 > "${output}"
+>       grep ^# "${output}"
+> -    grep sleep "${output}"
+> -    grep schedule "${output}"
+> -    grep execve "${output}"
+>       time_re="[[:space:]]+1[[:digit:]]{5}\.[[:digit:]]{3}"
+>       # 100283.000 100283.000 100283.000          1   __x64_sys_clock_nanosleep
+>       # Check for one *clock_nanosleep line with a Count of just 1 that takes a bit more than 0.1 seconds
 
