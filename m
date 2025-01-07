@@ -1,194 +1,192 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7311F3D47
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 16:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD19189BB3
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 16:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736268381; cv=none; b=pmyq3+FQbn86dUJhPbpyaz63001oLrkbP1tCUP4YMaLVIu5D2WxkX4eQXadENIeWBNgZqS7X6FS2de78SsAXtkHGzvAd9af+MGcvt8htrjSrSXn++64lNttV45RJf0FKt0J7PAZEP3S4nufv7IjuMb0LryQbmTI+M9SO40jbFIc=
+	t=1736268700; cv=none; b=H51zufH+vkK4nV4TFmoDfTzxGH1q7rR8e+b8PFZTziYwKVrdxQKvk1TbDx30FM5hE0HwnkEg1LA5L6yRbEkTodDatjA7fShCUq0WoKcIy/uHJ63YIP99LtPcXBazCKEdaZ7AAdyLtmj69lOpDtQo0VuIOJ5FA77nN+rqOi7BEmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736268381; c=relaxed/simple;
-	bh=nfj1Xu0XyTzOR1EBQLnUAw0M9/aU2Erg5Oxt4JQaDcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=INXf+2FOXTiWouiYXTIGfpQtDP3s8alnrCuSO4PNOpB+ohcZ1wKIohDWnN2ZJg1dlWVLERvw/QQt8jjtivrMGll9akKslGQncYqc162+cfJctdUH14A9MfI3CHhNe39wHvBoVbRDveFOIQGVOVoXwd3ZMGHsLiHokKMWU/Nd7iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YoqLU3Da; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736268700; c=relaxed/simple;
+	bh=zPQutXkq9wAFj64yViXr+nQrlVZo7TPkRloIt+aB8TU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nnI4ABCw9OEZ9K1EfQ6k5HJXSTjRQhJDgHXMk+35teCWq6mbWOHht10z5InOWjS7LLe5fPj2spFbLnfZoODM0m7ywJrk2oOn+p9SxMA6voIymywSWgGqagVlGMcMEDR5SOUdwWa0hhG2afm60Dnq9vRuISzyN614VZw5W6jg++8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P3B2uSir; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YoqLU3Da"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so161475ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 08:46:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P3B2uSir"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436281c8a38so113202515e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 08:51:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736268374; x=1736873174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RoUuinTnp1TfqZ89odKqiLTAxaKLAJJ7QZ1djcwttHM=;
-        b=YoqLU3DaEUykQdGcrk1YrC/W/nOm4wp6yXiimvjmCfqCzCgKgmAzK7pTMYHLFGEzBn
-         5aCZF3RYwnqUvS6vaL9S+ubmQx6/ez/pczKFzyXlwOXNlaQb57Wc4t7c1F7+yPhth/7c
-         pyUOP69ks1mMaFdvdiDPUwN/MvM/fkt2V8FUBxcI0sIgNwOEUXfW4Bl5UAJvDyRUYD/5
-         7cTpBdh/r0kYQL38Xi7UDzfYGtrbrmvBdgrbAEGyuYtros2Vll7oGc99vHJbFeTRtXUj
-         Gls8QBg01XvrnW3Rcs0dsoahHdD9hrIqUMxo7Mzth4dAxGz01RhIbuJLWFjhuVOti4+l
-         FvZA==
+        d=linaro.org; s=google; t=1736268694; x=1736873494; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CTSz7tBjYqInw46x/njFFjf677aGPAIHNq1BnsnC+ec=;
+        b=P3B2uSirmLExn0hXMeC5YPloPwD86hGmtUfEJLFxcThDr/A8ScfvZitRTr8xCpyhzW
+         QyK8yf7gC8LtWwybQkGaCUe5FGmokA56ciuo2YxCKIWJCG9qWw4hkOH9pHk81ipcfEsK
+         pi391vGUmjj6lPYFahNY8OriPxtNRS1mNS8v+Wf8sNn2vu7oGUVkWVrjBxnclNgDQ2mw
+         D07TT6uiiZ2efmDnIh8JOxIiBfns9eHYdg9IrDH0mxEDuITHQfby1dSKrD7jPbaJP+KE
+         MiRe26y40kH4iTCFt8PKKNr8yvAzNCrOMaUT1M/XhbHIUmXvhbHH15dLehd2qyQuVad9
+         kzpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736268374; x=1736873174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RoUuinTnp1TfqZ89odKqiLTAxaKLAJJ7QZ1djcwttHM=;
-        b=aQ77DOZS0+Jkq6vcUdqGB1amU2un5MRiucTLxHlvMjIHAUryrtiUFRXEvOk0sA0Yfv
-         LpiQDEFFylWwxl+VnGMDhrsuNxh4fbOgkKBOYmImOo/m4n0suExh5Px3WqW2Zairjcb4
-         9vKq6b6xK7PyZ7W99lvxktjneIXvIuUvVsVEoo02zQ6zp+/rdzAZPDvpKSVlDfoMpg1b
-         UC4WByByYNZFr56b4SFPxzCfSLs28gBWYI1nGbUTux+4fU1vyuDvjeuGGs4PUA+vfvl/
-         F1IZcjTOT4K7AqIQXDjRQgmHzRgXTzAJxwfVC8I/PhlL3rAoy2cRQTj7WLrG9+wmLk41
-         tusA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuYFNZ5+8RkgUzA/KXqfahWLvO+Zr0V5HcXRXmD/V/iI52JM0KpW0sQUdWKOom+5HyVuDIo7WaFkGmj7uB2pZ1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKi7q+9vNcfbJqeuqeVCNBxknfiF68lPlxoH0kcuzZISqe5/71
-	jgz5kNNQcEj+6reYk6v+FOBAxfCMNW4FeR8Tt081DURpk4gYO6EkPXvvNJm6IgN1GPLUAdGZ51Z
-	IA75DmbKsUe1aEQXi3e8IyNnjhs/5TLgsMrD5
-X-Gm-Gg: ASbGncuXM8yWORAsd4kpq4Kig2S2+dQIgSM8siFUV2UO9kprSHAMt5o5t23t5vF+WtK
-	o8HldSYjdG3IOqVVeHGhdHA1GuyHzvuo2bRanOKRBY4xV8AadU8asYtDovagDAvnD+O+q2w==
-X-Google-Smtp-Source: AGHT+IGYqdVgN1EdwmgZAtasWmScjV/71wD/8mw0DQ3R4SGAwfv0GvcTdE9fmx/zsZP2KBHTC6eNPVcC2/eTAyJEsKE=
-X-Received: by 2002:a05:6e02:1fe8:b0:3a7:dea7:87a6 with SMTP id
- e9e14a558f8ab-3ce333ae611mr3363625ab.29.1736268373922; Tue, 07 Jan 2025
- 08:46:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736268694; x=1736873494;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CTSz7tBjYqInw46x/njFFjf677aGPAIHNq1BnsnC+ec=;
+        b=l+NnHf5gYpFHvnzf8D8slc4nB3XMg7BFVt++/veo340PgRinef2fcPnnAdx+ZgDUAU
+         LOSlarh+7etw8jRG/PtWGu3mdgcdnDdNegsui4yyDj745AoWu3s2QBRppaYY37dEXtUK
+         6O21nOgjk6+UNoz7XZE4W17smK2/q4Vbu/m36clhOT/Y+p6Y9/c/n4fM0C/a8+AuycHq
+         xrvYM9wvCCV49jed5XJDHx2fOLmNiVm+s4onxLN3LQ1NXlIuGdamMCEHwrTEEk1VbxAg
+         vqbPuIUhyiSIxb4j9xz7IeeytWGUqNrsB0+Ftdk+lFcJTCIIX7mGz9QWTINTA2aOoF9b
+         h6iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxtg9PpKC+aqlzODUdcxqPRVbRtHP1octiBYC73CwN47VKsvtoL9BHKxIQSV8/HRb+v1m9g/uqIqNSATK/8YKG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6n/OaGYE12Z0+hGmaAuk+zwXMw5EoXJPpFe+zjcD1AU/2hLKK
+	/OS+TFjDzDLHg63mJRIrqbm517AY1x3sm4z6m+anB99Gx81HfO+UY49r1gAofvE=
+X-Gm-Gg: ASbGnctwral2pm2GbvsIK5FkfXFTQ1tBqiPRrFpCx//+46WZ5KrHWBHTUHXDwkf5gI2
+	6XFAQY8DHkoEVKSz3Wo2/3k4L/R6prpt2dMrICscxeqATZ3MdRf3iKyh1mzLmbGuZbpP4+MWO3I
+	IPXW3yjN3hvsedVbXQ8slt959jVm2NOeFn2APbf8ObB2N1oWOX03W+dsjSoFZI5TgrsbNEK4BDk
+	8z8qdhL4KhyF55d3FdipCl99teyuyO/m435b90yTqRWzyd2os+Xna2RSNlH04BidEA=
+X-Google-Smtp-Source: AGHT+IGwgFlorz+SlEeegQol9lzim8uyOt2SpyO+pyVXVckjlFtukdA4j1A0JjMECNUEulfh40a11Q==
+X-Received: by 2002:a05:600c:350b:b0:434:f8e5:1bb with SMTP id 5b1f17b1804b1-436686430a2mr559200735e9.12.1736268693699;
+        Tue, 07 Jan 2025 08:51:33 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.66.180])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b119d7sm635933915e9.20.2025.01.07.08.51.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2025 08:51:33 -0800 (PST)
+Message-ID: <d0ab6e2e-cd57-4477-8171-77b4c2d364f7@linaro.org>
+Date: Tue, 7 Jan 2025 16:51:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
- <CAP-5=fWVHaVpJbDf=afn5MhZ972uEq=sGEmsULoD=LRff2Vouw@mail.gmail.com> <fa5dfd6d-3b8d-4086-9604-e5abddd324c9@csgroup.eu>
-In-Reply-To: <fa5dfd6d-3b8d-4086-9604-e5abddd324c9@csgroup.eu>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 7 Jan 2025 08:46:02 -0800
-X-Gm-Features: AbW1kvYoxlBjLdxTV6GwL0H9rcNGGfYrfdbGog2kgceMTlrqNVfpEr6b_qO8KVM
-Message-ID: <CAP-5=fU_NCohskhq=rh1wLPxWmSuZcTw-hzwOhBSPBn4cfg4MA@mail.gmail.com>
-Subject: Re: [PATCH] libperf: Add back guard on MAX_NR_CPUS
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf test record+probe_libc_inet_pton: Make test
+ resilient
+To: Leo Yan <leo.yan@arm.com>
+Cc: Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Guilherme Amadio <amadio@gentoo.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Thomas Richter <tmricht@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241202111958.553403-1-leo.yan@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241202111958.553403-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 7, 2025 at 12:50=E2=80=AFAM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> Le 06/01/2025 =C3=A0 21:05, Ian Rogers a =C3=A9crit :
-> > On Mon, Jan 6, 2025 at 11:38=E2=80=AFAM Christophe Leroy
-> > <christophe.leroy@csgroup.eu> wrote:
-> >>
-> >> Building perf with EXTRA_CFLAGS=3D"-DMAX_NR_CPUS=3D1" fails:
-> >>
-> >>            CC      /home/chleroy/linux-powerpc/tools/perf/libperf/cpum=
-ap.o
-> >>          cpumap.c:16: error: "MAX_NR_CPUS" redefined [-Werror]
-> >>             16 | #define MAX_NR_CPUS 4096
-> >>                |
-> >>          <command-line>: note: this is the location of the previous de=
-finition
-> >>
-> >> Commit e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS=
-")
-> >> moved definition of MAX_NR_CPUS from lib/perf/include/internal/cpumap.=
-h
-> >> to lib/perf/cpumap.c but the guard surrounding that definition got los=
-t
-> >> in the move.
-> >>
-> >> See commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at
-> >> compile time") to see why it is needed.
-> >>
-> >> Note that MAX_NR_CPUS was initialy defined in perf/perf.h and a
-> >> redundant definition was added by commit 9c3516d1b850 ("libperf:
-> >> Add perf_cpu_map__new()/perf_cpu_map__read() functions").
-> >>
-> >> A cleaner fix would be to remove that duplicate but for the time
-> >> being fix the problem by bringing back the guard for when MAX_NR_CPUS
-> >> is already defined.
-> >>
-> >> Fixes: e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS=
-")
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > Hello,
-> >
-> > I believe this change might be unnecessary. The only use of
-> > MAX_NR_CPUS is in a warning message within perf_cpu_map__new, which
-> > takes a string and produces a perf_cpu_map. Other similar functions
-> > like cpu_map__new_sysconf don't check MAX_NR_CPUS. Therefore,
-> > specifying a -DMAX_NR_CPUS value on the build command line has little
-> > effect=E2=80=94it only impacts a warning message for certain kinds of
-> > perf_cpu_map creation. It's also unclear what the intended outcome is
-> > on the build command line.
-> >
-> > Given that specifying the value doesn't seem to have a clear purpose,
-> > allowing the build to break might be the best option. This would alert
-> > the person building perf that they are doing something that doesn't
-> > make sense.
-> >
->
-> Ok so I looked at it once more and indeed it looks like it has changed
-> since 2017. See commit 21b8732eb447 ("perf tools: Allow overriding
-> MAX_NR_CPUS at compile time") to understand why it was required at that
-> time.
->
-> Now I don't have much size difference anymore between a build with
-> MAX_NR_CPUS=3D1 and the default MAX_NR_CPUS=3D4096:
->
-> $ size perf perf-1cpu
->     text           data     bss     dec     hex filename
-> 3415908  104164   17148 3537220  35f944 perf
-> 3415904  104164   16124 3536192  35f540 perf-1cpu
->
-> Apparently that was changed by commit 6a1e2c5c2673 ("perf stat: Remove a
-> set of shadow stats static variables")
->
-> So I agree with you, it is apparently not worth reducing MAX_NR_CPUS
-> anymore, I'll give it a try.
 
-Thanks for figuring this out and the explanation. Fwiw, the shadow
-stats should be gone. Perf obviously reads counters, as there may be
-counters on multiple CPUs then it aggregates these counts together.
-The shadow stats were another aggregation mechanism used for metrics
-and being a simple person I managed to land just having the single
-aggregation approach although there's some cleanup in this area hiding
-as tech debt in perf script. The support was removed around 12 minor
-versions ago, iirc.
 
-As a heads up given the interest in binary size, most of perf's binary
-size comes from the json events. Off the top of my head I'd say it is
-like 70% on x86. We avoid string relocations on those by storing
-constant offsets and at some point I'd like to get compression going -
-although I'd like to compress across files, something 7-zip's format
-at least attempts but there was recent 7-zip security news which may
-mean a dependency is a bad thing. Anyway, most of the json events
-likely aren't needed by the platform you are building for and I added
-some build support for only including the ones you are. As you may not
-know your CPU's model name I added a mechanism to use CPUIDs:
-https://lore.kernel.org/r/20240904044351.712080-1-irogers@google.com
-But perhaps we can use x86-64 version levels to make this a more
-automated approach, if we see say a "-march=3Dx86-64-v4" in the CFLAGS -
-the idea being that say nehalem doesn't support x86-64-v4 so we can
-safely drop the nehalem json data. That said x86-64 version levels
-have been described as, "some crazy glibc artifact and is stupid and
-needs to die":
-https://lore.kernel.org/lkml/CAHk-=3Dwh_b8b1qZF8_obMKpF+xfYnPZ6t38F1+5pK-eX=
-NyCdJ7g@mail.gmail.com/
-For metrics I have a similar problem, knowing which models support
-which events, but to handle that I use the json and see if it has an
-event, if not the metric isn't created. This causes issues when new
-models rename events. Anyway, those patches haven't landed, here are
-the Intel versions:
-https://lore.kernel.org/lkml/20240926175035.408668-1-irogers@google.com/
+On 02/12/2024 11:19 am, Leo Yan wrote:
+> The test failed back and forth due to the call chain being heavily
+> impacted by the libc, which varies across different architectures and
+> distros.
+> 
+> The libc contains the symbols for "gaih_inet" and "getaddrinfo" in some
+> cases, but not always.  Moreover, these symbols can be either normal
+> symbols or dynamic symbols, making it difficult to decide the call chain
+> entries due to the symbols are inconsistent.
+> 
+> To fix the issue, this commit identifies three call chain entries are
+> always present.  These entries are matched by iterating through the
+> lines in the "perf script" result.  The recording attribute max-stack is
+> set to 4 for the possible maximum call chain depth.
+> 
+> After:
+> 
+>    # perf test -vF pton
+>    --- start ---
+>    Pattern: ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
+>      Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
+>    Pattern: .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib/aarch64-linux-gnu/libc-2.31.so|inlined\)$
+>      Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
+>      Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
+>    Pattern: .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
+>      Matching: ping  285058 [025] 1219802.466939: probe_libc:inet_pton: (ffffa14b7cf0)
+>      Matching: ffffa14b7cf0 __GI___inet_pton+0x0 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
+>      Matching: ffffa1488040 getaddrinfo+0xe8 (/usr/lib/aarch64-linux-gnu/libc-2.31.so)
+>      Matching: aaaab8672da4 [unknown] (/usr/bin/ping)
+>    ---- end ----
+>     82: probe libc's inet_pton & backtrace it with ping                 : Ok
+> 
+> Reported-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> Closes: https://lore.kernel.org/linux-perf-users/1728978807-81116-1-git-send-email-renyu.zj@linux.alibaba.com/
+> Reported-by: Guilherme Amadio <amadio@gentoo.org>
+> Closes: https://lore.kernel.org/linux-perf-users/Z0X3AYUWkAgfPpWj@x1/T/#m57327e135b156047e37d214a0d453af6ae1e02be
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> Changes from v1: Fixed a typo s/Seatch/Search.
+> 
+>   .../shell/record+probe_libc_inet_pton.sh      | 34 ++++++++++---------
+>   1 file changed, 18 insertions(+), 16 deletions(-)
+> 
 
-Thanks,
-Ian
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> index 47a26f25db9f..3fbc7a7409af 100755
+> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> @@ -43,17 +43,8 @@ trace_libc_inet_pton_backtrace() {
+>   		echo "((__GI_)?getaddrinfo|text_to_binary_address)\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+>   		echo "(gaih_inet|main)\+0x[[:xdigit:]]+[[:space:]]\(inlined|.*/bin/ping.*\)$" >> $expected
+>   		;;
+> -	ppc64|ppc64le)
+> -		eventattr='max-stack=4'
+> -		# Add gaih_inet to expected backtrace only if it is part of libc.
+> -		if nm $libc | grep -F -q gaih_inet.; then
+> -			echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+> -		fi
+> -		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+> -		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+> -		;;
+>   	*)
+> -		eventattr='max-stack=3'
+> +		eventattr='max-stack=4'
+>   		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+>   		;;
+>   	esac
+> @@ -76,14 +67,25 @@ trace_libc_inet_pton_backtrace() {
+>   	fi
+>   	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
+>   
+> -	exec 3<$perf_script
+>   	exec 4<$expected
+> -	while read line <&3 && read -r pattern <&4; do
+> +	while read -r pattern <&4; do
+> +		echo "Pattern: $pattern"
+>   		[ -z "$pattern" ] && break
+> -		echo $line
+> -		echo "$line" | grep -E -q "$pattern"
+> -		if [ $? -ne 0 ] ; then
+> -			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
+> +
+> +		found=0
+> +
+> +		# Search lines in the perf script result
+> +		exec 3<$perf_script
+> +		while read line <&3; do
+> +			[ -z "$line" ] && break
+> +			echo "  Matching: $line"
+> +			! echo "$line" | grep -E -q "$pattern"
+> +			found=$?
+> +			[ $found -eq 1 ] && break
+> +		done
+> +
+> +		if [ $found -ne 1 ] ; then
+> +			printf "FAIL: Didn't find the expected backtrace entry \"%s\"\n" "$pattern"
+>   			return 1
+>   		fi
+>   	done
+
