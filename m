@@ -1,128 +1,133 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B525D1DF74B;
-	Tue,  7 Jan 2025 07:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356EF1D7E47;
+	Tue,  7 Jan 2025 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736235559; cv=none; b=cZVhwUcRW76qmIv5DSid0HaFNng1JE01FLQmgznSP9jYZkPSo98L8zUimoCs6JzJmmR5VsklLlLXlt0e387FnMMwFwLwWcHJ6/fLQW/WxWo/EtGYhSu0gwXU1+AIFXTbVtk0FttuqekWLv2wHn9Vd/UXYvdl+IomW17UPo4btE8=
+	t=1736239807; cv=none; b=LnUpNYfQbV70XljxKeHIrIxKXpOQt9J1grDAswAB/5kaAPtw0/lMoBEXzJUHHY4vgHwJYytMBdaNfJjkPHksP6PBBVGcWkzKOE8TAw8kyAmLSyP9F/g9hVgjTAfi6ip9bDMgQlmYwuytEoHW9fd/Vw1AdGTxKBp22kyN7BAilqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736235559; c=relaxed/simple;
-	bh=LU0WbVQz2CxbGW2N1O6kmuaX5dfkZ0N6PZp0D5MggIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dNkkfeU8xLi7pfJlgzwElJQairvQecJH3Vsf3jwyqxi7pquQmdxEB2VtN9Vh6DMltC7xYnHnc1j93o/iKgaWVMmMVSkQ/gFZskNvFeIPRwHqfPvlD4MrCo80/yVFxaRImZo6zUt5Rb2cZyH34u6ISsT/MctYeDvWUUfbbBaVDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bR4X1ExU; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR4X1ExU"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2efded08c79so17509149a91.0;
-        Mon, 06 Jan 2025 23:39:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736235556; x=1736840356; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ULQq5TWZfMw9s6DzRDdbgNJ1Nc4fQXG8u2j3H7zO1uA=;
-        b=bR4X1ExUg8/H1KO/BRyf04nIjkUE7kzrOJQJ1fTmWq8EULhO9qx4lbgLjo5UAYVqln
-         6yQA1xmPRf1YDtBUmHlOMzxlEyxxGZhHzxejyWUfq4mxqOl0oepwNGZTkwPlDOs4zJ7s
-         nnhIRU68/Vz4YQbHl0keN0lii0T1hcQC9H5aJwmbCI/gRw0k6Ft/BoxXIHm6bnK7PGi5
-         RkPLDEfc7SSrwGbJ8aI0wUHoT3dI8dhs7BzmkI7NJfyAtLDVyC1LUgRffk6cKOnJWTLr
-         MJZlfoajL2hkJBARDHtLwv7Q9lNNMgsbzN5UcDvy3Y9Wn5qR7eyYuo7XCQwcLoHgmX5C
-         UaZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736235556; x=1736840356;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ULQq5TWZfMw9s6DzRDdbgNJ1Nc4fQXG8u2j3H7zO1uA=;
-        b=haEBxWw+mdBTObNo25/lV9dsjewIVBQ0z8qKTxTucbWVAJwIyy3rcNwQCtZQKRJUU5
-         ULA6zukbeJ120LmlVWlpLxuk94XuEB4M7GoYMjpbbdp+y/hf/JJAkO2FOWw7PCM1+ROg
-         yU23stsP/grB9lWQ/5aGiNOlZzOMuEAE8R6vgxT5SyLoo+NNX/p4OoTLBxiA8V8pyvuT
-         tenYdr10tluJhYo4Ycf6ZTP7Ls2Tlb51VmQJAWtCjsd99Wb25TWYdZH2+F2NVn4T2a5B
-         MOrLNI295gEek7WqCTPTHCmVrySH45/cr74xiFMtl1zI/ZrXl2GmTmD/q5oea3QQHEhA
-         CvWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGgwSMwyE4zV3Pm+r6O9t+uNktfmuqpYZCEm6+a5oASP2lHp8iwOwJoL6RkawpVHLHEwnXsyBUS8tS4lc2CDc/lQ==@vger.kernel.org, AJvYcCX0OGQMLxc0IqBMlfHSkNRQX6xUdJL4p/7BGaLLdKxmK/0H+LMrKhBQVhGZIlVFvOunD+e9Y7cYBuUr/s8=@vger.kernel.org, AJvYcCXvYyAhRDLY8GlXwgvN4Vt1FKLyccUeiiMeNk9xKczE5y7Bgk67Nn8Y0j2C0s2wbYboMfQg4JVo@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQmWRRUluIsPqCHUEYsq7+bXst6HbO7gHt1sb7iepCNDgQ9Swu
-	WQbOe7F5adxixxn6lh3kDJfI1tgLOm+d6ZhgN0/OrjciTsSlTfKY
-X-Gm-Gg: ASbGncuB9+WbKZ6+rsCnv4RrEqvce5YOeZ9E1kmzA/Hkx+RjdvCnl327nP6pN7cUzwG
-	dd1fUEUQrGNNtSfT4I2qzgrCng5lO1xTLKKUzAhulNuS5v8SpmuJ9OA0mLP3h1mghXqotEtqWcD
-	ddMlsVSmXL7BIvkUD3sURup9zOzFJHC9qCXj9/cg3OxGD7OCGFfYy6fbJqL6KOxUU9h6k6uOAcD
-	5jE2iN9RLTYmufFa6umjZ6tjVSWf/zGOoWhTQqaQkRdZeO2wiyq57BK+3ogfoR/sNsMF4zpFiDC
-	TVPuRpP/FkQ=
-X-Google-Smtp-Source: AGHT+IHRRlr/ytX/dJtmDLFtZebds7kTac0LXYNbmkv5WnAOVIgEot/OfejrsJVkZJbjXbpkJfdWSA==
-X-Received: by 2002:a05:6a00:4ac5:b0:725:b12e:604c with SMTP id d2e1a72fcca58-72abdd3c467mr84333969b3a.4.1736235555927;
-        Mon, 06 Jan 2025 23:39:15 -0800 (PST)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8fb851sm32782387b3a.132.2025.01.06.23.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 23:39:15 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	Ching-Chun Huang <jserv@ccns.ncku.edu.tw>,
-	Chun-Ying Huang <chuang@cs.nycu.edu.tw>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] perf bench: Fix undefined behavior in cmpworker()
-Date: Tue,  7 Jan 2025 15:39:06 +0800
-Message-Id: <20250107073906.3323640-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1736239807; c=relaxed/simple;
+	bh=YQTMNIxSLGB/Wa5Ta6pq+NW3OJ76deWxc6uMXXiW7Wk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uTzPkvyoAD+lczbKQ7OYHuJ6wsksfFFnXi8b3j+wmR4Tvas2TIjTFH+2IcndxMwQ95AhvcAXNFwYyyVTl2EiOcsy3VViGrnzQUquVvk5S86aTHDdhcByaKIIi3Ax8KRZhakYCaJc7un1PNWgEESHHeIYGgkn3sTwfwAdbcPbO4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YS45p0dpCz9sPd;
+	Tue,  7 Jan 2025 09:31:42 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Jk1VJOcVdokO; Tue,  7 Jan 2025 09:31:42 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YS45n6XFfz9rvV;
+	Tue,  7 Jan 2025 09:31:41 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CAFA08B765;
+	Tue,  7 Jan 2025 09:31:41 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id EimS5cl3j85D; Tue,  7 Jan 2025 09:31:41 +0100 (CET)
+Received: from [10.25.209.139] (unknown [10.25.209.139])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7488B8B764;
+	Tue,  7 Jan 2025 09:31:41 +0100 (CET)
+Message-ID: <fa5dfd6d-3b8d-4086-9604-e5abddd324c9@csgroup.eu>
+Date: Tue, 7 Jan 2025 09:31:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] libperf: Add back guard on MAX_NR_CPUS
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu>
+ <CAP-5=fWVHaVpJbDf=afn5MhZ972uEq=sGEmsULoD=LRff2Vouw@mail.gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <CAP-5=fWVHaVpJbDf=afn5MhZ972uEq=sGEmsULoD=LRff2Vouw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The comparison function cmpworker() violates the C standard's
-requirements for qsort() comparison functions, which mandate symmetry
-and transitivity:
 
-Symmetry: If x < y, then y > x.
-Transitivity: If x < y and y < z, then x < z.
 
-In its current implementation, cmpworker() incorrectly returns 0 when
-w1->tid < w2->tid, which breaks both symmetry and transitivity. This
-violation causes undefined behavior, potentially leading to issues such
-as memory corruption in glibc [1].
+Le 06/01/2025 à 21:05, Ian Rogers a écrit :
+> On Mon, Jan 6, 2025 at 11:38 AM Christophe Leroy
+> <christophe.leroy@csgroup.eu> wrote:
+>>
+>> Building perf with EXTRA_CFLAGS="-DMAX_NR_CPUS=1" fails:
+>>
+>>            CC      /home/chleroy/linux-powerpc/tools/perf/libperf/cpumap.o
+>>          cpumap.c:16: error: "MAX_NR_CPUS" redefined [-Werror]
+>>             16 | #define MAX_NR_CPUS 4096
+>>                |
+>>          <command-line>: note: this is the location of the previous definition
+>>
+>> Commit e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
+>> moved definition of MAX_NR_CPUS from lib/perf/include/internal/cpumap.h
+>> to lib/perf/cpumap.c but the guard surrounding that definition got lost
+>> in the move.
+>>
+>> See commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at
+>> compile time") to see why it is needed.
+>>
+>> Note that MAX_NR_CPUS was initialy defined in perf/perf.h and a
+>> redundant definition was added by commit 9c3516d1b850 ("libperf:
+>> Add perf_cpu_map__new()/perf_cpu_map__read() functions").
+>>
+>> A cleaner fix would be to remove that duplicate but for the time
+>> being fix the problem by bringing back the guard for when MAX_NR_CPUS
+>> is already defined.
+>>
+>> Fixes: e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
+>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Hello,
+> 
+> I believe this change might be unnecessary. The only use of
+> MAX_NR_CPUS is in a warning message within perf_cpu_map__new, which
+> takes a string and produces a perf_cpu_map. Other similar functions
+> like cpu_map__new_sysconf don't check MAX_NR_CPUS. Therefore,
+> specifying a -DMAX_NR_CPUS value on the build command line has little
+> effect—it only impacts a warning message for certain kinds of
+> perf_cpu_map creation. It's also unclear what the intended outcome is
+> on the build command line.
+> 
+> Given that specifying the value doesn't seem to have a clear purpose,
+> allowing the build to break might be the best option. This would alert
+> the person building perf that they are doing something that doesn't
+> make sense.
+> 
 
-Fix the issue by returning -1 when w1->tid < w2->tid, ensuring
-compliance with the C standard and preventing undefined behavior.
+Ok so I looked at it once more and indeed it looks like it has changed 
+since 2017. See commit 21b8732eb447 ("perf tools: Allow overriding 
+MAX_NR_CPUS at compile time") to understand why it was required at that 
+time.
 
-Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
-Fixes: 121dd9ea0116 ("perf bench: Add epoll parallel epoll_wait benchmark")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
-Changes in v2:
-- Rewrite commit message
+Now I don't have much size difference anymore between a build with 
+MAX_NR_CPUS=1 and the default MAX_NR_CPUS=4096:
 
- tools/perf/bench/epoll-wait.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ size perf perf-1cpu
+    text	   data	    bss	    dec	    hex	filename
+3415908	 104164	  17148	3537220	 35f944	perf
+3415904	 104164	  16124	3536192	 35f540	perf-1cpu
 
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index ef5c4257844d..4868d610e9bf 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -420,7 +420,7 @@ static int cmpworker(const void *p1, const void *p2)
- 
- 	struct worker *w1 = (struct worker *) p1;
- 	struct worker *w2 = (struct worker *) p2;
--	return w1->tid > w2->tid;
-+	return w1->tid > w2->tid ? 1 : -1;
- }
- 
- int bench_epoll_wait(int argc, const char **argv)
--- 
-2.34.1
+Apparently that was changed by commit 6a1e2c5c2673 ("perf stat: Remove a 
+set of shadow stats static variables")
 
+So I agree with you, it is apparently not worth reducing MAX_NR_CPUS 
+anymore, I'll give it a try.
+
+Thanks
+Christophe
