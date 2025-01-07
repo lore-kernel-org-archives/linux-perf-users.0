@@ -1,126 +1,169 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47EE1537C3
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 14:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BB11F37CF
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jan 2025 16:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736261389; cv=none; b=oNzohbg1QFiu5dPrHrHVvjiRBF5sx9KTFyLl0xS40LAQao/gg40RMvS9jioPZARyLUTS2jU45WNXqYHidu+PfQqUm271ny+L2f1oB+rVpxLLnsbc3aCSDNIFHVOBiZ8AUDxfsUxzwrgT39hJuw03ijK9c4WuhohOpzisPCBcLlQ=
+	t=1736266299; cv=none; b=R9p/qd2hWO6/6FMG/fME2ze7//QFEK6KrIyWInCenVBLMvEqLC5I9TfEG4uxzzcyMNNtVnss8ZVXVly+djyxJIB2apd+punShxS9ztm+WTgBvZB9ACKfpXIvQpWkdHNO+LQMmD8GwJknPyNBqB79I+2KIEnOlp/j5jAFCEw5eJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736261389; c=relaxed/simple;
-	bh=QEG4Lt3mn+Wq0xsRQRMvQJKA2t4dMpLwC9XZ0QsUKgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d1V4hdKPqaoki1+Q6gxEQhwXBL2LUoz/61eX3RYMNTYIKjD7KU93v33sUzXfN4v+007Feg8WKbStz1mPmsXKylq5ORtbC7OPwe4tr/sdN6qIqfLZH8v1/jMEi/XvKjJdCRuN+jRNxU2/BQBa89rxgCsbzGgAlsMG7LI728lr1r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AoktLoBd; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1736266299; c=relaxed/simple;
+	bh=oe4rYLsJTSsMqz8kYPo07co6S2Ugvm2arY6rIL9BfrE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hITWJL99R7UzO6F4APpyIILfuZoF9cPGlLNNYH4okDZXyoq2D0Cm5alBQ3uhCz+17JKgvamsDe1Vt7B7BPMn2lFc95xTDTwmGCD2dM0BcfDgoCYdv+Sa1kp/IhAFwCKU5LUfIxieIB4zvPBspgs1KYOFkPpAqMbrrCi1IEXKWpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yPt3ebKd; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AoktLoBd"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436a03197b2so59539225e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 06:49:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yPt3ebKd"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so154205ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 08:11:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736261382; x=1736866182; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K3u/NmEcbizgpdqDtJODTjPeBG7JBU/0LlN4PU1so0U=;
-        b=AoktLoBdRxn2k2l8cQA27v1UUvDErCQDRqwswWyInVEC0rj04Rd4USJqq+fBK6ey4U
-         NBDZbOM6rSx0N7iYoYHxHaiGOI1lI0fSWMsMTiml8e8v7UmD9dTrRwJ3yPWzhcSC+sDW
-         LX8+hzuX6PKTpWgSgGOpGbJen6DsjXLHG1IW1+SyMywhrkREy0ZWXFDQNSKq+iw6hUt6
-         oQWuNjNpgZDrB35o5IhuE5EB12Lu9vriRhjYbQK9xkXg4+5ccRqMNAovgD7uaYwxRNIU
-         3X3kLxHYfu6hxo/gIIKHOr7zw1gK1bTJE2vY6XrAy4MpvYLfPrvJHp3RteE0icgrS5Ij
-         batA==
+        d=google.com; s=20230601; t=1736266296; x=1736871096; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovdIMwIwiZ14E4dfVfO4ghoVyZV5ri9bDMxCK8IFTAI=;
+        b=yPt3ebKdNxIBfWrLby1RomYYDU1AwUTaLMOmp80bLrYRrE7BXIMQ0CerAWr4ziB2c9
+         UK8eZaK63qo/zFFJWH7dscth41z3gfw2AxCvging7NmplAveit52bFC9x78MNRmoHcoM
+         /QLmo12DhbMdU06+cJS0IDyoTSx2LcQgJLZin9PT8jI843PfBG705oLeTe1bvsZWWrUY
+         PRSh0VGRy+j9Oi90eB9XyhNX+/FP1P5deyc9cyS5d0OIFegqgeIojU+O3zZADSjS1pF2
+         mSF3KHc2LijPEposq6EyYWp9UXO45LnjdQbmchQ2eiKgPprHw5urfNJJgLz3ugpMrw8n
+         dHpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736261382; x=1736866182;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3u/NmEcbizgpdqDtJODTjPeBG7JBU/0LlN4PU1so0U=;
-        b=EpcrVaENxgaOoWO8+CQBgBxjyJEWgcMICBOT5evD+v9x1UJNVIdmb5S1dD77TeM5qM
-         nh63+TV9z94ZJm1OeGR5WJxz/5Wz5v7Sc8X46I1TRdzwcH0dZ70+j+Fd9NKO9hQ4ZIo2
-         8IpiZ+S/ooyjrTfxiK2B+aVfB+flD3TosMz//tep8Alb5WtN3BTe6MFUvD/NyBCr/iou
-         dTvvAJtgDUTIBDBiKDyxBFKFftlQ1rzqGZU7xw0aRmEFopoYfCWo0Lt8/VD48+b+Gjw0
-         PIpXdMkMuzv71/l9PnYwLhnSnJIV6Hf+CuHapb62VzJETmgVoXgZ+1yqxzdz4T9vr1vo
-         S1jw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjaE3iQrjg6pKOtR5srV6/9LAV1cf4OZ1c0AdboaJlg36LGI850hjYAsUf257f3vsRVY6ONOqoqYUlse2nwwlN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+meo1BW1Dds1DX1nx97BTOG92dJ2DPL7tCLb3tQRruonSSrYG
-	v2F00Clf1Tcaag4W+4FLde4FyDINnfI8dMJxd7cEJDCvKFpeNjUudFxT3Tn8wmYELqUvV6f3NIs
-	1
-X-Gm-Gg: ASbGncuyjkB0JSxzztK9AMgYxv97RbaiNIwwaRv2pK+up5qWHY5CMlUUByGcCZCjB/m
-	8EMnewKMpYWlcVXi/jQM3IVZDafZTzD2jLiTvYYsU0Z7grJvRJmqcUajeLnvmvTRlywQVjBiSQM
-	RWFBzlpV2JI/Ovk/GJO6mswE4Ye2mt1cXv8rwgoDKthxS+NrSxheA3u3E04b0jtDkCupmzSwrIQ
-	rDRGMG6eSAGsizho7EQY/nPUHVh7/PptLcdL39EsUF/bJdKNe1Isrnxuo2XEKL49zw=
-X-Google-Smtp-Source: AGHT+IFGvFPkSlYeeurN8gZ+h8Ez+4npmK5Z8xyVNs2V2PckDfXpluAxmlP4Ufddd+X9OkHCgV4ZkA==
-X-Received: by 2002:a05:600c:3b24:b0:436:2923:d23a with SMTP id 5b1f17b1804b1-43668b7a683mr422892985e9.33.1736261382081;
-        Tue, 07 Jan 2025 06:49:42 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.66.180])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436dd11d8b4sm15046065e9.1.2025.01.07.06.49.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2025 06:49:41 -0800 (PST)
-Message-ID: <f0828c16-8892-47c6-91ea-954101ed7dda@linaro.org>
-Date: Tue, 7 Jan 2025 14:49:40 +0000
+        d=1e100.net; s=20230601; t=1736266296; x=1736871096;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ovdIMwIwiZ14E4dfVfO4ghoVyZV5ri9bDMxCK8IFTAI=;
+        b=dES5YjuhKeZAcQ31qKd8+gylZAcM0zju2xnAy6keEBsq5c1dNs8UM6VPpCmh8TcNWN
+         yHKLHdkkgDSJdSQRj2yT52ly6mZhSYUVbB1DLrqZzh28Qc9P0knskGzErJbc0OhP/TNM
+         HgWEwbZJuMXhGbpGMfCpdK3sumIKH/TlYSC1vJlXiLB+2nlO6FZmVou5Lt+53pGJZFfj
+         qj1+jsfBWUWkf/DZ++/IjtMbJ3tnmmWFsQMpYkS/aM7xu6roHZlwLncy2SMIAQyHNjuI
+         f+t6R54uT/TCOq4DmmZlA5b0C3GsSTvDah0fVi0t5G8+s5J03Va2fn5yD5lu8vEFlBJR
+         SUlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMrNFAUk/Gdj0Fo5PR6lD/4Onrj12G3iZBl/eXuIO9gS6qsnkAgyCcTkYZ+9OixrK+vVa40N7VB6mqAfk3Gokf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVtVgzAeY3sPKAEkjha2tzw1Im0BDIlQbSjDK1GFt+bLai0jWT
+	nuVTMMC3VfYGrFmJxstAsLsF1Vgw5KcS3fGLOX2PlcTrm4JlkD/9pR4iMStJPXu6MPm+0HhJdua
+	psDyccWNxTUMLt7L4ItcP/JI20hDAWGPPRgrb
+X-Gm-Gg: ASbGncu9jM+HuEIvkgZbeM2TpgTRFaWwzfqVQ2Wy6n5d+oQKmeM2TTKDlfKC7lrjPUi
+	44IWsEEZGar4dhXqTk30g6N4By9vkKjzXNkJRy8W6Cw6zj6oksPnwh74MUQnzkwz9IDR6og==
+X-Google-Smtp-Source: AGHT+IFRGMAI8grxoLwU2BMFOYBqhR5G/5+yRiXlsTISXSuvfb3Eb0aGg6zU69aqjzEvaVHXuJ/Tu/v7loLxxl0BAcI=
+X-Received: by 2002:a05:6e02:1068:b0:3ce:3873:48d4 with SMTP id
+ e9e14a558f8ab-3ce38734b0amr762905ab.4.1736266295512; Tue, 07 Jan 2025
+ 08:11:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf test: Update ftrace test to use --graph-opts
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Thomas Richter <tmricht@linux.ibm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Kan Liang <kan.liang@linux.intel.com>
-References: <20250103231630.928815-1-namhyung@kernel.org>
- <20250103231630.928815-3-namhyung@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250103231630.928815-3-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250106215443.198633-1-irogers@google.com> <576a50c8-9ca2-4e2f-9bd8-7d9be4862920@linaro.org>
+In-Reply-To: <576a50c8-9ca2-4e2f-9bd8-7d9be4862920@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 7 Jan 2025 08:11:23 -0800
+Message-ID: <CAP-5=fUZ2QCocFKdLfBoNYC-CQfSAcdbA05OhegKmTt_PLR1WA@mail.gmail.com>
+Subject: Re: [PATCH v1] tools build: Fix a number of Wconversion warnings
+To: James Clark <james.clark@linaro.org>
+Cc: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 7, 2025 at 2:33=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
+>
+> On 06/01/2025 9:54 pm, Ian Rogers wrote:
+> > There's some expressed interest in having the compiler flag
+> > -Wconversion detect at build time certain kinds of potential problems:
+> > https://lore.kernel.org/lkml/20250103182532.GB781381@e132581.arm.com/
+> >
+> > As feature detection passes -Wconversion from CFLAGS when set, the
+> > feature detection compile tests need to not fail because of
+> > -Wconversion as the failure will be interpretted as a missing
+> > feature. Switch various types to avoid the -Wconversion issue, the
+> > exact meaning of the code is unimportant as it is typically looking
+> > for header file definitions.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> What's the plan for errors in #includes that we can't modify? I noticed
+> the Perl feature test fails with -Wconversion but can be fixed by
+> disabling the warning:
+>
+>    #pragma GCC diagnostic push
+>    #pragma GCC diagnostic ignored "-Wsign-conversion"
+>    #pragma GCC diagnostic ignored "-Wconversion"
+>    #include <EXTERN.h>
+>    #include <perl.h>
+>    #pragma GCC diagnostic pop
+>
+> Not sure why it needs both those things to be disabled when I only
+> enabled -Wconversion, but it does.
 
+This change lgtm, I'm not sure how others feel. I don't have a plan, I
+was just following up on Leo's Wconversion comment to see what state
+things were in. The feature tests without these changes pretty much
+break the build (I can live without perl support :-) ) so I thought I
+could move things forward there and then see the state of Wconversion
+with the patch I was working on.
 
-On 03/01/2025 11:16 pm, Namhyung Kim wrote:
-> I found it failed on machines with limited memory because 16M byte
-> per-cpu buffer is too big.  The reason it added the option is not to
-> miss tracing data.  Thus we can limit the data size by reducing the
-> function call depth instead of increasing the buffer size to handle the
-> whole data.
-> 
-> As it used the same option in the test_ftrace_trace() and it was able
-> to find the sleep function, it should work with the profile subcommand.
-> 
-> Get rid of other grep commands which might be affected by the depth
-> change.
-> 
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->   tools/perf/tests/shell/ftrace.sh | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
+I'm not sure how others feel about fixing Wconversion in perf, the
+errors are quite noisy imo. The biggest issue imo will be with headers
+shared by tools and the kernel, where kernel people may be vocal on
+the merits of Wconversion.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+> > ---
+> >   tools/build/feature/test-backtrace.c           | 2 +-
+> >   tools/build/feature/test-bpf.c                 | 2 +-
+> >   tools/build/feature/test-glibc.c               | 2 +-
+> >   tools/build/feature/test-libdebuginfod.c       | 2 +-
+> >   tools/build/feature/test-libdw.c               | 2 +-
+> >   tools/build/feature/test-libelf-gelf_getnote.c | 2 +-
+> >   tools/build/feature/test-libelf.c              | 2 +-
+> >   tools/build/feature/test-lzma.c                | 2 +-
+> >   8 files changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/build/feature/test-backtrace.c b/tools/build/feature=
+/test-backtrace.c
+> > index e9ddd27c69c3..7962fbad6401 100644
+> > --- a/tools/build/feature/test-backtrace.c
+> > +++ b/tools/build/feature/test-backtrace.c
+> > @@ -5,7 +5,7 @@
+> >   int main(void)
+> >   {
+> >       void *backtrace_fns[10];
+> > -     size_t entries;
+> > +     int entries;
+> >
+> >       entries =3D backtrace(backtrace_fns, 10);
+> >       backtrace_symbols_fd(backtrace_fns, entries, 1);
+> > diff --git a/tools/build/feature/test-bpf.c b/tools/build/feature/test-=
+bpf.c
+> > index 727d22e34a6e..e7a405f83af6 100644
+> > --- a/tools/build/feature/test-bpf.c
+> > +++ b/tools/build/feature/test-bpf.c
+> > @@ -44,5 +44,5 @@ int main(void)
+> >        * Test existence of __NR_bpf and BPF_PROG_LOAD.
+> >        * This call should fail if we run the testcase.
+> >        */
+> > -     return syscall(__NR_bpf, BPF_PROG_LOAD, &attr, sizeof(attr));
+> > +     return syscall(__NR_bpf, BPF_PROG_LOAD, &attr, sizeof(attr)) =3D=
+=3D 0;
+>
+> Seems a bit weird to invert some of the return values rather than doing
+> !=3D 0, but as you say, the actual values seem to be unimportant.
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
-> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-> index 2df05052c324a21c..c243731d2fbf67aa 100755
-> --- a/tools/perf/tests/shell/ftrace.sh
-> +++ b/tools/perf/tests/shell/ftrace.sh
-> @@ -67,11 +67,8 @@ test_ftrace_latency() {
->   
->   test_ftrace_profile() {
->       echo "perf ftrace profile test"
-> -    perf ftrace profile -m 16M sleep 0.1 > "${output}"
-> +    perf ftrace profile --graph-opts depth=5 sleep 0.1 > "${output}"
->       grep ^# "${output}"
-> -    grep sleep "${output}"
-> -    grep schedule "${output}"
-> -    grep execve "${output}"
->       time_re="[[:space:]]+1[[:digit:]]{5}\.[[:digit:]]{3}"
->       # 100283.000 100283.000 100283.000          1   __x64_sys_clock_nanosleep
->       # Check for one *clock_nanosleep line with a Count of just 1 that takes a bit more than 0.1 seconds
+Yeah it was arbitrary and I didn't want to add a stdlib.h dependency
+in a bunch of places for the sake of a definition of NULL. I'm happy
+for things to be done differently if people like.
 
+Thanks,
+Ian
