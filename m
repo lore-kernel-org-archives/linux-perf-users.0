@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BCD202C41;
-	Wed,  8 Jan 2025 19:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CFC22611;
+	Wed,  8 Jan 2025 19:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736365521; cv=none; b=dXEz2R60+JydwfoNcwYiecsx63Wm9sxvVOx38NVmQQU+t1zv9hKTwCLivI4EVks2vabywzXMGmdJWh1M+TptGexDp/aPNM+C31O8okYNKGTSIiyOskgIaDXF4WmLmRzSTTYM83FGB0EByLE+zz7b+jyA0YNJJYwehxaTmkXhm1Q=
+	t=1736365551; cv=none; b=JudFu3cju0788GfKY7jKr/yS7TjrjjOmOSdneeVBM+BESxTGpp8gtnyuqr+TyfCeg0qLBKfYduBO/M1SqGavuWTnbczN9mISXl2cZ3iHW5mXzR3PoB+5gE2veuGDDKZXZXdmSoNTGiESEuP1Y9tOv9uYbCsTVSet9wZwq2gCCsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736365521; c=relaxed/simple;
-	bh=CMuP0H9ETwtFDnpu5R7vNHWZzlXhp2pJ7kYHvHZS9yo=;
+	s=arc-20240116; t=1736365551; c=relaxed/simple;
+	bh=7YeO4NtVni/aC03LGP2tIZFULKZTiKeoXUv5FdQM6/U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/z6F6UoFRY6kZhJQE/H1AFPFyEckk7C6CQ6kLs9dofx7HJIL5IvDFeJ/uqTOtA6wTXtiVGTgA3qPM9+SV3ySecvrOfZap25TRfLZNd815SkiAjV7lJZRn8xhv/oVOBB5E+jrzp/rDvDV7wi4lykmDBDyBETonESI/Si9bwhpoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddwAkj+i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LEXyAE49PN566RR8nKE94BenxGVrrbxHsFYRfNwVN/UfQ128gDsgo7bcKS2+vvPr2zDu0FWYg1aGxiCS9o4Fd9PYIaYSs/ILPotwxMiRjkuxIQHC5Ln51aHF2LkEJ+AyIg7h7gx9W0L2XTzbTJxT1lsts9fhbZcL0H/XH7aDRfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBg4xSRB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddwAkj+i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA853C4CED3;
-	Wed,  8 Jan 2025 19:45:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBg4xSRB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE24C4CED3;
+	Wed,  8 Jan 2025 19:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736365520;
-	bh=CMuP0H9ETwtFDnpu5R7vNHWZzlXhp2pJ7kYHvHZS9yo=;
+	s=k20201202; t=1736365550;
+	bh=7YeO4NtVni/aC03LGP2tIZFULKZTiKeoXUv5FdQM6/U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ddwAkj+i0I2tCwQfvzqhODKrhI7cMZM6wGCsvKh2etEwDi1ggkvwHPfrwaU7Nbli6
-	 FJEOA0rezVU8U17ux9MzYQRSmb+vPZ9AJTW5E72RXmGV8oD1B5FWfr5QZzd8Az5lC9
-	 rwSyroirsFDFHTP/VIdw0Ar+QKqPWhtGJgB0Y4gfUh/XSeuGP0My7bR9NdVkzjPjDz
-	 xmD301QHobDJVvt6BoxA3Fj08vIUg/29ADIjLDI2KMkSmhArQVOPTKM+mYM3nEISiL
-	 ScSqya5N6GLihnloXEv5eymP7X/TcBpb+9Gq8kiQPMT1tutbxJD3rFip+E3vWp9CT+
-	 JUsY8OsIxAGeg==
-Date: Wed, 8 Jan 2025 11:45:18 -0800
+	b=WBg4xSRBAv5uOvIGgMsD1ICrRIESgZ7M5pXCt+sTJnclKW5v2OYdw15DzZPMqwpVj
+	 QBqv+8ov+oQT45RSpVsMsAcAK3LTtTJUOp3Hu0lbnrzMhtbcqBsPdU4vrF7FiO/Ej7
+	 GzhH4hKj5KYGHsB3vbClEomab+/loxQvxvLKg9JVxkUul97ywnWno4NWoq+YNSYbFd
+	 m/+VBw/Xzok2CevzDpl7QNV0NxIZbakJD3dczX/dCw4g0av/ETctQ73Lr8vSUNABk+
+	 UzxFxs9m/n2Pk6fw8geC18F8cgYZSWlfDYk31ntQZNj/MBOO35Q3HRcikbJenxTQ2Q
+	 58VEvgz6ZXScw==
+Date: Wed, 8 Jan 2025 11:45:48 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -43,10 +43,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dominique Martinet <asmadeus@codewreck.org>,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] perf stat: Use counter cpumask to skip zero values
-Message-ID: <Z37Vzk_-x-nE34fL@google.com>
+Subject: Re: [PATCH v4 3/4] perf parse-events: Set is_pmu_core for legacy
+ hardware events
+Message-ID: <Z37V7OSYZkp-WYpl@google.com>
 References: <20250108053428.1724490-1-irogers@google.com>
- <20250108053428.1724490-3-irogers@google.com>
+ <20250108053428.1724490-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,90 +56,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250108053428.1724490-3-irogers@google.com>
+In-Reply-To: <20250108053428.1724490-4-irogers@google.com>
 
-On Tue, Jan 07, 2025 at 09:34:26PM -0800, Ian Rogers wrote:
-> When a counter is 0 it may or may not be skipped. For uncore counters
-> it is common they are only valid on 1 logical CPU and all other CPUs
-> should be skipped. The PMU's cpumask was used for the skip
-> calculation, but that cpumask may not reflect user overrides.
+On Tue, Jan 07, 2025 at 09:34:27PM -0800, Ian Rogers wrote:
+> Also set the CPU map to all online CPU maps. This is done so the
+> behavior of legacy hardware and hardware cache events better matches
+> that of sysfs and json events during
+> __perf_evlist__propagate_maps. Fix missing cpumap put in "Synthesize
+> attr update" test.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/event_update.c |  1 +
+>  tools/perf/util/parse-events.c  | 37 ++++++++++++++++++++-------------
+>  2 files changed, 24 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+> index d6b4ce3ef4ee..9301fde11366 100644
+> --- a/tools/perf/tests/event_update.c
+> +++ b/tools/perf/tests/event_update.c
+> @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+>  	TEST_ASSERT_VAL("failed to synthesize attr update name",
+>  			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
+>  
+> +	perf_cpu_map__put(evsel->core.own_cpus);
+>  	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
 
-It's not clear to me how uncore PMU works with CPU overrides.
-I thought it's ignored and the kernel changed the CPU internally
-using the cpumask.  But it may be transparent to userspace and
-we can think it works as what we expect.
-
-Anyway, the commit dd15480a3d67b9cf ("perf stat: Hide invalid uncore
-event output for aggr mode") added the code and the concern was like
-
-  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
-
-So it should be fine as long as the output remains the same.
-
-
-> Similarly a counter on a core PMU may explicitly not
-> request a CPU be gathered. If the counter on this CPU's value is 0
-> then the counter should be skipped as it wasn't requested. Switch from
-> using the PMU cpumask to that associated with the evsel to support
-> these cases.
-
-Do you mean hybrid PMUs?  I guess they won't open events on not
-supported/requested CPUs in the first place, right?
+Looks like it needs to be in a separate commit.
 
 Thanks,
 Namhyung
 
-> 
-> Avoid potential crash with --per-thread mode where config->aggr_get_id
-> is NULL. Add some examples for the tool event 0 counter skipping.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/stat-display.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index ba79f73e1cf5..32badf623267 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -1042,8 +1042,16 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
->  		return true;
 >  
->  	/*
-> -	 * Many tool events are only gathered on the first index, skip other
-> -	 * zero values.
-> +	 * In per-thread mode the aggr_map and aggr_get_id functions may be
-> +	 * NULL, assume all 0 values should be output in that case.
-> +	 */
-> +	if (!config->aggr_map || !config->aggr_get_id)
-> +		return false;
-> +
-> +	/*
-> +	 * Tool events may be gathered on all logical CPUs, for example
-> +	 * system_time, but for many the first index is the only one used, for
-> +	 * example num_cores. Don't skip for the first index.
->  	 */
->  	if (evsel__is_tool(counter)) {
->  		struct aggr_cpu_id own_id =
-> @@ -1051,15 +1059,12 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+>  	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 1e23faa364b1..4bda4141e9e7 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -231,21 +231,30 @@ __add_event(struct list_head *list, int *idx,
+>  	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
+>  {
+>  	struct evsel *evsel;
+> -	struct perf_cpu_map *cpus = perf_cpu_map__is_empty(cpu_list) && pmu ? pmu->cpus : cpu_list;
+> +	bool is_pmu_core;
+> +	struct perf_cpu_map *cpus;
 >  
->  		return !aggr_cpu_id__equal(id, &own_id);
->  	}
+> -	cpus = perf_cpu_map__get(cpus);
+> -	if (pmu)
+> +	if (pmu) {
+> +		is_pmu_core = pmu->is_core;
+> +		cpus = perf_cpu_map__get(perf_cpu_map__is_empty(cpu_list) ? pmu->cpus : cpu_list);
+>  		perf_pmu__warn_invalid_formats(pmu);
 > -
->  	/*
-> -	 * Skip value 0 when it's an uncore event and the given aggr id
-> -	 * does not belong to the PMU cpumask.
-> +	 * Skip value 0 when the counter's cpumask doesn't match the given aggr
-> +	 * id.
->  	 */
-> -	if (!counter->pmu || !counter->pmu->is_uncore)
-> -		return false;
->  
-> -	perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
-> +	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.cpus) {
->  		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
->  
->  		if (aggr_cpu_id__equal(id, &own_id))
+> -	if (pmu && (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX)) {
+> -		perf_pmu__warn_invalid_config(pmu, attr->config, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG, "config");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config1, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config2, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
+> +		if (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX) {
+> +			perf_pmu__warn_invalid_config(pmu, attr->config, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG, "config");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config1, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config2, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
+> +		}
+> +	} else {
+> +		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
+> +			       attr->type == PERF_TYPE_HW_CACHE);
+> +		if (perf_cpu_map__is_empty(cpu_list))
+> +			cpus = is_pmu_core ? perf_cpu_map__new_online_cpus() : NULL;
+> +		else
+> +			cpus = perf_cpu_map__get(cpu_list);
+>  	}
+>  	if (init_attr)
+>  		event_attr_init(attr);
+> @@ -260,7 +269,7 @@ __add_event(struct list_head *list, int *idx,
+>  	evsel->core.cpus = cpus;
+>  	evsel->core.own_cpus = perf_cpu_map__get(cpus);
+>  	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+> -	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
+> +	evsel->core.is_pmu_core = is_pmu_core;
+>  	evsel->auto_merge_stats = auto_merge_stats;
+>  	evsel->pmu = pmu;
+>  	evsel->alternate_hw_config = alternate_hw_config;
 > -- 
 > 2.47.1.613.gc27f4b7a9f-goog
 > 
