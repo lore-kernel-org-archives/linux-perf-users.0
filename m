@@ -1,130 +1,150 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345E31632D9;
-	Wed,  8 Jan 2025 11:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EEA25949D
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 14:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736336334; cv=none; b=KIMLN8jC28IOq8ilLg+FDI4oRMf8IwRGpgORJS0ZHeokn1QhgzOcpYu99XkEzhJ//KsmbspvlpY8iSwjK6ZZlbStGnVor5Kk1hqepTff2YKKnLOrVwF0dCG6pIuwdguMIjyr6y6tc/cv+FelKBwNp9ARDxH9kbD0OokeyCiVhys=
+	t=1736346494; cv=none; b=Wkxq4UTJ3GsWTvlKt8Ow1H3yNJ/OjO9ut5eJEz2W4j03YZx+a+YuL+J9Nx3n7I2+jg38viZdZGIqTESraMcTL3t9/RD2HY+6/0r/GHD3mFot7zuDr5XfcxPpTqj+nKt3vP964kEo2jwHKw1k0/4vBlJktz9bblTbXdW9C02Zxic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736336334; c=relaxed/simple;
-	bh=GKSWeIs3SNCuqRSvLDRdT+Ol2XUVqJ0tmgWgCZ6YpgQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdyprTou0J8pAZkJJCtxYN+nTP/yYIa1YRlxWYE7fb/yCzkMOGrF8FDGcHHPqE3cloN4JJhBNZ5EMMRM+NY8put/tr9TX7u/ASVqj+yPhtqYwcukUspWVSj9Pmc7n2/9RgRstE8mw3JOliH3bOuje8HdoNsl/wbXhrANBc+1WLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A3eArnE0; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736346494; c=relaxed/simple;
+	bh=EbaQIPivd3k12R9u+2jbA4uZjrTwxRKMILMWyBbew2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rNvgqGgkTr3XxQL+T7yapxFQDAb/6rPK4/zDNILQkQAZgkKCZ0oqYiUQjAvh1rgGMiW30/wjWnjTfNtTlf7/WaTm7SfxgA2yuK61r88s/SoMZE1077g4dqk7Uu3XExl4YUA6XPQXmokdkR+i4bOrWvbN3pfzwNc1W3Rqqve3V6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hnlLQYTA; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3eArnE0"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3862d161947so7893625f8f.3;
-        Wed, 08 Jan 2025 03:38:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hnlLQYTA"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43624b2d453so172705325e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 06:28:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736336331; x=1736941131; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wfDUaSyAwf8y+EBWHrOhJz1t0LZv/CD1lph7mHopUew=;
-        b=A3eArnE0++MYmYKrG7TLMATl4crxrUBkKYIkLKBQqS8YGMUr3nr1BUIaFYcRBQRqjo
-         gfAgowwVuoehmmgeH7/kY97Vpk84J4zE9RhZY3WZBNCap2Sd6sSiaV2og/nM6meuD1S0
-         mcTnSJSeeqMSe7/AaSdICD85no+K/CruuKxferGqLj9rxH7rUrB96W6RUE+FqJmdUpJR
-         nfCHXYS3U1dRPNxJJ10rwzRQy2EXPmn1DEnrR9GbqMlpX2WWqToc3FMPVLLzZ6l6UCSI
-         998MpiwsLZzp2pKB4VSftpcPw3FQCYs0mrU08FHcRxVMG/9L3tCwVRQ5F6s7AtTQ6Mrb
-         Y1Ng==
+        d=linaro.org; s=google; t=1736346491; x=1736951291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
+        b=hnlLQYTAdsXICHCzSALVIWGTCGPfK3iT+bq6XprmbQosiylioVU0GpsSshmSD3aBS8
+         fxKoJ6IJn6a++l34pmWF/JfdUPWM+XjQO+ijaNhE9PcgCG2hPahbbiMqvEA8xMF5jtpv
+         WYHFaIbJ8RutA0LgYVGB/6Yeff7G4eosb6O0bmDNXUgNg1uY+cLJMpoMPtGs7qyVWaBl
+         f5vH1lP69fmxlEa5UOV7Wd3KA05Ph+/MqcVI7d9xBay6aitryEg16ERoSmlGBmdR0DOW
+         YIHyJixCPVp+XdZcbAf9SKV6KvcqpblusPgmcJ26XEQ5g2BuJISOx+uWrVE/j9+F+JJY
+         LuQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736336331; x=1736941131;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfDUaSyAwf8y+EBWHrOhJz1t0LZv/CD1lph7mHopUew=;
-        b=eFxA4aaOsBvLT7hfN4dq3xRHLqFgyZh5NALXm1BwXFQtSwr/s1kR0ggbkr/yYZC6Zl
-         iaoomL26+QIeJ6KLG299yZH1h35BQ7js8OuS3+M8Df2Ly3dCBWEJBiAMDCdsWF5RG8xG
-         Bs9FzBKMgAriH47kP93YrQXIoruRmIHxniucNOMM8N7o3rvO23jcukX5cCbEFhvs8FmW
-         vTO0PUVnKhr9m4CrVdMt4oR+/qUSaGkaRP2+8uh2iEIsmJkvhaOIoulqbYfqAwD4cb4M
-         uMypbv2JRajR+MeajTpYW40jHF8Lq1mUqDPtRpWAs9gtwPf2e8vKhU7p2QpnY+7FSjZk
-         Fhzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl4Jpg3hjp9pEUgmECrK2p8tQjX+laTLuqIf1XD5yGfNWgS6DJqvIExL2q9oXJvZVrLviFAiLevI2GMPkZvvwOuw==@vger.kernel.org, AJvYcCXiH5VtY/D9fFVRZNkch84KH5I0cl2702IYAEEieu5K5jE72FmFuBNrGT+AkrbU20zns3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOaJarDNrTOaDmjb7kmLBBGk7opHAki1dwh0c+RMbisZuw7xKC
-	tkfiwz9fXcU6iBBndIn+a9tb3CgvE6lxy5c78M8PVs+ioP2cQ/Bo
-X-Gm-Gg: ASbGnct6jcSvT8z+z/5RcyTYsvFFQf2EcOCHuBrl2AVJuwec2VJSYiVxmJ6dNkdGoyK
-	IFcwRTyQ9u071AyrsKdPv4WIjNqZ8b0BEm30BmRbsn4/xmxq+kkzLauq80QeC4G/JTRgk7u8cgz
-	TRO4VzpB6OKUS4/Cu6K9yOXMRvqG68/ilRHXI0hmZkbfpARM4gvWrgjahRZasaoM79RySkiZ51K
-	7XGhuJTQn9/mfuKPv4uDhkPCrsyjsw4ZhLulKAlopk=
-X-Google-Smtp-Source: AGHT+IHFlx9Hv+kLOWVugbXvMed1KdgogPvUCKi4z6k80IajYZnD8A9rfBJy+hjJKJt4C3bgLbjF+A==
-X-Received: by 2002:a05:6000:4024:b0:385:f220:f788 with SMTP id ffacd0b85a97d-38a873556c6mr1801999f8f.48.1736336331251;
-        Wed, 08 Jan 2025 03:38:51 -0800 (PST)
-Received: from krava ([213.175.46.84])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c832e74sm51984479f8f.30.2025.01.08.03.38.50
+        d=1e100.net; s=20230601; t=1736346491; x=1736951291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
+        b=oU0XUmIkF0YnplIrhddR8ChZRB6PfzUGgww3Q3IyInXWOulI9jT6AnU289XM27qh40
+         PDKJdhZ1rRYqwf29MWGpezFns8XU8yizsZlFdtHYNrjStqBU4joEnjX5LRKsbMMUuUB6
+         W2HUKtV3eNicCE1m5WtfbfGi17UxrSjLfcRcEkdjyZUNotH5faH3vbHmirPXylPJ3Kmr
+         tXEQSv2q2t2an7yG8CW8RXlDtSXbiyPISGHuyNaD7tF93NZPF+83W3DvIJXRIpQSsPZ0
+         hPScxwnRQzN3RQ57wAizjQmxZXMSneyxfnvVgXTH5VJEA3ZSPtdNKSndunJCscOf0lxy
+         U1Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3MWdrjiwx/LsxZ2M2qReR6C3Y6USg14yI8ad8NiXZl0g3b33zZUDrJVpRyGdW5mAdxeHhJ49P3GxkVcNzZWt+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU76cuytC3gOecgZzn+ylnFxKYHjPjuv/zVI5wZwoSEhOy0iC6
+	HlVV3zKGsQLEabgI2/JBypDZ3g+MVBKQuyHa0eG+5/rgUPqb1PJ7dq7k4GJS5oAavootkcsQqlm
+	S
+X-Gm-Gg: ASbGnctaVZv0LZsH0QGRYlOr3jiwAfXkBA4ABa5koGHSyxpDN12hXSeuWUEojqnwaMO
+	8ALb7c2nHeP5Va/D3rGdQYmsJMyqLi8JChqzso6Q3Tu0u1TSKb3lmy9roXG4Egb/+4e4HyJk8nc
+	LdJkEwxO9QBglD3AimfATAGBAijz0V8akQEehU5W/gbIV4OB/cFAr4pbeLfy+YN4KyFjjWhPswj
+	CKu3ItxUONKbFx5eGrTe0FF2ijEWKLg4y3v8hLSg2Qz3fOvqripYC3L
+X-Google-Smtp-Source: AGHT+IHz31vPgvjsP1ktI6cDJs5dwXi6jyonWjrDKCklrI15yME8jN2ZsQTROIywKIjV9MjHGbUrWw==
+X-Received: by 2002:a5d:64a8:0:b0:386:3a8e:64bd with SMTP id ffacd0b85a97d-38a8730560emr2565669f8f.22.1736346491235;
+        Wed, 08 Jan 2025 06:28:11 -0800 (PST)
+Received: from pop-os.. ([145.224.90.227])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a28f17315sm47577178f8f.108.2025.01.08.06.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 03:38:50 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 8 Jan 2025 12:38:48 +0100
-To: Song Liu <song@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Return error for missed kprobe multi
- bpf program execution
-Message-ID: <Z35jyGWboftcEPRF@krava>
-References: <20250106175048.1443905-1-jolsa@kernel.org>
- <CAPhsuW5p9C+0oLbec=bxZPvoEuPpAbDzbyPRD95ucBP=7HbO8A@mail.gmail.com>
+        Wed, 08 Jan 2025 06:28:10 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	yeoreum.yun@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com
+Cc: robh@kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v3 0/5] perf: arm_spe: Add format option for discard mode
+Date: Wed,  8 Jan 2025 14:27:22 +0000
+Message-Id: <20250108142731.400605-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5p9C+0oLbec=bxZPvoEuPpAbDzbyPRD95ucBP=7HbO8A@mail.gmail.com>
 
-On Mon, Jan 06, 2025 at 02:26:22PM -0800, Song Liu wrote:
-> On Mon, Jan 6, 2025 at 9:50 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > When kprobe multi bpf program can't be executed due to recursion check,
-> > we currently return 0 (success) to fprobe layer where it's ignored for
-> > standard kprobe multi probes.
-> >
-> > For kprobe session the success return value will make fprobe layer to
-> > install return probe and try to execute it as well.
-> >
-> > But the return session probe should not get executed, because the entry
-> > part did not run. FWIW the return probe bpf program most likely won't get
-> > executed, because its recursion check will likely fail as well, but we
-> > don't need to run it in the first place.. also we can make this clear
-> > and obvious.
-> >
-> > It also affects missed counts for kprobe session program execution, which
-> > are now doubled (extra count for not executed return probe).
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  kernel/trace/bpf_trace.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 48db147c6c7d..1f3d4b72a3f2 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -2797,7 +2797,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
-> >
-> >         if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-> >                 bpf_prog_inc_misses_counter(link->link.prog);
-> > -               err = 0;
-> > +               err = 1;
-> 
-> nit: Shall we return -EBUSY or some other error code?
+Discard mode (Armv8.6) is a way to enable SPE related PMU events without
+the overhead of recording any data. Add a format option, tests and docs
+for it.
 
-it's processed in __fprobe_handler and it's treated as bool, so technically
-it does not matter.. but I'd rather keep the 0/1 return values in here,
-because it's what the session program is forced to return
+In theory we could make the driver drop calls to allocate the aux buffer
+when discard mode is enabled. This would give a small memory saving,
+but I think there is potential to interfere with any tools that don't
+expect this so I left the aux allocation untouched. Even old tools that
+don't know about discard mode will be able to use it because we publish
+the format option. Not allocating the aux buffer will have to be added
+to tools which I've done in Perf.
 
-thanks,
-jirka
+Tested on the FVP with SAMPLE_FEED_OP (0x812D):
+
+ $ perf stat -e armv8_pmuv3/event=0x812D/ -- true
+
+ Performance counter stats for 'true':
+
+                 0      armv8_pmuv3/event=0x812D/
+
+ $ perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
+ $ perf stat -e armv8_pmuv3/event=0x812D/ -- true
+
+  Performance counter stats for 'true':
+
+             17350      armv8_pmuv3/event=0x812D/
+
+Changes since v2:
+  * Use existing SPE_PMU_FEAT_* mechanism (Will)
+
+Changes since v1:
+  * Add a new section and some clarifications about the PMU events to
+    the docs. (Ian)
+
+Applies to v6.13-rc6
+
+James Clark (5):
+  perf: arm_spe: Add format option for discard mode
+  perf docs: arm_spe: Document new discard mode
+  perf tool: arm-spe: Pull out functions for aux buffer and tracking
+    setup
+  perf tool: arm-spe: Don't allocate buffer or tracking event in discard
+    mode
+  perf test: arm_spe: Add test for discard mode
+
+ drivers/perf/arm_spe_pmu.c                | 22 ++++++
+ tools/perf/Documentation/perf-arm-spe.txt | 26 +++++++
+ tools/perf/arch/arm64/util/arm-spe.c      | 90 +++++++++++++++--------
+ tools/perf/tests/shell/test_arm_spe.sh    | 30 ++++++++
+ 4 files changed, 136 insertions(+), 32 deletions(-)
+
+-- 
+2.34.1
+
