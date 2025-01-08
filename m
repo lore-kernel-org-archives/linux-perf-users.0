@@ -1,109 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E351A8403;
-	Wed,  8 Jan 2025 19:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8BE19ABB6;
+	Wed,  8 Jan 2025 19:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736365982; cv=none; b=Ir01mRJZgOxlJoKYWGHr4q/iphgZXWmgsYdh1z15oflgOlTniqdty5moa6RkGGPoR+t4wgO+AboxFRH37eMwyKi4fguxLXXF3cM63G69TDuZGcHlFtLpMqcnk/UIiqcjrxmGgYToa6hSLlC3RHrtbCJGF7mWUW1WCKe7FE2SkCY=
+	t=1736366156; cv=none; b=FxV9NIQPl86VcYgcSzMuSdk1TVlN5rBqLBLQnGwrhgJ4S8RjhtOhF/RJNX5XOqrrm4Efk/H5tDCl18jbA6WwIV/chHQ+EhZ0HJ2kbvbHdpp4KiLIJA5wZgsBYJWChIkyPF0PZ/B9Wd0Zok/RvS5/KHqdrjEoG4wDLbyievP298A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736365982; c=relaxed/simple;
-	bh=3uWJkyH+6vsMrmyuAEnrQcZeMnRpcWUw160MsdlvX+s=;
+	s=arc-20240116; t=1736366156; c=relaxed/simple;
+	bh=d+BjqX6a64TsT7Fi6gIQ6p4XPXOWjDadBxtZpjjVovA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kUiRmc6254rnoRU+1hQHsgTb9BH7vZQk/tkaSH7rG0ePyBMw/gTvH5o8FjgirE+oBRaOzTcID2cOYx1dVX89ienY+knVLabvbKFkxMexKIPtm6CFDwY3fJbDJHFvMdxXZGCGZwsbnWcaTmGfR37q/dtEgKiBN83grZ12vosqkgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7Nx+kPn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnO7aMaRO1CEyqMsxkJDAUukSPal3coGSU0vDRWw9VzSDt3ccQ1X7C5UeHtEJ4Dt9rytxRn6jXLrvBbRVa971oFoOV01X4KqsSmeRofswnXybH1huKfzqVhB3NGafBw822y4fpLnpxdZcu/rEmQOQt/rs4NmmjWrw9Nx86bbBag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OH+Lj21X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7Nx+kPn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09AFC4CED3;
-	Wed,  8 Jan 2025 19:53:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OH+Lj21X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE9E3C4CED3;
+	Wed,  8 Jan 2025 19:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736365982;
-	bh=3uWJkyH+6vsMrmyuAEnrQcZeMnRpcWUw160MsdlvX+s=;
+	s=k20201202; t=1736366156;
+	bh=d+BjqX6a64TsT7Fi6gIQ6p4XPXOWjDadBxtZpjjVovA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y7Nx+kPnsayveIjuIECkrT/lI/OOZ3T6ReDbwpyi37MfzAZs8RYohKiNcTCcvY20V
-	 N0idzPM+pKCpPjZEIyuOcwUbmfIxs40Ii5D1lwJclwLPIACFZr+qi5C2Mewg4kf3Lc
-	 JUfW3g5z8jK9QjwbD+JbshPuDKJeMT9uvmvdh63gNJuZi6mF4E5CS4fokf6Oxz8eoI
-	 KqXKNEv8/Yqi0ZQShtrC2JJPi/S7ZZnfvYVQ7WvERQFrhWKH5DqWlZWZSyB3QpBn7y
-	 c9S44Ynojc9rayTvBSNEdVIdPMRpUOhGkb750zqFSvFDDQHgtGal4zsYztOzsqH1Rs
-	 FE9JU/zHPULuQ==
-Date: Wed, 8 Jan 2025 16:52:59 -0300
+	b=OH+Lj21XHbgPnC5NYzAOBn+0XFmBdOYGW+2uq7Q05QfZsIGko1fVrqdXRXROpO+eW
+	 IBIPB60MrsrRF9UN+stOzAQwvS0WXGcN1gOhl0Y0j/LpOwaas02s0NPB4LrsbCwii6
+	 ty4yaa7SAg/PvDevQ30LStkmfSZYhbkQyFBHOY3dlmokGXyIh5B73LwbVBVnslFQZz
+	 8NZkKDibtwZ9zzkrVTY6OQUsngSI3BbbLiLZntA5Kq+ffvBZEzhv75Nh32KGi+EohB
+	 ZX69upswPUNBiHZsw6WIIFMQSbWIPB+AvgNzUUC6rJqDvm7mKv4w0pmyH6mkPV21QG
+	 HWT3KPgejjQHg==
+Date: Wed, 8 Jan 2025 16:55:53 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	linux-perf-users@vger.kernel.org,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 3/3] perf test: Update ftrace test to use --graph-opts
-Message-ID: <Z37Xm6sM_UQfHOxW@x1>
-References: <20250107224352.1128669-1-namhyung@kernel.org>
- <20250107224352.1128669-3-namhyung@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v2] perf: Fix display of kernel symbols
+Message-ID: <Z37YSfVMabaJ3A8z@x1>
+References: <2ea4501209d5363bac71a6757fe91c0747558a42.1736329923.git.christophe.leroy@csgroup.eu>
+ <Z36Ra23US_zC3n2v@x1>
+ <590b2f02-f7f0-48b2-b45e-8a31bbadef2a@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250107224352.1128669-3-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <590b2f02-f7f0-48b2-b45e-8a31bbadef2a@csgroup.eu>
 
-On Tue, Jan 07, 2025 at 02:43:52PM -0800, Namhyung Kim wrote:
-> I found it failed on machines with limited memory because 16M byte
-> per-cpu buffer is too big.  The reason it added the option is not to
-> miss tracing data.  Thus we can limit the data size by reducing the
-> function call depth instead of increasing the buffer size to handle the
-> whole data.
+On Wed, Jan 08, 2025 at 06:06:03PM +0100, Christophe Leroy wrote:
 > 
-> As it used the same option in the test_ftrace_trace() and it was able
-> to find the sleep function, it should work with the profile subcommand.
 > 
-> Get rid of other grep commands which might be affected by the depth
-> change.
+> Le 08/01/2025 à 15:53, Arnaldo Carvalho de Melo a écrit :
+> > On Wed, Jan 08, 2025 at 10:54:20AM +0100, Christophe Leroy wrote:
+> > > Since commit 659ad3492b91 ("perf maps: Switch from rbtree to lazily
+> > > sorted array for addresses"), perf doesn't display anymore kernel
+> > > symbols on powerpc, allthough it still detects them as kernel addresses.
+> > > 
+> > > 	# Overhead  Command     Shared Object  Symbol
+> > > 	# ........  ..........  ............. ......................................
+> > > 	#
+> > > 	    80.49%  Coeur main  [unknown]      [k] 0xc005f0f8
+> > > 	     3.91%  Coeur main  gau            [.] engine_loop.constprop.0.isra.0
+> > > 	     1.72%  Coeur main  [unknown]      [k] 0xc005f11c
+> > > 	     1.09%  Coeur main  [unknown]      [k] 0xc01f82c8
+> > > 	     0.44%  Coeur main  libc.so.6      [.] epoll_wait
+> > > 	     0.38%  Coeur main  [unknown]      [k] 0xc0011718
+> > > 	     0.36%  Coeur main  [unknown]      [k] 0xc01f45c0
+> > > 
+> > > This is because function maps__find_next_entry() now returns current
+> > > entry instead of next entry, leading to kernel map end address
+> > > getting mis-configured with its own start address instead of the
+> > > start address of the following map.
+> > > 
+> > > Fix it by really taking the next entry, also make sure that entry
+> > > follows current one by making sure entries are sorted.
+> > > 
+> > > Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
+> > > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > > Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > ---
+> > > v2: Make sure the entries are sorted, if not sort them.
+> > 
+> > Since you have changed what I reviewed I'll have to re-review :-) Will
+> > try to do it after some calls.
 > 
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Ah yes sorry, should have removed your Reviewed-by.
+> 
+> Based on Ian's feedback "Using the next entry in this way won't work if the
+> entries aren't sorted", I added the following block in front of the initial
+> change:
+> 
+> +	while (!maps__maps_by_address_sorted(maps)) {
+> +		up_read(maps__lock(maps));
+> +		maps__sort_by_address(maps);
+> +		down_read(maps__lock(maps));
+> +	}
 
-Hey, I think we should convert the above Cc: to:
+Its ok, I'll keep it now that I looked at it.
 
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-
-As I think you became aware of this situation from a patch proposed by
-Thomas?
-
-I'm also CCing a few other folks that were CCed in Thomas patch, also
-CCed here.
+Thanks!
 
 - Arnaldo
-
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/ftrace.sh | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-> index 2df05052c324a21c..c243731d2fbf67aa 100755
-> --- a/tools/perf/tests/shell/ftrace.sh
-> +++ b/tools/perf/tests/shell/ftrace.sh
-> @@ -67,11 +67,8 @@ test_ftrace_latency() {
->  
->  test_ftrace_profile() {
->      echo "perf ftrace profile test"
-> -    perf ftrace profile -m 16M sleep 0.1 > "${output}"
-> +    perf ftrace profile --graph-opts depth=5 sleep 0.1 > "${output}"
->      grep ^# "${output}"
-> -    grep sleep "${output}"
-> -    grep schedule "${output}"
-> -    grep execve "${output}"
->      time_re="[[:space:]]+1[[:digit:]]{5}\.[[:digit:]]{3}"
->      # 100283.000 100283.000 100283.000          1   __x64_sys_clock_nanosleep
->      # Check for one *clock_nanosleep line with a Count of just 1 that takes a bit more than 0.1 seconds
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
