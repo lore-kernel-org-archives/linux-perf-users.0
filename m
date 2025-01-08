@@ -1,54 +1,54 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CC01A9B23
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 06:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D43F1B2EF2
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 07:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736319599; cv=none; b=O1tf/pNuQmqwrZld/Bi/BVT5QIWZouenF4cjc6k7mqq4BwUhcdrav/sFqTzFAB4JjbBqtB43tF1tsAevsH7hZ+voFzTx+PCtWjvt95TYNBo0nM7Avmhqot8REiskxKCH1qVenebs8J+T11/ud112VL7563EJ/5RkRtG5sw6tpEs=
+	t=1736319776; cv=none; b=qWcXHXJbb2Z56KF8zfOA9PQY6o/aRb5JqgB/dA/tr3nSAkhi0bJXSXplnZKyLc6dQg5VTegASGcCFF1BELatbwwFXfK0U13nsYwjBsTldLbU4aZ3vRQJyykvBLSsVaqga/zgcT1Hb/vvmljABtac2oXg8ukOIiEEEYq6OWOSyMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736319599; c=relaxed/simple;
-	bh=IZMOov6xn3FjVYuQAaC0lPmx7AinCu9M0bXuB0NntJs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qZuiKHa1XpY+vTJfxxfYoQ9TI7f7Ys/EfjyFKz2bWzgZWqcwlNi8QG2uXiXs4qHY8v60lm5OHxjNEDLFuZRZSkM2CWcsb8rQ0Le8B1vx2Hg9v7ZKlSsm8o1kyM07idVwmRsVW2TiYY6elqMNWLaS4+s9Yw7jN6esu74XFkWYPaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HE6oqqqU; arc=none smtp.client-ip=209.85.208.74
+	s=arc-20240116; t=1736319776; c=relaxed/simple;
+	bh=Bz4LxCTa33wqCDdtx6TZatScOlU8dCwKfQWgH27/7Fk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ANKPGil8WHuSNs9whqDojyQ+rtSIPJxEs1f1avnMNujHa6SG6iZ3orHPivtUnm2TbBp6TXQeQhB6L/7yXXfyVx63hXCfLVhL782AqGNHQ2r+so/c4RaYIJib6Y5G9j1hvfRpHEqaAT+O4NXmAFZb72CKRSv6uUMQfg0rQct76Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b8zuRIcU; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HE6oqqqU"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d0b5036394so7945336a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 22:59:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8zuRIcU"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d40c0c728aso13836351a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 23:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736319596; x=1736924396; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736319772; x=1736924572; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=1q62ua4ETuDv0nDfWH3IGj61xO4zPIGpATfa2OFDI2Y=;
-        b=HE6oqqqUfJyStve4H1die0ZrlMjc5rDeWRSdZv6pL6i6D7F34CfeB0cFuOMYhr3oPt
-         8T+5cTeq6L38n1aB55WXE/pYW+96Z6Gwg+7VwhNPRgTZHQoymGovpiuHVrJ0WbIsJ5cG
-         KHpJ3NHwYF/o49KRBbG1y8H4CwdlI1rCKpmV7vo4QpJRQeNLccxTrrALCCIj97xqS04o
-         TagL7EuXBfI1FhPNpm8BqzfH2iWsS2CU3SknCHmPzG54Iix2vHtGqwmFP5ImArt7iHun
-         6LBzEf75eckQkj+UWDgf3/tsBAj/D6t5ycn6xnq/SGkgJnGmyDtfoD9bauJu4DsSSjHj
-         LacQ==
+        bh=WzUTEwuJeYcSf17eDpB5yV1DZfs91R/xpM+4/0WQ8Yk=;
+        b=b8zuRIcU0knnxxrhS8Qqk1C5nbIMaHppIiRsJMuhmH3GnZpVgpcKwWbZoEMnQNtATX
+         amfzMnFNoUTt9XrPGimL4bMCSUR+WMDB9tOipKGzA2iTw5DEO79isKf84ITySv2WCs+r
+         10ANxmaFpGZFJi+OvgSV4wMIXD0yVYNDmyo5EPyAQLd2gy6k64iQLxGuTV1qlIBVBTOQ
+         bF1sfBuRN1mjwRgnob9M5ODmw4gKxlYoK+lBhxXZucxbt8OWSzoLrsl/27YqrgAahrGi
+         /KMLtNJn7SOHRFtlF0uDQNEOlhJOwnSjQnOu+te+OnU9oRyOfTOYveg4qRZcGAlJuL6z
+         ZeMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736319596; x=1736924396;
+        d=1e100.net; s=20230601; t=1736319772; x=1736924572;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1q62ua4ETuDv0nDfWH3IGj61xO4zPIGpATfa2OFDI2Y=;
-        b=bd7uofONts6PtCRju+G8EVtv4PRov1eQckw34ohUGWIaIhvZRh9Yny/1c3mDB8N1NU
-         MHpH+W/iZCsyXZggCDRtFgTDLWJ7jYL7+75wF9i4GzA2blPwWphajlQZqxRUP0pZQSBh
-         05gi+5zxo3cMXuIe23V4cypxpHw61/oEN6dEYNatuEXES/iTrUuKZKJi8hFetiE33pG2
-         PnJ3LoAvEWXohi11ZcOKEWeChd8JBflzwQH2PZ7J0V2QyjYJER6qg/RWSzjFq/twBHFq
-         gU3AvsOFQxyAdBQAV5v4VeTlPbc3Zlk2KG3W4QHeTBdxOnFHoLsAjdMaofKwEdNCmf7+
-         FROQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkqtTOlNkSLd1aOI/ZSf7GegKZtH0Phxpey5gQEOJJxDvWl/Veju9zrIzS7HoPXj+h8ZTpi6VRyjIXheYaZTJS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwikjOeDsoFn3eXtIyNDM+xhcLB3TZoJaob4LQSC2qVxlgjSjID
-	yzAzcVabLMVDExO74ONyM/Cp0FS8pT1ARAzqLEanBuAXWF2IiXN4KxqwV+u/AqXG+6oD8XMZCNg
-	UIyQbJQ==
-X-Google-Smtp-Source: AGHT+IFvZjaybIQly9Y3xkx817efsDVmdjlVKo7NQCNpySmmu1PxrGxcqBDsPhYRWEyR50YkY31LezJufidJ
-X-Received: from edbin6.prod.google.com ([2002:a05:6402:2086:b0:5d3:e9e4:d2f2])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:35d5:b0:5d1:2440:9ad3
- with SMTP id 4fb4d7f45d1cf-5d972e703e5mr1241968a12.30.1736319596797; Tue, 07
- Jan 2025 22:59:56 -0800 (PST)
-Date: Wed,  8 Jan 2025 07:59:34 +0100
+        bh=WzUTEwuJeYcSf17eDpB5yV1DZfs91R/xpM+4/0WQ8Yk=;
+        b=QKjuX5LajzhhzW7zdMso1mzTA/XrcEXzkxHcZujjURnIDZHYP/WgvlDktFmwwMM+u0
+         KZ0jdByGYLOfPO0Sl5BNBbVdEIdNLddlWU3hTFsQ9ZMRmApZ0UchVoPcMgOskrLeLToN
+         BjU0lLW2IlfsejTK9DclWasXmrtenPxyXHp3XpGeYmwaUeIUKcZvIQlHeMhMbB48FiSx
+         YTnx4ft6MmkljaKZVQ4gLUIEajh08h5UHcbBxii79xSBmf6oXMuFxJ3POW5qK/MuQ0Je
+         qznnC6t8CEShhAIC6mzaKSV3SrGBMsPVFd6K2DeON4T8du7uAONuXwSBcJClG+qoztr/
+         Eb6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXtEY8VxpNGAKgjRPm1nLIVKgdlubHoox+hWX1gdZl/zZxwWe7FJnceS7a2uHBYo6cY0UjsYq8svaKMrwnfCt6A@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkADLKHbBJVnyJrTDPCwKNietKFCEP71ybOiAFkq3x0Rcm6tc5
+	sxrz0luVAssFGf1pGyDNmkfxVmH8g/EopOs3iPnW6d65tC8n71289Vwr7s+K1r1q8Z+fC1zaOib
+	IztUxjQ==
+X-Google-Smtp-Source: AGHT+IGpVXPxb1zkPS6SYz3yM+kJAR6DtzfXEyx9zNlFwzyaai+MJYu2JZANZwLpJf9IDnJ29XWlAwvFX9Vb
+X-Received: from edben19.prod.google.com ([2002:a05:6402:5293:b0:5cf:bdb9:fa82])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:26c5:b0:5d0:d491:2d5e
+ with SMTP id 4fb4d7f45d1cf-5d972dfff55mr3625307a12.7.1736319772118; Tue, 07
+ Jan 2025 23:02:52 -0800 (PST)
+Date: Wed,  8 Jan 2025 08:02:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,17 +56,18 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Message-ID: <20250108065949.235718-1-dvyukov@google.com>
-Subject: [PATCH] perf hist: Fix width calculation in hpp__fmt()
+Message-ID: <20250108070248.237943-1-dvyukov@google.com>
+Subject: [PATCH] perf llvm-add2line: Remove unused include
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com
 Cc: Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-hpp__width_fn() round up width to length of the field name,
-hpp__fmt() should do it too. Otherwise, the numbers may
-end up unaligned if the field name is long.
+Remove unused symbol_conf.h include.
+First, it's just unused. Second, it's problematic since this is a C++ file,
+and most perf headers don't compile as C++. So if any other includes are
+added to symbol_conf.h, it may break the build.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -74,22 +75,21 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/perf/ui/hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/llvm-c-helpers.cpp | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index e5491995adf08..34fda1d5eccb4 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -121,7 +121,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	     const char *fmtstr, hpp_snprint_fn print_fn,
- 	     enum perf_hpp_fmt_type fmtype)
- {
--	int len = fmt->user_len ?: fmt->len;
-+	int len = max(fmt->user_len ?: fmt->len, (int)strlen(fmt->name));
+diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
+index 663bcaba2041f..004081bd12c9c 100644
+--- a/tools/perf/util/llvm-c-helpers.cpp
++++ b/tools/perf/util/llvm-c-helpers.cpp
+@@ -18,7 +18,6 @@
+ extern "C" {
+ #include <linux/zalloc.h>
+ }
+-#include "symbol_conf.h"
+ #include "llvm-c-helpers.h"
  
- 	if (symbol_conf.field_sep) {
- 		return __hpp__fmt(hpp, he, get_field, fmtstr, 1,
+ extern "C"
 
 base-commit: 09a0fa92e5b45e99cf435b2fbf5ebcf889cf8780
 -- 
