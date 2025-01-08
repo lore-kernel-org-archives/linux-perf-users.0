@@ -1,80 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18661957FC;
-	Wed,  8 Jan 2025 17:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49941FE473;
+	Wed,  8 Jan 2025 17:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736358613; cv=none; b=kxEuT9YG4aWmSXtI7NZkod01VsK1u6pc0w/m51N1XgWDPtcQqvrE9TPGyFwRDL5HceK0u+yubv1fROrnHW3GGXsaqqNb+fp/KKGNK4kqigqPjgF63Se7s7Pie1n1fred06Wz9LVqYNcKDFzz5rDBGa18ankJHDAhQInj9H6gSOY=
+	t=1736358939; cv=none; b=O8A8raNsP43ems9YURIEZhNP8RqEPRnroVfVF0ON6YxsS958btW4zfH8+Ex+pqoHFQtq4oDiPEMqj36Pg+Bb4yAnbZrolJBHlLupD20/vR9rON+7Hu9kEloxpm6Pu5ZMxPzWZW+MnXyJZU6/nUZrd3TzBuIn5EQyIWQEmFNECJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736358613; c=relaxed/simple;
-	bh=cJ4gsd2+xSu85gCs0M/1/TxPsXnhxVuiRvszKB4LNLk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CiFgxcDPOY/16PHN8TuGuCcNFsAP8ffZw3ORIqn/q3LQ78zp0DPr0DiP/JKAllW98NmuG94dH3E1eTvog+ioRUruUEFThZ+j1h4C99O2S5pLX+QwNCwLldTBv9VOoACI1d/GUUr1UezNXA/CN1awX73k7otRsSmp7zdDs1vxmGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+KR0QcB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736358939; c=relaxed/simple;
+	bh=ebdf4lXYyLJgX2oZyqnBtcVzXPyg85SSHuzX5p+lX4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YnMI4CMwiAkq5oVrsXFF0x3QSbx4ViJoNH8qqgL0ES/W1tNbhS5fbqbpfJlmVnX15M8W+JSxRQRQ+JX4XQDKW74X9yqKCVArXakI+mfBp0tixq35XJQM74SO79z04V5QIO5Y5fu25ZMGbhaUoJopdkPTM+jd+SVRy/aEYUjpfHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXMt+gRd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+KR0QcB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33052C4CED3;
-	Wed,  8 Jan 2025 17:50:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXMt+gRd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094B1C4CED3;
+	Wed,  8 Jan 2025 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736358613;
-	bh=cJ4gsd2+xSu85gCs0M/1/TxPsXnhxVuiRvszKB4LNLk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=E+KR0QcBh5dTmrMmpCxPJXqzLWSBkpuQUdw21FczRgA14Kl+rSMtEWTQUVpnr3ai8
-	 +59TkRf6vjrVIdEDIFindbZzEtk+hQHaeNhLZ7eVAZlPR5L/GS3YFRjiHe+uApyOLv
-	 4Z1ETo+VSa5yFroOvZshmPalB6SXH5lyb15j8XKosyWpOxB3Qhc9reDk/IduKI4W/o
-	 Zyblh5/14UwHtGqgDkSjwABgTyoVTivSbUYIefYnveA57v/C3ArVjgb6h/1SJ21UaT
-	 YpRBVeN3aU0BX75UrNoRvg6zzf2Ym057W5pu032sqnz+9dn0+CbTacAg6HhHAbViLN
-	 KFqq3UApQPpHA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB316380A965;
-	Wed,  8 Jan 2025 17:50:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1736358939;
+	bh=ebdf4lXYyLJgX2oZyqnBtcVzXPyg85SSHuzX5p+lX4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fXMt+gRdCFw9ce0IoXMLk5/kIzZ+9pYxkP0Li41+MiCzp0BfLpLnj/L4vHRFhq9vr
+	 2MpY5OclGf3R8boOpkW0mfYoPWJITIkovSLanA5mgB/7XMvoPswNhrhhMn1ajhz0bp
+	 k9YjfUqV6yTW8aCNq9lbT657YCLb8X9v+eC6wylJwjFM4INZ5tYtVVsOb1UgOnlCWv
+	 MqJsAraXxgnDu4to/TmGD5ml8jt6lQR/cHT9p6Z2mTPif9deNi27sPN89e28ad4n2s
+	 GMFtUlrFLf1knQ3dhib7jZ/ASrsfLXTOuEXQlqEAc2uGz0pCbHs3V++5orSdTmdP1c
+	 DIzj/B+LQAtZg==
+Date: Wed, 8 Jan 2025 09:55:35 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Jiachen Zhang <me@jcix.top>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf: Fix a wrong help message
+Message-ID: <Z368F9OnLGzluA5r@google.com>
+References: <20250108163658.1793072-1-me@jcix.top>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next 1/2] bpf: Return error for missed kprobe multi bpf
- program execution
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173635863460.728295.8358342066547800983.git-patchwork-notify@kernel.org>
-Date: Wed, 08 Jan 2025 17:50:34 +0000
-References: <20250106175048.1443905-1-jolsa@kernel.org>
-In-Reply-To: <20250106175048.1443905-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, kafai@fb.com,
- songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@chromium.org, sdf@fomichev.me, haoluo@google.com, mhiramat@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250108163658.1793072-1-me@jcix.top>
 
-Hello:
+Hello,
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Mon,  6 Jan 2025 18:50:47 +0100 you wrote:
-> When kprobe multi bpf program can't be executed due to recursion check,
-> we currently return 0 (success) to fprobe layer where it's ignored for
-> standard kprobe multi probes.
+On Thu, Jan 09, 2025 at 12:36:57AM +0800, Jiachen Zhang wrote:
+> The wrong help message may mislead users. This commit fixes it.
 > 
-> For kprobe session the success return value will make fprobe layer to
-> install return probe and try to execute it as well.
+> Fixes: 328ccdace885 ("perf report: Add --no-demangle option")
+> Signed-off-by: Jiachen Zhang <me@jcix.top>
+> ---
+>  tools/perf/builtin-report.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [...]
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 048c91960ba9..a286d156510a 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1422,7 +1422,7 @@ int cmd_report(int argc, const char **argv)
+>  	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+>  		   "addr2line binary to use for line numbers"),
+>  	OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
+> -		    "Disable symbol demangling"),
+> +		    "Enable symbol demangling"),
 
-Here is the summary with links:
-  - [bpf-next,1/2] bpf: Return error for missed kprobe multi bpf program execution
-    https://git.kernel.org/bpf/bpf-next/c/2ebadb60cb36
-  - [bpf-next,2/2] selftests/bpf: Add kprobe session recursion check test
-    https://git.kernel.org/bpf/bpf-next/c/bfaac2a0b9e5
+Maybe this is better: "Enable symbol demangling.  Use --no-demangle to disable."
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thanks,
+Namhyung
 
 
+>  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+>  		    "Enable kernel symbol demangling"),
+>  	OPT_BOOLEAN(0, "mem-mode", &report.mem_mode, "mem access profile"),
+> -- 
+> 2.34.1
+> 
