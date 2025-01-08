@@ -1,73 +1,72 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EEA25949D
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 14:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1641FCCE8
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 14:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736346494; cv=none; b=Wkxq4UTJ3GsWTvlKt8Ow1H3yNJ/OjO9ut5eJEz2W4j03YZx+a+YuL+J9Nx3n7I2+jg38viZdZGIqTESraMcTL3t9/RD2HY+6/0r/GHD3mFot7zuDr5XfcxPpTqj+nKt3vP964kEo2jwHKw1k0/4vBlJktz9bblTbXdW9C02Zxic=
+	t=1736346612; cv=none; b=aCnumYY0ttP6ApHfvaesMk62ZZDrnYwE4Nmcp3zC+ic64klPBM+bCRUYVis8WeZpjYw5/pd04szpvEbp7Y/crKKXitsnfqpSlyHrN+8P2ip8W9vntigteDreKRtFR1G+6fVD66HeN9qDAl7mz7Kb9nrovrf2mHidyqsz/Tug0CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736346494; c=relaxed/simple;
+	s=arc-20240116; t=1736346612; c=relaxed/simple;
 	bh=EbaQIPivd3k12R9u+2jbA4uZjrTwxRKMILMWyBbew2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rNvgqGgkTr3XxQL+T7yapxFQDAb/6rPK4/zDNILQkQAZgkKCZ0oqYiUQjAvh1rgGMiW30/wjWnjTfNtTlf7/WaTm7SfxgA2yuK61r88s/SoMZE1077g4dqk7Uu3XExl4YUA6XPQXmokdkR+i4bOrWvbN3pfzwNc1W3Rqqve3V6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hnlLQYTA; arc=none smtp.client-ip=209.85.128.49
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=POtqCThYzEAGrjeZ06nEiHCHJnRV8g/xOX4DFD9GPzM3bDr/yFrg+Z7EK3/gkZSc7lnE7B2j54jtthmbHYosL21fm0ApGYARdBkmmcE54jO8B4WVC04I9zHvDkdE5o3h/vnxtOjyRhRR+dMuWPEkMobKX7OSP/073Kh4HIoCZ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eixi2yST; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hnlLQYTA"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43624b2d453so172705325e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 06:28:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eixi2yST"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43618283d48so122101725e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 06:30:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736346491; x=1736951291; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1736346608; x=1736951408; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
-        b=hnlLQYTAdsXICHCzSALVIWGTCGPfK3iT+bq6XprmbQosiylioVU0GpsSshmSD3aBS8
-         fxKoJ6IJn6a++l34pmWF/JfdUPWM+XjQO+ijaNhE9PcgCG2hPahbbiMqvEA8xMF5jtpv
-         WYHFaIbJ8RutA0LgYVGB/6Yeff7G4eosb6O0bmDNXUgNg1uY+cLJMpoMPtGs7qyVWaBl
-         f5vH1lP69fmxlEa5UOV7Wd3KA05Ph+/MqcVI7d9xBay6aitryEg16ERoSmlGBmdR0DOW
-         YIHyJixCPVp+XdZcbAf9SKV6KvcqpblusPgmcJ26XEQ5g2BuJISOx+uWrVE/j9+F+JJY
-         LuQQ==
+        b=eixi2ySTdhd/EL04Dw814MmtGY9ji9cI8eG7RfMM3yNcFPEbDl/qLG7fNzIyGyGhoF
+         rJTWofQEZ1uQsNLCqGhIQxXtbwqssTeLQj/7sovxswtNRsv+jq02nv1kJzJdcm92UgjF
+         L1PLuNyeDVhW2xCcGIizyXzdB9S1ocwvZv4tgv28EeyRRaIdv4WaarSc98c48JWNUtyE
+         bO8OgX8K1+GS9vnVisrGWrOZH/H8LHAo+JKtDaMt3/K4a9ysJ+AZu7QHT3bS7GymMk1j
+         bISPbXiX/as0NW6ovARqehDJvumX9wF9+/rWYRUrB/38kYGNFOLZcODNsXN8zdpcDQWA
+         1jhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736346491; x=1736951291;
+        d=1e100.net; s=20230601; t=1736346608; x=1736951408;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
-        b=oU0XUmIkF0YnplIrhddR8ChZRB6PfzUGgww3Q3IyInXWOulI9jT6AnU289XM27qh40
-         PDKJdhZ1rRYqwf29MWGpezFns8XU8yizsZlFdtHYNrjStqBU4joEnjX5LRKsbMMUuUB6
-         W2HUKtV3eNicCE1m5WtfbfGi17UxrSjLfcRcEkdjyZUNotH5faH3vbHmirPXylPJ3Kmr
-         tXEQSv2q2t2an7yG8CW8RXlDtSXbiyPISGHuyNaD7tF93NZPF+83W3DvIJXRIpQSsPZ0
-         hPScxwnRQzN3RQ57wAizjQmxZXMSneyxfnvVgXTH5VJEA3ZSPtdNKSndunJCscOf0lxy
-         U1Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3MWdrjiwx/LsxZ2M2qReR6C3Y6USg14yI8ad8NiXZl0g3b33zZUDrJVpRyGdW5mAdxeHhJ49P3GxkVcNzZWt+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU76cuytC3gOecgZzn+ylnFxKYHjPjuv/zVI5wZwoSEhOy0iC6
-	HlVV3zKGsQLEabgI2/JBypDZ3g+MVBKQuyHa0eG+5/rgUPqb1PJ7dq7k4GJS5oAavootkcsQqlm
-	S
-X-Gm-Gg: ASbGnctaVZv0LZsH0QGRYlOr3jiwAfXkBA4ABa5koGHSyxpDN12hXSeuWUEojqnwaMO
-	8ALb7c2nHeP5Va/D3rGdQYmsJMyqLi8JChqzso6Q3Tu0u1TSKb3lmy9roXG4Egb/+4e4HyJk8nc
-	LdJkEwxO9QBglD3AimfATAGBAijz0V8akQEehU5W/gbIV4OB/cFAr4pbeLfy+YN4KyFjjWhPswj
-	CKu3ItxUONKbFx5eGrTe0FF2ijEWKLg4y3v8hLSg2Qz3fOvqripYC3L
-X-Google-Smtp-Source: AGHT+IHz31vPgvjsP1ktI6cDJs5dwXi6jyonWjrDKCklrI15yME8jN2ZsQTROIywKIjV9MjHGbUrWw==
-X-Received: by 2002:a5d:64a8:0:b0:386:3a8e:64bd with SMTP id ffacd0b85a97d-38a8730560emr2565669f8f.22.1736346491235;
-        Wed, 08 Jan 2025 06:28:11 -0800 (PST)
+        b=jxB/9+JCfg8wwLh2A2J3BVmAAbks43OHiInRS8dqPvyyhG1ztx1eJ+/lMxYZriWgs2
+         MCRXAfnhhTtQpGZtj/NaNaRPyizfNxZPea9ByZ2s/xe/4Cediab1btOWurne2kwXky+z
+         DK6R1/BaXUvme/dS1L3vjq4LHPgpZ23E5dfViqAKeIaT3hWWsQbtXq/2wPX+rmQqsgLO
+         KI2srt2LmlaerMfs1uJTErDvJMrAUv9W2rCoajk2bPI25kGa80uAHZzYX9sCEJ0QeR0B
+         j6As5B2G4Xi2eXMOhbSiyxJLif4ItJ2oovWBKpYCS6USvso1nrJY5VzTTuyTwacYEifP
+         qD8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWPupbnGemzvIvjyhgr6FUzdVJbu19yQdm0ehi080CRSm0cmUhN0mgqDOsV+aDsea3ZnLJslSukhPiWYMv4Z1To@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy/BMv4+iTR0C69ngm3plSII9l7sIexmfRHRP9MFTsCgbFsUH4
+	N65lKWbYF/n+70IXfEv5Uuj5tWUEEkzyOiTzFkNTzOzNbaQFDpYe0kzA88cChzA=
+X-Gm-Gg: ASbGncsFhBu0TKu0AjyRflRp9fxFmIBWPm3NnlOMfec/qXqKzFj1Uh6iEkt+PvehpLa
+	q8OtKgcoOBo6eSo0YMIi8A1BYOd8mgkNaUi0ArjlUpC605VzskO8j2TmXMuY+PeUYnIZS4SkWqL
+	gFA9y5EhgAZ17ealuIAuDAIA5CuZJFBvV1PsRaYYCwu+qfMQzhSMRYp0L1LHCZTIjkmJDHiebv2
+	jT/ACJEXPKi006XW84rh79F0cN7xVhLFW4OT/8STPH/ODkOR9aNlUL7
+X-Google-Smtp-Source: AGHT+IG+cpKSlSJhi+F2YnCugAoch81HQ2u34rrtXJ7N+pJyIFTLAKd0EsB9c31sEmDi5t+EC9MrUw==
+X-Received: by 2002:a05:600c:3b2a:b0:434:f623:9ff3 with SMTP id 5b1f17b1804b1-436e26a8c3cmr28551185e9.15.1736346607506;
+        Wed, 08 Jan 2025 06:30:07 -0800 (PST)
 Received: from pop-os.. ([145.224.90.227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a28f17315sm47577178f8f.108.2025.01.08.06.28.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e2ddccf4sm22836965e9.19.2025.01.08.06.30.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 06:28:10 -0800 (PST)
+        Wed, 08 Jan 2025 06:30:07 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	irogers@google.com,
 	yeoreum.yun@arm.com,
 	will@kernel.org,
-	mark.rutland@arm.com
+	mark.rutland@arm.com,
+	namhyung@kernel.org,
+	acme@kernel.org
 Cc: robh@kernel.org,
 	James Clark <james.clark@linaro.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -78,13 +77,13 @@ Cc: robh@kernel.org,
 	Graham Woodward <graham.woodward@arm.com>,
 	Michael Petlan <mpetlan@redhat.com>,
 	Veronika Molnarova <vmolnaro@redhat.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
 	Thomas Richter <tmricht@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
 Subject: [PATCH v3 0/5] perf: arm_spe: Add format option for discard mode
-Date: Wed,  8 Jan 2025 14:27:22 +0000
-Message-Id: <20250108142731.400605-1-james.clark@linaro.org>
+Date: Wed,  8 Jan 2025 14:28:55 +0000
+Message-Id: <20250108142904.401139-1-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
