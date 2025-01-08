@@ -1,91 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5451ACEDC;
-	Wed,  8 Jan 2025 20:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A793F20408C;
+	Wed,  8 Jan 2025 21:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736369795; cv=none; b=IDgoB5rk0TI2Ey/JW2oWmgGVjAODCIl0N6p8tGFQb0U/DNPJEvhxGWMx33d9KvWLZFTRoaT6Vk5i9bAchWvxCFrUvO/l8ncN6UyPWWCD0ADgMy0CSXHYnIDawd9OpSl/eRrokOSa6CxRxxBdvrycLAWZTfH2CxRNj6Gao3JKLqE=
+	t=1736370016; cv=none; b=FU7NmBdKDhyH29w9EFL02z85REHa7ocmZvmMlO3PxW3TbfN+PN9XwBnSeHEwnUwQQDXggzTMCo38JtIZHnXdm1VtwiAAH7z+aV4rCsZgbBKKOCPmzmol2g5MQTqUIjF6TzM9tKr7SsaEW8LQOL7cMVKw3Up4g5QoG9tzUr8SSWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736369795; c=relaxed/simple;
-	bh=P8IkcavraQ8tivVpHVJNx67O4hjnQ0inmfw84h3P5Ow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pME0SwE+BG8F/VvRGUyfG3wKeBW1XGaZXnrvmDHUPCV3UzSh2BJnzAuTVTVOXnTHgWGw9nTsK7H2gqPW2xW5EXJqsvfjETW5w6WaUm67i8uq3Oim1AI2LEh1CZ+7BO/U0zTq+hvkq4RrT9ALbzYLibyjawW8L4nt+FX4JPTEI04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUaGi2c/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736370016; c=relaxed/simple;
+	bh=OZjC06P6F/PvY2tElT0PeCr3pD8N23nPPYNYvwrHgYk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MVO3OrihS+Th4+VRdpW4CMkWjQ+WW9N8mv6GhEyeGioqPK8HATOEa5aPt/25g0iEwLT6Lr9Dt3RlubVhlUYYj/xxvQREv/kXou1QGhl1fCTKfrLZ/ayAEsHF+YOXwLZSdq0uzxLDPqgU/Xbmue+8Lct7XsLBZB5KC4hCjUXb4bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8FDUOXV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUaGi2c/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C456DC4CEE5;
-	Wed,  8 Jan 2025 20:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8FDUOXV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B24C4CED3;
+	Wed,  8 Jan 2025 21:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736369794;
-	bh=P8IkcavraQ8tivVpHVJNx67O4hjnQ0inmfw84h3P5Ow=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KUaGi2c/4T2zC0ddROt/Bys6xO04zQ2uQUW7bzCaXMsqeLrB8Rb6GKsgEFUvlA12r
-	 pP4/Sl0BQ+v437KD6uWeecSvx8eV9PlaI17URYBLQyi7T4GtY3Smgys7qzvSGqYjRX
-	 CP47K3ySXY2ZIlZ+TpgpDj5VxZJlGFp8SVfsadElp7q1BuDvTNhd/xno863Os2W/hf
-	 wqeH4KvaGWqM0Tn9aLsnfMrcfY+G1wZ6ZHoiqfmd6eyggPjUgw5r+aiPCY479ShjPy
-	 RC0jtXMi+BqUt2FgxqPjZynGyJ1/Yw/qTTgQoobG5oHlXGTlLNm9TFvwj7fSLpQnMA
-	 XC1tnQQ7H5cMA==
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ad272538e8so4655055ab.1;
-        Wed, 08 Jan 2025 12:56:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWbwybt6sMHPhQaAurVCSHd/+fnAtGSKDgP+o8CBOxAj4Yi0lAkgnIG0ZysrXtpZGwdnLa9j7v1zKjow3y7sbiFxw==@vger.kernel.org, AJvYcCXEM/Tv9Eef0R2DY8Aw+XKV+vgqzMDOQR9PCfQQGF/j76g6YswNgUdNAX5kYd120dfvc80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytL1mUZPOlKPrYW+FAgro24JZAcNC7dTSQAWPcyP4MRjZd5YUW
-	QwYU4NFNuqOpgmvMMGUwki8aRpbetjWXJsfBQP7U4mIb9YGINZnr5RnoSLCIP8lf5fU0eibHPVa
-	wayyA1IqkKZcP8XYAvFa1y8XrU0U=
-X-Google-Smtp-Source: AGHT+IH6BGyBMWkyUBSDz6QWt+ULF0P2eHviKybGN+es/ZDIMnlSuSsq8+pLyvRuKQ4C3b4/b3UueWHMea+Ni+KXjks=
-X-Received: by 2002:a05:6e02:318b:b0:3ce:38f4:1cc4 with SMTP id
- e9e14a558f8ab-3ce4760424dmr7205845ab.12.1736369793997; Wed, 08 Jan 2025
- 12:56:33 -0800 (PST)
+	s=k20201202; t=1736370016;
+	bh=OZjC06P6F/PvY2tElT0PeCr3pD8N23nPPYNYvwrHgYk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=B8FDUOXVaPb4LbCvB4MtlwBb9D2oYIoBq9fnuIGXOSEZe5oRztI0fkBIQIrbaYtto
+	 qORe+XdbuolVB//OF59Cu8g/jQ4Mhi+yoHXs5E3i4X23YYCmWQMbfY/CPHJdwsKGyC
+	 KdEHGKaQd+1Rhy4KnO2WZb/NRsRkotPYAgnWquFNkYNiqtUWOXkJvw4aGQRurv2huL
+	 UzOY8JuqOnxiky6g1k+4ussiibfoNGpKag3bjrEpRML/90icTMyKpaeaaEvRZn3/oS
+	 TzUZS62BG/IgmUIBgE5tP3KwajCxBUuUFNRVctzNN+cL3txBRjgsjdxt+ITZO7f+4C
+	 YpBXKEvwy2DhA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH 1/2] perf ftrace: Check min/max latency only with bucket range
+Date: Wed,  8 Jan 2025 13:00:14 -0800
+Message-ID: <20250108210015.1188531-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250106175048.1443905-1-jolsa@kernel.org> <CAPhsuW5p9C+0oLbec=bxZPvoEuPpAbDzbyPRD95ucBP=7HbO8A@mail.gmail.com>
- <Z35jyGWboftcEPRF@krava>
-In-Reply-To: <Z35jyGWboftcEPRF@krava>
-From: Song Liu <song@kernel.org>
-Date: Wed, 8 Jan 2025 12:56:23 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW7kH_6UpLrVYXMx08pTz3j21_RsHxm1oWgAHfP7M9qwmA@mail.gmail.com>
-X-Gm-Features: AbW1kvZtHz-EudEHjGS48wQNt-EMWwP5uwqtaTzD2N-t6sn_9P7-D6sxNhWsZJo
-Message-ID: <CAPhsuW7kH_6UpLrVYXMx08pTz3j21_RsHxm1oWgAHfP7M9qwmA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Return error for missed kprobe multi
- bpf program execution
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 8, 2025 at 3:38=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
-[...]
-> > >
-> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > index 48db147c6c7d..1f3d4b72a3f2 100644
-> > > --- a/kernel/trace/bpf_trace.c
-> > > +++ b/kernel/trace/bpf_trace.c
-> > > @@ -2797,7 +2797,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_mu=
-lti_link *link,
-> > >
-> > >         if (unlikely(__this_cpu_inc_return(bpf_prog_active) !=3D 1)) =
-{
-> > >                 bpf_prog_inc_misses_counter(link->link.prog);
-> > > -               err =3D 0;
-> > > +               err =3D 1;
-> >
-> > nit: Shall we return -EBUSY or some other error code?
->
-> it's processed in __fprobe_handler and it's treated as bool, so technical=
-ly
-> it does not matter.. but I'd rather keep the 0/1 return values in here,
-> because it's what the session program is forced to return
+It's an optional feature and remains 0 when bucket range is not given.
+And it makes the histogram goes to the last entry always because any
+latency (num) is greater than or equal to 0.
 
-Got it. Thanks for the explanation.
+Before:
+  $ sudo ./perf ftrace latency -a -T do_futex sleep 1
+  #   DURATION     |      COUNT | GRAPH                                          |
+       0 -    0 us |          0 |                                                |
+       1 -    2 us |          0 |                                                |
+       2 -    4 us |          0 |                                                |
+       4 -    8 us |          0 |                                                |
+       8 -   16 us |          0 |                                                |
+      16 -   32 us |          0 |                                                |
+      32 -   64 us |          0 |                                                |
+      64 -  128 us |          0 |                                                |
+     128 -  256 us |          0 |                                                |
+     256 -  512 us |          0 |                                                |
+     512 - 1024 us |          0 |                                                |
+       1 -    2 ms |          0 |                                                |
+       2 -    4 ms |          0 |                                                |
+       4 -    8 ms |          0 |                                                |
+       8 -   16 ms |          0 |                                                |
+      16 -   32 ms |          0 |                                                |
+      32 -   64 ms |          0 |                                                |
+      64 -  128 ms |          0 |                                                |
+     128 -  256 ms |          0 |                                                |
+     256 -  512 ms |          0 |                                                |
+     512 - 1024 ms |          0 |                                                |
+       1 - ...  s  |       1353 | ############################################## |
 
-Song
+After:
+  $ sudo ./perf ftrace latency -a -T do_futex sleep 1
+  #   DURATION     |      COUNT | GRAPH                                          |
+       0 -    0 us |        321 | ###########                                    |
+       1 -    2 us |        132 | ####                                           |
+       2 -    4 us |        202 | #######                                        |
+       4 -    8 us |        188 | ######                                         |
+       8 -   16 us |         16 |                                                |
+      16 -   32 us |         12 |                                                |
+      32 -   64 us |         30 | #                                              |
+      64 -  128 us |         98 | ###                                            |
+     128 -  256 us |         53 | #                                              |
+     256 -  512 us |         57 | ##                                             |
+     512 - 1024 us |          9 |                                                |
+       1 -    2 ms |          9 |                                                |
+       2 -    4 ms |          1 |                                                |
+       4 -    8 ms |         98 | ###                                            |
+       8 -   16 ms |          5 |                                                |
+      16 -   32 ms |          7 |                                                |
+      32 -   64 ms |         32 | #                                              |
+      64 -  128 ms |         10 |                                                |
+     128 -  256 ms |         10 |                                                |
+     256 -  512 ms |          2 |                                                |
+     512 - 1024 ms |          0 |                                                |
+       1 - ...  s  |          0 |                                                |
+
+Fixes: 690a052a6d85c530 ("perf ftrace latency: Add --max-latency option")
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-ftrace.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 08c1cc429b27e169..90cf2c9915a7e35b 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -796,8 +796,10 @@ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
+ 			// than the min latency desired.
+ 			if (num > 0) // 1st entry: [ 1 unit .. bucket_range units ]
+ 				i = num / ftrace->bucket_range + 1;
++			if (num >= max_latency - min_latency)
++				i = NUM_BUCKET -1;
+ 		}
+-		if (i >= NUM_BUCKET || num >= max_latency - min_latency)
++		if (i >= NUM_BUCKET)
+ 			i = NUM_BUCKET - 1;
+ 
+ 		num += min_latency;
+@@ -1738,7 +1740,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 			ret = -EINVAL;
+ 			goto out_delete_filters;
+ 		}
+-		if (!ftrace.min_latency) {
++		if (ftrace.bucket_range && !ftrace.min_latency) {
+ 			/* default min latency should be the bucket range */
+ 			ftrace.min_latency = ftrace.bucket_range;
+ 		}
+@@ -1749,7 +1751,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 			ret = -EINVAL;
+ 			goto out_delete_filters;
+ 		}
+-		if (!ftrace.max_latency) {
++		if (ftrace.bucket_range && !ftrace.max_latency) {
+ 			/* default max latency should depend on bucket range and num_buckets */
+ 			ftrace.max_latency = (NUM_BUCKET - 2) * ftrace.bucket_range +
+ 						ftrace.min_latency;
+-- 
+2.47.1.613.gc27f4b7a9f-goog
+
