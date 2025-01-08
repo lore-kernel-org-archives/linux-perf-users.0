@@ -1,280 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B8F2F50;
-	Wed,  8 Jan 2025 14:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0141FE468
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 15:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736348215; cv=none; b=UdUS0A9vchOzuu8qvrA9X6mIUxqomqGFuCkUvWRV6XUIu9jJdZ8fQ0Ha60liYaF7OoaQByR8nT43qPQyp3oMjq0Floq2RCu2MCrB070W/xAwBzB0sry9r0Y7iZnvY99sOJDaeHCinccrZaz40fO3B33sCyRfAvDCN5FKkokFXc8=
+	t=1736348878; cv=none; b=Zq0iPukMNPVqNm2q/iiWjmxXUrDKwzXLm3L9emiv+St+OLwdgRNex6rCmUqYQql++joJPzAZCvFDyKE3aUXvt+szB8+mqs6FYkYkJkW/oIbZyKZuJb1v4bh0KJg76Ys+xhPV8SWAaB4eewUUGeleIQJ5TLfaq04iVza6XNlv3k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736348215; c=relaxed/simple;
-	bh=NU4A5+SaeGmPzC7P7lkREfcYj3qaL6zee7E8WF3mJlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpL/DWqmLW9NbqD3cHaKIkCvv47Yk77WYUVrFSrnLNVC/jDNFs02/j0RRvDv5ztFB2nABR5N3z8oWJIw9zT2bXDmKLnUUtJ0YE65yK3bFRz0vBoXrIzvkC1/RAhkBsGqON1bjxp7uOM7JbLsp1/dw3pnvkU/tzwuGrwz3zOJwdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gvl66xh/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736348878; c=relaxed/simple;
+	bh=s4EFvmigaZ1I1RUfvamfVBDCsV3DT4yoWVj7DOy3dKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=ZN6TUmcTB1jJl+B9sz2QVBsclrDz1f5LXwb/tWvolVUXOj0nV79YXFJ9VNbKrj8o0gEF/xse8sNDbki48aItdeP0gzz68C/Atr5cmdKXnBUezPRfwjl/1H24xvNoKeReKCh5i6pK8AxUQ78bR1SHbAewp5E2guWSla4U0NO6oUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L/Agd0to; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gvl66xh/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392B3C4CED3;
-	Wed,  8 Jan 2025 14:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736348214;
-	bh=NU4A5+SaeGmPzC7P7lkREfcYj3qaL6zee7E8WF3mJlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gvl66xh/FR48/QsX9vB+jj6NqsmOJ1KdgEHCmtJw7Ro0rW63uBNUNVBml1i3opzYl
-	 2WCmbJmlbxje7yJL5dPVWJUFiEtxM5t6PCcftq5AA43ubzLrpAhLr8/59gQbgYG7gt
-	 qgeIQviPb+KHPuqmgRAGXT0RTUAgbaFd5lTjIRqbfXNHKUvqTSoXlhEM0RdvoHEy67
-	 o4o86kRGwdXyfSfd3FVZIQERJg8MPuP5j/YgElvusGRnBbz8uf067c+J83db3U13jk
-	 vT1SsXhV6Dtb2r1+3AjeKJfRqfJ1cp4kAAOqMCl/js5KF0ztjMmCXasFwPpAqMjzLd
-	 y7VK9SlZkotcg==
-Date: Wed, 8 Jan 2025 11:56:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH v2 1/3] perf ftrace: Display latency statistics at the end
-Message-ID: <Z36SM3m2QP5HSiev@x1>
-References: <20250107224352.1128669-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/Agd0to"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso113224055e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 07:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736348875; x=1736953675; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7VpBG/KbMCx5xWkKdY1LDcRL9XTJQWjy/R/gffg94UE=;
+        b=L/Agd0toAYmGCmCFYgGr8/Nv49sevM9NZwrSEk3PDv8Dz5EFmjYWMVNx8RollIHv31
+         oNHCnfSCetmWKHIrr+8aRLcfYFo1qZ6ftWGrMID2uKga2yMiKiJnCejyWjj3jp9uUTpy
+         fUn2Rl+GBJkiEgaD7+CcluJisMr29AslCV7i+kMk3rnO6e+se3myQmg+9PgQfhS5YxW5
+         Wh19aHFdG+21/M/nBqO32GfhihJyG81XqR7+uoSy206UWnQAexjLhvpnsVtF+wZ+2Ih7
+         oocu2YHiNCe5siRYwENdWDUWx+CpZAmaVofYnPHAOM8yord0HMWWSiMkiSnrO13XzEOB
+         EXfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736348875; x=1736953675;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7VpBG/KbMCx5xWkKdY1LDcRL9XTJQWjy/R/gffg94UE=;
+        b=ofc48i6W4RkcSrTGJQFyI6HGg47MwChw+wJuZRUGnydtBDN8KlyvIDfuv6+cSaD/um
+         It4b9sL+JPMor94erX7inxMq+FQQ54/q6HfSS3rSAV58LHjLC74El4yb3gzDT6WbZlbs
+         s0tuot5TYVko022HtKRdkBMChvYntpScnEWTplQGBlBUuEHqOze9skLdPh28waBDw46x
+         /Zjw3PJWocpFkfsnfGPj7kOW/lANlCIkDvZ7qTZmAyQyjkvh8ng10qHxjg8AWJ3WcVQq
+         3COYRE4X4JfGEIryAPOHQVUQTT+zsbtYN0J0tlLnzN5JoacEYZV3zfDITLXiUNHkJ+ov
+         vwQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTHZ3YqOiQWbQ2rBw0BIWDEnKu36YoQb9/sy50pIAHTzsxwNf6iZHszqwHBJ+0QrOf4EDBB6nFQVmYmRRODiAu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6U/FiGknn8Fn3+izGtrAXeIra0yPcorWfOL+zs2cBbi0kzEIk
+	tQmIRxEXd0RIvr2LvFSwGP/dNnZ+LoqML3Wuua7PIQsfVx7rpveYEAvPe5cc+wQ=
+X-Gm-Gg: ASbGncs64s9yQoGBgVP9vYNw14v9gXTUU2omgLORUCxYPA65iCk44JCoB4CR7xB5Wya
+	2bHpvu+wU3/KKzBTMDlqwgNY+bOa8r+SAPkZuT1L89tobW4E2HcrJ2jkv/YObhoAeIc/Hpxw+8Q
+	egRoYJ61bm8cuwWMrHtqYWZCXwhFXVGZB5Tg6mWPueYRWxAwnTH2k98kIZdV9obIxFX2giGTiOw
+	H4aU+ruWWUP3gzzaUtaNywPPOFg47P204IKkcWsGdXO/WFeUPYBYawapHQBTP9I504=
+X-Google-Smtp-Source: AGHT+IH96nc+f4rNc+2B+pIWlE/2a+IZh42CItHbdvY2Xx/w8bBpr7lwI8e17Iuc8aHMAvbCDHteyg==
+X-Received: by 2002:a05:600c:468a:b0:434:a968:89a3 with SMTP id 5b1f17b1804b1-436e26a78a4mr27752715e9.9.1736348875205;
+        Wed, 08 Jan 2025 07:07:55 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436dd11ddfdsm33923525e9.1.2025.01.08.07.07.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2025 07:07:54 -0800 (PST)
+Message-ID: <ac163e57-1bf8-4662-920c-9dbfecb26c06@linaro.org>
+Date: Wed, 8 Jan 2025 15:07:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107224352.1128669-1-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf test cpumap: Avoid use-after-free following merge
+To: Ian Rogers <irogers@google.com>
+References: <20250108051511.1720369-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250108051511.1720369-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 07, 2025 at 02:43:50PM -0800, Namhyung Kim wrote:
-> Sometimes users also want to see average latency as well as histogram.
-> Display latency statistics like avg, max, min at the end.
 
 
-Thanks, applied to perf-tools-next, also CCing Gabriele, since he did
-work on this tool recently.
-
-- Arnaldo
- 
->   $ sudo ./perf ftrace latency -ab -T synchronize_rcu -- ...
->   #   DURATION     |      COUNT | GRAPH                                          |
->        0 - 1    us |          0 |                                                |
->        1 - 2    us |          0 |                                                |
->        2 - 4    us |          0 |                                                |
->        4 - 8    us |          0 |                                                |
->        8 - 16   us |          0 |                                                |
->       16 - 32   us |          0 |                                                |
->       32 - 64   us |          0 |                                                |
->       64 - 128  us |          0 |                                                |
->      128 - 256  us |          0 |                                                |
->      256 - 512  us |          0 |                                                |
->      512 - 1024 us |          0 |                                                |
->        1 - 2    ms |          0 |                                                |
->        2 - 4    ms |          0 |                                                |
->        4 - 8    ms |          0 |                                                |
->        8 - 16   ms |          1 | #####                                          |
->       16 - 32   ms |          7 | ########################################       |
->       32 - 64   ms |          0 |                                                |
->       64 - 128  ms |          0 |                                                |
->      128 - 256  ms |          0 |                                                |
->      256 - 512  ms |          0 |                                                |
->      512 - 1024 ms |          0 |                                                |
->        1 - ...   s |          0 |                                                |
+On 08/01/2025 5:15 am, Ian Rogers wrote:
+> Previously cpu maps in the test weren't modified by calls to the cpu
+> map API, however, perf_cpu_map__merge was modified so the left hand
+> argument was updated. In the test this meant the maps copy of the
+> "two" map was put/deleted in the merge meaning when accessed via maps,
+> the pointer was stale and to the put/deleted memory. To fix this add
+> an extra layer of indirection to the maps array, so the updated value
+> of two is accessed.
 > 
->   # statistics  (in usec)
->     total time:               171832
->       avg time:                21479
->       max time:                30906
->       min time:                15869
->          count:                    8
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Fixes: a9d2217556f7 ("libperf cpumap: Refactor perf_cpu_map__merge()")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
 > ---
->  tools/perf/builtin-ftrace.c                 | 14 +++++++++++++-
->  tools/perf/util/bpf_ftrace.c                | 12 +++++++++++-
->  tools/perf/util/bpf_skel/func_latency.bpf.c | 19 +++++++++++++++++++
->  tools/perf/util/ftrace.h                    |  6 ++++--
->  4 files changed, 47 insertions(+), 4 deletions(-)
+>   tools/perf/tests/cpumap.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 834074162a63bf2b..2a786047ba32bcb7 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -43,6 +43,8 @@
->  static volatile sig_atomic_t workload_exec_errno;
->  static volatile sig_atomic_t done;
->  
-> +static struct stats latency_stats;  /* for tracepoints */
-> +
->  static void sig_handler(int sig __maybe_unused)
->  {
->  	done = true;
-> @@ -798,8 +800,10 @@ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
->  		if (i >= NUM_BUCKET || num >= max_latency - min_latency)
->  			i = NUM_BUCKET - 1;
->  
-> +		num += min_latency;
->  do_inc:
->  		buckets[i]++;
-> +		update_stats(&latency_stats, num);
->  
->  next:
->  		/* empty the line buffer for the next output  */
-> @@ -894,6 +898,12 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
->  	printf(" | %10d | %.*s%*s |\n", buckets[NUM_BUCKET - 1],
->  	       bar_len, bar, bar_total - bar_len, "");
->  
-> +	printf("\n# statistics  (in %s)\n", ftrace->use_nsec ? "nsec" : "usec");
-> +	printf("  total time: %20.0f\n", latency_stats.mean * latency_stats.n);
-> +	printf("    avg time: %20.0f\n", latency_stats.mean);
-> +	printf("    max time: %20"PRIu64"\n", latency_stats.max);
-> +	printf("    min time: %20"PRIu64"\n", latency_stats.min);
-> +	printf("       count: %20.0f\n", latency_stats.n);
->  }
->  
->  static int prepare_func_latency(struct perf_ftrace *ftrace)
-> @@ -932,6 +942,8 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  	if (fd < 0)
->  		pr_err("failed to open trace_pipe\n");
->  
-> +	init_stats(&latency_stats);
-> +
->  	put_tracing_file(trace_file);
->  	return fd;
->  }
-> @@ -961,7 +973,7 @@ static int stop_func_latency(struct perf_ftrace *ftrace)
->  static int read_func_latency(struct perf_ftrace *ftrace, int buckets[])
->  {
->  	if (ftrace->target.use_bpf)
-> -		return perf_ftrace__latency_read_bpf(ftrace, buckets);
-> +		return perf_ftrace__latency_read_bpf(ftrace, buckets, &latency_stats);
->  
->  	return 0;
->  }
-> diff --git a/tools/perf/util/bpf_ftrace.c b/tools/perf/util/bpf_ftrace.c
-> index bc484e65fb8f69ca..25fc280e414ac5fe 100644
-> --- a/tools/perf/util/bpf_ftrace.c
-> +++ b/tools/perf/util/bpf_ftrace.c
-> @@ -11,6 +11,7 @@
->  #include "util/debug.h"
->  #include "util/evlist.h"
->  #include "util/bpf_counter.h"
-> +#include "util/stat.h"
->  
->  #include "util/bpf_skel/func_latency.skel.h"
->  
-> @@ -86,6 +87,8 @@ int perf_ftrace__latency_prepare_bpf(struct perf_ftrace *ftrace)
->  		}
->  	}
->  
-> +	skel->bss->min = INT64_MAX;
-> +
->  	skel->links.func_begin = bpf_program__attach_kprobe(skel->progs.func_begin,
->  							    false, func->name);
->  	if (IS_ERR(skel->links.func_begin)) {
-> @@ -122,7 +125,7 @@ int perf_ftrace__latency_stop_bpf(struct perf_ftrace *ftrace __maybe_unused)
->  }
->  
->  int perf_ftrace__latency_read_bpf(struct perf_ftrace *ftrace __maybe_unused,
-> -				  int buckets[])
-> +				  int buckets[], struct stats *stats)
->  {
->  	int i, fd, err;
->  	u32 idx;
-> @@ -146,6 +149,13 @@ int perf_ftrace__latency_read_bpf(struct perf_ftrace *ftrace __maybe_unused,
->  			buckets[idx] += hist[i];
->  	}
->  
-> +	if (skel->bss->count) {
-> +		stats->mean = skel->bss->total / skel->bss->count;
-> +		stats->n = skel->bss->count;
-> +		stats->max = skel->bss->max;
-> +		stats->min = skel->bss->min;
-> +	}
-> +
->  	free(hist);
->  	return 0;
->  }
-> diff --git a/tools/perf/util/bpf_skel/func_latency.bpf.c b/tools/perf/util/bpf_skel/func_latency.bpf.c
-> index 4df54e1b1411b10a..fb144811b34fc72a 100644
-> --- a/tools/perf/util/bpf_skel/func_latency.bpf.c
-> +++ b/tools/perf/util/bpf_skel/func_latency.bpf.c
-> @@ -38,6 +38,12 @@ struct {
->  
->  int enabled = 0;
->  
-> +// stats
-> +__s64 total;
-> +__s64 count;
-> +__s64 max;
-> +__s64 min;
-> +
->  const volatile int has_cpu = 0;
->  const volatile int has_task = 0;
->  const volatile int use_nsec = 0;
-> @@ -122,6 +128,8 @@ int BPF_PROG(func_end)
->  					delta >= max_latency - min_latency)
->  					key = NUM_BUCKET - 1;
->  			}
-> +
-> +			delta += min_latency;
->  			goto do_lookup;
->  		}
->  		// calculate index using delta
-> @@ -136,6 +144,17 @@ int BPF_PROG(func_end)
->  			return 0;
->  
->  		*hist += 1;
-> +
-> +		if (bucket_range == 0)
-> +			delta /= cmp_base;
-> +
-> +		__sync_fetch_and_add(&total, delta);
-> +		__sync_fetch_and_add(&count, 1);
-> +
-> +		if (delta > max)
-> +			max = delta;
-> +		if (delta < min)
-> +			min = delta;
->  	}
->  
->  	return 0;
-> diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
-> index f218703063f74786..5dee2caba0fe403f 100644
-> --- a/tools/perf/util/ftrace.h
-> +++ b/tools/perf/util/ftrace.h
-> @@ -7,6 +7,7 @@
->  
->  struct evlist;
->  struct hashamp;
-> +struct stats;
->  
->  struct perf_ftrace {
->  	struct evlist		*evlist;
-> @@ -46,7 +47,7 @@ int perf_ftrace__latency_prepare_bpf(struct perf_ftrace *ftrace);
->  int perf_ftrace__latency_start_bpf(struct perf_ftrace *ftrace);
->  int perf_ftrace__latency_stop_bpf(struct perf_ftrace *ftrace);
->  int perf_ftrace__latency_read_bpf(struct perf_ftrace *ftrace,
-> -				  int buckets[]);
-> +				  int buckets[], struct stats *stats);
->  int perf_ftrace__latency_cleanup_bpf(struct perf_ftrace *ftrace);
->  
->  #else  /* !HAVE_BPF_SKEL */
-> @@ -71,7 +72,8 @@ perf_ftrace__latency_stop_bpf(struct perf_ftrace *ftrace __maybe_unused)
->  
->  static inline int
->  perf_ftrace__latency_read_bpf(struct perf_ftrace *ftrace __maybe_unused,
-> -			      int buckets[] __maybe_unused)
-> +			      int buckets[] __maybe_unused,
-> +			      struct stats *stats __maybe_unused)
->  {
->  	return -1;
->  }
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index 5ed7ff072ea3..2354246afc5a 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -252,16 +252,16 @@ static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subte
+>   	struct perf_cpu_map *empty = perf_cpu_map__intersect(one, two);
+>   	struct perf_cpu_map *pair = perf_cpu_map__new("1-2");
+>   	struct perf_cpu_map *tmp;
+> -	struct perf_cpu_map *maps[] = {empty, any, one, two, pair};
+> +	struct perf_cpu_map **maps[] = {&empty, &any, &one, &two, &pair};
+>   
+>   	for (size_t i = 0; i < ARRAY_SIZE(maps); i++) {
+>   		/* Maps equal themself. */
+> -		TEST_ASSERT_VAL("equal", perf_cpu_map__equal(maps[i], maps[i]));
+> +		TEST_ASSERT_VAL("equal", perf_cpu_map__equal(*maps[i], *maps[i]));
+>   		for (size_t j = 0; j < ARRAY_SIZE(maps); j++) {
+>   			/* Maps dont't equal each other. */
+>   			if (i == j)
+>   				continue;
+> -			TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal(maps[i], maps[j]));
+> +			TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal(*maps[i], *maps[j]));
+>   		}
+>   	}
+>   
+> @@ -274,7 +274,7 @@ static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subte
+>   	perf_cpu_map__put(tmp);
+>   
+>   	for (size_t i = 0; i < ARRAY_SIZE(maps); i++)
+> -		perf_cpu_map__put(maps[i]);
+> +		perf_cpu_map__put(*maps[i]);
+>   
+>   	return TEST_OK;
+>   }
+
