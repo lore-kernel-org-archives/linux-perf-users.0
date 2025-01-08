@@ -1,59 +1,61 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1641FCCE8
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 14:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971EC1FCFDB
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 14:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736346612; cv=none; b=aCnumYY0ttP6ApHfvaesMk62ZZDrnYwE4Nmcp3zC+ic64klPBM+bCRUYVis8WeZpjYw5/pd04szpvEbp7Y/crKKXitsnfqpSlyHrN+8P2ip8W9vntigteDreKRtFR1G+6fVD66HeN9qDAl7mz7Kb9nrovrf2mHidyqsz/Tug0CQ=
+	t=1736346616; cv=none; b=jXjKWnw66gJ/SxorTSlkUdtKRwdOHQxXwW27ZgnHAScioX/OPnKxSSxDIlWK/cEwVy8CG1n+Djdy5wg71VBD/0SHf1fmYs1gspRQAi6tEe66v/P8x8HOvuYRJvEXi7FeIDXEFryYwbmR7oTeR6Wg4WSJr4mNlExAvkOfnPuZfGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736346612; c=relaxed/simple;
-	bh=EbaQIPivd3k12R9u+2jbA4uZjrTwxRKMILMWyBbew2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=POtqCThYzEAGrjeZ06nEiHCHJnRV8g/xOX4DFD9GPzM3bDr/yFrg+Z7EK3/gkZSc7lnE7B2j54jtthmbHYosL21fm0ApGYARdBkmmcE54jO8B4WVC04I9zHvDkdE5o3h/vnxtOjyRhRR+dMuWPEkMobKX7OSP/073Kh4HIoCZ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eixi2yST; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1736346616; c=relaxed/simple;
+	bh=kPHLZrDNKrarvsG+2cdGymsw5D7aOVxFWnWlmvzi7lo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hxT7CImNYP0+2JvQyTRTjZJ+2iyP6lPlcJbMjtNK8zYav6YHIkG02dD5zXJzzHzbakC55hiGrcBH2tQyyvYQ+sutzZEhq55QAX0mRa2v4OD5Wq2asibFMwzPc1KW+4w19wnSHVHpeFxa3cRGs3jBUsqZ48bK9Fy121pvhYsH67w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DoJQsvAS; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eixi2yST"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43618283d48so122101725e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 06:30:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoJQsvAS"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361c705434so122045015e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 06:30:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736346608; x=1736951408; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
-        b=eixi2ySTdhd/EL04Dw814MmtGY9ji9cI8eG7RfMM3yNcFPEbDl/qLG7fNzIyGyGhoF
-         rJTWofQEZ1uQsNLCqGhIQxXtbwqssTeLQj/7sovxswtNRsv+jq02nv1kJzJdcm92UgjF
-         L1PLuNyeDVhW2xCcGIizyXzdB9S1ocwvZv4tgv28EeyRRaIdv4WaarSc98c48JWNUtyE
-         bO8OgX8K1+GS9vnVisrGWrOZH/H8LHAo+JKtDaMt3/K4a9ysJ+AZu7QHT3bS7GymMk1j
-         bISPbXiX/as0NW6ovARqehDJvumX9wF9+/rWYRUrB/38kYGNFOLZcODNsXN8zdpcDQWA
-         1jhw==
+        d=linaro.org; s=google; t=1736346613; x=1736951413; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tGOb+QzXOCupJHbixt2wd4hm1wKT1vTFMOcKSfrV7BU=;
+        b=DoJQsvASnWMFRujCq682Nv1wS1DakpBs+XLeZBVzZIOnO11iahneuNuz+LQQ0all5a
+         M4vf1PCPhIk5gPA6rw/HxnK7qAWOSDHlAYzMWLPGqOmUIIM8u6DxMk+XBjInJVrfWeNp
+         +OD/2BXrX2GLaCXfnE5DkCjgbF1ClEFMvwVhNR+gRlI+srrIYi3/s8ihFlHFbcq8h0Nx
+         V7e9DGmSCQdEJ/XNJXH0AretZ2ExgW43MB8+cjduufxRbDB0LRFQs/PrvcU9YXY4WS5F
+         yonCY01IskrQrOMH/2Sf5rf0XgWfQ6PHY/OiHoVleDIwF8jOOlvGgc1Qhj7mtcG38XuV
+         p/1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736346608; x=1736951408;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5DTjVFlw3a1BE3G1k/Oc0pCRnQoWK8WuT3gO6hdQWPM=;
-        b=jxB/9+JCfg8wwLh2A2J3BVmAAbks43OHiInRS8dqPvyyhG1ztx1eJ+/lMxYZriWgs2
-         MCRXAfnhhTtQpGZtj/NaNaRPyizfNxZPea9ByZ2s/xe/4Cediab1btOWurne2kwXky+z
-         DK6R1/BaXUvme/dS1L3vjq4LHPgpZ23E5dfViqAKeIaT3hWWsQbtXq/2wPX+rmQqsgLO
-         KI2srt2LmlaerMfs1uJTErDvJMrAUv9W2rCoajk2bPI25kGa80uAHZzYX9sCEJ0QeR0B
-         j6As5B2G4Xi2eXMOhbSiyxJLif4ItJ2oovWBKpYCS6USvso1nrJY5VzTTuyTwacYEifP
-         qD8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWPupbnGemzvIvjyhgr6FUzdVJbu19yQdm0ehi080CRSm0cmUhN0mgqDOsV+aDsea3ZnLJslSukhPiWYMv4Z1To@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy/BMv4+iTR0C69ngm3plSII9l7sIexmfRHRP9MFTsCgbFsUH4
-	N65lKWbYF/n+70IXfEv5Uuj5tWUEEkzyOiTzFkNTzOzNbaQFDpYe0kzA88cChzA=
-X-Gm-Gg: ASbGncsFhBu0TKu0AjyRflRp9fxFmIBWPm3NnlOMfec/qXqKzFj1Uh6iEkt+PvehpLa
-	q8OtKgcoOBo6eSo0YMIi8A1BYOd8mgkNaUi0ArjlUpC605VzskO8j2TmXMuY+PeUYnIZS4SkWqL
-	gFA9y5EhgAZ17ealuIAuDAIA5CuZJFBvV1PsRaYYCwu+qfMQzhSMRYp0L1LHCZTIjkmJDHiebv2
-	jT/ACJEXPKi006XW84rh79F0cN7xVhLFW4OT/8STPH/ODkOR9aNlUL7
-X-Google-Smtp-Source: AGHT+IG+cpKSlSJhi+F2YnCugAoch81HQ2u34rrtXJ7N+pJyIFTLAKd0EsB9c31sEmDi5t+EC9MrUw==
-X-Received: by 2002:a05:600c:3b2a:b0:434:f623:9ff3 with SMTP id 5b1f17b1804b1-436e26a8c3cmr28551185e9.15.1736346607506;
-        Wed, 08 Jan 2025 06:30:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736346613; x=1736951413;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tGOb+QzXOCupJHbixt2wd4hm1wKT1vTFMOcKSfrV7BU=;
+        b=UZozstJzQCJZTZ4OyIkCQ6iRAh5e4BTAzSJgInrshGKDqt2jYll4Zro9jFijHH1iNJ
+         iWiaL54fvMwEMO2Emj7D/gm7jOWz5O9fiJJpbPXNKbZntATN0YWdmxGqQaE3DibP0G05
+         dApDW1beguTBT0v2oGoEpQ68Q7VMma/9+tHOw9pgyolTlIx5zDWFq4dfx2TCNq2LBzxy
+         ADhVC2wryhfkGMHISXhhQBFlm1TBxUMeo8HbPE+GbnyQ6jezaFhA6eLkoqnI8LQI+CAe
+         BGTQH7A5zHa9zzEeSwNAlNVv2YxZI9oTWdw5hMD3O26E4POA4MN9dI9l3kWYWBxXFhFK
+         K6Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6z+6aw6vhmNka5KK2sTp8Uk6pibrT6odsdEe6xmTXGncArXZOM9krI+ms2b5Pnrf3PDecrMWhUwiuRX3J9HOp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWbAPTg+5S7yVr5xYgI3AGrCboNYZh/G5oW1z+MDzpfdNr/xyW
+	PpQ8eoinv/RehSu6gD0/ZSJqSnUkpUr0M45aQQltoAMyDTiANxZFzpVGRFS6iFQ=
+X-Gm-Gg: ASbGncvXehCoRJvhLR/KAh2wiFPpvzUJPJWQMJm/XeA9wm6XbxUtxV/mo38AoZdDFDD
+	SoS6T5fllXNt6rB30U65tlFW7OyssfRKpIULXEt8K/15FM7PwIkJ3rO+j1EUTq9sHwBQXqoKzJ9
+	ziRkbJwoqMrrrY2SfoVKcDsl0iMGNnrezVXvzF8SsGvs9b4VYMMXa9SyxGzhznnKMxaCkNIIIus
+	p2tpvbH35RDG3RDbVMaIv/FBpM25lm+d+k1HOaCRUH+dCC4HnjeLDNT
+X-Google-Smtp-Source: AGHT+IHN1A9cX6z/xhhtgrQjHkaDM0PpDq23z/ArfmpMTg/+JIa+MQk4qZUtvdK5AFfi/widPNwZ7g==
+X-Received: by 2002:a05:600c:1d07:b0:434:9934:575 with SMTP id 5b1f17b1804b1-436e26a8f4dmr28940535e9.16.1736346612923;
+        Wed, 08 Jan 2025 06:30:12 -0800 (PST)
 Received: from pop-os.. ([145.224.90.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e2ddccf4sm22836965e9.19.2025.01.08.06.30.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e2ddccf4sm22836965e9.19.2025.01.08.06.30.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 06:30:07 -0800 (PST)
+        Wed, 08 Jan 2025 06:30:12 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
@@ -77,14 +79,16 @@ Cc: robh@kernel.org,
 	Graham Woodward <graham.woodward@arm.com>,
 	Michael Petlan <mpetlan@redhat.com>,
 	Veronika Molnarova <vmolnaro@redhat.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [PATCH v3 0/5] perf: arm_spe: Add format option for discard mode
-Date: Wed,  8 Jan 2025 14:28:55 +0000
-Message-Id: <20250108142904.401139-1-james.clark@linaro.org>
+Subject: [PATCH v3 1/5] perf: arm_spe: Add format option for discard mode
+Date: Wed,  8 Jan 2025 14:28:56 +0000
+Message-Id: <20250108142904.401139-2-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250108142904.401139-1-james.clark@linaro.org>
+References: <20250108142904.401139-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -93,57 +97,102 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Discard mode (Armv8.6) is a way to enable SPE related PMU events without
-the overhead of recording any data. Add a format option, tests and docs
-for it.
+FEAT_SPEv1p2 (optional from Armv8.6) adds a discard mode that allows all
+SPE data to be discarded rather than written to memory. Add a format
+bit for this mode.
 
-In theory we could make the driver drop calls to allocate the aux buffer
-when discard mode is enabled. This would give a small memory saving,
-but I think there is potential to interfere with any tools that don't
-expect this so I left the aux allocation untouched. Even old tools that
-don't know about discard mode will be able to use it because we publish
-the format option. Not allocating the aux buffer will have to be added
-to tools which I've done in Perf.
+If the mode isn't supported, the format bit isn't published and attempts
+to use it will result in -EOPNOTSUPP. Allocating an aux buffer is still
+allowed even though it won't be written to so that old tools continue to
+work, but updated tools can choose to skip this step.
 
-Tested on the FVP with SAMPLE_FEED_OP (0x812D):
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ drivers/perf/arm_spe_pmu.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
- $ perf stat -e armv8_pmuv3/event=0x812D/ -- true
-
- Performance counter stats for 'true':
-
-                 0      armv8_pmuv3/event=0x812D/
-
- $ perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
- $ perf stat -e armv8_pmuv3/event=0x812D/ -- true
-
-  Performance counter stats for 'true':
-
-             17350      armv8_pmuv3/event=0x812D/
-
-Changes since v2:
-  * Use existing SPE_PMU_FEAT_* mechanism (Will)
-
-Changes since v1:
-  * Add a new section and some clarifications about the PMU events to
-    the docs. (Ian)
-
-Applies to v6.13-rc6
-
-James Clark (5):
-  perf: arm_spe: Add format option for discard mode
-  perf docs: arm_spe: Document new discard mode
-  perf tool: arm-spe: Pull out functions for aux buffer and tracking
-    setup
-  perf tool: arm-spe: Don't allocate buffer or tracking event in discard
-    mode
-  perf test: arm_spe: Add test for discard mode
-
- drivers/perf/arm_spe_pmu.c                | 22 ++++++
- tools/perf/Documentation/perf-arm-spe.txt | 26 +++++++
- tools/perf/arch/arm64/util/arm-spe.c      | 90 +++++++++++++++--------
- tools/perf/tests/shell/test_arm_spe.sh    | 30 ++++++++
- 4 files changed, 136 insertions(+), 32 deletions(-)
-
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index fd5b78732603..f5e6878db9d6 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -85,6 +85,7 @@ struct arm_spe_pmu {
+ #define SPE_PMU_FEAT_LDS			(1UL << 4)
+ #define SPE_PMU_FEAT_ERND			(1UL << 5)
+ #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
++#define SPE_PMU_FEAT_DISCARD			(1UL << 7)
+ #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
+ 	u64					features;
+ 
+@@ -193,6 +194,9 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+ #define ATTR_CFG_FLD_store_filter_CFG		config	/* PMSFCR_EL1.ST */
+ #define ATTR_CFG_FLD_store_filter_LO		34
+ #define ATTR_CFG_FLD_store_filter_HI		34
++#define ATTR_CFG_FLD_discard_CFG		config	/* PMBLIMITR_EL1.FM = DISCARD */
++#define ATTR_CFG_FLD_discard_LO			35
++#define ATTR_CFG_FLD_discard_HI			35
+ 
+ #define ATTR_CFG_FLD_event_filter_CFG		config1	/* PMSEVFR_EL1 */
+ #define ATTR_CFG_FLD_event_filter_LO		0
+@@ -216,6 +220,7 @@ GEN_PMU_FORMAT_ATTR(store_filter);
+ GEN_PMU_FORMAT_ATTR(event_filter);
+ GEN_PMU_FORMAT_ATTR(inv_event_filter);
+ GEN_PMU_FORMAT_ATTR(min_latency);
++GEN_PMU_FORMAT_ATTR(discard);
+ 
+ static struct attribute *arm_spe_pmu_formats_attr[] = {
+ 	&format_attr_ts_enable.attr,
+@@ -228,6 +233,7 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
+ 	&format_attr_event_filter.attr,
+ 	&format_attr_inv_event_filter.attr,
+ 	&format_attr_min_latency.attr,
++	&format_attr_discard.attr,
+ 	NULL,
+ };
+ 
+@@ -238,6 +244,9 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
+ 
++	if (attr == &format_attr_discard.attr && !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
++		return 0;
++
+ 	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
+ 		return 0;
+ 
+@@ -502,6 +511,12 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+ 	u64 base, limit;
+ 	struct arm_spe_pmu_buf *buf;
+ 
++	if (ATTR_CFG_GET_FLD(&event->attr, discard)) {
++		limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
++		limit |= PMBLIMITR_EL1_E;
++		goto out_write_limit;
++	}
++
+ 	/* Start a new aux session */
+ 	buf = perf_aux_output_begin(handle, event);
+ 	if (!buf) {
+@@ -743,6 +758,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
+ 		return -EOPNOTSUPP;
+ 
++	if (ATTR_CFG_GET_FLD(&event->attr, discard) &&
++	    !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
++		return -EOPNOTSUPP;
++
+ 	set_spe_event_has_cx(event);
+ 	reg = arm_spe_event_to_pmscr(event);
+ 	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
+@@ -1027,6 +1046,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 	if (FIELD_GET(PMSIDR_EL1_ERND, reg))
+ 		spe_pmu->features |= SPE_PMU_FEAT_ERND;
+ 
++	if (spe_pmu->pmsver >= ID_AA64DFR0_EL1_PMSVer_V1P2)
++		spe_pmu->features |= SPE_PMU_FEAT_DISCARD;
++
+ 	/* This field has a spaced out encoding, so just use a look-up */
+ 	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
+ 	switch (fld) {
 -- 
 2.34.1
 
