@@ -1,83 +1,157 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B6D91F7097;
-	Wed,  8 Jan 2025 09:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9151F0E3F
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 10:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736329810; cv=none; b=oWhXUxrGoj52M5Xbo1nXzGaAAVgLXpwK1ybQptyuM8FpMWxEsbD5RkHpgFaGTTuaxTDDSrSs5r18V2yZ7mka0nJuHfcP9Jf2CNPqevS1dEG51mPLLti5rd4EF8IIQ+q3bgo0uOnULZdcNNHUMBvJXN9LEcjX0oaAjCaCY4nnT2Y=
+	t=1736330903; cv=none; b=q8RPWYNA9fTN6LmM/Tw/dBpFiooKgsXW2KFb3AaGBeOl/4+aCHrQ6kYuIlVmu9lO6XYhLMsvnea3mKTtm/IA7IzrC/CDn0Mtu+KFOdcP+pGcWw902zZWpW+Y153IIAdGkmZ1LBXncm8atXG6gYhge/GUe7tMkxhEkPTqlfWg3gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736329810; c=relaxed/simple;
-	bh=zYAGE8QbxKeiF29HDF5A4cvzDluLkNIsa/y7/gNnmaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rN9/fKAlrAjy28RwUZQ2Ox7zwFnhbrl7IoWpZP+QoylRYWwA3pGumeMj9NCf/gMXCNDUOhQdqgzlGRhqXP/UIWMQwl2bqhh8xqYKCqLq+m+lNEoVESOrEx7TRrI/Sn9Pp97zvObX7vUpTZg05dKUtpxOkYeXa7UnQdBwxsK2wo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YSj4k1Tlzz9sTD;
-	Wed,  8 Jan 2025 10:17:58 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Ev2o6ECynf8S; Wed,  8 Jan 2025 10:17:58 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YSj4k0lh3z9sT7;
-	Wed,  8 Jan 2025 10:17:58 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 073E98B768;
-	Wed,  8 Jan 2025 10:17:58 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id WA33TRlzg4jX; Wed,  8 Jan 2025 10:17:57 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 960068B767;
-	Wed,  8 Jan 2025 10:17:57 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] kallsyms: Always include _edata
-Date: Wed,  8 Jan 2025 10:17:54 +0100
-Message-ID: <2fec8c50c271dff59f0177ff0884b6c374486ba5.1736327770.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1736330903; c=relaxed/simple;
+	bh=O1LT66HGYw2JwtyHTynUEGAnjLq5x1K99vutGXXKDK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W7I/AS6OTTtJupzlwLpaOucfGC2pW3bwYkFWPcM9u2MapJDT10tIPPUQ0HUEMkqOHfjAfeoA9mW87fYhmm6sL6nNo71kScR2bKzMymkBWmsdI17IZ0nVaYOV7T9UVPB8YiUYVSVQ5vjrluX51/dDkvrERqpiv8GTsapERfU1mTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mYXutmIW; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mYXutmIW"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a34e8410bso5670309f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 02:08:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736330899; x=1736935699; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YjY6+zjtyOIX1iyK/8QhOIQrcr0euu2ifQ2NruT64Tw=;
+        b=mYXutmIW2/hWG9PIWs9MIGURAkNux2eajHHalqDUgWN5IcYdOA5nY9kJ4v2bj7c+Z6
+         wGoDoSkc/2Zvmbv7N+1Njy/M5Vhr8fkj9LMshk8z4ulJSGYrrf1p1NArFn+MHvz3Jb4f
+         lEXsOZVcOSY7UVPeVjskRLpyYznapdrShUV5VxU3iEDINHWy1FhTQ/+XKg7s/RJochFV
+         OZZ5V12z2BmlYdWqn8I9anEezp5utvhvHYrdHwcEYjgPilbgZlBy8gxs1cjkPOnDTrQZ
+         U8t6YT5oF0pw2/uePzAuPAwUZqs1c1VM68Zjb5NFLSZ/1ORDPpL3azNt0M0HYuc5iwIO
+         OAoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736330899; x=1736935699;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjY6+zjtyOIX1iyK/8QhOIQrcr0euu2ifQ2NruT64Tw=;
+        b=gj2N8QzAbyHk7kttPE3gxKmhjZhcHdn8P/oRvAOKNdCfSv3ICKhZVTwvxPrPD+ZdHv
+         MRqPsqR0e6ccwV+rvRWL4UZlr3NGKtrai0DopPwbij1a75HI2ySfh7YDMJx35T9B4ymD
+         5ld9xQ8cExw3RCo0bhiAUGyZwtVn0Q4o/2relmtcdM13jeIBWBmwRjvtz26lphyVRT/f
+         z2+JowWhFeegdHU84vXMvFU07nntLAvJJDqL1Uka6OgdP2QUYLV3YnqjBdqM0SpZcOE6
+         vQlf5ccw+5zDfSz7J7IeFLLD9u6pul5KlH8LqldAX01BY+7dDKq6+XPyBgt4GdoIxXjz
+         3hew==
+X-Forwarded-Encrypted: i=1; AJvYcCVKgT49sz2IAqZzhQqt1FfecDEM8f6WcIv3NOmt5Lo/Bmd8+H5sjg7xGXhHkaCc/3IUJt2Nm1esip15WHGMLAEa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPErzhBWvuFyPCelmc9X6QnAEN+XTHBt8R/TAE2eV8yobpW1CG
+	wS7iQnLuEDb+m3TKF1EH8msZj4qtiKCbQWgC7zb7v9AIMlCV5e6bQSqjC59xrk0=
+X-Gm-Gg: ASbGnct4x0EB/oL3EjhS1vvUPtKeM3F82rdRD8z07wfxZp60ZE7Jo7ECBBo2pE4pwuv
+	oe/9mTHWyMBrYngI+b77bffadUWRGcVIR1XX5pDgIvQF/ATaMocoXUNBo8WIHAbr3bBvKTdB9xQ
+	qBslSj9AKj7Dhl9+dL+jiIAMd79ON2trTGQjs7MdDo4Fke2z+1/bExgdpFqrK6zpbYgxNI6MIOa
+	qrFfmfiM2tNr5r5sof2Tv/GGXF+/cR5O1LOeMxssjfW1TrQKYI6QHxSHmU7y+q2CkE=
+X-Google-Smtp-Source: AGHT+IFu99ytHjTbRlZvRSjYKF3KyW4IOwcR6xJDGsiYoktyTX+cpKyAZe0Elx/55d+bPtnX5LCY0A==
+X-Received: by 2002:a5d:5f52:0:b0:385:fcfb:8d4f with SMTP id ffacd0b85a97d-38a872deb1amr1964341f8f.21.1736330899266;
+        Wed, 08 Jan 2025 02:08:19 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.227])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a88825167sm787846f8f.78.2025.01.08.02.08.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2025 02:08:18 -0800 (PST)
+Message-ID: <ccab556d-5d08-49f9-8039-a8c507a7a0e1@linaro.org>
+Date: Wed, 8 Jan 2025 10:08:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1736327874; l=901; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=zYAGE8QbxKeiF29HDF5A4cvzDluLkNIsa/y7/gNnmaE=; b=phUBcQMzGu5s2Any9DFi8D1iChFZ7vYkQDjKS53d6tiKMn4sMiQpDS5WHfeNw2d3Q3TM2ovXy s8XRIyMcqpUCNzZb+YM2+yRyzFNqLlJHQ14jecGoCbMR/pOF8CC1Yk2
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] perf: arm_spe: Add format option for discard mode
+To: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ irogers@google.com, yeoreum.yun@arm.com, mark.rutland@arm.com,
+ robh@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Graham Woodward <graham.woodward@arm.com>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20241224104414.179365-1-james.clark@linaro.org>
+ <20241224104414.179365-2-james.clark@linaro.org>
+ <20250107173950.GA8111@willie-the-truck>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250107173950.GA8111@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since commit 69a87a32f5cd ("perf machine: Include data symbols in the
-kernel map"), perf needs _edata symbol.
 
-Make sure it is always included in /proc/kallsyms and not only when
-CONFIG_KALLSYMS_ALL is selected.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Fixes: 69a87a32f5cd ("perf machine: Include data symbols in the kernel map")
----
- scripts/kallsyms.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 07/01/2025 5:39 pm, Will Deacon wrote:
+> On Tue, Dec 24, 2024 at 10:44:08AM +0000, James Clark wrote:
+>> FEAT_SPEv1p2 (optional from Armv8.6) adds a discard mode that allows all
+>> SPE data to be discarded rather than written to memory. Add a format
+>> bit for this mode.
+>>
+>> If the mode isn't supported, the format bit isn't published and attempts
+>> to use it will result in -EOPNOTSUPP. Allocating an aux buffer is still
+>> allowed even though it won't be written to so that old tools continue to
+>> work, but updated tools can choose to skip this step.
+>>
+>> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   drivers/perf/arm_spe_pmu.c | 23 +++++++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+>> index fd5b78732603..9aaf3f98e6f5 100644
+>> --- a/drivers/perf/arm_spe_pmu.c
+>> +++ b/drivers/perf/arm_spe_pmu.c
+>> @@ -193,6 +193,9 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+>>   #define ATTR_CFG_FLD_store_filter_CFG		config	/* PMSFCR_EL1.ST */
+>>   #define ATTR_CFG_FLD_store_filter_LO		34
+>>   #define ATTR_CFG_FLD_store_filter_HI		34
+>> +#define ATTR_CFG_FLD_discard_CFG		config	/* PMBLIMITR_EL1.FM = DISCARD */
+>> +#define ATTR_CFG_FLD_discard_LO			35
+>> +#define ATTR_CFG_FLD_discard_HI			35
+>>   
+>>   #define ATTR_CFG_FLD_event_filter_CFG		config1	/* PMSEVFR_EL1 */
+>>   #define ATTR_CFG_FLD_event_filter_LO		0
+>> @@ -216,6 +219,7 @@ GEN_PMU_FORMAT_ATTR(store_filter);
+>>   GEN_PMU_FORMAT_ATTR(event_filter);
+>>   GEN_PMU_FORMAT_ATTR(inv_event_filter);
+>>   GEN_PMU_FORMAT_ATTR(min_latency);
+>> +GEN_PMU_FORMAT_ATTR(discard);
+>>   
+>>   static struct attribute *arm_spe_pmu_formats_attr[] = {
+>>   	&format_attr_ts_enable.attr,
+>> @@ -228,9 +232,15 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
+>>   	&format_attr_event_filter.attr,
+>>   	&format_attr_inv_event_filter.attr,
+>>   	&format_attr_min_latency.attr,
+>> +	&format_attr_discard.attr,
+>>   	NULL,
+>>   };
+>>   
+>> +static bool discard_unsupported(struct arm_spe_pmu *spe_pmu)
+>> +{
+>> +	return spe_pmu->pmsver < ID_AA64DFR0_EL1_PMSVer_V1P2;
+>> +}
+> 
+> Why not add a new SPE_PMU_FEAT_* for this and handle it in a similar
+> way to other optional hardware features?
+> 
+> Will
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 03852da3d249..391ab7ebce7f 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -215,6 +215,8 @@ static int symbol_valid(const struct sym_entry *s)
- 		if (string_starts_with(name, "__start_") ||
- 		    string_starts_with(name, "__stop_"))
- 			return 1;
-+		if (!strcmp(name, "_edata"))
-+			return 1;
- 
- 		if (symbol_in_range(s, text_ranges,
- 				    ARRAY_SIZE(text_ranges)) == 0)
--- 
-2.47.0
+Hmmm good point, I'm not sure why I didn't do it that way. Possibly 
+because it's only based off pmsver which is already saved, whereas the 
+other feats are based off reading PMSIDR which is thrown away. But I can 
+add SPE_PMU_FEAT_DISCARD.
+
+Thanks
+James
+
 
