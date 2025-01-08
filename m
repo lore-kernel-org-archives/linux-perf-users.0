@@ -1,329 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158951CD0C;
-	Wed,  8 Jan 2025 00:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5735F14B080
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 02:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736295243; cv=none; b=bINlgFhwMoO7chesQe2bhV2Nr7y7d3yQzNkiP9BZmqRlh4C395pyVsLJZrbCiyC7OSG3iZYOYf26gFd9sLJgJe9Y8N3By8uQRh1ur2bhSnD93Ia5L/n66BvYdUqlPv67CqYzfgpqCUFN0leY9u1xRI9NjeUWoyBpGhaOBU2RS8g=
+	t=1736302091; cv=none; b=J2CXGyQPIPQqfGGv+9YvWu71rrICOQx6jr8qohMoyzHOLJPogozu3RJz26iTcL5U0zvAznonssiEaQBAQFIhX/IFndra4meV1WvbX4pKtMWeyF+KkwIdc/1pPDhKm58lvRGg5or/LGD/4eAXVphXcUWDhUiIG3Q182HDudyRaJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736295243; c=relaxed/simple;
-	bh=992FE+Lgtuk4e2J/Xct1JTsgfnjCufNdvJz+0UD8KdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g47B1dk2v85dAtO9WCekpuI+d9wpCpeUCdwK1Nqga9S0cxzAXnE3V7KFxVgXLJNZfhkwaKUHYlYQVamBlBGcz+gRaubEP4rTNx/Nl0jCnVP8vCKYSk+S+/zH+XlXK8bGpsLhaS/5v57hhf8nA9I333qX1tPUPPnDSPS9p3aTzzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiOMwYLq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736302091; c=relaxed/simple;
+	bh=DSDBviiYURCQUASOkPYj5vrx2O1zld+frJ/HqnKFLNs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Dy+VvzPfEqO1La5tg7yktD+tUXaw1Vm+PcnL3kr8eMSFyt9Dv5sDndCtK+dctrZSV/5iql/mpnpnSnHpkuscVrR+la0FAmjXM0fU+cubVuwCVkJXYlsJ9q/zw8xgWOr8trUCrj1GrNCKtd56qx2Pw/4KbptDWPOcOsJhPJXX5XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=WmYg1Zzv; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiOMwYLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5264C4CED6;
-	Wed,  8 Jan 2025 00:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736295242;
-	bh=992FE+Lgtuk4e2J/Xct1JTsgfnjCufNdvJz+0UD8KdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CiOMwYLqfvv/FwH8/DjDx1t13uESx7A+5gLVEf5beKPP9mdHJ2HKK4utufGXxWnHk
-	 e3U5fIUZxD9inM2JaXUoxY57EXCd+H3IpGN55BFu3Du0JLP1ubvrr3hwtj7FlMTZh/
-	 yPElMxqT4f11MHaEn7A9a+EuAxYzFlfPqcIY3Ye6e4OGpHks43cuEi6EI8zVZEGgv2
-	 pEjR7UREm41dInt4CQBdqN9t6dmpU+aQbX3/DQK8+dKtgXDIpP2JIKXyzrBLEio0aG
-	 kDyo5Gk/WZjXCC18WROyZcJQcTua985bWyX8JooJ6aPqMbhqrBgXStnAC6wsrkhzNf
-	 oOMaQbGLIOpug==
-Date: Tue, 7 Jan 2025 16:14:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v4 3/4] perf record: Skip don't fail for events that
- don't open
-Message-ID: <Z33DSLHzCpEVrAdy@google.com>
-References: <20250107180854.770470-1-irogers@google.com>
- <20250107180854.770470-4-irogers@google.com>
- <Z32CeUuxt4ASJeRe@google.com>
- <CAP-5=fUqbPX4RLSLzw1UJ9NycOh8r5o4TxLfu2RRxooPG0gUtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="WmYg1Zzv"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21634338cfdso26053975ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jan 2025 18:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736302087; x=1736906887; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JmsennAv/54mPSZlEcUcoRZz+1ld61A8s3zYAPWHNpI=;
+        b=WmYg1ZzvVPJSyJi2NlIxLN9AkPJfJKkHlSETLIgblv3LcMb+OH0W/6oD4YkfXhyy87
+         ZozXiaPaurjuCna4uwxW6gDUkjD7rSHHM2zMCtDNIiMw/ENB6UbMoFcJDmLnrUjS/eHc
+         QNh3AlqubDnm1zLC1owap2njGFYAa01eTBvh9FH/SIrhkjIFqbXgSSYBgrm6LqNxuwFQ
+         Wk1inBVfrfEhx7O3Ebw/xyF6eGkT8DdQ4DG5rlm7vs3yfNPaH5nOzR0FYj8gDMr0lpT5
+         pue8wGPS1FdtvgYcihue9O97+X/MTAcA0rI5ulXP3igUOotJ+Y1rJ+6oAOUwRWhUt5/G
+         Pmmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736302087; x=1736906887;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JmsennAv/54mPSZlEcUcoRZz+1ld61A8s3zYAPWHNpI=;
+        b=ogj0YDh+Tc7fphj1fJY8gUbM/iE38pIvbyoxWeDTaRw68Aj5oUttEdiMRC6/O9ihrw
+         HZntXaGS3UlGuaBoRZYFBQZjOGn6m9D9CKofqyOZBCtXFXCYJN3SyKrDzFIRpY2SDaDw
+         5SSx0wZE9yYwyoACcRvtP1EFWTVx8J0xX3qP5fYwalYxSM/r5Bxoo2KaPwXc+ixdeHkt
+         lHUED+gXFmjL35YvsMvas7DFxGIBrUPAcy512DlbAays8JJQejjt/VsuW3tnDY+Sowzs
+         1PIUelh35qLEJA5NYzhdTDIfDpR5lB9ZmEfPTybuS6vEZ3lvw/xjM5FE5ri9D4JfMPKL
+         brlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUI0hNPVxAbuls0qQBIblfsE12mEoSess3huaz8PWE0wKlb0mzw5X3QU67uf5yO8z2WReQuxbL5kjkjm15ZyK0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwKU57vFbClpMZ1qLnFIJrcmj8e+sRyKPCj30HJX5nzOxTxjGE
+	QV7rTqbmbCZ3cxiwi+rIDNfWhTu5eSAxaeIMCWUyeC++t6MfS3uhq4c7ZvKpmE8=
+X-Gm-Gg: ASbGncsPs4wKcEYF8waqKaOephFvUmCeICbTAe2/x9LbZHboKrrKFDkR+xUQ2/9/eTi
+	3CrXnSnV8EmBs9uxcupTDSYm5gk3363jqXQ41lT9GCQyvmqG9caopx/YpliG08iV2LOuwuL3W8t
+	7vahUqIHfbWcVoFbrXPy172NaJtgUAjCAGJXN4o5KcfimBOAY6OpimlRTpvDU4VCAkqZvyPTLZm
+	Eo/zk7WuCJQqy+LM0wEyb6BuZF7Bf1wIY/2FDFnXmyAzTl9pkBvYYNlV/4BZdrVxce9c/g2
+X-Google-Smtp-Source: AGHT+IEq2Zspq+98QGFyujHxjTam1MP7KbplyThsxm1rRvzkJf+WBVn4MSX77PKCqgXt4GY0SV99ew==
+X-Received: by 2002:a17:902:e843:b0:215:a3fb:b4d6 with SMTP id d9443c01a7336-21a83f3f50dmr20000675ad.8.1736302087504;
+        Tue, 07 Jan 2025 18:08:07 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dca0282fsm316662405ad.259.2025.01.07.18.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 18:08:06 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v5 00/16] perf tools: Use generic syscall scripts for all
+ archs
+Date: Tue, 07 Jan 2025 18:07:48 -0800
+Message-Id: <20250107-perf_syscalltbl-v5-0-935de46d3175@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUqbPX4RLSLzw1UJ9NycOh8r5o4TxLfu2RRxooPG0gUtA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPXdfWcC/23OwWrDMAyA4VcpPs/Dlp3U7qnvMUpxFak1ZEmxi
+ 1kIefe5uawsPf4CfdIsMqVIWRx2s0hUYo7jUKP52Am8heFKMna1BSiwymsj75T4nKeMoe8fl16
+ 27F1HjNhyI+rWPRHHn1X8OtW+xfwY07QeKPo5XS2tld1YRUslfegCNbhvNfExxTLmOOAnjt/iy
+ RX4I0DDloBKsMPgnWUmq94Q5pVot4SpBBjPyoB1umveEPaVcFvCVuKC9Q1iwODoH7Esyy+mV/b
+ uegEAAA==
+X-Change-ID: 20240913-perf_syscalltbl-6f98defcc6f5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+ Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+ Leo Yan <leo.yan@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-csky@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8419; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=DSDBviiYURCQUASOkPYj5vrx2O1zld+frJ/HqnKFLNs=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ3rt3f8dSgIzYz98m8m/fGOh3t9H4anf775qWzbjZo+f7
+ YSTkS/9OkpZGMQ4GGTFFFl4rjUwt97RLzsqWjYBZg4rE8gQBi5OAZhIti/DX+nTMim1Dpxcd9aZ
+ zFnclGUmmnlg8dZeT4kz/YbVEnr//jIyvA6/wlXj/vvSIeljWc/WWsu2vdXU6TG0lvlTMj3qnPJ
+ VHgA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Tue, Jan 07, 2025 at 12:34:25PM -0800, Ian Rogers wrote:
-> On Tue, Jan 7, 2025 at 11:37 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Tue, Jan 07, 2025 at 10:08:53AM -0800, Ian Rogers wrote:
-> > > Whilst for many tools it is an expected behavior that failure to open
-> > > a perf event is a failure, ARM decided to name PMU events the same as
-> > > legacy events and then failed to rename such events on a server uncore
-> > > SLC PMU. As perf's default behavior when no PMU is specified is to
-> > > open the event on all PMUs that advertise/"have" the event, this
-> > > yielded failures when trying to make the priority of legacy and
-> > > sysfs/json events uniform - something requested by RISC-V and ARM. A
-> > > legacy event user on ARM hardware may find their event opened on an
-> > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
-> > > such events which this patch implements. Rather than have the skipping
-> > > conditional on running on ARM, the skipping is done on all
-> > > architectures as such a fundamental behavioral difference could lead
-> > > to problems with tools built/depending on perf.
-> > >
-> > > An example of perf record failing to open events on x86 is:
-> > > ```
-> > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
-> > > Error:
-> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
-> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-> > > "dmesg | grep -i perf" may provide additional information.
-> > >
-> > > Error:
-> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
-> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-> > > "dmesg | grep -i perf" may provide additional information.
-> > >
-> > > Error:
-> > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-> > > The LLC-prefetch-read event is not supported.
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
-> > >
-> > > $ perf report --stats
-> > > Aggregated stats:
-> > >                TOTAL events:      17255
-> > >                 MMAP events:        284  ( 1.6%)
-> > >                 COMM events:       1961  (11.4%)
-> > >                 EXIT events:          1  ( 0.0%)
-> > >                 FORK events:       1960  (11.4%)
-> > >               SAMPLE events:         87  ( 0.5%)
-> > >                MMAP2 events:      12836  (74.4%)
-> > >              KSYMBOL events:         83  ( 0.5%)
-> > >            BPF_EVENT events:         36  ( 0.2%)
-> > >       FINISHED_ROUND events:          2  ( 0.0%)
-> > >             ID_INDEX events:          1  ( 0.0%)
-> > >           THREAD_MAP events:          1  ( 0.0%)
-> > >              CPU_MAP events:          1  ( 0.0%)
-> > >            TIME_CONV events:          1  ( 0.0%)
-> > >        FINISHED_INIT events:          1  ( 0.0%)
-> > > cycles stats:
-> > >               SAMPLE events:         87
-> > > ```
-> > >
-> > > If all events fail to open then the perf record will fail:
-> > > ```
-> > > $ perf record -e LLC-prefetch-read true
-> > > Error:
-> > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-> > > The LLC-prefetch-read event is not supported.
-> > > Error:
-> > > Failure to open any events for recording
-> > > ```
-> > >
-> > > This is done by detecting if dummy events were implicitly added by
-> > > perf and seeing if the evlist is empty without them. This allows the
-> > > dummy event still to be recorded:
-> > > ```
-> > > $ perf record -e dummy true
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.046 MB perf.data ]
-> > > ```
-> > > but fail when inserted:
-> > > ```
-> > > $ perf record -e LLC-prefetch-read -a true
-> > > Error:
-> > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-> > > The LLC-prefetch-read event is not supported.
-> > > Error:
-> > > Failure to open any events for recording
-> > > ```
-> > >
-> > > The issue with legacy events is that on RISC-V they want the driver to
-> > > not have mappings from legacy to non-legacy config encodings for each
-> > > vendor/model due to size, complexity and difficulty to update. It was
-> > > reported that on ARM Apple-M? CPUs the legacy mapping in the driver
-> > > was broken and the sysfs/json events should always take precedent,
-> > > however, it isn't clear this is still the case. It is the case that
-> > > without working around this issue a legacy event like cycles without a
-> > > PMU can encode differently than when specified with a PMU - the
-> > > non-PMU version favoring legacy encodings, the PMU one avoiding legacy
-> > > encodings.
-> > >
-> > > The patch removes events and then adjusts the idx value for each
-> > > evsel. This is done so that the dense xyarrays used for file
-> > > descriptors, etc. don't contain broken entries. As event opening
-> > > happens relatively late in the record process, use of the idx value
-> > > before the open will have become corrupted, so it is expected there
-> > > are latent bugs hidden behind this change - the change is best
-> > > effort. As the only vendor that has broken event names is ARM, this
-> > > will principally effect ARM users. They will also experience warning
-> > > messages like those above because of the uncore PMU advertising legacy
-> > > event names.
-> > >
-> > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > Tested-by: James Clark <james.clark@linaro.org>
-> > > Tested-by: Leo Yan <leo.yan@arm.com>
-> > > Tested-by: Atish Patra <atishp@rivosinc.com>
-> > > ---
-> > >  tools/perf/builtin-record.c | 54 ++++++++++++++++++++++++++++++++-----
-> > >  1 file changed, 48 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > > index 5db1aedf48df..b3f06638f3c6 100644
-> > > --- a/tools/perf/builtin-record.c
-> > > +++ b/tools/perf/builtin-record.c
-> > > @@ -161,6 +161,7 @@ struct record {
-> > >       struct evlist           *sb_evlist;
-> > >       pthread_t               thread_id;
-> > >       int                     realtime_prio;
-> > > +     int                     num_parsed_dummy_events;
-> > >       bool                    switch_output_event_set;
-> > >       bool                    no_buildid;
-> > >       bool                    no_buildid_set;
-> > > @@ -961,7 +962,6 @@ static int record__config_tracking_events(struct record *rec)
-> > >        */
-> > >       if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
-> > >           perf_pmus__num_core_pmus() > 1) {
-> > > -
-> > >               /*
-> > >                * User space tasks can migrate between CPUs, so when tracing
-> > >                * selected CPUs, sideband for all CPUs is still needed.
-> > > @@ -1366,6 +1366,7 @@ static int record__open(struct record *rec)
-> > >       struct perf_session *session = rec->session;
-> > >       struct record_opts *opts = &rec->opts;
-> > >       int rc = 0;
-> > > +     bool skipped = false;
-> > >
-> > >       evlist__for_each_entry(evlist, pos) {
-> > >  try_again:
-> > > @@ -1381,15 +1382,50 @@ static int record__open(struct record *rec)
-> > >                               pos = evlist__reset_weak_group(evlist, pos, true);
-> > >                               goto try_again;
-> > >                       }
-> > > -                     rc = -errno;
-> > >                       evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
-> > > -                     ui__error("%s\n", msg);
-> > > -                     goto out;
-> > > +                     ui__error("Failure to open event '%s' on PMU '%s' which will be removed.\n%s\n",
-> > > +                               evsel__name(pos), evsel__pmu_name(pos), msg);
-> > > +                     pos->skippable = true;
-> > > +                     skipped = true;
-> > > +             } else {
-> > > +                     pos->supported = true;
-> > >               }
-> > > -
-> > > -             pos->supported = true;
-> > >       }
-> > >
-> > > +     if (skipped) {
-> > > +             struct evsel *tmp;
-> > > +             int idx = 0, num_dummy = 0, num_non_dummy = 0,
-> > > +                 removed_dummy = 0, removed_non_dummy = 0;
-> > > +
-> > > +             /* Remove evsels that failed to open and update indices. */
-> > > +             evlist__for_each_entry_safe(evlist, tmp, pos) {
-> > > +                     if (evsel__is_dummy_event(pos))
-> > > +                             num_dummy++;
-> > > +                     else
-> > > +                             num_non_dummy++;
-> > > +
-> > > +                     if (!pos->skippable)
-> > > +                             continue;
-> > > +
-> > > +                     if (evsel__is_dummy_event(pos))
-> > > +                             removed_dummy++;
-> > > +                     else
-> > > +                             removed_non_dummy++;
-> > > +
-> > > +                     evlist__remove(evlist, pos);
-> > > +             }
-> > > +             evlist__for_each_entry(evlist, pos) {
-> > > +                     pos->core.idx = idx++;
-> > > +             }
-> > > +             /* If list is empty except implicitly added dummy events then fail. */
-> > > +             if ((num_non_dummy == removed_non_dummy) &&
-> > > +                 ((rec->num_parsed_dummy_events == 0) ||
-> > > +                  (removed_dummy >= (num_dummy - rec->num_parsed_dummy_events)))) {
-> > > +                     ui__error("Failure to open any events for recording.\n");
-> > > +                     rc = -1;
-> > > +                     goto out;
-> > > +             }
-> > > +     }
-> >
-> > Instead of couting dummy events, I wonder if it could check any
-> > supported non-dummy events in the evlist.
-> >
-> >         if (skipped) {
-> >                 bool found = false;
-> >
-> >                 evlist__for_each_entry_safe(evlist, tmp, pos) {
-> >                         if (pos->skippable) {
-> >                                 evlist__remove(evlist, pos);
-> >                                 continue;
-> >                         }
-> >                         if (evsel__is_dummy_event(pos))
-> >                                 continue;
-> >                         found = true;
-> >                 }
-> >                 if (!found) {
-> >                         ui__error("...");
-> >                         rc = -1;
-> >                         goto out;
-> >                 }
-> >                 /* recalculate the index */
-> >         }
-> >
-> > Then it should do the same, no?  The corner case would be when users
-> > specify dummy events in the command line (maybe to check permissions
-> > by the exit code).
-> >
-> >   $ perf record -a -e dummy true
-> >
-> > If it fails to open, then 'skipped' set and 'found' not set so the
-> > command will fail.  It it succeeds, then it doesn't set 'skipped'
-> > and the command will exit with 0.
-> >
-> > Do I miss something?
-> 
-> Yep, but it depends on what we want the behavior to be. Consider an
-> event that doesn't support record and the dummy event which for the
-> sake of argument will open here:
-> 
-> $ perf record -a -e LLC-prefetch-read,dummy true
-> 
-> In this case initially found is false, we then process
-> LLC-prefetch-read which didn't open and remove it from the evlist.
-> Next we process the dummy event that did open but because it was a
-> dummy event found won't be set to true. The code will then proceed to
-> fail (found == false) even though the dummy event did open. Were this
-> cycles and not dummy:
-> 
-> $ perf record -a -e LLC-prefetch-read,cycles true
-> 
-> Then the expectation would be for this to proceed with a warning on
-> LLC-prefetch-read and to record cycles. With your code dummy will
-> behave differently to cycles as it will terminate perf record early.
-> Does this matter? I'm not sure, but I was trying to make the events
-> (dummy vs non-dummy) consistent.
+Standardize the generation of syscall headers around syscall tables.
+Previously each architecture independently selected how syscall headers
+would be generated, or would not define a way and fallback onto
+libaudit. Convert all architectures to use a standard syscall header
+generation script and allow each architecture to override the syscall
+table to use if they do not use the generic table.
 
-I'm not sure too.  Anyway it won't get any samples if all other
-non-dummy events failed.  Then there are not much points to run the
-perf record IMHO.  I think dummy event is special as you counted it
-specifically so we don't need to worry about the special case too much.
+As a result of these changes, no architecture will require libaudit, and
+so the fallback case of using libaudit is removed by this series.
 
-Thanks,
-Namhyung
+Testing:
+
+I have tested that the syscall mappings of id to name generation works
+as expected for every architecture, but I have only validated that perf
+trace compiles and runs as expected on riscv, arm64, and x86_64.
+
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Tested-by: Ian Rogers <irogers@google.com>
+
+---
+Changes in v5:
+- Remove references to HAVE_SYSCALL_TABLE_SUPPORT that were
+  missed/recently introduced
+- Rebase on perf-tools-next
+- Install headers to $(OUTPUT)arch instead of $(OUTPUT)tools/perf/arch
+- Link to v4: https://lore.kernel.org/r/20241218-perf_syscalltbl-v4-0-bc8caef2ca8e@rivosinc.com
+
+Changes in v4:
+- Remove audit_machine member of syscalltbl struct (Ian)
+- Rebase on perf-tools-next
+- Link to v3: https://lore.kernel.org/r/20241216-perf_syscalltbl-v3-0-239f032481d5@rivosinc.com
+
+Changes in v3:
+- Fix compiliation when OUTPUT is empty
+- Correct unused headers to be .h instead of .c  (Namhyung)
+- Make variable definition of supported archs (Namhyung)
+- Convert += into := for syscalls headers (Namhyung)
+- Link to v2: https://lore.kernel.org/r/20241212-perf_syscalltbl-v2-0-f8ca984ffe40@rivosinc.com
+
+Changes in v2:
+- Rebase onto 6.13-rc2
+- Fix output path so it generates to /tools/perf/arch properly
+- Link to v1: https://lore.kernel.org/r/20241104-perf_syscalltbl-v1-0-9adae5c761ef@rivosinc.com
+
+---
+Charlie Jenkins (16):
+      perf tools: Create generic syscall table support
+      perf tools: arc: Support generic syscall headers
+      perf tools: csky: Support generic syscall headers
+      perf tools: arm: Support syscall headers
+      perf tools: sh: Support syscall headers
+      perf tools: sparc: Support syscall headers
+      perf tools: xtensa: Support syscall header
+      perf tools: x86: Use generic syscall scripts
+      perf tools: alpha: Support syscall header
+      perf tools: parisc: Support syscall header
+      perf tools: arm64: Use syscall table
+      perf tools: loongarch: Use syscall table
+      perf tools: mips: Use generic syscall scripts
+      perf tools: powerpc: Use generic syscall table scripts
+      perf tools: s390: Use generic syscall table scripts
+      perf tools: Remove dependency on libaudit
+
+ Documentation/admin-guide/workload-tracing.rst     |   2 +-
+ tools/build/feature/Makefile                       |   4 -
+ tools/build/feature/test-libaudit.c                |  11 -
+ tools/perf/Documentation/perf-check.txt            |   2 -
+ tools/perf/Makefile.config                         |  39 +-
+ tools/perf/Makefile.perf                           |  12 +-
+ tools/perf/arch/alpha/entry/syscalls/Kbuild        |   2 +
+ .../arch/alpha/entry/syscalls/Makefile.syscalls    |   5 +
+ tools/perf/arch/alpha/entry/syscalls/syscall.tbl   | 504 ++++++++++++++++++++
+ tools/perf/arch/alpha/include/syscall_table.h      |   2 +
+ tools/perf/arch/arc/entry/syscalls/Kbuild          |   2 +
+ .../perf/arch/arc/entry/syscalls/Makefile.syscalls |   3 +
+ tools/perf/arch/arc/include/syscall_table.h        |   2 +
+ tools/perf/arch/arm/entry/syscalls/Kbuild          |   4 +
+ .../perf/arch/arm/entry/syscalls/Makefile.syscalls |   2 +
+ tools/perf/arch/arm/entry/syscalls/syscall.tbl     | 483 +++++++++++++++++++
+ tools/perf/arch/arm/include/syscall_table.h        |   2 +
+ tools/perf/arch/arm64/Makefile                     |  22 -
+ tools/perf/arch/arm64/entry/syscalls/Kbuild        |   3 +
+ .../arch/arm64/entry/syscalls/Makefile.syscalls    |   6 +
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  |  46 --
+ .../perf/arch/arm64/entry/syscalls/syscall_32.tbl  | 476 +++++++++++++++++++
+ .../perf/arch/arm64/entry/syscalls/syscall_64.tbl  |   1 +
+ tools/perf/arch/arm64/include/syscall_table.h      |   8 +
+ tools/perf/arch/csky/entry/syscalls/Kbuild         |   2 +
+ .../arch/csky/entry/syscalls/Makefile.syscalls     |   3 +
+ tools/perf/arch/csky/include/syscall_table.h       |   2 +
+ tools/perf/arch/loongarch/Makefile                 |  22 -
+ tools/perf/arch/loongarch/entry/syscalls/Kbuild    |   2 +
+ .../loongarch/entry/syscalls/Makefile.syscalls     |   3 +
+ .../arch/loongarch/entry/syscalls/mksyscalltbl     |  45 --
+ tools/perf/arch/loongarch/include/syscall_table.h  |   2 +
+ tools/perf/arch/mips/entry/syscalls/Kbuild         |   2 +
+ .../arch/mips/entry/syscalls/Makefile.syscalls     |   5 +
+ tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  32 --
+ tools/perf/arch/mips/include/syscall_table.h       |   2 +
+ tools/perf/arch/parisc/entry/syscalls/Kbuild       |   3 +
+ .../arch/parisc/entry/syscalls/Makefile.syscalls   |   6 +
+ tools/perf/arch/parisc/entry/syscalls/syscall.tbl  | 463 +++++++++++++++++++
+ tools/perf/arch/parisc/include/syscall_table.h     |   8 +
+ tools/perf/arch/powerpc/Makefile                   |  25 -
+ tools/perf/arch/powerpc/entry/syscalls/Kbuild      |   3 +
+ .../arch/powerpc/entry/syscalls/Makefile.syscalls  |   6 +
+ .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  39 --
+ tools/perf/arch/powerpc/include/syscall_table.h    |   8 +
+ tools/perf/arch/riscv/Makefile                     |  22 -
+ tools/perf/arch/riscv/entry/syscalls/Kbuild        |   2 +
+ .../arch/riscv/entry/syscalls/Makefile.syscalls    |   4 +
+ tools/perf/arch/riscv/entry/syscalls/mksyscalltbl  |  47 --
+ tools/perf/arch/riscv/include/syscall_table.h      |   8 +
+ tools/perf/arch/s390/Makefile                      |  21 -
+ tools/perf/arch/s390/entry/syscalls/Kbuild         |   2 +
+ .../arch/s390/entry/syscalls/Makefile.syscalls     |   5 +
+ tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  32 --
+ tools/perf/arch/s390/include/syscall_table.h       |   2 +
+ tools/perf/arch/sh/entry/syscalls/Kbuild           |   2 +
+ .../perf/arch/sh/entry/syscalls/Makefile.syscalls  |   4 +
+ tools/perf/arch/sh/entry/syscalls/syscall.tbl      | 472 +++++++++++++++++++
+ tools/perf/arch/sh/include/syscall_table.h         |   2 +
+ tools/perf/arch/sparc/entry/syscalls/Kbuild        |   3 +
+ .../arch/sparc/entry/syscalls/Makefile.syscalls    |   5 +
+ tools/perf/arch/sparc/entry/syscalls/syscall.tbl   | 514 +++++++++++++++++++++
+ tools/perf/arch/sparc/include/syscall_table.h      |   8 +
+ tools/perf/arch/x86/Build                          |   1 -
+ tools/perf/arch/x86/Makefile                       |  25 -
+ tools/perf/arch/x86/entry/syscalls/Kbuild          |   3 +
+ .../perf/arch/x86/entry/syscalls/Makefile.syscalls |   6 +
+ tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  42 --
+ tools/perf/arch/x86/include/syscall_table.h        |   8 +
+ tools/perf/arch/xtensa/entry/syscalls/Kbuild       |   2 +
+ .../arch/xtensa/entry/syscalls/Makefile.syscalls   |   4 +
+ tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  | 439 ++++++++++++++++++
+ tools/perf/arch/xtensa/include/syscall_table.h     |   2 +
+ tools/perf/builtin-check.c                         |   2 -
+ tools/perf/builtin-help.c                          |   2 -
+ tools/perf/builtin-trace.c                         |  30 --
+ tools/perf/check-headers.sh                        |   9 +
+ tools/perf/perf.c                                  |   6 +-
+ tools/perf/scripts/Makefile.syscalls               |  61 +++
+ tools/perf/scripts/syscalltbl.sh                   |  86 ++++
+ tools/perf/tests/make                              |   7 +-
+ tools/perf/util/env.c                              |   6 +-
+ tools/perf/util/generate-cmdlist.sh                |   4 +-
+ tools/perf/util/syscalltbl.c                       |  90 +---
+ tools/perf/util/syscalltbl.h                       |   1 -
+ tools/scripts/syscall.tbl                          | 409 ++++++++++++++++
+ 86 files changed, 4103 insertions(+), 623 deletions(-)
+---
+base-commit: 034b5b147bf7f44a45e39334725f8633b7ca8c3b
+change-id: 20240913-perf_syscalltbl-6f98defcc6f5
+-- 
+- Charlie
 
