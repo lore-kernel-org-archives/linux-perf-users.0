@@ -1,95 +1,135 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4719A15853B
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jan 2025 18:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EB31E515;
+	Wed,  8 Jan 2025 19:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736360408; cv=none; b=qqQaJRcI6kHL07vAqHNVgOPHia2JvrfAjPRDJnBE8D1O12gNJdICie9rOaqAwCPvowaMIA/odWbeS8qzTpDA7R21/bB3b/vI/QTCIksfBdbEZxiQsC0mKFI+CvZkUNfiQO+24GOd/CTN9ih6CDWBELaj8G76V3S9Df1gO6KrvRo=
+	t=1736363373; cv=none; b=bwAtq2TMrAUXNUcqICxcHN4hrTBfSHaYLIhohv/5Wj333aP5tjagkO/jtlRcnD2PsuDxb7k5LhEgXhQala8JlSKvGH2UKcgWUZ9Z68+lRISmdOXaYypei1gTKl4ZiHloaKR/CNlPJiObjWUcqQvXoMXvw3PElkFz2QByvxEUDfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736360408; c=relaxed/simple;
-	bh=FDLSo8zCSBrZilXL2MyxJ65EFR6amqNwWX7yPlpdMUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eeAPb5XJAsh//D24x5jjuKcoMqpUtKq3MxuaQSTdEF5kxYWFL8SqTzg7xkCICq0I3TDGS8oYhIg3OHnFUZ4P7rrg+avlnNT/oP5vZVNnpUObnuGKKFTvu/zY6cAZIA2aYIpn4us59T20q4MIyUEtsnMnAdgVC+Ae/gxeBWe6R84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YSwYZ4lk8z9sPd;
-	Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ATU5y-duZQVG; Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YSwYZ408mz9rvV;
-	Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7853E8B783;
-	Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id JyxhuDd45FHW; Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 17D168B768;
-	Wed,  8 Jan 2025 18:55:14 +0100 (CET)
-Message-ID: <4e4ffc4f-e8dd-4771-bf97-8b372b1c97e0@csgroup.eu>
-Date: Wed, 8 Jan 2025 18:55:13 +0100
+	s=arc-20240116; t=1736363373; c=relaxed/simple;
+	bh=rSZBRYj039b8RQwyEHU9xxgGpy1/IO64Deu7DzE7F0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TBeonjyOEM19cgNr+3pwBY66chYdIhHfHFsej+ZzvJWtptwnWdirZbaNMeNolJvWoJEYOgFwbQIJwGUQRWTJUxtaddrISfbEQE4yuQ9jQ+wJV7AOCZyyJR9hIJWDHzfAcsOR2zQYlE2WDuK2LhDWfHCZIQ72KnYT2SA3f5kdgVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkC+NOdO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkC+NOdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5F3C4CED3;
+	Wed,  8 Jan 2025 19:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736363372;
+	bh=rSZBRYj039b8RQwyEHU9xxgGpy1/IO64Deu7DzE7F0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IkC+NOdOljWt2FW2pJzuvP7Gl2zCyasUsvWHfs//j70lBv6HTgSz+FwZM7ird1DPx
+	 YxeFJsoH5j1epD4KWOiiMGAOUL5b6rsrj5Le8Sq/L5epjeUD2uTvba6aTf1gi5+0gv
+	 UJhVpr2Nu00TaLgDApAqh8sXW2Mg28IGpEdDZGs11TJUYq2l/OXZHw2XtyJp5SZfip
+	 EzrvFK7yyYf97PKNQuDjZvxogS3SDRJxRxk5neF6xc0JSIfvx5pD74fkF2pOXutEpZ
+	 la3253kd0+iA8ssVEA6dYS4WBtizrFNQp4bz/yn/BrmP5pQlL72gxBknWyp0r3E/4M
+	 kHz+tGSy3qygQ==
+Date: Wed, 8 Jan 2025 11:09:30 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] perf test: Add a runs-per-test flag
+Message-ID: <Z37NaqivQSrclaTd@google.com>
+References: <20250107220152.1213959-1-irogers@google.com>
+ <20250107220152.1213959-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Perf doesn't display kernel symbols anymore (bisected commit
- 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for
- addresses"))
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- James Clark <james.clark@linaro.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Ian Rogers <irogers@google.com>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <719a89a5-8dff-48a0-ba8f-802c740a00a6@csgroup.eu>
- <53f3abe5-dd22-4a1a-82e6-bc88e91d1869@linaro.org> <Z217eBsXIaSgKuSs@x1>
- <5217124a-f033-4085-b9f5-a477c96728d6@csgroup.eu> <Z3bYltoidQpqtyJ_@x1>
- <48724052-4003-4140-8106-f9ea098cedcb@csgroup.eu> <Z3c4nupM-UENN5LM@x1>
- <5b8ec160-4b50-4736-8012-30ae35c45028@csgroup.eu> <Z3gPncBcCnZiNy57@x1>
- <752a31b0-4370-4f52-b7cc-45f0078c1d6c@csgroup.eu>
- <Z3xPHSrVInsc6W6I@google.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <Z3xPHSrVInsc6W6I@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250107220152.1213959-4-irogers@google.com>
 
+On Tue, Jan 07, 2025 at 02:01:52PM -0800, Ian Rogers wrote:
+> To detect flakes it is useful to run tests more than once. Add a
+> runs-per-test flag that will run each test multiple times.
 
+Does it change the output?  What if it sometimes succeeds and fails?
+It'd be nice if you can add an example output in the commit log.
 
-Le 06/01/2025 à 22:46, Namhyung Kim a écrit :
->>
->> And in System.map I have:
->>
->> c136a000 D __start___bug_table
->> c1377c14 D __stop___bug_table
->> c1378000 B __bss_start
->> c1378000 B _edata
->> c1378000 B initcall_debug
->> c1378004 B reset_devices
->>
->> Should perf try to locate the very last symbol when it doesn't find _edata ?
->> Or should architecture's link script be modified ? Otherwise commit
->> 69a87a32f5cd ("perf machine: Include data symbols in the kernel map") is
->> just pointless.
+Also please update the documentation.
+
+Thanks,
+Namhyung
+
 > 
-> Let's go with kallsyms__get_symbol_start().  I think it's the most
-> straight-forward and simplest fix.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/builtin-test.c | 28 +++++++++++++++++-----------
+>  1 file changed, 17 insertions(+), 11 deletions(-)
 > 
-
-Ok, I did that, see patch 
-https://lore.kernel.org/linux-perf-users/b3ee1994d95257cb7f2de037c5030ba7d1bed404.1736327613.git.christophe.leroy@csgroup.eu/T/#u
-
-And for the _edata which is sometimes missing, I send patch 
-https://lore.kernel.org/linux-perf-users/2fec8c50c271dff59f0177ff0884b6c374486ba5.1736327770.git.christophe.leroy@csgroup.eu/T/#u
-
-Christophe
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 887f735da900..729740c1e5e5 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -42,6 +42,8 @@
+>  static bool dont_fork;
+>  /* Fork the tests in parallel and wait for their completion. */
+>  static bool sequential;
+> +/* Number of times each test is run. */
+> +static unsigned int runs_per_test = 1;
+>  const char *dso_to_test;
+>  const char *test_objdump_path = "objdump";
+>  
+> @@ -485,7 +487,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+>  			len = strlen(test_description(*t, i));
+>  			if (width < len)
+>  				width = len;
+> -			num_tests++;
+> +			num_tests += runs_per_test;
+>  		}
+>  	}
+>  	child_tests = calloc(num_tests, sizeof(*child_tests));
+> @@ -549,16 +551,18 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+>  				continue;
+>  			}
+>  
+> -			test_suite__for_each_test_case(*t, curr_test_case) {
+> -				if (!perf_test__matches(test_description(*t, curr_test_case),
+> -							curr_suite, argc, argv))
+> -					continue;
+> -
+> -				err = start_test(*t, curr_suite, curr_test_case,
+> -						 &child_tests[child_test_num++],
+> -						 width, pass);
+> -				if (err)
+> -					goto err_out;
+> +			for (unsigned int run = 0; run < runs_per_test; run++) {
+> +				test_suite__for_each_test_case(*t, curr_test_case) {
+> +					if (!perf_test__matches(test_description(*t, curr_test_case),
+> +								curr_suite, argc, argv))
+> +						continue;
+> +
+> +					err = start_test(*t, curr_suite, curr_test_case,
+> +							 &child_tests[child_test_num++],
+> +							 width, pass);
+> +					if (err)
+> +						goto err_out;
+> +				}
+>  			}
+>  		}
+>  		if (!sequential) {
+> @@ -698,6 +702,8 @@ int cmd_test(int argc, const char **argv)
+>  		    "Do not fork for testcase"),
+>  	OPT_BOOLEAN('S', "sequential", &sequential,
+>  		    "Run the tests one after another rather than in parallel"),
+> +	OPT_UINTEGER('r', "runs-per-test", &runs_per_test,
+> +		     "Run each test the given number of times, default 1"),
+>  	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '--list-workloads' to list the available ones."),
+>  	OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the available builtin workloads to use with -w/--workload"),
+>  	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+> -- 
+> 2.47.1.613.gc27f4b7a9f-goog
+> 
