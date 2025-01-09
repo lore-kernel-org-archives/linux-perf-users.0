@@ -1,63 +1,66 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407C4A2D
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 07:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C766921481E
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 07:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736409078; cv=none; b=RREzhEiCfiJwpFdWTLfIzil8da7VnYeNLM7ed8ZOkiEjxsQZNCRpt9wC3Athv4pvLR5kvBJ5LetWQW3FyAX3zLQtliFXWEsbcQspzKwKuKF+PUUoWxQf6ILe/lyGIYMBfGYcllMc0R/92Bf98EBhxMSwIAJ0czF96cK5sdepwx0=
+	t=1736409081; cv=none; b=MZA85EiskiBhgeNiaYVSP0c4YJVWesOeWpa2gtWNAVF+hpqmbo8t/igCE+rMQ7f/1V0ONjl7Gj6DHoLXeFy6eM0+Mp9ZUKsbjFpFQiWedJcVpPahAlR3sw08H5wPPrmf1HzlTPY9zO6JTG8E23yfPH6eJq+5Zmx0XnEgzB7uNaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736409078; c=relaxed/simple;
-	bh=NgNGGXDCEmAc1LpZTPl9JoIjk6vyEGof3BxpbdHW61w=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=uom77kz5iO6KvI+3roQE/n0QilH3idTjzAtJh/9IJxNUch3XBthEg+oMsphWwzYtKPclb9BSvWhfYmYH1t3oHMdB1xdrCiXs2WdOmhgc9Dg4e17t+VZrwxplhUrg9Iu9IKXQZIN9CHOhpISB/xRN4ajhhhYkAXqbLpMT/SHy9cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qbvhMu59; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1736409081; c=relaxed/simple;
+	bh=q5bMp7PJSGnNgxEfef9drZZDGV2cNpjnTsQPTbdE+eE=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=sDJTQvgtz0ndrEH0SXYvMowfZfPJrVVNiwa1HnAf9jAYNodz3AxEp1YlCFLMMuRKZ37kyeipWwIkEwenKb/pbVqQsCulxIEKLQlYYCnc8dmn1PJ2Va+t8dldTqsIJXshVUrOPKoZxQEgJNRR4da46oPE+fRdXECNUg3j5qivMQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=noB7anb4; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbvhMu59"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3a0d165daeso1427626276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 23:51:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="noB7anb4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3c61a11a40so1476996276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 23:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736409076; x=1737013876; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A6oCyJ6VA9pSfECFyiTNm0tpn1KomntB6XldcC3u6rs=;
-        b=qbvhMu59fo+IafQmEu0jNeiJ+8MRlV5IlnTvJZ9vgQG5HhsJ2iI46FUQfKPAOcRiCi
-         mt1sYy7BAOwiM1XDt5HdiCRljxLhAa2zQoItfN8yQO44vkrrkYJ1Fn1qieaEi7eo1RJ1
-         YANgsf/hXetCxOW2S9eBOvix0FFCGAqaNt2RmXzYzg2Y+XdiFkVikYKdJ5fw+Eo87QCQ
-         Xn9o3ZL47oDHX6KPTI5pGxgIxaftFuF6U46rzl7Wl59Fhl/ZeHpp/qHyIeZwkwJTO7I4
-         6kDcX5UJ9HeMpusDQ8XUQlMflNFqjJZZLKviscdFesiPXc+WcdJrCJ2pPSciaS64EIgm
-         QJew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736409076; x=1737013876;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1736409079; x=1737013879; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=A6oCyJ6VA9pSfECFyiTNm0tpn1KomntB6XldcC3u6rs=;
-        b=rnxeojzTVSo7FvJPTM9N4k0gdxWa9ZTt1NS+E+5jQ17txxVCZbFcFvArHzz55sLuTZ
-         g34Ejaeeq9zfBcKkFkEQBH0Hqmohh8FsL+E5d8ZzZBUlX9bqmOdPksNNGsfCRqvB6RBr
-         oP4js5+XQjKqSKCZE02L4KXl6jqUkowYwCYb2iZTm3EgSwh4Zr2Sygn8HPDY155huZPv
-         pQ8EVeQfhveyBwW1+NrtfJ2ZM8T5NOGjE84/Vk4gHd3eYXVRHysJ5FlMYbWrxlIS1XU3
-         grxZ6mRhYw2jjzrVQNVJh6ndn6sgV26PyKk1eX5aZul+Ul1KKiG/EBtOiZG2E4NNrxbZ
-         OJMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN3wAEQG3vuU7dbllhHFu6JlmdboGhI41yA7+eRS4GSMU8IoHBIbAoN1y0kbDCAdRBOFYICMcZpD2VYdP31qLg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgIwkOo2m5YmHIU/5fL6axNyVVv9wPC+bV3tIdbF4yh3zgE1cK
-	IRuteVBCfamiSEr8kHGDf/Xsj3R9CzY4yGZpSKRWuxJUaRueGtWKeWGPy17cDpPx5o3+2Khv9Ft
-	d8L/zeg==
-X-Google-Smtp-Source: AGHT+IHGqzJHFrQqDKAYKyAb+ZZ8g4MgI0TN9EkCiyaffrCYucpAYRDPWXdTPAEYsAA+ArrnD2gzwIO6IEIq
+        bh=BfOiQa/L9OiEEGjP9sXMi3rlBfHgK084BGp4CIjcSjs=;
+        b=noB7anb4kVm8UcHMkZ3ho4ACYz6M01TGB9znVdUPA+SvRVipwC9t00M2gsn5ElCzU0
+         EPvD/i+8Wf+o0XAF1yhbbLdzW1z+oQrQ/C0fy02QGEHAj3S/XLKc8kMyPOkps6WwGlR1
+         X7+LIVDEmLzr8TVwD9fWY4uyIj4c/fB74JyMfIe5D0xovVk0Bn3b6b0vjJ+LNIfZ2GRd
+         15hrVx4+9NmyIYGevb+sq1/ZK1GHxvfWiznp6RPZd0fM8xgmpCB48gw9vTNA0RAUYhtb
+         T4UiOuoECJfcIjJT7ivE/F+JratwZgEAJlRJf1fUIV8CKgBxXe64qWgB+htTeUfCTCVk
+         0EFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736409079; x=1737013879;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfOiQa/L9OiEEGjP9sXMi3rlBfHgK084BGp4CIjcSjs=;
+        b=MmTXon3ch6WlI+xp0SsAZUESdoC1rDl5/ydy2t/20GP1hFLH6+f1dQ26gED1rb/vTD
+         VOxamXkz96D1I7klJYlekbvcSvopSL92ZzQMj9VziifOI7yosKVUGQ0G458vPKh0mY2V
+         4KMPgKSR1Vcw84wLhIQOyhZxwr2uMQ0yKIHNvFFpSUcC6MIN3uGwUIU+IKrM+N6+r3vE
+         DUO67WZLpTapH1U29nNI5R0A4ub59z6zMaRkhpRhUC8jZCGW6y/5+IL08+RVutaRTTM1
+         cYBQFIofy9tK4h1+h+XDwRikN76Bwwi+MA7/nrV5htqFQtMYMe1VeIO42rF3FNfv94GI
+         uShg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkBKiTDbfTgbePIRw3exbLwtFgQ4QNzgAknjxsq90cbdUzI32L8kw4bz+3Y1oTzLfjk+xSlWKz+fnpGUVd5HBA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6REXlxaKvY9TPkBso2o5CP1ahZgS0iUfJZUzbjXNCsPFsp3AT
+	LFbF/53deOAGlyN9EMRw2BUIouweh0OQiWmB4xhAFVFjlx7APor1rtKVnUdRckB+9PhJJLF7z2K
+	ViszzXQ==
+X-Google-Smtp-Source: AGHT+IHJ+xoP/OiRHl2NwVopvadefTgrOROW0d1nGwF4MhrqP/RTesuhzD45oXRxdaLTiZ5qawBd8auXYm7X
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:f801:f788:c7e5:c181])
- (user=irogers job=sendgmr) by 2002:a25:c70b:0:b0:e48:3916:d902 with SMTP id
- 3f1490d57ef6-e54ee1f9930mr14093276.6.1736409076261; Wed, 08 Jan 2025 23:51:16
+ (user=irogers job=sendgmr) by 2002:a25:30d5:0:b0:e4a:8f5b:179a with SMTP id
+ 3f1490d57ef6-e54ee276297mr14040276.9.1736409078576; Wed, 08 Jan 2025 23:51:18
  -0800 (PST)
-Date: Wed,  8 Jan 2025 23:50:57 -0800
-Message-Id: <20250109075108.7651-1-irogers@google.com>
+Date: Wed,  8 Jan 2025 23:50:58 -0800
+In-Reply-To: <20250109075108.7651-1-irogers@google.com>
+Message-Id: <20250109075108.7651-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250109075108.7651-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 00/11] Python improvements for a real use of parse_events
+Subject: [PATCH v1 01/11] perf debug: Avoid stack overflow in recursive error message
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,30 +74,29 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-While parse_events access in python was added, it wasn't used by any
-python script. In enabling this for the tracepoint.py script a number
-of latent bugs and necessary improvements were discovered.
+In debug_file, pr_warning_once is called on error. As that function
+calls debug_file the function will yield a stack overflow. Switch the
+location of the call so the recursion is avoided.
 
-Ian Rogers (11):
-  perf debug: Avoid stack overflow in recursive error message
-  perf evlist: Add success path to evlist__create_syswide_maps
-  perf evsel: tp_format accessing improvements
-  perf python: Add evlist enable and disable methods
-  perf python: Add member access to a number of evsel variables
-  perf python: Add optional cpus and threads arguments to parse_events
-  perf python: Update ungrouped evsel leader in clone
-  perf python: Avoid duplicated code in get_tracepoint_field
-  perf python: Add evlist all_cpus accessor
-  perf python: Add evlist.config to set up record options
-  perf python tracepoint: Switch to using parse_events
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- tools/perf/python/tracepoint.py |  23 +++---
- tools/perf/util/debug.c         |   2 +-
- tools/perf/util/evlist.c        |  13 ++--
- tools/perf/util/evsel.c         |  16 +++-
- tools/perf/util/python.c        | 127 ++++++++++++++++++++++++++++----
- 5 files changed, 145 insertions(+), 36 deletions(-)
-
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 995f6bb05b5f..f9ef7d045c92 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -46,8 +46,8 @@ int debug_type_profile;
+ FILE *debug_file(void)
+ {
+ 	if (!_debug_file) {
+-		pr_warning_once("debug_file not set");
+ 		debug_set_file(stderr);
++		pr_warning_once("debug_file not set");
+ 	}
+ 	return _debug_file;
+ }
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
