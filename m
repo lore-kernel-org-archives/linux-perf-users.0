@@ -1,98 +1,267 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D984B4A1A
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 22:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE495205AD5
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 23:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736462948; cv=none; b=MxOhh+dpfjXMp21uqryKQR589rpnm+Vlk1Z9opPTqx/2+R03kVf40F1MUEI1Gv5T7KB/eKRtx36UiUT+zmd+xbbUjXaSiAcViw0mV1p4S6yEULOcgHyoNk87h3QtsHYd+nzPNEfT0rYB4JbSKEHXjaJmJxRk66DSlK0O5pc98Gc=
+	t=1736463666; cv=none; b=YVfKmiMPCzSugn3mZdVYl/UiUgZZvLMEVt4PsHMFYlEVdvGwQUBcUL6fze0BAtyIJg6n0aOH5wXtCLj5SMNKBmvEBEiOvpJfGJENmY/uMUku7Ewv097sEYLRPFDakFQUTsoYxT+S/Hb14OQHj+Iv+6D4ix90Zt8/LjS+luiY2A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736462948; c=relaxed/simple;
-	bh=JWSQxpLNJtWw6uJIEdvogrtnIw+S9pkOwR4JVEOYuSw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LoodPSmREUQyrIq/2bmDhnksBq0mnDdrqvwNf8ks3Dbx+w4nYEZg1bcLLC/+Ve5etmKMogHH1n1qC1cSTk3umxf6gJTLcYTWE/OU5BF5l3GcdGuyjcPA59n+zvJwZDtUROSUA+VNH5twBZtL9oeWBYLMDadhXlYM/LcWz0gCm0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=jRtg58ej; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
+	s=arc-20240116; t=1736463666; c=relaxed/simple;
+	bh=ouylJ8vaww+BvN5+CjToW8mtqfVEhB1cWP2LujyiEy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGoXRX1HEjQM1Wu7+iO+HLVrKPNyA7Lk4iWrahfLHyLNCfPPUe/cXCe6Ye0RooRKUerq2DymBpZlLXdovFOlyBZgszsP3IT4USY7EoK4fMwaNcCxr5+iRT9MuRYF1opayNWgIPHauQa3tjmY6J4CobMzgew0tGCcY+BvNDstR+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=g9q/3Cy+; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="jRtg58ej"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YTg253Yj7z9sTP;
-	Thu,  9 Jan 2025 23:49:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
-	s=MBO0001; t=1736462941;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JWSQxpLNJtWw6uJIEdvogrtnIw+S9pkOwR4JVEOYuSw=;
-	b=jRtg58ej6Idc59fUs6Ffh5bBSGp4kIHvrrmGceEtQ0VSyos/ms7FjfIb8UGBF1lwoaGKex
-	ybo2s3yx3tkuqjUKltBsm9+TuaoSCSN6LfDB93M0K2GPD8jZQDEg9IJXBZSEiRTYqToy02
-	JkQwUzfxJFyHs4OJ7ulzhlrGkOnA47vLs3FPU+RwgR04PnbcM5R5fsFM29Wmu8GUy5PdiU
-	8659fYfePJIoG+9FSo0+thx0GWK9LeNasJl5wX5LfSiJzcIb630/Mdzjj0Lcw858KQA1aJ
-	tDNWKhshni4b+s/KwBC8hOXG7lZXSucoUkFZ/gxJji/CVxms2o1HpaJF/Ixweg==
-Message-ID: <317c11923cf676437456e44a7f408d4ce589a9c0.camel@michel-slm.name>
-Subject: Re: [PATCH 1/1 perf-tools] perf MANIFEST: Add
- arch/*/include/uapi/asm/bpf_perf_event.h to the perf tarball
-From: Michel Lind <michel@michel-slm.name>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="g9q/3Cy+"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21a1e6fd923so32015525ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 15:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736463663; x=1737068463; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=u1Rto3tQvT3jFN5xuxXHqKLZjGHCEokZTCe6xmBnORw=;
+        b=g9q/3Cy+xguC9G42bmdnj9vz+2rGfGWYXgAwg5B1Rg2XFJC1hXiKZU2zYLau/Ev6A2
+         Tyq6HzkDRpTRRH6QykuTg6/ShavOglCcBg3VYKE6k7nz2yVuUU5GGcN10YDJLu01rwba
+         BA7ooUB0gpQeVu4ty+/znHHp4gbXwQHGqEv6US2cOMBuCaG0UQSL0WuhnTvN0BKvMCuL
+         5fzqBajiFdLf8ckDvozIxC3rxNgOLgy/wUhbmqiNkAtIFc9cnKLgjmYJh7xN6RemRxfi
+         gZv+QTtljlvsUH7OwwMbSGhs+u/5uWl8Yck9mkAYSdZwCZbu+IK3fN6Y85OkY40+sGDS
+         0tGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736463663; x=1737068463;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u1Rto3tQvT3jFN5xuxXHqKLZjGHCEokZTCe6xmBnORw=;
+        b=m+Aq9UhgQNjnNW0qlE5BIK14i+rSqppnRlD4ac1CdMhdB46MSmPqHZ/IMN7FGoohS2
+         51/I6czrxx7xjjIgch9akLYkhvapiD9gPgUwUiPZw+xvnwzV6XAph9J5RX4Zl+53xjKW
+         98vPlXd5OQTxAwKpXoZ8HTB+DyRLnY/1NabjbqYnh/PT6yer9rMnRStrL0M1G6j7UxPv
+         h+Op/1d/CMNxwIfttgS021ek7ITaqptdE28Vtl+Vq/eGGCdO4/+pIBB7Ohzxpx1rdONF
+         ZhDJIzrTMcO8VmofeX8y2/RniiYTym81aLc7nwjVuTPWOnnZZVe/02N2g/2Ec4q8vbrl
+         0NHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUK6W12ge+vK1jK2UZCr/QxWnZzhjDL0BoVLAbydsTfhW9x7BFoDLzzZyBOfg5yT2XRmrMt2abXF1QqBjzvfc+F@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqDYtj533D7GvJvLd/75W+GRAxMoH01QNpgk2GExpvMhO2X9aq
+	u35fB0m84RX062IuZdrS9otv9v2MRZ3SvrIw0G/Kx58sF6mgNQDYq5K1AY/MmQU=
+X-Gm-Gg: ASbGnctW8eewB+5R5ILmV1SBmMUr2Afp4R42yVmGGzT9iIpK4ggzzRXWcfKasa9Cr5A
+	hnNm1qn9+98XpaR9YsqX2sHouI4QjctRTPz+gIsNmgDCzGzt6HIHmvwhUtH7IFzN5K47UZ4Sbjw
+	BqVZro/dDuB0TEZ8I4UsI9IHqW/D1bRjgpZQ3hvfkbV/BYJsDi/QiDuDNA09xARe40cn0gYTb63
+	eTZ5aHGRc70eQ78kx7f7oRUzoXh1Egr3w+Zg9z0tDNkwvlapdeI
+X-Google-Smtp-Source: AGHT+IHHLbAhu86VzYd6LBFp5j+Q2QinJd1yN68qZ09Yns1ZwY4dgQCRzdIJeqQ19rPDtpnqmFcSKA==
+X-Received: by 2002:a17:902:f70f:b0:216:32ea:c84b with SMTP id d9443c01a7336-21a83fc3652mr135133105ad.37.1736463663201;
+        Thu, 09 Jan 2025 15:01:03 -0800 (PST)
+Received: from ghost ([2601:647:6700:64d0:691c:638a:ff10:3765])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f234984sm2890475ad.205.2025.01.09.15.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 15:01:02 -0800 (PST)
+Date: Thu, 9 Jan 2025 15:00:59 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Date: Thu, 09 Jan 2025 16:48:57 -0600
-In-Reply-To: <Z0Yy5u42Q1hWoEzz@x1>
-References: <Z0Yy5u42Q1hWoEzz@x1>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-mh7+rpV4IdgMkRF0KsZR"
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 00/16] perf tools: Use generic syscall scripts for all
+ archs
+Message-ID: <Z4BVK3D7sN-XYg2o@ghost>
+References: <20250108-perf_syscalltbl-v6-0-7543b5293098@rivosinc.com>
+ <Z3_ybwWW3QZvJ4V6@x1>
+ <Z4AoFA974kauIJ9T@ghost>
+ <Z4A2Y269Ffo0ERkS@x1>
+ <Z4BEygdXmofWBr0-@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4BEygdXmofWBr0-@x1>
+
+On Thu, Jan 09, 2025 at 06:51:06PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jan 09, 2025 at 05:49:42PM -0300, Arnaldo Carvalho de Melo wrote:
+> > BTW this series is already pushed out to perf-tools-next:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
+> 
+> Hey, now I noticed that with this latest version we see:
+> 
+> ⬢ [acme@toolbox perf-tools-next]$ m
+> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+>   BUILD:   Doing 'make -j28' parallel build
+> Warning: Kernel ABI header differences:
+>   diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libbfd: [ on  ]
+> ...                          libbfd-buildid: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                               libunwind: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>    /home/acme/git/perf-tools-next/tools/perf/scripts/syscalltbl.sh  --abis common,32,i386 /home/acme/git/perf-tools-next/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_32.h
+>    /home/acme/git/perf-tools-next/tools/perf/scripts/syscalltbl.sh  --abis common,64 /home/acme/git/perf-tools-next/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_64.h
+>   GEN     /tmp/build/perf-tools-next/common-cmds.h
+>   GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
+>   PERF_VERSION = 6.13.rc2.gd73982c39183
+>   GEN     perf-archive
+>   GEN     perf-iostat
+>   MKDIR   /tmp/build/perf-tools-next/jvmti/
+>   MKDIR   /tmp/build/perf-tools-next/jvmti/
+>   MKDIR   /tmp/build/perf-tools-next/jvmti/
+>   MKDIR   /tmp/build/perf-tools-next/jvmti/
+> 
+> 
+> While with the previous one we would see something like SYSCALLTBL as
+> the step name, like we have GEN, MKDIR, etc, can you take a look?
+
+Ooh okay I see, the quiet commands were being ignored as-is. We could
+add the lines to handle this to Makefile.syscalls, but I think the
+better solution is to move the lines from Makefile.build to
+Makefile.perf to be more generically available. Here is a patch for
+that. I also added the comment from the kernel Makefile describing what
+this does.
+
+From 8dcec7f5d937ede3d33c687573dc2f1654ddc59e Mon Sep 17 00:00:00 2001
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Thu, 9 Jan 2025 14:36:40 -0800
+Subject: [PATCH] perf tools: Expose quiet/verbose variables in Makefile.perf
+
+The variables to make builds silent/verbose live inside
+tools/build/Makefile.build. Move those variables to the top-level
+Makefile.perf to be generally available.
+
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ tools/build/Makefile.build | 20 --------------------
+ tools/perf/Makefile.perf   | 37 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 21 deletions(-)
+
+diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
+index 5fb3fb3d97e0..e710ed67a1b4 100644
+--- a/tools/build/Makefile.build
++++ b/tools/build/Makefile.build
+@@ -12,26 +12,6 @@
+ PHONY := __build
+ __build:
+ 
+-ifeq ($(V),1)
+-  quiet =
+-  Q =
+-else
+-  quiet=quiet_
+-  Q=@
+-endif
+-
+-# If the user is running make -s (silent mode), suppress echoing of commands
+-# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
+-ifeq ($(filter 3.%,$(MAKE_VERSION)),)
+-short-opts := $(firstword -$(MAKEFLAGS))
+-else
+-short-opts := $(filter-out --%,$(MAKEFLAGS))
+-endif
+-
+-ifneq ($(findstring s,$(short-opts)),)
+-  quiet=silent_
+-endif
+-
+ build-dir := $(srctree)/tools/build
+ 
+ # Define $(fixdep) for dep-cmd function
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a449d0015536..55d6ce9ea52f 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -161,12 +161,47 @@ export VPATH
+ SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
+ endif
+ 
++# Beautify output
++# ---------------------------------------------------------------------------
++#
++# Most of build commands in Kbuild start with "cmd_". You can optionally define
++# "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
++# that command is printed by default.
++#
++# e.g.)
++#    quiet_cmd_depmod = DEPMOD  $(MODLIB)
++#          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
++#
++# A simple variant is to prefix commands with $(Q) - that's useful
++# for commands that shall be hidden in non-verbose mode.
++#
++#    $(Q)$(MAKE) $(build)=scripts/basic
++#
++# To put more focus on warnings, be less verbose as default
++# Use 'make V=1' to see the full commands
++
+ ifeq ($(V),1)
++  quiet =
+   Q =
+ else
+-  Q = @
++  quiet=quiet_
++  Q=@
+ endif
+ 
++# If the user is running make -s (silent mode), suppress echoing of commands
++# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
++ifeq ($(filter 3.%,$(MAKE_VERSION)),)
++short-opts := $(firstword -$(MAKEFLAGS))
++else
++short-opts := $(filter-out --%,$(MAKEFLAGS))
++endif
++
++ifneq ($(findstring s,$(short-opts)),)
++  quiet=silent_
++endif
++
++export quiet Q
++
+ # Do not use make's built-in rules
+ # (this improves performance and avoids hard-to-debug behaviour);
+ MAKEFLAGS += -r
+-- 
+2.34.1
 
 
---=-mh7+rpV4IdgMkRF0KsZR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+- Charlie
 
-Hi Arnaldo,
-
-On Tue, 2024-11-26 at 17:43 -0300, Arnaldo Carvalho de Melo wrote:
-> Needed to build tools/lib/bpf/ on various arches other than x86_64,
-> notably arm64 when using the perf tarballs generated by:
->=20
-> =C2=A0 $ make help | grep perf-
-
-I can confirm this works - I've applied this on top of the stable
-tree's 6.12.9 tag, and generated a tarball that works for building perf
-in Hyperscale, e.g.
-
-https://cbs.centos.org/koji/buildinfo?buildID=3D57925
-
-Can this be merged too? Thanks
-
-(Also - presumably merged changes eventually shows up in the perf-
-tools-next branch)
-
-
-Best regards,
-
---=20
- _o) Michel Lind
-_( ) identities:
-https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
-
---=-mh7+rpV4IdgMkRF0KsZR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iI0EABYKADUWIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ4BSWRccbWljaGVsQG1p
-Y2hlbC1zbG0ubmFtZQAKCRCLIp0vfMwE8lOgAQC4InQsjG0TQU1+/OIS8AZLsX+6
-2DWIha6ZaQEBIvibBgEAwIsRsVF7savDE/Nm187lAnZgQpQP+R7lF0eNqPS7BwQ=
-=9NZn
------END PGP SIGNATURE-----
-
---=-mh7+rpV4IdgMkRF0KsZR--
+> 
+> All is out there in perf-tools-next.
+> 
+> - Arnaldo
