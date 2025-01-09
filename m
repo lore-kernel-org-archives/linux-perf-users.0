@@ -1,104 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2034A1A;
-	Thu,  9 Jan 2025 21:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6713D4A1A;
+	Thu,  9 Jan 2025 21:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736457429; cv=none; b=ie8VMi+zGdhbyiagrtdAJUU37xYkUZaIq7yaJbcXKFmT08/6Xl5a/h8B0eLff9zTI9jY1YFEg/OqelLpr2Pp13F8XjWzdJ/p2hlDfRWimMigfr/csqP8eyswZ+Qrf5jSyTWEyu/OI5tlH2Is6+9XE79XG8k2dk5hSiJ7VaVX3Rw=
+	t=1736457587; cv=none; b=PvJ4rr5Ka+1JlHVk0wGm2bu11Z+7dkVgoIn0h2qSPN2oAzpn1NeMr2vHIEXPL+emByFoFIwxpngRo2wHV6rYb1eKVJNev6J/2UYGbKMO0KlNjt+g7Aj5Y1dJ/lkF9wAqrWmrb7a0X1HlaJLZIV0VJQ0oU1O7nUWXcPwjH+cwD30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736457429; c=relaxed/simple;
-	bh=UMr+xJwW/kFfm1aAzQV98x8XnolYnrlaynxp2asnV1s=;
+	s=arc-20240116; t=1736457587; c=relaxed/simple;
+	bh=/+CuzyI4ogI8kX2Wrufcv5bIb8TPa6p0upBceJiHjRg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWt0/x600dP4JcrZ38fn8rIzQO/ikmvmxrMhHoTr6HlwKdmVlt1tTgE6rkcKPqzJvKofPsoPybmZ+zf8ca56J7ku3zMdQXyftTopMpa92oCqM98dSNsKaeQshBkkvyEe4XS5zX6F5tYPaLiC2WTcXhK2TPNIH/tdAW5YPIT57YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISrd3bTe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXaAKp7E3kYvy3Y+PrW08B287zNCV3Mh6bmlra5cGQvSmVLDQm4A5TSZ0tiogp75tT1Pga6oKv1TZrRcwsQ296zo+uQY3zeCWVIpTiNwCdnG4sDjI7bFIKO3kikSL0ww2MQQ1wXd+5LVJeuF8Vdvf1zd78MQ1mQgYRdM2hBuopE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hfp2+Cz1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISrd3bTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA543C4CEDF;
-	Thu,  9 Jan 2025 21:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hfp2+Cz1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78328C4CEDF;
+	Thu,  9 Jan 2025 21:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736457429;
-	bh=UMr+xJwW/kFfm1aAzQV98x8XnolYnrlaynxp2asnV1s=;
+	s=k20201202; t=1736457587;
+	bh=/+CuzyI4ogI8kX2Wrufcv5bIb8TPa6p0upBceJiHjRg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ISrd3bTeGPpOSDa0GWCdEHhWg26f0Lmz7oy1LotBdAtfSHU9m+i/V4nQBWD/rTs2p
-	 nRstm5ATcQAUO7kCn9DBZyCYN6VPxHGYXjEbZz68qegQTlNIzI3pv7gsTtW/aKYLeJ
-	 XI94eBPzmHe+xne/U7tGxyiZ6XpIs2P0/arXQnMDZlllmctnuJ5No81iw56pOk2SHm
-	 812sWLpb5wnDoSwp+C4SyUvCn5s4hvL5PQJjqqb029TRCl5FtAFQZYUpXWYQQxGGTc
-	 DOOmnZ6cb4o9A6ZxrSRYKsHUESvs43nW2MTHpK8/mSqSynnmXXyedeXc+S/oPf3IuO
-	 vijWPAGRVw1hw==
-Date: Thu, 9 Jan 2025 18:17:06 -0300
+	b=Hfp2+Cz1/nFOq/61ISUnLBxHcbViRy6F2dhWFJohXd/HehbVc453ks3QIqtaLKCep
+	 6Au1kNVgAZBUzxq7pZAjF5eRPyAwsn3JK5EtupqoRchQMb973DnV1zFdHLwtMSXieS
+	 JfAUi6D7qS28tYpQT6m2/xiZ2oJeASLp+Y4gHSIZ7Z3qxvjdiZO3xj6MJ/n7SsRcK8
+	 d+GhumOLvYskC23n0hlQtGQwYMG4JvDa5ByZLjQkWLVLQ8rtaaDMpk29kR6HNPgBWX
+	 ejExiOfXTUY1EGNMjVLPWng8tXnwJRtqNRmCBbdqM3ogTzhxAd+9OAJX5SpQc7c/BU
+	 3ILwr/Tge2Edw==
+Date: Thu, 9 Jan 2025 18:19:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf top reports not being able to resolve kernel symbols
-Message-ID: <Z4A80o7shniaixby@x1>
-References: <Z3bd2uCdo2EAMSnG@x1>
- <Z3boDyuus0fiGcok@x1>
- <Z3buKhcCsZi3_aGb@x1>
- <Z3b-DqBMnNb4ucEm@google.com>
- <Z3c6cwACnzku_ntQ@x1>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Blake Jones <blakejones@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fixup end address of modules
+Message-ID: <Z4A9cMoSHVpAxF3-@x1>
+References: <20241218220453.203069-1-namhyung@kernel.org>
+ <CAP-5=fX2Pj+Gv89LoO8SakqwVoaiT2A9BZEKmLjnbYmc4ZRo4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z3c6cwACnzku_ntQ@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX2Pj+Gv89LoO8SakqwVoaiT2A9BZEKmLjnbYmc4ZRo4w@mail.gmail.com>
 
-On Thu, Jan 02, 2025 at 10:16:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Jan 02, 2025 at 12:58:54PM -0800, Namhyung Kim wrote:
-> > On Thu, Jan 02, 2025 at 04:51:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > So there are symbols that are not being resolved anymore that were
-> > > before your patch, namely:
+On Wed, Dec 18, 2024 at 02:15:35PM -0800, Ian Rogers wrote:
+> On Wed, Dec 18, 2024 at 2:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > In machine__create_module(), it reads /proc/modules to get a list of
+> > modules in the system.  The file shows the start address (of text) and
+> > the size of the module so it uses the info to reconstruct system memory
+> > maps for symbol resolution.
+> >
+> > But module memory consists of multiple segments and they can be
+> > scaterred.  Currently perf tools assume they are contiguous and see some
 > 
-> > > arch/x86/entry/entry_64.S
+> nit: s/scaterred/scattered/
 > 
-> > > nmi_no_fsgsbase:
-> > >         /* EBX == 0 -> invoke SWAPGS */
-> > >         testl   %ebx, %ebx
-> > >         jnz     nmi_restore
+> > overlaps.  This can confuse the tool when it finds a map containing a
+> > given address.
+> >
+> > As we mostly care about the function symbols in the text segment, it can
+> > fixup the size or end address of modules when there's an overlap.  We
+> > can use maps__fixup_end() which updates the end address using the start
+> > address of the next map.
+> >
+> > Ideally it should be able to track other segments (like data/rodata),
+> > but that would require some changes in /proc/modules IMHO.
+> >
+> > Reported-by: Blake Jones <blakejones@google.com>
+> > Cc: Luis Chamberlain <mcgrof@kernel.org>
+> > Cc: Petr Pavlu <petr.pavlu@suse.com>
+> > Cc: Sami Tolvanen <samitolvanen@google.com>
+> > Cc: Daniel Gomez <da.gomez@samsung.com>
+> > Cc: linux-modules@vger.kernel.org
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> > > nmi_swapgs:
-> > >         swapgs
-> 
-> > > nmi_restore:
-> > >         POP_REGS
->  
-> > Sorry about that, maybe I should've done this instead.  Can you check
-> > if it works correctly?
-> 
-> Its late here, but basic test shows samples being resolved to
-> nmi_restore, when using the TUI 'perf top' interface and pressing / to
-> ask for samples resolved to samples with 'nmi' on its name, several
-> other such routines appeared on the radar, including:
-> 
-> Samples: 2K of event 'cpu_atom/cycles/P', 4000 Hz, Event count (approx.): 496683332 lost: 0/0 drop: 0/0
-> Overhead  Shared O  Symbol
->    0.05%  [kernel]  [k] ct_nmi_enter
->    0.04%  [kernel]  [k] local_touch_nmi
->    0.01%  [kernel]  [k] ct_nmi_exit
->    0.01%  [kernel]  [k] nmi_restore
->    0.00%  [kernel]  [k] nmi_handle
-> 
-> [1]+  Stopped                 perf top
-> root@number:~#
-> 
-> So:
-> 
-> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> And preliminarly:
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Applied.
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
