@@ -1,121 +1,162 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4183418787A
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 18:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7B3198E77;
+	Thu,  9 Jan 2025 18:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736446076; cv=none; b=js9cMhDP51Hpa8FfJOsV1zEra6AOWmydEyX7bZHnACk6/NBbXo26EMkrhAqtLkHw5dPXSdrpyNiIb6G0pSwzYNWpzlEJPM7xlWPJTpjvesFb4FDRs02+RmOV7jgqPyoPJHtOyH6SZpvXIk3kpfPyRfohSP/PfsJt6diN2bBvsqY=
+	t=1736446377; cv=none; b=d5ZxaQAwz+kYEb+XQB5mZsNa3O3oyrfE1CeNddQd/dTF73eRNZdhg9MW0wWTzvRpyVqe1tRJjRNxGsoAIQZZtRB6kctdlYv95CCvwSRUwhGRpFxryQW2rEcT/o/sw4S0UJrbpJRwDa4F2RILXwZgdzedekcWF1CGUZgCykQhskM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736446076; c=relaxed/simple;
-	bh=ugZpTRoY215QYVPyz/5QfbNSSDwu5aCv7SqGOKW3jX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=DU7k7GDSSmRmlYgw+yY2uiJsxluW83DNw66RbKuzfsRG0Oz5kmwER7UVjafHQAoeeW7euGHp8OElyYuyK4j1A1S6UM1DL9Webej6VNAtlaqRdrkZDh9nOv7xIsvumcF0MusM2STYMQVGXM5Ly5FGkNL/1xa0/jN6QwrsCmH1+ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dGtcrJFW; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dGtcrJFW"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a814c54742so3295ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 10:07:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736446074; x=1737050874; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ORjOt91OVzNWJjEkhCZRX5PBOBJZYTPcpVx08rmeKL8=;
-        b=dGtcrJFW4rpbaz1VS7M5I7UKe9oMCWUNgWlFU0y0b8i4UmAHIQ6Pa410TaFxwd9YmG
-         nj1bKA1dvV47tMAUqIPOL0HCjKNO7Jp5J1BWhAsPypN/GK+R3SRs4OMQaBXrGXFrHc4T
-         boOoJ5ESjBIZM9SDflF/0pOGmX9LG+O5wC9M3DPWAl6nArU7ExJulyqh06qiber3lpAX
-         u2OmaGxusg8GoPurVIqmqY7hqd3NQvWHwvm5H+QzLIDEK9IEYfCjvSfW9lQs7aoCtfd3
-         pDe+yra9w6F6qddnbiNXIJ8vA6bc4EKiocX7L4sXeA0H86vX35WMCm47eWBZ10tjLRWX
-         0H2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736446074; x=1737050874;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ORjOt91OVzNWJjEkhCZRX5PBOBJZYTPcpVx08rmeKL8=;
-        b=DWh+v683ZCy5UoLvda1K9JN9a/v2PfdKfVnZEcSZLTsp5K5IN/rLnEt7xplEOdxHhL
-         HQrUqaaiJ9zASrHEzFYcAIqFg9jZwIbl+NnHa7HSqkPA1hhAJlmnBNqT62m1djr94a3q
-         pyRqkn9B5CGFv8/shP812kshHhxlI31OfOlh9AO8HW/p6Gne9A/jlxHMr9BBIvy1AtT7
-         vDfr5y9NSQStLAL2QckqCCnX6hCCVD31bnUyq6Ieery9svKiP3N4V1O4vFbY/SXQxRFC
-         o3XPHxh4fCWtOSSAZk7Ekaf4sWqV3xSWLpmJNeMz2NZb7FuuOz1nQ7JDCcfUn1rshhr2
-         Cjeg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/T7iNvFKjshkis2qVIQ5bJkT7w/aTsEA+1IPm2vsP+NmAFcmnOb0P3EnRLzKbPsqcrDCg2/RasXVgpZzCNuCo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtTlu9+KSj4qvBUU6eW+JHlUqeVE6mo493P5WYKL1kjWcD+oTk
-	Dlo2gDYOCqYloGxykOWWvMYER/02HEfzuFGnH2esQUUXEhVtaBCFzt451ZufWc1a1wcXE04ZMTC
-	ZlTE3l82i6ML9anZXUSjy1KfiIrAqCf9WAQTZ
-X-Gm-Gg: ASbGncvL0Lr672nytc9dn9j3n4sNrqzi3O5eEnJrnbch2EIhYyGVLVmEEBwZVL/cHoW
-	sbdOPQwlGH4rYGjwtB8IdUVddpqr/wG0Dlh/sLNJUWvmqjD+VVFmImr7p7Xct0OeydrZGLw==
-X-Google-Smtp-Source: AGHT+IGyK5p/l3EipMfZ1MTGvdUKjfXhbK8pHVtyalAw1/2NipiFpbWMu2kcVDjpXRVl8YmMfH5nt+SIgLqEfdmQGbM=
-X-Received: by 2002:a05:6e02:168c:b0:3ce:2f93:a02b with SMTP id
- e9e14a558f8ab-3ce486c43c4mr4143555ab.12.1736446074248; Thu, 09 Jan 2025
- 10:07:54 -0800 (PST)
+	s=arc-20240116; t=1736446377; c=relaxed/simple;
+	bh=/5dTRDMV78qZmOCApCjOpjNR90Iez/OfHF2DD4rNA+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aDsR0oTnmH19XrNpkbC2uKZcDYjjyi5YWLJZPXOEhxJ5DjdZ5K2u+xuTL3priONQLnHU6x6eI2v7xaqDzPUlUmrRFC8n3EQnuuPVx1XvFHsFr0e0wSnfEgQzAacg6nTXMUF8XP6d67e6qZLpSyLptM99yWJP7kfwKwZexn5tHI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A193497;
+	Thu,  9 Jan 2025 10:13:22 -0800 (PST)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 757C83F59E;
+	Thu,  9 Jan 2025 10:12:52 -0800 (PST)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v3 RESEND] events/core: fix acoount failure for event's child_total_enable_time at task exit
+Date: Thu,  9 Jan 2025 18:12:32 +0000
+Message-Id: <20250109181231.3539863-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025172303.77538-1-irogers@google.com>
-In-Reply-To: <20241025172303.77538-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 9 Jan 2025 10:07:43 -0800
-X-Gm-Features: AbW1kva0hUwy2pBqhnvhkJ6zCkGmcob6UgPjL7j6upOAEc4G3eoUrGRGr8Z5YPw
-Message-ID: <CAP-5=fWcdB5fx+GpKQqL1hjSXArZVfjZzxsTdqMp4NT5Q6QTRA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] Mypy and pylint build support
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 25, 2024 at 10:23=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Support building perf checking the python code with mypy and/or
-> pylint. Currently there are too many errors to make this a default.
->
-> Shellcheck generates no output on success, so linking shellcheck files
-> doesn't cause `ld` to fail. Mypy and pylint generate output that will
-> break `ld` so change the Makefile.build to ignore test log files.
->
-> Address some initial mypy errors.
->
-> Ian Rogers (6):
->   tools/build: Don't pass test log files to linker
->   perf build: Rename TEST_LOGS to SHELL_TEST_LOGS
->   perf build: Add mypy build tests
->   perf build: Add pylint build tests
->   perf test: Address attr.py mypy error
->   perf python: Fix setup.py mypy errors
+The perf core code fails to account for total_enable_time of event
+when its state is inactive.
 
-Ping.
+Here is the error case for failure to account for total_enable_time for
+core event:
 
-Thanks,
-Ian
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
+...
 
->  tools/build/Makefile.build         |  6 +++++-
->  tools/perf/Build                   | 32 +++++++++++++++++++++++++++---
->  tools/perf/Makefile.perf           | 14 +++++++++++--
->  tools/perf/arch/x86/Build          |  6 +++---
->  tools/perf/arch/x86/tests/Build    |  6 +++---
->  tools/perf/pmu-events/Build        | 25 ++++++++++++++++++++++-
->  tools/perf/scripts/Build           | 26 ++++++++++++++++++++++++
->  tools/perf/tests/Build             | 32 +++++++++++++++++++++++++++---
->  tools/perf/tests/shell/lib/attr.py |  8 +-------
->  tools/perf/trace/beauty/Build      |  6 +++---
->  tools/perf/util/Build              | 31 ++++++++++++++++++++++++++---
->  tools/perf/util/setup.py           | 10 ++++++++--
->  12 files changed, 171 insertions(+), 31 deletions(-)
->
-> --
-> 2.47.0.163.g1226f6d8fa-goog
->
+/*
+ * three number represetns each
+ *   scaled count / total_enable_time / total_total_running_time
+ */
+armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+                                      ^^^^^^^^^^
+armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+                                      ^^^^^^^^^^
+
+ Performance counter stats for 'stress-ng --pthread=2 -t 2s':
+
+     1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
+     1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
+
+Since above two events are belong to the same task context and
+mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
+the total_enable_time should be the same (marked with ^^^^^^^^^^^)
+and the summation of ratio should be 100%.
+
+This account failure of total_enable_time because of
+account failure of child_total_enable_time of child event when
+child task exit.
+
+Below table explains how the child_total_enable_time is failed to account at
+exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
+
+ - in means sched_in.
+ - out means sched_out.
+ - exit means at the exit of child task.
+   NOTE: the value is before calling list_del_event(). which mean
+         the value at exit column will be added at parent event's
+          child_total_enable_time when child task exit.
+ - ctx is the child_task_ctx,
+ - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
+   added in CPU0,
+ - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
+   added in CPU1,
+ - e0 and e1 belongs to same child_task_ctx.
+
+          CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
+          |  in | out |       | in  | out     |       | in      | exit        |
+------------------------------------------------------------------------------
+ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
+------------------------------------------------------------------------------
+e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
+------------------------------------------------------------------------------
+e0->run   |  0  | t1  |       | t1  | t1     *|       | t1      | t1 + t3     |
+------------------------------------------------------------------------------
+e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
+------------------------------------------------------------------------------
+e1->run   |  0  | 0  *|       | 0   | t2      |       | t2      | t2         X|
+------------------------------------------------------------------------------
+
+The value marked with * means it doesn't updates since event->state was
+INACTIVE.
+
+Please see the last CPU0's column with exit (marked with X).
+Since e1's state is INACTIVE its total_enable_time doesn't update
+and it remains with former value without accounting t3 time.
+
+In this situation, at __perf_remove_from_context() while exit child_task,
+sync_child_event() where adds child_event's total_enable_time to
+parent event's child_total_enable_time is called before
+list_del_event() in which event time is updated by setting the event state
+as OFF. that means child_total_enable_time is added with missing
+amount of last enable time -- t3.
+
+In case of parent event's total_enable_time is updated properly in
+list_del_event() when the task exit.
+However, the child_total_enable_time is missed when child_task exited,
+the perf prints error amount of enable_time (which is summation of
+total_enable_time + child_total_enable_time).
+
+To address this, before updating child_total_enable_time of parent's
+event, update child event time.
+
+After this patch, this problem is gone like:
+
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
+...
+armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
+armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
+
+ Performance counter stats for 'stress-ng --pthread=2 -t 10s':
+
+    15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
+    22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 065f9188b44a..d27717c44924 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13337,6 +13337,7 @@ static void sync_child_event(struct perf_event *child_event)
+ 	}
+
+ 	child_val = perf_event_count(child_event, false);
++	perf_event_update_time(child_event);
+
+ 	/*
+ 	 * Add back the child's count to the parent's count:
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
