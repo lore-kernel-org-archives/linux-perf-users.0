@@ -1,154 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F273214A74
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 07:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE683BBF0
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 14:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736409192; cv=none; b=DIDtpxe6PutacNdLJRdGn7m0LtQo6XWqGKzJVGe4oFIclvY4ArfoIRYiKVnrJroNAomZQFA0QKN7vi8JAjyWdi7IJkmaTVLQHXR7DKzHAQLm0lDYEgbA5+ZlUN2vfYxDDnI9TUYCBWeTZ+Y1QSu5xMlhXILitsq8HLS82Ar1TsA=
+	t=1736434253; cv=none; b=Im2rAOUWPKPKWeFbTzbbGhTb2W4O1LFUft+41+N1hDE5fp48zUOPYvnjIh8qqYo7X2ZVLmu3JKXIK0xkdB5F+XOA3c6xDo49z0JdJua5w9Ypw9Or5ftBoxl+mnEJALgMG4y0u7J4OFeKI+US7SVR9wVxuZxlDSVB9eecWMJYV5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736409192; c=relaxed/simple;
-	bh=GKA/s0dhS3y5Q0wClnwz/vinA1zILLOoLzSvzMb3AiA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fluk/vDexkl/vGGfWruZKzcxMsbBF1w51YIYfSdvvZfgFQN5+baGiXs7rQbWReg8CbRoWY1LoQSZ7mcC8wm6xKDddSNV4YjwP/Vi+srMeWrqyYfgh2Ep+LJ3Fjzxc3T2hr+yegsfSTEUNWy3MPQn9vgaB0QIjNY4FUwK56XHdMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZmWc2eGH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736434253; c=relaxed/simple;
+	bh=q2hm5e03GHcl7yGH+zD8oWdvoCkRIVVhxDbNPxk1hl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tRmzk9KSY5DHgMSPkO/cy667lSX/hnqqIWJAoz1mhpNaOls17INThDb/+wpMZ+XigpbnCgDGhP45oPmL7fWts1ViuSXlbn10arvcSzhKEGY+PFsmfs23j13e5qBX2JRCjxMNVp/6ActA+5eDuT0tqdZR4hH0lUpWrC4KINdZeqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dokM3ndg; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZmWc2eGH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736409189;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gfO+r5xR4PUDrsRJu5n76LpjO4EViTJFVCpyoVSyyzU=;
-	b=ZmWc2eGHgxH3osGY6b553wU9MaSz+DnsDjJchQYhO7egM3yUhOxF8LhH04qvXd6EN+p8Gx
-	BM7jRoOC03Pp0mf9s1QhXBE/eM3N28O13quwIIumi2I9Pjv34sro2agUAgmY+SdnV0zU8v
-	yvOcYSJYy57lmc8951WGzSyNTUtV4u8=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-aFitqN_6PvOidXyoENW6eA-1; Thu, 09 Jan 2025 02:53:07 -0500
-X-MC-Unique: aFitqN_6PvOidXyoENW6eA-1
-X-Mimecast-MFC-AGG-ID: aFitqN_6PvOidXyoENW6eA
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6e5c9ef38so99782985a.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 23:53:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dokM3ndg"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso900450f8f.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 06:50:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736434250; x=1737039050; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L5DpCE96R7nb9vcFrBhf7ly1HvCsEb1jpqWjC9kRG1I=;
+        b=dokM3ndg5oRHq1JcWxsdxBVu+abD2Y+/vRG4pfZonJ4SLNo5UAArOLRVHm/bYqNqgo
+         HAxXxVJUbLkb29PPIMUwo5dFwsvAt2DmIYGMyjlZq2hlmjc+/3xdN3YfqP/bkIf5z5I+
+         N+b7LpdUzglE4oPDA8uW0RMZHelgFbJr5b1Y+wZ3eQdq9umaAP5uTu4A7FYJU8c87biH
+         8KXyD9esQAHpmsor9sUgYXGfqIbEY477At/mWfNFxU1TWhP5nwaCYEPDsECZAm3a6P2v
+         FNvUAMV/GjivrtbBawl+nyV3DvoDCGEgzkQKLrjfgaYNKgD46kJrSArplW9S5B5NghzP
+         eICg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736409187; x=1737013987;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1736434250; x=1737039050;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gfO+r5xR4PUDrsRJu5n76LpjO4EViTJFVCpyoVSyyzU=;
-        b=Tf0hsbbe64PcjBKU/GnruRZPGdIMzfyyMgtaugXstka0uJzeJnQ/5/yByyncRqOXOm
-         lttjaOQsXw52hedzTZrmDI3/M7rA53KoOxPWzdtQ7lxT5dW/IPBkQKBA40B/R/50r0wV
-         DANiDp4pUzLCg/YuRMHOuzvfKd7rdAC9APw1bNBYh+5hPFUlw9Vg8P2mw+0oJ6Dnvhg+
-         AK9aSzQBm53MR6QvMd/FrCtNUtWNK+TtYpWslalyScwwUWWHObT6843gMdv/6qheww0v
-         6XXwmoim20NyCDrDnHPpM12yhq+xgI33eqMgxnPeLnfe/YXGxm1CNIUwEYPmShdf2UZk
-         9M3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiG5XzcUY8uQHJUZP0Lr9gUI/3fkP3X4hn5f/wukzVtzfTLoVhatvyIYdWtzcuVw5eOOPjDCODkmWygX5CJDxo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUAW0xCp1sxkVHPQvrQys72XEZyQD6mFk2dtVtvrGQFN4wHbjc
-	sxzQuZJ9PO9CnnTaN+NeXxFva0nS/fY5Aq8Nq+cI0klLg82CxLmicZRbpRRjb1pyEKXRqdHI5wI
-	Bay58OkOsSWdHgxQtraMiOoTA29c50LN+TMzdRzU/5h9GKQF5ikMgO2IzPNLGxyQy4SM=
-X-Gm-Gg: ASbGncvAxxOWebxd58EiihzWnh0Gge3LSGHzJqI9LZmFwF9Iot1+OF26foBN9zUtSBk
-	9x4rnySXuvzG+hD9BcbLUofSSmWYKzu6qDctAb7M2EUSgWNwld4Cp2bDZ/iGC8+wQUwNa7Pskxp
-	N9BWWZ3VT6IxcOt+6upR93LiA1MgIx3AxCdoQEfvDVK+7WPjNW4eJJaXysW+Uiq+4PXGzAjuZf/
-	Ep0l/j2mzjvd3mSs2lLZARmNKHfyYx5D5M3Y+CnRHPgBRpPgyUVmAUEqC+jNrVZJLQ0PcT8zM1L
-	zQ0PdhU=
-X-Received: by 2002:a05:620a:248d:b0:7a9:abdf:f517 with SMTP id af79cd13be357-7bce1286ea9mr359755385a.25.1736409187076;
-        Wed, 08 Jan 2025 23:53:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEEEiUGlJ10Kc8Mh22kcaQUJV1JNv8LIMdR5nsQVb0+EmtKA1fprNXE6lw3tD9o0QflpgqiqA==
-X-Received: by 2002:a05:620a:248d:b0:7a9:abdf:f517 with SMTP id af79cd13be357-7bce1286ea9mr359753885a.25.1736409186814;
-        Wed, 08 Jan 2025 23:53:06 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7bce3248514sm42623685a.28.2025.01.08.23.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 23:53:06 -0800 (PST)
-Message-ID: <a016ab208eb3ee3821ab59a2520a2bf56645917e.camel@redhat.com>
-Subject: Re: [PATCH 1/2] perf ftrace: Check min/max latency only with bucket
- range
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
-	 <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
-	 <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, 	linux-perf-users@vger.kernel.org
-Date: Thu, 09 Jan 2025 08:53:02 +0100
-In-Reply-To: <20250108210015.1188531-1-namhyung@kernel.org>
-References: <20250108210015.1188531-1-namhyung@kernel.org>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+        bh=L5DpCE96R7nb9vcFrBhf7ly1HvCsEb1jpqWjC9kRG1I=;
+        b=NvNUC2z1RGfJmmptVgDnCtG0LvOUP60pcgphBRI03LCrNVSGZnPP+Qi9I3N7/q7jHr
+         kCFL9+AyMydXAqusdgE6K6MDJ6xM+qwUBpmDE1V+0yoxT5LkTIhwLF20KXBYrDob6fa2
+         lPMjznABDorTWCr1pAJAaM5PZ2z838MbBEkSlPKFyNWEhAZsAxSbOKLJMNV0XG2VIEyL
+         p+sCcSzm48wXbaCbIg/D2AQd6orj+oMD1zG98WZOmsP9wXz3+j0gymQNKCnMPdIZxO/u
+         IVrGL76yjS0SWOK9fpS25Q/bFfnmHUvk4UpITPqfVsUJIc+HBIxQK0i5QFt7vRNuqiS1
+         C5DQ==
+X-Gm-Message-State: AOJu0YzEAMRMPQVui6yN2jwPim6+qfJji+TFSKwyV2PRB507IJwCgwrm
+	zIGOw4of3PF+TmIQqw3MxE/1dlN5bTPDiOzgv7ZirDLtCu0OI9jlkOTMB6rCXk0=
+X-Gm-Gg: ASbGncvsetU5oUkZ9VjBzvhI1po7AdASDlZ4Yrabv85SyZMawA8bNc0UmbAuJX0IV7T
+	/KpP93En3VskY7UvpnniI0ejHRpri63BpmYoJTugl2aQRsJ/dGxdi9Eh3ltZzFXaSv1ZA3OEuf3
+	bexACWVXkeeM+WjcWT9LXL42D/4fuslBEFy9ETr0bfp9kExaOV1n0tVIPd8HWzqOJ6iOCxJZyjz
+	z7UbKE2oQ1mj6YbkebIKaGh3KtY2+oDn1AM/rEZQGp89PtIdWlx4PoNu7EPczOOifI=
+X-Google-Smtp-Source: AGHT+IEcH8+Ovf9omwBo2p4K0b2ig9ksDRfs3Jq9Fpco+kBxi3c4aP25riv95a6SHGcGD9NTY6W2Ag==
+X-Received: by 2002:adf:c08d:0:b0:38a:87cc:fb42 with SMTP id ffacd0b85a97d-38a87ccfc9cmr5369663f8f.21.1736434250198;
+        Thu, 09 Jan 2025 06:50:50 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.67.122])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4b8214sm2013068f8f.78.2025.01.09.06.50.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2025 06:50:49 -0800 (PST)
+Message-ID: <89e678bc-f0af-4929-a8a6-a2666f1294a4@linaro.org>
+Date: Thu, 9 Jan 2025 14:50:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf report: Fix input reload/switch functionality
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ namhyung@kernel.org, irogers@google.com
+References: <20250108063628.215577-1-dvyukov@google.com>
+ <384d6c4b-d2ce-47f8-9030-6225758b5923@linaro.org>
+ <CACT4Y+bUrZHD5H+z5-+dKGbtBPO9EQNzBoOwYGhp7zHGrHYrQg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CACT4Y+bUrZHD5H+z5-+dKGbtBPO9EQNzBoOwYGhp7zHGrHYrQg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-01-08 at 13:00 -0800, Namhyung Kim wrote:
-> It's an optional feature and remains 0 when bucket range is not
-> given.
-> And it makes the histogram goes to the last entry always because any
-> latency (num) is greater than or equal to 0.
 
-Thanks Namhyung for fixing this, something definitely slipped while
-testing..
 
-I confirm your patches work well also when the bucket range is provided but=
- the
-min latency isn't.
+On 08/01/2025 3:35 pm, Dmitry Vyukov wrote:
+> On Wed, 8 Jan 2025 at 16:23, James Clark <james.clark@linaro.org> wrote:
+>>
+>> On 08/01/2025 6:36 am, Dmitry Vyukov wrote:
+>>> Currently the code checks that there is no "ipc" in the sort order
+>>> and add an ipc string. This will always error out on the second pass
+>>> after input reload/switch, since the sort order already contains "ipc".
+>>> Do the ipc check/fixup only on the first pass.
+>>>
+>>
+>> Hi Dmitry,
+>>
+>> A reproducer with before and after behavior might be helpful for the review.
+>>
+>> It might be unrelated to your change here, but the input switch thing
+>> didn't seem to do anything for me. If I record two files, open the first
+>> one, press S and select the second file nothing seems to change. I
+>> assumed it would show the other file but nothing changes?
+>>
+>>    $ perf record -- true
+>>    $ perf record -o 2.data -- ls
+>>    $ perf report
+>>    S key
+>>    load 2.data
+> 
+> Yes, sure. This needs "--sort symbol":
+> 
+> perf report --sort symbol
+> 
+> then press 's', select file, and it terminates.
+> 
+> Affects fewer cases then I initially assumed, since I happened to run
+> with "--sort symbol" when I discovered it.
+> 
+> 
 
-I'm wondering if it would be cleaner to propagate your changes (using
-min/max latency only if bucket_range is provided) also to
-make_histogram. That function currently works since we assume
-min_latency to be always 0, which is the case but probably not
-considering it altogether would look a bit better and prevent some
-headache in the future.
+Ah yeah I can reproduce the bug with --sort, which is fixed by the 
+patch. But 's' doesn't actually reload a new histogram for me, I just 
+get the original file again. Maybe I'm misunderstanding what 's' is 
+supposed to do?
 
----
- tools/perf/builtin-ftrace.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 076c703e5c334..82d63d7af9d03 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -779,19 +779,16 @@ static void make_histogram(struct perf_ftrace *ftrace=
-, int buckets[],
- 		if (ftrace->use_nsec)
- 			num *=3D 1000;
-=20
--		i =3D 0;
--		if (num < min_latency)
--			goto do_inc;
--
--		num -=3D min_latency;
--
- 		if (!ftrace->bucket_range) {
- 			i =3D log2(num);
- 			if (i < 0)
- 				i =3D 0;
- 		} else {
--			// Less than 1 unit (ms or ns), or, in the future,
--			// than the min latency desired.
-+			i =3D 0;
-+			if (num < min_latency)
-+				goto do_inc;
-+
-+			num -=3D min_latency;
- 			if (num > 0) // 1st entry: [ 1 unit .. bucket_range units ]
- 				i =3D num / ftrace->bucket_range + 1;
- 			if (num >=3D max_latency - min_latency)
-
-base-commit: 257ccfaf9fbef6f54eabf1a8f8a8efcc9036439b
---=20
-2.47.1
+>>> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+>>> Fixes: ec6ae74fe8f0 ("perf report: Display average IPC and IPC coverage per symbol")
+>>   > Cc: Namhyung Kim <namhyung@kernel.org>> Cc: Ian Rogers
+>> <irogers@google.com>
+>>> Cc: linux-perf-users@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> ---
+>>>    tools/perf/builtin-report.c | 30 ++++++++++++++++--------------
+>>>    1 file changed, 16 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>>> index 048c91960ba91..42d7dfdf07d9b 100644
+>>> --- a/tools/perf/builtin-report.c
+>>> +++ b/tools/perf/builtin-report.c
+>>> @@ -1721,22 +1721,24 @@ int cmd_report(int argc, const char **argv)
+>>>                symbol_conf.annotate_data_sample = true;
+>>>        }
+>>>
+>>> -     if (sort_order && strstr(sort_order, "ipc")) {
+>>> -             parse_options_usage(report_usage, options, "s", 1);
+>>> -             goto error;
+>>> -     }
+>>> -
+>>> -     if (sort_order && strstr(sort_order, "symbol")) {
+>>> -             if (sort__mode == SORT_MODE__BRANCH) {
+>>> -                     snprintf(sort_tmp, sizeof(sort_tmp), "%s,%s",
+>>> -                              sort_order, "ipc_lbr");
+>>> -                     report.symbol_ipc = true;
+>>> -             } else {
+>>> -                     snprintf(sort_tmp, sizeof(sort_tmp), "%s,%s",
+>>> -                              sort_order, "ipc_null");
+>>> +     if (last_key != K_SWITCH_INPUT_DATA) {
+>>> +             if (sort_order && strstr(sort_order, "ipc")) {
+>>> +                     parse_options_usage(report_usage, options, "s", 1);
+>>> +                     goto error;
+>>>                }
+>>>
+>>> -             sort_order = sort_tmp;
+>>> +             if (sort_order && strstr(sort_order, "symbol")) {
+>>> +                     if (sort__mode == SORT_MODE__BRANCH) {
+>>> +                             snprintf(sort_tmp, sizeof(sort_tmp), "%s,%s",
+>>> +                                      sort_order, "ipc_lbr");
+>>> +                             report.symbol_ipc = true;
+>>> +                     } else {
+>>> +                             snprintf(sort_tmp, sizeof(sort_tmp), "%s,%s",
+>>> +                                      sort_order, "ipc_null");
+>>> +                     }
+>>> +
+>>> +                     sort_order = sort_tmp;
+>>> +             }
+>>>        }
+>>>
+>>>        if ((last_key != K_SWITCH_INPUT_DATA && last_key != K_RELOAD) &&
+>>>
+>>> base-commit: 09a0fa92e5b45e99cf435b2fbf5ebcf889cf8780
+>>
 
