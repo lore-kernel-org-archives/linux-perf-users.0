@@ -1,57 +1,57 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C65205E0A
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 21:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FB02063C1
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 21:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736459474; cv=none; b=nO6nD+XkenXjtRkhM5VRR9+MyMnRi/8xX5vkryetA2ISzhil8WX+YiACTBAgEUvouMT+RGIzVfCq/Tyv78KMQY4EOHDHniMOVqEkBlDg/N7XReCx74MsAWxv2TaFfoYY/jDU5JiQyPZ4hCMLIe8Co/CTqeKdbNnhre9F6yyLlyk=
+	t=1736459477; cv=none; b=uDylujQSzVgNoj8h4BIlc/R/J0SCDNrV3Vg3rqNM1UbNm6ZneZja6H2IXdAwq+PxGwxp2fVB3Q2ZCBO0soPaNaKTOpf763swoZcr45rxM/cGbQ/sEsyl/4OMwxXTRI+KAzfXIHWkbmi+IIJ798GoQpG6T3FUXVBnY9IIV/FXALg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736459474; c=relaxed/simple;
-	bh=+7Yhxzt89Bt/FtZ0vYhkiBaegzjMmVsjRss0mqjtWOY=;
+	s=arc-20240116; t=1736459477; c=relaxed/simple;
+	bh=rb3nJ50Qx6Av0jjPKM4BDhZRCZf5SaYdGkra8TgFlyQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=P2XbtlbHo1oSCBEEJCE9qx4Bq5FRtXXjJHccmSsVKowo8d2TJpyQKKTpzfKUEZg87mqwN8pzfEn5lMQ9d92SwQPDCIhakXKVyh8ek0SkUybKB1SL5q7mV+mMXS25w+zTKyYLtAq8Dz+9+OyA4KvkEWlNdHyaAaBb8f/6D50rKfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T1tbGudC; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=KcHp2+uKE+cXInY4ANgCvtVpsEm1lF7h+fWc2CMYjkFiy56suM9rLn5+dugGbEbGXnGBJwdp4GKQeJjZVLlGOHVlcl3honplOETMMeXGkFik2XFMGsKCM1u9mAPWnmfVSdQLKobtpvJbQam+EAyMMVswoq17n80SDHqndcdjpgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mWGMevKH; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T1tbGudC"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5505f613e5so2762640276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 13:51:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mWGMevKH"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e549c458692so3497513276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 13:51:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736459472; x=1737064272; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736459474; x=1737064274; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YLGfjWF8Dvwd5vX5dBqbXBJjQRQp0vBCnTiwsZVrhXw=;
-        b=T1tbGudC77Ktw+8Nd6Bi7/6r+hkAU6d4362MSV3IOEyvEyQ+Qi+8KjAKj2JUbAJ5kH
-         6WDyxFE5PUNQgk3cFFrjY8Sxui534lWQPRRvqwBpNPWVnHwHMifveFtN4PcdbkYG2JYM
-         l2CQTPIGtax4EoVWCsLK/VETZ4kG9thz7Pds8FfQLZSopL9BvGiH/2VLhEe4FWI4wZV1
-         Pysqm3Ku8LvYKYnAQEVHSrxDf703nTtjLFQHSPAl14jH9lodFH8xF1Yzo+HZYlOjSOAg
-         BQXEAnUW/PTH0LBnuNF1d5UO9vhJc4UE7Zyp9XMNWqUjpYGjlwYAhnH9m3AVkS2BWklR
-         vDvg==
+        bh=XY2zs0NTwgAFtZHHxTu56AgcGBqwz9PeDUjhHd39VYk=;
+        b=mWGMevKH6ra1j6yZuIfMmMTdudhmhnUbn7AYy/8L23tXS7ET4Ba54hd+fuKBOs4irH
+         xZq+8HTr8M1LGQOBXIV6o/ShZGaq+DJyh11MkO94nLdRz6gCYqanqr6W1sVDaSwIythL
+         R/vbdli/S2alihy5LI7fB2yv32JRGDS7gFGu1XzLRlqSHbP/sKNg2nKCdORiRSjRszO5
+         rFr2W7KX5ez+QodArSPWZBbWqHJxG09girQYnVjociOVFOaeruYsgVNTjz5jiPn2i3A8
+         qvxmThy4KmLLBIVL5Xp9Dy16VwgkIQMVcBQWKg9sfnnfiYQ98X6/HLf0xSqN2skmr1OY
+         9iNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736459472; x=1737064272;
+        d=1e100.net; s=20230601; t=1736459474; x=1737064274;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YLGfjWF8Dvwd5vX5dBqbXBJjQRQp0vBCnTiwsZVrhXw=;
-        b=tvIlbkMLj0JdMb2jc/I7NZum3Uhw/VfOcXyrU2rc5ULMFI8uqTuU5AR4m3ynt8CHLd
-         gsjrq0G0icmn6s0b/T/ikCmXjQpJ+/+rWfOYofEjm7/+T7BGOsXnJ868OHlgMOg+lCm6
-         av8J4iDl636rgZvJlNHMi9H++FsQByXu9Nz8naLwO2hyPZWVtfjek0jDSgsPiZ0edwK0
-         cn4R/7+C7CCB/z7j8cjdCo/proNP2/MQ7WF4zvaMlbVReFr205BBSIJM4XTlCcIPdtwy
-         mG33r7svU2w1spYg8vQdn4NpuuKtom6Mi+QouhsSCOt08X0lOaXpp1fEhjKnIjHAuKUR
-         oflQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWP7pCAKleYCl/AdsuSmmAN4Y/EBNWWDhyX3zdAhmdlnnE9fraB/G3UN0TqJovLE0vlGrhYQP18KYTmq/nT8cg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzo8YKW0vEeMGMnxd6CzYgedboZJkm7rhymL+P/VPqwrmEY821
-	blqelvLjr+00acvN2BTyzJM/DKK3bTej6dU1DCdx2X4aBySzw8F+PntTEbJho7o1my0EsPd7UFF
-	evGv8hg==
-X-Google-Smtp-Source: AGHT+IFNBF8/b18TaeHOjZXwlLPSns4sJbrZYHGMf0g4LTtJa9asgt72dPYr9HcdZ/mkL+akKyCJgOUBs+Av
+        bh=XY2zs0NTwgAFtZHHxTu56AgcGBqwz9PeDUjhHd39VYk=;
+        b=OCzFEB5sSB+LzlIj615LCfrUzzuXCSFkMB/Ehgblgl0z1sKwnEo9uqiDSXitun8076
+         oI7czQqWyAeW15RcdYIAq0UaHzc6E0MYAm8rXV3jE84BVAoFGBthOc3gawFFjuYH+z+Z
+         sTtAaKkomq6kZjM/0LDrcP5x6ERgQpltsWnttgOJPGQFs0ThDjNypTSX+YWyj/seOoiT
+         CHoBi/t2gF7XcoHp+mItP8IxPiVm34Rl6Q2hP/+xovek3lw4R8XfJjaAjbLW0C8RzSYr
+         Kqr487+JIPUG2O1j9N1W+Yf/AhwJKOBHoXTiERS8fRypi13HjKDiKPNnAJZmbMCtFMAm
+         JJIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEL0cl29R0jWu33pO3ZcD5jI5AWH+UuC4XpMBDjeYen9f9QSjd47pGuADw8FWJSOlsvyP+5GD2Bby/mSgjgIbT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqsGxsnnsEebgqH1MLgxrR5Dkigl0OXyXXBWCEUNVGtw6UQqzz
+	MPzxF7rtg3rspG/fHQuJSs1RrFhvJxLwvu2EDqixB659/2mJPJ+ynKkzLtpmI4nr/yQVKYRqdLp
+	GYTBDMA==
+X-Google-Smtp-Source: AGHT+IH2qwOcfHH2bK3OckucCWIEdi7YApF7/mRchMh0i7t2VufuaD66SsX539TxewHKkwJtAR5ode736gWi
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7ea3:d1e5:495a:9a4f])
- (user=irogers job=sendgmr) by 2002:a81:a985:0:b0:620:32ea:e1d4 with SMTP id
- 00721157ae682-6f543c590b5mr198097b3.0.1736459472119; Thu, 09 Jan 2025
- 13:51:12 -0800 (PST)
-Date: Thu,  9 Jan 2025 13:50:54 -0800
+ (user=irogers job=sendgmr) by 2002:a25:ce08:0:b0:e46:91aa:992a with SMTP id
+ 3f1490d57ef6-e54edf44475mr17922276.4.1736459474673; Thu, 09 Jan 2025 13:51:14
+ -0800 (PST)
+Date: Thu,  9 Jan 2025 13:50:55 -0800
 In-Reply-To: <20250109215055.454888-1-irogers@google.com>
-Message-Id: <20250109215055.454888-5-irogers@google.com>
+Message-Id: <20250109215055.454888-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250109215055.454888-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v4 4/5] perf test: Add a runs-per-test flag
+Subject: [PATCH v4 5/5] perf test: Improve verbose documentation
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,105 +71,31 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-To detect flakes it is useful to run tests more than once. Add a
-runs-per-test flag that will run each test multiple times. Example
-output:
-
-```
-$ perf test -r 3 lbr -v
-122: perf record LBR tests                                           : Ok
-122: perf record LBR tests                                           : Ok
-122: perf record LBR tests                                           : Ok
-```
-
-Update the documentation for the runs-per-test option.
+Add a little more detail on the output expectations for each verbose
+level.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-test.txt |  9 ++++++++-
- tools/perf/tests/builtin-test.c        | 28 ++++++++++++++++----------
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ tools/perf/Documentation/perf-test.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
-index 8f8a3c367570..85f868c324ff 100644
+index 85f868c324ff..32da0d1fa86a 100644
 --- a/tools/perf/Documentation/perf-test.txt
 +++ b/tools/perf/Documentation/perf-test.txt
-@@ -33,7 +33,14 @@ OPTIONS
+@@ -28,8 +28,11 @@ OPTIONS
+ 	Tests to skip (comma separated numeric list).
+ 
+ -v::
++-vv::
++-vvv::
+ --verbose::
+-	Be more verbose.
++	With a single '-v', verbose level 1, only failing test output
++	is displayed. With '-vv' and higher all test output is shown.
  
  -S::
  --sequential::
--	Run tests one after the other, this is the default mode.
-+	Run all tests one after the other. By default "exclusive"
-+	tests are run sequentially, but other tests are run in
-+	parallel to speed execution.
-+
-+-r::
-+--runs-per-test::
-+	Run each test the given number of times, by default once. This
-+	option can be useful to determine if a test is flaky.
- 
- -F::
- --dont-fork::
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c6071c4db741..14d30a5053be 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -42,6 +42,8 @@
- static bool dont_fork;
- /* Fork the tests in parallel and wait for their completion. */
- static bool sequential;
-+/* Number of times each test is run. */
-+static unsigned int runs_per_test = 1;
- const char *dso_to_test;
- const char *test_objdump_path = "objdump";
- 
-@@ -485,7 +487,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 			len = strlen(test_description(*t, i));
- 			if (width < len)
- 				width = len;
--			num_tests++;
-+			num_tests += runs_per_test;
- 		}
- 	}
- 	child_tests = calloc(num_tests, sizeof(*child_tests));
-@@ -549,16 +551,18 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 				continue;
- 			}
- 
--			test_suite__for_each_test_case(*t, curr_test_case) {
--				if (!perf_test__matches(test_description(*t, curr_test_case),
--							curr_suite, argc, argv))
--					continue;
--
--				err = start_test(*t, curr_suite, curr_test_case,
--						 &child_tests[child_test_num++],
--						 width, pass);
--				if (err)
--					goto err_out;
-+			for (unsigned int run = 0; run < runs_per_test; run++) {
-+				test_suite__for_each_test_case(*t, curr_test_case) {
-+					if (!perf_test__matches(test_description(*t, curr_test_case),
-+								curr_suite, argc, argv))
-+						continue;
-+
-+					err = start_test(*t, curr_suite, curr_test_case,
-+							 &child_tests[child_test_num++],
-+							 width, pass);
-+					if (err)
-+						goto err_out;
-+				}
- 			}
- 		}
- 		if (!sequential) {
-@@ -698,6 +702,8 @@ int cmd_test(int argc, const char **argv)
- 		    "Do not fork for testcase"),
- 	OPT_BOOLEAN('S', "sequential", &sequential,
- 		    "Run the tests one after another rather than in parallel"),
-+	OPT_UINTEGER('r', "runs-per-test", &runs_per_test,
-+		     "Run each test the given number of times, default 1"),
- 	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing, use '--list-workloads' to list the available ones."),
- 	OPT_BOOLEAN(0, "list-workloads", &list_workloads, "List the available builtin workloads to use with -w/--workload"),
- 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
