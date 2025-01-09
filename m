@@ -1,274 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02D81ACEAE;
-	Thu,  9 Jan 2025 21:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B85204F72
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 21:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736459031; cv=none; b=bUd91PVpdOSYUPGUU1KQ11vKouWm4hLAPFT3QoODItShTxNZqYcSEeL5uITRhMmSoX224fLJ5XRUbCR5StzB2TGj1EmPZuLmJQkHI60tqsYSJlqaBm82m5PICrd7a3UKMH794sjVmQoBUhhnKr9huT3myaTAJxVT7JgqonBRHrg=
+	t=1736459054; cv=none; b=BLANF1zaCyDuk1jXBDoTErvbjP+RvRNEVYbdKd2gJA0o7vD9AJGD6vz8vB46TramqQTD2nzPIatC2FrzdsLvCjzQf8AuJLE3fDHjOyPtL/BcEynst4a/jbWRdJXhqDm45oxUeIYJ/VDzDsZzIhU0K57rKFt3oU/PDGioJHOzlTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736459031; c=relaxed/simple;
-	bh=M0snV44UFgly4ylZ82gceg9saj8Zti2LYEIqYCeS/kY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DerAycNxFaSezcwLQ5ybHf7p6FfQsqQDt7+Om/nn7DTQ9Mayd18SZopq4Rl+5pHZBBng9MA2+fnCcGRWig4KF3IAbLhm3bRWEng1e9FWDZUbegJfNH/5mownItbRa2sD9dN6a8Y7IcpLFWZ4EY2PHyC0OIQkqZVpYu8I8cendMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiEuB6+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736459054; c=relaxed/simple;
+	bh=fdRNTTqF11Tm74qGwMIRyPMOb9yj8YJ0xMrUNLj2sC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cuUCUb9Q8AV9hz+3VPmFA0jxo0cBbmcICISv2N/7PHsBqmH+bc4MDeUdE7GbGfxok5bFB5THSnYNuts3ESDB/2rFVBQ8JM9xJ7U3aw+J41lcvxFjAGWql/j1zUX2tUXxzisbLxUxguMA7ALCpDbsMqRF755JVoSCymzO0oYopqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bI6qH3I1; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiEuB6+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503C0C4CED2;
-	Thu,  9 Jan 2025 21:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736459029;
-	bh=M0snV44UFgly4ylZ82gceg9saj8Zti2LYEIqYCeS/kY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WiEuB6+EMhIOrGoGMA6MrOvyTB4uPzg0gQpWFKkTHoPDQcyW+3KvyjVgfvnww+5cZ
-	 BAzpASOK2s6SMhixrye2OwLt/gqoGIQJQt+2stRdKvYpxi4JC41G0uLCFSrQzifCq8
-	 GRIE+eAEUFsFgTU9aLyHBOu6pGd/xS0vukk5uW9GmrTl8mYhgr2dlEq6IGEa2nqh46
-	 cXxcAPUNU7Eshpusz9D2lmETZ4BJauiQMW+5O56g9C2tuldNJdhR0XQd77CpnS51AR
-	 xKq32frREjLU4DykqiTRYNq0WzadQJ6XbviBbZW7HuYWHY7njWGL5VGPCr7XulmI0b
-	 r66Y1Ee1LeO0g==
-Date: Thu, 9 Jan 2025 13:43:47 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf hist: Deduplicate cmp/sort/collapse code
-Message-ID: <Z4BDEz3Bmd2DmfNi@google.com>
-References: <cover.1736321686.git.dvyukov@google.com>
- <4bf65a9a789a0bb78e4a3e120ad30389725d2249.1736321686.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bI6qH3I1"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a814c54742so8635ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 13:44:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736459050; x=1737063850; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bq5Pq28Ma4ZMRli7h4+jQsL1coppaz0Y7A7E/RNNvqI=;
+        b=bI6qH3I1GYi3VCFgee3Tgu4H2FHtGKD+TdLtkrbu1R9d++zfLDAGlLxcIFSrL7Xe12
+         3S3uRd6ei2NSIsKxYAWLOJ1kLDWXbrvI8CFL2ZNDIMC8GC0o8HK5VLqKIS1SWCbHaw87
+         F2J64V7e1v22kc28PdP4Ybxu+FKSFHYPZiqjT6cLQ70P1Oz5VZLNVZvrKrDYP3urgKHF
+         0foOjpjr8l+Me7tGprckeh6Ernl+1vfYpiyg0StamMtgbCIjYGq9f8K5VzZIfDkuDjsy
+         o/KMaWQNWGuKRvx7ziIca+g2oVFyE1iEopL4H0qeZKySKVpHYu7FPCYWiIm4T9utIVt2
+         aMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736459050; x=1737063850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bq5Pq28Ma4ZMRli7h4+jQsL1coppaz0Y7A7E/RNNvqI=;
+        b=Ev7UjL/KeiDxOxUv8/8Oaq6hsO31+JNv147Z5Cs7kQi1faUwdCpguDrTvDoYIQSfwr
+         dFmcao1XWgMh/EXp3zgd3/9FYUGVwq/KQ6zRPRs4gOItQycOlREpjZIF5mcRgL51Ij1Q
+         8GWMAPpzwtfXmSVFDJxiwmqdrnwJ4PyXeYN6EwIySgN3FTPBXzVqqY170wDhFJJO4CoN
+         UIBq+ftXXlGkuzJIbtgk7KCJIIVgl77NNxWOTvS2W79vnvMIQSFicEzk0l+fyxd2EmsW
+         OL2Hj8vXGqDJgPGqr0yh2SOLYe46RKvozamrnAx+8Ud+01DRxSaXYgREwDgejjvYLd8k
+         ckhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUsZZzQmYKccOmv/jOC0QhXzaxp02ffutg9PdLjn2rRr+8HlcvBMXYlm4FLAuuJF+ULXhkU4vGKN5aPaiNkTmr@vger.kernel.org
+X-Gm-Message-State: AOJu0YycCC58L5DFYXJCJ1DFcseYBW3EzgzpR28y9Gw9EH15B0vbMcIG
+	W2Vv3Ogq/RrQgWvzCdGpprIarSaqfGAOBuA39R5CZZIM8Q6xESJMZ35KnsWgYO5/1PHhh1eie1w
+	IHpbqXx2O4BiMCNOrTYUxzB5arZ0/qRKjETd+
+X-Gm-Gg: ASbGncsEaQ5VPziPEpZcTNmHgilXDrjvU362tESdt9l1Z8HsYPkootuC7G4Ld0RJmvi
+	a55uhiUA+t2ADCwbS2dGkxPvCxtIQfb0uC6j5ZF+TFcipAkpy/K2WO0dVtL3y0Lg/UQvq2w==
+X-Google-Smtp-Source: AGHT+IFenZyG1rVDZu8wEn51G8UENe6KuYRmo7nxFXrLory2Xh733iS6bSVwtEEERtgMuWsRrOesOaa1Ykqvn8hptKo=
+X-Received: by 2002:a05:6e02:178f:b0:3ce:3d5b:bde3 with SMTP id
+ e9e14a558f8ab-3ce58877bd5mr117655ab.3.1736459049901; Thu, 09 Jan 2025
+ 13:44:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4bf65a9a789a0bb78e4a3e120ad30389725d2249.1736321686.git.dvyukov@google.com>
+References: <20241115161600.228994-1-james.clark@linaro.org>
+ <CAP-5=fUq1JLCVLQerQbK+itNg2RZaP9zCo9RUTgKoGqTQi3yYQ@mail.gmail.com>
+ <ZzjyVgnEUOYknN1k@x1> <CAP-5=fUDnBii8T2hH3o+J=DXMe7xxHXP7Kno5fz4OjBestObwg@mail.gmail.com>
+ <8a89ba95-22cb-4e69-a776-3c927e80f5df@linux.intel.com>
+In-Reply-To: <8a89ba95-22cb-4e69-a776-3c927e80f5df@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 9 Jan 2025 13:43:58 -0800
+X-Gm-Features: AbW1kvYUPXCDZe31oN4aUOqTNJrOnGNDcz2_ylSz1orlUruX7CihfwKwAytWPlY
+Message-ID: <CAP-5=fUYYgo5W26FoZ40FvkT9Nf8g1uQdEz_u5zB9=DvYds1LA@mail.gmail.com>
+Subject: Re: [PATCH] perf tests: Make leader sampling test work without branch event
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Dec 23, 2024 at 1:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
+com> wrote:
+>
+>
+> On 12/21/2024 3:08 PM, Ian Rogers wrote:
+> > On Sat, Nov 16, 2024 at 11:28=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> >> On Fri, Nov 15, 2024 at 10:54:43AM -0800, Ian Rogers wrote:
+> >>> On Fri, Nov 15, 2024 at 8:16=E2=80=AFAM James Clark <james.clark@lina=
+ro.org> wrote:
+> >>>> Arm a57 only has speculative branch events so this test fails there.=
+ The
+> >>>> test doesn't depend on branch instructions so change it to instructi=
+ons
+> >>>> which is pretty much guaranteed to be everywhere. The
+> >>>> test_branch_counter() test above already tests for the existence of =
+the
+> >>>> branches event and skips if its not present.
+> >>>>
+> >>>> Signed-off-by: James Clark <james.clark@linaro.org>
+> >>> Reviewed-by: Ian Rogers <irogers@google.com>
+> >> Thanks, applied to perf-tools-next,
+> > Rebasing on perf-tools-next I see this failing on my Intel Tigerlake
+> > laptop. An example script output for:
+> > ```
+> >  perf record -o "${perfdata}" -e "{instructions,instructions}:Su"
+> > ```
+> > is:
+> > ```
+> >             perf  352917 49604.160314:          3 instructions:
+> > 7f155caca323 [unknown]
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.160314:          3 instructions:
+> > 7f155caca323 [unknown]
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.160317:         18 instructions:
+> > 7f155cacaf3d _dl_start+0x3d
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.160317:         18 instructions:
+> > 7f155cacaf3d _dl_start+0x3d
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.160319:          3 instructions:
+> > 7f155cacaf44 _dl_start+0x44
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.160319:          3 instructions:
+> > 7f155cacaf44 _dl_start+0x44
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.161099:        120 instructions:
+> > ffffffff8ce00080 [unknown] ([unknown])
+> >             perf  352917 49604.161099:     181013 instructions:
+> > ffffffff8ce00080 [unknown] ([unknown])
+> >             perf  352917 49604.161115:       8811 instructions:
+> > 7f155cad22d0 strcmp+0x8b0
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.161115:       8811 instructions:
+> > 7f155cad22d0 strcmp+0x8b0
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.161130:      10483 instructions:
+> > 7f155caba508 _dl_new_object+0x198
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.161130:      10483 instructions:
+> > 7f155caba508 _dl_new_object+0x198
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.165156:     177355 instructions:
+> > 7f155cab90a4 _dl_lookup_symbol_x+0x44
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> >             perf  352917 49604.165156:   13313598 instructions:
+> > 7f155cab90a4 _dl_lookup_symbol_x+0x44
+> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> > ...
+> > ```
+> >
+> > Dapeng/Kan, any thoughts why the counts don't match for instructions
+> > but did for branches?
+>
+>
+> That looks strange,  what's your kernel version and perf-tool version? I
+> just tried the latest perf-tools-next branch, but I don't see this issue.
 
-On Wed, Jan 08, 2025 at 08:36:53AM +0100, Dmitry Vyukov wrote:
-> Application of cmp/sort/collapse fmt callbacks is duplicated 6 times.
-> Factor it into a common helper function. NFC.
-
-It's interesting to use offsetof and cast it to functions. :)
-
-> 
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  tools/perf/util/hist.c | 104 +++++++++++++++++------------------------
->  tools/perf/util/hist.h |   2 -
->  2 files changed, 44 insertions(+), 62 deletions(-)
-> 
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index fff1345658016..8e4e844425370 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -32,6 +32,9 @@
->  #include <linux/time64.h>
->  #include <linux/zalloc.h>
->  
-> +static int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
-> +static int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
-> +
->  static bool hists__filter_entry_by_dso(struct hists *hists,
->  				       struct hist_entry *he);
->  static bool hists__filter_entry_by_thread(struct hists *hists,
-> @@ -1292,19 +1295,27 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
->  	return err;
->  }
->  
-> -int64_t
-> -hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
-> +static int64_t
-> +hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
-> +		     struct hist_entry *right, unsigned long fn_offset,
-> +		     bool ignore_dynamic, bool ignore_skipped)
->  {
-> +	typedef int64_t (*fn_t)(struct perf_hpp_fmt *, struct hist_entry *, struct hist_entry *);
-
-Probably better to put it in util/hist.h and each members (cmp, collapse,
-sort) use the typedef to make sure they remain in the same.
-
-
->  	struct hists *hists = left->hists;
->  	struct perf_hpp_fmt *fmt;
->  	int64_t cmp = 0;
-> +	fn_t fn;
->  
-> -	hists__for_each_sort_list(hists, fmt) {
-> -		if (perf_hpp__is_dynamic_entry(fmt) &&
-> +	perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
-> +		if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
->  		    !perf_hpp__defined_dynamic_entry(fmt, hists))
->  			continue;
->  
-> -		cmp = fmt->cmp(fmt, left, right);
-> +		if (ignore_skipped && perf_hpp__should_skip(fmt, hists))
-> +			continue;
-> +
-> +		fn = *(fn_t *)(((char *)fmt) + fn_offset);
-
-Doesn't just below work?
-
-		fn = (void *)fmt + fn_offset;
+It seems to have cleared up for me. I'll speak up again if I can get a
+reproduction.
 
 Thanks,
-Namhyung
-
-
-> +		cmp = fn(fmt, left, right);
->  		if (cmp)
->  			break;
->  	}
-> @@ -1313,23 +1324,33 @@ hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
->  }
->  
->  int64_t
-> -hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
-> +hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
->  {
-> -	struct hists *hists = left->hists;
-> -	struct perf_hpp_fmt *fmt;
-> -	int64_t cmp = 0;
-> +	return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> +		offsetof(struct perf_hpp_fmt, cmp), true, false);
-> +}
->  
-> -	hists__for_each_sort_list(hists, fmt) {
-> -		if (perf_hpp__is_dynamic_entry(fmt) &&
-> -		    !perf_hpp__defined_dynamic_entry(fmt, hists))
-> -			continue;
-> +static int64_t
-> +hist_entry__sort(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> +		offsetof(struct perf_hpp_fmt, sort), false, true);
-> +}
->  
-> -		cmp = fmt->collapse(fmt, left, right);
-> -		if (cmp)
-> -			break;
-> -	}
-> +int64_t
-> +hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> +		offsetof(struct perf_hpp_fmt, collapse), true, false);
-> +}
->  
-> -	return cmp;
-> +static int64_t
-> +hist_entry__collapse_hierarchy(struct perf_hpp_list *hpp_list,
-> +			       struct hist_entry *left,
-> +			       struct hist_entry *right)
-> +{
-> +	return hist_entry__cmp_impl(hpp_list, left, right,
-> +		offsetof(struct perf_hpp_fmt, collapse), false, false);
->  }
->  
->  void hist_entry__delete(struct hist_entry *he)
-> @@ -1503,14 +1524,7 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
->  	while (*p != NULL) {
->  		parent = *p;
->  		iter = rb_entry(parent, struct hist_entry, rb_node_in);
-> -
-> -		cmp = 0;
-> -		perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
-> -			cmp = fmt->collapse(fmt, iter, he);
-> -			if (cmp)
-> -				break;
-> -		}
-> -
-> +		cmp = hist_entry__collapse_hierarchy(hpp_list, iter, he);
->  		if (!cmp) {
->  			he_stat__add_stat(&iter->stat, &he->stat);
->  			return iter;
-> @@ -1730,24 +1744,6 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
->  	return 0;
->  }
->  
-> -static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-> -{
-> -	struct hists *hists = a->hists;
-> -	struct perf_hpp_fmt *fmt;
-> -	int64_t cmp = 0;
-> -
-> -	hists__for_each_sort_list(hists, fmt) {
-> -		if (perf_hpp__should_skip(fmt, a->hists))
-> -			continue;
-> -
-> -		cmp = fmt->sort(fmt, a, b);
-> -		if (cmp)
-> -			break;
-> -	}
-> -
-> -	return cmp;
-> -}
-> -
->  static void hists__reset_filter_stats(struct hists *hists)
->  {
->  	hists->nr_non_filtered_entries = 0;
-> @@ -2449,21 +2445,15 @@ static struct hist_entry *add_dummy_hierarchy_entry(struct hists *hists,
->  	struct rb_node **p;
->  	struct rb_node *parent = NULL;
->  	struct hist_entry *he;
-> -	struct perf_hpp_fmt *fmt;
->  	bool leftmost = true;
->  
->  	p = &root->rb_root.rb_node;
->  	while (*p != NULL) {
-> -		int64_t cmp = 0;
-> +		int64_t cmp;
->  
->  		parent = *p;
->  		he = rb_entry(parent, struct hist_entry, rb_node_in);
-> -
-> -		perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
-> -			cmp = fmt->collapse(fmt, he, pair);
-> -			if (cmp)
-> -				break;
-> -		}
-> +		cmp = hist_entry__collapse_hierarchy(he->hpp_list, he, pair);
->  		if (!cmp)
->  			goto out;
->  
-> @@ -2521,16 +2511,10 @@ static struct hist_entry *hists__find_hierarchy_entry(struct rb_root_cached *roo
->  
->  	while (n) {
->  		struct hist_entry *iter;
-> -		struct perf_hpp_fmt *fmt;
-> -		int64_t cmp = 0;
-> +		int64_t cmp;
->  
->  		iter = rb_entry(n, struct hist_entry, rb_node_in);
-> -		perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
-> -			cmp = fmt->collapse(fmt, iter, he);
-> -			if (cmp)
-> -				break;
-> -		}
-> -
-> +		cmp = hist_entry__collapse_hierarchy(he->hpp_list, iter, he);
->  		if (cmp < 0)
->  			n = n->rb_left;
->  		else if (cmp > 0)
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 1131056924d9c..6cff03eb043b7 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -342,8 +342,6 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
->  struct perf_hpp;
->  struct perf_hpp_fmt;
->  
-> -int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
-> -int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
->  int hist_entry__transaction_len(void);
->  int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
->  			      struct hists *hists);
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
-> 
+Ian
