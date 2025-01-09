@@ -1,183 +1,131 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DB919306F
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 17:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A324B2B9BF
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 17:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736445257; cv=none; b=sk15cqSHGLLdNhWm/zu18Evym4+Ud+Yt+ExsKTzbxViAAmkrpa2ADINlznR2yonvJIWySGGIToN/g0VVkBUqcEXOQ7on1JSqt3pajqk6NISRytRO+upccxhYUX1BYnFx7DC+BYY4zQEX5qZqQhciBwiwwwgNkcP6V3hRjmkO92M=
+	t=1736445528; cv=none; b=HzWTLguIVbTt4VEYSQrqt1DdlNNhVuq4y46jU+yFMCYpORwG1/OkCNTjgjxBOULaaatvJQV7gid8YxJ/S5QR12TIrZD+zFz6lgnzZuDLikaNFR1p5Qkwy5mR+20DjvQPIcGm1w3s+PVUV7Xnxyy+i+zeIdD/5uSFsGLHQgH1i/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736445257; c=relaxed/simple;
-	bh=+B5cK4L/P/9DCZxic/K9keD7ba0KBVFqI40tiVaroy4=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=uzhuCy+oj+bp4vAJm5e4IXYVsBCKRpRNcsU4iEXPkUfRtt1hppXER35g/svTAcU/MfIah8krOcNFUUN35un7r9d4Yo30/m/yWgXuFNjF6IDbPcnPz/rB4rVaZS58kCQLfWRpjp+y1V8wXpbnY3pVdE4sVyYGXM6Su0XGjxgW68c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iUwvB0k3; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1736445528; c=relaxed/simple;
+	bh=lomIqOtJ/ynGJJVv1VdqQaSHLi5oIrChDMi7EfyciFw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=pgY9TWxdBnQGqoUZY7b5f8pap6QQSlPqsUmo4GXtEiJLLTkbmo1dcEfEZqnoHvwFdeImrQetAlkibqyqcpFMDH7/+H5vTLeQPXfdh8FQBDWfNfLkepsdhHrXTAhfjn6uRaWUKUObk4rekyy1cBGWcNHsoQyDrEZ6I/HSPbX0zFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gi/9QtFs; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iUwvB0k3"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3a0d165daeso2741462276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 09:54:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gi/9QtFs"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a815a5fb60so3795ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 09:58:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736445253; x=1737050053; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=z7r0dYrZLYKc4QlZbZNC2EaiF7lH3kg3YPkL/1XAtFg=;
-        b=iUwvB0k3pdDlTcOxLPmlaRcfCUe6wv7frlPw476r1vmP+C9DspEckkjixDvqbw/VGU
-         p2sjWx4fCrbdmvT1IqAQBtBKATVyu1ixmcPoQwSzE1J6QbYeGpQ7J0ll9krxVcf5O1W4
-         P93VMH018w7JZN3phPnZTcg6sV2RIvK3ypN4+bPJz9aZNwNLC8CTBplFWfzT0W6fim4L
-         F15IipAd6oZAGErw1+wUMjt4qabxLyS0J3szKsVBRrKUfXAPaAs2ukoMoo+OGqojvHS4
-         9VOKhOmagctcwgDGbXdthcYHlLye0MGz/WrF3yNdKJSK4Yv/uXgneKgy1mXesYs8yiaq
-         Ql9A==
+        d=google.com; s=20230601; t=1736445526; x=1737050326; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GNP6kZl0BWMuS5Jra3qtVvP+rXQgGZY5VcWnXzDsqEc=;
+        b=gi/9QtFsRipSBWmScD4eHDJ8VhCehEksPOzF0EMUkIMsdT2BPfzbZ4c2sU/nO2Ks04
+         DLekcKSuNdDX7lbaysRPU2u3oQ2ufdY1CaBj1H+OambgCgPN6bVYhPExN4V3ZIq9Bdah
+         +l7LJzj3V4VgKHO7IgKOIhS0ncunOcnoHedwOIDzk8dqo84QzGP4pjGYet5NSZIfFEQS
+         56JbOMq8z49ksQENfW//JM6WZShPzX6RCoESdU+oOhbJkVyjkKLZTSDWyH0HLXMcJQvL
+         wLB2+VJLwCG+qQi02HQ8mNHwFOR5AlZqvTEIMKX6hZeKKg9Xn0QKQPXo6ANHchORAc8r
+         IQIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736445253; x=1737050053;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z7r0dYrZLYKc4QlZbZNC2EaiF7lH3kg3YPkL/1XAtFg=;
-        b=W0e6Na9wxvNmbazNgYEK6XRyE6aXQkSvTbnJDaJl5reA8Mvc+k8TYQrHjbW0k2/EDQ
-         KAS+AdQYpflJ/6IaY10oGzkpfYZnAy1zPcbBwjuBXg9y4VKLO2Wprt2IfG3cGnHXpyrq
-         w7rho5WMpq8UEHigCypyV1Doiop2olo5GPC7FQRPms0DEWKcvCDrG/vErlF55FhP+Mhq
-         T43ZLsWE5LiF1+q1YkafsiH7GvYMc0R9ikOviDWMCqjxMJg+sc7SxQb4WtpmsvbEhBJu
-         Ox1kj5QeIvROiL0VIfr3HiVD7pLZ5PMgFJPArvbdwG17P8xNoSjDMr11djU3Q5Xpj7at
-         zpAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWInON4nBmPWBVUVs6O0kS2Q4sPHiY7ZA7TwmehKt6kTdk7+UBepXA7cW2Ll2NNKwkgCPR+xSuKkot9aUpfN8na@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZgg7DyKjCwazEHHNyCw/80kmo3c+F6zyeVKE+Dy2nfvnkenKi
-	1tBkOroN4NFjMtpvNnNtJSG6TnNRl/9p4VN5JzRpL1YIO0ikhLRQ2EWwKOe5rsm3RU/pyLYATx2
-	wXf3dYQ==
-X-Google-Smtp-Source: AGHT+IFqFkjJDa589DE0fYHZRiu00Yp48wFbZ0ExFKzuLBz/qtcsTyE/IXcrpSIB/VeOfdJyres4/mpVmrgK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:f801:f788:c7e5:c181])
- (user=irogers job=sendgmr) by 2002:a25:2085:0:b0:e3c:9f2c:707b with SMTP id
- 3f1490d57ef6-e54edf1eaa9mr19861276.1.1736445253183; Thu, 09 Jan 2025 09:54:13
- -0800 (PST)
-Date: Thu,  9 Jan 2025 09:54:01 -0800
-Message-Id: <20250109175401.161340-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1736445526; x=1737050326;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GNP6kZl0BWMuS5Jra3qtVvP+rXQgGZY5VcWnXzDsqEc=;
+        b=nmW3TtI+9RCVnbPL2YaE/vJbtGFft8IS8HGnvXyE4ZddTwgtBK4e60MNXQ43WXLMZn
+         KYq/BtsoP2xS4UIkhfWt5vC/LUO5nAY1TOi+cQMk1UHxqavCQbyNxqbQ5idPMrF6ILvZ
+         d52E/i2fXYgSegXSZRswP3CworHa1ISbGooHO8Cj0jfwTQ56NZDsQITNCBETkSA1Y9Rx
+         PGF/eQmZxBng8eC8nlC/wprDwPq34rNvRsvPi8Veirqmm3ShK5+RDfGp7vRfi211A6Uy
+         3mnF/IAPY0HUq7GpPkt91oaZDOEu88WvMNYcVKery+kjvRq+N3afmV0aIQCSjbMOEKMY
+         mGrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVpLO0QWC3BfQoBKj3Btwh9JMgYscr2AySbXyJ6Of+SeofJrXsZbBgl0bOBmYhCY0apMN9CudfHXynHALwaDqL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHx19S/n7Zu35pVdSw1XKcAvl1zsyIAwGBDSlpWUMYSWYE8qtO
+	c4NrmgQNfra11dhuusBNm96cjvNwZRmdk5w5xn9YYXw8H+gDRdUuHryaA2+Y1l//P+DyDr16CeB
+	upop6H1S34kH6+D4PY2hltOPRQ1rG0WzNFk0b
+X-Gm-Gg: ASbGncsNqu6H0+YoLo35DqyT6wlIeuLU1ANam/noTj+2HyOqDbYtHrh26s+BS6eNPiy
+	+o+Qz0pzSZ82ILzLINjxhIFpLArkVGyYh0WlA2JAvqwnvMLlkDNbeZEg09SpsRTbc3hLa/g==
+X-Google-Smtp-Source: AGHT+IGSVfuUfR0qUPjmpfptUU/N9ChAG3VMNXjX5RR+ePhUnWB+Hl0cIzCTPbgK71/n5/QmNJRi3BM14QIfqZb5ICw=
+X-Received: by 2002:a05:6e02:1d86:b0:3a7:dcc1:9936 with SMTP id
+ e9e14a558f8ab-3ce4acf68dbmr3276315ab.23.1736445525787; Thu, 09 Jan 2025
+ 09:58:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1] perf parse-events: Tidy name token matching
+MIME-Version: 1.0
+References: <20241119031754.1021858-1-irogers@google.com>
+In-Reply-To: <20241119031754.1021858-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
+Date: Thu, 9 Jan 2025 09:58:34 -0800
+X-Gm-Features: AbW1kvbfWKF-FDZ6gTQYTUVPrOwhzIPI48_dT8WN06zUu6qKFhb7XjtEkSAxn0Q
+Message-ID: <CAP-5=fWBEGj-bKnfF3bi+qy3nzrV+oWzDj-0M5bRe2kQSsJ2Tw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol-elf: Avoid a weak cxx_demangle_sym function
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs
-before parsing") names (generally event names) excluded hyphen (minus)
-symbols as the formation of legacy names with hyphens was handled in
-the yacc code. That commit allowed hyphens supposedly making
-name_minus unnecessary. However, changing name_minus to name has
-issues in the term config tokens as then name ends up having priority
-over numbers and name allows matching numbers since commit
-5ceb57990bf4 ("perf parse: Allow tracepoint names to start with digits
-"). It is also permissable for a name to match with a colon (':') in
-it when its in a config term list. To address this rename name_minus
-to term_name, make the pattern match name's except for the colon, add
-number matching into the config term region with a higher priority
-than name matching. This addresses an inconsistency and allows greater
-matching for names inside of term lists, for example, they may start
-with a number.
+On Mon, Nov 18, 2024 at 7:17=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> cxx_demangle_sym is weak in case demangle-cxx.c replaces the
+> definition in symbol-elf.c. When demangle-cxx.c is built
+> HAVE_CXA_DEMANGLE_SUPPORT is defined, as such the define can be used
+> to avoid a weak symbol. As weak symbols are outside of the C standard
+> their use can lead to strange behaviors, in particular with LTO, as
+> well as causing issues to be hidden at link time.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Rename name_tag to quoted_name and update comments and helper
-functions to avoid str detecting quoted strings which was already done
-by the lexer.
+Ping.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.l | 51 +++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 19 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index bf7f73548605..7ed86e3e34e3 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -53,21 +53,25 @@ static int str(yyscan_t scanner, int token)
- 	YYSTYPE *yylval = parse_events_get_lval(scanner);
- 	char *text = parse_events_get_text(scanner);
- 
--	if (text[0] != '\'') {
--		yylval->str = strdup(text);
--	} else {
--		/*
--		 * If a text tag specified on the command line
--		 * contains opening single quite ' then it is
--		 * expected that the tag ends with single quote
--		 * as well, like this:
--		 *     name=\'CPU_CLK_UNHALTED.THREAD:cmask=1\'
--		 * quotes need to be escaped to bypass shell
--		 * processing.
--		 */
--		yylval->str = strndup(&text[1], strlen(text) - 2);
--	}
-+	yylval->str = strdup(text);
-+	return token;
-+}
-+
-+static int quoted_str(yyscan_t scanner, int token)
-+{
-+	YYSTYPE *yylval = parse_events_get_lval(scanner);
-+	char *text = parse_events_get_text(scanner);
- 
-+	/*
-+	 * If a text tag specified on the command line
-+	 * contains opening single quite ' then it is
-+	 * expected that the tag ends with single quote
-+	 * as well, like this:
-+	 *     name=\'CPU_CLK_UNHALTED.THREAD:cmask=1\'
-+	 * quotes need to be escaped to bypass shell
-+	 * processing.
-+	 */
-+	yylval->str = strndup(&text[1], strlen(text) - 2);
- 	return token;
- }
- 
-@@ -235,9 +239,16 @@ event		[^,{}/]+
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]{1,16}
- num_raw_hex	[a-fA-F0-9]{1,16}
--name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
--name_tag	[\'][a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
--name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
-+/* Regular pattern to match the token PE_NAME. */
-+name_start      [a-zA-Z0-9_*?\[\]]
-+name		{name_start}[a-zA-Z0-9_*?.\[\]!\-]*
-+/* PE_NAME token when inside a config term list, allows ':'. */
-+term_name	{name_start}[a-zA-Z0-9_*?.\[\]!\-:]*
-+/*
-+ * PE_NAME token when quoted, allows ':,.='.
-+ * Matches the RHS of terms like: name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks'.
-+ */
-+quoted_name	[\']{name_start}[a-zA-Z0-9_*?.\[\]!\-:,\.=]*[\']
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
- /*
-  * If you add a modifier you need to update check_modifier().
-@@ -341,7 +352,9 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
- {lc_type}			{ return lc_str(yyscanner, _parse_state); }
- {lc_type}-{lc_op_result}	{ return lc_str(yyscanner, _parse_state); }
- {lc_type}-{lc_op_result}-{lc_op_result}	{ return lc_str(yyscanner, _parse_state); }
--{name_minus}		{ return str(yyscanner, PE_NAME); }
-+{num_dec}		{ return value(_parse_state, yyscanner, 10); }
-+{num_hex}		{ return value(_parse_state, yyscanner, 16); }
-+{term_name}		{ return str(yyscanner, PE_NAME); }
- @{drv_cfg_term}		{ return drv_str(yyscanner, PE_DRV_CFG_TERM); }
- }
- 
-@@ -410,7 +423,7 @@ r{num_raw_hex}		{ return str(yyscanner, PE_RAW); }
- 
- {modifier_event}	{ return modifiers(_parse_state, yyscanner); }
- {name}			{ return str(yyscanner, PE_NAME); }
--{name_tag}		{ return str(yyscanner, PE_NAME); }
-+{quoted_name}		{ return quoted_str(yyscanner, PE_NAME); }
- "/"			{ BEGIN(config); return '/'; }
- ,			{ BEGIN(event); return ','; }
- :			{ return ':'; }
--- 
-2.47.1.613.gc27f4b7a9f-goog
-
+> ---
+>  tools/perf/util/symbol-elf.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index e398abfd13a0..66fd1249660a 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -287,8 +287,9 @@ static bool want_demangle(bool is_kernel_sym)
+>   * Demangle C++ function signature, typically replaced by demangle-cxx.c=
+pp
+>   * version.
+>   */
+> -__weak char *cxx_demangle_sym(const char *str __maybe_unused, bool param=
+s __maybe_unused,
+> -                             bool modifiers __maybe_unused)
+> +#ifndef HAVE_CXA_DEMANGLE_SUPPORT
+> +char *cxx_demangle_sym(const char *str __maybe_unused, bool params __may=
+be_unused,
+> +                      bool modifiers __maybe_unused)
+>  {
+>  #ifdef HAVE_LIBBFD_SUPPORT
+>         int flags =3D (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI=
+ : 0);
+> @@ -302,6 +303,7 @@ __weak char *cxx_demangle_sym(const char *str __maybe=
+_unused, bool params __mayb
+>         return NULL;
+>  #endif
+>  }
+> +#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+>
+>  static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_=
+name)
+>  {
+> --
+> 2.47.0.338.g60cca15819-goog
+>
