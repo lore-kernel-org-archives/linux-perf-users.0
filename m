@@ -1,165 +1,105 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B85204F72
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 21:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286A8204C23
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 21:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736459054; cv=none; b=BLANF1zaCyDuk1jXBDoTErvbjP+RvRNEVYbdKd2gJA0o7vD9AJGD6vz8vB46TramqQTD2nzPIatC2FrzdsLvCjzQf8AuJLE3fDHjOyPtL/BcEynst4a/jbWRdJXhqDm45oxUeIYJ/VDzDsZzIhU0K57rKFt3oU/PDGioJHOzlTM=
+	t=1736459465; cv=none; b=BqEdND7F5bdXsm76ckw29m2V1Tj1dkSNZrPSIEoG1sGTu4pv6Rgszb7se47uLO1LDFc9YhSl2rGYjhVNtDcRDWBaxdulwYdFi6TqQlpshSUA6j6o6GqvugstbLL4MCDwW3p+vy6JwzuTSISS32VXfdks2g6CrgkbD04e926PxvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736459054; c=relaxed/simple;
-	bh=fdRNTTqF11Tm74qGwMIRyPMOb9yj8YJ0xMrUNLj2sC0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cuUCUb9Q8AV9hz+3VPmFA0jxo0cBbmcICISv2N/7PHsBqmH+bc4MDeUdE7GbGfxok5bFB5THSnYNuts3ESDB/2rFVBQ8JM9xJ7U3aw+J41lcvxFjAGWql/j1zUX2tUXxzisbLxUxguMA7ALCpDbsMqRF755JVoSCymzO0oYopqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bI6qH3I1; arc=none smtp.client-ip=209.85.166.170
+	s=arc-20240116; t=1736459465; c=relaxed/simple;
+	bh=2M8Z4oeAs3TxDQ/FDZqdElhrrWV5I/M+9OsI0NA04/Y=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=nUIhKj4P2tORovSdrO6nAMw5AEsfS/GZUsNlERDSHNFXWyxHaF6ija53krCvMkr57Woue5ek6l1Z3Kt/PFeeE9GLUVh306jRPNdhnippzJL7bBTk0YPXDWG+P5808yTWElOveisC0twSDRSNOW4THp/Vj/nzL/ozNpFJCDSKbe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fE7WU9SM; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bI6qH3I1"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a814c54742so8635ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 13:44:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fE7WU9SM"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3fea893dc5so6124528276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jan 2025 13:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736459050; x=1737063850; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bq5Pq28Ma4ZMRli7h4+jQsL1coppaz0Y7A7E/RNNvqI=;
-        b=bI6qH3I1GYi3VCFgee3Tgu4H2FHtGKD+TdLtkrbu1R9d++zfLDAGlLxcIFSrL7Xe12
-         3S3uRd6ei2NSIsKxYAWLOJ1kLDWXbrvI8CFL2ZNDIMC8GC0o8HK5VLqKIS1SWCbHaw87
-         F2J64V7e1v22kc28PdP4Ybxu+FKSFHYPZiqjT6cLQ70P1Oz5VZLNVZvrKrDYP3urgKHF
-         0foOjpjr8l+Me7tGprckeh6Ernl+1vfYpiyg0StamMtgbCIjYGq9f8K5VzZIfDkuDjsy
-         o/KMaWQNWGuKRvx7ziIca+g2oVFyE1iEopL4H0qeZKySKVpHYu7FPCYWiIm4T9utIVt2
-         aMUw==
+        d=google.com; s=20230601; t=1736459463; x=1737064263; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mXl/4sCW/KKr/jAegTBssmpp7/LzQrix957XB2rDl2U=;
+        b=fE7WU9SMa2VFYU6x3AGQxXPcFd5qi38NZE6mLl3j6qSOvHugoPRJCfE/AS3i5C5a2Z
+         xR+9o1IO5Kcj2AdHnu910F3Kd9nsikNitfLJNaoiaRWXbt6C7W43Lfe0tGq1VKOJVa51
+         ajc8JyDJhm2Foh0IxW5rG7zveStSRJ93Nni8G0zt31FZLVE4Kwkebyh45RBCqXjrP28/
+         uSliHE94J5BxpFVhec+V9RCvcU3hhQ46ui4NmWnaTtdUcD3NF193sp0fb4blTfOpSGxB
+         fWPx6jGg+jSsjQWwKEqdoe4rRKu73H0Vfr72nz57Exc6/DKxpO72v0RUwVfIvdjLhlBW
+         wJOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736459050; x=1737063850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bq5Pq28Ma4ZMRli7h4+jQsL1coppaz0Y7A7E/RNNvqI=;
-        b=Ev7UjL/KeiDxOxUv8/8Oaq6hsO31+JNv147Z5Cs7kQi1faUwdCpguDrTvDoYIQSfwr
-         dFmcao1XWgMh/EXp3zgd3/9FYUGVwq/KQ6zRPRs4gOItQycOlREpjZIF5mcRgL51Ij1Q
-         8GWMAPpzwtfXmSVFDJxiwmqdrnwJ4PyXeYN6EwIySgN3FTPBXzVqqY170wDhFJJO4CoN
-         UIBq+ftXXlGkuzJIbtgk7KCJIIVgl77NNxWOTvS2W79vnvMIQSFicEzk0l+fyxd2EmsW
-         OL2Hj8vXGqDJgPGqr0yh2SOLYe46RKvozamrnAx+8Ud+01DRxSaXYgREwDgejjvYLd8k
-         ckhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUsZZzQmYKccOmv/jOC0QhXzaxp02ffutg9PdLjn2rRr+8HlcvBMXYlm4FLAuuJF+ULXhkU4vGKN5aPaiNkTmr@vger.kernel.org
-X-Gm-Message-State: AOJu0YycCC58L5DFYXJCJ1DFcseYBW3EzgzpR28y9Gw9EH15B0vbMcIG
-	W2Vv3Ogq/RrQgWvzCdGpprIarSaqfGAOBuA39R5CZZIM8Q6xESJMZ35KnsWgYO5/1PHhh1eie1w
-	IHpbqXx2O4BiMCNOrTYUxzB5arZ0/qRKjETd+
-X-Gm-Gg: ASbGncsEaQ5VPziPEpZcTNmHgilXDrjvU362tESdt9l1Z8HsYPkootuC7G4Ld0RJmvi
-	a55uhiUA+t2ADCwbS2dGkxPvCxtIQfb0uC6j5ZF+TFcipAkpy/K2WO0dVtL3y0Lg/UQvq2w==
-X-Google-Smtp-Source: AGHT+IFenZyG1rVDZu8wEn51G8UENe6KuYRmo7nxFXrLory2Xh733iS6bSVwtEEERtgMuWsRrOesOaa1Ykqvn8hptKo=
-X-Received: by 2002:a05:6e02:178f:b0:3ce:3d5b:bde3 with SMTP id
- e9e14a558f8ab-3ce58877bd5mr117655ab.3.1736459049901; Thu, 09 Jan 2025
- 13:44:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736459463; x=1737064263;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mXl/4sCW/KKr/jAegTBssmpp7/LzQrix957XB2rDl2U=;
+        b=S3Ton+1k/UXPJYopB8LyDYXmwCdosccyZryWj3qaHu+GrJPPtwF+vse6fzwmMTAqEb
+         bVRc+Q4yaOH5MVmwC7l+p89ewz3xS8dnuyTD/F67KM/B+2WntRv997FuPEnDOp4DvhRe
+         T5f8dU46E0yJwLVtncKQMV4IxG5kaj/Ktcd8mx50Vzl7zor88rNmOnDG6aps6gfFANSx
+         RFjQk//UCX0h0tpUnJgiqEXB3IZYuHoAVUOJUffLDFjY8UC6IY42XvLUvwEAJk1wzYYM
+         Liu4c+Z49sAIEMPgipaeyOkATYbmtHI6h2M8u8ASqiFpLxPMeXu5ap58pceeUm/j6tgd
+         PBhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVy92K3Op5lQoAmDm4EsTTDS+zopEHuPqmyfEaT6Y6sL5TKi1MsLJY9W8dhTJNbN+uXp1Xj9C+sqABPxEnoudqp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD4MHUKFavCyW1bbxcUU9Dr99z1p6AZpKtth4O/i/bwIayo31Q
+	kZYOgCVD5YNeo6y9qHn1VPkR7E3p2jmdy8qx71HwKbCbjenW6BJ2WvtQi416kGsXtOhaoiadRHr
+	DeycfQQ==
+X-Google-Smtp-Source: AGHT+IGCF/OA/mA3vx2QKdGrC37iSEna+juKgDnRJTwyHyBksYLpjoZmL/+MGNQrD0/f/R+9RKaSeqHjfRT0
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7ea3:d1e5:495a:9a4f])
+ (user=irogers job=sendgmr) by 2002:a0d:de85:0:b0:6ee:fbef:239 with SMTP id
+ 00721157ae682-6f543f26fc5mr186227b3.5.1736459463225; Thu, 09 Jan 2025
+ 13:51:03 -0800 (PST)
+Date: Thu,  9 Jan 2025 13:50:50 -0800
+Message-Id: <20250109215055.454888-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241115161600.228994-1-james.clark@linaro.org>
- <CAP-5=fUq1JLCVLQerQbK+itNg2RZaP9zCo9RUTgKoGqTQi3yYQ@mail.gmail.com>
- <ZzjyVgnEUOYknN1k@x1> <CAP-5=fUDnBii8T2hH3o+J=DXMe7xxHXP7Kno5fz4OjBestObwg@mail.gmail.com>
- <8a89ba95-22cb-4e69-a776-3c927e80f5df@linux.intel.com>
-In-Reply-To: <8a89ba95-22cb-4e69-a776-3c927e80f5df@linux.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v4 0/5] perf test: Add a runs-per-test option
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 9 Jan 2025 13:43:58 -0800
-X-Gm-Features: AbW1kvYUPXCDZe31oN4aUOqTNJrOnGNDcz2_ylSz1orlUruX7CihfwKwAytWPlY
-Message-ID: <CAP-5=fUYYgo5W26FoZ40FvkT9Nf8g1uQdEz_u5zB9=DvYds1LA@mail.gmail.com>
-Subject: Re: [PATCH] perf tests: Make leader sampling test work without branch event
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
-	linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 23, 2024 at 1:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 12/21/2024 3:08 PM, Ian Rogers wrote:
-> > On Sat, Nov 16, 2024 at 11:28=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> >> On Fri, Nov 15, 2024 at 10:54:43AM -0800, Ian Rogers wrote:
-> >>> On Fri, Nov 15, 2024 at 8:16=E2=80=AFAM James Clark <james.clark@lina=
-ro.org> wrote:
-> >>>> Arm a57 only has speculative branch events so this test fails there.=
- The
-> >>>> test doesn't depend on branch instructions so change it to instructi=
-ons
-> >>>> which is pretty much guaranteed to be everywhere. The
-> >>>> test_branch_counter() test above already tests for the existence of =
-the
-> >>>> branches event and skips if its not present.
-> >>>>
-> >>>> Signed-off-by: James Clark <james.clark@linaro.org>
-> >>> Reviewed-by: Ian Rogers <irogers@google.com>
-> >> Thanks, applied to perf-tools-next,
-> > Rebasing on perf-tools-next I see this failing on my Intel Tigerlake
-> > laptop. An example script output for:
-> > ```
-> >  perf record -o "${perfdata}" -e "{instructions,instructions}:Su"
-> > ```
-> > is:
-> > ```
-> >             perf  352917 49604.160314:          3 instructions:
-> > 7f155caca323 [unknown]
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.160314:          3 instructions:
-> > 7f155caca323 [unknown]
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.160317:         18 instructions:
-> > 7f155cacaf3d _dl_start+0x3d
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.160317:         18 instructions:
-> > 7f155cacaf3d _dl_start+0x3d
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.160319:          3 instructions:
-> > 7f155cacaf44 _dl_start+0x44
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.160319:          3 instructions:
-> > 7f155cacaf44 _dl_start+0x44
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.161099:        120 instructions:
-> > ffffffff8ce00080 [unknown] ([unknown])
-> >             perf  352917 49604.161099:     181013 instructions:
-> > ffffffff8ce00080 [unknown] ([unknown])
-> >             perf  352917 49604.161115:       8811 instructions:
-> > 7f155cad22d0 strcmp+0x8b0
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.161115:       8811 instructions:
-> > 7f155cad22d0 strcmp+0x8b0
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.161130:      10483 instructions:
-> > 7f155caba508 _dl_new_object+0x198
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.161130:      10483 instructions:
-> > 7f155caba508 _dl_new_object+0x198
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.165156:     177355 instructions:
-> > 7f155cab90a4 _dl_lookup_symbol_x+0x44
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >             perf  352917 49604.165156:   13313598 instructions:
-> > 7f155cab90a4 _dl_lookup_symbol_x+0x44
-> > (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> > ...
-> > ```
-> >
-> > Dapeng/Kan, any thoughts why the counts don't match for instructions
-> > but did for branches?
->
->
-> That looks strange,  what's your kernel version and perf-tool version? I
-> just tried the latest perf-tools-next branch, but I don't see this issue.
+Add a runs-per-test option to perf test inorder to better diagnose
+flakes. Each runs executes as if it were a different test, the tests
+appear together in the output:
 
-It seems to have cleared up for me. I'll speak up again if I can get a
-reproduction.
+```
+$ perf test -r 3 lbr -v
+122: perf record LBR tests                                           : Ok
+122: perf record LBR tests                                           : Ok
+122: perf record LBR tests                                           : Ok
+```
 
-Thanks,
-Ian
+v4: Fix crash in dont_fork mode caused by cleanup work.
+v3: Improve perf test documentation, including for the new option, and
+    add some example output to the commit messages as requested by
+    Namhyung.
+v2: In the v1 patch Kan and I noted cleanup that would make the code
+    cleaner and less indented:
+    https://lore.kernel.org/lkml/20241109160219.49976-1-irogers@google.com/
+    Add patches doing some builtin-test.c cleanup and then add the
+    runs-per-test flag.
+
+Ian Rogers (5):
+  perf test: Rename functions and variables for better clarity
+  perf test: Send list output to stdout rather than stderr
+  perf test: Remove parallel option documentation
+  perf test: Add a runs-per-test flag
+  perf test: Improve verbose documentation
+
+ tools/perf/Documentation/perf-test.txt |  20 ++-
+ tools/perf/tests/builtin-test.c        | 223 ++++++++++++-------------
+ 2 files changed, 119 insertions(+), 124 deletions(-)
+
+-- 
+2.47.1.613.gc27f4b7a9f-goog
+
