@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EDA43169
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 07:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1084521517B
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jan 2025 07:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736409088; cv=none; b=HhBfvjMgzxTUAW1QzzNwVrWE8XFGHlqv7LzFeIw/DV7Dfz2QycHxdecDRMoGuEEduqBr5O8x4lqiBqMSeZG+JOxmd4g8L4SFQ2VibOMvoQ5JSDRxdJDNO/bxaGMKQmR51O2ENJ4OnAf0PqsHaxoZpLb4enNtCc28lGoXwZJbY8g=
+	t=1736409090; cv=none; b=dAdp7mf3DFt22sAsVOCCan68+yG+yZ4pCPeIXdgVAYNm9DjhHYsUOUgJ0spyLmj4aQkd2bJ6Qb0JqiVcHsMefugpqwsBEBgBTyW/eS2wy3RBY8m4GA7arshzqa5mUYxN2Ze+E8ZgTR57Ix9j9mzGKrHnhvyd11eQUnJlJRdbDJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736409088; c=relaxed/simple;
-	bh=JWLHLZaHXZUbCGyEiGTHx6SFRTHPlzSBMWL1I5q0294=;
+	s=arc-20240116; t=1736409090; c=relaxed/simple;
+	bh=hiXdohrvZfBQQVlWlScp48GUnTP6f+2pkpwNTAqWek4=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Hxnbn00RZPDiEDtx2cqSeLsDbU9NZ2/jO0C7A6hH16+bn4kMuVUiwabDI+9Xwu4DDeT9KgxqlUGsdMj+7I9GIFYEvO0wG66Dc6VVxuLltibwp0WN8daYCj2MpF8gwcl7GGi4JaXQq3PF9c3Ecky9rnCF8oLCk/r1zUXrOmTEjEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lDbMTg+C; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=W1ZgwS7zJVBOpFdRA60SMEWZMjaB4zKKCZb2NN4x/OXs9HzfCc3vNfVpgBzyZY+9KrWDZNr86ZiFO0hwaZ53wu4yvLYGSIBiU4+oeCKB2puuzHxsiTTLryNWWlbw5TVDDLeQwFq4nqY1iCbc4N4WgMq6YwzR/1AyC5p53K3VKYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rOiMBxdc; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lDbMTg+C"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e535f2c8f7eso1491670276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 23:51:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rOiMBxdc"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e4a8b40dd40so1487407276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jan 2025 23:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736409086; x=1737013886; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736409088; x=1737013888; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=epzBIcpq14vhr2+XgSqG+4thTJ3QNCJ6p4BI0eNk4RM=;
-        b=lDbMTg+Ccv1fYL84iPpiSpNDsZ8+HsK+K6aSIy1sYTETn0A86qIp/mvur/VDRQJoL4
-         FBTZUOXZJvrAdKh2N7Pdhn4D8WzWAWdjEORNcpZCVGwM7c2Rg85eTAnJ+nb/56G2a/nv
-         00flQh7MlGoDtrEwS2c59w7+C7vleHwjlxN3/E4cSbTaI55/FFAoAxiFYZf8hHzRD1uW
-         npMRgZjPhFEjfaQmwtqklMQ3U7LSeSw2wdfugx+ZX8iWiyVTXzxBAKaXLcZIM+Pz859X
-         66rzluV2T/QRcv7JiVG2LE/u3KIfM1q9cQTGhrn0Uk4EG/bxcs+K3EODLnUwkli3maPw
-         3fzQ==
+        bh=2aDXsm3uEdQo2ZnXfxbpUagdP14qYtfS3MpVBq60tU0=;
+        b=rOiMBxdcauwuA3SY1v4LHIv1nKpnSRVk0sTKuThT2KtrJF/AGwt2P4MWHtE7OKCgKf
+         VaGIwxFxnBPZ5pa5GME+n95xVEY0TZCDSWd3Jz/ri3UpyNLOKqSbKC9UcpGGYT5HHP1C
+         ccxSYJ/EOX6brUVFN2rielmGELRep0MJIoGxRuEEpIzNDRMwd5U9GLJj/6EsBk+jOBKG
+         SBb4aLV2ukfnd80iTVs5HEK7IKvnY7Ipct92sVvmyurf3mLPmM5mJEPkPKPuwk34I2wb
+         vxBwEVl/h2l4Qg08Tv9JK4BqlD+ov7zQkhFjS6wFEXbg6HsPKHuBI+eqMWhswm2undDd
+         oVLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736409086; x=1737013886;
+        d=1e100.net; s=20230601; t=1736409088; x=1737013888;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=epzBIcpq14vhr2+XgSqG+4thTJ3QNCJ6p4BI0eNk4RM=;
-        b=KmuuVnhbd1SARVvCky0YkRQKKRz3hFLqJbMOM79mHkKv7tDRwArtHI81q+Ry2dmHdr
-         iaC4WOn8/yQac8F4RkYpgUQawgHmSZbTFQuw9IJPXQufzeAdp9stA23v7hwIBiuERMPt
-         n4zN1TiP8ZJ6+Z7gCrN1FacayWwqVl+zD6GEMYQ+2gkeSE1QzGW2Yu+s8f0AxqmiuzXo
-         4OIsYqqHSzCqqHtJBPqiRNzdioUTh1jyFTKpA7PBtDzvEV1Pq3dTd9HLMzwyJZmJitWg
-         1Y11Sic4egJjCHiTma7PaFgCDfzIUuURc0NjXtJWIQQTe93fSLdVfwfDRtMAoElz4Y1s
-         3sQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXj5r8XIzSAgJty5zAn6p1Y0JRdEWvXF/RG3GDNutZXhpwaZwSCQ7fpxn87jgUSChURdQCT/Pf/DvG3TuFTHdXh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwQg/y8Ju0ltkvSsh9AEoc23vCbR26Hluj9ugGtLhr6QJA4Qcp
-	1LQeuIxkYW7wm1Iydq9iI0dRR8MTj3AMb0ClBN1um9AldkA8c9etGerQo7OStwnMQ10kJq8vWxg
-	dIuxDkw==
-X-Google-Smtp-Source: AGHT+IG16oQcBcWxWzba8vjLnphRCfLsB1BOo7MqZBmhZ+9j3cgfHLBvEUa+7wAK787lSMmL1smOrh1E4PHi
+        bh=2aDXsm3uEdQo2ZnXfxbpUagdP14qYtfS3MpVBq60tU0=;
+        b=CdDcc0TDvGkWt/j9vtOBpPan7K2qioER4O8femadPmdM9bDT0D8r+VFvvZbrmtx8Om
+         UgCIH8EGbMETjbEp+STgSn/g/W3+7g279mxXrQCwSVGs+Ai/A4uaPgjp+gR2XjXYMO1m
+         I/m2Mm4pEie/RhnkmC0QM5sgvH1Ce6E4QW+t0WcCqYyN/WAd0e2ttwr9Z7Gabcsarwek
+         /oc4Cy89l8KVQ0GriO17a+jOh7+ttq2ZVN9URneIuk/fvZ35Py/1UXpbQVQvgmeiI1at
+         VWpyWlkn2ArVGQ+LMUkIPJx4/ZjLDNQbWf3Uo0urmMtp+tFFBWp9UtmG+H9bMYrf72lP
+         vyQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWp188kEj2oBD5VcHocBORnnyS5ovw5/x9qPG6x4RUy9pnbAKi/L7aXYpPggst0IgpBShr+RMl9svyarxRA37/G@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtVkLX82WktzfJ124CazT3jZ7VZB5HzWKbKRYwNvXQRRHDGO/o
+	2XKlHPvQy1lshoXiVKSz+EDuzIj0gECM4olD0Eys47yy0O07ysq13XvXfZmF28zDEAIDlrmVpNw
+	YB34itQ==
+X-Google-Smtp-Source: AGHT+IHkS55KUzgcoevzHuMN1Ir9gOuIfNU/o0DtzV6iVcbvEacKNS6E+1S/Q/beXkgJxe1UXVhLr+ri7zYq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:f801:f788:c7e5:c181])
- (user=irogers job=sendgmr) by 2002:a25:cecf:0:b0:e4c:35c4:cf05 with SMTP id
- 3f1490d57ef6-e54ee1e51a6mr11486276.5.1736409085711; Wed, 08 Jan 2025 23:51:25
+ (user=irogers job=sendgmr) by 2002:a25:a144:0:b0:e39:87ba:3582 with SMTP id
+ 3f1490d57ef6-e54f01a8895mr11372276.5.1736409088033; Wed, 08 Jan 2025 23:51:28
  -0800 (PST)
-Date: Wed,  8 Jan 2025 23:51:01 -0800
+Date: Wed,  8 Jan 2025 23:51:02 -0800
 In-Reply-To: <20250109075108.7651-1-irogers@google.com>
-Message-Id: <20250109075108.7651-5-irogers@google.com>
+Message-Id: <20250109075108.7651-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250109075108.7651-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 04/11] perf python: Add evlist enable and disable methods
+Subject: [PATCH v1 05/11] perf python: Add member access to a number of evsel variables
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,58 +74,55 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-By default the evsels from parse_events will be disabled. Add access
-to the evlist functions so they can be enabled/disabled.
+Most variables are part of the perf_event_attr, so that they may be
+queried and modified.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/perf/util/python.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index b4bc57859f73..8f68320130c4 100644
+index 8f68320130c4..6a7042fd2569 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -1019,6 +1019,20 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
- 	return Py_None;
- }
- 
-+static PyObject *pyrf_evlist__disable(struct pyrf_evlist *pevlist)
-+{
-+	evlist__disable(&pevlist->evlist);
-+	Py_INCREF(Py_None);
-+	return Py_None;
-+}
-+
-+static PyObject *pyrf_evlist__enable(struct pyrf_evlist *pevlist)
-+{
-+	evlist__enable(&pevlist->evlist);
-+	Py_INCREF(Py_None);
-+	return Py_None;
-+}
-+
- static PyMethodDef pyrf_evlist__methods[] = {
- 	{
- 		.ml_name  = "mmap",
-@@ -1056,6 +1070,18 @@ static PyMethodDef pyrf_evlist__methods[] = {
- 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
- 		.ml_doc	  = PyDoc_STR("reads an event.")
- 	},
-+	{
-+		.ml_name  = "disable",
-+		.ml_meth  = (PyCFunction)pyrf_evlist__disable,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("Disable the evsels in the evlist.")
-+	},
-+	{
-+		.ml_name  = "enable",
-+		.ml_meth  = (PyCFunction)pyrf_evlist__enable,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("Enable the evsels in the evlist.")
-+	},
+@@ -802,6 +802,28 @@ static PyMethodDef pyrf_evsel__methods[] = {
  	{ .ml_name = NULL, }
  };
  
++#define evsel_member_def(member, ptype, help) \
++	{ #member, ptype, \
++	  offsetof(struct pyrf_evsel, evsel.member), \
++	  0, help }
++
++#define evsel_attr_member_def(member, ptype, help) \
++	{ #member, ptype, \
++	  offsetof(struct pyrf_evsel, evsel.core.attr.member), \
++	  0, help }
++
++static PyMemberDef pyrf_evsel__members[] = {
++	evsel_member_def(tracking, T_BOOL, "tracking event."),
++	evsel_attr_member_def(type, T_UINT, "attribute type."),
++	evsel_attr_member_def(size, T_UINT, "attribute size."),
++	evsel_attr_member_def(config, T_ULONGLONG, "attribute config."),
++	evsel_attr_member_def(sample_period, T_ULONGLONG, "attribute sample_period."),
++	evsel_attr_member_def(sample_type, T_ULONGLONG, "attribute sample_type."),
++	evsel_attr_member_def(read_format, T_ULONGLONG, "attribute read_format."),
++	evsel_attr_member_def(wakeup_events, T_UINT, "attribute wakeup_events."),
++	{ .name = NULL, },
++};
++
+ static const char pyrf_evsel__doc[] = PyDoc_STR("perf event selector list object.");
+ 
+ static PyTypeObject pyrf_evsel__type = {
+@@ -811,6 +833,7 @@ static PyTypeObject pyrf_evsel__type = {
+ 	.tp_dealloc	= (destructor)pyrf_evsel__delete,
+ 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+ 	.tp_doc		= pyrf_evsel__doc,
++	.tp_members	= pyrf_evsel__members,
+ 	.tp_methods	= pyrf_evsel__methods,
+ 	.tp_init	= (initproc)pyrf_evsel__init,
+ 	.tp_str         = pyrf_evsel__str,
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
