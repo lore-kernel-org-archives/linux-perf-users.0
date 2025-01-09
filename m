@@ -1,94 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD82C84039;
-	Thu,  9 Jan 2025 20:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651DB77102;
+	Thu,  9 Jan 2025 21:10:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736455782; cv=none; b=h6DMkQngE7ZRRKjCTtNCwr+Zzmvi47OBqi2NlE2+BQlrHRE0EnwX5L21djHeiflwa2ECtloYf5uS0YaHdmw19buEDOS/m+bdxIH0ZphHC9ZNNGe8I0wUt2bsVtQDNFH8CBuVp1xwKX0JGivT5hNwuJ/mEt2psMlhy3f9/0u3ULw=
+	t=1736457017; cv=none; b=VTKuYjzdWpeoW3/X1mxpKrkEvxnAaqOFvYEXgKM+pylevPyWxlDyDkghXEy00e4A+QLErF6PDqGY9XAoCVpdymZm1jyD44ZyjQV9n/i531U+unSs23VLqyXFvPRK2PbgwKseVGkaGgcq//8eJSvuQ3Vcp8Tin0wlcH5vuUBiRMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736455782; c=relaxed/simple;
-	bh=ZXX4c3x7gBrrsmjeXcEhCbYQD0RNFq9SKOTJyfD+w8M=;
+	s=arc-20240116; t=1736457017; c=relaxed/simple;
+	bh=V/DZsdTjbKeJFInZ/Oe4P/8D9ybp8q16WfD6DOFlXwY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lz+D+orQkN6J3Wwljwu8kiLR73aocMAc9zQ+onLxbT9FpngCR73Dp+KpA2erRaEP4os3T+C34OnAMsB1rnHA8GHlkhRIMBwQhzsUjBHkys/KAIHUPZC2qljedNoCVCovpTDBxYqz2xtvd6ezwEASAYj40EZtHbP1L3Q9Hsar0ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWvKKMjG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DU9jzNLHkC5l0y6Szd2x4MysACjbrh+WIObkn7WcTEWg5DT5ixvTL/W908INXGTNEVmT/30sAe/CfKED1YF2cLjXvz7ztdQGxDczYNh/TPR1x3TZ+raDtt4Niqi1ldiAcPd+LoAgl6wp33qsojYqTDXNoW3Dm0nGTG+6kQJKsj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWGwwdk7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWvKKMjG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA63C4CED2;
-	Thu,  9 Jan 2025 20:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWGwwdk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E49C4CED2;
+	Thu,  9 Jan 2025 21:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736455782;
-	bh=ZXX4c3x7gBrrsmjeXcEhCbYQD0RNFq9SKOTJyfD+w8M=;
+	s=k20201202; t=1736457016;
+	bh=V/DZsdTjbKeJFInZ/Oe4P/8D9ybp8q16WfD6DOFlXwY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tWvKKMjG4qNcEdVbxpmuI7b4+HbBdLkpA+CAMEMYEpRiDciCf4+vEIw2Q4+w2yjfZ
-	 jTvxs8jEmA05UEDVWAXXpjNc2VtZiEIpRu70xTvqCcsKpRbzaHI1lWSmw7CNxREs+Y
-	 tcF2kH3OJnCH5l1gN7nYB+GygB7QcjZAbUF8tBCsIpAxeJJlhSo8SgcHZCtTgRw+5b
-	 PAoxrRVlGEHzJLN9Oucuu/ShuUtvjHD6sfNGb0+TMeUfZJg8u1/VX1eDTtxpj2kfwH
-	 2u7OfDHS4bABbNg/V0Xml60Go/or9ECQsio/b80eE3ZedaBdcLgKM5LgnvvFLc9HZ/
-	 2p9f4xhFqpurg==
-Date: Thu, 9 Jan 2025 17:49:39 -0300
+	b=LWGwwdk7xBuJrFN5f4Im3H5GGcQmxcMTkLNoNntupVCSoXZcZJsNvAN+BqQ6Kq9yK
+	 q8eltPEkbW1zbzGojIC668/3+CIdR4YPkuaANWx5njKMVqd9vg2zP5wanNMGHTwc4j
+	 8R7YFLgAuH1mjkTEvX8faQNetm7aAhDiTdCyLBYnE8Xi/K7ScoZ9AGlmEzvpxKnsNR
+	 xc0dQjGHvKBeedlB80nAczERAVAaboN8BcWV7gKdX/Ba1Fp8Ihrk2DLeG87vFHajlq
+	 Lic0dN14f5yLOcc6M6kIrXxI+qXQgUWaUsefaWndw4WnJJ+3pjmBPfUTZ+tUjV31Qs
+	 JF+1qlqIbum9A==
+Date: Thu, 9 Jan 2025 18:10:13 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 00/16] perf tools: Use generic syscall scripts for all
- archs
-Message-ID: <Z4A2Y269Ffo0ERkS@x1>
-References: <20250108-perf_syscalltbl-v6-0-7543b5293098@rivosinc.com>
- <Z3_ybwWW3QZvJ4V6@x1>
- <Z4AoFA974kauIJ9T@ghost>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: Re: [PATCH] perf trace: Fix unaligned access for augmented args
+Message-ID: <Z4A7NdLPeXmplTXA@x1>
+References: <20250102201248.790841-1-namhyung@kernel.org>
+ <Z4AZiTNhI9qKGYh3@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4AoFA974kauIJ9T@ghost>
+In-Reply-To: <Z4AZiTNhI9qKGYh3@x1>
 
-On Thu, Jan 09, 2025 at 11:48:36AM -0800, Charlie Jenkins wrote:
-> On Thu, Jan 09, 2025 at 12:59:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > ⬢ [acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
-> > d06826160a982494 (HEAD -> perf-tools-next) perf tools: Remove dependency on libaudit
-> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> > - tarpkg: ./tests/perf-targz-src-pkg .
-> >                  make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1 -j28  DESTDIR=/tmp/tmp.JJT3tvN7bV
-> >               make_with_gtk2: cd . && make GTK2=1 -j28  DESTDIR=/tmp/tmp.BF53V2qpl3
-> > - /home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP: cd . && make FEATURE_DUMP_COPY=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP  feature-dump
-> > cd . && make FEATURE_DUMP_COPY=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP feature-dump
-> >          make_no_libbionic_O: cd . && make NO_LIBBIONIC=1 FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j28 O=/tmp/tmp.KZuQ0q2Vs6 DESTDIR=/tmp/tmp.0sxMyH91gS
-> >            make_util_map_o_O: cd . && make util/map.o FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j28 O=/tmp/tmp.Y0Mx3KLREI DESTDIR=/tmp/tmp.wg9HCVVLHE
-> >               make_install_O: cd . && make install FEATURES_DUMP=/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j28 O=/tmp/tmp.P0LEBAkW1X DESTDIR=/tmp/tmp.agTavZndFN
-> >   failed to find: etc/bash_completion.d/perf
-> 
-> Is this something introduced by this patch?
+On Thu, Jan 09, 2025 at 03:46:33PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jan 02, 2025 at 12:12:47PM -0800, Namhyung Kim wrote:
+> > Some version of compilers reported unaligned accesses in perf trace when
+> > undefined-behavior sanitizer is on.  I found that it uses raw data in the
+> > sample directly and assuming it's properly aligned.
 
-I don't think so.
+> > Unlike other sample fields, the raw data is not 8-byte aligned because
+> > there's a size field (u32) before the actual data.  So I added a static
+> > buffer in syscall__augmented_args() and return it instead.  This is not
+> > ideal but should work well as perf trace is single-threaded.
+ 
+> > A better approach would be aligning the raw data by adding a 4-byte data
+> > before the augmented args but I'm afraid it'd break the backward
+> > compatibility.
+  
+> You mean for 'perf trace record' files?
+ 
+> Older tools will not be able to process new files, while old files will
+> be remain processable by new tools if we insert a u32 with zeroes before
+> the size field, that way if the first u32 is not zero, we do as you do
+> below and incur the cost of copying to that intermediary buffer,
+> otherwise we read the real size in the next u32 and don't incur the cost
+> of copying.
+ 
+> Your fix below works as it incurs the cost all the time, which is ok for
+> now, but as a follow up patch we can see if the approach I described
+> above works.
+ 
+> Applying.
 
-BTW this series is already pushed out to perf-tools-next:
+Applied, and forget about my suggestion above, as we discussed this is
+not feasible, I added these notes to your patch:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
+   Committer testing:
+    
+    To build with the undefined behaviour sanitizer:
+    
+     $ make CC=clang EXTRA_CFLAGS=-fsanitize=undefined -C tools/perf
+    
+    Checking if the resulting binary is instrumented:
+    
+      root@number:~# nm ~/bin/perf | grep ubsan | wc -l
+      113
+      root@number:~# nm ~/bin/perf | grep ubsan | tail -5
+      000000000043d5b0 t _ZN7__ubsanL19UBsanOnDeadlySignalEiPvS0_
+      000000000043ce50 T _ZNK7__ubsan5Value12getSIntValueEv
+      000000000043cf40 T _ZNK7__ubsan5Value12getUIntValueEv
+      000000000043d140 T _ZNK7__ubsan5Value13getFloatValueEv
+      000000000043cfd0 T _ZNK7__ubsan5Value19getPositiveIntValueEv
+      root@number:~#
+    
+    Now running something that will access timespec, as reported in the
+    Closes URL:
+    
+      root@number:~# perf trace --max-events=1 -e *nano* sleep 1.1
+      trace/beauty/timespec.c:10:64: runtime error: member access within misaligned address 0x7fc583cfb2a4 for type 'struct augmented_arg', which requires 8 byte alignment
+      0x7fc583cfb2a4: note: pointer points here
+        99 99 11 00 10 00 00 00  00 00 00 00 01 00 00 00  00 00 00 00 01 e1 f5 05  00 00 00 00 00 00 00 00
+                    ^
+      SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior trace/beauty/timespec.c:10:64
+      <SNIP>
+    
+    As Namhyung said we need to make the raw_data to be 64-bit aligned,
+    probably we need to add a PERF_SAMPLE_ALIGNED_RAW with a 64-bit raw_size
+    instead of the current u32 done at kernel/events/core.c,
+    perf_output_sample(), that perf_output_put(handle, raw->size) where
+    raw->size is an u32 and then the raw_data is always 64-bit unaligned...
+    
+    After the patch:
+    
+      root@number:~# perf trace -e *nano* sleep 1.1
+           0.000 (1100.064 ms): sleep/1984224 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 100000001 }, rmtp: 0x7fff5b3fe970) = 0
+      root@number:~#
 
-Thanks!
-
-- Arnaldo
