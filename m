@@ -1,93 +1,56 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1D6213E7B
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 19:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2064A20ADC9;
+	Fri, 10 Jan 2025 19:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736537467; cv=none; b=A4J7En2K6ISFlBODYWA97oZQz9XllGEjNujvQe2QHaEUVftRN781TOj0Y2+yfUeVHuJgrANkVx+cCXbJT7E58QWY832rkM/kKEja6zBjn6wdHfkWoKLrnAcBTSWDkn8qvsoANZD4hEvWcrrPKGoc9Njs7RBkZRvzZd758LGfJM4=
+	t=1736538030; cv=none; b=GXmDu58qv71bw8zWEljKGdytwjdDoKEM5enOwYSVdaLWJC9HWZswhtAuHo1WXQ2mI83MJkLnXfe03R3wgteBh0hdeqEXBhNkMW/k8D3GGNF9ZwxerkVka3zOLPkyB3WQI4Enn+wiCttMt6Mz0FDoBDfWSR7Qu+HdkOmBe5ZkOmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736537467; c=relaxed/simple;
-	bh=cCIVRRQWwHdObE52/2AeeqNAiuegHaviOd3IMjq/QRo=;
+	s=arc-20240116; t=1736538030; c=relaxed/simple;
+	bh=Ie/6AQ37NDcgluz+wrew7LINpdv7/s6SEKcyVq1dN54=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpQyNSlLtyLtz5x0eAajij10nND7E/89ywX7fh4Po+/PknxotL1TWDyDFBrfhN4WkIKvd+ikftupduUFj8Ki7B5mztCQvAr4mlU+nonTsSFcI6EkE8YcPNnqbrj4lFnzXmXz0bZmjyS+BeFIRkbhibN5b2NjxstYAliQkdqDkRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=tSu2E6MA; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1/aLYDfObfoskt965UxWPpubHyre0+1f4eL0H+DBmUmVuXueysgrKOCP76lm/8NFW3IKwmwwYnOuxzeUKMBOlRNdXe7O++wFS52HfDmtCP8WhSDUvgZLKVBMQY9RhZSSybV1jPhscKfmoV8JUW6YJZFsokrw6eIpqxl6wo/OXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4Chqvp/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="tSu2E6MA"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21619108a6bso41589475ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 11:31:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736537465; x=1737142265; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T624wPcrhS1JgwTBcPosmdXx4gdcuulJGOQvqM6CtCw=;
-        b=tSu2E6MApWWyRAjxThkZm6dBGIpcVvlkndK1huEUSPlaSuauaq88exVzi50fOJABSo
-         JQ0oPPUa3COfjtA+6kmCOR+cibNzw7HT5j12XuAdIO1UFcelO7Uzsou5ntmkrDakWaJV
-         tD//deniHkeE6jNJxaKe7DcwEA9pLfsvlAjQWllk8xOhSIFRqQPOg2cwnPeNjGPzADEg
-         YMOo7rGGYJRTGu8CkDVyNLA3wtO3r8rTB5wJp4OpoOuppAyBsdMwa0e7NhO6mrgYtQnX
-         Weu1u8Yu+YjpQxpzeBAcPZIbm1inGgEaF+eeQEcxnORM8t5M8jW3a1HZrrVzj/SrFoAj
-         f7Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736537465; x=1737142265;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T624wPcrhS1JgwTBcPosmdXx4gdcuulJGOQvqM6CtCw=;
-        b=BcWPrPqNdwplEED+aK0p092qgYxqpVd/qTdlMjNyi5zIBM4q2YiSj1wDJaF4s2HZXH
-         lBEo+m62L7ZSlkHCPxCp7pHkTMg37NGTHTCFjPHnnuUHvZUh6VhoHPPzaZ9oSDbq4O/T
-         Mk+m9r2Qstg8JAP129UeX0INf8Kpbw/V0r69FTR5B2e+y330QuDDr769f74evqt7+SLa
-         DJjL4te1sTZ+e3p3GqBDoKCGyictjYFW2i36GOEkS0ZF5znpIlRjHtdkTl1vApFbJVc2
-         hnCDfzjLbXQhNf8OdmJCIlVI5kXZAWFOf9Gm6Ra9EK51VIGCYEA2aaO0GSVLdFan8ROZ
-         CqIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrFebKzoiLUiaYu0QCabC8OmO/aotx4E+qIRUUUI5VMJdMcASD9Ei8gRiZFLRxGXjX9bM9QGRr+F3ziygrzBdj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzdchuTaqUVPuXS+3UE5ctko9Lp8g7znnuanvM7O2mF4OxXWK/
-	JURJE0M7SB3scWxzfcBc5mk2jSoGFMsLO9zMNYro87+DOJwhENCgiExcKMVLfLU=
-X-Gm-Gg: ASbGncuOBweJzYAaV27FBOcR0W1Dh/wNNFKaZbdMKseujyibnnA7evqq++eQz2pIvHK
-	MJe0XSaTOmmf26YgS0x21IJAWNjTU9y8KTntgLx+pBArlyhUVWKgHg7z0QtzMyxa1l0NAS5Jh4m
-	nc/viWjQQkfizBP+oUFURMbnfAtmMF9Sp5wY5fc56XCl3RHuVxq0DBHoTyMdQFJ7o+lZm7asjb/
-	zZuwTGarq71sZoULBKmruTL1uT0FSleyRrukukIoQopEb6z1YlR
-X-Google-Smtp-Source: AGHT+IEre0AsdJDUsGl4k/O1aF6vQLIHA3Knu3Spyy4azSMvw1UNUQEJLtptbRCNfCZV9aZHSRvhEg==
-X-Received: by 2002:a17:903:124f:b0:215:83e1:99ff with SMTP id d9443c01a7336-21a83f63f68mr150756545ad.27.1736537464834;
-        Fri, 10 Jan 2025 11:31:04 -0800 (PST)
-Received: from ghost ([2601:647:6700:64d0:4bc7:d274:c14b:fde8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f219a94sm16883985ad.129.2025.01.10.11.31.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 11:31:04 -0800 (PST)
-Date: Fri, 10 Jan 2025 11:31:01 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4Chqvp/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38E5C4CEE1;
+	Fri, 10 Jan 2025 19:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736538029;
+	bh=Ie/6AQ37NDcgluz+wrew7LINpdv7/s6SEKcyVq1dN54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G4Chqvp/twL+TwkmGdqTNYaYaswj3mhJSJidmhSpQ8see915iOPFa+l6DBrpi8sdH
+	 PZ51ykfauZdMcvnC+k8rYRyOK7hBWxn6rSbE1eQZSr/wxWiFQLnyscbbGrpotW12CD
+	 PL/stQVvxL5wR99YxAQ0xXX0d1/bUi//fC7qbAuA3PpxhTbX92z9TB8LEcONvQs3OV
+	 DK7JXJkcWloUkM4HqeBjG0XAhppDjo5f4+Yx1HXT2hy+SoUxSZBRVj9SSEu3J71wxN
+	 04aq1xULSguCaM1ACdqBnQkVMZL4yN+5YslT8oC7K0uk9lqjhKGWqNvqSdQ0seKVdr
+	 t6MVNLNlsAxHw==
+Date: Fri, 10 Jan 2025 11:40:27 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 00/16] perf tools: Use generic syscall scripts for all
- archs
-Message-ID: <Z4F1dXQLPGZ3JFI5@ghost>
-References: <20250108-perf_syscalltbl-v6-0-7543b5293098@rivosinc.com>
- <Z3_ybwWW3QZvJ4V6@x1>
- <Z4AoFA974kauIJ9T@ghost>
- <Z4A2Y269Ffo0ERkS@x1>
- <Z4BEygdXmofWBr0-@x1>
- <Z4BVK3D7sN-XYg2o@ghost>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z4F3qxFaYnMTtPw7@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -96,180 +59,382 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4BVK3D7sN-XYg2o@ghost>
+In-Reply-To: <20250109222109.567031-5-irogers@google.com>
 
-On Thu, Jan 09, 2025 at 03:00:59PM -0800, Charlie Jenkins wrote:
-> On Thu, Jan 09, 2025 at 06:51:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Jan 09, 2025 at 05:49:42PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > BTW this series is already pushed out to perf-tools-next:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
-> > 
-> > Hey, now I noticed that with this latest version we see:
-> > 
-> > ⬢ [acme@toolbox perf-tools-next]$ m
-> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> >   BUILD:   Doing 'make -j28' parallel build
-> > Warning: Kernel ABI header differences:
-> >   diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
-> > 
-> > Auto-detecting system features:
-> > ...                                   libdw: [ on  ]
-> > ...                                   glibc: [ on  ]
-> > ...                                  libbfd: [ on  ]
-> > ...                          libbfd-buildid: [ on  ]
-> > ...                                  libelf: [ on  ]
-> > ...                                 libnuma: [ on  ]
-> > ...                  numa_num_possible_cpus: [ on  ]
-> > ...                                 libperl: [ on  ]
-> > ...                               libpython: [ on  ]
-> > ...                               libcrypto: [ on  ]
-> > ...                               libunwind: [ on  ]
-> > ...                             libcapstone: [ on  ]
-> > ...                               llvm-perf: [ on  ]
-> > ...                                    zlib: [ on  ]
-> > ...                                    lzma: [ on  ]
-> > ...                               get_cpuid: [ on  ]
-> > ...                                     bpf: [ on  ]
-> > ...                                  libaio: [ on  ]
-> > ...                                 libzstd: [ on  ]
-> > 
-> >    /home/acme/git/perf-tools-next/tools/perf/scripts/syscalltbl.sh  --abis common,32,i386 /home/acme/git/perf-tools-next/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_32.h
-> >    /home/acme/git/perf-tools-next/tools/perf/scripts/syscalltbl.sh  --abis common,64 /home/acme/git/perf-tools-next/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_64.h
-> >   GEN     /tmp/build/perf-tools-next/common-cmds.h
-> >   GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
-> >   PERF_VERSION = 6.13.rc2.gd73982c39183
-> >   GEN     perf-archive
-> >   GEN     perf-iostat
-> >   MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >   MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >   MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >   MKDIR   /tmp/build/perf-tools-next/jvmti/
-> > 
-> > 
-> > While with the previous one we would see something like SYSCALLTBL as
-> > the step name, like we have GEN, MKDIR, etc, can you take a look?
+On Thu, Jan 09, 2025 at 02:21:09PM -0800, Ian Rogers wrote:
+> Originally posted and merged from:
+> https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
+> This reverts commit 4f1b067359ac8364cdb7f9fda41085fa85789d0f although
+> the patch is now smaller due to related fixes being applied in commit
+> 22a4db3c3603 ("perf evsel: Add alternate_hw_config and use in
+> evsel__match").
+> The original commit message was:
 > 
-> Ooh okay I see, the quiet commands were being ignored as-is. We could
-> add the lines to handle this to Makefile.syscalls, but I think the
-> better solution is to move the lines from Makefile.build to
-> Makefile.perf to be more generically available. Here is a patch for
-> that. I also added the comment from the kernel Makefile describing what
-> this does.
+> It was requested that RISC-V be able to add events to the perf tool so
+> the PMU driver didn't need to map legacy events to config encodings:
+> https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.com/
 > 
-> From 8dcec7f5d937ede3d33c687573dc2f1654ddc59e Mon Sep 17 00:00:00 2001
-> From: Charlie Jenkins <charlie@rivosinc.com>
-> Date: Thu, 9 Jan 2025 14:36:40 -0800
-> Subject: [PATCH] perf tools: Expose quiet/verbose variables in Makefile.perf
+> This change makes the priority of events specified without a PMU the
+> same as those specified with a PMU, namely sysfs and JSON events are
+> checked first before using the legacy encoding.
+
+I'm still not convinced why we need this change despite of these
+troubles.  If it's because RISC-V cannot define the lagacy hardware
+events in the kernel driver, why not using a different name in JSON and
+ask users to use the name specifically?  Something like:
+
+  $ perf record -e riscv-cycles ...
+
+Thanks,
+Namhyung
+
 > 
-> The variables to make builds silent/verbose live inside
-> tools/build/Makefile.build. Move those variables to the top-level
-> Makefile.perf to be generally available.
+> The hw_term is made more generic as a hardware_event that encodes a
+> pair of string and int value, allowing parse_events_multi_pmu_add to
+> fall back on a known encoding when the sysfs/JSON adding fails for
+> core events. As this covers PE_VALUE_SYM_HW, that token is removed and
+> related code simplified.
 > 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Tested-by: Atish Patra <atishp@rivosinc.com>
+> Tested-by: James Clark <james.clark@linaro.org>
+> Tested-by: Leo Yan <leo.yan@arm.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Beeman Strong <beeman@rivosinc.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/build/Makefile.build | 20 --------------------
->  tools/perf/Makefile.perf   | 37 ++++++++++++++++++++++++++++++++++++-
->  2 files changed, 36 insertions(+), 21 deletions(-)
+>  tools/perf/util/parse-events.c | 26 +++++++++---
+>  tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
+>  tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
+>  3 files changed, 98 insertions(+), 64 deletions(-)
 > 
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index 5fb3fb3d97e0..e710ed67a1b4 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -12,26 +12,6 @@
->  PHONY := __build
->  __build:
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 1e23faa364b1..3a60fca53cfa 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1545,8 +1545,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  	struct list_head *list = NULL;
+>  	struct perf_pmu *pmu = NULL;
+>  	YYLTYPE *loc = loc_;
+> -	int ok = 0;
+> -	const char *config;
+> +	int ok = 0, core_ok = 0;
+> +	const char *tmp;
+>  	struct parse_events_terms parsed_terms;
 >  
-> -ifeq ($(V),1)
-> -  quiet =
-> -  Q =
-> -else
-> -  quiet=quiet_
-> -  Q=@
-> -endif
-> -
-> -# If the user is running make -s (silent mode), suppress echoing of commands
-> -# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> -ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> -short-opts := $(firstword -$(MAKEFLAGS))
-> -else
-> -short-opts := $(filter-out --%,$(MAKEFLAGS))
-> -endif
-> -
-> -ifneq ($(findstring s,$(short-opts)),)
-> -  quiet=silent_
-> -endif
-> -
->  build-dir := $(srctree)/tools/build
+>  	*listp = NULL;
+> @@ -1559,15 +1559,15 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  			return ret;
+>  	}
 >  
->  # Define $(fixdep) for dep-cmd function
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index a449d0015536..55d6ce9ea52f 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -161,12 +161,47 @@ export VPATH
->  SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
->  endif
+> -	config = strdup(event_name);
+> -	if (!config)
+> +	tmp = strdup(event_name);
+> +	if (!tmp)
+>  		goto out_err;
 >  
-> +# Beautify output
-> +# ---------------------------------------------------------------------------
-> +#
-> +# Most of build commands in Kbuild start with "cmd_". You can optionally define
-> +# "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
-> +# that command is printed by default.
-> +#
-> +# e.g.)
-> +#    quiet_cmd_depmod = DEPMOD  $(MODLIB)
-> +#          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
-> +#
-> +# A simple variant is to prefix commands with $(Q) - that's useful
-> +# for commands that shall be hidden in non-verbose mode.
-> +#
-> +#    $(Q)$(MAKE) $(build)=scripts/basic
-> +#
-> +# To put more focus on warnings, be less verbose as default
-> +# Use 'make V=1' to see the full commands
-> +
->  ifeq ($(V),1)
-> +  quiet =
->    Q =
->  else
-> -  Q = @
-> +  quiet=quiet_
-> +  Q=@
->  endif
+>  	if (parse_events_term__num(&term,
+>  				   PARSE_EVENTS__TERM_TYPE_USER,
+> -				   config, /*num=*/1, /*novalue=*/true,
+> +				   tmp, /*num=*/1, /*novalue=*/true,
+>  				   loc, /*loc_val=*/NULL) < 0) {
+> -		zfree(&config);
+> +		zfree(&tmp);
+>  		goto out_err;
+>  	}
+>  	list_add_tail(&term->list, &parsed_terms.terms);
+> @@ -1598,6 +1598,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  			pr_debug("%s -> %s/%s/\n", event_name, pmu->name, sb.buf);
+>  			strbuf_release(&sb);
+>  			ok++;
+> +			if (pmu->is_core)
+> +				core_ok++;
+>  		}
+>  	}
 >  
-> +# If the user is running make -s (silent mode), suppress echoing of commands
-> +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> +short-opts := $(firstword -$(MAKEFLAGS))
-> +else
-> +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> +endif
+> @@ -1614,6 +1616,18 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>  		}
+>  	}
+>  
+> +	if (hw_config != PERF_COUNT_HW_MAX && !core_ok) {
+> +		/*
+> +		 * The event wasn't found on core PMUs but it has a hardware
+> +		 * config version to try.
+> +		 */
+> +		if (!parse_events_add_numeric(parse_state, list,
+> +						PERF_TYPE_HARDWARE, hw_config,
+> +						const_parsed_terms,
+> +						/*wildcard=*/true))
+> +			ok++;
+> +	}
 > +
-> +ifneq ($(findstring s,$(short-opts)),)
-> +  quiet=silent_
-> +endif
+>  out_err:
+>  	parse_events_terms__exit(&parsed_terms);
+>  	if (ok)
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index bf7f73548605..29082a22ccc9 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -113,12 +113,12 @@ do {								\
+>  	yyless(0);						\
+>  } while (0)
+>  
+> -static int sym(yyscan_t scanner, int type, int config)
+> +static int sym(yyscan_t scanner, int config)
+>  {
+>  	YYSTYPE *yylval = parse_events_get_lval(scanner);
+>  
+> -	yylval->num = (type << 16) + config;
+> -	return type == PERF_TYPE_HARDWARE ? PE_VALUE_SYM_HW : PE_VALUE_SYM_SW;
+> +	yylval->num = config;
+> +	return PE_VALUE_SYM_SW;
+>  }
+>  
+>  static int term(yyscan_t scanner, enum parse_events__term_type type)
+> @@ -129,13 +129,13 @@ static int term(yyscan_t scanner, enum parse_events__term_type type)
+>  	return PE_TERM;
+>  }
+>  
+> -static int hw_term(yyscan_t scanner, int config)
+> +static int hw(yyscan_t scanner, int config)
+>  {
+>  	YYSTYPE *yylval = parse_events_get_lval(scanner);
+>  	char *text = parse_events_get_text(scanner);
+>  
+> -	yylval->hardware_term.str = strdup(text);
+> -	yylval->hardware_term.num = PERF_TYPE_HARDWARE + config;
+> +	yylval->hardware_event.str = strdup(text);
+> +	yylval->hardware_event.num = config;
+>  	return PE_TERM_HW;
+>  }
+>  
+> @@ -324,16 +324,16 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+>  aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
+>  aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
+>  metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
+> -cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+> -stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+> -stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> -instructions					{ return hw_term(yyscanner, PERF_COUNT_HW_INSTRUCTIONS); }
+> -cache-references				{ return hw_term(yyscanner, PERF_COUNT_HW_CACHE_REFERENCES); }
+> -cache-misses					{ return hw_term(yyscanner, PERF_COUNT_HW_CACHE_MISSES); }
+> -branch-instructions|branches			{ return hw_term(yyscanner, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+> -branch-misses					{ return hw_term(yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
+> -bus-cycles					{ return hw_term(yyscanner, PERF_COUNT_HW_BUS_CYCLES); }
+> -ref-cycles					{ return hw_term(yyscanner, PERF_COUNT_HW_REF_CPU_CYCLES); }
+> +cpu-cycles|cycles				{ return hw(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+> +stalled-cycles-frontend|idle-cycles-frontend	{ return hw(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+> +stalled-cycles-backend|idle-cycles-backend	{ return hw(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> +instructions					{ return hw(yyscanner, PERF_COUNT_HW_INSTRUCTIONS); }
+> +cache-references				{ return hw(yyscanner, PERF_COUNT_HW_CACHE_REFERENCES); }
+> +cache-misses					{ return hw(yyscanner, PERF_COUNT_HW_CACHE_MISSES); }
+> +branch-instructions|branches			{ return hw(yyscanner, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+> +branch-misses					{ return hw(yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
+> +bus-cycles					{ return hw(yyscanner, PERF_COUNT_HW_BUS_CYCLES); }
+> +ref-cycles					{ return hw(yyscanner, PERF_COUNT_HW_REF_CPU_CYCLES); }
+>  r{num_raw_hex}		{ return str(yyscanner, PE_RAW); }
+>  r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
+>  ,			{ return ','; }
+> @@ -377,28 +377,28 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
+>  <<EOF>>			{ BEGIN(INITIAL); }
+>  }
+>  
+> -cpu-cycles|cycles				{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES); }
+> -stalled-cycles-frontend|idle-cycles-frontend	{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+> -stalled-cycles-backend|idle-cycles-backend	{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> -instructions					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_INSTRUCTIONS); }
+> -cache-references				{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_REFERENCES); }
+> -cache-misses					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_MISSES); }
+> -branch-instructions|branches			{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+> -branch-misses					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_MISSES); }
+> -bus-cycles					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BUS_CYCLES); }
+> -ref-cycles					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES); }
+> -cpu-clock					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CPU_CLOCK); }
+> -task-clock					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_TASK_CLOCK); }
+> -page-faults|faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS); }
+> -minor-faults					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS_MIN); }
+> -major-faults					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS_MAJ); }
+> -context-switches|cs				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CONTEXT_SWITCHES); }
+> -cpu-migrations|migrations			{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CPU_MIGRATIONS); }
+> -alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_ALIGNMENT_FAULTS); }
+> -emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
+> -dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
+> -bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
+> -cgroup-switches					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CGROUP_SWITCHES); }
+> +cpu-cycles|cycles				{ return hw(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+> +stalled-cycles-frontend|idle-cycles-frontend	{ return hw(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+> +stalled-cycles-backend|idle-cycles-backend	{ return hw(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> +instructions					{ return hw(yyscanner, PERF_COUNT_HW_INSTRUCTIONS); }
+> +cache-references				{ return hw(yyscanner, PERF_COUNT_HW_CACHE_REFERENCES); }
+> +cache-misses					{ return hw(yyscanner, PERF_COUNT_HW_CACHE_MISSES); }
+> +branch-instructions|branches			{ return hw(yyscanner, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+> +branch-misses					{ return hw(yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
+> +bus-cycles					{ return hw(yyscanner, PERF_COUNT_HW_BUS_CYCLES); }
+> +ref-cycles					{ return hw(yyscanner, PERF_COUNT_HW_REF_CPU_CYCLES); }
+> +cpu-clock					{ return sym(yyscanner, PERF_COUNT_SW_CPU_CLOCK); }
+> +task-clock					{ return sym(yyscanner, PERF_COUNT_SW_TASK_CLOCK); }
+> +page-faults|faults				{ return sym(yyscanner, PERF_COUNT_SW_PAGE_FAULTS); }
+> +minor-faults					{ return sym(yyscanner, PERF_COUNT_SW_PAGE_FAULTS_MIN); }
+> +major-faults					{ return sym(yyscanner, PERF_COUNT_SW_PAGE_FAULTS_MAJ); }
+> +context-switches|cs				{ return sym(yyscanner, PERF_COUNT_SW_CONTEXT_SWITCHES); }
+> +cpu-migrations|migrations			{ return sym(yyscanner, PERF_COUNT_SW_CPU_MIGRATIONS); }
+> +alignment-faults				{ return sym(yyscanner, PERF_COUNT_SW_ALIGNMENT_FAULTS); }
+> +emulation-faults				{ return sym(yyscanner, PERF_COUNT_SW_EMULATION_FAULTS); }
+> +dummy						{ return sym(yyscanner, PERF_COUNT_SW_DUMMY); }
+> +bpf-output					{ return sym(yyscanner, PERF_COUNT_SW_BPF_OUTPUT); }
+> +cgroup-switches					{ return sym(yyscanner, PERF_COUNT_SW_CGROUP_SWITCHES); }
+>  
+>  {lc_type}			{ return str(yyscanner, PE_LEGACY_CACHE); }
+>  {lc_type}-{lc_op_result}	{ return str(yyscanner, PE_LEGACY_CACHE); }
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index f888cbb076d6..d2ef1890007e 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -55,7 +55,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  %}
+>  
+>  %token PE_START_EVENTS PE_START_TERMS
+> -%token PE_VALUE PE_VALUE_SYM_HW PE_VALUE_SYM_SW PE_TERM
+> +%token PE_VALUE PE_VALUE_SYM_SW PE_TERM
+>  %token PE_EVENT_NAME
+>  %token PE_RAW PE_NAME
+>  %token PE_MODIFIER_EVENT PE_MODIFIER_BP PE_BP_COLON PE_BP_SLASH
+> @@ -65,11 +65,9 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  %token PE_DRV_CFG_TERM
+>  %token PE_TERM_HW
+>  %type <num> PE_VALUE
+> -%type <num> PE_VALUE_SYM_HW
+>  %type <num> PE_VALUE_SYM_SW
+>  %type <mod> PE_MODIFIER_EVENT
+>  %type <term_type> PE_TERM
+> -%type <num> value_sym
+>  %type <str> PE_RAW
+>  %type <str> PE_NAME
+>  %type <str> PE_LEGACY_CACHE
+> @@ -85,6 +83,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  %type <list_terms> opt_pmu_config
+>  %destructor { parse_events_terms__delete ($$); } <list_terms>
+>  %type <list_evsel> event_pmu
+> +%type <list_evsel> event_legacy_hardware
+>  %type <list_evsel> event_legacy_symbol
+>  %type <list_evsel> event_legacy_cache
+>  %type <list_evsel> event_legacy_mem
+> @@ -102,8 +101,8 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  %destructor { free_list_evsel ($$); } <list_evsel>
+>  %type <tracepoint_name> tracepoint_name
+>  %destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
+> -%type <hardware_term> PE_TERM_HW
+> -%destructor { free ($$.str); } <hardware_term>
+> +%type <hardware_event> PE_TERM_HW
+> +%destructor { free ($$.str); } <hardware_event>
+>  
+>  %union
+>  {
+> @@ -118,10 +117,10 @@ static void free_list_evsel(struct list_head* list_evsel)
+>  		char *sys;
+>  		char *event;
+>  	} tracepoint_name;
+> -	struct hardware_term {
+> +	struct hardware_event {
+>  		char *str;
+>  		u64 num;
+> -	} hardware_term;
+> +	} hardware_event;
+>  }
+>  %%
+>  
+> @@ -264,6 +263,7 @@ PE_EVENT_NAME event_def
+>  event_def
+>  
+>  event_def: event_pmu |
+> +	   event_legacy_hardware |
+>  	   event_legacy_symbol |
+>  	   event_legacy_cache sep_dc |
+>  	   event_legacy_mem sep_dc |
+> @@ -306,24 +306,45 @@ PE_NAME sep_dc
+>  	$$ = list;
+>  }
+>  
+> -value_sym:
+> -PE_VALUE_SYM_HW
+> +event_legacy_hardware:
+> +PE_TERM_HW opt_pmu_config
+> +{
+> +	/* List of created evsels. */
+> +	struct list_head *list = NULL;
+> +	int err = parse_events_multi_pmu_add(_parse_state, $1.str, $1.num, $2, &list, &@1);
 > +
-> +export quiet Q
+> +	free($1.str);
+> +	parse_events_terms__delete($2);
+> +	if (err)
+> +		PE_ABORT(err);
 > +
->  # Do not use make's built-in rules
->  # (this improves performance and avoids hard-to-debug behaviour);
->  MAKEFLAGS += -r
+> +	$$ = list;
+> +}
+>  |
+> -PE_VALUE_SYM_SW
+> +PE_TERM_HW sep_dc
+> +{
+> +	struct list_head *list;
+> +	int err;
+> +
+> +	err = parse_events_multi_pmu_add(_parse_state, $1.str, $1.num, NULL, &list, &@1);
+> +	free($1.str);
+> +	if (err)
+> +		PE_ABORT(err);
+> +	$$ = list;
+> +}
+>  
+>  event_legacy_symbol:
+> -value_sym '/' event_config '/'
+> +PE_VALUE_SYM_SW '/' event_config '/'
+>  {
+>  	struct list_head *list;
+> -	int type = $1 >> 16;
+> -	int config = $1 & 255;
+>  	int err;
+> -	bool wildcard = (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE);
+>  
+>  	list = alloc_list();
+>  	if (!list)
+>  		YYNOMEM;
+> -	err = parse_events_add_numeric(_parse_state, list, type, config, $3, wildcard);
+> +	err = parse_events_add_numeric(_parse_state, list,
+> +				/*type=*/PERF_TYPE_SOFTWARE, /*config=*/$1,
+> +				$3, /*wildcard=*/false);
+>  	parse_events_terms__delete($3);
+>  	if (err) {
+>  		free_list_evsel(list);
+> @@ -332,18 +353,17 @@ value_sym '/' event_config '/'
+>  	$$ = list;
+>  }
+>  |
+> -value_sym sep_slash_slash_dc
+> +PE_VALUE_SYM_SW sep_slash_slash_dc
+>  {
+>  	struct list_head *list;
+> -	int type = $1 >> 16;
+> -	int config = $1 & 255;
+> -	bool wildcard = (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE);
+>  	int err;
+>  
+>  	list = alloc_list();
+>  	if (!list)
+>  		YYNOMEM;
+> -	err = parse_events_add_numeric(_parse_state, list, type, config, /*head_config=*/NULL, wildcard);
+> +	err = parse_events_add_numeric(_parse_state, list,
+> +				/*type=*/PERF_TYPE_SOFTWARE, /*config=*/$1,
+> +				/*head_config=*/NULL, /*wildcard=*/false);
+>  	if (err)
+>  		PE_ABORT(err);
+>  	$$ = list;
 > -- 
-> 2.34.1
+> 2.47.1.613.gc27f4b7a9f-goog
 > 
-> 
-> - Charlie
-
-Let me know how you want to handle this, I can send this out as a
-separate patch if that's better.
-
-- Charlie
-
-> 
-> > 
-> > All is out there in perf-tools-next.
-> > 
-> > - Arnaldo
