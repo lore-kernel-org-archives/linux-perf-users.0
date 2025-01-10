@@ -1,55 +1,55 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0242248B9
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 18:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDEB21B1AB
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 18:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534519; cv=none; b=dnxq/9EgP5ewcpLQcleT70pyPqIH4zuDICwEq9zecZifc3Ygy9IPTzO2TC87Tdzgx8mH+hHDzTM/+Y62q6hCA13SBNSUYzmTXP7nisi/FpSO12UCAxSsYitXiXWRVSwU/8+c64AjtnvNLa5ye2XltfePsNAO2gdB1ucNZTbgxYU=
+	t=1736534522; cv=none; b=DVA+IG+8BerxmrFPO4VX7Cas2bZfyx/RphM7hTeg3oTfK5zafaZX6BaHa7V9sqaifsNtdDMZ8M6RRNhQh1nZjA6iQFfbPP/yUdqglbhFj5AdKJ+7t3UQfrKw43MCkCSzq8F64R96FYi8K9fxpiseXK47GuKaOTYhbOdYs0eCIdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534519; c=relaxed/simple;
-	bh=SZWSB4xfWiJGdbbRiBIwnZ68GYA4NlfRz2uMWEeyAjw=;
+	s=arc-20240116; t=1736534522; c=relaxed/simple;
+	bh=l8VRofw4n3u7F2JDfOw4pto7/SqLPxEHxIwvtXRrZBI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IsRq7FFtIA50JCAx/fMIecJaDFnnwCZVixkkhi/aexjVQEqGQ5PwOPh/Ui61LsiZX3aMjkhecJumPT+rjnjcZRa07neSdoU6ozOZ6Dg4FCAc/4tPn4UMtulWxin+e3gCSyYRcUdFcF0/ZPiSJnvGhgFMIOjXRXQ3NgfNm8eEOAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iDkGrgTK; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=TUHTLxks+wth/NiUAMLvdum+lHQdlaEdE012ugKhkuW/TkZDNpTwPtcyQryiStYoNsMJ/noyk2eCVv9N2r/jfV3uas/DgksIRkp0m48YNbdxijykUF2/KX0RrqLDyQ/NIcYjjrQ0Rd1hfLFoETtHzK/ZPEqQ+AiAJRTh3RecD78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ZV4/zi/; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iDkGrgTK"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3862b364578so1612479f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 10:41:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ZV4/zi/"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4362f893bfaso12712195e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 10:41:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534480; x=1737139280; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736534493; x=1737139293; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aw/CnxStV8mvixiIOCl4TLOf7+c8cjSAdFrfDhkuuHg=;
-        b=iDkGrgTKHVUa34+ZKmxOSc0xwlurss6RE8/r+LqYpqitJzMkpPySm7IZKpZHys9em2
-         pnj9244eqbH46mK1dAP3AIse9cR2NBErzZbkf2d9DcAGpNvZh7PiY4LCjtICGW9V/YRP
-         cJYr7hXel2n3RMuEQzGuA8h9TVs/fkUzZenWMztEJLjyxdwVOR7EjfUkybgTay/Xb+uk
-         Y/Tst3A3W6yIWuUi3EA2NI4A8NYG4KT/8HSFxSt79sr41pHhJciLC7MjYC3EhXz+on3e
-         fMuQWtQINtB6NLiLlGtQ9U3H3PCaK7LP5AhdGJvCvg46xw9SQTssN/MolzzES9pFiX54
-         /Wdw==
+        bh=0rBDGQyJzQ3zE+AnCN6b+fGLld6jYpPH9L4MwLLlvpM=;
+        b=4ZV4/zi//Id/+RZH9DhV8P+F3eKi0SuXWX30qtfN1TFYYXwT8l9qvDWWIOq+dUx1MW
+         HA2SctJO2gTW4wNqqy7vDSteH2gi2J9crGNdZl/UPn0Sq0aYTLYzj7lRjR7pyPdxKCFi
+         GDisgMMyCWjMIl57w1qXplWpjXyOgM8PJHdOwYA3Y1V9bq0oT2BRWoZmkMtqEMmOVGUV
+         +qO8Yos7vfcTD0HMNC6dvn91FnLy2BG1fuEj/Ljwp8OtCJbgkdELH5zhULpJKAURpCaK
+         IGiu6IA+Ge6usWuOsnC57wC51tNgwOaBqzC/enaiZWd6bGTlleqNqesgv0iqGrDZuNVX
+         CyGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534480; x=1737139280;
+        d=1e100.net; s=20230601; t=1736534493; x=1737139293;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aw/CnxStV8mvixiIOCl4TLOf7+c8cjSAdFrfDhkuuHg=;
-        b=TNrhvK6TtF0DMphPfbeTybOSveNqRYTL3rOmKuKYPrdhduEffivEdfCuolj/EZOrb1
-         rEH6RAO7rETpdPdPe8hk4kPnJf3reqHvlLne1AiP3MG5YM8E4Kt7bG1LKw82Xid727zX
-         tlQwmfzavFDfAQ6IWWfOJf7bFDjsquRKr7NKXKbFamNGI7lmZPKovR1g001DFBXzqgqM
-         5/IWsB2p8fLrPLQ0REgsEXo2jsPsgY/HWPbK93yBITwnmwv7xyiRmuHctfFZJJUs75Ti
-         IfnYA/ueB1Dx6c+qgyybfyajD2tHuadgXqt5XPzkDzOAFDqltN7ADj8KDz1hbOVvd4pB
-         7VBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHZ9eMsqH34e7w6rqgK8A0uXCwtstL4/rTznO+x/5XPZhkr5UHdnvs+NfOr2v7e5dmQzK9Jra2vsmvKz0cz6FP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2CvmpY9jI8UULKdyZwyKbsXeq3eE0Tkk8Nzpt4aoK85PJzq9T
-	ARDaP9+4V24gQXuBwyHUAG6KOY8MwVvn6YLtKZpWPJ7NWeh+gwG8n0ULQT8VHr9bHq+KOzouIE/
-	u/aq8TFCeZA==
-X-Google-Smtp-Source: AGHT+IEfIL+1aAzwB4pbtK9eyCgzXtWnxn8Tg5skOTY2l9Jdg/lcArfVr7lNF3vncmrBkENqt6o7go6KThD7+Q==
-X-Received: from wmqe1.prod.google.com ([2002:a05:600c:4e41:b0:434:a050:ddcf])
+        bh=0rBDGQyJzQ3zE+AnCN6b+fGLld6jYpPH9L4MwLLlvpM=;
+        b=DTogG245IEirgBspB/jxb3QVZqZmCAIu09KDU1agHrPItAq4SNfkY7cbXTg/7ZweG6
+         go1V87R67LhFhMXQkY78jyWmm5gBfKsBoaXUoI8g/si/skBPCQcZYLPVa52uz+uSNedT
+         hvzNbgORZgcSxE4JEGRE7dHks33k26NfpN/X2AzUYdHUPxZcY8pwZpFZK3oRtzYzircZ
+         NH0RX4LkDOopL8IQFw61hv19gtyrCQDl/YHPwkkJIB+hjEZTs9/vzx8OBGtkrLF7yNE0
+         XQp8VGSgAG6Uj1XOud/YzuA4y6+pD51GKP+3n5a26jCQaXpG9GhleFvsq3qAKhc0OqQp
+         2hIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrlywxdGy7A9PQdi1YprhvdUzeieJDT4nJ71JJWwjnqR14QJ7/8+DDWyxInD7q4jUzUMQVkm4ph+deZGyfcWrp@vger.kernel.org
+X-Gm-Message-State: AOJu0YweMGnQ6fVJ5P0Px7yzBULuIx1I8i+k5R+/QF1PKGnKUts4blH1
+	/FRuTnz5p3B++myyocycyfS+tSdSjyG/oFTRKdpyUnqvtz1qGEB60fc+Dolj7KEnvpdGgJrvy8o
+	zG8OcbLyjmQ==
+X-Google-Smtp-Source: AGHT+IGSdZ2gZJ+03Djx+zc677EB8kBOQn6jxeBFpWfFWpyM+wf7VvlfzHG8+toKsNSgpgcgyJMUn+Q1Gcn1Dw==
+X-Received: from wmbfc10.prod.google.com ([2002:a05:600c:524a:b0:434:e9fe:f913])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1547:b0:386:34af:9bae with SMTP id ffacd0b85a97d-38a8b0b7fd0mr6975597f8f.4.1736534479521;
- Fri, 10 Jan 2025 10:41:19 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:41 +0000
+ 2002:a05:600c:3ba4:b0:431:3bf9:3ebb with SMTP id 5b1f17b1804b1-436e26f4805mr96359685e9.24.1736534492849;
+ Fri, 10 Jan 2025 10:41:32 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:47 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-15-8419288bc805@google.com>
-Subject: [PATCH TEMP WORKAROUND RFC v2 15/29] mm: asi: Workaround missing
- partial-unmap support
+Message-ID: <20250110-asi-rfc-v2-v2-21-8419288bc805@google.com>
+Subject: [PATCH RFC v2 21/29] KVM: x86: asi: Restricted address space for VM execution
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -115,136 +114,300 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-This is a hack, no need to review it carefully. asi_unmap() doesn't
-currently work unless it corresponds exactly to an asi_map() of the
-exact same region.
+An ASI restricted address space is added for KVM. This protects the
+userspace from attack by the guest, and the guest from attack by other
+processes. It doesn't attempt to prevent the guest from attack by the
+current process.
 
-This is mostly harmless (it's only a functional problem if you wanna
-touch those pages from the ASI critical section) but it's messy. For
-now, working around the only practical case that appears by moving the
-asi_map call up the call stack in the page allocator, to the place where
-we know the actual size the mapping is supposed to end up at.
-
-This just removes the main case where that happens. Later, a proper
-solution for partial unmaps will be needed.
+This change incorporates an extra asi_exit at the end of vcpu_run. We
+expect later iterations of ASI to drop that call as we gain the
+ability to context switch within the ASI domain.
 
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- mm/page_alloc.c | 40 ++++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  3 ++
+ arch/x86/kvm/svm/svm.c          |  2 ++
+ arch/x86/kvm/vmx/vmx.c          | 38 ++++++++++++--------
+ arch/x86/kvm/x86.c              | 77 ++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 105 insertions(+), 15 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3e98fdfbadddb1f7d71e9e050b63255b2008d167..f96e95032450be90b6567f67915b0b941fc431d8 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4604,22 +4604,20 @@ void __init page_alloc_init_asi(void)
- 	}
- }
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 6d9f763a7bb9d5db422ea5625b2c28420bd14f26..00cda452dd6ca6ec57ff85ca194ee4aeb6af3be7 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -37,6 +37,7 @@
+ #include <asm/kvm_vcpu_regs.h>
+ #include <asm/hyperv-tlfs.h>
+ #include <asm/reboot.h>
++#include <asm/asi.h>
  
--static int asi_map_alloced_pages(struct page *page, uint order, gfp_t gfp_mask)
-+static int asi_map_alloced_pages(struct page *page, size_t size, gfp_t gfp_mask)
- {
+ #define __KVM_HAVE_ARCH_VCPU_DEBUGFS
  
- 	if (!static_asi_enabled())
- 		return 0;
- 
- 	if (!(gfp_mask & __GFP_SENSITIVE)) {
--		int err = asi_map_gfp(
--			ASI_GLOBAL_NONSENSITIVE, page_to_virt(page),
--			PAGE_SIZE * (1 << order), gfp_mask);
-+		int err = asi_map_gfp(ASI_GLOBAL_NONSENSITIVE, page_to_virt(page), size, gfp_mask);
- 		uint i;
- 
- 		if (err)
- 			return err;
- 
--		for (i = 0; i < (1 << order); i++)
-+		for (i = 0; i < (size >> PAGE_SHIFT); i++)
- 			__SetPageGlobalNonSensitive(page + i);
- 	}
- 
-@@ -4629,7 +4627,7 @@ static int asi_map_alloced_pages(struct page *page, uint order, gfp_t gfp_mask)
- #else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
- 
- static inline
--int asi_map_alloced_pages(struct page *pages, uint order, gfp_t gfp_mask)
-+int asi_map_alloced_pages(struct page *pages, size_t size, gfp_t gfp_mask)
- {
- 	return 0;
- }
-@@ -4896,7 +4894,7 @@ struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
- 	trace_mm_page_alloc(page, order, alloc_gfp, ac.migratetype);
- 	kmsan_alloc_page(page, order, alloc_gfp);
- 
--	if (page && unlikely(asi_map_alloced_pages(page, order, gfp))) {
-+	if (page && unlikely(asi_map_alloced_pages(page, PAGE_SIZE << order, gfp))) {
- 		__free_pages(page, order);
- 		page = NULL;
- 	}
-@@ -5118,12 +5116,13 @@ void page_frag_free(void *addr)
- }
- EXPORT_SYMBOL(page_frag_free);
- 
--static void *make_alloc_exact(unsigned long addr, unsigned int order,
--		size_t size)
-+static void *finish_exact_alloc(unsigned long addr, unsigned int order,
-+		size_t size, gfp_t gfp_mask)
- {
- 	if (addr) {
- 		unsigned long nr = DIV_ROUND_UP(size, PAGE_SIZE);
- 		struct page *page = virt_to_page((void *)addr);
-+		struct page *first = page;
- 		struct page *last = page + nr;
- 
- 		split_page_owner(page, order, 0);
-@@ -5132,9 +5131,22 @@ static void *make_alloc_exact(unsigned long addr, unsigned int order,
- 		while (page < --last)
- 			set_page_refcounted(last);
- 
--		last = page + (1UL << order);
-+		last = page + (1 << order);
- 		for (page += nr; page < last; page++)
- 			__free_pages_ok(page, 0, FPI_TO_TAIL);
+@@ -1535,6 +1536,8 @@ struct kvm_arch {
+ 	 */
+ #define SPLIT_DESC_CACHE_MIN_NR_OBJECTS (SPTE_ENT_PER_PAGE + 1)
+ 	struct kvm_mmu_memory_cache split_desc_cache;
 +
++	struct asi *asi;
+ };
+ 
+ struct kvm_vm_stat {
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 9df3e1e5ae81a1346409632edd693cb7e0740f72..f2c3154292b4f6c960b490b0773f53bea43897bb 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4186,6 +4186,7 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
+ 	guest_state_enter_irqoff();
+ 
+ 	amd_clear_divider();
++	asi_enter(vcpu->kvm->arch.asi);
+ 
+ 	if (sev_es_guest(vcpu->kvm))
+ 		__svm_sev_es_vcpu_run(svm, spec_ctrl_intercepted,
+@@ -4193,6 +4194,7 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
+ 	else
+ 		__svm_vcpu_run(svm, spec_ctrl_intercepted);
+ 
++	asi_relax();
+ 	guest_state_exit_irqoff();
+ }
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d28618e9277ede83ad2edc1b1778ea44123aa797..181d230b1c057fed33f7b29b7b0e378dbdfeb174 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -49,6 +49,7 @@
+ #include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/vmx.h>
++#include <asm/asi.h>
+ 
+ #include <trace/events/ipi.h>
+ 
+@@ -7282,14 +7283,34 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 					unsigned int flags)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	unsigned long cr3;
+ 
+ 	guest_state_enter_irqoff();
++	asi_enter(vcpu->kvm->arch.asi);
++
++	/*
++	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
++	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
++	 * it switches back to the current->mm, which can occur in KVM context
++	 * when switching to a temporary mm to patch kernel code, e.g. if KVM
++	 * toggles a static key while handling a VM-Exit.
++	 * Also, this must be done after asi_enter(), as it changes CR3
++	 * when switching address spaces.
++	 */
++	cr3 = __get_current_cr3_fast();
++	if (unlikely(cr3 != vmx->loaded_vmcs->host_state.cr3)) {
++		vmcs_writel(HOST_CR3, cr3);
++		vmx->loaded_vmcs->host_state.cr3 = cr3;
++	}
+ 
+ 	/*
+ 	 * L1D Flush includes CPU buffer clear to mitigate MDS, but VERW
+ 	 * mitigation for MDS is done late in VMentry and is still
+ 	 * executed in spite of L1D Flush. This is because an extra VERW
+ 	 * should not matter much after the big hammer L1D Flush.
++	 *
++	 * This is only after asi_enter() for performance reasons.
++	 * RFC: This also needs to be integrated with ASI's tainting model.
+ 	 */
+ 	if (static_branch_unlikely(&vmx_l1d_should_flush))
+ 		vmx_l1d_flush(vcpu);
+@@ -7310,6 +7331,8 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 
+ 	vmx->idt_vectoring_info = 0;
+ 
++	asi_relax();
++
+ 	vmx_enable_fb_clear(vmx);
+ 
+ 	if (unlikely(vmx->fail)) {
+@@ -7338,7 +7361,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-	unsigned long cr3, cr4;
++	unsigned long cr4;
+ 
+ 	/* Record the guest's net vcpu time for enforced NMI injections. */
+ 	if (unlikely(!enable_vnmi &&
+@@ -7381,19 +7404,6 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+ 		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
+ 	vcpu->arch.regs_dirty = 0;
+ 
+-	/*
+-	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
+-	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
+-	 * it switches back to the current->mm, which can occur in KVM context
+-	 * when switching to a temporary mm to patch kernel code, e.g. if KVM
+-	 * toggles a static key while handling a VM-Exit.
+-	 */
+-	cr3 = __get_current_cr3_fast();
+-	if (unlikely(cr3 != vmx->loaded_vmcs->host_state.cr3)) {
+-		vmcs_writel(HOST_CR3, cr3);
+-		vmx->loaded_vmcs->host_state.cr3 = cr3;
+-	}
+-
+ 	cr4 = cr4_read_shadow();
+ 	if (unlikely(cr4 != vmx->loaded_vmcs->host_state.cr4)) {
+ 		vmcs_writel(HOST_CR4, cr4);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 83fe0a78146fc198115aba0e76ba57ecfb1dd8d9..3e0811eb510650abc601e4adce1ce4189835a730 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -85,6 +85,7 @@
+ #include <asm/emulate_prefix.h>
+ #include <asm/sgx.h>
+ #include <clocksource/hyperv_timer.h>
++#include <asm/asi.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+@@ -9674,6 +9675,55 @@ static void kvm_x86_check_cpu_compat(void *ret)
+ 	*(int *)ret = kvm_x86_check_processor_compatibility();
+ }
+ 
++#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
++static inline int kvm_x86_init_asi_class(void)
++{
++	static struct asi_taint_policy policy = {
 +		/*
-+		 * ASI doesn't support partially undoing calls to asi_map, so
-+		 * we can only safely free sub-allocations if they were made
-+		 * with __GFP_SENSITIVE in the first place. Users of this need
-+		 * to map with forced __GFP_SENSITIVE and then here we'll make a
-+		 * second asi_map_alloced_pages() call to do any mapping that's
-+		 * necessary, but with the exact size.
++		 * Prevent going to the guest with sensitive data potentially
++		 * left in sidechannels by code running in the unrestricted
++		 * address space, or another MM.
 +		 */
-+		if (unlikely(asi_map_alloced_pages(first, nr << PAGE_SHIFT, gfp_mask))) {
-+			free_pages_exact(first, size);
-+			return NULL;
-+		}
- 	}
- 	return (void *)addr;
- }
-@@ -5162,8 +5174,8 @@ void *alloc_pages_exact_noprof(size_t size, gfp_t gfp_mask)
- 	if (WARN_ON_ONCE(gfp_mask & (__GFP_COMP | __GFP_HIGHMEM)))
- 		gfp_mask &= ~(__GFP_COMP | __GFP_HIGHMEM);
++		.protect_data =  ASI_TAINT_KERNEL_DATA | ASI_TAINT_OTHER_MM_DATA,
++		/*
++		 * Prevent going to the guest with branch predictor state
++		 * influenced by other processes. Note this bit is about
++		 * protecting the guest from other parts of the system, while
++		 * data_taints is about protecting other parts of the system
++		 * from the guest.
++		 */
++		.prevent_control = ASI_TAINT_OTHER_MM_CONTROL,
++		.set = ASI_TAINT_GUEST_DATA,
++	};
++
++	/*
++	 * Inform ASI that the guest will gain control of the branch predictor,
++	 * unless we're just unconditionally blasting it after VM Exit.
++	 *
++	 * RFC: This is a bit simplified - on some configurations we could avoid
++	 * a duplicated RSB-fill if we had a separate taint specifically for the
++	 * RSB.
++	 */
++	if (!cpu_feature_enabled(X86_FEATURE_IBPB_ON_VMEXIT) ||
++	    !IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) ||
++	    !cpu_feature_enabled(X86_FEATURE_RSB_VMEXIT))
++		policy.set = ASI_TAINT_GUEST_CONTROL;
++
++	/*
++	 * And the same for data left behind by code in the userspace domain
++	 * (i.e. the VMM itself, plus kernel code serving its syscalls etc).
++	 * This should eventually be configurable: users whose VMMs contain
++	 * no secrets can disable it to avoid paying a mitigation cost on
++	 * transition between their guest and userspace.
++	 */
++	policy.protect_data |= ASI_TAINT_USER_DATA;
++
++	return asi_init_class(ASI_CLASS_KVM, &policy);
++}
++#else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
++static inline int kvm_x86_init_asi_class(void) { return 0; }
++#endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
++
+ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ {
+ 	u64 host_pat;
+@@ -9737,6 +9787,10 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 	kvm_caps.supported_vm_types = BIT(KVM_X86_DEFAULT_VM);
+ 	kvm_caps.supported_mce_cap = MCG_CTL_P | MCG_SER_P;
  
--	addr = get_free_pages_noprof(gfp_mask, order);
--	return make_alloc_exact(addr, order, size);
-+	addr = get_free_pages_noprof(gfp_mask | __GFP_SENSITIVE, order);
-+	return finish_exact_alloc(addr, order, size, gfp_mask);
- }
- EXPORT_SYMBOL(alloc_pages_exact_noprof);
++	r = kvm_x86_init_asi_class();
++	if (r < 0)
++		goto out_mmu_exit;
++
+ 	if (boot_cpu_has(X86_FEATURE_XSAVE)) {
+ 		kvm_host.xcr0 = xgetbv(XCR_XFEATURE_ENABLED_MASK);
+ 		kvm_caps.supported_xcr0 = kvm_host.xcr0 & KVM_SUPPORTED_XCR0;
+@@ -9754,7 +9808,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
  
-@@ -5187,10 +5199,10 @@ void * __meminit alloc_pages_exact_nid_noprof(int nid, size_t size, gfp_t gfp_ma
- 	if (WARN_ON_ONCE(gfp_mask & (__GFP_COMP | __GFP_HIGHMEM)))
- 		gfp_mask &= ~(__GFP_COMP | __GFP_HIGHMEM);
+ 	r = ops->hardware_setup();
+ 	if (r != 0)
+-		goto out_mmu_exit;
++		goto out_asi_uninit;
  
--	p = alloc_pages_node_noprof(nid, gfp_mask, order);
-+	p = alloc_pages_node_noprof(nid, gfp_mask | __GFP_SENSITIVE, order);
- 	if (!p)
- 		return NULL;
--	return make_alloc_exact((unsigned long)page_address(p), order, size);
-+	return finish_exact_alloc((unsigned long)page_address(p), order, size, gfp_mask);
- }
+ 	kvm_ops_update(ops);
  
- /**
+@@ -9810,6 +9864,8 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ out_unwind_ops:
+ 	kvm_x86_ops.enable_virtualization_cpu = NULL;
+ 	kvm_x86_call(hardware_unsetup)();
++out_asi_uninit:
++	asi_uninit_class(ASI_CLASS_KVM);
+ out_mmu_exit:
+ 	kvm_mmu_vendor_module_exit();
+ out_free_percpu:
+@@ -9841,6 +9897,7 @@ void kvm_x86_vendor_exit(void)
+ 	cancel_work_sync(&pvclock_gtod_work);
+ #endif
+ 	kvm_x86_call(hardware_unsetup)();
++	asi_uninit_class(ASI_CLASS_KVM);
+ 	kvm_mmu_vendor_module_exit();
+ 	free_percpu(user_return_msrs);
+ 	kmem_cache_destroy(x86_emulator_cache);
+@@ -11574,6 +11631,13 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 
+ 	r = vcpu_run(vcpu);
+ 
++	/*
++	 * At present ASI doesn't have the capability to transition directly
++	 * from the restricted address space to the user address space. So we
++	 * just return to the unrestricted address space in between.
++	 */
++	asi_exit();
++
+ out:
+ 	kvm_put_guest_fpu(vcpu);
+ 	if (kvm_run->kvm_valid_regs)
+@@ -12705,6 +12769,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	if (ret)
+ 		goto out_uninit_mmu;
+ 
++	ret = asi_init(kvm->mm, ASI_CLASS_KVM, &kvm->arch.asi);
++	if (ret)
++		goto out_uninit_mmu;
++
++	ret = static_call(kvm_x86_vm_init)(kvm);
++	if (ret)
++		goto out_asi_destroy;
++
+ 	INIT_HLIST_HEAD(&kvm->arch.mask_notifier_list);
+ 	atomic_set(&kvm->arch.noncoherent_dma_count, 0);
+ 
+@@ -12742,6 +12814,8 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 
+ 	return 0;
+ 
++out_asi_destroy:
++	asi_destroy(kvm->arch.asi);
+ out_uninit_mmu:
+ 	kvm_mmu_uninit_vm(kvm);
+ 	kvm_page_track_cleanup(kvm);
+@@ -12883,6 +12957,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
+ 	kvm_destroy_vcpus(kvm);
+ 	kvfree(rcu_dereference_check(kvm->arch.apic_map, 1));
+ 	kfree(srcu_dereference_check(kvm->arch.pmu_event_filter, &kvm->srcu, 1));
++	asi_destroy(kvm->arch.asi);
+ 	kvm_mmu_uninit_vm(kvm);
+ 	kvm_page_track_cleanup(kvm);
+ 	kvm_xen_destroy_vm(kvm);
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
