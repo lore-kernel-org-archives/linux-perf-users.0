@@ -1,360 +1,120 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584AA206F33
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 20:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B99206F1D
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 20:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736539637; cv=none; b=c4kNGW14UXLpxUOJdJbwqs+Ynip4WnP2TpFSyd/TGOC1cFamJ+aZPP7pfEE/K5m3/WNLbRutgN/GCQC5NvmLMS2PDLvXuVCp+vtZLDSM3y6DBcfSRMvoouCp/NEoFflR2eReCoA6NIPNTc8TUjhKvBVedL3les1CVfoI4jmOj2Y=
+	t=1736540540; cv=none; b=osZWH5F9E8DGiD9vtD4o+tGZBRQGfrw8MwaS1yiAPlFckGUdSYwAG27M0zd0BMXm0+1V4XMFRa9iEQEEvTatKGrnxfTSj8piSWNhRLln8WFcefGLt1Muw4QGO3vIKfmUENpwzi9IcE+CThYdgxH4kSb8ymNVqCEqOMtr3K7Xd/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736539637; c=relaxed/simple;
-	bh=wIygmx8zAIDTvLXG/w2wENiBhC+xajY46C6DLTZlr7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S/VXkxagSTX110xsJulHki4KMRiaxqzhgcnpOBL2RAW7UHH/HzAZtWczzqBsT1rBBqUPUcFiHD/0IOx4KXTKQbz2dzaVzXm/7+p43mo0D2V5Tm9lhIWKLsmnROz8uWp1uKe9YkordPt4Gy51MVrTGBlgnkjCBzNs44Ht5V3f/8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yHjuzORg; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736540540; c=relaxed/simple;
+	bh=X2r2zjBF27YbotUwfP/xNStnIXfpxoAr3T0wJFokBtU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gTb/iwVQ1Hgjf6Kbi1dl2NfkSk9dc26kQMgjGXewUv3f2i93/2RKXPCD375z+AypO7TeOnmTIFZsPBCATCh7Mc7faU24RF8QohHjoBYaENnUDTMkkhEab32qmyFUO3OJElsrnT0WRHr/whUMgp0Th+jey9aJskqNuZZCD5DMW9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=GIxMxLai; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yHjuzORg"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4364a37a1d7so26057145e9.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 12:07:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736539633; x=1737144433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1w3M3FDqcBiRNcGIjU217Q8iIGiQxBn4AmPygsVUYso=;
-        b=yHjuzORg47CZ8ToctwkU4w0QqTHLZBdge+lo/cAeC2OMZ2AH6d1fRM7xvCusSP/m/j
-         bM9r+yyCj+RJIN5GmQM+9iXV98xQCCPMrB8mIZYnefNOkWvnoTIX9X0HwRkzvi3QRUOA
-         rFQT5sjtG/TJkQcll3RaHAvmXL/dCbc3nLB7OW2ARie4HBTyvR2+QK13l3c9gsZ7Az/T
-         OGtGdAGxNiApN18+41PeBa0/8NHFVwm68yeu3C7iOwfGdF7vGoi6lgW08RPjVRHC1r74
-         E4LiMVaEcv/wuqRIqPq+/FSBRnXYxNr0p302Xvq8zegew+qcYa77sMQZCgbGDSwymooe
-         BQnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736539633; x=1737144433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1w3M3FDqcBiRNcGIjU217Q8iIGiQxBn4AmPygsVUYso=;
-        b=oCavfHI5gGvQKSGEocBvApzkYCxCSbhcJO4P1mAXRnWh3yaABDYtRZ1bXaCh+2DgK8
-         osKbuCAVSQaTXJoGzgfx0ANbMJ1x2m1LzLGFm3FFGAcmEbf654BU5LygQyjeUUBuMS4d
-         8JzFeSDXjB62keXWKKYq3Mt6bGnGkRJn6Y2tpWR0gsoN1DA5od45c6I5/MdQ0pQtXI2P
-         WdlmdMKYRr0YlIjlKmfX3h2TyqJp3C/yLHE4BnfRYIPy9Wd5+LY7gUU3/UpuOA/HlGpt
-         J61oIfXM9rKOZ1kz7U+IKVM6YnG8dkxVc8emBwow/ckIINKSIHH8CBzx8AjHZTKwTMEx
-         032Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/GOM3b9E4vHRao+HFks01vN0Jx2D+cLqNc1vHsntBM0ApVtPYxvUctLJQQP+ZvMukUXjXBZA4iymQLdvP6M1n@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6yUhp8qqLDlU3XWgup+nXQ2qoyoaL+bYzcylmwXQSuHIlqa5K
-	6LH+0m8wuXUQXnefNiORq8RTYZExbM4Zcj8IDW79hCqFFKQvKwQ0lkFwB8Mj2xss1+JCeA70YTj
-	ZxGwm9r3leXbcYGttNGMqN2sN7Db8Wk+zbCkM
-X-Gm-Gg: ASbGncticsBJzQfOA9geO+PutCb+GADU2sx3MOhaka3omVD+88+KNQz/A4nVUXg1xhB
-	P9hltURWK3hw+8kpopIigTJPoW/G/AplY5s0/
-X-Google-Smtp-Source: AGHT+IFXsXs67kGFEBjB8Z5uBXQUDTqb+Qyyv9p526ClwJdY89UoJ2/9SR4r22xrevit3XGDTiLDZACVgU3KpJrnV+s=
-X-Received: by 2002:a05:6000:1a8a:b0:386:1cd3:8a07 with SMTP id
- ffacd0b85a97d-38a872fc363mr9932735f8f.7.1736539632507; Fri, 10 Jan 2025
- 12:07:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="GIxMxLai"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YVCkD2s2Cz9tJB;
+	Fri, 10 Jan 2025 21:22:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	s=MBO0001; t=1736540532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X2r2zjBF27YbotUwfP/xNStnIXfpxoAr3T0wJFokBtU=;
+	b=GIxMxLaiol0pN3/3MqUx3VjJ86jFBtggeTLJsZo8Tddep+GwEqP/YHlrQl6NgEm2dgaVHy
+	8bVw8iNpob6c0IRKsRCYoybOGZfQLhYjPXBblQJz9LMj/GmgAcQuY2lMTtqjY39rplB3Gj
+	2jykWTZk5ZsVQtQJnnN5LS1yYGOZA18AH5fhriUJyGNtDh0NRVhaPxGj42n1IVpsHBsbGI
+	JVJtVixX6lKFgH2BMgwGA9juIhqgKhIONFBTR1L5RD3KHy3PyV0/e31jB+yWZ0zSbhzZ0I
+	UrqKkHPZMfI2CJD8JZ8vpP3tN4e8OchmaKOYgjvFJVx2zfQsSJEVnwE7mnFPpQ==
+Message-ID: <6c81d671fc8e9f72ec1823eb0dd091a17cc7eefb.camel@michel-slm.name>
+Subject: Re: [PATCH 1/1 perf-tools] perf MANIFEST: add license files
+From: Michel Lind <michel@michel-slm.name>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users
+	 <linux-perf-users@vger.kernel.org>
+Date: Fri, 10 Jan 2025 14:22:03 -0600
+In-Reply-To: <CA+JHD904E19iDzZ8HqcTwe61Wzp57_mkPuWz5miEztdd8jbVhA@mail.gmail.com>
+References: <Z0Zcx0WRqtlUYpgw@hyperscale.parallels>
+	 <2fe55e73d3ef64ec3bfc683446e3f1f8b9e8c9e8.camel@michel-slm.name>
+	 <Z4BFcA0L3IfsmtbZ@x1>
+	 <2a25433033c3b31f5c61b84ffb4efd51267ce3e5.camel@michel-slm.name>
+	 <CA+JHD904E19iDzZ8HqcTwe61Wzp57_mkPuWz5miEztdd8jbVhA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-c6Gh7ujqIrgMB18iOC7Y"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110051346.1507178-1-ctshao@google.com> <20250110051346.1507178-3-ctshao@google.com>
-In-Reply-To: <20250110051346.1507178-3-ctshao@google.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Fri, 10 Jan 2025 12:07:01 -0800
-X-Gm-Features: AbW1kva__7ETBk2gIIKyku2gD_XVtK8f14RCkPzN3x3e7ZJJBwb3sKttLFL5iDw
-Message-ID: <CAJpZYjUcvSD_11gZY5GUNf7zsCAszXc+5B1eHuuh-qVShT1bHA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf lock: Retrieve owner callstack in bpf program
-To: linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
+
+
+--=-c6Gh7ujqIrgMB18iOC7Y
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 9, 2025 at 9:14=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> wr=
-ote:
+On Fri, 2025-01-10 at 16:51 -0300, Arnaldo Carvalho de Melo wrote:
+>=20
+>=20
+> On Fri, Jan 10, 2025, 3:59=E2=80=AFPM Michel Lind <michel@michel-slm.name=
 >
-> Tracing owner callstack in `contention_begin()` and `contention_end()`,
-> and storing in `owner_lock_stat` bpf map.
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  .../perf/util/bpf_skel/lock_contention.bpf.c  | 149 +++++++++++++++++-
->  1 file changed, 148 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index 05da19fdab23..79b641d7beb2 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -7,6 +7,7 @@
->  #include <asm-generic/errno-base.h>
->
->  #include "lock_data.h"
-> +#include <time.h>
->
->  /* for collect_lock_syms().  4096 was rejected by the verifier */
->  #define MAX_CPUS  1024
-> @@ -178,6 +179,9 @@ int data_fail;
->  int task_map_full;
->  int data_map_full;
->
-> +struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
-> +void bpf_task_release(struct task_struct *p) __ksym;
-> +
->  static inline __u64 get_current_cgroup_id(void)
->  {
->         struct task_struct *task;
-> @@ -407,6 +411,60 @@ int contention_begin(u64 *ctx)
->         pelem->flags =3D (__u32)ctx[1];
->
->         if (needs_callstack) {
-> +               u32 i =3D 0;
-> +               int owner_pid;
-> +               unsigned long *entries;
-> +               struct task_struct *task;
-> +               cotd *data;
-> +
-> +               if (!lock_owner)
-> +                       goto contention_begin_skip_owner_callstack;
-> +
-> +               task =3D get_lock_owner(pelem->lock, pelem->flags);
-> +               if (!task)
-> +                       goto contention_begin_skip_owner_callstack;
-> +
-> +               owner_pid =3D BPF_CORE_READ(task, pid);
-> +
-> +               entries =3D bpf_map_lookup_elem(&owner_stacks_entries, &i=
-);
-> +               if (!entries)
-> +                       goto contention_begin_skip_owner_callstack;
-> +               for (i =3D 0; i < max_stack; i++)
-> +                       entries[i] =3D 0x0;
-> +
-> +               task =3D bpf_task_from_pid(owner_pid);
-> +               if (task) {
-> +                       bpf_get_task_stack(task, entries,
-> +                                          max_stack * sizeof(unsigned lo=
-ng),
-> +                                          0);
-> +                       bpf_task_release(task);
-> +               }
-> +
-> +               data =3D bpf_map_lookup_elem(&contention_owner_tracing,
-> +                                          &(pelem->lock));
-> +
-> +               // Contention just happens, or corner case `lock` is owne=
-d by
-> +               // process not `owner_pid`.
-> +               if (!data || data->pid !=3D owner_pid) {
-> +                       cotd first =3D {
-> +                               .pid =3D owner_pid,
-> +                               .timestamp =3D pelem->timestamp,
-> +                               .count =3D 1,
-> +                       };
-> +                       bpf_map_update_elem(&contention_owner_tracing,
-> +                                           &(pelem->lock), &first, BPF_A=
-NY);
-> +                       bpf_map_update_elem(&contention_owner_stacks,
-> +                                           &(pelem->lock), entries, BPF_=
-ANY);
-> +               }
-> +               // Contention is going on and new waiter joins.
-> +               else {
-> +                       __sync_fetch_and_add(&data->count, 1);
-> +                       // TODO: Since for owner the callstack would chan=
-ge at
-> +                       // different time, We should check and report if =
-the
-> +                       // callstack is different with the recorded one i=
-n
-> +                       // `contention_owner_stacks`.
-> +               }
-> +contention_begin_skip_owner_callstack:
->                 pelem->stack_id =3D bpf_get_stackid(ctx, &stacks,
->                                                   BPF_F_FAST_STACK_CMP | =
-stack_skip);
->                 if (pelem->stack_id < 0)
-> @@ -443,6 +501,7 @@ int contention_end(u64 *ctx)
->         struct tstamp_data *pelem;
->         struct contention_key key =3D {};
->         struct contention_data *data;
-> +       __u64 timestamp;
->         __u64 duration;
->         bool need_delete =3D false;
->
-> @@ -469,12 +528,100 @@ int contention_end(u64 *ctx)
->                         return 0;
->                 need_delete =3D true;
->         }
-> -       duration =3D bpf_ktime_get_ns() - pelem->timestamp;
-> +       timestamp =3D bpf_ktime_get_ns();
-> +       duration =3D timestamp - pelem->timestamp;
->         if ((__s64)duration < 0) {
->                 __sync_fetch_and_add(&time_fail, 1);
->                 goto out;
->         }
->
-> +       if (needs_callstack && lock_owner) {
-> +               u64 owner_contention_time;
-> +               unsigned long *owner_stack;
-> +               struct contention_data *cdata;
-> +               cotd *otdata;
-> +
-> +               otdata =3D bpf_map_lookup_elem(&contention_owner_tracing,
-> +                                            &(pelem->lock));
-> +               owner_stack =3D bpf_map_lookup_elem(&contention_owner_sta=
-cks,
-> +                                                 &(pelem->lock));
-> +               if (!otdata || !owner_stack)
-> +                       goto contention_end_skip_owner_callstack;
-> +
-> +               owner_contention_time =3D timestamp - otdata->timestamp;
-> +
-> +               // Update `owner_lock_stat` if `owner_stack` is
-> +               // available.
-> +               if (owner_stack[0] !=3D 0x0) {
-> +                       cdata =3D bpf_map_lookup_elem(&owner_lock_stat,
-> +                                                   owner_stack);
-> +                       if (!cdata) {
-> +                               struct contention_data first =3D {
-> +                                       .total_time =3D owner_contention_=
-time,
-> +                                       .max_time =3D owner_contention_ti=
-me,
-> +                                       .min_time =3D owner_contention_ti=
-me,
-> +                                       .count =3D 1,
-> +                                       .flags =3D pelem->flags,
-> +                               };
-> +                               bpf_map_update_elem(&owner_lock_stat,
-> +                                                   owner_stack, &first,
-> +                                                   BPF_ANY);
-> +                       } else {
-> +                               __sync_fetch_and_add(&cdata->total_time,
-> +                                                    owner_contention_tim=
-e);
-> +                               __sync_fetch_and_add(&cdata->count, 1);
-> +
-> +                               /* FIXME: need atomic operations */
-> +                               if (cdata->max_time < owner_contention_ti=
-me)
-> +                                       cdata->max_time =3D owner_content=
-ion_time;
-> +                               if (cdata->min_time > owner_contention_ti=
-me)
-> +                                       cdata->min_time =3D owner_content=
-ion_time;
-> +                       }
-> +               }
-> +
-> +               // `pid` in `otdata` is not lock owner anymore, delete
-> +               // this entry.
-> +               bpf_map_delete_elem(&contention_owner_stacks, &(otdata->p=
-id));
+> wrote:
+> > On Thu, 2025-01-09 at 18:53 -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Thu, Jan 09, 2025 at 12:55:16PM -0600, Michel Lind wrote:
+> > > > Happy holidays all!
+> > > >=20
+> > > > On Tue, 2024-11-26 at 17:41 -0600, Michel Lind wrote:
+> > > > > The standalone tarballs should include the license files -
+> > > > > both
+> > > > > the
+> > > > > COPYING declaration as well as the text of GPLv2.
+> > > > >=20
+> > > > Just making sure this does not fall through the crack - does
+> > > > this
+> > > > look
+> > > > good to merge, or are there any issue with it?
+> > >=20
+> > > Applied, thanks for the reminder!
+> > >=20
+> > Thanks! I don't see it in the perf-tools-next branch, but see the
+> > other
+> > MANIFEST update - I wonder if I'm looking in the wrong place.
+>=20
+> When I say "applied" it doesn't mean it will straight away appear in
+> a public repo, I do some tests that take some time before making all
+> public, which I did after you checked:=C2=A0
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+commit/?h=3Dperf-tools-next&id=3D74c033b6aa650ea7280221a9e57b7318a120978c
+>=20
+Ah, no, I do see that one. I meant the "perf MANIFEST: add license
+files" patch that from the timeline should have gone in before the
+bpf_perf_event.h one.
 
-I just realized the above three lines are unnecessary and should be
-deleted, please ignore them and I will fix them in my next patch.
+Thanks,
 
-> +
-> +               //  No contention is going on, delete `lock` in
-> +               //  `contention_owner_tracing` and
-> +               //  `contention_owner_stacks`
-> +               if (otdata->count <=3D 1) {
-> +                       bpf_map_delete_elem(&contention_owner_tracing,
-> +                                           &(pelem->lock));
-> +                       bpf_map_delete_elem(&contention_owner_stacks,
-> +                                           &(pelem->lock));
-> +               }
-> +               // Contention is still going on, with a new owner
-> +               // (current task). `otdata` should be updated accordingly=
-.
-> +               // If ctx[1] is not 0, the current task terminate lock wa=
-iting
-> +               // without acquiring it.
-> +               else if (ctx[1] =3D=3D 0) {
-> +                       unsigned long *entries;
-> +                       u32 i =3D 0;
-> +
-> +                       otdata->pid =3D pid;
-> +                       otdata->timestamp =3D timestamp;
-> +                       (otdata->count)--;
-> +                       bpf_map_update_elem(&contention_owner_tracing,
-> +                                           &(pelem->lock), otdata, BPF_A=
-NY);
-> +
-> +                       entries =3D
-> +                               bpf_map_lookup_elem(&owner_stacks_entries=
-, &i);
-> +                       if (!entries)
-> +                               goto contention_end_skip_owner_callstack;
-> +                       for (i =3D 0; i < (u32)max_stack; i++)
-> +                               entries[i] =3D 0x0;
-> +
-> +                       bpf_get_task_stack(bpf_get_current_task_btf(), en=
-tries,
-> +                                          max_stack * sizeof(unsigned lo=
-ng),
-> +                                          0);
-> +                       bpf_map_update_elem(&contention_owner_stacks,
-> +                                           &(pelem->lock), entries, BPF_=
-ANY);
-> +               }
+--=20
+ _o) Michel Lind
+_( ) identities:
+https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
 
-The logic above is a bit flawed. It should be:
-                // Contention is still going on, with a new owner
-                // (current task). `otdata` should be updated accordingly.
-                else {
-                        (otdata->count)--;
+--=-c6Gh7ujqIrgMB18iOC7Y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-                        // If ctx[1] is not 0, the current task
-terminates lock waiting
-                        // without acquiring it. Owner is not changed.
-                        if (ctx[1] =3D=3D 0) {
-                                u32 i =3D 0;
-                                otdata->pid =3D pid;
-                                otdata->timestamp =3D timestamp;
+-----BEGIN PGP SIGNATURE-----
 
-                                entries =3D
+iI0EABYKADUWIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ4GBaxccbWljaGVsQG1p
+Y2hlbC1zbG0ubmFtZQAKCRCLIp0vfMwE8sO5AQDykjCPWhU4n2imS8fTV2EUtNWt
+Q0wMRZp9dx6BUrQ00QD+PdWzI/ykzCU7zibdCcqLwg2YdPxLiNyttyvni543kg8=
+=xKlD
+-----END PGP SIGNATURE-----
 
-bpf_map_lookup_elem(&owner_stacks_entries, &i);
-                                if (!entries) {
-
-bpf_map_update_elem(&contention_owner_tracing,
-
-       &(pelem->lock), otdata, BPF_ANY);
-                                        goto
-contention_end_skip_owner_callstack;
-                                }
-                                for (i =3D 0; i < (u32)max_stack; i++)
-                                        entries[i] =3D 0x0;
-
-
-bpf_get_task_stack(bpf_get_current_task_btf(), entries,
-                                                   max_stack *
-sizeof(unsigned long),
-                                                   0);
-                                bpf_map_update_elem(&contention_owner_stack=
-s,
-                                                    &(pelem->lock),
-entries, BPF_ANY);
-                        }
-
-                        bpf_map_update_elem(&contention_owner_tracing,
-                                            &(pelem->lock), otdata, BPF_ANY=
-);
-                }
-I will update this in my next patch.
-
-> +       }
-> +contention_end_skip_owner_callstack:
-> +
->         switch (aggr_mode) {
->         case LOCK_AGGR_CALLER:
->                 key.stack_id =3D pelem->stack_id;
-> --
-> 2.47.1.688.g23fc6f90ad-goog
->
+--=-c6Gh7ujqIrgMB18iOC7Y--
