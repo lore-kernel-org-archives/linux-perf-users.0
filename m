@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346E56AA7;
-	Fri, 10 Jan 2025 00:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D1785270;
+	Fri, 10 Jan 2025 00:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736470004; cv=none; b=hVzIVVEi0CdiUPN1g9OomOIfKj/Hepix245Z6Ikp6wrB9Uo0YzCpDFhFJePmXX7V7ezdQKCkjWQLM6YPz34pUnUW7Y/uhzKPcj9YfHZn5U6UdMod2gcu8x61q7FD5tvKCzNoZMbzrBamGK2Tx6tP0TyXeSqadyZ8DuM8BAxnftk=
+	t=1736470735; cv=none; b=fsZTCu8l+//pCKrrjCHnUGEpR6YtCXtJDJpi03IFQ2c1DhgzGIqrWak0V16o+NT8PHeymipxtMPyeJQYYrSxYYR1enzFE4NLCwL5MazTJOlD7MDZo68FpranpppEBluICDo3NzkTg2D712yiZwybrM/if+bdJjHFXW8+fkBqw/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736470004; c=relaxed/simple;
-	bh=A3d3vgbVOw/ZeuhbBwDa1JMMTp93Uxd9h0fFzPHcFA0=;
+	s=arc-20240116; t=1736470735; c=relaxed/simple;
+	bh=kWh0eUdcriBV8O8nsILNy0hVf9xZI22rVgxbjf4gMag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u0AUdfZaaSeRsm/RTNsN/ilOHoKsYiJ36T98lfEptF5nzXTat06+Q5Y68XQDCwDiiqtwTwmxRjfm+RIqumR07pPxDrCBE4Ppm2A2yWkNhxa30+ctjywnuuuHH45c40wdALCz7BU9lYymX5Y8yfey4nsT93aqKBanV/6ox8ppN6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEZCMrzN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhjVbmZVBmknduC1Jrg6wo41GA1nMpGTXf58HFfo6Odq2vwcrooji4gB8ELdXsDCYMBm6iyKbvF9k3GhOcPDenxLgOKwpvuaOUrCuhPMXAt8F6V6f3l4wDvfOPD6R4jJD+Yfgv0ZnPUFM9CZmm0TekOws7PnvJfaNaYNeyJdBhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKHAOvtV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEZCMrzN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E9BC4CED2;
-	Fri, 10 Jan 2025 00:46:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKHAOvtV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AB7C4CED2;
+	Fri, 10 Jan 2025 00:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736470003;
-	bh=A3d3vgbVOw/ZeuhbBwDa1JMMTp93Uxd9h0fFzPHcFA0=;
+	s=k20201202; t=1736470735;
+	bh=kWh0eUdcriBV8O8nsILNy0hVf9xZI22rVgxbjf4gMag=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EEZCMrzN1blEKKiNzvvcsh1YCT1DL/XNVTT9jqK+A4ELWvHlkpC3VHZQyUhhWPDto
-	 xvCIJy56EX4Eln0I9U6/7OlQwgj+T/SS+FyxVVH8poMc7PnQVx6c+rWVEhG3EzZga6
-	 6PEQ+B3/IWZOxQYUa+IQSaZtXpFFQD1h6ZTiGWGjunbDy8dbM12oYc01Lif/wmravE
-	 x/g82V2Y3nI27HsXlqZwYr377CThEBpeAIgx0I7TE645tMExQxpqurJagCLScYABL2
-	 43M7tcPK/RDuIOn01nO9Z72Xrfj2jFugB7H99GLE+Zs5gVks+M58sZbxX/1UfbCJFo
-	 iKOMrYQsYIMgQ==
-Date: Thu, 9 Jan 2025 16:46:41 -0800
+	b=pKHAOvtV74AsxgSI4GzkXVez1SCCb2AsDU4A/Sjs/DEaNLRSwphyUtRC0JhOBeqD1
+	 eVWzganjHn3tNPiizyqd0JvpzVET5yOm554HEVq8cW76qbpbqNucZ0M++14+MmBtyj
+	 oGDYR0nuQi/cp1U1txOBrnxaV4o0x6I5tzjrmBo9jBmo44+cszKSaUr4HsbsZle8Te
+	 In9vVWYQYuLAbU1BMOe97P0U+v6vQaBmhhk5JDUgkRrmj6mR49vdV9zkm3vVCV0QyO
+	 UxEACfyehmPLgeZTqcJCznIzPOMopkER+K/kscm8BhMj7wGjUWih2zv1tHdl8penIE
+	 NMgvkhUCpzlXQ==
+Date: Thu, 9 Jan 2025 16:58:53 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf ftrace: Check min/max latency only with bucket
- range
-Message-ID: <Z4Bt8aIkX5uErX8a@google.com>
-References: <20250108210015.1188531-1-namhyung@kernel.org>
- <a016ab208eb3ee3821ab59a2520a2bf56645917e.camel@redhat.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] perf test: Remove parallel option documentation
+Message-ID: <Z4BwzZ27OrG19EL7@google.com>
+References: <20250109215055.454888-1-irogers@google.com>
+ <20250109215055.454888-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,74 +50,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a016ab208eb3ee3821ab59a2520a2bf56645917e.camel@redhat.com>
+In-Reply-To: <20250109215055.454888-4-irogers@google.com>
 
-On Thu, Jan 09, 2025 at 08:53:02AM +0100, Gabriele Monaco wrote:
-> On Wed, 2025-01-08 at 13:00 -0800, Namhyung Kim wrote:
-> > It's an optional feature and remains 0 when bucket range is not
-> > given.
-> > And it makes the histogram goes to the last entry always because any
-> > latency (num) is greater than or equal to 0.
+On Thu, Jan 09, 2025 at 01:50:53PM -0800, Ian Rogers wrote:
+> The parallel option was removed in commit 94d1a913bdc4 ("perf test:
+> Make parallel testing the default").
 > 
-> Thanks Namhyung for fixing this, something definitely slipped while
-> testing..
+> Fixes: 94d1a913bdc4 ("perf test: Make parallel testing the default")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/perf-test.txt | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> I confirm your patches work well also when the bucket range is provided but the
-> min latency isn't.
-> 
-> I'm wondering if it would be cleaner to propagate your changes (using
-> min/max latency only if bucket_range is provided) also to
-> make_histogram. That function currently works since we assume
-> min_latency to be always 0, which is the case but probably not
-> considering it altogether would look a bit better and prevent some
-> headache in the future.
+> diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
+> index efcdec528a8f..8f8a3c367570 100644
+> --- a/tools/perf/Documentation/perf-test.txt
+> +++ b/tools/perf/Documentation/perf-test.txt
+> @@ -35,12 +35,6 @@ OPTIONS
+>  --sequential::
+>  	Run tests one after the other, this is the default mode.
 
-It looks good.  One thing I concern is 'num += min_latency' before
-do_inc.  I put it there to make it symmetric to 'num -= min_latency'
-so it should go to inside the block too.
-
-Or you could factor it out as a function like 'i = get_bucket_index(num)'
-so that it can keep the original num for the stats.
+This needs to be changed too as it's not the default anymore. :)
 
 Thanks,
 Namhyung
 
-> 
-> ---
->  tools/perf/builtin-ftrace.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 076c703e5c334..82d63d7af9d03 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -779,19 +779,16 @@ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
->  		if (ftrace->use_nsec)
->  			num *= 1000;
 >  
-> -		i = 0;
-> -		if (num < min_latency)
-> -			goto do_inc;
+> --p:: 
+> ---parallel::
+> -	Run tests in parallel, speeds up the whole process but is not safe with
+> -	the current infrastructure, where some tests that compete for some resources,
+> -	for instance, 'perf probe' tests that add/remove probes or clean all probes, etc.
 > -
-> -		num -= min_latency;
-> -
->  		if (!ftrace->bucket_range) {
->  			i = log2(num);
->  			if (i < 0)
->  				i = 0;
->  		} else {
-> -			// Less than 1 unit (ms or ns), or, in the future,
-> -			// than the min latency desired.
-> +			i = 0;
-> +			if (num < min_latency)
-> +				goto do_inc;
-> +
-> +			num -= min_latency;
->  			if (num > 0) // 1st entry: [ 1 unit .. bucket_range units ]
->  				i = num / ftrace->bucket_range + 1;
->  			if (num >= max_latency - min_latency)
-> 
-> base-commit: 257ccfaf9fbef6f54eabf1a8f8a8efcc9036439b
+>  -F::
+>  --dont-fork::
+>  	Do not fork child for each test, run all tests within single process, this
 > -- 
-> 2.47.1
+> 2.47.1.613.gc27f4b7a9f-goog
 > 
