@@ -1,224 +1,309 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5578020D51C
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 13:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7194120B7F8
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 13:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736514010; cv=none; b=KApMfGi46QVaGy2on3MmN5FOv+kxyBMevGNuJ6lmjlx5HDQVhWnQSqSINZD7D/P6cK7uQbQL48JoF9+ZotrUzOwQglaGlcMV9HXp7FsYppSelAo++XC2vmL0gcTMzBGWMz9Gxq0Q7q3jEmRrnPqlGGKNOOM8Msd3kAhiR0FAigI=
+	t=1736514126; cv=none; b=DbAxF9gZy5Bti6Gsapd9UA2xR0JTRA6MTXuVz9mJVtP15sVU0PFKTkK/qm7JAqGpmLCrnZ1J86An38gD+FdToI7Lr5RjaVZ9UQApjVpbm1GZ9g0DCFT/7au/o+kpIkEZQVxQPayRUOOSft4OXOQrvIYhf+lBTmU69oH4C4kZNDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736514010; c=relaxed/simple;
-	bh=BBOMQEwO4lHZrqhgmqKrdxa1Avbgz9XW109w5tul5+c=;
+	s=arc-20240116; t=1736514126; c=relaxed/simple;
+	bh=Z1Uz6ZJed86ji0XJL8PRjB6zEwYRWO7DKK4CAGVN+4k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dixEg8jknfvOtP5JrQyrQafkmxuYJzVqoNKHBAOX8B31vj+hFYAonDZnfa6oaYkj17JUBFo8iu78Vq+7lcGXT5FAZ3hZGU0qGm0MTlKwzhat797P0Na38mmEfVIVgRFYM+Lf5+XO/92CDLHDpxal1R/nQGpy0uTD+E+A6ot/NNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZXaxerb; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=l/I14FpbT5YDrK0PAAwLeJpuagq3xW8nsLcqb/cD+MMPfSC1LpYw3po4j/WCEfRZCk95um49LKezP1pR1PAbsu9CKqr67mu4xY9vpxVtMhkv2yBRerXvF5p0+dDL08Dtf/j2Uf7xq0DNbu5GcZAFGWUCpmQybvgMWtqWVi8C0Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B5WuMZSK; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZXaxerb"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-304d760f118so14163911fa.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 05:00:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B5WuMZSK"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30225b2586cso28299551fa.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 05:02:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736514006; x=1737118806; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736514122; x=1737118922; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G4p1relGUMyIzXuzLvWRXXGYj0FGG01Tdcew1wLT3iM=;
-        b=EZXaxerbcXw+x3w4FoyXaxlVBnY43Q1TtKupmjG7V7x8ZEBOM063u29VgEnI1u8+OP
-         BTxZlNunGWz8qAytSTVFTOFmeWRuROeWRvcaINjWxKPUm/iMUo/h6pbjAe+BOSanKhFL
-         BOeQN9SMYK09W0La/bYWp78QQZsZWLzVdeg8VdDhRbxZ1kqIrjGux0mxFyiDGCY6Ly5K
-         1/nB5e5kUjXhS2qI9S+/1wveG2xxF0h4oju8QSOBhq7B/WNiS6wPO852nz/8Ik8FRb3M
-         Qu/2btPNSxecvr9lptBo9BxKeVa8dWqx/wXC3ii0k5JcHPre4FMjhhfUf8ieNyKiQ/IQ
-         B+ig==
+        bh=GIuJaAcBh+r7/ShmaoODtZ0yk30WEYhss4VTwuY6EOc=;
+        b=B5WuMZSKwypzWAY1uJFrq252cMIsTh8KVsJSeSvRFertk+kOMrpHWZkZ5Bl6j48rad
+         AiDjdGmVC6V6tY7WfNHxTpo2MMqdnj4Zj8rxnBq1X6iG7i9KDXyYztRMY2yLA+sy+s1J
+         BdItQ36nxOZ+91oBAbKRm6arsUdVco6m4cx3GfX4q8lX31EHJMeEoFxWHJL9wvYHPGrI
+         UqlYZHbmpseYadn1qe24sxDhik86utXERNDX8cviQBJw1fOGK/sDG5foSk2+rKV0vp0z
+         +ORfXDsOeu7bMfKz9LfVWwQvD0nDqFiw+ggOgaPw3yAFaArvrhv4tl8dzmul3FdYj3ln
+         fYuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736514006; x=1737118806;
+        d=1e100.net; s=20230601; t=1736514122; x=1737118922;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G4p1relGUMyIzXuzLvWRXXGYj0FGG01Tdcew1wLT3iM=;
-        b=swNXmeiZYU+JeMKYilw7GBlRNhUMXYxQi1h+LYkEGRLUiBfyJhIAl6XXps+FfQ0bjt
-         Be9XyOBifQGuWdpHuqtbbJk1q2CS9GyyENZBjKnOvqpznj645eol6776tW1Iaezw+9Ga
-         SRDKKTK5qHgnmqBTchmubXqEHwSLTXWMW55pYYC1w9205rAq/d/9zilWgUlKnBqusxy9
-         vQLJzF5OZnuT8gCGp7XSZ4tKqI/MJrhaS8JoiiMVVvwUlmRot8+/OxeCrdvz7fAL3Tjp
-         XenZRGZ1EqKMEbWqHVtcCfQ53T9wq4kv3Ckw1ZdOIJQkq5W+RmrVDeQvkSvDOreQ02Ny
-         znEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXz3TtkLeBRyImP+fIoGWrSBH9hHQQe2YAxhX/HVs7PY6Af7nLam9/rv/G9mHufpFMJEUi7pnLwLkpwEkOqaZgM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTMiGCbazceDG7pVwkZJ9qAWynTEyq1SqdRWsjJq7zLgT7wic3
-	FgxYTCIHaEximdpnlD6KpSMTBZ1SKJYM8rUUXAtpG/Fi7lRvKhP1rWHgiNOyP17QXO03wh5c5Qn
-	YhE66mNPz/y7NM9dJDkWp4nBV42fqsDUpijG7
-X-Gm-Gg: ASbGncv4qcz5SthAjzSHlsnLfUfjFSO1rRHMPUGQsnwGSVz3yt5iPYRwCBve2nYH5ff
-	Of/AsYmT1MJ+ciI1Vhs9fVcq5+oGGWfjbpbN/iyI6SGwzGrItEcBOUxWmIQ168UQpdk8BrNg=
-X-Google-Smtp-Source: AGHT+IEQEs9ZKuj6m3nVToPGYb6X4fyepwmkCstUWnuY/cOyHonuv3ovKDtXnRWPNSQh8Ifb7vv38eDHXlayz6aiEMo=
-X-Received: by 2002:a2e:bb8e:0:b0:2ff:56a6:2992 with SMTP id
- 38308e7fff4ca-305f45fe704mr23512951fa.37.1736514006011; Fri, 10 Jan 2025
- 05:00:06 -0800 (PST)
+        bh=GIuJaAcBh+r7/ShmaoODtZ0yk30WEYhss4VTwuY6EOc=;
+        b=CALkZPXtP4Uk2vJlKA1PfeJYKZnVgk07b50FtiT9BKh/mTx2kz/7dD6qQGa/qumPqd
+         NR5KYK0ztTxGXPs9qYX/oXlG/tj6Hvr9lFYV6VX0e1nt2vMjU/deDNb1WI0tOYLF4qiC
+         svoXTjT3I0PHbe7ayNqXzQeRz//coUx9lRSpZqx/6329Fd2pWdb2Y2pwsi3g41z4QNkJ
+         aYaAJnbs+4uSO96is0COPKLtmhc+Gy2JIkwgsBvMeUbVMpO94gQga0ijgjvNHb5vJeRF
+         T2zKxDFFTNiQMdchRzjIjpWrGRfCApieQv6yfsk1RJZlG1lE9S59lz2ZO3HwMZSW93/w
+         9iQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6cSSJC7wLmXCOiDQT2UpBN7jqLPV6pHlXicspIm4kiu6tB/1mY2b55rYoGxiT4ouXUjLqpBjuzT2sRLwBb66M@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVhVyRMyfiq93o/2ZV5fPNp9Bv6/x2YQ4GaSO76GlveIGAjMC5
+	0ze4UAqWGliMfDtKsfPkd5TeSPeX75ygCWcDZVIU7mjIt3JwarDoaDkvB8qe4+sAspCNiLntSIC
+	CuPzYkqE/A5QvVpB7vOheTdKLPwWAz6IS8VQC
+X-Gm-Gg: ASbGncvVq+rdsKyevImSxx1rmn4scM8oIQ6WbckHTdhxCQ8RPIcYULjQB0OquObPl2L
+	oZlo/hWDAsZADqlSTlWk5GtgKFVHN1PnfOyEuQgQp+VhXN3ovHWsEt5tK62txjGn0jegylV8=
+X-Google-Smtp-Source: AGHT+IEXHT0qoxBwxT1z36KB1QUksLLsmmh0uUBfvDj54hax/MNOvMeNWnJ6/p5xvJ3ZEpAZuBHuD3CPhuijLz4bkpw=
+X-Received: by 2002:a05:651c:b25:b0:2ff:5589:5a1a with SMTP id
+ 38308e7fff4ca-305fcfa0440mr22232021fa.6.1736514122117; Fri, 10 Jan 2025
+ 05:02:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1736321686.git.dvyukov@google.com> <177603055d58e3d82e38f236f3be9fa52dc2d2c5.1736321686.git.dvyukov@google.com>
- <Z4BGuYG-V9H4wk9i@google.com>
-In-Reply-To: <Z4BGuYG-V9H4wk9i@google.com>
+References: <cover.1736321686.git.dvyukov@google.com> <4bf65a9a789a0bb78e4a3e120ad30389725d2249.1736321686.git.dvyukov@google.com>
+ <Z4BDEz3Bmd2DmfNi@google.com>
+In-Reply-To: <Z4BDEz3Bmd2DmfNi@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 10 Jan 2025 13:59:54 +0100
-X-Gm-Features: AbW1kvaBDhljrbMkbJf4E4IJCpliGimzPWYqQV49HW3cEqidKVEWuh9OgCVxt8I
-Message-ID: <CACT4Y+YwLy903AHPQ43gm7iM4Hn-ZroG=HHFvFo9Pk1_ko+cOg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf hist: Fix bogus profiles when filters are enabled
+Date: Fri, 10 Jan 2025 14:01:50 +0100
+X-Gm-Features: AbW1kvakSUi_GepURCxmO2p08MvR5f1bmHmXxInHUvQ-ueSmRURkKU2nh-b2XeY
+Message-ID: <CACT4Y+ZK_r7sGTrEv5kKnrX4SLAvHPc_cu53wP36K+zmoTjExA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf hist: Deduplicate cmp/sort/collapse code
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 9 Jan 2025 at 22:59, Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, 9 Jan 2025 at 22:43, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Jan 08, 2025 at 08:36:54AM +0100, Dmitry Vyukov wrote:
-> > When a filtered column is not present in the sort order, profiles become
-> > arbitrary broken. Filtered and non-filtered entries are collapsed
-> > together, and the filtered-by field ends up with a random value (either
-> > from a filtered or non-filtered entry). If we end up with filtered
-> > entry/value, then the whole collapsed entry will be filtered out and will
-> > be missing in the profile. If we end up with non-filtered entry/value,
-> > then the overhead value will be wrongly larger (include some subset
-> > of filtered out samples).
-> >
-> > This leads to very confusing profiles. The problem is hard to notice,
-> > and if noticed hard to understand. If the filter is for a single value,
-> > then it can be fixed by adding the corresponding field to the sort order
-> > (provided user understood the problem). But if the filter is for multiple
-> > values, it's impossible to fix b/c there is no concept of binary sorting
-> > based on filter predicate (we want to group all non-filtered values in
-> > one bucket, and all filtered values in another).
-> >
-> > Examples of affected commands:
-> > perf report --tid=123
-> > perf report --sort overhead,symbol --comm=foo,bar
-> >
-> > Fix this by considering filtered status as the highest priority
-> > sort/collapse predicate.
+> Hello,
 >
-> Do you mean when you specify filters not in a sort list?
+> On Wed, Jan 08, 2025 at 08:36:53AM +0100, Dmitry Vyukov wrote:
+> > Application of cmp/sort/collapse fmt callbacks is duplicated 6 times.
+> > Factor it into a common helper function. NFC.
 >
-> I guess it's an undefined behavior.. probably better to warn users not
-> to do that and exit.  The hist entries are built using only the fields
-> in the sort list.  Filtering by unspecified fields would be meaningless
-> and won't work well IMHO.
+> It's interesting to use offsetof and cast it to functions. :)
 
-We could warn as well, but I do want this feature for:
-https://lore.kernel.org/linux-perf-users/CACT4Y+an1LSY15f9MS_vnbaaeeqMf+k4-Dqqfu-zwcUAHFNk=w@mail.gmail.com/T/#t
-I think it may be useful for other cases as well, let's discuss the
-feature below.
-Why won't it work well? At least in my local manual testing, it worked
-well. This does make hist built using filtered fields as well.
+Is there a better way to do this?
+Intuitively I reached for member pointers, but then realized it's not
+a thing in C...
 
 
-> > As a side effect this effectively adds a new feature of showing profile
-> > where several lines are combined based on arbitrary filtering predicate.
-> > For example, showing symbols from binaries foo and bar combined together,
-> > but not from other binaries; or showing combined overhead of several
-> > particular threads.
->
-> I'm not sure I'm following.  I'm seeing this even with your change.
->
-> Without filters:
->
->   $ ./perf report -s dso --stdio -q
->       98.41%  perf
->        1.11%  [kernel.kallsyms]
->        0.41%  ld-linux-x86-64.so.2
->        0.05%  libLLVM-16.so.1
->        0.03%  libc.so.6
->
->
-> With filter:
->
->   $ ./perf report -s dso -d '[kernel.kallsyms],libc.so.6' --stdio -q
->        1.11%  [kernel.kallsyms]
->        0.03%  libc.so.6
->
-> You said you want to have them combined together, right?
-> But I think the current behavior makes more sense.
-
-
-If you add a field to both sort and filter, then this change does not
-affect anything (filtered fields already participate in
-sorting/merging). It affects things when the filter field is not in
-sort.
-
-Consider the following queries:
-"What symbols consume time in this subset of binaries (but not in the rest)?"
-Naively, one would try:
-perf report --sort=symbol --comm=cc1,ld
-And this deceptively works and shows something, but as far as I
-understand these are random numbers now.
-With this change you can actually do this (you will see things like
-malloc/free in both of these binaries, or if one profiles e.g. Go
-programs, then there will be lots of common symbols from
-runtime/stdlin).
-
-Another example: profile for this particular subset of threads/cpus
-(but not for the rest).
-
-And in particular for:
-https://lore.kernel.org/linux-perf-users/CACT4Y+an1LSY15f9MS_vnbaaeeqMf+k4-Dqqfu-zwcUAHFNk=w@mail.gmail.com/T/#t
-I want to enable: --parallelism=1-8 filter.
-Currently you will either see random garbage numbers, or if you add
-'parallelism' to sort order, then you will see each symbol/comm
-duplicated 8 times for each separate value of parallelism (which is
-not useful). But currently you can't see symbol/comm for these 8
-parallelism levels combined, but not for the rest.
-
-All-in-all, this looks like a change that defines behavior that's
-currently undefined in a useful and intuitive way, without changing
-any of the currently defined behaviors.
-
-
-
-
-
-
-
-
-
-
-
-> Thanks,
-> Namhyung
->
-> >
 > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 > > Cc: Namhyung Kim <namhyung@kernel.org>
 > > Cc: Ian Rogers <irogers@google.com>
 > > Cc: linux-perf-users@vger.kernel.org
 > > Cc: linux-kernel@vger.kernel.org
 > > ---
-> >  tools/perf/util/hist.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >  tools/perf/util/hist.c | 104 +++++++++++++++++------------------------
+> >  tools/perf/util/hist.h |   2 -
+> >  2 files changed, 44 insertions(+), 62 deletions(-)
 > >
 > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index 8e4e844425370..b70170d854a0c 100644
+> > index fff1345658016..8e4e844425370 100644
 > > --- a/tools/perf/util/hist.c
 > > +++ b/tools/perf/util/hist.c
-> > @@ -1303,9 +1303,18 @@ hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
-> >       typedef int64_t (*fn_t)(struct perf_hpp_fmt *, struct hist_entry *, struct hist_entry *);
+> > @@ -32,6 +32,9 @@
+> >  #include <linux/time64.h>
+> >  #include <linux/zalloc.h>
+> >
+> > +static int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
+> > +static int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
+> > +
+> >  static bool hists__filter_entry_by_dso(struct hists *hists,
+> >                                      struct hist_entry *he);
+> >  static bool hists__filter_entry_by_thread(struct hists *hists,
+> > @@ -1292,19 +1295,27 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+> >       return err;
+> >  }
+> >
+> > -int64_t
+> > -hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
+> > +static int64_t
+> > +hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
+> > +                  struct hist_entry *right, unsigned long fn_offset,
+> > +                  bool ignore_dynamic, bool ignore_skipped)
+> >  {
+> > +     typedef int64_t (*fn_t)(struct perf_hpp_fmt *, struct hist_entry *, struct hist_entry *);
+>
+> Probably better to put it in util/hist.h and each members (cmp, collapse,
+> sort) use the typedef to make sure they remain in the same.
+
+Noted. But let's decide on the "perf hist: Fix bogus profiles when
+filters are enabled" first, that was the motivation for this
+refactoring.
+
+
 > >       struct hists *hists = left->hists;
 > >       struct perf_hpp_fmt *fmt;
-> > -     int64_t cmp = 0;
-> > +     int64_t cmp;
-> >       fn_t fn;
+> >       int64_t cmp = 0;
+> > +     fn_t fn;
 > >
-> > +     /*
-> > +      * Never collapse filtered and non-filtered entries.
-> > +      * Note this is not the same as having an extra (invisible) fmt
-> > +      * that corresponds to the filtered status.
-> > +      */
-> > +     cmp = (int64_t)!!left->filtered - (int64_t)!!right->filtered;
-> > +     if (cmp)
-> > +             return cmp;
-> > +
-> >       perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
-> >               if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
+> > -     hists__for_each_sort_list(hists, fmt) {
+> > -             if (perf_hpp__is_dynamic_entry(fmt) &&
+> > +     perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
+> > +             if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
 > >                   !perf_hpp__defined_dynamic_entry(fmt, hists))
+> >                       continue;
+> >
+> > -             cmp = fmt->cmp(fmt, left, right);
+> > +             if (ignore_skipped && perf_hpp__should_skip(fmt, hists))
+> > +                     continue;
+> > +
+> > +             fn = *(fn_t *)(((char *)fmt) + fn_offset);
+>
+> Doesn't just below work?
+>
+>                 fn = (void *)fmt + fn_offset;
+>
+> Thanks,
+> Namhyung
+>
+>
+> > +             cmp = fn(fmt, left, right);
+> >               if (cmp)
+> >                       break;
+> >       }
+> > @@ -1313,23 +1324,33 @@ hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
+> >  }
+> >
+> >  int64_t
+> > -hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
+> > +hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
+> >  {
+> > -     struct hists *hists = left->hists;
+> > -     struct perf_hpp_fmt *fmt;
+> > -     int64_t cmp = 0;
+> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
+> > +             offsetof(struct perf_hpp_fmt, cmp), true, false);
+> > +}
+> >
+> > -     hists__for_each_sort_list(hists, fmt) {
+> > -             if (perf_hpp__is_dynamic_entry(fmt) &&
+> > -                 !perf_hpp__defined_dynamic_entry(fmt, hists))
+> > -                     continue;
+> > +static int64_t
+> > +hist_entry__sort(struct hist_entry *left, struct hist_entry *right)
+> > +{
+> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
+> > +             offsetof(struct perf_hpp_fmt, sort), false, true);
+> > +}
+> >
+> > -             cmp = fmt->collapse(fmt, left, right);
+> > -             if (cmp)
+> > -                     break;
+> > -     }
+> > +int64_t
+> > +hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
+> > +{
+> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
+> > +             offsetof(struct perf_hpp_fmt, collapse), true, false);
+> > +}
+> >
+> > -     return cmp;
+> > +static int64_t
+> > +hist_entry__collapse_hierarchy(struct perf_hpp_list *hpp_list,
+> > +                            struct hist_entry *left,
+> > +                            struct hist_entry *right)
+> > +{
+> > +     return hist_entry__cmp_impl(hpp_list, left, right,
+> > +             offsetof(struct perf_hpp_fmt, collapse), false, false);
+> >  }
+> >
+> >  void hist_entry__delete(struct hist_entry *he)
+> > @@ -1503,14 +1524,7 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
+> >       while (*p != NULL) {
+> >               parent = *p;
+> >               iter = rb_entry(parent, struct hist_entry, rb_node_in);
+> > -
+> > -             cmp = 0;
+> > -             perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
+> > -                     cmp = fmt->collapse(fmt, iter, he);
+> > -                     if (cmp)
+> > -                             break;
+> > -             }
+> > -
+> > +             cmp = hist_entry__collapse_hierarchy(hpp_list, iter, he);
+> >               if (!cmp) {
+> >                       he_stat__add_stat(&iter->stat, &he->stat);
+> >                       return iter;
+> > @@ -1730,24 +1744,6 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+> >       return 0;
+> >  }
+> >
+> > -static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+> > -{
+> > -     struct hists *hists = a->hists;
+> > -     struct perf_hpp_fmt *fmt;
+> > -     int64_t cmp = 0;
+> > -
+> > -     hists__for_each_sort_list(hists, fmt) {
+> > -             if (perf_hpp__should_skip(fmt, a->hists))
+> > -                     continue;
+> > -
+> > -             cmp = fmt->sort(fmt, a, b);
+> > -             if (cmp)
+> > -                     break;
+> > -     }
+> > -
+> > -     return cmp;
+> > -}
+> > -
+> >  static void hists__reset_filter_stats(struct hists *hists)
+> >  {
+> >       hists->nr_non_filtered_entries = 0;
+> > @@ -2449,21 +2445,15 @@ static struct hist_entry *add_dummy_hierarchy_entry(struct hists *hists,
+> >       struct rb_node **p;
+> >       struct rb_node *parent = NULL;
+> >       struct hist_entry *he;
+> > -     struct perf_hpp_fmt *fmt;
+> >       bool leftmost = true;
+> >
+> >       p = &root->rb_root.rb_node;
+> >       while (*p != NULL) {
+> > -             int64_t cmp = 0;
+> > +             int64_t cmp;
+> >
+> >               parent = *p;
+> >               he = rb_entry(parent, struct hist_entry, rb_node_in);
+> > -
+> > -             perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
+> > -                     cmp = fmt->collapse(fmt, he, pair);
+> > -                     if (cmp)
+> > -                             break;
+> > -             }
+> > +             cmp = hist_entry__collapse_hierarchy(he->hpp_list, he, pair);
+> >               if (!cmp)
+> >                       goto out;
+> >
+> > @@ -2521,16 +2511,10 @@ static struct hist_entry *hists__find_hierarchy_entry(struct rb_root_cached *roo
+> >
+> >       while (n) {
+> >               struct hist_entry *iter;
+> > -             struct perf_hpp_fmt *fmt;
+> > -             int64_t cmp = 0;
+> > +             int64_t cmp;
+> >
+> >               iter = rb_entry(n, struct hist_entry, rb_node_in);
+> > -             perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
+> > -                     cmp = fmt->collapse(fmt, iter, he);
+> > -                     if (cmp)
+> > -                             break;
+> > -             }
+> > -
+> > +             cmp = hist_entry__collapse_hierarchy(he->hpp_list, iter, he);
+> >               if (cmp < 0)
+> >                       n = n->rb_left;
+> >               else if (cmp > 0)
+> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > index 1131056924d9c..6cff03eb043b7 100644
+> > --- a/tools/perf/util/hist.h
+> > +++ b/tools/perf/util/hist.h
+> > @@ -342,8 +342,6 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+> >  struct perf_hpp;
+> >  struct perf_hpp_fmt;
+> >
+> > -int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
+> > -int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
+> >  int hist_entry__transaction_len(void);
+> >  int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
+> >                             struct hists *hists);
 > > --
 > > 2.47.1.613.gc27f4b7a9f-goog
 > >
