@@ -1,230 +1,142 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A57D208978
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 22:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ED7206F3E
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 22:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736547335; cv=none; b=aPUO2g7pObEhsZGpjnVaeqAtG/MzEKfCR/h5lD94aFcPqmy+jiKIkDjFN/DEgylKNxOPm8bZRDs5JQsVZG8ZFG+qN2hgmYPoiPYPiUx2cnxk3ql3ZKM7aulGyKWKWucexfydGH3aSEQcwJqkLNirwc2qGx/scVqh0jjR7G7UoUw=
+	t=1736548658; cv=none; b=W3COIe4OMLKaRwijHbLCytzK4hnzbkl/cfk1A1fVUJX+tEhJ12qBIeuyr3IE4Vl6Zq3ujVtjQUdoHxBtkfGzJS6Uda4zBbDcVSKwJ6edFjg1pnJIE8LzkGCD6LE+Xygw9itWD5olqOl1UbglqfEwKOzOr+Hd+wMD+sJBcyrUfH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736547335; c=relaxed/simple;
-	bh=Pbw6rr0ldA6M5FV1qyS9494wBAnh++0ucfBKORWl74Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oDTdsALMUNGGZqR0cRS+79Xrm5mQoflQFegid2C346/0mxilXPy/n7urpcuS/BtZyYcfRxvTvsLo1EwFPrWcLRNfy1xXPyjQue3gFxn+8zwC5O5T7XkkNFAofYfPhSE1cINpd0jSxp6nadoCRwkVjrZbZcYtn75QGD9ITAcwrKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UpnXdv+E; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736548658; c=relaxed/simple;
+	bh=ncMeCvm69LYCcYXCpOm23nEqhzYMcHT4byBJHzv9bZY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hhpTSQNB5UfdcxhElNlB9fwdO8txtHZ16Bj0X+lU3k9W93CGVRDv5PnN1n4hvPjykEtn8mNRt8fdLkX9PUR+co7KPL0QBevQ29mQhV9xUyd5eIS1OiRJuRgzBwEY6ES8qYyYlJYUe3Y0roagdzQ6AhaPMTnB2y+H4Cqv3PtUEkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=IxOEY+qI; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpnXdv+E"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a814c54742so36865ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 14:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736547331; x=1737152131; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xyf17ZT9slE7/aTobYnyZK2ZPH/yXI9i1sP5jC8kVzw=;
-        b=UpnXdv+E5DtwkIjOCQGQ0tuXj6QbLmDfPyRmyJzeAYWgXhwHnsE7u8tn8XYw6e/QYL
-         exCidXde6JEipHXYOC00UgzJCbtdaEkWm9vnlyQ/1ZVHuORF8zgAOhu7X1aVqfA3Wl4v
-         8rsnbHFJBXBZBd9GF2igW9j9EBPHIhHPTx34GwxOUh8dBp9atamXAeaORZxqrgHdxDKW
-         3Bk8swqasHcqG/MFEmiaSN19uwgmZiqtZJ7OWzl9zkG3v8qUNrur9RZm16o8PVfve1G6
-         ylGK1JUmDEZcR37kfEOcfPfDd31o9pLBJotyn2b2uFRi2p9XKysrH5Mfv3NsSDYB2g9V
-         S+jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736547331; x=1737152131;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xyf17ZT9slE7/aTobYnyZK2ZPH/yXI9i1sP5jC8kVzw=;
-        b=nM39u86WK24TjNotdAQsT4l7lTHGYV7VKyO/iCy8z8QsrRg1HzkblZuKy9ARTiJKb7
-         VvFYn8zbNjEvGKhsSWZTO/Ss+f8MaSBufCI9NSZjfaL5JrRpNHp0eWouAMv2nTrLD5Af
-         Li2rGy/sSvqk6WUn27oKdGux1XkBQLfRmz5fppd/zPmHFyuBuhX4rU1SDAUR++WevgIi
-         1qtMdqIlaUkCKF7Hxh6yKDmKasMqRnxKqJ+09HGpU91oAQK0Z3VZasrHv4pHcBXtWSRs
-         XuPHiaMy2Fq6rEIOuVgoQ3rjf+sPf0VZdjQhqfOIKnysIG85lkuoavI3nnb6Mm9KtFiv
-         EfVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzvImVb9zC7zq2mMnB9K9U9OOLesgqwvFFGFyahEQFqviuIjDFNl2hKHxqrNegk7L5RHaLRv8unue8Wz9sYubT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKOYYMl+VTklDBx9z8WmHm11vcxfedtSWI/FrzdbF5SlkGkYu/
-	8r11J/+tOQ/v/Ix6vr/W3bwFaGD+zEz8LF9se76EbIeAXY+crN9vKOGX6TOZqlowpO8cFrru+qZ
-	lhc+olm/U/f1PXOA4sovejYtbBcQJiNPdEQly
-X-Gm-Gg: ASbGnctwuDc1SE1PT5hr4BJ5TJxP+miX3T5IQIQvD5geMcu/o5vMv2XxbwdknupKGk6
-	WbtxMFmLFZTpyNWc/S5cxt/4FLVKu/ekV1d3rDLJ4UlTth5SSTqaIF+TcXiBXSE00ZWsxTA==
-X-Google-Smtp-Source: AGHT+IEL2R5yiLpoxdMkXtaQmYeERswzLOkBxw35xegyRNt4Srohdo0xhUoQmrH1tbE6Sr7n1azpu9sn8Fd/9X1QBsk=
-X-Received: by 2002:a05:6e02:1889:b0:3a7:7d6e:fef9 with SMTP id
- e9e14a558f8ab-3ce58940c0fmr3815535ab.27.1736547329856; Fri, 10 Jan 2025
- 14:15:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="IxOEY+qI"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YVGkN0B32z9v9n;
+	Fri, 10 Jan 2025 23:37:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	s=MBO0001; t=1736548652;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ncMeCvm69LYCcYXCpOm23nEqhzYMcHT4byBJHzv9bZY=;
+	b=IxOEY+qIvGRZhwXgmPaNzXYlwp1JL/hhE5H4kWEnytGKlcSeopKDc3puCch5VYRE8TYoxC
+	6Dy8Lw8e/UIvVqSgaIJkjqIvtWmAEErVw/+DqKnExirHvg8JvPnaBGXrmsmxvSum8NLk/Y
+	8UBvIhjwoJa0qrCRUa13ht2eFiaVgxSLCM7jczsNaTkq3NV+CXhqwbDon6xRtQ8/Y5Qh3k
+	3A2aVmua2Bq9AIO4E6Sq7gCkoZCn87BhrNFYc1eCWXH2YESOnJTMGvqt3PfcM8t93D8xJy
+	Dv7zhz6ByP3/QyHnaTy37S3Iul7pSl3LHCLvmcUJ7Y/KgVIl3TroQSgMgfuUpA==
+Message-ID: <8b6e4382cad6a98461863454a8405fa78ed3b591.camel@michel-slm.name>
+Subject: Re: [PATCH 1/1 perf-tools] perf MANIFEST: add license files
+From: Michel Lind <michel@michel-slm.name>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users
+	 <linux-perf-users@vger.kernel.org>
+Date: Fri, 10 Jan 2025 16:37:23 -0600
+In-Reply-To: <CA+JHD93YcNEaLgasSsjAmo7fWe4gy-5d90NCdxYUwPdgRuPL2A@mail.gmail.com>
+References: <Z0Zcx0WRqtlUYpgw@hyperscale.parallels>
+	 <2fe55e73d3ef64ec3bfc683446e3f1f8b9e8c9e8.camel@michel-slm.name>
+	 <Z4BFcA0L3IfsmtbZ@x1>
+	 <2a25433033c3b31f5c61b84ffb4efd51267ce3e5.camel@michel-slm.name>
+	 <CA+JHD904E19iDzZ8HqcTwe61Wzp57_mkPuWz5miEztdd8jbVhA@mail.gmail.com>
+	 <6c81d671fc8e9f72ec1823eb0dd091a17cc7eefb.camel@michel-slm.name>
+	 <CA+JHD93YcNEaLgasSsjAmo7fWe4gy-5d90NCdxYUwPdgRuPL2A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-GrP/jo3qsXdWQ91+2tWv"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
- <Z4F3qxFaYnMTtPw7@google.com>
-In-Reply-To: <Z4F3qxFaYnMTtPw7@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 10 Jan 2025 14:15:18 -0800
-X-Gm-Features: AbW1kvYjNVbCbiervK0hlM-K3dZs4T2o5kLS5RO58s8hIauUaHysPv7YXJMtqlY
-Message-ID: <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+X-Rspamd-Queue-Id: 4YVGkN0B32z9v9n
+
+
+--=-GrP/jo3qsXdWQ91+2tWv
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 10, 2025 at 11:40=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Fri, 2025-01-10 at 18:06 -0300, Arnaldo Carvalho de Melo wrote:
+>=20
+>=20
+> On Fri, Jan 10, 2025, 5:22=E2=80=AFPM Michel Lind <michel@michel-slm.name=
 >
-> On Thu, Jan 09, 2025 at 02:21:09PM -0800, Ian Rogers wrote:
-> > Originally posted and merged from:
-> > https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
-> > This reverts commit 4f1b067359ac8364cdb7f9fda41085fa85789d0f although
-> > the patch is now smaller due to related fixes being applied in commit
-> > 22a4db3c3603 ("perf evsel: Add alternate_hw_config and use in
-> > evsel__match").
-> > The original commit message was:
-> >
-> > It was requested that RISC-V be able to add events to the perf tool so
-> > the PMU driver didn't need to map legacy events to config encodings:
-> > https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.c=
-om/
-> >
-> > This change makes the priority of events specified without a PMU the
-> > same as those specified with a PMU, namely sysfs and JSON events are
-> > checked first before using the legacy encoding.
->
-> I'm still not convinced why we need this change despite of these
-> troubles.  If it's because RISC-V cannot define the lagacy hardware
-> events in the kernel driver, why not using a different name in JSON and
-> ask users to use the name specifically?  Something like:
->
->   $ perf record -e riscv-cycles ...
+> wrote:
+> > On Fri, 2025-01-10 at 16:51 -0300, Arnaldo Carvalho de Melo wrote:
+> > >=20
+> > >=20
+> > > On Fri, Jan 10, 2025, 3:59=E2=80=AFPM Michel Lind
+> > > <michel@michel-slm.name>
+> > > wrote:
+> > > > On Thu, 2025-01-09 at 18:53 -0300, Arnaldo Carvalho de Melo
+> > > > wrote:
+> > > > > On Thu, Jan 09, 2025 at 12:55:16PM -0600, Michel Lind wrote:
+> > > > > > Happy holidays all!
+> > > > > >=20
+> > > > > > On Tue, 2024-11-26 at 17:41 -0600, Michel Lind wrote:
+> > > > > > > The standalone tarballs should include the license files
+> > > > > > > -
+> > > > > > > both
+> > > > > > > the
+> > > > > > > COPYING declaration as well as the text of GPLv2.
+> > > > > > >=20
+> > > > > > Just making sure this does not fall through the crack -
+> > > > > > does
+> > > > > > this
+> > > > > > look
+> > > > > > good to merge, or are there any issue with it?
+> > > > >=20
+> > > > > Applied, thanks for the reminder!
+> > > > >=20
+> > > > Thanks! I don't see it in the perf-tools-next branch, but see
+> > > > the
+> > > > other
+> > > > MANIFEST update - I wonder if I'm looking in the wrong place.
+> > >=20
+> > > When I say "applied" it doesn't mean it will straight away appear
+> > > in
+> > > a public repo, I do some tests that take some time before making
+> > > all
+> > > public, which I did after you checked:=C2=A0
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/commit/?h=3Dperf-tools-next&id=3D74c033b6aa650ea7280221a9e57b7318a12097=
+8c
+> > >=20
+> > Ah, no, I do see that one. I meant the "perf MANIFEST: add license
+> > files" patch that from the timeline should have gone in before the
+> > bpf_perf_event.h one.
+>=20
+> Indeed, I though it was there as well, will make sure it gets there,
+> thanks for pointing it out.=C2=A0
+>=20
+Thanks again! If it no longer applies cleanly, I'm happy to redo it.
 
-So ARM and RISC-V are more than able to speak for themselves and have
-their tags on the series, but let's recap why I'm motivated to do this
-change:
 
-1) perf supported legacy events;
-2) perf supported sysfs and json events, but at a lower priority than
-legacy events;
-3) hybrid support was added but in a way where all the hybrid PMUs
-needed to be known, assumptions about PMU were implicit and baked into
-the tool;
-4) metric support for hybrid was going in a similar implicit direction
-and I objected, what would cycles mean in a metric if the core PMU was
-implicit? Rather than pursue this the hybrid code was overhauled, PMUs
-became more of a thing and we added a notion of a "core" PMU which
-would support legacy events;
-5) ARM core PMUs differ in naming, etc. than just about every other
-platform. Their core events had been being programmed as if they were
-uncore events - ie without the legacy priority. Fixing hybrid, and
-fixing ARM PMUs to know they supported legacy events, broke perf on
-Apple-M? series due to a PMU driver issue with legacy events:
-https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st=
-/
-"Perf broke on all Apple ARM64 systems (tested almost everything), and
-according to maz also on Juno (so, probably all big.LITTLE) since
-v6.5."
-6) sysfs/json events were made the priority over legacy to unbreak
-perf on Apple-M? CPUs, but only if the PMU is specified:
-https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
-   Reported-by: Hector Martin <marcan@marcan.st>
-   Signed-off-by: Ian Rogers <irogers@google.com>
-   Tested-by: Hector Martin <marcan@marcan.st>
-   Tested-by: Marc Zyngier <maz@kernel.org>
-   Acked-by: Mark Rutland <mark.rutland@arm.com>
+Best regards,
 
-This gets us to the current code where I can trivially get an
-inconsistency. Here on Intel with no PMU in the event name:
-```
-$ perf stat -vv -e cpu-cycles true
-Using CPUID GenuineIntel-6-8D-1
-Control descriptor is not initialized
-------------------------------------------------------------
-perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  enable_on_exec                   1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid 752915  cpu -1  group_fd -1  flags 0x8 =3D 3
-cpu-cycles: -1: 1293076 273429 273429
-cpu-cycles: 1293076 273429 273429
+--=20
+ _o) Michel Lind
+_( ) identities:
+https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
 
- Performance counter stats for 'true':
+--=-GrP/jo3qsXdWQ91+2tWv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-         1,293,076      cpu-cycles
+-----BEGIN PGP SIGNATURE-----
 
-       0.000809752 seconds time elapsed
+iI0EABYKADUWIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ4GhIxccbWljaGVsQG1p
+Y2hlbC1zbG0ubmFtZQAKCRCLIp0vfMwE8jeqAP4u0+krp79+uaWcsGpXZ0gN1DBJ
+vJCuac9zWVE/5+V2VAEAxqVUYmttl61H5cxBYu76HNXo9pCsfROeBo3Hfl6hhgI=
+=O3PB
+-----END PGP SIGNATURE-----
 
-       0.000841000 seconds user
-       0.000000000 seconds sys
-```
-
-Here with a PMU event name:
-```
-$ sudo perf stat -vv -e cpu/cpu-cycles/ true
-Using CPUID GenuineIntel-6-8D-1
-Attempt to add: cpu/cpu-cycles=3D0/
-..after resolving event: cpu/event=3D0x3c/
-Control descriptor is not initialized
-------------------------------------------------------------
-perf_event_attr:
-  type                             4 (cpu)
-  size                             136
-  config                           0x3c (cpu-cycles)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  enable_on_exec                   1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid 752839  cpu -1  group_fd -1  flags 0x8 =3D 3
-cpu/cpu-cycles/: -1: 1421235 531150 531150
-cpu/cpu-cycles/: 1421235 531150 531150
-
- Performance counter stats for 'true':
-
-         1,421,235      cpu/cpu-cycles/
-
-       0.001292908 seconds time elapsed
-
-       0.001340000 seconds user
-       0.000000000 seconds sys
-```
-
-That is the no PMU event is opened as type=3D0/config=3D0 (legacy) while
-the PMU event is opened as type=3D4/config=3D0x3c (sysfs encoding). Now
-let's cross our fingers and hope that in the driver they are really
-the same thing. I take objection to the idea that there should be two
-different priorities for sysfs/json and legacy depending on whether a
-PMU is or isn't specified in the event name. The priority could be
-legacy then sysfs/json, or it could be sysfs/json then legacy, but it
-should be the same regardless of whether the PMU is put in the event
-name. The PMU in the event name should be optional, for example we may
-or may not show it in the stat output. The encoding being consistent
-was the case prior to the Apple-M? fix and this patch aims to make it
-consistent once more. Given the ARM bug mentioned above it should also
-fix specifying or not the PMU on Apple-M? CPUs as it will avoid the
-same legacy event issue that may only exist on old kernels. RISC-V is
-motivated because of not wanting hard coded legacy events in the
-driver for all potential vendors and models.
-
-Thanks,
-Ian
+--=-GrP/jo3qsXdWQ91+2tWv--
