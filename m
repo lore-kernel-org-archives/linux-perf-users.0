@@ -1,72 +1,73 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D1F1E3761
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 09:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B45520B7F2
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 09:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736501875; cv=none; b=YELGupuGBaqRiF0YOvuqnDO/ErDfMWSLzrU4PIL6E9cOShS4vL5JBuRf27RSRtGa88IdUAGNvLkc6QSwNdqbfYuRGDMKw0w2aoh1Zeu3kn6/Yu4PBqI8pYPJfFuuEn4L78NNaYG8M3Un26eZui/yHLKR4JW8gGkfXUYcUv+8Gj8=
+	t=1736502240; cv=none; b=JG0zxa2vsPTuE6iH6iYr9u0x8wuV3bG48GPl//cHh/wq+JDs5Y5bP9c3Sv8hD+hdEN0jWm2pVHY1mnrh3ioRWKYS22AKfbc9xUQTrU2lHKmZwGZ+U3uiyboOexbIs+RfyZwrQlebfhYbSuWouaktDgEObrxuzpiHy/yIvtpBirQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736501875; c=relaxed/simple;
-	bh=hVARM/6blmx2jrKgtclYKLwbwIn6FsfFdhZTuswts5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IgKmx0rDURwnrDrSAa4XAxAiisx3TFTGO+Mzdf+pfPPtwgExbx7lOoHJHDwSYXE1QV2wZMHZx9cjahcuig85oZEpe4MbUiG6XduZxTtO1vS0Sdsg6imseThV49U24+8X4VNH1BWjMUFM9qrOZdejFjRIo0xIIaIdQfBC/0ZgIS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J9odWsG8; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1736502240; c=relaxed/simple;
+	bh=I0b0D5xtbrRYD2Vif3h/w2iK/wXbNViwsT+ya6rm28s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=If/tw6pXhKBb7kakL4B+R4ob4hXB9D26yx/OFfzX9sWx3Wvq7r1LIcH5Nsj5rp3q5bsTK2cPC1fMtckBsde/nhQccLHRImeIZBK2gvDyR5kF5ZzZfgfd8GoWVcc/sxRTRmCbMU5FkyNOjOexIyIBSzsEV/j1l2setZkViGiG3Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a9ivZtts; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J9odWsG8"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 509NwHHn000788;
-	Fri, 10 Jan 2025 09:37:46 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a9ivZtts"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 509NaGfW018158;
+	Fri, 10 Jan 2025 09:43:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=TSvN27zBgYEDLhVxxKsauuh9EoGy1d7wXzEbI2XcI
-	Wc=; b=J9odWsG8+Tub5c7zijY65pFtUybwMHkC572qWu/uJpdxszeDxO9QISvJZ
-	1SkhKK/vUWaTx1W4kJ/fc4bQH3J3xT1H6NTQrsCoxgbj3MDFp4KonGrzYjq8HV2v
-	ucpFHFjcFW0ebxpmDCQljDkbhiU4urwyMkOeZ63bnzGp1SjnFfUodl+lXBnRIr0Y
-	q8tXqXMOK1y7aLzz9EuPxJ5irwm+nPsdNdixZyMonp1OltDJ2oHYfyQW2J1X6yR2
-	TUywn4utflIkhLk27moqehVGK9nrTmq5nhBsgDXKUVeUk+D2s4QASSWFE1ANcHwE
-	BznIpYqbAnUdzcmNAT+uR9tCYaxEw==
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=Q15Qs22smqoIRdd57Er+BBVsac7o
+	QoNNAeF9ajmNHjk=; b=a9ivZtts+eZCel7EAVYBohbqWBrjA+zQfuQvLmEME+FW
+	5xiiLM6Mqxzq4AUSR/6D5LYHgMaPaswBlpxlsGMzzaKLl8cKLlsL94SBWViJydxx
+	M0iOTwo9lRnq+2elhrl8/cOoH3tobBfLFsosY85uMQTHcJS/nRltWRUnJBvZbmew
+	Ls2gqLLxqEeYf0/4hdNvFyLSrNGfSUKSU5lv4+TCMjB8aVZ0Iwpabw5HqgyyyTW7
+	6ClqykijLbTZI1AxkO8TnkAlcg7X+TvwzxkrjyQxnsQsV4h6qbkU9iWbYCnr7KGI
+	gx7pRSyDNKxriP1u+1wM9oZPqHe86FjBuoJ2qAEPlQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442rkhsvdc-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442r9asw7p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 09:37:46 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50A9OhFu022862;
-	Fri, 10 Jan 2025 09:37:45 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442rkhsvd9-1
+	Fri, 10 Jan 2025 09:43:39 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50A9efm3013605;
+	Fri, 10 Jan 2025 09:43:38 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442r9asw7n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 09:37:45 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50A5nHYA015795;
-	Fri, 10 Jan 2025 09:37:44 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43ygtm9g9m-1
+	Fri, 10 Jan 2025 09:43:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50A9NEBg008974;
+	Fri, 10 Jan 2025 09:43:38 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43yfq09q3u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 09:37:44 +0000
+	Fri, 10 Jan 2025 09:43:38 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50A9bell25625202
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50A9hYwl21037528
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Jan 2025 09:37:40 GMT
+	Fri, 10 Jan 2025 09:43:34 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BF02520040;
-	Fri, 10 Jan 2025 09:37:40 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 564FB2004B;
+	Fri, 10 Jan 2025 09:43:34 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4259420043;
-	Fri, 10 Jan 2025 09:37:35 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 00C2F20040;
+	Fri, 10 Jan 2025 09:43:28 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.61.241.17])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 10 Jan 2025 09:37:34 +0000 (GMT)
+	Fri, 10 Jan 2025 09:43:27 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
+        irogers@google.com, namhyung@kernel.org, vmolnaro@redhat.com,
+        mpetlan@redhat.com
 Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com
-Subject: [PATCH V2] tools/perf/builtin-lock: Fix return code for functions in __cmd_contention
-Date: Fri, 10 Jan 2025 15:07:30 +0530
-Message-Id: <20250110093730.93610-1-atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH V2] tools/perf/tests/base_probe: Fix check for the count of existing probes in test_adding_kernel
+Date: Fri, 10 Jan 2025 15:13:24 +0530
+Message-Id: <20250110094324.94604-1-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -74,83 +75,113 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: SGlhLc6TF-HnbvK2IHfMwW-XXXq-_4mq
-X-Proofpoint-GUID: xlpasoyjlZUMnpmr6m8qOMw_W3zslOrz
+X-Proofpoint-GUID: XgF3CVrlekrAvSZ0E1Ww3Ry2vnMElDRM
+X-Proofpoint-ORIG-GUID: l2G_PTBcpE4blZkPYnPmoCQgJMFNnW34
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxscore=0 suspectscore=0 phishscore=0 impostorscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501100078
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 priorityscore=1501 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501100078
 
-perf lock contention returns zero exit value even if the lock contention
-BPF setup failed.
+perftool-testsuite_probe fails in test_adding_kernel as below:
+	Regexp not found: "probe:inode_permission_11"
+	-- [ FAIL ] -- perf_probe :: test_adding_kernel :: force-adding probes ::
+	second probe adding (with force) (output regexp parsing)
+	event syntax error: 'probe:inode_permission_11'
+	  \___ unknown tracepoint
 
-  # ./perf lock con -b true
-  libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-  libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
-  libbpf: failed to find valid kernel BTF
-  libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was CONFIG_DEBUG_INFO_BTF enabled?
-  libbpf: failed to find '.BTF' ELF section in /lib/modules/6.13.0-rc3+/build/vmlinux
-  libbpf: failed to find valid kernel BTF
-  libbpf: Error loading vmlinux BTF: -ESRCH
-  libbpf: failed to load object 'lock_contention_bpf'
-  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
-  Failed to load lock-contention BPF skeleton
-  lock contention BPF setup failed
-  # echo $?
-   0
+	Error:  File /sys/kernel/tracing//events/probe/inode_permission_11
+	not found.
+	Hint:   Perhaps this kernel misses some CONFIG_ setting to
+	enable this feature?.
 
-Fix this by saving the return code for lock_contention_prepare
-so that command exits with proper return code. Similarly set the
-return code properly for two other functions in builtin-lock, namely
-setup_output_field() and select_key().
+The test does the following:
+1) Adds a probe point first using :
+    $CMD_PERF probe --add $TEST_PROBE
+2) Then tries to add same probe again without —force
+and expects it to fail. Next tries to add same probe again
+with —force. In this case, perf probe succeeds and adds
+the probe with a suffix number. Example:
+
+ ./perf probe --add inode_permission
+ Added new event:
+  probe:inode_permission (on inode_permission)
+
+ ./perf probe --add inode_permission --force
+ Added new event:
+  probe:inode_permission_1 (on inode_permission)
+
+  ./perf probe --add inode_permission --force
+ Added new event:
+  probe:inode_permission_2 (on inode_permission)
+
+Each time, suffix is added to existing probe name.
+To get the suffix number, test cases uses :
+NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
+
+This will work if there is no other probe existing
+in the system. If there are any other probes other than
+kernel probes or inode_permission, ( example: any probe),
+"perf probe -l" will include count for other probes too.
+
+Example, in the system where this failed, already some
+probes were default added. So count became 10
+  ./perf probe -l | wc -l
+  10
+
+So to be specific for "inode_permission", restrict the
+probe count check to that probe point alone using :
+NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
+
+Similarly while removing the probe using "probe --del *",
+( removing all probes ), check uses:
+
+ ../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE"
+
+But if there are other probes in the system, the log will
+contain reference to other existing probe too. Hence change
+usage of check_all_lines_matched.pl to check_all_patterns_found.pl
+This will make sure expecting string comes in the result
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
 Changelog:
- v1 -> v2
- Fixed return code in functions: setup_output_field()
- and select_key() as pointed out by Namhyung.
+ v1 -> v2:
+ No code changes. After being reviewed by Michael Petlan, since
+ initial patch was posted in 2024-10-14, rebased on top of latest
+ perf-tools-next
 
- tools/perf/builtin-lock.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/base_probe/test_adding_kernel.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 208c482daa56..94a2bc15a2fa 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -2049,7 +2049,8 @@ static int __cmd_contention(int argc, const char **argv)
- 				goto out_delete;
- 		}
+diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+index d541ffd44a93..f8b5f096d0d7 100755
+--- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
++++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+@@ -169,7 +169,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
+ (( TEST_RESULT += $? ))
  
--		if (lock_contention_prepare(&con) < 0) {
-+		err = lock_contention_prepare(&con);
-+		if (err < 0) {
- 			pr_err("lock contention BPF setup failed\n");
- 			goto out_delete;
- 		}
-@@ -2070,10 +2071,14 @@ static int __cmd_contention(int argc, const char **argv)
- 		}
- 	}
+ # adding existing probe with '--force' should pass
+-NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
++NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
+ $CMD_PERF probe --force --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_03.err
+ PERF_EXIT_CODE=$?
  
--	if (setup_output_field(true, output_fields))
-+	err = setup_output_field(true, output_fields);
-+	if (err) {
-+		pr_err("Failed to setup output field\n");
- 		goto out_delete;
-+	}
+@@ -205,7 +205,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using doubled probe"
+ $CMD_PERF probe --del \* 2> $LOGS_DIR/adding_kernel_removing_wildcard.err
+ PERF_EXIT_CODE=$?
  
--	if (select_key(true))
-+	err = select_key(true);
-+	if (err)
- 		goto out_delete;
+-../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
++../common/check_all_patterns_found.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
+ CHECK_EXIT_CODE=$?
  
- 	if (symbol_conf.field_sep) {
+ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
 -- 
 2.43.5
 
