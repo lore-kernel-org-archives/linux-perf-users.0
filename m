@@ -1,147 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FC7214225;
-	Fri, 10 Jan 2025 18:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30B721516E
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jan 2025 18:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736535326; cv=none; b=TCHSD7SigH8KO9bENOnOGvtjwdX++U8T+D8gsM117Cj+Ud91+nABMSvfysHVUyLCXBj4AOynXmBX+M+XNyZ2YM37CmDVghaYG1C+3tfyBaXbfRxCf3ISh2AtPuZmVsltf2GiAjPhMqSSyhlo2kJNgDAiZJ162g/fmRlZ7eqkZKc=
+	t=1736535545; cv=none; b=esiR8HBosrD30ejJYpo2Pw26hAzbo+YSvo14tfncjdMkPJgnWvMi08zR2RtGQI9jUYdauCd40l+oyhBmhZ5nqRu9aO+6/COahSHaav/rIyTfMtJ1/3FwqzbK7PBjPWT9w/+YBdNvUW9crZqB36DXBLbFzykdLs6vWfxh5fcMYl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736535326; c=relaxed/simple;
-	bh=pvRpioX99tGG3pirkv8iYfX5Ac6GPRSh/b6szM6jbho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g8mt//RkH66x6JY+Dv5MJJE73cN1sanWgFFCxtBdteRZXfjT2oaa2E1aigIQDUIQfbLwfXlTNJKuGO6lv8vwpnopt6/u6G/go3zvkEReSX72Vlq5xCyYItvmsQFWsTORhhYKRN1iedTq67jf407J54v/Oa2s39XIcaV6tVNw9p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYx8sS5y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736535545; c=relaxed/simple;
+	bh=NrqfJKFsnqvJuMT7ud2vLyWJdQ6uvGW0sfV/fc8ReGU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gRStViO8Rbh2w9RGTqc+OeEeks5J+Y0stNSQqTKnQ562CGXZeCrsP76d1gPc3UaEGUbDq2hAhrKO6burLONDSR2z/PN7Wa8WgDvWfAIA5mFLtJ4+z/GGIraqivr8XekSCIdxztyi5ETyvr5E6mgHPLz9OhB+X6ZkGp0RPVKOhyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=PBPlzme9; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYx8sS5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6428C4CED6;
-	Fri, 10 Jan 2025 18:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736535326;
-	bh=pvRpioX99tGG3pirkv8iYfX5Ac6GPRSh/b6szM6jbho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eYx8sS5yDUy4Dw1dfY17Jv4wKYU86OHspL49n2inukygYaIjJ8e7hhzCH+H0agmW5
-	 S5F+smZCzRXhKrMICwnBAJg42jc57VcjguTPQMpFCbH8P9iKSWoCz6d9UNB1c5+nLQ
-	 iXOgHrgPjhFUQ6SkpsW5gcJBmi8LS+FZ7h6njjMkmf4CKyraVocB3HrhGfqmI6HLhz
-	 UxgcuBHjhlqaQV9txRtaAWqqbBO9JCIIiXFmqURBpJw+J8Zm15j0zB2kbxM4wyya7b
-	 J2zyMHL1YIYpeFrn4Y25qs4EnS9o9pxXS1Bg96u4/koELnLyeAGVe5M3RZmWiPdELQ
-	 H4Nib5iDe0x7w==
-Date: Fri, 10 Jan 2025 10:55:24 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
- don't open
-Message-ID: <Z4FtHGBbCEeLQhAm@google.com>
-References: <20250109222109.567031-1-irogers@google.com>
- <20250109222109.567031-4-irogers@google.com>
- <Z4B279zu_8Kz5N6u@google.com>
- <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="PBPlzme9"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YV9t50kdhz9sc8;
+	Fri, 10 Jan 2025 19:58:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	s=MBO0001; t=1736535533;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NrqfJKFsnqvJuMT7ud2vLyWJdQ6uvGW0sfV/fc8ReGU=;
+	b=PBPlzme9WwbUPQpm6tmQHnJCZNgBd5xle425wMiCXZCWWDLKoC8BrbxFSG3sg1w//dSaRO
+	zoNKciNlHm8j1SHFvNtnBvmX9lDW8Rqvu5O3nTdViaXZZr1XbZHvJma5IKFN6tFjaMYIUq
+	33VsQ47N84iF5Vtq4dpizqdod7VF4yUnbUWBINJ1uaucLxIgcg70VKtnHAjOm/m9z9zzXW
+	GZzVYPLzMQLQGCbph6xhAicJe+akXKMOA316B4EtvzI/NluSRAbCeDZyp1FJpbYDAqvsHy
+	slrwqSUwT4MksL1JebMPPt3x+FbpMvhjjq/L+NpGpr1GyUtKOwXBzerzUSxTtQ==
+Message-ID: <2a25433033c3b31f5c61b84ffb4efd51267ce3e5.camel@michel-slm.name>
+Subject: Re: [PATCH 1/1 perf-tools] perf MANIFEST: add license files
+From: Michel Lind <michel@michel-slm.name>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+Date: Fri, 10 Jan 2025 12:58:40 -0600
+In-Reply-To: <Z4BFcA0L3IfsmtbZ@x1>
+References: <Z0Zcx0WRqtlUYpgw@hyperscale.parallels>
+	 <2fe55e73d3ef64ec3bfc683446e3f1f8b9e8c9e8.camel@michel-slm.name>
+	 <Z4BFcA0L3IfsmtbZ@x1>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-7iM88pBuuD5S25U3kMns"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
-
-On Thu, Jan 09, 2025 at 08:44:38PM -0800, Ian Rogers wrote:
-> On Thu, Jan 9, 2025 at 5:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
-> > > Whilst for many tools it is an expected behavior that failure to open
-> > > a perf event is a failure, ARM decided to name PMU events the same as
-> > > legacy events and then failed to rename such events on a server uncore
-> > > SLC PMU. As perf's default behavior when no PMU is specified is to
-> > > open the event on all PMUs that advertise/"have" the event, this
-> > > yielded failures when trying to make the priority of legacy and
-> > > sysfs/json events uniform - something requested by RISC-V and ARM. A
-> > > legacy event user on ARM hardware may find their event opened on an
-> > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
-> > > such events which this patch implements. Rather than have the skipping
-> > > conditional on running on ARM, the skipping is done on all
-> > > architectures as such a fundamental behavioral difference could lead
-> > > to problems with tools built/depending on perf.
-> > >
-> > > An example of perf record failing to open events on x86 is:
-> > > ```
-> > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
-> > > Error:
-> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
-> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-> > > "dmesg | grep -i perf" may provide additional information.
-> > >
-> > > Error:
-> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
-> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-> > > "dmesg | grep -i perf" may provide additional information.
-> > >
-> > > Error:
-> > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-> > > The LLC-prefetch-read event is not supported.
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
-> >
-> > I'm afraid this can be too noisy.
-> 
-> The intention is to be noisy:
-> 1) it matches the existing behavior, anything else is potentially a regression;
-
-Well.. I think you're changing the behavior. :)  Also currently it just
-fails on the first event so it won't be too much noisy.
-
-  $ perf record -e data_read,data_write,LLC-prefetch-read -a sleep 0.1
-  event syntax error: 'data_read,data_write,LLC-prefetch-read'
-                       \___ Bad event name
-  
-  Unable to find event on a PMU of 'data_read'
-  Run 'perf list' for a list of valid events
-  
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
-  
-      -e, --event <event>   event selector. use 'perf list' to list available events
+X-Rspamd-Queue-Id: 4YV9t50kdhz9sc8
 
 
-> 2) it only happens if trying to record on a PMU/event that doesn't
-> support recording, something that is currently an error and so we're
-> not motivated to change the behavior as no-one should be using it;
+--=-7iM88pBuuD5S25U3kMns
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It was caught by Linus, so we know at least one (very important) user.
+On Thu, 2025-01-09 at 18:53 -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jan 09, 2025 at 12:55:16PM -0600, Michel Lind wrote:
+> > Happy holidays all!
+> >=20
+> > On Tue, 2024-11-26 at 17:41 -0600, Michel Lind wrote:
+> > > The standalone tarballs should include the license files - both
+> > > the
+> > > COPYING declaration as well as the text of GPLv2.
+> > >=20
+> > Just making sure this does not fall through the crack - does this
+> > look
+> > good to merge, or are there any issue with it?
+>=20
+> Applied, thanks for the reminder!
+>=20
+Thanks! I don't see it in the perf-tools-next branch, but see the other
+MANIFEST update - I wonder if I'm looking in the wrong place.
 
+Best regards,
 
-> 3) for the wildcard case the only offender is ARM's SLC PMU and the
-> appropriate fix there has always been to make the CPU cycle's event
-> name match the bus_cycles event name by calling it cpu_cycles -
-> something that doesn't conflict with a core PMU event name, the thing
-> that has introduced all these problems, patches, long email exchanges,
-> unfixed inconsistencies, etc.. If the errors aren't noisy then there
-> is little motivation for the ARM SLC PMU's event name to be fixed.
+--=20
+ _o) Michel Lind
+_( ) identities:
+https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
 
-I understand your concern but I'm not sure it's the best way to fix the
-issue.
+--=-7iM88pBuuD5S25U3kMns
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-James, Leo, is there any chance you can rename the SLC cycles event in
-the kernel driver?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Namhyung
+iI0EABYKADUWIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCZ4Ft4BccbWljaGVsQG1p
+Y2hlbC1zbG0ubmFtZQAKCRCLIp0vfMwE8oOKAQCOscqOZRyUjfR+tTE+gvnb2D3m
+Mo4kncwhWsFMpI0w4QEA8ZwtCmb/ZeqxOmyAc/0uYORNweNpocCAI0ZZAkoLOQs=
+=hPK5
+-----END PGP SIGNATURE-----
 
+--=-7iM88pBuuD5S25U3kMns--
