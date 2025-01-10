@@ -1,65 +1,65 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80770207666;
-	Fri, 10 Jan 2025 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7497B20C017;
+	Fri, 10 Jan 2025 09:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736494990; cv=none; b=bI7rrJm4s5Dq6HZ/h+IqpMy1vTF97pzUIg77c+rnsgnhYyjVeaO6oZSfipZTl7P6aSJxpDBvjrMwLix+sD+C/ZKfDy9VysnwEs8sKmGUZaCd9i6CkhttKUuytZf8LiGU+TruUr9KgyIRmrUlIrYVa1+E7utOv3J+cM4nsN+6aoc=
+	t=1736501187; cv=none; b=eq3uj62gsSwloaxQZOCCd7yxpNlcyKDQeFXN0SxCfa1Y3hbxzrwWOyIUbjKNEWZPNDfXwxruDKBdm7lsYtiIyA77XPWcIdIkqPf3GtLtnzuZYufKn57mIae5pC2/E2/WrZAlvyWknosvGyESiWYYjFguI3na6i/m+MF5NUx+NnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736494990; c=relaxed/simple;
-	bh=6+TavjBgD92x3W/344qWRBxNZp2GSjgmNZwAIwpol0w=;
+	s=arc-20240116; t=1736501187; c=relaxed/simple;
+	bh=8CzWRDyQ2goLoebcY0j4R7DwJLeCMmnH0jxTLwrevdY=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Ypm9Cyw4det8trneLl0azVWorflIrNjnzwnwQhP2IdzIQTZRqlpgTNwGMfWExJT1K04D2c7rsavJkmm3Z4anax1qyJzkVLLX16rDjwyC2TsLgyzuZfQLTmNY+JsPVsMftrd5zT/uvxMM/jK+WcIOFOjkXDG8gc5/vOiSYG0tZys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CJsgvR/+; arc=none smtp.client-ip=148.163.158.5
+	 Message-Id:References:To; b=IuwiUXnXQ99ApK3/TyfEU6PQxqW6CERK8T7ATT/j2rAXO+5B7MIDNPV7Ul8gdRBkIR00FmcUZFA/HesgqVas3XNU0JifL5O9Ol8ilTsXVwlbSX19ilFKD8MrzlnlcDvCcBNAwsoqofauOLq8Ks2ApUiK1o9xx8ketern1uq0ERg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jMTc53y5; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CJsgvR/+"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50A1xlhe009581;
-	Fri, 10 Jan 2025 07:42:59 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jMTc53y5"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50A3rWtv028366;
+	Fri, 10 Jan 2025 09:26:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7Pg9Hf
-	0VD6xs/EweUM7V5NCNy6H2ch3ICqCOENEVxWo=; b=CJsgvR/+ywrBKwxSAH45qr
-	4r/qKrI6mbUA4uTAiTTsBWmb2HkSXx9hQLAGV8I5zXJnz9DVKhFa/QbSsN3OuLmR
-	Z5CrfjotiFbXKvDZR2Svw93k52FXVLf3sfvZpUF0U7KHgHvo31rnJoZDV1Pgaytk
-	/0EY/5uLmil/oHtjLgSM4YJ9tyGs+uGRo8JdLbY3MOAFDfh6EZGnIpQyDPHLl5Sg
-	3kHepFUonyu8miSePqQI/TMIDfoGaioH21gfriZzriXalzOTq++Pcc5dI0KlRmaf
-	ayy0VbMfp/u9QPeWJIhe6TtoNiVQPmhIJ/mC2AF55u0aoswpqX8x3Sp8eQH+MayA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=98yYFL
+	UW18kU2QTeuZbwwBqZAxbBmbeUB5XHkz6el08=; b=jMTc53y5GGNjPL0acrioGf
+	OxsZ+kMhB7YzA6RBgQuEgYt16j0SBen9IU8piSPA5G92BIlRX3g3NvkCC/kFnOa2
+	ctCf7hJls1ArGC/vHqvq4KMWyEPPvGLAcSvBZ0wtm8EY207IPyU9Ka6S96M0J/f2
+	y2pO71aGNeUFpwKqj69PIit85C/aU1tNk46iTUkrEYkjufUoRVB0QlLd+RfA77jU
+	AXjzMhBirg1pM8hoZ5N6NyH11GK6UlcZzqHtA6RfOPewdlJKV6tBtQGKHWLpr+FO
+	nWML6J1QQJdMSQnKLQP6lIkfZojcLL44W7P8ozkGiyRoCi3XjOkZnq9Ro97ABohQ
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442fx5bp2u-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442v1q1616-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 07:42:59 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50A7gw4Q007704;
-	Fri, 10 Jan 2025 07:42:58 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442fx5bp2s-1
+	Fri, 10 Jan 2025 09:26:17 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50A9I5mL008837;
+	Fri, 10 Jan 2025 09:26:16 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 442v1q1613-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 07:42:58 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50A6WlY5027963;
-	Fri, 10 Jan 2025 07:42:57 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43yhhkgxck-1
+	Fri, 10 Jan 2025 09:26:16 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50A5F3hX015851;
+	Fri, 10 Jan 2025 09:26:15 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43ygtm9f2f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jan 2025 07:42:57 +0000
+	Fri, 10 Jan 2025 09:26:15 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50A7gsJk17039636
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50A9QB0A38928868
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Jan 2025 07:42:54 GMT
+	Fri, 10 Jan 2025 09:26:11 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3629A20040;
-	Fri, 10 Jan 2025 07:42:54 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8175320040;
+	Fri, 10 Jan 2025 09:26:11 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0DB502004B;
-	Fri, 10 Jan 2025 07:42:49 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 85A1120043;
+	Fri, 10 Jan 2025 09:26:06 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.61.241.17])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 10 Jan 2025 07:42:48 +0000 (GMT)
+	Fri, 10 Jan 2025 09:26:06 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -68,125 +68,105 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: [PATCH] tools/perf: Fix segfault during perf record --off-cpu
- when debuginfo is not enabled
+Subject: Re: [PATCH] tools/perf: Fix return code for lock_contention_prepare
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Z3xKTKkVSf7tWCtD@google.com>
-Date: Fri, 10 Jan 2025 13:12:34 +0530
-Cc: jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+In-Reply-To: <Z3xH6kCK9zj5ttZM@google.com>
+Date: Fri, 10 Jan 2025 14:55:52 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <F2E04F8D-AC28-491A-ADC1-8C90DFC2CB9D@linux.vnet.ibm.com>
-References: <20241223135813.8175-1-atrajeev@linux.vnet.ibm.com>
- <409D0233-93FF-40D6-BC2E-B7625E4E1B97@linux.vnet.ibm.com>
- <Z3xKTKkVSf7tWCtD@google.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+Message-Id: <9460DA8B-0A2B-4567-851B-931EEEA0B4C1@linux.vnet.ibm.com>
+References: <20241223135655.8042-1-atrajeev@linux.vnet.ibm.com>
+ <Z3xH6kCK9zj5ttZM@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
 X-Mailer: Apple Mail (2.3818.100.11.1.3)
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: i0emdf_TQ_gI4G83-7HuaLFU-RTj8OWB
-X-Proofpoint-ORIG-GUID: IbIAa9nIwuFRptSY7kMa83NBU-4nUslp
+X-Proofpoint-GUID: vTV0GUTHc05I8OA2ffpJyY5Xtb8AkoX-
+X-Proofpoint-ORIG-GUID: aC7NC6M-bHhiXrEwmTUEjeOmgoi3A6kD
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- spamscore=0 suspectscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 impostorscore=0 adultscore=0 suspectscore=0
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 phishscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501100061
+ definitions=main-2501100074
 
 
 
-> On 7 Jan 2025, at 2:55=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+> On 7 Jan 2025, at 2:45=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >=20
-> On Fri, Dec 27, 2024 at 04:18:32PM +0530, Athira Rajeev wrote:
->>=20
->>=20
->>> On 23 Dec 2024, at 7:28=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>=20
->>> When kernel is built without debuginfo, running perf record with
->>> --off-cpu results in segfault as below:
->>>=20
->>>  ./perf record --off-cpu -e dummy sleep 1
->>>  libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was =
-CONFIG_DEBUG_INFO_BTF enabled?
->>>  libbpf: failed to find '.BTF' ELF section in =
-/lib/modules/6.13.0-rc3+/build/vmlinux
->>>  libbpf: failed to find valid kernel BTF
->>>  Segmentation fault (core dumped)
->>>=20
->>> The backtrace pointed to:
->>>=20
->>>  #0  0x00000000100fb17c in btf.type_cnt ()
->>>  #1  0x00000000100fc1a8 in btf_find_by_name_kind ()
->>>  #2  0x00000000100fc38c in btf.find_by_name_kind ()
->>>  #3  0x00000000102ee3ac in off_cpu_prepare ()
->>>  #4  0x000000001002f78c in cmd_record ()
->>>  #5  0x00000000100aee78 in run_builtin ()
->>>  #6  0x00000000100af3e4 in handle_internal_command ()
->>>  #7  0x000000001001004c in main ()
->>>=20
->>> Code sequence is:
->>>  static void check_sched_switch_args(void)
->>>  {
->>>       struct btf *btf =3D btf__load_vmlinux_btf();
->>>       const struct btf_type *t1, *t2, *t3;
->>>       u32 type_id;
->>>=20
->>>       type_id =3D btf__find_by_name_kind(btf, =
-"btf_trace_sched_switch",
->>>                                        BTF_KIND_TYPEDEF);
->>>=20
->>> btf__load_vmlinux_btf fails when CONFIG_DEBUG_INFO_BTF is not =
-enabled.
->>> Here bpf__find_by_name_kind calls btf__type_cnt with NULL btf
->>> value and results in segfault. To fix this, add a check to see if
->>> btf is not NULL before invoking bpf__find_by_name_kind
->>>=20
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Hello,
 >=20
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> On Mon, Dec 23, 2024 at 07:26:55PM +0530, Athira Rajeev wrote:
+>> perf lock contention returns zero exit value even if the lock =
+contention
+>> BPF setup failed.
+>>=20
+>>   # ./perf lock con -b true
+>>   libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was =
+CONFIG_DEBUG_INFO_BTF enabled?
+>>   libbpf: failed to find '.BTF' ELF section in =
+/lib/modules/6.13.0-rc3+/build/vmlinux
+>>   libbpf: failed to find valid kernel BTF
+>>   libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was =
+CONFIG_DEBUG_INFO_BTF enabled?
+>>   libbpf: failed to find '.BTF' ELF section in =
+/lib/modules/6.13.0-rc3+/build/vmlinux
+>>   libbpf: failed to find valid kernel BTF
+>>   libbpf: Error loading vmlinux BTF: -ESRCH
+>>   libbpf: failed to load object 'lock_contention_bpf'
+>>   libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
+>>   Failed to load lock-contention BPF skeleton
+>>   lock contention BPF setup failed
+>>   # echo $?
+>>    0
+>>=20
+>> Fix this by saving the return code for lock_contention_prepare
+>> so that command exits with proper return code
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> Thanks for the fix, the change itself looks good but I think we need =
+the
+> same for setup_output_field() and select_key() as well.
 >=20
 > Thanks,
 > Namhyung
+
+Hi Namhyung
+
+Thanks for reviewing and pointing out setup_output_field() and =
+select_key()
+I will send a V2 with handling return code for these two functions as =
+well
+
+Thanks
+Athira=20
 >=20
-
-Thanks Namhyung for reviewing the patch
-
-Athira
->>> ---
->>> tools/perf/util/bpf_off_cpu.c | 5 +++++
->>> 1 file changed, 5 insertions(+)
->>>=20
->>> diff --git a/tools/perf/util/bpf_off_cpu.c =
-b/tools/perf/util/bpf_off_cpu.c
->>> index a590a8ac1f9d..4269b41d1771 100644
->>> --- a/tools/perf/util/bpf_off_cpu.c
->>> +++ b/tools/perf/util/bpf_off_cpu.c
->>> @@ -100,6 +100,11 @@ static void check_sched_switch_args(void)
->>> const struct btf_type *t1, *t2, *t3;
->>> u32 type_id;
->>>=20
->>> + if (!btf) {
->>> + pr_debug("Missing btf, check if CONFIG_DEBUG_INFO_BTF is =
-enabled\n");
->>> + goto cleanup;
->>> + }
->>> +
+>=20
+>> ---
+>> tools/perf/builtin-lock.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
 >>=20
->> Hi,
+>> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+>> index 208c482daa56..2226c7dd4ae6 100644
+>> --- a/tools/perf/builtin-lock.c
+>> +++ b/tools/perf/builtin-lock.c
+>> @@ -2049,7 +2049,8 @@ static int 	(int argc, const char **argv)
+>> goto out_delete;
+>> }
 >>=20
->> Looking for review comments on this
->>=20
->> Athira
->>> type_id =3D btf__find_by_name_kind(btf, "btf_trace_sched_switch",
->>> BTF_KIND_TYPEDEF);
->>> if ((s32)type_id < 0)
->>> --=20
->>> 2.43.5
+>> - if (lock_contention_prepare(&con) < 0) {
+>> + err =3D lock_contention_prepare(&con);
+>> + if (err < 0) {
+>> pr_err("lock contention BPF setup failed\n");
+>> goto out_delete;
+>> }
+>> --=20
+>> 2.43.5
 
 
