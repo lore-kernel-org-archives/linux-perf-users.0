@@ -1,342 +1,105 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6583E207646
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 19:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1461B85F8
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 20:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736622145; cv=none; b=nk8oSxMa51BheuHKYBprfqNHVzOINNezzFbAwpcbmx+OPYKrCDqMhxP//5V4nnGiV/YrBVkztGkkIo95fSdXQ2651zIj8MHD4scmvmhVo4M/LloEdMEp0T8e8Bw2+QKq/t1WCYnQ2tfp8jUd4LtF3iWjH/srb6+NlUPQMsM7W6s=
+	t=1736627337; cv=none; b=Fa2O9b8ymfWdbUNKVyVb8Da6NEqYZ8/ODJd0Hii1VCF4LWl1enielJabGDncCCwW1spoZ8LFshHO54iABUZkLV3ylS6v8X/3qC3vpNAV4c3ng8JepF12kncSKdiYqmHxDld/z+X6TMJPTsbcBD4SkPh/jjo4LICRXTmmq8vRPXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736622145; c=relaxed/simple;
-	bh=8d5ZbXGg+CS4F+PUcskdXxWDod5xL4EBuLpzbLfOx2g=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=o8Cl6tISpaswBkfg8ff1v6ggUHiMrio5Ckg692VXHsZbZUrA1rl6BKW7Rj+VaIC49OarE0/Xmwud3dKm7sO+EWIg54Pu5cF00Ua7GdlQfKvncdP9NTtyjca563lNLAOxO3kfrP6rTIZwkGcnUtO45sRfvwGK1DdbIrbxZCVCRWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xm6t5Jnc; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1736627337; c=relaxed/simple;
+	bh=DsOdeCeb0rw/bP+NcrZWlhKmoLtwqT32GOYhX8Gu+S0=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=eSaMHjdClB7zlxl3isEPi7M9/qD4A8sbVn9Y99OwlbRZgskjI+rqVWDhYTxarkJgwRk1Jao9MBxvGcZFCKEcs61OCFlIn5qKQLkaFvNpJf2x2kQ9i66vrUpLiEFeKQ7EN7+6A4toP+UMZPPLjfPRMJ7d29rT1FlHBlppPAlmsTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3iXxifu; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xm6t5Jnc"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5740c858beso913251276.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 11:02:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3iXxifu"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3a1bc0c876so6667120276.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 12:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736622142; x=1737226942; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/KHdCQrYjK76avUgYltveC+FrWILCxlnZWg9B+pOdgg=;
-        b=xm6t5Jnc8z07IkWuoACHilm+9iy9uTDmGklcZ7iQ4EPXImvwdzsgK78STXJ+hu4Hfl
-         uR8fH2vr8XZ5zcDafats0Qyju+O+EewayUMpy7XIc+J4pAR0YJ/1Pvc4l0HRCWQJ3kUm
-         gjLN5oSFiM2TgE7rr/42pGqUHJxBt07KlWIArSzyqKMWNGc3WpczCNRVx/VQ8zHDLFUq
-         w+/ViovAAu5I/UZeozmqAzgGwgwyqnnKJg7aSW0u9NghsLWcsFtoJhknAs1WIboQJDaT
-         Y2rHGLiIDXIpPGoCIm0DLukGcnP8YR6a9l9iuP+voC1SRHnLJtX/vX1YLtmV2SZPnpuF
-         2xQQ==
+        d=google.com; s=20230601; t=1736627334; x=1737232134; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=su7sEZs6sK9K+9hHJb7zVZvpVw3fB02+nwGgI8BSZN4=;
+        b=h3iXxifuHcxwy57XDd8SNlqX5010En5vjR/c2QPpgMeYG/kgMTHEpq2pcHrR2qtUGY
+         ViiQUObdppB69F8kHgQUSjkxCAQ6nEI5Wmm92ARQUWBiA5NkrreqJLYytmsvs/G8BNBG
+         gwSPm6KQQ+7/lQqLlqsHI1T706S+W33Dx5DpwxXS79cPwOTfuRlh6jf0FMoz4/uGoiM+
+         c/WnYx5WoPIAEmR7NzBddUJjVlcFcbMmauYcp4T/jc6hjmguVzvJHmkGpVnEANEWlPZr
+         q0dRslYQ3u0Qsd5TJfufD6IVvPZnjBCl2ke6XJZ8tVhux9pMU089yA0+CC76zYRE2nWW
+         A8zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736622142; x=1737226942;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/KHdCQrYjK76avUgYltveC+FrWILCxlnZWg9B+pOdgg=;
-        b=NMZNOhKzq+z6bqliaeH23Nlt4fE4rMSwuI0amF4K7MFyZWFgeCAowjy+cjLPZsmXp2
-         oGT31NWtmafMIi9JnmZHimrAeGlhWTf12G2t06lWvVeIR16qqibxg6dUUswNbwQ/bR3O
-         2gKrbskHBeWLT6YFa92yo3FUFrlRqEzMZkL0odqUpOWua90/Ktk0UMHXi0+SqCZxUPVR
-         FWcSuwZGZV5m8e9PqVuIEo99p4uPZV/1tfnWPHSiLRYUSLxO1TbPjgfJvJeJPEuPgDif
-         69UHkB84JTJsEs7hyNzKSE33SZ5c/w8o7xikBC8Pf9sytuzsF6JMz8soWe+qCuetqJXz
-         JNrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMGH6KufSArR2YczMYXZaNlOrIl3rHAjYXVk+wjkXxoitzd/92b19ODhM/ymWB82GgUiD0Rxmm19wE2GEnE6f2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6GKIqXnpEunSiX108/v43e6BVL70MQ9HJYojGHkz/IlmZQIUH
-	rD7ZgtAxQzCcLU98P6NoFOR0b3qbvsJNLQ1HdO3tUUDQKcI0c3/736xagOJScZaDhAoVMSJVTHU
-	ZgtVESg==
-X-Google-Smtp-Source: AGHT+IFPtElgJRccVOWvDP8xI+8WJBxpOJzmwpiRcDdRn2q0TflIymCwYwyTqswzTFZ7olVJ5MONMO9wG84S
+        d=1e100.net; s=20230601; t=1736627334; x=1737232134;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=su7sEZs6sK9K+9hHJb7zVZvpVw3fB02+nwGgI8BSZN4=;
+        b=oVZXbi3yvmObRa0oSXRsAacK2+AcAORPnflMmoEmxK5Aa8jQ7VXnlnHwa+nLHjQX06
+         /um2Gl4MD5PnwXwWxD7PG2ZwX4WKums8P87F0upw7HyV6rVM0KF0caAswqyHjUnbCmhg
+         sooXgVC6++DpqCApYUUEjBm2YNTQAC0JOaY3SvqwqhrehrLKbmlWw3DKUD6qeiF3d96E
+         rxufQV8T5tbmPhAnY8jMoTNGd0hkePWC5S6hTyTg4YdNhz2VKEfE9674GE5U6Q2rSeDh
+         gN69vmiiQG6KAIWty/3lOnIFKedWF+srmem7cqHR45EJZ53WqsKJkW/jtZU+vObe+lBI
+         q+Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOeRfNblJb0IM8Pr3ZCrCJ+A1pJHwT9fSt1qqlsrppanFbVmhGIE4kI4GfyFDjNFFv2m0olzXi7hpz1+W2wmC+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/hlSdAlulmYrrbK0p558XyO7RG3FDo7MFqJJwKoc22P+ZhrWW
+	nP8ph+DWGo70Hu8HLyZ9ILYtMmpa/U0v/C7ggv9UXlwjEgIGrxClpzX7S3der0GE1JuLwKkc5+g
+	/YmxoBQ==
+X-Google-Smtp-Source: AGHT+IH1/aE6G+u0DsJsYlLN4153L+o9XiJB0ZkaVr0GPPmiVVDH32HwfXYOBkEs5gHx139r+z7Mno/lfroX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8807:d7c5:bb27:35fc])
- (user=irogers job=sendgmr) by 2002:a05:690c:6b84:b0:6dd:fda3:6568 with SMTP
- id 00721157ae682-6f5312dcab5mr420237b3.3.1736622142666; Sat, 11 Jan 2025
- 11:02:22 -0800 (PST)
-Date: Sat, 11 Jan 2025 11:01:43 -0800
-In-Reply-To: <20250111190143.1029906-1-irogers@google.com>
-Message-Id: <20250111190143.1029906-11-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:a4c9:0:b0:e39:6fdc:556d with SMTP id
+ 3f1490d57ef6-e54efbe6474mr33317276.0.1736627334602; Sat, 11 Jan 2025 12:28:54
+ -0800 (PST)
+Date: Sat, 11 Jan 2025 12:28:48 -0800
+Message-Id: <20250111202851.1075338-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250111190143.1029906-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 10/10] perf thread_map: Remove uid options
+Subject: [PATCH v1 0/3] Remove BUILD_NONDISTRO
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
-	Xu Yang <xu.yang_2@nxp.com>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	James Clark <james.clark@linaro.org>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Changbin Du <changbin.du@huawei.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Now the target doesn't have a uid, it is handled through BPF filters,
-remove the uid options to thread_map creation. Tidy up the functions
-used in tests to avoid passing unused arguments.
+BUILD_NONDISTRO is used to build perf against the license incompatible
+libbfd and libiberty libraries. As this has been opt-in for nearly 2
+years, commit dd317df07207 ("perf build: Make binutil libraries opt
+in"), remove the code to simplify the code base.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/event-times.c             |  4 +--
- tools/perf/tests/keep-tracking.c           |  2 +-
- tools/perf/tests/mmap-basic.c              |  2 +-
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/tests/perf-time-to-tsc.c        |  2 +-
- tools/perf/tests/switch-tracking.c         |  2 +-
- tools/perf/tests/thread-map.c              |  2 +-
- tools/perf/util/evlist.c                   |  2 +-
- tools/perf/util/python.c                   | 10 +++----
- tools/perf/util/thread_map.c               | 32 ++--------------------
- tools/perf/util/thread_map.h               |  6 ++--
- 12 files changed, 20 insertions(+), 48 deletions(-)
+Ian Rogers (3):
+  perf build: Remove libbfd support
+  perf build: Remove libiberty support
+  perf build: Remove unused defines
 
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index 2148024b4f4a..ae3b98bb42cf 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -62,7 +62,7 @@ static int attach__current_disabled(struct evlist *evlist)
- 
- 	pr_debug("attaching to current thread as disabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-@@ -88,7 +88,7 @@ static int attach__current_enabled(struct evlist *evlist)
- 
- 	pr_debug("attaching to current thread as enabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("failed to call thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index 5a3b2bed07f3..eafb49eb0b56 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -78,7 +78,7 @@ static int test__keep_tracking(struct test_suite *test __maybe_unused, int subte
- 	int found, err = -1;
- 	const char *comm;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 012c8ae439fd..cf2ca28aa0f7 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -46,7 +46,7 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
- 	char sbuf[STRERR_BUFSIZE];
- 	struct mmap *md;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index fb114118c876..3644d6f52c07 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -28,7 +28,7 @@ static int test__openat_syscall_event_on_all_cpus(struct test_suite *test __mayb
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
- 	cpu_set_t cpu_set;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index 131b62271bfa..b54cbe5f1808 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -20,7 +20,7 @@ static int test__openat_syscall_event(struct test_suite *test __maybe_unused,
- 	int err = TEST_FAIL, fd;
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index bbe2ddeb9b74..c2a6b451d7ff 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -90,7 +90,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	struct mmap *md;
- 
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 576f82a15015..0691c272537c 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -345,7 +345,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
- 	const char *comm;
- 	int err = -1;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (!threads) {
- 		pr_debug("thread_map__new failed!\n");
- 		goto out_err;
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index 1fe521466bf4..54209592168d 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -115,7 +115,7 @@ static int test__thread_map_remove(struct test_suite *test __maybe_unused, int s
- 	TEST_ASSERT_VAL("failed to allocate map string",
- 			asprintf(&str, "%d,%d", getpid(), getppid()) >= 0);
- 
--	threads = thread_map__new_str(str, NULL, 0, false);
-+	threads = thread_map__new_str(str, /*tid=*/NULL, /*all_threads=*/false);
- 	free(str);
- 
- 	TEST_ASSERT_VAL("failed to allocate thread_map",
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1fd91b5e8777..f686c9f5054d 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1006,7 +1006,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
- 	 * per-thread data. thread_map__new_str will call
- 	 * thread_map__new_all_cpus to enumerate all threads.
- 	 */
--	threads = thread_map__new_str(target->pid, target->tid, UINT_MAX, all_threads);
-+	threads = thread_map__new_str(target->pid, target->tid, all_threads);
- 
- 	if (!threads)
- 		return -1;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index b4bc57859f73..2488f6f4a3f7 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -566,14 +566,14 @@ struct pyrf_thread_map {
- static int pyrf_thread_map__init(struct pyrf_thread_map *pthreads,
- 				 PyObject *args, PyObject *kwargs)
- {
--	static char *kwlist[] = { "pid", "tid", "uid", NULL };
--	int pid = -1, tid = -1, uid = UINT_MAX;
-+	static char *kwlist[] = { "pid", "tid", NULL };
-+	int pid = -1, tid = -1;
- 
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|iii",
--					 kwlist, &pid, &tid, &uid))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ii",
-+					 kwlist, &pid, &tid))
- 		return -1;
- 
--	pthreads->threads = thread_map__new(pid, tid, uid);
-+	pthreads->threads = thread_map__new(pid, tid);
- 	if (pthreads->threads == NULL)
- 		return -1;
- 	return 0;
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index b5f12390c355..ca193c1374ed 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -72,7 +72,7 @@ struct perf_thread_map *thread_map__new_by_tid(pid_t tid)
- 	return threads;
- }
- 
--static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
-+static struct perf_thread_map *thread_map__new_all_cpus(void)
- {
- 	DIR *proc;
- 	int max_threads = 32, items, i;
-@@ -98,15 +98,6 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 		if (*end) /* only interested in proper numerical dirents */
- 			continue;
- 
--		snprintf(path, sizeof(path), "/proc/%s", dirent->d_name);
--
--		if (uid != UINT_MAX) {
--			struct stat st;
--
--			if (stat(path, &st) != 0 || st.st_uid != uid)
--				continue;
--		}
--
- 		snprintf(path, sizeof(path), "/proc/%d/task", pid);
- 		items = scandir(path, &namelist, filter, NULL);
- 		if (items <= 0) {
-@@ -157,24 +148,11 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 	goto out_closedir;
- }
- 
--struct perf_thread_map *thread_map__new_all_cpus(void)
--{
--	return __thread_map__new_all_cpus(UINT_MAX);
--}
--
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid)
--{
--	return __thread_map__new_all_cpus(uid);
--}
--
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid)
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid)
- {
- 	if (pid != -1)
- 		return thread_map__new_by_pid(pid);
- 
--	if (tid == -1 && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	return thread_map__new_by_tid(tid);
- }
- 
-@@ -289,15 +267,11 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
- 	goto out;
- }
- 
--struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid,
--				       uid_t uid, bool all_threads)
-+struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid, bool all_threads)
- {
- 	if (pid)
- 		return thread_map__new_by_pid_str(pid);
- 
--	if (!tid && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	if (all_threads)
- 		return thread_map__new_all_cpus();
- 
-diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
-index 00ec05fc1656..fc16d87f32fb 100644
---- a/tools/perf/util/thread_map.h
-+++ b/tools/perf/util/thread_map.h
-@@ -11,13 +11,11 @@ struct perf_record_thread_map;
- struct perf_thread_map *thread_map__new_dummy(void);
- struct perf_thread_map *thread_map__new_by_pid(pid_t pid);
- struct perf_thread_map *thread_map__new_by_tid(pid_t tid);
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid);
--struct perf_thread_map *thread_map__new_all_cpus(void);
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid);
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid);
- struct perf_thread_map *thread_map__new_event(struct perf_record_thread_map *event);
- 
- struct perf_thread_map *thread_map__new_str(const char *pid,
--		const char *tid, uid_t uid, bool all_threads);
-+		const char *tid, bool all_threads);
- 
- struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str);
- 
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |  63 +-----
+ tools/perf/Makefile.perf                |  11 +-
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/tests/Build                  |   1 -
+ tools/perf/tests/builtin-test.c         |   1 -
+ tools/perf/tests/make                   |   2 -
+ tools/perf/tests/pe-file-parsing.c      | 101 ----------
+ tools/perf/tests/tests.h                |   1 -
+ tools/perf/util/demangle-cxx.cpp        |  22 +--
+ tools/perf/util/disasm_bpf.c            | 166 ----------------
+ tools/perf/util/srcline.c               | 244 +-----------------------
+ tools/perf/util/symbol-elf.c            |  95 ---------
+ tools/perf/util/symbol.c                | 135 -------------
+ tools/perf/util/symbol.h                |   4 -
+ 15 files changed, 9 insertions(+), 839 deletions(-)
+ delete mode 100644 tools/perf/tests/pe-file-parsing.c
+
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
