@@ -1,57 +1,57 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDE1BCA0A
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 19:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB091BD9C1
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 19:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736622133; cv=none; b=HdwGROUse+zklUKHZfhg8DeFQFQq9QENexEgEYhWnZKgt6Go4xD4yOmGf8s7KYNferKEm9gJHsOQwUwODlFUguLhUdorCgcgXnf/V1HGM1QElQKWRIzE9g6YJ/OeBfIZcFdqsp5QDNY9Jf5YLz/PzE6ymVcYAfIeC1c7itAZLdU=
+	t=1736622135; cv=none; b=U4AIPWGe4utkWLecigJCoP5aHyYpK7dWGgEItnH7pGab3/NoRHHBYGYypGvg29a8tBZPxWKX49v9TQLLaUg44j+iW2Kpy+SKQYP/YeSMIizct++b2zFkKSHj1W3z86GGxN5Q28s4ipXngiNcpu49mrrDGWYvu4Q5Jj0iRYUuGgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736622133; c=relaxed/simple;
-	bh=7mUywMOC/o1LdpAhwS9wTZ/OmD/h/FA4gdvLvHYWT48=;
+	s=arc-20240116; t=1736622135; c=relaxed/simple;
+	bh=34yhx+tyZYMBexY/N510FoV9b7eWcWrTsAiR5+Nfbs0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=LmbgiemucnYU2F6DYBwvodjl7QYBuDAYBBTaPB2jmZ2PRJdg92PH3pq7mid+D/7rwMn02QfgSyMg+TfFk4/Cff717JP0K/t+H98P5BoQ4it/RJQ727qxdIsl+or09VIPPU1DoNkVCIROwvwHSZrrYhhX82dRzJRAE2XsmzMIbFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0zSwuKET; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=gokBex0VIaLfKyAwKXsuINpiREt8R+pGZqRhTiCq8/yZOf01BaYPER+ysZBc6dfGgX/jV+e0LqNUtkMNgkoZy+1xflY5vJ4C1gOUdOn7y0lkgrZWJwpSHFg1uieCh71ZCmzCttT2djLPg2C1W2zaM0tyUcfhFPzUGwfp+RZrhz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yqSkKbsx; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0zSwuKET"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3988f71863so7134514276.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 11:02:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yqSkKbsx"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e573c46fd5dso1164318276.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 11:02:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736622131; x=1737226931; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736622133; x=1737226933; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ecFMZiGNp7fan7UfoFlHQMnJEtz/mf35WDJXLyzqixg=;
-        b=0zSwuKETjZ7kpq0FDvNnpVApJbL/DvZYXqyivLVcBxPl8gxbnJDm/2uO1JQB9765S2
-         ZmC0kT1iZ6SIFW/qCVoelusGbU9+Vp7KBjH++DioVa7NwTQzv5la2vH0sHrwg3cYrlF9
-         h9TupUWdjQ1pWNy4a9CTiK55ubrH/CZfaUzyBw4Vm0n1UZOt89Z440jqBurYJti3HXnn
-         f+PCx0dauPEbRqY0QekAoVQAIBbsvWGE9n8CwPprSTLYBQ6b0LxoUuqPgpDxr5iDtHOJ
-         iS+t4b3SIpfTGF/Fvs03EK1JKONDQIryk1quAlGt7KkJm6/11Vw4k7QwPl/On17Px38H
-         Z32g==
+        bh=vdHYhFrNVIqtHmEvS3ztNPxYRt3R+LiiQaFr8xJHZro=;
+        b=yqSkKbsxu0h9A3r1VhV0joQchYifYTiRgcbCBra2A55A1OvvLVYemBC4uWq0HIWugc
+         7Vr7fi3ABg8hH1gQrd4+UxfHJRcFtH9mlegp2czbLQEd8SOQXLhmx15K+ent2G35F9Oh
+         /y/FZpIVTnqvPD0pNF2o2CFMO63EDUz9zWSowXAoumaU2C0T6785lsriKyET3hwgpr7E
+         2wR+T9YruBHERLnXukR8hlZPrwZjAvTuzaXFT1WHxvgo5XLk4KJvqD18DD9mAs05cUm2
+         hsYq6UXADT2tZsyg4Ud/uIeGklRZZeXe29QZ2BpLUqcyIcOYh5Pw9zwBjNgsNBAPl8pg
+         M/YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736622131; x=1737226931;
+        d=1e100.net; s=20230601; t=1736622133; x=1737226933;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ecFMZiGNp7fan7UfoFlHQMnJEtz/mf35WDJXLyzqixg=;
-        b=JScpFC5+xVd7Bms6dxiuKabOWK+kOwgubLXhWuEz3QpS3/FVcZU/YR1TBdXnYmFXl2
-         lSHB94jzvWLlLyw4qo1RX9snuCgrwsvtre8KgXmcuLvQi8tQs+DpAvpoFO04EMasTCbY
-         NXDdJOxLFNsr7PnNmEIP/YstjGoH18i6uVOXolhLhApCgvF7oF4Frf0fAYLZxoiAK43W
-         7tu5CL0NntIq0fbzFzLbYMTE/wV9XTt8qdrmn1Okavn2fW5jz05Ii/1CuNg3nFWijI9b
-         icaF4lghXPbUGOAz2E1mEWxgI1Gm2PT9z29/DU/Y8HmhF9Jedmos5trlADOSmMH5fh8x
-         /X+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUYFNN5KrrWD/XzY46P21r1ccEYXPGBBaSq0OXVwJWoX/QeIVEaNlP/UR9xuSSyflUWq3lnSpScLf1GRUs5ayVf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTHTdGsl8+kQ/9r5OPc7Bs/j3U1kCWoGR8lrl4dbaOy7n7zkOm
-	F8UhpSXS9hBJ9oImHHBwYqaBYhu6QeI8/CN2qKuQLR5ezLoz9idUfF6VveiTzxswOT5m9ky48s3
-	BdVaHJg==
-X-Google-Smtp-Source: AGHT+IHwLynNopDYbrz7wn+p1xNk/yc5yHrokXgy+gopNUNkleZttkhC9a5oUoROnrPbbC6b23GEtpU52KLH
+        bh=vdHYhFrNVIqtHmEvS3ztNPxYRt3R+LiiQaFr8xJHZro=;
+        b=Om7W1pUkQdQdFv3QVPyJEWJJcD9/HLvm6x2r7Pz0EeZs01Ch1yO4mhRrHxyYBNTvCI
+         bNqFnBfRKJfTr9RKYnCOmyQDQegDG5d+6yoWQfdEAB8zqV9+fjZFrnmkq32XooMP96nb
+         BQgae9UEkmRZ9yqQ/bl2ut9/eyfXI11kqMLMv6XrQG4Sff9ieUS4oeyNPCj73R3It7LZ
+         pVDqJcIvNeXj8dq5qCVUm9pVfNWpp7RxA67/wdOd9j+Co1FkE1CheUUyeDsjtSCtgDX5
+         QsRHuhFf3GrlzU7KfYGlsWbG01b01KUpJekyzWqvxUmq+Lci3nR5IKVDTWcVP+WxFKSM
+         G0Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXJsPSNd5lI93RKxYiRGEU27KL0fvDEe0aV/XMyGmYJt0Nk2wWv2xhHruw1yBk3DLVSQJW6p+rU5VKKgaRPcib@vger.kernel.org
+X-Gm-Message-State: AOJu0YziRtGk8bFlK5WKsIOweirsRytuVv3wX8hJfp2hEqyZO4nA1DcZ
+	pU9FFxDlMJBoL4DL4k1t/e1wLU1u0XPInO0oxxMeJb8gJWCWTVffhogVEFamJ8TTlRE2pkZ9qfb
+	4RwVtUg==
+X-Google-Smtp-Source: AGHT+IF3VZBxbyLkBSTyR6IZ3Tvw8GSMA1nzChpsrnODeXVR+Pnt/DsFjkoy8YYj6hZoJ/mHcLfzRgpl36Od
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8807:d7c5:bb27:35fc])
- (user=irogers job=sendgmr) by 2002:a05:690c:854:b0:6e3:f32:5fc8 with SMTP id
- 00721157ae682-6f53121d25bmr331107b3.1.1736622131129; Sat, 11 Jan 2025
- 11:02:11 -0800 (PST)
-Date: Sat, 11 Jan 2025 11:01:38 -0800
+ (user=irogers job=sendgmr) by 2002:a25:a442:0:b0:e39:aa0b:bee7 with SMTP id
+ 3f1490d57ef6-e5507353f8emr22575276.4.1736622133248; Sat, 11 Jan 2025 11:02:13
+ -0800 (PST)
+Date: Sat, 11 Jan 2025 11:01:39 -0800
 In-Reply-To: <20250111190143.1029906-1-irogers@google.com>
-Message-Id: <20250111190143.1029906-6-irogers@google.com>
+Message-Id: <20250111190143.1029906-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250111190143.1029906-1-irogers@google.com>
 X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Subject: [PATCH v1 05/10] perf record: Switch user option to use BPF filter
+Subject: [PATCH v1 06/10] perf top: Switch user option to use BPF filter
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,63 +81,87 @@ where the uid doesn't match.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ tools/perf/builtin-top.c | 22 ++++++++++++----------
+ tools/perf/util/top.c    |  4 ++--
+ tools/perf/util/top.h    |  1 +
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 5db1aedf48df..d0203f62faeb 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -172,6 +172,7 @@ struct record {
- 	bool			timestamp_boundary;
- 	bool			off_cpu;
- 	const char		*filter_action;
-+	const char		*uid_str;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
-@@ -3451,8 +3452,7 @@ static struct option __record_options[] = {
- 		     "or ranges of time to enable events e.g. '-D 10-20,30-40'",
- 		     record__parse_event_enable_time),
- 	OPT_BOOLEAN(0, "kcore", &record.opts.kcore, "copy /proc/kcore"),
--	OPT_STRING('u', "uid", &record.opts.target.uid_str, "user",
--		   "user to profile"),
-+	OPT_STRING('u', "uid", &record.uid_str, "user", "user to profile"),
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index ca3e8eca6610..f6d837be185b 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -642,7 +642,7 @@ static void *display_thread_tui(void *arg)
+ 	 */
+ 	evlist__for_each_entry(top->evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+-		hists->uid_filter_str = top->record_opts.target.uid_str;
++		hists->uid_filter_str = top->uid_str;
+ 	}
  
- 	OPT_CALLBACK_NOOPT('b', "branch-any", &record.opts.branch_stack,
- 		     "branch any", "sample any taken branches",
-@@ -4171,19 +4171,21 @@ int cmd_record(int argc, const char **argv)
+ 	ret = evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
+@@ -1562,7 +1562,7 @@ int cmd_top(int argc, const char **argv)
+ 		    "Add prefix to source file path names in programs (with --prefix-strip)"),
+ 	OPT_STRING(0, "prefix-strip", &annotate_opts.prefix_strip, "N",
+ 		    "Strip first N entries of source file path name in programs (with --prefix)"),
+-	OPT_STRING('u', "uid", &target->uid_str, "user", "user to profile"),
++	OPT_STRING('u', "uid", &top.uid_str, "user", "user to profile"),
+ 	OPT_CALLBACK(0, "percent-limit", &top, "percent",
+ 		     "Don't show entries under that percent", parse_percent_limit),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+@@ -1753,15 +1753,17 @@ int cmd_top(int argc, const char **argv)
  		ui__warning("%s\n", errbuf);
  	}
  
--	err = target__parse_uid(&rec->opts.target);
--	if (err) {
+-	status = target__parse_uid(target);
+-	if (status) {
 -		int saved_errno = errno;
 -
--		target__strerror(&rec->opts.target, err, errbuf, BUFSIZ);
--		ui__error("%s", errbuf);
-+	if (rec->uid_str) {
-+		uid_t uid = parse_uid(rec->uid_str);
+-		target__strerror(target, status, errbuf, BUFSIZ);
+-		ui__error("%s\n", errbuf);
++	if (top.uid_str) {
++		uid_t uid = parse_uid(top.uid_str);
  
--		err = -saved_errno;
--		goto out;
+-		status = -saved_errno;
+-		goto out_delete_evlist;
 +		if (uid == UINT_MAX) {
-+			ui__error("Invalid User: %s", rec->uid_str);
-+			err = -EINVAL;
-+			goto out;
++			ui__error("Invalid User: %s", top.uid_str);
++			status = -EINVAL;
++			goto out_delete_evlist;
 +		}
-+		err = parse_uid_filter(rec->evlist, uid);
-+		if (err)
-+			goto out;
++		status = parse_uid_filter(top.evlist, uid);
++		if (status)
++			goto out_delete_evlist;
  	}
  
--	/* Enable ignoring missing threads when -u/-p option is defined. */
--	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
-+	/* Enable ignoring missing threads when -p option is defined. */
-+	rec->opts.ignore_missing_thread = rec->opts.target.pid;
+ 	if (target__none(target))
+diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
+index 4db3d1bd686c..b06e10a116bb 100644
+--- a/tools/perf/util/top.c
++++ b/tools/perf/util/top.c
+@@ -88,9 +88,9 @@ size_t perf_top__header_snprintf(struct perf_top *top, char *bf, size_t size)
+ 	else if (target->tid)
+ 		ret += SNPRINTF(bf + ret, size - ret, " (target_tid: %s",
+ 				target->tid);
+-	else if (target->uid_str != NULL)
++	else if (top->uid_str != NULL)
+ 		ret += SNPRINTF(bf + ret, size - ret, " (uid: %s",
+-				target->uid_str);
++				top->uid_str);
+ 	else
+ 		ret += SNPRINTF(bf + ret, size - ret, " (all");
  
- 	evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
+diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+index 4c5588dbb131..04ff926846be 100644
+--- a/tools/perf/util/top.h
++++ b/tools/perf/util/top.h
+@@ -48,6 +48,7 @@ struct perf_top {
+ 	const char	   *sym_filter;
+ 	float		   min_percent;
+ 	unsigned int	   nr_threads_synthesize;
++	const char	   *uid_str;
  
+ 	struct {
+ 		struct ordered_events	*in;
 -- 
 2.47.1.613.gc27f4b7a9f-goog
 
