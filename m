@@ -1,223 +1,128 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8256B634;
-	Sat, 11 Jan 2025 17:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CE1170A26
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 19:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736618235; cv=none; b=vCLg+hQ0YVRNSiracNZkPnNc0dCr5MLGKsQ37TWgByECKZb1mllAxERSNpiUqPjcKsRR0b67UcrmxvLX05xBuBne0WHb7iqoOal8rEUj736ecLvRqg3VU4tcSUfgRWioXIZukJKGKDmUKcXtlqmUlRu+LPblfcXDnCX0W1xUe8M=
+	t=1736622123; cv=none; b=u6jetLS8yWC/R+YlqSMEmpXlQyAUN3j7AQwtRNo00p34iZNevZtzaoTpZLOBkqtd8pqhhxZk5F8oj1Rf0qgw01u7MgoH/f4AwaIPx5N1o8ml8ixkxJrt5Um3ADkIlIhdTcczDEBcoKpLn4nFUPGlahbwxD5SFtftgYHMVegcGx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736618235; c=relaxed/simple;
-	bh=ZuPmFlnqHGfNcIlCYBxbCIL1fkijr3wBaqL1e8akxDI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GO404vpcUchDqzXzneqHj0E4StYkuxS8b5n0ao8tjCoo+Thjf+UwJwFsC7KLXDkPEC5SyxltPqLOpELNicsP/MY06fUP5juXzjeGW7W2slbbd0dftt5t3hXH0jDhAM54hZQZqWQCUfNUeeXIV2aEeQ4xe+v9PO0nqk6i5ERbZMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b6e4d38185so292166985a.0;
-        Sat, 11 Jan 2025 09:57:13 -0800 (PST)
+	s=arc-20240116; t=1736622123; c=relaxed/simple;
+	bh=HQI56t3Xk8Nax12U4SiUvZLhRcgZJYblQDi4Y8nSSCc=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=jdgTQef3uiW9c3G1i4oyN+MQmCDNygrT+JW7wjBCNf8VFvnnpsA5uT0eyie3tY4HWxqqCgFxKFLYNDaoLOp1F+CJsa03S7hWbtDGpcqlKRUBkP2b1/OVuPEWUk+0T1QdE2SUM3UREAgR78Xs/TAXwa/pClxuVCKRDRDeHP/jhD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rIj02wUT; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rIj02wUT"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5505f613e5so6232298276.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jan 2025 11:02:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736622120; x=1737226920; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=d3A0USpCKcPm+oZI+s4cg9x83Pq7450iM+zG1Swbqbk=;
+        b=rIj02wUTSrD4sjkgtRQoPj3DT8Tatmib/rMJjqxU3VMbZVKFTos4cSK7tzKyU9PsFC
+         BgpUhFl5tHwI8FVHONGKjbU/3vcfxUPwf5z7RrEcTDTh0IYc2zZm8JItyujbcrAYll3D
+         ofUvJT7QLJAnO/bpq9NsGmxat25wpAcVC9sirUq5g2S5HAHxk+l2xdJOS1nJMd1JGKpj
+         Dh5TtBatRh7zTRLpIe2axZX8H0dkR1MRmIPvTgTZgsYw++ZqzoK+e0RWCh5WoDGjqkR9
+         AVpTQpB1PdEyvs//l1n+g5NNFa3KA7epLCGYsQYEnTJYbp38pjNjn6uCYu1fyE0ruDxH
+         uYpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736618232; x=1737223032;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UVCyocSWQeL6rl9UsMQxUJ/1ipLs5qXVXl8X7iHttI0=;
-        b=Nbld3etqbRl2vj2z4iW+XyycCrg3UPmk/Xu3GiMfZL53Qcd3+uY2aKpN+5uwd58S/4
-         L33ywTEnN+4zswoI2fEXRZcI+JbkWzpQsUXGPpV/dyho/ItqIkY9/AW6pVwuCKlusZae
-         69E2oO4SDpWQZJJJaG4J+GEzW0yzfz6hE1Cr8a7bKZ+Nv4hnULyUcR7qIc0ewt/xT52t
-         cM1VYngeECmSsMM/0/1Ea1BLwM+oKf/8QcCMBkphRFOCh6XOtEPBQ8p68yTmYujyqIMh
-         tLidWmjDubsLlIdfSprIe45w4qRwysc+BsTJRKjHBxUvI0ADI5CVfvOM3homElyiQmBq
-         //+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWFicPzqXa9Dal1XfBgkvdr7rEIDjw+JXJwvKVP5Jdm6rWAJl1U9fB0lnqbIyk1RQ/FSBNmhlEjsu4z6Zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZEIPjv49Ts+JBNCQaOrddTJJZBLmwA+x5X3zvT5pt8jOemQZH
-	Uaz2aOQbvHBLfEnKrCMtyvQBj//i5BJ9YtRTpIqEi0V4k2linmWYn2OYTo+U
-X-Gm-Gg: ASbGncs4WtwM5BDu46XkyJW5U4bHujx1oU/15VIe1wLnUPlFYJzXPP/lvJe3nTpnDul
-	1LMtxVnIg8nlxa3zXlzecFDIMmtWUthH+LY+RlcXrPqWjaZhqZNVLO+PlnEPIY53tV7+NxC8syb
-	6l4h2i0AQqm8BXhjCHOvJzjJD6mowS+S61OjnF8j6R25rgmgVeeqSkOH+TTLiz0i6r2fY1YpLxg
-	JNn4wk10SJgr6EDclngAJGppd2qCYDQWjwYLgv9zX5by7KbV62AKAHE2cuvXj4poPR8LGFJA3B3
-	VLEf3vQ=
-X-Google-Smtp-Source: AGHT+IGtDd6eCkoJ/Y3CclmwLt/y1hNoBTm71vFwD6OQPNfBvk1hnKaCTEH5rCqCQiWCp7D75hOTNA==
-X-Received: by 2002:a05:620a:24c6:b0:7b6:f34b:cdd2 with SMTP id af79cd13be357-7bcd97a4e6cmr2707065585a.53.1736618232189;
-        Sat, 11 Jan 2025 09:57:12 -0800 (PST)
-Received: from tachyon.tail92c87.ts.net ([192.159.180.233])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7bce3248304sm300273785a.31.2025.01.11.09.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2025 09:57:11 -0800 (PST)
-From: Tavian Barnes <tavianator@tavianator.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Tavian Barnes <tavianator@tavianator.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf intel-pt: don't zero the whole perf_sample
-Date: Sat, 11 Jan 2025 12:56:17 -0500
-Message-ID: <d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com>
-X-Mailer: git-send-email 2.47.1
+        d=1e100.net; s=20230601; t=1736622120; x=1737226920;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d3A0USpCKcPm+oZI+s4cg9x83Pq7450iM+zG1Swbqbk=;
+        b=I177iubuj45/7/vh6UhrvmBUHRL7GzyUK0d1T1PvN8iwwdgHIrRm2tpvij56teEnYG
+         XW+NJMXDAA5oIcM+FqxO5ZnPV0AYF/Pzxb3bYhB7BHw6OoNZPc7qS8aB5rGvsqKAg78W
+         uABOO7lirNqRC8qhMa0J8wacn5hXCAnnIt5WFjo95oRYGWtg5kmbQwzSutjPshuT1mEE
+         cbMLN2a+F797kubgljkb+/13ls6XxhZE+Q3ViD5AL8WYD30/K9UIANANhdDnJGQ9c/4i
+         RgFegN+bU4UFtaZ5tNLnK09O+tnwEEb7wwryJVTn3wvgpZS/O8nZAsR7amhvTNi97+d0
+         PydA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8bC4jodIJ1kOGE66CwnQCnj6dR6AFHHi675Sseir3LuZSAKtTI7vm9O2RASJe3jY2nGbtA7RvM0GMhBzy6xqs@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQDc+wvMt9QxrNex1+A7eVEQL2jFAOrKHMmHid2iouVelyUEGc
+	AxL53pp1tPAL1sqochJ7K9H6uRD1AFn4qPG62sgCSxXz4B3+cdrosemWdX5yVSQD48tMR41A0sM
+	vWIFYAA==
+X-Google-Smtp-Source: AGHT+IHLje0K1WCz/tc+8OQHrck+cCflLVO6F1nUn/pT2VCgo83pDFeyqJv+hHmPuifgoVC4IrBhJx2v3ZxQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8807:d7c5:bb27:35fc])
+ (user=irogers job=sendgmr) by 2002:a0d:d282:0:b0:6ee:6f60:e564 with SMTP id
+ 00721157ae682-6f543f586demr396197b3.3.1736622119780; Sat, 11 Jan 2025
+ 11:01:59 -0800 (PST)
+Date: Sat, 11 Jan 2025 11:01:33 -0800
+Message-Id: <20250111190143.1029906-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
+Subject: [PATCH v1 00/10] Move uid filtering to BPF filters
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	Xu Yang <xu.yang_2@nxp.com>, Tengda Wu <wutengda@huaweicloud.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-C designated initializers like
+Rather than scanning /proc and skipping PIDs based on their UIDs, use
+BPF filters for uid filtering. The /proc scanning in thread_map is
+racy as the PID may exit before the perf_event_open causing perf to
+abort. BPF UID filters are more robust as they avoid the race. Add a
+helper for commands that support UID filtering and wire up. Remove the
+non-BPF UID filtering support.
 
-    struct perf_sample sample = { .ip = 0, };
+Ian Rogers (10):
+  perf bench evlist-open-close: Reduce scope of 2 variables
+  perf parse-events filter: Use evsel__find_pmu
+  perf target: Separate parse_uid into its own function
+  perf parse-events: Add parse_uid_filter helper
+  perf record: Switch user option to use BPF filter
+  perf top: Switch user option to use BPF filter
+  perf trace: Switch user option to use BPF filter
+  perf bench evlist-open-close: Switch user option to use BPF filter
+  perf target: Remove uid from target
+  perf thread_map: Remove uid options
 
-set every unmentioned field of the struct to zero.  But since
-sizeof(struct perf_sample) == 1384, this takes a long time.
+ tools/perf/bench/evlist-open-close.c        | 76 ++++++++++++---------
+ tools/perf/builtin-ftrace.c                 |  1 -
+ tools/perf/builtin-kvm.c                    |  2 -
+ tools/perf/builtin-record.c                 | 26 +++----
+ tools/perf/builtin-stat.c                   |  4 +-
+ tools/perf/builtin-top.c                    | 22 +++---
+ tools/perf/builtin-trace.c                  | 25 ++++---
+ tools/perf/tests/backward-ring-buffer.c     |  1 -
+ tools/perf/tests/event-times.c              |  8 +--
+ tools/perf/tests/keep-tracking.c            |  2 +-
+ tools/perf/tests/mmap-basic.c               |  2 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+ tools/perf/tests/openat-syscall.c           |  2 +-
+ tools/perf/tests/perf-record.c              |  1 -
+ tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+ tools/perf/tests/switch-tracking.c          |  2 +-
+ tools/perf/tests/task-exit.c                |  1 -
+ tools/perf/tests/thread-map.c               |  2 +-
+ tools/perf/util/bpf-filter.c                |  2 +-
+ tools/perf/util/evlist.c                    |  3 +-
+ tools/perf/util/parse-events.c              | 25 ++++---
+ tools/perf/util/parse-events.h              |  1 +
+ tools/perf/util/python.c                    | 10 +--
+ tools/perf/util/target.c                    | 54 ++-------------
+ tools/perf/util/target.h                    | 15 +---
+ tools/perf/util/thread_map.c                | 32 +--------
+ tools/perf/util/thread_map.h                |  6 +-
+ tools/perf/util/top.c                       |  4 +-
+ tools/perf/util/top.h                       |  1 +
+ 30 files changed, 135 insertions(+), 200 deletions(-)
 
-struct perf_sample does not need to be fully initialized, and even
-.ip = 0 is unnecessary because intel_pt_prep_*_sample() will initialize
-it.  Skipping the initialization saves about 2.5% of the execution time
-when running
-
-    $ perf script --itrace=i0
-
-Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
----
- tools/perf/util/intel-pt.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 30be6dfe09eb..c829398c5bb9 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1764,7 +1764,7 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct dummy_branch_stack {
- 		u64			nr;
- 		u64			hw_idx;
-@@ -1835,7 +1835,7 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 
- 	if (intel_pt_skip_event(pt))
- 		return 0;
-@@ -1867,7 +1867,7 @@ static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	u64 period = 0;
- 
- 	if (ptq->sample_ipc)
-@@ -1894,7 +1894,7 @@ static int intel_pt_synth_transaction_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 
- 	if (intel_pt_skip_event(pt))
- 		return 0;
-@@ -1927,7 +1927,7 @@ static int intel_pt_synth_ptwrite_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_ptwrite raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -1953,7 +1953,7 @@ static int intel_pt_synth_cbr_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_cbr raw;
- 	u32 flags;
- 
-@@ -1983,7 +1983,7 @@ static int intel_pt_synth_psb_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_psb raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2009,7 +2009,7 @@ static int intel_pt_synth_mwait_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_mwait raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2034,7 +2034,7 @@ static int intel_pt_synth_pwre_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_pwre raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2059,7 +2059,7 @@ static int intel_pt_synth_exstop_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_exstop raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2084,7 +2084,7 @@ static int intel_pt_synth_pwrx_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_pwrx raw;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2235,7 +2235,7 @@ static void intel_pt_add_lbrs(struct branch_stack *br_stack,
- static int intel_pt_do_synth_pebs_sample(struct intel_pt_queue *ptq, struct evsel *evsel, u64 id)
- {
- 	const struct intel_pt_blk_items *items = &ptq->state->items;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	union perf_event *event = ptq->event_buf;
- 	struct intel_pt *pt = ptq->pt;
- 	u64 sample_type = evsel->core.attr.sample_type;
-@@ -2407,7 +2407,7 @@ static int intel_pt_synth_events_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct {
- 		struct perf_synth_intel_evt cfe;
- 		struct perf_synth_intel_evd evd[INTEL_PT_MAX_EVDS];
-@@ -2446,7 +2446,7 @@ static int intel_pt_synth_iflag_chg_sample(struct intel_pt_queue *ptq)
- {
- 	struct intel_pt *pt = ptq->pt;
- 	union perf_event *event = ptq->event_buf;
--	struct perf_sample sample = { .ip = 0, };
-+	struct perf_sample sample;
- 	struct perf_synth_intel_iflag_chg raw;
- 
- 	if (intel_pt_skip_event(pt))
 -- 
-2.47.1
+2.47.1.613.gc27f4b7a9f-goog
 
