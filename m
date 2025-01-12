@@ -1,460 +1,592 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB8F256D;
-	Sun, 12 Jan 2025 09:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A6E1B4F1A
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Jan 2025 13:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736673480; cv=none; b=V4d0cXVCj9aOHKH7HIEGVKTA2BTrujE2eUrhd10rdNiQWOwHdxhJgdKK0YGguigPc3xj4DN7w1sbO100eGTR4lN1D7swBF2mLeezDVZ/1fKG8YLwAeuez7rA0ndWiKiLbt6OBqauR0Xj4etxXsItVpQRZh6O82DQldnqThSdLZo=
+	t=1736689383; cv=none; b=Vap+FYX40D3fBu4LMZCKvp4fHB14fxZ1uuqpMwbb6QmHl6pAG0n04CR3Scb5LXSGJa0j3IfJbWsmBEAR2ODHMGlGYtX+S9b3jVeOOjXq6nqfbp0sAzCiqUmYrEsOHO5M2wnjqC5/VGvs98LIG+TIgTmKO+EZNvPreRGgwGbkJUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736673480; c=relaxed/simple;
-	bh=WpGxUuS8Q1/VgDB5w44GJRlBfxoEdKNmMu/V7ds0ZiQ=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=tLgUYK044hvkuw+ximttDTeFpa8wbStaMH6e5b9UgolEu38MP4PY0G2Cf+CLTyxwlOQ8Nbt4SQ3rz3ePs4jhVvmJVyaQt5HBByDiD9DeCXnfDK9X9bF1vG/x/zDazZ13ITeWGZvKD3yUlrWHBgKNYKpkmHcB5mWm/uh2HGYel/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=RCBeIk/l; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1736689383; c=relaxed/simple;
+	bh=c3ia+DjshRY9LadSHZIcjKnOsy+lH5YYvow7JDj8/cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HFpg4hlGhdtH6mdf4fV+XAsT4AGLA/8hhx9MFPRDDXy55MDRapEepLlTJmjEEyRCIP7Ss2xm7RlkEuAJQ5k7MvokOPqibSO9LrLhKykr9Afe6353i7xVv0d04f/hJnRai7zuTIywiRzkQptO58dZo8Qf1GoMKSUvUryetfIqAU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=tw1YKk/6; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="RCBeIk/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1736673467;
-	bh=Nc6iXzQtln0KuwjoybtxrlXak95m/IIcOMAUrdl81dM=;
-	h=From:Mime-Version:Subject:Message-Id:Date:To;
-	b=RCBeIk/lNZt8XlqxTHC4EL6m9fkiEpaOP+QrT4P+U2iXrwQnjTDzcWn8Z2YMjn7Np
-	 KiNZ8VeB3Ms+t6F0b5fuIRgDjlj7HOLS9BwQJM3QeK3mMLHlcT+QwHafUghRYK5MNo
-	 TlacGXAFj9d12NtKeL48Ht7o2KExe/3/GLjGuMF4=
-X-QQ-mid: bizesmtpip2t1736673466tmdk654
-X-QQ-Originating-IP: mrvnTuFwT07YOYdV0uafUFd3RyVGUfj+YWKYwqvj9sw=
-Received: from smtpclient.apple ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 12 Jan 2025 17:17:44 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 9361464416884909194
-From: Kun Hu <huk23@m.fudan.edu.cn>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="tw1YKk/6"
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BA6B73F27F
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 Jan 2025 13:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1736689371;
+	bh=/SYLtKuL+TcrSYTu3535iKxtYnKffJssQ8uc2Sk8nn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=tw1YKk/6FUxARDGzyK6OYMICwcHuivC5WESHZZftXs8ey9kYL7wwPW28N3Kz/CgYL
+	 Q3eSpz7OKshFiJL42Az0SzGaR61XuDX2fCVBxW2DvmN2CO/FdJTHfLrQ5qsFnvSeTV
+	 mXpVabrYJmDPZOqRaY26PR9zdv+FcqAG7UtzXjo+NCDJLHyOgSzQ4O9/PmWHsBfe9C
+	 XIEegQTs4qRyhNT4LYljlu1b73LxIThk9MD6WwI+GxYD6CdRp8nj7/OhaCIFMoC/5W
+	 7E1k4m6fI9cllLXDAlmPJMtMCoIyMlcRkaOUPzRE0ihnE6E55S8Pl69PSjU9yfRD5n
+	 PYhg+m1T5q4nA==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2f46b7851fcso10153552a91.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Jan 2025 05:42:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736689367; x=1737294167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/SYLtKuL+TcrSYTu3535iKxtYnKffJssQ8uc2Sk8nn4=;
+        b=CdUwhBObhC8M/FUDARP6cPC1NzpMsel9dJVu+PRj5rg5p9wWiClKz2auDM6RJKGehq
+         ShyIP3k7QGud1XjAuW83cFbsq99Qt33zyewrR196DLaduqyZMTbhE0W2UxNOeWI38vZJ
+         JJwGVanMJvQnM77fX2k1yWa27vwZT2O/Edlv5oUPZX7mwzRcHq+L5kz9Z62FWfFgUV7Z
+         kUew7cH/EOn7EmRmVDFsPGbZa17cj8Kp/x4AgahB2AKx968bw8T7Q3KW1Sg9P2i6IeBv
+         y9TXPqEGA8Ffng5TrDqRgIVhdeLvs1C+JoPKj6jKzBheGf5iU3Ne+3aslejiKZONBlTw
+         xS3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVy3i/GWItZ/ZcJUmfKU/V2ilOESocqu2ubAyULd7FzNhPjBIQ4/AHIfPh7vrxKHHTtgNdBdAvKfmH7GOr8AskB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqqxUV4NNga0vrHmxG7fKXbNfn0gtcBj9PK8UNEVZghaY+gDOH
+	4DkNTSudGwpMBtpPr154GZFP4BmGFIzL5YqRnGBZZJu8vlQXi+p3zLdaCL4hM/BOxGw8QHv6lm3
+	9xYVvHFEs/bUMFtvsGZn0R2YC4lfKL5CONS1ZA/gf1rwiCSm2hURGApkVgUAmmcju+P23WxJvsY
+	21qLgygfM=
+X-Gm-Gg: ASbGncvBp1wFJ+L5NuxsO9QYr/e6X9bWnaFX4H4GwV/tYBtyy0tUAmkPpT29XiEnfih
+	pea3ISToDL1oAPFjHTfLuGCaAt0Hpel5I4LjQH365Z9V0RKs+Byucplu3x7qHW7cF4SP5/wt7p9
+	OAwOzKgcNMIUNdKdUsti1ZDgBpnR9Sc+1giiwGS8AjooumM19GOy2E4uoBPlFfZ0kCEQfAiVwb2
+	T6qFqFG7w98TljIrvh6XPrXwmY7DHgN1K3gabYlYSD8aodsAOZc5zo2uA0=
+X-Received: by 2002:a05:6a00:408e:b0:725:9dc7:4f8b with SMTP id d2e1a72fcca58-72d21f562c6mr23526898b3a.15.1736689367292;
+        Sun, 12 Jan 2025 05:42:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGrMMTskNvubTL+r7umeiw9uFk/SWpiMmiUrJSlENrizBev1U/5D9v1rEAWBOkTOI5bQHhkMg==
+X-Received: by 2002:a05:6a00:408e:b0:725:9dc7:4f8b with SMTP id d2e1a72fcca58-72d21f562c6mr23526869b3a.15.1736689366892;
+        Sun, 12 Jan 2025 05:42:46 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:2846:8ec3:3898:1a7f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d4056a5f3sm4504874b3a.58.2025.01.12.05.42.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2025 05:42:46 -0800 (PST)
+Date: Sun, 12 Jan 2025 22:42:44 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, rui.zhang@intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.dei, 
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 10/10] perf/x86/rapl: Add core energy counter support
+ for AMD CPUs
+Message-ID: <uv7mz6vew2bzgre5jdpmwldxljp5djzmuiksqdcdwipfm4zm7w@ribobcretidk>
+References: <20241115060805.447565-1-Dhananjay.Ugwekar@amd.com>
+ <20241115060805.447565-11-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Bug: Potential Deadlock or Resource Contention in Btrfs Subsystem
-Message-Id: <AA0E5191-E4D8-4FAA-AB60-B38D6F2D0E99@m.fudan.edu.cn>
-Date: Sun, 12 Jan 2025 17:17:33 +0800
-Cc: "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>,
- linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-To: peterz@infradead.org,
- namhyung@kernel.org,
- mingo@kernel.org,
- jolsa@kernel.org,
- song@kernel.org,
- josef@toxicpanda.com,
- anand.jain@oracle.com,
- nborisov@suse.com,
- dsterba@suse.com
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NuC7ko3X4dcAWLyY03w6K8pcwM7vvxqVSpUbUcmc9WzE4HD1EIg2NXcI
-	zRARNtO3fsOODLIgkUVTtutG13ZXwBHxusUCVoCPtPySmxfE40eE1kSa5VRcygzb6+M/E81
-	0F5+mquc1sfD4se22lL9kHfiWFfeE1IsEe8Bae8G5rTARMudaPp9wmxz+H49dzwP13eF8QG
-	vQEtIbwFoai03BGVF+jgNScvvjryFtIp4XBEF0A79QtNgFFvICcbUowqPe1TbBdk80ksphu
-	YfK1VVSClt7I7TUljSTe/eBDxCYNeUleaXBaRrx5xvOxgybRobmxu0pbXHCuoZqUpPLcXfb
-	RUqA5uw0tk4FF1xT5YW9S5aus0Wa7sKneN+cwnUTXy7U6e36HP8o8QIZBLD8uHdWH/wLMS8
-	FWKPxdCKyknSiouqqfCnI3DhmMPTIeLV+e0LnjuFruqzn0cgzluRzOliJfBd5746nshh6oY
-	y1rBdLGSST5BsLHiJ4Q+JfOKWO5EJU671nc+O8oiaQTB+RZyZJNDY467PR2eSvafEZiz6IY
-	5Tgw6PwocSJ1YfpCMj1ebMDB1RdW/TQ2LNnKTYQtskFqjGk5JCw37GWlgo7wHETo77UMU4j
-	4L6IUcXMo5PUllxmMcm+LRZ+qDMtuvJmhoRmRWJmWEVfKulccTFhbUwn9NxsPqLbTj4BPAN
-	lOFzB4P/Mbx6oPIEUvreG0A0MD5tEm1ojsryKaix8fFSzEzhkasjr5DKygun3vYv4a8hTQK
-	csvxsK3iIMOb7kGJchB2lPK/26dgAjq2qolxqE1CgBtHIcttqOmXVTdIGL2EYmFlJ7LfhFD
-	BzGJVjmm7tNWMV71LEN8IvIE/UFdzkObhjp/7I+R7xfZAPiLENnGzZMRROTrr7ETZ2Mfdec
-	pLyd6GfAkWwA8n1Cd/zlS9YeGAjtOyGOt4z6R53PV6CKbw5+BbDpYyKrxX3YUlwryVOysJo
-	NtsiCohl7oQz3lHnRXwwvks5snl28JKuZ4/SWaKNIYl53KB5FG29yJkZ2XG/2xHRFYT39sq
-	E76Dsw4ab04yHeFA8E
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241115060805.447565-11-Dhananjay.Ugwekar@amd.com>
 
-Hello,
+On Fri, Nov 15, 2024 at 06:08:06AM GMT, Dhananjay Ugwekar wrote:
+> Add a new "power_core" PMU and "energy-core" event for monitoring
+> energy consumption by each individual core. The existing energy-cores
+> event aggregates the energy consumption of CPU cores at the package level.
+> This new event aligns with the AMD's per-core energy counters.
+> 
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+> 
+> Results with workload pinned to CPU 4 in core 4 on an AMD Zen4 Genoa
+> machine:
+> 
+> $ sudo perf stat --per-core -e power_core/energy-core/ -- taskset -c 4 stress-ng --matrix 1 --timeout 5s
+> stress-ng: info:  [21250] setting to a 5 second run per stressor
+> stress-ng: info:  [21250] dispatching hogs: 1 matrix
+> stress-ng: info:  [21250] successful run completed in 5.00s
+> 
+>  Performance counter stats for 'system wide':
+> 
+> S0-D0-C0              1               0.00 Joules power_core/energy-core/
+> S0-D0-C1              1               0.00 Joules power_core/energy-core/
+> S0-D0-C2              1               0.00 Joules power_core/energy-core/
+> S0-D0-C3              1               0.00 Joules power_core/energy-core/
+> S0-D0-C4              1               8.43 Joules power_core/energy-core/
+> S0-D0-C5              1               0.00 Joules power_core/energy-core/
+> S0-D0-C6              1               0.00 Joules power_core/energy-core/
+> S0-D0-C7              1               0.00 Joules power_core/energy-core/
+> S0-D1-C8              1               0.00 Joules power_core/energy-core/
+> S0-D1-C9              1               0.00 Joules power_core/energy-core/
+> S0-D1-C10             1               0.00 Joules power_core/energy-core/
+> 
+> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> ---
+>  arch/x86/events/rapl.c | 185 +++++++++++++++++++++++++++++++++--------
+>  1 file changed, 152 insertions(+), 33 deletions(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 6e51386ff91f..e9be1f31163d 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -39,6 +39,10 @@
+>   *	  event: rapl_energy_psys
+>   *    perf code: 0x5
+>   *
+> + *  core counter: consumption of a single physical core
+> + *	  event: rapl_energy_core (power_core PMU)
+> + *    perf code: 0x1
+> + *
+>   * We manage those counters as free running (read-only). They may be
+>   * use simultaneously by other tools, such as turbostat.
+>   *
+> @@ -81,6 +85,10 @@ enum perf_rapl_pkg_events {
+>  	NR_RAPL_PKG_DOMAINS = PERF_RAPL_PKG_EVENTS_MAX,
+>  };
+>  
+> +#define PERF_RAPL_CORE			0		/* single core */
+> +#define PERF_RAPL_CORE_EVENTS_MAX	1
+> +#define NR_RAPL_CORE_DOMAINS		PERF_RAPL_CORE_EVENTS_MAX
+> +
+>  static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst = {
+>  	"pp0-core",
+>  	"package",
+> @@ -89,6 +97,8 @@ static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst
+>  	"psys",
+>  };
+>  
+> +static const char *const rapl_core_domain_name __initconst = "core";
+> +
+>  /*
+>   * event code: LSB 8 bits, passed in attr->config
+>   * any other bit is reserved
+> @@ -141,14 +151,18 @@ enum rapl_unit_quirk {
+>  
+>  struct rapl_model {
+>  	struct perf_msr *rapl_pkg_msrs;
+> +	struct perf_msr *rapl_core_msrs;
+>  	unsigned long	pkg_events;
+> +	unsigned long	core_events;
+>  	unsigned int	msr_power_unit;
+>  	enum rapl_unit_quirk	unit_quirk;
+>  };
+>  
+>   /* 1/2^hw_unit Joule */
+>  static int rapl_pkg_hw_unit[NR_RAPL_PKG_DOMAINS] __read_mostly;
+> +static int rapl_core_hw_unit __read_mostly;
+>  static struct rapl_pmus *rapl_pmus_pkg;
+> +static struct rapl_pmus *rapl_pmus_core;
+>  static u64 rapl_timer_ms;
+>  static struct rapl_model *rapl_model;
+>  
+> @@ -156,14 +170,23 @@ static struct rapl_model *rapl_model;
+>   * Helper function to get the correct topology id according to the
+>   * RAPL PMU scope.
+>   */
+> -static inline unsigned int get_rapl_pmu_idx(int cpu)
+> -{	/*
+> +static inline unsigned int get_rapl_pmu_idx(int cpu, int scope)
+> +{
+> +	/*
+>  	 * Returns unsigned int, which converts the '-1' return value
+>  	 * (for non-existent mappings in topology map) to UINT_MAX, so
+>  	 * the error check in the caller is simplified.
+>  	 */
+> -	return rapl_pkg_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+> -					     topology_logical_die_id(cpu);
+> +	switch (scope) {
+> +	case PERF_PMU_SCOPE_PKG:
+> +		return topology_logical_package_id(cpu);
+> +	case PERF_PMU_SCOPE_DIE:
+> +		return topology_logical_die_id(cpu);
+> +	case PERF_PMU_SCOPE_CORE:
+> +		return topology_logical_core_id(cpu);
+> +	default:
+> +		return -EINVAL;
+> +	}
+>  }
+>  
+>  static inline u64 rapl_read_counter(struct perf_event *event)
+> @@ -173,19 +196,20 @@ static inline u64 rapl_read_counter(struct perf_event *event)
+>  	return raw;
+>  }
+>  
+> -static inline u64 rapl_scale(u64 v, int cfg)
+> +static inline u64 rapl_scale(u64 v, struct perf_event *event)
+>  {
+> -	if (cfg > NR_RAPL_PKG_DOMAINS) {
+> -		pr_warn("Invalid domain %d, failed to scale data\n", cfg);
+> -		return v;
+> -	}
+> +	int hw_unit = rapl_pkg_hw_unit[event->hw.config - 1];
+> +
+> +	if (event->pmu->scope == PERF_PMU_SCOPE_CORE)
+> +		hw_unit = rapl_core_hw_unit;
+> +
+>  	/*
+>  	 * scale delta to smallest unit (1/2^32)
+>  	 * users must then scale back: count * 1/(1e9*2^32) to get Joules
+>  	 * or use ldexp(count, -32).
+>  	 * Watts = Joules/Time delta
+>  	 */
+> -	return v << (32 - rapl_pkg_hw_unit[cfg - 1]);
+> +	return v << (32 - hw_unit);
+>  }
+>  
+>  static u64 rapl_event_update(struct perf_event *event)
+> @@ -212,7 +236,7 @@ static u64 rapl_event_update(struct perf_event *event)
+>  	delta = (new_raw_count << shift) - (prev_raw_count << shift);
+>  	delta >>= shift;
+>  
+> -	sdelta = rapl_scale(delta, event->hw.config);
+> +	sdelta = rapl_scale(delta, event);
+>  
+>  	local64_add(sdelta, &event->count);
+>  
+> @@ -341,13 +365,14 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
+>  static int rapl_pmu_event_init(struct perf_event *event)
+>  {
+>  	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
+> -	int bit, ret = 0;
+> +	int bit, rapl_pmus_scope, ret = 0;
+>  	struct rapl_pmu *rapl_pmu;
+>  	unsigned int rapl_pmu_idx;
+> +	struct rapl_pmus *rapl_pmus;
+>  
+> -	/* only look at RAPL events */
+> -	if (event->attr.type != rapl_pmus_pkg->pmu.type)
+> -		return -ENOENT;
+> +	/* unsupported modes and filters */
+> +	if (event->attr.sample_period) /* no sampling */
+> +		return -EINVAL;
 
-When using our customized fuzzer tool to fuzz the latest Linux kernel, =
-the following crash (41s)
-was triggered.
+Hi Dhananjay,
 
-HEAD commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
-git tree: upstream
-Console output: =
-https://drive.google.com/file/d/1pCyGTZTXMoUYn7NmKmAI4uzXrIXfl9K4/view?usp=
-=3Dsharing
-Kernel config: =
-https://drive.google.com/file/d/1w49JIxvyeFZT7bqCXvZjozqpoLYLUvJH/view?usp=
-=3Dsharing
-C reproducer: =
-https://drive.google.com/file/d/1gJjbndbNAJbwzGMiFr4ZGqF6VsOExkfD/view?usp=
-=3Dsharing
-Syzlang reproducer: =
-https://drive.google.com/file/d/1EndqkJNtUxhqf9SmF9t05I28UfU8Rhks/view?usp=
-=3Dsharing
-New crash log: =
-https://drive.google.com/file/d/12rKpMVQLb-FHx_wlDlelYS7Skhbbiiqw/view?usp=
-=3Dsharing
+On linux-next, since this commit, it seems that simple sampling with 'perf
+record -- <command>' (i.e. the default event), 'perf top' etc. can
+unexpectedly fail because rapl_pmu_event_init() now returns -EINVAL instead
+of -ENOENT even in such cases of a type mismatch. I observed that this
+prevents evsel__fallback() from falling back to cpu-clock or task-clock.
 
-We first found the issue without a stable C and Syzlang reproducers, but =
-later I tried multiple rounds of replication and got a new crash log =
-(the results seem to be different twice) as well as the C and Syzlang =
-reproducers.
+Should we reorder the checks in rapl_pmu_event_init() to allow an early
+return with -ENOENT in such cases, as shown below? I'm not very familiar
+with this area and I might be missing something. I'd appreciate it if you
+could share your thoughts.
 
-I suspect the issue may stem from resource contention or synchronization =
-delays, as indicated by functions like queued_spin_lock_slowpath and =
-synchronize_rcu_expedited. There could also be inconsistencies in file =
-system or device state management (btrfs_close_devices, loop_configure), =
-or challenges with concurrent resource allocation (copy_process, =
-perf_prepare_sample).=20
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -370,17 +370,6 @@ static int rapl_pmu_event_init(struct perf_event *event)
+        unsigned int rapl_pmu_idx;
+        struct rapl_pmus *rapl_pmus;
 
-Could you kindly help review these areas to narrow down the root cause? =
-Your expertise would be greatly appreciated.
+-       /* unsupported modes and filters */
+-       if (event->attr.sample_period) /* no sampling */
+-               return -EINVAL;
+-
+-       /* check only supported bits are set */
+-       if (event->attr.config & ~RAPL_EVENT_MASK)
+-               return -EINVAL;
+-
+-       if (event->cpu < 0)
+-               return -EINVAL;
+-
+        rapl_pmus = container_of(event->pmu, struct rapl_pmus, pmu);
+        if (!rapl_pmus)
+                return -EINVAL;
+@@ -411,6 +400,17 @@ static int rapl_pmu_event_init(struct perf_event *event)
+        } else
+                return -EINVAL;
 
-If you fix this issue, please add the following tag to the commit:
-Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin =
-<jjtan24@m.fudan.edu.cn>
++       /* unsupported modes and filters */
++       if (event->attr.sample_period) /* no sampling */
++               return -EINVAL;
++
++       /* check only supported bits are set */
++       if (event->attr.config & ~RAPL_EVENT_MASK)
++               return -EINVAL;
++
++       if (event->cpu < 0)
++               return -EINVAL;
++
+        /* check event supported */
+        if (!(rapl_pmus->cntr_mask & (1 << bit)))
+                return -EINVAL;
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 26s! [syz.5.114:2341]
-Modules linked in:
-irq event stamp: 0
-hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-hardirqs last disabled at (0): [<ffffffff9c8ea334>] =
-copy_process+0x1dc4/0x7550 kernel/fork.c:2339
-softirqs last  enabled at (0): [<ffffffff9c8ea381>] =
-copy_process+0x1e11/0x7550 kernel/fork.c:2340
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-CPU: 0 UID: 0 PID: 2341 Comm: syz.5.114 Tainted: G    B              =
-6.13.0-rc5 #1
-Tainted: [B]=3DBAD_PAGE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-RIP: 0010:kasan_mem_to_shadow include/linux/kasan.h:64 [inline]
-RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:129 [inline]
-RIP: 0010:memory_is_poisoned mm/kasan/generic.c:161 [inline]
-RIP: 0010:check_region_inline mm/kasan/generic.c:180 [inline]
-RIP: 0010:kasan_check_range+0x49/0x1b0 mm/kasan/generic.c:189
-Code: 00 0f 1f 44 00 00 48 b8 00 00 00 00 00 00 00 ff eb 0a 48 b8 00 00 =
-00 00 00 80 ff ff 48 39 c7 0f 82 ad 00 00 00 4c 8d 5c 37 ff <48> 89 fb =
-48 b8 00 00 00 00 00 fc ff df 4d 89 da 48 c1 eb 03 49 c1
-RSP: 0018:ffa0000004567610 EFLAGS: 00000206
-RAX: ff00000000000000 RBX: ffffffffa72d3ac0 RCX: ffffffffa48fb188
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffffa72d3ac0
-RBP: ffa0000004567678 R08: fff3fc00008acee5 R09: fffffbfff4e5a759
-R10: fffffbfff4e5a758 R11: ffffffffa72d3ac3 R12: 0000000000000001
-R13: 0000000000000003 R14: fffffbfff4e5a758 R15: ff1100000163c810
-FS:  00007fd72f03c700(0000) GS:ff1100006a200000(0000) =
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9e6b5806f4 CR3: 000000004122e001 CR4: 0000000000771ef0
-PKRU: 80000000
-Call Trace:
- <IRQ>
- </IRQ>
- <TASK>
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
- virt_spin_lock arch/x86/include/asm/qspinlock.h:102 [inline]
- queued_spin_lock_slowpath+0xb8/0xc60 kernel/locking/qspinlock.c:324
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x1de/0x290 kernel/locking/spinlock_debug.c:116
- spin_lock include/linux/spinlock.h:351 [inline]
- __kernfs_new_node+0xff/0x8c0 fs/kernfs/dir.c:629
- kernfs_new_node+0x18b/0x250 fs/kernfs/dir.c:700
- kernfs_create_dir_ns+0x4d/0x160 fs/kernfs/dir.c:1061
- internal_create_group+0xadd/0x1000 fs/sysfs/group.c:170
- loop_sysfs_init drivers/block/loop.c:762 [inline]
- loop_configure+0x68e/0xf90 drivers/block/loop.c:1098
- lo_ioctl+0xc47/0x1760 drivers/block/loop.c:1524
- blkdev_ioctl+0x27e/0x6d0 block/ioctl.c:693
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x19e/0x210 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd7303e832b
-Code: 0f 92 c0 84 c0 75 b0 49 8d 3c 1c e8 1f 3f 03 00 85 c0 78 b1 48 83 =
-c4 08 4c 89 e0 5b 41 5c c3 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fd72f03b968 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007fd7303e832b
-RDX: 0000000000000004 RSI: 0000000000004c00 RDI: 0000000000000005
-RBP: 0000000000000005 R08: 0000000000000000 R09: 00000000000046dc
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fd72f03ba0c R14: 00007fd72f03ba10 R15: 00000000200047c2
- </TASK>
-Sending NMI from CPU 0 to CPUs 1-3:
-NMI backtrace for cpu 2
-CPU: 2 UID: 0 PID: 234 Comm: systemd-udevd Tainted: G    B              =
-6.13.0-rc5 #1
-Tainted: [B]=3DBAD_PAGE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:106 [inline]
-RIP: 0010:queued_spin_lock_slowpath+0x248/0xc60 =
-kernel/locking/qspinlock.c:324
-Code: 14 02 48 89 d8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 bc 09 00 =
-00 b8 01 00 00 00 66 89 03 e9 c1 fe ff ff 89 44 24 48 f3 90 <e9> 5e fe =
-ff ff 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03
-RSP: 0018:ffa00000035e7660 EFLAGS: 00000202
-RAX: 0000000000000001 RBX: ffffffffa72d3ac0 RCX: ffffffffa48fb188
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffffa72d3ac0
-RBP: ffa00000035e76a8 R08: fff3fc00006bceeb R09: fffffbfff4e5a759
-R10: fffffbfff4e5a758 R11: ffffffffa72d3ac3 R12: 0000000000000001
-R13: 0000000000000003 R14: fffffbfff4e5a758 R15: 0000000000000001
-FS:  00007f52ff3348c0(0000) GS:ff1100006a300000(0000) =
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd727c1b000 CR3: 0000000005cd4001 CR4: 0000000000771ef0
-PKRU: 55555554
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x1de/0x290 kernel/locking/spinlock_debug.c:116
- spin_lock include/linux/spinlock.h:351 [inline]
- kernfs_put fs/kernfs/dir.c:574 [inline]
- kernfs_put+0x16d/0x3b0 fs/kernfs/dir.c:552
- evict+0x403/0x880 fs/inode.c:796
- iput_final fs/inode.c:1946 [inline]
- iput fs/inode.c:1972 [inline]
- iput+0x51c/0x830 fs/inode.c:1958
- dentry_unlink_inode+0x2cd/0x4c0 fs/dcache.c:422
- __dentry_kill+0x186/0x5b0 fs/dcache.c:625
- dput.part.0+0x49e/0x990 fs/dcache.c:867
- dput+0x1f/0x30 fs/dcache.c:857
- lookup_fast+0x24b/0x520 fs/namei.c:1757
- walk_component+0x5e/0x5b0 fs/namei.c:2108
- lookup_last fs/namei.c:2610 [inline]
- path_lookupat.isra.0+0x180/0x560 fs/namei.c:2634
- do_o_path fs/namei.c:3958 [inline]
- path_openat+0x1a97/0x2970 fs/namei.c:3980
- do_filp_open+0x1fa/0x2f0 fs/namei.c:4014
- do_sys_openat2+0x641/0x6e0 fs/open.c:1402
- do_sys_open+0xc7/0x150 fs/open.c:1417
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f52ff7e0342
-Code: c0 f6 c2 40 75 52 89 d0 45 31 d2 25 00 00 41 00 3d 00 00 41 00 74 =
-41 64 8b 04 25 18 00 00 00 85 c0 75 65 b8 01 01 00 00 0f 05 <48> 3d 00 =
-f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 38 64 48 2b 0c 25
-RSP: 002b:00007ffeb31bb980 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f52ff7e0342
-RDX: 00000000002a0000 RSI: 000055f5a5c490d1 RDI: 0000000000000011
-RBP: 000055f5a5c490d0 R08: 000055f59033f950 R09: 00007f52ff8c3be0
-R10: 0000000000000000 R11: 0000000000000246 R12: 000055f5a5bb47b5
-R13: 0000000000000011 R14: 0000000000000005 R15: 000055f5a5c490d1
- </TASK>
-NMI backtrace for cpu 3
-CPU: 3 UID: 0 PID: 2338 Comm: syz.6.112 Tainted: G    B              =
-6.13.0-rc5 #1
-Tainted: [B]=3DBAD_PAGE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:106 [inline]
-RIP: 0010:queued_spin_lock_slowpath+0x248/0xc60 =
-kernel/locking/qspinlock.c:324
-Code: 14 02 48 89 d8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 bc 09 00 =
-00 b8 01 00 00 00 66 89 03 e9 c1 fe ff ff 89 44 24 48 f3 90 <e9> 5e fe =
-ff ff 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03
-RSP: 0018:ffa0000003827630 EFLAGS: 00000202
-RAX: 0000000000000001 RBX: ffffffffa72d3ac0 RCX: ffffffffa48fb188
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffffa72d3ac0
-RBP: ffa0000003827678 R08: fff3fc0000704ee5 R09: fffffbfff4e5a759
-R10: fffffbfff4e5a758 R11: ffffffffa72d3ac3 R12: 0000000000000001
-R13: 0000000000000003 R14: fffffbfff4e5a758 R15: ff1100000163c810
-FS:  00007f562eb2c700(0000) GS:ff1100006a380000(0000) =
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f562770b000 CR3: 0000000021918005 CR4: 0000000000771ef0
-PKRU: 80000000
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x1de/0x290 kernel/locking/spinlock_debug.c:116
- spin_lock include/linux/spinlock.h:351 [inline]
- __kernfs_new_node+0xff/0x8c0 fs/kernfs/dir.c:629
- kernfs_new_node+0x18b/0x250 fs/kernfs/dir.c:700
- kernfs_create_dir_ns+0x4d/0x160 fs/kernfs/dir.c:1061
- internal_create_group+0xadd/0x1000 fs/sysfs/group.c:170
- loop_sysfs_init drivers/block/loop.c:762 [inline]
- loop_configure+0x68e/0xf90 drivers/block/loop.c:1098
- lo_ioctl+0xc47/0x1760 drivers/block/loop.c:1524
- blkdev_ioctl+0x27e/0x6d0 block/ioctl.c:693
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x19e/0x210 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f562fef932b
-Code: 0f 92 c0 84 c0 75 b0 49 8d 3c 1c e8 1f 3f 03 00 85 c0 78 b1 48 83 =
-c4 08 4c 89 e0 5b 41 5c c3 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f562eb2b968 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f562fef932b
-RDX: 0000000000000005 RSI: 0000000000004c00 RDI: 0000000000000006
-RBP: 0000000000000006 R08: 0000000000000000 R09: 0000000000005d98
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f562eb2ba0c R14: 00007f562eb2ba10 R15: 0000000020011842
- </TASK>
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 2322 Comm: syz.3.108 Tainted: G    B              =
-6.13.0-rc5 #1
-Tainted: [B]=3DBAD_PAGE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-1.13.0-1ubuntu1.1 04/01/2014
-RIP: 0010:apic_mem_wait_icr_idle arch/x86/kernel/apic/ipi.c:130 [inline]
-RIP: 0010:__default_send_IPI_shortcut+0x13/0x40 =
-arch/x86/kernel/apic/ipi.c:163
-Code: 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 =
-90 53 89 fb 83 fe 02 75 04 eb 1d f3 90 8b 04 25 00 c3 5f ff <f6> c4 10 =
-75 f2 09 de 89 34 25 00 c3 5f ff 5b e9 b4 94 33 08 e8 74
-RSP: 0018:ffa00000001e8850 EFLAGS: 00000002
-RAX: 00000000000400f6 RBX: 0000000000040000 RCX: ffffffff9c74659c
-RDX: 0000000000000001 RSI: 00000000000000f6 RDI: 0000000000040000
-RBP: 0000000000000001 R08: 0000000000000000 R09: fff3fc000003d100
-R10: fff3fc000003d0ff R11: ffa00000001e87ff R12: 0000000000000001
-R13: ff1100006a2bd270 R14: ff1100006a2bd468 R15: ffa00000001e8918
-FS:  00007f5d89ee7700(0000) GS:ff1100006a280000(0000) =
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000008f1e005 CR4: 0000000000771ef0
-PKRU: 80000000
-Call Trace:
- <NMI>
- </NMI>
- <IRQ>
- __apic_send_IPI_self arch/x86/include/asm/apic.h:455 [inline]
- arch_irq_work_raise+0x4f/0x70 arch/x86/kernel/irq_work.c:31
- irq_work_raise kernel/irq_work.c:84 [inline]
- __irq_work_queue_local kernel/irq_work.c:112 [inline]
- __irq_work_queue_local+0x14c/0x450 kernel/irq_work.c:88
- irq_work_queue_on+0x156/0x170 kernel/irq_work.c:175
- rcu_read_unlock_special kernel/rcu/tree_plugin.h:686 [inline]
- __rcu_read_unlock+0x440/0x570 kernel/rcu/tree_plugin.h:437
- rcu_read_unlock include/linux/rcupdate.h:882 [inline]
- __perf_event_output kernel/events/core.c:8091 [inline]
- perf_event_output_forward+0x16a/0x2c0 kernel/events/core.c:8100
- __perf_event_overflow+0x1e4/0x8f0 kernel/events/core.c:9926
- perf_swevent_overflow+0xac/0x150 kernel/events/core.c:10001
- perf_swevent_event+0x1e9/0x2e0 kernel/events/core.c:10034
- perf_tp_event+0x227/0xfe0 kernel/events/core.c:10535
- perf_trace_run_bpf_submit+0xef/0x180 kernel/events/core.c:10471
- do_perf_trace_preemptirq_template include/trace/events/preemptirq.h:14 =
-[inline]
- perf_trace_preemptirq_template+0x287/0x450 =
-include/trace/events/preemptirq.h:14
- trace_irq_enable include/trace/events/preemptirq.h:40 [inline]
- trace_hardirqs_on+0xf2/0x160 kernel/trace/trace_preemptirq.c:73
- irqentry_exit+0x3b/0x90 kernel/entry/common.c:357
- asm_sysvec_irq_work+0x1a/0x20 arch/x86/include/asm/idtentry.h:738
-RIP: 0010:handle_softirqs+0x185/0x870 kernel/softirq.c:549
-Code: 00 00 48 89 44 24 20 48 c7 c7 40 39 c7 a4 e8 82 23 fc 07 65 66 c7 =
-05 20 c0 72 63 00 00 e8 83 c3 40 00 fb 48 c7 c3 c0 b0 e0 a6 <e9> 8f 00 =
-00 00 48 b9 00 00 00 00 00 fc ff df 48 89 d8 48 c1 e8 03
-RSP: 0018:ffa00000001e8f78 EFLAGS: 00000246
-RAX: 0000000000000007 RBX: ffffffffa6e0b0c0 RCX: 1ffffffff51f7c86
-RDX: 0000000000000000 RSI: 0000000000000103 RDI: ffffffff9c90f18d
-RBP: ffa0000004656d48 R08: 0000000000000000 R09: 0000000000000000
-R10: fffffbfff51f7aba R11: ffffffffa8fbd5d7 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000200
- __do_softirq kernel/softirq.c:595 [inline]
- invoke_softirq kernel/softirq.c:435 [inline]
- __irq_exit_rcu kernel/softirq.c:662 [inline]
- irq_exit_rcu+0xee/0x140 kernel/softirq.c:678
- instr_sysvec_call_function_single arch/x86/kernel/smp.c:266 [inline]
- sysvec_call_function_single+0xca/0xf0 arch/x86/kernel/smp.c:266
- </IRQ>
- <TASK>
- asm_sysvec_call_function_single+0x1a/0x20 =
-arch/x86/include/asm/idtentry.h:709
-RIP: 0010:get_current arch/x86/include/asm/current.h:49 [inline]
-RIP: 0010:__rcu_read_unlock+0xc6/0x570 kernel/rcu/tree_plugin.h:440
-Code: b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 0f b6 04 02 84 c0 =
-74 08 3c 03 0f 8e bf 01 00 00 8b 85 00 04 00 00 85 c0 75 57 <65> 48 8b =
-1d b2 ae 52 63 48 8d bb fc 03 00 00 48 b8 00 00 00 00 00
-RSP: 0018:ffa0000004656df8 EFLAGS: 00000206
-RAX: 0000000000000046 RBX: ff1100006a2bd240 RCX: 1ffffffff51f7c86
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffff9cb10432
-RBP: ffffffffa7126380 R08: 0000000000000000 R09: 0000000000000000
-R10: fffffbfff51f7aba R11: ffffffffa8fbd5d7 R12: 0000000000000001
-R13: 0000000000000200 R14: ffffffffa7194b00 R15: 0000000000000000
- rcu_read_unlock include/linux/rcupdate.h:882 [inline]
- __is_insn_slot_addr+0x140/0x290 kernel/kprobes.c:305
- is_kprobe_insn_slot include/linux/kprobes.h:332 [inline]
- kernel_text_address kernel/extable.c:123 [inline]
- kernel_text_address+0x5b/0xc0 kernel/extable.c:94
- __kernel_text_address+0xd/0x40 kernel/extable.c:79
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:369 [inline]
- unwind_get_return_address+0x62/0xb0 arch/x86/kernel/unwind_orc.c:364
- arch_stack_walk+0x9d/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8f/0xc0 kernel/stacktrace.c:122
- kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x87/0x90 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4119 [inline]
- slab_alloc_node mm/slub.c:4168 [inline]
- kmem_cache_alloc_noprof+0x154/0x420 mm/slub.c:4175
- radix_tree_node_alloc.constprop.0+0x1e8/0x350 lib/radix-tree.c:253
- idr_get_free+0x569/0xac0 lib/radix-tree.c:1506
- idr_alloc_u32+0x174/0x2d0 lib/idr.c:46
- idr_alloc_cyclic+0x106/0x230 lib/idr.c:125
- __kernfs_new_node+0x117/0x8c0 fs/kernfs/dir.c:630
- kernfs_new_node+0x18b/0x250 fs/kernfs/dir.c:700
- __kernfs_create_file+0x55/0x360 fs/kernfs/file.c:1034
- sysfs_add_file_mode_ns+0x21c/0x440 fs/sysfs/file.c:313
- sysfs_create_file_ns+0x12f/0x1d0 fs/sysfs/file.c:380
- sysfs_create_file include/linux/sysfs.h:788 [inline]
- sysfs_create_files+0x6e/0x1c0 fs/sysfs/file.c:390
- btrfs_sysfs_add_mounted+0x1f1/0x480 fs/btrfs/sysfs.c:2170
- open_ctree+0x24d6/0x5190 fs/btrfs/disk-io.c:3471
- btrfs_fill_super fs/btrfs/super.c:972 [inline]
- btrfs_get_tree_super fs/btrfs/super.c:1898 [inline]
- btrfs_get_tree+0x101a/0x1c40 fs/btrfs/super.c:2093
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- fc_mount+0x17/0xd0 fs/namespace.c:1231
- btrfs_get_tree_subvol fs/btrfs/super.c:2051 [inline]
- btrfs_get_tree+0xa1b/0x1c40 fs/btrfs/super.c:2094
- vfs_get_tree+0x93/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3507 [inline]
- path_mount+0x1287/0x1d60 fs/namespace.c:3834
- do_mount+0xf8/0x110 fs/namespace.c:3847
- __do_sys_mount fs/namespace.c:4057 [inline]
- __se_sys_mount fs/namespace.c:4034 [inline]
- __x64_sys_mount+0x193/0x230 fs/namespace.c:4034
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5d8b29615e
-Code: ff ff ff 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 =
-00 00 00 00 66 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 =
-f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f5d89ee69b8 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 000000000000559d RCX: 00007f5d8b29615e
-RDX: 00000000200055c0 RSI: 0000000020005600 RDI: 00007f5d89ee6a10
-RBP: 00007f5d89ee6a50 R08: 00007f5d89ee6a50 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 00000000200055c0
-R13: 0000000020005600 R14: 00007f5d89ee6a10 R15: 0000000020000440
- </TASK>
+Thanks.
 
+-Koichiro
 
-
----------------
-thanks,
-Kun Hu=
+>  
+>  	/* check only supported bits are set */
+>  	if (event->attr.config & ~RAPL_EVENT_MASK)
+> @@ -356,31 +381,49 @@ static int rapl_pmu_event_init(struct perf_event *event)
+>  	if (event->cpu < 0)
+>  		return -EINVAL;
+>  
+> -	if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
+> +	rapl_pmus = container_of(event->pmu, struct rapl_pmus, pmu);
+> +	if (!rapl_pmus)
+>  		return -EINVAL;
+> -
+> -	cfg = array_index_nospec((long)cfg, NR_RAPL_PKG_DOMAINS + 1);
+> -	bit = cfg - 1;
+> -
+> -	/* check event supported */
+> -	if (!(rapl_pmus_pkg->cntr_mask & (1 << bit)))
+> +	rapl_pmus_scope = rapl_pmus->pmu.scope;
+> +
+> +	if (rapl_pmus_scope == PERF_PMU_SCOPE_PKG || rapl_pmus_scope == PERF_PMU_SCOPE_DIE) {
+> +		/* only look at RAPL package events */
+> +		if (event->attr.type != rapl_pmus_pkg->pmu.type)
+> +			return -ENOENT;
+> +
+> +		cfg = array_index_nospec((long)cfg, NR_RAPL_PKG_DOMAINS + 1);
+> +		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
+> +			return -EINVAL;
+> +
+> +		bit = cfg - 1;
+> +		event->hw.event_base = rapl_model->rapl_pkg_msrs[bit].msr;
+> +	} else if (rapl_pmus_scope == PERF_PMU_SCOPE_CORE) {
+> +		/* only look at RAPL core events */
+> +		if (event->attr.type != rapl_pmus_core->pmu.type)
+> +			return -ENOENT;
+> +
+> +		cfg = array_index_nospec((long)cfg, NR_RAPL_CORE_DOMAINS + 1);
+> +		if (!cfg || cfg >= NR_RAPL_PKG_DOMAINS + 1)
+> +			return -EINVAL;
+> +
+> +		bit = cfg - 1;
+> +		event->hw.event_base = rapl_model->rapl_core_msrs[bit].msr;
+> +	} else
+>  		return -EINVAL;
+>  
+> -	/* unsupported modes and filters */
+> -	if (event->attr.sample_period) /* no sampling */
+> +	/* check event supported */
+> +	if (!(rapl_pmus->cntr_mask & (1 << bit)))
+>  		return -EINVAL;
+>  
+> -	rapl_pmu_idx = get_rapl_pmu_idx(event->cpu);
+> -	if (rapl_pmu_idx >= rapl_pmus_pkg->nr_rapl_pmu)
+> +	rapl_pmu_idx = get_rapl_pmu_idx(event->cpu, rapl_pmus_scope);
+> +	if (rapl_pmu_idx >= rapl_pmus->nr_rapl_pmu)
+>  		return -EINVAL;
+> -
+>  	/* must be done before validate_group */
+> -	rapl_pmu = rapl_pmus_pkg->rapl_pmu[rapl_pmu_idx];
+> +	rapl_pmu = rapl_pmus->rapl_pmu[rapl_pmu_idx];
+>  	if (!rapl_pmu)
+>  		return -EINVAL;
+>  
+>  	event->pmu_private = rapl_pmu;
+> -	event->hw.event_base = rapl_model->rapl_pkg_msrs[bit].msr;
+>  	event->hw.config = cfg;
+>  	event->hw.idx = bit;
+>  
+> @@ -397,12 +440,14 @@ RAPL_EVENT_ATTR_STR(energy-pkg  ,   rapl_pkg, "event=0x02");
+>  RAPL_EVENT_ATTR_STR(energy-ram  ,   rapl_ram, "event=0x03");
+>  RAPL_EVENT_ATTR_STR(energy-gpu  ,   rapl_gpu, "event=0x04");
+>  RAPL_EVENT_ATTR_STR(energy-psys,   rapl_psys, "event=0x05");
+> +RAPL_EVENT_ATTR_STR(energy-core,   rapl_core, "event=0x01");
+>  
+>  RAPL_EVENT_ATTR_STR(energy-cores.unit, rapl_cores_unit, "Joules");
+>  RAPL_EVENT_ATTR_STR(energy-pkg.unit  ,   rapl_pkg_unit, "Joules");
+>  RAPL_EVENT_ATTR_STR(energy-ram.unit  ,   rapl_ram_unit, "Joules");
+>  RAPL_EVENT_ATTR_STR(energy-gpu.unit  ,   rapl_gpu_unit, "Joules");
+>  RAPL_EVENT_ATTR_STR(energy-psys.unit,   rapl_psys_unit, "Joules");
+> +RAPL_EVENT_ATTR_STR(energy-core.unit,   rapl_core_unit, "Joules");
+>  
+>  /*
+>   * we compute in 0.23 nJ increments regardless of MSR
+> @@ -412,6 +457,7 @@ RAPL_EVENT_ATTR_STR(energy-pkg.scale,     rapl_pkg_scale, "2.3283064365386962890
+>  RAPL_EVENT_ATTR_STR(energy-ram.scale,     rapl_ram_scale, "2.3283064365386962890625e-10");
+>  RAPL_EVENT_ATTR_STR(energy-gpu.scale,     rapl_gpu_scale, "2.3283064365386962890625e-10");
+>  RAPL_EVENT_ATTR_STR(energy-psys.scale,   rapl_psys_scale, "2.3283064365386962890625e-10");
+> +RAPL_EVENT_ATTR_STR(energy-core.scale,   rapl_core_scale, "2.3283064365386962890625e-10");
+>  
+>  /*
+>   * There are no default events, but we need to create
+> @@ -444,6 +490,12 @@ static const struct attribute_group *rapl_attr_groups[] = {
+>  	NULL,
+>  };
+>  
+> +static const struct attribute_group *rapl_core_attr_groups[] = {
+> +	&rapl_pmu_format_group,
+> +	&rapl_pmu_events_group,
+> +	NULL,
+> +};
+> +
+>  static struct attribute *rapl_events_cores[] = {
+>  	EVENT_PTR(rapl_cores),
+>  	EVENT_PTR(rapl_cores_unit),
+> @@ -504,6 +556,18 @@ static struct attribute_group rapl_events_psys_group = {
+>  	.attrs = rapl_events_psys,
+>  };
+>  
+> +static struct attribute *rapl_events_core[] = {
+> +	EVENT_PTR(rapl_core),
+> +	EVENT_PTR(rapl_core_unit),
+> +	EVENT_PTR(rapl_core_scale),
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group rapl_events_core_group = {
+> +	.name  = "events",
+> +	.attrs = rapl_events_core,
+> +};
+> +
+>  static bool test_msr(int idx, void *data)
+>  {
+>  	return test_bit(idx, (unsigned long *) data);
+> @@ -541,6 +605,11 @@ static struct perf_msr amd_rapl_pkg_msrs[] = {
+>  	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL, false, 0 },
+>  };
+>  
+> +static struct perf_msr amd_rapl_core_msrs[] = {
+> +	[PERF_RAPL_CORE] = { MSR_AMD_CORE_ENERGY_STATUS, &rapl_events_core_group,
+> +				 test_msr, false, RAPL_MSR_MASK },
+> +};
+> +
+>  static int rapl_check_hw_unit(void)
+>  {
+>  	u64 msr_rapl_power_unit_bits;
+> @@ -552,6 +621,8 @@ static int rapl_check_hw_unit(void)
+>  	for (i = 0; i < NR_RAPL_PKG_DOMAINS; i++)
+>  		rapl_pkg_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+>  
+> +	rapl_core_hw_unit = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+> +
+>  	switch (rapl_model->unit_quirk) {
+>  	/*
+>  	 * DRAM domain on HSW server and KNL has fixed energy unit which can be
+> @@ -570,7 +641,6 @@ static int rapl_check_hw_unit(void)
+>  		break;
+>  	}
+>  
+> -
+>  	/*
+>  	 * Calculate the timer rate:
+>  	 * Use reference of 200W for scaling the timeout to avoid counter
+> @@ -589,9 +659,13 @@ static int rapl_check_hw_unit(void)
+>  static void __init rapl_advertise(void)
+>  {
+>  	int i;
+> +	int num_counters = hweight32(rapl_pmus_pkg->cntr_mask);
+> +
+> +	if (rapl_pmus_core)
+> +		num_counters += hweight32(rapl_pmus_core->cntr_mask);
+>  
+>  	pr_info("API unit is 2^-32 Joules, %d fixed counters, %llu ms ovfl timer\n",
+> -		hweight32(rapl_pmus_pkg->cntr_mask), rapl_timer_ms);
+> +		num_counters, rapl_timer_ms);
+>  
+>  	for (i = 0; i < NR_RAPL_PKG_DOMAINS; i++) {
+>  		if (rapl_pmus_pkg->cntr_mask & (1 << i)) {
+> @@ -599,6 +673,10 @@ static void __init rapl_advertise(void)
+>  				rapl_pkg_domain_names[i], rapl_pkg_hw_unit[i]);
+>  		}
+>  	}
+> +
+> +	if (rapl_pmus_core && (rapl_pmus_core->cntr_mask & (1 << PERF_RAPL_CORE)))
+> +		pr_info("hw unit of domain %s 2^-%d Joules\n",
+> +			rapl_core_domain_name, rapl_core_hw_unit);
+>  }
+>  
+>  static void cleanup_rapl_pmus(struct rapl_pmus *rapl_pmus)
+> @@ -619,6 +697,10 @@ static const struct attribute_group *rapl_attr_update[] = {
+>  	NULL,
+>  };
+>  
+> +static const struct attribute_group *rapl_core_attr_update[] = {
+> +	&rapl_events_core_group,
+> +};
+> +
+>  static int __init init_rapl_pmu(struct rapl_pmus *rapl_pmus)
+>  {
+>  	struct rapl_pmu *rapl_pmu;
+> @@ -645,13 +727,22 @@ static int __init init_rapl_pmu(struct rapl_pmus *rapl_pmus)
+>  	return -ENOMEM;
+>  }
+>  
+> -static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_scope)
+> +static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_scope,
+> +				 const struct attribute_group **rapl_attr_groups,
+> +				 const struct attribute_group **rapl_attr_update)
+>  {
+>  	int nr_rapl_pmu = topology_max_packages();
+>  	struct rapl_pmus *rapl_pmus;
+>  
+> +	/*
+> +	 * rapl_pmu_scope must be either PKG, DIE or CORE
+> +	 */
+>  	if (rapl_pmu_scope == PERF_PMU_SCOPE_DIE)
+>  		nr_rapl_pmu	*= topology_max_dies_per_package();
+> +	else if (rapl_pmu_scope == PERF_PMU_SCOPE_CORE)
+> +		nr_rapl_pmu	*= topology_num_cores_per_package();
+> +	else if (rapl_pmu_scope != PERF_PMU_SCOPE_PKG)
+> +		return -EINVAL;
+>  
+>  	rapl_pmus = kzalloc(struct_size(rapl_pmus, rapl_pmu, nr_rapl_pmu), GFP_KERNEL);
+>  	if (!rapl_pmus)
+> @@ -740,8 +831,10 @@ static struct rapl_model model_spr = {
+>  
+>  static struct rapl_model model_amd_hygon = {
+>  	.pkg_events	= BIT(PERF_RAPL_PKG),
+> +	.core_events	= BIT(PERF_RAPL_CORE),
+>  	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
+>  	.rapl_pkg_msrs	= amd_rapl_pkg_msrs,
+> +	.rapl_core_msrs	= amd_rapl_core_msrs,
+>  };
+>  
+>  static const struct x86_cpu_id rapl_model_match[] __initconst = {
+> @@ -813,7 +906,8 @@ static int __init rapl_pmu_init(void)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = init_rapl_pmus(&rapl_pmus_pkg, rapl_pkg_pmu_scope);
+> +	ret = init_rapl_pmus(&rapl_pmus_pkg, rapl_pkg_pmu_scope, rapl_attr_groups,
+> +			     rapl_attr_update);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -825,6 +919,27 @@ static int __init rapl_pmu_init(void)
+>  	if (ret)
+>  		goto out;
+>  
+> +	if (rapl_model->core_events) {
+> +		ret = init_rapl_pmus(&rapl_pmus_core, PERF_PMU_SCOPE_CORE,
+> +				     rapl_core_attr_groups,
+> +				     rapl_core_attr_update);
+> +		if (ret) {
+> +			pr_warn("power-core PMU initialization failed (%d)\n", ret);
+> +			goto core_init_failed;
+> +		}
+> +
+> +		rapl_pmus_core->cntr_mask = perf_msr_probe(rapl_model->rapl_core_msrs,
+> +						     PERF_RAPL_CORE_EVENTS_MAX, false,
+> +						     (void *) &rapl_model->core_events);
+> +
+> +		ret = perf_pmu_register(&rapl_pmus_core->pmu, "power_core", -1);
+> +		if (ret) {
+> +			pr_warn("power-core PMU registration failed (%d)\n", ret);
+> +			cleanup_rapl_pmus(rapl_pmus_core);
+> +		}
+> +	}
+> +
+> +core_init_failed:
+>  	rapl_advertise();
+>  	return 0;
+>  
+> @@ -837,6 +952,10 @@ module_init(rapl_pmu_init);
+>  
+>  static void __exit intel_rapl_exit(void)
+>  {
+> +	if (rapl_pmus_core) {
+> +		perf_pmu_unregister(&rapl_pmus_core->pmu);
+> +		cleanup_rapl_pmus(rapl_pmus_core);
+> +	}
+>  	perf_pmu_unregister(&rapl_pmus_pkg->pmu);
+>  	cleanup_rapl_pmus(rapl_pmus_pkg);
+>  }
+> -- 
+> 2.34.1
+> 
