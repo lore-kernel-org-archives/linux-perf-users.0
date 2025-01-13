@@ -1,159 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19721BB6B3
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 18:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55331B2199
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 18:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736792830; cv=none; b=FZsjBtI3qqEUmqDOoCqEhG53phXAW1QVq2CfB4vXRbnkZtbksRzSNqd0ZSorpW+OCipyFVYBpamaWssw7nK9wqfN7WmvXzHS7S7vAUQxgL0ROpIMTXPTK+uv7E5E+oV65URfVOw+bLyMGkVfd6JTOJKbsxB49Mj/yPNQN4Z/+hE=
+	t=1736794775; cv=none; b=WTYaRL4IOoc9BiDVZSbc/gG3J7LlApqksSdLn/7bC/9Gab48rB0Rze2ZbVHW61lTkFLg51JhrLKJKbSNNRxKw1xbXJoQ0ANZ4Tl330M3jiQGV1zKJbxmev0tUfb9Z81YkpeYG5Co917lITC5x1nj8tCUiZeWooojCFLrY5BKiFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736792830; c=relaxed/simple;
-	bh=IO5SSy9yGN9ez+o4inQvSQyhoHVF3kQQgdjv+vpq1yg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Do8N1hxQXrNM5jCuL0Xf2sQIJvotS871vPnRtuau++uPuSis+Xa4I3lfFpiQMiRJKfXZ0fqgTyldY2Hqx2g1l58UwTy2PsAdHOZXJTWa8iUfXixHCXw/xOF+9Mv70ZEOUvNSH0/XAWmmc7XhdM/DNFBavKhQ55/cOxiDpBkKU7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtexWxTW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736794775; c=relaxed/simple;
+	bh=eDkSaHKisJUZ13hHtYwmN4Xauvlba9YzJ2rNjB0q1Ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MLTExmFySOB3SU/tOGoITYYyCQ1ypVzoHEd2SAzUSFzyXQ1DJtvsUs+eS46Mqm6ceUPYZOEkF67w6Y4SCBSQttykpZtQaaoL720STq3mTJD5BsMUY/nYRw+qWJ83ZfAZalbapGAyEsdBA/KFMTOAgjjjjma1FvFsWnvkSrCf1t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sIoviWWW; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtexWxTW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736792827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ox4QFeoIlB8yMvVMUnjPRi7APZkRaU74KoxBbfWdo/Y=;
-	b=PtexWxTWa2MGY4mW6sXI3jrTDU9fBKweC3ul4Neckb8RQrRGmmljPO5INjZiEvkLv4t5pq
-	aFjOYcj5D7UjtyCjKen/LdMYsD/JD4ZjGjXHMId6cWKqVL0uV0WSIZ7/oepHHagyQchNy7
-	+yjDT1i1fIYRsnw7Ms4Bmqf63QOHjFY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-596-haGVms8KP7qarL5pHqhw4Q-1; Mon,
- 13 Jan 2025 13:27:04 -0500
-X-MC-Unique: haGVms8KP7qarL5pHqhw4Q-1
-X-Mimecast-MFC-AGG-ID: haGVms8KP7qarL5pHqhw4Q
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 868B21955DDB;
-	Mon, 13 Jan 2025 18:27:03 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.147])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AE6B19560AD;
-	Mon, 13 Jan 2025 18:27:00 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com,
-	mpetlan@redhat.com,
-	namhyung@kernel.org
-Cc: irogers@google.com
-Subject: [PATCH v2 10/10] perf test: Remove perftool drivers
-Date: Mon, 13 Jan 2025 19:26:05 +0100
-Message-ID: <20250113182605.130719-11-vmolnaro@redhat.com>
-In-Reply-To: <Z4UwHy-Kj9XDI9cf@x1>
-References: <Z4UwHy-Kj9XDI9cf@x1>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sIoviWWW"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2161eb95317so81698905ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 10:59:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736794773; x=1737399573; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oucMJkx6ro9PPa7y1jrDOx4rSBXUZuES3PIBtiAphnY=;
+        b=sIoviWWWS0Cyc0Y7VG2B2832pYXjGLEsQOtUCFMXBMF9H74c5vyGK5sfql+3Oqs08X
+         vm8KzrHOEEidrM1p61h06NhQ6RVS8RMIXr1iH2+WCNWftjm1bfYRM8z8Q3EIExjZLAUk
+         qRjYuGDTboUDS2WC3czen5IxXRgQDX5jsnty4tARILahLicXAtQ2xV3IU2GoxdJJjc2l
+         ZontMdKfC9ZqToUkHVUjXygIJJ3trpvtIZBn2QMMtbDkHe9EW+YuN8NrkuOS+KNTKWy5
+         GevHFwzT8762us+r3yiDEe2bNzwHw4gpqBOl1eP3XPtAPpuQ4PaSZGzyD9Y2l1TN1tQE
+         8H8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736794773; x=1737399573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oucMJkx6ro9PPa7y1jrDOx4rSBXUZuES3PIBtiAphnY=;
+        b=Mk4qvy3SvLAzovd3LniWSV/g3BAGNyrEIE05eRpDNmfCh34FnMLk0n4BmmSZg1huYF
+         BR1JFLvkLiyzo4LAwPA1rt+WHba7SMdk4k5wN5FLoTZGsxD+PpCipHcc1SasBwEzutC1
+         zeVWagQyj4/vjuzqVDU5PjxCIFFcAM+Mp8oBtYdcZfQo8uPCTqo+4t8MpOyie9uRAi9m
+         YWlLU7KtEel2ZNlUeuALEKqPysbkhojp+gSCgnvZZSr4Z70oGg/Vi+Q/EDHqL6t22R6F
+         5gjK58/cXCNs/oX6HPoS+bp/HuPf6bu7UpWCzOgULCzIUG+Vxd6EUD9z3k9B4xjmjmY8
+         x7hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ZdCB8H0eATD9gHCzA3aTTfT2lhZc6OfcfkSLXzGZ/cUJcFY9KEcVynzkrYyLS1NqEvD9lrjRohPVZ6ikAi17@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJK0Zuiy5FAuU/SYDU91PfxcvNmH7MuADFiS+Oqyc36ng34kY4
+	7LTgly125uzRru57rX9sDdJJG45XBJCXShNk6/NxSulf0CvjI7nJAvUsBgyxonA=
+X-Gm-Gg: ASbGncvl6n1VfbmUzU+YDrVjCGS8gyZ7/cPnt8CpwikuKku7r/hEXcpp5w4wpllJKGa
+	UMKlUfMQ12lE/v7mUuLu02x5bpdacVQoNGGj82dCQSWEX5tPfPpDI0pgvOfhZNqm4peoQkyUsAN
+	zspX3jcqAWLoNsUWNCibR4dvNlOeXVmamFOhLrpXIlQPl0/cNcIVNcPLABGmi2zA7gMJ2bWK54Q
+	Cfeush/26wEFkIHdq2ZroCAHjRIaWkjk9dtkfm7x4dcEsWWPFc=
+X-Google-Smtp-Source: AGHT+IF4QVdzyukBMivdFlVyYWumc55Rbbg/jjOLDIJYUn9Ggcyr7/1DtytnRlcd4ciNzcdkBV2jcQ==
+X-Received: by 2002:a17:902:c941:b0:216:7cbf:951f with SMTP id d9443c01a7336-21a83f4f096mr342220165ad.21.1736794772965;
+        Mon, 13 Jan 2025 10:59:32 -0800 (PST)
+Received: from ghost ([2601:647:6700:64d0:a6ef:43e8:dc9:f072])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f219330sm56802405ad.132.2025.01.13.10.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2025 10:59:32 -0800 (PST)
+Date: Mon, 13 Jan 2025 10:59:29 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Atish Patra <atishp@rivosinc.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] perf: Add PERF_EVENT_IOC_INC_EVENT_LIMIT
+Message-ID: <Z4VikUrFuHocTXAl@ghost>
+References: <20250106-perf_set_event_limit-v3-0-dbde0e90ddde@rivosinc.com>
+ <20250106-perf_set_event_limit-v3-1-dbde0e90ddde@rivosinc.com>
+ <20250113131812.GB8362@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250113131812.GB8362@noisy.programming.kicks-ass.net>
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Mon, Jan 13, 2025 at 02:18:12PM +0100, Peter Zijlstra wrote:
+> On Mon, Jan 06, 2025 at 08:07:32PM -0800, Charlie Jenkins wrote:
+> > PERF_EVENT_IOC_REFRESH immediately enables after incrementing
+> > event_limit.  Provide a new ioctl flag that allows programs to increment
+> > event_limit without enabling the event. A usecase for this is to set an
+> > event_limit in combination with enable_on_exec.
+> 
+> 
+> Utter lack of WHY.
 
-The perf now provides all of the features required for running the
-perftool test cases, such as creating log directories, running setup scripts
-and the tests are structured by the base_ directories.
+My usecase is being able to use libperf to calculate performance metrics
+from running a program for X number of instructions.
+PERF_EVENT_IOC_REFRESH can be used to stop the counters after the
+instruction sampling threshold has been hit. This requires being able to
+start PERF_EVENT_IOC_REFRESH as soon as the program starts executing,
+which is a perfect application for enable_on_exec.
 
-Remove the drivers as they are no longer necessary together with
-the condition of skipping the base_ directories and run the
-test cases by the default perf test structure.
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- .../tests/shell/perftool-testsuite_probe.sh   | 23 -------------------
- .../tests/shell/perftool-testsuite_report.sh  | 23 -------------------
- tools/perf/tests/tests-scripts.c              |  2 --
- 3 files changed, 48 deletions(-)
- delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
- delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
-
-diff --git a/tools/perf/tests/shell/perftool-testsuite_probe.sh b/tools/perf/tests/shell/perftool-testsuite_probe.sh
-deleted file mode 100755
-index 7b1bfd0f888fc30c..0000000000000000
---- a/tools/perf/tests/shell/perftool-testsuite_probe.sh
-+++ /dev/null
-@@ -1,23 +0,0 @@
--#!/bin/bash
--# perftool-testsuite_probe (exclusive)
--# SPDX-License-Identifier: GPL-2.0
--
--test -d "$(dirname "$0")/base_probe" || exit 2
--cd "$(dirname "$0")/base_probe" || exit 2
--status=0
--
--PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
--export PERFSUITE_RUN_DIR
--
--for testcase in setup.sh test_*; do                  # skip setup.sh if not present or not executable
--     test -x "$testcase" || continue
--     ./"$testcase"
--     (( status += $? ))
--done
--
--if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
--	rm -rf "$PERFSUITE_RUN_DIR"
--fi
--
--test $status -ne 0 && exit 1
--exit 0
-diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/perf/tests/shell/perftool-testsuite_report.sh
-deleted file mode 100755
-index a8cf75b4e77ec1a3..0000000000000000
---- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-+++ /dev/null
-@@ -1,23 +0,0 @@
--#!/bin/bash
--# perftool-testsuite_report (exclusive)
--# SPDX-License-Identifier: GPL-2.0
--
--test -d "$(dirname "$0")/base_report" || exit 2
--cd "$(dirname "$0")/base_report" || exit 2
--status=0
--
--PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
--export PERFSUITE_RUN_DIR
--
--for testcase in setup.sh test_*; do                  # skip setup.sh if not present or not executable
--     test -x "$testcase" || continue
--     ./"$testcase"
--     (( status += $? ))
--done
--
--if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
--	rm -rf "$PERFSUITE_RUN_DIR"
--fi
--
--test $status -ne 0 && exit 1
--exit 0
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index 91ef0b47d2a8425c..e09a52c0f692dcfe 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -413,8 +413,6 @@ static void append_suits_in_dir(int dir_fd,
- 			if (!S_ISDIR(st.st_mode))
- 				continue;
- 		}
--		if (strncmp(ent->d_name, "base_", 5) == 0)
--			continue; /* Skip scripts that have a separate driver. */
- 
- 		/* Scan subdir for test cases*/
- 		fd = openat(dir_fd, ent->d_name, O_PATH);
--- 
-2.43.0
+- Charlie
 
