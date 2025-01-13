@@ -1,154 +1,1951 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B008204583
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 12:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A605622CF12
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 12:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736771135; cv=none; b=HKeDGBbUBlwlsKs+btcfDtOr/fg66wZMWJfg09Vq50/SmvlhCV0zD3YBZrRDMsZNxaa3jqmmU6csEGyZhgZ3rxKyIjVwQwK+PpyDFRkV7jr20r7NtevhnCAELPHM34mapKqeT6v6eT6C5aDK/6sRSV/IF85lkC8rfs6fNIuuPwk=
+	t=1736771720; cv=none; b=GPAw1IL3d/frEmWHeBf9+K0sIZm/VrXVV+wN0mSdPd81bAHIYRMkb9WWyKGrqthVw7tCh04oJ27TDbGmKiJJRlrFX37ijPuS9GQr63etlKuFdxSsPBTvd9E+eGfCzrmW1a1spvXIX5EH5/a51emjbFzgFxNl0JiND32e0sacFE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736771135; c=relaxed/simple;
-	bh=RAOJuSjayWPQDs7oILktjx1PyK6wjZkRcBOAt+KAVNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nppnha47Xti9njh0q4ZcHyLELp6wPoSiFyGTEiGbdHk7zYA5KXuPSVl4zLqU2GQ9Uj/S81vbCNGNcQvENApj90PfeAjzEDevmpI0bNZrNzmvbO4s9lLrV5tQI+Sg83D5kokZu1qyYK+lJT8Lyhej2+eS9db97tvurGvjZ0MZswk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cb6lvZ8W; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736771720; c=relaxed/simple;
+	bh=wJhSzgwLgsWyiOdkXmb3cfXaF4YQpf4pXvRNNKrQsxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=EpsMcfqbo6rVxsT6rLTtogLDxKuduuQ4ai3lFQHCtmRG6TftgZYLxW2ylcylp8LiQJcxjvz2J2U/gB+FqXhb6XJkXIkaglJAz89OdVtnff19M5Qp7+5lt0p+2LDfMMkmINMvc4K7Ghdg/Gc3kzODXGXZMfS/pvlXIg50oj1NCB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LPwLMNYK; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cb6lvZ8W"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53ffaaeeb76so4203480e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 04:25:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPwLMNYK"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9e44654ae3so675056366b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 04:35:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736771131; x=1737375931; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QPA9rYWDLBwtTLVL+VDbhbWGbkRHM8aCAEpCy806+Ck=;
-        b=Cb6lvZ8WDYjO9XxCH+zXFwVFlPJm3mTNf6afWAzywkYqOcg6sRYmOMwVIaYDKg0aZx
-         EMw2IXN2uRCTRVtDQAOOIwPbCfqADr63s2qELcfl3TZ+q+NaYbiKLBs9Y8DVnoly+oBH
-         FoKADxaEhkEf51bZDWFzCLllS4mmjgD8sJc5ItLPRlqsvI2kD+RHsTkbsEiPRB9GZzcf
-         rHj3xc5g2Em8rIOj+FaV0fyfd0NzXusUc+AESi4bfdRguf3uep4AscboRQauVfnBOsx6
-         hyU9HcGAo/G6bkvHxXWsW6gDp8fLNo3cH1CA2G2I/zXHDjiuqJH68knzECSxjLa6gRkN
-         kBgg==
+        d=linaro.org; s=google; t=1736771713; x=1737376513; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rjqsbxrSwjNMBlhk7NK7sukMSo4I7qE3XC+q5onaDg0=;
+        b=LPwLMNYKEWtdHD49hmao2MeXj6OAL9q4PnP6g/g1UwJi/3B+RBot2J5h/EYH3+ll04
+         sfVNN84dAYQCnhxe6N07jUNOX0s1yHKPCKeGvlqY/hvLgSYQh3VxsRMtzWZ6sflWYiNb
+         BWUzE3LlHYV/wkdpt9OWxdPyM9iAbYUOhqm7rRCZIHRm717CEL1OqOP3UDANqdYb8hIW
+         x9c4u+2ksYntfdFwaeLXPZwJDCT3SX3diHwgdjgAVwaoCHccBpW+lDty2Ec4SPs4rDqJ
+         JMlH3g3I0ffmbK9KW98xL1VafPDTYvoEHDjpPzdQLepPJ+HU0aHpQAP5Vckzv0gI2Kuw
+         I5xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736771131; x=1737375931;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QPA9rYWDLBwtTLVL+VDbhbWGbkRHM8aCAEpCy806+Ck=;
-        b=SidC5UrBUhxKoilV7ML0nSauHTo2qOebdRW5K5OyKEnNMsmMEgFAQ6P49QpTAy68hG
-         KLesDDMmWYRcP4W2Pr+j49zjr8NiOxAfrSHVSUWZutXRWqYiHOKG3J9axPqv/enib4vr
-         LvbPr2oPlEsyQAHPTZccdm7PUHVmd4J2RsDB5QsdH6BpV/lt29x7KIj761B4Cg9+Otl1
-         Y1Xn4BYJtehNcj+yHQJBfDgfgJWFxN8o5IEGocqws5EkmtRVF3Typ/78JsmO2XEoE7s+
-         PpHzV6IdgyozgBHOrHlqLZu9PyS/ihbpeJ1MXm1p7qsSWXcozjWsvMhjpJLjv/b++oLX
-         qfNg==
-X-Gm-Message-State: AOJu0YwlUfrqotL0KoSXvGAsO+vI+5bctqUAYOekdO+9CrsM7NR8PHrA
-	FPvgjtZFZHPeLyff5u+bqBk26KvXG9Km+p79Fsg6CLPUYhhItGj17UxB8VZFUuN6CM5qvi6cwxB
-	AMciV3BZPLiwfYIM8MbemFrkiGsoxUkQKBRrP
-X-Gm-Gg: ASbGnctncG6+sGWtrVCErhwZKNsKz/PfVEROaYgXLn/g4zztBOS63VZN6vw2F41ePs5
-	O3fDlFmxl2kwREy7j3z6AW8hQh+k3cwvHkHFzm7XMdEx/77WBsE6ZWtfgk0DnuGdxBE0N
-X-Google-Smtp-Source: AGHT+IGZaVHHutYOxtKP9DfSn3K+YpCdeKsMo6L4iXAQj4rLpkEjG1sK172u+3EPLy7pWBuVIHfjDo52McA4Q326QWo=
-X-Received: by 2002:a05:6512:2209:b0:540:2542:6081 with SMTP id
- 2adb3069b0e04-542845ba4fcmr6124473e87.23.1736771131095; Mon, 13 Jan 2025
- 04:25:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736771713; x=1737376513;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjqsbxrSwjNMBlhk7NK7sukMSo4I7qE3XC+q5onaDg0=;
+        b=WIrYjL/1/KRPGPMGWjL3GGjTKyFdeTtk6cikfw0fujOnZErZDUywcIF2n9DqIOxI2U
+         HOEoCSo/BRPkNWggcVRvoEXp1MOI2u8QMyjIaP7xQ77BPOhyNUppvPbPyeaBhcnWtUGd
+         +4HPxaUglfSMY0TJQUiFGn+QD5TyU/n755Ju/uGiYKUp+QQ5CRHYfnT33uf+qBcVv14c
+         63lztNVQf44p2lTlJARre5N08LK7Gbd7juVnQTVOO7ySY3x1c1lsicTnpAQv4hHI+UNT
+         Ny091RYLHIkOQYM1s9YsRLYnurQDL7hkol+Kr2YiESQybJyXFrxR3NO1eB9FP+pc1/Ew
+         AX/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVRZzHmjXbzthnJHdSFpECB12/Z2AE1ZUrNmPNajCdSoxfsdjAFvNsVnGA2XmbyPgYiqtZUrtx/pYXNVrBx7vv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzApJiSCS0cRQUOwaxX0VLJQHHq2Q+oV8+7RA2lGM044KHjwk6Q
+	CdJM2z1yucg2Xr8RtXYHMbjmzWTMqJF3aasykn963fw264uGeKlN3BGY5PYBBzU=
+X-Gm-Gg: ASbGncsGcBzYVbc7Dt+2TD5sSBE9ieFfb4SVsdu3aMeqw3wjcyeNJhD0OSnEFoqzKgY
+	m9rPFsvz8QuUg+220BpUdbvx1D6CdHHS82Vpdv9T627JBDL+6ETHa8e+O51LSeXg/aVTfe93+9i
+	f6n0/HNAMBuPp1w5p9g555t2TC8ecF1aNc0GTt80WkspgtpZBJhpcUr8xWRwel46qD5Hbj2oamw
+	P3cY6i3LEh8O9kPZ7cRY19N/iKEconeGErI5SplBFF0q9Bsy1+/wD90VL96smFFTXUP
+X-Google-Smtp-Source: AGHT+IGmbCu9u4IzjtS7BWHB2aEyN+Xd0P+39BwG6fIPpapLmc6B2rS5vVwJ/mlCS0m/NCOu77x/ZA==
+X-Received: by 2002:a17:906:1e0f:b0:ab2:dd7e:136c with SMTP id a640c23a62f3a-ab2dd7e142bmr934067666b.31.1736771710750;
+        Mon, 13 Jan 2025 04:35:10 -0800 (PST)
+Received: from [192.168.68.163] ([212.105.145.205])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c95b1bb6sm495420166b.159.2025.01.13.04.35.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 04:35:10 -0800 (PST)
+Message-ID: <da5792c3-8f53-4be8-8f53-e1cf6660feab@linaro.org>
+Date: Mon, 13 Jan 2025 12:35:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108082435.268431-1-dvyukov@google.com> <CACT4Y+an1LSY15f9MS_vnbaaeeqMf+k4-Dqqfu-zwcUAHFNk=w@mail.gmail.com>
-In-Reply-To: <CACT4Y+an1LSY15f9MS_vnbaaeeqMf+k4-Dqqfu-zwcUAHFNk=w@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 13 Jan 2025 13:25:19 +0100
-X-Gm-Features: AbW1kvZPVEXHBr-vGmoj1HX6r7qJwOWH4e9gSBD-LeF92Ml7vC-9TZX4e-uJn2I
-Message-ID: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Add wall-clock and parallelism profiling
-To: namhyung@kernel.org, irogers@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-On Wed, 8 Jan 2025 at 09:34, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, 8 Jan 2025 at 09:24, Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > There are two notions of time: wall-clock time and CPU time.
-> > For a single-threaded program, or a program running on a single-core
-> > machine, these notions are the same. However, for a multi-threaded/
-> > multi-process program running on a multi-core machine, these notions are
-> > significantly different. Each second of wall-clock time we have
-> > number-of-cores seconds of CPU time.
-> >
-> > Currently perf only allows to profile CPU time. Perf (and all other
-> > existing profilers to the best of my knowledge) does not allow profile
-> > wall-clock time.
-> >
-> > Optimizing CPU overhead is useful to improve 'throughput', while
-> > optimizing wall-clock overhead is useful to improve 'latency'.
-> > These profiles are complementary and are not interchangeable.
-> > Examples of where wall-clock profile is needed:
-> >  - optimzing build latency
-> >  - optimizing server request latency
-> >  - optimizing ML training/inference latency
-> >  - optimizing running time of any command line program
-> >
-> > CPU profile is useless for these use cases at best (if a user understands
-> > the difference), or misleading at worst (if a user tries to use a wrong
-> > profile for a job).
-> >
-> > This patch adds wall-clock and parallelization profiling.
-> > See the added documentation and flags descriptions for details.
-> >
-> > Brief outline of the implementation:
-> >  - add context switch collection during record
-> >  - calculate number of threads running on CPUs (parallelism level)
-> >    during report
-> >  - divide each sample weight by the parallelism level
-> > This effectively models that we were taking 1 sample per unit of
-> > wall-clock time.
-> >
-> > The feature is added on an equal footing with the existing CPU profiling
-> > rather than a separate mode enabled with special flags. The reasoning is
-> > that users may not understand the problem and the meaning of numbers they
-> > are seeing in the first place, so won't even realize that they may need
-> > to be looking for some different profiling mode. When they are presented
-> > with 2 sets of different numbers, they should start asking questions.
->
-> Hi folks,
->
-> Am I missing something and this is possible/known already?
->
-> I understand this is a large change, and I am open to comments.
-> I've also uploaded it to gerrit if you prefer to review there:
-> https://linux-review.git.corp.google.com/c/linux/kernel/git/torvalds/linux/+/25608
->
-> You may also checkout that branch and try it locally. It works on older kernels.
->
-> What of this is testable within the current testing framework?
-> Also how do I run tests? I failed to figure it out.
->
-> Btw, the profile example in the docs is from a real kernel build on my machine.
-> You can see how misleading the current profile is wrt latency.
->
-> Or you can see what takes time in the perf make itself.
-> (despite -j128, 73% of time was spent with 1 running thread,
-> only a few percent of time was spent with high parallelism).
->
->   Wallclock  Overhead           Parallelism / Command
-> -    73.64%     6.96%           1
->    +    28.53%     2.70%           cc1
->    +    17.93%     1.69%           python3
->    +    10.79%     1.02%           ld
-> -     7.49%     1.42%           2
->    +     4.26%     0.81%           cc1
->    +     0.72%     0.14%           ld
->    +     0.68%     0.13%           cc1plus
-> ...
-> -     1.33%    15.74%           125
->    +     1.23%    14.50%           cc1
->    +     0.03%     0.33%           gcc
->    +     0.03%     0.32%           sh
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf vendor events arm64: Add N3 events/metrics
+To: Ian Rogers <irogers@google.com>
+References: <20250110172006.680753-1-irogers@google.com>
+Content-Language: en-US
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ Nick Forrington <nick.forrington@arm.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250110172006.680753-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-> [PATCH] tools/perf: Add wall-clock and parallelism profiling
 
-Note to myself: need to change the subject to "perf report:".
+On 10/01/2025 5:20 pm, Ian Rogers wrote:
+> Using the scripts at:
+> https://gitlab.arm.com/telemetry-solution/telemetry-solution/
+> 
+> Generate perf json for neoverse-n3 using the following command:
+> ```
+> $ telemetry-solution/tools/perf_json_generator/generate.py \
+>    tools/perf/ --telemetry-files \
+>    telemetry-solution/data/pmu/cpu/neoverse/neoverse-n3.json:neoverse-n3
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   .../arm64/arm/neoverse-n3/core-imp-def.json   | 930 ++++++++++++++++++
+
+I assume you got warnings about missing groups, if one is missing that 
+results in everything being dumped in core-imp-def.json. I have an 
+internal ticket open about it which is why I didn't post N3 and V3 jsons 
+yet, I'll check on it again.
+
+Up to you whether you want to continue with it like this and I can send 
+a fix up later but there's also a conflict with the recent Fujitsu 
+Monaka events.
+
+Thanks
+James
+
+>   .../arch/arm64/arm/neoverse-n3/metrics.json   | 471 +++++++++
+>   .../arch/arm64/common-and-microarch.json      | 372 +++++++
+>   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
+>   4 files changed, 1774 insertions(+)
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/core-imp-def.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/core-imp-def.json
+> new file mode 100644
+> index 000000000000..995c49111e78
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/core-imp-def.json
+> @@ -0,0 +1,930 @@
+> +[
+> +    {
+> +        "ArchStdEvent": "SW_INCR",
+> +        "PublicDescription": "Counts software writes to the PMSWINC_EL0 (software PMU increment) register. The PMSWINC_EL0 register is a manually updated counter for use by application software.\n\nThis event could be used to measure any user program event, such as accesses to a particular data structure (by writing to the PMSWINC_EL0 register each time the data structure is accessed).\n\nTo use the PMSWINC_EL0 register and event, developers must insert instructions that write to the PMSWINC_EL0 register into the source code.\n\nSince the SW_INCR event records writes to the PMSWINC_EL0 register, there is no need to do a read/increment/write sequence to the PMSWINC_EL0 register."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1I_CACHE_REFILL",
+> +        "PublicDescription": "Counts cache line refills in the level 1 instruction cache caused by a missed instruction fetch. Instruction fetches may include accessing multiple instructions, but the single cache line allocation is counted once."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1I_TLB_REFILL",
+> +        "PublicDescription": "Counts level 1 instruction TLB refills from any Instruction fetch. If there are multiple misses in the TLB that are resolved by the refill, then this event only counts once. This event will not count if the translation table walk results in a fault (such as a translation or access fault), since there is no new translation created for the TLB."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_REFILL",
+> +        "PublicDescription": "Counts level 1 data cache refills caused by speculatively executed load or store operations that missed in the level 1 data cache. This event only counts one event per cache line."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE",
+> +        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations. Atomic operations that resolve in the CPUs caches (near atomic operations) counts as both a write access and read access. Each access to a cache line is counted including the multiple accesses caused by single instructions such as LDM or STM. Each access to other level 1 data or unified memory structures, for example refill buffers, write buffers, and write-back buffers, are also counted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_TLB_REFILL",
+> +        "PublicDescription": "Counts level 1 data TLB accesses that resulted in TLB refills. If there are multiple misses in the TLB that are resolved by the refill, then this event only counts once. This event counts for refills caused by preload instructions or hardware prefetch accesses. This event counts regardless of whether the miss hits in L2 or results in a translation table walk. This event will not count if the translation table walk results in a fault (such as a translation or access fault), since there is no new translation created for the TLB. This event will not count on an access from an AT(address translation) instruction."
+> +    },
+> +    {
+> +        "ArchStdEvent": "INST_RETIRED",
+> +        "PublicDescription": "Counts instructions that have been architecturally executed."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TAKEN",
+> +        "PublicDescription": "Counts any taken architecturally visible exceptions such as IRQ, FIQ, SError, and other synchronous exceptions. Exceptions are counted whether or not they are taken locally."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_RETURN",
+> +        "PublicDescription": "Counts any architecturally executed exception return instructions. For example: AArch64: ERET"
+> +    },
+> +    {
+> +        "ArchStdEvent": "CID_WRITE_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed writes to the CONTEXTIDR_EL1 register, which usually contain the kernel PID and can be output with hardware trace."
+> +    },
+> +    {
+> +        "ArchStdEvent": "PC_WRITE_RETIRED",
+> +        "PublicDescription": "Counts branch instructions that caused a change of Program Counter, which effectively causes a change in the control flow of the program."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IMMED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed direct branches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_RETURN_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed procedure returns."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_MIS_PRED",
+> +        "PublicDescription": "Counts branches which are speculatively executed and mispredicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CPU_CYCLES",
+> +        "PublicDescription": "Counts CPU clock cycles (not timer cycles). The clock measured by this event is defined as the physical clock driving the CPU logic."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_PRED",
+> +        "PublicDescription": "Counts all speculatively executed branches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS",
+> +        "PublicDescription": "Counts memory accesses issued by the CPU load store unit, where those accesses are issued due to load or store operations. This event counts memory accesses no matter whether the data is received from any level of cache hierarchy or external memory. If memory accesses are broken up into smaller transactions than what were specified in the load or store instructions, then the event counts those smaller memory transactions."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1I_CACHE",
+> +        "PublicDescription": "Counts instruction fetches which access the level 1 instruction cache. Instruction cache accesses caused by cache maintenance operations are not counted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_WB",
+> +        "PublicDescription": "Counts write-backs of dirty data from the L1 data cache to the L2 cache. This occurs when either a dirty cache line is evicted from L1 data cache and allocated in the L2 cache or dirty data is written to the L2 and possibly to the next level of cache. This event counts both victim cache line evictions and cache write-backs from snoops or cache maintenance operations. The following cache operations are not counted:\n\n1. Invalidations which do not result in data being transferred out of the L1 (such as evictions of clean data),\n2. Full line writes which write to L2 without writing L1, such as write streaming mode."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE",
+> +        "PublicDescription": "Counts accesses to the level 2 cache due to data accesses. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the first level data cache or translation resolutions due to accesses. This event also counts write back of dirty data from level 1 data cache to the L2 cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_REFILL",
+> +        "PublicDescription": "Counts cache line refills into the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_WB",
+> +        "PublicDescription": "Counts write-backs of data from the L2 cache to outside the CPU. This includes snoops to the L2 (from other CPUs) which return data even if the snoops cause an invalidation. L2 cache line invalidations which do not write data outside the CPU and snoops which return data from an L1 cache are not counted. Data would not be written outside the cache when invalidating a clean cache line."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BUS_ACCESS",
+> +        "PublicDescription": "Counts memory transactions issued by the CPU to the external bus, including snoop requests and snoop responses. Each beat of data is counted individually."
+> +    },
+> +    {
+> +        "ArchStdEvent": "INST_SPEC",
+> +        "PublicDescription": "Counts operations that have been speculatively executed."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TTBR_WRITE_RETIRED",
+> +        "PublicDescription": "Counts architectural writes to TTBR0/1_EL1. If virtualization host extensions are enabled (by setting the HCR_EL2.E2H bit to 1), then accesses to TTBR0/1_EL1 that are redirected to TTBR0/1_EL2, or accesses to TTBR0/1_EL12, are counted. TTBRn registers are typically updated when the kernel is swapping user-space threads or applications."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BUS_CYCLES",
+> +        "PublicDescription": "Counts bus cycles in the CPU. Bus cycles represent a clock cycle in which a transaction could be sent or received on the interface from the CPU to the external bus. Since that interface is driven at the same clock speed as the CPU, this event is a duplicate of CPU_CYCLES."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_ALLOCATE",
+> +        "PublicDescription": "Counts level 2 cache line allocates that do not fetch data from outside the level 2 data or unified cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed branches, whether the branch is taken or not. Instructions that explicitly write to the PC are also counted. Note that exception generating instructions, exception return instructions and context synchronization instructions are not counted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_MIS_PRED_RETIRED",
+> +        "PublicDescription": "Counts branches counted by BR_RETIRED which were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND",
+> +        "PublicDescription": "Counts cycles when frontend could not send any micro-operations to the rename stage because of frontend resource stalls caused by fetch memory latency or branch prediction flow stalls. STALL_FRONTEND_SLOTS counts SLOTS during the cycle when this event counts."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND",
+> +        "PublicDescription": "Counts cycles whenever the rename unit is unable to send any micro-operations to the backend of the pipeline because of backend resource constraints. Backend resource constraints can include issue stage fullness, execution stage fullness, or other internal pipeline resource fullness. All the backend slots were empty during the cycle when this event counts."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_TLB",
+> +        "PublicDescription": "Counts level 1 data TLB accesses caused by any memory load or store operation. Note that load or store instructions can be broken up into multiple memory operations. This event does not count TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1I_TLB",
+> +        "PublicDescription": "Counts level 1 instruction TLB accesses, whether the access hits or misses in the TLB. This event counts both demand accesses and prefetch or preload generated accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2I_CACHE",
+> +        "PublicDescription": "Counts accesses to the level 2 cache due to instruction accesses. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the first level instruction cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2I_CACHE_REFILL",
+> +        "PublicDescription": "Counts cache line refills into the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 instruction cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE_ALLOCATE",
+> +        "PublicDescription": "Counts level 3 cache line allocates that do not fetch data from outside the level 3 data or unified cache. For example, allocates due to streaming stores."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE_REFILL",
+> +        "PublicDescription": "Counts level 3 accesses that receive data from outside the L3 cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE",
+> +        "PublicDescription": "Counts level 3 cache accesses. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_TLB_REFILL",
+> +        "PublicDescription": "Counts level 2 TLB refills caused by memory operations from both data and instruction fetch, except for those caused by TLB maintenance operations and hardware prefetches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_TLB",
+> +        "PublicDescription": "Counts level 2 TLB accesses except those caused by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "REMOTE_ACCESS",
+> +        "PublicDescription": "Counts accesses to another chip, which is implemented as a different CMN mesh in the system. If the CHI bus response back to the core indicates that the data source is from another chip (mesh), then the counter is updated. If no data is returned, even if the system snoops another chip/mesh, then the counter is not updated."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LL_CACHE",
+> +        "PublicDescription": "Counts transactions that were returned from outside the core cluster. This event counts transactions for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts transactions for L3 cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LL_CACHE_MISS",
+> +        "PublicDescription": "Counts transactions that were returned from outside the core cluster and missed in the last level cache"
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_WALK",
+> +        "PublicDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_WALK",
+> +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LL_CACHE_RD",
+> +        "PublicDescription": "Counts read transactions that were returned from outside the core cluster. This event counts for external last level cache  when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts for the L3 cache. This event counts read transactions returned from outside the core if those transactions are either hit in the system level cache or missed in the SLC and are returned from any other external sources."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LL_CACHE_MISS_RD",
+> +        "PublicDescription": "Counts read transactions that were returned from outside the core cluster but missed in the system level cache. This event counts for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts for L3 cache. This event counts read transactions returned from outside the core if those transactions are missed in the System level Cache. The data source of the transaction is indicated by a field in the CHI transaction returning to the CPU. This event does not count reads caused by cache maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_LMISS_RD",
+> +        "PublicDescription": "Counts cache line refills into the level 1 data cache from any memory read operations, that incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "OP_RETIRED",
+> +        "PublicDescription": "Counts micro-operations that are architecturally executed. This is a count of number of micro-operations retired from the commit queue in a single cycle."
+> +    },
+> +    {
+> +        "ArchStdEvent": "OP_SPEC",
+> +        "PublicDescription": "Counts micro-operations speculatively executed. This is the count of the number of micro-operations dispatched in a cycle."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL",
+> +        "PublicDescription": "Counts cycles when no operations are sent to the rename unit from the frontend or from the rename unit to the backend for any reason (either frontend or backend stall). This event is the sum of STALL_FRONTEND and STALL_BACKEND"
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_SLOT_BACKEND",
+> +        "PublicDescription": "Counts slots per cycle in which no operations are sent from the rename unit to the backend due to backend resource constraints. STALL_BACKEND counts during the cycle when STALL_SLOT_BACKEND counts at least 1."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_SLOT_FRONTEND",
+> +        "PublicDescription": "Counts slots per cycle in which no operations are sent to the rename unit from the frontend due to frontend resource constraints."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_SLOT",
+> +        "PublicDescription": "Counts slots per cycle in which no operations are sent to the rename unit from the frontend or from the rename unit to the backend for any reason (either frontend or backend stall). STALL_SLOT is the sum of STALL_SLOT_FRONTEND and STALL_SLOT_BACKEND."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_RD",
+> +        "PublicDescription": "Counts level 1 data cache accesses from any load operation. Atomic load operations that resolve in the CPUs caches counts as both a write access and read access."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_WR",
+> +        "PublicDescription": "Counts level 1 data cache accesses generated by store operations. This event also counts accesses caused by a DC ZVA (data cache zero, specified by virtual address) instruction. Near atomic operations that resolve in the CPUs caches count as a write access and read access."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_REFILL_INNER",
+> +        "PublicDescription": "Counts level 1 data cache refills where the cache line data came from caches inside the immediate cluster of the core."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER",
+> +        "PublicDescription": "Counts level 1 data cache refills for which the cache line data came from outside the immediate cluster of the core, like an SLC in the system interconnect or DRAM."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_INVAL",
+> +        "PublicDescription": "Counts each explicit invalidation of a cache line in the level 1 data cache caused by:\n\n- Cache Maintenance Operations (CMO) that operate by a virtual address.\n- Broadcast cache coherency operations from another CPU in the system.\n\nThis event does not count for the following conditions:\n\n1. A cache refill invalidates a cache line.\n2. A CMO which is executed on that CPU and invalidates a cache line specified by set/way.\n\nNote that CMOs that operate by set/way cannot be broadcast from one CPU to another."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_RD",
+> +        "PublicDescription": "Counts level 2 data cache accesses due to memory read operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_WR",
+> +        "PublicDescription": "Counts level 2 cache accesses due to memory write operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
+> +        "PublicDescription": "Counts refills for memory accesses due to memory read operation counted by L2D_CACHE_RD. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
+> +        "PublicDescription": "Counts refills for memory accesses due to memory write operation counted by L2D_CACHE_WR. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
+> +        "PublicDescription": "Counts evictions from the level 2 cache because of a line being allocated into the L2 cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
+> +        "PublicDescription": "Counts write-backs from the level 2 cache that are a result of either:\n\n1. Cache maintenance operations,\n\n2. Snoop responses or,\n\n3. Direct cache transfers to another CPU due to a forwarding snoop request."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_INVAL",
+> +        "PublicDescription": "Counts each explicit invalidation of a cache line in the level 2 cache by cache maintenance operations that operate by a virtual address, or by external coherency operations. This event does not count if either:\n\n1. A cache refill invalidates a cache line or,\n2. A Cache Maintenance Operation (CMO), which invalidates a cache line specified by set/way, is executed on that CPU.\n\nCMOs that operate by set/way cannot be broadcast from one CPU to another."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BUS_ACCESS_RD",
+> +        "PublicDescription": "Counts memory read transactions seen on the external bus. Each beat of data is counted individually."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BUS_ACCESS_WR",
+> +        "PublicDescription": "Counts memory write transactions seen on the external bus. Each beat of data is counted individually."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_RD",
+> +        "PublicDescription": "Counts memory accesses issued by the CPU due to load operations. The event counts any memory load access, no matter whether the data is received from any level of cache hierarchy or external memory. The event also counts atomic load operations. If memory accesses are broken up by the load/store unit into smaller transactions that are issued by the bus interface, then the event counts those smaller transactions."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_WR",
+> +        "PublicDescription": "Counts memory accesses issued by the CPU due to store operations. The event counts any memory store access, no matter whether the data is located in any level of cache or external memory. The event also counts atomic load and store operations. If memory accesses are broken up by the load/store unit into smaller transactions that are issued by the bus interface, then the event counts those smaller transactions."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STREX_FAIL_SPEC",
+> +        "PublicDescription": "Counts store-exclusive operations that have been speculatively executed and have not successfully completed the store operation."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STREX_SPEC",
+> +        "PublicDescription": "Counts store-exclusive operations that have been speculatively executed."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LD_SPEC",
+> +        "PublicDescription": "Counts speculatively executed load operations including Single Instruction Multiple Data (SIMD) load operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ST_SPEC",
+> +        "PublicDescription": "Counts speculatively executed store operations including Single Instruction Multiple Data (SIMD) store operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DP_SPEC",
+> +        "PublicDescription": "Counts speculatively executed logical or arithmetic instructions such as MOV/MVN operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD operations excluding load, store and move micro-operations that move data to or from SIMD (vector) registers."
+> +    },
+> +    {
+> +        "ArchStdEvent": "VFP_SPEC",
+> +        "PublicDescription": "Counts speculatively executed floating point operations. This event does not count operations that move data to or from floating point (vector) registers."
+> +    },
+> +    {
+> +        "ArchStdEvent": "PC_WRITE_SPEC",
+> +        "PublicDescription": "Counts speculatively executed operations which cause software changes of the PC. Those operations include all taken branch operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CRYPTO_SPEC",
+> +        "PublicDescription": "Counts speculatively executed cryptographic operations except for PMULL and VMULL operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ISB_SPEC",
+> +        "PublicDescription": "Counts ISB operations that are executed."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DSB_SPEC",
+> +        "PublicDescription": "Counts DSB operations that are speculatively issued to Load/Store unit in the CPU."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DMB_SPEC",
+> +        "PublicDescription": "Counts DMB operations that are speculatively issued to the Load/Store unit in the CPU. This event does not count implied barriers from load acquire/store release operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_UNDEF",
+> +        "PublicDescription": "Counts the number of synchronous exceptions which are taken locally that are due to attempting to execute an instruction that is UNDEFINED. Attempting to execute instruction bit patterns that have not been allocated. Attempting to execute instructions when they are disabled. Attempting to execute instructions at an inappropriate Exception level. Attempting to execute an instruction when the value of PSTATE.IL is 1."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_SVC",
+> +        "PublicDescription": "Counts SVC exceptions taken locally."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_PABORT",
+> +        "PublicDescription": "Counts synchronous exceptions that are taken locally and caused by Instruction Aborts."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_DABORT",
+> +        "PublicDescription": "Counts exceptions that are taken locally and are caused by data aborts or SErrors. Conditions that could cause those exceptions are attempting to read or write memory where the MMU generates a fault, attempting to read or write memory with a misaligned address, interrupts from the nSEI inputs and internally generated SErrors."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_IRQ",
+> +        "PublicDescription": "Counts IRQ exceptions including the virtual IRQs that are taken locally."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_FIQ",
+> +        "PublicDescription": "Counts FIQ exceptions including the virtual FIQs that are taken locally."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_SMC",
+> +        "PublicDescription": "Counts SMC exceptions take to EL3."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_HVC",
+> +        "PublicDescription": "Counts HVC exceptions taken to EL2."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TRAP_PABORT",
+> +        "PublicDescription": "Counts exceptions which are traps not taken locally and are caused by Instruction Aborts. For example, attempting to execute an instruction with a misaligned PC."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TRAP_DABORT",
+> +        "PublicDescription": "Counts exceptions which are traps not taken locally and are caused by Data Aborts or SError interrupts. Conditions that could cause those exceptions are:\n\n1. Attempting to read or write memory where the MMU generates a fault,\n2. Attempting to read or write memory with a misaligned address,\n3. Interrupts from the SEI input.\n4. internally generated SErrors."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TRAP_OTHER",
+> +        "PublicDescription": "Counts the number of synchronous trap exceptions which are not taken locally and are not SVC, SMC, HVC, data aborts, Instruction Aborts, or interrupts."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TRAP_IRQ",
+> +        "PublicDescription": "Counts IRQ exceptions including the virtual IRQs that are not taken locally."
+> +    },
+> +    {
+> +        "ArchStdEvent": "EXC_TRAP_FIQ",
+> +        "PublicDescription": "Counts FIQs which are not taken locally but taken from EL0, EL1,\n or EL2 to EL3 (which would be the normal behavior for FIQs when not executing\n in EL3)."
+> +    },
+> +    {
+> +        "ArchStdEvent": "RC_LD_SPEC",
+> +        "PublicDescription": "Counts any load acquire operations that are speculatively executed. For example: LDAR, LDARH, LDARB"
+> +    },
+> +    {
+> +        "ArchStdEvent": "RC_ST_SPEC",
+> +        "PublicDescription": "Counts any store release operations that are speculatively executed. For example: STLR, STLRH, STLRB"
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE_RD",
+> +        "PublicDescription": "Counts level 3 cache accesses caused by any memory read operation. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts flushes including architectural, microarchitectural, and branch redirects.",
+> +        "EventCode": "0x120",
+> +        "EventName": "IMP_CT_FLUSH",
+> +        "BriefDescription": "Counts flushes including architectural, microarchitectural, and branch redirects."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts flushes due to memory hazards.",
+> +        "EventCode": "0x121",
+> +        "EventName": "IMP_CT_FLUSH_MEM",
+> +        "BriefDescription": "Counts flushes due to memory hazards."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts flushes due to non-branch instructions predicted as a branch.",
+> +        "EventCode": "0x122",
+> +        "EventName": "IMP_CT_FLUSH_BAD_BRANCH",
+> +        "BriefDescription": "Counts flushes due to non-branch instructions predicted as a branch."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts flushes due to ISB or similar side-effects.",
+> +        "EventCode": "0x124",
+> +        "EventName": "IMP_CT_FLUSH_ISB",
+> +        "BriefDescription": "Counts flushes due to ISB or similar side-effects."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts flushes due to other hazards.",
+> +        "EventCode": "0x125",
+> +        "EventName": "IMP_CT_FLUSH_OTHER",
+> +        "BriefDescription": "Counts flushes due to other hazards."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts load/store detected nuke due to read-after-read ordering hazard.",
+> +        "EventCode": "0x127",
+> +        "EventName": "IMP_LS_RAR",
+> +        "BriefDescription": "Counts load/store detected nuke due to read-after-read ordering hazard."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts load/store detected nuke due to read-after-write ordering hazard.",
+> +        "EventCode": "0x128",
+> +        "EventName": "IMP_LS_RAW",
+> +        "BriefDescription": "Counts load/store detected nuke due to read-after-write ordering hazard."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts backend stalls due to unavailable flag registers.",
+> +        "EventCode": "0x158",
+> +        "EventName": "IMP_STALL_BACKEND_RENAME_FRF",
+> +        "BriefDescription": "Counts backend stalls due to unavailable flag registers."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts backend stalls due to unavailable general registers.",
+> +        "EventCode": "0x159",
+> +        "EventName": "IMP_STALL_BACKEND_RENAME_GRF",
+> +        "BriefDescription": "Counts backend stalls due to unavailable general registers."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts backend stalls due to unavailable vector registers.",
+> +        "EventCode": "0x15A",
+> +        "EventName": "IMP_STALL_BACKEND_RENAME_VRF",
+> +        "BriefDescription": "Counts backend stalls due to unavailable vector registers."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the SX IQ being full",
+> +        "EventCode": "0x15C",
+> +        "EventName": "IMP_STALL_BACKEND_IQ_SX",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the SX IQ being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the MX IQ being full",
+> +        "EventCode": "0x15D",
+> +        "EventName": "IMP_STALL_BACKEND_IQ_MX",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the MX IQ being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the LS IQ being full",
+> +        "EventCode": "0x15E",
+> +        "EventName": "IMP_STALL_BACKEND_IQ_LS",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the LS IQ being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the VX IQ being full",
+> +        "EventCode": "0x15F",
+> +        "EventName": "IMP_STALL_BACKEND_IQ_VX",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_BUSY where the backend is stalled due to the VX IQ being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the MCQ being full",
+> +        "EventCode": "0x160",
+> +        "EventName": "IMP_STALL_BACKEND_MCQ",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the MCQ being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 0",
+> +        "EventCode": "0x198",
+> +        "EventName": "IMP_L2_CHI_CBUSY0",
+> +        "BriefDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 0"
+> +    },
+> +    {
+> +        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 1",
+> +        "EventCode": "0x199",
+> +        "EventName": "IMP_L2_CHI_CBUSY1",
+> +        "BriefDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 1"
+> +    },
+> +    {
+> +        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 2",
+> +        "EventCode": "0x19A",
+> +        "EventName": "IMP_L2_CHI_CBUSY2",
+> +        "BriefDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 2"
+> +    },
+> +    {
+> +        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 3",
+> +        "EventCode": "0x19B",
+> +        "EventName": "IMP_L2_CHI_CBUSY3",
+> +        "BriefDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 3"
+> +    },
+> +    {
+> +        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer indicating multiple cores actively making requests",
+> +        "EventCode": "0x19C",
+> +        "EventName": "IMP_L2_CHI_CBUSY_MT",
+> +        "BriefDescription": "Count of RXDAT or RXRSP responses received with indication completer indicating multiple cores actively making requests"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the PCRF being full",
+> +        "EventCode": "0x1003",
+> +        "EventName": "IMP_STALL_BACKEND_PCRF",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the PCRF being full"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the return stack being full",
+> +        "EventCode": "0x1005",
+> +        "EventName": "IMP_STALL_BACKEND_RSTACK",
+> +        "BriefDescription": "Counts each cycle counted by STALL_BACKEND_CPUBOUND where the backend is stalled due to the return stack being full"
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_POP",
+> +        "PublicDescription": "Counts statistical profiling sample population, the count of all operations that could be sampled but may or may not be chosen for sampling."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED",
+> +        "PublicDescription": "Counts statistical profiling samples taken for sampling."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FILTRATE",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are not removed by filtering."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_COLLISION",
+> +        "PublicDescription": "Counts statistical profiling samples that have collided with a previous sample and so therefore not taken."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CNT_CYCLES",
+> +        "PublicDescription": "Increments at a constant frequency equal to the rate of increment of the System Counter, CNTPCT_EL0."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_MEM",
+> +        "PublicDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the last level core cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1I_CACHE_LMISS",
+> +        "PublicDescription": "Counts cache line refills into the level 1 instruction cache, that incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_LMISS_RD",
+> +        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any memory read operations that incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2I_CACHE_LMISS",
+> +        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any instruction read operations that incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
+> +        "PublicDescription": "Counts any cache line refill into the level 3 cache from memory read operations that incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRB_WRAP",
+> +        "PublicDescription": "This event is generated each time the current write pointer is wrapped to the base pointer."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRB_TRIG",
+> +        "PublicDescription": "This event is generated when a Trace Buffer Extension Trigger Event occurs."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRCEXTOUT0",
+> +        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 0."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRCEXTOUT1",
+> +        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 1."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRCEXTOUT2",
+> +        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 2."
+> +    },
+> +    {
+> +        "ArchStdEvent": "TRCEXTOUT3",
+> +        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 3."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CTI_TRIGOUT4",
+> +        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 4."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CTI_TRIGOUT5",
+> +        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 5."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CTI_TRIGOUT6",
+> +        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 6."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CTI_TRIGOUT7",
+> +        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 7."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LDST_ALIGN_LAT",
+> +        "PublicDescription": "Counts the number of memory read and write accesses in a cycle that incurred additional latency, due to the alignment of the address and the size of data being accessed, which results in store crossing a single cache line."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LD_ALIGN_LAT",
+> +        "PublicDescription": "Counts the number of memory read accesses in a cycle that incurred additional latency, due to the alignment of the address and size of data being accessed, which results in load crossing a single cache line."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ST_ALIGN_LAT",
+> +        "PublicDescription": "Counts the number of memory write access in a cycle that incurred additional latency, due to the alignment of the address and size of data being accessed incurred additional latency."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_CHECKED",
+> +        "PublicDescription": "Counts the number of memory read and write accesses counted by MEM_ACCESS that are tag checked by the Memory Tagging Extension (MTE). This event is implemented as the sum of MEM_ACCESS_CHECKED_RD and MEM_ACCESS_CHECKED_WR"
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_CHECKED_RD",
+> +        "PublicDescription": "Counts the number of memory read accesses in a cycle that are tag checked by the Memory Tagging Extension (MTE)."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_CHECKED_WR",
+> +        "PublicDescription": "Counts the number of memory write accesses in a cycle that is tag checked by the Memory Tagging Extension (MTE)."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_INST_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_INST_SPEC",
+> +        "PublicDescription": "Counts speculatively executed operations that are SVE operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "FP_HP_SPEC",
+> +        "PublicDescription": "Counts speculatively executed half precision floating point operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "FP_SP_SPEC",
+> +        "PublicDescription": "Counts speculatively executed single precision floating point operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "FP_DP_SPEC",
+> +        "PublicDescription": "Counts speculatively executed double precision floating point operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_PRED_SPEC",
+> +        "PublicDescription": "Counts speculatively executed predicated SVE operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC",
+> +        "PublicDescription": "Counts speculatively executed predicated SVE operations with no active predicate elements."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_PRED_FULL_SPEC",
+> +        "PublicDescription": "Counts speculatively executed predicated SVE operations with all predicate elements active."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC",
+> +        "PublicDescription": "Counts speculatively executed predicated SVE operations with at least one but not all active predicate elements."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_PRED_NOT_FULL_SPEC",
+> +        "PublicDescription": "Counts speculatively executed predicated SVE operations with at least one non active predicate elements."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_LDFF_SPEC",
+> +        "PublicDescription": "Counts speculatively executed SVE first fault or non-fault load operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC",
+> +        "PublicDescription": "Counts speculatively executed SVE first fault or non-fault load operations that clear at least one bit in the FFR."
+> +    },
+> +    {
+> +        "ArchStdEvent": "FP_SCALE_OPS_SPEC",
+> +        "PublicDescription": "Counts speculatively executed scalable single precision floating point operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "FP_FIXED_OPS_SPEC",
+> +        "PublicDescription": "Counts speculatively executed non-scalable single precision floating point operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_SVE_INT8_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type an 8-bit integer."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_SVE_INT16_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type a 16-bit integer."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_SVE_INT32_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type a 32-bit integer."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ASE_SVE_INT64_SPEC",
+> +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type a 64-bit integer."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IMMED_TAKEN_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed direct branches that were taken."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_INDNR_TAKEN_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were taken."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IMMED_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed direct branches that were correctly predicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IMMED_MIS_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed direct branches that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IND_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IND_MIS_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_RETURN_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_RETURN_MIS_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_INDNR_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_INDNR_MIS_PRED_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_PRED_RETIRED",
+> +        "PublicDescription": "Counts branch instructions counted by BR_RETIRED which were correctly predicted."
+> +    },
+> +    {
+> +        "ArchStdEvent": "BR_IND_RETIRED",
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns."
+> +    },
+> +    {
+> +        "ArchStdEvent": "INST_FETCH_PERCYC",
+> +        "PublicDescription": "Counts number of instruction fetches outstanding per cycle, which will provide an average latency of instruction fetch."
+> +    },
+> +    {
+> +        "ArchStdEvent": "MEM_ACCESS_RD_PERCYC",
+> +        "PublicDescription": "Counts the number of outstanding loads or memory read accesses per cycle."
+> +    },
+> +    {
+> +        "ArchStdEvent": "INST_FETCH",
+> +        "PublicDescription": "Counts Instruction memory accesses that the PE makes."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_WALK_PERCYC",
+> +        "PublicDescription": "Counts the number of data translation table walks in progress per cycle."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_WALK_PERCYC",
+> +        "PublicDescription": "Counts the number of instruction translation table walks in progress per cycle."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_BR",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are branches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_LD",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are loads or load atomic operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_ST",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are stores or store atomic operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_OP",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are matching any operation type filters supported."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_EVENT",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are matching event packet filter constraints."
+> +    },
+> +    {
+> +        "ArchStdEvent": "SAMPLE_FEED_LAT",
+> +        "PublicDescription": "Counts statistical profiling samples taken which are exceeding minimum latency set by operation latency filter constraints."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_HWUPD",
+> +        "PublicDescription": "Counts number of memory accesses triggered by a data translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_HWUPD",
+> +        "PublicDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_STEP",
+> +        "PublicDescription": "Counts number of memory accesses triggered by a demand data translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_STEP",
+> +        "PublicDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_WALK_LARGE",
+> +        "PublicDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_BLOCK is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_WALK_LARGE",
+> +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_BLOCK event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "DTLB_WALK_SMALL",
+> +        "PublicDescription": "Counts number of data translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_PAGE event is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "ITLB_WALK_SMALL",
+> +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_PAGE event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_RW",
+> +        "PublicDescription": "Counts level 1 data demand cache accesses from any load or store operation. Near atomic operations that resolve in the CPUs caches counts as both a write access and read access."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_RW",
+> +        "PublicDescription": "Counts level 2 cache demand accesses from any load/store operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2I_CACHE_RD",
+> +        "PublicDescription": "Counts level 2 cache accesses that are due to a demand instruction cache access."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L3D_CACHE_MISS",
+> +        "PublicDescription": "Counts level 3 cache accesses that missed in the level 3 cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_HWPRF",
+> +        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_MEMBOUND",
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the memory resources."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_L1I",
+> +        "PublicDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the level 1 instruction cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_MEM",
+> +        "PublicDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the last level core cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_TLB",
+> +        "PublicDescription": "Counts when the frontend is stalled on any TLB misses being handled. This event also counts the TLB accesses made by hardware prefetches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_CPUBOUND",
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the CPU resources excluding memory resources."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_FLOW",
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the branch prediction unit."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_FRONTEND_FLUSH",
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage as the frontend is recovering from a machine flush or resteer. Example scenarios that cause a flush include branch mispredictions, taken exceptions, micro-architectural flush etc."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_MEMBOUND",
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to resource constraints in the memory resources."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_L1D",
+> +        "PublicDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the level 1 data cache."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_TLB",
+> +        "PublicDescription": "Counts cycles when the backend is stalled on any demand TLB misses being handled."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_ST",
+> +        "PublicDescription": "Counts cycles when the backend is stalled and there is a store that has not reached the pre-commit stage."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_CPUBOUND",
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to any resource constraints in the CPU excluding memory resources."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_BUSY",
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations because the issue queues are full to take any operations for execution."
+> +    },
+> +    {
+> +        "ArchStdEvent": "STALL_BACKEND_RENAME",
+> +        "PublicDescription": "Counts cycles when backend is stalled even when operations are available from the frontend but at least one is not ready to be sent to the backend because no rename register is available."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CAS_NEAR_PASS",
+> +        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE and updated the location accessed."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CAS_NEAR_SPEC",
+> +        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE."
+> +    },
+> +    {
+> +        "ArchStdEvent": "CAS_FAR_SPEC",
+> +        "PublicDescription": "Counts compare and swap instructions that did not execute locally to the PE."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L1D_CACHE_REFILL_HWPRF",
+> +        "PublicDescription": "Counts level 1 data cache refills where the cache line is requested by a hardware prefetcher."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_PRF",
+> +        "PublicDescription": "Counts level 2 data cache accesses from software preload or prefetch instructions or hardware prefetcher."
+> +    },
+> +    {
+> +        "ArchStdEvent": "L2D_CACHE_REFILL_PRF",
+> +        "PublicDescription": "Counts refills due to accesses generated as a result of prefetches."
+> +    },
+> +    {
+> +        "ArchStdEvent": "LL_CACHE_REFILL",
+> +        "PublicDescription": "Counts last level accesses that receive data from outside the last level cache."
+> +    }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> new file mode 100644
+> index 000000000000..5265c7749fe8
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+> @@ -0,0 +1,471 @@
+> +[
+> +    {
+> +        "MetricName": "backend_bound",
+> +        "MetricExpr": "STALL_SLOT_BACKEND / (5 * CPU_CYCLES) * 100",
+> +        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the backend of the processor.",
+> +        "MetricGroup": "TopdownL1",
+> +        "ScaleUnit": "1percent of slots"
+> +    },
+> +    {
+> +        "MetricName": "backend_busy_bound",
+> +        "MetricExpr": "STALL_BACKEND_BUSY / STALL_BACKEND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to issue queues being full to accept operations for execution.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_cache_l1d_bound",
+> +        "MetricExpr": "STALL_BACKEND_L1D / (STALL_BACKEND_L1D + STALL_BACKEND_MEM) * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to memory access latency issues caused by level 1 data cache misses.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_cache_l2d_bound",
+> +        "MetricExpr": "STALL_BACKEND_MEM / (STALL_BACKEND_L1D + STALL_BACKEND_MEM) * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to memory access latency issues caused by level 2 data cache misses.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_core_bound",
+> +        "MetricExpr": "STALL_BACKEND_CPUBOUND / STALL_BACKEND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to backend core resource constraints not related to instruction fetch latency issues caused by memory access components.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_core_rename_bound",
+> +        "MetricExpr": "STALL_BACKEND_RENAME / STALL_BACKEND_CPUBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend as the rename unit registers are unavailable.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_mem_bound",
+> +        "MetricExpr": "STALL_BACKEND_MEMBOUND / STALL_BACKEND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to backend core resource constraints related to memory access latency issues caused by memory access components.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_mem_cache_bound",
+> +        "MetricExpr": "(STALL_BACKEND_L1D + STALL_BACKEND_MEM) / STALL_BACKEND_MEMBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to memory latency issues caused by data cache misses.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_mem_store_bound",
+> +        "MetricExpr": "STALL_BACKEND_ST / STALL_BACKEND_MEMBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to memory write pending caused by stores stalled in the pre-commit stage.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_mem_tlb_bound",
+> +        "MetricExpr": "STALL_BACKEND_TLB / STALL_BACKEND_MEMBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to memory access latency issues caused by data TLB misses.",
+> +        "MetricGroup": "Topdown_Backend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "backend_stalled_cycles",
+> +        "MetricExpr": "STALL_BACKEND / CPU_CYCLES * 100",
+> +        "BriefDescription": "This metric is the percentage of cycles that were stalled due to resource constraints in the backend unit of the processor.",
+> +        "MetricGroup": "Cycle_Accounting",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "bad_speculation",
+> +        "MetricExpr": "(1 - STALL_SLOT / (5 * CPU_CYCLES)) * (1 - OP_RETIRED / OP_SPEC) * 100 + STALL_FRONTEND_FLUSH / CPU_CYCLES * 100",
+> +        "BriefDescription": "This metric is the percentage of total slots that executed operations and didn't retire due to a pipeline flush.\nThis indicates cycles that were utilized but inefficiently.",
+> +        "MetricGroup": "TopdownL1",
+> +        "ScaleUnit": "1percent of slots"
+> +    },
+> +    {
+> +        "MetricName": "barrier_percentage",
+> +        "MetricExpr": "(ISB_SPEC + DSB_SPEC + DMB_SPEC) / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures instruction and data barrier operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "branch_direct_ratio",
+> +        "MetricExpr": "BR_IMMED_RETIRED / BR_RETIRED",
+> +        "BriefDescription": "This metric measures the ratio of direct branches retired to the total number of branches architecturally executed.",
+> +        "MetricGroup": "Branch_Effectiveness",
+> +        "ScaleUnit": "1per branch"
+> +    },
+> +    {
+> +        "MetricName": "branch_indirect_ratio",
+> +        "MetricExpr": "BR_IND_RETIRED / BR_RETIRED",
+> +        "BriefDescription": "This metric measures the ratio of indirect branches retired, including function returns, to the total number of branches architecturally executed.",
+> +        "MetricGroup": "Branch_Effectiveness",
+> +        "ScaleUnit": "1per branch"
+> +    },
+> +    {
+> +        "MetricName": "branch_misprediction_ratio",
+> +        "MetricExpr": "BR_MIS_PRED_RETIRED / BR_RETIRED",
+> +        "BriefDescription": "This metric measures the ratio of branches mispredicted to the total number of branches architecturally executed. This gives an indication of the effectiveness of the branch prediction unit.",
+> +        "MetricGroup": "Miss_Ratio;Branch_Effectiveness",
+> +        "ScaleUnit": "100percent of branches"
+> +    },
+> +    {
+> +        "MetricName": "branch_mpki",
+> +        "MetricExpr": "BR_MIS_PRED_RETIRED / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of branch mispredictions per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;Branch_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "branch_percentage",
+> +        "MetricExpr": "PC_WRITE_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures branch operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "branch_return_ratio",
+> +        "MetricExpr": "BR_RETURN_RETIRED / BR_RETIRED",
+> +        "BriefDescription": "This metric measures the ratio of branches retired that are function returns to the total number of branches architecturally executed.",
+> +        "MetricGroup": "Branch_Effectiveness",
+> +        "ScaleUnit": "1per branch"
+> +    },
+> +    {
+> +        "MetricName": "crypto_percentage",
+> +        "MetricExpr": "CRYPTO_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures crypto operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "dtlb_mpki",
+> +        "MetricExpr": "DTLB_WALK / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of data TLB Walks per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;DTLB_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "dtlb_walk_ratio",
+> +        "MetricExpr": "DTLB_WALK / L1D_TLB",
+> +        "BriefDescription": "This metric measures the ratio of data TLB Walks to the total number of data TLB accesses. This gives an indication of the effectiveness of the data TLB accesses.",
+> +        "MetricGroup": "Miss_Ratio;DTLB_Effectiveness",
+> +        "ScaleUnit": "100percent of TLB accesses"
+> +    },
+> +    {
+> +        "MetricName": "fp16_percentage",
+> +        "MetricExpr": "FP_HP_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures half-precision floating point operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "FP_Precision_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "fp32_percentage",
+> +        "MetricExpr": "FP_SP_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures single-precision floating point operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "FP_Precision_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "fp64_percentage",
+> +        "MetricExpr": "FP_DP_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures double-precision floating point operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "FP_Precision_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "fp_ops_per_cycle",
+> +        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
+> +        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+> +        "MetricGroup": "FP_Arithmetic_Intensity",
+> +        "ScaleUnit": "1operations per cycle"
+> +    },
+> +    {
+> +        "MetricName": "frontend_bound",
+> +        "MetricExpr": "(STALL_SLOT_FRONTEND / (5 * CPU_CYCLES) - STALL_FRONTEND_FLUSH / CPU_CYCLES) * 100",
+> +        "BriefDescription": "This metric is the percentage of total slots that were stalled due to resource constraints in the frontend of the processor.",
+> +        "MetricGroup": "TopdownL1",
+> +        "ScaleUnit": "1percent of slots"
+> +    },
+> +    {
+> +        "MetricName": "frontend_cache_l1i_bound",
+> +        "MetricExpr": "STALL_FRONTEND_L1I / (STALL_FRONTEND_L1I + STALL_FRONTEND_MEM) * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to memory access latency issues caused by level 1 instruction cache misses.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_cache_l2i_bound",
+> +        "MetricExpr": "STALL_FRONTEND_MEM / (STALL_FRONTEND_L1I + STALL_FRONTEND_MEM) * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to memory access latency issues caused by level 2 instruction cache misses.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_core_bound",
+> +        "MetricExpr": "STALL_FRONTEND_CPUBOUND / STALL_FRONTEND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to frontend core resource constraints not related to instruction fetch latency issues caused by memory access components.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_core_flow_bound",
+> +        "MetricExpr": "STALL_FRONTEND_FLOW / STALL_FRONTEND_CPUBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend as the decode unit is awaiting input from the branch prediction unit.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_core_flush_bound",
+> +        "MetricExpr": "STALL_FRONTEND_FLUSH / STALL_FRONTEND_CPUBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend as the processor is recovering from a pipeline flush caused by bad speculation or other machine resteers.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_mem_bound",
+> +        "MetricExpr": "STALL_FRONTEND_MEMBOUND / STALL_FRONTEND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to frontend core resource constraints related to the instruction fetch latency issues caused by memory access components.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_mem_cache_bound",
+> +        "MetricExpr": "(STALL_FRONTEND_L1I + STALL_FRONTEND_MEM) / STALL_FRONTEND_MEMBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to instruction fetch latency issues caused by instruction cache misses.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_mem_tlb_bound",
+> +        "MetricExpr": "STALL_FRONTEND_TLB / STALL_FRONTEND_MEMBOUND * 100",
+> +        "BriefDescription": "This metric is the percentage of total cycles stalled in the frontend due to instruction fetch latency issues caused by instruction TLB misses.",
+> +        "MetricGroup": "Topdown_Frontend",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "frontend_stalled_cycles",
+> +        "MetricExpr": "STALL_FRONTEND / CPU_CYCLES * 100",
+> +        "BriefDescription": "This metric is the percentage of cycles that were stalled due to resource constraints in the frontend unit of the processor.",
+> +        "MetricGroup": "Cycle_Accounting",
+> +        "ScaleUnit": "1percent of cycles"
+> +    },
+> +    {
+> +        "MetricName": "integer_dp_percentage",
+> +        "MetricExpr": "(DP_SPEC - DSB_SPEC) / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalar integer operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "ipc",
+> +        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
+> +        "BriefDescription": "This metric measures the number of instructions retired per cycle.",
+> +        "MetricGroup": "General",
+> +        "ScaleUnit": "1per cycle"
+> +    },
+> +    {
+> +        "MetricName": "itlb_mpki",
+> +        "MetricExpr": "ITLB_WALK / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of instruction TLB Walks per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;ITLB_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "itlb_walk_ratio",
+> +        "MetricExpr": "ITLB_WALK / L1I_TLB",
+> +        "BriefDescription": "This metric measures the ratio of instruction TLB Walks to the total number of instruction TLB accesses. This gives an indication of the effectiveness of the instruction TLB accesses.",
+> +        "MetricGroup": "Miss_Ratio;ITLB_Effectiveness",
+> +        "ScaleUnit": "100percent of TLB accesses"
+> +    },
+> +    {
+> +        "MetricName": "l1d_cache_miss_ratio",
+> +        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
+> +        "BriefDescription": "This metric measures the ratio of level 1 data cache accesses missed to the total number of level 1 data cache accesses. This gives an indication of the effectiveness of the level 1 data cache.",
+> +        "MetricGroup": "Miss_Ratio;L1D_Cache_Effectiveness",
+> +        "ScaleUnit": "100percent of cache accesses"
+> +    },
+> +    {
+> +        "MetricName": "l1d_cache_mpki",
+> +        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 1 data cache accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;L1D_Cache_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "l1d_tlb_miss_ratio",
+> +        "MetricExpr": "L1D_TLB_REFILL / L1D_TLB",
+> +        "BriefDescription": "This metric measures the ratio of level 1 data TLB accesses missed to the total number of level 1 data TLB accesses. This gives an indication of the effectiveness of the level 1 data TLB.",
+> +        "MetricGroup": "Miss_Ratio;DTLB_Effectiveness",
+> +        "ScaleUnit": "100percent of TLB accesses"
+> +    },
+> +    {
+> +        "MetricName": "l1d_tlb_mpki",
+> +        "MetricExpr": "L1D_TLB_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 1 data TLB accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;DTLB_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "l1i_cache_miss_ratio",
+> +        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
+> +        "BriefDescription": "This metric measures the ratio of level 1 instruction cache accesses missed to the total number of level 1 instruction cache accesses. This gives an indication of the effectiveness of the level 1 instruction cache.",
+> +        "MetricGroup": "Miss_Ratio;L1I_Cache_Effectiveness",
+> +        "ScaleUnit": "100percent of cache accesses"
+> +    },
+> +    {
+> +        "MetricName": "l1i_cache_mpki",
+> +        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 1 instruction cache accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;L1I_Cache_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "l1i_tlb_miss_ratio",
+> +        "MetricExpr": "L1I_TLB_REFILL / L1I_TLB",
+> +        "BriefDescription": "This metric measures the ratio of level 1 instruction TLB accesses missed to the total number of level 1 instruction TLB accesses. This gives an indication of the effectiveness of the level 1 instruction TLB.",
+> +        "MetricGroup": "Miss_Ratio;ITLB_Effectiveness",
+> +        "ScaleUnit": "100percent of TLB accesses"
+> +    },
+> +    {
+> +        "MetricName": "l1i_tlb_mpki",
+> +        "MetricExpr": "L1I_TLB_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 1 instruction TLB accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;ITLB_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "l2_cache_miss_ratio",
+> +        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
+> +        "BriefDescription": "This metric measures the ratio of level 2 cache accesses missed to the total number of level 2 cache accesses. This gives an indication of the effectiveness of the level 2 cache, which is a unified cache that stores both data and instruction. Note that cache accesses in this cache are either data memory access or instruction fetch as this is a unified cache.",
+> +        "MetricGroup": "Miss_Ratio;L2_Cache_Effectiveness",
+> +        "ScaleUnit": "100percent of cache accesses"
+> +    },
+> +    {
+> +        "MetricName": "l2_cache_mpki",
+> +        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 2 unified cache accesses missed per thousand instructions executed. Note that cache accesses in this cache are either data memory access or instruction fetch as this is a unified cache.",
+> +        "MetricGroup": "MPKI;L2_Cache_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "l2_tlb_miss_ratio",
+> +        "MetricExpr": "L2D_TLB_REFILL / L2D_TLB",
+> +        "BriefDescription": "This metric measures the ratio of level 2 unified TLB accesses missed to the total number of level 2 unified TLB accesses. This gives an indication of the effectiveness of the level 2 TLB.",
+> +        "MetricGroup": "Miss_Ratio;ITLB_Effectiveness;DTLB_Effectiveness",
+> +        "ScaleUnit": "100percent of TLB accesses"
+> +    },
+> +    {
+> +        "MetricName": "l2_tlb_mpki",
+> +        "MetricExpr": "L2D_TLB_REFILL / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of level 2 unified TLB accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;ITLB_Effectiveness;DTLB_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "ll_cache_read_hit_ratio",
+> +        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
+> +        "BriefDescription": "This metric measures the ratio of last level cache read accesses hit in the cache to the total number of last level cache accesses. This gives an indication of the effectiveness of the last level cache for read traffic. Note that cache accesses in this cache are either data memory access or instruction fetch as this is a system level cache.",
+> +        "MetricGroup": "LL_Cache_Effectiveness",
+> +        "ScaleUnit": "100percent of cache accesses"
+> +    },
+> +    {
+> +        "MetricName": "ll_cache_read_miss_ratio",
+> +        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
+> +        "BriefDescription": "This metric measures the ratio of last level cache read accesses missed to the total number of last level cache accesses. This gives an indication of the effectiveness of the last level cache for read traffic. Note that cache accesses in this cache are either data memory access or instruction fetch as this is a system level cache.",
+> +        "MetricGroup": "Miss_Ratio;LL_Cache_Effectiveness",
+> +        "ScaleUnit": "100percent of cache accesses"
+> +    },
+> +    {
+> +        "MetricName": "ll_cache_read_mpki",
+> +        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
+> +        "BriefDescription": "This metric measures the number of last level cache read accesses missed per thousand instructions executed.",
+> +        "MetricGroup": "MPKI;LL_Cache_Effectiveness",
+> +        "ScaleUnit": "1MPKI"
+> +    },
+> +    {
+> +        "MetricName": "load_percentage",
+> +        "MetricExpr": "LD_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures load operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "nonsve_fp_ops_per_cycle",
+> +        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
+> +        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+> +        "MetricGroup": "FP_Arithmetic_Intensity",
+> +        "ScaleUnit": "1operations per cycle"
+> +    },
+> +    {
+> +        "MetricName": "retiring",
+> +        "MetricExpr": "(1 - STALL_SLOT / (CPU_CYCLES * 5)) * (OP_RETIRED / OP_SPEC) * 100",
+> +        "BriefDescription": "This metric is the percentage of total slots that retired operations, which indicates cycles that were utilized efficiently.",
+> +        "MetricGroup": "TopdownL1",
+> +        "ScaleUnit": "1percent of slots"
+> +    },
+> +    {
+> +        "MetricName": "scalar_fp_percentage",
+> +        "MetricExpr": "VFP_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalar floating point operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "simd_percentage",
+> +        "MetricExpr": "ASE_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures advanced SIMD operations as a percentage of total operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "store_percentage",
+> +        "MetricExpr": "ST_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures store operations as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "sve_all_percentage",
+> +        "MetricExpr": "SVE_INST_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalable vector operations, including loads and stores, as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "Operation_Mix",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "sve_fp_ops_per_cycle",
+> +        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
+> +        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
+> +        "MetricGroup": "FP_Arithmetic_Intensity",
+> +        "ScaleUnit": "1operations per cycle"
+> +    },
+> +    {
+> +        "MetricName": "sve_predicate_empty_percentage",
+> +        "MetricExpr": "SVE_PRED_EMPTY_SPEC / SVE_PRED_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalable vector operations with no active predicates as a percentage of sve predicated operations speculatively executed.",
+> +        "MetricGroup": "SVE_Effectiveness",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "sve_predicate_full_percentage",
+> +        "MetricExpr": "SVE_PRED_FULL_SPEC / SVE_PRED_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalable vector operations with all active predicates as a percentage of sve predicated operations speculatively executed.",
+> +        "MetricGroup": "SVE_Effectiveness",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "sve_predicate_partial_percentage",
+> +        "MetricExpr": "SVE_PRED_PARTIAL_SPEC / SVE_PRED_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalable vector operations with at least one active predicates as a percentage of sve predicated operations speculatively executed.",
+> +        "MetricGroup": "SVE_Effectiveness",
+> +        "ScaleUnit": "1percent of operations"
+> +    },
+> +    {
+> +        "MetricName": "sve_predicate_percentage",
+> +        "MetricExpr": "SVE_PRED_SPEC / INST_SPEC * 100",
+> +        "BriefDescription": "This metric measures scalable vector operations with predicates as a percentage of operations speculatively executed.",
+> +        "MetricGroup": "SVE_Effectiveness",
+> +        "ScaleUnit": "1percent of operations"
+> +    }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> index 492083b99256..3409e39bb8df 100644
+> --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+> @@ -227,6 +227,18 @@
+>           "EventName": "L1I_TLB",
+>           "BriefDescription": "Attributable Level 1 instruction TLB access"
+>       },
+> +    {
+> +        "PublicDescription": "Counts accesses to the level 2 cache due to instruction accesses. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the first level instruction cache.",
+> +        "EventCode": "0x27",
+> +        "EventName": "L2I_CACHE",
+> +        "BriefDescription": "Counts accesses to the level 2 cache due to instruction accesses. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the first level instruction cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cache line refills into the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 instruction cache.",
+> +        "EventCode": "0x28",
+> +        "EventName": "L2I_CACHE_REFILL",
+> +        "BriefDescription": "Counts cache line refills into the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 instruction cache."
+> +    },
+>       {
+>           "PublicDescription": "Attributable Level 3 data cache allocation without refill",
+>           "EventCode": "0x29",
+> @@ -275,6 +287,18 @@
+>           "EventName": "REMOTE_ACCESS",
+>           "BriefDescription": "Access to another socket in a multi-socket system"
+>       },
+> +    {
+> +        "PublicDescription": "Counts transactions that were returned from outside the core cluster. This event counts transactions for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts transactions for L3 cache.",
+> +        "EventCode": "0x32",
+> +        "EventName": "LL_CACHE",
+> +        "BriefDescription": "Counts transactions that were returned from outside the core cluster. This event counts transactions for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts transactions for L3 cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts transactions that were returned from outside the core cluster and missed in the last level cache",
+> +        "EventCode": "0x33",
+> +        "EventName": "LL_CACHE_MISS",
+> +        "BriefDescription": "Counts transactions that were returned from outside the core cluster and missed in the last level cache"
+> +    },
+>       {
+>           "PublicDescription": "Access to data TLB causes a translation table walk",
+>           "EventCode": "0x34",
+> @@ -395,6 +419,12 @@
+>           "EventName": "L2D_CACHE_LMISS_RD",
+>           "BriefDescription": "Level 2 data cache long-latency read miss"
+>       },
+> +    {
+> +        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any instruction read operations that incurred additional latency.",
+> +        "EventCode": "0x400A",
+> +        "EventName": "L2I_CACHE_LMISS",
+> +        "BriefDescription": "Counts cache line refills into the level 2 unified cache from any instruction read operations that incurred additional latency."
+> +    },
+>       {
+>           "PublicDescription": "Level 3 data cache long-latency read miss.  The counter counts each memory read access counted by L3D_CACHE that incurs additional latency because it returns data from outside the Level 3 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 3 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 3 data or unified cache.",
+>           "EventCode": "0x400B",
+> @@ -808,5 +838,347 @@
+>           "EventCode": "0x80EF",
+>           "EventName": "ASE_SVE_INT64_SPEC",
+>           "BriefDescription": "Advanced SIMD and SVE 64-bit integer operations speculatively executed"
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed direct branches that were taken.",
+> +        "EventCode": "0x8108",
+> +        "EventName": "BR_IMMED_TAKEN_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed direct branches that were taken."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were taken.",
+> +        "EventCode": "0x810C",
+> +        "EventName": "BR_INDNR_TAKEN_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches excluding procedure returns that were taken."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed direct branches that were correctly predicted.",
+> +        "EventCode": "0x8110",
+> +        "EventName": "BR_IMMED_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed direct branches that were correctly predicted."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed direct branches that were mispredicted and caused a pipeline flush.",
+> +        "EventCode": "0x8111",
+> +        "EventName": "BR_IMMED_MIS_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed direct branches that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were correctly predicted.",
+> +        "EventCode": "0x8112",
+> +        "EventName": "BR_IND_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches including procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were mispredicted and caused a pipeline flush.",
+> +        "EventCode": "0x8113",
+> +        "EventName": "BR_IND_MIS_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches including procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed procedure returns that were correctly predicted.",
+> +        "EventCode": "0x8114",
+> +        "EventName": "BR_RETURN_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed procedure returns that were mispredicted and caused a pipeline flush.",
+> +        "EventCode": "0x8115",
+> +        "EventName": "BR_RETURN_MIS_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were correctly predicted.",
+> +        "EventCode": "0x8116",
+> +        "EventName": "BR_INDNR_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches excluding procedure returns that were correctly predicted."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were mispredicted and caused a pipeline flush.",
+> +        "EventCode": "0x8117",
+> +        "EventName": "BR_INDNR_MIS_PRED_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches excluding procedure returns that were mispredicted and caused a pipeline flush."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts branch instructions counted by BR_RETIRED which were correctly predicted.",
+> +        "EventCode": "0x811C",
+> +        "EventName": "BR_PRED_RETIRED",
+> +        "BriefDescription": "Counts branch instructions counted by BR_RETIRED which were correctly predicted."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns.",
+> +        "EventCode": "0x811D",
+> +        "EventName": "BR_IND_RETIRED",
+> +        "BriefDescription": "Counts architecturally executed indirect branches including procedure returns."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of instruction fetches outstanding per cycle, which will provide an average latency of instruction fetch.",
+> +        "EventCode": "0x8120",
+> +        "EventName": "INST_FETCH_PERCYC",
+> +        "BriefDescription": "Counts number of instruction fetches outstanding per cycle, which will provide an average latency of instruction fetch."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts the number of outstanding loads or memory read accesses per cycle.",
+> +        "EventCode": "0x8121",
+> +        "EventName": "MEM_ACCESS_RD_PERCYC",
+> +        "BriefDescription": "Counts the number of outstanding loads or memory read accesses per cycle."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts Instruction memory accesses that the PE makes.",
+> +        "EventCode": "0x8124",
+> +        "EventName": "INST_FETCH",
+> +        "BriefDescription": "Counts Instruction memory accesses that the PE makes."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts the number of data translation table walks in progress per cycle.",
+> +        "EventCode": "0x8128",
+> +        "EventName": "DTLB_WALK_PERCYC",
+> +        "BriefDescription": "Counts the number of data translation table walks in progress per cycle."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts the number of instruction translation table walks in progress per cycle.",
+> +        "EventCode": "0x8129",
+> +        "EventName": "ITLB_WALK_PERCYC",
+> +        "BriefDescription": "Counts the number of instruction translation table walks in progress per cycle."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are branches.",
+> +        "EventCode": "0x812A",
+> +        "EventName": "SAMPLE_FEED_BR",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are branches."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are loads or load atomic operations.",
+> +        "EventCode": "0x812B",
+> +        "EventName": "SAMPLE_FEED_LD",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are loads or load atomic operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are stores or store atomic operations.",
+> +        "EventCode": "0x812C",
+> +        "EventName": "SAMPLE_FEED_ST",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are stores or store atomic operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are matching any operation type filters supported.",
+> +        "EventCode": "0x812D",
+> +        "EventName": "SAMPLE_FEED_OP",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are matching any operation type filters supported."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are matching event packet filter constraints.",
+> +        "EventCode": "0x812E",
+> +        "EventName": "SAMPLE_FEED_EVENT",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are matching event packet filter constraints."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts statistical profiling samples taken which are exceeding minimum latency set by operation latency filter constraints.",
+> +        "EventCode": "0x812F",
+> +        "EventName": "SAMPLE_FEED_LAT",
+> +        "BriefDescription": "Counts statistical profiling samples taken which are exceeding minimum latency set by operation latency filter constraints."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of memory accesses triggered by a data translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers.",
+> +        "EventCode": "0x8134",
+> +        "EventName": "DTLB_HWUPD",
+> +        "BriefDescription": "Counts number of memory accesses triggered by a data translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD.",
+> +        "EventCode": "0x8135",
+> +        "EventName": "ITLB_HWUPD",
+> +        "BriefDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing an update of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of memory accesses triggered by a demand data translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers.",
+> +        "EventCode": "0x8136",
+> +        "EventName": "DTLB_STEP",
+> +        "BriefDescription": "Counts number of memory accesses triggered by a demand data translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that this event counts accesses triggered by software preloads, but not accesses triggered by hardware prefetchers."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD.",
+> +        "EventCode": "0x8137",
+> +        "EventName": "ITLB_STEP",
+> +        "BriefDescription": "Counts number of memory accesses triggered by an instruction translation table walk and performing a read of a translation table entry. Memory accesses are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_BLOCK is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations.",
+> +        "EventCode": "0x8138",
+> +        "EventName": "DTLB_WALK_LARGE",
+> +        "BriefDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_BLOCK is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_BLOCK event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations.",
+> +        "EventCode": "0x8139",
+> +        "EventName": "ITLB_WALK_LARGE",
+> +        "BriefDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a large page. The set of large pages is defined as all pages with a final size higher than or equal to 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_BLOCK event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of data translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_PAGE event is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations.",
+> +        "EventCode": "0x813A",
+> +        "EventName": "DTLB_WALK_SMALL",
+> +        "BriefDescription": "Counts number of data translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. If DTLB_WALK_PAGE event is implemented, then it is an alias for this event in this family. Note that partial translations that cause a translation table walk are also counted. Also note that this event counts walks triggered by software preloads, but not walks triggered by hardware prefetchers, and that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_PAGE event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations.",
+> +        "EventCode": "0x813B",
+> +        "EventName": "ITLB_WALK_SMALL",
+> +        "BriefDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_PAGE event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 1 data demand cache accesses from any load or store operation. Near atomic operations that resolve in the CPUs caches counts as both a write access and read access.",
+> +        "EventCode": "0x8140",
+> +        "EventName": "L1D_CACHE_RW",
+> +        "BriefDescription": "Counts level 1 data demand cache accesses from any load or store operation. Near atomic operations that resolve in the CPUs caches counts as both a write access and read access."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 2 cache demand accesses from any load/store operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses.",
+> +        "EventCode": "0x8148",
+> +        "EventName": "L2D_CACHE_RW",
+> +        "BriefDescription": "Counts level 2 cache demand accesses from any load/store operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 2 cache accesses that are due to a demand instruction cache access.",
+> +        "EventCode": "0x8149",
+> +        "EventName": "L2I_CACHE_RD",
+> +        "BriefDescription": "Counts level 2 cache accesses that are due to a demand instruction cache access."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 3 cache accesses that missed in the level 3 cache.",
+> +        "EventCode": "0x8152",
+> +        "EventName": "L3D_CACHE_MISS",
+> +        "BriefDescription": "Counts level 3 cache accesses that missed in the level 3 cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher.",
+> +        "EventCode": "0x8154",
+> +        "EventName": "L1D_CACHE_HWPRF",
+> +        "BriefDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the memory resources.",
+> +        "EventCode": "0x8158",
+> +        "EventName": "STALL_FRONTEND_MEMBOUND",
+> +        "BriefDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the memory resources."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the level 1 instruction cache.",
+> +        "EventCode": "0x8159",
+> +        "EventName": "STALL_FRONTEND_L1I",
+> +        "BriefDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the level 1 instruction cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the last level core cache.",
+> +        "EventCode": "0x815B",
+> +        "EventName": "STALL_FRONTEND_MEM",
+> +        "BriefDescription": "Counts cycles when the frontend is stalled because there is an instruction fetch request pending in the last level core cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts when the frontend is stalled on any TLB misses being handled. This event also counts the TLB accesses made by hardware prefetches.",
+> +        "EventCode": "0x815C",
+> +        "EventName": "STALL_FRONTEND_TLB",
+> +        "BriefDescription": "Counts when the frontend is stalled on any TLB misses being handled. This event also counts the TLB accesses made by hardware prefetches."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the CPU resources excluding memory resources.",
+> +        "EventCode": "0x8160",
+> +        "EventName": "STALL_FRONTEND_CPUBOUND",
+> +        "BriefDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the CPU resources excluding memory resources."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the branch prediction unit.",
+> +        "EventCode": "0x8161",
+> +        "EventName": "STALL_FRONTEND_FLOW",
+> +        "BriefDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the branch prediction unit."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage as the frontend is recovering from a machine flush or resteer. Example scenarios that cause a flush include branch mispredictions, taken exceptions, micro-architectural flush etc.",
+> +        "EventCode": "0x8162",
+> +        "EventName": "STALL_FRONTEND_FLUSH",
+> +        "BriefDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage as the frontend is recovering from a machine flush or resteer. Example scenarios that cause a flush include branch mispredictions, taken exceptions, micro-architectural flush etc."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to resource constraints in the memory resources.",
+> +        "EventCode": "0x8164",
+> +        "EventName": "STALL_BACKEND_MEMBOUND",
+> +        "BriefDescription": "Counts cycles when the backend could not accept any micro-operations due to resource constraints in the memory resources."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the level 1 data cache.",
+> +        "EventCode": "0x8165",
+> +        "EventName": "STALL_BACKEND_L1D",
+> +        "BriefDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the level 1 data cache."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend is stalled on any demand TLB misses being handled.",
+> +        "EventCode": "0x8167",
+> +        "EventName": "STALL_BACKEND_TLB",
+> +        "BriefDescription": "Counts cycles when the backend is stalled on any demand TLB misses being handled."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend is stalled and there is a store that has not reached the pre-commit stage.",
+> +        "EventCode": "0x8168",
+> +        "EventName": "STALL_BACKEND_ST",
+> +        "BriefDescription": "Counts cycles when the backend is stalled and there is a store that has not reached the pre-commit stage."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to any resource constraints in the CPU excluding memory resources.",
+> +        "EventCode": "0x816A",
+> +        "EventName": "STALL_BACKEND_CPUBOUND",
+> +        "BriefDescription": "Counts cycles when the backend could not accept any micro-operations due to any resource constraints in the CPU excluding memory resources."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations because the issue queues are full to take any operations for execution.",
+> +        "EventCode": "0x816B",
+> +        "EventName": "STALL_BACKEND_BUSY",
+> +        "BriefDescription": "Counts cycles when the backend could not accept any micro-operations because the issue queues are full to take any operations for execution."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts cycles when backend is stalled even when operations are available from the frontend but at least one is not ready to be sent to the backend because no rename register is available.",
+> +        "EventCode": "0x816D",
+> +        "EventName": "STALL_BACKEND_RENAME",
+> +        "BriefDescription": "Counts cycles when backend is stalled even when operations are available from the frontend but at least one is not ready to be sent to the backend because no rename register is available."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE and updated the location accessed.",
+> +        "EventCode": "0x8171",
+> +        "EventName": "CAS_NEAR_PASS",
+> +        "BriefDescription": "Counts compare and swap instructions that executed locally to the PE and updated the location accessed."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE.",
+> +        "EventCode": "0x8172",
+> +        "EventName": "CAS_NEAR_SPEC",
+> +        "BriefDescription": "Counts compare and swap instructions that executed locally to the PE."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts compare and swap instructions that did not execute locally to the PE.",
+> +        "EventCode": "0x8173",
+> +        "EventName": "CAS_FAR_SPEC",
+> +        "BriefDescription": "Counts compare and swap instructions that did not execute locally to the PE."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 1 data cache refills where the cache line is requested by a hardware prefetcher.",
+> +        "EventCode": "0x81BC",
+> +        "EventName": "L1D_CACHE_REFILL_HWPRF",
+> +        "BriefDescription": "Counts level 1 data cache refills where the cache line is requested by a hardware prefetcher."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts level 2 data cache accesses from software preload or prefetch instructions or hardware prefetcher.",
+> +        "EventCode": "0x8285",
+> +        "EventName": "L2D_CACHE_PRF",
+> +        "BriefDescription": "Counts level 2 data cache accesses from software preload or prefetch instructions or hardware prefetcher."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts refills due to accesses generated as a result of prefetches.",
+> +        "EventCode": "0x828D",
+> +        "EventName": "L2D_CACHE_REFILL_PRF",
+> +        "BriefDescription": "Counts refills due to accesses generated as a result of prefetches."
+> +    },
+> +    {
+> +        "PublicDescription": "Counts last level accesses that receive data from outside the last level cache.",
+> +        "EventCode": "0x829A",
+> +        "EventName": "LL_CACHE_REFILL",
+> +        "BriefDescription": "Counts last level accesses that receive data from outside the last level cache."
+>       }
+>   ]
+> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> index f4d1ca4d1493..7ef4ecbeb6ed 100644
+> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> @@ -36,6 +36,7 @@
+>   0x00000000410fd480,v1,arm/cortex-x2,core
+>   0x00000000410fd490,v1,arm/neoverse-n2-v2,core
+>   0x00000000410fd4f0,v1,arm/neoverse-n2-v2,core
+> +0x00000000410fd8e0,v1,arm/neoverse-n3,core
+>   0x00000000420f5160,v1,cavium/thunderx2,core
+>   0x00000000430f0af0,v1,cavium/thunderx2,core
+>   0x00000000460f0010,v1,fujitsu/a64fx,core
+
