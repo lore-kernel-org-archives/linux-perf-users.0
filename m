@@ -1,198 +1,350 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE9B1BD9D8
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 19:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A077B1C07C9;
+	Mon, 13 Jan 2025 20:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736797553; cv=none; b=r5XL17+8KLWSAA649Trrd7HKNQ4VJT3zYF0+1uGWzYt9AyiN5qT8keNIJoxnzgaqLt/nvzOwSnipUKABBx6dvF4A9qJOuBv/o02ImquaXb/Ow0gh96abueYdux6EEtB6qdK9n/EOod515x3QGXbXRUx3Hne7+UdKrpePYcxq/+E=
+	t=1736801484; cv=none; b=OjvmnNHs82Q/yp0OZ0An0ZrmbXLp8FZ6u1o2DEaBhDRFipn4CN6X30BfE6SIiZ8N5iHmYwffxdolOWazFjCyUexI2IzhcZpxs5qofWWfRYAOhdMA0I87qVKS8bv6QkzdhCovmhVREBNSC1MPAvRI19x1KFmyIaUghlk5LCP3XQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736797553; c=relaxed/simple;
-	bh=KeNlaPvzChcjf3R2kGDxqjzOsCcORxgIpry4AfDj4lc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+Im+ui65nWQAJkfv7VoBD/0wO0f8CoS4+zHmaPYOyKYoGkP3NE5LDAgL7T8LSzV+Jqsn4q26QtKXJ9sX/3Kb/DAvNJkEwJampuh0kmSl9QR3g2gZ9tOEsTQz96SFxApr7z9cbvcQEJso3G5SWbGU8/0BUyLq1HTU1Wg7hTP6MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0pxk/27O; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736801484; c=relaxed/simple;
+	bh=KbVfSrygL6EBk9FJdpE1n8s4pWNZ+N7EFhZ898zx7+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WIefnvWwI7GoGD81hsV/yIJxlKrihTtfemnPRbofAm3PdUjFfNwyppCbdax1WtAb0MA1UHNC5QtttKkHnsGdUSxj78hDZhK2lGGtl0H/F5ht2SAcSCSpqwFzB4HccDG1hJQpdXqG95A17RDoKLRPlG+W8VpBgJTcG0g+a/OkZbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Whr+76vo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0pxk/27O"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a814c54742so20045ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 11:45:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736797551; x=1737402351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UzaZxcXDEFLe3xIBNkpQCPFqJ0x+en9zj51Bgj1MHWQ=;
-        b=0pxk/27Oq/V0aZ2s+iZTJHF+cK0q+/NAp9kNPEFJBLEO+xRBdXeYldDpAgeMQHpVtN
-         fZSGY/juDbdi+ujedOjXAZHCUsL0SvNOPZ4foGKIVbIXVu7vqovSIvlY9uNG82rkExZs
-         cMo/D0qaVAOrzx3VrBUDLxA0j42jwATxcT88oxu9t1iRdPYhB3KPx9J4jmV/U43UslJl
-         c9yXZOOmylRuzm/zkBg5JK1uWDQCEmW37XJHrOe6oqYuixbGMXTX4Z3gCXjmiWV9ACf/
-         Fv7c0Tq1OYtwB6FG/YO7A9BJ8QrAfxm9/hqijYo73x5hJxAoK9xClDMl7bJUtBWrb0GY
-         HHug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736797551; x=1737402351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UzaZxcXDEFLe3xIBNkpQCPFqJ0x+en9zj51Bgj1MHWQ=;
-        b=DDEDkWAVL1y/MBSKlPdfiWnkO0x+behY3vk4+psxnGun0SY/0sLQAtotC3rvqbY1We
-         guPKrcE9cMSufdZwHg4AlQ9phJTWHAVAENv9e7P/JjwJaWRMXVcK6rU72CjT3u229E7b
-         L3HtKIGzzCiXkhlVtZiqEKq6jL1HhftKXxm3MaOmgJaqXTJKwDl76DdUCHHia8F/PQb8
-         cfSNCnTKIQjGoPXDBUL6HSZHdx+4Vw52WltqgyI8iARAjzRrbKucJ6L6AWN5U/jO/Ert
-         sn0L4a9VHJjrz62XN/vV5KaNG+XP9BqrnB98Kcqf1MHX74+OPDMM/ktJXCM21fWytBW/
-         /vAg==
-X-Forwarded-Encrypted: i=1; AJvYcCX35mLD94h2sIQswJkLBXa4fKKLYYykTQDUPodAVN9bawpnKShv3Hi70LXOsNohL3mwbZmhk83AK+AHXLmUZHOf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRC+T+g12Z/zWqi5fMdm6aaTe8afFpCL+j0/gvDMhZquV0J/W/
-	ctJvobQb/EZmYBkcBhDbC1DxyUj3/1l/Vk5vA5C9/t3v4JayW/yyDiXie/eAcjdF6RDp3qhnob8
-	z+YeB9fx0oPqubEa8I1fVL8uB1xIdovtCyroB
-X-Gm-Gg: ASbGncsq4r2+HAjkmfjiRzkIK1NFoucfTal3nvLPNiZOPxnmcOwdFvThQQWiHC7X0D5
-	9gHJzRDuzFov1JEO4aFsiCXFm5Kn5T4ACSYuCi8LSFoJRYe2FlVRPHRMMKIUzv/E5Yt4NQQ==
-X-Google-Smtp-Source: AGHT+IEmtxbOrY9+g5mPjy4uXM2KP3iH8q9Z2TSZqn3G+G/4yD1BKVTobi8RELPxFpmeFB6/d4ETG7ICILV00WbGLCY=
-X-Received: by 2002:a05:6e02:1a25:b0:3ce:2f93:a02b with SMTP id
- e9e14a558f8ab-3ce7ac5662fmr300905ab.12.1736797551035; Mon, 13 Jan 2025
- 11:45:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Whr+76vo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78002C4CED6;
+	Mon, 13 Jan 2025 20:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736801484;
+	bh=KbVfSrygL6EBk9FJdpE1n8s4pWNZ+N7EFhZ898zx7+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Whr+76voivOhQJ26N/JeQngJsI4ln7g3kzpTXg16b/mNzGMIQfWJ5H9FPKDjiP7rq
+	 Y1w4TiV05kpcyEZQ8ENQm4bKIMl1X98e0e+Flput5v6vGXWka0umpdn9gsTs2BxBjr
+	 ZSLa+8IbDIPv/XU589aGjvWf97umpPhYqoo/oDteAb/sVOaATu8QxlVCcOto92Cgvc
+	 JfsnprG5BnlDQSOqEogSIGr35AfY69jROvmuMYEyzOPc7bR8jfNJ1csPFj7D+jCtUC
+	 MFkBnplkcKileWw3XtDvLavtfzaGgMiJmx13qJoNY7C/c1boZEuHTaUjeUybnU70GP
+	 2s8jrNf5q8jSA==
+Date: Mon, 13 Jan 2025 12:51:22 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
+ don't open
+Message-ID: <Z4V8ykyHErC89iYj@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-4-irogers@google.com>
+ <Z4B279zu_8Kz5N6u@google.com>
+ <Z4EsUAtOKZUzcw2S@x1>
+ <CAP-5=fV2cYjxf6jvYcKkd=2wcQrbR=58qafiSJ-qzE17EmWqGQ@mail.gmail.com>
+ <Z4F0bKnCHCaqdvFw@google.com>
+ <CAP-5=fVn=0n=gN6ngMmBTry3A+US3z=bX5SzVP6Zs0J0t2HLuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com>
- <c29a4cdc-9419-4f1e-92bc-a75c3b10e37d@intel.com> <CAP-5=fWjH9uU6eYAFXBY0X2KrvbU8xYAzwzPATYPMW1t46-pgg@mail.gmail.com>
-In-Reply-To: <CAP-5=fWjH9uU6eYAFXBY0X2KrvbU8xYAzwzPATYPMW1t46-pgg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 Jan 2025 11:45:39 -0800
-X-Gm-Features: AbW1kvZ2Ru9IOyn2Ibq009AMGr3gOWt70W4rwczKVDCQ2WVNcSOhUQKNis9-D-M
-Message-ID: <CAP-5=fXrCMJW-j9Y1qvrxxymLnjOt4GCQ5pdMPSPrT9ZmDPA3g@mail.gmail.com>
-Subject: Re: [PATCH] perf intel-pt: don't zero the whole perf_sample
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Tavian Barnes <tavianator@tavianator.com>, linux-perf-users@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Andrew Kreimer <algonell@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVn=0n=gN6ngMmBTry3A+US3z=bX5SzVP6Zs0J0t2HLuA@mail.gmail.com>
 
-On Mon, Jan 13, 2025 at 9:30=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Jan 13, 2025 at 12:15=E2=80=AFAM Adrian Hunter <adrian.hunter@int=
-el.com> wrote:
-> >
-> > On 11/01/25 19:56, Tavian Barnes wrote:
-> > > C designated initializers like
-> > >
-> > >     struct perf_sample sample =3D { .ip =3D 0, };
-> > >
-> > > set every unmentioned field of the struct to zero.  But since
-> > > sizeof(struct perf_sample) =3D=3D 1384, this takes a long time.
-> > >
-> > > struct perf_sample does not need to be fully initialized, and even
-> >
-> > Yes it does need to be fully initialized.  Leaving members
-> > uninitialized in the hope that they never get used adds to
-> > code complexity e.g. how do you know they never are used,
-> > or future members never will be used.
->
-> First thought, perhaps we can use sanitizers to catch mistakes but
-> leave the default optimized code to not have any overhead.
->
-> Second thought, the perf_sample looks like:
-> ```
-> $ pahole perf
-> ...
-> struct perf_sample {
->        u64                        ip;                   /*     0     8 */
->        u32                        pid;                  /*     8     4 */
->        u32                        tid;                  /*    12     4 */
->        u64                        time;                 /*    16     8 */
->        u64                        addr;                 /*    24     8 */
->        u64                        id;                   /*    32     8 */
->        u64                        stream_id;            /*    40     8 */
->        u64                        period;               /*    48     8 */
->        u64                        weight;               /*    56     8 */
->        /* --- cacheline 1 boundary (64 bytes) --- */
->        u64                        transaction;          /*    64     8 */
->        u64                        insn_cnt;             /*    72     8 */
->        u64                        cyc_cnt;              /*    80     8 */
->        u32                        cpu;                  /*    88     4 */
->        u32                        raw_size;             /*    92     4 */
->        u64                        data_src;             /*    96     8 */
->        u64                        phys_addr;            /*   104     8 */
->        u64                        data_page_size;       /*   112     8 */
->        u64                        code_page_size;       /*   120     8 */
->        /* --- cacheline 2 boundary (128 bytes) --- */
->        u64                        cgroup;               /*   128     8 */
->        u32                        flags;                /*   136     4 */
->        u32                        machine_pid;          /*   140     4 */
->        u32                        vcpu;                 /*   144     4 */
->        u16                        insn_len;             /*   148     2 */
->        u8                         cpumode;              /*   150     1 */
->
->        /* XXX 1 byte hole, try to pack */
->
->        u16                        misc;                 /*   152     2 */
->        u16                        ins_lat;              /*   154     2 */
->        union {
->                u16                p_stage_cyc;          /*   156     2 */
->                u16                retire_lat;           /*   156     2 */
->        };                                               /*   156     2 */
->        union {
->                u16                        p_stage_cyc;          /*
-> 0     2 */
->                u16                        retire_lat;           /*
-> 0     2 */
->        };
->
->        _Bool                      no_hw_idx;            /*   158     1 */
->        char                       insn[16];             /*   159    16 */
->
->        /* XXX 1 byte hole, try to pack */
->
->        void *                     raw_data;             /*   176     8 */
->        struct ip_callchain *      callchain;            /*   184     8 */
->        /* --- cacheline 3 boundary (192 bytes) --- */
->        struct branch_stack *      branch_stack;         /*   192     8 */
->        u64 *                      branch_stack_cntr;    /*   200     8 */
->        struct regs_dump           user_regs;            /*   208   544 */
->        /* --- cacheline 11 boundary (704 bytes) was 48 bytes ago --- */
->        struct regs_dump           intr_regs;            /*   752   544 */
->        /* --- cacheline 20 boundary (1280 bytes) was 16 bytes ago --- */
->        struct stack_dump          user_stack;           /*  1296    24 */
->        struct sample_read         read;                 /*  1320    40 */
->         /* --- cacheline 21 boundary (1344 bytes) was 16 bytes ago --- */
->        struct aux_sample          aux_sample;           /*  1360    16 */
->        struct simd_flags          simd_flags;           /*  1376     8 */
->
->        /* size: 1384, cachelines: 22, members: 39 */
->        /* sum members: 1382, holes: 2, sum holes: 2 */
->        /* last cacheline: 40 bytes */
-> };
-> ```
-> The two regs_dump structs are 79% of the size. They comprise of:
-> ```
-> struct regs_dump {
->        u64                        abi;                  /*     0     8 */
->        u64                        mask;                 /*     8     8 */
->        u64 *                      regs;                 /*    16     8 */
->        u64                        cache_regs[64];       /*    24   512 */
->        /* --- cacheline 8 boundary (512 bytes) was 24 bytes ago --- */
->        u64                        cache_mask;           /*   536     8 */
->
->        /* size: 544, cachelines: 9, members: 5 */
->        /* last cacheline: 32 bytes */
-> };
-> ```
-> So the cache_regs are taking up the majority of the space. I have a
-> WIP patch set to make user_regs and intr_regs optional/lazily
-> allocated. I'll send it out shortly.
+Hi Ian,
 
-Sent as:
-https://lore.kernel.org/lkml/20250113194345.1537821-1-irogers@google.com/
+On Fri, Jan 10, 2025 at 01:33:57PM -0800, Ian Rogers wrote:
+> On Fri, Jan 10, 2025 at 11:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Fri, Jan 10, 2025 at 08:42:02AM -0800, Ian Rogers wrote:
+> > > On Fri, Jan 10, 2025 at 6:18 AM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Adding Linus to the CC list as he participated in this discussion in the
+> > > > past, so a heads up about changes in this area that are being further
+> > > > discussed.
+> > >
+> > > Linus blocks my email so I'm not sure of the point.
+> >
+> > That's unfortunate, but he should be able to see others' reply.
+> >
+> > >
+> > > > On Thu, Jan 09, 2025 at 05:25:03PM -0800, Namhyung Kim wrote:
+> > > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
+> > > > > > Whilst for many tools it is an expected behavior that failure to open
+> > > > > > a perf event is a failure, ARM decided to name PMU events the same as
+> > > > > > legacy events and then failed to rename such events on a server uncore
+> > > > > > SLC PMU. As perf's default behavior when no PMU is specified is to
+> > > > > > open the event on all PMUs that advertise/"have" the event, this
+> > > > > > yielded failures when trying to make the priority of legacy and
+> > > > > > sysfs/json events uniform - something requested by RISC-V and ARM. A
+> > > > > > legacy event user on ARM hardware may find their event opened on an
+> > > > > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
+> > > > > > such events which this patch implements. Rather than have the skipping
+> > > > > > conditional on running on ARM, the skipping is done on all
+> > > > > > architectures as such a fundamental behavioral difference could lead
+> > > > > > to problems with tools built/depending on perf.
+> > > > > >
+> > > > > > An example of perf record failing to open events on x86 is:
+> > > > > > ```
+> > > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+> > > > > > Error:
+> > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
+> > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > >
+> > > > > > Error:
+> > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
+> > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > >
+> > > > > > Error:
+> > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+> > > > >
+> > > > > I'm afraid this can be too noisy.
+> > > >
+> > > > Agreed.
+> > > >
+> > > > > > $ perf report --stats
+> > > > > > Aggregated stats:
+> > > > > >                TOTAL events:      17255
+> > > > > >                 MMAP events:        284  ( 1.6%)
+> > > > > >                 COMM events:       1961  (11.4%)
+> > > > > >                 EXIT events:          1  ( 0.0%)
+> > > > > >                 FORK events:       1960  (11.4%)
+> > > > > >               SAMPLE events:         87  ( 0.5%)
+> > > > > >                MMAP2 events:      12836  (74.4%)
+> > > > > >              KSYMBOL events:         83  ( 0.5%)
+> > > > > >            BPF_EVENT events:         36  ( 0.2%)
+> > > > > >       FINISHED_ROUND events:          2  ( 0.0%)
+> > > > > >             ID_INDEX events:          1  ( 0.0%)
+> > > > > >           THREAD_MAP events:          1  ( 0.0%)
+> > > > > >              CPU_MAP events:          1  ( 0.0%)
+> > > > > >            TIME_CONV events:          1  ( 0.0%)
+> > > > > >        FINISHED_INIT events:          1  ( 0.0%)
+> > > > > > cycles stats:
+> > > > > >               SAMPLE events:         87
+> > > > > > ```
+> > > > > >
+> > > > > > If all events fail to open then the perf record will fail:
+> > > > > > ```
+> > > > > > $ perf record -e LLC-prefetch-read true
+> > > > > > Error:
+> > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > Error:
+> > > > > > Failure to open any events for recording
+> > > > > > ```
+> > > > > >
+> > > > > > As an evlist may have dummy events that open when all command line
+> > > > > > events fail we ignore dummy events when detecting if at least some
+> > > > > > events open. This still permits the dummy event on its own to be used
+> > > > > > as a permission check:
+> > > > > > ```
+> > > > > > $ perf record -e dummy true
+> > > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > > [ perf record: Captured and wrote 0.046 MB perf.data ]
+> > > > > > ```
+> > > > > > but allows failure when a dummy event is implicilty inserted or when
+> > > > > > there are insufficient permissions to open it:
+> > > > > > ```
+> > > > > > $ perf record -e LLC-prefetch-read -a true
+> > > > > > Error:
+> > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > Error:
+> > > > > > Failure to open any events for recording
+> > > > > > ```
+> > > > > >
+> > > > > > The issue with legacy events is that on RISC-V they want the driver to
+> > > > > > not have mappings from legacy to non-legacy config encodings for each
+> > > > > > vendor/model due to size, complexity and difficulty to update. It was
+> > > > > > reported that on ARM Apple-M? CPUs the legacy mapping in the driver
+> > > > > > was broken and the sysfs/json events should always take precedent,
+> > > > > > however, it isn't clear this is still the case. It is the case that
+> > > > > > without working around this issue a legacy event like cycles without a
+> > > > > > PMU can encode differently than when specified with a PMU - the
+> > > > > > non-PMU version favoring legacy encodings, the PMU one avoiding legacy
+> > > > > > encodings.
+> > > > > >
+> > > > > > The patch removes events and then adjusts the idx value for each
+> > > > > > evsel. This is done so that the dense xyarrays used for file
+> > > > > > descriptors, etc. don't contain broken entries. As event opening
+> > > > > > happens relatively late in the record process, use of the idx value
+> > > > > > before the open will have become corrupted, so it is expected there
+> > > > > > are latent bugs hidden behind this change - the change is best
+> > > > > > effort. As the only vendor that has broken event names is ARM, this
+> > > > > > will principally effect ARM users. They will also experience warning
+> > > > > > messages like those above because of the uncore PMU advertising legacy
+> > > > > > event names.
+> > > > > >
+> > > > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > > Tested-by: James Clark <james.clark@linaro.org>
+> > > > > > Tested-by: Leo Yan <leo.yan@arm.com>
+> > > > > > Tested-by: Atish Patra <atishp@rivosinc.com>
+> > > > > > ---
+> > > > > >  tools/perf/builtin-record.c | 47 ++++++++++++++++++++++++++++++++-----
+> > > > > >  1 file changed, 41 insertions(+), 6 deletions(-)
+> > > > > >
+> > > > > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > > > > index 5db1aedf48df..c0b8249a3787 100644
+> > > > > > --- a/tools/perf/builtin-record.c
+> > > > > > +++ b/tools/perf/builtin-record.c
+> > > > > > @@ -961,7 +961,6 @@ static int record__config_tracking_events(struct record *rec)
+> > > > > >      */
+> > > > > >     if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+> > > > > >         perf_pmus__num_core_pmus() > 1) {
+> > > > > > -
+> > > > > >             /*
+> > > > > >              * User space tasks can migrate between CPUs, so when tracing
+> > > > > >              * selected CPUs, sideband for all CPUs is still needed.
+> > > > > > @@ -1366,6 +1365,7 @@ static int record__open(struct record *rec)
+> > > > > >     struct perf_session *session = rec->session;
+> > > > > >     struct record_opts *opts = &rec->opts;
+> > > > > >     int rc = 0;
+> > > > > > +   bool skipped = false;
+> > > > > >
+> > > > > >     evlist__for_each_entry(evlist, pos) {
+> > > > > >  try_again:
+> > > > > > @@ -1381,15 +1381,50 @@ static int record__open(struct record *rec)
+> > > > > >                             pos = evlist__reset_weak_group(evlist, pos, true);
+> > > > > >                             goto try_again;
+> > > > > >                     }
+> > > > > > -                   rc = -errno;
+> > > > > >                     evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
+> > > > > > -                   ui__error("%s\n", msg);
+> > > > > > -                   goto out;
+> > > > > > +                   ui__error("Failure to open event '%s' on PMU '%s' which will be removed.\n%s\n",
+> > > > > > +                             evsel__name(pos), evsel__pmu_name(pos), msg);
+> > > >
+> > > > > How about changing it to pr_debug() and add below ...
+> > > >
+> > > > That sounds better.
+> > > >
+> > > > > > +                   pos->skippable = true;
+> > > > > > +                   skipped = true;
+> > > > > > +           } else {
+> > > > > > +                   pos->supported = true;
+> > > > > >             }
+> > > > > > -
+> > > > > > -           pos->supported = true;
+> > > > > >     }
+> > > > > >
+> > > > > > +   if (skipped) {
+> > > > > > +           struct evsel *tmp;
+> > > > > > +           int idx = 0;
+> > > > > > +           bool evlist_empty = true;
+> > > > > > +
+> > > > > > +           /* Remove evsels that failed to open and update indices. */
+> > > > > > +           evlist__for_each_entry_safe(evlist, tmp, pos) {
+> > > > > > +                   if (pos->skippable) {
+> > > > > > +                           evlist__remove(evlist, pos);
+> > > > > > +                           continue;
+> > > > > > +                   }
+> > > > > > +
+> > > > > > +                   /*
+> > > > > > +                    * Note, dummy events may be command line parsed or
+> > > > > > +                    * added by the tool. We care about supporting `perf
+> > > > > > +                    * record -e dummy` which may be used as a permission
+> > > > > > +                    * check. Dummy events that are added to the command
+> > > > > > +                    * line and opened along with other events that fail,
+> > > > > > +                    * will still fail as if the dummy events were tool
+> > > > > > +                    * added events for the sake of code simplicity.
+> > > > > > +                    */
+> > > > > > +                   if (!evsel__is_dummy_event(pos))
+> > > > > > +                           evlist_empty = false;
+> > > > > > +           }
+> > > > > > +           evlist__for_each_entry(evlist, pos) {
+> > > > > > +                   pos->core.idx = idx++;
+> > > > > > +           }
+> > > > > > +           /* If list is empty then fail. */
+> > > > > > +           if (evlist_empty) {
+> > > > > > +                   ui__error("Failure to open any events for recording.\n");
+> > > > > > +                   rc = -1;
+> > > > > > +                   goto out;
+> > > > > > +           }
+> > > >
+> > > > > ... ?
+> > > >
+> > > > >               if (!verbose)
+> > > > >                       ui__warning("Removed some unsupported events, use -v for details.\n");
+> > > >
+> > > > And even this one would be best left for cases where we can determine
+> > > > that its a new situation, i.e. one that should work and not the ones we
+> > > > know that will not work already and thus so far didn't alarm the user
+> > > > into thinking something is wrong.
+> > > >
+> > > > Having the ones we know will fail as pr_debug() seems enough, I'd say.
+> > >
+> > > This means that:
+> > > ```
+> > > $ perf record -e data_read,LLC-prefetch-read -a sleep 0.1
+> > > ```
+> > > will fail (as data_read is a memory controller event and the LLC
+> > > doesn't support sampling) with something like:
+> > > ```
+> > > Error:
+> > > Failure to open any events for recording
+> > > ```
+> > > Which feels a bit minimal. As I already mentioned, it is also a
+> > > behavior change and so has the potential to break scripts dependent on
+> > > the failure information.
+> >
+> > I don't think it's about failure behavior, the concern is the error
+> > messages.  It can take too much screen space when users give a long list
+> > of invalid events.  And unfortunately the current error message for
+> > checking dmesg is not very helpful.
+> 
+> Making the dmesg message more useful is a separate issue. The error
+
+Sure.
+
+> message only happens when things are broken and I think having an
+> error message is better than none, or somehow having to know to wade
+> through verbose output. I think this is very clear in:
+> https://lore.kernel.org/lkml/CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com/
+> 
+> > Anyway you can add this line too: "Use -v to see the details."
+> 
+> So silently failing and then expecting users to scrape verbose output
+> is a fairly significant behavior change for the tool.
+
+I'm not saying I want silent failures.  It should say it fails to parse
+or open some events.  But I think it needs to care about repeating
+failure messages.
+
+> 
+> > >
+> > > A patch lowering the priority of error messages should be independent
+> > > of the 4 changes here. I'd be happy if someone follows this series
+> > > with a patch doing it.
+> >
+> > I think the error behavior is a part of this change.
+> 
+> I disagree with it, so I think you need to address my comments.
+
+You are changing the error behavior by skipping failed events then the
+relevant error messages should be handled properly in this patchset.
 
 Thanks,
-Ian
+Namhyung
+
