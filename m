@@ -1,122 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B07CA6F
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 02:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151FA145B00;
+	Mon, 13 Jan 2025 03:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736735701; cv=none; b=rjVBnJarc0/dUllZp2r0hipeq+HRmUvoSY+Y5XvSLKQERJpeOsewodCf+XXsth0qyyl5AL8ooBupvGyUJIPlM91Ylq2QXUeFK+ftU6FQVwrzVxKyfOaBfiMDjbvlXyQGX1b0VSH/lsdV/+sz9KfP7ot1hFvMAoxth5Uhs9RqnF4=
+	t=1736738718; cv=none; b=gcOaGThIAnBn/Za9f5QtNsuVIw3QECF605Ex6/JdIABkse98zi54Emd+qXEf6zG0SycKu6HkF2XdVzNj4OcBhPxcqgkjIplcT0prSfDQVPkw+0uPjGz00P0ZC3aNCOO0E/YzxPmK5O4zeAf2d93EGXegLxOo7nr8HOQLnXhZfrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736735701; c=relaxed/simple;
-	bh=eUZ+Fh4WZtN0NgpyoBv8xQhqDHri3okYFkr9cU9cfkQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GaVpC3WV3RAhkvYUqzfbz/6D+/uxjhMPfUdRktBiECCQYo7oQUYUAwvrv9qtzrlxV52voiyE7ZXFZyFpEE5n/Rtn6Z69Kma8cYNhS7zltgfeRmYghEBuD0wSMCfp1hsU3nc/7ZCAZmz/5ZsUnUm/lnHeSXBkvzCTMre5JDuXQ0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ma7ohAUj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ma7ohAUj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736735698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=rUsb9BFjv/SGXtccDr17xh+DnOCZmi7XICMLfPeLdQM=;
-	b=Ma7ohAUjqAAnGRZbneQ8JjJSy1H+Q0gMB+QIObw5mo0ndjWBQQY2fMSCqOmUIMo6/b0qew
-	sLwoqu232kPDAodHn5cqjpVKkd4CV2IGrb/FfJNktb8B9+Dt1rF04PyJS2azgm//cdDQYV
-	1gT2xuJU0oTgaYqujymyu3+DAFCDBfc=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-2mnZfxEmNjWvz0WQL9UFwg-1; Sun, 12 Jan 2025 21:34:57 -0500
-X-MC-Unique: 2mnZfxEmNjWvz0WQL9UFwg-1
-X-Mimecast-MFC-AGG-ID: 2mnZfxEmNjWvz0WQL9UFwg
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-216405eea1fso69688805ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Jan 2025 18:34:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736735696; x=1737340496;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rUsb9BFjv/SGXtccDr17xh+DnOCZmi7XICMLfPeLdQM=;
-        b=Stx1gLDMeFP579ihwOaCfLATOTRivyguT/f32TVS8GaGgueqbLnHwAQXDryLJdchBP
-         dj2wp/4ODW3GB3AtuS331s3F54f3iMFICa1rdbJ1WyBN3Gfi37wsehEfHvBvS0Sz5ku/
-         mjqf8kW0tDB8hYyoymr4+wrPghgNSvjwGT0awg1gTuOeMGuWIC+syaTarFRgO2VnVjU/
-         fbIMkmpj26yUPcfa/fB6OoeZ7nQxzUvyPEtUszMOXo0LssywQ1sAtSBWZH7xWL3fIJca
-         SvG8b+nAKVIl89e12da5kMMOP58FqB6R5/snlnZILOHRGaMAtKJ+gQCHm7V/erTdNG+b
-         nBag==
-X-Gm-Message-State: AOJu0YwbuXGf4Xd2TDb2xfOhhpCUV0CsDz6zAN4pST7BsJPQFJHuoe/D
-	t2BtlFlVZNZrBqoDItUcMf9a+CZYxtlnjLcNaUcwsZKMIXMm1p6ZfOMu1ETPmfzhHykelY3oYE9
-	O41mYrJXIIE4VOE4RTxsfZuBSCVVFjMjiX5XuIE3hQzA9y6Oj1ZiVcmK7T1MAhFzpZI6kMGdOil
-	yEo2vmJIIXRM8dv86NH0MrTCFyE+lL6VcwL9NLkeTKG+V2HwlNf7Kl
-X-Gm-Gg: ASbGncvEOEsQb8CRthmvrouJwokqqArMkJZnYPlhTFHT0UYAgUx1xI9sNzM67bkuuSc
-	eQg1oWIgTAhTCTCERQlmZaYwqlPDJrosY8ypIOME=
-X-Received: by 2002:a17:902:e810:b0:216:2804:a241 with SMTP id d9443c01a7336-21a83fb0a86mr269083685ad.37.1736735695982;
-        Sun, 12 Jan 2025 18:34:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEX6yxGeMH0ZpEwMjQsCI3I2nKNHzt61e850//2gaREksB2DcbIEnikc9kH7666vlyIa1mxkM5HjkclQQ3bdZ8=
-X-Received: by 2002:a17:902:e810:b0:216:2804:a241 with SMTP id
- d9443c01a7336-21a83fb0a86mr269083455ad.37.1736735695701; Sun, 12 Jan 2025
- 18:34:55 -0800 (PST)
+	s=arc-20240116; t=1736738718; c=relaxed/simple;
+	bh=ZROcNkPL+PIui2Olv9okK5m2o/TQQDxJRJ6EDjzHyF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fh83hrziUU5cFwWDjHW1XEXCUZgtaJIQLde07ZOaWjzXzK3JRbBpc/a8A25vx3heX4TOBkAH9gL4kez9dlZp9yPo+RReGNb2Cw/1cnK6wrXaPl+0Exh/CxddJwegrap8YXVZAJr0g/VboY7ciAq9Co5UGRdNtG1RC1sxGcEVijQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YWd0s2gngz4f3kFr;
+	Mon, 13 Jan 2025 11:24:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id ACE411A0AD1;
+	Mon, 13 Jan 2025 11:25:05 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+Oh4Rn7Cs+Aw--.57391S4;
+	Mon, 13 Jan 2025 11:25:03 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [RFC PATCH] perf/core: Fix warning in perf_cgroup_set_timestamp
+Date: Mon, 13 Jan 2025 03:34:09 +0000
+Message-Id: <20250113033409.1874607-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Mon, 13 Jan 2025 10:34:44 +0800
-X-Gm-Features: AbW1kvY-bQ7iqyrGo9w9AY4-yJ37b5Otu8Onsk0V_pr2HPTZV39rs1ry-T64FHk
-Message-ID: <CAATMXfnhT-Uqp9rfBGZesjYSmbn8UAcyXzuhkhM8Uvg7wCX5Dg@mail.gmail.com>
-Subject: perf record "--off-cpu" options failed on 1 [v]cpu machine
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>, irogers@google.com, 
-	Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl+Oh4Rn7Cs+Aw--.57391S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3GrWxAFy8XFWrtFWfAw43Wrg_yoWfGw1fpw
+	4UJF47Cr48tr1DJ345Jr15A3yUJr48Aa1UXr17Jr1rAF15Ww1UXF1UGr4UJrn8Jr1IqFy7
+	tws8Xw40qr17JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Hi all,
+Hello, syzkaller trigger a warning shown below.
 
-I meet this problem when running the perf test "record_offcpu.sh" on 1
-[v]cpu machine:
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 6936 at kernel/events/core.c:838 perf_cgroup_set_timestamp kernel/events/core.c:838 [inline]
+WARNING: CPU: 1 PID: 6936 at kernel/events/core.c:838 ctx_sched_in+0x4c2/0x620 kernel/events/core.c:3911
+Modules linked in:
+CPU: 1 PID: 6936 Comm: syz.2.1408 Not tainted 6.6.0+ #41
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+RIP: 0010:perf_cgroup_set_timestamp kernel/events/core.c:838 [inline]
+RIP: 0010:ctx_sched_in+0x4c2/0x620 kernel/events/core.c:3911
+Code: 00 00 44 8b 6b 70 e9 9d fc ff ff e8 88 dd cb ff 40 0f b6 d5 48 8d 73 38 48 89 df e8 78 f9 ff ff e9 b7 fc ff ff e8 6e dd cb ff <0f> 0b 48 8b 0c 24 e9 11 fe ff ff e8 ce 4c 2b 00 48 8b 0c 24 e9 4b
+RSP: 0018:ffff88800ac5f8c8 EFLAGS: 00010012
+RAX: 0000000040000000 RBX: ffff88800c814600 RCX: ffffffffa447acc2
+RDX: ffff88810913a340 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: 0000000000000002 R08: 0000000000000001 R09: ffffed100158bf1b
+R10: 0000000000000000 R11: 1ffff110201dc18c R12: ffff88800c814670
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff8881190bf7c0
+FS:  00007f803d1276c0(0000) GS:ffff888119080000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000065b8b0 CR3: 000000003492e005 CR4: 0000000000772ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ perf_event_sched_in kernel/events/core.c:2678 [inline]
+ perf_event_context_sched_in kernel/events/core.c:3984 [inline]
+ __perf_event_task_sched_in+0x26c/0x450 kernel/events/core.c:4013
+ perf_event_task_sched_in include/linux/perf_event.h:1515 [inline]
+ finish_task_switch.isra.0+0x3af/0x7b0 kernel/sched/core.c:5508
+ context_switch kernel/sched/core.c:5642 [inline]
+ __schedule+0xd2a/0x2000 kernel/sched/core.c:6964
+ schedule+0x134/0x2f0 kernel/sched/core.c:7040
+ futex_wait_queue+0xc8/0x170 kernel/futex/waitwake.c:355
+ futex_wait+0x29e/0x680 kernel/futex/waitwake.c:656
+ do_futex+0x194/0x360 kernel/futex/syscalls.c:106
+ __do_sys_futex kernel/futex/syscalls.c:183 [inline]
+ __se_sys_futex+0xf7/0x390 kernel/futex/syscalls.c:164
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x78/0xe2
+RIP: 0033:0x54d2cd
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f803d1270e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: ffffffffffffffda RBX: 0000000000796088 RCX: 000000000054d2cd
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 0000000000796088
+RBP: 0000000000796080 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000079608c
+R13: 0000000000000000 R14: 00007ffd609954a0 R15: 00007f803d107000
+ </TASK>
+
+I check other cpu callstack, and I found that cpu2 was closing an event and
+event->ctx is pointer to cpu1 perf_cpu_context->ctx.
+
+crash> bt -c2
+PID: 6935     TASK: ffff88800f062340  CPU: 2    COMMAND: "syz.2.1408"
+    [exception RIP: stop_this_cpu+219]
+    RIP: ffffffffa3ba29bb  RSP: fffffe651efe1e30  RFLAGS: 00000046
+    RAX: 0000000080110001  RBX: 0000000080000008  RCX: ffffffffa3ba29ba
+    RDX: ffff88800f062340  RSI: 0000000000000008  RDI: ffffffffb9505720
+    RBP: 0000000000000002   R8: 0000000000000001   R9: fffffbfff72a0ae4
+    R10: ffffffffb9505727  R11: 0000000000000000  R12: 0000000000000000
+    R13: 0000005fe3697e1e  R14: dffffc0000000000  R15: ffffffffb39191b0
+    CS: 0010  SS: 0018
+ #0 [fffffe651efe1e40] smp_stop_nmi_callback at ffffffffa3c1db02
+ #1 [fffffe651efe1e58] nmi_handle at ffffffffa3b831f9
+ #2 [fffffe651efe1eb0] default_do_nmi at ffffffffaf334415
+ #3 [fffffe651efe1ed0] exc_nmi at ffffffffaf3345f4
+ #4 [fffffe651efe1ef0] end_repeat_nmi at ffffffffaf401dae
+    [exception RIP: kvm_wait+259]
+    RIP: ffffffffa3c5c423  RSP: ffff88802d2b7a68  RFLAGS: 00000093
+    RAX: 0000000000000000  RBX: 0000000000000003  RCX: ffffffffa3c5c422
+    RDX: ffff88800f062340  RSI: 0000000000000003  RDI: 0000000000000000
+    RBP: ffff8881190bf7c0   R8: 0000000000000001   R9: ffffed1023217ef8
+    R10: 0000000000000003  R11: 0000000000000000  R12: 0000000000000003
+    R13: 0000000000000003  R14: ffff8881190bf7c0  R15: ffff888119146940
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+--- <NMI exception stack> ---
+ #5 [ffff88802d2b7a68] kvm_wait at ffffffffa3c5c423
+ #6 [ffff88802d2b7a88] __pv_queued_spin_lock_slowpath at ffffffffaf370e53
+ #7 [ffff88802d2b7b60] _raw_spin_lock_irqsave at ffffffffaf36eb0b
+ #8 [ffff88802d2b7be0] _atomic_dec_and_raw_lock_irqsave at ffffffffaf24ae15
+ #9 [ffff88802d2b7c20] put_pmu_ctx at ffffffffa4453f04
+ #10 [ffff88802d2b7cc8] _free_event at ffffffffa4480ed0
+ #11 [ffff88802d2b7d10] perf_event_release_kernel at ffffffffa4484f61
+ #12 [ffff88802d2b7dd8] perf_release at ffffffffa44851cc
+ #13 [ffff88802d2b7de8] __fput at ffffffffa4845e96
+ #14 [ffff88802d2b7e60] task_work_run at ffffffffa3e2de14
+ #15 [ffff88802d2b7f08] syscall_exit_to_user_mode at ffffffffaf338044
+ #16 [ffff88802d2b7f28] do_syscall_64 at ffffffffaf330306
+ #17 [ffff88802d2b7f50] entry_SYSCALL_64_after_hwframe at ffffffffaf400134
+    RIP: 000000000054d2cd  RSP: 00007f803d148048  RFLAGS: 00000246
+    RAX: 0000000000000000  RBX: 0000000000795fa0  RCX: 000000000054d2cd
+    RDX: 0000000000000000  RSI: ffffffffffffffff  RDI: 000000000000000f
+    RBP: 0000000000000000   R8: 0000000000000000   R9: 0000000000000000
+    R10: 0000000000000000  R11: 0000000000000246  R12: 0000000000795fac
+    R13: 0000000000000000  R14: 0000000000795fa0  R15: 00007f803d128000
+    ORIG_RAX: 00000000000001b4  CS: 0033  SS: 002b
+
+From above callstack, cpu2 has removed the event from perf_cpu_context. So
+the warning should not be trigger. Most of the places that operate cgrp
+are lock protected. But I found that perf_cgroup_switch might be the
+problem.
+
+static void perf_cgroup_switch(struct task_struct *task)
+{
+	...
+	// step 1 check cgrp info
+	if (READ_ONCE(cpuctx->cgrp) == NULL)
+		return;
+
+	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+
+	cgrp = perf_cgroup_from_task(task, NULL);
+	if (READ_ONCE(cpuctx->cgrp) == cgrp)
+		return;
+
+	// step 2 get cpuctx lock
+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+	...
+
+	// step 3 update cgrp info
+	cpuctx->cgrp = cgrp;
+	...
+
+	// step 4 release cpuctx lock
+	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+	...
+}
+
+The step 1 and step 2 look like unreasonable. Because when it check the
+cgrp info, it is not under lock protect, so after it acquire the
+cpuctx->ctx.lock, the cgrp info may already changed to NULL. So I think it
+should change the sequence of steps 1 and 2. But I can't reproduce the this
+problem, please help if have any suggestions.
+
+Thanks
+Gengkun
+
+Fixes: facc43071cc0 ("perf: Optimize event scheduling locking")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 ---
-# ./record_offcpu.sh
-Checking off-cpu privilege
-Basic off-cpu test
-Error:
-The /tmp/__perf_test.perf.data.mjj
-FB data has no samples!
-Basic off-cpu test [Failed missing output]
----
+ kernel/events/core.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-The command executed is "perf record --off-cpu -e dummy -o ${perfdata}
-sleep 1" that can not
-record any samples:
----
-# perf record --off-cpu -e dummy sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.008 MB perf.data ]
-
-# perf report --stdio
-Error:
-The perf.data data has no samples!
-# To display the perf.data header info, please use
---header/--header-only options.
-#
----
-
-I also tested Hardware event 'cycles', and got the same results.
-
-But when test the Tracepoint event "sched:sched_switch", it works and
-can get the samples:
----
-# perf record --off-cpu -e sched:sched_switch sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.009 MB perf.data (2 samples) ]
----
-
-Can someone give me some ideas why this problem occurs?  I try to read
-the code of the
-option '--off-cpu', but it looks related to bpf, I have no more ideas for that.
-
-Btw, I tested on 5.14.x and 6.12.x kernels, this issue only happened
-on 5.14.x kernel.
-
-Thanks,
-Qiao Zhao
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 065f9188b44a..bca64889069b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -885,20 +885,21 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+ 	struct perf_cgroup *cgrp;
+ 
++	cgrp = perf_cgroup_from_task(task, NULL);
++
++	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 	/*
+ 	 * cpuctx->cgrp is set when the first cgroup event enabled,
+ 	 * and is cleared when the last cgroup event disabled.
+ 	 */
+ 	if (READ_ONCE(cpuctx->cgrp) == NULL)
+-		return;
++		goto unlock;
+ 
+ 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+ 
+-	cgrp = perf_cgroup_from_task(task, NULL);
+ 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
+-		return;
++		goto unlock;
+ 
+-	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 	perf_ctx_disable(&cpuctx->ctx, true);
+ 
+ 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
+@@ -916,6 +917,7 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
+ 
+ 	perf_ctx_enable(&cpuctx->ctx, true);
++unlock:
+ 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ }
+ 
+-- 
+2.34.1
 
