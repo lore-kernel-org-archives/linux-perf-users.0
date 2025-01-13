@@ -1,141 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7242E628;
-	Mon, 13 Jan 2025 14:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB5E3232
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 14:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736778360; cv=none; b=eex80xJXYBbcz+oWJIQmYJwmOzJI1ag3tPZvPLRqNA2Y8sxtjJo14zRPwhAScce271okqAYd2zmggPop6EhXtyHy8eP+ybHs2cC/V8chvu3iTwAL2ZA+vaf/vrY5zN2TQbh2hlZoeVtQuiD4UWfsFEfMj6Aqp3ZSPTDNJtqPS9M=
+	t=1736778831; cv=none; b=RbveeBcAOoMnUDF7a7nr8BOIfAOXfWcT/ojd5fr5whxqsoh6XfX/Qhx8VmQKqVXCriQgWehKYtsHEidKMPCR/RHioQS/HA1QUwEJqjp2Izc6lLr8T2rCOFBaiOz115YCIEY17zFY28PncX7fHdhgnuGwE7JaIolqfSSuRQgUbv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736778360; c=relaxed/simple;
-	bh=EP3pH/+ztEdEh+n7BRLJVNbr+hq+ohRw/giie9w5auw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GfU31Y2fF0D/qRS9MMiGqSnEAWh5jwmb0CTYnEaWeRsP+HGo8iY31w11gs0EyRJvxRKGv3AViTlCTNcEncZG6XoA6FYg6+Xsaup33ZtWYeAvAE4X2blFV5thltVN3D8FoqtoJXdNkRti3xcuvGmj+5p+bWJmsVNdDWhq4fAeMfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ir6X3rQN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736778831; c=relaxed/simple;
+	bh=UI5UyGHuHx/kdjWc1ifSNCtnWW7AKfhnT+stQLJgjJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qhg9yEJYrP6cgcsIBixdRGa0D7PHeEImyN/7sUCjIKaBWR/gx2hG86sijOWDmqTSDKEBaQdbPG2WlUwZ1MDQx6cAsPGTJtIZD8V3YqtKtIK9OOjF1BavzuwdE5YS5iMrr9i748JKzCoy+3Uh8IMQWv3DrQs2OPMsU7M7pme674I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pl9v3cKR; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ir6X3rQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA4BC4CEE7;
-	Mon, 13 Jan 2025 14:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736778360;
-	bh=EP3pH/+ztEdEh+n7BRLJVNbr+hq+ohRw/giie9w5auw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ir6X3rQN7FkEhXpBen5vQS/RfRIbaiWPsOmUYE5fBNLqz8GeJZ8axdwvWWBjmeI3u
-	 UInUJ64NMKDab+jubaYaushVvJnY+E+yJi+zuQh96lDEqc7cW8riBkK4nm3cmw4Amt
-	 vJvMWIeCq6i7ujjM0HaCPBCUunzTOViFjhv8IcujRWANXNXOGwDb8mnIwQz86ZSMge
-	 msT43UQ+YQ8hQulUPVFO/umIvkfPiZ3UfFCxyWP2rXnGuA7I4XyDF7dVf+oB/clPeW
-	 M0js7j4OU2bdH+X+kiicjbTyXI+w677Nw9f7ij7JgSkzrBXdLoM9HHm923/danu3uO
-	 2791KZ2DLiLsw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5401ab97206so4309041e87.3;
-        Mon, 13 Jan 2025 06:25:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWlkhyvhSIYIsFAFDhjMwAUmXR/o+2xhao9hkbD6EOn29irhugSLIrQ4roB96ctVsF8grU75b7gQR5hHvYOKowccg==@vger.kernel.org, AJvYcCXyx7q81UGbiktVV6bJ2IT2Pbxm4DWwNKeautynBvBTg0fnHTKaNtBc3AR3BgfMrgkQrIOEGh+Lf6nS9Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrA06t5KmhaUMdlVpGF1tfCO7Rrbac3KleAMq5t+GG17TLJIib
-	0/IsKgOerNUnPCoJfDy3YtZ8yUsqUTIXSk1sKTOj7ARDO0EzeattFta17MG2NFWZK/PAHDK4BM8
-	crCxftyI3UN6vEChGm+Q3oaOWdA==
-X-Google-Smtp-Source: AGHT+IHPR6LI38cRMAUWX2FVbigUxaUXuBu3Tecz6/LlSSgkGrzbwHCYi0uJa2iD8M11/Xs8zKGh751ixtOcI5apmU4=
-X-Received: by 2002:a05:6512:a96:b0:540:22e0:1f63 with SMTP id
- 2adb3069b0e04-54284528df4mr6227523e87.19.1736778358376; Mon, 13 Jan 2025
- 06:25:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pl9v3cKR"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso42091985e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 06:33:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736778829; x=1737383629; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MqbC9h0hn607K4Ewdqlu+9qs+7+DikbnXyIiUIob8m8=;
+        b=Pl9v3cKR/Y9zStQ0pSc57YUmGwD+yPW8ate390qUQivSveNhc1Z2qyIqcrdje8VNxm
+         G2esWiHsHHKMHF5EGEfsIsfds4vmKxv8eth6Ef7wn8/LeW+ghaXr4qr1M+zaBAbjzsXd
+         nYMXC3vapiaCatwGIqBd+JLPMxgZZXky+/xTWjFmdV0smDpvCRYxHx+pcyIZa9cyfur1
+         Vibgq4xvvbooacmoBL/H6HgYnuiPl7NLW1nFvu2XMNasxYBuw80zGdamsIhQlhkPXKqa
+         n7yv6zMB4yO3EEJE7jof3jpA9k79fJeDrSRU2Rq7jsSGw6I6FzsFepuJDzn9AJpPlR88
+         XjEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736778829; x=1737383629;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MqbC9h0hn607K4Ewdqlu+9qs+7+DikbnXyIiUIob8m8=;
+        b=f0mb4rO2TfTqWOFjLMVn+miOKUvd3BdmpKnlIP8z1Nsy4+8/6L3XLdlHKK6F3IIQGh
+         C2BZajClB9+Xh+11fo8y6BZTez0WaPuOHfaxp7zVQSxdQo0F4z5+WOaCHOwU0D4Q6vOV
+         MoOWZOlM1NDiKVLIfobjLDqcJChQVzpvOY3yQq77XJeVyUbcNop6gndiFcwBuxd0BtcY
+         lGt3+ZoOO7zn77FdhYgYPWFGL5jPTaexOppqJdZCNjvZsQFVxHOmEdSvRbunXDhBdzwy
+         EvEiahfXYbUVdeQPhSZZcxnSh2by8UV5MrGwsmDPhO4aAQffE19Um6vOvxx7+iGMehTR
+         mjlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrpng6dXOKiYZGnTciBW6mRUa27O1McgsA7KGBulbs7MRHzJLVcF9tyajuFgQbs38qRJ4Cula/LcuDDfQpPJ80@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQMzSOEnstwsaYv1QsfI/XVfXnGi+0Sa342qXaYzt9TwFHXFl8
+	Rb7qB06loX0QogZgFsg4nN3ZQIEQQM5W08Nldi5BoqOgqE8MOcYwQ78HiZg1qZ8=
+X-Gm-Gg: ASbGncvMcyfc4melsITf/tmfQ/kHd7BWbnppk+UaclE/Q4mXwezwPTXnVDAf6PATDOv
+	yoG1aA+feMow+XzJxRcCicj1iVK4t8d2MZmsgvws735+ByRov20zGgG+Qy2twBzxmXgOqSq2Qeu
+	8gBke+W4ir+omU+OMcN0ofSBDxN2yKPw03JJH9uH+6ap2L6UVgEuWZfb/JnVYQRexxoD3qtkp67
+	I3qXJi2c5Y1lyVm1T2mlW2ynD7aF4zZkRwFirpNCxuoW+ubxQpcSe0Mdf8cIpeNLxXs
+X-Google-Smtp-Source: AGHT+IH09rhSt7io4S7fN4A/EBvnW9x8LDmprwxYrp67xLY37+QhpKW/LvjLTHUaqq4ASbZ5AEkR2A==
+X-Received: by 2002:a05:600c:4511:b0:436:5165:f1ec with SMTP id 5b1f17b1804b1-436e271d428mr208866655e9.30.1736778828577;
+        Mon, 13 Jan 2025 06:33:48 -0800 (PST)
+Received: from [192.168.68.163] ([212.105.145.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e6263fsm149061365e9.39.2025.01.13.06.33.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 06:33:48 -0800 (PST)
+Message-ID: <5ea201e5-6ab7-4935-a8ce-20f67f3193c1@linaro.org>
+Date: Mon, 13 Jan 2025 14:33:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241213231312.2640687-2-robh@kernel.org>
-In-Reply-To: <20241213231312.2640687-2-robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 13 Jan 2025 08:25:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJqJzAvG1wVG2y_FBApVxF8wapP+7+xGXeZ2kHiCqy-jQ@mail.gmail.com>
-X-Gm-Features: AbW1kvawPjOgvUkx9gTdS80budnTIBX569TueqNXCGivWWiNrcTwmPMwTn3XI74
-Message-ID: <CAL_JsqJqJzAvG1wVG2y_FBApVxF8wapP+7+xGXeZ2kHiCqy-jQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: test: Speed up running brstack test
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Cc: James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] perf: arm_spe: Add format option for discard mode
+To: Will Deacon <will@kernel.org>, namhyung@kernel.org, acme@kernel.org
+Cc: catalin.marinas@arm.com, kernel-team@android.com, robh@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Graham Woodward <graham.woodward@arm.com>,
+ Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova
+ <vmolnaro@redhat.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, irogers@google.com, yeoreum.yun@arm.com,
+ mark.rutland@arm.com
+References: <20250108142904.401139-1-james.clark@linaro.org>
+ <173652065683.3245172.11665292685923367751.b4-ty@kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <173652065683.3245172.11665292685923367751.b4-ty@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 13, 2024 at 5:19=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
->
-> From: James Clark <james.clark@arm.com>
->
-> The brstack test runs quite slowly in software models. Part of the reason
-> is "xargs -n1" is quite inefficient in replacing spaces with newlines.
-> While that's not noticeable on normal machines, it is on software models.
-> Use "tr -s ' ' '\n'" instead which can do the same transformation, but is
-> much faster. For comparison on an M1 Macbook Pro:
->
-> $ time seq -s ' ' 10000 | xargs -n1 > /dev/null
->
-> real    0m2.729s
-> user    0m2.009s
-> sys     0m0.914s
-> $ time seq -s ' ' 10000 | tr -s ' ' '\n' | grep '.' > /dev/null
->
-> real    0m0.002s
-> user    0m0.001s
-> sys     0m0.001s
->
-> The "grep '.'" is also needed to remove any remaining blank lines.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> [robh: Drop changing loop iterations on arm64. Squash blank line fix and =
-redo commit msg]
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> Originally part of this series[1], but I've dropped any Arm specifics,
-> and it stands on its own. No reason this needs to wait on Arm BRBE
-> support (which I'm working on now). I don't expect to have other changes
-> to this test related to BRBE anymore.
->
-> [1] https://lore.kernel.org/all/20240613061731.3109448-8-anshuman.khandua=
-l@arm.com/
->
->  tools/perf/tests/shell/test_brstack.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ping!
 
->
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/sh=
-ell/test_brstack.sh
-> index 5f14d0cb013f..e01df7581393 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -30,7 +30,7 @@ test_user_branches() {
->         echo "Testing user branch stack sampling"
->
->         perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u =
--- ${TESTPROG} > /dev/null 2>&1
-> -       perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 =
-> $TMPDIR/perf.script
-> +       perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' =
-'\n' > $TMPDIR/perf.script
->
->         # example of branch entries:
->         #       brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
-> @@ -59,7 +59,7 @@ test_filter() {
->         echo "Testing branch stack filtering permutation ($test_filter_fi=
-lter,$test_filter_expect)"
->
->         perf record -o $TMPDIR/perf.data --branch-filter $test_filter_fil=
-ter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
-> -       perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $=
-TMPDIR/perf.script
-> +       perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n=
-' | grep '.' > $TMPDIR/perf.script
->
->         # fail if we find any branch type that doesn't match any of the e=
-xpected ones
->         # also consider UNKNOWN branch types (-)
-> --
-> 2.45.2
->
+On 10/01/2025 4:22 pm, Will Deacon wrote:
+> On Wed, 08 Jan 2025 14:28:55 +0000, James Clark wrote:
+>> Discard mode (Armv8.6) is a way to enable SPE related PMU events without
+>> the overhead of recording any data. Add a format option, tests and docs
+>> for it.
+>>
+>> In theory we could make the driver drop calls to allocate the aux buffer
+>> when discard mode is enabled. This would give a small memory saving,
+>> but I think there is potential to interfere with any tools that don't
+>> expect this so I left the aux allocation untouched. Even old tools that
+>> don't know about discard mode will be able to use it because we publish
+>> the format option. Not allocating the aux buffer will have to be added
+>> to tools which I've done in Perf.
+>>
+>> [...]
+> 
+> Applied driver and docs patches to will (for-next/perf), thanks!
+> 
+> [1/5] perf: arm_spe: Add format option for discard mode
+>        https://git.kernel.org/will/c/d28d95bc63cb
+> [2/5] perf docs: arm_spe: Document new discard mode
+>        https://git.kernel.org/will/c/ba113ecad81a
+> 
+> Cheers,
+
+Thanks Will. Arnaldo and Namhyung, are you ok to take the Perf changes now?
+
+Thanks
+James
+
