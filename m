@@ -1,224 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FD3240225;
-	Mon, 13 Jan 2025 15:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D2A20AF74;
+	Mon, 13 Jan 2025 16:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736783846; cv=none; b=FgvtTK8f0IY9VoRORceLgWO8AQXUAmkFnKv0ytZC1kSOIXfC+cfcT6sA309UDIETyqi/E3XpmOytYUZR4o8GFbYlVmG2ET2KDT5ZXfqwBUmrRRqmLHfqLbzLeYbtie1UyhIPyINyg7qxKoyxCSZaz+ks60wXyhO1h2APcpPLWYM=
+	t=1736785631; cv=none; b=P0xuhQv+MMy3rRFdigLPN9p1hJrr5lk4zZE3lSaMadqhKUPyXYH1AgGd0P2s9F2bvgLFq6u6VsI8gYcSdkjQDqxAz3gINKZScjgX2mdTJQl1fFU6yX9G46Au6SaybRRJOdJOXLDHxJX8cPTChyWh9T/PRJlDZD0r2vYW9EYHF98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736783846; c=relaxed/simple;
-	bh=qt2ooosAU3+t17LW0tjL1W4HlfJ0Lpf9y7jSjh8N1fQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/AwbvK8n0FhxSrPo8w+a975WRjWH1tLEzDZR8A9/Ml77SScM51xHuNws1uCIAhiLXW1zisI2PEwQdXqU9QghBIq5fAWvaOXOag4gYxb6V+4Yh/3IOlCapXs99F4ZLVnfZwaDDYa3gf2vSOlJZgkEDQfJQVcbMxDw4zZmvAlUos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHmaHW3C; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHmaHW3C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5923C4CEE1;
-	Mon, 13 Jan 2025 15:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736783846;
-	bh=qt2ooosAU3+t17LW0tjL1W4HlfJ0Lpf9y7jSjh8N1fQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XHmaHW3CcqF3fna89xHfpFlgdvdr70jNylkrDcaCQ54SgP1AWBc4VrAk6d/w74fb3
-	 PNKw4OOsv3AjSqnxwqg4aKlKJo6zXAtRRZwINd2W2yVOsMqkTkoYBdKufU9Tz/R4HX
-	 m0ztSK3PAX/kcQITCUKg4PApVBUlywKG4rRi1wSoIQcjDGEjGoVDqXiG3OBVlh2nIS
-	 6D+9x54qr7vUG9ltl+8RxEdsv49L5dY60+QOMc+koQqLokHjLSBnqqUQE/zaLaLUJt
-	 kTYj2dF+Sjd7VdoOAzRQkLsHRBzqFi3vuRayxJxzQrMC6m0RCRIn0TBu0dAgGpEb35
-	 7cfeLT+gl7dNw==
-Date: Mon, 13 Jan 2025 12:57:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
- trace
-Message-ID: <Z4U343yQUDF3H7qs@x1>
-References: <20241215190712.787847-1-howardchu95@gmail.com>
- <Z2CGdi5xpJy6C6sv@google.com>
- <Z2mzzytPOpjF0Hxe@x1>
- <Z2m8qzyLdm1BEYuF@x1>
- <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
+	s=arc-20240116; t=1736785631; c=relaxed/simple;
+	bh=+14yFuYK/mSJitNM8vxDpe1OQ5GwdzmZzGvkg+n7lIk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D1BeQSP5Qu4GbbsLGE6O3iNnLfQ873lQXyYguclKyavapCacJw9tPdSwQ3+3ZNZc8uQwrvUP06xZ/uMvHOhC2SWoFqYD5Vsb+/NEt8VZ4H98FvwGmqKhaODPF6riJkwzsB/N3M0XkTA3/8xT6ZTsnZpUcSa3k2gmPvIZ+JUVIW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-467a37a2a53so54649111cf.2;
+        Mon, 13 Jan 2025 08:27:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736785628; x=1737390428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eEzYVItTrJXiGPIOh2cYL7kRqnTbUubRgdjTGFJendQ=;
+        b=YQgy9WeN2Foq2Wjtilr22ojIcYrHq/zS3bYXN01DkI2zJJnVuqWJWY0YTrw9TWAdS/
+         4MGvamYbrqYoDqmSggKVkSR131rQOJ33FpC9YaKcSuswVNzGziUPhgDIWIQsk6VV9LmM
+         zSWMPbkqmp5LZ1+7xOv1GaZPostnosYJgUOARQDO9InTw+Lekbq8UOHE4eCLlpX+cfTN
+         RA2XBHrRH8Y0Y5LOE9fncb8fVxKXNxbeK39rfkyOYJfHMF7Q1KArVCt2/epotd7o2g76
+         IGezsvVKVnjV8S1b1AgpIuoDKwTCwmpQP/A9tFJYFyC9DqJTqo/gpCLb4ObB7rzHJj7P
+         JfcA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0CIO0PmusxnCB3co8zHbykirSVjWue/m0mLrB7EojFxP5E8zwfPvWpicr7wF2YVO7aOCOQZMu3fNvvGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaZpc+kiBs3VlZwvZaLhIBWMwTFlYMlcWW0xlX6odBCjlae03y
+	oWAgZ5llY/rIVNIXzMuOpIK6M2ru0NZl6VjSj7auTUHnkfh2PPgVunoRairzbXI=
+X-Gm-Gg: ASbGncsoj6HWbI/O1R501p5sBi6yaP5qBq1LM32wWBfyMJJV2uBWUQjPOHLUBs/4E2b
+	H5VY4M0d3sStFFha2vT5RqRv2JE5YQgeXhxy8Hie38QBSKBy5zbQYCEQ/QSD0Kl0JHFvkLpo277
+	XnEg19bOmRxQ1zz+5I83qaSuajsmL3txJpoaw8CPlij2d6kgMjjyMVJgEm0Z5wjKT2/tXWEXq/6
+	weqMOQMZAjLj50yNCeBxsA8zKOMV/LI0f21NhTwYtyt+9sEaA61VebRF18/jhsIadzdi0wrH410
+	tViJG65UoJnNr1bWrgGo9+mACw==
+X-Google-Smtp-Source: AGHT+IGGGl1gZr33TGau/nUA27wD+dPTEeoaQpEOwDq4IIJL3xXoSliW8cQYvwtQrH+5gR/T8MV7TA==
+X-Received: by 2002:a05:622a:250a:b0:46c:7276:7997 with SMTP id d75a77b69052e-46c72767a71mr413445581cf.13.1736785627729;
+        Mon, 13 Jan 2025 08:27:07 -0800 (PST)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com. [209.85.219.48])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46c873454c1sm42466961cf.38.2025.01.13.08.27.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 08:27:07 -0800 (PST)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6d8f75b31bfso38194686d6.3;
+        Mon, 13 Jan 2025 08:27:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVdUZ03z/aBN5SDOtHHfqpnxDW0YQVwkQ4TCxYXuCCkTgWvf6iD9Fj3B+aezexq4vdB0zUTj12GuEkkhsI=@vger.kernel.org
+X-Received: by 2002:a05:6214:260b:b0:6d8:8874:2131 with SMTP id
+ 6a1803df08f44-6df9b1eab44mr290915456d6.13.1736785626734; Mon, 13 Jan 2025
+ 08:27:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
+References: <d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com>
+ <c29a4cdc-9419-4f1e-92bc-a75c3b10e37d@intel.com>
+In-Reply-To: <c29a4cdc-9419-4f1e-92bc-a75c3b10e37d@intel.com>
+From: Tavian Barnes <tavianator@tavianator.com>
+Date: Mon, 13 Jan 2025 11:26:56 -0500
+X-Gmail-Original-Message-ID: <CABg4E-nOWV-xyrXHy0i9Yf1iEaM4cH6esLnbVHRXnK-85TMUtw@mail.gmail.com>
+X-Gm-Features: AbW1kvZzacMoNoQDEpmudbEvN0Sbjz5mIvEvzGbK8b-jISoszbzHiY9oySTI7IA
+Message-ID: <CABg4E-nOWV-xyrXHy0i9Yf1iEaM4cH6esLnbVHRXnK-85TMUtw@mail.gmail.com>
+Subject: Re: [PATCH] perf intel-pt: don't zero the whole perf_sample
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Andrew Kreimer <algonell@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 10, 2025 at 04:52:08PM -0800, Howard Chu wrote:
-> Hello Arnaldo,
-> 
-> On Mon, Dec 23, 2024 at 11:40 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Mon, Jan 13, 2025 at 3:15=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+> On 11/01/25 19:56, Tavian Barnes wrote:
+> > C designated initializers like
 > >
-> > On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
-> > > > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
-> > > > > Changes in v4:
-> > > > >  - Use if -f to check the existence of vmlinux BTF, and exit if it
-> > > > >    doesn't, so trace_test_string will not overwrite $err, and keep
-> > > > >    running the test.
-> > > > >
-> > > > > Changes in v3:
-> > > > >  - Add vmlinux BTF check, and skip the tests if it doesn't exist
-> > > > >
-> > > > > v1, v2:
-> > > > >
-> > > > > The previous version of the perf trace BTF general augmentation tests
-> > > > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
-> > > > > <acme@kernel.org> for pointing this out), this version uses bash instead
-> > > > > of POSIX shell to pass Shellcheck.
-> > > > >
-> > > > > This patch series also adds documentation for the new option
-> > > > > --force-btf, which is used in the tests.
-> > > > >
-> > > > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
-> > > > >
-> > > > > Howard Chu (2):
-> > > > >   perf trace: Add tests for BTF general augmentation
-> > > > >   perf docs: Add documentation for --force-btf option
-> > > >
-> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > > Thanks, applied to perf-tools-next,
+> >     struct perf_sample sample =3D { .ip =3D 0, };
 > >
-> > It fails when running in parallel mode, sometimes:
+> > set every unmentioned field of the struct to zero.  But since
+> > sizeof(struct perf_sample) =3D=3D 1384, this takes a long time.
 > >
-> > 109: perf trace BTF general tests                                    : FAILED!
-> >
-> > Then:
-> >
-> > root@number:~# perf stat --null -r 10 perf test "BTF general"
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : FAILED!
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : FAILED!
-> > 109: perf trace BTF general tests                                    : Ok
-> > 109: perf trace BTF general tests                                    : Ok
-> >
-> >  Performance counter stats for 'perf test BTF general' (10 runs):
-> >
-> >              2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
-> >
-> > root@number:~#
-> >
-> >
-> > So its not just when running in paralell, anyway, its merged, we can go
-> > on from what we got there.
-> 
-> It never fails on my machine, I think the reason is my machine is not
-> fully-loaded. Can you please run
-> ```
-> perf stat --null -r 10 perf test -vv "BTF general"
-> ```
-> And provide the output?
+> > struct perf_sample does not need to be fully initialized, and even
+>
+> Yes it does need to be fully initialized.  Leaving members
+> uninitialized in the hope that they never get used adds to
+> code complexity e.g. how do you know they never are used,
+> or future members never will be used.
 
-root@number:~# grep -m1 'model name' /proc/cpuinfo 
-model name	: Intel(R) Core(TM) i7-14700K
-root@number:~#
-
-root@number:~# perf stat --null -r 10 perf test -vv "BTF general"
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47824
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47842
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47860
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47878
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47896
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Buffer augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47917
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Buffer augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47938
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Testing perf trace's struct augmentation
----- end(0) ----
-106: perf trace BTF general tests                                    : Ok
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47962
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAILED!
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 47980
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Testing perf trace's struct augmentation
----- end(0) ----
-106: perf trace BTF general tests                                    : Ok
-106: perf trace BTF general tests:
---- start ---
-test child forked, pid 48004
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-Testing perf trace's buffer augmentation
-Testing perf trace's struct augmentation
----- end(0) ----
-106: perf trace BTF general tests                                    : Ok
-
- Performance counter stats for 'perf test -vv BTF general' (10 runs):
-
-             1.166 +- 0.272 seconds time elapsed  ( +- 23.34% )
-
-root@number:~#
-
+Right, please ignore this patch then.  I thought I had seen other
+cases where perf_sample was not fully initialized but I wasn't reading
+the code carefully enough.  Sorry for the noise!
