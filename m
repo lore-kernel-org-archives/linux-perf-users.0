@@ -1,153 +1,192 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B04C13C8F3
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 16:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEC1AAA3D
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 17:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736786892; cv=none; b=DzxlsMRlRsX4Gvqmw5s4zb7+TNpwECNbh/HKmbZvrbk8hFN67bcn2YHoLb8/eAGQW9Hb8qqBL8+0rUtrrdnao0trn7cg5fX6eGdtV5pv8CA7PqsZx0qhvHgCtJDlJlDt6ykMycEMVKSVZNJm8h0JiYlh2mR1zsgxFu4nneTUdjQ=
+	t=1736789424; cv=none; b=a1+9s60m+RXN6+GuBWQg1vskYArB9+FrEv22lUZ2jTv6w+vQuzSVogyizKeOzfJRKAfQLVV1YoPa0JHZnRZA0s70GW2aJKVczoAO7uGqgW5zHNTCtk3LP0TMYvdrPPFxxNgOqHz3jF9H7P396lBfq8n5Ho5k9K5Uc0zmx2cuuak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736786892; c=relaxed/simple;
-	bh=uawQNnVORCsCtDVNK5OjHXpZvyzfrQp2eZ2UhpxZEaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RlTP57ztGUEltrxS+QH3QD3xxRen0PJW9n8wICmy+TFiL3hKiN5tY8XxsUu4klSddsujFeMwl6QWoTfo4Q9GcaBTtRukK7foimeic8UYRh6G/mk+uIsiq2TkNBLlHj/W9RDaJ5Aar4hfOKpPWCyLIrf8A/DwyiYRMD/pSQNhfgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yAQmWZCE; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1736789424; c=relaxed/simple;
+	bh=q9dt7T2kxh2ksAAIKPPdkrerh8F8r8F+Xqh8cUY+9Bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FUIF3SKUrbyA5ZLmYvrEbifXj1NNmbdSbZAyBoXi+DLUB8gat9rtjxZ0wP9kNRLhmI1vuO8u2mXLa+8DzsUBuNVZvxHF1uKvl5Qo800URZhlMcV6JRw34gDLRr+zd+N/KDdaJrJmF1Nrk+EZKJ7dleCl2qK36+T3batGG4NX/74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S+2uxO/r; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAQmWZCE"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso32681845e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 08:48:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+2uxO/r"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a814c54742so328555ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 09:30:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736786888; x=1737391688; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DCDwiC2ChTMIMuF5sErsTKTOGH/i2ual/aPVMi/EvR4=;
-        b=yAQmWZCE5sXqFIu3g6KT4nV/bF7qOdZuEUvdQ7flwDGivtti2gl3L2/Z1OPiwTY47p
-         VIDVk51mzhw0ozt41pWMNV+PbhQG1aR8ajIl4FnVRuKsryUVVIzAkofs2frBobUMLeDs
-         OQIgnyhKCl8LY7UdPMq1PtMEg+y3M0qQs5Esse9A8Kbdk00hzzUrqfw7l12Decsg19kt
-         KPyUNX3WnELJiNuMA6x/EeSv4HloYckkD3SBJfQ5XsgmN/RFWyCCbQwrdNECu9AqpGtD
-         L6yXuGRQXaSZasXxRYod/rsV65/YLfNOxrPLfivBKGmlKeyZdLkTrJxfh1LDzlOKSKEL
-         rugg==
+        d=google.com; s=20230601; t=1736789422; x=1737394222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iXuPa8TVlTiVWqQHEixqwitz1pTYvCwxg2IKbYzMpWs=;
+        b=S+2uxO/r0Wb9PixLl/KOcz6pSsp/dNptQQd113EKler8L/QcqdHZZlwlm0Rg0ydMH+
+         F9KPjVm5MvTYIq3SQdwagPr2VVQeMZUeJ0xUAuO/1WTny9VrdNqlX2EGQfuEaruIdHxX
+         6pkFFauey745nrHTeQPLdbH5G6K5BTWWd2UCEcHysU0hJ7+UgIk1X4M1SuCNp3fkCa5/
+         ZDSfiePqf5hOurYT7HnkYUyPNZKLMGza1zDl64XRSPsCsZknBCQV0hK6I814LT6RLS9a
+         XLsSkcuaU4iNnV7Rx3dR0+bibz2UJ3DUzNDL4sWvDKEEqmDrt3bP4McTyCwIExQX8MDS
+         XH7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736786888; x=1737391688;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DCDwiC2ChTMIMuF5sErsTKTOGH/i2ual/aPVMi/EvR4=;
-        b=Lw+rdgANn0NsLNhV7s9jNkX/OKEFr9vCHlMxR7KVWpDSEe5H4bhJQmcfdIplsc/cca
-         PiWCM1NgrX6yRxU4+sC1Qkwcec2hbZz8IYhBw/fzm0S69unwmWp+6FLk+G2MgptoKebA
-         BRDfX6Hu2Px5QCol31k66FJbpAZWESzOMEq+UWkfrJoX++HMhngKffy9Uw5nC2ybhp1q
-         wjd846rxr13vLeIW09x9OefFNYfw7U9F+kksS1F2+qyODJKjgAG3SX9fPqIcddBUkvV9
-         CuCUYR5ka8+kqi+V1kKUP9Pcur9zcZOWJofSBjPBfne2xEIfiubFHexrvdks45jvKxq/
-         8RwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4rZ+Lph1ZxTQAHq5P8GD8GuX/S/hkhmcWNmR03xRoozQy89tdqn62AvG2exQr9DxtOkFNkQFZjedy1z2bfKHu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFyRtzJhSHT+QXOPRiwPBHxwLOAKROcmFoPv2TQt8sCL61ZBOn
-	mi9GFYnWFTl32K0iLUXzyZbHW+3isR8wz4ttyaTy9a+mDEDjQnljLjtat5eleDQ=
-X-Gm-Gg: ASbGncuQvWjmbpQG0myY33zc96Oq3P/udNuWpmc4I09aupCh9UHRAgH9PVHIXamAtDn
-	PORMV9GSvtG3OiezBD1nxdrgnt64phzPBRz8PpMsMzVa98LPIqQM9A1h/20dcEOWiLmwDwW6jNs
-	laFDrZ7FIGUiqm6lkS26wwMvrUcKTy23xqQlPAH2aD2B0eISoRWB03kyDj5ti/hy8TsAl/K33Xf
-	92Fi7u6a6J1aip1QvoSwL52nEVV/lGq9uT5YDfdCe5LWn6MsUAjZNQl43NCBHmdg6h5
-X-Google-Smtp-Source: AGHT+IER6KYF6RQvQUMNV9juLdwNdllc6fPKkCHKfac+vsy4zTDSEgoZ/Ee/dPPZGpy7n4GhLF2KjA==
-X-Received: by 2002:a05:600c:1987:b0:434:a386:6ae with SMTP id 5b1f17b1804b1-436e267850cmr200788085e9.7.1736786888373;
-        Mon, 13 Jan 2025 08:48:08 -0800 (PST)
-Received: from [192.168.68.163] ([212.105.145.205])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9d8fb99sm150640805e9.3.2025.01.13.08.48.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2025 08:48:08 -0800 (PST)
-Message-ID: <d0ebae42-99b6-42be-beaa-947160da3b88@linaro.org>
-Date: Mon, 13 Jan 2025 16:48:06 +0000
+        d=1e100.net; s=20230601; t=1736789422; x=1737394222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iXuPa8TVlTiVWqQHEixqwitz1pTYvCwxg2IKbYzMpWs=;
+        b=W83jelrUie7d9WKA1LNwFOzDpt2NIcC9wrFt4BrAAq1d8T5B9FqTRkuSt0hwxHGXxG
+         K/M3zdP4Cz/ZQRx9o5Xgcm2CElS0WUZpcQbI6pa/vLlprAUyqBexET0kAy0CnnVGF37T
+         flFdCTW6pmJvKg4zWXn6ZiJMJ3fPYBkEy9ny+p5b4gGCaPE95lyWZg0BcIBFRjhCFB6p
+         eDIvn/3vju2lsS86GpFWLvMgLUuKe58DzX7XYay3u5+AevemM2Hh60ap0aEHaTrMAewE
+         FGEFAqXs/BXuezyndEzZ+oqHQ3ELAO8NCsBtRHMP/YVhaz6swlGaUSfnOXslReM32aBS
+         q4lA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6FIpBfYQQ+WN6f0HxwCnG8BcDmCegLMGh2DVdH+pJ3pogkwJgB6JnGu8VtFQJKci8Wh2DjP9Yt29HgSwSd6EE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoipOj0NqVs7/YpxIR6oacRc86DqRJZK73qpA0w5mU4UBWXUGC
+	LstdXwesYDjWqhIKU2UNywH9IiJ6gWB+adfioHDtXAKoUwUu//e2LGLszkJzIeKo6Qa5naZpQxW
+	Vfj2VrF9AfewdyCa0+a4T94S7x8t8ZZdQUmb0VWa+tnuZREzoqPyV
+X-Gm-Gg: ASbGnctbMTNyjwBz7Xbe68yJ1B/vi1B3Ps9oDbw71K8ba3LWIoKnaIYoLU9yhPRoRDv
+	y49+07KUg3w7Hs+QC2JyBKuGJhSW8H9ikH+OVEgdK0XcK1XjfW8IpSxOjQnY8ohMKatIzIA==
+X-Google-Smtp-Source: AGHT+IE2sx4qDIrq8fYgSGJTLqsShCWh9kHpeWGmHHMq0VuwMrWZqdl8dWm+55qTxXbi08h7+tsfeT6SLVVDYoROVY4=
+X-Received: by 2002:a05:6e02:12c2:b0:3ce:3711:3229 with SMTP id
+ e9e14a558f8ab-3ce56c03376mr8878155ab.14.1736789421435; Mon, 13 Jan 2025
+ 09:30:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf vendor events arm64: Add N3 events/metrics
-To: Ian Rogers <irogers@google.com>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- Nick Forrington <nick.forrington@arm.com>
-References: <20250110172006.680753-1-irogers@google.com>
- <da5792c3-8f53-4be8-8f53-e1cf6660feab@linaro.org>
- <CAP-5=fXyVtZChi1fkochiyKw6AztdhEE_rfpJUsz_P9po5bhXA@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXyVtZChi1fkochiyKw6AztdhEE_rfpJUsz_P9po5bhXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com>
+ <c29a4cdc-9419-4f1e-92bc-a75c3b10e37d@intel.com>
+In-Reply-To: <c29a4cdc-9419-4f1e-92bc-a75c3b10e37d@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 13 Jan 2025 09:30:10 -0800
+X-Gm-Features: AbW1kvb3D1yGkkahXdX_s0MCJLAseBq8X3uXWYK8KE2z9_AJTCAraCEUAAmAQrA
+Message-ID: <CAP-5=fWjH9uU6eYAFXBY0X2KrvbU8xYAzwzPATYPMW1t46-pgg@mail.gmail.com>
+Subject: Re: [PATCH] perf intel-pt: don't zero the whole perf_sample
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Tavian Barnes <tavianator@tavianator.com>, linux-perf-users@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Andrew Kreimer <algonell@gmail.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 13, 2025 at 12:15=E2=80=AFAM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
+>
+> On 11/01/25 19:56, Tavian Barnes wrote:
+> > C designated initializers like
+> >
+> >     struct perf_sample sample =3D { .ip =3D 0, };
+> >
+> > set every unmentioned field of the struct to zero.  But since
+> > sizeof(struct perf_sample) =3D=3D 1384, this takes a long time.
+> >
+> > struct perf_sample does not need to be fully initialized, and even
+>
+> Yes it does need to be fully initialized.  Leaving members
+> uninitialized in the hope that they never get used adds to
+> code complexity e.g. how do you know they never are used,
+> or future members never will be used.
 
+First thought, perhaps we can use sanitizers to catch mistakes but
+leave the default optimized code to not have any overhead.
 
-On 13/01/2025 3:51 pm, Ian Rogers wrote:
-> On Mon, Jan 13, 2025 at 4:35 AM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 10/01/2025 5:20 pm, Ian Rogers wrote:
->>> Using the scripts at:
->>> https://gitlab.arm.com/telemetry-solution/telemetry-solution/
->>>
->>> Generate perf json for neoverse-n3 using the following command:
->>> ```
->>> $ telemetry-solution/tools/perf_json_generator/generate.py \
->>>     tools/perf/ --telemetry-files \
->>>     telemetry-solution/data/pmu/cpu/neoverse/neoverse-n3.json:neoverse-n3
->>> ```
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>    .../arm64/arm/neoverse-n3/core-imp-def.json   | 930 ++++++++++++++++++
->>
->> I assume you got warnings about missing groups, if one is missing that
->> results in everything being dumped in core-imp-def.json. I have an
->> internal ticket open about it which is why I didn't post N3 and V3 jsons
->> yet, I'll check on it again.
-> 
-> I was testing with JEVENTS_ARCH=all. I'm not sure what the group
-> warning is, do you have a link?
-> 
+Second thought, the perf_sample looks like:
+```
+$ pahole perf
+...
+struct perf_sample {
+       u64                        ip;                   /*     0     8 */
+       u32                        pid;                  /*     8     4 */
+       u32                        tid;                  /*    12     4 */
+       u64                        time;                 /*    16     8 */
+       u64                        addr;                 /*    24     8 */
+       u64                        id;                   /*    32     8 */
+       u64                        stream_id;            /*    40     8 */
+       u64                        period;               /*    48     8 */
+       u64                        weight;               /*    56     8 */
+       /* --- cacheline 1 boundary (64 bytes) --- */
+       u64                        transaction;          /*    64     8 */
+       u64                        insn_cnt;             /*    72     8 */
+       u64                        cyc_cnt;              /*    80     8 */
+       u32                        cpu;                  /*    88     4 */
+       u32                        raw_size;             /*    92     4 */
+       u64                        data_src;             /*    96     8 */
+       u64                        phys_addr;            /*   104     8 */
+       u64                        data_page_size;       /*   112     8 */
+       u64                        code_page_size;       /*   120     8 */
+       /* --- cacheline 2 boundary (128 bytes) --- */
+       u64                        cgroup;               /*   128     8 */
+       u32                        flags;                /*   136     4 */
+       u32                        machine_pid;          /*   140     4 */
+       u32                        vcpu;                 /*   144     4 */
+       u16                        insn_len;             /*   148     2 */
+       u8                         cpumode;              /*   150     1 */
 
- From the perf_json_generator:
+       /* XXX 1 byte hole, try to pack */
 
-  $ telemetry-solution/tools/perf_json_generator/generate.py \
-    tools/perf/ --telemetry-files \
-    telemetry-solution/data/pmu/cpu/neoverse/neoverse-n3.json:neoverse-n3
+       u16                        misc;                 /*   152     2 */
+       u16                        ins_lat;              /*   154     2 */
+       union {
+               u16                p_stage_cyc;          /*   156     2 */
+               u16                retire_lat;           /*   156     2 */
+       };                                               /*   156     2 */
+       union {
+               u16                        p_stage_cyc;          /*
+0     2 */
+               u16                        retire_lat;           /*
+0     2 */
+       };
 
-  Warning: Not writing events which do not have a group (note that the
-  mnemonic printed may differ to the one in the source json if it differs
-  in the common Perf files):
+       _Bool                      no_hw_idx;            /*   158     1 */
+       char                       insn[16];             /*   159    16 */
 
-  IMP_CT_FLUSH: Counts flushes including architectural,
-  microarchitectural, and branch redirects.
-  ...
+       /* XXX 1 byte hole, try to pack */
 
->> Up to you whether you want to continue with it like this and I can send
->> a fix up later but there's also a conflict with the recent Fujitsu
->> Monaka events.
-> 
-> I'm happy to let you push the updates. An alternative, that may work
-> around the group issue, is just to push the event updates. Any chance
-> on an ETA?
-> 
-> Thanks,
-> Ian
+       void *                     raw_data;             /*   176     8 */
+       struct ip_callchain *      callchain;            /*   184     8 */
+       /* --- cacheline 3 boundary (192 bytes) --- */
+       struct branch_stack *      branch_stack;         /*   192     8 */
+       u64 *                      branch_stack_cntr;    /*   200     8 */
+       struct regs_dump           user_regs;            /*   208   544 */
+       /* --- cacheline 11 boundary (704 bytes) was 48 bytes ago --- */
+       struct regs_dump           intr_regs;            /*   752   544 */
+       /* --- cacheline 20 boundary (1280 bytes) was 16 bytes ago --- */
+       struct stack_dump          user_stack;           /*  1296    24 */
+       struct sample_read         read;                 /*  1320    40 */
+        /* --- cacheline 21 boundary (1344 bytes) was 16 bytes ago --- */
+       struct aux_sample          aux_sample;           /*  1360    16 */
+       struct simd_flags          simd_flags;           /*  1376     8 */
 
-Can't say on an eta. There was a fix already done but not made live yet, 
-but now it turns out maybe we don't want to put these particular events 
-into Perf because they're not in the TRM. Could be several weeks before 
-anything goes live.
+       /* size: 1384, cachelines: 22, members: 39 */
+       /* sum members: 1382, holes: 2, sum holes: 2 */
+       /* last cacheline: 40 bytes */
+};
+```
+The two regs_dump structs are 79% of the size. They comprise of:
+```
+struct regs_dump {
+       u64                        abi;                  /*     0     8 */
+       u64                        mask;                 /*     8     8 */
+       u64 *                      regs;                 /*    16     8 */
+       u64                        cache_regs[64];       /*    24   512 */
+       /* --- cacheline 8 boundary (512 bytes) was 24 bytes ago --- */
+       u64                        cache_mask;           /*   536     8 */
 
-It's a bit of a hack but I can regenerate them without these particular 
-events in a V2, and then whatever the outcome is from above will be an 
-incremental change later.
+       /* size: 544, cachelines: 9, members: 5 */
+       /* last cacheline: 32 bytes */
+};
+```
+So the cache_regs are taking up the majority of the space. I have a
+WIP patch set to make user_regs and intr_regs optional/lazily
+allocated. I'll send it out shortly.
 
+Thanks,
+Ian
