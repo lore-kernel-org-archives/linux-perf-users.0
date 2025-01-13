@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4051B1BB6B3
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 18:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BFD1C4A26
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 18:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736792802; cv=none; b=JP0GHLkvBppSECfMtrucSXNcpweZZjMKBnCE0FCBtWnKJl2TUhEmbF4Czl6QQPLtt2bGrS4FWvCrJJxGZbNTJBcZIhimzGrK4KNSYajjLBt7FmRmalz0Lh+W/xikcKrlE0e8anbjmzmvGxFWBp1f/mVIvoevIZBOBB1FfdCE+tE=
+	t=1736792811; cv=none; b=WQFcc69Hdo5odJwQ8n3RoVrfbm7n0IlDEQia65jNGsAHm4xgonECkBLNrAqQbGCs1W4PMvQTyly8RXFJ5QB/Vvi5IopfBy5qf5djMo382k1qZSuKBUuVGjtCn0r/bDKAznApx4O0XUutXbehLRUPa9eSCzRXPJi0jcvpA0raR38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736792802; c=relaxed/simple;
-	bh=Kd/Kkuz64+viq53QfR2qRQIKL0vb7m46I+xRKieRnrM=;
+	s=arc-20240116; t=1736792811; c=relaxed/simple;
+	bh=+2cS1Gs/EwTxCBLR3CCBCXLUD4eq0xhHz8i/zki1XWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YsXcp8LiR33wEqL5kn8JfHlyKYFsMTRqkV8Shqy80gd329IEIAsgHeNIbyCUvva0iJL9YNOxVrmmssNdkVrVKQZf3uIIKXgGoyePH/X1/HZAtv4s/KGUKTxckZRthA5nb+gIzYWlq6VIUTcWKMgGP9k4JicvAY0bVyf84GNvpss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lh2ndt85; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=k0zpuT77ZQ1HQne6Yg+pdqvUwnVDTNEUetUJof+MgKL8YBM5c0kPKAkCvOMcjxwVI0o5hjqpFyGZUDCOtNf0xbTSkp+O5gkn6VNfQYrUHSmmnP5jSwtMJzNni7tB2NtIUzT3hp4YY9jiP9KBRz+uxq3B+8M3LzrZqVAm/TtKoog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YUtSA3oU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lh2ndt85"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUtSA3oU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736792800;
+	s=mimecast20190719; t=1736792808;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VRO01xqtDs2hPIJbXl21sIl9bKp5ROsqzaUgBQTq4kg=;
-	b=Lh2ndt85oTfz09KkGkFRFGc10cEyRmn6hkb20ItXvV7k+VAx43ZTbMFPP1hiSxiYFYPMx1
-	JGykfXohVTBVWrKJoCdH8SLYsT7kiTlxYAIvr6f9OWrNFAj7AejCOo8+v+dwBr7foTsvtU
-	7vIWRa55U5GoHVACtuGpq3BiCH0VFII=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=rwuir3JvJnHapvVQX584MCGjTGQ3ocSIYyZpmkpdsn0=;
+	b=YUtSA3oUA3oAL7jR3v/CzBK4++hFv4kOXgDa9KDbuZDr3Cgk3VqCQd5BGhUKcJL/ccvTnc
+	Ar8E21GIZt8yJ4GxEWi4MCaJ+kVClMAmDIEijVzCGQTsyYmSAQhnKScRtsvtgyAg53Kiym
+	Qn6DhIssf+Ujwgcgpqjp0kVzLS17epM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-t0NHpQ33Oqa3hUDbpAZbOA-1; Mon,
- 13 Jan 2025 13:26:38 -0500
-X-MC-Unique: t0NHpQ33Oqa3hUDbpAZbOA-1
-X-Mimecast-MFC-AGG-ID: t0NHpQ33Oqa3hUDbpAZbOA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-267-YKoWRhqDN2q4hIRjGMLcBA-1; Mon,
+ 13 Jan 2025 13:26:42 -0500
+X-MC-Unique: YKoWRhqDN2q4hIRjGMLcBA-1
+X-Mimecast-MFC-AGG-ID: YKoWRhqDN2q4hIRjGMLcBA
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 849391955D61;
-	Mon, 13 Jan 2025 18:26:37 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80DEB19560B8;
+	Mon, 13 Jan 2025 18:26:40 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.225.147])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4003119560AD;
-	Mon, 13 Jan 2025 18:26:34 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20EA219560AD;
+	Mon, 13 Jan 2025 18:26:37 +0000 (UTC)
 From: vmolnaro@redhat.com
 To: linux-perf-users@vger.kernel.org,
 	acme@kernel.org,
@@ -49,9 +49,9 @@ To: linux-perf-users@vger.kernel.org,
 	mpetlan@redhat.com,
 	namhyung@kernel.org
 Cc: irogers@google.com
-Subject: [PATCH v2 01/10] perf test perftool_testsuite: Add missing description
-Date: Mon, 13 Jan 2025 19:25:56 +0100
-Message-ID: <20250113182605.130719-2-vmolnaro@redhat.com>
+Subject: [PATCH v2 02/10] perf test perftool_testsuite: Return correct value for skipping
+Date: Mon, 13 Jan 2025 19:25:57 +0100
+Message-ID: <20250113182605.130719-3-vmolnaro@redhat.com>
 In-Reply-To: <Z4UwHy-Kj9XDI9cf@x1>
 References: <Z4UwHy-Kj9XDI9cf@x1>
 Precedence: bulk
@@ -65,8 +65,9 @@ X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Properly name the test cases of perftool_testsuite instead of the
-license being taken as the name for 'perf test'.
+In 'perf test', a return value 2 represents that the test case was
+skipped. Fix this value for perftool_testsuite test cases to
+differentiate between skip and pass values.
 
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
@@ -76,87 +77,87 @@ Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
  tools/perf/tests/shell/base_probe/test_basic.sh              | 2 +-
  tools/perf/tests/shell/base_probe/test_invalid_options.sh    | 2 +-
  tools/perf/tests/shell/base_probe/test_line_semantics.sh     | 2 +-
- tools/perf/tests/shell/base_report/setup.sh                  | 2 +-
- tools/perf/tests/shell/base_report/test_basic.sh             | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/tests/shell/common/init.sh                        | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-index ac5a15c57fb38f14..4204e941fad99269 100755
+index 4204e941fad99269..45c21673643641b3 100755
 --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
 +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perf_probe :: Reject blacklisted probes (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+@@ -22,7 +22,7 @@ TEST_RESULT=0
+ BLACKFUNC_LIST=`head -n 5 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
+ if [ -z "$BLACKFUNC_LIST" ]; then
+ 	print_overall_skipped
+-	exit 0
++	exit 2
+ fi
  
- #
+ # try to find vmlinux with DWARF debug info
 diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-index d541ffd44a9332b6..c276c2a3fc26ecde 100755
+index c276c2a3fc26ecde..24fe91550c672cc2 100755
 --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
 +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# Add 'perf probe's, list and remove them
-+# perf_probe :: Add probes, list and remove them (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+@@ -33,7 +33,7 @@ fi
+ check_kprobes_available
+ if [ $? -ne 0 ]; then
+ 	print_overall_skipped
+-	exit 0
++	exit 2
+ fi
  
- #
+ 
 diff --git a/tools/perf/tests/shell/base_probe/test_basic.sh b/tools/perf/tests/shell/base_probe/test_basic.sh
-index 09669ec479f23d2f..a69dc1c9f92c1b96 100755
+index a69dc1c9f92c1b96..9d8b5afbeddda268 100755
 --- a/tools/perf/tests/shell/base_probe/test_basic.sh
 +++ b/tools/perf/tests/shell/base_probe/test_basic.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perf_probe :: Basic perf probe functionality (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+@@ -19,7 +19,7 @@ TEST_RESULT=0
  
- #
+ if ! check_kprobes_available; then
+ 	print_overall_skipped
+-	exit 0
++	exit 2
+ fi
+ 
+ 
 diff --git a/tools/perf/tests/shell/base_probe/test_invalid_options.sh b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-index 0f835558a14b2069..8d1570c44a54ac75 100755
+index 8d1570c44a54ac75..92f7254eb32a31d0 100755
 --- a/tools/perf/tests/shell/base_probe/test_invalid_options.sh
 +++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perf_probe :: Reject invalid options (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+@@ -19,7 +19,7 @@ TEST_RESULT=0
  
- #
+ if ! check_kprobes_available; then
+ 	print_overall_skipped
+-	exit 0
++	exit 2
+ fi
+ 
+ # Check for presence of DWARF
 diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-index b114f3e50b7fe131..2ab70a543087c543 100755
+index 2ab70a543087c543..20435b6bf6bc654d 100755
 --- a/tools/perf/tests/shell/base_probe/test_line_semantics.sh
 +++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perf_probe :: Check patterns for line semantics (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+@@ -20,7 +20,7 @@ TEST_RESULT=0
  
- #
-diff --git a/tools/perf/tests/shell/base_report/setup.sh b/tools/perf/tests/shell/base_report/setup.sh
-index 4caa496660c64f5e..b03501b2e8fc5330 100755
---- a/tools/perf/tests/shell/base_report/setup.sh
-+++ b/tools/perf/tests/shell/base_report/setup.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perftool-testsuite :: perf_report
- # SPDX-License-Identifier: GPL-2.0
+ if ! check_kprobes_available; then
+ 	print_overall_skipped
+-	exit 0
++	exit 2
+ fi
  
- #
-diff --git a/tools/perf/tests/shell/base_report/test_basic.sh b/tools/perf/tests/shell/base_report/test_basic.sh
-index 47677cbd4df31f0a..2398eba4d3fdd3db 100755
---- a/tools/perf/tests/shell/base_report/test_basic.sh
-+++ b/tools/perf/tests/shell/base_report/test_basic.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--
-+# perf_report :: Basic perf report options (exclusive)
- # SPDX-License-Identifier: GPL-2.0
+ # Check for presence of DWARF
+diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
+index 259706ef58994bf9..26c7525651e084fc 100644
+--- a/tools/perf/tests/shell/common/init.sh
++++ b/tools/perf/tests/shell/common/init.sh
+@@ -88,7 +88,7 @@ consider_skipping()
+ 	# the runmode of a testcase needs to be at least the current suite's runmode
+ 	if [ $PERFTOOL_TESTSUITE_RUNMODE -lt $TESTCASE_RUNMODE ]; then
+ 		print_overall_skipped
+-		exit 0
++		exit 2
+ 	fi
+ }
  
- #
 -- 
 2.43.0
 
