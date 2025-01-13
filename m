@@ -1,68 +1,80 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A56224B28;
-	Mon, 13 Jan 2025 13:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D663B22CF36
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 13:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736774300; cv=none; b=pncd8ETklTwPOYGkLSrE6RvA80iyZcWegUTGGd0f3nYuaVKYK5KjZDU76RswzttKraQqf0uH6YLYCsRQg1Lmlh9N8S90aiHarAlmSn7vBSkT+6s6jyNQsA46HzjfvdhIHkXCcHxiodUytAZOmV3+RQP47RjviR3XKKzdYlR7Vw8=
+	t=1736775271; cv=none; b=UGi3UJp8DdsB5tt7G2Qog1LjRMSJq3DP8r+1uhoaoQYYubUt09VPVleaZUJ/Th9IchIi4CVOZaOp/OeDBY5w7zWEzMzd5W00aA/S8oa3TqP9uGgj0CGT8GiuzI3ayn0AI2RXSL63RbPCJ6OvD1mVtrQjm2OzKqpRz7KmQtcjl6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736774300; c=relaxed/simple;
-	bh=SsZu8YcLzTbYaJPMHqsBgmhGNcErqFfYYIu7dhWopwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ow79rVyGjTXYdaXm/tsiJpLEPnDAzJXBQoG+1I3T9TKru/QT51BWpm6xO5wrn0l4BJeytmg1oZzTwc5UhG901kMmBWK58GyqoAnewDl5qUG5e7DNC4j4Tx9JlUmcjZNa51PdDw4BO4wzV+ah6yu5by9b7N+j2vh6hw4qvpdUE38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JQ4SGs9K; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1736775271; c=relaxed/simple;
+	bh=mhfKsdxy4ny09CpivFZEqqoBkgWKbVRCHfE7fxK5B7Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Y4fKmUZDgbGVMDSzj9CCenv0PTmh2Nu/wpWjVHQ8MKzbqLzBFYcVqFNTjiTg51LRkMh4CNYMoo0uMfzr2QFO1pLET9ZMC8tKKCyvu4tjvyXSgylRDYl0Wxmxs6eC62ltlh1YiEb+PxEt6beUvi+mPWaZ8XR/R9Z7jY/6t30KXfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mskKPRml; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JQ4SGs9K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gYlgEsWSfO33bKZLTvDkNRe3cAN19cwynMw/uti7Rfo=; b=JQ4SGs9KrpKcZtlnzlpDD+MCxE
-	0VcVtobTRv+t4oZ7KE6jToquy3iUl8tMR95HlMN43pid6Bk8OtjKZecj9PyTJa7TyNTdniy+G4X8R
-	vqkghcqZuHtdMROQSlN2yurnGUFoTZ3AywlPRU2kQORPlu1p/N98ApqGtpxlXsl16GTXdyWzXEg3w
-	gIjN1bvtkIitdJhCLG5M3iUBoNFEs8taKFFBsgwcAGDNIUKxP3BKWhQUgl4cgKDz9tB5OjQaicZnB
-	CIwSA+BdPtMPQKXPAnhXQkAIPo9yplbud1CnZczO+6XIHaIr6PL++AlYkWa62J9FXXgF5t5OO4Zhe
-	49+h1JnA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXKKa-0000000AIDO-2N3c;
-	Mon, 13 Jan 2025 13:18:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2A7F530057A; Mon, 13 Jan 2025 14:18:12 +0100 (CET)
-Date: Mon, 13 Jan 2025 14:18:12 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Atish Patra <atishp@rivosinc.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] perf: Add PERF_EVENT_IOC_INC_EVENT_LIMIT
-Message-ID: <20250113131812.GB8362@noisy.programming.kicks-ass.net>
-References: <20250106-perf_set_event_limit-v3-0-dbde0e90ddde@rivosinc.com>
- <20250106-perf_set_event_limit-v3-1-dbde0e90ddde@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mskKPRml"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa622312962so402617366b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 05:34:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736775268; x=1737380068; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2K3+InxgWdcedIUmFC5ZBMbgnGaWRgOdwpB/Jt6OUHI=;
+        b=mskKPRmlGzGAzPuYDlI1PLo53Ea7Gp8PjpAiAT7SU0Eotkay22LCBl/IhmsPqAc3bd
+         axQoHHDeYAP9fXgKHNEFJEeFqwnRGTB+Cl1GCn9093lyFjfyeZNuH6qMS5lV/Oe0hy7M
+         TLU8HMv6YXo6mC2qHrGR6ZLNQsTCPSozRD9U81fxL9CXs0VTtA0ihMOMJpbepLf0oOId
+         feCD5GAFoLVKuaaHAwMY70j9EBXhKqYpVPeT3YgIa2mEjTrr7MgoNrkSSeYdBAa/o87l
+         GheivL5Hx4EcMFhFle90k7L5KvnnXuK8E6j6EQQKwdN82KRU2h4ksTchauy6em3Rb5dL
+         hWCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736775268; x=1737380068;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2K3+InxgWdcedIUmFC5ZBMbgnGaWRgOdwpB/Jt6OUHI=;
+        b=I21wkAzfO+tECHbOnS6faekJpRefscvG1QEzRd+xrS4fGvWO2OJdgSNsET2QTMcTnM
+         xEyOBqjd7KDre3rQiKcTfPDqsoANpLi2h48UpKVjiGHEUEMP+61vb5rbUZFA7OwngZkU
+         3wYfpmWoF0TCtL77xgWUBnnBeslGT105mjTiV8zRaD9wruKaHLu9iAZpmr1SikzxFEUq
+         DtYugRObH0j8BTxIJs+5ZqrK4kiwIIWWFOWXwmyD7nqtzLVhgkqsu/SUlRVLxmG6ZuLX
+         bZZ4uDwrb3CKYbmL4fzqIv4WoPYjHeyoggjWiimVee8LqrDPBL1c2/y5HJkBnHwewpKP
+         kCRw==
+X-Gm-Message-State: AOJu0YwSPt2JsCOw/iTGwt/bx8b58WVc7wqkYs/1gCAOs7LsNSg07FZ2
+	jg5ZCIkHRMw5ypd3B89Mg0yclZONTgV8hBgFuzWMvVCwdQmTeHdm7ZLOrwkD6VeQCtEGg4uTRxD
+	3z7CWRQ==
+X-Google-Smtp-Source: AGHT+IFLl3aj3KyIPB/I7grW9IgFpMaf/UuPgW7QssbZLcQc0R06FWJrx2b3EGuqN+/97/axyKG4G236zsgQ
+X-Received: from edsr9.prod.google.com ([2002:aa7:da09:0:b0:5d9:d4a:7e1c])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7da7:b0:aae:85a9:e2d
+ with SMTP id a640c23a62f3a-ab2ab6bfa39mr1996807266b.45.1736775268330; Mon, 13
+ Jan 2025 05:34:28 -0800 (PST)
+Date: Mon, 13 Jan 2025 14:34:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250106-perf_set_event_limit-v3-1-dbde0e90ddde@rivosinc.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.1.688.g23fc6f90ad-goog
+Message-ID: <cover.1736775109.git.dvyukov@google.com>
+Subject: [PATCH v2 0/2] perf hist: Fix bogus profiles when filters are enabled
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 06, 2025 at 08:07:32PM -0800, Charlie Jenkins wrote:
-> PERF_EVENT_IOC_REFRESH immediately enables after incrementing
-> event_limit.  Provide a new ioctl flag that allows programs to increment
-> event_limit without enabling the event. A usecase for this is to set an
-> event_limit in combination with enable_on_exec.
+*** BLURB HERE ***
+
+Dmitry Vyukov (2):
+  perf hist: Deduplicate cmp/sort/collapse code
+  perf hist: Fix bogus profiles when filters are enabled
+
+ tools/perf/util/hist.c | 114 +++++++++++++++++++----------------------
+ tools/perf/util/hist.h |  14 +++--
+ 2 files changed, 59 insertions(+), 69 deletions(-)
 
 
-Utter lack of WHY.
+base-commit: 5bc55a333a2f7316b58edc7573e8e893f7acb532
+-- 
+2.47.1.688.g23fc6f90ad-goog
+
