@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A686F1420DD;
-	Mon, 13 Jan 2025 15:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10CD17557;
+	Mon, 13 Jan 2025 15:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736783247; cv=none; b=C/RVf5nkg8KEBWobhyB8IVrnL+mgP0ZmykTBz+YP7Mf04Ny4rse0mBKjtn4ZzU3/M0A28HKphMoCTOlJZz3iRhIdMxB/7dZoNDwI6yir9nSivvNINZKV3YYStjPfbFO8OLhEmxIvwrJdwR2CZcfijXtY76ZAdaWIX+5Dcb8rr6I=
+	t=1736783320; cv=none; b=AWf7Y/7kymamp1aGwArCKSIRdD9NQ/q8sgTM9OM0md7Ws0UHuJ3MJ3TF6rbHkDcsNOelbzpnnCWGYlSaUh6TVJ8MJJmCNNXJmnA6ca39yXD4A+olKMV0BV5w2pMBaFo8xTQkpww1Kr+lBwiIEaxWQeMHZ1JN9dIyVib/v1Gegfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736783247; c=relaxed/simple;
-	bh=oxLzB40VbG925YES8dIbMXGmc0WKPKteapK7aX6jX+Q=;
+	s=arc-20240116; t=1736783320; c=relaxed/simple;
+	bh=q8nYehHYoicOGXwunJWDhfW0S5+WX2+WdcPUvH6l/xA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M1hPiWFzTIWlA0oCiXvCZxz0pBoh21j2fAG6+3sbtdkHcjgf9oF4swV9QWfli8oGYHp8BvwlE+WqbAESLbqhGXorImjJSINqonKhRYo4FBQsCpOkgZef9LY9AmQGAT4vJ0EQ/zxMUK1ua1U3LLWmmDXManmzbq2JKEf0yVwprhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyGxmVxp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYOrgIL1/oL9WQUSHAzy1ymlpLrqD5Ckp+Csi4uTlwF3NOhHVq3H3Iujpqc2ATHBgALGEsb5MjkrFj8QnZSroc6zzSNLBRwJpN/9MKxdj1a3dutR7BAjsmbCwNGVEhGqEHmc0Cvn3jjfBsZQgMZttCsDtAKucRaCg5HUmyx8Q/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xdb0vyMc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyGxmVxp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEBDC4CEE2;
-	Mon, 13 Jan 2025 15:47:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xdb0vyMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5013C4CEE1;
+	Mon, 13 Jan 2025 15:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736783247;
-	bh=oxLzB40VbG925YES8dIbMXGmc0WKPKteapK7aX6jX+Q=;
+	s=k20201202; t=1736783320;
+	bh=q8nYehHYoicOGXwunJWDhfW0S5+WX2+WdcPUvH6l/xA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YyGxmVxpz94K5k++YY8kBePkDQ5vJgLBbxnhjjAtuTXJtFdnMPbHWioD62lfmkPLK
-	 0BIwyqqp6H39IT05u5bcEvRhZTokc8Rayv4cVqrWHp74qUri8XZY6gxD9KhzeOwlIX
-	 X7juBrtzUnft4ytMMcPyjaWVYIOtt815IUdCBu9UG9KcsX2Tf67ethBcbb+SLaJM49
-	 geUcUm1U/X8sTeq05FWHRuHw+6/BglpO9/7d0PkJXMaHRlSVlqPt5rCbAf878WPXNA
-	 IalAs+vmTZJZP9ftb6355javM3j9e02Pcr+OMOU5huXh/rvpajshnmawL1acDaUABP
-	 CaU5NJ8kuZpng==
-Date: Mon, 13 Jan 2025 12:47:24 -0300
+	b=Xdb0vyMc8ByqCIKWVxuLqjBmQAsojkQsIA8D2QumOl7QXJxq6MMf7pb1poElk0uI2
+	 mJsmb8eP6/V5p0krWQigVHW54ftWU0ZrUjvWk1r/H/9YetTMNjclWmKD3yBRCxVTIf
+	 fPiGpAeQ5qatbqJdjLVYZtrsTczhG+7Lvroh5FMtayzvB4uOXAgCD8GQL1PyFJbRlv
+	 EMIyPuTOUX/HruH7hXqJ0mPYVvDE8iNrspOStTv4mfLTSV+NwwQxbZewJKTd7D0lpH
+	 BJrWCvC2KG+3+rgWteqaC9CQP7T5qyXdrqtsqWjeAjc5TId+OTEeAbnAiX0rocFoH9
+	 tD+wdu2VBcF1g==
+Date: Mon, 13 Jan 2025 12:48:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	mhiramat@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf probe: Rename err label
-Message-ID: <Z4U1jAlk2Pv1t9Bi@x1>
-References: <20241211085525.519458-1-james.clark@linaro.org>
- <20241211085525.519458-3-james.clark@linaro.org>
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf inject: Fix use without initialization of local
+ variables
+Message-ID: <Z4U11bKn3zJjLQij@x1>
+References: <20241211060831.806539-1-irogers@google.com>
+ <6f441be9-7731-45dd-a131-39cc2e34dc1a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,97 +50,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241211085525.519458-3-james.clark@linaro.org>
+In-Reply-To: <6f441be9-7731-45dd-a131-39cc2e34dc1a@linaro.org>
 
-On Wed, Dec 11, 2024 at 08:55:24AM +0000, James Clark wrote:
-> Rename err to out to avoid confusion because buf is still supposed to be
-> freed in non error cases.
+On Wed, Dec 11, 2024 at 09:58:00AM +0000, James Clark wrote:
+> On 11/12/2024 6:08 am, Ian Rogers wrote:
+> > Local variables were missing initialization and command line
+> > processing didn't provide default values.
+> > 
+> > Fixes: 64eed019f3fc ("perf inject: Lazy build-id mmap2 event insertion")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/builtin-inject.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index d6989195a061..11e49cafa3af 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -2367,10 +2367,10 @@ int cmd_inject(int argc, const char **argv)
+> >   	};
+> >   	int ret;
+> >   	const char *known_build_ids = NULL;
+> > -	bool build_ids;
+> > -	bool build_id_all;
+> > -	bool mmap2_build_ids;
+> > -	bool mmap2_build_id_all;
+> > +	bool build_ids = false;
+> > +	bool build_id_all = false;
+> > +	bool mmap2_build_ids = false;
+> > +	bool mmap2_build_id_all = false;
+> >   	struct option options[] = {
+> >   		OPT_BOOLEAN('b', "build-ids", &build_ids,
+> 
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
 Thanks, applied to perf-tools-next,
 
 - Arnaldo
- 
-> Tested-by: Namhyung Kim <namhyung@kernel.org>
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/util/probe-event.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index eaa0318e9b87..35af6570cf9b 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -1383,20 +1383,20 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  		if (p == buf) {
->  			semantic_error("No file/function name in '%s'.\n", p);
->  			err = -EINVAL;
-> -			goto err;
-> +			goto out;
->  		}
->  		*(p++) = '\0';
->  
->  		err = parse_line_num(&p, &lr->start, "start line");
->  		if (err)
-> -			goto err;
-> +			goto out;
->  
->  		if (*p == '+' || *p == '-') {
->  			const char c = *(p++);
->  
->  			err = parse_line_num(&p, &lr->end, "end line");
->  			if (err)
-> -				goto err;
-> +				goto out;
->  
->  			if (c == '+') {
->  				lr->end += lr->start;
-> @@ -1416,11 +1416,11 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  		if (lr->start > lr->end) {
->  			semantic_error("Start line must be smaller"
->  				       " than end line.\n");
-> -			goto err;
-> +			goto out;
->  		}
->  		if (*p != '\0') {
->  			semantic_error("Tailing with invalid str '%s'.\n", p);
-> -			goto err;
-> +			goto out;
->  		}
->  	}
->  
-> @@ -1431,7 +1431,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  			lr->file = strdup_esq(p);
->  			if (lr->file == NULL) {
->  				err = -ENOMEM;
-> -				goto err;
-> +				goto out;
->  			}
->  		}
->  		if (*buf != '\0')
-> @@ -1439,7 +1439,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  		if (!lr->function && !lr->file) {
->  			semantic_error("Only '@*' is not allowed.\n");
->  			err = -EINVAL;
-> -			goto err;
-> +			goto out;
->  		}
->  	} else if (strpbrk_esq(buf, "/."))
->  		lr->file = strdup_esq(buf);
-> @@ -1448,10 +1448,10 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
->  	else {	/* Invalid name */
->  		semantic_error("'%s' is not a valid function name.\n", buf);
->  		err = -EINVAL;
-> -		goto err;
-> +		goto out;
->  	}
->  
-> -err:
-> +out:
->  	free(buf);
->  	return err;
->  }
-> -- 
-> 2.34.1
-> 
