@@ -1,65 +1,64 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B6A227B92
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 22:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1D2228360
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 22:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736895530; cv=none; b=dMBcW9iH9VgBflWPSTiVt081x9hydiNaaOlD9mPRcS/yoNcphdqf4gFOHuqMuogyiFAFtRpzKEuuH7k7JuR7MrvFOyb5+QIAyQSpvqyrVjH5dZBlg9mPj1pMPeL43+ujfPk7SZnjCsrBTp9+DMod91Ynna0cJs5F9RG6XKVisyc=
+	t=1736895532; cv=none; b=SHw+CRmSx+kN6DUiUWih26Z6Gi330KMI6fFJk7e5Xmrf0rYbxNKPt4EJ298qBWFICfB3U33b5vwU5Zl8W20ogtZMHZbr1XcGB4kYa0bf7B8437zhfGsSMO0X6yUo09G+tp6/6+aiWhmQnmINLpcfbkr6pkG2Z8QmN7hy07afFIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736895530; c=relaxed/simple;
-	bh=IonkNrSqnxTgqTe44xyZhAJLdqqmTStDra6vOLyGrKw=;
+	s=arc-20240116; t=1736895532; c=relaxed/simple;
+	bh=KX+c6OZLcoeS98RkAUKLotKTlJrHqY7en1pLAwLRhK8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=vGdLQN9X5YlkJVIPP2H3mFlCxJx70+Sg5nFLW2iGzIgqpV54/nnjYfXuDG4S6ErvtfieqblcIlw/JdKY4K3xRIQme7lzjVwWW6cTAzuFRFnyLcMEx56QyJKL1Yz+DvINVcIPRR7t2Sd5cTgOh8yEdJ0Im7W1I0n5yROvyJRfQW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gXctSMhm; arc=none smtp.client-ip=209.85.214.182
+	 In-Reply-To:To:Cc; b=mDYmodA8qpVIiagGazWkLk3h/cuzSgZ7rOv946a4Mmz5p+ahmNcBNP6zOVtoLGOk8cxdMB7oh3slo1b2Yz6Z/SP9uyXfvyGs/SwSK5hgSI8hNn2MkfyiWdoZzmcbYA75IFdVAnCywY1IfFyFMQkMT7jKcVszMZ6SQ5jsPxq+HeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=mRpHszRX; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gXctSMhm"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-216401de828so100946315ad.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 14:58:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="mRpHszRX"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2164b1f05caso108020525ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 14:58:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736895528; x=1737500328; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736895530; x=1737500330; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lFaqQYFa0i4Hi1540ZaNWub9sunz3Nl340tvz0aVjzo=;
-        b=gXctSMhmMtCU5kClJE/0l886usgr53w8XT2HZQK7xjFbqeKLOnzKh2mvPnPSHrv/Cv
-         PaLL4igwlcdoOg4eHNR5ZHt8avDNUBKOgBZuzuaHgCTfyz1+JBoJrYgM36YFtDHBbsXB
-         0dNtJ0y/Jx08ecinbQiNAmwLZuKZEw2QHQ1ER++eQR50A4ZwNnSDLULslFmRlZW0i82b
-         cwEWtGhFpMdUcpVz3xRbqUuRJ6XN+bvxxdT62QJzoBtHkgPUqM0xlIK+bIu84CziSBab
-         6su7mCnfFhYa13JzfUdygvlT0lrKfVvAeiw0gA1WBMVVXCPJ/Fak4NNk+8AB4JFmqMgm
-         1LiA==
+        bh=qntZYbhhaPOyc0opQ/xzbCXT2UPDrjgDrjtXnzGv1Lc=;
+        b=mRpHszRX6ik/dBvFnqOgfexdZuIsP3u9Y4NIjN1p5e8ujRPU59C/lNHIgHqxrP+eA+
+         jIU9a7ITmY46zrhBLYlYqhYKWYD/pjktFnLHFjpx3GGDK+vuLsAvOIUdyUIQNQtmKDqb
+         IiAZDKi6gZiemqdf+cOk8DB8Fyl53wov3wkzwECVnIJPsrSfllEdV0XIKeLNcO52B/hn
+         T/gV1o6ElybcHx9U1KWDpbPkUoxLora92bCoC3mfalgFqGCx0UFLbIETkmtjF7KO7+UF
+         bG9084XOX1dAJwElF/ZBhg5guNP5em/sgu5tnnhGRaAS41ldsh6zD3v3DdkLX9d4C8KG
+         SWYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736895528; x=1737500328;
+        d=1e100.net; s=20230601; t=1736895530; x=1737500330;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lFaqQYFa0i4Hi1540ZaNWub9sunz3Nl340tvz0aVjzo=;
-        b=braEm/CP8jcrPEn4acvr74uJCOUOloBOlFONugm1tcl9wmlwKpA8BnO2xduy+Gw8rG
-         QbOOKgt/kqxIyTAz3ZES/Q7IkQ4N5xmDvLuXc6dvRvZkAAOrxy9/On5JiGMW0HMPCwnV
-         0n1Dt4d5Sk7lIgMO32xEDm70/0KLd9GcsK/vSiOk6QYuE053brd59UIEE7LPnZWHyMI/
-         MQG7GG2ggxlyE9LnzwUVEjHZFpXEzhCKjjSyTekjLZr0qPSa4HjcBJ268xw4B591JHD0
-         Q3klguX/AhmkGe2ifcQ7eU/o9Dnod/biUZA5JyQJ95pv9lhaYcaf2dKuS3y9asS4WAJC
-         qj6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWeAl5yTqMHyBfuoM+bcnGDiGBhJ9Shr7otHq4cDm2fws/cm4wNVYJgD2U1IbA6bQFp5fSpJhCv1J/CiPfTeWbP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS6YQF4EOHEKO4EyRY78FPAAbp5pLo4aTF1t+Rg7a2RCM4UHhM
-	DPxVDALJkp3LiNtdwB2WA6nQMwPVEaAxQLEdm+21vF+gNeKFQJegExn6vBDzyhc=
-X-Gm-Gg: ASbGncvKe5ahw37MEfQ5eFe0uLW3wDiAjyqkkz8ZZkNxNwQtClWNS+kjIpV+rjcdDPm
-	vmTstXLOBRPGIRnFwRfYpiOSH9TNXFv3Siu95gPffLsAKaaaBaWX6lHjo/s1xX1IEMW9Ejsz6EZ
-	dNq7OtqsXvV43uId3+I+IDVmgd/uaBJHsfX/tockqny97RYJyjqtfV8R+DRNJ6IcuItnfI6TKWG
-	nyIoEF4UkRZ1Lir/BZ3ns8oH2o+xGlIfsi0fWn6L+38ATO/OClcv0MWXA9oBRd+4R5Gvw==
-X-Google-Smtp-Source: AGHT+IHCQ6qV+IZREHZOksM8g070R45gqC24v2Ey2b78fnINPv3h7b/5YKzuEF3OHMLV4KVWpbWi3w==
-X-Received: by 2002:a17:902:c941:b0:216:7cbf:951f with SMTP id d9443c01a7336-21a83f4f096mr419065225ad.21.1736895528131;
-        Tue, 14 Jan 2025 14:58:48 -0800 (PST)
+        bh=qntZYbhhaPOyc0opQ/xzbCXT2UPDrjgDrjtXnzGv1Lc=;
+        b=v/1tqhp2Wrul+sNHyNgTsKujWQtp6bXtozSGP5We/TvhiGYQHxjoM7876pgibcfDI8
+         nIulr1De1eNF9a7cT3X9808B9u8tzoQH3RdR4z5fqrqKuW+yC1ynqc80VHjg08eyOMIQ
+         DcNjfT+Ws5pNO5DMiw77XzjXtYIlIGns0/4jvasnWpHKAbXAdcUdtYQ7+Lferp9B9Glv
+         dXp7MsoZkW83kdOQsRT2ZIWOPsvCsDeYXEDnCYlmJJAkaFBKKnyYTv7Ll89rGbG9/JtS
+         0EiMApAutFPsImZUSqZtH2UIqnrj3fwS6AoNSq5Gr9kgTIOv+XzWjpK3N7UQvT+KHFcQ
+         KiQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnLTl1XdIoFnoHOGYFMre+Xx7vIEQALDSCviKdkGj4qUixDEPjwcgHgxvOm+m3FiPpK/BKWe5SjNoRixz7Gm0E@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGP4XfFYn/SyFSEfciCqqE7P7rrvO9uJEAH/qrlKem4/wiKlPh
+	vmpRYFOrMiKs5LTeRmGFM//nMI4FvIcBt2HZI0F/XocqK+xpWsc3AZX31BJsOFo=
+X-Gm-Gg: ASbGnctqrlNXGFbReJ0WQcSSzxlc+b7BJq0PsQTEjdJcQu5B/lxflOHmB4F5VfX0IYH
+	3VHiqZaLb+ba3lj1ONxaaeYlCf9A3YNf+UOlCD9iVEtCc4ZNHewU3SLiP9jng4Wf+t8blFRxAR6
+	Em1fLDW+obL4SM4nKuDA+6M1vcOgCGTiwaopGOwia+v1tzpHs3NPxNXZGoEHMkpGbS7ckseeO6m
+	phZk3BL5XA3kKRSDH/bvyHzpGtyxRv4cjucml+jaWEP/hjBU5+fBmZy5vNmkU8H1wWW9g==
+X-Google-Smtp-Source: AGHT+IGvBxZa4fPYf8i5v/l3b33jLbUOvTwVMUDT5oDU8+c/I1Eb7QvrJXcdFBnuK94wX8xRhTTgmw==
+X-Received: by 2002:a17:902:ecc5:b0:216:45eb:5e4d with SMTP id d9443c01a7336-21a83f4b29dmr369677175ad.6.1736895529901;
+        Tue, 14 Jan 2025 14:58:49 -0800 (PST)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10df7asm71746105ad.47.2025.01.14.14.58.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10df7asm71746105ad.47.2025.01.14.14.58.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 14:58:47 -0800 (PST)
+        Tue, 14 Jan 2025 14:58:49 -0800 (PST)
 From: Atish Patra <atishp@rivosinc.com>
-Date: Tue, 14 Jan 2025 14:57:42 -0800
-Subject: [PATCH v2 17/21] RISC-V: perf: Add legacy event encodings via
- sysfs
+Date: Tue, 14 Jan 2025 14:57:43 -0800
+Subject: [PATCH v2 18/21] RISC-V: perf: Add Qemu virt machine events
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,7 +67,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250114-counter_delegation-v2-17-8ba74cdb851b@rivosinc.com>
+Message-Id: <20250114-counter_delegation-v2-18-8ba74cdb851b@rivosinc.com>
 References: <20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com>
 In-Reply-To: <20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -89,68 +88,84 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Atish Patra <atishp@rivosinc.com>
 X-Mailer: b4 0.15-dev-13183
 
-Define sysfs details for the legacy events so that any tool can
-parse these to understand the minimum set of legacy events
-supported by the platform. The sysfs entry will describe both event
-encoding and corresponding counter map so that an perf event can be
-programmed accordingly.
+Qemu virt machine supports a very minimal set of legacy perf events.
+Add them to the vendor table so that users can use them when
+counter delegation is enabled.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu_dev.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/vendorid_list.h |  4 ++++
+ drivers/perf/riscv_pmu_dev.c           | 36 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
+diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
+index 2f2bb0c84f9a..ef22b03552bc 100644
+--- a/arch/riscv/include/asm/vendorid_list.h
++++ b/arch/riscv/include/asm/vendorid_list.h
+@@ -9,4 +9,8 @@
+ #define SIFIVE_VENDOR_ID	0x489
+ #define THEAD_VENDOR_ID		0x5b7
+ 
++#define QEMU_VIRT_VENDOR_ID		0x000
++#define QEMU_VIRT_IMPL_ID		0x000
++#define QEMU_VIRT_ARCH_ID		0x000
++
+ #endif
 diff --git a/drivers/perf/riscv_pmu_dev.c b/drivers/perf/riscv_pmu_dev.c
-index 8c5e2474fb7d..8c5598253af0 100644
+index 8c5598253af0..d28d60abaaf2 100644
 --- a/drivers/perf/riscv_pmu_dev.c
 +++ b/drivers/perf/riscv_pmu_dev.c
-@@ -122,7 +122,20 @@ static struct attribute_group riscv_cdeleg_pmu_format_group = {
- 	.attrs = riscv_cdeleg_pmu_formats_attr,
- };
+@@ -26,6 +26,7 @@
+ #include <asm/sbi.h>
+ #include <asm/cpufeature.h>
+ #include <asm/vendor_extensions.h>
++#include <asm/vendorid_list.h>
+ #include <asm/vendor_extensions/andes.h>
+ #include <asm/hwcap.h>
+ #include <asm/csr_ind.h>
+@@ -384,7 +385,42 @@ struct riscv_vendor_pmu_events {
+ 	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map, \
+ 	  .attrs_events = _attrs },
  
-+#define RVPMU_EVENT_ATTR_RESOLVE(m) #m
-+#define RVPMU_EVENT_CMASK_ATTR(_name, _var, config, mask) \
-+	PMU_EVENT_ATTR_STRING(_name, rvpmu_event_attr_##_var, \
-+			      "event=" RVPMU_EVENT_ATTR_RESOLVE(config) \
-+			      ",counterid_mask=" RVPMU_EVENT_ATTR_RESOLVE(mask) "\n")
-+
-+#define RVPMU_EVENT_ATTR_PTR(name) (&rvpmu_event_attr_##name.attr.attr)
-+
-+static struct attribute_group riscv_cdeleg_pmu_event_group __ro_after_init = {
-+	.name = "events",
++/* QEMU virt PMU events */
++static const struct riscv_pmu_event qemu_virt_hw_event_map[PERF_COUNT_HW_MAX] = {
++	PERF_MAP_ALL_UNSUPPORTED,
++	[PERF_COUNT_HW_CPU_CYCLES]		= {0x01, 0xFFFFFFF8},
++	[PERF_COUNT_HW_INSTRUCTIONS]		= {0x02, 0xFFFFFFF8}
 +};
 +
- static const struct attribute_group *riscv_cdeleg_pmu_attr_groups[] = {
-+	&riscv_cdeleg_pmu_event_group,
- 	&riscv_cdeleg_pmu_format_group,
- 	NULL,
- };
-@@ -362,11 +375,14 @@ struct riscv_vendor_pmu_events {
- 	const struct riscv_pmu_event *hw_event_map;
- 	const struct riscv_pmu_event (*cache_event_map)[PERF_COUNT_HW_CACHE_OP_MAX]
- 						       [PERF_COUNT_HW_CACHE_RESULT_MAX];
-+	struct attribute **attrs_events;
- };
- 
--#define RISCV_VENDOR_PMU_EVENTS(_vendorid, _archid, _implid, _hw_event_map, _cache_event_map) \
-+#define RISCV_VENDOR_PMU_EVENTS(_vendorid, _archid, _implid, _hw_event_map, \
-+				_cache_event_map, _attrs) \
- 	{ .vendorid = _vendorid, .archid = _archid, .implid = _implid, \
--	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map },
-+	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map, \
-+	  .attrs_events = _attrs },
- 
++static const struct riscv_pmu_event qemu_virt_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
++						[PERF_COUNT_HW_CACHE_OP_MAX]
++						[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++	PERF_CACHE_MAP_ALL_UNSUPPORTED,
++	[C(DTLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10019, 0xFFFFFFF8},
++	[C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]	= {0x1001B, 0xFFFFFFF8},
++
++	[C(ITLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10021, 0xFFFFFFF8},
++};
++
++RVPMU_EVENT_CMASK_ATTR(cycles, cycles, 0x01, 0xFFFFFFF8);
++RVPMU_EVENT_CMASK_ATTR(instructions, instructions, 0x02, 0xFFFFFFF8);
++RVPMU_EVENT_CMASK_ATTR(dTLB-load-misses, dTLB_load_miss, 0x10019, 0xFFFFFFF8);
++RVPMU_EVENT_CMASK_ATTR(dTLB-store-misses, dTLB_store_miss, 0x1001B, 0xFFFFFFF8);
++RVPMU_EVENT_CMASK_ATTR(iTLB-load-misses, iTLB_load_miss, 0x10021, 0xFFFFFFF8);
++
++static struct attribute *qemu_virt_event_group[] = {
++	RVPMU_EVENT_ATTR_PTR(cycles),
++	RVPMU_EVENT_ATTR_PTR(instructions),
++	RVPMU_EVENT_ATTR_PTR(dTLB_load_miss),
++	RVPMU_EVENT_ATTR_PTR(dTLB_store_miss),
++	RVPMU_EVENT_ATTR_PTR(iTLB_load_miss),
++	NULL,
++};
++
  static struct riscv_vendor_pmu_events pmu_vendor_events_table[] = {
++	RISCV_VENDOR_PMU_EVENTS(QEMU_VIRT_VENDOR_ID, QEMU_VIRT_ARCH_ID, QEMU_VIRT_IMPL_ID,
++				qemu_virt_hw_event_map, qemu_virt_cache_event_map,
++				qemu_virt_event_group)
  };
-@@ -388,6 +404,8 @@ static void rvpmu_vendor_register_events(void)
- 		    pmu_vendor_events_table[i].archid == arch_id) {
- 			current_pmu_hw_event_map = pmu_vendor_events_table[i].hw_event_map;
- 			current_pmu_cache_event_map = pmu_vendor_events_table[i].cache_event_map;
-+			riscv_cdeleg_pmu_event_group.attrs =
-+							pmu_vendor_events_table[i].attrs_events;
- 			break;
- 		}
- 	}
+ 
+ const struct riscv_pmu_event *current_pmu_hw_event_map;
 
 -- 
 2.34.1
