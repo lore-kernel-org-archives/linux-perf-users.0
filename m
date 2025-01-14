@@ -1,132 +1,104 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633C120B1F5
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 21:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420F820AF78;
+	Tue, 14 Jan 2025 21:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736889567; cv=none; b=uL4YqHitMDBheoGsmf08VuO+KSiXD9pIx2uG6HsEpotUQlf0MfxddkjJ/5b4RuLVNLNjV9jM+mZTd2bXKmvo4VUqiNzND2BniByzlATWg2kGNSFawfDeCnsFds5JU1TRGvRMUiQH2JctH+eD/CTYnBr3yN8Puz4MTpmGPB5EtPY=
+	t=1736889778; cv=none; b=kz4LdihFyUehGgoIHm7Se+o2foG8di1di8co39a4RfM4ki+5d/6SErc8ZtH5tQDSJhM7ImxqbGQAWvrqFnGZxZ4an4qi/aPAUl3UohhWwx12J91bHTKuSIYpqjmfnwvEr2DsK/AeHXnfpycfoO1p2969PX/Qv/3++mOXkQ7aBoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736889567; c=relaxed/simple;
-	bh=75fcOSQJdhmnq3pSXnEyg1Dd9Gtm+vOQTHqw0XM6WTs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W+CU1kz6Qn8mAoBvC37d9skvG208GjSu8gH2irtaRzUds87qnXjJSXgaKiPVpk674/dELQ6eKRAk78p+D6Qi1UaidMU/hWetrTCjnQj9/426HArdrMbWkS4jjlcPzN6ip6QH/Lmyg1PJZJA+EvF/rdR1XkQ0vRcVk2lkUs6saj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e7nuU18E; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1736889778; c=relaxed/simple;
+	bh=61jHI45N/+UZU/azmB+G3qQIdOfBU8HAvam8BCjntbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=shnDf6BpNTSsoh03VqEGIZ1Ot7qIO/3Xg26K9muZr3AKz+SS6dOx3gH6eCjBnplbdSn4l/NdyD60NH7r+/GXZXGrE534R269Y/djnr3B00kyLV8H6MTab/N3qop2zI6pAskRy9ES/Xyj2oNnUqen3EAGXSe//IQPvos5hhUJ4Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXxYL5kr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7nuU18E"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-218cf85639eso161292915ad.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 13:19:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736889565; x=1737494365; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVbipT56M6kECF5Qh7elLUxboyXWurLrq3UYAkefsoQ=;
-        b=e7nuU18EDzPa3x8Kv50KAwIViJ8EPVBsM8MUymYFL554zqnQ1k0kqdoOwE3/zZQ34h
-         Zv5YBf6P4119SdKqRmOkS2GHI3dYXbrKdvCaaBEtBWjur2h43o7w6H1c1qPGdelkIXtu
-         G7QTE76ZXoSySqTwRVnARtjL/8scp3WMC17ND1v2G7n2zP0FoP0cT2p5APgCFHADwvYa
-         x5BgORDkBXQ57agb+txiv4aM780ASXxK3Si0GYmHYXL3vkmktoiKTk0r19w173jsgjiD
-         jVgFCBVahj8ghRhFddNQztthZmy4qdGT9lHECb9JKGBk2A4nMITQ8kOoercLllCH+Alb
-         Akkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736889565; x=1737494365;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVbipT56M6kECF5Qh7elLUxboyXWurLrq3UYAkefsoQ=;
-        b=FAMchXkmajnwqPfQqIfsiDKQhNLmBmWGmWbDFXizVUoDKvgFn/Vr5WJV7E49Z+t+68
-         NF2dKfM/S04tVe57szOkLaa3c/iiIBK1Wi6X97T4IMQpAWpOHDSH9gOh9uTiILu/jSNh
-         gOZT/BPy2H5VuveRsX+yI0HLzYJL3Rpa0b55Pc3TidVRX2+E1iMVxesnbg22MMQcr+RI
-         rLAabU3ts4n5LthIPw3kY++XQyeGtJNpKPfjOFXLo1BewC1OPE1prRK8e4QPnezimU94
-         lxuZDk45B5fggxEB/WyyM/gHDTcKDrY7zlm/TLPH/Pa6JGvcuygt1/m6WztrzBHcZiV9
-         RfAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXN6/Yqa0qfFl6ZpRNwZuRTH9oKvAym//ifRp62R1gG1RuGWOfRYAqpJYofw6py6EGFzU4/frInSRp8gmyTGGIz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9v0PkSKpZsvGOmx0SPCxBqOh3U2Bl6VFuujiQbuk60MoQz8TC
-	6T3yJIeSz2r39hZPDs+8zkaNfzrofM35lzq0/jy5F2PSGZNPl/T2P/jY6ne+SVMrMTho+60VoRq
-	xmA==
-X-Google-Smtp-Source: AGHT+IGTMIc2Hr+w/ebVVGGlbFAB7WFV7TbQJLIjfH34Jlhrw+YYPMlrag1B602JmLWOQ4sU4fLE9W3Pz50=
-X-Received: from plap13.prod.google.com ([2002:a17:902:f08d:b0:217:8109:e87])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec1:b0:216:3dc5:1230
- with SMTP id d9443c01a7336-21a83ffc1dbmr401799985ad.42.1736889564696; Tue, 14
- Jan 2025 13:19:24 -0800 (PST)
-Date: Tue, 14 Jan 2025 13:19:23 -0800
-In-Reply-To: <20250114175143.81438-19-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXxYL5kr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBE6C4CEDD;
+	Tue, 14 Jan 2025 21:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736889778;
+	bh=61jHI45N/+UZU/azmB+G3qQIdOfBU8HAvam8BCjntbM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GXxYL5krNI48K6rvNOtyqwTu7KF9EiMVGuH+sHRCiECO1x48mi0QSkLbFTPOlHNsj
+	 mvRde73K0Yo12U6Q7I569xWd1YZ0Z3kwvV7iodovhqPmInUh0aLC/+uKEiFkNuSIa1
+	 gVWx80WzoHGxhAnUM+lCXHdYMowlHmOADFWKI2WGYagMhYQ5dpQA7GsExVbnh6GnDf
+	 hLSPW6+jPZ5dVqmz5ITIcetecoVYjKpReApNwdmdB7aJeD5C5uZ/g8Z4B66osCltbE
+	 ZyOJ4Gp+eZ7nubwaBT/3F2QT4Gfi7lcFs/8nIHT6nNwHnHpIJLd9lQ1C4g3nm7TSyy
+	 8oXngOjBN1Uqw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH 0/4] perf trace: Add --system-summary option
+Date: Tue, 14 Jan 2025 13:22:52 -0800
+Message-ID: <20250114212256.160730-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-19-vschneid@redhat.com>
-Message-ID: <Z4bU2xlZXh53lgH6@google.com>
-Subject: Re: [PATCH v4 18/30] x86/kvm/vmx: Mark vmx_l1d_should flush and
- vmx_l1d_flush_cond keys as allowed in .noinstr
-From: Sean Christopherson <seanjc@google.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
-	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Please use "KVM: VMX:" for the scope.
+Hello,
 
-On Tue, Jan 14, 2025, Valentin Schneider wrote:
-> Later commits will cause objtool to warn about static keys being used in
-> .noinstr sections in order to safely defer instruction patching IPIs
-> targeted at NOHZ_FULL CPUs.
-> 
-> These keys are used in .noinstr code, and can be modified at runtime
-> (/proc/kernel/vmx* write). However it is not expected that they will be
-> flipped during latency-sensitive operations, and thus shouldn't be a source
-> of interference wrt the text patching IPI.
+I've realized that perf trace shows system call summary at the end for
+each thread.  But sometimes users want to see the global whole system
+summary or statistics instead.
 
-This misses KVM's static key that's buried behind CONFIG_HYPERV=m|y.
+So I've added --system-summary option like below:
 
-vmlinux.o: warning: objtool: vmx_vcpu_enter_exit+0x241: __kvm_is_using_evmcs: non-RO static key usage in noinstr
-vmlinux.o: warning: objtool: vmx_update_host_rsp+0x13: __kvm_is_using_evmcs: non-RO static key usage in noinstr
+    $ sudo ./perf trace -as --system-summary sleep 1
+    
+     Summary of events:
+    
+     total, 21580 events
+    
+       syscall            calls  errors  total       min       avg       max       stddev
+                                         (msec)    (msec)    (msec)    (msec)        (%)
+       --------------- --------  ------ -------- --------- --------- ---------     ------
+       epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+       futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+       poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+       ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+       clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+       epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+       nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+       ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+       recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+       write               1393      0     2.854     0.001     0.002     0.017      1.79%
+       read                1063    100     2.236     0.000     0.002     0.083      5.11%
+       ...
 
-Side topic, it's super annoying that "objtool --noinstr" only runs on vmlinux.o.
-I realize objtool doesn't have the visilibity to validate cross-object calls,
-but couldn't objtool validates calls and static key/branch usage so long as the
-target or key/branch is defined in the same object?
+This patchset is on top of (but not necessarily depends on) my system
+call sampling patch.
+
+  https://lore.kernel.org/r/20241219183400.350308-1-namhyung@kernel.org
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (4):
+  perf trace: Allocate syscall stats only if summary is on
+  perf trace: Convert syscall_stats to hashmap
+  perf tools: Get rid of now-unused rb_resort.h
+  perf trace: Add --system-summary option
+
+ tools/perf/Documentation/perf-trace.txt |   3 +
+ tools/perf/builtin-trace.c              | 222 +++++++++++++++++++-----
+ tools/perf/util/rb_resort.h             | 146 ----------------
+ 3 files changed, 178 insertions(+), 193 deletions(-)
+ delete mode 100644 tools/perf/util/rb_resort.h
+
+-- 
+2.48.0.rc2.279.g1de40edade-goog
+
