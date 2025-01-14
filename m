@@ -1,350 +1,225 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E1C1C3BE3
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 16:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF7B18952C;
+	Tue, 14 Jan 2025 17:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736870849; cv=none; b=DGAnJfbMyjtNZkQBVWaAaEdII3b5bDBK1maTa8/u9o0cyK/feS1amLSonaOr+rfcMSoB2ADMMFvSixmfg+XbHXc4qGHYuZmHp7l4m1H15+fLm+xxE/qjDS4iqNtXfek6EwlHqFfkuo3ZtN9IV+U12ldBUF5oHNCxGMp6eMphKqo=
+	t=1736877162; cv=none; b=qQCW1fBfl660bPuFbkVCIxQxiELkaBQuEIuorsgswyUmtTW0kVQTjDs2+FQfDVWgykjb860ZtcuayssNTQbp63tJdUuR5QbhXG8azP1WnBiAb/sEbeyUnK/wkqaopuJyIEDJhJsoqUOyBclj8KPEpfNOokhEv9/Hs1Ej47sR1Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736870849; c=relaxed/simple;
-	bh=lYid5DSTaSkr2w2p3h5+0qDWLUOqcUx7izwJFbHIF8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uv5J4t+tY23QkyL9Z0Q1W7y91/pGQ4DC7HgkLhUZRae4F2qIo25l5fsaz5HATUEAeu9EBJ8xaY0Caz/b+9xpK/OQJtlJnMPu9btpVljOfKoOsCQ5to09kM3AEP6JOe4ID0E9ICvpLITNAUwm1F4sx4C0IspwiUKwaPieG02ifMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r7+eTIeS; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736877162; c=relaxed/simple;
+	bh=Mjv2BLOZG/NTr21nt8MST1+xyYQg3MqZRCU8ArKHPoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R2jjM32e5CuXOliAXaV1hDjoc1uxLAffjq+B8CKVjFaHJiHXz66aIxZca7uI3SzcG09x91QxRGDQOSDUPy/22xFRpOcfew+5zt3DbOZo2/Gss28yldeTjzJ+bHcyX13i+p2zKHMSFTQneED3cT5IM6HsF6Lr6Uo+lDHpdfbps7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGDyGPTc; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r7+eTIeS"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-305d843d925so44257821fa.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 08:07:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736870846; x=1737475646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qgqIuuCRKFpDOhU/WOjT9SEzKRiqGwWC6SvRmB9S2Mc=;
-        b=r7+eTIeStmJWhkZHaPhASge+rrzr0k81kS9QFDn9lv7/aghqj4IluXHxaZ8KTVdSMz
-         3vHBCNLOI0fnxa5g69nFLLGnvHM557jfh1av3aAKX70owqgbOsBhdvsckCdNVL2blqmL
-         ytSAhdJcknDWEGQlXxjr3Y9E79B6TjsmkvXLvsv6E10raV7KKict20mi/aAeY3HeoG/T
-         YsOWrz4mTGpwDUQUluJNFblNQIotg0XZJfgdMaHT6HkKrD9QaOLWkEfq9+Cp2y3bYoat
-         Hnyj96KfFUVbQHsVadbtJVDL4+4OMFaNEB28s/yYAdyXXNgyYrmHRuJ12W41dalVQlEG
-         v+FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736870846; x=1737475646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qgqIuuCRKFpDOhU/WOjT9SEzKRiqGwWC6SvRmB9S2Mc=;
-        b=bTbvX3xDCqKPW07GQly7A04BUrKEOOcwFo6GgGpUuUc8XrbEsDCu77EeOciOErV/l/
-         U5Y4+yn/i/0ZQ+sV4XDuyBVnoybE6oTfMe2lJU0rY8x1hbBGWerpj8opf0tE+eGw/KuZ
-         hww7LtpMQjG97V1FM0ARqDiH9kn1rcCp/2OuQMKse4d8plW5CxgcW5guO9awGUJiufWF
-         xTpAZXhHKb+7crFOozqmpd9tFBCm8XAL6FK8D2pS5PZymmix4Z65tyhljcNwNx/HOuLV
-         9wQ9bdXl9B1wwFB82MnF0iLnh+Y/p6Lz96RWfANCi3y5li6hTLWRNgOu5VtjK9ZFYLEV
-         hvrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWPMeXdilSbLS2Unc+7YmAUZVnb6doIp+RwkPnTGJoyWZDfY/Nd/zTFmzqWaJDNlzt9/pTtkT3JyCPe8tAx7It@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXcQyc9XlHqQdhi86auLslwhd8zjrz3C/4pWdMnQUg8MaMT1PF
-	DDHnod3cGJJWO9K7n3VXN6xozxPW4WmBWIh0sfGa9yOBhXsQ1bZZKRIzmBRa+8VG8fR+p/R9d4s
-	qHqv8T1CxkURB1sNcgG2IAvfzcRF2oRBSWBPg
-X-Gm-Gg: ASbGncvHk6QYmXrxfQZt9BBtMEbmwvs6zEul4b+g7vLITTkNv/qL0lUIC7uyaTrIw8N
-	md8fVtHt9n3hV3adFPz5fE208hdstI6vZXY3s8tNfbJk2JN1LRXcmGzUcAe8HqfbsR2zS
-X-Google-Smtp-Source: AGHT+IHK1TcpkDSHjtck4A5CO0VEMK3Yd32ta7zNxm/pMpv0Z+OR+BDcSfaMtospQXyIqABi/X9a+0vlaSc1pwCYUa8=
-X-Received: by 2002:a2e:be09:0:b0:300:3a15:8f19 with SMTP id
- 38308e7fff4ca-305f45dc70dmr88914411fa.32.1736870845315; Tue, 14 Jan 2025
- 08:07:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGDyGPTc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736877160; x=1768413160;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Mjv2BLOZG/NTr21nt8MST1+xyYQg3MqZRCU8ArKHPoQ=;
+  b=QGDyGPTcyIeq4/q4tyK7kYk8U9rVD9Q0KX1Qyfq9v54jZjFfmZRZtdV7
+   pjj+98M9wqEHqunHzrMtfkS9MFLXdzOord3h9OSG7xhEUpSNXiXINEZYx
+   3UTLZ2cxPyMuC56bZ3iFRi/zzMiQwNxvvKH4tk237ENHSFUTQTV6e+L6s
+   B8iCAhnmRG2LOPUHc2E+wtmuwO7MRvNQZIHmiCkVgN5PVzokXe7C4M4Tm
+   6Q6JBejpOHOq1sDlzAQPfV+vjZZ9tnnHM/gUoG51BTAK9YC0Ho4btXkUA
+   Sl7yUENbOgZCrJC30DLI2qdTToSCQcRqbOvS1cGmpZBQGW5LnRh6EVj5p
+   g==;
+X-CSE-ConnectionGUID: 6D9osqq5Q6aRyNrCmvqwRQ==
+X-CSE-MsgGUID: MgqG/uWTQIm0GEMfvjO0OQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="36880979"
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="36880979"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:52:39 -0800
+X-CSE-ConnectionGUID: adQvo0UkSX25t8O5Lo9TSQ==
+X-CSE-MsgGUID: OoACoXSeTfCRyclcWX/rbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="104950618"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:52:39 -0800
+Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7D34620B5713;
+	Tue, 14 Jan 2025 09:52:37 -0800 (PST)
+Message-ID: <698e3cf3-3579-4bd4-93e2-bbcda56a2a29@linux.intel.com>
+Date: Tue, 14 Jan 2025 12:52:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com> <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com> <Z4aJSde5KXO-rqWM@x1>
-In-Reply-To: <Z4aJSde5KXO-rqWM@x1>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 14 Jan 2025 17:07:14 +0100
-X-Gm-Features: AbW1kvYfuBfYuQ9-mVLjv_qtwqG1dEHZKlFfdj0T4oHZI9ZmYC0icMrMG5OE_RA
-Message-ID: <CACT4Y+b6nbqNHt1MwT_KfWjNrMA_1qvMD=Gkk9gfZNXLL79xdQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	eranian@google.com, Ingo Molnar <mingo@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 14 Jan 2025 at 16:57, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
-ote:
->
-> Adding Ingo and PeterZ to the CC list.
->
-> On Tue, Jan 14, 2025 at 09:26:57AM +0100, Dmitry Vyukov wrote:
-> > On Tue, 14 Jan 2025 at 02:51, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > On Mon, Jan 13, 2025 at 02:40:06PM +0100, Dmitry Vyukov wrote:
-> > > > There are two notions of time: wall-clock time and CPU time.
-> > > > For a single-threaded program, or a program running on a single-cor=
-e
-> > > > machine, these notions are the same. However, for a multi-threaded/
-> > > > multi-process program running on a multi-core machine, these notion=
-s are
-> > > > significantly different. Each second of wall-clock time we have
-> > > > number-of-cores seconds of CPU time.
-> > > >
-> > > > Currently perf only allows to profile CPU time. Perf (and all other
-> > > > existing profilers to the be best of my knowledge) does not allow t=
-o
-> > > > profile wall-clock time.
-> > > >
-> > > > Optimizing CPU overhead is useful to improve 'throughput', while
-> > > > optimizing wall-clock overhead is useful to improve 'latency'.
-> > > > These profiles are complementary and are not interchangeable.
-> > > > Examples of where wall-clock profile is needed:
-> > > >  - optimzing build latency
-> > > >  - optimizing server request latency
-> > > >  - optimizing ML training/inference latency
-> > > >  - optimizing running time of any command line program
-> > > >
-> > > > CPU profile is useless for these use cases at best (if a user under=
-stands
-> > > > the difference), or misleading at worst (if a user tries to use a w=
-rong
-> > > > profile for a job).
-> > > >
-> > > > This patch adds wall-clock and parallelization profiling.
-> > > > See the added documentation and flags descriptions for details.
-> > > >
-> > > > Brief outline of the implementation:
-> > > >  - add context switch collection during record
-> > > >  - calculate number of threads running on CPUs (parallelism level)
-> > > >    during report
-> > > >  - divide each sample weight by the parallelism level
-> > > > This effectively models that we were taking 1 sample per unit of
-> > > > wall-clock time.
->
-> > > Thanks for working on this, very interesting!
->
-> Indeed!
->
-> > > But I guess this implementation depends on cpu-cycles event and singl=
-e
-> > > target process.
->
-> > Not necessarily, it works the same for PMU events, e.g. again from perf=
- make:
->
-> > Samples: 481K of event 'dTLB-load-misses', Event count (approx.): 16941=
-3440
-> > Overhead  Wallclock  Command          Symbol
-> >    5.34%     16.33%  ld               [.] bfd_elf_link_add_symbols
-> >    4.14%     14.99%  ld               [.] bfd_link_hash_traverse
-> >    3.53%     10.87%  ld               [.] __memmove_avx_unaligned_erms
-> >    1.61%      0.05%  cc1              [k] native_queued_spin_lock_slowp=
-ath
-> >    1.47%      0.09%  cc1              [k] __d_lookup_rcu
-> >    1.38%      0.55%  sh               [k] __percpu_counter_sum
-> >    1.22%      0.11%  cc1              [k] __audit_filter_op
-> >    0.95%      0.08%  cc1              [k] audit_filter_rules.isra.0
-> >    0.72%      0.47%  sh               [k] pcpu_alloc_noprof
->
-> > And also it works well for multi-process targets, again most examples
-> > in the patch are from kernel make.
->
-> > > Do you think if it'd work for system-wide profiling?
->
-> > Currently it doesn't b/c system-wide emits PERF_RECORD_SWITCH_CPU_WIDE
-> > instead of PERF_RECORD_SWITCH which this patch handles.
->
-> > It can be made to work, I just didn't want to complicate this patch mor=
-e.
-> > It can work as is, if the system activity includes mostly a single
-> > task, e.g. you run something on command line, it's taking too long, so
-> > you decide to do perf record -a in parallel to see what it's doing.
->
-> > For system-wide profiling we do Google (GWP), it may need some
-> > additional logic to make it useful. Namely, the system-wide
-> > parallelism is not useful in multi-task contexts. But we can extend
-> > report to allow us to calculate parallelism/wall-clock overhead for a
-> > single multi-threaded process only. Or, if we auto-matically
-> > post-process system-wide profile, then we can split the profile
-> > per-process and calculate parallelism for each of them.
->
-> > I am also not sure if we use perf report for GWP, or do manual trace
-> > parsing. When/if this part is merged, we can think of the system-wide
-> > story.
->
-> > TODO: don't enable context-switch recording for -a mode.
->
-> > > How do you define wall-clock overhead if the event counts something
-> > > different (like the number of L3 cache-misses)?
->
-> > It's the same. We calculate CPU overhead for these. Wallclock overhead
-> > is the same, it's just the weights are adjusted proportionally.
->
-> > Physical meaning is similar:
-> > CPU overhead: how much L3 misses affect throughput/cpu consumption
-> > Wallclock overhead: how much L3 misses affect latency
->
-> > > Also I'm not sure about the impact of context switch events which cou=
-ld
-> > > generate a lot of records that may end up with losing some of them.  =
-And
-> > > in that case the parallelism tracking would break.
->
-> > I've counted SAMPLE/SWITCH events on perf make:
->
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > 813829
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > 46249
->
-> > And this is for:
-> > perf record -e L1-dcache-load-misses,dTLB-load-misses make
->
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > 1138615
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > 115433
->
-> > Doesn't pretend to be scientifically accurate, but gives some idea
-> > about proportion.
->
-> > So for the number of samples that's 5% and 10% respectively.
-> > SWITCH events are smaller (24 bytes vs 40 bytes for SAMPLE), so for
-> > ring size it's 3-6%.
->
-> > FWIW I've also considered and started implementing a different
-> > approach where the kernel would count parallelism level for each
-> > context and write it out with samples:
-> > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab=
-496c1a9f2
-> > Then sched_in/out would need to do atomic inc/dec on a global counter.
-> > Not sure how hard it is to make all corner cases work there, I dropped
-> > it half way b/c the perf record post-processing looked like a better
-> > approach.
->
-> > Lost SWITCH events may be a problem. Perf report already detects and
-> > prints a warning about lost events. Should we stop reporting
-> > parallelism/wall-clock if any events are lost? I just don't see it in
-> > practice.
->
-> > Kernel could write-out a bitmask of types of lost events in PERF_RECORD=
-_LOST.
->
-> right
->
-> > > > The feature is added on an equal footing with the existing CPU prof=
-iling
-> > > > rather than a separate mode enabled with special flags. The reasoni=
-ng is
-> > > > that users may not understand the problem and the meaning of number=
-s they
-> > > > are seeing in the first place, so won't even realize that they may =
-need
-> > > > to be looking for some different profiling mode. When they are pres=
-ented
-> > > > with 2 sets of different numbers, they should start asking question=
-s.
-> > >
-> > > I understand your point but I think it has some limitation so maybe i=
-t's
-> > > better to put in a separate mode with special flags.
->
-> > I hate all options.
->
-> > The 3rd option is to add a _mandary_ flag to perf record to ask for
-> > profiling mode. Then the old "perf record" will say "nope, you need to
-> > choose, here are your options and explanation of the options".
->
-> Well, we have a line for tips about perf usage at the botton, for
-> instance, when I ran 'perf report' to check it it showed:
->
-> Tip: Add -I to perf record to sample register values, which will be visib=
-le in perf report sample context.
->
-> We could add a line with:
->
-> Tip: Use '-s wallclock' to get wallclock/latency profiling
-
-Thanks for the review!
-
-This is an option too.
-I am not very strong about the exact option we choose, I understand
-what I proposed has downsides too.
-I am ready to go with a solution we will agree on here.
-
-> And when using it we could have another tip:
->
-> Tip: Use 'perf config report.mode=3Dwallclock' to change the default
->
-> =E2=AC=A2 [acme@toolbox pahole]$ perf config report.mode=3Dwallclock
-> =E2=AC=A2 [acme@toolbox pahole]$ perf config report.mode
-> report.mode=3Dwallclock
-> =E2=AC=A2 [acme@toolbox pahole]$
->
-> Or something along these lines.
->
-> Or we could have a popup that would appear with a "Important notice",
-> explaining the wallclock mode and asking the user to opt-in to having
-> both, just one or keep the old mode, that would be a quick, temporary
-> "annoyance" for people used with the current mode while bringing this
-> cool new mode to the attention of users.
-
-Is there an example of doing something similar in the code?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V8 2/2] perf/x86/intel: Support PEBS counters snapshotting
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
+ dapeng1.mi@linux.intel.com
+References: <20250106142103.1735729-1-kan.liang@linux.intel.com>
+ <20250106142103.1735729-2-kan.liang@linux.intel.com>
+ <20250114120026.GO5388@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250114120026.GO5388@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> Another idea, more general, is to be able to press some hotkey that
-> would toggle available sort keys, like we have, for instance, 'k' to
-> toggle the 'Shared object' column in the default 'perf report/top'
-> TUI while filtering out non-kernel samples.
->
-> But my initial feeling is that you're right and we want this wallclock
-> column on by default, its just a matter of finding a convenient/easy way
-> for users to opt-in.
->
-> Being able to quickly toggle ordering by the Overhead/Wallclock columns
-> also looks useful.
 
-I've tried to do something similar, e.g. filtering by parallelism
-level on-the-fly, thus this patch:
-https://lore.kernel.org/linux-perf-users/CACT4Y+b8X7PnUwQtuU2QXSqumNDbN8pWD=
-m8EX+wnvgNAKbW0xw@mail.gmail.com/T/#t
-But it turned out the reload functionality is more broken than working.
+On 2025-01-14 7:00 a.m., Peter Zijlstra wrote:
+> On Mon, Jan 06, 2025 at 06:21:03AM -0800, kan.liang@linux.intel.com wrote:
+>> @@ -4059,6 +4087,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>  		event->hw.flags |= PERF_X86_EVENT_PEBS_VIA_PT;
+>>  	}
+>>  
+>> +	if ((event->attr.sample_type & PERF_SAMPLE_READ) &&
+>> +	    (x86_pmu.intel_cap.pebs_format >= 6) &&
+>> +	    is_sampling_event(event) &&
+>> +	    event->attr.precise_ip)
+>> +			event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
+>> +
+> 
+> White space fail, easily fixed though.
+> 
+>>  	if ((event->attr.type == PERF_TYPE_HARDWARE) ||
+>>  	    (event->attr.type == PERF_TYPE_HW_CACHE))
+>>  		return 0;
+>> @@ -4167,6 +4201,24 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>  	return 0;
+>>  }
+>>  
+>> +static int intel_pmu_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+>> +{
+>> +	struct perf_event *event;
+>> +	int ret = x86_schedule_events(cpuc, n, assign);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (cpuc->is_fake)
+>> +		return ret;
+>> +
+>> +	event = cpuc->event_list[n - 1];
+>> +	if (event && is_pebs_counter_event_group(event))
+>> +		intel_pmu_pebs_update_cfg(cpuc, n, assign);
+>> +
+>> +	return 0;
+>> +}
+> 
+> This lit up the WTF'o'meter for a bit. This needs a comment at the very
+> least, but I also hate how this relies on the core code never doing a
+> transaction larger than a single group.
+> 
+> Furthermore, you can have multiple ->schedule_events() calls in a single
+> pmu_disable() section, so why is schedule_events() the right place to do
+> this?
+> 
+> Could it not happen that you add group-a, which has this PEBS_CNTR thing
+> on, computes the fancy new pebs_data_cfg field. Then adds another event,
+> which perturbs the counter placement, does not update the pebs_data_cfg
+> and you're up a creek?
+> > I would've thought that x86_pmu_enable() would be a better place for
+> this -- that's the one place where everything is set up, right before it
+> is made to go.
 
-I agree it would be nice to have these usability improvements.
-But this is also a large change, so I would prefer to merge the basic
-functionality, and then we can do some improvements on top. This is
-also the first time I am touching perf code, there are too many new
-things to learn for me.
+Yes, the x86_pmu_enable() seems a better place for the global setup.
 
-> > If we add it as a new separate mode, I fear it's doomed to be
-> > unknown/unused and people will continue to not realize what they are
-> > profiling, meaning of numbers, and continue to use wrong profiles for
-> > the job.
->
-> > I consider latency/wall-clock profiling as useful and as fundamental
-> > as the current bandwidth profiling for parallel workloads (more or
-> > less all workloads today). Yet we are in 2025 and no profilers out
-> > there support latency profiling. Which suggests to me there is a
-> > fundamental lack of understanding of the matter, so new optional mode
-> > may not work well.
->
-> > If you are interested for context, I used a similar mode (for pprof at
-> > the time) to optimize TensorFlow latency (people mostly care about
-> > latency). All existing profilers said it's 99% highly optimized and
-> > parallelized matrix multiplication, we are done here. Yet, the
-> > wallclock profile said, nope, it's 45% Python interpreter, which
-> > resulted in this fix:
-> > https://github.com/soumith/convnet-benchmarks/commit/605988f847fcf261c2=
-88abc2351597d71a2ee149
-> > Full story and examples of these profiles are here:
-> > https://github.com/dvyukov/perf-load
->
-> Cool, I'm about to start vacation till Feb, 4, so will not be able to
-> test all your work, but its important work that we definetely have to
-> test and help in getting merged.
->
-> Thanks!
->
-> - Arnaldo
+> Only problem seems to be x86_pmu_enable_all() /
+> x86_pmu.enable_all() isn't given the right information, but that should
+> be fixable. Maybe clear cpuc->n_added after calling enable_all() ?
+
+
+Not the x86_pmu_enable_all(). The setup should be done before
+x86_pmu_start(), which update the MSR_PEBS_DATA_CFG.
+
+I will send out a V9 to address it.
+
+Thanks,
+Kan
+
+> 
+> 
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index ba74e1198328..e36bfb95c2a3 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -1308,10 +1308,63 @@ static void adaptive_pebs_record_size_update(void)
+>>  		sz += sizeof(struct pebs_xmm);
+>>  	if (pebs_data_cfg & PEBS_DATACFG_LBRS)
+>>  		sz += x86_pmu.lbr_nr * sizeof(struct lbr_entry);
+>> +	if (pebs_data_cfg & (PEBS_DATACFG_METRICS | PEBS_DATACFG_CNTR)) {
+>> +		sz += sizeof(struct pebs_cntr_header);
+>> +
+>> +		/* Metrics base and Metrics Data */
+>> +		if (pebs_data_cfg & PEBS_DATACFG_METRICS)
+>> +			sz += 2 * sizeof(u64);
+>> +
+>> +		if (pebs_data_cfg & PEBS_DATACFG_CNTR) {
+>> +			sz += hweight64((pebs_data_cfg >> PEBS_DATACFG_CNTR_SHIFT) & PEBS_DATACFG_CNTR_MASK)
+>> +			      * sizeof(u64);
+>> +			sz += hweight64((pebs_data_cfg >> PEBS_DATACFG_FIX_SHIFT) & PEBS_DATACFG_FIX_MASK)
+>> +			      * sizeof(u64);
+> 
+> blergh, when splitting lines the operator goes on the end of the last
+> line. These lines are too long anyway.
+> 
+> Maybe:
+> 
+> #define PEBS_DATACFG_CNTR(x) \
+> 	((x >> PEBS_DATACFG_CNTR_SHIFT) & PEBS_DATACFG_CNTR_MASK)
+> #define PEBS_DATACFG_FIX(x) \
+> 	((x >> PEBS_DATACFG_FIX_SHIFT) & PEBS_DATACFG_FIX_MASK)
+> 
+> 			sz += (hweight64(PEBS_DATACFG_CNTR(pebs_data_cfg)) +
+> 			       hweight64(PEBS_DATACFG_FIX(pebs_data_cfg)))) *
+> 			      sizeof(u64);
+> 
+>> +		}
+>> +	}
+>>  
+>>  	cpuc->pebs_record_size = sz;
+>>  }
+>>  
+>> +static void __intel_pmu_pebs_update_cfg(struct perf_event *event,
+>> +					int idx, u64 *pebs_data_cfg)
+>> +{
+>> +	if (is_metric_event(event)) {
+>> +		*pebs_data_cfg |= PEBS_DATACFG_METRICS;
+>> +		return;
+>> +	}
+>> +
+>> +	*pebs_data_cfg |= PEBS_DATACFG_CNTR;
+>> +
+>> +	if (idx >= INTEL_PMC_IDX_FIXED) {
+>> +		*pebs_data_cfg |= ((1ULL << (idx - INTEL_PMC_IDX_FIXED)) & PEBS_DATACFG_FIX_MASK)
+>> +				  << PEBS_DATACFG_FIX_SHIFT;
+>> +	} else {
+>> +		*pebs_data_cfg |= ((1ULL << idx) & PEBS_DATACFG_CNTR_MASK)
+>> +				  << PEBS_DATACFG_CNTR_SHIFT;
+> 
+> Also yuck. Maybe:
+> 
+> #define PEBS_DATACFG_FIX_BIT(x) \
+> 	(((1ULL << x) & PEBS_DATACFG_FIX_MASK) << PEBS_DATACFG_FIX_SHIFT)
+> 
+> 
+> 	pebs_data_cfg |= PEBS_DATACFG_FIX_BIT(idx - INTEL_PMC_IDX_FIXED);
+> 
+> 
+> 
+>> +	}
+>> +}
+>> +
+> 
+> 
+> 
+
