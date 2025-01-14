@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4E021E0A6
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 23:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B9D222584
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 23:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736896422; cv=none; b=pFUYc7rNiDmCfavQriSwmwVO9UYCRb4IxVh4268H45jJ4LTQFxvHm0cuEWw2vVP5R0K2EpowhkiYqGs/TZpxpdXN9y/JGmz5rwiVLzvfn9qUrxNFlEV9E2R+L0UAsKc/3KymeERdZmCTKpkBIqDgsEONUZk4LNLeMUvQ0qnkymU=
+	t=1736896424; cv=none; b=n5gE+b6/Vw3duEtiBU0QmKJTTUBmk2M0W+il4l4BinIzzK9sovykGwVDMNTnnVU3sUMeD7MGLg49POw/iUza1gnvlOe7IwKly+9+4B0DW7cloSp5xOyMwgx8rX4g6EtCg2yryeUJCg0lBrvHIpl3KUnECmCrAC3EFD2XQZXku6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736896422; c=relaxed/simple;
-	bh=btl4qXL5evLxqcHl1FvdrUG8RJ5rjIlNvcEpLlfshFg=;
+	s=arc-20240116; t=1736896424; c=relaxed/simple;
+	bh=TK5jsPUddoVqcWXgIyzdTH/6UP97uh46LEr347Po1cA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=i5OLrdTKk3aLu4TzDBKe4FEIvD7TD6p8RZZ2VsLnEk6ERnA+XxcxD9UadfySigV8/sTd66Vo6GQZG7XGX1TyUeud6N2hPkP8pOWDDaFiHhu9oLE4gn9j0OmCwJdxNyI4BQx5iKE4kCpn89cFdEVoo4rzOZM3kPxBtDi3IVzKah0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1cHF8amj; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=jGjaVgBJVtnppLrFkJwR+XPtxIo4s1+i6iKL4so2YoKS1oQmOASLDwcB5o0rY/z5vGOJgURBIvBeJ1jNgVzb3aiXV0SlwrYZE5PpGcdwG4rnOOgL8LEqypwXbZQ+ZWoSVxQ5tmrh/SmMjWTStGQFast12+4K8kddvGsJpWXOk9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1ER2/FXL; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1cHF8amj"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3c61a11a40so15130580276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 15:13:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1ER2/FXL"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e53bf9e60e4so14743749276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 15:13:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736896420; x=1737501220; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736896422; x=1737501222; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua/j8ZQhkKWj7ygdra9SGaNhS8kdmsUQSxwWnqi04Hs=;
-        b=1cHF8amjmE1GxbH0Yu03jTHlhs1n8Yx79kNjQ6wbS9a9pv1FVDIROweeW71P3Ekvyt
-         XEzE0cLO1TBzGf5BPcfmyMjNkX8LfSk43ndV2g6GVjk96Gxv1ju/0XCazUvKl6NOcrk0
-         u35OhrDySrMhmNOMxwpJ5H5agen8qfIQ0PhFLriYe3Rh8XwjcPzlUe4e9kRRnoYVMKPc
-         Rq5BvD1PViyWcINcSoAponIhGKK/Y/8Bk4ByKlpoa7JEf5bW4PxuNeft3GejPYtZHGt1
-         Pr6e2e5IpAiVXGJFBhX+b7ugiUhjEBSnknG2m3+a5mcNSZIYR3iyfeizL+VPISlrf82D
-         LlMA==
+        bh=N1xjM3wphMNYu1Ks6TVH7fA4hJ036I4dNmv6CTOW45Q=;
+        b=1ER2/FXL/7UCxzaN40Ds9MA0VVhLmxOF9U3yhHXxo9UVSLwzb9CGOvoTMJXeqT0/69
+         XE8bIYFcAkVewOnOn1U8QV0k3l9lttW4VeN6SkULz854PJ0GDJWN9jT4tE2g49W5/ryx
+         84JRrNtX6ozGWiF6uW1pINvxN/YQVU1gt+4+FZFb9I3iTreq4NKzycEy25d4NbhvBgR5
+         GJJKyJq3jIqhBn9mHcPfBfARQVIApC2Y/RI+QJgwucbHYze/aha84EjIz1wpxGpGiyYC
+         9X/RDG3wXN/RUWXuUjFiQzgQW4f6sAysfMIQZvJhL6XZeItw/JyQYNii65ZhabO/YLFr
+         QAIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736896420; x=1737501220;
+        d=1e100.net; s=20230601; t=1736896422; x=1737501222;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua/j8ZQhkKWj7ygdra9SGaNhS8kdmsUQSxwWnqi04Hs=;
-        b=EgndflyqbmeX6Kf7JsR0THoQIlmWSSRB6CmSGbkul1ieUJbQ4d6egs96UFopFBl0bj
-         tvpQbujg/of9Noq7a35FCMdKBRb1/P/DfaKkCzfiH/ELEc99kKwyXv5UrAcvP1CVhvlT
-         KzJIywB3RZYmp169wj8cXPzc96D1aTTo6waXny94eJvT/O5gD8aZ/RYwOcgdEMp3Mk+4
-         5YpH+cBN0x01fLeHU2nNYwaFylE+4CJ8c7PGqpwiIc1vxxUypfui+BXf2uTZxorKmblx
-         0DZUpdKBQ8G2zdmfqTe789rm73GtcmOOcaP+s8g+jb4GcjamIo46hZC0oYNBgtYU8+kj
-         NQHg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1Cw1ln9umWGXsLhpovuU9TUpKjpiYdd6YUQA4l7WE3BWFanFAMjgL54TdEPnSfnRKoZYOGeMpky2ncQzuVOPg@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl8t4I3gteWsiJjBng8mu64gVMiv0FvREphVfJQqPUHx2f7ZxO
-	y0PEzqNk8HGyBeIp1T7fFM+9S0rps9nWY9d0FR6HMaxU49vtYE6l51MCC3+yI5U2Lpfdd4YbQ4R
-	VbPLtrw==
-X-Google-Smtp-Source: AGHT+IGmnTme9h/rpITxWUBz+vW/Nmh8/Ox6gBif+8JaTIBSnE+1wJDVCGBgW9tRmSZ2O4/OTmEwKTVVeGk3
+        bh=N1xjM3wphMNYu1Ks6TVH7fA4hJ036I4dNmv6CTOW45Q=;
+        b=KFxnqXb7REnlbERxfSaVNs2BMOz7MCwcEGC2u12SdEIzYi+nd9hl6ScaGi3/Bnzxe3
+         O7tZtNkFSv+zL91N8SQoG7hwljzn/FF6ClONeC3r1UyUiqxMFpqLI3azxD6iq+BxVxNr
+         PORPC5ny2BeRM4aY7O50Mi3INioWg/axfyEMP9oGsWjOcvqN5RF1bOhcYigLXDodQfmo
+         JYclJ4Pdsy5r5On53KpLQKSVkBHREaKHZlaTaB4+i+29gT6f5RP6qf9KqnrvNSrjggmO
+         7TN3nZsvAketvb6QQg+SRQRLWih1IfBpnEE3GCN4lnVyA3jlONHVePbss/KwxSGnIRNA
+         5hhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt5BdTXDOzfBwr4aTOjsT5LIXLtlL17dBmEkRVHbwG3apQcMsqH9XA1qoYmXBvfSwRE8la4xfhB4UUPI//xHmm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqsbdFjGE31cX3FWAnH70eOqm3jY2jsuhPHLJWcbIQZuZbDnS1
+	JrAI5YJYuyZ6e1/zGAKQ4GPtPYlrrd8k5X0eo/U+N/6MPWp9eXd68BXztYCPmhed/aK56yfuoYZ
+	vOz9ngg==
+X-Google-Smtp-Source: AGHT+IE6vfJevlH8r7yu7Dpu1i9qXKvuoPLqRHx5pq+3+JCv3a3eukT2BmKSixvpexe5/MBkmW1GzX281wQl
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:b3e8:96da:3fa1:5494])
- (user=irogers job=sendgmr) by 2002:a5b:642:0:b0:e39:6fdc:5567 with SMTP id
- 3f1490d57ef6-e54eddd285bmr71645276.0.1736896419977; Tue, 14 Jan 2025 15:13:39
+ (user=irogers job=sendgmr) by 2002:a25:c7d4:0:b0:e57:3e87:8c17 with SMTP id
+ 3f1490d57ef6-e573e878d01mr27597276.5.1736896422209; Tue, 14 Jan 2025 15:13:42
  -0800 (PST)
-Date: Tue, 14 Jan 2025 15:13:30 -0800
+Date: Tue, 14 Jan 2025 15:13:31 -0800
 In-Reply-To: <20250114231332.13419-1-irogers@google.com>
-Message-Id: <20250114231332.13419-3-irogers@google.com>
+Message-Id: <20250114231332.13419-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250114231332.13419-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Subject: [PATCH v1 2/4] perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
+Subject: [PATCH v1 3/4] perf stat: Don't merge counters purely on name
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,289 +74,60 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than scanning core or all PMUs, allow pmu_read_sysfs to read
-some combination of core, other, hwmon and tool PMUs. The PMUs that
-should be read and are already read are held as bitmaps. It is known
-that a "hwmon_" prefix is necessary for a hwmon PMU's name, similarly
-with "tool", so only scan those PMUs in situations the PMU name or the
-PMU's type number make sense to.
+Counter merging was added in commit 942c5593393d ("perf stat: Add
+perf_stat_merge_counters()"), however, it merges events with the same
+name on different PMUs regardless of whether the different PMUs are
+actually of the same type (ie they differ only in the suffix on the
+PMU). For hwmon events there may be a temp1 event on every PMU, but
+the PMU names are all unique and don't differ just by a suffix. The
+merging is over eager and will merge all the hwmon counters together
+meaning an aggregated and very large temp1 value is shown. The same
+would be true for say cache events and memory controller events where
+the PMUs differ but the event names are the same.
 
-The number of openat system calls reduces from 276 to 98 for a hwmon
-event. The number of openats for regular perf events isn't changed.
+Fix the problem by correctly saying two PMUs alias when they differ
+only by suffix.
 
+Note, there is an overlap with evsel's merged_stat with aggregation
+and the evsel's metric_leader where aggregation happens for metrics.
+
+Fixes: 942c5593393d ("perf stat: Add perf_stat_merge_counters()")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.h  |   2 +
- tools/perf/util/pmus.c | 144 ++++++++++++++++++++++++++---------------
- 2 files changed, 95 insertions(+), 51 deletions(-)
+ tools/perf/util/stat.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index dbed6c243a5e..edd36c20aedc 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -37,6 +37,8 @@ struct perf_pmu_caps {
- };
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 7c2ccdcc3fdb..cfdb6d55df9b 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -535,7 +535,10 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
  
- enum {
-+	PERF_PMU_TYPE_PE_START    = 0,
-+	PERF_PMU_TYPE_PE_END      = 0xFFFEFFFF,
- 	PERF_PMU_TYPE_HWMON_START = 0xFFFF0000,
- 	PERF_PMU_TYPE_HWMON_END   = 0xFFFFFFFD,
- 	PERF_PMU_TYPE_TOOL = 0xFFFFFFFE,
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b493da0d22ef..3e3ffafcad71 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -37,10 +37,23 @@
-  */
- static LIST_HEAD(core_pmus);
- static LIST_HEAD(other_pmus);
--static bool read_sysfs_core_pmus;
--static bool read_sysfs_all_pmus;
-+enum perf_tool_pmu_type {
-+	PERF_TOOL_PMU_TYPE_PE_CORE,
-+#define PERF_TOOL_PMU_TYPE_PE_CORE_MASK (1 << PERF_TOOL_PMU_TYPE_PE_CORE)
-+	PERF_TOOL_PMU_TYPE_PE_OTHER,
-+#define PERF_TOOL_PMU_TYPE_PE_OTHER_MASK (1 << PERF_TOOL_PMU_TYPE_PE_OTHER)
-+	PERF_TOOL_PMU_TYPE_TOOL,
-+#define PERF_TOOL_PMU_TYPE_TOOL_MASK (1 << PERF_TOOL_PMU_TYPE_TOOL)
-+	PERF_TOOL_PMU_TYPE_HWMON,
-+#define PERF_TOOL_PMU_TYPE_HWMON_MASK (1 << PERF_TOOL_PMU_TYPE_HWMON)
-+#define PERF_TOOL_PMU_TYPE_ALL_MASK (PERF_TOOL_PMU_TYPE_PE_CORE_MASK |	\
-+					PERF_TOOL_PMU_TYPE_PE_OTHER_MASK | \
-+					PERF_TOOL_PMU_TYPE_TOOL_MASK |	\
-+					PERF_TOOL_PMU_TYPE_HWMON_MASK)
-+};
-+static unsigned int read_pmu_types;
- 
--static void pmu_read_sysfs(bool core_only);
-+static void pmu_read_sysfs(unsigned int to_read_pmus);
- 
- size_t pmu_name_len_no_suffix(const char *str)
+ 	return 0;
+ }
+-/* events should have the same name, scale, unit, cgroup but on different PMUs */
++/*
++ * Events should have the same name, scale, unit, cgroup but on different core
++ * PMUs or on different but matching uncore PMUs.
++ */
+ static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
  {
-@@ -102,8 +115,7 @@ void perf_pmus__destroy(void)
+ 	if (strcmp(evsel__name(evsel_a), evsel__name(evsel_b)))
+@@ -553,7 +556,13 @@ static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
+ 	if (evsel__is_clock(evsel_a) != evsel__is_clock(evsel_b))
+ 		return false;
  
- 		perf_pmu__delete(pmu);
- 	}
--	read_sysfs_core_pmus = false;
--	read_sysfs_all_pmus = false;
-+	read_pmu_types = 0;
+-	return evsel_a->pmu != evsel_b->pmu;
++	if (evsel_a->pmu == evsel_b->pmu || evsel_a->pmu == NULL || evsel_b->pmu == NULL)
++		return false;
++
++	if (evsel_a->pmu->is_core)
++		return evsel_b->pmu->is_core;
++
++	return pmu__name_match(evsel_a->pmu, evsel_b->pmu->name);
  }
  
- static struct perf_pmu *pmu_find(const char *name)
-@@ -129,6 +141,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	struct perf_pmu *pmu;
- 	int dirfd;
- 	bool core_pmu;
-+	unsigned int to_read_pmus = 0;
- 
- 	/*
- 	 * Once PMU is loaded it stays in the list,
-@@ -139,11 +152,11 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	if (pmu)
- 		return pmu;
- 
--	if (read_sysfs_all_pmus)
-+	if (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
- 		return NULL;
- 
- 	core_pmu = is_pmu_core(name);
--	if (core_pmu && read_sysfs_core_pmus)
-+	if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
- 		return NULL;
- 
- 	dirfd = perf_pmu__event_source_devices_fd();
-@@ -151,15 +164,27 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 			       /*eager_load=*/false);
- 	close(dirfd);
- 
--	if (!pmu) {
--		/*
--		 * Looking up an inidividual PMU failed. This may mean name is
--		 * an alias, so read the PMUs from sysfs and try to find again.
--		 */
--		pmu_read_sysfs(core_pmu);
-+	if (pmu)
-+		return pmu;
-+
-+	/* Looking up an individual perf event PMU failed, check if a tool PMU should be read. */
-+	if (!strncmp(name, "hwmon_", 6))
-+		to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
-+	else if (!strcmp(name, "tool"))
-+		to_read_pmus |= PERF_TOOL_PMU_TYPE_TOOL_MASK;
-+
-+	if (to_read_pmus) {
-+		pmu_read_sysfs(to_read_pmus);
- 		pmu = pmu_find(name);
-+		if (pmu)
-+			return pmu;
- 	}
--	return pmu;
-+	/* Read all necessary PMUs from sysfs and see if the PMU is found. */
-+	to_read_pmus = PERF_TOOL_PMU_TYPE_PE_CORE_MASK;
-+	if (!core_pmu)
-+		to_read_pmus |= PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
-+	pmu_read_sysfs(to_read_pmus);
-+	return pmu_find(name);
- }
- 
- static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
-@@ -176,11 +201,11 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	if (pmu)
- 		return pmu;
- 
--	if (read_sysfs_all_pmus)
-+	if (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
- 		return NULL;
- 
- 	core_pmu = is_pmu_core(name);
--	if (core_pmu && read_sysfs_core_pmus)
-+	if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
- 		return NULL;
- 
- 	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name,
-@@ -197,52 +222,60 @@ static int pmus_cmp(void *priv __maybe_unused,
- }
- 
- /* Add all pmus in sysfs to pmu list: */
--static void pmu_read_sysfs(bool core_only)
-+static void pmu_read_sysfs(unsigned int to_read_types)
- {
--	int fd;
--	DIR *dir;
--	struct dirent *dent;
- 	struct perf_pmu *tool_pmu;
- 
--	if (read_sysfs_all_pmus || (core_only && read_sysfs_core_pmus))
-+	if ((read_pmu_types & to_read_types) == to_read_types) {
-+		/* All requested PMU types have been read. */
- 		return;
-+	}
- 
--	fd = perf_pmu__event_source_devices_fd();
--	if (fd < 0)
--		return;
-+	if (to_read_types & (PERF_TOOL_PMU_TYPE_PE_CORE_MASK | PERF_TOOL_PMU_TYPE_PE_OTHER_MASK)) {
-+		int fd = perf_pmu__event_source_devices_fd();
-+		DIR *dir;
-+		struct dirent *dent;
-+		bool core_only = (to_read_types & PERF_TOOL_PMU_TYPE_PE_OTHER_MASK) == 0;
- 
--	dir = fdopendir(fd);
--	if (!dir) {
--		close(fd);
--		return;
--	}
-+		if (fd < 0)
-+			goto skip_pe_pmus;
- 
--	while ((dent = readdir(dir))) {
--		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
--			continue;
--		if (core_only && !is_pmu_core(dent->d_name))
--			continue;
--		/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_pmus): */
--		perf_pmu__find2(fd, dent->d_name);
--	}
-+		dir = fdopendir(fd);
-+		if (!dir) {
-+			close(fd);
-+			goto skip_pe_pmus;
-+		}
- 
--	closedir(dir);
--	if (list_empty(&core_pmus)) {
-+		while ((dent = readdir(dir))) {
-+			if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
-+				continue;
-+			if (core_only && !is_pmu_core(dent->d_name))
-+				continue;
-+			/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_pmus): */
-+			perf_pmu__find2(fd, dent->d_name);
-+		}
-+
-+		closedir(dir);
-+	}
-+skip_pe_pmus:
-+	if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_empty(&core_pmus)) {
- 		if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
- 			pr_err("Failure to set up any core PMUs\n");
- 	}
- 	list_sort(NULL, &core_pmus, pmus_cmp);
--	if (!core_only) {
-+
-+	if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
-+	    (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
- 		tool_pmu = perf_pmus__tool_pmu();
- 		list_add_tail(&tool_pmu->list, &other_pmus);
--		perf_pmus__read_hwmon_pmus(&other_pmus);
- 	}
-+	if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
-+	    (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
-+		perf_pmus__read_hwmon_pmus(&other_pmus);
-+
- 	list_sort(NULL, &other_pmus, pmus_cmp);
--	if (!list_empty(&core_pmus)) {
--		read_sysfs_core_pmus = true;
--		if (!core_only)
--			read_sysfs_all_pmus = true;
--	}
-+
-+	read_pmu_types |= to_read_types;
- }
- 
- static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
-@@ -263,12 +296,21 @@ static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
- 
- struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
- {
-+	unsigned int to_read_pmus;
- 	struct perf_pmu *pmu = __perf_pmus__find_by_type(type);
- 
--	if (pmu || read_sysfs_all_pmus)
-+	if (pmu || (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK))
- 		return pmu;
- 
--	pmu_read_sysfs(/*core_only=*/false);
-+	if (type >= PERF_PMU_TYPE_PE_START && type <= PERF_PMU_TYPE_PE_END) {
-+		to_read_pmus = PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
-+			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
-+	} else if (type >= PERF_PMU_TYPE_HWMON_START && type <= PERF_PMU_TYPE_HWMON_END) {
-+		to_read_pmus = PERF_TOOL_PMU_TYPE_HWMON_MASK;
-+	} else {
-+		to_read_pmus = PERF_TOOL_PMU_TYPE_TOOL_MASK;
-+	}
-+	pmu_read_sysfs(to_read_pmus);
- 	pmu = __perf_pmus__find_by_type(type);
- 	return pmu;
- }
-@@ -282,7 +324,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
- 	bool use_core_pmus = !pmu || pmu->is_core;
- 
- 	if (!pmu) {
--		pmu_read_sysfs(/*core_only=*/false);
-+		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
- 		pmu = list_prepare_entry(pmu, &core_pmus, list);
- 	}
- 	if (use_core_pmus) {
-@@ -300,7 +342,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
- struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
- {
- 	if (!pmu) {
--		pmu_read_sysfs(/*core_only=*/true);
-+		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_PE_CORE_MASK);
- 		return list_first_entry_or_null(&core_pmus, typeof(*pmu), list);
- 	}
- 	list_for_each_entry_continue(pmu, &core_pmus, list)
-@@ -316,7 +358,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 	const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
- 
- 	if (!pmu) {
--		pmu_read_sysfs(/*core_only=*/false);
-+		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
- 		pmu = list_prepare_entry(pmu, &core_pmus, list);
- 	} else
- 		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+ static void evsel__merge_aliases(struct evsel *evsel)
 -- 
 2.48.0.rc2.279.g1de40edade-goog
 
