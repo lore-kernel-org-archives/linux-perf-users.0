@@ -1,247 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C784622ACF7;
-	Tue, 14 Jan 2025 03:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F99168DA
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 04:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736827004; cv=none; b=E++1iwLLno94Djoak7D5dljDdeHZH43yCfoqMnxrH7uMmdHY+ZyAdRmwEXHBEoUtgGDX4/6qJvoMD4Ei5Af7CohHDjtxzU8XwGkaLGML5d0P5qaQUshVfsRdi8so55p6G4Q9hLUjLji9zDGusx76t0dU1olli/7yvleo8qrg804=
+	t=1736827804; cv=none; b=Kgj6mU9rM5b7iBsW854AWlYV6zLUabKyRHT1LqBcp9/dsdkqBuy4T4aY1YKQ0sAl9Cln83OyzGHn2khIjZYWPFjM2M4K+gyLHHZkEPETO+zA6T3e247C/8eoH7HTG58DCTCTmDdJX4oAT6Bk0MALCKt832fHotCUkCcq4qwqC8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736827004; c=relaxed/simple;
-	bh=nCLsJ1F8/J91WhpGj9jw+7bQhIyXl9La0vEZdo0ScwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3ipumDJBvnQcdogPCkqjHgt0Dg2ezsWFls+ktFJmWrxRJS/LcJ3/cHCoyYAbH2MENKYx5Lmlh2bJx5CUYL0w1AbeoLM7dsN5YijwHUePiO+0pXalaJkFfhPuaM/FZcQe6du5//BV7LVfH2VVae2vrqo8T6Wzk4rUNW0qT3jsyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAjR9AdN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736827804; c=relaxed/simple;
+	bh=qVkvgMENHI8flH4JDjkYtPlC4BZf0FntYuDOVZdFbt0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JApG3JOpPNkA/HlEoRTavDJed5QoOq8sVe8wDeHqMHwQJNB/kO887sCf4v20w3vonMKGsy0cXGD8gUv4kPqdvMvVj0VJiWqmy3gMPSeo8u3j/PwIGltrRvHdieFvW7oz0BbY55kLT2h841oZkFLAjDqMCyd7Ey6gkAdy9THh4d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/H4nN+i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAjR9AdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD82AC4CEE3;
-	Tue, 14 Jan 2025 03:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736827004;
-	bh=nCLsJ1F8/J91WhpGj9jw+7bQhIyXl9La0vEZdo0ScwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vAjR9AdNT7f90fIdNSBZRYlRvghpUpvpnr5sJFXUEIG1Jq9lNY3M+OXx7uaD740fy
-	 c3nSTYS0GgyK4tC4eK5jXyMfUfVN/FIyi8sZvh4f4FC88zfiyb1S+y5XzCVSR1NSfb
-	 rmYScPsPfjX0FZLYzyrOPGFtAys1QzGRhHyxYHm+Nf09MQZcSc0NbqgWnW40ulJRlT
-	 ZJ2vf1Ou2boGqerBlMcBj7fC1MKZx5XPEUiiJSSso6skrxec7x2Iomc2BHq8AxAwGx
-	 Ue8MnsK1frpXsnoUq8MoSWEEaYV1AKd1nIcxm/zaoP9A0RdK7InflGFOdzbPJjintr
-	 36hQppeB+8ZIQ==
-Date: Mon, 13 Jan 2025 19:56:42 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] perf lock: Report owner stack in usermode
-Message-ID: <Z4Xgen-HsfcvUuGN@google.com>
-References: <20250113052220.2105645-1-ctshao@google.com>
- <20250113052220.2105645-5-ctshao@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/H4nN+i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736827801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y50vhiuQ0vt1wwiKIfMh8A/carLd1iG8aN39/Ha5s94=;
+	b=U/H4nN+i8jUHhX8sjDAgWs1X2uAvYMUcjP5w1tuGB5/H2iNHP+oVkbbIqFs35ofJV2XkLn
+	jezodL2U0yfnOPxDO68vlMSKiB+R9xAIU/MdzxsHGzlWMCDDJ+hg1M+zgcL90jkrKyjWQP
+	8CbkON+ppuu4aKEfXTGnCpOaY0oy8m8=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-IIBofCr_OiWpzr416FlDlA-1; Mon, 13 Jan 2025 23:10:00 -0500
+X-MC-Unique: IIBofCr_OiWpzr416FlDlA-1
+X-Mimecast-MFC-AGG-ID: IIBofCr_OiWpzr416FlDlA
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2f129f7717fso9239209a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jan 2025 20:10:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736827799; x=1737432599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y50vhiuQ0vt1wwiKIfMh8A/carLd1iG8aN39/Ha5s94=;
+        b=QMb2zvo3G1UYc68lKAMFo+YdbwpjafLOJWRjpwPSxENp54nU8Sk0nypDAiGnqJjgzo
+         /frvKNUILZis8pYsFM+sWg4OJrlrBrUru77G7cb2972HZD9dqkldj89EPvrnky4uuM4h
+         s+x2UpZ/fYilsU2DVang9jYxvyLzV7iDjHQL9uOpS3QzKl7G328ggrWo9o5C23L5LsPF
+         VTSDniJEsCqb54o73nTdTntwfeCSkspA8+fmatesr/7U1bJIuw6+895aZ9xOmKO1gCLA
+         JtNHAIvsqc3AE1vBy0IE+hUGfb4nHyFk3Wyn0W14sxQD0wH1RsXDbkAkyVMaSI30OICO
+         EGoA==
+X-Gm-Message-State: AOJu0Yzdg3rzEyjpbvNgFnOcDHOAxIBzWBXMhasPRoEsNPxiJY8p/tyO
+	5biDdYbeJRpSG/ln/KihzPPUtuYXe6V7PDA6bTTwFqL4dW3LuSQCCpZa1RusIfeWs1nt6tiwW9+
+	uPs0lxR3KqTn9p6Npxd0V7O3vVkmj7PclSTLB09U67zshxLShjDtLKZfhQukGG1hcX85Ss4Ze25
+	ur1FzRt58zXssw4o/nlmtKdKSbTt4/gj2JfH6acTPeWsVykCOKU+U/CZQ6Mw==
+X-Gm-Gg: ASbGncsPOncwISVAreFjgdKk73Jif/6ZHtwuBK+2KXCKH5ibNGM5y8Un9yg/dtbRYw5
+	fK1q+XiWTmr8MZhLSmU8dZkKqcTtzK+BeYZP/WMg=
+X-Received: by 2002:a17:90b:3a0e:b0:2ee:45fe:63b5 with SMTP id 98e67ed59e1d1-2f548e98716mr31776886a91.3.1736827798875;
+        Mon, 13 Jan 2025 20:09:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHSPMCUHswVKpHcKrdtGDEaAjZA2fPmoSZJmmzJy8rSA1HXFZeDACIerzeftoOHXCnVqKt+bDbktG2Ie1bbSiM=
+X-Received: by 2002:a17:90b:3a0e:b0:2ee:45fe:63b5 with SMTP id
+ 98e67ed59e1d1-2f548e98716mr31776861a91.3.1736827798530; Mon, 13 Jan 2025
+ 20:09:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250113052220.2105645-5-ctshao@google.com>
+References: <CAATMXfnhT-Uqp9rfBGZesjYSmbn8UAcyXzuhkhM8Uvg7wCX5Dg@mail.gmail.com>
+ <CAH0uvoiJ=F3U9ib7_pmUPttMcSaSYkmD8Pi9qTLrtWHxEw9fKQ@mail.gmail.com>
+In-Reply-To: <CAH0uvoiJ=F3U9ib7_pmUPttMcSaSYkmD8Pi9qTLrtWHxEw9fKQ@mail.gmail.com>
+From: Qiao Zhao <qzhao@redhat.com>
+Date: Tue, 14 Jan 2025 12:09:47 +0800
+X-Gm-Features: AbW1kvYq7-xORwKlZ8HLiJVgSAQG5L8YHl818ufZo8pwT9TIKCd5l3g0aW7xIv4
+Message-ID: <CAATMXfnHzRG+i0DWBuMG17n-NgQOkQHd2JCU0bUjNrvnzuMaEg@mail.gmail.com>
+Subject: Re: perf record "--off-cpu" options failed on 1 [v]cpu machine
+To: Howard Chu <howardchu95@gmail.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>, Michael Petlan <mpetlan@redhat.com>, 
+	irogers@google.com, Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 12, 2025 at 09:20:17PM -0800, Chun-Tse Shao wrote:
-> Parse `owner_lock_stat` into a rb tree, and report owner lock stats with
-> stack trace in order.
-> 
-> Example output:
->   $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex-spin -E3 perf bench sched pipe
->   ...
->    contended   total wait     max wait     avg wait         type   caller
-> 
->          171      1.55 ms     20.26 us      9.06 us        mutex   pipe_read+0x57
->                           0xffffffffac6318e7  pipe_read+0x57
->                           0xffffffffac623862  vfs_read+0x332
->                           0xffffffffac62434b  ksys_read+0xbb
->                           0xfffffffface604b2  do_syscall_64+0x82
->                           0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
->           36    193.71 us     15.27 us      5.38 us        mutex   pipe_write+0x50
->                           0xffffffffac631ee0  pipe_write+0x50
->                           0xffffffffac6241db  vfs_write+0x3bb
->                           0xffffffffac6244ab  ksys_write+0xbb
->                           0xfffffffface604b2  do_syscall_64+0x82
->                           0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
->            4     51.22 us     16.47 us     12.80 us        mutex   do_epoll_wait+0x24d
->                           0xffffffffac691f0d  do_epoll_wait+0x24d
->                           0xffffffffac69249b  do_epoll_pwait.part.0+0xb
->                           0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
->                           0xfffffffface604b2  do_syscall_64+0x82
->                           0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
-> 
->   === owner stack trace ===
-> 
->            3     31.24 us     15.27 us     10.41 us        mutex   pipe_read+0x348
->                           0xffffffffac631bd8  pipe_read+0x348
->                           0xffffffffac623862  vfs_read+0x332
->                           0xffffffffac62434b  ksys_read+0xbb
->                           0xfffffffface604b2  do_syscall_64+0x82
->                           0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
->   ...
-> 
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  tools/perf/builtin-lock.c             | 20 ++++++++++++-
->  tools/perf/util/bpf_lock_contention.c | 41 +++++++++++++++++++++++++++
->  tools/perf/util/lock-contention.h     |  2 ++
->  3 files changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index f9b7620444c0..0dfec175b25b 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -42,6 +42,7 @@
->  #include <linux/zalloc.h>
->  #include <linux/err.h>
->  #include <linux/stringify.h>
-> +#include <linux/rbtree.h>
->  
->  static struct perf_session *session;
->  static struct target target;
-> @@ -1926,6 +1927,23 @@ static void print_contention_result(struct lock_contention *con)
->  			break;
->  	}
->  
-> +	if (con->owner && con->save_callstack) {
-> +		struct rb_root root = RB_ROOT;
-> +
-> +
+Hi Howard,
 
-A duplicate new line.
+Thanks for your response and explantion!
 
+On Mon, Jan 13, 2025 at 11:44=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
+ wrote:
+>
+> Hello Qiao,
+>
+> On Sun, Jan 12, 2025 at 6:35=E2=80=AFPM Qiao Zhao <qzhao@redhat.com> wrot=
+e:
+> >
+> > Hi all,
+> >
+> > I meet this problem when running the perf test "record_offcpu.sh" on 1
+> > [v]cpu machine:
+> > ---
+> > # ./record_offcpu.sh
+> > Checking off-cpu privilege
+> > Basic off-cpu test
+> > Error:
+> > The /tmp/__perf_test.perf.data.mjj
+> > FB data has no samples!
+> > Basic off-cpu test [Failed missing output]
+> > ---
+> >
+> > The command executed is "perf record --off-cpu -e dummy -o ${perfdata}
+> > sleep 1" that can not
+> > record any samples:
+> > ---
+> > # perf record --off-cpu -e dummy sleep 1
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.008 MB perf.data ]
+> >
+> > # perf report --stdio
+> > Error:
+> > The perf.data data has no samples!
+> > # To display the perf.data header info, please use
+> > --header/--header-only options.
+> > #
+> > ---
+> >
+> > I also tested Hardware event 'cycles', and got the same results.
+>
+> Are you saying that you ran
+> ```
+> perf record --off-cpu -e cycles sleep 1
+> ```
+> And got no samples? The 'off-cpu' option collects samples in a BPF map
+> which is separated from the usual perf ring buffer, the latter is used
+> to collecting the cycles event. If perf record --off-cpu -e cycles
+> sleep 1 doesn't collect samples then perf record -e cycles sleep 1
+> shouldn't collect any samples either.
 
-> +		if (symbol_conf.field_sep)
-> +			fprintf(lock_output, "# owner stack trace:\n");
-> +		else
-> +			fprintf(lock_output, "\n=== owner stack trace ===\n\n");
-> +		while ((st = pop_owner_stack_trace(con)))
-> +			insert_to(&root, st, compare);
-> +
-> +		while ((st = pop_from(&root))) {
-> +			print_lock_stat(con, st);
-> +			zfree(st);
-> +		}
-> +	}
-> +
->  	if (print_nr_entries) {
->  		/* update the total/bad stats */
->  		while ((st = pop_from_result())) {
-> @@ -2071,7 +2089,7 @@ static int check_lock_contention_options(const struct option *options,
->  		}
->  	}
->  
-> -	if (show_lock_owner)
-> +	if (show_lock_owner && !verbose)
->  		show_thread_stats = true;
+Understand! Thank you!
 
-No, I don't think -v should control this.  Let's change the semantic not
-to imply --threads anymore.  I think you can simply delete this code.
-Users need to specify -t/--threads option for the old behavior.  Hmm..
-maybe we can show some warnings.
+>
+> >
+> > But when test the Tracepoint event "sched:sched_switch", it works and
+> > can get the samples:
+> > ---
+> > # perf record --off-cpu -e sched:sched_switch sleep 1
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.009 MB perf.data (2 samples) ]
+>
+> There are two samples. Can you please check if there is an offcpu-time
+> sample in this perf.data file? Specifically:
+> ```
+> perf script | grep offcpu-time
 
-	if (show_lock_owner && !show_thread_stats) {
-		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
-		pr_warning("Please use -t option too to keep the old behavior.\n");
-	}
+Command "perf script | grep offcpu-time' did not show any
+"offcpu-time" sample in perf.data.
+btw, in test case "record_offcpu.sh" use the 'perf evlist' to list
+samples 'offcpu-time'.
+# perf script | grep offcpu-time
+# perf evlist | grep offcpu-time
+offcpu-time
 
-Can you please update the documentation of the -o/--lock-owner option
-too?
+> ```
+>
+> If there isn't one, can you please run:
+> ```
+> perf record --off-cpu -a
+> ```
+>
+> and leave it running for a couple of seconds? Then, run:
+> ```
+> perf script | grep offcpu-time
+> ```
+> to see if any offcpu-time samples appear.
 
->  
->  	return 0;
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index c9c58f243ceb..a63d5ffac386 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -414,6 +414,47 @@ static const char *lock_contention_get_name(struct lock_contention *con,
->  	return name_buf;
->  }
->  
-> +struct lock_stat *pop_owner_stack_trace(struct lock_contention *con)
-> +{
-> +	int fd;
-> +	u64 *stack_trace;
-> +	struct contention_data data = {};
-> +	size_t stack_size = con->max_stack * sizeof(*stack_trace);
-> +	struct lock_stat *st;
-> +	char name[KSYM_NAME_LEN];
-> +
-> +	fd = bpf_map__fd(skel->maps.owner_lock_stat);
-> +
-> +	stack_trace = zalloc(stack_size);
-> +	if (stack_trace == NULL)
-> +		return NULL;
-> +
-> +	if (bpf_map_get_next_key(fd, NULL, stack_trace))
-> +		return NULL;
-> +
-> +	bpf_map_lookup_elem(fd, stack_trace, &data);
-> +	st = zalloc(sizeof(struct lock_stat));
+Yes, when use '-a', 'perf script' can show the offcpu-time samples.
+# perf record --off-cpu -a   <--- C-C after 5 seconds
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.139 MB perf.data (91 samples) ]
+# perf script | grep offcpu-time
+tuned     913 [000] 18446744069.414584: 2000177867 offcpu-time:
+tuned     700 [000] 18446744069.414584: 2000204356 offcpu-time:
+perf    5865 [000] 18446744069.414584: 2780030394 offcpu-time:
+sshd    5385 [000] 18446744069.414584:     163718 offcpu-time:
+perf    5866 [000] 18446744069.414584: 1001042294 offcpu-time:
 
-You need to check the error and handle it properly.
+>
+> I suspect that it might have something to do with BPF, although kernel
+> version 5.14 includes all the conditions necessary for perf record
+> --off-cpu to function properly. Can you please check if the BPF maps
+> are working as expected by using bpftool? That is to say while
+> running:
+> ```
+> perf record --off-cpu -a
+> ```
+> Check the bpf map:
+> ```
+> bpftool map | grep -E "stacks|off_cpu|tstamp"
 
+Yes, as you said, run the "perf record --off-cpu -a" in terminal, and
+run bpftool map:
+# bpftool map | grep -E "stacks|off_cpu|tstamp"
+228: stack_trace  name stacks  flags 0x0
+229: task_storage  name tstamp  flags 0x1
+230: hash  name off_cpu  flags 0x0
+234: array  name off_cpu_.bss  flags 0x400
+235: array  name off_cpu_.rodata  flags 0x480
+236: array  name off_cpu_.data  flags 0x400
 
-> +
-> +	strcpy(name, stack_trace[0] ? lock_contention_get_name(con, NULL,
-> +							       stack_trace, 0) :
-> +				      "unknown");
-> +
-> +	st->name = strdup(name);
+I can see the "stacks" and "off_cpu" flags by bpftool map.
 
-Why do you copy and strdup()?  Anyway please check the error.
+- Qiao
 
 
-> +	st->flags = data.flags;
-> +	st->nr_contended = data.count;
-> +	st->wait_time_total = data.total_time;
-> +	st->wait_time_max = data.max_time;
-> +	st->wait_time_min = data.min_time;
-> +	st->callstack = memdup(stack_trace, stack_size);
+> ```
+>
+> It's supposed to say:
+> perf $ sudo bpftool map | grep -E "stacks|off_cpu|tstamp"
+> 2046: stack_trace  name stacks  flags 0x0
+> 2047: task_storage  name tstamp  flags 0x1
+> 2048: hash  name off_cpu  flags 0x0
+> 2052: array  name off_cpu_.bss  flags 0x400
+> 2053: array  name off_cpu_.rodata  flags 0x480
+> 2054: array  name off_cpu_.data  flags 0x400
+>
+> You can also check the BPF maps for data.
+> $ bpftool map dump name stacks
+> ...
+> key:
+> 8a ff 01 00
+> value:
+> cd b4 f1 63 02 72 00 00  6e a6 2f 65 02 72 00 00
+> 53 aa 29 65 02 72 00 00  8d 18 4d 65 02 72 00 00
+> 71 07 3f b1 ec 60 00 00  ca a1 e2 63 02 72 00 00
+> 8b a2 e2 63 02 72 00 00  05 09 3f b1 ec 60 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+> Found 533 elements
+>
+> $ bpftool map dump name off_cpu
+> key:
+> 3e d0 0a 00 24 d0 0a 00  bd 77 00 00 01 00 00 00
+> 00 00 00 00 00 00 00 00
+> value:
+> 89 61 03 10 00 00 00 00
+> ...
+> Found 648 elements
+>
+> Thanks,
+> Howard
+>
+>
+> > ---
+> >
+> > Can someone give me some ideas why this problem occurs?  I try to read
+> > the code of the
+> > option '--off-cpu', but it looks related to bpf, I have no more ideas f=
+or that.
+> >
+> > Btw, I tested on 5.14.x and 6.12.x kernels, this issue only happened
+> > on 5.14.x kernel.
+> >
+> > Thanks,
+> > Qiao Zhao
+> >
+> >
+>
 
-Why not just give it to the 'st'?
-
-> +
-> +	if (data.count)
-> +		st->avg_wait_time = data.total_time / data.count;
-> +
-> +	bpf_map_delete_elem(fd, stack_trace);
-> +	free(stack_trace);
-
-Then you don't need to free it here.
-
-> +
-> +	return st;
-> +}
->  int lock_contention_read(struct lock_contention *con)
->  {
->  	int fd, stack, err = 0;
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index 1a7248ff3889..83b400a36137 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -156,6 +156,8 @@ int lock_contention_stop(void);
->  int lock_contention_read(struct lock_contention *con);
->  int lock_contention_finish(struct lock_contention *con);
->  
-> +struct lock_stat *pop_owner_stack_trace(struct lock_contention *con);
-> +
->  #else  /* !HAVE_BPF_SKEL */
-
-I think you need to define it here as well.
-
-Thanks,
-Namhyung
-
->  
->  static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
-> -- 
-> 2.47.1.688.g23fc6f90ad-goog
-> 
