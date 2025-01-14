@@ -1,302 +1,279 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD50C13C695
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 22:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBFA26AC3
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 22:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736892041; cv=none; b=VA5Qiejk0dZJy/aecZEnNz0lBIiHItAnzjxqrN/mGNk9/EIwufm1OmkQGBwwpOiXKpaho+/5pXNNzkQDZd+igw9KIRPMb1d3Rc7HeJGts6HS7dVlMGHKh1lP9Gf6ZrZ2icZLIQXvrUPQ75BgCDSr6ffQiM7HdheUaKCm/SXaaXA=
+	t=1736895500; cv=none; b=YRFYWgmOpKuW0U2XgAlepTuPPeye+eMaAUwX9GVn+3ZrRRgh2NVI+bjl2MKZeFuh8kPqo7wJKcyw2PIW6DsCJDcC1P5inlEwiWg5nsz/95hlTYhCIspVMrBgU9ed4YJGZLjySsv1TooQdT8Uti2+M3ZaXpXoBxRVy5c/lNJzdog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736892041; c=relaxed/simple;
-	bh=9ICZ0W3Bkxk6NScIrYrvoP5/k3RPtl89AAbJs5WhK/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CjObiYa8AkjZRt8G49qwEIBN++E26H+Fz0VM1+FOGwJzn0SYRwSimDJaX0iNKmpP5gQnIBFRM/09/4uM/ORgVB+bNC+nx+kr88ypW2iqpU9dwEBO/NYsegJY7DyZaKq+LTSdY88VYb1NlIsliB0jWaqz6kSPhE+lPKWz6yKECgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CfnWOFU8; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1736895500; c=relaxed/simple;
+	bh=ZGu9IdXOLfdPCL+ux9zxEK5DL5AsfyK+zsLs+w+Olf0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q8+JpPscvWMW577jkla+OrE8INBJHeybYt22y42NnaB2EtoD+ahDgI2wkwVnoEPygcerfnRZM82TugwHJQfnNSXlQorv4varIO+M/edSI8xYZArOs6OPxght4FtG3qAoxY17RpP07TMlX5EUBpNdeLGmesCg6l3242hxGgRi3Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eEZZdnDL; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CfnWOFU8"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ef714374c0so369800a91.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 14:00:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eEZZdnDL"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21628b3fe7dso103693425ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 14:58:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736892038; x=1737496838; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LAi/vDeugCHa71Ma0EXTvLeZpuJSJHZJbQffJrAlCfU=;
-        b=CfnWOFU8YcufNRB29bZ04MvHjbHryKeuMsose1caY8Z7sJKY8ieR3Slnks+dLgmZm8
-         dFiPZiHzfJLqTWAst6zXJ9h5b5vJe809XU/bsUfEviki8ef5FYho17FfrlFXUu7csoQW
-         9yPYUvQTNCoOyZxdnAvwuc/kPqcLaF8p8uRUQuSUz0qEYyltCUwPAS/xqpiJEv6m3quW
-         Ai70RI+NsC+GGHZoPfWOHCca8dyzB+bO1rYO2LmmPsIgkfQQxiJz4YK2WyelHM191eSq
-         6hbJ0cL3RKSd2ewRyKziHqHjBKPq1SsfRM2NnaX7ISECobBOmYjn8kBOi+RY+FDGLFUo
-         WLXQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736895497; x=1737500297; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nYkLU0NirAu9JE4/rkvv4iX0/5kO7v9LARooIOZwEJg=;
+        b=eEZZdnDLwhNXcuUGMQY/9R5mYbi2Vrg9FuXrmVwMt0V/CAXbVq9+EKiSoNQiKvkM8g
+         qY6RqRaHQsa9XTO5yuwSfyCh3jcK+3cVji51jWzALou0uReqip+r/k9WRcrusStHL63+
+         TtEkY7RgKOpuAv0Bcqztaots8isOzrR4JSzzlhzIkScDX8pC8c9es1EdFXU1y9CskBsX
+         sWF6FoMt+0ukys3TrZjt4nn8oBA5ta9afqqirtcDoLhfdWI/YqSxg4Ih1BN2aB7LH7yD
+         Ud3e+EN6IPRbP0fIjEPs8RRgNBzj+I9WmCRu64mv5hNBi7MrHpPTPgHCdmccfIPMSOHK
+         dEcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736892038; x=1737496838;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAi/vDeugCHa71Ma0EXTvLeZpuJSJHZJbQffJrAlCfU=;
-        b=q4UursiAV9h5DHJWYS4fRYSrjTFp6dvjL6LKRR4NjR4DPgwFERsiRLUwCgxKmwxn8r
-         0ysMjbud4Ixo87+ePKB4MoJY13Oxe84IFWBx5SqzCGnxTRGxQgHKDG45C0jciN+pqvhA
-         5RN1mnbLEAyfXFruREkeIKaRvkWyTKttRBzEYc/57DMxYxe3cTq9rSEgnefx0wsmp38Y
-         0rrB6NyZ5LXbPMXe7nK9EcGEoHpgKKlaxEtc6fzQxuFxb7s+tq9TMQq9TBaRgsxoFbtu
-         1NAGOy0u8dblLtuoa+Z3sn0rqQxL8Bbu8Icwwc5cIcqzOd5LIlHkMSXxkw5UwbWzug8C
-         bS1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXm1Go88uzEbJKWk8bC8/LrqLW7No5HvyX7XkK5WZnZaAWGFI8kZSwuzJSh8ZuJQsQacEsPgdVybb99fozt98OE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzm2TVESRKUPV7us8b7lqOUdZ2obhXSGzjNnRSsd+nVMuzNEXS
-	HjtumRr4Nc1dlL7BLs/o5i5UyRlTwsOshaSgUw41fE4bWrffrPG+gXX9jqsU4js=
-X-Gm-Gg: ASbGnctZZZswtJEpKEfxScmN2lrqJURZItgssqYDDnJVue9bGEZXCyXZMN51vSL//2l
-	zrXestS/E25wkzm8iP5q4XWLPKczGT+z3UtCS89rDandnKGRzI7SCfx9k9Gv6tIl8iQgGtIxBRa
-	UIUvpAeBM5sGZ0JdnOsiSTXumml0BCqU+RBpo40PLLG0zX6o+xZY28vyq/cVb993gYhmwY2l6SZ
-	GLAF/oEKrK7cdQIJ7InPXINsHXk084DWeytE0WZdMJuGso=
-X-Google-Smtp-Source: AGHT+IHUmOu5Z8yV9askuOExmMIbEPTgLHypbNQwlNxLYlNE9sF/DEJ2VQ1UKljmu+ix+BNJ1HS+qw==
-X-Received: by 2002:a17:90b:3a08:b0:2ee:edae:775 with SMTP id 98e67ed59e1d1-2f728dd351amr804769a91.3.1736892037932;
-        Tue, 14 Jan 2025 14:00:37 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f72c20abc4sm27371a91.34.2025.01.14.14.00.35
+        d=1e100.net; s=20230601; t=1736895497; x=1737500297;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nYkLU0NirAu9JE4/rkvv4iX0/5kO7v9LARooIOZwEJg=;
+        b=ADwg+si4Y+q7288twQpdcPU5sg5JHqK3FK6cQ0WnDuYv1XZALWC4NZKgZ1s2F6F59f
+         KXvOboSL12PAl1pemYBguv6VdnhO9tFvrRMwKR/Zp0ll6K+LrYu7OyatD26g794jzRH2
+         iMnJLdzRiN1dLAuGd5R5B9n09uYl5125BuFS4D0e0IiswjIx9x+Jo8JjI4yoYA+8or+c
+         zvxIuj1WmHLt0en1HJ6JnINMOLm5XeZ5R6+U71pFOmiFOgC3sEd21LNiIuIWck1bSEcu
+         aF8LkMvy9OQ7GZJRSUgRe/A6U4CBXmGezeg0Yknxs1O8r8e2Zn+Sb0XXAHZlrxQg4BNa
+         0UwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyGHO9SvsCGdvEkidlpe3LaziXeOnB0pqSd5uA3kQuxDuypTEZ6cjGcfu38XKveGwHxLC71Tg1zgHadlT5jvaR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfx6nJ8AKGuGU4JQUI5BU6iVGEO/q/UuRrH7iX/nVgyyEIbgGk
+	3jDagWAQltUX+FnEQSbNSdH+xzvNiJ5lT4eU/XplyKxYWziLRj6lyG8ll28b+tY=
+X-Gm-Gg: ASbGncvC2TfYyNDhOzMLFp9nVwrzWvw9KIA5Q4l64snVhkmAhGuNNKtTCDEp07PDA17
+	qVbNQcJJ2pUwQGmsYHU2tLmGY6Sdlbx8js8N8QfX1fiNMcL4MoE6QjjiJ3vdNrqvD58FDhmu6b+
+	1IETjXsdvyKFtSqFUGf7zx4dlpE7Uw/YwP5cdpk41su/AZCmy42YugtttQpAY17jp5Rs6q0LBf0
+	wWonhXu3MMvhl4avV10SXxkNlNT17ercy53k6OXHYJ/+yRb118Y7x1Ik/NaJ6PWTXg9wA==
+X-Google-Smtp-Source: AGHT+IFtG/k42yCeVuHX0tPN9L9VOFBp4AdntnEMp6oqgm8Ihathe3ej6ZuJqnnMKmge/3JMw8KR8w==
+X-Received: by 2002:a17:902:ecc5:b0:215:7dbf:f3de with SMTP id d9443c01a7336-21a83f5e4e5mr418050535ad.28.1736895496910;
+        Tue, 14 Jan 2025 14:58:16 -0800 (PST)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10df7asm71746105ad.47.2025.01.14.14.58.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 14:00:36 -0800 (PST)
-Date: Tue, 14 Jan 2025 14:00:33 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 00/16] perf tools: Use generic syscall scripts for all
- archs
-Message-ID: <Z4bega1SChsGKqe6@ghost>
-References: <20250108-perf_syscalltbl-v6-0-7543b5293098@rivosinc.com>
- <Z3_ybwWW3QZvJ4V6@x1>
- <Z4AoFA974kauIJ9T@ghost>
- <Z4A2Y269Ffo0ERkS@x1>
- <Z4BEygdXmofWBr0-@x1>
- <Z4BVK3D7sN-XYg2o@ghost>
- <Z4F1dXQLPGZ3JFI5@ghost>
- <Z4UpRqywqYPZSUM_@x1>
- <Z4alwvqYithaVLSL@x1>
- <Z4a6oivg7f74N12Q@ghost>
+        Tue, 14 Jan 2025 14:58:16 -0800 (PST)
+From: Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v2 00/21] Add Counter delegation ISA extension support
+Date: Tue, 14 Jan 2025 14:57:25 -0800
+Message-Id: <20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4a6oivg7f74N12Q@ghost>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANXrhmcC/yWNwQ6CMBBEf4Xs2ZJ2AYuc/A9DDFkW2ERb0iLRE
+ P7disc3mXmzQeQgHKHJNgi8ShTvEuApA5o6N7KSPjGgxlJbUynyL7dwuPf84LFbUl2dse4KHGq
+ 6EEEazoEHeR/SW5t4krj48Dk+VvNL/zo0VuvKFnVe2LI0aJRRyRin+Rpk9VEc5eSf0O77/gUwy
+ 20VqQAAAA==
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>, 
+ Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
+ devicetree@vger.kernel.org, kvm@vger.kernel.org, 
+ kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, 
+ Kaiwen Xue <kaiwenx@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.15-dev-13183
 
-On Tue, Jan 14, 2025 at 11:27:30AM -0800, Charlie Jenkins wrote:
-> On Tue, Jan 14, 2025 at 02:58:26PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Jan 13, 2025 at 11:55:05AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Fri, Jan 10, 2025 at 11:31:01AM -0800, Charlie Jenkins wrote:
-> > > > On Thu, Jan 09, 2025 at 03:00:59PM -0800, Charlie Jenkins wrote:
-> > > > > Ooh okay I see, the quiet commands were being ignored as-is. We could
-> > > > > add the lines to handle this to Makefile.syscalls, but I think the
-> > > > > better solution is to move the lines from Makefile.build to
-> > > > > Makefile.perf to be more generically available. Here is a patch for
-> > > > > that. I also added the comment from the kernel Makefile describing what
-> > > > > this does.
-> > > 
-> > > > > From 8dcec7f5d937ede3d33c687573dc2f1654ddc59e Mon Sep 17 00:00:00 2001
-> > > > > From: Charlie Jenkins <charlie@rivosinc.com>
-> > > > > Date: Thu, 9 Jan 2025 14:36:40 -0800
-> > > > > Subject: [PATCH] perf tools: Expose quiet/verbose variables in Makefile.perf
-> > > > > 
-> > > > > The variables to make builds silent/verbose live inside
-> > > > > tools/build/Makefile.build. Move those variables to the top-level
-> > > > > Makefile.perf to be generally available.
-> > > 
-> > > <SNIP applied patch>
-> > >  
-> > > > Let me know how you want to handle this, I can send this out as a
-> > > > separate patch if that's better.
-> > > 
-> > > I used the patch you provided above after hand editing the message
-> > > before feeding it to 'git am', added these comments:
-> > 
-> > Somehow this is causing some trouble:
-> > 
-> > ⬢ [acme@toolbox perf-tools-next]$ make -C tools/perf build-test
-> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> > - tarpkg: ./tests/perf-targz-src-pkg .
-> > /bin/sh: line 1: @make: command not found
-> > make[4]: *** [Makefile:27: clean-asm_pure_loop] Error 127
-> > make[3]: *** [Makefile.perf:764: tests-coresight-targets-clean] Error 2
-> > make[2]: *** [Makefile:96: clean] Error 2
-> > make[1]: *** [tests/make:330: make_static] Error 2
-> > make: *** [Makefile:109: build-test] Error 2
-> > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> > ⬢ [acme@toolbox perf-tools-next]$
-> > 
-> > Can you please try fixing it as I'm busy now (I'll be on vacation from
-> > tomorrow till early February)? This is what I extracted:
-> 
-> There was an erroneous $(Q) in
-> tools/perf/tests/shell/coresight/Makefile. Previously it would expand to
-> the empty string so wouldn't cause any problems, but now it's in the
-> middle of an expression so hence the error. I'll send an updated patch.
+This series adds the counter delegation extension support. It is based on
+very early PoC work done by Kevin Xue and mostly rewritten after that.
+The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+on multiple ISA extensions.
 
-Let me know if this works as expected! I sent it as [1].
+1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+   5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+   RISC-V CSR address space.
+2. Smstateen: The stateen bit[60] controls the access to the registers
+   indirectly via the above indirect registers.
+3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
 
-[1] https://lore.kernel.org/all/20250114-perf_make_test-v1-1-decc1c517b11@rivosinc.com/
+The counter delegation extension allows Supervisor mode to program the
+hpmevent and hpmcounters directly without needing the assistance from the
+M-mode via SBI calls. This results in a faster perf profiling and very
+few traps. This extension also introduces a scountinhibit CSR which allows
+to stop/start any counter directly from the S-mode. As the counter
+delegation extension potentially can have more than 100 CSRs, the specification
+leverages the indirect CSR extension to save the precious CSR address range.
 
-> 
-> > 
-> > commit c199fd785d18121ffd0ba5758e23a42ba2984e11
-> > Author: Charlie Jenkins <charlie@rivosinc.com>
-> > Date:   Mon Jan 13 11:50:55 2025 -0300
-> > 
-> >     perf tools: Expose quiet/verbose variables in Makefile.perf
-> >     
-> >     The variables to make builds silent/verbose live inside
-> >     tools/build/Makefile.build. Move those variables to the top-level
-> >     Makefile.perf to be generally available.
-> >     
-> >     Committer testing:
-> >     
-> >     See the SYSCALL lines, now they are consistent with the other
-> >     operations in other lines:
-> >     
-> >       SYSTBL  /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_32.h
-> >       SYSTBL  /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_64.h
-> >       GEN     /tmp/build/perf-tools-next/common-cmds.h
-> >       GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
-> >       PERF_VERSION = 6.13.rc2.g3d94bb6ed1d0
-> >       GEN     perf-archive
-> >       MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >       MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >       MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >       MKDIR   /tmp/build/perf-tools-next/jvmti/
-> >       GEN     perf-iostat
-> >       CC      /tmp/build/perf-tools-next/jvmti/libjvmti.o
-> >       CC      /tmp/build/perf-tools-next/jvmti/jvmti_agent.o
-> >     
-> >     Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >     Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> >     Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
-> >     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> >     Cc: Arnd Bergmann <arnd@arndb.de>
-> >     Cc: Christian Brauner <brauner@kernel.org>
-> >     Cc: Guo Ren <guoren@kernel.org>
-> >     Cc: Günther Noack <gnoack@google.com>
-> >     Cc: Ian Rogers <irogers@google.com>
-> >     Cc: Ingo Molnar <mingo@redhat.com>
-> >     Cc: James Clark <james.clark@linaro.org>
-> >     Cc: Jiri Olsa <jolsa@kernel.org>
-> >     Cc: John Garry <john.g.garry@oracle.com>
-> >     Cc: Jonathan Corbet <corbet@lwn.net>
-> >     Cc: Leo Yan <leo.yan@linux.dev>
-> >     Cc: Mark Rutland <mark.rutland@arm.com>
-> >     Cc: Mickaël Salaün <mic@digikod.net>
-> >     Cc: Mike Leach <mike.leach@linaro.org>
-> >     Cc: Namhyung Kim <namhyung@kernel.org>
-> >     Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> >     Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> >     Cc: Peter Zijlstra <peterz@infradead.org>
-> >     Cc: Will Deacon <will@kernel.org>
-> >     Link: http://lore.kernel.org/lkml/None
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> > index 5fb3fb3d97e0fd11..e710ed67a1b49d9f 100644
-> > --- a/tools/build/Makefile.build
-> > +++ b/tools/build/Makefile.build
-> > @@ -12,26 +12,6 @@
-> >  PHONY := __build
-> >  __build:
-> >  
-> > -ifeq ($(V),1)
-> > -  quiet =
-> > -  Q =
-> > -else
-> > -  quiet=quiet_
-> > -  Q=@
-> > -endif
-> > -
-> > -# If the user is running make -s (silent mode), suppress echoing of commands
-> > -# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> > -ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> > -short-opts := $(firstword -$(MAKEFLAGS))
-> > -else
-> > -short-opts := $(filter-out --%,$(MAKEFLAGS))
-> > -endif
-> > -
-> > -ifneq ($(findstring s,$(short-opts)),)
-> > -  quiet=silent_
-> > -endif
-> > -
-> >  build-dir := $(srctree)/tools/build
-> >  
-> >  # Define $(fixdep) for dep-cmd function
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index a449d00155364422..55d6ce9ea52fb2a5 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -161,12 +161,47 @@ export VPATH
-> >  SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
-> >  endif
-> >  
-> > +# Beautify output
-> > +# ---------------------------------------------------------------------------
-> > +#
-> > +# Most of build commands in Kbuild start with "cmd_". You can optionally define
-> > +# "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
-> > +# that command is printed by default.
-> > +#
-> > +# e.g.)
-> > +#    quiet_cmd_depmod = DEPMOD  $(MODLIB)
-> > +#          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
-> > +#
-> > +# A simple variant is to prefix commands with $(Q) - that's useful
-> > +# for commands that shall be hidden in non-verbose mode.
-> > +#
-> > +#    $(Q)$(MAKE) $(build)=scripts/basic
-> > +#
-> > +# To put more focus on warnings, be less verbose as default
-> > +# Use 'make V=1' to see the full commands
-> > +
-> >  ifeq ($(V),1)
-> > +  quiet =
-> >    Q =
-> >  else
-> > -  Q = @
-> > +  quiet=quiet_
-> > +  Q=@
-> >  endif
-> >  
-> > +# If the user is running make -s (silent mode), suppress echoing of commands
-> > +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> > +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> > +short-opts := $(firstword -$(MAKEFLAGS))
-> > +else
-> > +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> > +endif
-> > +
-> > +ifneq ($(findstring s,$(short-opts)),)
-> > +  quiet=silent_
-> > +endif
-> > +
-> > +export quiet Q
-> > +
-> >  # Do not use make's built-in rules
-> >  # (this improves performance and avoids hard-to-debug behaviour);
-> >  MAKEFLAGS += -r
+Due to the dependency of these extensions, the following extensions must be
+enabled in qemu to use the counter delegation feature in S-mode.
+
+"smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+or Virt machine users can just "max" cpu instead.
+
+When we access the counters directly in S-mode, we also need to solve the
+following problems.
+
+1. Event to counter mapping
+2. Event encoding discovery
+
+The RISC-V ISA doesn't define any standard either for event encoding or the
+event to counter mapping rules. Until now, the SBI PMU implementation relies
+on device tree binding[3] to discover the event to counter mapping in RISC-V
+platform in the firmware. The SBI PMU specification[4] defines event encoding
+for standard perf events as well. Thus, the kernel can query the appropriate
+counter for an given event from the firmware.
+
+However, the kernel doesn't need any firmware interaction for hardware
+counters if counter delegation is available in the hardware. Thus, the driver
+needs to discover the above mappings/encodings by itself without any assistance
+from firmware.
+
+Solution to Problem #1:
+This patch series solves the above problem #1 by extending the perf tool in a
+way so that event json file can specify the counter constraints of each event
+and that can be passed to the driver to choose the best counter for a given
+event. The perf stat metric series[5] from Weilin already extend the perf tool
+to parse "Counter" property to specify the hardware counter restriction.
+As that series was not revised in a while, I have rebased it and included in
+this series. I can only include the necessary parts from that patch required
+for this series if required. 
+
+This series extends that support by converting comma separated string to a
+bitmap. The counter constraint bitmap is passed to the perf driver via
+newly introduced "counterid_mask" property set in "config2".
+However, it results in the following event string which has repeated information
+about the counters both in list and bitmask format. I am not sure how I can pass
+the list information to the driver directly. That's why I added a
+counterid_mask property.
+
+Additionaly, the PATCH5 in [5] parses the bitmask information from the
+string and puts it into the metric group structure. We can just convert it in
+python easily and pass it to the metric group instead. The PATCH19 does exactly
+that and sets the counterid_mask property.
+
+@Weilin @Ian : Please let me know if there is a better way to solve the problem I
+described. 
+
+Due to the new counterid_mask property, the layout in empty-pmu-events.c got
+changed which is patched in PATCH 20 based on existing script.
+
+Possible solutions to Problem #2:
+
+1. Extend the PMU DT parsing support to kernel as well. However, that requires
+additional support in ACPI based system. It also needs more infrastructure in
+the virtualization as well.
+
+2. Rename perf legacy events to riscv specific names. This will require users to
+use perf differently than other ISAs which is not ideal.
+
+3. Define a architecture specific override function for legacy events. Earlier
+RFC version did that but it is not preferred as arch specific behavior in perf
+tool has other ramifications on the tests.
+
+4. Ian graciously helped and sent a generic fix[6] for #3 that prefers json
+over legacy encoding. Unfortunately, it had some regressions and the discussions
+are ongoing if it is a viable solution.
+
+5. Specify the encodings in the driver. There were earlier concerns of managing
+these in the driver as these encodings are vendor specific in absence of an ISA
+guidelines. However, we also need to support counter virtualization and legacy
+event users (without perf tool) as described in [7]. That's why, this series
+adapts this solution similar to other ISAs. The vendors can define their pmu
+event encoding and event to counter mapping in the driver.
+
+Note: This solution is still compatible with solution #4 by Ian. It gives vendors
+flexibility to define legacy event encoding in either the driver or json file
+if Ian's series [6] is merged. If we can get rid of the legacy events in the
+future, we can just rely on the json encodings. I have not added a json file for
+qemu as I have not included Ian's patches in this series. But I have verified them
+with a virt machine specific json file.
+
+The Qemu patches can be found here:
+https://github.com/atishp04/qemu/tree/b4/counter_delegation_v4
+
+The Linux kernel patches can be found here:
+https://github.com/atishp04/linux/tree/b4/counter_delegation_v2
+
+[1] https://github.com/riscv/riscv-indirect-csr-access
+[2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+[4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+[5] https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
+[6] https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+[7] https://lore.kernel.org/lkml/20241026121758.143259-1-irogers@google.com/T/#m653a6b98919a365a361a698032502bd26af9f6ba
+
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+Changes in v2:
+- Dropped architecture specific overrides for event encoding.
+- Dropped hwprobe bits.
+- Added a vendor specific event encoding table to support vendor specific event
+  encoding and counter mapping.
+- Fixed few bugs and cleanup.
+- Link to v1: https://lore.kernel.org/r/20240217005738.3744121-1-atishp@rivosinc.com
+
+---
+Atish Patra (17):
+      RISC-V: Add Sxcsrind ISA extension definition and parsing
+      dt-bindings: riscv: add Sxcsrind ISA extension description
+      RISC-V: Define indirect CSR access helpers
+      RISC-V: Add Ssccfg ISA extension definition and parsing
+      dt-bindings: riscv: add Ssccfg ISA extension description
+      RISC-V: Add Smcntrpmf extension parsing
+      dt-bindings: riscv: add Smcntrpmf ISA extension description
+      RISC-V: perf: Restructure the SBI PMU code
+      RISC-V: perf: Modify the counter discovery mechanism
+      RISC-V: perf: Add a mechanism to defined legacy event encoding
+      RISC-V: perf: Implement supervisor counter delegation support
+      RISC-V: perf: Use config2/vendor table for event to counter mapping
+      RISC-V: perf: Add legacy event encodings via sysfs
+      RISC-V: perf: Add Qemu virt machine events
+      tools/perf: Support event code for arch standard events
+      tools/perf: Pass the Counter constraint values in the pmu events
+      Sync empty-pmu-events.c with autogenerated one
+
+Charlie Jenkins (1):
+      RISC-V: perf: Skip PMU SBI extension when not implemented
+
+Kaiwen Xue (2):
+      RISC-V: Add Sxcsrind ISA extension CSR definitions
+      RISC-V: Add Sscfg extension CSR definition
+
+Weilin Wang (1):
+      perf pmu-events: Add functions in jevent.py to parse counter and event info for hardware aware grouping
+
+ .../devicetree/bindings/riscv/extensions.yaml      |  34 +
+ MAINTAINERS                                        |   4 +-
+ arch/riscv/include/asm/csr.h                       |  57 ++
+ arch/riscv/include/asm/csr_ind.h                   |  42 +
+ arch/riscv/include/asm/hwcap.h                     |   8 +
+ arch/riscv/include/asm/kvm_vcpu_pmu.h              |   4 +-
+ arch/riscv/include/asm/kvm_vcpu_sbi.h              |   2 +-
+ arch/riscv/include/asm/sbi.h                       |   2 +-
+ arch/riscv/include/asm/vendorid_list.h             |   4 +
+ arch/riscv/kernel/cpufeature.c                     |   5 +
+ arch/riscv/kvm/Makefile                            |   4 +-
+ arch/riscv/kvm/vcpu_pmu.c                          |   2 +-
+ arch/riscv/kvm/vcpu_sbi.c                          |   2 +-
+ drivers/perf/Kconfig                               |  16 +-
+ drivers/perf/Makefile                              |   4 +-
+ drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}   |   0
+ drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c}  | 941 +++++++++++++++++----
+ include/linux/perf/riscv_pmu.h                     |  26 +-
+ .../perf/pmu-events/arch/riscv/arch-standard.json  |  10 +
+ tools/perf/pmu-events/empty-pmu-events.c           | 299 ++++---
+ tools/perf/pmu-events/jevents.py                   | 218 ++++-
+ tools/perf/pmu-events/pmu-events.h                 |  32 +-
+ 22 files changed, 1422 insertions(+), 294 deletions(-)
+---
+base-commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
+change-id: 20240715-counter_delegation-628a32f8c9cc
+--
+Regards,
+Atish patra
+
