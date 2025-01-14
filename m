@@ -1,206 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0C41B2193
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062A61FC0F9;
+	Tue, 14 Jan 2025 18:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736877922; cv=none; b=AybR2YWfMPRYnsR3CAUfU5AfD0w9UeBCO+1ySCbsR1odGBzCKo/1L+78aoKTIrc7UatmyG8JWdOnYnGuXwNwYKERbL2/NhrE6aoYDjI6NRLPhS2hU0GNaorPGGI14Hf0TH+eMazPkyeJmJ7YAqfQvrCd7PY5mvNb93N57SbJQq4=
+	t=1736878609; cv=none; b=fv3zSIKJq/G3WYL29hR7caSrrjWqNRVuJu5npUQqPYTAHSUqSJo0A+3O5Oz1Pln4ogsQFI90AyI78zKfMtQ+KIbnDP7mRL24MZr7b8tKyAlhwAV991Nn/49cjPEwNG8k8jBluZt6yx3R8W884CaEaURLQDqboXpikt2VwTN098E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736877922; c=relaxed/simple;
-	bh=Ridgu5blzXm7nQql+8tYYz1nxzV6sFC9d8yZ6tWq2XU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BgNTps5JI1H5BgRtGFCwuQQ63KAEY5GTFzoU0XJSC1L/xje22kDRPIsNfJmEVsu+JObOME6F5aUZljU3g7AKABNgOwkjGmn5VXGIAF0Bev6EvMNJasCwbVcfOkN+Sk2jpGVyAkwvNwjr44AToZryJb1uqeiiC4g5gdC2PPh/B+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZhxlRo2F; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736878609; c=relaxed/simple;
+	bh=2d5mcBQYIOKIiLZ2FTmRSbI9dj5YDJwkn5dj1EWX2f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dx4gaG3YXdkD2+qGELGVUX7Huahz8H5YibT7Pt9iYstU+3bvi0geFY9z5knEK3jMlvaIUHjFF4j3U+hNGotLqP+mvbJmn5ImbhlvjYcCODJz4BV/jrw9YsvEvEsulsYaCwRw9M/8YA/yQeMaAgF+ULol+vUdl1gbqM1MXn/qLfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhgNlZfw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZhxlRo2F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736877919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hBnzPr+bF01eZ/FcGt3b6YBzs+ceSVKdSHsMFlRMR5E=;
-	b=ZhxlRo2FJO17mb66ETya58v8DRE0IjvguFrYxLu6s6Ff8s/Dbrb3kMCKvERBvRLjKjou3r
-	7dW1xpsTDKu2gZcL+gw+Uf9Rl64rgDICgN9chMFnxrCkCXh++719IaYtc/OZj7kAd2OFZh
-	WIc0lB/xwiIkjLm65BCHxcHbMmIb5Rg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-8ogZguOiNnCawOG8JxolMw-1; Tue,
- 14 Jan 2025 13:05:15 -0500
-X-MC-Unique: 8ogZguOiNnCawOG8JxolMw-1
-X-Mimecast-MFC-AGG-ID: 8ogZguOiNnCawOG8JxolMw
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0F9F1956050;
-	Tue, 14 Jan 2025 18:05:11 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.192.55])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DFA25195608A;
-	Tue, 14 Jan 2025 18:04:49 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com
-Cc: Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v4 30/30] context-tracking: Add a Kconfig to enable IPI deferral for NO_HZ_IDLE
-Date: Tue, 14 Jan 2025 18:51:43 +0100
-Message-ID: <20250114175143.81438-31-vschneid@redhat.com>
-In-Reply-To: <20250114175143.81438-1-vschneid@redhat.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhgNlZfw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86A2C4CEDD;
+	Tue, 14 Jan 2025 18:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736878608;
+	bh=2d5mcBQYIOKIiLZ2FTmRSbI9dj5YDJwkn5dj1EWX2f4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GhgNlZfw4Ce7O+fcLuo+j3/hMsATMBGQG0B8ac+1yJyNLxCLYiPRVSfemE5uoGX19
+	 DkSHz3GwOAE3TYz2UaSE1p+UQiPiEC6SSix+7emekPDkwSxyjIVTSDZnRSK6BKjGgq
+	 N+R9bzYABf7Ehe4FErpKWcwA+4fokwR11p9eHV6JCIJOaqa7qz6Wr5rrepODTphIcH
+	 In9I7RC1Qv4Xbu2u+xb+X6HEbW/gXZIjG6M9o2dlIu+mV0vXYun0GMsfjrPt3QrwVo
+	 NULVQmQqs6Ui//FralTq8sBPLuuNkH1orzvnyzrcBfI6sVZx2zI4NEklfJxkiPtpH4
+	 h3sNL9MX7uc1w==
+Date: Tue, 14 Jan 2025 15:16:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, irogers@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	eranian@google.com, Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
+Message-ID: <Z4aqDUwCeStTTguE@x1>
+References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
+ <20250113134022.2545894-1-dvyukov@google.com>
+ <Z4XDJyvjiie3howF@google.com>
+ <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
+ <Z4aJSde5KXO-rqWM@x1>
+ <CACT4Y+b6nbqNHt1MwT_KfWjNrMA_1qvMD=Gkk9gfZNXLL79xdQ@mail.gmail.com>
+ <Z4akewi7UPXpagce@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4akewi7UPXpagce@x1>
 
-With NO_HZ_IDLE, we get CONTEXT_TRACKING_IDLE, so we get these
-transitions:
-
-  ct_idle_enter()
-    ct_kernel_exit()
-      ct_state_inc_clear_work()
-
-  ct_idle_exit()
-    ct_kernel_enter()
-      ct_work_flush()
-
-With just CONTEXT_TRACKING_IDLE, ct_state_inc_clear_work() is just
-ct_state_inc() and ct_work_flush() is a no-op. However, making them be
-functional as if under CONTEXT_TRACKING_WORK would allow NO_HZ_IDLE to
-leverage IPI deferral to keep idle CPUs idle longer.
-
-Having this enabled for NO_HZ_IDLE is a different argument than for having
-it for NO_HZ_FULL (power savings vs latency/performance), but the backing
-mechanism is identical.
-
-Add a default-no option to enable IPI deferral with NO_HZ_IDLE.
-
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- kernel/time/Kconfig | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/Kconfig b/kernel/time/Kconfig
-index 7e8106a0d981f..c7398fe5382a0 100644
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -183,9 +183,23 @@ config CONTEXT_TRACKING_USER_FORCE
+On Tue, Jan 14, 2025 at 02:53:03PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Jan 14, 2025 at 05:07:14PM +0100, Dmitry Vyukov wrote:
+> > I agree it would be nice to have these usability improvements.
  
- config CONTEXT_TRACKING_WORK
- 	bool
--	depends on HAVE_CONTEXT_TRACKING_WORK && CONTEXT_TRACKING_USER
-+	depends on HAVE_CONTEXT_TRACKING_WORK && (CONTEXT_TRACKING_USER || CONTEXT_TRACKING_WORK_IDLE)
- 	default y
+> Right, and I'm not talking about those as a requirement for your patch
+> to get accepted.
  
-+config CONTEXT_TRACKING_WORK_IDLE
-+       bool
-+       depends on HAVE_CONTEXT_TRACKING_WORK && CONTEXT_TRACKING_IDLE && !CONTEXT_TRACKING_USER
-+       default n
-+       help
-+	 This option enables deferral of some IPIs when they are targeted at CPUs
-+	 that are idle. This can help keep CPUs idle longer, but induces some
-+	 extra overhead to idle <-> kernel transitions and to IPI sending.
-+
-+	 Say Y if the power improvements are worth more to you than the added
-+	 overheads.
-+
-+	 Say N otherwise.
-+
- config NO_HZ
- 	bool "Old Idle dynticks config"
- 	help
--- 
-2.43.0
+> > But this is also a large change, so I would prefer to merge the basic
+> > functionality, and then we can do some improvements on top. This is
+> > also the first time I am touching perf code, there are too many new
+> > things to learn for me.
+ 
+> I'm happy you made the effort and will try to help you as much as I can.
+ 
+> I agree that, with the patch below, that I'll try to split and merge
+> before travelling, we'll have a good starting point.
+> 
+> Here is the patch, I'll split the perf_config__set_variable into a
+> separate patch and merge, so that you can continue from there. The
+> "<LONGER EXPLANATION>" part should tell the user that 'perf config
+> report.workload=yes|no' can be done later, to switch the mode, if one
+> doesn't want to continue with it as default.
 
+Its now in the tmp.perf-tools-next branch at:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+
+I'm testing it together with a batch of patches one of which I had to
+bisect and remove, soon will be in the main perf-tools-next branch.
+
+I mean this patch:
+
+"perf config: Add a function to set one variable in .perfconfig"
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next
+
+Thanks,
+
+- Arnaldo
