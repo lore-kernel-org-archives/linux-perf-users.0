@@ -1,92 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062A61FC0F9;
-	Tue, 14 Jan 2025 18:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB85120E030
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736878609; cv=none; b=fv3zSIKJq/G3WYL29hR7caSrrjWqNRVuJu5npUQqPYTAHSUqSJo0A+3O5Oz1Pln4ogsQFI90AyI78zKfMtQ+KIbnDP7mRL24MZr7b8tKyAlhwAV991Nn/49cjPEwNG8k8jBluZt6yx3R8W884CaEaURLQDqboXpikt2VwTN098E=
+	t=1736878644; cv=none; b=Du+UsUCfbD1M/gaU5nmQJzWToNA2S9Sacue7QwpQFyERbIHYnRZmQGbuieY6qmE5bcDJeTWBXQEiufblR8grLcIhqdczNr11Ezp/DuVjaq6got2oSDyhMHCQ6fv6f526OC/dNYIzlhgdwjlX4J4I8rBHrbn9azy39FRE2oZfseY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736878609; c=relaxed/simple;
-	bh=2d5mcBQYIOKIiLZ2FTmRSbI9dj5YDJwkn5dj1EWX2f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dx4gaG3YXdkD2+qGELGVUX7Huahz8H5YibT7Pt9iYstU+3bvi0geFY9z5knEK3jMlvaIUHjFF4j3U+hNGotLqP+mvbJmn5ImbhlvjYcCODJz4BV/jrw9YsvEvEsulsYaCwRw9M/8YA/yQeMaAgF+ULol+vUdl1gbqM1MXn/qLfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhgNlZfw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736878644; c=relaxed/simple;
+	bh=I0aYHuk99JA9dU0puEhTqa+Ivu5XtOv7dOMzqH0MLLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lb1EW0Bqe7JGpl5pdIJUDPANhD5RBFDt0+At5syDS3mVempWlDovHPI+zhyVebvUoSNQoS7Uzt+byuYZodg2KzHrpA0J2l1r6+btbIartdld7eBWvgJf2YK+ukfkkeaSTirDrTX0GuplnY36C3bIXzbRixj+a1ZyjuBTxvsRnQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EXtm8zSi; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhgNlZfw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86A2C4CEDD;
-	Tue, 14 Jan 2025 18:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736878608;
-	bh=2d5mcBQYIOKIiLZ2FTmRSbI9dj5YDJwkn5dj1EWX2f4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GhgNlZfw4Ce7O+fcLuo+j3/hMsATMBGQG0B8ac+1yJyNLxCLYiPRVSfemE5uoGX19
-	 DkSHz3GwOAE3TYz2UaSE1p+UQiPiEC6SSix+7emekPDkwSxyjIVTSDZnRSK6BKjGgq
-	 N+R9bzYABf7Ehe4FErpKWcwA+4fokwR11p9eHV6JCIJOaqa7qz6Wr5rrepODTphIcH
-	 In9I7RC1Qv4Xbu2u+xb+X6HEbW/gXZIjG6M9o2dlIu+mV0vXYun0GMsfjrPt3QrwVo
-	 NULVQmQqs6Ui//FralTq8sBPLuuNkH1orzvnyzrcBfI6sVZx2zI4NEklfJxkiPtpH4
-	 h3sNL9MX7uc1w==
-Date: Tue, 14 Jan 2025 15:16:45 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, irogers@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	eranian@google.com, Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
-Message-ID: <Z4aqDUwCeStTTguE@x1>
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com>
- <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
- <Z4aJSde5KXO-rqWM@x1>
- <CACT4Y+b6nbqNHt1MwT_KfWjNrMA_1qvMD=Gkk9gfZNXLL79xdQ@mail.gmail.com>
- <Z4akewi7UPXpagce@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXtm8zSi"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3e638e1b4so8530a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 10:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736878641; x=1737483441; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I0aYHuk99JA9dU0puEhTqa+Ivu5XtOv7dOMzqH0MLLU=;
+        b=EXtm8zSii3wekymY6ORkKD1JDrVoQy0ggWwTrHyXX1420b4Av/uuY4+JYYiI/hRnvC
+         RNIP2ukp8w+O4wfnpBXLBqPL+GaCf3BBfI7manRZsEzpCActvfr9vHL6WJHR2DrG1CK+
+         RS9jdbSS/RGqfs0DflA4BC5xAwWToQdtJU7mldacEsYAyVp/NmixwtYO1Pnw6XQEVrzm
+         tGZmCJgHUquF5szQ0uPUbVEbPr/QXgRfUsBStXb/nrfkbDaAXA7x534l4fcegzZxzo7C
+         kVD2oyGevrHY0bALQymcdJsfMNepU3LctjdMoMOxbb+s4stkse+Dzc07ObbgoO/Mtxiq
+         K4UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736878641; x=1737483441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I0aYHuk99JA9dU0puEhTqa+Ivu5XtOv7dOMzqH0MLLU=;
+        b=GgiCETMVuAvQGHepF0rH5UFGSeQb9lo3aNlHgpBqVvRMl8r32vxs0Vy4fhvqoZAvLF
+         Q9dLJ5ZNTYHle0hWm/NiTANGooixrMLbWDQAUaXSW8SBtzMRHu7bPdfD9tNpxerfwI4c
+         ry4TkbyuF9sE31rluvlGzfGnvYE8tL8mwXiajGlWiDJM4BFX9lY7D3/OhRQs2/KNUR8F
+         WV97R9rbzEukjDcFOjauKOF+AZu7PGewQIHGYaG8GbHtTxQ71siLSCcrk++ApA89D/Qp
+         4HpT1ASeBtMS8fXVcUi8TMA5V5tjvJNiK1mjMuArafMSBnrCqs6koFV0624MxdZAz4Ju
+         mutw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Lu+l2GClP43BPTaTo3IBkBfuVapjT4LsHYzOgeaaaYv3XBgshPfrojVmanW0bOPf8Qxpbn82OwcbovDqUgSi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ3XeyvXwu1vPhD84wm1RdZZKscMBeHV/CQw1CBu90HmP6H7dv
+	RErYXV3uOyz43oWgRy7ZodPu3y2IbRqT6epGFUZrGh+HKVfvW6ajrpnGPDIIqfCIjRM4DdHDwyq
+	ylICNciEgWSjvwqGZQb4kEifzlTGZ0gO0iKj7
+X-Gm-Gg: ASbGncuWNpK3qMpQ8vLTXJfC1vNZfM5TlnNNVol7pdDhNN1lm6a96ZCyhO5kcKHfacU
+	dsPAKahNykm2KxNk9tOU5t09ACA84W+uHuBEYwPihoSx/n9pEYIqyMlh74bEv4610bA==
+X-Google-Smtp-Source: AGHT+IFOWOuSvDhgzEqoKb2CNkVmA/sXHofQ9hZDfWF+l4vbbQk0RN2k51cQSZIijLzKAw1RUyxlH5Nb9O1wedqOjko=
+X-Received: by 2002:a50:d4d2:0:b0:5d1:22e1:7458 with SMTP id
+ 4fb4d7f45d1cf-5d9f695dda7mr124694a12.4.1736878640478; Tue, 14 Jan 2025
+ 10:17:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4akewi7UPXpagce@x1>
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
+In-Reply-To: <20250114175143.81438-30-vschneid@redhat.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 14 Jan 2025 19:16:44 +0100
+X-Gm-Features: AbW1kvY7dNxOnvBqE7JSPz560QoJfBjiwfsZgS18MpZMQ07ZRC1TBr6Zwl5A-60
+Message-ID: <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
+ targeting NOHZ_FULL CPUs
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
+	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
+	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2025 at 02:53:03PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Jan 14, 2025 at 05:07:14PM +0100, Dmitry Vyukov wrote:
-> > I agree it would be nice to have these usability improvements.
- 
-> Right, and I'm not talking about those as a requirement for your patch
-> to get accepted.
- 
-> > But this is also a large change, so I would prefer to merge the basic
-> > functionality, and then we can do some improvements on top. This is
-> > also the first time I am touching perf code, there are too many new
-> > things to learn for me.
- 
-> I'm happy you made the effort and will try to help you as much as I can.
- 
-> I agree that, with the patch below, that I'll try to split and merge
-> before travelling, we'll have a good starting point.
-> 
-> Here is the patch, I'll split the perf_config__set_variable into a
-> separate patch and merge, so that you can continue from there. The
-> "<LONGER EXPLANATION>" part should tell the user that 'perf config
-> report.workload=yes|no' can be done later, to switch the mode, if one
-> doesn't want to continue with it as default.
+On Tue, Jan 14, 2025 at 6:51=E2=80=AFPM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+> vunmap()'s issued from housekeeping CPUs are a relatively common source o=
+f
+> interference for isolated NOHZ_FULL CPUs, as they are hit by the
+> flush_tlb_kernel_range() IPIs.
+>
+> Given that CPUs executing in userspace do not access data in the vmalloc
+> range, these IPIs could be deferred until their next kernel entry.
+>
+> Deferral vs early entry danger zone
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> This requires a guarantee that nothing in the vmalloc range can be vunmap=
+'d
+> and then accessed in early entry code.
 
-Its now in the tmp.perf-tools-next branch at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-
-I'm testing it together with a batch of patches one of which I had to
-bisect and remove, soon will be in the main perf-tools-next branch.
-
-I mean this patch:
-
-"perf config: Add a function to set one variable in .perfconfig"
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next
-
-Thanks,
-
-- Arnaldo
+In other words, it needs a guarantee that no vmalloc allocations that
+have been created in the vmalloc region while the CPU was idle can
+then be accessed during early entry, right?
