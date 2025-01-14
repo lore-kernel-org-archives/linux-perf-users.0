@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83702204583
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D51CDFB9
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736877622; cv=none; b=NkM5YKpmLAPBOFJKVSJTbuT/nZ204bCsvMEJfXrPmXGwD6R28N1dY80jb2IcD6uXPLyXIPsAP8Vu5bTW3Bv4mrqHKkuJKqphlfnNY/w3ncBRuIK1qYa39+XhjeO/x1vZU4uzjQTfJj7TeCU6gf0wXkjRU6Tj2OL/2jgXGa3OiEg=
+	t=1736877669; cv=none; b=WLFUvK2dWGBa2rjm4yw46X1b01mUMOUKBHY0PzqxwpLwDe5P2HK+U2J5+kO85jjA1VotEnQ84+f1ecT0D6AVa9YRDg0FrvPdbeyzb19P5NyM/Fe8Xkcerlzw1AuWtc/272SAypgqVgVkcd3KiqL+Ixl5YxC6gvUb0hgG0lATJXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736877622; c=relaxed/simple;
-	bh=DlNKaMcWkLekUb5b729QKRNcYbX/BVpcNnQiLO9J7o4=;
+	s=arc-20240116; t=1736877669; c=relaxed/simple;
+	bh=Y9meNLxA6jL66coP9nwMxClb3biQtC0rd+uDc0URSKI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WGl6XAEBbJyhwPFZlqfPFmwCJEOArelEp8S60cvzBfgo3fxBI+pCBXAJUwhC4kckWnQUj1RW7pRK5LoAs1OkCfJyIRTU4djxecSNDumfsKGridFQeng50Me2e0tm88AhV4hnHzaRvLBkf0PAXHhZmxOscOKwFfALrOxpOyrV7rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NRl+6MoN; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=hOWE6UNWmGB2aH6O2f6Yshz2rZzLVFY8o1tTKSK7x9iGowBdah4gpvk9s3IGW32TvFdmQZk2vS3uKI83ZImtgbGHTCTqZcCYU7mZlnTE8W9M+10kSk7ZdTiInzYfjciKPGB4bnZDPGALtcm2vOiJA8TIGsaFzBSTDBnBHO/zz8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IwCrzzoy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRl+6MoN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwCrzzoy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736877619;
+	s=mimecast20190719; t=1736877666;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oEa6Jvbfjlidl4MXGQFSAZ9P76MqELccnrf7elTRMWU=;
-	b=NRl+6MoNTIWNe2+aYksDm9CbWvaZYeQSgCc56F60q0bHR/eiC7JeMihvCji9EGzQrR6lpp
-	mZl5CaUMXVIR6gdULu1eAQ0yDQMTXZ23sILPWR91CK2OEhSm0Dh7a22eseGtNva6UMBpy4
-	RiokD6VQ5LLE+Arp3NVUGBWKE2VFn68=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=GQSPZLQ3FmvxIu57q6qI2psmX9IZ2horrf+PeQlNWuI=;
+	b=IwCrzzoyPc6VXpp4KOFHWCbTdAuDm14x0chia/ULxDQVEy1eCDZFG2prTqKetRQM6tlp9X
+	PB0wveFUK7FrSNCEWzwh1L0FQ+DSUeyTHQH/+ZUh124LwepIzVKzNDYT2QbdJyCBdySJYj
+	+ATn7CcG5M6EsRYVrnnbpW+s+GKa3kM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-k3wLyZ7iPkiQIoWyV-6PFw-1; Tue,
- 14 Jan 2025 13:00:14 -0500
-X-MC-Unique: k3wLyZ7iPkiQIoWyV-6PFw-1
-X-Mimecast-MFC-AGG-ID: k3wLyZ7iPkiQIoWyV-6PFw
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-l9crDhjEN0CU5mOOpfPM-A-1; Tue,
+ 14 Jan 2025 13:01:02 -0500
+X-MC-Unique: l9crDhjEN0CU5mOOpfPM-A-1
+X-Mimecast-MFC-AGG-ID: l9crDhjEN0CU5mOOpfPM-A
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD2A51955DE0;
-	Tue, 14 Jan 2025 18:00:10 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 734481954190;
+	Tue, 14 Jan 2025 18:00:56 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.192.55])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79BA9195E3E0;
-	Tue, 14 Jan 2025 17:59:46 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F38CE195608A;
+	Tue, 14 Jan 2025 18:00:33 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -59,7 +59,8 @@ To: linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	bpf@vger.kernel.org,
 	bcm-kernel-feedback-list@broadcom.com
-Cc: Juergen Gross <jgross@suse.com>,
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
 	Ajay Kaher <ajay.kaher@broadcom.com>,
 	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
 	Russell King <linux@armlinux.org.uk>,
@@ -85,7 +86,6 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
 	Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
@@ -131,9 +131,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v4 17/30] sched/clock, x86: Mark __sched_clock_stable key as allowed in .noinstr
-Date: Tue, 14 Jan 2025 18:51:30 +0100
-Message-ID: <20250114175143.81438-18-vschneid@redhat.com>
+Subject: [PATCH v4 19/30] stackleack: Mark stack_erasing_bypass key as allowed in .noinstr
+Date: Tue, 14 Jan 2025 18:51:32 +0100
+Message-ID: <20250114175143.81438-20-vschneid@redhat.com>
 In-Reply-To: <20250114175143.81438-1-vschneid@redhat.com>
 References: <20250114175143.81438-1-vschneid@redhat.com>
 Precedence: bulk
@@ -149,35 +149,36 @@ Later commits will cause objtool to warn about static keys being used in
 .noinstr sections in order to safely defer instruction patching IPIs
 targeted at NOHZ_FULL CPUs.
 
-__sched_clock_stable is used in .noinstr code, and can be modified at
-runtime (e.g. time_cpufreq_notifier()). Suppressing the text_poke_sync()
-IPI has little benefits for this key, as NOHZ_FULL is incompatible with an
-unstable TSC anyway.
+stack_erasing_bypass is used in .noinstr code, and can be modified at runtime
+(proc/sys/kernel/stack_erasing write). However it is not expected that it
+will be  flipped during latency-sensitive operations, and thus shouldn't be
+a source of interference wrt the text patching IPI.
 
 Mark it to let objtool know not to warn about it.
 
+Reported-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/sched/clock.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/stackleak.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
-index 200e5568b9894..e59986bc14a43 100644
---- a/kernel/sched/clock.c
-+++ b/kernel/sched/clock.c
-@@ -75,8 +75,11 @@ static DEFINE_STATIC_KEY_FALSE_RO(sched_clock_running);
-  *
-  * Similarly we start with __sched_clock_stable_early, thereby assuming we
-  * will become stable, such that there's only a single 1 -> 0 transition.
-+ *
-+ * Allowed in .noinstr as an unstable TLC is incompatible with NOHZ_FULL,
-+ * thus the text patching IPI would be the least of our concerns.
-  */
--static DEFINE_STATIC_KEY_FALSE(__sched_clock_stable);
-+static DEFINE_STATIC_KEY_FALSE_NOINSTR(__sched_clock_stable);
- static int __sched_clock_stable_early = 1;
+diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+index 39fd620a7db6f..a4f07fbc13f61 100644
+--- a/kernel/stackleak.c
++++ b/kernel/stackleak.c
+@@ -18,7 +18,11 @@
+ #include <linux/sysctl.h>
+ #include <linux/init.h>
  
- /*
+-static DEFINE_STATIC_KEY_FALSE(stack_erasing_bypass);
++/*
++ * This static key can only be modified via its sysctl interface. It is
++ * expected it will remain stable during latency-senstive operations.
++ */
++static DEFINE_STATIC_KEY_FALSE_NOINSTR(stack_erasing_bypass);
+ 
+ #ifdef CONFIG_SYSCTL
+ static int stack_erasing_sysctl(const struct ctl_table *table, int write,
 -- 
 2.43.0
 
