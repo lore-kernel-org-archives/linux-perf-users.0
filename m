@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF20215055
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD2820766C
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 18:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736877853; cv=none; b=deg9ebwGjS/mF4zIrfyePfjq9VQxo3ig3OEK9soB73jAZKCYUEe66OGwrOyevTg+qOotXpmmyUkNjlFUZeM8pWF/bpU0kCEJcNpesyH0dIIGbkxHZgB1RbgeOHjpneZCz9n+dBBHUAynWgEgKjOFPvXJvm+SGgAUSR7OlHdXees=
+	t=1736877865; cv=none; b=Xcxnl6BX48lM0vtbv3kHJl7+fYggwo6rOcSDItMRFaxNYutONbRED+hIm+H3LupoHt+/tlSHcI+ajZw5Leca59Qa8N8NINwYhJ4q8IjVed6SaQv0uKYIhmkaCLESGT+1FDrmqHReBsdXq9rcHbx2vVrJ5ZqGVM5ZrJnEfrkgrVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736877853; c=relaxed/simple;
-	bh=8Qc17PnoYVrDWBie42x0+m5I3f99ilEL8iBQ1J8ka7s=;
+	s=arc-20240116; t=1736877865; c=relaxed/simple;
+	bh=Mw3gFYE3d/xGzHWONneZh61asJCFkOwmbMPlIHsHUKo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aWC28DM1Sv7WeRWADuqkVNEukKnUhxztG2LbHmmqb3AXPxbhMjL3n96vrj90gwBZovpDSA4g9C2czgYKAIN6lvfcWbqWaUKoXBKpZKH+YofrcSJbcVpan9pjOp/fnxM9I5PfXEaxknAPnibIQHaLlbr3hrxMtjhO8gUZXr5JrG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LTwCaDm0; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=fAz0fWBNplIjq5t8HGBHpOCBUwL4FN5tGVpeQIb38XR4ATGW+HOlE54W8iEWqiDy88+0FxTIEWNjMOqffFRiUMZrOJ1KBCVW51AAacCXdTUNcVQaLjBb+U7SIhk6J/io3MeZ0pcwzIaAIvLh8bPf2yCP8LlqCWU1DRlISOfN2qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tq5xlByH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTwCaDm0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tq5xlByH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736877850;
+	s=mimecast20190719; t=1736877863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qfGcbREmcisg82Rx6e546I8mjQ8z9ythW/HTCaSXKy0=;
-	b=LTwCaDm030pG9AOhBs6eYL8FVYf41aic18w4nWdPtuJyXsj0F+g2wRKOBptvmqUT9KwHse
-	E1ebR9dyzX62LSQh03PMnfQle0oNgEUhCKpCmB4HLRiz5/qJdKcbJ+Bihyrlx+K6PtYAWe
-	0741DzGA8VzB661JDz+biSa82BUPVPg=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=1xC4OsvuHAy+Ds3sLAPsZ084bYad84WLBsAT/g0G1RM=;
+	b=Tq5xlByHAWmx53nlL4Fl6XUaeluEZSfDl6yct+VGCeqfJgQ9TjBldpVdm/hGXlrS+6AdlB
+	69FdHpX1ca8cfBT3t4fuQRdSrY+DoEIWpnj30AfUeV0dYJGLYgGwBX4+v61huay/rAYt33
+	F6dOAsszRYlpe3lvquGxBjRPi4SN0YA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-2bGxv9G8MbqEpONYIM0Pig-1; Tue,
- 14 Jan 2025 13:04:06 -0500
-X-MC-Unique: 2bGxv9G8MbqEpONYIM0Pig-1
-X-Mimecast-MFC-AGG-ID: 2bGxv9G8MbqEpONYIM0Pig
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-15QLd5xpPJuBfkaI0jxIcg-1; Tue,
+ 14 Jan 2025 13:00:36 -0500
+X-MC-Unique: 15QLd5xpPJuBfkaI0jxIcg-1
+X-Mimecast-MFC-AGG-ID: 15QLd5xpPJuBfkaI0jxIcg
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBCE81955D4F;
-	Tue, 14 Jan 2025 18:04:02 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7DD041954195;
+	Tue, 14 Jan 2025 18:00:33 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.192.55])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2065195608A;
-	Tue, 14 Jan 2025 18:03:39 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3F89B195608A;
+	Tue, 14 Jan 2025 18:00:11 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -59,7 +59,8 @@ To: linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	bpf@vger.kernel.org,
 	bcm-kernel-feedback-list@broadcom.com
-Cc: Juergen Gross <jgross@suse.com>,
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
 	Ajay Kaher <ajay.kaher@broadcom.com>,
 	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
 	Russell King <linux@armlinux.org.uk>,
@@ -85,7 +86,6 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
 	Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
@@ -131,9 +131,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v4 27/30] x86/tlb: Make __flush_tlb_local() noinstr-compliant
-Date: Tue, 14 Jan 2025 18:51:40 +0100
-Message-ID: <20250114175143.81438-28-vschneid@redhat.com>
+Subject: [PATCH v4 18/30] x86/kvm/vmx: Mark vmx_l1d_should flush and vmx_l1d_flush_cond keys as allowed in .noinstr
+Date: Tue, 14 Jan 2025 18:51:31 +0100
+Message-ID: <20250114175143.81438-19-vschneid@redhat.com>
 In-Reply-To: <20250114175143.81438-1-vschneid@redhat.com>
 References: <20250114175143.81438-1-vschneid@redhat.com>
 Precedence: bulk
@@ -145,55 +145,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Later patches will require issuing a __flush_tlb_all() from noinstr code.
-This requires making both __flush_tlb_local() and __flush_tlb_global()
-noinstr-compliant.
+Later commits will cause objtool to warn about static keys being used in
+.noinstr sections in order to safely defer instruction patching IPIs
+targeted at NOHZ_FULL CPUs.
 
-For __flush_tlb_local(), xen_flush_tlb() has already been made noinstr, so
-it's just native_flush_tlb_global(), and simply __always_inline'ing
-invalidate_user_asid() gets us there
+These keys are used in .noinstr code, and can be modified at runtime
+(/proc/kernel/vmx* write). However it is not expected that they will be
+flipped during latency-sensitive operations, and thus shouldn't be a source
+of interference wrt the text patching IPI.
 
+Mark it to let objtool know not to warn about it.
+
+Reported-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- arch/x86/include/asm/paravirt.h | 2 +-
- arch/x86/mm/tlb.c               | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index b3daee3d46677..0c0dd186c03e6 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -70,7 +70,7 @@ void native_flush_tlb_one_user(unsigned long addr);
- void native_flush_tlb_multi(const struct cpumask *cpumask,
- 			     const struct flush_tlb_info *info);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 893366e537322..a028c38f44e02 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -225,8 +225,15 @@ module_param(pt_mode, int, S_IRUGO);
  
--static inline void __flush_tlb_local(void)
-+static __always_inline void __flush_tlb_local(void)
- {
- 	PVOP_VCALL0(mmu.flush_tlb_user);
- }
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 2d2ab3e221f0c..18b40bbc2fa15 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -257,7 +257,7 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
-  *
-  * See SWITCH_TO_USER_CR3.
-  */
--static inline void invalidate_user_asid(u16 asid)
-+static __always_inline void invalidate_user_asid(u16 asid)
- {
- 	/* There is no user ASID if address space separation is off */
- 	if (!IS_ENABLED(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION))
-@@ -1206,7 +1206,7 @@ STATIC_NOPV noinstr void native_flush_tlb_global(void)
- /*
-  * Flush the entire current user mapping
-  */
--STATIC_NOPV void native_flush_tlb_local(void)
-+STATIC_NOPV noinstr void native_flush_tlb_local(void)
- {
- 	/*
- 	 * Preemption or interrupts must be disabled to protect the access
+ struct x86_pmu_lbr __ro_after_init vmx_lbr_caps;
+ 
+-static DEFINE_STATIC_KEY_FALSE(vmx_l1d_should_flush);
+-static DEFINE_STATIC_KEY_FALSE(vmx_l1d_flush_cond);
++/*
++ * Both of these static keys end up being used in .noinstr sections, however
++ * they are only modified:
++ * - at init
++ * - from a /proc/kernel/vmx* write
++ * thus during latency-sensitive operations they should remain stable.
++ */
++static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_should_flush);
++static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_flush_cond);
+ static DEFINE_MUTEX(vmx_l1d_flush_mutex);
+ 
+ /* Storage for pre module init parameter parsing */
 -- 
 2.43.0
 
