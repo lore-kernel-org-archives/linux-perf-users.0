@@ -1,96 +1,59 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE902040BD
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 19:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8491D5143;
+	Tue, 14 Jan 2025 19:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736882860; cv=none; b=Rw1TfWDeZ8lj6B4XNMwgBe154cV6PLCI8Q0k17b20UzNVmhcrwJXk4SYTWtlEFqRZlSt630vu//U11M/djzuJveZyrOIjclKLgS4fhbtn3jCwxvQWDDUkKI5nyZQ/rSIvlzslWlySDgSbsy/qDvEm5pM3zB5HoNxah78yjkU/Gw=
+	t=1736882961; cv=none; b=k82yypDWqlgyoMUZYeW/Jiub6VbRVGJBkgSL7WKzViPf5g7xwhIXgrTSRWSsqFFGFWRTpqrdjyaGgR9dOOe2AaYlKCPcp9RyD+2331Pvd1VpvkcuYmL2Gr5ySKrxXOnWttAprGpqW3rs9oF8LqVHo79LbHTpd3OdRniXHA+3/MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736882860; c=relaxed/simple;
-	bh=Uxw0taxwqk1Pq7X+X5K0+wSP4PXacCH+ZF9RVEkvz0M=;
+	s=arc-20240116; t=1736882961; c=relaxed/simple;
+	bh=Y1rD7ysLA8nt9WcqL1WGfLyNFUqZH0Q1EzD/3syv2m0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVkEwMkLqgFc2lHXaj3qDMPCbLMHT0tgwceYtZl8gNzqc4p6r8tpgpiNhfilt1eNCFGryxfXiW0Z8u9ess7Vmih1Ij9p6uedF8T6M69+/lvq/07Xfq8LM3jwi0ntyqd0yCgHNZygC8jUQpdsvi086k0R25LxZPvmyUf1F0khwL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=wWgz3XtF; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RtYbmdCosFwQFtwXrNqZXHI+BGzZi/i6RDtLpdyH+DlOEJyGEZwuia6jbFAuM/WBy1vRfdzR4ucp0ZTNiMFhac1Yo1z5S2TvsHYPdGYMX/T9cLAgKfTYIm68M9zhg561+Eyv7BGSuJjPLxDg7jLwWMou2w48W2F/Njn/WoGV42I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1OZqUwt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="wWgz3XtF"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21675fd60feso130682555ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 11:27:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1736882857; x=1737487657; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ES4PfYVi7ZyhgRUm9GYH+FMCnEy4+AUcUAHWe5oV5jA=;
-        b=wWgz3XtFKEYGCy0b4YoNhIb1fCXl/Z7F2KkJZlBmh3dRCLA2PvI48C7oqgDaE+pEqg
-         FYyNAMsX0JfGGLTRLOehfKbYCTIGCjOIo7f6scTY6Yw8NsR1GCRa0DguFtaZFhWcghR2
-         x32iou7RzmiOp+lK3y6aveqa+rCM+X9+qwD8V4vbDYpNqAKbgvGDXo6MVVcgbeWMl/vf
-         XPBI2cp7SpulNsG2uN+olI53aRT7Dejq3hBkE2fkAJIcVUkyH0NkIFA2vhtVJeh7gvBO
-         nfHqYLSQV/iI4BwxjcZSNdGZwiBjQr/hzcITXsBTKsVF8RNU2JjifmvjoRYAzWmG5Hpd
-         54hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736882857; x=1737487657;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ES4PfYVi7ZyhgRUm9GYH+FMCnEy4+AUcUAHWe5oV5jA=;
-        b=cCoThII3yDdtYfcfMSzcJBRbdQp88G+sItMfVQ4wSOBpBJrP8LgCMCW74x91H5HdE5
-         ByzavbM1TkAhfCZoSngEqWp0EJozY7gS293e5xrkp9M88RuoBSX2euvdyPi8n8wsb+4C
-         ra5kD7PP2am0Qb72e1A3NvFUHAAkEHn5RzN2+ZyOnVRem8RrPbXofeBoJCNenInv3KEx
-         ZH1kKpd7tB107bPOlhDwqMnmZi8ZSkJcCCi8Wfh41IBP3pyIiiOsa2m/TVxPYbBSBgHt
-         4s6rD1fRbcijMyNQon4ugy97YVKME70fdETVgYQTjCLFqgFt4HEjqD5yVuluN1dNBBM4
-         QVBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhVQkrdKAhEIsKKY5ZO5TpmNL220KdCWb+1ZsPGZS77OUCmYnwAbAfBB2zzUVGp/+vDT5G3+g9LcEMQU05uk9X@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO3dq7G9eHZdvIBAedfG331SY3zbRzPapzNCiQp10OKRhkHPct
-	HWt/b4PKc97VO4aVekCIH1hN+h8J/UOnr7bmig4loY7XdLcMpImamQwmsUbj7yk=
-X-Gm-Gg: ASbGncuMq7Th63lnxyF9XBHw2/6XAETsZufPQZwsrHAs61yZCEoahPF3QVvd5kWlTtA
-	EkvOHYSwb0eIUljQwldiGwzOja97L7lWP89oSEHcMAzaK2V4fLz1jWOQU6Etrf29RKyluFX+zqS
-	HwiDiHZeLM+yOOWdq0ssaUcTGkQ5tbOtKbKNa6etI3NMLokHyH1a1x+aMGXPpkl3wdAKsHvU4hT
-	5ZvIbKIMWq4NdjPq3vldUSDIqZ3E58p+7S0sGjEwHd57tL8ufNP
-X-Google-Smtp-Source: AGHT+IHNba0GEbibje0t5wLZKfmTow6LQxoYMbmUndt+PVUCx5IeqgXnaaRg1lp0Qu+9TDj1PY7X3A==
-X-Received: by 2002:a17:902:d4cd:b0:216:3c2b:a5e5 with SMTP id d9443c01a7336-21a83f71115mr361190955ad.27.1736882856927;
-        Tue, 14 Jan 2025 11:27:36 -0800 (PST)
-Received: from ghost ([2601:647:6700:64d0:c3be:2c11:1223:572a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10e006sm70578375ad.1.2025.01.14.11.27.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 11:27:34 -0800 (PST)
-Date: Tue, 14 Jan 2025 11:27:30 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1OZqUwt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59644C4CEDD;
+	Tue, 14 Jan 2025 19:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736882961;
+	bh=Y1rD7ysLA8nt9WcqL1WGfLyNFUqZH0Q1EzD/3syv2m0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1OZqUwtq98ldpwv2P3EcvYZ4/E7vUT/O31/nfukOmu6sXSmpN3GcMqfF6u7+Q9KB
+	 ZOJt9kiP9Kf4diBuCt8Lj5u6h0RSaghbNS/QHmVQjoDpAw83ZqgCO4XhO0aFfuZWjy
+	 rRPl0M2bDlWRgP07wmSoNa5YPNaZdkr+f5yaHS/sxtn+C0wtYXGs9Dd8cm/u6+zfOm
+	 2aATjkRrmib3ErXMUCd8kBMbol6vIFaNRAxo6lKBfnocOL0epZ41Dk3rKHdg9AmFLP
+	 +4CqmWn2/itjDhQFR+yd+wQyzXPFLygCkxeFPN0nfK4AIBYsqtzMAJoIkaB6zg/rj1
+	 96WjAR4J2JiDQ==
+Date: Tue, 14 Jan 2025 11:29:18 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Christian Brauner <brauner@kernel.org>, Guo Ren <guoren@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 00/16] perf tools: Use generic syscall scripts for all
- archs
-Message-ID: <Z4a6oivg7f74N12Q@ghost>
-References: <20250108-perf_syscalltbl-v6-0-7543b5293098@rivosinc.com>
- <Z3_ybwWW3QZvJ4V6@x1>
- <Z4AoFA974kauIJ9T@ghost>
- <Z4A2Y269Ffo0ERkS@x1>
- <Z4BEygdXmofWBr0-@x1>
- <Z4BVK3D7sN-XYg2o@ghost>
- <Z4F1dXQLPGZ3JFI5@ghost>
- <Z4UpRqywqYPZSUM_@x1>
- <Z4alwvqYithaVLSL@x1>
+	Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
+ don't open
+Message-ID: <Z4a7DncIlP6pznW7@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-4-irogers@google.com>
+ <Z4B279zu_8Kz5N6u@google.com>
+ <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
+ <Z4FtHGBbCEeLQhAm@google.com>
+ <CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -100,196 +63,165 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4alwvqYithaVLSL@x1>
+In-Reply-To: <CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com>
 
-On Tue, Jan 14, 2025 at 02:58:26PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Jan 13, 2025 at 11:55:05AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Jan 10, 2025 at 11:31:01AM -0800, Charlie Jenkins wrote:
-> > > On Thu, Jan 09, 2025 at 03:00:59PM -0800, Charlie Jenkins wrote:
-> > > > Ooh okay I see, the quiet commands were being ignored as-is. We could
-> > > > add the lines to handle this to Makefile.syscalls, but I think the
-> > > > better solution is to move the lines from Makefile.build to
-> > > > Makefile.perf to be more generically available. Here is a patch for
-> > > > that. I also added the comment from the kernel Makefile describing what
-> > > > this does.
-> > 
-> > > > From 8dcec7f5d937ede3d33c687573dc2f1654ddc59e Mon Sep 17 00:00:00 2001
-> > > > From: Charlie Jenkins <charlie@rivosinc.com>
-> > > > Date: Thu, 9 Jan 2025 14:36:40 -0800
-> > > > Subject: [PATCH] perf tools: Expose quiet/verbose variables in Makefile.perf
-> > > > 
-> > > > The variables to make builds silent/verbose live inside
-> > > > tools/build/Makefile.build. Move those variables to the top-level
-> > > > Makefile.perf to be generally available.
-> > 
-> > <SNIP applied patch>
-> >  
-> > > Let me know how you want to handle this, I can send this out as a
-> > > separate patch if that's better.
-> > 
-> > I used the patch you provided above after hand editing the message
-> > before feeding it to 'git am', added these comments:
+On Fri, Jan 10, 2025 at 11:18:53AM -0800, Ian Rogers wrote:
+> On Fri, Jan 10, 2025 at 10:55 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Thu, Jan 09, 2025 at 08:44:38PM -0800, Ian Rogers wrote:
+> > > On Thu, Jan 9, 2025 at 5:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
+> > > > > Whilst for many tools it is an expected behavior that failure to open
+> > > > > a perf event is a failure, ARM decided to name PMU events the same as
+> > > > > legacy events and then failed to rename such events on a server uncore
+> > > > > SLC PMU. As perf's default behavior when no PMU is specified is to
+> > > > > open the event on all PMUs that advertise/"have" the event, this
+> > > > > yielded failures when trying to make the priority of legacy and
+> > > > > sysfs/json events uniform - something requested by RISC-V and ARM. A
+> > > > > legacy event user on ARM hardware may find their event opened on an
+> > > > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
+> > > > > such events which this patch implements. Rather than have the skipping
+> > > > > conditional on running on ARM, the skipping is done on all
+> > > > > architectures as such a fundamental behavioral difference could lead
+> > > > > to problems with tools built/depending on perf.
+> > > > >
+> > > > > An example of perf record failing to open events on x86 is:
+> > > > > ```
+> > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+> > > > > Error:
+> > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
+> > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > >
+> > > > > Error:
+> > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
+> > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > >
+> > > > > Error:
+> > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > The LLC-prefetch-read event is not supported.
+> > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+> > > >
+> > > > I'm afraid this can be too noisy.
+> > >
+> > > The intention is to be noisy:
+> > > 1) it matches the existing behavior, anything else is potentially a regression;
+> >
+> > Well.. I think you're changing the behavior. :)  Also currently it just
+> > fails on the first event so it won't be too much noisy.
+> >
+> >   $ perf record -e data_read,data_write,LLC-prefetch-read -a sleep 0.1
+> >   event syntax error: 'data_read,data_write,LLC-prefetch-read'
+> >                        \___ Bad event name
+> >
+> >   Unable to find event on a PMU of 'data_read'
+> >   Run 'perf list' for a list of valid events
+> >
+> >    Usage: perf record [<options>] [<command>]
+> >       or: perf record [<options>] -- <command> [<options>]
+> >
+> >       -e, --event <event>   event selector. use 'perf list' to list available events
 > 
-> Somehow this is causing some trouble:
+> Fwiw, this error is an event parsing error not an event opening error.
+> You need to select an uncore event, I was using data_read which exists
+> in the uncore_imc_free_running PMUs on Intel tigerlake. Here is the
+> existing error message:
+> ```
+> $ perf record -e data_read -a true
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
+> ```
+> and here it with the series:
+> ```
+> $ perf record -e data_read -a true
+> Error:
+> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0'
+> which will be removed.
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
 > 
-> ⬢ [acme@toolbox perf-tools-next]$ make -C tools/perf build-test
-> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> - tarpkg: ./tests/perf-targz-src-pkg .
-> /bin/sh: line 1: @make: command not found
-> make[4]: *** [Makefile:27: clean-asm_pure_loop] Error 127
-> make[3]: *** [Makefile.perf:764: tests-coresight-targets-clean] Error 2
-> make[2]: *** [Makefile:96: clean] Error 2
-> make[1]: *** [tests/make:330: make_static] Error 2
-> make: *** [Makefile:109: build-test] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> ⬢ [acme@toolbox perf-tools-next]$
+> Error:
+> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1'
+> which will be removed.
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
 > 
-> Can you please try fixing it as I'm busy now (I'll be on vacation from
-> tomorrow till early February)? This is what I extracted:
+> Error:
+> Failure to open any events for recording.
+> ```
+> and here is what it would be with pr_debug:
+> ```
+> $ perf record -e data_read -a true
+> Error:
+> Failure to open any events for recording.
+> ```
+> I believe this last output is worst because:
+> 1) If not all events fail to open there is no error reported unless I
+> know to run with -v, which will also bring a bunch more noise with it,
 
-There was an erroneous $(Q) in
-tools/perf/tests/shell/coresight/Makefile. Previously it would expand to
-the empty string so wouldn't cause any problems, but now it's in the
-middle of an expression so hence the error. I'll send an updated patch.
+I suggested to add a warning if any (not all) of events failed to open.
+
+  "Removed some unsupported events, use -v for details."
+
+
+> 2) I don't see the PMU / event name and "Invalid argument" indicating
+> what has gone wrong again unless I know to run with -v and get all the
+> verbose noise with that.
+
+I don't think single -v adds a lot of noise in the output.
 
 > 
-> commit c199fd785d18121ffd0ba5758e23a42ba2984e11
-> Author: Charlie Jenkins <charlie@rivosinc.com>
-> Date:   Mon Jan 13 11:50:55 2025 -0300
+> Yes it is noisy on 1 platform for 1 event due to an ARM PMU event name
+> bug that ARM should have long ago fixed. That should be fixed rather
+> than hiding errors and making users think they are recording samples
+> when silently they're not - or they need to search through verbose
+> output to try to find out if something broke.
+
+I'm not sure if it's a bug in the driver.  It happens because perf tool
+changed the way it finds events - it used to look at the core PMUs only
+if no PMU name was given, but now it searches every PMU, right?
+
 > 
->     perf tools: Expose quiet/verbose variables in Makefile.perf
->     
->     The variables to make builds silent/verbose live inside
->     tools/build/Makefile.build. Move those variables to the top-level
->     Makefile.perf to be generally available.
->     
->     Committer testing:
->     
->     See the SYSCALL lines, now they are consistent with the other
->     operations in other lines:
->     
->       SYSTBL  /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_32.h
->       SYSTBL  /tmp/build/perf-tools-next/arch/x86/include/generated/asm/syscalls_64.h
->       GEN     /tmp/build/perf-tools-next/common-cmds.h
->       GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
->       PERF_VERSION = 6.13.rc2.g3d94bb6ed1d0
->       GEN     perf-archive
->       MKDIR   /tmp/build/perf-tools-next/jvmti/
->       MKDIR   /tmp/build/perf-tools-next/jvmti/
->       MKDIR   /tmp/build/perf-tools-next/jvmti/
->       MKDIR   /tmp/build/perf-tools-next/jvmti/
->       GEN     perf-iostat
->       CC      /tmp/build/perf-tools-next/jvmti/libjvmti.o
->       CC      /tmp/build/perf-tools-next/jvmti/jvmti_agent.o
->     
->     Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->     Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
->     Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Arnd Bergmann <arnd@arndb.de>
->     Cc: Christian Brauner <brauner@kernel.org>
->     Cc: Guo Ren <guoren@kernel.org>
->     Cc: Günther Noack <gnoack@google.com>
->     Cc: Ian Rogers <irogers@google.com>
->     Cc: Ingo Molnar <mingo@redhat.com>
->     Cc: James Clark <james.clark@linaro.org>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: John Garry <john.g.garry@oracle.com>
->     Cc: Jonathan Corbet <corbet@lwn.net>
->     Cc: Leo Yan <leo.yan@linux.dev>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Mickaël Salaün <mic@digikod.net>
->     Cc: Mike Leach <mike.leach@linaro.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Palmer Dabbelt <palmer@dabbelt.com>
->     Cc: Paul Walmsley <paul.walmsley@sifive.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Will Deacon <will@kernel.org>
->     Link: http://lore.kernel.org/lkml/None
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > 2) it only happens if trying to record on a PMU/event that doesn't
+> > > support recording, something that is currently an error and so we're
+> > > not motivated to change the behavior as no-one should be using it;
+> >
+> > It was caught by Linus, so we know at least one (very important) user.
 > 
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index 5fb3fb3d97e0fd11..e710ed67a1b49d9f 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
-> @@ -12,26 +12,6 @@
->  PHONY := __build
->  __build:
->  
-> -ifeq ($(V),1)
-> -  quiet =
-> -  Q =
-> -else
-> -  quiet=quiet_
-> -  Q=@
-> -endif
-> -
-> -# If the user is running make -s (silent mode), suppress echoing of commands
-> -# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> -ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> -short-opts := $(firstword -$(MAKEFLAGS))
-> -else
-> -short-opts := $(filter-out --%,$(MAKEFLAGS))
-> -endif
-> -
-> -ifneq ($(findstring s,$(short-opts)),)
-> -  quiet=silent_
-> -endif
-> -
->  build-dir := $(srctree)/tools/build
->  
->  # Define $(fixdep) for dep-cmd function
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index a449d00155364422..55d6ce9ea52fb2a5 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -161,12 +161,47 @@ export VPATH
->  SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
->  endif
->  
-> +# Beautify output
-> +# ---------------------------------------------------------------------------
-> +#
-> +# Most of build commands in Kbuild start with "cmd_". You can optionally define
-> +# "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
-> +# that command is printed by default.
-> +#
-> +# e.g.)
-> +#    quiet_cmd_depmod = DEPMOD  $(MODLIB)
-> +#          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
-> +#
-> +# A simple variant is to prefix commands with $(Q) - that's useful
-> +# for commands that shall be hidden in non-verbose mode.
-> +#
-> +#    $(Q)$(MAKE) $(build)=scripts/basic
-> +#
-> +# To put more focus on warnings, be less verbose as default
-> +# Use 'make V=1' to see the full commands
-> +
->  ifeq ($(V),1)
-> +  quiet =
->    Q =
->  else
-> -  Q = @
-> +  quiet=quiet_
-> +  Q=@
->  endif
->  
-> +# If the user is running make -s (silent mode), suppress echoing of commands
-> +# make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> +ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> +short-opts := $(firstword -$(MAKEFLAGS))
-> +else
-> +short-opts := $(filter-out --%,$(MAKEFLAGS))
-> +endif
-> +
-> +ifneq ($(findstring s,$(short-opts)),)
-> +  quiet=silent_
-> +endif
-> +
-> +export quiet Q
-> +
->  # Do not use make's built-in rules
->  # (this improves performance and avoids hard-to-debug behaviour);
->  MAKEFLAGS += -r
+> If they care enough then specifying the PMU with the event will avoid
+> any warning and has always been a fix for this issue. It was the first
+> proposed workaround for Linus.
+
+I guess that's what Linus said regression.
+
+> 
+> > > 3) for the wildcard case the only offender is ARM's SLC PMU and the
+> > > appropriate fix there has always been to make the CPU cycle's event
+> > > name match the bus_cycles event name by calling it cpu_cycles -
+> > > something that doesn't conflict with a core PMU event name, the thing
+> > > that has introduced all these problems, patches, long email exchanges,
+> > > unfixed inconsistencies, etc.. If the errors aren't noisy then there
+> > > is little motivation for the ARM SLC PMU's event name to be fixed.
+> >
+> > I understand your concern but I'm not sure it's the best way to fix the
+> > issue.
+> 
+> Right, I'm similarly concerned about hiding legitimate warning/error
+> messages because of 1 event on 1 PMU on 1 architecture because of how
+> perf gets driven by 1 user. Yes, when you break you can wade through
+> the verbose output but imo the verbose output was never intended to be
+> used in that way.
+
+Well, the verbose output is to debug when something doesn't go well, no?
+
+Thanks,
+Namhyung
+
+
