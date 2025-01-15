@@ -1,292 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2076.outbound.protection.outlook.com [40.107.236.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C9A6FB9;
-	Wed, 15 Jan 2025 02:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736909532; cv=none; b=Dtu/k8V6oVF2mLfxhnmHlsD7M694DavaS9mWEl5fqQ++1JmjA98Io0MN7ftl3FqNlcVhgMrwcB7fCoR9PO/gqvbbxIGoLV9QhM63W47wX0QQgetUAV8TfPzIr6wITbcerpezqiQsHNn+GlQIBP8O/wUZehoRRXWCqeTQpi5ZU+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736909532; c=relaxed/simple;
-	bh=yMuW3rZ5VC8zMDyShFBfQdCFCTvHdntK2B1qzK7sFuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pgI47bitKO4enXzF8UHfhU8L7h1SJaKAoP3rxQjJjfFvP6Mbm4aENAXlJK87GbawczSLV0JtEPP9M5eYkYyNWKCEeYRCbSYUJr2sI+OCS5uRfRR4n0vadkEpoBbCD1PHD9EpyQlaNj2ko1mYlqFmdd1GO+eRSb1Gv3fMwEyhlnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SLEaCYUI; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD4D22F384;
+	Wed, 15 Jan 2025 05:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736919965; cv=fail; b=sR92xJalECQcvy0dQPvk7fpGtxrR5+LLU24jw1Q26ZXRlFG+AN8/zK6AATa18mjZjCY0oFH/Nojm5tl5IXbYzsaPELiyPBlwzs2RJ9CgzTBsSc49KOIYtGfg1vKnH4VS0MQgXuZ3jnh1hXS840oQG1ADSP1nflZfPBI+FALrzxA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736919965; c=relaxed/simple;
+	bh=iCJSyrpAGG+11SM5FfdQx143oQPKaCLfkPomzceZrvM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sCHXa/CTFmr+bo73ijpnHhygYAJ6yKiFtM9P7oeQiSF4g63eclvkzpt8byE3mWUW33TG9pxvJc9FAqV/VsSLhX5+rXzehIQ8RSbsQqeUhnFSqqNI3yhuov3+9RLdF0XGb0rU7+yKhVIXbaIBREWFZH+jbDcdqVCXYQSM3R2pG88=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Obj+Entb; arc=fail smtp.client-ip=40.107.236.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SLEaCYUI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736909531; x=1768445531;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yMuW3rZ5VC8zMDyShFBfQdCFCTvHdntK2B1qzK7sFuE=;
-  b=SLEaCYUIfNhPKZtvKQiLSh5xQatP+JyGQCtaTN0hUA1xh1UZm3MDIPbE
-   0osZChP9hCV0o6gfJEzt32WgJCTN3PA3dHz1t1MCqdNDafSBvjH2QO6Hu
-   niuFC2mHbpR2BzOOHFvqmnO01RcInYADCnED8i29flQnY4LIkNZevvOaA
-   UIYQLzXg4odZ3UFTNbSsq+/dVlB6zWopHCV8ikLagSe3VbIiCPnL+dFe8
-   qgbYPv1sdlBAVnumHW5AW7UIjnnDEtQxwwsTn9tImi6rBm3TIU0D1w20b
-   EdqHyJazBGG/h392zquGpWTibf9VH5FK9AAuEg14N0873VnMfQxDZ6tXF
-   w==;
-X-CSE-ConnectionGUID: 7m4Z6FGBQuS86Ezm2z5BRw==
-X-CSE-MsgGUID: Xas3W/G8T9WBWxuZM7GjWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="40909667"
-X-IronPort-AV: E=Sophos;i="6.12,316,1728975600"; 
-   d="scan'208";a="40909667"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 18:52:10 -0800
-X-CSE-ConnectionGUID: mglLaGBRR5aJ+/PLxKk0JA==
-X-CSE-MsgGUID: JOTLoJsvTwm5KtGuRfeqBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135860276"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 18:52:04 -0800
-Message-ID: <de34d0eb-095b-4992-a48d-28f5a59634ca@linux.intel.com>
-Date: Wed, 15 Jan 2025 10:52:02 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Obj+Entb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y081ZohoAsVgW4vFtn63r6MbgWBLmmRB/wCVcllBI4jF3k7+yDhxyFY2v6dkINoFHfO70yV5f2G+gzKAP3KcpzL3CitMC5ZerhuZZ5R9gn6jAfF2aTrOxPu8S0pKXXo+xCnF5wfFAI7mTtYaynLGBGPQyAhUsFN5jsZqelagjZJMBdvrpZSb9Nn8OuAGboeqycAuMxiFHqAoYhNTrOQ3XqRIOqwvNfG8iKTK5KZELeVAWU+c4XG+jvyJW6uoELICIdZGohU+roJvsfR1ICGD8sgEtwL9LJxhuARO2ebbnHEikFyZgvyuOW38GMWG7QBusHFdp0CFg8fRkNILMUDUhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a87sWqX1WwvFOt14T8pV2YJjvLjnLhmCgGPmy35YL68=;
+ b=tg2m4FjCjs+hLBfQsbLxr+EPIGLBZx8awwOVk6J8Guvzr68VsuwOozwDp75EN8U2DBdtusTeMv5zxcQi5i0hjJO+1r/PgS4LgjAkjaYEMGjQ0+rkMS8sCeL3VM0ov6/bZz/CH0UTMavG+nOExqaPg65C3lZEFD57BMmrGDwxfi48dU78eVhBZPNHDB/ZgXstbtAzz+i++bCQQahQs1t2xoouc2TJWEUxs4gG/00119N9CUtj9zPiggucPRiIYaph1lU/wMUSgj9auRV3PSo/4deEtWHNBLjzQcynizny55D/ZOtcv6ddWF1aiF8uopfW1OUMSG1XH9ZRGAlvQ80ZGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a87sWqX1WwvFOt14T8pV2YJjvLjnLhmCgGPmy35YL68=;
+ b=Obj+EntbnlN13iPlZTUc/3zHV/HuSPk8SVBuZTbMlL4/Rah2qlibFgU4ndo0nwgxH+DEFDoOFqLacMKi9jKdExXZhoSx+Up+kBHnCW0aEDwGOwFSwnaxbhBDJA32q2E6PLYbt+ZNXSrwfuxNTIZtFzGL7n4bLSxZmHbS4qbiwJ8=
+Received: from BYAPR07CA0108.namprd07.prod.outlook.com (2603:10b6:a03:12b::49)
+ by SA3PR12MB7880.namprd12.prod.outlook.com (2603:10b6:806:305::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Wed, 15 Jan
+ 2025 05:45:58 +0000
+Received: from SJ1PEPF00001CE8.namprd03.prod.outlook.com
+ (2603:10b6:a03:12b:cafe::65) by BYAPR07CA0108.outlook.office365.com
+ (2603:10b6:a03:12b::49) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8335.17 via Frontend Transport; Wed,
+ 15 Jan 2025 05:45:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE8.mail.protection.outlook.com (10.167.242.24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8356.11 via Frontend Transport; Wed, 15 Jan 2025 05:45:58 +0000
+Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 14 Jan
+ 2025 23:45:53 -0600
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>
+CC: <ravi.bangoria@amd.com>, <acme@kernel.org>, <eranian@google.com>,
+	<irogers@google.com>, <kan.liang@linux.intel.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v4 0/9] perf/amd/ibs: Fix sample period computations
+Date: Wed, 15 Jan 2025 05:44:29 +0000
+Message-ID: <20250115054438.1021-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 18/58] KVM: x86/pmu: Introduce
- enable_passthrough_pmu module parameter
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-19-mizhang@google.com> <Zzyg_0ACKwHGLC7w@google.com>
- <50ba7bd1-6acf-4b50-9eb1-8beb2beee9ec@linux.intel.com>
- <Z4b-kkRNp1V0faTq@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <Z4b-kkRNp1V0faTq@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE8:EE_|SA3PR12MB7880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59b8dfdd-cd1d-477d-f273-08dd3527e2f6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2qWYemUAwwPePzxntCfz9i1mI4BPFI8kBNp2nu5/Mee1ukKNGg2j+fzT3SZ3?=
+ =?us-ascii?Q?hJcdJKd01OzmqPHQ6grzSyS7e4xZPHKfgHY+ug13JDzhvnQ0QaBO95HqJ30T?=
+ =?us-ascii?Q?cJfJqffC3iRcRImuFmYmguRYCAMKyv/56Np05L49obHd+jRm6p/hgWrhpQZh?=
+ =?us-ascii?Q?EUcYKDeWqauV3lgmnTDK/3KnUtiCZu6wMaDRTNUmRP6yX28kr+exvNB18Rx/?=
+ =?us-ascii?Q?0/mPBwq+cd7RhqOJHX9OwUrRcCwIAJgAVlJJv3CLHEzPUs9mC61o3vHKQwBm?=
+ =?us-ascii?Q?TmMikvZZ08SrXdqgi/vKqqC1mqkXGuY2jjlq0djdtJQteX+V01Y8QdLxXhSV?=
+ =?us-ascii?Q?pgoISj91+gKj4C+2B5JBYG9dkLRve3SA8bOw3iN7f+MxCPg7+bKnD5UFhxo3?=
+ =?us-ascii?Q?FBVt6S2D4mkxqso4jdsURPU2bjk1l4Ae4Fk/5mEjIGFvgayvw4byIaOM9o1C?=
+ =?us-ascii?Q?MvKnoq34jK/eZir2eEeG7KgMCZ9DGxS7yEEPwkVrBk037RXOAmb7awpIUfi1?=
+ =?us-ascii?Q?lAbhdpeLZJzkGK1OFSWcw1AYs7xoQWrkbtxBizLBMM8bcfyTHyvVIBhzo/al?=
+ =?us-ascii?Q?l4CDsGGslD5OrT6XeNt6Pxyyq++vuaXc662mkmIeigAvNmUi7U9VvMnS9FM6?=
+ =?us-ascii?Q?qwI2XAyrHPndmfugt4Kdial61MPBYO3xW/Buo3+wGaywDCfHlZMsKfdqnhH3?=
+ =?us-ascii?Q?xW4eCIDznGt0mBWZFr/nkORQDrfy+W/nCS3jOa8oZ5Upx744B5B6f7VUfFQo?=
+ =?us-ascii?Q?crdLEO+yPUOeEUAGJ/VUxtYJnnDN4UBjGAWRg1qavB4aSnf9g86lFHC7avqF?=
+ =?us-ascii?Q?+8EX1vUIdrHcVW6ruPOnpRs5shqKMXwahnZUdzfcc4TGPJtglzXzUbzsklG+?=
+ =?us-ascii?Q?6HE/IKDlv6XbdAxvXdcPh2sAzFB1KwsUz9/v4rPoH4AjDKwS8b4FXsySyZhd?=
+ =?us-ascii?Q?TJOR1TUyEqzVgjJAOryYnOjDzJx5thkbFSdMgzDJFA7Ewl2BG0Ke3+qyYkv6?=
+ =?us-ascii?Q?biCNl4s3h5qGbCsiVUYoM+mKl6okPwhf1d0jyH1FuoJ3qfjon37BWAsBpPZA?=
+ =?us-ascii?Q?E9kCKBOvzVpXggd3jX4IVxMQziyNVdQlx8Z+XHSHbuQi4uOoaDI/8A3r4Icl?=
+ =?us-ascii?Q?6uf++Qx4zpPXj7v2LNcUgBtBnReIUaQsKZom08Cx7q2ymGkBddB/37sfRr78?=
+ =?us-ascii?Q?e0NHWQ9fZZz1lwbnNr/24jWaD4CKLLzS7hCnWAHC4SFhdff6nmWE6eLcMaf7?=
+ =?us-ascii?Q?15Uc1q7LyDAPI4B8/PKHDfwlA8zxisn7tJU0nWmB/SlM57GSur2NJcIZq5xz?=
+ =?us-ascii?Q?QELBpTJ0Q8DFFclLbmnTJn3nRE6HRLQqYiz9Ust+DTC5oSCxJ2egelV5G8X9?=
+ =?us-ascii?Q?BTka7vyIr0TIFXHsTwYnGe/1Ek2Jx4v1Dax6V4gcHv1zIthmPiM+hs8iocFw?=
+ =?us-ascii?Q?lgR6vGK0yStfTlVRFpCdLBzZXQD6tNyHp1/PejlAiCrDwGygtgqHV1fe+sMk?=
+ =?us-ascii?Q?u7NfO4iiFJQtifE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 05:45:58.2747
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59b8dfdd-cd1d-477d-f273-08dd3527e2f6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE8.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7880
 
+IBS Fetch and IBS Op PMUs have constraints on supported sample period
+values. The IBS hw behavior could be undefined if they are not followed.
+Currently, IBS driver does not honor them correctly and thus a malicious
+event could cause issues to the system. Fortunately, the IBS hw is very
+resilient so far and IBS PMUs are restricted to root only, so the attack
+vector is minimal. In any case, these are genuine bugs and must be fixed.
 
-On 1/15/2025 8:17 AM, Mingwei Zhang wrote:
-> On Wed, Nov 20, 2024, Mi, Dapeng wrote:
->> On 11/19/2024 10:30 PM, Sean Christopherson wrote:
->>> As per my feedback in the initial RFC[*]:
->>>
->>>  2. The module param absolutely must not be exposed to userspace until all patches
->>>     are in place.  The easiest way to do that without creating dependency hell is
->>>     to simply not create the module param.
->>>
->>> [*] https://lore.kernel.org/all/ZhhQBHQ6V7Zcb8Ve@google.com
->> Sure. It looks we missed this comment. Would address it.
->>
-> Dapeng, just synced with Sean offline. His point is that we still need
-> kernel parameter but introduce that in the last part of the series so
-> that any bisect won't trigger the new PMU logic in the middle of the
-> series. But I think you are right to create a global config and make it
-> false.
+Patches are prepared on tip/perf/core (b709eb872e19) with 4cd67bac9d4e
+("perf test: Introduce DEFINE_SUITE_EXCLUSIVE().") cherry-picked from
+perf-tools-next/perf-tools-next.
 
-Ok, I would add a patch to expose the kernel parameter and put it at the
-last. Thanks.
+v3: https://lore.kernel.org/r/20241210093449.1662-1-ravi.bangoria@amd.com
+v3->v4:
+  - No need to add pmu->adjust_period() callback. Adjust sample_period
+    within IBS driver itself.
+  - Fix perf IBS period test when sampling freq is more than
+    perf_event_max_sample_rate.
+  - Add unit test with sample_period beyond IBS PMU supported max period.
+  - Fix i386 perf tool build failure.
+  - Patch to introduce DEFINE_SUITE_EXCLUSIVE() is already picked up by
+    Arnaldo and is in the perf-tools-next/perf-tools-next. So remove it
+    from the series.
 
+Ravi Bangoria (9):
+  perf/amd/ibs: Remove IBS_{FETCH|OP}_CONFIG_MASK macros
+  perf/amd/ibs: Remove pointless sample period check
+  perf/amd/ibs: Fix ->config to sample period calculation for OP PMU
+  perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
+  perf/amd/ibs: Don't allow freq mode event creation through ->config
+    interface
+  perf/amd/ibs: Add PMU specific minimum period
+  perf/amd/ibs: Add ->check_period() callback
+  perf/amd/ibs: Ceil sample_period to min_period
+  perf test amd ibs: Add sample period unit test
 
->
->>> On Thu, Aug 01, 2024, Mingwei Zhang wrote:
->>>> Introduce enable_passthrough_pmu as a RO KVM kernel module parameter. This
->>>> variable is true only when the following conditions satisfies:
->>>>  - set to true when module loaded.
->>>>  - enable_pmu is true.
->>>>  - is running on Intel CPU.
->>>>  - supports PerfMon v4.
->>>>  - host PMU supports passthrough mode.
->>>>
->>>> The value is always read-only because passthrough PMU currently does not
->>>> support features like LBR and PEBS, while emualted PMU does. This will end
->>>> up with two different values for kvm_cap.supported_perf_cap, which is
->>>> initialized at module load time. Maintaining two different perf
->>>> capabilities will add complexity. Further, there is not enough motivation
->>>> to support running two types of PMU implementations at the same time,
->>>> although it is possible/feasible in reality.
->>>>
->>>> Finally, always propagate enable_passthrough_pmu and perf_capabilities into
->>>> kvm->arch for each KVM instance.
->>>>
->>>> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->>>> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
->>>> ---
->>>>  arch/x86/include/asm/kvm_host.h |  1 +
->>>>  arch/x86/kvm/pmu.h              | 14 ++++++++++++++
->>>>  arch/x86/kvm/vmx/vmx.c          |  7 +++++--
->>>>  arch/x86/kvm/x86.c              |  8 ++++++++
->>>>  arch/x86/kvm/x86.h              |  1 +
->>>>  5 files changed, 29 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->>>> index f8ca74e7678f..a15c783f20b9 100644
->>>> --- a/arch/x86/include/asm/kvm_host.h
->>>> +++ b/arch/x86/include/asm/kvm_host.h
->>>> @@ -1406,6 +1406,7 @@ struct kvm_arch {
->>>>  
->>>>  	bool bus_lock_detection_enabled;
->>>>  	bool enable_pmu;
->>>> +	bool enable_passthrough_pmu;
->>> Again, as I suggested/requested in the initial RFC[*], drop the per-VM flag as well
->>> as kvm_pmu.passthrough.  There is zero reason to cache the module param.  KVM
->>> should always query kvm->arch.enable_pmu prior to checking if the mediated PMU
->>> is enabled, so I doubt we even need a helper to check both.
->>>
->>> [*] https://lore.kernel.org/all/ZhhOEDAl6k-NzOkM@google.com
->> Sure.
->>
->>
->>>>  
->>>>  	u32 notify_window;
->>>>  	u32 notify_vmexit_flags;
->>>> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->>>> index 4d52b0b539ba..cf93be5e7359 100644
->>>> --- a/arch/x86/kvm/pmu.h
->>>> +++ b/arch/x86/kvm/pmu.h
->>>> @@ -208,6 +208,20 @@ static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
->>>>  			enable_pmu = false;
->>>>  	}
->>>>  
->>>> +	/* Pass-through vPMU is only supported in Intel CPUs. */
->>>> +	if (!is_intel)
->>>> +		enable_passthrough_pmu = false;
->>>> +
->>>> +	/*
->>>> +	 * Pass-through vPMU requires at least PerfMon version 4 because the
->>>> +	 * implementation requires the usage of MSR_CORE_PERF_GLOBAL_STATUS_SET
->>>> +	 * for counter emulation as well as PMU context switch.  In addition, it
->>>> +	 * requires host PMU support on passthrough mode. Disable pass-through
->>>> +	 * vPMU if any condition fails.
->>>> +	 */
->>>> +	if (!enable_pmu || kvm_pmu_cap.version < 4 || !kvm_pmu_cap.passthrough)
->>> As is quite obvious by the end of the series, the v4 requirement is specific to
->>> Intel.
->>>
->>> 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
->>> 	    (is_intel && kvm_pmu_cap.version < 4) ||
->>> 	    (is_amd && kvm_pmu_cap.version < 2))
->>> 		enable_passthrough_pmu = false;
->>>
->>> Furthermore, there is zero reason to explicitly and manually check the vendor,
->>> kvm_init_pmu_capability() takes kvm_pmu_ops.  Adding a callback is somewhat
->>> undesirable as it would lead to duplicate code, but we can still provide separation
->>> of concerns by adding const variables to kvm_pmu_ops, a la MAX_NR_GP_COUNTERS.
->>>
->>> E.g.
->>>
->>> 	if (enable_pmu) {
->>> 		perf_get_x86_pmu_capability(&kvm_pmu_cap);
->>>
->>> 		/*
->>> 		 * WARN if perf did NOT disable hardware PMU if the number of
->>> 		 * architecturally required GP counters aren't present, i.e. if
->>> 		 * there are a non-zero number of counters, but fewer than what
->>> 		 * is architecturally required.
->>> 		 */
->>> 		if (!kvm_pmu_cap.num_counters_gp ||
->>> 		    WARN_ON_ONCE(kvm_pmu_cap.num_counters_gp < min_nr_gp_ctrs))
->>> 			enable_pmu = false;
->>> 		else if (pmu_ops->MIN_PMU_VERSION > kvm_pmu_cap.version)
->>> 			enable_pmu = false;
->>> 	}
->>>
->>> 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
->>> 	    pmu_ops->MIN_MEDIATED_PMU_VERSION > kvm_pmu_cap.version)
->>> 		enable_mediated_pmu = false;
->> Sure.  would do.
->>
->>
->>>> +		enable_passthrough_pmu = false;
->>>> +
->>>>  	if (!enable_pmu) {
->>>>  		memset(&kvm_pmu_cap, 0, sizeof(kvm_pmu_cap));
->>>>  		return;
->>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->>>> index ad465881b043..2ad122995f11 100644
->>>> --- a/arch/x86/kvm/vmx/vmx.c
->>>> +++ b/arch/x86/kvm/vmx/vmx.c
->>>> @@ -146,6 +146,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
->>>>  extern bool __read_mostly allow_smaller_maxphyaddr;
->>>>  module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
->>>>  
->>>> +module_param(enable_passthrough_pmu, bool, 0444);
->>> Hmm, we either need to put this param in kvm.ko, or move enable_pmu to vendor
->>> modules (or duplicate it there if we need to for backwards compatibility?).
->>>
->>> There are advantages to putting params in vendor modules, when it's safe to do so,
->>> e.g. it allows toggling the param when (re)loading a vendor module, so I think I'm
->>> supportive of having the param live in vendor code.  I just don't want to split
->>> the two PMU knobs.
->> Since enable_passthrough_pmu has already been in vendor modules,  we'd
->> better duplicate enable_pmu module parameter in vendor modules as the 1st step.
->>
->>
->>>>  #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
->>>>  #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
->>>>  #define KVM_VM_CR0_ALWAYS_ON				\
->>>> @@ -7924,7 +7926,8 @@ static __init u64 vmx_get_perf_capabilities(void)
->>>>  	if (boot_cpu_has(X86_FEATURE_PDCM))
->>>>  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
->>>>  
->>>> -	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
->>>> +	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
->>>> +	    !enable_passthrough_pmu) {
->>>>  		x86_perf_get_lbr(&vmx_lbr_caps);
->>>>  
->>>>  		/*
->>>> @@ -7938,7 +7941,7 @@ static __init u64 vmx_get_perf_capabilities(void)
->>>>  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
->>>>  	}
->>>>  
->>>> -	if (vmx_pebs_supported()) {
->>>> +	if (vmx_pebs_supported() && !enable_passthrough_pmu) {
->>> Checking enable_mediated_pmu belongs in vmx_pebs_supported(), not in here,
->>> otherwise KVM will incorrectly advertise support to userspace:
->>>
->>> 	if (vmx_pebs_supported()) {
->>> 		kvm_cpu_cap_check_and_set(X86_FEATURE_DS);
->>> 		kvm_cpu_cap_check_and_set(X86_FEATURE_DTES64);
->>> 	}
->> Sure. Thanks for pointing this.
->>
->>
->>>>  		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
->>>>  		/*
->>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>>> index f1d589c07068..0c40f551130e 100644
->>>> --- a/arch/x86/kvm/x86.c
->>>> +++ b/arch/x86/kvm/x86.c
->>>> @@ -187,6 +187,10 @@ bool __read_mostly enable_pmu = true;
->>>>  EXPORT_SYMBOL_GPL(enable_pmu);
->>>>  module_param(enable_pmu, bool, 0444);
->>>>  
->>>> +/* Enable/disable mediated passthrough PMU virtualization */
->>>> +bool __read_mostly enable_passthrough_pmu;
->>>> +EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
->>>> +
->>>>  bool __read_mostly eager_page_split = true;
->>>>  module_param(eager_page_split, bool, 0644);
->>>>  
->>>> @@ -6682,6 +6686,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->>>>  		mutex_lock(&kvm->lock);
->>>>  		if (!kvm->created_vcpus) {
->>>>  			kvm->arch.enable_pmu = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
->>>> +			/* Disable passthrough PMU if enable_pmu is false. */
->>>> +			if (!kvm->arch.enable_pmu)
->>>> +				kvm->arch.enable_passthrough_pmu = false;
->>> And this code obviously goes away if the per-VM snapshot is removed.
+ arch/x86/events/amd/ibs.c                  |  92 +-
+ arch/x86/include/asm/perf_event.h          |   1 +
+ tools/perf/arch/x86/include/arch-tests.h   |   1 +
+ tools/perf/arch/x86/tests/Build            |   1 +
+ tools/perf/arch/x86/tests/amd-ibs-period.c | 951 +++++++++++++++++++++
+ tools/perf/arch/x86/tests/arch-tests.c     |   2 +
+ 6 files changed, 1024 insertions(+), 24 deletions(-)
+ create mode 100644 tools/perf/arch/x86/tests/amd-ibs-period.c
+
+-- 
+2.43.0
+
