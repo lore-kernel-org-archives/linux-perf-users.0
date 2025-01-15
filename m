@@ -1,206 +1,346 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD421D90C8
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 21:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A6814B959;
+	Wed, 15 Jan 2025 22:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736976046; cv=none; b=noqut2ZTlRhNSYmO8GSYMmXSmLb9UCrSCdPCPofcwPx90zi+Dn3Xz+mw0h2CqfwABrUSga8wK+QDdcsd+Oazww/SNswCVUxlrgsTyAAYnTxraQDxlLHPVQ+auFElZozT1oZLlx1bVpGbpriAGtRydjreE4CWERuAP+F2Ve6MYEM=
+	t=1736979290; cv=none; b=jFuwsV4IhP2A1vqGQ+6hqjYO510yF17wBtNPobkJ/9qIMgTRIIlU+8gv0gT9LsrPZvrbcJPOY7eF80r252LE1EnL+lHPB3CXZ94vpdf7FIOyy8NQUlAWFkyvI4i2vVXHAxXiSI3knn9Aey1qI7AfyAaYW+qWiylY4zCDG7Swzpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736976046; c=relaxed/simple;
-	bh=RFQGnF82QQKEbPHmfAURW3WE2od1aVQDJNiwGyvFllE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jGy1y35fhH/4svb6J4rmdniY/6huDs56yN68xl0kKIw/QIf7aISJxUsAXfLYkd3skmuEIny8+bvLuw+4yCPvx4uThqSn5qxHDzRaScQNgKjlopmlvVbV9NN+8aH4a2FKUKr1fJ3IVyM5Qa5rKQOsKeD3b3YiyTmGyr/gj+vxoWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTBPd0SZ; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736979290; c=relaxed/simple;
+	bh=rnfEp8aPrsy1U2N3FvE2RQXmcPtwzwGxPuJGGt5uU0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnAmkdcemGUa/vIt8IJHkpcwkG9lklB4cN9WJ8o0Ycr6FAQh/zjunUQxssqbIYRwnzkjdouwy3oGe9YEHm9NCOqTBX3KYKDxtYYdNXHznHe7+vY0m9bxeeT/pGeoGnZW9BkJieIpppOGTdP3yqF00lkcdjVebi2LBG7EIvttcFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8bF/pgP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTBPd0SZ"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a814c54742so6985ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 13:20:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736976044; x=1737580844; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eeZMzdoAZOaC7hUZA2ynOD6FiOeCO3Zdi0LI3tDnsEQ=;
-        b=eTBPd0SZBFKe/dxyjXJsrP4KMoUpKvomEuY3XRS1J3qAOnazgdHGM0MYXu722OCHsy
-         8QnwGU+UgoWnkKaRgQQubgorvEU2Fn14pj9VqnneG25xSRGNcti437frMSEKAVBAc9sM
-         zqCQJjg4DpSERFqr6kViXbqEm8hnGTvw70eWdqNp/I6kwNN3EMzf0qG7VniWv58t+7I8
-         V+taB1LcqGlX7SKBLjCJuXdxxE2QYaDZ8rxNM1FJNDGZDKEE91VoQePTB7XOkc338DY6
-         iiXT4tFg0NcLYWqUsA3X0ormxkoINHJQwCh/BW2u6TCBhBsdDpyErLLxdkn/GQH3JS0o
-         peuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736976044; x=1737580844;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eeZMzdoAZOaC7hUZA2ynOD6FiOeCO3Zdi0LI3tDnsEQ=;
-        b=ZrEpgid2xo2G1sPSs/HfbysKHwZPz7ysJ3sg94t8eks8zlUz1072/gzqT+p4tAUFC9
-         C08YI6bo/GgFX3q6Fer+k1RKUaFZj88nLeYSzNojNHCQtVhONy/KRySZ5I7v/PVzdDy9
-         BPkqb31a19iNrQ11N7+NCfHgqO5kDHJbPH1hASSyGNLC2Cn/oXJO6jXakKLEDmfGOGwC
-         +BOoBTYYXZpkyDy/XTKqDZe9Io1cIDfY+j2Kdh4a8lfJC11lUlFZz88O0/3kOTrKNdoN
-         2pp/xaGao5WjE+XBfOtgr05y2LdIae1rROaRp4XJ9STeRb8o5IDByvWk0VucUZzXZa9G
-         x9xA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpkViAoIZ+dEZEhrdO1Q5kH0JorsSJqeIyyMA9J9Wbv/SFfJi4cG95l9AI9QBNkBGY6cv2kTWZavfVqle4MnN6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxGcNcTAFpIhlgxunlfb5Gu02tuDRnurABDeETLyNoR2Nod+Hz
-	4EU3JPIQ5PU8i9HJHLbEAXPCSNmKszeY30WCV8wZ0ifuzYlN/XVGMgiv1WPoDikk8fnnI9Exr+d
-	hEed/q9WbDufvkjRYf+73skVI11SVOOiqXYK/
-X-Gm-Gg: ASbGnctug8jl7TsW2iqCH0LJwq467CJEUj1oIxUEbtJbk8gKe6mmsxhaI6Zzdix0MH7
-	f34SjvUQDC7m426RGAev78shFsqEFpQIQmSJpUnvQkB54wVb/xbUjd6fz8BcTCssF2ee1SQ==
-X-Google-Smtp-Source: AGHT+IFdY3EdK0RlcaqR7XkhN3TwPfkXvTLWVLDZLyVErZSKQhkg++eul6BWJ+ye5pTMy/Cw/yGmyMYIs/WijFhs82g=
-X-Received: by 2002:a05:6e02:13af:b0:3a7:e616:8d36 with SMTP id
- e9e14a558f8ab-3cee99d21f9mr659135ab.9.1736976043998; Wed, 15 Jan 2025
- 13:20:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8bF/pgP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F73CC4CED1;
+	Wed, 15 Jan 2025 22:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736979290;
+	bh=rnfEp8aPrsy1U2N3FvE2RQXmcPtwzwGxPuJGGt5uU0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n8bF/pgPbF+iC/2yY1YSZGqpiaJ1iA7bekq7/IZRveuFaIY7TepsqFNZw1VzhP1hZ
+	 HcV9deiQzwNgAqP3C4RO9qiPxmQ3VA/LA+J7WqDcoI7+3IH4SQXfwIibjgQGOo7+4f
+	 W7ZWDDIsdYSz4UOa2roWlYkepZsXmoAjyRIFHkrO35zU+nmyXJCPz8ETvFfh9QXoea
+	 Ifnn0gs9akd92/LRCzHVGW7AanWwbdGlE5dCxG1XCM6TE5iRwpRZYX+4hZ+2TDzwvx
+	 UhjLD0ToOAlE3SxuPhKZHqrhdJIsbIZLFIyx9znM3TkXGpRNIRaqrFSUWGVr68x9Es
+	 ZcJKBbMIPG9IQ==
+Date: Wed, 15 Jan 2025 14:14:48 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
+ don't open
+Message-ID: <Z4gzWDsxlSxSbBSQ@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-4-irogers@google.com>
+ <Z4B279zu_8Kz5N6u@google.com>
+ <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
+ <Z4FtHGBbCEeLQhAm@google.com>
+ <CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com>
+ <Z4a7DncIlP6pznW7@google.com>
+ <CAP-5=fWZxpooqOhC_QrR2YaZVEj0UpipBCHXHZMbFfv7G15Vnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
- <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
- <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com> <Z4f3fDXemAMpBNMS@google.com>
-In-Reply-To: <Z4f3fDXemAMpBNMS@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 Jan 2025 13:20:32 -0800
-X-Gm-Features: AbW1kvYyQa9lv756_leTn8rvCmcqj4_u0BB6bMWojLD8QesTDfLByWCEv88e_84
-Message-ID: <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWZxpooqOhC_QrR2YaZVEj0UpipBCHXHZMbFfv7G15Vnw@mail.gmail.com>
 
-On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > > There was an explicit, and reviewed by Jiri and Arnaldo, intent with
-> > > the hybrid work that using a legacy event with a hybrid PMU, even
-> > > though the PMU doesn't advertise through json or sysfs the legacy
-> > > event, the perf tool supports it.
->
-> I thought legacy events on hybrid were converted to PMU events.
-
-No, when BIG.little was created nothing changed in perf events but
-when Intel did hybrid they wanted to make the hybrid CPUs (atom and
-performance) appear as if they were one type. The PMU event encodings
-vary a lot for this on Intel, ARM has standards for the encoding.
-Intel extended the legacy format to take a PMU type id:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
-"EEEEEEEE: PMU type ID"
-that is in the top 32-bits of the config.
-
+On Tue, Jan 14, 2025 at 03:55:47PM -0800, Ian Rogers wrote:
+> On Tue, Jan 14, 2025 at 11:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Fri, Jan 10, 2025 at 11:18:53AM -0800, Ian Rogers wrote:
+> > > On Fri, Jan 10, 2025 at 10:55 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Thu, Jan 09, 2025 at 08:44:38PM -0800, Ian Rogers wrote:
+> > > > > On Thu, Jan 9, 2025 at 5:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
+> > > > > > > Whilst for many tools it is an expected behavior that failure to open
+> > > > > > > a perf event is a failure, ARM decided to name PMU events the same as
+> > > > > > > legacy events and then failed to rename such events on a server uncore
+> > > > > > > SLC PMU. As perf's default behavior when no PMU is specified is to
+> > > > > > > open the event on all PMUs that advertise/"have" the event, this
+> > > > > > > yielded failures when trying to make the priority of legacy and
+> > > > > > > sysfs/json events uniform - something requested by RISC-V and ARM. A
+> > > > > > > legacy event user on ARM hardware may find their event opened on an
+> > > > > > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
+> > > > > > > such events which this patch implements. Rather than have the skipping
+> > > > > > > conditional on running on ARM, the skipping is done on all
+> > > > > > > architectures as such a fundamental behavioral difference could lead
+> > > > > > > to problems with tools built/depending on perf.
+> > > > > > >
+> > > > > > > An example of perf record failing to open events on x86 is:
+> > > > > > > ```
+> > > > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+> > > > > > > Error:
+> > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
+> > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > > >
+> > > > > > > Error:
+> > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
+> > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > > >
+> > > > > > > Error:
+> > > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+> > > > > >
+> > > > > > I'm afraid this can be too noisy.
+> > > > >
+> > > > > The intention is to be noisy:
+> > > > > 1) it matches the existing behavior, anything else is potentially a regression;
+> > > >
+> > > > Well.. I think you're changing the behavior. :)  Also currently it just
+> > > > fails on the first event so it won't be too much noisy.
+> > > >
+> > > >   $ perf record -e data_read,data_write,LLC-prefetch-read -a sleep 0.1
+> > > >   event syntax error: 'data_read,data_write,LLC-prefetch-read'
+> > > >                        \___ Bad event name
+> > > >
+> > > >   Unable to find event on a PMU of 'data_read'
+> > > >   Run 'perf list' for a list of valid events
+> > > >
+> > > >    Usage: perf record [<options>] [<command>]
+> > > >       or: perf record [<options>] -- <command> [<options>]
+> > > >
+> > > >       -e, --event <event>   event selector. use 'perf list' to list available events
 > > >
-> > > Making it so that events without PMUs are only legacy events just
-> > > doesn't work. There are far too many existing uses of non-legacy
-> > > events without PMU, the metrics contain 100s of examples.
->
-> That's unfortunate.  It'd be nice if metrics were written with PMU
-> names.
-
-But then we'd end up with things like on Intel:
-UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
-becoming:
-uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-or just:
-cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-As a user the first works for me and doesn't have any ambiguity over
-PMUs as the event name already encodes the PMU. AMD similarly place
-the part of a pipeline into event names. Were we to break everybody by
-requiring the PMU we'd also need to explain which PMU to use. Sites
-with event lists (like https://perfmon-events.intel.com/) don't
-explain the PMU and it'd be messy as on Intel you have a CHA PMU for
-server chips but a CBOX on client chips, etc.
-
-> I have a question.  What if an event name in a metric matches to
-> multiple unrelated PMUs?
-
-The metric may break or we'd aggregate the unrelated counts together.
-Take a metric like IPC as "instructions/cycles", that metric should
-work on a hybrid system as they have instructions and cycles. If you
-used an event for instructions like inst_retired.any then maybe the
-metric will fail on one kind of core that didn't have that event. Now
-if we have accelerators advertising instructions and cycles events, we
-should be able to compute the metric for the accelerator. What could
-happen today is that the accelerator will have a cpumask of a single
-CPU, we could aggregate the accelerator counter into the CPU event
-with the same CPU as the cpumask, we'd end up with a weird quasi CPU
-and accelerator IPC metric for that CPU. What should happen is that we
-get an IPC for the accelerator and IPC for each hybrid core
-independently, but the way we handle evsels, CPUs, PMUs is not really
-set up for that. Hopefully getting a set of PMUs into the evsel will
-clear that up. Assuming all of that is cleared up, is it wrong if the
-IPC metric is computed for the accelerator if it was originally
-written as a CPU metric? Not really. Could there be metrics where that
-is the case? Probably, and specifying PMUs in the event names would be
-a fix. There have also been proposals that we restrict the PMUs for
-certain metrics. As event names are currently so distinct it isn't a
-problem we've faced yet and it is not clear it is a problem other than
-highlighting tech debt in areas of the tool like aggregation.
-
+> > > Fwiw, this error is an event parsing error not an event opening error.
+> > > You need to select an uncore event, I was using data_read which exists
+> > > in the uncore_imc_free_running PMUs on Intel tigerlake. Here is the
+> > > existing error message:
+> > > ```
+> > > $ perf record -e data_read -a true
+> > > Error:
+> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> > > for event (data_read).
+> > > "dmesg | grep -i perf" may provide additional information.
+> > > ```
+> > > and here it with the series:
+> > > ```
+> > > $ perf record -e data_read -a true
+> > > Error:
+> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0'
+> > > which will be removed.
+> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> > > for event (data_read).
+> > > "dmesg | grep -i perf" may provide additional information.
 > > >
-> > > Prior to switching json/sysfs to being the priority when a PMU is
-> > > specified, it was the case that all encodings were the same, with or
-> > > without a PMU.
+> > > Error:
+> > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1'
+> > > which will be removed.
+> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> > > for event (data_read).
+> > > "dmesg | grep -i perf" may provide additional information.
 > > >
-> > > I don't think there is anything natural about assuming things about
-> > > event names. Take cycles, cpu-cycles and cpu_cycles:
-> > >  - cycles on x86 is only encoded via a legacy event;
-> > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycles is als=
-o
-> > > a legacy event name;
-> > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have a
-> > > corresponding legacy event name.
->
-> I think the behavior should be:
->
->   cycles -> PERF_COUNT_HW_CPU_CYCLES
->   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
->   cpu_cycles -> no legacy -> sysfs or json
->   cpu/cycles/ -> sysfs or json
->   cpu/cpu-cycles/ -> sysfs or json
+> > > Error:
+> > > Failure to open any events for recording.
+> > > ```
+> > > and here is what it would be with pr_debug:
+> > > ```
+> > > $ perf record -e data_read -a true
+> > > Error:
+> > > Failure to open any events for recording.
+> > > ```
+> > > I believe this last output is worst because:
+> > > 1) If not all events fail to open there is no error reported unless I
+> > > know to run with -v, which will also bring a bunch more noise with it,
+> >
+> > I suggested to add a warning if any (not all) of events failed to open.
+> >
+> >   "Removed some unsupported events, use -v for details."
+> >
+> >
+> > > 2) I don't see the PMU / event name and "Invalid argument" indicating
+> > > what has gone wrong again unless I know to run with -v and get all the
+> > > verbose noise with that.
+> >
+> > I don't think single -v adds a lot of noise in the output.
+> >
+> > >
+> > > Yes it is noisy on 1 platform for 1 event due to an ARM PMU event name
+> > > bug that ARM should have long ago fixed. That should be fixed rather
+> > > than hiding errors and making users think they are recording samples
+> > > when silently they're not - or they need to search through verbose
+> > > output to try to find out if something broke.
+> >
+> > I'm not sure if it's a bug in the driver.  It happens because perf tool
+> > changed the way it finds events - it used to look at the core PMUs only
+> > if no PMU name was given, but now it searches every PMU, right?
+> 
+> So there is the ARM bug in the PMU driver that caused an issue with
+> the hybrid fixes done because of wanting to have metrics work for
+> hybrid. The bug is reported here:
+> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
 
-So I disagree as if you add a PMU to an event name the encoding
-shouldn't change:
-1) This historically was perf's behavior.
-2) Different event encodings can have different behaviors (broken in
-some notable cases).
-3) Intuitively what wildcarding does is try to open "*/event/" where *
-is every possible PMU name. Having different event encodings is
-breaking that intuition it could also break situations where you try
-to assert equivalence based on type/config.
-4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
-that's why the priority was changed.
-5) RISC-V would like the tool tackle the legacy to config mapping
-challenge, rather than the PMU driver, given the potential diversity
-of hardware implementations.
+I'm not sure if it's agreed to be called a PMU bug.
+My understanding is it's the change in the perf tool that break it.
 
-To this end we hosted RISC-V's perf people at Google and they
-expressed that their preference was what this series does, and they
-expressed this directly to you.
 
-I don't think there would be an issue in this area if it wasn't for
-Neoverse and Linus - that's why the revert happened. This change in
-behavior was proposed by Arnaldo:
-https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
-and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
-in Google's tree.
+> The events are apple_icestorm_pmu/cycles/ and
+> apple_firestorm_pmu/cycles/. The issue is that prior to fixing hybrid
+> the ARM PMUs looked like uncore PMUs and couldn't open a legacy event,
+> which was fine as they has sysfs events. When hybrid was fixed in the
+> tool, the tool would then try to open apple_icestorm_pmu/cycles/ and
+> apple_firestorm_pmu/cycles/ as legacy events - legacy having priority
+> over sysfs/json back then. The legacy mapping was broken in the PMU
+
+I don't know why you want to use legacy events (PERF_TYPE_HARDWARE)
+when it has PMU in the event name and the PMU has a different type
+enconding.
+
+
+> driver. Now were everything working as intended, just the cycles event
+> would be specified on the command line and the event would be wildcard
+> opened on the apple_icestorm_pmu and apple_firestorm_pmu. I believe
+> this way would already use a legacy encoding and so to work around the
+> PMU driver bug people were specifying the PMU name to get the sysfs
+> encoding, but that only worked as the PMUs appeared to be uncore.
+> 
+> > >
+> > > > > 2) it only happens if trying to record on a PMU/event that doesn't
+> > > > > support recording, something that is currently an error and so we're
+> > > > > not motivated to change the behavior as no-one should be using it;
+> > > >
+> > > > It was caught by Linus, so we know at least one (very important) user.
+> > >
+> > > If they care enough then specifying the PMU with the event will avoid
+> > > any warning and has always been a fix for this issue. It was the first
+> > > proposed workaround for Linus.
+> >
+> > I guess that's what Linus said regression.
+> 
+> But a regression where? The tool's behavior is pretty clear, no PMU
+> the event will be tried on every PMU, give it a PMU and the event will
+> only be tried on that PMU, give it a PMU without a suffix and the
+> event will be opened on all PMUs that match the name with different
+> suffixes.
+
+It may be clear to you but may not be to others.  When did the change
+come in?  Before the change, people assume it would only try core PMU.
+And the people can still have the idea if they haven't used any affected
+events.  I guess many users would use legacy events only.
+
+
+> I dislike the idea of  cpu-cycles implicitly being just for
+> core PMUs, but cpu_cycles being for all PMUs as the hyphen is a legacy
+> name and the underscore not.
+
+That's because we specifically picked some names to be used as a legacy
+event.  And it worked well.  If some PMU didn't use the name, it's their
+fault and they should use PMU event with their name.
+
+
+> I dislike the idea of specifying a PMU
+> with uncore events as uncore events often already have a PMU within
+> their event name and it also breaks the universe. 
+
+Does the 'universe' mean 'metric'?
+
+Having PMU name in the event name is their choice.  Do you see this in
+sysfs or JSON?  Or both?
+
+Actually I don't like the idea of trying every PMU if no PMU name is
+given.  But you said reverting it would break metrics (I don't know if
+there are other users rely on this behavior).  Maybe can we handle
+metrics differently?
+
+I guess we can put JSON events and metrics without PMU in a global name
+space so that it can be searched (after legacy name) when users don't
+specify PMUs in the command line.  Otherwise it should have PMU name
+and sysfs event (then JSON events with PMU name) can be searched.
+
+Does that make sense?
+
+
+> When trying to find
+> out what people mean by event names being implicitly associated with
+> PMUs I get told I'm throwing out "what ifs," when all I'm doing is
+> reading the code (that I wrote and I'm trying to fix) and trying to
+> figure out what behavior people want. What I don't want is
+> inconsistencies, events behaving differently in different scenarios
+> and the perf output's use of event names being inconsistent with the
+> parsing. RISC-V and ARM have wanted the syfs/json over legacy
+> priority, so I'm trying to get that landed.
+
+I'm not sure now RISC-V and ARM want it.  Or it needs to be more
+specific what they want exactly.
+
+> 
+> Ultimately the original regression comes back to the ARM SLC PMU
+> advertising a cycles event when it should have been named cpu_cycles,
+> if for no other reason than uniformity with the bus_cycles name on the
+> same PMU. The change in perf's wildcard behavior exposed the latent
+> bug, that doesn't make the SLC PMU's event name not a bug. The change
+> here is to make seeing that bug non-terminal to running the program.
+
+I don't see it's a bug if uncore PMUs have an event named 'cycles' or
+whatever.  It's just because perf record wanted to use it and that's
+entirely tool's choice.
 
 Thanks,
-Ian
+Namhyung
+
+> 
+> > >
+> > > > > 3) for the wildcard case the only offender is ARM's SLC PMU and the
+> > > > > appropriate fix there has always been to make the CPU cycle's event
+> > > > > name match the bus_cycles event name by calling it cpu_cycles -
+> > > > > something that doesn't conflict with a core PMU event name, the thing
+> > > > > that has introduced all these problems, patches, long email exchanges,
+> > > > > unfixed inconsistencies, etc.. If the errors aren't noisy then there
+> > > > > is little motivation for the ARM SLC PMU's event name to be fixed.
+> > > >
+> > > > I understand your concern but I'm not sure it's the best way to fix the
+> > > > issue.
+> > >
+> > > Right, I'm similarly concerned about hiding legitimate warning/error
+> > > messages because of 1 event on 1 PMU on 1 architecture because of how
+> > > perf gets driven by 1 user. Yes, when you break you can wade through
+> > > the verbose output but imo the verbose output was never intended to be
+> > > used in that way.
+> >
+> > Well, the verbose output is to debug when something doesn't go well, no?
+> 
+> The output isn't currently only enabled in verbose mode, so is this
+> wrong? You will only get extra warnings with this change if you do
+> anything wrong. For a hybrid system maybe you've gone from 1 warning
+> to 2, I fail to see a big deal. Yes if you try to do perf record on an
+> uncore server PMU with many instances you will potentially get many
+> warnings, but the behavior before and after is to fail and the user is
+> likely to figure out what the fix is in both cases, with more errors
+> they may appreciate better that the event was getting opened on many
+> PMUs. The trend for event parsing errors is to have more error
+> messages. We went from 1 to 2 in commit
+> a910e4666d61712840c78de33cc7f89de8affa78 and from 2 to many in commit
+> fd7b8e8fb20f51d60dfee7792806548f3c6a4c2c. The trend isn't to try to
+> move things into verbose only output and for things to silently (or
+> with little detail) fail for the user.
+> 
+> Thanks,
+> Ian
