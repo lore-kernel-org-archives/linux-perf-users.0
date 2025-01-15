@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187F31AA783;
-	Wed, 15 Jan 2025 18:42:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483461D63F6;
+	Wed, 15 Jan 2025 18:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736966573; cv=none; b=Kn+6mfysO28URPdS38URhpELrZ4NaZxjevnic9wyR62JUGRLab827zpst4wjghJq9W1qY+xsNC01RkCdYgQlOfGC/6+3J1c59EERGt60ObTig+sBKbXiT2EprAOXxenvYwg4O2w36S+T7VRL5vGQM/06xR5qls5fYct6jpDSgrw=
+	t=1736966574; cv=none; b=kzQ8UIkQBK+lO9FnrLXTnSL6JdyFz7axbX/EHXR/G8WIbrtHZ3Dcr2UGuk1tFePO0pJGe30jrHOcBLRJsEjrZLtWJviMQ/lKoZzs2sgCYaTc6d+04y29fXMyrGzm380Rnc4A9VSGj7i1AI9mXUTsCQNqF9Ov0nSxLZ4n/SaICys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736966573; c=relaxed/simple;
-	bh=zrLHgBy1diKkcJvN+xtaUMXNWjr5eHsI4YrTiaKyn+s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cXKxJhR7RlRCWA7WN5jY5v4+9rFNZKUigYXgsSLES6M/t8FssHLHfQSwLNr4iPvJvcQrEYLDkeMESp9ojOFlzAEscsP50HuU/ZDLVd+A2Rx3AfQ8smi7CkQS065lU7G656dAXYPbilqe5cVzyHsaObb4h5G1zX8vUyHxIiOFiQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lGsFU88B; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1736966574; c=relaxed/simple;
+	bh=jdfRXA0mV/YYMOU+glU6zZe10TQ/j3jgcGaKuJc+IJo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jeJ8WfjoXcjOHf2b1eHV6LC/HcGAQ7VWq3RBc+9adRmqi4o9AIYyFO2SdrNJX2axuDlgBdi6fLAi18NxCJCnRyIdzmJGliigucjCgQMb8g+z+dCiUFuJ10ADe44Jdd8yHS9jRsuPCAynw/zZk33vWL+tDg/NoplGPAE15IUQbsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnvmkMHR; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lGsFU88B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnvmkMHR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736966571; x=1768502571;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zrLHgBy1diKkcJvN+xtaUMXNWjr5eHsI4YrTiaKyn+s=;
-  b=lGsFU88BMvX/yL2of4Nx+Rgd2XUp6+3pELehkCjtymr+oM37Itheyy76
-   uS+lTDhI8KD9GrNsiRJ8TAhuSGGWL2+Nrf0nNv6rhy1tr9iFrMQsdc7H5
-   /1lX4tW659NavOgb4xWv2qHHD+SsGfpdsF495cMZVoBCcIsLX8U+1hZNe
-   KP6oBJndlKHqyDeq+dFMNh1R6FI4f/Rp3yGc7R1uT4xBXX2FAxRhiprIG
-   1Q0U9Af7SblG5/UtyfsmyuB+bkQL8uSr93c0r90iBjYouZto3hXM3MdCu
-   ldST5Hszlm1MHJLTu8G5POUqQ0gkGIzecvCQe8j4kmDRb+M9rI81BBumB
+  t=1736966573; x=1768502573;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jdfRXA0mV/YYMOU+glU6zZe10TQ/j3jgcGaKuJc+IJo=;
+  b=hnvmkMHRX77XP4y2CZAgj9Kas1iPThNtmd6vHNpzBdclcS93Yvnw05U1
+   vIu4XroXufQbWARUUqDjDtvcwx5Q9FitFeZr0Qsw6Q1MYbTonIt1fUNPb
+   C/+JnbEz2dV+BSNYxKJliynWCyp/psV55Z1DX78m247O65Ipr73WBZwhj
+   AivUEjsg1tnUHpHaANiZUyCCWLQylnR0CjGCU/THi2fg1JW8V9GKMdF5H
+   NHE8p/f2n1raPj9pwHb1wgLMhxR5NN1+CJbiFPm7l1v82lC2GA+3b7sRB
+   wgivkwE/mFz7CXsyYa0fwnf2WTy44QDjgANW5WHhmE18EIWqz7tgNFJXK
    Q==;
-X-CSE-ConnectionGUID: gRCPj6QBRgiGdHVPXSlVFg==
-X-CSE-MsgGUID: xegFKhVVQ8WMX7TuZ602eA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="48733346"
+X-CSE-ConnectionGUID: 7LJ9G9NpTMi0U7EOl/lpiA==
+X-CSE-MsgGUID: wDPaFZSORJOjRrUuMnKJHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="48733353"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="48733346"
+   d="scan'208";a="48733353"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
   by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 10:42:50 -0800
-X-CSE-ConnectionGUID: bCbqAb5DTyybhiMyzijadA==
-X-CSE-MsgGUID: 0gqFBqctR5eiZ4f1/O5Oiw==
+X-CSE-ConnectionGUID: FZpdlXs5QTa+lE1wVXXgpA==
+X-CSE-MsgGUID: SMVMDOKoT6qSSS/YMyAqLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
-   d="scan'208";a="105278506"
+   d="scan'208";a="105278510"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by orviesa006.jf.intel.com with ESMTP; 15 Jan 2025 10:42:49 -0800
 From: kan.liang@linux.intel.com
@@ -54,12 +55,13 @@ To: peterz@infradead.org,
 Cc: ak@linux.intel.com,
 	eranian@google.com,
 	dapeng1.mi@linux.intel.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH V9 1/3] perf/x86/intel: Avoid pmu_disable/enable if !cpuc->enabled in sample read
-Date: Wed, 15 Jan 2025 10:43:16 -0800
-Message-Id: <20250115184318.2854459-1-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V9 2/3] perf: Avoid the read if the count is already updated
+Date: Wed, 15 Jan 2025 10:43:17 -0800
+Message-Id: <20250115184318.2854459-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250115184318.2854459-1-kan.liang@linux.intel.com>
+References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,85 +70,140 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-The WARN_ON(this_cpu_read(cpu_hw_events.enabled)) in the
-intel_pmu_save_and_restart_reload() is triggered, when sampling read
-topdown events.
+The event may have been updated in the PMU-specific implementation,
+e.g., Intel PEBS counters snapshotting. The common code should not
+read and overwrite the value.
 
-In a NMI handler, the cpu_hw_events.enabled is set and used to indicate
-the status of core PMU. The generic pmu->pmu_disable_count, updated in
-the perf_pmu_disable/enable pair, is not touched.
-However, the perf_pmu_disable/enable pair is invoked when sampling read
-in a NMI handler. The cpuc->enabled is mistakenly set by the
-perf_pmu_enable().
+The PERF_SAMPLE_READ in the data->sample_type can be used to detect
+whether the PMU-specific value is available. If yes, avoid the
+pmu->read() in the common code. Add a new flag, skip_read, to track the
+case.
 
-Avoid perf_pmu_disable/enable() if the core PMU is already disabled.
+Factor out a perf_pmu_read() to clean up the code.
 
-Fixes: 7b2c05a15d29 ("perf/x86/intel: Generic support for hardware TopDown metrics")
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
 
-A new patch to fix the issue found on a legacy platform.
-(Not related to counters snapshotting feature)
+No changes since V8
 
-But since it also touches the sampling read code, the patches to enable
-the counters snapshotting feature must be on top of the patch.
-The patch itself can be applied separately.
+ include/linux/perf_event.h  |  8 +++++++-
+ kernel/events/core.c        | 33 ++++++++++++++++-----------------
+ kernel/events/ring_buffer.c |  1 +
+ 3 files changed, 24 insertions(+), 18 deletions(-)
 
-
- arch/x86/events/intel/core.c | 7 +++++--
- arch/x86/events/intel/ds.c   | 9 ++++++---
- 2 files changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2a2824e9c50d..bce423ad3fad 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2778,15 +2778,18 @@ DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
- static void intel_pmu_read_topdown_event(struct perf_event *event)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int pmu_enabled = cpuc->enabled;
- 
- 	/* Only need to call update_topdown_event() once for group read. */
- 	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
- 	    !is_slots_event(event))
- 		return;
- 
--	perf_pmu_disable(event->pmu);
-+	if (pmu_enabled)
-+		perf_pmu_disable(event->pmu);
- 	static_call(intel_pmu_update_topdown_event)(event);
--	perf_pmu_enable(event->pmu);
-+	if (pmu_enabled)
-+		perf_pmu_enable(event->pmu);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8333f132f4a9..2d07bc1193f3 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1062,7 +1062,13 @@ struct perf_output_handle {
+ 	struct perf_buffer		*rb;
+ 	unsigned long			wakeup;
+ 	unsigned long			size;
+-	u64				aux_flags;
++	union {
++		u64			flags;		/* perf_output*() */
++		u64			aux_flags;	/* perf_aux_output*() */
++		struct {
++			u64		skip_read : 1;
++		};
++	};
+ 	union {
+ 		void			*addr;
+ 		unsigned long		head;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b2bc67791f84..f91ba29048ce 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1191,6 +1191,12 @@ static void perf_assert_pmu_disabled(struct pmu *pmu)
+ 	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
  }
  
- static void intel_pmu_read_event(struct perf_event *event)
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ba74e1198328..81b6ec8e824e 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2096,11 +2096,14 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
- 
- void intel_pmu_auto_reload_read(struct perf_event *event)
++static inline void perf_pmu_read(struct perf_event *event)
++{
++	if (event->state == PERF_EVENT_STATE_ACTIVE)
++		event->pmu->read(event);
++}
++
+ static void get_ctx(struct perf_event_context *ctx)
  {
--	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
-+	int pmu_enabled = this_cpu_read(cpu_hw_events.enabled);
+ 	refcount_inc(&ctx->refcount);
+@@ -3473,8 +3479,7 @@ static void __perf_event_sync_stat(struct perf_event *event,
+ 	 * we know the event must be on the current CPU, therefore we
+ 	 * don't need to use it.
+ 	 */
+-	if (event->state == PERF_EVENT_STATE_ACTIVE)
+-		event->pmu->read(event);
++	perf_pmu_read(event);
  
--	perf_pmu_disable(event->pmu);
-+	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
-+	if (pmu_enabled)
-+		perf_pmu_disable(event->pmu);
- 	intel_pmu_drain_pebs_buffer();
--	perf_pmu_enable(event->pmu);
-+	if (pmu_enabled)
-+		perf_pmu_enable(event->pmu);
- }
+ 	perf_event_update_time(event);
  
- /*
+@@ -4618,15 +4623,8 @@ static void __perf_event_read(void *info)
+ 
+ 	pmu->read(event);
+ 
+-	for_each_sibling_event(sub, event) {
+-		if (sub->state == PERF_EVENT_STATE_ACTIVE) {
+-			/*
+-			 * Use sibling's PMU rather than @event's since
+-			 * sibling could be on different (eg: software) PMU.
+-			 */
+-			sub->pmu->read(sub);
+-		}
+-	}
++	for_each_sibling_event(sub, event)
++		perf_pmu_read(sub);
+ 
+ 	data->ret = pmu->commit_txn(pmu);
+ 
+@@ -7400,9 +7398,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
+ 
+-	if ((leader != event) &&
+-	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+-		leader->pmu->read(leader);
++	if ((leader != event) && !handle->skip_read)
++		perf_pmu_read(leader);
+ 
+ 	values[n++] = perf_event_count(leader, self);
+ 	if (read_format & PERF_FORMAT_ID)
+@@ -7415,9 +7412,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
+-		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+-			sub->pmu->read(sub);
++		if ((sub != event) && !handle->skip_read)
++			perf_pmu_read(sub);
+ 
+ 		values[n++] = perf_event_count(sub, self);
+ 		if (read_format & PERF_FORMAT_ID)
+@@ -7476,6 +7472,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ {
+ 	u64 sample_type = data->type;
+ 
++	if (data->sample_flags & PERF_SAMPLE_READ)
++		handle->skip_read = 1;
++
+ 	perf_output_put(handle, *header);
+ 
+ 	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 4f46f688d0d4..9b49ecca693e 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -185,6 +185,7 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 
+ 	handle->rb    = rb;
+ 	handle->event = event;
++	handle->flags = 0;
+ 
+ 	have_lost = local_read(&rb->lost);
+ 	if (unlikely(have_lost)) {
 -- 
 2.38.1
 
