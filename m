@@ -1,193 +1,389 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2063.outbound.protection.outlook.com [40.107.101.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C58143725;
-	Wed, 15 Jan 2025 15:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736956213; cv=fail; b=rNxm1phepwKXNkJeTR1wfjrL0L/hkw2e1y5nml4dVuRifeZ1pscbAtSMxUoVBHzp0pQlmkqPl7MafaeNvRIIYSywKNL8dlDJ267IQwCmFKAYzZuLFYFAU186DO33dhn0x+sdxzRJeLk4zgKZEyqT41XCWnqiafVZ2oJ8Q+6GRKY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736956213; c=relaxed/simple;
-	bh=FpPmzEXC9Bi572CVCBMkv6I2N5slVK77WhdhQtJjdFc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BTqd4mI16fJVK28rNEZfSmBgF2+H7JWnemFaSF6fLcen8VbI5tOFk7cSIiJuSQEWIIzZ32rD7mOBK1h3+GIP7dER6xeFNmaUtV5RcSvDxDkJWdMaGXl9iFQwb0SkWLk2DRcsFMnjj/FKH0rg8oR8zhdZ9/bfjKK9aRNLPFUwS5A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T+RZZvve; arc=fail smtp.client-ip=40.107.101.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A9B24A7ED;
+	Wed, 15 Jan 2025 17:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736962308; cv=none; b=q3/iTf2IfXQCXpTd46vs9zoBsMTEM2fQNNKFOXp4IN5vGcI7+b+ThKysP9Izm5XsJaQoy0VlrRgaJdKZqhU59aEm3lfQJ0cS/4CZNPYL8TCdfZjJFdMuufi2Pd2em67cxcTr3D7XH/CnoVyGQTDFbskRPY599uZ9oBTn8KxQytk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736962308; c=relaxed/simple;
+	bh=iYIeW7YKjgII85WDaAsAvZllWglZDH68LUkt7B2Zrcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mm43FBuuCn54MHgSJe3BkWCl0WDiboYME6uP5ZkmjSMZUGj3lXJQdDIRYanSXnBPZWXqN9VBJsQ0EHIvfxD/RWp74H1Kae+/wJXpRfLQBG/+NAwGrOBtPzJCRyHMSw28sVRW3V5HbanD5GGF1hnbJgQA+R4QX3+16j/8aS+lP/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vL+PuYkW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T+RZZvve"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hfcFZycsygL4givaHWQg6HmNHcjNQF+LUYI9VZtXSdT59N0Tlw66a6Xyy4+tZuVhrnfnlBJ8MrAxQGyBKoABjreaedMCHiIpu3B1Hdb/oo7rXh0QWiw0db7ly1gu7ptR6JETWWFN+hnDufUsVtAD9CUFtJwHThLSx70b8CyRHFpG3EkC3SblmYk6tgcVnPNsVOFYs154NHTKpsB98okGYG3lVrdlBY2d6+zFRKhfKPEBeIZ3GvgGjqKwVmN5aiPz9YNq+4++mBKzCiwsM7uvVAWbjjs7LzuFYpUMsnuiWF9QCbhRHOLLLC37klJ7PDMgK3ZAK0dnmKLRrJghWl+QwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IlMEqJI+ArK5iOWEClJ2DG6Jjpt0SMz5C9/7Bi/VRZg=;
- b=TIKPTbqiXwm4DTUGY9+TDHpmk4w9mfuuapgFNMiiazCRmwpK2lv26HxdYU0HNhrOhA/9gts4h7ztNxFP7GQHXvhEU8/U2cb64PadHFpDNDWx0uJlNL1vZzoQIae/2pxg5i8DZlFDp0frAWRLvu3bC3WvGcimAeCIfgAZFr93ayEVTOMA1eekR5pPHkooOi+OSZF86TR88IFaqjOFNdrUGqxejSmk/kekYGLHa+Oy7JsFn+Qeg+BWh+0gb0nUBP3Xd1ViqkY/e0eo/0tZHwOeCsau4CMhrqgPxeLPyVYjYp/nOg2wwhuL+keC1Y+YB6oqWH20Eg55GyaUFt2s6Hb1Yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IlMEqJI+ArK5iOWEClJ2DG6Jjpt0SMz5C9/7Bi/VRZg=;
- b=T+RZZvveihd70ctXQLobLrafQTCvU6TdXufahmJUOq1vrPXXWE53xUF7WPmN9T6V/K8HgNq4MoiRlFSy5J0Xg1bsDycUEZWStE2eofQIiUaF3nz4kIVcTfdHfD8KJLWjyEzlCHSuCmiTzyPriSTWa/x+BMbYpShZyJrZGEMpv4c=
-Received: from MN0P220CA0023.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:52e::27)
- by PH7PR12MB9202.namprd12.prod.outlook.com (2603:10b6:510:2ef::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Wed, 15 Jan
- 2025 15:50:09 +0000
-Received: from BL6PEPF0001AB4F.namprd04.prod.outlook.com
- (2603:10b6:208:52e:cafe::a4) by MN0P220CA0023.outlook.office365.com
- (2603:10b6:208:52e::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.13 via Frontend Transport; Wed,
- 15 Jan 2025 15:50:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4F.mail.protection.outlook.com (10.167.242.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8356.11 via Frontend Transport; Wed, 15 Jan 2025 15:50:08 +0000
-Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 15 Jan
- 2025 09:50:03 -0600
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: <peterz@infradead.org>, <kan.liang@linux.intel.com>
-CC: <ravi.bangoria@amd.com>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <eranian@google.com>, <irogers@google.com>,
-	<bp@alien8.de>, <x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [UNTESTED][PATCH] perf/x86: Fix limit_period() for 'freq mode events'
-Date: Wed, 15 Jan 2025 15:49:49 +0000
-Message-ID: <20250115154949.3147-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vL+PuYkW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4797AC4CED1;
+	Wed, 15 Jan 2025 17:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736962308;
+	bh=iYIeW7YKjgII85WDaAsAvZllWglZDH68LUkt7B2Zrcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vL+PuYkWNGBO9zZt6LGYIjUihIsykd0WOrQQHLog5haAmtF3phPTitrM7pHRDytO9
+	 CwBa+y6XXd3aFQ21jthxNHotkJPM0izcshsraSWdi5P7gv/L/eTVkIN8YH/VwcJ4JJ
+	 HBYjLd7bJnz+yrkb5/mFJv2Lfm2HJx1+/kdYsVUgIINBqn4q5F7pifdn+CbMKbuPXO
+	 Rryw3SqPoZJGIgqrOw891oWQay5Gx/JmAho9F6DlvxDYtcX272rhLXQCA+BqVAP44j
+	 /RBvplQJxB4aHw4QgopwLeFIhUUarjWeax4PiYkdWFXCKGcyu02+9whw6kqYRrCJJw
+	 m8m0NDuXH5+sg==
+Date: Wed, 15 Jan 2025 09:31:45 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
+ don't open
+Message-ID: <Z4fxAQAHZ9JtdHiL@google.com>
+References: <20250109222109.567031-1-irogers@google.com>
+ <20250109222109.567031-4-irogers@google.com>
+ <Z4B279zu_8Kz5N6u@google.com>
+ <Z4EsUAtOKZUzcw2S@x1>
+ <CAP-5=fV2cYjxf6jvYcKkd=2wcQrbR=58qafiSJ-qzE17EmWqGQ@mail.gmail.com>
+ <Z4F0bKnCHCaqdvFw@google.com>
+ <CAP-5=fVn=0n=gN6ngMmBTry3A+US3z=bX5SzVP6Zs0J0t2HLuA@mail.gmail.com>
+ <Z4V8ykyHErC89iYj@google.com>
+ <CAP-5=fXSjLWd4j08Um7deqB3dHbk+1DpTpddr7wkYOUJTeScrg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4F:EE_|PH7PR12MB9202:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b2e73f0-dd79-48e4-d8f6-08dd357c49f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2QoLSj1arHCx0k7tKoW1n0cyeEdk/M4NYVMIhvdzZZHy5qdeTyn25XfVr2BL?=
- =?us-ascii?Q?NhOkeeaT+uVhVeFSjGmsIbntG0Gh1f3UIcfvki1M/B5PbHc+iuVRoi+OOsro?=
- =?us-ascii?Q?agdoQVXfYIzX7E1jPIZ3cEW++Yc946dXQkptBGp592gcthBnro1xqbSXY6RL?=
- =?us-ascii?Q?auQOA+YHCEKW1v/f0i7QYD3Tu27VORJVHW4kw2Qi/piGbuYcV49r2/mHNLSq?=
- =?us-ascii?Q?p7uwxVy/s1jQ6A4b1qE1cGxU/63rTy86wYHNIoHHwOSL5H19jq/Ji6TeTY+a?=
- =?us-ascii?Q?rrwUmiCDnd7mtZllc7PrnLiYANy2x326TajL0MprkaIpc1w7UB2gVvbr2VXk?=
- =?us-ascii?Q?hAWSI3IQq93KM/GW8prvGvJh/Jv7NPOLYX17wgX/DZ2A7ek5JoOXt+IZI0zb?=
- =?us-ascii?Q?MB8UfEG+RDe+9w8faT+m5Jns8uEBcZBvO1v7emm3sbUBt7Kbg70ip2DryxGP?=
- =?us-ascii?Q?PoZWuGZGWeLRw0p3YISToEjI7SYpbXY8Rtw7d8mvXZ0Gkll0XkFO3tx5jZar?=
- =?us-ascii?Q?5H3VxjaSS3v6d7bjJW4+Cw7JRDfzlZQ/j56K8WLYB16Yhb62hacgzSOwPX6b?=
- =?us-ascii?Q?gjSQJO9ma4IPOphMWHa2zBBA/iT+I22Q3Msgm/+aMw419KZVYQ437SaGu1Sq?=
- =?us-ascii?Q?aHG1gAeq4c545EyGcoAvEWbBIlLeR9Htn6wHI3+vGhDQhRij4uDwGKvqLKJK?=
- =?us-ascii?Q?7Va13gUq2Xx9KkNIbFtMwBYtdAistqb1sU9wniIqXwydWmTijZITWhUb5lWc?=
- =?us-ascii?Q?3uHWCV8hHvWr7GI8aKLAQdyXm3t4eTTPL+L/6pCPrcjMIKqb0PUVOOV86JLZ?=
- =?us-ascii?Q?5FG7NCGu/szxRp5rRPS6dL4ShnqIUCvRH0toIXaEm7tbvPVIXWFqZ96s1HyN?=
- =?us-ascii?Q?gDMcqF1n7StjzYg4R8UR+FGXWN5hcwQPNKgB/+hIOktzqlysTPEo/yDQVv8h?=
- =?us-ascii?Q?hw7sdskWfRJkYtrXpl6qNmCv3Pc4cj5+uiACHCJBLMFoambywy45q3BEm2cP?=
- =?us-ascii?Q?qt/uotbR4P32aUi0uU089AMT4U24mY/uRUMfk0pDd3tXUps04VzN9miI74Fc?=
- =?us-ascii?Q?4ZHJT1/poezs2Zb0OqZ4Eo4XyKgec/Yyy0gDZu/4aFiYqhJOxTFHl/77aUHz?=
- =?us-ascii?Q?aqikL3GYoUNrrrYo3kSV2ix6ij48KPtHtTF9n7D3kWEcWcL21CwcFpByC1+N?=
- =?us-ascii?Q?JiiyAJnh2MG4K2oVN+YrGCG3MH2SXT1yM5/yaPkl4iq1do23slChnqRsgjDe?=
- =?us-ascii?Q?JGhJenoxYw4RejkxoDWzDEe0q5gdu8UYNc+Skz0Ps4ml0hALJk4SBTOtDud1?=
- =?us-ascii?Q?TCo9+phWTuOaXpSpXlg4xcd2Z6s3S1Yeg3QruXTF7X9z3iXB5ULgCp3Ng87x?=
- =?us-ascii?Q?3YDH6ppFQUHk8MHm0nYJ+oTu+Xz1JvneODoku+x1hRG/VvODIqwWUBS3lLef?=
- =?us-ascii?Q?zAugVWJKt2b20Tx7Vcxy7iYN2yneAKVc8wEawaqIX+ve+COw6z6ZakZ1jabr?=
- =?us-ascii?Q?OuaasIvI4wa/Ae0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 15:50:08.9049
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b2e73f0-dd79-48e4-d8f6-08dd357c49f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9202
+In-Reply-To: <CAP-5=fXSjLWd4j08Um7deqB3dHbk+1DpTpddr7wkYOUJTeScrg@mail.gmail.com>
 
-For the freq mode event ...
+On Mon, Jan 13, 2025 at 03:04:26PM -0800, Ian Rogers wrote:
+> On Mon, Jan 13, 2025 at 12:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Fri, Jan 10, 2025 at 01:33:57PM -0800, Ian Rogers wrote:
+> > > On Fri, Jan 10, 2025 at 11:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Fri, Jan 10, 2025 at 08:42:02AM -0800, Ian Rogers wrote:
+> > > > > On Fri, Jan 10, 2025 at 6:18 AM Arnaldo Carvalho de Melo
+> > > > > <acme@kernel.org> wrote:
+> > > > > >
+> > > > > > Adding Linus to the CC list as he participated in this discussion in the
+> > > > > > past, so a heads up about changes in this area that are being further
+> > > > > > discussed.
+> > > > >
+> > > > > Linus blocks my email so I'm not sure of the point.
+> > > >
+> > > > That's unfortunate, but he should be able to see others' reply.
+> > > >
+> > > > >
+> > > > > > On Thu, Jan 09, 2025 at 05:25:03PM -0800, Namhyung Kim wrote:
+> > > > > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
+> > > > > > > > Whilst for many tools it is an expected behavior that failure to open
+> > > > > > > > a perf event is a failure, ARM decided to name PMU events the same as
+> > > > > > > > legacy events and then failed to rename such events on a server uncore
+> > > > > > > > SLC PMU. As perf's default behavior when no PMU is specified is to
+> > > > > > > > open the event on all PMUs that advertise/"have" the event, this
+> > > > > > > > yielded failures when trying to make the priority of legacy and
+> > > > > > > > sysfs/json events uniform - something requested by RISC-V and ARM. A
+> > > > > > > > legacy event user on ARM hardware may find their event opened on an
+> > > > > > > > uncore PMU which for perf record will fail. Arnaldo suggested skipping
+> > > > > > > > such events which this patch implements. Rather than have the skipping
+> > > > > > > > conditional on running on ARM, the skipping is done on all
+> > > > > > > > architectures as such a fundamental behavioral difference could lead
+> > > > > > > > to problems with tools built/depending on perf.
+> > > > > > > >
+> > > > > > > > An example of perf record failing to open events on x86 is:
+> > > > > > > > ```
+> > > > > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+> > > > > > > > Error:
+> > > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
+> > > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > > > >
+> > > > > > > > Error:
+> > > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
+> > > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+> > > > > > > > "dmesg | grep -i perf" may provide additional information.
+> > > > > > > >
+> > > > > > > > Error:
+> > > > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+> > > > > > >
+> > > > > > > I'm afraid this can be too noisy.
+> > > > > >
+> > > > > > Agreed.
+> > > > > >
+> > > > > > > > $ perf report --stats
+> > > > > > > > Aggregated stats:
+> > > > > > > >                TOTAL events:      17255
+> > > > > > > >                 MMAP events:        284  ( 1.6%)
+> > > > > > > >                 COMM events:       1961  (11.4%)
+> > > > > > > >                 EXIT events:          1  ( 0.0%)
+> > > > > > > >                 FORK events:       1960  (11.4%)
+> > > > > > > >               SAMPLE events:         87  ( 0.5%)
+> > > > > > > >                MMAP2 events:      12836  (74.4%)
+> > > > > > > >              KSYMBOL events:         83  ( 0.5%)
+> > > > > > > >            BPF_EVENT events:         36  ( 0.2%)
+> > > > > > > >       FINISHED_ROUND events:          2  ( 0.0%)
+> > > > > > > >             ID_INDEX events:          1  ( 0.0%)
+> > > > > > > >           THREAD_MAP events:          1  ( 0.0%)
+> > > > > > > >              CPU_MAP events:          1  ( 0.0%)
+> > > > > > > >            TIME_CONV events:          1  ( 0.0%)
+> > > > > > > >        FINISHED_INIT events:          1  ( 0.0%)
+> > > > > > > > cycles stats:
+> > > > > > > >               SAMPLE events:         87
+> > > > > > > > ```
+> > > > > > > >
+> > > > > > > > If all events fail to open then the perf record will fail:
+> > > > > > > > ```
+> > > > > > > > $ perf record -e LLC-prefetch-read true
+> > > > > > > > Error:
+> > > > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > > > Error:
+> > > > > > > > Failure to open any events for recording
+> > > > > > > > ```
+> > > > > > > >
+> > > > > > > > As an evlist may have dummy events that open when all command line
+> > > > > > > > events fail we ignore dummy events when detecting if at least some
+> > > > > > > > events open. This still permits the dummy event on its own to be used
+> > > > > > > > as a permission check:
+> > > > > > > > ```
+> > > > > > > > $ perf record -e dummy true
+> > > > > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > > > > [ perf record: Captured and wrote 0.046 MB perf.data ]
+> > > > > > > > ```
+> > > > > > > > but allows failure when a dummy event is implicilty inserted or when
+> > > > > > > > there are insufficient permissions to open it:
+> > > > > > > > ```
+> > > > > > > > $ perf record -e LLC-prefetch-read -a true
+> > > > > > > > Error:
+> > > > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+> > > > > > > > The LLC-prefetch-read event is not supported.
+> > > > > > > > Error:
+> > > > > > > > Failure to open any events for recording
+> > > > > > > > ```
+> > > > > > > >
+> > > > > > > > The issue with legacy events is that on RISC-V they want the driver to
+> > > > > > > > not have mappings from legacy to non-legacy config encodings for each
+> > > > > > > > vendor/model due to size, complexity and difficulty to update. It was
+> > > > > > > > reported that on ARM Apple-M? CPUs the legacy mapping in the driver
+> > > > > > > > was broken and the sysfs/json events should always take precedent,
+> > > > > > > > however, it isn't clear this is still the case. It is the case that
+> > > > > > > > without working around this issue a legacy event like cycles without a
+> > > > > > > > PMU can encode differently than when specified with a PMU - the
+> > > > > > > > non-PMU version favoring legacy encodings, the PMU one avoiding legacy
+> > > > > > > > encodings.
+> > > > > > > >
+> > > > > > > > The patch removes events and then adjusts the idx value for each
+> > > > > > > > evsel. This is done so that the dense xyarrays used for file
+> > > > > > > > descriptors, etc. don't contain broken entries. As event opening
+> > > > > > > > happens relatively late in the record process, use of the idx value
+> > > > > > > > before the open will have become corrupted, so it is expected there
+> > > > > > > > are latent bugs hidden behind this change - the change is best
+> > > > > > > > effort. As the only vendor that has broken event names is ARM, this
+> > > > > > > > will principally effect ARM users. They will also experience warning
+> > > > > > > > messages like those above because of the uncore PMU advertising legacy
+> > > > > > > > event names.
+> > > > > > > >
+> > > > > > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > > > > Tested-by: James Clark <james.clark@linaro.org>
+> > > > > > > > Tested-by: Leo Yan <leo.yan@arm.com>
+> > > > > > > > Tested-by: Atish Patra <atishp@rivosinc.com>
+> > > > > > > > ---
+> > > > > > > >  tools/perf/builtin-record.c | 47 ++++++++++++++++++++++++++++++++-----
+> > > > > > > >  1 file changed, 41 insertions(+), 6 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > > > > > > index 5db1aedf48df..c0b8249a3787 100644
+> > > > > > > > --- a/tools/perf/builtin-record.c
+> > > > > > > > +++ b/tools/perf/builtin-record.c
+> > > > > > > > @@ -961,7 +961,6 @@ static int record__config_tracking_events(struct record *rec)
+> > > > > > > >      */
+> > > > > > > >     if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+> > > > > > > >         perf_pmus__num_core_pmus() > 1) {
+> > > > > > > > -
+> > > > > > > >             /*
+> > > > > > > >              * User space tasks can migrate between CPUs, so when tracing
+> > > > > > > >              * selected CPUs, sideband for all CPUs is still needed.
+> > > > > > > > @@ -1366,6 +1365,7 @@ static int record__open(struct record *rec)
+> > > > > > > >     struct perf_session *session = rec->session;
+> > > > > > > >     struct record_opts *opts = &rec->opts;
+> > > > > > > >     int rc = 0;
+> > > > > > > > +   bool skipped = false;
+> > > > > > > >
+> > > > > > > >     evlist__for_each_entry(evlist, pos) {
+> > > > > > > >  try_again:
+> > > > > > > > @@ -1381,15 +1381,50 @@ static int record__open(struct record *rec)
+> > > > > > > >                             pos = evlist__reset_weak_group(evlist, pos, true);
+> > > > > > > >                             goto try_again;
+> > > > > > > >                     }
+> > > > > > > > -                   rc = -errno;
+> > > > > > > >                     evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
+> > > > > > > > -                   ui__error("%s\n", msg);
+> > > > > > > > -                   goto out;
+> > > > > > > > +                   ui__error("Failure to open event '%s' on PMU '%s' which will be removed.\n%s\n",
+> > > > > > > > +                             evsel__name(pos), evsel__pmu_name(pos), msg);
+> > > > > >
+> > > > > > > How about changing it to pr_debug() and add below ...
+> > > > > >
+> > > > > > That sounds better.
+> > > > > >
+> > > > > > > > +                   pos->skippable = true;
+> > > > > > > > +                   skipped = true;
+> > > > > > > > +           } else {
+> > > > > > > > +                   pos->supported = true;
+> > > > > > > >             }
+> > > > > > > > -
+> > > > > > > > -           pos->supported = true;
+> > > > > > > >     }
+> > > > > > > >
+> > > > > > > > +   if (skipped) {
+> > > > > > > > +           struct evsel *tmp;
+> > > > > > > > +           int idx = 0;
+> > > > > > > > +           bool evlist_empty = true;
+> > > > > > > > +
+> > > > > > > > +           /* Remove evsels that failed to open and update indices. */
+> > > > > > > > +           evlist__for_each_entry_safe(evlist, tmp, pos) {
+> > > > > > > > +                   if (pos->skippable) {
+> > > > > > > > +                           evlist__remove(evlist, pos);
+> > > > > > > > +                           continue;
+> > > > > > > > +                   }
+> > > > > > > > +
+> > > > > > > > +                   /*
+> > > > > > > > +                    * Note, dummy events may be command line parsed or
+> > > > > > > > +                    * added by the tool. We care about supporting `perf
+> > > > > > > > +                    * record -e dummy` which may be used as a permission
+> > > > > > > > +                    * check. Dummy events that are added to the command
+> > > > > > > > +                    * line and opened along with other events that fail,
+> > > > > > > > +                    * will still fail as if the dummy events were tool
+> > > > > > > > +                    * added events for the sake of code simplicity.
+> > > > > > > > +                    */
+> > > > > > > > +                   if (!evsel__is_dummy_event(pos))
+> > > > > > > > +                           evlist_empty = false;
+> > > > > > > > +           }
+> > > > > > > > +           evlist__for_each_entry(evlist, pos) {
+> > > > > > > > +                   pos->core.idx = idx++;
+> > > > > > > > +           }
+> > > > > > > > +           /* If list is empty then fail. */
+> > > > > > > > +           if (evlist_empty) {
+> > > > > > > > +                   ui__error("Failure to open any events for recording.\n");
+> > > > > > > > +                   rc = -1;
+> > > > > > > > +                   goto out;
+> > > > > > > > +           }
+> > > > > >
+> > > > > > > ... ?
+> > > > > >
+> > > > > > >               if (!verbose)
+> > > > > > >                       ui__warning("Removed some unsupported events, use -v for details.\n");
+> > > > > >
+> > > > > > And even this one would be best left for cases where we can determine
+> > > > > > that its a new situation, i.e. one that should work and not the ones we
+> > > > > > know that will not work already and thus so far didn't alarm the user
+> > > > > > into thinking something is wrong.
+> > > > > >
+> > > > > > Having the ones we know will fail as pr_debug() seems enough, I'd say.
+> > > > >
+> > > > > This means that:
+> > > > > ```
+> > > > > $ perf record -e data_read,LLC-prefetch-read -a sleep 0.1
+> > > > > ```
+> > > > > will fail (as data_read is a memory controller event and the LLC
+> > > > > doesn't support sampling) with something like:
+> > > > > ```
+> > > > > Error:
+> > > > > Failure to open any events for recording
+> > > > > ```
+> > > > > Which feels a bit minimal. As I already mentioned, it is also a
+> > > > > behavior change and so has the potential to break scripts dependent on
+> > > > > the failure information.
+> > > >
+> > > > I don't think it's about failure behavior, the concern is the error
+> > > > messages.  It can take too much screen space when users give a long list
+> > > > of invalid events.  And unfortunately the current error message for
+> > > > checking dmesg is not very helpful.
+> > >
+> > > Making the dmesg message more useful is a separate issue. The error
+> >
+> > Sure.
+> >
+> > > message only happens when things are broken and I think having an
+> > > error message is better than none, or somehow having to know to wade
+> > > through verbose output. I think this is very clear in:
+> > > https://lore.kernel.org/lkml/CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com/
+> > >
+> > > > Anyway you can add this line too: "Use -v to see the details."
+> > >
+> > > So silently failing and then expecting users to scrape verbose output
+> > > is a fairly significant behavior change for the tool.
+> >
+> > I'm not saying I want silent failures.  It should say it fails to parse
+> > or open some events.  But I think it needs to care about repeating
+> > failure messages.
+> >
+> > >
+> > > > >
+> > > > > A patch lowering the priority of error messages should be independent
+> > > > > of the 4 changes here. I'd be happy if someone follows this series
+> > > > > with a patch doing it.
+> > > >
+> > > > I think the error behavior is a part of this change.
+> > >
+> > > I disagree with it, so I think you need to address my comments.
+> >
+> > You are changing the error behavior by skipping failed events then the
+> > relevant error messages should be handled properly in this patchset.
+> 
+> I'm not sure what you are asking and I'm not sure why it matters?
+> Previously you'd asked for all the output to be moved under verbose.
+> 
+> If I specify an event that doesn't work with perf record today then it
+> fails. With this patch it fails too. If that event is a core PMU event
+> then there will be an error message for each core PMU that doesn't
+> support the event. So I get 2 error messages on hybrid. This doesn't
+> feel egregious or warrant a new error message mechanism. I would like
+> it so that evsels supported 1 or more PMUs, in which case this would
+> be 1 error message.
+> 
+> If I specify perf record today on an uncore event then perf record
+> fails and I get 1 error message for the uncore PMU. The new behavior
+> will be to get 1 error message per uncore PMU. If I'm on a server with
+> 10s of uncore PMUs then maybe the message is spammy, but the command
+> fails today and will continue to fail with this series. I don't see a
+> motivation to change or optimize for this case and again, evsels that
+> support >1 PMU would be the most appropriate fix.
+> 
+> The only case where there is no message today but would be with this
+> patch series is for cycles on ARM's neoverse. There will be one
+> warning for the evsel on the SLC PMU. That's one warning and not many.
+> 
+> As I've said, if you want a more elaborate error reporting system then
+> take these patches and add it to them. There's a larger refactor to
+> make evsels support >1 PMU that would clean up the many events on
+> server uncore PMUs issue, but that shouldn't be part of this series
+> nor gate it. If you are trying to perf record on uncore PMUs then you
+> already have problems and optimizing the error messages for your
+> mistake, I don't get why it matters?
 
-event->attr.sample_period contains sampling freq, not the sample period.
-So, use actual sample period (event->hw.sample_period) while calling
-limit_period().
+What about with multiple events in the command line - one of them
+failing with >1 PMUs and the command now succeeds?
 
-Kernel dynamically adjusts event sample period after every sample to meet
-the desire sampling freq. For this, kernel starts with sample period = 1
-and gradually increase it. Instead of simply returning error, start
-calibrating freq with the minimum sample period provided by limit_period().
-
-Similarly, value provided along with ioctl(PERF_EVENT_IOC_PERIOD) contains
-new freq not the sample period. Avoid calling limit_period() for freq mode
-event in the ioctl() code path.
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
-UNTESTED: limit_period() is mostly defined by Intel PMUs and I don't have
-any of those test machines.
-
- arch/x86/events/core.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index c75c482d4c52..924aa35676d3 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -629,10 +629,22 @@ int x86_pmu_hw_config(struct perf_event *event)
- 		event->hw.config |= x86_pmu_get_event_config(event);
- 
- 	if (event->attr.sample_period && x86_pmu.limit_period) {
--		s64 left = event->attr.sample_period;
--		x86_pmu.limit_period(event, &left);
--		if (left > event->attr.sample_period)
--			return -EINVAL;
-+		if (event->attr.freq) {
-+			s64 left = event->hw.sample_period;
-+
-+			x86_pmu.limit_period(event, &left);
-+			if (left != event->hw.sample_period) {
-+				event->hw.sample_period = left;
-+				event->hw.last_period = left;
-+				local64_set(&event->hw.period_left, left);
-+			}
-+		} else {
-+			s64 left = event->attr.sample_period;
-+
-+			x86_pmu.limit_period(event, &left);
-+			if (left > event->attr.sample_period)
-+				return -EINVAL;
-+		}
- 	}
- 
- 	/* sample_regs_user never support XMM registers */
-@@ -2648,6 +2660,9 @@ static int x86_pmu_check_period(struct perf_event *event, u64 value)
- 	if (x86_pmu.check_period && x86_pmu.check_period(event, value))
- 		return -EINVAL;
- 
-+	if (event->attr.freq)
-+		return 0;
-+
- 	if (value && x86_pmu.limit_period) {
- 		s64 left = value;
- 		x86_pmu.limit_period(event, &left);
--- 
-2.34.1
+Thanks,
+Namhyung
 
