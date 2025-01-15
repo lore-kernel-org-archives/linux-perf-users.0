@@ -1,334 +1,316 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1F7221D90
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 23:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F320ED
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 00:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736898962; cv=none; b=OgIV59fQMFE1c1HLUg2K3toHDeDtSPyTyszDAZDG32xLU98B4oMaiEjnu4UTEaik5oohDuYrFSzKMnkeXnZoAgok9NXEEEG7UKvBR9W82JrV5rRlNhVFghp8hKeBgcS9iJ7p5p/2DLiikDYj4dXaJMp5+ViB33zqC8RXXjhBegQ=
+	t=1736900249; cv=none; b=FpCo+YJfo3420h9HVJLHan02IAM0sahyxF8HkJwmKiYSpidnrjBhQL9H4cFyXzi+XL6s6Zb7ucTxVftjAW2xHMxKPpVSir82/pVUxObiKzccEHXNFmpLU3EdBbDNxIHFOXMST4snRW5htkVfbFUj5qlJYmC3PDw7rGB2Z7MhHwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736898962; c=relaxed/simple;
-	bh=KaALaCaKNmbvVs1ZpCkOxun8jgOb4rPuqBHd/Sf7Ilg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QOIX4bTED84E+6Qmeb7+opEQx5WT3Wh3+wsQBVtIUTg+pjOv8FPSA9TxvpEOBZaNVtfb4XggkdAkQtFa1piB4iiIUcp9aq6fgXDV1iqBO8zrkWjYHpbAkjLrPmSHpjYhKh352VV0QIRdMwozdzWqe8mwq1Xpdjh8yKP9Wa2Z0m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D+fMDUwD; arc=none smtp.client-ip=209.85.166.178
+	s=arc-20240116; t=1736900249; c=relaxed/simple;
+	bh=l++N0rRRnmhxtLecqKAzKpyOqgFEVFWwoimOEH4Hs6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HsG0JTMQv3KJFMzmkw3VytSkbF+QfifDo7JlVbF5XX/sDIzImXrcXe606q7o+uHUnkoo2mTKkZ7WI79gRzvGRrcUadri3IjcvSJrwWuX4eombn1zjpSb3rBd1WV7vxqIWjRFT2ahz06zt7yvE7MmMhb5QG8lN6cUMThgkJNNFk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eRWJ/zJD; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D+fMDUwD"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so59385ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 15:56:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eRWJ/zJD"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2167141dfa1so5498775ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 16:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736898959; x=1737503759; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zZjztpnGf2/x7CmVk8X85gVhhDvgMNeUrqUQwbwgBRw=;
-        b=D+fMDUwDeFvn1Mi0BqT8iHa0kyHA6swwAJvhHAw1XZKtbIoYci3FedVk8RN4GUc2PB
-         fynd8HKOoLyih4uiUJ6ccK0fOL7lQu+pLRuwJt3PSJZOBPaAfxfcnj7w7zNqde6X6zMT
-         J0l/AqzrQCr3aSZVi/BZ4jciy/3ZDTyW2A9xq/9td0SVQjmSzFYNddwBEFUkIm0xbxzw
-         A0tZ7CzxoMqpvxIG7BmY8oDlpaRRtubyXMlhHzyTNOeJ/sKKx4flhXcopsrtaa1ctOCh
-         EKgXYFiAb9BdhschbnZfHROOVGG8SDTK8UDfuoPqxIaTBpm33f2mWN3ZsOURh+QHZOHN
-         dkDA==
+        d=google.com; s=20230601; t=1736900247; x=1737505047; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uOpQ4k9N7Yz9sD40MgkYZa7qAKsgRfoLfiT4EIq2i2Q=;
+        b=eRWJ/zJDs8c3OUIypL2jihM/bimRUyz4Vhz65YzydCEYhT/rN5zvZb3FK0RnQNPJq2
+         sb3F2kLF6LjKnLaMeU6BlYnmh8EvAa+F7adGUdydDsu9DzyXvx69lP5/Tf38O5JozkMh
+         LLCfCKhY2TF+NznzvVL8wWjo9OwrxVQM97qPIigmshJ0tCQG6MKXVNC1CyQ3oKHtjXnf
+         SxOIHYmBVRKfLs1yjuhDIJYSlhCb92f4s+MZoj2nt6odydHHUyfIDU9xbu8idb/w0XiS
+         GlTHNW9IJXOp/OHpNAJV7ZFVH4+WK04mDFMkp6kxZx0sNA6Dbx/A6c2bZUR4eeGGbGhc
+         6SiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736898959; x=1737503759;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zZjztpnGf2/x7CmVk8X85gVhhDvgMNeUrqUQwbwgBRw=;
-        b=MXrCL+sFTKxNuvtmo9JUQd+VMTopTnppEURPkOgFDmmyMBlrPlIJaP6Wcp/fKKen9F
-         QaFUQvTIuLCGCohBCAqLF3EcwkqX7OlzVHgauIgnLiO8xUW9r7QmkcTgYU1AeksB6akF
-         HBfAvVpn7CzidXTWxXV86zTGYgMh0eU6TgELy/S6wwjgOPB7TSDBdAMLPPjpyuJsI73o
-         zuC+RO93CVvNUEPViMttvu4BSZPoY8A24suR778ozHFTD4NJzR9GC6dIs6NjwXxI3Av3
-         mYaVHHinaVIJcwkDp2rL/MPVvdKTWS0yBDir8eAdh6x029WCNyWqUHDvAdpbUjhwTB9g
-         q9/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVsjiCxake6tLeCbR6JcMHoTM60zPXz8VBAhN2GGVVIx3Iwc8EkbK0IAypPSDO3vBgfOFVw6oa9xPrx7n/c4YM9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQJc4Yg1n3pTqRNM0iOXTqM5nzjvoHL86um8uF6qla4b3fDONN
-	jdeqXkyHE2UimJBjrYeHJ2GWovA14TtNElsYxZHGuagQmq8+o82YrZnC6EVXesijDNcO8fAXY18
-	voNIvYyv+XOljpvlWKuRSBGGD+k4BCzokuaqc
-X-Gm-Gg: ASbGncuD1r3qeJ8xveMPrkC+dDDt4qob8Qm64NCG5GuGokecTiMbaerdm49cWZczz6O
-	p29FBTBhMLu+wDqtdym3IHeWQCWEv/TtWcBQJ8RM=
-X-Google-Smtp-Source: AGHT+IFD2FZO22gYwjqS/W2R8BU+z1PyKboxx9L2nXXaxN3X1mxEPSgfAkW3JDRnEpr2kbwloN6DlCar/hZ/ez+9ewY=
-X-Received: by 2002:a05:6e02:20e3:b0:3ce:6a91:2318 with SMTP id
- e9e14a558f8ab-3ce84a4ac08mr1245815ab.26.1736898959213; Tue, 14 Jan 2025
- 15:55:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736900247; x=1737505047;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uOpQ4k9N7Yz9sD40MgkYZa7qAKsgRfoLfiT4EIq2i2Q=;
+        b=RxyOURar/pV7TkCKlkvSApwnWObOX0MK6OyAuGHiSO5kLsVAYuPrlvRN/Q0SLl/a9e
+         gDu0hY7J/kwl6iveVopsz/SRG91I7X+/BjW8ysLuDlCuBbhxjerFzB4bZY0vxWd19MY2
+         w7LjdnktiHwgMjGPChEXdiXPzQGze7AUOAR97RYRFM2Iq0vPVpWppx+lwj2N99Ol3Yej
+         jrHGfLtaClFQju3K9mWU928gAbZyHDLBk+0NnjB3pihm6MJHNGdnX89QG1QKLC5JRJV3
+         fzcVWZJdVot1TwWpGcRNC9vPePAxBMHx3dP9o2MMeeUQeEsB22nuPQ+QD3FpEU/ZQ79r
+         +IKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWKrjrFuo0xiLdAIA0MWRZNqgiX1BfhJs+Cmqy+7dGXtF65rr/uVZdKAsIAa2h/st3sk7CkZSgwvF2LxYzOWvy6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkwc9R8w6VuUg+ZHhtzVk5z5lCYRWerCV8iB3KUQ96UQoYWiI2
+	DTFJRxZYfpRg7668n0883cbKTtlclDzKHw3pbhXmmd/8rpQNOGXYu/1AKVI99g==
+X-Gm-Gg: ASbGncvcoy6dDJMw6N0BO/U187uutNB+J2FQnlhK1VevI+ipy6xEr7gGbCYHzd/zHeb
+	ShJvX4uBPRrGiTDS6n3vzFF+2Ljt2Mrq2W2Gco9pD9VByyCTc+vO4RxiRvnsTTZgrYVYv6IBS63
+	MyD0JhrE9NgkaMOayIle7ojyvW4VJM9mKpVvsDqY/kOjA4Qv99KCA4Erft4qraIMCM8wAo0Zd4F
+	2kO0LakJuHWjxPohygdZv4H8JrG87j+vJCBeeWk3pTJAXqShtBXHifX/0qVrJO2yMMUNEr/SoyM
+	zNR8OLnK8RyswVo=
+X-Google-Smtp-Source: AGHT+IHlp6t+xXJnV4P8Vu4aZmuAPI3oW4rb8hqktrWG5kw8S4ybvNBeeQDe7sLXbPwA/Tpw8T7PaA==
+X-Received: by 2002:a17:902:ec87:b0:215:a808:61cf with SMTP id d9443c01a7336-21bf0d269e3mr13524095ad.25.1736900246677;
+        Tue, 14 Jan 2025 16:17:26 -0800 (PST)
+Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f25cc1esm71520325ad.213.2025.01.14.16.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 16:17:25 -0800 (PST)
+Date: Wed, 15 Jan 2025 00:17:22 +0000
+From: Mingwei Zhang <mizhang@google.com>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 18/58] KVM: x86/pmu: Introduce
+ enable_passthrough_pmu module parameter
+Message-ID: <Z4b-kkRNp1V0faTq@google.com>
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-19-mizhang@google.com>
+ <Zzyg_0ACKwHGLC7w@google.com>
+ <50ba7bd1-6acf-4b50-9eb1-8beb2beee9ec@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-4-irogers@google.com>
- <Z4B279zu_8Kz5N6u@google.com> <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
- <Z4FtHGBbCEeLQhAm@google.com> <CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com>
- <Z4a7DncIlP6pznW7@google.com>
-In-Reply-To: <Z4a7DncIlP6pznW7@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 14 Jan 2025 15:55:47 -0800
-X-Gm-Features: AbW1kvalc4iuRVQvNblsy_TYapr356XuLDObglLylqCbMl1JxwzmbUECWJ5lJ1E
-Message-ID: <CAP-5=fWZxpooqOhC_QrR2YaZVEj0UpipBCHXHZMbFfv7G15Vnw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that don't open
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50ba7bd1-6acf-4b50-9eb1-8beb2beee9ec@linux.intel.com>
 
-On Tue, Jan 14, 2025 at 11:29=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Fri, Jan 10, 2025 at 11:18:53AM -0800, Ian Rogers wrote:
-> > On Fri, Jan 10, 2025 at 10:55=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Thu, Jan 09, 2025 at 08:44:38PM -0800, Ian Rogers wrote:
-> > > > On Thu, Jan 9, 2025 at 5:25=E2=80=AFPM Namhyung Kim <namhyung@kerne=
-l.org> wrote:
-> > > > >
-> > > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
-> > > > > > Whilst for many tools it is an expected behavior that failure t=
-o open
-> > > > > > a perf event is a failure, ARM decided to name PMU events the s=
-ame as
-> > > > > > legacy events and then failed to rename such events on a server=
- uncore
-> > > > > > SLC PMU. As perf's default behavior when no PMU is specified is=
- to
-> > > > > > open the event on all PMUs that advertise/"have" the event, thi=
-s
-> > > > > > yielded failures when trying to make the priority of legacy and
-> > > > > > sysfs/json events uniform - something requested by RISC-V and A=
-RM. A
-> > > > > > legacy event user on ARM hardware may find their event opened o=
-n an
-> > > > > > uncore PMU which for perf record will fail. Arnaldo suggested s=
-kipping
-> > > > > > such events which this patch implements. Rather than have the s=
-kipping
-> > > > > > conditional on running on ARM, the skipping is done on all
-> > > > > > architectures as such a fundamental behavioral difference could=
- lead
-> > > > > > to problems with tools built/depending on perf.
-> > > > > >
-> > > > > > An example of perf record failing to open events on x86 is:
-> > > > > > ```
-> > > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.=
-1
-> > > > > > Error:
-> > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_runni=
-ng_0' which will be removed.
-> > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid arg=
-ument) for event (data_read).
-> > > > > > "dmesg | grep -i perf" may provide additional information.
-> > > > > >
-> > > > > > Error:
-> > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_runni=
-ng_1' which will be removed.
-> > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid arg=
-ument) for event (data_read).
-> > > > > > "dmesg | grep -i perf" may provide additional information.
-> > > > > >
-> > > > > > Error:
-> > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which wi=
-ll be removed.
-> > > > > > The LLC-prefetch-read event is not supported.
-> > > > > > [ perf record: Woken up 1 times to write data ]
-> > > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 sample=
-s) ]
-> > > > >
-> > > > > I'm afraid this can be too noisy.
-> > > >
-> > > > The intention is to be noisy:
-> > > > 1) it matches the existing behavior, anything else is potentially a=
- regression;
-> > >
-> > > Well.. I think you're changing the behavior. :)  Also currently it ju=
-st
-> > > fails on the first event so it won't be too much noisy.
-> > >
-> > >   $ perf record -e data_read,data_write,LLC-prefetch-read -a sleep 0.=
-1
-> > >   event syntax error: 'data_read,data_write,LLC-prefetch-read'
-> > >                        \___ Bad event name
-> > >
-> > >   Unable to find event on a PMU of 'data_read'
-> > >   Run 'perf list' for a list of valid events
-> > >
-> > >    Usage: perf record [<options>] [<command>]
-> > >       or: perf record [<options>] -- <command> [<options>]
-> > >
-> > >       -e, --event <event>   event selector. use 'perf list' to list a=
-vailable events
+On Wed, Nov 20, 2024, Mi, Dapeng wrote:
+> 
+> On 11/19/2024 10:30 PM, Sean Christopherson wrote:
+> > As per my feedback in the initial RFC[*]:
 > >
-> > Fwiw, this error is an event parsing error not an event opening error.
-> > You need to select an uncore event, I was using data_read which exists
-> > in the uncore_imc_free_running PMUs on Intel tigerlake. Here is the
-> > existing error message:
-> > ```
-> > $ perf record -e data_read -a true
-> > Error:
-> > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-> > for event (data_read).
-> > "dmesg | grep -i perf" may provide additional information.
-> > ```
-> > and here it with the series:
-> > ```
-> > $ perf record -e data_read -a true
-> > Error:
-> > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0'
-> > which will be removed.
-> > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-> > for event (data_read).
-> > "dmesg | grep -i perf" may provide additional information.
+> >  2. The module param absolutely must not be exposed to userspace until all patches
+> >     are in place.  The easiest way to do that without creating dependency hell is
+> >     to simply not create the module param.
 > >
-> > Error:
-> > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1'
-> > which will be removed.
-> > The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-> > for event (data_read).
-> > "dmesg | grep -i perf" may provide additional information.
-> >
-> > Error:
-> > Failure to open any events for recording.
-> > ```
-> > and here is what it would be with pr_debug:
-> > ```
-> > $ perf record -e data_read -a true
-> > Error:
-> > Failure to open any events for recording.
-> > ```
-> > I believe this last output is worst because:
-> > 1) If not all events fail to open there is no error reported unless I
-> > know to run with -v, which will also bring a bunch more noise with it,
->
-> I suggested to add a warning if any (not all) of events failed to open.
->
->   "Removed some unsupported events, use -v for details."
->
->
-> > 2) I don't see the PMU / event name and "Invalid argument" indicating
-> > what has gone wrong again unless I know to run with -v and get all the
-> > verbose noise with that.
->
-> I don't think single -v adds a lot of noise in the output.
->
-> >
-> > Yes it is noisy on 1 platform for 1 event due to an ARM PMU event name
-> > bug that ARM should have long ago fixed. That should be fixed rather
-> > than hiding errors and making users think they are recording samples
-> > when silently they're not - or they need to search through verbose
-> > output to try to find out if something broke.
->
-> I'm not sure if it's a bug in the driver.  It happens because perf tool
-> changed the way it finds events - it used to look at the core PMUs only
-> if no PMU name was given, but now it searches every PMU, right?
+> > [*] https://lore.kernel.org/all/ZhhQBHQ6V7Zcb8Ve@google.com
+> 
+> Sure. It looks we missed this comment. Would address it.
+> 
 
-So there is the ARM bug in the PMU driver that caused an issue with
-the hybrid fixes done because of wanting to have metrics work for
-hybrid. The bug is reported here:
-https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st=
-/
-The events are apple_icestorm_pmu/cycles/ and
-apple_firestorm_pmu/cycles/. The issue is that prior to fixing hybrid
-the ARM PMUs looked like uncore PMUs and couldn't open a legacy event,
-which was fine as they has sysfs events. When hybrid was fixed in the
-tool, the tool would then try to open apple_icestorm_pmu/cycles/ and
-apple_firestorm_pmu/cycles/ as legacy events - legacy having priority
-over sysfs/json back then. The legacy mapping was broken in the PMU
-driver. Now were everything working as intended, just the cycles event
-would be specified on the command line and the event would be wildcard
-opened on the apple_icestorm_pmu and apple_firestorm_pmu. I believe
-this way would already use a legacy encoding and so to work around the
-PMU driver bug people were specifying the PMU name to get the sysfs
-encoding, but that only worked as the PMUs appeared to be uncore.
+Dapeng, just synced with Sean offline. His point is that we still need
+kernel parameter but introduce that in the last part of the series so
+that any bisect won't trigger the new PMU logic in the middle of the
+series. But I think you are right to create a global config and make it
+false.
 
+> 
 > >
-> > > > 2) it only happens if trying to record on a PMU/event that doesn't
-> > > > support recording, something that is currently an error and so we'r=
-e
-> > > > not motivated to change the behavior as no-one should be using it;
-> > >
-> > > It was caught by Linus, so we know at least one (very important) user=
-.
+> > On Thu, Aug 01, 2024, Mingwei Zhang wrote:
+> >> Introduce enable_passthrough_pmu as a RO KVM kernel module parameter. This
+> >> variable is true only when the following conditions satisfies:
+> >>  - set to true when module loaded.
+> >>  - enable_pmu is true.
+> >>  - is running on Intel CPU.
+> >>  - supports PerfMon v4.
+> >>  - host PMU supports passthrough mode.
+> >>
+> >> The value is always read-only because passthrough PMU currently does not
+> >> support features like LBR and PEBS, while emualted PMU does. This will end
+> >> up with two different values for kvm_cap.supported_perf_cap, which is
+> >> initialized at module load time. Maintaining two different perf
+> >> capabilities will add complexity. Further, there is not enough motivation
+> >> to support running two types of PMU implementations at the same time,
+> >> although it is possible/feasible in reality.
+> >>
+> >> Finally, always propagate enable_passthrough_pmu and perf_capabilities into
+> >> kvm->arch for each KVM instance.
+> >>
+> >> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> >> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> >> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+> >> ---
+> >>  arch/x86/include/asm/kvm_host.h |  1 +
+> >>  arch/x86/kvm/pmu.h              | 14 ++++++++++++++
+> >>  arch/x86/kvm/vmx/vmx.c          |  7 +++++--
+> >>  arch/x86/kvm/x86.c              |  8 ++++++++
+> >>  arch/x86/kvm/x86.h              |  1 +
+> >>  5 files changed, 29 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> >> index f8ca74e7678f..a15c783f20b9 100644
+> >> --- a/arch/x86/include/asm/kvm_host.h
+> >> +++ b/arch/x86/include/asm/kvm_host.h
+> >> @@ -1406,6 +1406,7 @@ struct kvm_arch {
+> >>  
+> >>  	bool bus_lock_detection_enabled;
+> >>  	bool enable_pmu;
+> >> +	bool enable_passthrough_pmu;
+> > Again, as I suggested/requested in the initial RFC[*], drop the per-VM flag as well
+> > as kvm_pmu.passthrough.  There is zero reason to cache the module param.  KVM
+> > should always query kvm->arch.enable_pmu prior to checking if the mediated PMU
+> > is enabled, so I doubt we even need a helper to check both.
 > >
-> > If they care enough then specifying the PMU with the event will avoid
-> > any warning and has always been a fix for this issue. It was the first
-> > proposed workaround for Linus.
->
-> I guess that's what Linus said regression.
-
-But a regression where? The tool's behavior is pretty clear, no PMU
-the event will be tried on every PMU, give it a PMU and the event will
-only be tried on that PMU, give it a PMU without a suffix and the
-event will be opened on all PMUs that match the name with different
-suffixes. I dislike the idea of  cpu-cycles implicitly being just for
-core PMUs, but cpu_cycles being for all PMUs as the hyphen is a legacy
-name and the underscore not. I dislike the idea of specifying a PMU
-with uncore events as uncore events often already have a PMU within
-their event name and it also breaks the universe. When trying to find
-out what people mean by event names being implicitly associated with
-PMUs I get told I'm throwing out "what ifs," when all I'm doing is
-reading the code (that I wrote and I'm trying to fix) and trying to
-figure out what behavior people want. What I don't want is
-inconsistencies, events behaving differently in different scenarios
-and the perf output's use of event names being inconsistent with the
-parsing. RISC-V and ARM have wanted the syfs/json over legacy
-priority, so I'm trying to get that landed.
-
-Ultimately the original regression comes back to the ARM SLC PMU
-advertising a cycles event when it should have been named cpu_cycles,
-if for no other reason than uniformity with the bus_cycles name on the
-same PMU. The change in perf's wildcard behavior exposed the latent
-bug, that doesn't make the SLC PMU's event name not a bug. The change
-here is to make seeing that bug non-terminal to running the program.
-
+> > [*] https://lore.kernel.org/all/ZhhOEDAl6k-NzOkM@google.com
+> 
+> Sure.
+> 
+> 
 > >
-> > > > 3) for the wildcard case the only offender is ARM's SLC PMU and the
-> > > > appropriate fix there has always been to make the CPU cycle's event
-> > > > name match the bus_cycles event name by calling it cpu_cycles -
-> > > > something that doesn't conflict with a core PMU event name, the thi=
-ng
-> > > > that has introduced all these problems, patches, long email exchang=
-es,
-> > > > unfixed inconsistencies, etc.. If the errors aren't noisy then ther=
-e
-> > > > is little motivation for the ARM SLC PMU's event name to be fixed.
-> > >
-> > > I understand your concern but I'm not sure it's the best way to fix t=
-he
-> > > issue.
+> >>  
+> >>  	u32 notify_window;
+> >>  	u32 notify_vmexit_flags;
+> >> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> >> index 4d52b0b539ba..cf93be5e7359 100644
+> >> --- a/arch/x86/kvm/pmu.h
+> >> +++ b/arch/x86/kvm/pmu.h
+> >> @@ -208,6 +208,20 @@ static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
+> >>  			enable_pmu = false;
+> >>  	}
+> >>  
+> >> +	/* Pass-through vPMU is only supported in Intel CPUs. */
+> >> +	if (!is_intel)
+> >> +		enable_passthrough_pmu = false;
+> >> +
+> >> +	/*
+> >> +	 * Pass-through vPMU requires at least PerfMon version 4 because the
+> >> +	 * implementation requires the usage of MSR_CORE_PERF_GLOBAL_STATUS_SET
+> >> +	 * for counter emulation as well as PMU context switch.  In addition, it
+> >> +	 * requires host PMU support on passthrough mode. Disable pass-through
+> >> +	 * vPMU if any condition fails.
+> >> +	 */
+> >> +	if (!enable_pmu || kvm_pmu_cap.version < 4 || !kvm_pmu_cap.passthrough)
+> > As is quite obvious by the end of the series, the v4 requirement is specific to
+> > Intel.
 > >
-> > Right, I'm similarly concerned about hiding legitimate warning/error
-> > messages because of 1 event on 1 PMU on 1 architecture because of how
-> > perf gets driven by 1 user. Yes, when you break you can wade through
-> > the verbose output but imo the verbose output was never intended to be
-> > used in that way.
->
-> Well, the verbose output is to debug when something doesn't go well, no?
-
-The output isn't currently only enabled in verbose mode, so is this
-wrong? You will only get extra warnings with this change if you do
-anything wrong. For a hybrid system maybe you've gone from 1 warning
-to 2, I fail to see a big deal. Yes if you try to do perf record on an
-uncore server PMU with many instances you will potentially get many
-warnings, but the behavior before and after is to fail and the user is
-likely to figure out what the fix is in both cases, with more errors
-they may appreciate better that the event was getting opened on many
-PMUs. The trend for event parsing errors is to have more error
-messages. We went from 1 to 2 in commit
-a910e4666d61712840c78de33cc7f89de8affa78 and from 2 to many in commit
-fd7b8e8fb20f51d60dfee7792806548f3c6a4c2c. The trend isn't to try to
-move things into verbose only output and for things to silently (or
-with little detail) fail for the user.
-
-Thanks,
-Ian
+> > 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
+> > 	    (is_intel && kvm_pmu_cap.version < 4) ||
+> > 	    (is_amd && kvm_pmu_cap.version < 2))
+> > 		enable_passthrough_pmu = false;
+> >
+> > Furthermore, there is zero reason to explicitly and manually check the vendor,
+> > kvm_init_pmu_capability() takes kvm_pmu_ops.  Adding a callback is somewhat
+> > undesirable as it would lead to duplicate code, but we can still provide separation
+> > of concerns by adding const variables to kvm_pmu_ops, a la MAX_NR_GP_COUNTERS.
+> >
+> > E.g.
+> >
+> > 	if (enable_pmu) {
+> > 		perf_get_x86_pmu_capability(&kvm_pmu_cap);
+> >
+> > 		/*
+> > 		 * WARN if perf did NOT disable hardware PMU if the number of
+> > 		 * architecturally required GP counters aren't present, i.e. if
+> > 		 * there are a non-zero number of counters, but fewer than what
+> > 		 * is architecturally required.
+> > 		 */
+> > 		if (!kvm_pmu_cap.num_counters_gp ||
+> > 		    WARN_ON_ONCE(kvm_pmu_cap.num_counters_gp < min_nr_gp_ctrs))
+> > 			enable_pmu = false;
+> > 		else if (pmu_ops->MIN_PMU_VERSION > kvm_pmu_cap.version)
+> > 			enable_pmu = false;
+> > 	}
+> >
+> > 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
+> > 	    pmu_ops->MIN_MEDIATED_PMU_VERSION > kvm_pmu_cap.version)
+> > 		enable_mediated_pmu = false;
+> 
+> Sure.  would do.
+> 
+> 
+> >> +		enable_passthrough_pmu = false;
+> >> +
+> >>  	if (!enable_pmu) {
+> >>  		memset(&kvm_pmu_cap, 0, sizeof(kvm_pmu_cap));
+> >>  		return;
+> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >> index ad465881b043..2ad122995f11 100644
+> >> --- a/arch/x86/kvm/vmx/vmx.c
+> >> +++ b/arch/x86/kvm/vmx/vmx.c
+> >> @@ -146,6 +146,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
+> >>  extern bool __read_mostly allow_smaller_maxphyaddr;
+> >>  module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+> >>  
+> >> +module_param(enable_passthrough_pmu, bool, 0444);
+> > Hmm, we either need to put this param in kvm.ko, or move enable_pmu to vendor
+> > modules (or duplicate it there if we need to for backwards compatibility?).
+> >
+> > There are advantages to putting params in vendor modules, when it's safe to do so,
+> > e.g. it allows toggling the param when (re)loading a vendor module, so I think I'm
+> > supportive of having the param live in vendor code.  I just don't want to split
+> > the two PMU knobs.
+> 
+> Since enable_passthrough_pmu has already been in vendor modules,  we'd
+> better duplicate enable_pmu module parameter in vendor modules as the 1st step.
+> 
+> 
+> >
+> >>  #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
+> >>  #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
+> >>  #define KVM_VM_CR0_ALWAYS_ON				\
+> >> @@ -7924,7 +7926,8 @@ static __init u64 vmx_get_perf_capabilities(void)
+> >>  	if (boot_cpu_has(X86_FEATURE_PDCM))
+> >>  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+> >>  
+> >> -	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
+> >> +	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
+> >> +	    !enable_passthrough_pmu) {
+> >>  		x86_perf_get_lbr(&vmx_lbr_caps);
+> >>  
+> >>  		/*
+> >> @@ -7938,7 +7941,7 @@ static __init u64 vmx_get_perf_capabilities(void)
+> >>  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
+> >>  	}
+> >>  
+> >> -	if (vmx_pebs_supported()) {
+> >> +	if (vmx_pebs_supported() && !enable_passthrough_pmu) {
+> > Checking enable_mediated_pmu belongs in vmx_pebs_supported(), not in here,
+> > otherwise KVM will incorrectly advertise support to userspace:
+> >
+> > 	if (vmx_pebs_supported()) {
+> > 		kvm_cpu_cap_check_and_set(X86_FEATURE_DS);
+> > 		kvm_cpu_cap_check_and_set(X86_FEATURE_DTES64);
+> > 	}
+> 
+> Sure. Thanks for pointing this.
+> 
+> 
+> >
+> >>  		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
+> >>  		/*
+> >> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> >> index f1d589c07068..0c40f551130e 100644
+> >> --- a/arch/x86/kvm/x86.c
+> >> +++ b/arch/x86/kvm/x86.c
+> >> @@ -187,6 +187,10 @@ bool __read_mostly enable_pmu = true;
+> >>  EXPORT_SYMBOL_GPL(enable_pmu);
+> >>  module_param(enable_pmu, bool, 0444);
+> >>  
+> >> +/* Enable/disable mediated passthrough PMU virtualization */
+> >> +bool __read_mostly enable_passthrough_pmu;
+> >> +EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
+> >> +
+> >>  bool __read_mostly eager_page_split = true;
+> >>  module_param(eager_page_split, bool, 0644);
+> >>  
+> >> @@ -6682,6 +6686,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> >>  		mutex_lock(&kvm->lock);
+> >>  		if (!kvm->created_vcpus) {
+> >>  			kvm->arch.enable_pmu = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
+> >> +			/* Disable passthrough PMU if enable_pmu is false. */
+> >> +			if (!kvm->arch.enable_pmu)
+> >> +				kvm->arch.enable_passthrough_pmu = false;
+> > And this code obviously goes away if the per-VM snapshot is removed.
