@@ -1,204 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7EE1D6DC5;
-	Wed, 15 Jan 2025 19:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD421D90C8
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 21:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736968437; cv=none; b=inA0bRb5GxdHVdur6KWwQ4PhmfJu7Xr8B77bT238UqyGv00rEUZ2Sbtr7d35WmGB4LEsxG0nkgEPGbhDjDzySZzJ8qQQTHMaBzGWO7FYcL5d+qgCV0A4xp/PglyHVl+5hJ2+4ptyIGERhP61aOvyLMM5e3CHn3VxYDBldPKiNjQ=
+	t=1736976046; cv=none; b=noqut2ZTlRhNSYmO8GSYMmXSmLb9UCrSCdPCPofcwPx90zi+Dn3Xz+mw0h2CqfwABrUSga8wK+QDdcsd+Oazww/SNswCVUxlrgsTyAAYnTxraQDxlLHPVQ+auFElZozT1oZLlx1bVpGbpriAGtRydjreE4CWERuAP+F2Ve6MYEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736968437; c=relaxed/simple;
-	bh=5j6uNe4JOhp42a3UoL5OduNrPDr39cMDCmgVSF3r97A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kqEVoX6rk84iLviZy3QlYEvZpDiIixvoOckHrmvCPE1/AUOcf9XdVkp8zljNwUel3oHGTuqLIyr+HHBm4ibBDzGAGZ0Dz/1ASmmi8+JaDw4FwdvntjywsPOufOWS4BlAIaJKtRqL9FhbM7WIQmvxmPciMdJHxm/izQEi7DvYJVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSVUitwa; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736976046; c=relaxed/simple;
+	bh=RFQGnF82QQKEbPHmfAURW3WE2od1aVQDJNiwGyvFllE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jGy1y35fhH/4svb6J4rmdniY/6huDs56yN68xl0kKIw/QIf7aISJxUsAXfLYkd3skmuEIny8+bvLuw+4yCPvx4uThqSn5qxHDzRaScQNgKjlopmlvVbV9NN+8aH4a2FKUKr1fJ3IVyM5Qa5rKQOsKeD3b3YiyTmGyr/gj+vxoWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTBPd0SZ; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSVUitwa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736968436; x=1768504436;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5j6uNe4JOhp42a3UoL5OduNrPDr39cMDCmgVSF3r97A=;
-  b=GSVUitwa62BiGcq15mKzWmOJk0WNicwS3H2EbF+FI3AaLBcqHR6k5tAX
-   rxtK9CTjd6yBG6RgRmGiGyXww2+JQKV1Ra7Ed+XfBk9Y3Zhn7cb+tAU5l
-   ES8dtWlspB28ohohsR0aIlN2TqEsPrxyjwLG3CIxZ4dOQF9IPt9W5r56u
-   GbEEDj6P2qak7GI76gjBn1tn7V9yuECrqgwA8rMje37VBa1qkvqY+PaOI
-   KsWg1b+jHwkVsMbYeGCHD8idhFpAApCu4/5tkdHJCGdoTe4kFzjyIcS8X
-   Bo/J7RTVgjUrzSsg6ZetAq9niCfDkGIY0XSCwGJR2Lhj7s5Msgcdqlo7T
-   w==;
-X-CSE-ConnectionGUID: KktN/Iy1Rs206dE7XCLhhQ==
-X-CSE-MsgGUID: oNFzaGmdSq6Af9mV1D5cTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="37551014"
-X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
-   d="scan'208";a="37551014"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 11:13:55 -0800
-X-CSE-ConnectionGUID: ffDA660eTXGxC+h2JfpaUQ==
-X-CSE-MsgGUID: XbMXCM2+Szu7c1RfnfCzHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
-   d="scan'208";a="105824598"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 11:13:54 -0800
-Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9EA3120B5713;
-	Wed, 15 Jan 2025 11:13:52 -0800 (PST)
-Message-ID: <62c13793-f4b4-4e2e-b6bc-0de2427ea93e@linux.intel.com>
-Date: Wed, 15 Jan 2025 14:13:51 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTBPd0SZ"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a814c54742so6985ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 13:20:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736976044; x=1737580844; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eeZMzdoAZOaC7hUZA2ynOD6FiOeCO3Zdi0LI3tDnsEQ=;
+        b=eTBPd0SZBFKe/dxyjXJsrP4KMoUpKvomEuY3XRS1J3qAOnazgdHGM0MYXu722OCHsy
+         8QnwGU+UgoWnkKaRgQQubgorvEU2Fn14pj9VqnneG25xSRGNcti437frMSEKAVBAc9sM
+         zqCQJjg4DpSERFqr6kViXbqEm8hnGTvw70eWdqNp/I6kwNN3EMzf0qG7VniWv58t+7I8
+         V+taB1LcqGlX7SKBLjCJuXdxxE2QYaDZ8rxNM1FJNDGZDKEE91VoQePTB7XOkc338DY6
+         iiXT4tFg0NcLYWqUsA3X0ormxkoINHJQwCh/BW2u6TCBhBsdDpyErLLxdkn/GQH3JS0o
+         peuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736976044; x=1737580844;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eeZMzdoAZOaC7hUZA2ynOD6FiOeCO3Zdi0LI3tDnsEQ=;
+        b=ZrEpgid2xo2G1sPSs/HfbysKHwZPz7ysJ3sg94t8eks8zlUz1072/gzqT+p4tAUFC9
+         C08YI6bo/GgFX3q6Fer+k1RKUaFZj88nLeYSzNojNHCQtVhONy/KRySZ5I7v/PVzdDy9
+         BPkqb31a19iNrQ11N7+NCfHgqO5kDHJbPH1hASSyGNLC2Cn/oXJO6jXakKLEDmfGOGwC
+         +BOoBTYYXZpkyDy/XTKqDZe9Io1cIDfY+j2Kdh4a8lfJC11lUlFZz88O0/3kOTrKNdoN
+         2pp/xaGao5WjE+XBfOtgr05y2LdIae1rROaRp4XJ9STeRb8o5IDByvWk0VucUZzXZa9G
+         x9xA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpkViAoIZ+dEZEhrdO1Q5kH0JorsSJqeIyyMA9J9Wbv/SFfJi4cG95l9AI9QBNkBGY6cv2kTWZavfVqle4MnN6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxGcNcTAFpIhlgxunlfb5Gu02tuDRnurABDeETLyNoR2Nod+Hz
+	4EU3JPIQ5PU8i9HJHLbEAXPCSNmKszeY30WCV8wZ0ifuzYlN/XVGMgiv1WPoDikk8fnnI9Exr+d
+	hEed/q9WbDufvkjRYf+73skVI11SVOOiqXYK/
+X-Gm-Gg: ASbGnctug8jl7TsW2iqCH0LJwq467CJEUj1oIxUEbtJbk8gKe6mmsxhaI6Zzdix0MH7
+	f34SjvUQDC7m426RGAev78shFsqEFpQIQmSJpUnvQkB54wVb/xbUjd6fz8BcTCssF2ee1SQ==
+X-Google-Smtp-Source: AGHT+IFdY3EdK0RlcaqR7XkhN3TwPfkXvTLWVLDZLyVErZSKQhkg++eul6BWJ+ye5pTMy/Cw/yGmyMYIs/WijFhs82g=
+X-Received: by 2002:a05:6e02:13af:b0:3a7:e616:8d36 with SMTP id
+ e9e14a558f8ab-3cee99d21f9mr659135ab.9.1736976043998; Wed, 15 Jan 2025
+ 13:20:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [UNTESTED][PATCH] perf/x86: Fix limit_period() for 'freq mode
- events'
-To: Ravi Bangoria <ravi.bangoria@amd.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- eranian@google.com, irogers@google.com, bp@alien8.de, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com
-References: <20250115154949.3147-1-ravi.bangoria@amd.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250115154949.3147-1-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
+ <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com> <Z4f3fDXemAMpBNMS@google.com>
+In-Reply-To: <Z4f3fDXemAMpBNMS@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 15 Jan 2025 13:20:32 -0800
+X-Gm-Features: AbW1kvYyQa9lv756_leTn8rvCmcqj4_u0BB6bMWojLD8QesTDfLByWCEv88e_84
+Message-ID: <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > > There was an explicit, and reviewed by Jiri and Arnaldo, intent with
+> > > the hybrid work that using a legacy event with a hybrid PMU, even
+> > > though the PMU doesn't advertise through json or sysfs the legacy
+> > > event, the perf tool supports it.
+>
+> I thought legacy events on hybrid were converted to PMU events.
 
+No, when BIG.little was created nothing changed in perf events but
+when Intel did hybrid they wanted to make the hybrid CPUs (atom and
+performance) appear as if they were one type. The PMU event encodings
+vary a lot for this on Intel, ARM has standards for the encoding.
+Intel extended the legacy format to take a PMU type id:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
+"EEEEEEEE: PMU type ID"
+that is in the top 32-bits of the config.
 
-On 2025-01-15 10:49 a.m., Ravi Bangoria wrote:
-> For the freq mode event ...
-> 
-> event->attr.sample_period contains sampling freq, not the sample period.
-> So, use actual sample period (event->hw.sample_period) while calling
-> limit_period().
-> 
-> Kernel dynamically adjusts event sample period after every sample to meet
-> the desire sampling freq. For this, kernel starts with sample period = 1
-> and gradually increase it. Instead of simply returning error, start
-> calibrating freq with the minimum sample period provided by limit_period().
-> 
-> Similarly, value provided along with ioctl(PERF_EVENT_IOC_PERIOD) contains
-> new freq not the sample period. Avoid calling limit_period() for freq mode
-> event in the ioctl() code path.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
-> UNTESTED: limit_period() is mostly defined by Intel PMUs and I don't have
-> any of those test machines.
-> 
->  arch/x86/events/core.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index c75c482d4c52..924aa35676d3 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -629,10 +629,22 @@ int x86_pmu_hw_config(struct perf_event *event)
->  		event->hw.config |= x86_pmu_get_event_config(event);
->  
->  	if (event->attr.sample_period && x86_pmu.limit_period) {
-> -		s64 left = event->attr.sample_period;
-> -		x86_pmu.limit_period(event, &left);
-> -		if (left > event->attr.sample_period)
-> -			return -EINVAL;
-> +		if (event->attr.freq) {
-> +			s64 left = event->hw.sample_period;
-> +
-> +			x86_pmu.limit_period(event, &left);
-> +			if (left != event->hw.sample_period) {
-> +				event->hw.sample_period = left;
-> +				event->hw.last_period = left;
-> +				local64_set(&event->hw.period_left, left);
-> +			}
+> > >
+> > > Making it so that events without PMUs are only legacy events just
+> > > doesn't work. There are far too many existing uses of non-legacy
+> > > events without PMU, the metrics contain 100s of examples.
+>
+> That's unfortunate.  It'd be nice if metrics were written with PMU
+> names.
 
-For a better start period, I'd prefer the below patch.
-https://lore.kernel.org/lkml/20241022130414.2493923-1-kan.liang@linux.intel.com/
+But then we'd end up with things like on Intel:
+UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
+becoming:
+uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+or just:
+cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+As a user the first works for me and doesn't have any ambiguity over
+PMUs as the event name already encodes the PMU. AMD similarly place
+the part of a pipeline into event names. Were we to break everybody by
+requiring the PMU we'd also need to explain which PMU to use. Sites
+with event lists (like https://perfmon-events.intel.com/) don't
+explain the PMU and it'd be messy as on Intel you have a CHA PMU for
+server chips but a CBOX on client chips, etc.
 
-The limit_period() check was introduced in the c46e665f0377 ("perf/x86:
-Add INST_RETIRED.ALL workarounds"). For my understanding, it's to check
-the !freq case. If so, I'm thinking something as below.
+> I have a question.  What if an event name in a metric matches to
+> multiple unrelated PMUs?
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 79a4aad5a0a3..6467ecc65486 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -630,7 +630,7 @@ int x86_pmu_hw_config(struct perf_event *event)
- 	if (event->attr.type == event->pmu->type)
- 		event->hw.config |= x86_pmu_get_event_config(event);
+The metric may break or we'd aggregate the unrelated counts together.
+Take a metric like IPC as "instructions/cycles", that metric should
+work on a hybrid system as they have instructions and cycles. If you
+used an event for instructions like inst_retired.any then maybe the
+metric will fail on one kind of core that didn't have that event. Now
+if we have accelerators advertising instructions and cycles events, we
+should be able to compute the metric for the accelerator. What could
+happen today is that the accelerator will have a cpumask of a single
+CPU, we could aggregate the accelerator counter into the CPU event
+with the same CPU as the cpumask, we'd end up with a weird quasi CPU
+and accelerator IPC metric for that CPU. What should happen is that we
+get an IPC for the accelerator and IPC for each hybrid core
+independently, but the way we handle evsels, CPUs, PMUs is not really
+set up for that. Hopefully getting a set of PMUs into the evsel will
+clear that up. Assuming all of that is cleared up, is it wrong if the
+IPC metric is computed for the accelerator if it was originally
+written as a CPU metric? Not really. Could there be metrics where that
+is the case? Probably, and specifying PMUs in the event names would be
+a fix. There have also been proposals that we restrict the PMUs for
+certain metrics. As event names are currently so distinct it isn't a
+problem we've faced yet and it is not clear it is a problem other than
+highlighting tech debt in areas of the tool like aggregation.
 
--	if (event->attr.sample_period && x86_pmu.limit_period) {
-+	if (!event->attr.freq && x86_pmu.limit_period) {
- 		s64 left = event->attr.sample_period;
- 		x86_pmu.limit_period(event, &left);
- 		if (left > event->attr.sample_period)
+> > >
+> > > Prior to switching json/sysfs to being the priority when a PMU is
+> > > specified, it was the case that all encodings were the same, with or
+> > > without a PMU.
+> > >
+> > > I don't think there is anything natural about assuming things about
+> > > event names. Take cycles, cpu-cycles and cpu_cycles:
+> > >  - cycles on x86 is only encoded via a legacy event;
+> > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycles is als=
+o
+> > > a legacy event name;
+> > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have a
+> > > corresponding legacy event name.
+>
+> I think the behavior should be:
+>
+>   cycles -> PERF_COUNT_HW_CPU_CYCLES
+>   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+>   cpu_cycles -> no legacy -> sysfs or json
+>   cpu/cycles/ -> sysfs or json
+>   cpu/cpu-cycles/ -> sysfs or json
 
+So I disagree as if you add a PMU to an event name the encoding
+shouldn't change:
+1) This historically was perf's behavior.
+2) Different event encodings can have different behaviors (broken in
+some notable cases).
+3) Intuitively what wildcarding does is try to open "*/event/" where *
+is every possible PMU name. Having different event encodings is
+breaking that intuition it could also break situations where you try
+to assert equivalence based on type/config.
+4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
+that's why the priority was changed.
+5) RISC-V would like the tool tackle the legacy to config mapping
+challenge, rather than the PMU driver, given the potential diversity
+of hardware implementations.
 
-> +		} else {
-> +			s64 left = event->attr.sample_period;
-> +
-> +			x86_pmu.limit_period(event, &left);
-> +			if (left > event->attr.sample_period)
-> +				return -EINVAL;
-> +		}
->  	}
->  
->  	/* sample_regs_user never support XMM registers */
-> @@ -2648,6 +2660,9 @@ static int x86_pmu_check_period(struct perf_event *event, u64 value)
->  	if (x86_pmu.check_period && x86_pmu.check_period(event, value))
->  		return -EINVAL;
->  
-> +	if (event->attr.freq)
-> +		return 0;
-> +
+To this end we hosted RISC-V's perf people at Google and they
+expressed that their preference was what this series does, and they
+expressed this directly to you.
 
-The ioctl(PERF_EVENT_IOC_PERIOD) can be used to set both freq and
-period. But according to the implementation, yes, the
-perf_event_check_period() should be only for the !freq mode.
-
-If so, we may change the generic code.
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f91ba29048ce..a9a04d4f3619 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5960,14 +5960,15 @@ static int _perf_event_period(struct perf_event
-*event, u64 value)
- 	if (!value)
- 		return -EINVAL;
-
--	if (event->attr.freq && value > sysctl_perf_event_sample_rate)
--		return -EINVAL;
--
--	if (perf_event_check_period(event, value))
--		return -EINVAL;
--
--	if (!event->attr.freq && (value & (1ULL << 63)))
--		return -EINVAL;
-+	if (event->attr.freq) {
-+		if (value > sysctl_perf_event_sample_rate)
-+			return -EINVAL;
-+	} else {
-+		if (perf_event_check_period(event, value))
-+			return -EINVAL;
-+		if (value & (1ULL << 63))
-+			return -EINVAL;
-+	}
-
- 	event_function_call(event, __perf_event_period, &value);
+I don't think there would be an issue in this area if it wasn't for
+Neoverse and Linus - that's why the revert happened. This change in
+behavior was proposed by Arnaldo:
+https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
+and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
+in Google's tree.
 
 Thanks,
-Kan
-
->  	if (value && x86_pmu.limit_period) {
->  		s64 left = value;
->  		x86_pmu.limit_period(event, &left);
-
+Ian
