@@ -1,316 +1,290 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F320ED
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 00:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45454BE6C;
+	Wed, 15 Jan 2025 00:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736900249; cv=none; b=FpCo+YJfo3420h9HVJLHan02IAM0sahyxF8HkJwmKiYSpidnrjBhQL9H4cFyXzi+XL6s6Zb7ucTxVftjAW2xHMxKPpVSir82/pVUxObiKzccEHXNFmpLU3EdBbDNxIHFOXMST4snRW5htkVfbFUj5qlJYmC3PDw7rGB2Z7MhHwk=
+	t=1736901034; cv=none; b=W7IVE5HMXkPkpYRjkk1hIGvtZltY8v1tymvVhHn5awgYZSq6DmI6c/vK1gf62oG8aShzvhCyJQtBGBS7HKZ7YtD8R9Q8NFaf55GWL0vMCBRUrofEJBfGZHmsMosa1Z4uoruW1dYnzondIrBrAIxT20e9zt/Rv86gCjl3o1VMNqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736900249; c=relaxed/simple;
-	bh=l++N0rRRnmhxtLecqKAzKpyOqgFEVFWwoimOEH4Hs6w=;
+	s=arc-20240116; t=1736901034; c=relaxed/simple;
+	bh=I7ZvAuYaLpo4K6j/WJsCJUsmkU7VtpOF76JdD//4/ao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsG0JTMQv3KJFMzmkw3VytSkbF+QfifDo7JlVbF5XX/sDIzImXrcXe606q7o+uHUnkoo2mTKkZ7WI79gRzvGRrcUadri3IjcvSJrwWuX4eombn1zjpSb3rBd1WV7vxqIWjRFT2ahz06zt7yvE7MmMhb5QG8lN6cUMThgkJNNFk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eRWJ/zJD; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7SnfmjElphCOWQ7RnkX7KCbABANJUWIqPeoHtYGCoGWGeGEscYj2eTY242IQRr9H9IE+ntQO4Uyzk9NRE3c79YJQwKkR8EvK2LJeqRHw+FW39PXmE/duQfAurpUBWZSaMxUic1nlkc4TA5Gw0ReVRQcgvNYSKaN2A3xbySlAvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn7FKZYi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eRWJ/zJD"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2167141dfa1so5498775ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jan 2025 16:17:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736900247; x=1737505047; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uOpQ4k9N7Yz9sD40MgkYZa7qAKsgRfoLfiT4EIq2i2Q=;
-        b=eRWJ/zJDs8c3OUIypL2jihM/bimRUyz4Vhz65YzydCEYhT/rN5zvZb3FK0RnQNPJq2
-         sb3F2kLF6LjKnLaMeU6BlYnmh8EvAa+F7adGUdydDsu9DzyXvx69lP5/Tf38O5JozkMh
-         LLCfCKhY2TF+NznzvVL8wWjo9OwrxVQM97qPIigmshJ0tCQG6MKXVNC1CyQ3oKHtjXnf
-         SxOIHYmBVRKfLs1yjuhDIJYSlhCb92f4s+MZoj2nt6odydHHUyfIDU9xbu8idb/w0XiS
-         GlTHNW9IJXOp/OHpNAJV7ZFVH4+WK04mDFMkp6kxZx0sNA6Dbx/A6c2bZUR4eeGGbGhc
-         6SiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736900247; x=1737505047;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOpQ4k9N7Yz9sD40MgkYZa7qAKsgRfoLfiT4EIq2i2Q=;
-        b=RxyOURar/pV7TkCKlkvSApwnWObOX0MK6OyAuGHiSO5kLsVAYuPrlvRN/Q0SLl/a9e
-         gDu0hY7J/kwl6iveVopsz/SRG91I7X+/BjW8ysLuDlCuBbhxjerFzB4bZY0vxWd19MY2
-         w7LjdnktiHwgMjGPChEXdiXPzQGze7AUOAR97RYRFM2Iq0vPVpWppx+lwj2N99Ol3Yej
-         jrHGfLtaClFQju3K9mWU928gAbZyHDLBk+0NnjB3pihm6MJHNGdnX89QG1QKLC5JRJV3
-         fzcVWZJdVot1TwWpGcRNC9vPePAxBMHx3dP9o2MMeeUQeEsB22nuPQ+QD3FpEU/ZQ79r
-         +IKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKrjrFuo0xiLdAIA0MWRZNqgiX1BfhJs+Cmqy+7dGXtF65rr/uVZdKAsIAa2h/st3sk7CkZSgwvF2LxYzOWvy6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkwc9R8w6VuUg+ZHhtzVk5z5lCYRWerCV8iB3KUQ96UQoYWiI2
-	DTFJRxZYfpRg7668n0883cbKTtlclDzKHw3pbhXmmd/8rpQNOGXYu/1AKVI99g==
-X-Gm-Gg: ASbGncvcoy6dDJMw6N0BO/U187uutNB+J2FQnlhK1VevI+ipy6xEr7gGbCYHzd/zHeb
-	ShJvX4uBPRrGiTDS6n3vzFF+2Ljt2Mrq2W2Gco9pD9VByyCTc+vO4RxiRvnsTTZgrYVYv6IBS63
-	MyD0JhrE9NgkaMOayIle7ojyvW4VJM9mKpVvsDqY/kOjA4Qv99KCA4Erft4qraIMCM8wAo0Zd4F
-	2kO0LakJuHWjxPohygdZv4H8JrG87j+vJCBeeWk3pTJAXqShtBXHifX/0qVrJO2yMMUNEr/SoyM
-	zNR8OLnK8RyswVo=
-X-Google-Smtp-Source: AGHT+IHlp6t+xXJnV4P8Vu4aZmuAPI3oW4rb8hqktrWG5kw8S4ybvNBeeQDe7sLXbPwA/Tpw8T7PaA==
-X-Received: by 2002:a17:902:ec87:b0:215:a808:61cf with SMTP id d9443c01a7336-21bf0d269e3mr13524095ad.25.1736900246677;
-        Tue, 14 Jan 2025 16:17:26 -0800 (PST)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f25cc1esm71520325ad.213.2025.01.14.16.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 16:17:25 -0800 (PST)
-Date: Wed, 15 Jan 2025 00:17:22 +0000
-From: Mingwei Zhang <mizhang@google.com>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 18/58] KVM: x86/pmu: Introduce
- enable_passthrough_pmu module parameter
-Message-ID: <Z4b-kkRNp1V0faTq@google.com>
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-19-mizhang@google.com>
- <Zzyg_0ACKwHGLC7w@google.com>
- <50ba7bd1-6acf-4b50-9eb1-8beb2beee9ec@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn7FKZYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F032C4CEDD;
+	Wed, 15 Jan 2025 00:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736901033;
+	bh=I7ZvAuYaLpo4K6j/WJsCJUsmkU7VtpOF76JdD//4/ao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fn7FKZYiaqQvuUeSgOzWdw+HoPwOyUTjLZ17Zp1kea/6FCIhCxCtwJGdH5KWuEHUj
+	 1sXbXZsAealO2AXZqZzJ5kza5fnS8/elv909YcVA8pNNlhYkf+x6uZDGURZ1TIw+tC
+	 KCIINj6b+149E0aI437K9f1ImW5duokC2GgAQP1ePuimhZBlSnfnxF6pDZxHd4iF3Z
+	 w1zB1UDFB9fce46pIC4le0heyI9moinCxB/VVES7ge+Gy7GOw++yr47xIoC+LoRZjr
+	 Rc/DPIfNI2gJ+yMvYYguiVWORytwJ43EM/jw3u/1UF2hL5C/h2n8qJuPa0cHX1DRFM
+	 R3ibKRJBPtZEw==
+Date: Tue, 14 Jan 2025 16:30:32 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, eranian@google.com
+Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
+Message-ID: <Z4cBqGBzZI8VqtIx@google.com>
+References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
+ <20250113134022.2545894-1-dvyukov@google.com>
+ <Z4XDJyvjiie3howF@google.com>
+ <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <50ba7bd1-6acf-4b50-9eb1-8beb2beee9ec@linux.intel.com>
+In-Reply-To: <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
 
-On Wed, Nov 20, 2024, Mi, Dapeng wrote:
-> 
-> On 11/19/2024 10:30 PM, Sean Christopherson wrote:
-> > As per my feedback in the initial RFC[*]:
+On Tue, Jan 14, 2025 at 09:26:57AM +0100, Dmitry Vyukov wrote:
+> On Tue, 14 Jan 2025 at 02:51, Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> >  2. The module param absolutely must not be exposed to userspace until all patches
-> >     are in place.  The easiest way to do that without creating dependency hell is
-> >     to simply not create the module param.
+> > Hello,
 > >
-> > [*] https://lore.kernel.org/all/ZhhQBHQ6V7Zcb8Ve@google.com
+> > On Mon, Jan 13, 2025 at 02:40:06PM +0100, Dmitry Vyukov wrote:
+> > > There are two notions of time: wall-clock time and CPU time.
+> > > For a single-threaded program, or a program running on a single-core
+> > > machine, these notions are the same. However, for a multi-threaded/
+> > > multi-process program running on a multi-core machine, these notions are
+> > > significantly different. Each second of wall-clock time we have
+> > > number-of-cores seconds of CPU time.
+> > >
+> > > Currently perf only allows to profile CPU time. Perf (and all other
+> > > existing profilers to the be best of my knowledge) does not allow to
+> > > profile wall-clock time.
+> > >
+> > > Optimizing CPU overhead is useful to improve 'throughput', while
+> > > optimizing wall-clock overhead is useful to improve 'latency'.
+> > > These profiles are complementary and are not interchangeable.
+> > > Examples of where wall-clock profile is needed:
+> > >  - optimzing build latency
+> > >  - optimizing server request latency
+> > >  - optimizing ML training/inference latency
+> > >  - optimizing running time of any command line program
+> > >
+> > > CPU profile is useless for these use cases at best (if a user understands
+> > > the difference), or misleading at worst (if a user tries to use a wrong
+> > > profile for a job).
+> > >
+> > > This patch adds wall-clock and parallelization profiling.
+> > > See the added documentation and flags descriptions for details.
+> > >
+> > > Brief outline of the implementation:
+> > >  - add context switch collection during record
+> > >  - calculate number of threads running on CPUs (parallelism level)
+> > >    during report
+> > >  - divide each sample weight by the parallelism level
+> > > This effectively models that we were taking 1 sample per unit of
+> > > wall-clock time.
+> >
+> > Thanks for working on this, very interesting!
+> >
+> > But I guess this implementation depends on cpu-cycles event and single
+> > target process.
 > 
-> Sure. It looks we missed this comment. Would address it.
-> 
+> Not necessarily, it works the same for PMU events, e.g. again from perf make:
 
-Dapeng, just synced with Sean offline. His point is that we still need
-kernel parameter but introduce that in the last part of the series so
-that any bisect won't trigger the new PMU logic in the middle of the
-series. But I think you are right to create a global config and make it
-false.
+Of course it would work with other events.  But the thing is how to
+interprete the result IMHO.
 
 > 
-> >
-> > On Thu, Aug 01, 2024, Mingwei Zhang wrote:
-> >> Introduce enable_passthrough_pmu as a RO KVM kernel module parameter. This
-> >> variable is true only when the following conditions satisfies:
-> >>  - set to true when module loaded.
-> >>  - enable_pmu is true.
-> >>  - is running on Intel CPU.
-> >>  - supports PerfMon v4.
-> >>  - host PMU supports passthrough mode.
-> >>
-> >> The value is always read-only because passthrough PMU currently does not
-> >> support features like LBR and PEBS, while emualted PMU does. This will end
-> >> up with two different values for kvm_cap.supported_perf_cap, which is
-> >> initialized at module load time. Maintaining two different perf
-> >> capabilities will add complexity. Further, there is not enough motivation
-> >> to support running two types of PMU implementations at the same time,
-> >> although it is possible/feasible in reality.
-> >>
-> >> Finally, always propagate enable_passthrough_pmu and perf_capabilities into
-> >> kvm->arch for each KVM instance.
-> >>
-> >> Co-developed-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> >> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> >> ---
-> >>  arch/x86/include/asm/kvm_host.h |  1 +
-> >>  arch/x86/kvm/pmu.h              | 14 ++++++++++++++
-> >>  arch/x86/kvm/vmx/vmx.c          |  7 +++++--
-> >>  arch/x86/kvm/x86.c              |  8 ++++++++
-> >>  arch/x86/kvm/x86.h              |  1 +
-> >>  5 files changed, 29 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> >> index f8ca74e7678f..a15c783f20b9 100644
-> >> --- a/arch/x86/include/asm/kvm_host.h
-> >> +++ b/arch/x86/include/asm/kvm_host.h
-> >> @@ -1406,6 +1406,7 @@ struct kvm_arch {
-> >>  
-> >>  	bool bus_lock_detection_enabled;
-> >>  	bool enable_pmu;
-> >> +	bool enable_passthrough_pmu;
-> > Again, as I suggested/requested in the initial RFC[*], drop the per-VM flag as well
-> > as kvm_pmu.passthrough.  There is zero reason to cache the module param.  KVM
-> > should always query kvm->arch.enable_pmu prior to checking if the mediated PMU
-> > is enabled, so I doubt we even need a helper to check both.
-> >
-> > [*] https://lore.kernel.org/all/ZhhOEDAl6k-NzOkM@google.com
+> Samples: 481K of event 'dTLB-load-misses', Event count (approx.): 169413440
+> Overhead  Wallclock  Command          Symbol
+>    5.34%     16.33%  ld               [.] bfd_elf_link_add_symbols
+>    4.14%     14.99%  ld               [.] bfd_link_hash_traverse
+>    3.53%     10.87%  ld               [.] __memmove_avx_unaligned_erms
+>    1.61%      0.05%  cc1              [k] native_queued_spin_lock_slowpath
+>    1.47%      0.09%  cc1              [k] __d_lookup_rcu
+>    1.38%      0.55%  sh               [k] __percpu_counter_sum
+>    1.22%      0.11%  cc1              [k] __audit_filter_op
+>    0.95%      0.08%  cc1              [k] audit_filter_rules.isra.0
+>    0.72%      0.47%  sh               [k] pcpu_alloc_noprof
 > 
-> Sure.
+> And also it works well for multi-process targets, again most examples
+> in the patch are from kernel make.
+
+It's the single-origin case.  I'm curious about the multiple-origin
+cases like profiling two or more existing processes together.  How do
+you determine the initial parallelism?
+
+Also I think the parallelism is defined in a process (group).  Does it
+still make sense in system-wide profiling?
+
+> 
+> > Do you think if it'd work for system-wide profiling?
+> 
+> Currently it doesn't b/c system-wide emits PERF_RECORD_SWITCH_CPU_WIDE
+> instead of PERF_RECORD_SWITCH which this patch handles.
+> 
+> It can be made to work, I just didn't want to complicate this patch more.
+
+Ok.
+
+> It can work as is, if the system activity includes mostly a single
+> task, e.g. you run something on command line, it's taking too long, so
+> you decide to do perf record -a in parallel to see what it's doing.
+> 
+> For system-wide profiling we do Google (GWP), it may need some
+> additional logic to make it useful. Namely, the system-wide
+> parallelism is not useful in multi-task contexts. But we can extend
+> report to allow us to calculate parallelism/wall-clock overhead for a
+> single multi-threaded process only. Or, if we auto-matically
+> post-process system-wide profile, then we can split the profile
+> per-process and calculate parallelism for each of them.
+> 
+> I am also not sure if we use perf report for GWP, or do manual trace
+> parsing. When/if this part is merged, we can think of the system-wide
+> story.
+> 
+> TODO: don't enable context-switch recording for -a mode.
 > 
 > 
-> >
-> >>  
-> >>  	u32 notify_window;
-> >>  	u32 notify_vmexit_flags;
-> >> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> >> index 4d52b0b539ba..cf93be5e7359 100644
-> >> --- a/arch/x86/kvm/pmu.h
-> >> +++ b/arch/x86/kvm/pmu.h
-> >> @@ -208,6 +208,20 @@ static inline void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
-> >>  			enable_pmu = false;
-> >>  	}
-> >>  
-> >> +	/* Pass-through vPMU is only supported in Intel CPUs. */
-> >> +	if (!is_intel)
-> >> +		enable_passthrough_pmu = false;
-> >> +
-> >> +	/*
-> >> +	 * Pass-through vPMU requires at least PerfMon version 4 because the
-> >> +	 * implementation requires the usage of MSR_CORE_PERF_GLOBAL_STATUS_SET
-> >> +	 * for counter emulation as well as PMU context switch.  In addition, it
-> >> +	 * requires host PMU support on passthrough mode. Disable pass-through
-> >> +	 * vPMU if any condition fails.
-> >> +	 */
-> >> +	if (!enable_pmu || kvm_pmu_cap.version < 4 || !kvm_pmu_cap.passthrough)
-> > As is quite obvious by the end of the series, the v4 requirement is specific to
-> > Intel.
-> >
-> > 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
-> > 	    (is_intel && kvm_pmu_cap.version < 4) ||
-> > 	    (is_amd && kvm_pmu_cap.version < 2))
-> > 		enable_passthrough_pmu = false;
-> >
-> > Furthermore, there is zero reason to explicitly and manually check the vendor,
-> > kvm_init_pmu_capability() takes kvm_pmu_ops.  Adding a callback is somewhat
-> > undesirable as it would lead to duplicate code, but we can still provide separation
-> > of concerns by adding const variables to kvm_pmu_ops, a la MAX_NR_GP_COUNTERS.
-> >
-> > E.g.
-> >
-> > 	if (enable_pmu) {
-> > 		perf_get_x86_pmu_capability(&kvm_pmu_cap);
-> >
-> > 		/*
-> > 		 * WARN if perf did NOT disable hardware PMU if the number of
-> > 		 * architecturally required GP counters aren't present, i.e. if
-> > 		 * there are a non-zero number of counters, but fewer than what
-> > 		 * is architecturally required.
-> > 		 */
-> > 		if (!kvm_pmu_cap.num_counters_gp ||
-> > 		    WARN_ON_ONCE(kvm_pmu_cap.num_counters_gp < min_nr_gp_ctrs))
-> > 			enable_pmu = false;
-> > 		else if (pmu_ops->MIN_PMU_VERSION > kvm_pmu_cap.version)
-> > 			enable_pmu = false;
-> > 	}
-> >
-> > 	if (!enable_pmu || !kvm_pmu_cap.passthrough ||
-> > 	    pmu_ops->MIN_MEDIATED_PMU_VERSION > kvm_pmu_cap.version)
-> > 		enable_mediated_pmu = false;
+> > How do you define wall-clock overhead if the event counts something
+> > different (like the number of L3 cache-misses)?
 > 
-> Sure.  would do.
+> It's the same. We calculate CPU overhead for these. Wallclock overhead
+> is the same, it's just the weights are adjusted proportionally.
+
+I got this part but ...
+
+> 
+> Physical meaning is similar:
+> CPU overhead: how much L3 misses affect throughput/cpu consumption
+> Wallclock overhead: how much L3 misses affect latency
+
+I'm not sure if it's correct.  The event would tell where you get the L3
+miss mostly.  It doesn't necessarily mean latency.  IOW more L3 miss
+doesn't mean more CPU time.  I guess that's why perf doesn't say it as
+"CPU overhead".
+
+Hmm.. maybe you could rename it differently?
+
 > 
 > 
-> >> +		enable_passthrough_pmu = false;
-> >> +
-> >>  	if (!enable_pmu) {
-> >>  		memset(&kvm_pmu_cap, 0, sizeof(kvm_pmu_cap));
-> >>  		return;
-> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >> index ad465881b043..2ad122995f11 100644
-> >> --- a/arch/x86/kvm/vmx/vmx.c
-> >> +++ b/arch/x86/kvm/vmx/vmx.c
-> >> @@ -146,6 +146,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
-> >>  extern bool __read_mostly allow_smaller_maxphyaddr;
-> >>  module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
-> >>  
-> >> +module_param(enable_passthrough_pmu, bool, 0444);
-> > Hmm, we either need to put this param in kvm.ko, or move enable_pmu to vendor
-> > modules (or duplicate it there if we need to for backwards compatibility?).
+> > Also I'm not sure about the impact of context switch events which could
+> > generate a lot of records that may end up with losing some of them.  And
+> > in that case the parallelism tracking would break.
+> 
+> I've counted SAMPLE/SWITCH events on perf make:
+> 
+> perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
+> 813829
+> perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
+> 46249
+> 
+> And this is for:
+> perf record -e L1-dcache-load-misses,dTLB-load-misses make
+> 
+> perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
+> 1138615
+> perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
+> 115433
+> 
+> Doesn't pretend to be scientifically accurate, but gives some idea
+> about proportion.
+> So for the number of samples that's 5% and 10% respectively.
+
+I think it depends on the workload.  In a very loaded system with short
+timeslice or something, you could get a lot more sched switches.  In
+your workload, `make` may have a long single-threaded portion.
+
+
+> SWITCH events are smaller (24 bytes vs 40 bytes for SAMPLE), so for
+> ring size it's 3-6%.
+> 
+> FWIW I've also considered and started implementing a different
+> approach where the kernel would count parallelism level for each
+> context and write it out with samples:
+> https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
+> Then sched_in/out would need to do atomic inc/dec on a global counter.
+
+It seems you counted parallelism in an event (including inherited ones).
+But usually perf tool opens a separate FD on each CPU for an event (like
+cycles), then you need to adjust the value across all CPUS.  I'm not
+sure if it's doable in this approach.
+
+
+> Not sure how hard it is to make all corner cases work there, I dropped
+> it half way b/c the perf record post-processing looked like a better
+> approach.
+
+Probably.
+
+> 
+> Lost SWITCH events may be a problem. Perf report already detects and
+> prints a warning about lost events. Should we stop reporting
+> parallelism/wall-clock if any events are lost? I just don't see it in
+> practice.
+
+It happens quite often when there are many activities.  Probably we can
+consider stopping when it detects some lost records.
+
+
+> Kernel could write-out a bitmask of types of lost events in PERF_RECORD_LOST.
+
+It'd be nice, but given the rate of sched switch I guess it'd most
+likely contain some.
+
+> 
+> 
+> > > The feature is added on an equal footing with the existing CPU profiling
+> > > rather than a separate mode enabled with special flags. The reasoning is
+> > > that users may not understand the problem and the meaning of numbers they
+> > > are seeing in the first place, so won't even realize that they may need
+> > > to be looking for some different profiling mode. When they are presented
+> > > with 2 sets of different numbers, they should start asking questions.
 > >
-> > There are advantages to putting params in vendor modules, when it's safe to do so,
-> > e.g. it allows toggling the param when (re)loading a vendor module, so I think I'm
-> > supportive of having the param live in vendor code.  I just don't want to split
-> > the two PMU knobs.
+> > I understand your point but I think it has some limitation so maybe it's
+> > better to put in a separate mode with special flags.
 > 
-> Since enable_passthrough_pmu has already been in vendor modules,  we'd
-> better duplicate enable_pmu module parameter in vendor modules as the 1st step.
+> I hate all options.
 > 
+> The 3rd option is to add a _mandary_ flag to perf record to ask for
+> profiling mode. Then the old "perf record" will say "nope, you need to
+> choose, here are your options and explanation of the options".
 > 
-> >
-> >>  #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
-> >>  #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
-> >>  #define KVM_VM_CR0_ALWAYS_ON				\
-> >> @@ -7924,7 +7926,8 @@ static __init u64 vmx_get_perf_capabilities(void)
-> >>  	if (boot_cpu_has(X86_FEATURE_PDCM))
-> >>  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
-> >>  
-> >> -	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
-> >> +	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
-> >> +	    !enable_passthrough_pmu) {
-> >>  		x86_perf_get_lbr(&vmx_lbr_caps);
-> >>  
-> >>  		/*
-> >> @@ -7938,7 +7941,7 @@ static __init u64 vmx_get_perf_capabilities(void)
-> >>  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
-> >>  	}
-> >>  
-> >> -	if (vmx_pebs_supported()) {
-> >> +	if (vmx_pebs_supported() && !enable_passthrough_pmu) {
-> > Checking enable_mediated_pmu belongs in vmx_pebs_supported(), not in here,
-> > otherwise KVM will incorrectly advertise support to userspace:
-> >
-> > 	if (vmx_pebs_supported()) {
-> > 		kvm_cpu_cap_check_and_set(X86_FEATURE_DS);
-> > 		kvm_cpu_cap_check_and_set(X86_FEATURE_DTES64);
-> > 	}
+> If we add it as a new separate mode, I fear it's doomed to be
+> unknown/unused and people will continue to not realize what they are
+> profiling, meaning of numbers, and continue to use wrong profiles for
+> the job.
+
+I think people will find it out if it really works well! :)
+
 > 
-> Sure. Thanks for pointing this.
+> I consider latency/wall-clock profiling as useful and as fundamental
+> as the current bandwidth profiling for parallel workloads (more or
+> less all workloads today). Yet we are in 2025 and no profilers out
+> there support latency profiling. Which suggests to me there is a
+> fundamental lack of understanding of the matter, so new optional mode
+> may not work well.
+
+I'm open to make it default if we can make sure it works well and have a
+clear interpretation of the result.
+
 > 
-> 
-> >
-> >>  		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
-> >>  		/*
-> >> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> >> index f1d589c07068..0c40f551130e 100644
-> >> --- a/arch/x86/kvm/x86.c
-> >> +++ b/arch/x86/kvm/x86.c
-> >> @@ -187,6 +187,10 @@ bool __read_mostly enable_pmu = true;
-> >>  EXPORT_SYMBOL_GPL(enable_pmu);
-> >>  module_param(enable_pmu, bool, 0444);
-> >>  
-> >> +/* Enable/disable mediated passthrough PMU virtualization */
-> >> +bool __read_mostly enable_passthrough_pmu;
-> >> +EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
-> >> +
-> >>  bool __read_mostly eager_page_split = true;
-> >>  module_param(eager_page_split, bool, 0644);
-> >>  
-> >> @@ -6682,6 +6686,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >>  		mutex_lock(&kvm->lock);
-> >>  		if (!kvm->created_vcpus) {
-> >>  			kvm->arch.enable_pmu = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
-> >> +			/* Disable passthrough PMU if enable_pmu is false. */
-> >> +			if (!kvm->arch.enable_pmu)
-> >> +				kvm->arch.enable_passthrough_pmu = false;
-> > And this code obviously goes away if the per-VM snapshot is removed.
+> If you are interested for context, I used a similar mode (for pprof at
+> the time) to optimize TensorFlow latency (people mostly care about
+> latency). All existing profilers said it's 99% highly optimized and
+> parallelized matrix multiplication, we are done here. Yet, the
+> wallclock profile said, nope, it's 45% Python interpreter, which
+> resulted in this fix:
+> https://github.com/soumith/convnet-benchmarks/commit/605988f847fcf261c288abc2351597d71a2ee149
+> Full story and examples of these profiles are here:
+> https://github.com/dvyukov/perf-load
+
+Great examples!  I'll take a look later.
+
+Thanks,
+Namhyung
+
