@@ -1,295 +1,371 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD7124A7C9;
-	Wed, 15 Jan 2025 13:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123D978F52
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 14:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736948536; cv=none; b=UuMMxGzTakjgoRv3WSgGoEovMGnFlftffoqvb0KXCOMla05gCqZv5Qsg/R16SId7YeC6I2dXMRhKKwG6Yphklr0djKdpxuBsUtVkPTwEmihT71XQrMYFRpXXZrkHp4bDs2U5GR8t5Cs4UdIYC2DCPruf3stJUG/kCOui0GSgx4c=
+	t=1736951021; cv=none; b=QGBIwZBqvXvO1Fc7JVtlAt3kGGyJaC90eO20j9VMSeLH/DnUXxzaqGgnuwfNw4U0P/SnvT2dGrADE2kfc98q5Gr2oXMLY8asdWOJLh+CDD9qK3gwlV4saNfgncHjA7NFqkE8gdm2BtHeGeKoUJG1DL+VG69Hn/Is9xYkbYXCqe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736948536; c=relaxed/simple;
-	bh=XYPclbGu6jQvmLFAqON9/q/Qu4c+wcxi5uFmLlUBhA4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cp4YDRMLWbc7LsteqsvIOwArNAXHT6XFTXzjw5c3hGmwu70Q+1os65MX+7tvaTSK30Djd4No+hDOYmHL6Sy6XO5bfnmhgK22T/Wr15jB1e0P4vP1EXtpc6uWQu9HWveTmzdqoFluOFN8ZTpQY2Ejg0QI2GLj6MMtE11FjObZBuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YY6ZK0018z6LD56;
-	Wed, 15 Jan 2025 21:40:24 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 284411400F4;
-	Wed, 15 Jan 2025 21:42:10 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 15 Jan
- 2025 14:42:09 +0100
-Date: Wed, 15 Jan 2025 13:42:07 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
-	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
-	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
- Ying <ying.huang@intel.com>, Vishak G <vishak.g@samsung.com>, Krishna Kanth
- Reddy <krish.reddy@samsung.com>, "Alok Rathore" <alok.rathore@samsung.com>,
-	<gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <20250115134207.00002918@huawei.com>
-In-Reply-To: <1296674576.21735899902648.JavaMail.epsvc@epcpadp1new>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-	<20241127163426.00004a65@huawei.com>
-	<CGME20250103053521epcas5p30cd4abba59d695664335b03ba806c56d@epcas5p3.samsung.com>
-	<1296674576.21735899902648.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736951021; c=relaxed/simple;
+	bh=EjYYZp26R+AnFYjVi/4FF6Oq9T6KLAH6lHwuRguD4Ss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGxrcr57gQwoFrmpvi4mohW9LhVYWys4cxP56IyvUtrskILpxKFwCnmyvjet+mv/vhNgHmzE3J92ALtL6Tl7+hsg2/Ng2rbW1lwYUnwdbTw9iqj7+A+Bk+T2pyiY9J0mGfnhZVjbdjnfg64fwwyzvEYc51IjhTvI28/tAi5cTTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=jhq6goKN; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="jhq6goKN"
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4C36D3F291
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 14:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1736951016;
+	bh=tLrpWKkQpfNNzLrjeHG7JiFFwIRmg6bzHJb4bEkXJP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=jhq6goKNrp6kFO+GD1QTWD7U2zcWVM49acwzk1CRq4k2qqlJBywauSSITVMxXu1j8
+	 AE9m+rX7UgOeB7M/ZGEgfBgBEtqJQFmxYfoPIYugES+G2q+RwBI5Ulir7aKjoiGnY7
+	 8ff1x2Y7oH3HAfoC34VsnDgkRbHCHvD3SZcB53hOOk6iPGRvtp8lejdKnVfTe9gxeY
+	 15kXE042GmAmriRSO9omm7SoRSi59pgt27QQ+6XH9b1hpVdOBFmjclmSxoBhm7nI+a
+	 N882rx5c8LDmd/WG2ArjyLq61dYhXC5pv7RpIZIEjqq+H4/tkUlcMlBRqKwMVyDG30
+	 tfpyaEpA+0zUg==
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2166855029eso129082275ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 06:23:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736951015; x=1737555815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tLrpWKkQpfNNzLrjeHG7JiFFwIRmg6bzHJb4bEkXJP4=;
+        b=l/8HuEb4UjUNUydJJOZM62w24CpbfzteQifON2e/QsrHpKviY8io28Q3EOJ/alT8/n
+         C83psPHxVZjPI9pddFl3WiX/ZVnWf+smEIUGWk36cz/dCR4fAUaIqRmBxadsdn0a7gNp
+         7ieiyrH9QEZjXPskLm4hEbVv7oMMBn+A/yURK4NqeR/xibKjbM93cOUk2U+h6Ic5qMOJ
+         zzwkme5w8T5Z9wdRjim7aiku4DXG6sp3utwCLzk3MMyomHg+vPYonC/rv+1j34g2ECl8
+         EXmnM0KAJSphcaOGZtSN1d4kaRVQ1PltRwtzELRKvLWj55z58nfBawqNAUIa5fQB7rEk
+         c4RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8B/H3T3OHFH4yCjUhPNC2LtCPH4VU5y58/gEurCxK9hYWnHkDw9gUokxA8AZA4AD405wb5R6bOh2pDc7Me4XI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQkB7VIh/nQnpMa6r0CQ4ymBc/3TAXhcCTmqEmx+NeJ++Meiej
+	Rf8z2QtDGnLt/E9mI3eC80uYQLUYFVuFfwrvgIYzhCv8CWZEWrenGK94qgyJfz8jndIO0WcKtfz
+	h16BMe2xlmUIJ1YfGX8HPNTljJKwygZqEhCuuz8E3eeRJYogboDkQ/6wyBbDyy+ZWZKFuJ065Ai
+	r+sezKBIk=
+X-Gm-Gg: ASbGncscPe8EsvWkoC2rcA3GuYUhkSUzA5RPD/SdPjrs5j1zcw24bxfLUIQXsU5QRCn
+	qm1fJTWN8jZ+SNOBk24IWGBfgpakJrr5VVp6Czw4jA61rnLrBYIwwrEAb1avMGqZkzrrmnWIFYr
+	o/1AvluXIVXvftI3qNTRZfD3f12Kh7Gtxbhj/K+h1SMNBmOg1MVkg5Z76yq9qlUbhi0TGXlKz4q
+	lZwegBeNSGjwka3GkcKYgWiLTF/K/FRVtu6/153fePzBkGXRg7Ifjn0Pw==
+X-Received: by 2002:a17:902:e74e:b0:215:aee1:7e3e with SMTP id d9443c01a7336-21a83f36d48mr453468965ad.5.1736951014824;
+        Wed, 15 Jan 2025 06:23:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH0lVzIzzK+Ar3J8KWgJr21Wz/JVXy3fKbLhjarvUf5vOOKT6Hb+HiO0xIEja9RrPvZ62/meA==
+X-Received: by 2002:a17:902:e74e:b0:215:aee1:7e3e with SMTP id d9443c01a7336-21a83f36d48mr453468515ad.5.1736951014434;
+        Wed, 15 Jan 2025 06:23:34 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:a2b:f86a:24d1:351c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f25aabfsm82971855ad.246.2025.01.15.06.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 06:23:34 -0800 (PST)
+Date: Wed, 15 Jan 2025 23:23:31 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, rui.zhang@intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.dei, 
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 10/10] perf/x86/rapl: Add core energy counter support
+ for AMD CPUs
+Message-ID: <6ljdgok5zostmu4uxixwh3idgrrtodul4bjvujvwjfda427snu@3vxczriucb6m>
+References: <20241115060805.447565-1-Dhananjay.Ugwekar@amd.com>
+ <20241115060805.447565-11-Dhananjay.Ugwekar@amd.com>
+ <uv7mz6vew2bzgre5jdpmwldxljp5djzmuiksqdcdwipfm4zm7w@ribobcretidk>
+ <98f6108a-3a4f-4ad1-8f0a-a03264f7a2d7@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98f6108a-3a4f-4ad1-8f0a-a03264f7a2d7@amd.com>
 
-On Fri, 3 Jan 2025 10:57:22 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
-
-> On 27/11/24 04:34PM, Jonathan Cameron wrote:
-> >On Thu, 21 Nov 2024 10:18:41 +0000
-> >Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >  
-> >> The CXL specification release 3.2 is now available under a click through at
-> >> https://computeexpresslink.org/cxl-specification/ and it brings new
-> >> shiny toys.  
-> >
-> >If anyone wants to play, basic emulation on my CXL QEMU staging tree
-> >https://gitlab.com/jic23/qemu/-/commit/e89b35d264c1bcc04807e7afab1254f35ffc8cb9
-> >
-> >Branch with a few other things on top is:
-> >https://gitlab.com/jic23/qemu/-/commits/cxl-2024-11-27
-> >
-> >Note that this currently doesn't produce real data.  I have a plan
-> >/ initial PoC / hack to hook that up via an addition to the QEMU cache
-> >plugin and an external tool to emulate the hotness tracker counting
-> >hardware. Will be a little while before I get that finished, so in
-> >a meantime the above exercises the driver.
-> >
-> >Jonathan
-> >  
+On Mon, Jan 13, 2025 at 12:04:43PM GMT, Dhananjay Ugwekar wrote:
+> On 1/12/2025 7:12 PM, Koichiro Den wrote:
+> > On Fri, Nov 15, 2024 at 06:08:06AM GMT, Dhananjay Ugwekar wrote:
+> >> Add a new "power_core" PMU and "energy-core" event for monitoring
+> >> energy consumption by each individual core. The existing energy-cores
+> >> event aggregates the energy consumption of CPU cores at the package level.
+> >> This new event aligns with the AMD's per-core energy counters.
 > >>
-> >> RFC reason
-> >> - Whilst trace capture with a particular configuration is potentially useful
-> >>   the intent is that CXL HMU units will be used to drive various forms of
-> >>   hotpage migration for memory tiering setups. This driver doesn't do this
-> >>   (yet), but rather provides data capture etc for experimentation and
-> >>   for working out how to mostly put the allocations in the right place to
-> >>   start with by tuning applications.
+> >> Tested the package level and core level PMU counters with workloads
+> >> pinned to different CPUs.
 > >>
-> >> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-> >> of this is to provide a way to establish which units of memory (typically
-> >> pages or larger) in CXL attached memory are hot. The implementation details
-> >> and algorithm are all implementation defined. The specification simply
-> >> describes the 'interface' which takes the form of ring buffer of hotness
-> >> records in a PCI BAR and defined capability, configuration and status
-> >> registers.
+> >> Results with workload pinned to CPU 4 in core 4 on an AMD Zen4 Genoa
+> >> machine:
 > >>
-> >> The hardware may have constraints on what it can track, granularity etc
-> >> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-> >> trackers). Some of these constraints are discoverable from the hardware
-> >> registers, others such as loss of accuracy have no universally accepted
-> >> measures as they are typically access pattern dependent. Sadly it is
-> >> very unlikely any hardware will implement a truly precise tracker given
-> >> the large resource requirements for tracking at a useful granularity.
+> >> $ sudo perf stat --per-core -e power_core/energy-core/ -- taskset -c 4 stress-ng --matrix 1 --timeout 5s
+> >> stress-ng: info:  [21250] setting to a 5 second run per stressor
+> >> stress-ng: info:  [21250] dispatching hogs: 1 matrix
+> >> stress-ng: info:  [21250] successful run completed in 5.00s
 > >>
-> >> There are two fundamental operation modes:
+> >>  Performance counter stats for 'system wide':
 > >>
-> >> * Epoch based. Counters are checked after a period of time (Epoch) and
-> >>   if over a threshold added to the hotlist.
-> >> * Always on. Counters run until a threshold is reached, after that the
-> >>   hot unit is added to the hotlist and the counter released.
+> >> S0-D0-C0              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C1              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C2              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C3              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C4              1               8.43 Joules power_core/energy-core/
+> >> S0-D0-C5              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C6              1               0.00 Joules power_core/energy-core/
+> >> S0-D0-C7              1               0.00 Joules power_core/energy-core/
+> >> S0-D1-C8              1               0.00 Joules power_core/energy-core/
+> >> S0-D1-C9              1               0.00 Joules power_core/energy-core/
+> >> S0-D1-C10             1               0.00 Joules power_core/energy-core/
 > >>
-> >> Counting can be filtered on:
+> >> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> >> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> >> ---
+> >>  arch/x86/events/rapl.c | 185 +++++++++++++++++++++++++++++++++--------
+> >>  1 file changed, 152 insertions(+), 33 deletions(-)
 > >>
-> >> * Region of CXL DPA space (256MiB per bit in a bitmap).
-> >> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
-> >>
-> >> Sampling can be modified by:
-> >>
-> >> * Downsampling including potentially randomized downsampling.
-> >>
-> >> The driver presented here is intended to be useful in its own right but
-> >> also to act as the first step of a possible path towards hotness monitoring
-> >> based hot page migration. Those steps might look like.
-> >>
-> >> 1. Gather data - drivers provide telemetry like solutions to get that
-> >>    data. May be enhanced, for example in this driver by providing the
-> >>    HPA address rather than DPA Unit Address. Userspace can access enough
-> >>    information to do this so maybe not.
-> >> 2. Userspace algorithm development, possibly combined with userspace
-> >>    triggered migration by PA. Working out how to use different levels
-> >>    of constrained hardware resources will be challenging.
-> >> 3. Move those algorithms in kernel. Will require generalization across
-> >>    different hotpage trackers etc.
-> >>
-> >> So far this driver just gives access to the raw data. I will probably kick
-> >> of a longer discussion on how to do adaptive sampling needed to actually
-> >> use these units for tiering etc, sometime soon (if no one one else beats
-> >> me too it).  There is a follow up topic of how to virtualize this stuff
-> >> for memory stranding cases (VM gets a fixed mixture of fast and slow
-> >> memory and should do it's own tiering).
-> >>
-> >> More details in the Documentation patch but typical commands are:
-> >>
-> >> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
-> >>  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
-> >>  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
-> >>  hotness_granual=12  
-> 
-> Facing issue while executing perf record on x86 emulation environment using following steps
-> 
-> 1. Tried applying CHMU Patch on branch cxl-for-6.13 using b4 utility. As
-> base commit is not specified, with minor change able to apply patch.
-> Compiled kernel with CONFIG_CXL_HMU
-> 
-> 2. Compiled jic23/cxl-2024-11-27 for x86_64-softmmu
-> 
-> 3. Launched Qemu with following CXL topology along with compiled kernel
-> VM="-object memory-backend-ram,id=vmem1,share=on,size=512M \
->      -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
->      -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
->      -device cxl-type3,bus=root_port13,volatile-memdev=vmem1,id=cxl-vmem1 \
->      -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k"
-> 
-> 4. Created region and onlined this memory. Also run top utility on the newly created 
-> numa node using numactl -m<node> top
-> 
-> 5. Compiled and installed perf utility in qemu environment, and able to
-> see cxl_hmu_mem* entries in perf list
-> 
-> root@QEMUCXL2030mm:~# perf list
-> <snip>
->   cxl_hmu_mem0.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_hmu_mem0.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_hmu_mem0.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_hmu_mem1.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_hmu_mem1.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_hmu_mem1.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
->   cxl_pmu_mem0.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
->   cxl_pmu_mem0.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
->   cxl_pmu_mem1.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
->   cxl_pmu_mem1.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
-> <snip>
-> 
-> 6. Tried running perf command mentioned in Documentation/trace/cxl-hmu.rst
-> 
-> root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf -v
-> perf version 6.12.rc5.gc198a4f4a356
-> root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12
-> event syntax error: '..ess_granual=12'
->                                   \___ Unrecognized input
-
-This is probably my mistake when cutting and pasting the example from a terminal.
-Add a trailing / and something to run.
-
- perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/ -- sleep 10
-
-Jonathan
-
-> 
-> 
-> 
-> Are there any steps i am missing?
-> 
-> Regards,
-> Neeraj	 
-> 
-> >>
-> >> $perf report --dump-raw-traces
-> >>
-> >> Example output.  With a counter_width of 16 (0x10) the least significant
-> >> 4 bytes are the counter value and the unit index is bits 16-63.
-> >> Here all units are over the threshold and the indexes are 0,1,2 etc.
-> >>
-> >> . ... CXL_HMU data: size 33512 bytes
-> >> Header 0: units: 29c counter_width 10
-> >> Header 1 : deadbeef
-> >> 0000000000000283
-> >> 0000000000010364
-> >> 0000000000020366
-> >> 000000000003033c
-> >> 0000000000040343
-> >> 00000000000502ff
-> >> 000000000006030d
-> >> 000000000007031a
-> >>
-> >> Which will produce a list of hotness entries.
-> >> Bits[N-1:0] counter value
-> >> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
-> >>   config to get to a Host Physical Address)
-> >>
-> >> Specific RFC questions.
-> >> - What should be in the header added to the aux buffer.
-> >>   Currently just the minimum is provided. Number of records
-> >>   and the counter width needed to decode them.
-> >> - Should we reset the counters when doing sampling "-F X"
-> >>   If the frequency is higher than the epoch we never see any hot units.
-> >>   If so, when should we reset them?
-> >>
-> >> Note testing has been light and on emulation only + as perf tool is
-> >> a pain to build on a striped back VM,  build testing has all be on
-> >> arm64 so far.  The driver loads though on both arm64 and x86 so
-> >> any problems are likely in the perf tool arch specific code
-> >> which is build tested (on wrong machine)
-> >>
-> >> The QEMU emulation needs some cleanup, but I should be able to post
-> >> that shortly to let people actually play with this.  There are lots
-> >> of open questions there on how 'right' we want the emulation to be
-> >> and what counting uarch to emulate.
-> >>
-> >> Jonathan Cameron (4):
-> >>   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
-> >>   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
-> >>   perf: Add support for CXL Hotness Monitoring Units (CHMU)
-> >>   hwtrace: Document CXL Hotness Monitoring Unit driver
-> >>
-> >>  Documentation/trace/cxl-hmu.rst     | 197 +++++++
-> >>  Documentation/trace/index.rst       |   1 +
-> >>  drivers/cxl/Kconfig                 |   6 +
-> >>  drivers/cxl/Makefile                |   3 +
-> >>  drivers/cxl/core/Makefile           |   1 +
-> >>  drivers/cxl/core/core.h             |   1 +
-> >>  drivers/cxl/core/hmu.c              |  64 ++
-> >>  drivers/cxl/core/port.c             |   2 +
-> >>  drivers/cxl/core/regs.c             |  14 +
-> >>  drivers/cxl/cxl.h                   |   5 +
-> >>  drivers/cxl/cxlpci.h                |   1 +
-> >>  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
-> >>  drivers/cxl/hmu.h                   |  23 +
-> >>  drivers/cxl/pci.c                   |  26 +-
-> >>  tools/perf/arch/arm/util/auxtrace.c |  58 ++
-> >>  tools/perf/arch/x86/util/auxtrace.c |  76 +++
-> >>  tools/perf/util/Build               |   1 +
-> >>  tools/perf/util/auxtrace.c          |   4 +
-> >>  tools/perf/util/auxtrace.h          |   1 +
-> >>  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
-> >>  tools/perf/util/cxl-hmu.h           |  18 +
-> >>  21 files changed, 1748 insertions(+), 1 deletion(-)
-> >>  create mode 100644 Documentation/trace/cxl-hmu.rst
-> >>  create mode 100644 drivers/cxl/core/hmu.c
-> >>  create mode 100644 drivers/cxl/hmu.c
-> >>  create mode 100644 drivers/cxl/hmu.h
-> >>  create mode 100644 tools/perf/util/cxl-hmu.c
-> >>  create mode 100644 tools/perf/util/cxl-hmu.h
+> >> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> >> index 6e51386ff91f..e9be1f31163d 100644
+> >> --- a/arch/x86/events/rapl.c
+> >> +++ b/arch/x86/events/rapl.c
+> >> @@ -39,6 +39,10 @@
+> >>   *	  event: rapl_energy_psys
+> >>   *    perf code: 0x5
+> >>   *
+> >> + *  core counter: consumption of a single physical core
+> >> + *	  event: rapl_energy_core (power_core PMU)
+> >> + *    perf code: 0x1
+> >> + *
+> >>   * We manage those counters as free running (read-only). They may be
+> >>   * use simultaneously by other tools, such as turbostat.
+> >>   *
+> >> @@ -81,6 +85,10 @@ enum perf_rapl_pkg_events {
+> >>  	NR_RAPL_PKG_DOMAINS = PERF_RAPL_PKG_EVENTS_MAX,
+> >>  };
 > >>  
-> >  
+> >> +#define PERF_RAPL_CORE			0		/* single core */
+> >> +#define PERF_RAPL_CORE_EVENTS_MAX	1
+> >> +#define NR_RAPL_CORE_DOMAINS		PERF_RAPL_CORE_EVENTS_MAX
+> >> +
+> >>  static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst = {
+> >>  	"pp0-core",
+> >>  	"package",
+> >> @@ -89,6 +97,8 @@ static const char *const rapl_pkg_domain_names[NR_RAPL_PKG_DOMAINS] __initconst
+> >>  	"psys",
+> >>  };
+> >>  
+> >> +static const char *const rapl_core_domain_name __initconst = "core";
+> >> +
+> >>  /*
+> >>   * event code: LSB 8 bits, passed in attr->config
+> >>   * any other bit is reserved
+> >> @@ -141,14 +151,18 @@ enum rapl_unit_quirk {
+> >>  
+> >>  struct rapl_model {
+> >>  	struct perf_msr *rapl_pkg_msrs;
+> >> +	struct perf_msr *rapl_core_msrs;
+> >>  	unsigned long	pkg_events;
+> >> +	unsigned long	core_events;
+> >>  	unsigned int	msr_power_unit;
+> >>  	enum rapl_unit_quirk	unit_quirk;
+> >>  };
+> >>  
+> >>   /* 1/2^hw_unit Joule */
+> >>  static int rapl_pkg_hw_unit[NR_RAPL_PKG_DOMAINS] __read_mostly;
+> >> +static int rapl_core_hw_unit __read_mostly;
+> >>  static struct rapl_pmus *rapl_pmus_pkg;
+> >> +static struct rapl_pmus *rapl_pmus_core;
+> >>  static u64 rapl_timer_ms;
+> >>  static struct rapl_model *rapl_model;
+> >>  
+> >> @@ -156,14 +170,23 @@ static struct rapl_model *rapl_model;
+> >>   * Helper function to get the correct topology id according to the
+> >>   * RAPL PMU scope.
+> >>   */
+> >> -static inline unsigned int get_rapl_pmu_idx(int cpu)
+> >> -{	/*
+> >> +static inline unsigned int get_rapl_pmu_idx(int cpu, int scope)
+> >> +{
+> >> +	/*
+> >>  	 * Returns unsigned int, which converts the '-1' return value
+> >>  	 * (for non-existent mappings in topology map) to UINT_MAX, so
+> >>  	 * the error check in the caller is simplified.
+> >>  	 */
+> >> -	return rapl_pkg_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+> >> -					     topology_logical_die_id(cpu);
+> >> +	switch (scope) {
+> >> +	case PERF_PMU_SCOPE_PKG:
+> >> +		return topology_logical_package_id(cpu);
+> >> +	case PERF_PMU_SCOPE_DIE:
+> >> +		return topology_logical_die_id(cpu);
+> >> +	case PERF_PMU_SCOPE_CORE:
+> >> +		return topology_logical_core_id(cpu);
+> >> +	default:
+> >> +		return -EINVAL;
+> >> +	}
+> >>  }
+> >>  
+> >>  static inline u64 rapl_read_counter(struct perf_event *event)
+> >> @@ -173,19 +196,20 @@ static inline u64 rapl_read_counter(struct perf_event *event)
+> >>  	return raw;
+> >>  }
+> >>  
+> >> -static inline u64 rapl_scale(u64 v, int cfg)
+> >> +static inline u64 rapl_scale(u64 v, struct perf_event *event)
+> >>  {
+> >> -	if (cfg > NR_RAPL_PKG_DOMAINS) {
+> >> -		pr_warn("Invalid domain %d, failed to scale data\n", cfg);
+> >> -		return v;
+> >> -	}
+> >> +	int hw_unit = rapl_pkg_hw_unit[event->hw.config - 1];
+> >> +
+> >> +	if (event->pmu->scope == PERF_PMU_SCOPE_CORE)
+> >> +		hw_unit = rapl_core_hw_unit;
+> >> +
+> >>  	/*
+> >>  	 * scale delta to smallest unit (1/2^32)
+> >>  	 * users must then scale back: count * 1/(1e9*2^32) to get Joules
+> >>  	 * or use ldexp(count, -32).
+> >>  	 * Watts = Joules/Time delta
+> >>  	 */
+> >> -	return v << (32 - rapl_pkg_hw_unit[cfg - 1]);
+> >> +	return v << (32 - hw_unit);
+> >>  }
+> >>  
+> >>  static u64 rapl_event_update(struct perf_event *event)
+> >> @@ -212,7 +236,7 @@ static u64 rapl_event_update(struct perf_event *event)
+> >>  	delta = (new_raw_count << shift) - (prev_raw_count << shift);
+> >>  	delta >>= shift;
+> >>  
+> >> -	sdelta = rapl_scale(delta, event->hw.config);
+> >> +	sdelta = rapl_scale(delta, event);
+> >>  
+> >>  	local64_add(sdelta, &event->count);
+> >>  
+> >> @@ -341,13 +365,14 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
+> >>  static int rapl_pmu_event_init(struct perf_event *event)
+> >>  {
+> >>  	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
+> >> -	int bit, ret = 0;
+> >> +	int bit, rapl_pmus_scope, ret = 0;
+> >>  	struct rapl_pmu *rapl_pmu;
+> >>  	unsigned int rapl_pmu_idx;
+> >> +	struct rapl_pmus *rapl_pmus;
+> >>  
+> >> -	/* only look at RAPL events */
+> >> -	if (event->attr.type != rapl_pmus_pkg->pmu.type)
+> >> -		return -ENOENT;
+> >> +	/* unsupported modes and filters */
+> >> +	if (event->attr.sample_period) /* no sampling */
+> >> +		return -EINVAL;
+> > 
+> > Hi Dhananjay,
+> > 
+> > On linux-next, since this commit, it seems that simple sampling with 'perf
+> > record -- <command>' (i.e. the default event), 'perf top' etc. can
+> > unexpectedly fail because rapl_pmu_event_init() now returns -EINVAL instead
+> > of -ENOENT even in such cases of a type mismatch. I observed that this
+> > prevents evsel__fallback() from falling back to cpu-clock or task-clock.
+> > 
+> > Should we reorder the checks in rapl_pmu_event_init() to allow an early
+> > return with -ENOENT in such cases, as shown below? I'm not very familiar
+> > with this area and I might be missing something. I'd appreciate it if you
+> > could share your thoughts.
+> > 
+> > --- a/arch/x86/events/rapl.c
+> > +++ b/arch/x86/events/rapl.c
+> > @@ -370,17 +370,6 @@ static int rapl_pmu_event_init(struct perf_event *event)
+> >         unsigned int rapl_pmu_idx;
+> >         struct rapl_pmus *rapl_pmus;
+> > 
+> > -       /* unsupported modes and filters */
+> > -       if (event->attr.sample_period) /* no sampling */
+> > -               return -EINVAL;
+> > -
+> > -       /* check only supported bits are set */
+> > -       if (event->attr.config & ~RAPL_EVENT_MASK)
+> > -               return -EINVAL;
+> > -
+> > -       if (event->cpu < 0)
+> > -               return -EINVAL;
+> > -
+> >         rapl_pmus = container_of(event->pmu, struct rapl_pmus, pmu);
+> >         if (!rapl_pmus)
+> >                 return -EINVAL;
+> > @@ -411,6 +400,17 @@ static int rapl_pmu_event_init(struct perf_event *event)
+> >         } else
+> >                 return -EINVAL;
+> > 
+> > +       /* unsupported modes and filters */
+> > +       if (event->attr.sample_period) /* no sampling */
+> > +               return -EINVAL;
+> > +
+> > +       /* check only supported bits are set */
+> > +       if (event->attr.config & ~RAPL_EVENT_MASK)
+> > +               return -EINVAL;
+> > +
+> > +       if (event->cpu < 0)
+> > +               return -EINVAL;
+> > +
+> >         /* check event supported */
+> >         if (!(rapl_pmus->cntr_mask & (1 << bit)))
+> >                 return -EINVAL;
+> > 
+> > Thanks.
+> > 
+> > -Koichiro
 > 
+> Hello Koichiro,
+> 
+> I tried reproducing the issue you mentioned using "sudo perf record -- sleep 2" and 
+> "sudo perf top" commands on an AMD EPYC system, the commands worked successfully. 
+> Can you please mention which system and which exact commands you're 
+> running that reproduced the issue?
+> 
+> My analysis is, if we are running "perf record/top" with the default event, we would 
+> not enter the rapl_pmu_event_init() function, which renders the reordering of the type 
+> checks irrelevant. Regardless, please let me know how I can reproduce the issue.
+> 
+> Thanks,
+> Dhananjay
 
+Hi,
+
+Apologies for the delayed response, and thank you for your comment. I
+confirmed that just running "perf top" on a qemu instance reproduces it.
+The host CPU model is Intel Core i9-13900K, which is passed through to
+the guest.
+
+In my case, no pmu for PERF_TYPE_RAW is registered, but the rapl pmu is
+present. Then, perf_init_event() reaches the line marked "---->" below, and
+rapl_pmu_event_init() run, which returns -EINVAL before the type check.
+
+  static struct pmu *perf_init_event(struct perf_event *event)
+  {
+          [...]
+          if (pmu) {
+                  [...]
+                  goto unlock;
+          }
+    
+          list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+  ---->           ret = perf_try_init_event(pmu, event);
+                  if (!ret)
+                          goto unlock;
+    
+                  if (ret != -ENOENT) {
+                          pmu = ERR_PTR(ret);
+                          goto unlock;
+                  }
+          }
+
+I'll look into this a bit more on my side later and get back to you if
+something becomes clear.
+
+Thanks,
+
+-Koichiro
