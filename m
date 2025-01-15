@@ -1,36 +1,65 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DBC248173;
-	Wed, 15 Jan 2025 09:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6812459D4
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 13:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736933031; cv=none; b=LubBUuuaY1CJAtV7NGPmP+THNc7HfsIEnj19El7ymLn4fBdWvXhWelkDeHBG7XzxLPB5Cz96w0SDco+Oepgo6pk/3xasX0T1TUJu2ou1gfya7LQVBnCtxlYTmYYNRFTv3bKQMA+F47HPTn/NHpbu/j6vS75DIBEW7rbBJFEGjjA=
+	t=1736946274; cv=none; b=D6biqd/aaOBNcmwf9QACBa4MjaSvFv/c7WPfdZgErJ7RdMGtOP1vcGrPyWx4rA/qlir64zXqMkA1exxJICxb0QBTPBe0cCux8nJzd3yLp0uwYiVfTO/OyrIFZtG6F9D7nuhsI9Twfn71UT7CyIRluDp7u8RXuHfTFqnSCqKEGCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736933031; c=relaxed/simple;
-	bh=Iwp5DlsntPpB2Ma/i8rcyqrt+6GKhYL4CrI7wbuPs5w=;
+	s=arc-20240116; t=1736946274; c=relaxed/simple;
+	bh=eXs0b38KvcJxirilnrOHZmh0F3qmSWivx94TX36TvR4=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=VkQ6MzKMZtuH5g6eDNDgGV5kI2fwpCJjZfxo2OKMtqnLPjFIBxqKFS6/TgT6NwHxKUGWI4/lLmpt8RmczoXVtnclQ/eDDFVqKmeP41jauI6rhEY8kf0epbpWkz/B6s7fkdyshrqEzr17j3E+aWKXiO+Xilkedk/asKC8jESqOlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=d4D037sP; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	 Message-Id:References:To; b=WBBDEJaAwmddpRR1qRQ5G8Oh1ORT/K8Hei+vFujAHB2iEnadijk1jhNXZXkD5VRCDi2gj6OXSAZ1+npTjTIpUXA1ojzbyKgsdw1d0ha4Lh8xDS/z/15w6SuZ7+Uo3cCIfUkhgWzvcUmfJOmDHF3ws3RIbqfrerV1zcjuTFVskRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kJxyt5/3; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="d4D037sP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1736932969;
-	bh=Iwp5DlsntPpB2Ma/i8rcyqrt+6GKhYL4CrI7wbuPs5w=;
-	h=Mime-Version:Subject:From:Date:Message-Id:To;
-	b=d4D037sPA+qhv38uwjV1O5gPKMMwRWa+LVsv53ukV5A9L3Dl0KvF/KQUOwpl3FrHA
-	 BtfKeUL/brudsY7w4YnFaJuwOLAcq5mh8131ooNy62y3rltRnh/ftF9xgdhzuAnRa5
-	 CvmDKlxdSuiMyMEzI0icqJVqnaklNYlNaj2umvAU=
-X-QQ-mid: bizesmtpsz7t1736932967t2qn5kq
-X-QQ-Originating-IP: ub0u27b1n0Ja8kBjIn2P5iAqxG7HGMYuzOqGtUyMBOU=
-Received: from smtpclient.apple ( [202.120.235.205])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 15 Jan 2025 17:22:45 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14841633537363899611
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kJxyt5/3"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F3rJNN019928;
+	Wed, 15 Jan 2025 13:04:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=cTO+4b
+	O2FTgoqSx5b20mgeevsh2AE9q9eFw6Yvn5Yrc=; b=kJxyt5/3nc+JPDXx6MG8/A
+	uGLg6N1z3BkkcZkra9HWThp0OzXXqFQJos8ta7M4IjpONMwSHVnYNOmyUBpdcXuC
+	lQlYf7wvSRRCqOwDOnNgHM+eKgvPSa0DOBWXosZPF/SBFicrDti8kj4sWz1E4wAi
+	B4D+x3qawiM6WnBb54LvEmEEM2fttNdwb/c1pWI6YT71LkcOiHxIPCd7wR2aVa6U
+	4Pukaf8OmgRRIYF7ZE2uiYQ9GDeoXBHtYgsAny2jW8v0w66Q5GFIl+19bW+RXgXk
+	00uuU738124k/XqrYPa7rGsOThSovDPffi4BNSKh6ezNKzuwfIggVlLK7Lnd3QFg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4465gjt60p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 13:04:24 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50FCqr0L019490;
+	Wed, 15 Jan 2025 13:04:23 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4465gjt60j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 13:04:23 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50F9mvC4002738;
+	Wed, 15 Jan 2025 13:04:22 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4443by8ff4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 13:04:22 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50FD4IgX49349052
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 Jan 2025 13:04:18 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3E84320040;
+	Wed, 15 Jan 2025 13:04:18 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3275520049;
+	Wed, 15 Jan 2025 13:04:13 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.249.232])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 15 Jan 2025 13:04:12 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -39,95 +68,124 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: Bug: Potential Deadlock or Resource Contention in Btrfs Subsystem
-From: Kun Hu <huk23@m.fudan.edu.cn>
-In-Reply-To: <085e2f2d-a306-4a38-9943-1e306a8c11ea@gmx.com>
-Date: Wed, 15 Jan 2025 17:22:35 +0800
-Cc: josef@toxicpanda.com,
- anand.jain@oracle.com,
- nborisov@suse.com,
- dsterba@suse.com,
- "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>,
- linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org,
- linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V2] tools/perf/builtin-lock: Fix return code for functions
+ in __cmd_contention
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Z4WQ6IO1euKOMIHN@google.com>
+Date: Wed, 15 Jan 2025 18:33:58 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <BECC6BA3-8FBF-4975-B48D-31B2C975D944@m.fudan.edu.cn>
-References: <AA0E5191-E4D8-4FAA-AB60-B38D6F2D0E99@m.fudan.edu.cn>
- <085e2f2d-a306-4a38-9943-1e306a8c11ea@gmx.com>
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Message-Id: <4B7C2224-EB83-427E-987F-58997BA03CD2@linux.vnet.ibm.com>
+References: <20250110093730.93610-1-atrajeev@linux.vnet.ibm.com>
+ <Z4WQ6IO1euKOMIHN@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
 X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MZ4KZWW7YB31tEg0wL2SX3+Ch6+42yci3QbjmzihJhABPV34pJjSfAmp
-	hmSQ4BoTfTYkXjqbucVE91Wf0EQLOnZxqoIso2MhidUX1+6ev6T4YbEAkGmOtlcGhU2yGx2
-	BLEW/ErTwE3oLZjzqxZlgumrDX02P1WAqoPxHaxUW1In4MrhEBlzM7QJurseeh87EVEsHlC
-	d8Yur+U8CGE63G2oC1OoU5TLyMFA9sNGhxiSo583o9PtCpoxZ5Vy1RcRH3bapNMioatO2HO
-	1aARkkZeIUyWVD2aKIy9GGFWrcOHV7lBDJJYAk60Ypagc4vuTb80TSPVH1ystBYWt3QySs4
-	GiOCJbr1/vhsJhC/qTxacafSnf6GqUHL0WALRqVUfcQ3exQNIIE1odgQStNnnv8gY9W2wW8
-	LTl2PzenAvE3Q1mcQ9DImzrfAioFy4wmohShn8Vn83CckOLLxTH2b/2rI2b+aGq/mvSIfpR
-	OMHDfgn44wrIt8zm8w5sbjdNoNdl/kg77QRQiOpCZOSVxcM8aM/6cPxCZgWfaRCNwGmjCqY
-	ZzqZWfNQCEmxJRJ/93IDTBfrxkhALI0e5nnB28bejJ22DvhLTwHuzTeMLeTPIcQLAiF6n5f
-	UYTZYgJ52+UmNl7uy8SPcmstlStm7nOLeFEZxtOzYp8Vz/mKqzw4bkxLP9o1sYiLWKSv8d3
-	EmTbR1B5kTv85RfMZVlo+3v7b8iPtmjRaN0fIX1uGzbSZUsALn5BYdlZgQ0z+i/s1cypr7z
-	BpqM3/r4XM1wn3edPqnks300NEAHYTn2b4s6Y6wOXT4rFdoBlo8L3JxGN3njbQpKaMfGSWY
-	MnIyktBEzpI/yg0z1zM67xB5YD8W8hEnjNPeWPNefpANKe9LPsBZaMZxFgO38y41iqLFidS
-	pB3WIb7zEScpfHhxAKT/SZj0Qq4AgK2q838vEsUOMUZJRCSJF+X2SEnWzAOn5Ctw0eKKfZX
-	b7nIWoUnUGs+wDT9gHi2b4+SgufoT07e1rVs=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: SFsGXvn1re3ijClSK7-xgGe1mYWmsiIR
+X-Proofpoint-GUID: Kq0FW7B2nVKZxA2I88He8sDoQVxX7_mA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-15_05,2025-01-15_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1015 suspectscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501150099
 
+
+
+> On 14 Jan 2025, at 3:47=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>=20
+> On Fri, Jan 10, 2025 at 03:07:30PM +0530, Athira Rajeev wrote:
+>> perf lock contention returns zero exit value even if the lock =
+contention
+>> BPF setup failed.
+>>=20
+>>  # ./perf lock con -b true
+>>  libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was =
+CONFIG_DEBUG_INFO_BTF enabled?
+>>  libbpf: failed to find '.BTF' ELF section in =
+/lib/modules/6.13.0-rc3+/build/vmlinux
+>>  libbpf: failed to find valid kernel BTF
+>>  libbpf: kernel BTF is missing at '/sys/kernel/btf/vmlinux', was =
+CONFIG_DEBUG_INFO_BTF enabled?
+>>  libbpf: failed to find '.BTF' ELF section in =
+/lib/modules/6.13.0-rc3+/build/vmlinux
+>>  libbpf: failed to find valid kernel BTF
+>>  libbpf: Error loading vmlinux BTF: -ESRCH
+>>  libbpf: failed to load object 'lock_contention_bpf'
+>>  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -ESRCH
+>>  Failed to load lock-contention BPF skeleton
+>>  lock contention BPF setup failed
+>>  # echo $?
+>>   0
+>>=20
+>> Fix this by saving the return code for lock_contention_prepare
+>> so that command exits with proper return code. Similarly set the
+>> return code properly for two other functions in builtin-lock, namely
+>> setup_output_field() and select_key().
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+>=20
+> Thanks,
+> Namhyung
+Hi Namhyung,
+
+Thanks for the reviewed-by=20
+
+Athira
 
 >=20
-> There is a recent report about btrfs' new mount API change lead to
-> mnt_list corruption:
->=20
-> =
-https://lore.kernel.org/linux-btrfs/ec6784ed-8722-4695-980a-4400d4e7bd1a@g=
-mx.com/
->=20
-> Which can be fixed by the latest VFS branch provided by Christian:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git =
-vfs-6.14.mount
->=20
-> Considering the offending fc_mount() triggered by
-> btrfs_get_tree_subvol() is involved, mind to test if the above branch
-> fixes the bug?
+>> ---
+>> Changelog:
+>> v1 -> v2
+>> Fixed return code in functions: setup_output_field()
+>> and select_key() as pointed out by Namhyung.
+>>=20
+>> tools/perf/builtin-lock.c | 11 ++++++++---
+>> 1 file changed, 8 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+>> index 208c482daa56..94a2bc15a2fa 100644
+>> --- a/tools/perf/builtin-lock.c
+>> +++ b/tools/perf/builtin-lock.c
+>> @@ -2049,7 +2049,8 @@ static int __cmd_contention(int argc, const =
+char **argv)
+>> goto out_delete;
+>> }
+>>=20
+>> - if (lock_contention_prepare(&con) < 0) {
+>> + err =3D lock_contention_prepare(&con);
+>> + if (err < 0) {
+>> pr_err("lock contention BPF setup failed\n");
+>> goto out_delete;
+>> }
+>> @@ -2070,10 +2071,14 @@ static int __cmd_contention(int argc, const =
+char **argv)
+>> }
+>> }
+>>=20
+>> - if (setup_output_field(true, output_fields))
+>> + err =3D setup_output_field(true, output_fields);
+>> + if (err) {
+>> + pr_err("Failed to setup output field\n");
+>> goto out_delete;
+>> + }
+>>=20
+>> - if (select_key(true))
+>> + err =3D select_key(true);
+>> + if (err)
+>> goto out_delete;
+>>=20
+>> if (symbol_conf.field_sep) {
+>> --=20
+>> 2.43.5
 
-We are still reproducing this issue on the vfs mount - v6.14 branch =
-respectively, but I'm not sure if it's a significant issue. Looking at =
-the latest crash log it seems to be consistent with the originally =
-reported issue (BTRFS filesystem race operation causing deadlocks and =
-initialization function failures). Looking at the reproducer =
-perf_event_open and syz_mount_image are both using randomly crafted =
-parameters.=20
 
-Specifically, perf_event_open entered the cpu=3D0x3ffffffffff parameter =
-resulting in frequent performance event monitoring initialization, and =
-the CPU number range defined by this parameter did not satisfy the valid =
-numbering range, which could trigger invalid accesses and resource =
-contention. In addition, the image data for syz_mount_image is randomly =
-generated, which may lead to parsing failure of block device metadata, =
-log playback errors, and block order anomalies.We give the link of the 3 =
-new issue logs : 1) on vfs mount - v6.14 branch, 2) on v6.13-rc7, 3) on =
-v6.13-rc7 merged with vfs mount - v6.14 branch
-
-1) Link: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0110_6.13rc6/41-BUG_%20soft=
-%20lockup%20in%20lo_ioct/crashlog0113_vfs-mount%20v6.14.txt
-
-2) Link: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0110_6.13rc6/41-BUG_%20soft=
-%20lockup%20in%20lo_ioct/crashlog0115_6.13rc7.txt
-
-3) Link: =
-https://github.com/pghk13/Kernel-Bug/blob/main/0110_6.13rc6/41-BUG_%20soft=
-%20lockup%20in%20lo_ioct/crashlog0115_6.13rc7_vfs-mount%20v6.14.txt
-
-I=E2=80=99m not sure if the log is useful for you. If you have any =
-concerns, Please let me know. And If it=E2=80=99s not a important issue, =
-then please ignore it too!=20
-
-=E2=80=94=E2=80=94=E2=80=94
-Thanks,
-Kun Hu=
