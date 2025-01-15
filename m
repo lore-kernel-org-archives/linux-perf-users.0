@@ -1,333 +1,167 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFD41DB159
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 08:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA57722F82F
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 08:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736928146; cv=none; b=YPRC0OWLGruzKQimXoA5wlhAfMLBS784Ges05H7yDDQtk0AIipMYuCnkXXQV3iwZyPGNbQqWuhHjErEnXAqcoJW/5HJcdtiWvZITScFFhRVg5lTHoY/G5g7AsWs0wRqxcm0m+A2gII5i5EC4BnqNiQUP85bZQBlrB6jpaSRCngY=
+	t=1736929322; cv=none; b=YchdKkI+q6xT5KVyVmKLInGC0o9G3dqUo/oUUrGDXutpBKjLsUWbYT+MzKwIGmBtsBYdK/QEAJLMvwz8VIo7LTya8mjP2XPNRGnnCUjN7oVieBGxBe89Z6ri7ZK2cWqReZ1ZjDLASIYxC4iUI/n/UYllp4Zd7o/SyVbIcL/lO8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736928146; c=relaxed/simple;
-	bh=9SR6eNBaix7dI4gir6x76qxlDnK3TpaX+VytheAmmv4=;
+	s=arc-20240116; t=1736929322; c=relaxed/simple;
+	bh=ZykKxIGqv+X148e2gcaIScS80oYgBRWYk5QnERaRz4c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qysqwPunUwCFGPrfq4n1YLCMbAowxz32UNdZWmv0l+2tI8504aTGDKlvKA92aM6HDm3crsOx1fiPmjLsYCT+205sSkfdwYMV4KoPoG8cqXoWc2v2W+HKjg0fR90MN9qKS60AX6bgv6ACejy8by740JrXp7CzYdQ5hmOURLbQsg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fwmhqe4s; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JxyM8UzMUY7uwl5ulRAcjQ2/7j8kDEvPHKNrMoQQCu/DImHVBSB2peStuRbyqLxDcKYZyW8BHp2Q/d0kFzq+x/S/9qF3Mck83RHGZm+tg6aMsDQCt19pi9WkEFWSroUMLndsOwYlGqt/uqrc0XaUr0kRswTV1U1XG1hxO2B+MkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjKmx4YR; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fwmhqe4s"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30615661f98so41057321fa.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 00:02:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjKmx4YR"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e5787c3fcf8so1529792276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 00:22:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736928142; x=1737532942; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736929319; x=1737534119; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aGBP3/A+nD/KjxBNO6UWx8EejIRdLM/OU+p876/XP5E=;
-        b=fwmhqe4swOT83YSywElvqx6hV6KPhGagwB5rFPkLBYfxm0bHWHr++/hUs15G6rt8Z9
-         Si2IeHyNfyaUorrSyXm9Rc3Mjv5EUVlS7Nx+Ts4jfQRppft91O7TXm0pRwsCe0uM8uH7
-         yu0p3GIZP8oNLXLYO3Ob8107pJCTbZGpkVxeFxZtfUtdxGBNvDwNhJMuXtl1kdyNiYnn
-         UCGkLayNUzJLChVKshx+SYYe5oanW5Gah81neFQUDDeWZfkCKcfHKRmupebLAWd/yJGY
-         Ig3sRwkvuTSbUeDjPEq+cknTwC0n3iPHaJTmK4/HRqQmXYJ2Sl78vSnexQe1Ia7YHt8J
-         EDPA==
+        bh=8+eFB0JnkI9ZDWzqW+mOkg95ksSlIKxRMXk/0eft3Ag=;
+        b=bjKmx4YRF6e29ASRFuXtfNLHwnGjPnrmQsWQA4d0GMiW0U0Z/NWssekavVtZolSfmv
+         tOKK/Sqjhkgi/68lWJDEpka2PTIrnGNFHYeTIHRP8fziAabpxw4wN7Njcx3RGOn+TJXR
+         B7BTwkol7EuvGXhsVfz9iB910lrpWrk9spO+cRZOPYLSGQ9DozqtbWMT45a1YDDPsXQD
+         1dkKgs5vIcMPtTYbLTfVttrZYycIgf3kDdQdvvp3X3goGCH7apvm9FfjdmVYNkeb3F6J
+         gA3Qw/sbFJXRIAdZK7ONOOP89UbpuOZ8pDT9AXhUanliqybzHkpg6bqqvqFdo2WAk8PY
+         1aYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736928142; x=1737532942;
+        d=1e100.net; s=20230601; t=1736929319; x=1737534119;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aGBP3/A+nD/KjxBNO6UWx8EejIRdLM/OU+p876/XP5E=;
-        b=Qw37XMbYat06xxoDtu1MCJ/Ah00beZabpLpqBAG6vvkRpGUsaopgbxYFhFaDioGAau
-         Rb6xzXWM7OUT+hoHoNxh4W4Lm8HimDpyv5LYydivTLcOt/5gyW+xyvqvDsLhggNGEiEP
-         giaEbULyOeZjcmeg46mflsrIi8mwvQHFbMQPYsIKjPFhAxjGi5XkiZYIwr5PBr+pJQSj
-         I1NHxciPv0UuQmc44Cbe56ZO7G4srCaVjWPaJSpEz8URwSQCbB4VhGYYY3Tec+oi5GO0
-         AFTx37LfE2ysXouuL6la5UvNaoICK3MKGOCo75x7krGWQY4SIMcIdnbui8R/Gwnd4Uoa
-         d1CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuNYTU8GZYonlj9C579cMrSQdHpMtLCT7GFGU5aonQYNCQaZsPaM9PgsTSwP0UPYvdFQDcwc7sAgHKC7SLj6GD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcLee/whgfHw2ebXKSamrzE5m/7oJTTPdru1zHXv2xmCEnT7D2
-	t5Ruwr5fpuPxfstnNB7JVe5YCAJJfoL5A+B61bUmTNoesrL8imPwrPh0WAvQWGmCHdmDAzsc34Y
-	CZOk0YtTH/jlxRqw8+uJ7VKFHYBZGeAVHay+FZgS2xRrUMWnZzg==
-X-Gm-Gg: ASbGncvEUgVga6B89JWsnitGGtMWNpNFDTJ/IgsC1hP8s0lWVVZQ4LhQ0nFXuvB3JN7
-	IL2kADsxbRtF5FUa5N+8CLeg+cXJJiHg2grReKAZwCfk1FI6kf6apKw9Hyylq92+QpmOs3MI=
-X-Google-Smtp-Source: AGHT+IFrVVXM89lX5l6S/FPlm0pnJxGYya3vCZo/tFOvBCBLJcgAzVgnA807ISXu0MfNQH7+Zaa+E+M/aZtaAT4ALc0=
-X-Received: by 2002:a05:651c:a0b:b0:300:1f2c:e3d1 with SMTP id
- 38308e7fff4ca-305f45a09abmr93569641fa.23.1736928141964; Wed, 15 Jan 2025
- 00:02:21 -0800 (PST)
+        bh=8+eFB0JnkI9ZDWzqW+mOkg95ksSlIKxRMXk/0eft3Ag=;
+        b=TXwx1z+5DMV1HqZWMnsG057g5Gnk02f5SvDqXbZ3bs83IuU+Lb2S844sFWYQPgNRBV
+         qriC1U5FJhudUfPT1600Up0Zld6wOYkyUbIenlPZZF5WyfD4yJfJcb2R9YcZAOCfr1Ay
+         6QkE6yXFG8yFqZowoYRHN0Dq+2NFG5Kl8b8CUqS9Cx/+8dba5lbpamm2r5jkZvKtKQ8g
+         EVI06c18rtuyTods3QQqUwqVJbQG/80yjAtjdEbQKW4V+5lTUDmTCwlQaoWHX1cFH67q
+         qt1GVgdQxJ/h3vvkLEHTZsSClU76sTXiFqqHrkoOqiucYUibd0JT8t37GMqqcAmOImFF
+         yNCw==
+X-Gm-Message-State: AOJu0YyMQGGsNiyGkSFC1ZBCz2kS8ox2KZSlo/CCqMIGeXyLI+gqh9tQ
+	9VLQ22AKPU+sCCJx0r/d4//hakyfuBTZKd3hj+N5a/9wesr9Xs76WXubmFIkm2A62kgAb2nonoS
+	gIKZEPZ94KQRP7N2WT3rBIukh8uY=
+X-Gm-Gg: ASbGncszuR0DUaPDPlaaWrEEZAeDvhF57CMiTVosO51DsyAx7iJ/cb1ux047GoZ6gMb
+	6jiwaQ5LcIuww2Chzou/HtIagMJuV0GlWsClx
+X-Google-Smtp-Source: AGHT+IHKGgd/PC1MuOtmzBoRsXQYBafRtlCCgN4ClYpzK9RvFh4ROPHNrjLzEmSi8CptsHQ1ZaodA9Al9UtxMu5h670=
+X-Received: by 2002:a05:690c:7105:b0:6f6:ca9a:30aa with SMTP id
+ 00721157ae682-6f6ca9a34d6mr11629997b3.25.1736929319507; Wed, 15 Jan 2025
+ 00:21:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1736775109.git.dvyukov@google.com> <52f5a4dcc10ecb00fdf78750d1b32dabcbaf2a31.1736775109.git.dvyukov@google.com>
- <Z4cKNjudLDJBrlM_@google.com>
-In-Reply-To: <Z4cKNjudLDJBrlM_@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 15 Jan 2025 09:02:10 +0100
-X-Gm-Features: AbW1kvZMLnSsvvTqdK6tKxY_nn0-txf8ZwCW8yEJob_5eE3M0_dXvy8DeW4hsGc
-Message-ID: <CACT4Y+btZxgsBStAAQ8RYhNoidR9Ub0KQYHZFE5TSihPVmAkMg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf hist: Deduplicate cmp/sort/collapse code
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <CAATMXfnhT-Uqp9rfBGZesjYSmbn8UAcyXzuhkhM8Uvg7wCX5Dg@mail.gmail.com>
+ <CAH0uvoiJ=F3U9ib7_pmUPttMcSaSYkmD8Pi9qTLrtWHxEw9fKQ@mail.gmail.com> <CAATMXfnHzRG+i0DWBuMG17n-NgQOkQHd2JCU0bUjNrvnzuMaEg@mail.gmail.com>
+In-Reply-To: <CAATMXfnHzRG+i0DWBuMG17n-NgQOkQHd2JCU0bUjNrvnzuMaEg@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 15 Jan 2025 00:21:48 -0800
+X-Gm-Features: AbW1kvazznqc1SZ-ynUCOtbb72dt1PRs67e7BQIKYFWcsVNSBv-tudtYN4H5ztU
+Message-ID: <CAH0uvogpFVgs5ftBUrkAaf0Lz2+RJJPXWPAGew76D2+qbBFwUQ@mail.gmail.com>
+Subject: Re: perf record "--off-cpu" options failed on 1 [v]cpu machine
+To: Qiao Zhao <qzhao@redhat.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>, Michael Petlan <mpetlan@redhat.com>, 
+	irogers@google.com, Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 15 Jan 2025 at 02:07, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Mon, Jan 13, 2025 at 02:34:14PM +0100, Dmitry Vyukov wrote:
-> > Application of cmp/sort/collapse fmt callbacks is duplicated 6 times.
-> > Factor it into a common helper function. NFC.
-> >
-> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> >
-> > ---
-> >
-> > Changes in v2:
-> >  - add perf_hpp_fmt_cmp_t typedef to util/hist.h
-> >  - use the typedef for perf_hpp_fmt::{cmp,collapse,sort}
-> > ---
-> >  tools/perf/util/hist.c | 103 +++++++++++++++++------------------------
-> >  tools/perf/util/hist.h |  14 +++---
-> >  2 files changed, 49 insertions(+), 68 deletions(-)
-> >
-> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index fff1345658016..a4b8ec3805565 100644
-> > --- a/tools/perf/util/hist.c
-> > +++ b/tools/perf/util/hist.c
-> > @@ -32,6 +32,9 @@
-> >  #include <linux/time64.h>
-> >  #include <linux/zalloc.h>
-> >
-> > +static int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
-> > +static int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
-> > +
-> >  static bool hists__filter_entry_by_dso(struct hists *hists,
-> >                                      struct hist_entry *he);
-> >  static bool hists__filter_entry_by_thread(struct hists *hists,
-> > @@ -1292,19 +1295,26 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
-> >       return err;
-> >  }
-> >
-> > -int64_t
-> > -hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
-> > +static int64_t
-> > +hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
-> > +                  struct hist_entry *right, unsigned long fn_offset,
-> > +                  bool ignore_dynamic, bool ignore_skipped)
->
-> Maybe it's a matter of tastes, but I think it could be simpler like
-> below.
->
-> >  {
-> >       struct hists *hists = left->hists;
-> >       struct perf_hpp_fmt *fmt;
-> >       int64_t cmp = 0;
-> > +     perf_hpp_fmt_cmp_t fn;
->
->         perf_hpp_fmt_cmp_t *fn;
->
-> >
-> > -     hists__for_each_sort_list(hists, fmt) {
-> > -             if (perf_hpp__is_dynamic_entry(fmt) &&
-> > +     perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
-> > +             if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
-> >                   !perf_hpp__defined_dynamic_entry(fmt, hists))
-> >                       continue;
-> >
-> > -             cmp = fmt->cmp(fmt, left, right);
-> > +             if (ignore_skipped && perf_hpp__should_skip(fmt, hists))
-> > +                     continue;
-> > +
-> > +             fn = *(perf_hpp_fmt_cmp_t *)(((char *)fmt) + fn_offset);
-> > +             cmp = fn(fmt, left, right);
->
->                 fn = (void *)fmt + fn_offset;
->                 cmp = (*fn)(fmt, left, right);
+Hi Qiao,
 
-Done in v3.
+<SNIP>
 
-> Otherwise, looks good to me.
-
-Thanks for the review.
-
-> Thanks,
-> Namhyung
+> > >
+> > > But when test the Tracepoint event "sched:sched_switch", it works and
+> > > can get the samples:
+> > > ---
+> > > # perf record --off-cpu -e sched:sched_switch sleep 1
+> > > [ perf record: Woken up 1 times to write data ]
+> > > [ perf record: Captured and wrote 0.009 MB perf.data (2 samples) ]
+> >
+> > There are two samples. Can you please check if there is an offcpu-time
+> > sample in this perf.data file? Specifically:
+> > ```
+> > perf script | grep offcpu-time
 >
-> >               if (cmp)
-> >                       break;
-> >       }
-> > @@ -1313,23 +1323,33 @@ hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
-> >  }
+> Command "perf script | grep offcpu-time' did not show any
+> "offcpu-time" sample in perf.data.
+> btw, in test case "record_offcpu.sh" use the 'perf evlist' to list
+> samples 'offcpu-time'.
+> # perf script | grep offcpu-time
+> # perf evlist | grep offcpu-time
+> offcpu-time
+
+Gotcha, thanks.
+
+>
+> > ```
 > >
-> >  int64_t
-> > -hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
-> > +hist_entry__cmp(struct hist_entry *left, struct hist_entry *right)
-> >  {
-> > -     struct hists *hists = left->hists;
-> > -     struct perf_hpp_fmt *fmt;
-> > -     int64_t cmp = 0;
-> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> > +             offsetof(struct perf_hpp_fmt, cmp), true, false);
-> > +}
+> > If there isn't one, can you please run:
+> > ```
+> > perf record --off-cpu -a
+> > ```
 > >
-> > -     hists__for_each_sort_list(hists, fmt) {
-> > -             if (perf_hpp__is_dynamic_entry(fmt) &&
-> > -                 !perf_hpp__defined_dynamic_entry(fmt, hists))
-> > -                     continue;
-> > +static int64_t
-> > +hist_entry__sort(struct hist_entry *left, struct hist_entry *right)
-> > +{
-> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> > +             offsetof(struct perf_hpp_fmt, sort), false, true);
-> > +}
+> > and leave it running for a couple of seconds? Then, run:
+> > ```
+> > perf script | grep offcpu-time
+> > ```
+> > to see if any offcpu-time samples appear.
+>
+> Yes, when use '-a', 'perf script' can show the offcpu-time samples.
+
+Interesting, then it might be a task filtering problem... Since
+```
+perf record --off-cpu sleep 1
+```
+records nothing except for the process of 'sleep 1', which did not
+yield any samples in your case...
+
+> # perf record --off-cpu -a   <--- C-C after 5 seconds
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.139 MB perf.data (91 samples) ]
+> # perf script | grep offcpu-time
+> tuned     913 [000] 18446744069.414584: 2000177867 offcpu-time:
+> tuned     700 [000] 18446744069.414584: 2000204356 offcpu-time:
+> perf    5865 [000] 18446744069.414584: 2780030394 offcpu-time:
+> sshd    5385 [000] 18446744069.414584:     163718 offcpu-time:
+> perf    5866 [000] 18446744069.414584: 1001042294 offcpu-time:
+>
 > >
-> > -             cmp = fmt->collapse(fmt, left, right);
-> > -             if (cmp)
-> > -                     break;
-> > -     }
-> > +int64_t
-> > +hist_entry__collapse(struct hist_entry *left, struct hist_entry *right)
-> > +{
-> > +     return hist_entry__cmp_impl(left->hists->hpp_list, left, right,
-> > +             offsetof(struct perf_hpp_fmt, collapse), true, false);
-> > +}
-> >
-> > -     return cmp;
-> > +static int64_t
-> > +hist_entry__collapse_hierarchy(struct perf_hpp_list *hpp_list,
-> > +                            struct hist_entry *left,
-> > +                            struct hist_entry *right)
-> > +{
-> > +     return hist_entry__cmp_impl(hpp_list, left, right,
-> > +             offsetof(struct perf_hpp_fmt, collapse), false, false);
-> >  }
-> >
-> >  void hist_entry__delete(struct hist_entry *he)
-> > @@ -1503,14 +1523,7 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
-> >       while (*p != NULL) {
-> >               parent = *p;
-> >               iter = rb_entry(parent, struct hist_entry, rb_node_in);
-> > -
-> > -             cmp = 0;
-> > -             perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
-> > -                     cmp = fmt->collapse(fmt, iter, he);
-> > -                     if (cmp)
-> > -                             break;
-> > -             }
-> > -
-> > +             cmp = hist_entry__collapse_hierarchy(hpp_list, iter, he);
-> >               if (!cmp) {
-> >                       he_stat__add_stat(&iter->stat, &he->stat);
-> >                       return iter;
-> > @@ -1730,24 +1743,6 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
-> >       return 0;
-> >  }
-> >
-> > -static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-> > -{
-> > -     struct hists *hists = a->hists;
-> > -     struct perf_hpp_fmt *fmt;
-> > -     int64_t cmp = 0;
-> > -
-> > -     hists__for_each_sort_list(hists, fmt) {
-> > -             if (perf_hpp__should_skip(fmt, a->hists))
-> > -                     continue;
-> > -
-> > -             cmp = fmt->sort(fmt, a, b);
-> > -             if (cmp)
-> > -                     break;
-> > -     }
-> > -
-> > -     return cmp;
-> > -}
-> > -
-> >  static void hists__reset_filter_stats(struct hists *hists)
-> >  {
-> >       hists->nr_non_filtered_entries = 0;
-> > @@ -2449,21 +2444,15 @@ static struct hist_entry *add_dummy_hierarchy_entry(struct hists *hists,
-> >       struct rb_node **p;
-> >       struct rb_node *parent = NULL;
-> >       struct hist_entry *he;
-> > -     struct perf_hpp_fmt *fmt;
-> >       bool leftmost = true;
-> >
-> >       p = &root->rb_root.rb_node;
-> >       while (*p != NULL) {
-> > -             int64_t cmp = 0;
-> > +             int64_t cmp;
-> >
-> >               parent = *p;
-> >               he = rb_entry(parent, struct hist_entry, rb_node_in);
-> > -
-> > -             perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
-> > -                     cmp = fmt->collapse(fmt, he, pair);
-> > -                     if (cmp)
-> > -                             break;
-> > -             }
-> > +             cmp = hist_entry__collapse_hierarchy(he->hpp_list, he, pair);
-> >               if (!cmp)
-> >                       goto out;
-> >
-> > @@ -2521,16 +2510,10 @@ static struct hist_entry *hists__find_hierarchy_entry(struct rb_root_cached *roo
-> >
-> >       while (n) {
-> >               struct hist_entry *iter;
-> > -             struct perf_hpp_fmt *fmt;
-> > -             int64_t cmp = 0;
-> > +             int64_t cmp;
-> >
-> >               iter = rb_entry(n, struct hist_entry, rb_node_in);
-> > -             perf_hpp_list__for_each_sort_list(he->hpp_list, fmt) {
-> > -                     cmp = fmt->collapse(fmt, iter, he);
-> > -                     if (cmp)
-> > -                             break;
-> > -             }
-> > -
-> > +             cmp = hist_entry__collapse_hierarchy(he->hpp_list, iter, he);
-> >               if (cmp < 0)
-> >                       n = n->rb_left;
-> >               else if (cmp > 0)
-> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > index 1131056924d9c..46c8373e31465 100644
-> > --- a/tools/perf/util/hist.h
-> > +++ b/tools/perf/util/hist.h
-> > @@ -342,8 +342,6 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
-> >  struct perf_hpp;
-> >  struct perf_hpp_fmt;
-> >
-> > -int64_t hist_entry__cmp(struct hist_entry *left, struct hist_entry *right);
-> > -int64_t hist_entry__collapse(struct hist_entry *left, struct hist_entry *right);
-> >  int hist_entry__transaction_len(void);
-> >  int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
-> >                             struct hists *hists);
-> > @@ -452,6 +450,9 @@ struct perf_hpp {
-> >       bool skip;
-> >  };
-> >
-> > +typedef int64_t (*perf_hpp_fmt_cmp_t)(
-> > +     struct perf_hpp_fmt *, struct hist_entry *, struct hist_entry *);
-> > +
-> >  struct perf_hpp_fmt {
-> >       const char *name;
-> >       int (*header)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > @@ -463,12 +464,9 @@ struct perf_hpp_fmt {
-> >                    struct hist_entry *he);
-> >       int (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> >                    struct hist_entry *he);
-> > -     int64_t (*cmp)(struct perf_hpp_fmt *fmt,
-> > -                    struct hist_entry *a, struct hist_entry *b);
-> > -     int64_t (*collapse)(struct perf_hpp_fmt *fmt,
-> > -                         struct hist_entry *a, struct hist_entry *b);
-> > -     int64_t (*sort)(struct perf_hpp_fmt *fmt,
-> > -                     struct hist_entry *a, struct hist_entry *b);
-> > +     perf_hpp_fmt_cmp_t cmp;
-> > +     perf_hpp_fmt_cmp_t collapse;
-> > +     perf_hpp_fmt_cmp_t sort;
-> >       bool (*equal)(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
-> >       void (*free)(struct perf_hpp_fmt *fmt);
-> >
-> > --
-> > 2.47.1.688.g23fc6f90ad-goog
-> >
+> > I suspect that it might have something to do with BPF, although kernel
+> > version 5.14 includes all the conditions necessary for perf record
+> > --off-cpu to function properly. Can you please check if the BPF maps
+> > are working as expected by using bpftool? That is to say while
+> > running:
+> > ```
+> > perf record --off-cpu -a
+> > ```
+> > Check the bpf map:
+> > ```
+> > bpftool map | grep -E "stacks|off_cpu|tstamp"
+>
+> Yes, as you said, run the "perf record --off-cpu -a" in terminal, and
+> run bpftool map:
+> # bpftool map | grep -E "stacks|off_cpu|tstamp"
+> 228: stack_trace  name stacks  flags 0x0
+> 229: task_storage  name tstamp  flags 0x1
+> 230: hash  name off_cpu  flags 0x0
+> 234: array  name off_cpu_.bss  flags 0x400
+> 235: array  name off_cpu_.rodata  flags 0x480
+> 236: array  name off_cpu_.data  flags 0x400
+>
+> I can see the "stacks" and "off_cpu" flags by bpftool map.
+
+Thanks, then those BPF components are all loaded.
+
+I wonder why it fails to record this single task/process of 'sleep'.
+My gut feeling is that the can_record() function in off_cpu.bpf.c
+thinks it's not okay to record the task and filters it out. There
+might also be something related to the usage of BPF_CORE, especially
+considering that the kernel structs changed from 5.14 to 6.12. I'll
+take a deeper look into this.
+
+Thanks,
+Howard
