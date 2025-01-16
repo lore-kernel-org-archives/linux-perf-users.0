@@ -1,227 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2FC24A7F4
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 12:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455D822A7E2
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 13:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737030691; cv=none; b=AstIiSRhyg8tXv6I5VAn7IubtOdjeu9GgdgM2WIo1UrHEpL0VsFFA9xfaFCM/BgIWAnROrgXMLmF0DPaAK79e27qV4MPMaUSNI/72Vz5QDEEas0tcbgWDpKcgID8jYtj1xHUSNfoMuK1ifInZsoaVHvRkz0IkovoB2kXlRdn6yE=
+	t=1737033777; cv=none; b=cKrWVKQUjs0eJ608SxcUpTTypZyg39an05ca6onbIKjPbCS/eAzjMn9CuwbDo/+IZphmeULSaiA3k2tLxq2y/Q19xkXPXnW3XYQousSNki0OR0CnCOJHdiJwh5yfvkGoASsdyI5xNmEJjls2zZBjiXHQCUIt08/HqD6sBxFh18k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737030691; c=relaxed/simple;
-	bh=Mymtu6c0C6owoGK2o5u062xBZgN0jCylYAygNUv4Noc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EIW+TjadhVp6QkDDNwyL8jMTSb8qKtc8BR/WuVyhBNMtvVhrsEJYfn/2ZKCFuXUefM8vjeoy861nbEKwEzCcemme/pUzCg+uRAfglE9OrUqu4bKWOnwbgtHjSChV7CPbKPQ8g4zxITiyxoJsSsBi7XvpElDWzC48rvTNFInRdZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+/I4Nwh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737033777; c=relaxed/simple;
+	bh=SixtGEHyx0Ll20sNHrYW42AzL6XqkNRKNahYOvra4Ow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=abX5ILykjcjlE9eNG6DzbH5O5MoTFZFZIMmKYuDPYK3Z032dYPZ2Y4t0+F6+zNW4z6XQkuyksYaSQzqMEfeeZw1vlrBb2ib6wQP5GxBXcnM3DxAyjN6dLGwBDoOKvGni/R+uYpZJGND1DtmokFTQTN8aqDu00GbSnHU5z7QoWP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pNeyTU4W; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+/I4Nwh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737030687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K2e2iP2sUAqfkOljiHRIdFl1aLlIvE3zStOPNmlVqVw=;
-	b=N+/I4NwhaV/8/+D924ywAB87B/6qpcgSxlZuw1cMVnzpMqtIu01PGe3IAC1QBNNkd+m/hF
-	mL7VoVCAdtHn/Yuovei5TT1zxJOoM5q8ZUAPjpgK9YGkdAwjYVycf9DNSIXv6VCIY2FnPK
-	7rtcdrCOOXHiR8Kz9mWYlYqvbqUpZ7A=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-fANclslbMU2mylVuUzdiyA-1; Thu, 16 Jan 2025 07:31:26 -0500
-X-MC-Unique: fANclslbMU2mylVuUzdiyA-1
-X-Mimecast-MFC-AGG-ID: fANclslbMU2mylVuUzdiyA
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43628594d34so4179055e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 04:31:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pNeyTU4W"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-467abce2ef9so221461cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 05:22:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737033774; x=1737638574; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SixtGEHyx0Ll20sNHrYW42AzL6XqkNRKNahYOvra4Ow=;
+        b=pNeyTU4Wee181wY3gln1ZIsC2nfANHQigyORUUwhis5a/svsy2XSo7Xam0g0o1qqxH
+         OV3IvX1Out0hM4WPFsipP6vuKmYyJ0K4x3mCSX4VAm5Xm3S3TDsbIIUx8pK64aicKtiX
+         xLd8HeF9oG/oYmGWVbBqaGW2jBtGfU+H0aSB0gMnTEscXsxaK9xgNowcUys3eHXReWdL
+         Z0oCT9i8ZxEJFZTbhygdURDe70RmsV70bc+VhaYHHSGUf9PzREFnFp57vDH/WiuzlhNO
+         iOepUKMRMDultudOy77sJhRbFXhTN0QNpa+Vw4mRHcSYaNPF0pG8HeqVuzyI87pcHCug
+         VUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737030684; x=1737635484;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2e2iP2sUAqfkOljiHRIdFl1aLlIvE3zStOPNmlVqVw=;
-        b=k1t8GyPjcyj5mIezO8Kmc1bGkFWiadIh+SOs/fEuCPgUDUe0OT1s+yEqOqMq1V6yLW
-         TT4bXK1EBKOBk7HXqV1TO75B/e+ENbqhpTyDz5TXndklY7MRCn0AcXUL47QDjkxZId8O
-         KzB2VyoT7KUOOiTmBSmUs5vYjxid4xuaY6lCArt3YE7LmzUB29KkaxCRWA/HTOiN03aL
-         o4iP3673sZWh1GbuzSQXutPdAcfjcUtr7IQ8pCIub4/UZORS3pvnFLj0kUs1xTjDrYIm
-         W9hfbUpQljr+NaJAAlcV7XTSsyBI+u8OElXPxYsI1UbhOpDQvi8FF6VThEsWIwgzlJCQ
-         ThIg==
-X-Gm-Message-State: AOJu0YzLvHEgUwSQdHJnB88NjqpmH0o3zYR2v2CjHjIQCRWgLVxiBRrh
-	FgwjmlNXX/EnDORzkvCypAVIYLqLWaGzLUcPXpn9xJBqjcwfC4H2/FMDGVEWrYfXsUipVb4M1HX
-	WSepO8UXFgKVZqvf6mW0WovtvCBUUbHYtcReCp+FWtjlMiYzwSFOVJ2pv/Hk2lqky5mA4aULFas
-	Mj8DlCLsWRt4KD3CbovtznJMaNKNN2xP14c/bvQAtMfB/0BNQLa6ZHqw==
-X-Gm-Gg: ASbGncs5OTOfjgLootHQXd99vMhCN0mzYZA3I2n6huebTLf2J1v2WKTcYZAN0n3Fu9J
-	qWUXewM8xSMNO5daiMlc6GR6dUCQ43wtyb9oTsZ+5TFpZhko7AYUMxLzZA1ZfSs4nYruEASgaSW
-	edaV8+lUG6aj6IzZmW139ekcLlUaCU01/NCXgrf0K/9vVCTHStzbbt9MocwZ56sWHQ6Ay6JtWpr
-	bnIIEJ0nVr5Id7ikBjmgqiAk2vBSgP1S+fUy8rmUHHqxt8m48e6TQhB39uzvjie5JKWHokWeyec
-	4QOUXAp5iaM=
-X-Received: by 2002:a05:600c:5115:b0:434:feb1:adae with SMTP id 5b1f17b1804b1-436e266e823mr288289745e9.3.1737030683943;
-        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEZ0IIFZaJGOkjxDEu+mX9L9N/O7lQNh2Woi0PEcaCzsx3V4fAcwsk26FTkHIqlRWyNd3Sq+A==
-X-Received: by 2002:a05:600c:5115:b0:434:feb1:adae with SMTP id 5b1f17b1804b1-436e266e823mr288289365e9.3.1737030683440;
-        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
-Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c74bf061sm57274905e9.17.2025.01.16.04.31.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
-Message-ID: <8f62887e-f3c5-4b43-8c77-897564dc971e@redhat.com>
-Date: Thu, 16 Jan 2025 13:31:21 +0100
+        d=1e100.net; s=20230601; t=1737033774; x=1737638574;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SixtGEHyx0Ll20sNHrYW42AzL6XqkNRKNahYOvra4Ow=;
+        b=HIMKPPiuRswh7+ELlvmzY2BDN+zrwBm232bhAptL3svAxIP+hZ7tXcMjCyVb71iCSn
+         yHvl8MRI/peOg6UTiabPwT9RaYa3dM6369vRo8q54xVN7/L9CeI9vP360IYya3XN7yHP
+         4LHMshEzkPEIVQFdMnQrUR/7VbZrtME1H8bRrhrwjxtVBB9TryLsWsF6sqajeVlv+V7H
+         R0nb5n5vi4as9HshSAd82O1XeD6AYf+LkNeGh+0pyOnTMrcAf1qc6WnpBV6ln3jHnMbM
+         hR73M0e3o3ofsQO14+eQdGhhN/3VrTQbjWSRtOX/7k6/mq0FS9tRndHt9jiX+0Zi6CtZ
+         BdWA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+WuQDn9fC6OJW4UDn8SmjzqcaCZeoTm3VKM+EalNvXWga3wccFd7/CVGEknP9GyfJtEO2sLqnwcUXHPFRC+gD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDc9W3HJIU8UxfRF/rQyGCs0Pks0jsFubWo5+KuuvcztVLQl3y
+	aI11rIpyHj9agFVo17uvSFUIPKWLSMT+61+6VltY2ZCUAPx/hrCueeeiwyBjm0MFPoU6qvEen4r
+	lZaZZ4aYToE7HDN4he5vrnrkGJlIc24Axq15Z
+X-Gm-Gg: ASbGncvZFnpkqbSfPdcfwPU14DwGiz0GXTfPGUApnEWr64xw6P6SWw0xdIC+05Z2dMC
+	yUSjk1sACoJzNrduX2QhK18qyQy3NjeUYyTn3NnqraryS2QZG5Y8Tbqn+lKzghsVTFco=
+X-Google-Smtp-Source: AGHT+IGgdmm3+dKyYphBOJrkDF9RqCEL6Tsx6LZHIZIcfENKNOrXYM9LEzERENIX0F6hf0/LX3P/eN8RFihp6QDk6j4=
+X-Received: by 2002:ac8:5f11:0:b0:466:7a06:2d03 with SMTP id
+ d75a77b69052e-46e0545796amr2768561cf.1.1737033773706; Thu, 16 Jan 2025
+ 05:22:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test stat_all_pmu.sh: Correctly check 'perf stat'
- result
-From: Veronika Molnarova <vmolnaro@redhat.com>
-To: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
- irogers@google.com
-Cc: mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- kan.liang@linux.intel.com, qzhao@redhat.com
-References: <20241122231233.79509-1-vmolnaro@redhat.com>
- <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
-Content-Language: en-US
-In-Reply-To: <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com> <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
+ <20250116102747.GAZ4jfI9HG3K-PW7nf@fat_crate.local>
+In-Reply-To: <20250116102747.GAZ4jfI9HG3K-PW7nf@fat_crate.local>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Thu, 16 Jan 2025 14:22:42 +0100
+X-Gm-Features: AbW1kvbCtSg9vNMeYe9Cs6fkL4An-kckhSPmCiLhYkfVvSqDDbiTwg4NAXTmVUM
+Message-ID: <CA+i-1C1sXC1tbo9ytuex0eBD3gUbQwnNP8rvOhCv=JV+oSHo1g@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions noinstr compatible
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <rppt@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 16 Jan 2025 at 01:21, Borislav Petkov <bp@alien8.de> wrote:
+> > Unfortunately Thomas pointed out this will prevent the function from
+> > being inlined at call sites in .text.
+> >
+> > So far I haven't been able[1] to find a formulation that lets us :
+> > 1. avoid calls from .noinstr.text -> .text,
+> > 2. while also letting the compiler freely decide what to inline.
+> >
+> > 1 is a functional requirement so here I'm just giving up on 2. Existing
+> > callsites of this code are just forced inline. For the incoming code
+> > that needs to call it from noinstr, they will be out-of-line calls.
+>
+> I'm not sure some of that belongs in the commit message - if you want to have
+> it in the submission, you should put it under the --- line below, right above
+> the diffstat.
 
+Sure. I'm actually not even sure that for a [PATCH]-quality thing this
+cross-cutting commit even makes sense - once we've decided on the
+general way to solve this problem, perhaps the changes should just be
+part of the commit that needs them?
 
-On 12/10/24 16:20, Veronika Molnarova wrote:
-> 
-> 
-> On 11/23/24 00:12, vmolnaro@redhat.com wrote:
->> From: Veronika Molnarova <vmolnaro@redhat.com>
->>
->> Test case "stat_all_pmu.sh" is not correctly checking 'perf stat' output
->> due to a poor design. Firstly, having the 'set -e' option with a trap
->> catching the sigexit causes the shell to exit immediately if 'perf stat' ends
->> with any non-zero value, which is then caught by the trap reporting an
->> unexpected signal. This causes events that should be parsed by the if-else
->> statement to be caught by the trap handler and are reported as errors:
->>
->>     $ perf test -vv "perf all pmu"
->>     Testing i915/actual-frequency/
->>     Unexpected signal in main
->>     Error:
->>     Access to performance monitoring and observability operations is limited.
->>
->> Secondly, the if-else branches are not exclusive as the checking if the
->> event is present in the output log covers also the "<not supported>"
->> events, which should be accepted, and also the "Bad name events", which
->> should be rejected.
->>
->> Remove the "set -e" option from the test case, correctly parse the
->> "perf stat" output log and check its return value. Add the missing
->> outputs for the 'perf stat' result and also add logs messages to
->> report the branch that parsed the event for more info.
-> 
-> Hi Ian,
-> 
-> is there anything that I am missing? If so would be great to know the idea
-> of your patch. This issue is getting quite old so would be great to get a proper
-> fix together.
-> 
-> Thanks,
-> Veronika
+It feels messy to have a patch that "does multiple things", but on the
+other hand it might be annoying to review a patch that says "make a
+load of random changes across the kernel, which are needed at various
+points in various upcoming patches, trust me".
 
-Hello,
+Do you have any opinion on that?
 
-just wanted to ping the patch. Would be great to sort it out and close the issue.
+(BTW, since a comment you made on another series (can't find it on
+Lore...), I've changed my writing style to avoid stuff like this in
+comments & commit messages in general, but this text all predates
+that. I'll do my best to sort all that stuff out before I send
+anything as a [PATCH].)
 
-Thanks,
-Veronika
+On Thu, 16 Jan 2025 at 11:29, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Jan 16, 2025 at 01:18:58AM +0100, Borislav Petkov wrote:
+> > Long story short, lemme try to poke around tomorrow to try to figure out what
+> > actually happens. It could be caused by the part of Rik's patches and this one
+> > inlining things. We'll see...
+>
+> Looks transient... The very similar guest boots fine on another machine. Let's
+> watch this...
 
->>
->> Fixes: 7e73ea40295620e7 ("perf test: Ignore security failures in all PMU test")
->> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
->> ---
->>  tools/perf/tests/shell/stat_all_pmu.sh | 48 ++++++++++++++++++--------
->>  1 file changed, 34 insertions(+), 14 deletions(-)
->>
->> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
->> index 8b148b300be1131e..9c466c0efa857fc2 100755
->> --- a/tools/perf/tests/shell/stat_all_pmu.sh
->> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
->> @@ -2,7 +2,6 @@
->>  # perf all PMU test (exclusive)
->>  # SPDX-License-Identifier: GPL-2.0
->>  
->> -set -e
->>  err=0
->>  result=""
->>  
->> @@ -16,34 +15,55 @@ trap trap_cleanup EXIT TERM INT
->>  # Test all PMU events; however exclude parameterized ones (name contains '?')
->>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g')
->>  do
->> -  echo "Testing $p"
->> -  result=$(perf stat -e "$p" true 2>&1)
->> -  if echo "$result" | grep -q "$p"
->> +  echo -n "Testing $p -- "
->> +  output=$(perf stat -e "$p" true 2>&1)
->> +  stat_result=$?
->> +  if echo "$output" | grep -q "$p"
->>    then
->>      # Event seen in output.
->> -    continue
->> -  fi
->> -  if echo "$result" | grep -q "<not supported>"
->> -  then
->> -    # Event not supported, so ignore.
->> -    continue
->> +    if [ $stat_result -eq 0 ] && ! echo "$output" | grep -q "<not supported>"
->> +    then
->> +      # Event supported.
->> +      echo "supported"
->> +      continue
->> +    elif echo "$output" | grep -q "<not supported>"
->> +    then
->> +      # Event not supported, so ignore.
->> +      echo "not supported"
->> +      continue
->> +    elif echo "$output" | grep -q "No permission to enable"
->> +    then
->> +      # No permissions, so ignore.
->> +      echo "no permission to enable"
->> +      continue
->> +    elif echo "$output" | grep -q "Bad event name"
->> +    then
->> +      # Non-existent event.
->> +      echo "Error: Bad event name"
->> +      echo "$output"
->> +      err=1
->> +      continue
->> +    fi
->>    fi
->> -  if echo "$result" | grep -q "Access to performance monitoring and observability operations is limited."
->> +
->> +  if echo "$output" | grep -q "Access to performance monitoring and observability operations is limited."
->>    then
->>      # Access is limited, so ignore.
->> +    echo "access limited"
->>      continue
->>    fi
->>  
->>    # We failed to see the event and it is supported. Possibly the workload was
->>    # too small so retry with something longer.
->> -  result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
->> -  if echo "$result" | grep -q "$p"
->> +  output=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
->> +  if echo "$output" | grep -q "$p"
->>    then
->>      # Event seen in output.
->> +    echo "supported"
->>      continue
->>    fi
->>    echo "Error: event '$p' not printed in:"
->> -  echo "$result"
->> +  echo "$output"
->>    err=1
->>  done
->>  
-
+Oh, I didn't notice your update until now. But yeah I also couldn't
+reproduce it on a Sapphire Rapids machine and on QEMU with this patch
+applied on top of tip/master (37bc915c6ad0f).
