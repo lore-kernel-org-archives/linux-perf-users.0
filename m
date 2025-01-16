@@ -1,188 +1,268 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3002EB10
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 02:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736992994; cv=none; b=IfWnT9AtR5tlMd/CwglTFomGsjM5X+CzlNzpgcyycfPZ1WyRlBrXrTGTYlrezbn8zzTdreO2caIjYxqB6dC47yLHlmOjArOqhUYIyxzRO6ztNSal7X6XqQS8D5b232vRg7MqDVhYacCJOPMa+/gub8rp1dZ/9PZZovxlcr3B9js=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736992994; c=relaxed/simple;
-	bh=6H6SznWVkd4zqH08Mc3kC1LFnhuC8TP1Wdev/ouSW9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vAnM8Z4ISbdY8Gs6mU0rmHSw4WB/oTD1C0CxEkhldSQkiialfjlxjSaSNCrQG/ALbzm5V+ndMaLBbmTaw21h4u5GMNamYL0C/zffFSHMM/YMY35pIrScu/OGFgydvinMoD4A7EUqmIhOTsmMFREoxC34JNjNmHhoyORECGQRogo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IOnok5gR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70662AE96;
+	Thu, 16 Jan 2025 04:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737001307; cv=fail; b=o53wIurDxbdNMxifONsU9u7/DqnQGc/+11faIaRRR5PyF+bA/9ijVAzisPdHl+ypZXPjVV/S0Gv75W+jU0oT0sWHcbOL80cyQw8JgUEbtxcigtAtAX2aaserkwYHvWrZh4i3dtQIYi/BzV2VSYAfDWT7AfalamYod6uB5OVU+oI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737001307; c=relaxed/simple;
+	bh=q4bRVhNM1T5auuX6qx6mrK5Zbfsb8YkVKXU6OeIYUTg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dAyxekrdC9/zAeJkP9A5hmND6cJMCuU5i745EAIvSXqdkDfXWEl9gwL7jq/LqsenZcfeBU63qP/eDpGw41HJCRYUqHUOqPFlq0S7MGcBD8tPrI6vUUvwj3sAA1TE0CWtMdBnECn3ZDI0GRipxrM7xXCxu5BowvinAVSx9qAEn/k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wje4MYJo; arc=fail smtp.client-ip=40.107.93.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IOnok5gR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736992991;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkcOryu255p1tsSxTm2B4F+up29HLyULWgE6NpeGRSM=;
-	b=IOnok5gRZfdNvJDTln254xZRVKHpQ85X9RjcV4nzlyNTtMKy8MhHOWKY2WCBD5Y/9VF0gx
-	GE3SQd/6UQv9qSL5Ut526aJDAS270WipwaeigiqmfMTYC2nSrFj8DwWdrtiXq5LJp+//iI
-	xjOW2yTDLoT8I7bpGioziz8MrKGVFAw=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-184-1GYzCgp5Ps28GcHvg9yV3A-1; Wed, 15 Jan 2025 21:03:10 -0500
-X-MC-Unique: 1GYzCgp5Ps28GcHvg9yV3A-1
-X-Mimecast-MFC-AGG-ID: 1GYzCgp5Ps28GcHvg9yV3A
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2efa74481fdso945108a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 18:03:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736992989; x=1737597789;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KkcOryu255p1tsSxTm2B4F+up29HLyULWgE6NpeGRSM=;
-        b=jYu56FXmIzh/eOstleauCKsxmGfvY1DzwiqfXj+URXkXSDVKm3mQd0qExSvK/y212X
-         R+Y3rq3+T+u4m7Ap4wUhXwmwXXOJzVi1iKLrO5MxIE1GettEsDPV8TaVnqs3yEKDxA71
-         jsPlq6lV7HCFoIGLKqfgkuwJ6JdI+DhB5L57YrKyACfx8Oy6wMjRbOcvA1tu8HpLdKn/
-         yKno008Osrkr707i3uOkTbBIo8rf/nBJszyIUzGwG33rr77u2peZL9uziJOcwRlWFKLY
-         VEschQ13JNPNDU/9soBCPHY4Xa/jyZ8h4tsIAownTBchFMjF34NqW+fhqoiXoHVIDwy7
-         EL1g==
-X-Gm-Message-State: AOJu0YwFeuueZiqvwN2IJSqi9DAYS8+PV40u8UQULJrB+eI6ELHJIxIb
-	p1sqvLgHjbSdq8HqCFt16VIQoJ7ZgEKBSzdR0h9c3FkL1EbXl7WUALR38WufKaexC6wJwIsFyPi
-	uys2vhma/73WuYa4pZ7FbEfqCzRCbwUFN/2f6vcfVxK03EkHTyXD+T6C/4o0JEDeRIFJKXdhF3u
-	J2Et2ct1Thfb3nb/1ab1oZO907ax1B803vctFSMgOXIw==
-X-Gm-Gg: ASbGncsbojNk744mLYPwuZBRIxD1JZKCz0xz3yrMLmPL7feqDeFn+l5oTMs5+IBuNL0
-	3eTIGqMe8M2fx2K01pjLSNTJJWUWTX7/62nHKyJg=
-X-Received: by 2002:a17:90b:1f8b:b0:2f5:63a:449c with SMTP id 98e67ed59e1d1-2f548f1a28emr43361653a91.28.1736992989080;
-        Wed, 15 Jan 2025 18:03:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGeS6WaTi8XU5yfIclfR6iqo6b8vHFccf+aCSVntW/p9E1Qnzxf3IwWMKplaPqouNjqJC/e9J3vHrC18C4FaIg=
-X-Received: by 2002:a17:90b:1f8b:b0:2f5:63a:449c with SMTP id
- 98e67ed59e1d1-2f548f1a28emr43361638a91.28.1736992988814; Wed, 15 Jan 2025
- 18:03:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wje4MYJo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wA7zs03WQLZIN9oOfXtcHhNQtVyt7/iiAZK+HI10eODUju2/gGFQO+zaBdODfJ2XYIi6pk8sl5fOY/CH2G2hLQRaG+pVWoOW/wt+YVyjtjIwpix2h3nXIQXfyzfhmPd1NDwYqoWwH+dfjM3BRLq0+Y2v2jCgWeE7Efij3cmvgz1/yFo9IYoLtCMdukPqlGZCt3rlvUX0VxMuPEh/lqfL4f2dRFg1NdxrqzqXjxMVijuZRu6sRm04DyUxU2aARCbAwThfEv5sfOwqEPyRwCtZjaq32JjiKZTnMT/zOeoNryt2D+iyG15l5RfhqRK4UQ+rFZwwHKJzaS9TMcvxSMKByQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TIqbXBxm8Dm2TzSt6pHvwmP5Phi9Wx26XlLpsCnzqgU=;
+ b=aM4P6/CFmPeAvJdsEv+MWDS6kFbDsJX1bNRAWDeDf+twTZUi6eln/EdsS94TtZJPv9rMWFz4wZ6gbEMGd1BI/n2blAYaHKScdgEKAeHs+aKAiiODMwjRin7Y4sMBpkQzv89uKSzhe2Te3/Q4bgC7Ld9WpLKe4Oin/fTZkG3b8AXN36VSlotLzrm6218vaq7Og7ePMRd0RZqDUKOjHAM2E+JSzt5/OB95v2emzcfSeTuz7Cv79R0LPsgH+MNKdIkfsLhwXBoDQFpOYfluBnfFuWor1e+hHQ2m6z+mMyQukQZ1SNX0LP7LA3xGL2zJfeUv2+3TUbdItv9to+IjU8zYmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TIqbXBxm8Dm2TzSt6pHvwmP5Phi9Wx26XlLpsCnzqgU=;
+ b=wje4MYJo9uq8/zDknbhxHj/gaMkVgdcxvyHePDJYW7CicfUPELsKyS12Xg6Z251OERRyl/EbqJ3tX//lpnHWZw3AqO21Y+e/Tbp77rx/LoBL+4Ip83OoVJflu5OJwrKkTDx7VGDkHTmq9hHA+EfnM28RNrPHPQ1Jos2fLUJggY4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CY8PR12MB7414.namprd12.prod.outlook.com (2603:10b6:930:5e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Thu, 16 Jan
+ 2025 04:21:43 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%5]) with mapi id 15.20.8335.017; Thu, 16 Jan 2025
+ 04:21:43 +0000
+Message-ID: <5f2c62d4-1bfa-458d-847e-095979a4bf54@amd.com>
+Date: Thu, 16 Jan 2025 09:51:33 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [UNTESTED][PATCH] perf/x86: Fix limit_period() for 'freq mode
+ events'
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, eranian@google.com, irogers@google.com, bp@alien8.de,
+ x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, santosh.shukla@amd.com,
+ ananth.narayan@amd.com, sandipan.das@amd.com,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250115154949.3147-1-ravi.bangoria@amd.com>
+ <62c13793-f4b4-4e2e-b6bc-0de2427ea93e@linux.intel.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <62c13793-f4b4-4e2e-b6bc-0de2427ea93e@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PEPF000001AA.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::10) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAATMXfnhT-Uqp9rfBGZesjYSmbn8UAcyXzuhkhM8Uvg7wCX5Dg@mail.gmail.com>
- <CAH0uvoiJ=F3U9ib7_pmUPttMcSaSYkmD8Pi9qTLrtWHxEw9fKQ@mail.gmail.com>
- <CAATMXfnHzRG+i0DWBuMG17n-NgQOkQHd2JCU0bUjNrvnzuMaEg@mail.gmail.com> <CAH0uvogpFVgs5ftBUrkAaf0Lz2+RJJPXWPAGew76D2+qbBFwUQ@mail.gmail.com>
-In-Reply-To: <CAH0uvogpFVgs5ftBUrkAaf0Lz2+RJJPXWPAGew76D2+qbBFwUQ@mail.gmail.com>
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Thu, 16 Jan 2025 10:02:57 +0800
-X-Gm-Features: AbW1kvbXSuyCxTCjc-EMoUNl9kwHR9EQLDRcla9m_DdsnVgIQJtxFbMKizKR4Dg
-Message-ID: <CAATMXfnKPrXpwpoeCLpN2FmAdV2VZwSbMSR=Gau5=6iJfcLKNQ@mail.gmail.com>
-Subject: Re: perf record "--off-cpu" options failed on 1 [v]cpu machine
-To: Howard Chu <howardchu95@gmail.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>, Michael Petlan <mpetlan@redhat.com>, 
-	irogers@google.com, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CY8PR12MB7414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 081ce301-14eb-4d28-4a4b-08dd35e5483a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OUs0aklqT2hEZnpocUVQSFlpL0dOcVVRc2NWSEY4TmtVMVM1N1dRWVRwOCtx?=
+ =?utf-8?B?N2QyLzhtamRMRHo5YTZzVGw2Q3R4aGVNd1UwTUxKem80YlNTNGsvOUFyTEJx?=
+ =?utf-8?B?TjN3SllmNG82TlVZNGVCZTNnc1dlRFNUN1ZBVzRXYUZSVW5qdHY3R21MdlZv?=
+ =?utf-8?B?c1ViZ0dHNjJ0SGlYQTd4dWx1TDNOSk9nc0JvSjFsMzJlM3piWXZBRmJlZFZB?=
+ =?utf-8?B?ekJRK0RNWHY4T2ZTdHNFZUJUYTMySzBYY3I4eFFDc2paVUFhV0UrTktQcC9X?=
+ =?utf-8?B?dFJQbFY5TnZTQ1l5ZW5Pa2dTQ0t2dTU4dUdjcWxqbm5VSEpnUzBrc1F1dmJh?=
+ =?utf-8?B?eXdQQW1zS2pURFQwWEhBdGc5M2Y5MWtWaVNaUGkxdEgxOVVNZ0VzSVRjSG53?=
+ =?utf-8?B?Tkk5S1E2WGwrakhmcHVSamhaaC84WEFPMFhCakNNaHh4VWRpYjF2UGNHTnBy?=
+ =?utf-8?B?VFB3M29MUkI2M1RLR1BPN2hWdlROQ3ExL21KdnRHbHN1UXBxSzhqYml4MGVL?=
+ =?utf-8?B?VFc5Z001ajBvM2FBNzFmSXRwdjFHNExQMWFTU3JDVVpDNmR5UytRM3R1b2pD?=
+ =?utf-8?B?MXljUDVBcUZOTEZORmRUd1h5YXRRNCsxanUxMVBSTmtTMUxQTDNIbHMwOCtF?=
+ =?utf-8?B?ZUEzM3FwdTlFTkpFVXFhdW5JZmp3Y29YRXpqTDd6R1dPRy9KSmFNN09hT0JR?=
+ =?utf-8?B?RzJwNTNWeGd1UGp6VnMwRzkwSDcrSWo3NEtHazRFWExINTVTQjhCREthVUlE?=
+ =?utf-8?B?WVVlY3VGZ2Vza3pXd3hpR29KdXdpK2NTamZhRnQwSUV1TEJaLzdHY1l2alFj?=
+ =?utf-8?B?d1RDN3VCNFlBNlNDMGhpUWZCR3NSUnNCdjBDWDQ3SjJ0bFZydmlUb2VCYjAw?=
+ =?utf-8?B?c0sxRHF1U3ZhUUx0d09YbUNLZmVZS0RhcmFVQXBLNERrMFBaUzdJcDFHaTRH?=
+ =?utf-8?B?WVp3NElNUFpkTDJhMUFzTjdSemgxaTVWWWRDa1FKdldmUjFpUU5Oc3Rxdkd3?=
+ =?utf-8?B?YjhZMlJCMzh5bkRXNExUeERhL2UvQmxYNHVBYUNZVE9oKzlGTG4wQm82QzZV?=
+ =?utf-8?B?MzZaQ2tEaWVFMkVweUZaZDIrc2pIS1RoR0xQVkVFeXltajZvS0Iwbml5Rmd3?=
+ =?utf-8?B?ZWx6NTJEK1RickRCOFkvdmZzM0dhUGRqRktQZFBYVm1BT2lGM2d0U09RQURT?=
+ =?utf-8?B?b1JLOFdkdmM3bEptbDRSb2FiKy9mOGo5ZlFVWHhOSURic1FVbXY2WmZMd3ox?=
+ =?utf-8?B?ZWx3Unl0THhaNUZZK3p2Rm9peVlKMEI3b0pTeUxzcklPaEhHMFBnOXN2Qi9z?=
+ =?utf-8?B?TncxOG5hSG5XVkxKdWtCTG9tTGRCb1BoYk5aVjZicTlmMUw1V0I5U3FvU2RM?=
+ =?utf-8?B?UG54d2VQV2p3NWEvaVljS3NGeDdrUVVOQ29pMWFjUXRoK0l0dzc4VG91ZGM3?=
+ =?utf-8?B?L0Nra28vZFVJUEt3RjRDVDlqMjdWNkNQMW1LdVZiRFdtN2I1ZTk3OEN2WkJh?=
+ =?utf-8?B?Tk1IeTVycVdyK2RGajZQY0FBcmdnMjMzajNGcTJXSWRqUm5EM0VsejJaK1dX?=
+ =?utf-8?B?Z0hYRWNBUFdtcFlTY1gwbmNpSlBFOW1WYnk2OC8xWGtUME9JN0IzWmE5V29y?=
+ =?utf-8?B?dU1jU3dDUHJaSThRWUZIU2c5NFdHMFh1c3BjVkQxY09kQnJMYm5DNGxrNjlQ?=
+ =?utf-8?B?d2pMVWVzOTd5R2Q3MThrdFlNUHYxUDFlZDI2cWpVMFNDQlNIZS9DTUNLdlpp?=
+ =?utf-8?B?alhVK0c5dlBveXRTYlNLbUJwNmwwZDNxYkFaem9VTktzSFhUcGZqL1BBaUdt?=
+ =?utf-8?B?a3dhdEd5Z3NDRUVmOXZKZWNFQjdXbXhrb0pNeGttWVFQNDFlZDVZRGV2Z3JE?=
+ =?utf-8?Q?tehSbvoEQeRxW?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U000bHVsSFBxV3hVdjU3Y3Z4QStkZ0U4WkhOeTBHcVcrSWw0d0JSa3pZMnNC?=
+ =?utf-8?B?ekpCK3AwdVR5bWxjQmE3Uk05cktvbWFIR1NlaFl5aGtuc242eTcySE9kVnBD?=
+ =?utf-8?B?OEpjSldyN3d4NDh2SVZjZTFmWU9TOGJEMlhwOUhEVHYxMTBUbWZXb0Nqdi9U?=
+ =?utf-8?B?bm1NTDQrK0Y0NkVXbENiajdXUzhSTExTMEtkYmJTNW1wOC9qMEpCMHZMbG9P?=
+ =?utf-8?B?TGlmVVhqcHcxZGg3UHdnSUZZcEp6RWdhQ1NGY0pmMk8vRG1MYkMxRVhZS254?=
+ =?utf-8?B?R3VhUzZHSVNQb1Y3WHBsUHJOUmE2ajhRVWlBS2tjbVVJL3o3TExBd3pNc0dj?=
+ =?utf-8?B?T2tvUko5bGsyS2lhVTZPM1BCKzZCZlc0YVQrZDhZbTRPK0ZoaUNHQWdpSUx3?=
+ =?utf-8?B?bndwM0x2RDRqWnU3WEdhMUsxZDV0OXUrN0NLakF3UEZ4Mm1OREJteHZsNGFS?=
+ =?utf-8?B?RXdZRnBHenk4WWNJNHNaWlEwN011QXgrWDBSbGRaZHVyVFVuL2J2RjBCVTBX?=
+ =?utf-8?B?L1J1dy9ZRnFQQkNhVjRUSlVXUFoydTVvQWxUR1dvL0dMSjFMZFkvZVNvY0NW?=
+ =?utf-8?B?NGhLNHlvZDVTc0U2aE8rU01XWWlmanNZQVZFd28yUklZNVUxWlRaTVJkcHdr?=
+ =?utf-8?B?R1l5MDV5ZlBFeXhiMEdieWN0dDdzcFhlakFJWTNjR0NNT1dQL2lpcC95STdu?=
+ =?utf-8?B?UXpvbTUyZ0IwQ1VwQ3hzclo3aGxZbG9WZUEzVVZ5YmZCamJXUE8rRGZycUFw?=
+ =?utf-8?B?VGI5RFgxTHpsQ1VrUW84YVA3c29DTm9DYWo1aThDTXdDcE43dlQwMytmUUV5?=
+ =?utf-8?B?ZDdyMC9UdHFPYnovZkU5OEZPL1M1U0VWMndmTGI3YXNhLzBhUVFjRzdtMmxY?=
+ =?utf-8?B?ZjRVTVNMWkZ0MDdoR09MeGduelpBNDVadDhPWk8zM0RWM3djd1diTkYyR21W?=
+ =?utf-8?B?alJhYXJFSzBaSVlyMTArR09YK0JpZFNNSzEyeHlFdHFmT096WVJrODVYTWlZ?=
+ =?utf-8?B?bVcveGc2VktESTF2dHRVc3VlT01LY0d0bHdCWXFuSkdFQ0F5SkY2NjY0cUJl?=
+ =?utf-8?B?LzlJK0tNWXdrRVhFYWoxazJKRG5rKzhBRzcvM0ZLQzlYSEF3RFZSLzR1Z1BI?=
+ =?utf-8?B?aDZwUU1oSFFvSStqeWVTY1ZxR2NaazJkSWxGSVRPVTZlcnRhVk1vUFlCVUlE?=
+ =?utf-8?B?N1dTdlljYnFvZ2xEZ3l6SlVBc0hzZTFqR0dSblhYZTlRTDJXV1VVTGxKYVJS?=
+ =?utf-8?B?R1ZNWFdXcjBRWWtpYzc2eTRYZE5ndEppc2doVDFldm5UaHNGT1ZIVEQzdDNo?=
+ =?utf-8?B?ekwvb2k2bmUwelhLeEE5MXRQa2pzdDhoajNEeGtHdS84YUY0UWhMVFhFV0Va?=
+ =?utf-8?B?NDNCSWIxdHZTalBkeCtFUXh4dDFoRU1lUFp1U3JCNTB3RHBuTGpvNHpmZUJM?=
+ =?utf-8?B?ejJ3MzZvVDEyR05yeXkwV1JVVndtNFRLN0FaUUVWSElFcEgrZnVPc09wSlhz?=
+ =?utf-8?B?VGtVY2hBV0RSTUpQYi8xOGtrRnB6TGhKQUFnTlhDVWRyRHhCdjJwWUp4M2Ri?=
+ =?utf-8?B?bFBwZTVMeXQxMWRENktlUTd3ZVlXOG9ZVUFJSmRndlMweUszdzErMTloVUpM?=
+ =?utf-8?B?bzllWkZmTFZsZXlNejRUUVAvdmZwRGxEV29HVVdJS1dpL1NkaHpra29sRUJU?=
+ =?utf-8?B?RlduQS82S1MzSHF5OEd6ZnM0L1NBLzdIeWRUZWJ5UU5McXlhVkFjSGNzYjJC?=
+ =?utf-8?B?Rzh4TFY5MmFOdzlPeHBzODA1Y1pHaWZkQmFEc29CTklzem5wMEZSQ1BSMTZk?=
+ =?utf-8?B?R3FJMkZnSHAwYmROODNPQUMzRjFHUFVWR1h2MDAxc1JOTld0VWpSa0FHZ3VX?=
+ =?utf-8?B?cDhmS2dkZlpKVnp5em12NkgrVUJwZUpoWTNGS29jbkJYOWtGWEkzWUJXYXpV?=
+ =?utf-8?B?ZWhyVHZLeTRYamV1aWMzeGxWU3l1OFVtZ3lvM3JSZ1hyUm9SM1daK0ZhRXdo?=
+ =?utf-8?B?R3dPZlRFcHErNlNLN2xVZ2ZydlN6VVJMbUZQRzRtZFhldm96eHRQbDF2T2sy?=
+ =?utf-8?B?ZWR2cEV6UkFXcXJBQ0xGYmZYREkyYmIrTzNLOVp5OE4zajBVY1lNUXE0dkJM?=
+ =?utf-8?Q?FAHCTTFnynZLlCK58+yfUUz5r?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 081ce301-14eb-4d28-4a4b-08dd35e5483a
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 04:21:43.6805
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XikwqfSsr2VFcVqD4gd7FAEOVrAcOtKC0bbVyfofwPeF+OIjHsPigSQAbEgR5vgRC/CKBDTolgEdUgbRR3YYeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7414
 
-On Wed, Jan 15, 2025 at 4:22=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> Hi Qiao,
->
-> <SNIP>
->
-> > > >
-> > > > But when test the Tracepoint event "sched:sched_switch", it works a=
-nd
-> > > > can get the samples:
-> > > > ---
-> > > > # perf record --off-cpu -e sched:sched_switch sleep 1
-> > > > [ perf record: Woken up 1 times to write data ]
-> > > > [ perf record: Captured and wrote 0.009 MB perf.data (2 samples) ]
-> > >
-> > > There are two samples. Can you please check if there is an offcpu-tim=
-e
-> > > sample in this perf.data file? Specifically:
-> > > ```
-> > > perf script | grep offcpu-time
-> >
-> > Command "perf script | grep offcpu-time' did not show any
-> > "offcpu-time" sample in perf.data.
-> > btw, in test case "record_offcpu.sh" use the 'perf evlist' to list
-> > samples 'offcpu-time'.
-> > # perf script | grep offcpu-time
-> > # perf evlist | grep offcpu-time
-> > offcpu-time
->
-> Gotcha, thanks.
->
-> >
-> > > ```
-> > >
-> > > If there isn't one, can you please run:
-> > > ```
-> > > perf record --off-cpu -a
-> > > ```
-> > >
-> > > and leave it running for a couple of seconds? Then, run:
-> > > ```
-> > > perf script | grep offcpu-time
-> > > ```
-> > > to see if any offcpu-time samples appear.
-> >
-> > Yes, when use '-a', 'perf script' can show the offcpu-time samples.
->
-> Interesting, then it might be a task filtering problem... Since
-> ```
-> perf record --off-cpu sleep 1
-> ```
-> records nothing except for the process of 'sleep 1', which did not
-> yield any samples in your case...
->
-> > # perf record --off-cpu -a   <--- C-C after 5 seconds
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.139 MB perf.data (91 samples) ]
-> > # perf script | grep offcpu-time
-> > tuned     913 [000] 18446744069.414584: 2000177867 offcpu-time:
-> > tuned     700 [000] 18446744069.414584: 2000204356 offcpu-time:
-> > perf    5865 [000] 18446744069.414584: 2780030394 offcpu-time:
-> > sshd    5385 [000] 18446744069.414584:     163718 offcpu-time:
-> > perf    5866 [000] 18446744069.414584: 1001042294 offcpu-time:
-> >
-> > >
-> > > I suspect that it might have something to do with BPF, although kerne=
-l
-> > > version 5.14 includes all the conditions necessary for perf record
-> > > --off-cpu to function properly. Can you please check if the BPF maps
-> > > are working as expected by using bpftool? That is to say while
-> > > running:
-> > > ```
-> > > perf record --off-cpu -a
-> > > ```
-> > > Check the bpf map:
-> > > ```
-> > > bpftool map | grep -E "stacks|off_cpu|tstamp"
-> >
-> > Yes, as you said, run the "perf record --off-cpu -a" in terminal, and
-> > run bpftool map:
-> > # bpftool map | grep -E "stacks|off_cpu|tstamp"
-> > 228: stack_trace  name stacks  flags 0x0
-> > 229: task_storage  name tstamp  flags 0x1
-> > 230: hash  name off_cpu  flags 0x0
-> > 234: array  name off_cpu_.bss  flags 0x400
-> > 235: array  name off_cpu_.rodata  flags 0x480
-> > 236: array  name off_cpu_.data  flags 0x400
-> >
-> > I can see the "stacks" and "off_cpu" flags by bpftool map.
->
-> Thanks, then those BPF components are all loaded.
->
-> I wonder why it fails to record this single task/process of 'sleep'.
-> My gut feeling is that the can_record() function in off_cpu.bpf.c
-> thinks it's not okay to record the task and filters it out. There
-> might also be something related to the usage of BPF_CORE, especially
-> considering that the kernel structs changed from 5.14 to 6.12. I'll
-> take a deeper look into this.
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index c75c482d4c52..924aa35676d3 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -629,10 +629,22 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>  		event->hw.config |= x86_pmu_get_event_config(event);
+>>  
+>>  	if (event->attr.sample_period && x86_pmu.limit_period) {
+>> -		s64 left = event->attr.sample_period;
+>> -		x86_pmu.limit_period(event, &left);
+>> -		if (left > event->attr.sample_period)
+>> -			return -EINVAL;
+>> +		if (event->attr.freq) {
+>> +			s64 left = event->hw.sample_period;
+>> +
+>> +			x86_pmu.limit_period(event, &left);
+>> +			if (left != event->hw.sample_period) {
+>> +				event->hw.sample_period = left;
+>> +				event->hw.last_period = left;
+>> +				local64_set(&event->hw.period_left, left);
+>> +			}
+> 
+> For a better start period, I'd prefer the below patch.
+> https://lore.kernel.org/lkml/20241022130414.2493923-1-kan.liang@linux.intel.com/
+> 
+> The limit_period() check was introduced in the c46e665f0377 ("perf/x86:
+> Add INST_RETIRED.ALL workarounds"). For my understanding, it's to check
+> the !freq case. If so, I'm thinking something as below.
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 79a4aad5a0a3..6467ecc65486 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -630,7 +630,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+>  	if (event->attr.type == event->pmu->type)
+>  		event->hw.config |= x86_pmu_get_event_config(event);
+> 
+> -	if (event->attr.sample_period && x86_pmu.limit_period) {
+> +	if (!event->attr.freq && x86_pmu.limit_period) {
+>  		s64 left = event->attr.sample_period;
+>  		x86_pmu.limit_period(event, &left);
+>  		if (left > event->attr.sample_period)
 
-Thank you, Howard! Appreciate your help!!
+LGTM.
 
->
-> Thanks,
-> Howard
->
+>> +		} else {
+>> +			s64 left = event->attr.sample_period;
+>> +
+>> +			x86_pmu.limit_period(event, &left);
+>> +			if (left > event->attr.sample_period)
+>> +				return -EINVAL;
+>> +		}
+>>  	}
+>>  
+>>  	/* sample_regs_user never support XMM registers */
+>> @@ -2648,6 +2660,9 @@ static int x86_pmu_check_period(struct perf_event *event, u64 value)
+>>  	if (x86_pmu.check_period && x86_pmu.check_period(event, value))
+>>  		return -EINVAL;
+>>  
+>> +	if (event->attr.freq)
+>> +		return 0;
+>> +
+> 
+> The ioctl(PERF_EVENT_IOC_PERIOD) can be used to set both freq and
+> period. But according to the implementation, yes, the
+> perf_event_check_period() should be only for the !freq mode.
+> 
+> If so, we may change the generic code.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f91ba29048ce..a9a04d4f3619 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5960,14 +5960,15 @@ static int _perf_event_period(struct perf_event
+> *event, u64 value)
+>  	if (!value)
+>  		return -EINVAL;
+> 
+> -	if (event->attr.freq && value > sysctl_perf_event_sample_rate)
+> -		return -EINVAL;
+> -
+> -	if (perf_event_check_period(event, value))
+> -		return -EINVAL;
+> -
+> -	if (!event->attr.freq && (value & (1ULL << 63)))
+> -		return -EINVAL;
+> +	if (event->attr.freq) {
+> +		if (value > sysctl_perf_event_sample_rate)
+> +			return -EINVAL;
+> +	} else {
+> +		if (perf_event_check_period(event, value))
+> +			return -EINVAL;
+> +		if (value & (1ULL << 63))
+> +			return -EINVAL;
+> +	}
+> 
+>  	event_function_call(event, __perf_event_period, &value);
 
+LGTM. And you can remove the if (event->attr.freq) check from
+intel_pmu_has_bts_period().
+
+Mind sending a proper patch series?
+
+Thanks,
+Ravi
