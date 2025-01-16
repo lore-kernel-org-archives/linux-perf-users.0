@@ -1,38 +1,38 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71CD19FA92;
-	Thu, 16 Jan 2025 11:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353701DE4FC;
+	Thu, 16 Jan 2025 12:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737028080; cv=none; b=t1HSMgM7gsEaroBI+rqs5VzRaLwgUIIo6iq8gjs3Ah4mfQiKniEe5Y0I2qrWKle/Eyq7zg/2xqSGDv3t8QVkEJ8P852ioPOqCqvBOs+N/tQVO/NpTauFC8ZQzfXE2JHKYnsXMAuTPkEhDjK/JVg0IYP+Ws+TMx0c9y0BbRxN2Rs=
+	t=1737028932; cv=none; b=Tm3yxVZrayvQaGBU4WyqPTDjoQzmxLHhRr9+dpggzBgzhVXVor4F0GixRcAzeIXg/CbfMh4hLHHtVlfMg/9ci4fovHu4nv/qy1grU++P79cpmFWyLqtXsTIzQCnAtxhChS+DedHZZOGH+ZiloeMqT2baYYP30sgEjgK7bmvcQcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737028080; c=relaxed/simple;
-	bh=kgu0IOPoh+/mTZWH9Z/Ec3pXX2ALJzDt+P83iVs6BJs=;
+	s=arc-20240116; t=1737028932; c=relaxed/simple;
+	bh=ibsKHbyo2VQ/DV9M0kk07F4zbKTpRd6NkgfGkmph6BU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tatkO5Bz6StzEbXbjojbsa6W+OorZkkoQXJX8PYq3N1LtJyAgfJeVYFJGphgVBYIJ1/+pdZoigfZJt/bC+PuToJX4FOtPrrJPLBtWIC7GheQypKxN6X3L+fI6ARQjD25j1hXiW2i712VmisjJPhSAjcHGS8ayx/Uu7uhlnORZ3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZLgNpNqy; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=S81T4JAk3qkXS0iCIpEQSuZ/z0ENR7bAmKutO7ZusymAW9a+VEixvHu+TgsOiMJG7A70i0KH8iEKB+rLbCMhNEBeR8OoZbKouw7R2iclRhXI0QMbDID//5ziuoIlOKbI6dPexfTudOkLzdfFskrKw5pB6n9X8xPgirLjhCAn7MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jRbnOrzQ; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZLgNpNqy"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRbnOrzQ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vhc9o9g9y2Z4LH3mwpo+FtIZL36TRvnRdHaoc+cgZu8=; b=ZLgNpNqyz8ndthNgunWPWyVYX2
-	lCmdJzGWQ2gViJCly8ECLumlwNlKv+tbqdmoJblAKs38ozqP5dtZRDohRb2GC2wCYPy4aiViJQjW0
-	HKJ7ecvLBWSltItOzYSwLBoYT03K55s8ugWd3QjwVeieKLh6v6FyF+sJwV+YDRTqtYx8/N+6WCn2C
-	I3mtbv3/lg7JJzTq/DeTNoh5XUcj1YgkFY/V1JCGVVW0tf+nvZ43iHmJ+CxNS0eiIcWf3IgTrUjSU
-	Vqi2HR07sj5TXcamMYgKsZu9ALC2JzVE6DriCxzc/Sr/SDJI1nndC2Ud28G9Z17vzMxyf6DjQsQ2/
-	o9HU/cPQ==;
+	bh=HpIJ8WNpWrfXSs8bTFtnaCi5H1JzV8juPRSTrMtcQ28=; b=jRbnOrzQclpvVJz7Au40XgkK08
+	SoVD/N31oWLONVY8u97GKy1+Jeajywk3nKmFl+syLCLNyTATM/N5whokVRNsZ3pn9WtXvFABKQbOb
+	I/GWV2p+zPpOe7AQTGQ42TGs3fqbwuwPxUGsncIq2oILd5cv3GwBrDpsSYZVQIijb/d7digLbfHcv
+	JFAbZsleeaJfwPhq2KAKPbI/0tX6Tpe1x6Ub4Bi4vb6TW6bWhk0M/5aJLndQCoX3PsWlWA1t3dulV
+	HCXuxRzetMn6FleVnvqwma8a/XYO30k3Ar48EoF9zBtGGPuGyuYdac0jPe+n5eY9++E+BB8/+Z7NA
+	dgMTYCkQ==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYOLo-0000000BETk-0A50;
-	Thu, 16 Jan 2025 11:47:52 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tYOZY-0000000DLsZ-2iwu;
+	Thu, 16 Jan 2025 12:02:04 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 54214300777; Thu, 16 Jan 2025 12:47:51 +0100 (CET)
-Date: Thu, 16 Jan 2025 12:47:51 +0100
+	id BC7D9300777; Thu, 16 Jan 2025 13:02:03 +0100 (CET)
+Date: Thu, 16 Jan 2025 13:02:03 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: kan.liang@linux.intel.com
 Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
@@ -40,7 +40,7 @@ Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com
 Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-Message-ID: <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
+Message-ID: <20250116120203.GK8362@noisy.programming.kicks-ass.net>
 References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
  <20250115184318.2854459-3-kan.liang@linux.intel.com>
 Precedence: bulk
@@ -55,78 +55,135 @@ In-Reply-To: <20250115184318.2854459-3-kan.liang@linux.intel.com>
 
 On Wed, Jan 15, 2025 at 10:43:18AM -0800, kan.liang@linux.intel.com wrote:
 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Did they really read all the various versions without spotting any of
-the problems, or are you just rubber stamping things at this point :/
-
-Best to drop review tags after serious changes to patches.
-
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
-
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 8f218ac0d445..79a4aad5a0a3 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -94,6 +94,8 @@ DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_aliases, *x86_pmu.pebs_aliases);
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index 81b6ec8e824e..10ce80230ad3 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -1294,6 +1294,19 @@ static inline void pebs_update_threshold(struct cpu_hw_events *cpuc)
+>  	ds->pebs_interrupt_threshold = threshold;
+>  }
 >  
->  DEFINE_STATIC_CALL_NULL(x86_pmu_filter, *x86_pmu.filter);
+> +#define PEBS_DATACFG_CNTRS(x)						\
+> +	((x >> PEBS_DATACFG_CNTR_SHIFT) & PEBS_DATACFG_CNTR_MASK)
+> +
+> +#define PEBS_DATACFG_CNTR_BIT(x)					\
+> +	(((1ULL << x) & PEBS_DATACFG_CNTR_MASK) << PEBS_DATACFG_CNTR_SHIFT)
+> +
+> +#define PEBS_DATACFG_FIX(x)						\
+> +	((x >> PEBS_DATACFG_FIX_SHIFT) & PEBS_DATACFG_FIX_MASK)
+> +
+> +#define PEBS_DATACFG_FIX_BIT(x)						\
+> +	(((1ULL << (x - INTEL_PMC_IDX_FIXED)) & PEBS_DATACFG_FIX_MASK)	\
+> +	 << PEBS_DATACFG_FIX_SHIFT)
+
+That INTEL_PMX_IDX_FIXED does not belong here, needs to be at the
+callsite.
+
+
+> @@ -1914,6 +1975,34 @@ static void adaptive_pebs_save_regs(struct pt_regs *regs,
+>  #endif
+>  }
 >  
-> +DEFINE_STATIC_CALL_NULL(x86_pmu_late_config, x86_pmu_late_config);
+> +static void intel_perf_event_pmc_to_count(struct perf_event *event, u64 pmc)
+> +{
+> +	int shift = 64 - x86_pmu.cntval_bits;
+> +	struct hw_perf_event *hwc;
+> +	u64 delta, prev_pmc;
+> +
+> +	/*
+> +	 * The PEBS record doesn't shrink on pmu::del().
+> +	 * See pebs_update_state().
+> +	 * Ignore the non-exist event.
+> +	 */
+> +	if (!event)
+> +		return;
+> +
+> +	hwc = &event->hw;
+> +	prev_pmc = local64_read(&hwc->prev_count);
+> +
+> +	/* Only update the count when the PMU is disabled */
+> +	WARN_ON(this_cpu_read(cpu_hw_events.enabled));
+> +	local64_set(&hwc->prev_count, pmc);
+> +
+> +	delta = (pmc << shift) - (prev_pmc << shift);
+> +	delta >>= shift;
+> +
+> +	local64_add(delta, &event->count);
+> +	local64_sub(delta, &hwc->period_left);
+> +}
 
-So all these static call are through struct x86_pmu (hence the naming),
-but not this one ?!?
+Name and function don't really match at this point. When I suggested
+this function it returned a count value, now it's closer to
+intel_perf_event_update_pmc() or somesuch.
 
->  /*
->   * This one is magic, it will get called even when PMU init fails (because
->   * there is no PMU), in which case it should simply return NULL.
-> @@ -1329,7 +1331,16 @@ static void x86_pmu_enable(struct pmu *pmu)
+
+
+> @@ -2049,6 +2138,61 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
 >  		}
+>  	}
 >  
->  		/*
-> -		 * step2: reprogram moved events into new counters
-> +		 * step2:
-> +		 * The late config (after counters are scheduled)
-> +		 * is required for some cases, e.g., PEBS counters
-> +		 * snapshotting. Because an accurate counter index
-> +		 * is needed.
-> +		 */
-> +		static_call_cond(x86_pmu_late_config)();
+> +	if (format_group & (PEBS_DATACFG_CNTR | PEBS_DATACFG_METRICS)) {
+> +		struct pebs_cntr_header *cntr = next_record;
+> +		int bit;
+> +
+> +		next_record += sizeof(struct pebs_cntr_header);
 > +
 > +		/*
-> +		 * step3: reprogram moved events into new counters
->  		 */
->  		for (i = 0; i < cpuc->n_events; i++) {
->  			event = cpuc->event_list[i];
+> +		 * The PEBS_DATA_CFG is a global register, which is the
+> +		 * superset configuration for all PEBS events.
+> +		 * For the PEBS record of non-sample-read group, ignore
+> +		 * the counter snapshot fields.
+> +		 */
+> +		if (!is_pebs_counter_event_group(event)) {
+> +			unsigned int nr;
+> +
+> +			nr = bitmap_weight((unsigned long *)&cntr->cntr, INTEL_PMC_MAX_GENERIC) +
+> +			     bitmap_weight((unsigned long *)&cntr->fixed, INTEL_PMC_MAX_FIXED);
 
-Placement and naming are weird.
+hweight32 ?
 
-These 2 loops migrate all counters that got a new place, the first loop
-taking out pre-existing counters that got a new place, the second loop
-setting up these same and new counters.
+> +			if (cntr->metrics == INTEL_CNTR_METRICS)
+> +				nr += 2;
+> +			next_record += nr * sizeof(u64);
+> +			goto end_cntr;
 
-Why do the pebs config in the middle, where the least number of counters
-are set-up?
+Yuck, can't you break out stuff into a helper function to get rid of
+that goto?
 
-AFAICT all it really needs is cpuc->assignp[], which is unchanged
-throughout. You can call this at any time before clearing n_added,
-sticking it in the middle just seems weird.
-
-Then naming, config is typically what we do at event creation,
-x86_pmu_hw_config() like. This is not at all related, so perhaps pick a
-different name?
-
-Bah, we're so very close between x86_pmu::{enable, disable, assign}() :/
-
-Also, I think I found you another bug... Consider what happens to the
-counter value when we reschedule a HES_STOPPED counter, then we skip
-x86_pmu_start(RELOAD) on step2, which leave the counter value with
-'random' crap from whatever was there last.
-
-But meanwhile you do program PEBS to sample it. That will happily sample
-this garbage.
-
-Hmm?
+> +		}
+> +
+> +		for_each_set_bit(bit, (unsigned long *)&cntr->cntr, INTEL_PMC_MAX_GENERIC) {
+> +			intel_perf_event_pmc_to_count(cpuc->events[bit], *(u64 *)next_record);
+> +			next_record += sizeof(u64);
+> +		}
+> +
+> +		for_each_set_bit(bit, (unsigned long *)&cntr->fixed, INTEL_PMC_MAX_FIXED) {
+> +			/* The slots event will be handled with perf_metric later */
+> +			if ((cntr->metrics == INTEL_CNTR_METRICS) &&
+> +			    (bit + INTEL_PMC_IDX_FIXED == INTEL_PMC_IDX_FIXED_SLOTS)) {
+> +				next_record += sizeof(u64);
+> +				continue;
+> +			}
+> +			intel_perf_event_pmc_to_count(cpuc->events[bit + INTEL_PMC_IDX_FIXED],
+> +						      *(u64 *)next_record);
+> +			next_record += sizeof(u64);
+> +		}
+> +
+> +		/* HW will reload the value right after the overflow. */
+> +		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
+> +			local64_set(&event->hw.prev_count, (u64)-event->hw.sample_period);
+> +
+> +		if (cntr->metrics == INTEL_CNTR_METRICS) {
+> +			static_call(intel_pmu_update_topdown_event)
+> +				   (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS],
+> +				    (u64 *)next_record);
+> +			next_record += 2 * sizeof(u64);
+> +		}
+> +		data->sample_flags |= PERF_SAMPLE_READ;
+> +	}
+> +
+> +end_cntr:
+> +
+>  	WARN_ONCE(next_record != __pebs + basic->format_size,
+>  			"PEBS record size %u, expected %llu, config %llx\n",
+>  			basic->format_size,
