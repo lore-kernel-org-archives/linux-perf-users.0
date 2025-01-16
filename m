@@ -1,112 +1,98 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CCD18B464;
-	Thu, 16 Jan 2025 21:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664CC198A0D;
+	Thu, 16 Jan 2025 21:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737061809; cv=none; b=a+6dBwByygMqg9Hc4kuXlqporxJCIR5Gmh9u+jFKOTmTR7VaQlW8IZF9f302MSRQLdaIjAYLjC065lDaTIO4WOzxlt2hwFbmmWT8nAI0IvgbeAaOTI/lEWaOjGS35CSRfBc8P/ZfhcESmxys3C+UnEPzdJZsFlBYrLx/m2XjJtU=
+	t=1737063872; cv=none; b=bGGzBvNmiUudXO8Tv+Kkm9A9F0Z1up7zCKqhUhXsOVP+3oFT6gz/uAKkHXYc08GtKeXrBweX687GrWMI6oAW5G94+6UlFqZ5NwoNhhv0f47WvwrhWVhhsxkdAuOfkg33lP8w6oIuZQ9GB1mEAS+pwGi+r1gH9UQ0hjLpMPxfDBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737061809; c=relaxed/simple;
-	bh=D+p+NDkdTslt+DLYVV6gJCfp3dQ0MkzGmUAE+CHuPr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tAjVwFIaGYqv57tw0EK413TwA9fUa8VCvf4hSXukpPW5ER3mIWDH16D4/VvVUA78mlPsLsUWQ1qMP8PxUpX2kPqMm4i/OUl9beN2/4VTyaG3A8ZQiWn8GTu2CUNwsrwCA1uzsqnv9s3wq1o4u4W3gFUAbBn1DG9HXSBxTz6wqC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Oh7sqswV; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oh7sqswV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7F31H0PLTiG6yU7uqIlnY+Bu4H2JbnoORsLt9Rl0MWw=; b=Oh7sqswVS9cCjNO0710AL6SRnw
-	PubXbsbdoQ3fR9IBjnvSW2yxGR55yVc+5h3aKG7i0aux1pxYovdtoQesPpfFd8o6et4NfWg1Tq/6I
-	kkJuACw1m0mPy1Jn9Nw1+mZJid5staeL6aXiab0OI8e+JMjiMTPRQryKBzwjyaBx7RjaN59Pd0j+u
-	92erL7vTMwlFGuxUc0MOZd/yb/jOfSYYktLQjJRTFiez+QG2gvJ7iemMimz2r+fB3NNjoSzH4APG/
-	OlZNBUavYwg9hpozum5zreR2QU8dOsUTD9+bm2QZ0Fpp+J26SpA3539yuRv7Q3sEUlr+PiDqN3gUk
-	NYEef/XA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYX7o-00000002Yw1-1Ccx;
-	Thu, 16 Jan 2025 21:10:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B550E300777; Thu, 16 Jan 2025 22:09:59 +0100 (CET)
-Date: Thu, 16 Jan 2025 22:09:59 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: mingo@redhat.com, namhyung@kernel.org, acme@kernel.org,
-	eranian@google.com, irogers@google.com, kan.liang@linux.intel.com,
-	bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, santosh.shukla@amd.com,
-	ananth.narayan@amd.com, sandipan.das@amd.com
-Subject: Re: [PATCH v4 5/9] perf/amd/ibs: Don't allow freq mode event
- creation through ->config interface
-Message-ID: <20250116210959.GB7232@noisy.programming.kicks-ass.net>
-References: <20250115054438.1021-1-ravi.bangoria@amd.com>
- <20250115054438.1021-6-ravi.bangoria@amd.com>
+	s=arc-20240116; t=1737063872; c=relaxed/simple;
+	bh=WQjUiQ2ufFWq7U+Kvjd6tTLRkvJdz19mR2F/dtojoUY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=HSXQWlSct1ojxmJWbneVbZ2oiF3OXC/SyY9qx5c0+Iqx7jlB4GLBHAYjxgkRzTeQOkE1jAyg4iN12N/BHEWeIcU57FOzkjB16Xx39v/rIhCauGqpnWmDVbkP5k8n7h5wYRuBNHClPMZw2Nj+tap9Jt2h+8+9jktyUKwwdJHBoL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB48EC4CED6;
+	Thu, 16 Jan 2025 21:44:31 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tYXfK-00000000yxc-2opM;
+	Thu, 16 Jan 2025 16:44:38 -0500
+Message-ID: <20250116214123.917928229@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 16 Jan 2025 16:41:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michael Petlan <mpetlan@redhat.com>,
+ Veronika  Molnarova <vmolnaro@redhat.com>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v2 0/2] tracing: gfp: Fix regression of printing GFP flags in user space tracing tooling
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115054438.1021-6-ravi.bangoria@amd.com>
-
-On Wed, Jan 15, 2025 at 05:44:34AM +0000, Ravi Bangoria wrote:
-> Most perf_event_attr->config bits directly maps to IBS_{FETCH|OP}_CTL
-> MSR. Since the sample period is programmed in these control registers,
-> IBS PMU driver allows opening an IBS event by setting sample period
-> value directly in perf_event_attr->config instead of using explicit
-> perf_event_attr->sample_period interface.
-> 
-> However, this logic is not applicable for freq mode events since the
-> semantics of control register fields are applicable only to fixed
-> sample period whereas the freq mode event adjusts sample period after
-> each and every sample. Currently, IBS driver (unintentionally) allows
-> creating freq mode event via ->config interface, which is semantically
-> wrong as well as detrimental because it can be misused to bypass
-> perf_event_max_sample_rate checks.
-> 
-> Don't allow freq mode event creation through perf_event_attr->config
-> interface.
-
-So this is the case where:
-
-perf_event_attr = {
-	.freq = 1.
-	.sample_freq = 0,
-}
-
-Right, where we would then take the period from the .config fields?
-
-So that seems sensible enough; but does this not break existing users?
-Or are we lucky enough to not have any users of this borken behaviour,
-unlike the earlier broken behaviour that we now have to live with?
 
 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  arch/x86/events/amd/ibs.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index d9c84f1d530f..3e7ca1e2f25e 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -315,6 +315,9 @@ static int perf_ibs_init(struct perf_event *event)
->  	} else {
->  		u64 period = 0;
->  
-> +		if (event->attr.freq)
-> +			return -EINVAL;
-> +
->  		if (perf_ibs == &perf_ibs_op) {
->  			period = (config & IBS_OP_MAX_CNT) << 4;
->  			if (ibs_caps & IBS_CAPS_OPCNTEXT)
-> -- 
-> 2.43.0
-> 
+This fixes a regression that was brought up last year[1], but due
+to missing a response it was forgotten about.
+
+The commit 772dd0342727c ("mm: enumerate all gfp flags") introduced
+usage of enums in creating of the __GFP_* flags. But enums are not
+converted to their values like macros are in the trace event format
+files that are exported to user space to allow tools to properly parse
+the raw binary events. This broke the parsing of gfp flags.
+
+Instead of having something like:
+
+  gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
+
+It would just have a raw hex value:
+
+  gfp_flags=0x140cca
+
+Which is mostly useless or hard to decipher.
+
+Instead of reverting the enums into macros, use the TRACE_DEFINE_ENUM()
+macro that informs the tracing subsystem about enums and it converts them
+to their proper values.
+
+The first patch is a fix that fixes the regression and should go into
+the current rc release as well as be backported to stable.
+
+The second patch is a clean up that removes duplication of the GFP flags
+in the macros of mmflags.h and should be added in the coming merge window.
+
+I kept the two together so that one can see why the solution to the first
+patch was made. The use of TRACE_GFP_EM() internally was added to make
+it easier to reuse the TRACE_GFP_FLAGS macro.
+
+Changes since v1: https://lore.kernel.org/20250116132359.1f20cdec@gandalf.local.home
+
+- Moved the updates to only include/trace/events/mmflags.h
+
+- Removed the macro call in include/trace/events/kmem.h
+
+- Use an internal TRACE_GFP_EM() macro in TRACE_GFP_FLAGS to allow
+  it to be expanded later for use with the __def_gfpflags_names()
+  macro
+
+- Added the second non critical patch to show he clean up of removing
+  duplicate defines of the ___GFP_*_BITs. 
+
+[1] https://lore.kernel.org/all/87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com/
+
+Steven Rostedt (2):
+      tracing: gfp: Fix the GFP enum values shown for user space tracing tools
+      tracing: gfp: Remove duplication of recording GFP flags
+
+----
+ include/trace/events/mmflags.h | 104 +++++++++++++++++++++++++++++------------
+ 1 file changed, 73 insertions(+), 31 deletions(-)
