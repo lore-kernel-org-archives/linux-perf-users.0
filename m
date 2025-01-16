@@ -1,424 +1,270 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430C81D9A7F
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 22:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF6117991;
+	Thu, 16 Jan 2025 00:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736980850; cv=none; b=Xdd5xl1M/p26HuJhWRwQZLv4QjVbhEXAEpJyDCmT7OrhxSHGMylw+KhnJbCcRfDFBzvLppVqOd39oLfQX9YfKdY7hV681EuCG4xQh+zQ8w5y2iQp+/N608fj3feBTXEatecNJoVVimUV9CudXwmZZBavDiy+IgnJPu2GSgxgP+Y=
+	t=1736986918; cv=none; b=eX94l3yaVeNk6hI+KbxmbJM0TcqHzEQSVZncL7CUTGS7fyF+ir+Mg1Q8KjI97/skJuzWZPEb+lSBrfXmmi+r+ha9oaEskVl3afsSprpK7WhANkSB8SF0U306XZQ/v13O/H+uf+9fM8vRpCoqB2U3jNLVRD9nvb6Awa8r86mYdRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736980850; c=relaxed/simple;
-	bh=iRelIUbfX3hNf9OdE2ifq0NHKfwIu8jUYNMrQc1cAOc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QrsGBip6IN+EOCT2xM12tvJKurOSAde1/GzCIWoOs3QFdnV7CQJstHLuPSnR96KsSFoG76IBGqmKgDmyRU0KQtC+OhHtf4U/z/p8MeEXPYghWQEtvhzmb9QXg55wrDj4ed+zhopJKbg0zyARiwNYUuJ5a1l8ZJUAQD53K43HHyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZnWt/9xy; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736986918; c=relaxed/simple;
+	bh=CnVEtvm6r0FK1c66L6L7ntFsmh6oSuFSfI8+wFyyIis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=og/iiOTZmfQRvncJEDafE6drCBB9PlLG6Tr5fHi55vwpszlqP3mdXYsVujcDNLc4fv5w73mVWIzg6262dxTm8snjjwzl0z/9SqzEcLH3XNkGAJGdMQHN2g1r0xJRIL1h/3DpgxS0TaOp7UJQcTqH/faiFCtmgdUSlxjPY14dts8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=J4tKA2z9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZnWt/9xy"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso14525ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jan 2025 14:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736980847; x=1737585647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5/uRWMmNrI+CzzONAsOwBGVmf9FI4ZKGRWoPazZOMtg=;
-        b=ZnWt/9xychE+Oa7o5suZuv1/hnY/UoC74HI2ATr2tM1cn97F0tFQGLDpdWEP+vxk8I
-         hiyaEcztmbe4KohC5OdCK7QqDoUAkTtNnZyT4Y3JxK6Kqz6VMWta4DIttcZGn1gCo4uO
-         qLy3frpe3bIMW3g7+u8P2exTz8r6nyeZDaOD0akJ4KNG00B7c+hcmzEItqjKkzo+ZnDq
-         lF8C2P0dNYj6a7UDLDSeW8nbtA5eUY66ZGhTlJWKYGO5DOxseBfHujAxvBZzqgqth5yv
-         QLIz/NGGqYi5S2gvTPFtCdUxgXWnjhhq/O4t4M33PAQttY6VBkLKqgD7h3EJCfxfu+rn
-         5xKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736980847; x=1737585647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5/uRWMmNrI+CzzONAsOwBGVmf9FI4ZKGRWoPazZOMtg=;
-        b=dLGYg1ZufhPRSRtHEVkvNAN5hNNI5HT4KIe+sHwKsywoXzuzIPoaNUVppH4RohpuVT
-         6nBpd9jgU1VWT3pFmw8cg+k3UFzu5vUWpPJfFdFZ5uuctcwRqJ4F9ZgIwzv+20rapuWL
-         sIemH/uhuNoCEVyBCa8ygl6PgtjEpIWH7i+4o2XZVBT+1RTUpFVUdTeV54o0btDYWc82
-         t0Rkk/iZAkKu45+8oMFBzfRhOKiTH1ePeEvkZEuBD6DN0yjfhDhc80PTxG+7QLba8V48
-         iDs5TE7anVMhU0/qonwq6kwUcYWo77fhRTET7KEPZoaxlqnIGq+QkSOJYFUGOqOFF+ju
-         D0+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX6O7dATBk/Cd5hUbuqTKliDdajVFdfF8fGTaVbY1IATTTDBTKU059lpybK4pfkji080wpl1VEZmSFt4Sq9aOdk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVJo5GZ9PyqfDKpygMoZR7Sz3Z7mMSvwBiJSsdZFYQwVJuHsQ+
-	Gs0l7sKGUjEzz9FRAGbcUPstBpfhDSO8BfSob6Av0HDpZFfw+uUWu+tUg6UlCT+48UbLXwyPjr9
-	6Vx6W/2t8S/6lidFS7aZkpn5GdaoLI57/c6gl
-X-Gm-Gg: ASbGnctxri7uMCfG/ibrU//lIuL0MZC4ESqStsTPOelLsW43+ffnC09bKV0jVgI1xVX
-	2+BhiyFEJlrZgTpuVztV1etWXg+pfZ9ZhAf8tQbtBP/lOoxgUE6SMkcglkuesIhAxtrDjjQ==
-X-Google-Smtp-Source: AGHT+IF+nLZwVnop/dw42anH5EH5QDmiqpqMVTomjXBgTX6Hzc9vEumZX9FY8EnnZuqSxOE2ZWiFMQ4IkqK9wbJR9Ls=
-X-Received: by 2002:a05:6e02:3885:b0:3a7:dcc1:9936 with SMTP id
- e9e14a558f8ab-3cf420018efmr251905ab.23.1736980847016; Wed, 15 Jan 2025
- 14:40:47 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="J4tKA2z9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0C56940E016C;
+	Thu, 16 Jan 2025 00:21:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VbKRelzzy0f1; Thu, 16 Jan 2025 00:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1736986908; bh=sf+0ox9qps9OCdNOEgrNakgxyzYQCzMyDXp9Teo1SPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J4tKA2z9c1dX6/H2/3UFIDVILO8xBwPl1TEyUVQC4DlsQu0QI4LpBFQsTv6iHdtZ2
+	 p9YzSu1IhOTiU08BN0L2M0PecKjs22CleittrM2qBO2cPFFy2HJaYp5I0uY6OZRukR
+	 zozlAlfCzmYK6zA6a7rnwMrIQ0b9nW+RolLTUFHyU+pjU2cgIrmrHLhc5fWiU93M7s
+	 2LkZr/YbbEmZFQD4jIKQDyVrDvGkXqUQxr/6r6ASqtjZeCHNBw03OzcKbqcsL4Zf7y
+	 r1sNh+hwC4E+Sr34rsrK2zYDvzgRcnP4r3tkiHo/VN5TYvqIp98CXQqbLfpwJEbhX6
+	 LaT6JfdqWRw5QyxhDfkiFjx/XLr9NsYyJlC7ZF0t4iyxrgh9cNrQSodGzZq46p9SyW
+	 +WsaNZgJgyJuKoQeomDMVOTWzfADMeQN5FYTZwJH0fqluCcbXDu1gyb+MVca8Gq90k
+	 llpN+og3N+QW/Z2lzB9EkrkOeRj43toNWqIzt56gvuiATFuUMDYR70QV3oeogpE80D
+	 afkT8idhQsUhKtFR8pKG/nJdJsboyyBxDAYqoVUea/m1agSvHxOA/qykF1MomKo6Rn
+	 83v/tkyRaK2qlfWRqxNzTUP0WyMRLSCK9+KBi9ZUGMvUEoc5K77pSKK9g5j/jP4qjT
+	 q2Tju1YxL09ppY+Av5Rr7RuI=
+Received: from zn.tnic (p200300eA971f93c3329C23fFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93c3:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7299840E0277;
+	Thu, 16 Jan 2025 00:19:07 +0000 (UTC)
+Date: Thu, 16 Jan 2025 01:18:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions
+ noinstr compatible
+Message-ID: <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-4-irogers@google.com>
- <Z4B279zu_8Kz5N6u@google.com> <CAP-5=fUSfbZGNaUttM3UCzcrMzkkFAJVA8mheMKQ0nxNH_KuTg@mail.gmail.com>
- <Z4FtHGBbCEeLQhAm@google.com> <CAP-5=fVr43v8gkqi8SXVaNKnkO+cooQVqx3xUFJ-BtgxGHX90g@mail.gmail.com>
- <Z4a7DncIlP6pznW7@google.com> <CAP-5=fWZxpooqOhC_QrR2YaZVEj0UpipBCHXHZMbFfv7G15Vnw@mail.gmail.com>
- <Z4gzWDsxlSxSbBSQ@google.com>
-In-Reply-To: <Z4gzWDsxlSxSbBSQ@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 Jan 2025 14:40:35 -0800
-X-Gm-Features: AbW1kvY2lBurBM5PiNSiu7ZKfP05HIal-Ya2Gwpj4lVD7yOgIi4Qf2sHZvwXP_E
-Message-ID: <CAP-5=fUDHujdg-bryzMmXECEQ6zdVfQH-v99ZHfV+p3_zG2XPg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that don't open
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
 
-On Wed, Jan 15, 2025 at 2:14=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Jan 14, 2025 at 03:55:47PM -0800, Ian Rogers wrote:
-> > On Tue, Jan 14, 2025 at 11:29=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Fri, Jan 10, 2025 at 11:18:53AM -0800, Ian Rogers wrote:
-> > > > On Fri, Jan 10, 2025 at 10:55=E2=80=AFAM Namhyung Kim <namhyung@ker=
-nel.org> wrote:
-> > > > >
-> > > > > On Thu, Jan 09, 2025 at 08:44:38PM -0800, Ian Rogers wrote:
-> > > > > > On Thu, Jan 9, 2025 at 5:25=E2=80=AFPM Namhyung Kim <namhyung@k=
-ernel.org> wrote:
-> > > > > > >
-> > > > > > > On Thu, Jan 09, 2025 at 02:21:08PM -0800, Ian Rogers wrote:
-> > > > > > > > Whilst for many tools it is an expected behavior that failu=
-re to open
-> > > > > > > > a perf event is a failure, ARM decided to name PMU events t=
-he same as
-> > > > > > > > legacy events and then failed to rename such events on a se=
-rver uncore
-> > > > > > > > SLC PMU. As perf's default behavior when no PMU is specifie=
-d is to
-> > > > > > > > open the event on all PMUs that advertise/"have" the event,=
- this
-> > > > > > > > yielded failures when trying to make the priority of legacy=
- and
-> > > > > > > > sysfs/json events uniform - something requested by RISC-V a=
-nd ARM. A
-> > > > > > > > legacy event user on ARM hardware may find their event open=
-ed on an
-> > > > > > > > uncore PMU which for perf record will fail. Arnaldo suggest=
-ed skipping
-> > > > > > > > such events which this patch implements. Rather than have t=
-he skipping
-> > > > > > > > conditional on running on ARM, the skipping is done on all
-> > > > > > > > architectures as such a fundamental behavioral difference c=
-ould lead
-> > > > > > > > to problems with tools built/depending on perf.
-> > > > > > > >
-> > > > > > > > An example of perf record failing to open events on x86 is:
-> > > > > > > > ```
-> > > > > > > > $ perf record -e data_read,cycles,LLC-prefetch-read -a slee=
-p 0.1
-> > > > > > > > Error:
-> > > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_r=
-unning_0' which will be removed.
-> > > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid=
- argument) for event (data_read).
-> > > > > > > > "dmesg | grep -i perf" may provide additional information.
-> > > > > > > >
-> > > > > > > > Error:
-> > > > > > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_r=
-unning_1' which will be removed.
-> > > > > > > > The sys_perf_event_open() syscall returned with 22 (Invalid=
- argument) for event (data_read).
-> > > > > > > > "dmesg | grep -i perf" may provide additional information.
-> > > > > > > >
-> > > > > > > > Error:
-> > > > > > > > Failure to open event 'LLC-prefetch-read' on PMU 'cpu' whic=
-h will be removed.
-> > > > > > > > The LLC-prefetch-read event is not supported.
-> > > > > > > > [ perf record: Woken up 1 times to write data ]
-> > > > > > > > [ perf record: Captured and wrote 2.188 MB perf.data (87 sa=
-mples) ]
-> > > > > > >
-> > > > > > > I'm afraid this can be too noisy.
-> > > > > >
-> > > > > > The intention is to be noisy:
-> > > > > > 1) it matches the existing behavior, anything else is potential=
-ly a regression;
-> > > > >
-> > > > > Well.. I think you're changing the behavior. :)  Also currently i=
-t just
-> > > > > fails on the first event so it won't be too much noisy.
-> > > > >
-> > > > >   $ perf record -e data_read,data_write,LLC-prefetch-read -a slee=
-p 0.1
-> > > > >   event syntax error: 'data_read,data_write,LLC-prefetch-read'
-> > > > >                        \___ Bad event name
-> > > > >
-> > > > >   Unable to find event on a PMU of 'data_read'
-> > > > >   Run 'perf list' for a list of valid events
-> > > > >
-> > > > >    Usage: perf record [<options>] [<command>]
-> > > > >       or: perf record [<options>] -- <command> [<options>]
-> > > > >
-> > > > >       -e, --event <event>   event selector. use 'perf list' to li=
-st available events
-> > > >
-> > > > Fwiw, this error is an event parsing error not an event opening err=
-or.
-> > > > You need to select an uncore event, I was using data_read which exi=
-sts
-> > > > in the uncore_imc_free_running PMUs on Intel tigerlake. Here is the
-> > > > existing error message:
-> > > > ```
-> > > > $ perf record -e data_read -a true
-> > > > Error:
-> > > > The sys_perf_event_open() syscall returned with 22 (Invalid argumen=
-t)
-> > > > for event (data_read).
-> > > > "dmesg | grep -i perf" may provide additional information.
-> > > > ```
-> > > > and here it with the series:
-> > > > ```
-> > > > $ perf record -e data_read -a true
-> > > > Error:
-> > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0=
-'
-> > > > which will be removed.
-> > > > The sys_perf_event_open() syscall returned with 22 (Invalid argumen=
-t)
-> > > > for event (data_read).
-> > > > "dmesg | grep -i perf" may provide additional information.
-> > > >
-> > > > Error:
-> > > > Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1=
-'
-> > > > which will be removed.
-> > > > The sys_perf_event_open() syscall returned with 22 (Invalid argumen=
-t)
-> > > > for event (data_read).
-> > > > "dmesg | grep -i perf" may provide additional information.
-> > > >
-> > > > Error:
-> > > > Failure to open any events for recording.
-> > > > ```
-> > > > and here is what it would be with pr_debug:
-> > > > ```
-> > > > $ perf record -e data_read -a true
-> > > > Error:
-> > > > Failure to open any events for recording.
-> > > > ```
-> > > > I believe this last output is worst because:
-> > > > 1) If not all events fail to open there is no error reported unless=
- I
-> > > > know to run with -v, which will also bring a bunch more noise with =
-it,
-> > >
-> > > I suggested to add a warning if any (not all) of events failed to ope=
-n.
-> > >
-> > >   "Removed some unsupported events, use -v for details."
-> > >
-> > >
-> > > > 2) I don't see the PMU / event name and "Invalid argument" indicati=
-ng
-> > > > what has gone wrong again unless I know to run with -v and get all =
-the
-> > > > verbose noise with that.
-> > >
-> > > I don't think single -v adds a lot of noise in the output.
-> > >
-> > > >
-> > > > Yes it is noisy on 1 platform for 1 event due to an ARM PMU event n=
-ame
-> > > > bug that ARM should have long ago fixed. That should be fixed rathe=
-r
-> > > > than hiding errors and making users think they are recording sample=
-s
-> > > > when silently they're not - or they need to search through verbose
-> > > > output to try to find out if something broke.
-> > >
-> > > I'm not sure if it's a bug in the driver.  It happens because perf to=
-ol
-> > > changed the way it finds events - it used to look at the core PMUs on=
-ly
-> > > if no PMU name was given, but now it searches every PMU, right?
-> >
-> > So there is the ARM bug in the PMU driver that caused an issue with
-> > the hybrid fixes done because of wanting to have metrics work for
-> > hybrid. The bug is reported here:
-> > https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marca=
-n.st/
->
-> I'm not sure if it's agreed to be called a PMU bug.
-> My understanding is it's the change in the perf tool that break it.
->
->
-> > The events are apple_icestorm_pmu/cycles/ and
-> > apple_firestorm_pmu/cycles/. The issue is that prior to fixing hybrid
-> > the ARM PMUs looked like uncore PMUs and couldn't open a legacy event,
-> > which was fine as they has sysfs events. When hybrid was fixed in the
-> > tool, the tool would then try to open apple_icestorm_pmu/cycles/ and
-> > apple_firestorm_pmu/cycles/ as legacy events - legacy having priority
-> > over sysfs/json back then. The legacy mapping was broken in the PMU
->
-> I don't know why you want to use legacy events (PERF_TYPE_HARDWARE)
-> when it has PMU in the event name and the PMU has a different type
-> enconding.
+On Fri, Jan 10, 2025 at 06:40:27PM +0000, Brendan Jackman wrote:
+> Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions noinstr compatible
 
-Historically we used legacy then sysfs/json. When Intel did the hybrid
-work they kept this priority for legacy events when the hybrid PMU was
-specified. Intel change, Arnaldo and Jiri reviewing. My belief in why
-it was done this way is that not every legacy event has a sysfs/json
-encoding, and the priority was just inheriting an existing behavior.
+The tip tree preferred format for patch subject prefixes is
+'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
+'genirq/core:'. Please do not use file names or complete file paths as
+prefix. 'git log path/to/file' should give you a reasonable hint in most
+cases.
 
-> > driver. Now were everything working as intended, just the cycles event
-> > would be specified on the command line and the event would be wildcard
-> > opened on the apple_icestorm_pmu and apple_firestorm_pmu. I believe
-> > this way would already use a legacy encoding and so to work around the
-> > PMU driver bug people were specifying the PMU name to get the sysfs
-> > encoding, but that only worked as the PMUs appeared to be uncore.
-> >
-> > > >
-> > > > > > 2) it only happens if trying to record on a PMU/event that does=
-n't
-> > > > > > support recording, something that is currently an error and so =
-we're
-> > > > > > not motivated to change the behavior as no-one should be using =
-it;
-> > > > >
-> > > > > It was caught by Linus, so we know at least one (very important) =
-user.
-> > > >
-> > > > If they care enough then specifying the PMU with the event will avo=
-id
-> > > > any warning and has always been a fix for this issue. It was the fi=
-rst
-> > > > proposed workaround for Linus.
-> > >
-> > > I guess that's what Linus said regression.
-> >
-> > But a regression where? The tool's behavior is pretty clear, no PMU
-> > the event will be tried on every PMU, give it a PMU and the event will
-> > only be tried on that PMU, give it a PMU without a suffix and the
-> > event will be opened on all PMUs that match the name with different
-> > suffixes.
->
-> It may be clear to you but may not be to others.  When did the change
-> come in?  Before the change, people assume it would only try core PMU.
-> And the people can still have the idea if they haven't used any affected
-> events.  I guess many users would use legacy events only.
+So I guess "x86/asm:" or so.
 
-Who are these others? The only affected event is a cycles event on an
-ARM SLC PMU. What gets fixed? Potentially Apple-M hardware where
-legacy events have historically been broken. Rather than others
-complaining I think there's a much greater number of others who will
-be happy about the fix.
+> Some existing utility functions would need to be called from a noinstr
+> context in the later patches. So mark these as either noinstr or
+> __always_inline.
+> 
+> An earlier version of this by Junaid had a macro that was intended to
+> tell the compiler "either inline this function, or call it in the
+> noinstr section", which basically boiled down to:
+> 
+>  #define inline_or_noinstr noinline __section(".noinstr.text")
+> 
+> Unfortunately Thomas pointed out this will prevent the function from
+> being inlined at call sites in .text.
+> 
+> So far I haven't been able[1] to find a formulation that lets us :
+> 1. avoid calls from .noinstr.text -> .text,
+> 2. while also letting the compiler freely decide what to inline.
+> 
+> 1 is a functional requirement so here I'm just giving up on 2. Existing
+> callsites of this code are just forced inline. For the incoming code
+> that needs to call it from noinstr, they will be out-of-line calls.
 
-> > I dislike the idea of  cpu-cycles implicitly being just for
-> > core PMUs, but cpu_cycles being for all PMUs as the hyphen is a legacy
-> > name and the underscore not.
->
-> That's because we specifically picked some names to be used as a legacy
-> event.  And it worked well.  If some PMU didn't use the name, it's their
-> fault and they should use PMU event with their name.
+I'm not sure some of that belongs in the commit message - if you want to have
+it in the submission, you should put it under the --- line below, right above
+the diffstat.
 
-I'm not sure this is the case. If you look at the legacy event names
-it was typical they included something like a PMU before the first
-hyphen. What does cpu- mean for hybrid? Why does LLC mean L2 when
-typical LLCs these days are L3? I think ideally we'd delete the legacy
-events and fix the missing events by explicitly putting them into
-sysfs/json. I don't see that happening soon.
+> [1] https://lore.kernel.org/lkml/CA+i-1C1z35M8wA_4AwMq7--c1OgjNoLGTkn4+Td5gKg7QQAzWw@mail.gmail.com/
+> 
+> Checkpatch-args: --ignore=COMMIT_LOG_LONG_LINE
 
-> > I dislike the idea of specifying a PMU
-> > with uncore events as uncore events often already have a PMU within
-> > their event name and it also breaks the universe.
->
-> Does the 'universe' mean 'metric'?
+Yeah, you can drop those. People should not turn off brain, use checkpatch and
+point at all the silly errors it spits anyway.
 
-No, I mean if I do:
-$ perf stat -e data_read ...
-it works today. Making all non-core events require a PMU means I need to ty=
-pe:
-$ perf stat -e uncore_imc_free_running/data_read/ ...
-This is true for all non-core events with your proposal. I've
-previously advised you that the former behavior is what perf's command
-line completion of event names assumes.
+> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> ---
+>  arch/x86/include/asm/processor.h     |  2 +-
+>  arch/x86/include/asm/special_insns.h |  8 ++++----
+>  arch/x86/include/asm/tlbflush.h      |  3 +++
+>  arch/x86/mm/tlb.c                    | 13 +++++++++----
+>  4 files changed, 17 insertions(+), 9 deletions(-)
 
-> Having PMU name in the event name is their choice.  Do you see this in
-> sysfs or JSON?  Or both?
->
-> Actually I don't like the idea of trying every PMU if no PMU name is
-> given.  But you said reverting it would break metrics (I don't know if
-> there are other users rely on this behavior).  Maybe can we handle
-> metrics differently?
->
-> I guess we can put JSON events and metrics without PMU in a global name
-> space so that it can be searched (after legacy name) when users don't
-> specify PMUs in the command line.  Otherwise it should have PMU name
-> and sysfs event (then JSON events with PMU name) can be searched.
->
-> Does that make sense?
+So I was just about to look at the below diff but then booting the patch in my
+guest causes it to stop at:
 
-So my intention for metrics is that the events there work as events
-would work for perf stat. Not least this simplifies testing and
-creating metrics.
+[    1.110988] sr 2:0:0:0: Attached scsi generic sg1 type 5
+[    1.114210] PM: Image not found (code -22)
+[    1.114903] clk: Disabling unused clocks
+[    1.119397] EXT4-fs (sda2): mounted filesystem 90868bc4-a017-4fa2-ac81-931ba260346f ro with ordered data mode. Quota mode: disabled.
+[    1.121069] VFS: Mounted root (ext4 filesystem) readonly on device 8:2.
+<--- EOF
 
-There are things we can do with the search order of events, I'd like
-to make it so users can create their own events, but this is getting
-off topic.
+with the below call stack.
 
-> > When trying to find
-> > out what people mean by event names being implicitly associated with
-> > PMUs I get told I'm throwing out "what ifs," when all I'm doing is
-> > reading the code (that I wrote and I'm trying to fix) and trying to
-> > figure out what behavior people want. What I don't want is
-> > inconsistencies, events behaving differently in different scenarios
-> > and the perf output's use of event names being inconsistent with the
-> > parsing. RISC-V and ARM have wanted the syfs/json over legacy
-> > priority, so I'm trying to get that landed.
->
-> I'm not sure now RISC-V and ARM want it.  Or it needs to be more
-> specific what they want exactly.
+Booting it on Linus' master branch is ok but this is tip/master with all that
+we've accumulated for the next merge window along with other stuff I'm poking
+at...
 
-In which case let's make the priority be legacy then sysfs/json, I'm
-happy with that. We can revert the changes that Mark Rutland and the
-Apple-M folks pushed for. We can tell RISC-V they're not being
-specific enough with their need. I don't think that's as good an
-alternative as the changes here, but if it works for you...
+Long story short, lemme try to poke around tomorrow to try to figure out what
+actually happens. It could be caused by the part of Rik's patches and this one
+inlining things. We'll see...
 
-> >
-> > Ultimately the original regression comes back to the ARM SLC PMU
-> > advertising a cycles event when it should have been named cpu_cycles,
-> > if for no other reason than uniformity with the bus_cycles name on the
-> > same PMU. The change in perf's wildcard behavior exposed the latent
-> > bug, that doesn't make the SLC PMU's event name not a bug. The change
-> > here is to make seeing that bug non-terminal to running the program.
->
-> I don't see it's a bug if uncore PMUs have an event named 'cycles' or
-> whatever.  It's just because perf record wanted to use it and that's
-> entirely tool's choice.
+native_flush_tlb_one_user (addr=2507219558400) at arch/x86/mm/tlb.c:1177
+1177            if (!static_cpu_has(X86_FEATURE_PTI))
+(gdb) bt
+#0  native_flush_tlb_one_user (addr=2507219558400) at arch/x86/mm/tlb.c:1177
+#1  0xffffffff8128206e in flush_tlb_one_user (addr=addr@entry=2507219558400) at arch/x86/mm/tlb.c:1196
+#2  flush_tlb_one_kernel (addr=addr@entry=2507219558400) at arch/x86/mm/tlb.c:1151
+#3  0xffffffff812820b7 in do_kernel_range_flush (info=0xffff88807dc311c0) at arch/x86/mm/tlb.c:1092
+#4  0xffffffff8137beb6 in csd_do_func (csd=0x0 <fixed_percpu_data>, info=0xffff88807dc311c0, 
+    func=0xffffffff81282090 <do_kernel_range_flush>) at kernel/smp.c:134
+#5  smp_call_function_many_cond (mask=<optimized out>, func=func@entry=0xffffffff81282090 <do_kernel_range_flush>, 
+    info=0xffff88807dc311c0, scf_flags=scf_flags@entry=3, cond_func=cond_func@entry=0x0 <fixed_percpu_data>)
+    at kernel/smp.c:876
+#6  0xffffffff8137c254 in on_each_cpu_cond_mask (cond_func=cond_func@entry=0x0 <fixed_percpu_data>, 
+    func=func@entry=0xffffffff81282090 <do_kernel_range_flush>, info=<optimized out>, wait=wait@entry=true, 
+    mask=<optimized out>) at kernel/smp.c:1052
+#7  0xffffffff81282020 in on_each_cpu (wait=1, info=<optimized out>, func=0xffffffff81282090 <do_kernel_range_flush>)
+    at ./include/linux/smp.h:71
+#8  flush_tlb_kernel_range (start=start@entry=18446683600570097664, end=<optimized out>, end@entry=18446683600579907584)
+    at arch/x86/mm/tlb.c:1106
+#9  0xffffffff81481c3f in __purge_vmap_area_lazy (start=18446683600570097664, start@entry=18446744073709551615, 
+    end=18446683600579907584, end@entry=0, full_pool_decay=full_pool_decay@entry=false) at mm/vmalloc.c:2284
+#10 0xffffffff81481fde in _vm_unmap_aliases (start=start@entry=18446744073709551615, end=end@entry=0, 
+    flush=<optimized out>, flush@entry=0) at mm/vmalloc.c:2899
+#11 0xffffffff81482049 in vm_unmap_aliases () at mm/vmalloc.c:2922
+#12 0xffffffff81284d9f in change_page_attr_set_clr (addr=0xffffc9000001fef0, numpages=<optimized out>, mask_set=..., 
+    mask_clr=..., force_split=<optimized out>, in_flag=0, pages=0x0 <fixed_percpu_data>)
+    at arch/x86/mm/pat/set_memory.c:1881
+#13 0xffffffff81285c52 in change_page_attr_set (array=0, mask=..., numpages=511, addr=0xffffc9000001fef0)
+    at arch/x86/mm/pat/set_memory.c:1922
+#14 set_memory_nx (addr=<optimized out>, addr@entry=18446744071759204352, numpages=numpages@entry=511)
+    at arch/x86/mm/pat/set_memory.c:2110
+#15 0xffffffff8127b729 in free_init_pages (what=what@entry=0xffffffff8226bac0 "unused decrypted", 
+    begin=18446744071759204352, end=18446744071761297408) at arch/x86/mm/init.c:929
+#16 0xffffffff898f25aa in mem_encrypt_free_decrypted_mem () at arch/x86/mm/mem_encrypt_amd.c:574
+#17 0xffffffff81ca06c3 in free_initmem () at arch/x86/mm/init.c:973
+#18 0xffffffff81c9fa48 in kernel_init (unused=<optimized out>) at init/main.c:1475
+#19 0xffffffff812398a0 in ret_from_fork (prev=<optimized out>, regs=0xffffc9000001ff58, 
+    fn=0xffffffff81c9fa10 <kernel_init>, fn_arg=0x0 <fixed_percpu_data>) at arch/x86/kernel/process.c:148
+#20 0xffffffff81206f7a in ret_from_fork_asm () at arch/x86/entry/entry_64.S:244
+#21 0x1f0f2e6600000000 in ?? ()
+#22 0x2e66000000000084 in ?? ()
+#23 0x0000000000841f0f in ?? ()
+#24 0x000000841f0f2e66 in ?? ()
+#25 0x00841f0f2e660000 in ?? ()
+#26 0x1f0f2e6600000000 in ?? ()
+#27 0x2e66000000000084 in ?? ()
+#28 0x0000000000841f0f in ?? ()
+#29 0x000000841f0f2e66 in ?? ()
+#30 0x00841f0f2e660000 in ?? ()
+#31 0x0000000000000000 in ?? ()
+(gdb)
 
-It's a bug because a wildcard match */cycles/ will match against the
-SLC PMU's event and if users don't want to specify a PMU it breaks
-perf record when wildcarding cycles. These changes lower the failure
-to a warning, implementing the behavior proposed by Arnaldo:
-https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
-and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
-in Google's tree. If you want to require uncore events have PMUs in
-their names, maintain all the metrics, etc. I don't plan on carrying
-that but you have complete freedom to do what you see best.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks,
-Ian
+https://people.kernel.org/tglx/notes-about-netiquette
