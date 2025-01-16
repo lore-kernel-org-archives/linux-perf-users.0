@@ -1,35 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B22F22DC43;
-	Thu, 16 Jan 2025 19:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A1B81727;
+	Thu, 16 Jan 2025 20:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737056959; cv=none; b=Q8YKEXGbLA+cOWoS24qw12YRqXJWSCqp8sblYEnIKnsmJMj3RT9A2pzBsQgvg46DI2XYvG1PrvSP7BcSdgkvdFyfDAa63UmU/oGI/hEqqEguOkbbwmSDyeOUwn4XKcNTPTBYPLNOJhSkoV+Up8C0a2xFlVKWNfzvOpSaLkrXz7w=
+	t=1737058348; cv=none; b=IZzrrp7T54i/kOrB1QX7u78nbqCmdh7CGRyJrSFhIo8FCixL9lepAW4K/fj2aTaBoQHuxI7AEqpnUNP/GdjcZeVDsslrMjGpgbNTGwKVJkPrhq3SJExyJVYN/2nubb77Quo4oKLIbyavIKwXdHjDgGgMwanFEpkWn4G/YFN6YF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737056959; c=relaxed/simple;
-	bh=BWdxef5Vjb4w2vbz2p7Uo0bd0P/bK/JdtvzdW/cXoUw=;
+	s=arc-20240116; t=1737058348; c=relaxed/simple;
+	bh=hDV5TMm0QqYt7tln1MTJDElQj2k0ZtjBytq6skR4l8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nGozBexVCJYahWknJrO0Kfe7/Az5eab2Hj22qbNBwCKdmUNZB8XqmQQvMia2BYuGBfoeSNfjV7fGtS/AP5uq+Dj36KUiFQTGricCpsq+h3GR8+me8wrh8SlWgclezJSe2KRhCOvFt+f7WfQQAj92wkprRQgovVAkXlYrTmSHz3A=
+	 MIME-Version:Content-Type; b=sCuo1GiXBsGr5u+cTOQI+zej2YzXeoY6JZjh+TcWatSW2kB3j7ivGYDSFHkNOS8dn+i22JBi9LehGLaFge1HbvmZLoaG+7R6f77NPBMeltIKczwOH/H8o/Udza4xjhCGkw4Jo8rq7yNSnDhd+ILEJ1IKZWAPSZ08dgK44BzilsQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF67FC4CED6;
-	Thu, 16 Jan 2025 19:49:17 +0000 (UTC)
-Date: Thu, 16 Jan 2025 14:49:23 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A53A8C4CED6;
+	Thu, 16 Jan 2025 20:12:26 +0000 (UTC)
+Date: Thu, 16 Jan 2025 15:12:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
  <akpm@linux-foundation.org>, Michael Petlan <mpetlan@redhat.com>, Veronika
- Molnarova <vmolnaro@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
+ Molnarova <vmolnaro@redhat.com>, Suren Baghdasaryan <surenb@google.com>
 Subject: Re: [PATCH] tracing: gfp: Fix the GFP enum values shown for user
  space tracing tools
-Message-ID: <20250116144923.6b8cda97@gandalf.local.home>
-In-Reply-To: <20250116144341.7e883931@gandalf.local.home>
+Message-ID: <20250116151232.4cc70a51@gandalf.local.home>
+In-Reply-To: <CAHk-=wjHUvCTurVZosKsJhPmBJBYXeN=pNCE2nnV9EWp9P5JmQ@mail.gmail.com>
 References: <20250116132359.1f20cdec@gandalf.local.home>
-	<20250116144341.7e883931@gandalf.local.home>
+	<CAHk-=wiFEeyY5HE3NMvDYd254yHynzaQyzwYhv5gzRj7KU+gjA@mail.gmail.com>
+	<20250116141800.31d519eb@gandalf.local.home>
+	<CAHk-=wg_2zXOKH2kDAnAyvC6MDWWgyuMRqQDNTGzKJBhfVzHVQ@mail.gmail.com>
+	<20250116143018.0b156e42@gandalf.local.home>
+	<CAHk-=wjHUvCTurVZosKsJhPmBJBYXeN=pNCE2nnV9EWp9P5JmQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -40,20 +43,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Jan 2025 14:43:41 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 16 Jan 2025 11:30:52 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> I also tested this only with the above define in mmflags.h and just added
-> it to kmem.h before sending out. It appears there's a bug in the
-> TRACE_EVENT_ENUM define that doesn't translate the TRACE_SYSTEM properly
-> and it created the same variable used for both kmem.h and mmflags.h and the
-> build failed.
+> On Thu, 16 Jan 2025 at 11:30, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > Would it at least be OK to add a comment there to update the tracing code
+> > if a new GFP flag is added?  
 > 
-> So v2 will also include a fix to TRACE_DEFINE_ENUM().
+> Sure.
 
-Never mind. It appears that the kmem.h includes mmflags.h :-p
+Heh, there's already a comment, and I can make the changes there:
 
-Well, the TRACE_DEFINE_ENUM() still needs to be fixed, but that could wait
-for the next merge window.
+
+/*
+ * In case of changes, please don't forget to update
+ * include/trace/events/mmflags.h and tools/perf/builtin-kmem.c
+ */
+
+enum {
+	___GFP_DMA_BIT,
+	___GFP_HIGHMEM_BIT,
+[..]
 
 -- Steve
