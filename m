@@ -1,236 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A5622BAC6;
-	Thu, 16 Jan 2025 15:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E061DE4F8;
+	Thu, 16 Jan 2025 16:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737042980; cv=none; b=qkaRBPa1NR99acAsyZuN1LLZyzP8xPndlgAQiQ287K7+6EwCiPoTAh3S9ERbchEWjKu1R/OSvYcAaa+aa9NPqgFYbWz4/Sqs4eM3RCYAcWClz7NcncFWT/+nwNxr1QkSW8P3+Q1KLBFyu+wbQXTqmz4TYqqvFM+NcbJoVVaI9Lc=
+	t=1737045905; cv=none; b=dkWP4G1bxj/w1Wrys3Mvkw/s/SqC0OFY7Twp1ont1Byy0qqY/0IfauoeDtljB6jIYm93CZ8cX9AFp3bEs/RtcoMXSdwwwiBWstbucS35KBHY/k6Hn2HEXB/exwiFoHEaArURTT1Wgz6wwNTyNDu5mJmSbXAqqBUA4nEejN9xbrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737042980; c=relaxed/simple;
-	bh=Caca4ix34F0PIzUPOigkS0pCWfGhUfoqK2wLkNjSJTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lJBjKui1wYKxQQlHUtRfR9afGseuyuxCCf2vPNHocpnYY+gCTqyGttwBUxUptNU620By+Ak3Hmbko8Y2hPBa/MORA5PulgXbxAAncu6q/O9C7TClJwCVpForgKp77TiykAbv6tY7IMbvRwoLGypJX4pMyeA+mYhNgdPaS6P8xn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WRemeRXX; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737045905; c=relaxed/simple;
+	bh=gzIeXtvT+o21ai8GfLNJEIL4JMGkaC8ofbxalttfEtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIQTDhq6U+vpRTL5z0aD0cgX5hjE82nuBHEoLulj6kIgMTNRRovdF7uzUaqwyBvd6qHfvZOQKXPd3FuenpFqT1IQyUOq9RTWffAoHLRmLFwqo0qAovZ+9BUfKfyausvBGSysfSnPfGxpu63TSjcTwNGNdnbfoLHQOVEZVu9QoDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Ii/k/+mE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WRemeRXX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737042979; x=1768578979;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Caca4ix34F0PIzUPOigkS0pCWfGhUfoqK2wLkNjSJTk=;
-  b=WRemeRXXg/9VBE0chjkmP2BopbSu3rNsw3sbvD8n+NZDXmptz2FNS9pY
-   DHkiksgrXbx8Crf+bMry6yeQYr0yd970gDoMkgYkSQXIn/HJuh95033DQ
-   7PMVmUn9Rm4vWhfnJQGUMFVDaBeOzNt/JjN1cQju9RJ6ONPPTpUcaulMp
-   +SXhEY6U8fCjkW0He/BsTKt+oYZTiR1e8P4ueWZYoNsACjmPsF0slmZ0h
-   f+j+hD/9Nqd1tO98EF72OkoaB9GTgbxN3VeMiy3PI9YzhiliYUh5xerT4
-   0+eXwRJSltjhPz5fluM14LVeKM0n3Q8Gy2mmc4qQZSrectsL6B55Dzce7
-   A==;
-X-CSE-ConnectionGUID: lo/keRBJQ+OtgytDPO8OwQ==
-X-CSE-MsgGUID: wQIc6ruERmKORVM7tduivg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11317"; a="37321067"
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="37321067"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 07:55:51 -0800
-X-CSE-ConnectionGUID: +Nep8eQJS/m1VO5hDR/oMA==
-X-CSE-MsgGUID: +y2A9aSISAKB3rnqf1b+tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="105359640"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 07:55:50 -0800
-Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ii/k/+mE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CA9C340E015F;
+	Thu, 16 Jan 2025 16:44:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id w_qUMcx4OXut; Thu, 16 Jan 2025 16:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1737045896; bh=WgoKIzz0OYQgA951gA+dXClPJUSxVjM8SRERMxXCGDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ii/k/+mEQxhvi2cUq/OXag0RZzqM3+5gAKnmstJm1M3emqPqpm+FuBuTOkVG6z7Xf
+	 jK+idKpC77Q5Bb60bZEBETOeIYeybsV/OSz+HtCJkvQFCOANvCv50k0v7NDa6SMX+M
+	 eW8d/Kr6ZqmS72pz22a2f/+VjuvWRZi/DggF/7WWes5sPk2G2kgdDpbQuINvEg40Bw
+	 N23oo0oWrzyrbeWzAdiyVuD5Yw3mo37WXbbioRprWVaR2YxBJ0EXK+Gl4VR5xC9PZr
+	 OEgpLDhSThdeD7i1O5+lXsNAoSSCiqPlPw+UuhcmOIMMGEIbCewfQxWy1tU8HF3OLo
+	 971HvVXWqqaYqOUXF6C1rkTZJSjg6i1KL8jPchO1X57XYToTkMPLyPzCkyoYJKp2F/
+	 Q31hRdIdEbLaR8cpz5o5mXbI7I5fBMqVNSBbod4oBwfFPYgChEyFgfhZOsoRk9Bs8B
+	 Mq20gwUu5GXJt+hzn0MH9j0zSLA7eW0zjtMDtDIwaj3DW5gUm514gGFeEzI1eUM7E8
+	 OlSpl1gBnv9+jHVUT6Im6NNIQMxUYvTlP22zuE4gO60oYZW58v76F1ovgaGaD+UBVR
+	 WxxI3+3u6J2jlTd3rFkC2SVxOeTNpyK1mHsXzhJ+es/K1LUAYRL+ghsyJTRL2GcbTo
+	 vQ/6kTLCL9KspKSVn+JOGlao=
+Received: from zn.tnic (p200300ea971f934f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:934f:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4EF4120B5713;
-	Thu, 16 Jan 2025 07:55:48 -0800 (PST)
-Message-ID: <be90e73b-eedf-4ff0-a832-b579e003cac9@linux.intel.com>
-Date: Thu, 16 Jan 2025 10:55:46 -0500
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AF48840E0286;
+	Thu, 16 Jan 2025 16:43:11 +0000 (UTC)
+Date: Thu, 16 Jan 2025 17:43:05 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, Junaid Shahid <junaids@google.com>
+Subject: Re: [PATCH RFC v2 02/29] x86: Create
+ CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
+Message-ID: <20250116164305.GEZ4k3Gd2IoJpJzEIl@fat_crate.local>
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
- dapeng1.mi@linux.intel.com
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
- <20250115184318.2854459-3-kan.liang@linux.intel.com>
- <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
 
+On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 7b9a7e8f39acc8e9aeb7d4213e87d71047865f5c..5a50582eb210e9d1309856a737d32b76fa1bfc85 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2519,6 +2519,20 @@ config MITIGATION_PAGE_TABLE_ISOLATION
+>  
+>  	  See Documentation/arch/x86/pti.rst for more details.
+>  
+> +config MITIGATION_ADDRESS_SPACE_ISOLATION
+> +	bool "Allow code to run with a reduced kernel address space"
+> +	default n
+> +	depends on X86_64 && !PARAVIRT && !UML
+> +	help
+> +	  This feature provides the ability to run some kernel code
 
+s/This feature provide/Provide/
 
-On 2025-01-16 6:47 a.m., Peter Zijlstra wrote:
-> On Wed, Jan 15, 2025 at 10:43:18AM -0800, kan.liang@linux.intel.com wrote:
-> 
->> Reviewed-by: Andi Kleen <ak@linux.intel.com>
->> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Did they really read all the various versions without spotting any of
-> the problems, or are you just rubber stamping things at this point :/
-> 
-> Best to drop review tags after serious changes to patches.
-> 
+> +	  with a reduced kernel address space. This can be used to
+> +	  mitigate some speculative execution attacks.
+> +
+> +	  The !PARAVIRT dependency is only because of lack of testing; in theory
+> +	  the code is written to work under paravirtualization. In practice
+> +	  there are likely to be unhandled cases, in particular concerning TLB
+> +	  flushes.
 
-Sure.
+Right, this paragraph should be under the "---" line too until PARAVIRT gets
+tested, ofc.
 
->> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
-> 
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 8f218ac0d445..79a4aad5a0a3 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -94,6 +94,8 @@ DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_aliases, *x86_pmu.pebs_aliases);
->>  
->>  DEFINE_STATIC_CALL_NULL(x86_pmu_filter, *x86_pmu.filter);
->>  
->> +DEFINE_STATIC_CALL_NULL(x86_pmu_late_config, x86_pmu_late_config);
-> 
-> So all these static call are through struct x86_pmu (hence the naming),
-> but not this one ?!?
+Thx.
 
-I will add it in struct x86_pmu.
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
->>  /*
->>   * This one is magic, it will get called even when PMU init fails (because
->>   * there is no PMU), in which case it should simply return NULL.
->> @@ -1329,7 +1331,16 @@ static void x86_pmu_enable(struct pmu *pmu)
->>  		}
->>  
->>  		/*
->> -		 * step2: reprogram moved events into new counters
->> +		 * step2:
->> +		 * The late config (after counters are scheduled)
->> +		 * is required for some cases, e.g., PEBS counters
->> +		 * snapshotting. Because an accurate counter index
->> +		 * is needed.
->> +		 */
->> +		static_call_cond(x86_pmu_late_config)();
->> +
->> +		/*
->> +		 * step3: reprogram moved events into new counters
->>  		 */
->>  		for (i = 0; i < cpuc->n_events; i++) {
->>  			event = cpuc->event_list[i];
-> 
-> Placement and naming are weird.
-> 
-> These 2 loops migrate all counters that got a new place, the first loop
-> taking out pre-existing counters that got a new place, the second loop
-> setting up these same and new counters.
-> 
-> Why do the pebs config in the middle, where the least number of counters
-> are set-up?
-> 
-> AFAICT all it really needs is cpuc->assignp[], which is unchanged
-> throughout. You can call this at any time before clearing n_added,
-> sticking it in the middle just seems weird.
-
-I just tried to put it right before the x86_pmu_start(RELOAD), since the
-MSR will be updated in the x86_pmu_start().
-But yes, any place before it is good.
-
-> 
-> Then naming, config is typically what we do at event creation,
-> x86_pmu_hw_config() like. This is not at all related, so perhaps pick a
-> different name?
-
-How about late_setup/extra_setup?
-
-@@ -1300,6 +1300,9 @@ static void x86_pmu_enable(struct pmu *pmu)
-
- 	if (cpuc->n_added) {
- 		int n_running = cpuc->n_events - cpuc->n_added;
-+
-+		static_call_cond(x86_pmu_late_setup)();
-+
- 		/*
- 		 * apply assignment obtained either from
- 		 * hw_perf_group_sched_in() or x86_pmu_enable()
-
-
-It can be put at the begin of the cpuc->n_added.
-
-So perf does the late setup, and then move and start the pre-existing
-and new events. Is it OK?
-
-> 
-> Bah, we're so very close between x86_pmu::{enable, disable, assign}() :/
-> 
-> Also, I think I found you another bug... Consider what happens to the
-> counter value when we reschedule a HES_STOPPED counter, then we skip
-> x86_pmu_start(RELOAD) on step2, which leave the counter value with
-> 'random' crap from whatever was there last.
-> 
-> But meanwhile you do program PEBS to sample it. That will happily sample
-> this garbage.
-> 
-> Hmm?
-
-I'm not quite sure I understand the issue.
-
-The HES_STOPPED counter should be a pre-existing counter. Just for some
-reason, it's stopped, right? So perf doesn't need to re-configure the
-PEBS__DATA_CFG, since the idx is not changed.
-
-The worry is that the HES_STOPPED counter is restarted with
-x86_pmu_start(0), right?
-
-There should be 3 places which invoking the x86_pmu_start(0).
-- In __perf_event_stop(). But according to the comments, it's only for
-the events with AUX ring buffer. It should not be a problem for PEBS.
-- Handle throttle. The event does stop(0) and then start(0). There
-should be no 'random' garbage, since the counter has been stopped.
-Everything should be just the same as when it's stopped.
-- In the perf_adjust_freq_unthr_events(), when the period is not
-adjusted, there should be no 'random' garbage as well.
-
-Or do you mean that some 3rd party tools change the counter values while
-it's stopped?
-
-If so, I think we may force update for the pebs-counter-event-group as
-below.
-
-@@ -1517,7 +1522,8 @@ static void x86_pmu_start(struct perf_event
-*event, int flags)
- 	if (WARN_ON_ONCE(idx == -1))
- 		return;
-
--	if (flags & PERF_EF_RELOAD) {
-+	if (flags & PERF_EF_RELOAD ||
-+		is_pebs_counter_event_group(event)) {
- 		WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTODATE));
-  		static_call(x86_pmu_set_period)(event);
- 	}
-@@ -1608,7 +1614,8 @@ void x86_pmu_stop(struct perf_event *event, int flags)
- 		hwc->state |= PERF_HES_STOPPED;
- 	}
-
--	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-+	if (((flags & PERF_EF_UPDATE) || is_pebs_counter_event_group(event)) &&
-+	    !(hwc->state & PERF_HES_UPTODATE)) {
- 		/*
- 		 * Drain the remaining delta count out of a event
- 		 * that we are disabling:
-
-
-Thanks,
-Kan
+https://people.kernel.org/tglx/notes-about-netiquette
