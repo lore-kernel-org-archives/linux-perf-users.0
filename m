@@ -1,139 +1,134 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF281DDA35
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 10:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A471DC1A7;
+	Thu, 16 Jan 2025 11:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737025094; cv=none; b=GMzEoi6bJKBm2suFIxYpiEqz4LYbtfY4mEsvmhcxiwUgTrUZsbbT3fZ5+hSXiH0x+ATvDZjTGOMk3cHvok2wCgknG9CHv3IsqhNLTpST/u05CAA9bViItWfs4OKb4C0wEFrsp9rsyjH4bZn8umMNMkomunQCZoSBQ6mQMVmtBEI=
+	t=1737025738; cv=none; b=dKQ4NiFyu6zJVrAipWyC+6TEVJ4znE85fmPL4soUHWTzzT2uBu9yR/gIBeItGW3fqHpsvJTXwJGJsn4BMFE2qpC5/QiMQGISfW4gjdNoAG8x1PzQ7sy/AAcO7NFMMa0UDLso3ikBgZfta+D/4k1gqxOY1iTxwX2KC7EZa9onNU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737025094; c=relaxed/simple;
-	bh=mEl9FPdNIGL+7of09FaB+aLQ+LE02jM69s1x/OSq8Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
-	 In-Reply-To:Content-Type; b=B98RPVXhvXPvUlkZMqLTRwA967AqKAt96imB87ut/jBammMfRPFECo9x6EyLcY8QDhDvQlVuayaBl3hYRlsY2p37MbIz+utyKPVR61e6inGfgP1e4FDELCUHrottK+3XLvC4sPgaUcxbVgBh4lMlzdfSIwB0j3Vw5fOSMqxZAMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g9Lvikjg; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737025738; c=relaxed/simple;
+	bh=RbrQ5xpOl+Cm3oPZXk0S+RBe+pp4JWY1Lf4Xx0Q20K8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pk2gMXI2GodJaqAVZRbR7njQg3uX0Z6eNuPlnzYeQey8U2gclxJrQrvclibn/vhEfnfr5EZzKsuWcslRkE9zsGZu0FxYA1Etp2jtXixZsetoGmQLNVNZ891EVoa3W1GbQbtQVwauT9Ix4sQKp+zCXwu39aN6ke7uSMrpQmXWlUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjBGHlXJ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9Lvikjg"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38a34e8410bso392402f8f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 02:58:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjBGHlXJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21628b3fe7dso12783285ad.3;
+        Thu, 16 Jan 2025 03:08:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737025091; x=1737629891; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:cc:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2tsLhHgCE8t1uHtJmL2kynlLt5kpefdWOcvDAu5xoAA=;
-        b=g9Lvikjg2ILm66FRcMiGuCU5GXjvnDyPbywW4kL57qqvbqX7C1u7F/alhJOM3MBJT1
-         pk8W8a5vkQFlG65oN9krnpDNt/Vzxv9JLTTlKWFZD2it/Qyp/7fUb0Dfw+6nVpOZSxJH
-         KQWE5As1T2qdQf0Rr8smlqyd09Jh2yYvLwvREOxEJamYO/7A+DeYrhFcr6w+FoCX2p4w
-         nHOeW7I3VreQK4Lp6lJtY3cubyKt4w28xRuZ1BwSVK5ajNRpJpeldmIHRIwUSA6GWai4
-         DG0oFzPm0AfyHslBgiXPzdXgkdSQiPlmzSa9g4Lb+ZKVy98q1yFtQarRR4K/e9WGHGOX
-         Qcng==
+        d=gmail.com; s=20230601; t=1737025736; x=1737630536; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HVob6HRTL2nDYxizp1KhGNSTIQaQOBFoaq+iR2x2d5I=;
+        b=DjBGHlXJ6H/z9ZPvve/vWxAK8wgDEtfM0f291n0jvpb8tpvkX+5Sw6mq4yUerAHlRi
+         zmno5v+9S77B6RY5WcvmsJFVPbD9K3TTCDXqnKDQuUftbtvdMqk6uutfvKIAWSx2Jb6G
+         IekIreeBLUPJm3Yp/fBXgmw+rNYgoeDmJHPOvfE0cZjCc2xRapiZe0tKsZsd4ZpW4kqY
+         5UEYIUv0MBwXry9EOMRZ59kFkneIxa3awh2MXG+/tgIbqpKri3IfZleVkdmiTRQNTsRl
+         2x7sc6gl7Z8lM8yPgJnt5QA5c9E5CyJHx/OaeoN2YpOput0ut5hZEU3QACPA082oBsPD
+         2gdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737025091; x=1737629891;
-        h=content-transfer-encoding:in-reply-to:cc:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tsLhHgCE8t1uHtJmL2kynlLt5kpefdWOcvDAu5xoAA=;
-        b=wSTuehzKJGfxtkt4EoI3om7k6IWrTB6A1Q7yvdA/Qdm2uY9/AxQWEtOEnCPzLMhZJ+
-         K0R5Dp0IOEjgiTv7i4aPfkdsKm1r1ZuyiWxJEf72MLoEKGq6h4h0QMjrPpF4Ven0CHh0
-         6z3d9yCtRAmi46c/8gy3rOTgGC1nYFfwZVLEjdVOOw868tJEr+UrzZXQc1eGWXxvGbLq
-         tzBzzcTyrKMtPgxN18v+tdx/4Z9tl7boNzd15S2pIowPFIDl7AUDZFvNVS6hBvJ5MBGF
-         oPAGwK1Q8CJDBFvG1LlXdiU2mBBAtLSOBp+MGdU9/B0mRXSyXQ27c3Kyp7DZ/6aski2Y
-         F+hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHZFs8CvTbTjhXqlQviAI5GW5o5D423IuzMUjC4Hf+7BRaWQqUQLE4lHHcq5Wbm67nxnAbWwhSfW+dSahCOZHG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPuGs0H82TQ8GH3M/bdFhJtNoByvVet/WpCHdgLOR8oyqyQmZo
-	a2LEWOp8Lg9HgP1soePqur1V3iRuglnJpbliNLXp40751S4LT+ekYjrEdNOx5dg=
-X-Gm-Gg: ASbGncuymKlsyrNZao+nnYqxllIotjGqLuEg4tMCzpFetDV6y17kVcIipKAzkaUbf7J
-	efmL0EwlDGUlVrNODUzM8VPl8mfBjRdzTMyOCb0nrRVn5lm81MfQdLUVzKUl63trbwK2+5zbG8G
-	6rsKtaV2SfpozuNvgwtDZgt8ZCy72qQqYcZq0VLSzDKzUwuxov9RSROFuR0uN/kRWWybCtQ+gp2
-	nW0Y3awUKWNsDT5W/ODBUhOuEMC5cSAhiOk+aDbyWCNyXJHRMBJQ+eNZjB5rgvP7g==
-X-Google-Smtp-Source: AGHT+IFdR4AJ/eWyTtSvWP609ybcS++0zb/CT+oNdVHiy1WuvgSrUhFhMr0Z1qGvJhn9tx8HaTJ3CA==
-X-Received: by 2002:a5d:64cc:0:b0:386:366d:5d0b with SMTP id ffacd0b85a97d-38a8732098dmr27681383f8f.55.1737025090876;
-        Thu, 16 Jan 2025 02:58:10 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.65.18])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c006sm19968676f8f.46.2025.01.16.02.58.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2025 02:58:10 -0800 (PST)
-Message-ID: <64a3dadc-7c37-4e05-8d42-445142691777@linaro.org>
-Date: Thu, 16 Jan 2025 10:58:09 +0000
+        d=1e100.net; s=20230601; t=1737025736; x=1737630536;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HVob6HRTL2nDYxizp1KhGNSTIQaQOBFoaq+iR2x2d5I=;
+        b=HmyzZcloSaj9A1h4v1/HZsw7HvmbznkA/1YTeVBR2x8K0gko0KMeBl47Ph2h5/CPak
+         5faEKAzryw4yEDhBGu6TITZ+zGRhdGKYJ4IE5jL280xmfWgZmnT2faQQ+pEUFRVnZV/6
+         N+wUaUA4NpayN6wqQxuF4Igx9uWPvMnED59+n6DcxK4UN21pgMKqu8FCz72rCV3DiAZ0
+         u8MnFuwYR/xTF1Et5xOgDxSebMnBN30lqkUfl84OIe8sdVEboqBfX58YaEJune9UQF2g
+         S0G9QPevKi5tDHRWa2vlzNZbD8r+6LFEN9ftdD0bKfkJh9UG9mVPrDHga02hitJOx9JX
+         gKgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoDL/nrIRwBUGvaCllcfJ/Xk3GHt/vNSUmBg2aAO+UZgVa/q7nR6SDEeT0/Gl2ysjH2of8UDzWRgmBCoM=@vger.kernel.org, AJvYcCWXGZk4QW48dQYfgWu8t+XGiaHffg2XaQJ7YxClUCCFCZWP/yKziWBUXdjxS38/sdIFBBhjy/1t@vger.kernel.org, AJvYcCXLEqdMoPnCBHcws2xpQMCCD4L/xmUgmL+Pig+lSHyF4o9E17J++sNvrbzizqqiRVLUI8OsJVAXBZOJ+JOAp3p5UQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc+Y4rq+FQn/icNobZHmv64VUJkBEiX04+5XFLxYbsXajPqVJE
+	Sf0hVaso0t7CUBHl2uH1tVjpWHwaMMIjrP5q+W2vsZetrvuRKcQH
+X-Gm-Gg: ASbGnctuH9C/j8VJ4ejeW+TyI18xqgF5s4zrZHIr5mKiW5eiC2uMzJ4nAnAXvmUqSB0
+	fHC7EyP8zf2SSD7jJbCIcD/0+CM6OAvqXs/6zmKQV8mslj1BhfvuVIJUS1FWCpja+6l/FEMO8dZ
+	4XMFza81xYxhS5YE8sbhjS2FkIpfOySbUd/QC1kq6eeipYx+RY51SZQS53oIZ8cFwhn8WYlHJkO
+	Q28Dyc1TkU9Q859MwlAvd9+VyU6pkxWs77DmtlpFf7VsXfXDxNdnC2uzgSas14FuAri4nYiAOfP
+	Jel4J58lMuU=
+X-Google-Smtp-Source: AGHT+IFTjeVq7Kmmuih3Jimx5Xcu7Np5d0JWWOoJOMtDxN3UjM/5dEeVF8QPS9luq3k29xMs/ovvVQ==
+X-Received: by 2002:a05:6a00:1489:b0:728:eb32:356c with SMTP id d2e1a72fcca58-72d21f459dbmr43140418b3a.11.1737025736106;
+        Thu, 16 Jan 2025 03:08:56 -0800 (PST)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d4067e682sm10679087b3a.125.2025.01.16.03.08.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2025 03:08:55 -0800 (PST)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	Ching-Chun Huang <jserv@ccns.ncku.edu.tw>,
+	Chun-Ying Huang <chuang@cs.nycu.edu.tw>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] perf bench: Fix undefined behavior in cmpworker()
+Date: Thu, 16 Jan 2025 19:08:42 +0800
+Message-Id: <20250116110842.4087530-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/6] Mypy and pylint build support
-From: James Clark <james.clark@linaro.org>
-To: Ian Rogers <irogers@google.com>
-References: <20241025172303.77538-1-irogers@google.com>
- <45f0bebf-6d4a-448c-8088-db2facbbfa46@linaro.org>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>,
- Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
- Veronika Molnarova <vmolnaro@redhat.com>, Ze Gao <zegao2021@gmail.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <45f0bebf-6d4a-448c-8088-db2facbbfa46@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The comparison function cmpworker() violates the C standard's
+requirements for qsort() comparison functions, which mandate symmetry
+and transitivity:
 
+Symmetry: If x < y, then y > x.
+Transitivity: If x < y and y < z, then x < z.
 
-On 16/01/2025 10:56 am, James Clark wrote:
-> 
-> 
-> On 25/10/2024 6:22 pm, Ian Rogers wrote:
->> Support building perf checking the python code with mypy and/or
->> pylint. Currently there are too many errors to make this a default.
->>
->> Shellcheck generates no output on success, so linking shellcheck files
->> doesn't cause `ld` to fail. Mypy and pylint generate output that will
->> break `ld` so change the Makefile.build to ignore test log files.
->>
->> Address some initial mypy errors.
->>
->> Ian Rogers (6):
->>    tools/build: Don't pass test log files to linker
->>    perf build: Rename TEST_LOGS to SHELL_TEST_LOGS
->>    perf build: Add mypy build tests
->>    perf build: Add pylint build tests
->>    perf test: Address attr.py mypy error
->>    perf python: Fix setup.py mypy errors
->>
->>   tools/build/Makefile.build         |  6 +++++-
->>   tools/perf/Build                   | 32 +++++++++++++++++++++++++++---
->>   tools/perf/Makefile.perf           | 14 +++++++++++--
->>   tools/perf/arch/x86/Build          |  6 +++---
->>   tools/perf/arch/x86/tests/Build    |  6 +++---
->>   tools/perf/pmu-events/Build        | 25 ++++++++++++++++++++++-
->>   tools/perf/scripts/Build           | 26 ++++++++++++++++++++++++
->>   tools/perf/tests/Build             | 32 +++++++++++++++++++++++++++---
->>   tools/perf/tests/shell/lib/attr.py |  8 +-------
->>   tools/perf/trace/beauty/Build      |  6 +++---
->>   tools/perf/util/Build              | 31 ++++++++++++++++++++++++++---
->>   tools/perf/util/setup.py           | 10 ++++++++--
->>   12 files changed, 171 insertions(+), 31 deletions(-)
->>
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> 
->    $ make PYLINT=1 MYPY=1
-> 
->    TEST    python/twatch.py.pylint_log
->    ...
->    Your code has been rated at -5.00/10
->    ...
+In its current implementation, cmpworker() incorrectly returns 0 when
+w1->tid < w2->tid, which breaks both symmetry and transitivity. This
+violation causes undefined behavior, potentially leading to issues such
+as memory corruption in glibc [1].
 
-I forgot to add this:
+Fix the issue by returning -1 when w1->tid < w2->tid, ensuring
+compliance with the C standard and preventing undefined behavior.
 
-  :(
+Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
+Fixes: 121dd9ea0116 ("perf bench: Add epoll parallel epoll_wait benchmark")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+---
+Changes in v3:
+- Perform a full comparison for clarity, as suggested by James.
 
-I didn't know it could go negative.
+ tools/perf/bench/epoll-wait.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index ef5c4257844d..20fe4f72b4af 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -420,7 +420,12 @@ static int cmpworker(const void *p1, const void *p2)
+ 
+ 	struct worker *w1 = (struct worker *) p1;
+ 	struct worker *w2 = (struct worker *) p2;
+-	return w1->tid > w2->tid;
++
++	if (w1->tid > w2->tid)
++		return 1;
++	if (w1->tid < w2->tid)
++		return -1;
++	return 0;
+ }
+ 
+ int bench_epoll_wait(int argc, const char **argv)
+-- 
+2.34.1
 
