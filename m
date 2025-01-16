@@ -1,60 +1,61 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2708719992C
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 23:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3922FAC3
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 23:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737069021; cv=none; b=YB1bRTpBkhd2qjRVSTFtEWR7OXcASQffwQNU9jy/mOIINUO1FYyxXi1ISd2gwu877UGrdAkyO4N6yOVdkV/1ZzbUVfFpz84ghE5EE/beTfKkTc9C/AQJWXvoxw9xuADLGNC/8l+fWVZpxcCXUiAQrUgRR7cArWZox+7Fq8BDPL8=
+	t=1737069032; cv=none; b=lC/tPaYV3wiLkH65srQnZ0Fda2jMtq9zlQeRzwv8i4nX+PW1cX7zwgYQU5191uO5uaGADXISjUEYYqZ3Gxyfp7Old94Na8Dk7i2Fgu9IfxkAOuLX0gRBwhzdlKl5PNljkpybc1ecpX86Ua/CYJykRnvpbXnZHt/At6ZqV0PaEfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737069021; c=relaxed/simple;
-	bh=zuY3O18Tj3s5bv1IKSxkNZURrCa+mFTlRFzYQgPqel4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LFUUwKN/cnUC69Z8WmX2i5n7la1PJHWS6SVVbnISbnW2SSIzMShQzOwW9Sd+VUv8F0MnIAri8bsCa49UFtStgxGjJG3eyFNIwkAQAy9RhTTOu5E5XiXDoQeqzR4LRliPQEfHjZP27Qn+nN2WBQXJ7qqoTUuMevvVxZE8cuQ4zmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CzelOHE1; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1737069032; c=relaxed/simple;
+	bh=bF/cdbPvyjz0FfZNx2ey9irVZg4a8yyfWpE7AZtnRxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W4E2Hzzq9AZFLCCGngxd4c9Xw5ZF6KzZ41xIcUcoo9XDKqGwJHsumkGs4CKcE2LL989SyD5EI58JK7AY0AlQT1ILh/WjIhNvmu6Y7jMghJH6tF3GEege7OHXWpi6dBA1rr5h3LeGbqsifgTtU0eZ4ilKz5EBP4B9+wV7Xp+KilY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BpGfvkRW; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CzelOHE1"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-385de9f789cso1128503f8f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 15:10:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BpGfvkRW"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361f664af5so15764055e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 15:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737069017; x=1737673817; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q8uJh+xH3eI/c9V3pGChrDiSvCKIcHtU+7c19/VbDB0=;
-        b=CzelOHE1a5BZSJOJI/ZeIXs9pVgm5fsnJ7uRteGalCT51Hy1yD09u8meaQ227JVrxq
-         Ffq6OpdmUa23L9bZK8+S9DmG6/ltGLy6YLC/ljPS6GhhP7s4imwlb9awhksgg//b6n5C
-         jmCHbTZBRRo4TAGIrR6nMVVco8Ux72sLtTdPhH0t3ZeVfcqVfwY7OseK7N0iqCILXs63
-         1t/GuccR9Wcaoj1jDDtDhGmZMmdwc2llnY4PUj80BT2h3AOLzNlx4/HjT0F9vgmvPt1S
-         B9fDzVW4eBZ442+qxvZytOcRqiJ+PNoJycFHYiZy0vWErOJFI/zLEI0sfOUWvHaniPKL
-         VBeg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737069028; x=1737673828; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ih0D7I8XCBuUn8cwCzLwA9EVpPglV1xp5bSahtqmwB0=;
+        b=BpGfvkRWn9kpf0xiC6LnrTpHJCPPft5iWuctLPwOPCconJJVRoQxJNEOk5Nz3LN9nm
+         QfcRK6C3G3My22pjoel2v/kkeVy08qsfRPrAAAvnaW7ypHM8fStIqGe+8Taabu5FHHN8
+         4ysAGmUlTpAX60CrSe/K3f0BflhltF845bpHF7dLY3IYLLgSbp+Gnvsx4fydS7IcENbl
+         pjqbG7TyC7tYmQ3ZT5YJ0t2zvv86hEgGF6CrBa3fI4vtWuRvtoGB211wm+TjuzPyr1iZ
+         VyNCpaZU1ybG/5Wky5tGE5UgkUJV9kdOfDyf7qYiTkk4pt+sDBOg/RzYn9OhJcjQTkUX
+         dzgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737069017; x=1737673817;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q8uJh+xH3eI/c9V3pGChrDiSvCKIcHtU+7c19/VbDB0=;
-        b=HYHq3+HV4Z25OShUxINaQJEat1SB2d0hety8BgrV6jG7TkPD0BfXkMxtKr9PfRN+sA
-         htAuIML8JXvYnZPPuCtO0deGYs6n2IomIP6mXy0bboTzIcR+F/yZPWjNiXcb1+9Y5PJM
-         ogd5O1rueGnwzOIAQrEsF5NIuOnVuLvi+tJ0OEnroyrdZrXfXJxesuG31J405+QpDCmA
-         ASQwRnjcff1SrpJoTQUJ3iotK7aYaewKFog+MIPcKMjtYZUYdZRPtU7oSs5XzjoPfMHC
-         9Iv97YzyXu5xzD6f+T+AqK56Hl3J6nHwxqp+uTeHMUF7PNR+QyAa6ipEOVSK+u3aaPKM
-         WHKA==
-X-Gm-Message-State: AOJu0Yxqt4SBPt72b1p6Pbnk4fZCXEC26/StusZBeAPHQGdiqKV7Ch3t
-	L6wFYk9m9eTtUJCD6bQwCe5sB3CiOKw/1efukKi8coKIOhfV+XbTbWSRURSpigxV1shdDwlMQ1u
-	J
-X-Gm-Gg: ASbGncuiKy5uB94yV/dXhoIYGn4/nEZAvfRL/OcNdRXSVX+Xkwwjpvgu7GKPkoXWFoS
-	woxHVYoR3d2dAJYe/kLz49BwE+rSQjW7QnHGEX4CfpFrpZqf9IL2XoMQtUSN/jv5jDLPwZ8qsKq
-	+uHcd6mBjjfPMPWE6zUncTAVX/AUxk3A8mjMtZSx2mfHf6gFBEMBaXQkPqlNxlN3mH5/iv0wKjj
-	6MZ+E2Wyxk92qS4gyDmj6Usw+/OL0kBcp5QOY28+fTx5j/UT1jGozBZ2WtlRiLSoGFpbRgQBuIX
-	o+cvL1ZifQKnpzUZ
-X-Google-Smtp-Source: AGHT+IF0eMc8RsiD3vYznSPkvx/UK3bXs0kRUnvDYnuRW301R33pMrAUnJVLjjR2VGZTLTvqShRQuA==
-X-Received: by 2002:a5d:5848:0:b0:38b:e1b3:16dc with SMTP id ffacd0b85a97d-38bf57d339amr277724f8f.50.1737069017185;
-        Thu, 16 Jan 2025 15:10:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737069028; x=1737673828;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ih0D7I8XCBuUn8cwCzLwA9EVpPglV1xp5bSahtqmwB0=;
+        b=eREkvA0BMzF6q50BSXpIDTuBggEhMQUTennlVgRd8za3ONnMSy4oI/0wJnmtvnZZ3s
+         zjG5/CrtTFGnLSInzdDra5FqOuEwcMgITiclutkJltkyFblxfSKw0Ujn5WDB4iEqfg+A
+         Mbxy4zWLRi30wa4ZZl3o7oPQpfuSJtgk8QqnUszzTlOAmogAuqfQeTZjf+OrrI2C8uxi
+         fwyY0l7HLkdUprCMwbnCj0E+xEQf39ivoacwV0i6ufpB1mLj/g3lwa87jPQxPFgwJzRU
+         QWhMSOsUolxlkVTWqFAeFBeIkho1hYx330BuTP1XfdjBTwBeq+YZym4qXKGVcw8xeTHl
+         3SJQ==
+X-Gm-Message-State: AOJu0YwwGRNX/JcWqKjydsrtvKUL5jkYhuAK9Rpdagaa9gJkP6G2Kgu8
+	QGedLSnwnRG3Kv/bPpzfe4kE1gQueAPf9elWOjRTuBsdsKeNepwYsQQNgLleYmw=
+X-Gm-Gg: ASbGnctiLTXhWzQVolv/8DIU0sCu6XX1j/J2zlvYym34HXg0CEpKus5IQC+RRNMn5DO
+	kWUMehpveIUu/Q3XbDUlZK3eLlbKdtmtmRExNaGJ1EvrryqKrRX9ood5cSXTwji6hDtQs9sW1Dr
+	vLQ1Pt8s+MyY15E1fwusT16TFzRL+T00CzqY4XZp+VHQyVnV4/dM3VSvcJNb2Sb46i7+EyMZiE5
+	12Zp1v6YaHS74tATABd/S7Wn1fuljlHfK99WMTzjSX3rKI3kSkH08gAtRwqIqK7nbhHLNOmoQaW
+	ICkZtf6JREgNcOeD
+X-Google-Smtp-Source: AGHT+IGZkSeIeWLg78b7QIySnUPbuLbB0vhAavzUj7u+Y4mZGnlfT+raQ/EoGquZ508s9+cVypWC2g==
+X-Received: by 2002:adf:ffca:0:b0:38a:88e2:e6aa with SMTP id ffacd0b85a97d-38bf56745bcmr243859f8f.29.1737069028398;
+        Thu, 16 Jan 2025 15:10:28 -0800 (PST)
 Received: from rkanwal-XPS-15-9520.uk.rivosinc.com ([2a02:c7c:75ac:6300:b3f2:3a24:1767:7db0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322b337sm974991f8f.59.2025.01.16.15.10.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322b337sm974991f8f.59.2025.01.16.15.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2025 15:10:16 -0800 (PST)
+        Thu, 16 Jan 2025 15:10:28 -0800 (PST)
 From: Rajnesh Kanwal <rkanwal@rivosinc.com>
 To: linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
@@ -80,10 +81,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	kaiwenxue1@gmail.com,
 	vincent.chen@sifive.com,
 	Rajnesh Kanwal <rkanwal@rivosinc.com>
-Subject: [PATCH v2 0/7] riscv: pmu: Add support for Control Transfer Records Ext.
-Date: Thu, 16 Jan 2025 23:09:48 +0000
-Message-Id: <20250116230955.867152-1-rkanwal@rivosinc.com>
+Subject: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
+Date: Thu, 16 Jan 2025 23:09:49 +0000
+Message-Id: <20250116230955.867152-2-rkanwal@rivosinc.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250116230955.867152-1-rkanwal@rivosinc.com>
+References: <20250116230955.867152-1-rkanwal@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -92,64 +95,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series enables Control Transfer Records extension support on riscv
-architecture. This extension is similar to Arch LBR in x86 and BRBE in ARM.
-The Extension has been ratified and the latest release can be found here [0]
+RISCV CTR extension support a maximum depth of 256 last branch records.
+The 127 entries limit results in corrupting CTR entries for RISC-V if
+configured to be 256 entries. This will not impact any other architectures
+as it is just increasing maximum limit of possible entries.
 
-CTR extension depends on both the implementation of S-mode and Sscsrind
-extension v1.0.0 [1]. CTR access ctrsource, ctrtartget and ctrdata CSRs using
-sscsrind extension.
+Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+---
+ tools/perf/util/machine.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-The series is based on Smcdeleg/Ssccfg counter delegation extension [2]
-patches [3]. CTR itself doesn't depend on counter delegation support. This
-rebase is basically to include the Smcsrind patches.
-
-The last patch is in the perf tool to allow processing 256 entries. Without
-this perf seems to consider that sample as corrupted and discards it.
-
-Here is the link to a quick guide [4] to setup and run a basic perf demo on
-Linux to use CTR Ext.
-
-Qemu patches can be found here:
-https://github.com/rajnesh-kanwal/qemu/tree/b4/ctr_upstream_v5
-
-Opensbi patch can be found here:
-https://github.com/rajnesh-kanwal/opensbi/tree/ctr_upstream_v2
-
-Linux kernel patches can be found here:
-https://github.com/rajnesh-kanwal/linux/tree/b4/ctr_upstream_v2
-
-[0]: https://github.com/riscv/riscv-control-transfer-records/releases/tag/v1.0
-[1]: https://github.com/riscvarchive/riscv-indirect-csr-access/releases/tag/v1.0.0
-[2]: https://github.com/riscvarchive/riscv-smcdeleg-ssccfg/releases/tag/v1.0.0
-[3]: https://lore.kernel.org/lkml/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com/
-[4]: https://github.com/rajnesh-kanwal/linux/wiki/Running-CTR-basic-demo-on-QEMU-RISC%E2%80%90V-Virt-machine
-
-Rajnesh Kanwal (7):
-  perf: Increase the maximum number of samples to 256.
-  riscv: pmu: Add Control transfer records CSR definations.
-  riscv: Add Control Transfer Records extension parsing
-  dt-bindings: riscv: add Sxctr ISA extension description
-  riscv: pmu: Add infrastructure for Control Transfer Record
-  riscv: pmu: Add driver for Control Transfer Records Ext.
-  riscv: pmu: Integrate CTR Ext support in riscv_pmu_dev driver
-
- .../devicetree/bindings/riscv/extensions.yaml |  14 +
- MAINTAINERS                                   |   1 +
- arch/riscv/include/asm/csr.h                  |  83 +++
- arch/riscv/include/asm/hwcap.h                |   4 +
- arch/riscv/kernel/cpufeature.c                |   2 +
- drivers/perf/Kconfig                          |  11 +
- drivers/perf/Makefile                         |   1 +
- drivers/perf/riscv_ctr.c                      | 608 ++++++++++++++++++
- drivers/perf/riscv_pmu_common.c               |  23 +-
- drivers/perf/riscv_pmu_dev.c                  |  82 +++
- drivers/perf/riscv_pmu_legacy.c               |   2 +
- include/linux/perf/riscv_pmu.h                |  55 ++
- tools/perf/util/machine.c                     |  21 +-
- 13 files changed, 898 insertions(+), 9 deletions(-)
- create mode 100644 drivers/perf/riscv_ctr.c
-
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 27d5345d2b30..f2eb3c20274e 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2174,25 +2174,32 @@ static void save_iterations(struct iterations *iter,
+ 		iter->cycles += be[i].flags.cycles;
+ }
+ 
+-#define CHASHSZ 127
+-#define CHASHBITS 7
+-#define NO_ENTRY 0xff
++#define CHASHBITS 8
++#define NO_ENTRY 0xffU
+ 
+-#define PERF_MAX_BRANCH_DEPTH 127
++#define PERF_MAX_BRANCH_DEPTH 256
+ 
+ /* Remove loops. */
++/* Note: Last entry (i==ff) will never be checked against NO_ENTRY
++ * so it's safe to have an unsigned char array to process 256 entries
++ * without causing clash between last entry and NO_ENTRY value.
++ */
+ static int remove_loops(struct branch_entry *l, int nr,
+ 			struct iterations *iter)
+ {
+ 	int i, j, off;
+-	unsigned char chash[CHASHSZ];
++	unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+ 
+ 	memset(chash, NO_ENTRY, sizeof(chash));
+ 
+-	BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
++	BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+ 
+ 	for (i = 0; i < nr; i++) {
+-		int h = hash_64(l[i].from, CHASHBITS) % CHASHSZ;
++		/* Remainder division by PERF_MAX_BRANCH_DEPTH is not
++		 * needed as hash_64 will anyway limit the hash
++		 * to CHASHBITS
++		 */
++		int h = hash_64(l[i].from, CHASHBITS);
+ 
+ 		/* no collision handling for now */
+ 		if (chash[h] == NO_ENTRY) {
 -- 
 2.34.1
 
