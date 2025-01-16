@@ -1,178 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E061DE4F8;
-	Thu, 16 Jan 2025 16:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF2117C8B;
+	Thu, 16 Jan 2025 16:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737045905; cv=none; b=dkWP4G1bxj/w1Wrys3Mvkw/s/SqC0OFY7Twp1ont1Byy0qqY/0IfauoeDtljB6jIYm93CZ8cX9AFp3bEs/RtcoMXSdwwwiBWstbucS35KBHY/k6Hn2HEXB/exwiFoHEaArURTT1Wgz6wwNTyNDu5mJmSbXAqqBUA4nEejN9xbrc=
+	t=1737046030; cv=none; b=PArb2m1n6AyB5hf2q6+90j2wlTXBH7X+OmFV5xTj7BKdea0cMW7joQTFHT9RKKcV+2X4r3vlaHuhzFcs66m0YCMMhj7lphyvAWoQfVpYV+LE5dGqyoz0vAUar2f9SDBV1iU+O1fPKv/1OgUmEw2AJ/vmFc1dNwuIngIUYQJEgrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737045905; c=relaxed/simple;
-	bh=gzIeXtvT+o21ai8GfLNJEIL4JMGkaC8ofbxalttfEtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIQTDhq6U+vpRTL5z0aD0cgX5hjE82nuBHEoLulj6kIgMTNRRovdF7uzUaqwyBvd6qHfvZOQKXPd3FuenpFqT1IQyUOq9RTWffAoHLRmLFwqo0qAovZ+9BUfKfyausvBGSysfSnPfGxpu63TSjcTwNGNdnbfoLHQOVEZVu9QoDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Ii/k/+mE; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ii/k/+mE"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CA9C340E015F;
-	Thu, 16 Jan 2025 16:44:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id w_qUMcx4OXut; Thu, 16 Jan 2025 16:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1737045896; bh=WgoKIzz0OYQgA951gA+dXClPJUSxVjM8SRERMxXCGDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ii/k/+mEQxhvi2cUq/OXag0RZzqM3+5gAKnmstJm1M3emqPqpm+FuBuTOkVG6z7Xf
-	 jK+idKpC77Q5Bb60bZEBETOeIYeybsV/OSz+HtCJkvQFCOANvCv50k0v7NDa6SMX+M
-	 eW8d/Kr6ZqmS72pz22a2f/+VjuvWRZi/DggF/7WWes5sPk2G2kgdDpbQuINvEg40Bw
-	 N23oo0oWrzyrbeWzAdiyVuD5Yw3mo37WXbbioRprWVaR2YxBJ0EXK+Gl4VR5xC9PZr
-	 OEgpLDhSThdeD7i1O5+lXsNAoSSCiqPlPw+UuhcmOIMMGEIbCewfQxWy1tU8HF3OLo
-	 971HvVXWqqaYqOUXF6C1rkTZJSjg6i1KL8jPchO1X57XYToTkMPLyPzCkyoYJKp2F/
-	 Q31hRdIdEbLaR8cpz5o5mXbI7I5fBMqVNSBbod4oBwfFPYgChEyFgfhZOsoRk9Bs8B
-	 Mq20gwUu5GXJt+hzn0MH9j0zSLA7eW0zjtMDtDIwaj3DW5gUm514gGFeEzI1eUM7E8
-	 OlSpl1gBnv9+jHVUT6Im6NNIQMxUYvTlP22zuE4gO60oYZW58v76F1ovgaGaD+UBVR
-	 WxxI3+3u6J2jlTd3rFkC2SVxOeTNpyK1mHsXzhJ+es/K1LUAYRL+ghsyJTRL2GcbTo
-	 vQ/6kTLCL9KspKSVn+JOGlao=
-Received: from zn.tnic (p200300ea971f934f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:934f:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AF48840E0286;
-	Thu, 16 Jan 2025 16:43:11 +0000 (UTC)
-Date: Thu, 16 Jan 2025 17:43:05 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 02/29] x86: Create
- CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-Message-ID: <20250116164305.GEZ4k3Gd2IoJpJzEIl@fat_crate.local>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
+	s=arc-20240116; t=1737046030; c=relaxed/simple;
+	bh=bj1zIvD44L0sz0dm+S6wWjfTgb66hdkO+X/lYwX/AQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jVt6SkUeuT6IMaVVPFejy/WbPiMptadoSWMua0xqR2C7LFMJ7u2BluqjGV0svIvv64vGroaDESF++ZudlFcBTg+ZaxX60ut19xkIzumV5Q6Dp9vZTVnWssiiHaUBNwl8sojbThxK1zI8Ydlakube8pa3fZMto2kPdN6X1ZlPjWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C1CC4CED6;
+	Thu, 16 Jan 2025 16:47:09 +0000 (UTC)
+Date: Thu, 16 Jan 2025 11:47:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
+ Suren Baghdasaryan <surenb@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: perf kmem --page stat and gpf_flags translation
+Message-ID: <20250116114710.3f84894a@gandalf.local.home>
+In-Reply-To: <2ccbae71-0a65-439d-825a-26dc2261fbcf@redhat.com>
+References: <87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com>
+	<20241121100326.645bd0d7@gandalf.local.home>
+	<2ccbae71-0a65-439d-825a-26dc2261fbcf@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 7b9a7e8f39acc8e9aeb7d4213e87d71047865f5c..5a50582eb210e9d1309856a737d32b76fa1bfc85 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2519,6 +2519,20 @@ config MITIGATION_PAGE_TABLE_ISOLATION
->  
->  	  See Documentation/arch/x86/pti.rst for more details.
->  
-> +config MITIGATION_ADDRESS_SPACE_ISOLATION
-> +	bool "Allow code to run with a reduced kernel address space"
-> +	default n
-> +	depends on X86_64 && !PARAVIRT && !UML
-> +	help
-> +	  This feature provides the ability to run some kernel code
+On Thu, 16 Jan 2025 15:34:28 +0100
+Veronika Molnarova <vmolnaro@redhat.com> wrote:
 
-s/This feature provide/Provide/
+> >> # perf script
+> >> perf   96553 [003] 100299.663963: kmem:mm_page_alloc: page=0x1a8f9 pfn=0x1a8f9 order=0 migratetype=0 gfp_flags=0x500cc2
+> >> perf   96553 [003] 100299.663995: kmem:mm_page_alloc: page=0x1bc3f pfn=0x1bc3f order=0 migratetype=0 gfp_flags=0x40cc0
+> >> perf   96553 [003] 100299.664001: kmem:mm_page_alloc: page=0x1a9d9 pfn=0x1a9d9 order=0 migratetype=0 gfp_flags=0x40cc0
+> >> perf   96553 [003] 100299.664011: kmem:mm_page_alloc: page=0x1788b pfn=0x1788b order=0 migratetype=0 gfp_flags=0x40cc0
+> >> perf   96553 [003] 100299.664023: kmem:mm_page_alloc: page=0x17993 pfn=0x17993 order=0 migratetype=0 gfp_flags=0xcc0
+> >>  
+> > 
+> > Does the same thing happen with trace-cmd record?
+> > 
+> >  # trace-cmd record -e mm_page_alloc
+> > [ run tests, hit Ctrl^C ]
+> > 
+> >  # trace-cmd report
+> > 
+> > ?
+> > 
+> > If so, could you send the trace.dat file to me.
+> > 
+> > Thanks,
+> > 
+> > -- Steve
+> >   
+> 
+> Hi,
+> 
+> is there any progress on this issue?
 
-> +	  with a reduced kernel address space. This can be used to
-> +	  mitigate some speculative execution attacks.
-> +
-> +	  The !PARAVIRT dependency is only because of lack of testing; in theory
-> +	  the code is written to work under paravirtualization. In practice
-> +	  there are likely to be unhandled cases, in particular concerning TLB
-> +	  flushes.
+Sorry, the response got lost in my INBOX.
 
-Right, this paragraph should be under the "---" line too until PARAVIRT gets
-tested, ofc.
+Anyway, it appears that userspace can not parse it:
 
-Thx.
+$ trace-cmd dump --events /tmp/trace.dat 
+        [Section 18 @ 2082: "events format", flags 0x1, 931 bytes]
+        [Events format, 1 systems]
+name: mm_page_alloc
+ID: 510
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
 
--- 
-Regards/Gruss,
-    Boris.
+        field:unsigned long pfn;        offset:8;       size:8; signed:0;
+        field:unsigned int order;       offset:16;      size:4; signed:0;
+        field:unsigned long gfp_flags;  offset:24;      size:8; signed:0;
+        field:int migratetype;  offset:32;      size:4; signed:1;
 
-https://people.kernel.org/tglx/notes-about-netiquette
+print fmt: "page=%p pfn=0x%lx order=%d migratetype=%d gfp_flags=%s", REC->pfn != -1UL ? (vmemmap + (REC->pfn)) : ((void *)0), REC->pfn != -1UL ? REC->pfn : 0, REC->order, REC->migratetype, (REC->gfp_flags) ? __print_flags(REC->gfp_flags, "|", {( unsigned long)(((((((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))) | (( gfp_t)0)) | (( gfp_t)((((1UL))) << (___GFP_COMP_BIT))) | (( gfp_t)((((1UL))) << (___GFP_NOMEMALLOC_BIT))) | (( gfp_t)((((1UL))) << (___GFP_NOWARN_BIT)))) & ~(( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT))))) | (( gfp_t)((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT)))), "GFP_TRANSHUGE"}, {( unsigned long)((((((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))) | (( gfp_t)0)) | (( gfp_t)((((1UL))) << (___GFP_COMP_BIT))) | (( gfp_t)((((1UL))) << (___GFP_NOMEMALLOC_BIT))) | (( gfp_t)((((1UL))) << (___GFP_NOWARN_BIT)))) & ~(( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT))))), "GFP_TRANSHUGE_LIGHT"}, {( unsigned long)((((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))) | (( gfp_t)0)), "GFP_HIGHUSER_MOVABLE"}, {( unsigned long)(((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT)))), "GFP_HIGHUSER"}, {( unsigned long)((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT)))), "GFP_USER"}, {( unsigned long)(((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_ACCOUNT_BIT)))), "GFP_KERNEL_ACCOUNT"}, {( unsigned long)((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT))) | (( gfp_t)((((1UL))) << (___GFP_FS_BIT)))), "GFP_KERNEL"}, {( unsigned long)((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT)))), "GFP_NOFS"}, {( unsigned long)((( gfp_t)((((1UL))) << (___GFP_HIGH_BIT)))|(( gfp_t)((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))), "GFP_ATOMIC"}, {( unsigned long)((( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT))))), "GFP_NOIO"}, {( unsigned long)((( gfp_t)((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT))) | (( gfp_t)((((1UL))) << (___GFP_NOWARN_BIT)))), "GFP_NOWAIT"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_DMA_BIT))), "GFP_DMA"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT))), "__GFP_HIGHMEM"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_DMA32_BIT))), "GFP_DMA32"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_HIGH_BIT))), "__GFP_HIGH"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_IO_BIT))), "__GFP_IO"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_FS_BIT))), "__GFP_FS"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_NOWARN_BIT))), "__GFP_NOWARN"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_RETRY_MAYFAIL_BIT))), "__GFP_RETRY_MAYFAIL"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_NOFAIL_BIT))), "__GFP_NOFAIL"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_NORETRY_BIT))), "__GFP_NORETRY"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_COMP_BIT))), "__GFP_COMP"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_ZERO_BIT))), "__GFP_ZERO"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_NOMEMALLOC_BIT))), "__GFP_NOMEMALLOC"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_MEMALLOC_BIT))), "__GFP_MEMALLOC"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_HARDWALL_BIT))), "__GFP_HARDWALL"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_THISNODE_BIT))), "__GFP_THISNODE"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_RECLAIMABLE_BIT))), "__GFP_RECLAIMABLE"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))), "__GFP_MOVABLE"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_ACCOUNT_BIT))), "__GFP_ACCOUNT"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_WRITE_BIT))), "__GFP_WRITE"}, {( unsigned long)(( gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT)))), "__GFP_RECLAIM"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))), "__GFP_DIRECT_RECLAIM"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_KSWAPD_RECLAIM_BIT))), "__GFP_KSWAPD_RECLAIM"}, {( unsigned long)(( gfp_t)((((1UL))) << (___GFP_ZEROTAGS_BIT))), "__GFP_ZEROTAGS"} ) : "none"
+
+See all those: << (__GFP_*)
+
+user space has no idea what numbers they represent. It should have
+triggered a FAILED_TO_PARSE, but it appears that the __print_flags() hid
+that error. :-/
+
+This broke with commit: 772dd0342727c ("mm: enumerate all gfp flags") as
+enums do not translate into numbers like defines do. So all gfp_flags are
+now broken in user space trace tooling.
+
+To fix this, we need to add somewhere:
+
+TRACE_DEFINE_ENUM(___GFP_DMA_BIT);
+TRACE_DEFINE_ENUM(___GFP_HIGHMEM_BIT);
+TRACE_DEFINE_ENUM(___GFP_DMA32_BIT);
+TRACE_DEFINE_ENUM(___GFP_MOVABLE_BIT);
+TRACE_DEFINE_ENUM(___GFP_RECLAIMABLE_BIT);
+TRACE_DEFINE_ENUM(___GFP_HIGH_BIT);
+TRACE_DEFINE_ENUM(___GFP_IO_BIT);
+TRACE_DEFINE_ENUM(___GFP_FS_BIT);
+TRACE_DEFINE_ENUM(___GFP_ZERO_BIT);
+TRACE_DEFINE_ENUM(___GFP_UNUSED_BIT);
+TRACE_DEFINE_ENUM(___GFP_DIRECT_RECLAIM_BIT);
+TRACE_DEFINE_ENUM(___GFP_KSWAPD_RECLAIM_BIT);
+TRACE_DEFINE_ENUM(___GFP_WRITE_BIT);
+TRACE_DEFINE_ENUM(___GFP_NOWARN_BIT);
+TRACE_DEFINE_ENUM(___GFP_RETRY_MAYFAIL_BIT);
+TRACE_DEFINE_ENUM(___GFP_NOFAIL_BIT);
+TRACE_DEFINE_ENUM(___GFP_NORETRY_BIT);
+TRACE_DEFINE_ENUM(___GFP_MEMALLOC_BIT);
+TRACE_DEFINE_ENUM(___GFP_COMP_BIT);
+TRACE_DEFINE_ENUM(___GFP_NOMEMALLOC_BIT);
+TRACE_DEFINE_ENUM(___GFP_HARDWALL_BIT);
+TRACE_DEFINE_ENUM(___GFP_THISNODE_BIT);
+TRACE_DEFINE_ENUM(___GFP_ACCOUNT_BIT);
+TRACE_DEFINE_ENUM(___GFP_ZEROTAGS_BIT);
+#ifdef CONFIG_KASAN_HW_TAGS
+TRACE_DEFINE_ENUM(___GFP_SKIP_ZERO_BIT);
+TRACE_DEFINE_ENUM(___GFP_SKIP_KASAN_BIT);
+#endif
+#ifdef CONFIG_LOCKDEP
+TRACE_DEFINE_ENUM(___GFP_NOLOCKDEP_BIT);
+#endif
+TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+
+That will convert the enums into numbers in the trace event format files.
+
+
+-- Steve
