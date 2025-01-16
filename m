@@ -1,156 +1,233 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA94A1DDC23;
-	Thu, 16 Jan 2025 10:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261DF19539F;
+	Thu, 16 Jan 2025 10:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737023386; cv=none; b=A595hOrXKfPPjn1zNMJZVvmhdgs96Oj8tE0Z4KuC5L4loRiDAODODOsmMTnARyKe7OgMIc3vQA/0jUK6kKB7VuIUW/pHsQFMvbEQ+u+txdDskl8kEtl4RpzubThWuTL+DFXs3nZVf/mUOxfjC0MG1s4uJe8oRX1oYTaKXlsanho=
+	t=1737023586; cv=none; b=FdPULHkbPyUBTTRwL8UrhgN7ZjDUk20Tvipw0MdpkCxJanqkVgfgFOSFtyB2Ipq7tDYbYh7+V2zFJw6EIlmt+J3rvCFRS6zMf6QG5IIMduK5fOKPhjOWxwGw5TSTYCaGWRkp2JCuCSgG5NJTV5Lo9IHjBF4/xt2+lZWC6yBeR10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737023386; c=relaxed/simple;
-	bh=jP/wVz8lrlZOPBRiVe05XfWlnjrVaTJVXBj2co85OLg=;
+	s=arc-20240116; t=1737023586; c=relaxed/simple;
+	bh=QU5d+Tyq+Qb2PApXjG+Zo+3QY/YuLIJeuJDQkS5Wwrs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ec6S3Zr1e+ctfKTo9ahF8l68NZdlGgZ/Yg2lCNAuqoezOZOOOFb63Pp4A8Wx/mEqi7ki9U+bfm9vmUfe35Q39B7ylC3DeA7W56w8ZqeSC0/698iuXUqcAuOoMnjBrHOdSaBgkyJSCPExxV5ZaGCxIwk6VfE6cM8J6f4hSWbPKz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FM40lE/0; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vv7Tm1SDJNKhN1id0HPl4d81Mdxjhkqd16AeoW/D2+HSKE1VOR9E0H3Zu4g3FXnMWTh9UTom+pIvOKgYOvkvBG6MUBuHCJlahMM/Pmd7ov0vMEulLs3Icpom+ymDbLhTuVadbmEuGB/7flMwBszQ4WVOopIDf+XvxY2Cg+TqQ8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z9XbPZXX; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FM40lE/0"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C3C7840E02BE;
-	Thu, 16 Jan 2025 10:29:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id MFOmT_gDX9aa; Thu, 16 Jan 2025 10:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1737023375; bh=GQBvA11kyxIGOlMc4gw5ALfkgQqX/TyrIH9O3oAvLFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FM40lE/0clitssFsEKe5JK0a143dAnkAItQNq6yMfahZmpGeSTt09D5HGf0pFLbt8
-	 ulpp29oYaFstDERke8ThqjtXoN04wo6eTBNIkCpJpYEXzS9U9b6shsRrnjlVJY+eKW
-	 TBn1/+CZ9ngMH08pwT66FQz7AXQy6uCPmHYlis0QOsac6iB9mWKsXjQbzbnmjnFYRL
-	 rZuO8syduQMjrFLSjkGi0HDUyE5i/fs8xiEFxdQfkwB7MgmrqT5n5XzifvkD8pCoqz
-	 5X1jUm0gItWfUGbyRkcvKB+w0NCTaoWmvE8UGl8msx3A8F9pgsooW7AjKtjxpPd8Lg
-	 Fb16TJfn+gMvgYR9ZsMlvBBT0VyKZ8xqAHFUwbZBUJJBetncTrqjjppvD9l7XGyf4m
-	 juTTN1zpyhjrfd7TJsAviRyvUSFuCvbml3Dt2L9NGpEIVm/zwFrWYVYuT654H8gFk2
-	 2Yj2R3th9hwTaGTH/t/mjjo+AyzreQe3eFBzv5ejybagmNkRrbkC3tIXtHARl+Igxz
-	 KDg7YnAEPlNEP63WkcD8y4HxsuP37idpXVeYFeL/U5iPMx4eRF2w1AcbW6UgXuHjtO
-	 b3RYhp+4K4Ia7A1PVcGG9NkyVI2JCvCFPMGn35tDMiM9QmJ3MEVxqzNgvDl6r7hKMW
-	 MGq/1HBafOJLETwhOQ5EmCKY=
-Received: from zn.tnic (p200300ea971f93c3329c23fFFEa6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93c3:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F55140E028B;
-	Thu, 16 Jan 2025 10:27:52 +0000 (UTC)
-Date: Thu, 16 Jan 2025 11:27:47 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions
- noinstr compatible
-Message-ID: <20250116102747.GAZ4jfI9HG3K-PW7nf@fat_crate.local>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
- <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z9XbPZXX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YQozZ0qAw76KyENUe8cP271dJjMXAoDFnL7V32VXPSM=; b=Z9XbPZXXGMBLk78qmBqAmyE/8n
+	MjspFRXmpAYMjU9mdXnUIrC4bOAPTh3qoW9gERMtQFaUrSIhBZGAULSu06rAU/usgdpwZCyUW5nac
+	Oqz4NxrsKi89mLRzPjaY8syLOGYjv7DIhVjPHLuZeUxys7azJdoCPaTcBLbn694ucdRBnSl7zyJIw
+	Cvnby9sxf/O+JL8EJs7OwmKA1DnunlM1S9TRI5KCuf+h/LeN+Klkk7KS+VawFW1csgGIef2YQD4OT
+	CZj3ejz8J9EAQcMNujxY2eZlijCgn9GwDkKpI49BOUa3Qkmu8VodAyOErBynaSrcyg3uaOmj/9T8J
+	e3XL8obQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tYNBJ-0000000C52v-2zEW;
+	Thu, 16 Jan 2025 10:32:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C8471300777; Thu, 16 Jan 2025 11:32:56 +0100 (CET)
+Date: Thu, 16 Jan 2025 11:32:56 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH V9 1/3] perf/x86/intel: Avoid pmu_disable/enable if
+ !cpuc->enabled in sample read
+Message-ID: <20250116103256.GI8362@noisy.programming.kicks-ass.net>
+References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
+In-Reply-To: <20250115184318.2854459-1-kan.liang@linux.intel.com>
 
-On Thu, Jan 16, 2025 at 01:18:58AM +0100, Borislav Petkov wrote:
-> Long story short, lemme try to poke around tomorrow to try to figure out what
-> actually happens. It could be caused by the part of Rik's patches and this one
-> inlining things. We'll see...
+On Wed, Jan 15, 2025 at 10:43:16AM -0800, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The WARN_ON(this_cpu_read(cpu_hw_events.enabled)) in the
+> intel_pmu_save_and_restart_reload() is triggered, when sampling read
+> topdown events.
+> 
+> In a NMI handler, the cpu_hw_events.enabled is set and used to indicate
+> the status of core PMU. The generic pmu->pmu_disable_count, updated in
+> the perf_pmu_disable/enable pair, is not touched.
+> However, the perf_pmu_disable/enable pair is invoked when sampling read
+> in a NMI handler. The cpuc->enabled is mistakenly set by the
+> perf_pmu_enable().
+> 
+> Avoid perf_pmu_disable/enable() if the core PMU is already disabled.
+> 
+> Fixes: 7b2c05a15d29 ("perf/x86/intel: Generic support for hardware TopDown metrics")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/events/intel/core.c | 7 +++++--
+>  arch/x86/events/intel/ds.c   | 9 ++++++---
+>  2 files changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 2a2824e9c50d..bce423ad3fad 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -2778,15 +2778,18 @@ DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
+>  static void intel_pmu_read_topdown_event(struct perf_event *event)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	int pmu_enabled = cpuc->enabled;
+>  
+>  	/* Only need to call update_topdown_event() once for group read. */
+>  	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
+>  	    !is_slots_event(event))
+>  		return;
+>  
+> -	perf_pmu_disable(event->pmu);
+> +	if (pmu_enabled)
+> +		perf_pmu_disable(event->pmu);
+>  	static_call(intel_pmu_update_topdown_event)(event);
+> -	perf_pmu_enable(event->pmu);
+> +	if (pmu_enabled)
+> +		perf_pmu_enable(event->pmu);
+>  }
+>  
+>  static void intel_pmu_read_event(struct perf_event *event)
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index ba74e1198328..81b6ec8e824e 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -2096,11 +2096,14 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
+>  
+>  void intel_pmu_auto_reload_read(struct perf_event *event)
+>  {
+> -	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
+> +	int pmu_enabled = this_cpu_read(cpu_hw_events.enabled);
+>  
+> -	perf_pmu_disable(event->pmu);
+> +	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
+> +	if (pmu_enabled)
+> +		perf_pmu_disable(event->pmu);
+>  	intel_pmu_drain_pebs_buffer();
+> -	perf_pmu_enable(event->pmu);
+> +	if (pmu_enabled)
+> +		perf_pmu_enable(event->pmu);
+>  }
 
-Looks transient... The very similar guest boots fine on another machine. Let's
-watch this...
+Hurmp.. would it not be nicer to merge that logic. Perhaps something
+like so?
 
--- 
-Regards/Gruss,
-    Boris.
+---
+ arch/x86/events/intel/core.c | 41 +++++++++++++++++++++++------------------
+ arch/x86/events/intel/ds.c   | 11 +----------
+ arch/x86/events/perf_event.h |  2 +-
+ 3 files changed, 25 insertions(+), 29 deletions(-)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 7601196d1d18..5b491a6815e6 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2785,28 +2785,33 @@ static u64 icl_update_topdown_event(struct perf_event *event)
+ 
+ DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
+ 
+-static void intel_pmu_read_topdown_event(struct perf_event *event)
++static void intel_pmu_read_event(struct perf_event *event)
+ {
+-	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	if (event->hw.flags & (PERF_X86_EVENT_AUTO_RELOAD | PERF_X86_EVENT_TOPDOWN)) {
++		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++		bool pmu_enabled = cpuc->enabled;
+ 
+-	/* Only need to call update_topdown_event() once for group read. */
+-	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
+-	    !is_slots_event(event))
+-		return;
++		/* Only need to call update_topdown_event() once for group read. */
++		if (is_topdown_event(event) && !is_slots_event(event) &&
++		    (cpuc->txn_flags & PERF_PMU_TXN_READ))
++			return;
+ 
+-	perf_pmu_disable(event->pmu);
+-	static_call(intel_pmu_update_topdown_event)(event);
+-	perf_pmu_enable(event->pmu);
+-}
++		cpuc->enabled = 0;
++		if (pmu_enabled)
++			intel_pmu_disable_all();
+ 
+-static void intel_pmu_read_event(struct perf_event *event)
+-{
+-	if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
+-		intel_pmu_auto_reload_read(event);
+-	else if (is_topdown_count(event))
+-		intel_pmu_read_topdown_event(event);
+-	else
+-		x86_perf_event_update(event);
++		if (is_topdown_event(event))
++			static_call(intel_pmu_update_topdown_event)(event);
++		else
++			intel_pmu_drain_pebs_buffer();
++
++		cpuc->enabled = pmu_enabled;
++		if (pmu_enabled)
++			intel_pmu_enable_all(0);
++		return;
++	}
++
++	x86_perf_event_update(event);
+ }
+ 
+ static void intel_pmu_enable_fixed(struct perf_event *event)
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index ba74e1198328..050098c54ae7 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -953,7 +953,7 @@ int intel_pmu_drain_bts_buffer(void)
+ 	return 1;
+ }
+ 
+-static inline void intel_pmu_drain_pebs_buffer(void)
++void intel_pmu_drain_pebs_buffer(void)
+ {
+ 	struct perf_sample_data data;
+ 
+@@ -2094,15 +2094,6 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
+ 	return NULL;
+ }
+ 
+-void intel_pmu_auto_reload_read(struct perf_event *event)
+-{
+-	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
+-
+-	perf_pmu_disable(event->pmu);
+-	intel_pmu_drain_pebs_buffer();
+-	perf_pmu_enable(event->pmu);
+-}
+-
+ /*
+  * Special variant of intel_pmu_save_and_restart() for auto-reload.
+  */
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 31c2771545a6..38b3e30f8988 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1643,7 +1643,7 @@ void intel_pmu_pebs_disable_all(void);
+ 
+ void intel_pmu_pebs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+ 
+-void intel_pmu_auto_reload_read(struct perf_event *event);
++void intel_pmu_drain_pebs_buffer(void);
+ 
+ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
+ 
