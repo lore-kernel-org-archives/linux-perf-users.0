@@ -1,172 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F277A234CE4;
-	Thu, 16 Jan 2025 18:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B24A18CC1C
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 19:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737053711; cv=none; b=dG3Cr0/IiwzxJ70zxiYrCZE15FkdQhoJ2YT4Bo1ESid/2qTyffJ8pjUSoW6CkBytzI69GaxAQUI7yTtaYUxGM44xAkm06XhAjh5sov4IJ/9H/o5WKGUTRHR+79bsAwV6VdawK9qfyP/DoDJX0rwbj7LakxvV5QEAlwGB/CcfcsA=
+	t=1737054056; cv=none; b=o8AOF6uYjbZpLvAyY3pPKLp1h1MRs3oTPBybCtaYnDGz5FvXE6FBp5wsxf3VHU5FJv5yDDIxLwN+JKhEEcQ3McpUQOIggQBu0IydkmbdM5cysZ1eJYqgq4vPSFTjpUF2EefpYhrqTzalVaRQYFI2VLQcaEL6/oZ6oGW0p0bFOIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737053711; c=relaxed/simple;
-	bh=GjN9CRNUsQVdxrwKdp8D8zNv08JZcn8mZ5FSI1G92bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPczIUd2jXjUX5HN7VvgUnmrZ5g8FZSx0oMwgCNsAccLKUV8asfrMGxSOk5B28vhAS8qbWMR04CS5/kAC5Vajgb0sTOqqDFc1U6ef+iSRN/2HuAH1WImIJI3VwvCykLfJD9d/yw2EUMxcNwRaUibvXRczeQvu9UZ001iQAfHL8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZbJhOai; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737054056; c=relaxed/simple;
+	bh=crPe6L9PC/tqgQXgUXhf+Q+KNG3odeSdt+dpPMx15CI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ueubT541vIySESYLzRvErNfzGN8w+n+esX4ppCrBVeqpTag7oF4fFPWa6QpHUo0S3/PiGiQSp7il5i+caa55ep1Kbfual4m+SzSL7WgsOBPGf2TQN/ZeTk1Z7iSydjovFD6AZ48W5o4qKafGp/AFOYIwJ0UOhBLJj6fWTlYhSFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=O0IM0aCI; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZbJhOai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7CAC4CEE2;
-	Thu, 16 Jan 2025 18:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737053710;
-	bh=GjN9CRNUsQVdxrwKdp8D8zNv08JZcn8mZ5FSI1G92bg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uZbJhOai5N1Std6NRP/4z6SsjvISYLO1PvRi+kqHvTHlVw99doXZD7CCVv/XceJqz
-	 foLOCROegeeXULBj6ShhOJPBRm48k+rZrk8r/IHUBkwUPe+0EgbjOziLfpFo6E/l13
-	 h8SRvzEn0OEg2TVgl5QQvGD1jv1Nb+kyhbk8XUxExvsIAPQY+KzrXlkkBDmqo31GVo
-	 kRnstLvBnF2OtUAUuvUnhCjJJLXf/nCX179Id+6756wWOVLy8G4gEtUzImvuLVrxTF
-	 Audzh0wIffH317D1n1tEiesxnjhA8njwpvxi642YHjQFT0isE66pPRmDUX02VqcNne
-	 EzkGoCzGSLVvw==
-Date: Thu, 16 Jan 2025 10:55:08 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, eranian@google.com,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	chu howard <howardchu95@gmail.com>
-Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
-Message-ID: <Z4lWDPpmdQDM1k6l@google.com>
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com>
- <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
- <CAP-5=fWHivx7Q6okMwYOs=65MZr40RjE16tgatMX0hjkCfrwfw@mail.gmail.com>
- <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="O0IM0aCI"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso250443866b.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 11:00:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1737054038; x=1737658838; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C9C+G173FQhI1bxqB+XXDtj4qeOsuE8EKfsvfarbU/I=;
+        b=O0IM0aCI2GXcKfViOc+9j3eeT8grGjFg7i3vlBz9S73qw5GdfQTkeuf9M8u5MNscYX
+         70VlPCpd4SbFm5nm+ZzFYEnjxYhhOH0V0mVwOUi4tj7ZMwJOdAZRO7F/ZxUoV0ENdpi0
+         l+0sep4whZpR/V6Eh4PFivEj3uvsDOuTXL6Jo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737054038; x=1737658838;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C9C+G173FQhI1bxqB+XXDtj4qeOsuE8EKfsvfarbU/I=;
+        b=GQQpDaWfE1z2x9lOeOu9LKnedl8+kokE1IQpWRkPxgA8Nukcz8HGjnfH9EXWtlDPVb
+         77EbEOzxA6e31YHC521068x47GgsJCmzRP1Fp39E5JrnuSnrcQLpGJnSPGOe9nqDzN59
+         JQseIzLB8LyQqwevyFPbV8YHqbosZw9ShqUvgSZuvN68GWlhtbYXHd/x+grVhu0NBYho
+         asz6NncfRfWufXgs2aH4QCu13q6JuWC1pbartyBZgCDEdjLBsa9D++MsG4LVsHaHflar
+         2qtUyl3fLOAGiBUjh/qoOrOV0c6nQzAnu6lmS1MKG7FXS9klMAUrRdBYBuFPWCjHige/
+         OHOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhZ5fU93zAsHayy5JjFXwgD6l89eiUET0l0+C8YQumtP34DNbOSSjvFxd7EeE9e9zTZxysFTXaa8tmsQLU4eIR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4z1CU1+7zoArd4Amdrdp4djvqk4rmsPbUEn24nMV8mDLolVLH
+	W6gdfkLnfYzbB2agqgFeUMYVqAFpcR/4htg6AeKO9erS9F4wCpqGimF/+LNK/tfFNEaxNBCE3Xc
+	Y3AU=
+X-Gm-Gg: ASbGnctAB50nd59bxZL0R7D4fqXyT4CVIxCdIBq2dec1ddpzjRH+iFteOLrlLr2kljS
+	EheW+t7n41R2a1n94CDrmhtJN59dHgIT/BqSS6vPt4tQuWxZksdnbN2ZdeRUrwLx//Iol3eVfZb
+	Ay2+EmqtFlO6CBTTes41Xi9KQJARdtAgeOye3BGfFc6J9LYjVc4MeETfRPWbtr4rDvAZcgOAJw1
+	nMH+ezZ/g0Ds7bK3eb7g5ayB8v/9XZJwohdqL+hv9ZUCs/M0Jjdlgi0ZRbkdSYpjNGHUDAEl/4y
+	NZQAq7ZNikoX31mKQsT2k7HPyS92z6E=
+X-Google-Smtp-Source: AGHT+IGndlqj31u0UC/Dfhnqe/Y45Szj71Xqs7jsWYq3mbh+IWUYAAG9rwU3QOjaod94sKQrGBH8gg==
+X-Received: by 2002:a17:906:f581:b0:aa6:b4b3:5925 with SMTP id a640c23a62f3a-ab2ab5597cfmr2568533566b.14.1737054038162;
+        Thu, 16 Jan 2025 11:00:38 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384fcd73dsm34336666b.178.2025.01.16.11.00.36
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 11:00:36 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d982de9547so2645996a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 11:00:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVJN6MfdLiHvOVJwLRAvgLRtfuaChmZk7AhlND+TBEahfzoU4yRx1lA4OBEV15YNL5K/YqIYmdUO5Tagq6LANBh@vger.kernel.org
+X-Received: by 2002:a17:906:7311:b0:a9a:bbcc:5092 with SMTP id
+ a640c23a62f3a-ab2ab6bfb7amr3215368366b.39.1737054036177; Thu, 16 Jan 2025
+ 11:00:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com>
+References: <20250116132359.1f20cdec@gandalf.local.home>
+In-Reply-To: <20250116132359.1f20cdec@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 16 Jan 2025 11:00:20 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiFEeyY5HE3NMvDYd254yHynzaQyzwYhv5gzRj7KU+gjA@mail.gmail.com>
+X-Gm-Features: AbW1kvZhAEAPFdLu_XCSUkgL9bv7yhhorVSJTllTKCEW113vDKNfW_1s1Mdp5pY
+Message-ID: <CAHk-=wiFEeyY5HE3NMvDYd254yHynzaQyzwYhv5gzRj7KU+gjA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: gfp: Fix the GFP enum values shown for user
+ space tracing tools
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 15, 2025 at 08:11:51AM +0100, Dmitry Vyukov wrote:
-> On Wed, 15 Jan 2025 at 06:59, Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Tue, Jan 14, 2025 at 12:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > [snip]
-> > > FWIW I've also considered and started implementing a different
-> > > approach where the kernel would count parallelism level for each
-> > > context and write it out with samples:
-> > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
-> > > Then sched_in/out would need to do atomic inc/dec on a global counter.
-> > > Not sure how hard it is to make all corner cases work there, I dropped
-> > > it half way b/c the perf record post-processing looked like a better
-> > > approach.
-> >
-> > Nice. Just to focus on this point and go off on something of a
-> > tangent. I worry a little about perf_event_sample_format where we've
-> > used 25 out of the 64 bits of sample_type. Perhaps there will be a
-> > sample_type2 in the future. For the code and data page size it seems
-> > the same information could come from mmap events. You have a similar
-> > issue. I was thinking of another similar issue, adding information
-> > about the number of dirty pages in a VMA. I wonder if there is a
-> > better way to organize these things, rather than just keep using up
-> > bits in the perf_event_sample_format. For example, we could have a
-> > code page size software event that when in a leader sampling group
-> > with a hardware event with a sample IP provides the code page size
-> > information of the leader event's sample IP. We have loads of space in
-> > the types and config values to have an endless number of such events
-> > and maybe the value could be generated by a BPF program for yet more
-> > flexibility. What these events would mean without a leader sample
-> > event I'm not sure.
-> 
-> In the end I did not go with adding parallelism to each sample (this
-> is purely perf report change), so at least for this patch this is very
-> tangential :)
-> 
-> > Wrt wall clock time, Howard Chu has done some work advancing off-CPU
-> > sampling. Wall clock time being off CPU plus on CPU. We need to do
-> > something to move forward the default flags/options for perf record,
-> > for example, we don't enable build ID mmap events by default causing
-> > the whole perf.data file to be scanned looking to add build ID events
-> > for the dsos with samples in them. One option that could be a default
-> > could be off-CPU profiling, and when permissions deny the BPF approach
-> > we can fallback on using events. If these events are there by default
-> > then it makes sense to hook them up in perf report.
-> 
-> Interesting. Do you mean "IO" by "off-CPU".
-> Yes, if a program was blocked for IO for 10 seconds (no CPU work),
-> then that obviously contributes to latency, but won't be in this
-> profile. Though, it still works well for a large number of important
-> cases (e.g. builds, ML inference, server request handling are
-> frequently not IO bound).
-> 
-> I was thinking how IO can be accounted for in the wall-clock profile.
-> Since we have SWITCH OUT events (and they already include preemption
-> bit), we do have info to account for blocked threads. But it gets
-> somewhat complex and has to make some hypotheses b/c not all blocked
-> threads contribute to latency (e.g. blocked watchdog thread). So I
-> left it out for now.
-> 
-> The idea was as follows.
-> We know a set of threads blocked at any point in time (switched out,
-> but not preempted).
-> We hypothesise that each of these could equally improve CPU load to
-> max if/when unblocked.
-> We inject synthetic samples in a leaf "IO wait" symbol with the weight
-> according to the hypothesis. I think these events can be  injected
-> before each switch in event only (which changes the set of blocked
-> threads).
-> 
-> Namely:
-> If CPU load is already at max (parallelism == num cpus), we don't
-> inject any IO wait events.
-> If the number of blocked threads is 0, we don't inject any IO wait events.
-> If there are C idle CPUs and B blocked threads, we inject IO wait
-> events with weight C/B for each of them.
+On Thu, 16 Jan 2025 at 10:23, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> --- a/include/linux/gfp_types.h
+> +++ b/include/linux/gfp_types.h
 
-To track idle CPUs, you need sched-switch of all CPUs regardless of your
-workload, right?  Also I'm not sure when do you want to inject the IO
-wait events - when a thread is sched-out without preemption?  And what
-would be the weight?  I guess you want something like:
+No - please do these somewhere else.
 
-  blocked time * C / B
+This header is included by *everything*.
 
-Then C and B can change before the thread is woken up.
+Put it in some tracing header that isn't.
 
-> For example, if there is a single blocked thread, then we hypothesise
-> that this blocked thread is the root cause of all currently idle CPUs
-> being idle.
-
-I think this may make sense when you target a single process group but
-it also needs system-wide idle information.
-
-> 
-> This still has a problem of saying that unrelated threads contribute
-> to latency, but at least it's a simple/explainable model and it should
-> show guilty threads as well. Maybe unrelated threads can be filtered
-> by the user by specifying a set of symbols in stacks of unrelated
-> threads.
-
-Or by task name.
-
-> 
-> Does it make any sense? Do you have anything better?
-
-I'm not sure if it's right to use idle state which will be affected by
-unrelated processes.  Maybe it's good for system-wide profiling.
-
-For a process (group) profiliing, I think you need to consider number of
-total threads, active threads, and CPUs.  And if the #active-threads is
-less than min(#total-threads, #CPUs), then it could be considered as
-idle from the workload's perspective.
-
-What do you think?
-
-Thanks,
-Namhyung
-
+             Linus
