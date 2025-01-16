@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664CC198A0D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A45822CBF9;
 	Thu, 16 Jan 2025 21:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737063872; cv=none; b=bGGzBvNmiUudXO8Tv+Kkm9A9F0Z1up7zCKqhUhXsOVP+3oFT6gz/uAKkHXYc08GtKeXrBweX687GrWMI6oAW5G94+6UlFqZ5NwoNhhv0f47WvwrhWVhhsxkdAuOfkg33lP8w6oIuZQ9GB1mEAS+pwGi+r1gH9UQ0hjLpMPxfDBE=
+	t=1737063872; cv=none; b=lifKTl/dimztVE2o5dSoBINhvw1qKMpt5pYpW55EzIZtM+dUdpQVoqopgjPa5LwOZ1TnsiCDIyU78tUTRuTMcJTpNZ4DCj7uq352Dsvlrt+6GJj2pIuXlm1R9pBuVg499mHylrxOISbJAJRWOISJNni1TFRcd6WuNmBSMXH5Mls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737063872; c=relaxed/simple;
-	bh=WQjUiQ2ufFWq7U+Kvjd6tTLRkvJdz19mR2F/dtojoUY=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=HSXQWlSct1ojxmJWbneVbZ2oiF3OXC/SyY9qx5c0+Iqx7jlB4GLBHAYjxgkRzTeQOkE1jAyg4iN12N/BHEWeIcU57FOzkjB16Xx39v/rIhCauGqpnWmDVbkP5k8n7h5wYRuBNHClPMZw2Nj+tap9Jt2h+8+9jktyUKwwdJHBoL0=
+	bh=8UwU8P6hd5ekUuKU4t9A4gqzAaFTJfHAkHRwzdJm5Lw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=WHNiLZzxIkrL6rkHpe81pcsyjAsGzB2gzePdZh8Vqw3/f3cEk2kRvzuArasB132vBWSKo2LHJT/49HGqHTFCLKHnKy4TnJ98OPz5xXpAlB3n0S/PrgQtj84qSkCuzyVlXYlCEVGxQ8XjvojhtYulea3jnoR7UQG/95g+6C2emCQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB48EC4CED6;
-	Thu, 16 Jan 2025 21:44:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA3EC4CEDF;
+	Thu, 16 Jan 2025 21:44:32 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tYXfK-00000000yxc-2opM;
+	id 1tYXfK-00000000yyC-46fX;
 	Thu, 16 Jan 2025 16:44:38 -0500
-Message-ID: <20250116214123.917928229@goodmis.org>
+Message-ID: <20250116214438.749504792@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 16 Jan 2025 16:41:23 -0500
+Date: Thu, 16 Jan 2025 16:41:24 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -32,48 +33,75 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Michael Petlan <mpetlan@redhat.com>,
  Veronika  Molnarova <vmolnaro@redhat.com>,
  Suren Baghdasaryan <surenb@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v2 0/2] tracing: gfp: Fix regression of printing GFP flags in user space tracing tooling
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ stable@vger.kernel.org
+Subject: [PATCH v2 1/2] tracing: gfp: Fix the GFP enum values shown for user space tracing
+ tools
+References: <20250116214123.917928229@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
-This fixes a regression that was brought up last year[1], but due
-to missing a response it was forgotten about.
+Tracing tools like perf and trace-cmd read the /sys/kernel/tracing/events/*/*/format
+files to know how to parse the data and also how to print it. For the
+"print fmt" portion of that file, if anything uses an enum that is not
+exported to the tracing system, user space will not be able to parse it.
 
-The commit 772dd0342727c ("mm: enumerate all gfp flags") introduced
-usage of enums in creating of the __GFP_* flags. But enums are not
-converted to their values like macros are in the trace event format
-files that are exported to user space to allow tools to properly parse
-the raw binary events. This broke the parsing of gfp flags.
+The GFP flags use to be defines, and defines get translated in the print
+fmt sections. But now they are converted to use enums, which is not.
 
-Instead of having something like:
+The mm_page_alloc trace event format use to have:
 
-  gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
+  print fmt: "page=%p pfn=0x%lx order=%d migratetype=%d gfp_flags=%s",
+    REC->pfn != -1UL ? (((struct page *)vmemmap_base) + (REC->pfn)) : ((void
+    *)0), REC->pfn != -1UL ? REC->pfn : 0, REC->order, REC->migratetype,
+    (REC->gfp_flags) ? __print_flags(REC->gfp_flags, "|", {( unsigned
+    long)(((((((( gfp_t)(0x400u|0x800u)) | (( gfp_t)0x40u) | (( gfp_t)0x80u) |
+    (( gfp_t)0x100000u)) | (( gfp_t)0x02u)) | (( gfp_t)0x08u) | (( gfp_t)0)) |
+    (( gfp_t)0x40000u) | (( gfp_t)0x80000u) | (( gfp_t)0x2000u)) & ~((
+    gfp_t)(0x400u|0x800u))) | (( gfp_t)0x400u)), "GFP_TRANSHUGE"}, {( unsigned
+    long)((((((( gfp_t)(0x400u|0x800u)) | (( gfp_t)0x40u) | (( gfp_t)0x80u) |
+    (( gfp_t)0x100000u)) | (( gfp_t)0x02u)) | (( gfp_t)0x08u) | (( gfp_t)0)) ...
 
-It would just have a raw hex value:
+Where the GFP values are shown and not their names. But after the GFP
+flags were converted to use enums, it has:
 
-  gfp_flags=0x140cca
+  print fmt: "page=%p pfn=0x%lx order=%d migratetype=%d gfp_flags=%s",
+    REC->pfn != -1UL ? (vmemmap + (REC->pfn)) : ((void *)0), REC->pfn != -1UL
+    ? REC->pfn : 0, REC->order, REC->migratetype, (REC->gfp_flags) ?
+    __print_flags(REC->gfp_flags, "|", {( unsigned long)((((((((
+    gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) <<
+    (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT)))
+    | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) <<
+    (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT))))
+    | (( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))) | (( gfp_t)0)) | ((
+    gfp_t)((((1UL))) << (___GFP_COMP_BIT))) ...
 
-Which is mostly useless or hard to decipher.
+Where the enums names like ___GFP_KSWAPD_RECLAIM_BIT are shown and not their
+values. User space has no way to convert these names to their values and
+the output will fail to parse. What is shown is now:
 
-Instead of reverting the enums into macros, use the TRACE_DEFINE_ENUM()
-macro that informs the tracing subsystem about enums and it converts them
-to their proper values.
+  mm_page_alloc:  page=0xffffffff981685f3 pfn=0x1d1ac1 order=0 migratetype=1 gfp_flags=0x140cca
 
-The first patch is a fix that fixes the regression and should go into
-the current rc release as well as be backported to stable.
+The TRACE_DEFINE_ENUM() macro was created to handle enums in the print fmt
+files. This causes them to be replaced at boot up with the numbers, so
+that user space tooling can parse it. By using this macro, the output is
+back to the human readable:
 
-The second patch is a clean up that removes duplication of the GFP flags
-in the macros of mmflags.h and should be added in the coming merge window.
+  mm_page_alloc: page=0xffffffff981685f3 pfn=0x122233 order=0 migratetype=1 gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
 
-I kept the two together so that one can see why the solution to the first
-patch was made. The use of TRACE_GFP_EM() internally was added to make
-it easier to reuse the TRACE_GFP_FLAGS macro.
-
+Cc: stable@vger.kernel.org
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Closes: https://lore.kernel.org/all/87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com/
+Fixes: 772dd0342727c ("mm: enumerate all gfp flags")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
 Changes since v1: https://lore.kernel.org/20250116132359.1f20cdec@gandalf.local.home
 
 - Moved the updates to only include/trace/events/mmflags.h
@@ -84,15 +112,84 @@ Changes since v1: https://lore.kernel.org/20250116132359.1f20cdec@gandalf.local.
   it to be expanded later for use with the __def_gfpflags_names()
   macro
 
-- Added the second non critical patch to show he clean up of removing
-  duplicate defines of the ___GFP_*_BITs. 
+ include/trace/events/mmflags.h | 63 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-[1] https://lore.kernel.org/all/87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com/
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index bb8a59c6caa2..d36c857dd249 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -13,6 +13,69 @@
+  * Thus most bits set go first.
+  */
+ 
++/* These define the values that are enums (the bits) */
++#define TRACE_GFP_FLAGS_GENERAL			\
++	TRACE_GFP_EM(DMA)			\
++	TRACE_GFP_EM(HIGHMEM)			\
++	TRACE_GFP_EM(DMA32)			\
++	TRACE_GFP_EM(MOVABLE)			\
++	TRACE_GFP_EM(RECLAIMABLE)		\
++	TRACE_GFP_EM(HIGH)			\
++	TRACE_GFP_EM(IO)			\
++	TRACE_GFP_EM(FS)			\
++	TRACE_GFP_EM(ZERO)			\
++	TRACE_GFP_EM(DIRECT_RECLAIM)		\
++	TRACE_GFP_EM(KSWAPD_RECLAIM)		\
++	TRACE_GFP_EM(WRITE)			\
++	TRACE_GFP_EM(NOWARN)			\
++	TRACE_GFP_EM(RETRY_MAYFAIL)		\
++	TRACE_GFP_EM(NOFAIL)			\
++	TRACE_GFP_EM(NORETRY)			\
++	TRACE_GFP_EM(MEMALLOC)			\
++	TRACE_GFP_EM(COMP)			\
++	TRACE_GFP_EM(NOMEMALLOC)		\
++	TRACE_GFP_EM(HARDWALL)			\
++	TRACE_GFP_EM(THISNODE)			\
++	TRACE_GFP_EM(ACCOUNT)			\
++	TRACE_GFP_EM(ZEROTAGS)
++
++#ifdef CONFIG_KASAN_HW_TAGS
++# define TRACE_GFP_FLAGS_KASAN			\
++	TRACE_GFP_EM(SKIP_ZERO)			\
++	TRACE_GFP_EM(SKIP_KASAN)
++#else
++# define TRACE_GFP_FLAGS_KASAN
++#endif
++
++#ifdef CONFIG_LOCKDEP
++# define TRACE_GFP_FLAGS_LOCKDEP		\
++	TRACE_GFP_EM(NOLOCKDEP)
++#else
++# define TRACE_GFP_FLAGS_LOCKDEP
++#endif
++
++#ifdef CONFIG_SLAB_OBJ_EXT
++# define TRACE_GFP_FLAGS_SLAB			\
++	TRACE_GFP_EM(NO_OBJ_EXT)
++#else
++# define TRACE_GFP_FLAGS_SLAB
++#endif
++
++#define TRACE_GFP_FLAGS				\
++	TRACE_GFP_FLAGS_GENERAL			\
++	TRACE_GFP_FLAGS_KASAN			\
++	TRACE_GFP_FLAGS_LOCKDEP			\
++	TRACE_GFP_FLAGS_SLAB
++
++#undef TRACE_GFP_EM
++#define TRACE_GFP_EM(a) TRACE_DEFINE_ENUM(___GFP_##a##_BIT);
++
++TRACE_GFP_FLAGS
++
++/* Just in case these are ever used */
++TRACE_DEFINE_ENUM(___GFP_UNUSED_BIT);
++TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
++
+ #define gfpflag_string(flag) {(__force unsigned long)flag, #flag}
+ 
+ #define __def_gfpflag_names			\
+-- 
+2.45.2
 
-Steven Rostedt (2):
-      tracing: gfp: Fix the GFP enum values shown for user space tracing tools
-      tracing: gfp: Remove duplication of recording GFP flags
 
-----
- include/trace/events/mmflags.h | 104 +++++++++++++++++++++++++++++------------
- 1 file changed, 73 insertions(+), 31 deletions(-)
