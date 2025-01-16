@@ -1,60 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAA922FAC3
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 23:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2708719992C
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 23:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737068874; cv=none; b=fE0TlV19+a7+5EhHKBdBLf4eIqk57Q2GuDgXYBDgoy4x10KCEu0jV4L3Tsr/t7cKGMRMF98WGCnd25iavmhTpGaN4zXVOhAa0lnv766ByNtDB+Zo4IjJHckvelvJB3k+lGgzWxe67lvkhpYAhCH97+wD+qbKNKmf8RMETE5MN4c=
+	t=1737069021; cv=none; b=YB1bRTpBkhd2qjRVSTFtEWR7OXcASQffwQNU9jy/mOIINUO1FYyxXi1ISd2gwu877UGrdAkyO4N6yOVdkV/1ZzbUVfFpz84ghE5EE/beTfKkTc9C/AQJWXvoxw9xuADLGNC/8l+fWVZpxcCXUiAQrUgRR7cArWZox+7Fq8BDPL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737068874; c=relaxed/simple;
-	bh=MsohCofWaiEY1SCmsLK+koscI73AQSCUW+YofGw4f6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jeX95JrzPY2E4ZZG4v4aPRLCH70Hb43+gDkcS4jsMR6ROUJmB0bDn5WtfmK+Ahz58dxXVmHNPClKAw8mEY2AFAxh/Dgd3B7bQD1aQzkeB+sEOPNaZxgswdYAu+zJ24RqO7Tj6RP+VL6oRV2Mg9IuwLhpcigv8YzeriSuxY4CxVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Of+PGpNk; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1737069021; c=relaxed/simple;
+	bh=zuY3O18Tj3s5bv1IKSxkNZURrCa+mFTlRFzYQgPqel4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LFUUwKN/cnUC69Z8WmX2i5n7la1PJHWS6SVVbnISbnW2SSIzMShQzOwW9Sd+VUv8F0MnIAri8bsCa49UFtStgxGjJG3eyFNIwkAQAy9RhTTOu5E5XiXDoQeqzR4LRliPQEfHjZP27Qn+nN2WBQXJ7qqoTUuMevvVxZE8cuQ4zmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CzelOHE1; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Of+PGpNk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737068870; x=1768604870;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MsohCofWaiEY1SCmsLK+koscI73AQSCUW+YofGw4f6o=;
-  b=Of+PGpNklwCunNQKrhXcWFKUh6Qg6cdAbOuW1+5MTcXiSSXLyzScDs35
-   V1jQcgCjuX7/zwKGl3e6GfHBRM1Ht3WqFxMOKa4ZyrZYpFRF9BPRDSdvY
-   +nj+7QziwoGRYGAgFefnhBN6SY3O3G7pqdUpUBamkjmMrzBOgQ9u6qtFe
-   OmeSBvwVW5Wlm0b4/6wSCm1WBUel2N6+/FDpclvQXNstuvqmInGZsxD9V
-   DheXb+nv8kgXTGt7+o0oQXU86MIWMHKFALQPuI3/girk9ZikB9b7Dtiaj
-   tKbzclc9MlDYiCGyBEzx8vL+BZoiRGq4XIuM9tpigmNrzhOoLWaJsK773
-   w==;
-X-CSE-ConnectionGUID: RAZKRHeYSLiCUaC8Hf+z3g==
-X-CSE-MsgGUID: 7bAXpRsPTmmh4DM32MXf+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11317"; a="37364134"
-X-IronPort-AV: E=Sophos;i="6.13,210,1732608000"; 
-   d="scan'208";a="37364134"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 15:07:42 -0800
-X-CSE-ConnectionGUID: sEeNkZFCSDmkGgTdkfUTvQ==
-X-CSE-MsgGUID: Ov6K84l9SGuYOenN6TatYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,210,1732608000"; 
-   d="scan'208";a="136474363"
-Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 15:07:41 -0800
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: <intel-xe@lists.freedesktop.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH v13 7/7] drm/xe/pmu: Add GT C6 events
-Date: Thu, 16 Jan 2025 15:07:18 -0800
-Message-ID: <20250116230718.82460-8-lucas.demarchi@intel.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250116230718.82460-1-lucas.demarchi@intel.com>
-References: <20250116230718.82460-1-lucas.demarchi@intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CzelOHE1"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-385de9f789cso1128503f8f.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 15:10:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737069017; x=1737673817; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q8uJh+xH3eI/c9V3pGChrDiSvCKIcHtU+7c19/VbDB0=;
+        b=CzelOHE1a5BZSJOJI/ZeIXs9pVgm5fsnJ7uRteGalCT51Hy1yD09u8meaQ227JVrxq
+         Ffq6OpdmUa23L9bZK8+S9DmG6/ltGLy6YLC/ljPS6GhhP7s4imwlb9awhksgg//b6n5C
+         jmCHbTZBRRo4TAGIrR6nMVVco8Ux72sLtTdPhH0t3ZeVfcqVfwY7OseK7N0iqCILXs63
+         1t/GuccR9Wcaoj1jDDtDhGmZMmdwc2llnY4PUj80BT2h3AOLzNlx4/HjT0F9vgmvPt1S
+         B9fDzVW4eBZ442+qxvZytOcRqiJ+PNoJycFHYiZy0vWErOJFI/zLEI0sfOUWvHaniPKL
+         VBeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737069017; x=1737673817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q8uJh+xH3eI/c9V3pGChrDiSvCKIcHtU+7c19/VbDB0=;
+        b=HYHq3+HV4Z25OShUxINaQJEat1SB2d0hety8BgrV6jG7TkPD0BfXkMxtKr9PfRN+sA
+         htAuIML8JXvYnZPPuCtO0deGYs6n2IomIP6mXy0bboTzIcR+F/yZPWjNiXcb1+9Y5PJM
+         ogd5O1rueGnwzOIAQrEsF5NIuOnVuLvi+tJ0OEnroyrdZrXfXJxesuG31J405+QpDCmA
+         ASQwRnjcff1SrpJoTQUJ3iotK7aYaewKFog+MIPcKMjtYZUYdZRPtU7oSs5XzjoPfMHC
+         9Iv97YzyXu5xzD6f+T+AqK56Hl3J6nHwxqp+uTeHMUF7PNR+QyAa6ipEOVSK+u3aaPKM
+         WHKA==
+X-Gm-Message-State: AOJu0Yxqt4SBPt72b1p6Pbnk4fZCXEC26/StusZBeAPHQGdiqKV7Ch3t
+	L6wFYk9m9eTtUJCD6bQwCe5sB3CiOKw/1efukKi8coKIOhfV+XbTbWSRURSpigxV1shdDwlMQ1u
+	J
+X-Gm-Gg: ASbGncuiKy5uB94yV/dXhoIYGn4/nEZAvfRL/OcNdRXSVX+Xkwwjpvgu7GKPkoXWFoS
+	woxHVYoR3d2dAJYe/kLz49BwE+rSQjW7QnHGEX4CfpFrpZqf9IL2XoMQtUSN/jv5jDLPwZ8qsKq
+	+uHcd6mBjjfPMPWE6zUncTAVX/AUxk3A8mjMtZSx2mfHf6gFBEMBaXQkPqlNxlN3mH5/iv0wKjj
+	6MZ+E2Wyxk92qS4gyDmj6Usw+/OL0kBcp5QOY28+fTx5j/UT1jGozBZ2WtlRiLSoGFpbRgQBuIX
+	o+cvL1ZifQKnpzUZ
+X-Google-Smtp-Source: AGHT+IF0eMc8RsiD3vYznSPkvx/UK3bXs0kRUnvDYnuRW301R33pMrAUnJVLjjR2VGZTLTvqShRQuA==
+X-Received: by 2002:a5d:5848:0:b0:38b:e1b3:16dc with SMTP id ffacd0b85a97d-38bf57d339amr277724f8f.50.1737069017185;
+        Thu, 16 Jan 2025 15:10:17 -0800 (PST)
+Received: from rkanwal-XPS-15-9520.uk.rivosinc.com ([2a02:c7c:75ac:6300:b3f2:3a24:1767:7db0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322b337sm974991f8f.59.2025.01.16.15.10.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2025 15:10:16 -0800 (PST)
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+To: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	ajones@ventanamicro.com,
+	anup@brainfault.org,
+	acme@kernel.org,
+	atishp@rivosinc.com,
+	beeman@rivosinc.com,
+	brauner@kernel.org,
+	conor@kernel.org,
+	heiko@sntech.de,
+	irogers@google.com,
+	mingo@redhat.com,
+	james.clark@arm.com,
+	renyu.zj@linux.alibaba.com,
+	jolsa@kernel.org,
+	jisheng.teoh@starfivetech.com,
+	palmer@dabbelt.com,
+	will@kernel.org,
+	kaiwenxue1@gmail.com,
+	vincent.chen@sifive.com,
+	Rajnesh Kanwal <rkanwal@rivosinc.com>
+Subject: [PATCH v2 0/7] riscv: pmu: Add support for Control Transfer Records Ext.
+Date: Thu, 16 Jan 2025 23:09:48 +0000
+Message-Id: <20250116230955.867152-1-rkanwal@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,152 +92,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
+This series enables Control Transfer Records extension support on riscv
+architecture. This extension is similar to Arch LBR in x86 and BRBE in ARM.
+The Extension has been ratified and the latest release can be found here [0]
 
-Provide a PMU interface for GT C6 residency counters. The implementation
-is ported over from the i915 PMU code. Residency is provided in units of
-ms(like sysfs entry in - /sys/class/drm/card0/device/tile0/gt0/gtidle).
+CTR extension depends on both the implementation of S-mode and Sscsrind
+extension v1.0.0 [1]. CTR access ctrsource, ctrtartget and ctrdata CSRs using
+sscsrind extension.
 
-Sample usage and output:
+The series is based on Smcdeleg/Ssccfg counter delegation extension [2]
+patches [3]. CTR itself doesn't depend on counter delegation support. This
+rebase is basically to include the Smcsrind patches.
 
-	$ perf list | grep gt-c6
-	  xe_0000_00_02.0/gt-c6-residency/                   [Kernel PMU event]
+The last patch is in the perf tool to allow processing 256 entries. Without
+this perf seems to consider that sample as corrupted and discards it.
 
-	$ tail /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency*
-	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency <==
-	event=0x01
+Here is the link to a quick guide [4] to setup and run a basic perf demo on
+Linux to use CTR Ext.
 
-	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency.unit <==
-	ms
+Qemu patches can be found here:
+https://github.com/rajnesh-kanwal/qemu/tree/b4/ctr_upstream_v5
 
-	$ perf stat -e xe_0000_00_02.0/gt-c6-residency,gt=0/ -I1000
-	#           time             counts unit events
-	     1.001196056              1,001 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
-	     2.005216219              1,003 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
+Opensbi patch can be found here:
+https://github.com/rajnesh-kanwal/opensbi/tree/ctr_upstream_v2
 
-Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
+Linux kernel patches can be found here:
+https://github.com/rajnesh-kanwal/linux/tree/b4/ctr_upstream_v2
 
-Besides the rebase, that changed a lot how the event was added,
-here is a summary of other changes:
+[0]: https://github.com/riscv/riscv-control-transfer-records/releases/tag/v1.0
+[1]: https://github.com/riscvarchive/riscv-indirect-csr-access/releases/tag/v1.0.0
+[2]: https://github.com/riscvarchive/riscv-smcdeleg-ssccfg/releases/tag/v1.0.0
+[3]: https://lore.kernel.org/lkml/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com/
+[4]: https://github.com/rajnesh-kanwal/linux/wiki/Running-CTR-basic-demo-on-QEMU-RISC%E2%80%90V-Virt-machine
 
-- Use xe_pm_runtime_get_if_active() when reading
-  xe_gt_idle_residency_msec() as there's not guarantee it will not be
-  suspended anymore by the time it reads the counter
+Rajnesh Kanwal (7):
+  perf: Increase the maximum number of samples to 256.
+  riscv: pmu: Add Control transfer records CSR definations.
+  riscv: Add Control Transfer Records extension parsing
+  dt-bindings: riscv: add Sxctr ISA extension description
+  riscv: pmu: Add infrastructure for Control Transfer Record
+  riscv: pmu: Add driver for Control Transfer Records Ext.
+  riscv: pmu: Integrate CTR Ext support in riscv_pmu_dev driver
 
-- Drop sample[] from the pmu struct and only use the prev/counter from
-  the perf_event struct. This avoids mixing the counter reported to 2
-  separate clients.
+ .../devicetree/bindings/riscv/extensions.yaml |  14 +
+ MAINTAINERS                                   |   1 +
+ arch/riscv/include/asm/csr.h                  |  83 +++
+ arch/riscv/include/asm/hwcap.h                |   4 +
+ arch/riscv/kernel/cpufeature.c                |   2 +
+ drivers/perf/Kconfig                          |  11 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/riscv_ctr.c                      | 608 ++++++++++++++++++
+ drivers/perf/riscv_pmu_common.c               |  23 +-
+ drivers/perf/riscv_pmu_dev.c                  |  82 +++
+ drivers/perf/riscv_pmu_legacy.c               |   2 +
+ include/linux/perf/riscv_pmu.h                |  55 ++
+ tools/perf/util/machine.c                     |  21 +-
+ 13 files changed, 898 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/perf/riscv_ctr.c
 
-- Drop time ktime helpers and just use what's provided by
-  include/linux/ktime.h
-
- drivers/gpu/drm/xe/xe_pmu.c | 56 +++++++++++++++++++++++++++++++------
- 1 file changed, 48 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-index c2af82ec3f793..37df9d3cc110c 100644
---- a/drivers/gpu/drm/xe/xe_pmu.c
-+++ b/drivers/gpu/drm/xe/xe_pmu.c
-@@ -11,6 +11,7 @@
- #include "xe_device.h"
- #include "xe_force_wake.h"
- #include "xe_gt_clock.h"
-+#include "xe_gt_idle.h"
- #include "xe_gt_printk.h"
- #include "xe_mmio.h"
- #include "xe_macros.h"
-@@ -117,16 +118,50 @@ static int xe_pmu_event_init(struct perf_event *event)
- 	return 0;
- }
- 
--static u64 __xe_pmu_event_read(struct perf_event *event)
-+static u64 read_gt_c6_residency(struct xe_pmu *pmu, struct xe_gt *gt, u64 prev)
- {
--	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct xe_device *xe = gt_to_xe(gt);
-+	unsigned long flags;
-+	ktime_t t0;
-+	s64 delta;
-+
-+	if (xe_pm_runtime_get_if_active(xe)) {
-+		u64 val = xe_gt_idle_residency_msec(&gt->gtidle);
-+
-+		xe_pm_runtime_put(xe);
-+
-+		return val;
-+	}
-+
-+	/*
-+	 * Estimate the idle residency by looking at the time the device was
-+	 * suspended: should be good enough as long as the sampling frequency is
-+	 * 2x or more than the suspend frequency.
-+	 */
-+	raw_spin_lock_irqsave(&pmu->lock, flags);
-+	t0 = pmu->suspend_timestamp[gt->info.id];
-+	raw_spin_unlock_irqrestore(&pmu->lock, flags);
-+
-+	delta = ktime_ms_delta(ktime_get(), t0);
-+
-+	return prev + delta;
-+}
-+
-+static u64 __xe_pmu_event_read(struct perf_event *event, u64 prev)
-+{
-+	struct xe_pmu *pmu = container_of(event->pmu, typeof(*pmu), base);
-+	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
- 	struct xe_gt *gt = event_to_gt(event);
--	u64 val = 0;
- 
- 	if (!gt)
--		return 0;
-+		return prev;
-+
-+	switch (config_to_event_id(event->attr.config)) {
-+	case XE_PMU_EVENT_GT_C6_RESIDENCY:
-+		return read_gt_c6_residency(pmu, gt, prev);
-+	}
- 
--	return val;
-+	return prev;
- }
- 
- static void xe_pmu_event_update(struct perf_event *event)
-@@ -136,10 +171,11 @@ static void xe_pmu_event_update(struct perf_event *event)
- 
- 	prev = local64_read(&hwc->prev_count);
- 	do {
--		new = __xe_pmu_event_read(event);
-+		new = __xe_pmu_event_read(event, prev);
- 	} while (!local64_try_cmpxchg(&hwc->prev_count, &prev, new));
- 
--	local64_add(new - prev, &event->count);
-+	if (new > prev)
-+		local64_add(new - prev, &event->count);
- }
- 
- static void xe_pmu_event_read(struct perf_event *event)
-@@ -162,7 +198,7 @@ static void xe_pmu_enable(struct perf_event *event)
- 	 * for all listeners. Even when the event was already enabled and has
- 	 * an existing non-zero value.
- 	 */
--	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event));
-+	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event, 0));
- }
- 
- static void xe_pmu_event_start(struct perf_event *event, int flags)
-@@ -267,6 +303,10 @@ static const struct attribute_group pmu_events_attr_group = {
- 
- static void set_supported_events(struct xe_pmu *pmu)
- {
-+	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
-+
-+	if (!xe->info.skip_guc_pc)
-+		pmu->supported_events |= BIT_ULL(XE_PMU_EVENT_GT_C6_RESIDENCY);
- }
- 
- /**
 -- 
-2.48.0
+2.34.1
 
