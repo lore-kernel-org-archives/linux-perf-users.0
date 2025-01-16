@@ -1,190 +1,137 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0752D1DE8AC;
-	Thu, 16 Jan 2025 14:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C396822B585
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 14:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737036299; cv=none; b=fYfD3JLSuqVO5Yu0wx2Zz1Ib203/xKe/go/NTe5+t2mU1Lm+fIEMfz1vUQxNjrbOOQFNRXDlBEkXwkDoWumYNH9HaUhzLTCxT/E41G8m/KzUaffhUbnrEvnid52F1sX1/vrUruuzIZd02wx6TO1hNmBqw88TQlhcQWyVdLGxXDk=
+	t=1737038075; cv=none; b=UrbRV00AXs5yDkHjU/QLNyOB8ppi7LvmXAW2etuWolEq1Ebvh/2vbUFEEc64Xgk8JqD3MTrwoDTfnCAhZvHwFDcCmraahjTrCgmPw9Wj7nF4fCKDM3eN5ojHAlOAzaXv0lkvhPVDRmdDaymz1bZ5p24UjimElgan6Q4xBTB72qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737036299; c=relaxed/simple;
-	bh=hNyknZwTpS4igQ+b6Q471Clo7jLNR8MSLrznRv+goc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RAPMQmtGvZPqnPyfHSSBetv1bu8un6SIimDWFgH1grLafK3aqPL5xT+FZxfWXPEU6v2FPpm8NZdKSTJOq1SqPaIwp5VaYZpLBEu9/3AKLSAyU9o1RkMJe5X3k1aH3t5B6B1V04OSYpN54ASf79I1xdbSUvHemEMCzv2r+K2VXus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AoUcPN70; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1737038075; c=relaxed/simple;
+	bh=IhPCl110K3kK1/Mt8s1pU3zE4XJXrjW3zj7Hl7SH5JE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rPBRxB0ey5ea7vgL2PQMMbneAaPkVWB3Lcto9R5K1H6e6wxowIl9FqmH0dy0NGqZxlendaUbINyjSeqk7jkdGj39gzcE5n6dRtaA/9s09GVRJ+oSKZuqmFKkpp9GOs/gWF/xKKqZerxtu+DfJ96w9ZWsqF2xOHF0Uqh8Om8sv3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NUsW1FSZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AoUcPN70"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 64DEC40E0288;
-	Thu, 16 Jan 2025 14:04:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2AjLmPaIv3rS; Thu, 16 Jan 2025 14:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1737036284; bh=ugKrbojVRwTBmPMKkHUcaS2aDcqRv9OqaSevzpXMYOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AoUcPN70r71GRskEbBjwKB5t2IpKoOvWroHj7Gj+yh3TXIQq4jAaeXsAtKetsP+we
-	 7U42EJbMPBRZdphzKgKJnl1FaXd4+NOPdDL1SkgOkJuvHbUXMBGkSPz+3v8h7dNhmT
-	 Hnpwxe9r0qX772w6Op3rP2iEyZS27E/nwn39RIAvFhrt8U3AgFlwZ1zghfPHzcZ8zO
-	 c/4ymjaW+0fTU8jpLPb236iMCAWdJa4hZ/QKzL2ReUqqUBynyzdljxfL49TuGZKsUK
-	 HuZUYY0mmrBW4uLQ4YxKMwtuKAzOBBOTZPyqnz4H81TmMZX9A3znFZ3JT09PpbLLCS
-	 Ia6e5nKvzD4mq+MXsOmJ3+GXejTE4cvNoC5h043TIg2mzfveb9shxPPW6gBlFTA53E
-	 7jgElnzIfinsMoQwVSg6i18FLDzY50+kqVz9+zbr5gpiPs5LeCwLYM/Aq1u2fGPpZ0
-	 0Ls41+wYzo1pfh0OpM+GBydt5tkuWtf+9452THH3PFkEdzhwGbhRprrYvj75bnToTh
-	 nRx4uZELom9gJdmd+ZcYZKN5oNcUaiz0Ijo4hBEtkfRieSbS8RUd1mN91KKgO2qVid
-	 d+CXJjbRpPfJbO67fm64t8fRGqM3v/OqRo/Z09m5/2qMM0veqGpRWUhNKQ3qXXaJz4
-	 pfAh9T0l+/f8chSy2nlAbhlU=
-Received: from zn.tnic (p200300ea971f934f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:934f:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B67F640E0286;
-	Thu, 16 Jan 2025 14:03:01 +0000 (UTC)
-Date: Thu, 16 Jan 2025 15:02:58 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions
- noinstr compatible
-Message-ID: <20250116140258.GDZ4kRkvEGYovA_J5u@fat_crate.local>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
- <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
- <20250116102747.GAZ4jfI9HG3K-PW7nf@fat_crate.local>
- <CA+i-1C1sXC1tbo9ytuex0eBD3gUbQwnNP8rvOhCv=JV+oSHo1g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUsW1FSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737038072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SlVUZEGdNiUP4ymo2bPnpZQRc11SVsEuAtqv0GA7FOE=;
+	b=NUsW1FSZMelcbgqxxS3JEFlvdamGmIBCJPzYhf0NRkWNwIFij9vTFa9hRIvRaCAMQQaWKx
+	4aUsXHBk+nPdBftFZwxSn7crUIdU0ZBbuudrzGaZ2iVGne9kSd4vpZU93nr1JXo9uwyaFh
+	koJzcJ77AOsn6jKkuxA1miJkMT+kDiE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-608-BExd9ODSPDuETvu3HtJMeQ-1; Thu, 16 Jan 2025 09:34:31 -0500
+X-MC-Unique: BExd9ODSPDuETvu3HtJMeQ-1
+X-Mimecast-MFC-AGG-ID: BExd9ODSPDuETvu3HtJMeQ
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4361ac8b25fso4842045e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 06:34:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737038070; x=1737642870;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SlVUZEGdNiUP4ymo2bPnpZQRc11SVsEuAtqv0GA7FOE=;
+        b=nXj/KEhQ9k8Ht0sfLQ7K6rJ7mwJmqXu0pyAW/RLZvo2uAwHX8QBCTiNapkllq/MmNC
+         DItiePyoMVDrwKTlJvm7Ctljjd0HHVAuHWWxuTz6+m2mr0zEBBpAee+li5LMOMoQITTr
+         XCma76s482GqfVf6JhgNclFiRUW6ZH+GIbIjWBnGF9Va6StVgf2vaZ8BsOvrR3R9lAXY
+         sPz3zRH48mJJ/Ki5N64NdMCfTV7C65x1Bh9/qihy0d753/f6ZlgmrOVom2mKezh4Ijz3
+         vdR5T03RAZEXDQ2hDMyRUhK2X3SzOI7awd/ZLbuQWq+fr6fjOAtE3vi1yyav7HSMVisL
+         MZHQ==
+X-Gm-Message-State: AOJu0YzCVPu8rmgi0pyxquWVDD/Evp1N/LQG0bUW1n4k2u3Lodk4F/6g
+	BpPSdMsd11I1zjWe4sKIxKOE72n5QBUHTkA+LmIgWRVQ6HqK7mVR97Pqm8JEClxqres2Iqs8PcE
+	v3eYH43Ye6S5AVBqNrlW4Fwm5e+O7tQUWypli/C/dC6ryRpqtUiULl19Q1opnbIp/Y1s=
+X-Gm-Gg: ASbGnctnN9C3QaWoMbPdU/9jNG/Fswad3uWoI6zMyk0Ol6KqZX2MB057oiMJJtbfWo5
+	oEJd3FS28/kIMaGGoow528/2zLigOn1X8G3WZIZe8+11irveI73+yA3V39sfHI4LYTUTlw2XCIY
+	EP8X+yQPeJNcif8fIXqhTdGiT9qht5xaeyglL+IObR9HuVIlaKqKD9wt9kM/GaXLS7TFb5Ebjsw
+	bULax7m60F1wdXBRxw0Mx/m84ClAA/w7SfWvxR6vHy6Ut+c6DaMeIPQP7f71uMKP2k+jmHVkbj/
+	1J7zSAnMeCk=
+X-Received: by 2002:a05:600c:1552:b0:434:fb65:ebbb with SMTP id 5b1f17b1804b1-436e26be5a3mr330748585e9.17.1737038069942;
+        Thu, 16 Jan 2025 06:34:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHEa76TR3MKycVQl9SMPVCKzQ43IgjBdPHU2kCQq9eJUFNO6UIGhk2rvGTtL3WQvOIi1gvemw==
+X-Received: by 2002:a05:600c:1552:b0:434:fb65:ebbb with SMTP id 5b1f17b1804b1-436e26be5a3mr330748295e9.17.1737038069512;
+        Thu, 16 Jan 2025 06:34:29 -0800 (PST)
+Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3221c25sm33133f8f.23.2025.01.16.06.34.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 06:34:29 -0800 (PST)
+Message-ID: <2ccbae71-0a65-439d-825a-26dc2261fbcf@redhat.com>
+Date: Thu, 16 Jan 2025 15:34:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+i-1C1sXC1tbo9ytuex0eBD3gUbQwnNP8rvOhCv=JV+oSHo1g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: perf kmem --page stat and gpf_flags translation
+To: Steven Rostedt <rostedt@goodmis.org>, Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
+References: <87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com>
+ <20241121100326.645bd0d7@gandalf.local.home>
+Content-Language: en-US
+From: Veronika Molnarova <vmolnaro@redhat.com>
+In-Reply-To: <20241121100326.645bd0d7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 16, 2025 at 02:22:42PM +0100, Brendan Jackman wrote:
-> Sure. I'm actually not even sure that for a [PATCH]-quality thing this
-> cross-cutting commit even makes sense - once we've decided on the
-> general way to solve this problem, perhaps the changes should just be
-> part of the commit that needs them?
 
-Right, that sounds better.
 
-> It feels messy to have a patch that "does multiple things", but on the
-> other hand it might be annoying to review a patch that says "make a
-> load of random changes across the kernel, which are needed at various
-> points in various upcoming patches, trust me".
+On 11/21/24 16:03, Steven Rostedt wrote:
+> On Thu, 21 Nov 2024 14:54:25 +0100 (CET)
+> Michael Petlan <mpetlan@redhat.com> wrote:
 > 
-> Do you have any opinion on that?
+>> Hello Steve and others,
+>>
+>> We have found out that perf kmem --page stat sometimes fails like the
+>> following:
+>>
+>> # perf kmem --page stat
+>> 0x2aa28 [0x8]: failed to process type: 68 [Operation not permitted]
+>> error during process events: -1
+>>
+>> This seem to happen on s390x KVM machines.
+>>
+>> When we tried to investigate for the reasons, it seems that the problem
+>> is caused by incorrect/unexpected translation of gpf_flags for event
+>> kmem:mm_page_alloc.
+>>
+>> # perf script
+>> perf   96553 [003] 100299.663963: kmem:mm_page_alloc: page=0x1a8f9 pfn=0x1a8f9 order=0 migratetype=0 gfp_flags=0x500cc2
+>> perf   96553 [003] 100299.663995: kmem:mm_page_alloc: page=0x1bc3f pfn=0x1bc3f order=0 migratetype=0 gfp_flags=0x40cc0
+>> perf   96553 [003] 100299.664001: kmem:mm_page_alloc: page=0x1a9d9 pfn=0x1a9d9 order=0 migratetype=0 gfp_flags=0x40cc0
+>> perf   96553 [003] 100299.664011: kmem:mm_page_alloc: page=0x1788b pfn=0x1788b order=0 migratetype=0 gfp_flags=0x40cc0
+>> perf   96553 [003] 100299.664023: kmem:mm_page_alloc: page=0x17993 pfn=0x17993 order=0 migratetype=0 gfp_flags=0xcc0
+>>
+> 
+> Does the same thing happen with trace-cmd record?
+> 
+>  # trace-cmd record -e mm_page_alloc
+> [ run tests, hit Ctrl^C ]
+> 
+>  # trace-cmd report
+> 
+> ?
+> 
+> If so, could you send the trace.dat file to me.
+> 
+> Thanks,
+> 
+> -- Steve
+> 
 
-You're absolutely right - we do things when we need them and not before.
-Otherwise, often times things get done preemptively and then forgotten only
-for someone to notice way later and undo them again.
+Hi,
 
-> (BTW, since a comment you made on another series (can't find it on
-> Lore...), I've changed my writing style to avoid stuff like this in
-> comments & commit messages in general, but this text all predates
-> that. I'll do my best to sort all that stuff out before I send
-> anything as a [PATCH].)
+is there any progress on this issue?
 
-Thanks!
+Thanks,
+Veronika
 
-Btw, good and funny way to use "[PATCH]-quality" to mean non-RFC. :-P
-
-> Oh, I didn't notice your update until now. But yeah I also couldn't
-> reproduce it on a Sapphire Rapids machine and on QEMU with this patch
-> applied on top of tip/master (37bc915c6ad0f).
-
-Yeah, it feels like toolchain-related but I can't put my finger on it yet.
-We'll see if and when this thing will re-surface its ugly head...
-
-:-)
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
