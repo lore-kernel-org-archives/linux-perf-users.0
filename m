@@ -1,189 +1,227 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353701DE4FC;
-	Thu, 16 Jan 2025 12:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2FC24A7F4
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 12:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737028932; cv=none; b=Tm3yxVZrayvQaGBU4WyqPTDjoQzmxLHhRr9+dpggzBgzhVXVor4F0GixRcAzeIXg/CbfMh4hLHHtVlfMg/9ci4fovHu4nv/qy1grU++P79cpmFWyLqtXsTIzQCnAtxhChS+DedHZZOGH+ZiloeMqT2baYYP30sgEjgK7bmvcQcQ=
+	t=1737030691; cv=none; b=AstIiSRhyg8tXv6I5VAn7IubtOdjeu9GgdgM2WIo1UrHEpL0VsFFA9xfaFCM/BgIWAnROrgXMLmF0DPaAK79e27qV4MPMaUSNI/72Vz5QDEEas0tcbgWDpKcgID8jYtj1xHUSNfoMuK1ifInZsoaVHvRkz0IkovoB2kXlRdn6yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737028932; c=relaxed/simple;
-	bh=ibsKHbyo2VQ/DV9M0kk07F4zbKTpRd6NkgfGkmph6BU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S81T4JAk3qkXS0iCIpEQSuZ/z0ENR7bAmKutO7ZusymAW9a+VEixvHu+TgsOiMJG7A70i0KH8iEKB+rLbCMhNEBeR8OoZbKouw7R2iclRhXI0QMbDID//5ziuoIlOKbI6dPexfTudOkLzdfFskrKw5pB6n9X8xPgirLjhCAn7MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jRbnOrzQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1737030691; c=relaxed/simple;
+	bh=Mymtu6c0C6owoGK2o5u062xBZgN0jCylYAygNUv4Noc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EIW+TjadhVp6QkDDNwyL8jMTSb8qKtc8BR/WuVyhBNMtvVhrsEJYfn/2ZKCFuXUefM8vjeoy861nbEKwEzCcemme/pUzCg+uRAfglE9OrUqu4bKWOnwbgtHjSChV7CPbKPQ8g4zxITiyxoJsSsBi7XvpElDWzC48rvTNFInRdZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+/I4Nwh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRbnOrzQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HpIJ8WNpWrfXSs8bTFtnaCi5H1JzV8juPRSTrMtcQ28=; b=jRbnOrzQclpvVJz7Au40XgkK08
-	SoVD/N31oWLONVY8u97GKy1+Jeajywk3nKmFl+syLCLNyTATM/N5whokVRNsZ3pn9WtXvFABKQbOb
-	I/GWV2p+zPpOe7AQTGQ42TGs3fqbwuwPxUGsncIq2oILd5cv3GwBrDpsSYZVQIijb/d7digLbfHcv
-	JFAbZsleeaJfwPhq2KAKPbI/0tX6Tpe1x6Ub4Bi4vb6TW6bWhk0M/5aJLndQCoX3PsWlWA1t3dulV
-	HCXuxRzetMn6FleVnvqwma8a/XYO30k3Ar48EoF9zBtGGPuGyuYdac0jPe+n5eY9++E+BB8/+Z7NA
-	dgMTYCkQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYOZY-0000000DLsZ-2iwu;
-	Thu, 16 Jan 2025 12:02:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BC7D9300777; Thu, 16 Jan 2025 13:02:03 +0100 (CET)
-Date: Thu, 16 Jan 2025 13:02:03 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-Message-ID: <20250116120203.GK8362@noisy.programming.kicks-ass.net>
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
- <20250115184318.2854459-3-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+/I4Nwh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737030687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K2e2iP2sUAqfkOljiHRIdFl1aLlIvE3zStOPNmlVqVw=;
+	b=N+/I4NwhaV/8/+D924ywAB87B/6qpcgSxlZuw1cMVnzpMqtIu01PGe3IAC1QBNNkd+m/hF
+	mL7VoVCAdtHn/Yuovei5TT1zxJOoM5q8ZUAPjpgK9YGkdAwjYVycf9DNSIXv6VCIY2FnPK
+	7rtcdrCOOXHiR8Kz9mWYlYqvbqUpZ7A=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-fANclslbMU2mylVuUzdiyA-1; Thu, 16 Jan 2025 07:31:26 -0500
+X-MC-Unique: fANclslbMU2mylVuUzdiyA-1
+X-Mimecast-MFC-AGG-ID: fANclslbMU2mylVuUzdiyA
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43628594d34so4179055e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 04:31:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737030684; x=1737635484;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K2e2iP2sUAqfkOljiHRIdFl1aLlIvE3zStOPNmlVqVw=;
+        b=k1t8GyPjcyj5mIezO8Kmc1bGkFWiadIh+SOs/fEuCPgUDUe0OT1s+yEqOqMq1V6yLW
+         TT4bXK1EBKOBk7HXqV1TO75B/e+ENbqhpTyDz5TXndklY7MRCn0AcXUL47QDjkxZId8O
+         KzB2VyoT7KUOOiTmBSmUs5vYjxid4xuaY6lCArt3YE7LmzUB29KkaxCRWA/HTOiN03aL
+         o4iP3673sZWh1GbuzSQXutPdAcfjcUtr7IQ8pCIub4/UZORS3pvnFLj0kUs1xTjDrYIm
+         W9hfbUpQljr+NaJAAlcV7XTSsyBI+u8OElXPxYsI1UbhOpDQvi8FF6VThEsWIwgzlJCQ
+         ThIg==
+X-Gm-Message-State: AOJu0YzLvHEgUwSQdHJnB88NjqpmH0o3zYR2v2CjHjIQCRWgLVxiBRrh
+	FgwjmlNXX/EnDORzkvCypAVIYLqLWaGzLUcPXpn9xJBqjcwfC4H2/FMDGVEWrYfXsUipVb4M1HX
+	WSepO8UXFgKVZqvf6mW0WovtvCBUUbHYtcReCp+FWtjlMiYzwSFOVJ2pv/Hk2lqky5mA4aULFas
+	Mj8DlCLsWRt4KD3CbovtznJMaNKNN2xP14c/bvQAtMfB/0BNQLa6ZHqw==
+X-Gm-Gg: ASbGncs5OTOfjgLootHQXd99vMhCN0mzYZA3I2n6huebTLf2J1v2WKTcYZAN0n3Fu9J
+	qWUXewM8xSMNO5daiMlc6GR6dUCQ43wtyb9oTsZ+5TFpZhko7AYUMxLzZA1ZfSs4nYruEASgaSW
+	edaV8+lUG6aj6IzZmW139ekcLlUaCU01/NCXgrf0K/9vVCTHStzbbt9MocwZ56sWHQ6Ay6JtWpr
+	bnIIEJ0nVr5Id7ikBjmgqiAk2vBSgP1S+fUy8rmUHHqxt8m48e6TQhB39uzvjie5JKWHokWeyec
+	4QOUXAp5iaM=
+X-Received: by 2002:a05:600c:5115:b0:434:feb1:adae with SMTP id 5b1f17b1804b1-436e266e823mr288289745e9.3.1737030683943;
+        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEZ0IIFZaJGOkjxDEu+mX9L9N/O7lQNh2Woi0PEcaCzsx3V4fAcwsk26FTkHIqlRWyNd3Sq+A==
+X-Received: by 2002:a05:600c:5115:b0:434:feb1:adae with SMTP id 5b1f17b1804b1-436e266e823mr288289365e9.3.1737030683440;
+        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
+Received: from [10.202.147.124] (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c74bf061sm57274905e9.17.2025.01.16.04.31.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 04:31:23 -0800 (PST)
+Message-ID: <8f62887e-f3c5-4b43-8c77-897564dc971e@redhat.com>
+Date: Thu, 16 Jan 2025 13:31:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115184318.2854459-3-kan.liang@linux.intel.com>
-
-On Wed, Jan 15, 2025 at 10:43:18AM -0800, kan.liang@linux.intel.com wrote:
-
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index 81b6ec8e824e..10ce80230ad3 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -1294,6 +1294,19 @@ static inline void pebs_update_threshold(struct cpu_hw_events *cpuc)
->  	ds->pebs_interrupt_threshold = threshold;
->  }
->  
-> +#define PEBS_DATACFG_CNTRS(x)						\
-> +	((x >> PEBS_DATACFG_CNTR_SHIFT) & PEBS_DATACFG_CNTR_MASK)
-> +
-> +#define PEBS_DATACFG_CNTR_BIT(x)					\
-> +	(((1ULL << x) & PEBS_DATACFG_CNTR_MASK) << PEBS_DATACFG_CNTR_SHIFT)
-> +
-> +#define PEBS_DATACFG_FIX(x)						\
-> +	((x >> PEBS_DATACFG_FIX_SHIFT) & PEBS_DATACFG_FIX_MASK)
-> +
-> +#define PEBS_DATACFG_FIX_BIT(x)						\
-> +	(((1ULL << (x - INTEL_PMC_IDX_FIXED)) & PEBS_DATACFG_FIX_MASK)	\
-> +	 << PEBS_DATACFG_FIX_SHIFT)
-
-That INTEL_PMX_IDX_FIXED does not belong here, needs to be at the
-callsite.
-
-
-> @@ -1914,6 +1975,34 @@ static void adaptive_pebs_save_regs(struct pt_regs *regs,
->  #endif
->  }
->  
-> +static void intel_perf_event_pmc_to_count(struct perf_event *event, u64 pmc)
-> +{
-> +	int shift = 64 - x86_pmu.cntval_bits;
-> +	struct hw_perf_event *hwc;
-> +	u64 delta, prev_pmc;
-> +
-> +	/*
-> +	 * The PEBS record doesn't shrink on pmu::del().
-> +	 * See pebs_update_state().
-> +	 * Ignore the non-exist event.
-> +	 */
-> +	if (!event)
-> +		return;
-> +
-> +	hwc = &event->hw;
-> +	prev_pmc = local64_read(&hwc->prev_count);
-> +
-> +	/* Only update the count when the PMU is disabled */
-> +	WARN_ON(this_cpu_read(cpu_hw_events.enabled));
-> +	local64_set(&hwc->prev_count, pmc);
-> +
-> +	delta = (pmc << shift) - (prev_pmc << shift);
-> +	delta >>= shift;
-> +
-> +	local64_add(delta, &event->count);
-> +	local64_sub(delta, &hwc->period_left);
-> +}
-
-Name and function don't really match at this point. When I suggested
-this function it returned a count value, now it's closer to
-intel_perf_event_update_pmc() or somesuch.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test stat_all_pmu.sh: Correctly check 'perf stat'
+ result
+From: Veronika Molnarova <vmolnaro@redhat.com>
+To: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+ irogers@google.com
+Cc: mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ kan.liang@linux.intel.com, qzhao@redhat.com
+References: <20241122231233.79509-1-vmolnaro@redhat.com>
+ <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
+Content-Language: en-US
+In-Reply-To: <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-> @@ -2049,6 +2138,61 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
->  		}
->  	}
->  
-> +	if (format_group & (PEBS_DATACFG_CNTR | PEBS_DATACFG_METRICS)) {
-> +		struct pebs_cntr_header *cntr = next_record;
-> +		int bit;
-> +
-> +		next_record += sizeof(struct pebs_cntr_header);
-> +
-> +		/*
-> +		 * The PEBS_DATA_CFG is a global register, which is the
-> +		 * superset configuration for all PEBS events.
-> +		 * For the PEBS record of non-sample-read group, ignore
-> +		 * the counter snapshot fields.
-> +		 */
-> +		if (!is_pebs_counter_event_group(event)) {
-> +			unsigned int nr;
-> +
-> +			nr = bitmap_weight((unsigned long *)&cntr->cntr, INTEL_PMC_MAX_GENERIC) +
-> +			     bitmap_weight((unsigned long *)&cntr->fixed, INTEL_PMC_MAX_FIXED);
+On 12/10/24 16:20, Veronika Molnarova wrote:
+> 
+> 
+> On 11/23/24 00:12, vmolnaro@redhat.com wrote:
+>> From: Veronika Molnarova <vmolnaro@redhat.com>
+>>
+>> Test case "stat_all_pmu.sh" is not correctly checking 'perf stat' output
+>> due to a poor design. Firstly, having the 'set -e' option with a trap
+>> catching the sigexit causes the shell to exit immediately if 'perf stat' ends
+>> with any non-zero value, which is then caught by the trap reporting an
+>> unexpected signal. This causes events that should be parsed by the if-else
+>> statement to be caught by the trap handler and are reported as errors:
+>>
+>>     $ perf test -vv "perf all pmu"
+>>     Testing i915/actual-frequency/
+>>     Unexpected signal in main
+>>     Error:
+>>     Access to performance monitoring and observability operations is limited.
+>>
+>> Secondly, the if-else branches are not exclusive as the checking if the
+>> event is present in the output log covers also the "<not supported>"
+>> events, which should be accepted, and also the "Bad name events", which
+>> should be rejected.
+>>
+>> Remove the "set -e" option from the test case, correctly parse the
+>> "perf stat" output log and check its return value. Add the missing
+>> outputs for the 'perf stat' result and also add logs messages to
+>> report the branch that parsed the event for more info.
+> 
+> Hi Ian,
+> 
+> is there anything that I am missing? If so would be great to know the idea
+> of your patch. This issue is getting quite old so would be great to get a proper
+> fix together.
+> 
+> Thanks,
+> Veronika
 
-hweight32 ?
+Hello,
 
-> +			if (cntr->metrics == INTEL_CNTR_METRICS)
-> +				nr += 2;
-> +			next_record += nr * sizeof(u64);
-> +			goto end_cntr;
+just wanted to ping the patch. Would be great to sort it out and close the issue.
 
-Yuck, can't you break out stuff into a helper function to get rid of
-that goto?
+Thanks,
+Veronika
 
-> +		}
-> +
-> +		for_each_set_bit(bit, (unsigned long *)&cntr->cntr, INTEL_PMC_MAX_GENERIC) {
-> +			intel_perf_event_pmc_to_count(cpuc->events[bit], *(u64 *)next_record);
-> +			next_record += sizeof(u64);
-> +		}
-> +
-> +		for_each_set_bit(bit, (unsigned long *)&cntr->fixed, INTEL_PMC_MAX_FIXED) {
-> +			/* The slots event will be handled with perf_metric later */
-> +			if ((cntr->metrics == INTEL_CNTR_METRICS) &&
-> +			    (bit + INTEL_PMC_IDX_FIXED == INTEL_PMC_IDX_FIXED_SLOTS)) {
-> +				next_record += sizeof(u64);
-> +				continue;
-> +			}
-> +			intel_perf_event_pmc_to_count(cpuc->events[bit + INTEL_PMC_IDX_FIXED],
-> +						      *(u64 *)next_record);
-> +			next_record += sizeof(u64);
-> +		}
-> +
-> +		/* HW will reload the value right after the overflow. */
-> +		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
-> +			local64_set(&event->hw.prev_count, (u64)-event->hw.sample_period);
-> +
-> +		if (cntr->metrics == INTEL_CNTR_METRICS) {
-> +			static_call(intel_pmu_update_topdown_event)
-> +				   (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS],
-> +				    (u64 *)next_record);
-> +			next_record += 2 * sizeof(u64);
-> +		}
-> +		data->sample_flags |= PERF_SAMPLE_READ;
-> +	}
-> +
-> +end_cntr:
-> +
->  	WARN_ONCE(next_record != __pebs + basic->format_size,
->  			"PEBS record size %u, expected %llu, config %llx\n",
->  			basic->format_size,
+>>
+>> Fixes: 7e73ea40295620e7 ("perf test: Ignore security failures in all PMU test")
+>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+>> ---
+>>  tools/perf/tests/shell/stat_all_pmu.sh | 48 ++++++++++++++++++--------
+>>  1 file changed, 34 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+>> index 8b148b300be1131e..9c466c0efa857fc2 100755
+>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+>> @@ -2,7 +2,6 @@
+>>  # perf all PMU test (exclusive)
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  
+>> -set -e
+>>  err=0
+>>  result=""
+>>  
+>> @@ -16,34 +15,55 @@ trap trap_cleanup EXIT TERM INT
+>>  # Test all PMU events; however exclude parameterized ones (name contains '?')
+>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g')
+>>  do
+>> -  echo "Testing $p"
+>> -  result=$(perf stat -e "$p" true 2>&1)
+>> -  if echo "$result" | grep -q "$p"
+>> +  echo -n "Testing $p -- "
+>> +  output=$(perf stat -e "$p" true 2>&1)
+>> +  stat_result=$?
+>> +  if echo "$output" | grep -q "$p"
+>>    then
+>>      # Event seen in output.
+>> -    continue
+>> -  fi
+>> -  if echo "$result" | grep -q "<not supported>"
+>> -  then
+>> -    # Event not supported, so ignore.
+>> -    continue
+>> +    if [ $stat_result -eq 0 ] && ! echo "$output" | grep -q "<not supported>"
+>> +    then
+>> +      # Event supported.
+>> +      echo "supported"
+>> +      continue
+>> +    elif echo "$output" | grep -q "<not supported>"
+>> +    then
+>> +      # Event not supported, so ignore.
+>> +      echo "not supported"
+>> +      continue
+>> +    elif echo "$output" | grep -q "No permission to enable"
+>> +    then
+>> +      # No permissions, so ignore.
+>> +      echo "no permission to enable"
+>> +      continue
+>> +    elif echo "$output" | grep -q "Bad event name"
+>> +    then
+>> +      # Non-existent event.
+>> +      echo "Error: Bad event name"
+>> +      echo "$output"
+>> +      err=1
+>> +      continue
+>> +    fi
+>>    fi
+>> -  if echo "$result" | grep -q "Access to performance monitoring and observability operations is limited."
+>> +
+>> +  if echo "$output" | grep -q "Access to performance monitoring and observability operations is limited."
+>>    then
+>>      # Access is limited, so ignore.
+>> +    echo "access limited"
+>>      continue
+>>    fi
+>>  
+>>    # We failed to see the event and it is supported. Possibly the workload was
+>>    # too small so retry with something longer.
+>> -  result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>> -  if echo "$result" | grep -q "$p"
+>> +  output=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>> +  if echo "$output" | grep -q "$p"
+>>    then
+>>      # Event seen in output.
+>> +    echo "supported"
+>>      continue
+>>    fi
+>>    echo "Error: event '$p' not printed in:"
+>> -  echo "$result"
+>> +  echo "$output"
+>>    err=1
+>>  done
+>>  
+
