@@ -1,83 +1,172 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFD81547E2;
-	Thu, 16 Jan 2025 19:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2CF2770B;
+	Thu, 16 Jan 2025 19:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737054516; cv=none; b=OnXhq/BjYMucYjvhOd+XDwFyBrUf5kzsV7PlWnxYaPl8gqnHJA+HRYnXouxCj1h7diyIf+H1a5Sw3pLASw4Q3ZrgPTHMtT6R5vmC+yfv1kFqBb7keV+hAHndq0jxV7HBFKHMojAkJEKuSWwblnZVO2HoPFWG3dkv9A+fMPKVbfw=
+	t=1737055077; cv=none; b=IqcLvNh68LZIN+wdrGdnZsgoJvtZfh3C5KcCKrH1iLebL8blG6GP7TJOLUlSfjO9hj3mrXPlO6e+tjdDBXJMasUrVUgRwm2vuaWFDlAmLSA4P5vVpaf5SBDACrXCxsTGHKcqZF2NVJaerN52DI5k3PnBQ3rTh6QSBG5cFeKuS+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737054516; c=relaxed/simple;
-	bh=yxNfZW+QAXZ/RGkTQd6Y3aHYqYsdXQxpiAS65GtQ/QA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8+QU3Oh+BBvhRgoG1tQUO+q5N02zIaCuf4X2A3Hzf6BOqr1wB/5GLdK659doR2AEgdiAuTGPBZu7l2rwdmbUxhBs2gVP5buid15N7BvuWh9CEKRcO0wLQUcWBlieItAzRfTrlsMpYlbqaSTQQr1TfXHkmCfH5EZcH/skXTqSOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f44353649aso1900570a91.0;
-        Thu, 16 Jan 2025 11:08:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737054514; x=1737659314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9woIcLoaAyHZhNforMi4bYkNy4vsMV19L2RMrtgrBYw=;
-        b=nznm6wKLejZw9bfH/q0BlzsoZkajiPtzsY/XDnrdMNhWbnnt3u66P6gZ9UAR+UqvXD
-         ciNPcr+3A/cklAbLoEs3wYh4gPro4LcKm1PUk8p7Oxwy5BXL8NDBL2g569tbIjE4t2cl
-         kQBRzXxfoKdsY47kdfInPHQNEPyV9QX5il1cGWMZqwXRbiEBMYHZfs5CUy0slRCjIRdh
-         hx9dXQKye5zS3Oq2glSTLu6RpTKyse/Xnl2GRT0ejU2IuxO4pxncdUIqKJHZpDu5Qim3
-         KVUTElC8xt4mqGyEkEyycieMFgVHwSV4B31uF3Ukyd9GX81NJnhDgjmAnP5F5zjl2uDi
-         OKJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCByRgvlk5FavTn8MI7Dlf4ZrtlKTcWaF+P+fRpLvgNP12jQ503zTJT2xAoJixHAAfRCLufYB8Z8F/vI5Nt3AS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEmrI/nSKVzereCoA2CpACb32CttSLP5l65cQWwOo3IfGeChEH
-	s1lXhBvrp8lQ47JlKStLlUSF8/2k98L92x1JJTA5ryXTr/1YADNcGS/xBSfDhJYqSVYLNYGH3K2
-	3Ue0vtwgym2mPUE3+Pq7VLb63hmE=
-X-Gm-Gg: ASbGncvzwTdnJfojjtke8HSIO9qMvdy7GTY+OTCBmy9mPh8rYmFLB2yzmkufsYmCn8C
-	71l9ZoGPt8mXTZ/3VQPus8gPkn70FTiub9vBT
-X-Google-Smtp-Source: AGHT+IFKvpTmzA9k8DNNvuwI0izIJrCrJXTSmbKSYcntOAlfG80qO3OCLrn7LxwegWue0Z/QVtDoGwHyOTOe77b1QOc=
-X-Received: by 2002:a17:90a:c2c7:b0:2ee:ba84:5cac with SMTP id
- 98e67ed59e1d1-2f548ea5a01mr50926421a91.7.1737054514288; Thu, 16 Jan 2025
- 11:08:34 -0800 (PST)
+	s=arc-20240116; t=1737055077; c=relaxed/simple;
+	bh=7K74G0KpbMnNmZ6t6sLh3JLeIVgEDg+82LEBCs5gUIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z7BaaNQhgPkt9+TXK216gyA68deDK3j0Ue9RJwxh8kNDbUnotYAoGresBHYvFWI5Rr0y4dVMocgHaNnlNivArqZPHCnHwqQuqz7HHTLG2IccI50Ks0/xgwVdheDzE/ZPY8iqVI5DtH4qHmPrATRbsUZSlH1Pa9/7lf5e9FLju7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E6BC4CED6;
+	Thu, 16 Jan 2025 19:17:55 +0000 (UTC)
+Date: Thu, 16 Jan 2025 14:18:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Michael Petlan <mpetlan@redhat.com>, Veronika
+ Molnarova <vmolnaro@redhat.com>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH] tracing: gfp: Fix the GFP enum values shown for user
+ space tracing tools
+Message-ID: <20250116141800.31d519eb@gandalf.local.home>
+In-Reply-To: <CAHk-=wiFEeyY5HE3NMvDYd254yHynzaQyzwYhv5gzRj7KU+gjA@mail.gmail.com>
+References: <20250116132359.1f20cdec@gandalf.local.home>
+	<CAHk-=wiFEeyY5HE3NMvDYd254yHynzaQyzwYhv5gzRj7KU+gjA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241210200847.1023139-1-ctshao@google.com> <20241210200847.1023139-3-ctshao@google.com>
- <Z1nk9owKE_xHVh1i@google.com>
-In-Reply-To: <Z1nk9owKE_xHVh1i@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 16 Jan 2025 11:08:23 -0800
-X-Gm-Features: AbW1kvaWhMtt64iP1abE7wBHHvVefrxI4Bq_UEem5qo2qPOM0DlYpngavjSDHug
-Message-ID: <CAM9d7cgXuSMbV2hMKZqUQOHU=c7Gix2sxh4C=BbLNSJEaZX6Yg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] perf lock: Rename fields in lock_type_table
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, nick.forrington@arm.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Thu, 16 Jan 2025 11:00:20 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Wed, Dec 11, 2024 at 11:20=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Tue, Dec 10, 2024 at 12:08:22PM -0800, Chun-Tse Shao wrote:
-> > `lock_type_table` contains `name` and `str` which can be confusing.
-> > Rename them to `flags_name` and `lock_name` and add descriptions to
-> > enhance understanding.
-> > Tested by building perf for x86.
+> On Thu, 16 Jan 2025 at 10:23, Steven Rostedt <rostedt@goodmis.org> wrote:
 > >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
->
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> > --- a/include/linux/gfp_types.h
+> > +++ b/include/linux/gfp_types.h  
+> 
+> No - please do these somewhere else.
+> 
+> This header is included by *everything*.
+> 
+> Put it in some tracing header that isn't.
+> 
 
-I'm trying to process this patchset but it doesn't apply to perf-tools-next
-anymore.  Can you please rebase?
+But they are only defines, they are not created until used. Are you worried
+that it will slow down the compile?
 
-Thanks,
-Namhyung
+I wanted this to stay close to where they are crated so they can keep in
+sync, and not break when something new is added.
+
+Another way is to have something like:
+
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index 4591a3e1711d..65c61c7b9f22 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -23,41 +23,66 @@ typedef unsigned int __bitwise gfp_t;
+  * include/trace/events/mmflags.h and tools/perf/builtin-kmem.c
+  */
+ 
+-enum {
+-	___GFP_DMA_BIT,
+-	___GFP_HIGHMEM_BIT,
+-	___GFP_DMA32_BIT,
+-	___GFP_MOVABLE_BIT,
+-	___GFP_RECLAIMABLE_BIT,
+-	___GFP_HIGH_BIT,
+-	___GFP_IO_BIT,
+-	___GFP_FS_BIT,
+-	___GFP_ZERO_BIT,
+-	___GFP_UNUSED_BIT,	/* 0x200u unused */
+-	___GFP_DIRECT_RECLAIM_BIT,
+-	___GFP_KSWAPD_RECLAIM_BIT,
+-	___GFP_WRITE_BIT,
+-	___GFP_NOWARN_BIT,
+-	___GFP_RETRY_MAYFAIL_BIT,
+-	___GFP_NOFAIL_BIT,
+-	___GFP_NORETRY_BIT,
+-	___GFP_MEMALLOC_BIT,
+-	___GFP_COMP_BIT,
+-	___GFP_NOMEMALLOC_BIT,
+-	___GFP_HARDWALL_BIT,
+-	___GFP_THISNODE_BIT,
+-	___GFP_ACCOUNT_BIT,
+-	___GFP_ZEROTAGS_BIT,
++#define GFP_BITS_GENERAL			\
++	EM(DMA)					\
++	EM(HIGHMEM)				\
++	EM(DMA32)				\
++	EM(MOVABLE)				\
++	EM(RECLAIMABLE)				\
++	EM(HIGH)				\
++	EM(IO)					\
++	EM(FS)					\
++	EM(ZERO)				\
++	EM(UNUSED_BIT)				\
++	EM(DIRECT_RECLAIM)			\
++	EM(KSWAPD_RECLAIM)			\
++	EM(WRITE)				\
++	EM(NOWARN)				\
++	EM(RETRY_MAYFAIL)			\
++	EM(NOFAIL)				\
++	EM(NORETRY)				\
++	EM(MEMALLOC)				\
++	EM(COMP)				\
++	EM(NOMEMALLOC)				\
++	EM(HARDWALL)				\
++	EM(THISNODE)				\
++	EM(ACCOUNT)				\
++	EM(ZEROTAGS)
++
+ #ifdef CONFIG_KASAN_HW_TAGS
+-	___GFP_SKIP_ZERO_BIT,
+-	___GFP_SKIP_KASAN_BIT,
++# define GFP_BITS_KASAN				\
++	EM(SKIP_ZERO)				\
++	EM(SKIP_KASAN)
++#else
++# define GFP_BITS_KASAN
+ #endif
++
+ #ifdef CONFIG_LOCKDEP
+-	___GFP_NOLOCKDEP_BIT,
++# define GFP_BITS_LOCKDEP			\
++	EM(NOLOCKDEP)
++#else
++# define GFP_BITS_LOCKDEP
+ #endif
++
+ #ifdef CONFIG_SLAB_OBJ_EXT
+-	___GFP_NO_OBJ_EXT_BIT,
++# define GFP_BITS_SLAB				\
++	EM(NO_OBJ_EXT)
++#else
++# define GFP_BITS_SLAB
+ #endif
++
++# define GFP_BITS				\
++	GFP_BITS_GENERAL			\
++	GFP_BITS_KASAN				\
++	GFP_BITS_LOCKDEP			\
++	GFP_BITS_SLAB
++
++
++#undef EM
++#define EM(a)	___GFP_##a##_BIT,
++
++enum {
++	GFP_BITS
+ 	___GFP_LAST_BIT
+ };
+ 
+
+Then I could just use the GFP_BITS and redefine the EM() to add the
+TRACE_DEFINE_ENUM() around them. Or something similar.
+
+But I didn't think you would go for that.
+
+-- Steve
+
