@@ -1,233 +1,133 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261DF19539F;
-	Thu, 16 Jan 2025 10:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667BC1DB951
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 10:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737023586; cv=none; b=FdPULHkbPyUBTTRwL8UrhgN7ZjDUk20Tvipw0MdpkCxJanqkVgfgFOSFtyB2Ipq7tDYbYh7+V2zFJw6EIlmt+J3rvCFRS6zMf6QG5IIMduK5fOKPhjOWxwGw5TSTYCaGWRkp2JCuCSgG5NJTV5Lo9IHjBF4/xt2+lZWC6yBeR10=
+	t=1737024051; cv=none; b=DCMl5SVzyWU5dOsFAF6faFrS/On3cCqlPDX+dPfOi8HdyV3rXBCeJDcezDK2R0UwZGxb4mTSfxop35HMPIZpJDO2Ro1UbTz46jhbTLw7uf5LiuosnXYqqW8obbEIJAT8JGIAmrfdXOvm6e8al4hGfr+/yqBkXvtVi3bIrUi7l58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737023586; c=relaxed/simple;
-	bh=QU5d+Tyq+Qb2PApXjG+Zo+3QY/YuLIJeuJDQkS5Wwrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vv7Tm1SDJNKhN1id0HPl4d81Mdxjhkqd16AeoW/D2+HSKE1VOR9E0H3Zu4g3FXnMWTh9UTom+pIvOKgYOvkvBG6MUBuHCJlahMM/Pmd7ov0vMEulLs3Icpom+ymDbLhTuVadbmEuGB/7flMwBszQ4WVOopIDf+XvxY2Cg+TqQ8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z9XbPZXX; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1737024051; c=relaxed/simple;
+	bh=FXr/R/ASTh37z1sRowGMoD+KS4XfQ1KUY2lWIB+fsm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UpOT1goQdz3rSxGOuPOfCSDO+WFJ4JDdI73iFKFTHpS2JsRgFDLIbuwdxaO4q2ybrite9uqQa6Y/L3ZRq7XyU1xN0rm3jLa4/DDARAr4MhIm1cBKYIk4jUfT+ZhMSV/qa+lJTEYhwAcic5SXWp8YqM7i+/DVOj5Pe9spr1IwqFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S2uuhxG8; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z9XbPZXX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YQozZ0qAw76KyENUe8cP271dJjMXAoDFnL7V32VXPSM=; b=Z9XbPZXXGMBLk78qmBqAmyE/8n
-	MjspFRXmpAYMjU9mdXnUIrC4bOAPTh3qoW9gERMtQFaUrSIhBZGAULSu06rAU/usgdpwZCyUW5nac
-	Oqz4NxrsKi89mLRzPjaY8syLOGYjv7DIhVjPHLuZeUxys7azJdoCPaTcBLbn694ucdRBnSl7zyJIw
-	Cvnby9sxf/O+JL8EJs7OwmKA1DnunlM1S9TRI5KCuf+h/LeN+Klkk7KS+VawFW1csgGIef2YQD4OT
-	CZj3ejz8J9EAQcMNujxY2eZlijCgn9GwDkKpI49BOUa3Qkmu8VodAyOErBynaSrcyg3uaOmj/9T8J
-	e3XL8obQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYNBJ-0000000C52v-2zEW;
-	Thu, 16 Jan 2025 10:32:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C8471300777; Thu, 16 Jan 2025 11:32:56 +0100 (CET)
-Date: Thu, 16 Jan 2025 11:32:56 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH V9 1/3] perf/x86/intel: Avoid pmu_disable/enable if
- !cpuc->enabled in sample read
-Message-ID: <20250116103256.GI8362@noisy.programming.kicks-ass.net>
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S2uuhxG8"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3863494591bso399683f8f.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jan 2025 02:40:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737024047; x=1737628847; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EO66lMiXI/Sfgw5U/SYlAlVA9b1JkDl1ZV2cUjyfDeo=;
+        b=S2uuhxG8t3yRx9fYZgNa9BD6J7CV86GcTgAG7JnUuLOxGuO0kVeeesWIBLOtIQVJ+N
+         8HMpXlEf0IAZFtIfrRQRgfbyZfr3bBUsgE8gJBKCUO5Ck8Uoz45UbkjkjzOVzql3OTvz
+         rRYJAZgj81jFnj6Z30H0SP1cdwadJkRn8ys0i0oqayUDaxreaGDZK6PuU2KoMlbiyupM
+         7EVofZb+6maXvdYiNbWE6uE2IvP5UdJSa8idBDWNmwDs0689nc4tJ2sejP6PhJ4wrGds
+         OksisIUBPHEbtiqzGnmkrxWWH0fcqPoG0Z9AzjlYf7e0gkLFgUMYrgAJzZtxRdI5kdqF
+         xmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737024047; x=1737628847;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EO66lMiXI/Sfgw5U/SYlAlVA9b1JkDl1ZV2cUjyfDeo=;
+        b=RndzF8qH1fpBw9HIY1j2q/ANKQhVM9MHl9lgHKbk+70b772IdInSBDHBNGQaH2npqH
+         T+mUMwEwFLfKIwM9EfM1R7uD9eAI8bsQcwu92ILQJZlTY/qklJ4vgtm2tjMUIiMVa2/2
+         PlEFknpvZSlRzDkiGZC9nSWtkoZaF7Z7/xnKiKHLXvmdGlyvLrN8V6BPxZ7QGWk+7Pxj
+         rsadVrtHci+D1GwKv9XRp9B//Nekon2Lw/zz7s2B9rl6fTfJBi0RQTUPlydhfSL4uMcq
+         jLK8lC6aBcErIbRw3oX55/YQ3nFmeegOPGsopX8vBfD+AwaVtlQO67oiJy1InYVnmxK3
+         1Bag==
+X-Forwarded-Encrypted: i=1; AJvYcCUf8c/JMH4TwIrDLDupuiaBK+FySKkbk8eDzlqCkomfX/52MKhWbkYqXg/4yEIK+NiGxO2mnlRMojoJUGoA1+HC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3rOKDR6fC8ikdmYO/RdwkUkH+QVeUw9/xI1uHjxPwoKgM2gGw
+	yvS1VXsHKig+D6kB/+y6PhOhxDjfnASsaP81EumHVfEPWSapeD3WaO5jemcMxuc=
+X-Gm-Gg: ASbGncvOF97NhfPIpzQoo431G94Oj8lo+ZMZzOxZtLNPnfXUZzuUoXr0dVsRmA48w6Q
+	0aXyCP/j+tFSxaYP6+aZZMlrLjVhMl7wBMA1vAtemWJoY2b63npXuJogfEygqCiCFoLRqMG94dA
+	HUEso/jsQdfIbkwTC/yA4CoycmBLpIlhim0Pvt+Pl6V2Vtg8+kxMJi/TaKSRrU3K+64ZQFipYRB
+	UKA/YJE6qbWJHL00MuukNIPGI5H13eSDf1TpUW6FJZmTeo04WSM9mx/JdybpnT9mQ==
+X-Google-Smtp-Source: AGHT+IENhP2degD2HSgnG/QrAKOGnMF+zY05b1bOVZLzbMSLYYZMykC89gMNgsoBqQE6xISFPPiCKA==
+X-Received: by 2002:adf:a411:0:b0:38a:87cc:fbee with SMTP id ffacd0b85a97d-38a87ccfd10mr22019911f8f.14.1737024047135;
+        Thu, 16 Jan 2025 02:40:47 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.65.18])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bec32b96dsm1625787f8f.21.2025.01.16.02.40.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 02:40:46 -0800 (PST)
+Message-ID: <d90e130c-984a-4b9f-8297-ead2857ab361@linaro.org>
+Date: Thu, 16 Jan 2025 10:40:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115184318.2854459-1-kan.liang@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf bench: Fix undefined behavior in cmpworker()
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+ kan.liang@linux.intel.com, Ching-Chun Huang <jserv@ccns.ncku.edu.tw>,
+ Chun-Ying Huang <chuang@cs.nycu.edu.tw>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+References: <20250107073906.3323640-1-visitorckw@gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250107073906.3323640-1-visitorckw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 15, 2025 at 10:43:16AM -0800, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+
+
+On 07/01/2025 7:39 am, Kuan-Wei Chiu wrote:
+> The comparison function cmpworker() violates the C standard's
+> requirements for qsort() comparison functions, which mandate symmetry
+> and transitivity:
 > 
-> The WARN_ON(this_cpu_read(cpu_hw_events.enabled)) in the
-> intel_pmu_save_and_restart_reload() is triggered, when sampling read
-> topdown events.
+> Symmetry: If x < y, then y > x.
+> Transitivity: If x < y and y < z, then x < z.
 > 
-> In a NMI handler, the cpu_hw_events.enabled is set and used to indicate
-> the status of core PMU. The generic pmu->pmu_disable_count, updated in
-> the perf_pmu_disable/enable pair, is not touched.
-> However, the perf_pmu_disable/enable pair is invoked when sampling read
-> in a NMI handler. The cpuc->enabled is mistakenly set by the
-> perf_pmu_enable().
+> In its current implementation, cmpworker() incorrectly returns 0 when
+> w1->tid < w2->tid, which breaks both symmetry and transitivity. This
+> violation causes undefined behavior, potentially leading to issues such
+> as memory corruption in glibc [1].
 > 
-> Avoid perf_pmu_disable/enable() if the core PMU is already disabled.
+> Fix the issue by returning -1 when w1->tid < w2->tid, ensuring
+> compliance with the C standard and preventing undefined behavior.
 > 
-> Fixes: 7b2c05a15d29 ("perf/x86/intel: Generic support for hardware TopDown metrics")
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Link: https://www.qualys.com/2024/01/30/qsort.txt [1]
+> Fixes: 121dd9ea0116 ("perf bench: Add epoll parallel epoll_wait benchmark")
 > Cc: stable@vger.kernel.org
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 > ---
->  arch/x86/events/intel/core.c | 7 +++++--
->  arch/x86/events/intel/ds.c   | 9 ++++++---
->  2 files changed, 11 insertions(+), 5 deletions(-)
+> Changes in v2:
+> - Rewrite commit message
 > 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 2a2824e9c50d..bce423ad3fad 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2778,15 +2778,18 @@ DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
->  static void intel_pmu_read_topdown_event(struct perf_event *event)
->  {
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	int pmu_enabled = cpuc->enabled;
->  
->  	/* Only need to call update_topdown_event() once for group read. */
->  	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
->  	    !is_slots_event(event))
->  		return;
->  
-> -	perf_pmu_disable(event->pmu);
-> +	if (pmu_enabled)
-> +		perf_pmu_disable(event->pmu);
->  	static_call(intel_pmu_update_topdown_event)(event);
-> -	perf_pmu_enable(event->pmu);
-> +	if (pmu_enabled)
-> +		perf_pmu_enable(event->pmu);
->  }
->  
->  static void intel_pmu_read_event(struct perf_event *event)
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index ba74e1198328..81b6ec8e824e 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -2096,11 +2096,14 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
->  
->  void intel_pmu_auto_reload_read(struct perf_event *event)
->  {
-> -	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
-> +	int pmu_enabled = this_cpu_read(cpu_hw_events.enabled);
->  
-> -	perf_pmu_disable(event->pmu);
-> +	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
-> +	if (pmu_enabled)
-> +		perf_pmu_disable(event->pmu);
->  	intel_pmu_drain_pebs_buffer();
-> -	perf_pmu_enable(event->pmu);
-> +	if (pmu_enabled)
-> +		perf_pmu_enable(event->pmu);
->  }
+>   tools/perf/bench/epoll-wait.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+> index ef5c4257844d..4868d610e9bf 100644
+> --- a/tools/perf/bench/epoll-wait.c
+> +++ b/tools/perf/bench/epoll-wait.c
+> @@ -420,7 +420,7 @@ static int cmpworker(const void *p1, const void *p2)
+>   
+>   	struct worker *w1 = (struct worker *) p1;
+>   	struct worker *w2 = (struct worker *) p2;
+> -	return w1->tid > w2->tid;
+> +	return w1->tid > w2->tid ? 1 : -1;
 
-Hurmp.. would it not be nicer to merge that logic. Perhaps something
-like so?
+I suppose you can skip the 0 for equality because you know that no two 
+tids are the same?
 
----
- arch/x86/events/intel/core.c | 41 +++++++++++++++++++++++------------------
- arch/x86/events/intel/ds.c   | 11 +----------
- arch/x86/events/perf_event.h |  2 +-
- 3 files changed, 25 insertions(+), 29 deletions(-)
+Anyone looking at this in the future might still think it's still wrong 
+unless it does the full comparison. Even if it's not technically 
+required I would write it like a "normal" one now that we're here:
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 7601196d1d18..5b491a6815e6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2785,28 +2785,33 @@ static u64 icl_update_topdown_event(struct perf_event *event)
- 
- DEFINE_STATIC_CALL(intel_pmu_update_topdown_event, x86_perf_event_update);
- 
--static void intel_pmu_read_topdown_event(struct perf_event *event)
-+static void intel_pmu_read_event(struct perf_event *event)
- {
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	if (event->hw.flags & (PERF_X86_EVENT_AUTO_RELOAD | PERF_X86_EVENT_TOPDOWN)) {
-+		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+		bool pmu_enabled = cpuc->enabled;
- 
--	/* Only need to call update_topdown_event() once for group read. */
--	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
--	    !is_slots_event(event))
--		return;
-+		/* Only need to call update_topdown_event() once for group read. */
-+		if (is_topdown_event(event) && !is_slots_event(event) &&
-+		    (cpuc->txn_flags & PERF_PMU_TXN_READ))
-+			return;
- 
--	perf_pmu_disable(event->pmu);
--	static_call(intel_pmu_update_topdown_event)(event);
--	perf_pmu_enable(event->pmu);
--}
-+		cpuc->enabled = 0;
-+		if (pmu_enabled)
-+			intel_pmu_disable_all();
- 
--static void intel_pmu_read_event(struct perf_event *event)
--{
--	if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
--		intel_pmu_auto_reload_read(event);
--	else if (is_topdown_count(event))
--		intel_pmu_read_topdown_event(event);
--	else
--		x86_perf_event_update(event);
-+		if (is_topdown_event(event))
-+			static_call(intel_pmu_update_topdown_event)(event);
-+		else
-+			intel_pmu_drain_pebs_buffer();
-+
-+		cpuc->enabled = pmu_enabled;
-+		if (pmu_enabled)
-+			intel_pmu_enable_all(0);
-+		return;
-+	}
-+
-+	x86_perf_event_update(event);
- }
- 
- static void intel_pmu_enable_fixed(struct perf_event *event)
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ba74e1198328..050098c54ae7 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -953,7 +953,7 @@ int intel_pmu_drain_bts_buffer(void)
- 	return 1;
- }
- 
--static inline void intel_pmu_drain_pebs_buffer(void)
-+void intel_pmu_drain_pebs_buffer(void)
- {
- 	struct perf_sample_data data;
- 
-@@ -2094,15 +2094,6 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
- 	return NULL;
- }
- 
--void intel_pmu_auto_reload_read(struct perf_event *event)
--{
--	WARN_ON(!(event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD));
--
--	perf_pmu_disable(event->pmu);
--	intel_pmu_drain_pebs_buffer();
--	perf_pmu_enable(event->pmu);
--}
--
- /*
-  * Special variant of intel_pmu_save_and_restart() for auto-reload.
-  */
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 31c2771545a6..38b3e30f8988 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1643,7 +1643,7 @@ void intel_pmu_pebs_disable_all(void);
- 
- void intel_pmu_pebs_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
- 
--void intel_pmu_auto_reload_read(struct perf_event *event);
-+void intel_pmu_drain_pebs_buffer(void);
- 
- void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
- 
+   if (w1->tid > w2->tid) return 1;
+   if (w1->tid < w2->tid) return -1;
+   return 0;
+
