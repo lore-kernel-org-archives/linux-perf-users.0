@@ -1,130 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640111F63CF;
-	Fri, 17 Jan 2025 07:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854791FBE83
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jan 2025 09:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737098801; cv=none; b=Zm4qjBql2zHS30OnRQwyCXvEw6zK8WcpE6Clep05nOJJq6BIDSVX97Y5u7oNngaVpJHAPC1sROC8ygdeMG6BCLAEyvv6h8taAxT/D9ukmhpbeSKvjrmVJOkzHdpKWOTPjicUN9nqB/Re57FC0X1grLt1/bN1/Jzt985H+UR4PPA=
+	t=1737107280; cv=none; b=tzzEeeTZL/zVyOVhPy7gM0MZqbGjJ6YFhst/YzjnnqTO3A8C1sfLjTLoXXcEm9H4/fzj5QIXmgybln4SQ55Xd6Dhq6VueQ9DlkNyEIsCP4uXNMNUgxeTD4WdPJ/HWXbFkFhv6Z4gGyAqx6/r462t7zjYIXPfar92zBE4HCEfSHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737098801; c=relaxed/simple;
-	bh=pd+N9DbEYwQGAZHzSpJQsdPR3JiyiQPM02kIRo5ZBF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u+IuyN6GtCGkwYUccwmO/LXKcHudTdJYBCfiAzZ5LLrp8z+qdusrd7+hExzmcrr25SWNydgcowA5NvIkA2UJF7dPjlYnnrJZwIB4+8EgUYSdWnlnHDJT7ald2O7/O6ZUUjQQL6gl8fApAJMIqdao0pfyojnZkRy7tczm8lKpLnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3+fytBo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737107280; c=relaxed/simple;
+	bh=F2gqeuB0aLhR/bzKUvYunwZ5S0liP9KO05qoNp3Tqo0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L3F6FuEeV5fRXQrDPcrTP3rWCR9WJtCwyDe3+zgBPPXKj9TQQS8sOcJX6vHX4OmstVefOD5zjXanF7OpxJr7ZAJffyVk1mGROHfH15FZR2E2NNfd+tsU34+KUbl12x0q2Zloe63MYRg/1V7gj+1cPz7SeItQtEMYVKAcQYGtdPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHBRYnQc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3+fytBo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF597C4CEDD;
-	Fri, 17 Jan 2025 07:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737098800;
-	bh=pd+N9DbEYwQGAZHzSpJQsdPR3JiyiQPM02kIRo5ZBF4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e3+fytBouuPEgun4JIlPY5nWFLDblEon2Wv8BUSLSlKuG8tE+InryQbvyLW0irS2q
-	 ei9XsMd3qJ9NyYGhVr1XWuROOO09UCo4ipjAwNTvRSWaFn9JNih3dt9YK0GkRUxlH1
-	 qktP2LjwTWNzcGvBQ6rwwjxKja6Ffndm1WEdQfixBSOWQ+1+rZsf+OC44ddekJ6Wmf
-	 dgUYe8r/UQFhOpfB1UXHMQkkOYzSYk7a5yftnJR1qmvTxv5+tZhIoCUR4k58GCq8q2
-	 anB/o7Ql5voGabKHVqCJrOd1RfbIm3mlC6vHyZTHypv+ttU5PjvWR0nNppXJqP/bZj
-	 iwgZE7Jcya1ow==
-Message-ID: <a6b584bd-d136-4429-90af-6c5cfaf47350@kernel.org>
-Date: Fri, 17 Jan 2025 08:26:31 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHBRYnQc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737107277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+	b=DHBRYnQclWBz29AczmtdH2psrHQWNAp2LDJjwl32uDPBUSGvi1VCdiDO7Zu95RYG4y3OpB
+	9Tebjf3WoGAbLJ64WOQ9vzSA4BycUOWy/bKAHOHksNptStG7BmNFug3JbEo5RGgIFyw1yE
+	ZQ5x15X5d61OUrj/+AN5FwVAZ+jtRyE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-GQ-K1WbEPmeMEShtxX_wvw-1; Fri, 17 Jan 2025 04:47:56 -0500
+X-MC-Unique: GQ-K1WbEPmeMEShtxX_wvw-1
+X-Mimecast-MFC-AGG-ID: GQ-K1WbEPmeMEShtxX_wvw
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-436328fcfeeso13404515e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jan 2025 01:47:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737107274; x=1737712074;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+        b=l6VttjjVPSzZsle7bz9iXV5/6BeNfrfqMDWWy1LNMYdsgmmnsbIbKOT3AJOUfiyV+o
+         YgQwNZ8zMG54abJxKT12e/Uovizc1n1rHpYUC1+nwPcv80MkDI53G3Aw5OzB3KgWeKLJ
+         6hzCT8YI/ykf/bsTD5otfWo4uoZ79PPjsAXueN0yun+XNv/fNmeAzieu5YJt4LqlaFua
+         l0M4oGATxuZEXbQxz55/7RkMnNQYjObLaMnc2Gm1sXj4fobagh6tjwEqVBN4HMlZ8TZk
+         xEPClRfeFTMpHqmdJsSEnzDOVOuMSKIsUO9FZ+pXupV50BMbjnExCeLkZ90oNugdhNZr
+         fmAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVDTY+1Du0rmlwuxd5BexKpTN2COxr1A40nLdTzmCCvUyp6EHN53jN+aXi6+NM7dqWHzACuHnJ1Bec4KPZdIGj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza/ENmgk3UjQuoGbb527IbqHllDsv75CGYI/VMlWpXLVqap5Lj
+	uqeLBRFsuuATGMuSmxx4k8x+ztN/8Eh8PpdAhQUaGquLcqUmG8zIZIebjpmt0yFiyaI0cKWG06j
+	RcJjwHdsU9cVLOy+CuvUO+QsMmeU+6ubPRNleNqwIT7KSz/e//EUcqmlXyjQGZaG9z7Q=
+X-Gm-Gg: ASbGncsyoCETp/K/foxDwXZ91McAbXZpCx5eX3xizfbnL+mohy6FB+17neVqcshe0FV
+	nyZTCAN8K6YyLUPaaP74J3ZUqW6YOR718/Q37qxCx/mJB0utySkC/wjC51EC1ceAnHcCJOgAAFp
+	GT/aCMnqe4ef5LdFAnCe0TTEuVBKo1pcFfZgygp7LGxx12jHs0A6pyaJZAdks1Xr44mNmM+FILt
+	tJC+4FVQN34KDehtp6aH+wmDUxC52EG3v+tKEHnb8WaGXOy49yeMVlGoA/QTIv60LXC2qk7CNpe
+	ZN9kuHqX9eJOUXcRirqzHI9AsfZbt0VGubRsm4MfiQ==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16314405e9.13.1737107273787;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHToHDxXT5KMOIEW1byUZUSn/LchRidR5pJg2ZFHbUxu07B2Q/njknWrWkjTXhDYHkp8NfwWQ==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16313255e9.13.1737107273291;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438904131f5sm27135155e9.11.2025.01.17.01.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 01:47:52 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
+ <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
+ Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
+ patching IPIs
+In-Reply-To: <Z4bTlZkqihaAyGb4@google.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-26-vschneid@redhat.com>
+ <Z4bTlZkqihaAyGb4@google.com>
+Date: Fri, 17 Jan 2025 10:47:49 +0100
+Message-ID: <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] dt-bindings: riscv: add Sxctr ISA extension
- description
-To: Rajnesh Kanwal <rkanwal@rivosinc.com>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Cc: linux-perf-users@vger.kernel.org, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, ajones@ventanamicro.com,
- anup@brainfault.org, acme@kernel.org, atishp@rivosinc.com,
- beeman@rivosinc.com, brauner@kernel.org, conor@kernel.org, heiko@sntech.de,
- irogers@google.com, mingo@redhat.com, james.clark@arm.com,
- renyu.zj@linux.alibaba.com, jolsa@kernel.org, jisheng.teoh@starfivetech.com,
- palmer@dabbelt.com, will@kernel.org, kaiwenxue1@gmail.com,
- vincent.chen@sifive.com
-References: <20250116230955.867152-1-rkanwal@rivosinc.com>
- <20250116230955.867152-5-rkanwal@rivosinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250116230955.867152-5-rkanwal@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 17/01/2025 00:09, Rajnesh Kanwal wrote:
-> Add the S[m|s]ctr ISA extension description.
-> 
-> Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
-> ---
->  .../devicetree/bindings/riscv/extensions.yaml      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+On 14/01/25 13:13, Sean Christopherson wrote:
+> On Tue, Jan 14, 2025, Valentin Schneider wrote:
+>> text_poke_bp_batch() sends IPIs to all online CPUs to synchronize
+>> them vs the newly patched instruction. CPUs that are executing in userspace
+>> do not need this synchronization to happen immediately, and this is
+>> actually harmful interference for NOHZ_FULL CPUs.
+>
+> ...
+>
+>> This leaves us with static keys and static calls.
+>
+> ...
+>
+>> @@ -2317,11 +2334,20 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+>>       * First step: add a int3 trap to the address that will be patched.
+>>       */
+>>      for (i = 0; i < nr_entries; i++) {
+>> -		tp[i].old = *(u8 *)text_poke_addr(&tp[i]);
+>> -		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
+>> +		void *addr = text_poke_addr(&tp[i]);
+>> +
+>> +		/*
+>> +		 * There's no safe way to defer IPIs for patching text in
+>> +		 * .noinstr, record whether there is at least one such poke.
+>> +		 */
+>> +		if (is_kernel_noinstr_text((unsigned long)addr))
+>> +			cond = NULL;
+>
+> Maybe pre-check "cond", especially if multiple ranges need to be checked?  I.e.
+>
+>               if (cond && is_kernel_noinstr_text(...))
+>> +
+>> +		tp[i].old = *((u8 *)addr);
+>> +		text_poke(addr, &int3, INT3_INSN_SIZE);
+>>      }
+>>
+>> -	text_poke_sync();
+>> +	__text_poke_sync(cond);
+>>
+>>      /*
+>>       * Second step: update all but the first byte of the patched range.
+>
+> ...
+>
+>> +/**
+>> + * is_kernel_noinstr_text - checks if the pointer address is located in the
+>> + *                    .noinstr section
+>> + *
+>> + * @addr: address to check
+>> + *
+>> + * Returns: true if the address is located in .noinstr, false otherwise.
+>> + */
+>> +static inline bool is_kernel_noinstr_text(unsigned long addr)
+>> +{
+>> +	return addr >= (unsigned long)__noinstr_text_start &&
+>> +	       addr < (unsigned long)__noinstr_text_end;
+>> +}
+>
+> This doesn't do the right thing for modules, which matters because KVM can be
+> built as a module on x86, and because context tracking understands transitions
+> to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
+> being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
+> or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
+> patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
+> use the wrong static path.
+>
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
+and thus such a static key usage should at the very least be caught and
+warned about by objtool - when this isn't built as a module.
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
+I never really thought about noinstr sections for modules; I can get
+objtool to warn about a non-noinstr allowed key being used in
+e.g. vmx_vcpu_enter_exit() just by feeding it the vmx.o:
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit.isra.0+0x0: dummykey: non-RO static key usage in noinstr
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+...but that requires removing a lot of code first because objtool stops
+earlier in its noinstr checks as it hits functions it doesn't have full
+information on, e.g.
 
-Best regards,
-Krzysztof
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit+0x21c: call to __ct_user_enter() leaves .noinstr.text section
+
+__ct_user_enter() *is* noinstr, but you don't get that from just the header prototype.
+
+> I don't expect this to ever cause problems in practice, because patching code in
+> KVM's VM-Enter/VM-Exit path that has *functional* implications, while CPUs are
+> actively running guest code, would be all kinds of crazy.  But I do think we
+> should plug the hole.
+>
+> If this issue is unique to KVM, i.e. is not a generic problem for all modules (I
+> assume module code generally isn't allowed in the entry path, even via NMI?), one
+> idea would be to let KVM register its noinstr section for text poking.
+
