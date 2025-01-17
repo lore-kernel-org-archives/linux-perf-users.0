@@ -1,334 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6886315696E;
-	Fri, 17 Jan 2025 16:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D4719C56D;
+	Fri, 17 Jan 2025 16:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737129819; cv=none; b=EIjuhZeHbgqUZTpAXP84VmolaRMQz/nR0TPi4mCrV3+PDZwJlQ4CwYlIw8pX5t1ylbaKMRluT4qsKqo4SBKGAC1hgsugybGKayOT0LgZptiUGJZBChMLd5ZvIxmO7s8RTL0HOWtlXwylVg92FzKSl5gdf2+eoW/LiHrkPsyCFlM=
+	t=1737130301; cv=none; b=uLB1UFSq8AK2heCzhXaTIm1rJGWHKI8Fv/3ZAS/PiYntToZSKe+mrwEfI2Mlwk8I2ChiWAgFVidhLRk2BGD4xyKdupos1LfMBfxempqLlEZB2V58vqxkvemhCPpxhLQcdMFs8Rw4NsjQR4D8goAZLp7+2Ms7rmYZp9ra5WagKnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737129819; c=relaxed/simple;
-	bh=2DF3I5ADTzr2vulySgOe7Nh62/QVqlUSIlEVA6L38wI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=X1pHWmMgNfVTWkeLUoo2BrM/3M14S25l5ezWF5iEbNwy2M8kLpx4oCE2UnvKV0l7jNkDo3M7yQ5k6+m2dUFEJxRKyy8Ewjbjb4dYOiOtCErAZn25suY9LZq6xf10AZASaXJ35jmqUP3vBG2mr9lULc3gO3tdyiSbkXsh+FigL5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ie8Zp9hl; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737130301; c=relaxed/simple;
+	bh=J+c0tdWpIHr0KlbOLBzEFr0vBExsTwyn4LFfRX4AfIk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsYQEGA4lQ/dnz9J78njIpDzX9CUpxPhk9WMkcEdt6XIoJ1Xj4gSmg7DLx9C2x1qpKRQBbuHJSJWVCu3B23IgX4ry5kAFi8JF5JRzA5gjvhpm8T+5//RhAnsgBsSFFZqhC29GIYTkh3B+fn/2kWmvgUPnLRyUfJ/VMqOj7PvPgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIyLfqKO; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ie8Zp9hl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737129817; x=1768665817;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=2DF3I5ADTzr2vulySgOe7Nh62/QVqlUSIlEVA6L38wI=;
-  b=Ie8Zp9hlnPToLH5fXbtcUvFKFKgW6MSNG2KlkoIVtr9cHpcxcpL52WnO
-   2yT0QVhzWhK5gIXl5ArTO7RZcMQPeKpIoCkDVxFOb9iG0nHXmF/65o0rJ
-   vZJeQwxz+TXYaT0pD6yq5sWBtr7UASwKcIc33kgf54gTZLjwYOFgMj++M
-   Ee8/CR4UT+9QJWWiesKlIcHnADuXzwICIGqYtKhwkvNnV8B+SneZNyrne
-   XcJOYWapxn7cuuwjgsQZ8mqLbwOH1sLoi9jnFFif3SVldKBkajnnsPU6I
-   8Li6fV30/qEF2okRWI6PG0ciEnBtDHk4k14q/FSo6BwdW7ciNrp6yj3kE
-   Q==;
-X-CSE-ConnectionGUID: 3FXvRUMHR4mefBuXlclGKA==
-X-CSE-MsgGUID: /8Ppa8+CT0uDgxgSctU8Lw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="41238175"
-X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="41238175"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 08:03:36 -0800
-X-CSE-ConnectionGUID: cisACPYiT/q7OXXp0aWWXA==
-X-CSE-MsgGUID: 7E/fbI0qRmmj7oigexYWlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="129096210"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 08:03:36 -0800
-Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 26F7F20B5713;
-	Fri, 17 Jan 2025 08:03:34 -0800 (PST)
-Message-ID: <10984553-bf84-4bff-9129-4b31815e38d6@linux.intel.com>
-Date: Fri, 17 Jan 2025 11:03:33 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIyLfqKO"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3022484d4e4so21922211fa.1;
+        Fri, 17 Jan 2025 08:11:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737130297; x=1737735097; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Mwf/8xvajfVfuiw0AKepwMJBFKP0lwWuKM/onBPK6d8=;
+        b=YIyLfqKO1w01qo4BK1cb7TU/xUkmTl45xJ0GMxOmqkN2Wen8zQTg+bhv3ZeeHT25U7
+         7O5IjAJMlWs3/YdLj06FIn05Dzk0zu7zgUVx7ua/pkNct9ifmmlgJ+Zl4Td0GubyKlbi
+         pQhKOiOodVIlqDij7mnP/U1hL/b48G8olQkTLCG0cI6Gl+VfwY/pnszQx+jKt0SEyf2C
+         dXGsR7jVuLXY0pun1yEaKRTUEnoUBqELV/+h+lepc65AZf0Tv773eeNcZQHhPX7grd32
+         hdfn4KYMTb386Sa3gQrM3da+MY7bFq+0jVuonfNnMyI24U/w26W0HzN/gON8GR3o0sTY
+         /lRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737130297; x=1737735097;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mwf/8xvajfVfuiw0AKepwMJBFKP0lwWuKM/onBPK6d8=;
+        b=XrqquKPIkl0V6AWxmuoH4Br0q2h8D7YBWuUZzeGXvafyniy4pgX/AojwrybKV+ELym
+         lEyHsbWAEl01s3ZFmyrF9vkoT9pP1QhC9eoqVfBdBzoviuTFU8W6rR8s4PqLWFZfyXJq
+         batrzUmKrM9oiBYGmy5zG7R2n4/wdhaEJkrcJ1Jo2oIBEm+6afWusQhiTRvUbzvWjx0H
+         RCSJ01mc+QIAfQq87GMelwyV4zfhkRmdNMMmdm3Q/BjRD94v3ZNb5iH6UnNWhbQL1eIH
+         Ub16OtwMZwONS+1kUPBVYjlQnYSEfNxU+N6bh1tU+GgKuKulP10XlswltvZKDG8MoO7G
+         Wbqg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/fLWuoidPz8cVBtwKS6KxXM1v6JLqam4lfJ657h2zvZiNhOD8xHGn42cvcBpWAF+U7DRvP79J/yQDfw==@vger.kernel.org, AJvYcCU8//FFn0GFAVyPXd5Yykj7vDil6Sc9xWAmeBtEHTjFmJeZldHIadyATDGGshmEgiwaUV+y@vger.kernel.org, AJvYcCUkdKOoNinnv+xRTrrRPBUsxnfmgJUrWS5gwxJuynMsYqOI1wcA1hkldij+KbnMKMuMxaR+Ny2+3kwc0YySV1n7@vger.kernel.org, AJvYcCUl0MDFfyKHU8vjqxWqL9BQMQ+r+/b1tPSUffnNDqFJBvbWjZFy+gIGtDhdphjOfE5iyPfF@vger.kernel.org, AJvYcCVRcF7cJYinXm5Leb3yprFu56a0xEtColtOENPXeXq14sGWKj9MvUV5WJG/K3GRNuJ3xK8=@vger.kernel.org, AJvYcCVi25GCqJjYFdI7HjgDZ4mkWukstFgnHFBBwB05LiVXNIsDd4ogTAYNHf8oztdyipWwS5GT+y2LY4ogw9Pk@vger.kernel.org, AJvYcCWbMFyM5uPi8lIkxgGVVXGQ0rHG07cxZFY5XRClWELpbtUDVaOmUrGO4XomdcRBSD59wqvjS9FXgD6t5lm10Mgl@vger.kernel.org, AJvYcCXBDMvkB2RvSfQIQzZ0IoBv89X/1o7/LwlhJ8n4C3MBVna1yEzxM1WCgcFZxyLXnVD9kg3WLeoL4PH5wqUDrwXWyg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBF0KbmlFxBiLO2Tz/iI6MMGlv1lSdMV/71NaXnV5z+qltvAYQ
+	pyj2LXPa/5iy/vFAJXhf3988+7SlVQgwkNV3yEC82E9wVJBDA9Pg
+X-Gm-Gg: ASbGncuWuFkXI0z41O9QJvntg3khxuglYw5Ln4FJuG0VF9ULY5LXswBLFHOjFx0DZS5
+	S5ReJwjLeATLEak++QrHbR3a289Z0HKLd+NVQrqoU74rh7+THtZfsrGZGoObsMSyvc5F/9cLjqQ
+	1ZZZ07yD05Kf414UCjYsN3hU96awDzZVkeCFwz5om9SXLFLpgqr66CgDFjTHcBLMiIx52Gm0vsI
+	DexUf1i6APU42IPei5Osd4ZRCG6FYw9qDKXnlUsfGHn9HUhxA0GpbEdzFgVWHMH9C5gH92KK1bF
+	NIT1uzwunIU=
+X-Google-Smtp-Source: AGHT+IFH9kfhzB42dITXdZg9xXnIuIrCtLCGkWK8kDwmfncKlFAzifmDHoUZVUHtKkW5iC7Zz8oHDA==
+X-Received: by 2002:a2e:bc27:0:b0:302:40ec:a1b3 with SMTP id 38308e7fff4ca-3072caa166amr12690871fa.21.1737130297134;
+        Fri, 17 Jan 2025 08:11:37 -0800 (PST)
+Received: from pc636 (host-217-213-93-172.mobileonline.telia.com. [217.213.93.172])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3072a4ed4bcsm4854351fa.71.2025.01.17.08.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 08:11:36 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Fri, 17 Jan 2025 17:11:30 +0100
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+Message-ID: <Z4qBMqcMg16p57av@pc636>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/23] Intel vendor events and TMA 5.01 metrics
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>
-References: <20250116064355.344245-1-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250116064355.344245-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-
-
-On 2025-01-16 1:43 a.m., Ian Rogers wrote:
-> Update the Intel vendor events to the latest.
-> Update the metrics to TMA 5.01.
-> Add Arrowlake and Clearwaterforest support.
-> Add metrics for LNL and GNR.
-> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
+On Fri, Jan 17, 2025 at 04:25:45PM +0100, Valentin Schneider wrote:
+> On 14/01/25 19:16, Jann Horn wrote:
+> > On Tue, Jan 14, 2025 at 6:51 PM Valentin Schneider <vschneid@redhat.com> wrote:
+> >> vunmap()'s issued from housekeeping CPUs are a relatively common source of
+> >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
+> >> flush_tlb_kernel_range() IPIs.
+> >>
+> >> Given that CPUs executing in userspace do not access data in the vmalloc
+> >> range, these IPIs could be deferred until their next kernel entry.
+> >>
+> >> Deferral vs early entry danger zone
+> >> ===================================
+> >>
+> >> This requires a guarantee that nothing in the vmalloc range can be vunmap'd
+> >> and then accessed in early entry code.
+> >
+> > In other words, it needs a guarantee that no vmalloc allocations that
+> > have been created in the vmalloc region while the CPU was idle can
+> > then be accessed during early entry, right?
 > 
-> The perf json was generated using the script:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> with the generated json being in:
-> https://github.com/intel/perfmon/tree/main/scripts/perf
+> I'm not sure if that would be a problem (not an mm expert, please do
+> correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
+> deferred anyway.
 > 
-> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
-> Weilin Wang <weilin.wang@intel.com> for helping get this patch series
-> together.
+> So after vmapping something, I wouldn't expect isolated CPUs to have
+> invalid TLB entries for the newly vmapped page.
 > 
-> v2: Fix hybrid and Co-authored-by tag issues reported by
->     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
->     Clearwaterforest.
-
-Thanks Ian!
-
-Acked-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
+> However, upon vunmap'ing something, the TLB flush is deferred, and thus
+> stale TLB entries can and will remain on isolated CPUs, up until they
+> execute the deferred flush themselves (IOW for the entire duration of the
+> "danger zone").
 > 
-> Ian Rogers (23):
->   perf vendor events: Update Alderlake events/metrics
->   perf vendor events: Update AlderlakeN events/metrics
->   perf vendor events: Add Arrowlake events/metrics
->   perf vendor events: Update Broadwell events/metrics
->   perf vendor events: Update BroadwellDE events/metrics
->   perf vendor events: Update BroadwellX events/metrics
->   perf vendor events: Update CascadelakeX events/metrics
->   perf vendor events: Add Clearwaterforest events
->   perf vendor events: Update EmeraldRapids events/metrics
->   perf vendor events: Update GrandRidge events/metrics
->   perf vendor events: Update/add Graniterapids events/metrics
->   perf vendor events: Update Haswell events/metrics
->   perf vendor events: Update HaswellX events/metrics
->   perf vendor events: Update Icelake events/metrics
->   perf vendor events: Update IcelakeX events/metrics
->   perf vendor events: Update/add Lunarlake events/metrics
->   perf vendor events: Update Meteorlake events/metrics
->   perf vendor events: Update Rocketlake events/metrics
->   perf vendor events: Update Sapphirerapids events/metrics
->   perf vendor events: Update Sierraforest events/metrics
->   perf vendor events: Update Skylake metrics
->   perf vendor events: Update SkylakeX events/metrics
->   perf vendor events: Update Tigerlake events/metrics
+> Does that make sense?
 > 
->  .../arch/x86/alderlake/adl-metrics.json       | 3637 ++++++++++---
->  .../pmu-events/arch/x86/alderlake/cache.json  |  292 +-
->  .../arch/x86/alderlake/floating-point.json    |   19 +-
->  .../arch/x86/alderlake/frontend.json          |   19 -
->  .../pmu-events/arch/x86/alderlake/memory.json |   32 +-
->  .../arch/x86/alderlake/metricgroups.json      |   10 +-
->  .../pmu-events/arch/x86/alderlake/other.json  |   92 +-
->  .../arch/x86/alderlake/pipeline.json          |  127 +-
->  .../arch/x86/alderlake/virtual-memory.json    |   33 +
->  .../arch/x86/alderlaken/adln-metrics.json     |   83 +-
->  .../pmu-events/arch/x86/alderlaken/cache.json |  227 +-
->  .../arch/x86/alderlaken/floating-point.json   |   17 +-
->  .../arch/x86/alderlaken/memory.json           |   20 +
->  .../pmu-events/arch/x86/alderlaken/other.json |   81 +-
->  .../arch/x86/alderlaken/pipeline.json         |   97 +-
->  .../arch/x86/alderlaken/virtual-memory.json   |   30 +
->  .../arch/x86/arrowlake/arl-metrics.json       | 4597 ++++++++++++++++
->  .../pmu-events/arch/x86/arrowlake/cache.json  | 1471 ++++++
->  .../arch/x86/arrowlake/floating-point.json    |  532 ++
->  .../arch/x86/arrowlake/frontend.json          |  609 +++
->  .../pmu-events/arch/x86/arrowlake/memory.json |  387 ++
->  .../arch/x86/arrowlake/metricgroups.json      |  150 +
->  .../pmu-events/arch/x86/arrowlake/other.json  |  279 +
->  .../arch/x86/arrowlake/pipeline.json          | 2307 +++++++++
->  .../arch/x86/arrowlake/uncore-cache.json      |   20 +
->  .../x86/arrowlake/uncore-interconnect.json    |   47 +
->  .../arch/x86/arrowlake/uncore-memory.json     |  142 +
->  .../arch/x86/arrowlake/uncore-other.json      |   10 +
->  .../arch/x86/arrowlake/virtual-memory.json    |  522 ++
->  .../arch/x86/broadwell/bdw-metrics.json       |  312 +-
->  .../pmu-events/arch/x86/broadwell/cache.json  |   10 +-
->  .../arch/x86/broadwell/frontend.json          |    4 +-
->  .../pmu-events/arch/x86/broadwell/memory.json |    8 +-
->  .../arch/x86/broadwell/metricgroups.json      |    5 +
->  .../arch/x86/broadwell/pipeline.json          |   10 +-
->  .../arch/x86/broadwellde/bdwde-metrics.json   |  256 +-
->  .../arch/x86/broadwellde/cache.json           |   10 +-
->  .../arch/x86/broadwellde/frontend.json        |    4 +-
->  .../arch/x86/broadwellde/memory.json          |    6 +-
->  .../arch/x86/broadwellde/metricgroups.json    |    5 +
->  .../arch/x86/broadwellde/pipeline.json        |   10 +-
->  .../arch/x86/broadwellde/uncore-cache.json    |   28 +-
->  .../x86/broadwellde/uncore-interconnect.json  |   16 +-
->  .../arch/x86/broadwellx/bdx-metrics.json      |  344 +-
->  .../pmu-events/arch/x86/broadwellx/cache.json |   10 +-
->  .../arch/x86/broadwellx/frontend.json         |    4 +-
->  .../arch/x86/broadwellx/memory.json           |    6 +-
->  .../arch/x86/broadwellx/metricgroups.json     |    5 +
->  .../arch/x86/broadwellx/pipeline.json         |   10 +-
->  .../arch/x86/broadwellx/uncore-cache.json     |   28 +-
->  .../x86/broadwellx/uncore-interconnect.json   |   36 +-
->  .../arch/x86/broadwellx/uncore-memory.json    |    1 +
->  .../arch/x86/cascadelakex/clx-metrics.json    |  767 +--
->  .../arch/x86/cascadelakex/metricgroups.json   |    9 +-
->  .../arch/x86/cascadelakex/uncore-cache.json   |   60 +-
->  .../x86/cascadelakex/uncore-interconnect.json |   11 -
->  .../arch/x86/clearwaterforest/cache.json      |  144 +
->  .../arch/x86/clearwaterforest/counter.json    |    7 +
->  .../arch/x86/clearwaterforest/frontend.json   |   18 +
->  .../arch/x86/clearwaterforest/memory.json     |   22 +
->  .../arch/x86/clearwaterforest/other.json      |   22 +
->  .../arch/x86/clearwaterforest/pipeline.json   |  113 +
->  .../x86/clearwaterforest/virtual-memory.json  |   29 +
->  .../arch/x86/emeraldrapids/cache.json         |   28 +-
->  .../arch/x86/emeraldrapids/emr-metrics.json   | 1036 ++--
->  .../arch/x86/emeraldrapids/frontend.json      |   19 -
->  .../arch/x86/emeraldrapids/memory.json        |   15 +-
->  .../arch/x86/emeraldrapids/metricgroups.json  |   10 +-
->  .../arch/x86/emeraldrapids/pipeline.json      |   23 -
->  .../arch/x86/emeraldrapids/uncore-io.json     |  218 +-
->  .../arch/x86/grandridge/grr-metrics.json      |  284 +-
->  .../arch/x86/grandridge/pipeline.json         |    3 +-
->  .../arch/x86/grandridge/uncore-cache.json     |    4 +-
->  .../x86/grandridge/uncore-interconnect.json   |   60 +
->  .../arch/x86/grandridge/uncore-io.json        |  214 +-
->  .../arch/x86/grandridge/uncore-memory.json    |    2 +-
->  .../arch/x86/graniterapids/cache.json         |  110 +-
->  .../arch/x86/graniterapids/counter.json       |    2 +-
->  .../arch/x86/graniterapids/frontend.json      |   24 +-
->  .../arch/x86/graniterapids/gnr-metrics.json   | 2311 +++++++++
->  .../arch/x86/graniterapids/memory.json        |  121 +-
->  .../arch/x86/graniterapids/metricgroups.json  |  145 +
->  .../arch/x86/graniterapids/other.json         |   99 +
->  .../arch/x86/graniterapids/pipeline.json      |   40 +-
->  .../arch/x86/graniterapids/uncore-cache.json  |   14 +-
->  .../graniterapids/uncore-interconnect.json    |   87 +
->  .../arch/x86/graniterapids/uncore-io.json     |  280 +-
->  .../arch/x86/graniterapids/uncore-memory.json |  122 +-
->  .../arch/x86/graniterapids/uncore-power.json  |   98 +
->  .../arch/x86/haswell/hsw-metrics.json         |  260 +-
->  .../pmu-events/arch/x86/haswell/memory.json   |    2 +-
->  .../arch/x86/haswell/metricgroups.json        |    5 +
->  .../arch/x86/haswellx/hsx-metrics.json        |  296 +-
->  .../arch/x86/haswellx/metricgroups.json       |    5 +
->  .../arch/x86/haswellx/uncore-cache.json       |   28 +-
->  .../x86/haswellx/uncore-interconnect.json     |   38 +-
->  .../pmu-events/arch/x86/icelake/cache.json    |   34 +-
->  .../pmu-events/arch/x86/icelake/frontend.json |   17 -
->  .../arch/x86/icelake/icl-metrics.json         |  849 +--
->  .../pmu-events/arch/x86/icelake/memory.json   |   13 +-
->  .../arch/x86/icelake/metricgroups.json        |   10 +-
->  .../pmu-events/arch/x86/icelake/pipeline.json |   30 +-
->  .../arch/x86/icelake/uncore-interconnect.json |   76 -
->  .../arch/x86/icelake/uncore-other.json        |    2 +-
->  .../arch/x86/icelake/virtual-memory.json      |   18 +
->  .../pmu-events/arch/x86/icelakex/cache.json   |   41 +-
->  .../arch/x86/icelakex/frontend.json           |   17 -
->  .../arch/x86/icelakex/icx-metrics.json        |  852 +--
->  .../pmu-events/arch/x86/icelakex/memory.json  |   13 +-
->  .../arch/x86/icelakex/metricgroups.json       |   10 +-
->  .../arch/x86/icelakex/pipeline.json           |   30 +-
->  .../pmu-events/arch/x86/lunarlake/cache.json  | 1322 ++++-
->  .../arch/x86/lunarlake/floating-point.json    |  484 ++
->  .../arch/x86/lunarlake/frontend.json          |  654 ++-
->  .../arch/x86/lunarlake/lnl-metrics.json       | 4611 +++++++++++++++++
->  .../pmu-events/arch/x86/lunarlake/memory.json |  262 +-
->  .../arch/x86/lunarlake/metricgroups.json      |  150 +
->  .../pmu-events/arch/x86/lunarlake/other.json  |  496 +-
->  .../arch/x86/lunarlake/pipeline.json          | 2104 +++++++-
->  .../arch/x86/lunarlake/uncore-memory.json     |   18 +
->  .../arch/x86/lunarlake/virtual-memory.json    |  428 ++
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |   42 +-
->  .../pmu-events/arch/x86/meteorlake/cache.json |  109 +-
->  .../arch/x86/meteorlake/frontend.json         |   30 +-
->  .../arch/x86/meteorlake/memory.json           |   22 +-
->  .../arch/x86/meteorlake/metricgroups.json     |   10 +-
->  .../arch/x86/meteorlake/mtl-metrics.json      | 3818 +++++++++++---
->  .../pmu-events/arch/x86/meteorlake/other.json |   54 +
->  .../arch/x86/meteorlake/pipeline.json         |   89 +-
->  .../pmu-events/arch/x86/rocketlake/cache.json |   34 +-
->  .../arch/x86/rocketlake/frontend.json         |   17 -
->  .../arch/x86/rocketlake/memory.json           |   13 +-
->  .../arch/x86/rocketlake/metricgroups.json     |   10 +-
->  .../arch/x86/rocketlake/pipeline.json         |   30 +-
->  .../arch/x86/rocketlake/rkl-metrics.json      |  849 +--
->  .../x86/rocketlake/uncore-interconnect.json   |   10 -
->  .../arch/x86/rocketlake/uncore-other.json     |    2 +-
->  .../arch/x86/rocketlake/virtual-memory.json   |   18 +
->  .../arch/x86/sapphirerapids/cache.json        |   30 +-
->  .../arch/x86/sapphirerapids/frontend.json     |   19 -
->  .../arch/x86/sapphirerapids/memory.json       |   15 +-
->  .../arch/x86/sapphirerapids/metricgroups.json |   10 +-
->  .../arch/x86/sapphirerapids/pipeline.json     |   23 -
->  .../arch/x86/sapphirerapids/spr-metrics.json  |  968 ++--
->  .../arch/x86/sapphirerapids/uncore-io.json    |  138 +-
->  .../arch/x86/sierraforest/counter.json        |    2 +-
->  .../arch/x86/sierraforest/other.json          |   20 +
->  .../arch/x86/sierraforest/pipeline.json       |    3 +-
->  .../arch/x86/sierraforest/srf-metrics.json    |  308 +-
->  .../arch/x86/sierraforest/uncore-cache.json   |   28 +-
->  .../x86/sierraforest/uncore-interconnect.json |   87 +
->  .../arch/x86/sierraforest/uncore-io.json      |  280 +-
->  .../arch/x86/sierraforest/uncore-memory.json  |  122 +-
->  .../arch/x86/sierraforest/uncore-power.json   |   98 +
->  .../arch/x86/skylake/metricgroups.json        |    9 +-
->  .../arch/x86/skylake/skl-metrics.json         |  684 ++-
->  .../arch/x86/skylakex/metricgroups.json       |    9 +-
->  .../arch/x86/skylakex/skx-metrics.json        |  740 +--
->  .../arch/x86/skylakex/uncore-cache.json       |   60 +-
->  .../x86/skylakex/uncore-interconnect.json     |   11 -
->  .../pmu-events/arch/x86/tigerlake/cache.json  |   45 +-
->  .../arch/x86/tigerlake/frontend.json          |   17 -
->  .../pmu-events/arch/x86/tigerlake/memory.json |   13 +-
->  .../arch/x86/tigerlake/metricgroups.json      |   10 +-
->  .../arch/x86/tigerlake/pipeline.json          |   30 +-
->  .../arch/x86/tigerlake/tgl-metrics.json       |  745 +--
->  .../x86/tigerlake/uncore-interconnect.json    |    4 +-
->  .../arch/x86/tigerlake/uncore-other.json      |    2 +-
->  .../arch/x86/tigerlake/virtual-memory.json    |   18 +
->  169 files changed, 38371 insertions(+), 8097 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/arl-metrics.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/metricgroups.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/metricgroups.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/floating-point.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/lnl-metrics.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/metricgroups.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-memory.json
-> 
+Probably i am missing something and need to have a look at your patches,
+but how do you guarantee that no-one map same are that you defer for TLB
+flushing?
 
+As noted by Jann, we already defer a TLB flushing by backing freed areas
+until certain threshold and just after we cross it we do a flush.
+
+--
+Uladzislau Rezki
