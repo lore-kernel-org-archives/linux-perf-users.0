@@ -1,378 +1,351 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E5D1B0F2C
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jan 2025 22:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737154371; cv=fail; b=mVfgyZraQxNS6QvPIbR85ZmPzwwcpC+dBXvA/D47qbeBH1Wu16zKnaVjNiCZUArNudEwgWOSvFT4mJfQdTrc7FTZpmai5ObrssU1RTt/J8A+1+s3Uwz6Gxp2sk4ZFzfYmAmi8FHLaWS+3eh0mpw/1Q065auA6TSOxghFaPLUJig=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737154371; c=relaxed/simple;
-	bh=hdRNFUhwCrr76SHIEAuTAW4qQbn8eaHaj+nbaWCBprI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rS825GOX1IiF1ZqUaMo765frgKQlWvSbBRVy9wpt33frKSea1sqVl9Oalq0gIfFDuQQ3Xno2KNVGHMTKGNPbxBnhoqqkv3UGpnVyTDQwBcwCOAYO5IxxJbrKJyiEog6RhCLQLXjm1Q8IHi561n5iXJ4/2qrY/SQyfOS2rm/4Hwk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4nmw6+i; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9C110F2;
+	Sat, 18 Jan 2025 03:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737169407; cv=none; b=DdaA+l4TZywJJkhtj/h5MbOciQG6LwpaagjT3HlMyxCYgZ2iP+RjJwXkrOfrzLPKL+ClYY4O4egnWsaZkHHlTEWQrJpRaSe6Y6u7l9qTHnsGFQZ9aohlRU+36gNqBqZBbj93TlFL9NzLicTc7quNKRBxR81NLoEiGbfmQMZBnxM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737169407; c=relaxed/simple;
+	bh=hje9bjga0lHUMdgn0Lht6DDygVZLP+XQW7OcggQ28Ik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GbZFXulJMNrOy+87f0lUJmptYU6sowM+c/A/7n69LFB8fyRGnola/qCUAWhSbHsNjADm7hAnbzGuocr9bA/bcs9GGVmPn1y6Om4vREwhkRqwGWV+ejMG9xhHVqDuHVLQNnuTvdvPGf3Y+p1O8wfV4hXxVuMVA8frz1jg1mw7mNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UfBSmN/m; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4nmw6+i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737154366; x=1768690366;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=hdRNFUhwCrr76SHIEAuTAW4qQbn8eaHaj+nbaWCBprI=;
-  b=R4nmw6+i3vJ2Wuo8KEKHn3ifYrPOxB1006mLd8SbrGB7foQQu/XP/xs9
-   4sD1H3p4cZpBjd2hlf7aq1j88I2Pw3JELFSV+dJntFQ6yfUIuwPkh4+uo
-   kI+wp7pjXkCfgkxvDlCv4KcXq/vjuW6/Ark79SLu2WVtfaJrm+mgdANgN
-   eWFAQ5BlXD9SmwQLFHE0ZbbT1jCQIMHq4o+liQpC+MIntPdVPGX+aGCUv
-   JGSWKQ+PKDLo2UqY6MeQrGb/AfP4DWHEYsJ3uMHJInnEOvlod50A04/GN
-   LqDELxmaXqJYhbQATFylRbPYDLPTj/zPoZ34+foxvVuHo37zclGhI91xS
-   w==;
-X-CSE-ConnectionGUID: Y3DrBs0XTXSDWL5KOWl4GQ==
-X-CSE-MsgGUID: Gw/uIqgqQfeakM8mQeiHHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="48996618"
-X-IronPort-AV: E=Sophos;i="6.13,213,1732608000"; 
-   d="scan'208";a="48996618"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 14:52:42 -0800
-X-CSE-ConnectionGUID: 1fDnbdKHSCS2RZC20zHWLQ==
-X-CSE-MsgGUID: 9r2fceInQ0i0FpA99ygvHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,213,1732608000"; 
-   d="scan'208";a="106107685"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Jan 2025 14:52:42 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 17 Jan 2025 14:52:41 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Fri, 17 Jan 2025 14:52:41 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 17 Jan 2025 14:52:40 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yl6scpDKaBYJAt8cjJmWu3ZLeAGXGbkGBkiAKZxTPqNy/ghmOhm8IMUjtdb7ljugTkeoj8p/3Hnj90XNnWslJcBKzNpc/tgExH/vv6ak+OvqhLiaivqs0zkkYce1GCgCyoT8HO9zP2JkV3nDQYU9/IT3HVC/OyyPU7/180wfuKC+4QuCJRCbEcLDSanzOzk6B7CGyUHr0kK5WdWsUHFgZ8eJ/gEIYcaSvPAuUWPItuiB79cNiomD/O/hU7PSzmKYNTfIDXxplgRFydOSyqlG1xZrKfrtccjiLF9uQS97AfoVsMAWa3jNoTAbXyFMScj1zv4CMiQRiXbbpHHufNEIJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=633FwY6dDEOrbZCTDE8/ktQQg0hqlyL7I8Q+AIfKvHI=;
- b=tbOokvN/wOUrdHHHHL5qxy+IRO+C+BB5/QU+nRDZ1PhxpRr8lJMMGweaC4iM7QXAoVa5dCelDv3WWqVbS7+0w/gqTQjdza0AD1DWr+qD4yYTuV+A5dcjfxzd7O5I5DGiygnRrur/yaEGP6NKQJNU9Vp4buXHKKfxS2Cx72S9V3HL9TBsv4irHZdYvU6RusFJgoeR7bpqluEdD6qggTz30N2dqjarHZaPtXQj3b3ZKAO7gh9Yurc37YexSidUbAexfL/LOdl9qzCZnl8Ej0sG0j/JfKSI9wcIssBNv/RSkEakLJEw516BVQij3pkDWQZHcatINB1nf2XbIr67I1v3WA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB8282.namprd11.prod.outlook.com (2603:10b6:806:269::11)
- by SJ2PR11MB7473.namprd11.prod.outlook.com (2603:10b6:a03:4d2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.12; Fri, 17 Jan
- 2025 22:52:39 +0000
-Received: from SN7PR11MB8282.namprd11.prod.outlook.com
- ([fe80::f9d9:8daa:178b:3e72]) by SN7PR11MB8282.namprd11.prod.outlook.com
- ([fe80::f9d9:8daa:178b:3e72%5]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
- 22:52:39 +0000
-Date: Fri, 17 Jan 2025 17:52:35 -0500
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-CC: <intel-xe@lists.freedesktop.org>, Peter Zijlstra <peterz@infradead.org>,
-	<linux-perf-users@vger.kernel.org>, Vinay Belgaumkar
-	<vinay.belgaumkar@intel.com>
-Subject: Re: [PATCH v13 7/7] drm/xe/pmu: Add GT C6 events
-Message-ID: <Z4rfM91LoZs5LfM2@intel.com>
-References: <20250116230718.82460-1-lucas.demarchi@intel.com>
- <20250116230718.82460-8-lucas.demarchi@intel.com>
- <Z4qk8qv1_VyV8W80@intel.com>
- <4k2afkamwpucxyap3hgklwpgh2p7an5ebdgyqixkyipye6o2ze@y6dext5dg5tb>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4k2afkamwpucxyap3hgklwpgh2p7an5ebdgyqixkyipye6o2ze@y6dext5dg5tb>
-X-ClientProxiedBy: MW4PR04CA0260.namprd04.prod.outlook.com
- (2603:10b6:303:88::25) To SN7PR11MB8282.namprd11.prod.outlook.com
- (2603:10b6:806:269::11)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfBSmN/m"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e399e904940so4307877276.2;
+        Fri, 17 Jan 2025 19:03:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737169405; x=1737774205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSKp4iotqJT3vHTGoq9EjSiYcIa8N06H91s2WJYjxbM=;
+        b=UfBSmN/mIqDHYCfOZnHYixbQu7tBrgdD9AP2mdwjUVobx5jB34g4TVck2AEpy3WXL2
+         difqJ2OVHx54A8mDWXeWmtmHo/GKqVT1W+eSIy422rBkidduqgEqyhm0ypyhvB4QWyQx
+         7rCjEomqhWIbuxIY+JvcIDD5//b6pbmvhgAeLTdteR/UVcfe5qnGM3rTUd0/XETHr+hm
+         A6CeInnb01JewkUtm9ln2gi7D6yrYvDti5zKW+E+BwVS9WcSpSkbo227gKQQuzZYDlGf
+         KP9aP2yCeAa3YzXn6uiYhOSghqlAfkZctEw/t3c7eF6itrUgZKu4Hs1uyclFl4W8f6OT
+         CBcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737169405; x=1737774205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cSKp4iotqJT3vHTGoq9EjSiYcIa8N06H91s2WJYjxbM=;
+        b=gbl07qwzIvbnvFxaMUNsfoh8+CnC5NaCx6FYbdisSNf/NadScZ15jm4K4VzAMu4my5
+         72ZYTUQ+peS7MZm804hbWlzrBxxGuEXudZ5fblTFLNjDOd+uzAVZGwTee/XSBUZPUWGU
+         3qc/I3wWH/BB1nvEWmM1R2Psnja4s23FOP9y2GLuFokSh9FPwLkFrYl8xJWk/GJdLGOd
+         3wB8bd9pkMQ14n5y93vFy/ASCjM1ZivuHhgHDuGF+mUpo2zKjTlQ+9/8ruDDVe1TgEPr
+         aNnC6fF1aLcixHcIs5c1YZRdGkxHeLSQbamVkwyVxC08OHag14Ogvtkb/g8H5K4ugiDP
+         mSBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNpk4zHlvQs40/7t0fsd/uHBHt5DhHSzYfhkoASWPVxXNyCRkpjXxOoFGLzxIN57eHDsNBuJD3NUR4USV9hr4O5w==@vger.kernel.org, AJvYcCXwm/IN8b7I2aUbckd+DZiInq1JWwoDRdNQvx/JrhZM7ftwOsTYfSMd8S+qjOei6SxDtVMXERh27dZG71Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWfQS2VXZVucWvmvcanN4eh2Xc6EpC+Ukf3EnNKCjb5eR08B/v
+	Te7ZDBfX7Vwh0nfiWWHCx+liyH0EuF9Ggjn9q28EdOASLRNSOHvGAZ+U5aOd15j2IPcD0FmGu2T
+	M6asmvU1CEjPMpnCKZDWloEI3b1Y=
+X-Gm-Gg: ASbGncuWoeN8qMjJu9biszjTTssT+QDapgRk8D1EgCVoCp2AiOY9orgtQUvXHpkhxMO
+	OEZKNNi2VPaGE8FwK/eZEgKeEXkPXfU99eMzsJXrmVj8GTttd3y93
+X-Google-Smtp-Source: AGHT+IEoY1m7+9s9DfqDbnNrbgc13u9MGj+6yWgalY2f9FFDa2490w4DBIllryd1d8KHstnMvNat2+oaoafJT/6rbBY=
+X-Received: by 2002:a05:690c:25ca:b0:6ef:7f34:fe08 with SMTP id
+ 00721157ae682-6f6eb6b26c5mr52950227b3.18.1737169405051; Fri, 17 Jan 2025
+ 19:03:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB8282:EE_|SJ2PR11MB7473:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3cb7054-cf09-4b48-19d0-08dd3749a491
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?l46E6cSMY6WclXN3qNHcrLRlJkoNHmLqMmdN2e19fxfPeGCxxVcU8+Vpep1z?=
- =?us-ascii?Q?qfa/8ZyBWQBobQBEHw/ArXl0MbqgVqd4+KxnKG0qmtrK5ZsHHZqzRD9VRTNX?=
- =?us-ascii?Q?a4FXejALLlnDAwmsNKmWl3BeQS6tAuspH1+Da+NbaGz9OhRySRY8LZhrLKpt?=
- =?us-ascii?Q?ebVXAiYB+GV+ctggOfUjdwByLzeV6roOsE2T0kUXrHWeUjN9LdPo9WawgqTN?=
- =?us-ascii?Q?nYVQoMRQsR53avZzpIB8584AAfIaOhMceBi9JvRV2kosEadF+B9Tz1SPwIPQ?=
- =?us-ascii?Q?PlZ0BI6hUxUvwbk+hOItJmniPZgBl3bz1k/UVHCWOcycI6CHmqwkankEcPnU?=
- =?us-ascii?Q?mQ3sYkb1n21OwP0Nf1bJhuPsvntJGGRNX4CFRRoASMWgwKQ1Kzm88bCKD8Ht?=
- =?us-ascii?Q?LvYGOxPiBU0RuFbO1Bbre9e13TxMui2FsUUes4IzMZUT+SJoWFmPTImGMOP8?=
- =?us-ascii?Q?3r5bGpWhol4bcGC/sIFMrEH3fLbbBfeaag+Ehd6CKdpOayeU1D0gi2NAV0eW?=
- =?us-ascii?Q?Zy8zWpDd9W3EUBDorOTRAWudjpyerkrG0KcH1t4mIClHuY0sSnQtGd/QuWdI?=
- =?us-ascii?Q?CFjQkmW4k+HB0Esc9+tx4Tatqs1gR4UM0HJrMkeDe1XQYWN1oW52tg/BLXTG?=
- =?us-ascii?Q?7M3BVZWJ18BDl16og94lUG5w8253XQ/iZ+0loIwAXp3Yny71FlrZkyIdjbog?=
- =?us-ascii?Q?SZG8dzMTeaOXiX9UY30vCUcu3Wb1x39FLoQIJTIN/RE0cQpgnYdcEMyR+2rJ?=
- =?us-ascii?Q?i8snf8avGMLs1X+DIEYd50g3uJJaFAsXkO0meWlmgOXOW+/H4xApVNbI76uU?=
- =?us-ascii?Q?N97h5hV4xzTBkgizbu1Tcj+Pm7LVnMrekFJUFU3gfmCekup2Ve2DTOjXjxpz?=
- =?us-ascii?Q?7sfM4ihog0VfnPGc2bzKM0CODh9oliK04asm4k5xMWwD/BuBZupph1Fpx81L?=
- =?us-ascii?Q?vwqzdl78jRrWLjRnw3iFNMvcUT+gQOUC3mCtsvnW2A6ZyTo/owWu+o37w5P5?=
- =?us-ascii?Q?W4RB97zIgRsoMXV900vd8zREh+dhyqAAawp8707gwDpQKzcrAFaDnCKcIp2i?=
- =?us-ascii?Q?wlI2kISFmlVn0NfU/wUsWuUtGofIUGVbARYx1+jNfbJZoFVcLADt+zpcCjAj?=
- =?us-ascii?Q?dRUaAlJ6qz5lRGWYgF9qf0aL+Jb3ig1oy7rM1wO7pGzsY/vUFdpMLqldxixJ?=
- =?us-ascii?Q?JngtuF/GIDrH+RhxFu2zjQedjT4A7PNFZQrJe4U8gGG8wYjMLQiPPS4P/3rV?=
- =?us-ascii?Q?rzP50jLoUHZRSldpq4nIO+tIMNoSEVNtrHCPlTqwSTpHdPMJEaAGVcALbhPU?=
- =?us-ascii?Q?n7nmBNJ+nBE7zzIZQYdDz+l+bQgajo34VrSDFB2wczP2KcjhuK55UlJ0Zejr?=
- =?us-ascii?Q?rvr5rFA0qpgQeptLLJohZ1MZLO8B?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB8282.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?F6PQ/dNMdzjphGhDerqAcga1dJ6vJJbJ7PoC2EYavaSg+v9qLtn6sC8ExJB8?=
- =?us-ascii?Q?5GESWhNDPNgjpm/XXWc8aHtAhkUY/V/ImvGOM3Fd7SiZSr+9vhK3Xn9qCzRl?=
- =?us-ascii?Q?VfhORik9wwIMg83QkPAxHuS0h73NaoVFUV4BIPJ8pZXuS19y0y07Sj6PdvTb?=
- =?us-ascii?Q?kd48Mdndro/XvfsLp4Q4taJRCxN/5W4HboKXpPk6UAw+EI6Ti47yC/SNNzgB?=
- =?us-ascii?Q?1gtON2ttVTy/wMC45gxOYDXYia9APYvjpRbPNVVGPrId2URIR1T8TAUbKufQ?=
- =?us-ascii?Q?d+hXFm4jOrn6Ie+u2jHxjflPJkzbzcAu1msYHDFPZE0v9EjNye8h56ngW6JS?=
- =?us-ascii?Q?3bvRvpH0HSBLLcioQJGTmbBG5VRQ2KxjMVd5c5R2W7i9L4zCycBPBMc7V08o?=
- =?us-ascii?Q?4jUN35gdgvH656w/jWOGqO2jdC9kfpx14+R2W/HjPcs0QQoL7KMTS3pETQu+?=
- =?us-ascii?Q?CyNKlgAEW/bXcwjjwBdrUGF+GpQX0jv//yyr5jYceZVObbB9xGBzhevUBKjB?=
- =?us-ascii?Q?3U5bNQvA1yMp6EE7yHJ1xGhpX/m+GD4nuHZ9VvhPVVLYxlAcJqriJQWRTc04?=
- =?us-ascii?Q?sfG20xz4XXyiFyFoXrCYsiww9m6tUTNf09FGmmNIkhX9zLj7IYOmuFTGjYRr?=
- =?us-ascii?Q?cECzLYkNFUlvkxbLXpEKke+huxLMiY5sgKtsW28P2GRbzasAo2+AoGUa9xT6?=
- =?us-ascii?Q?EkOyEYNxbBGjYjpjlTyPnO3TDuEfVZ/iM0eV3UUidJSHe1iH+q/LUH/rgacW?=
- =?us-ascii?Q?u1/vYl4CWxziNgQBmDZ8wuBZiZk9nuFenGppriQvh8vw0YVKqW3+6VekiP9l?=
- =?us-ascii?Q?a3ysgOL0IAjCZjfyBjXbkSlPLtb1HpMyN5O6i7lQBBbOANyRkzFZ6rRY0j8y?=
- =?us-ascii?Q?t65GLD8BW4yIZddZw57K+kHRVb/6gQ1legrIm/e6Wtisvd8pkfoHtZeVulWV?=
- =?us-ascii?Q?ZWVQgBj2+ovaiDzGRwPCxfwnkweN4q/QK55BFlKxioon1uAkUg/xNcM7da2F?=
- =?us-ascii?Q?96Cn83jKvmrOIYl5jATLqCEMUob1NvYtBRhMCyfMXlg01jCC2JGbakDwlzwh?=
- =?us-ascii?Q?naBddFqYYxx1WRGZik0cfxdrwxL9AsDxzDup2/5CmDpSjebeLe9RR25i12pX?=
- =?us-ascii?Q?lATBFIMBbwPg4ktiA+R0zEu834mE3MzyOtxVmURA+KB3o8dCUTfiAz3D0qsN?=
- =?us-ascii?Q?vi8NO2nSuDxD6d8598yrNxvBwsmrH+XAxsdvsSMPYuef+yL6sSSzmfBKIbtd?=
- =?us-ascii?Q?4wFn4Oo/JLVN4MCSRse8c6z4PbLEUlTFsdRASvrR+kUobQtq9W8sHjAP3evG?=
- =?us-ascii?Q?0Gl7uPmWb/s29d6NyhH/psVvMprTe5zvi5IJKR3GiBfJ9OKxfjvSc9m+j+4l?=
- =?us-ascii?Q?xMkQMNSELGivRTGmEsG4FHAkRcjE9kxQ2IWUshY4P0KD2Oq5yfoeglAv/EGM?=
- =?us-ascii?Q?v2u0ikkvk8MfiKQ4vFqKvuz6/hGJ6EAbtRUfIWzDLfWSCLK0vZm3ZRiLBsCS?=
- =?us-ascii?Q?F1DFxY8hz4OwuxOfL22XhITJOD9TEKRr5cLmGcjMiNoUrYrLmP2+aINjXfqI?=
- =?us-ascii?Q?X9lSe7Uig9wiF0T3kOB8vDCCMQTm6KF0U776LPxXCyXI1ljlgkv3bDe6/E68?=
- =?us-ascii?Q?lQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3cb7054-cf09-4b48-19d0-08dd3749a491
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB8282.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 22:52:39.1497
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FGoyeyW4IDtAsWlUNGMS0OtxmAzflh2HMtCsTZ+iHnLWR0J7dGblrUFyMXSLXy9BVYz9k+DD5CTx2mA8+dZQew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7473
-X-OriginatorOrg: intel.com
+References: <20250114212256.160730-1-namhyung@kernel.org> <20250114212256.160730-3-namhyung@kernel.org>
+In-Reply-To: <20250114212256.160730-3-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 17 Jan 2025 19:03:13 -0800
+X-Gm-Features: AbW1kvZE_cQMDZHP8AbEBcQGrK6oKNqPRzMsv_Z9kujM46VbrUg4Mb7XJQMol84
+Message-ID: <CAH0uvogVw6UGxZf1OZRPt5YWpHtGbi6LbH-9VYpOipEWGwM_4A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] perf trace: Convert syscall_stats to hashmap
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 17, 2025 at 04:40:25PM -0600, Lucas De Marchi wrote:
-> On Fri, Jan 17, 2025 at 01:44:02PM -0500, Rodrigo Vivi wrote:
-> > On Thu, Jan 16, 2025 at 03:07:18PM -0800, Lucas De Marchi wrote:
-> > > From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
-> > > 
-> > > Provide a PMU interface for GT C6 residency counters. The implementation
-> > > is ported over from the i915 PMU code. Residency is provided in units of
-> > > ms(like sysfs entry in - /sys/class/drm/card0/device/tile0/gt0/gtidle).
-> > > 
-> > > Sample usage and output:
-> > > 
-> > > 	$ perf list | grep gt-c6
-> > > 	  xe_0000_00_02.0/gt-c6-residency/                   [Kernel PMU event]
-> > > 
-> > > 	$ tail /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency*
-> > > 	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency <==
-> > > 	event=0x01
-> > > 
-> > > 	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency.unit <==
-> > > 	ms
-> > > 
-> > > 	$ perf stat -e xe_0000_00_02.0/gt-c6-residency,gt=0/ -I1000
-> > > 	#           time             counts unit events
-> > > 	     1.001196056              1,001 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
-> > > 	     2.005216219              1,003 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
-> > > 
-> > > Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
-> > > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > > ---
-> > > 
-> > > Besides the rebase, that changed a lot how the event was added,
-> > > here is a summary of other changes:
-> > > 
-> > > - Use xe_pm_runtime_get_if_active() when reading
-> > >   xe_gt_idle_residency_msec() as there's not guarantee it will not be
-> > >   suspended anymore by the time it reads the counter
-> > > 
-> > > - Drop sample[] from the pmu struct and only use the prev/counter from
-> > >   the perf_event struct. This avoids mixing the counter reported to 2
-> > >   separate clients.
-> > > 
-> > > - Drop time ktime helpers and just use what's provided by
-> > >   include/linux/ktime.h
-> > > 
-> > >  drivers/gpu/drm/xe/xe_pmu.c | 56 +++++++++++++++++++++++++++++++------
-> > >  1 file changed, 48 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-> > > index c2af82ec3f793..37df9d3cc110c 100644
-> > > --- a/drivers/gpu/drm/xe/xe_pmu.c
-> > > +++ b/drivers/gpu/drm/xe/xe_pmu.c
-> > > @@ -11,6 +11,7 @@
-> > >  #include "xe_device.h"
-> > >  #include "xe_force_wake.h"
-> > >  #include "xe_gt_clock.h"
-> > > +#include "xe_gt_idle.h"
-> > >  #include "xe_gt_printk.h"
-> > >  #include "xe_mmio.h"
-> > >  #include "xe_macros.h"
-> > > @@ -117,16 +118,50 @@ static int xe_pmu_event_init(struct perf_event *event)
-> > >  	return 0;
-> > >  }
-> > > 
-> > > -static u64 __xe_pmu_event_read(struct perf_event *event)
-> > > +static u64 read_gt_c6_residency(struct xe_pmu *pmu, struct xe_gt *gt, u64 prev)
-> > >  {
-> > > -	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-> > > +	struct xe_device *xe = gt_to_xe(gt);
-> > > +	unsigned long flags;
-> > > +	ktime_t t0;
-> > > +	s64 delta;
-> > > +
-> > > +	if (xe_pm_runtime_get_if_active(xe)) {
-> > > +		u64 val = xe_gt_idle_residency_msec(&gt->gtidle);
-> > > +
-> > > +		xe_pm_runtime_put(xe);
-> > > +
-> > > +		return val;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Estimate the idle residency by looking at the time the device was
-> > > +	 * suspended: should be good enough as long as the sampling frequency is
-> > > +	 * 2x or more than the suspend frequency.
-> > > +	 */
-> > > +	raw_spin_lock_irqsave(&pmu->lock, flags);
-> > > +	t0 = pmu->suspend_timestamp[gt->info.id];
-> > > +	raw_spin_unlock_irqrestore(&pmu->lock, flags);
-> > 
-> > I believe we should simply avoid the patch 4 and this block and use
-> > xe_pm_runtime_get(xe) instead of the if_active variant.
-> 
-> downside is that gpu is going to be awaken because we are monitoring it.
-> 
-> > 
-> > I'm afraid this won't be a good estimative since this mix 2 different wakes
-> > of 2 different IP blocks... the runtime pm is for the entire device, while
-> > in runtime active the GTs can be sleeping in GT-C6.
-> 
-> in runtime active we can read the counter without making the debug tool
-> (perf) disrupt the device state. Idea here is that when it's on runtime
-> pm suspended it also counts as gt-c6 since it's stronger than that.
-> device suspended implies gt-6, so we count that since suspended.
+Hello Namhyung,
 
-hmm okay, that superseeds indeed. but then it would be good if patch 4
-saves per device and not per gt, and we make this clear with a comment
-there to avoid confusions...
+Sorry for the delay caused by health issues. In my opinion, this
+unlocks the true power of perf trace=E2=80=94a high-performance, buffered, =
+and
+multi-process (or system-wide) tracer.
 
-> 
-> > 
-> > or did we get some deadlock risk on that scenario?
-> 
-> I don't think there's a deadlock... there's just the undesired behavior
-> of "when perf is running, the device is never suspended" - and since we
-> have plans to integrate perf with tools like gputop/qmassa/etc, it means
-> it will never suspend "when users are looking at it".
-> 
-> It's definitely simpler, if acceptable: "when looking at gt-c6, the
-> device will never suspend". We can also start with the simpler one and
-> split the more complex scenario with a patch on top, too.
+On Tue, Jan 14, 2025 at 1:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> It was using a RBtree-based int-list as a hash and a custome resort
+> logic for that.  As we have hashmap, let's convert to it and add a
+> sorting function using an array.  It's also to prepare supporting
+> system-wide syscall stats.
+>
+> No functional changes intended.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-trace.c | 121 ++++++++++++++++++++++++++++---------
+>  1 file changed, 92 insertions(+), 29 deletions(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 0691e817c15b4136..ad7f7fcd0d80b9df 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -39,6 +39,7 @@
+>  #include "util/synthetic-events.h"
+>  #include "util/evlist.h"
+>  #include "util/evswitch.h"
+> +#include "util/hashmap.h"
+>  #include "util/mmap.h"
+>  #include <subcmd/pager.h>
+>  #include <subcmd/exec-cmd.h>
+> @@ -63,7 +64,6 @@
+>  #include "print_binary.h"
+>  #include "string2.h"
+>  #include "syscalltbl.h"
+> -#include "rb_resort.h"
+>  #include "../perf.h"
+>  #include "trace_augment.h"
+>
+> @@ -1520,17 +1520,55 @@ struct thread_trace {
+>                 struct file   *table;
+>         } files;
+>
+> -       struct intlist *syscall_stats;
+> +       struct hashmap *syscall_stats;
+>  };
+>
+> +static size_t id_hash(long key, void *ctx __maybe_unused)
+> +{
+> +       return key;
+> +}
+> +
+> +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
+> +{
+> +       return key1 =3D=3D key2;
+> +}
+> +
+> +static struct hashmap *alloc_syscall_stats(void)
+> +{
+> +       struct hashmap *stats =3D hashmap__new(id_hash, id_equal, NULL);
+> +
+> +       /* just for simpler error check */
+> +       if (IS_ERR_OR_NULL(stats))
 
-my baseline assumption was that if you are looking at perf is because you are
-doing something with it, so it is not suspended in general...
+I don't think stats will ever be NULL.
 
-But well, there's also the power consumption aspect in general that
-would be higher when looking to the device and that wouldn't be good
-indeed in the tools charts...
+> +               stats =3D NULL;
+> +       return stats;
+> +}
+> +
+> +static void delete_syscall_stats(struct hashmap *syscall_stats)
+> +{
+> +       struct hashmap_entry *pos;
+> +       size_t bkt;
+> +
+> +       if (syscall_stats =3D=3D NULL)
+> +               return;
+> +
+> +       hashmap__for_each_entry(syscall_stats, pos, bkt)
+> +               free(pos->pvalue);
+> +       hashmap__free(syscall_stats);
+> +}
+> +
+>  static struct thread_trace *thread_trace__new(struct trace *trace)
+>  {
+>         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_trac=
+e));
+>
+>         if (ttrace) {
+>                 ttrace->files.max =3D -1;
+> -               if (trace->summary)
+> -                       ttrace->syscall_stats =3D intlist__new(NULL);
+> +               if (trace->summary) {
+> +                       ttrace->syscall_stats =3D alloc_syscall_stats();
+> +                       if (ttrace->syscall_stats =3D=3D NULL) {
+> +                               free(ttrace);
+> +                               ttrace =3D NULL;
+> +                       }
+> +               }
+>         }
+>
+>         return ttrace;
+> @@ -1545,7 +1583,7 @@ static void thread_trace__delete(void *pttrace)
+>         if (!ttrace)
+>                 return;
+>
+> -       intlist__delete(ttrace->syscall_stats);
+> +       delete_syscall_stats(ttrace->syscall_stats);
+>         ttrace->syscall_stats =3D NULL;
+>         thread_trace__free_files(ttrace);
+>         zfree(&ttrace->entry_str);
+> @@ -2464,22 +2502,19 @@ struct syscall_stats {
+>  static void thread__update_stats(struct thread *thread, struct thread_tr=
+ace *ttrace,
+>                                  int id, struct perf_sample *sample, long=
+ err, bool errno_summary)
+>  {
+> -       struct int_node *inode;
+> -       struct syscall_stats *stats;
+> +       struct syscall_stats *stats =3D NULL;
+>         u64 duration =3D 0;
+>
+> -       inode =3D intlist__findnew(ttrace->syscall_stats, id);
+> -       if (inode =3D=3D NULL)
+> -               return;
+> -
+> -       stats =3D inode->priv;
+> -       if (stats =3D=3D NULL) {
+> +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
+>                 stats =3D zalloc(sizeof(*stats));
+>                 if (stats =3D=3D NULL)
+>                         return;
+>
+>                 init_stats(&stats->stats);
+> -               inode->priv =3D stats;
+> +               if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
+> +                       free(stats);
+> +                       return;
+> +               }
+>         }
+>
+>         if (ttrace->entry_time && sample->time > ttrace->entry_time)
+> @@ -4618,18 +4653,45 @@ static size_t trace__fprintf_threads_header(FILE =
+*fp)
+>         return printed;
+>  }
+>
+> -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
+> +struct syscall_entry {
+>         struct syscall_stats *stats;
+>         double               msecs;
+>         int                  syscall;
+> -)
+> +};
+> +
+> +static int entry_cmp(const void *e1, const void *e2)
+> +{
+> +       const struct syscall_entry *entry1 =3D e1;
+> +       const struct syscall_entry *entry2 =3D e2;
+> +
+> +       return entry1->msecs > entry2->msecs ? -1 : 1;
+> +}
+> +
+> +static struct syscall_entry *thread__sort_stats(struct thread_trace *ttr=
+ace)
+>  {
+> -       struct int_node *source =3D rb_entry(nd, struct int_node, rb_node=
+);
+> -       struct syscall_stats *stats =3D source->priv;
+> +       struct syscall_entry *entry;
+> +       struct hashmap_entry *pos;
+> +       unsigned bkt, i, nr;
+> +
+> +       nr =3D ttrace->syscall_stats->sz;
+> +       entry =3D malloc(nr * sizeof(*entry));
+> +       if (entry =3D=3D NULL)
+> +               return NULL;
+>
+> -       entry->syscall =3D source->i;
+> -       entry->stats   =3D stats;
+> -       entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&stat=
+s->stats) / NSEC_PER_MSEC) : 0;
+> +       i =3D 0;
+> +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
+> +               struct syscall_stats *ss =3D pos->pvalue;
+> +               struct stats *st =3D &ss->stats;
+> +
+> +               entry[i].stats =3D ss;
+> +               entry[i].msecs =3D (u64)st->n * (avg_stats(st) / NSEC_PER=
+_MSEC);
+> +               entry[i].syscall =3D pos->key;
+> +               i++;
+> +       }
+> +       assert(i =3D=3D nr);
+> +
+> +       qsort(entry, nr, sizeof(*entry), entry_cmp);
+> +       return entry;
+>  }
+>
+>  static size_t thread__dump_stats(struct thread_trace *ttrace,
+> @@ -4637,10 +4699,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>  {
+>         size_t printed =3D 0;
+>         struct syscall *sc;
+> -       struct rb_node *nd;
+> -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stats);
+> +       struct syscall_entry *entries;
+>
+> -       if (syscall_stats =3D=3D NULL)
+> +       entries =3D thread__sort_stats(ttrace);
+> +       if (entries =3D=3D NULL)
+>                 return 0;
+>
+>         printed +=3D fprintf(fp, "\n");
+> @@ -4649,8 +4711,9 @@ static size_t thread__dump_stats(struct thread_trac=
+e *ttrace,
+>         printed +=3D fprintf(fp, "                                     (m=
+sec)    (msec)    (msec)    (msec)        (%%)\n");
+>         printed +=3D fprintf(fp, "   --------------- --------  ------ ---=
+----- --------- --------- ---------     ------\n");
+>
+> -       resort_rb__for_each_entry(nd, syscall_stats) {
+> -               struct syscall_stats *stats =3D syscall_stats_entry->stat=
+s;
+> +       for (size_t i =3D 0; i < ttrace->syscall_stats->sz; i++) {
+> +               struct syscall_entry *entry =3D &entries[i];
+> +               struct syscall_stats *stats =3D entry->stats;
 
-so, okay, let's try to save power and get some good charts ;)
+Maybe add a newline here?
 
-> 
-> > perhaps we should get runtime pm in upper layers when using PMU?
-> 
-> we'd need to do it when enabling/disabling the event. It should be
-> possible, yes. We can't do it on the read call though since we'd need to
-> make that synchronously.
-> 
-> Lucas De Marchi
-> 
-> > 
-> > > +
-> > > +	delta = ktime_ms_delta(ktime_get(), t0);
-> > > +
-> > > +	return prev + delta;
-> > > +}
-> > > +
-> > > +static u64 __xe_pmu_event_read(struct perf_event *event, u64 prev)
-> > > +{
-> > > +	struct xe_pmu *pmu = container_of(event->pmu, typeof(*pmu), base);
-> > > +	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
-> > >  	struct xe_gt *gt = event_to_gt(event);
-> > > -	u64 val = 0;
-> > > 
-> > >  	if (!gt)
-> > > -		return 0;
-> > > +		return prev;
-> > > +
-> > > +	switch (config_to_event_id(event->attr.config)) {
-> > > +	case XE_PMU_EVENT_GT_C6_RESIDENCY:
-> > > +		return read_gt_c6_residency(pmu, gt, prev);
-> > > +	}
-> > > 
-> > > -	return val;
-> > > +	return prev;
-> > >  }
-> > > 
-> > >  static void xe_pmu_event_update(struct perf_event *event)
-> > > @@ -136,10 +171,11 @@ static void xe_pmu_event_update(struct perf_event *event)
-> > > 
-> > >  	prev = local64_read(&hwc->prev_count);
-> > >  	do {
-> > > -		new = __xe_pmu_event_read(event);
-> > > +		new = __xe_pmu_event_read(event, prev);
-> > >  	} while (!local64_try_cmpxchg(&hwc->prev_count, &prev, new));
-> > > 
-> > > -	local64_add(new - prev, &event->count);
-> > > +	if (new > prev)
-> > > +		local64_add(new - prev, &event->count);
-> > >  }
-> > > 
-> > >  static void xe_pmu_event_read(struct perf_event *event)
-> > > @@ -162,7 +198,7 @@ static void xe_pmu_enable(struct perf_event *event)
-> > >  	 * for all listeners. Even when the event was already enabled and has
-> > >  	 * an existing non-zero value.
-> > >  	 */
-> > > -	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event));
-> > > +	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event, 0));
-> > >  }
-> > > 
-> > >  static void xe_pmu_event_start(struct perf_event *event, int flags)
-> > > @@ -267,6 +303,10 @@ static const struct attribute_group pmu_events_attr_group = {
-> > > 
-> > >  static void set_supported_events(struct xe_pmu *pmu)
-> > >  {
-> > > +	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
-> > > +
-> > > +	if (!xe->info.skip_guc_pc)
-> > > +		pmu->supported_events |= BIT_ULL(XE_PMU_EVENT_GT_C6_RESIDENCY);
-> > >  }
-> > > 
-> > >  /**
-> > > --
-> > > 2.48.0
-> > > 
+>                 if (stats) {
+>                         double min =3D (double)(stats->stats.min) / NSEC_=
+PER_MSEC;
+>                         double max =3D (double)(stats->stats.max) / NSEC_=
+PER_MSEC;
+> @@ -4661,10 +4724,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>                         pct =3D avg ? 100.0 * stddev_stats(&stats->stats)=
+ / avg : 0.0;
+>                         avg /=3D NSEC_PER_MSEC;
+>
+> -                       sc =3D &trace->syscalls.table[syscall_stats_entry=
+->syscall];
+> +                       sc =3D &trace->syscalls.table[entry->syscall];
+>                         printed +=3D fprintf(fp, "   %-15s", sc->name);
+>                         printed +=3D fprintf(fp, " %8" PRIu64 " %6" PRIu6=
+4 " %9.3f %9.3f %9.3f",
+> -                                          n, stats->nr_failures, syscall=
+_stats_entry->msecs, min, avg);
+> +                                          n, stats->nr_failures, entry->=
+msecs, min, avg);
+>                         printed +=3D fprintf(fp, " %9.3f %9.2f%%\n", max,=
+ pct);
+>
+>                         if (trace->errno_summary && stats->nr_failures) {
+> @@ -4678,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_trac=
+e *ttrace,
+>                 }
+>         }
+>
+> -       resort_rb__delete(syscall_stats);
+> +       free(entries);
+>         printed +=3D fprintf(fp, "\n\n");
+>
+>         return printed;
+> --
+> 2.48.0.rc2.279.g1de40edade-goog
+>
+
+Thanks,
+Howard
