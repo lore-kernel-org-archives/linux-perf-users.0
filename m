@@ -1,57 +1,58 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DA21A725C
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 10:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D25374BE1
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 11:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737283861; cv=none; b=KozZpodBrX/iJ58Qej73VKPv6+6p2KQM1y8KY4bs/VyKZLpVyT4Kd7oLWPvzIGANo5KbvvO57ivnELfN+HEKhaGetADICnytLqXBIK3jmfMWVhvLOSnYfGUsWZK9+2mCkDRmkNCZUMjKjuAL/0Ba+E+uUQ5PhkSwvzK6E3p2A3k=
+	t=1737284932; cv=none; b=oLnOoyV9H6yzDTx1IzWg3nsPnEWS+4QvTjA0jUqwlJdNvYzRJCO9xUgHMDvgKT5A5+KfeXhY2c9hbn/faAzEHZzR14PhQL+36FKc5u7CDvbZumu6gFHuUCFuc4LRtm2advtObu9R68TwlYPX+sXyAK9znZuRPcy1bn5frCodOiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737283861; c=relaxed/simple;
-	bh=l8xHmcozjwkFVe5OrhojQaoKC6AFn/TcpXmPy2vzE38=;
+	s=arc-20240116; t=1737284932; c=relaxed/simple;
+	bh=ut9yTDqHNWYIr6lLVWtmFVq+wRfa58IwQVvgxL+/5G8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWLh5JhWOEalxkikL/DBopwbn1FEL4lZesvZpRv+sTKXzwIOjY34ITOOaCXEpr+du2r5oVHa9jqIMBhY6iRDC/Deg/tMyrPChQxqd0lgcHq3bSn2SYjDPxbqk5cMqTMs1jOwxhE8YHw5XlwQP5xZe0tJjfHHetrPlEcQgvq3FAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OhRxm47h; arc=none smtp.client-ip=209.85.208.182
+	 To:Cc:Content-Type; b=OU5qfQrzmXZO6xvqf7YGwJyZMKFdBoim0cOKqnUCkuKq60Px2W8ImT3ThH09BjQjnHhIHSInU3pkFbZNf8VE56ETGHH8fmIg/R13BZd8jS/NZhFyN2L4r7v4xRUGsrsRTdSAanlGKVQgymVI5IBfbHo8OK69B42VzvTVKrDPWPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y2NG9mzM; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OhRxm47h"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30036310158so30067591fa.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 02:50:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y2NG9mzM"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30615661f98so38195931fa.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 03:08:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737283857; x=1737888657; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MveSsjd8YRrqYFlGsRr+4I/Nl3vjM8Oh/69WD3GQB88=;
-        b=OhRxm47h8xtMg5354yJoX2IMoPc8HjnLRRxP0yPe4BjZSlbetq1MYc5qXZeGBY4aQP
-         LsNwouqTuIuazanaMEYIMw74n2ji2U4UPelPaYsGUmHb2URMoJEES0rPbz5uSQZNgIKA
-         IKJmyylKKoV5PFzN0Gg6cQuOMFirm8n9MOdKasY2LvdQWu0K/kg5EOimTHFRrA3H7Z4s
-         oqR2iQMWYWSe1cDUrdoHXwHK0VvYuEg/PlHhdCvZ72M/y1fnhq23UcRuSbytGm9cXyUK
-         kT98QSMgdIXIoznTkU9glokzF788iDq+3QksYYPKgYMnUudQhxX5bvz1L01Ica4mGgoY
-         H++Q==
+        d=google.com; s=20230601; t=1737284928; x=1737889728; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1JIEQfCUsKzBVpYrWku2yuMv4Vr5lH5R7DgEOVUl6us=;
+        b=y2NG9mzMSob4hjMw3T6GBHlxKxLil7VidbKLC6fQ9zA3VwcIou92UPBseAsIpkBAvT
+         iIlGjCCwE3wa+IHsT+4yiDxJt6yxBIsUmu6FK0DD5MkOIVvnDmHVMrAKAqjI5aInHgsY
+         SBW65KTAVHNCKpQZM81b141TXI14ObTPui0Ik/t/XlHc0fi+bnKCwsPevZfRggMcv+l+
+         +YYpd/VJJpClxSrI3FQK0OyQIq2efYFYOAP7hxC3SyvCdkykqyl96xEqdOTSNkMm1lQN
+         vZFIZJGTP7EKkk0gc9FLa2QKe0qpMio7G9o1nLXMI31puSA42OYdN9Ng1amEXfcIRrjF
+         4GVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737283857; x=1737888657;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MveSsjd8YRrqYFlGsRr+4I/Nl3vjM8Oh/69WD3GQB88=;
-        b=fVb/q55BankIPCFcj+4sEHMejDJcTP0U3LQs3doAZop7vTpKKlAxZDD2S+vOgQkUaf
-         zQ37NwEuzzNWfgaiKhaecns48z9uS37cOPQ+7nIUGk8Jda+z7mNXxVEnaEL2HFiPRAR3
-         BeFNdsc21HgcEV/AQzDmZXHzLeAC6wbL4WCah08bzdCazoPcO01sns8nzzwPa5veAvle
-         /3NFNs2cNF5B0H7t9RPMYSHtjOqh/pvLT+TNjBsn7mfvTQHBKpHwXud8cmJH3dhtjres
-         E9ZQg0ds8tNGLpoWdC7rbT9VpLyhIJwUKT+2gIMQphFwzKfpvYB5c1pizeNfyyeoWNlB
-         e1ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUV4gUA7qDttVb68yfbI5TdPlgYppsQSkMD0uNvpk2c6sBZevG0MqPNgKdYF8GNASCZKcwDUPjcmraA/mLbrvvZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3YMBn2UWUS2HOb1Xln5lrE3UHchkR670K4K1TWrvPiWdRVYvH
-	NsMcUnF0Qz0oN7D5YESgdeS63lC46T9NxzawcLu6k4nB0CypYkgHz4D2yS2MJE1Z+cH5aFL7eOA
-	vW+0Fr5Gw/wopRVVldCcd6k+yVJk5aSoXc5om
-X-Gm-Gg: ASbGncuTn5z/Xc9mUoC9N5/J/TJLUs3fEOaTfyypraq+7bQ1UkTpU17IziAmbKl2qqv
-	2EagK0G0GS4Zt+todYV8KD4Pn1bR8Jqmq4Uhqkkh3Hm1A1n7zIcnG10v2GjOyN5jQ4HPGqcMB6A
-	mXQEAoZMQw
-X-Google-Smtp-Source: AGHT+IH2wJoN376VDvjwNVv8KoGoVXc6gD1Gdia0oj/bYZwKGr+zZIVM9oAqk5gU6SL2NUJLuRZsu+9jyL4PZaQo920=
-X-Received: by 2002:a05:651c:b26:b0:302:336a:8ada with SMTP id
- 38308e7fff4ca-3072cb21c89mr30962771fa.27.1737283856759; Sun, 19 Jan 2025
- 02:50:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737284928; x=1737889728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1JIEQfCUsKzBVpYrWku2yuMv4Vr5lH5R7DgEOVUl6us=;
+        b=Binz1+t/jGDUmaMimkj9k7qP7PL3MT9cCQK3GmuZNttP8L6+k5KZT0oDZv7loorpRK
+         47hEzxyVRzBJFuP1pOQ52f42N3fS7iAhlsZZ5P+p6j6e7r6DWSQwzfquCVPzOUu7mSDo
+         QpjtdMd/sc/6XwntrNfOQYEy8cH1mmOCDkidfYhJyQFtsQwe3c95GTA8FiqvvPtoTRAn
+         wr1ciI68n8CAX6ZUKIKelE06dktHtCbDqQ2sy+C4e98rTmgDdoJD7tTP/7jrOrlCbhJa
+         fPeMpzasSBin7Yo+/jRwAuOQTQd85k+erf002CYkOUNjNAlVrXW2lDGDTnb8J6XB1cMt
+         ITkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxxSC4n72xHQMmqrp+tEWKiCcRIW8iwLPu3xqIv5+BrnOFOmOfB6In27GgcWOxr/weP1IBZyIiz3xm77GxvPvH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8KZbL1ODac1co2EKNjqxttidPcgsA/iCa0p94nPca3O7ms3D5
+	ScjQAabwe/TsXR9P0170FxUZW8vNnr0P8Ha5kJPctZhDpym4kCbo/UnZY8aQDJ0KE9c9UFqzeMh
+	uWf8NvvRnXOOiH2G5f0PP8WlG4JgF8Y7i3KJd
+X-Gm-Gg: ASbGncsSuNi1MRkYDy+oiRFrZbIZKOCK5TOWWwXNILg5QkqUO+O7U4GyL8WtttTDFbq
+	sB8Uncvew1yHM8lCOrNf/utmY/ChDweTupnqNuLDsW4xt+WCkcR+8FQYROkhrSzDluWava3M3wU
+	p1jc3Huu4q
+X-Google-Smtp-Source: AGHT+IGLW4T+/b+6iiktnGjwUL9ahOwVBUh7A5NO/XdZbBXV9/dPTCN9B4d5C96Ku1vbMAzrARf6hbfnMf2J83BJHpw=
+X-Received: by 2002:a2e:bd01:0:b0:304:588a:99ce with SMTP id
+ 38308e7fff4ca-3072c994c81mr36694421fa.0.1737284927883; Sun, 19 Jan 2025
+ 03:08:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,304 +61,166 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
  <20250113134022.2545894-1-dvyukov@google.com> <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com> <Z4cBqGBzZI8VqtIx@google.com>
-In-Reply-To: <Z4cBqGBzZI8VqtIx@google.com>
+ <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
+ <CAP-5=fWHivx7Q6okMwYOs=65MZr40RjE16tgatMX0hjkCfrwfw@mail.gmail.com>
+ <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com> <Z4lWDPpmdQDM1k6l@google.com>
+In-Reply-To: <Z4lWDPpmdQDM1k6l@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Sun, 19 Jan 2025 11:50:45 +0100
-X-Gm-Features: AbW1kvbBBWQ_xX-psCmmj1S1ivvVnCfpaiSWiyu7Dgrurkqe3C76vUuD5ds1_90
-Message-ID: <CACT4Y+bv5bMkpnZM1=VXCt5=tUxKxv21N6B2mTB9UqqOYa0g0g@mail.gmail.com>
-Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
+Date: Sun, 19 Jan 2025 12:08:36 +0100
+X-Gm-Features: AbW1kvZVnmborYEGWImDjdyTZZtzQRfGfg6XBcKRakltamYyk-HPqHHmyX3N0i0
+Message-ID: <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
+Subject: Off-CPU sampling (was perf report: Add wall-clock and parallelism profiling)
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, eranian@google.com
+Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
+	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	chu howard <howardchu95@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 15 Jan 2025 at 01:30, Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, 16 Jan 2025 at 19:55, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Tue, Jan 14, 2025 at 09:26:57AM +0100, Dmitry Vyukov wrote:
-> > On Tue, 14 Jan 2025 at 02:51, Namhyung Kim <namhyung@kernel.org> wrote:
+> On Wed, Jan 15, 2025 at 08:11:51AM +0100, Dmitry Vyukov wrote:
+> > On Wed, 15 Jan 2025 at 06:59, Ian Rogers <irogers@google.com> wrote:
 > > >
-> > > Hello,
+> > > On Tue, Jan 14, 2025 at 12:27=E2=80=AFAM Dmitry Vyukov <dvyukov@googl=
+e.com> wrote:
+> > > [snip]
+> > > > FWIW I've also considered and started implementing a different
+> > > > approach where the kernel would count parallelism level for each
+> > > > context and write it out with samples:
+> > > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f7=
+11ab496c1a9f2
+> > > > Then sched_in/out would need to do atomic inc/dec on a global count=
+er.
+> > > > Not sure how hard it is to make all corner cases work there, I drop=
+ped
+> > > > it half way b/c the perf record post-processing looked like a bette=
+r
+> > > > approach.
 > > >
-> > > On Mon, Jan 13, 2025 at 02:40:06PM +0100, Dmitry Vyukov wrote:
-> > > > There are two notions of time: wall-clock time and CPU time.
-> > > > For a single-threaded program, or a program running on a single-core
-> > > > machine, these notions are the same. However, for a multi-threaded/
-> > > > multi-process program running on a multi-core machine, these notions are
-> > > > significantly different. Each second of wall-clock time we have
-> > > > number-of-cores seconds of CPU time.
-> > > >
-> > > > Currently perf only allows to profile CPU time. Perf (and all other
-> > > > existing profilers to the be best of my knowledge) does not allow to
-> > > > profile wall-clock time.
-> > > >
-> > > > Optimizing CPU overhead is useful to improve 'throughput', while
-> > > > optimizing wall-clock overhead is useful to improve 'latency'.
-> > > > These profiles are complementary and are not interchangeable.
-> > > > Examples of where wall-clock profile is needed:
-> > > >  - optimzing build latency
-> > > >  - optimizing server request latency
-> > > >  - optimizing ML training/inference latency
-> > > >  - optimizing running time of any command line program
-> > > >
-> > > > CPU profile is useless for these use cases at best (if a user understands
-> > > > the difference), or misleading at worst (if a user tries to use a wrong
-> > > > profile for a job).
-> > > >
-> > > > This patch adds wall-clock and parallelization profiling.
-> > > > See the added documentation and flags descriptions for details.
-> > > >
-> > > > Brief outline of the implementation:
-> > > >  - add context switch collection during record
-> > > >  - calculate number of threads running on CPUs (parallelism level)
-> > > >    during report
-> > > >  - divide each sample weight by the parallelism level
-> > > > This effectively models that we were taking 1 sample per unit of
-> > > > wall-clock time.
-> > >
-> > > Thanks for working on this, very interesting!
-> > >
-> > > But I guess this implementation depends on cpu-cycles event and single
-> > > target process.
+> > > Nice. Just to focus on this point and go off on something of a
+> > > tangent. I worry a little about perf_event_sample_format where we've
+> > > used 25 out of the 64 bits of sample_type. Perhaps there will be a
+> > > sample_type2 in the future. For the code and data page size it seems
+> > > the same information could come from mmap events. You have a similar
+> > > issue. I was thinking of another similar issue, adding information
+> > > about the number of dirty pages in a VMA. I wonder if there is a
+> > > better way to organize these things, rather than just keep using up
+> > > bits in the perf_event_sample_format. For example, we could have a
+> > > code page size software event that when in a leader sampling group
+> > > with a hardware event with a sample IP provides the code page size
+> > > information of the leader event's sample IP. We have loads of space i=
+n
+> > > the types and config values to have an endless number of such events
+> > > and maybe the value could be generated by a BPF program for yet more
+> > > flexibility. What these events would mean without a leader sample
+> > > event I'm not sure.
 > >
-> > Not necessarily, it works the same for PMU events, e.g. again from perf make:
+> > In the end I did not go with adding parallelism to each sample (this
+> > is purely perf report change), so at least for this patch this is very
+> > tangential :)
+> >
+> > > Wrt wall clock time, Howard Chu has done some work advancing off-CPU
+> > > sampling. Wall clock time being off CPU plus on CPU. We need to do
+> > > something to move forward the default flags/options for perf record,
+> > > for example, we don't enable build ID mmap events by default causing
+> > > the whole perf.data file to be scanned looking to add build ID events
+> > > for the dsos with samples in them. One option that could be a default
+> > > could be off-CPU profiling, and when permissions deny the BPF approac=
+h
+> > > we can fallback on using events. If these events are there by default
+> > > then it makes sense to hook them up in perf report.
+> >
+> > Interesting. Do you mean "IO" by "off-CPU".
+> > Yes, if a program was blocked for IO for 10 seconds (no CPU work),
+> > then that obviously contributes to latency, but won't be in this
+> > profile. Though, it still works well for a large number of important
+> > cases (e.g. builds, ML inference, server request handling are
+> > frequently not IO bound).
+> >
+> > I was thinking how IO can be accounted for in the wall-clock profile.
+> > Since we have SWITCH OUT events (and they already include preemption
+> > bit), we do have info to account for blocked threads. But it gets
+> > somewhat complex and has to make some hypotheses b/c not all blocked
+> > threads contribute to latency (e.g. blocked watchdog thread). So I
+> > left it out for now.
+> >
+> > The idea was as follows.
+> > We know a set of threads blocked at any point in time (switched out,
+> > but not preempted).
+> > We hypothesise that each of these could equally improve CPU load to
+> > max if/when unblocked.
+> > We inject synthetic samples in a leaf "IO wait" symbol with the weight
+> > according to the hypothesis. I think these events can be  injected
+> > before each switch in event only (which changes the set of blocked
+> > threads).
+> >
+> > Namely:
+> > If CPU load is already at max (parallelism =3D=3D num cpus), we don't
+> > inject any IO wait events.
+> > If the number of blocked threads is 0, we don't inject any IO wait even=
+ts.
+> > If there are C idle CPUs and B blocked threads, we inject IO wait
+> > events with weight C/B for each of them.
 >
-> Of course it would work with other events.  But the thing is how to
-> interprete the result IMHO.
+> To track idle CPUs, you need sched-switch of all CPUs regardless of your
+> workload, right?  Also I'm not sure when do you want to inject the IO
+> wait events - when a thread is sched-out without preemption?  And what
+> would be the weight?  I guess you want something like:
 >
-> >
-> > Samples: 481K of event 'dTLB-load-misses', Event count (approx.): 169413440
-> > Overhead  Wallclock  Command          Symbol
-> >    5.34%     16.33%  ld               [.] bfd_elf_link_add_symbols
-> >    4.14%     14.99%  ld               [.] bfd_link_hash_traverse
-> >    3.53%     10.87%  ld               [.] __memmove_avx_unaligned_erms
-> >    1.61%      0.05%  cc1              [k] native_queued_spin_lock_slowpath
-> >    1.47%      0.09%  cc1              [k] __d_lookup_rcu
-> >    1.38%      0.55%  sh               [k] __percpu_counter_sum
-> >    1.22%      0.11%  cc1              [k] __audit_filter_op
-> >    0.95%      0.08%  cc1              [k] audit_filter_rules.isra.0
-> >    0.72%      0.47%  sh               [k] pcpu_alloc_noprof
-> >
-> > And also it works well for multi-process targets, again most examples
-> > in the patch are from kernel make.
+>   blocked time * C / B
 >
-> It's the single-origin case.  I'm curious about the multiple-origin
-> cases like profiling two or more existing processes together.  How do
-> you determine the initial parallelism?
+> Then C and B can change before the thread is woken up.
 
-What is the "multiple-origin case"? How is it different from multiple processes?
+Yes, these events need to be emitted on every switch-in/out in the
+trace so that a long blocked thread gets multiple events with
+different weights.
 
-> Also I think the parallelism is defined in a process (group).  Does it
-> still make sense in system-wide profiling?
-
-I've tried to answer this here:
-
-> It can work as is, if the system activity includes mostly a single
-> task, e.g. you run something on command line, it's taking too long, so
-> you decide to do perf record -a in parallel to see what it's doing.
+> > For example, if there is a single blocked thread, then we hypothesise
+> > that this blocked thread is the root cause of all currently idle CPUs
+> > being idle.
 >
-> For system-wide profiling we do Google (GWP), it may need some
-> additional logic to make it useful. Namely, the system-wide
-> parallelism is not useful in multi-task contexts. But we can extend
-> report to allow us to calculate parallelism/wall-clock overhead for a
-> single multi-threaded process only. Or, if we auto-matically
-> post-process system-wide profile, then we can split the profile
-> per-process and calculate parallelism for each of them.
+> I think this may make sense when you target a single process group but
+> it also needs system-wide idle information.
 
-Additionally we could add a process filter that will calculate
-parallelism only with the given set of processes (specified by PIDs or
-comm names). I.e. one profiled the whole system, but then says "I am
-really interested only in processes X and Y".
+I assumed this profiling is done on a mostly idle system (generally
+it's a good idea for any profiling).
 
+Theoretically, we could look at runnable threads rather than running.
+If there are NumCPU runnable threads, then creating more runnable
+threads won't help.
 
-
-> > > Do you think if it'd work for system-wide profiling?
-> >
-> > Currently it doesn't b/c system-wide emits PERF_RECORD_SWITCH_CPU_WIDE
-> > instead of PERF_RECORD_SWITCH which this patch handles.
-> >
-> > It can be made to work, I just didn't want to complicate this patch more.
+> > This still has a problem of saying that unrelated threads contribute
+> > to latency, but at least it's a simple/explainable model and it should
+> > show guilty threads as well. Maybe unrelated threads can be filtered
+> > by the user by specifying a set of symbols in stacks of unrelated
+> > threads.
 >
-> Ok.
->
-> > It can work as is, if the system activity includes mostly a single
-> > task, e.g. you run something on command line, it's taking too long, so
-> > you decide to do perf record -a in parallel to see what it's doing.
-> >
-> > For system-wide profiling we do Google (GWP), it may need some
-> > additional logic to make it useful. Namely, the system-wide
-> > parallelism is not useful in multi-task contexts. But we can extend
-> > report to allow us to calculate parallelism/wall-clock overhead for a
-> > single multi-threaded process only. Or, if we auto-matically
-> > post-process system-wide profile, then we can split the profile
-> > per-process and calculate parallelism for each of them.
-> >
-> > I am also not sure if we use perf report for GWP, or do manual trace
-> > parsing. When/if this part is merged, we can think of the system-wide
-> > story.
-> >
-> > TODO: don't enable context-switch recording for -a mode.
-> >
-> >
-> > > How do you define wall-clock overhead if the event counts something
-> > > different (like the number of L3 cache-misses)?
-> >
-> > It's the same. We calculate CPU overhead for these. Wallclock overhead
-> > is the same, it's just the weights are adjusted proportionally.
->
-> I got this part but ...
+> Or by task name.
 >
 > >
-> > Physical meaning is similar:
-> > CPU overhead: how much L3 misses affect throughput/cpu consumption
-> > Wallclock overhead: how much L3 misses affect latency
+> > Does it make any sense? Do you have anything better?
 >
-> I'm not sure if it's correct.  The event would tell where you get the L3
-> miss mostly.  It doesn't necessarily mean latency.  IOW more L3 miss
-> doesn't mean more CPU time.  I guess that's why perf doesn't say it as
-> "CPU overhead".
-
-Yes, I agree, it does not directly translate to increased CPU
-consumption or latency.
-But the point is: whatever was the effect on CPU consumption, it's
-rescaled to latency.
-
-
-> Hmm.. maybe you could rename it differently?
-
-You mean the "perf report" help page, right?
-
-Yes, strictly speaking it's not "CPU overhead" and "Wall-clock
-overhead", but rather "Overhead in CPU time" and "Overhead in
-wall-clock time". Does it look better to you?
-
-
-> > > Also I'm not sure about the impact of context switch events which could
-> > > generate a lot of records that may end up with losing some of them.  And
-> > > in that case the parallelism tracking would break.
-> >
-> > I've counted SAMPLE/SWITCH events on perf make:
-> >
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > 813829
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > 46249
-> >
-> > And this is for:
-> > perf record -e L1-dcache-load-misses,dTLB-load-misses make
-> >
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > 1138615
-> > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > 115433
-> >
-> > Doesn't pretend to be scientifically accurate, but gives some idea
-> > about proportion.
-> > So for the number of samples that's 5% and 10% respectively.
+> I'm not sure if it's right to use idle state which will be affected by
+> unrelated processes.  Maybe it's good for system-wide profiling.
 >
-> I think it depends on the workload.  In a very loaded system with short
-> timeslice or something, you could get a lot more sched switches.  In
-> your workload, `make` may have a long single-threaded portion.
+> For a process (group) profiliing, I think you need to consider number of
+> total threads, active threads, and CPUs.  And if the #active-threads is
+> less than min(#total-threads, #CPUs), then it could be considered as
+> idle from the workload's perspective.
+>
+> What do you think?
 
-Unfortunately this is likely to be true.
+I don't know, hard to say. I see what you mean, but this makes the
+problem even harder, and potentially breaking hypotheses we are
+making.
+For example, if we have 2 unrelated workloads A and B running on the
+machine. Their high- and low-parallelism phases will overlap randomly,
+and we will make conclusions from that, but these overlapping are
+really random and may not hold next time. Or next time A may be
+collocated with C.
 
-> > SWITCH events are smaller (24 bytes vs 40 bytes for SAMPLE), so for
-> > ring size it's 3-6%.
-> >
-> > FWIW I've also considered and started implementing a different
-> > approach where the kernel would count parallelism level for each
-> > context and write it out with samples:
-> > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
-> > Then sched_in/out would need to do atomic inc/dec on a global counter.
->
-> It seems you counted parallelism in an event (including inherited ones).
-> But usually perf tool opens a separate FD on each CPU for an event (like
-> cycles), then you need to adjust the value across all CPUS.  I'm not
-> sure if it's doable in this approach.
-
-Right, this is probably when I gave up on that approach -- when I
-observed the counter has a value of 1 at most.
-
-> > Not sure how hard it is to make all corner cases work there, I dropped
-> > it half way b/c the perf record post-processing looked like a better
-> > approach.
->
-> Probably.
->
-> >
-> > Lost SWITCH events may be a problem. Perf report already detects and
-> > prints a warning about lost events. Should we stop reporting
-> > parallelism/wall-clock if any events are lost? I just don't see it in
-> > practice.
->
-> It happens quite often when there are many activities.  Probably we can
-> consider stopping when it detects some lost records.
->
->
-> > Kernel could write-out a bitmask of types of lost events in PERF_RECORD_LOST.
->
-> It'd be nice, but given the rate of sched switch I guess it'd most
-> likely contain some.
-
-What's an easy way to get lost events? Normally on my machine I never see them.
-Is there some parameter to make the buffer very small, or something?
-
-
-> > > > The feature is added on an equal footing with the existing CPU profiling
-> > > > rather than a separate mode enabled with special flags. The reasoning is
-> > > > that users may not understand the problem and the meaning of numbers they
-> > > > are seeing in the first place, so won't even realize that they may need
-> > > > to be looking for some different profiling mode. When they are presented
-> > > > with 2 sets of different numbers, they should start asking questions.
-> > >
-> > > I understand your point but I think it has some limitation so maybe it's
-> > > better to put in a separate mode with special flags.
-> >
-> > I hate all options.
-> >
-> > The 3rd option is to add a _mandary_ flag to perf record to ask for
-> > profiling mode. Then the old "perf record" will say "nope, you need to
-> > choose, here are your options and explanation of the options".
-> >
-> > If we add it as a new separate mode, I fear it's doomed to be
-> > unknown/unused and people will continue to not realize what they are
-> > profiling, meaning of numbers, and continue to use wrong profiles for
-> > the job.
->
-> I think people will find it out if it really works well! :)
-
-Yes, but it may take 10 years for the word to spread :)
-I am afraid the main problem is that people don't know they need to be
-looking for something. We had 20 years of widespread multi-CPU/core
-systems and no profiler supporting latency profiling.
-
-But as I said, I am open to options (at least I will know it's there
-for my purposes :)).
-
-
-> > I consider latency/wall-clock profiling as useful and as fundamental
-> > as the current bandwidth profiling for parallel workloads (more or
-> > less all workloads today). Yet we are in 2025 and no profilers out
-> > there support latency profiling. Which suggests to me there is a
-> > fundamental lack of understanding of the matter, so new optional mode
-> > may not work well.
->
-> I'm open to make it default if we can make sure it works well and have a
-> clear interpretation of the result.
->
-> >
-> > If you are interested for context, I used a similar mode (for pprof at
-> > the time) to optimize TensorFlow latency (people mostly care about
-> > latency). All existing profilers said it's 99% highly optimized and
-> > parallelized matrix multiplication, we are done here. Yet, the
-> > wallclock profile said, nope, it's 45% Python interpreter, which
-> > resulted in this fix:
-> > https://github.com/soumith/convnet-benchmarks/commit/605988f847fcf261c288abc2351597d71a2ee149
-> > Full story and examples of these profiles are here:
-> > https://github.com/dvyukov/perf-load
->
-> Great examples!  I'll take a look later.
->
-> Thanks,
-> Namhyung
->
+I would solve the simpler problem of profiling a single workload on a
+mostly idle system first, and only then move to the harder case. Are
+you considering this for GWP-type profiling?
