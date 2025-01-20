@@ -1,198 +1,175 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B499E224EA
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 06:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737354643; cv=fail; b=sStfTlotBmERk4Q46SKgQgpZsd1ucZAsNN+ksbWIiFDBqoi/3hYVb/VPOhVmYEKzJzQmsJFNpB6Sfcbn7nGfidT7XakK20m5W9pupBYMByj4LCdgJ0R7x3bUMypwUOwZUawJTR5FaX9BhwpGJV1ZPqflyU5OMddynEK1B+XtH2s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737354643; c=relaxed/simple;
-	bh=0s3RHUPLtgqlK9tH8j/nUbKkreqEDBEHCbA+hFjfZ50=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OtM5fOgGc+DZjoWdRfaiOSGjXMfmrb/aQSMYBO4UkVQ2hmumojX0wA9UEme9rJ4L1W7a7a8kCfB/W7evB8XbQicRW2NevecCWW3MB9LrDvVbm7wiStxriFgkp7+jt575vbCiW4jpgpOKAkfXQEkXNAlkWPbTtCW4j3SNHlNVdHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yDY9AzJp; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4094C96
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 08:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737361426; cv=none; b=hwQoPBqKdiniG63SlTj7StpsXsj/KbgyfvQcWz9VwkvfwXhKlU0YGn/OegdkP/MPrpBhWr3Gkvg1oT4x651cDN84sx81Oe4p4GYM74loApSlygHHvh7X9Ha3Uk4OgVgPP+HwBxilmt4uRjWyL80I8tTvJHe27JS+24Qkaeeigjc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737361426; c=relaxed/simple;
+	bh=9cFBjgFR1/W03IzGNjk4avA5LJbMna9bRbLXx3CwbPk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=oz2tc+7KszxhgmNvwRsUat+ABmA62R4ZfSu3Obik5I2DCFA5B44EFGXkaGiNe14kfPr2UGxnYFs0MEfYhlpuJGYd57prguZ29PhrUDdswsX2q09/WQTSzuDBqtpOFO1KI//z0wIMJFALQ1qoIkx5nVgEERlcU1SNmi9MXYowb+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ANIWsBtF; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yDY9AzJp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GP18N117S+wmehV9M6pZw4qs8oKcgIkRhChBa2dxSK7RSyfqzSrHZTXI3YGbvDPjfbUREYcu2zUk1x7poCdEbEpBfqT4Jl2MIGpOZrUsJTRZjqvBedT/KyxsmpUppv3MR0mNE9/AQ5b/CB71TPlNHUH0bz6YJcPqPVTJfUvf7b5L/zKd1ks924EZhDAQbOPNR22LQ6q9bzEfIGLsShipmJSXXfGsNJJc5j8pid/reHNsbYJeqM9pycrO/LhAe+2BRcz05hBHMswxgUclnq+quPUUZuExuNOwf330v04iJYqTUNrVS34pHzGwsvDS225uk5qbhC78GK7m8EfOjAu3GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I1Vw+/0bfZcoFAwxk02fBnQ+4VoHwnqHo0UMGDR3MMs=;
- b=blgOuiuNthLbh7PjDeLlyFU8DuZ1WMdAtXUKyOcRrOxRwpLvZRK9/IZkRVBVEzibmT/UPZ0HqOxD5TXU0XayT2p8uJk0wDEvHBPPz4+PcVInu1Kv13m4ZTBv/8McOLyJJtjX2Q/7UfeK5M2xY85Gmxc5tziUd+zpAJ/Oh45Fw10drbSrWE6W5pqSkRm10ZqPeVjCUC8g8AuaDSnlqH0mI/jOt0tS82c6oBAcu9OJ9wQ7bxdGc5U2vKFPXrHUXqHHoGT3myADVQS6KAYHKttLeesL+yyT9f45+7JGw/JyTDEffZpHzbeiDgJvvCAyK/U3OyiVOME3twLhhHROVg2QiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I1Vw+/0bfZcoFAwxk02fBnQ+4VoHwnqHo0UMGDR3MMs=;
- b=yDY9AzJpocrg2+kyJxqwlfaDQVzo+XWHrbBdidDWhDsq07igvZ4BgTZCVEx7f06xpDv3sAT8zh7ixXMFlWTShp1pQRa1CpQnLSViwYkbyZzvudFPTAQRJiUW2tVmpKCsSLnjQ+zruXq7z65Hb9QusotgR0hmEdfINDodzynbXwM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SJ0PR12MB5609.namprd12.prod.outlook.com (2603:10b6:a03:42c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.21; Mon, 20 Jan
- 2025 06:30:39 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%5]) with mapi id 15.20.8356.014; Mon, 20 Jan 2025
- 06:30:39 +0000
-Message-ID: <d4403303-81b5-4f7d-b7b1-1550c37d9e0f@amd.com>
-Date: Mon, 20 Jan 2025 12:00:30 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/perf/tests: Update event_groups test to use
- instructions as one of the sibling event for hw type
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- irogers@google.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
- disgoel@linux.vnet.ibm.com, hbathini@linux.ibm.com,
- Tejas Manhas <Tejas.Manhas1@ibm.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250110094620.94976-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20250110094620.94976-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0208.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e9::16) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ANIWsBtF"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50K20hBx031841;
+	Mon, 20 Jan 2025 08:23:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Qtqen/
+	MXOiB4PVUtzX0xf/ut44hK7g+2ztmrYVWMB0c=; b=ANIWsBtFCHr2E/eBixq+lb
+	4XTWlwtJCJxAhXrIZCTj+kCK91Lav0RcaVtUXAEVxWqgr2TgXRjbBrs6/Sc2a5YT
+	XpPVNhTUMLgXbrT+dXwIrsLKLdUV6W8F8OjhqSjrD59vuvpRtMTIqIPX72vy1K4F
+	8+sLKs8SZ9zRbFo1+GSPx/1zejFz39wTD33vZPOHWzUJeb1VVJULmlX7o/EfEr0d
+	o4jPj0bAq6stznKMVmighkyhKlJGKQmuAPouqXdQuUH2JmPEEs6tQjz8AGmqVkMh
+	DsEH6Dtk5of5VUjy1XKUPoRDHtYnZq83P71CaOL2sXmxsb6WgKlsLU2CRTfOlMqA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449db0sb9k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 08:23:33 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50K8J23c018403;
+	Mon, 20 Jan 2025 08:23:33 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449db0sb9f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 08:23:33 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50K4ttpL032248;
+	Mon, 20 Jan 2025 08:23:32 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 448rujd4yb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 08:23:32 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50K8NSk163635918
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Jan 2025 08:23:28 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A65152004B;
+	Mon, 20 Jan 2025 08:23:28 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 283C22004D;
+	Mon, 20 Jan 2025 08:23:23 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.241.253])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 20 Jan 2025 08:23:22 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB5609:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85407465-94e9-4d4b-c486-08dd391bf4a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QlpLaUNmR2RoQTRsbi9HZ1V3WXMzK1pMdGQ2ZTA1Ukg3VXhWYXVnV1I3L0xi?=
- =?utf-8?B?TjRBcjRNVHhNQzJiV1JXTWFyRTBuZHIwQjhaWVNNTDVBQ01peDFUZkRZRTFy?=
- =?utf-8?B?TjBtSWw0bFdGTEJkSStLQ25NR1hZRXRqcFMwaHYySkE1K2hLOUlYWUdWbUFU?=
- =?utf-8?B?T2xTanM0cW9Ddzcwem8rai9VaFd2bGM1aVJzM2Vid3dZT2VQK1dXQitHRlhk?=
- =?utf-8?B?TXVDMVNxYmI0WXNtN1N1NFhPQlhKSmhrMExCNEdxb3FIR1NqUVUwMlJsNUcr?=
- =?utf-8?B?OWkwRGJCTm0wVjZGZXRBQWhSVXBoVThxTURJS2dLeEkxdmt6QzA4OWRHQjFi?=
- =?utf-8?B?aE56VGgzK1JMMk9PSUJuSm1uSzBhandyZUxhMXpic2VpbHEzQnpmaHZzS3JF?=
- =?utf-8?B?WjBXL3hONTVJR2xXbFJRcFcxRmcrV2hNV0pNZDdabjE4OU0zaWNFaWxBSW9M?=
- =?utf-8?B?S0x6ekhtdGVVa1FRQnJYYmEyKzlRdXZOZ2tTOWVBRCtDb2Y5QUZDdnAvd002?=
- =?utf-8?B?eW1DeFhuSlp3Z0liQXNFanB0b3Z6cUNxa0U4bzhOSytGZDZDTTFxU2Yxb3Qx?=
- =?utf-8?B?RnJEa3phL0hYY1ZDZU1rRUJ6eTZZaklQOGd4VVprYmo5aEZMOWFmMGRDSXM1?=
- =?utf-8?B?ZDFVVkxXOHBBWVZLblBFUnpvVTJVYmRWdW5kcHl1Zi8xMVpzRllSNDZEVHc5?=
- =?utf-8?B?N3QxZ1RrY2tlV3dZRHBoVXZMSzFaV2ZDUzVMV2k4UWhjNHRHVkZVcXBIYTNi?=
- =?utf-8?B?RGxIT3dYM1F6WThjVmYxL2M1ZElXcGx2YURpOXM1NjBqRlY4ZDlnV3liMXlM?=
- =?utf-8?B?UFFmUG5xM29PRTZIN2tUZGZnNUljRFRrMTY1ZmFmLzF6bW9vSy9pQk1CTEl4?=
- =?utf-8?B?TGUrUXdFNk9uV0dhWHh2U0lsQjFEVFJvWndOYUhZUkhXWFhqUXliUGIyTzZt?=
- =?utf-8?B?RlRnNnpkbEZPeFZ1U2p3V0dQempnVlJ3YVhob21aeHZtRWhLWW9XNDZRMDRp?=
- =?utf-8?B?VEZHUnVQZTVuVTVnYU1DUThhTHZhS3hGNy8zcGR3RkphS1JOWStMZ0x1bnJW?=
- =?utf-8?B?aXZleHlaeDJnMnNoais0WDBubVpiQWYwTUx1MFpzdUdkVXlqajU4a0N4V0Jj?=
- =?utf-8?B?Y2R2U2JDYkVaaEVIQk1zWGo5MklyaTh5aXJ5c1p3Rm5MenJPeklSYW1mMCs3?=
- =?utf-8?B?YmVjYmRxcEhzVHRvMUF0VmFoZkg0MHVDWU5jMkVleS9XRzdPS2N5YjVBNmhp?=
- =?utf-8?B?czJ1MHRnL3VYOFlKRGJUTmxlV2tiTkQzNTA1OGg2am5La1JqR1hNQWhDa2lC?=
- =?utf-8?B?cDFuY3JrampIRTgzYk5uU2loUHozQm5nOWdtQWRtaWpEUktGNys1aE45cVp2?=
- =?utf-8?B?dnFSZGRDRXN3WHpYK25pamZiOGk4M1hGaStRdCt4eFptbll4TmxrOWFIb0Z1?=
- =?utf-8?B?bDhiQWwvelB1NHhRK1J0RkhPSTRLSjRKb01vL3l1L3VoTkZLYTEyVHpWN3NX?=
- =?utf-8?B?YS83MXByb2JydE1TQ0gybCtZMEt0T0cvVDZmUVVrc0FVZERuaVcrNHNpUFZQ?=
- =?utf-8?B?blF0UVZBeVExWTdLa0VBVHcrUmtOWVRHTC9BQ2wzdGp4MzhTOVJIUEFoSnE0?=
- =?utf-8?B?UHFFNHdZc0t0UkhTeC80bEFReW5sZ0ZkOWRKVG5wa2I0U09ZOWJ2cjI4SXFj?=
- =?utf-8?B?VkY4R2hONVRjdllVWG9wekx0MFFBOHZieXFLd0diL1Q2S0FuYWZUTXhuMmpi?=
- =?utf-8?B?dU1uOHJ0QXpISVhSYnZmUDJ6RSs0WmhrbmdEYmtvdDNiK04zQ0IwcnJacXZy?=
- =?utf-8?B?bTJsd0MzeEg5QlVMSGV6MTV5ZGY4WEIyQThVN04rTzVuaytTZlBQRmNoUGhj?=
- =?utf-8?Q?loORP0JyLJunm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djhSVU04ZjNiMUFYVHpGUm15Z3NoZ2RtbnlvZTV5RW5uQzYrQjN2ZHpweDlN?=
- =?utf-8?B?MlVUL0FiUllnaUZIYnp3WXh0ZVk2N1JEOUNlQ2E1R0RZZGNYQUhPWU9wNFNQ?=
- =?utf-8?B?YzRNMGV4OHRWOE1uN3hsMk9wTXpkRHIvdTBPYjdzMzlLc2c2L3lsMUFqNmVV?=
- =?utf-8?B?QjBKUDRPQ1kwYTN5MGt5QWx0UUM2RjlQN25HRkxTRHBEQ2RiajBhdVNFMmxU?=
- =?utf-8?B?SC9EUmdMR3FTbDNadjdlak5NdEpQb0pDYUh6YlJ2eFFSWVVGeWpZMGxpcHlF?=
- =?utf-8?B?a0xTVk9xbUYwQy9NUThLdHAwVlA2eWxodm1TWk9BNHhxa1Uva3RtQTBGVW52?=
- =?utf-8?B?MHBzanNVbVJOSWZjY3hjVCtnT3U0U2tBcFRhWktwaW9IdWxHaUFtNXgvanlQ?=
- =?utf-8?B?S1BlTUFSZC92WEtOby9YOXU3d2duYTJYa3ZmVjBmNmpMM2tlajNtOGZlRkVB?=
- =?utf-8?B?UXFnaWdacmFPNUFJN1ZCNmwzNFk1UFpYVm1SU2hsNmFsL0cyYTFJME1TbC9J?=
- =?utf-8?B?NFhlMmNYYUUrR2JEZ0xVN1BkS0V0a2lOaERGeUVWcEpDRW1jMjgrcWh4RGdX?=
- =?utf-8?B?SzRqK1NUaXpJUXg1RkNOUjRleGp2NG5QWXg0NkxONTV4OGpnUUwwRE5CK3Ny?=
- =?utf-8?B?ZHRYWmlmMUlYS2RPZ0FoSDA0bElWcTZJTkhLS0VUaDR4bDdaWFZxN25RRDBS?=
- =?utf-8?B?S3ZLUG05UlJsWnRISFdKTWJBYVlVMzhRZmhqYWZ3ZDhlYXMwa3VuUkJ2ZkRt?=
- =?utf-8?B?aHI2OUdWM3NuWDRtZVppR0paOS9VeFhtUHhGVGo0blcyQjJtMEtCSUV3c0wz?=
- =?utf-8?B?V1piQlhwbHBWbFNaMlAxZjlrQUlpMXVGdERDQWtTY0dDOUZRcHZndTBsdFdP?=
- =?utf-8?B?bmd3WTNWSmZVV3g1OVdWNm5TYTJ4RktYN291REYzdSszK0xsMVFVclFOdW1H?=
- =?utf-8?B?b2k5SFBreWN4bm5va1pqTVU2THpvVGtyYTNJcEIxYnprYmpKSHdJRm1lZzE0?=
- =?utf-8?B?dlJ1Skl1WkEwODIwckNmaHZJUS85MG1VZmphaXRBdnptRWNZUHNZUVdQanBH?=
- =?utf-8?B?WUQ4M3l1RGRQK080YXFJaUJrbnkrU0pQL0FJd1hpM0hVcUEwYzlVTzBuUmNT?=
- =?utf-8?B?cHVNb2NoYXUvbFVsQWlDdjB0Qmx6TTRrclZ1YjFXV0xvRkNXYVgrZHlXQ2t6?=
- =?utf-8?B?OHhvZ1oyS0xSTHE0M1ZsOHBJZ2RYWWZnVGhaWURxVmU2dXJQbUE4ZlFsaER3?=
- =?utf-8?B?d25IL0tPNkFHOERhNUZCYVIxUTFPREd6YkxQM2o0WHkwTEdCUlhmbTk3RnZk?=
- =?utf-8?B?dDFGMW04bktnYXd5YjhObERxbWN6dnQ2OW9zSG9XR01vc2ZoWVFYa0tPVVFy?=
- =?utf-8?B?UzFyK3pCRHRsWFY1WmF4TFYxOE5tTjBkTGNKbkROMlphMHNNcTZ6QjZ0bjBF?=
- =?utf-8?B?dVNYTHg0WjBiREtSSnloQndUcFQ5aUVnSHl5SGVSbXZPYU03N01QdDJFdG9T?=
- =?utf-8?B?TkxsR2h3K3kxbGhscnNBbkZMR3kyMTZsTWwwVmt2L2s0bWNiczBaWWJGS2sz?=
- =?utf-8?B?RVlXSms0NGw4SUZaMWdvdVRBb093QllLYzcreUVqU1Y5eFpQWjFWd2NPbHJJ?=
- =?utf-8?B?MWY4UnI5ZzBVSjVqb2wxYnNWK0EvZmVTQzFSeUp1aFJVejI4aGNzUlRYYnZO?=
- =?utf-8?B?MXNPd0Q2dzdwN2lVSnpFTlZlTk5rbENYcll3eUMyVGR4dU04citrczZrbGRk?=
- =?utf-8?B?NGVSd1RJYThjMkszSktFRndDTUN5U0EyU3U5SWJHYURlVzg1Uk82S2ttZno3?=
- =?utf-8?B?NXJrbndHNTBvT1lxbWdLVUtDcDhWbE9peFNSMEYzQjlpRlJuMEVlRUpMTnV3?=
- =?utf-8?B?aHRKdndmQkRZSUJKNjVlME5EbzhpSWU4MDZISXJLSkViUnRCemYwdXZsV0Fv?=
- =?utf-8?B?SG9SZW5ERnZOVlVTNXEzdEhwYWxZdDk4dytQZjRwVldpYksxL090NWQ1eGVL?=
- =?utf-8?B?RU9OTlRzaitHa3NCYW1JTFVtOW1TdzYvZlF2TkhseEVrenNIcWhQNG5KWHI4?=
- =?utf-8?B?cHp1VzlqYTZqMHZFNFFuSnFrQVVwNU5ldXNJUE9POHFXNFlrOGRWb3J6R3Uv?=
- =?utf-8?Q?u0hfYdwLShhH0O9wv5/F31/yH?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85407465-94e9-4d4b-c486-08dd391bf4a2
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2025 06:30:39.0924
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h6ermVfYnUPnqoCf+9D4aP02ilQvUazh64yYUEzqIoF9Wm0DYjW+VM4Ft+XYpVoHNbnWaspv02GXLSe9ZU2s8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5609
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: [PATCH] tools/perf/tests: Update event_groups test to use
+ instructions as one of the sibling event for hw type
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <d4403303-81b5-4f7d-b7b1-1550c37d9e0f@amd.com>
+Date: Mon, 20 Jan 2025 13:53:08 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com, Tejas Manhas <Tejas.Manhas1@ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7626F28E-7BEC-4374-800F-ABD1D044D092@linux.vnet.ibm.com>
+References: <20250110094620.94976-1-atrajeev@linux.vnet.ibm.com>
+ <d4403303-81b5-4f7d-b7b1-1550c37d9e0f@amd.com>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VwJRQRGy7MzrR9smNCpHEK5bTplLABr-
+X-Proofpoint-GUID: iDaWe2gOwOoF1cFD5EkR1oKzR_m8zw6E
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-20_01,2025-01-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 mlxscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501200066
 
-Hi Athira,
 
-On 10-Jan-25 3:16 PM, Athira Rajeev wrote:
-> In some of the powerpc platforms, event group testcase fails as below:
-> 
->    # perf test -v 'Event groups'
->    69: Event groups                                                    :
->    --- start ---
->    test child forked, pid 9765
->    Using CPUID 0x00820200
->    Using hv_24x7 for uncore pmu event
->    0x0 0x0, 0x0 0x0, 0x0 0x0: Fail
->    0x0 0x0, 0x0 0x0, 0x1 0x3: Pass
-> 
-> The testcase creates various combinations of hw, sw and uncore
-> PMU events and verify group creation succeeds or fails as expected.
-> This tests one of the limitation in perf where it doesn't allow
-> creating a group of events from different hw PMUs.
-> 
-> The testcase starts a leader event and opens two sibling events.
-> The combination the fails is three hardware events in a group.
-> "0x0 0x0, 0x0 0x0, 0x0 0x0: Fail"
-> 
-> Type zero and config zero which translates to PERF_TYPE_HARDWARE
-> and PERF_COUNT_HW_CPU_CYCLE. There is event constraint in powerpc
-> that events using same counter cannot be programmed in a group.
-> Here there is one alternative event for cycles, hence one leader
-> and only one sibling event can go in as a group.
 
-For power9, cycles seems to map to PM_CYC event:
+> On 20 Jan 2025, at 12:00=E2=80=AFPM, Ravi Bangoria =
+<ravi.bangoria@amd.com> wrote:
+>=20
+> Hi Athira,
+>=20
+> On 10-Jan-25 3:16 PM, Athira Rajeev wrote:
+>> In some of the powerpc platforms, event group testcase fails as =
+below:
+>>=20
+>>   # perf test -v 'Event groups'
+>>   69: Event groups                                                    =
+:
+>>   --- start ---
+>>   test child forked, pid 9765
+>>   Using CPUID 0x00820200
+>>   Using hv_24x7 for uncore pmu event
+>>   0x0 0x0, 0x0 0x0, 0x0 0x0: Fail
+>>   0x0 0x0, 0x0 0x0, 0x1 0x3: Pass
+>>=20
+>> The testcase creates various combinations of hw, sw and uncore
+>> PMU events and verify group creation succeeds or fails as expected.
+>> This tests one of the limitation in perf where it doesn't allow
+>> creating a group of events from different hw PMUs.
+>>=20
+>> The testcase starts a leader event and opens two sibling events.
+>> The combination the fails is three hardware events in a group.
+>> "0x0 0x0, 0x0 0x0, 0x0 0x0: Fail"
+>>=20
+>> Type zero and config zero which translates to PERF_TYPE_HARDWARE
+>> and PERF_COUNT_HW_CPU_CYCLE. There is event constraint in powerpc
+>> that events using same counter cannot be programmed in a group.
+>> Here there is one alternative event for cycles, hence one leader
+>> and only one sibling event can go in as a group.
+>=20
+> For power9, cycles seems to map to PM_CYC event:
+>=20
+>   GENERIC_EVENT_ATTR(cpu-cycles,                  PM_CYC);
+>=20
+> However, I don't see PM_CYC in power9_event_alternatives[]. Is =
+PM_RUN_CYC
+> and PM_CYC are same?
 
-   GENERIC_EVENT_ATTR(cpu-cycles,                  PM_CYC);
+Hi Ravi
 
-However, I don't see PM_CYC in power9_event_alternatives[]. Is PM_RUN_CYC
-and PM_CYC are same?
+They are not the same. PM_CYC count irrespective of the run latch state =
+(idle state)
+whereas PM_RUN_CYC doesn=E2=80=99t do that.
 
-Thanks,
-Ravi
+This test runs fine in power9. The event code for PM_CYC is=20
+EVENT(PM_CYC,                                   0x0001e)
+
+Here it is not specifically meant to be run a particular counter and =
+even if no alternative event is defined, it can pick available counters =
+and go in as a group. But there are cases like other PMU (which is used =
+in absence of platform specific PMU) , where alternative event is =
+specified to run a particular counter.
+Example: arch/powerpc/perf/generic-compat-pmu.c=20
+
+        EVENT(PM_CYC_ALT,                       0x100f0)
+	EVENT(PM_CYC,                           0x600f4)
+
+In this case, we can have only two cycles events to go in a group. So =
+with our testcase events, one leader and only one sibling event
+can go in a group (checked other PMU=E2=80=99s to confirm two is =
+possible). So added this fix to consider instructions as one of the =
+sibling event.
+
+Thanks
+Athira
+
+>=20
+> Thanks,
+> Ravi
+
+
