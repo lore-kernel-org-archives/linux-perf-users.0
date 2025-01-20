@@ -1,226 +1,180 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D25374BE1
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 11:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737284932; cv=none; b=oLnOoyV9H6yzDTx1IzWg3nsPnEWS+4QvTjA0jUqwlJdNvYzRJCO9xUgHMDvgKT5A5+KfeXhY2c9hbn/faAzEHZzR14PhQL+36FKc5u7CDvbZumu6gFHuUCFuc4LRtm2advtObu9R68TwlYPX+sXyAK9znZuRPcy1bn5frCodOiU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737284932; c=relaxed/simple;
-	bh=ut9yTDqHNWYIr6lLVWtmFVq+wRfa58IwQVvgxL+/5G8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OU5qfQrzmXZO6xvqf7YGwJyZMKFdBoim0cOKqnUCkuKq60Px2W8ImT3ThH09BjQjnHhIHSInU3pkFbZNf8VE56ETGHH8fmIg/R13BZd8jS/NZhFyN2L4r7v4xRUGsrsRTdSAanlGKVQgymVI5IBfbHo8OK69B42VzvTVKrDPWPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y2NG9mzM; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEE684A2B;
+	Mon, 20 Jan 2025 04:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737349169; cv=fail; b=E6bzdpeKcet13certdCTH3TXljEEUGW4JJj0kbj6DAk+mMSnS55vSmXxqMX72vmx7COE5Q3908Uml5BB87REJOTOtm6TTXpXz4A2rR/A8c/jspPYK87S/bvWDDdA2y9lZ8MXdHG4c3VVZkAE5F9y+JPelj60aWLA6lNeHb7yhUY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737349169; c=relaxed/simple;
+	bh=eXiMe10K/uirvnDoVSGVM7jrNyboQ1/g9kvKU/T2wzM=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fY5LUpPI05Nh8X4v7mpWAT8sVRxoUOP+eQybzZomPr3KvEgXPhvyX+qGg9PyUgkPQZMqfr2uuuKjn3G6fCxTOQbCO0YshKI+emZAhYPDNUGnGPWdVrD7PiYps5gMg+V5UOzBsoQ/FA9jue1g6I1TRiVL838HsYR+PnxJSLzwhMM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HmPpUp4i; arc=fail smtp.client-ip=40.107.237.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y2NG9mzM"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30615661f98so38195931fa.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Jan 2025 03:08:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737284928; x=1737889728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1JIEQfCUsKzBVpYrWku2yuMv4Vr5lH5R7DgEOVUl6us=;
-        b=y2NG9mzMSob4hjMw3T6GBHlxKxLil7VidbKLC6fQ9zA3VwcIou92UPBseAsIpkBAvT
-         iIlGjCCwE3wa+IHsT+4yiDxJt6yxBIsUmu6FK0DD5MkOIVvnDmHVMrAKAqjI5aInHgsY
-         SBW65KTAVHNCKpQZM81b141TXI14ObTPui0Ik/t/XlHc0fi+bnKCwsPevZfRggMcv+l+
-         +YYpd/VJJpClxSrI3FQK0OyQIq2efYFYOAP7hxC3SyvCdkykqyl96xEqdOTSNkMm1lQN
-         vZFIZJGTP7EKkk0gc9FLa2QKe0qpMio7G9o1nLXMI31puSA42OYdN9Ng1amEXfcIRrjF
-         4GVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737284928; x=1737889728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1JIEQfCUsKzBVpYrWku2yuMv4Vr5lH5R7DgEOVUl6us=;
-        b=Binz1+t/jGDUmaMimkj9k7qP7PL3MT9cCQK3GmuZNttP8L6+k5KZT0oDZv7loorpRK
-         47hEzxyVRzBJFuP1pOQ52f42N3fS7iAhlsZZ5P+p6j6e7r6DWSQwzfquCVPzOUu7mSDo
-         QpjtdMd/sc/6XwntrNfOQYEy8cH1mmOCDkidfYhJyQFtsQwe3c95GTA8FiqvvPtoTRAn
-         wr1ciI68n8CAX6ZUKIKelE06dktHtCbDqQ2sy+C4e98rTmgDdoJD7tTP/7jrOrlCbhJa
-         fPeMpzasSBin7Yo+/jRwAuOQTQd85k+erf002CYkOUNjNAlVrXW2lDGDTnb8J6XB1cMt
-         ITkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxxSC4n72xHQMmqrp+tEWKiCcRIW8iwLPu3xqIv5+BrnOFOmOfB6In27GgcWOxr/weP1IBZyIiz3xm77GxvPvH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8KZbL1ODac1co2EKNjqxttidPcgsA/iCa0p94nPca3O7ms3D5
-	ScjQAabwe/TsXR9P0170FxUZW8vNnr0P8Ha5kJPctZhDpym4kCbo/UnZY8aQDJ0KE9c9UFqzeMh
-	uWf8NvvRnXOOiH2G5f0PP8WlG4JgF8Y7i3KJd
-X-Gm-Gg: ASbGncsSuNi1MRkYDy+oiRFrZbIZKOCK5TOWWwXNILg5QkqUO+O7U4GyL8WtttTDFbq
-	sB8Uncvew1yHM8lCOrNf/utmY/ChDweTupnqNuLDsW4xt+WCkcR+8FQYROkhrSzDluWava3M3wU
-	p1jc3Huu4q
-X-Google-Smtp-Source: AGHT+IGLW4T+/b+6iiktnGjwUL9ahOwVBUh7A5NO/XdZbBXV9/dPTCN9B4d5C96Ku1vbMAzrARf6hbfnMf2J83BJHpw=
-X-Received: by 2002:a2e:bd01:0:b0:304:588a:99ce with SMTP id
- 38308e7fff4ca-3072c994c81mr36694421fa.0.1737284927883; Sun, 19 Jan 2025
- 03:08:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HmPpUp4i"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ghnBPg8cxLtt8ZANTCqEAW2RVMzQqRGv4h9EVwVyDBdwMdprPuDjHckk5vtzzWDRpDLjmen+g8Mbn8U/+RWDr2NQlE164Nsin+krZ/viz616e4qN2S+IHX9+njGr+mbtrSFPcb4BRj5+KBzVHN5e70RbKQNlRNXwPc6eqiQiF4jcssGOHtAybw5yFEdU0It9ZbxoSYqzvdO+hnMyvMLQ+OesJuXW11FEwG+ikZxG4JSjwdTW0xsa3/rRCyvRwkDObbsyJmWSjgs1SdAZLFCZPGlZsA8L2xiLr/fcvW9ju8/qp1o42FtmuE0ae1PjiA1noNNTWgeE7DbtVQ1Z62C2wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TuCbQ5GCmeE5afSiodl3TBS6dqiBtiOXMTGMb/AveyY=;
+ b=H9ixpdschjRCB/lzbtimX9ZEk3pKsjxORE1jlWA+wblVh4Hi5pz+1bdox1e2KqbPeQ/xb6isWQfXUvJMx3JyXonxsC8+lsplrqg0U21iET/Lp6ymTrDdRZegFVb99yIwoClMHPOpHJHM0Hxx3QgDyruiJVL3ICXoG+LYbSQBzu1w3sFAQPNyI+d9Wbk3XG1v7TiBehL6XBtDA2+5eoyk0jn+q7mRjrOyaeNQ9Pr0lbum/Enm1C6U1R6AXy+nd7YiTxEm0E74WjppihSxm2JnUQTk7Lnp4/0Ejv6YhP9N2pYqXdESqFnM3ylS1QW7lqlBl699ngahm/jviZ2sIzZJ5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TuCbQ5GCmeE5afSiodl3TBS6dqiBtiOXMTGMb/AveyY=;
+ b=HmPpUp4iXNSZ5cUlQv6cT26kS3JMJce7UvXcmW0mDWSIVeYAgPK6x3vBibKQW4VtoCEJwDjNtO+1neqNOm0KCewAhUanBLN96ffdmreWXK6FRfCcN7KoPBO5+zTpn4jWAFehJljsjAh02cstcSEH66s5XFko8npxlYdru4qh7Qs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by PH7PR12MB7188.namprd12.prod.outlook.com (2603:10b6:510:204::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.17; Mon, 20 Jan
+ 2025 04:59:23 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%5]) with mapi id 15.20.8356.014; Mon, 20 Jan 2025
+ 04:59:23 +0000
+Message-ID: <2fa8372e-41d2-4b0d-a549-cff9ab208bf2@amd.com>
+Date: Mon, 20 Jan 2025 10:29:14 +0530
+User-Agent: Mozilla Thunderbird
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH 2/3] perf: Fix low freq setting via IOC_PERIOD
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: ak@linux.intel.com, jolsa@redhat.com, stable@vger.kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250117151913.3043942-1-kan.liang@linux.intel.com>
+ <20250117151913.3043942-2-kan.liang@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <20250117151913.3043942-2-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0157.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:c8::19) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com> <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
- <CAP-5=fWHivx7Q6okMwYOs=65MZr40RjE16tgatMX0hjkCfrwfw@mail.gmail.com>
- <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com> <Z4lWDPpmdQDM1k6l@google.com>
-In-Reply-To: <Z4lWDPpmdQDM1k6l@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Sun, 19 Jan 2025 12:08:36 +0100
-X-Gm-Features: AbW1kvZVnmborYEGWImDjdyTZZtzQRfGfg6XBcKRakltamYyk-HPqHHmyX3N0i0
-Message-ID: <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
-Subject: Off-CPU sampling (was perf report: Add wall-clock and parallelism profiling)
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	chu howard <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH7PR12MB7188:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bd74277-b3fb-4a9b-43f2-08dd390f350a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dFRVTlpZQlllOFROK1RiNU1lWU92Tm9vai9mR0ZwZG5GU0oxYjJFU0ZxK0Fm?=
+ =?utf-8?B?WUxsOTVjOE5FakNRbVQvUHlRTWtGeUZqcHlwc2laSU9FQnY3QmRucCtNL3Qy?=
+ =?utf-8?B?ZmkxSkhMY25xaFFWeHBsNjY5UHN6bS8valhEVUR1Vk9ETThaVzRXT1RVR1Vk?=
+ =?utf-8?B?VUxaanZwYlR4S0UvRUt2UThWSURJOWExWi95eXNyOGtNYU5CbGNXc0RYRFcz?=
+ =?utf-8?B?ZWZXRHRKazZjWG02SUtuQmhLYWlLWFgvbHJKSjVGdno2dUVIRVZMMkNUOGxC?=
+ =?utf-8?B?ak90T1MybXdYSDl0clpuSXdFV0YyMjlWQmZ6NkU5dXZnWE15RC9WM0hTOUZG?=
+ =?utf-8?B?MTBPczRDU3g4WGxWQzZyYm9kTXJSQkI5TnhXam85OHJ2NmQyc1V6ZjV3LzFD?=
+ =?utf-8?B?K0c5VkpJQU83SldEN1hIam1OVGZ0Tis3NjVRVEJ3NlZlN1ZYSmEySitVd3Jh?=
+ =?utf-8?B?TVovNFo0YnRLems2QUlCeFpoWklhYWlSckVJalJWV1VqRm9ZeXVNK3ByaFhL?=
+ =?utf-8?B?NDBYSy9UdFdTdnMzKzVmRHhDODA4cW5NRVFnek9WcHRhS0MvU0VlOThxcU01?=
+ =?utf-8?B?WmQ0QnUybW9Ma3VnRU01eHJJUWtRaHF1WXRaUHBxdXVQRm44TElJTXBqemtL?=
+ =?utf-8?B?MDlpS3RSYnM1RWpjb2VIckNxRHpyTGx4bW50YWpFM2dnUks4NGV0eUFDNVNC?=
+ =?utf-8?B?RHcxaHZBSXJsV2M2NEhmV1JVWEJON1dWK2dJYjEvcTdTRU1mY295c3diUlRT?=
+ =?utf-8?B?RzRYS29LUmJ3Vm56OFZzZk9yVlh6ZXVxMDhlbWxpNDBkMEdxMWUyZXEyN0VK?=
+ =?utf-8?B?UGxUTUthQXMyeCt3Z3c4dlh0ZE95UjlXaUJYMlVsUHZReHJNODMzZU9KaWs4?=
+ =?utf-8?B?c1NjYytOc2s2enU0dXA0ZUlTTFp3emlmQUdubjRiNnlSOVFzaDQ4UUlBeE83?=
+ =?utf-8?B?MVRldjZad2pxNEZKMnVidU0wOSszYzAxcmpCdGtNY2drSjhHU2lzMkJQMmk5?=
+ =?utf-8?B?UmVZUWVJMUdQcE1zcUtBZmNCRnRTNU1UbDgxci9LMFpRNVNEZC9EZW1rWGFm?=
+ =?utf-8?B?UEd2Z24yL1pVOVZJOWgvWm1BZTZKWkZ3QXgvd1RpVU1nZDFaTjZDUEppVXpJ?=
+ =?utf-8?B?bmZUaFEwMzgzTE1iMXY1ZnlyaUliY2QxM2RLNTdnM01qeDRMcXFJZDNqOHk4?=
+ =?utf-8?B?bVJWcVJDRHJhZDlXMy9QUGJJcDdNTlEwZ2JNSDNIa1J0Rnpya0xBanA0UlZh?=
+ =?utf-8?B?aHdRMmxJdERLQnpOTm1ieUFPa3ZHQU1xWmJoK0hoUG5BdTJoNkZUSUo0WVJ5?=
+ =?utf-8?B?TXNMYk1aaTQ5TVh1d25lYjlIMG5nQXZuUmI4UHVLSHVZT2E1ZWxjVjJidFhC?=
+ =?utf-8?B?MUxsVk1jK3BJbEs2MTNScUhvRHhOYmFrL1o4OVhRc3Q4ZkVldjRyRThRcmhD?=
+ =?utf-8?B?VFFKbTB2dnFZZ1ZjS082a1pvVmEzYkdnYlF4NHJFdXFMRGFGUzR4bDU4SWVh?=
+ =?utf-8?B?b1VWMENaQkZKbE5UamhvcDl1eUh5SHlCUDZ0N3ZQM0xFYS9wRHVsclB3MWV3?=
+ =?utf-8?B?VHJ4akwvcnhNYy9XNjdJOHgxVTRWSUdRSUtlcDlnTHFuYVp5bmRZa1Z2azlR?=
+ =?utf-8?B?YnlMc1ZhcWRnZFFVcWFjNDZEcHk1VEx4ZHpwZ0RBVTRsQk9YczN1dUlhdVRY?=
+ =?utf-8?B?czRCVldwMlFWdVBmY0hMalJncmJNUm9ZeGFUSFVFb3hMb0szU2l3c1lLck9M?=
+ =?utf-8?B?Ykl4WWhuSk53NkFDMm91bnliWHB2alcrVC9xN0hvTXl2S2FLc3BMVnNBL0No?=
+ =?utf-8?B?RWZLQXJ2SkJIVC9PYW1OQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WCtIejRMMG9peUFsUHN3T29WRGZ4Sk5MZUExTi93azZxMkowcHQyZStoV2M1?=
+ =?utf-8?B?ZThEeW5DRWdhVkxXb2FFemZRaXhQRUlmbk1zTm84bTRFeEU1NGovcC9aTGg3?=
+ =?utf-8?B?V2d4YjZueUNtNC9lMURWUDVVeG4waGlRcmFHbDJ1KzhXTmtwZEw2R1R2KzhI?=
+ =?utf-8?B?SzdEKzVzK2xzOFNJdmNqQ29TQ1ZaakVzMWRXdWpGVEZ0R3Z4WWs0elV5VHNY?=
+ =?utf-8?B?ZnlJNHd4Mnp4MjNIZWFRSHJKNWZXREJIeTRMZ3MrY1gzZDR3QXArMWJnMDhQ?=
+ =?utf-8?B?bmVBS2k5MXJBZ1JYcVBXSFhCM2tOOVRXdGRiYlR0YWNzYUFxWHFkTzVuTWRK?=
+ =?utf-8?B?Zzc1Vlkrc0RhMUlXeXdPcEt3QnhtcXRYMXZ0U25IU2REc2ZmNmlVNllISEM4?=
+ =?utf-8?B?MnhPR1VHT21ibFN1TEFyblZnTkxWL3p1aWtDVW00aStoYmRaNHF0VUxudzZy?=
+ =?utf-8?B?U2U4dmNlQnR0V3FOSVFlS1B1WERMMHNFMUxUZDYrVGhzc1BNUy9zaVJndnh3?=
+ =?utf-8?B?VTRCOXRXUzM0VGpxVE5qaHpNWWxaU1ZwYjg4czREdENDZWFtSS9RQnpmSHdI?=
+ =?utf-8?B?czJ0Zm5UaWhHRmNpSjhVaDRNaUhWQWQxSFlGS1JjaUVwU2ZNVS92TExHdHJO?=
+ =?utf-8?B?a1ZhNjFyRU1WcDN3aE9Sa1NyWmovcnZENnRqZGtDRXlibTBHUS92MGZKYVpn?=
+ =?utf-8?B?WFE1S1UxdlFua2dGN1ltcnNzanpYNXNqZ3d5Q2l1SmFZYUQyYm9BWndPek5z?=
+ =?utf-8?B?c2JmcXhPcWpYUERnRjhLWUs2cHJPSmFUalIvNjdma3lLM0VkRUEweFNjYnY0?=
+ =?utf-8?B?MVpzdXNNMTAzWEJWY2VtOEtRMGJJcHlKalYwL2libjQ3RnAwemx4OWxmZFhQ?=
+ =?utf-8?B?WE9wak4vbmxpWUg2RFg0MHp3cnRrQnk2QklTYUNwNTRZalVxa20vc2FvWCtH?=
+ =?utf-8?B?ek9UeGU0MjlQd0lHN0h2K2xwVTFsY1JjbXhGMkdLUDZhdCtEd3BNSk1NZlBF?=
+ =?utf-8?B?SGNIZ09vamRicFV2U0R6MG5KZEVFU1c1bS9SdFJXWUJMN0Y1MTlJWGk2SGdT?=
+ =?utf-8?B?NFdiMitGRDZDQlpPcDRmbnlKSDFvWDl2WGtZZml5L1daLzB2R3kvanJKNnV3?=
+ =?utf-8?B?dm80RnY3dktJSGczQ2pTM3o4b1lSNGdhbVlzQmV4OXdDUmQ1Y043S3kyZ2dN?=
+ =?utf-8?B?VjgxWmo3YzhTc2g3T1VnbGUvTTVIUW9aMkVJMzBpcXFMbEZnd080b25sR0xB?=
+ =?utf-8?B?MmpHQUYzNDQySFczNU8zN2tqUllLOFJEb1cranZRNU81UDRodWI0UnMzZlZK?=
+ =?utf-8?B?bk5BdVBZa1VRYVJ6cGVpVHBGek9ZZ2xTSXIzZGhXVXZFaDg1TCtKSEczYkxp?=
+ =?utf-8?B?SVBwNzFCMWFkQ0hkQ29ZMkRsS2VobG5iL09acUlaZTBJVEVnUEVjYmNKT3pO?=
+ =?utf-8?B?S0NNTTV2bEJPc2w0M0pmU1Z4RmZPMFh6UFFmd3F3SmNwOHpxM2JJaE1IenRq?=
+ =?utf-8?B?bW81dnhkQ1NZaGROZXFESXlCQytqLzgxUnVib01nY1JWOEh4ZitxaExEVXU4?=
+ =?utf-8?B?YWZBdTdFeXRsQ3RCRUUvWEl1Y0NQaDhCK1J2MFdlTm51akcyZjMyTXNrNWJm?=
+ =?utf-8?B?QlVOMHZlOTdsZ3FTOVk1cEYrdVlHdkUvVEFiYXp1ako2SVQ4TEc3d1luZDJF?=
+ =?utf-8?B?U2c3UW9tQW44VTRKSFpiV25rc2pTa3R2QmRsdXhvL1RBL2FaSnNsNUNYeFg2?=
+ =?utf-8?B?SmZXcTI2L2I2RXNNTzZweWhLU3hxdWZ2bVhmZkxGTUdWdndhS3RoV2lPUkpH?=
+ =?utf-8?B?VFlWUWJ2dVdEamdjOVd4eHNiNjdzWVkzTytUZkNndVNLRFNNSE1pSDZNbldu?=
+ =?utf-8?B?S1k3NFhDL2IvNkI3YVhqdFlrZVJpWVhxdHdwbmJrbzR1eElEZHVuTWxBVjlC?=
+ =?utf-8?B?K1JzRm94SE9iN2c5WGRSSEVrd3J1STNKY3BkWHBxOHFaNVBzNmp5Y3lhNGVM?=
+ =?utf-8?B?YkMzVVd3N1pGYkRpQU5LbFdBTXUwa2xZNERCZXBHWG9YY2UyR3VVWU5XVDNj?=
+ =?utf-8?B?SHptRXlLTDZzQTVCN1FuUDFRU090TGdsNDVVcVhyMXpkQVg5U3RWZktteHpT?=
+ =?utf-8?Q?FA7jYjf8IXLnYs6yL4wneVhpa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bd74277-b3fb-4a9b-43f2-08dd390f350a
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2025 04:59:23.7265
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gWPBMM0Q52D1MlEdQPzpMUESIbCNLoaHaAm1rK9QeljYDkAUp/7WA1tFTCcCGC410bICyq3HvhDfOREoURjptQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7188
 
-On Thu, 16 Jan 2025 at 19:55, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Wed, Jan 15, 2025 at 08:11:51AM +0100, Dmitry Vyukov wrote:
-> > On Wed, 15 Jan 2025 at 06:59, Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Tue, Jan 14, 2025 at 12:27=E2=80=AFAM Dmitry Vyukov <dvyukov@googl=
-e.com> wrote:
-> > > [snip]
-> > > > FWIW I've also considered and started implementing a different
-> > > > approach where the kernel would count parallelism level for each
-> > > > context and write it out with samples:
-> > > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f7=
-11ab496c1a9f2
-> > > > Then sched_in/out would need to do atomic inc/dec on a global count=
-er.
-> > > > Not sure how hard it is to make all corner cases work there, I drop=
-ped
-> > > > it half way b/c the perf record post-processing looked like a bette=
-r
-> > > > approach.
-> > >
-> > > Nice. Just to focus on this point and go off on something of a
-> > > tangent. I worry a little about perf_event_sample_format where we've
-> > > used 25 out of the 64 bits of sample_type. Perhaps there will be a
-> > > sample_type2 in the future. For the code and data page size it seems
-> > > the same information could come from mmap events. You have a similar
-> > > issue. I was thinking of another similar issue, adding information
-> > > about the number of dirty pages in a VMA. I wonder if there is a
-> > > better way to organize these things, rather than just keep using up
-> > > bits in the perf_event_sample_format. For example, we could have a
-> > > code page size software event that when in a leader sampling group
-> > > with a hardware event with a sample IP provides the code page size
-> > > information of the leader event's sample IP. We have loads of space i=
-n
-> > > the types and config values to have an endless number of such events
-> > > and maybe the value could be generated by a BPF program for yet more
-> > > flexibility. What these events would mean without a leader sample
-> > > event I'm not sure.
-> >
-> > In the end I did not go with adding parallelism to each sample (this
-> > is purely perf report change), so at least for this patch this is very
-> > tangential :)
-> >
-> > > Wrt wall clock time, Howard Chu has done some work advancing off-CPU
-> > > sampling. Wall clock time being off CPU plus on CPU. We need to do
-> > > something to move forward the default flags/options for perf record,
-> > > for example, we don't enable build ID mmap events by default causing
-> > > the whole perf.data file to be scanned looking to add build ID events
-> > > for the dsos with samples in them. One option that could be a default
-> > > could be off-CPU profiling, and when permissions deny the BPF approac=
-h
-> > > we can fallback on using events. If these events are there by default
-> > > then it makes sense to hook them up in perf report.
-> >
-> > Interesting. Do you mean "IO" by "off-CPU".
-> > Yes, if a program was blocked for IO for 10 seconds (no CPU work),
-> > then that obviously contributes to latency, but won't be in this
-> > profile. Though, it still works well for a large number of important
-> > cases (e.g. builds, ML inference, server request handling are
-> > frequently not IO bound).
-> >
-> > I was thinking how IO can be accounted for in the wall-clock profile.
-> > Since we have SWITCH OUT events (and they already include preemption
-> > bit), we do have info to account for blocked threads. But it gets
-> > somewhat complex and has to make some hypotheses b/c not all blocked
-> > threads contribute to latency (e.g. blocked watchdog thread). So I
-> > left it out for now.
-> >
-> > The idea was as follows.
-> > We know a set of threads blocked at any point in time (switched out,
-> > but not preempted).
-> > We hypothesise that each of these could equally improve CPU load to
-> > max if/when unblocked.
-> > We inject synthetic samples in a leaf "IO wait" symbol with the weight
-> > according to the hypothesis. I think these events can be  injected
-> > before each switch in event only (which changes the set of blocked
-> > threads).
-> >
-> > Namely:
-> > If CPU load is already at max (parallelism =3D=3D num cpus), we don't
-> > inject any IO wait events.
-> > If the number of blocked threads is 0, we don't inject any IO wait even=
-ts.
-> > If there are C idle CPUs and B blocked threads, we inject IO wait
-> > events with weight C/B for each of them.
->
-> To track idle CPUs, you need sched-switch of all CPUs regardless of your
-> workload, right?  Also I'm not sure when do you want to inject the IO
-> wait events - when a thread is sched-out without preemption?  And what
-> would be the weight?  I guess you want something like:
->
->   blocked time * C / B
->
-> Then C and B can change before the thread is woken up.
+On 17-Jan-25 8:49 PM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> A low freq cannot be set via IOC_PERIOD on some platforms.
+> 
+> The perf_event_check_period() introduced in commit 81ec3f3c4c4d
+> ("perf/x86: Add check_period PMU callback") intended to check the
+> period, rather than the freq. A low freq may be mistakenly rejected by
+> the limit_period().
+> 
+> Fixes: 81ec3f3c4c4d ("perf/x86: Add check_period PMU callback")
+> Closes: https://lore.kernel.org/lkml/20250115154949.3147-1-ravi.bangoria@amd.com/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> Cc: stable@vger.kernel.org
 
-Yes, these events need to be emitted on every switch-in/out in the
-trace so that a long blocked thread gets multiple events with
-different weights.
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-> > For example, if there is a single blocked thread, then we hypothesise
-> > that this blocked thread is the root cause of all currently idle CPUs
-> > being idle.
->
-> I think this may make sense when you target a single process group but
-> it also needs system-wide idle information.
-
-I assumed this profiling is done on a mostly idle system (generally
-it's a good idea for any profiling).
-
-Theoretically, we could look at runnable threads rather than running.
-If there are NumCPU runnable threads, then creating more runnable
-threads won't help.
-
-> > This still has a problem of saying that unrelated threads contribute
-> > to latency, but at least it's a simple/explainable model and it should
-> > show guilty threads as well. Maybe unrelated threads can be filtered
-> > by the user by specifying a set of symbols in stacks of unrelated
-> > threads.
->
-> Or by task name.
->
-> >
-> > Does it make any sense? Do you have anything better?
->
-> I'm not sure if it's right to use idle state which will be affected by
-> unrelated processes.  Maybe it's good for system-wide profiling.
->
-> For a process (group) profiliing, I think you need to consider number of
-> total threads, active threads, and CPUs.  And if the #active-threads is
-> less than min(#total-threads, #CPUs), then it could be considered as
-> idle from the workload's perspective.
->
-> What do you think?
-
-I don't know, hard to say. I see what you mean, but this makes the
-problem even harder, and potentially breaking hypotheses we are
-making.
-For example, if we have 2 unrelated workloads A and B running on the
-machine. Their high- and low-parallelism phases will overlap randomly,
-and we will make conclusions from that, but these overlapping are
-really random and may not hold next time. Or next time A may be
-collocated with C.
-
-I would solve the simpler problem of profiling a single workload on a
-mostly idle system first, and only then move to the harder case. Are
-you considering this for GWP-type profiling?
+Thanks,
+Ravi
