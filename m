@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51B11E9B3A;
-	Mon, 20 Jan 2025 18:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D39B1EF08D
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 18:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737397613; cv=none; b=PUXyCsf8Hlik3dpr+0eIm8Nu1vX1D+hVuUWf+NEALhuACA45zBxqP0Yio+IzIK3jvPz1hHXqG9nxuqMrCsiJpwPxRHJDrUuPCWWCoC8T9LKP0x/57u4pqqc8jFbIUM0Uu0HK7HM/Yy4U76IZ2GnDSL+htPmlzZniMMOZtV18C8Y=
+	t=1737397614; cv=none; b=C+t0L39XvZWJiut1sifuh72wtZ+3o50c/EKaUzn0opTQre1p40q6DU3I/3eAGVHeexqps+pqjhdsXb/2Ff2XxWbAD2s/H4j4ID2//WUD4fQRIzCU6yaQzKFFfqghwzrQF2uiVEATbMoaRjCQwIa8tnTXEDz/0hQv1L4LuX8yYfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737397613; c=relaxed/simple;
-	bh=oh4XG0k1wiyb4ciLC+LsJtjwpJlpzCNaNP0e4izg59E=;
+	s=arc-20240116; t=1737397614; c=relaxed/simple;
+	bh=3Ec0q/3tdObVXJBG60rzWCKvQBWmVLyUV9dr8jd55QA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nQXigULKd0ETdo8rjiYUwkGyz8wxDlx001gBNzs6auQ1vCaGS171N+qIIMirBKhf4RlkGoQ2NMpL9M8wwczX6V3lVlVeeJCDJ1asXXC/k3ldp1EwXrbbqCWPP51Y9H8fjzLv3GH9Wsyjh9nbHJJbncDqwcdOSfhlRphDqWb1f0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQWB07SU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=kmjS1T5tZ8EBx8JiG9/p3Mq+FNgd/TbOh3E9ZTw5qd3Lmaw6R72xCrGZn5xsMFLaHzjJpKNZPbfhrDOUjbHzOGRU9lLiislYFRleyj1BinX3E+62w0o9lHGMzJYZ28x+OwCwLn526yp9O0eBzrupzO44AmseW5+rKJhp8r6v640=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CR8a9K2U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQWB07SU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B2DC4CEE2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CR8a9K2U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15F0C4CEDD;
 	Mon, 20 Jan 2025 18:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737397613;
-	bh=oh4XG0k1wiyb4ciLC+LsJtjwpJlpzCNaNP0e4izg59E=;
+	s=k20201202; t=1737397614;
+	bh=3Ec0q/3tdObVXJBG60rzWCKvQBWmVLyUV9dr8jd55QA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=PQWB07SUH1LhTBmx6q4Sn6iZ0i2WewQ4kDE7Srj4R6BVy8sRf4uVWGWWwt6tv1JYq
-	 a1muJCItdAWAixDzEAhISFuErH23CLl+N6/SJmkTQuxUGPtAk8ai18IFW799Lg1owc
-	 FpOVqVUjxyYFkdO3wPKHgE4x6BKUNwpttzPPnEbI2cq0RSHcLCtjXJq+K+z3HD2i/M
-	 VyncKAYGPpyVCXzL3S5DC/I/SNVfIc4AAGltaKT9JHS+z4t90jjTocP9AZ0dTGpoVa
-	 JGTei1QRwRSOWCT8V8K+mQCzrOW+HPcAYaZfHLU9jofbkGZopftkb/rj0jZrv2Lpw4
-	 vrze8hFxuVRAA==
+	b=CR8a9K2U2l/ty+sYOWLjiAlBF/YGotue1UZg5v7EN7AMmaJiK1WLbM/kH8eTGIpCU
+	 UTcGHEi+cXR/Ebmg2s/9irOnRy1lP8GxzJ4Q8uJrJsh0HX+hIPXiFDfNYYttGXHTcx
+	 4BYRvvvq1r5DCx4dY8rqRneRZxtxAlrXLCQPmKIfY3L5pIu1EvFQsrtN/wmmSFQo5A
+	 MOFMl/UVEtPKT81uNZtBytYDujFkCM54cQa5B/zPZ1XQAIS0+LHiRMlyjb/K7iUQ3p
+	 Eu8TcLalG5WAQ/x0mODE4ebVqk4AfaFG7HMRJ2W1E+NjcwWEeIRT8KtsXbl/Yk1H+X
+	 qlwvOyVlZw6Rg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
- kan.liang@linux.intel.com, Ching-Chun Huang <jserv@ccns.ncku.edu.tw>, 
- Chun-Ying Huang <chuang@cs.nycu.edu.tw>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>, 
- stable@vger.kernel.org
-In-Reply-To: <20250116110842.4087530-1-visitorckw@gmail.com>
-References: <20250116110842.4087530-1-visitorckw@gmail.com>
-Subject: Re: [PATCH v3] perf bench: Fix undefined behavior in cmpworker()
-Message-Id: <173739761304.3950752.5970208244862437457.b4-ty@kernel.org>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+ irogers@google.com, ravi.bangoria@amd.com, 
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, 
+ hbathini@linux.ibm.com, Tejas Manhas <Tejas.Manhas1@ibm.com>
+In-Reply-To: <20250110094620.94976-1-atrajeev@linux.vnet.ibm.com>
+References: <20250110094620.94976-1-atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH] tools/perf/tests: Update event_groups test to use
+ instructions as one of the sibling event for hw type
+Message-Id: <173739761368.3950752.17907962905280799459.b4-ty@kernel.org>
 Date: Mon, 20 Jan 2025 10:26:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -50,14 +49,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 16 Jan 2025 19:08:42 +0800, Kuan-Wei Chiu wrote:
+On Fri, 10 Jan 2025 15:16:20 +0530, Athira Rajeev wrote:
 
-> The comparison function cmpworker() violates the C standard's
-> requirements for qsort() comparison functions, which mandate symmetry
-> and transitivity:
+> In some of the powerpc platforms, event group testcase fails as below:
 > 
-> Symmetry: If x < y, then y > x.
-> Transitivity: If x < y and y < z, then x < z.
+>    # perf test -v 'Event groups'
+>    69: Event groups                                                    :
+>    --- start ---
+>    test child forked, pid 9765
+>    Using CPUID 0x00820200
+>    Using hv_24x7 for uncore pmu event
+>    0x0 0x0, 0x0 0x0, 0x0 0x0: Fail
+>    0x0 0x0, 0x0 0x0, 0x1 0x3: Pass
 > 
 > [...]
 
