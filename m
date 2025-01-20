@@ -1,175 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017531E25E4
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 13:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E331E379C
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 14:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737381211; cv=none; b=WAMW5A38S8MUObXsA349jqSyyxy5SYfeUhjIkJX2dL7BaP0W3QSzxJjbXFFP+k4ezKK1aD5xJnu66I/avDOe8/lL7gIjP+23NXRCDYiQu7p89MhUofGrj6A+K5SdMB5zjma34sQ+/xe/BdnFmlfIFjDvxstezSBG0+YB0ADJmco=
+	t=1737383526; cv=none; b=Adml8z4eQsDYpaGwG4Osk+zf8HMQw8X8VfLa8oDjA1jjEFRPA5E9+zexo7iqPhTcag6SIE/1nfWSLTH4MClrc8D5HTgnoHK057+gLoJgC34iQ6ZqGv58sBc1+/xGq7iI6xLSvQD9JZAs3Vb8AAvuIKZke3P0+xYkGhEB1xsuO9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737381211; c=relaxed/simple;
-	bh=uxNVkuB1kfPiPhaAvJDAYwdoCzbbN5ig+MfWtinYkGs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AHU8q7D5cSs2uQvk5YmCjio5PUQn1Cz09fQ2Dck3X7DTCeepjdlCpVtwqzvpe4aBdI+XT4XguNZ//6eYsMWC7Bwv2OCOQTxI7EuS4GbxDcdsZj6FDN/wHAxgau9kUNezG9VaKpCSAxR8XT8aBrCitd4/W3bB/+yLxITiyoMBrTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HbMtC92I; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737383526; c=relaxed/simple;
+	bh=UGyMBMcIVf3YgdAAAO8SDGM93mxs4lAxVLUuWtcg2Tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IuiQvcGqW/aj5wI90sjo1bTBD9a41eWVUUHzDNnzpv2YrHvHE6Xn0Cpk3eIvd/00cQeGBt3zDMO+42EXitgVxsWccKPwQflMsVdw0Aae9nwvW9lN6VM2y7RTIlwILiXOrO5oNT/8xRotlkluQHi6hVQNCGi2Jy2J/oq1DrRSL3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rWy47mSJ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HbMtC92I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737381209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6OUKdt6VXAQzpOTUFB26LmXUDO8O/oST+Zn2uKcAtKs=;
-	b=HbMtC92IGEx8a976wcxW0kDoKugHnljw5CJ/V3bldO3EleSl4f8dkr/UxaQd0pGkdw7Vvs
-	FLaOvwZFsd3RnEuOP3KbFH5VZ/Mo3jfZrt9VEpg7hpZnAL1LxkF1kfKPvTMoqshvadb4YN
-	4Ooo0u4GxuufcBnly1qGnkquaO6lzww=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-BZCAgCPRNSW-SyxfE4cpOw-1; Mon, 20 Jan 2025 08:53:27 -0500
-X-MC-Unique: BZCAgCPRNSW-SyxfE4cpOw-1
-X-Mimecast-MFC-AGG-ID: BZCAgCPRNSW-SyxfE4cpOw
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-467a3c0c8f6so85056121cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 05:53:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rWy47mSJ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso32472245e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jan 2025 06:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737383523; x=1737988323; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SiZ9AEMIpIBal0pgB9YcdYzwMXAZ/sY3umvSjnZjx/4=;
+        b=rWy47mSJss8m4YqDU2ht3XSS095XAMJfILnU/TW+AG/jVc1QiXZIPX5BYNWjWsz3B2
+         ipJvKtsy56Hlyml7OTZZ06je2FJuMBxUkoQhrmS+ISEpdSIcufWDEt7xxoPPf1igGqIM
+         K/7UGUW/Mt+OZe/n7keANn2OvvMUkFT3hvSaLQbn0DVkwtQ23iQzW5JacIZTy4+uWhdd
+         4bn/yeANNlPog3k4XfgrExS0Yih7fNQ0JkBjKb+0BKe47nUqOH0ScqkIXyA9YeN3eqhz
+         A9h3WFKEhCXiZUEI+usPW4c7Llmeb846K9Hc4c+idlrZ4jeLEkznXTAtgGMoM7eVmf1A
+         sVvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737381207; x=1737986007;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6OUKdt6VXAQzpOTUFB26LmXUDO8O/oST+Zn2uKcAtKs=;
-        b=golUMa3fGZe6pITvVRQKxVYU+/vSmzLSROhM/57+YVSxlZ079L20zB8xm1fROqUc3j
-         JQgKzGMR7Rcb/wuZW2HnDuZqqVeeaejbxDV/8Hn3mf6ss+0OPnU70J9RhgMtUozxSfYd
-         78wtLyHk4rhm16PKb9PuPVWVToRLDOuvAumsrNUTVfbSngxa4M8iMQkIycsMGuU1CxUC
-         jQv5RxvbiGIwLEVWf0zhLQsqPS5bwFF3/GosgT3tjuFtyOH0M81UW5o3CJoZJGfGYIxz
-         T9m4igBGa1cjxmWPlhbS19/Gdc/uVkVD/pvpPIMbFqUEza8TQkkhnTIyzrD7AD7biAX3
-         1WaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkx+KuFlx34d4EduEmkWMdMB0JnAcOOJyYABvBA0jDpFBup22NRr0EOkgBiiiFICjbjm2Q996G24eL91vN61xB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxBh+XZBOstmLRWrWa7C1ad3O7MWAPiPknrTSF481vJf3j1Fmy
-	7XlQfSzhpPtXIALNV3ddWV0TP7dL5OsZBV/KMEGhA6IU5BDxmcNeLPvzz9Sb7wXmbZehssvgesk
-	k0C4BOx7o3gIMZhaU//0HRp5Z7FKgFz4akLRSqMqSd11CcxlroXLP9s2cu4IAQLxgDBw=
-X-Gm-Gg: ASbGncvBQEE/yqUMvWf+O9GGb7OX7wTUw/VnltBrumA4z5eDxXPU6rykytnLovZuDRA
-	JsmodjfzS9391KO0dggx+gsymj7BalnJohwZuE/zG+82sxVKPsuDYQgDk1AolQBDYUS3GE5MOrr
-	CnlBHkBrVZcvzvcOI+4+tkB3eFpYbssAarQviQYUQHy2rx015yepWnwhtHBcdLNpfIJFZNWU5pi
-	+/br7jwRO+xNCswcXkYMGTCSC9boAmSRQvNx51Ct95+OBmCrQalrdi8KZUkRpjQq+NgH69pEAhp
-	2si169LQHmVwamjBiU9dqhmU3iOXVfCdmfN+eOsR6nlc1gl4MDYrsvw=
-X-Received: by 2002:ac8:7d82:0:b0:467:5e61:c116 with SMTP id d75a77b69052e-46e12a1e36cmr160729061cf.7.1737381207219;
-        Mon, 20 Jan 2025 05:53:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGCbxGDy6CHUSfOLqTxGL3gA1S6wKRHlUvydXAdXodFBspL8+Pdog+OKdfN6k1jzDkgqmOx+A==
-X-Received: by 2002:ac8:7d82:0:b0:467:5e61:c116 with SMTP id d75a77b69052e-46e12a1e36cmr160728291cf.7.1737381206799;
-        Mon, 20 Jan 2025 05:53:26 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e1030da00sm42651971cf.33.2025.01.20.05.53.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 05:53:25 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
- <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
- Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
- Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
- <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
- Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
- Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
- Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
- Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
- <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
- patching IPIs
-In-Reply-To: <Z4qQL89GZ_gk0vpu@google.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-26-vschneid@redhat.com>
- <Z4bTlZkqihaAyGb4@google.com>
- <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z4qQL89GZ_gk0vpu@google.com>
-Date: Mon, 20 Jan 2025 14:53:13 +0100
-Message-ID: <xhsmhtt9tfv7a.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1737383523; x=1737988323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SiZ9AEMIpIBal0pgB9YcdYzwMXAZ/sY3umvSjnZjx/4=;
+        b=ML6jehULkN6pshV2uqv7+KMB6B3itlNyktvVMvDZM3xzR/UHPTKia1yIOJv6Bwpkzq
+         l5doGgLMlVhA8xUtVtRlxcsEgCnSUEIV/5oTLwCVdDYUCeZ/pAFqGiHZt0jxH7d90yh6
+         bhEOvA47CSczSKBvNC3ruVGGSAgTGTlyzGGOrqN7fy+CP7Eu3ZE1dTzgZCT24y5n+/d9
+         hxobqCqSl7O4TEjn/VAr1Xj4DZB07Vn3xD+veh5TPAsPcgAeoRE7MqWamIBO6vBsETD2
+         6sxo2dwJ+f9WoNg7TrWKWzVxEcia4qsFfjb/2vkqSIDvG8LklzE74R5mVZh42ezuZcfL
+         gY2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVbqiJ5SGd0NKzhjPLDIy/eSI6gJ4yEGzZKon/VOloZ6ctPfPI2kk1diwk9VD1767/zEdYHVESyzHXT/25AC4Lf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4uz+0cbMHXgTmhrSqEJG1k7hp64slpISDXPwcW+5u++37wkRc
+	dpsrGtZ3hBxf732VV+13joSH3GuqQxPY9/QYOHtTyA9aUVOOOazgEOLeY+QlBRV7M8HOseeyJ3W
+	uJQWJku/zxyRk7DP7seSYcC3MDKi4xVcQe1mAoA==
+X-Gm-Gg: ASbGncv5zaljvswcdXcjwkk90l5h/pEmoneglb6yFSF+sdmzfgdeu8IFUIVo/PoBltu
+	9GCMdIIGK+KBCEELZrOpvdJkSme76F3wBqfc2P234wO+1XaMxSg==
+X-Google-Smtp-Source: AGHT+IGKxzJfAaMej3lPo0df14bMbqPv00NKhWrfw8R61+wj18jHSezj1g2Ch9RDv3IkDJmq5dHO9gQpVTF15GTc4ms=
+X-Received: by 2002:a5d:6da4:0:b0:38c:1362:41b5 with SMTP id
+ ffacd0b85a97d-38c136244cdmr287147f8f.6.1737383523208; Mon, 20 Jan 2025
+ 06:32:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-5-rkanwal@rivosinc.com>
+ <a6b584bd-d136-4429-90af-6c5cfaf47350@kernel.org>
+In-Reply-To: <a6b584bd-d136-4429-90af-6c5cfaf47350@kernel.org>
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Date: Mon, 20 Jan 2025 14:31:52 +0000
+X-Gm-Features: AbW1kvZInqdQyKkStOI76x1AjV5KU_we8C9l1vTVnN92-zuJ2K0hpojm3xHiJZI
+Message-ID: <CAECbVCu0qmCp5fVhkWE48R8xsC7cY4EjS6Rv0tqe8GP8DeZAZw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] dt-bindings: riscv: add Sxctr ISA extension description
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, ajones@ventanamicro.com, 
+	anup@brainfault.org, acme@kernel.org, atishp@rivosinc.com, 
+	beeman@rivosinc.com, brauner@kernel.org, conor@kernel.org, heiko@sntech.de, 
+	irogers@google.com, mingo@redhat.com, james.clark@arm.com, 
+	renyu.zj@linux.alibaba.com, jolsa@kernel.org, jisheng.teoh@starfivetech.com, 
+	palmer@dabbelt.com, will@kernel.org, kaiwenxue1@gmail.com, 
+	vincent.chen@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/01/25 09:15, Sean Christopherson wrote:
-> On Fri, Jan 17, 2025, Valentin Schneider wrote:
->> On 14/01/25 13:13, Sean Christopherson wrote:
->> > On Tue, Jan 14, 2025, Valentin Schneider wrote:
->> >> +/**
->> >> + * is_kernel_noinstr_text - checks if the pointer address is located in the
->> >> + *                    .noinstr section
->> >> + *
->> >> + * @addr: address to check
->> >> + *
->> >> + * Returns: true if the address is located in .noinstr, false otherwise.
->> >> + */
->> >> +static inline bool is_kernel_noinstr_text(unsigned long addr)
->> >> +{
->> >> +	return addr >= (unsigned long)__noinstr_text_start &&
->> >> +	       addr < (unsigned long)__noinstr_text_end;
->> >> +}
->> >
->> > This doesn't do the right thing for modules, which matters because KVM can be
->> > built as a module on x86, and because context tracking understands transitions
->> > to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
->> > being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
->> > or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
->> > patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
->> > use the wrong static path.
->>>
->> AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
->> and thus such a static key usage should at the very least be caught and
->> warned about by objtool - when this isn't built as a module.
+Hi Krzysztof,
+
+Sorry my bad. I will keep this in mind next time.
+Thanks for pointing it out.
+
+- Rajnesh
+
+On Fri, Jan 17, 2025 at 7:26=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
 >
-> That doesn't magically do the right thing though.  If KVM is built as a module,
-> is_kernel_noinstr_text() will get false negatives even for static keys/branches
-> that are annotaed as NOINSTR.
-
-Quite so.
-
-I've been looking at mod_mem_type & friends, I'm thinking adding a
-MOD_NOINSTR_TEXT type might be overkill considering modules really
-shouldn't be involved with early entry, KVM being the one exception.
-
-Your suggestion to have a KVM-module-specific noinstr section sounds good
-to me, I'll have a look at that.
-
+> On 17/01/2025 00:09, Rajnesh Kanwal wrote:
+> > Add the S[m|s]ctr ISA extension description.
+> >
+> > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+> > ---
+> >  .../devicetree/bindings/riscv/extensions.yaml      | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+>
+> <form letter>
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC. It might happen, that command when run on an older
+> kernel, gives you outdated entries. Therefore please be sure you base
+> your patches on recent Linux kernel.
+>
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline) or work on fork of kernel
+> (don't, instead use mainline). Just use b4 and everything should be
+> fine, although remember about `b4 prep --auto-to-cc` if you added new
+> patches to the patchset.
+>
+> You missed at least devicetree list (maybe more), so this won't be
+> tested by automated tooling. Performing review on untested code might be
+> a waste of time.
+>
+> Please kindly resend and include all necessary To/Cc entries.
+> </form letter>
+>
+> Best regards,
+> Krzysztof
