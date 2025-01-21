@@ -1,167 +1,220 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CD41F237F;
-	Tue, 21 Jan 2025 12:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B1D1F191E;
+	Tue, 21 Jan 2025 13:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737464333; cv=none; b=dSGUg0CkHkK0Tp8lUkNVaSpdxql2AL6BgwxI+xBTYQ0j57z8jOlluGclnHtZlEr9TTYnMKbj9PJJgX6KZDGwfk1bSwVJq1tpfKyYFqQ5AntnaLEiZ9vXMbg+SBH9k1yj1aBW63jBHFT/PzFF3ahMAARMmK58DJgpZbgbKqXZO8s=
+	t=1737464523; cv=none; b=Jxtf0UB0qocnoY7Z/5qVmOdJ8ebzSEtwDiNx82RVBx22NNwgizWzkdRk1Rpz7YNwaCBJS0Zt+ZyL83Vaw5H2vEL8LFJfVhCOE17DmBS+cEWSrjILXYPDV2GVGApFDJuA+tO/RZ6K8mx/0egdhhgW5AsJ1FPyfg910EI7OtyCE9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737464333; c=relaxed/simple;
-	bh=QYslSgnT9BU4BwJnueu1pngMVropz0v/0dvjrApe5FU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l10/doX9SykTmuopj9d7Ys0EFoAWoyOhYZ6KG0GiLuGRCDmBAwKvPwHWmz/pclgyvkCgHYSA7KH7NxyLUz86atxn2IJGYaEi27xNfIuCwHr4dALYQaNP0PyHAqGi30SICon7Wk9HTz9ZvqtvN04XMNjyUZWM2h24Hb8a8rumtYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YcnMD5JMbz4f3jqy;
-	Tue, 21 Jan 2025 20:58:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2C6FA1A154A;
-	Tue, 21 Jan 2025 20:58:48 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgC3Gl8Emo9npdRUBg--.36843S4;
-	Tue, 21 Jan 2025 20:58:45 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH v2] perf/core: Fix warning due to unordred pmu_ctx_list
-Date: Tue, 21 Jan 2025 13:08:02 +0000
-Message-Id: <20250121130802.1813928-1-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1737464523; c=relaxed/simple;
+	bh=q/Boh/hxmexBZCuEYU3eWsfDlYGvDQCKVFqyCSKfv4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNpKCtF3hlTFTnru6ujApOHczj+c289Gjq2Z0NUc8UqVlesfLQU7ZXSX8XNj0CDwpXe0rHzbfb+T6FR5/3nT9m3uJKRkbrUY0d6huUT7f4kePP+XL13Ez1JV/MTCvQVGNPedxQJPBZRytgkyRLp2leiJHBwxw7J2jSzhdR9rnEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CED9E106F;
+	Tue, 21 Jan 2025 05:02:28 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECD173F66E;
+	Tue, 21 Jan 2025 05:01:59 -0800 (PST)
+Date: Tue, 21 Jan 2025 13:01:54 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: "mark.barnett@arm.com" <mark.barnett@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
+	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
+	james.clark@arm.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/5] perf: Allow periodic events to alternate between
+ two sample periods
+Message-ID: <20250121130154.GA416913@e132581.arm.com>
+References: <20250106120156.227273-1-mark.barnett@arm.com>
+ <20250106120156.227273-2-mark.barnett@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3Gl8Emo9npdRUBg--.36843S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxur1kAry8trWDZFyxWrWDtwb_yoW5Wr15pF
-	s7ArnYvFWkt3Wvvayaya1DXwn8Kr1fXFWDXwn8C34FyF4agFWDJa17GF45tF909rs7XFyj
-	yw4jqFy7tayDtFDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-	FIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuZXoDUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250106120156.227273-2-mark.barnett@arm.com>
 
-Syskaller triggers a warning due to prev_epc->pmu != next_epc->pmu in
-perf_event_swap_task_ctx_data. vmcore shows that two lists have the same
-perf_event_pmu_context, but not in the same order.
+On Mon, Jan 06, 2025 at 12:01:52PM +0000, mark.barnett@arm.com wrote:
+> From: Ben Gainey <ben.gainey@arm.com>
+> 
+> This change modifies perf_event_attr to add a second, alternative
+> sample period field, and modifies the core perf overflow handling
+> such that when specified an event will alternate between two sample
+> periods.
+> 
+> Currently, perf does not provide a  mechanism for decoupling the period
+> over which counters are counted from the period between samples. This is
+> problematic for building a tool to measure per-function metrics derived
+> from a sampled counter group. Ideally such a tool wants a very small
+> sample window in order to correctly attribute the metrics to a given
+> function, but prefers a larger sample period that provides representative
+> coverage without excessive probe effect, triggering throttling, or
+> generating excessive amounts of data.
+> 
+> By alternating between a long and short sample_period and subsequently
+> discarding the long samples, tools may decouple the period between
+> samples that the tool cares about from the window of time over which
+> interesting counts are collected.
+> 
+> It is expected that typically tools would use this feature with the
+> cycles or instructions events as an approximation for time, but no
+> restrictions are applied to which events this can be applied to.
+> 
+> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+> Signed-off-by: Mark Barnett <mark.barnett@arm.com>
+> ---
+>  include/linux/perf_event.h      |  5 +++++
+>  include/uapi/linux/perf_event.h |  3 +++
+>  kernel/events/core.c            | 37 ++++++++++++++++++++++++++++++++-
+>  3 files changed, 44 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index cb99ec8c9e96..cbb332f4e19c 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -276,6 +276,11 @@ struct hw_perf_event {
+>  	 */
+>  	u64				freq_time_stamp;
+>  	u64				freq_count_stamp;
+> +
+> +	/*
+> +	 * Indicates that the alternative sample period is used
+> +	 */
+> +	bool				using_alt_sample_period;
+>  #endif
+>  };
+>  
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 0524d541d4e3..499a8673df8e 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -379,6 +379,7 @@ enum perf_event_read_format {
+>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+>  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+> +#define PERF_ATTR_SIZE_VER9	144	/* add: alt_sample_period */
+>  
+>  /*
+>   * Hardware event_id to monitor via a performance monitoring event:
+> @@ -531,6 +532,8 @@ struct perf_event_attr {
+>  	__u64	sig_data;
+>  
+>  	__u64	config3; /* extension of config2 */
+> +
+> +	__u64	alt_sample_period;
+>  };
+>  
+>  /*
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 065f9188b44a..7e339d12363a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4178,6 +4178,8 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
+>  	s64 period, sample_period;
+>  	s64 delta;
+>  
+> +	WARN_ON_ONCE(hwc->using_alt_sample_period);
+> +
+>  	period = perf_calculate_period(event, nsec, count);
+>  
+>  	delta = (s64)(period - hwc->sample_period);
+> @@ -9850,6 +9852,7 @@ static int __perf_event_overflow(struct perf_event *event,
+>  				 int throttle, struct perf_sample_data *data,
+>  				 struct pt_regs *regs)
+>  {
+> +	struct hw_perf_event *hwc = &event->hw;
+>  	int events = atomic_read(&event->event_limit);
+>  	int ret = 0;
+>  
+> @@ -9869,6 +9872,18 @@ static int __perf_event_overflow(struct perf_event *event,
+>  	    !bpf_overflow_handler(event, data, regs))
+>  		goto out;
+>  
+> +	/*
+> +	 * Swap the sample period to the alternative period
+> +	 */
+> +	if (event->attr.alt_sample_period) {
+> +		bool using_alt = hwc->using_alt_sample_period;
+> +		u64 sample_period = (using_alt ? event->attr.sample_period
+> +					       : event->attr.alt_sample_period);
+> +
+> +		hwc->sample_period = sample_period;
+> +		hwc->using_alt_sample_period = !using_alt;
+> +	}
+> +
+>  	/*
+>  	 * XXX event_limit might not quite work as expected on inherited
+>  	 * events
+> @@ -12291,9 +12306,19 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	if (attr->freq && attr->sample_freq)
+>  		hwc->sample_period = 1;
+>  	hwc->last_period = hwc->sample_period;
+> -
 
-The problem is that the order of pmu_ctx_list for the parent is impacted by
-the time when an event/pmu is added. While the order for a child is
-impacted bt the event order in the pinned_groups and flexible_groups. So
-the order of pmu_ctx_list in the parent and child may be different.
+Redundant change at here?
 
-To fix this problem, insert the perf_event_pmu_context to proper place
-after iteration of pmu_ctx_list.
+>  	local64_set(&hwc->period_left, hwc->sample_period);
+>  
+> +	if (attr->alt_sample_period) {
+> +		hwc->sample_period = attr->alt_sample_period;
+> +		hwc->using_alt_sample_period = true;
+> +	}
 
-The follow testcase can trigger above warning:
+My understanding it sets a short sample window for the first period.
+Would it initialize the `hwc->period_left` with the updated sample
+period?
 
- # perf record -e cycles --call-graph lbr -- taskset -c 3 ./a.out &
- # perf stat -e cpu-clock,cs -p xxx // xxx is the pid of a.out
+> +
+> +	/*
+> +	 * alt_sample_period cannot be used with freq
+> +	 */
+> +	if (attr->freq && attr->alt_sample_period)
+> +		goto err_ns;
+> +
 
-test.c
+It is good to validate parameters first. So move the checking before
+the adjustment for the alt sample period.
 
-void main() {
-        int count = 0;
-        pid_t pid;
+>  	/*
+>  	 * We do not support PERF_SAMPLE_READ on inherited events unless
+>  	 * PERF_SAMPLE_TID is also selected, which allows inherited events to
+> @@ -12763,9 +12788,19 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	if (attr.freq) {
+>  		if (attr.sample_freq > sysctl_perf_event_sample_rate)
+>  			return -EINVAL;
+> +		if (attr.alt_sample_period)
+> +			return -EINVAL;
+>  	} else {
+>  		if (attr.sample_period & (1ULL << 63))
+>  			return -EINVAL;
+> +		if (attr.alt_sample_period) {
+> +			if (!attr.sample_period)
+> +				return -EINVAL;
+> +			if (attr.alt_sample_period & (1ULL << 63))
+> +				return -EINVAL;
+> +			if (attr.alt_sample_period == attr.sample_period)
+> +				attr.alt_sample_period = 0;
 
-        printf("%d running\n", getpid());
-        sleep(30);
-        printf("running\n");
+In theory, the attr.alt_sample_period should be less than
+attr.sample_period, right?
 
-        pid = fork();
-        if (pid == -1) {
-                printf("fork error\n");
-                return;
-        }
-        if (pid == 0) {
-                while (1) {
-                        count++;
-                }
-        } else {
-                while (1) {
-                        count++;
-                }
-        }
-}
+Thanks,
+Leo
 
-The testcase first open a lbr event, so it will alloc task_ctx_data, and
-then open tracepoint and software events, so the parent ctx will have 3
-different perf_event_pmu_contexts. When doing inherit, child ctx will
-insert the perf_event_pmu_context in another order then the warning will
-trigger.
-
-Fixes: bd2756811766 ("perf: Rewrite core context handling")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
-Changes in v2:
-1. update commit message.
-2. only sort the pmu_ctx_list of ctx which ctx->task != NULL.
-Link to v1: https://lore.kernel.org/all/20250120114344.632474-1-luogengkun@huaweicloud.com/
-
----
- kernel/events/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 065f9188b44a..096f92b9a971 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4950,7 +4950,7 @@ static struct perf_event_pmu_context *
- find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
- {
--	struct perf_event_pmu_context *new = NULL, *epc;
-+	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
- 	void *task_ctx_data = NULL;
- 
- 	if (!ctx->task) {
-@@ -5007,12 +5007,19 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 			atomic_inc(&epc->refcount);
- 			goto found_epc;
- 		}
-+		// Make sure the pmu_ctx_list is sorted by pmu
-+		if (!pos && epc->pmu->type > pmu->type)
-+			pos = epc;
- 	}
- 
- 	epc = new;
- 	new = NULL;
- 
--	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
-+	if (!pos)
-+		list_add_tail(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
-+	else
-+		list_add(&epc->pmu_ctx_entry, pos->pmu_ctx_entry.prev);
-+
- 	epc->ctx = ctx;
- 
- found_epc:
--- 
-2.34.1
-
+> +		}
+>  	}
+>  
+>  	/* Only privileged users can get physical addresses */
+> 
+> -- 
+> 2.43.0
+> 
