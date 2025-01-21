@@ -1,220 +1,136 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B1D1F191E;
-	Tue, 21 Jan 2025 13:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4481F2380;
+	Tue, 21 Jan 2025 13:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737464523; cv=none; b=Jxtf0UB0qocnoY7Z/5qVmOdJ8ebzSEtwDiNx82RVBx22NNwgizWzkdRk1Rpz7YNwaCBJS0Zt+ZyL83Vaw5H2vEL8LFJfVhCOE17DmBS+cEWSrjILXYPDV2GVGApFDJuA+tO/RZ6K8mx/0egdhhgW5AsJ1FPyfg910EI7OtyCE9Y=
+	t=1737467811; cv=none; b=L+0URZx6AWuvPyo8sjRimcXuNIKo6eG1Src4FZa+9Sxn3YmiprshgVACUUjwVi78bcNmSOu5txNN6dlfWk3WRJc2HSY9SmI62BQYDDKjeXD+Ix8bYaC91onrCyoO+Wyt/pscLImPT3c8th61Hgq206K2yVIbRGiIy2AQwri9/jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737464523; c=relaxed/simple;
-	bh=q/Boh/hxmexBZCuEYU3eWsfDlYGvDQCKVFqyCSKfv4M=;
+	s=arc-20240116; t=1737467811; c=relaxed/simple;
+	bh=MqI6lrWOZQoTFNws7n2UwUgsmLRqEZNZodv6GljplcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNpKCtF3hlTFTnru6ujApOHczj+c289Gjq2Z0NUc8UqVlesfLQU7ZXSX8XNj0CDwpXe0rHzbfb+T6FR5/3nT9m3uJKRkbrUY0d6huUT7f4kePP+XL13Ez1JV/MTCvQVGNPedxQJPBZRytgkyRLp2leiJHBwxw7J2jSzhdR9rnEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CED9E106F;
-	Tue, 21 Jan 2025 05:02:28 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECD173F66E;
-	Tue, 21 Jan 2025 05:01:59 -0800 (PST)
-Date: Tue, 21 Jan 2025 13:01:54 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "mark.barnett@arm.com" <mark.barnett@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
-	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
-	james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/5] perf: Allow periodic events to alternate between
- two sample periods
-Message-ID: <20250121130154.GA416913@e132581.arm.com>
-References: <20250106120156.227273-1-mark.barnett@arm.com>
- <20250106120156.227273-2-mark.barnett@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0RNozjaB5DNC6/HxZmZVm8JMA7guwHGdhwoqM3d1yeJXguuzs7EnomVIb/Q8IIvmMTQX1bs4IlQNc1RGky9pfrL9LSZaPmPOTBsP9C92VYHI+SLqN9Ba8wnes77+IZY62K0cNoHcE4qcAnJGDYkle8GP8aePN+r8YaDiPfhWoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isvlPBsQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isvlPBsQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13D92C4CEDF;
+	Tue, 21 Jan 2025 13:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737467810;
+	bh=MqI6lrWOZQoTFNws7n2UwUgsmLRqEZNZodv6GljplcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=isvlPBsQ7TrI9disQI4ep5AL0JttTMJYCjeOXU0i2Ch/ZJhKtfxYn7noZla1QkDqv
+	 en2cxtzrpb+ySn8gOB8ZoZV2S+K1n5H3W3i1NokW2jFX5MYZAQKEGHyjcd+04RPzL6
+	 fTPenbokZbubnqvnOZIUv59tCiByEKKxVUoJRCVR2ClnBGXpdDVbmRMbF5RR0kls7U
+	 7c4EikX8Q0rBg27nmXW8SWsbwke1FjZREhy6DgcwG1U+Sf6B+2s64Bk1dTdAxFB7Uo
+	 aEgg3mljv5NxhaLk6HLG7ru2QC2RXk1FcHRWMYbZ4w1F80Cti9sUorhTjzrFo4+wEW
+	 S4aA+5YxpaHVg==
+Date: Tue, 21 Jan 2025 14:56:47 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 03/30] rcu: Add a small-width RCU watching counter
+ debug option
+Message-ID: <Z4-nn8snXYyzocQW@localhost.localdomain>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-4-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250106120156.227273-2-mark.barnett@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250114175143.81438-4-vschneid@redhat.com>
 
-On Mon, Jan 06, 2025 at 12:01:52PM +0000, mark.barnett@arm.com wrote:
-> From: Ben Gainey <ben.gainey@arm.com>
+Le Tue, Jan 14, 2025 at 06:51:16PM +0100, Valentin Schneider a écrit :
+> A later commit will reduce the size of the RCU watching counter to free up
+> some bits for another purpose. Paul suggested adding a config option to
+> test the extreme case where the counter is reduced to its minimum usable
+> width for rcutorture to poke at, so do that.
 > 
-> This change modifies perf_event_attr to add a second, alternative
-> sample period field, and modifies the core perf overflow handling
-> such that when specified an event will alternate between two sample
-> periods.
+> Make it only configurable under RCU_EXPERT. While at it, add a comment to
+> explain the layout of context_tracking->state.
 > 
-> Currently, perf does not provide a  mechanism for decoupling the period
-> over which counters are counted from the period between samples. This is
-> problematic for building a tool to measure per-function metrics derived
-> from a sampled counter group. Ideally such a tool wants a very small
-> sample window in order to correctly attribute the metrics to a given
-> function, but prefers a larger sample period that provides representative
-> coverage without excessive probe effect, triggering throttling, or
-> generating excessive amounts of data.
-> 
-> By alternating between a long and short sample_period and subsequently
-> discarding the long samples, tools may decouple the period between
-> samples that the tool cares about from the window of time over which
-> interesting counts are collected.
-> 
-> It is expected that typically tools would use this feature with the
-> cycles or instructions events as an approximation for time, but no
-> restrictions are applied to which events this can be applied to.
-> 
-> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
-> Signed-off-by: Mark Barnett <mark.barnett@arm.com>
-> ---
->  include/linux/perf_event.h      |  5 +++++
->  include/uapi/linux/perf_event.h |  3 +++
->  kernel/events/core.c            | 37 ++++++++++++++++++++++++++++++++-
->  3 files changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index cb99ec8c9e96..cbb332f4e19c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -276,6 +276,11 @@ struct hw_perf_event {
->  	 */
->  	u64				freq_time_stamp;
->  	u64				freq_count_stamp;
-> +
-> +	/*
-> +	 * Indicates that the alternative sample period is used
-> +	 */
-> +	bool				using_alt_sample_period;
->  #endif
->  };
->  
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 0524d541d4e3..499a8673df8e 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -379,6 +379,7 @@ enum perf_event_read_format {
->  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
->  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
->  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
-> +#define PERF_ATTR_SIZE_VER9	144	/* add: alt_sample_period */
->  
->  /*
->   * Hardware event_id to monitor via a performance monitoring event:
-> @@ -531,6 +532,8 @@ struct perf_event_attr {
->  	__u64	sig_data;
->  
->  	__u64	config3; /* extension of config2 */
-> +
-> +	__u64	alt_sample_period;
->  };
->  
->  /*
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 065f9188b44a..7e339d12363a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4178,6 +4178,8 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
->  	s64 period, sample_period;
->  	s64 delta;
->  
-> +	WARN_ON_ONCE(hwc->using_alt_sample_period);
-> +
->  	period = perf_calculate_period(event, nsec, count);
->  
->  	delta = (s64)(period - hwc->sample_period);
-> @@ -9850,6 +9852,7 @@ static int __perf_event_overflow(struct perf_event *event,
->  				 int throttle, struct perf_sample_data *data,
->  				 struct pt_regs *regs)
->  {
-> +	struct hw_perf_event *hwc = &event->hw;
->  	int events = atomic_read(&event->event_limit);
->  	int ret = 0;
->  
-> @@ -9869,6 +9872,18 @@ static int __perf_event_overflow(struct perf_event *event,
->  	    !bpf_overflow_handler(event, data, regs))
->  		goto out;
->  
-> +	/*
-> +	 * Swap the sample period to the alternative period
-> +	 */
-> +	if (event->attr.alt_sample_period) {
-> +		bool using_alt = hwc->using_alt_sample_period;
-> +		u64 sample_period = (using_alt ? event->attr.sample_period
-> +					       : event->attr.alt_sample_period);
-> +
-> +		hwc->sample_period = sample_period;
-> +		hwc->using_alt_sample_period = !using_alt;
-> +	}
-> +
->  	/*
->  	 * XXX event_limit might not quite work as expected on inherited
->  	 * events
-> @@ -12291,9 +12306,19 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  	if (attr->freq && attr->sample_freq)
->  		hwc->sample_period = 1;
->  	hwc->last_period = hwc->sample_period;
-> -
+> Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-Redundant change at here?
-
->  	local64_set(&hwc->period_left, hwc->sample_period);
->  
-> +	if (attr->alt_sample_period) {
-> +		hwc->sample_period = attr->alt_sample_period;
-> +		hwc->using_alt_sample_period = true;
-> +	}
-
-My understanding it sets a short sample window for the first period.
-Would it initialize the `hwc->period_left` with the updated sample
-period?
-
-> +
-> +	/*
-> +	 * alt_sample_period cannot be used with freq
-> +	 */
-> +	if (attr->freq && attr->alt_sample_period)
-> +		goto err_ns;
-> +
-
-It is good to validate parameters first. So move the checking before
-the adjustment for the alt sample period.
-
->  	/*
->  	 * We do not support PERF_SAMPLE_READ on inherited events unless
->  	 * PERF_SAMPLE_TID is also selected, which allows inherited events to
-> @@ -12763,9 +12788,19 @@ SYSCALL_DEFINE5(perf_event_open,
->  	if (attr.freq) {
->  		if (attr.sample_freq > sysctl_perf_event_sample_rate)
->  			return -EINVAL;
-> +		if (attr.alt_sample_period)
-> +			return -EINVAL;
->  	} else {
->  		if (attr.sample_period & (1ULL << 63))
->  			return -EINVAL;
-> +		if (attr.alt_sample_period) {
-> +			if (!attr.sample_period)
-> +				return -EINVAL;
-> +			if (attr.alt_sample_period & (1ULL << 63))
-> +				return -EINVAL;
-> +			if (attr.alt_sample_period == attr.sample_period)
-> +				attr.alt_sample_period = 0;
-
-In theory, the attr.alt_sample_period should be less than
-attr.sample_period, right?
-
-Thanks,
-Leo
-
-> +		}
->  	}
->  
->  	/* Only privileged users can get physical addresses */
-> 
-> -- 
-> 2.43.0
-> 
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
