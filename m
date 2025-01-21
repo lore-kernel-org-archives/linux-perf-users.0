@@ -1,86 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 355FC187FE4;
-	Tue, 21 Jan 2025 17:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B43E1F55F5;
+	Tue, 21 Jan 2025 18:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737480136; cv=none; b=uJY+khMJv6MDRGHxrNBeSy1iR9If5YbPfm0hEf1ghkFbP1OIRCcsOQiaM+bg8fYNjnStzgt+hnmChAq2hVkJSL+kySADhWtrYzWTah3i83feHXM0n3/g7/i5ScONfcg/3q3hUBpQPricdZs+hSlGz8N5ruXqaiPhCx5zlN+hlpY=
+	t=1737482651; cv=none; b=hHt0pjCCt05yonqlI2BLo1OJTr504t17/DQfCYos9wpQu+PsYlwgC/nk+rVcTRPV9HaMM7wethLW/Nuq0KsTaBF1U1IhBa0AL6ln6aoZ38NVka/CZ0SMr2JfWEHcjU9B4UGOpWPsvUaU1zSWvfJlNAkpqyPM1PtMIv83MPj4oP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737480136; c=relaxed/simple;
-	bh=mC/iT8g5fvrhcz+i+2BWMfLIo8yMAh3iyJaeo3cRojs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E+nX+EeAf11cUydsocmapNCWFhSORLmH209xJrA/gBoTAaHR8h/WYd9rgQ97NDDcGxdXGmkdTcS2XgWMr3g59lD6UWMIrpAI+0scXXGm7Lyb0p0BQrP7N6tL6S+09MlyuxrL0PkL0jcsrxz3YES2OrLxhZsR/AWOO+/SP48K2VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE6B8106F;
-	Tue, 21 Jan 2025 09:22:41 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3E33F66E;
-	Tue, 21 Jan 2025 09:22:12 -0800 (PST)
-Date: Tue, 21 Jan 2025 17:22:02 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "mark.barnett@arm.com" <mark.barnett@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
-	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
-	james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 5/5] perf: Record sample last_period before updating
-Message-ID: <20250121172202.GB416913@e132581.arm.com>
-References: <20250106120156.227273-1-mark.barnett@arm.com>
- <20250106120156.227273-6-mark.barnett@arm.com>
+	s=arc-20240116; t=1737482651; c=relaxed/simple;
+	bh=RexphgXcca/HGAbF5WYL5QDvHdKxYQYIozdWYBmj5A4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pJopZ5I5NaEiNo1K9JmL+bYIrx1Jes3Fdez/+eUpGsiFcpTnkYiC9Ji01rNf/luaFYpb8B9ixTagGi75AczehUA/r4eh3bHoaLqtBmma8XbgOTl/DN9wNPvkarAPoJJ6E7gHKWNbOra0bsQvIp9Un5iGnwsag3Qb4vM11Jsv11o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jsWSOv14; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jsWSOv14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE8FC4CEDF;
+	Tue, 21 Jan 2025 18:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737482651;
+	bh=RexphgXcca/HGAbF5WYL5QDvHdKxYQYIozdWYBmj5A4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jsWSOv1496bIgcgUpxvsW/FXnsgTo4nZ4LMCQvVtiNBOKtRBbvmPUC5q/jo02pkw7
+	 grfIHNphyvqt+cFBaXaz+M1foVYsKmoCEv/cYSpVkWzHgQg8B2+xX3KgGxA8F1Ph01
+	 YKHQAndk6+Lv1bGtwJnB4KLJPZGAkTMMejqrP5trayN6Is6dFvuGDtqYB+l3JfJdXS
+	 RIzBupNNaaGd8s9oD+hZkcstLOaZRnaADVmaojYk/49ArSwLU+ONiGmZMU9Ics/6p9
+	 le1Q2XRFqfNRtb3zjZJDA7+GrXadyBxrir027pm5N6wpGgIlrD+kkhzTArBjstxg32
+	 p24IJ6Tx7srRw==
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ce76b8d5bcso52948165ab.0;
+        Tue, 21 Jan 2025 10:04:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUKlSnutER3nSKwoMqFKxTrLH3/zj6XGYCaavxYTRhuULK9KCDU0LXmc9PSMkJaQvhNy3nQrc/Ceo2bZquqlSOOjw==@vger.kernel.org, AJvYcCXQNbka3cnkd2iJOeeE0pJzli88Vo0yp6JSLxfc5gojDMX42WgLVm/iS+eDUE6XfacCNV1CVbLPa5Gl0fU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoUjGMKiKQYacrsDrCjrA6XxWxsAHzxuaOWMNZuLdsHZPW0fPv
+	1XQWnEXHcY31zK4XTTkzotqzf4+8a0hNAKEJXB1/mQrLd6FjpkQu1oJVuvZyw+v5qLCxX8N2LCN
+	hLzQBuyZ1sntE/rWNVWLmswQTXzI=
+X-Google-Smtp-Source: AGHT+IHPewm/sy5sENGYg2Sic/HGyofJS3pKDEfijNPXAUH5JX7pndzHiNeTlI3O/V/rpgZM0jsUT6I+i817RGvNdYM=
+X-Received: by 2002:a92:ca47:0:b0:3ce:867c:f51b with SMTP id
+ e9e14a558f8ab-3cf7447e655mr139372915ab.14.1737482650454; Tue, 21 Jan 2025
+ 10:04:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250106120156.227273-6-mark.barnett@arm.com>
+References: <20250111202851.1075338-1-irogers@google.com> <20250111202851.1075338-2-irogers@google.com>
+ <Z4Us_aB9PNk63MbG@x1> <CAP-5=fWrFGM=TbQ5zBjdBAyDLJhJ48K_6TLHt22jLhnV11OG_g@mail.gmail.com>
+In-Reply-To: <CAP-5=fWrFGM=TbQ5zBjdBAyDLJhJ48K_6TLHt22jLhnV11OG_g@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Tue, 21 Jan 2025 10:03:59 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5UgMSrs=rJpZw6nPTqteEZRa=tt3XvWKq4oMk6rLGbrA@mail.gmail.com>
+X-Gm-Features: AbW1kvZGba6Hj8Tk0hboEmoq_SzzMp9msrvn0y963nB2E0MZbsoAPYidjAHXlNw
+Message-ID: <CAPhsuW5UgMSrs=rJpZw6nPTqteEZRa=tt3XvWKq4oMk6rLGbrA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] perf build: Remove libbfd support
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, James Clark <james.clark@linaro.org>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Changbin Du <changbin.du@huawei.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Howard Chu <howardchu95@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 06, 2025 at 12:01:56PM +0000, mark.barnett@arm.com wrote:
-> From: Mark Barnett <mark.barnett@arm.com>
-> 
-> This change alters the PowerPC and x86 driver implementations to record
-> the last sample period before the event is updated for the next period.
-> 
-> A common pattern in PMU driver implementations is to have a
-> "*_event_set_period" function which takes care of updating the various
-> period-related fields in a perf_event structure. In most cases, the
-> drivers choose to call this function after initializing a sample data
-> structure with perf_sample_data_init. The x86 and PowerPC drivers
-> deviate from this, choosing to update the period before initializing the
-> sample data. When using an event with an alternate sample period, this
-> causes an incorrect period to be written to the sample data that gets
-> reported to userspace.
+Hi Ian and Arnaldo,
 
-I found conflict when I applied this patch on linux-next [1], with the
-commit below:
+On Tue, Jan 21, 2025 at 8:52=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Mon, Jan 13, 2025 at 7:10=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Sat, Jan 11, 2025 at 12:28:49PM -0800, Ian Rogers wrote:
+> > > libbfd is license incompatible with perf and building requires the
+> > > BUILD_NONDISTRO=3D1 build flag. Remove the code to simplify the code
+> > > base.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > > diff --git a/tools/perf/util/disasm_bpf.c b/tools/perf/util/disasm_bp=
+f.c
+> > > index 1fee71c79b62..a891a0b909a7 100644
+> > > --- a/tools/perf/util/disasm_bpf.c
+> > > -
+> > > -int symbol__disassemble_bpf(struct symbol *sym, struct annotate_args=
+ *args)
+> > > -{
+> > > -     struct annotation *notes =3D symbol__annotation(sym);
+> >
+> > Song,
+> >
+> >         Have you ever investigated how to reimplement BPF disassemble
+> > using some other library than this one?
 
-commit faac6f105ef169e2e5678c14e1ffebf2a7d780b6
-Author: Yabin Cui <yabinc@google.com>
-Date:   Wed May 15 12:36:09 2024 -0700
+I am sorry that I somehow missed this thread last week.
 
-    perf/core: Check sample_type in perf_sample_save_brstack
-
-    Check sample_type in perf_sample_save_brstack() to prevent
-    saving branch stack data when it isn't required.
-
-    Suggested-by: Namhyung Kim <namhyung@kernel.org>
-    Signed-off-by: Yabin Cui <yabinc@google.com>
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
-    Reviewed-by: Ian Rogers <irogers@google.com>
-    Acked-by: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lore.kernel.org/r/20240515193610.2350456-4-yabinc@google.com
-
-
-Please consider to rebase the patch to fix conflict in next spin.
+I haven't looked into alternatives to libbfd.
 
 Thanks,
-Leo
+Song
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>
+> I think doing it using libLLVM should be straightforward. I sent out
+> this series to make libcapstone and libLLVM loadable using
+> dlopen/dlsym:
+> https://lore.kernel.org/lkml/20250120173208.344231-1-irogers@google.com/
+> See symbol__disassemble_llvm in patch 5:
+> https://lore.kernel.org/lkml/20250120173208.344231-6-irogers@google.com/
+> the difference is selecting just the BPF disassembler, so don't pass a
+> triplet, force it to BPF.
+>
+> Anyway, one option following that series is to factor libbfd
+> dependencies into a bfd.c in tools/perf/util. That way we can try to
+> have a common interface for capstone, LLVM, etc. The other is to
+> delete it, which is my preference. I can add the BPF disassembler
+> support to llvm.c in that series and rebase this series onto it.
