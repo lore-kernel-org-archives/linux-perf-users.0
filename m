@@ -1,129 +1,190 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1561F0E55
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 16:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D721F55E4;
+	Tue, 21 Jan 2025 17:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737478359; cv=none; b=C4nBlRyx1PbI+jS5G28hmMcUIW/RpHe8mQ/eT8GsIlDNGApF8TC/Jt+6Hm+t2IqWpZlOmkbs/3AyRdFn5TRzMESbFZTsFIc6UGDyRLbG6WbUcLMQr7jRXRRubQW1nbNYtFtx7G31/07sr1tLYhuwwjN5+PL/LUAOmO4HLZJykSk=
+	t=1737478819; cv=none; b=kVk0KzAUjxT9JHFl1p7PAgyXFfbvVkaDgktbM62nrbIhUTLv/QB7lVmwT6o+JylJoJNS7IIV5ZR7NYL4WILayQKhaksGea9OytSPu78pCmuVR5JbJ2VqrQJy2+sBMb06pNat9Yo29YqJg24qDdbuJPGwPlA38wUjR3jkVxotA1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737478359; c=relaxed/simple;
-	bh=7mxyyL7MVyzak+1aNwGycWcSVQ4tiMe1zte1DrwA6ns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZNLocBcMk+4/rleqW4UFkw3Ao3kbz7XwYKtCWSILCbuYQYBwIrgqIOFSFZ/KNZLDHkWCe1R2OGG+Vrxm/zMYTCRSvwGcGD+YnC3CyrtZLJQ0r3cOnu3ErCvp73TT8/Ss24zObZmrF3XZni7XXwAUUJClo81ueQCuPbhCL3OyRxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g2NdPSkA; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1737478819; c=relaxed/simple;
+	bh=9OS+xRmfz4uuv2J1YGJZ++S2O40MMdmWQmSQIuypaCI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aU+abS1bGf7dYKs1ummvugRXTGAWYmpb4L8WEkGY2CbbQm3LdPJEq6cdSBvxNBO4ZdxduDBXeKTr4SSpfG2unbKtwUOTx1qb0oFeUi1lbLS9GmO3czfQftoFs8CiMaHLQXsoGhyhwfvFhvQVuwWs1rso6P5B6RnAEy2eC69ptsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMVW1OpN; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g2NdPSkA"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so618925ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 08:52:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMVW1OpN"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54021daa6cbso6474898e87.0;
+        Tue, 21 Jan 2025 09:00:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737478356; x=1738083156; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GdMHqHkwdEdrk35RgW3takUNGRDO6kyBZ5ZWP7L4ArY=;
-        b=g2NdPSkAF3pG/pBRL+DMOEQKo7625erywbiWqscDwmugMQefpJglX4r1PIXZOeOU2F
-         Ni9TSzIAiyu6Sn1OHuRMKYCgJhwNfy+k4D26uE6j4KTMhtvEOMjiS5iRX3f8B7DoxDmt
-         DEkNHZLPTToMHrPflKEXuTCToY2V9tnf1lV/5Edvb8Uw35DyLrBS/Pr7hTlp1dmkkeVi
-         VHkSQXzv2Qw4qXn2fmJEmwuEc6048u8hQbvEAx/j9eQrhk9be1h762EcMH4/NaRRn2e9
-         BoGv9nFwyvQ26lc3F54z2k8CjQI+q4Pc7cnS2t4zzHPF0LVXmUOIWQvbp5SRmLUhT+nQ
-         gq/w==
+        d=gmail.com; s=20230601; t=1737478814; x=1738083614; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6O7kZyVX02YaNVvlK+AnjIGslDTljYFtI1mm3L3G+es=;
+        b=gMVW1OpNxZGCbfGiZJN7CWogRmhb8O/8NZQJUjl5VvDOFm8axyCM3Qpxe2lI4LTrUd
+         S23mQS6EhykZyiPZAZchKhUFyLauUNI/PTXzvvS6fpIB8YFJd0EwSz/LdLHeMo5qf/Je
+         6VVfbR2V6g55pg4cEajPSY4yrFuGdGoEoz50ZVvO2khmL7gGXhIELMHTqgr9FxkwFCO0
+         tfH2hYNk7YErLOQGsxdnMpYZwupbPa2WqU4r5r8XKk27iFdmNQZs2/Pv20ZzMCFVmkYF
+         /415sca28vufjjPWayU2xZn2j/5RKYAHoFit+W5tRiL+xJN6X2GLoRIwsp/lGkN2QDzM
+         3KMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737478356; x=1738083156;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GdMHqHkwdEdrk35RgW3takUNGRDO6kyBZ5ZWP7L4ArY=;
-        b=lm86MzIKF/FnJjjbL5NNX0+axyF/oOXFJZIb3EONBsnQ5t1TUEY9cYkM37c5GhqdnT
-         VYwtBNztjrwGTYjQHAN+ZCzyQuAURjGeSAi43IpJAH0nlhcF9x8W9EVp+OTwCoZfhhWg
-         e+N2o4uJTdxFmy8Z9rPE5z//449mGtHLtmw7ktX/m5X9+CD5Edanpgy9nhlFZRRcIzq3
-         OASC36jJW7Iy9J8Egsw6+cBQpJS6jjOrDjQJabxzLfrOaBZxNIn1vLbYhtmm+KclwxUq
-         EGzYP2/p07OnT3McicgK0tYWFC8R5TZN478g1esKB/M+yZG3l83we3dPl72eIMlkkWVN
-         x3DA==
-X-Forwarded-Encrypted: i=1; AJvYcCWljHeHteeBNWbAOmEblv26xnNZz4sUn1niLTJbTW4HczRZu87ao05uAQsDjViG8gA4cFMIS2olWFxyLpr4wPu4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj+hmnkqxhb3Mv3QN0iXxgAyEHoYyQCPGPtkcohu+CgMW0JDN3
-	s85ikdn1ivSFIxDbYuy6Jx1DZFoVInYG85oK6WOLadLUx++34wITrlDGQvXBqFL1cILAR0CUvnd
-	8LHc1Cf92q8M6QljVJf1dC3zXfL6oD2hP4K4c
-X-Gm-Gg: ASbGncvUzX1yvoFfrxijCrymx565KamXAV+pgIFQItqVhAL5kPS4PKnV1z0DIbzhwoz
-	hIzengGOjV9bjudgifQaYIujsuWore5Ms8x8NaHL8eWBZArU9gdAkRCagzXkF0XOdbj5gSdRlcY
-	nCb8k=
-X-Google-Smtp-Source: AGHT+IHmxO9ekfZnbmE6Bs7fLm+kad4fug+Sd8hSJAjtC5MGX0sYHnFZGrHDPVQHmeTywqKuDMZuAgszz5pMm3hnqhM=
-X-Received: by 2002:a05:6e02:1f12:b0:3a7:dcc1:9936 with SMTP id
- e9e14a558f8ab-3cf827d810bmr9215785ab.23.1737478356505; Tue, 21 Jan 2025
- 08:52:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737478814; x=1738083614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6O7kZyVX02YaNVvlK+AnjIGslDTljYFtI1mm3L3G+es=;
+        b=lGnTbRWrBRlK7G3M+G46ai6f4FOET4eHZIGsvePltJVuy6ulKHFIHM96u1jR16Ahv+
+         MlqF+IelPynlcok9yft6BzyNfcOodv2v0Df8bz4udphrKAb5o33faizDojADtiGmIzc3
+         BLEiPen3rNdczIJA3rTBX99YYldatJy+JQP4YmYiA1nv/Kna5FsEdUcqzz17RQy3EoEZ
+         UvtQT3apocOGImoKdBhtmHCOlaDfM7XgtEbDlhU2rVuAbWCYmfL1I7tyCsMKBCO+s7ML
+         mOOoKBDweKRmaubPYtdYQSXowFBQv+lW6gHtR5QJA8X9M7ICxRHSR9FcUIIMwHBXOU+r
+         7pvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUigKuYSYVlzKBRoOyZiyvCekM9de8/BgmoF01epWwnOBzPGeufLLCysMPTIqb8vCV2WR38hiqjk3gsNb3nhHcy@vger.kernel.org, AJvYcCVNtzF3fjeLtXQZpDdR8q/KVhJGX5khPOSOMCulvucvUlhK2JGnHQ2OU5hbqfNl3AMrS5OQoEI3GeKwa41qLehO@vger.kernel.org, AJvYcCVX9kf658Bb9flmPpGTJY87XSdeeA/XrJLR/TagmZRByVCGL5YTWs/6NFt68iRpGbHiH8s0vEBdnHiVG0DdXZoMtQ==@vger.kernel.org, AJvYcCVxfB0VZE0r4TTLNqtq9Qg/wCiwgdqMY1S08/n7UCSQQZy9cAJX1oO9pYSmBKgUYqHuYE29cMW9+rlXl/ed@vger.kernel.org, AJvYcCWIFd7d3dJIXZOFjEqSqqXGsZAnLqpxHPvrGFclJTIKJMBLf5++N/JS5lZP12BW0uEMyFQ=@vger.kernel.org, AJvYcCWlOJMi9Xi/D1sWTOXFPlgdWmNj80HvNhhD9dCFNH1lLYwrOKLp5uirslT2Pd0TChwB4yleqmRh31Baxw==@vger.kernel.org, AJvYcCWppZQM2mzUCKA6kpil5RUMmVWvUAPYCfe6r4YwJ61NwYKnAr0oAyjXbz5jAl9FgX3r7MBK@vger.kernel.org, AJvYcCXn5XNKxjuU7Yn3tN4Bp54J7ly3jq96QxClg4eMau4u5ragf3oAS+gD+3a8ZY0aCLQDHZZD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwnMRjNfrhr2ORtkPt2uwTzgrLHLRF2n4bDrukhK72y9A6qGWh
+	M6W4ovuC0MOgm/tWbLdgRs6o5r6HN52B6rXnVXcPAK+PUDRAPLQKwCLoU7w3
+X-Gm-Gg: ASbGncvtj7NdDPURSgbMGbW7o1rNFvmJ/oyRzvKReHpbORks9jSKs9ZjQDH4Exrk0Nt
+	ID/QCnEt8abXtOpldDHMNyRHEvD+89Wkk38DMe0K/EkbDansjdmpYkAAL4DwqDTpZtvrMapT7Bu
+	u4TOzZhp5YmnzYiq0p1f3fYpSOHphihAKouMGnfpXxUFqEZUrS5hATbc9Ry+jx9/M2BNube9dO6
+	9RQW0VVOnVc/fmKKjRHE/dWY/3oWsZEfTQ8UerOU3xOHwY3LiVCPCkfShdcP3wQN2LInp7oEl7U
+	DU8Y9FiOIHbo4bsGSYvCI7h7
+X-Google-Smtp-Source: AGHT+IGYPF71D1RmaKnbW82c+U5IMmpDPZJTk/HJCRRaq5z7S90tH0rTVzhA6Sl8Kwc0O/33Vf8jgg==
+X-Received: by 2002:a05:6512:104b:b0:543:9b0f:7d39 with SMTP id 2adb3069b0e04-5439c282920mr7151519e87.32.1737478813837;
+        Tue, 21 Jan 2025 09:00:13 -0800 (PST)
+Received: from pc636 (host-217-213-93-172.mobileonline.telia.com. [217.213.93.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5439af76fe9sm1916768e87.212.2025.01.21.09.00.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 09:00:12 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 21 Jan 2025 18:00:07 +0100
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+Message-ID: <Z4_Sl-zu7GprkbaL@pc636>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4qBMqcMg16p57av@pc636>
+ <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z44wSJTXknQVKWb0@pc636>
+ <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250111202851.1075338-1-irogers@google.com> <20250111202851.1075338-2-irogers@google.com>
- <Z4Us_aB9PNk63MbG@x1>
-In-Reply-To: <Z4Us_aB9PNk63MbG@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 21 Jan 2025 08:52:25 -0800
-X-Gm-Features: AbW1kvYxvgjy13SLjdZKQOnoERiY0yxlZ0w_vIpu7Xubnp27cGk8gKqw1dEhWb8
-Message-ID: <CAP-5=fWrFGM=TbQ5zBjdBAyDLJhJ48K_6TLHt22jLhnV11OG_g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] perf build: Remove libbfd support
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Song Liu <song@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, James Clark <james.clark@linaro.org>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Changbin Du <changbin.du@huawei.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On Mon, Jan 13, 2025 at 7:10=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Sat, Jan 11, 2025 at 12:28:49PM -0800, Ian Rogers wrote:
-> > libbfd is license incompatible with perf and building requires the
-> > BUILD_NONDISTRO=3D1 build flag. Remove the code to simplify the code
-> > base.
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> > diff --git a/tools/perf/util/disasm_bpf.c b/tools/perf/util/disasm_bpf.=
-c
-> > index 1fee71c79b62..a891a0b909a7 100644
-> > --- a/tools/perf/util/disasm_bpf.c
-> > -
-> > -int symbol__disassemble_bpf(struct symbol *sym, struct annotate_args *=
-args)
-> > -{
-> > -     struct annotation *notes =3D symbol__annotation(sym);
->
-> Song,
->
->         Have you ever investigated how to reimplement BPF disassemble
-> using some other library than this one?
+> > As noted before, we defer flushing for vmalloc. We have a lazy-threshold
+> > which can be exposed(if you need it) over sysfs for tuning. So, we can add it.
+> >
+> 
+> In a CPU isolation / NOHZ_FULL context, isolated CPUs will be running a
+> single userspace application that will never enter the kernel, unless
+> forced to by some interference (e.g. IPI sent from a housekeeping CPU).
+> 
+> Increasing the lazy threshold would unfortunately only delay the
+> interference - housekeeping CPUs are free to run whatever, and so they will
+> eventually cause the lazy threshold to be hit and IPI all the CPUs,
+> including the isolated/NOHZ_FULL ones.
+> 
+Do you have any testing results for your workload? I mean how much
+potentially we can allocate. Again, maybe it is just enough to back
+and once per-hour offload it.
 
-I think doing it using libLLVM should be straightforward. I sent out
-this series to make libcapstone and libLLVM loadable using
-dlopen/dlsym:
-https://lore.kernel.org/lkml/20250120173208.344231-1-irogers@google.com/
-See symbol__disassemble_llvm in patch 5:
-https://lore.kernel.org/lkml/20250120173208.344231-6-irogers@google.com/
-the difference is selecting just the BPF disassembler, so don't pass a
-triplet, force it to BPF.
+Apart of that how critical IPIing CPUs affect your workloads?
 
-Anyway, one option following that series is to factor libbfd
-dependencies into a bfd.c in tools/perf/util. That way we can try to
-have a common interface for capstone, LLVM, etc. The other is to
-delete it, which is my preference. I can add the BPF disassembler
-support to llvm.c in that series and rebase this series onto it.
+> I was thinking maybe we could subdivide the vmap space into two regions
+> with their own thresholds, but a task may allocate/vmap stuff while on a HK
+> CPU and be moved to an isolated CPU afterwards, and also I still don't have
+> any strong guarantee about what accesses an isolated CPU can do in its
+> early entry code :(
+> 
+I agree this is not worth to play with a vmap space in terms of splitting it.
 
-Thanks,
-Ian
+Sorry for later answer and thank you!
 
-> Thanks,
->
-> - Arnaldo
+--
+Uladzislau Rezki
