@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650471C1735;
-	Tue, 21 Jan 2025 15:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CF7188006;
+	Tue, 21 Jan 2025 16:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737473110; cv=none; b=jBwabmwXD2Wgs2LH1excV+JS8//Z+iRHKeaTP15e//V7tEy13Pv5gu3d3RzW7HaLwDaNkayA5JQxo4OokzHhM5rGebhO9EJYXbxgCLDXahVrQWogzTWqx9VenJIKdHz44ZK+v//d1UTngTq6NhBujgqGtlBbchCmvP5/nlz3xk0=
+	t=1737475982; cv=none; b=NMXXiHdXH9d9XwKq1KOxzJ0FAHdFlJeXFct8LyBFzc54hAG6rpsDpEaTxHkZL52bIZckR2tK5j4cA5SQvyVWP4/DCGwby8tpnmhIdf8r40xuB9PG7UcXvyPBsvo0CNlmg72qXZM4oVuXR2BbhBKcS3vMqOvX+NR6TKh6w3EMLtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737473110; c=relaxed/simple;
-	bh=ZvYrvPoCdOMPwJGbJxu9v191ZljnAWqGwNKeqQ4ZkA4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TuJBFFTDlsxF+/5TaACCYSzxER4wIQxBpbDPRg/8HD2gtxZ38gRjxX7rPWTwOj8llV+a/bPY3Mm7RXDTMeRRZFsbfS3Br5XhGTiQ/F3IBcvASb/We1eEXKhXUgLVL/gC58JceKNc71NafVYEoB5N9saRyoIifGrwYhpuTqZBVbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FjPkVxEJ; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1737475982; c=relaxed/simple;
+	bh=zD2ekEshlfDlnJ+vzvlb6p+YD0VSwTReux2r7806EyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NJ/5oDQIRf8Cvwk716/qIuHKI0r5JYsPlTOBHn1LuPbqLiNZX0V1WuWgFYTK5YnQUwa2JIwOLMJkt7Nn+yxRN2Q2jZWKgMkqe87TAYY1aW2CFPzl3RAUqec6ZOOhExLN2F72jFec9wDSBf4rafe/G2g4YgqRI9cNHIeAe1qU4yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPVivUgk; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FjPkVxEJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPVivUgk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737473110; x=1769009110;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=ZvYrvPoCdOMPwJGbJxu9v191ZljnAWqGwNKeqQ4ZkA4=;
-  b=FjPkVxEJiceB3Gtt1S95uL+ZinAENa3EOGuLsxirqg1QwnzydftfkoLK
-   KDTSxLlqWHVlvx3hWJAx3lVFaHJEJq8NKNNMiLYqHigUDH1UOaHOgamat
-   NJpEJCRWOXZIojXMm6WilklslSTedWEqUjoHB15KT0zLKbjFg1m8IQVbr
-   lnXO9tMQlEJKliZw/a8ZYFHH2pi8FivSVI/FjQNVYWAOX5OoUZMeI+5mo
-   j9HePYbnuthy0VnAnNoHckXmSjrIx7FQgHeEmieCo8iSV0IzkdbiXOdo8
-   9eRRtysSXYbI38vjTFw4tti74wEo5mDkVN9+DCh2Ln2M2O0w0KMUKDCYn
-   w==;
-X-CSE-ConnectionGUID: n+V/jflBTZqYv7vVwokYWA==
-X-CSE-MsgGUID: xsuW3FWFTL+mUoa7MpgFjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="48386659"
+  t=1737475981; x=1769011981;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zD2ekEshlfDlnJ+vzvlb6p+YD0VSwTReux2r7806EyM=;
+  b=lPVivUgkfMNw4KdUGKc5GgHgHWBl4kU+sqf2TBJILIurGVN7XcA+8Dj8
+   VC7zBHai6ZRYNRuUKAscg6f43/l3+FDAEmt4Hfce/lNz5Rw9cpDsHx/28
+   qrTFKTvM5nPD+tS/hVFQ7lT0x6kiQ4AvT5H3PeVUfquKSCZkkXjfIk+x/
+   IO6fMCA7rpDJfFBH860D+mhM9xZWGVuPgvj4+GERvzwZjUnVfA6IclQXv
+   pDMn7aqdoyiuqW1T4ixnyGDEZrdH93ZXqgZvNMFsVdqEu2BGae+IF/9w8
+   hTLIRPGT6t8cYsWX4U7/2fd2BIIanSFh4M8VHLndJABTQpoQo2n9AAFI8
+   g==;
+X-CSE-ConnectionGUID: W3i3l65wS76hnfE7QVhkUg==
+X-CSE-MsgGUID: tBm8Giq9TsuWnp+dVTRamg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37772363"
 X-IronPort-AV: E=Sophos;i="6.13,222,1732608000"; 
-   d="scan'208";a="48386659"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 07:25:09 -0800
-X-CSE-ConnectionGUID: PfoxyYwYSUq/2S4rHWhAWQ==
-X-CSE-MsgGUID: RI8zPYDZSAm94N269yMgYw==
+   d="scan'208";a="37772363"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 08:13:00 -0800
+X-CSE-ConnectionGUID: 52ms/hyVRpyf0rrh8PMrxw==
+X-CSE-MsgGUID: hhjACR7lRLiq/WWlqvBtFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106665031"
+   d="scan'208";a="111476220"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 07:25:06 -0800
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 08:12:59 -0800
 Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id DB40F20B5713;
-	Tue, 21 Jan 2025 07:25:04 -0800 (PST)
-Message-ID: <e05bb0c7-cbbb-422a-882c-1dfa648b29e9@linux.intel.com>
-Date: Tue, 21 Jan 2025 10:25:03 -0500
+	by linux.intel.com (Postfix) with ESMTPS id 51F1D20B5713;
+	Tue, 21 Jan 2025 08:12:57 -0800 (PST)
+Message-ID: <aa086dd7-10aa-4746-889d-b13c793da5ec@linux.intel.com>
+Date: Tue, 21 Jan 2025 11:12:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,99 +58,125 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2] perf/core: Fix warning due to unordred pmu_ctx_list
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
 Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
- dapeng1.mi@linux.intel.com
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
- <20250115184318.2854459-3-kan.liang@linux.intel.com>
- <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
- <be90e73b-eedf-4ff0-a832-b579e003cac9@linux.intel.com>
- <20250116204225.GA7232@noisy.programming.kicks-ass.net>
- <20250116205659.GA15641@noisy.programming.kicks-ass.net>
- <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, ravi.bangoria@amd.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250121130802.1813928-1-luogengkun@huaweicloud.com>
 Content-Language: en-US
-In-Reply-To: <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250121130802.1813928-1-luogengkun@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 2025-01-21 8:08 a.m., Luo Gengkun wrote:
+> Syskaller triggers a warning due to prev_epc->pmu != next_epc->pmu in
+> perf_event_swap_task_ctx_data. vmcore shows that two lists have the same
+> perf_event_pmu_context, but not in the same order.
+> 
+> The problem is that the order of pmu_ctx_list for the parent is impacted by
+> the time when an event/pmu is added. While the order for a child is
+> impacted bt the event order in the pinned_groups and flexible_groups. So
 
+%s/bt/by/
 
-On 2025-01-16 4:50 p.m., Liang, Kan wrote:
+> the order of pmu_ctx_list in the parent and child may be different.
 > 
+> To fix this problem, insert the perf_event_pmu_context to proper place
+> after iteration of pmu_ctx_list.
 > 
-> On 2025-01-16 3:56 p.m., Peter Zijlstra wrote:
->> On Thu, Jan 16, 2025 at 09:42:25PM +0100, Peter Zijlstra wrote:
->>> On Thu, Jan 16, 2025 at 10:55:46AM -0500, Liang, Kan wrote:
->>>
->>>>> Also, I think I found you another bug... Consider what happens to the
->>>>> counter value when we reschedule a HES_STOPPED counter, then we skip
->>>>> x86_pmu_start(RELOAD) on step2, which leave the counter value with
->>>>> 'random' crap from whatever was there last.
->>>>>
->>>>> But meanwhile you do program PEBS to sample it. That will happily sample
->>>>> this garbage.
->>>>>
->>>>> Hmm?
->>>>
->>>> I'm not quite sure I understand the issue.
->>>>
->>>> The HES_STOPPED counter should be a pre-existing counter. Just for some
->>>> reason, it's stopped, right? So perf doesn't need to re-configure the
->>>> PEBS__DATA_CFG, since the idx is not changed.
->>>
->>> Suppose you have your group {A, B, C} and lets suppose A is the PEBS
->>> event, further suppose that B is also a sampling event. Lets say they
->>> get hardware counters 1,2 and 3 respectively.
->>>
->>> Then lets say B gets throttled.
->>>
->>> While it is throttled, we get a new event D scheduled, and D gets placed
->>> on counter 2 -- where B lives, which gets moved over to counter 4.
->>>
->>> Then our loops will update and remove B from 2, but because
->>> throttled/HES_STOPPED it will not start it on counter 4.
->>>>> Meanwhile, we do have the PEBS_DATA_CFG thing updated to sample counter
->>> 1,3 and 4.
->>>
->>> PEBS assist happens, and samples the uninitialized counter 4.
->>> Also, by skipping x86_pmu_start() we miss the assignment of
->> cpuc->events[] so PEBS buffer decode can't even find the dodgy event.
->>
+> The follow testcase can trigger above warning:
 > 
-> Yes, counter 4 includes garbage before the B is started again.
-> But the cpuc->events[counter 4] is NULL either.
+>  # perf record -e cycles --call-graph lbr -- taskset -c 3 ./a.out &
+>  # perf stat -e cpu-clock,cs -p xxx // xxx is the pid of a.out
 > 
-> The current implementation ignores the NULL cpuc->events[]. The stopped
-> B should not be mistakenly updated.
+> test.c
 > 
-> +static void intel_perf_event_pmc_to_count(struct perf_event *event, u64
-> pmc)
-> +{
-> +	int shift = 64 - x86_pmu.cntval_bits;
-> +	struct hw_perf_event *hwc;
-> +	u64 delta, prev_pmc;
+> void main() {
+>         int count = 0;
+>         pid_t pid;
+> 
+>         printf("%d running\n", getpid());
+>         sleep(30);
+>         printf("running\n");
+> 
+>         pid = fork();
+>         if (pid == -1) {
+>                 printf("fork error\n");
+>                 return;
+>         }
+>         if (pid == 0) {
+>                 while (1) {
+>                         count++;
+>                 }
+>         } else {
+>                 while (1) {
+>                         count++;
+>                 }
+>         }
+> }
+> 
+> The testcase first open a lbr event, so it will alloc task_ctx_data, and
+> then open tracepoint and software events, so the parent ctx will have 3
+> different perf_event_pmu_contexts. When doing inherit, child ctx will
+> insert the perf_event_pmu_context in another order then the warning will
+> trigger.
+> 
+> Fixes: bd2756811766 ("perf: Rewrite core context handling")
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> ---
+> Changes in v2:
+> 1. update commit message.
+> 2. only sort the pmu_ctx_list of ctx which ctx->task != NULL.
+> Link to v1: https://lore.kernel.org/all/20250120114344.632474-1-luogengkun@huaweicloud.com/
+> 
+> ---
+>  kernel/events/core.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 065f9188b44a..096f92b9a971 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4950,7 +4950,7 @@ static struct perf_event_pmu_context *
+>  find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
+>  		     struct perf_event *event)
+>  {
+> -	struct perf_event_pmu_context *new = NULL, *epc;
+> +	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
+>  	void *task_ctx_data = NULL;
+>  
+>  	if (!ctx->task) {
+> @@ -5007,12 +5007,19 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
+>  			atomic_inc(&epc->refcount);
+>  			goto found_epc;
+>  		}
+> +		// Make sure the pmu_ctx_list is sorted by pmu
+
+/* Make sure the pmu_ctx_list is sorted by pmu */
+
+> +		if (!pos && epc->pmu->type > pmu->type)
+> +			pos = epc;
+>  	}
+>  
+>  	epc = new;
+>  	new = NULL;
+>  
+> -	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
+> +	if (!pos)
+> +		list_add_tail(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
+> +	else
+> +		list_add(&epc->pmu_ctx_entry, pos->pmu_ctx_entry.prev);
 > +
-> +	/*
-> +	 * The PEBS record doesn't shrink on pmu::del().
-> +	 * See pebs_update_state().
-> +	 * Ignore the non-exist event.
-> +	 */
-> +	if (!event)
-> +		return;
-> 
-> 
+>  	epc->ctx = ctx;
+>  
+>  found_epc:
 
-I've sent a V10 to address all the comments in V9.
-The above case is explained in the comments of
-intel_perf_event_update_pmc() in V10.
-https://lore.kernel.org/lkml/20250121152303.3128733-4-kan.liang@linux.intel.com/
+Other than the above two issues, the patch looks good to me.
 
-Please take a look and let me know if it's not sufficient to handle the
-case.
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
 Kan
