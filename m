@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F9B42065;
-	Wed, 22 Jan 2025 20:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98CD1C3BE6;
+	Wed, 22 Jan 2025 21:03:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737578844; cv=none; b=T/8lZ4qMjmIWVSCTy1/VQ7kkSco9Tzkt55mUi5XV2KP+/n9xbvjc3yFTUuw9LOR1PWgCLflvRb0+sb9s/Y0zRfv4lQDDIo7vnObhFIjV/Z+SgYUvcH+FbYMOs4orTwiUG/UiOld6MlljUvZFA9+PG8AaRnyrJWgGZTJMbVV+rXk=
+	t=1737579822; cv=none; b=ikOrSIG0OTj5klruF7QWx/niTFUakqwjNBv2tsKZjTX+a9nRSZE+o6fZm9EmvfPAKG+cCO3cLFbbiSpxb/QoZvvCGqEdD0eUnLmLF8Q5wVyVD5SXnfiG4nzyUnWLaY1KLm6qkp4zN4s5PbOyBLJpuqG7tcVr77d6uwYoRuW7RYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737578844; c=relaxed/simple;
-	bh=yVY1iDt0GllR5XrawxzVAkczV+CiWgvvcuZmJvTZ6SM=;
+	s=arc-20240116; t=1737579822; c=relaxed/simple;
+	bh=4/WOzLmxRHmIf3zcI7u2Vszl7y5naiQxuzhkQ6VdbGM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ehGxR/FCQo+e7PDoeO3zbNRIiIbyrH8Li+zZYeZqv2CK9/eGMMoTzyf64cSekp9vJyXwrGKE4iY1y3+LCuBMAbJOn5Zxqvb6Sdv8t5R4TJomw82kBG8+08SUQ36CuCOMLZfHPAI7buqi7ScY1Vc949sgONEa9Ug5OIQGWch3/Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnSsQsz+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NlJKgYYM0IbxvZunXI1vC+Mu8ZIH5jT8MQ1JpHeoUK86y6aAj43DE2xtBBzJHEurFqeGczwBgJMWp3GfVx3iclL/UcyyqfHQ9eR5KM0upK2BU/dPiXJ0tP+celkEF+s1SlN5HuY+vajGuI1Rk1uJOy7n9HsT8GomsTIBP4dG2Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MmAyOkjF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnSsQsz+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832A8C4CED2;
-	Wed, 22 Jan 2025 20:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MmAyOkjF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37DB1C4CED2;
+	Wed, 22 Jan 2025 21:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737578843;
-	bh=yVY1iDt0GllR5XrawxzVAkczV+CiWgvvcuZmJvTZ6SM=;
+	s=k20201202; t=1737579822;
+	bh=4/WOzLmxRHmIf3zcI7u2Vszl7y5naiQxuzhkQ6VdbGM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mnSsQsz+ZC8WOyFCH6U0cZkFSSCb1HGQ5jZVYPBXn6E9YjVgfea72FOFKuYOaOcLg
-	 9bV7h1uAYa510DyrSSs3nZjndGZfkaRNBPG0lQt4udWMb2mi+7TMVJv7XaD5Mnhzum
-	 /uAxgO2+fcE0Iv4WyjhCch9GO84Q3Zsqxqij1HytoeY3NIwAoGhn/qc29OvSiLEJdE
-	 9qBIr3Xo5JAm/0B2wKe0HxyS0ybjiTbv07S1ltekiyfTKY9+kedcgHcAsQOWMhVsxd
-	 i2UmHnz91HHE2OgDjbet79Vul4+HonPncdaCrQM11/QSRKi3gZIBSvzMg3qDlcinpI
-	 RV1kxc7EfVHIw==
-Date: Wed, 22 Jan 2025 12:47:20 -0800
+	b=MmAyOkjFDr50Q6ttAyYozFPicaTt6l7pemlyo3DAB8nMfq+4maNGPFJpd9HiNjf61
+	 NvJ4jyNif/+zg8hqiC/3qqQXYEstrxDYY3TmbftChcPwty0cdxxK3IHesj8kItX5tz
+	 w4pzFvzpkay2uYW7vHSsE7SDdKCO/3HGuNOoFw6VaGMlCUhEkiZ6HLUCraF6VifQQx
+	 tvSRQZzfKLnVf6UJPyk4aJXViRshn7Fpkb+Gqp/wR9jhJ8YxZv4x6S/vUVVl3Vk8gy
+	 ydjBa8UgSsO075mNxHzYybboe4WlzkQwM80yRW7vXHKefIumu9FGhRFb+5o9giw1V1
+	 mfrADLW5Qod6w==
+Date: Wed, 22 Jan 2025 13:03:39 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -48,11 +48,12 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
-Message-ID: <20250122204720.t42a4em5endxox3y@jpoimboe>
+Subject: Re: [PATCH v4 02/39] task_work: Fix TWA_NMI_CURRENT race with
+ __schedule()
+Message-ID: <20250122210339.i6sehdw4ddzqyy5h@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
- <20250122122821.GN7145@noisy.programming.kicks-ass.net>
+ <ad5fb696fbcd276c0902dbb94baa75fb79a6e1e2.1737511963.git.jpoimboe@kernel.org>
+ <20250122124228.GO7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,47 +62,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250122122821.GN7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250122124228.GO7145@noisy.programming.kicks-ass.net>
 
-On Wed, Jan 22, 2025 at 01:28:21PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 21, 2025 at 06:30:53PM -0800, Josh Poimboeuf wrote:
-> > It's possible for irq_work_queue() to fail if the work has already been
-> > claimed.  That can happen if a TWA_NMI_CURRENT task work is requested
-> > before a previous TWA_NMI_CURRENT IRQ work on the same CPU has gotten a
-> > chance to run.
+On Wed, Jan 22, 2025 at 01:42:28PM +0100, Peter Zijlstra wrote:
+> So I'm a little confused, isn't something like this sufficient?
 > 
-> I'm confused, if it fails then it's already pending, and we'll get the
-> notification already. You can still add the work.
-
-Yeah, I suppose that makes sense.  If the pending irq_work is already
-going to set TIF_NOTIFY_RESUME anyway, there's no need to do that again.
-
-> > The error has to be checked before the write to task->task_works.  Also
-> > the try_cmpxchg() loop isn't needed in NMI context.  The TWA_NMI_CURRENT
-> > case really is special, keep things simple by keeping its code all
-> > together in one place.
+> If we hit before schedule(), all just works as expected, if we hit after
+> schedule(), the task will already have the TIF flag set, and we'll hit
+> the return to user path once it gets scheduled again.
 > 
-> NMIs can nest,
+> ---
+> diff --git a/kernel/task_work.c b/kernel/task_work.c
+> index c969f1f26be5..155549c017b2 100644
+> --- a/kernel/task_work.c
+> +++ b/kernel/task_work.c
+> @@ -9,7 +9,12 @@ static struct callback_head work_exited; /* all we need is ->next == NULL */
+>  #ifdef CONFIG_IRQ_WORK
+>  static void task_work_set_notify_irq(struct irq_work *entry)
+>  {
+> -	test_and_set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
+> +	/*
+> +	 * no-op IPI
+> +	 *
+> +	 * TWA_NMI_CURRENT will already have set the TIF flag, all
+> +	 * this interrupt does it tickle the return-to-user path.
+> +	 */
+>  }
+>  static DEFINE_PER_CPU(struct irq_work, irq_work_NMI_resume) =
+>  	IRQ_WORK_INIT_HARD(task_work_set_notify_irq);
+> @@ -98,6 +103,7 @@ int task_work_add(struct task_struct *task, struct callback_head *work,
+>  		break;
+>  #ifdef CONFIG_IRQ_WORK
+>  	case TWA_NMI_CURRENT:
+> +		set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
+>  		irq_work_queue(this_cpu_ptr(&irq_work_NMI_resume));
+>  		break;
+>  #endif
 
-Just for my understanding: for nested NMIs, the entry code basically
-queues up the next NMI, so the C handler (exc_nmi) can't nest.  Right?
+Yeah, that looks so much better...
 
-> consider #DB (which is NMI like)
-
-What exactly do you mean by "NMI like"?  Is it because a #DB might be
-basically running in NMI context, if the NMI hit a breakpoint?
-
-> doing task_work_add() and getting interrupted with NMI doing the same.
-
-How exactly would that work?  At least with my patch the #DB wouldn't be
-able to use TWA_NMI_CURRENT unless in_nmi() were true due to NMI hitting
-a breakpoint.  In which case a nested NMI wouldn't actually nest, it
-would get "queued" by the entry code.
-
-But yeah, I do see how the reverse can be true: somebody sets a
-breakpoint in task_work, right where it's fiddling with the list head.
-NMI calls task_work_add(TWA_NMI_CURRENT), triggering the #DB, which also
-calls task_work_add().
+The self-IPI is only needed when the NMI happened in user space, right?
+Would it make sense to have an optimized version of that?
 
 -- 
 Josh
