@@ -1,63 +1,81 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369BE17C220;
-	Wed, 22 Jan 2025 14:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A902135B9;
+	Wed, 22 Jan 2025 15:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737556164; cv=none; b=sHccKf9+oeRKq/wa3o2Et8WFA1SB3X3lA7c0JvJRgey9HwwKT/EIfTfRPt0iFkwMtfjwraL+WfLn7QhwmnAr11CfxMIqRXWpGrivmnizGG+kwGmqntDw7jFpfd1LUMXDNZPT9Jri6SqyOrMN8yNJQb3XREVnDHvn1RQKuhR7Fss=
+	t=1737559263; cv=none; b=AJ+13G19J/5YRkoxAgPQSDb3z3jt1t7pa11jD8+f7DINpR8fkcLGi1/NEUpBJhsZK5cIS3on5nl6PHjeotUdWQTLjHZqGFWIcJKJ3+ea0QuVpztaeW4vZYpXEzQ9u42HxiHP2ztEr5KUu5ol8uQGYXn2fQfreZzzIo6EqtbbMJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737556164; c=relaxed/simple;
-	bh=/QuYLbMciNEg112Hi88iTqqGzv/UzhiCzj7dIYKIK18=;
+	s=arc-20240116; t=1737559263; c=relaxed/simple;
+	bh=3rguBu7d6l8oqA29EsdGgBXCuRaX/mEzmEacYDnc8MQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lIksbmWao8TWnocNFcau4Yy5azzcMvP2NSeNPbdIhpvQvqA4+x5OyinPRt97guhCZ5pz0l8LQt9aQWI+EukWQHBGmVQlsS8VtHcmAlI/kCr9RTtfrdAcjFJPWRFZJt66HZB1gHrs8wmt8J5N4ZuRU23cKqfxYKajgjh6a8h69xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mO9cj4uo; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTPbfFoKr4zuu48atQtbc1kVC5gh3GjTdpgj+4G8yTkxJj+oLePUgugl1f7sh1sRqDoPauACD6xOW7cUE56EphQzN5pMRSB9meSz5v4vWzNdc+31viNzxP+0TsWLc2okdoeOu7KEbTI4kX1MVw1GQhIPZe+L4tPmVEwn/cbB1zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BW400wqW; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mO9cj4uo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZgcuTvass36SWvQtsw+fq8x9uNnHa1v6uA9BfphBvpQ=; b=mO9cj4uoYr3kyd3P/pQbCr+arT
-	4jLLlCXHempAhR4UekM/APJDlZMvzTdSFQ6d8RGRHn/bdFyplTzzrslE6WobYWQzaHqjHpZzEQpq4
-	LPJyU5lmc8An/A8MnyDqv1msJWYICAKspg2ghltVjMQF4c241eifYyqNHa1L+s8k8qTFrbOCS6Tum
-	pPKwkVom8N22t76TqEggKjlOWjYkUdN/fb9y0J6md/bVFd9MVYyQNqEEZz/HaNoHQLw9Ke6FpAphM
-	6jxU8OAX/7V5ukzFRopDExyuHQQcrLcyL0nKflmlCMH+QqeDMpzU3Rw3fwBfCx9RcHmz2R+rxl22O
-	OH3ZdqIg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tabjC-0000000DacE-47QY;
-	Wed, 22 Jan 2025 14:29:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8875D300599; Wed, 22 Jan 2025 15:29:10 +0100 (CET)
-Date: Wed, 22 Jan 2025 15:29:10 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BW400wqW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737559262; x=1769095262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3rguBu7d6l8oqA29EsdGgBXCuRaX/mEzmEacYDnc8MQ=;
+  b=BW400wqWC9lUljiQ+YLKac9h+mZHB/2oDBd7gL/er43o51u9KjLZxvJH
+   uCvziaJ6rntxKQFe/lMQ6rVzlpfBy9c+LB1vxqFjfkOrbCNAh3i9AZKIs
+   bFx6OmOxHe4u7CgXdTcNdjYNIeIDEcfiBuRA/4RI9663zmnoLLV/YyctG
+   G0iqCUjPMvVpIOq1TkRZ04Hur9pZdmHsJj79jFKGJAQyA/8FX5g7hl6+I
+   /X53byMcaf8TEUR3ATQBSxvM7qkuAJjC9kRtv0V4bsLpnK+UMkW4QA9CP
+   RVpbY/SogUdpiIC0wMood87sheYcbUgYP3bGycvRXZqhzXrhNLzXDsUpV
+   w==;
+X-CSE-ConnectionGUID: 642tkySITcqh0lVkfCwcHw==
+X-CSE-MsgGUID: FqUAAPxlQ6mvGV1hhH6dgQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37905044"
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="37905044"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 07:21:01 -0800
+X-CSE-ConnectionGUID: VxdqHyfOTmq4kmu3CfVvEg==
+X-CSE-MsgGUID: kmpLDOPgR2uydCgruscnyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="107701138"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 07:21:00 -0800
+Date: Wed, 22 Jan 2025 07:20:59 -0800
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 34/39] perf: Skip user unwind if !current->mm
-Message-ID: <20250122142910.GW7145@noisy.programming.kicks-ass.net>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Li Huafei <lihuafei1@huawei.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove
+ BUILD_NONDISTRO
+Message-ID: <Z5EM24qWVQF2VdI8@tassilo>
+References: <20250122062332.577009-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,26 +84,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org>
+In-Reply-To: <20250122062332.577009-1-irogers@google.com>
 
-On Tue, Jan 21, 2025 at 06:31:26PM -0800, Josh Poimboeuf wrote:
-> If the task doesn't have any memory, there's no stack to unwind.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 99f0f28feeb5..a886bb83f4d0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7792,7 +7792,7 @@ struct perf_callchain_entry *
->  perf_callchain(struct perf_event *event, struct pt_regs *regs)
->  {
->  	bool kernel = !event->attr.exclude_callchain_kernel;
-> -	bool user   = !event->attr.exclude_callchain_user;
-> +	bool user   = !event->attr.exclude_callchain_user && current->mm;
+On Tue, Jan 21, 2025 at 10:23:15PM -0800, Ian Rogers wrote:
+> Linking against libcapstone and libLLVM can be a significant increase
+> in dependencies and size of memory footprint. For something like `perf
+> record` the disassembler and addr2line functionality won't be
+> used. Support dynamically loading these libraries using dlopen and
+> then calling the appropriate functions found using dlsym.
 
-What about things like io_uring helpers, don't they keep ->mm but are
-never in userspace?
+It's unclear to me what this actually fixes. If the code is not used
+it should not be faulted in and the dynamic linker is lazy too, so 
+if it's not used, it won't even be linked. 
+
+I don't see any numbers, but it won't surprise me if it improved
+actual run time or memory usage significantly.
+
+-Andi
+
