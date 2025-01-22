@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333F41CB337;
-	Wed, 22 Jan 2025 02:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948041CCB40;
+	Wed, 22 Jan 2025 02:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737513136; cv=none; b=cbAj10MURfCQbfX5Tn87CFVn75Xok0xJ/QxFaReF4FfpKXD0xKKzKlGoUFPsdK5OuuPdgGLazOuMjdWiedQLho1dN9iAJw+rQxvLqqZ7PQ/wCGolRHPuIfN1gQtII4ah43sUA9XucdAacRA5gIEzvuaGICVIPfaYtGyi8eZpVW8=
+	t=1737513136; cv=none; b=NOBdX1DG0lMJWGoU0RPeg7rThSFemHnzX9SApLqRuujXmRHV717VUlejWUg8p5Wj1jjToSAIQnWbGSciPooHyFO/VJk34A2ybGVurTkPGASdORxXlMc9yF7DZ5S//yyASoqUfyggCRonZBEEJ+N2jrTHsGnE+agbg7BZ+PsclxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737513136; c=relaxed/simple;
-	bh=SJtVtbvkLcEvN5WibexRkaVRWjXt1N5t9/+LsSeWysQ=;
+	bh=3l4otAURi7kB3h4hFwmhDwPOJru/SqxpPAZlyFNo3VI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FkGFM0dBuOdr44lJl3RQygsMYP2htd/+mQR62vc0ed3WrzzLJ/ryQWf8CXQBo4uPbzCkqY9YqfNfvts+MR8W6tJFHLO72I6v93zH3WvNp3PT9LfKzarYBlst0mNGALGAbuRzdFjtOD/RtaFH0pDolVy8IaPw4676AdGJ1VpbemM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KITmzbbo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AFkdF/enMgPmf5KP3tu2TBvmG+hG4yysZ/gRB2CNu8JVeguWReqTun6vQl+acd8ugnNSY6x/8QwKwhpojRRpxTOZtTG0s/OtWnrpg/q75SiDpc89tKlG9bPccWnS7eKfZK8Hoj0O9FnoqLbxrr3ltow2i+RH3UGoefNnxzz40o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d68pAy6U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KITmzbbo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C342C4CEE5;
-	Wed, 22 Jan 2025 02:32:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d68pAy6U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3866BC4CEDF;
+	Wed, 22 Jan 2025 02:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737513136;
-	bh=SJtVtbvkLcEvN5WibexRkaVRWjXt1N5t9/+LsSeWysQ=;
+	s=k20201202; t=1737513135;
+	bh=3l4otAURi7kB3h4hFwmhDwPOJru/SqxpPAZlyFNo3VI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KITmzbboQkeH902l5uema+VjX6uIubfMNZW56mKn1L5OG0Fy3rzwFjatLLRvL/npn
-	 sAsSAyPqa/9fhaOJJ/vBgq08p7jDcZyb8GitAc8El5z6WsJTlRBHj3UqzSgWph9Niw
-	 GOshUPpWklvCTTulnQUAHYdCUYMIkeaviND/4Mx6GYl8rN+W215KKG8SHF8hT2iasY
-	 L8HUVtha1/NP0YhiyocDV+2mLCRdRu9iRhd5F69fzzN3WUnuvqY/zTgyBT0x3M79bz
-	 6uFYRkdzVc9mfLZCq2PZVB4Tlb12cmpYgIo9uPXo2/BZmAh5cPOC0gBpnoDL4fL4/i
-	 FTB4trh0yulXA==
+	b=d68pAy6UiYIsXp8LITx076zVTZTyrm1OXBRC5OuHcsdfD+Q7V30hrc+0QVV1+7nd5
+	 c1S+S6nAjhyDe7YuVxMTNiIcXi0jsQQgPoFSGK1H193Uk+YUYj8EZo5fcqE+P+jEdX
+	 No5ap9GE61FQ6YpTt1ytrYTu2nSoEImZrIosqJ4HibfkrWtXbqIFSTlaqDJCBx3N5y
+	 DqU2AXa1GHeSPJHNo/foKQ90cJK67s+4lzT5oHUkPOHLg5mmzdkZ5YJ2sSAJMhgtqP
+	 p5oYApcj3+fTMRsuyi//ZZ+xmLThJZnzhX0X5dTPxI6cP0Q4iUWpFjiLlcqY9ccxxV
+	 u9AWNC5nAMqFA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -53,9 +53,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: [PATCH v4 23/39] unwind_user/sframe/x86: Enable sframe unwinding on x86
-Date: Tue, 21 Jan 2025 18:31:15 -0800
-Message-ID: <ea29b983a63c23fe6965aa984e1087a35be3e143.1737511963.git.jpoimboe@kernel.org>
+Subject: [PATCH v4 22/39] unwind_user/sframe: Wire up unwind_user to sframe
+Date: Tue, 21 Jan 2025 18:31:14 -0800
+Message-ID: <25c75930c310cb4e9d3878276f00fe7e6523f4e1.1737511963.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1737511963.git.jpoimboe@kernel.org>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
@@ -67,27 +67,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The x86 sframe 2.0 implementation works fairly well, starting with
-binutils 2.41 (though some bugs are getting fixed in later versions).
-Enable it.
+Now that the sframe infrastructure is fully in place, make it work by
+hooking it up to the unwind_user interface.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/Kconfig                      |  1 +
+ include/linux/unwind_user_types.h |  1 +
+ kernel/unwind/user.c              | 22 +++++++++++++++++++---
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 08c44db0fefb..1016f8f80447 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -293,6 +293,7 @@ config X86
- 	select HAVE_UNSTABLE_SCHED_CLOCK
- 	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
- 	select HAVE_UNWIND_USER_FP		if X86_64
-+	select HAVE_UNWIND_USER_SFRAME		if X86_64
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
- 	select VDSO_GETRANDOM			if X86_64
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 23edd0e4e16a..12a3b73cbe66 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -448,6 +448,7 @@ config HAVE_UNWIND_USER_COMPAT_FP
+ 
+ config HAVE_UNWIND_USER_SFRAME
+ 	bool
++	select UNWIND_USER
+ 
+ config AS_SFRAME
+ 	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 3ec4a097a3dd..5558558948b7 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -9,6 +9,7 @@ enum unwind_user_type {
+ 	UNWIND_USER_TYPE_NONE,
+ 	UNWIND_USER_TYPE_FP,
+ 	UNWIND_USER_TYPE_COMPAT_FP,
++	UNWIND_USER_TYPE_SFRAME,
+ };
+ 
+ struct unwind_stacktrace {
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index 92963f129c6a..fc0c75da81f6 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -6,6 +6,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/unwind_user.h>
++#include <linux/sframe.h>
+ #include <linux/uaccess.h>
+ #include <asm/unwind_user.h>
+ 
+@@ -29,6 +30,12 @@ static inline bool compat_state(struct unwind_user_state *state)
+ 	       state->type == UNWIND_USER_TYPE_COMPAT_FP;
+ }
+ 
++static inline bool sframe_state(struct unwind_user_state *state)
++{
++	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_SFRAME) &&
++	       state->type == UNWIND_USER_TYPE_SFRAME;
++}
++
+ #define UNWIND_GET_USER_LONG(to, from, state)				\
+ ({									\
+ 	int __ret;							\
+@@ -48,12 +55,19 @@ int unwind_user_next(struct unwind_user_state *state)
+ 	if (state->done)
+ 		return -EINVAL;
+ 
+-	if (compat_state(state))
++	if (compat_state(state)) {
+ 		frame = &compat_fp_frame;
+-	else if (fp_state(state))
++	} else if (sframe_state(state)) {
++		if (sframe_find(state->ip, frame)) {
++			if (!IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
++				goto the_end;
++			frame = &fp_frame;
++		}
++	} else if (fp_state(state)) {
+ 		frame = &fp_frame;
+-	else
++	} else {
+ 		goto the_end;
++	}
+ 
+ 	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
+ 
+@@ -94,6 +108,8 @@ int unwind_user_start(struct unwind_user_state *state)
+ 
+ 	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) && in_compat_mode(regs))
+ 		state->type = UNWIND_USER_TYPE_COMPAT_FP;
++	else if (current_has_sframe())
++		state->type = UNWIND_USER_TYPE_SFRAME;
+ 	else if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
+ 		state->type = UNWIND_USER_TYPE_FP;
+ 	else
 -- 
 2.48.1
 
