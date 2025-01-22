@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DC31B4135
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661A61C5499
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737527105; cv=none; b=jQ0c7kEk2ZRWOJeeUgBKTYoK0CYz53DKwvou3GiGBAibQqRycQHHetFuMerkQyr+Pb6Pxv5S4jSacOZ+Y+JXn43fzR7QBfYhK/fL0uTyOp5wyof3O6LkI0yqNeHsGKT26RfLEeuZ5+/zKxecsf+cld6uQqEaRacNtJN23wb/Xg4=
+	t=1737527113; cv=none; b=fCHIaaSpKFdUQlQ6Lpbo2V7aqfSF0ZZp+Y/m0e+6guULyUHGLLpOGmqMDgySIKv7l7rFuqYlkI1GuXyoX/dCKdDvZYDveXDRo1/ojz/ZuiQKS4dqDm5WWtsqBH02jaZKzQci/ysku8TTkRXAoiat5tvNcai53eodihjq/6pDg+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737527105; c=relaxed/simple;
-	bh=HyF8MzGPJg1E6Do/DMTf+qbt3SxXfZbYtVitHb/HJLs=;
+	s=arc-20240116; t=1737527113; c=relaxed/simple;
+	bh=63nBtpeMpe7xv4aEwrBhb9npTX5s1rkxRdlgAXmvoMc=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=CGMFd9p/HAoLZJ+wI9TRKav68j04MwTL3AwL6zYJ951RM/vwQrtSoBFEtw4Iw+dFl0RI6T9lbOPfcZM72fbGTauxAR94z3A0rlg4peSMfXTs5mY/POsBagZZuimSjiB4jjYrL7T3KIjKtkYZsdBnhm8DD6d1rYI2re6YhehQ9sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BIbZOfM0; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=tCKS56CKEZLkRW5i2UFFvtTamaWYtEvD0gY7Y/R3PmI+uSA6dTuxqQC+GtxN93s9wqj835UWk4XVdpRIoXLc0qfuYqZ9FR9mk+WK+vFogauoaiclX5T5vRAY139TlxS35eb6trRQ86WVymyeWOgxI6ubQCjpiNNvXr7UPOsLt84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=llUaRN7g; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BIbZOfM0"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e579836ee17so12674081276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:25:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="llUaRN7g"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5742f52896so16487558276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:25:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737527103; x=1738131903; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737527110; x=1738131910; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OgrvkZ657QImwi6lc3WsCCSLkVlVfHzjlVLn1y8own8=;
-        b=BIbZOfM0oZMDcjTw8dHudjz/5IdMC7Adzc9/sPMbzypg962eT86wQLKnvrFkEzzXSW
-         GUKDm7eVSJs2RILH5L2crREwT7U5DBjBygTMH1Tna+3YYR/vqaTc627r4/ldLWmFC2Up
-         pZIUc+MOYrvcinziNMrwgunBbA4fkRvDzVqdQ3tYMo1/6LW0wH/h5MTASePiWtHNyuX5
-         hNiig0ajiffFW8pKIpkZXdRZPkEvutmbZWOaKVLvwAjrwRndrhIs5VKcn6RyXZZvBEqU
-         PZBkjXt6G2b47Wo91OTAsLvGjd7YhnZcbrqo48YNFHX7cf5L8WkBCi9mxjQ7CplEiwuh
-         xveQ==
+        bh=wLotHYn7qhYJCMkThRcrq9/AzDWfjF/CYgpDO7eIVEI=;
+        b=llUaRN7gBolxFomTia5TxhwOGEKEtBtoIDt5c8ccPPDWHyYb9+lZHyiiEqvzLXlHxy
+         AOPhX1+EgnnIc/vqVCymXRogQ2Y7Ut2wAZKdaxxAJe2CshECvTevjNn5k1It8G9KIugf
+         QKfpKS3G6Uj3vZ0woIAMyFya283lrvwVIYTZ6LnyPVFU+SEDeFNRc0bZZcioGncMdLyp
+         JKLOCEsBW/ReqXITUYcPIOHB/p/OqdmJHlrRuuL8AcPYKsrs4cfqNU/y01T8jfzbJRqc
+         NWV47idbRTLz+F4YmdBkZxwaq4AOwH5wKFl5EmQxyS0f20wxLm+KzuHLn/dJBgjXZcoo
+         Bz6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737527103; x=1738131903;
+        d=1e100.net; s=20230601; t=1737527110; x=1738131910;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OgrvkZ657QImwi6lc3WsCCSLkVlVfHzjlVLn1y8own8=;
-        b=mdBfM9IvbTQiCAz9fi81S5nBWbZDuZlG8oI/CeEPAmUocRRZ8W8UYoqCMwM8cnKvNi
-         GZ+bZ9NT1DlSLgUy8sD0/xwHKMKk5uoOSWVYQPfHmgP/W2cBcntTIaQHIeexm303qRlr
-         7FEkLccmv/KuZXLFJPkPxWB3Z4YmoWy9u4pDQ2dBePtRooX+DGN6eoKrD8GUosLE5KTA
-         6MQ6nqMa4bKBD5qZO+r4g8/04veir8XtUgOPMMu8aJT2fLSbCLD+CD4jrrRLjv/orWbA
-         HBOVLeWKscK0BOW8MMzXtoUjJGM8Hd72ayzc+YUApNLDr0ROjiDRGWyP838SjkS0DbcJ
-         C3/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXpjy9YKnB4CKWPBx/mFrsAVXuBAGrdsbmmcepF0U1tOMqY6ItzqmClRvzDYsyyrzvBZVStco8kL4ouvPnMwKAx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Cp8vo+vqkc1SvHGGnfYN4m0QvUarAqOrO7hiW46uqERh53Vc
-	fRTplCXoydE5ErbONS45MMbOM1oB8zjnQXvUBXJO7wpa0B1fxacOW63co94+qaXAN1jNTlcp/zA
-	MIr7Ugw==
-X-Google-Smtp-Source: AGHT+IFEOrfiAwnNwnDSaAeF9iqef1fiQ/E6IuDI5dItzM8nXl59fKPhAOg42XIax1O7ETkSWKQsfIZHvj1T
+        bh=wLotHYn7qhYJCMkThRcrq9/AzDWfjF/CYgpDO7eIVEI=;
+        b=RX+rX8Ti48dyqqR0OrNiZCcUFZqDsAXaY2XtnQvb8K6FWe9q0HOqlW7tf3Q+DT/peZ
+         SS794wNcvJ5i2cZk9C0ZiXZyGeHBCyfNgkUdV5SwL0IaIcmGDfnn7LCtDH7RL2WWkaA6
+         mF6Tb7W93/irNQMvuSGexJoFS0rMre/SfPD8oAwWk+fs6bTDd3LVwIqrzaUwTQNrXg5g
+         OELpCr5di4c6PuEpCVZPsCKNCAx0zCTBvwWq1/GOBJMO7VplS9Xc9DYhHZt5dupBtNz2
+         pD4TD5xFcpLWmMu7n6ZeOJ1Mk2hKqe2KWmm5VJAB5Z4+CZf/weeACFCOsGb4Pp//u6dZ
+         ZyFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUenkENNDjn2fcSw+zlxSFP0uzOKiwi1Prs8Y5/GUq0IKXYCAxq0GsZ9mW7Ew8yGoNuCb82LxokE9LaBdUIFtiG@vger.kernel.org
+X-Gm-Message-State: AOJu0YykLD5LNGZ3NNewAdw068IEUmC82Xun5BphsaN/qnwPp8YYechq
+	Kjt9j0XZ4YjCnf3l/Kqepw6UnCeEM+XqzWG99jNthT1+7CnTbaamqVqqjZV9ts8VSyvfy3lIIYs
+	NG9vEFQ==
+X-Google-Smtp-Source: AGHT+IEqK8ZkONJZBAyEEerDbvvaV8PkDpFyO4x4ko4onzv5SasjqsaaN+Db8+thwFx1lPNpBvA0psxpee3q
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:807b:be79:d5c3:ee5c])
- (user=irogers job=sendgmr) by 2002:a05:690c:5204:b0:6ef:c86b:af48 with SMTP
- id 00721157ae682-6f6eb649e8dmr258027b3.2.1737527102737; Tue, 21 Jan 2025
- 22:25:02 -0800 (PST)
-Date: Tue, 21 Jan 2025 22:23:24 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:341:0:b0:e48:9cab:d051 with SMTP id
+ 3f1490d57ef6-e57b13e4fcamr41710276.9.1737527110404; Tue, 21 Jan 2025 22:25:10
+ -0800 (PST)
+Date: Tue, 21 Jan 2025 22:23:25 -0800
 In-Reply-To: <20250122062332.577009-1-irogers@google.com>
-Message-Id: <20250122062332.577009-10-irogers@google.com>
+Message-Id: <20250122062332.577009-11-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250122062332.577009-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Subject: [PATCH v2 09/17] perf dso: Move read_symbol from llvm/capstone to dso
+Subject: [PATCH v2 10/17] perf dso: Support BPF programs in dso__read_symbol
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,350 +80,152 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Move the read_symbol function to dso.h, make the return type const and
-add a mutable out_buf out parameter. In future changes this will allow
-a code pointer to be returned without necessary allocating memory.
+Set the buffer to the code in the BPF linear info. This enables BPF
+JIT code disassembly by LLVM and capstone. Move the disassmble_bpf
+calls to disassemble_objdump so that they are only called after
+falling back to the objdump option.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/capstone.c | 64 +++++-----------------------
- tools/perf/util/dso.c      | 67 +++++++++++++++++++++++++++++
- tools/perf/util/dso.h      |  4 ++
- tools/perf/util/llvm.c     | 87 +++++++-------------------------------
- 4 files changed, 97 insertions(+), 125 deletions(-)
+ tools/perf/util/disasm.c | 12 +++---
+ tools/perf/util/dso.c    | 85 +++++++++++++++++++++++++---------------
+ 2 files changed, 60 insertions(+), 37 deletions(-)
 
-diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-index 8d65c7a55a8b..f103988184c8 100644
---- a/tools/perf/util/capstone.c
-+++ b/tools/perf/util/capstone.c
-@@ -434,66 +434,23 @@ static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
- 	return 0;
- }
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index a9cc588a3006..99b9c21e02b0 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1500,6 +1500,12 @@ static int symbol__disassemble_objdump(const char *filename, struct symbol *sym,
+ 	struct child_process objdump_process;
+ 	int err;
  
--static u8 *
--read_symbol(const char *filename, struct map *map, struct symbol *sym,
--	    u64 *len, bool *is_64bit)
--{
--	struct dso *dso = map__dso(map);
--	struct nscookie nsc;
--	u64 start = map__rip_2objdump(map, sym->start);
--	u64 end = map__rip_2objdump(map, sym->end);
--	int fd, count;
--	u8 *buf = NULL;
--	struct find_file_offset_data data = {
--		.ip = start,
--	};
--
--	*is_64bit = false;
--
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	fd = open(filename, O_RDONLY);
--	nsinfo__mountns_exit(&nsc);
--	if (fd < 0)
--		return NULL;
--
--	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
--			    is_64bit) == 0)
--		goto err;
--
--	*len = end - start;
--	buf = malloc(*len);
--	if (buf == NULL)
--		goto err;
--
--	count = pread(fd, buf, *len, data.offset);
--	close(fd);
--	fd = -1;
--
--	if ((u64)count != *len)
--		goto err;
--
--	return buf;
--
--err:
--	if (fd >= 0)
--		close(fd);
--	free(buf);
--	return NULL;
--}
--
- int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 				 struct symbol *sym __maybe_unused,
- 				 struct annotate_args *args __maybe_unused)
- {
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct map *map = args->ms.map;
-+	struct dso *dso = map__dso(map);
- 	u64 start = map__rip_2objdump(map, sym->start);
--	u64 len;
- 	u64 offset;
- 	int i, count, free_count;
- 	bool is_64bit = false;
- 	bool needs_cs_close = false;
--	u8 *buf = NULL;
-+	/* Malloc-ed buffer containing instructions read from disk. */
-+	u8 *code_buf = NULL;
-+	/* Pointer to code to be disassembled. */
-+	const u8 *buf;
-+	u64 buf_len;
- 	csh handle;
- 	struct cs_insn *insn = NULL;
- 	char disasm_buf[512];
-@@ -503,7 +460,8 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 	if (args->options->objdump_path)
- 		return -1;
++	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return symbol__disassemble_bpf(sym, args);
++
++	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE)
++		return symbol__disassemble_bpf_image(sym, args);
++
+ 	err = asprintf(&command,
+ 		 "%s %s%s --start-address=0x%016" PRIx64
+ 		 " --stop-address=0x%016" PRIx64
+@@ -1681,11 +1687,7 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
  
--	buf = read_symbol(filename, map, sym, &len, &is_64bit);
-+	buf = dso__read_symbol(dso, filename, map, sym,
-+			       &code_buf, &buf_len, &is_64bit);
- 	if (buf == NULL)
- 		return -1;
+ 	pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_name(dso), sym, sym->name);
  
-@@ -532,7 +490,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 
- 	needs_cs_close = true;
- 
--	free_count = count = perf_cs_disasm(handle, buf, len, start, len, &insn);
-+	free_count = count = perf_cs_disasm(handle, buf, buf_len, start, buf_len, &insn);
- 	for (i = 0, offset = 0; i < count; i++) {
- 		int printed;
- 
-@@ -556,7 +514,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 	}
- 
- 	/* It failed in the middle: probably due to unknown instructions */
--	if (offset != len) {
-+	if (offset != buf_len) {
- 		struct list_head *list = &notes->src->source;
- 
- 		/* Discard all lines and fallback to objdump */
-@@ -575,7 +533,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
- 		if (free_count > 0)
- 			perf_cs_free(insn, free_count);
- 	}
--	free(buf);
-+	free(code_buf);
- 	return count < 0 ? count : 0;
- 
- err:
+-	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO) {
+-		return symbol__disassemble_bpf(sym, args);
+-	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE) {
+-		return symbol__disassemble_bpf_image(sym, args);
+-	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
++	if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
+ 		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
+ 	} else if (dso__is_kcore(dso)) {
+ 		kce.addr = map__rip_2objdump(map, sym->start);
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 5c6e85fdae0d..0285904ed26d 100644
+index 0285904ed26d..a90799bed230 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -1664,3 +1664,70 @@ bool is_perf_pid_map_name(const char *dso_name)
- 
- 	return perf_pid_map_tid(dso_name, &tid);
- }
-+
-+struct find_file_offset_data {
-+	u64 ip;
-+	u64 offset;
-+};
-+
-+/* This will be called for each PHDR in an ELF binary */
-+static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
-+{
-+	struct find_file_offset_data *data = arg;
-+
-+	if (start <= data->ip && data->ip < start + len) {
-+		data->offset = pgoff + data->ip - start;
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
-+			   const struct map *map, const struct symbol *sym,
-+			   u8 **out_buf, u64 *out_buf_len, bool *is_64bit)
-+{
-+	struct nscookie nsc;
-+	u64 start = map__rip_2objdump(map, sym->start);
-+	u64 end = map__rip_2objdump(map, sym->end);
-+	int fd, count;
-+	u8 *buf = NULL;
-+	size_t len;
-+	struct find_file_offset_data data = {
-+		.ip = start,
-+	};
-+
-+	*out_buf = NULL;
-+	*out_buf_len = 0;
-+	*is_64bit = false;
-+
-+	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-+	fd = open(symfs_filename, O_RDONLY);
-+	nsinfo__mountns_exit(&nsc);
-+	if (fd < 0)
-+		return NULL;
-+
-+	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) == 0)
-+		goto err;
-+
-+	len = end - start;
-+	buf = malloc(len);
-+	if (buf == NULL)
-+		goto err;
-+
-+	count = pread(fd, buf, len, data.offset);
-+	close(fd);
-+	fd = -1;
-+
-+	if ((u64)count != len)
-+		goto err;
-+
-+	*out_buf = buf;
-+	*out_buf_len = len;
-+	return buf;
-+
-+err:
-+	if (fd >= 0)
-+		close(fd);
-+	free(buf);
-+	return NULL;
-+}
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index bb8e8f444054..734e3a3d95f0 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -828,4 +828,8 @@ u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
- bool perf_pid_map_tid(const char *dso_name, int *tid);
- bool is_perf_pid_map_name(const char *dso_name);
- 
-+const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
-+			   const struct map *map, const struct symbol *sym,
-+			   u8 **out_buf, u64 *out_buf_len, bool *is_64bit);
-+
- #endif /* __PERF_DSO */
-diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-index f6a8943b7c9d..a0774373f0d6 100644
---- a/tools/perf/util/llvm.c
-+++ b/tools/perf/util/llvm.c
-@@ -296,71 +296,6 @@ void dso__free_a2l_llvm(struct dso *dso __maybe_unused)
- 	/* Nothing to free. */
- }
- 
--
--struct find_file_offset_data {
--	u64 ip;
--	u64 offset;
--};
--
--/* This will be called for each PHDR in an ELF binary */
--static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
--{
--	struct find_file_offset_data *data = arg;
--
--	if (start <= data->ip && data->ip < start + len) {
--		data->offset = pgoff + data->ip - start;
--		return 1;
--	}
--	return 0;
--}
--
--static u8 *
--read_symbol(const char *filename, struct map *map, struct symbol *sym,
--	    u64 *len, bool *is_64bit)
--{
--	struct dso *dso = map__dso(map);
+@@ -1686,48 +1686,69 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 			   const struct map *map, const struct symbol *sym,
+ 			   u8 **out_buf, u64 *out_buf_len, bool *is_64bit)
+ {
 -	struct nscookie nsc;
--	u64 start = map__rip_2objdump(map, sym->start);
--	u64 end = map__rip_2objdump(map, sym->end);
+ 	u64 start = map__rip_2objdump(map, sym->start);
+ 	u64 end = map__rip_2objdump(map, sym->end);
 -	int fd, count;
 -	u8 *buf = NULL;
+-	size_t len;
 -	struct find_file_offset_data data = {
 -		.ip = start,
 -	};
--
--	*is_64bit = false;
--
++	const u8 *buf;
++	size_t len = end - start;
+ 
+ 	*out_buf = NULL;
+ 	*out_buf_len = 0;
+ 	*is_64bit = false;
+ 
 -	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	fd = open(filename, O_RDONLY);
+-	fd = open(symfs_filename, O_RDONLY);
 -	nsinfo__mountns_exit(&nsc);
 -	if (fd < 0)
--		return NULL;
--
--	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
--			    is_64bit) == 0)
++	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE) {
++		pr_debug("No BPF image disassembly support\n");
+ 		return NULL;
++	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO) {
++#ifdef HAVE_LIBBPF_SUPPORT
++		struct bpf_prog_info_node *info_node;
++		struct perf_bpil *info_linear;
++
++		*is_64bit = sizeof(void *) == sizeof(u64);
++		info_node = perf_env__find_bpf_prog_info(dso__bpf_prog(dso)->env,
++							 dso__bpf_prog(dso)->id);
++		if (!info_node) {
++			errno = SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
++			return NULL;
++		}
++		info_linear = info_node->info_linear;
++		buf = (const u8 *)(uintptr_t)(info_linear->info.jited_prog_insns);
++		assert(len <= info_linear->info.jited_prog_len);
++#else
++		pr_debug("No BPF program disassembly support\n");
++		return NULL;
++#endif
++	} else {
++		struct nscookie nsc;
++		int fd;
++		ssize_t count;
++		struct find_file_offset_data data = {
++			.ip = start,
++		};
++		u8 *code_buf = NULL;
+ 
+-	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) == 0)
 -		goto err;
 -
--	*len = end - start;
--	buf = malloc(*len);
+-	len = end - start;
+-	buf = malloc(len);
 -	if (buf == NULL)
 -		goto err;
 -
--	count = pread(fd, buf, *len, data.offset);
+-	count = pread(fd, buf, len, data.offset);
 -	close(fd);
 -	fd = -1;
 -
--	if ((u64)count != *len)
+-	if ((u64)count != len)
 -		goto err;
--
--	return buf;
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++		fd = open(symfs_filename, O_RDONLY);
++		nsinfo__mountns_exit(&nsc);
++		if (fd < 0)
++			return NULL;
+ 
+-	*out_buf = buf;
++		if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) == 0) {
++			close(fd);
++			return NULL;
++		}
++		buf = code_buf = malloc(len);
++		if (buf == NULL) {
++			close(fd);
++			return NULL;
++		}
++		count = pread(fd, code_buf, len, data.offset);
++		close(fd);
++		if ((u64)count != len) {
++			free(code_buf);
++			return NULL;
++		}
++		*out_buf = code_buf;
++	}
+ 	*out_buf_len = len;
+ 	return buf;
 -
 -err:
 -	if (fd >= 0)
 -		close(fd);
 -	free(buf);
 -	return NULL;
--}
--
- /*
-  * Whenever LLVM wants to resolve an address into a symbol, it calls this
-  * callback. We don't ever actually _return_ anything (in particular, because
-@@ -397,8 +332,11 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	struct map *map = args->ms.map;
- 	struct dso *dso = map__dso(map);
- 	u64 start = map__rip_2objdump(map, sym->start);
--	u8 *buf;
--	u64 len;
-+	/* Malloc-ed buffer containing instructions read from disk. */
-+	u8 *code_buf = NULL;
-+	/* Pointer to code to be disassembled. */
-+	const u8 *buf;
-+	u64 buf_len;
- 	u64 pc;
- 	bool is_64bit;
- 	char triplet[64];
-@@ -418,7 +356,8 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	perf_LLVMInitializeAllTargetMCs();
- 	perf_LLVMInitializeAllDisassemblers();
- 
--	buf = read_symbol(filename, map, sym, &len, &is_64bit);
-+	buf = dso__read_symbol(dso, filename, map, sym,
-+			       &code_buf, &buf_len, &is_64bit);
- 	if (buf == NULL)
- 		return -1;
- 
-@@ -466,14 +405,18 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	annotation_line__add(&dl->al, &notes->src->source);
- 
- 	pc = start;
--	for (u64 offset = 0; offset < len; ) {
-+	for (u64 offset = 0; offset < buf_len; ) {
- 		unsigned int ins_len;
- 
- 		storage.branch_addr = 0;
- 		storage.pcrel_load_addr = 0;
- 
--		ins_len = perf_LLVMDisasmInstruction(disasm, buf + offset,
--						     len - offset, pc,
-+		/*
-+		 * LLVM's API has the code be disassembled as non-const, cast
-+		 * here as we may be disassembling from mapped read-only memory.
-+		 */
-+		ins_len = perf_LLVMDisasmInstruction(disasm, (u8 *)(buf + offset),
-+						     buf_len - offset, pc,
- 						     disasm_buf, sizeof(disasm_buf));
- 		if (ins_len == 0)
- 			goto err;
-@@ -531,7 +474,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 
- err:
- 	perf_LLVMDisasmDispose(disasm);
--	free(buf);
-+	free(code_buf);
- 	free(line_storage);
- 	return ret;
  }
 -- 
 2.48.0.rc2.279.g1de40edade-goog
