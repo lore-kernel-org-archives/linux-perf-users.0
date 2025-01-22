@@ -1,49 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F2B215798;
-	Wed, 22 Jan 2025 19:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E098215F77;
+	Wed, 22 Jan 2025 19:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737572890; cv=none; b=DXTb3iJm1fWwN0NCgUZHs7cDaOuzQAo4nrt6VjSYKPctSPT/5NGqHeNZRXQjG4bg2ByK6MpfRTd9bB72lvWLdwYfyNM702hX3oKZmGcRpbhjQR8icELIH4UKPxC/9iYNrmzdqguUSrw2sUJrZmBm1/iPoXP9l7ozCljRK24VqoQ=
+	t=1737573094; cv=none; b=Lq6k2709OsnvelWNwVEK+9qhlkN329PQpxEH29g8Vjvn6vjeydEt2xBNAiHHKhwFDjr4X2sA4f8pqcrhltOzMiXDCZZwDgRhIKED/cIjHT6Gs2x1qbbwu3tOCZ8sx8wU9iAL22ciMiBw4pdktyWF7/pKRtE6OQMPyc1mMf2u2K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737572890; c=relaxed/simple;
-	bh=YQM2wOt+tXg/eaxTsi8ZA6SK7q0Ma7jK/eHW+A/fOBY=;
+	s=arc-20240116; t=1737573094; c=relaxed/simple;
+	bh=w31kqE5Zh9oAlyNqmV3jMpsRZgwWRKLSeaiGM7/tCEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AbD/HP33lVUEJUfI2pTNmCQC8k/IIhCvHCpo9WIqtr16d2vLTdaSevA3emseE8/sUHzWRaRttbfMG3nP+JRqqareC+4Nl0NFBWPU2dI1L9trRVvwvkc1qIqG7QzRuiiT0XKGmh3li+czo18ggrdKtnwDJliJNTIE702gMV4LIUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGpoiK5P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwmEeUaQLLpDN64lwliTV37YF3ei1uxi9YKvQFVtrE1Gb0Cw25FaH/Bs0T0768Q17qp2I+fRr6F9mTPmLGpDey2vztc/h2/w1cOR7ZlUTjfu7kqAgm/eQTOgSBDJVmgQqycKu6OfjbS8nNdwwfUkCQD2BXCi2qJ+zp+awCUFXt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVZ4oxxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGpoiK5P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175EBC4CED2;
-	Wed, 22 Jan 2025 19:08:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVZ4oxxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753C1C4CED3;
+	Wed, 22 Jan 2025 19:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737572890;
-	bh=YQM2wOt+tXg/eaxTsi8ZA6SK7q0Ma7jK/eHW+A/fOBY=;
+	s=k20201202; t=1737573094;
+	bh=w31kqE5Zh9oAlyNqmV3jMpsRZgwWRKLSeaiGM7/tCEs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HGpoiK5PEMHyIJZX7apJrSX10fIMnyCBpUC8mkwO8r9BclZlOcL59kzWZdSU4YpBC
-	 4WdUkbKxXXrZxdPkGY9mZWk4bwSIgx+tfCLEE8WxiHPpyDijh8i5gRBmv7NUgjqbHf
-	 juliir/P9bYV45sK/dnT07HcDmpgZetABmNs2w72IOk9X2fYggPD6yF4YzcxKxuj4H
-	 byLE5A8msYS+KWy8m2jxMtRkDCpDGynGhsLqF/Tm2gGrOhnbttOlNvrJtj/JZxE2km
-	 rmDJMjIm01DdQsIqf6iyy57eKQ1S4AG/f3CRphK7cLCQ3yukeeIOLbAf55gRN9BxWe
-	 6FryUDxWIfopg==
-Date: Wed, 22 Jan 2025 11:08:08 -0800
+	b=NVZ4oxxnsglyL6Jl31hvDLLG2oMZCVqZFIVM06zMbqBmfefRUgYzeRq5ac9wHBLeu
+	 TJD3AHtIXgm2fqZDYsuc3SF2tIU6Xe7oQNl2tqhSb0RSbw88QraQFJsClodOCXwvQ6
+	 k9m4SQVGW3bdb8nBHldzG7/28zy2Vx9ISC6h+TFXBQRU0+/txQZEQ1T195iV0D/xUL
+	 coZTbBZJKwjFhFyCM0cncrT1wpfbsgtY2fQILRlseFoqzo0Ixv47m6jo1/8EUgY7OJ
+	 46+tiLef2PzeEWhAG++f8YPEP4dDuAtDGIOeVghVZ7c+m8bE+RCEnI3A+6vln7mx4V
+	 is0dq35agL0LQ==
+Date: Wed, 22 Jan 2025 11:11:31 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Howard Chu <howardchu95@gmail.com>
-Cc: Benjamin Peterson <benjamin@engflow.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Remove return value of
- trace__fprintf_tp_fields
-Message-ID: <Z5FCGGBxBHD95zjT@google.com>
-References: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
- <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
- <CAH0uvohQvqRYo8JBX_Z1yVobqcxRgQG4G1Y8o8XMv18CnrqBbA@mail.gmail.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix runtime error of index out of bounds
+Message-ID: <Z5FC47bfDAPu75-e@google.com>
+References: <20250122025519.361873-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,89 +43,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvohQvqRYo8JBX_Z1yVobqcxRgQG4G1Y8o8XMv18CnrqBbA@mail.gmail.com>
+In-Reply-To: <20250122025519.361873-1-howardchu95@gmail.com>
 
-Hello,
+On Tue, Jan 21, 2025 at 06:55:19PM -0800, Howard Chu wrote:
+> libtraceevent parses and returns an array of argument fields, sometimes
+> larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr",
+> idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
+> elements max, creating an out-of-bounds access. This runtime error is
+> found by UBsan. The error message:
 
-On Tue, Jan 21, 2025 at 07:01:53PM -0800, Howard Chu wrote:
-> Hello fellow maintainers,
-> 
-> Just a slight ping.
-
-Thanks for the reminder.
-
-> 
-> Thanks,
-> Howard
-> 
-> On Fri, Dec 13, 2024 at 10:06 AM Howard Chu <howardchu95@gmail.com> wrote:
-> >
-> > Hello Benjamin,
-> >
-> > On Thu, Dec 12, 2024 at 7:56 PM Benjamin Peterson <benjamin@engflow.com> wrote:
-> > >
-> > > The return value of this function was meaningless and therefore ignored by
-> > > the caller. Remove it.
-
-In fact, I don't see the reason to merge this, as it's the convention to
-return the number of characters it prints.  Yes, it's not used but not
-much reason to remove it.
+I'm curious how I miss this.  Is this only for some specific syscalls or
+always happening?  Do you which commit introduced this?
 
 Thanks,
 Namhyung
 
-> > >
-> > > Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
-> > > ---
-> > > This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("perf
-> > > trace: avoid garbage when not printing a trace event's arguments").
-> > > ---
-> > >  tools/perf/builtin-trace.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > > index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..246be66fd59a4b9d76e4d3c42b68d0a444ca366a 100644
-> > > --- a/tools/perf/builtin-trace.c
-> > > +++ b/tools/perf/builtin-trace.c
-> > > @@ -3022,8 +3022,8 @@ static void bpf_output__fprintf(struct trace *trace,
-> > >         ++trace->nr_events_printed;
-> > >  }
-> > >
-> > > -static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
-> > > -                                      struct thread *thread, void *augmented_args, int augmented_args_size)
-> > > +static void trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
-> > > +                                    struct thread *thread, void *augmented_args, int augmented_args_size)
-> > >  {
-> > >         char bf[2048];
-> > >         size_t size = sizeof(bf);
-> > > @@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
-> > >                 printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
-> > >         }
-> > >
-> > > -       return printed + fprintf(trace->output, "%.*s", (int)printed, bf);
-> > > +       fprintf(trace->output, "%.*s", (int)printed, bf);
-> > >  }
-> > >
-> > >  static int trace__event_handler(struct trace *trace, struct evsel *evsel,
-> > >
-> > > ---
-> > > base-commit: eefa7a9c069908412f8f5d15833901d1b46ae1b2
-> > > change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
-> > >
-> > > Best regards,
-> > > --
-> > > Benjamin Peterson <benjamin@engflow.com>
-> > >
-> > >
-> >
-> > Thank you for the follow-up patch, LGTM. Built and tested.
-> >
-> > perf $ ./perf test "perf trace"
-> > 109: perf trace enum augmentation tests                              : Ok
-> > 110: perf trace exit race                                            : Ok
-> >
-> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> >
-> > Thanks,
-> > Howard
+> 
+> perf $ sudo UBSAN_OPTIONS=print_stacktrace=1 ./perf trace -a --max-events=1
+> builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type 'syscall_arg_fmt [6]'
+>     #0 0x5c04956be5fe in syscall__alloc_arg_fmts /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:1966
+>     #1 0x5c04956c0510 in trace__read_syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2110
+>     #2 0x5c04956c372b in trace__syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2436
+>     #3 0x5c04956d2f39 in trace__init_syscalls_bpf_prog_array_maps /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:3897
+>     #4 0x5c04956d6d25 in trace__run /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:4335
+>     #5 0x5c04956e112e in cmd_trace /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:5502
+>     #6 0x5c04956eda7d in run_builtin /home/howard/hw/linux-perf/tools/perf/perf.c:351
+>     #7 0x5c04956ee0a8 in handle_internal_command /home/howard/hw/linux-perf/tools/perf/perf.c:404
+>     #8 0x5c04956ee37f in run_argv /home/howard/hw/linux-perf/tools/perf/perf.c:448
+>     #9 0x5c04956ee8e9 in main /home/howard/hw/linux-perf/tools/perf/perf.c:556
+>     #10 0x79eb3622a3b7 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+>     #11 0x79eb3622a47a in __libc_start_main_impl ../csu/libc-start.c:360
+>     #12 0x5c04955422d4 in _start (/home/howard/hw/linux-perf/tools/perf/perf+0x4e02d4) (BuildId: 5b6cab2d59e96a4341741765ad6914a4d784dbc6)
+> 
+>      0.000 ( 0.014 ms): Chrome_ChildIO/117244 write(fd: 238, buf: !, count: 1)                                      = 1
+> 
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/builtin-trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index d7c7d29291fb..8d3260bad10a 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2108,7 +2108,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+>  	}
+>  
+>  	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
+> -					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields))
+> +					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields - 1))
+>  		return -ENOMEM;
+>  
+>  	sc->args = sc->tp_format->format.fields;
+> -- 
+> 2.45.2
+> 
