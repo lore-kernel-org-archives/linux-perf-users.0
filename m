@@ -1,61 +1,61 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254851F78E8
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 16:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139372147F0
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 16:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737563803; cv=none; b=sDJVE5pPngSBXDaYKeS4/ejjSR0DFnm7gxy2faa6DVvzP/5EBv+Ed60j+4EqY3SS4qMnshIn7M79wRMSLTBrRUYee4Mtk/iv9GRd2t3Yz7a1EmAoS+d2FzbzIigfhe0WYssm1EPZ9/KZjvrsHvNMgBBLmMIa+Jxt2jyVsZGIHGs=
+	t=1737563859; cv=none; b=qNQ/dnAzQgdyZX/XTj3JYc6Q3XeKSS4REa0OOJCcENbbEc1KrfzE6JUw3eDK4URjm4dnUcaqUk/e0uJ2tm9vCavyxL4sg//d7G9hbhjqm/wuJrRV680uNfFhQr5WpXw8bxsnY/yabxFvxwAcmN2Ude6BBBpaDOsQ9j8iWzMlz74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737563803; c=relaxed/simple;
-	bh=rmpYusZJGDT/DAEy+BHMIJuGYg9jHtoUbkCtCTqpNUc=;
+	s=arc-20240116; t=1737563859; c=relaxed/simple;
+	bh=qezaMzAzpTobAOA536UJM9vcy/KVUbYZa1dwUhvaJhM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JWP91VPBz5jKvIpLhWWG5++fPaIQvmCedWc0IF44NGd5OGwxJJ9MPW+Hiq6s9XiMXmfxpESONSSlSxDXqata/4LP9JvFEhgW6sDFuNPZGMAke5iq2V6gfugUN26oDHOdKoM/ZHKEJ3W2v9uuQOcLzGplADdwHq4MTlDhcx6awU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D5ES49JH; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=ALGcKVb77cBNnz74i7wHQxWglpE+4gab4L56DG2BuMmHt/LlBv8Qic+E5Hg7rzQ3LDPcEK5gttpb4JRPThHeJQT2jA2OqLdoFYW6CO/ZuaUIryDXiRcZE0KAokkabTQe0eOmPPjgZ9OB3eW9trzuZrWJQyxSf47FhORftoE2wBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NGuvmrcq; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D5ES49JH"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3862a921123so5020281f8f.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 08:36:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGuvmrcq"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso49926775e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 08:37:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737563797; x=1738168597; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1737563852; x=1738168652; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ICi0fYJpTiHUTggeB07nOYSxpzr9AlGPGY1Bvh6a6r4=;
-        b=D5ES49JH78uzJDa1bhFK0N6wRfqstzRBqchniJS1I//sLUOBJGnp+cISbnTbiVjdKT
-         oMAJAtF5nt/cMU1iO5t0rbj7dvTIN40nhteZsrOvs1qLoqt9wKxu+6swMkXGBTENz+VK
-         QbKTvtJ1uJCHWH1evf4ARROu4+yWofOvzDamRyGqc7UOpXawDssJesMvlSQTlOEe3Scy
-         4A/Ul1Ufo5VS4c4P921LTWLcLuBzafxJfrljcJzpePkJJpIbOmtpMBlqebMABJ7b1t6h
-         OhoPJrh2/EQFXeIxiPMN3flrXVLVw8xK0vZ200j4EKKrDHsC3qjXE4WmpJsKRjr89RNT
-         tRLQ==
+        bh=btSTll95OkbRtXHK/Za/Gwr/tXcxsu4uIACsK/aq3WU=;
+        b=NGuvmrcqmhVlM9nWnDCNTvezXy9pHFvZZAWk4GLci8+O6FbkNhdVOv45z6uprsKeAz
+         TxZneb54tUNDoWTL1MqaLtDK8/EiKaiEaQo/OEJO9uqXRGytWXDo6mAriTf4WDe9oysf
+         5n9Bs/rYdW69jf9yq51zKTIWNe7/nIacnmYVqdIn1DWlz3A3Eo936VBTBGixCE8oGqtR
+         1yQS3Hyz44aLDfekh4Spib5iWZlhS/vNaC5Tq66u4WJ5142Dc7PevxCdFLKprZl8QvZg
+         PmP19Zzfq8Ezi5lXcDOUUfoQ9c5qT7oIDjw7QP9hQWU01/VTdvYW6tWW+D6KFgZHLUrz
+         GRaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737563797; x=1738168597;
+        d=1e100.net; s=20230601; t=1737563852; x=1738168652;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ICi0fYJpTiHUTggeB07nOYSxpzr9AlGPGY1Bvh6a6r4=;
-        b=ZF4M2Fz0cVjpk0CnuRcZKT7JtQZ0Kw+KmlTIkugoJlaWo8qGWWeLZGDsbJtVvtSSrO
-         ZUWWceB9j47eiMXNhTGDxlvSXliECLxU21F6FFRBUFYINPHie1noulDILkxqMSkCQ8AO
-         j+U3qXs4T28cxlch8iQIOos5s7qXvk8R6TeXTtYxsSoPlSf8NorgLgm81Y/JAwSmm8hV
-         kJwgHbZHtlQ3xqm6GOwEYrAn7n8h8nN380fTgbKli5es+2vI2X451K8hxMLzHhNpT7o2
-         6YJ+gEBPayjQJ/IqfhusLO4WOL+4MNgtmcGqEHxU/YSI1l5bEcsHAZUzyweXqhIJeJNy
-         Z5gA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKc2uiItj5HbH8y0Y7F+A8NDWlJjifxIgh/J3MleSEm9bdjCV5hrrDO/tLY6I8dPSOQXJeE2kxPsZ7sQvIvSFA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlF6v6Z04ncC+dctvAccN4gkhH0YwTnNTraduV0eOsXhCWuOVY
-	/++9JGVOZytNS+tKq7fkIGNF3wAjV7u6QAckoNpss6auHkhpKod2TYqfX+D3wVg=
-X-Gm-Gg: ASbGncsqH7hg6vl+QlI5qmP4fBc/HQYahyNYyQW3GmEr1QOre2+rkLOO/d6QnznlsPz
-	U3S2Zf3k0icYBa/sboGLiQT5oc6hnhIxEXBiNul+DiEs1jXml8m6BBVxakKm8pO/o2JgijPCStQ
-	gyH2xcZ4FZCJbeL0xVkB8Dnko2KTwdREwmIFcqWFYClUB1cmGecjsmnhO/qZ1olbB4qMqgE3vvj
-	9rg2ytwItMGte0fg/CUMhvwyCwZVO75+sUbQ9aSvmOW1myore7i/1C3/EE1h0kc8LDQ3Q==
-X-Google-Smtp-Source: AGHT+IEdpC8UcgIjnagVwu36/HRAHNLuy/950nfwjsQesqWIX/3vgiBHFPcZz9iXWd4MiEKG7ClaCQ==
-X-Received: by 2002:a5d:47a3:0:b0:385:d852:29ed with SMTP id ffacd0b85a97d-38bf57a9853mr19066533f8f.36.1737563794976;
-        Wed, 22 Jan 2025 08:36:34 -0800 (PST)
+        bh=btSTll95OkbRtXHK/Za/Gwr/tXcxsu4uIACsK/aq3WU=;
+        b=ubca94joBbui/Esu+8TIUmevMer2tEEbZ5YsVVomkaKxNLojeOmSQLJRGuWVBctnE+
+         /dcIoxnTdeagowKWhacuK/vNaJdGlx8stiGKKfOyuHb6+eF9Lbj3vXSaCoovehY1xA++
+         pYVSU+eqjJoAGqtFSL1RQaNpC9/0Z6NkEtEo7dLncUfjNfWgVO0AGAEXWRQHcnYg12ZZ
+         dn/O7Wx2my0fSDz7pGwAOie+YpmUag73FmOoAIgoG1FVVchb/53hy7yoiSn65FX0jJnY
+         q7IkUsFH4A59T1MPqcIC6GLNkjMHfQ3iuBERJ1c4Q2tMDmdBTbWeiYoDAs4D0v6z2Gt7
+         MZQg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+bNhqCex+7Ga09qqD/8cq6PW/7oh7W+nu8tlgXgTxBfcoy/WeEn9p1Al9o1FxYslRa63XiG0sSsj/VFbDCxdA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0t2S7UxORHkdcFtD9dkOAXPtwSuzli172H6w6VRX22KJTGpWL
+	qDo1DB09DOU0FP+H8eyw7I0kpJwuLWFybwBJ9swMHos4t+rr+gB6abd1C97KUQU=
+X-Gm-Gg: ASbGnctqmEesloMXZu3ku8Zlx0X0zzNWa/pVMlSXhMe6QJdKWZ8yTFVrGHML3Uju3/p
+	0f+sPthWaxXP5VqGkNzE/3yvT8Ba8UNAetcb1rGSWs7exfFA+1Um4lgQ7jNYQQ0wXjsMVLxe2xY
+	0bFsRx5Sz8C5xLLf5fbjoHkt2lqNLdfjcPQ20wTKWCCmr5h4l22u8IoPYR65M+ws61AzJQsFe1Z
+	Ox578Sz9X6jUBZK0lK60mfOUyfArw9oOK5wyA8dYQPkVMCDyhMqBk0l30qXHpXC+m6hQw==
+X-Google-Smtp-Source: AGHT+IEiOBsaKrznFhX3SVjdW218U7QgwmXeweaXnBGDV8S1qkkA+JbeKJWbEhXcC/y5TFzqCgpaUA==
+X-Received: by 2002:adf:ea0d:0:b0:38b:da31:3e3e with SMTP id ffacd0b85a97d-38bf566c690mr19003924f8f.28.1737563851004;
+        Wed, 22 Jan 2025 08:37:31 -0800 (PST)
 Received: from pop-os.. ([212.105.145.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf321508esm16983562f8f.10.2025.01.22.08.36.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf321508esm16983562f8f.10.2025.01.22.08.37.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2025 08:36:34 -0800 (PST)
+        Wed, 22 Jan 2025 08:37:30 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
 To: irogers@google.com,
 	linux-perf-users@vger.kernel.org,
@@ -77,9 +77,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/2] perf vendor events arm64: Add N3 events/metrics
-Date: Wed, 22 Jan 2025 16:35:02 +0000
-Message-Id: <20250122163504.2061472-2-james.clark@linaro.org>
+Subject: [PATCH v2 2/2] perf vendor events arm64: Add V3 events/metrics
+Date: Wed, 22 Jan 2025 16:35:03 +0000
+Message-Id: <20250122163504.2061472-3-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250122163504.2061472-1-james.clark@linaro.org>
 References: <20250122163504.2061472-1-james.clark@linaro.org>
@@ -94,62 +94,72 @@ Content-Transfer-Encoding: 8bit
 Using the scripts at:
 https://gitlab.arm.com/telemetry-solution/telemetry-solution/
 
-Generate perf json for neoverse-n3 using the following command:
+Generate perf json for neoverse-v3 using the following command:
 ```
 $ telemetry-solution/tools/perf_json_generator/generate.py \
   tools/perf/ --telemetry-files \
-  telemetry-solution/data/pmu/cpu/neoverse/neoverse-n3.json
+  telemetry-solution/data/pmu/cpu/neoverse/neoverse-v3.json
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 [Re-generate after updating script]
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../arch/arm64/arm/neoverse-n3/bus.json       |  18 +
- .../arch/arm64/arm/neoverse-n3/exception.json |  62 +++
- .../arm64/arm/neoverse-n3/fp_operation.json   |  22 +
- .../arch/arm64/arm/neoverse-n3/general.json   |  10 +
- .../arch/arm64/arm/neoverse-n3/l1d_cache.json |  50 ++
- .../arch/arm64/arm/neoverse-n3/l1i_cache.json |  14 +
- .../arch/arm64/arm/neoverse-n3/l2_cache.json  |  78 +++
- .../arch/arm64/arm/neoverse-n3/l3_cache.json  |  26 +
- .../arch/arm64/arm/neoverse-n3/ll_cache.json  |  22 +
- .../arch/arm64/arm/neoverse-n3/memory.json    |  54 +++
- .../arch/arm64/arm/neoverse-n3/metrics.json   | 457 ++++++++++++++++++
- .../arch/arm64/arm/neoverse-n3/retired.json   |  90 ++++
- .../arch/arm64/arm/neoverse-n3/spe.json       |  42 ++
- .../arm64/arm/neoverse-n3/spec_operation.json |  90 ++++
- .../arch/arm64/arm/neoverse-n3/stall.json     |  86 ++++
- .../arch/arm64/arm/neoverse-n3/sve.json       |  50 ++
- .../arch/arm64/arm/neoverse-n3/tlb.json       |  74 +++
- .../arch/arm64/arm/neoverse-n3/trace.json     |  42 ++
- .../arch/arm64/common-and-microarch.json      | 180 +++++++
+ .../arch/arm64/arm/neoverse-v3/brbe.json      |   6 +
+ .../arch/arm64/arm/neoverse-v3/bus.json       |  18 +
+ .../arch/arm64/arm/neoverse-v3/exception.json |  62 +++
+ .../arm64/arm/neoverse-v3/fp_operation.json   |  22 +
+ .../arch/arm64/arm/neoverse-v3/general.json   |  40 ++
+ .../arch/arm64/arm/neoverse-v3/l1d_cache.json |  74 +++
+ .../arch/arm64/arm/neoverse-v3/l1i_cache.json |  62 +++
+ .../arch/arm64/arm/neoverse-v3/l2_cache.json  |  78 +++
+ .../arch/arm64/arm/neoverse-v3/ll_cache.json  |  10 +
+ .../arch/arm64/arm/neoverse-v3/memory.json    |  58 +++
+ .../arch/arm64/arm/neoverse-v3/metrics.json   | 457 ++++++++++++++++++
+ .../arch/arm64/arm/neoverse-v3/retired.json   |  98 ++++
+ .../arch/arm64/arm/neoverse-v3/spe.json       |  42 ++
+ .../arm64/arm/neoverse-v3/spec_operation.json | 126 +++++
+ .../arch/arm64/arm/neoverse-v3/stall.json     | 124 +++++
+ .../arch/arm64/arm/neoverse-v3/sve.json       |  50 ++
+ .../arch/arm64/arm/neoverse-v3/tlb.json       | 138 ++++++
+ .../arch/arm64/common-and-microarch.json      | 130 +++++
  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
- 20 files changed, 1468 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/fp_operation.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/general.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1d_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1i_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l2_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l3_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/ll_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/retired.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spe.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spec_operation.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/stall.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/sve.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/tlb.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/trace.json
+ 19 files changed, 1596 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/brbe.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/bus.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/exception.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/fp_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/general.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1d_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1i_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l2_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/ll_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/retired.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spe.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spec_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/stall.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/sve.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/tlb.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/brbe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/brbe.json
+new file mode 100644
+index 000000000000..9fdf5b0453a0
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/brbe.json
+@@ -0,0 +1,6 @@
++[
++    {
++        "ArchStdEvent": "BRB_FILTRATE",
++        "PublicDescription": "Counts branch records captured which are not removed by filtering."
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/bus.json
 new file mode 100644
 index 000000000000..2e11a8c4a484
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/bus.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/bus.json
 @@ -0,0 +1,18 @@
 +[
 +    {
@@ -169,11 +179,11 @@ index 000000000000..2e11a8c4a484
 +        "PublicDescription": "Counts memory write transactions seen on the external bus. Each beat of data is counted individually."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/exception.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/exception.json
 new file mode 100644
 index 000000000000..7126fbf292e0
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/exception.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/exception.json
 @@ -0,0 +1,62 @@
 +[
 +    {
@@ -237,11 +247,11 @@ index 000000000000..7126fbf292e0
 +        "PublicDescription": "Counts FIQs which are not taken locally but taken from EL0, EL1,\n or EL2 to EL3 (which would be the normal behavior for FIQs when not executing\n in EL3)."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/fp_operation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/fp_operation.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/fp_operation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/fp_operation.json
 new file mode 100644
 index 000000000000..cec3435ac766
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/fp_operation.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/fp_operation.json
 @@ -0,0 +1,22 @@
 +[
 +    {
@@ -265,28 +275,58 @@ index 000000000000..cec3435ac766
 +        "PublicDescription": "Counts speculatively executed non-scalable single precision floating point operations."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/general.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/general.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/general.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/general.json
 new file mode 100644
-index 000000000000..c5dcdcf43c58
+index 000000000000..4d816015b8c2
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/general.json
-@@ -0,0 +1,10 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/general.json
+@@ -0,0 +1,40 @@
 +[
 +    {
 +        "ArchStdEvent": "CPU_CYCLES",
 +        "PublicDescription": "Counts CPU clock cycles (not timer cycles). The clock measured by this event is defined as the physical clock driving the CPU logic."
 +    },
 +    {
++        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 0",
++        "EventCode": "0x198",
++        "EventName": "L2_CHI_CBUSY0",
++        "BriefDescription": "Number of RXDAT or RXRSP response received with CBusy of 0"
++    },
++    {
++        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 1",
++        "EventCode": "0x199",
++        "EventName": "L2_CHI_CBUSY1",
++        "BriefDescription": "Number of RXDAT or RXRSP response received with CBusy of 1"
++    },
++    {
++        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 2",
++        "EventCode": "0x19A",
++        "EventName": "L2_CHI_CBUSY2",
++        "BriefDescription": "Number of RXDAT or RXRSP response received with CBusy of 2"
++    },
++    {
++        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer fullness indicator set to 3",
++        "EventCode": "0x19B",
++        "EventName": "L2_CHI_CBUSY3",
++        "BriefDescription": "Number of RXDAT or RXRSP response received with CBusy of 3"
++    },
++    {
++        "PublicDescription": "Count of RXDAT or RXRSP responses received with indication completer indicating multiple cores actively making requests",
++        "EventCode": "0x19C",
++        "EventName": "L2_CHI_CBUSY_MT",
++        "BriefDescription": "Number of RXDAT or RXRSP response received with CBusy Multi-threaded set"
++    },
++    {
 +        "ArchStdEvent": "CNT_CYCLES",
 +        "PublicDescription": "Increments at a constant frequency equal to the rate of increment of the System Counter, CNTPCT_EL0."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1d_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1d_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1d_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1d_cache.json
 new file mode 100644
-index 000000000000..ee04d9fe1a70
+index 000000000000..891e07631c6e
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1d_cache.json
-@@ -0,0 +1,50 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1d_cache.json
+@@ -0,0 +1,74 @@
 +[
 +    {
 +        "ArchStdEvent": "L1D_CACHE_REFILL",
@@ -313,12 +353,28 @@ index 000000000000..ee04d9fe1a70
 +        "PublicDescription": "Counts level 1 data cache accesses generated by store operations. This event also counts accesses caused by a DC ZVA (data cache zero, specified by virtual address) instruction. Near atomic operations that resolve in the CPUs caches count as a write access and read access."
 +    },
 +    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "PublicDescription": "Counts level 1 data cache refills caused by speculatively executed load instructions where the memory read operation misses in the level 1 data cache. This event only counts one event per cache line."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "PublicDescription": "Counts level 1 data cache refills caused by speculatively executed store instructions where the memory write operation misses in the level 1 data cache. This event only counts one event per cache line."
++    },
++    {
 +        "ArchStdEvent": "L1D_CACHE_REFILL_INNER",
 +        "PublicDescription": "Counts level 1 data cache refills where the cache line data came from caches inside the immediate cluster of the core."
 +    },
 +    {
 +        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER",
 +        "PublicDescription": "Counts level 1 data cache refills for which the cache line data came from outside the immediate cluster of the core, like an SLC in the system interconnect or DRAM."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++        "PublicDescription": "Counts dirty cache line evictions from the level 1 data cache caused by a new cache line allocation. This event does not count evictions caused by cache maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++        "PublicDescription": "Counts write-backs from the level 1 data cache that are a result of a coherency operation made by another CPU. Event count includes cache maintenance operations."
 +    },
 +    {
 +        "ArchStdEvent": "L1D_CACHE_INVAL",
@@ -329,20 +385,28 @@ index 000000000000..ee04d9fe1a70
 +        "PublicDescription": "Counts level 1 data demand cache accesses from any load or store operation. Near atomic operations that resolve in the CPUs caches counts as both a write access and read access."
 +    },
 +    {
-+        "ArchStdEvent": "L1D_CACHE_HWPRF",
-+        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher."
++        "ArchStdEvent": "L1D_CACHE_PRFM",
++        "PublicDescription": "Counts level 1 data cache accesses from software preload or prefetch instructions."
 +    },
 +    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_HWPRF",
-+        "PublicDescription": "Counts level 1 data cache refills where the cache line is requested by a hardware prefetcher."
++        "ArchStdEvent": "L1D_CACHE_MISS",
++        "PublicDescription": "Counts cache line misses in the level 1 data cache."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_PRFM",
++        "PublicDescription": "Counts level 1 data cache refills where the cache line access was generated by software preload or prefetch instructions."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_HWPRF",
++        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1i_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1i_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1i_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1i_cache.json
 new file mode 100644
-index 000000000000..633f1030359d
+index 000000000000..fc511c5d2021
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l1i_cache.json
-@@ -0,0 +1,14 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l1i_cache.json
+@@ -0,0 +1,62 @@
 +[
 +    {
 +        "ArchStdEvent": "L1I_CACHE_REFILL",
@@ -355,13 +419,61 @@ index 000000000000..633f1030359d
 +    {
 +        "ArchStdEvent": "L1I_CACHE_LMISS",
 +        "PublicDescription": "Counts cache line refills into the level 1 instruction cache, that incurred additional latency."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_RD",
++        "PublicDescription": "Counts demand instruction fetches which access the level 1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_PRFM",
++        "PublicDescription": "Counts instruction fetches generated by software preload or prefetch instructions which access the level 1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HWPRF",
++        "PublicDescription": "Counts instruction fetches which access the level 1 instruction cache generated by the hardware prefetcher."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_REFILL_PRFM",
++        "PublicDescription": "Counts cache line refills in the level 1 instruction cache caused by a missed instruction fetch generated by software preload or prefetch instructions. Instruction fetches may include accessing multiple instructions, but the single cache line allocation is counted once."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HIT_RD",
++        "PublicDescription": "Counts demand instruction fetches that access the level 1 instruction cache and hit in the L1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HIT_RD_FPRFM",
++        "PublicDescription": "Counts demand instruction fetches that access the level 1 instruction cache that hit in the L1 instruction cache and the line was requested by a software prefetch."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HIT_RD_FHWPRF",
++        "PublicDescription": "Counts demand instruction fetches generated by hardware prefetch that access the level 1 instruction cache and hit in the L1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HIT",
++        "PublicDescription": "Counts instruction fetches that access the level 1 instruction cache and hit in the level 1 instruction cache. Instruction cache accesses caused by cache maintenance operations are not counted."
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_HIT_PRFM",
++        "PublicDescription": "Counts instruction fetches generated by software preload or prefetch instructions that access the level 1 instruction cache and hit in the level 1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_LFB_HIT_RD",
++        "PublicDescription": "Counts demand instruction fetches that access the level 1 instruction cache and hit in a line that is in the process of being loaded into the level 1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_LFB_HIT_RD_FPRFM",
++        "PublicDescription": "Counts demand instruction fetches generated by software prefetch instructions that access the level 1 instruction cache and hit in a line that is in the process of being loaded into the level 1 instruction cache."
++    },
++    {
++        "ArchStdEvent": "L1I_LFB_HIT_RD_FHWPRF",
++        "PublicDescription": "Counts demand instruction fetches generated by hardware prefetch that access the level 1 instruction cache and hit in a line that is in the process of being loaded into the level 1 instruction cache."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l2_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l2_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l2_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l2_cache.json
 new file mode 100644
-index 000000000000..e6cce710c560
+index 000000000000..b38d71fd1136
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l2_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/l2_cache.json
 @@ -0,0 +1,78 @@
 +[
 +    {
@@ -375,18 +487,6 @@ index 000000000000..e6cce710c560
 +    {
 +        "ArchStdEvent": "L2D_CACHE_WB",
 +        "PublicDescription": "Counts write-backs of data from the L2 cache to outside the CPU. This includes snoops to the L2 (from other CPUs) which return data even if the snoops cause an invalidation. L2 cache line invalidations which do not write data outside the CPU and snoops which return data from an L1 cache are not counted. Data would not be written outside the cache when invalidating a clean cache line."
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_ALLOCATE",
-+        "PublicDescription": "Counts level 2 cache line allocates that do not fetch data from outside the level 2 data or unified cache."
-+    },
-+    {
-+        "ArchStdEvent": "L2I_CACHE",
-+        "PublicDescription": "Counts accesses to the level 2 cache due to instruction accesses. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the first level instruction cache."
-+    },
-+    {
-+        "ArchStdEvent": "L2I_CACHE_REFILL",
-+        "PublicDescription": "Counts cache line refills into the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 instruction cache."
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_RD",
@@ -417,77 +517,49 @@ index 000000000000..e6cce710c560
 +        "PublicDescription": "Counts each explicit invalidation of a cache line in the level 2 cache by cache maintenance operations that operate by a virtual address, or by external coherency operations. This event does not count if either:\n\n1. A cache refill invalidates a cache line or,\n2. A Cache Maintenance Operation (CMO), which invalidates a cache line specified by set/way, is executed on that CPU.\n\nCMOs that operate by set/way cannot be broadcast from one CPU to another."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_LMISS_RD",
-+        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any memory read operations that incurred additional latency."
++        "PublicDescription": "Counts level 2 cache accesses due to level 1 data cache hardware prefetcher.",
++        "EventCode": "0x1B8",
++        "EventName": "L2D_CACHE_L1HWPRF",
++        "BriefDescription": "L2D cache access due to L1 hardware prefetch"
 +    },
 +    {
-+        "ArchStdEvent": "L2I_CACHE_LMISS",
-+        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any instruction read operations that incurred additional latency."
++        "PublicDescription": "Counts level 2 cache refills where the cache line is requested by a level 1 data cache hardware prefetcher.",
++        "EventCode": "0x1B9",
++        "EventName": "L2D_CACHE_REFILL_L1HWPRF",
++        "BriefDescription": "L2D cache refill due to L1 hardware prefetch"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_LMISS_RD",
++        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any memory read operations that incurred additional latency."
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_RW",
 +        "PublicDescription": "Counts level 2 cache demand accesses from any load/store operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
 +    },
 +    {
-+        "ArchStdEvent": "L2I_CACHE_RD",
-+        "PublicDescription": "Counts level 2 cache accesses that are due to a demand instruction cache access."
++        "ArchStdEvent": "L2D_CACHE_PRFM",
++        "PublicDescription": "Counts level 2 data cache accesses generated by software preload or prefetch instructions."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_PRF",
-+        "PublicDescription": "Counts level 2 data cache accesses from software preload or prefetch instructions or hardware prefetcher."
++        "ArchStdEvent": "L2D_CACHE_MISS",
++        "PublicDescription": "Counts cache line misses in the level 2 cache. Level 2 cache is a unified cache for data and instruction accesses. Accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_PRF",
-+        "PublicDescription": "Counts refills due to accesses generated as a result of prefetches."
++        "ArchStdEvent": "L2D_CACHE_REFILL_PRFM",
++        "PublicDescription": "Counts refills due to accesses generated as a result of software preload or prefetch instructions as counted by L2D_CACHE_PRFM."
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_HWPRF",
++        "PublicDescription": "Counts level 2 data cache accesses generated by L2D hardware prefetchers."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l3_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l3_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/ll_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/ll_cache.json
 new file mode 100644
-index 000000000000..8fe51a628419
+index 000000000000..fd5a2e0099b8
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/l3_cache.json
-@@ -0,0 +1,26 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/ll_cache.json
+@@ -0,0 +1,10 @@
 +[
-+    {
-+        "ArchStdEvent": "L3D_CACHE_ALLOCATE",
-+        "PublicDescription": "Counts level 3 cache line allocates that do not fetch data from outside the level 3 data or unified cache. For example, allocates due to streaming stores."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_REFILL",
-+        "PublicDescription": "Counts level 3 accesses that receive data from outside the L3 cache."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE",
-+        "PublicDescription": "Counts level 3 cache accesses. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_RD",
-+        "PublicDescription": "Counts level 3 cache accesses caused by any memory read operation. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
-+        "PublicDescription": "Counts any cache line refill into the level 3 cache from memory read operations that incurred additional latency."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_MISS",
-+        "PublicDescription": "Counts level 3 cache accesses that missed in the level 3 cache."
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/ll_cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/ll_cache.json
-new file mode 100644
-index 000000000000..c9259682d39e
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/ll_cache.json
-@@ -0,0 +1,22 @@
-+[
-+    {
-+        "ArchStdEvent": "LL_CACHE",
-+        "PublicDescription": "Counts transactions that were returned from outside the core cluster. This event counts transactions for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts transactions for L3 cache."
-+    },
-+    {
-+        "ArchStdEvent": "LL_CACHE_MISS",
-+        "PublicDescription": "Counts transactions that were returned from outside the core cluster and missed in the last level cache"
-+    },
 +    {
 +        "ArchStdEvent": "LL_CACHE_RD",
 +        "PublicDescription": "Counts read transactions that were returned from outside the core cluster. This event counts for external last level cache  when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts for the L3 cache. This event counts read transactions returned from outside the core if those transactions are either hit in the system level cache or missed in the SLC and are returned from any other external sources."
@@ -495,22 +567,22 @@ index 000000000000..c9259682d39e
 +    {
 +        "ArchStdEvent": "LL_CACHE_MISS_RD",
 +        "PublicDescription": "Counts read transactions that were returned from outside the core cluster but missed in the system level cache. This event counts for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts for L3 cache. This event counts read transactions returned from outside the core if those transactions are missed in the System level Cache. The data source of the transaction is indicated by a field in the CHI transaction returning to the CPU. This event does not count reads caused by cache maintenance operations."
-+    },
-+    {
-+        "ArchStdEvent": "LL_CACHE_REFILL",
-+        "PublicDescription": "Counts last level accesses that receive data from outside the last level cache."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/memory.json
 new file mode 100644
-index 000000000000..f19204a5faae
+index 000000000000..0454ffc1d364
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/memory.json
-@@ -0,0 +1,54 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/memory.json
+@@ -0,0 +1,58 @@
 +[
 +    {
 +        "ArchStdEvent": "MEM_ACCESS",
 +        "PublicDescription": "Counts memory accesses issued by the CPU load store unit, where those accesses are issued due to load or store operations. This event counts memory accesses no matter whether the data is received from any level of cache hierarchy or external memory. If memory accesses are broken up into smaller transactions than what were specified in the load or store instructions, then the event counts those smaller memory transactions."
++    },
++    {
++        "ArchStdEvent": "MEMORY_ERROR",
++        "PublicDescription": "Counts any detected correctable or uncorrectable physical memory errors (ECC or parity) in protected CPUs RAMs. On the core, this event counts errors in the caches (including data and tag rams). Any detected memory error (from either a speculative and abandoned access, or an architecturally executed access) is counted. Note that errors are only detected when the actual protected memory is accessed by an operation."
 +    },
 +    {
 +        "ArchStdEvent": "REMOTE_ACCESS",
@@ -561,11 +633,11 @@ index 000000000000..f19204a5faae
 +        "PublicDescription": "Counts Instruction memory accesses that the PE makes."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
 new file mode 100644
-index 000000000000..1f7c9536cb88
+index 000000000000..d022ae25c864
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
 @@ -0,0 +1,457 @@
 +[
 +    {
@@ -643,7 +715,7 @@ index 000000000000..1f7c9536cb88
 +    },
 +    {
 +        "ArchStdEvent": "bad_speculation",
-+        "MetricExpr": "(1 - STALL_SLOT / (5 * CPU_CYCLES)) * (1 - OP_RETIRED / OP_SPEC) * 100 + STALL_FRONTEND_FLUSH / CPU_CYCLES * 100"
++        "MetricExpr": "(1 - STALL_SLOT / (10 * CPU_CYCLES)) * (1 - OP_RETIRED / OP_SPEC) * 100 + STALL_FRONTEND_FLUSH / CPU_CYCLES * 100"
 +    },
 +    {
 +        "MetricName": "barrier_percentage",
@@ -682,7 +754,7 @@ index 000000000000..1f7c9536cb88
 +    },
 +    {
 +        "MetricName": "branch_percentage",
-+        "MetricExpr": "PC_WRITE_SPEC / INST_SPEC * 100",
++        "MetricExpr": "(BR_IMMED_SPEC + BR_INDIRECT_SPEC) / INST_SPEC * 100",
 +        "BriefDescription": "This metric measures branch operations as a percentage of operations speculatively executed.",
 +        "MetricGroup": "Operation_Mix",
 +        "ScaleUnit": "1percent of operations"
@@ -745,7 +817,7 @@ index 000000000000..1f7c9536cb88
 +    },
 +    {
 +        "ArchStdEvent": "frontend_bound",
-+        "MetricExpr": "(STALL_SLOT_FRONTEND / (5 * CPU_CYCLES) - STALL_FRONTEND_FLUSH / CPU_CYCLES) * 100"
++        "MetricExpr": "(STALL_SLOT_FRONTEND / (10 * CPU_CYCLES) - STALL_FRONTEND_FLUSH / CPU_CYCLES) * 100"
 +    },
 +    {
 +        "MetricName": "frontend_cache_l1i_bound",
@@ -812,7 +884,7 @@ index 000000000000..1f7c9536cb88
 +    },
 +    {
 +        "MetricName": "integer_dp_percentage",
-+        "MetricExpr": "(DP_SPEC - DSB_SPEC) / INST_SPEC * 100",
++        "MetricExpr": "DP_SPEC / INST_SPEC * 100",
 +        "BriefDescription": "This metric measures scalar integer operations as a percentage of operations speculatively executed.",
 +        "MetricGroup": "Operation_Mix",
 +        "ScaleUnit": "1percent of operations"
@@ -1024,12 +1096,12 @@ index 000000000000..1f7c9536cb88
 +        "ScaleUnit": "1percent of operations"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/retired.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/retired.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/retired.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/retired.json
 new file mode 100644
-index 000000000000..135e5dbd8c78
+index 000000000000..04617c399dda
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/retired.json
-@@ -0,0 +1,90 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/retired.json
+@@ -0,0 +1,98 @@
 +[
 +    {
 +        "ArchStdEvent": "SW_INCR",
@@ -1042,10 +1114,6 @@ index 000000000000..135e5dbd8c78
 +    {
 +        "ArchStdEvent": "CID_WRITE_RETIRED",
 +        "PublicDescription": "Counts architecturally executed writes to the CONTEXTIDR_EL1 register, which usually contain the kernel PID and can be output with hardware trace."
-+    },
-+    {
-+        "ArchStdEvent": "PC_WRITE_RETIRED",
-+        "PublicDescription": "Counts branch instructions that caused a change of Program Counter, which effectively causes a change in the control flow of the program."
 +    },
 +    {
 +        "ArchStdEvent": "BR_IMMED_RETIRED",
@@ -1070,10 +1138,6 @@ index 000000000000..135e5dbd8c78
 +    {
 +        "ArchStdEvent": "OP_RETIRED",
 +        "PublicDescription": "Counts micro-operations that are architecturally executed. This is a count of number of micro-operations retired from the commit queue in a single cycle."
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_TAKEN_RETIRED",
-+        "PublicDescription": "Counts architecturally executed direct branches that were taken."
 +    },
 +    {
 +        "ArchStdEvent": "BR_INDNR_TAKEN_RETIRED",
@@ -1112,6 +1176,22 @@ index 000000000000..135e5dbd8c78
 +        "PublicDescription": "Counts architecturally executed indirect branches excluding procedure returns that were mispredicted and caused a pipeline flush."
 +    },
 +    {
++        "ArchStdEvent": "BR_TAKEN_PRED_RETIRED",
++        "PublicDescription": "Counts architecturally executed branches that were taken and were correctly predicted."
++    },
++    {
++        "ArchStdEvent": "BR_TAKEN_MIS_PRED_RETIRED",
++        "PublicDescription": "Counts architecturally executed branches that were taken and were mispredicted causing a pipeline flush."
++    },
++    {
++        "ArchStdEvent": "BR_SKIP_PRED_RETIRED",
++        "PublicDescription": "Counts architecturally executed branches that were not taken and were correctly predicted."
++    },
++    {
++        "ArchStdEvent": "BR_SKIP_MIS_PRED_RETIRED",
++        "PublicDescription": "Counts architecturally executed branches that were not taken and were mispredicted causing a pipeline flush."
++    },
++    {
 +        "ArchStdEvent": "BR_PRED_RETIRED",
 +        "PublicDescription": "Counts branch instructions counted by BR_RETIRED which were correctly predicted."
 +    },
@@ -1120,11 +1200,11 @@ index 000000000000..135e5dbd8c78
 +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spe.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spe.json
 new file mode 100644
 index 000000000000..ca0217fa4681
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spe.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spe.json
 @@ -0,0 +1,42 @@
 +[
 +    {
@@ -1168,12 +1248,12 @@ index 000000000000..ca0217fa4681
 +        "PublicDescription": "Counts statistical profiling samples taken which are exceeding minimum latency set by operation latency filter constraints."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spec_operation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spec_operation.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spec_operation.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spec_operation.json
 new file mode 100644
-index 000000000000..f91eb18d683c
+index 000000000000..7d7359402e9e
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/spec_operation.json
-@@ -0,0 +1,90 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/spec_operation.json
+@@ -0,0 +1,126 @@
 +[
 +    {
 +        "ArchStdEvent": "BR_MIS_PRED",
@@ -1192,6 +1272,26 @@ index 000000000000..f91eb18d683c
 +        "PublicDescription": "Counts micro-operations speculatively executed. This is the count of the number of micro-operations dispatched in a cycle."
 +    },
 +    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++        "PublicDescription": "Counts unaligned memory read operations issued by the CPU. This event counts unaligned accesses (as defined by the actual instruction), even if they are subsequently issued as multiple aligned accesses. The event does not count preload operations (PLD, PLI)."
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++        "PublicDescription": "Counts unaligned memory write operations issued by the CPU. This event counts unaligned accesses (as defined by the actual instruction), even if they are subsequently issued as multiple aligned accesses."
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++        "PublicDescription": "Counts unaligned memory operations issued by the CPU. This event counts unaligned accesses (as defined by the actual instruction), even if they are subsequently issued as multiple aligned accesses."
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC",
++        "PublicDescription": "Counts Load-Exclusive operations that have been speculatively executed. For example: LDREX, LDX"
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC",
++        "PublicDescription": "Counts store-exclusive operations that have been speculatively executed and have successfully completed the store operation."
++    },
++    {
 +        "ArchStdEvent": "STREX_FAIL_SPEC",
 +        "PublicDescription": "Counts store-exclusive operations that have been speculatively executed and have not successfully completed the store operation."
 +    },
@@ -1206,6 +1306,10 @@ index 000000000000..f91eb18d683c
 +    {
 +        "ArchStdEvent": "ST_SPEC",
 +        "PublicDescription": "Counts speculatively executed store operations including Single Instruction Multiple Data (SIMD) store operations."
++    },
++    {
++        "ArchStdEvent": "LDST_SPEC",
++        "PublicDescription": "Counts load and store operations that have been speculatively executed."
 +    },
 +    {
 +        "ArchStdEvent": "DP_SPEC",
@@ -1228,6 +1332,18 @@ index 000000000000..f91eb18d683c
 +        "PublicDescription": "Counts speculatively executed cryptographic operations except for PMULL and VMULL operations."
 +    },
 +    {
++        "ArchStdEvent": "BR_IMMED_SPEC",
++        "PublicDescription": "Counts direct branch operations which are speculatively executed."
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC",
++        "PublicDescription": "Counts procedure return operations (RET, RETAA and RETAB) which are speculatively executed."
++    },
++    {
++        "ArchStdEvent": "BR_INDIRECT_SPEC",
++        "PublicDescription": "Counts indirect branch operations including procedure returns, which are speculatively executed. This includes operations that force a software change of the PC, other than exception-generating operations and direct branch instructions. Some examples of the instructions counted by this event include BR Xn, RET, etc..."
++    },
++    {
 +        "ArchStdEvent": "ISB_SPEC",
 +        "PublicDescription": "Counts ISB operations that are executed."
 +    },
@@ -1248,28 +1364,28 @@ index 000000000000..f91eb18d683c
 +        "PublicDescription": "Counts any store release operations that are speculatively executed. For example: STLR, STLRH, STLRB"
 +    },
 +    {
++        "ArchStdEvent": "SIMD_INST_SPEC",
++        "PublicDescription": "Counts speculatively executed operations that are SIMD or SVE vector operations or Advanced SIMD non-scalar operations."
++    },
++    {
 +        "ArchStdEvent": "ASE_INST_SPEC",
 +        "PublicDescription": "Counts speculatively executed Advanced SIMD operations."
 +    },
 +    {
-+        "ArchStdEvent": "CAS_NEAR_PASS",
-+        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE and updated the location accessed."
++        "ArchStdEvent": "INT_SPEC",
++        "PublicDescription": "Counts speculatively executed integer arithmetic operations."
 +    },
 +    {
-+        "ArchStdEvent": "CAS_NEAR_SPEC",
-+        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE."
-+    },
-+    {
-+        "ArchStdEvent": "CAS_FAR_SPEC",
-+        "PublicDescription": "Counts compare and swap instructions that did not execute locally to the PE."
++        "ArchStdEvent": "PRF_SPEC",
++        "PublicDescription": "Counts speculatively executed operations that prefetch memory. For example: Scalar: PRFM, SVE: PRFB, PRFD, PRFH, or PRFW."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/stall.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/stall.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/stall.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/stall.json
 new file mode 100644
-index 000000000000..51cda27880b9
+index 000000000000..cafa73508db6
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/stall.json
-@@ -0,0 +1,86 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/stall.json
+@@ -0,0 +1,124 @@
 +[
 +    {
 +        "ArchStdEvent": "STALL_FRONTEND",
@@ -1294,6 +1410,36 @@ index 000000000000..51cda27880b9
 +    {
 +        "ArchStdEvent": "STALL_SLOT",
 +        "PublicDescription": "Counts slots per cycle in which no operations are sent to the rename unit from the frontend or from the rename unit to the backend for any reason (either frontend or backend stall). STALL_SLOT is the sum of STALL_SLOT_FRONTEND and STALL_SLOT_BACKEND."
++    },
++    {
++        "PublicDescription": "Counts cycles counted by STALL_BACKEND_BUSY when the backend could not accept any micro-operations\nbecause the simple integer issue queues are full to take any operations for execution.",
++        "EventCode": "0x15C",
++        "EventName": "DISPATCH_STALL_IQ_SX",
++        "BriefDescription": "Dispatch stalled due to IQ full,SX"
++    },
++    {
++        "PublicDescription": "Counts cycles counted by STALL_BACKEND_BUSY when the backend could not accept any micro-operations\nbecause the complex integer issue queues are full and can not take any operations for execution.",
++        "EventCode": "0x15D",
++        "EventName": "DISPATCH_STALL_IQ_MX",
++        "BriefDescription": "Dispatch stalled due to IQ full,MX"
++    },
++    {
++        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations\nbecause the load/store issue queues are full and can not take any operations for execution.",
++        "EventCode": "0x15E",
++        "EventName": "DISPATCH_STALL_IQ_LS",
++        "BriefDescription": "Dispatch stalled due to IQ full,LS"
++    },
++    {
++        "PublicDescription": "Counts cycles counted by STALL_BACKEND_BUSY when the backend could not accept any micro-operations\nbecause the vector issue queues are full and can not take any operations for execution.",
++        "EventCode": "0x15F",
++        "EventName": "DISPATCH_STALL_IQ_VX",
++        "BriefDescription": "Dispatch stalled due to IQ full,VX"
++    },
++    {
++        "PublicDescription": "Counts cycles counted by STALL_BACKEND_BUSY when the backend could not accept any micro-operations\nbecause the commit queue is full and can not take any operations for execution.",
++        "EventCode": "0x160",
++        "EventName": "DISPATCH_STALL_MCQ",
++        "BriefDescription": "Dispatch stalled due to MCQ full"
 +    },
 +    {
 +        "ArchStdEvent": "STALL_BACKEND_MEM",
@@ -1336,6 +1482,10 @@ index 000000000000..51cda27880b9
 +        "PublicDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the level 1 data cache."
 +    },
 +    {
++        "ArchStdEvent": "STALL_BACKEND_L2D",
++        "PublicDescription": "Counts cycles when the backend is stalled because there is a pending demand load request in progress in the level 2 data cache."
++    },
++    {
 +        "ArchStdEvent": "STALL_BACKEND_TLB",
 +        "PublicDescription": "Counts cycles when the backend is stalled on any demand TLB misses being handled."
 +    },
@@ -1352,15 +1502,19 @@ index 000000000000..51cda27880b9
 +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations because the issue queues are full to take any operations for execution."
 +    },
 +    {
++        "ArchStdEvent": "STALL_BACKEND_ILOCK",
++        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to resource constraints imposed by input dependency."
++    },
++    {
 +        "ArchStdEvent": "STALL_BACKEND_RENAME",
 +        "PublicDescription": "Counts cycles when backend is stalled even when operations are available from the frontend but at least one is not ready to be sent to the backend because no rename register is available."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/sve.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/sve.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/sve.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/sve.json
 new file mode 100644
 index 000000000000..51dab48cb2ba
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/sve.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/sve.json
 @@ -0,0 +1,50 @@
 +[
 +    {
@@ -1412,12 +1566,12 @@ index 000000000000..51dab48cb2ba
 +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type a 64-bit integer."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/tlb.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/tlb.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/tlb.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/tlb.json
 new file mode 100644
-index 000000000000..c7aa89c2f19f
+index 000000000000..41c5472c1def
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/tlb.json
-@@ -0,0 +1,74 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/tlb.json
+@@ -0,0 +1,138 @@
 +[
 +    {
 +        "ArchStdEvent": "L1I_TLB_REFILL",
@@ -1452,12 +1606,60 @@ index 000000000000..c7aa89c2f19f
 +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    },
 +    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++        "PublicDescription": "Counts level 1 data TLB refills caused by memory read operations. If there are multiple misses in the TLB that are resolved by the refill, then this event only counts once. This event counts for refills caused by preload instructions or hardware prefetch accesses. This event counts regardless of whether the miss hits in L2 or results in a translation table walk. This event will not count if the translation table walk results in a fault (such as a translation or access fault), since there is no new translation created for the TLB. This event will not count on an access from an Address Translation (AT) instruction."
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++        "PublicDescription": "Counts level 1 data TLB refills caused by data side memory write operations. If there are multiple misses in the TLB that are resolved by the refill, then this event only counts once. This event counts for refills caused by preload instructions or hardware prefetch accesses. This event counts regardless of whether the miss hits in L2 or results in a translation table walk. This event will not count if the table walk results in a fault (such as a translation or access fault), since there is no new translation created for the TLB. This event will not count with an access from an Address Translation (AT) instruction."
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_RD",
++        "PublicDescription": "Counts level 1 data TLB accesses caused by memory read operations. This event counts whether the access hits or misses in the TLB. This event does not count TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_WR",
++        "PublicDescription": "Counts any L1 data side TLB accesses caused by memory write operations. This event counts whether the access hits or misses in the TLB. This event does not count TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_RD",
++        "PublicDescription": "Counts level 2 TLB refills caused by memory read operations from both data and instruction fetch except for those caused by TLB maintenance operations or hardware prefetches."
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_WR",
++        "PublicDescription": "Counts level 2 TLB refills caused by memory write operations from both data and instruction fetch except for those caused by TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_RD",
++        "PublicDescription": "Counts level 2 TLB accesses caused by memory read operations from both data and instruction fetch except for those caused by TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_WR",
++        "PublicDescription": "Counts level 2 TLB accesses caused by memory write operations from both data and instruction fetch except for those caused by TLB maintenance operations."
++    },
++    {
 +        "ArchStdEvent": "DTLB_WALK_PERCYC",
 +        "PublicDescription": "Counts the number of data translation table walks in progress per cycle."
 +    },
 +    {
 +        "ArchStdEvent": "ITLB_WALK_PERCYC",
 +        "PublicDescription": "Counts the number of instruction translation table walks in progress per cycle."
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_RW",
++        "PublicDescription": "Counts level 1 data TLB demand accesses caused by memory read or write operations. This event counts whether the access hits or misses in the TLB. This event does not count TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L1I_TLB_RD",
++        "PublicDescription": "Counts level 1 instruction TLB demand accesses whether the access hits or misses in the TLB."
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_PRFM",
++        "PublicDescription": "Counts level 1 data TLB accesses generated by software prefetch or preload memory accesses. Load or store instructions can be broken into multiple memory operations. This event does not count TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "L1I_TLB_PRFM",
++        "PublicDescription": "Counts level 1 instruction TLB accesses generated by software preload or prefetch instructions. This event counts whether the access hits or misses in the TLB. This event does not count TLB maintenance operations."
 +    },
 +    {
 +        "ArchStdEvent": "DTLB_HWUPD",
@@ -1490,260 +1692,178 @@ index 000000000000..c7aa89c2f19f
 +    {
 +        "ArchStdEvent": "ITLB_WALK_SMALL",
 +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_PAGE event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/trace.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/trace.json
-new file mode 100644
-index 000000000000..a09043486cd9
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/trace.json
-@@ -0,0 +1,42 @@
-+[
-+    {
-+        "ArchStdEvent": "TRB_WRAP",
-+        "PublicDescription": "This event is generated each time the current write pointer is wrapped to the base pointer."
 +    },
 +    {
-+        "ArchStdEvent": "TRB_TRIG",
-+        "PublicDescription": "This event is generated when a Trace Buffer Extension Trigger Event occurs."
++        "ArchStdEvent": "DTLB_WALK_RW",
++        "PublicDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    },
 +    {
-+        "ArchStdEvent": "TRCEXTOUT0",
-+        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 0."
++        "ArchStdEvent": "ITLB_WALK_RD",
++        "PublicDescription": "Counts number of demand instruction translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    },
 +    {
-+        "ArchStdEvent": "TRCEXTOUT1",
-+        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 1."
++        "ArchStdEvent": "DTLB_WALK_PRFM",
++        "PublicDescription": "Counts number of software prefetches or preloads generated data translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    },
 +    {
-+        "ArchStdEvent": "TRCEXTOUT2",
-+        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 2."
-+    },
-+    {
-+        "ArchStdEvent": "TRCEXTOUT3",
-+        "PublicDescription": "This event is generated each time an event is signaled by ETE external event 3."
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT4",
-+        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 4."
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT5",
-+        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 5."
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT6",
-+        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 6."
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT7",
-+        "PublicDescription": "This event is generated each time an event is signaled on CTI output trigger 7."
++        "ArchStdEvent": "ITLB_WALK_PRFM",
++        "PublicDescription": "Counts number of software prefetches or preloads generated instruction translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    }
 +]
 diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-index dddecc946575..ed90b0b332cd 100644
+index ed90b0b332cd..e40be37addf8 100644
 --- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
 +++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-@@ -227,6 +227,16 @@
-         "EventName": "L1I_TLB",
-         "BriefDescription": "Attributable Level 1 instruction TLB access"
+@@ -546,6 +546,11 @@
+         "EventName": "SVE_INST_RETIRED",
+         "BriefDescription": "Instruction architecturally executed, SVE."
      },
 +    {
-+        "EventCode": "0x27",
-+        "EventName": "L2I_CACHE",
-+        "BriefDescription": "Level 2 instruction cache access"
-+    },
-+    {
-+        "EventCode": "0x28",
-+        "EventName": "L2I_CACHE_REFILL",
-+        "BriefDescription": "Level 2 instruction cache refill"
++        "EventCode": "0x8004",
++        "EventName": "SIMD_INST_SPEC",
++        "BriefDescription": "Operation speculatively executed, SIMD"
 +    },
      {
-         "PublicDescription": "Attributable Level 3 data cache allocation without refill",
-         "EventCode": "0x29",
-@@ -275,6 +285,16 @@
-         "EventName": "REMOTE_ACCESS",
-         "BriefDescription": "Access to another socket in a multi-socket system"
+         "PublicDescription": "ASE operations speculatively executed",
+         "EventCode": "0x8005",
+@@ -1284,6 +1289,26 @@
+         "EventName": "BR_INDNR_MIS_PRED_RETIRED",
+         "BriefDescription": "Branch instruction architecturally executed, mispredicted indirect excluding procedure return"
      },
 +    {
-+        "EventCode": "0x32",
-+        "EventName": "LL_CACHE",
-+        "BriefDescription": "Last level cache access"
++        "EventCode": "0x8118",
++        "EventName": "BR_TAKEN_PRED_RETIRED",
++        "BriefDescription": "Branch instruction architecturally executed, predicted branch, taken"
 +    },
 +    {
-+        "EventCode": "0x33",
-+        "EventName": "LL_CACHE_MISS",
-+        "BriefDescription": "Last level cache miss"
++        "EventCode": "0x8119",
++        "EventName": "BR_TAKEN_MIS_PRED_RETIRED",
++        "BriefDescription": "Branch instruction architecturally executed, mispredicted branch, taken"
++    },
++    {
++        "EventCode": "0x811A",
++        "EventName": "BR_SKIP_PRED_RETIRED",
++        "BriefDescription": "Branch instruction architecturally executed, predicted branch, not taken"
++    },
++    {
++        "EventCode": "0x811B",
++        "EventName": "BR_SKIP_MIS_PRED_RETIRED",
++        "BriefDescription": "Branch instruction architecturally executed, mispredicted branch, not taken"
 +    },
      {
-         "PublicDescription": "Access to data TLB causes a translation table walk",
-         "EventCode": "0x34",
-@@ -395,6 +415,11 @@
-         "EventName": "L2D_CACHE_LMISS_RD",
-         "BriefDescription": "Level 2 data cache long-latency read miss"
+         "EventCode": "0x811C",
+         "EventName": "BR_PRED_RETIRED",
+@@ -1294,6 +1319,11 @@
+         "EventName": "BR_IND_RETIRED",
+         "BriefDescription": "Instruction architecturally executed, indirect branch"
      },
 +    {
-+        "EventCode": "0x400A",
-+        "EventName": "L2I_CACHE_LMISS",
-+        "BriefDescription": "Level 2 instruction cache long-latency miss"
++        "EventCode": "0x811F",
++        "EventName": "BRB_FILTRATE",
++        "BriefDescription": "Branch Record captured"
 +    },
      {
-         "PublicDescription": "Level 3 data cache long-latency read miss.  The counter counts each memory read access counted by L3D_CACHE that incurs additional latency because it returns data from outside the Level 3 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 3 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 3 data or unified cache.",
-         "EventCode": "0x400B",
-@@ -1209,6 +1234,81 @@
-         "EventName": "ASE_SVE_INT_MMLA_SPEC",
-         "BriefDescription": "Integer Operation speculatively executed, Advanced SIMD or SVE matrix multiply."
+         "EventCode": "0x8120",
+         "EventName": "INST_FETCH_PERCYC",
+@@ -1349,6 +1379,26 @@
+         "EventName": "SAMPLE_FEED_LAT",
+         "BriefDescription": "Statisical Profiling sample taken, exceeding minimum latency"
      },
 +    {
-+        "EventCode": "0x8108",
-+        "EventName": "BR_IMMED_TAKEN_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, immediate, taken"
++        "EventCode": "0x8130",
++        "EventName": "L1D_TLB_RW",
++        "BriefDescription": "Level 1 data TLB demand access"
 +    },
 +    {
-+        "EventCode": "0x810C",
-+        "EventName": "BR_INDNR_TAKEN_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, indirect excluding procedure return, taken"
++        "EventCode": "0x8131",
++        "EventName": "L1I_TLB_RD",
++        "BriefDescription": "Level 1 instruction TLB demand access"
 +    },
 +    {
-+        "EventCode": "0x8110",
-+        "EventName": "BR_IMMED_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, predicted immediate"
++        "EventCode": "0x8132",
++        "EventName": "L1D_TLB_PRFM",
++        "BriefDescription": "Level 1 data TLB software preload"
 +    },
 +    {
-+        "EventCode": "0x8111",
-+        "EventName": "BR_IMMED_MIS_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, mispredicted immediate"
-+    },
-+    {
-+        "EventCode": "0x8112",
-+        "EventName": "BR_IND_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, predicted indirect"
-+    },
-+    {
-+        "EventCode": "0x8113",
-+        "EventName": "BR_IND_MIS_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, mispredicted indirect"
-+    },
-+    {
-+        "EventCode": "0x8114",
-+        "EventName": "BR_RETURN_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, predicted procedure return"
-+    },
-+    {
-+        "EventCode": "0x8115",
-+        "EventName": "BR_RETURN_MIS_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, mispredicted procedure return"
-+    },
-+    {
-+        "EventCode": "0x8116",
-+        "EventName": "BR_INDNR_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, predicted indirect excluding procedure return"
-+    },
-+    {
-+        "EventCode": "0x8117",
-+        "EventName": "BR_INDNR_MIS_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, mispredicted indirect excluding procedure return"
-+    },
-+    {
-+        "EventCode": "0x811C",
-+        "EventName": "BR_PRED_RETIRED",
-+        "BriefDescription": "Branch instruction architecturally executed, predicted branch"
-+    },
-+    {
-+        "EventCode": "0x811D",
-+        "EventName": "BR_IND_RETIRED",
-+        "BriefDescription": "Instruction architecturally executed, indirect branch"
-+    },
-+    {
-+        "EventCode": "0x8120",
-+        "EventName": "INST_FETCH_PERCYC",
-+        "BriefDescription": "Event in progress, INST FETCH"
-+    },
-+    {
-+        "EventCode": "0x8121",
-+        "EventName": "MEM_ACCESS_RD_PERCYC",
-+        "BriefDescription": "Event in progress, MEM ACCESS RD"
-+    },
-+    {
-+        "EventCode": "0x8124",
-+        "EventName": "INST_FETCH",
-+        "BriefDescription": "Instruction memory access"
++        "EventCode": "0x8133",
++        "EventName": "L1I_TLB_PRFM",
++        "BriefDescription": "Level 1 instruction TLB software preload"
 +    },
      {
-         "EventCode": "0x8128",
-         "EventName": "DTLB_WALK_PERCYC",
-@@ -1219,6 +1319,46 @@
-         "EventName": "ITLB_WALK_PERCYC",
-         "BriefDescription": "Instruction translation table walks in progress."
-     },
-+    {
-+        "EventCode": "0x812A",
-+        "EventName": "SAMPLE_FEED_BR",
-+        "BriefDescription": "Statisical Profiling sample taken, branch"
-+    },
-+    {
-+        "EventCode": "0x812B",
-+        "EventName": "SAMPLE_FEED_LD",
-+        "BriefDescription": "Statisical Profiling sample taken, load"
-+    },
-+    {
-+        "EventCode": "0x812C",
-+        "EventName": "SAMPLE_FEED_ST",
-+        "BriefDescription": "Statisical Profiling sample taken, store"
-+    },
-+    {
-+        "EventCode": "0x812D",
-+        "EventName": "SAMPLE_FEED_OP",
-+        "BriefDescription": "Statisical Profiling sample taken, matching operation type"
-+    },
-+    {
-+        "EventCode": "0x812E",
-+        "EventName": "SAMPLE_FEED_EVENT",
-+        "BriefDescription": "Statisical Profiling sample taken, matching events"
-+    },
-+    {
-+        "EventCode": "0x812F",
-+        "EventName": "SAMPLE_FEED_LAT",
-+        "BriefDescription": "Statisical Profiling sample taken, exceeding minimum latency"
-+    },
-+    {
-+        "EventCode": "0x8134",
-+        "EventName": "DTLB_HWUPD",
-+        "BriefDescription": "Data TLB hardware update of translation table"
-+    },
-+    {
-+        "EventCode": "0x8135",
-+        "EventName": "ITLB_HWUPD",
-+        "BriefDescription": "Instruction TLB hardware update of translation table"
-+    },
-     {
-         "EventCode": "0x8136",
-         "EventName": "DTLB_STEP",
-@@ -1249,6 +1389,11 @@
+         "EventCode": "0x8134",
+         "EventName": "DTLB_HWUPD",
+@@ -1389,11 +1439,46 @@
          "EventName": "ITLB_WALK_SMALL",
          "BriefDescription": "Instruction TLB small page translation table walk."
      },
 +    {
-+        "EventCode": "0x8140",
-+        "EventName": "L1D_CACHE_RW",
-+        "BriefDescription": "Level 1 data cache demand access"
++        "EventCode": "0x813C",
++        "EventName": "DTLB_WALK_RW",
++        "BriefDescription": "Data TLB demand access with at least one translation table walk"
++    },
++    {
++        "EventCode": "0x813D",
++        "EventName": "ITLB_WALK_RD",
++        "BriefDescription": "Instruction TLB demand access with at least one translation table walk"
++    },
++    {
++        "EventCode": "0x813E",
++        "EventName": "DTLB_WALK_PRFM",
++        "BriefDescription": "Data TLB software preload access with at least one translation table walk"
++    },
++    {
++        "EventCode": "0x813F",
++        "EventName": "ITLB_WALK_PRFM",
++        "BriefDescription": "Instruction TLB software preload access with at least one translation table walk"
++    },
+     {
+         "EventCode": "0x8140",
+         "EventName": "L1D_CACHE_RW",
+         "BriefDescription": "Level 1 data cache demand access"
+     },
++    {
++        "EventCode": "0x8141",
++        "EventName": "L1I_CACHE_RD",
++        "BriefDescription": "Level 1 instruction cache demand fetch"
++    },
++    {
++        "EventCode": "0x8142",
++        "EventName": "L1D_CACHE_PRFM",
++        "BriefDescription": "Level 1 data cache software preload"
++    },
++    {
++        "EventCode": "0x8143",
++        "EventName": "L1I_CACHE_PRFM",
++        "BriefDescription": "Level 1 instruction cache software preload"
 +    },
      {
          "EventCode": "0x8144",
          "EventName": "L1D_CACHE_MISS",
-@@ -1259,11 +1404,26 @@
+@@ -1404,6 +1489,16 @@
          "EventName": "L1I_CACHE_HWPRF",
          "BriefDescription": "Level 1 instruction cache hardware prefetch."
      },
 +    {
-+        "EventCode": "0x8148",
-+        "EventName": "L2D_CACHE_RW",
-+        "BriefDescription": "Level 2 data cache demand access"
++        "EventCode": "0x8146",
++        "EventName": "L1D_CACHE_REFILL_PRFM",
++        "BriefDescription": "Level 1 data cache refill, software preload"
 +    },
 +    {
-+        "EventCode": "0x8149",
-+        "EventName": "L2I_CACHE_RD",
-+        "BriefDescription": "Level 2 instruction cache demand fetch"
++        "EventCode": "0x8147",
++        "EventName": "L1I_CACHE_REFILL_PRFM",
++        "BriefDescription": "Level 1 instruction cache refill, software preload"
++    },
+     {
+         "EventCode": "0x8148",
+         "EventName": "L2D_CACHE_RW",
+@@ -1414,11 +1509,21 @@
+         "EventName": "L2I_CACHE_RD",
+         "BriefDescription": "Level 2 instruction cache demand fetch"
+     },
++    {
++        "EventCode": "0x814A",
++        "EventName": "L2D_CACHE_PRFM",
++        "BriefDescription": "Level 2 data cache software preload"
 +    },
      {
          "EventCode": "0x814C",
@@ -1751,59 +1871,71 @@ index dddecc946575..ed90b0b332cd 100644
          "BriefDescription": "Level 2 data cache demand access miss."
      },
 +    {
-+        "EventCode": "0x8152",
-+        "EventName": "L3D_CACHE_MISS",
-+        "BriefDescription": "Level 3 data cache demand access miss"
++        "EventCode": "0x814E",
++        "EventName": "L2D_CACHE_REFILL_PRFM",
++        "BriefDescription": "Level 2 data cache refill, software preload"
 +    },
      {
-         "EventCode": "0x8154",
-         "EventName": "L1D_CACHE_HWPRF",
-@@ -1374,6 +1534,21 @@
-         "EventName": "STALL_BACKEND_MEMCPYSET",
-         "BriefDescription": "Backend stall cycles, Memory Copy or Set operation."
+         "EventCode": "0x8152",
+         "EventName": "L3D_CACHE_MISS",
+@@ -1614,6 +1719,16 @@
+         "EventName": "L2D_CACHE_HIT_WR",
+         "BriefDescription": "Level 2 data cache demand access hit, write."
      },
 +    {
-+        "EventCode": "0x8171",
-+        "EventName": "CAS_NEAR_PASS",
-+        "BriefDescription": "Atomic memory Operation speculatively executed, Compare and Swap pass"
++        "EventCode": "0x81D0",
++        "EventName": "L1I_CACHE_HIT_RD_FPRFM",
++        "BriefDescription": "Level 1 instruction cache demand fetch first hit, fetched by software preload"
 +    },
 +    {
-+        "EventCode": "0x8172",
-+        "EventName": "CAS_NEAR_SPEC",
-+        "BriefDescription": "Atomic memory Operation speculatively executed, Compare and Swap near"
-+    },
-+    {
-+        "EventCode": "0x8173",
-+        "EventName": "CAS_FAR_SPEC",
-+        "BriefDescription": "Atomic memory Operation speculatively executed, Compare and Swap far"
++        "EventCode": "0x81E0",
++        "EventName": "L1I_CACHE_HIT_RD_FHWPRF",
++        "BriefDescription": "Level 1 instruction cache demand fetch first hit, fetched by hardware prefetcher"
 +    },
      {
-         "EventCode": "0x8186",
-         "EventName": "UOP_RETIRED",
-@@ -1509,6 +1684,11 @@
-         "EventName": "L2D_CACHE_REFILL_PRF",
-         "BriefDescription": "Level 2 data cache refill, preload or prefetch hit."
+         "EventCode": "0x8200",
+         "EventName": "L1I_CACHE_HIT",
+@@ -1629,6 +1744,11 @@
+         "EventName": "L2D_CACHE_HIT",
+         "BriefDescription": "Level 2 data cache hit."
      },
 +    {
-+        "EventCode": "0x829A",
-+        "EventName": "LL_CACHE_REFILL",
-+        "BriefDescription": "Last level cache refill"
++        "EventCode": "0x8208",
++        "EventName": "L1I_CACHE_HIT_PRFM",
++        "BriefDescription": "Level 1 instruction cache software preload hit"
 +    },
      {
-         "EventCode": "0x8320",
-         "EventName": "L1D_CACHE_REFILL_PERCYC",
+         "EventCode": "0x8240",
+         "EventName": "L1I_LFB_HIT_RD",
+@@ -1654,6 +1774,16 @@
+         "EventName": "L2D_LFB_HIT_WR",
+         "BriefDescription": "Level 2 data cache demand access line-fill buffer hit, write."
+     },
++    {
++        "EventCode": "0x8250",
++        "EventName": "L1I_LFB_HIT_RD_FPRFM",
++        "BriefDescription": "Level 1 instruction cache demand fetch line-fill buffer first hit, recently fetched by software preload"
++    },
++    {
++        "EventCode": "0x8260",
++        "EventName": "L1I_LFB_HIT_RD_FHWPRF",
++        "BriefDescription": "Level 1 instruction cache demand fetch line-fill buffer first hit, recently fetched by hardware prefetcher"
++    },
+     {
+         "EventCode": "0x8280",
+         "EventName": "L1I_CACHE_PRF",
 diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 5c846fe90513..c2f0797bf34b 100644
+index c2f0797bf34b..bb3fa8a33496 100644
 --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
 @@ -36,6 +36,7 @@
  0x00000000410fd480,v1,arm/cortex-x2,core
  0x00000000410fd490,v1,arm/neoverse-n2-v2,core
  0x00000000410fd4f0,v1,arm/neoverse-n2-v2,core
-+0x00000000410fd8e0,v1,arm/neoverse-n3,core
++0x00000000410fd830,v1,arm/neoverse-v3,core
+ 0x00000000410fd8e0,v1,arm/neoverse-n3,core
  0x00000000420f5160,v1,cavium/thunderx2,core
  0x00000000430f0af0,v1,cavium/thunderx2,core
- 0x00000000460f0010,v1,fujitsu/a64fx,core
 -- 
 2.34.1
 
