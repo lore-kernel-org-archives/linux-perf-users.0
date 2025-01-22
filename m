@@ -1,432 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827BB10E0
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 05:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737523738; cv=fail; b=Iyq1Rr6NrNmmQBlOrDesMlewtzsWRlz4XOvRC2HzHYWTYxOvpv6r+xZiDmcMaqIPegu7JRGVH4OxNm25WGU29HjE+WOWTyCtfuo+362jcWr0o+zGnvfTg7r3zm3f+CQ6xF9qRE/ZiKvx4fpxIJejsvALLkT3ykR+0gb4TE3Y5X8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737523738; c=relaxed/simple;
-	bh=MA5cvjuU9xMBF3SXFz799zceCLVF+mdHMiInf4Q8RKw=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JTns3rZf0Em9+Yu6EClYclilH1wwKHKGJCLnq/FGQbS0AEW/gwWqwIbECcUaj1iT52EBIL680++j85SviBkfzJDoYZQGoF5I3x+qjiEd5YVIOk0eOVo19JF+G43iupwOY2tN1HDlfraw8KKF3OITq26aBTCL7rYnzprXiq/7zMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KUzwYrha; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79322190674
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737527028; cv=none; b=uoPhQLs4JUGiKNVOO+a+o2umMB9M2D+19Vb8Cdhe1qrOibM/0/xM/Ip9/GcT8RRctiNZDF4Ir8C7RNP1ixQvF1IGsU5sNOLKyleXR/0kFb2a9CwSSiwfoArqVOI5dVI3SyKY4noZdmZriId2kRQ23BVGXypR80+TOdDx0iq74kM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737527028; c=relaxed/simple;
+	bh=csE5eO77txt/1tgULDwPBlUQn51ePKLm4FAc5Dc7JmA=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=A8icU9yqFH1gsnNASwXHkRRZLKmHADaBYYE6suVIyUlFVUUfH7BD2prHVnth/Xjz8UdabUCvl92/HyLP9f4POLrMIii8pyitdJtF5wgASwgCUe5RftDcOkXOZ5qBTjhmepIqs/MYs9Ad0RjRnhKorvSBqUn3goLIaNufvAw9RIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E+4mQt4P; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KUzwYrha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737523733; x=1769059733;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=MA5cvjuU9xMBF3SXFz799zceCLVF+mdHMiInf4Q8RKw=;
-  b=KUzwYrha6iPrxfCcg/9dUQkmrxCJxYvEjaDqwyJedVYZ8wvMnyjJ6pUQ
-   Uy15HTkbH7USFlkznFBBalmUTEmIgsCRvN1RVRKWHACyRzjc7qH6xI4xQ
-   crK+xfzuaIfViFWXUy/sjN21lIODrW9qKOKkqQwr5xzJw7EW72a+2SkrQ
-   rphyMZ0BM/s5GboKDXVeOwOLpRDFbv4rAwOOTOKWiZ59CsUy7q1WZjyvU
-   nBYWTskgUcAxi7BpWYxBQiUtxm60Jzj+cAFn5pK0SgihYdAU+3ZEe3DyT
-   jLdTju30Jw+880zt1h3j4RrdpC2uv3zGnVdDkOyVgAKhX2vhtIo9PlP6Y
-   g==;
-X-CSE-ConnectionGUID: KA9XjRDGRzSTXrrxhzrPAA==
-X-CSE-MsgGUID: I+4MjLX8Rxa4gnJNkD5kEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="48955141"
-X-IronPort-AV: E=Sophos;i="6.13,224,1732608000"; 
-   d="scan'208";a="48955141"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 21:28:52 -0800
-X-CSE-ConnectionGUID: tZE/FviuSHyqmQds/NASnw==
-X-CSE-MsgGUID: TAKk9ktVRYOYvOmdn3pdtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111047189"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Jan 2025 21:28:49 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 21 Jan 2025 21:28:48 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 21 Jan 2025 21:28:48 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 21 Jan 2025 21:28:48 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Udb+ZSxcmQgpXF5fPtHuLdBFv0B3rUzcYgkZh5a04kmtRQ8nSy6MoJUE6E//8dZ2ySfe9jWxm2xT5rPP3bshDEp21pumKkdEsrnCJfSAOVDwzHKVNOGoQKscgdGWherwJZEF3hA2bc97sOY137cbFWbqrNUhBLjHYeykKtPzvsnTlG0WWFX5V41r8vuFJ581wXzxm4IR67mfW+uBIbHxyEShmLv67SuTwjZ+GZRVt+G7RGD7gIe8dBpQfSInueg7KH4u91iGXbN7jVqdhY21g8pZGd3OXAFGQpNOAVFl2ys2C29oujPtwvVYJ6mHMbTVYnzmaeXCAXLN4RICXROpxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C46idgIbqjegOG6VbFH9qITS4qLzaeXHLD7vlBwv8sg=;
- b=MPVgoQYUZ20f0QyPoS6S4lLWVHDzFyV5BKHl8jVRlkQvMpYttoKse9AhUIFd4cHj61ybhMfYZsZ6Rp5T5qPHIN0Cz0zZhupfC825lFnB80Scv/5k7lyl2ylUmqIxLg/4x73x7bmcCqo7jccwsTIpaUgpESoPPp0eUHwGWTJQ2EUZ9eI2bmaoBvuJJ4GxHjgwW0fD0JbPbkO7VK/sPbXYOkYVNwaOWGDXItw/ZxVZ0IdImsbuKxNkWl6jM1glKLBeTzCnI9xv+SDsWFE/zsovLRE6HgEoU0VFTkreZxCu293AhCAsu0+yll+4peMgKpsN48zl0XvwRiFMCB+RF40lcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB7958.namprd11.prod.outlook.com (2603:10b6:8:f9::19) by
- DS0PR11MB8113.namprd11.prod.outlook.com (2603:10b6:8:127::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8356.20; Wed, 22 Jan 2025 05:28:45 +0000
-Received: from DS0PR11MB7958.namprd11.prod.outlook.com
- ([fe80::d3ba:63fc:10be:dfca]) by DS0PR11MB7958.namprd11.prod.outlook.com
- ([fe80::d3ba:63fc:10be:dfca%3]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
- 05:28:45 +0000
-Message-ID: <dc92347d-0e21-44e1-8b0f-ea6f77d041cf@intel.com>
-Date: Wed, 22 Jan 2025 10:58:38 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 7/7] drm/xe/pmu: Add GT C6 events
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-CC: <intel-xe@lists.freedesktop.org>, Peter Zijlstra <peterz@infradead.org>,
-	<linux-perf-users@vger.kernel.org>, Vinay Belgaumkar
-	<vinay.belgaumkar@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, "Gupta,
- Anshuman" <anshuman.gupta@intel.com>
-References: <20250116230718.82460-1-lucas.demarchi@intel.com>
- <20250116230718.82460-8-lucas.demarchi@intel.com>
- <cbf55ca1-1692-4db4-9589-c07aec53cfe6@intel.com>
- <kihwh2cftvdw72ou2clk7tchrdl5u2bwzrp6n2cizuqyx7jbvf@oolswepiidsm>
-Content-Language: en-US
-From: Riana Tauro <riana.tauro@intel.com>
-In-Reply-To: <kihwh2cftvdw72ou2clk7tchrdl5u2bwzrp6n2cizuqyx7jbvf@oolswepiidsm>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1P287CA0012.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::35) To DS0PR11MB7958.namprd11.prod.outlook.com
- (2603:10b6:8:f9::19)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E+4mQt4P"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3c61a11a40so17032339276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:23:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737527024; x=1738131824; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nMZxZB2QjSpIDp5wnSfQlTa2w8/qiOlFxFu++p/vc3s=;
+        b=E+4mQt4P5QlmNdiyZmx1/XDx804TQET26wYwuQ7i4UJtxNntHj4DbzGQfMy97D/7M5
+         jgg7Fxoh3d/ToXll6hHxuSlVWiuxsh3tF94pLrrBmw8wYGD2E5GC2NFR8FuyHbSWLs3L
+         DZKmhHEbYWsXfPMapd17WDES9Ma8smboC+JQYUy7UUC1ZchXbjGS2Sm1KPZQYu9wHSVg
+         +6MS+xXV+XWGO0Db06I7RZvxBVE/GfgP7ogejG2hOhWPhT64lQhShW7Q+hDmuq7oZGTD
+         BwCJ5ZWoNhGZWfjrRQHn4UG3jchsoDZHMVawiOcOS3rDOlrK90Pfr9TwZQr5UlE2ghyG
+         Uj2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737527024; x=1738131824;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nMZxZB2QjSpIDp5wnSfQlTa2w8/qiOlFxFu++p/vc3s=;
+        b=rY7JA8v2xCw4Wl578moh9LVs30MY2Jv8jMwOlpFwojsKx4rGQJMJkOkpFrJHNPU84t
+         NYyt086sc9xd+PnioSbdkzLLesOSaKHy80HWCoDPK48Mbx22GDg85lYKPcedM07WzMDp
+         I0y1qBVHFYwB0Mg+FK9yraQtl2eRBxFYuqWmwIn1RNpyU8abnZB+Kk3xEOSE9nw/bHFT
+         20RZLibzqO6ZNHeqpHHrmbXluyfV2v5OmN9iWl1Nf3dtsZwQf5b8OvK2lAEKbQt0OZpz
+         qe1sycAlCw5pI5yNGjC3O1FJgqMS0mc3ioPrk6H62HflmCt0qtBfKp1mNqkd7Wfp7tRK
+         Asiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkb71WLm/YlbFq42KfJyzIty6YsnztizPShEsMzxPzLYnGJQd/VQAXDmXmvxtFxW6DwlnzpeidY5KTn4xdeTDb@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjlasKGF0rNBjIO1l9oSM1PrikTtxiGHC2bkXMPMLt0Aou4VA9
+	Bu9OxNWE8LxKtosSLI7KSGUZGEO/NqFTWFnAHIcX5i+YH51Du5A9AJNmSx3pBbioCHUWebIN+AJ
+	S3+mJKw==
+X-Google-Smtp-Source: AGHT+IFesCcSUy5QR6NwPlyI9//F17lW3wX3r/cz01SIvg7MVkFwQV5BfyGn58F73PrknjQthN5LEM/A3L1B
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:807b:be79:d5c3:ee5c])
+ (user=irogers job=sendgmr) by 2002:a05:690c:6101:b0:6f6:d314:49c9 with SMTP
+ id 00721157ae682-6f6eb949eefmr515577b3.8.1737527024453; Tue, 21 Jan 2025
+ 22:23:44 -0800 (PST)
+Date: Tue, 21 Jan 2025 22:23:15 -0800
+Message-Id: <20250122062332.577009-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7958:EE_|DS0PR11MB8113:EE_
-X-MS-Office365-Filtering-Correlation-Id: a08e1ce1-fd93-4dc2-4882-08dd3aa5a40d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bVVWNGF4eXBaNnpOaFA5bnNieG9EbHZ0aVVnZWFxdVVsMlJjNmFSMGhMZ2V3?=
- =?utf-8?B?Wi85SXNRWThqTGh0cE52UlhQNUNzQkQwWE1kMkZmZXdoZ1hvNVdyZWZhUDZ5?=
- =?utf-8?B?WHkzY3hSQVRNdlpQQng0c1JwL1YvbnRWYjFjUUo1R0ZVWXoycHVlbWhweE1G?=
- =?utf-8?B?N0pWcHduZkU5VzJoV3JvUnB6emJOMytKbHByb3lNUzUxbEFBQlMzYzR0YXZ0?=
- =?utf-8?B?eUVrc0dyUFFHWEZvWlVwSVRPUkZRMGFSbmlEcnBTMk5vcjJHM0NWdEFrZFB1?=
- =?utf-8?B?SHFlOElvbzBJaC9BNWE1Z2g0RFkva1RyTEQxNmZSQ0FQaklJWUJTcVFJckI4?=
- =?utf-8?B?ZnY5cG1sdUxrM3dpK0x5ZzMyWEYxVGNLMTZtc1FNOG5WazlGODk4bnpnd2hm?=
- =?utf-8?B?WFk2SXBYLzlFOGRKbFNOQm5ERmc5VXFJb3Z4K1RCSnE1dUYwLzVzSk9vMEoz?=
- =?utf-8?B?YnZ0UkRLdUptejF0bWUvblF3ejZjR0RRdDJKeTlvRm8vOG5ueExYamZDWWtW?=
- =?utf-8?B?ZlBRY1lRVWtVMGJjd2J2Y2FEbExHaEVZNzJvWlNCU0o4K3oxWUtiUGE1MGwz?=
- =?utf-8?B?ZEV6M3U0NjlpWjUyOTZTVzRpVmxyUUZ6cnNDbUNJODVwcGc5NFZOeWhQK2dW?=
- =?utf-8?B?YWViSGRPWHpLajlQWmZ3bjJrbzBJUW5qbVQxZ0liTUI3WFU2eERnSEpMUzMw?=
- =?utf-8?B?Z2hkZWdZVUh1OWpxNENURzFvTWtTNUJzK00wb2xpVkp6bEx1MGg0YzdYalhP?=
- =?utf-8?B?N0VIVHQ2TlBFRG10cUE1Tjh6VUgyNkMyeWZoV2E2ZXd6KzFFYUtvSmZKWktY?=
- =?utf-8?B?OGthenRybUswYTNPNlVNRFNNQlVDV2VKTUF2UXRvcDFHK1RuTzVYczNrMGVJ?=
- =?utf-8?B?Tm5pcnJqVFliSVZQb3U3blBSVDZRZXdkUm03Y1VUeWdsRG5vdGYxYkpHNmRM?=
- =?utf-8?B?QmFYSFhIbG1qV1gycTdXSDZyTWZEQU5YSjZpL0pUaytTRXR0cnZJK1pBQnlu?=
- =?utf-8?B?NFFETkhPd1htUU9COEZCdVMvckRGcHVsZWVtTllzQUhCQWQ5SmROT2NSUXlX?=
- =?utf-8?B?RTgvQ0xORzliRnYrTmNqL1Z6M2FoMzJuRjY0aU5ORS9DMElKMDltc2VxNWt3?=
- =?utf-8?B?bTRtclNTalRUQ3RTWHMvYngrK3daaEdjSitqYzB5YnJwamtGMzhPL1VkVGtY?=
- =?utf-8?B?NXhKb0FQakdvUFZsc1RSaVkxblVMalkyWU1tclV3U1hmZkNJQmVyMHY3ZmUv?=
- =?utf-8?B?TS9vMEd4dG1XTG5QL21WQmsxdG5wWWxWNlRqNy82a2ZId1BWb0x3aFNwUUZD?=
- =?utf-8?B?QkZjMTRQSXQwbitSTEF4OEpCblZJR3ZQVG5kZzhUSmdvbThTV0FRbUtJYlVx?=
- =?utf-8?B?Ly92VENRQ1d5OE04MlFRUkpxaEtwcG1OY3A1VVRMZTBQLzNzM3JiZHFGTzlD?=
- =?utf-8?B?R3RHZnI2NGsxemMyeHJGdTBtd0VCMGd2V2ZCUVRTMFZ1R01EM3VPQVNnVjN5?=
- =?utf-8?B?eStrRndqanRYMVEzejk1bGd6T3hGTE1DUkZjWElJaU9NWTJyWjAyN1hBK2NU?=
- =?utf-8?B?aUdMZXp2dHRqd0gzbWVYWGVQMHd6RFI5TkRqZDMrM0Nqd3hiYlJWRjNZRk5J?=
- =?utf-8?B?ZnJyQXJ1WHBybWRzL3hEamJ4R2pNUUphdHVUVDhRMHl3NjJuekUvWkJzUUxk?=
- =?utf-8?B?RkVzVFZ4OEUxL2tXTktGdEhlWGM4Q0RtT1h0U3ZKUjZ2Sy85bHJkTjRCNS9J?=
- =?utf-8?B?d2hnQWJBRnM4RWtYbW43WDFFQ3EvQWRRazNiMTQrTXFMM3V0ZHdkZ2R3RFdN?=
- =?utf-8?B?TXJGdkM1MFhYSlcwL2tLTXFST0J5cW5CWW1xS0k5NDV5UWpwU1IxQXlRYkRJ?=
- =?utf-8?Q?74BopcXnMEF4Y?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7958.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cEU0SnNvZ0lNejYzS25qUjVaeXN6V3ZUS3FPTlNnK2RVT2tBYTdlc3J3SFJi?=
- =?utf-8?B?eUN1U3VXbE5MR1JyVWI4dnNtSk5VUFVISVNNcXBHM2k4eWw4UEh3bnRPaWpo?=
- =?utf-8?B?SlhQUzI0c0hSSXRDaTUyeFUydlBqdHhXT3FJRk5TUzZJMUtpWTVqSDJJMUx1?=
- =?utf-8?B?d0JWeUVjbVBkM2NrZEVCdk5XM3QrRmxET1RWR0g3K2FzT2VHa1NGRWVUSytL?=
- =?utf-8?B?OHRydWU5QWZxU2FIVWdJZVNxNS9TbzhKOUxnWEhqWlc5V1djSDhSZGc1V2hx?=
- =?utf-8?B?eHlBbWlNR05pV3g3K3RoeVRGeXhGR09xYlZQaFN3OWZqYnF6TFZ5NGVxNERh?=
- =?utf-8?B?WmQ2aEoyUUtSZHQ3NytlaGk0R0E2M3A4QzMzcjNZRXB6eDNLTUx4VWE4Y2Vx?=
- =?utf-8?B?ZEx2TEkzQ25jbnRtc2Z3b2pWN29tSDVpN1BXemJJQStKMEU1MUhuK0E0eS8x?=
- =?utf-8?B?OXNteWkydThVRmc5YkRqYVloM01Cd0VkcE5laWkrdWVHN2ZMQ0IrV29EVi9W?=
- =?utf-8?B?SkVZMFptM0lETWJFbTJoZzJWQys1S3JyMTNqVVkyUldndmtVNVdUemZDNmRC?=
- =?utf-8?B?WERWOE0rU0pLUVdlWm9ydUNTQ2NxY2ROKzVTTlp3VXd2M21JR3hoajBYMlhr?=
- =?utf-8?B?S01pemxENzJKV2ovTHNQb25yU3MzUEdJanV0MitZRmJja0E3Ly8yanc1Smkw?=
- =?utf-8?B?VE84bkpiMHZTZ0dlVkdlblc0ZDNWY0VUb0Q3dWN4YVUvWUxwcU4zMkZjWlFC?=
- =?utf-8?B?ZFdtV0Zlc1J0RkJVcGdBRklZRE5PTjhUK3V0NVA1NEI3VXpBQ2crUFd1Rm5y?=
- =?utf-8?B?N2FRc1RaVzVuSk5MdnBOTWQ3NGkyYmVRWnd2RE5Vd1JnN3h6aWxNZnFzRjBS?=
- =?utf-8?B?L0FHNnpsUmdaYzVkdzYyQSt2WnlTYUdMV3E0OEVsaXNHa0VmcWpWbjArVG40?=
- =?utf-8?B?YWpsanZadytCSjdVUy9IM053UG9xTEYydG9tZkZ1MXYvNk9PWk9SbWRWQVJT?=
- =?utf-8?B?cVR5MThLeWg3d0Jkd25ZNXY5eDRnakNOOFNlU05KRVBMbGpLbkRpVHYwUWlz?=
- =?utf-8?B?c2pkUzM5S0hmaU0wNzdjSXNzNHdyRm90c0c2blZYSkVZUkZwdWcwUUUwQkFy?=
- =?utf-8?B?ZGpvaUswaDd5OE9pRi9Beno4Mm5xZ2Q2SVBXSm44UEx6N0NQa3kvSmUyTjh1?=
- =?utf-8?B?bUN6ZjdJRWFhc2xLVmdVbGx4QmR4amh5K0xRb3ZoQ0NRZ201ZmdRa2hOSjMr?=
- =?utf-8?B?cmM3OHVIbk1kVlhlZEVadzY3clhYSWtTRkVHRWNNeTRnVHVjdzlXVkN1YUtQ?=
- =?utf-8?B?dWZmM09mSkJFNzFWZjIxaDFFSUtiQ3AvbTRkM3AwNlk0VzE3QlkraEh1OW9D?=
- =?utf-8?B?Z3Y4THIwbEVxQUF6TndqZk9TeXpMVEZscXB0VE11cEJISXJtaUdRN0UxMHN3?=
- =?utf-8?B?azh3bVZOVlNBNVBqVTNYSmdSbVJhS2hlUHlEemgyNFB5VXRDVUJCdy8ra3Vt?=
- =?utf-8?B?bnFxMDBvWXFjOGJCYmFIbC85cG5Fams1NUVxTy9CMitUZFRiYk9ZN2tEdkRy?=
- =?utf-8?B?eTBaTElrNkxZMzhkbW9XTmRSVGhPOHdTVkNBSzNWOTliSFgwS1NuRmpPWHN5?=
- =?utf-8?B?dWo2bkhobktHTnJITlpvSXZoS3V2MmRXSGcwWFpqU1pJOE1WQ0RTb2VES1Uw?=
- =?utf-8?B?cHpxK01Lc1JyeU9OWlQwT1hVUjUwZlZJeC9EK2R6YStYZGtyVldkd0szSGZk?=
- =?utf-8?B?RVV4Y3E3YlIxbDZDTm8wL1Y2YzlPZTVmRFNnbVZETnYyQ0FsOU1lTS9EbXRa?=
- =?utf-8?B?ak5IUllLYWlwQkJFR2crdXMxNFkzVHl2MDFuSmpyZzBWcTM3cFZpNEN6YUFr?=
- =?utf-8?B?Ymd2Z2Q3bkxYYVBMdXdlMkFUcERaZzRKd0dmcUNwcWFRYzlGbjJPNW1QMlc3?=
- =?utf-8?B?MXFBQ2FjdWtSY2wwdFZKNG9PZk9YY3cvNUR3eFlTYmpxeC84cFg3c2dHZTJT?=
- =?utf-8?B?OTBiT0M1K0dSOTBHUVFFOXVjK041OE5mcS9ia1BWWVk0OFhvQ2dwcFplRnpz?=
- =?utf-8?B?WGRuSWQ3RjNtcmdLNFJoOGVpK2s1NHArNVR5NXdjQ1ZLN1hCdVRjamR5N1FL?=
- =?utf-8?Q?nRPy9ve8kSTaB4/MNnaG5HAIw?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a08e1ce1-fd93-4dc2-4882-08dd3aa5a40d
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7958.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 05:28:45.6162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V03h0C8fyVao6JU4vxuNV2hGcle4rR6VtqqsSlMLgLSDZokoLcQlxAqHQ+3txf454uJ3ddspaVFwIguEn3B4qQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8113
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
+Subject: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Linking against libcapstone and libLLVM can be a significant increase
+in dependencies and size of memory footprint. For something like `perf
+record` the disassembler and addr2line functionality won't be
+used. Support dynamically loading these libraries using dlopen and
+then calling the appropriate functions found using dlsym.
 
+BUILD_NONDISTRO is used to build perf against the license incompatible
+libbfd and libiberty libraries. As this has been opt-in for nearly 2
+years, commit dd317df07207 ("perf build: Make binutil libraries opt
+in"), remove the code to simplify the code base.
 
-On 1/22/2025 2:08 AM, Lucas De Marchi wrote:
-> On Tue, Jan 21, 2025 at 11:46:45AM +0530, Riana Tauro wrote:
->> Hi Lucas
->>
->> On 1/17/2025 4:37 AM, Lucas De Marchi wrote:
->>> From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
->>>
->>> Provide a PMU interface for GT C6 residency counters. The implementation
->>> is ported over from the i915 PMU code. Residency is provided in units of
->>> ms(like sysfs entry in - /sys/class/drm/card0/device/tile0/gt0/gtidle).
->>>
->>> Sample usage and output:
->>>
->>>     $ perf list | grep gt-c6
->>>       xe_0000_00_02.0/gt-c6-residency/                   [Kernel PMU 
->>> event]
->>>
->>>     $ tail /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt- 
->>> c6-residency*
->>>     ==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6- 
->>> residency <==
->>>     event=0x01
->>>
->>>     ==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6- 
->>> residency.unit <==
->>>     ms
->>>
->>>     $ perf stat -e xe_0000_00_02.0/gt-c6-residency,gt=0/ -I1000
->>>     #           time             counts unit events
->>>          1.001196056              1,001 ms   xe_0000_00_02.0/gt-c6- 
->>> residency,gt=0/
->>>          2.005216219              1,003 ms   xe_0000_00_02.0/gt-c6- 
->>> residency,gt=0/
->>>
->>> Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
->>> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->>> ---
->>>
->>> Besides the rebase, that changed a lot how the event was added,
->>> here is a summary of other changes:
->>>
->>> - Use xe_pm_runtime_get_if_active() when reading
->>>   xe_gt_idle_residency_msec() as there's not guarantee it will not be
->>>   suspended anymore by the time it reads the counter
->>>
->>> - Drop sample[] from the pmu struct and only use the prev/counter from
->>>   the perf_event struct. This avoids mixing the counter reported to 2
->>>   separate clients.
->>>
->>> - Drop time ktime helpers and just use what's provided by
->>>   include/linux/ktime.h
->>>
->>>  drivers/gpu/drm/xe/xe_pmu.c | 56 +++++++++++++++++++++++++++++++------
->>>  1 file changed, 48 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
->>> index c2af82ec3f793..37df9d3cc110c 100644
->>> --- a/drivers/gpu/drm/xe/xe_pmu.c
->>> +++ b/drivers/gpu/drm/xe/xe_pmu.c
->>> @@ -11,6 +11,7 @@
->>>  #include "xe_device.h"
->>>  #include "xe_force_wake.h"
->>>  #include "xe_gt_clock.h"
->>> +#include "xe_gt_idle.h"
->>>  #include "xe_gt_printk.h"
->>>  #include "xe_mmio.h"
->>>  #include "xe_macros.h"
->>> @@ -117,16 +118,50 @@ static int xe_pmu_event_init(struct perf_event 
->>> *event)
->>>      return 0;
->>>  }
->>> -static u64 __xe_pmu_event_read(struct perf_event *event)
->>> +static u64 read_gt_c6_residency(struct xe_pmu *pmu, struct xe_gt 
->>> *gt, u64 prev)
->>>  {
->>> -    struct xe_device *xe = container_of(event->pmu, typeof(*xe), 
->>> pmu.base);
->>> +    struct xe_device *xe = gt_to_xe(gt);
->>> +    unsigned long flags;
->>> +    ktime_t t0;
->>> +    s64 delta;
->>> +
->>> +    if (xe_pm_runtime_get_if_active(xe)) {
->> Seeing this lockdep warn on reading gt-c6-residency
->>
->> [ 5032.731663] =============================
->> [ 5032.735699] [ BUG: Invalid wait context ]
->> [ 5032.745260] -----------------------------
->> [ 5032.749300] perf/3320 is trying to lock:
->> [ 5032.753260] ffff888105f2c238 (&dev->power.lock){-.-.}-{3:3}, at: 
->> pm_runtime_get_conditional+0x26/0xb0
-> 
-> ugh... thanks. Currently we are papering over that in drm-tip since
-> i915's pmu is completly broken.  I need to remember reverting that hack
-> from topic/core-for-CI to test things properly so xe doesn't have the
-> same fate.
-> 
-> here dev->power.lock is a spinlock, but ....
-> 
-> 
->> [ 5032.762528] other info that might help us debug this:
->> [ 5032.767613] context-{5:5}
->> [ 5032.770262] 3 locks held by perf/3320:
->> [ 5032.774045]  #0: ffff88846f632048 (&cpuctx_mutex){+.+.}-{4:4}, at: 
->> perf_event_ctx_lock_nested+0xba/0x230
->> [ 5032.783587]  #1: ffff8881037482c0 (&event->child_mutex){+.+.}- 
->> {4:4}, at: perf_event_for_each_child+0x39/0x90
->> [ 5032.793480]  #2: ffff88846f631fb8 (&cpuctx_lock){....}-{2:2}, at: 
->> event_function+0x57/0x120
-> 
-> we are already holding a raw_spinlock.
-yeah and it's seen after 6.13. That's why xe_pm_runtime_suspended was 
-used as it was not throwing any warning
+The patch series:
+1) does some initial clean up;
+2) moves the capstone and LLVM code to their own C files,
+3) simplifies a little the capstone code;
+4) adds perf_ variants of the functions that will either directly call
+   the function or use dlsym to discover it;
+5) adds BPF JIT disassembly support to LLVM and capstone disassembly;
+6) removes the BUILD_NONDISTRO code, reduces scope and removes what's possible.
 
-Seeing a similar one for force_wake too, for engine activity. fw->lock 
-is spinlock. Any suggestions to avoid this without changing it to 
-raw_spinlock?
+The addr2line LLVM functionality is written in C++. To avoid linking
+against libLLVM for this, a new LIBLLVM_DYNAMIC option is added where
+the C++ code with the libLLVM dependency will be built into a
+libperf-llvm.so and that dlsym-ed and called against. Ideally LLVM
+would extend their C API to avoid this.
 
-[  465.380652] ffff88810d5b8098 (&fw->lock){....}-{3:3}, at: 
-xe_force_wake_get+0x1f9/0x8c0 [xe]
-[  465.389168] other info that might help us debug this:
-[  465.394221] context-{5:5}
-[  465.396847] 1 lock held by swapper/0/0:
-[  465.400682]  #0: ffff88885f031fb8 (&cpuctx_lock){....}-{2:2}, at: 
-__perf_event_read+0x60/0x230
+The libbfd BPF disassembly supported source lines, this wasn't ported
+to the capstone and LLVM disassembly.
 
-For runtime_get, rodrigo's suggestion would work. But taking force_wake 
-on event start and end would cause power issues.
+v2: Add mangling of the function names in libperf-llvm.so to avoid
+    potential infinite recursion. Add BPF JIT disassembly support to
+    LLVM and capstone. Add/rebase the BUILD_NONDISTRO cleanup onto the
+    series from:
+    https://lore.kernel.org/lkml/20250111202851.1075338-1-irogers@google.com/
+    Some other minor additional clean up.
 
-Thanks
-Riana
-> 
-> The previous check for xe_pm_runtime_suspended() would get rid of the
-> warning since it doesn't take the dev->power.lock, but it would also be
-> racy. I think using the simplified interface Rodrigo proposed would be
-> the ok:  just take the runtime pm when creating the event
-> and releasing it when closing. It brings back the issues of releasing
-> an event after the device unbinds, but hopefully that will be fixed soon
-> by Peter's patches to perf_pmu_unregister().
-> 
-> Thanks for checking.
-> 
-> Lucas De Marchi
-> 
->>
->>
->> [ 5032.829907] Call Trace:
->> [ 5032.832384]  <TASK>
->> [ 5032.834513]  dump_stack_lvl+0x81/0xc0
->> [ 5032.838236]  dump_stack+0x10/0x20
->> [ 5032.841586]  __lock_acquire+0xa5a/0x2550
->> [ 5032.845548]  lock_acquire+0xc3/0x2f0
->> [ 5032.849156]  ? pm_runtime_get_conditional+0x26/0xb0
->> [ 5032.854066]  ? is_bpf_text_address+0x71/0x120
->> [ 5032.858487]  _raw_spin_lock_irqsave+0x4b/0x70
->> [ 5032.862892]  ? pm_runtime_get_conditional+0x26/0xb0
->> [ 5032.867814]  pm_runtime_get_conditional+0x26/0xb0
->> [ 5032.872570]  pm_runtime_get_if_active+0x13/0x20
->> [ 5032.877141]  xe_pm_runtime_get_if_active+0x12/0x20 [xe]
->> [ 5032.882545]  __xe_pmu_event_read+0x116/0x2a0 [xe]
->>
->> Thanks
->> Riana
->>
->>> +        u64 val = xe_gt_idle_residency_msec(&gt->gtidle);
->>> +
->>> +        xe_pm_runtime_put(xe);
->>> +
->>> +        return val;
->>> +    }
->>> +
->>> +    /*
->>> +     * Estimate the idle residency by looking at the time the device 
->>> was
->>> +     * suspended: should be good enough as long as the sampling 
->>> frequency is
->>> +     * 2x or more than the suspend frequency.
->>> +     */
->>> +    raw_spin_lock_irqsave(&pmu->lock, flags);
->>> +    t0 = pmu->suspend_timestamp[gt->info.id];
->>> +    raw_spin_unlock_irqrestore(&pmu->lock, flags);
->>> +
->>> +    delta = ktime_ms_delta(ktime_get(), t0);
->>> +
->>> +    return prev + delta;
->>> +}
->>> +
->>> +static u64 __xe_pmu_event_read(struct perf_event *event, u64 prev)
->>> +{
->>> +    struct xe_pmu *pmu = container_of(event->pmu, typeof(*pmu), base);
->>> +    struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
->>>      struct xe_gt *gt = event_to_gt(event);
->>> -    u64 val = 0;
->>>      if (!gt)
->>> -        return 0;
->>> +        return prev;
->>> +
->>> +    switch (config_to_event_id(event->attr.config)) {
->>> +    case XE_PMU_EVENT_GT_C6_RESIDENCY:
->>> +        return read_gt_c6_residency(pmu, gt, prev);
->>> +    }
->>> -    return val;
->>> +    return prev;
->>>  }
->>>  static void xe_pmu_event_update(struct perf_event *event)
->>> @@ -136,10 +171,11 @@ static void xe_pmu_event_update(struct 
->>> perf_event *event)
->>>      prev = local64_read(&hwc->prev_count);
->>>      do {
->>> -        new = __xe_pmu_event_read(event);
->>> +        new = __xe_pmu_event_read(event, prev);
->>>      } while (!local64_try_cmpxchg(&hwc->prev_count, &prev, new));
->>> -    local64_add(new - prev, &event->count);
->>> +    if (new > prev)
->>> +        local64_add(new - prev, &event->count);
->>>  }
->>>  static void xe_pmu_event_read(struct perf_event *event)
->>> @@ -162,7 +198,7 @@ static void xe_pmu_enable(struct perf_event *event)
->>>       * for all listeners. Even when the event was already enabled 
->>> and has
->>>       * an existing non-zero value.
->>>       */
->>> -    local64_set(&event->hw.prev_count, __xe_pmu_event_read(event));
->>> +    local64_set(&event->hw.prev_count, __xe_pmu_event_read(event, 0));
->>>  }
->>>  static void xe_pmu_event_start(struct perf_event *event, int flags)
->>> @@ -267,6 +303,10 @@ static const struct attribute_group 
->>> pmu_events_attr_group = {
->>>  static void set_supported_events(struct xe_pmu *pmu)
->>>  {
->>> +    struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
->>> +
->>> +    if (!xe->info.skip_guc_pc)
->>> +        pmu->supported_events |= BIT_ULL(XE_PMU_EVENT_GT_C6_RESIDENCY);
->>>  }
->>>  /**
->>
+Ian Rogers (17):
+  perf build: Remove libtracefs configuration
+  perf map: Constify objdump offset/address conversion APIs
+  perf capstone: Move capstone functionality into its own file
+  perf llvm: Move llvm functionality into its own file
+  perf capstone: Remove open_capstone_handle
+  perf capstone: Support for dlopen-ing libcapstone.so
+  perf llvm: Support for dlopen-ing libLLVM.so
+  perf llvm: Mangle libperf-llvm.so function names
+  perf dso: Move read_symbol from llvm/capstone to dso
+  perf dso: Support BPF programs in dso__read_symbol
+  perf llvm: Disassemble cleanup
+  perf dso: Clean up read_symbol error handling
+  perf build: Remove libbfd support
+  perf build: Remove libiberty support
+  perf build: Remove unused defines
+  perf disasm: Remove disasm_bpf
+  perf disasm: Make ins__scnprintf and ins__is_nop static
+
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |  90 +---
+ tools/perf/Makefile.perf                |  35 +-
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/builtin-script.c             |   2 -
+ tools/perf/tests/Build                  |   1 -
+ tools/perf/tests/builtin-test.c         |   1 -
+ tools/perf/tests/make                   |   4 +-
+ tools/perf/tests/pe-file-parsing.c      | 101 ----
+ tools/perf/tests/tests.h                |   1 -
+ tools/perf/util/Build                   |   5 +-
+ tools/perf/util/annotate.h              |   1 -
+ tools/perf/util/capstone.c              | 682 ++++++++++++++++++++++++
+ tools/perf/util/capstone.h              |  24 +
+ tools/perf/util/demangle-cxx.cpp        |  22 +-
+ tools/perf/util/disasm.c                | 632 +---------------------
+ tools/perf/util/disasm.h                |   5 +-
+ tools/perf/util/disasm_bpf.c            | 195 -------
+ tools/perf/util/disasm_bpf.h            |  12 -
+ tools/perf/util/dso.c                   |  98 ++++
+ tools/perf/util/dso.h                   |   4 +
+ tools/perf/util/llvm-c-helpers.cpp      | 120 ++++-
+ tools/perf/util/llvm-c-helpers.h        |  24 +-
+ tools/perf/util/llvm.c                  | 489 +++++++++++++++++
+ tools/perf/util/llvm.h                  |  24 +
+ tools/perf/util/map.c                   |  19 +-
+ tools/perf/util/map.h                   |   6 +-
+ tools/perf/util/print_insn.c            | 117 +---
+ tools/perf/util/srcline.c               | 306 +----------
+ tools/perf/util/srcline.h               |   6 +
+ tools/perf/util/symbol-elf.c            |  95 ----
+ tools/perf/util/symbol.c                | 135 -----
+ tools/perf/util/symbol.h                |   4 -
+ 33 files changed, 1552 insertions(+), 1710 deletions(-)
+ delete mode 100644 tools/perf/tests/pe-file-parsing.c
+ create mode 100644 tools/perf/util/capstone.c
+ create mode 100644 tools/perf/util/capstone.h
+ delete mode 100644 tools/perf/util/disasm_bpf.c
+ delete mode 100644 tools/perf/util/disasm_bpf.h
+ create mode 100644 tools/perf/util/llvm.c
+ create mode 100644 tools/perf/util/llvm.h
+
+-- 
+2.48.0.rc2.279.g1de40edade-goog
 
