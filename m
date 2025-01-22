@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674611C3C18;
-	Wed, 22 Jan 2025 02:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A91C4A26;
+	Wed, 22 Jan 2025 02:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737513128; cv=none; b=XBhcEe8eCx+ocORbOzqVP9CNkJOG4as/toDfsD6/Xsawit5bh5zqYIQEWPjCPhMI/FIjIMHHPGK3vEUodrq8OX4eN4PzgAjxoKFPbbcRTXjYkMi1lianiB4Cngnyt6ScKq9eSG9LmMrnBBFszADweU6J9r9lvBLIWmebHABIvpo=
+	t=1737513129; cv=none; b=OFXO7dL7SlK2HFO9HLNl7by7RXG1PgY4/2lXnUbmSCyltph0R8kDu08yqGk4SYXb8t+Kg1blDCs5biN52MMkOwRaxkcKc6jpG/OAddvoPzQki7P8B02n58kRaFbgCRUSu/3/ng4TMxSeC8HKYTO9Zmz7kDTMpVmCr/nLK0YkrM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737513128; c=relaxed/simple;
-	bh=Yq6Sy9F8GLI0+jx6f9TZDl5/tz4xxEMoL/ncBzNK5EU=;
+	s=arc-20240116; t=1737513129; c=relaxed/simple;
+	bh=t52ezAu10lmnZqY9cRbRZaguDtc+L+Sgw2qfNRQTEsE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DWxOdMyIaDaND9789eh72t81X3cupXpImYmVpBBjP8k8NVYvQscQvblzhvKCntatjOiz48mPd5YcWHvdT7l3QqisG4XaBc4Xf2tsnTTHRa9VgLAntv9CFCiuixiiZ5Ao1rx7DKhMZ/7UWg+t+L0RM6UE71Iyf+ZabXnqCT1+XkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leVaio9w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Bi8Q7cYrVMp6hfCGX9pz+Pm28fpMhV0cCFEPMTFTqBFZ4qn3x0um2DrPCYDPp/TkDdRD1Sc3+wRvSBbO78+Tq/VghEDWt2Toh+JkGvNSSCgGaBZiNMZU6TSrCYXMpWV0CAMHmbgifXfnw8b1JwywdxCfYEI8DajhuQMJojLV8dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFgOz+tW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leVaio9w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEEC9C4CEE6;
-	Wed, 22 Jan 2025 02:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFgOz+tW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B71BC4CEE0;
+	Wed, 22 Jan 2025 02:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737513127;
-	bh=Yq6Sy9F8GLI0+jx6f9TZDl5/tz4xxEMoL/ncBzNK5EU=;
+	s=k20201202; t=1737513128;
+	bh=t52ezAu10lmnZqY9cRbRZaguDtc+L+Sgw2qfNRQTEsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=leVaio9wlFZK8kle7zzEDn1b/dLayauALuaQlno+M7AUPnlfLcT1PvoY0bqEaogoP
-	 nypOCVPGKMKOmQCnVVYpBaHcNYdN5sdtfpfEaRmAvMkB4B1kuBesoQpTuUFlIjhdBk
-	 uh4MiTZa90qDhdjXfFw7rQezwhhnC0teKoz72n2+vsEOUIDLiiBcOpx//w5W6RkFqK
-	 d9GsvKhahcg1zzcSeBrhNU8CZiqKh4sIwizW9Fq9DnIiv7nht1VJRg3OS4/YTHgm+0
-	 00WKv4ISj+nwCE13ToXvY5Ue1wnzBULztwV7aEd0EP0TiPdQXGUZl7jf0PjADwOhJ6
-	 OO22hc85iyzyA==
+	b=hFgOz+tWSPmnTQrzGGwrfLgXFljDgDbpnXYTp4IZi420uDzdW7FEpGlTS1CRbW0ZW
+	 ao6ZslnLexANtEKuKz1xf+oRf0ZtsmjOm3sBk4+28I37msM/Sle3nFEPXR/AUuVrd0
+	 U9BugDjFFpuSTqH2DENNGMgb8W+3kIhUAZwGG2HammSaTh7yt8Yg5RSfKdZmbtUXbE
+	 mzZVHDPdWieuSJPrI6o6fcCkCy1ZJJ8RVeeicdSLrCZrEnN2SM8sAcHwm60d7W1/cb
+	 pLV6mZPuMiQmAwV+gJ4ouWf6qIcL26whZfiRbomnaC4ySK4fRBTvwF/ZjPriCbJmOR
+	 qtN7ByEVX5CTw==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -53,9 +53,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: [PATCH v4 15/39] unwind_user: Add compat mode frame pointer support
-Date: Tue, 21 Jan 2025 18:31:07 -0800
-Message-ID: <252c260bc65005fc3091b2bb9e0aabc2e5a6cea3.1737511963.git.jpoimboe@kernel.org>
+Subject: [PATCH v4 16/39] unwind_user/x86: Enable compat mode frame pointer unwinding on x86
+Date: Tue, 21 Jan 2025 18:31:08 -0800
+Message-ID: <a4946f6e8eff1eebedec54296482e4bbbec0ef30.1737511963.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1737511963.git.jpoimboe@kernel.org>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
@@ -67,207 +67,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add optional support for user space compat mode frame pointer unwinding.
-If supported, the arch needs to enable CONFIG_HAVE_UNWIND_USER_COMPAT_FP
-and define ARCH_INIT_USER_COMPAT_FP_FRAME.
+Use ARCH_INIT_USER_COMPAT_FP_FRAME to describe how frame pointers are
+unwound on x86, and implement the hooks needed to add the segment base
+addresses.  Enable HAVE_UNWIND_USER_COMPAT_FP if the system has compat
+mode compiled in.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/Kconfig                            |  4 +++
- include/asm-generic/Kbuild              |  2 ++
- include/asm-generic/unwind_user.h       | 15 +++++++++++
- include/asm-generic/unwind_user_types.h |  9 +++++++
- include/linux/unwind_user_types.h       |  3 +++
- kernel/unwind/user.c                    | 36 ++++++++++++++++++++++---
- 6 files changed, 65 insertions(+), 4 deletions(-)
- create mode 100644 include/asm-generic/unwind_user_types.h
+ arch/x86/Kconfig                         |  1 +
+ arch/x86/include/asm/unwind_user.h       | 50 ++++++++++++++++++++++++
+ arch/x86/include/asm/unwind_user_types.h | 17 ++++++++
+ 3 files changed, 68 insertions(+)
+ create mode 100644 arch/x86/include/asm/unwind_user_types.h
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index cf996cbb8142..f1f7a3857c97 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -442,6 +442,10 @@ config HAVE_UNWIND_USER_FP
- 	bool
- 	select UNWIND_USER
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index f938b957a927..08c44db0fefb 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -291,6 +291,7 @@ config X86
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
++	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
+ 	select HAVE_UNWIND_USER_FP		if X86_64
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index 8597857bf896..bb1148111259 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -2,10 +2,60 @@
+ #ifndef _ASM_X86_UNWIND_USER_H
+ #define _ASM_X86_UNWIND_USER_H
  
-+config HAVE_UNWIND_USER_COMPAT_FP
-+	bool
-+	depends on HAVE_UNWIND_USER_FP
++#include <linux/unwind_user_types.h>
++#include <asm/ptrace.h>
++#include <asm/perf_event.h>
 +
- config AS_SFRAME
- 	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
+ #define ARCH_INIT_USER_FP_FRAME							\
+ 	.cfa_off	= (s32)sizeof(long) *  2,				\
+ 	.ra_off		= (s32)sizeof(long) * -1,				\
+ 	.fp_off		= (s32)sizeof(long) * -2,				\
+ 	.use_fp		= true,
  
-diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
-index 1b43c3a77012..2f3e4e2d8610 100644
---- a/include/asm-generic/Kbuild
-+++ b/include/asm-generic/Kbuild
-@@ -58,6 +58,8 @@ mandatory-y += tlbflush.h
- mandatory-y += topology.h
- mandatory-y += trace_clock.h
- mandatory-y += uaccess.h
-+mandatory-y += unwind_user.h
-+mandatory-y += unwind_user_types.h
- mandatory-y += vermagic.h
- mandatory-y += vga.h
- mandatory-y += video.h
-diff --git a/include/asm-generic/unwind_user.h b/include/asm-generic/unwind_user.h
-index 832425502fb3..385638ce4aec 100644
---- a/include/asm-generic/unwind_user.h
-+++ b/include/asm-generic/unwind_user.h
-@@ -2,8 +2,23 @@
- #ifndef _ASM_GENERIC_UNWIND_USER_H
- #define _ASM_GENERIC_UNWIND_USER_H
- 
-+#include <asm/unwind_user_types.h>
++#ifdef CONFIG_IA32_EMULATION
 +
- #ifndef ARCH_INIT_USER_FP_FRAME
-  #define ARCH_INIT_USER_FP_FRAME
- #endif
- 
-+#ifndef ARCH_INIT_USER_COMPAT_FP_FRAME
-+ #define ARCH_INIT_USER_COMPAT_FP_FRAME
-+ #define in_compat_mode(regs) false
-+#endif
++#define ARCH_INIT_USER_COMPAT_FP_FRAME						\
++	.cfa_off	= (s32)sizeof(u32)  *  2,				\
++	.ra_off		= (s32)sizeof(u32)  * -1,				\
++	.fp_off		= (s32)sizeof(u32)  * -2,				\
++	.use_fp		= true,
 +
-+#ifndef arch_unwind_user_init
-+static inline void arch_unwind_user_init(struct unwind_user_state *state, struct pt_regs *reg) {}
-+#endif
++#define in_compat_mode(regs) !user_64bit_mode(regs)
 +
-+#ifndef arch_unwind_user_next
-+static inline void arch_unwind_user_next(struct unwind_user_state *state) {}
-+#endif
-+
- #endif /* _ASM_GENERIC_UNWIND_USER_H */
-diff --git a/include/asm-generic/unwind_user_types.h b/include/asm-generic/unwind_user_types.h
-new file mode 100644
-index 000000000000..ee803de7c998
---- /dev/null
-+++ b/include/asm-generic/unwind_user_types.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_GENERIC_UNWIND_USER_TYPES_H
-+#define _ASM_GENERIC_UNWIND_USER_TYPES_H
-+
-+#ifndef arch_unwind_user_state
-+struct arch_unwind_user_state {};
-+#endif
-+
-+#endif /* _ASM_GENERIC_UNWIND_USER_TYPES_H */
-diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
-index 65bd070eb6b0..3ec4a097a3dd 100644
---- a/include/linux/unwind_user_types.h
-+++ b/include/linux/unwind_user_types.h
-@@ -3,10 +3,12 @@
- #define _LINUX_UNWIND_USER_TYPES_H
- 
- #include <linux/types.h>
-+#include <asm/unwind_user_types.h>
- 
- enum unwind_user_type {
- 	UNWIND_USER_TYPE_NONE,
- 	UNWIND_USER_TYPE_FP,
-+	UNWIND_USER_TYPE_COMPAT_FP,
- };
- 
- struct unwind_stacktrace {
-@@ -25,6 +27,7 @@ struct unwind_user_state {
- 	unsigned long ip;
- 	unsigned long sp;
- 	unsigned long fp;
-+	struct arch_unwind_user_state arch;
- 	enum unwind_user_type type;
- 	bool done;
- };
-diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
-index 73fd4e150dfd..92963f129c6a 100644
---- a/kernel/unwind/user.c
-+++ b/kernel/unwind/user.c
-@@ -13,12 +13,32 @@ static struct unwind_user_frame fp_frame = {
- 	ARCH_INIT_USER_FP_FRAME
- };
- 
-+static struct unwind_user_frame compat_fp_frame = {
-+	ARCH_INIT_USER_COMPAT_FP_FRAME
-+};
-+
- static inline bool fp_state(struct unwind_user_state *state)
- {
- 	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
- 	       state->type == UNWIND_USER_TYPE_FP;
- }
- 
-+static inline bool compat_state(struct unwind_user_state *state)
++static inline void arch_unwind_user_init(struct unwind_user_state *state,
++					 struct pt_regs *regs)
 +{
-+	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) &&
-+	       state->type == UNWIND_USER_TYPE_COMPAT_FP;
++	unsigned long cs_base, ss_base;
++
++	if (state->type != UNWIND_USER_TYPE_COMPAT_FP)
++		return;
++
++	scoped_guard(irqsave) {
++		cs_base = segment_base_address(regs->cs);
++		ss_base = segment_base_address(regs->ss);
++	}
++
++	state->arch.cs_base = cs_base;
++	state->arch.ss_base = ss_base;
++
++	state->ip += cs_base;
++	state->sp += ss_base;
++	state->fp += ss_base;
 +}
++#define arch_unwind_user_init arch_unwind_user_init
 +
-+#define UNWIND_GET_USER_LONG(to, from, state)				\
-+({									\
-+	int __ret;							\
-+	if (compat_state(state))					\
-+		__ret = get_user(to, (u32 __user *)(from));		\
-+	else								\
-+		__ret = get_user(to, (u64 __user *)(from));		\
-+	__ret;								\
-+})
++static inline void arch_unwind_user_next(struct unwind_user_state *state)
++{
++	if (state->type != UNWIND_USER_TYPE_COMPAT_FP)
++		return;
 +
- int unwind_user_next(struct unwind_user_state *state)
- {
- 	struct unwind_user_frame _frame;
-@@ -28,7 +48,9 @@ int unwind_user_next(struct unwind_user_state *state)
- 	if (state->done)
- 		return -EINVAL;
- 
--	if (fp_state(state))
-+	if (compat_state(state))
-+		frame = &compat_fp_frame;
-+	else if (fp_state(state))
- 		frame = &fp_frame;
- 	else
- 		goto the_end;
-@@ -39,10 +61,10 @@ int unwind_user_next(struct unwind_user_state *state)
- 	if (cfa <= state->sp)
- 		goto the_end;
- 
--	if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
-+	if (UNWIND_GET_USER_LONG(ra, cfa + frame->ra_off, state))
- 		goto the_end;
- 
--	if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
-+	if (frame->fp_off && UNWIND_GET_USER_LONG(fp, cfa + frame->fp_off, state))
- 		goto the_end;
- 
- 	state->ip = ra;
-@@ -50,6 +72,8 @@ int unwind_user_next(struct unwind_user_state *state)
- 	if (frame->fp_off)
- 		state->fp = fp;
- 
-+	arch_unwind_user_next(state);
++	state->ip += state->arch.cs_base;
++	state->fp += state->arch.ss_base;
++}
++#define arch_unwind_user_next arch_unwind_user_next
 +
- 	return 0;
- 
- the_end:
-@@ -68,7 +92,9 @@ int unwind_user_start(struct unwind_user_state *state)
- 		return -EINVAL;
- 	}
- 
--	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
-+	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) && in_compat_mode(regs))
-+		state->type = UNWIND_USER_TYPE_COMPAT_FP;
-+	else if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
- 		state->type = UNWIND_USER_TYPE_FP;
- 	else
- 		state->type = UNWIND_USER_TYPE_NONE;
-@@ -77,6 +103,8 @@ int unwind_user_start(struct unwind_user_state *state)
- 	state->sp = user_stack_pointer(regs);
- 	state->fp = frame_pointer(regs);
- 
-+	arch_unwind_user_init(state, regs);
++#endif /* CONFIG_IA32_EMULATION */
 +
- 	return 0;
- }
- 
++#include <asm-generic/unwind_user.h>
++
+ #endif /* _ASM_X86_UNWIND_USER_H */
+diff --git a/arch/x86/include/asm/unwind_user_types.h b/arch/x86/include/asm/unwind_user_types.h
+new file mode 100644
+index 000000000000..d7074dc5f0ce
+--- /dev/null
++++ b/arch/x86/include/asm/unwind_user_types.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_UNWIND_USER_TYPES_H
++#define _ASM_UNWIND_USER_TYPES_H
++
++#ifdef CONFIG_IA32_EMULATION
++
++struct arch_unwind_user_state {
++	unsigned long ss_base;
++	unsigned long cs_base;
++};
++#define arch_unwind_user_state arch_unwind_user_state
++
++#endif /* CONFIG_IA32_EMULATION */
++
++#include <asm-generic/unwind_user_types.h>
++
++#endif /* _ASM_UNWIND_USER_TYPES_H */
 -- 
 2.48.1
 
