@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A293A1D47AE;
-	Wed, 22 Jan 2025 02:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24391D5CCC;
+	Wed, 22 Jan 2025 02:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737513139; cv=none; b=Q6jlOZSi7/GZC3ntlk1EHv1jC5WvwYXfZ7IzcXFWaKJzqcG6gbo/iDZcifbbeyd2tcb5MGI/Z1B0V4SwWnv2hSNT4YqgSzVUH+sQHRbk5y4Bi0TsY/FNflPP7v1YJMf4uo2oj++MlB+MZROozw6flRRtuaTb5EpxaNjdwF4pOQQ=
+	t=1737513140; cv=none; b=FptLNt/NPCO2ooSlKnvmMg/TiN6r6oLX+4ekK3vwo14EbtjDyYf/P3WoApBvo12b/zrvePC5+UZ9wFTBuWAV/Hnj92c7EDDmHd9wGuFJnHLuNfBqbB5lrqt+VFqggp/jtcuJnwSf0NlytXrEwsg+LOnSok6UD/r/GOrINHgQl1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737513139; c=relaxed/simple;
-	bh=B3rzqWK+3dbuAMW6Yd/wHbo0urS3X1S4CoqxAu7Q/kk=;
+	s=arc-20240116; t=1737513140; c=relaxed/simple;
+	bh=YdokVxORLyw0FxMyJUC9g39qf45hCSMsY+ha4iDY2z4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iU/Hjkzhqkxy3Rg3isCtRc2X6jsX9j9CgjvMkUwE4pqPYzcHLoj/1unhF2tuG0B17+ze+PLL1OsThSnqlWJRiY2Rln1YNfbr9i8RGNwh9Q4cp1S84sQIMpeRr6G5e7Z29p9CXD7Yh1QW4YmvFQgeghiGCoXRUr+T5/rnnsfYFzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOs7iLC+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bfPmgXN64vMZrcKFWuQRQIdBWH1aasyHT+b+4ytz68KHWoxDvFZpyHjJQi6GEJYjSoK3r/pBRnbN/eAyddCPnleF8wp/sjhA/y0aIB/Oe/63hlKUjwfq3o4p3OUZwVnJTtUM4ItgTf5c/Uo8FdVZdkFRgUk74GpALkOfT+VZrwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONBj9H+M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOs7iLC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482D1C4CEE2;
-	Wed, 22 Jan 2025 02:32:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONBj9H+M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C119C4CEDF;
+	Wed, 22 Jan 2025 02:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737513139;
-	bh=B3rzqWK+3dbuAMW6Yd/wHbo0urS3X1S4CoqxAu7Q/kk=;
+	s=k20201202; t=1737513140;
+	bh=YdokVxORLyw0FxMyJUC9g39qf45hCSMsY+ha4iDY2z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jOs7iLC+5Y5SrGTs+eo1KrPvKXGsuXcr6f96sJ+5cNCVKFqeCSgWZOfXyOSj+RxxN
-	 GVMtk7EWG6cvLgFcM5uDToqIKjSMYcN2WGCMOTlx/8smeoo0SFRVHCeaEIBd6KD2bB
-	 3bS5cpt4MN8xVWDNzlc2VldfshL979OlZH2Tr655aqQ35ZTE1YQe71gzifVOUFvl5V
-	 Wzr6ve+JcAEpG6dQftuBERuN1RsPlGb/bODQsLn1kSkfTKGR1sX82b4rEMAzWJ8DyA
-	 MWnbv/FjR8YnvXWGc0T6y5lyU3QlJD4p6Cn0jElKRpb8Uyy1mf3YnK1q3J4+d21lM+
-	 nI+R1/HzDkmhQ==
+	b=ONBj9H+M9B5Xi79oMeluW0MFsqv4B12Wm9Kgs0AtvwcMN91PavPN4dw38XCl0hfQd
+	 ymjxZG+WXlLYfq15A0AR1cBwMEKvuENcTnmsU7rD6wqawyQONeBREoEsgLUOcu23gs
+	 BhQ4XENgRZRoqa0+uXYxh5rJ7uV9E38JSLzQwx3clDr4RvbI937eXR4Rpbe1Nzz6b0
+	 COXlynXlGTfKZtqi6k3/zm/mWS+ZjKUhfbrkcqMUCRKM6rZsRS/UkoY6UEUqmgDR+X
+	 +V1Yi5qZpO1DNTQgFKZ8qCk/OADJ+bvjqdYBJQrsOxD94MFcsQLJmKtQbuh5+8GnC1
+	 TJx+QYOUDo5Nw==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -53,9 +53,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess regions
-Date: Tue, 21 Jan 2025 18:31:18 -0800
-Message-ID: <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
+Subject: [PATCH v4 27/39] unwind_user/sframe: Add .sframe validation option
+Date: Tue, 21 Jan 2025 18:31:19 -0800
+Message-ID: <3c7be3db0795ba8d660ee21ef5980e8ab7780c12.1737511963.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1737511963.git.jpoimboe@kernel.org>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
@@ -67,226 +67,144 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Objtool warns about calling pr_debug() from uaccess-enabled regions, and
-rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
-uaccess before doing the dynamic printk, and use that to add debug
-messages throughout the uaccess-enabled regions.
+Add a debug feature to validate all .sframe sections when first loading
+the file rather than on demand.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- kernel/unwind/sframe.c       | 59 ++++++++++++++++++++++++++++--------
- kernel/unwind/sframe_debug.h | 31 +++++++++++++++++++
- 2 files changed, 77 insertions(+), 13 deletions(-)
+ arch/Kconfig           | 19 ++++++++++
+ kernel/unwind/sframe.c | 81 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 100 insertions(+)
 
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 12a3b73cbe66..b3676605bab6 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -453,6 +453,25 @@ config HAVE_UNWIND_USER_SFRAME
+ config AS_SFRAME
+ 	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
+ 
++config SFRAME_VALIDATION
++	bool "Enable .sframe section debugging"
++	depends on HAVE_UNWIND_USER_SFRAME
++	depends on DYNAMIC_DEBUG
++	help
++	  When adding an .sframe section for a task, validate the entire
++	  section immediately rather than on demand.
++
++	  This is a debug feature which is helpful for rooting out .sframe
++	  section issues.  If the .sframe section is corrupt, it will fail to
++	  load immediately, with more information provided in dynamic printks.
++
++	  This has a significant page cache footprint due to its reading of the
++	  entire .sframe section for every loaded executable and shared
++	  library.  Also, it's done for all processes, even those which don't
++	  get stack traced by the kernel.  Not recommended for general use.
++
++	  If unsure, say N.
++
+ config HAVE_PERF_REGS
+ 	bool
+ 	help
 diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index f463123f9afe..a2ca26b952d3 100644
+index a2ca26b952d3..bba14c5fe0f5 100644
 --- a/kernel/unwind/sframe.c
 +++ b/kernel/unwind/sframe.c
-@@ -53,12 +53,15 @@ static __always_inline int __read_fde(struct sframe_section *sec,
- 			      sizeof(struct sframe_fde), Efault);
- 
- 	ip = sec->sframe_start + fde->start_addr;
--	if (ip < sec->text_start || ip > sec->text_end)
-+	if (ip < sec->text_start || ip > sec->text_end) {
-+		dbg_sec_uaccess("bad fde num %d\n", fde_num);
- 		return -EINVAL;
-+	}
- 
- 	return 0;
- 
- Efault:
-+	dbg_sec_uaccess("fde %d usercopy failed\n", fde_num);
- 	return -EFAULT;
+@@ -336,6 +336,83 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
+ 	return ret;
  }
  
-@@ -85,16 +88,22 @@ static __always_inline int __find_fde(struct sframe_section *sec,
- 		unsafe_get_user(func_off, (s32 __user *)mid, Efault);
- 
- 		if (ip_off >= func_off) {
--			if (func_off < func_off_low)
-+			if (func_off < func_off_low) {
-+				dbg_sec_uaccess("fde %u not sorted\n",
-+						(unsigned int)(mid - first));
- 				return -EFAULT;
-+			}
- 
- 			func_off_low = func_off;
- 
- 			found = mid;
- 			low = mid + 1;
- 		} else {
--			if (func_off > func_off_high)
-+			if (func_off > func_off_high) {
-+				dbg_sec_uaccess("fde %u not sorted\n",
-+						(unsigned int)(mid - first));
- 				return -EFAULT;
-+			}
- 
- 			func_off_high = func_off;
- 
-@@ -140,6 +149,8 @@ static __always_inline int __find_fde(struct sframe_section *sec,
- 		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
- 		break;							\
- 	default:							\
-+		dbg_sec_uaccess("%d: bad UNSAFE_GET_USER_INC size %u\n",\
-+				__LINE__, size);			\
- 		return -EFAULT;						\
- 	}								\
- })
-@@ -158,24 +169,34 @@ static __always_inline int __read_fre(struct sframe_section *sec,
- 	u8 info;
- 
- 	addr_size = fre_type_to_size(fre_type);
--	if (!addr_size)
-+	if (!addr_size) {
-+		dbg_sec_uaccess("bad addr_size in fde info %u\n", fde->info);
- 		return -EFAULT;
-+	}
- 
--	if (fre_addr + addr_size + 1 > sec->fres_end)
-+	if (fre_addr + addr_size + 1 > sec->fres_end) {
-+		dbg_sec_uaccess("fre addr+info goes past end of subsection\n");
- 		return -EFAULT;
-+	}
- 
- 	UNSAFE_GET_USER_INC(ip_off, cur, addr_size, Efault);
--	if (fde_type == SFRAME_FDE_TYPE_PCINC && ip_off > fde->func_size)
-+	if (fde_type == SFRAME_FDE_TYPE_PCINC && ip_off > fde->func_size) {
-+		dbg_sec_uaccess("fre starts past end of function: ip_off=0x%x, func_size=0x%x\n",
-+				ip_off, fde->func_size);
- 		return -EFAULT;
-+	}
- 
- 	UNSAFE_GET_USER_INC(info, cur, 1, Efault);
- 	offset_count = SFRAME_FRE_OFFSET_COUNT(info);
- 	offset_size  = offset_size_enum_to_size(SFRAME_FRE_OFFSET_SIZE(info));
--	if (!offset_count || !offset_size)
-+	if (!offset_count || !offset_size) {
-+		dbg_sec_uaccess("zero offset_count or size in fre info %u\n",info);
- 		return -EFAULT;
--
--	if (cur + (offset_count * offset_size) > sec->fres_end)
-+	}
-+	if (cur + (offset_count * offset_size) > sec->fres_end) {
-+		dbg_sec_uaccess("fre goes past end of subsection\n");
- 		return -EFAULT;
-+	}
- 
- 	fre->size = addr_size + 1 + (offset_count * offset_size);
- 
-@@ -184,8 +205,10 @@ static __always_inline int __read_fre(struct sframe_section *sec,
- 
- 	ra_off = sec->ra_off;
- 	if (!ra_off) {
--		if (!offset_count--)
-+		if (!offset_count--) {
-+			dbg_sec_uaccess("zero offset_count, can't find ra_off\n");
- 			return -EFAULT;
-+		}
- 
- 		UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
- 	}
-@@ -196,8 +219,10 @@ static __always_inline int __read_fre(struct sframe_section *sec,
- 		UNSAFE_GET_USER_INC(fp_off, cur, offset_size, Efault);
- 	}
- 
--	if (offset_count)
-+	if (offset_count) {
-+		dbg_sec_uaccess("non-zero offset_count after reading fre\n");
- 		return -EFAULT;
-+	}
- 
- 	fre->ip_off		= ip_off;
- 	fre->cfa_off		= cfa_off;
-@@ -208,6 +233,7 @@ static __always_inline int __read_fre(struct sframe_section *sec,
- 	return 0;
- 
- Efault:
-+	dbg_sec_uaccess("fre usercopy failed\n");
- 	return -EFAULT;
- }
- 
-@@ -241,13 +267,20 @@ static __always_inline int __find_fre(struct sframe_section *sec,
- 		which = !which;
- 
- 		ret = __read_fre(sec, fde, fre_addr, fre);
--		if (ret)
-+		if (ret) {
-+			dbg_sec_uaccess("fde addr 0x%x: __read_fre(%u) failed\n",
-+					fde->start_addr, i);
-+			dbg_print_fde_uaccess(sec, fde);
- 			return ret;
-+		}
- 
- 		fre_addr += fre->size;
- 
--		if (prev_fre && fre->ip_off <= prev_fre->ip_off)
-+		if (prev_fre && fre->ip_off <= prev_fre->ip_off) {
-+			dbg_sec_uaccess("fde addr 0x%x: fre %u not sorted\n",
-+					fde->start_addr, i);
- 			return -EFAULT;
-+		}
- 
- 		if (fre->ip_off > ip_off)
- 			break;
-diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
-index 4d121cdbb760..3bb3c5574aee 100644
---- a/kernel/unwind/sframe_debug.h
-+++ b/kernel/unwind/sframe_debug.h
-@@ -13,6 +13,26 @@
- #define dbg_sec(fmt, ...)						\
- 	dbg("%s: " fmt, sec->filename, ##__VA_ARGS__)
- 
-+#define __dbg_sec_descriptor(fmt, ...)					\
-+	__dynamic_pr_debug(&descriptor, "sframe: %s: " fmt,		\
-+			   sec->filename, ##__VA_ARGS__)
++#ifdef CONFIG_SFRAME_VALIDATION
 +
-+/*
-+ * To avoid breaking uaccess rules, temporarily disable uaccess
-+ * before calling printk.
-+ */
-+#define dbg_sec_uaccess(fmt, ...)					\
-+({									\
-+	DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);			\
-+	if (DYNAMIC_DEBUG_BRANCH(descriptor)) {				\
-+		user_read_access_end();					\
-+		__dbg_sec_descriptor(fmt, ##__VA_ARGS__);		\
-+		BUG_ON(!user_read_access_begin(				\
-+				(void __user *)sec->sframe_start,	\
-+				sec->sframe_end - sec->sframe_start));	\
-+	}								\
-+})
-+
- static __always_inline void dbg_print_header(struct sframe_section *sec)
- {
- 	unsigned long fdes_end;
-@@ -27,6 +47,15 @@ static __always_inline void dbg_print_header(struct sframe_section *sec)
- 		sec->ra_off, sec->fp_off);
- }
- 
-+static __always_inline void dbg_print_fde_uaccess(struct sframe_section *sec,
-+						  struct sframe_fde *fde)
++static __always_inline int __sframe_validate_section(struct sframe_section *sec)
 +{
-+	dbg_sec_uaccess("FDE: start_addr:0x%x func_size:0x%x "
-+			"fres_off:0x%x fres_num:%d info:%u rep_size:%u\n",
-+			fde->start_addr, fde->func_size,
-+			fde->fres_off, fde->fres_num, fde->info, fde->rep_size);
++	unsigned long prev_ip = 0;
++	unsigned int i;
++
++	for (i = 0; i < sec->num_fdes; i++) {
++		struct sframe_fre *fre, *prev_fre = NULL;
++		unsigned long ip, fre_addr;
++		struct sframe_fde fde;
++		struct sframe_fre fres[2];
++		bool which = false;
++		unsigned int j;
++		int ret;
++
++		ret = __read_fde(sec, i, &fde);
++		if (ret)
++			return ret;
++
++		ip = sec->sframe_start + fde.start_addr;
++		if (ip <= prev_ip) {
++			dbg_sec_uaccess("fde %u not sorted\n", i);
++			return -EFAULT;
++		}
++		prev_ip = ip;
++
++		fre_addr = sec->fres_start + fde.fres_off;
++		for (j = 0; j < fde.fres_num; j++) {
++			int ret;
++
++			fre = which ? fres : fres + 1;
++			which = !which;
++
++			ret = __read_fre(sec, &fde, fre_addr, fre);
++			if (ret) {
++				dbg_sec_uaccess("fde %u: __read_fre(%u) failed\n", i, j);
++				dbg_print_fde_uaccess(sec, &fde);
++				return ret;
++			}
++
++			fre_addr += fre->size;
++
++			if (prev_fre && fre->ip_off <= prev_fre->ip_off) {
++				dbg_sec_uaccess("fde %u: fre %u not sorted\n", i, j);
++				return -EFAULT;
++			}
++
++			prev_fre = fre;
++		}
++	}
++
++	return 0;
 +}
 +
- static inline void dbg_init(struct sframe_section *sec)
++static int sframe_validate_section(struct sframe_section *sec)
++{
++	int ret;
++
++	if (!user_read_access_begin((void __user *)sec->sframe_start,
++				    sec->sframe_end - sec->sframe_start)) {
++		dbg_sec("section usercopy failed\n");
++		return -EFAULT;
++	}
++
++	ret = __sframe_validate_section(sec);
++	user_read_access_end();
++	return ret;
++}
++
++#else /*  !CONFIG_SFRAME_VALIDATION */
++
++static int sframe_validate_section(struct sframe_section *sec) { return 0; }
++
++#endif /* !CONFIG_SFRAME_VALIDATION */
++
++
+ static void free_section(struct sframe_section *sec)
  {
- 	struct mm_struct *mm = current->mm;
-@@ -53,8 +82,10 @@ static inline void dbg_free(struct sframe_section *sec)
+ 	dbg_free(sec);
+@@ -444,6 +521,10 @@ int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 		goto err_free;
+ 	}
  
- #define dbg(args...)			no_printk(args)
- #define dbg_sec(args...	)		no_printk(args)
-+#define dbg_sec_uaccess(args...)	no_printk(args)
- 
- static inline void dbg_print_header(struct sframe_section *sec) {}
-+static inline void dbg_print_fde_uaccess(struct sframe_section *sec, struct sframe_fde *fde) {}
- 
- static inline void dbg_init(struct sframe_section *sec) {}
- static inline void dbg_free(struct sframe_section *sec) {}
++	ret = sframe_validate_section(sec);
++	if (ret)
++		goto err_free;
++
+ 	ret = mtree_insert_range(sframe_mt, sec->text_start, sec->text_end, sec, GFP_KERNEL);
+ 	if (ret) {
+ 		dbg_sec("mtree_insert_range failed: text=%lx-%lx\n",
 -- 
 2.48.1
 
