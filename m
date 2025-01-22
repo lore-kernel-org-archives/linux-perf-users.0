@@ -1,123 +1,160 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F351249F9;
-	Wed, 22 Jan 2025 02:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BF7145B0B;
+	Wed, 22 Jan 2025 03:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737514525; cv=none; b=iQ0amyzE02PlNl8rq8TNLB9c+++v349cdvGt0oIWoxbMIXdvHgyqAnUwzdjiWPaXqm0897HTb4/SCFaYpbXg3u8O6802bqswbzE1JCILjuTKJoudGYNqgdlOF6MH3GoNdcxm//rM46f4LuuK6zz3cGn9WyMFtEGxW91hNTxboiU=
+	t=1737514926; cv=none; b=RGqSlyVx/J6n5jpKmoJN729mjQFbQFCE3gRjsF6TRKPsc+VsEIAt8r/xkAOHVgEPR6D+/m4TxFS+f9aqszFGGc9GY54yOP1u630QEUyzg0SAXZZG8rWvj7OqH4N63iFr9U/TX+3ViejwoW/Ccx0fRwCES5VIZ25TYyROnhg7qTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737514525; c=relaxed/simple;
-	bh=owsREPu73reOdOGqFXBmOYWByOrrb3fA/ohV8js5ZYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SAASCwdyT1P5aSMJRq5ewdQDQKqswIrZ1/WdYzA9WV6d4W+QHmhU4Cot6AnnqOhFYCFFzCDbTHkrqxvMIM1hxwzTT1qCF+OFcVcKpJfK+AyeqpDF7zrvMA2tFvEraziaCIa85uQLqHAWdul0iaE+gmlaKNa03wc5gh+QOOjO5NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P11IKxdM; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1737514926; c=relaxed/simple;
+	bh=BgrYG9WcCDnzmoSkAIsY6/9qnhPL92Gk3IPD/KQL+ME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S46sbqzU9zwCWoyIkhNZvqsIpLhUqUrI6sm+o/TgSEEdWdriOS/BcspA8oFiwRhcWyJpLTtnOn2Nfda1POJVgrcEL+PTIaBJk5aKtG+q7XTS+QS/ELEzrRnMoxHrqY4iqu04sEo7xAX9gHhvDaOru0IFCGkYBTiZwdUyRrVbV0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIBpLgfY; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P11IKxdM"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-216281bc30fso146562395ad.0;
-        Tue, 21 Jan 2025 18:55:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIBpLgfY"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e53ef7462b6so10004564276.3;
+        Tue, 21 Jan 2025 19:02:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737514523; x=1738119323; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RWGE/MqVRclJs2RoOlJ1F8C5SI97efwbC4+6/PUtfwc=;
-        b=P11IKxdMJeV2kdZH1kTMGhB81CXK5s5MgaYkI1+Xk2hH7WbJha1FL7Na4e4mOPByrg
-         5weEgeRavLLzdi/VMnysSYvdDbPKGkSz51RI/em8GawpgAqrA3kQ355YEhQYo6DuvNcU
-         qF7R8mUgLWfimXsgGxAGhtloma99HEUlUYsKSbXunQsyKwEcAAtvayZohcQmj9D0zb8Y
-         /9jlua8/NZoHEmHKtzU6uapH3saMiU1h2gaQRBdbU6oEerRL3K8/VVqcfrKICtPBOxzR
-         5aA8Wu+nh9K/HcM1r4QlYM24wo3hZzTNoXVNZKzpJTu360V86pmoQXAR4353fzROkIkf
-         zGrg==
+        d=gmail.com; s=20230601; t=1737514924; x=1738119724; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9OrJ7eS4GC3iycAalq2MpKxlqB3VQOcEMxEVWzDKl38=;
+        b=YIBpLgfYzyoelleRIBxJ3vEm656trLPAnwEGNOsCVeTUeLIFigOlJHTaCvMIu2Flwe
+         MdNsjzopcpCWJ07//OSeyTLutJxHGuRjGKPr0g/fZNBjJUpdAac3K46oDvz+fpf7KXqw
+         TJjA/wJub+LBWSu/yca8Wd0c7S/869h4jHySy3Qx0swjymtsUGeqGLdOTxMLQbcn+iMq
+         rBjtSRp1NPGnlZWOD8mxiBmhT10yx671cYSdl01I+eFqIKWXSoUFHMo2SWxl9qNfPoHS
+         fUMXgjUJ2CJZSsemKlM2EMBtl5cDdqbfkvqeULNb+ILe7SBg4qJvMcNV3J4CsVUOlzeo
+         yeiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737514523; x=1738119323;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RWGE/MqVRclJs2RoOlJ1F8C5SI97efwbC4+6/PUtfwc=;
-        b=lKmR63I85XX1Wx6UPC8lq+KJdmOMJ9T1aieR8kEAi8sw/f4+r23181Db6eragNwgWs
-         q602HPHFWoiQrGi3P9YHnADOqa3hXaC4b2BQgWJLrCmXjXEuOKSIvbR4az9MA/5xC7BV
-         E/iqoAZT6cxcz2by9QSXSKY6mQZJ095jjMhT2OOnDIJISpQ8/zezXtqYoTsw3j7B79B9
-         HNRr4EobAYjA2O4Kcv83U4hpALretyXL+QMAdiHyj9ctyGGE1w0mqk7qeBn/gt+mdzH4
-         VD/B2o2M75vVJEfdWf5DFdF6nlb/TGCUgSTkgivsJb2ly5OzewCeicP+h+u/OVE/30ml
-         QNGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCRBaxCqgBUIoMlgA749VCH7FPyelHMSn5ZuWBqJa0N1YHxWTazV0ST5Ghi/ANq7hqOz0J8JptizfEZeK3aU5ykw==@vger.kernel.org, AJvYcCWlsKEtLmBu3VbWOoZb0awHPPqWaQwtgd7+yu3etiYedeq/zCkUfhXoOVqebjH6LMG4n3gpOCna1JqXYec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMvlreD1tlWtKWgT0wct6wHWxYPI5k1kU783NZQfzUMFS7hDZ6
-	kDmJhS2Z64I+e+EoAjGm4s31mirH4dGuDPGpWCNvF8gdKI5P0D46
-X-Gm-Gg: ASbGnctn2Uw+DL/hBb+fafg8vUSysPFltI9JFEGQx4dwOam9pLLoICg07nylnrTxqES
-	Ykx9SZX/H33eb84u+4BNMLOb4qLlW7c7gzv6XxOJOVk37OKfjFEUkNgrz1TpUpCp88YBRCOZtUP
-	2mRfHAnK+jjhWK4cN3PdAc7Xr0ftY5rENUdfS80D/wdCiPqsMindYbH4AH5a96iRzuPkaANjfzB
-	eZCxQKKVXV3GDezBM2C6QgCpbm2I5lYjVlER8tog5P3wYQlRi9l4goOajUOKvUmYnmuHulC6+0/
-	EwIkb+kcz7+EK0xteMs/oiXrMA==
-X-Google-Smtp-Source: AGHT+IE4we7e1x4y1dhztqc0aOIMQ3eqPIwZwNaMqsEuasPMYm1B5aLGa3dAEplUxQc2OQRm9Quo3Q==
-X-Received: by 2002:a17:902:f78f:b0:216:7cde:523 with SMTP id d9443c01a7336-21c35630682mr284911755ad.32.1737514522620;
-        Tue, 21 Jan 2025 18:55:22 -0800 (PST)
-Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2ceb9b9csm84621145ad.94.2025.01.21.18.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 18:55:22 -0800 (PST)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: namhyung@kernel.org,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v1] perf trace: Fix runtime error of index out of bounds
-Date: Tue, 21 Jan 2025 18:55:19 -0800
-Message-ID: <20250122025519.361873-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1737514924; x=1738119724;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9OrJ7eS4GC3iycAalq2MpKxlqB3VQOcEMxEVWzDKl38=;
+        b=Fka7+FWa9Q9S9LB2oKOsMi9iPFQrnuCgcWgZUdcEeGKudM8HCC1liukzw+KyqU1ocy
+         9o+OaP518/i+Ee2bNHucjXFvvFn+eTjyB5uWDGWZwP+dnq15vlN1/MgJUz65kQKJ3OoV
+         WfEBCrs0iAV0+9FQqPs04LKyUG7U9IrmHDtgiuxM1olhDTLGNXecZmAU64XQOXljyp1u
+         fTQ3ffjZQutluD1cRuspUVhTAIgvmTWc5lopJgXpFjnYyW6KbSEpUCDg5MZevj7exMHu
+         XlX3cWmS62FEMFgxoRZlA02ueoKRZHPuo3BO6suIBvh/hkjqwpPtbwmtfdAz0Sc1ad9t
+         405Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ZY0Q2k8PUdt1EZU6kdFljGz74sJbHJAAYWaCgbtu8s7d4GYacnm27z15QL3QZqXolOAThw6P9FyrNX7+2iaG3A==@vger.kernel.org, AJvYcCXHM3WJW57jM9/gAAEjuv3GVWSpMFNJU+WWz+08vq+t3dDgQ1kRD4eihw2RUJCgASVCYOiv/aUce4Ys51s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybyI+RHDhyOUVEew3aA6yhfLyJ8ky2rG5DHgmOGBKJXCJ/h9sP
+	WvYvNCMGR9BLbjy8ivlxpkabDosiVwEgqkQnkb5CViqA3GR2BAY1GWeiQMx1Nodht+myOGqn+86
+	bVbGSn+Vbz6mqfXa3RVVCkTWpVUM=
+X-Gm-Gg: ASbGncsIJrXbuNkl7FS0FnIJ56aK3gnnNS/co2Tbn9GU3sAjD2Oe4Ok5MfAJ3Syia//
+	OuFRxkX8Gg/BmrGulq3sjvpXqLb2IrUeKqXkKiEpAFMK9t4X+VQ==
+X-Google-Smtp-Source: AGHT+IHDEtZKHbVBPsCFpFck/wsXq4P8AQd2F9THTcsa0WJbOznAELCxMTHwx+M7fsXvKpye/cJh60dvhnGneaxPMnE=
+X-Received: by 2002:a05:690c:6603:b0:6ef:c5f6:2ac8 with SMTP id
+ 00721157ae682-6f6eb904750mr162063147b3.27.1737514923643; Tue, 21 Jan 2025
+ 19:02:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com> <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
+In-Reply-To: <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Tue, 21 Jan 2025 19:01:53 -0800
+X-Gm-Features: AbW1kvY_OofDRzdzofl5f6gCf7hJD4ohz31QQJqvExZBbmJqkIovc5V0cIUDt_o
+Message-ID: <CAH0uvohQvqRYo8JBX_Z1yVobqcxRgQG4G1Y8o8XMv18CnrqBbA@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Remove return value of trace__fprintf_tp_fields
+To: Benjamin Peterson <benjamin@engflow.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-libtraceevent parses and returns an array of argument fields, sometimes
-larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr",
-idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
-elements max, creating an out-of-bounds access. This runtime error is
-found by UBsan. The error message:
+Hello fellow maintainers,
 
-perf $ sudo UBSAN_OPTIONS=print_stacktrace=1 ./perf trace -a --max-events=1
-builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type 'syscall_arg_fmt [6]'
-    #0 0x5c04956be5fe in syscall__alloc_arg_fmts /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:1966
-    #1 0x5c04956c0510 in trace__read_syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2110
-    #2 0x5c04956c372b in trace__syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2436
-    #3 0x5c04956d2f39 in trace__init_syscalls_bpf_prog_array_maps /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:3897
-    #4 0x5c04956d6d25 in trace__run /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:4335
-    #5 0x5c04956e112e in cmd_trace /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:5502
-    #6 0x5c04956eda7d in run_builtin /home/howard/hw/linux-perf/tools/perf/perf.c:351
-    #7 0x5c04956ee0a8 in handle_internal_command /home/howard/hw/linux-perf/tools/perf/perf.c:404
-    #8 0x5c04956ee37f in run_argv /home/howard/hw/linux-perf/tools/perf/perf.c:448
-    #9 0x5c04956ee8e9 in main /home/howard/hw/linux-perf/tools/perf/perf.c:556
-    #10 0x79eb3622a3b7 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #11 0x79eb3622a47a in __libc_start_main_impl ../csu/libc-start.c:360
-    #12 0x5c04955422d4 in _start (/home/howard/hw/linux-perf/tools/perf/perf+0x4e02d4) (BuildId: 5b6cab2d59e96a4341741765ad6914a4d784dbc6)
+Just a slight ping.
 
-     0.000 ( 0.014 ms): Chrome_ChildIO/117244 write(fd: 238, buf: !, count: 1)                                      = 1
+Thanks,
+Howard
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d7c7d29291fb..8d3260bad10a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2108,7 +2108,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	}
- 
- 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
--					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields))
-+					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields - 1))
- 		return -ENOMEM;
- 
- 	sc->args = sc->tp_format->format.fields;
--- 
-2.45.2
-
+On Fri, Dec 13, 2024 at 10:06=E2=80=AFAM Howard Chu <howardchu95@gmail.com>=
+ wrote:
+>
+> Hello Benjamin,
+>
+> On Thu, Dec 12, 2024 at 7:56=E2=80=AFPM Benjamin Peterson <benjamin@engfl=
+ow.com> wrote:
+> >
+> > The return value of this function was meaningless and therefore ignored=
+ by
+> > the caller. Remove it.
+> >
+> > Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+> > ---
+> > This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("pe=
+rf
+> > trace: avoid garbage when not printing a trace event's arguments").
+> > ---
+> >  tools/perf/builtin-trace.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..246be66fd59a4b9d76e4d3c=
+42b68d0a444ca366a 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -3022,8 +3022,8 @@ static void bpf_output__fprintf(struct trace *tra=
+ce,
+> >         ++trace->nr_events_printed;
+> >  }
+> >
+> > -static size_t trace__fprintf_tp_fields(struct trace *trace, struct evs=
+el *evsel, struct perf_sample *sample,
+> > -                                      struct thread *thread, void *aug=
+mented_args, int augmented_args_size)
+> > +static void trace__fprintf_tp_fields(struct trace *trace, struct evsel=
+ *evsel, struct perf_sample *sample,
+> > +                                    struct thread *thread, void *augme=
+nted_args, int augmented_args_size)
+> >  {
+> >         char bf[2048];
+> >         size_t size =3D sizeof(bf);
+> > @@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct tra=
+ce *trace, struct evsel *evsel,
+> >                 printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf + p=
+rinted, size - printed, &syscall_arg, val);
+> >         }
+> >
+> > -       return printed + fprintf(trace->output, "%.*s", (int)printed, b=
+f);
+> > +       fprintf(trace->output, "%.*s", (int)printed, bf);
+> >  }
+> >
+> >  static int trace__event_handler(struct trace *trace, struct evsel *evs=
+el,
+> >
+> > ---
+> > base-commit: eefa7a9c069908412f8f5d15833901d1b46ae1b2
+> > change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+> >
+> > Best regards,
+> > --
+> > Benjamin Peterson <benjamin@engflow.com>
+> >
+> >
+>
+> Thank you for the follow-up patch, LGTM. Built and tested.
+>
+> perf $ ./perf test "perf trace"
+> 109: perf trace enum augmentation tests                              : Ok
+> 110: perf trace exit race                                            : Ok
+>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+>
+> Thanks,
+> Howard
