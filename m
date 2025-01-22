@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEC01C175A
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF19D1BBBE3
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737527120; cv=none; b=uS26P+CD5b9pW0Bv2to98wcmu2OIORDtPMjloftFIpyE1asmEo8hKL2uZAkqUEj3mETD8lXN1ovz0kSd00gswwlCnHVzdDuNhs0KiD8cndeJ2K2y+QQ11nS33ve+c4/Molim0y4TOIBHsMgWrNjuVMJyXv7Sjx7kq4lrgb0e1DA=
+	t=1737527130; cv=none; b=g3oZTl2AIUq9RiO5hQXt7Ognf0s/XCcmr41q+9AGotOdH6cpTzJ5RHHKBmxCanc5omEJWnZm5usvLcgfr1Q8mkpNTmvj8jht7PJB+Z81Ybl/0wyHCC5OF+ayZlF52yEc+zPgmafVlgp1cLt671GIoXrss7TqK4ZRfFd7niJiLRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737527120; c=relaxed/simple;
-	bh=fslZfMEltprSZcTKlHEcI81MzAYEcQiKGjjQrOFeeQs=;
+	s=arc-20240116; t=1737527130; c=relaxed/simple;
+	bh=Lzob+NuJy06upC4gEoA3ss329xpU9HN0aFks4gS31oA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=VKY/V++0WNLl9R04ugFQTI/aC9/u1u7/r2aEA1iiSotBhBjb/Qd7Wxc+uIIOw3kLAZC9c3+iFarwHhSQNbj1C/f3Jctq0DQxZdJ8rxccUaGwMHyd47k7DrCHA/vXNFjZTF1cEuDFXKGzO6tVAFolk0IJH8Jn4DU8QSnztl5NeLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ijyAVgO; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=nsa0ej8MmBhFkgkHD0oUDSy0ErwL+o/WJ2OawVDnb2mrIvivuifuP1/IhQ58hlVWcO+GZTO8p91zaRAzyyaasZ2fY+ME0gUimniCOT0Io4DFaZj2e/KxbO7TxPqp81UV0WKdjQytrgSmCyPiNFciEqMSXNBf2St7cSH5OghMrjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ANiKYH4z; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ijyAVgO"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e3fea893dc5so1439191276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:25:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ANiKYH4z"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572df6db3eso14153815276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:25:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737527118; x=1738131918; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737527128; x=1738131928; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ifAh4z9tkFouiScWwWQSL99thftn0z74dbeCX/fEfD8=;
-        b=4ijyAVgOgmNWOI0u5LeNsDEhFDkMNtAzjr00Xc5nYgmBo/id2uy5pVM31oDTG03O6U
-         0HYTfJVlIp21M4qY1Ala6X44oORXfL8r/uMFgFxHSJU7mPsQKONeTQ3jjQaJnlEVAkM6
-         siWiBBpHmRaML1O5tvxbkEfUce+IDia6LtoZNEy90a1ekylk96CleKRzn9MRakvpu81y
-         bhkTJKjuEfF56lGjesvnnrNw4L8GG+g4LCc1p4k6u7tPtPuIMwW66r29xQWQRshHw5Gu
-         v21TcHET73uPCNvT7nvNuyEeVqQh5TqlgefHNSplceN9q7OWimVhq1LVsfbjMT/8GMw2
-         Ekwg==
+        bh=/etQtMYVd4NbKTRYWQL1OC8HOEVmkVBi2gOIQvu8y4k=;
+        b=ANiKYH4ztvhhrEYCm6bUvWLFDnu25QEwpZjA1wJhoeHTw7GNA6kpy4S1P+WXT2dCBh
+         ENtefrel0vuqlbk+uquRzDWuqnn00JIiaAE2LZNTPPW/0O8zRCLUh6O9mcGg0t/jXNx8
+         eTyuSQcSMXfqpIOwk9KI9VO1LtQRiZvBaW1iemEX3PtyWWl1BuxbEcMZ/+gpmPwUQTUG
+         BEP3TbvnFoT+0W8TmOvOh2UVpRjyzu5o4jQ3jKo1r8GxA75xBx47Fs4+0ohfCvB/8WvT
+         SphYD4L3196ffGlTtZ6R/kXPpKPWdcLpTM+xR0VITgQ8ez2nUAdH9+FbKPbnMUmo9+5J
+         ExTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737527118; x=1738131918;
+        d=1e100.net; s=20230601; t=1737527128; x=1738131928;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ifAh4z9tkFouiScWwWQSL99thftn0z74dbeCX/fEfD8=;
-        b=oOG8NZNVg1ChGiZ3DVIj0BXFVyJnvwDz3DGe4jUeNsi9KjgpSMzx+wL+4CRQaQoMVn
-         ojE3bG17C1RC2HyYefzkeaROq/cfz8MX8ojmCT95VFBlJGSaFCJ8LiUkfmn3Hv4r792Q
-         s8JmZCj9hqoH7KKKWJnnQPyI+zVyqmxJfTcXAWRCOqMqC0jROLQALJz0hj26SNURCKk5
-         m9BZcpH33SCMoIsGwyFGdFb0xBxb5rqcn5xgv2kSJ4567F6yufE9cDmMm5WYrnbeMWDQ
-         iA/uf8uyvrKHFr3rKXgmp3gzdD69tL0+UE+WflXu7KvZWC37UXKoLm4WmOPfrASzFys7
-         yLjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCnXWsu4ZAd452nkoq9PmVhNDBc16Cl3311DwANfrMpnGAjDXHUh8zZkrsDhGOpZrD6lKuFFyTwNz4xJPag+Ia@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh4hRtRM1W2MotSmtX2wzzI5OXNM6appsmY5WvUh0Rg2GuP7/0
-	0NfCVgn68RI3UTxv7MIGjvPhNh3yzUt/wvMzBOdfF5xhRsS9+p5ksPLuHNmlZ76mC3e4Te1s62G
-	Y/e31Gw==
-X-Google-Smtp-Source: AGHT+IHYRcdPxQUE7RFn1o5mEQhJrq8PAszt9Jv65BlBcEciA0rf2Yi2TG/Nx4Vi1nxNKr4a7TSmsVRBAdUi
+        bh=/etQtMYVd4NbKTRYWQL1OC8HOEVmkVBi2gOIQvu8y4k=;
+        b=Pn9TskcenPKTycI5oYiDKOsSitfZ3xoTePUhQtK0t/7ksM/acJGZDniZByCkUGkTdW
+         h72Z8voAusjMOQDlPnAFA/vmRsGW72mddu/rdcPdEAVsE/27k9E7XbG5dnLjAheAHpjZ
+         p/7tatWUzDTmnU2V5YWXYTmO3twWEFeLz5krbybIJwyznlIRsEOy9Gh6wv5ay0DdZJw6
+         onWdldhZcB2Aa4r2qC41uawwtPlMljiGzoaBSBzN2oSSO8mo5vSTs/xrxTY/Mj8lygi/
+         FtMfN/5T2LWGV/gskOACmILV3Jy4KTkREszoiK/0EqyvkAtnBjgWkViERubJjOkrg10m
+         S2hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWT7gHwF7bkKBW2mfwjnIl1ffLLPLZrOk9THjErNdbyFrlhfgaOl0pbYoz8LtUFTFaRVeAVdRzE2AqutRlDeLCI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB72sU3zRqra4+uC1HDp3n/rpkSgEMKEaEYX+0nGiNDzyYAQQC
+	ia21+oH23ed9/359168OB7BsON34y5QD6whIvzl6PnEIy00JkJAlykOKacgUfB+C8Q5k+hTAB6T
+	Q+w5Gjw==
+X-Google-Smtp-Source: AGHT+IH6D33Da/yJv7XvymX6q4uMCft9Y3ZBUbwM3+o4/Q+cURxwz6r2bb7aP9Xyo1liFmfBDPf1zpaiIvA1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:807b:be79:d5c3:ee5c])
- (user=irogers job=sendgmr) by 2002:a05:690c:d0b:b0:6ee:a2b0:a803 with SMTP id
- 00721157ae682-6f6c98438a8mr1261387b3.1.1737527118189; Tue, 21 Jan 2025
- 22:25:18 -0800 (PST)
-Date: Tue, 21 Jan 2025 22:23:26 -0800
+ (user=irogers job=sendgmr) by 2002:a25:33c4:0:b0:e58:228:d611 with SMTP id
+ 3f1490d57ef6-e580228d824mr11847276.8.1737527127476; Tue, 21 Jan 2025 22:25:27
+ -0800 (PST)
+Date: Tue, 21 Jan 2025 22:23:27 -0800
 In-Reply-To: <20250122062332.577009-1-irogers@google.com>
-Message-Id: <20250122062332.577009-12-irogers@google.com>
+Message-Id: <20250122062332.577009-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250122062332.577009-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Subject: [PATCH v2 11/17] perf llvm: Disassemble cleanup
+Subject: [PATCH v2 12/17] perf dso: Clean up read_symbol error handling
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,83 +80,116 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Move the 3 LLVM initialization routines to be called in a single
-init_llvm function that has its own bool to avoid repeated
-initialization. Reduce the scope of triplet and avoid copying strings
-for x86.
+Ensure errno is set and return to caller for error handling. Unusually
+for perf the value isn't negated as expected by
+symbol__strerror_disassemble.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/llvm.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ tools/perf/util/capstone.c |  3 ++-
+ tools/perf/util/dso.c      | 14 ++++++++++++--
+ tools/perf/util/llvm.c     |  3 ++-
+ 3 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-index a0774373f0d6..a28f130c8951 100644
---- a/tools/perf/util/llvm.c
-+++ b/tools/perf/util/llvm.c
-@@ -244,6 +244,17 @@ static void perf_LLVMDisasmDispose(LLVMDisasmContextRef context)
- #endif
- }
- 
-+static void init_llvm(void)
-+{
-+	static bool init;
-+
-+	if (!init) {
-+		perf_LLVMInitializeAllTargetInfos();
-+		perf_LLVMInitializeAllTargetMCs();
-+		perf_LLVMInitializeAllDisassemblers();
-+		init = true;
-+	}
-+}
- 
- static void free_llvm_inline_frames(struct llvm_a2l_frame *inline_frames,
- 				    int num_frames)
-@@ -339,7 +350,6 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	u64 buf_len;
- 	u64 pc;
- 	bool is_64bit;
--	char triplet[64];
- 	char disasm_buf[2048];
- 	size_t disasm_len;
- 	struct disasm_line *dl;
-@@ -352,27 +362,25 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 	if (args->options->objdump_path)
- 		return -1;
- 
--	perf_LLVMInitializeAllTargetInfos();
--	perf_LLVMInitializeAllTargetMCs();
--	perf_LLVMInitializeAllDisassemblers();
--
+diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+index f103988184c8..032548828925 100644
+--- a/tools/perf/util/capstone.c
++++ b/tools/perf/util/capstone.c
+@@ -12,6 +12,7 @@
+ #include "symbol.h"
+ #include "thread.h"
+ #include <dlfcn.h>
++#include <errno.h>
+ #include <fcntl.h>
+ #include <inttypes.h>
+ #include <string.h>
+@@ -463,7 +464,7 @@ int symbol__disassemble_capstone(const char *filename __maybe_unused,
  	buf = dso__read_symbol(dso, filename, map, sym,
  			       &code_buf, &buf_len, &is_64bit);
  	if (buf == NULL)
- 		return -1;
+-		return -1;
++		return errno;
  
-+	init_llvm();
- 	if (arch__is(args->arch, "x86")) {
--		if (is_64bit)
--			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
--		else
--			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
-+		const char *triplet = is_64bit ? "x86_64-pc-linux" : "i686-pc-linux";
-+
-+		disasm = perf_LLVMCreateDisasm(triplet, &storage, /*tag_type=*/0,
-+					       /*get_op_info=*/NULL, symbol_lookup_callback);
+ 	/* add the function address and name */
+ 	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index a90799bed230..247e59605f26 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1697,6 +1697,7 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 
+ 	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE) {
+ 		pr_debug("No BPF image disassembly support\n");
++		errno = EOPNOTSUPP;
+ 		return NULL;
+ 	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO) {
+ #ifdef HAVE_LIBBPF_SUPPORT
+@@ -1715,6 +1716,7 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 		assert(len <= info_linear->info.jited_prog_len);
+ #else
+ 		pr_debug("No BPF program disassembly support\n");
++		errno = EOPNOTSUPP;
+ 		return NULL;
+ #endif
  	} else {
-+		char triplet[64];
-+
- 		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
- 			  args->arch->name);
-+		disasm = perf_LLVMCreateDisasm(triplet, &storage, /*tag_type=*/0,
-+					       /*get_op_info=*/NULL, symbol_lookup_callback);
- 	}
--
--	disasm = perf_LLVMCreateDisasm(triplet, &storage, 0, NULL,
--				       symbol_lookup_callback);
- 	if (disasm == NULL)
- 		goto err;
+@@ -1725,26 +1727,34 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 			.ip = start,
+ 		};
+ 		u8 *code_buf = NULL;
++		int saved_errno;
  
+ 		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 		fd = open(symfs_filename, O_RDONLY);
++		saved_errno = errno;
+ 		nsinfo__mountns_exit(&nsc);
+-		if (fd < 0)
++		if (fd < 0) {
++			errno = saved_errno;
+ 			return NULL;
++		}
+ 
+-		if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) == 0) {
++		if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data, is_64bit) <= 0) {
+ 			close(fd);
++			errno = ENOENT;
+ 			return NULL;
+ 		}
+ 		buf = code_buf = malloc(len);
+ 		if (buf == NULL) {
+ 			close(fd);
++			errno = ENOMEM;
+ 			return NULL;
+ 		}
+ 		count = pread(fd, code_buf, len, data.offset);
++		saved_errno = errno;
+ 		close(fd);
+ 		if ((u64)count != len) {
+ 			free(code_buf);
++			errno = saved_errno;
+ 			return NULL;
+ 		}
+ 		*out_buf = code_buf;
+diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+index a28f130c8951..1607364ee736 100644
+--- a/tools/perf/util/llvm.c
++++ b/tools/perf/util/llvm.c
+@@ -9,6 +9,7 @@
+ #include "srcline.h"
+ #include "symbol.h"
+ #include <dlfcn.h>
++#include <errno.h>
+ #include <fcntl.h>
+ #include <inttypes.h>
+ #include <unistd.h>
+@@ -365,7 +366,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
+ 	buf = dso__read_symbol(dso, filename, map, sym,
+ 			       &code_buf, &buf_len, &is_64bit);
+ 	if (buf == NULL)
+-		return -1;
++		return errno;
+ 
+ 	init_llvm();
+ 	if (arch__is(args->arch, "x86")) {
 -- 
 2.48.0.rc2.279.g1de40edade-goog
 
