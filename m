@@ -1,38 +1,38 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E391B4236;
-	Wed, 22 Jan 2025 12:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C29213240;
+	Wed, 22 Jan 2025 12:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737548916; cv=none; b=nMJrjyMuqLpjDKfGgCRfy5kUTRZp2iUAqjGUvAaK8lou3+nk5662C+pBassmi0RkDpQEOEwczZsY/vTymlZbnqQk9i+2U3vrWtO1EKFHOpuSn/43pS1jQIvTWrPF0njv4/rS0LvAI7VHKn/WlExsy4vmnn68ePb9K5/JhDvkLwI=
+	t=1737549761; cv=none; b=GGQRzCqaXuSg6V71iMvITVbQqSxGw0jV/DUXgqClak1OfzeCzOOkquNUt7QLZgM+Z4VubLZgkrlzRmy/5BSmGMJUijh4oT7Es1/DnKcM1mi+yz3r+roVMxVVHD0TsEf8aTlF5N/4ADMwx4BYDBoe6PbfXPhxgV1ml+FE9+MJqjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737548916; c=relaxed/simple;
-	bh=ZEIuYuFzpVNpnsaS1IElgVqUFXAjuJxM/2XVfTsuvIk=;
+	s=arc-20240116; t=1737549761; c=relaxed/simple;
+	bh=PS/saersNv2KAu4ql0W5yEeCsb8jJfLGGbfpc4rtuvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FuTx2kN+RXl/dE26Gvx13i/ITvLa/UiMnxrSRh7Hmmrb0HL2phhn0huoP9ZqaEZG11PjZvd3n2uNKS3AWl0sbFBvPPNsBRp1BsINBE9OkAiNpibcjonwG5AOWxrto8usa2CZOzx9EbqvtR/9Chu9wlfk241kfO44mh1nVSCcO0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dSqXYNcg; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5MXNQGQlTAPZlQrWiSZ2z0JjyY7GFms9o/1GxFT3q7lsNaYOlg5D1Ima53cTH/tLP/LZnmns7iWlmpJVC9dtYMOgNzGLh/5gNRu9s7z3vtPX0CK2UAcZUqK9QFQZtC6CpwQ4e0EBMDw9W/GJ7dIk+PKolG0Ujk/fhIOTcmrqOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=krKDeU14; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dSqXYNcg"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="krKDeU14"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mm5ArHntQGgCQyeZEglTwhSTgAAN5NBYsIo5LY4N9qU=; b=dSqXYNcgxWQZB5Dw3/WmTmp89F
-	XpxW7Tk4KP2ZaAxR6FPc+5uK6QzzXae5rPqA1UM7MOnX9TJrlT3xDGAeoZ3y/bIKZnqLzhiCBnvWe
-	F/nxVx8M97zyaznlN03p257T7PRoTA8m5F9TjzV79GKY/hHDLc4s9/kyrElLI+OmHRalNOgGHzvNG
-	7WPAP//61pm4OOSTDU8wf/DksyGLTYhzDEpYVFXiYRc/rMeqSbr2/iVtfe3bz0Q8Gce8ZIwzzAdOk
-	cBACy3T69NYVEG0duA60LHQfYv+/3Efw+kNVFRSB7eAoRF6v0gpX4VMT/qTG5Q+mzYbRMFKB2697m
-	k2DyDcww==;
+	bh=cDDklsV9CLZX5Yk6aVrIEBswD2Xe5ZP8qdbqlJWZTPQ=; b=krKDeU14FiNnvTpukYVlucR3Ov
+	ORF7XVnP/zIpa3I8UlZUcEIQyVvpVtOzn2B2519MGCGbnnhuRIZ/FvGLvmgLeX9avROFnbGiiVVCM
+	0jjFj90kEWQZld8Gw/tKB0XydSfAcpVWG9Wby7qiRaujQNxzapxfQoevec1UUCj8LQd/99PCUh9Cj
+	/bniIfqNjYCRQhvZRDtWHjZbp2LDLWAgMkTdF1VpDA+ijm7Wou3NRswW/XfvPK2zE2fU9IND+mWJs
+	kCacVXLONZGpC0vmilgfB7bjeDE4lI6b2qJ2EHoBUTMY/HneMlTbXHVHzZpFq/3xQvaTrF0aESxzR
+	z+F8D66A==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1taZqI-00000001AdU-21FZ;
-	Wed, 22 Jan 2025 12:28:22 +0000
+	id 1taa3x-00000001BIi-0VgF;
+	Wed, 22 Jan 2025 12:42:29 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 14641300599; Wed, 22 Jan 2025 13:28:22 +0100 (CET)
-Date: Wed, 22 Jan 2025 13:28:21 +0100
+	id B1AD6300599; Wed, 22 Jan 2025 13:42:28 +0100 (CET)
+Date: Wed, 22 Jan 2025 13:42:28 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -54,10 +54,11 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
-Message-ID: <20250122122821.GN7145@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 02/39] task_work: Fix TWA_NMI_CURRENT race with
+ __schedule()
+Message-ID: <20250122124228.GO7145@noisy.programming.kicks-ass.net>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
+ <ad5fb696fbcd276c0902dbb94baa75fb79a6e1e2.1737511963.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,25 +67,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
+In-Reply-To: <ad5fb696fbcd276c0902dbb94baa75fb79a6e1e2.1737511963.git.jpoimboe@kernel.org>
 
-On Tue, Jan 21, 2025 at 06:30:53PM -0800, Josh Poimboeuf wrote:
-> It's possible for irq_work_queue() to fail if the work has already been
-> claimed.  That can happen if a TWA_NMI_CURRENT task work is requested
-> before a previous TWA_NMI_CURRENT IRQ work on the same CPU has gotten a
-> chance to run.
+On Tue, Jan 21, 2025 at 06:30:54PM -0800, Josh Poimboeuf wrote:
+> If TWA_NMI_CURRENT task work is queued from an NMI triggered while
+> running in __schedule() with IRQs disabled, task_work_set_notify_irq()
+> ends up inadvertently running on the next scheduled task.  So the
+> original task doesn't get its TIF_NOTIFY_RESUME flag set and the task
+> work may get delayed indefinitely, or may not get to run at all.
+> 
+>     __schedule()
+> 	// disable irqs
+> 	    <NMI>
+> 		task_work_add(current, work, TWA_NMI_CURRENT);
+> 	    </NMI>
+> 	// current = next;
+> 	// enable irqs
+> 	    <IRQ>
+> 		task_work_set_notify_irq()
+> 		test_and_set_tsk_thread_flag(current, TIF_NOTIFY_RESUME); // wrong task!
+> 	    </IRQ>
+> 	// original task skips task work on its next return to user (or exit!)
+> 
+> Fix it by storing the task pointer along with the irq_work struct and
+> passing that task to set_notify_resume().
 
-I'm confused, if it fails then it's already pending, and we'll get the
-notification already. You can still add the work.
+So I'm a little confused, isn't something like this sufficient?
 
-> The error has to be checked before the write to task->task_works.  Also
-> the try_cmpxchg() loop isn't needed in NMI context.  The TWA_NMI_CURRENT
-> case really is special, keep things simple by keeping its code all
-> together in one place.
+If we hit before schedule(), all just works as expected, if we hit after
+schedule(), the task will already have the TIF flag set, and we'll hit
+the return to user path once it gets scheduled again.
 
-NMIs can nest, consider #DB (which is NMI like) doing task_work_add()
-and getting interrupted with NMI doing the same.
-
-
-Might all this be fallout from trying to fix that schedule() bug from
-the next patch, because as is, I don't see it.
+---
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index c969f1f26be5..155549c017b2 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -9,7 +9,12 @@ static struct callback_head work_exited; /* all we need is ->next == NULL */
+ #ifdef CONFIG_IRQ_WORK
+ static void task_work_set_notify_irq(struct irq_work *entry)
+ {
+-	test_and_set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
++	/*
++	 * no-op IPI
++	 *
++	 * TWA_NMI_CURRENT will already have set the TIF flag, all
++	 * this interrupt does it tickle the return-to-user path.
++	 */
+ }
+ static DEFINE_PER_CPU(struct irq_work, irq_work_NMI_resume) =
+ 	IRQ_WORK_INIT_HARD(task_work_set_notify_irq);
+@@ -98,6 +103,7 @@ int task_work_add(struct task_struct *task, struct callback_head *work,
+ 		break;
+ #ifdef CONFIG_IRQ_WORK
+ 	case TWA_NMI_CURRENT:
++		set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
+ 		irq_work_queue(this_cpu_ptr(&irq_work_NMI_resume));
+ 		break;
+ #endif
