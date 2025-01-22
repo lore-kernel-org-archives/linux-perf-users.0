@@ -1,136 +1,169 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4751B21B9
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3126AF5;
+	Wed, 22 Jan 2025 07:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737527172; cv=none; b=Q6wEH4KD5LBsdgHkSSDcijZd1c/T0+i0ejMEraVxzs01duVnsoSFAdKuoRroBXvNli8ilS0GhCabeHS/u0Mbhd+pZlWZRg21A7pFxbLl8r/EPUzjTo5wPKSeX3tcIPvZhq/eLD5tHm+nwPuWNLrgb8Pi6TVuscNlUqIb/E9USO0=
+	t=1737530689; cv=none; b=ESdqSN44VJUO6pSnWpvGX3Gv8NxjdQ5kb8gxexOSc3T/HnTIcSkZVSXFMusT+GPO71KNsl8a/irD+0x+IoMc0aBsGTs6XkmIYCogiUsyTGDKw7OYYvnk/PeBKHXfkcYpY4YLulnJ1TbTbqJ0tWrNJf7XdeGSrfKdCh94ac2MAlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737527172; c=relaxed/simple;
-	bh=BfQOAR1G+at7pRYGYXzHQjPEnrcQ33cHSvtWSYC7XKw=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Ca0qa61+5RWTUJKiD+0uqAT96nRZUSMVjpwm2EzgkRrtaUkjdKBIoHkXLChhqpOOQzhRFBxrizq3T0q0Snh+0oZSYdZVIZjKLHX7eC6UF36UzqfoNeAwEd7n4YeLORZe2Q48h+GIexbAR6JlTokcdkflt7rrGDxZq0IVXeCKq6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EO4DABGB; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EO4DABGB"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e53bf9e60e4so15780208276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:26:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737527169; x=1738131969; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jgqdWXIgH31oO69HT02RtwzG7MxuXhHOOr55YpEQGAs=;
-        b=EO4DABGB9M5LH0lBfxs+nYZ3Iz/nFBetOUEARsxxJEg0B5zbSzZFbJtoAlFcpiBhYq
-         oYFGSwmYzsTv6D8qdQMVbyNC9DxM2RczL3JHXtwKOWP7cKZCdF1JkQOHNRpV126iKsoJ
-         t5bTwlCVRZBd8wS6k5YJyjOB8qXRxI19JMH6MSYJKLBl6ZVEN8VRb2FRCYR95ih6F3A8
-         s/FUteA9lJvOxpY9sd1HSFfVOam4PMTNiIm88FHrtvrClCKj3ITkY9JjKe1D+ydTV+5v
-         aoxGxWH1/2l+0WxiAsM8iwWm3EmnnAInrLuOxH8UqixMeHMkwwC6z9EHeOdb3mwbvEo4
-         BwFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737527169; x=1738131969;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jgqdWXIgH31oO69HT02RtwzG7MxuXhHOOr55YpEQGAs=;
-        b=WiX2Feq4uMUMHQHNGJ6ebB2LY9yAkWdKyTqARKfRItUhTx3yzjzSc5+EA3++0ey8Gn
-         yfI1VESd500YEVX5DoWJ+7yRaiAvlqlISttE1ZGdduumyEllZhXS0nCI9N8mIvq5Sf/I
-         A+ppvrSlQAk7WOT77m8wDMKcMtJcz7yLfWYSC9ml4b38bJgkW0Qtts5sPsIm7bsC+SZe
-         kWMF/rKG5eyWSiu3w+Ski+sZf83aIsPZl1sjfBhmNO8oQcGvmkx/MPSfpFnoJx6WHpuG
-         nMnjPbyGEIYewaWcGbyGrlZPd0xSq/sdL6E7M7vtFas06FkITHAjE1siNbCotrwqJsIQ
-         iodA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcLW5UcqFu8DoYZE1l43JeaImQLY473zLeIWEqGHWuLLgGlKtax7WK4CTRqwjgqa31RGp76tKhpNt1DeSuUWFM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyOxK/OE2+vxpGBqsdjdhmE6SCKLPPsuufqsh9taAloOjWidod
-	wkdC1yAxj0gexe+KBmv9gFireZ4wBqGmG/oteuoreI3FM9CePZwGJby9luxNKtKWZW2W6kd89Lk
-	GfRoiKg==
-X-Google-Smtp-Source: AGHT+IF6rwzVNy8tbQ12mHzbRHmKpJHEzsK35EPLx3KJfYalflkJcjMfzIoyWZyP5IcEbo2YvBdof+rOLPE0
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:807b:be79:d5c3:ee5c])
- (user=irogers job=sendgmr) by 2002:a05:690c:3005:b0:6e9:f188:8638 with SMTP
- id 00721157ae682-6f6eb9475efmr341777b3.7.1737527169492; Tue, 21 Jan 2025
- 22:26:09 -0800 (PST)
-Date: Tue, 21 Jan 2025 22:23:32 -0800
-In-Reply-To: <20250122062332.577009-1-irogers@google.com>
-Message-Id: <20250122062332.577009-18-irogers@google.com>
+	s=arc-20240116; t=1737530689; c=relaxed/simple;
+	bh=nnOW8QCaq9yXAB6ElHKDnDMVq3KR9+zk2s8leSid3II=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qc2urq/V9+xwJUHOhIZIJLba5zL+iJLwepcAq7i4l9Q6wHp+mLgrjT9cJAqtHdYLdAsLrd8IUPtXKwXtt90mxxpVQfQsgI9WM4bMDPF0/TC1U82/vbxwIujvu0J8oX4+TJne/yT+hyxBGNxEgGGKZXznCgnbPBCuMpgWP7WOD1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YdFv9206vz4f3jLN;
+	Wed, 22 Jan 2025 15:24:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 27CAA1A1822;
+	Wed, 22 Jan 2025 15:24:43 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgBHq183nZBnrk2dBg--.46007S4;
+	Wed, 22 Jan 2025 15:24:41 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH v3] perf/core: Fix warning due to unordred pmu_ctx_list
+Date: Wed, 22 Jan 2025 07:33:56 +0000
+Message-Id: <20250122073356.1824736-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250122062332.577009-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Subject: [PATCH v2 17/17] perf disasm: Make ins__scnprintf and ins__is_nop static
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBHq183nZBnrk2dBg--.46007S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr18ArWxtw1DKFWUWry8Krg_yoW5Ar43pF
+	4kCrnYvFWkKF10vayaya1DXw15Kr1fXa1DWwn8G34FyF4agFWDJa17GF45JF909rs7Wa4j
+	yw4jqF17tayDta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Reduce the scope of ins__scnprintf and ins__is_nop that aren't used
-outside of disasm.c.
+Syskaller triggers a warning due to prev_epc->pmu != next_epc->pmu in
+perf_event_swap_task_ctx_data. vmcore shows that two lists have the same
+perf_event_pmu_context, but not in the same order.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+The problem is that the order of pmu_ctx_list for the parent is impacted by
+the time when an event/pmu is added. While the order for a child is
+impacted by the event order in the pinned_groups and flexible_groups. So
+the order of pmu_ctx_list in the parent and child may be different.
+
+To fix this problem, insert the perf_event_pmu_context to proper place
+after iteration of pmu_ctx_list.
+
+The follow testcase can trigger above warning:
+
+ # perf record -e cycles --call-graph lbr -- taskset -c 3 ./a.out &
+ # perf stat -e cpu-clock,cs -p xxx // xxx is the pid of a.out
+
+test.c
+
+void main() {
+        int count = 0;
+        pid_t pid;
+
+        printf("%d running\n", getpid());
+        sleep(30);
+        printf("running\n");
+
+        pid = fork();
+        if (pid == -1) {
+                printf("fork error\n");
+                return;
+        }
+        if (pid == 0) {
+                while (1) {
+                        count++;
+                }
+        } else {
+                while (1) {
+                        count++;
+                }
+        }
+}
+
+The testcase first open a lbr event, so it will alloc task_ctx_data, and
+then open tracepoint and software events, so the parent ctx will have 3
+different perf_event_pmu_contexts. When doing inherit, child ctx will
+insert the perf_event_pmu_context in another order then the warning will
+trigger.
+
+Fixes: bd2756811766 ("perf: Rewrite core context handling")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/disasm.c | 6 +++---
- tools/perf/util/disasm.h | 3 ---
- 2 files changed, 3 insertions(+), 6 deletions(-)
+1. update commit message.
+2. modify annotation style.
+3. add reviewed by.
+Link to v2: https://lore.kernel.org/all/20250121130802.1813928-1-luogengkun@huaweicloud.com/
+Link to v1: https://lore.kernel.org/all/20250120114344.632474-1-luogengkun@huaweicloud.com
 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index ebd86691acf8..b2dfd40588ef 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -246,8 +246,8 @@ static int ins__raw_scnprintf(struct ins *ins, char *bf, size_t size,
- 	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->raw);
- }
- 
--int ins__scnprintf(struct ins *ins, char *bf, size_t size,
--		   struct ins_operands *ops, int max_ins_name)
-+static int ins__scnprintf(struct ins *ins, char *bf, size_t size,
-+			  struct ins_operands *ops, int max_ins_name)
+---
+ kernel/events/core.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 065f9188b44a..3f68fbbf3de0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4950,7 +4950,7 @@ static struct perf_event_pmu_context *
+ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
+ 		     struct perf_event *event)
  {
- 	if (ins->ops->scnprintf)
- 		return ins->ops->scnprintf(ins, bf, size, ops, max_ins_name);
-@@ -824,7 +824,7 @@ static struct ins_ops ret_ops = {
- 	.scnprintf = ins__raw_scnprintf,
- };
+-	struct perf_event_pmu_context *new = NULL, *epc;
++	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
+ 	void *task_ctx_data = NULL;
  
--bool ins__is_nop(const struct ins *ins)
-+static bool ins__is_nop(const struct ins *ins)
- {
- 	return ins->ops == &nop_ops;
- }
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index 2cb4e1a6bd30..09c86f540f7f 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -110,13 +110,10 @@ struct arch *arch__find(const char *name);
- bool arch__is(struct arch *arch, const char *name);
+ 	if (!ctx->task) {
+@@ -5007,12 +5007,19 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
+ 			atomic_inc(&epc->refcount);
+ 			goto found_epc;
+ 		}
++		/* Make sure the pmu_ctx_list is sorted by pmu */
++		if (!pos && epc->pmu->type > pmu->type)
++			pos = epc;
+ 	}
  
- struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
--int ins__scnprintf(struct ins *ins, char *bf, size_t size,
--		   struct ins_operands *ops, int max_ins_name);
+ 	epc = new;
+ 	new = NULL;
  
- bool ins__is_call(const struct ins *ins);
- bool ins__is_jump(const struct ins *ins);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
--bool ins__is_nop(const struct ins *ins);
- bool ins__is_ret(const struct ins *ins);
- bool ins__is_lock(const struct ins *ins);
+-	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
++	if (!pos)
++		list_add_tail(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
++	else
++		list_add(&epc->pmu_ctx_entry, pos->pmu_ctx_entry.prev);
++
+ 	epc->ctx = ctx;
  
+ found_epc:
 -- 
-2.48.0.rc2.279.g1de40edade-goog
+2.34.1
 
