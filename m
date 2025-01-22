@@ -1,222 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DDF170A15;
-	Wed, 22 Jan 2025 02:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F351249F9;
+	Wed, 22 Jan 2025 02:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737513321; cv=none; b=ru1zeluQ+uHdxbAJo+5h5FCMSo21VASjM5LWtQ5IkP2cGejEaUX64jC6jnhj7HnOBe6wL3h8ozdiHhuWH+uMW1JCx22ZHq6afTfFpfaP5pE6Xh8fQPpPVRM9HrTSwIPfMFL9moTHfacv3rzDhJFVNCh7CjXzDSPT98jyHnDZf/U=
+	t=1737514525; cv=none; b=iQ0amyzE02PlNl8rq8TNLB9c+++v349cdvGt0oIWoxbMIXdvHgyqAnUwzdjiWPaXqm0897HTb4/SCFaYpbXg3u8O6802bqswbzE1JCILjuTKJoudGYNqgdlOF6MH3GoNdcxm//rM46f4LuuK6zz3cGn9WyMFtEGxW91hNTxboiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737513321; c=relaxed/simple;
-	bh=hQr70nJFPpr3IR+3WHkCZaeOfn9y4cOzZG7LuQnlPEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAXD+LB6si5UDhVD6JWOpa2OXEc8NP9V6l49cVaqngm/nfS9D58I9ibEn20KSJvWV3qL0XFNZi8+D2dTle8abNaGTk8QsJQ12ffZBos0UNT6fSMPOeeOBvIMGE0pZo4H+T/M9K7aYq8aZo6YqN6Tc/3xJyhTaTwWj1SRhO0R5s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItUIDsij; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737514525; c=relaxed/simple;
+	bh=owsREPu73reOdOGqFXBmOYWByOrrb3fA/ohV8js5ZYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SAASCwdyT1P5aSMJRq5ewdQDQKqswIrZ1/WdYzA9WV6d4W+QHmhU4Cot6AnnqOhFYCFFzCDbTHkrqxvMIM1hxwzTT1qCF+OFcVcKpJfK+AyeqpDF7zrvMA2tFvEraziaCIa85uQLqHAWdul0iaE+gmlaKNa03wc5gh+QOOjO5NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P11IKxdM; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItUIDsij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024BDC4CEDF;
-	Wed, 22 Jan 2025 02:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737513319;
-	bh=hQr70nJFPpr3IR+3WHkCZaeOfn9y4cOzZG7LuQnlPEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ItUIDsij4Q3QK4chCyynXQ5OX6zsCbbhiEqi47tcIdjaGeVkmyiMncRov000ZczHo
-	 09u7LMbhPeu4UU8pDM/0crN2ZxLyqEWqwphBHmdZHd4gG186BYbPTHNaUK6k4/vgOf
-	 HTSbivH0WepBFJ+WvHSurwnzVQBD6xVdKxCiIFpDVi9iw+QG8lhG1vZ+HmWi3sTD1q
-	 nn8oe7RItl7RZfOEc3nAubB60vY6AUH00QlJsY3d2fNc5sgqG90TNssMSzUo9GS+Ry
-	 gSJVw3pxsWBNAjO5Bv1jHGrjObY89IRSK67a8DAPgpCohrbotHiXy2okZF1YmIpnzO
-	 IjiIOJ+eh9QgA==
-Date: Tue, 21 Jan 2025 18:35:17 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 00/39] unwind, perf: sframe user space unwinding
-Message-ID: <20250122023517.lmztuocecdjqzfhc@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P11IKxdM"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-216281bc30fso146562395ad.0;
+        Tue, 21 Jan 2025 18:55:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737514523; x=1738119323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RWGE/MqVRclJs2RoOlJ1F8C5SI97efwbC4+6/PUtfwc=;
+        b=P11IKxdMJeV2kdZH1kTMGhB81CXK5s5MgaYkI1+Xk2hH7WbJha1FL7Na4e4mOPByrg
+         5weEgeRavLLzdi/VMnysSYvdDbPKGkSz51RI/em8GawpgAqrA3kQ355YEhQYo6DuvNcU
+         qF7R8mUgLWfimXsgGxAGhtloma99HEUlUYsKSbXunQsyKwEcAAtvayZohcQmj9D0zb8Y
+         /9jlua8/NZoHEmHKtzU6uapH3saMiU1h2gaQRBdbU6oEerRL3K8/VVqcfrKICtPBOxzR
+         5aA8Wu+nh9K/HcM1r4QlYM24wo3hZzTNoXVNZKzpJTu360V86pmoQXAR4353fzROkIkf
+         zGrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737514523; x=1738119323;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RWGE/MqVRclJs2RoOlJ1F8C5SI97efwbC4+6/PUtfwc=;
+        b=lKmR63I85XX1Wx6UPC8lq+KJdmOMJ9T1aieR8kEAi8sw/f4+r23181Db6eragNwgWs
+         q602HPHFWoiQrGi3P9YHnADOqa3hXaC4b2BQgWJLrCmXjXEuOKSIvbR4az9MA/5xC7BV
+         E/iqoAZT6cxcz2by9QSXSKY6mQZJ095jjMhT2OOnDIJISpQ8/zezXtqYoTsw3j7B79B9
+         HNRr4EobAYjA2O4Kcv83U4hpALretyXL+QMAdiHyj9ctyGGE1w0mqk7qeBn/gt+mdzH4
+         VD/B2o2M75vVJEfdWf5DFdF6nlb/TGCUgSTkgivsJb2ly5OzewCeicP+h+u/OVE/30ml
+         QNGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCRBaxCqgBUIoMlgA749VCH7FPyelHMSn5ZuWBqJa0N1YHxWTazV0ST5Ghi/ANq7hqOz0J8JptizfEZeK3aU5ykw==@vger.kernel.org, AJvYcCWlsKEtLmBu3VbWOoZb0awHPPqWaQwtgd7+yu3etiYedeq/zCkUfhXoOVqebjH6LMG4n3gpOCna1JqXYec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMvlreD1tlWtKWgT0wct6wHWxYPI5k1kU783NZQfzUMFS7hDZ6
+	kDmJhS2Z64I+e+EoAjGm4s31mirH4dGuDPGpWCNvF8gdKI5P0D46
+X-Gm-Gg: ASbGnctn2Uw+DL/hBb+fafg8vUSysPFltI9JFEGQx4dwOam9pLLoICg07nylnrTxqES
+	Ykx9SZX/H33eb84u+4BNMLOb4qLlW7c7gzv6XxOJOVk37OKfjFEUkNgrz1TpUpCp88YBRCOZtUP
+	2mRfHAnK+jjhWK4cN3PdAc7Xr0ftY5rENUdfS80D/wdCiPqsMindYbH4AH5a96iRzuPkaANjfzB
+	eZCxQKKVXV3GDezBM2C6QgCpbm2I5lYjVlER8tog5P3wYQlRi9l4goOajUOKvUmYnmuHulC6+0/
+	EwIkb+kcz7+EK0xteMs/oiXrMA==
+X-Google-Smtp-Source: AGHT+IE4we7e1x4y1dhztqc0aOIMQ3eqPIwZwNaMqsEuasPMYm1B5aLGa3dAEplUxQc2OQRm9Quo3Q==
+X-Received: by 2002:a17:902:f78f:b0:216:7cde:523 with SMTP id d9443c01a7336-21c35630682mr284911755ad.32.1737514522620;
+        Tue, 21 Jan 2025 18:55:22 -0800 (PST)
+Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2ceb9b9csm84621145ad.94.2025.01.21.18.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 18:55:22 -0800 (PST)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1] perf trace: Fix runtime error of index out of bounds
+Date: Tue, 21 Jan 2025 18:55:19 -0800
+Message-ID: <20250122025519.361873-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1737511963.git.jpoimboe@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 21, 2025 at 06:30:52PM -0800, Josh Poimboeuf wrote:
-> For testing with user space, here are the latest binutils fixes:
-> 
->   1785837a2570 ("ld: fix PR/32297")
->   938fb512184d ("ld: fix wrong SFrame info for lazy IBT PLT")
->   47c88752f9ad ("ld: generate SFrame stack trace info for .plt.got")
-> 
-> An out-of-tree glibc patch is also needed -- will attach in a reply.
+libtraceevent parses and returns an array of argument fields, sometimes
+larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr",
+idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
+elements max, creating an out-of-bounds access. This runtime error is
+found by UBsan. The error message:
 
-Latest out-of-tree glibc patch below:
+perf $ sudo UBSAN_OPTIONS=print_stacktrace=1 ./perf trace -a --max-events=1
+builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type 'syscall_arg_fmt [6]'
+    #0 0x5c04956be5fe in syscall__alloc_arg_fmts /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:1966
+    #1 0x5c04956c0510 in trace__read_syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2110
+    #2 0x5c04956c372b in trace__syscall_info /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:2436
+    #3 0x5c04956d2f39 in trace__init_syscalls_bpf_prog_array_maps /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:3897
+    #4 0x5c04956d6d25 in trace__run /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:4335
+    #5 0x5c04956e112e in cmd_trace /home/howard/hw/linux-perf/tools/perf/builtin-trace.c:5502
+    #6 0x5c04956eda7d in run_builtin /home/howard/hw/linux-perf/tools/perf/perf.c:351
+    #7 0x5c04956ee0a8 in handle_internal_command /home/howard/hw/linux-perf/tools/perf/perf.c:404
+    #8 0x5c04956ee37f in run_argv /home/howard/hw/linux-perf/tools/perf/perf.c:448
+    #9 0x5c04956ee8e9 in main /home/howard/hw/linux-perf/tools/perf/perf.c:556
+    #10 0x79eb3622a3b7 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #11 0x79eb3622a47a in __libc_start_main_impl ../csu/libc-start.c:360
+    #12 0x5c04955422d4 in _start (/home/howard/hw/linux-perf/tools/perf/perf+0x4e02d4) (BuildId: 5b6cab2d59e96a4341741765ad6914a4d784dbc6)
 
-diff --git a/elf/dl-load.c b/elf/dl-load.c
-index e986d7faab..5a593c2126 100644
---- a/elf/dl-load.c
-+++ b/elf/dl-load.c
-@@ -29,6 +29,7 @@
- #include <bits/wordsize.h>
- #include <sys/mman.h>
- #include <sys/param.h>
-+#include <sys/prctl.h>
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <gnu/lib-names.h>
-@@ -87,6 +88,9 @@ struct filebuf
- 
- #define STRING(x) __STRING (x)
- 
-+#ifndef PT_GNU_SFRAME
-+#define PT_GNU_SFRAME 0x6474e554
-+#endif
- 
- /* This is the decomposed LD_LIBRARY_PATH search path.  */
- struct r_search_path_struct __rtld_env_path_list attribute_relro;
-@@ -1186,6 +1190,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
- 	  l->l_relro_addr = ph->p_vaddr;
- 	  l->l_relro_size = ph->p_memsz;
- 	  break;
-+
-+	case PT_GNU_SFRAME:
-+	  l->l_sframe_start = ph->p_vaddr;
-+	  l->l_sframe_end   = ph->p_vaddr + ph->p_memsz;
-+	  break;
+     0.000 ( 0.014 ms): Chrome_ChildIO/117244 write(fd: 238, buf: !, count: 1)                                      = 1
+
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d7c7d29291fb..8d3260bad10a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2108,7 +2108,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
  	}
  
-     if (__glibc_unlikely (nloadcmds == 0))
-@@ -1236,6 +1245,26 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
- 	l->l_map_start = l->l_map_end = 0;
- 	goto lose;
-       }
-+
-+#define PR_ADD_SFRAME 77
-+    if (l->l_sframe_start != 0)
-+    {
-+      l->l_sframe_start += l->l_addr;
-+      l->l_sframe_end   += l->l_addr;
-+
-+      for (size_t i = 0; i < nloadcmds; i++)
-+      {
-+	struct loadcmd *c = &loadcmds[i];
-+
-+	if (c->prot & PROT_EXEC)
-+	{
-+	  ElfW(Addr) text_start = l->l_addr + c->mapstart;
-+	  ElfW(Addr) text_end   = l->l_addr + c->mapend;
-+
-+	  __prctl(PR_ADD_SFRAME, l->l_sframe_start, l->l_sframe_end, text_start, text_end);
-+	}
-+      }
-+    }
-   }
+ 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
+-					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields))
++					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields - 1))
+ 		return -ENOMEM;
  
-   if (l->l_ld != NULL)
-diff --git a/elf/dl-unmap-segments.h b/elf/dl-unmap-segments.h
-index f16f4d7ded..dd14162e00 100644
---- a/elf/dl-unmap-segments.h
-+++ b/elf/dl-unmap-segments.h
-@@ -21,14 +21,20 @@
- 
- #include <link.h>
- #include <sys/mman.h>
-+#include <sys/prctl.h>
- 
- /* _dl_map_segments ensures that any whole pages in gaps between segments
-    are filled in with PROT_NONE mappings.  So we can just unmap the whole
-    range in one fell swoop.  */
- 
-+#define PR_REMOVE_SFRAME 78
-+
- static __always_inline void
- _dl_unmap_segments (struct link_map *l)
- {
-+  if (l->l_sframe_start != 0)
-+    __prctl(PR_REMOVE_SFRAME, l->l_sframe_start, NULL, NULL, NULL);
-+
-   __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
- }
- 
-diff --git a/elf/setup-vdso.h b/elf/setup-vdso.h
-index 888e1e4897..2a6bb9b944 100644
---- a/elf/setup-vdso.h
-+++ b/elf/setup-vdso.h
-@@ -16,6 +16,11 @@
-    License along with the GNU C Library; if not, see
-    <https://www.gnu.org/licenses/>.  */
- 
-+#include <sys/prctl.h>
-+#ifndef PT_GNU_SFRAME
-+#define PT_GNU_SFRAME 0x6474e554
-+#endif
-+
- static inline void __attribute__ ((always_inline))
- setup_vdso (struct link_map *main_map __attribute__ ((unused)),
- 	    struct link_map ***first_preload __attribute__ ((unused)))
-@@ -52,6 +57,14 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
- 	      if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
- 		l->l_map_end = ph->p_vaddr + ph->p_memsz;
- 	    }
-+	  else if (ph->p_type == PT_GNU_SFRAME)
-+	    {
-+	      if (! l->l_sframe_start)
-+		{
-+		  l->l_sframe_start = ph->p_vaddr;
-+		  l->l_sframe_end   = ph->p_vaddr + ph->p_memsz;
-+		}
-+	    }
- 	  else
- 	    /* There must be no TLS segment.  */
- 	    assert (ph->p_type != PT_TLS);
-@@ -74,6 +87,15 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
-       l->l_local_scope[0]->r_nlist = 1;
-       l->l_local_scope[0]->r_list = &l->l_real;
- 
-+#define PR_ADD_SFRAME 77
-+      if (l->l_sframe_start != 0)
-+	{
-+	  l->l_sframe_start += l->l_addr;
-+	  l->l_sframe_end   += l->l_addr;
-+
-+	  __prctl(PR_ADD_SFRAME, l->l_sframe_start, l->l_sframe_end, l->l_addr, l->l_map_end);
-+	}
-+
-       /* Now that we have the info handy, use the DSO image's soname
- 	 so this object can be looked up by name.  */
-       if (l->l_info[DT_SONAME] != NULL)
-diff --git a/include/link.h b/include/link.h
-index 5ed445d5a6..e94390b29e 100644
---- a/include/link.h
-+++ b/include/link.h
-@@ -345,6 +345,9 @@ struct link_map
-     ElfW(Addr) l_relro_addr;
-     size_t l_relro_size;
- 
-+    ElfW(Addr) l_sframe_start;
-+    ElfW(Addr) l_sframe_end;
-+
-     unsigned long long int l_serial;
-   };
- 
+ 	sc->args = sc->tp_format->format.fields;
+-- 
+2.45.2
+
