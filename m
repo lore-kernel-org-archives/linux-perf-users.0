@@ -1,174 +1,105 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732741B0F35
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92EF1B424F
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 06:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737527044; cv=none; b=jihIgP36qw2tYC+Oenw2sGhe4QtOrh8p3+KZrBtaUFxLbHhK88p5pkK1YU8Gw+KpAzBtduokJ3TWFt3ylHUC1fOT2CwRJc55ZQvPUfKGHBw6SI1XmX2Tdg0KJTC/+IkPsZbKfWx7HrozOieDF+V3BPBaJA1H9IUHn1B2m2cGhIo=
+	t=1737527054; cv=none; b=ZWZbscR9WSEthcGqPnwkToNVkLI5MQCusNbgkhO5gKLkv5UtxRuX7T0j/IhFdYBTVDWpturuqcH5rXOg5uJTsavd2gChBrBvzsFdMHVxr/mtNN/kBB/aU3gMJ9ouEW4lfMRk9QA1bhUFrR9x4mBHBbxyUj8L65sEo3hh/COcUjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737527044; c=relaxed/simple;
-	bh=Qmq55MBFFDlIdUOT+YCdRI2WTxYpsmxURFZ8UOnIG5k=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=h51IkV8zuuoMtU/YmPg+A4565h11BfQ2H+NQFUfoGeq3xddWdL4msww2QBZ8QnJ1SjI4vRsKk7QaqMsFVv/DrZmhNnkNKUQs/8mRiuSYiWiS+jo7mQz1vXjW1GSkXu2Yqj2Timy+TkKQy46ge/6B8GaA3SMU+n+ew60WM9SWCqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OEcwJO/P; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1737527054; c=relaxed/simple;
+	bh=uAEpU2K02sNQ8ZGhjJ+Kr6EIIuyqU2W6NIkawtiuPrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f5O4vAKooCJRTAlT+DKsarltDySQcTTKKT3ejnBxks/duzNYKxJkxKYoUkqobcejGCr65WB9Mwq7ft96dP1H94I0DGX/JKpMebWzI3vFBlwgEiQv+Zx+39JD9njRllj0bDfa6kEWTcbCXJ3/pufkKfvC0PgHpMR3rwAxeyloFko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gv09mg26; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OEcwJO/P"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3a0f608b88so14681856276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 22:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737527042; x=1738131842; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kWzjT8BGnYGxE3H8fS5inyNnD+mPb+JDTto8cogfHm8=;
-        b=OEcwJO/PcJ7tCjmdFyihQKTJaN5sxCvk7mIuXM2aKP7ArHVL3TWemg1jcgWQouMca/
-         JM7ZXjPYR88nyOpGvf99pk4JBPbHtxzmIhMNB66zqBXKlcqx1ecBgJze3UjTPMWfMl7r
-         XaXXnOnsytFzllX6bRFYr4nd3A/H2pqF769GaBqVmsep+H/j+Q0JibbkxKPpRBeYCXCo
-         FBPQS2tI1wxEIQZYOGYCaJTvZvjevQQ4RY21JUL8bijKww3iNvuyUd5saq2ihQoWAS+M
-         u6sgTQynzJMoTbThTtdPzSelYcyY0Qp28QiG86/B0KEzNJ7z6ZpO5Gju/QpxHOhZciVA
-         Inhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737527042; x=1738131842;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kWzjT8BGnYGxE3H8fS5inyNnD+mPb+JDTto8cogfHm8=;
-        b=lEZ2dRC/oK+dVuo4/tEnsco8a0nsk0Qx6mqfkonhgU/eVAwL5zfuFggFYGFzKwYm2P
-         oDEqOlx3nvEA93FcLm7PmuX1NBT8o0HkgtW8BsKVcfR3dembZZs+3uZZOop5F7WKR/DA
-         uu2FWzKYJU3oO7dt7HaVK8eqRM3sjA5ljhNYVnqk2bCMGmzirZAu+ThgUzNQbnyOhsBj
-         HyxEXcL0aPBPORnjGLGp1rJQBf7fuIaEBUDnZJek5AZpEh7z8bhr2fMPMO28r19ihiNV
-         1wxtv57/cY3pVWy4kruuMqEjeED1SOdR4VXROKJ38ffZivmyw+SPhqer3S1jqpygJt31
-         TxFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXR4ykgn2aCGgCbESYo7l3r3PQgeXGXxKTPBTMLUeZze0MnzmNJ7oCDm+ZfjnHfpcL9acPeR3CQydWeoqHAn4pL@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr0+g99YcUHA5fWxGqWR35VLhVAv5c314IhdnkGM7GcPBXNS5i
-	cjnYOXznUJ0WDiwVv0rI5/LbbQH01AZnvRN3lh8oYTb6LXkGJ6NNj2N4A4ZSpL8u8WnMokwArGI
-	oMB/Kow==
-X-Google-Smtp-Source: AGHT+IEkQrVl+S1ecATwU/x39/z+G48tsIZyI5LDZqnLUZLk9fS8HATbtR2ta/8MhmTWSqrSAgqjrw5VZEOC
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:807b:be79:d5c3:ee5c])
- (user=irogers job=sendgmr) by 2002:a25:538a:0:b0:e39:91bc:eef5 with SMTP id
- 3f1490d57ef6-e57b103b91emr42227276.2.1737527042387; Tue, 21 Jan 2025 22:24:02
- -0800 (PST)
-Date: Tue, 21 Jan 2025 22:23:17 -0800
-In-Reply-To: <20250122062332.577009-1-irogers@google.com>
-Message-Id: <20250122062332.577009-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gv09mg26"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737527053; x=1769063053;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uAEpU2K02sNQ8ZGhjJ+Kr6EIIuyqU2W6NIkawtiuPrY=;
+  b=Gv09mg26Ox9UrnRSkoAX/K5ijDb22kWOoiPq8YIN/Lf2tr+ezyMQnIew
+   uK4RGympmXMhwhi626Rc+HuB6hGBDD1V7s1yyt3ZQ7JBbFUPDk6URQ9u6
+   NmTJdkmi+5nD333yoaZrBwdtAFeYXy9IY6y8c1JPw6WzZ9+xcNMLSHdRO
+   u2Qrx20sUvddmDWh2ba/Dj29iP2r7PMyKvyYG2vYNzp/+CNJYAItk9Cxs
+   P3mLRunyjSN2M5Q+5209k/Nego/3CW8lFAfVrOTTT46+z/4kokRpdNmJ7
+   i4K4oXxV8eVwxfeau3SI9tp+GVbUlXix2La8nPnW2SdPPbqfF3htpLkHa
+   g==;
+X-CSE-ConnectionGUID: 92hQmVJFRcqBJwz953ejxw==
+X-CSE-MsgGUID: drhgRNo3Qq+ST0QsBTposw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="41643292"
+X-IronPort-AV: E=Sophos;i="6.13,224,1732608000"; 
+   d="scan'208";a="41643292"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 22:24:12 -0800
+X-CSE-ConnectionGUID: fQG21xvjRbKdGH7RVzg2cg==
+X-CSE-MsgGUID: K1KM0QHXQyapbGoZc5FLVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="112015652"
+Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 22:24:11 -0800
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: <intel-xe@lists.freedesktop.org>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
+	Riana Tauro <riana.tauro@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>
+Subject: [PATCH v14 1/7] perf/core: Add PMU_EVENT_ATTR_ID_STRING
+Date: Tue, 21 Jan 2025 22:23:35 -0800
+Message-ID: <20250122062341.1100173-2-lucas.demarchi@intel.com>
+X-Mailer: git-send-email 2.48.0
+In-Reply-To: <20250122062341.1100173-1-lucas.demarchi@intel.com>
+References: <20250122062341.1100173-1-lucas.demarchi@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250122062332.577009-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Subject: [PATCH v2 02/17] perf map: Constify objdump offset/address conversion APIs
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Make the map argument const as the conversion act won't modify the map
-and this allows other callers to use a const struct map.
+struct perf_pmu_events_attr has both id and event_str however zeroes
+the id and only set event_str. Add another macro that allows to set both
+so drivers can make use of them. The id is useful for determining the
+visibility of the attributes without resorting to creating separate
+groups passed via update_attr, while the event_str is still useful for
+attributes like *.unit or *.scale.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
- tools/perf/util/map.c | 19 +++++++++++++++----
- tools/perf/util/map.h |  6 +++---
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ include/linux/perf_event.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index d729438b7d65..a22a423792d7 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -514,6 +514,8 @@ void srccode_state_free(struct srccode_state *state)
- 	state->line = 0;
- }
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index cb99ec8c9e96f..423f21b51cb0f 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1923,13 +1923,16 @@ static struct perf_pmu_events_attr _var = {				\
+ 	.id   =  _id,							\
+ };
  
-+static const struct kmap *__map__const_kmap(const struct map *map);
+-#define PMU_EVENT_ATTR_STRING(_name, _var, _str)			    \
++#define PMU_EVENT_ATTR_ID_STRING(_name, _var, _id, _str)		    \
+ static struct perf_pmu_events_attr _var = {				    \
+ 	.attr		= __ATTR(_name, 0444, perf_event_sysfs_show, NULL), \
+-	.id		= 0,						    \
++	.id		= _id,						    \
+ 	.event_str	= _str,						    \
+ };
+ 
++#define PMU_EVENT_ATTR_STRING(_name, _var, _str)			\
++	PMU_EVENT_ATTR_ID_STRING(_name, _var, 0, _str)
 +
- /**
-  * map__rip_2objdump - convert symbol start address to objdump address.
-  * @map: memory map
-@@ -525,9 +527,9 @@ void srccode_state_free(struct srccode_state *state)
-  *
-  * Return: Address suitable for passing to "objdump --start-address="
-  */
--u64 map__rip_2objdump(struct map *map, u64 rip)
-+u64 map__rip_2objdump(const struct map *map, u64 rip)
- {
--	struct kmap *kmap = __map__kmap(map);
-+	const struct kmap *kmap = __map__const_kmap(map);
- 	const struct dso *dso = map__dso(map);
- 
- 	/*
-@@ -570,7 +572,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
-  *
-  * Return: Memory address.
-  */
--u64 map__objdump_2mem(struct map *map, u64 ip)
-+u64 map__objdump_2mem(const struct map *map, u64 ip)
- {
- 	const struct dso *dso = map__dso(map);
- 
-@@ -587,7 +589,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
- }
- 
- /* convert objdump address to relative address.  (To be removed) */
--u64 map__objdump_2rip(struct map *map, u64 ip)
-+u64 map__objdump_2rip(const struct map *map, u64 ip)
- {
- 	const struct dso *dso = map__dso(map);
- 
-@@ -619,6 +621,15 @@ struct kmap *__map__kmap(struct map *map)
- 	return (struct kmap *)(&RC_CHK_ACCESS(map)[1]);
- }
- 
-+static const struct kmap *__map__const_kmap(const struct map *map)
-+{
-+	const struct dso *dso = map__dso(map);
-+
-+	if (!dso || !dso__kernel(dso))
-+		return NULL;
-+	return (struct kmap *)(&RC_CHK_ACCESS(map)[1]);
-+}
-+
- struct kmap *map__kmap(struct map *map)
- {
- 	struct kmap *kmap = __map__kmap(map);
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 4262f5a143be..768501eec70e 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -133,13 +133,13 @@ static inline u64 map__unmap_ip(const struct map *map, u64 ip_or_rip)
- }
- 
- /* rip/ip <-> addr suitable for passing to `objdump --start-address=` */
--u64 map__rip_2objdump(struct map *map, u64 rip);
-+u64 map__rip_2objdump(const struct map *map, u64 rip);
- 
- /* objdump address -> memory address */
--u64 map__objdump_2mem(struct map *map, u64 ip);
-+u64 map__objdump_2mem(const struct map *map, u64 ip);
- 
- /* objdump address -> rip */
--u64 map__objdump_2rip(struct map *map, u64 ip);
-+u64 map__objdump_2rip(const struct map *map, u64 ip);
- 
- struct symbol;
- struct thread;
+ #define PMU_EVENT_ATTR_ID(_name, _show, _id)				\
+ 	(&((struct perf_pmu_events_attr[]) {				\
+ 		{ .attr = __ATTR(_name, 0444, _show, NULL),		\
 -- 
-2.48.0.rc2.279.g1de40edade-goog
+2.48.0
 
