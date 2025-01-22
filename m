@@ -1,96 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187A21F193A
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 10:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3C71F893C
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 10:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737541989; cv=fail; b=PJKjvIsYSX51i4rBNYuxM81wTM4An2bJRHM3Wvv+5Py9Ckw1ApeMb+O+6WNYila2AjTp2mkfDWDDbPZHpbhP8ayZlZvsLL0UaM0+7PeJPA4JJZrJyz+MmyFRgZdWDWpigPi9xW04pjwwB1LtgYW8oYuMbYNRhi/UWtzxAdTirmk=
+	t=1737543155; cv=fail; b=eQ/3zT7HsM47DNy+q8Owi8P9vso735mL7qREcjtOB6iE4UI6odvjO5qC5CUh7AAdNY6+SGtcb+uYkuh0nrRm76rS1AEUGLvASJk937Fyx0z5z9Z20zapWLCYb4Hc+PGRv1OmMSTH3C1C4uPaFqXyFTzNZmrwecS4Ve9tObkgNdo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737541989; c=relaxed/simple;
-	bh=mNATzPxt5EiQa2Qiky+sFNX2Hb8RicJi4LOqJBffKHQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IhqtIwrHu3N0syCbylg6p3Kgi8VJ8twSX7HFQL+RgEONxTZSJxZ7FPsLV639pAdvEnlnK63ReKHp9WR/FNBYltIlYi368yRvGTtYLtN4ONQhNDnASfK+rvrCasfWZlHCkktS+trekspP3Ii9U12hT2yhcZekfozTWEtyHjQ5Jcc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RWKryKcO; arc=fail smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1737543155; c=relaxed/simple;
+	bh=ej1Ps2v862+lpuh8EoGi5D6QoQ8r1pwWN1pOk2+Kdag=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PxyuzBarnvddLPIkQvijuSpz9YsCEnkMDLIv13gfBxu+4FGiMyyAcFLH9O1HNm348cKvjg6yWVJfXrJOzzcUA0iE/MmQiHc3eEwexLIz6KwdE7qwHEwDb6a8L002PQdrfI1t/8Lp9tGqygsA9ePD08G/xD2agHIkH0xbR++qmu0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mYYiaXlS; arc=fail smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RWKryKcO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mYYiaXlS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737541987; x=1769077987;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=mNATzPxt5EiQa2Qiky+sFNX2Hb8RicJi4LOqJBffKHQ=;
-  b=RWKryKcObbPVajwcMlPJZM/bB9JIutaJUKuZL/rfMDIht7061VHUl0UV
-   XQjxhQi0hCS17EQf0eIWNHy4wfFYwGtG/aUHqGcIohxROetBr6978AChR
-   NNCc0apDROugrOANS3K5j4HATt7rFAWCso+PXWtf7YvMVJ0qxiSxoTozC
-   4Xi9RsiPZuxCELhQvuHePW3l9zRjY7GUASnd9D+RfGHzn3P7PUam/Jp4H
-   kKo9BoYbondy59dcFPsA2jaweZ975RZTAUvhxWk7HlOBVesbKkyWJA5fP
-   EcuB0rHLdBaDFdyNWQtN9pXob9c8japw1nqcg7qMnViKwvS7wWxacOg5w
-   Q==;
-X-CSE-ConnectionGUID: WfIuhgU6QMmN3jIwJlQe4Q==
-X-CSE-MsgGUID: KzGCziUhQY6yCqD92PKnFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37870887"
-X-IronPort-AV: E=Sophos;i="6.13,224,1732608000"; 
-   d="scan'208";a="37870887"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 02:33:06 -0800
-X-CSE-ConnectionGUID: 07BX29XURya+2esG4aBCgQ==
-X-CSE-MsgGUID: H5gyc/nPQX+fTHoHlS1S1Q==
+  t=1737543153; x=1769079153;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ej1Ps2v862+lpuh8EoGi5D6QoQ8r1pwWN1pOk2+Kdag=;
+  b=mYYiaXlSzJZ+h3y46zSP+RlvvPjRLJKnCrmt1qSqYgn5lcJBNFUyOCCH
+   /pIFMbQXqiPQ1GnSbaH15eEQy0/HJxpmjG916Ou9IDg/+4GJBPOJ3pqEg
+   tejfYcGDE0y/7TbYzF+fe/3diV+cRGmAXYemmQ10xWSaNCZrKLZki7Xid
+   MF8iTedJ94d4R654yjCJU44hsUuhr9KXqhUxxv7LNI/eXKJ8RFp++UEXx
+   t0/gSpGFjYM1i/PxDqjximXlFXj7z94bhXffM2WwHl7YASPzM+qGZxmYG
+   wnNwGlImILuJ3aGIXZxIBOXS9TxigqqkxpEKqjsvBbXdGwjJm9o1xvinK
+   w==;
+X-CSE-ConnectionGUID: irOg1IKKRq+8u/Bk+fjhuw==
+X-CSE-MsgGUID: NTQJRI8aT7a5YoBnR5wK1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38096733"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38096733"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 02:52:33 -0800
+X-CSE-ConnectionGUID: rCW58mUkQga2ZtzLHC684Q==
+X-CSE-MsgGUID: VNFCvoq9Tz63/7mlu2HLew==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="137975875"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Jan 2025 02:33:06 -0800
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="112131480"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Jan 2025 02:52:33 -0800
 Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 22 Jan 2025 02:33:05 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ 15.1.2507.44; Wed, 22 Jan 2025 02:52:32 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
  orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 22 Jan 2025 02:33:05 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.44 via Frontend Transport; Wed, 22 Jan 2025 02:52:32 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 22 Jan 2025 02:33:05 -0800
+ 15.1.2507.44; Wed, 22 Jan 2025 02:52:31 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RiYAS1uU0o5wUIGb/FibRAEg7nJPj1s7L0PPvdIFi2TC905XmFLI2fDeU8Eb+cG1B6AKMur3Tda3rwoZSqcoG3i6NxVDGtyj6xc++MfCtFXLv/ewxc/fJtu6G+b/4eGvGo/v1LTaclgK4wdNaKH0YFJyOQgCd+bSSI4UX+jQPTVXNlsr79O5xGe9ceASudztjWfwSBTZaMh0GZycbBA7eiUrNjFLvzblg6j4gFgDZ1NerxeENFv7H4R1yRR2Q5BNXasLT5NzWwE8fAikHyy9mntLG4N8rud0h6XZSJzBnexUQcZ/RBnaGNcwpx5UL7U0s4OcnOABIXIo0uUzfKJBQw==
+ b=uwcnpH4277b4BrbcHG1+1CQ/kMYJVPwRnRqToejGKOoLqSs71etB1tEd3J4i1OdXSLbs4sPhXNQ5OBaP/uhjnvqquzPYs5j4AgKisNjqgSo6dzOSbuKkoO71VOawK/xLOR/TspK4F/U1oYjPOufu9zdOdpFS5s8VMCINoiortvYXMvnL8OuJLbOYhhdD9oDHcvpumjfaoeIM0aLKLbM+IjWuFaSVk6eGn6VtG/4h6VJUsBGqrzMASgvy012s2zDz5w/pR0O3AQe4pv9inRArr3L1d/nB0QpBIr0F1/OnjNnbN8FLJDyuwYz3uUXenLc3SZR1msDtkUVaCMBPDs76hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q6GyL8P2APv+QLsNuPosQ591J+jogK1Ro+1V3Q0NsoU=;
- b=Ze9HEFG5dbGi71yNLCxSeUKhok+IA/nx2tdUkl0eb5VVLnqE1DhXBOMkCdVY55u8/1BL7q3yrxi7IbT6L65E9OK0vCBE+DAEJNnFWFFUt/Htx7geMEmXhSRoZG2c8qR6Wga77vb8+md6ZwuQi/wYxa0Re2WHR49+lG5fJE3oComXmZ6TsXsJz/EB7SnF10HxvsY+HJmJn/feDOlsFX6UhB++qABXAgAiguyx9GXrZGbJNyoCHCtnfg4wdRUSdJSPiNbGOQA2FZcOGb6sydkM+pq1D6LU7D3kSHUbwRUmdRb+IzXybZ0LB5spyaOaRAQwQWirLFJ0TbNnjw/E/jsxfA==
+ bh=+9HRjMlK4sLWpXO0SkcptY0TlMPtbRwK5wkmMVACZvE=;
+ b=I5Imcxgzxki/iCGM5fn2QfuICbk1duB0KwKGERQnKp3xK8uUhjrfY7DmL0F5wNM0QT897pxhCPfWyfCAfcM27T9YxQu22gsWzmNiWOZMZr4S/f7RGhG+RqGyU/lVO1RY4a14NKvDouZpwIeIvzBMeNrLlrWarTZf2X5iZcTrJdpCqmkhWVNC87r6emd+/FXDuSQyMwKr2VfPSXG81d5TJiGehTSTwZouoZpR5qIqJuvIdI//3xiC6qh5bskgXXh02Ebhmiybako0Vm9apayEaXeohmI0ALfLuhkWkXFcYOXS54Sm3ykt6lqXz5mHnOKiZmhjvhmC/53tktrPb53dGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7SPRMB0046.namprd11.prod.outlook.com (2603:10b6:510:1f6::20)
- by CYXPR11MB8663.namprd11.prod.outlook.com (2603:10b6:930:da::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.22; Wed, 22 Jan
- 2025 10:33:03 +0000
-Received: from PH7SPRMB0046.namprd11.prod.outlook.com
- ([fe80::5088:3f5b:9a15:61dc]) by PH7SPRMB0046.namprd11.prod.outlook.com
- ([fe80::5088:3f5b:9a15:61dc%6]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
- 10:33:03 +0000
-Date: Wed, 22 Jan 2025 05:32:59 -0500
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-CC: <intel-xe@lists.freedesktop.org>, Vinay Belgaumkar
-	<vinay.belgaumkar@intel.com>, Riana Tauro <riana.tauro@intel.com>, "Peter
- Zijlstra" <peterz@infradead.org>, <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v14 7/7] drm/xe/pmu: Add GT C6 events
-Message-ID: <Z5DJW7oYSlp6ZTQn@intel.com>
+Received: from DS0PR11MB7958.namprd11.prod.outlook.com (2603:10b6:8:f9::19) by
+ DM3PR11MB8681.namprd11.prod.outlook.com (2603:10b6:0:49::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8356.21; Wed, 22 Jan 2025 10:52:02 +0000
+Received: from DS0PR11MB7958.namprd11.prod.outlook.com
+ ([fe80::d3ba:63fc:10be:dfca]) by DS0PR11MB7958.namprd11.prod.outlook.com
+ ([fe80::d3ba:63fc:10be:dfca%3]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
+ 10:52:02 +0000
+Message-ID: <22a55c13-7833-439c-87c6-4970953f2eeb@intel.com>
+Date: Wed, 22 Jan 2025 16:21:55 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 2/7] drm/xe/pmu: Enable PMU interface
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	<intel-xe@lists.freedesktop.org>
+CC: Rodrigo Vivi <rodrigo.vivi@intel.com>, Vinay Belgaumkar
+	<vinay.belgaumkar@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-perf-users@vger.kernel.org>
 References: <20250122062341.1100173-1-lucas.demarchi@intel.com>
- <20250122062341.1100173-8-lucas.demarchi@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250122062341.1100173-8-lucas.demarchi@intel.com>
-X-ClientProxiedBy: MW2PR16CA0035.namprd16.prod.outlook.com (2603:10b6:907::48)
- To PH7SPRMB0046.namprd11.prod.outlook.com (2603:10b6:510:1f6::20)
+ <20250122062341.1100173-3-lucas.demarchi@intel.com>
+Content-Language: en-US
+From: Riana Tauro <riana.tauro@intel.com>
+In-Reply-To: <20250122062341.1100173-3-lucas.demarchi@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0059.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::13) To DS0PR11MB7958.namprd11.prod.outlook.com
+ (2603:10b6:8:f9::19)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -98,160 +101,565 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7SPRMB0046:EE_|CYXPR11MB8663:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d2f83e0-a2f3-47a0-2900-08dd3ad02691
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7958:EE_|DM3PR11MB8681:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d8cbf2f-3afe-4e2b-1dbe-08dd3ad2cd50
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?fe4AX24yYg8WY6HbkFKEkvTJ/nnCrb39zL10vKVZ8mLpR7jwjwYVxbPifOFL?=
- =?us-ascii?Q?7xnaa1Fb73bufdkMEEzd/47qXDEJHwnNPoeYg2OSg7b9FWoLY60zhlvZyGvb?=
- =?us-ascii?Q?dj8uLBuPSqBFjiztdhtIPhtxZE8GI0BceSqWJLlJ9C/gBP75RH6HFhSpGSAk?=
- =?us-ascii?Q?8XtB/vXKbOSs4lEUfKTG0Sj19+IuVipz8HfGitvYvvh1yekHG6gMktS9Hhvz?=
- =?us-ascii?Q?wh8WrJRy+jXAL8YQaQmIYwUx5JnKEjzDX6ITH9n4fi51OMAzEhCVWPDTtas3?=
- =?us-ascii?Q?xYmgEASFpbdhEBLqpS0PrgFBJ8XZpwzT0p8J6KajA7cNyaV4b4ZjLLShnUAh?=
- =?us-ascii?Q?vVoknbwAjcFw3tEFa8IYp0oN8e8GL1XYWiGx9IlGKNMhQPZNYA539K7fh28K?=
- =?us-ascii?Q?LN3nH8kpvJ3XUB4+Wbsb3WfXv0UBByYkCy32tD58/ivTSfr/bri01VqWkSed?=
- =?us-ascii?Q?CIpYuYDlX0kNNkG/DOeCENOEqLdxRljXYcC7Zp88Vl5MiYnpOy0TV8dnXk6p?=
- =?us-ascii?Q?a0aGjeim0h+AOFmvhIfNS51/dIa/9WtOjF3YYjAFwUCFS+Rp+uruaMohnMbX?=
- =?us-ascii?Q?Pao4r4sq/0x0KSjK1CtNYyjw6wK3vfjx7z6xN58crrxnED/29OzSUeUqsHh0?=
- =?us-ascii?Q?5Y5HGQ3LGS3QYZipF2wrA5k4zb5WkaWPVuGYpKzhaEXoWLXbzQJRrAU0EoQH?=
- =?us-ascii?Q?oYHD75M7LqXgzGPl6klTKXPxRi4gvukCQk3nAwVF1t4Gtv6pYP3BLR+D0JxH?=
- =?us-ascii?Q?+8Crn1bLBBlDxLrcDPFGkyo8tJJBQeriOtWmR/Q4U4VeRAV9VIt/yJlUkjOU?=
- =?us-ascii?Q?/GFwDvSmlEpuN5qSlMzwwBaR+D2RpHMLN8vdXLsTQB+Am0N71hvjkVjv3atJ?=
- =?us-ascii?Q?I+KAgNDVdscaSYN5gpfIEnMndzI5J7e+t2r50NNs7zIIzRh5pABD2Z6dmnab?=
- =?us-ascii?Q?8VQTQKfqV0LltXeyxxstpprx26YL7XmBH8W1XxLFYymPqTdpUvtd2bbiUBN+?=
- =?us-ascii?Q?BH5QfZa1O0Su1UfFushzEteX3gGjz7bF/0Bmev6/zlCBG1m6Zth2HGQ0rfKY?=
- =?us-ascii?Q?69+Ihpt9laxEhjQKpoa7+vxLevboqbTIGH1Rxds1iJhrGKAD12Ff1meJY0LV?=
- =?us-ascii?Q?WIjpyfHUz1Wmc7CbpaeK92We5WJjk84Afa1KV773A0QO8wPB1i0h5/zUC1Hs?=
- =?us-ascii?Q?Mc3zubHvmCmfLy3ZZAbcaqCqO6eEziGvs/nMqArF0NHbkqvLKpanILC/4LFX?=
- =?us-ascii?Q?WiBQZPIApVlCr3lmZu8wMWBQMlC8eRzrQ8dcJUaddGts782kzXnWQZhhgsFT?=
- =?us-ascii?Q?BV5GliQnU5b17NmsyWKhJjfZTuTZH5FIHR2pCm8HVBtLJ8X6bssQ3b3NA1p0?=
- =?us-ascii?Q?rIEA9zqTRmZfBaI2UwCVrQmysjiT?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7SPRMB0046.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dDh5M3piTlZOc3p4ZjlqOUdGTWNtaE5jYVBWKzdCMjg0clhFNG15S2tvTnhX?=
+ =?utf-8?B?Q0JCNjM1YnB5UnpGa0JRaG1oMk9RVjNhV0Q1dWFkRFdiMVBtSVB3cnhpanJV?=
+ =?utf-8?B?SnhibTlFWmtWU2FXZXI1Mk5PQzUvQzBybjR4VEdhVHF5MDZmaHkvN1IwTEFo?=
+ =?utf-8?B?M2FyWDI5OHVKT0pZVjdJVFNkcFRTdFVreHBtTlcrQmJ3c0QvR24xcUtZb3J0?=
+ =?utf-8?B?YmFvVnVXaXU0TFdXQ3Q4MDBOaWZna2FNM3AvU3BtOHlVUTlkS1ltNmJWR3hk?=
+ =?utf-8?B?QVB0cW5Zc1BhSno1VXcybVZtdmFpUXorN04ybk5VaHM1OCtXWUh1cTA1VTV4?=
+ =?utf-8?B?VjQxb3NVWEYxUWFXU21UZGk4ZmFOV0pSK2VCeEFsZmhGdldkMVJiOEdpbEI3?=
+ =?utf-8?B?c0FRb3NybE9CbVBTK1I5UWZDOVFLeWpNSjRxbHlyS3FjOFhuUWJvR2JnLzZs?=
+ =?utf-8?B?bUplUVI4ZGZVUkI3NXJ5Zno1K2VHUXVvRGdTalg2VERHRUlWY09iOGpBaEVK?=
+ =?utf-8?B?MUsydk1VOXJWdmQ1d0lCQWgzcGJPbFIzY09DV1hQcDM1N1FIMUdGd29UTkpP?=
+ =?utf-8?B?TlJKNVNaT3kwdkl0NStCV1FsZEl5WTR0OTVJd3VyZFhPVG1mNU5HNzNqWFR1?=
+ =?utf-8?B?SnZqMjBsb1lVUDNRT0VBNVdOVnlmdUt6Kys5L3F0dkNicWxacFgvNllKSWlF?=
+ =?utf-8?B?anQ2TTdaeDB5SURzQUVVM2dOQ3Q4V1F0ZGhiNHlUSEo5clhibTk2UzFrTkgx?=
+ =?utf-8?B?TkwyTkFOVlF1UUN1eFBuN2xhSWtDellhSDZobmwzMGZ4ZFd1Z2pKVDhhaGZS?=
+ =?utf-8?B?TlJVTzBjSTd1NlAraFo4bkVWY2VtczJ1TWx5a2d6M243RzVRT0RET1N1WnpT?=
+ =?utf-8?B?U0hQMGFEdGFRalI5K2tVbDU0Sm52NXMyNlg3a3dERFJLYVlsaHZibVhRL1Rv?=
+ =?utf-8?B?eEJmNUhyQStBa3d6RGtBQ3cvK0gxUGVRMzVpNEZOUzMyN0ZpcklVa2lUNFZT?=
+ =?utf-8?B?cDJnR0FQV3lmczFwemRLaE9SbVV5YWViYlBvWlVqcU9rQnBwdDVRVG8wT3F1?=
+ =?utf-8?B?V1VkdEpxTVp6dDJYTUxoTDlWR0wwWEloL2dxMzZNOUErVWtndHg5bld6ZTVW?=
+ =?utf-8?B?SDVBd21OdldhYTY5M3gxU01SNktsZ3VJdit3Mlo1N1VtWWdocFYwb0YrNGhE?=
+ =?utf-8?B?NFFwVTNHaTZGSkR1UFd6dnBKOHZvbHE1R1phVEVCNUc2Y212L2FQd2FjT09i?=
+ =?utf-8?B?NXlDUVI5YnNTOWtnNitHTWVDdXg2a1ZtN2NUQ1lHNm1RNlRPQ1dtU0NhKzlY?=
+ =?utf-8?B?d3NKYkVxcnU1ZGRJR2tPV2tuazE2OHBwNGpOOWFWakZiT2wvMTB5d2VNOUpT?=
+ =?utf-8?B?Q3EwbVE3S0VtVEVsWDdLcjc1aEVsTVpieHExbHlJdFp2dld2VGs2Qm5ZUlNM?=
+ =?utf-8?B?R0E3V1J6bmtSZFd3MW9sV2tVSFhFVWZsb3FPM3VKVVphYW1EZkVqei8rNndW?=
+ =?utf-8?B?Rll1cDRVRTFyVTVQQ3ZFdThUSTVvbGFJQXZzNFg3N3kydTdZa0NldkFFcXhN?=
+ =?utf-8?B?MFJDZmdFTVNOeFVQY21MSTVRbS95N0c2ZldreDViMjN3SGQxSHdKVHR4OHRq?=
+ =?utf-8?B?SlZscE9SeWtjUnQ2MlI5WXFKL0J6eXRyM3FsVVpELzg5YUwwR2RxSTFSYkJP?=
+ =?utf-8?B?dVdVMUFRU2pzOHhVV2FsOTB3cU9id1c0WkI1R0g3TGt3K0F0TVE5UFI3cDBq?=
+ =?utf-8?B?TWdPa0dGR281SHZTR2JHamQ1WWtMMDFQNmt2Lzl3cFlTYzM0dGtTb1JhNHZW?=
+ =?utf-8?B?VS9FZ2FaZ2xsb0xpdWdMZz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7958.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WMx8/io0wywm1Ds9zGpQWZ9qStpUzvXuyu1afhs4MMfVLGnjrhUIh6U1Q7Zv?=
- =?us-ascii?Q?5ic5PqS+E2FpyRc0EEyx/cNHkfBgN9Jx6YpGdrcQKD6hamTc5lDGA5Lw9r97?=
- =?us-ascii?Q?+YkfgJ+qkGDQCVQdlDtr3McUXHuyTRSRZL9GPmwbzdrA+4hVilwVVSP+VRX0?=
- =?us-ascii?Q?aF7H0aKkzqV7Hu/rDYpkyglYB0fVRAqg+hY42vU31Xw1aKaar/BIwM0i+d5W?=
- =?us-ascii?Q?hXZ7o+2ryJNFXA2lCzvnUC/n2B2TeTdZMVLCf/F9pXKGgJogkFFemmxk/Vno?=
- =?us-ascii?Q?gBvjlULT0teHZM2X3uRR/ITLBhBxZOLrMirDOCy9agFH5/lx8QP6CeDLWPnO?=
- =?us-ascii?Q?3kjmncx6z3f348RtAHI5WUg/6NfA3R/9pu0IyGcWSQQHIfC2bG7+Aw19/U+1?=
- =?us-ascii?Q?KcT35GzM+Nx6z7HActNz6mW1T7B2Qw0ASP+3AYmo1ltkcRjBKr8bYQgszJJm?=
- =?us-ascii?Q?57ggXDqDfiZYLyrMleJGQVQ9xSTE/yNWq/03gBh1uxlfmURZ5gFU8xAnNinf?=
- =?us-ascii?Q?u+3/m/9okn8P1+hd86RvJOzh7zM+MLPMhi516igW5n0U37yIvgabi9SM0v5U?=
- =?us-ascii?Q?tTuuro2JEexb6Qx8U4jOlQpPWBiyqHm+im0Chnl/WlOKorHlswghiDf9jLt8?=
- =?us-ascii?Q?q9ne1xZbfIFyz9zc305M9hxbZ4wzAihj4zWxxGhdJl25KSuRM5Snwlfz8p16?=
- =?us-ascii?Q?Fj0l1BEX5RZJRSp4H1LHd1FGN0TvPa9iw4aciKGVwJxIr3c0c+e5m1yrhUKK?=
- =?us-ascii?Q?Egf0/jV/hcJvTWhuXprqVd3swExPCNsHvbxVSc5ECfJiQ4V4O2Q4sgPT1G8E?=
- =?us-ascii?Q?njLvdlewk4XqxY1o98T8p5aMv6Kz7qsvJvqoUtg9NyxwDHP9eLX1qZgfO1hc?=
- =?us-ascii?Q?E3ZQVLO0K6lxfmKf/cHUXp5wmajXJ5eNA16aKrZpOOcAqMVUM5tYjzSIOqGM?=
- =?us-ascii?Q?nKX7PPmXu5AT+pULtLNmWa5b0WSqyYxz/i6QsGDBOiMTIaxJHLRvDY12SIB+?=
- =?us-ascii?Q?4J0IS0E/nFPqXi1nnNLaDaakTPGZtC5Ji6R8SIOOAfzi3EmEbpItf7MptXyy?=
- =?us-ascii?Q?iVqD0PiYTr0Y6FHYxRolSKFsoiaFvkKXi8UKGOesU9nIFpzBDyyrcur7OAw3?=
- =?us-ascii?Q?Zn7zKLouTcFUBKT73LsInDrrSB+NHHILJrUAxSZZj/b1jgedTYqaoebt7YO3?=
- =?us-ascii?Q?LOSqmlqjPGSZSP30jFrXdnxISdy15nGc7Y1siPTkz4FNvxm6uRub5XQPLrZk?=
- =?us-ascii?Q?STDv/7YMF8QSeib7gO5nUgLYU8cVE1lTy1yWmfAAcBMetLyUq7iij7r1iKcf?=
- =?us-ascii?Q?XMxyQXRk1ETuiy0h3PgDsJARy79KlsHm11trS1NbVJo+VwprZVUsrxW6x74F?=
- =?us-ascii?Q?cBNSg+zrvTL6iyn47koOjKXChlOC+aYm3sm8aEgx3cgMdUxItMfeVwR9L4Hq?=
- =?us-ascii?Q?GpT+O+ogCMsMQxzr1eLuEqY64xoVR94j9i2XDJyypXe7vt1k6EPXCeEnRFQJ?=
- =?us-ascii?Q?3VLCW+6Jyw9yYziFjVa+sX2PQfLqTd4NKidLwFY5bPYOAJIK0gND/wXJCH/9?=
- =?us-ascii?Q?pQn/RbgFn/bwHHCvEZ1/cZ5m8dKbfzwW8boOj6IOP23jcNq0/4PZOzWrMQx/?=
- =?us-ascii?Q?Vg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d2f83e0-a2f3-47a0-2900-08dd3ad02691
-X-MS-Exchange-CrossTenant-AuthSource: PH7SPRMB0046.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cHNkR044QUlJbUs5THRKUWVKbnozZTVndkprWVNZYjhwRWZlblBvUkVab1hE?=
+ =?utf-8?B?QW1RN2ZsN0hpWTEwN0RESlRXNC9nY0VXdVh0UU1pNVd4SU1EdmhvTlovSE9l?=
+ =?utf-8?B?RVpYZ1dxV3pXQVN3T1ZDSG1LcEJKU3JHWis5UHRpYXFHUzd6TkhzOVJDK3NT?=
+ =?utf-8?B?SFNCd1puSDBUZUtIR2JLQTZua3RhcmhSNUFyQ29wL0tLYjB3YXpHcGNYSTRN?=
+ =?utf-8?B?TGEzZFoyTDlsdGpIMWNMYURqd1FXYUdZL2hpOTltbUxHYkpQbGVpQmxxaVF2?=
+ =?utf-8?B?YUd0bkVpZFRYTnJDM0ZyTkVOVlhGT0VRbjBaSEltNkhHd2diVmc4QzVKMHZo?=
+ =?utf-8?B?aHQ3VEYvcUZWV0h6V3ZoQnBiNFBqZkVCRzdkcE8vOXVEWkhtREFST0FYaGhj?=
+ =?utf-8?B?bERhU0xzeXpBdThjSTZNRGNxOHhpaTEzOEExZ3lRbWJtQmdyQzN0cUdXMVcx?=
+ =?utf-8?B?dk83MGlnWWhPRVZwUG9YMTRjdEZhcWxGQnVDMzJpVFQ3NFpJdjY4eTZZc0Mr?=
+ =?utf-8?B?NmhWKzhFcUI0ZVAzMTJkb1V4YjZub1NWSHEyUFM5WW9KN1pIMTVEQTkzR0xX?=
+ =?utf-8?B?T3NmMU9oNHJ5SkZyeEtNZXVJM3RYeEd0K1REb0g4eHI3MVB4SDNZTzJkV2hO?=
+ =?utf-8?B?dks3Qkp4N3NhbStyZWFnTCs2aEx0L240dWtxeWFaeW44YldIdEhRN2gzelVX?=
+ =?utf-8?B?OG1qeGw5RnQrZEZJei8rYVp6RzV2akxhZkZiYXVMQTh4QU5lZE9kN0MvWGpu?=
+ =?utf-8?B?OVc5aGdEdmZFeTFqQjhlaUpPRHZJT1E4aUxyOXliNEY4Z3FvRWtnWGpySkNl?=
+ =?utf-8?B?bWJydUdRUVNlUy9xSExDUVFyRWJPRFE1Wk5FNTh4eEhKK1l6OHFJNFhER1dR?=
+ =?utf-8?B?UDU5elFMa3lkUnczYVBDRVBNdzE3YjRRS285VXhnTld1dnR3TEFvRFhLaXNO?=
+ =?utf-8?B?MGtpY0lDMW40bnVjVEJhUGptWHArcmM0Q1FGbldwRHNTeExVZ25sNktaL2VZ?=
+ =?utf-8?B?OE9wSVBUZVY1UGROaUI5RXh6cTBMUUJJTU9JU1ZsbVFWNERnbTVNM1BRczBT?=
+ =?utf-8?B?REpaQjhMdVVJRmFSVEJ0WEVnWTJSTTdHQUpEc0hlZElWSG1iN08vdVJtZjg2?=
+ =?utf-8?B?SytITTkySDFqbjdWUWgxb05LY0VkT1Ixd2IyOXhmRW5kYThiZ1pCbThVQXdU?=
+ =?utf-8?B?bExlZHFjd0JVTGkvcUUzaHpVWEtUdGIwNDQxSVpBeUVxbkZzZDRvMTczdFZH?=
+ =?utf-8?B?RFA2SllSOUxPeTBqMlFTUkxuZzRjMEVhdTlhWWhkcjhJVlhZMFh0ckNSOHB3?=
+ =?utf-8?B?UG5nK3hNbzMxck44TEdWbkZ2Y0I3bk9LaE52T3F5blN5NU5ZNHE4MEN0a0Jq?=
+ =?utf-8?B?Nll4ZFBUT3hlNWg0QnNmazVDaVNjTi9YNGRzYTJMa29RZzAvOXFxeUhqWTA1?=
+ =?utf-8?B?bzE4WGxTVTQ4VlVXU1VzRk9FY3I0bHArcW9vMTFrVFJnRjlzSDEyMkVUTUNh?=
+ =?utf-8?B?VjJTKzBUemdZblYyU25lUmRBeUNqbjdZL2VVOHdUQ1VSQmkzRXRDVndyRkQz?=
+ =?utf-8?B?djIwb2YrU2Mvb0MxdWZsUXhIZzBZS3FGV2Y2ZGpxbmw1eHg4ZHNmUVhjTFgy?=
+ =?utf-8?B?bXJQL3V5TXFqU2hkWEtTb2JKckdMT3VZS3JkWWJTNkszbEIyaVdFSmlrUEh3?=
+ =?utf-8?B?cGZGMW1va01DZ3B2b0EwRDdnUHF5TCsxenU1T00zOW1kTjBGNlZsRUpmaFJJ?=
+ =?utf-8?B?Z3I1cHl6WXlGNnlRdk5DUTFvMXo4SU1iT3RJSEMxcFRGQUk4MzJvUWpITXdh?=
+ =?utf-8?B?R2N1cHIzbEZZdDQ1N3JoYnJPTERtN2x5dVd1SzJsSmw0WEd2SW81TUtEOVNU?=
+ =?utf-8?B?NkVBSmV5SzhZUW1mRWdDYWZ5WFVObFUrcldrN0ZtaytXZC9jazFKMHpzMkNt?=
+ =?utf-8?B?RGJnTTJLdHR6Y1dJU05pSW5lUVZkRlQzT2hGaE5oZjZwMmo0d0NDbkxYUC9D?=
+ =?utf-8?B?OW92d3JIdFNFL0dTR0JtckRvM3NBOE91Q2dNdmJQR285NTJzckNPVmpNWWFh?=
+ =?utf-8?B?VEJWOFFmTStTaUtJV0ZXa2RDTXpTSTY4aXhHZFJ4aUpnc3ptUTd4akd4OVNR?=
+ =?utf-8?Q?77i0RwX/IBiIoROX6lNZ5H2Pw?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d8cbf2f-3afe-4e2b-1dbe-08dd3ad2cd50
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7958.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 10:33:03.3016
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 10:52:02.1715
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KpOBBCvwgiO2eC0n4RRzjC5mCnLDR8hnWBT20Ztl7ycbCEXp9ak45c0EUHeNB1XW4qDEcqYVaBxxrpf5cZIcFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8663
+X-MS-Exchange-CrossTenant-UserPrincipalName: xgktJUXqHKbWdyBsb7BLl5Hh5PY/yFZUiZ3f9VuapLB7E+nvhRPtwfykgm0xGEmWXj9sl4MkQ482u3gcCfkjKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8681
 X-OriginatorOrg: intel.com
 
-On Tue, Jan 21, 2025 at 10:23:41PM -0800, Lucas De Marchi wrote:
+Hi Lucas
+
+On 1/22/2025 11:53 AM, Lucas De Marchi wrote:
 > From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
 > 
-> Provide a PMU interface for GT C6 residency counters. The implementation
-> is ported over from the i915 PMU code. 
-
-This is not valid anymore right?! Perhaps rephrase to show that the API
-design itself was taken from there?
-
-> Residency is provided in units of
-> ms(like sysfs entry in - /sys/class/drm/card0/device/tile0/gt0/gtidle).
+> Basic PMU enabling patch. Setup the basic framework
+> for adding events/timers. This patch was previously
+> reviewed here -
+> https://patchwork.freedesktop.org/series/119504/
 > 
-> Sample usage and output:
+> Based on previous versions by Bommu Krishnaiah, Aravind Iddamsetty and
+> Riana Tauro, using i915 and rapl as reference implementation.
 > 
-> 	$ perf list | grep gt-c6
-> 	  xe_0000_00_02.0/gt-c6-residency/                   [Kernel PMU event]
-> 
-> 	$ tail /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency*
-> 	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency <==
-> 	event=0x01
-> 
-> 	==> /sys/bus/event_source/devices/xe_0000_00_02.0/events/gt-c6-residency.unit <==
-> 	ms
-> 
-> 	$ perf stat -e xe_0000_00_02.0/gt-c6-residency,gt=0/ -I1000
-> 	#           time             counts unit events
-> 	     1.001196056              1,001 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
-> 	     2.005216219              1,003 ms   xe_0000_00_02.0/gt-c6-residency,gt=0/
-> 
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 > Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
 > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 > ---
->  drivers/gpu/drm/xe/xe_pmu.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+>   drivers/gpu/drm/xe/Makefile          |   2 +
+>   drivers/gpu/drm/xe/xe_device.c       |   3 +
+>   drivers/gpu/drm/xe/xe_device_types.h |   4 +
+>   drivers/gpu/drm/xe/xe_pmu.c          | 299 +++++++++++++++++++++++++++
+>   drivers/gpu/drm/xe/xe_pmu.h          |  20 ++
+>   drivers/gpu/drm/xe/xe_pmu_types.h    |  43 ++++
+>   6 files changed, 371 insertions(+)
+>   create mode 100644 drivers/gpu/drm/xe/xe_pmu.c
+>   create mode 100644 drivers/gpu/drm/xe/xe_pmu.h
+>   create mode 100644 drivers/gpu/drm/xe/xe_pmu_types.h
 > 
+> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+> index 68861db5f27ce..aa0d981663e4c 100644
+> --- a/drivers/gpu/drm/xe/Makefile
+> +++ b/drivers/gpu/drm/xe/Makefile
+> @@ -305,6 +305,8 @@ endif
+>   xe-$(CONFIG_DRM_XE_DP_TUNNEL) += \
+>   	i915-display/intel_dp_tunnel.o
+>   
+> +xe-$(CONFIG_PERF_EVENTS) += xe_pmu.o
+> +
+>   obj-$(CONFIG_DRM_XE) += xe.o
+>   obj-$(CONFIG_DRM_XE_KUNIT_TEST) += tests/
+>   
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index bd6191e1ed3e7..f3f754beb812b 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -49,6 +49,7 @@
+>   #include "xe_pat.h"
+>   #include "xe_pcode.h"
+>   #include "xe_pm.h"
+> +#include "xe_pmu.h"
+>   #include "xe_query.h"
+>   #include "xe_sriov.h"
+>   #include "xe_tile.h"
+> @@ -871,6 +872,8 @@ int xe_device_probe(struct xe_device *xe)
+>   
+>   	xe_oa_register(xe);
+>   
+> +	xe_pmu_register(&xe->pmu);
+> +
+>   	xe_debugfs_register(xe);
+>   
+>   	xe_hwmon_register(xe);
+> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+> index 16ebb2859877f..58e79e19deaad 100644
+> --- a/drivers/gpu/drm/xe/xe_device_types.h
+> +++ b/drivers/gpu/drm/xe/xe_device_types.h
+> @@ -18,6 +18,7 @@
+>   #include "xe_memirq_types.h"
+>   #include "xe_oa_types.h"
+>   #include "xe_platform_types.h"
+> +#include "xe_pmu_types.h"
+>   #include "xe_pt_types.h"
+>   #include "xe_sriov_types.h"
+>   #include "xe_step_types.h"
+> @@ -514,6 +515,9 @@ struct xe_device {
+>   		int mode;
+>   	} wedged;
+>   
+> +	/** @pmu: performance monitoring unit */
+> +	struct xe_pmu pmu;
+> +
+>   #ifdef TEST_VM_OPS_ERROR
+>   	/**
+>   	 * @vm_inject_error_position: inject errors at different places in VM
 > diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-> index 8d938d67c1f2c..a2e4addd3dd7e 100644
-> --- a/drivers/gpu/drm/xe/xe_pmu.c
+> new file mode 100644
+> index 0000000000000..c5641af6e9a91
+> --- /dev/null
 > +++ b/drivers/gpu/drm/xe/xe_pmu.c
-> @@ -11,6 +11,7 @@
->  #include "xe_device.h"
->  #include "xe_force_wake.h"
->  #include "xe_gt_clock.h"
-> +#include "xe_gt_idle.h"
->  #include "xe_gt_printk.h"
->  #include "xe_mmio.h"
->  #include "xe_macros.h"
-> @@ -122,12 +123,16 @@ static int xe_pmu_event_init(struct perf_event *event)
->  static u64 __xe_pmu_event_read(struct perf_event *event)
->  {
->  	struct xe_gt *gt = event_to_gt(event);
-> -	u64 val = 0;
->  
->  	if (!gt)
->  		return 0;
->  
-> -	return val;
-> +	switch (config_to_event_id(event->attr.config)) {
-> +	case XE_PMU_EVENT_GT_C6_RESIDENCY:
-> +		return xe_gt_idle_residency_msec(&gt->gtidle);
+> @@ -0,0 +1,299 @@
+> +// SPDX-License-Identifier: MIT
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+
+Some of these headers are unused
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_managed.h> 
+> +#include <drm/xe_drm.h>
+above 2 unused
+> +
+> +#include "regs/xe_gt_regs.h"
+unused
+> +#include "xe_device.h"
+
+> +#include "xe_force_wake.h"
+> +#include "xe_gt_clock.h"
+> +#include "xe_gt_printk.h"
+> +#include "xe_mmio.h"
+> +#include "xe_macros.h"
+unused
+> +#include "xe_pm.h"
+> +#include "xe_pmu.h"
+> +
+> +/**
+> + * DOC: Xe PMU (Performance Monitoring Unit)
+> + *
+> + * Expose events/counters like GT-C6 residency and GT frequency to user land.
+> + * Events are per device. The GT can be selected with an extra config sub-field
+> + * (bits 60-63).
+> + *
+> + * All events are listed in sysfs:
+> + *
+> + *     $ ls -ld /sys/bus/event_source/devices/xe_*
+> + *     $ ls /sys/bus/event_source/devices/xe_0000_00_02.0/events/
+> + *     $ ls /sys/bus/event_source/devices/xe_0000_00_02.0/format/
+> + *
+> + * The format directory has info regarding the configs that can be used.
+> + * The standard perf tool can be used to grep for a certain event as well.
+> + * Example:
+> + *
+> + *     $ perf list | grep gt-c6
+> + *
+> + * To sample a specific event for a GT at regular intervals:
+> + *
+> + *     $ perf stat -e <event_name,gt=> -I <interval>
+> + */
+> +
+> +#define XE_PMU_EVENT_GT_MASK		GENMASK_ULL(63, 60)
+> +#define XE_PMU_EVENT_ID_MASK		GENMASK_ULL(11, 0)
+> +
+> +static unsigned int config_to_event_id(u64 config)
+> +{
+> +	return FIELD_GET(XE_PMU_EVENT_ID_MASK, config);
+> +}
+> +
+> +static unsigned int config_to_gt_id(u64 config)
+> +{
+> +	return FIELD_GET(XE_PMU_EVENT_GT_MASK, config);
+> +}
+> +
+> +static struct xe_gt *event_to_gt(struct perf_event *event)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	u64 gt = config_to_gt_id(event->attr.config);
+> +
+> +	return xe_device_get_gt(xe, gt);
+> +}
+> +
+> +static bool event_supported(struct xe_pmu *pmu, unsigned int gt,
+> +			    unsigned int id)
+> +{
+> +	if (gt >= XE_MAX_GT_PER_TILE)
+> +		return false;
+> +
+> +	return false;
+> +}
+> +
+> +static void xe_pmu_event_destroy(struct perf_event *event)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +
+> +	drm_WARN_ON(&xe->drm, event->parent);
+> +	drm_dev_put(&xe->drm);
+> +}
+> +
+> +static int xe_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	struct xe_pmu *pmu = &xe->pmu;
+> +	unsigned int id, gt;
+> +
+> +	if (!pmu->registered)
+> +		return -ENODEV;
+> +
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	/* unsupported modes and filters */
+> +	if (event->attr.sample_period) /* no sampling */
+> +		return -EINVAL;
+> +
+> +	if (event->cpu < 0)
+> +		return -EINVAL;
+> +
+> +	gt = config_to_gt_id(event->attr.config);
+> +	id = config_to_event_id(event->attr.config);
+> +	if (!event_supported(pmu, gt, id))
+> +		return -ENOENT;
+> +
+> +	if (has_branch_stack(event))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!event->parent) {
+> +		drm_dev_get(&xe->drm);
+> +		event->destroy = xe_pmu_event_destroy;
 > +	}
 > +
 > +	return 0;
->  }
->  
->  static void xe_pmu_event_update(struct perf_event *event)
-> @@ -268,6 +273,10 @@ static const struct attribute_group pmu_events_attr_group = {
->  
->  static void set_supported_events(struct xe_pmu *pmu)
->  {
+> +}
+> +
+> +static u64 __xe_pmu_event_read(struct perf_event *event)
+> +{
+> +	struct xe_gt *gt = event_to_gt(event);
+> +	u64 val = 0;
+> +
+> +	if (!gt)
+> +		return 0;
+> +
+> +	return val;
+> +}
+> +
+> +static void xe_pmu_event_read(struct perf_event *event)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct xe_pmu *pmu = &xe->pmu;
+> +	u64 prev, new;
+> +
+> +	if (!pmu->registered) {
+> +		event->hw.state = PERF_HES_STOPPED;
+> +		return;
+> +	}
+> +
+> +	prev = local64_read(&hwc->prev_count);
+> +	do {
+> +		new = __xe_pmu_event_read(event);
+> +	} while (!local64_try_cmpxchg(&hwc->prev_count, &prev, new));
+> +
+> +	local64_add(new - prev, &event->count);
+> +}
+> +
+> +static void xe_pmu_enable(struct perf_event *event)
+> +{
+> +	/*
+> +	 * Store the current counter value so we can report the correct delta
+> +	 * for all listeners. Even when the event was already enabled and has
+> +	 * an existing non-zero value.
+> +	 */
+> +	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event));
+> +}
+> +
+> +static void xe_pmu_event_start(struct perf_event *event, int flags)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	struct xe_pmu *pmu = &xe->pmu;
+> +
+> +	if (!pmu->registered)
+> +		return;
+> +
+> +	xe_pmu_enable(event);
+> +	event->hw.state = 0;
+> +}
+> +
+> +static void xe_pmu_event_stop(struct perf_event *event, int flags)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	struct xe_pmu *pmu = &xe->pmu;
+> +
+> +	if (pmu->registered)
+> +		if (flags & PERF_EF_UPDATE)
+> +			xe_pmu_event_read(event);
+> +
+> +	event->hw.state = PERF_HES_STOPPED;
+> +}
+> +
+> +static int xe_pmu_event_add(struct perf_event *event, int flags)
+> +{
+> +	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+> +	struct xe_pmu *pmu = &xe->pmu;
+> +
+> +	if (!pmu->registered)
+> +		return -ENODEV;
+> +
+> +	if (flags & PERF_EF_START)
+> +		xe_pmu_event_start(event, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void xe_pmu_event_del(struct perf_event *event, int flags)
+> +{
+> +	xe_pmu_event_stop(event, PERF_EF_UPDATE);
+> +}
+> +
+> +PMU_FORMAT_ATTR(gt,	"config:60-63");
+> +PMU_FORMAT_ATTR(event,	"config:0-11");
+> +
+> +static struct attribute *pmu_format_attrs[] = {
+> +	&format_attr_event.attr,
+> +	&format_attr_gt.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group pmu_format_attr_group = {
+> +	.name = "format",
+> +	.attrs = pmu_format_attrs,
+> +};
+> +
+> +static struct attribute *pmu_event_attrs[] = {
+> +	/* No events yet */
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group pmu_events_attr_group = {
+> +	.name = "events",
+> +	.attrs = pmu_event_attrs,
+> +};
+> +
+> +/**
+> + * xe_pmu_unregister() - Remove/cleanup PMU registration
+> + * @arg: Ptr to pmu
+> + */
+> +static void xe_pmu_unregister(void *arg)
+> +{
+> +	struct xe_pmu *pmu = arg;
 > +	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
 > +
-> +	if (!xe->info.skip_guc_pc)
-> +		pmu->supported_events |= BIT_ULL(XE_PMU_EVENT_GT_C6_RESIDENCY);
->  }
+> +	if (!pmu->registered)
+> +		return;
+> +
+> +	pmu->registered = false;
+> +
+> +	perf_pmu_unregister(&pmu->base);
+> +	kfree(pmu->name);
+> +}
+> +
+> +/**
+> + * xe_pmu_register() - Define basic PMU properties for Xe and add event callbacks.
+> + * @pmu: the PMU object
+> + *
+> + * Returns 0 on success and an appropriate error code otherwise
+> + */
+> +int xe_pmu_register(struct xe_pmu *pmu)
+> +{
+> +	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
+> +	static const struct attribute_group *attr_groups[] = {
+> +		&pmu_format_attr_group,
+> +		&pmu_events_attr_group,
+> +		NULL
+> +	};
+> +	int ret = -ENOMEM;
+> +	char *name;
+> +
+> +	if (IS_SRIOV_VF(xe))
+> +		return 0;
+> +
+> +	raw_spin_lock_init(&pmu->lock);
+> +
+> +	name = kasprintf(GFP_KERNEL, "xe_%s",
+> +			 dev_name(xe->drm.dev));
+> +	if (!name)
+> +		goto err;
+> +
+> +	/* tools/perf reserves colons as special. */
+> +	strreplace(name, ':', '_');
+> +
+> +	pmu->name		= name;
+> +	pmu->base.attr_groups	= attr_groups;
+> +	pmu->base.scope		= PERF_PMU_SCOPE_SYS_WIDE;
+> +	pmu->base.module	= THIS_MODULE;
+> +	pmu->base.task_ctx_nr	= perf_invalid_context;
+> +	pmu->base.event_init	= xe_pmu_event_init;
+> +	pmu->base.add		= xe_pmu_event_add;
+> +	pmu->base.del		= xe_pmu_event_del;
+> +	pmu->base.start		= xe_pmu_event_start;
+> +	pmu->base.stop		= xe_pmu_event_stop;
+> +	pmu->base.read		= xe_pmu_event_read;
+> +
+> +	ret = perf_pmu_register(&pmu->base, pmu->name, -1);
+> +	if (ret)
+> +		goto err_name;
+> +
+> +	pmu->registered = true;
+> +
+> +	return devm_add_action_or_reset(xe->drm.dev, xe_pmu_unregister, pmu);
+> +
+> +err_name:
+> +	kfree(name);
+> +err:
+> +	drm_err(&xe->drm, "Failed to register PMU (ret=%d)!\n", ret);
+> +
+> +	return ret;
+> +}
+> diff --git a/drivers/gpu/drm/xe/xe_pmu.h b/drivers/gpu/drm/xe/xe_pmu.h
+> new file mode 100644
+> index 0000000000000..f9dfe77d00cb6
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_pmu.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+> +#ifndef _XE_PMU_H_
+> +#define _XE_PMU_H_
+> +
+> +#include "xe_pmu_types.h"
+> +
+> +struct xe_gt;
+unused
+> +
+> +#if IS_ENABLED(CONFIG_PERF_EVENTS)
+> +int xe_pmu_register(struct xe_pmu *pmu);
+> +#else
+> +static inline void xe_pmu_register(struct xe_pmu *pmu) {}
+> +#endif
+> +
+> +#endif
+> +
+> diff --git a/drivers/gpu/drm/xe/xe_pmu_types.h b/drivers/gpu/drm/xe/xe_pmu_types.h
+> new file mode 100644
+> index 0000000000000..e0cf7169f4fda
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_pmu_types.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+> +#ifndef _XE_PMU_TYPES_H_
+> +#define _XE_PMU_TYPES_H_
+> +
+> +#include <linux/perf_event.h>
+> +#include <linux/spinlock_types.h>
+> +
+> +enum {
+> +	__XE_NUM_PMU_SAMPLERS
+> +};
+This enum is not used. can be removed
 
-A feeling that it would be better to squash this to the other attribute patch,
-but I understand the reasons...
+Thanks,
+Riana
+> +
+> +#define XE_PMU_MAX_GT 2
+> +
+> +/**
+> + * struct xe_pmu - PMU related data per Xe device
+> + *
+> + * Stores per device PMU info that includes event/perf attributes and
+> + * sampling counters across all GTs for this device.
+> + */
+> +struct xe_pmu {
+> +	/**
+> +	 * @base: PMU base.
+> +	 */
+> +	struct pmu base;
+> +	/**
+> +	 * @registered: PMU is registered and not in the unregistering process.
+> +	 */
+> +	bool registered;
+> +	/**
+> +	 * @name: Name as registered with perf core.
+> +	 */
+> +	const char *name;
+> +	/**
+> +	 * @lock: Lock protecting enable mask and ref count handling.
+> +	 */
+> +	raw_spinlock_t lock;
+> +};
+> +
+> +#endif
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-
->  
->  /**
-> -- 
-> 2.48.0
-> 
