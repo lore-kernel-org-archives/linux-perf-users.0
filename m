@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A0D1C54A5;
-	Wed, 22 Jan 2025 21:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD331C7B62;
+	Wed, 22 Jan 2025 22:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737582765; cv=none; b=n+o70Q3rVd7HwJFtHc88VBVgwd3v+WCv4O5IZJhkWeqOcM8JFYUJDNI9SIv9SwjotMiUDTwGS7Qy5ruiS5ruvv3oWNZkbYCB7i0/zK86FqppsjL1eI2J6Ce0HEpvq7nKsuzZJR91ZxTcxKpfzi+r9ijCz6TquDYGnIY1lZeG7sU=
+	t=1737584075; cv=none; b=rdhn60hRkmq7pWU/m8bhvrtJ3bkTl37gdXIdW1eRqFStxx9LCfpQ8sTnFRUh3EVgKrApRHztb1sFNYyV0PPbWE6XAZnAD0hTNP6GX5cQaHF8Aayimo6t1xiXTitVHAGbal1TZWwFrCVKE3Yf0Saj0z2Vi3/VJYD6X82DrNiH77A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737582765; c=relaxed/simple;
-	bh=rGgJnGJbCH093WZXL65TqjFTkBH/SVb4xp5TY6NpG0A=;
+	s=arc-20240116; t=1737584075; c=relaxed/simple;
+	bh=wNx+xKmh5ZkvXW2oGFzqRnpoaQpNc6b/iXxd9FQrR8Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tfW3aCroLjlcG0w6of7HMXumPPkVG0H4seKO9kuCxt0UvGI5CLAKeOiXvypoyia4kKgcLlYPPc3eX8C1FTW+CXEx4SoN4pZh04oySeu16u2Deiz6NyJupwBptRJiS0fVEKYEtU6/8ij8qh30G/l708J+73dDmoH9LOdf1h9cdUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUuYZ38Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfqX6W9adGYELhcF33wDGABsqY8BRzGsLb6UHLYRYVmp+qK7WDMb2cEZ80hO081h0epcOsnANR2PBGososRB84JDaXrQS3RUMWtHMObXPh2d7zts7kqCqpxjST9bH5m3vi5NNOXtxzkItszpGFkbtOT4Bvdn5xwp+F5Dw2BHmVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHCeAnfM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUuYZ38Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DAECC4CED2;
-	Wed, 22 Jan 2025 21:52:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHCeAnfM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5321DC4CED2;
+	Wed, 22 Jan 2025 22:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737582764;
-	bh=rGgJnGJbCH093WZXL65TqjFTkBH/SVb4xp5TY6NpG0A=;
+	s=k20201202; t=1737584073;
+	bh=wNx+xKmh5ZkvXW2oGFzqRnpoaQpNc6b/iXxd9FQrR8Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IUuYZ38QMw7EItgjVYMtKPLOK38XSqOP93G2SyNmuI7ZExrVENejEjuMgr7zpbNpO
-	 /FNxTGyI9b/9Z3GzukB/EYL8bcy+Rl4dELvvWFWPJdFgTznTAjFaouTP99BCtUatII
-	 B2pDutO5LHZpcG5h7yS4FN4AJ0Y5auN0S0gzkANEZfqgI02aMwnd68LhtZOUQprpiU
-	 SAmMB1cK9HgzgTXz765pNNmesKwLcb9+ScRpUhZnrThNUuhz5p0kv8/ra45NnXe3Dz
-	 NQeRGtnTwly0qkHBl//JdzOcy8Pz4cpoPzsCwdqmdT2IMysU9W5yJCv13z54nG2kIk
-	 Fk2q0GBa5WPIQ==
-Date: Wed, 22 Jan 2025 13:52:41 -0800
+	b=vHCeAnfMcAc0enMt1PmTZu4JK2S5rg5PWxNzmjqZbMhILAiVZZTcJDWA4N7oFk28h
+	 SPK36tUAKjqUWqYVojruexksgiuxdn46RDYqN/yMiK420YRCETt+C6B6Ky6f/iEJjZ
+	 vBBhKHxR3v4VA9qrR+T3Tz4kToK3hAsU3Faiw8ebvGHCnsH/E2KHmEYlZVRqf265n3
+	 6MaICNna+qk2c3FQkGZMZacJwKOlawgJr+nrQTQosDsuxUJwcbbtgz4pUcVPG95T0N
+	 R0SenjQ0v/oS6m0hWUWDnHYaLhjDID9nvrucLsnb4F8+BqtVBdCd8VipSI/eDEydDh
+	 aG1YUX3+E59tg==
+Date: Wed, 22 Jan 2025 14:14:30 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -48,12 +48,13 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250122215241.gpzay24gzx4yggla@jpoimboe>
+Subject: Re: [PATCH v4 02/39] task_work: Fix TWA_NMI_CURRENT race with
+ __schedule()
+Message-ID: <20250122221430.jfnleewvjj3mcbif@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
- <20250122134420.GR7145@noisy.programming.kicks-ass.net>
+ <ad5fb696fbcd276c0902dbb94baa75fb79a6e1e2.1737511963.git.jpoimboe@kernel.org>
+ <20250122124228.GO7145@noisy.programming.kicks-ass.net>
+ <20250122210339.i6sehdw4ddzqyy5h@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,29 +63,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250122134420.GR7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250122210339.i6sehdw4ddzqyy5h@jpoimboe>
 
-On Wed, Jan 22, 2025 at 02:44:20PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 21, 2025 at 06:31:20PM -0800, Josh Poimboeuf wrote:
-> 
-> > +/* entry-from-user counter */
-> > +static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
-> 
-> AFAICT from the below, this thing does *not* count entry-from-user. It
-> might count a subset, but I need to stare longer.
+On Wed, Jan 22, 2025 at 01:03:42PM -0800, Josh Poimboeuf wrote:
+> The self-IPI is only needed when the NMI happened in user space, right?
+> Would it make sense to have an optimized version of that?
 
-Right, it's a subset.  Something like so:
-
-/*
- * This is a unique percpu identifier for a given task entry context.
- * Conceptually, it's incremented every time the CPU enters the kernel from
- * user space, so that each "entry context" on the CPU gets a unique ID.  In
- * reality, as an optimization, it's only incremented on demand for the first
- * deferred unwind request after a given entry-from-user.
- *
- * It's combined with the CPU id to make a systemwide-unique "context cookie".
- */
-static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
+Actually, maybe not, that could be tricky if the NMI hits in the kernel
+after task work runs.
 
 -- 
 Josh
