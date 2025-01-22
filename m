@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA8E38DF9;
-	Wed, 22 Jan 2025 22:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA8838DF9;
+	Wed, 22 Jan 2025 22:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737586290; cv=none; b=cC9Uoy4c9rTTsietz22vGPDXfsryFG1Tb+gSeF7K2cV0xskyDPHyVHaVeXc2g9/+5zuASk75Aqihh47feXiHQrR0JKgJO0BUIlK8QkKxeyZW+tMTtgj2Wy87wMjdmmo1HxkaUZBelfcRS4sDRiK1WLk+Xs4ha5Qp3k3tbThhTQo=
+	t=1737586380; cv=none; b=Q7HL134NcQcmAyDlL1wtMNT4fcZ0yYd8xl+YuvOlYTNRU2dY+mHfh4CjuUMPPXmoF/Q145dpNXdgvqwiBeiQuRcb5EyJrqTVX1DIHrYsVj8buan3ohDOz66DrNSDCaS4FoqlpULe9P6CVXhtAJLSiUCpapa/OgCoUV4aFIA3CW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737586290; c=relaxed/simple;
-	bh=YWQtUcumTn6FHln6OPiZH3GA/KCi5vn+c6w77T4yNV4=;
+	s=arc-20240116; t=1737586380; c=relaxed/simple;
+	bh=MRR4/KapLTaD3pLe5Drq1bMLY6g2y72NfAnrzHSjpSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MySC0gh7DGVhsBxU3psgmmq/GIUdVqUwVBMPRbNO/5KhquRD+7i2UjSQPAYnPkDUWcc4kT2uQDJDOlQQzgqZAWjzfV/AE4axq65BphesmkU0G7cdZgfSVOGgwMbXc75gi7PJqGfRdLiMsYhA2Jr9ieZKGVLa/y1dI2BDvhYFU94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kE7hVB6q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qDjP3g1jaEKAEFIdS9OWSd2inRo0b6AtUwtYlidLr5LbUJja+JRWVHOZ+DS2957c2CB8Br8hlz8hBnoGKQdnCQ6pWkeKTlzzgfbKwL8NbTsdPqAANZ6xemidkZfA3YYR5Hkk6NGo+l/lcr+NxtKEZ+MRpnp5fkT13GFKvIH+ZnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToHaSGxU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kE7hVB6q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461A1C4CED2;
-	Wed, 22 Jan 2025 22:51:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToHaSGxU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C399C4CED2;
+	Wed, 22 Jan 2025 22:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737586290;
-	bh=YWQtUcumTn6FHln6OPiZH3GA/KCi5vn+c6w77T4yNV4=;
+	s=k20201202; t=1737586379;
+	bh=MRR4/KapLTaD3pLe5Drq1bMLY6g2y72NfAnrzHSjpSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kE7hVB6qIxmh5xK/N+l5I/TU4XEy8b9gBn3oRMry+qMnY+rl8xvfyt8gUi2AoQsfp
-	 xUybRGHeuulunH6xmqnD4SC0e7FAmdhMNn/DEyeptB5xKNaxGhe8b0pD0mkLfKDbzM
-	 9r1O+Qg6YS9JuNCYodzETRZz1F3AISBPFRvV5hgp/0zHEWI06lc2gODSlIrnocv0H0
-	 fRmCj7i2gQf1U8aZ9KU+YPydgVW0d3SvhRx2sifwTN0vhKckhk6ekiubGVoHKXFWPG
-	 DA4xZE+YDh+ij65+EsI0aIj8CQ7HNGjlq4kOC93niJnoC6iIns4nEifFoyDb6VCBgu
-	 eBdnhIHKTw8fw==
-Date: Wed, 22 Jan 2025 14:51:27 -0800
+	b=ToHaSGxUS8L8EUvQgBOEPdm10kM7UVjfqs/lIh756pPmcml/XV8LZHVrMGtViZOmN
+	 ViHOL8DH7eHs/qXGtyROnxEPFdmu4KHKWCzGPldnj6H2pnbzftqPaeSnCDslQAAHH2
+	 hwzqDBXrVvOs9guAeIL9r+W5BdkfUwQuCbYerBWK8HsW/YbeQP4x1v5FPwJuoTmZ52
+	 8K8NmHLAEZ4hSDAeeaqjP7ZBlRF2kdI14Jte0il5jPL+Tz0mCUh4lU/DF0gmx66+Sh
+	 sCBXrVtmjcba9dhP0/1Q8pUiKlHHBWzRRGtPtvoDfYZElcTtHltJGi16I3HcMJMJPw
+	 moEEvjQK5fREA==
+Date: Wed, 22 Jan 2025 14:52:57 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -48,13 +48,12 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250122225127.qhxmqamg7pnugnya@jpoimboe>
+Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250122225257.h64ftfnorofe7cb4@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
- <20250122133730.GQ7145@noisy.programming.kicks-ass.net>
- <20250122141616.GU7145@noisy.programming.kicks-ass.net>
+ <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
+ <20250122142418.GV7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,30 +62,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250122141616.GU7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250122142418.GV7145@noisy.programming.kicks-ass.net>
 
-On Wed, Jan 22, 2025 at 03:16:16PM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 22, 2025 at 02:37:30PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 21, 2025 at 06:31:20PM -0800, Josh Poimboeuf wrote:
-> > > +/*
-> > > + * The context cookie is a unique identifier which allows post-processing to
-> > > + * correlate kernel trace(s) with user unwinds.  The high 12 bits are the CPU
-> > 
-> > s/12/16/ ?
-> > 
-> > > + * id; the lower 48 bits are a per-CPU entry counter.
-> > > + */
-> > > +static u64 ctx_to_cookie(u64 cpu, u64 ctx)
-> > > +{
-> > > +	BUILD_BUG_ON(NR_CPUS > 65535);
-> > > +	return (ctx & ((1UL << 48) - 1)) | (cpu << 48);
-> > > +}
+On Wed, Jan 22, 2025 at 03:24:18PM +0100, Peter Zijlstra wrote:
+> On Tue, Jan 21, 2025 at 06:31:22PM -0800, Josh Poimboeuf wrote:
+> > +static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *cookie)
+> > +{
+> > +	struct unwind_task_info *info = &current->unwind_info;
+> > +	bool inited_cookie = false;
+> > +	int ret;
+> > +
+> > +	*cookie = info->cookie;
+> > +	if (!*cookie) {
+> > +		/*
+> > +		 * This is the first unwind request since the most recent entry
+> > +		 * from user.  Initialize the task cookie.
+> > +		 *
+> > +		 * Don't write to info->cookie directly, otherwise it may get
+> > +		 * cleared if the NMI occurred in the kernel during early entry
+> > +		 * or late exit before the task work gets to run.  Instead, use
+> > +		 * info->nmi_cookie which gets synced later by get_cookie().
+> > +		 */
+> > +		if (!info->nmi_cookie) {
+> > +			u64 cpu = raw_smp_processor_id();
+> > +			u64 ctx_ctr;
+> > +
+> > +			ctx_ctr = __this_cpu_inc_return(unwind_ctx_ctr);
 > 
-> Also, I have to note that 0 is a valid return value here, which will
-> give a ton of fun.
+> __this_cpu_inc_return() is *NOT* NMI safe IIRC.
 
-The ctx_ctr is always incremented before calling this, so 0 isn't a
-valid cookie.
+Hm, I guess I was only looking at x86.
 
 -- 
 Josh
