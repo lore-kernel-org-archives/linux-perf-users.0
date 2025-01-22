@@ -1,144 +1,161 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717061F94A;
-	Wed, 22 Jan 2025 00:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAEC22318
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 01:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737506703; cv=none; b=IIH20WE/NwHR7QVHOOamfmMDUZop8kDNJLjnKENoqh3SyN65s0+6O1OQNe0DXbcVSbNQSPKa4esdLb60Ta3iMyzV+tYK5GsI4x0cfRXFLvVCsvzhNukggCNJO8i//2x+L7bPXwdwn7iz9uV1H0G3qOQEaefVhJRtEEod2Oa6I/A=
+	t=1737507848; cv=none; b=pmrBM7KG7QOUWZVfOsr+ndoCM07s4nLry1ckGRWw6RdY/CZFWP6/SZH4UMCEu8Mjlkbu0NZefxmUdPP+QwknzGkKjUW00lnfJX1xamRv+k5JGYcS2esBXy2mn53uBSbYNQbiLdwFeGCJtFr+JRTMo8RT9G78+mEIR9x8Bogap88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737506703; c=relaxed/simple;
-	bh=qknoMfqwZA4Hzv0OtiGDj8KA+4pH21PDeqe79WaPKAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Smi+h9iGIwm7K7CJ/HMHels/Rq5GVqMKTXeJkHsJWW/Chh7SSvlXhnM8ReDkbA1s1eSCfXcUKMbC0djq5egqg1FHJb6xUsgGhD/ffKqVE2KiEnVfxlX+9NTbyCvxoC5TaC4+10ajEvVLXJXWo2QvT9OjpvYuhER2DFRlyjcuwSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hrv/5Ip6; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737507848; c=relaxed/simple;
+	bh=fBMEEQrP8cCyPVJBx+8XOjAmMFlhjYXlOqE8udqGu/8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=trxlSg+AMXByKvfp8GWgW1Vqy98ee7HjDUdg5d1uL/MQwTniaZhiMxpJVMK14kz0kFGkPUL7UKb0Gm0i2CctpoJDOxvA2YNe1inRFZsgdg42NLUPXEYBEAKYPkozUWPwrcvGd3xRPGrVIpOLWYtw8vV3KR1TVdUbA4E5Z7HXBaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WEy78DRH; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrv/5Ip6"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so8723401276.2;
-        Tue, 21 Jan 2025 16:45:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WEy78DRH"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2178115051dso117163775ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jan 2025 17:04:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737506700; x=1738111500; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3u6lDJpGKaqKJ90PtSYF8Ihi8DcFqCnZIbdfqyDuHlU=;
-        b=hrv/5Ip6Yae8/jQVrfoqq1ozVSbzuVKW4DtMpZlvNScHgCdzrMayPXla8hT1qwkC/J
-         WVxeU95K67sMgnUGqKAopW7XHieQagylxp0v16P7dg4Yu9Rd3DNtc2ajUKb2FgXDfWtk
-         OeyAdgfPKwBOOkBnEQ6HV3NBiXkhva4NFuLoYbihAjbrA7NOvzQy3m+RQY9S3mCGBo/r
-         gg5/iV2WnSXsItGmM8tDQe+tai5UP/Ne0p3MqrtXBJDBnnQWmO2PxbqXwgqS3/fh9wb6
-         B/DSkQbYiZ3iGTbFZTQN3qUk5RylFYPMrExY//99JMc46x3w2krD25vh9JHz3qEMDKJp
-         x40Q==
+        d=google.com; s=20230601; t=1737507846; x=1738112646; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HGAInSW7+q0vU97QD0HUaaeZu0zheatXMugXZrnQnto=;
+        b=WEy78DRHeUvxY7t7PcEUsDBI+b9ZIEAFetH3Kd4q9ZhSoY1zzMJgqqsPCOhqIuYVnp
+         OQYlr9Tq9id6pcfECpP3HDdY3eQdvpcLjwjjRMBGxVSX6a4vnJ5wZ/hlXE82E2h/DUM9
+         oUs3lrYctW5FdR7p7zMcn6zgStgomoKIMikNcJCamMup+JWjffjhmtxylVejiRmJF8Y1
+         my8MShAJ8KwYCxGUdiwgGwIzza38fC95+BnBhbELCia2LSoZHEYfl3Uc01ltx1f8oVwq
+         CFqMB269e2Ms0IxzzVf5NrsQ2JscqGCg05/J6LcghGHM/zcgatSM2WhaQU4lppNOCKa4
+         W8aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737506700; x=1738111500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3u6lDJpGKaqKJ90PtSYF8Ihi8DcFqCnZIbdfqyDuHlU=;
-        b=O0mAuOD2ReTaJlEJlUGv6p+ikJM5tJMcIakV/FfZ62pzq0yrjXZL5XsuEbmt69hD+s
-         trU4He8cPohWlwAd5EpNIO+i0WgvDClpHFxhFQDiQnd/hxmL8+bWwn2dR+uQqgNJ61p5
-         nhSkyfcIVaxfFtb1Hz1U0u5fF5CO9g8EAr1gLVAbyadqjnIM0q18Fhy8NFVOipGYbz1N
-         lejTHS3OfO7F3mR7BCpXlo15cZMVVCh2aZI/XWMY6sOTXLODhpHIrnazWG+cWqZGAYMh
-         7r4wZDao17wh+tvxTsR8wW/lOsrkEsleKUpFf0I9zNKBYEbPAFrWgHuQ5YssqSeUcAJl
-         ul4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUXFtFUILKdC78KWXVAqi9lpJ7/sw6Vr6erqw3RftMTceHxvtdqxKaK9oWjD0ceLM/AFpKd+wwEsrmHgd1+DZFSPg==@vger.kernel.org, AJvYcCVSZ7kmHa+9N6KtrIijOO73JmV6DAxD002fBSG1tKuG3LlRE8+gd9vG01E9p8CVtEoZI9rGE4ft6QEn5+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH/JXXxFFpDWXuQiLrKH1vd3Pji075AQi9HdFXpCEgwisZY5hR
-	Nq62XWuxVQNa5h5DErmsF674Vg7QpodixrT6dQPhfGx4Z3lducS6HXVbgW0SBpAY5AiVa2hSmcg
-	QAvCOf6rB73efmPp+Nk8MScL4uD0=
-X-Gm-Gg: ASbGncvozU3Gw1PPBQljJ7VdU7s3G4JsdXzcAVj0NSiMtSm/lRK5+8R2e/4SJF+uM9u
-	o2uLDpBi/ORRwzUhtjnQZU1RIo2u6+2Aocj/Rr8Kyvk4TcZC/Kg==
-X-Google-Smtp-Source: AGHT+IGUgLg4mKG/vjln481jS7WwdlX9z5e7oI/8Ud48GILfqkzR8lrqK6CBk4XSd0YZSBj39CZHmsVThT62SZBhtsE=
-X-Received: by 2002:a05:690c:a91:b0:6ef:7fc0:a378 with SMTP id
- 00721157ae682-6f6eb67728amr146056527b3.9.1737506700232; Tue, 21 Jan 2025
- 16:45:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737507846; x=1738112646;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HGAInSW7+q0vU97QD0HUaaeZu0zheatXMugXZrnQnto=;
+        b=dCdmvtE0p5RTUdnV9Cuj8IT7mx0gbh07D1N5zm80bLGQGGSxrn4sz9fjKc0vdSFOCS
+         R74IvKUsDbEA9jKrVHdMJyFuGyByWkV+XQerIr4ZGk+80sAuYDK9FLVOA4xDzcQg26rh
+         R+7j6b6uLtsCYrGEVNG15DTJVhq+alyAokRCvu0M44pbdZgNOOqmdU5dgl1oBScAJJfT
+         /dUGmBNlI6mQUJspXfOTmAIs787YG/o/Y9Ca7TVM6cSiqHMow5wvBFhmgxecD68gQyuW
+         al/79XejoycpCRhjwTR/Z296cL/mVJCYEVWTLSnSPJqhdJACfhS+7Io5tEDkuY9sgW2F
+         OhCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTl6RnVwKJFh1g4CxXk9/nc2oTvIACzg9ifb3Pe0GYx1gz6iCgUJLJrSonk3RUmNvYvGHtprS9WOAy5SyfWnaE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws/d90Mw1lFcd23ZDh+lLaqoJq9ocmJh9IQnU7h2rnlQXxLOcR
+	tULXfMrcUJTNSllyr1/RB+DDFroJlkMt/qxK1PSQL5lg5Omzh6UrApZbSpuKN6VBmg+e5apWKRU
+	EWQ==
+X-Google-Smtp-Source: AGHT+IH6F+XmsAOl9kzgOVOxBLRRXT62oJJbonrrKhR+qzEndDJ3UWVtcgPMx5PJJKXl4IX7nvimBDDp9aQ=
+X-Received: from pfau14.prod.google.com ([2002:a05:6a00:aa8e:b0:72d:b2a2:bed7])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:6088:b0:72a:a9b5:ed91
+ with SMTP id d2e1a72fcca58-72daf99ed03mr26365241b3a.13.1737507845610; Tue, 21
+ Jan 2025 17:04:05 -0800 (PST)
+Date: Tue, 21 Jan 2025 17:04:04 -0800
+In-Reply-To: <Z5A6NPqVGoZ32YsN@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250122001741.714400-1-namhyung@kernel.org>
-In-Reply-To: <20250122001741.714400-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 21 Jan 2025 16:44:49 -0800
-X-Gm-Features: AbW1kvYAXe_II-NjRS6mwBK76hHAeuxtJgbnQ55_vcxvsZUkRr7UC3pZ54kYC6Y
-Message-ID: <CAH0uvojiJjwPH5na-RBZi9O=TKtLcdFCXQDjYfd9T9bnoycX=w@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Skip syscall enum test if no landlock syscall
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-23-vschneid@redhat.com>
+ <Z5A6NPqVGoZ32YsN@pavilion.home>
+Message-ID: <Z5BEBCWVWP_fq2zY@google.com>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+From: Sean Christopherson <seanjc@google.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
+	Yair Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
+	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+On Wed, Jan 22, 2025, Frederic Weisbecker wrote:
+> Le Tue, Jan 14, 2025 at 06:51:35PM +0100, Valentin Schneider a =C3=A9crit=
+ :
+> > ct_nmi_{enter, exit}() only touches the RCU watching counter and doesn'=
+t
+> > modify the actual CT state part context_tracking.state. This means that
+> > upon receiving an IRQ when idle, the CT_STATE_IDLE->CT_STATE_KERNEL
+> > transition only happens in ct_idle_exit().
+> >=20
+> > One can note that ct_nmi_enter() can only ever be entered with the CT s=
+tate
+> > as either CT_STATE_KERNEL or CT_STATE_IDLE, as an IRQ/NMI happenning in=
+ the
+> > CT_STATE_USER or CT_STATE_GUEST states will be routed down to ct_user_e=
+xit().
+>=20
+> Are you sure? An NMI can fire between guest_state_enter_irqoff() and
+> __svm_vcpu_run().
 
-On Tue, Jan 21, 2025 at 4:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> The perf trace enum augmentation test specifically targets landlock_
-> add_rule syscall but IIUC it's an optional and can be opt-out by a
-> kernel config.
->
-> Currently trace_landlock() runs `perf test -w landlock` before the
-> actual testing to check the availability but it's not enough since the
-> workload always returns 0.  Instead it could check if perf trace output
-> has 'landlock' string.
+Heh, technically, they can't.  On SVM, KVM clears GIF prior to svm_vcpu_ent=
+er_exit(),
+and restores GIF=3D1 only after it returns.  I.e. NMIs are fully blocked _o=
+n SVM_.
 
-I remember doing the landlock syscall nr ifdef checking and returning
--1... Somehow it's not there... Sorry.
+VMX unfortunately doesn't provide GIF, and so NMIs can arrive at any time. =
+ It's
+infeasible for software to prevent them, so we're stuck with that.  [In the=
+ory,
+KVM could deliberately generate an NMI and not do IRET so that NMIs are blo=
+cked,
+but that would be beyond crazy].
 
->
-> Fixes: d66763fed30f0bd8c ("perf test trace_btf_enum: Add regression test =
-for the BTF augmentation of enums in 'perf trace'")
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/trace_btf_enum.sh | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/=
-shell/trace_btf_enum.sh
-> index 5a3b8a5a9b5cf296..e57ad6913f3e9316 100755
-> --- a/tools/perf/tests/shell/trace_btf_enum.sh
-> +++ b/tools/perf/tests/shell/trace_btf_enum.sh
-> @@ -27,7 +27,11 @@ trace_landlock() {
->    echo "Tracing syscall ${syscall}"
->
->    # test flight just to see if landlock_add_rule and libbpf are availabl=
-e
-
-Wonder why I put 'libbpf' here, can you please change this comment to
-'# test flight just to see if landlock_add_rule is available'
-If you find this change appropriate?
-
-> -  $TESTPROG
-> +  if ! perf trace $TESTPROG 2>&1 | grep -q landlock
-> +  then
-> +    echo "No landlock system call found. Fallback to non-syscall tracing=
-."
-
-I wouldn't say it's a fallback, because the non-syscall test gets run
-even if the landlock_add_rule syscall can be invoked. Why not say: 'No
-landlock system call found, skipping to non-syscall tracing'?
-
-> +    return
-> +  fi
->
->    if perf trace -e $syscall $TESTPROG 2>&1 | \
->       grep -q -E ".*landlock_add_rule\(ruleset_fd: 11, rule_type: (LANDLO=
-CK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags=
-: 45\) =3D -1.*"
-> --
-> 2.48.0.rc2.279.g1de40edade-goog
->
-
-Other things LGTM.
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
+> And NMIs interrupting userspace don't call enter_from_user_mode(). In fac=
+t
+> they don't call irqentry_enter_from_user_mode() like regular IRQs but
+> irqentry_nmi_enter() instead. Well that's for archs implementing common e=
+ntry
+> code, I can't speak for the others.
+>=20
+> Unifying the behaviour between user and idle such that the IRQs/NMIs exit=
+ the
+> CT_STATE can be interesting but I fear this may not come for free. You wo=
+uld
+> need to save the old state on IRQ/NMI entry and restore it on exit.
+>=20
+> Do we really need it?
+>=20
+> Thanks.
