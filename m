@@ -1,198 +1,115 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62B21D5AD4
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 23:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FB01BD027
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 23:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676545; cv=none; b=tR2q9gwt+g9CHIpPDSAyDI/uQ34cwNukR+x2J33BXF+rqI5NJCots/Q8FSD/+Pt+lBfwAkTjbJkudNV8tIIMZ8dEYjd8NmIxTHFrd6QOntydzymQl3YUUFJqJHXSttS64Da1RUvib2LKTeEoZGGZfELbVfaE+zSTZACrKcu6qis=
+	t=1737676781; cv=none; b=FIBWCzGiNjdusvfDcS6yrgjaBOMRR2XLqIVp7avug6irdfrHjd/iIj1+xYvmjhdappwlE29as8Cv3mQV5Sxb6/+nC9gFg7yqf+/pe3oamZ7i7p57EvqPnADeimE9CVFrXM4NR7RQnWgWNZTjreh9e0i9uAseSb3zF10kTbilAi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676545; c=relaxed/simple;
-	bh=v0FggTfs25V/GAY+T15aZ5RkSzmN+aC2OxF418iX4Oo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n5oLzck5hOBBxB/SH5BLnEYEHJD9KXOy9cZJZLGhkuVFlJKYb/b7LF6LK0apv2RNrh+00ieXOsjkuVfiq7kiaRss9qG/FdHXFT2QsjFCVDeCw3L40tSh/OUdgKTWzBlSc3tBFLP0n84frQN+8CoeEK7OPoHvQZi3akfSIGv1X6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yhu3qTUe; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1737676781; c=relaxed/simple;
+	bh=bWgQLBpkfpxIT34/8Wx/CNRUEQDQg1V7I+bbzIQI6f4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kkRrf8JkdzWBUJU3+SU9DtOjBmBsQ6zJ23oB9HYmoEYzkIsoxTzZRaQDELD9eiPZ24T4xjQ/PDTXHUrx7bsRl+IvFdv5ORWRgV1jg2GDc/qgylsxERpPOTuV0Ta66uveMu47hubNwvzJwyGJQ0BOf3Xb0+zOXEuFNPlZA5YPCyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=CQC5+NwF; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yhu3qTUe"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5d3e638e1b4so1412a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 15:55:43 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="CQC5+NwF"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-216728b1836so24773095ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 15:59:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737676542; x=1738281342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z9Ragv1x82SwxtUpkVXr3TYFZXEnZuc/EWqFgnlmJDc=;
-        b=Yhu3qTUePzeBcY3fMbOsBt4j2R2Pgeyz6sDyaDJ4iUaRQeGEw/bZ88CsmiwTt3gVoS
-         hzKMtwFLQwb/uhzAECFSlwiTZKSt8Hxa1934cIM2Hzz0uUGP4viOd0K1E/tyVKHEtj77
-         E/2zrU5x8wAFWlNYT46Tl45LvE/HQy9PARLITQtdfTqLP9Cg2o0uXQyO1bo0AAqxjnZ0
-         dOFbbE860vLCm98vb6lig2rlernr9cLFlim2OgOYJbfZr4nyDug08KN2BVm4zjJW2wmW
-         j/JkBuxgbbKTHMugT2aes9+LR84NXNPellHds80Rw1Hm9Z35XFmjeCKAL+psNgjBJfR8
-         wxlw==
+        d=engflow.com; s=google; t=1737676778; x=1738281578; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5m/RuW26VeXb+ulCBQUP9Ev9ewcGepBG0IbXPJOeedk=;
+        b=CQC5+NwFnIVAxPa4QQcXIKu2R9oQILuYVs5c+kpCeQOPgVmUASXdEuzDGx8ay5wfcj
+         HiUnyJoz/TWnAEjo4gIdr2/p5biZcV3dwRIw4MM5YU9JFiGPUGnQOUOZ4u4wO+Gp5JC7
+         J9UE5L01Wcai/oWz2ozP+hl2gHMJR8hoU5Sxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737676542; x=1738281342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z9Ragv1x82SwxtUpkVXr3TYFZXEnZuc/EWqFgnlmJDc=;
-        b=vWdLbsDqw+yjAZlYp/4xMApGMNPO7pM7UMqVpuzRyzTi9hB1oogyz4GqvZudBxi61G
-         xAZJKEo0EdC6Cly4NTpjUzYKjsw0buUwVyRu98Y5O9Z1oMsQAScmKRMyCmfcJVcvlrUM
-         k95wu5VmTx6hWxOsNcBuhvBB8Jq7aVf9B6dLDReKHQKjaB6D2oMj0SmAYEMhhkG+rJaZ
-         iXCWjgmyBgR3O5Z6x7oj1tIWvI6TPZF1y8Mk5/n3RTUDY550Mogbkw+4P8SucaDPpmjU
-         6eHzZkVaqA0E9xR8/u6B1/1PmcSK9aVfVqGVerQjb1vD+1LK6x94VNcxHLUGHbwaPrq7
-         jWqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXzqFUJw/PyIaJsUGMpgilBrEE6JiqNBAZO1XHZ103j05qme5x5LKERPHY3aDzfgFpDmzQxdZOmD+eiDTR21ZU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWjHlAfuVhC3aEPHMeEbUdzYaAtKtd8UAP80qYZbtBZB3w0j/8
-	5LhCVfV2kC24li2+QW85Y4Fui/E9jdVWdfzJOI57qjEZ+NT1VTTTJ8Xj8bNlvJwT5J1GKjZKMmO
-	OSSz3FOR0wOfD3xfMaJnR8titJNmYKNMc1tUv
-X-Gm-Gg: ASbGncuWymGmnRl2rzp0rXNApBxsmsNeiuDL6hzc6YRSYY/njbcJwSX8LI01wOacHOZ
-	0fE0zCa24aHai2AnbZ/Z0AMu1fzJM1ovlw74wA91fGBIP1Ta508dnOrKtrRclvDFOesELxiUn2W
-	mMNrcpIqGumIEe
-X-Google-Smtp-Source: AGHT+IFGTCYC1Urp8sKTGkSi5p5S/Fc8SFTFb532XbOtDnLlTcDCvS5l/1/sYkHDNjZYgiEvQM+eMoDylP2iU6QViPQ=
-X-Received: by 2002:a50:9b0e:0:b0:5db:e8ed:5741 with SMTP id
- 4fb4d7f45d1cf-5dc0c9ed5fcmr146053a12.7.1737676541342; Thu, 23 Jan 2025
- 15:55:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737676778; x=1738281578;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5m/RuW26VeXb+ulCBQUP9Ev9ewcGepBG0IbXPJOeedk=;
+        b=HLqvCwhD9XKlMJm0frPEc/yjOhxVjEKChs+BRHLoES3yB8cxHjff2C20xDq56Un9cN
+         GSwzBjr26wvW8qYCYlCO2OsYmRbfJTQF75QZW3UnJtlVt7Mrl/6V1i32er++mz93whDp
+         4nMfnhh8ZtUpTYLeKQPTj7ZyGq3grc1OiuRSDBaKtcG99zH0lZh2ZbBiHwCqEOvtUbHp
+         h0228SOAbXW98UQdR+0kKqdFRW/eRhlomXnS5CdEVdSqyeFxFCZ/9S64xcfF4e+sRpYK
+         Q6cqOGOT5uHoXx9Dpq3iZuDV3enxiq3YfYZsaRNbetizevscuE6HxsPfnRCbK9enLTvC
+         xyZQ==
+X-Gm-Message-State: AOJu0Yy4hahPRthRx4+DGfQo+UqGy8THDV8d5AeMzAfho49afwYjNOy8
+	S0gqmYfos8bMdYZWgKsrFFHom/AiUE6pNUB/U9JCtXi/aHToAeLT8MdrZuRDp7w=
+X-Gm-Gg: ASbGncsRwjihRsKclkJkd/copvyDtTcd8WM1pQZwjQHFAQf1SQ5RFi11IkE7OhB0Vvy
+	5H0FwmS9hbb67Q3GlCws+ezoJUjTmozwc+cNrHUNfV51xKHd5GrguCcavsuMu9uRWsqnJ/PooXp
+	WLDj1tC+yHqA8RkfrMhtYZdDXJ79nl7a/6MK63e+yrDf4TwvClbKgrpI9CQU428XrisghOr7hsC
+	ezOqFJr1wmezBPisF7RpLaB4GdTUFw0DvTrWeAJ87Kuc5wnlK/aF/8ucqR2oczjoqjJIXmNMESj
+	UgX5xCC1/n68lymTpx0/bcfg3gmIkrT2R8MikPTTsJuJsA==
+X-Google-Smtp-Source: AGHT+IEPqjhQVpFd3DogTe/CckCCbHZwhWa9F5A94jY7ve5wDBGv7zqqz1Lb0T8ZhKtstlj1bQqa4w==
+X-Received: by 2002:a17:902:ef11:b0:216:3dc5:1240 with SMTP id d9443c01a7336-21c355ef44bmr393632985ad.45.1737676778206;
+        Thu, 23 Jan 2025 15:59:38 -0800 (PST)
+Received: from [127.0.1.1] (158-247-70-44.PUBLIC.monkeybrains.net. [158.247.70.44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da4141d41sm4656375ad.126.2025.01.23.15.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 15:59:37 -0800 (PST)
+From: Benjamin Peterson <benjamin@engflow.com>
+Date: Thu, 23 Jan 2025 15:59:35 -0800
+Subject: [PATCH v2] perf trace: Fix return value of
+ trace__fprintf_tp_fields
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123214342.4145818-1-andrii@kernel.org> <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
- <202501231526.A3C13EC5@keescook>
-In-Reply-To: <202501231526.A3C13EC5@keescook>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 24 Jan 2025 00:55:05 +0100
-X-Gm-Features: AWEUYZkNff3Q26T9o9EX_TQ_KWMgeFo0Eqakd0uRwk5keM2gA1CnvXc-g9_3J_s
-Message-ID: <CAG48ez1TXEJH3mFmm-QZbbmr_YupnoLA0WQx6WgxKQSHP3jPSA@mail.gmail.com>
-Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under CAP_PERFMON
-To: Kees Cook <kees@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	kernel-team@meta.com, rostedt@goodmis.org, peterz@infradead.org, 
-	mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, 
-	liam.howlett@oracle.com, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250123-void-fprintf_tp_fields-v2-1-6038f8224987@engflow.com>
+X-B4-Tracking: v=1; b=H4sIAObXkmcC/4WNQQqDMBBFryKzboqZGihd9R5FJI0zOmATSSS2i
+ Hdv6gW6fA/++xskikIJbtUGkbIkCb4Anipwo/UDKekLA9bYaNSocpBe8RzFL9wtc8dCU5/U1Vp
+ LyMagYSjjORLL+wg/2sKjpCXEz/GT9c/+TWattHrWDi/M3DjT3MkPPIX17MIL2n3fv3551vK+A
+ AAA
+X-Change-ID: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Benjamin Peterson <benjamin@engflow.com>
+X-Mailer: b4 0.14.2
 
-On Fri, Jan 24, 2025 at 12:47=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
-> On Thu, Jan 23, 2025 at 01:52:52PM -0800, Suren Baghdasaryan wrote:
-> > On Thu, Jan 23, 2025 at 1:44=E2=80=AFPM Andrii Nakryiko <andrii@kernel.=
-org> wrote:
-> > >
-> > > It's very common for various tracing and profiling toolis to need to
-> > > access /proc/PID/maps contents for stack symbolization needs to learn
-> > > which shared libraries are mapped in memory, at which file offset, et=
-c.
-> > > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless w=
-e
-> > > are looking at data for our own process, which is a trivial case not =
-too
-> > > relevant for profilers use cases).
-> > >
-> > > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
-> > > discover memory layout of another process: it allows to fully control
-> > > arbitrary other processes. This is problematic from security POV for
-> > > applications that only need read-only /proc/PID/maps (and other simil=
-ar
-> > > read-only data) access, and in large production settings CAP_SYS_PTRA=
-CE
-> > > is frowned upon even for the system-wide profilers.
-> > >
-> > > On the other hand, it's already possible to access similar kind of
-> > > information (and more) with just CAP_PERFMON capability. E.g., settin=
-g
-> > > up PERF_RECORD_MMAP collection through perf_event_open() would give o=
-ne
-> > > similar information to what /proc/PID/maps provides.
-> > >
-> > > CAP_PERFMON, together with CAP_BPF, is already a very common combinat=
-ion
-> > > for system-wide profiling and observability application. As such, it'=
-s
-> > > reasonable and convenient to be able to access /proc/PID/maps with
-> > > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
-> > >
-> > > For procfs, these permissions are checked through common mm_access()
-> > > helper, and so we augment that with cap_perfmon() check *only* if
-> > > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't=
- be
-> > > permitted by CAP_PERFMON.
-> > >
-> > > Besides procfs itself, mm_access() is used by process_madvise() and
-> > > process_vm_{readv,writev}() syscalls. The former one uses
-> > > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERF=
-MON
-> > > seems like a meaningful allowable capability as well.
-> > >
-> > > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level o=
-f
-> > > permissions (though for readv PTRACE_MODE_READ seems more reasonable,
-> > > but that's outside the scope of this change), and as such won't be
-> > > affected by this patch.
-> >
-> > CC'ing Jann and Kees.
-> >
-> > >
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  kernel/fork.c | 11 ++++++++++-
-> > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/fork.c b/kernel/fork.c
-> > > index ded49f18cd95..c57cb3ad9931 100644
-> > > --- a/kernel/fork.c
-> > > +++ b/kernel/fork.c
-> > > @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_stru=
-ct *task)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(get_task_mm);
-> > >
-> > > +static bool can_access_mm(struct mm_struct *mm, struct task_struct *=
-task, unsigned int mode)
-> > > +{
-> > > +       if (mm =3D=3D current->mm)
-> > > +               return true;
-> > > +       if ((mode & PTRACE_MODE_READ) && perfmon_capable())
-> > > +               return true;
-> > > +       return ptrace_may_access(task, mode);
-> > > +}
->
-> nit: "may" tends to be used more than "can" for access check function nam=
-ing.
->
-> So, this will bypass security_ptrace_access_check() within
-> ptrace_may_access(). CAP_PERFMON may be something LSMs want visibility
-> into.
->
-> It also bypasses the dumpability check in __ptrace_may_access(). (Should
-> non-dumpability block visibility into "maps" under CAP_PERFMON?)
->
-> This change provides read access for CAP_PERFMON to:
->
-> /proc/$pid/maps
-> /proc/$pid/smaps
-> /proc/$pid/mem
-> /proc/$pid/environ
-> /proc/$pid/auxv
-> /proc/$pid/attr/*
-> /proc/$pid/smaps_rollup
-> /proc/$pid/pagemap
->
-> /proc/$pid/mem access seems way out of bounds for CAP_PERFMON. environ
-> and auxv maybe too much also. The "attr" files seem iffy. pagemap may be
-> reasonable.
+This function formerly returned twice the number of bytes printed.
 
-FWIW, my understanding is that if you can use perf_event_open() on a
-process, you can also grab large amounts of stack memory contents from
-that process via PERF_SAMPLE_STACK_USER/sample_stack_user. (The idea
-there is that stack unwinding for userspace stacks is complicated, so
-it's the profiler's job to turn a pile of raw stack contents and a
-register snapshot into a stack trace.) So _to some extent_ I think it
-is already possible to read memory of another process via CAP_PERFMON.
-Whether that is desirable or not I don't know, though I guess it's
-hard to argue that there's a qualitative security difference between
-reading register contents and reading stack memory...
+Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
+---
+This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("perf
+trace: avoid garbage when not printing a trace event's arguments").
+
+To: 
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..c2e8ff48682bdc86a0a21f54f5163eb82d4cc17d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
+ 	}
+ 
+-	return printed + fprintf(trace->output, "%.*s", (int)printed, bf);
++	return fprintf(trace->output, "%.*s", (int)printed, bf);
+ }
+ 
+ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+
+---
+base-commit: 8883957b3c9de2087fb6cf9691c1188cccf1ac9c
+change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+
+Best regards,
+-- 
+Benjamin Peterson <benjamin@engflow.com>
+
