@@ -1,112 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4712014F108;
-	Thu, 23 Jan 2025 18:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9C7147C91;
+	Thu, 23 Jan 2025 18:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737656368; cv=none; b=LdV3gixls/XATzGrA0csafcz1kydSkDE2Nz+UDRzK2/06VBc4EdI0cwDw4FVofxjl8nry/5gF6joUKHtOzBjmxoSud+X1wKb6Zko6Jx8mBoslHI3XzWKcz0GhLjgo99wr3rYjugkzroPlan+TonUNhmq7yYsknGO4LDP6PWFAgY=
+	t=1737657059; cv=none; b=BAWTj31vKv1u00cuwj5TTqXL6NMy3HBiE4dizLiTWcbxsaHyts6q7h59MBJCxGuRsDraGHb3tDWG+U9b1+NaNWcDsVD5VujF6YKtA7u1uT1hw9E1KzIPEl1I1FxOum2HkI4tU1+vZM15TCwVKoUIxdV7HwEUweWTmnHI/kXyfbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737656368; c=relaxed/simple;
-	bh=GvQwYvfCJtbKgiBXMvf6dFY/gAGsY/mc9X9xlMNaaRQ=;
+	s=arc-20240116; t=1737657059; c=relaxed/simple;
+	bh=8NJCtbEEx5kYiy3UAc6g8mcWsZRKq/mcS6qEQQ3Y6NE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHjoufRKDZEPjbGTTfyMKfYrsXMGh4ncSW3TYBmU5ZY7MERNSF18Qz6EEyaScAd1g7h2nfjlSmAf+1mDxAyLevTnuWyyFp46i/LoQsh2obaqK7wSJ1tVbcrX/Z4AIsUP8amZI+uZ48ihBREFDgPYo7sy4f6KmDouy4xywDYLYgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PxgJONRZ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SD+OeiSIs7gubSNVmErWF8Hagv9wIX9/BqKxrL2y1s9cdALMFdByw2OdTUiJwmnCv/tNEOmDvKaPvZpEDAba6GdyScOLzz2IOk2LHLGlgjcYy1lb63USIJMPbKtlenCdXtT6R2Vxt0RqGGPUrbK9wYi/Mct+pIJ8ss1l1b4+mMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ki/nxfcR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PxgJONRZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737656367; x=1769192367;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GvQwYvfCJtbKgiBXMvf6dFY/gAGsY/mc9X9xlMNaaRQ=;
-  b=PxgJONRZPaK+qLjE5Tqj+RZH2sSTRLcAt72FFzoMSsbuHxWmu3LYEDoL
-   eg+BCrRq7JCE2OzatppyJGvCVTG3R7ghkpGve0S5E4BmZpz++MRTkkaUN
-   wRzfouAe5Bry/CQsy8kzqHyEft+J7p+WmMne0UE9zJsfmx/DioO+uroBG
-   +ltuib2wMrdH7CPDd+UPW42zm3KVnd0D2V0ubOFsNWbqZ6LkPw7QoY+qv
-   qdJVqGJOlhOf1VDEykqTnq5Xieg/becLbdKLKq31yWgd+hf0Ba6ja3poQ
-   0LDZhKNkDsTskz/JcqYm352GX2bWu9XCk9TLRZm1JqEj4HKQjg076jvGg
-   Q==;
-X-CSE-ConnectionGUID: Hyx/Qd5QRQOU7TAR1FZ+Ig==
-X-CSE-MsgGUID: a06xyNx4QXu8S0EyKfawOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="41930269"
-X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="41930269"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:19:27 -0800
-X-CSE-ConnectionGUID: 2currXbiRM2/mGXtKLSgpQ==
-X-CSE-MsgGUID: ukUmkCvcSNqWMMh4y5/A7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107376189"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 10:19:26 -0800
-Date: Thu, 23 Jan 2025 10:19:25 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ki/nxfcR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B049C4CED3;
+	Thu, 23 Jan 2025 18:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737657059;
+	bh=8NJCtbEEx5kYiy3UAc6g8mcWsZRKq/mcS6qEQQ3Y6NE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ki/nxfcRzIGED0q/s+Aed7HRnfQ7FTZW72BQTKcBmUACrLMiGPhoHM4GLJ7DoAqGS
+	 u05qvk6ECWvmL5PqcenRWPfpCku8HqsQB+trXBed+YOR2GIc0xphWKO+d5VDKaxZXq
+	 5PdOHS+Sbi+2ZHpWmPpqSS9nWnVX0h92xVXrYrd99acipyudzN8bEgT7HpQq14t6Lx
+	 o6P1+w3zqzDCnZUX0WNaHy6mIg573WDDBsvz0oVWnF9k5l6rz5bxFvPevydJJSNG/C
+	 xhjqeXFvguQX3mJRokeBTAibsJMIvnVOLLOIz/1F3KnuIsVGu3kF8fM2a6arud0FPU
+	 JJ1WPkTLlDbtA==
+Date: Thu, 23 Jan 2025 10:30:56 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Li Huafei <lihuafei1@huawei.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove
- BUILD_NONDISTRO
-Message-ID: <Z5KILXC9-dN4Vo1o@tassilo>
-References: <20250122062332.577009-1-irogers@google.com>
- <Z5EM24qWVQF2VdI8@tassilo>
- <CAP-5=fW6ZWf6jF3Xnike81S9s_5tZ9w4DS8=8Ff1Ve87O32_Sg@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250123183056.rnl4nbihml6pxx2n@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
+ <20250122133730.GQ7145@noisy.programming.kicks-ass.net>
+ <20250122141616.GU7145@noisy.programming.kicks-ass.net>
+ <20250122225127.qhxmqamg7pnugnya@jpoimboe>
+ <20250123081718.GC3808@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fW6ZWf6jF3Xnike81S9s_5tZ9w4DS8=8Ff1Ve87O32_Sg@mail.gmail.com>
+In-Reply-To: <20250123081718.GC3808@noisy.programming.kicks-ass.net>
 
-> In certain scenarios, like data centers, it can be useful to
-> statically link all your dependencies to avoid dll hell.
+On Thu, Jan 23, 2025 at 09:17:18AM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 22, 2025 at 02:51:27PM -0800, Josh Poimboeuf wrote:
+> > On Wed, Jan 22, 2025 at 03:16:16PM +0100, Peter Zijlstra wrote:
+> > The ctx_ctr is always incremented before calling this, so 0 isn't a
+> > valid cookie.
+> 
+> Right, so that's the problem. You're considering 0 an invalid cookie,
+> but ctx_to_cookie(0, 1<<48) will be a 0 cookie.
+> 
+> That thing *will* wrap.
 
-Yes but it won't be loaded into memory if not used. Executable
-loading is all lazy. Maybe look a page fault trace for loading
-perf if you don't believe me.
+Well, yes, after N years of sustained very high syscall activity on CPU
+0, with stack tracing enabled, in which multiple tracer unwind requests
+happen to occur in the same entry context where ctx_ctr wrapped, one of
+the tracers might get an invalid cookie.
 
-So you're trying to optimize disk space here?
+I can double-increment the counter when it's (1UL << 48) - 1).  Or use
+some other bit for "cookie valid".
 
-I didn't see that in the cover letter.
-
-It doesn't seem like a very good reason for such an intrusive patch kit.
-
-If it's a serious concern maybe investigate an executable compressor?
-
-> The X86
-> disassembler alone in libllvm is of a size comparable to the perf tool
-
-I agree that LLVM is a serious bloat and DLL hell concern, but I don't think 
-dlopen is the answer here.
-
--Andi
+-- 
+Josh
