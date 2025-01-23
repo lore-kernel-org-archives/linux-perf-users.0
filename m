@@ -1,51 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4F71BDAB5;
-	Thu, 23 Jan 2025 23:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57671BDAB5;
+	Thu, 23 Jan 2025 23:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676133; cv=none; b=nf4TY0kRxxPozOK5+eKmhrCuUE5FawivmhNM48ufWuXgWH+cvVQZR7yxKYhrzAo6wA7WfBOXlfYvC2W4m3MhWG4m519R9abYbd+Epkn1594BQXTtHKkpPQpeArc4N8KB64B5FbQaoRCtuhKzuYTY9BohEa5flLGEbc+TTW0Opag=
+	t=1737676434; cv=none; b=WHzkH8DpS4F0EOKATsvWr+6NM5xaGJiTqZd5orC/gcn3n6nJqdsH9+A9hrAutjUcQSNG8k7m8XDieyyY1kq5DSNo2FnAPd9QCRY2TFP366scXxLWOI11Ks78epqvgOJmRaGB7RB3pbN0qKoddCgvMmLLYXIoos7pKPx7LI4dNnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676133; c=relaxed/simple;
-	bh=SiEgAeLJ7UUpKCLTfXfDd8AfUyVfAc6pr3CSVOEfDrk=;
+	s=arc-20240116; t=1737676434; c=relaxed/simple;
+	bh=q+SAH+rFRx+dqlUSB16kyjIJPu8SXZPRZGZ/Bq/BcPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNMkIDX+yyMdACZfyRGBhCLdgZ00jYP5TpTuq+NxmGoorA6lC6Qpigq02pYIWFeMI+B9PUuHkeYugjgBJdSHRfVjL75bVZ/x9B1MwIPRFlD72k76uIPNXwkRRTId9E+3zWAw0U7BfX9wsXeMmYIBVr+iOvGZCfvSJyx1Ds70tcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIylCQW6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h71wBK7JDaB/NeQddIF2EWTXkyGh6KFZ6oWEMHNEHcZSqIN59k0JoKRGMR3T4UzHe61ufu5ZxX6BhM+tx3NESyiYTDZGFHinNtIG70qJgGeGpTM4j6IDN2dC4hgea+AxIOmMUYPeRXnzWojZ+Lv8j0ZhrKa5mNKwFsG2gfQYBAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjrVQEM5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIylCQW6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A2CEC4CED3;
-	Thu, 23 Jan 2025 23:48:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjrVQEM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E06C4CED3;
+	Thu, 23 Jan 2025 23:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737676132;
-	bh=SiEgAeLJ7UUpKCLTfXfDd8AfUyVfAc6pr3CSVOEfDrk=;
+	s=k20201202; t=1737676434;
+	bh=q+SAH+rFRx+dqlUSB16kyjIJPu8SXZPRZGZ/Bq/BcPg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BIylCQW6+hjV7Dj2uYSAIWybegaBpq9gSy6ggefCThhB9PSL9/yTUlAo3/uotIVsR
-	 aHG5r/D655vTuB5aewVhLviAOEnaQgfYhb3LinjpMTiLeRbACQFJ15aRjzXFQrTlCo
-	 m2UrBxblIZzExWQbMdWy5h4GWFvYQCJ8EpSXsCJ3ZkVMdeO/zlUFZBqX0TpTPAszzo
-	 XzqZYJ7duYKOWCKnj0gS4FNS7SSnRmmY6nQEGsXmvS0b50RUCM/aCq0uAu6dQZutQj
-	 d10DFF+AHYFiqPS2Vwb6YbwQNh48DZOUVyZAWrK4wi4JZYOEwUqdSNqjSUk2Hjs3Fx
-	 bzau53j/o6dGg==
-Date: Thu, 23 Jan 2025 15:48:50 -0800
+	b=tjrVQEM5qvfp+MhVJd6uTEiLNLLrBWEmEuFMUC1oyoBfOUEqlrBSeuXpLei5Wm0RP
+	 pS8Qh/bFCbcJEDEK51UyiwWMCy4V7JVrmbQbIuRQTGf+JMPnfZ51IHvDw/HWZNePIR
+	 V/pG9IiShWl1YxAANv60ltqntjZKIeIaAvFDWauTQlRqi083wWg3FZYAZ8SFUyZmFd
+	 K0L7F9gSLz7G7ejUHbmdO/frVlZCt/5OzCy94X0RKj+AyXlXwiZVlqQMSpBORL1fIu
+	 vdv/ptM3s9it3UDeJp+FZfOje70TJR65U8yNMfYvhYrCBX7PvGVOHkgE9nQmYgwTIm
+	 w3166ocYE1Bog==
+Date: Thu, 23 Jan 2025 15:53:52 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Benjamin Peterson <benjamin@engflow.com>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Remove return value of
- trace__fprintf_tp_fields
-Message-ID: <Z5LVYtjPZduzcoE-@google.com>
-References: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
- <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
- <CAH0uvohQvqRYo8JBX_Z1yVobqcxRgQG4G1Y8o8XMv18CnrqBbA@mail.gmail.com>
- <Z5FCGGBxBHD95zjT@google.com>
- <CAEmfU+tj6kUbRNe7YbCorRStyAKs=7ndj73BvPUpkwA-gcBZCg@mail.gmail.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
+ trace
+Message-ID: <Z5LWkMPTu6mUtdJ-@google.com>
+References: <20241215190712.787847-1-howardchu95@gmail.com>
+ <Z2CGdi5xpJy6C6sv@google.com>
+ <Z2mzzytPOpjF0Hxe@x1>
+ <Z2m8qzyLdm1BEYuF@x1>
+ <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
+ <Z4U343yQUDF3H7qs@x1>
+ <Z4vyvNChyXZx33xf@google.com>
+ <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,45 +54,136 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEmfU+tj6kUbRNe7YbCorRStyAKs=7ndj73BvPUpkwA-gcBZCg@mail.gmail.com>
+In-Reply-To: <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
 
-On Wed, Jan 22, 2025 at 11:19:05AM -0800, Benjamin Peterson wrote:
-> On Wed, Jan 22, 2025 at 11:08 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Tue, Jan 21, 2025 at 07:01:53PM -0800, Howard Chu wrote:
-> > > Hello fellow maintainers,
-> > >
-> > > Just a slight ping.
-> >
-> > Thanks for the reminder.
+On Tue, Jan 21, 2025 at 04:19:35PM -0800, Howard Chu wrote:
+> Hello Namhyung,
 > 
-> Thanks for taking a look.
-> 
+> On Sat, Jan 18, 2025 at 10:28 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > >
-> > > Thanks,
-> > > Howard
-> > >
-> > > On Fri, Dec 13, 2024 at 10:06 AM Howard Chu <howardchu95@gmail.com> wrote:
+> > On Mon, Jan 13, 2025 at 12:57:23PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Fri, Jan 10, 2025 at 04:52:08PM -0800, Howard Chu wrote:
+> > > > Hello Arnaldo,
 > > > >
-> > > > Hello Benjamin,
-> > > >
-> > > > On Thu, Dec 12, 2024 at 7:56 PM Benjamin Peterson <benjamin@engflow.com> wrote:
+> > > > On Mon, Dec 23, 2024 at 11:40 AM Arnaldo Carvalho de Melo
+> > > > <acme@kernel.org> wrote:
 > > > > >
-> > > > > The return value of this function was meaningless and therefore ignored by
-> > > > > the caller. Remove it.
+> > > > > On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > > On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
+> > > > > > > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
+> > > > > > > > Changes in v4:
+> > > > > > > >  - Use if -f to check the existence of vmlinux BTF, and exit if it
+> > > > > > > >    doesn't, so trace_test_string will not overwrite $err, and keep
+> > > > > > > >    running the test.
+> > > > > > > >
+> > > > > > > > Changes in v3:
+> > > > > > > >  - Add vmlinux BTF check, and skip the tests if it doesn't exist
+> > > > > > > >
+> > > > > > > > v1, v2:
+> > > > > > > >
+> > > > > > > > The previous version of the perf trace BTF general augmentation tests
+> > > > > > > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
+> > > > > > > > <acme@kernel.org> for pointing this out), this version uses bash instead
+> > > > > > > > of POSIX shell to pass Shellcheck.
+> > > > > > > >
+> > > > > > > > This patch series also adds documentation for the new option
+> > > > > > > > --force-btf, which is used in the tests.
+> > > > > > > >
+> > > > > > > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
+> > > > > > > >
+> > > > > > > > Howard Chu (2):
+> > > > > > > >   perf trace: Add tests for BTF general augmentation
+> > > > > > > >   perf docs: Add documentation for --force-btf option
+> > > > > > >
+> > > > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > >
+> > > > > > Thanks, applied to perf-tools-next,
+> > > > >
+> > > > > It fails when running in parallel mode, sometimes:
+> > > > >
+> > > > > 109: perf trace BTF general tests                                    : FAILED!
+> > > > >
+> > > > > Then:
+> > > > >
+> > > > > root@number:~# perf stat --null -r 10 perf test "BTF general"
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : FAILED!
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : FAILED!
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > > 109: perf trace BTF general tests                                    : Ok
+> > > > >
+> > > > >  Performance counter stats for 'perf test BTF general' (10 runs):
+> > > > >
+> > > > >              2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
+> > > > >
+> > > > > root@number:~#
+> > > > >
+> > > > >
+> > > > > So its not just when running in paralell, anyway, its merged, we can go
+> > > > > on from what we got there.
+> > > >
+> > > > It never fails on my machine, I think the reason is my machine is not
+> > > > fully-loaded. Can you please run
+> > > > ```
+> > > > perf stat --null -r 10 perf test -vv "BTF general"
+> > > > ```
+> > > > And provide the output?
+> > >
+> > > root@number:~# grep -m1 'model name' /proc/cpuinfo
+> > > model name    : Intel(R) Core(TM) i7-14700K
+> > > root@number:~#
+> > >
+> > > root@number:~# perf stat --null -r 10 perf test -vv "BTF general"
+> > > 106: perf trace BTF general tests:
+> > > --- start ---
+> > > test child forked, pid 47824
+> > > Checking if vmlinux BTF exists
+> > > Testing perf trace's string augmentation
+> > > String augmentation test failed
+> > > ---- end(-1) ----
+> > > 106: perf trace BTF general tests                                    : FAILED!
+> > > 106: perf trace BTF general tests:
+> > > --- start ---
+> > > test child forked, pid 47842
+> > > Checking if vmlinux BTF exists
+> > > Testing perf trace's string augmentation
+> > > String augmentation test failed
+> > > ---- end(-1) ----
+> > > 106: perf trace BTF general tests                                    : FAILED!
+> > > ...
 > >
-> > In fact, I don't see the reason to merge this, as it's the convention to
-> > return the number of characters it prints.  Yes, it's not used but not
-> > much reason to remove it.
+> > I also see the failure on not fully-loaded machines (both Intel and
+> > AMD).
+> >
+> >   $ sudo ./perf test -v BTF
+> >   --- start ---
+> >   test child forked, pid 525025
+> >   Checking if vmlinux BTF exists
+> >   Testing perf trace's string augmentation
+> >   String augmentation test failed
+> >   ---- end(-1) ----
+> >   106: perf trace BTF general tests                                    : FAILED!
+> >
+> > Thanks,
+> > Namhyung
+> >
 > 
-> The main reason to remove the return value is that it has no useful
-> interpretation and is therefore confusing. To wit, the function
-> returns two times the number of bytes it prints.
+> Just wondering, did you and Arnaldo apply this patch:
+> https://lore.kernel.org/linux-perf-users/20241213023047.541218-1-howardchu95@gmail.com/
 
-Oh, ok.  Then please just fix it to return the correct number.
+I don't think we applied it, will add to perf-tools.
+
+> 
+> This seems to solve the problem for me...
+
+But I'm not sure if it fixes the problem.  IIUC the patch fixes the
+loading problem.  And for some reason, I don't see the problem any more.
+But I remember this sometimes happened in the past.
 
 Thanks,
 Namhyung
