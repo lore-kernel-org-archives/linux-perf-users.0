@@ -1,159 +1,112 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041AE1C5D5F
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 07:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9084620B81D;
+	Thu, 23 Jan 2025 08:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737618525; cv=none; b=e6D+miG1cDtyF2BGnKIP8U/Ov7D3XB1hftXGQIelNO/FCXF9H1Y8zuLtD/5/85cC7zpPBZthS44cV3zcZsXaFt7bJqRndnxmFdxoA7K6JWqgefqIc9CP/2/1OEupCTM47hW914fliEo8rIMN3hVopYoDDpdgMwBGvmMXI99BiJI=
+	t=1737620059; cv=none; b=Lszm19vx9+Gil6o/fst6dGO7jvb1/+n+dJKlC9wOBrN1/8mcQom2o9MN7n0MWZI5LKQMmNU9wGjsJDNpgnb2vbGVJn2OorpYsIOpnBQy1LOBleEf9TR92fGDi87yHFHGlE3Dk1CpqhBbvZw93971MpFZKGWrCUR7nz5qVwiTidw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737618525; c=relaxed/simple;
-	bh=E0Qx9FZxwsUpuF7Q7TcIl3+sHLKgQHJqorw9hLI9+Qw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r5KiSQZnGpfBqvsSfuaHaTmJoJxWslUMMgXzCDwkI+obFKm/cEpc2OD+q8Bl5j2PWe8hWckYjl1xRS0w5+2X6J6vq6Fgcy2Eco7SNbmW3eeshZGxkg96aLpwZFJfEjShmU1Si3YbMcuBHPs+8GNDkZfgEcCen+V0+G63ItQ/w5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TezeUwNP; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1737620059; c=relaxed/simple;
+	bh=vROsj2hp1Pfaf7r/gMvV4hEAqBJjRE0M26bZWw1HSdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMQNrYcQsw6OP/OT1dXoSKqeleUsV8r1bJe/0+9WZQt4lEK8PP7Ea1AGW5BsBLn8xsoYNNOv6i/ha1xgTzM7Scp817bT+mFm44ZCY1k3ioaWWNwroD/pB/ap3pYqLZedt/u2TJbxFw0kD85LE7DhQ3jZGKT4StNPSMw9k3qyMIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kGds9UZ/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TezeUwNP"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ee709715d9so955262a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 23:48:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1737618523; x=1738223323; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=akq5KXNO6yQt2g32XEbXQyeThszQvcySRASydOxEc/Y=;
-        b=TezeUwNPxfqABNy7Vix6ntqLoK9kVSfUH92oEkasW0FV5DEv3SCrkgQPGAb4k3smP+
-         NobchlrX5Gwh1TgSl9p/1OiaG10pdLbuIXFdMd5qXtSyl8dy2L16x6st0wuSVcfcKxIw
-         vIGAfamKPRro3+rJzxtnwdl+DsYlhVydkoot6k0AWWaFikH7+wwSgBTZndxPCcnEqihZ
-         sOgklWGii1mvrjyk2Qk6B5pFty4xTliKYTIwWhlbmJGheTAaOncdqVuCLdHFEnMB6w0m
-         yRjnxbTKCR7m7pYr52NpRVgR5vpiKizPKHpqBQ+76KX9nbB9BRNGdcN0WwthOVluu8mO
-         bOeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737618523; x=1738223323;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=akq5KXNO6yQt2g32XEbXQyeThszQvcySRASydOxEc/Y=;
-        b=b42qqIyWWmsjhwAfnqY9wzdCbHzeUnElZhLg0w5XQ59w6VWZRmif+h4vM/UjZ6/bHT
-         IJ2hlATIMqVmOc5lIQQCZsTx6nsu1NsUmUhZKkPa2MpgKbaa8tPwjijeBIedkxeosALg
-         iOTjTc5/l+6bXxRabTlHJRKQ/kfeT9rhxpuSBSk7AdE3JrgWcQRCYGptXY2sRHY3Cgrv
-         u9mLbLiaXK+bGV3iIztzJQicWZ6WChWNHQBtAfgBbr7V0LCYG0IR3P3hLwwH2rpWlbDy
-         g/pWJDEBCnB89+ImeCTP0+5pb6zwXD/OCbyZLaUS/8MdAifCcuBWZWOX5s09XIRBntvA
-         sWCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOoAYQn+qBPppexuts/u7uVud2jVlfRCMJudnou7mcsZ615qtjH6ajmq/60yFRJYtsCNc2vais0iOwNoFTjy/X@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzSxj0TcBaPFcgXxCTrnAowAwxLLSGAH5A8wxP0+MpLjAD0aXO
-	UZaidlAmi7TOxK5L6rZ+LxUi39DY2DDn/hXe/DeBUTWAB8WOlMabS/Z3QLTIt3I=
-X-Gm-Gg: ASbGnctYxaZhi41rkLzQokJW4ZNYlgyFyRuDQu1NtlQCw8xE11X65l4mBWruG5addZ6
-	lmjqWqer+sX/OTlTwwjHQZtEpyetdGRDOTkVRb3u0gpuATXb6oonfgIH8XtXkkQJeewsQH4rpVz
-	1w+JkFQWW1xYUXIdDMA9WaPk78koZ9Mhwt2T0DeetVqWgYgtvbqoGgWek7vpSIC/wb8IwKST+Eo
-	igWCsxGef87FxJ0qVdc2dnAUuu2VMm32AFYwJbDu7hcjcMwqcDMY1I8luJ3eN4odOCTBVKG7BuS
-	TWdXsndHjnVYI+r00OrrnLgxFsNPRiXpFwn8PgY0uRg0J22L
-X-Google-Smtp-Source: AGHT+IE9X53VOiUMKpFB+BSDlxPRom2fGPMvdfIAykyzXKLH2DYJqYIyh5IN0C8tYV+MtH6iQMWt8w==
-X-Received: by 2002:a05:6a00:b4d:b0:71e:108e:9c16 with SMTP id d2e1a72fcca58-72daf9760cbmr36109849b3a.12.1737618521995;
-        Wed, 22 Jan 2025 23:48:41 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([2408:8207:7820:2ed0:a46e:6310:4021:f441])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72daba4895csm12749090b3a.130.2025.01.22.23.48.38
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 22 Jan 2025 23:48:41 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
-Date: Thu, 23 Jan 2025 15:48:30 +0800
-Message-Id: <20250123074830.90923-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kGds9UZ/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DnDI6vNdsy+vgx9C523oD+xSrdWFQ2X4GKCb+SBDNJ4=; b=kGds9UZ/qx7dZ4wCLtzZbZykfo
+	xIkebEmyQr9lx36Rq7HXYS3Mu6BzMDqk2tY3n9r3BLs+91t7fdeToLu2VJJvZ3MSq2vLl8KgYvC3m
+	HI+MpR/AmTXHXw+Ey0ZmdQHU1PMHAi+AhUS5I9X1tkYRrcZOAXmbplE6RZShdJiT4v47JbzMpWs0b
+	sBjYPPOpdopYrnMJ3NSENHwce1oHL8GiHFQQjd4vV8h1Tu/6WDGVksdA7ElE4p3MJPT8Rec9ns7ot
+	EwXtABzJzVKeUcIiMJa5rRqFIUJJfR0qUSsq7dIeCM9dru1VPRCaCdMBV+imqZJPd7FGqS/VDmeJd
+	yaloNPeg==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tasLk-0000000Dkr2-0S5M;
+	Thu, 23 Jan 2025 08:14:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 59C4C300717; Thu, 23 Jan 2025 09:14:03 +0100 (CET)
+Date: Thu, 23 Jan 2025 09:14:03 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
+Message-ID: <20250123081403.GA3808@noisy.programming.kicks-ass.net>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
+ <20250122122821.GN7145@noisy.programming.kicks-ass.net>
+ <20250122204720.t42a4em5endxox3y@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250122204720.t42a4em5endxox3y@jpoimboe>
 
-During platform_device_register, wrongly using struct device
-pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
-still, accessing the duplicated device leads to list corruption as its
-mutex content (e.g., list, magic) remains the same as the original.
+On Wed, Jan 22, 2025 at 12:47:20PM -0800, Josh Poimboeuf wrote:
+> On Wed, Jan 22, 2025 at 01:28:21PM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 21, 2025 at 06:30:53PM -0800, Josh Poimboeuf wrote:
+> > > It's possible for irq_work_queue() to fail if the work has already been
+> > > claimed.  That can happen if a TWA_NMI_CURRENT task work is requested
+> > > before a previous TWA_NMI_CURRENT IRQ work on the same CPU has gotten a
+> > > chance to run.
+> > 
+> > I'm confused, if it fails then it's already pending, and we'll get the
+> > notification already. You can still add the work.
+> 
+> Yeah, I suppose that makes sense.  If the pending irq_work is already
+> going to set TIF_NOTIFY_RESUME anyway, there's no need to do that again.
+> 
+> > > The error has to be checked before the write to task->task_works.  Also
+> > > the try_cmpxchg() loop isn't needed in NMI context.  The TWA_NMI_CURRENT
+> > > case really is special, keep things simple by keeping its code all
+> > > together in one place.
+> > 
+> > NMIs can nest,
+> 
+> Just for my understanding: for nested NMIs, the entry code basically
+> queues up the next NMI, so the C handler (exc_nmi) can't nest.  Right?
+> 
+> > consider #DB (which is NMI like)
+> 
+> What exactly do you mean by "NMI like"?  Is it because a #DB might be
+> basically running in NMI context, if the NMI hit a breakpoint?
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- drivers/perf/dwc_pcie_pmu.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+No, #DB, #BP and such are considered NMI (and will have in_nmi() true)
+because they can trigger anywhere, including sections where IRQs are
+disabled.
 
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index cccecae9823f..8b208f287a1f 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
- 	u32 sbdf;
- 
- 	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
--	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
--						 pdev, sizeof(*pdev));
--
-+	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
- 	if (IS_ERR(plat_dev))
- 		return PTR_ERR(plat_dev);
- 
-@@ -614,19 +612,32 @@ static struct notifier_block dwc_pcie_pmu_nb = {
- 
- static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- {
--	struct pci_dev *pdev = plat_dev->dev.platform_data;
-+	struct pci_dev *pdev = NULL;
- 	struct dwc_pcie_pmu *pcie_pmu;
-+	bool found = false;
- 	char *name;
- 	u32 sbdf;
- 	u16 vsec;
- 	int ret;
- 
-+	for_each_pci_dev(pdev) {
-+		sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
-+		if (sbdf == plat_dev->id) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	if (!found) {
-+		pr_err("The plat_dev->id does not match the sbdf");
-+		return -ENODEV;
-+	}
-+
- 	vsec = dwc_pcie_des_cap(pdev);
- 	if (!vsec)
- 		return -ENODEV;
- 
- 	sbdf = plat_dev->id;
--	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
-+	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%d_pmu", sbdf);
- 	if (!name)
- 		return -ENOMEM;
- 
-@@ -640,7 +651,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- 	pcie_pmu->on_cpu = -1;
- 	pcie_pmu->pmu = (struct pmu){
- 		.name		= name,
--		.parent		= &pdev->dev,
-+		.parent		= &plat_dev->dev,
- 		.module		= THIS_MODULE,
- 		.attr_groups	= dwc_pcie_attr_groups,
- 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-@@ -727,7 +738,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
- 
- static struct platform_driver dwc_pcie_pmu_driver = {
- 	.probe = dwc_pcie_pmu_probe,
--	.driver = {.name = "dwc_pcie_pmu",},
-+	.driver = {.name = "platform_dwc_pcie",},
- };
- 
- static int __init dwc_pcie_pmu_init(void)
--- 
-2.39.2
+> > doing task_work_add() and getting interrupted with NMI doing the same.
+> 
+> How exactly would that work?  At least with my patch the #DB wouldn't be
+> able to use TWA_NMI_CURRENT unless in_nmi() were true
+
+It is, see exc_debug_kernel() doing irqentry_nmi_enter().
 
