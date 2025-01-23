@@ -1,152 +1,178 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CDC49625
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 16:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0E9212F86
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737648484; cv=none; b=vANEnPgLst78o/vltIq+oj1nhnyHSPaShr9Z7F9TULLJCLjv+Wqlikv8ebcGqq1gXJmxc2OUMstgu4FpuTVPT+z9cUThFyiz8a4AJ0BilVMokzN70MH6s8Sc+CEOMH4XTgxxoSt7ZZkJ+qK8eDBC5gTcp/MBwlWe44O+S1au6LM=
+	t=1737648943; cv=none; b=DjG2GHuyEHRFIYQaxESmMeFfzj9bcGoKlPsFUfrjEzbbvaZnE8gnKEmpyVIscfdlD+NbkW1QfOJ4Tk5FkTqwxi13jfZXeRT0x5AgbIe66iSmfsYr9n8d4y+ZN5jUT8rYNkIf9EL9lfxTHvOgFts6pA03GWCUtLTcvgj0kf+hyVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737648484; c=relaxed/simple;
-	bh=VJiHmI1djOKKK9qlzui7VcEj1PKh0CYZs7jRjQzcX2I=;
+	s=arc-20240116; t=1737648943; c=relaxed/simple;
+	bh=sWb3Cyv6I+HWgEBC2YhkQ8AmThJXOM6FiiGW3+jYoWY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fiRyjHK2Le5n/bne1zDOB3/2XFQk6QzXbI/9f1L+Sx0wZ2tIxjbdvxwmtuIL7jBrzksU9VE0nOE4w2R1T0/xx0kHJPM9DJFUKV0fdIq+t7zyuiTFMkyYU6uRd/DYDOl80jL/TMBifK0+epLsAqR5lwBdmQGdqTcAAcgdS/FDKBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XYSJHgm3; arc=none smtp.client-ip=209.85.166.178
+	 To:Cc:Content-Type; b=duW6/KBrvV8TrZvp8FvxS4tRkYdoLQJssQcL0momLAuOIKfppOyRPGpHJbbrpp1MtyrBj6cZF1gklQtRxRfmJoYLhID/3xsy/RDqC60f8LChowlPLNNy/86ksZ94uz/HQ6GVmYEkIk94o6AlVAF9A0LOdm48CwPyUGIxov0rHZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=inXpg9iA; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XYSJHgm3"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so155535ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 08:08:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="inXpg9iA"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso138505ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 08:15:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737648481; x=1738253281; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737648941; x=1738253741; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YQDmKPoAbR7c0QGvmjmPxwpkQvGXQ/s6fxXQ9ADc7Og=;
-        b=XYSJHgm3cc3R2UGLhWX2N9y1R3bs6iFC7+FaNBXCuI9S8aq2N8IJMCOdn2DlsHzi7z
-         xwCBoobW+e/k9r8lO+Zfwdq8PMAnnUb4Y5FM4ZBqP3fVF/J8yva0mdAomIFVozd+eCku
-         UjiGwfW603/B/hBbIHxm/WyS47fie2gf1URuQ8ckPUcNOg1WGShAzbae9HV17G02uD1c
-         kTuzbPwHz/6EgG2S6fPQBgua+vtCyhIVS8Z7Em3QT3WZ+2sJ5cAhg7IEdMaYY/lhk0vx
-         1xDJs1rqK+AnF7AoYrxDt+S26NZlnX9ggG8xyF+yo+ISXvxeZPmY7aLMBPokkqOQVpKL
-         mNJg==
+        bh=oX5waazhkl6YZTYhr5knhySaY3YOmwCWsekYmWtNjQg=;
+        b=inXpg9iAen9Z0wB/qBaXcQuEqVf5hZpAleA/8ahhtwyE6Wccc8fVPGk5U2B6slu+xQ
+         MI9J/gc9uMFWUdVQnScegNyXfZTUibHwQbfHazhKFsS4bmzjoyYxLjQ5FhS9j+i3Ci7T
+         p5HiYmm53SYt1ZJOQTF+YzLnGwijxG6VHNEWWqC36cbxgB8b39mMnPvTfa2UiTptstzv
+         r4J/6GVCpMrnMx8BBmbBOg36D0kIQw8seL2zPqvy64CVWVxsbpui67RT/bxU4HXdJTr6
+         MLI4OUq5TYUMScgW9af+eVt/GaGD/rmTifpko9WcbPDo2B00dk0bW+gGX+5l1RaHxqo9
+         IP4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737648481; x=1738253281;
+        d=1e100.net; s=20230601; t=1737648941; x=1738253741;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YQDmKPoAbR7c0QGvmjmPxwpkQvGXQ/s6fxXQ9ADc7Og=;
-        b=TYQ4MVH0JY/YicBMsSy/oM+4hpf2+j7mPr2tO3WVCPRYhP8sB7kq/prrmbv/KejBEh
-         GWF2k+f7zqs9m+irdq7BK5mRMc5ELg4dIKYSoTT0PNRlICzIe5o5gqRTvn/K4bVFAIXa
-         YxFsLjnpNFJFUu3VjhvLxtZx2SVboH9lYz6+0B8JM0XctyD2yyTooq9cZ1AU8I/ya5Pd
-         W4hfOpEP/yS83z5f5dscXAzoEQnZZMjfKhmd1ZB4ubBHf7L+aliqTf84BfOYyS+zF/yQ
-         bnetLR9ENFOTAPSitVJJrWj1400BLB0NGf+IvVf0LNoqV+baMCQEieAU1Rs0NXfrkH3d
-         lX5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMzxJxeEz+dFFqWV3MSs2Ig4akn94c8vkhZEbsixDio1HmBwUWxV2cIO189bVKmqq91usSwpuMzdviDtvgDWjC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys9U/PhSK4FieBojMgYGFFbzWMiKCb0lQTi6HyUZl/Rl26jSZT
-	GI1hSR/zo6K0kdb93QPmO4DBkvNRvRHeoaC5Lr2KvvIecYQx9A+QZETamF/7xAiRBi7QBbQ9kV9
-	bsI+gsvVciKQiJxHYNaaUXiNVx6KPLGuvYgHr
-X-Gm-Gg: ASbGnctVwAie5BROx2TYMcQc6ojTZ9LpovkXBz1+lpGiU7t6ttfKpNZOuld5Czo27cp
-	Riw9W1TcxEIITVCvNXAJnGB1Ki0/TwdqUfgZhM4VAkmFTW4q1lR1tHI0XvdoqccBnjeWkGVLX5K
-	xjVWXp4Mngoz+DBQ==
-X-Google-Smtp-Source: AGHT+IEXJE46BE9oGbt739cbBwHASjUpEeCbviM8FWa0ovSaM4CyC+OI2+kR+M4VbAO92iS1fs/qHZrGKmHuWnAJN1o=
-X-Received: by 2002:a05:6e02:1d14:b0:3a7:7d6e:fef9 with SMTP id
- e9e14a558f8ab-3cfbdebdff2mr3008595ab.27.1737648479856; Thu, 23 Jan 2025
- 08:07:59 -0800 (PST)
+        bh=oX5waazhkl6YZTYhr5knhySaY3YOmwCWsekYmWtNjQg=;
+        b=s8DAKR3BCPm5x2vn8vylcRjgCB9haaGRdaFhgUHVsVHV49/mJfbm/KM3cWjqGdaymB
+         1OtqjJi0trG/oePDlVDsVjUDBPU+3Zs7iHOODl8+kbarZ9QS4wkaJjgdnZNk8hBqrxBq
+         M/yCBoR6QSGsOnfZTON0JnwwY97YawUDfplgY0hImewe6fR2sAbioQ/PM6fLNYmaBeF4
+         hXBkqF2YukNaHtj90M8TEb5IQjYB+GME0hQLVoOjQmc1ZQWFsvBRKCH5vxKpThmiL4LD
+         mR+beuAwYKa1aiiXgkz+x+sFQHj2+V6VaXZWDgOsYw6A2lYH+VB/PRwESc4vvWm9P0eJ
+         T1qA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqIH5ege0yxR9k7Wi9/crv1eG7TTaafP/jtI7w/w/rikRwTp7JVzg/ap9KYTBHt90kNYu/+tVIyvPJj4U2mrft@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqQNpGpRXauZeo42gJ86O+nN6UXJ4ugATrXlvqIHREawTisQc5
+	sXxYXvYxoD8bca0N17lctJzj1Dt29ktAw6f3dF7z/UfG1pySt8L3JYzFBthl1UOULXO2WQYMNsm
+	MG0Y2O9sm/YwvTUBU12pjKmCin1KusyZ3dOsZ
+X-Gm-Gg: ASbGnct5OG5nIRY7eeRyf05q3QZ6Kw8tPWebvxYTJdWA1DuK+5OGfVgBhp32ycFo4rg
+	aRxOsJMqTvQf5DplAgpJENGOGi4DfRyjdpmBN4QEMZegTxsdAnWr7FhA/b1k5fte141p0qFx9iK
+	VOB28RtEM32xmz+Q==
+X-Google-Smtp-Source: AGHT+IE4dRIHwDklupjhcoOBGPvWlDevfd1aF/gxc4PDN4ZI7ZrVMfPmXLgWCZvRbgAPyCHAmBh67ZLvfsRMB8ReA2Y=
+X-Received: by 2002:a05:6e02:1f81:b0:3cf:ade6:7ffb with SMTP id
+ e9e14a558f8ab-3cfbc926b4bmr4384345ab.28.1737648940674; Thu, 23 Jan 2025
+ 08:15:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120173208.344231-1-irogers@google.com> <20250120173208.344231-5-irogers@google.com>
- <Z5FwusFZ_bYlu6aK@google.com> <CAP-5=fX4vtKzMtrEbZhqH0dmKpXY3Ke+pVJ-ZbnHnAVuto7Z8g@mail.gmail.com>
-In-Reply-To: <CAP-5=fX4vtKzMtrEbZhqH0dmKpXY3Ke+pVJ-ZbnHnAVuto7Z8g@mail.gmail.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com> <20250123140721.2496639-18-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250123140721.2496639-18-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 Jan 2025 08:07:48 -0800
-X-Gm-Features: AWEUYZmuYzja_lRDXich0Xw56IxoG1_AoHvfnNjTcqKJp9HAh_UgwJL40-V3vys
-Message-ID: <CAP-5=fXx=q-LHcb9BtjE1AFZGmV55NBWy3HvfWQaABo-YO=4gA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] perf capstone: Support for dlopen-ing libcapstone.so
-To: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 23 Jan 2025 08:15:28 -0800
+X-Gm-Features: AWEUYZlcE9eGXBebq67xpO-gd2iY0iu5DHB6Jt50eGLf7g9NgQKCPf7nb1pAQ-Y
+Message-ID: <CAP-5=fV-+3dU1CtUAYazv5L6VfNwDxv1C9Q=tQXzve9nqpaqrw@mail.gmail.com>
+Subject: Re: [PATCH 17/20] perf tools: Support to show SSP register
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 22, 2025 at 2:42=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Jan 22, 2025 at 10:21=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.=
+com> wrote:
 >
-> On Wed, Jan 22, 2025 at 2:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Mon, Jan 20, 2025 at 09:32:07AM -0800, Ian Rogers wrote:
-> > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT=
-,
-> > > support dlopen-ing libcapstone.so and then calling the necessary
-> > > functions by looking them up using dlsym. Reverse engineer the types
-> > > in the API using pahole, adding only what's used in the perf code or
-> > > necessary for the sake of struct size and alignment.
-> >
-> > I think reverse engineering the types is fragile.  Can we simply change
-> > to dlopen if libcapstone is available?
+> Add SSP register support.
 >
-> The current behavior is if HAVE_LIBCAPSTONE_SUPPORT then we will link
-> against libcapstone and can assume the header files are present.
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  tools/arch/x86/include/uapi/asm/perf_regs.h    | 4 +++-
+>  tools/perf/arch/x86/util/perf_regs.c           | 2 ++
+>  tools/perf/util/intel-pt.c                     | 2 +-
+>  tools/perf/util/perf-regs-arch/perf_regs_x86.c | 2 ++
+>  4 files changed, 8 insertions(+), 2 deletions(-)
 >
-> The reverse engineering of structs and constants I agree is brittle,
-> but these things shouldn't change, it is used in this code when the
-> capstone/capstone.h isn't present. If capstone/capstone.h is required
-> we could change the ifdefs to indicate:
-> 1) capstone is present and we're linking against it (this is
-> HAVE_LIBCAPSTONE_SUPPORT today);
-> 2) capstone is present but use it by way of dlopen;
-> 3) capstone isn't present don't #include, don't link and don't dlopen.
->
-> My thought was that this is less good than the reverse engineering.
-> (1) relies on the builder having libcapstone, which at build time is a
-> warning that flies by. (2) also relies on the builder having to have
-> libcapstone and to opt into a dlopen behavior, they'll need to read
-> Makefiles to discover this. (3) gives a less good perf tool with in
-> the source lots of __maybe_unused and ifdef-ed out functions all over
-> the place.
->
-> With the reverse engineered values if you have libcapstone then
-> HAVE_LIBCAPSTONE_SUPPORT works as before - no change. If you don't
-> then you will be opted into getting something better than objdump -
-> albeit it could break if the reverse engineered values drift from
-> those in capstone/capstone.h. Less build options also is less
-> complexity and cleaner code.
+> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86=
+/include/uapi/asm/perf_regs.h
+> index 7c9d2bb3833b..158e353070c3 100644
+> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
+> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+> @@ -27,9 +27,11 @@ enum perf_event_x86_regs {
+>         PERF_REG_X86_R13,
+>         PERF_REG_X86_R14,
+>         PERF_REG_X86_R15,
+> +       PERF_REG_X86_SSP,
 
-To be clear, if the header file values/structs drift then libcapstone
-will need to version values/structs, we'll need to update the perf
-code to use these, etc. Otherwise a tool linked against an older
-libcapstone will break when libcapstone is updated. The code handling
-not having any libcapstone, dlopen-ed or not, would be significant as
-every static function will need an #ifdef to avoid a not used warning,
-every parameter will need a __maybe_unused and the overall code
-quality in perf will be worse imo because of this. The no libcapstone
-default when not detected would be crappy for users. The values/types
-added here are fewer than 20, and so are not a huge maintenance
-burden. I did a similar thing for the LLVM C++ symbolizer code and its
-maintenance would have been a burden and so abandoned it in the
-llvm-c-helpers case that mainly affects addr2line and not disassembly.
-Hopefully later LLVM C APIs will make this unnecessary.
+nit: Would it be worth a comment here? SSP may not be apparent to
+everyone. Perhaps something like:
+```
+/* Shadow stack pointer (SSP) present on Clearwater Forest and newer models=
+. */
+```
+>         /* These are the limits for the GPRs. */
+>         PERF_REG_X86_32_MAX =3D PERF_REG_X86_GS + 1,
+> -       PERF_REG_X86_64_MAX =3D PERF_REG_X86_R15 + 1,
+> +       PERF_REG_X86_64_MAX =3D PERF_REG_X86_SSP + 1,
+> +       PERF_REG_INTEL_PT_MAX =3D PERF_REG_X86_R15 + 1,
 
-Anyway, because of this I won't be changing this in later versions. I
-will be carrying these changes in Google's tree and think ideally it
-would be carried in the regular tree.
+nit: It's a little peculiar to me the "+1" here - but that's
+pre-existing. Perhaps comments above here too:
+```
+/* The MAX_REG_X86_64 used generally, for PEBS, etc. */
+PERF_REG_X86_64_MAX =3D PERF_REG_X86_SSP + 1,
+/* The MAX_REG_INTEL_PT ignores the SSP register. */
+PERF_REG_INTEL_PT_MAX =3D PERF_REG_X86_R15 + 1,
+```
+Otherwise:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
+
+>
+>         /* These all need two bits set because they are 128bit */
+>         PERF_REG_X86_XMM0  =3D 32,
+> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/u=
+til/perf_regs.c
+> index 12fd93f04802..9f492568f3b4 100644
+> --- a/tools/perf/arch/x86/util/perf_regs.c
+> +++ b/tools/perf/arch/x86/util/perf_regs.c
+> @@ -36,6 +36,8 @@ static const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG(R14, PERF_REG_X86_R14),
+>         SMPL_REG(R15, PERF_REG_X86_R15),
+>  #endif
+> +       SMPL_REG(SSP, PERF_REG_X86_SSP),
+> +
+>         SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+>         SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+>         SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 30be6dfe09eb..86196275c1e7 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -2139,7 +2139,7 @@ static u64 *intel_pt_add_gp_regs(struct regs_dump *=
+intr_regs, u64 *pos,
+>         u32 bit;
+>         int i;
+>
+> -       for (i =3D 0, bit =3D 1; i < PERF_REG_X86_64_MAX; i++, bit <<=3D =
+1) {
+> +       for (i =3D 0, bit =3D 1; i < PERF_REG_INTEL_PT_MAX; i++, bit <<=
+=3D 1) {
+>                 /* Get the PEBS gp_regs array index */
+>                 int n =3D pebs_gp_regs[i] - 1;
+>
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/=
+util/perf-regs-arch/perf_regs_x86.c
+> index 708954a9d35d..9a909f02bc04 100644
+> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> @@ -54,6 +54,8 @@ const char *__perf_reg_name_x86(int id)
+>                 return "R14";
+>         case PERF_REG_X86_R15:
+>                 return "R15";
+> +       case PERF_REG_X86_SSP:
+> +               return "ssp";
+>
+>  #define XMM(x) \
+>         case PERF_REG_X86_XMM ## x:     \
+> --
+> 2.40.1
+>
