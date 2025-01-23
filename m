@@ -1,36 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460AC15625A;
-	Thu, 23 Jan 2025 18:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEA62F3B;
+	Thu, 23 Jan 2025 18:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737657788; cv=none; b=iFdssDsmOdiKkWhuPwwxsOQPbyo5+nyS3y0zsycz3lFk/ySPlQVtD7MzWsQmRGnBCXAYmpt7tXW1KZEJ+3u4z9yELH1aeQl/ksRtXkX9dkwCuSOcQwC5q0AkwEFq+tqJ984wuK5+77vwayK2e13M9CHwAnEA9DhzJg2OQwCn9xI=
+	t=1737657939; cv=none; b=lxgXaRmjvnCVhtGpRapis7p+qfYZKVGxMVk965SWsr6L/ICvFDwGYbNx8I4pyVwRbJSMO8nZ4hb6LWDlhYPM4aUfgU52r3aVwg979pWDa2o2A4BfNoWJUe8OODC4OFIWURLpUDIZpAWQtwosNOiwP6NBBs9eyiIW/SApKlTjGb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737657788; c=relaxed/simple;
-	bh=1I1Qzg0rVDit+pAFlgUmK98i+dbpD8zLzGhP3sQKtN0=;
+	s=arc-20240116; t=1737657939; c=relaxed/simple;
+	bh=/hzZPwGynrYSsJ+Bya58z3KDQHJTOwtaPmGbJDf7sDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQyIyOCh9F96DEqhuD70oTRmGSKMaCad+g7K1xl8/ymqEsEHgMk6uFwIGM+RhTXJGwj/8Sm8aBkwnCGjcpRBBQAv3Ej654dSjOV4wNNmXkOiP0IkWXxfs4/Wb2zM1xOJAru+/1AsExdUMAu2vBI0HgnGJ8lB4FwFJyUR6RB/vJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrvkkXsO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZT2NxcyV8AumU5CTxksi+MzOG7saHdLdXpfDm1w3BZe9vaH0/dYjJ8tiljlqJLqjEcdBbvTe3vQRaED0U9eTRPDJ5eb9SCueR5lcFMMrwa6TyQeloQyHxlsmU9xG+DAmeLq1899UyNz85D6EUfDPP0GNZ9rJc80kR9jx1bkGkfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+1SPXdB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrvkkXsO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D567C4CED3;
-	Thu, 23 Jan 2025 18:43:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+1SPXdB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E935FC4CEDF;
+	Thu, 23 Jan 2025 18:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737657787;
-	bh=1I1Qzg0rVDit+pAFlgUmK98i+dbpD8zLzGhP3sQKtN0=;
+	s=k20201202; t=1737657938;
+	bh=/hzZPwGynrYSsJ+Bya58z3KDQHJTOwtaPmGbJDf7sDk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PrvkkXsORV83sNa20ViH7QzcrNhZXTMYnW4wr82a1CjV0xZ1cFV2cgAqMhwSPCgEo
-	 EeYEWsajJL3kl3hEIlhW+/7sKtecasDgZwtCH31TrnG1Fwiti03R/3pGcASTq4MZee
-	 uhfqZ+73njuqhylwA6SX7xMyIxdZ4FMrU9RNGNMXImFeYNLpoqMfxi6WxxbVKqGPEh
-	 KtlXc/Fxf5AVPE+jyBdQNzHJ6WooXSnFOxkQPB9izRAZJhJkAPbzt0u+58E2ri9N+y
-	 RRRCDwdt5kgWWxAThYWiZwb7GfOYheQJA52a37I03l2D20wPl/kHdEp0Dm1Oxdkc68
-	 ggTI5aHzyx7GA==
-Date: Thu, 23 Jan 2025 10:43:05 -0800
+	b=r+1SPXdBSZuJAljXTJCMFDISzXCpnse7SDSnYEyVOQlZ5X3Tj0sDby58uuSN0U3Az
+	 CfEWZE/0jlajncdVQlqWBKFr2H/NBssNIk7cfNCuSnARH7VzMsRw2rfbLgn6cRNyf2
+	 OnJBWFhIFVDM/PmqJ+Q7dzk0bQIh1/ygAyD7yh6bwG58Lm/O5Gr8pFuvDbuYy3TbOe
+	 BoVwMz6ppe1mHP2f9N3iQC9edZ8BgJfnRKn6FR/UfDOdk+edL3MEv+PixIgV5ipfp5
+	 a4z4VifQtY79NBszPBvqF4cpp/MoeMcMQidHD7mVz4gPIUJzX7brufBcXS9WM3qLIx
+	 YMUgSHSbIGFEg==
+Date: Thu, 23 Jan 2025 10:45:35 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
@@ -44,18 +43,18 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
 	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
 	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250123184305.rjuxj7hs3ond3e7c@jpoimboe>
+Subject: Re: [PATCH v4 29/39] unwind_user/deferred: Add unwind cache
+Message-ID: <20250123184535.hymskoka5e73ufwv@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
- <e92fc832-ef46-4863-9316-24f30d8d82fd@efficios.com>
- <20250123040533.e7guez5drz7mk6es@jpoimboe>
- <20250123082534.GD3808@noisy.programming.kicks-ass.net>
+ <51855c0902486060cd6e1ccc6b22fd092a2e676d.1737511963.git.jpoimboe@kernel.org>
+ <20250122135700.GS7145@noisy.programming.kicks-ass.net>
+ <20250122223625.aibbrh43pjkzve6c@jpoimboe>
+ <20250123083131.GE3808@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,44 +63,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250123082534.GD3808@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250123083131.GE3808@noisy.programming.kicks-ass.net>
 
-On Thu, Jan 23, 2025 at 09:25:34AM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 22, 2025 at 08:05:33PM -0800, Josh Poimboeuf wrote:
+On Thu, Jan 23, 2025 at 09:31:31AM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 22, 2025 at 02:36:25PM -0800, Josh Poimboeuf wrote:
+> > On Wed, Jan 22, 2025 at 02:57:00PM +0100, Peter Zijlstra wrote:
+> > > On Tue, Jan 21, 2025 at 06:31:21PM -0800, Josh Poimboeuf wrote:
+> > But if the NMI happens late in the exit-to-user path, with IRQs
+> > disabled, right before nr_entries gets cleared, the cache won't get
+> > used in the task work.
+> > 
+> > However I think we can clear it on entry-from-user.
 > 
-> > However... would it be a horrible idea for 'next' to unwind 'prev' after
-> > the context switch???
+> Return to user runs with interrupts disabled, if an NMI hits that, it
+> will have to set TIF_NOTIFY_RESUME again and queue the IRQ work thing.
+> That self-IPI will hit the moment we do IRET (which is what re-enables
+> interrupts) and we're going back into the kernel.
 > 
-> The idea isn't terrible, but it will be all sorta of tricky.
-> 
-> The big immediate problem is that the CPU doing the context switch
-> looses control over prev at:
-> 
->   __schedule()
->     context_switch()
->       finish_task_switch()
->         finish_task()
-> 	  smp_store_release(&prev->on_cpu, 0);
-> 
-> And this is before we drop rq->lock.
-> 
-> The instruction after that store another CPU is free to claim the task
-> and run with it. Notably, another CPU might already be spin waiting on
-> that state, trying to wake the task back up.
-> 
-> By the time we get to a schedulable context, @prev is completely out of
-> bounds.
+> Anyway, I suppose that is a long way of saying that you should be able
+> to do this on return to user.
 
-Could unwind_deferred_request() call migrate_disable() or so?
-
-How bad would it be to set some bit in @prev to prevent it from getting
-rescheduled until the unwind from @next has been done?  Unfortunately
-two tasks would be blocked on the unwind instead of one.
-
-BTW, this might be useful for another reason.  In Steve's sframe meeting
-yesterday there was some talk of BPF needing to unwind from
-sched-switch, without having to wait indefinitely for @prev to get
-rescheduled and return to user.
+Indeed, I knew that but somehow overlooked the fact that the IRQ would
+clear the cookie so the cache wouldn't be usable anyway.
 
 -- 
 Josh
