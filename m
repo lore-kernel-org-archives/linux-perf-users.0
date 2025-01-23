@@ -1,220 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58271D5AB9;
-	Thu, 23 Jan 2025 23:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008151D432D
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 23:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737675290; cv=none; b=RfkhhVhEONsXRFr7+C2Y2HCDzyipAcZ3irzCRLf8awQXhQjl8kVrjPA1hMfgPP2LvAWuWpTppmx09OKyrxxAJUM++mBfs6oLvX70NOpZSBkd8GSxPsmW2oOwGkD0OFTPubcouZ/DReGvWS+3z+a4+EqW+CBl96PIedBT2uvjjyc=
+	t=1737675388; cv=none; b=I6YN0w3MzkWia/NFJwlEMXiOV6SitYwGpx1JbaYaPi+DXg9CAsnwdU2TiOm3bHyua627nIWTuXNbCQCjFyjs58U8gp6bAKTrFyzj8QGt2NTy6z8qniw/DHxF6jCExlNBQ5rrWMQ5zq4lD+xaqnGoTMpo4Zz78DETy2GRaf334SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737675290; c=relaxed/simple;
-	bh=PwxjONB++A+9wM5woTms13h00oSvubWGRcBIudfuow8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B4G9A7Nq5wflQLoqYgQtIrcE8Lu2MFwqfAswPOsddRr44uJ7jrPuChnwN888+09fQMhef7QrrPMDWoXB/AfbtsQATzpJIT/aEfEm9NBm04HwO8xqdn8YEOAbkKC2dn2dllmX8zy+v0r2OwLkdkwxY7BykJVA6NXdm/OTThDpG6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGZ4PHYh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737675388; c=relaxed/simple;
+	bh=mX+bhjaU4+tyU0YNDvGKwPHDqYwLaTa0D1aykgl1osM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XLN+6IIfhnPrRqnbDjtpWY5eD/ikx9czKA1t/Is90fmc32+GfcINuLBRavaEc2cx+7JMe1v0D58OXVklRdPs8MEiuht7AhHtnorTiDRoNO60xCGXGdECAwb9Dntkq60OXBdY6z2JCc/r0QteZP+t2ZzrzoepWdc4h9KnbmlsIU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vwpz1Nsu; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGZ4PHYh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22892C4AF0B;
-	Thu, 23 Jan 2025 23:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737675289;
-	bh=PwxjONB++A+9wM5woTms13h00oSvubWGRcBIudfuow8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kGZ4PHYh+Tdi0o+AoPRmHCBsioNMnyuQUFW1Su2ObDlHhkF+NjsEpfTuUbXLvX+Ie
-	 Tz3ke/4RcppqbHQmwlpN/SImApQkvIGKP8VoACxGvr3BPVQ1QPloJq/tl7wsCYbSRU
-	 NJtBe3TgSJ1FpJbF2mRfJcpM9Ym/bv6XF0jJFTcOpTRgZ8GAmWKUpaY/qVt6ut7m4S
-	 /rlmEWRHcLiQI92cJ1CIqw32ZitWM3G93rtml+hh16tOoTMo4gcsZPeNimRqgk5xky
-	 eiP/R/wED2QU8IiknR+WCZhzgTU6hyAssmoVMIz6e9Q+sP2lnHGC+VD2N5MlhHE/1O
-	 jREqLXT7Uldgg==
-Date: Thu, 23 Jan 2025 15:34:46 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Stephane Eranian <eranian@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	chu howard <howardchu95@gmail.com>
-Subject: Re: Off-CPU sampling (was perf report: Add wall-clock and
- parallelism profiling)
-Message-ID: <Z5LSFmM64tFPj-Vz@google.com>
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com>
- <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
- <CAP-5=fWHivx7Q6okMwYOs=65MZr40RjE16tgatMX0hjkCfrwfw@mail.gmail.com>
- <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com>
- <Z4lWDPpmdQDM1k6l@google.com>
- <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vwpz1Nsu"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so37745ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 15:36:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737675386; x=1738280186; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sQWIJTKgmSuU/0hLaYv81afc36/rsOvr4FPywbIsP+o=;
+        b=vwpz1Nsu80m6Ip11ikiQSBihMVc2uSlOc+ZsdXtXgxWmGl+s0uW0ptixK0qjOX+ogS
+         8p8NaWkR03BKcU1gl8eFRTr5+qVZpFHiFRsoe1BKxuEHqVnQwWcJxt+dMg4p0lNddJKw
+         CbD4aI8IOEu/7Tbq188OIKR7dloIUX+4PDOJ88mC1nTQA/r06G3xi2ado7Lf2OuToqDU
+         N7/p61dEvGi89czi8ynm4yzq0gEmH9Xe2JLGAOWZQzpPsZWAp1JtJhGyPZFcxMu+GawD
+         1qfDIkE6Htmg+xo7YV3oSXyYOuOAOahMM/p4tO0SzpGjXsAWdbQwDY6Gj6w6bvh/1h+s
+         AkGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737675386; x=1738280186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sQWIJTKgmSuU/0hLaYv81afc36/rsOvr4FPywbIsP+o=;
+        b=WRZk7Ved2Knh3sALcVKbzcsElUOU+k+oJcMc0zrkh+qcqRiBtAO5hJPiQ072N275Ih
+         G+UGeTCACwugUJxxbaaWGXvDQAAGUF7ghNJ6J1in7vo2nFtlvDUszFAKHzdIRtiB5FhJ
+         C/9C8w9dqnTGIz3FRSIZi7cqgKVvEr3eZky4HexoLnUJkDZHOk2iCjZDKVrVkPjnMPkl
+         NlKaGiagJ4a9r3O/erDgAZHolZv7X542szva9QfHOrW60UzFzD9ooplZiww4PHLzmLcg
+         YVny2f9Uh8rPSj/plpXQGKS2GyT9u/KcBWO93fdcvxQ86GgGyfK9faPaLluKpXDVWCsh
+         rn8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0yHbw+nt6kg7kP1YpFCwd9rNnmyfx2/9HF3HCIgz6JCa0BqYDJysJnH8cySuLZ0ISaobWrNgXXVcE6KH0RmB2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7F9LwUg+qjL2f4NdMnsppjXGTClPJi7aNJT54ZvIrSyHHTRZf
+	2cLctgsNQRXBGLKiYErqjT1PfJ4MxKj1FOFnyY4BbERJIbFouKEEhOqPRb5OQrpT6kNSwBOwn/J
+	KlrKLDzIc5CTDJw7GN57tHFyU2y66CTzzlaTM
+X-Gm-Gg: ASbGncsOgxoQ8BSSCCMqzjlh/yDuPhyLefThszy/jPH6vsZYiO4mxyCKlU3vqKpOaCY
+	aCWYLcBGa3E0mYvHz7oqM9uub8aAsadBDM9M7q8keGE/x2kK5neWzRumFR+E47sSXPqMLdc7tXF
+	oYhcdh80F6PykuwA==
+X-Google-Smtp-Source: AGHT+IFFEHA8S7Jm/MSuIYwTx+AWwwIIWpO6M06a1I7jCX8Tk9g/h+72gUDoKNlt1oo07ukMe4cZ1nUCIWXHOq77Hk4=
+X-Received: by 2002:a05:6e02:2685:b0:3a7:683e:2fb0 with SMTP id
+ e9e14a558f8ab-3cfbc90ccc7mr6269445ab.6.1737675385869; Thu, 23 Jan 2025
+ 15:36:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
+References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
+In-Reply-To: <Z5K712McgLXkN6aR@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 23 Jan 2025 15:36:14 -0800
+X-Gm-Features: AWEUYZlsArDtt5C7cJjJiyeindS8a6XImZjqfVccO_XajuQQ3sp6lx_PcTyJvBY
+Message-ID: <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 19, 2025 at 12:08:36PM +0100, Dmitry Vyukov wrote:
-> On Thu, 16 Jan 2025 at 19:55, Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Jan 23, 2025 at 1:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Jan 21, 2025 at 10:23:15PM -0800, Ian Rogers wrote:
+> > Linking against libcapstone and libLLVM can be a significant increase
+> > in dependencies and size of memory footprint. For something like `perf
+> > record` the disassembler and addr2line functionality won't be
+> > used. Support dynamically loading these libraries using dlopen and
+> > then calling the appropriate functions found using dlsym.
+>
+> It's not clear from the description how you would use dlopen/dlsym.
+> Based on an offline discussion, you want to leave the current linking
+> model as is, and to support dlopen/dlsym when it's NOT detected at
+> build-time, right?
+
+Yep. Current behavior is no header file than these options fail, new
+behavior is that we try to use dlopen/dlsym and fail if the dlopen
+fails.
+
+> For that, you need to carry some definitions of the functions and types
+> for the used APIs.  But I'm not sure if it's right to carry them in the
+> perf code base.
+
+Right. I mention that here:
+https://lore.kernel.org/lkml/CAP-5=3DfUhNuybCU-2_5EgcCwgwXnxvyFMvyhzKe=3DZP=
+1bssQwXHw@mail.gmail.com/
+For LLVM we need 3 typedefs and 5 #defines, for capstone we need 2
+structs and 5 enums (if we #ifdef some x86 only formatting code).
+
+The problem in not carrying those definitions is:
+1) if the header file isn't present a build won't support
+LLVM/capstone even by dlopen - everything falls through to
+objdump/addr2line that have known performance issues;
+2) package maintainers either need to spot a warning message to
+realize they've done this by having a missing header file (hard to
+spot and brittle) or we require the build to fail and people without
+capstone.h opt out of the build error with NO_CAPSTONE=3D1 - something
+perf developers will probably not like;
+3) the LLVM/capstone code needs #ifdefs and __maybe_unused to suppress
+compiler warnings, or perhaps we have a minimal version of those
+files, leading to extra code complexity.
+
+I believe the approach here is no worse than what we do with vmlinux.h
+for BPF code and is robust as depending on dlsym being able to look up
+the function names. It is not perfect but I think it is more perfect
+and less complex than the alternative.
+
 > >
-> > On Wed, Jan 15, 2025 at 08:11:51AM +0100, Dmitry Vyukov wrote:
-> > > On Wed, 15 Jan 2025 at 06:59, Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Tue, Jan 14, 2025 at 12:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > > [snip]
-> > > > > FWIW I've also considered and started implementing a different
-> > > > > approach where the kernel would count parallelism level for each
-> > > > > context and write it out with samples:
-> > > > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
-> > > > > Then sched_in/out would need to do atomic inc/dec on a global counter.
-> > > > > Not sure how hard it is to make all corner cases work there, I dropped
-> > > > > it half way b/c the perf record post-processing looked like a better
-> > > > > approach.
-> > > >
-> > > > Nice. Just to focus on this point and go off on something of a
-> > > > tangent. I worry a little about perf_event_sample_format where we've
-> > > > used 25 out of the 64 bits of sample_type. Perhaps there will be a
-> > > > sample_type2 in the future. For the code and data page size it seems
-> > > > the same information could come from mmap events. You have a similar
-> > > > issue. I was thinking of another similar issue, adding information
-> > > > about the number of dirty pages in a VMA. I wonder if there is a
-> > > > better way to organize these things, rather than just keep using up
-> > > > bits in the perf_event_sample_format. For example, we could have a
-> > > > code page size software event that when in a leader sampling group
-> > > > with a hardware event with a sample IP provides the code page size
-> > > > information of the leader event's sample IP. We have loads of space in
-> > > > the types and config values to have an endless number of such events
-> > > > and maybe the value could be generated by a BPF program for yet more
-> > > > flexibility. What these events would mean without a leader sample
-> > > > event I'm not sure.
-> > >
-> > > In the end I did not go with adding parallelism to each sample (this
-> > > is purely perf report change), so at least for this patch this is very
-> > > tangential :)
-> > >
-> > > > Wrt wall clock time, Howard Chu has done some work advancing off-CPU
-> > > > sampling. Wall clock time being off CPU plus on CPU. We need to do
-> > > > something to move forward the default flags/options for perf record,
-> > > > for example, we don't enable build ID mmap events by default causing
-> > > > the whole perf.data file to be scanned looking to add build ID events
-> > > > for the dsos with samples in them. One option that could be a default
-> > > > could be off-CPU profiling, and when permissions deny the BPF approach
-> > > > we can fallback on using events. If these events are there by default
-> > > > then it makes sense to hook them up in perf report.
-> > >
-> > > Interesting. Do you mean "IO" by "off-CPU".
-> > > Yes, if a program was blocked for IO for 10 seconds (no CPU work),
-> > > then that obviously contributes to latency, but won't be in this
-> > > profile. Though, it still works well for a large number of important
-> > > cases (e.g. builds, ML inference, server request handling are
-> > > frequently not IO bound).
-> > >
-> > > I was thinking how IO can be accounted for in the wall-clock profile.
-> > > Since we have SWITCH OUT events (and they already include preemption
-> > > bit), we do have info to account for blocked threads. But it gets
-> > > somewhat complex and has to make some hypotheses b/c not all blocked
-> > > threads contribute to latency (e.g. blocked watchdog thread). So I
-> > > left it out for now.
-> > >
-> > > The idea was as follows.
-> > > We know a set of threads blocked at any point in time (switched out,
-> > > but not preempted).
-> > > We hypothesise that each of these could equally improve CPU load to
-> > > max if/when unblocked.
-> > > We inject synthetic samples in a leaf "IO wait" symbol with the weight
-> > > according to the hypothesis. I think these events can be  injected
-> > > before each switch in event only (which changes the set of blocked
-> > > threads).
-> > >
-> > > Namely:
-> > > If CPU load is already at max (parallelism == num cpus), we don't
-> > > inject any IO wait events.
-> > > If the number of blocked threads is 0, we don't inject any IO wait events.
-> > > If there are C idle CPUs and B blocked threads, we inject IO wait
-> > > events with weight C/B for each of them.
+> > BUILD_NONDISTRO is used to build perf against the license incompatible
+> > libbfd and libiberty libraries. As this has been opt-in for nearly 2
+> > years, commit dd317df07207 ("perf build: Make binutil libraries opt
+> > in"), remove the code to simplify the code base.
+>
+> This part can be a separate series.
+
+Right, I posted it as a series here:
+https://lore.kernel.org/lkml/20250111202851.1075338-1-irogers@google.com/
+as mentioned in the v2 notes below. The issue was that Arnaldo pointed
+out removing BUILD_NONDISTRO removed disassemble_bpf that had only
+been implemented for libbfd. This series adds the LLVM/capstone
+definitions built into the symbol__disassemble refactor. Merging that
+series would conflict with this series, so I posted everything
+together to avoid having series of patches depending upon one another.
+I also wanted to check that what is in disasm.c in the end is
+reasonable, which I believe it is with significantly reduced
+ifdef-ery.
+
 > >
-> > To track idle CPUs, you need sched-switch of all CPUs regardless of your
-> > workload, right?  Also I'm not sure when do you want to inject the IO
-> > wait events - when a thread is sched-out without preemption?  And what
-> > would be the weight?  I guess you want something like:
-> >
-> >   blocked time * C / B
-> >
-> > Then C and B can change before the thread is woken up.
-> 
-> Yes, these events need to be emitted on every switch-in/out in the
-> trace so that a long blocked thread gets multiple events with
-> different weights.
-
-Ok.
-
-> 
-> > > For example, if there is a single blocked thread, then we hypothesise
-> > > that this blocked thread is the root cause of all currently idle CPUs
-> > > being idle.
-> >
-> > I think this may make sense when you target a single process group but
-> > it also needs system-wide idle information.
-> 
-> I assumed this profiling is done on a mostly idle system (generally
-> it's a good idea for any profiling).
-> 
-> Theoretically, we could look at runnable threads rather than running.
-> If there are NumCPU runnable threads, then creating more runnable
-> threads won't help.
-
-But it'd need to look at the state of the previous (sched-out) task in
-sched_switch event which is a lot bigger.
-
-> 
-> > > This still has a problem of saying that unrelated threads contribute
-> > > to latency, but at least it's a simple/explainable model and it should
-> > > show guilty threads as well. Maybe unrelated threads can be filtered
-> > > by the user by specifying a set of symbols in stacks of unrelated
-> > > threads.
-> >
-> > Or by task name.
-> >
-> > >
-> > > Does it make any sense? Do you have anything better?
-> >
-> > I'm not sure if it's right to use idle state which will be affected by
-> > unrelated processes.  Maybe it's good for system-wide profiling.
-> >
-> > For a process (group) profiliing, I think you need to consider number of
-> > total threads, active threads, and CPUs.  And if the #active-threads is
-> > less than min(#total-threads, #CPUs), then it could be considered as
-> > idle from the workload's perspective.
-> >
-> > What do you think?
-> 
-> I don't know, hard to say. I see what you mean, but this makes the
-> problem even harder, and potentially breaking hypotheses we are
-> making.
-> For example, if we have 2 unrelated workloads A and B running on the
-> machine. Their high- and low-parallelism phases will overlap randomly,
-> and we will make conclusions from that, but these overlapping are
-> really random and may not hold next time. Or next time A may be
-> collocated with C.
-
-Hmm.. but isn't it the same when you use idle state?  CPUs can go idle
-randomly because of other workload IMHO.
-
-> 
-> I would solve the simpler problem of profiling a single workload on a
-> mostly idle system first, and only then move to the harder case.
-
-I agree with you to start with the simpler one.  I need to check the
-code how you checked the idle state.
-
-
-> Are you considering this for GWP-type profiling?
-
-No, I'm not (for now).
+> > The patch series:
+> > 1) does some initial clean up;
+> > 2) moves the capstone and LLVM code to their own C files,
+> > 3) simplifies a little the capstone code;
+>
+> I like changes up to this in general.  Let me take a look at the
+> patches.
 
 Thanks,
-Namhyung
+Ian
+Ian
 
+> Thanks,
+> Namhyung
