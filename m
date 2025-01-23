@@ -1,190 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57671BDAB5;
-	Thu, 23 Jan 2025 23:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62B21D5AD4
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 23:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676434; cv=none; b=WHzkH8DpS4F0EOKATsvWr+6NM5xaGJiTqZd5orC/gcn3n6nJqdsH9+A9hrAutjUcQSNG8k7m8XDieyyY1kq5DSNo2FnAPd9QCRY2TFP366scXxLWOI11Ks78epqvgOJmRaGB7RB3pbN0qKoddCgvMmLLYXIoos7pKPx7LI4dNnE=
+	t=1737676545; cv=none; b=tR2q9gwt+g9CHIpPDSAyDI/uQ34cwNukR+x2J33BXF+rqI5NJCots/Q8FSD/+Pt+lBfwAkTjbJkudNV8tIIMZ8dEYjd8NmIxTHFrd6QOntydzymQl3YUUFJqJHXSttS64Da1RUvib2LKTeEoZGGZfELbVfaE+zSTZACrKcu6qis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676434; c=relaxed/simple;
-	bh=q+SAH+rFRx+dqlUSB16kyjIJPu8SXZPRZGZ/Bq/BcPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h71wBK7JDaB/NeQddIF2EWTXkyGh6KFZ6oWEMHNEHcZSqIN59k0JoKRGMR3T4UzHe61ufu5ZxX6BhM+tx3NESyiYTDZGFHinNtIG70qJgGeGpTM4j6IDN2dC4hgea+AxIOmMUYPeRXnzWojZ+Lv8j0ZhrKa5mNKwFsG2gfQYBAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjrVQEM5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737676545; c=relaxed/simple;
+	bh=v0FggTfs25V/GAY+T15aZ5RkSzmN+aC2OxF418iX4Oo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n5oLzck5hOBBxB/SH5BLnEYEHJD9KXOy9cZJZLGhkuVFlJKYb/b7LF6LK0apv2RNrh+00ieXOsjkuVfiq7kiaRss9qG/FdHXFT2QsjFCVDeCw3L40tSh/OUdgKTWzBlSc3tBFLP0n84frQN+8CoeEK7OPoHvQZi3akfSIGv1X6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yhu3qTUe; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjrVQEM5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E06C4CED3;
-	Thu, 23 Jan 2025 23:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737676434;
-	bh=q+SAH+rFRx+dqlUSB16kyjIJPu8SXZPRZGZ/Bq/BcPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tjrVQEM5qvfp+MhVJd6uTEiLNLLrBWEmEuFMUC1oyoBfOUEqlrBSeuXpLei5Wm0RP
-	 pS8Qh/bFCbcJEDEK51UyiwWMCy4V7JVrmbQbIuRQTGf+JMPnfZ51IHvDw/HWZNePIR
-	 V/pG9IiShWl1YxAANv60ltqntjZKIeIaAvFDWauTQlRqi083wWg3FZYAZ8SFUyZmFd
-	 K0L7F9gSLz7G7ejUHbmdO/frVlZCt/5OzCy94X0RKj+AyXlXwiZVlqQMSpBORL1fIu
-	 vdv/ptM3s9it3UDeJp+FZfOje70TJR65U8yNMfYvhYrCBX7PvGVOHkgE9nQmYgwTIm
-	 w3166ocYE1Bog==
-Date: Thu, 23 Jan 2025 15:53:52 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
- trace
-Message-ID: <Z5LWkMPTu6mUtdJ-@google.com>
-References: <20241215190712.787847-1-howardchu95@gmail.com>
- <Z2CGdi5xpJy6C6sv@google.com>
- <Z2mzzytPOpjF0Hxe@x1>
- <Z2m8qzyLdm1BEYuF@x1>
- <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
- <Z4U343yQUDF3H7qs@x1>
- <Z4vyvNChyXZx33xf@google.com>
- <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yhu3qTUe"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5d3e638e1b4so1412a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 15:55:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737676542; x=1738281342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z9Ragv1x82SwxtUpkVXr3TYFZXEnZuc/EWqFgnlmJDc=;
+        b=Yhu3qTUePzeBcY3fMbOsBt4j2R2Pgeyz6sDyaDJ4iUaRQeGEw/bZ88CsmiwTt3gVoS
+         hzKMtwFLQwb/uhzAECFSlwiTZKSt8Hxa1934cIM2Hzz0uUGP4viOd0K1E/tyVKHEtj77
+         E/2zrU5x8wAFWlNYT46Tl45LvE/HQy9PARLITQtdfTqLP9Cg2o0uXQyO1bo0AAqxjnZ0
+         dOFbbE860vLCm98vb6lig2rlernr9cLFlim2OgOYJbfZr4nyDug08KN2BVm4zjJW2wmW
+         j/JkBuxgbbKTHMugT2aes9+LR84NXNPellHds80Rw1Hm9Z35XFmjeCKAL+psNgjBJfR8
+         wxlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737676542; x=1738281342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z9Ragv1x82SwxtUpkVXr3TYFZXEnZuc/EWqFgnlmJDc=;
+        b=vWdLbsDqw+yjAZlYp/4xMApGMNPO7pM7UMqVpuzRyzTi9hB1oogyz4GqvZudBxi61G
+         xAZJKEo0EdC6Cly4NTpjUzYKjsw0buUwVyRu98Y5O9Z1oMsQAScmKRMyCmfcJVcvlrUM
+         k95wu5VmTx6hWxOsNcBuhvBB8Jq7aVf9B6dLDReKHQKjaB6D2oMj0SmAYEMhhkG+rJaZ
+         iXCWjgmyBgR3O5Z6x7oj1tIWvI6TPZF1y8Mk5/n3RTUDY550Mogbkw+4P8SucaDPpmjU
+         6eHzZkVaqA0E9xR8/u6B1/1PmcSK9aVfVqGVerQjb1vD+1LK6x94VNcxHLUGHbwaPrq7
+         jWqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXzqFUJw/PyIaJsUGMpgilBrEE6JiqNBAZO1XHZ103j05qme5x5LKERPHY3aDzfgFpDmzQxdZOmD+eiDTR21ZU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWjHlAfuVhC3aEPHMeEbUdzYaAtKtd8UAP80qYZbtBZB3w0j/8
+	5LhCVfV2kC24li2+QW85Y4Fui/E9jdVWdfzJOI57qjEZ+NT1VTTTJ8Xj8bNlvJwT5J1GKjZKMmO
+	OSSz3FOR0wOfD3xfMaJnR8titJNmYKNMc1tUv
+X-Gm-Gg: ASbGncuWymGmnRl2rzp0rXNApBxsmsNeiuDL6hzc6YRSYY/njbcJwSX8LI01wOacHOZ
+	0fE0zCa24aHai2AnbZ/Z0AMu1fzJM1ovlw74wA91fGBIP1Ta508dnOrKtrRclvDFOesELxiUn2W
+	mMNrcpIqGumIEe
+X-Google-Smtp-Source: AGHT+IFGTCYC1Urp8sKTGkSi5p5S/Fc8SFTFb532XbOtDnLlTcDCvS5l/1/sYkHDNjZYgiEvQM+eMoDylP2iU6QViPQ=
+X-Received: by 2002:a50:9b0e:0:b0:5db:e8ed:5741 with SMTP id
+ 4fb4d7f45d1cf-5dc0c9ed5fcmr146053a12.7.1737676541342; Thu, 23 Jan 2025
+ 15:55:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
+References: <20250123214342.4145818-1-andrii@kernel.org> <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
+ <202501231526.A3C13EC5@keescook>
+In-Reply-To: <202501231526.A3C13EC5@keescook>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 24 Jan 2025 00:55:05 +0100
+X-Gm-Features: AWEUYZkNff3Q26T9o9EX_TQ_KWMgeFo0Eqakd0uRwk5keM2gA1CnvXc-g9_3J_s
+Message-ID: <CAG48ez1TXEJH3mFmm-QZbbmr_YupnoLA0WQx6WgxKQSHP3jPSA@mail.gmail.com>
+Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under CAP_PERFMON
+To: Kees Cook <kees@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	kernel-team@meta.com, rostedt@goodmis.org, peterz@infradead.org, 
+	mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, 
+	liam.howlett@oracle.com, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 21, 2025 at 04:19:35PM -0800, Howard Chu wrote:
-> Hello Namhyung,
-> 
-> On Sat, Jan 18, 2025 at 10:28 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Jan 13, 2025 at 12:57:23PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Fri, Jan 10, 2025 at 04:52:08PM -0800, Howard Chu wrote:
-> > > > Hello Arnaldo,
-> > > >
-> > > > On Mon, Dec 23, 2024 at 11:40 AM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
-> > > > > > > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
-> > > > > > > > Changes in v4:
-> > > > > > > >  - Use if -f to check the existence of vmlinux BTF, and exit if it
-> > > > > > > >    doesn't, so trace_test_string will not overwrite $err, and keep
-> > > > > > > >    running the test.
-> > > > > > > >
-> > > > > > > > Changes in v3:
-> > > > > > > >  - Add vmlinux BTF check, and skip the tests if it doesn't exist
-> > > > > > > >
-> > > > > > > > v1, v2:
-> > > > > > > >
-> > > > > > > > The previous version of the perf trace BTF general augmentation tests
-> > > > > > > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
-> > > > > > > > <acme@kernel.org> for pointing this out), this version uses bash instead
-> > > > > > > > of POSIX shell to pass Shellcheck.
-> > > > > > > >
-> > > > > > > > This patch series also adds documentation for the new option
-> > > > > > > > --force-btf, which is used in the tests.
-> > > > > > > >
-> > > > > > > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
-> > > > > > > >
-> > > > > > > > Howard Chu (2):
-> > > > > > > >   perf trace: Add tests for BTF general augmentation
-> > > > > > > >   perf docs: Add documentation for --force-btf option
-> > > > > > >
-> > > > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > >
-> > > > > > Thanks, applied to perf-tools-next,
-> > > > >
-> > > > > It fails when running in parallel mode, sometimes:
-> > > > >
-> > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > >
-> > > > > Then:
-> > > > >
-> > > > > root@number:~# perf stat --null -r 10 perf test "BTF general"
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > >
-> > > > >  Performance counter stats for 'perf test BTF general' (10 runs):
-> > > > >
-> > > > >              2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
-> > > > >
-> > > > > root@number:~#
-> > > > >
-> > > > >
-> > > > > So its not just when running in paralell, anyway, its merged, we can go
-> > > > > on from what we got there.
-> > > >
-> > > > It never fails on my machine, I think the reason is my machine is not
-> > > > fully-loaded. Can you please run
-> > > > ```
-> > > > perf stat --null -r 10 perf test -vv "BTF general"
-> > > > ```
-> > > > And provide the output?
+On Fri, Jan 24, 2025 at 12:47=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Thu, Jan 23, 2025 at 01:52:52PM -0800, Suren Baghdasaryan wrote:
+> > On Thu, Jan 23, 2025 at 1:44=E2=80=AFPM Andrii Nakryiko <andrii@kernel.=
+org> wrote:
 > > >
-> > > root@number:~# grep -m1 'model name' /proc/cpuinfo
-> > > model name    : Intel(R) Core(TM) i7-14700K
-> > > root@number:~#
+> > > It's very common for various tracing and profiling toolis to need to
+> > > access /proc/PID/maps contents for stack symbolization needs to learn
+> > > which shared libraries are mapped in memory, at which file offset, et=
+c.
+> > > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless w=
+e
+> > > are looking at data for our own process, which is a trivial case not =
+too
+> > > relevant for profilers use cases).
 > > >
-> > > root@number:~# perf stat --null -r 10 perf test -vv "BTF general"
-> > > 106: perf trace BTF general tests:
-> > > --- start ---
-> > > test child forked, pid 47824
-> > > Checking if vmlinux BTF exists
-> > > Testing perf trace's string augmentation
-> > > String augmentation test failed
-> > > ---- end(-1) ----
-> > > 106: perf trace BTF general tests                                    : FAILED!
-> > > 106: perf trace BTF general tests:
-> > > --- start ---
-> > > test child forked, pid 47842
-> > > Checking if vmlinux BTF exists
-> > > Testing perf trace's string augmentation
-> > > String augmentation test failed
-> > > ---- end(-1) ----
-> > > 106: perf trace BTF general tests                                    : FAILED!
-> > > ...
+> > > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
+> > > discover memory layout of another process: it allows to fully control
+> > > arbitrary other processes. This is problematic from security POV for
+> > > applications that only need read-only /proc/PID/maps (and other simil=
+ar
+> > > read-only data) access, and in large production settings CAP_SYS_PTRA=
+CE
+> > > is frowned upon even for the system-wide profilers.
+> > >
+> > > On the other hand, it's already possible to access similar kind of
+> > > information (and more) with just CAP_PERFMON capability. E.g., settin=
+g
+> > > up PERF_RECORD_MMAP collection through perf_event_open() would give o=
+ne
+> > > similar information to what /proc/PID/maps provides.
+> > >
+> > > CAP_PERFMON, together with CAP_BPF, is already a very common combinat=
+ion
+> > > for system-wide profiling and observability application. As such, it'=
+s
+> > > reasonable and convenient to be able to access /proc/PID/maps with
+> > > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
+> > >
+> > > For procfs, these permissions are checked through common mm_access()
+> > > helper, and so we augment that with cap_perfmon() check *only* if
+> > > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't=
+ be
+> > > permitted by CAP_PERFMON.
+> > >
+> > > Besides procfs itself, mm_access() is used by process_madvise() and
+> > > process_vm_{readv,writev}() syscalls. The former one uses
+> > > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERF=
+MON
+> > > seems like a meaningful allowable capability as well.
+> > >
+> > > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level o=
+f
+> > > permissions (though for readv PTRACE_MODE_READ seems more reasonable,
+> > > but that's outside the scope of this change), and as such won't be
+> > > affected by this patch.
 > >
-> > I also see the failure on not fully-loaded machines (both Intel and
-> > AMD).
+> > CC'ing Jann and Kees.
 > >
-> >   $ sudo ./perf test -v BTF
-> >   --- start ---
-> >   test child forked, pid 525025
-> >   Checking if vmlinux BTF exists
-> >   Testing perf trace's string augmentation
-> >   String augmentation test failed
-> >   ---- end(-1) ----
-> >   106: perf trace BTF general tests                                    : FAILED!
-> >
-> > Thanks,
-> > Namhyung
-> >
-> 
-> Just wondering, did you and Arnaldo apply this patch:
-> https://lore.kernel.org/linux-perf-users/20241213023047.541218-1-howardchu95@gmail.com/
+> > >
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > > ---
+> > >  kernel/fork.c | 11 ++++++++++-
+> > >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index ded49f18cd95..c57cb3ad9931 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_stru=
+ct *task)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(get_task_mm);
+> > >
+> > > +static bool can_access_mm(struct mm_struct *mm, struct task_struct *=
+task, unsigned int mode)
+> > > +{
+> > > +       if (mm =3D=3D current->mm)
+> > > +               return true;
+> > > +       if ((mode & PTRACE_MODE_READ) && perfmon_capable())
+> > > +               return true;
+> > > +       return ptrace_may_access(task, mode);
+> > > +}
+>
+> nit: "may" tends to be used more than "can" for access check function nam=
+ing.
+>
+> So, this will bypass security_ptrace_access_check() within
+> ptrace_may_access(). CAP_PERFMON may be something LSMs want visibility
+> into.
+>
+> It also bypasses the dumpability check in __ptrace_may_access(). (Should
+> non-dumpability block visibility into "maps" under CAP_PERFMON?)
+>
+> This change provides read access for CAP_PERFMON to:
+>
+> /proc/$pid/maps
+> /proc/$pid/smaps
+> /proc/$pid/mem
+> /proc/$pid/environ
+> /proc/$pid/auxv
+> /proc/$pid/attr/*
+> /proc/$pid/smaps_rollup
+> /proc/$pid/pagemap
+>
+> /proc/$pid/mem access seems way out of bounds for CAP_PERFMON. environ
+> and auxv maybe too much also. The "attr" files seem iffy. pagemap may be
+> reasonable.
 
-I don't think we applied it, will add to perf-tools.
-
-> 
-> This seems to solve the problem for me...
-
-But I'm not sure if it fixes the problem.  IIUC the patch fixes the
-loading problem.  And for some reason, I don't see the problem any more.
-But I remember this sometimes happened in the past.
-
-Thanks,
-Namhyung
-
+FWIW, my understanding is that if you can use perf_event_open() on a
+process, you can also grab large amounts of stack memory contents from
+that process via PERF_SAMPLE_STACK_USER/sample_stack_user. (The idea
+there is that stack unwinding for userspace stacks is complicated, so
+it's the profiler's job to turn a pile of raw stack contents and a
+register snapshot into a stack trace.) So _to some extent_ I think it
+is already possible to read memory of another process via CAP_PERFMON.
+Whether that is desirable or not I don't know, though I guess it's
+hard to argue that there's a qualitative security difference between
+reading register contents and reading stack memory...
