@@ -1,193 +1,198 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301C8139CEF;
-	Thu, 23 Jan 2025 23:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89841B3948;
+	Thu, 23 Jan 2025 23:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737673924; cv=none; b=I2Wr0l7F8RfuQDKDSnDrwdH96f7vMQLhsNNbzURRWOrh965SMdjGTkzMIG7EQl1nQGlxS7IUVxFK2/CDB7M/AfVeJRwMEASMy4k2UjAGNMdpGqraMWqN5ANL/YT2XvfwvJ/Y/22rNu5krCLbwY1oPnaMGFVyDdby/nIlvjwtWQM=
+	t=1737675288; cv=none; b=aoQaymrp7uaZjjJ/F5sxVnKiv851sGqJ2AyTtAgUaGj/YxONC8wPDcBaPvPaQ8ZVi8pOuzkjXNcA88tQ4VIUyqNjINzjD5r9zWEGGhrSNncg2KjhqkyHc3uke3N+vf11A6sFwFtHFJ8E0TQu4QywXMRqRvJy1bUS54UX/kjnM0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737673924; c=relaxed/simple;
-	bh=eoCNcVECKz+NF82IMCY1Qbz4onIwEluRPxxjPeAhW5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dEgXEiS1qA+lSa4eupDeTfbetzonEZgKeGnKJEHYSPtpcFh8K3lB5tVC3hbaekc+CQWnDJhqke/Ok05RJBvY63A7cNRZB12KOIIH2g3s01+9OULQOYYqAf9v+Q4HJaJiyofhtX2g/D7fCx0y1o3gHgpyH6cY1bM+0ml8ZN0M0kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LcxLOjml; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737675288; c=relaxed/simple;
+	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i37APGCGsVBB58oT5DXFTmn1fZ/zz3XTFZk3barDc5uOfRGPGvkaZ7a9Uen7ndpSDTfsvQ3yl8WepOW1cE1DPKJGsEpNZrX0TO30LbSqgiA0HWhfc/cpHniuh4OWwuw5jyMmCHYW70kI5BJB2gzAUjW2yC6As6aGPD8tP2dMxCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=td7iJcvl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcxLOjml"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e479e529ebcso2100101276.3;
-        Thu, 23 Jan 2025 15:12:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737673922; x=1738278722; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKoJw9FlYwc0UNYR34AMCBueSo8/FSSlax+RXSs3Ig0=;
-        b=LcxLOjmlYdEMnTkSXkcnWG6SH2YM3eHh5E0SXquv/z3Sf7/+h8VPB9cWywc5uZFNec
-         h20JE0o6pHWJk+5mWyMTfv3V9kCieT0hIBDF/g/UehrA3vBemQu59mCckNZCeuEl3fsz
-         TA41HWKVWz5j2e4SNvjbtdQUpXhY6J4yZBmZVnZKgaYaUSMUKhVem92Q8fRS/ktkEf5j
-         afRuBVMSqta3rAz7c9AeJTD1BTJSCcw/teZEgR+qHKkAQCx3cOUnbHgXiaG58obPncwn
-         AoI5hRncq4B9l113al9DUPqen73W84u+byK71vk3bUI2baje3z9LUMo8S0rI9krZYSjC
-         YIPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737673922; x=1738278722;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rKoJw9FlYwc0UNYR34AMCBueSo8/FSSlax+RXSs3Ig0=;
-        b=Def7Enb/eWyE2wgEfInG9Dp3tbo80OLudwgERfUc2anhoGG+klVMB3139dGM5GGX90
-         zSMzi1VohgAvLQ1VlzH9ZRkl4dQz1J34hbJUT+GoWW/bj03rJKxTHfP8qzubB8nudxmE
-         HQpNGNwrNwyAaWGg8GY89ORLfVkIIlFKjdjImIKec8GR8oeOsKAmy2wqIA4XY5G28/h6
-         nz+ydatjkRaRAVj3C3nA7DbpceyXxbo5Xnn7mSZOjAkOck8htUXZohuRac8wrgrjihpa
-         As/dth6xyqhig1vbfDNYW+PzGIOf50bARyYqK9CkqHb6Uj+3elLwZ++3GR/FvBVI0bly
-         YouA==
-X-Forwarded-Encrypted: i=1; AJvYcCV57cCUWpvkXt1Y87EEL7i4FipR9RYgqKNQRIUq3I6+/xJIMUaWZU9W12DZbA/iGg96Dlrxdgt6cgckcoeKb0kUlA==@vger.kernel.org, AJvYcCXFsiPCR9vG/xw25fQZLb7i/FPKdV58A97h0MwVvyuBji45LFvGD44HYyvlMhteTiZgCaRvAyLLogLW/ak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybXtFYroqzVioSL+E6h+SlHU5xfmmieQSsLzYX1959JoODk2/p
-	BwHekDWU20Wl8BLAoGVV/tzmxbr3MGp/i6C0HaOwi0Xi4uMfaavFSQ0h6F2DsMSun/xJ/AzNjnM
-	SbSTPTth+9H/xNqGm8GM2i4L89mh34g73tN4=
-X-Gm-Gg: ASbGncv0nZfjcIeCzqBkd9tA66POh13dp++nluKD9sktkINkLDCQOPUb0OrerEkqRGe
-	BhMu+0RIhmVfC3EHK6r4Wc2TGyiA+QMxINqEbTwEGMyfJycjgCC4Hsb8aTj+w
-X-Google-Smtp-Source: AGHT+IFXIZ7tKSccbJGm64UlBQf5gr5g9BhTo44+GgVqTxkqoAZApo4jC06e1hN0wDq3VPCEnRWXFzs1KAM0i82OYtI=
-X-Received: by 2002:a05:690c:690d:b0:6f4:beb3:1f1c with SMTP id
- 00721157ae682-6f6eb922174mr228403407b3.26.1737673921953; Thu, 23 Jan 2025
- 15:12:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="td7iJcvl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 456F3C4CED3;
+	Thu, 23 Jan 2025 23:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737675288;
+	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=td7iJcvlHx3Mo9I/quWKQjNsyRBBwa0p8+r9vK/pejEgXCD07CHX5YaYXUob+Q1ul
+	 e/7fen+rXZu/iQz8ZCXNt2KkLV/+yWR2uRoo42fzY7Bjp8ZYp2wF4ctO1kmak7Y6Kv
+	 aTAvS6/iv2IO7YkYVjOfEvqY3hTEAqxN04HT8sbWmwsOiRbRPZQNVfog5rhOZwnPYn
+	 xPQ7EwiB7YU+GEsYUqlDw/MEE5ldAjfCLv+d1geJVq9DT77qdjbPMVpxD5p+3mnVu7
+	 ySHqaPh/DUrxJObIishUm2/tpP9u5zz115qyXZzJWUmDN7Rqc44s2Xhwlv4qricQWK
+	 RhYrAMdZv6WRw==
+Date: Thu, 23 Jan 2025 15:34:45 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250123233445.qhgb76tj7tjiqagj@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
+ <20250122141505.GT7145@noisy.programming.kicks-ass.net>
+ <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
+ <20250123084026.GF3808@noisy.programming.kicks-ass.net>
+ <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
+ <20250123221734.GE969@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122025519.361873-1-howardchu95@gmail.com> <Z5FC47bfDAPu75-e@google.com>
-In-Reply-To: <Z5FC47bfDAPu75-e@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 23 Jan 2025 15:11:54 -0800
-X-Gm-Features: AWEUYZlZvQWgNqjC82V319H8gYglH3awXIo9qxdhBlejB-m4CO8ticR3-kt8u6k
-Message-ID: <CAH0uvoiYSG_gJo3tnVHvi71x6kmL5-hXDJGMJJeRMkJtiofYXg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf trace: Fix runtime error of index out of bounds
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250123221734.GE969@noisy.programming.kicks-ass.net>
 
-Hello Namhyung,
+On Thu, Jan 23, 2025 at 11:17:34PM +0100, Peter Zijlstra wrote:
+> On Thu, Jan 23, 2025 at 11:48:07AM -0800, Josh Poimboeuf wrote:
+> > > > > 	cookie = READ_ONCE(current->unwind_info.cookie);
+> > > > > 	do {
+> > > > > 		if (cookie)
+> > > > > 			return cookie;
+> > > > > 		cookie = ctx_to_cookie(cpu, ctr+1);
+> > > > > 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie, cookie));
+> > 
+> > Should not the 2nd argument be &zero?
+> 
+> This I suppose
+> 
+> 	cookie = READ_ONCE(current->unwind_info.cookie);
+> 	do {
+> 		if (cookie)
+> 			return cookie;
+> 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie,
+> 				ctx_to_cookie(cpu, ctr+1)));
 
-On Wed, Jan 22, 2025 at 11:11=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Tue, Jan 21, 2025 at 06:55:19PM -0800, Howard Chu wrote:
-> > libtraceevent parses and returns an array of argument fields, sometimes
-> > larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr"=
-,
-> > idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
-> > elements max, creating an out-of-bounds access. This runtime error is
-> > found by UBsan. The error message:
->
-> I'm curious how I miss this.  Is this only for some specific syscalls or
-> always happening?  Do you which commit introduced this?
+Here's what I have at the moment.  unwind_deferred_request() is vastly
+simplified thanks to your suggestions, no more NMI-specific muck.
+work->pending is replaced with work->cookie so the task work can use it
+in case it crossed the cookie-clearing boundary (return-to-user with
+IRQs disabled).
 
-On my x86-64 machine, I found that this error can occur for syscalls
-with 6 arguments, which results in nr_fields being 7. These syscalls
-are:
-copy_file_range
-epoll_pwait
-epoll_pwait2
-futex
-futex_wait
-io_pgetevents
-io_uring_enter
-mbind
-mmap
-move_pages
-preadv2
-process_vm_readv
-process_vm_writev
-pselect6
-pwritev2
-recvfrom
-sendto
-splice
+static inline bool nmi_supported(void)
+{
+	return IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG);
+}
 
-But the runtime error occurs only with the futex syscall, when
-accessing sc->fmt->arg[idx]. This is an array of length 6.
+/*
+ * Read the task context cookie, initializing it if this is the first request
+ * since the most recent entry from user.
+ */
+static u64 get_cookie(void)
+{
+	struct unwind_task_info *info = &current->unwind_info;
+	u64 ctr, cookie, old_cookie = 0;
+	unsigned int cpu;
 
->
-> Thanks,
-> Namhyung
->
-> >
-> > perf $ sudo UBSAN_OPTIONS=3Dprint_stacktrace=3D1 ./perf trace -a --max-=
-events=3D1
-> > builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type =
-'syscall_arg_fmt [6]'
-> >     #0 0x5c04956be5fe in syscall__alloc_arg_fmts /home/howard/hw/linux-=
-perf/tools/perf/builtin-trace.c:1966
-> >     #1 0x5c04956c0510 in trace__read_syscall_info /home/howard/hw/linux=
--perf/tools/perf/builtin-trace.c:2110
-> >     #2 0x5c04956c372b in trace__syscall_info /home/howard/hw/linux-perf=
-/tools/perf/builtin-trace.c:2436
-> >     #3 0x5c04956d2f39 in trace__init_syscalls_bpf_prog_array_maps /home=
-/howard/hw/linux-perf/tools/perf/builtin-trace.c:3897
-> >     #4 0x5c04956d6d25 in trace__run /home/howard/hw/linux-perf/tools/pe=
-rf/builtin-trace.c:4335
-> >     #5 0x5c04956e112e in cmd_trace /home/howard/hw/linux-perf/tools/per=
-f/builtin-trace.c:5502
-> >     #6 0x5c04956eda7d in run_builtin /home/howard/hw/linux-perf/tools/p=
-erf/perf.c:351
-> >     #7 0x5c04956ee0a8 in handle_internal_command /home/howard/hw/linux-=
-perf/tools/perf/perf.c:404
-> >     #8 0x5c04956ee37f in run_argv /home/howard/hw/linux-perf/tools/perf=
-/perf.c:448
-> >     #9 0x5c04956ee8e9 in main /home/howard/hw/linux-perf/tools/perf/per=
-f.c:556
-> >     #10 0x79eb3622a3b7 in __libc_start_call_main ../sysdeps/nptl/libc_s=
-tart_call_main.h:58
-> >     #11 0x79eb3622a47a in __libc_start_main_impl ../csu/libc-start.c:36=
-0
-> >     #12 0x5c04955422d4 in _start (/home/howard/hw/linux-perf/tools/perf=
-/perf+0x4e02d4) (BuildId: 5b6cab2d59e96a4341741765ad6914a4d784dbc6)
-> >
-> >      0.000 ( 0.014 ms): Chrome_ChildIO/117244 write(fd: 238, buf: !, co=
-unt: 1)                                      =3D 1
-> >
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > ---
-> >  tools/perf/builtin-trace.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index d7c7d29291fb..8d3260bad10a 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -2108,7 +2108,7 @@ static int trace__read_syscall_info(struct trace =
-*trace, int id)
-> >       }
-> >
-> >       if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
-> > -                                     RAW_SYSCALL_ARGS_NUM : sc->tp_for=
-mat->format.nr_fields))
-> > +                                     RAW_SYSCALL_ARGS_NUM : sc->tp_for=
-mat->format.nr_fields - 1))
+	cookie = READ_ONCE(info->cookie);
+	if (cookie)
+		return cookie;
 
-Looking back, unfortunately, this is incorrect, because, as Arnaldo
-mentioned, the '__syscall_nr' in tracefs does not exist in older
-kernels. You mentioned missing the runtime error; maybe check the
-tracefs on your machine to see if there is a '__syscall_nr'.
+	guard(irqsave)();
 
-$ cat /sys/kernel/tracing/events/syscalls/sys_enter_futex/format |
-grep __syscall_nr
-        field:int __syscall_nr; offset:8;   size:4;  signed:1;
+	cpu = raw_smp_processor_id();
+	ctr = __this_cpu_read(unwind_ctx_ctr);
 
-And I'll send v2 that will have the correct logic.
+	cookie = ctx_to_cookie(cpu, ++ctr);
 
-Thanks,
-Howard
+	/* Make sure the cookie is non-zero. */
+	if (!cookie)
+		cookie = ctx_to_cookie(cpu, ++ctr);
 
-> >               return -ENOMEM;
-> >
-> >       sc->args =3D sc->tp_format->format.fields;
-> > --
-> > 2.45.2
-> >
+	/* Write the task cookie unless an NMI just now swooped in to do so. */
+	if (!try_cmpxchg64(&info->cookie, &old_cookie, cookie))
+		return old_cookie;
+
+	/* Success, update the context counter. */
+	__this_cpu_write(unwind_ctx_ctr, ctr);
+
+	return cookie;
+}
+
+/*
+ * Schedule a user space unwind to be done in task work before exiting the
+ * kernel.
+ *
+ * The returned cookie output is a unique identifer for the current task entry
+ * context.  Its value will also be passed to the callback function.  It can be
+ * used to stitch kernel and user stack traces together in post-processing.
+ *
+ * It's valid to call this function multiple times for the same @work within
+ * the same task entry context.  Each call will return the same cookie.  If the
+ * callback is already pending, an error will be returned along with the
+ * cookie.  If the callback is not pending because it has already been
+ * previously called for the same entry context, it will be called again with
+ * the same stack trace and cookie.
+ *
+ * Thus are three possible return scenarios:
+ *
+ *   * return != 0, *cookie == 0: the operation failed, no pending callback.
+ *
+ *   * return != 0, *cookie != 0: the callback is already pending. The cookie
+ *     can still be used to correlate with the pending callback.
+ *
+ *   * return == 0, *cookie != 0: the callback queued successfully.  The
+ *     callback is guaranteed to be called with the given cookie.
+ */
+int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+{
+	enum task_work_notify_mode mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+	u64 zero = 0;
+	int ret;
+
+	*cookie = 0;
+
+	if (!current->mm || !user_mode(task_pt_regs(current)))
+		return -EINVAL;
+
+	if (!nmi_supported() && in_nmi())
+		return -EINVAL;
+
+	/* Return a valid @cookie even if the callback is already pending. */
+	*cookie = READ_ONCE(work->cookie);
+	if (*cookie)
+		return -EEXIST;
+
+	*cookie = get_cookie();
+
+	/* Claim the work unless an NMI just now swooped in to do so. */
+	if (!try_cmpxchg64(&work->cookie, &zero, *cookie))
+		return -EEXIST;
+
+	/* The work has been claimed, now schedule it. */
+	ret = task_work_add(current, &work->work, mode);
+	if (WARN_ON_ONCE(ret)) {
+		WRITE_ONCE(work->cookie, 0);
+		return ret;
+	}
+
+	return 0;
+}
+
+-- 
+Josh
