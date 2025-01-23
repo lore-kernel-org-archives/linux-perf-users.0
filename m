@@ -1,115 +1,138 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01522010F2;
-	Thu, 23 Jan 2025 09:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA8620CCFF;
+	Thu, 23 Jan 2025 09:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737623657; cv=none; b=GlzGZem9zoro/y6p+V5p+qzF/fgmvNG4Gsq8F1PnMGFMKSCbgnL088ye9Xm1ibw8ihQWBK0Jx0yOm2FZNweWObWwQxhWLWNo+VEhNvtMyGk8LAMYafo5yP8OArZHyKU/Cf2nyjrqWKQxdzcfYKax5m6X6qs5MrLMJFQk6xeWoIQ=
+	t=1737625805; cv=none; b=tg7EaYpFn4J25IXT9PL3bJ/kK1616bMuLpbxjOCm0T0XuELB0YQSevf544+AWMYRU8Crn1gGQtzq6JMQFTeSY1hbRUn1Z84q+1VSqnK1feizBJszftsFBswlhW7gt3gGLlM5it4tMTV/qj6sej/+wY3yqClDjc1vcLidg/hTO5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737623657; c=relaxed/simple;
-	bh=UhEgZubK54fEPqXm/asIEOwWn/TImv/6W1gP46DzVEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkMzH2JNpx1w0Pg6ll77P0q6d+JwF6iNnNMMuMRW7IdJBYmF2R7yGyqrX6qS/nUzoiEz9JEsgOOqhF2jbezOg4ElOd4JHz8XmJR+9PS1TdZV8sXric18WGZNxEZ/ixIYfV8RBrl5K84ttg02QAnM4aXo5r/TbK0hluwq/mzSOcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ewmgdo4m; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1737625805; c=relaxed/simple;
+	bh=xzt4URNabIKkONjmNRY0fm3fVF5z84E/xJdyzIh3FA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=K1cwMs96A9iM8tHoWeGCzxPjBNGvr0d7K2SK7oiQyWbMa+7DuHFv51HYfS6RhehdTwbNuUuGq6Vg4cHXj4zXuJ3VgjzZ/5J7W5CJBf898pGEikmcDoT2Lt8fT9k+XVSiPo75IpHH+rCqF5gvLj48MJI7+MTPiXt0j/nY/ryx4iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Kv8nTySE; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ewmgdo4m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4gk8VcCUdUgjoW54ObMOvOEf7lv/rECHs3E4nbb1c1c=; b=ewmgdo4mIuMQyPFe+ikPGSyFap
-	12z3vfgeItTMwCuQvfv4OuqrtSZgdL97hOj0GNu4+sz1AYx5ChBdKQvbAgP/qS6hXsw6J89v9+Pbj
-	q7VeOu3DUVlrlWOdlyirElF9oevtdNwY3xxxBNjidSP3VOe9uvtMJMa3CXk/BeYnz7Nv/M/qdtOiA
-	I1/6HxQPP5JxozQDP/EQUHUoJWRXfl8bNc9Wzl+3jRevxWg+G6LV5sL7WZ+XNS2Qn0DCT0reXhZ6x
-	1JkBRUQBrF1CWIevIcn0k8+KwdYXJ97NnAfMjWKnumYLd90uSLPxZuK/x6xbwg8iYCuKApxzvpFed
-	ctM10M0Q==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tatHt-0000000DlLD-12uQ;
-	Thu, 23 Jan 2025 09:14:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1BF983006E6; Thu, 23 Jan 2025 10:14:08 +0100 (CET)
-Date: Thu, 23 Jan 2025 10:14:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-Message-ID: <20250123091407.GJ3808@noisy.programming.kicks-ass.net>
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
- <20250115184318.2854459-3-kan.liang@linux.intel.com>
- <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
- <be90e73b-eedf-4ff0-a832-b579e003cac9@linux.intel.com>
- <20250116204225.GA7232@noisy.programming.kicks-ass.net>
- <20250116205659.GA15641@noisy.programming.kicks-ass.net>
- <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Kv8nTySE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1737625792; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Q1Ts7XE8Xr5IE3ZwrGLXx/LOXkXGx3YbnOYf+1AJwHU=;
+	b=Kv8nTySEbX9tqHYFdDeev3mTZfJQwC86rh9A5uH9WVeWE18ICtyQt2TbrfUyEOiEIR48m/+Iue41WeQCv7ttaeLO4cfrxaHhjtqEnHxPTCBjocd4U5aaUA8GjQwmvfAYTBiB1tvK6N8N/OitgLxeJ0kNesmytbRUyrRYvpsxwaM=
+Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOBFs9N_1737625791 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 23 Jan 2025 17:49:52 +0800
+Message-ID: <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com>
+Date: Thu, 23 Jan 2025 17:49:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
+To: Yunhui Cui <cuiyunhui@bytedance.com>, renyu.zj@linux.alibaba.com,
+ will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 16, 2025 at 04:50:01PM -0500, Liang, Kan wrote:
-> 
-> 
-> On 2025-01-16 3:56 p.m., Peter Zijlstra wrote:
-> > On Thu, Jan 16, 2025 at 09:42:25PM +0100, Peter Zijlstra wrote:
-> >> On Thu, Jan 16, 2025 at 10:55:46AM -0500, Liang, Kan wrote:
-> >>
-> >>>> Also, I think I found you another bug... Consider what happens to the
-> >>>> counter value when we reschedule a HES_STOPPED counter, then we skip
-> >>>> x86_pmu_start(RELOAD) on step2, which leave the counter value with
-> >>>> 'random' crap from whatever was there last.
-> >>>>
-> >>>> But meanwhile you do program PEBS to sample it. That will happily sample
-> >>>> this garbage.
-> >>>>
-> >>>> Hmm?
-> >>>
-> >>> I'm not quite sure I understand the issue.
-> >>>
-> >>> The HES_STOPPED counter should be a pre-existing counter. Just for some
-> >>> reason, it's stopped, right? So perf doesn't need to re-configure the
-> >>> PEBS__DATA_CFG, since the idx is not changed.
-> >>
-> >> Suppose you have your group {A, B, C} and lets suppose A is the PEBS
-> >> event, further suppose that B is also a sampling event. Lets say they
-> >> get hardware counters 1,2 and 3 respectively.
-> >>
-> >> Then lets say B gets throttled.
-> >>
-> >> While it is throttled, we get a new event D scheduled, and D gets placed
-> >> on counter 2 -- where B lives, which gets moved over to counter 4.
-> >>
-> >> Then our loops will update and remove B from 2, but because
-> >> throttled/HES_STOPPED it will not start it on counter 4.
-> >>>> Meanwhile, we do have the PEBS_DATA_CFG thing updated to sample counter
-> >> 1,3 and 4.
-> >>
-> >> PEBS assist happens, and samples the uninitialized counter 4.
-> > > Also, by skipping x86_pmu_start() we miss the assignment of
-> > cpuc->events[] so PEBS buffer decode can't even find the dodgy event.
-> > 
-> 
-> Yes, counter 4 includes garbage before the B is started again.
-> But the cpuc->events[counter 4] is NULL either.
-> 
-> The current implementation ignores the NULL cpuc->events[]. The stopped
-> B should not be mistakenly updated.
 
-Ah, indeed. I was so close.
 
-One question though -- is this value ever exposed otherwise? I had a
-quick look and I don't think we support PERF_SAMPLE_RAW for PEBS, but
-what about PEBS-to-PT ? 
+在 2025/1/23 15:48, Yunhui Cui 写道:
+> During platform_device_register, wrongly using struct device
+> pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
+> still, accessing the duplicated device leads to list corruption as its
+> mutex content (e.g., list, magic) remains the same as the original.
+> 
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   drivers/perf/dwc_pcie_pmu.c | 25 ++++++++++++++++++-------
+>   1 file changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index cccecae9823f..8b208f287a1f 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+>   	u32 sbdf;
+>   
+>   	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
+> -	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
+> -						 pdev, sizeof(*pdev));
+> -
+> +	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
+>   	if (IS_ERR(plat_dev))
+>   		return PTR_ERR(plat_dev);
+>   
+> @@ -614,19 +612,32 @@ static struct notifier_block dwc_pcie_pmu_nb = {
+>   
+>   static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+>   {
+> -	struct pci_dev *pdev = plat_dev->dev.platform_data;
+> +	struct pci_dev *pdev = NULL;
+>   	struct dwc_pcie_pmu *pcie_pmu;
+> +	bool found = false;
+>   	char *name;
+>   	u32 sbdf;
+>   	u16 vsec;
+>   	int ret;
+>   
+> +	for_each_pci_dev(pdev) {
+> +		sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +		if (sbdf == plat_dev->id) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +	if (!found) {
+> +		pr_err("The plat_dev->id does not match the sbdf");
+> +		return -ENODEV;
+> +	}
+> +
 
-Anywya, let me go find this v10 thing :-)
+How about using pci_get_domain_bus_and_slot() to find pci_dev?
+
+>   	vsec = dwc_pcie_des_cap(pdev);
+>   	if (!vsec)
+>   		return -ENODEV;
+>   
+>   	sbdf = plat_dev->id;
+> -	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
+> +	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%d_pmu", sbdf);
+
+A new name will break previous user tools.
+
+>   	if (!name)
+>   		return -ENOMEM;
+>   
+> @@ -640,7 +651,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+>   	pcie_pmu->on_cpu = -1;
+>   	pcie_pmu->pmu = (struct pmu){
+>   		.name		= name,
+> -		.parent		= &pdev->dev,
+> +		.parent		= &plat_dev->dev,
+>   		.module		= THIS_MODULE,
+>   		.attr_groups	= dwc_pcie_attr_groups,
+>   		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> @@ -727,7 +738,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
+>   
+>   static struct platform_driver dwc_pcie_pmu_driver = {
+>   	.probe = dwc_pcie_pmu_probe,
+> -	.driver = {.name = "dwc_pcie_pmu",},
+> +	.driver = {.name = "platform_dwc_pcie",},
+>   };
+>   
+>   static int __init dwc_pcie_pmu_init(void)
+
+Thanks.
+
+Best Regards,
+Shuai
+
