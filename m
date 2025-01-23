@@ -1,63 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89841B3948;
-	Thu, 23 Jan 2025 23:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58271D5AB9;
+	Thu, 23 Jan 2025 23:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737675288; cv=none; b=aoQaymrp7uaZjjJ/F5sxVnKiv851sGqJ2AyTtAgUaGj/YxONC8wPDcBaPvPaQ8ZVi8pOuzkjXNcA88tQ4VIUyqNjINzjD5r9zWEGGhrSNncg2KjhqkyHc3uke3N+vf11A6sFwFtHFJ8E0TQu4QywXMRqRvJy1bUS54UX/kjnM0I=
+	t=1737675290; cv=none; b=RfkhhVhEONsXRFr7+C2Y2HCDzyipAcZ3irzCRLf8awQXhQjl8kVrjPA1hMfgPP2LvAWuWpTppmx09OKyrxxAJUM++mBfs6oLvX70NOpZSBkd8GSxPsmW2oOwGkD0OFTPubcouZ/DReGvWS+3z+a4+EqW+CBl96PIedBT2uvjjyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737675288; c=relaxed/simple;
-	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	s=arc-20240116; t=1737675290; c=relaxed/simple;
+	bh=PwxjONB++A+9wM5woTms13h00oSvubWGRcBIudfuow8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i37APGCGsVBB58oT5DXFTmn1fZ/zz3XTFZk3barDc5uOfRGPGvkaZ7a9Uen7ndpSDTfsvQ3yl8WepOW1cE1DPKJGsEpNZrX0TO30LbSqgiA0HWhfc/cpHniuh4OWwuw5jyMmCHYW70kI5BJB2gzAUjW2yC6As6aGPD8tP2dMxCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=td7iJcvl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B4G9A7Nq5wflQLoqYgQtIrcE8Lu2MFwqfAswPOsddRr44uJ7jrPuChnwN888+09fQMhef7QrrPMDWoXB/AfbtsQATzpJIT/aEfEm9NBm04HwO8xqdn8YEOAbkKC2dn2dllmX8zy+v0r2OwLkdkwxY7BykJVA6NXdm/OTThDpG6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGZ4PHYh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="td7iJcvl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 456F3C4CED3;
-	Thu, 23 Jan 2025 23:34:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGZ4PHYh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22892C4AF0B;
+	Thu, 23 Jan 2025 23:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737675288;
-	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	s=k20201202; t=1737675289;
+	bh=PwxjONB++A+9wM5woTms13h00oSvubWGRcBIudfuow8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=td7iJcvlHx3Mo9I/quWKQjNsyRBBwa0p8+r9vK/pejEgXCD07CHX5YaYXUob+Q1ul
-	 e/7fen+rXZu/iQz8ZCXNt2KkLV/+yWR2uRoo42fzY7Bjp8ZYp2wF4ctO1kmak7Y6Kv
-	 aTAvS6/iv2IO7YkYVjOfEvqY3hTEAqxN04HT8sbWmwsOiRbRPZQNVfog5rhOZwnPYn
-	 xPQ7EwiB7YU+GEsYUqlDw/MEE5ldAjfCLv+d1geJVq9DT77qdjbPMVpxD5p+3mnVu7
-	 ySHqaPh/DUrxJObIishUm2/tpP9u5zz115qyXZzJWUmDN7Rqc44s2Xhwlv4qricQWK
-	 RhYrAMdZv6WRw==
-Date: Thu, 23 Jan 2025 15:34:45 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	b=kGZ4PHYh+Tdi0o+AoPRmHCBsioNMnyuQUFW1Su2ObDlHhkF+NjsEpfTuUbXLvX+Ie
+	 Tz3ke/4RcppqbHQmwlpN/SImApQkvIGKP8VoACxGvr3BPVQ1QPloJq/tl7wsCYbSRU
+	 NJtBe3TgSJ1FpJbF2mRfJcpM9Ym/bv6XF0jJFTcOpTRgZ8GAmWKUpaY/qVt6ut7m4S
+	 /rlmEWRHcLiQI92cJ1CIqw32ZitWM3G93rtml+hh16tOoTMo4gcsZPeNimRqgk5xky
+	 eiP/R/wED2QU8IiknR+WCZhzgTU6hyAssmoVMIz6e9Q+sP2lnHGC+VD2N5MlhHE/1O
+	 jREqLXT7Uldgg==
+Date: Thu, 23 Jan 2025 15:34:46 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Stephane Eranian <eranian@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250123233445.qhgb76tj7tjiqagj@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
- <20250122141505.GT7145@noisy.programming.kicks-ass.net>
- <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
- <20250123084026.GF3808@noisy.programming.kicks-ass.net>
- <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
- <20250123221734.GE969@noisy.programming.kicks-ass.net>
+	Peter Zijlstra <peterz@infradead.org>,
+	chu howard <howardchu95@gmail.com>
+Subject: Re: Off-CPU sampling (was perf report: Add wall-clock and
+ parallelism profiling)
+Message-ID: <Z5LSFmM64tFPj-Vz@google.com>
+References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
+ <20250113134022.2545894-1-dvyukov@google.com>
+ <Z4XDJyvjiie3howF@google.com>
+ <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
+ <CAP-5=fWHivx7Q6okMwYOs=65MZr40RjE16tgatMX0hjkCfrwfw@mail.gmail.com>
+ <CACT4Y+Yh98VcNgmJ-gF9+inw=ZDkg1rRzi4_35f6krw8BBRpug@mail.gmail.com>
+ <Z4lWDPpmdQDM1k6l@google.com>
+ <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,133 +54,167 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250123221734.GE969@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACT4Y+YMAM1eMEEWhGsOcGqPT2bn+4FRSp5ORgF0Qji8nmBzdQ@mail.gmail.com>
 
-On Thu, Jan 23, 2025 at 11:17:34PM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2025 at 11:48:07AM -0800, Josh Poimboeuf wrote:
-> > > > > 	cookie = READ_ONCE(current->unwind_info.cookie);
-> > > > > 	do {
-> > > > > 		if (cookie)
-> > > > > 			return cookie;
-> > > > > 		cookie = ctx_to_cookie(cpu, ctr+1);
-> > > > > 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie, cookie));
-> > 
-> > Should not the 2nd argument be &zero?
+On Sun, Jan 19, 2025 at 12:08:36PM +0100, Dmitry Vyukov wrote:
+> On Thu, 16 Jan 2025 at 19:55, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, Jan 15, 2025 at 08:11:51AM +0100, Dmitry Vyukov wrote:
+> > > On Wed, 15 Jan 2025 at 06:59, Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > On Tue, Jan 14, 2025 at 12:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > [snip]
+> > > > > FWIW I've also considered and started implementing a different
+> > > > > approach where the kernel would count parallelism level for each
+> > > > > context and write it out with samples:
+> > > > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
+> > > > > Then sched_in/out would need to do atomic inc/dec on a global counter.
+> > > > > Not sure how hard it is to make all corner cases work there, I dropped
+> > > > > it half way b/c the perf record post-processing looked like a better
+> > > > > approach.
+> > > >
+> > > > Nice. Just to focus on this point and go off on something of a
+> > > > tangent. I worry a little about perf_event_sample_format where we've
+> > > > used 25 out of the 64 bits of sample_type. Perhaps there will be a
+> > > > sample_type2 in the future. For the code and data page size it seems
+> > > > the same information could come from mmap events. You have a similar
+> > > > issue. I was thinking of another similar issue, adding information
+> > > > about the number of dirty pages in a VMA. I wonder if there is a
+> > > > better way to organize these things, rather than just keep using up
+> > > > bits in the perf_event_sample_format. For example, we could have a
+> > > > code page size software event that when in a leader sampling group
+> > > > with a hardware event with a sample IP provides the code page size
+> > > > information of the leader event's sample IP. We have loads of space in
+> > > > the types and config values to have an endless number of such events
+> > > > and maybe the value could be generated by a BPF program for yet more
+> > > > flexibility. What these events would mean without a leader sample
+> > > > event I'm not sure.
+> > >
+> > > In the end I did not go with adding parallelism to each sample (this
+> > > is purely perf report change), so at least for this patch this is very
+> > > tangential :)
+> > >
+> > > > Wrt wall clock time, Howard Chu has done some work advancing off-CPU
+> > > > sampling. Wall clock time being off CPU plus on CPU. We need to do
+> > > > something to move forward the default flags/options for perf record,
+> > > > for example, we don't enable build ID mmap events by default causing
+> > > > the whole perf.data file to be scanned looking to add build ID events
+> > > > for the dsos with samples in them. One option that could be a default
+> > > > could be off-CPU profiling, and when permissions deny the BPF approach
+> > > > we can fallback on using events. If these events are there by default
+> > > > then it makes sense to hook them up in perf report.
+> > >
+> > > Interesting. Do you mean "IO" by "off-CPU".
+> > > Yes, if a program was blocked for IO for 10 seconds (no CPU work),
+> > > then that obviously contributes to latency, but won't be in this
+> > > profile. Though, it still works well for a large number of important
+> > > cases (e.g. builds, ML inference, server request handling are
+> > > frequently not IO bound).
+> > >
+> > > I was thinking how IO can be accounted for in the wall-clock profile.
+> > > Since we have SWITCH OUT events (and they already include preemption
+> > > bit), we do have info to account for blocked threads. But it gets
+> > > somewhat complex and has to make some hypotheses b/c not all blocked
+> > > threads contribute to latency (e.g. blocked watchdog thread). So I
+> > > left it out for now.
+> > >
+> > > The idea was as follows.
+> > > We know a set of threads blocked at any point in time (switched out,
+> > > but not preempted).
+> > > We hypothesise that each of these could equally improve CPU load to
+> > > max if/when unblocked.
+> > > We inject synthetic samples in a leaf "IO wait" symbol with the weight
+> > > according to the hypothesis. I think these events can be  injected
+> > > before each switch in event only (which changes the set of blocked
+> > > threads).
+> > >
+> > > Namely:
+> > > If CPU load is already at max (parallelism == num cpus), we don't
+> > > inject any IO wait events.
+> > > If the number of blocked threads is 0, we don't inject any IO wait events.
+> > > If there are C idle CPUs and B blocked threads, we inject IO wait
+> > > events with weight C/B for each of them.
+> >
+> > To track idle CPUs, you need sched-switch of all CPUs regardless of your
+> > workload, right?  Also I'm not sure when do you want to inject the IO
+> > wait events - when a thread is sched-out without preemption?  And what
+> > would be the weight?  I guess you want something like:
+> >
+> >   blocked time * C / B
+> >
+> > Then C and B can change before the thread is woken up.
 > 
-> This I suppose
+> Yes, these events need to be emitted on every switch-in/out in the
+> trace so that a long blocked thread gets multiple events with
+> different weights.
+
+Ok.
+
 > 
-> 	cookie = READ_ONCE(current->unwind_info.cookie);
-> 	do {
-> 		if (cookie)
-> 			return cookie;
-> 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie,
-> 				ctx_to_cookie(cpu, ctr+1)));
+> > > For example, if there is a single blocked thread, then we hypothesise
+> > > that this blocked thread is the root cause of all currently idle CPUs
+> > > being idle.
+> >
+> > I think this may make sense when you target a single process group but
+> > it also needs system-wide idle information.
+> 
+> I assumed this profiling is done on a mostly idle system (generally
+> it's a good idea for any profiling).
+> 
+> Theoretically, we could look at runnable threads rather than running.
+> If there are NumCPU runnable threads, then creating more runnable
+> threads won't help.
 
-Here's what I have at the moment.  unwind_deferred_request() is vastly
-simplified thanks to your suggestions, no more NMI-specific muck.
-work->pending is replaced with work->cookie so the task work can use it
-in case it crossed the cookie-clearing boundary (return-to-user with
-IRQs disabled).
+But it'd need to look at the state of the previous (sched-out) task in
+sched_switch event which is a lot bigger.
 
-static inline bool nmi_supported(void)
-{
-	return IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG);
-}
+> 
+> > > This still has a problem of saying that unrelated threads contribute
+> > > to latency, but at least it's a simple/explainable model and it should
+> > > show guilty threads as well. Maybe unrelated threads can be filtered
+> > > by the user by specifying a set of symbols in stacks of unrelated
+> > > threads.
+> >
+> > Or by task name.
+> >
+> > >
+> > > Does it make any sense? Do you have anything better?
+> >
+> > I'm not sure if it's right to use idle state which will be affected by
+> > unrelated processes.  Maybe it's good for system-wide profiling.
+> >
+> > For a process (group) profiliing, I think you need to consider number of
+> > total threads, active threads, and CPUs.  And if the #active-threads is
+> > less than min(#total-threads, #CPUs), then it could be considered as
+> > idle from the workload's perspective.
+> >
+> > What do you think?
+> 
+> I don't know, hard to say. I see what you mean, but this makes the
+> problem even harder, and potentially breaking hypotheses we are
+> making.
+> For example, if we have 2 unrelated workloads A and B running on the
+> machine. Their high- and low-parallelism phases will overlap randomly,
+> and we will make conclusions from that, but these overlapping are
+> really random and may not hold next time. Or next time A may be
+> collocated with C.
 
-/*
- * Read the task context cookie, initializing it if this is the first request
- * since the most recent entry from user.
- */
-static u64 get_cookie(void)
-{
-	struct unwind_task_info *info = &current->unwind_info;
-	u64 ctr, cookie, old_cookie = 0;
-	unsigned int cpu;
+Hmm.. but isn't it the same when you use idle state?  CPUs can go idle
+randomly because of other workload IMHO.
 
-	cookie = READ_ONCE(info->cookie);
-	if (cookie)
-		return cookie;
+> 
+> I would solve the simpler problem of profiling a single workload on a
+> mostly idle system first, and only then move to the harder case.
 
-	guard(irqsave)();
+I agree with you to start with the simpler one.  I need to check the
+code how you checked the idle state.
 
-	cpu = raw_smp_processor_id();
-	ctr = __this_cpu_read(unwind_ctx_ctr);
 
-	cookie = ctx_to_cookie(cpu, ++ctr);
+> Are you considering this for GWP-type profiling?
 
-	/* Make sure the cookie is non-zero. */
-	if (!cookie)
-		cookie = ctx_to_cookie(cpu, ++ctr);
+No, I'm not (for now).
 
-	/* Write the task cookie unless an NMI just now swooped in to do so. */
-	if (!try_cmpxchg64(&info->cookie, &old_cookie, cookie))
-		return old_cookie;
+Thanks,
+Namhyung
 
-	/* Success, update the context counter. */
-	__this_cpu_write(unwind_ctx_ctr, ctr);
-
-	return cookie;
-}
-
-/*
- * Schedule a user space unwind to be done in task work before exiting the
- * kernel.
- *
- * The returned cookie output is a unique identifer for the current task entry
- * context.  Its value will also be passed to the callback function.  It can be
- * used to stitch kernel and user stack traces together in post-processing.
- *
- * It's valid to call this function multiple times for the same @work within
- * the same task entry context.  Each call will return the same cookie.  If the
- * callback is already pending, an error will be returned along with the
- * cookie.  If the callback is not pending because it has already been
- * previously called for the same entry context, it will be called again with
- * the same stack trace and cookie.
- *
- * Thus are three possible return scenarios:
- *
- *   * return != 0, *cookie == 0: the operation failed, no pending callback.
- *
- *   * return != 0, *cookie != 0: the callback is already pending. The cookie
- *     can still be used to correlate with the pending callback.
- *
- *   * return == 0, *cookie != 0: the callback queued successfully.  The
- *     callback is guaranteed to be called with the given cookie.
- */
-int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
-{
-	enum task_work_notify_mode mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
-	u64 zero = 0;
-	int ret;
-
-	*cookie = 0;
-
-	if (!current->mm || !user_mode(task_pt_regs(current)))
-		return -EINVAL;
-
-	if (!nmi_supported() && in_nmi())
-		return -EINVAL;
-
-	/* Return a valid @cookie even if the callback is already pending. */
-	*cookie = READ_ONCE(work->cookie);
-	if (*cookie)
-		return -EEXIST;
-
-	*cookie = get_cookie();
-
-	/* Claim the work unless an NMI just now swooped in to do so. */
-	if (!try_cmpxchg64(&work->cookie, &zero, *cookie))
-		return -EEXIST;
-
-	/* The work has been claimed, now schedule it. */
-	ret = task_work_add(current, &work->work, mode);
-	if (WARN_ON_ONCE(ret)) {
-		WRITE_ONCE(work->cookie, 0);
-		return ret;
-	}
-
-	return 0;
-}
-
--- 
-Josh
