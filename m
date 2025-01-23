@@ -1,512 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8457113AA53
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 04:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B986F2F3B;
+	Thu, 23 Jan 2025 06:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737605995; cv=none; b=VjFF0iD9maAQdh2qw3bHv6efQRI9Few0Erqq9yu+guHei9NLJhJeVdWFnUkaIr864N8kdDd1KuFxX4BerQu2WKVB//pXN4g+ckPlp8sI/eW+wbvDB97pbHde0x2PS4WAOOCeE+j8raCYAjnJGR+vJAMd9dKKQomp9Ac03lhwcp4=
+	t=1737613212; cv=none; b=cUNmVG7OwOFciT8+Xdv32N86j/JZAXMTtYCuRXZlA58kU4ovBsPhMKm5dd/TwrIwrshaAoWkE8Tb5lkOk9nJfE6ikld5XNbhhO7rRZCC5HuWlCR1yE8Ht55R84KOkLti+Lp8KTa8qsi7b4zqWN1tpZQkLDmgewtEFznmZH+vfwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737605995; c=relaxed/simple;
-	bh=kfMQCKnN9aYD9rKOyeMqV6cOStHkGZqvWze4mSZw8ig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S0byv07zJG14e2U28od3hzGEQTASOWxMm6ot0LOT1S6WpqlrsVZuDHhAwmShB9V0HKu3oMP5kClgCITaEJhtSLhvB9qVyX69JI8D7Gs9mhEtHpP3qh45Nd2ZsEBMu+C9odf5K+Q3qWcN+EN88EQ2UhnOkHRzyCJSzMMw3wCfhDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K2Hs2DbR; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1737613212; c=relaxed/simple;
+	bh=+NaRClZC6uCqXwr3eGZ5Yd22degxy1KIGaxZvpQquU0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mUAzUl3dM0v4K2x7aC793Mba41nAt0mSSGxh7xnOUqmM+BtDeoysm7E1TAL1XvuuXHUWxCTXlq+rMgkterfTmNBS1W0XlxZx/Tzeghi/fgVNqKvfOwt2cN8TFqiXlDprgLb1omvk6Dsypyob7xnjYNTCZJu1+cs+DqlxgK/h7PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bFtukkmn; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K2Hs2DbR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bFtukkmn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737605993; x=1769141993;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kfMQCKnN9aYD9rKOyeMqV6cOStHkGZqvWze4mSZw8ig=;
-  b=K2Hs2DbR7jkckYGIGJphIRM33wj+RgyUmMNQaj8rCXtlwWD+FHeBKe+l
-   E3x8k6OVpMNK5RSadz5o0oY7DRTY2EoPRzD9FTLJ3piLfvhwADDQ1DfiQ
-   wcumRWxSUBrJvCHXrXQxjmA4PTsQllBy1sfES+rWLHDW12AmcJDhREkkT
-   EG9azWYgdChP0R0mt+Kqa8WuFq+HyYfk8xA3xmh+DXmiWYXQUylkE4bcc
-   CHHveSMg2Mkp85WChEdER/HEo+ZeOTw8MY6749ihLlgNmNLxtxyITATDi
-   l+ODvTF8TbsWD8y56GSb88Pd1EG8V9WIeeGQysgFoYKjn64qEE9dw876U
-   A==;
-X-CSE-ConnectionGUID: Dl177WEKRyKF40QJU0+z9A==
-X-CSE-MsgGUID: OuDlXtaCRpqT1PXgu3Dx6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37971653"
+  t=1737613210; x=1769149210;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+NaRClZC6uCqXwr3eGZ5Yd22degxy1KIGaxZvpQquU0=;
+  b=bFtukkmnTIHJ3rzPLUzUivq/MPKHfdck86y04JyS0vwoF4XnWMNa0IhP
+   ZB62xiPyELsNQ5b8p1sCZpk87WdBd5KO5e6TWpIekclLgVufLZi8muJBz
+   XJ3EEQygJaCjQ+cDVIYWgAdLozIyyBgbPlkk8tjzGqkX0pmV7/tfmR95P
+   lBc9bHZWXoddd3muQ7eOwPubEq8d9dBNNp9ME7bV1wOAbrzQsYX4og8Q2
+   s8YwOGGPRJGu9nB5blHILZ0uBgDrx1RmQoh3qi83wV26JmnkngB+Jxeuc
+   zkCMMgEtDv7vTajCSh/IjvoPLFSQ9AKoV5clRyY5rZy0cYLYtM5Y+td6v
+   w==;
+X-CSE-ConnectionGUID: J2nW5oRzTJG6JwaHHSHJmg==
+X-CSE-MsgGUID: vP+cwBaHRfWfV5/R7/XpiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="55513013"
 X-IronPort-AV: E=Sophos;i="6.13,227,1732608000"; 
-   d="scan'208";a="37971653"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 20:19:48 -0800
-X-CSE-ConnectionGUID: LcCuuFbgTnWuIBfGehGrnw==
-X-CSE-MsgGUID: 2sUoIL1sQ12pSNP6HdzWhg==
+   d="scan'208";a="55513013"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 22:20:09 -0800
+X-CSE-ConnectionGUID: b45excVlQqm0yo+u9CzdsA==
+X-CSE-MsgGUID: Xt/iCb1UTzCAiV5Nfeg9QA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107202055"
-Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 20:19:47 -0800
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: <intel-xe@lists.freedesktop.org>
-Cc: Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
-	Riana Tauro <riana.tauro@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="112334395"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by orviesa003.jf.intel.com with ESMTP; 22 Jan 2025 22:20:05 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH v15 1/6] drm/xe/pmu: Enable PMU interface
-Date: Wed, 22 Jan 2025 20:19:18 -0800
-Message-ID: <20250123041923.1892837-2-lucas.demarchi@intel.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250123041923.1892837-1-lucas.demarchi@intel.com>
-References: <20250123041923.1892837-1-lucas.demarchi@intel.com>
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 00/20] Arch-PEBS and PMU supports for Clearwater Forest
+Date: Thu, 23 Jan 2025 14:07:01 +0000
+Message-Id: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
+This patch series enables PMU and architectural PEBS (arch-PEBS) for
+Clearwater Forest (CWF).
 
-Basic PMU enabling patch. Setup the basic framework
-for adding events/timers. This patch was previously
-reviewed here -
-https://patchwork.freedesktop.org/series/119504/
+Comparing with previous generation Sierra Forest (SRF), CWF has two key
+differences on PMU perspective.
 
-Based on previous versions by Bommu Krishnaiah, Aravind Iddamsetty and
-Riana Tauro, using i915 and rapl as reference implementation.
+a. Increases 3 fixed counters, fixed counter 4, 5 and 6 which are used
+to profile topdown-bad-spec, topdown-fe-bound and topdown-retiring
+events.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
- drivers/gpu/drm/xe/Makefile          |   2 +
- drivers/gpu/drm/xe/xe_device.c       |   3 +
- drivers/gpu/drm/xe/xe_device_types.h |   4 +
- drivers/gpu/drm/xe/xe_pmu.c          | 289 +++++++++++++++++++++++++++
- drivers/gpu/drm/xe/xe_pmu.h          |  18 ++
- drivers/gpu/drm/xe/xe_pmu_types.h    |  35 ++++
- 6 files changed, 351 insertions(+)
- create mode 100644 drivers/gpu/drm/xe/xe_pmu.c
- create mode 100644 drivers/gpu/drm/xe/xe_pmu.h
- create mode 100644 drivers/gpu/drm/xe/xe_pmu_types.h
+b. Introduce architectural PEBS which is used to replace previous
+DS area based PEBS.
 
-diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-index 68861db5f27ce..aa0d981663e4c 100644
---- a/drivers/gpu/drm/xe/Makefile
-+++ b/drivers/gpu/drm/xe/Makefile
-@@ -305,6 +305,8 @@ endif
- xe-$(CONFIG_DRM_XE_DP_TUNNEL) += \
- 	i915-display/intel_dp_tunnel.o
- 
-+xe-$(CONFIG_PERF_EVENTS) += xe_pmu.o
-+
- obj-$(CONFIG_DRM_XE) += xe.o
- obj-$(CONFIG_DRM_XE_KUNIT_TEST) += tests/
- 
-diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-index bd6191e1ed3e7..f3f754beb812b 100644
---- a/drivers/gpu/drm/xe/xe_device.c
-+++ b/drivers/gpu/drm/xe/xe_device.c
-@@ -49,6 +49,7 @@
- #include "xe_pat.h"
- #include "xe_pcode.h"
- #include "xe_pm.h"
-+#include "xe_pmu.h"
- #include "xe_query.h"
- #include "xe_sriov.h"
- #include "xe_tile.h"
-@@ -871,6 +872,8 @@ int xe_device_probe(struct xe_device *xe)
- 
- 	xe_oa_register(xe);
- 
-+	xe_pmu_register(&xe->pmu);
-+
- 	xe_debugfs_register(xe);
- 
- 	xe_hwmon_register(xe);
-diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-index 16ebb2859877f..58e79e19deaad 100644
---- a/drivers/gpu/drm/xe/xe_device_types.h
-+++ b/drivers/gpu/drm/xe/xe_device_types.h
-@@ -18,6 +18,7 @@
- #include "xe_memirq_types.h"
- #include "xe_oa_types.h"
- #include "xe_platform_types.h"
-+#include "xe_pmu_types.h"
- #include "xe_pt_types.h"
- #include "xe_sriov_types.h"
- #include "xe_step_types.h"
-@@ -514,6 +515,9 @@ struct xe_device {
- 		int mode;
- 	} wedged;
- 
-+	/** @pmu: performance monitoring unit */
-+	struct xe_pmu pmu;
-+
- #ifdef TEST_VM_OPS_ERROR
- 	/**
- 	 * @vm_inject_error_position: inject errors at different places in VM
-diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-new file mode 100644
-index 0000000000000..b3da3863928af
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_pmu.c
-@@ -0,0 +1,289 @@
-+// SPDX-License-Identifier: MIT
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#include <drm/drm_drv.h>
-+#include <linux/device.h>
-+
-+#include "xe_device.h"
-+#include "xe_pmu.h"
-+
-+/**
-+ * DOC: Xe PMU (Performance Monitoring Unit)
-+ *
-+ * Expose events/counters like GT-C6 residency and GT frequency to user land via
-+ * the perf interface. Events are per device. The GT can be selected with an
-+ * extra config sub-field (bits 60-63).
-+ *
-+ * All events are listed in sysfs:
-+ *
-+ *     $ ls -ld /sys/bus/event_source/devices/xe_*
-+ *     $ ls /sys/bus/event_source/devices/xe_0000_00_02.0/events/
-+ *     $ ls /sys/bus/event_source/devices/xe_0000_00_02.0/format/
-+ *
-+ * The format directory has info regarding the configs that can be used.
-+ * The standard perf tool can be used to grep for a certain event as well.
-+ * Example:
-+ *
-+ *     $ perf list | grep gt-c6
-+ *
-+ * To sample a specific event for a GT at regular intervals:
-+ *
-+ *     $ perf stat -e <event_name,gt=> -I <interval>
-+ */
-+
-+#define XE_PMU_EVENT_GT_MASK		GENMASK_ULL(63, 60)
-+#define XE_PMU_EVENT_ID_MASK		GENMASK_ULL(11, 0)
-+
-+static unsigned int config_to_event_id(u64 config)
-+{
-+	return FIELD_GET(XE_PMU_EVENT_ID_MASK, config);
-+}
-+
-+static unsigned int config_to_gt_id(u64 config)
-+{
-+	return FIELD_GET(XE_PMU_EVENT_GT_MASK, config);
-+}
-+
-+static struct xe_gt *event_to_gt(struct perf_event *event)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	u64 gt = config_to_gt_id(event->attr.config);
-+
-+	return xe_device_get_gt(xe, gt);
-+}
-+
-+static bool event_supported(struct xe_pmu *pmu, unsigned int gt,
-+			    unsigned int id)
-+{
-+	if (gt >= XE_MAX_GT_PER_TILE)
-+		return false;
-+
-+	return false;
-+}
-+
-+static void xe_pmu_event_destroy(struct perf_event *event)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+
-+	drm_WARN_ON(&xe->drm, event->parent);
-+	drm_dev_put(&xe->drm);
-+}
-+
-+static int xe_pmu_event_init(struct perf_event *event)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct xe_pmu *pmu = &xe->pmu;
-+	unsigned int id, gt;
-+
-+	if (!pmu->registered)
-+		return -ENODEV;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	/* unsupported modes and filters */
-+	if (event->attr.sample_period) /* no sampling */
-+		return -EINVAL;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	gt = config_to_gt_id(event->attr.config);
-+	id = config_to_event_id(event->attr.config);
-+	if (!event_supported(pmu, gt, id))
-+		return -ENOENT;
-+
-+	if (has_branch_stack(event))
-+		return -EOPNOTSUPP;
-+
-+	if (!event->parent) {
-+		drm_dev_get(&xe->drm);
-+		event->destroy = xe_pmu_event_destroy;
-+	}
-+
-+	return 0;
-+}
-+
-+static u64 __xe_pmu_event_read(struct perf_event *event)
-+{
-+	struct xe_gt *gt = event_to_gt(event);
-+	u64 val = 0;
-+
-+	if (!gt)
-+		return 0;
-+
-+	return val;
-+}
-+
-+static void xe_pmu_event_read(struct perf_event *event)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct xe_pmu *pmu = &xe->pmu;
-+	u64 prev, new;
-+
-+	if (!pmu->registered) {
-+		event->hw.state = PERF_HES_STOPPED;
-+		return;
-+	}
-+
-+	prev = local64_read(&hwc->prev_count);
-+	do {
-+		new = __xe_pmu_event_read(event);
-+	} while (!local64_try_cmpxchg(&hwc->prev_count, &prev, new));
-+
-+	local64_add(new - prev, &event->count);
-+}
-+
-+static void xe_pmu_enable(struct perf_event *event)
-+{
-+	/*
-+	 * Store the current counter value so we can report the correct delta
-+	 * for all listeners. Even when the event was already enabled and has
-+	 * an existing non-zero value.
-+	 */
-+	local64_set(&event->hw.prev_count, __xe_pmu_event_read(event));
-+}
-+
-+static void xe_pmu_event_start(struct perf_event *event, int flags)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct xe_pmu *pmu = &xe->pmu;
-+
-+	if (!pmu->registered)
-+		return;
-+
-+	xe_pmu_enable(event);
-+	event->hw.state = 0;
-+}
-+
-+static void xe_pmu_event_stop(struct perf_event *event, int flags)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct xe_pmu *pmu = &xe->pmu;
-+
-+	if (pmu->registered)
-+		if (flags & PERF_EF_UPDATE)
-+			xe_pmu_event_read(event);
-+
-+	event->hw.state = PERF_HES_STOPPED;
-+}
-+
-+static int xe_pmu_event_add(struct perf_event *event, int flags)
-+{
-+	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
-+	struct xe_pmu *pmu = &xe->pmu;
-+
-+	if (!pmu->registered)
-+		return -ENODEV;
-+
-+	if (flags & PERF_EF_START)
-+		xe_pmu_event_start(event, flags);
-+
-+	return 0;
-+}
-+
-+static void xe_pmu_event_del(struct perf_event *event, int flags)
-+{
-+	xe_pmu_event_stop(event, PERF_EF_UPDATE);
-+}
-+
-+PMU_FORMAT_ATTR(gt,	"config:60-63");
-+PMU_FORMAT_ATTR(event,	"config:0-11");
-+
-+static struct attribute *pmu_format_attrs[] = {
-+	&format_attr_event.attr,
-+	&format_attr_gt.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group pmu_format_attr_group = {
-+	.name = "format",
-+	.attrs = pmu_format_attrs,
-+};
-+
-+static struct attribute *pmu_event_attrs[] = {
-+	/* No events yet */
-+	NULL,
-+};
-+
-+static const struct attribute_group pmu_events_attr_group = {
-+	.name = "events",
-+	.attrs = pmu_event_attrs,
-+};
-+
-+/**
-+ * xe_pmu_unregister() - Remove/cleanup PMU registration
-+ * @arg: Ptr to pmu
-+ */
-+static void xe_pmu_unregister(void *arg)
-+{
-+	struct xe_pmu *pmu = arg;
-+	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
-+
-+	if (!pmu->registered)
-+		return;
-+
-+	pmu->registered = false;
-+
-+	perf_pmu_unregister(&pmu->base);
-+	kfree(pmu->name);
-+}
-+
-+/**
-+ * xe_pmu_register() - Define basic PMU properties for Xe and add event callbacks.
-+ * @pmu: the PMU object
-+ *
-+ * Returns 0 on success and an appropriate error code otherwise
-+ */
-+int xe_pmu_register(struct xe_pmu *pmu)
-+{
-+	struct xe_device *xe = container_of(pmu, typeof(*xe), pmu);
-+	static const struct attribute_group *attr_groups[] = {
-+		&pmu_format_attr_group,
-+		&pmu_events_attr_group,
-+		NULL
-+	};
-+	int ret = -ENOMEM;
-+	char *name;
-+
-+	if (IS_SRIOV_VF(xe))
-+		return 0;
-+
-+	name = kasprintf(GFP_KERNEL, "xe_%s",
-+			 dev_name(xe->drm.dev));
-+	if (!name)
-+		goto err;
-+
-+	/* tools/perf reserves colons as special. */
-+	strreplace(name, ':', '_');
-+
-+	pmu->name		= name;
-+	pmu->base.attr_groups	= attr_groups;
-+	pmu->base.scope		= PERF_PMU_SCOPE_SYS_WIDE;
-+	pmu->base.module	= THIS_MODULE;
-+	pmu->base.task_ctx_nr	= perf_invalid_context;
-+	pmu->base.event_init	= xe_pmu_event_init;
-+	pmu->base.add		= xe_pmu_event_add;
-+	pmu->base.del		= xe_pmu_event_del;
-+	pmu->base.start		= xe_pmu_event_start;
-+	pmu->base.stop		= xe_pmu_event_stop;
-+	pmu->base.read		= xe_pmu_event_read;
-+
-+	ret = perf_pmu_register(&pmu->base, pmu->name, -1);
-+	if (ret)
-+		goto err_name;
-+
-+	pmu->registered = true;
-+
-+	return devm_add_action_or_reset(xe->drm.dev, xe_pmu_unregister, pmu);
-+
-+err_name:
-+	kfree(name);
-+err:
-+	drm_err(&xe->drm, "Failed to register PMU (ret=%d)!\n", ret);
-+
-+	return ret;
-+}
-diff --git a/drivers/gpu/drm/xe/xe_pmu.h b/drivers/gpu/drm/xe/xe_pmu.h
-new file mode 100644
-index 0000000000000..60c37126f87ec
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_pmu.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#ifndef _XE_PMU_H_
-+#define _XE_PMU_H_
-+
-+#include "xe_pmu_types.h"
-+
-+#if IS_ENABLED(CONFIG_PERF_EVENTS)
-+int xe_pmu_register(struct xe_pmu *pmu);
-+#else
-+static inline int xe_pmu_register(struct xe_pmu *pmu) { return 0; }
-+#endif
-+
-+#endif
-+
-diff --git a/drivers/gpu/drm/xe/xe_pmu_types.h b/drivers/gpu/drm/xe/xe_pmu_types.h
-new file mode 100644
-index 0000000000000..0e8faae6bc1b3
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_pmu_types.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright © 2025 Intel Corporation
-+ */
-+
-+#ifndef _XE_PMU_TYPES_H_
-+#define _XE_PMU_TYPES_H_
-+
-+#include <linux/perf_event.h>
-+#include <linux/spinlock_types.h>
-+
-+#define XE_PMU_MAX_GT 2
-+
-+/**
-+ * struct xe_pmu - PMU related data per Xe device
-+ *
-+ * Stores per device PMU info that includes event/perf attributes and sampling
-+ * counters across all GTs for this device.
-+ */
-+struct xe_pmu {
-+	/**
-+	 * @base: PMU base.
-+	 */
-+	struct pmu base;
-+	/**
-+	 * @registered: PMU is registered and not in the unregistering process.
-+	 */
-+	bool registered;
-+	/**
-+	 * @name: Name as registered with perf core.
-+	 */
-+	const char *name;
-+};
-+
-+#endif
+The general fixed counter bitmap (CPUID.23H.1H.EBX) support has been
+upstreamed along with the ARL/LNL PMU enabling patches. Only CWF
+specific event attributes need to be supported in this patch series.
+
+Comparing with the legacy DS area based PEBS, especially for adaptive
+PEBS, arch-PEBS basically inherits all currently supported PEBS 
+groups, such as basic-info group, memory-info group, GPRs group,
+XMMs (Vector registers) group and LBRs group, but with some new fields
+in these groups.
+
+The key differences between legacy PEBS and arch-PEBS are
+
+a. Arch-PEBS leverages CPUID.23H.4/5H sub-leaves to enumerate supported
+capabilities. These two cpuid sub-leaves tell which PEBS groups are 
+supported and which GP and fixed counters support arch-PEBS. 
+IA32_PERF_CAPABILITIES MSR is not used for indicating PEBS capabilities
+anymore.
+
+b. Arch-PEBS increases several new MSRs, IA32_PEBS_BASE,
+IA32_PEBS_INDEX and IA32_PMC_GPn/FXm_CFG_C MSRs. IA32_PEBS_BASE MSR is
+used to tell HW the PEBS buffer starting address and size, HW would
+write the captured records into the PEBS buffer. IA32_PEBS_INDEX MSR
+provides several fields, like WR_OFFSET and THRESH_OFFSET. WR_OFFSET is
+used to tell SW the latest PEBS record offset in PEBS buffer by HW and
+THRESH_OFFSET tells HW that a PMI should be generated if current written
+PEBS record cross this offset. IA32_PMC_GPn/FXm_CFG_C is per-counter
+MSR, each GP or fixed counter has its own CFG_C MSR. This MSR is used to
+configure which PEBS groups would be captured for the corresponding
+counter once the counter overflows. Since each counter has its owned
+CFG_C MSR, it means that arch-PEBS supports to capture different PEBS
+groups for different counters. Whereas the legacy DS-based PEBS only
+supports a global shared PEBS configuration, all counters have to share
+same PEBS configuration. This is a significant improvement for
+arch-PEBS, it provides more flexibility and higher efficiency. The
+legacy MSRs IA32_PEBS_ENABLE and MSR_PEBS_DATA_CFG are deprecated in
+arch-PEBS.
+
+c. Arch-PEBS increases the capabilities to capture more registers, like
+SSP register and higher width xsave-enabled vector registers, like
+OPMASK/YMM/ZMM registers. Of course, not all platforms support to
+capture all these vector registers, HW would suggest which vector
+registers are supported by CPUID.23H.4H.EBX, such as CWF only supports
+to capture XMM/YMM registers. New added SSP register would be placed into
+GPRs group and all vector registers including XMM registers would be
+placed into xsave-enabled registers group.
+
+d. Arch-PEBS does some changes on the PEBS record layout although some
+groups still have same format with previous legacy adaptive PEBS. 
+Arch-PEBS supports PEBS record fragments as well, if the continued bit
+in the record header is set, it indicates there are fragments followed.
+
+The details about arch-PEBS can be found in chapter 11 "Architectural
+PEBS" of "Intel architecture instruction set extensions programming
+ reference"[1].
+
+The patch 01/20 provides basic PMU support for CWF, the patch 02/20 fixes
+an error about parsing archPerfmonExt (0x23) CPUID leaf, the left
+patches (03/20 ~ 20/20) provides arch-PEBS support for kernel and perf
+tools. This patch series is based on Peter's perf/core tree + Kan's PEBS
+counter snapshot patchset (v10)[2].
+
+
+Tests:
+
+The following tests are run on CWF and no issue is found. Please notice
+nmi_watchdog is disabled when running the tests.
+
+a. Basic perf counting case.
+   perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
+
+b. Basic PMI based perf sampling case.
+   perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
+
+c. Basic PEBS based perf sampling case.
+   perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}:p' sleep 1
+
+d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+   perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 sleep 1
+
+e. PEBS sampling case with auxiliary (memory info) group
+   perf mem record sleep 1
+
+f. PEBS sampling case with counter group
+   perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
+   
+g. Perf stat and record test
+   perf test 95; perf test 119
+
+h. perf-fuzzer test
+
+
+Ref:
+
+[1] https://www.intel.com/content/www/us/en/content-details/843860/intel-architecture-instruction-set-extensions-programming-reference.html
+[2] https://lore.kernel.org/all/20250121152303.3128733-1-kan.liang@linux.intel.com/
+
+
+Dapeng Mi (19):
+  perf/x86/intel: Add PMU support for Clearwater Forest
+  perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
+  perf/x86/intel: Decouple BTS initialization from PEBS initialization
+  perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+  perf/x86/intel: Initialize architectural PEBS
+  perf/x86/intel/ds: Factor out common PEBS processing code to functions
+  perf/x86/intel: Process arch-PEBS records or record fragments
+  perf/x86/intel: Factor out common functions to process PEBS groups
+  perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+  perf/x86/intel: Setup PEBS constraints base on counter & pdist map
+  perf/x86/intel: Setup PEBS data configuration and enable legacy groups
+  perf/x86/intel: Add SSP register support for arch-PEBS
+  perf/x86/intel: Add counter group support for arch-PEBS
+  perf/core: Support to capture higher width vector registers
+  perf/x86/intel: Support arch-PEBS vector registers group capturing
+  perf tools: Support to show SSP register
+  perf tools: Support to capture more vector registers (common part)
+  perf tools: Support to capture more vector registers (x86/Intel part)
+  perf tools/tests: Add vector registers PEBS sampling test
+
+Kan Liang (1):
+  perf/x86/intel: Fix ARCH_PERFMON_NUM_COUNTER_LEAF
+
+ arch/arm/kernel/perf_regs.c                   |   6 +
+ arch/arm64/kernel/perf_regs.c                 |   6 +
+ arch/csky/kernel/perf_regs.c                  |   5 +
+ arch/loongarch/kernel/perf_regs.c             |   5 +
+ arch/mips/kernel/perf_regs.c                  |   5 +
+ arch/powerpc/perf/perf_regs.c                 |   5 +
+ arch/riscv/kernel/perf_regs.c                 |   5 +
+ arch/s390/kernel/perf_regs.c                  |   5 +
+ arch/x86/events/core.c                        |  94 ++-
+ arch/x86/events/intel/bts.c                   |   6 +-
+ arch/x86/events/intel/core.c                  | 292 +++++++-
+ arch/x86/events/intel/ds.c                    | 697 ++++++++++++++----
+ arch/x86/events/perf_event.h                  |  62 +-
+ arch/x86/include/asm/intel_ds.h               |  10 +-
+ arch/x86/include/asm/msr-index.h              |  28 +
+ arch/x86/include/asm/perf_event.h             | 147 +++-
+ arch/x86/include/uapi/asm/perf_regs.h         |  86 ++-
+ arch/x86/kernel/perf_regs.c                   |  55 +-
+ include/linux/perf_event.h                    |   2 +
+ include/linux/perf_regs.h                     |  10 +
+ include/uapi/linux/perf_event.h               |  10 +
+ kernel/events/core.c                          |  53 +-
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  87 ++-
+ tools/include/uapi/linux/perf_event.h         |  13 +
+ tools/perf/arch/arm/util/perf_regs.c          |   5 +-
+ tools/perf/arch/arm64/util/perf_regs.c        |   5 +-
+ tools/perf/arch/csky/util/perf_regs.c         |   5 +-
+ tools/perf/arch/loongarch/util/perf_regs.c    |   5 +-
+ tools/perf/arch/mips/util/perf_regs.c         |   5 +-
+ tools/perf/arch/powerpc/util/perf_regs.c      |   9 +-
+ tools/perf/arch/riscv/util/perf_regs.c        |   5 +-
+ tools/perf/arch/s390/util/perf_regs.c         |   5 +-
+ tools/perf/arch/x86/util/perf_regs.c          | 108 ++-
+ tools/perf/builtin-script.c                   |  19 +-
+ tools/perf/tests/shell/record.sh              |  55 ++
+ tools/perf/util/evsel.c                       |  14 +-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/parse-regs-options.c          |  23 +-
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |  90 +++
+ tools/perf/util/perf_regs.c                   |   5 -
+ tools/perf/util/perf_regs.h                   |  18 +-
+ tools/perf/util/record.h                      |   2 +-
+ tools/perf/util/sample.h                      |   6 +-
+ tools/perf/util/session.c                     |  31 +-
+ tools/perf/util/synthetic-events.c            |   7 +-
+ 45 files changed, 1851 insertions(+), 267 deletions(-)
+
 -- 
-2.48.0
+2.40.1
 
