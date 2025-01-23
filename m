@@ -1,38 +1,38 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113A91EEE0;
-	Thu, 23 Jan 2025 08:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A8520C016;
+	Thu, 23 Jan 2025 08:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737621106; cv=none; b=Hku8gPbnAZgzYObvYIQVT4QG/pThCgS9e80d6kC0/O/ZW67q/tdWgRMIk9S0uirMVE8dYC8Hsxkn4qmgy+RtkcvREubpDQG5wNqFuBdSzy91611x3b0hl69APmovktCBYovGpFsbYl/JUWHjIbOQW5IZz4jgEOaIJIPoJVvNqrc=
+	t=1737621640; cv=none; b=QMctARVs/nrcHzxSr5hWKGxoS/TdBC/mN8ZGtwK2cdMH1/eqxkehdOYYolz1jQqMPpvGKyNuSXLY7eN9sCmnlBHu7usorlH3dcczn3THJbMO3kKlRjW+APK7x7EuzhLxK/LHlcCUrO0Ny1TJHmLUu7Oa7k4WkkncSH6/HJaLrf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737621106; c=relaxed/simple;
-	bh=cqr96AADxibyyX3p/cVeDDk/k56CpzyDZ/1wk0Dn9I0=;
+	s=arc-20240116; t=1737621640; c=relaxed/simple;
+	bh=4yZw1/VhB7OmXrBnvyGYtpyG/yT6UJDKwZdOJ6iGPKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIluIZJCsIkykr/fiXDKAAlC+BzSW8BN4vgDgu0IXeM49EByKPWFewPDfnu9qqMrnfvxUk6J7RWkZftPOUUUA96+HsNDADOUeNHjkFQcpGLSh7ZmBHhhGk4fl6A8ppriaY1Eil6KXPH6/wtibGt1FF5yvgql6Z3IJaF9eA8v7A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ifE6EVqM; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=X69Zdaks4jTtz6M0Nxi9N+wuHksFD8lO1hOaJXhrd9hqyZiC/9UEczgaXHWCeUfXLbCiQQAL22ZpoK5PHRsYNgvmKxvlE2ZgPHzHIvMsJ4tMlE82QB5CfEO75wEAPtdaaARJsLz/UxWf491p3qYjEwSRmkwlZvcP20WsujXAsqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jpXZNP7j; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifE6EVqM"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jpXZNP7j"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=CYbLtkDMy8imrbdEZKVeQ069gtxllANmIxz8jkAWZ9k=; b=ifE6EVqMIqyD2ZcJvi2hCg2rwb
-	6sRwDNqKFBJQcrAKABblJfz03TK3WkmfL8LZFegBc9SI9W7dn1OWgiBCRvvdLiugXbGwGC0UYPi1q
-	cbFcQuLDstg2O8tTjvPGKvATIQfvPhok1FukpGW0fYr5UsVbEa0o03YBkhQfwMkJEN5gcLRGs/QIv
-	K0rzesmsl3TxmXpGdWkjJXe57t+aXm9+vnzAMZIZxnjAFBzQLTSJ2VZzUZHVgYew8vvvdqnxKtLpQ
-	x8rxFrcZ4UVfyJKvbJvGplNQIKlRcjFDp2+INI4py1NXFWH5E+LOQvirbKKP4DaQKtLb7DlskI0QS
-	HkMPSpBA==;
+	bh=Pqt+fUTStPC9oCNZMvxh/lkt7vFV6m8xwr8cKmVb3/c=; b=jpXZNP7joGIaPjxyvc5W40tJk8
+	rrRMmElT424E7bGJ/wRhH7dCiJovT2uNai57FTMRfvPg1esQZ2vo+265Q7lsAIEoYPn0Lt5R9Tdle
+	l0F/xQBtEhA33ppDwHJbYJiv1ug0JUyslxCJldI1pOSMwmvIR5WHVIlpTp8xvBPNqLn1jR1v+Nxs4
+	Ba/KtPFAbafZhga4QLp1RBA8yo0Vk3MZsNxyGmObESs3gRSe7UB/J51RXQ5zgyykljh1ETwTCLsPm
+	OflWWDiaPosPorMd02O2ZhHjmbslMqv9tZ5KjbdBVnBoe/8W6vTVJXmjWdaZ5eivRo+3J859vu5Lq
+	5OrUnAYw==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tascd-00000008jNl-3Mrn;
-	Thu, 23 Jan 2025 08:31:31 +0000
+	id 1taslG-00000008ju1-3UqN;
+	Thu, 23 Jan 2025 08:40:26 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 60FFB3006E6; Thu, 23 Jan 2025 09:31:31 +0100 (CET)
-Date: Thu, 23 Jan 2025 09:31:31 +0100
+	id 445D5300717; Thu, 23 Jan 2025 09:40:26 +0100 (CET)
+Date: Thu, 23 Jan 2025 09:40:26 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -54,12 +54,13 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 29/39] unwind_user/deferred: Add unwind cache
-Message-ID: <20250123083131.GE3808@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250123084026.GF3808@noisy.programming.kicks-ass.net>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <51855c0902486060cd6e1ccc6b22fd092a2e676d.1737511963.git.jpoimboe@kernel.org>
- <20250122135700.GS7145@noisy.programming.kicks-ass.net>
- <20250122223625.aibbrh43pjkzve6c@jpoimboe>
+ <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
+ <20250122141505.GT7145@noisy.programming.kicks-ass.net>
+ <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,50 +69,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250122223625.aibbrh43pjkzve6c@jpoimboe>
+In-Reply-To: <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
 
-On Wed, Jan 22, 2025 at 02:36:25PM -0800, Josh Poimboeuf wrote:
-> On Wed, Jan 22, 2025 at 02:57:00PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 21, 2025 at 06:31:21PM -0800, Josh Poimboeuf wrote:
-> > > Cache the results of the unwind to ensure the unwind is only performed
-> > > once, even when called by multiple tracers.
-> > > 
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > ---
-> > >  include/linux/unwind_deferred_types.h |  8 +++++++-
-> > >  kernel/unwind/deferred.c              | 26 ++++++++++++++++++++------
-> > >  2 files changed, 27 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> > > index 9749824aea09..6f71a06329fb 100644
-> > > --- a/include/linux/unwind_deferred_types.h
-> > > +++ b/include/linux/unwind_deferred_types.h
-> > > @@ -2,8 +2,14 @@
-> > >  #ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
-> > >  #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
-> > >  
-> > > -struct unwind_task_info {
-> > > +struct unwind_cache {
-> > >  	unsigned long		*entries;
-> > > +	unsigned int		nr_entries;
-> > > +	u64			cookie;
-> > > +};
+On Wed, Jan 22, 2025 at 02:49:02PM -0800, Josh Poimboeuf wrote:
+> On Wed, Jan 22, 2025 at 03:15:05PM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 21, 2025 at 06:31:22PM -0800, Josh Poimboeuf wrote:
+> > Oh gawd. Can we please do something simple like:
 > > 
-> > If you make the return to user path clear nr_entries you don't need a
-> > second cookie field I think.
+> > 	guard(irqsave)();
+> > 	cpu = raw_smp_processor_id();
+> > 	ctr = __this_cpu_read(unwind_ctx_cnt);
 > 
-> But if the NMI happens late in the exit-to-user path, with IRQs
-> disabled, right before nr_entries gets cleared, the cache won't get
-> used in the task work.
+> Don't you need a compiler barrier here?  __this_cpu_read() doesn't have
+> one.
+
+What for?
+
+> > 	cookie = READ_ONCE(current->unwind_info.cookie);
+> > 	do {
+> > 		if (cookie)
+> > 			return cookie;
+> > 		cookie = ctx_to_cookie(cpu, ctr+1);
+> > 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie, cookie));
+> > 	__this_cpu_write(unwind_ctx_ctr, ctr+1);
+> > 	return cookie;
 > 
-> However I think we can clear it on entry-from-user.
+> I was trying to avoid the overhead of the cmpxchg.
 
-Return to user runs with interrupts disabled, if an NMI hits that, it
-will have to set TIF_NOTIFY_RESUME again and queue the IRQ work thing.
-That self-IPI will hit the moment we do IRET (which is what re-enables
-interrupts) and we're going back into the kernel.
+We're going to be doing userspace stack unwinding, I don't think
+overhead is a real concern.
 
-Anyway, I suppose that is a long way of saying that you should be able
-to do this on return to user.
+> But also, the nmi_cookie is still needed for the case where the NMI
+> arrives before info->cookie gets cleared by early entry-from-user.
 
-But yes, enter-from-user should work too.
+So how about we clear cookie (and set nr_entries to -1) at
+return-to-user, after we've done the work loop and have interrupts
+disabled until we hit userspace.
+
+Any NMI that hits there will have to cause another entry anyway.
