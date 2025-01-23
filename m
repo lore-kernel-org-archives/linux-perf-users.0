@@ -1,65 +1,53 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14AA20C03A;
-	Thu, 23 Jan 2025 08:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01522010F2;
+	Thu, 23 Jan 2025 09:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737621855; cv=none; b=d8PUdrUpzy/gfOAyEUVk1HOPerZYq3fHnJjULQ7AH8k5o2q4yaWCOyg2W+YKIOQB/Qp2ESlUkwQGwUuPt5/y6Ce6jrQn0wf9GQZQApuVVa+IbBl5XRIxH9pPVqs6og59wkScQA6OrWQyQ1FUqInOyoQjULaCJAX1J33lMq/yHTg=
+	t=1737623657; cv=none; b=GlzGZem9zoro/y6p+V5p+qzF/fgmvNG4Gsq8F1PnMGFMKSCbgnL088ye9Xm1ibw8ihQWBK0Jx0yOm2FZNweWObWwQxhWLWNo+VEhNvtMyGk8LAMYafo5yP8OArZHyKU/Cf2nyjrqWKQxdzcfYKax5m6X6qs5MrLMJFQk6xeWoIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737621855; c=relaxed/simple;
-	bh=st1hjqQiInuslmuy2R+7FlDnsIx1MG1MnaPMOJNL0vw=;
+	s=arc-20240116; t=1737623657; c=relaxed/simple;
+	bh=UhEgZubK54fEPqXm/asIEOwWn/TImv/6W1gP46DzVEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulXY8ZImZsf1f+NknLuQNHAjzG1/7d/NtXxIxjGw8AB4DaW76jWlMMv0e/3GfbQtluJwizqm4vz9xuOuiKNfHmJCHoJIgOTjbuN9Qw7cGpOhiIGyuPAMWzWOYq5D2q2A/zeN/soJvD/jI7GKfbyaikM4MXsdg1w/LxteV0xtTPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kkgfc6iI; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=RkMzH2JNpx1w0Pg6ll77P0q6d+JwF6iNnNMMuMRW7IdJBYmF2R7yGyqrX6qS/nUzoiEz9JEsgOOqhF2jbezOg4ElOd4JHz8XmJR+9PS1TdZV8sXric18WGZNxEZ/ixIYfV8RBrl5K84ttg02QAnM4aXo5r/TbK0hluwq/mzSOcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ewmgdo4m; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kkgfc6iI"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ewmgdo4m"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JIR26XdPlkQ6JFnPOIfMnXovAk3Z9SvRrpY1FOaV/Bk=; b=kkgfc6iIiwED7WlUgGLj8idK9N
-	1qsg1iapI8oMBnRqQ/flzKANB0ryh9VTVJ61BQrWSEpPMTKHqljy9Tv0wCfjA/uFe9HngN89iKL1L
-	mDk2AVjStuOEGgObhFA2lvkUDDLN0DDIJ1vPM+ZO1UzrydSHjR9TQnvmxZoOvysYd+4t3aYAhf1IY
-	eh2I/3g/PtRePzvwY8NNI7pAAUA05EvqqLYS9oZ3IvCRvWaBAw4ANNHD7px4iN62ENQOgwLske+Ed
-	JSbG8NE94psflLmIg291i2uGOty+xW6OPlN+p7gXnCqyKRlWJ+kCs9DgYgBlN3t2mcBKGF9i1C4Pt
-	2Na4DxtA==;
+	bh=4gk8VcCUdUgjoW54ObMOvOEf7lv/rECHs3E4nbb1c1c=; b=ewmgdo4mIuMQyPFe+ikPGSyFap
+	12z3vfgeItTMwCuQvfv4OuqrtSZgdL97hOj0GNu4+sz1AYx5ChBdKQvbAgP/qS6hXsw6J89v9+Pbj
+	q7VeOu3DUVlrlWOdlyirElF9oevtdNwY3xxxBNjidSP3VOe9uvtMJMa3CXk/BeYnz7Nv/M/qdtOiA
+	I1/6HxQPP5JxozQDP/EQUHUoJWRXfl8bNc9Wzl+3jRevxWg+G6LV5sL7WZ+XNS2Qn0DCT0reXhZ6x
+	1JkBRUQBrF1CWIevIcn0k8+KwdYXJ97NnAfMjWKnumYLd90uSLPxZuK/x6xbwg8iYCuKApxzvpFed
+	ctM10M0Q==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tason-0000000Dl5d-1VAA;
-	Thu, 23 Jan 2025 08:44:05 +0000
+	id 1tatHt-0000000DlLD-12uQ;
+	Thu, 23 Jan 2025 09:14:09 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BBB4E3006E6; Thu, 23 Jan 2025 09:44:04 +0100 (CET)
-Date: Thu, 23 Jan 2025 09:44:04 +0100
+	id 1BF983006E6; Thu, 23 Jan 2025 10:14:08 +0100 (CET)
+Date: Thu, 23 Jan 2025 10:14:07 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 34/39] perf: Skip user unwind if !current->mm
-Message-ID: <20250123084404.GH3808@noisy.programming.kicks-ass.net>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org>
- <20250122142910.GW7145@noisy.programming.kicks-ass.net>
- <20250122230838.lrmuxhowq6ezvoqp@jpoimboe>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	ak@linux.intel.com, eranian@google.com, dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
+Message-ID: <20250123091407.GJ3808@noisy.programming.kicks-ass.net>
+References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
+ <20250115184318.2854459-3-kan.liang@linux.intel.com>
+ <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
+ <be90e73b-eedf-4ff0-a832-b579e003cac9@linux.intel.com>
+ <20250116204225.GA7232@noisy.programming.kicks-ass.net>
+ <20250116205659.GA15641@noisy.programming.kicks-ass.net>
+ <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,36 +56,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250122230838.lrmuxhowq6ezvoqp@jpoimboe>
+In-Reply-To: <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
 
-On Wed, Jan 22, 2025 at 03:08:38PM -0800, Josh Poimboeuf wrote:
-> On Wed, Jan 22, 2025 at 03:29:10PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 21, 2025 at 06:31:26PM -0800, Josh Poimboeuf wrote:
-> > > If the task doesn't have any memory, there's no stack to unwind.
-> > > 
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > ---
-> > >  kernel/events/core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > index 99f0f28feeb5..a886bb83f4d0 100644
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -7792,7 +7792,7 @@ struct perf_callchain_entry *
-> > >  perf_callchain(struct perf_event *event, struct pt_regs *regs)
-> > >  {
-> > >  	bool kernel = !event->attr.exclude_callchain_kernel;
-> > > -	bool user   = !event->attr.exclude_callchain_user;
-> > > +	bool user   = !event->attr.exclude_callchain_user && current->mm;
+On Thu, Jan 16, 2025 at 04:50:01PM -0500, Liang, Kan wrote:
+> 
+> 
+> On 2025-01-16 3:56 p.m., Peter Zijlstra wrote:
+> > On Thu, Jan 16, 2025 at 09:42:25PM +0100, Peter Zijlstra wrote:
+> >> On Thu, Jan 16, 2025 at 10:55:46AM -0500, Liang, Kan wrote:
+> >>
+> >>>> Also, I think I found you another bug... Consider what happens to the
+> >>>> counter value when we reschedule a HES_STOPPED counter, then we skip
+> >>>> x86_pmu_start(RELOAD) on step2, which leave the counter value with
+> >>>> 'random' crap from whatever was there last.
+> >>>>
+> >>>> But meanwhile you do program PEBS to sample it. That will happily sample
+> >>>> this garbage.
+> >>>>
+> >>>> Hmm?
+> >>>
+> >>> I'm not quite sure I understand the issue.
+> >>>
+> >>> The HES_STOPPED counter should be a pre-existing counter. Just for some
+> >>> reason, it's stopped, right? So perf doesn't need to re-configure the
+> >>> PEBS__DATA_CFG, since the idx is not changed.
+> >>
+> >> Suppose you have your group {A, B, C} and lets suppose A is the PEBS
+> >> event, further suppose that B is also a sampling event. Lets say they
+> >> get hardware counters 1,2 and 3 respectively.
+> >>
+> >> Then lets say B gets throttled.
+> >>
+> >> While it is throttled, we get a new event D scheduled, and D gets placed
+> >> on counter 2 -- where B lives, which gets moved over to counter 4.
+> >>
+> >> Then our loops will update and remove B from 2, but because
+> >> throttled/HES_STOPPED it will not start it on counter 4.
+> >>>> Meanwhile, we do have the PEBS_DATA_CFG thing updated to sample counter
+> >> 1,3 and 4.
+> >>
+> >> PEBS assist happens, and samples the uninitialized counter 4.
+> > > Also, by skipping x86_pmu_start() we miss the assignment of
+> > cpuc->events[] so PEBS buffer decode can't even find the dodgy event.
 > > 
-> > What about things like io_uring helpers, don't they keep ->mm but are
-> > never in userspace?
 > 
-> Hm, that's news to me.  At least this patch doesn't make things worse in
-> that regard.
+> Yes, counter 4 includes garbage before the B is started again.
+> But the cpuc->events[counter 4] is NULL either.
 > 
-> IIRC, user_regs(task_pt_regs(current)) returns false for kthreads
-> because the regs area is cleared.  We could add in a user_regs() check?
+> The current implementation ignores the NULL cpuc->events[]. The stopped
+> B should not be mistakenly updated.
 
-Possibly, I've not yet dug into the io_worker thing in much detail yet.
+Ah, indeed. I was so close.
+
+One question though -- is this value ever exposed otherwise? I had a
+quick look and I don't think we support PERF_SAMPLE_RAW for PEBS, but
+what about PEBS-to-PT ? 
+
+Anywya, let me go find this v10 thing :-)
