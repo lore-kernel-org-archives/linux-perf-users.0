@@ -1,154 +1,116 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28061C54A7
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 21:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C11C5D57
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 21:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737667499; cv=none; b=jv4m7Q2TjS6jKunV5ZR7/uHpQaSn33ZknYRIrNft61pndT6O+t+Jzhyp/nhvy4L8Dmbdv9rZoRniSaZdTcYKdnU/8ZOf6AJa27Q0A7Ok+Bf8PZ8V1267bDYPo/M/Js0LOkgoodyULaEv00Eu0z/gWdKo9WCo4hCE0I5F+uBbTPQ=
+	t=1737668250; cv=none; b=os/XSkHvOTB/MPMPqQ1u2OSJGMeBRN02CuBQhqFKVEdCv4hDOPysKaeTQ5DytBZ1ayHi0zplo6ySmeFLaUwb1rZXUfRdane1gYbHAeVCGJ6KU6MDtxqddJOluTL4vZbSckLSZ6GBTkDFRGKlV4OBjQkt6euwc5DbNKpO617Fdok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737667499; c=relaxed/simple;
-	bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
+	s=arc-20240116; t=1737668250; c=relaxed/simple;
+	bh=L752r3W235xYDox9BIyWE3Rp16Pk46klYTAG96XXzG4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sSUS5xWrDG6TtyMP3KE1VW1UeXWa/Dd2dDqO+FBmF4gR+z2aW/0JikkbOg+u29dHZJDewDY2cLt6L7zLEg3bnUoNP+mGQRcJ4nW+oESOaMdwySICjZW+S5mKvarC/3dtAL1MmgrkfB56d0vLUd8EEgK6P1bwfgUEnwAsgSpcBg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qRuf8/vC; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=u+FOd6XOEIIydrblkBWQheImRACUHtYG39JYf6nXQcmG5kVSFE/JiDmwXQ5NCdJu52u1JmX0JhwZTu5LpCjE0BM+6jNhmQGQUaaOzhSikmqjZZznAq2eUKdzCc/kieAOoNRBx6/kBS6fenB+LsBd+b5s/4P3b5eO9fvsYv0QyDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p98tQp0O; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRuf8/vC"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so26575ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 13:24:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p98tQp0O"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so40295ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 13:37:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737667496; x=1738272296; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737668248; x=1738273048; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
-        b=qRuf8/vC4Bjo1ZwXnPU5QjdS06O1FH5w/rPa/tgSl/fyy/mICi2d32rmLDAq6Qkj2/
-         R6tN8SmpAbyWju6W7oANfyP+FG1QszCNhoOJLqmQ64gDfk3E+gaHLR4UF2rwTBfCDddu
-         INdCT4ESByao8/czyH7ThIplHmKIXuenAXdIUyrbLehbwoz4FBDU767SJhrUWPPkWCrJ
-         XWsbNDOAA6CwWu4NBXOQxRDt9TQmEKaYgylh1LU7U/G3MjWXI0yrC34gy0ySA47BtZwh
-         TT1TwFBIUgxBn6PoIT7qMvB466WzFGofzz+JsHWfvtJSkgY5OqM50gcnqH2mhRPy7IFE
-         PwNA==
+        bh=uoxnm9hTWfZu/cKYiCMCQS81Mb/wxsDunq4c/uCgQzg=;
+        b=p98tQp0OMchs7XOtZWLm7C0Hhbqf+S9/2ZfWUSUq48yyFvUUx6vc4grKSgv21PaYS0
+         OBheA412BxuhhMR3IDoo3FckA16bUqNm5NpwFwqXaCQDlQVnghuP9CnP8Oq0QjHWCNGF
+         5/z6J+qzYoU109UTBCgO08hOsloXJ2sq0D69oAxxskKWVR7e72jrsK1efwfmf9GyxcL+
+         TOYVKj9DgFhFCX0/Hv7Iifmjd1Ipnxm+TVgiJcAh9cFrgO3iu+rCB/+bM+3fUlaXoMSK
+         LlS/FUU7AmYjsbI0Ld2J3BaIdaQEqhyebvmVC7XEP2qFz4yvtPb7yLf2jdTtXKHRkUzL
+         hj/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737667496; x=1738272296;
+        d=1e100.net; s=20230601; t=1737668248; x=1738273048;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
-        b=hck6muX+NQmyYeKg3/LDYpy+DpKKAfrov/AcNbZqt7TnJhRWJpH9XxbIW+GiZWgJAg
-         xwCJjYyEwu9ElT7U7gmoE92EbE/IeFLnLW0KQb6uUTu0+nBk9y8GYHbM8RGSPvip3ZWi
-         W7fKZOTchxL4HRb3JsTpq26oK2bqWefl/YNQaFWrDxHM9aE1b5hA627mUN5CwUrxAUSV
-         HnOhjbwfPmnS4c7ZwnWDt7SqWfJUy4T5gtdKwgw6szYnFtrOd8ee4VMUQkZhBJXQ87U8
-         YqmGFAupF95+Qjvc19FaYKD5MUMCIPbdPHLhcacNuoFjpMjSuaIOerP7oQKptM4q8kad
-         xplA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ7TpVejq27p6s0PLn/EcOv6YcK1gb6kLt38fpapMfg38JXUqPOcdUZGcjdadxllC/e7wofe42zp6JBbzNwxLh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiK7ph15XX1P/dwE4kjNAH883nNihFBzqXUloeyCd26eTOKl37
-	DAsqh6+txOXkR9w8n9DtOLtKszsHAF1SNUZygKjCWX+dPn3FZTeZwnyHY88i+ebTsVQmER9L1RH
-	VRKaN7dBrUNEs48HzBP2uc7kYibJsk/vHvdN3
-X-Gm-Gg: ASbGncvY/nidWhkKufsWtBzxk9qW7OBk81Bz90ugQyCGS9JDwK1yVKT7ATpVp8Ez0kb
-	uidcWpM2UjuQEb1vKxoLVaMxqTVBVy3dbL/PYFhEUfva44sBg3taq+c/UcrehTQ0m6Bwz4Xni84
-	zVD9phLGi7JacF6Q==
-X-Google-Smtp-Source: AGHT+IGwvofrtUyEuSwOuV3OUTAsv9p7IO9zxK0RoTXVD1YmkrPrc9vYfh/5phhlnpuNXd8qGJMfJHgAwe0IUpnUZuM=
-X-Received: by 2002:a92:da09:0:b0:3cf:c1af:99f with SMTP id
- e9e14a558f8ab-3cfc1af0b2bmr2536455ab.24.1737667495808; Thu, 23 Jan 2025
- 13:24:55 -0800 (PST)
+        bh=uoxnm9hTWfZu/cKYiCMCQS81Mb/wxsDunq4c/uCgQzg=;
+        b=uOle0wkc3oY1SqCmKFBnWcxYh2eUVZv9GkguD2YQOgbkP05Xe7NUebNN8VacMMDmSo
+         GNCHwQ4R0LHpEYf2Id/AtaXq22fe25Z412Oag5t5LIVI7Od+xmZCVK11HC4AiMYxU77H
+         7jIHzdg3C2VoJcFQEmwH1P7ryW9W4R6MVuOosVgPGocy6mO/kzVlB6kuJbPsVVsU0ob1
+         jAj5ORDzAXVIMFWYcTvZ9sWuvHw0td0fVPbk4hEj4rMoJ9nOatkKwU3/VR9hyu5R0Bye
+         kgAHfftikxYlU9rbPQl26+3kgPw3tG0kFKqnYqxlUzva8Vdpafmj63gGbHqXCQ00NHTz
+         vr8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCLe9Y0nYKi5h/7Zolo/j6oXbkKpyTOe/T+xH0xeFWLvPJmDzKRH1Lot9tlBjrFJgPbA1h3eMlAE11Y5qRevN3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoQqq7vm3bnrY9+gp8VuAy+HERxSAtfRrKVNv1sKZSOwZgdPFV
+	0CQ+asENbn8GtixQe4G7QkahVycrlUD/FXWll1guwjQlyNpGsDhj3p72gFgGesa99WZaYuH7eVk
+	MarR/kIP+gRMWK+9cacKy6tBu2ZOGhMsGuUlh
+X-Gm-Gg: ASbGncucyBw8O2EvOBjkXZDgiXwAILYnj4YN/dTzia6obdGlEoVwN1Gttg+3+XBBN9b
+	sIunHjookMM5VwPwJ0I7Xd3TY/3UNyqi3F6OeB0CGXSFiEv6CZabSsQaL80OayhD28NXyfSW52u
+	FAlhTsJfgqvfmSPA==
+X-Google-Smtp-Source: AGHT+IFe7SswEBLl2QnLCKZzlHXG+YarrT6rMAK1wtA2NW1AV2vUVPldz0BgyNNQs/pQU2LinX6XSFXiFaCh8HCJUlw=
+X-Received: by 2002:a05:6e02:20c6:b0:3a7:e301:a1f2 with SMTP id
+ e9e14a558f8ab-3cfbdea9d88mr4093055ab.15.1737668247865; Thu, 23 Jan 2025
+ 13:37:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122062332.577009-1-irogers@google.com> <Z5EM24qWVQF2VdI8@tassilo>
- <CAP-5=fW6ZWf6jF3Xnike81S9s_5tZ9w4DS8=8Ff1Ve87O32_Sg@mail.gmail.com> <Z5KILXC9-dN4Vo1o@tassilo>
-In-Reply-To: <Z5KILXC9-dN4Vo1o@tassilo>
+References: <20250120173208.344231-1-irogers@google.com> <20250120173208.344231-5-irogers@google.com>
+ <Z5FwusFZ_bYlu6aK@google.com> <CAP-5=fX4vtKzMtrEbZhqH0dmKpXY3Ke+pVJ-ZbnHnAVuto7Z8g@mail.gmail.com>
+ <CAP-5=fXx=q-LHcb9BtjE1AFZGmV55NBWy3HvfWQaABo-YO=4gA@mail.gmail.com>
+In-Reply-To: <CAP-5=fXx=q-LHcb9BtjE1AFZGmV55NBWy3HvfWQaABo-YO=4gA@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 Jan 2025 13:24:44 -0800
-X-Gm-Features: AWEUYZm6s3k1Q3-4dxuPxZe5_z1NgGEQjOMpv31v0pNOZT3BbLBoJ2mkb87R2IA
-Message-ID: <CAP-5=fW5xmir_26CrQN50TWkzab3GueUvne4VWhWhqc82p6LvA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
-To: Andi Kleen <ak@linux.intel.com>
+Date: Thu, 23 Jan 2025 13:37:16 -0800
+X-Gm-Features: AWEUYZkx3MIYrAmzo2aXD_jxkXsQ8Hq8_p05FIEhwZQ0cii9aIVMyCMgz9iHWj8
+Message-ID: <CAP-5=fUhNuybCU-2_5EgcCwgwXnxvyFMvyhzKe=ZP1bssQwXHw@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2025 at 10:19=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
-ote:
->
-> > In certain scenarios, like data centers, it can be useful to
-> > statically link all your dependencies to avoid dll hell.
->
-> Yes but it won't be loaded into memory if not used. Executable
-> loading is all lazy. Maybe look a page fault trace for loading
-> perf if you don't believe me.
->
-> So you're trying to optimize disk space here?
->
-> I didn't see that in the cover letter.
+> > On Wed, Jan 22, 2025 at 2:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > I think reverse engineering the types is fragile.  Can we simply chan=
+ge
+> > > to dlopen if libcapstone is available?
 
-For me yes, for distributions it is dependencies. This is already in
-the v3 message:
-https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
-
-> It doesn't seem like a very good reason for such an intrusive patch kit.
-
-The capstone and LLVM code is preexisting. Moving the capstone/llvm
-code to their own files isn't dependent on dlopen, it does make it
-nicer to have a single place we're doing dlopen. The change to shim
-the capstone/LLVM calls looks like this:
+To understand the scope of the problem, here is the LLVM code:
 https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
-ls/perf/util/llvm.c#L160-L182
-That is a shim is introduced that either calls through to the function
-if we're linking against libcapstone/llvm or does the dlsym. There are
-7 such functions in the LLVM code. I don't think shimming 7 functions
-is at the scale of hugely intrusive.
+ls/perf/util/llvm.c#L22
+3 typedefs and 5 #defines on 13 lines of code.
 
-> If it's a serious concern maybe investigate an executable compressor?
+The capstone code is larger primarily due to needing to define cs_x86
+(and its dependencies) which are used for extra detail in printing:
+https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
+ls/perf/util/capstone.c#L23-L132
+We could opt out of providing the extra detail if capstone.h isn't
+present. I believe this can remove lines 49 to 123. This would mean
+there would be 37 lines of reverse engineered types - 2 structs and 5
+enums.
 
-Perhaps just have a squashfs partition.
-
-Fwiw, excluding dependencies I think compression on the events is a
-good solution. Convert json events/metrics to a sysfs file with the
-cpuid in the path, add the compressed file to the binary as data, find
-"json" events by iterating the directories in the compressed file,
-etc. A single filesystem approach to event lookup can mean we do some
-kind of unionfs style lookup of events, which could support users
-adding their own events/metrics in a directory. Zip doesn't support
-compressing across files, which is something of a requirement here,
-other formats do but it's a case of optimizing for some kind of
-libarchive sweet spot. The opportunity here is that about 70% of the
-binary is event encodings, a compressed file is about 30% of the
-current binary size, so we could reduce the binary size by about 40%.
-
-> > The X86
-> > disassembler alone in libllvm is of a size comparable to the perf tool
->
-> I agree that LLVM is a serious bloat and DLL hell concern, but I don't th=
-ink
-> dlopen is the answer here.
-
-Agreed, but it's where the code is at. addr2line command or use LLVM
-for some performance. I think having an inbuilt solution would be best
-longer term - we spend energy trying to parse and understand text
-output from tools/libraries when the information is just sitting there
-in the instruction encoding. Such a solution would be brittle for
-things like new dwarf information, so we may want to have fallbacks
-like LLVM but having a loosely coupled dependency using dlopen feels
-preferable there, to aid package maintainers.
+My feeling is that this isn't significant and better than returning
+errors for capstone/llvm, having #ifdefs/__maybe_unused for the cases
+we lack the types throughout the code and relying on people building
+noticing a warning to realize they need to install a dependency - the
+alternative of failing the build if the capstone/LLVM header files
+aren't present, and unless some NO_... build option isn't passed,
+likely won't fly with perf developers.
 
 Thanks,
 Ian
