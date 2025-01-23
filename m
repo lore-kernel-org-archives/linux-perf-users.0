@@ -1,38 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB2C1CEEB6;
-	Thu, 23 Jan 2025 22:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8D31B0F2F;
+	Thu, 23 Jan 2025 22:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737670755; cv=none; b=A2wIcF3okJ65NDk+Rn2ixAOKssmRaPnhg+kEpHUzP9f4uJEZJdaMG/MBlAcsdGsiHhN4kfROVFtn4tRV6Nenu+sGSw25+sFfy1L4z8tJcQNLg5Kiqt1th/PemEqKM3Pd1G7tFTzjUxPKHl1nFJKE8rqCGsSURFXu+znAcH6P9Hc=
+	t=1737670882; cv=none; b=lbQa1xYfPtWhI4/s4w0l+arQLr0hSby+iu6728rVpR2igJfb+pcmo6+YbSKPXoEZO2xx2oFZmmOTrLQlGNYqptwmxgSvgQxWAVoumiFZuDtUMGEOtyLbDzUg7hLJh71IOlyeNPr90MkIgIjTXqm0y6vFTDA4Pqoi4KV9ScF04Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737670755; c=relaxed/simple;
-	bh=B7gk++jCMY/BtalIYCw/H6LHVHDOviKcwWkkwl2PrM4=;
+	s=arc-20240116; t=1737670882; c=relaxed/simple;
+	bh=X57Oh0JS/ZOCaFEKu1rWMqsIenBnOP1ahPElwDUh6nw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxCKws2dlncNAe7b5f+E2z4Y8heyPaGk1THlpbylUKtf06ScizgAWfrh+P5VeZTzvdWZQu2Dqj9PZq5wbuQH49RT668N1oVLXREn9KewYnHPq/CSfpCG4+WtTAYwNdHSP5N5vqTXtD0J145oA5c+ka/Jq8upbk/aE/WVrkcH5pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LDOmfgsl; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQnrpf9BJfQC9nN8s+zJDwqXls1tmvrxiFjMBEAfuJCNR5QdpH4nN6ltGcMGcjv0tjs0te8eIYc3RJt3tRSjNM4Gh9tzbTdK5Cr4zKXkg0qIMtL2dhvpsBei4ZsLqjs2o7dmBNYKB2pjokorfKXwKz9dIz5axhpHf4opzuDaYlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TBZLJB4v; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDOmfgsl"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TBZLJB4v"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LvA5ehYZhYft0tnAhYfdtI5coJkJeA/0CGC1dXTtsX0=; b=LDOmfgslOIOyKVSdtPxTzIEon8
-	fA+IADLs4h7UOW3ns61cBbHMKYErAD4zDeKp/GCLrMBWbEGh208rKI1ud0WLRlTV1/GxdWkQ9lKC6
-	vKZD0M4ABH9NNdT3mByRmP5329KohKocDYBxc/FoJYkSki67oxTXPNirW3J/tohLm/rMYhVzN8l1f
-	sQSQZeH4cuhC6m8mpTM4jLxmuPHkMNg3wJ76vsLr00wVm0RWv55GCHI4l7RZ8Vmu4EbzUr7R/vJR8
-	k1ZBsIjXB9i1aaDAkQqM+P06bPs2shRzXAKOcyaHcpn1mS+c300QAarerZlgtT4qbLj/oy8Ix1dr0
-	ywzljHrw==;
+	bh=jfhCW7nhk3Q/snlnIdLGiMlH6jeUTF8Nuy8kf8OlzRo=; b=TBZLJB4vjA1ItqBy2dpMdy4x0l
+	C9TlCnXZTM8rJN6mJjcB81goNxFPYuaUCW0EFqcDP1JRxx3oJ/wOMGP0gbjPLke3j3+NDrxyxjdlO
+	u5NhH9F2ZV5OjbiopUKuRzim++1lIoLY/GcXRDFxJhr7vRFFjxaz4Po0zA7rLPg+b+0rbmVLDZYhh
+	Kp5M9R68mXASlKS+6nLFRTtLc4KyI3TygBKXiIIL6sWJBpwMdqLH+9E9h1EW1vbS7IMEbk5gLAI8R
+	b5LdyDEnWwf0C/T3szQE2VtOXLVlXKghQa5EHb6aUbyMwr9u4Y05cJdXCb9SOS/p1ITJ7VDA+cthu
+	5C3LX45A==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tb5XT-0000000BBGv-3Sgh;
-	Thu, 23 Jan 2025 22:19:03 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tb5W5-0000000DqtG-1Sby;
+	Thu, 23 Jan 2025 22:19:39 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 35EE5300717; Thu, 23 Jan 2025 23:19:03 +0100 (CET)
-Date: Thu, 23 Jan 2025 23:19:03 +0100
+	id 0C7093006E6; Thu, 23 Jan 2025 23:17:35 +0100 (CET)
+Date: Thu, 23 Jan 2025 23:17:34 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -54,14 +54,15 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
-Message-ID: <20250123221903.GF969@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250123221734.GE969@noisy.programming.kicks-ass.net>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
- <20250122122821.GN7145@noisy.programming.kicks-ass.net>
- <20250122204720.t42a4em5endxox3y@jpoimboe>
- <20250123081403.GA3808@noisy.programming.kicks-ass.net>
- <20250123171509.3xmrbrbmu3tsll7w@jpoimboe>
+ <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
+ <20250122141505.GT7145@noisy.programming.kicks-ass.net>
+ <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
+ <20250123084026.GF3808@noisy.programming.kicks-ass.net>
+ <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,27 +71,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123171509.3xmrbrbmu3tsll7w@jpoimboe>
+In-Reply-To: <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
 
-On Thu, Jan 23, 2025 at 09:15:09AM -0800, Josh Poimboeuf wrote:
-> On Thu, Jan 23, 2025 at 09:14:03AM +0100, Peter Zijlstra wrote:
-> > On Wed, Jan 22, 2025 at 12:47:20PM -0800, Josh Poimboeuf wrote:
-> > > What exactly do you mean by "NMI like"?  Is it because a #DB might be
-> > > basically running in NMI context, if the NMI hit a breakpoint?
-> > 
-> > No, #DB, #BP and such are considered NMI (and will have in_nmi() true)
-> > because they can trigger anywhere, including sections where IRQs are
-> > disabled.
+On Thu, Jan 23, 2025 at 11:48:07AM -0800, Josh Poimboeuf wrote:
+> > > > 	cookie = READ_ONCE(current->unwind_info.cookie);
+> > > > 	do {
+> > > > 		if (cookie)
+> > > > 			return cookie;
+> > > > 		cookie = ctx_to_cookie(cpu, ctr+1);
+> > > > 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie, cookie));
 > 
-> So:
-> 
->   - while exceptions are technically not NMI, they're "NMI" because they
->     can occur in NMI or IRQ-disabled regions
-> 
->   - such "NMI" exceptions can be preempted by NMIs and "NMIs"
-> 
->   - NMIs can be preempted by "NMIs" but not NMIs (except in entry code!)
-> 
-> ... did I get all that right?  Not subtle at all!
+> Should not the 2nd argument be &zero?
 
-Yeah, sounds about right :-)
+This I suppose
+
+	cookie = READ_ONCE(current->unwind_info.cookie);
+	do {
+		if (cookie)
+			return cookie;
+	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie,
+				ctx_to_cookie(cpu, ctr+1)));
