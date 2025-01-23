@@ -1,288 +1,159 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B40B20C487
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 07:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041AE1C5D5F
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 07:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737618438; cv=none; b=fyDsBrc6U4M7X6gdg4CMZAE3wcUZJ1MXGcqjeWMSyAqx0w6Wa28juZ/wH+Edvi6yEDr8vb7RpJAEgxL3bRS5SZvMCd8vGg/Fcwk/cuXiryeVSbWsDFBJbe/whhUw9nqWZAcJiZWrVg2N1+WjOcgitKAyk6KBCr2CJoMAXvpJ5/w=
+	t=1737618525; cv=none; b=e6D+miG1cDtyF2BGnKIP8U/Ov7D3XB1hftXGQIelNO/FCXF9H1Y8zuLtD/5/85cC7zpPBZthS44cV3zcZsXaFt7bJqRndnxmFdxoA7K6JWqgefqIc9CP/2/1OEupCTM47hW914fliEo8rIMN3hVopYoDDpdgMwBGvmMXI99BiJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737618438; c=relaxed/simple;
-	bh=fLRFvGEGqKtFQGLXLVLSNIBik5FhXuDM0tMa3Nsu98Y=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=vBe37CR5hCa+xLnncO7iNhXI6NyAmhEr4AnlKLjmo552IDBJ9IShwI5xydZsvdvwHsKtZYdwTeP7/sls6uoWD6nx470PFn+neQhrnXTQR81DTbc/VLti/TIyScoJmr0haszgLiZ5wxg1n+ZKq43D69pZLDXmVjnrkfDY1VTyc2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZN2/4M6; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1737618525; c=relaxed/simple;
+	bh=E0Qx9FZxwsUpuF7Q7TcIl3+sHLKgQHJqorw9hLI9+Qw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r5KiSQZnGpfBqvsSfuaHaTmJoJxWslUMMgXzCDwkI+obFKm/cEpc2OD+q8Bl5j2PWe8hWckYjl1xRS0w5+2X6J6vq6Fgcy2Eco7SNbmW3eeshZGxkg96aLpwZFJfEjShmU1Si3YbMcuBHPs+8GNDkZfgEcCen+V0+G63ItQ/w5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TezeUwNP; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZN2/4M6"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e54e14f7cbcso1783556276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 23:47:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TezeUwNP"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ee709715d9so955262a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 23:48:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737618435; x=1738223235; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=76ttAHRF3rIX3juKfMVrnox6BeyYpMdEkjNVR8LNQkM=;
-        b=vZN2/4M6VFXoNSuOdkqFBdAjgQgVBqhSYg3k+VXOkp/tmjfdh1+7bixEHnVyYJCASo
-         NVqieuIqD4BG2/iF0mLJi941auaKKrir6gKlabnaC/H+7svzuZ+Do2MkWEGMW3RDJyxq
-         QUolojveGyWY2hgzi6qWEd4si5n9GNCiQnGVBnNSILWqonypBoOzZ4yacq/gBaRnCzXO
-         zzwOeDMgOCIu1lDfW2SVyVzXhrFSdTTRKYDbHeaPL1+fsLrlygSEYqJSL5W/JGlPk7w5
-         txJ4jMqMzXliHJBCKh/UQnAcZ440IBMuBq1GwiJzwL0LMtkHsD6YWj6UxaeOMgQ4C4E9
-         PL8g==
+        d=bytedance.com; s=google; t=1737618523; x=1738223323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=akq5KXNO6yQt2g32XEbXQyeThszQvcySRASydOxEc/Y=;
+        b=TezeUwNPxfqABNy7Vix6ntqLoK9kVSfUH92oEkasW0FV5DEv3SCrkgQPGAb4k3smP+
+         NobchlrX5Gwh1TgSl9p/1OiaG10pdLbuIXFdMd5qXtSyl8dy2L16x6st0wuSVcfcKxIw
+         vIGAfamKPRro3+rJzxtnwdl+DsYlhVydkoot6k0AWWaFikH7+wwSgBTZndxPCcnEqihZ
+         sOgklWGii1mvrjyk2Qk6B5pFty4xTliKYTIwWhlbmJGheTAaOncdqVuCLdHFEnMB6w0m
+         yRjnxbTKCR7m7pYr52NpRVgR5vpiKizPKHpqBQ+76KX9nbB9BRNGdcN0WwthOVluu8mO
+         bOeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737618435; x=1738223235;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=76ttAHRF3rIX3juKfMVrnox6BeyYpMdEkjNVR8LNQkM=;
-        b=od35eXDy0fpcgk3ydoeWMkBE67xmCbN74LOCagGWm9DktEoSgyVZo2c6xsrFkJohRN
-         SX37Z7CBNNYvW2ZD00MHxPTDarz54Utk+bXvNXBYiVMs5bQAZ6vb2X/4PvbLTDlt7JCD
-         IksOh1VORlIwdB4AQUZIUDTe2KGtG1cxqfZ4p9R3PwdOPToAKmc3eRWAMRAmtxuIO8IX
-         jakkIdQr/d6mxNJEacH/ToTo4rFCSGKI1Ylya/lOL5h6k6R2z0D5d8BeybMwZMOa6E/O
-         H7HKinETSvEJPhcKx0fvDxspPEZfpSkJ6Lr+6XGZHV4xj3bEEG/Ekn1t0fggWpF8MNQ9
-         B7XA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFeEIQBq756t06Fs4H75Gqk3ZjEB/JrVIAkBqSpEUM/wkDUGBiYu6g+oZeRyPDxaN6znVvouveAiDZU9xnpdsp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZEVIGaHsJiDRCwEjSDUoQAbr24jZma2cRSIPpqHWbv/2LNCjs
-	nFrsD0RisqsAtzKZvCwIEw9DuVGsg1k3BbSTBKdBKMX1ZxsdxQsEdB/8qVkgD35Xkh+lKlkW7MN
-	Hr7fARg==
-X-Google-Smtp-Source: AGHT+IE9R9Fh4lUJwDFvHC3tyBYYt2+JIwpoi2K88c9BoJjp6yVFbFpdGz4GeMyh+mZoFlBYDHvT/MZkAxDd
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:2fda:d811:ae83:77e0])
- (user=irogers job=sendgmr) by 2002:a25:d8d4:0:b0:e57:f46a:98ce with SMTP id
- 3f1490d57ef6-e58259f769dmr7324276.6.1737618433366; Wed, 22 Jan 2025 23:47:13
- -0800 (PST)
-Date: Wed, 22 Jan 2025 23:46:59 -0800
-In-Reply-To: <20250123074659.698123-1-irogers@google.com>
-Message-Id: <20250123074659.698123-6-irogers@google.com>
+        d=1e100.net; s=20230601; t=1737618523; x=1738223323;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=akq5KXNO6yQt2g32XEbXQyeThszQvcySRASydOxEc/Y=;
+        b=b42qqIyWWmsjhwAfnqY9wzdCbHzeUnElZhLg0w5XQ59w6VWZRmif+h4vM/UjZ6/bHT
+         IJ2hlATIMqVmOc5lIQQCZsTx6nsu1NsUmUhZKkPa2MpgKbaa8tPwjijeBIedkxeosALg
+         iOTjTc5/l+6bXxRabTlHJRKQ/kfeT9rhxpuSBSk7AdE3JrgWcQRCYGptXY2sRHY3Cgrv
+         u9mLbLiaXK+bGV3iIztzJQicWZ6WChWNHQBtAfgBbr7V0LCYG0IR3P3hLwwH2rpWlbDy
+         g/pWJDEBCnB89+ImeCTP0+5pb6zwXD/OCbyZLaUS/8MdAifCcuBWZWOX5s09XIRBntvA
+         sWCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOoAYQn+qBPppexuts/u7uVud2jVlfRCMJudnou7mcsZ615qtjH6ajmq/60yFRJYtsCNc2vais0iOwNoFTjy/X@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzSxj0TcBaPFcgXxCTrnAowAwxLLSGAH5A8wxP0+MpLjAD0aXO
+	UZaidlAmi7TOxK5L6rZ+LxUi39DY2DDn/hXe/DeBUTWAB8WOlMabS/Z3QLTIt3I=
+X-Gm-Gg: ASbGnctYxaZhi41rkLzQokJW4ZNYlgyFyRuDQu1NtlQCw8xE11X65l4mBWruG5addZ6
+	lmjqWqer+sX/OTlTwwjHQZtEpyetdGRDOTkVRb3u0gpuATXb6oonfgIH8XtXkkQJeewsQH4rpVz
+	1w+JkFQWW1xYUXIdDMA9WaPk78koZ9Mhwt2T0DeetVqWgYgtvbqoGgWek7vpSIC/wb8IwKST+Eo
+	igWCsxGef87FxJ0qVdc2dnAUuu2VMm32AFYwJbDu7hcjcMwqcDMY1I8luJ3eN4odOCTBVKG7BuS
+	TWdXsndHjnVYI+r00OrrnLgxFsNPRiXpFwn8PgY0uRg0J22L
+X-Google-Smtp-Source: AGHT+IE9X53VOiUMKpFB+BSDlxPRom2fGPMvdfIAykyzXKLH2DYJqYIyh5IN0C8tYV+MtH6iQMWt8w==
+X-Received: by 2002:a05:6a00:b4d:b0:71e:108e:9c16 with SMTP id d2e1a72fcca58-72daf9760cbmr36109849b3a.12.1737618521995;
+        Wed, 22 Jan 2025 23:48:41 -0800 (PST)
+Received: from L6YN4KR4K9.bytedance.net ([2408:8207:7820:2ed0:a46e:6310:4021:f441])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72daba4895csm12749090b3a.130.2025.01.22.23.48.38
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 22 Jan 2025 23:48:41 -0800 (PST)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
+Date: Thu, 23 Jan 2025 15:48:30 +0800
+Message-Id: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250123074659.698123-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Subject: [PATCH v2 5/5] perf stat: Changes to event name uniquification
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The existing logic would disable uniquification on an evlist or enable
-it per evsel, this is unfortunate as uniquification is most needed
-when events have the same name and so the whole evlist must be
-considered.  Change the initial disable uniquify on an evlist
-processing to also set a needs_uniquify flag, for cases like the
-matching event names. This must be done as an initial pass as
-uniquification of an event name will change the behavior of the
-check. Keep the per counter uniquification but now only uniquify event
-names when the needs_uniquify flag is set.
+During platform_device_register, wrongly using struct device
+pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
+still, accessing the duplicated device leads to list corruption as its
+mutex content (e.g., list, magic) remains the same as the original.
 
-Before this change a hwmon like temp1 wouldn't be uniquified and
-afterwards it will (ie the PMU is added to the temp1 event's name).
-
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- tools/perf/util/evsel.h        |   1 +
- tools/perf/util/stat-display.c | 111 +++++++++++++++++++++++----------
- 2 files changed, 79 insertions(+), 33 deletions(-)
+ drivers/perf/dwc_pcie_pmu.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 5e789fa80590..d91621b6c8c2 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -119,6 +119,7 @@ struct evsel {
- 	bool			errored;
- 	bool			needs_auxtrace_mmap;
- 	bool			default_metricgroup; /* A member of the Default metricgroup */
-+	bool			needs_uniquify;
- 	struct hashmap		*per_pkg_mask;
- 	int			err;
- 	int			script_output_type;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ba79f73e1cf5..e65c7e9f15d1 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -929,12 +929,16 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 	}
- }
+diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+index cccecae9823f..8b208f287a1f 100644
+--- a/drivers/perf/dwc_pcie_pmu.c
++++ b/drivers/perf/dwc_pcie_pmu.c
+@@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+ 	u32 sbdf;
  
--static void uniquify_event_name(struct evsel *counter)
-+static void evsel__uniquify_counter(struct evsel *counter)
+ 	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
+-	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
+-						 pdev, sizeof(*pdev));
+-
++	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
+ 	if (IS_ERR(plat_dev))
+ 		return PTR_ERR(plat_dev);
+ 
+@@ -614,19 +612,32 @@ static struct notifier_block dwc_pcie_pmu_nb = {
+ 
+ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
  {
- 	const char *name, *pmu_name;
- 	char *new_name, *config;
+-	struct pci_dev *pdev = plat_dev->dev.platform_data;
++	struct pci_dev *pdev = NULL;
+ 	struct dwc_pcie_pmu *pcie_pmu;
++	bool found = false;
+ 	char *name;
+ 	u32 sbdf;
+ 	u16 vsec;
  	int ret;
  
-+	/* No uniquification necessary. */
-+	if (!counter->needs_uniquify)
-+		return;
-+
- 	/* The evsel was already uniquified. */
- 	if (counter->uniquified_name)
- 		return;
-@@ -942,19 +946,6 @@ static void uniquify_event_name(struct evsel *counter)
- 	/* Avoid checking to uniquify twice. */
- 	counter->uniquified_name = true;
- 
--	/* The evsel has a "name=" config term or is from libpfm. */
--	if (counter->use_config_name || counter->is_libpfm_event)
--		return;
--
--	/* Legacy no PMU event, don't uniquify. */
--	if  (!counter->pmu ||
--	     (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW))
--		return;
--
--	/* A sysfs or json event replacing a legacy event, don't uniquify. */
--	if (counter->pmu->is_core && counter->alternate_hw_config != PERF_COUNT_HW_MAX)
--		return;
--
- 	name = evsel__name(counter);
- 	pmu_name = counter->pmu->name;
- 	/* Already prefixed by the PMU name. */
-@@ -993,17 +984,6 @@ static void uniquify_event_name(struct evsel *counter)
- 	}
- }
- 
--static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
--{
--	return evsel__is_hybrid(evsel) && !config->hybrid_merge;
--}
--
--static void uniquify_counter(struct perf_stat_config *config, struct evsel *counter)
--{
--	if (config->aggr_mode == AGGR_NONE || hybrid_uniquify(counter, config))
--		uniquify_event_name(counter);
--}
--
- /**
-  * should_skip_zero_count() - Check if the event should print 0 values.
-  * @config: The perf stat configuration (including aggregation mode).
-@@ -1089,7 +1069,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	if (counter->merged_stat)
- 		return;
- 
--	uniquify_counter(config, counter);
-+	evsel__uniquify_counter(counter);
- 
- 	val = aggr->counts.val;
- 	ena = aggr->counts.ena;
-@@ -1670,7 +1650,8 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
- 		print_metric_end(config, os);
- }
- 
--static void disable_uniquify(struct evlist *evlist)
-+/* Should uniquify be disabled for the evlist? */
-+static bool evlist__disable_uniquify(const struct evlist *evlist)
- {
- 	struct evsel *counter;
- 	struct perf_pmu *last_pmu = NULL;
-@@ -1679,20 +1660,84 @@ static void disable_uniquify(struct evlist *evlist)
- 	evlist__for_each_entry(evlist, counter) {
- 		/* If PMUs vary then uniquify can be useful. */
- 		if (!first && counter->pmu != last_pmu)
--			return;
-+			return false;
- 		first = false;
- 		if (counter->pmu) {
- 			/* Allow uniquify for uncore PMUs. */
- 			if (!counter->pmu->is_core)
--				return;
-+				return false;
- 			/* Keep hybrid event names uniquified for clarity. */
- 			if (perf_pmus__num_core_pmus() > 1)
--				return;
-+				return false;
++	for_each_pci_dev(pdev) {
++		sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
++		if (sbdf == plat_dev->id) {
++			found = true;
++			break;
 +		}
 +	}
-+	return true;
-+}
-+
-+static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
-+{
-+	struct evsel *evsel;
-+
-+	if (counter->merged_stat) {
-+		/* Counter won't be shown. */
-+		return;
++	if (!found) {
++		pr_err("The plat_dev->id does not match the sbdf");
++		return -ENODEV;
 +	}
 +
-+	if (counter->use_config_name || counter->is_libpfm_event) {
-+		/* Original name will be used. */
-+		return;
-+	}
-+
-+	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
-+		/* Legacy event, don't uniquify. */
-+		return;
-+	}
-+
-+	if (counter->pmu && counter->pmu->is_core &&
-+	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
-+		/* A sysfs or json event replacing a legacy event, don't uniquify. */
-+		return;
-+	}
-+
-+	if (config->aggr_mode == AGGR_NONE) {
-+		/* Always unique with no aggregation. */
-+		counter->needs_uniquify = true;
-+		return;
-+	}
-+
-+	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
-+		/* Unique hybrid counters necessary. */
-+		counter->needs_uniquify = true;
-+		return;
-+	}
-+
-+	/*
-+	 * Do other non-merged events in the evlist have the same name? If so
-+	 * uniquify is necessary.
-+	 */
-+	evlist__for_each_entry(counter->evlist, evsel) {
-+		if (evsel == counter || evsel->merged_stat)
-+			continue;
-+
-+		if (evsel__name_is(counter, evsel__name(evsel))) {
-+			counter->needs_uniquify = true;
-+			return;
- 		}
- 	}
--	evlist__for_each_entry_continue(evlist, counter) {
--		counter->uniquified_name = true;
-+}
-+
-+static void evlist__set_needs_uniquify(struct evlist *evlist, const struct perf_stat_config *config)
-+{
-+	struct evsel *counter;
-+
-+	if (evlist__disable_uniquify(evlist)) {
-+		evlist__for_each_entry(evlist, counter)
-+			counter->uniquified_name = true;
-+		return;
- 	}
-+
-+	evlist__for_each_entry(evlist, counter)
-+		evsel__set_needs_uniquify(counter, config);
- }
+ 	vsec = dwc_pcie_des_cap(pdev);
+ 	if (!vsec)
+ 		return -ENODEV;
  
- void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
-@@ -1706,7 +1751,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		.first = true,
- 	};
+ 	sbdf = plat_dev->id;
+-	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
++	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%d_pmu", sbdf);
+ 	if (!name)
+ 		return -ENOMEM;
  
--	disable_uniquify(evlist);
-+	evlist__set_needs_uniquify(evlist, config);
+@@ -640,7 +651,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+ 	pcie_pmu->on_cpu = -1;
+ 	pcie_pmu->pmu = (struct pmu){
+ 		.name		= name,
+-		.parent		= &pdev->dev,
++		.parent		= &plat_dev->dev,
+ 		.module		= THIS_MODULE,
+ 		.attr_groups	= dwc_pcie_attr_groups,
+ 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+@@ -727,7 +738,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
  
- 	if (config->iostat_run)
- 		evlist->selected = evlist__first(evlist);
+ static struct platform_driver dwc_pcie_pmu_driver = {
+ 	.probe = dwc_pcie_pmu_probe,
+-	.driver = {.name = "dwc_pcie_pmu",},
++	.driver = {.name = "platform_dwc_pcie",},
+ };
+ 
+ static int __init dwc_pcie_pmu_init(void)
 -- 
-2.48.1.262.g85cc9f2d1e-goog
+2.39.2
 
