@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521D620C03A
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 07:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B40B20C487
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 07:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737618433; cv=none; b=Lh0IINXTxB64+yK86YE7qN6IPbwd8KdZNDqx8UPDfuvv2luwJuuaOjQL+gO7U+IXT9WHaT4b6fHdjejeHdpO2Hh3SNw6DmQhBSMyNCYScUScMb1W1mf3y0UKmXS7wEpo+a8IzdTBmg7KEtNgv9YecykRWwsgbl/tzgquwxOuIIs=
+	t=1737618438; cv=none; b=fyDsBrc6U4M7X6gdg4CMZAE3wcUZJ1MXGcqjeWMSyAqx0w6Wa28juZ/wH+Edvi6yEDr8vb7RpJAEgxL3bRS5SZvMCd8vGg/Fcwk/cuXiryeVSbWsDFBJbe/whhUw9nqWZAcJiZWrVg2N1+WjOcgitKAyk6KBCr2CJoMAXvpJ5/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737618433; c=relaxed/simple;
-	bh=ev6gOwSw4jl6V/iZ6caKVvKq7JDregz/9FV23n2B/xQ=;
+	s=arc-20240116; t=1737618438; c=relaxed/simple;
+	bh=fLRFvGEGqKtFQGLXLVLSNIBik5FhXuDM0tMa3Nsu98Y=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=d1e05I8yuIYTI2i9ErbIjUTS9LbhPfsoWhP9Pu6I9ssrvGrZh2NmA3nSk4yDjRDK09HNbM3oWLCLZy5L+4CJYRMRc9Q+M0v8hpPLo3J+kCxT/MLYyyuffMfqMuTssCG94gCoCaBCMYiotpM6elEwyBUMYo2MVybrYA1OELAdio0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ibg7BCld; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=vBe37CR5hCa+xLnncO7iNhXI6NyAmhEr4AnlKLjmo552IDBJ9IShwI5xydZsvdvwHsKtZYdwTeP7/sls6uoWD6nx470PFn+neQhrnXTQR81DTbc/VLti/TIyScoJmr0haszgLiZ5wxg1n+ZKq43D69pZLDXmVjnrkfDY1VTyc2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZN2/4M6; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ibg7BCld"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02fff66a83so1412085276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 23:47:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZN2/4M6"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e54e14f7cbcso1783556276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jan 2025 23:47:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737618431; x=1738223231; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737618435; x=1738223235; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DibDykcBruUh/0Lt2YF7KYtu0dPCuDqFOq2uHrXam2E=;
-        b=Ibg7BCldAHS2tCAGfd57iKs+XqfgwLnhGPx27Xts+ZQiHgG5h+69/RCRf1yfnGX1zt
-         gcTDrFZA313hjYiH/Q+OVegch8TygzzaIDyEN95pvZFs2LRYOgtEpD+R6fwxeAaGaINL
-         SMsu8UB4QY/KYnptL0A1uUzKjfDO+sbFePI6/L9fgV6VNq4KOZqkZ2A78ndiRg8MRk8a
-         GZSdDYV7vO4USaFD/Dfw5yuv+UKIxef6n8tJPH2Jyv0Y3gxicpVRIo0kT7N6OX+lnW+U
-         7WIfW48FlodbpI3f9ATDXQhEzRGgp/4MaJ4t93dWABamn5OTEx5egdOWu6A3saXYzA48
-         GLog==
+        bh=76ttAHRF3rIX3juKfMVrnox6BeyYpMdEkjNVR8LNQkM=;
+        b=vZN2/4M6VFXoNSuOdkqFBdAjgQgVBqhSYg3k+VXOkp/tmjfdh1+7bixEHnVyYJCASo
+         NVqieuIqD4BG2/iF0mLJi941auaKKrir6gKlabnaC/H+7svzuZ+Do2MkWEGMW3RDJyxq
+         QUolojveGyWY2hgzi6qWEd4si5n9GNCiQnGVBnNSILWqonypBoOzZ4yacq/gBaRnCzXO
+         zzwOeDMgOCIu1lDfW2SVyVzXhrFSdTTRKYDbHeaPL1+fsLrlygSEYqJSL5W/JGlPk7w5
+         txJ4jMqMzXliHJBCKh/UQnAcZ440IBMuBq1GwiJzwL0LMtkHsD6YWj6UxaeOMgQ4C4E9
+         PL8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737618431; x=1738223231;
+        d=1e100.net; s=20230601; t=1737618435; x=1738223235;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DibDykcBruUh/0Lt2YF7KYtu0dPCuDqFOq2uHrXam2E=;
-        b=HHzgBaFT8DqWUcwWcPZzxhAeWQdD73YctmKhGoSO/FGGjKTWQP3wl28XINp7ws8vpC
-         WTUjgYb5i/PpGOj1dTRQkFWQcUsDL4ALEJL8UXl1Sfxv0MdsxgUwZYgiz8HhtPhtY6AS
-         J4ARgaxiX4xM5mVkIZDt7b+7y62J/2rNeGEGQe5OtPkCU8FArwlNdgUcXPuJFRD3lcDv
-         vCUrWELnQnOEuleoE5Fd2Dg+JBjsUxq0OPwrkc4qZexXGzQxTxJuT7GFls1WxyqSrNUj
-         xWZH/e5HMXpc9cIt6IitvmhDwIRfnGuEnocl4oM6oAhH4PKEQ8j3oJjJZyxWsfVMGOCA
-         bVRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDb2AMqOYughJkSlcsHY8qCWrsCEVj4tXfpSezK9yGhHYvqngOWruhAHpV40Mi1qkpRcSv7LnYz4q0VCVLPdAf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv2MNMfT74ErrzajN/HxdqCp7URfTiiqQUur41gAvFSoBEeMRE
-	dwmXnwyOQdW3PijYT7Ipdj0F+6XeFYZMZ8rIt9/DarTy72IHkmjWHg0y2m7gs1Pp4667YfsA8dq
-	hptWrzQ==
-X-Google-Smtp-Source: AGHT+IE87jbT8I4D3MgQZvsZ2qLI+fhLyD63f8Gc0ijFyB8cgfhVoXEDc1maMbMo27Is6nL5mI8QFidgNe10
+        bh=76ttAHRF3rIX3juKfMVrnox6BeyYpMdEkjNVR8LNQkM=;
+        b=od35eXDy0fpcgk3ydoeWMkBE67xmCbN74LOCagGWm9DktEoSgyVZo2c6xsrFkJohRN
+         SX37Z7CBNNYvW2ZD00MHxPTDarz54Utk+bXvNXBYiVMs5bQAZ6vb2X/4PvbLTDlt7JCD
+         IksOh1VORlIwdB4AQUZIUDTe2KGtG1cxqfZ4p9R3PwdOPToAKmc3eRWAMRAmtxuIO8IX
+         jakkIdQr/d6mxNJEacH/ToTo4rFCSGKI1Ylya/lOL5h6k6R2z0D5d8BeybMwZMOa6E/O
+         H7HKinETSvEJPhcKx0fvDxspPEZfpSkJ6Lr+6XGZHV4xj3bEEG/Ekn1t0fggWpF8MNQ9
+         B7XA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFeEIQBq756t06Fs4H75Gqk3ZjEB/JrVIAkBqSpEUM/wkDUGBiYu6g+oZeRyPDxaN6znVvouveAiDZU9xnpdsp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZEVIGaHsJiDRCwEjSDUoQAbr24jZma2cRSIPpqHWbv/2LNCjs
+	nFrsD0RisqsAtzKZvCwIEw9DuVGsg1k3BbSTBKdBKMX1ZxsdxQsEdB/8qVkgD35Xkh+lKlkW7MN
+	Hr7fARg==
+X-Google-Smtp-Source: AGHT+IE9R9Fh4lUJwDFvHC3tyBYYt2+JIwpoi2K88c9BoJjp6yVFbFpdGz4GeMyh+mZoFlBYDHvT/MZkAxDd
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:2fda:d811:ae83:77e0])
- (user=irogers job=sendgmr) by 2002:a05:690c:6307:b0:6ef:7c63:b104 with SMTP
- id 00721157ae682-6f6eb949f2emr577327b3.7.1737618431203; Wed, 22 Jan 2025
- 23:47:11 -0800 (PST)
-Date: Wed, 22 Jan 2025 23:46:58 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d8d4:0:b0:e57:f46a:98ce with SMTP id
+ 3f1490d57ef6-e58259f769dmr7324276.6.1737618433366; Wed, 22 Jan 2025 23:47:13
+ -0800 (PST)
+Date: Wed, 22 Jan 2025 23:46:59 -0800
 In-Reply-To: <20250123074659.698123-1-irogers@google.com>
-Message-Id: <20250123074659.698123-5-irogers@google.com>
+Message-Id: <20250123074659.698123-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250123074659.698123-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Subject: [PATCH v2 4/5] perf stat: Don't merge counters purely on name
+Subject: [PATCH v2 5/5] perf stat: Changes to event name uniquification
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,60 +74,215 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Counter merging was added in commit 942c5593393d ("perf stat: Add
-perf_stat_merge_counters()"), however, it merges events with the same
-name on different PMUs regardless of whether the different PMUs are
-actually of the same type (ie they differ only in the suffix on the
-PMU). For hwmon events there may be a temp1 event on every PMU, but
-the PMU names are all unique and don't differ just by a suffix. The
-merging is over eager and will merge all the hwmon counters together
-meaning an aggregated and very large temp1 value is shown. The same
-would be true for say cache events and memory controller events where
-the PMUs differ but the event names are the same.
+The existing logic would disable uniquification on an evlist or enable
+it per evsel, this is unfortunate as uniquification is most needed
+when events have the same name and so the whole evlist must be
+considered.  Change the initial disable uniquify on an evlist
+processing to also set a needs_uniquify flag, for cases like the
+matching event names. This must be done as an initial pass as
+uniquification of an event name will change the behavior of the
+check. Keep the per counter uniquification but now only uniquify event
+names when the needs_uniquify flag is set.
 
-Fix the problem by correctly saying two PMUs alias when they differ
-only by suffix.
+Before this change a hwmon like temp1 wouldn't be uniquified and
+afterwards it will (ie the PMU is added to the temp1 event's name).
 
-Note, there is an overlap with evsel's merged_stat with aggregation
-and the evsel's metric_leader where aggregation happens for metrics.
-
-Fixes: 942c5593393d ("perf stat: Add perf_stat_merge_counters()")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/perf/util/evsel.h        |   1 +
+ tools/perf/util/stat-display.c | 111 +++++++++++++++++++++++----------
+ 2 files changed, 79 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 7c2ccdcc3fdb..1f7abd8754c7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -535,7 +535,10 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
- 
- 	return 0;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 5e789fa80590..d91621b6c8c2 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -119,6 +119,7 @@ struct evsel {
+ 	bool			errored;
+ 	bool			needs_auxtrace_mmap;
+ 	bool			default_metricgroup; /* A member of the Default metricgroup */
++	bool			needs_uniquify;
+ 	struct hashmap		*per_pkg_mask;
+ 	int			err;
+ 	int			script_output_type;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index ba79f73e1cf5..e65c7e9f15d1 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -929,12 +929,16 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 	}
  }
--/* events should have the same name, scale, unit, cgroup but on different PMUs */
-+/*
-+ * Events should have the same name, scale, unit, cgroup but on different core
-+ * PMUs or on different but matching uncore PMUs.
-+ */
- static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
+ 
+-static void uniquify_event_name(struct evsel *counter)
++static void evsel__uniquify_counter(struct evsel *counter)
  {
- 	if (strcmp(evsel__name(evsel_a), evsel__name(evsel_b)))
-@@ -553,7 +556,13 @@ static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
- 	if (evsel__is_clock(evsel_a) != evsel__is_clock(evsel_b))
- 		return false;
+ 	const char *name, *pmu_name;
+ 	char *new_name, *config;
+ 	int ret;
  
--	return evsel_a->pmu != evsel_b->pmu;
-+	if (evsel_a->pmu == evsel_b->pmu || evsel_a->pmu == NULL || evsel_b->pmu == NULL)
-+		return false;
++	/* No uniquification necessary. */
++	if (!counter->needs_uniquify)
++		return;
 +
-+	if (evsel_a->pmu->is_core)
-+		return evsel_b->pmu->is_core;
-+
-+	return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
+ 	/* The evsel was already uniquified. */
+ 	if (counter->uniquified_name)
+ 		return;
+@@ -942,19 +946,6 @@ static void uniquify_event_name(struct evsel *counter)
+ 	/* Avoid checking to uniquify twice. */
+ 	counter->uniquified_name = true;
+ 
+-	/* The evsel has a "name=" config term or is from libpfm. */
+-	if (counter->use_config_name || counter->is_libpfm_event)
+-		return;
+-
+-	/* Legacy no PMU event, don't uniquify. */
+-	if  (!counter->pmu ||
+-	     (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW))
+-		return;
+-
+-	/* A sysfs or json event replacing a legacy event, don't uniquify. */
+-	if (counter->pmu->is_core && counter->alternate_hw_config != PERF_COUNT_HW_MAX)
+-		return;
+-
+ 	name = evsel__name(counter);
+ 	pmu_name = counter->pmu->name;
+ 	/* Already prefixed by the PMU name. */
+@@ -993,17 +984,6 @@ static void uniquify_event_name(struct evsel *counter)
+ 	}
  }
  
- static void evsel__merge_aliases(struct evsel *evsel)
+-static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
+-{
+-	return evsel__is_hybrid(evsel) && !config->hybrid_merge;
+-}
+-
+-static void uniquify_counter(struct perf_stat_config *config, struct evsel *counter)
+-{
+-	if (config->aggr_mode == AGGR_NONE || hybrid_uniquify(counter, config))
+-		uniquify_event_name(counter);
+-}
+-
+ /**
+  * should_skip_zero_count() - Check if the event should print 0 values.
+  * @config: The perf stat configuration (including aggregation mode).
+@@ -1089,7 +1069,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	if (counter->merged_stat)
+ 		return;
+ 
+-	uniquify_counter(config, counter);
++	evsel__uniquify_counter(counter);
+ 
+ 	val = aggr->counts.val;
+ 	ena = aggr->counts.ena;
+@@ -1670,7 +1650,8 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 		print_metric_end(config, os);
+ }
+ 
+-static void disable_uniquify(struct evlist *evlist)
++/* Should uniquify be disabled for the evlist? */
++static bool evlist__disable_uniquify(const struct evlist *evlist)
+ {
+ 	struct evsel *counter;
+ 	struct perf_pmu *last_pmu = NULL;
+@@ -1679,20 +1660,84 @@ static void disable_uniquify(struct evlist *evlist)
+ 	evlist__for_each_entry(evlist, counter) {
+ 		/* If PMUs vary then uniquify can be useful. */
+ 		if (!first && counter->pmu != last_pmu)
+-			return;
++			return false;
+ 		first = false;
+ 		if (counter->pmu) {
+ 			/* Allow uniquify for uncore PMUs. */
+ 			if (!counter->pmu->is_core)
+-				return;
++				return false;
+ 			/* Keep hybrid event names uniquified for clarity. */
+ 			if (perf_pmus__num_core_pmus() > 1)
+-				return;
++				return false;
++		}
++	}
++	return true;
++}
++
++static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
++{
++	struct evsel *evsel;
++
++	if (counter->merged_stat) {
++		/* Counter won't be shown. */
++		return;
++	}
++
++	if (counter->use_config_name || counter->is_libpfm_event) {
++		/* Original name will be used. */
++		return;
++	}
++
++	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
++		/* Legacy event, don't uniquify. */
++		return;
++	}
++
++	if (counter->pmu && counter->pmu->is_core &&
++	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
++		/* A sysfs or json event replacing a legacy event, don't uniquify. */
++		return;
++	}
++
++	if (config->aggr_mode == AGGR_NONE) {
++		/* Always unique with no aggregation. */
++		counter->needs_uniquify = true;
++		return;
++	}
++
++	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++		/* Unique hybrid counters necessary. */
++		counter->needs_uniquify = true;
++		return;
++	}
++
++	/*
++	 * Do other non-merged events in the evlist have the same name? If so
++	 * uniquify is necessary.
++	 */
++	evlist__for_each_entry(counter->evlist, evsel) {
++		if (evsel == counter || evsel->merged_stat)
++			continue;
++
++		if (evsel__name_is(counter, evsel__name(evsel))) {
++			counter->needs_uniquify = true;
++			return;
+ 		}
+ 	}
+-	evlist__for_each_entry_continue(evlist, counter) {
+-		counter->uniquified_name = true;
++}
++
++static void evlist__set_needs_uniquify(struct evlist *evlist, const struct perf_stat_config *config)
++{
++	struct evsel *counter;
++
++	if (evlist__disable_uniquify(evlist)) {
++		evlist__for_each_entry(evlist, counter)
++			counter->uniquified_name = true;
++		return;
+ 	}
++
++	evlist__for_each_entry(evlist, counter)
++		evsel__set_needs_uniquify(counter, config);
+ }
+ 
+ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+@@ -1706,7 +1751,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		.first = true,
+ 	};
+ 
+-	disable_uniquify(evlist);
++	evlist__set_needs_uniquify(evlist, config);
+ 
+ 	if (config->iostat_run)
+ 		evlist->selected = evlist__first(evlist);
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
