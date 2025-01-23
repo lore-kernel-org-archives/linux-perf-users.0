@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B321CAA8C;
-	Thu, 23 Jan 2025 06:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5AB1CD1EA;
+	Thu, 23 Jan 2025 06:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737613224; cv=none; b=NWu/R6TzbHdpbNpuLvZvMdg9MBHfMu+EuU8M2CXPL17rO2gp38wvNzCV9Gr34qihfwYOxzDuudql3wZ3cllNLBY+CVPh7UMQjZRevQGDuSrIS44qFRkxCQi9Wp+WgvRyIRKb6B4QBr4JUVq4nViPLZgTPyi4qZszY24Sy3xGw4U=
+	t=1737613227; cv=none; b=oJ8lFMvo9ZlVjP4Wpbuzda+4Fv4e1aAdQ0pvAM8ZiI9xGsEGW7Z46NT09fHiYZZo31YkUWVDkqRxU3DGw0UIGSyHh78qtKDIaMwR9HX10XakOLf47LbjYSJhRb2f10utPOFHh5/xF4WmcMywgUg6Gxnv7PWKcyImdt2pDgnqesw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737613224; c=relaxed/simple;
-	bh=l3wSYEAfl5v5b3KMp8mM+Z1KMLhUKde2syJ/vc4aPBA=;
+	s=arc-20240116; t=1737613227; c=relaxed/simple;
+	bh=km79UngpPkrZIJwtiWyAjaZipv2uHIAEmkV3BKaTUDA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j5XTvjRcWjbummIp1dNCvdD7SlSWwa9VLCvnbBI5PCUNGXsdowouOwsOriBfBKsP0HtuYnJJ9VkK7QebgOj+6/A7hmc1g/Pdi3Qnx7b3S4xqTOdKtgvieUEE8eYk9PWOE7s1B3paxe5FsAuiHI7ojq1CQGt5MXfUQ2acIl/ywVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gZG4I5pL; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=fti2q1uyzZb89wiStwx09y8PS25GL2ohmVjKL43j4/EmUxTLvKLqYJRpeKJzjQsIH/ySp8xVaYoURzuODie20GG5wNV5GRgZ6rlzvI1nIaqo+jdN/yFqXYpWzmojN6K4lkOexTDdtr1tpHfY23Nn9OXPVgcKIhJdctZa0osnNF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HANysIDb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gZG4I5pL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HANysIDb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737613223; x=1769149223;
+  t=1737613227; x=1769149227;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=l3wSYEAfl5v5b3KMp8mM+Z1KMLhUKde2syJ/vc4aPBA=;
-  b=gZG4I5pLkJterb3r7YvjG/8S2GAJzNIaRTqyhj2+oQgCP94tn7WZ1IfY
-   /f9KmmVqpXxz/CCOowwSmHZW9pVcPxoACMVijFjlXyAomj+Q91tMdTNFV
-   dNupdvQ2JCdxo9Gi0wcbEflOLD91yQDknWEDAa/Jq6iR2qmFMyPlCsaGW
-   vQAk5322/YPdCuFBdX8A6TlQgdLmT2l9kYKmbI1sDRCoCEIcjZwOsrBUP
-   yTLKbYW189vqCYODNeNBe5mdA80MtP9FhG7eCD0NXVr1J9P1dLoCE3FuB
-   p+FJT/31VCGOIXA/kgnQw297ZPlU6qfmiRvhnIzdaKcODQiuPEbIvPTfO
-   g==;
-X-CSE-ConnectionGUID: SZKwARG+SvSpmR0fLsOTqw==
-X-CSE-MsgGUID: su0Ni2MLQvSqNfDVTWCM4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="55513059"
+  bh=km79UngpPkrZIJwtiWyAjaZipv2uHIAEmkV3BKaTUDA=;
+  b=HANysIDbIZ+8nlGoK/1ZhHa6BcRNJLvADOLLRkxbocnxRjq1UrnDpS3P
+   Ctj4fuuskjBYtceXNs1Z48Xqz57JYmPW8+rhiAq4C0rGI4QBIECUo3gBX
+   96rBPUxGJA4OBuykdedspZb47h4gkIUV7sOU+0a3ihIfdmlxLeEUjNwcP
+   6/xxlOD1+RIq+eWZscuC1fbpBfztGqvGPs/J6kx0oTG8Djem4D71wYJY0
+   fq0aTDuCkkcMjunfQhe4AsbbnPFrf/R/rvnv0hWQ7IFqL0BGzD10EC4Pf
+   OrcJC5dwkaETm2Nbr1WHtnNCy/dwWmw49zFhNG1/M70uoCu0rKVuFe+gv
+   A==;
+X-CSE-ConnectionGUID: gD6usK2BS9uE/jA+zos8Ag==
+X-CSE-MsgGUID: Ex8BCGdbQZKwPvyEnAbJXg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="55513069"
 X-IronPort-AV: E=Sophos;i="6.13,227,1732608000"; 
-   d="scan'208";a="55513059"
+   d="scan'208";a="55513069"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 22:20:23 -0800
-X-CSE-ConnectionGUID: ZCTNdLOaRAOPKgRIXCftkg==
-X-CSE-MsgGUID: /pI8FQQpSlG9KcA7z5YSkw==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 22:20:27 -0800
+X-CSE-ConnectionGUID: beuVxB+5Q+KuYYe1J7YqgQ==
+X-CSE-MsgGUID: b1sJz8ckREeKTF2XvOvVbg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="112334468"
+   d="scan'208";a="112334498"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa003.jf.intel.com with ESMTP; 22 Jan 2025 22:20:19 -0800
+  by orviesa003.jf.intel.com with ESMTP; 22 Jan 2025 22:20:22 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 04/20] perf/x86/intel: Decouple BTS initialization from PEBS initialization
-Date: Thu, 23 Jan 2025 14:07:05 +0000
-Message-Id: <20250123140721.2496639-5-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 05/20] perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+Date: Thu, 23 Jan 2025 14:07:06 +0000
+Message-Id: <20250123140721.2496639-6-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
 References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
@@ -72,90 +72,150 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move x86_pmu.bts flag initialization into bts_init() from
-intel_ds_init() and rename intel_ds_init() to intel_pebs_init() since it
-fully initializes PEBS now after removing the x86_pmu.bts
-initialization.
-
-It's safe to move x86_pmu.bts into bts_init() since all x86_pmu.bts flag
-are called after bts_init() execution.
+Since architectural PEBS would be introduced in subsequent patches,
+rename x86_pmu.pebs to x86_pmu.ds_pebs for distinguishing with the
+upcoming architectural PEBS.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/bts.c  | 6 +++++-
- arch/x86/events/intel/core.c | 2 +-
- arch/x86/events/intel/ds.c   | 5 ++---
- arch/x86/events/perf_event.h | 2 +-
- 4 files changed, 9 insertions(+), 6 deletions(-)
+ arch/x86/events/intel/core.c |  6 +++---
+ arch/x86/events/intel/ds.c   | 20 ++++++++++----------
+ arch/x86/events/perf_event.h |  2 +-
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 8f78b0c900ef..a205d1fb37b1 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -584,7 +584,11 @@ static void bts_event_read(struct perf_event *event)
- 
- static __init int bts_init(void)
- {
--	if (!boot_cpu_has(X86_FEATURE_DTES64) || !x86_pmu.bts)
-+	if (!boot_cpu_has(X86_FEATURE_DTES64))
-+		return -ENODEV;
-+
-+	x86_pmu.bts = boot_cpu_has(X86_FEATURE_BTS);
-+	if (!x86_pmu.bts)
- 		return -ENODEV;
- 
- 	if (boot_cpu_has(X86_FEATURE_PTI)) {
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index d29e7ada96aa..91afba51038f 100644
+index 91afba51038f..0063afa0ddac 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -6593,7 +6593,7 @@ __init int intel_pmu_init(void)
- 	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
- 		intel_pmu_arch_lbr_init();
+@@ -4268,7 +4268,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+ 	};
  
--	intel_ds_init();
-+	intel_pebs_init();
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return arr;
  
- 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
- 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 13a78a8a2780..86fa6d8c45cf 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2650,10 +2650,10 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+ 	/*
+@@ -5447,7 +5447,7 @@ static __init void intel_clovertown_quirk(void)
+ 	 * these chips.
+ 	 */
+ 	pr_warn("PEBS disabled due to CPU errata\n");
+-	x86_pmu.pebs = 0;
++	x86_pmu.ds_pebs = 0;
+ 	x86_pmu.pebs_constraints = NULL;
  }
  
- /*
-- * BTS, PEBS probe and setup
-+ * PEBS probe and setup
-  */
- 
--void __init intel_ds_init(void)
-+void __init intel_pebs_init(void)
+@@ -5945,7 +5945,7 @@ tsx_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ static umode_t
+ pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
  {
- 	/*
- 	 * No support for 32bit formats
-@@ -2661,7 +2661,6 @@ void __init intel_ds_init(void)
+-	return x86_pmu.pebs ? attr->mode : 0;
++	return x86_pmu.ds_pebs ? attr->mode : 0;
+ }
+ 
+ static umode_t
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 86fa6d8c45cf..e8a06c8486af 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -624,7 +624,7 @@ static int alloc_pebs_buffer(int cpu)
+ 	int max, node = cpu_to_node(cpu);
+ 	void *buffer, *insn_buff, *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return 0;
+ 
+ 	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+@@ -659,7 +659,7 @@ static void release_pebs_buffer(int cpu)
+ 	struct cpu_hw_events *hwev = per_cpu_ptr(&cpu_hw_events, cpu);
+ 	void *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	kfree(per_cpu(insn_buffer, cpu));
+@@ -734,7 +734,7 @@ void release_ds_buffers(void)
+ {
+ 	int cpu;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	for_each_possible_cpu(cpu)
+@@ -763,13 +763,13 @@ void reserve_ds_buffers(void)
+ 	x86_pmu.bts_active = 0;
+ 	x86_pmu.pebs_active = 0;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	if (!x86_pmu.bts)
+ 		bts_err = 1;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		pebs_err = 1;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -805,7 +805,7 @@ void reserve_ds_buffers(void)
+ 		if (x86_pmu.bts && !bts_err)
+ 			x86_pmu.bts_active = 1;
+ 
+-		if (x86_pmu.pebs && !pebs_err)
++		if (x86_pmu.ds_pebs && !pebs_err)
+ 			x86_pmu.pebs_active = 1;
+ 
+ 		for_each_possible_cpu(cpu) {
+@@ -2661,12 +2661,12 @@ void __init intel_pebs_init(void)
  	if (!boot_cpu_has(X86_FEATURE_DTES64))
  		return;
  
--	x86_pmu.bts  = boot_cpu_has(X86_FEATURE_BTS);
- 	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
+-	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
++	x86_pmu.ds_pebs = boot_cpu_has(X86_FEATURE_PEBS);
  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
  	if (x86_pmu.version <= 4)
+ 		x86_pmu.pebs_no_isolation = 1;
+ 
+-	if (x86_pmu.pebs) {
++	if (x86_pmu.ds_pebs) {
+ 		char pebs_type = x86_pmu.intel_cap.pebs_trap ?  '+' : '-';
+ 		char *pebs_qual = "";
+ 		int format = x86_pmu.intel_cap.pebs_format;
+@@ -2750,7 +2750,7 @@ void __init intel_pebs_init(void)
+ 
+ 		default:
+ 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
+-			x86_pmu.pebs = 0;
++			x86_pmu.ds_pebs = 0;
+ 		}
+ 	}
+ }
+@@ -2759,7 +2759,7 @@ void perf_restore_debug_store(void)
+ {
+ 	struct debug_store *ds = __this_cpu_read(cpu_hw_events.ds);
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	wrmsrl(MSR_IA32_DS_AREA, (unsigned long)ds);
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a698e6484b3b..e15c2d0dbb27 100644
+index e15c2d0dbb27..d5b7f5605e1e 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -1661,7 +1661,7 @@ void intel_pmu_drain_pebs_buffer(void);
- 
- void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
- 
--void intel_ds_init(void);
-+void intel_pebs_init(void);
- 
- void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
- 				struct cpu_hw_events *cpuc,
+@@ -888,7 +888,7 @@ struct x86_pmu {
+ 	 */
+ 	unsigned int	bts			:1,
+ 			bts_active		:1,
+-			pebs			:1,
++			ds_pebs			:1,
+ 			pebs_active		:1,
+ 			pebs_broken		:1,
+ 			pebs_prec_dist		:1,
 -- 
 2.40.1
 
