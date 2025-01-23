@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F713AD3F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF9C13A25B
 	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 04:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737605994; cv=none; b=t/+SyF8r9NAdLo25+eWuyLn5th+3GWWDfbUYZ+ta0CeBU07AY0Q+Jg0+/+1WXHF5PC9y2ZWNxZ7YZfA1cGZ0JPoBtrwVi7PuzMDBVZ5sOxkg5fecCDcd9xtDH7p0TOVXPVVm+7ZBJl4apqiQhlhmlcUcNU825xEbypozV+8RYIs=
+	t=1737605995; cv=none; b=eRTjoPsWWKRjno5wipUO3idoiXg5WbezV0Qv7WQ3iI/4YfwscTTCkG8emRFX9ZtStheD8dFlvjBJXIqfp7s8VG4hqB8hJtRaHRiXDVtgPGybt964E6s9vS+G9jY0jqmDERK/6efxy1CAkkFirXBmPSoJCVmg3Gi1WZ0B6vNtuhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737605994; c=relaxed/simple;
-	bh=sU2zceit82BkL6W3a8LC3UYg5h23YrZLnJeaoynkC5k=;
+	s=arc-20240116; t=1737605995; c=relaxed/simple;
+	bh=GbSkrVCQ6St6WTtTFr8henqmfW4s8kz28hTv8mQMS6A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gsGDLlqn3LpJSo3q+u3syNJ2ik4yTGXG5JWSbdUamwK+hCr28rw5toio73fD/2Nc7/5Yn24dGkYtswKuN79cpzJG3/UR+PMLVkluZ0k0qw+sdMxxF+wyx0ittyQ8AQJAukYeF/VO2jcMqp4o/nH/3pnE28uTwcgH89S+dOh3Tkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFfYzn/+; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=vF/8xZxdOzud4Ta5OSOFPkKMw9D4iQz8GJvpLzDoPW5Kw48sLkjBPv+n+WFg87SnZEJ+nIwMisU0YWZkTCOHQRtJM/AwCk3/YoXc2aemGdna82+7H3hy/92oMq9iUfLCEk/WPTq8ZGkHnmBPOU4EglYn7HykIjjvJc5w6TCVUTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSG21cGn; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFfYzn/+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSG21cGn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1737605993; x=1769141993;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=sU2zceit82BkL6W3a8LC3UYg5h23YrZLnJeaoynkC5k=;
-  b=kFfYzn/+wESjWekaLNOVJCroPW/mxAnxuam4RxHyHMQuXFyqJA5kigoO
-   tAmzPZCoorwhbgjzm0TtXgwUBppbPQDW3Z/mpaTrZGoRZH1ny1AyIN52m
-   P/PO81/TgFDh0/Sr+jzxPq3Oa9K8rAgp51wZbIUeRO7DGs97/PHFYR3Bf
-   BJf6vZEe6PDwN5zqnBDtWFgeQvs8fPi7ARgCS+0Rh3rNuZOg8VnXxn+gB
-   jOS2fE33JyUdhqRjo78HOkEK/boQpujl6uuMdDqKjBuN5X42RgQNCZr/V
-   xRmr3JZiZKkZulh+cXenCtKVgGkLMO3BDmqhEWr0aN4fT5ZC7lmGkYk9/
-   Q==;
-X-CSE-ConnectionGUID: 6XFnonIKRqqbOdI0bqrveg==
-X-CSE-MsgGUID: AR81uSRZT7q4U2WSm8ZEoA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37971644"
+  bh=GbSkrVCQ6St6WTtTFr8henqmfW4s8kz28hTv8mQMS6A=;
+  b=GSG21cGns314cYhDugFy5FV98XiqcNU1hdOgiJ0jv1yLwBElRczoNjKm
+   XFijQ42ZeQncaAHqMJHSETentfu2YnMv/nmQ75bf38oPPwGjyevUF2YkY
+   mUvSCgXS/Ixvth6TZixeQtkXvVYUrArCnlYnMXDxY/oE8HSuRXkFFdA8g
+   MfzRgess8PryLA+MbqtYtRKFyykF2+8fU8GzXkwN1Ch7hS2Agr7T1NwJq
+   zTxE+BippW0f/wtD1scOxaSIzTFqryz/DYYIUW/eDQR+vBusy5d9UFcX6
+   Ld9boKe/fw6lUvA5pH8sSTGed9hbRv+vxEWIwFXYChuDA+XGzEmQCOvT+
+   w==;
+X-CSE-ConnectionGUID: 8z5iXKR5T7Snn3Zvgdx9hA==
+X-CSE-MsgGUID: tIfCDUW7RfqPyg9/YaosCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37971650"
 X-IronPort-AV: E=Sophos;i="6.13,227,1732608000"; 
-   d="scan'208";a="37971644"
+   d="scan'208";a="37971650"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
   by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 20:19:48 -0800
-X-CSE-ConnectionGUID: oQ7493TiSVOMxlqZiH6gSg==
-X-CSE-MsgGUID: acXVC5u3Q+OYV4MnwGZUbw==
+X-CSE-ConnectionGUID: n4sbsBBzSF+zSvTqYuZjrg==
+X-CSE-MsgGUID: vn/49FcJQ82R95zpPTXTTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107202058"
+   d="scan'208";a="107202067"
 Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
   by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 20:19:47 -0800
 From: Lucas De Marchi <lucas.demarchi@intel.com>
@@ -51,9 +51,9 @@ Cc: Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>,
 	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH v15 2/6] drm/xe/pmu: Assert max gt
-Date: Wed, 22 Jan 2025 20:19:19 -0800
-Message-ID: <20250123041923.1892837-3-lucas.demarchi@intel.com>
+Subject: [PATCH v15 5/6] drm/xe/pmu: Get/put runtime pm on event init
+Date: Wed, 22 Jan 2025 20:19:22 -0800
+Message-ID: <20250123041923.1892837-6-lucas.demarchi@intel.com>
 X-Mailer: git-send-email 2.48.0
 In-Reply-To: <20250123041923.1892837-1-lucas.demarchi@intel.com>
 References: <20250123041923.1892837-1-lucas.demarchi@intel.com>
@@ -65,28 +65,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-XE_PMU_MAX_GT needs to be used due to a circular dependency, but we
-should make sure it doesn't go out of sync with XE_PMU_MAX_GT. Add a
-compile check for that.
+When the event is created, make sure runtime pm is taken and later put:
+in order to read an event counter the GPU needs to remain accessible and
+doing a get/put during perf's read is not possible it's holding a
+raw_spinlock.
 
+Suggested-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
- drivers/gpu/drm/xe/xe_pmu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/xe/xe_pmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/xe/xe_pmu.c b/drivers/gpu/drm/xe/xe_pmu.c
-index b3da3863928af..df93ba96bdc1e 100644
+index 5e5a9fcf30ace..2b66a7957b665 100644
 --- a/drivers/gpu/drm/xe/xe_pmu.c
 +++ b/drivers/gpu/drm/xe/xe_pmu.c
-@@ -249,6 +249,8 @@ int xe_pmu_register(struct xe_pmu *pmu)
- 	int ret = -ENOMEM;
- 	char *name;
+@@ -7,6 +7,7 @@
+ #include <linux/device.h>
  
-+	BUILD_BUG_ON(XE_MAX_GT_PER_TILE != XE_PMU_MAX_GT);
-+
- 	if (IS_SRIOV_VF(xe))
- 		return 0;
+ #include "xe_device.h"
++#include "xe_pm.h"
+ #include "xe_pmu.h"
+ 
+ /**
+@@ -71,6 +72,7 @@ static void xe_pmu_event_destroy(struct perf_event *event)
+ 	struct xe_device *xe = container_of(event->pmu, typeof(*xe), pmu.base);
+ 
+ 	drm_WARN_ON(&xe->drm, event->parent);
++	xe_pm_runtime_put(xe);
+ 	drm_dev_put(&xe->drm);
+ }
+ 
+@@ -103,6 +105,7 @@ static int xe_pmu_event_init(struct perf_event *event)
+ 
+ 	if (!event->parent) {
+ 		drm_dev_get(&xe->drm);
++		xe_pm_runtime_get(xe);
+ 		event->destroy = xe_pmu_event_destroy;
+ 	}
  
 -- 
 2.48.0
