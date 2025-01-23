@@ -1,103 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CBE1741D2;
-	Thu, 23 Jan 2025 19:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28061C54A7
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 21:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737662094; cv=none; b=Pn8+f5Luq8cs0re/Y+ehqql0hna4HrQDe+t4yIzRgScd5ixQWV0kSNdlo3xMI1g5rX55YeMz4Td5UmUoDp7S99SpZzQCzULrMnLJ1Y9SScBoKlZ/xls/QLwYcWXpfSNAbxmcQZCrS3+QA5/geuip38ZbYO3Exk5l2lXxUnh9Cr4=
+	t=1737667499; cv=none; b=jv4m7Q2TjS6jKunV5ZR7/uHpQaSn33ZknYRIrNft61pndT6O+t+Jzhyp/nhvy4L8Dmbdv9rZoRniSaZdTcYKdnU/8ZOf6AJa27Q0A7Ok+Bf8PZ8V1267bDYPo/M/Js0LOkgoodyULaEv00Eu0z/gWdKo9WCo4hCE0I5F+uBbTPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737662094; c=relaxed/simple;
-	bh=/YSpLDFXDiY62kESVn9AJy4fOeTfbL5FyIDo7ugyZoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aqYUS1sgtgGhy+Jmzs9E8DAHUsrk1BsMjMa2/6xg8Ah5K4jBUo6zsKG/GkMxBHmvgGvFOevh4hsmOxfS1zRU32vrfEZ+ADE4jxp2/eNP1ypt9Btc5EzeNloI9ji9n+Ki80YrQd0kOtK0RWsLhx4c4s+wzu+/IZYNk5l5I3Y8u+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvJ86tXz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737667499; c=relaxed/simple;
+	bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sSUS5xWrDG6TtyMP3KE1VW1UeXWa/Dd2dDqO+FBmF4gR+z2aW/0JikkbOg+u29dHZJDewDY2cLt6L7zLEg3bnUoNP+mGQRcJ4nW+oESOaMdwySICjZW+S5mKvarC/3dtAL1MmgrkfB56d0vLUd8EEgK6P1bwfgUEnwAsgSpcBg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qRuf8/vC; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvJ86tXz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B22C4CED3;
-	Thu, 23 Jan 2025 19:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737662093;
-	bh=/YSpLDFXDiY62kESVn9AJy4fOeTfbL5FyIDo7ugyZoc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dvJ86tXz2P44/RLKhQ/mY5CHqaBEpObsRrlOWNhaYXtTAt+sb6Nn6ImEI4brqcUgT
-	 hzzHVET+BwZaA/7ztV9txeGBXImpRSO6Sr5edcGZgeFNBzpcMAh4KGf38BG3/bMXWy
-	 7XL04Gt+EPW+mAab/zekLdHTYWUqQGqqePV8a4Vp1Kqf/0PZbcY6eZWuXYkyl4NvsH
-	 UW91dY12oeGN3bsjFLql5+D1nKRtfTnn6wP9ZsVWob3Ou9o+oPmLWG4y9Qn+sTlD/c
-	 nPZfiXeGfV9BWBSxheVFbMsbTMjBHRErtpVvr1QhngObWDAvv+jjSKog/sR3asAxzB
-	 nrMQlS2TY2xnQ==
-Date: Thu, 23 Jan 2025 11:54:51 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250123195451.f2a4jfu5tkfklwf2@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
- <20250122141505.GT7145@noisy.programming.kicks-ass.net>
- <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
- <20250123084026.GF3808@noisy.programming.kicks-ass.net>
- <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRuf8/vC"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so26575ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 13:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737667496; x=1738272296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
+        b=qRuf8/vC4Bjo1ZwXnPU5QjdS06O1FH5w/rPa/tgSl/fyy/mICi2d32rmLDAq6Qkj2/
+         R6tN8SmpAbyWju6W7oANfyP+FG1QszCNhoOJLqmQ64gDfk3E+gaHLR4UF2rwTBfCDddu
+         INdCT4ESByao8/czyH7ThIplHmKIXuenAXdIUyrbLehbwoz4FBDU767SJhrUWPPkWCrJ
+         XWsbNDOAA6CwWu4NBXOQxRDt9TQmEKaYgylh1LU7U/G3MjWXI0yrC34gy0ySA47BtZwh
+         TT1TwFBIUgxBn6PoIT7qMvB466WzFGofzz+JsHWfvtJSkgY5OqM50gcnqH2mhRPy7IFE
+         PwNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737667496; x=1738272296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M5BXGpgwMCnIFqEQNLncr323vXpk/UyBJI1PvRa54rE=;
+        b=hck6muX+NQmyYeKg3/LDYpy+DpKKAfrov/AcNbZqt7TnJhRWJpH9XxbIW+GiZWgJAg
+         xwCJjYyEwu9ElT7U7gmoE92EbE/IeFLnLW0KQb6uUTu0+nBk9y8GYHbM8RGSPvip3ZWi
+         W7fKZOTchxL4HRb3JsTpq26oK2bqWefl/YNQaFWrDxHM9aE1b5hA627mUN5CwUrxAUSV
+         HnOhjbwfPmnS4c7ZwnWDt7SqWfJUy4T5gtdKwgw6szYnFtrOd8ee4VMUQkZhBJXQ87U8
+         YqmGFAupF95+Qjvc19FaYKD5MUMCIPbdPHLhcacNuoFjpMjSuaIOerP7oQKptM4q8kad
+         xplA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ7TpVejq27p6s0PLn/EcOv6YcK1gb6kLt38fpapMfg38JXUqPOcdUZGcjdadxllC/e7wofe42zp6JBbzNwxLh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiK7ph15XX1P/dwE4kjNAH883nNihFBzqXUloeyCd26eTOKl37
+	DAsqh6+txOXkR9w8n9DtOLtKszsHAF1SNUZygKjCWX+dPn3FZTeZwnyHY88i+ebTsVQmER9L1RH
+	VRKaN7dBrUNEs48HzBP2uc7kYibJsk/vHvdN3
+X-Gm-Gg: ASbGncvY/nidWhkKufsWtBzxk9qW7OBk81Bz90ugQyCGS9JDwK1yVKT7ATpVp8Ez0kb
+	uidcWpM2UjuQEb1vKxoLVaMxqTVBVy3dbL/PYFhEUfva44sBg3taq+c/UcrehTQ0m6Bwz4Xni84
+	zVD9phLGi7JacF6Q==
+X-Google-Smtp-Source: AGHT+IGwvofrtUyEuSwOuV3OUTAsv9p7IO9zxK0RoTXVD1YmkrPrc9vYfh/5phhlnpuNXd8qGJMfJHgAwe0IUpnUZuM=
+X-Received: by 2002:a92:da09:0:b0:3cf:c1af:99f with SMTP id
+ e9e14a558f8ab-3cfc1af0b2bmr2536455ab.24.1737667495808; Thu, 23 Jan 2025
+ 13:24:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
+References: <20250122062332.577009-1-irogers@google.com> <Z5EM24qWVQF2VdI8@tassilo>
+ <CAP-5=fW6ZWf6jF3Xnike81S9s_5tZ9w4DS8=8Ff1Ve87O32_Sg@mail.gmail.com> <Z5KILXC9-dN4Vo1o@tassilo>
+In-Reply-To: <Z5KILXC9-dN4Vo1o@tassilo>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 23 Jan 2025 13:24:44 -0800
+X-Gm-Features: AWEUYZm6s3k1Q3-4dxuPxZe5_z1NgGEQjOMpv31v0pNOZT3BbLBoJ2mkb87R2IA
+Message-ID: <CAP-5=fW5xmir_26CrQN50TWkzab3GueUvne4VWhWhqc82p6LvA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2025 at 11:48:10AM -0800, Josh Poimboeuf wrote:
-> On Thu, Jan 23, 2025 at 09:40:26AM +0100, Peter Zijlstra wrote:
-> > On Wed, Jan 22, 2025 at 02:49:02PM -0800, Josh Poimboeuf wrote:
-> > > But also, the nmi_cookie is still needed for the case where the NMI
-> > > arrives before info->cookie gets cleared by early entry-from-user.
-> > 
-> > So how about we clear cookie (and set nr_entries to -1) at
-> 
-> I think we could set nr_entries to 0 instead of -1?
-> 
-> > return-to-user, after we've done the work loop and have interrupts
-> > disabled until we hit userspace.
-> >
-> > Any NMI that hits there will have to cause another entry anyway.
-> 
-> But there's a cookie mismatch:
-> 
->     // return-to-user: IRQs disabled
->     <NMI>
-> 	current->unwind_info.cookie = 0x1234
->     </NMI>
->     unwind_exit_to_user_mode()
-> 	current->unwind_info.cookie = 0
->     IRET
-> <IRQ>
->     task_work()
->         callback(@cookie=WRONG)
+On Thu, Jan 23, 2025 at 10:19=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
+ote:
+>
+> > In certain scenarios, like data centers, it can be useful to
+> > statically link all your dependencies to avoid dll hell.
+>
+> Yes but it won't be loaded into memory if not used. Executable
+> loading is all lazy. Maybe look a page fault trace for loading
+> perf if you don't believe me.
+>
+> So you're trying to optimize disk space here?
+>
+> I didn't see that in the cover letter.
 
-Though, assuming we're keeping the unwind_work struct, there's a simpler
-alternative to nmi_cookie: store the cookie in the unwind_work.  Then
-the task work can just use that instead of current->unwind_info.cookie.
+For me yes, for distributions it is dependencies. This is already in
+the v3 message:
+https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
 
--- 
-Josh
+> It doesn't seem like a very good reason for such an intrusive patch kit.
+
+The capstone and LLVM code is preexisting. Moving the capstone/llvm
+code to their own files isn't dependent on dlopen, it does make it
+nicer to have a single place we're doing dlopen. The change to shim
+the capstone/LLVM calls looks like this:
+https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
+ls/perf/util/llvm.c#L160-L182
+That is a shim is introduced that either calls through to the function
+if we're linking against libcapstone/llvm or does the dlsym. There are
+7 such functions in the LLVM code. I don't think shimming 7 functions
+is at the scale of hugely intrusive.
+
+> If it's a serious concern maybe investigate an executable compressor?
+
+Perhaps just have a squashfs partition.
+
+Fwiw, excluding dependencies I think compression on the events is a
+good solution. Convert json events/metrics to a sysfs file with the
+cpuid in the path, add the compressed file to the binary as data, find
+"json" events by iterating the directories in the compressed file,
+etc. A single filesystem approach to event lookup can mean we do some
+kind of unionfs style lookup of events, which could support users
+adding their own events/metrics in a directory. Zip doesn't support
+compressing across files, which is something of a requirement here,
+other formats do but it's a case of optimizing for some kind of
+libarchive sweet spot. The opportunity here is that about 70% of the
+binary is event encodings, a compressed file is about 30% of the
+current binary size, so we could reduce the binary size by about 40%.
+
+> > The X86
+> > disassembler alone in libllvm is of a size comparable to the perf tool
+>
+> I agree that LLVM is a serious bloat and DLL hell concern, but I don't th=
+ink
+> dlopen is the answer here.
+
+Agreed, but it's where the code is at. addr2line command or use LLVM
+for some performance. I think having an inbuilt solution would be best
+longer term - we spend energy trying to parse and understand text
+output from tools/libraries when the information is just sitting there
+in the instruction encoding. Such a solution would be brittle for
+things like new dwarf information, so we may want to have fallbacks
+like LLVM but having a loosely coupled dependency using dlopen feels
+preferable there, to aid package maintainers.
+
+Thanks,
+Ian
