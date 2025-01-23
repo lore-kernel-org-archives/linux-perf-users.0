@@ -1,38 +1,38 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9084620B81D;
-	Thu, 23 Jan 2025 08:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72408136E21;
+	Thu, 23 Jan 2025 08:15:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737620059; cv=none; b=Lszm19vx9+Gil6o/fst6dGO7jvb1/+n+dJKlC9wOBrN1/8mcQom2o9MN7n0MWZI5LKQMmNU9wGjsJDNpgnb2vbGVJn2OorpYsIOpnBQy1LOBleEf9TR92fGDi87yHFHGlE3Dk1CpqhBbvZw93971MpFZKGWrCUR7nz5qVwiTidw=
+	t=1737620134; cv=none; b=B/6iiGNNk8zRG3b+n7qi2VHFJF4pWCrYf77TTVWj4hdsVXfds8QILxKW6+GKftFgTETVL98TFzLSUq27EUEK4smw/kvyZ4bMsUVbbjGjwKvnkzKyH+JaNCKSYV+DJLN9F95+KKJ2MqNr4FRycePUUT930gWu7B69g3goPDi7/js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737620059; c=relaxed/simple;
-	bh=vROsj2hp1Pfaf7r/gMvV4hEAqBJjRE0M26bZWw1HSdA=;
+	s=arc-20240116; t=1737620134; c=relaxed/simple;
+	bh=0AK7WmvDyjQlRYeM0Ly8UcgZD14ijCOLsfLs/Z7AfjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMQNrYcQsw6OP/OT1dXoSKqeleUsV8r1bJe/0+9WZQt4lEK8PP7Ea1AGW5BsBLn8xsoYNNOv6i/ha1xgTzM7Scp817bT+mFm44ZCY1k3ioaWWNwroD/pB/ap3pYqLZedt/u2TJbxFw0kD85LE7DhQ3jZGKT4StNPSMw9k3qyMIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kGds9UZ/; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=emdmWGlLHOpdOCSeMicPVWry0ePjsSehcm6xfAa8CTOwDe9HzBvrv7nQy7xGtW5nUnurzc6xJhWz3UVFg7vcSJNpfVh94ZdOVe7qefqpc/c88/41eb8XDr5MrsU2lArQmF0F+TQksrLWypUum4rz7hpr2rRKHW8Ukao9RMBmOWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eOsh1CQa; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kGds9UZ/"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eOsh1CQa"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DnDI6vNdsy+vgx9C523oD+xSrdWFQ2X4GKCb+SBDNJ4=; b=kGds9UZ/qx7dZ4wCLtzZbZykfo
-	xIkebEmyQr9lx36Rq7HXYS3Mu6BzMDqk2tY3n9r3BLs+91t7fdeToLu2VJJvZ3MSq2vLl8KgYvC3m
-	HI+MpR/AmTXHXw+Ey0ZmdQHU1PMHAi+AhUS5I9X1tkYRrcZOAXmbplE6RZShdJiT4v47JbzMpWs0b
-	sBjYPPOpdopYrnMJ3NSENHwce1oHL8GiHFQQjd4vV8h1Tu/6WDGVksdA7ElE4p3MJPT8Rec9ns7ot
-	EwXtABzJzVKeUcIiMJa5rRqFIUJJfR0qUSsq7dIeCM9dru1VPRCaCdMBV+imqZJPd7FGqS/VDmeJd
-	yaloNPeg==;
+	bh=8DHZ4n2TBAlXWrin3ifIzIgZkldTo1uEfhcby08Z7EQ=; b=eOsh1CQaOf35FD+PbGE+DqB8bI
+	HV76z+8mMC6mGPqa9rPydmMaHcPnfEOjWY3xReDeyyRQi7ioCXPSGBCmQz/v8dT/dVnudy0Jir150
+	7XOnUlPSDj7NyZSb5kq6T/P3uSVtwar4FnaGz3QyxZRLcJ4w+FGM36WrQM0upncBNGtcKnRW/XvLP
+	maaKDqpvs1WpwRtmrFFoZuBQVm5V7yo9NTn702zIHZ9IOhHclVlBwcHMw9MSfZLcZTmyZ8Zmegvbi
+	vzSDabgEc4sg19xiO7hMpFOmH5ne7UqI4BfAOtgF/nsXtbZ2TKjSDHr3RlRzKRNK0htdhp81DkNeH
+	UIk6svrQ==;
 Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tasLk-0000000Dkr2-0S5M;
-	Thu, 23 Jan 2025 08:14:04 +0000
+	id 1tasN1-0000000Dks2-10ll;
+	Thu, 23 Jan 2025 08:15:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 59C4C300717; Thu, 23 Jan 2025 09:14:03 +0100 (CET)
-Date: Thu, 23 Jan 2025 09:14:03 +0100
+	id D1FE03006E6; Thu, 23 Jan 2025 09:15:22 +0100 (CET)
+Date: Thu, 23 Jan 2025 09:15:22 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -54,12 +54,14 @@ Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
-Message-ID: <20250123081403.GA3808@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 02/39] task_work: Fix TWA_NMI_CURRENT race with
+ __schedule()
+Message-ID: <20250123081522.GB3808@noisy.programming.kicks-ass.net>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
- <20250122122821.GN7145@noisy.programming.kicks-ass.net>
- <20250122204720.t42a4em5endxox3y@jpoimboe>
+ <ad5fb696fbcd276c0902dbb94baa75fb79a6e1e2.1737511963.git.jpoimboe@kernel.org>
+ <20250122124228.GO7145@noisy.programming.kicks-ass.net>
+ <20250122210339.i6sehdw4ddzqyy5h@jpoimboe>
+ <20250122221430.jfnleewvjj3mcbif@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,45 +70,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250122204720.t42a4em5endxox3y@jpoimboe>
+In-Reply-To: <20250122221430.jfnleewvjj3mcbif@jpoimboe>
 
-On Wed, Jan 22, 2025 at 12:47:20PM -0800, Josh Poimboeuf wrote:
-> On Wed, Jan 22, 2025 at 01:28:21PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 21, 2025 at 06:30:53PM -0800, Josh Poimboeuf wrote:
-> > > It's possible for irq_work_queue() to fail if the work has already been
-> > > claimed.  That can happen if a TWA_NMI_CURRENT task work is requested
-> > > before a previous TWA_NMI_CURRENT IRQ work on the same CPU has gotten a
-> > > chance to run.
-> > 
-> > I'm confused, if it fails then it's already pending, and we'll get the
-> > notification already. You can still add the work.
+On Wed, Jan 22, 2025 at 02:14:30PM -0800, Josh Poimboeuf wrote:
+> On Wed, Jan 22, 2025 at 01:03:42PM -0800, Josh Poimboeuf wrote:
+> > The self-IPI is only needed when the NMI happened in user space, right?
+> > Would it make sense to have an optimized version of that?
 > 
-> Yeah, I suppose that makes sense.  If the pending irq_work is already
-> going to set TIF_NOTIFY_RESUME anyway, there's no need to do that again.
-> 
-> > > The error has to be checked before the write to task->task_works.  Also
-> > > the try_cmpxchg() loop isn't needed in NMI context.  The TWA_NMI_CURRENT
-> > > case really is special, keep things simple by keeping its code all
-> > > together in one place.
-> > 
-> > NMIs can nest,
-> 
-> Just for my understanding: for nested NMIs, the entry code basically
-> queues up the next NMI, so the C handler (exc_nmi) can't nest.  Right?
-> 
-> > consider #DB (which is NMI like)
-> 
-> What exactly do you mean by "NMI like"?  Is it because a #DB might be
-> basically running in NMI context, if the NMI hit a breakpoint?
+> Actually, maybe not, that could be tricky if the NMI hits in the kernel
+> after task work runs.
 
-No, #DB, #BP and such are considered NMI (and will have in_nmi() true)
-because they can trigger anywhere, including sections where IRQs are
-disabled.
-
-> > doing task_work_add() and getting interrupted with NMI doing the same.
-> 
-> How exactly would that work?  At least with my patch the #DB wouldn't be
-> able to use TWA_NMI_CURRENT unless in_nmi() were true
-
-It is, see exc_debug_kernel() doing irqentry_nmi_enter().
-
+Right, I was going to say, lets keep this as simple as possible :-)
