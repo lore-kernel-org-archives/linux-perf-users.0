@@ -1,151 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A09D3597C;
-	Thu, 23 Jan 2025 15:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CDC49625
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 16:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737646588; cv=none; b=OVMxC7AQxpLjZSJHIetS0YhhzexdT5lzoV+iHRdIZMhd0X/XPzDD4httSgfX6EAg7PpADteQHWBZfx1MrrBUPBjUE0TzpiYzENeqAhVe60eW2uLqRg4fRcvCk8plLSKZBDjvzSUEuG2iTTlye3aHDTW2zdcgMtXNWMVrRnNlPEw=
+	t=1737648484; cv=none; b=vANEnPgLst78o/vltIq+oj1nhnyHSPaShr9Z7F9TULLJCLjv+Wqlikv8ebcGqq1gXJmxc2OUMstgu4FpuTVPT+z9cUThFyiz8a4AJ0BilVMokzN70MH6s8Sc+CEOMH4XTgxxoSt7ZZkJ+qK8eDBC5gTcp/MBwlWe44O+S1au6LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737646588; c=relaxed/simple;
-	bh=0YHTZ86RBn50qvBOSFKWmEYbZbB8FwtVbm3cb44e/O8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tXe08hQKkBbbUPAvIcO2wccY2gnFiXy4e9Zn19AaoSt5XAbvzWFYIszMVwwUd8NswKdt/YDJQ63mrPNoWZmTsg4HoBe/mIaewMyiko+n1LQ3PyLK0RfUaJoMlBuSeXiKtpDoaArQWpaZoSgDfZt1Ht09rUX3viM6Xq7gfJuZ0g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HInR86aV; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737648484; c=relaxed/simple;
+	bh=VJiHmI1djOKKK9qlzui7VcEj1PKh0CYZs7jRjQzcX2I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fiRyjHK2Le5n/bne1zDOB3/2XFQk6QzXbI/9f1L+Sx0wZ2tIxjbdvxwmtuIL7jBrzksU9VE0nOE4w2R1T0/xx0kHJPM9DJFUKV0fdIq+t7zyuiTFMkyYU6uRd/DYDOl80jL/TMBifK0+epLsAqR5lwBdmQGdqTcAAcgdS/FDKBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XYSJHgm3; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HInR86aV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737646587; x=1769182587;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0YHTZ86RBn50qvBOSFKWmEYbZbB8FwtVbm3cb44e/O8=;
-  b=HInR86aVAqw1LOaTzz//I/lQ7i+/RsHusqJ3fuJqdISSRJ3LD4uFgD/N
-   VmL2CNaQNhjx2nixO6AJjGlKaGLz99FY/aLRcFhZJAlSnr4/h2refJhGy
-   rCJ+wwZ+uG/XglGEH/YG1w1oKOViV9xHUGDF1n+dE2y5yRMYfEPJlYdVt
-   MmlbxkDUUZcZnRMwipyALNfB1XKMqCDa+ssROrwvrBGwXd1CaVz/5XOWi
-   VE3lh6Ji83BsMBG4KXgUB6fojvyKiVJW5xDr+E1arXrmXFmvMn4eSsHqk
-   loGFXS1Cn28rFV76SsMiiWiN8vYz9D2ihqMnkh6OnOueKFAE4pT9RxdSG
-   Q==;
-X-CSE-ConnectionGUID: N8jz+Pk3Q5Cq3SXMt5QfQA==
-X-CSE-MsgGUID: bMsULTsHReK5Z22Ntlwneg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55695726"
-X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
-   d="scan'208";a="55695726"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 07:36:26 -0800
-X-CSE-ConnectionGUID: 5jx2EMEqRamHAAkOR2y3LQ==
-X-CSE-MsgGUID: WRM2jJfXTcuzo8l7+GcUjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
-   d="scan'208";a="138352476"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 07:36:26 -0800
-Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E886B20B5713;
-	Thu, 23 Jan 2025 07:36:24 -0800 (PST)
-Message-ID: <ab878ced-9f8e-470b-b3fd-f12f7f042519@linux.intel.com>
-Date: Thu, 23 Jan 2025 10:36:23 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XYSJHgm3"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so155535ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 08:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737648481; x=1738253281; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YQDmKPoAbR7c0QGvmjmPxwpkQvGXQ/s6fxXQ9ADc7Og=;
+        b=XYSJHgm3cc3R2UGLhWX2N9y1R3bs6iFC7+FaNBXCuI9S8aq2N8IJMCOdn2DlsHzi7z
+         xwCBoobW+e/k9r8lO+Zfwdq8PMAnnUb4Y5FM4ZBqP3fVF/J8yva0mdAomIFVozd+eCku
+         UjiGwfW603/B/hBbIHxm/WyS47fie2gf1URuQ8ckPUcNOg1WGShAzbae9HV17G02uD1c
+         kTuzbPwHz/6EgG2S6fPQBgua+vtCyhIVS8Z7Em3QT3WZ+2sJ5cAhg7IEdMaYY/lhk0vx
+         1xDJs1rqK+AnF7AoYrxDt+S26NZlnX9ggG8xyF+yo+ISXvxeZPmY7aLMBPokkqOQVpKL
+         mNJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737648481; x=1738253281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YQDmKPoAbR7c0QGvmjmPxwpkQvGXQ/s6fxXQ9ADc7Og=;
+        b=TYQ4MVH0JY/YicBMsSy/oM+4hpf2+j7mPr2tO3WVCPRYhP8sB7kq/prrmbv/KejBEh
+         GWF2k+f7zqs9m+irdq7BK5mRMc5ELg4dIKYSoTT0PNRlICzIe5o5gqRTvn/K4bVFAIXa
+         YxFsLjnpNFJFUu3VjhvLxtZx2SVboH9lYz6+0B8JM0XctyD2yyTooq9cZ1AU8I/ya5Pd
+         W4hfOpEP/yS83z5f5dscXAzoEQnZZMjfKhmd1ZB4ubBHf7L+aliqTf84BfOYyS+zF/yQ
+         bnetLR9ENFOTAPSitVJJrWj1400BLB0NGf+IvVf0LNoqV+baMCQEieAU1Rs0NXfrkH3d
+         lX5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUMzxJxeEz+dFFqWV3MSs2Ig4akn94c8vkhZEbsixDio1HmBwUWxV2cIO189bVKmqq91usSwpuMzdviDtvgDWjC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys9U/PhSK4FieBojMgYGFFbzWMiKCb0lQTi6HyUZl/Rl26jSZT
+	GI1hSR/zo6K0kdb93QPmO4DBkvNRvRHeoaC5Lr2KvvIecYQx9A+QZETamF/7xAiRBi7QBbQ9kV9
+	bsI+gsvVciKQiJxHYNaaUXiNVx6KPLGuvYgHr
+X-Gm-Gg: ASbGnctVwAie5BROx2TYMcQc6ojTZ9LpovkXBz1+lpGiU7t6ttfKpNZOuld5Czo27cp
+	Riw9W1TcxEIITVCvNXAJnGB1Ki0/TwdqUfgZhM4VAkmFTW4q1lR1tHI0XvdoqccBnjeWkGVLX5K
+	xjVWXp4Mngoz+DBQ==
+X-Google-Smtp-Source: AGHT+IEXJE46BE9oGbt739cbBwHASjUpEeCbviM8FWa0ovSaM4CyC+OI2+kR+M4VbAO92iS1fs/qHZrGKmHuWnAJN1o=
+X-Received: by 2002:a05:6e02:1d14:b0:3a7:7d6e:fef9 with SMTP id
+ e9e14a558f8ab-3cfbdebdff2mr3008595ab.27.1737648479856; Thu, 23 Jan 2025
+ 08:07:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V9 3/3] perf/x86/intel: Support PEBS counters snapshotting
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
- dapeng1.mi@linux.intel.com
-References: <20250115184318.2854459-1-kan.liang@linux.intel.com>
- <20250115184318.2854459-3-kan.liang@linux.intel.com>
- <20250116114751.GJ8362@noisy.programming.kicks-ass.net>
- <be90e73b-eedf-4ff0-a832-b579e003cac9@linux.intel.com>
- <20250116204225.GA7232@noisy.programming.kicks-ass.net>
- <20250116205659.GA15641@noisy.programming.kicks-ass.net>
- <7f0ed750-b4b3-4adc-98d2-1e9cccd3bf02@linux.intel.com>
- <20250123091407.GJ3808@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250123091407.GJ3808@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250120173208.344231-1-irogers@google.com> <20250120173208.344231-5-irogers@google.com>
+ <Z5FwusFZ_bYlu6aK@google.com> <CAP-5=fX4vtKzMtrEbZhqH0dmKpXY3Ke+pVJ-ZbnHnAVuto7Z8g@mail.gmail.com>
+In-Reply-To: <CAP-5=fX4vtKzMtrEbZhqH0dmKpXY3Ke+pVJ-ZbnHnAVuto7Z8g@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 23 Jan 2025 08:07:48 -0800
+X-Gm-Features: AWEUYZmuYzja_lRDXich0Xw56IxoG1_AoHvfnNjTcqKJp9HAh_UgwJL40-V3vys
+Message-ID: <CAP-5=fXx=q-LHcb9BtjE1AFZGmV55NBWy3HvfWQaABo-YO=4gA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2025-01-23 4:14 a.m., Peter Zijlstra wrote:
-> On Thu, Jan 16, 2025 at 04:50:01PM -0500, Liang, Kan wrote:
->>
->>
->> On 2025-01-16 3:56 p.m., Peter Zijlstra wrote:
->>> On Thu, Jan 16, 2025 at 09:42:25PM +0100, Peter Zijlstra wrote:
->>>> On Thu, Jan 16, 2025 at 10:55:46AM -0500, Liang, Kan wrote:
->>>>
->>>>>> Also, I think I found you another bug... Consider what happens to the
->>>>>> counter value when we reschedule a HES_STOPPED counter, then we skip
->>>>>> x86_pmu_start(RELOAD) on step2, which leave the counter value with
->>>>>> 'random' crap from whatever was there last.
->>>>>>
->>>>>> But meanwhile you do program PEBS to sample it. That will happily sample
->>>>>> this garbage.
->>>>>>
->>>>>> Hmm?
->>>>>
->>>>> I'm not quite sure I understand the issue.
->>>>>
->>>>> The HES_STOPPED counter should be a pre-existing counter. Just for some
->>>>> reason, it's stopped, right? So perf doesn't need to re-configure the
->>>>> PEBS__DATA_CFG, since the idx is not changed.
->>>>
->>>> Suppose you have your group {A, B, C} and lets suppose A is the PEBS
->>>> event, further suppose that B is also a sampling event. Lets say they
->>>> get hardware counters 1,2 and 3 respectively.
->>>>
->>>> Then lets say B gets throttled.
->>>>
->>>> While it is throttled, we get a new event D scheduled, and D gets placed
->>>> on counter 2 -- where B lives, which gets moved over to counter 4.
->>>>
->>>> Then our loops will update and remove B from 2, but because
->>>> throttled/HES_STOPPED it will not start it on counter 4.
->>>>>> Meanwhile, we do have the PEBS_DATA_CFG thing updated to sample counter
->>>> 1,3 and 4.
->>>>
->>>> PEBS assist happens, and samples the uninitialized counter 4.
->>>> Also, by skipping x86_pmu_start() we miss the assignment of
->>> cpuc->events[] so PEBS buffer decode can't even find the dodgy event.
->>>
->>
->> Yes, counter 4 includes garbage before the B is started again.
->> But the cpuc->events[counter 4] is NULL either.
->>
->> The current implementation ignores the NULL cpuc->events[]. The stopped
->> B should not be mistakenly updated.
-> 
-> Ah, indeed. I was so close.
-> 
-> One question though -- is this value ever exposed otherwise? I had a
-> quick look and I don't think we support PERF_SAMPLE_RAW for PEBS, but
-> what about PEBS-to-PT ? 
+On Wed, Jan 22, 2025 at 2:42=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
+> On Wed, Jan 22, 2025 at 2:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Mon, Jan 20, 2025 at 09:32:07AM -0800, Ian Rogers wrote:
+> > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT=
+,
+> > > support dlopen-ing libcapstone.so and then calling the necessary
+> > > functions by looking them up using dlsym. Reverse engineer the types
+> > > in the API using pahole, adding only what's used in the perf code or
+> > > necessary for the sake of struct size and alignment.
+> >
+> > I think reverse engineering the types is fragile.  Can we simply change
+> > to dlopen if libcapstone is available?
+>
+> The current behavior is if HAVE_LIBCAPSTONE_SUPPORT then we will link
+> against libcapstone and can assume the header files are present.
+>
+> The reverse engineering of structs and constants I agree is brittle,
+> but these things shouldn't change, it is used in this code when the
+> capstone/capstone.h isn't present. If capstone/capstone.h is required
+> we could change the ifdefs to indicate:
+> 1) capstone is present and we're linking against it (this is
+> HAVE_LIBCAPSTONE_SUPPORT today);
+> 2) capstone is present but use it by way of dlopen;
+> 3) capstone isn't present don't #include, don't link and don't dlopen.
+>
+> My thought was that this is less good than the reverse engineering.
+> (1) relies on the builder having libcapstone, which at build time is a
+> warning that flies by. (2) also relies on the builder having to have
+> libcapstone and to opt into a dlopen behavior, they'll need to read
+> Makefiles to discover this. (3) gives a less good perf tool with in
+> the source lots of __maybe_unused and ifdef-ed out functions all over
+> the place.
+>
+> With the reverse engineered values if you have libcapstone then
+> HAVE_LIBCAPSTONE_SUPPORT works as before - no change. If you don't
+> then you will be opted into getting something better than objdump -
+> albeit it could break if the reverse engineered values drift from
+> those in capstone/capstone.h. Less build options also is less
+> complexity and cleaner code.
 
-The counters snapshotting feature is only available on the latest
-platforms, lunar lake/arrow lake, and future platforms with Arch PEBS.
+To be clear, if the header file values/structs drift then libcapstone
+will need to version values/structs, we'll need to update the perf
+code to use these, etc. Otherwise a tool linked against an older
+libcapstone will break when libcapstone is updated. The code handling
+not having any libcapstone, dlopen-ed or not, would be significant as
+every static function will need an #ifdef to avoid a not used warning,
+every parameter will need a __maybe_unused and the overall code
+quality in perf will be worse imo because of this. The no libcapstone
+default when not detected would be crappy for users. The values/types
+added here are fewer than 20, and so are not a huge maintenance
+burden. I did a similar thing for the LLVM C++ symbolizer code and its
+maintenance would have been a burden and so abandoned it in the
+llvm-c-helpers case that mainly affects addr2line and not disassembly.
+Hopefully later LLVM C APIs will make this unnecessary.
 
-The PEBS-to-PT is not enumerated on lunar lake/arrow lake. (It actually
-never works on hybrid.) It will be deprecated on Arch PEBS as well.
-So we don't need to worry about the PEBS-to-PT.
+Anyway, because of this I won't be changing this in later versions. I
+will be carrying these changes in Google's tree and think ideally it
+would be carried in the regular tree.
 
-> Anywya, let me go find this v10 thing :-)
-
-Thanks.
-
-Kan
-
+Thanks,
+Ian
