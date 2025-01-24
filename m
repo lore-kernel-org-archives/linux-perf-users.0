@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65545FBF6;
-	Fri, 24 Jan 2025 16:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85718FBF6;
+	Fri, 24 Jan 2025 16:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737737598; cv=none; b=JP++GEXFJpOUw9w+G03t/lUIFuBSxtAubr4LDvfqat1jrTBBO0/Or52NFzwZpeZOu9od14nu+aoit4CYenhLEUYcJaII9/9wpILiEVVIBF8YZZ9EwzlraACNAgzBSxlIxq/rYi3RR2TXdS5RQmwYWvK/1yJEdeUFpELIwlGOMB8=
+	t=1737737778; cv=none; b=llry0FSMATlwWhqwNt5QEMhoh7Lx3N+PD57tg8XMRL2UfQMN5VW3RQ+MfT7UPutTG4zcL8VBgamsvcBaK58h8Y0lNObFWcsmN3G12g8y3PcCHQgaNvx1ThTyI8pZjZrMMAXXMwiPTEr1f/t6ajyJ5OWS87Y16P1L9bxO9p3V24Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737737598; c=relaxed/simple;
-	bh=qPIOFO8bGBTpcv1DPcqFGcSO5s4HmGRpDM85BVyuP/s=;
+	s=arc-20240116; t=1737737778; c=relaxed/simple;
+	bh=+2/cfZrAdySIv4uxUP30BP1I7KomzUj4dyKI6FzDFUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bt6Uba7Yos1ofBGmUqpSiDplW2ASVc5jJ6iIVV2KWrGVL96v6r3sS5C29jQ3GOjya2r8XPPUC5xSTD2N0Zznaz7hcJfA41JNrqRWlO+GxkWHh/4i6y4oSWquyVS+KC0YaZCQtFuauVPFr95uWnB04jfebELjmvBOgvbNN0fiXUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/eK8ohY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqbwLCwHaCsTg4tpQp0iS6EGOiY1jR25KsL3KcRawo2yyMm6ehpLr/G9Z7Stx0FyxVtYMlJO+WEhP88W+rnW2Jy+MNm3einsoq4vfgAg5zIEInX7ixTJiCPTXMKiB+oGURWCW2LkMs3h2FVwTonkmTfyWMTSyn+k9ozWisUlojA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stP8cjQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/eK8ohY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6A51C4CED2;
-	Fri, 24 Jan 2025 16:53:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stP8cjQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7041C4CEDD;
+	Fri, 24 Jan 2025 16:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737737595;
-	bh=qPIOFO8bGBTpcv1DPcqFGcSO5s4HmGRpDM85BVyuP/s=;
+	s=k20201202; t=1737737773;
+	bh=+2/cfZrAdySIv4uxUP30BP1I7KomzUj4dyKI6FzDFUY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V/eK8ohYjDpCLLf1GgkezqxYbPa2x2gEjJvuKsnTR561Cmch60BijnsvWwwpuhnBa
-	 EECeD16eRvYhJWkoIhhbTK6axd/MKH0hvDLIECk99IC5/2tq7zJVNGVhNie6GhJfr/
-	 Zd7a6EnjXBauCgN8BTPZ7SLrKFikzNa4qkq8PlJEQaf4EBs0+5XOO7sOItUMbZh/Tu
-	 ZkztVhJw9KZET03TTJQ8a1+ytbRTsi+1HV34OCDVbUpIHRxKNSSiGE+ItM/iKx8B+g
-	 fDDgk8HtY940+aXLxEw5PRzj3jMABI7HJv0kgC0CqEdwdiZ2B3bKDo/YJdmc/fvUzV
-	 5ASMzoQT89rjA==
-Date: Fri, 24 Jan 2025 08:53:13 -0800
+	b=stP8cjQyDn69zOqi5pyOqrzSIcgzgVdApIA6AvZZrmWM+SKPll1gtM72kwSmf4Q9F
+	 AoOlzx+75boRzPM2EMDQy3Pqe67Dux9M+UJBPd4wOrRVDm4BOl71zHxXM1s6v2g9k3
+	 4BGO1cVnwWVT/iIbUhDRiZwIOT6wiURqKh9dWnrA4NVuS+8C6VHw5MYwiUfrv4kYQ6
+	 PiJ1XpiOlisINHFre4S/lsv9DQ2E11HrDT4FwEamc/XP/mMOQJ8kBCYLbG9lPY+Cxg
+	 FBqKY4pE6ad7H0jq3zY80iJI/su25gXYAZWoLSDXwgfCtEEKubN4nz6p5DXkifpRXw
+	 zpi113xiYR6Qw==
+Date: Fri, 24 Jan 2025 08:56:11 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Jens Remus <jremus@linux.ibm.com>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -50,11 +50,10 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>
 Subject: Re: [PATCH v4 09/39] x86/vdso: Enable sframe generation in VDSO
-Message-ID: <20250124165313.aejzzy5c5siqbnfq@jpoimboe>
+Message-ID: <20250124165611.qgp765fhqi6fm72g@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
  <c93fbd53f01c2c86f747af27040ac11f16dee032.1737511963.git.jpoimboe@kernel.org>
- <cde90a82-6bdd-4a12-872a-7b39edf3eac8@linux.ibm.com>
- <20250124164332.gqgzimfix3vk4bsw@jpoimboe>
+ <05ae2b86-ba4c-4eaf-9c5f-726fc57c7a2d@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,24 +62,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250124164332.gqgzimfix3vk4bsw@jpoimboe>
+In-Reply-To: <05ae2b86-ba4c-4eaf-9c5f-726fc57c7a2d@linux.ibm.com>
 
-On Fri, Jan 24, 2025 at 08:43:35AM -0800, Josh Poimboeuf wrote:
-> On Fri, Jan 24, 2025 at 05:00:27PM +0100, Jens Remus wrote:
-> > On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> > > +#ifdef __x86_64__
+On Fri, Jan 24, 2025 at 05:30:36PM +0100, Jens Remus wrote:
+> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> > Enable sframe generation in the VDSO library so kernel and user space
+> > can unwind through it.
 > > 
-> > #if defined(__x86_64__) && defined(CONFIG_AS_SFRAME)
-> > 
-> > AFAIK the kernel has a minimum binutils requirement of 2.25 [1]
-> > and assembler option "--gsframe" as well as directive
-> > ".cfi_sections .sframe" were introduced with 2.40.
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > 
-> True, I'll change it to just '#ifdef CONFIG_AS_SFRAME' since that's what
-> really matters (and 32-bit doesn't support it anyway).
+> > diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> 
+> > @@ -47,13 +47,17 @@ quiet_cmd_vdso2c = VDSO2C  $@
+> >   $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
+> >   	$(call if_changed,vdso2c)
+> > +#ifdef CONFIG_AS_SFRAME
+> > +SFRAME_CFLAGS := -Wa$(comma)-gsframe
+> > +#endif
+> > +
+> 
+> You probably erroneously mixed up C preprocessor and Makefile syntax? :-)
+> 
+> ifeq ($(CONFIG_AS_SFRAME),y)
+>        SFRAME_CFLAGS := -Wa,--gsframe
+> endif
+> 
+> $(comma) does not appear to be required in this context.
 
-Actually, just CONFIG_AS_CFAME didn't work as 64-bit still compiles some
-32-bit asm files.  I'll go with your suggestion.
+Yeah, before it was in a Makefile macro which needed the $(comma) to
+distinguish it from the macro arguments.
 
 -- 
 Josh
