@@ -1,137 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CF718D63C;
-	Fri, 24 Jan 2025 09:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC15623A0;
+	Fri, 24 Jan 2025 09:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737711956; cv=none; b=Kob+uJbiMA4wCiLTwnkK0/eS1U2aN2NCg/EKSuCDRYAEoLs6j8Xgz68Wvtx0GET5uxBzScQ1XrKPAq8vSIXFGNc8RuchD5ivQ/lWOfmzcC5qoFSPnJ+LUijdoDzLdV/CNX9Lf5vwQzQRENLlLbM563Ls0MC3+SeebczvKi+rjUY=
+	t=1737712287; cv=none; b=ZZCak7otd74TgbAGYw98be9aDnr24yJzAA7m08dcE1XZzIyOV+PEby9kEUSttanOufnOjAWjh/E43rfORLXOTQPVejK/nwoJCXVvQjhTZkNZBaeQyi5Y11mpB6R5ourRgOiJl8NyDqqxAErj6ba/PlMAEVMJkXWu8uZKgoNFsGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737711956; c=relaxed/simple;
-	bh=eB2zDntAjt8L+m9HIlRkkULjJqOEs9/jE8oisXlLBWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdeqFvNMB8tyrkmE7qPVeWsfqYZNxN7123qnOWgbwQHzzVXeV+olWaErFcrsdPQtcIhoqJQZkbfX0d9SELQFgDHZ/q1h8BVTzG4B39sATAlHIZ5caDk+fK2olSjHKkC3E/VW4kU+xmj1wrDe/sVYEgOOHoQ0McbYmitN4aJbJ4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5sDAFyt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5sDAFyt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B960C4CED2;
-	Fri, 24 Jan 2025 09:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737711956;
-	bh=eB2zDntAjt8L+m9HIlRkkULjJqOEs9/jE8oisXlLBWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r5sDAFytysFAd08xigMIdNSQaON3PfDxZ9tc2l98pwn0W46Ey2NIYkhf0+iCBAHls
-	 1+on1E+DvhXwG4zDqHZUhtELbONQvdPAIWLAgT4ke458UWqPtrerWhznFTx6LmtEcn
-	 ZByXndeHa8U9otquiYrS+xKHlt6wgIs6yLqefkaa5acZpR8OejesrGUtZRjgCL3hGf
-	 BVnePg8OtowoCgFrP8cGL7+qi+ugAKLi7RS3UW+xRArwnq1y4xu3En9+PwD/gIOPht
-	 3cJh1+WuLGlR+d34M7Gsp5/oDDSJDkJIpwgpuyZKbrOaiDPbArRMfQqNumuRYPLpKM
-	 jO3u/iaJNGQwg==
-Date: Fri, 24 Jan 2025 10:45:48 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, peterz@infradead.org, 
-	mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, liam.howlett@oracle.com, 
-	surenb@google.com
-Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under
- CAP_PERFMON
-Message-ID: <20250124-zander-restaurant-7583fe1634b9@brauner>
-References: <20250123214342.4145818-1-andrii@kernel.org>
+	s=arc-20240116; t=1737712287; c=relaxed/simple;
+	bh=LaVH4TvV1sPKBPejbwzD4Q36yIuUsT8IGsH2VAKvOXs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=atSP8J/odfrF/J0jjYOBOxSdWlKgpdrLA2vFRHvDpTikiUFQtLETFaHAYVKXHJE6smi1Lg2uDZceSIHW4cOQN8fMr8DojSrpKiE95VyMH0cIDPZzZ45ZRaVBC+jTojDtNACoJCC86tF1/lXOB7Ijk9n14rR9ER51L3M10X0S6dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YfXzz2n46z2Fc75;
+	Fri, 24 Jan 2025 17:47:59 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 17B581A0188;
+	Fri, 24 Jan 2025 17:51:21 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Fri, 24 Jan
+ 2025 17:51:20 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>, <andrii.nakryiko@gmail.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: [PATCH v5 0/2] uprobes: Improve scalability by reducing the contention on siglock
+Date: Fri, 24 Jan 2025 09:38:24 +0000
+Message-ID: <20250124093826.2123675-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250123214342.4145818-1-andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Thu, Jan 23, 2025 at 01:43:42PM -0800, Andrii Nakryiko wrote:
-> It's very common for various tracing and profiling toolis to need to
-> access /proc/PID/maps contents for stack symbolization needs to learn
-> which shared libraries are mapped in memory, at which file offset, etc.
-> Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
-> are looking at data for our own process, which is a trivial case not too
-> relevant for profilers use cases).
-> 
-> Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
-> discover memory layout of another process: it allows to fully control
-> arbitrary other processes. This is problematic from security POV for
-> applications that only need read-only /proc/PID/maps (and other similar
-> read-only data) access, and in large production settings CAP_SYS_PTRACE
-> is frowned upon even for the system-wide profilers.
-> 
-> On the other hand, it's already possible to access similar kind of
-> information (and more) with just CAP_PERFMON capability. E.g., setting
-> up PERF_RECORD_MMAP collection through perf_event_open() would give one
-> similar information to what /proc/PID/maps provides.
-> 
-> CAP_PERFMON, together with CAP_BPF, is already a very common combination
-> for system-wide profiling and observability application. As such, it's
-> reasonable and convenient to be able to access /proc/PID/maps with
-> CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
-> 
-> For procfs, these permissions are checked through common mm_access()
-> helper, and so we augment that with cap_perfmon() check *only* if
-> requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't be
-> permitted by CAP_PERFMON.
-> 
-> Besides procfs itself, mm_access() is used by process_madvise() and
-> process_vm_{readv,writev}() syscalls. The former one uses
-> PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMON
-> seems like a meaningful allowable capability as well.
-> 
-> process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
-> permissions (though for readv PTRACE_MODE_READ seems more reasonable,
-> but that's outside the scope of this change), and as such won't be
-> affected by this patch.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  kernel/fork.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index ded49f18cd95..c57cb3ad9931 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_struct *task)
->  }
->  EXPORT_SYMBOL_GPL(get_task_mm);
->  
-> +static bool can_access_mm(struct mm_struct *mm, struct task_struct *task, unsigned int mode)
-> +{
-> +	if (mm == current->mm)
-> +		return true;
-> +	if ((mode & PTRACE_MODE_READ) && perfmon_capable())
-> +		return true;
+The profiling result of BPF selftest on ARM64 platform reveals the
+significant contention on the current->sighand->siglock is the
+scalability bottleneck. The reason is also very straightforward that all
+producer threads of benchmark have to contend the spinlock mentioned to
+resume the TIF_SIGPENDING bit in thread_info that might be removed in
+uprobe_deny_signal().
 
-Just fyi, I suspect that this will trigger new audit denials if the task
-doesn't have CAP_SYS_ADMIN or CAP_PERFORM in the initial user namespace
-but where it would still have access through ptrace_may_access(). Such
-changes have led to complaints before.
+The contention on current->sighand->siglock is unnecessary, this series
+remove them thoroughly. I've use the script developed by Andrii in [1]
+to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
+64 cores@2.4GHz running the kernel on next tree + the optimization in
+[2] for get_xol_insn_slot().
 
-I'm not sure how likely that is but it might be noticable. If that's the
-case ns_capable_noaudit(&init_user_ns, ...) would help.
+before-opt
+----------
+uprobe-nop      ( 1 cpus):    0.907 ± 0.003M/s  (  0.907M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.676 ± 0.008M/s  (  0.838M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.210 ± 0.003M/s  (  0.802M/s/cpu)
+uprobe-nop      ( 8 cpus):    4.457 ± 0.003M/s  (  0.557M/s/cpu)
+uprobe-nop      (16 cpus):    3.724 ± 0.011M/s  (  0.233M/s/cpu)
+uprobe-nop      (32 cpus):    2.761 ± 0.003M/s  (  0.086M/s/cpu)
+uprobe-nop      (64 cpus):    1.293 ± 0.015M/s  (  0.020M/s/cpu)
 
-> +	return ptrace_may_access(task, mode);
-> +}
-> +
->  struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  {
->  	struct mm_struct *mm;
-> @@ -1559,7 +1568,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  	mm = get_task_mm(task);
->  	if (!mm) {
->  		mm = ERR_PTR(-ESRCH);
-> -	} else if (mm != current->mm && !ptrace_may_access(task, mode)) {
-> +	} else if (!can_access_mm(mm, task, mode)) {
->  		mmput(mm);
->  		mm = ERR_PTR(-EACCES);
->  	}
-> -- 
-> 2.43.5
-> 
+uprobe-push     ( 1 cpus):    0.883 ± 0.001M/s  (  0.883M/s/cpu)
+uprobe-push     ( 2 cpus):    1.642 ± 0.005M/s  (  0.821M/s/cpu)
+uprobe-push     ( 4 cpus):    3.086 ± 0.002M/s  (  0.771M/s/cpu)
+uprobe-push     ( 8 cpus):    3.390 ± 0.003M/s  (  0.424M/s/cpu)
+uprobe-push     (16 cpus):    2.652 ± 0.005M/s  (  0.166M/s/cpu)
+uprobe-push     (32 cpus):    2.713 ± 0.005M/s  (  0.085M/s/cpu)
+uprobe-push     (64 cpus):    1.313 ± 0.009M/s  (  0.021M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.774 ± 0.000M/s  (  1.774M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.350 ± 0.001M/s  (  1.675M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.604 ± 0.000M/s  (  1.651M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.706 ± 0.005M/s  (  0.838M/s/cpu)
+uprobe-ret      (16 cpus):    5.231 ± 0.001M/s  (  0.327M/s/cpu)
+uprobe-ret      (32 cpus):    5.743 ± 0.003M/s  (  0.179M/s/cpu)
+uprobe-ret      (64 cpus):    4.726 ± 0.016M/s  (  0.074M/s/cpu)
+
+after-opt
+---------
+uprobe-nop      ( 1 cpus):    0.985 ± 0.002M/s  (  0.985M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.773 ± 0.005M/s  (  0.887M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.304 ± 0.001M/s  (  0.826M/s/cpu)
+uprobe-nop      ( 8 cpus):    5.328 ± 0.002M/s  (  0.666M/s/cpu)
+uprobe-nop      (16 cpus):    6.475 ± 0.002M/s  (  0.405M/s/cpu)
+uprobe-nop      (32 cpus):    4.831 ± 0.082M/s  (  0.151M/s/cpu)
+uprobe-nop      (64 cpus):    2.564 ± 0.053M/s  (  0.040M/s/cpu)
+
+uprobe-push     ( 1 cpus):    0.964 ± 0.001M/s  (  0.964M/s/cpu)
+uprobe-push     ( 2 cpus):    1.766 ± 0.002M/s  (  0.883M/s/cpu)
+uprobe-push     ( 4 cpus):    3.290 ± 0.009M/s  (  0.823M/s/cpu)
+uprobe-push     ( 8 cpus):    4.670 ± 0.002M/s  (  0.584M/s/cpu)
+uprobe-push     (16 cpus):    5.197 ± 0.004M/s  (  0.325M/s/cpu)
+uprobe-push     (32 cpus):    5.068 ± 0.161M/s  (  0.158M/s/cpu)
+uprobe-push     (64 cpus):    2.605 ± 0.026M/s  (  0.041M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.833 ± 0.001M/s  (  1.833M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.384 ± 0.003M/s  (  1.692M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.677 ± 0.004M/s  (  1.669M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.854 ± 0.005M/s  (  0.857M/s/cpu)
+uprobe-ret      (16 cpus):    6.508 ± 0.006M/s  (  0.407M/s/cpu)
+uprobe-ret      (32 cpus):    5.793 ± 0.009M/s  (  0.181M/s/cpu)
+uprobe-ret      (64 cpus):    4.743 ± 0.016M/s  (  0.074M/s/cpu)
+
+Above benchmark results demonstrates a obivious improvement in the
+scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
+of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
+
+v5->v4:
+Nothing new, just rebase to next-20250124.
+
+v4->v3:
+1. Rebase v3 [3] to the lateset tip/perf/core.
+2. Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3. Acked-by: Oleg Nesterov <oleg@redhat.com>
+
+v3->v2:
+Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
+
+v2->v1:
+Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
+completion of singlestep which leads to handle_singlestep() has no
+chance to restore the removed TIF_SIGPENDING [3] and some case in
+question. So this revision proposes to use a flag in uprobe_task to
+track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
+
+[1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
+[2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
+[3] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@huawei.com/ 
+
+
+Liao Chang (2):
+  uprobes: Remove redundant spinlock in uprobe_deny_signal()
+  uprobes: Remove the spinlock within handle_singlestep()
+
+ include/linux/uprobes.h |  1 +
+ kernel/events/uprobes.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.34.1
+
