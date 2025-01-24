@@ -1,70 +1,45 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA1E4A1D;
-	Fri, 24 Jan 2025 11:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576AA2B9BC;
+	Fri, 24 Jan 2025 12:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737719906; cv=none; b=cUv3txHSK5kxNxVyinGZK8Gukb1M2dKUFSYm2CKSPx0GR2I3+0dHW+VuSLshGudLM1gpY9wdk87OauTABA0wXa7ANqQgITz8LpB0N1KqlO+Xukgpn5kUhQFZjlbN/BVn5GlrOSTOCWAVGVp4WEqt4EzdrTlZgOgU+D8ZumHOp0s=
+	t=1737721798; cv=none; b=V/74tQbGff1AZOTUd5kMd0by+vumAMiCZ414glrZZxo676isbe3XIF4XmxBzCOjN21EscrWC1o6mcvYDBI8x3nD1Q6XIWBGUGFEw53XBZlFXj0hOg84HOW2xCPPOe35nCTmeIf0063wNO784RDT1yybCE/fWsWXPdF3pwETc9MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737719906; c=relaxed/simple;
-	bh=X1S/2x/UzIFXU8YsUc3j3QV4J2BBm87Q1r0RObPQyQg=;
+	s=arc-20240116; t=1737721798; c=relaxed/simple;
+	bh=JwX8musVq+spcpO8VEXeNqq9bKiTj5rJbdsNNvyFCe8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HAW1BupcSAiid4cRoH08MxcRj4YZlgFWYeOkz3guUTnQhY/0Ei0taBapk4BAOb7Zt6dOhW7McXjt/tKqmvXmt6xWyh77Tqq2DETH+Vu1rOILQepRRMWvwLvE2YB4ibZxlP+BfjlvYY65kiT95x0glSkWYptOD+hQIW6/PF0Oc2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hWeg8eHk; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNrPQWPHk9+Lz2HwBc2sUCqcW6lJbxB1GAtieQLKE4IyNtZIjg3w5I2nFvrqBLGw4RVG6UwgMeEQzn1aGnOiBYwhHZ13FdY6y+mCNEKRGoEj+b3WELjvFxfovHM2wqsIps7fAP3tesc54xWyCKXkLimoChVc9O3h1yid2pNNw4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPk6UeVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hWeg8eHk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sgYpbh1DfX8JZ/m/T6xAdzG9eIdqJ1ADdSM1jAgjGnk=; b=hWeg8eHkWCPDaXICzh0tOm+XWM
-	QER0kThn8dmpMCIvp6RmmzMmrD5a8CPhdxPIT6YYr6dn277gy6G5MRd48gtdFpdXxLef5Ak3kK8ve
-	Pny4MnTRhzebEomAcROSfuR3OOkpDjSnqZH6qT6/WEotDte+dB1UCJy/Axgfw5lwQhUJsl32ED6uF
-	DZ2mBc2qgcQkctG9CH/4FG+CY1hGR0PIy9Q6F7i83f5Ownq5eo3JKoXEOG0/EtTdpYv3iDsL2S4N3
-	952D4UnyAbTETGgOhU3mlBqeuj3q5PTN5ZkBoZ9+JRSUfHSCmqdY7FZ7vF9KUF+AYR1ePogQmAL0C
-	bjurmsmg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tbIK9-0000000FXad-2VH4;
-	Fri, 24 Jan 2025 11:58:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 27B03300619; Fri, 24 Jan 2025 12:58:09 +0100 (CET)
-Date: Fri, 24 Jan 2025 12:58:08 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250124115808.GC15996@noisy.programming.kicks-ass.net>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
- <20250122141505.GT7145@noisy.programming.kicks-ass.net>
- <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
- <20250123084026.GF3808@noisy.programming.kicks-ass.net>
- <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
- <20250123221734.GE969@noisy.programming.kicks-ass.net>
- <20250123233445.qhgb76tj7tjiqagj@jpoimboe>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPk6UeVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC9E7C4CEDD;
+	Fri, 24 Jan 2025 12:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737721798;
+	bh=JwX8musVq+spcpO8VEXeNqq9bKiTj5rJbdsNNvyFCe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BPk6UeVAOQKa1tW5jlmsBHMAt3+ItJAXlrnRL1MiTQ3pif3Umq9lNV7NaUyMR6ULD
+	 pdX9+U9vARyY7/FoIUj+wtcNKU5mMDwwtGgq0B7tkk//7mEWTt0fEg7GdnQLo/jkx8
+	 vZvD3VETn337V8QK1vqeHcWIHTYvJGPDqjG2Gku5o6DxBOe9NA9ebCpaX4YFVXYYQ+
+	 mTM49i0A+GlsQV7CtpAVcq/fit7WH44CunvhJflOz5xm7KlDaJHOxJAqld3/DMzwkK
+	 GPj37EI1pb7NF+4y/+XI4pKqFfR6WsLwrNuOgr8hfXjyROzoAl6SdlDhMK2dQNCevx
+	 IFUcaaPKwz3Qg==
+Date: Fri, 24 Jan 2025 12:29:53 +0000
+From: Will Deacon <will@kernel.org>
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com,
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev
+ devices
+Message-ID: <20250124122952.GB23438@willie-the-truck>
+References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+ <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com>
+ <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
+ <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com>
+ <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,15 +48,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123233445.qhgb76tj7tjiqagj@jpoimboe>
+In-Reply-To: <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Jan 23, 2025 at 03:34:45PM -0800, Josh Poimboeuf wrote:
+On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
+> > >>>        vsec = dwc_pcie_des_cap(pdev);
+> > >>>        if (!vsec)
+> > >>>                return -ENODEV;
+> > >>>
+> > >>>        sbdf = plat_dev->id;
+> > >>> -     name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
+> > >>> +     name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%d_pmu", sbdf);
+> > >>
+> > >> A new name will break previous user tools.
+> > > This name isn't suitable. It can't clearly show which is the PMU
+> > > device. Userspace tools don't have binding relationships, like perf.
+> > > Tools must traverse PMU devices before use.
+> >
+> > The device is under /sys/bus/event_source/ which indates it is PMU device.
+> > As far as I know, most of PMU devices do not endup with a '_pmu' prefix.
+> 
+> The point is the name "dwc_rootport_" is misleading, suggesting an
+> extra PCIE RP in the system. Best to change the name to intuitive
+> "xx_pmu".
 
-> Here's what I have at the moment.  unwind_deferred_request() is vastly
-> simplified thanks to your suggestions, no more NMI-specific muck.
-> work->pending is replaced with work->cookie so the task work can use it
-> in case it crossed the cookie-clearing boundary (return-to-user with
-> IRQs disabled).
+As pointed out above, changing the name will break userspace. So it's
+simply not an option, sorry.
 
-That looks a lot saner, thanks! I'll be waiting for the next cycle, not
-sure I can track all the changes in me head.
+Will
