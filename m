@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8914FBF6;
-	Fri, 24 Jan 2025 16:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC961ADC80;
+	Fri, 24 Jan 2025 17:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737737838; cv=none; b=T40siM8sTGLcF9VneF+RugwpOyXdXrgDq4XSAWemJaBblbmLr5YW/p2D8ts4QjiL4Kq5emlj+S9L8PKWB4NOdBRc3CrWmivSEy/sGIDcaORrkQd3YbrxMnKjmgtWkB54VI0jzSGAYATFeNTp/GM2FIqF0bWSqjGoPMFM6QctFgo=
+	t=1737738462; cv=none; b=vGjO/3tPLTtMCaC+d0V9ojzVqNQZLhUsva/IByVreukffDOMbJVqkz+k3Qs2ydrM/vrjEdPsGn9GLUC2a4OvlneOtuQUpbdFPJ6fNynjMwyLHymUxt6WmbiaSCZrlbnVz60BYogZdrn0Bt3h+5oKggX4WJ9FqVs8wfAtQ07FvFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737737838; c=relaxed/simple;
-	bh=ylHYzB0S3kjYA5jzC2tk2Pt6TRfSJsTdbvj0WpwwAtY=;
+	s=arc-20240116; t=1737738462; c=relaxed/simple;
+	bh=E1bAFitXybHEtPZ8TCHNUgsLNVAC56dGNsXImLjMDus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvo98UsC1e7alG1ivkXESWpwyS2WGSPUYRDz1G5MgiYTQfqar/3U/kdTsjyQF96JfVtmiLYixYGHxxrRvUdRWZcMm522/19sU+XqD6tBkqfKasgClyaiwuO+4bKGpeU6qtgZz+5fv7wwqtrFPfU13hchZ0nY5+2chvBPGDvCTJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jq3DyDnv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThJQL5N0Ep4KmW+cFVCTttiFJ3dZyy4+fQAaXzoOtPz/DJGmklgbgXaC96He/lt4xtL+DCr57D7MQXTU9zRQCs0db5q7ifwxI0Iary6Js7Gmt8NnNz2xaeQdnFkw9yoisuQWrjAOVgWhlF7MtyDsAi5qIA3xuuslqAvdE0BNlMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsUqJYOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jq3DyDnv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C434C4CED2;
-	Fri, 24 Jan 2025 16:57:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsUqJYOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B0EC4CED2;
+	Fri, 24 Jan 2025 17:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737737837;
-	bh=ylHYzB0S3kjYA5jzC2tk2Pt6TRfSJsTdbvj0WpwwAtY=;
+	s=k20201202; t=1737738461;
+	bh=E1bAFitXybHEtPZ8TCHNUgsLNVAC56dGNsXImLjMDus=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jq3DyDnvlepAADkR/nd/XuRL/2FL5SuaTkN9ASituh4CaxLdwqWNfpxAuMqgGuQzo
-	 hiOQnl033QTRbLPG8cIvGAL/irxPvLGtZgIfMDvt5VuxkN/X7nwn69nQcAnN102qpI
-	 hU/NDsaIk2kCAAiN0WcZY/CUrpOkeI5S5WqDBDY5xS5wpCDLV0AB2MqNXA6Zlsxt1q
-	 7hD7/phelhymJYdIockfXRRmCQoOW16dpK70ewBMcWXhGLcq9YC7eXPkVQ8QZlhRRm
-	 gTXzmfnKc66okSB/QjNK4Nu6u1zZk2zspORUnfbm5lYpVa76xloc8BgnCo1Jj8xIYn
-	 p56Mtl8z5HcQQ==
-Date: Fri, 24 Jan 2025 08:57:14 -0800
+	b=EsUqJYOOy4u8WUE7j7LPKgePgwgPJhPajin/NGO/AoneOUpc9H4cveQzIAQha/ljH
+	 FuYY3vk1lDLh1fDPaxV9vmkK/FOC1F8IS5lHw7JdQsrPla8r/budJZoIAtncL35lq+
+	 hmP8hOBZzO9Fpx7rZ1Yn8UcrQ8Aosx5KIqgpoEZJtru0s2cCubkDKD4wEZ2BYDBRT3
+	 JA4wXHjbEmEBUpO764MpgoZmPOPs2bPpA2m+u4TZIL2eDQyhGpD9bKMRbButZ0eguZ
+	 vPO1mW5Argey2fpRkTSf+WzRZ5NJG3RijebyB8UzP46DF4ApTIolJHCF4O8lOyY9Ch
+	 OaTRIXDYWE8Kw==
+Date: Fri, 24 Jan 2025 09:07:39 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Jens Remus <jremus@linux.ibm.com>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -47,14 +47,13 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250124165714.irsxqqtww2qr6lya@jpoimboe>
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+Message-ID: <20250124170739.e3uzaoggmumhl2cq@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
- <30483278-c065-4851-b709-8d1dcfa1fe5e@linux.ibm.com>
+ <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
+ <4379b9c6-e896-4ea4-a4a5-9c6b3c9f2f75@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,19 +62,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <30483278-c065-4851-b709-8d1dcfa1fe5e@linux.ibm.com>
+In-Reply-To: <4379b9c6-e896-4ea4-a4a5-9c6b3c9f2f75@linux.ibm.com>
 
-On Fri, Jan 24, 2025 at 05:35:37PM +0100, Jens Remus wrote:
+On Fri, Jan 24, 2025 at 05:36:38PM +0100, Jens Remus wrote:
 > On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> > +static inline void unwind_deferred_init(struct unwind_work *work, unwind_callback_t func) {}
-> > +static inline int unwind_deferred_request(struct task_struct *task, struct unwind_work *work, u64 *cookie) { return -ENOSYS; }
 > 
-> static inline int unwind_deferred_request(struct unwind_work *work, u64 *cookie) { return -ENOSYS; }
+> > diff --git a/include/linux/sframe.h b/include/linux/sframe.h
 > 
-> Otherwise this does not compile on architectures that do not enable
-> UNWIND_USER.
+> > @@ -3,11 +3,14 @@
+> >   #define _LINUX_SFRAME_H
+> >   #include <linux/mm_types.h>
+> > +#include <linux/srcu.h>
+> >   #include <linux/unwind_user_types.h>
+> >   #ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
+> >   struct sframe_section {
+> > +	struct rcu_head	rcu;
+> > +
+> 
+> Nit: You are adding a blank line, that you later remove with
+> "[PATCH v4 25/39] unwind_user/sframe: Show file name in debug output".
 
-Yeah, bots have reported that also, thanks.
+I suppose that was intentional.  The original blank line created visual
+separation between the rcu head and the sframe values.  The later patch
+instead sort of uses the ifdef to keep some separation?  But yeah, I'll
+keep the blank lines for consistency.  <shrug>
+
+struct sframe_section {
+	struct rcu_head	rcu;
+
+#ifdef CONFIG_DYNAMIC_DEBUG
+	const char	*filename;
+#endif
+
+	unsigned long	sframe_start;
+	unsigned long	sframe_start;
+	unsigned long	sframe_end;
+	unsigned long	text_start;
+	unsigned long	text_end;
+
+	unsigned long	fdes_start;
+	unsigned long	fres_start;
+	unsigned long	fres_end;
+	unsigned int	num_fdes;
+
+	signed char	ra_off;
+	signed char	fp_off;
+};
 
 -- 
 Josh
