@@ -1,55 +1,55 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6957D1D5CD6
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 04:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B141D63D4
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 04:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737693168; cv=none; b=YFeP3gycFDG43j4ohlfj91/I5bOR9KDCyMWs+OmEnMIq3QYSQp+BOgjmfzVf2I1axjpx0AS3MyH835PHpOHp67RWtqmzMHRPKbAFnmN1WJ9PslnoTjpL/KT+vqvPepS2hoIBxnHpsylWb1iDexGVYd3JUuU8mugDl24hFSbT0Tk=
+	t=1737693541; cv=none; b=IGWXf2BUDNHO2En9cV5PmTPoaYsC0wSDx4FkLv4yOQkmEDL+fqfa3b6DgPRcavOrDHn+iT4dxgKdgTGGGaTokhNwC4POey30Q5o2+k62yclb2Pyp3bRPS91nBJ7XzaIXg0f1kiHaft64VpisjVu5iPzSYNUr3gl1FHxfJBfRmDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737693168; c=relaxed/simple;
-	bh=WsWfXBdAsZmpFLOg4Z45/1CHJDwZJcWImRjYcC6uJUc=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=UlQ4gJm95TaQdcVjpHEV6AvmbA1DtmvzD83eSJO4VAogcoQOj/HLGtBi1vH0VW3/ahOZVKNyxyskl4BpK9YunOX/HUbkrWIUK4ujz6ExdS0754LtkvG4A8S6ItvZW39rntdBumwFp1ro5GIOfrzbrsYxkmY8X5cRAxSZQfN7Eng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xBGYt6JV; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1737693541; c=relaxed/simple;
+	bh=Zb72lMbe4S6+kbLYAOQOr+7lj+nvekAbAHvrLoX90r4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=fdSJQq/DGl96a3Hu71SBTkC9uaikVgDuBWd/EWomkkQEhXIe3DaVPNHny4nEKQFLESM0ZH0ZER5c4VgAR67QEJD/DC1TXM2KbIpcs8GbuVrbFa4AkA6L5e/MNlJzbVrO7F4pu8PG52yLeKrXNBThhWoqP4LQq7XO8obNOq3unVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uQQyFq95; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xBGYt6JV"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5505f613e5so7180586276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 20:32:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uQQyFq95"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5742f52896so4706701276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 20:38:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737693165; x=1738297965; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737693539; x=1738298339; darn=vger.kernel.org;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=eyhNieawePCYid/HCGGpD8Pj8YkzfwMDeYbku9p4Drk=;
-        b=xBGYt6JVapxKefmIoU9g+aztErgLluFZK5rIoDpRIZLQ4mabkXEgqmPiS9GdFZlRWQ
-         GumPIhiKB0GneLMa7h1WGhoZP7wA9fne2xRsa4lZS+NCh3tOskj3qGgQctc+ok4xi+Hj
-         nD5QKAPrkgjLiBScmOeDtY6r0Im2I/wP/tbzkG4mScamJjSuUtimjtmoA3GOjiAHDVbm
-         9t1l02t3k13pXQPt7UHMuC1TMoCDreSWS4xFE2RImL3JA8FELNzqVuMH3xqq01Gti1cs
-         apmcIy5dbQmWcth+eaFlsGIJLlD8AkFEwolDHkcHEqLePDg6YVYDWZGonaaYfqZDgpHn
-         dh7Q==
+        bh=SpFCpBS37zKIhBhows1YsqYDYshq9kCjp6PCFAEHwqU=;
+        b=uQQyFq95OfP63bRzG9I+iSpqTjJfMrCCm/pZf89JiHnI0TD57CElDCAthl3XhF08/P
+         yykUrFRpp4hjYvf4ZuiZwD1nFGKBe/HtNmRKCMLOCAsE9sAOdyLyf7Rd8ezDGkAs8Ytj
+         LLCFX5db9P86J+F7Cv9Snw5kmaTqAP4RgiM6WyRWj6tdFZkRAuYgEzJUoUJyiPep3Wyr
+         Awye0iwc0138ZRYuRY0W91XOcvfELONyNF5ONSzS+U/jjfAscINHavmW5xiMMoDyPhtd
+         m4JUN6jRsq26AxGtnRBdUEV1+6gbb6VodEPXqflg+Gp/6qsiA0n3CRU5rWtZlDX4fzE7
+         gItQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737693165; x=1738297965;
+        d=1e100.net; s=20230601; t=1737693539; x=1738298339;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eyhNieawePCYid/HCGGpD8Pj8YkzfwMDeYbku9p4Drk=;
-        b=SmmBdboK1kC55YWcpJwmAtCWq1E4V/UWrmB10hdG7z3aG4sQailRjDz3V5i2CCGu3k
-         fEMGDeT138Unr/4qp+G4myetxQbMbeJsHWNzP87FPoLXovf10criNNUyJ3vtzapV7Tt+
-         L0e55xHbp7KBT8e6yzOCO8TPYxgk0k1xPXXO/cXy5NDhq4ZyXwjVjy0C+esM6k85+j18
-         7Zu2zWGBqdirmEsMm9VzJBdyuXnIFZgW1J3Isx/dntmIihWgJ3SCPbzhsydB71NiWFvP
-         feOEHMHBEMV+gO8cs9wruKuXPGwLFlreLZ4U6Q6QzxN9OIoArm/OvPj9omrVW/K08jzS
-         fb1g==
-X-Forwarded-Encrypted: i=1; AJvYcCX5IvCwvFQFcMXHYiW31+8xk86038TGi9AtsuDl7BEvBeelalYuEBLHLopcHOmVZpLD/YSEEAiRtHkfXvQrhG9i@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZjsNMWex2OtFtpNj4t3rx1Wk0Oz0pHdSy/9fB3uHruzOX/9ft
-	xHgzOJ5pV1OWjqIq5hrghuxKf+Xh9Lhp7K7iXiVMfkioBTd7QeLvzKgQQhbeyKIsbYxGaPQRdAt
-	xWKT5xQ==
-X-Google-Smtp-Source: AGHT+IEkdH4HLSLsrk9Ouph4XIXNIr+Pd5puR+bmY9pVIeGpveIWKHIbaQAgzRYKWmJN9MYbP/0qg37sWHMS
+        bh=SpFCpBS37zKIhBhows1YsqYDYshq9kCjp6PCFAEHwqU=;
+        b=CqAnjcOfkazYnmTt+tVKoIPO59rRXGyR7FeeIgMAlditJ8iJmGU0FNHFJCfLyiI6U9
+         PNpG/5SEKPWVmkzwRIIX08dIF2H2xuhXkib4ql05Yp2xNzgGXOyUAXGxHOXiOUXd2YSH
+         3VyB3P1Mtng9K2JhkfA9j7ig55mDumk3CyBcYyXue6PUHAzYxXAdsCiKqqPbu16vt3Ug
+         LhqLEI9xZiqaL4V94yiy2F5B2NNGhwbkgBS+SjY1Ch+tCde2snUWkDJOLsSq/pXhsaS5
+         titfEbolNzLDRWuBPCK8KnSt+sMJD0hAgt7qUhpVpjNcx3iCmtF3HfSRlee+gJwHscNx
+         VYrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfagdTQxHRRi80eqmUKUMoodNyBsByMfMA3kWaLPqQJcSIcIZ8KbikajdSLMOnAH8HbnkMOWdhzSBIUlgZ/WPh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvrItzqx1Bl+KIzLV0ZQJTsawdow+Vx4pklTChCgcAS3fqklBh
+	LTyxqQiBwt3EhyVKAu5eK1iVeq+xlDyGac7GmvjQpYXNmKCvr+qFBxx2EheKfdOxI6E0TGXyIeT
+	A0fNBpg==
+X-Google-Smtp-Source: AGHT+IESlAI6Opdgt2eFLdCRFJomXxVJurFs7wXWxxjzjhwdE4iILODFYebcSWp7IUMIqpIFtETex4CUWDpV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:37b6:cf70:1dbf:669c])
- (user=irogers job=sendgmr) by 2002:a05:690c:6488:b0:6ee:fbef:239 with SMTP id
- 00721157ae682-6f748e02ae3mr201377b3.5.1737693165329; Thu, 23 Jan 2025
- 20:32:45 -0800 (PST)
-Date: Thu, 23 Jan 2025 20:32:41 -0800
-Message-Id: <20250124043242.1174490-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:6f91:b0:6ee:4d97:9091 with SMTP
+ id 00721157ae682-6f6eb94303emr827597b3.7.1737693539149; Thu, 23 Jan 2025
+ 20:38:59 -0800 (PST)
+Date: Thu, 23 Jan 2025 20:38:56 -0800
+Message-Id: <20250124043856.1177264-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Subject: [PATCH v1] perf annotate: Use an array for the disassembler preference
+Subject: [PATCH v2] perf annotate: Use an array for the disassembler preference
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -83,12 +83,15 @@ objdump values are added but without a need to parse a string.
 
 Fixes: a6e8a58de629 ("perf disasm: Allow configuring what disassemblers to use")
 Closes: https://lore.kernel.org/lkml/CAP-5=fUdfCyxmEiTpzS2uumUp3-SyQOseX2xZo81-dQtWXj6vA@mail.gmail.com/
+---
+v2: Remove unused annotation_options nr_disassemblers variable.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
  tools/perf/util/annotate.c | 76 +++++++++++++++++++++++++++++++---
- tools/perf/util/annotate.h | 14 +++++--
+ tools/perf/util/annotate.h | 15 ++++---
  tools/perf/util/disasm.c   | 83 +++++++-------------------------------
- 3 files changed, 96 insertions(+), 77 deletions(-)
+ 3 files changed, 96 insertions(+), 78 deletions(-)
 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
 index 0d2ea22bd9e4..31bb326b07a6 100644
@@ -195,7 +198,7 @@ index 0d2ea22bd9e4..31bb326b07a6 100644
  
  static unsigned int parse_percent_type(char *str1, char *str2)
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 0ba5846dad4d..7ae89425b54c 100644
+index 0ba5846dad4d..98db1b88daf4 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
 @@ -34,8 +34,13 @@ struct annotated_data_type;
@@ -214,10 +217,11 @@ index 0ba5846dad4d..7ae89425b54c 100644
  
  struct annotation_options {
  	bool hide_src_code,
-@@ -53,13 +58,12 @@ struct annotation_options {
+@@ -52,14 +57,12 @@ struct annotation_options {
+ 	     annotate_src,
  	     full_addr;
  	u8   offset_level;
- 	u8   nr_disassemblers;
+-	u8   nr_disassemblers;
 +	u8   disassemblers[MAX_DISASSEMBLERS];
  	int  min_pcnt;
  	int  max_lines;
@@ -229,7 +233,7 @@ index 0ba5846dad4d..7ae89425b54c 100644
  	const char *prefix;
  	const char *prefix_strip;
  	unsigned int percent_type;
-@@ -134,6 +138,8 @@ struct disasm_line {
+@@ -134,6 +137,8 @@ struct disasm_line {
  	struct annotation_line	 al;
  };
  
