@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2761CFEB2;
-	Fri, 24 Jan 2025 22:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB03019E975;
+	Fri, 24 Jan 2025 22:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737758352; cv=none; b=iAPbL6ySRL6NTqIxnyIz6xSEdKgPIhGR3b3lLo+97vjZWn+Cu3dXKtoyMZO8ZbG48fFVgaPWaSvjAebK5suiLuwd4NXLlewhSxF97E1V/r9QDkJIVGjAB54AllWzSsgasfqGXWWwVnML4xWMC75jse26dPuT2FyBF4dbKtbKbNc=
+	t=1737758809; cv=none; b=qcGKcIgTeVCIi8issAXLjEok7kdyRg4XUv3vXnltfmRedTbow7OiQYiC81Rj15NMMWq64RpbejhfXaWcRof9bj07LPbuZJ47QL+fq1Ul1MnEfAzIRAH4rhSj2i/PsISILyiWp00DGJwGT9aTSDDPJRBG8hEgbf9wJs+AfRBuZNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737758352; c=relaxed/simple;
-	bh=bOC/DoQi+gBwJE3OIca1li3yeKPNO4dGJyXkW04s1JE=;
+	s=arc-20240116; t=1737758809; c=relaxed/simple;
+	bh=76BJhGDZ0qsjhHEGajgAdiZ9KAVN3V//xjtf3ccLXC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jsCAP7Gke1BxGiv6gwXvxKJkO+LNXy+I5uS6kojl+X22UQJyLa6XikZXWYZsul/u4hwQbWAYaPhYj3wHPIIBgZJzcoG1khO1o29VY5LU0cvMVJJL7yCMpc5JaLtVSv/JW7v8JaDgv/NOpIB8dW6cyIXpohDhiUwtFUZE1tvjtUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+w4JQei; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fny1m+RYu4lhnzlJZ+7lUNY46cLT9k/P3InySDjYvmPy40SE0KLvrfro4OEaKn5x80wMQ2z5clihu8mBczm+dA+2BJAOroUC98A4/yB8u23uQq3ys+gl4szRzXZFOxJoDf9hd0lyG5Vj9DN9ZiUtf0ZuIYUkx2PPbuU/Ak7m8aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSYMX1j0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+w4JQei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0646DC4CED2;
-	Fri, 24 Jan 2025 22:39:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSYMX1j0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A640C4CED2;
+	Fri, 24 Jan 2025 22:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737758351;
-	bh=bOC/DoQi+gBwJE3OIca1li3yeKPNO4dGJyXkW04s1JE=;
+	s=k20201202; t=1737758808;
+	bh=76BJhGDZ0qsjhHEGajgAdiZ9KAVN3V//xjtf3ccLXC0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+w4JQeiazizMT636wWcoYR7BjcxDDLxcfnLt5L2d82hgAzVwq3N6mr6AWqJW8tMm
-	 aUu713XKVeorGdND2Ei5rJSlu8bPJoF63CvfYssYTLRK7RPDiCDFosKr6zRuOjIBab
-	 B73WO1XV+kBWuLOncurfUSs8aiF05x0T6cwHzKn/Vge1cTdeHCRP9bYWDylZhXSxvX
-	 OD9EPiP1Qfbtytd30E12HHh1sh2Nep/EOIrQHF3qzVvyldP844YsxEPWuyY+qUD7zc
-	 LqmGzMeGn9DuuB0nrBZVqvJVC4+92ikNDnKZEWypoXzsXf/GxtVdjJuugdQ83aApWQ
-	 5ZfR009tJChpg==
-Date: Fri, 24 Jan 2025 14:39:09 -0800
+	b=dSYMX1j08Tuxd9CpN6Mq5Wg7ZxK7QKlkJfRY7ENu5k8GxlaonLDHY/4WVrpG/KZ+n
+	 N76/JrBTGGHllOol0XeYn9mWFXmbLpTlGp2Y+BtWQaOczNF/ANvXuls/fFG2Pw8f9O
+	 4olrYMT9tZyDYDCriACcKSXB3KePLq6xJVe7aHlQwts91M0js/mhOOG8pj7djoHUXS
+	 /jcnrzPgXlqBH37Tzf4chhDgRcBwNOrrDOhouANuDNhnO/h8CqVHIyw/0Xs3ZyEsTT
+	 FJoAWth7zvFptba8P5dNil7sdDYhWEs3/BstWlKjBDkF6xIoBm7uGhp4PbaPmvzZCW
+	 XV9MRUMURE0pQ==
+Date: Fri, 24 Jan 2025 14:46:45 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,20 +42,23 @@ Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
 	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
 	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-Message-ID: <20250124223909.sw7nfdjx4da46vyp@jpoimboe>
+Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250124224645.lcovfraeq53gegys@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <20250124151340.2c173332@gandalf.local.home>
+ <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
+ <e92fc832-ef46-4863-9316-24f30d8d82fd@efficios.com>
+ <20250123040533.e7guez5drz7mk6es@jpoimboe>
+ <20250123082534.GD3808@noisy.programming.kicks-ass.net>
+ <20250123184305.rjuxj7hs3ond3e7c@jpoimboe>
+ <20250123221326.GD969@noisy.programming.kicks-ass.net>
+ <20250124165803.565c29ed@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,46 +67,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250124151340.2c173332@gandalf.local.home>
+In-Reply-To: <20250124165803.565c29ed@gandalf.local.home>
 
-On Fri, Jan 24, 2025 at 03:13:40PM -0500, Steven Rostedt wrote:
-> On Fri, 24 Jan 2025 11:21:59 -0800
-> Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Fri, Jan 24, 2025 at 04:58:03PM -0500, Steven Rostedt wrote:
+> On Thu, 23 Jan 2025 23:13:26 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> > > given SFRAME_F_FRAME_POINTER in the header, is it really that
-> > > nonsensical and illegal to have zero FDEs/FREs? Maybe we should allow
-> > > that?  
-> > 
-> > It would seem a bit silly to create an empty .sframe section just to set
-> > that SFRAME_F_FRAME_POINTER bit.  Regardless, there's nothing the kernel
-> > can do with that.
-> > 
-> > > > +               dbg("no fde/fre entries\n");
-> > > > +               return -EINVAL;
-> > > > +       }
-> > > > +
-> > > > +       header_end = sec->sframe_start + SFRAME_HEADER_SIZE(shdr);
-> > > > +       if (header_end >= sec->sframe_end) {  
-> > > 
-> > > if we allow zero FDEs/FREs, header_end == sec->sframe_end is legal, right?  
-> > 
-> > I suppose so, but again I'm not seeing any reason to support that.
+> > -EPONIES, you cannot take faults from the middle of schedule(). They can
+> > always use the best effort FP unwind we have today.
 > 
-> Hmm, could that be useful for implementing a way to dynamically grow or
-> shrink an sframe because of jits? I'm just thinking about placeholders or
-> sohething.
+> Agreed.
+> 
+> Now the only thing I could think of is a flag gets set where the task comes
+> out of the scheduler and then does the stack trace. It doesn't need to do
+> the stack trace before it schedules. As it did just schedule, where ever it
+> scheduled must have been in a schedulable context.
+> 
+> That is, kind of like the task_work flag for entering user space and
+> exiting the kernel, could we have a sched_work flag to run after after being
+> scheduled back (exiting schedule()). Since the task has been picked to run,
+> it will not cause latency for other tasks. The work will be done in its
+> context. This is no different to the tasks accounting than if it does this
+> going back to user space. Heck, it would only need to do this once if it
+> didn't go back to user space, as the user space stack would be the same.
+> That is, if it gets scheduled multiple times, this would only happen on the
+> first instance until it leaves the kernel.
+> 
+> 
+> 	[ trigger stack trace - set sched_work ]
+> 
+> 	schedule() {
+> 		context_switch() -> CPU runs some other task
+> 				 <- gets scheduled back onto the CPU
+> 		[..]
+> 		/* preemption enabled ... */
+> 		if (sched_work) {
+> 			do stack trace() // can schedule here but
+> 					 // calls a schedule function that does not
+> 					 // do sched_work to prevent recursion
+> 		}
+> 	}
+> 
+> Could something like this work?
 
-Maybe?
+Yeah, this is basically a more fleshed out version of what I was trying
+to propose.
 
-I was thinking the kernel would have sframe_section placeholders for JIT
-code sections, so when sframe_find() retrieves the struct for a given
-IP, it sees the JIT flag is set along with a pointer to the in-memory
-shared "sframe section", then goes to read that to get the corresponding
-sframe entry (insert erratic hand waving).
-
-It's still early days but it's quite possible the in-memory "sframe
-section" formats might end up looking pretty different from the .sframe
-file section spec.
+One additional wrinkle is that if @prev wakes up on another CPU while
+@next is unwinding it, the unwind goes haywire.  So that would maybe
+need to be prevented.
 
 -- 
 Josh
