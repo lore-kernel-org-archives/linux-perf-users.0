@@ -1,272 +1,213 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CA91D63FB
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 04:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17F4A29;
+	Fri, 24 Jan 2025 04:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737692076; cv=none; b=V4dWFyMvK4EWVWPRU22Uuk1SNAJtSDL/ud8W3UUsv5JbC1xS/hOA8Mi3MXHcbSO252cqF7SrB64X2+zJAKOq6DfcYR0p5uBEhO2BdcF43qvtioRKecH3KViAhyyBkrX0afQ1EZ4aUn3EN4YS+gV98g3L21CfTGO2LxWRm5x5gKs=
+	t=1737693039; cv=none; b=TzsGwPw7X2Txnk9zqqNrOe0Dmm1Dd0hGP+EJIGU2TcYw8Ne+rtFCBC3irRO0/z+Lg2wtSVYapSYBDtDdqVJahf8ZrK3XQpxK+jqIfQFt+d7FWJ7xei6u4tAqwxDr2WeGjxGktTtenXlZdd/Jv69frYkpWk4TQZUNV5MdefVIKtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737692076; c=relaxed/simple;
-	bh=Q9K8NNu2RAWCel/2x0hxVkgNCK8hIhNlQdfYenrfLwc=;
+	s=arc-20240116; t=1737693039; c=relaxed/simple;
+	bh=xWKBCJ4/F+C4iPpN41/rfGAftSrlHoSrBjTz1DBlqAI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KkHZS+pwGxPAL91JR9Zrj6ni8jQGgrNdpfwIcPxeLBL3y7cZEmu6IjQaYyIK6GJ4GEGZmTXWtYgD4SuHpwjPH0nXD+J3g+YAHZo1z87mN697vtJjOnLeVJxfKAf1wcv70rF/6ojYyIEuyJ1Oq7RMJOhk09ysu4Cw8W4Z3DPZvBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wfvCV1Db; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=pHPWe7MPDNDTgFJJc18lhWtkDi04hzJKIeHjc/86xzgzOE5uRnoYqkiSzZAdIQh0PMZlKfKVOF6yY09u5JbIBZvhAvsgCfRzCju6ta1pWAIGVhBhyrAi4Npt4As7kJWBjZISpSorPrpme9DfXU8ow1f8OyYoUzJZG96cC5tOzqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpmLK9CK; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wfvCV1Db"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so65535ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 20:14:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpmLK9CK"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e573136107bso2875000276.3;
+        Thu, 23 Jan 2025 20:30:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737692073; x=1738296873; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1737693036; x=1738297836; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8BBJlY+dd7Vjignx+oxblpwdbhdbID+alwpFAP9eGRM=;
-        b=wfvCV1DbN1nvro7nW9aaqtu7fXgLuz5dZDqzw0N8uNFb1WQxTzMzaMazHVmUQPiRp0
-         0F1/J3rlB8Vr7qmoj/XFfqNxi55d6B97TIXcDi9DYk5mcrwWG/vKvuFynYwLV6gJZrwj
-         omBG56/iwon358qU8p4ACzdLk9KLXf57AKfa5RXbbL7Tp5ehRPHErOs5XRf96KgnzHqe
-         O/f2eTkfz6wA+VellZTB9VZ5fOJL11sRM73OFX/D7Zr3E9m1zX3Dln0Zna+HsuCL7ZiI
-         ddvojs+qbVNbIzEv7w2vx3Zx40U1JZ6uW2Fz4beJBpAt60jFA4mN+UeGTh1xty0BFRL8
-         hdhg==
+        bh=FJ3141s7bYtALogaTO8fTKNutJIlVaw7DyLO73zGOZY=;
+        b=bpmLK9CKYemhXG4mqk7m+QNtLk0iglZrG75durrnPU1+jvdE7MLnAWZ0XPy1mGVO50
+         ro5sU2zfF/nCKLWdHP4FPZ9rfAjbD53fFg1Rg3RYP6dfbwXQblhMYBBkFzvxvQzwAoYD
+         I8QdBpEKG47QfZghHtuNRD72Us+Al587Byom1/Zqd48CyPIEv9KP5YSTtQvgKBGdEXGt
+         BMiJvnvFZy90jdOBjGgZlZz2NRS/NjG/0wFpiSLKx9zf4HvcEjZN/M+oJxkmubPPcbip
+         AwycmhKlQS0v7Rrv6tv1WYwz7eWz0611GYvlF1eKTyzzjSiDFav3LECnZXNny7lA2shg
+         BaJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737692073; x=1738296873;
+        d=1e100.net; s=20230601; t=1737693036; x=1738297836;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8BBJlY+dd7Vjignx+oxblpwdbhdbID+alwpFAP9eGRM=;
-        b=Qs7A7kjeFl2Jny1BoL7e7wnDG0WQ1OT5i6NtWI2qttnXCY6TQOmea1cJjTDHb6NPVO
-         UPRHyRErNQKxgfqg5gV/9xRpjQT5+BhyougovFCSIYT10jWJap/yrxt05CuM/QnUia3o
-         +fuUqWLShVsYQHBrtJ0c1uT0LobFYRfaWHOlht+M2nVUlegki5F+7bDKsHoNFb5tKkJj
-         tg+noKcgCIEvJDYzzVYHl4igsx611ydt+N/14UCEW9SndprJpzq91I0xK2uuKn0sVqPv
-         4eRJk5i4KRUS3NwrJVDfNDv9fUaSfmRiqx7yX4kyAyExiZdXmfwFg4/pfJOVu70ubm9H
-         CrRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ+UKPr3u/thVhbTAOgb52e49Qo5Swg58U5HD7WrffzPenkQ4IafQUkobohJy8BrP25CzYhzhACKRUKfwL6iv8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZoxj+DhuVdn5ukIYjWCMAItZh8ZIGdhq0xDVwlUdFNqmrw+gI
-	D6oZ28jSnPydnqH1WJLmVGJdkOy9sLKGEnCXCZzzGm8gPJzPh+5kLNN7gm9OWLOoVi3TEQRAhSr
-	m88rPNSut67p4nN7o8Aaa0ylavTT3hBybuRWc
-X-Gm-Gg: ASbGncvo2kwCDwvAhqFc0quCuIfrmVGtmzIuoDrLSWPfzgrNOM+OghtkFEiMfhIXwom
-	a3NO1XOdV02phfygZJ4Uk8W8gJErjBN+LGccd62H1Raz52kKCh1QQyxFoOSxP9hg=
-X-Google-Smtp-Source: AGHT+IGR/nuY3I/CA9IMPeTYW1iZ8iqhjFa/vLyR6ErKhrOj3QqviGdA5YzS2VvZT7xKiAb7Io/a+Yo/8ytbAqV1qo8=
-X-Received: by 2002:a05:6e02:ca6:b0:3cf:c98a:ceba with SMTP id
- e9e14a558f8ab-3cfc98aded5mr752935ab.22.1737692073429; Thu, 23 Jan 2025
- 20:14:33 -0800 (PST)
+        bh=FJ3141s7bYtALogaTO8fTKNutJIlVaw7DyLO73zGOZY=;
+        b=JkLP0T3F2yUGGtV/AG8YhaQ8LGUUqjQInl1/pbv4fJ/EF8oKWSC9IrTd3mvHgJT62G
+         7VnXqmTH+cXvrorNlwWqcC0FUObxoD54ryMNLpOt0QXHFXQIfvucgxH6Gl4DEJAeoZ9z
+         YdF+Y+mBcpeC/7By53pNCWLsdPLyuz65w5Lb+jDYXyoDDrtIZX7Y5cPQ0TQYBYrSqHWk
+         0Eyn5WtuENTD+3P8DsXMTQzhgso25UfnowzWAWQgSdqrJiJbqZs+Yp9XYi9+Jy0aHzxY
+         JA2xCLaBZWIoCFQpIPWLy0xgujhjN4WnseoW/C8rOckSbmuS0s9trpIcpYTBdk0fvCqS
+         dvrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkHOjszrGsM4410he8FZ6itDcG174trWIkVqONdUuKDGj5VaY7WlzLlm1L8V0cVwRCyoL+25An7hhd1eU=@vger.kernel.org, AJvYcCV4vmz7P9yo0+0DUH1rb2Rnp3wD7nwyncTX0dqx3eVKQiDpk6V5JzfCxxu+luqKOS/9b6RphEGPsJLnDXSy+v0JYQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2yT2c5IajLD0cnz4Wug1SrPecQXaJZiCw8SONB1xhqyLLyP3t
+	RzQRyPIA7opJDR2il2iuSmBp9cDhl4avbnijhWtFBC23ziEO5vQ2TJ9nLzNAmrs//e4t8mQnpjn
+	Pe1Ne++IJ1j9Hmk7oOU3WFpJ/95PgNKWZznc=
+X-Gm-Gg: ASbGncuFIsHL6MKRlwxoaloDqtGFcYR2kBQugGVt/evtE4G2fZAf473N7UXstDHs3Bx
+	tG388c5M3VekmCjsVTeGRffkD6pJVbcae2WIbT6JR/8gbO41LGSWYloNCCNTfMHARG4tAwEI=
+X-Google-Smtp-Source: AGHT+IGcx0pGF7eli/nANUqU/IXnbiVeCtGpBZFEEMKHHxXD6rvkZG1Trzk76S2oImmPMArhnvO2AxU50Gn7F9Puzjw=
+X-Received: by 2002:a81:f20e:0:b0:6ef:7d51:eba6 with SMTP id
+ 00721157ae682-6f6eb90d669mr181057947b3.28.1737693036556; Thu, 23 Jan 2025
+ 20:30:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124035507.52827-1-hanchunchao@inspur.com>
-In-Reply-To: <20250124035507.52827-1-hanchunchao@inspur.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 Jan 2025 20:14:22 -0800
-X-Gm-Features: AWEUYZkmnDVS1ek-sriLtn4Xx_I3g1Pmwush5E47MlBiCkfQbQ6kn7-NNM3YdnM
-Message-ID: <CAP-5=fXY8a1yv7DpYPcZ+TeO+_sxv0MNyh3RVMav2JEGyiCn1w@mail.gmail.com>
-Subject: Re: [PATCH] perf vendor events: Fix double word in BriefDescription
-To: Charles Han <hanchunchao@inspur.com>, Edward <edward.baker@intel.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250122025519.361873-1-howardchu95@gmail.com> <Z5FC47bfDAPu75-e@google.com>
+In-Reply-To: <Z5FC47bfDAPu75-e@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 23 Jan 2025 20:30:25 -0800
+X-Gm-Features: AWEUYZmVBJAKMwhPsvIuxZw23nAcNMiu3c4JL7EXZoRLoOBN4UO0IkmwFWpYfDc
+Message-ID: <CAH0uvog74tVNjKXZdu+pvg-7CnsuVugEb-XpF6Xcqzc9jzWSAw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf trace: Fix runtime error of index out of bounds
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2025 at 7:55=E2=80=AFPM Charles Han <hanchunchao@inspur.com=
-> wrote:
->
-> Remove the repeated word "for" in BriefDescription.
->
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+Hello again,
 
-Hi,
+On Wed, Jan 22, 2025 at 11:11=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Tue, Jan 21, 2025 at 06:55:19PM -0800, Howard Chu wrote:
+> > libtraceevent parses and returns an array of argument fields, sometimes
+> > larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr"=
+,
+> > idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
+> > elements max, creating an out-of-bounds access. This runtime error is
+> > found by UBsan. The error message:
+>
+> I'm curious how I miss this.  Is this only for some specific syscalls or
+> always happening?  Do you which commit introduced this?
 
-Thanks for the contribution and reporting the issue! These files are
-generated by the script here:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-In the input json files I see the same error:
-https://github.com/intel/perfmon/blob/main/GNR/events/graniterapids_uncore_=
-experimental.json#L7524
-Ed could you address this or should Charles send a fix to github?
+Forgot to mention the commit: it is (5e58fcfaf4c6: 'perf trace: Allow
+allocating sc->arg_fmt even without the syscall tracepoint') that
+introduced the bug. However, I wasn't able to build the perf tool at
+this commit because it dates back to 2017, so I couldn=E2=80=99t bisect and
+test it.
+
+As for the runtime error, it occurs with the first 6-argument syscall
+that calls the syscall__alloc_arg_fmts() function and causes the
+out-of-bounds access. That=E2=80=99s going to be the futex syscall. If I sk=
+ip
+the futex syscall, mmap is next.
+
+static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+
+** the 'nr_args' passed in can be 7
+
+{
+        int idx;
+
+        if (nr_args =3D=3D RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_a=
+rgs !=3D 0)
+                nr_args =3D sc->fmt->nr_args;
+
+        sc->arg_fmt =3D calloc(nr_args, sizeof(*sc->arg_fmt));
+
+        ** arg_fmt has 7 elements
+
+        if (sc->arg_fmt =3D=3D NULL)
+                return -1;
+
+        for (idx =3D 0; idx < nr_args; ++idx) {
+
+                ** idx can be 6 (7th element), legal access for sc->arg_fmt
+                ** but not for sc->fmt->arg, length of 6
+
+                if (sc->fmt)
+                        sc->arg_fmt[idx] =3D sc->fmt->arg[idx];
+        }
+
+        sc->nr_args =3D nr_args;
+        return 0;
+}
 
 Thanks,
-Ian
+Howard
 
-> ---
->  .../graniterapids/uncore-interconnect.json    | 36 +++++++++----------
->  1 file changed, 18 insertions(+), 18 deletions(-)
+
+On Wed, Jan 22, 2025 at 11:11=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-intercon=
-nect.json b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnec=
-t.json
-> index 856ee985ecd4..0f5332ad0b80 100644
-> --- a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.js=
-on
-> +++ b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.js=
-on
-> @@ -1016,7 +1016,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for AD_BNC",
-> +        "BriefDescription": "Egress bypasses for AD_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.AD_BNC",
-> @@ -1026,7 +1026,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for AD_CRD",
-> +        "BriefDescription": "Egress bypasses for AD_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.AD_CRD",
-> @@ -1036,7 +1036,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for AK",
-> +        "BriefDescription": "Egress bypasses for AK",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.AK",
-> @@ -1046,7 +1046,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for BL_BNC",
-> +        "BriefDescription": "Egress bypasses for BL_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.BL_BNC",
-> @@ -1056,7 +1056,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for BL_CRD",
-> +        "BriefDescription": "Egress bypasses for BL_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.BL_CRD",
-> @@ -1066,7 +1066,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress bypasses for for IV",
-> +        "BriefDescription": "Egress bypasses for IV",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1E",
->          "EventName": "UNC_MDF_TxR_BYPASS.IV",
-> @@ -1076,7 +1076,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for AD_BNC",
-> +        "BriefDescription": "Number of egress inserts for AD_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.AD_BNC",
-> @@ -1086,7 +1086,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for AD_CRD",
-> +        "BriefDescription": "Number of egress inserts for AD_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.AD_CRD",
-> @@ -1096,7 +1096,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for AK",
-> +        "BriefDescription": "Number of egress inserts for AK",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.AK",
-> @@ -1106,7 +1106,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for BL_BNC",
-> +        "BriefDescription": "Number of egress inserts for BL_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.BL_BNC",
-> @@ -1116,7 +1116,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for BL_CRD",
-> +        "BriefDescription": "Number of egress inserts for BL_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.BL_CRD",
-> @@ -1126,7 +1126,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Number of egress inserts for for IV",
-> +        "BriefDescription": "Number of egress inserts for IV",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1C",
->          "EventName": "UNC_MDF_TxR_INSERTS.IV",
-> @@ -1136,7 +1136,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for AD_BNC",
-> +        "BriefDescription": "Egress occupancy for AD_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.AD_BNC",
-> @@ -1146,7 +1146,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for AD_CRD",
-> +        "BriefDescription": "Egress occupancy for AD_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.AD_CRD",
-> @@ -1156,7 +1156,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for AK",
-> +        "BriefDescription": "Egress occupancy for AK",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.AK",
-> @@ -1166,7 +1166,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for BL_BNC",
-> +        "BriefDescription": "Egress occupancy for BL_BNC",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.BL_BNC",
-> @@ -1176,7 +1176,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for BL_CRD",
-> +        "BriefDescription": "Egress occupancy for BL_CRD",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.BL_CRD",
-> @@ -1186,7 +1186,7 @@
->          "Unit": "MDF"
->      },
->      {
-> -        "BriefDescription": "Egress occupancy for for IV",
-> +        "BriefDescription": "Egress occupancy for IV",
->          "Counter": "0,1,2,3",
->          "EventCode": "0x1D",
->          "EventName": "UNC_MDF_TxR_OCCUPANCY.IV",
-> --
-> 2.31.1
+> On Tue, Jan 21, 2025 at 06:55:19PM -0800, Howard Chu wrote:
+> > libtraceevent parses and returns an array of argument fields, sometimes
+> > larger than RAW_SYSCALL_ARGS_NUM (6) because it includes "__syscall_nr"=
+,
+> > idx will traverse to index 6 (7th element) whereas sc->fmt->arg holds 6
+> > elements max, creating an out-of-bounds access. This runtime error is
+> > found by UBsan. The error message:
 >
+> I'm curious how I miss this.  Is this only for some specific syscalls or
+> always happening?  Do you which commit introduced this?
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > perf $ sudo UBSAN_OPTIONS=3Dprint_stacktrace=3D1 ./perf trace -a --max-=
+events=3D1
+> > builtin-trace.c:1966:35: runtime error: index 6 out of bounds for type =
+'syscall_arg_fmt [6]'
+> >     #0 0x5c04956be5fe in syscall__alloc_arg_fmts /home/howard/hw/linux-=
+perf/tools/perf/builtin-trace.c:1966
+> >     #1 0x5c04956c0510 in trace__read_syscall_info /home/howard/hw/linux=
+-perf/tools/perf/builtin-trace.c:2110
+> >     #2 0x5c04956c372b in trace__syscall_info /home/howard/hw/linux-perf=
+/tools/perf/builtin-trace.c:2436
+> >     #3 0x5c04956d2f39 in trace__init_syscalls_bpf_prog_array_maps /home=
+/howard/hw/linux-perf/tools/perf/builtin-trace.c:3897
+> >     #4 0x5c04956d6d25 in trace__run /home/howard/hw/linux-perf/tools/pe=
+rf/builtin-trace.c:4335
+> >     #5 0x5c04956e112e in cmd_trace /home/howard/hw/linux-perf/tools/per=
+f/builtin-trace.c:5502
+> >     #6 0x5c04956eda7d in run_builtin /home/howard/hw/linux-perf/tools/p=
+erf/perf.c:351
+> >     #7 0x5c04956ee0a8 in handle_internal_command /home/howard/hw/linux-=
+perf/tools/perf/perf.c:404
+> >     #8 0x5c04956ee37f in run_argv /home/howard/hw/linux-perf/tools/perf=
+/perf.c:448
+> >     #9 0x5c04956ee8e9 in main /home/howard/hw/linux-perf/tools/perf/per=
+f.c:556
+> >     #10 0x79eb3622a3b7 in __libc_start_call_main ../sysdeps/nptl/libc_s=
+tart_call_main.h:58
+> >     #11 0x79eb3622a47a in __libc_start_main_impl ../csu/libc-start.c:36=
+0
+> >     #12 0x5c04955422d4 in _start (/home/howard/hw/linux-perf/tools/perf=
+/perf+0x4e02d4) (BuildId: 5b6cab2d59e96a4341741765ad6914a4d784dbc6)
+> >
+> >      0.000 ( 0.014 ms): Chrome_ChildIO/117244 write(fd: 238, buf: !, co=
+unt: 1)                                      =3D 1
+> >
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/builtin-trace.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index d7c7d29291fb..8d3260bad10a 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2108,7 +2108,7 @@ static int trace__read_syscall_info(struct trace =
+*trace, int id)
+> >       }
+> >
+> >       if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
+> > -                                     RAW_SYSCALL_ARGS_NUM : sc->tp_for=
+mat->format.nr_fields))
+> > +                                     RAW_SYSCALL_ARGS_NUM : sc->tp_for=
+mat->format.nr_fields - 1))
+> >               return -ENOMEM;
+> >
+> >       sc->args =3D sc->tp_format->format.fields;
+> > --
+> > 2.45.2
+> >
