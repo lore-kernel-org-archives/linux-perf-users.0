@@ -1,126 +1,84 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E63224
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 17:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833821D435F
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 17:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737740258; cv=none; b=rX6OglNScGQPkuFJrJjbmGYLNzHu5SoTz+/IOzuEdsnsHkNTcU3Dk3dxmt9aYrvOd/t2rWaISXr3tWDrtoUzg8JUsgDQpUixNie6nT+2yBA/nafDz20HLYewWpSfvvWhvabOIJZO97s1A6m2OeRsPDKb3GW25JuS5JGrK2/qCxM=
+	t=1737740329; cv=none; b=VCfjnwSo5uYlgUe1vAWBCRG6+5dGLGvWL91Dh+rBR/Jux0DkV9ePRYhWgUxK4RFdv939oNl+Q/GhQeauq62JijZo3uPC/OhH47MqG8Ke7K1WEhnceOY10OD5uOAxhsAgi8u5kvxqrxY+MeCjP/BEuuwV9mLiD9HLGvXYiQiwiS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737740258; c=relaxed/simple;
-	bh=+ETipK4Yn4e4X+IMrqY1Tb4nsunXRn8bqircTpzzLX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uezNabhWlSbUjQ2NbHs7ywO2MvToMDEB/9tbEEYskeK0MBdfQysBJmuFhmh551OBf6BnIssx+lcVc0+RWHRxKvtYMsvLjLPtRJQRtn2xttKNzNnK/dt4cjluVkkhvEl7UHpyd2EhJUDGztVB3ads0tl7wQAf5tNcLQPUYmHflMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=t1f7hL/z; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
+	s=arc-20240116; t=1737740329; c=relaxed/simple;
+	bh=6J9QsPeVGeoMhpEEY5aNdZQpbGvVQPazROy23/F7t5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEC/Hn+iD0fCx8xsp0syoF4J9XbsQxBcm8SlJ917la1VubVVwMEbkHTSDId7mZEq5iaIVyeTSPy1BY3mEdPAHKP3vofrCZDpb7DwKt+tiBv2KoK+7j+QAe2blci4Zu/dLZM0CzYy5rse5Or1FQwG7GXsT/D/+Me/zGScaopHSXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gA1n584y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="t1f7hL/z"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aab925654d9so433962966b.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 09:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=engflow.com; s=google; t=1737740255; x=1738345055; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UOpeoVPFhrjIWOnt5MtGjoBcb1UkXl4bKR69lU6FYT0=;
-        b=t1f7hL/zSs+f23ULf1jP7Gw94IQekZ4lU3ZMOowIpPxG7bmsFvGyCRQ1IWUf3uLiur
-         bxqjLsjtvKRrC/O3/0j1hwmfWl784KPMBUkSKFG2+qluJ3xIphcDfHIi7g/HaQxQ46zg
-         PTXbHitYRDkKEHR5uSdRxzZ402yjnlGLXWmDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737740255; x=1738345055;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UOpeoVPFhrjIWOnt5MtGjoBcb1UkXl4bKR69lU6FYT0=;
-        b=hABy9DlaHlonBdmxpZ973XxXsmSw+82rybblRp3xIH92w+4/kKRhVlV2Dg+ck6xxXg
-         jkSofL9VnNwr3MpZ5GOVB8pk6YIyFhyBIYP9DAyvKl2ao/mKIXwEhcqiYUWc3KGS/cXG
-         ca7/G/xTxJKq10aJbUakwImqB5q3Hdb6SBsQ5rJA2/P45IR7hgc9ah+yp9zxD3TDYiJY
-         UF6eQdC6tKf99OlndNa9B4ZewAl69QmHfrBnRE3WS07JWqfKO5eNnCr3FEWFdSMfIe6Z
-         R+dk/+QCzjONh75CjJI/me5B1NGgEW332fglJfyTK+yM9SHA2fjD+gnKJ+tDp7CBqcb6
-         DoBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfUzVIxNCUEIg05szMYeyQsMYB0lFAoZ9CwRn1eOZMKZTYlHZ9Rtpf5wc32vXZy2SOT8GxtgMHLoBeYLOMrsWg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFnT1HSkFQeO+ARdHFnKFYXjh4GGsOZ7gJ2cUbw4ZBYAFvL4ap
-	x5gZhBTQIT+SrqS0+9a1+xQaW2PKEI8okRzFuiTCpT3N5FyqchTWRhSzQjKLxkxWhMPRKHEUxC4
-	w6zGUoJd4u1gSnaEpouKGu5YLLwhTxSlykv4b+A==
-X-Gm-Gg: ASbGncunGdXFNzOaRREiqrToda4pW+V86eFMQXP5mboCRADJRK9pbw7y1EomnbfsYLJ
-	FSncWdXDqwcHeF/Z7hCB3Hswf4KFPY3Dkq/yRMdlCozrq1Ggjf82anKygt2Xp4A==
-X-Google-Smtp-Source: AGHT+IEdUiSyA2/rFGKMXBBw1OFDtgQdjoWRowNbEu3hMN1ERkPs5FDTOPMVI2+Qa+EoeDrAJdKZexKj3y5HMYhGt5E=
-X-Received: by 2002:a17:907:940b:b0:aac:619:7ed8 with SMTP id
- a640c23a62f3a-ab38b1e651bmr2670705466b.7.1737740254746; Fri, 24 Jan 2025
- 09:37:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gA1n584y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737740327;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4R6JS0XZMazFw1xp1NS7WAjF2TrTme+GriKOz3p+f3M=;
+	b=gA1n584ys7MnajQyTfdvzy2JMycY5Ja3Pp6pEdI3sJCwERP3PWvkT2uBnyUO4zSyaCgGK1
+	MY2wrzOPMdxYDn+QQTM4CxS3wJoH4d3UvPsBel6AK2r2cUrk0R1yhG+pHL6WX9uk4HqXJZ
+	pHAtl+qhhSm5Y24ctQBXhjGdqEM1oXI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-WC7H8ziHMEm-WLZgTtcy1A-1; Fri,
+ 24 Jan 2025 12:38:44 -0500
+X-MC-Unique: WC7H8ziHMEm-WLZgTtcy1A-1
+X-Mimecast-MFC-AGG-ID: WC7H8ziHMEm-WLZgTtcy1A
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B047B19560B8;
+	Fri, 24 Jan 2025 17:38:40 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.72])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3AAD31800348;
+	Fri, 24 Jan 2025 17:38:33 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 24 Jan 2025 18:38:15 +0100 (CET)
+Date: Fri, 24 Jan 2025 18:38:07 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Liao Chang <liaochang1@huawei.com>, mhiramat@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, andrii.nakryiko@gmail.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] uprobes: Remove redundant spinlock in
+ uprobe_deny_signal()
+Message-ID: <20250124173807.GA2542@redhat.com>
+References: <20250124093826.2123675-1-liaochang1@huawei.com>
+ <20250124093826.2123675-2-liaochang1@huawei.com>
+ <20250124102702.6ff0ccc5@gandalf.local.home>
+ <20250124172435.GB13891@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212-void-fprintf_tp_fields-v1-1-b0c23fff4c54@engflow.com>
- <CAH0uvoi6=JmtX2xit9y7+NR5O+1S5zbxWpmLpbzC9+9nrkudHQ@mail.gmail.com>
- <CAH0uvohQvqRYo8JBX_Z1yVobqcxRgQG4G1Y8o8XMv18CnrqBbA@mail.gmail.com>
- <Z5FCGGBxBHD95zjT@google.com> <CAEmfU+tj6kUbRNe7YbCorRStyAKs=7ndj73BvPUpkwA-gcBZCg@mail.gmail.com>
- <Z5LVYtjPZduzcoE-@google.com>
-In-Reply-To: <Z5LVYtjPZduzcoE-@google.com>
-From: Benjamin Peterson <benjamin@engflow.com>
-Date: Fri, 24 Jan 2025 09:37:23 -0800
-X-Gm-Features: AWEUYZmv_hR7K1hslpCXWOcQGeGrCFyy-XxeFBKEmix791P9e7T73M-fGcR0VmU
-Message-ID: <CAEmfU+sWQ8YcfU4He6j2T_DGN7nafJgtO7ntQ=2KdDphttrsbQ@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Remove return value of trace__fprintf_tp_fields
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124172435.GB13891@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Jan 23, 2025 at 3:48=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On 01/24, Oleg Nesterov wrote:
 >
-> On Wed, Jan 22, 2025 at 11:19:05AM -0800, Benjamin Peterson wrote:
-> > On Wed, Jan 22, 2025 at 11:08=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Tue, Jan 21, 2025 at 07:01:53PM -0800, Howard Chu wrote:
-> > > > Hello fellow maintainers,
-> > > >
-> > > > Just a slight ping.
-> > >
-> > > Thanks for the reminder.
-> >
-> > Thanks for taking a look.
-> >
-> > >
-> > > >
-> > > > Thanks,
-> > > > Howard
-> > > >
-> > > > On Fri, Dec 13, 2024 at 10:06=E2=80=AFAM Howard Chu <howardchu95@gm=
-ail.com> wrote:
-> > > > >
-> > > > > Hello Benjamin,
-> > > > >
-> > > > > On Thu, Dec 12, 2024 at 7:56=E2=80=AFPM Benjamin Peterson <benjam=
-in@engflow.com> wrote:
-> > > > > >
-> > > > > > The return value of this function was meaningless and therefore=
- ignored by
-> > > > > > the caller. Remove it.
-> > >
-> > > In fact, I don't see the reason to merge this, as it's the convention=
- to
-> > > return the number of characters it prints.  Yes, it's not used but no=
-t
-> > > much reason to remove it.
-> >
-> > The main reason to remove the return value is that it has no useful
-> > interpretation and is therefore confusing. To wit, the function
-> > returns two times the number of bytes it prints.
->
-> Oh, ok.  Then please just fix it to return the correct number.
+> But I still think this patch is fine. The current task is going to execute
+> a single insn which can't enter the kernel and/or return to the userspace
+                      ^^^^^^^^^^^^^^^^^^^^^^
+I mean't, it can't do syscall, sorry for the possible confusion.
 
-Alright, I've submitted v2 that simply propagates the return value of fprin=
-tf.
+Oleg.
+
