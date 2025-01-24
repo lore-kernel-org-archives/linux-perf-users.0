@@ -1,115 +1,115 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FB01BD027
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 23:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDA814A630;
+	Fri, 24 Jan 2025 00:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676781; cv=none; b=FIBWCzGiNjdusvfDcS6yrgjaBOMRR2XLqIVp7avug6irdfrHjd/iIj1+xYvmjhdappwlE29as8Cv3mQV5Sxb6/+nC9gFg7yqf+/pe3oamZ7i7p57EvqPnADeimE9CVFrXM4NR7RQnWgWNZTjreh9e0i9uAseSb3zF10kTbilAi4=
+	t=1737678313; cv=none; b=j8/eK8lafGwBJNF3Wtb9O3NfZG9Auub16OBSc7jzAnjKmhYE9N13V8LPPkgookLj0eBOGulmiWYtJK6ji8fry9iI00u3YIiAccAi/6oK6QV6EjVIQRZY45lEc/YKqhNWPN/9D8Kd3fx6qG+4X49tPyNlv0oPxb+oIwQEf1IdMko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676781; c=relaxed/simple;
-	bh=bWgQLBpkfpxIT34/8Wx/CNRUEQDQg1V7I+bbzIQI6f4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kkRrf8JkdzWBUJU3+SU9DtOjBmBsQ6zJ23oB9HYmoEYzkIsoxTzZRaQDELD9eiPZ24T4xjQ/PDTXHUrx7bsRl+IvFdv5ORWRgV1jg2GDc/qgylsxERpPOTuV0Ta66uveMu47hubNwvzJwyGJQ0BOf3Xb0+zOXEuFNPlZA5YPCyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com; spf=pass smtp.mailfrom=engflow.com; dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b=CQC5+NwF; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=engflow.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engflow.com
+	s=arc-20240116; t=1737678313; c=relaxed/simple;
+	bh=+tbRR17szgQn1O/e6whVf7kJ/qMQQ5UO77xW+eAdOv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXQ17Md74/5Oi44booStRiSW/7jkER8JnOoY57rvAzJdJDa5bc7CWvykwV1xgSWADTUdtxYcu4e9vrhMpIxVpVEGiEVf4yXznKRl3aTjJAs+VUiky+lBQxOgnrdMhHTAs+zx5WJah5Ml+LsfXAsvi1FOtHp9D08a3h7THCrxxug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ay7sn3l/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engflow.com header.i=@engflow.com header.b="CQC5+NwF"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-216728b1836so24773095ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jan 2025 15:59:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=engflow.com; s=google; t=1737676778; x=1738281578; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5m/RuW26VeXb+ulCBQUP9Ev9ewcGepBG0IbXPJOeedk=;
-        b=CQC5+NwFnIVAxPa4QQcXIKu2R9oQILuYVs5c+kpCeQOPgVmUASXdEuzDGx8ay5wfcj
-         HiUnyJoz/TWnAEjo4gIdr2/p5biZcV3dwRIw4MM5YU9JFiGPUGnQOUOZ4u4wO+Gp5JC7
-         J9UE5L01Wcai/oWz2ozP+hl2gHMJR8hoU5Sxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737676778; x=1738281578;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5m/RuW26VeXb+ulCBQUP9Ev9ewcGepBG0IbXPJOeedk=;
-        b=HLqvCwhD9XKlMJm0frPEc/yjOhxVjEKChs+BRHLoES3yB8cxHjff2C20xDq56Un9cN
-         GSwzBjr26wvW8qYCYlCO2OsYmRbfJTQF75QZW3UnJtlVt7Mrl/6V1i32er++mz93whDp
-         4nMfnhh8ZtUpTYLeKQPTj7ZyGq3grc1OiuRSDBaKtcG99zH0lZh2ZbBiHwCqEOvtUbHp
-         h0228SOAbXW98UQdR+0kKqdFRW/eRhlomXnS5CdEVdSqyeFxFCZ/9S64xcfF4e+sRpYK
-         Q6cqOGOT5uHoXx9Dpq3iZuDV3enxiq3YfYZsaRNbetizevscuE6HxsPfnRCbK9enLTvC
-         xyZQ==
-X-Gm-Message-State: AOJu0Yy4hahPRthRx4+DGfQo+UqGy8THDV8d5AeMzAfho49afwYjNOy8
-	S0gqmYfos8bMdYZWgKsrFFHom/AiUE6pNUB/U9JCtXi/aHToAeLT8MdrZuRDp7w=
-X-Gm-Gg: ASbGncsRwjihRsKclkJkd/copvyDtTcd8WM1pQZwjQHFAQf1SQ5RFi11IkE7OhB0Vvy
-	5H0FwmS9hbb67Q3GlCws+ezoJUjTmozwc+cNrHUNfV51xKHd5GrguCcavsuMu9uRWsqnJ/PooXp
-	WLDj1tC+yHqA8RkfrMhtYZdDXJ79nl7a/6MK63e+yrDf4TwvClbKgrpI9CQU428XrisghOr7hsC
-	ezOqFJr1wmezBPisF7RpLaB4GdTUFw0DvTrWeAJ87Kuc5wnlK/aF/8ucqR2oczjoqjJIXmNMESj
-	UgX5xCC1/n68lymTpx0/bcfg3gmIkrT2R8MikPTTsJuJsA==
-X-Google-Smtp-Source: AGHT+IEPqjhQVpFd3DogTe/CckCCbHZwhWa9F5A94jY7ve5wDBGv7zqqz1Lb0T8ZhKtstlj1bQqa4w==
-X-Received: by 2002:a17:902:ef11:b0:216:3dc5:1240 with SMTP id d9443c01a7336-21c355ef44bmr393632985ad.45.1737676778206;
-        Thu, 23 Jan 2025 15:59:38 -0800 (PST)
-Received: from [127.0.1.1] (158-247-70-44.PUBLIC.monkeybrains.net. [158.247.70.44])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da4141d41sm4656375ad.126.2025.01.23.15.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 15:59:37 -0800 (PST)
-From: Benjamin Peterson <benjamin@engflow.com>
-Date: Thu, 23 Jan 2025 15:59:35 -0800
-Subject: [PATCH v2] perf trace: Fix return value of
- trace__fprintf_tp_fields
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ay7sn3l/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377D3C4CED3;
+	Fri, 24 Jan 2025 00:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737678312;
+	bh=+tbRR17szgQn1O/e6whVf7kJ/qMQQ5UO77xW+eAdOv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ay7sn3l/w+5Fsh4N/uTaKh2hoiHXNW7ARpmx9DxNE5YD8letw3Ra+mD9nAwzvRFI+
+	 9il2Uq5L7k4WsoUcLP8WcwllkYnw+XPdxlZXK6Ml5MmbXxfQ/gKlRF7EM8x0pIoEzc
+	 nGiT6T3h8vPzHqMcjToOv1tkB2ERTEDxOSXil8iXa3bPHOIjsWXX1kDLiDpl8mjugE
+	 1o9I829JhV8tR2itcUPO0Q+2l+Mfyj108F4Ew4J4YVyFC+mdlbcpvvoPbrfS9H860e
+	 t+lHdcPObR+sUaNnBllMp48do1SUqyfTB7ljsWX1YL95VaX9F7KdQfcH/zJMHFHM+o
+	 3akKeDqss3fCQ==
+Date: Thu, 23 Jan 2025 16:25:10 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Introduce --no-advice option when a new
+ event is created
+Message-ID: <Z5Ld5irdG--_Efgl@google.com>
+References: <20241214193452.16627-1-atomlin@atomlin.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250123-void-fprintf_tp_fields-v2-1-6038f8224987@engflow.com>
-X-B4-Tracking: v=1; b=H4sIAObXkmcC/4WNQQqDMBBFryKzboqZGihd9R5FJI0zOmATSSS2i
- Hdv6gW6fA/++xskikIJbtUGkbIkCb4Anipwo/UDKekLA9bYaNSocpBe8RzFL9wtc8dCU5/U1Vp
- LyMagYSjjORLL+wg/2sKjpCXEz/GT9c/+TWattHrWDi/M3DjT3MkPPIX17MIL2n3fv3551vK+A
- AAA
-X-Change-ID: 20241212-void-fprintf_tp_fields-8aaae2f5525f
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Benjamin Peterson <benjamin@engflow.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241214193452.16627-1-atomlin@atomlin.com>
 
-This function formerly returned twice the number of bytes printed.
+Hello,
 
-Signed-off-by: Benjamin Peterson <benjamin@engflow.com>
----
-This is a small followup cleanup to my earlier commit 5fb8e56542a3 ("perf
-trace: avoid garbage when not printing a trace event's arguments").
+Sorry for the late reply.
 
-To: 
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, Dec 14, 2024 at 07:34:52PM +0000, Aaron Tomlin wrote:
+> This patch introduces a new option namely "--no-advice" to be used with
+> the add command. Now one has the ability to avoid the generation of any
+> advice when a new event is created. Thus making the output reasonable.
+> For example:
+> 
+>   # perf probe --no-advice --add 'user_path_at%return return=$retval:s32'
+>   Added new event:
+>     probe:user_path_at__return (on user_path_at%return with return=$retval:s32)
+>   #
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6a1a128fe645014d0347ad4ec3e0c9e77ec59aee..c2e8ff48682bdc86a0a21f54f5163eb82d4cc17d 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3088,7 +3088,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
- 	}
- 
--	return printed + fprintf(trace->output, "%.*s", (int)printed, bf);
-+	return fprintf(trace->output, "%.*s", (int)printed, bf);
- }
- 
- static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+Thanks for sending the patch but why do you care?  You can just ignore
+the message.
 
----
-base-commit: 8883957b3c9de2087fb6cf9691c1188cccf1ac9c
-change-id: 20241212-void-fprintf_tp_fields-8aaae2f5525f
+Thanks,
+Namhyung
 
-Best regards,
--- 
-Benjamin Peterson <benjamin@engflow.com>
-
+> 
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> ---
+>  tools/perf/builtin-probe.c    | 4 +++-
+>  tools/perf/util/probe-event.h | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> index 69800e4d9530..36b8e08f3725 100644
+> --- a/tools/perf/builtin-probe.c
+> +++ b/tools/perf/builtin-probe.c
+> @@ -391,7 +391,7 @@ static int perf_add_probe_events(struct perf_probe_event *pevs, int npevs)
+>  	}
+>  
+>  	/* Note that it is possible to skip all events because of blacklist */
+> -	if (event) {
+> +	if (event && !probe_conf.no_advice) {
+>  #ifndef HAVE_LIBTRACEEVENT
+>  		pr_info("\nperf is not linked with libtraceevent, to use the new probe you can use tracefs:\n\n");
+>  		pr_info("\tcd /sys/kernel/tracing/\n");
+> @@ -577,6 +577,8 @@ __cmd_probe(int argc, const char **argv)
+>  		   "directory", "path to kernel source"),
+>  	OPT_BOOLEAN('\0', "no-inlines", &probe_conf.no_inlines,
+>  		"Don't search inlined functions"),
+> +	OPT_BOOLEAN('\0', "no-advice", &probe_conf.no_advice,
+> +		"Don't provide any advice after a new event is created."),
+>  	OPT__DRY_RUN(&probe_event_dry_run),
+>  	OPT_INTEGER('\0', "max-probes", &probe_conf.max_probes,
+>  		 "Set how many probe points can be found for a probe."),
+> diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+> index 61a5f4ff4e9c..be0dce26e133 100644
+> --- a/tools/perf/util/probe-event.h
+> +++ b/tools/perf/util/probe-event.h
+> @@ -14,6 +14,7 @@ struct probe_conf {
+>  	bool	show_location_range;
+>  	bool	force_add;
+>  	bool	no_inlines;
+> +	bool	no_advice;
+>  	bool	cache;
+>  	bool	bootconfig;
+>  	int	max_probes;
+> -- 
+> 2.47.1
+> 
