@@ -1,71 +1,71 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F62F1AA783;
-	Fri, 24 Jan 2025 17:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7862E1AA783;
+	Fri, 24 Jan 2025 17:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737741585; cv=none; b=YGNPLh+Bp6UQxuc/hlF6se/FlGCJAt/5BAglvuOA/EU9eOgjFc72iA98ofx2JsyvfoPd82lP4OMW7MB95xCoVSOaxhEHIPydlXgg9qwi5E6o/uYhD9K33SrBhLOrv2uMJ4SsPG/E1oYG3eg2BD7gSmw9W9aMB9JG0IoDleHgLNs=
+	t=1737741592; cv=none; b=FHPSilI0ZK7RC9HpQRD3ISQG0G3XAsCLV208c/BDXNXIYwgXFT+Nd+2tWV/26+TQhwAFX0+vOeR8lxqMh3OzDn12BxhzGokk5b8GVCWYAziHRoxlYkXnb4ATCTXzuMCJVP8SeVhZaVBWPzxmsjA3U8ejyNZwxXPrrXA8vl3Hm6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737741585; c=relaxed/simple;
-	bh=e4WDXPl3h3R0U11/6lCmm6R86JTR4Oeyn6rTYoW6t6k=;
+	s=arc-20240116; t=1737741592; c=relaxed/simple;
+	bh=fE1ezwRyOO8zloPjA6YZiK614cbMF88TOz1WWKa7beQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ePpynzPX4dbz2E0qKNysUahLMxhZtlrCGF8nv9vWA6nYdJCUWKB+Rukinj4Q20s8tKMiitB2QUMagoF0b6Gv1CZyWwUg8fLAx045AAxijMuYXMz3U05JjQETkaymGO3JauYBrLGSL3PRKUmJz5zF1BIz75JhzLqRBJkLvLLKDLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxgZgtmT; arc=none smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=c2Hp/B2zz3GKE3sUMbZYOLZ+Z1cNkZ1I62P66Sam94yt7T4LO368B4thzdEM0V9W2mbRlv4K10Wtfuane66S5eydFNZx3fUrRm/D3PGwaDAlWtVj1iJoTWxY4z2/Kzke1Vni0Sj5by4kD2/qxV1po5K3Q3jURIt18EstbO5rLS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjexpxpA; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxgZgtmT"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21649a7bcdcso42175205ad.1;
-        Fri, 24 Jan 2025 09:59:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjexpxpA"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2165cb60719so43214275ad.0;
+        Fri, 24 Jan 2025 09:59:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737741582; x=1738346382; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1737741590; x=1738346390; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YlSV3k9D2Ratrq++0GTszR4kd+ZXjx5Kd0itP8lOaHM=;
-        b=KxgZgtmTlOtm7XWU7dT23o1hGFRlUt1HZRyVyNryMmLg2KA34J07KQm5b4PT5okH2q
-         p+f3nM5Mgp8rY4AZhr/F8CLcqdzSu30kmCRVwB/cXSOksVITL/aNgvMr/rWskNXxabbK
-         JCTqtvNEIIbH8cJEafiJFq2wDnO8AERFV4zFgdKLiLZ+dDcH9r2+XULNuAiNKbYeWHJH
-         cqfum+37lfBjJ8CuFhhCbMFmIoaIHO97zBIzL8Y6UuyLmqKz1HKcqX1rp49z75KF6lUk
-         1OCEkGe82ndPMz+OI5EI0ktBAcWUE1rZCzsAnllnCR+OaFyv5sVkjZ6ZA6MsjLD+4tWd
-         4xag==
+        bh=ZxwPX+AIkxhIAp91WnKfR9e4p2dTDXnOb6tEY8/qdHw=;
+        b=JjexpxpAKFp+iGFZxUmgZD/h0xUzQOtDcyWSUnKho4cCgCFCogluJoPJ1sqhERSdVV
+         D8+kT7T85HFLPPaVVz7lar1FK0Ky6wNpsvSeR5E3q9KjkLL9Wo8I1S+ZQEXAbDEczzI8
+         UoafH/RPtFQYVBPr+Z8jJaK/661Q1G//1w2Z7B0JNg4UetphX0z/bVtk84kYpU+l62l3
+         Izwo6u9/vZiISf91GfCp/crUGHmjee/MpjXqnvIWmLR56dSMsYf+9LcKC7VatZ+9Zi7t
+         FF6dlVlWNM7BYVPdJJdJEGxFZGNRPdIJrGVBi/3jhVdWjZvX8B4/1Z2c5GB2wdvTQdKW
+         hJgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737741582; x=1738346382;
+        d=1e100.net; s=20230601; t=1737741590; x=1738346390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YlSV3k9D2Ratrq++0GTszR4kd+ZXjx5Kd0itP8lOaHM=;
-        b=ieqF1t16orYFrZKjuAWiEuDuIKFDuWZRbL8g6gnbuNJwip1RaWBhxHKVbVoMstuog4
-         PAcHHr7Iuu5IuWyBuJwkIH3l3bl46jrcP+hQi4Okk87rt5jbIRIULNLPpaReAWBZpWjB
-         31C9UzWWNyk5ybeIUbZraEv6o3TuwNQHwuM7jjAY1oHKCWQnl7n10CmOq+3w8CPkExt0
-         Y+YQo4as8T1wFhm5Zi0qdKExvSCRZg19juo+5Eisaq9waAjGkSnH/RlVHLSrE0wuf/8T
-         a8WSmg9ZOFGZrcoijCVblXWJsxi3+779ReRtBxuVfvJdAMFDpAEyqJssyFedCy2w0vAF
-         39Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfqc8oBAoMQDxLQkeVLfOk9R/gn2cENGzYaYvhmLlwydgg4mEVd8xndjGhhj6FLqV5leGjmX5YXVNyxVk=@vger.kernel.org, AJvYcCVGc4mJwcZe7FM08NA4QeLQbdLS3/EFHlQrl21ZxXpCPpChxOR7sn1nWnJBO6MdPPUz/YPFUWAy013F2oyETlwkTD+q@vger.kernel.org, AJvYcCXmCfJi4A4bI8mtmP7uQhLZGE/0Lbh3Ca5UVEv0joYqNNZ6XXSn7uER+EnMy/eX4leOhazz67xoSXrggxeg69eqeQ==@vger.kernel.org, AJvYcCXn3UmUHzDOXxSJo85r2jwn894UrPYh4whHXsjbhFLlZUUTkz2RqnX/8ujbF7KyyuROmzAdUikDAo0ANtdeiagkvg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaO/a6oDUNtP1vmZdqn1pfVWE6T+VKiei0dy9oFdt3ENgcL51z
-	nhlBqeJw/m/p3GhSrXidh7B9dSXQnq3ZJ9v5HWRTU5RABpDhrB37fKPEiRw/Iuaw1JtMVuHnogY
-	V54QuJQIDcgi6Ze6XDGRZy2A+gjQ=
-X-Gm-Gg: ASbGncs7fWWtZ6YxRtInrQZK09zs26FW9/phJyP6bc0LDFBiBrN3ILLqxlWAmx84qjw
-	JyttvDz+oJ0UBw9wIk+j1r0pkhO7UT+P0ZT8bLU0K+3SUWSkcdnRKqrWlJhwBKEPp713i6oL19P
-	jChA==
-X-Google-Smtp-Source: AGHT+IGMGScTckapwKdk9LPwqjxALnV4IVF8Ypu36jP32RvPs/EkkwVSrK0Ftx+Zt769/yk0iq1mNHKhBc9zr50xl6M=
-X-Received: by 2002:a05:6a00:17a3:b0:725:90f9:daf9 with SMTP id
- d2e1a72fcca58-72dafa7c0c9mr40618378b3a.15.1737741582520; Fri, 24 Jan 2025
- 09:59:42 -0800 (PST)
+        bh=ZxwPX+AIkxhIAp91WnKfR9e4p2dTDXnOb6tEY8/qdHw=;
+        b=thtQxwdQ+NsnugsXEOVjIlqGLZbXK8Jt7VRu0LyKXqOmdR8N0TPTI9ucniB72ZdcSN
+         QkR4UzjcEdtwQWOdPQ1dDOeai4k4CKX/ofoYTJBgdzM/Dki6pi82CGDDNJ8rIyKwx9/Q
+         taJAdbxO9sDKVR+u2j6ik8F0RqWHWvz3W0GgZVk5avXMXrbZ8xkXs4Q68UmBSpYdEyQS
+         nNIJDysS73aBE09aJxMoyjInsVLL5VgBAyg8vn7x/Z7ufPXq076IviK3VH1k72PEUdbX
+         xM7hDXx/Tr45LCEI8vEdBP0HBcb6bZkp84eM4EgTbJIQFwNjx4IuRsK6E4SjqvCMeA6k
+         LgwA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5QbcN0I01zdCJsn12ML5dqQkwygivraBxE7KZ/fxmJBQ0Zrum+ZcqPNe0cRyrw+kGbPeeMyVKwEBdkAguhZ/7Bw==@vger.kernel.org, AJvYcCWjCLyQB+otCjmBySTo/JFs0sWK6xzOFE5Hie9XcgaioBYoxxwaz6/MvagLQ/KGBy4g8WadeXFOYm6vColHZdAjmAza@vger.kernel.org, AJvYcCWzuK9HY30d++fYu3YsbRUPkcWclKTXi5YpVE6Pq9OgQwIntJybkWrnTFa2J7zYev7ky+G0BdVQ1BLBzSB42e47lw==@vger.kernel.org, AJvYcCXekmmLSa1CjnAH4rsg0CyQxL9PylRqCUsBoelybG1hKarK2W8FTzArZT+uC04iuDZuxxIfCtbu+FbLdhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3AYvWaGgINL8xcqm0sWyjbH1ys7kqsTdpTW/DNv0ejtI9hD0R
+	wDKIqj7CFCq6P/r+RyOOJxyGrwFhAiGmv5RqDA5TvkQORNPnP75RddR9A3upp1wolQBwToD6dvQ
+	OeDGn28ziueInkDmaRicE9gUgUfY=
+X-Gm-Gg: ASbGncviz4PjsaSXzlSDagHOQbc/CZIBDjLnOczbRbRKx0az1a8nu+sW9VNOwC3KM78
+	D7CLiGxOPVJkUfCZqE9+4ZzykhTnFbD2MiT58HDCMKvBMCTwli02iSvZXpeSO5llmFxHySeM6ot
+	QO5w==
+X-Google-Smtp-Source: AGHT+IFAgC0nFQZWXbC7zCRVk1ElOzm2+Nzsm1y/hFbtMngNwkfjzX0Y5y4UT/VAodvRV2ClbdlAYZXngLfhrUQeiGg=
+X-Received: by 2002:a05:6a00:6c99:b0:725:f097:ed21 with SMTP id
+ d2e1a72fcca58-72dafb55a4dmr40545987b3a.15.1737741589765; Fri, 24 Jan 2025
+ 09:59:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737511963.git.jpoimboe@kernel.org> <cd54347d26967427bc831f473d76e424ba3eba95.1737511963.git.jpoimboe@kernel.org>
-In-Reply-To: <cd54347d26967427bc831f473d76e424ba3eba95.1737511963.git.jpoimboe@kernel.org>
+References: <cover.1737511963.git.jpoimboe@kernel.org> <10b92f2fd065b67e6e3fd473ca145c34ea74b73a.1737511963.git.jpoimboe@kernel.org>
+In-Reply-To: <10b92f2fd065b67e6e3fd473ca145c34ea74b73a.1737511963.git.jpoimboe@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 24 Jan 2025 09:59:28 -0800
-X-Gm-Features: AWEUYZmb7i0VJt00azGUaAV70-NR2FHe0BxsqnnVpZ7ss3EDS1pJXbo4-7y8p28
-Message-ID: <CAEf4BzbG3C5=8bB0DKrVdMHDxADbZxnAwku46QAqt8qLW6ngOA@mail.gmail.com>
-Subject: Re: [PATCH v4 11/39] unwind_user: Add user space unwinding API
+Date: Fri, 24 Jan 2025 09:59:37 -0800
+X-Gm-Features: AWEUYZmhD9HKSgHLG_jTkfvr4UGLLxL1-4bQ50IoelJ2bbXy3o36re7ErBepFbw
+Message-ID: <CAEf4BzaQr1ruCh1beyhJ_i+aGuw4rGSftF_Zr5ZB=8Jim1jyyQ@mail.gmail.com>
+Subject: Re: [PATCH v4 12/39] unwind_user: Add frame pointer support
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
@@ -85,52 +85,48 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Jan 21, 2025 at 6:32=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
 > wrote:
 >
-> Introduce a generic API for unwinding user stacks.
+> Add optional support for user space frame pointer unwinding.  If
+> supported, the arch needs to enable CONFIG_HAVE_UNWIND_USER_FP and
+> define ARCH_INIT_USER_FP_FRAME.
+>
+> By encoding the frame offsets in struct unwind_user_frame, much of this
+> code can also be reused for future unwinder implementations like sframe.
 >
 > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > ---
->  arch/Kconfig                      |  3 ++
->  include/linux/unwind_user.h       | 15 ++++++++
->  include/linux/unwind_user_types.h | 31 ++++++++++++++++
->  kernel/Makefile                   |  1 +
->  kernel/unwind/Makefile            |  1 +
->  kernel/unwind/user.c              | 59 +++++++++++++++++++++++++++++++
->  6 files changed, 110 insertions(+)
->  create mode 100644 include/linux/unwind_user.h
->  create mode 100644 include/linux/unwind_user_types.h
->  create mode 100644 kernel/unwind/Makefile
->  create mode 100644 kernel/unwind/user.c
+>  arch/Kconfig                      |  4 +++
+>  include/asm-generic/unwind_user.h |  9 ++++++
+>  include/linux/unwind_user_types.h |  1 +
+>  kernel/unwind/user.c              | 49 +++++++++++++++++++++++++++++--
+>  4 files changed, 60 insertions(+), 3 deletions(-)
+>  create mode 100644 include/asm-generic/unwind_user.h
 >
 
-[...]
+Do you plan to reuse this logic for stack unwinding done by perf
+subsystem in perf_callchain_user()? See is_uprobe_at_func_entry()
+parts and also fixup_uretprobe_trampoline_entries() for some of the
+quirks that have to be taken into account when doing frame
+pointer-based unwinding. It would be great not to lose those in this
+new reimplementation.
 
-> --- /dev/null
-> +++ b/kernel/unwind/user.c
-> @@ -0,0 +1,59 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> +* Generic interfaces for unwinding user space
-> +*/
-> +#include <linux/kernel.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/task_stack.h>
-> +#include <linux/unwind_user.h>
+Not sure what's the best way to avoid duplicating the logic, but I
+thought I'd bring that up.
+
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c6fa2b3ecbc6..cf996cbb8142 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -438,6 +438,10 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
+>  config UNWIND_USER
+>         bool
+>
+> +config HAVE_UNWIND_USER_FP
+> +       bool
+> +       select UNWIND_USER
 > +
-> +int unwind_user_next(struct unwind_user_state *state)
-> +{
-> +       struct unwind_user_frame _frame;
-> +       struct unwind_user_frame *frame =3D &_frame;
-> +       unsigned long cfa =3D 0, fp, ra =3D 0;
-
-wouldn't all the above generate compilation warnings about unused
-variables, potentially breaking bisection?
-
-> +
-> +       /* no implementation yet */
-> +       -EINVAL;
-
-return missing?
-
-> +}
+>  config AS_SFRAME
+>         def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_e=
+ndproc)
+>
 
 [...]
