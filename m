@@ -1,231 +1,356 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990719E975;
-	Fri, 24 Jan 2025 17:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4681AA783;
+	Fri, 24 Jan 2025 17:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737740448; cv=none; b=TtzDUeg8cvngoX8g4gOzBlrNwLK5izg4YPqNurcEU1ujr++NNZI/cJNBcBDHAyK7tVML0ic72w3c+rRLHmQ1VRR2Sgr8VoVqFaRS3bjHpbUgOe/uS+OmmMoyG3Ui3lTXblK54i+EW4OSXLVnMnPjhKGMKssRYS3QHfKl3kxxIp8=
+	t=1737741401; cv=none; b=DXOvI6CDPCGPY33qZrFFRbHT4MKkDro7ntGxmGKXqOq/T9XiNU3ecRZ0i2rfXeez/V9EltOTdeX0YhrEJfY0P/VhQShCKRfJ7SoStACR8yX+LiSErmGY1dkf4cADe/0aCV5Z55CcIAhpQr15wiUwoFZ/1ar+O6PI5N/Xw/vxPJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737740448; c=relaxed/simple;
-	bh=RsDS9JAJ96wtXm5kgmzArXOFjtjTUPZiuCbiZphKpBQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OgzVdiN70RPDAqDPareNpU6yCvvfDlT6fonN72340jcQpqGxQUxwCHQAeh/U6svsroVyqKGet2+sAFWJMKp0XReUKW2RyjXy1qeVNYvlfSndkT7mW9xboR8h4aLzF0N+kWN43SRqGdeVMm/OBxdda9HOvQJk3swOSMfsjvuUv5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YflR705Dcz6M4Rs;
-	Sat, 25 Jan 2025 01:38:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D76C01400D4;
-	Sat, 25 Jan 2025 01:40:41 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 24 Jan
- 2025 18:40:40 +0100
-Date: Fri, 24 Jan 2025 17:40:39 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linxuarm@huawei.com>
-CC: <tongtiangen@huawei.com>, Yicong Yang <yangyicong@huawei.com>, "Niyas
- Sait" <niyas.sait@huawei.com>, <ajayjoshi@micron.com>, Vandana Salve
-	<vsalve@micron.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Price
-	<gourry@gourry.net>, Huang Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <20250124174039.00006940@huawei.com>
-In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1737741401; c=relaxed/simple;
+	bh=y5xs0g5+5uK1pKvR//CNx+aUr5I9591zqgOWvFaVt+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUFmnTNSIS+XHs7pOPvDDsDxQrcwvaDwscmS1A96irZBsmHBRLc2kHX3YoflCvdaGzin6/t95QAfxbkYgnBzkXs5u2QNCBL0LPHXbeFOtIi1TCwlFz4br1NArZCGdf31HrBKtWvXsYuWkKj4Jdg8wZuNJnv4TU4Ek1nWe1YM6sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVHm+82m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVHm+82m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3B0C4CED2;
+	Fri, 24 Jan 2025 17:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737741400;
+	bh=y5xs0g5+5uK1pKvR//CNx+aUr5I9591zqgOWvFaVt+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SVHm+82myyvlB9VN1i0fsWyKcR/JNy88XK/xQr0fjLXT5H4aufa6FpNTgr7eP/BJP
+	 UdU4iBfrsci9zM2eyVEJ9n9d8tUE4vb2qJ/4N5+2Y2u+56S0TE4Vs7L1mvGn0Sak+h
+	 meiZn2Sscv+fW4uLBAFtfY4m76sG+1x6DV6b/tfYVFQid6h7dkol3dFAWxgRntBDoI
+	 C31Dkecc19TsInjsn8F7nll9lNO6EOZ0MWG55OQ0fELmthdUH6Pf2vqXl92Wx78ZII
+	 5hemIjxMldeiaJYRo7UG/KWeBYPAENVUTW/tjJPLlZSvjCAcNy8U2Em4vqzb8x24R8
+	 /+h9RkHKm6WBA==
+Date: Fri, 24 Jan 2025 09:56:38 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, eranian@google.com
+Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
+Message-ID: <Z5PUViSUMRsJSIHX@google.com>
+References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
+ <20250113134022.2545894-1-dvyukov@google.com>
+ <Z4XDJyvjiie3howF@google.com>
+ <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
+ <Z4cBqGBzZI8VqtIx@google.com>
+ <CACT4Y+bv5bMkpnZM1=VXCt5=tUxKxv21N6B2mTB9UqqOYa0g0g@mail.gmail.com>
+ <CACT4Y+bA=NdTBjJRCGPr-HPe0=qBKfz5=afr3d+HJ_xLZZ_mKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+bA=NdTBjJRCGPr-HPe0=qBKfz5=afr3d+HJ_xLZZ_mKA@mail.gmail.com>
 
-On Thu, 21 Nov 2024 10:18:41 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Fri, Jan 24, 2025 at 11:46:01AM +0100, Dmitry Vyukov wrote:
+> What are the next steps for this patch?
+> 
+> I don't have any action items on my side. Am I missing any? Ready to be merged?
 
-> The CXL specification release 3.2 is now available under a click through at
-> https://computeexpresslink.org/cxl-specification/ and it brings new
-> shiny toys.
+I'll review the change today.
 
-PoC of qemu plugin based approach to getting real data:
-https://lore.kernel.org/qemu-devel/20250124172905.84099-1-Jonathan.Cameron@huawei.com/
+Thanks,
+Namhyung
 
-Also available on gitlab.com/jic23/qemu cxl-2025-01-24
-
-I have a minor revision to this driver to post after a spec clarification on units
-of one parameter. Will do that next week but for now that PoC ignores the parameter
-anyway :)
-
-Hopefully a cleaned up version of the above will provide us with a useful
-platform for algorithm and framework development. I've posted it early as
-there is a fundamental question for the QEMU maintainers on how they
-would prefer the plugin interaction to be done - once that's resolved it's
-just a question of wiring up more parameters and providing additional
-options for the actual counting implementation. For now it's an oracle
-with 32 bit counters for every page.  Hardware folk tell me that might be
-a 'little too expensive'!
-
-It's not even that slow :)
-
-Jonathan
 > 
-> RFC reason
-> - Whilst trace capture with a particular configuration is potentially useful
->   the intent is that CXL HMU units will be used to drive various forms of
->   hotpage migration for memory tiering setups. This driver doesn't do this
->   (yet), but rather provides data capture etc for experimentation and
->   for working out how to mostly put the allocations in the right place to
->   start with by tuning applications.
 > 
-> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
-> of this is to provide a way to establish which units of memory (typically
-> pages or larger) in CXL attached memory are hot. The implementation details
-> and algorithm are all implementation defined. The specification simply
-> describes the 'interface' which takes the form of ring buffer of hotness
-> records in a PCI BAR and defined capability, configuration and status
-> registers.
 > 
-> The hardware may have constraints on what it can track, granularity etc
-> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
-> trackers). Some of these constraints are discoverable from the hardware
-> registers, others such as loss of accuracy have no universally accepted
-> measures as they are typically access pattern dependent. Sadly it is
-> very unlikely any hardware will implement a truly precise tracker given
-> the large resource requirements for tracking at a useful granularity.
-> 
-> There are two fundamental operation modes:
-> 
-> * Epoch based. Counters are checked after a period of time (Epoch) and
->   if over a threshold added to the hotlist.
-> * Always on. Counters run until a threshold is reached, after that the
->   hot unit is added to the hotlist and the counter released.
-> 
-> Counting can be filtered on:
-> 
-> * Region of CXL DPA space (256MiB per bit in a bitmap).
-> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
-> 
-> Sampling can be modified by:
-> 
-> * Downsampling including potentially randomized downsampling.
-> 
-> The driver presented here is intended to be useful in its own right but
-> also to act as the first step of a possible path towards hotness monitoring
-> based hot page migration. Those steps might look like.
-> 
-> 1. Gather data - drivers provide telemetry like solutions to get that
->    data. May be enhanced, for example in this driver by providing the
->    HPA address rather than DPA Unit Address. Userspace can access enough
->    information to do this so maybe not.
-> 2. Userspace algorithm development, possibly combined with userspace
->    triggered migration by PA. Working out how to use different levels
->    of constrained hardware resources will be challenging.
-> 3. Move those algorithms in kernel. Will require generalization across
->    different hotpage trackers etc.
-> 
-> So far this driver just gives access to the raw data. I will probably kick
-> of a longer discussion on how to do adaptive sampling needed to actually
-> use these units for tiering etc, sometime soon (if no one one else beats
-> me too it).  There is a follow up topic of how to virtualize this stuff
-> for memory stranding cases (VM gets a fixed mixture of fast and slow
-> memory and should do it's own tiering).
-> 
-> More details in the Documentation patch but typical commands are:
-> 
-> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
->  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
->  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
->  hotness_granual=12
-> 
-> $perf report --dump-raw-traces
-> 
-> Example output.  With a counter_width of 16 (0x10) the least significant
-> 4 bytes are the counter value and the unit index is bits 16-63.
-> Here all units are over the threshold and the indexes are 0,1,2 etc.
-> 
-> . ... CXL_HMU data: size 33512 bytes
-> Header 0: units: 29c counter_width 10
-> Header 1 : deadbeef
-> 0000000000000283
-> 0000000000010364
-> 0000000000020366
-> 000000000003033c
-> 0000000000040343
-> 00000000000502ff
-> 000000000006030d
-> 000000000007031a
-> 
-> Which will produce a list of hotness entries.
-> Bits[N-1:0] counter value
-> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
->   config to get to a Host Physical Address)
-> 
-> Specific RFC questions.
-> - What should be in the header added to the aux buffer.
->   Currently just the minimum is provided. Number of records
->   and the counter width needed to decode them.
-> - Should we reset the counters when doing sampling "-F X"
->   If the frequency is higher than the epoch we never see any hot units.
->   If so, when should we reset them?
-> 
-> Note testing has been light and on emulation only + as perf tool is
-> a pain to build on a striped back VM,  build testing has all be on
-> arm64 so far.  The driver loads though on both arm64 and x86 so
-> any problems are likely in the perf tool arch specific code
-> which is build tested (on wrong machine)
-> 
-> The QEMU emulation needs some cleanup, but I should be able to post
-> that shortly to let people actually play with this.  There are lots
-> of open questions there on how 'right' we want the emulation to be
-> and what counting uarch to emulate.
-> 
-> Jonathan Cameron (4):
->   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
->   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
->   perf: Add support for CXL Hotness Monitoring Units (CHMU)
->   hwtrace: Document CXL Hotness Monitoring Unit driver
-> 
->  Documentation/trace/cxl-hmu.rst     | 197 +++++++
->  Documentation/trace/index.rst       |   1 +
->  drivers/cxl/Kconfig                 |   6 +
->  drivers/cxl/Makefile                |   3 +
->  drivers/cxl/core/Makefile           |   1 +
->  drivers/cxl/core/core.h             |   1 +
->  drivers/cxl/core/hmu.c              |  64 ++
->  drivers/cxl/core/port.c             |   2 +
->  drivers/cxl/core/regs.c             |  14 +
->  drivers/cxl/cxl.h                   |   5 +
->  drivers/cxl/cxlpci.h                |   1 +
->  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
->  drivers/cxl/hmu.h                   |  23 +
->  drivers/cxl/pci.c                   |  26 +-
->  tools/perf/arch/arm/util/auxtrace.c |  58 ++
->  tools/perf/arch/x86/util/auxtrace.c |  76 +++
->  tools/perf/util/Build               |   1 +
->  tools/perf/util/auxtrace.c          |   4 +
->  tools/perf/util/auxtrace.h          |   1 +
->  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
->  tools/perf/util/cxl-hmu.h           |  18 +
->  21 files changed, 1748 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/trace/cxl-hmu.rst
->  create mode 100644 drivers/cxl/core/hmu.c
->  create mode 100644 drivers/cxl/hmu.c
->  create mode 100644 drivers/cxl/hmu.h
->  create mode 100644 tools/perf/util/cxl-hmu.c
->  create mode 100644 tools/perf/util/cxl-hmu.h
-> 
-
+> On Sun, 19 Jan 2025 at 11:50, Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Wed, 15 Jan 2025 at 01:30, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Tue, Jan 14, 2025 at 09:26:57AM +0100, Dmitry Vyukov wrote:
+> > > > On Tue, 14 Jan 2025 at 02:51, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > On Mon, Jan 13, 2025 at 02:40:06PM +0100, Dmitry Vyukov wrote:
+> > > > > > There are two notions of time: wall-clock time and CPU time.
+> > > > > > For a single-threaded program, or a program running on a single-core
+> > > > > > machine, these notions are the same. However, for a multi-threaded/
+> > > > > > multi-process program running on a multi-core machine, these notions are
+> > > > > > significantly different. Each second of wall-clock time we have
+> > > > > > number-of-cores seconds of CPU time.
+> > > > > >
+> > > > > > Currently perf only allows to profile CPU time. Perf (and all other
+> > > > > > existing profilers to the be best of my knowledge) does not allow to
+> > > > > > profile wall-clock time.
+> > > > > >
+> > > > > > Optimizing CPU overhead is useful to improve 'throughput', while
+> > > > > > optimizing wall-clock overhead is useful to improve 'latency'.
+> > > > > > These profiles are complementary and are not interchangeable.
+> > > > > > Examples of where wall-clock profile is needed:
+> > > > > >  - optimzing build latency
+> > > > > >  - optimizing server request latency
+> > > > > >  - optimizing ML training/inference latency
+> > > > > >  - optimizing running time of any command line program
+> > > > > >
+> > > > > > CPU profile is useless for these use cases at best (if a user understands
+> > > > > > the difference), or misleading at worst (if a user tries to use a wrong
+> > > > > > profile for a job).
+> > > > > >
+> > > > > > This patch adds wall-clock and parallelization profiling.
+> > > > > > See the added documentation and flags descriptions for details.
+> > > > > >
+> > > > > > Brief outline of the implementation:
+> > > > > >  - add context switch collection during record
+> > > > > >  - calculate number of threads running on CPUs (parallelism level)
+> > > > > >    during report
+> > > > > >  - divide each sample weight by the parallelism level
+> > > > > > This effectively models that we were taking 1 sample per unit of
+> > > > > > wall-clock time.
+> > > > >
+> > > > > Thanks for working on this, very interesting!
+> > > > >
+> > > > > But I guess this implementation depends on cpu-cycles event and single
+> > > > > target process.
+> > > >
+> > > > Not necessarily, it works the same for PMU events, e.g. again from perf make:
+> > >
+> > > Of course it would work with other events.  But the thing is how to
+> > > interprete the result IMHO.
+> > >
+> > > >
+> > > > Samples: 481K of event 'dTLB-load-misses', Event count (approx.): 169413440
+> > > > Overhead  Wallclock  Command          Symbol
+> > > >    5.34%     16.33%  ld               [.] bfd_elf_link_add_symbols
+> > > >    4.14%     14.99%  ld               [.] bfd_link_hash_traverse
+> > > >    3.53%     10.87%  ld               [.] __memmove_avx_unaligned_erms
+> > > >    1.61%      0.05%  cc1              [k] native_queued_spin_lock_slowpath
+> > > >    1.47%      0.09%  cc1              [k] __d_lookup_rcu
+> > > >    1.38%      0.55%  sh               [k] __percpu_counter_sum
+> > > >    1.22%      0.11%  cc1              [k] __audit_filter_op
+> > > >    0.95%      0.08%  cc1              [k] audit_filter_rules.isra.0
+> > > >    0.72%      0.47%  sh               [k] pcpu_alloc_noprof
+> > > >
+> > > > And also it works well for multi-process targets, again most examples
+> > > > in the patch are from kernel make.
+> > >
+> > > It's the single-origin case.  I'm curious about the multiple-origin
+> > > cases like profiling two or more existing processes together.  How do
+> > > you determine the initial parallelism?
+> >
+> > What is the "multiple-origin case"? How is it different from multiple processes?
+> >
+> > > Also I think the parallelism is defined in a process (group).  Does it
+> > > still make sense in system-wide profiling?
+> >
+> > I've tried to answer this here:
+> >
+> > > It can work as is, if the system activity includes mostly a single
+> > > task, e.g. you run something on command line, it's taking too long, so
+> > > you decide to do perf record -a in parallel to see what it's doing.
+> > >
+> > > For system-wide profiling we do Google (GWP), it may need some
+> > > additional logic to make it useful. Namely, the system-wide
+> > > parallelism is not useful in multi-task contexts. But we can extend
+> > > report to allow us to calculate parallelism/wall-clock overhead for a
+> > > single multi-threaded process only. Or, if we auto-matically
+> > > post-process system-wide profile, then we can split the profile
+> > > per-process and calculate parallelism for each of them.
+> >
+> > Additionally we could add a process filter that will calculate
+> > parallelism only with the given set of processes (specified by PIDs or
+> > comm names). I.e. one profiled the whole system, but then says "I am
+> > really interested only in processes X and Y".
+> >
+> >
+> >
+> > > > > Do you think if it'd work for system-wide profiling?
+> > > >
+> > > > Currently it doesn't b/c system-wide emits PERF_RECORD_SWITCH_CPU_WIDE
+> > > > instead of PERF_RECORD_SWITCH which this patch handles.
+> > > >
+> > > > It can be made to work, I just didn't want to complicate this patch more.
+> > >
+> > > Ok.
+> > >
+> > > > It can work as is, if the system activity includes mostly a single
+> > > > task, e.g. you run something on command line, it's taking too long, so
+> > > > you decide to do perf record -a in parallel to see what it's doing.
+> > > >
+> > > > For system-wide profiling we do Google (GWP), it may need some
+> > > > additional logic to make it useful. Namely, the system-wide
+> > > > parallelism is not useful in multi-task contexts. But we can extend
+> > > > report to allow us to calculate parallelism/wall-clock overhead for a
+> > > > single multi-threaded process only. Or, if we auto-matically
+> > > > post-process system-wide profile, then we can split the profile
+> > > > per-process and calculate parallelism for each of them.
+> > > >
+> > > > I am also not sure if we use perf report for GWP, or do manual trace
+> > > > parsing. When/if this part is merged, we can think of the system-wide
+> > > > story.
+> > > >
+> > > > TODO: don't enable context-switch recording for -a mode.
+> > > >
+> > > >
+> > > > > How do you define wall-clock overhead if the event counts something
+> > > > > different (like the number of L3 cache-misses)?
+> > > >
+> > > > It's the same. We calculate CPU overhead for these. Wallclock overhead
+> > > > is the same, it's just the weights are adjusted proportionally.
+> > >
+> > > I got this part but ...
+> > >
+> > > >
+> > > > Physical meaning is similar:
+> > > > CPU overhead: how much L3 misses affect throughput/cpu consumption
+> > > > Wallclock overhead: how much L3 misses affect latency
+> > >
+> > > I'm not sure if it's correct.  The event would tell where you get the L3
+> > > miss mostly.  It doesn't necessarily mean latency.  IOW more L3 miss
+> > > doesn't mean more CPU time.  I guess that's why perf doesn't say it as
+> > > "CPU overhead".
+> >
+> > Yes, I agree, it does not directly translate to increased CPU
+> > consumption or latency.
+> > But the point is: whatever was the effect on CPU consumption, it's
+> > rescaled to latency.
+> >
+> >
+> > > Hmm.. maybe you could rename it differently?
+> >
+> > You mean the "perf report" help page, right?
+> >
+> > Yes, strictly speaking it's not "CPU overhead" and "Wall-clock
+> > overhead", but rather "Overhead in CPU time" and "Overhead in
+> > wall-clock time". Does it look better to you?
+> >
+> >
+> > > > > Also I'm not sure about the impact of context switch events which could
+> > > > > generate a lot of records that may end up with losing some of them.  And
+> > > > > in that case the parallelism tracking would break.
+> > > >
+> > > > I've counted SAMPLE/SWITCH events on perf make:
+> > > >
+> > > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
+> > > > 813829
+> > > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
+> > > > 46249
+> > > >
+> > > > And this is for:
+> > > > perf record -e L1-dcache-load-misses,dTLB-load-misses make
+> > > >
+> > > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
+> > > > 1138615
+> > > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
+> > > > 115433
+> > > >
+> > > > Doesn't pretend to be scientifically accurate, but gives some idea
+> > > > about proportion.
+> > > > So for the number of samples that's 5% and 10% respectively.
+> > >
+> > > I think it depends on the workload.  In a very loaded system with short
+> > > timeslice or something, you could get a lot more sched switches.  In
+> > > your workload, `make` may have a long single-threaded portion.
+> >
+> > Unfortunately this is likely to be true.
+> >
+> > > > SWITCH events are smaller (24 bytes vs 40 bytes for SAMPLE), so for
+> > > > ring size it's 3-6%.
+> > > >
+> > > > FWIW I've also considered and started implementing a different
+> > > > approach where the kernel would count parallelism level for each
+> > > > context and write it out with samples:
+> > > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
+> > > > Then sched_in/out would need to do atomic inc/dec on a global counter.
+> > >
+> > > It seems you counted parallelism in an event (including inherited ones).
+> > > But usually perf tool opens a separate FD on each CPU for an event (like
+> > > cycles), then you need to adjust the value across all CPUS.  I'm not
+> > > sure if it's doable in this approach.
+> >
+> > Right, this is probably when I gave up on that approach -- when I
+> > observed the counter has a value of 1 at most.
+> >
+> > > > Not sure how hard it is to make all corner cases work there, I dropped
+> > > > it half way b/c the perf record post-processing looked like a better
+> > > > approach.
+> > >
+> > > Probably.
+> > >
+> > > >
+> > > > Lost SWITCH events may be a problem. Perf report already detects and
+> > > > prints a warning about lost events. Should we stop reporting
+> > > > parallelism/wall-clock if any events are lost? I just don't see it in
+> > > > practice.
+> > >
+> > > It happens quite often when there are many activities.  Probably we can
+> > > consider stopping when it detects some lost records.
+> > >
+> > >
+> > > > Kernel could write-out a bitmask of types of lost events in PERF_RECORD_LOST.
+> > >
+> > > It'd be nice, but given the rate of sched switch I guess it'd most
+> > > likely contain some.
+> >
+> > What's an easy way to get lost events? Normally on my machine I never see them.
+> > Is there some parameter to make the buffer very small, or something?
+> >
+> >
+> > > > > > The feature is added on an equal footing with the existing CPU profiling
+> > > > > > rather than a separate mode enabled with special flags. The reasoning is
+> > > > > > that users may not understand the problem and the meaning of numbers they
+> > > > > > are seeing in the first place, so won't even realize that they may need
+> > > > > > to be looking for some different profiling mode. When they are presented
+> > > > > > with 2 sets of different numbers, they should start asking questions.
+> > > > >
+> > > > > I understand your point but I think it has some limitation so maybe it's
+> > > > > better to put in a separate mode with special flags.
+> > > >
+> > > > I hate all options.
+> > > >
+> > > > The 3rd option is to add a _mandary_ flag to perf record to ask for
+> > > > profiling mode. Then the old "perf record" will say "nope, you need to
+> > > > choose, here are your options and explanation of the options".
+> > > >
+> > > > If we add it as a new separate mode, I fear it's doomed to be
+> > > > unknown/unused and people will continue to not realize what they are
+> > > > profiling, meaning of numbers, and continue to use wrong profiles for
+> > > > the job.
+> > >
+> > > I think people will find it out if it really works well! :)
+> >
+> > Yes, but it may take 10 years for the word to spread :)
+> > I am afraid the main problem is that people don't know they need to be
+> > looking for something. We had 20 years of widespread multi-CPU/core
+> > systems and no profiler supporting latency profiling.
+> >
+> > But as I said, I am open to options (at least I will know it's there
+> > for my purposes :)).
+> >
+> >
+> > > > I consider latency/wall-clock profiling as useful and as fundamental
+> > > > as the current bandwidth profiling for parallel workloads (more or
+> > > > less all workloads today). Yet we are in 2025 and no profilers out
+> > > > there support latency profiling. Which suggests to me there is a
+> > > > fundamental lack of understanding of the matter, so new optional mode
+> > > > may not work well.
+> > >
+> > > I'm open to make it default if we can make sure it works well and have a
+> > > clear interpretation of the result.
+> > >
+> > > >
+> > > > If you are interested for context, I used a similar mode (for pprof at
+> > > > the time) to optimize TensorFlow latency (people mostly care about
+> > > > latency). All existing profilers said it's 99% highly optimized and
+> > > > parallelized matrix multiplication, we are done here. Yet, the
+> > > > wallclock profile said, nope, it's 45% Python interpreter, which
+> > > > resulted in this fix:
+> > > > https://github.com/soumith/convnet-benchmarks/commit/605988f847fcf261c288abc2351597d71a2ee149
+> > > > Full story and examples of these profiles are here:
+> > > > https://github.com/dvyukov/perf-load
+> > >
+> > > Great examples!  I'll take a look later.
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
