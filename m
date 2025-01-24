@@ -1,372 +1,219 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2047.outbound.protection.outlook.com [40.107.244.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF27E1C07DC
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 10:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737715579; cv=none; b=GT9uNr0srJtCB2vBjeU+3NMmnVSFBjPR2IlDMkEupo18FRiV6BMgl1nwZT8ECEOHOT2exITFueeJWbjIww9Hfa4hvgNPw0GYGiu1ZQZz6uepACqLUWHzevRq8ZbZDQDBJ940tFD2TTVD+OXsRd2j0k9veu0c2HyuaCO8x/IrLQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737715579; c=relaxed/simple;
-	bh=f0G+lCKPhn6IchuJyrwFxFNZitrfWQwRrBaVaCwlHhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EuSui0Hk1JuR+8UC0YgJVdP/vvSVW8ecsyIcSXfhUzueEQnX5HLQE/KqyV++wh9rkfL6gjwCwL1aWFLwkXu9aLtdyKP4h6cA1ksMzkiMrUvFUg3lFwUAABvxFYqLWA0m0o1EmnGEq1Ddkj0noHI+nKvC4szE7gwNfMyUS95yF58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F8IexMdO; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B04A17FE;
+	Fri, 24 Jan 2025 10:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737715729; cv=fail; b=Nb2KgtlWgUKdA8eSYrT/XU+u+aA0Chl7NOqJZ9KdWmJvuNvdd3/l4TnnpxWgspM5EfEVokIp86iizBFQClRXNA+UDRbhdudivL/0Hjoi29idfNfcGBWnRncIWh0dX/0OmCPNfL5CgXo0hBOLlkZfhNgv009YlzvVTMT9jjvG3iI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737715729; c=relaxed/simple;
+	bh=9Tg5dYt3qQlUcXE7Fyydvm7ZctFfDt9d9Ff2o4IKz+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=J0DjEChgjs4+XgTdmyUgQvduew0sWVN+/7jRX3Y9jh+PW3iD10rayTDPX3wEzNpdo2M7zbQYTbonV8XI5Aj/DbK29qn/kUkkrVwA/zQwiAyeVRmkJOEKOAP2p7AC+ygV1tMDJjObn9EkTpfZ/TVNQS26ScCxIBKhFvIuyePkI+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QtCnc4hW; arc=fail smtp.client-ip=40.107.244.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F8IexMdO"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-305f529a987so14613501fa.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 02:46:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737715574; x=1738320374; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Z2uZ7HIhpJudFp73Nafl9rIEMWaxp8OACIGCqup3YQ=;
-        b=F8IexMdOPmDcFCofJkQGOH2aP4Sas6Pf2zkO1xZglXw3znpDGH3Qhcwmi4YFdGHq70
-         ZeQc0/nyh8TQXd4QiNvxQlvf2ziyUEHxcZ8ayM4ZeVy5wBoE8DwcUnOQylAsB2jAj3zU
-         vHkdzkeGzfjdTzDwGc5pzv2D3eLV3icTh6i7Al8NYpCzjxPQpCpPVCr4fiPcdNqC03wE
-         +v2ZjcAX55aw5aM1DjY0T9QaAWMg+19LLh4vi/T8d1rNfyRS/r+SnNloEsPt8Z3elvDD
-         6NoYzDP0973hhB+Ot67iAIMBf947puxpm+CDIn74+JvJegqVlcSFbzYv+CTAUKwp2ZwV
-         Lwxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737715574; x=1738320374;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1Z2uZ7HIhpJudFp73Nafl9rIEMWaxp8OACIGCqup3YQ=;
-        b=USfAcMIGjS6c2xNFaAU3k78injAEQBUsDxtSijMX4OancvTSsqYdWA4O6Tc2odmehj
-         0UH7W3J10a73enxw10kiMzclmVe0nGvw5wVIbVol9+jyXQKEBY+vuPutz4v6fjYGym0v
-         GMCfNjoGf5Fw5TMIJWJNECbnZd+5Gk6Bopym5YzTMHUR7FXgXfL6kpNn5O8HEyUPNvgR
-         tDx7P/uvpB9ivHqW+Q+XiUV/d8JBULsRXDG6sv5/WO3QLWtWhfucKTulIW9zy/9phxlb
-         dFVcW0tVrmxrJG7ifChwaDMX2fDSoYpEm52dTovX2X6TXRDKPI24iTndO2Skt/Pddf3w
-         xsjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvq06YScLZhZJ4GxfT7OaBgjMHW/Y9j/H40AxIGCq/puEf1RrSDs9AeTxkPbpNE7bt3/DYUM3bBw+spYQKgIb/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbcAEYo6S3qMXYfWs1S8+dQYzLRzotn0Ovq1AE9e2kT6pSi2B
-	yuUcycWiAEL5pyVhwP4gjLwF1Hsm02iefYlqiXKwlPXtsc7PPCDggGdDUbySQA+aC2vrRSzoKoB
-	tw8FKmz/MqpgKauP+rxVKsMqcdjiJY7itBEj7
-X-Gm-Gg: ASbGnctKp5Skzxx+njeqKcDyfxbsh/Y9YlpPiU+eamKfndE0wd16ZoikNnC/J8vWZwb
-	1IhISh5UrGJWCXgdMODA4ErGTvIbRULORCgherZW0Jgwr/fBDzqMDLOJwuOA6EclyXKioHTCttX
-	4VxC4+nBkpv465r0G3bQ==
-X-Google-Smtp-Source: AGHT+IGlmPjNw2QNCGTDIt2eDzeIQctdPYn7D57GHnQ2xFfUu7j2KZ003K3DTG2v/i3poo5voJslTpApoOg5QS9/8Oc=
-X-Received: by 2002:a2e:a88a:0:b0:2fb:cc0:2a05 with SMTP id
- 38308e7fff4ca-3072cb1f6a3mr121836741fa.37.1737715573184; Fri, 24 Jan 2025
- 02:46:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QtCnc4hW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zSEBHvK2N2aor+hK5LGetpqh/Roq4RE062Ied/RYZyeLMmNWjiBCxaOAdrZL0Pl3SIzQUG4sjtxOb23rwqcmoXZQ8vk8vLCAa1vfXpdSvzPSxnSmaZw4QcesJOH1bDQJGUjREyQRuvUWo+fGuecvBv+A6Ia8NqosO1abjj76gAyiYDf+itdlb0+Ne28y1o00hSnKvS33knadF0uX9s11psvW4KaHxRU63+dq9kJKyBONOdR6GdSMbOGqL3H+cIUxFukqoxxT2sb5Y/RCvLw1Bqz2L8J80Xs1PGDoKbXdxtinc7zLCmv4seGnYuHVhMGmq8xpzIRzBEnrTBLMulhFKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cwVvFaV9aZnIyo9GynOO/BvAClq3gm1jIac8yqCvAwc=;
+ b=J1f8q0nZHpw8h9cOW6AYg+muF8gXT6maM0qXPSBmdcdyo8sjtXUMgghcNMU9c9mJGzN8xxeA4xEZinsZPsIdCJVSCisw4NRqzmomsQpwloxel4O2ilL3bhGhz2PMwqMpOyc/6w4kYH899OK5ltirhlWy1CfSIxDY4E/92NVIEaTLARXyRysbqWjO6Fy2uFPzCsWrzVFHxP4g/KZQ23YaQPEeyQr6FKi8BFP4hBCr1i8VVCftJXoDSHEU+RrjrhNupRsXdIP0SgvRFxlwZrguddMkXdyuQ9QVL3zQFRqsefw2hwk0z3qchVuih+31lIwtRqQ2JJX0ooYQ5YPG3BF+2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cwVvFaV9aZnIyo9GynOO/BvAClq3gm1jIac8yqCvAwc=;
+ b=QtCnc4hWjSJiYO68q+59zcxwqbjygQLbPhpdGpjQYfKLf723X+8ycyiTSPnIQ+ssntv4+KBQi/MfL+/3JMxEpbeZnbp8aYbdPbfr9c2R4ABg6zPf0YNP0WsXAU/fkHwBMt1QTGSqNRKSwKsFEHdcZZCoL3C402yDcmEWPw20MVg=
+Received: from PH8PR15CA0019.namprd15.prod.outlook.com (2603:10b6:510:2d2::21)
+ by SA3PR12MB7806.namprd12.prod.outlook.com (2603:10b6:806:31d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.20; Fri, 24 Jan
+ 2025 10:48:43 +0000
+Received: from SJ1PEPF00002327.namprd03.prod.outlook.com
+ (2603:10b6:510:2d2:cafe::1f) by PH8PR15CA0019.outlook.office365.com
+ (2603:10b6:510:2d2::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.22 via Frontend Transport; Fri,
+ 24 Jan 2025 10:48:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00002327.mail.protection.outlook.com (10.167.242.90) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8377.8 via Frontend Transport; Fri, 24 Jan 2025 10:48:43 +0000
+Received: from [10.136.33.41] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 24 Jan
+ 2025 04:48:22 -0600
+Message-ID: <8c298b9e-d7c2-4a27-b993-e3bca28f8237@amd.com>
+Date: Fri, 24 Jan 2025 16:18:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACT4Y+b4WYa9TSqKtDKTJNgXth1U30=KddutfSdp5gmXVOV_jA@mail.gmail.com>
- <20250113134022.2545894-1-dvyukov@google.com> <Z4XDJyvjiie3howF@google.com>
- <CACT4Y+b96xynNaZoBHP72-4tJM5Nzo3MBRW19_E7JsMKRWYCzg@mail.gmail.com>
- <Z4cBqGBzZI8VqtIx@google.com> <CACT4Y+bv5bMkpnZM1=VXCt5=tUxKxv21N6B2mTB9UqqOYa0g0g@mail.gmail.com>
-In-Reply-To: <CACT4Y+bv5bMkpnZM1=VXCt5=tUxKxv21N6B2mTB9UqqOYa0g0g@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 24 Jan 2025 11:46:01 +0100
-X-Gm-Features: AWEUYZnnrUKwalNqrbZsw9Ve8qFtsiC8nVNTjaAI3PuYNDDPVg2Vzj0zrbxmz_Q
-Message-ID: <CACT4Y+bA=NdTBjJRCGPr-HPe0=qBKfz5=afr3d+HJ_xLZZ_mKA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf report: Add wall-clock and parallelism profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text patching
+ IPIs
+To: Valentin Schneider <vschneid@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<xen-devel@lists.xenproject.org>, <kvm@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <rcu@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kselftest@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<bcm-kernel-feedback-list@broadcom.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Nicolas Saenz Julienne
+	<nsaenzju@redhat.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+	<ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+	<seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+	<luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+	<frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron
+	<jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel
+	<ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+	<jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+	<juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair Podemsky
+	<ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+	<kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+	<samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+	<aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel
+ Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu
+ (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-26-vschneid@redhat.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250114175143.81438-26-vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002327:EE_|SA3PR12MB7806:EE_
+X-MS-Office365-Filtering-Correlation-Id: 600ffd5d-1ae7-41e0-e57b-08dd3c64abd5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|7416014|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eGI4dEMxdFNsNzRsU2VWVmlmOTM0OVQ0cm1QdjlOTDlxa2tWcjR4NHlEOXZW?=
+ =?utf-8?B?b3UrcW5BamtEb1Nya0pWRDFPY3hRZDViek1ERGg0eVgzWXJmYkh4WVJRLzdR?=
+ =?utf-8?B?MEc3NWNTaTNobU9EckwyajdiMkVxQUJBYlZjYU5LajVVSmlQOWlDaGs0alBk?=
+ =?utf-8?B?cWlONUUyVlQ3c0hsS1ZTb0ROV0VsUVhVWmprTmxnZm1MNGhYRFpmRlJnVVFK?=
+ =?utf-8?B?UEdlOThNUC96dkNGQXJFSmRBU2JmTXdmRnBBWHNNS3Jhd3piOGpQTGJtUmhY?=
+ =?utf-8?B?R3FZdHd1R3V5UVZVS25GWjJISm5uYjlRMmhuVERUWERqZ1V5bHFCdURjdlNW?=
+ =?utf-8?B?R05Ua3dlUFcrUktoVDUvVnhoeGdQamtSQ3l4RDBGT25EU2w1dkJLbHhldGJp?=
+ =?utf-8?B?YUxFTTI3Q3FlRDFwT3hPMUI0Sjl4R1JMbStQZEt6R0c2WWlSMDc1azlmNzY3?=
+ =?utf-8?B?MmQ4NTdsd3JjWjJZUDZRVSs3d3hhMXlBVVVMai9nY0VMSHlRMjNvMkJYbkFq?=
+ =?utf-8?B?RVkzcWZOczNLYWprR1Ryb2lRbFkxQ2ZHY3RMN0xkY3lpOVFqS3QwSnQyRElJ?=
+ =?utf-8?B?SEt4TjhLWm00YWl0NUlQeVA0b2paQTM0azBleHVLcE9USTJEYlo4WnZFNkFv?=
+ =?utf-8?B?c2VtZm1wRW42TVRiK3BxWlFDS3NkT0t3SWNrYmZ6N3lRd3FFZjNKYWdQaXJQ?=
+ =?utf-8?B?Wml2ZE1qaEpxdEVxcDBiK2x1T21RVWJZZXhGVmlEOFVOVzIxZTV2a21zeUFa?=
+ =?utf-8?B?UlVRR2hpM2xJcGFETkpxMGd6MGtiTFNmSE8yQ2lBY1k3TmtYM0lzZkN0Q1Ry?=
+ =?utf-8?B?cG9FYlFlb2w0QXJBV3VGdnNXaWl5VThoc1VGVEFWSTQwRHZvUitCRTJCaFBB?=
+ =?utf-8?B?eTRuRFMxblZ5OHZ6Zm5MbU82N1NPdVRYZllvNU5XM3UrYkdPOC91VUl3dnRL?=
+ =?utf-8?B?aVdZazAzVyt4ZXozVzJqaGFFZjYxMXc4bXhRVVFhMXBCaXdGdkg5VjEyemR2?=
+ =?utf-8?B?cTNCS0owUDZvQit6bHpjbkYwYlZOcU5CdzlkVS9Jc2hCMXhXS080ci9qL1Vs?=
+ =?utf-8?B?Rk9sTmZNdG9mZ3FlTndKU2trK2l0ME1VaTl1Rkd0MzltbWhNZ1pPMTU0Y1pp?=
+ =?utf-8?B?ck1PNytGcTlUWmpoV1RpY0JGZFdIcDJ6UkdNdTRsR3JxMy9xY2ZEMmtBRkFT?=
+ =?utf-8?B?MkN2TVBiYWpaWXR2S2UrZG01blNiaFdrRStiR0k0K3ArRTc2UkMzaHVnRnIx?=
+ =?utf-8?B?RTFjc1RZa1lhWTdJb2IxZ0ZFeUhBbFl5NHFJSmg1eENEV24yUDV1dkZ3S0xr?=
+ =?utf-8?B?eUdhclkvRGN5ekRwVmY1QVMwNWd6d3g4SzdVOVl5WnQ3NEFFQ2dMYUorOXhk?=
+ =?utf-8?B?Nkw5OTZyZ2ZLZGhwV0lmdzNLaW5QS1ora2pBSXlvUlJGWWNVaXB6bFBFZUJ5?=
+ =?utf-8?B?WENVOFd5ZVMvaFZsU25mb1BQNXF3cE5lRzN4eUM1dzdzenBEbFMwVXR0TjZN?=
+ =?utf-8?B?T24wK3VyLzFBMW50a21KUllmSmQ3MEJPdW9sQ1hDc0VHN2ZTVm9zTTJXTWZW?=
+ =?utf-8?B?ck9Kc1ZMRXlEcDZzQnBnTG9weWt6MDNDbW5jOFdnVlpReDdCTXlJMFl4WCtO?=
+ =?utf-8?B?SGxHQUZaRmxlR2xibmJiT3VPTElNUEhGcnp2Q0UrTHFHd3VtdzhWKzl6b2k5?=
+ =?utf-8?B?MTl6UGZNWWovM3pMcmRvTjFHbFk5Njk0QVZZcnNWOUhtZ011S2YvSVBCWU1G?=
+ =?utf-8?B?U1I0NVlrR3lnUEl2ZFM1b21UQ2d3YVF2OVZoOFQ4S0pLRGRudTZ4ZHBmNE95?=
+ =?utf-8?B?am9UaGFHTTNnL2pORlRpVDZJdDlHUS9TYVVVRzFpem5FdXBDNk9rOHBKVjhr?=
+ =?utf-8?B?eDMzTWQ4d1A4U1VaUmRUNmNsNHJuaElOQWdlZXVWaEk1L0tPSTVaMUgvN2N5?=
+ =?utf-8?B?MUkwRjdvdnFHa0VUeXlMVEtPUlRzRm1QNFI3V2p0OFpwNm81dlJ5SHp5aVpt?=
+ =?utf-8?Q?VrP+GI9ukCMThuvNcrCduETSHbKQ3Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(7416014)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2025 10:48:43.2233
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 600ffd5d-1ae7-41e0-e57b-08dd3c64abd5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002327.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7806
 
-What are the next steps for this patch?
+Hello Valentin,
 
-I don't have any action items on my side. Am I missing any? Ready to be merged?
+On 1/14/2025 11:21 PM, Valentin Schneider wrote:
+> [..snip..]
+> diff --git a/include/linux/context_tracking_work.h b/include/linux/context_tracking_work.h
+> index c68245f8d77c5..931ade1dcbcc2 100644
+> --- a/include/linux/context_tracking_work.h
+> +++ b/include/linux/context_tracking_work.h
+> @@ -5,12 +5,12 @@
+>   #include <linux/bitops.h>
+>   
+>   enum {
+> -	CT_WORK_n_OFFSET,
+> +	CT_WORK_SYNC,
 
+nit.
 
+Shouldn't this be "CT_WORK_SYNC_OFFSET"?
 
-On Sun, 19 Jan 2025 at 11:50, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, 15 Jan 2025 at 01:30, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, Jan 14, 2025 at 09:26:57AM +0100, Dmitry Vyukov wrote:
-> > > On Tue, 14 Jan 2025 at 02:51, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > On Mon, Jan 13, 2025 at 02:40:06PM +0100, Dmitry Vyukov wrote:
-> > > > > There are two notions of time: wall-clock time and CPU time.
-> > > > > For a single-threaded program, or a program running on a single-core
-> > > > > machine, these notions are the same. However, for a multi-threaded/
-> > > > > multi-process program running on a multi-core machine, these notions are
-> > > > > significantly different. Each second of wall-clock time we have
-> > > > > number-of-cores seconds of CPU time.
-> > > > >
-> > > > > Currently perf only allows to profile CPU time. Perf (and all other
-> > > > > existing profilers to the be best of my knowledge) does not allow to
-> > > > > profile wall-clock time.
-> > > > >
-> > > > > Optimizing CPU overhead is useful to improve 'throughput', while
-> > > > > optimizing wall-clock overhead is useful to improve 'latency'.
-> > > > > These profiles are complementary and are not interchangeable.
-> > > > > Examples of where wall-clock profile is needed:
-> > > > >  - optimzing build latency
-> > > > >  - optimizing server request latency
-> > > > >  - optimizing ML training/inference latency
-> > > > >  - optimizing running time of any command line program
-> > > > >
-> > > > > CPU profile is useless for these use cases at best (if a user understands
-> > > > > the difference), or misleading at worst (if a user tries to use a wrong
-> > > > > profile for a job).
-> > > > >
-> > > > > This patch adds wall-clock and parallelization profiling.
-> > > > > See the added documentation and flags descriptions for details.
-> > > > >
-> > > > > Brief outline of the implementation:
-> > > > >  - add context switch collection during record
-> > > > >  - calculate number of threads running on CPUs (parallelism level)
-> > > > >    during report
-> > > > >  - divide each sample weight by the parallelism level
-> > > > > This effectively models that we were taking 1 sample per unit of
-> > > > > wall-clock time.
-> > > >
-> > > > Thanks for working on this, very interesting!
-> > > >
-> > > > But I guess this implementation depends on cpu-cycles event and single
-> > > > target process.
-> > >
-> > > Not necessarily, it works the same for PMU events, e.g. again from perf make:
-> >
-> > Of course it would work with other events.  But the thing is how to
-> > interprete the result IMHO.
-> >
-> > >
-> > > Samples: 481K of event 'dTLB-load-misses', Event count (approx.): 169413440
-> > > Overhead  Wallclock  Command          Symbol
-> > >    5.34%     16.33%  ld               [.] bfd_elf_link_add_symbols
-> > >    4.14%     14.99%  ld               [.] bfd_link_hash_traverse
-> > >    3.53%     10.87%  ld               [.] __memmove_avx_unaligned_erms
-> > >    1.61%      0.05%  cc1              [k] native_queued_spin_lock_slowpath
-> > >    1.47%      0.09%  cc1              [k] __d_lookup_rcu
-> > >    1.38%      0.55%  sh               [k] __percpu_counter_sum
-> > >    1.22%      0.11%  cc1              [k] __audit_filter_op
-> > >    0.95%      0.08%  cc1              [k] audit_filter_rules.isra.0
-> > >    0.72%      0.47%  sh               [k] pcpu_alloc_noprof
-> > >
-> > > And also it works well for multi-process targets, again most examples
-> > > in the patch are from kernel make.
-> >
-> > It's the single-origin case.  I'm curious about the multiple-origin
-> > cases like profiling two or more existing processes together.  How do
-> > you determine the initial parallelism?
->
-> What is the "multiple-origin case"? How is it different from multiple processes?
->
-> > Also I think the parallelism is defined in a process (group).  Does it
-> > still make sense in system-wide profiling?
->
-> I've tried to answer this here:
->
-> > It can work as is, if the system activity includes mostly a single
-> > task, e.g. you run something on command line, it's taking too long, so
-> > you decide to do perf record -a in parallel to see what it's doing.
-> >
-> > For system-wide profiling we do Google (GWP), it may need some
-> > additional logic to make it useful. Namely, the system-wide
-> > parallelism is not useful in multi-task contexts. But we can extend
-> > report to allow us to calculate parallelism/wall-clock overhead for a
-> > single multi-threaded process only. Or, if we auto-matically
-> > post-process system-wide profile, then we can split the profile
-> > per-process and calculate parallelism for each of them.
->
-> Additionally we could add a process filter that will calculate
-> parallelism only with the given set of processes (specified by PIDs or
-> comm names). I.e. one profiled the whole system, but then says "I am
-> really interested only in processes X and Y".
->
->
->
-> > > > Do you think if it'd work for system-wide profiling?
-> > >
-> > > Currently it doesn't b/c system-wide emits PERF_RECORD_SWITCH_CPU_WIDE
-> > > instead of PERF_RECORD_SWITCH which this patch handles.
-> > >
-> > > It can be made to work, I just didn't want to complicate this patch more.
-> >
-> > Ok.
-> >
-> > > It can work as is, if the system activity includes mostly a single
-> > > task, e.g. you run something on command line, it's taking too long, so
-> > > you decide to do perf record -a in parallel to see what it's doing.
-> > >
-> > > For system-wide profiling we do Google (GWP), it may need some
-> > > additional logic to make it useful. Namely, the system-wide
-> > > parallelism is not useful in multi-task contexts. But we can extend
-> > > report to allow us to calculate parallelism/wall-clock overhead for a
-> > > single multi-threaded process only. Or, if we auto-matically
-> > > post-process system-wide profile, then we can split the profile
-> > > per-process and calculate parallelism for each of them.
-> > >
-> > > I am also not sure if we use perf report for GWP, or do manual trace
-> > > parsing. When/if this part is merged, we can think of the system-wide
-> > > story.
-> > >
-> > > TODO: don't enable context-switch recording for -a mode.
-> > >
-> > >
-> > > > How do you define wall-clock overhead if the event counts something
-> > > > different (like the number of L3 cache-misses)?
-> > >
-> > > It's the same. We calculate CPU overhead for these. Wallclock overhead
-> > > is the same, it's just the weights are adjusted proportionally.
-> >
-> > I got this part but ...
-> >
-> > >
-> > > Physical meaning is similar:
-> > > CPU overhead: how much L3 misses affect throughput/cpu consumption
-> > > Wallclock overhead: how much L3 misses affect latency
-> >
-> > I'm not sure if it's correct.  The event would tell where you get the L3
-> > miss mostly.  It doesn't necessarily mean latency.  IOW more L3 miss
-> > doesn't mean more CPU time.  I guess that's why perf doesn't say it as
-> > "CPU overhead".
->
-> Yes, I agree, it does not directly translate to increased CPU
-> consumption or latency.
-> But the point is: whatever was the effect on CPU consumption, it's
-> rescaled to latency.
->
->
-> > Hmm.. maybe you could rename it differently?
->
-> You mean the "perf report" help page, right?
->
-> Yes, strictly speaking it's not "CPU overhead" and "Wall-clock
-> overhead", but rather "Overhead in CPU time" and "Overhead in
-> wall-clock time". Does it look better to you?
->
->
-> > > > Also I'm not sure about the impact of context switch events which could
-> > > > generate a lot of records that may end up with losing some of them.  And
-> > > > in that case the parallelism tracking would break.
-> > >
-> > > I've counted SAMPLE/SWITCH events on perf make:
-> > >
-> > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > > 813829
-> > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > > 46249
-> > >
-> > > And this is for:
-> > > perf record -e L1-dcache-load-misses,dTLB-load-misses make
-> > >
-> > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SAMPLE | wc -l
-> > > 1138615
-> > > perf script --dump-unsorted-raw-trace | grep PERF_RECORD_SWITCH | wc -l
-> > > 115433
-> > >
-> > > Doesn't pretend to be scientifically accurate, but gives some idea
-> > > about proportion.
-> > > So for the number of samples that's 5% and 10% respectively.
-> >
-> > I think it depends on the workload.  In a very loaded system with short
-> > timeslice or something, you could get a lot more sched switches.  In
-> > your workload, `make` may have a long single-threaded portion.
->
-> Unfortunately this is likely to be true.
->
-> > > SWITCH events are smaller (24 bytes vs 40 bytes for SAMPLE), so for
-> > > ring size it's 3-6%.
-> > >
-> > > FWIW I've also considered and started implementing a different
-> > > approach where the kernel would count parallelism level for each
-> > > context and write it out with samples:
-> > > https://github.com/dvyukov/linux/commit/56ee1f638ac1597a800a30025f711ab496c1a9f2
-> > > Then sched_in/out would need to do atomic inc/dec on a global counter.
-> >
-> > It seems you counted parallelism in an event (including inherited ones).
-> > But usually perf tool opens a separate FD on each CPU for an event (like
-> > cycles), then you need to adjust the value across all CPUS.  I'm not
-> > sure if it's doable in this approach.
->
-> Right, this is probably when I gave up on that approach -- when I
-> observed the counter has a value of 1 at most.
->
-> > > Not sure how hard it is to make all corner cases work there, I dropped
-> > > it half way b/c the perf record post-processing looked like a better
-> > > approach.
-> >
-> > Probably.
-> >
-> > >
-> > > Lost SWITCH events may be a problem. Perf report already detects and
-> > > prints a warning about lost events. Should we stop reporting
-> > > parallelism/wall-clock if any events are lost? I just don't see it in
-> > > practice.
-> >
-> > It happens quite often when there are many activities.  Probably we can
-> > consider stopping when it detects some lost records.
-> >
-> >
-> > > Kernel could write-out a bitmask of types of lost events in PERF_RECORD_LOST.
-> >
-> > It'd be nice, but given the rate of sched switch I guess it'd most
-> > likely contain some.
->
-> What's an easy way to get lost events? Normally on my machine I never see them.
-> Is there some parameter to make the buffer very small, or something?
->
->
-> > > > > The feature is added on an equal footing with the existing CPU profiling
-> > > > > rather than a separate mode enabled with special flags. The reasoning is
-> > > > > that users may not understand the problem and the meaning of numbers they
-> > > > > are seeing in the first place, so won't even realize that they may need
-> > > > > to be looking for some different profiling mode. When they are presented
-> > > > > with 2 sets of different numbers, they should start asking questions.
-> > > >
-> > > > I understand your point but I think it has some limitation so maybe it's
-> > > > better to put in a separate mode with special flags.
-> > >
-> > > I hate all options.
-> > >
-> > > The 3rd option is to add a _mandary_ flag to perf record to ask for
-> > > profiling mode. Then the old "perf record" will say "nope, you need to
-> > > choose, here are your options and explanation of the options".
-> > >
-> > > If we add it as a new separate mode, I fear it's doomed to be
-> > > unknown/unused and people will continue to not realize what they are
-> > > profiling, meaning of numbers, and continue to use wrong profiles for
-> > > the job.
-> >
-> > I think people will find it out if it really works well! :)
->
-> Yes, but it may take 10 years for the word to spread :)
-> I am afraid the main problem is that people don't know they need to be
-> looking for something. We had 20 years of widespread multi-CPU/core
-> systems and no profiler supporting latency profiling.
->
-> But as I said, I am open to options (at least I will know it's there
-> for my purposes :)).
->
->
-> > > I consider latency/wall-clock profiling as useful and as fundamental
-> > > as the current bandwidth profiling for parallel workloads (more or
-> > > less all workloads today). Yet we are in 2025 and no profilers out
-> > > there support latency profiling. Which suggests to me there is a
-> > > fundamental lack of understanding of the matter, so new optional mode
-> > > may not work well.
-> >
-> > I'm open to make it default if we can make sure it works well and have a
-> > clear interpretation of the result.
-> >
-> > >
-> > > If you are interested for context, I used a similar mode (for pprof at
-> > > the time) to optimize TensorFlow latency (people mostly care about
-> > > latency). All existing profilers said it's 99% highly optimized and
-> > > parallelized matrix multiplication, we are done here. Yet, the
-> > > wallclock profile said, nope, it's 45% Python interpreter, which
-> > > resulted in this fix:
-> > > https://github.com/soumith/convnet-benchmarks/commit/605988f847fcf261c288abc2351597d71a2ee149
-> > > Full story and examples of these profiles are here:
-> > > https://github.com/dvyukov/perf-load
-> >
-> > Great examples!  I'll take a look later.
-> >
-> > Thanks,
-> > Namhyung
-> >
+I believe it gets fixed in Patch 29/30 when "CT_WORK_TLBI_OFFSET" is
+added but perhaps that can be moved here to preserve bisection.
+
+>   	CT_WORK_MAX_OFFSET
+>   };
+>   
+>   enum ct_work {
+> -	CT_WORK_n        = BIT(CT_WORK_n_OFFSET),
+> +	CT_WORK_SYNC     = BIT(CT_WORK_SYNC_OFFSET),
+>   	CT_WORK_MAX      = BIT(CT_WORK_MAX_OFFSET)
+>   };
+>   
+
+-- 
+Thanks and Regards,
+Prateek
+
