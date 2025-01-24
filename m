@@ -1,340 +1,256 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8821C1AAA;
-	Fri, 24 Jan 2025 00:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A16224CC;
+	Fri, 24 Jan 2025 00:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737679142; cv=none; b=B1wI6D9vGm2hnkHo+KAYoCuOsqAWc2FIFpWs+Auj8gQPtnfXhR/G3YsRB/ZlE7v8EsWxW7yEXSyaqwFY8f9sZfT24lOXoPgjBCJv8zWbTsIeRB8udVDKhVNNXRM8kmZ1c2UPOJKgpkm5frjLFi7Wy0XPljDrRaaADiMPl5S2bn8=
+	t=1737680395; cv=none; b=ggX+nOwD9fF8GDIaeY8ASxLqixY4q9NuM/ogtni0cn7+MSbOWnkggO0INzum8A8FrHMt125pc3ClAP4ZFyMI3xIssPzcLv08egwPgucfl2oUkqLifR7mjLuC6xbTkWb/HTrm7UDWuGC4PqGZ0pugEPaidJomT2nynsgiHK4SA24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737679142; c=relaxed/simple;
-	bh=jgRQT9BMFf5EhAWGIZt65Ih9hqv4cSGdnAaRQoUQg0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kkvn6iO3wWqIECdmuf86LN1Ve/PMJMzSaSkGJcXTJqaeSogLGY3nrrmwSIHnGF9mFui8zutffEJLw5sE2iX93CW45tmYCHNHyq8ZTNis+JfL/GJUVLY+OGCYhKviXZ48QRca966cONSks247RCaUlMc3Dx/ZqzfZO0rbCLAG8U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWrIZU9R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737680395; c=relaxed/simple;
+	bh=cODgrbY+KP8MtIsLMUOf4ZIlSGAftl2qtO4zYfhWXRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=odGdk+zLOIp4bHPDoKR0sTl3NFoAbM/4MB24cpoe3HaU8owoiZGEFetfAw3lfZmtM47HqD47uSk+R77vU8NHskFhfLCRU2HAxJM8KE8/UN3QfiButFme/mdXC1TLadhmk67jXHkVuWH6faPDR429wmDQsOPnWdYOiz9k/SshzuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GI18n8fG; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWrIZU9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 814EBC4CED3;
-	Fri, 24 Jan 2025 00:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737679141;
-	bh=jgRQT9BMFf5EhAWGIZt65Ih9hqv4cSGdnAaRQoUQg0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eWrIZU9RnUhhChMn0n1ToJLBubXeU32vY8UUv0WCJdE0Z9LGepw0yamNFP9hX7q5q
-	 DSLpEwDxiot0Vq07g8Nyqzgj9F2Ivrfd9AhlUtaZiGnNRiCeo+92VTQgKUGPEM13xW
-	 IMOAFGwg3jCiHYH1K17KcSgzgVQYgt6xsR+6nB0o+r9ZxF2Kz+NYuiF7W97YHs/E1O
-	 adoVEBJAYoyvBt0dKFXRoYf0mL27TVukhSPAfZ2CmzDxXpaWR5iGBHnHNYfw3mqRN9
-	 P7bkS8iUYzcehQttA8kK56blVZTmHsViMfuyraBr1XJpprcn14yQf40iTigckFOY2f
-	 2MxSSKZaiv3Tg==
-Date: Thu, 23 Jan 2025 16:39:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] perf lock: Retrieve owner callstack in bpf program
-Message-ID: <Z5LhJI8Pi-lzFXAD@google.com>
-References: <20250113052220.2105645-1-ctshao@google.com>
- <20250113052220.2105645-3-ctshao@google.com>
- <Z4XbdVKyXgjUqZcP@google.com>
- <CAJpZYjWvuzrwViWqi3Oet2agXkJP6T=82HZ_YeKNYV2KKioWdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GI18n8fG"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f4448bf96fso2288046a91.0;
+        Thu, 23 Jan 2025 16:59:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737680393; x=1738285193; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HGJ+LOFQsueZjAbC0cPrdsYkdCGRoW9eQBPBsAKNZBw=;
+        b=GI18n8fG1QyTSiGGzFfzlIW9+9McIY4JXDjEkrjfe9tpvI+sC0/UizjP0iM7BgbwHX
+         ynis21g60rvWglw+/yCXPxr2aQ5efgzirfh/z93tIcz2RuddaWltRGARClIRpXCob5Rj
+         v6qSeGaqO/qg2bgf7gMEMvtw6O1gVgSOqLmfEY3sGEWLIxuUYEBWjZFRiQmn6Sil0cKr
+         xJXx3TeZq/+XVPo4Wcsf1eCBm197rRReupk9hl+hDaIk+Hwow6/XAE1EhUz9/t58eFk2
+         LJH2ZVCCpUAwpzIgXbcxMpKr+q2nIRArcb+zBR04u/nROqA1tywXrdHmUGuP4jlVjeWM
+         ZTlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737680393; x=1738285193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HGJ+LOFQsueZjAbC0cPrdsYkdCGRoW9eQBPBsAKNZBw=;
+        b=sCHBRSZxlIa6m8CQtsJlvF9JmmthCXaqHxYdb6wmtb44pwnwaLSL+ks/o4nesj9o6q
+         c6G5Uq1XyT5gkVW8/ZPgR4oj2jks8FksUcFnQjiezX9nyudDIRPRYFI08P6IeoEUZxJm
+         RvAeZ9Oj2hoyXaC/7BCKfqyw+INwn7it8gVRCXAMR43rDMQ6n7YKJcpMWj23do3x73tG
+         ECYHqlqPX1MzbVXQ3smGDLLj38eXL9yz8IlD5vKXQUiFlRv4XliM1qqWNi7xjwOkF/1o
+         MeS+Djn/yEXJ/0KeswpsahWSxLrM5R3FacZ/FsIAi+d6ITbXs24+s9FUoemn213zP0ID
+         yHSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCAoXrD0As77Oyshntc4eImrpqkDaubSX3Deg1r1QVu9YMsrtnUrZav8eQ9zIVWeuQdFTmD2T/4Y8ewmv6mmwrlw==@vger.kernel.org, AJvYcCV8l0x+wcKyeZQU7DcLXWFD8ujMvLIpH4dXjK6LctRuqHmu6exS1vOJr7/aMK7UbUgD5vAnTqmSoT33MoIFgb39PS/c1qp1@vger.kernel.org, AJvYcCW/QK8qVna0g63lRgcvxo2XkVKgA4gYHz0oGDMC0EFaeIHbdvX3Qs4c7GpojyHUCvQaCSE=@vger.kernel.org, AJvYcCWW8cYlrQDRbKLnwcnE/IbXVDVQ+qZIIqCPaDI8pukcZEsX/K4y6EqlGKuF0gdBqBYvXNa+7DNQ8uzmQV0N@vger.kernel.org, AJvYcCXk//4KE+Mk/EHwLD5SDMpV/suzKVLNaH2zp1whIt0fPGhB+pINfQig7W5eLFCbVJnIGhnjeTKsiqcg77tX5Q==@vger.kernel.org, AJvYcCXuuD8nHuqwkykWzGzWxLjzbRlT+EZjNlfxLh9gLqQl+whGbI6OGRXm4w4jX5wncXfH4DKffw0uDkr6PIZzhXyRZO4z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkEwEjCCmjomAYPazE58wsG/tZzxik91T1CkMNpCgGgmpn4gUT
+	GnJRW9cnFa/17TPqB6nnh2130kLqCUzq+yhCET24H100wv9/AMaXLKuYg7zgQgnI5+qFIV+z6aG
+	hFq1pVbv87S8XF6KR6lmKYRSpcYQ=
+X-Gm-Gg: ASbGncvxMpQYaApIToSVQ0acWtNRBabltaAwz73DLiNgrAoxEOt2ZLxVNqRpjd3ifmS
+	ICiNQxWpm+6Jw6NZ8XO8SNte8jiaeTslWgG+kAK38FkOJ7yQviBQNEDRK6izfHTcWfB3qTscVWX
+	3ieGs86GeVw76v
+X-Google-Smtp-Source: AGHT+IEUIz9scdrVFJ+gtZjs9wyWB7JNdYwpMDbqC2wtWVPcS47Yd13fC8PGpZo55BBHcmqGMYisS1UI28edrLiekgc=
+X-Received: by 2002:a05:6a00:3cd3:b0:727:d55e:4be3 with SMTP id
+ d2e1a72fcca58-72daf9e0919mr39848627b3a.7.1737680393052; Thu, 23 Jan 2025
+ 16:59:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJpZYjWvuzrwViWqi3Oet2agXkJP6T=82HZ_YeKNYV2KKioWdA@mail.gmail.com>
+References: <20250123214342.4145818-1-andrii@kernel.org> <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
+ <202501231526.A3C13EC5@keescook>
+In-Reply-To: <202501231526.A3C13EC5@keescook>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 23 Jan 2025 16:59:38 -0800
+X-Gm-Features: AbW1kva6NRq7GYf8siQt0N3qPLCqEdfanjjoZdLOdZlkCjA2qfdcH_vSoTjXlf4
+Message-ID: <CAEf4BzbYBw3kzWyyG42VZSKh8MX+Xfqa1B_TRRN4p35_C9xZmw@mail.gmail.com>
+Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under CAP_PERFMON
+To: Kees Cook <kees@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	kernel-team@meta.com, rostedt@goodmis.org, peterz@infradead.org, 
+	mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, 
+	liam.howlett@oracle.com, Jann Horn <jannh@google.com>, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 21, 2025 at 02:35:46PM -0800, Chun-Tse Shao wrote:
-> On Mon, Jan 13, 2025 at 7:35 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Sun, Jan 12, 2025 at 09:20:15PM -0800, Chun-Tse Shao wrote:
-> > > Tracing owner callstack in `contention_begin()` and `contention_end()`,
-> > > and storing in `owner_lock_stat` bpf map.
+On Thu, Jan 23, 2025 at 3:47=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Thu, Jan 23, 2025 at 01:52:52PM -0800, Suren Baghdasaryan wrote:
+> > On Thu, Jan 23, 2025 at 1:44=E2=80=AFPM Andrii Nakryiko <andrii@kernel.=
+org> wrote:
 > > >
-> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > It's very common for various tracing and profiling toolis to need to
+> > > access /proc/PID/maps contents for stack symbolization needs to learn
+> > > which shared libraries are mapped in memory, at which file offset, et=
+c.
+> > > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless w=
+e
+> > > are looking at data for our own process, which is a trivial case not =
+too
+> > > relevant for profilers use cases).
+> > >
+> > > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
+> > > discover memory layout of another process: it allows to fully control
+> > > arbitrary other processes. This is problematic from security POV for
+> > > applications that only need read-only /proc/PID/maps (and other simil=
+ar
+> > > read-only data) access, and in large production settings CAP_SYS_PTRA=
+CE
+> > > is frowned upon even for the system-wide profilers.
+> > >
+> > > On the other hand, it's already possible to access similar kind of
+> > > information (and more) with just CAP_PERFMON capability. E.g., settin=
+g
+> > > up PERF_RECORD_MMAP collection through perf_event_open() would give o=
+ne
+> > > similar information to what /proc/PID/maps provides.
+> > >
+> > > CAP_PERFMON, together with CAP_BPF, is already a very common combinat=
+ion
+> > > for system-wide profiling and observability application. As such, it'=
+s
+> > > reasonable and convenient to be able to access /proc/PID/maps with
+> > > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
+> > >
+> > > For procfs, these permissions are checked through common mm_access()
+> > > helper, and so we augment that with cap_perfmon() check *only* if
+> > > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't=
+ be
+> > > permitted by CAP_PERFMON.
+> > >
+> > > Besides procfs itself, mm_access() is used by process_madvise() and
+> > > process_vm_{readv,writev}() syscalls. The former one uses
+> > > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERF=
+MON
+> > > seems like a meaningful allowable capability as well.
+> > >
+> > > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level o=
+f
+> > > permissions (though for readv PTRACE_MODE_READ seems more reasonable,
+> > > but that's outside the scope of this change), and as such won't be
+> > > affected by this patch.
+> >
+> > CC'ing Jann and Kees.
+> >
+> > >
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 > > > ---
-> > >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 152 +++++++++++++++++-
-> > >  1 file changed, 151 insertions(+), 1 deletion(-)
+> > >  kernel/fork.c | 11 ++++++++++-
+> > >  1 file changed, 10 insertions(+), 1 deletion(-)
 > > >
-> > > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > index 05da19fdab23..3f47fbfa237c 100644
-> > > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > @@ -7,6 +7,7 @@
-> > >  #include <asm-generic/errno-base.h>
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index ded49f18cd95..c57cb3ad9931 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_stru=
+ct *task)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(get_task_mm);
 > > >
-> > >  #include "lock_data.h"
-> > > +#include <time.h>
-> > >
-> > >  /* for collect_lock_syms().  4096 was rejected by the verifier */
-> > >  #define MAX_CPUS  1024
-> > > @@ -178,6 +179,9 @@ int data_fail;
-> > >  int task_map_full;
-> > >  int data_map_full;
-> > >
-> > > +struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
-> > > +void bpf_task_release(struct task_struct *p) __ksym;
-> >
-> > To support old (ancient?) kernels, you can declare them as __weak and
-> > check if one of them is defined and ignore owner stacks on them.  Also
-> > you can check them in user space and turn off the option before loading.
-> >
+> > > +static bool can_access_mm(struct mm_struct *mm, struct task_struct *=
+task, unsigned int mode)
+> > > +{
+> > > +       if (mm =3D=3D current->mm)
+> > > +               return true;
+> > > +       if ((mode & PTRACE_MODE_READ) && perfmon_capable())
+> > > +               return true;
+> > > +       return ptrace_may_access(task, mode);
+> > > +}
+>
+> nit: "may" tends to be used more than "can" for access check function nam=
+ing.
+
+good point, will change to "may"
+
+>
+> So, this will bypass security_ptrace_access_check() within
+> ptrace_may_access(). CAP_PERFMON may be something LSMs want visibility
+> into.
+
+yeah, similar to perf's perf_check_permission() (though, admittedly,
+perf has its own security_perf_event_open(&attr, PERF_SECURITY_OPEN)
+check much earlier in perf_event_open() logic)
+
+>
+> It also bypasses the dumpability check in __ptrace_may_access(). (Should
+> non-dumpability block visibility into "maps" under CAP_PERFMON?)
+
+With perf_event_open() and PERF_RECORD_MMAP none of this dumpability
+is honored today as well, so I think CAP_PERFMON should override all
+these ptrace things here, no?
+
+>
+> This change provides read access for CAP_PERFMON to:
+>
+> /proc/$pid/maps
+> /proc/$pid/smaps
+> /proc/$pid/mem
+> /proc/$pid/environ
+> /proc/$pid/auxv
+> /proc/$pid/attr/*
+> /proc/$pid/smaps_rollup
+> /proc/$pid/pagemap
+>
+> /proc/$pid/mem access seems way out of bounds for CAP_PERFMON. environ
+> and auxv maybe too much also. The "attr" files seem iffy. pagemap may be
+> reasonable.
+
+As Shakeel pointed out, /proc/PID/mem is PTRACE_MODE_ATTACH, so won't
+be permitted under CAP_PERFMON either.
+
+Don't really know what auxv is, but I could read all that with BPF if
+I had CAP_PERFMON, for any task, so not like we are opening up new
+possibilities here.
+
+>
+> Gaining CAP_PERFMON access to *only* the "maps" file doesn't seem too
+> bad to me, but I think the proposed patch ends up providing way too wide
+> access to other things.
+
+I do care about maps mostly, yes, but I also wanted to avoid
+duplicating all that mm_access() logic just for maps (and probably
+smaps, they are the same data). But again, CAP_PERFMON basically means
+read-only tracing access to anything within kernel and any user
+process, so it felt appropriate to allow CAP_PERFMON here.
+
+>
+> Also, this is doing an init-namespace capability check for
+> CAP_PERFMON (via perfmon_capable()). Shouldn't this be per-namespace?
+
+CAP_PERFMON isn't namespaced as far as perf_event_open() is concerned,
+so at least for that reason I don't want to relax the requirement
+here. Namespacing CAP_PERFMON in general is interesting and I bet
+there are users that would appreciate that, but that's an entire epic
+journey we probably don't want to start here.
+
+>
+> -Kees
+>
 > > > +
-> > >  static inline __u64 get_current_cgroup_id(void)
+> > >  struct mm_struct *mm_access(struct task_struct *task, unsigned int m=
+ode)
 > > >  {
-> > >       struct task_struct *task;
-> > > @@ -407,6 +411,60 @@ int contention_begin(u64 *ctx)
-> > >       pelem->flags = (__u32)ctx[1];
-> > >
-> > >       if (needs_callstack) {
-> > > +             u32 i = 0;
-> > > +             int owner_pid;
-> > > +             unsigned long *entries;
-> > > +             struct task_struct *task;
-> > > +             cotd *data;
-> > > +
-> > > +             if (!lock_owner)
-> > > +                     goto contention_begin_skip_owner_callstack;
-> >
-> > Can be it 'skip_owner'?
-> >
-> > > +
-> > > +             task = get_lock_owner(pelem->lock, pelem->flags);
-> > > +             if (!task)
-> > > +                     goto contention_begin_skip_owner_callstack;
-> > > +
-> > > +             owner_pid = BPF_CORE_READ(task, pid);
-> > > +
-> > > +             entries = bpf_map_lookup_elem(&owner_stacks_entries, &i);
-> > > +             if (!entries)
-> > > +                     goto contention_begin_skip_owner_callstack;
-> > > +             for (i = 0; i < max_stack; i++)
-> > > +                     entries[i] = 0x0;
-> > > +
-> > > +             task = bpf_task_from_pid(owner_pid);
-> > > +             if (task) {
-> > > +                     bpf_get_task_stack(task, entries,
-> > > +                                        max_stack * sizeof(unsigned long),
-> > > +                                        0);
-> > > +                     bpf_task_release(task);
-> > > +             }
-> > > +
-> > > +             data = bpf_map_lookup_elem(&contention_owner_tracing,
-> > > +                                        &(pelem->lock));
-> >
-> > No need for parenthesis.
-> >
-> > > +
-> > > +             // Contention just happens, or corner case `lock` is owned by
-> > > +             // process not `owner_pid`.
-> > > +             if (!data || data->pid != owner_pid) {
-> > > +                     cotd first = {
-> > > +                             .pid = owner_pid,
-> > > +                             .timestamp = pelem->timestamp,
-> > > +                             .count = 1,
-> > > +                     };
-> > > +                     bpf_map_update_elem(&contention_owner_tracing,
-> > > +                                         &(pelem->lock), &first, BPF_ANY);
-> > > +                     bpf_map_update_elem(&contention_owner_stacks,
-> > > +                                         &(pelem->lock), entries, BPF_ANY);
-> >
-> > Hmm.. it just discard the old owner data if it comes from a new owner?
-> > Why not save the data into the result for the old lock/callstack?
-> 
-> There are two conditions which enter this if statement:
-> 1. (!data) contention just started, `&pelem->lock` entry in
-> `contetion_owner_tracing` is empty.
-> 2. (data->pid != owner_pid) Some internal errors so `data->pid` is
-> misaligned with `owner_pid`. In this case the timestamp would be
-> incorrect so I prefer to drop it.
-> WDYT?
-
-Ok, now I think that it should see contention_end from the earlier
-waiter for the second case so it should be rare.  Probably ok to drop
-it for now.
-
-> 
-> >
-> >
-> > > +             }
-> > > +             // Contention is going on and new waiter joins.
-> > > +             else {
-> > > +                     __sync_fetch_and_add(&data->count, 1);
-> > > +                     // TODO: Since for owner the callstack would change at
-> > > +                     // different time, We should check and report if the
-> > > +                     // callstack is different with the recorded one in
-> > > +                     // `contention_owner_stacks`.
-> > > +             }
-> > > +contention_begin_skip_owner_callstack:
-> > >               pelem->stack_id = bpf_get_stackid(ctx, &stacks,
-> > >                                                 BPF_F_FAST_STACK_CMP | stack_skip);
-> > >               if (pelem->stack_id < 0)
-> > > @@ -443,6 +501,7 @@ int contention_end(u64 *ctx)
-> > >       struct tstamp_data *pelem;
-> > >       struct contention_key key = {};
-> > >       struct contention_data *data;
-> > > +     __u64 timestamp;
-> > >       __u64 duration;
-> > >       bool need_delete = false;
-> > >
-> > > @@ -469,12 +528,103 @@ int contention_end(u64 *ctx)
-> > >                       return 0;
-> > >               need_delete = true;
-> > >       }
-> > > -     duration = bpf_ktime_get_ns() - pelem->timestamp;
-> > > +     timestamp = bpf_ktime_get_ns();
-> > > +     duration = timestamp - pelem->timestamp;
-> > >       if ((__s64)duration < 0) {
-> > >               __sync_fetch_and_add(&time_fail, 1);
-> > >               goto out;
-> > >       }
-> > >
-> > > +     if (needs_callstack && lock_owner) {
-> > > +             u64 owner_contention_time;
-> > > +             unsigned long *owner_stack;
-> > > +             struct contention_data *cdata;
-> > > +             cotd *otdata;
-> > > +
-> > > +             otdata = bpf_map_lookup_elem(&contention_owner_tracing,
-> > > +                                          &(pelem->lock));
-> > > +             owner_stack = bpf_map_lookup_elem(&contention_owner_stacks,
-> > > +                                               &(pelem->lock));
-> > > +             if (!otdata || !owner_stack)
-> > > +                     goto contention_end_skip_owner_callstack;
-> > > +
-> > > +             owner_contention_time = timestamp - otdata->timestamp;
-> > > +
-> > > +             // Update `owner_lock_stat` if `owner_stack` is
-> > > +             // available.
-> > > +             if (owner_stack[0] != 0x0) {
-> > > +                     cdata = bpf_map_lookup_elem(&owner_lock_stat,
-> > > +                                                 owner_stack);
-> > > +                     if (!cdata) {
-> > > +                             struct contention_data first = {
-> > > +                                     .total_time = owner_contention_time,
-> > > +                                     .max_time = owner_contention_time,
-> > > +                                     .min_time = owner_contention_time,
-> > > +                                     .count = 1,
-> > > +                                     .flags = pelem->flags,
-> > > +                             };
-> > > +                             bpf_map_update_elem(&owner_lock_stat,
-> > > +                                                 owner_stack, &first,
-> > > +                                                 BPF_ANY);
-> > > +                     } else {
-> > > +                             __sync_fetch_and_add(&cdata->total_time,
-> > > +                                                  owner_contention_time);
-> > > +                             __sync_fetch_and_add(&cdata->count, 1);
-> > > +
-> > > +                             /* FIXME: need atomic operations */
-> > > +                             if (cdata->max_time < owner_contention_time)
-> > > +                                     cdata->max_time = owner_contention_time;
-> > > +                             if (cdata->min_time > owner_contention_time)
-> > > +                                     cdata->min_time = owner_contention_time;
-> > > +                     }
-> > > +             }
-> > > +
-> > > +             //  No contention is going on, delete `lock` in
-> > > +             //  `contention_owner_tracing` and
-> > > +             //  `contention_owner_stacks`
-> > > +             if (otdata->count <= 1) {
-> > > +                     bpf_map_delete_elem(&contention_owner_tracing,
-> > > +                                         &(pelem->lock));
-> > > +                     bpf_map_delete_elem(&contention_owner_stacks,
-> > > +                                         &(pelem->lock));
-> > > +             }
-> > > +             // Contention is still going on, with a new owner
-> > > +             // (current task). `otdata` should be updated accordingly.
-> > > +             else {
-> > > +                     (otdata->count)--;
-> >
-> > No need for parenthesis, and it needs to be atomic dec.
-> >
-> > > +
-> > > +                     // If ctx[1] is not 0, the current task terminates lock
-> > > +                     // waiting without acquiring it. Owner is not changed.
-> >
-> > Please add a comment that ctx[1] has the return code of the lock
-> > function.  Maybe it's better to use a local variable.
-> >
-> > Also I think you need to say about the normal case too.  Returing 0
-> > means the waiter now gets the lock and becomes a new owner.  So it needs
-> > to update the owner information.
-> >
-> >
-> > > +                     if (ctx[1] == 0) {
-> > > +                             u32 i = 0;
-> > > +                             unsigned long *entries = bpf_map_lookup_elem(
-> > > +                                     &owner_stacks_entries, &i);
-> > > +                             if (entries) {
-> > > +                                     for (i = 0; i < (u32)max_stack; i++)
-> > > +                                             entries[i] = 0x0;
-> > > +
-> > > +                                     bpf_get_task_stack(
-> > > +                                             bpf_get_current_task_btf(),
-> >
-> > Same as bpf_get_stack(), right?
-> >
-> > > +                                             entries,
-> > > +                                             max_stack *
-> > > +                                                     sizeof(unsigned long),
-> > > +                                             0);
-> > > +                                     bpf_map_update_elem(
-> > > +                                             &contention_owner_stacks,
-> > > +                                             &(pelem->lock), entries,
-> > > +                                             BPF_ANY);
-> >
-> > Please factor out the code if it indents too much.  Or you can use goto
-> > or something to reduce the indentation level.
-> 
-> I will reindent it with `ColumnLimit=100`. I was using 80 since it was
-> predefined in `.clang-format`, looks outdated but no one updated it..
-
-Probably you can send a patch. :)
-
-But it still holds the same, please try not to indent a lot (and user
-shorter names).
-
-Thanks,
-Namhyung
-
-> 
-> >
-> >   if (ret != 0)
-> >         goto skip_update;
-> >
-> >   ...
-> >
-> >   if (entries == NULL)
-> >         goto skip_stack;
-> >
-> >   ...
-> >
-> > Thanks,
-> > Namhyung
-> >
-> > > +                             }
-> > > +
-> > > +                             otdata->pid = pid;
-> > > +                             otdata->timestamp = timestamp;
-> > > +                     }
-> > > +
-> > > +                     bpf_map_update_elem(&contention_owner_tracing,
-> > > +                                         &(pelem->lock), otdata, BPF_ANY);
-> > > +             }
-> > > +     }
-> > > +contention_end_skip_owner_callstack:
-> > > +
-> > >       switch (aggr_mode) {
-> > >       case LOCK_AGGR_CALLER:
-> > >               key.stack_id = pelem->stack_id;
+> > >         struct mm_struct *mm;
+> > > @@ -1559,7 +1568,7 @@ struct mm_struct *mm_access(struct task_struct =
+*task, unsigned int mode)
+> > >         mm =3D get_task_mm(task);
+> > >         if (!mm) {
+> > >                 mm =3D ERR_PTR(-ESRCH);
+> > > -       } else if (mm !=3D current->mm && !ptrace_may_access(task, mo=
+de)) {
+> > > +       } else if (!can_access_mm(mm, task, mode)) {
+> > >                 mmput(mm);
+> > >                 mm =3D ERR_PTR(-EACCES);
+> > >         }
 > > > --
-> > > 2.47.1.688.g23fc6f90ad-goog
+> > > 2.43.5
 > > >
+>
+> --
+> Kees Cook
