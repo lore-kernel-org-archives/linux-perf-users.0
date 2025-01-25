@@ -1,289 +1,164 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020124.outbound.protection.outlook.com [52.101.195.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CC22063D0
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jan 2025 05:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737782431; cv=none; b=rn8NUlRBbBLgdqW2PcDrWsCBX/KYNwidgrbRdfa61l4/TkxVGgZN8G+TBoU3JVA7/6MI+ULMQskI6ADuz5F9p9gbobunA7UjvbkoK7neu24xql1jxWd1n8h2KCrA66125eAEIeK3oXM7mzAALTNvcTF0NZIFVvyeFQ2aT+nMLjg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737782431; c=relaxed/simple;
-	bh=O1T75UsFALNUbzpJblBAoQmy/QjVDjUDQQaSNFCCp1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UJAYesCvtWymEWI5LSY9u+zGmt9doreCPZ4E9UaRL9wqnkbyYMMMsQSNmZS16Dbvypyn3yKBkG+X0o2tD0Trj29smod1ER1V1YCYaVgeaW4w3Q437/TlLslNiH41ZY0bJj/Ut1II5Bgr7dmYMAlsY1+hZXEkMP7uu3z/bPsegO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oztaDXVZ; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oztaDXVZ"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so81575ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jan 2025 21:20:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737782428; x=1738387228; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gI0l6geyBvTNYUfVyhSQBTU8bwzp+pWMDrseI++M4u0=;
-        b=oztaDXVZ933lLsx5KRyGN0h5LAJ0sLdBl7m6M7ICs85u5SiIF68i/B48UiWWxskEFW
-         Wtcy/O74gkHbkmtAqOoV/9eDUzihik+2BgKTvxcS74nNoauZ2N/VuD7NEGcapbZrnazc
-         ezwWE0HtzV+B4mSnM1tbFN4MnP+ZuA3pJ2V0/0jcy1yZeZL9OOi340ZW9aSxp01vItPO
-         +LEEtxP0V/oNaM0nOOFBUJGDXy37hAbhX4iVobKN33XdfsNyBxtFFJd3OcH+u019omHQ
-         PPZpalHVUq6Qf3TN17YxhddndRuPAoQZaWmBAvVktXErccPwB38NPhnKDs4Hao0ZvYs2
-         Z2gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737782428; x=1738387228;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gI0l6geyBvTNYUfVyhSQBTU8bwzp+pWMDrseI++M4u0=;
-        b=qY0l1nkfLX+Efed7jNE/Q2TL3KQUUAy8cvKJ8xgWxyarRiXknyYEtD+j/+g57hO5V2
-         SmbcLcjVi1AgQbLlth4YaNvX6guckqrdQjd+NGuFhHlUEUTmu04dHp7j3RoLBR7CgCII
-         ructywof6Y+CYwkQLavNZOCZl7Tt4u1vrQzmh5Q+gVmpj7c0ZgHCYhAAdttyEgY/s8cZ
-         G8tCLMIf2fpCeUcGWyW9YGd/fW2IzaBGgT1jdRtw2tkWWP3NlGOHWU/HSLVmcS9Vft0k
-         65ExTGNItoRWjawanR65ph10EU2uUhWRZTmTW7lPk6ydcfwuGv/SXFFr8avG7CFFAkM3
-         ZgDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhhgy+49OUBrSa1mqj0fidSA/K4UKyABzJ7uZYq21XYlja+N1n7bfjk7G77D9WT7eTOgMzGnOr9QDujBTk0jDM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyisCG7TzM730Tdmt7LRTfNPFm/ktQr0B0IMSu6IEbWnLAQhodL
-	R1h5CNeDdX0uI46IGsQ7s1v0EyIwHoKq7LFqCdBGdfwmbDer8etrKUNSOVR9RQ3OqYeu8hLzwI0
-	16YWAUfxl2AfQvRaYBCGs5TE887S3OOrW/CVd
-X-Gm-Gg: ASbGncvks3/zXGs45Q5GQNRsaI5SoSPracPETOygF/3IWLgCa3p/2bMhyqerncm+UQY
-	J0NxMDJIfGMXPORKAhzPYaBFRNUXbfuZsMEVmb8EPWGvQ+rkh54QmXOtZB/6sdHBvSb6WFjVWeQ
-	==
-X-Google-Smtp-Source: AGHT+IFUtNMh9Z0W8Yw1lY2LJ5LvNNJDokBmjw9PDDQzB7H9sTQAesT/p5rL6z55wxyts2HnMe4Rd/e5IOCIHo9xAs8=
-X-Received: by 2002:a05:6e02:218b:b0:3cd:d110:20dd with SMTP id
- e9e14a558f8ab-3cfd20f391amr966595ab.27.1737782427506; Fri, 24 Jan 2025
- 21:20:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397C01DD866;
+	Sat, 25 Jan 2025 12:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737807729; cv=fail; b=panDDKEeILhLLp8DKu+W6ggA4I0SqyqymSHqaqabWSkXSxUAgErM48G9BW065XdGC+jlHAABHNPbLHYpbHKejwTNBvpP8SzD0tSH8Q6MTFN8Z2fCAbdzeDPfoaV2AfGn0bwGrxk1u9LWRJQVAaowfajjx6maYArVx8fS12RzT6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737807729; c=relaxed/simple;
+	bh=Ef//BmffQ7E1Z8JDOSiBKxn8feBe91PRi9Uo3fZu9zY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BCh4GETCTCB8T/HOkFrX08YWdFUKtFu6509pIRZ4Q1MAkBZ51MmYVSWN+PzC7zH/LKmr0qL+yf3pED7zlRk0lFTOXrbs15J1h5W2PEi+HAHtjd26bfnHcopNChMmzwFd/DMOAayIBp0S7sqvYgAiyRDSN4UlgzUUISld7xwXG5s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PfIpkkOwXx1Y3iiYIsf248ynnFO0WXbAsyM58PNi3Z9ht7SZfLXULxEMLt3cHGgi42vWT8DE2K1NkuUYYbAoo5Btsn+3maoFaar4anzZefRHUCKhNP89nmpL7H6pZY/SXpbH/ccccWHmNV8rsAoXKgGie1fJ3mY4GHq6lOOfYMZA43Mklx03fKX22kfCGqi8uP4jOYoGhJCRegLoIOfQsmByN0HgrU+L30pCPpqRfS6TLxLf5g7jppP0tFN++vDbR9Me1iCBHGrB9ZdhyNrh13IGPjE9q09y1MvTSZErKHPE94vJn3ktqDWwzaz8dO4S/W6JOhZMngThyp8EWKvh/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/fHK5i84VjD65tBVC27HljWlX9eV76jTMO+P/z/Tcn4=;
+ b=GApTT2OJeMsjmJcwGgOLBS+zm7hUBJnFYd982Mdu+bo0nSoswd3yCDVG7KKKpUzFZRHLKxzDhWZy8j4u/Mn1bKnIdZyC8o6o+bf5RFyKXZc4UXNJQmDnKLgGrxVG+A+FhDp9WBj1y0lM2dSiWYfmm/vFJIOEWYU7u3q5NlsLiK8m4RLE9IKdzh5HhxJfrxSthJ09kJ1F/UtqvYWIsTmQb/x6cODl9G7d18n6yrS/y3aM6JCmbahz7QgCidRtUPLWXC0/rX6XcIAxreNScrNtQmOWLJqpElBFSdhhDkl+6Khxf1nQ4s+SoMAso/7AHSSS8QUCEaV5IygrmssuqCLodA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
+ by CWLP123MB6297.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:1d3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Sat, 25 Jan
+ 2025 12:22:03 +0000
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6%7]) with mapi id 15.20.8377.021; Sat, 25 Jan 2025
+ 12:22:03 +0000
+Date: Sat, 25 Jan 2025 12:22:02 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Introduce --no-advice option when a new
+ event is created
+Message-ID: <uibg6kd2pnpy4ckfxqnrar5a53dfgjfd2dgigbsve3fbanen7k@7hylru3wrn3o>
+References: <20241214193452.16627-1-atomlin@atomlin.com>
+ <Z5Ld5irdG--_Efgl@google.com>
+ <oqon532hz5nktpgilvpmvd5ywuasppbkfw2f6z5gjluyzo62ow@n7ynrou6uykm>
+ <Z5PP3vPpYOccGWIv@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z5PP3vPpYOccGWIv@google.com>
+X-ClientProxiedBy: LO4P123CA0484.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a8::21) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-7-irogers@google.com>
- <Z5QSm-w0efS9xh47@google.com>
-In-Reply-To: <Z5QSm-w0efS9xh47@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 24 Jan 2025 21:20:15 -0800
-X-Gm-Features: AWEUYZn1lYG_s_9UtV1AZf9F5dR3PIeFgOCadQ-EqV9fiTjdjaYQwOER_v3rUyQ
-Message-ID: <CAP-5=fWNy8CM8nKOAH=aXyNKg5h4U4vWfB92io_T5KpCsSgv9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 06/18] perf capstone: Support for dlopen-ing libcapstone.so
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|CWLP123MB6297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7799e424-1a11-458e-78a9-08dd3d3adfff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Vkg5WmU0T0I2b1JzejVrY0tGeXE2TGpwSzdEVTJVa1h6M3NSUVBPc1F5YWlh?=
+ =?utf-8?B?ZkozYWRLMTNPOE9KNWtFUWJYbEZpMm5CekRkenRpR0IrL3dmRTRPZEl6OWV2?=
+ =?utf-8?B?OTM3QU1sUXV5eDNnYmUybmdZQjRIOU8wK2JMSHlWbmlpZThWS29vVkJrYkhZ?=
+ =?utf-8?B?K3Z6WmdENGQxR28vZCtwdTl6S0F5MjlqeUc0ME1PZmp6Vm1OWWxpdWNZY1JL?=
+ =?utf-8?B?TjBtY3JUVzUxYUJzUGlZUFBOWGpOTGV6UHljWlpVeS9CbkQxYnJkSkc3SWZZ?=
+ =?utf-8?B?cnZtSDdsc2E0YUlLNENhbStSN0wvY3RuWEFZTUNJMGw4UVN1M0kveXNKU1A0?=
+ =?utf-8?B?M2xCN2xPMnduRHFrdEpKL1dhNmU3TjNCSlB6SkluMnA0T01CZytaOUhxNFls?=
+ =?utf-8?B?WHI0R1YvdWNIL3JRMVJpZTYrZndMcUpkaVo2NTNjN25DY0NBdzZqUFJUektz?=
+ =?utf-8?B?N0h1QXhia1hGL1ZBdkF2ZzVORk1YL3E5UDdjN1psNmExTmF6RmZ5eGo4WFNQ?=
+ =?utf-8?B?c3JXTkFhMU8vcjVqZmM0ZDl4V0dydVhjZnphZVQ3dVNpaUFSRE43aEg3YUNw?=
+ =?utf-8?B?OTUwRk9IN0REb2tib1dXa0NMQ2dST2dRRUYxVGFjUm9tTk5uWHB1MWNnencv?=
+ =?utf-8?B?OU9jWVZyRmRjc284Zmp1NllkRHY0YmhXSEJiVHRpckl1RWhaZ3JEaXdNcS8x?=
+ =?utf-8?B?bytBNmZLM1JsNmNBb3h3STcrSXBPakQzZFp6TjBmaVhVVk9oMW56a09FTzRX?=
+ =?utf-8?B?U0pjZTU1ZUhoVjl4aE16R2dSOHJtOTZFRk1JcHNVaHZ0VTRBRjlPMi9KcCto?=
+ =?utf-8?B?UGxjZExTNjZKS2Jwelh0MVhOY25FeXRtenZINHZBS2V5cFFkcEcxUnp4Sjln?=
+ =?utf-8?B?YVdTTnV5bnhaWDZKdytvSHM5aVMrODRxZ2M1OTU1ODFXSmZjY3lndDFvQkN6?=
+ =?utf-8?B?TkNVL1hwbDRCeUlzTSt4cjM5TzJnRW9xWDFGcGFXeUpPOWdHeEUyZEZpSUFv?=
+ =?utf-8?B?OEtKSlowVU1iRWY5ODRHQ2RFS29PNmd4U2FaVG5zbEIyaSt0TnV2UlZGUlMv?=
+ =?utf-8?B?cTJCODBVd3Qxb3Exd1I0cXJFN0dwSkNBRGFvQmttOUg3SWpnT3NzcGdTaEs4?=
+ =?utf-8?B?ZnM3c3g3bWRlREIyUFZHWWVKYWdOR0tOT3k0bW4vWXVKa0Fad25qek5JVXJ6?=
+ =?utf-8?B?OEQ5RzRBZWQxa2d6TnBEcGdBZ0VpVkZrYlV5c2dyMjV4cVF5Q2ZDcUZkK2Rl?=
+ =?utf-8?B?dEdiaG9PcVYrZUFraDlzdFk3ZExsT3ovZEFrRW5VcWplbGh4WDJUR0tqSU9L?=
+ =?utf-8?B?NlFSYUdyY2FVS3FPL1F3U0RWd2E5Z25TRVpyMkdidms4U0JaWUxNekZYOVRC?=
+ =?utf-8?B?TGJYNlJDNkoyNEFRVXBTQUM0RzMycjhPL0pYcTl2TTZIR1o2azNDZ2VOV0Vy?=
+ =?utf-8?B?ZUZoRlRPNXVLM2JNK2ErQUNNcUUra3lDM0tVSGkxVDJhY1NEUHdaajRrUXU4?=
+ =?utf-8?B?TXF0bGRLS3R3dGZlTk5HaUdad1AxckhnclRGeWN3cVlWbm12NXhEYXpoZWtu?=
+ =?utf-8?B?VHJLeUlnSHZXNEVZME1lbjBKSk9BUlg3aFRmaU1MUE5xaVRzZ09VN2pyK0t5?=
+ =?utf-8?B?d09hbGtrZ1lnVE9nQW9URTJWd2szNnlSN3E1dVdDQVRuTWNUSHFxaU85bW9h?=
+ =?utf-8?B?L2ZvTlBPZ0YweUkxT05pS2orRnYwZ0Z0UG9xRWxESXRETklPcEc4MUxmSTlM?=
+ =?utf-8?B?VGJiR05kQ25yRnpjaWVZSWQ4NHZlN21ubUM2aWpxYUcrdDBTbkM0RXhHSURw?=
+ =?utf-8?B?S3JDSWM1RkU2b0FuNEloVXlubWoxdXhOODN3ZjVoNUE1eng3czkwRkVnd0lX?=
+ =?utf-8?Q?gRqABuFRvgdOM?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dTQ1RTEvNS9IYThvcWlMVlpzbEtSMGN3cFJnQ2RDZXk5NHN5VnVuZG9SYi9p?=
+ =?utf-8?B?b2prWGw5K1U5cUw3QjlXOWw0MC9KYTB2UWtQb2VOc1BBeVFzVWNhRUsxMHUw?=
+ =?utf-8?B?dTBQVVRYM0dzbFQwNnVaWkVFaHU2MSs1Z3lLQlY0OUloTkJkMHYzcGJ3MnV4?=
+ =?utf-8?B?SllRYktYZ29PUUdxRzdWakNyUnI0UFJJMDNZZkFtKzFkQmgwM2V4OFpKaGFL?=
+ =?utf-8?B?cnhZdENZTWZYMi9NZmw5dFl4S1k4bnpwMjAwQUM5ajV5aU5TeXRIZklPZEVq?=
+ =?utf-8?B?N3pLcCsyRG1EK280REI2UkpYZ3lPWDRsSkZ2Z3JTU0lSYmh0RVNudmJ4YUVq?=
+ =?utf-8?B?dklzckRhZlI1SnFLcGVucS9yYWw5R2VBdFZUS3FJVS90b0lsWk5BRWYzT2hI?=
+ =?utf-8?B?R2x2b2VLU2tqblByUmdFVGQ1N0hTdEtNa0Fsa0JvMXE5NW1HZ1NFakFIRDZY?=
+ =?utf-8?B?M3VxcFhiaTBsaXRRUW5aSzdLckwwZEZvMDRhbzR6ZEl4eG15VlQ5Mm1vTEJI?=
+ =?utf-8?B?QTcycXhDL3p4ZmRHYkJvZXFNMlFCTW9xQ3lrMXY2N0VWR3YzODd6MHowSGow?=
+ =?utf-8?B?R0hpMkltOUR1NUxnVFA4SCtDNEk4bzVEcEM5NlFJWjR3VVFURjdVMC9WZHRo?=
+ =?utf-8?B?bVFRZWkvZGo0cFI1SEV2Z3ZSa05KMit3Mm5sQnl3V2d2YU5ib3RtM1AvTFAx?=
+ =?utf-8?B?SFRoTHVCZnNHd1VvVmJWTTN4bGFWRVc0SThpMG9wYUlCV2EzREloRTlZUkFj?=
+ =?utf-8?B?b05jY1BLUTRYb0pKcDNoQ0NRVWlTS1ZwQzVCOG5iQ2NjUk5LRk1Yd0hkNWJm?=
+ =?utf-8?B?VnNKdzFpL1BhRTVzOWFFUFUva3ljZURjMDFpS2lFOTlOSlBvNmtYUENrZ3h3?=
+ =?utf-8?B?cDBSYkQzemZEZStHbUpaL0ttZkh5WngrbW1FSmg5YlNvenFhb3huaTY5U1B4?=
+ =?utf-8?B?NEVoWTJycldwSDFCK1AvZ0ZrNWhBNkhxM3hwQ245dGJyVElXSmQ5RWkrZmZ3?=
+ =?utf-8?B?ZlVSR3FMRUloeXBhS2FYYXplTzFoZXdRMnFURi9IN3FnOTRKZHFCUUhXcCtI?=
+ =?utf-8?B?ckZ4UHYwMTZ4Q1VGZmZablVUVEtSeVEzRWd1dFZyUWxLWVcrbkVDMTBVbmV6?=
+ =?utf-8?B?VlRaVkZPMEI2TnZvaEhKc09VcGdxYnAybHNHRm1XOE5CclFBS1BudTQxdVpT?=
+ =?utf-8?B?NVFiMDlwcE5mNmNTNGVtZWRMOVN2TkdrcVFpKy9RVDFXRC95LzJwZjBXUGJN?=
+ =?utf-8?B?anhlSllhV2FwZ2VXNHdBUzN4UWw5cHRwS1lzSnFsMmg4ZkN4U1ppb2ZIdFND?=
+ =?utf-8?B?T1NhbmQvV0c1cVNMT3p6V2N6MUlGVkV5aC9JUjhhMlkxY0ZmTDNoSFBmM3dV?=
+ =?utf-8?B?VEZTaEMvUHh5R3Z1dEdMWEpwZWl2dXBqcVJSSlNsb1BtQUJMWkwyUjFCV1g0?=
+ =?utf-8?B?N3J4d2VwbmRadnZ2N2tHTTVUOG1FS3Zjdjl2cUlkd0REblpZT1BrMTZNYU5N?=
+ =?utf-8?B?Z21UMzZtaUJGZ09Nbzl0UkRRNHovT1BPczgvWlNtL1hjZTZDZzFxQW9FL2po?=
+ =?utf-8?B?d25jM3MvbWZDc2V2a0Q0TXhjSW1rTHA0NW90eVZ6M2tiQnhvb3IzK0pYMGRl?=
+ =?utf-8?B?MTFESkVhZERwamROTmpGZzNJREdBLzdFTGVKRjc3Q0R5V1dRREprT1Q1U0lr?=
+ =?utf-8?B?MGRDUWkyZG50dXgyMGZPUGNMcHpsT2hnam90RVdUTTJjU0ZZZWhuUDlkeXZL?=
+ =?utf-8?B?VXBxVXZqVXJDYmFDK2FuUFIxV2MrMU1GOVV6ZGdWY1pNcjQwdWkwNS9tajZv?=
+ =?utf-8?B?bmZCZlErMmFQc3FiZmVlVWdLV0hvU1FqdlhaaHM4Q1pGcitmaitSRkk3bXVz?=
+ =?utf-8?B?eUdrK01RWGE3K0ZsK2RXdU1jcE1FZWhVQmR5RTBCTHk2VVhNbTR1a3NzU05E?=
+ =?utf-8?B?c1RnQXJ2aW4xaThYWFlXOENDZjZrSmFVWDIyMmZ5Q2JWSElJK3NoQ1oveDZ4?=
+ =?utf-8?B?c2JTZk5zdzNuaDZKcUJwWEJiLy9aSS9zcDFleks3OUxSbzZyeUJFNDhGM2VK?=
+ =?utf-8?B?dXhsZUd3TnU0c0JCb0c3YWd0VHpZUnZIS1RvRVE5Z0IwVXc3RStHbVFEMkhW?=
+ =?utf-8?Q?Hl8jlCpJUJYo0YysMn4OkUjaN?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7799e424-1a11-458e-78a9-08dd3d3adfff
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2025 12:22:03.2967
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2pnnSZaEoNhZoUfERb2P8MsFZ6wMNiiWzIi57F/OJL8nRfrEzpmZhGbipFu3a+llpVVPPzo5TUraOo9/4FaJZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB6297
 
-On Fri, Jan 24, 2025 at 2:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Jan 22, 2025 at 09:42:56AM -0800, Ian Rogers wrote:
-> > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT,
-> > support dlopen-ing libcapstone.so and then calling the necessary
-> > functions by looking them up using dlsym. Reverse engineer the types
-> > in the API using pahole, adding only what's used in the perf code or
-> > necessary for the sake of struct size and alignment.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/capstone.c | 287 ++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 248 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-> > index c9845e4d8781..8d65c7a55a8b 100644
-> > --- a/tools/perf/util/capstone.c
-> > +++ b/tools/perf/util/capstone.c
-> > @@ -11,19 +11,249 @@
-> >  #include "print_insn.h"
-> >  #include "symbol.h"
-> >  #include "thread.h"
-> > +#include <dlfcn.h>
-> >  #include <fcntl.h>
-> > +#include <inttypes.h>
->
-> These two can go under #else (!HAVE_LIBCAPSTONE_SUPPORT).
+On Fri, Jan 24, 2025 at 09:37:34AM -0800, Namhyung Kim wrote:
+> Sounds like you may want -q option to suppress all output and check the
+> exit code of the command.
 
-Ack.
+Hi Namhyung,
 
-> >  #include <string.h>
-> >
-> >  #ifdef HAVE_LIBCAPSTONE_SUPPORT
-> >  #include <capstone/capstone.h>
-> > +#else
-> > +typedef size_t csh;
-> > +enum cs_arch {
-> > +     CS_ARCH_ARM =3D 0,
-> > +     CS_ARCH_ARM64 =3D 1,
-> > +     CS_ARCH_X86 =3D 3,
-> > +     CS_ARCH_SYSZ =3D 6,
-> > +};
-> > +enum cs_mode {
-> > +     CS_MODE_ARM =3D 0,
-> > +     CS_MODE_32 =3D 1 << 2,
-> > +     CS_MODE_64 =3D 1 << 3,
-> > +     CS_MODE_V8 =3D 1 << 6,
-> > +     CS_MODE_BIG_ENDIAN =3D 1 << 31,
-> > +};
-> > +enum cs_opt_type {
-> > +     CS_OPT_SYNTAX =3D 1,
-> > +     CS_OPT_DETAIL =3D 2,
-> > +};
-> > +enum cs_opt_value {
-> > +     CS_OPT_SYNTAX_ATT =3D 2,
-> > +     CS_OPT_ON =3D 3,
-> > +};
-> > +enum cs_err {
-> > +     CS_ERR_OK =3D 0,
-> > +     CS_ERR_HANDLE =3D 3,
-> > +};
-> > +enum x86_op_type {
-> > +     X86_OP_IMM =3D 2,
-> > +     X86_OP_MEM =3D 3,
-> > +};
-> > +enum x86_reg {
-> > +     X86_REG_RIP =3D 41,
-> > +};
-> > +typedef int32_t x86_avx_bcast;
-> > +struct x86_op_mem {
-> > +     enum x86_reg segment;
-> > +     enum x86_reg base;
-> > +     enum x86_reg index;
-> > +     int scale;
-> > +     int64_t disp;
-> > +};
-> > +
-> > +struct cs_x86_op {
-> > +     enum x86_op_type type;
-> > +     union {
-> > +             enum x86_reg  reg;
-> > +             int64_t imm;
-> > +             struct x86_op_mem mem;
-> > +     };
-> > +     uint8_t size;
-> > +     uint8_t access;
-> > +     x86_avx_bcast avx_bcast;
-> > +     bool avx_zero_opmask;
-> > +};
-> > +struct cs_x86_encoding {
-> > +     uint8_t modrm_offset;
-> > +     uint8_t disp_offset;
-> > +     uint8_t disp_size;
-> > +     uint8_t imm_offset;
-> > +     uint8_t imm_size;
-> > +};
-> > +typedef int32_t  x86_xop_cc;
-> > +typedef int32_t  x86_sse_cc;
-> > +typedef int32_t  x86_avx_cc;
-> > +typedef int32_t  x86_avx_rm;
-> > +struct cs_x86 {
-> > +     uint8_t prefix[4];
-> > +     uint8_t opcode[4];
-> > +     uint8_t rex;
-> > +     uint8_t addr_size;
-> > +     uint8_t modrm;
-> > +     uint8_t sib;
-> > +     int64_t disp;
-> > +     enum x86_reg sib_index;
-> > +     int8_t sib_scale;
-> > +     enum x86_reg sib_base;
-> > +     x86_xop_cc xop_cc;
-> > +     x86_sse_cc sse_cc;
-> > +     x86_avx_cc avx_cc;
-> > +     bool avx_sae;
-> > +     x86_avx_rm avx_rm;
-> > +     union {
-> > +             uint64_t eflags;
-> > +             uint64_t fpu_flags;
-> > +     };
-> > +     uint8_t op_count;
-> > +     struct cs_x86_op operands[8];
-> > +     struct cs_x86_encoding encoding;
-> > +};
-> > +struct cs_detail {
-> > +     uint16_t regs_read[12];
-> > +     uint8_t regs_read_count;
-> > +     uint16_t regs_write[20];
-> > +     uint8_t regs_write_count;
-> > +     uint8_t groups[8];
-> > +     uint8_t groups_count;
-> > +
-> > +     union {
-> > +             struct cs_x86 x86;
-> > +     };
-> > +};
->
-> As discussed, let's remove the detail part.
+I will prepare another patch.
 
-I kind of feel there should be a #warning in that case. I'd rather
-leave it as is and not have a build warning.
-
-> > +struct cs_insn {
-> > +     unsigned int id;
-> > +     uint64_t address;
-> > +     uint16_t size;
-> > +     uint8_t bytes[16];
-> > +     char mnemonic[32];
-> > +     char op_str[160];
-> > +     struct cs_detail *detail;
-> > +};
-> > +#endif
-> > +
-> > +#ifndef HAVE_LIBCAPSTONE_SUPPORT
-> > +static void *perf_cs_dll_handle(void)
-> > +{
-> > +     static bool dll_handle_init;
-> > +     static void *dll_handle;
-> > +
-> > +     if (!dll_handle_init) {
-> > +             dll_handle_init =3D true;
-> > +             dll_handle =3D dlopen("libcapstone.so", RTLD_LAZY);
-> > +             if (!dll_handle)
-> > +                     pr_debug("dlopen failed for libcapstone.so\n");
-> > +     }
-> > +     return dll_handle;
-> > +}
-> > +#endif
-> > +
-> > +static enum cs_err perf_cs_open(enum cs_arch arch, enum cs_mode mode, =
-csh *handle)
-> > +{
-> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> > +     return cs_open(arch, mode, handle);
-> > +#else
-> > +     static bool fn_init;
-> > +     static enum cs_err (*fn)(enum cs_arch arch, enum cs_mode mode, cs=
-h *handle);
-> > +
-> > +     if (!fn_init) {
-> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_open");
-> > +             if (!fn)
-> > +                     pr_debug("dlsym failed for cs_open\n");
-> > +             fn_init =3D true;
-> > +     }
-> > +     if (!fn)
-> > +             return CS_ERR_HANDLE;
-> > +     return fn(arch, mode, handle);
-> > +#endif
-> > +}
->
-> I think it's better to organize the code with less #ifdef's.
-
-I think this reduces readability - 100s of lines where it isn't clear
-there is something conditional going on, or losing the fact a function
-is a shim. More details in:
-https://lore.kernel.org/lkml/CAP-5=3DfV0w9tLFr7xYHFUH=3DUUq+tr+o5EYUik0d74r=
-MWa9=3DQi+A@mail.gmail.com/
-
-Thanks,
-Ian
+-- 
+Aaron Tomlin
