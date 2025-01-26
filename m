@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AA114A630;
-	Sun, 26 Jan 2025 20:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E05672;
+	Sun, 26 Jan 2025 20:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737924232; cv=none; b=ZH1juIgCbB42/p2TbjPYcT82tz4ZkNcMySDHZ9hwBDZRZj1o+VXc/NhKZkStZGZj29+4ADWRptAVZyyz4vZ/EiksmTQE8upScLIQLStZLM3tzDi4T5g4ScB1DtnEX7GN6pM1OA7SwFywrzArPs67Vj6hwIIsECGfW3xWD2/M9kY=
+	t=1737924736; cv=none; b=DIMwIaevyBLlt6NRFGhjp6cwdnEigkusaLHkCXsOYeEs0WfHGR1JjEup2dWlAxZ/fF7Cd7tUZkSI7mprEyRif/yCyoeZXY8fgbLrme6zbFjlN9WGs4mN1CE4DOI/IyXMh4w4G/I6AlEuOmc0ZxRk1XzU4ORqfDVdITtt1ydijbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737924232; c=relaxed/simple;
-	bh=WAim0j695cQbkHdBbE74RIvL4CgLtldJ/wJDvGtd5IE=;
+	s=arc-20240116; t=1737924736; c=relaxed/simple;
+	bh=lffJd18ez6S24Qh1EMgIimwEWPfRWGdSO6qEYI6HIGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgKFGp0BzpbgdcU7Qu4lsrM/G238pB/ka7QJ/PIx07klJxs0PUQgeGPgkQ1csn1uECWVWgGaFzkREbI0ti6vD3IRYLAcWn4tw+iCV2t6/M708h79TvJ3xrrq815AzsIZlGiNjQsvownfbZm3Voe1YaQx81WBamfUrLTsteTUybk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2azc8tR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVsjn7yNftQbNWT/6T0zYZU0ejRvlq4+5CYVGK7NHu/q5CpLSuVaFE1faDaJ/dxfDEh2Uj52bYqU2zdY2us583rnWaxb1Pi1jGS+V4Fr2zpUvgRh4ig+uhn/QQgTm8sssbsqQwU2PYOSfVjVyiujxehpU+ZfcUEzsJdLtQUCvkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAmN/7d8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2azc8tR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41770C4CED3;
-	Sun, 26 Jan 2025 20:43:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAmN/7d8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673E3C4CED3;
+	Sun, 26 Jan 2025 20:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737924231;
-	bh=WAim0j695cQbkHdBbE74RIvL4CgLtldJ/wJDvGtd5IE=;
+	s=k20201202; t=1737924735;
+	bh=lffJd18ez6S24Qh1EMgIimwEWPfRWGdSO6qEYI6HIGo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S2azc8tR2WMj7dxTEIbF1kxhsU6ZA4E+lP9PF5uoWQkff/UZjwntD816QswFwbeC6
-	 EsChIR3SskqLaOZZcfxGaqFIDw7eSD60I4Fea4xx6x4XdH2c3vhKRiYszEwSCN4mGk
-	 Xz65MFM7kcLwXiDTolMxW/eOF+E/vi0pcjLH1C1WfGitSYD/5Z881x4YemZOu2mt8T
-	 2DqZFpxgzKt5M3SJc0143w4iRCRBxePVZ4Thq8GjiVuE/D4fcK8L49ds6a+HG2zK8/
-	 ZBxjNFbKqelocySL7VSBoniZbbFIT0i5FqQFJVp4ooHXFywjWLbnjbpeYdTJjy7LIe
-	 3s5mKoG/kIlyg==
-Date: Sun, 26 Jan 2025 12:43:49 -0800
+	b=VAmN/7d8ba95lIW5ltCozGpVTSaxxXiQd/6LNxZ7xbUnaUBW4p85K8wAHkrIShDz+
+	 Z5alhBF3Vak6bU2vKEpXbBiREhKyFQZft4GLlmwC3U5Ttozy5v+A5gLkTi3IYqMnCa
+	 AeBmaYpQcYBAUUvSEtP2Tz50nlcsTFr5BPfSiFl/tE8rpM5Mwbej+27lM8M+Fw3+Mu
+	 giNdFuUH4gUT+Ljji6NutSd1tJwqCQCscHP1TG1w9s6DEaUo8l6kp2cw7GjwNHXQNY
+	 4qIWO/h6DX/eQ7v3NFhcBizGr02HdvaiSotI+WR4Y6ylqIIaVfWEzRrMHw0tgy9ddx
+	 wAB3ZEHaHdf1A==
+Date: Sun, 26 Jan 2025 12:52:13 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -42,12 +42,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Veronika Molnarova <vmolnaro@redhat.com>,
 	Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] tools/build: Don't pass test log files to linker
-Message-ID: <Z5aehY8evAFKqeiK@google.com>
+Subject: Re: [PATCH v1 3/6] perf build: Add mypy build tests
+Message-ID: <Z5agfIGq8h7OlPOl@google.com>
 References: <20241025172303.77538-1-irogers@google.com>
- <20241025172303.77538-2-irogers@google.com>
- <Z5Qi5olV2yy2-TJ8@google.com>
- <CAP-5=fXP8ZbVKBr6wetdP0AJZrz-MmtyigHOjZanA-wNUcTfRw@mail.gmail.com>
+ <20241025172303.77538-4-irogers@google.com>
+ <Z5QngQQZBIekSl_v@google.com>
+ <CAP-5=fW8sGBQ_KRSRKhpUH8fzjy_PG7S-75O-YF1xGj0agoe6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,29 +57,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXP8ZbVKBr6wetdP0AJZrz-MmtyigHOjZanA-wNUcTfRw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW8sGBQ_KRSRKhpUH8fzjy_PG7S-75O-YF1xGj0agoe6A@mail.gmail.com>
 
-On Fri, Jan 24, 2025 at 05:58:37PM -0800, Ian Rogers wrote:
-> On Fri, Jan 24, 2025 at 3:31 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, Jan 24, 2025 at 06:10:09PM -0800, Ian Rogers wrote:
+> On Fri, Jan 24, 2025 at 3:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > On Fri, Oct 25, 2024 at 10:22:58AM -0700, Ian Rogers wrote:
-> > > Separate test log files from object files. Depend on test log output
-> > > but don't pass to the linker.
+> > On Fri, Oct 25, 2024 at 10:23:00AM -0700, Ian Rogers wrote:
+> > > If MYPY=1 is passed to the build then run mypy over python code in
+> > > perf. Unlike shellcheck this isn't default on as there are currently
+> > > too many errors.
 > >
-> > I don't know why $(obj-y) contains log files in the first place.  It's
-> > supposed to have .o files only, right?
+> > Can you please add an example output in the commit log?  Also you need
+> > to add a comment to describe the build option.
 > 
-> There's context here:
-> https://lore.kernel.org/all/20231129213428.2227448-1-irogers@google.com/
-> $(obj-y) is the set of the dependencies from Build files, generally
-> directories or .o files. Perf added the test logs as the alternative
-> is to duplicate all the directory scanning and other logic for a
-> $(test-y) but it isn't clear how you'd even name targets for a test in
-> the Build files. Rather than reinvent Makefile.build the choice was
-> made to work with what we had.
+> It feels more of a developer option, so I'm not sure we should
+> advertise it. Ideally we'd just default it like the shellcheck case.
 
-Thanks for the explanation.  I'm ok with it for now but I'll take a look
-if there's a better way later.
+Yep, but I think we need some (brief) explanation even for a default
+developer option.
+
+> I'm not sure of the benefit of snapshotting mypy errors, a quick
+> internet search will show what mypy does and I'd prefer the patch set
+> focus on the build infrastructure changes.
+
+You are introducing a new thing so you need to explain what it is, how
+to use it and how the output look like.
+
+> 
+> > Is it ok to pass the option on a system that doesn't have mypy?
+> 
+> I'd expect the shell/which assignment to MYPY would leave it
+> undefined, in which case the behavior would match not building with
+> MYPY=1. It's basically the same logic as with shellchecks. I didn't
+> test/optimize for people requesting a build option with dependencies
+> missing.
+
+Ok, I'm good as long as it handles the case.
 
 Thanks,
 Namhyung
