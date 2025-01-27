@@ -1,191 +1,106 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B585E1FECA0;
-	Mon, 27 Jan 2025 13:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060456A33B;
+	Mon, 27 Jan 2025 15:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737985743; cv=none; b=pGz9TQbZQ/ezgzzvPVw6tfnR8bb3CtRTOuaMWLiTdgd3gL9YPaFg7yRJn4xYuMrmEMta70FsM0nDXIRPxQUZmn2BrVh9wo/ca48yRNGB4bcbaj2jDkqAYwXzCcYp16tVgCEcidRZF0JdxpuPq3IgG7Ae31sOEdFhCHxxMabUSPQ=
+	t=1737991179; cv=none; b=pE1iBHGRIsDbBo3o04zs6pSsGF0oDis7U15VyK/DqAnhE4VyngDMYP4gKKfSyP4XnxYD/bDzbhUztVaa/HZ+OTqnYHn82qsO/8EI5o5A3jbFs8+WEMC2RbcOHyEHsIK3i9E8VbSoh9XpFd/SDI4DdVyaLUTege8clzag6FkJWbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737985743; c=relaxed/simple;
-	bh=X1fYghLYqNZH+LTIso57Z/ViGpJWT/XpAIDReNjGdI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nDi9+pqs3lVSPD2alvNj8GqgDpJB5TfhktlNzi+F67tjl8i3Fp8LP/TG6OE8MMoOiucdDqBbjrR0231+auWCjdY95hzFspwJLLmmH6En2/ZKM2noUKrtGqYBvpBKSMUO/Q0xEa7tI1Yi5YqoF8Lqv5j9MOHosXNChaAZfZ4hsWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oJvj9Tb3; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1737991179; c=relaxed/simple;
+	bh=pe8qfvMSe1ksQIj9r0Cig/DweSV8yfGBxeZqEyb2PI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FDKXr+en2DfPslPcl5Z+KxEgUo1nJcl1desv+gaXhGi5gG3NM/T95KpJrvEdArf2Wt5FUJ95W5zgVNUHGYnBpx1IKTzsUPJ7jHinB7xp1Q9lCOVBr6SW6Ag8B5wmgtiB3XsLqUHwMm5gEEhjeKgPNv5G40fFRhA6b9KrJlLYmRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HdehforX; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oJvj9Tb3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 266E7E000F;
-	Mon, 27 Jan 2025 13:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737985732;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAUpfLOaApPb8YbcqujnrkqADoPvQNE2tKxRThozcyc=;
-	b=oJvj9Tb3k94uiQ99TDhlqWv9wDe2K+UZG/x8yaXyFC3rdvMwqHXFzh/b81vt9RXWkvHC8E
-	VFfojZQpSeLIKr0DSbx3CltjvqwByu/xsUxaCFKMNZ4V+yX4/WJzlsaAZZ5ZhhneV5tnc/
-	mAfBvIrqx0UZ1DXeWJdnp4m56t7dSTD8RBuBaJAczzsqc1hWU9GxZ+o+UuLF2Dji9pEncH
-	ofKi/EYKF18cJM3Hzbe2LbU6Uo89Y6ACv1ojAvPoe4VIgfcAL5ywEyJkp3x93rcyRGPPdf
-	Z80JK2m6zqnSNHsvbs5eLg4d/++TMhLXWzT+U/aS1p1DQ/cThI1GBRocCa2K0g==
-Date: Mon, 27 Jan 2025 14:48:49 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi
- Kleen <ak@linux.intel.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Alexis =?UTF-8?Q?Lothor=C3=A9?=
- <alexis.lothore@bootlin.com>, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf build: fix in-tree build
-Message-ID: <20250127144849.744ec7e0@booty>
-In-Reply-To: <Z5aiWiqJbkNaVG2Y@google.com>
-References: <20250124-perf-fix-intree-build-v1-1-485dd7a855e4@bootlin.com>
-	<Z5aiWiqJbkNaVG2Y@google.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HdehforX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737991178; x=1769527178;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pe8qfvMSe1ksQIj9r0Cig/DweSV8yfGBxeZqEyb2PI4=;
+  b=HdehforXoohapOLN7eU+oVPeDAe2KTnv1gly2eLv0W87mvKmwVdhYlcR
+   s6kBGCK53axkVGyuxfbtTArhhXSySPnlGhCqf5wwXo1jcLWIe9gSwcQcS
+   6RT17RGytQHLEqL0QYmpOIypvtfjcof4F+EUorF8MVnAw9oLUwGgfqsI/
+   F4ZLWECoVBwbViFoUXg9XjJggBHL4QhcUP90WQvDxC/bgKO/VktOfThTP
+   IkzHSJ3szmirzknsreIx+cq2AqIBjfrPunipzfy/wibJEb1bmYhXgKF/K
+   /bWHx7tXGH3Y2lmEnBkKc1FZGto1cfGiqL66Qo77/wGYN/CckkznVi1eP
+   w==;
+X-CSE-ConnectionGUID: 7jkMulmATEihW5kRqpfOQA==
+X-CSE-MsgGUID: aU3KOEG/RzeWBw6T9QIfVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38557487"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38557487"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:19:37 -0800
+X-CSE-ConnectionGUID: YZX0nUpkQZ+Gpe5G+KTXag==
+X-CSE-MsgGUID: VTemDsjcR6SbEFk9mhrtGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,238,1732608000"; 
+   d="scan'208";a="108278977"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:19:37 -0800
+Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D22DE20B5713;
+	Mon, 27 Jan 2025 07:19:35 -0800 (PST)
+Message-ID: <85588439-ec0e-4824-8193-f0737880ecb9@linux.intel.com>
+Date: Mon, 27 Jan 2025 10:19:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/20] perf/x86/intel: Parse CPUID archPerfmonExt leaves
+ for non-hybrid CPUs
+To: Andi Kleen <ak@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-4-dapeng1.mi@linux.intel.com>
+ <Z5KRT-F7MbTs6g6y@tassilo>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <Z5KRT-F7MbTs6g6y@tassilo>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hello Namhyung Kim, 
 
-thanks for having a look!
 
-On Sun, 26 Jan 2025 13:00:10 -0800
-Namhyung Kim <namhyung@kernel.org> wrote:
-
-> Hello,
+On 2025-01-23 1:58 p.m., Andi Kleen wrote:
+>> +	/*
+>> +	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
+>> +	 * PMU architectural features with a per-core view. For non-hybrid,
+>> +	 * each core has the same PMU capabilities. It's good enough to
+>> +	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
+>> +	 * is used to keep the common capabilities. Still keep the values
+>> +	 * from the leaf 0xa. The core specific update will be done later
+>> +	 * when a new type is online.
+>> +	 */
+>> +	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
+>> +		update_pmu_cap(NULL);
 > 
-> On Fri, Jan 24, 2025 at 02:06:08PM +0100, Luca Ceresoli wrote:
-> > Building perf in-tree is broken after commit 890a1961c812 ("perf tools:
-> > Create source symlink in perf object dir") which added a 'source' symlink
-> > in the output dir pointing to the source dir.  
-> 
-> I cannot reproduce it - both `make -C tools/perf` and `cd tools/perf; make`
-> work well for me.  What do you mean by in-tree build exactly?  Can you
-> please share your command line and the error messages?
+> It seems ugly to have these different code paths. Couldn't non hybrid
+> use x86_pmu in the same way? I assume it would be a larger patch.
 
-I have narrowed down my reproducer script from the initial report to a
-fairly minimal one, and here it is:
+The current non-hybrid is initialized in the intel_pmu_init(). But some
+of the initialization code for the hybrid is in the
+intel_pmu_cpu_starting(). Yes, it's better to move it together. It
+should be a larger patch. Since it's impacted other features, a separate
+patch set should be required.
 
-------------------------8<------------------------
-#!/bin/sh
+Thanks,
+Kan
 
-set -eu
-
-OUT_DIR=${1:-$(pwd)/tools/perf}
-DESTDIR=/tmp/aaa
-
-RET=0
-
-echo "Kernel version: $(git describe)"
-echo "OUT_DIR = ${OUT_DIR}"
-echo "DESTDIR = ${DESTDIR}"
-echo
-
-git clean -xdfq
-rm -fr ${DESTDIR}/
-
-# Only for out of tree builds: clear the build dir
-if ! echo ${OUT_DIR} | grep -q "tools/perf"; then
-    rm -fr ${OUT_DIR}
-    mkdir -p ${OUT_DIR}
-fi
-
-LINUX_MAKE_FLAGS="\
-    -C tools/perf \
-    O=${OUT_DIR} \
-    DESTDIR=${DESTDIR} \
-"
-
-make ${LINUX_MAKE_FLAGS}
-make ${LINUX_MAKE_FLAGS} install
-
-echo
-    
-if [ -h ${OUT_DIR}/perf ]; then
-    echo "*** ERROR: ${OUT_DIR}/perf is a symlink, should be an exectuable file: ***" >&2
-    ls -l ${OUT_DIR}/perf
-    RET=255
-fi
-
-if ! find ${DESTDIR}/ -name perf -not -type d | xargs file | grep 'ELF.*executable'; then
-    echo "*** ERROR: perf executable not preseint in install dir ${DESTDIR} ***" >&2
-    RET=255
-fi
-
-exit $RET
-------------------------8<------------------------
-
-Just put it outside of your kernel dir (or it will be removed by the
-'git clean' command) and run it in your kernel source dir. E.g. right
-now I'm doing:
-
-cd <kernel dir>
-git checkout v6.13
-../build-perf
-
-You should see it failing as:
-
-*** ERROR: /.../linux/tools/perf/perf is a symlink, should be an exectuable file: ***
-lrwxrwxrwx 1 user user 39 Jan 27 14:10 /.../linux/tools/perf/perf -> /.../linux/tools/perf
-*** ERROR: perf executable not preseint in install dir /tmp/aaa ***
-
-Note that in the broken case the kernel build continues and returns 0,
-but there is no perf exectuable.
-
-PS:
-
-And after having come up with the above script, I also found that the
-build succeeds with the following change:
-
-------------------------8<------------------------
-@@ -24,11 +24,10 @@
- LINUX_MAKE_FLAGS="\
-     -C tools/perf \
-     O=${OUT_DIR} \
--    DESTDIR=${DESTDIR} \
- "
- 
- make ${LINUX_MAKE_FLAGS}
--make ${LINUX_MAKE_FLAGS} install
-+make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
-------------------------8<------------------------
-
-In other words:
-
- * This fails:
-     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR}
-     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
- * This succeeds:
-     make ${LINUX_MAKE_FLAGS}
-     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
-
-The only difference is the presence of 'DESTDIR' in the compile command.
-
-My understanding and expectation is that DESTDIR has no effect on the
-make process except in the 'install' target. This is clearly not
-happening here.
-
-I have not yet found an obvious reason why 'DESTDIR' is special in the
-compilation stage, after a quick look.
-
-Best regards,
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
