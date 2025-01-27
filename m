@@ -1,54 +1,54 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95641FECBB
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573731FECD8
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737971972; cv=none; b=CIxvXHgiktxugZEX1837+X+OhiPzCb/LJRAsbhhsoQKBBQqw5UBhJyoB5htZZCKVhfY/un0eOzMRZ09Ij12j0o5ewYVhtUU8a8WsoWo2uiWDdiGfp6MqXETq7mShm3TPxro0CpMxYZjeaG/O0pA+8FBJ/qmJOKtSc7ppf6ypMnE=
+	t=1737971975; cv=none; b=GkkNPofHWdULQwKo2watbAC4QwdtnHTDoxZ3xb+Sr7LjddEyOpi24NFgfxGUCOi8QOas2WePG5tceqtksJeg1YpxeT9Yg9nv9EsCpFuOvPLhXzt/afqGR5ukCeEko3iQlfHg8v3/4ZXy3jOGrV0o3yP6Idn4iSxaB+WEAqAjiQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737971972; c=relaxed/simple;
-	bh=gJY4RlMRBrOEWOCFxqwDKzJS4qwdZRHORGp141d42RY=;
+	s=arc-20240116; t=1737971975; c=relaxed/simple;
+	bh=GggeSPiR8YbgLXP8wp9zrKxhR5MXY84YH0YwALVqOGA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bfCENC93ZtEHcG4BgGroHtBQQLQVagUCF8cAAldYXlscNcjL8tdwhSkfa1beWVNXlS77A7IjXC5vq87zmV2x/1GM4VClmF3mDIvMjwWXKmR4iyhusvCZH11aAhK+/XBDASEvKhyMltnN9PkjdntIkK5kHP1JD848OXFOvXUbQAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0I88LPs2; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=mNYs89wHbGH+vuScnpyIjzXaRjgEU2LSE2aUlpFjrW5Oen+9khpUIUAm38vcW3YJ5MoA9vqfKreY2gNfdSzPyounseil0gYFDs2XTCcRQm4+JAHs70HBZ4lj+jFNrEoS0zomzQPlILwJJdT+mR/fKb3GW8m0T+X6/ZkbL3E3KY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s0yyDJ/O; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0I88LPs2"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d43ec75bc4so3593265a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s0yyDJ/O"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d90b88322aso3441039a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737971969; x=1738576769; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737971972; x=1738576772; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UI3PFDbizjPUwB2DpjyDkLXCl+QfdgHXUWI6TUxru0M=;
-        b=0I88LPs25Qi/RVm7K+IweqGHc149g8jWZ+kFaZ2b76vKYRzCvoSi2erR7Yb9biTuoH
-         BlJnp5SqXphNQqkQo7XdRlpN9JQwhgdHpWsu3mMpQ06r8vRErBO8mtQZeFAFaB5w2f9X
-         VVvPeAbKTQQbIpRj6JaJq/9L7A2WJ79r1jWOE5V1fwPUTBCqeYJX6uDCSkqaN1HJE5af
-         jKJfY+5ifCAzgHz5ZFOpwMO3x5Un/Xv6aTllDkmINqA88wLR9e8L0WW9BNQWt9o4P1Lv
-         jMR0MHeHumbtcaN6JeC34BLzNL9bGFq3vtcwAIenWfH9qLElnTA/5bKGgbZxZfCWBJUa
-         ugTA==
+        bh=bL5cvZ53bMgUb5o74DP+LHGdAWU/IsbnP4gd/RMdofU=;
+        b=s0yyDJ/O+ZAfts+n6mGQ+Uo5AFXsRvjXfgu33WTdAZPHR7uYCeWq9XygxC35P2LZfp
+         fLEJazCB2wMbZta+NPgctS0BTdCfgWyNUA4CrwiOLyCwSH0b1+ZM0zAyWqvd4HV8EaX7
+         nDs0Sf7V0Ip/g5c7L7dUQaCTbBkAhL+LlvuhfIhDhGEM1/46QdtgH3k15Cx6LDp3ij/d
+         2+y/FTgkyPyN6JeAyztuwl36x94aXa/QfWdulG7DJaSlgXryJKNKHXgS6R5Is7oopmF7
+         WGrRLRQBTwWNefMXq6pUi4guI9kDPjFyPhVlzLWYausM8ucHOYfH5ohyL1oQ2OGvgTtX
+         1APw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737971969; x=1738576769;
+        d=1e100.net; s=20230601; t=1737971972; x=1738576772;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UI3PFDbizjPUwB2DpjyDkLXCl+QfdgHXUWI6TUxru0M=;
-        b=NTAdwMhfJXG8dLetjuNY33R2VESWuGo0byQvJVo7as69OvgB+6SPyOYcy1ZsrHSlf3
-         /5As3cYposmuPqvJCr+WWiG3jfr1QW36fORM7ZwWFMYGdKP0J4gSDyRl64ZeCHezPiC3
-         vZGbOks31ORWKipQ64miPz78cHeBDmiur/aGYMohpZpf7JnCXR9zzFlZ0cPU65mbHloj
-         1EAHYYQW5Rj7hlrAd+P+deT2puzsBEVv+mxEBWD9zhmRSFSbFGN76reyqGPinkarUQCr
-         UVyV2W/yn7U4yBJbzwuvEtry1WfTZ8HVm1we3aXLzj4wdCCxAwturMUmJowco5hqoKdN
-         6DRQ==
-X-Gm-Message-State: AOJu0Yy0R2gk+/xkYviOWgL1PbbnQSEE1OAfZv9n0fdwc+5wq66QWyH3
-	aYvE1/vRuclddvgLpfN243izF5E+6QdSQKcEEDRL7oTbUUXb5IHjEsKchzbKEuzlMYBfnSZOHYx
-	dsDJ+kg==
-X-Google-Smtp-Source: AGHT+IEhlV2/ER+QtAqm2OOo088+LKyzKDZ+VjLfP4b1dzl6eLVAbobMqR3MNBDd9gaBqRYsowO8H3dIKejs
-X-Received: from edze7.prod.google.com ([2002:a05:6402:1907:b0:5d8:ab23:4682])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:35d2:b0:5dc:6c1:816c
- with SMTP id 4fb4d7f45d1cf-5dc06c182e4mr13088466a12.1.1737971969229; Mon, 27
- Jan 2025 01:59:29 -0800 (PST)
-Date: Mon, 27 Jan 2025 10:58:53 +0100
+        bh=bL5cvZ53bMgUb5o74DP+LHGdAWU/IsbnP4gd/RMdofU=;
+        b=jL127/E8tsYszwuDaxcnupAMWXEAWLs1ku0KtSJyCLwU0vovmwxJmhILaowHQxRnAx
+         srzWQhMFagWsO2/Yga1G4WC24MAga9qZIi9Z61Nb/0hR4a4OmtzvvcKPd8PdP3ViL9Bm
+         59+Lzypq4pMvf8prr/svGLOHaU/VLjvH65h4PUzh493ca/vrAgd5p2DarLxsOXU4MYtL
+         ekJw2y0VOCM+UM3XBzX9uHyUtyO/I1n76fpoXsIeaJDUtkRQqslv/r59eZmCTa9fgvYh
+         wBLMaNyBtCgm9iBOP/U6OyYqJeCgwKcNspXB8UmdStJIlfGED7zb7tf/k1w/9mxvluH2
+         MfGw==
+X-Gm-Message-State: AOJu0YxCX491bMJiHFIQIrSHVoN7sjb+PBf8/iqceunefGFEg/mCyI1Z
+	wSIa5jH3+F/sBYVbuwl0fhgOK/0QPLnEb9UPVTdRtyPMeIgVSqiIES+B6+UG0/Zaaf4vAL85+r/
+	FkgtpMA==
+X-Google-Smtp-Source: AGHT+IEGmBHSZs/A63I7ECXvqOSG/Yu96vP2p77HqP1FtAxQ6jqD1LDPSViEIMqS3DYIXjKGTHKNaXRMzBlM
+X-Received: from edc7.prod.google.com ([2002:a05:6402:4607:b0:5d0:e889:c403])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:210c:b0:5d9:cde9:2b7f
+ with SMTP id 4fb4d7f45d1cf-5db7d3550d5mr33152266a12.23.1737971971687; Mon, 27
+ Jan 2025 01:59:31 -0800 (PST)
+Date: Mon, 27 Jan 2025 10:58:54 +0100
 In-Reply-To: <cover.1737971364.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,18 +58,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1737971364.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
-Subject: [PATCH v3 6/7] perf report: Add --latency flag
+Message-ID: <caaef05b295f604d339d22d7836b27942cec1aec.1737971364.git.dvyukov@google.com>
+Subject: [PATCH v3 7/7] perf report: Add latency and parallelism profiling documentation
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Add record/report --latency flag that allows to capture and show
-latency-centric profiles rather than the default CPU-consumption-centric
-profiles. For latency profiles record captures context switch events,
-and report shows Latency as the first column.
+Describe latency and parallelism profiling, related flags, and differences
+with the currently only supported CPU-consumption-centric profiling.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -78,316 +76,257 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/perf/builtin-record.c   | 20 +++++++++++++++++
- tools/perf/builtin-report.c   | 32 +++++++++++++++++++++++----
- tools/perf/ui/hist.c          | 41 ++++++++++++++++++++++++++++-------
- tools/perf/util/hist.h        |  1 +
- tools/perf/util/sort.c        | 33 +++++++++++++++++++++++-----
- tools/perf/util/sort.h        |  2 +-
- tools/perf/util/symbol_conf.h |  4 +++-
- 7 files changed, 113 insertions(+), 20 deletions(-)
+ .../callchain-overhead-calculation.txt        |  5 +-
+ .../cpu-and-latency-overheads.txt             | 85 +++++++++++++++++++
+ tools/perf/Documentation/perf-report.txt      | 49 +++++++----
+ tools/perf/Documentation/tips.txt             |  3 +
+ 4 files changed, 123 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 5db1aedf48df9..e219639ac401b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -161,6 +161,7 @@ struct record {
- 	struct evlist		*sb_evlist;
- 	pthread_t		thread_id;
- 	int			realtime_prio;
-+	bool			latency;
- 	bool			switch_output_event_set;
- 	bool			no_buildid;
- 	bool			no_buildid_set;
-@@ -3371,6 +3372,9 @@ static struct option __record_options[] = {
- 		     parse_events_option),
- 	OPT_CALLBACK(0, "filter", &record.evlist, "filter",
- 		     "event filter", parse_filter),
-+	OPT_BOOLEAN(0, "latency", &record.latency,
-+		    "Enable data collection for latency profiling.\n"
-+		    "\t\t\t  Use perf report --latency for latency-centric profile."),
- 	OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
- 			   NULL, "don't record events from perf itself",
- 			   exclude_perf),
-@@ -4017,6 +4021,22 @@ int cmd_record(int argc, const char **argv)
- 
- 	}
- 
-+	if (record.latency) {
-+		/*
-+		 * There is no fundamental reason why latency profiling
-+		 * can't work for system-wide mode, but exact semantics
-+		 * and details are to be defined.
-+		 * See the following thread for details:
-+		 * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
-+		 */
-+		if (record.opts.target.system_wide) {
-+			pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
-+			err = -EINVAL;
-+			goto out_opts;
-+		}
-+		record.opts.record_switch_events = true;
-+	}
+diff --git a/tools/perf/Documentation/callchain-overhead-calculation.txt b/tools/perf/Documentation/callchain-overhead-calculation.txt
+index 1a757927195ed..e0202bf5bd1a0 100644
+--- a/tools/perf/Documentation/callchain-overhead-calculation.txt
++++ b/tools/perf/Documentation/callchain-overhead-calculation.txt
+@@ -1,7 +1,8 @@
+ Overhead calculation
+ --------------------
+-The overhead can be shown in two columns as 'Children' and 'Self' when
+-perf collects callchains.  The 'self' overhead is simply calculated by
++The CPU overhead can be shown in two columns as 'Children' and 'Self'
++when perf collects callchains (and corresponding 'Wall' columns for
++wall-clock overhead).  The 'self' overhead is simply calculated by
+ adding all period values of the entry - usually a function (symbol).
+ This is the value that perf shows traditionally and sum of all the
+ 'self' overhead values should be 100%.
+diff --git a/tools/perf/Documentation/cpu-and-latency-overheads.txt b/tools/perf/Documentation/cpu-and-latency-overheads.txt
+new file mode 100644
+index 0000000000000..3b6d637054651
+--- /dev/null
++++ b/tools/perf/Documentation/cpu-and-latency-overheads.txt
+@@ -0,0 +1,85 @@
++CPU and latency overheads
++-------------------------
++There are two notions of time: wall-clock time and CPU time.
++For a single-threaded program, or a program running on a single-core machine,
++these notions are the same. However, for a multi-threaded/multi-process program
++running on a multi-core machine, these notions are significantly different.
++Each second of wall-clock time we have number-of-cores seconds of CPU time.
++Perf can measure overhead for both of these times (shown in 'overhead' and
++'latency' columns for CPU and wall-clock time correspondingly).
 +
- 	if (rec->buildid_mmap) {
- 		if (!perf_can_record_build_id()) {
- 			pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 2a19abdc869a1..69de6dbefecfa 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -112,6 +112,8 @@ struct report {
- 	u64			nr_entries;
- 	u64			queue_size;
- 	u64			total_cycles;
-+	u64			total_samples;
-+	u64			singlethreaded_samples;
- 	int			socket_filter;
- 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- 	struct branch_type_stat	brtype_stat;
-@@ -331,6 +333,10 @@ static int process_sample_event(const struct perf_tool *tool,
- 				     &rep->total_cycles, evsel);
- 	}
- 
-+	rep->total_samples++;
-+	if (al.parallelism == 1)
-+		rep->singlethreaded_samples++;
++Optimizing CPU overhead is useful to improve 'throughput', while optimizing
++latency overhead is useful to improve 'latency'. It's important to understand
++which one is useful in a concrete situation at hand. For example, the former
++may be useful to improve max throughput of a CI build server that runs on 100%
++CPU utilization, while the latter may be useful to improve user-perceived
++latency of a single interactive program build.
++These overheads may be significantly different in some cases. For example,
++consider a program that executes function 'foo' for 9 seconds with 1 thread,
++and then executes function 'bar' for 1 second with 128 threads (consumes
++128 seconds of CPU time). The CPU overhead is: 'foo' - 6.6%, 'bar' - 93.4%.
++While the latency overhead is: 'foo' - 90%, 'bar' - 10%. If we try to optimize
++running time of the program looking at the (wrong in this case) CPU overhead,
++we would concentrate on the function 'bar', but it can yield only 10% running
++time improvement at best.
 +
- 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
- 	if (ret < 0)
- 		pr_debug("problem adding hist entry, skipping event\n");
-@@ -1079,6 +1085,11 @@ static int __cmd_report(struct report *rep)
- 		return ret;
- 	}
- 
-+	/* Don't show Latency column for non-parallel profiles by default. */
-+	if (rep->singlethreaded_samples * 100 / rep->total_samples >= 99 &&
-+			!symbol_conf.prefer_latency)
-+		perf_hpp__cancel_latency();
++By default, perf shows only CPU overhead. To show latency overhead, use
++'perf record --latency' and 'perf report':
 +
- 	evlist__check_mem_load_aux(session->evlist);
- 
- 	if (rep->stats_mode)
-@@ -1468,6 +1479,10 @@ int cmd_report(int argc, const char **argv)
- 		    "Disable raw trace ordering"),
- 	OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
- 		    "Do not display empty (or dummy) events in the output"),
-+	OPT_BOOLEAN(0, "latency", &symbol_conf.prefer_latency,
-+		    "Show latency-centric profile rather than the default\n"
-+		    "\t\t\t  CPU-consumption-centric profile\n"
-+		    "\t\t\t  (requires perf record --latency flag)."),
- 	OPT_END()
- 	};
- 	struct perf_data data = {
-@@ -1722,16 +1737,25 @@ int cmd_report(int argc, const char **argv)
- 		symbol_conf.annotate_data_sample = true;
- 	}
- 
-+	symbol_conf.enable_latency = true;
- 	if (report.disable_order || !perf_session__has_switch_events(session)) {
- 		if (symbol_conf.parallelism_list_str ||
--				(sort_order && strstr(sort_order, "parallelism")) ||
--				(field_order && strstr(field_order, "parallelism"))) {
-+			symbol_conf.prefer_latency ||
-+			(sort_order && (strstr(sort_order, "latency") ||
-+				strstr(sort_order, "parallelism"))) ||
-+			(field_order && (strstr(field_order, "latency") ||
-+				strstr(field_order, "parallelism")))) {
- 			if (report.disable_order)
--				ui__error("Use of parallelism is incompatible with --disable-order.\n");
-+				ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
- 			else
--				ui__error("Use of parallelism requires --switch-events during record.\n");
-+				ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
- 			return -1;
- 		}
-+		/*
-+		 * If user did not ask for anything related to
-+		 * latency/parallelism explicitly, just don't show it.
-+		 */
-+		symbol_conf.enable_latency = false;
- 	}
- 
- 	if (sort_order && strstr(sort_order, "ipc")) {
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 22e31d835301e..d87046052b432 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -632,27 +632,36 @@ void perf_hpp__init(void)
- 		return;
- 
- 	if (symbol_conf.cumulate_callchain) {
--		hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC);
-+		/* Use idempotent addition to avoid more complex logic. */
-+		if (symbol_conf.prefer_latency)
-+			hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
-+		hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC, true);
-+		if (symbol_conf.enable_latency)
-+			hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
- 		perf_hpp__format[PERF_HPP__OVERHEAD].name = "Self";
- 	}
- 
--	hpp_dimension__add_output(PERF_HPP__OVERHEAD);
-+	if (symbol_conf.prefer_latency)
-+		hpp_dimension__add_output(PERF_HPP__LATENCY, true);
-+	hpp_dimension__add_output(PERF_HPP__OVERHEAD, true);
-+	if (symbol_conf.enable_latency)
-+		hpp_dimension__add_output(PERF_HPP__LATENCY, true);
- 
- 	if (symbol_conf.show_cpu_utilization) {
--		hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS);
--		hpp_dimension__add_output(PERF_HPP__OVERHEAD_US);
-+		hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS, false);
-+		hpp_dimension__add_output(PERF_HPP__OVERHEAD_US, false);
- 
- 		if (perf_guest) {
--			hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS);
--			hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US);
-+			hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS, false);
-+			hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US, false);
- 		}
- 	}
- 
- 	if (symbol_conf.show_nr_samples)
--		hpp_dimension__add_output(PERF_HPP__SAMPLES);
-+		hpp_dimension__add_output(PERF_HPP__SAMPLES, false);
- 
- 	if (symbol_conf.show_total_period)
--		hpp_dimension__add_output(PERF_HPP__PERIOD);
-+		hpp_dimension__add_output(PERF_HPP__PERIOD, false);
- }
- 
- void perf_hpp_list__column_register(struct perf_hpp_list *list,
-@@ -701,6 +710,22 @@ void perf_hpp__cancel_cumulate(void)
- 	}
- }
- 
-+void perf_hpp__cancel_latency(void)
-+{
-+	struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
++-----------------------------------
++Overhead  Latency  Command
++  93.88%   25.79%  cc1
++   1.90%   39.87%  gzip
++   0.99%   10.16%  dpkg-deb
++   0.57%    1.00%  as
++   0.40%    0.46%  sh
++-----------------------------------
 +
-+	if (is_strict_order(field_order) || is_strict_order(sort_order))
-+		return;
++To sort by latency overhead, use 'perf report --latency':
 +
-+	lat = &perf_hpp__format[PERF_HPP__LATENCY];
-+	acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
++-----------------------------------
++Latency  Overhead  Command
++ 39.87%     1.90%  gzip
++ 25.79%    93.88%  cc1
++ 10.16%     0.99%  dpkg-deb
++  4.17%     0.29%  git
++  2.81%     0.11%  objtool
++-----------------------------------
 +
-+	perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
-+		if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
-+			perf_hpp__column_unregister(fmt);
-+	}
-+}
++To get insight into the difference between the overheads, you may check
++parallelization histogram with '--sort=latency,parallelism,comm,symbol --hierarchy'
++flags. It shows fraction of (wall-clock) time the workload utilizes different
++numbers of cores ('Parallelism' column). For example, in the following case
++the workload utilizes only 1 core most of the time, but also has some
++highly-parallel phases, which explains significant difference between
++CPU and wall-clock overheads:
 +
- void perf_hpp__setup_output_field(struct perf_hpp_list *list)
- {
- 	struct perf_hpp_fmt *fmt;
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 91159f16c60b2..29d4c7a3d1747 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -582,6 +582,7 @@ enum {
- 
- void perf_hpp__init(void);
- void perf_hpp__cancel_cumulate(void);
-+void perf_hpp__cancel_latency(void);
- void perf_hpp__setup_output_field(struct perf_hpp_list *list);
- void perf_hpp__reset_output_field(struct perf_hpp_list *list);
- void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index bc4c3acfe7552..2b6023de7a53a 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2622,6 +2622,7 @@ struct hpp_dimension {
- 	const char		*name;
- 	struct perf_hpp_fmt	*fmt;
- 	int			taken;
-+	int			was_taken;
- };
- 
- #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
-@@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
- 		return -1;
- 
- 	hd->taken = 1;
-+	hd->was_taken = 1;
- 	perf_hpp_list__register_sort_field(list, fmt);
- 	return 0;
- }
-@@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
- 	return 0;
- }
- 
--int hpp_dimension__add_output(unsigned col)
-+int hpp_dimension__add_output(unsigned col, bool implicit)
- {
-+	struct hpp_dimension *hd;
++-----------------------------------
++  Latency  Overhead     Parallelism / Command / Symbol
+++  56.98%     2.29%     1
+++  16.94%     1.36%     2
+++   4.00%    20.13%     125
+++   3.66%    18.25%     124
+++   3.48%    17.66%     126
+++   3.26%     0.39%     3
+++   2.61%    12.93%     123
++-----------------------------------
 +
- 	BUG_ON(col >= PERF_HPP__MAX_INDEX);
--	return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-+	hd = &hpp_sort_dimensions[col];
-+	if (implicit && !hd->was_taken)
-+		return 0;
-+	return __hpp_dimension__add_output(&perf_hpp_list, hd);
- }
++By expanding corresponding lines, you may see what commands/functions run
++at the given parallelism level:
++
++-----------------------------------
++  Latency  Overhead     Parallelism / Command / Symbol
++-  56.98%     2.29%     1
++      32.80%     1.32%     gzip
++       4.46%     0.18%     cc1
++       2.81%     0.11%     objtool
++       2.43%     0.10%     dpkg-source
++       2.22%     0.09%     ld
++       2.10%     0.08%     dpkg-genchanges
++-----------------------------------
++
++To see the normal function-level profile for particular parallelism levels
++(number of threads actively running on CPUs), you may use '--parallelism'
++filter. For example, to see the profile only for low parallelism phases
++of a workload use '--latency --parallelism=1-2' flags.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 87f8645194062..7e0ba990d71e8 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -44,7 +44,7 @@ OPTIONS
+ --comms=::
+ 	Only consider symbols in these comms. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
+ --pid=::
+         Only show events for given process ID (comma separated list).
  
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-@@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
- 	if (sort__mode == SORT_MODE__DIFF)
- 		return keys;
+@@ -54,12 +54,12 @@ OPTIONS
+ --dsos=::
+ 	Only consider symbols in these dsos. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
+ -S::
+ --symbols=::
+ 	Only consider these symbols. CSV that understands
+ 	file://filename entries.  This option will affect the percentage of
+-	the overhead column.  See --percentage for more info.
++	the overhead and latency columns.  See --percentage for more info.
  
--	keys = prefix_if_not_in("overhead", keys);
--
--	if (symbol_conf.cumulate_callchain)
--		keys = prefix_if_not_in("overhead_children", keys);
-+	if (symbol_conf.prefer_latency) {
-+		keys = prefix_if_not_in("overhead", keys);
-+		keys = prefix_if_not_in("latency", keys);
-+		if (symbol_conf.cumulate_callchain) {
-+			keys = prefix_if_not_in("overhead_children", keys);
-+			keys = prefix_if_not_in("latency_children", keys);
-+		}
-+	} else if (!keys || (!strstr(keys, "overhead") &&
-+			!strstr(keys, "latency"))) {
-+		if (symbol_conf.enable_latency)
-+			keys = prefix_if_not_in("latency", keys);
-+		keys = prefix_if_not_in("overhead", keys);
-+		if (symbol_conf.cumulate_callchain) {
-+			if (symbol_conf.enable_latency)
-+				keys = prefix_if_not_in("latency_children", keys);
-+			keys = prefix_if_not_in("overhead_children", keys);
-+		}
-+	}
+ --symbol-filter=::
+ 	Only show symbols that match (partially) with this filter.
+@@ -68,6 +68,16 @@ OPTIONS
+ --hide-unresolved::
+         Only display entries resolved to a symbol.
  
- 	return keys;
- }
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 11fb15f914093..180d36a2bea35 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -141,7 +141,7 @@ int report_parse_ignore_callees_opt(const struct option *opt, const char *arg, i
++--parallelism::
++        Only consider these parallelism levels. Parallelism level is the number
++        of threads that actively run on CPUs at the time of sample. The flag
++        accepts single number, comma-separated list, and ranges (for example:
++        "1", "7,8", "1,64-128"). This is useful in understanding what a program
++        is doing during sequential/low-parallelism phases as compared to
++        high-parallelism phases. This option will affect the percentage of
++        the overhead and latency columns. See --percentage for more info.
++        Also see the `CPU and latency overheads' section for more details.
++
+ -s::
+ --sort=::
+ 	Sort histogram entries by given key(s) - multiple keys can be specified
+@@ -87,6 +97,7 @@ OPTIONS
+ 	entries are displayed as "[other]".
+ 	- cpu: cpu number the task ran at the time of sample
+ 	- socket: processor socket number the task ran at the time of sample
++	- parallelism: number of running threads at the time of sample
+ 	- srcline: filename and line number executed at the time of sample.  The
+ 	DWARF debugging info must be provided.
+ 	- srcfile: file name of the source file of the samples. Requires dwarf
+@@ -97,12 +108,14 @@ OPTIONS
+ 	- cgroup_id: ID derived from cgroup namespace device and inode numbers.
+ 	- cgroup: cgroup pathname in the cgroupfs.
+ 	- transaction: Transaction abort flags.
+-	- overhead: Overhead percentage of sample
+-	- overhead_sys: Overhead percentage of sample running in system mode
+-	- overhead_us: Overhead percentage of sample running in user mode
+-	- overhead_guest_sys: Overhead percentage of sample running in system mode
++	- overhead: CPU overhead percentage of sample.
++	- latency: latency (wall-clock) overhead percentage of sample.
++	  See the `CPU and latency overheads' section for more details.
++	- overhead_sys: CPU overhead percentage of sample running in system mode
++	- overhead_us: CPU overhead percentage of sample running in user mode
++	- overhead_guest_sys: CPU overhead percentage of sample running in system mode
+ 	on guest machine
+-	- overhead_guest_us: Overhead percentage of sample running in user mode on
++	- overhead_guest_us: CPU overhead percentage of sample running in user mode on
+ 	guest machine
+ 	- sample: Number of sample
+ 	- period: Raw number of event count of sample
+@@ -125,8 +138,8 @@ OPTIONS
+ 	- weight2: Average value of event specific weight (2nd field of weight_struct).
+ 	- weight3: Average value of event specific weight (3rd field of weight_struct).
  
- bool is_strict_order(const char *order);
+-	By default, comm, dso and symbol keys are used.
+-	(i.e. --sort comm,dso,symbol)
++	By default, overhead, comm, dso and symbol keys are used.
++	(i.e. --sort overhead,comm,dso,symbol).
  
--int hpp_dimension__add_output(unsigned col);
-+int hpp_dimension__add_output(unsigned col, bool implicit);
- void reset_dimensions(void);
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
- 			struct evlist *evlist,
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index c5b2e56127e22..cd9aa82c7d5ad 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -49,7 +49,9 @@ struct symbol_conf {
- 			keep_exited_threads,
- 			annotate_data_member,
- 			annotate_data_sample,
--			skip_empty;
-+			skip_empty,
-+			enable_latency,
-+			prefer_latency;
- 	const char	*vmlinux_name,
- 			*kallsyms_name,
- 			*source_prefix,
+ 	If --branch-stack option is used, following sort keys are also
+ 	available:
+@@ -201,9 +214,9 @@ OPTIONS
+ --fields=::
+ 	Specify output field - multiple keys can be specified in CSV format.
+ 	Following fields are available:
+-	overhead, overhead_sys, overhead_us, overhead_children, sample, period,
+-	weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.  The
+-	last 3 names are alias for the corresponding weights.  When the weight
++	overhead, latency, overhead_sys, overhead_us, overhead_children, sample,
++	period, weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.
++	The last 3 names are alias for the corresponding weights.  When the weight
+ 	fields are used, they will show the average value of the weight.
+ 
+ 	Also it can contain any sort key(s).
+@@ -289,7 +302,7 @@ OPTIONS
+ 	Accumulate callchain of children to parent entry so that then can
+ 	show up in the output.  The output will have a new "Children" column
+ 	and will be sorted on the data.  It requires callchains are recorded.
+-	See the `overhead calculation' section for more details. Enabled by
++	See the `Overhead calculation' section for more details. Enabled by
+ 	default, disable with --no-children.
+ 
+ --max-stack::
+@@ -442,9 +455,9 @@ OPTIONS
+ 	--call-graph option for details.
+ 
+ --percentage::
+-	Determine how to display the overhead percentage of filtered entries.
+-	Filters can be applied by --comms, --dsos and/or --symbols options and
+-	Zoom operations on the TUI (thread, dso, etc).
++	Determine how to display the CPU and latency overhead percentage
++	of filtered entries. Filters can be applied by --comms, --dsos, --symbols
++	and/or --parallelism options and Zoom operations on the TUI (thread, dso, etc).
+ 
+ 	"relative" means it's relative to filtered entries only so that the
+ 	sum of shown entries will be always 100%.  "absolute" means it retains
+@@ -627,6 +640,8 @@ include::itrace.txt[]
+ --skip-empty::
+ 	Do not print 0 results in the --stat output.
+ 
++include::cpu-and-latency-overheads.txt[]
++
+ include::callchain-overhead-calculation.txt[]
+ 
+ SEE ALSO
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 67b326ba00407..f6f71e70ff2cb 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -62,3 +62,6 @@ To show context switches in perf report sample context add --switch-events to pe
+ To show time in nanoseconds in record/report add --ns
+ To compare hot regions in two workloads use perf record -b -o file ... ; perf diff --stream file1 file2
+ To compare scalability of two workload samples use perf diff -c ratio file1 file2
++For latency profiling, try: perf record/report --latency
++For parallelism histogram, try: perf report --hierarchy --sort latency,parallelism,comm,symbol
++To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
