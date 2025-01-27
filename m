@@ -1,69 +1,191 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C36125A646;
-	Mon, 27 Jan 2025 11:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B585E1FECA0;
+	Mon, 27 Jan 2025 13:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737977308; cv=none; b=e3oeWDKRtViA2Jz+3SUaT0nTwm9AeSAqBVkonh7CmwItMYYfZMk9S2qQggyAoJlGKgarP+xyd8FJ9pqmKJxe7syk8BVBwi7FltFzxw45UWbSMdjsLMCg/ZE7H9Rn6GO53Pe1BZXghgGGQJa2XWoHot0WXvJA5E/NyHgRQy+OdWY=
+	t=1737985743; cv=none; b=pGz9TQbZQ/ezgzzvPVw6tfnR8bb3CtRTOuaMWLiTdgd3gL9YPaFg7yRJn4xYuMrmEMta70FsM0nDXIRPxQUZmn2BrVh9wo/ca48yRNGB4bcbaj2jDkqAYwXzCcYp16tVgCEcidRZF0JdxpuPq3IgG7Ae31sOEdFhCHxxMabUSPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737977308; c=relaxed/simple;
-	bh=GQoYB4Aob3xWAWnF8gpzfqf/CV52pRYvErqC2avKG9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8mb/q00HQv/DgC5A/qsXCqOqII37GEJtI2Ms4PpQlbtp9wAIECSy4JsFdfW7yo6z+b+imVrFe5Q227g5U0WtiUcJ6HpvVAM4lfWK9huv+Pj8rGkJ/H3EJOSe4Kbsn9YGYYVeVGR9J2mO76KN0izsYLNmdGA39JPLHiSiwJWaEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C409MVTC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1737985743; c=relaxed/simple;
+	bh=X1fYghLYqNZH+LTIso57Z/ViGpJWT/XpAIDReNjGdI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nDi9+pqs3lVSPD2alvNj8GqgDpJB5TfhktlNzi+F67tjl8i3Fp8LP/TG6OE8MMoOiucdDqBbjrR0231+auWCjdY95hzFspwJLLmmH6En2/ZKM2noUKrtGqYBvpBKSMUO/Q0xEa7tI1Yi5YqoF8Lqv5j9MOHosXNChaAZfZ4hsWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oJvj9Tb3; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C409MVTC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4+JW8sEw705PBUez1KwWSHcwOqxXtNjS9aj2SZZoj6w=; b=C409MVTCGBuNGnsP7NfupJWvCO
-	j7bs5f+qVTftz6QUX1SsYFmln0BxeHtnpJpo4yQiXa5XV1pEgMdU08nN01nXgjtZgEMMzrBYtSU4K
-	ZSjNdMpPjdYbgwySosjw6Ddo8aMegkxy0z1UpwKsCiUS43fA0o024TOK8ZkAeNk5hVxx/ldsPDuDn
-	C35tlEBeg0eyzGIt4NaFRd/ynbK5cN1XlriwCUwMUrw0JnwT63QQzlv9nAAlBDrTI4mKmLhaKmMIM
-	ScUH9EXYFcwHksl7V4hHQ+VIq8nbv9K4vxYImv0U0FeDFg3Vy4xVO77PFD/5qLCduY+74cRppMpcY
-	voGtm/YQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tcNHr-0000000EhMe-0X1s;
-	Mon, 27 Jan 2025 11:28:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8AA523004DE; Mon, 27 Jan 2025 12:28:14 +0100 (CET)
-Date: Mon, 27 Jan 2025 12:28:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, andrii.nakryiko@gmail.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-Message-ID: <20250127112814.GH16742@noisy.programming.kicks-ass.net>
-References: <20250124093826.2123675-1-liaochang1@huawei.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oJvj9Tb3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 266E7E000F;
+	Mon, 27 Jan 2025 13:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1737985732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bAUpfLOaApPb8YbcqujnrkqADoPvQNE2tKxRThozcyc=;
+	b=oJvj9Tb3k94uiQ99TDhlqWv9wDe2K+UZG/x8yaXyFC3rdvMwqHXFzh/b81vt9RXWkvHC8E
+	VFfojZQpSeLIKr0DSbx3CltjvqwByu/xsUxaCFKMNZ4V+yX4/WJzlsaAZZ5ZhhneV5tnc/
+	mAfBvIrqx0UZ1DXeWJdnp4m56t7dSTD8RBuBaJAczzsqc1hWU9GxZ+o+UuLF2Dji9pEncH
+	ofKi/EYKF18cJM3Hzbe2LbU6Uo89Y6ACv1ojAvPoe4VIgfcAL5ywEyJkp3x93rcyRGPPdf
+	Z80JK2m6zqnSNHsvbs5eLg4d/++TMhLXWzT+U/aS1p1DQ/cThI1GBRocCa2K0g==
+Date: Mon, 27 Jan 2025 14:48:49 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi
+ Kleen <ak@linux.intel.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Alexis =?UTF-8?Q?Lothor=C3=A9?=
+ <alexis.lothore@bootlin.com>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: fix in-tree build
+Message-ID: <20250127144849.744ec7e0@booty>
+In-Reply-To: <Z5aiWiqJbkNaVG2Y@google.com>
+References: <20250124-perf-fix-intree-build-v1-1-485dd7a855e4@bootlin.com>
+	<Z5aiWiqJbkNaVG2Y@google.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124093826.2123675-1-liaochang1@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, Jan 24, 2025 at 09:38:24AM +0000, Liao Chang wrote:
-> Liao Chang (2):
->   uprobes: Remove redundant spinlock in uprobe_deny_signal()
->   uprobes: Remove the spinlock within handle_singlestep()
+Hello Namhyung Kim, 
+
+thanks for having a look!
+
+On Sun, 26 Jan 2025 13:00:10 -0800
+Namhyung Kim <namhyung@kernel.org> wrote:
+
+> Hello,
 > 
->  include/linux/uprobes.h |  1 +
->  kernel/events/uprobes.c | 10 +++++-----
->  2 files changed, 6 insertions(+), 5 deletions(-)
+> On Fri, Jan 24, 2025 at 02:06:08PM +0100, Luca Ceresoli wrote:
+> > Building perf in-tree is broken after commit 890a1961c812 ("perf tools:
+> > Create source symlink in perf object dir") which added a 'source' symlink
+> > in the output dir pointing to the source dir.  
+> 
+> I cannot reproduce it - both `make -C tools/perf` and `cd tools/perf; make`
+> work well for me.  What do you mean by in-tree build exactly?  Can you
+> please share your command line and the error messages?
 
-Thanks, I've picked up the patches but will not merge them until post
--rc1.
+I have narrowed down my reproducer script from the initial report to a
+fairly minimal one, and here it is:
+
+------------------------8<------------------------
+#!/bin/sh
+
+set -eu
+
+OUT_DIR=${1:-$(pwd)/tools/perf}
+DESTDIR=/tmp/aaa
+
+RET=0
+
+echo "Kernel version: $(git describe)"
+echo "OUT_DIR = ${OUT_DIR}"
+echo "DESTDIR = ${DESTDIR}"
+echo
+
+git clean -xdfq
+rm -fr ${DESTDIR}/
+
+# Only for out of tree builds: clear the build dir
+if ! echo ${OUT_DIR} | grep -q "tools/perf"; then
+    rm -fr ${OUT_DIR}
+    mkdir -p ${OUT_DIR}
+fi
+
+LINUX_MAKE_FLAGS="\
+    -C tools/perf \
+    O=${OUT_DIR} \
+    DESTDIR=${DESTDIR} \
+"
+
+make ${LINUX_MAKE_FLAGS}
+make ${LINUX_MAKE_FLAGS} install
+
+echo
+    
+if [ -h ${OUT_DIR}/perf ]; then
+    echo "*** ERROR: ${OUT_DIR}/perf is a symlink, should be an exectuable file: ***" >&2
+    ls -l ${OUT_DIR}/perf
+    RET=255
+fi
+
+if ! find ${DESTDIR}/ -name perf -not -type d | xargs file | grep 'ELF.*executable'; then
+    echo "*** ERROR: perf executable not preseint in install dir ${DESTDIR} ***" >&2
+    RET=255
+fi
+
+exit $RET
+------------------------8<------------------------
+
+Just put it outside of your kernel dir (or it will be removed by the
+'git clean' command) and run it in your kernel source dir. E.g. right
+now I'm doing:
+
+cd <kernel dir>
+git checkout v6.13
+../build-perf
+
+You should see it failing as:
+
+*** ERROR: /.../linux/tools/perf/perf is a symlink, should be an exectuable file: ***
+lrwxrwxrwx 1 user user 39 Jan 27 14:10 /.../linux/tools/perf/perf -> /.../linux/tools/perf
+*** ERROR: perf executable not preseint in install dir /tmp/aaa ***
+
+Note that in the broken case the kernel build continues and returns 0,
+but there is no perf exectuable.
+
+PS:
+
+And after having come up with the above script, I also found that the
+build succeeds with the following change:
+
+------------------------8<------------------------
+@@ -24,11 +24,10 @@
+ LINUX_MAKE_FLAGS="\
+     -C tools/perf \
+     O=${OUT_DIR} \
+-    DESTDIR=${DESTDIR} \
+ "
+ 
+ make ${LINUX_MAKE_FLAGS}
+-make ${LINUX_MAKE_FLAGS} install
++make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+------------------------8<------------------------
+
+In other words:
+
+ * This fails:
+     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR}
+     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+ * This succeeds:
+     make ${LINUX_MAKE_FLAGS}
+     make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+
+The only difference is the presence of 'DESTDIR' in the compile command.
+
+My understanding and expectation is that DESTDIR has no effect on the
+make process except in the 'install' target. This is clearly not
+happening here.
+
+I have not yet found an obvious reason why 'DESTDIR' is special in the
+compilation stage, after a quick look.
+
+Best regards,
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
