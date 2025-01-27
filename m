@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060456A33B;
-	Mon, 27 Jan 2025 15:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA7EFC08;
+	Mon, 27 Jan 2025 15:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737991179; cv=none; b=pE1iBHGRIsDbBo3o04zs6pSsGF0oDis7U15VyK/DqAnhE4VyngDMYP4gKKfSyP4XnxYD/bDzbhUztVaa/HZ+OTqnYHn82qsO/8EI5o5A3jbFs8+WEMC2RbcOHyEHsIK3i9E8VbSoh9XpFd/SDI4DdVyaLUTege8clzag6FkJWbQ=
+	t=1737992304; cv=none; b=iQX8EMFmuxXXCjxeLKUbGnT5aTGvix65UVbbpFDFVPmSmvCHWVciynGYyw+LL6LMGu1TNVhH3oGjxLc4gHBpZtUjTf2m39jTk5PSclWNyCITq7NjzYmIYm3Vm22roLrktFlwPmC2cMHPtTMu7jthGnS54QCThGS0MfqhZ4ShOiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737991179; c=relaxed/simple;
-	bh=pe8qfvMSe1ksQIj9r0Cig/DweSV8yfGBxeZqEyb2PI4=;
+	s=arc-20240116; t=1737992304; c=relaxed/simple;
+	bh=PJ15fGEiQ+1OKAs6Vayxn17ILLcq6+XFfwGZtQpPHA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDKXr+en2DfPslPcl5Z+KxEgUo1nJcl1desv+gaXhGi5gG3NM/T95KpJrvEdArf2Wt5FUJ95W5zgVNUHGYnBpx1IKTzsUPJ7jHinB7xp1Q9lCOVBr6SW6Ag8B5wmgtiB3XsLqUHwMm5gEEhjeKgPNv5G40fFRhA6b9KrJlLYmRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HdehforX; arc=none smtp.client-ip=198.175.65.18
+	 In-Reply-To:Content-Type; b=O6F2dEGxtlKeQ40DUc7KpGm876L/6ZBFSXhiSXJs3VgS4DqDVuCTQgg+0BUiQ0/uWz+K3Ti221J5n7WdxUBDTYhnYrjL0x/+TCh7Ga3CTbmhD0AqiQhbYBGjjISRhaU1wAU7RZc6hkjLaR8SwD+Lp4wMhC6We7qMrsV1SNb7PIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VVRvUkOt; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HdehforX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VVRvUkOt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737991178; x=1769527178;
+  t=1737992303; x=1769528303;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=pe8qfvMSe1ksQIj9r0Cig/DweSV8yfGBxeZqEyb2PI4=;
-  b=HdehforXoohapOLN7eU+oVPeDAe2KTnv1gly2eLv0W87mvKmwVdhYlcR
-   s6kBGCK53axkVGyuxfbtTArhhXSySPnlGhCqf5wwXo1jcLWIe9gSwcQcS
-   6RT17RGytQHLEqL0QYmpOIypvtfjcof4F+EUorF8MVnAw9oLUwGgfqsI/
-   F4ZLWECoVBwbViFoUXg9XjJggBHL4QhcUP90WQvDxC/bgKO/VktOfThTP
-   IkzHSJ3szmirzknsreIx+cq2AqIBjfrPunipzfy/wibJEb1bmYhXgKF/K
-   /bWHx7tXGH3Y2lmEnBkKc1FZGto1cfGiqL66Qo77/wGYN/CckkznVi1eP
-   w==;
-X-CSE-ConnectionGUID: 7jkMulmATEihW5kRqpfOQA==
-X-CSE-MsgGUID: aU3KOEG/RzeWBw6T9QIfVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38557487"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="38557487"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:19:37 -0800
-X-CSE-ConnectionGUID: YZX0nUpkQZ+Gpe5G+KTXag==
-X-CSE-MsgGUID: VTemDsjcR6SbEFk9mhrtGQ==
-X-ExtLoop1: 1
+  bh=PJ15fGEiQ+1OKAs6Vayxn17ILLcq6+XFfwGZtQpPHA4=;
+  b=VVRvUkOtlnKsdJmBpp2WoKf3cCwGAbGPRTmaXCCrEIIMIkrQQc/d72qi
+   fAm8SIocZeekVjIqJz9vpRzjFS+ET4OlyESZ45/8qoyrrkLlAxAcKegeu
+   k+ekH4+HwIohTJ8jW+0SHV5GxCuYcybGhAAXctoFuca/l/fcXVuY5sr/k
+   KJ+KzMirYcviVkAgxUq32wst610v9RL01iju3VamUgzG9KAYDVfJT1MX/
+   FrnX4IsMxd7/SloddJ7KD8XksaMGXHn8vpfQNIUao0+TxzZxwdrGOQKoo
+   JyYxEl4o7WxaORZtj2XRj/TFOpkoQbOyAAuzvtYdM69Liu/bz4ykebXVg
+   A==;
+X-CSE-ConnectionGUID: mGRsVY9bRDeiKY+Aqb22cg==
+X-CSE-MsgGUID: Fcn3x3/ASP2Z7GmoQFyMYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11328"; a="63813190"
 X-IronPort-AV: E=Sophos;i="6.13,238,1732608000"; 
-   d="scan'208";a="108278977"
+   d="scan'208";a="63813190"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:38:22 -0800
+X-CSE-ConnectionGUID: 6j2blAj5SA+u1r05fK/YuQ==
+X-CSE-MsgGUID: ZkWgCDl6RWyfdBhg9vxRrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108910180"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:19:37 -0800
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 07:38:23 -0800
 Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D22DE20B5713;
-	Mon, 27 Jan 2025 07:19:35 -0800 (PST)
-Message-ID: <85588439-ec0e-4824-8193-f0737880ecb9@linux.intel.com>
-Date: Mon, 27 Jan 2025 10:19:34 -0500
+	by linux.intel.com (Postfix) with ESMTPS id B461E20B5713;
+	Mon, 27 Jan 2025 07:38:20 -0800 (PST)
+Message-ID: <4b66b490-3931-4e3d-9968-cd9de04a6b1a@linux.intel.com>
+Date: Mon, 27 Jan 2025 10:38:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,8 +58,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/20] perf/x86/intel: Parse CPUID archPerfmonExt leaves
- for non-hybrid CPUs
+Subject: Re: [PATCH 13/20] perf/x86/intel: Add SSP register support for
+ arch-PEBS
 To: Andi Kleen <ak@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -69,38 +69,39 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-4-dapeng1.mi@linux.intel.com>
- <Z5KRT-F7MbTs6g6y@tassilo>
+ <20250123140721.2496639-14-dapeng1.mi@linux.intel.com>
+ <Z5MiIWZhXpUwQgnG@tassilo>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Z5KRT-F7MbTs6g6y@tassilo>
+In-Reply-To: <Z5MiIWZhXpUwQgnG@tassilo>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2025-01-23 1:58 p.m., Andi Kleen wrote:
->> +	/*
->> +	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
->> +	 * PMU architectural features with a per-core view. For non-hybrid,
->> +	 * each core has the same PMU capabilities. It's good enough to
->> +	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
->> +	 * is used to keep the common capabilities. Still keep the values
->> +	 * from the leaf 0xa. The core specific update will be done later
->> +	 * when a new type is online.
->> +	 */
->> +	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
->> +		update_pmu_cap(NULL);
+On 2025-01-24 12:16 a.m., Andi Kleen wrote:
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index f40b03adb5c7..7ed80f01f15d 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -646,6 +646,16 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>  			return -EINVAL;
+>>  	}
+>>  
+>> +	/* sample_regs_user never support SSP register. */
+>> +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP)))
+>> +		return -EINVAL;
 > 
-> It seems ugly to have these different code paths. Couldn't non hybrid
-> use x86_pmu in the same way? I assume it would be a larger patch.
+> Why not? It's somewhere.
 
-The current non-hybrid is initialized in the intel_pmu_init(). But some
-of the initialization code for the hybrid is in the
-intel_pmu_cpu_starting(). Yes, it's better to move it together. It
-should be a larger patch. Since it's impacted other features, a separate
-patch set should be required.
+The current REGS_USER only returns the registers in the struct pt_regs.
+The ssp is not part of it. So it is only supported in the REGS_INTR. Is
+it enough?
+
+If we want to support ssp with REGS_USER, I think a arch-specific
+function should be required early to avoid the perf_sample_regs_user().
 
 Thanks,
 Kan
+
 
