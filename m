@@ -1,75 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BEA18FDDA;
-	Mon, 27 Jan 2025 18:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73C71A8404
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 21:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738002908; cv=none; b=NbUMA0J5VZvm4AhHZe8MI/1XJ/cBa4uduMA/jDo6d8JylTKA5ox4vyUCwJ7wOfQ9g1KeMx6V9O7vb+F4giN7ehNH+2KMYNBXQhRHVSrgM9J6LEWGWpYhVXT8TPbRC1WBIuGeqCV/NHmoCW2jp6CDBvZHHngoyONxqI3xjwpeklc=
+	t=1738012665; cv=none; b=hPp7f6gp4D9xeMF/Fl8HS/TBrGuBy+y/Lgt8BadKe+JgJ9lYwTQPE0EOufDt7qLUxITIhdKaSCg4lk2nVYtBJF/yZHAByJmtq1XWdt5aKtiGUtU4lRq0RunJOxaap2gi9PG30Jw4alxvIratj71lZM2nsRQHPR/Gp4ER1qoEpRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738002908; c=relaxed/simple;
-	bh=dERTfVk9xbmRISZO2txnelT4RFFG9bNlKVozSZahXk8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=uumBe2JNMSj2O7mIWQ83G2slkT4wat6UWCV2ZxeYHscTIum5oj5iPjeYqyz+wUV/71U12JZ02QFADBj5ioQ1G3Y/ZAYIblcux3nxvOSO18vIdl/+vd4k6u+98XNhisb8W+HjV4DRYX2uDlxjaVD/uIl2xrcaWecfBigFUieGUoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qivj5U5M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738012665; c=relaxed/simple;
+	bh=/BUu3mEM3rCKji5mZxUeA/2/5w1poUKM7wvA/jnX+ao=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=kuZ6LcdfnsvhXqJlYQ0ZWhSI1DsISc9+fJr9KdI1uJNbOFgTZr+bjhQ4NwQGXmDCzRxp/vy77Ey+HnuAHuzBIfgngraDumKwl1HbiKcGnVOPhgrYh8GckWhV9mPFAukjraCGGqsA/aWZ7J9zdFJ95tZvcIjNqBA3YfBPtWGW3/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrhJ7eiu; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qivj5U5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F808C4CEE0;
-	Mon, 27 Jan 2025 18:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738002908;
-	bh=dERTfVk9xbmRISZO2txnelT4RFFG9bNlKVozSZahXk8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Qivj5U5MNVlTMYwFLLfOT4FDpqjuyeHy1Wu2gEC9RMj3HN+BnN7aSFZpyZgMifzbw
-	 Iv3YUC6R3KcX3bhSXEHw3Kz593MIUzLJ2zC8q0jJyWebFxpE/ciA19ZDtoJTOULpjp
-	 WK3Nl9/XvzN6XWFCJV1jX01BcUqPOBlgl75eHkVZtyIjElTDHLb6Be+TTOV656zm+5
-	 nV7ZiBWlHEhFdPl3oSHm0ZG2mqutalDQp3PKlVafhhJ+XXD9XA3moAlaw5YN0XBYWe
-	 PSzvi0kvuEVD1Wy115wI1A+saqSGjFEEO1VjbL1GN9QOKBZWiHcJJZ3Zlkrp0RCUXi
-	 GDD40br2dFEzg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: irogers@google.com, linux-perf-users@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- Yoshihiro Furudera <fj5100bi@fujitsu.com>, 
- Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250122163504.2061472-1-james.clark@linaro.org>
-References: <20250122163504.2061472-1-james.clark@linaro.org>
-Subject: Re: [PATCH v2 0/2] perf vendor events arm64: Add N3 events/metrics
-Message-Id: <173800290747.34478.7772336329501115835.b4-ty@kernel.org>
-Date: Mon, 27 Jan 2025 10:35:07 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrhJ7eiu"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e3c61a11a40so13681435276.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 13:17:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738012663; x=1738617463; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bP3LjJM2yqm7ZF1bzjxMchIFOPBg28Ep2NfICJoxEig=;
+        b=SrhJ7eiuYWCO5+NlEPHJBPmlsvyrBq0CP2rJpzuMGP64OlFh9KRzRUruVoqK6ObCKq
+         f//Lp13oRzWJ9e0GVOdOyk1GZILp7wmRcRsrPqjgKDebOJIe6q6i65hsYOKAYIcm+KkZ
+         Pc/4lmFOpbTLz10DzDvDnKY/pvzD0VWJ6w52N0BVJCvKBIq5hMywl2X1mMUScN5mcHgu
+         4+nBLTwPOtYbc29uBXnMl0cvNEkjpsggtFeHQz+wuBguth/6fkLm0qDfsOqz/GLWoA9n
+         Vrph3K2Moulrn77NJE6LEBojY6iO/C2P6iYMOZL5cdAIz9KfnfOMbWgQh2CT0nt5CbvB
+         9s6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738012663; x=1738617463;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bP3LjJM2yqm7ZF1bzjxMchIFOPBg28Ep2NfICJoxEig=;
+        b=BZYU1XEMfby7qd/NoObQSH+5WaRt20scAE5JhXOukeOgtjGdi13LYrHiJhKcO36Kqr
+         Lp9feiNgcIXmiPjnmVBbmur+eJ6/TTJxgYtBA8u/1GxAz1MuGGKuC9mYdNllizTDqQlA
+         H4YDzqfdM2CgTQ8DI2aarRRex3V+hMUTFmlOkJKwVk4TcFA2VDeSh7ZI50lECI8LHida
+         OsRM1kP81hxlmZi8lL06OYEzhhFraqQVll5vAOdFWEJULcSwKGZCRu3f4fzt8bzPWOP1
+         SWwWancOi3hIYAA4kR+uvYAzlS51A+xY6EgfCdZcUAAnER450goprtB5ag9U/QYZLBez
+         7hxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRBbxXkUGneYmf1G/V2acSGa4eIt/TRHmkOLpopUKu3UD6HlYg8SdJL9MdV4Lju+u1gb+XVqkXzr2Kg8zwftcJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhsuAdbUDVD+0jqtO+yJt3K5IJUSyHRlYlymBvxcwvFMFdbdJY
+	m3NlApJIrBADaXM2Byasmodj0mQdcw/iKp0Bfm2UX7Ybirv4/S4TESNf5+guyj1ESxxIpEj9dFg
+	RV8VJ0w==
+X-Google-Smtp-Source: AGHT+IFLyWZwAHPDf3bUMlxmeXS5Vi2qWI6NmUZnoCT3gdOdbk12QZL0AWwKmFqrPa3VVAeJiyPjXHBXSNKy
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8343:7b31:63b1:a4be])
+ (user=irogers job=sendgmr) by 2002:a25:aab3:0:b0:e57:f577:5564 with SMTP id
+ 3f1490d57ef6-e57f57756dbmr58057276.8.1738012662727; Mon, 27 Jan 2025 13:17:42
+ -0800 (PST)
+Date: Mon, 27 Jan 2025 13:17:37 -0800
+Message-Id: <20250127211737.179059-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Subject: [PATCH v1] perf test: Skip Intel TPEBS under hypervisor
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 22 Jan 2025 16:35:01 +0000, James Clark wrote:
+Intel TPEBS test skips on non-Intel CPUs. On Intel CPUs under a
+hypervisor the cache-misses event may not be present. Skip the test
+under this condition.
 
-> Changes since V1:
->   * The generator script wasn't adding new common events properly and
->     also wasn't generating groups for N3 and V3. I've fixed up the
->     script and regenerated.
-> 
-> James Clark (2):
->   perf vendor events arm64: Add N3 events/metrics
->   perf vendor events arm64: Add V3 events/metrics
-> 
-> [...]
+Refactor the output code to be placed in a file so that on a signal
+the file can be dumped. This was necessary to catch the issue above as
+the failing perf record command would fail without output.
 
-Applied to perf-tools-next, thanks!
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../perf/tests/shell/test_stat_intel_tpebs.sh | 35 +++++++++++--------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-Best regards,
-Namhyung
+diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+index 695dcb93bb5e..1b61b219cd2f 100755
+--- a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
++++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+@@ -20,31 +20,38 @@ then
+   exit 2
+ fi
+ 
++stat_output=$(mktemp /tmp/__perf_stat_tpebs_output.XXXXX)
++
+ cleanup() {
++  rm -rf "${stat_output}"
+   trap - EXIT TERM INT
+ }
+ 
+ trap_cleanup() {
+   echo "Unexpected signal in ${FUNCNAME[1]}"
++  cat "${stat_output}"
+   cleanup
+   exit 1
+ }
+ trap trap_cleanup EXIT TERM INT
+ 
+-# Use this event for testing because it should exist in all platforms
+-event=cache-misses:R
+-
+-# Hybrid platforms output like "cpu_atom/cache-misses/R", rather than as above
+-alt_name=/cache-misses/R
++# Event to be used in tests
++event=cache-misses
+ 
+-# Without this cmd option, default value or zero is returned
+-#echo "Testing without --record-tpebs"
+-#result=$(perf stat -e "$event" true 2>&1)
+-#[[ "$result" =~ $event || "$result" =~ $alt_name ]] || exit 1
++if ! perf stat  -e "${event}:p" --record-tpebs -a sleep 0.01
++then
++  echo "Missing ${event} support"
++  exit 2
++fi
+ 
+ test_with_record_tpebs() {
+   echo "Testing with --record-tpebs"
+-  result=$(perf stat -e "$event" --record-tpebs -a sleep 0.01 2>&1)
++  if ! perf stat -e "${event}" --record-tpebs -a sleep 0.01 > "${stat_output}" 2>&1
++  then
++    echo "Testing with --record-tpebs [Failed perf stat]"
++    cat "${stat_output}"
++    exit 1
++  fi
+ 
+   # Expected output:
+   # $ perf stat --record-tpebs -e cache-misses:R -a sleep 0.01
+@@ -57,16 +64,16 @@ test_with_record_tpebs() {
+   #                  0      cache-misses:R
+   #
+   #        0.013963299 seconds time elapsed
+-  if [[ ! "$result" =~ "perf record" ]]
++  if ! grep "perf record" "${stat_output}"
+   then
+     echo "Testing with --record-tpebs [Failed missing perf record]"
+-    echo "$result"
++    cat "${stat_output}"
+     exit 1
+   fi
+-  if [[ ! "$result" =~ $event && ! "$result" =~ $alt_name ]]
++  if ! grep "${event}:R" "${stat_output}" && ! grep "/${event}/R" "${stat_output}"
+   then
+     echo "Testing with --record-tpebs [Failed missing event name]"
+-    echo "$result"
++    cat "${stat_output}"
+     exit 1
+   fi
+   echo "Testing with --record-tpebs [Success]"
+-- 
+2.48.1.262.g85cc9f2d1e-goog
 
