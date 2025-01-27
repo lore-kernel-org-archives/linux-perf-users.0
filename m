@@ -1,154 +1,192 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA391FC7F3
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C9E1FC7F3
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737971957; cv=none; b=EME4o8BlyV+lpdJKIEpkSfHDBZpol35/Fsx8JTAEhxV47vonFYrxZuBCm4kH5PMwaz1lVCApY5MZAEtLuzX9PD3JavC+viB0KGaf2cuQhI4bKlIuigeWMCkgCr2ITgNCoh2zBww+w+0ygLxdiKwJfTPpTOWqyMOimve9Kg+/zFU=
+	t=1737971960; cv=none; b=nlDKBV00I/grriLV5f0Xjm4ygB2BnjMMkbsWM9ikUe3xoOQZ5vnSjaNCFbNUxsRdfkFW3CTnk19UsoKqK7rmoDfUPx2lDqy8P7hpu9lSfVvimn2B48sxW57Ysu5zbbx5hsfBDQN7knTTzN27gGDFAxW7Oul7gMIkrbQh0eJRHyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737971957; c=relaxed/simple;
-	bh=UC2FXzcWcgolBEER15W83gDn+wDGtClwLgk9NU/aE/w=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eot/MH3VRwR2KwgmxNcm7VmsN8TXSthDBGDIHfpanttjyVaQsx1dQ9EXwNETNOlTb84mL85dlMlQsEw1Pq5oVq3qfSD/iyCk4nw+J1qBEn7shoJhdw0NzyP1EuA2bjkHRmlvoEd+yV65N7DsMhXY+1M6G5zYVkAQhZyZ+GJ4HUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zo4ffk/i; arc=none smtp.client-ip=209.85.218.74
+	s=arc-20240116; t=1737971960; c=relaxed/simple;
+	bh=7Lwmz2qowc+FL2S348X3fs0ddxo5HZNQI1A8WhNfwmM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UF8yx7tghZfZf73XfcUEX3ulu+G1gsmjohCqJsCozQ7reabWIC4Ckjifops+5Mi0qbeSI6A/UyxjiqgZQ7naR18CUWOK/S1XZ+/MidQ7H3OgzG8Rqr0iyk56rE7rRlTTDR3jqGCwzPdlYW5yi+OO+CvekSu7hvzpoOOd8Wumo0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=23D0DEL1; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zo4ffk/i"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-aa68952272bso494791566b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="23D0DEL1"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d3bf8874dbso4927870a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737971954; x=1738576754; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UkxAk9+lBkQHO0K5ooSsWH+26gvlSdhoYUGXyajZA0A=;
-        b=Zo4ffk/ia5U/R2LP7yuQPutOWq4eN/kIl+PKOMVKrahqfgW5vknb+hd2JzdMwkCRkk
-         cptFG21PjWX1G6IJsJErR3Q4sWqjAU/ZX67rNOzxNDu3wQNBu19K6tz1x4waQo+a0YB9
-         ugQvdHSPqM+ApFaHCzn7weR9b6xOiRyB1XYfUomnl7ShQ+BmF0htfm8a+yy34iAt3bTR
-         6tamsSnQJqOM7YvGoCKYnx/N9YHurTGEmFHsD7lmntcnywi1zaNvKrJTQPy+J9jx4sXc
-         eLKISnB04sRaMYNVVDFZF0az43h2SfaRJ2lNdroIiZGVxlJrgfr7OESm23fat7URO4dx
-         lBCA==
+        d=google.com; s=20230601; t=1737971956; x=1738576756; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wY6YjR33QYUTFA2QpzMQp9zL626GKLB+VcfcqXYl4og=;
+        b=23D0DEL18KYt5Yqv75lVQiJyWNLsTiuhFGSinubLbFBwh4SiMTzHVAmAPRJp1FJKCD
+         946xU1laTwVZwJAXPdo8qTOugy2JCgRmcWcJUH5oX9pZNKmY1wV1Nq93plpNDCPzTQBW
+         GJby9XqUhIVL9jqK28P8IgtkpsIPoerdoTxZz2/p2RWcm4yCeC43fAXfeodqsWOvLOMt
+         eg5KK+O9owY4hpl2SYlIvd4W6SmP5KPlBgJJSRJXtdRXLFvngxiZI9qJIt9reBkq200H
+         s4/oRAY4is4jkKkx/GbnSCo9/w4/rFNHmIvsB888S9vtUqs6FyvLumIxB2oBbrlar17H
+         A28A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737971954; x=1738576754;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UkxAk9+lBkQHO0K5ooSsWH+26gvlSdhoYUGXyajZA0A=;
-        b=nWgq3v0HKBR3D7cvNF7qDaOEnUuW4jD3Saxx3n0168q4ZtqZpPxd2ZXk+/KOS2TiqU
-         ZxpMgFHhtxSwyHkvRUW7MZ03NaLNackfvgZevwb9mjIiWwa/QHaH07O+4A+l8SEDpuiC
-         oYzNBCADmeroJ8+3bWW4u1a8k/kp8nA4VS1tbxACEQN7ohiY49+NhrZz7h+8hicDuqdw
-         8t6wpOjx9eQwePeGNYzaO7Pjbwfqby71QZIFOWcq+sJRntIJiqNlwhYybRIYsWqwVeyb
-         FWNiQoMTrTaUQriMc7JMQSXs/TjjTJtgD0ClwWubz4Hfq+fXCUoIRUd4X13tx2BtsMXF
-         dv7Q==
-X-Gm-Message-State: AOJu0YyJKH9qbcCtX8boV4jJIvaPXIK5FukU6OmxnG8mmIxo9VGMI0WY
-	UcxjcVpSCPK/HK2P23byTQLV32H2uZj0IV5Q8eQMxvNl5fM9QqNYk63fVtW1FNf6ucuz750N4gx
-	6lOM7tg==
-X-Google-Smtp-Source: AGHT+IFEg39chTS5McLJ9jmrQk89u/wZ/PbfXPm0viwkAh0oOKAGWcCuQyAW6Uc1Lh0xB3XH9NhqSfrrUghf
-X-Received: from edah3.prod.google.com ([2002:a05:6402:e83:b0:5cb:85ff:8366])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:3489:b0:5d0:e826:f0dc
- with SMTP id 4fb4d7f45d1cf-5db7d2f9c54mr34992120a12.12.1737971953937; Mon, 27
- Jan 2025 01:59:13 -0800 (PST)
-Date: Mon, 27 Jan 2025 10:58:47 +0100
+        d=1e100.net; s=20230601; t=1737971956; x=1738576756;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wY6YjR33QYUTFA2QpzMQp9zL626GKLB+VcfcqXYl4og=;
+        b=mrXjDayUIAjcLLxmtlsJKm8rFNwGU/dj/hIPqpBvR6t9HaNweiSfcAVdLV48jRsPWN
+         7ZDDWuW0dfB1arUSYVuD7leVy3uNcTus4dzsZOIBUSO29vgMmx2l5VZQPShSYBEGbTgH
+         zhUHKuU/YnL8ydAgQxK7DtLh5y7PFV8dCwbXeRn5cbzteiOxx+wAd3chMb7BL4h5VHiD
+         3wP6LuxsB4qt8s98XlyRIWJovIE2WywfIYdME24VC43V+z1LVXmbMlS9glkGyq6pvd6k
+         ya9pj7fQJUf7Y+QuXjdTDD4V/Rm16JLmQBqDH3/SWcftCEFUPlJjHHx/reBRCyDF5X3Q
+         zDMg==
+X-Gm-Message-State: AOJu0Yzw6yEmaPJJKqWzMrAuIIKtl12QDimlh90sZO9ZaLu9WVC54j76
+	q2gno8KpEYvhPCcjsa5+D6NvjXptUduhxzvrrj/7X9bI0P1m3XbZGiV9SFAhMmKVtwqSKSTLlkp
+	cOF4nhg==
+X-Google-Smtp-Source: AGHT+IHWR5KT444/HwyTkeF8oEknrLW504GPADqAKXMZXiZu/CWtg9MudjXP4L1rx2P21ydNd5cATZPXKLPB
+X-Received: from edap3.prod.google.com ([2002:a05:6402:5003:b0:5dc:37ed:79fc])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:26c6:b0:5dc:545:40a7
+ with SMTP id 4fb4d7f45d1cf-5dc05454350mr17309711a12.12.1737971956452; Mon, 27
+ Jan 2025 01:59:16 -0800 (PST)
+Date: Mon, 27 Jan 2025 10:58:48 +0100
+In-Reply-To: <cover.1737971364.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <cover.1737971364.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <cover.1737971364.git.dvyukov@google.com>
-Subject: [PATCH v3 0/7] perf report: Add latency and parallelism profiling
+Message-ID: <35860043ef3c4a25d36211853c3f2a6f83cd74b7.1737971364.git.dvyukov@google.com>
+Subject: [PATCH v3 1/7] perf report: Add machine parallelism
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-There are two notions of time: wall-clock time and CPU time.
-For a single-threaded program, or a program running on a single-core
-machine, these notions are the same. However, for a multi-threaded/
-multi-process program running on a multi-core machine, these notions are
-significantly different. Each second of wall-clock time we have
-number-of-cores seconds of CPU time.
+Add calculation of the current parallelism level (number of threads actively
+running on CPUs). The parallelism level can be shown in reports on its own,
+and to calculate latency overheads.
 
-Currently perf only allows to profile CPU time. Perf (and all other
-existing profilers to the be best of my knowledge) does not allow to
-profile wall-clock time.
-
-Optimizing CPU overhead is useful to improve 'throughput', while
-optimizing wall-clock overhead is useful to improve 'latency'.
-These profiles are complementary and are not interchangeable.
-Examples of where latency profile is needed:
- - optimzing build latency
- - optimizing server request latency
- - optimizing ML training/inference latency
- - optimizing running time of any command line program
-
-CPU profile is useless for these use cases at best (if a user understands
-the difference), or misleading at worst (if a user tries to use a wrong
-profile for a job).
-
-This series add latency and parallelization profiling.
-See the added documentation and flags descriptions for details.
-
-Brief outline of the implementation:
- - add context switch collection during record
- - calculate number of threads running on CPUs (parallelism level)
-   during report
- - divide each sample weight by the parallelism level
-This effectively models that we were taking 1 sample per unit of
-wall-clock time.
-
-We still default to the CPU profile, so it's up to users to learn
-about the second profiling mode and use it when appropriate.
-
-Changes in v3:
- - rebase and split into patches
- - rename 'wallclock' to 'latency' everywhere
- - don't enable latency profiling by default,
-   instead add record/report --latency flag
-
-Dmitry Vyukov (7):
-  perf report: Add machine parallelism
-  perf report: Add parallelism sort key
-  perf report: Switch filtered from u8 to u16
-  perf report: Add parallelism filter
-  perf report: Add latency output field
-  perf report: Add --latency flag
-  perf report: Add latency and parallelism profiling documentation
-
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
+---
+ tools/perf/builtin-report.c     | 1 +
+ tools/perf/util/addr_location.c | 1 +
+ tools/perf/util/addr_location.h | 2 ++
+ tools/perf/util/event.c         | 3 +++
+ tools/perf/util/machine.c       | 7 +++++++
+ tools/perf/util/machine.h       | 6 ++++++
+ 6 files changed, 20 insertions(+)
 
- .../callchain-overhead-calculation.txt        |  5 +-
- .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
- tools/perf/Documentation/perf-report.txt      | 49 ++++++----
- tools/perf/Documentation/tips.txt             |  3 +
- tools/perf/builtin-record.c                   | 20 +++++
- tools/perf/builtin-report.c                   | 39 ++++++++
- tools/perf/ui/browsers/hists.c                | 27 +++---
- tools/perf/ui/hist.c                          | 64 +++++++++----
- tools/perf/util/addr_location.c               |  1 +
- tools/perf/util/addr_location.h               |  7 +-
- tools/perf/util/event.c                       | 11 +++
- tools/perf/util/events_stats.h                |  2 +
- tools/perf/util/hist.c                        | 90 +++++++++++++++----
- tools/perf/util/hist.h                        | 26 +++++-
- tools/perf/util/machine.c                     |  7 ++
- tools/perf/util/machine.h                     |  6 ++
- tools/perf/util/session.c                     | 12 +++
- tools/perf/util/session.h                     |  1 +
- tools/perf/util/sort.c                        | 69 ++++++++++++--
- tools/perf/util/sort.h                        |  3 +-
- tools/perf/util/symbol.c                      | 34 +++++++
- tools/perf/util/symbol_conf.h                 |  8 +-
- 22 files changed, 498 insertions(+), 71 deletions(-)
- create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
-
-
-base-commit: 91b7747dc70d64b5ec56ffe493310f207e7ffc99
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index f5fbd670d619a..0d9bd090eda71 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1568,6 +1568,7 @@ int cmd_report(int argc, const char **argv)
+ 	report.tool.cgroup		 = perf_event__process_cgroup;
+ 	report.tool.exit		 = perf_event__process_exit;
+ 	report.tool.fork		 = perf_event__process_fork;
++	report.tool.context_switch	 = perf_event__process_switch;
+ 	report.tool.lost		 = perf_event__process_lost;
+ 	report.tool.read		 = process_read_event;
+ 	report.tool.attr		 = process_attr;
+diff --git a/tools/perf/util/addr_location.c b/tools/perf/util/addr_location.c
+index 51825ef8c0ab7..007a2f5df9a6a 100644
+--- a/tools/perf/util/addr_location.c
++++ b/tools/perf/util/addr_location.c
+@@ -17,6 +17,7 @@ void addr_location__init(struct addr_location *al)
+ 	al->cpumode = 0;
+ 	al->cpu = 0;
+ 	al->socket = 0;
++	al->parallelism = 1;
+ }
+ 
+ /*
+diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
+index d8ac0428dff23..36aaa45445f24 100644
+--- a/tools/perf/util/addr_location.h
++++ b/tools/perf/util/addr_location.h
+@@ -21,6 +21,8 @@ struct addr_location {
+ 	u8	      cpumode;
+ 	s32	      cpu;
+ 	s32	      socket;
++	/* Same as machine.parallelism but within [1, nr_cpus]. */
++	int	      parallelism;
+ };
+ 
+ void addr_location__init(struct addr_location *al);
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index aac96d5d19170..3d3ac58e1c660 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -767,6 +767,9 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+ 			al->socket = env->cpu[al->cpu].socket_id;
+ 	}
+ 
++	/* Account for possible out-of-order switch events. */
++	al->parallelism = min(max(machine->parallelism, 1), machine__nr_cpus_avail(machine));
++
+ 	if (al->map) {
+ 		if (symbol_conf.dso_list &&
+ 		    (!dso || !(strlist__has_entry(symbol_conf.dso_list,
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2d51badfbf2e2..0e65c5377f983 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -94,6 +94,8 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
+ 	machine->comm_exec = false;
+ 	machine->kernel_start = 0;
+ 	machine->vmlinux_map = NULL;
++	/* There is no initial context switch in, so we start at 1. */
++	machine->parallelism = 1;
+ 
+ 	machine->root_dir = strdup(root_dir);
+ 	if (machine->root_dir == NULL)
+@@ -677,8 +679,11 @@ int machine__process_aux_output_hw_id_event(struct machine *machine __maybe_unus
+ int machine__process_switch_event(struct machine *machine __maybe_unused,
+ 				  union perf_event *event)
+ {
++	bool out = event->header.misc & PERF_RECORD_MISC_SWITCH_OUT;
++
+ 	if (dump_trace)
+ 		perf_event__fprintf_switch(event, stdout);
++	machine->parallelism += out ? -1 : 1;
+ 	return 0;
+ }
+ 
+@@ -1900,6 +1905,8 @@ int machine__process_exit_event(struct machine *machine, union perf_event *event
+ 	if (dump_trace)
+ 		perf_event__fprintf_task(event, stdout);
+ 
++	/* There is no context switch out before exit, so we decrement here. */
++	machine->parallelism--;
+ 	if (thread != NULL) {
+ 		if (symbol_conf.keep_exited_threads)
+ 			thread__set_exited(thread, /*exited=*/true);
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 2e5a4cb342d82..a5f28652873ce 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -50,6 +50,12 @@ struct machine {
+ 		u64	  text_start;
+ 		u64	  text_end;
+ 	} sched, lock, traceiter, trace;
++	/*
++	 * The current parallelism level (number of threads that run on CPUs).
++	 * This value can be less than 1, or larger than the total number
++	 * of CPUs, if events are poorly ordered.
++	 */
++	int		  parallelism;
+ 	pid_t		  *current_tid;
+ 	size_t		  current_tid_sz;
+ 	union { /* Tool specific area */
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
