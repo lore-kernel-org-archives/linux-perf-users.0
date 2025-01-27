@@ -1,54 +1,54 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6E51FDE22
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0199B1FE44F
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737971963; cv=none; b=eBjZAs80KLxN4rr8NZcQItZBd1SUYS5ey3TevLqpBjyLyRVKHaQmiIuuO3T20LaAH7WnXqefdty226D+q6twhHfeEQPgTLmHY9DuxhvjSsDywx0GXZeLHEBjNf0c03/hStrFWHanuE2+r0y3dshQgcLSHWwVwavpg9MHNOYWuDM=
+	t=1737971964; cv=none; b=ks+7AaAYbSGKHVIBIH5l+AKykRBVeDo3xHiUj+k6j2hpeTpojv63EqSzNdGZlB6Kcgi4EJlmViDwvzTtRKKgpYnhnY72faGmP6ofryfqLbcgKmJ3b7VoF3vRwKA/LwREjNNZfNJgmQ8tAqGHLxmqCJiG/kQsIWxG6bkwr1LqY4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737971963; c=relaxed/simple;
-	bh=cNclnO68vswCkh+84xPCh9o2+/2+lsK7sgZCyii1PpI=;
+	s=arc-20240116; t=1737971964; c=relaxed/simple;
+	bh=CMm71ocJ13ENhSwg83YLPq3qIcUDzcZT3Q0wIiZ2TJ0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J0J5tcZKrk3G4clUEAoqaoNl+jm3DxWJbyeM+PZ/5d0UhFNM8RpCMU+p/YeLSMij+JpAYCZACr6VtpV/3op7DbjhWBcLHHwI+/s6E1G+dEdjfPO+gQQo8ay5fhTzTiqhTGno1EmnxwQiFmUyEA2LnHPRsDVhyc2oLJxyZRVUMmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YZWRN+S9; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=GwpEFuPV/nAUa+ZG+f/UYOS5nyZqqA4dTzDZOlHFI/ji235bQQnCFUkonPXWQtewrYxkDfgS9AQUlDc6cOvejNP+Ar3qeHhy3R4q83KNvVpaIOO+yrJSI9pezHq0rbyHa7S46yJJZq6tr9RKvxPc8bHjV/Undu++5sc9toua0S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9zhUMk6; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YZWRN+S9"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d3ff30b566so4229064a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9zhUMk6"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4362f893bfaso22783595e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737971959; x=1738576759; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1737971961; x=1738576761; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOELaFIO5iUqHVPdsTFBOAPxUJnQlKBp6D46phdh9Z0=;
-        b=YZWRN+S9QjmgF6FtkKaDX709nQI4/zIKQW8StVo0FxyPyNiduKkf4Mjq42ApN4X/hb
-         5vzjNIwTBPsjx9MHeUXhCn8qkmpx4Z0BnCxEVl8qm81dofV+9z2FWv7dUcQ+9+/PUMPN
-         zFSDDYNckdIsZUz4Kyu/RbB+mb+0NMEpoxSjGO2EcPW7UCy8HveaJPcCE7v4S78MakN9
-         7B536/SIHDSXSUJaIcsfLT26PwJ4NHnUY+3nwKVswqgiaV2KZhzgy6v7/7IbknqoTBom
-         2PSMO4bUOBsdihp7+c3/QivxVkfXvNx6E9+Al+gPTxRLisw4UkSWRTdCVRxdZuwpA/wK
-         CSWw==
+        bh=qZi36qj3Dk8D5X5YEhL/AUUUkfpPn0nYoCcDBPXmPQQ=;
+        b=K9zhUMk6SiTXozuOaGkTN8lcTcLaOsVy0H5wEcOYYlZcGDg/wNw3KVpgNhzSio+0ed
+         AJOV5PMN3VRQWqqKxPftKiXQDyV8MFHfodx/KgRRnK5Fp68UOYkFfABTidRIIO1J/7hZ
+         QVCTLP/7duJ3Ci1QClaqUVrVJejyB1JSKXpSP8bTpFI+n/AJVvlfjtUKc/CLiobNdKtQ
+         inRiynfNaRBGm3w5Fom74f+bftQeIr2/klndA6+am1eNj2E2v/YGXfAFpnD9jXl1EK2U
+         58Fh8hWNjFJq7GeF6t0ZiUMQKkk9QGOm+bnNGCb5dJrH2VCb+uHsi9v1RQGjE58ZSwHC
+         H3Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737971959; x=1738576759;
+        d=1e100.net; s=20230601; t=1737971961; x=1738576761;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOELaFIO5iUqHVPdsTFBOAPxUJnQlKBp6D46phdh9Z0=;
-        b=v9MMpQcYx9eyRjAfa8jS4ybiRQS+PTL5T1U/NR+vKRsZPH2XcKvz7L9illwXHdla/V
-         RdfmJNvXXvPlXcGxuXKOtHYDPVjM8j9xooTJ8nadAg5bPCU3KKVaapmTGV9u7+VW/wf4
-         vNxBZTGJ25MLvZL7QdS+79EKflcg7Q3V6Ql5+1K2iibAmma0JZxreoYM4EZYPHYXtWOX
-         IwdQgYOgy56tcaADdRWyFVBuohQ0K4jw/ZgdN6vqHLKFXD3UztyGmFgadYPbTmRvSQbY
-         wl+JJB/qMepTw9HB7nM8WJ6pbCp3ceHfg6JLdDyiScklSsidcg8IMWeDUDxa3cbQ2QEt
-         21+A==
-X-Gm-Message-State: AOJu0Yzq0WCBoLlHTqxL0cryn1bdy+VDLAe1qEsyF6Vc3PSR6E/ToK1s
-	NvTlQ8PaJMp7EaOwudWRJenfVPpRObxHaqkXlRkN4r1FC61eHrw6N5Cadv4at0EdwquHG72gd6r
-	9jYEA5Q==
-X-Google-Smtp-Source: AGHT+IGA9+D9Jw5XlvJVQYmyZq4z9qPj1Raw20IsgspYZ/XEthKM0PaESyfATbCHjlFPN+y77Ajbop+3/fBw
-X-Received: from edbb6.prod.google.com ([2002:a05:6402:1f06:b0:5d8:7c86:ecac])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:278f:b0:5d2:7346:3ecb
- with SMTP id 4fb4d7f45d1cf-5db7d2f8066mr38124892a12.12.1737971958994; Mon, 27
- Jan 2025 01:59:18 -0800 (PST)
-Date: Mon, 27 Jan 2025 10:58:49 +0100
+        bh=qZi36qj3Dk8D5X5YEhL/AUUUkfpPn0nYoCcDBPXmPQQ=;
+        b=A1Og9TVW76EMZlERDeDo5a7KxPz+xq7ImqFUISzEKbtx8ZObiQZTw4ZH50sOu2MRGU
+         8820hlGS8OBv1F4Pmu/AfrPX34jp8CYyNG9NRUTW0KwScnijnN8dQXHRE9AuZotxs/Qy
+         NQwsgnRy2aSvFZ/aHwvExVhDQWstWJp0D/tnzUJn5Jt85EYiry+JZEwc/KDUMrMOR/Nf
+         erwun48esZQ/oH1UxjSMLpjLx/vYtZzoTxMkkwapnd7/oeOu5mNZj5lOTT4Jx4pJht7f
+         6cVVR1V6Rif4BM79Qns1R1eoYKECkr9OA1vaRqqLHSzCDiPjMv4jJw2hyeD4q0q97hCv
+         VdiQ==
+X-Gm-Message-State: AOJu0YyHoNOa5meFg3WR+I+l0445RiZkOzlOOiQASCzPKVcAXWXn/zYm
+	o0YyTWUWycxPL1mV6jn/E/4MIS9wu4+RoeBq9olGrxBxUheQZ3DXSaI7AH2MnO/D4FWJWMrKxxe
+	B2H1U0g==
+X-Google-Smtp-Source: AGHT+IHmH3Gqb/Z2o7jzI0F2xckNIS1ZWcj3WZmmtB5FP/KGhgCpjXrsbfIsdGeJn+tXm3YFAkftIGHWW/sG
+X-Received: from wmga3.prod.google.com ([2002:a05:600c:2d43:b0:434:9da4:2fa5])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5112:b0:434:a5bc:70fc
+ with SMTP id 5b1f17b1804b1-438913cfa0emr355327075e9.8.1737971961472; Mon, 27
+ Jan 2025 01:59:21 -0800 (PST)
+Date: Mon, 27 Jan 2025 10:58:50 +0100
 In-Reply-To: <cover.1737971364.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,15 +58,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1737971364.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <3e52ed435e0ce98e1108b172fdcadc4749a25c98.1737971364.git.dvyukov@google.com>
-Subject: [PATCH v3 2/7] perf report: Add parallelism sort key
+Message-ID: <ebe01420df65a261bfbb59f425bc1d656f1fdc6b.1737971364.git.dvyukov@google.com>
+Subject: [PATCH v3 3/7] perf report: Switch filtered from u8 to u16
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Show parallelism level in profiles if requested by user.
+We already have all u8 bits taken, adding one more filter leads to unpleasant
+failure mode, where code compiles w/o warnings, but the last filters silently
+don't work. Add a typedef and switch to u16.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -75,180 +77,67 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/perf/builtin-report.c | 11 +++++++++++
- tools/perf/util/hist.c      |  2 ++
- tools/perf/util/hist.h      |  3 +++
- tools/perf/util/session.c   | 12 ++++++++++++
- tools/perf/util/session.h   |  1 +
- tools/perf/util/sort.c      | 23 +++++++++++++++++++++++
- tools/perf/util/sort.h      |  1 +
- 7 files changed, 53 insertions(+)
+ tools/perf/util/addr_location.h | 3 ++-
+ tools/perf/util/hist.c          | 2 +-
+ tools/perf/util/hist.h          | 4 +++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 0d9bd090eda71..14d49f0625881 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1720,6 +1720,17 @@ int cmd_report(int argc, const char **argv)
- 		symbol_conf.annotate_data_sample = true;
- 	}
+diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
+index 36aaa45445f24..f83d74e370b2f 100644
+--- a/tools/perf/util/addr_location.h
++++ b/tools/perf/util/addr_location.h
+@@ -3,6 +3,7 @@
+ #define __PERF_ADDR_LOCATION 1
  
-+	if (report.disable_order || !perf_session__has_switch_events(session)) {
-+		if ((sort_order && strstr(sort_order, "parallelism")) ||
-+				(field_order && strstr(field_order, "parallelism"))) {
-+			if (report.disable_order)
-+				ui__error("Use of parallelism is incompatible with --disable-order.\n");
-+			else
-+				ui__error("Use of parallelism requires --switch-events during record.\n");
-+			return -1;
-+		}
-+	}
-+
- 	if (sort_order && strstr(sort_order, "ipc")) {
- 		parse_options_usage(report_usage, options, "s", 1);
- 		goto error;
+ #include <linux/types.h>
++#include "hist.h"
+ 
+ struct thread;
+ struct maps;
+@@ -17,7 +18,7 @@ struct addr_location {
+ 	const char    *srcline;
+ 	u64	      addr;
+ 	char	      level;
+-	u8	      filtered;
++	filter_mask_t filtered;
+ 	u8	      cpumode;
+ 	s32	      cpu;
+ 	s32	      socket;
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 0f30f843c566d..cafd693568189 100644
+index cafd693568189..6b8f8da8d3b66 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -207,6 +207,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 
- 	hists__new_col_len(hists, HISTC_CGROUP, 6);
- 	hists__new_col_len(hists, HISTC_CGROUP_ID, 20);
-+	hists__new_col_len(hists, HISTC_PARALLELISM, 11);
- 	hists__new_col_len(hists, HISTC_CPU, 3);
- 	hists__new_col_len(hists, HISTC_SOCKET, 6);
- 	hists__new_col_len(hists, HISTC_MEM_LOCKED, 6);
-@@ -741,6 +742,7 @@ __hists__add_entry(struct hists *hists,
- 		.ip	 = al->addr,
- 		.level	 = al->level,
- 		.code_page_size = sample->code_page_size,
-+		.parallelism	= al->parallelism,
- 		.stat = {
- 			.nr_events = 1,
- 			.period	= sample->period,
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 46c8373e31465..a6e662d77dc24 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -42,6 +42,7 @@ enum hist_column {
- 	HISTC_CGROUP_ID,
- 	HISTC_CGROUP,
- 	HISTC_PARENT,
-+	HISTC_PARALLELISM,
- 	HISTC_CPU,
- 	HISTC_SOCKET,
- 	HISTC_SRCLINE,
-@@ -228,6 +229,7 @@ struct hist_entry {
- 	u64			transaction;
- 	s32			socket;
- 	s32			cpu;
-+	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
-@@ -580,6 +582,7 @@ bool perf_hpp__is_thread_entry(struct perf_hpp_fmt *fmt);
- bool perf_hpp__is_comm_entry(struct perf_hpp_fmt *fmt);
- bool perf_hpp__is_dso_entry(struct perf_hpp_fmt *fmt);
- bool perf_hpp__is_sym_entry(struct perf_hpp_fmt *fmt);
-+bool perf_hpp__is_parallelism_entry(struct perf_hpp_fmt *fmt);
- 
- struct perf_hpp_fmt *perf_hpp_fmt__dup(struct perf_hpp_fmt *fmt);
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index c06e3020a9769..00fcf8d8ac255 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2403,6 +2403,18 @@ bool perf_session__has_traces(struct perf_session *session, const char *msg)
- 	return false;
+@@ -585,7 +585,7 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template,
+ 	return he;
  }
  
-+bool perf_session__has_switch_events(struct perf_session *session)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(session->evlist, evsel) {
-+		if (evsel->core.attr.context_switch)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- int map__set_kallsyms_ref_reloc_sym(struct map *map, const char *symbol_name, u64 addr)
+-static u8 symbol__parent_filter(const struct symbol *parent)
++static filter_mask_t symbol__parent_filter(const struct symbol *parent)
  {
- 	char *bracket;
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index bcf1bcf06959b..db1c120a9e67f 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -141,6 +141,7 @@ int perf_session__resolve_callchain(struct perf_session *session,
- 				    struct symbol **parent);
- 
- bool perf_session__has_traces(struct perf_session *session, const char *msg);
-+bool perf_session__has_switch_events(struct perf_session *session);
- 
- void perf_event__attr_swap(struct perf_event_attr *attr);
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 3dd33721823f3..7eef43f5be360 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -892,6 +892,27 @@ struct sort_entry sort_cpu = {
- 	.se_width_idx	= HISTC_CPU,
+ 	if (symbol_conf.exclude_other && parent == NULL)
+ 		return 1 << HIST_FILTER__PARENT;
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index a6e662d77dc24..4035106a74087 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -33,6 +33,8 @@ enum hist_filter {
+ 	HIST_FILTER__C2C,
  };
  
-+/* --sort parallelism */
++typedef u16 filter_mask_t;
 +
-+static int64_t
-+sort__parallelism_cmp(struct hist_entry *left, struct hist_entry *right)
-+{
-+	return right->parallelism - left->parallelism;
-+}
-+
-+static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
-+				    size_t size, unsigned int width)
-+{
-+	return repsep_snprintf(bf, size, "%*d", width, he->parallelism);
-+}
-+
-+struct sort_entry sort_parallelism = {
-+	.se_header      = "Parallelism",
-+	.se_cmp	        = sort__parallelism_cmp,
-+	.se_snprintf    = hist_entry__parallelism_snprintf,
-+	.se_width_idx	= HISTC_PARALLELISM,
-+};
-+
- /* --sort cgroup_id */
+ enum hist_column {
+ 	HISTC_SYMBOL,
+ 	HISTC_TIME,
+@@ -244,7 +246,7 @@ struct hist_entry {
+ 	bool			leaf;
  
- static int64_t _sort__cgroup_dev_cmp(u64 left_dev, u64 right_dev)
-@@ -2534,6 +2555,7 @@ static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_ANNOTATE_DATA_TYPE_OFFSET, "typeoff", sort_type_offset),
- 	DIM(SORT_SYM_OFFSET, "symoff", sort_sym_offset),
- 	DIM(SORT_ANNOTATE_DATA_TYPE_CACHELINE, "typecln", sort_type_cacheline),
-+	DIM(SORT_PARALLELISM, "parallelism", sort_parallelism),
- };
+ 	char			level;
+-	u8			filtered;
++	filter_mask_t		filtered;
  
- #undef DIM
-@@ -2735,6 +2757,7 @@ MK_SORT_ENTRY_CHK(thread)
- MK_SORT_ENTRY_CHK(comm)
- MK_SORT_ENTRY_CHK(dso)
- MK_SORT_ENTRY_CHK(sym)
-+MK_SORT_ENTRY_CHK(parallelism)
- 
- 
- static bool __sort__hpp_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index a8572574e1686..11fb15f914093 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -72,6 +72,7 @@ enum sort_type {
- 	SORT_ANNOTATE_DATA_TYPE_OFFSET,
- 	SORT_SYM_OFFSET,
- 	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
-+	SORT_PARALLELISM,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
+ 	u16			callchain_size;
+ 	union {
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
