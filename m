@@ -1,196 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E900915D5C4;
-	Mon, 27 Jan 2025 15:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649E6433CB;
+	Mon, 27 Jan 2025 16:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737993125; cv=none; b=Yaixk2NT9g8JS+nz72wMIxpyoC41XThvZ1riCIksfXTtYLysSA3UrwSnQ9sWF0sHTwwS8wWOeWVqWQen2NztrCCfsLfCdgHNHMY4H5rsCkVvwW9iznH5ErGFppww+Q5Da+hytEGb2XF9MlAhdTCx+rDplukRrloFRxIriOjKrko=
+	t=1737994040; cv=none; b=oBSAOCgZflmV9FHkTX8PBcMpAX91z1FCF3HS7LVdiGcDMDy7dbM8viV+k8ZtFhkslWBhk1qMicjXj8sIafO76LOAu4GRb2zwJYlh/M2yr/8xEDwS+4wh1s1zndwF1A+/qGabYs8YOiitS3UzHdbEKCFZjfZEfgWnXfNSq23hPwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737993125; c=relaxed/simple;
-	bh=lKShl/TiOp2ZoXo/jImChQXPJ2hMZLXx2pOut7WiptI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLKFJfUHVX4VaBF+Z2eMkHiaDRNcIR6mJIyT/JNL2m+bKkJMX3TblJtnnT54DblrKEvsX15pyDWE7kuIM35u8d4bjeX9e5pNGzLZ5ZEwTbUfkvo6RkcRoGtXuaRz0+LgTNClx5GXD3odvjFt/caxe4wrmdUclmbHwsiKuLhffKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Opi/ZOMV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737994040; c=relaxed/simple;
+	bh=Tx4wLNQFH7gc/g1zYRgdMHI1g56pnmIStkrSAuQK4F4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NhFju+OqttTx25tBoXc1pMCH9XbDn13cOS5LZHZihO9Nem3RRw5KV8I70AOSImPFe/0TbM1YWplaVq0pfClINy0byuGeCrvE0IKZRFRfz7STUHeZN/tOwQvf7eTQyi9Gfiw8h2a2UERuPfAUSJVB6k6TE9OtHKeaLB5oTWdIrxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2Anbbkt; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Opi/ZOMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87519C4CED2;
-	Mon, 27 Jan 2025 15:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737993124;
-	bh=lKShl/TiOp2ZoXo/jImChQXPJ2hMZLXx2pOut7WiptI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Opi/ZOMV/zfLovkaRrjcFN22SaJmB+XJGtnDJ/cIoGIjT25SkYRyAorU+UjcclWyd
-	 6DePEaUZ/QK4W0yHLc5Kb3ieU/uOi+zRZdhIrfh5zorrG9bSfVDQc9h0dR9gO+3bHq
-	 ul1VD9PJ3iJuekF+lfnqBztVCR/WhUeMwXxaqNSwUyFJREhVmoO8Vtntzw4FAiTB00
-	 00OvDbjpP1jbVZyUSglO9BK2uxJ3fZYicWL3MsWiS1eDM68OxCFUf3tPPbIQwtET/k
-	 cGteI6qIszlohfI51re4Bs3hb3htIsly4LrqymlfAEdhSawB5JdAEcLJmnZm2zRPZn
-	 N7W92SLp2WhHA==
-Date: Mon, 27 Jan 2025 15:51:47 +0000
-From: Will Deacon <will@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-Message-ID: <20250127155146.GB25757@willie-the-truck>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2Anbbkt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737994038; x=1769530038;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Tx4wLNQFH7gc/g1zYRgdMHI1g56pnmIStkrSAuQK4F4=;
+  b=G2AnbbktH4hxoWaqPR/ReSl9Xs8m0dOQpJBxY3m8wanEwM3EjFxCFbNX
+   ZLkIqMiNBhEnhri0miQ3HqOh8Fm+Qzxzt+GMuOs3/g9NTymh2Sj0ZWCO4
+   aPqrx9pq4k0SqrVakWVCVQZNfPZyX70VTtvu2C29zDJlIEIUWzEGVlXtJ
+   icq+mP4iyGVghRiSNqJ9ykpRkeHeRWgR5TBtxlCCmTlx7XA0kmdLb4yn0
+   dzafHej7oi5WOQEKYXJYBj4Lo/I1Ane3BZRXqf38LYGzhmJh7G0RTxmOS
+   qfPT42xeavnwQW5YemcaN5rP3EwvAL/ddgi7UzN/CVjZm9EmbEN0dwiup
+   A==;
+X-CSE-ConnectionGUID: xEdLhiqARiiA7qrd3I7mmg==
+X-CSE-MsgGUID: +HHU/AO8RneaVpZTPj1Sjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11328"; a="42215407"
+X-IronPort-AV: E=Sophos;i="6.13,238,1732608000"; 
+   d="scan'208";a="42215407"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 08:07:17 -0800
+X-CSE-ConnectionGUID: HhMfvcNTTrahC9gYT7vcHQ==
+X-CSE-MsgGUID: TzEE0HHOSCuLE6g4YZ7fng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112493834"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 08:07:17 -0800
+Received: from [10.246.136.10] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.10])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 9994820B5713;
+	Mon, 27 Jan 2025 08:07:15 -0800 (PST)
+Message-ID: <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
+Date: Mon, 27 Jan 2025 11:07:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
+ counter & pdist map
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 17, 2025 at 04:52:19PM +0100, Jann Horn wrote:
-> On Fri, Jan 17, 2025 at 4:25 PM Valentin Schneider <vschneid@redhat.com> wrote:
-> > On 14/01/25 19:16, Jann Horn wrote:
-> > > On Tue, Jan 14, 2025 at 6:51 PM Valentin Schneider <vschneid@redhat.com> wrote:
-> > >> vunmap()'s issued from housekeeping CPUs are a relatively common source of
-> > >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
-> > >> flush_tlb_kernel_range() IPIs.
-> > >>
-> > >> Given that CPUs executing in userspace do not access data in the vmalloc
-> > >> range, these IPIs could be deferred until their next kernel entry.
-> > >>
-> > >> Deferral vs early entry danger zone
-> > >> ===================================
-> > >>
-> > >> This requires a guarantee that nothing in the vmalloc range can be vunmap'd
-> > >> and then accessed in early entry code.
-> > >
-> > > In other words, it needs a guarantee that no vmalloc allocations that
-> > > have been created in the vmalloc region while the CPU was idle can
-> > > then be accessed during early entry, right?
-> >
-> > I'm not sure if that would be a problem (not an mm expert, please do
-> > correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
-> > deferred anyway.
-> 
-> flush_cache_vmap() is about stuff like flushing data caches on
-> architectures with virtually indexed caches; that doesn't do TLB
-> maintenance. When you look for its definition on x86 or arm64, you'll
-> see that they use the generic implementation which is simply an empty
-> inline function.
-> 
-> > So after vmapping something, I wouldn't expect isolated CPUs to have
-> > invalid TLB entries for the newly vmapped page.
-> >
-> > However, upon vunmap'ing something, the TLB flush is deferred, and thus
-> > stale TLB entries can and will remain on isolated CPUs, up until they
-> > execute the deferred flush themselves (IOW for the entire duration of the
-> > "danger zone").
-> >
-> > Does that make sense?
-> 
-> The design idea wrt TLB flushes in the vmap code is that you don't do
-> TLB flushes when you unmap stuff or when you map stuff, because doing
-> TLB flushes across the entire system on every vmap/vunmap would be a
-> bit costly; instead you just do batched TLB flushes in between, in
-> __purge_vmap_area_lazy().
-> 
-> In other words, the basic idea is that you can keep calling vmap() and
-> vunmap() a bunch of times without ever doing TLB flushes until you run
-> out of virtual memory in the vmap region; then you do one big TLB
-> flush, and afterwards you can reuse the free virtual address space for
-> new allocations again.
-> 
-> So if you "defer" that batched TLB flush for CPUs that are not
-> currently running in the kernel, I think the consequence is that those
-> CPUs may end up with incoherent TLB state after a reallocation of the
-> virtual address space.
-> 
-> Actually, I think this would mean that your optimization is disallowed
-> at least on arm64 - I'm not sure about the exact wording, but arm64
-> has a "break before make" rule that forbids conflicting writable
-> address translations or something like that.
 
-Yes, that would definitely be a problem. There's also the more obvious
-issue that the CnP ("Common not Private") feature of some Arm CPUs means
-that TLB entries can be shared between cores, so the whole idea of using
-a CPU's exception level to predicate invalidation is flawed on such a
-system.
 
-Will
+On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
+> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+> can be dynamically configured base on these counter and precise
+> distribution bitmap instead of defining them statically.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
+>  arch/x86/events/intel/ds.c   |  1 +
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 7775e1e1c1e9..0f1be36113fa 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>  			    struct perf_event *event)
+>  {
+>  	struct event_constraint *c1, *c2;
+> +	struct pmu *pmu = event->pmu;
+>  
+>  	c1 = cpuc->event_constraint[idx];
+>  
+> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>  		c2->weight = hweight64(c2->idxmsk64);
+>  	}
+>  
+> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
+> +		u64 pebs_cntrs_mask;
+> +		u64 cntrs_mask;
+> +
+> +		if (event->attr.precise_ip >= 3)
+> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
+> +		else
+> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
+> +
+> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
+> +			     hybrid(pmu, cntr_mask64);
+> +
+> +		if (pebs_cntrs_mask != cntrs_mask) {
+> +			c2 = dyn_constraint(cpuc, c2, idx);
+> +			c2->idxmsk64 &= pebs_cntrs_mask;
+> +			c2->weight = hweight64(c2->idxmsk64);
+> +		}
+> +	}
+
+The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
+boot. I don't think it's efficient to calculate them every time.
+
+Maybe adding a local pebs_event_constraints_pdist[] and update both
+pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
+enumerated mask at initialization time.
+
+Update the intel_pebs_constraints() to utilize the corresponding array
+according to the precise_ip.
+
+The above may be avoided.
+
+Thanks,
+Kan
+
+> +
+>  	return c2;
+>  }
+>  
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index 2f2c6b7c801b..a573ce0e576a 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
+>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
+>  	x86_pmu.pebs_capable = ~0ULL;
+> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
+>  }
+>  
+>  /*
+
