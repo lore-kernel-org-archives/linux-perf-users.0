@@ -1,71 +1,151 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52A81ACED1;
-	Mon, 27 Jan 2025 21:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF551DE3B8;
+	Mon, 27 Jan 2025 22:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738013359; cv=none; b=FVMSiuLA3TMduyqOCXc3J3OcFDkt8MwC8wX8bsStH3ydYchQA9YxPZOxxba3riY9q29LW3SymZdLPzsFX1sH845NWHboiEleFrhbUcWKT58H4y1ZVlqGTzq39PVBL3r/7354VCvAVtWP2Pgj3qyb3RT3WjgBpjwuWP5KwILur1k=
+	t=1738016481; cv=none; b=mjXsjb272ly2q4oCccqW2PXtWOyobWuVCmeogxJU8Ex6TBur9TIpYUjIBkO/847Mo+UVgfEkND9e3W8bHHYKwlt4ABLmwt4bbSP5F3t6e4JCd0N5fCuPOWBmbGDCQagbemLaIE5+KKme3vwbo0MlJJd46JYnIfnjVgUrd2Sv5nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738013359; c=relaxed/simple;
-	bh=eq7mXsIBZmPuN99dbvkvON7tjy2PdfJnRNaYIqoWbvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaLlxwafMesfO5upjOU8Xm9rBIM4kJfjYypi+J6i0BJQx/KTGFrOnBLMwBhwmedy5rx+r6GtE7+k2vc+hRe/ILvuW/A8xF1cqWAQM0ZGc+Dg3CXXQcq8x+0tbvBmsf9oSo+u2XXUl+vftjZSMnRtxGpArREcEm3RE9dHc6x2vaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KqMWOfU9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738016481; c=relaxed/simple;
+	bh=4xM5GmrbIafh9OA6F7trKBrxUqS4abqgi5jrfUGrN+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kLpEF8Ht+ath8lPZ0CHckup+IlQNl5OvbSRiRltFjv8rGunampzcy5zdV+0HbGuxYqTe0qDguKViFpIG+7tYrvunNguD9TZO+Gw7fSMUc8JUS6MwC9sdIfQG5Ho9/Iux1EIv4h+0zjoGXwAP5AxeiIut9HWtXDl86eTN3H+4nw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss76KQYx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KqMWOfU9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=eq7mXsIBZmPuN99dbvkvON7tjy2PdfJnRNaYIqoWbvU=; b=KqMWOfU9wAmiBF4SWvd9EO47wY
-	G6/c+HNFj5+uyK7n52DMOmBax5Uec7pmKObZXeQ2DQWKeZl1rg9zzN+HK/PboxwNzKqQ4vs150lqH
-	U9MXIZRa02wBnPj0vI4/5x9FfjVORtIbJzJgvQnW/5njx5lhuBgF4ciTy8BHrramvPSeAmC0Z7+kf
-	W+w4dVNi8A5eyxxgyUuxn2w8bQ2v4qhWTGc4Owf4rAyqmjCNQmMX5AKIt6D11nxWfzijhUiPHKAyB
-	eXJTdFxur6THxxpVtN5enKWAy51/4p1x1CIqMo6LFE6Yw0B+eedjXqpLZTud5XA/iNjk30njbMrq5
-	dytg26fw==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tcWfG-00000009ubs-29Ep;
-	Mon, 27 Jan 2025 21:29:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E91373004DE; Mon, 27 Jan 2025 22:29:01 +0100 (CET)
-Date: Mon, 27 Jan 2025 22:29:01 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 02/20] perf/x86/intel: Fix ARCH_PERFMON_NUM_COUNTER_LEAF
-Message-ID: <20250127212901.GB9557@noisy.programming.kicks-ass.net>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-3-dapeng1.mi@linux.intel.com>
- <20250127162917.GM16742@noisy.programming.kicks-ass.net>
- <6d5c45b4-53ad-403f-9de3-a25b80a44e0e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss76KQYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF70C4CED2;
+	Mon, 27 Jan 2025 22:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738016480;
+	bh=4xM5GmrbIafh9OA6F7trKBrxUqS4abqgi5jrfUGrN+I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ss76KQYxKiJDlvPPDR6Fjv7j8LneXb5twX0eVkpvtfMQcn3u8Fk2USj+AWBlxvy40
+	 5fqoq7WNxVCgLaYJcMah0hDgLHk8SsIliRDvkxFKbtesq0AdkaTxGGR8ifwMAY6VgR
+	 6S+mrTCJBJSCEUQcoW6rkupbS5x6cXORTO4uFXXxL77TaaQp2YhU5gUpK0Frdy5sTh
+	 XSh3NtAArjkOisx/HnJhRcwod3lqbTPUDvCyxhMXw78m3hI+rNASZjBBSey1PW+MJT
+	 kFct/KLU+p5zirffmabFZ3Tm+vHHm+cnfKieCVGqP3ya6pwI4jPt/pDwTFBMYJYK4y
+	 zxZZv3UlsmayQ==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org,
+	viro@zeniv.linux.org.uk
+Cc: linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	peterz@infradead.org,
+	mingo@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	shakeel.butt@linux.dev,
+	rppt@kernel.org,
+	liam.howlett@oracle.com,
+	surenb@google.com,
+	kees@kernel.org,
+	jannh@google.com,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v2] mm,procfs: allow read-only remote mm access under CAP_PERFMON
+Date: Mon, 27 Jan 2025 14:21:14 -0800
+Message-ID: <20250127222114.1132392-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d5c45b4-53ad-403f-9de3-a25b80a44e0e@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 27, 2025 at 11:43:53AM -0500, Liang, Kan wrote:
+It's very common for various tracing and profiling toolis to need to
+access /proc/PID/maps contents for stack symbolization needs to learn
+which shared libraries are mapped in memory, at which file offset, etc.
+Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
+are looking at data for our own process, which is a trivial case not too
+relevant for profilers use cases).
 
-> But they are used for a 64-bit register.
-> The ARCH_PERFMON_NUM_COUNTER_LEAF is for the CPUID enumeration, which is
-> a u32.
+Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
+discover memory layout of another process: it allows to fully control
+arbitrary other processes. This is problematic from security POV for
+applications that only need read-only /proc/PID/maps (and other similar
+read-only data) access, and in large production settings CAP_SYS_PTRACE
+is frowned upon even for the system-wide profilers.
 
-A well, but CPUID should be using unions, no?
+On the other hand, it's already possible to access similar kind of
+information (and more) with just CAP_PERFMON capability. E.g., setting
+up PERF_RECORD_MMAP collection through perf_event_open() would give one
+similar information to what /proc/PID/maps provides.
 
-we have cpuid10_e[abd]x cpuid28_e[abc]x, so wheres cpuid23_e?x at?
+CAP_PERFMON, together with CAP_BPF, is already a very common combination
+for system-wide profiling and observability application. As such, it's
+reasonable and convenient to be able to access /proc/PID/maps with
+CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
+
+For procfs, these permissions are checked through common mm_access()
+helper, and so we augment that with cap_perfmon() check *only* if
+requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't be
+permitted by CAP_PERFMON. So /proc/PID/mem, which uses
+PTRACE_MODE_ATTACH, won't be permitted by CAP_PERFMON, but
+/proc/PID/maps, /proc/PID/environ, and a bunch of other read-only
+contents will be allowable under CAP_PERFMON.
+
+Besides procfs itself, mm_access() is used by process_madvise() and
+process_vm_{readv,writev}() syscalls. The former one uses
+PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMON
+seems like a meaningful allowable capability as well.
+
+process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
+permissions (though for readv PTRACE_MODE_READ seems more reasonable,
+but that's outside the scope of this change), and as such won't be
+affected by this patch.
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+v1->v2:
+  - expanded commit message a bit more about PTRACE_MODE_ATTACH vs
+    PTRACE_MODE_READ uses inside procfs; left the generic logic untouched, as
+    it still seems generally meaningful to allow CAP_PERFMON for read-only
+    memory access, given its use within perf and BPF subsystems;
+  - moved perfmon_capable() check after ptrace_may_access() to minimize the
+    worry of extra audit messages where CAP_SYS_PTRACE would be provided
+    (Christian);
+  - s/can/may/_access_mm rename (Kees);
+
+ kernel/fork.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index ded49f18cd95..452018f752a1 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1547,6 +1547,17 @@ struct mm_struct *get_task_mm(struct task_struct *task)
+ }
+ EXPORT_SYMBOL_GPL(get_task_mm);
+ 
++static bool may_access_mm(struct mm_struct *mm, struct task_struct *task, unsigned int mode)
++{
++	if (mm == current->mm)
++		return true;
++	if (ptrace_may_access(task, mode))
++		return true;
++	if ((mode & PTRACE_MODE_READ) && perfmon_capable())
++		return true;
++	return false;
++}
++
+ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+ {
+ 	struct mm_struct *mm;
+@@ -1559,7 +1570,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+ 	mm = get_task_mm(task);
+ 	if (!mm) {
+ 		mm = ERR_PTR(-ESRCH);
+-	} else if (mm != current->mm && !ptrace_may_access(task, mode)) {
++	} else if (!may_access_mm(mm, task, mode)) {
+ 		mmput(mm);
+ 		mm = ERR_PTR(-EACCES);
+ 	}
+-- 
+2.43.5
+
