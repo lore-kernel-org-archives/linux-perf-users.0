@@ -1,289 +1,154 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2043.outbound.protection.outlook.com [40.107.220.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7891FCD0C;
-	Mon, 27 Jan 2025 08:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737968388; cv=fail; b=jOoHQwuRCJyRoJ+Ouxq8nSDwIaojdsrRRrXn1So9/UfDHNqqQjJyUP1Vp7TFsTbO8sNDzDCNqfD79kQaatdPYnijEbmGPM376eJIA220jTQG4yaxg4l5ndi37V7uLX4gRy6f67DDpcW2KVNeWuokMMKbIwTxs2IGZWFoZSpHQP4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737968388; c=relaxed/simple;
-	bh=JHI3hBFwkyMnBmWSwYw1ZAkbRdfo4wJ35q/cdse0kGU=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ez2YBCTTgfkwuOrq8VT05Tzwbel1zPDRKapmHkjvq5E5nDwACaHSUIXju1/ZKikknwg/QOAQz3qPpcZiD8g/ka59+0hDq5gN+ZnEdw3r0nIePVIGwal3rdAnpoUi5il7QJ+qoPEjGA/99yY/4CVb47oqGbZ02PDijzzctMl8Zl4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R1YUIMUl; arc=fail smtp.client-ip=40.107.220.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA391FC7F3
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 09:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737971957; cv=none; b=EME4o8BlyV+lpdJKIEpkSfHDBZpol35/Fsx8JTAEhxV47vonFYrxZuBCm4kH5PMwaz1lVCApY5MZAEtLuzX9PD3JavC+viB0KGaf2cuQhI4bKlIuigeWMCkgCr2ITgNCoh2zBww+w+0ygLxdiKwJfTPpTOWqyMOimve9Kg+/zFU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737971957; c=relaxed/simple;
+	bh=UC2FXzcWcgolBEER15W83gDn+wDGtClwLgk9NU/aE/w=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eot/MH3VRwR2KwgmxNcm7VmsN8TXSthDBGDIHfpanttjyVaQsx1dQ9EXwNETNOlTb84mL85dlMlQsEw1Pq5oVq3qfSD/iyCk4nw+J1qBEn7shoJhdw0NzyP1EuA2bjkHRmlvoEd+yV65N7DsMhXY+1M6G5zYVkAQhZyZ+GJ4HUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zo4ffk/i; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R1YUIMUl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ur1JjgCcjj8C8lzu3SZkt/xUyVF5GEiR2FpkwcruaJfNMWd9knbMHyWwICUvH3ezy9pMqO07eUiETyicy1iH0uDuJi1kItgfKHxfULbjhgIJE9VEBQjbvM7hArztNXqa8FJ9ANskQa5GJE/55Xoepksi+cA4c2TWybXeVSvKjKA6UJlEtBvBj8hZcwJmQTr4lIVzQLmM1OEronZxtWBkRXqKfBRvpheCZaOUy1krkJ63QyJRLTADlFiQ2RdzaiijnawdUtQ8l2OAbHNyf8R/vJ8fq8j3/EL8PBKw7nqMtM+eDy19lW/NL6jHt0N6AcUg60TCybL/CBRJXrwrOu8rbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7pqHm1jPG8EU3bBQV7HecYszB/ssI1aWlaAnQNHdWqU=;
- b=FwUQuKj/JlRehRYQDVUQxK0+uHssefMTd5H0cHdtR+rVIaNxH/bHvQ0KDYCBryhKhF2gmUvgvWQfU5+jBCWjFME7WfK7fS5HYgFa2RErGSlebNFLej0iKcQYKGlTzX1yP6UjURGFZIvC89doIT2HLvfOlgeI1p7kdBBKFsrncjw/BLUuUXn2kJaYSQg1dDcHxWIsIKoOseXBKQef9xFj1+x7b7uidiFHjhioZAV3xFsmmnC4PFlss0kyFkDpoLbZbP1G/7i+EIsk4Zof/GLfcJqanGH56HTH8CTvbMcgBVQLfzh9H5gl7CEnk2Zpcby1a8VdTuLQtdC37VpT8Q0fRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7pqHm1jPG8EU3bBQV7HecYszB/ssI1aWlaAnQNHdWqU=;
- b=R1YUIMUldkQgo7kg/GXjnopfXdnDK7QxYshvoht0p1gEnQ7N4fLsS2FhxUdp842L9Bfk5Uo65nJshUuMN2gf4IixJShtTbm18hIYShwnWO+LqUp02nq+SdCIcGebuFBbhzSVd97PPmL9hHcfgb6nfGe5y1wV6xxx88R8IEY0E1w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by PH0PR12MB8128.namprd12.prod.outlook.com (2603:10b6:510:294::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Mon, 27 Jan
- 2025 08:59:42 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%5]) with mapi id 15.20.8377.021; Mon, 27 Jan 2025
- 08:59:42 +0000
-Message-ID: <c8a2d737-1c27-461e-8609-99a448004ca4@amd.com>
-Date: Mon, 27 Jan 2025 14:29:31 +0530
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [RFC] perf script AMD/IBS: Add scripts to show
- function/instruction level granular profile
-To: Ian Rogers <irogers@google.com>
-Cc: "acme@kernel.org" <acme@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "eranian@google.com" <eranian@google.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "bp@alien8.de" <bp@alien8.de>, "mark.rutland@arm.com"
- <mark.rutland@arm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "Shukla, Santosh" <Santosh.Shukla@amd.com>,
- "Narayan, Ananth" <Ananth.Narayan@amd.com>,
- "Das1, Sandipan" <Sandipan.Das@amd.com>,
- "Bangoria, Ravikumar" <ravi.bangoria@amd.com>
-References: <20250124060638.905-1-ravi.bangoria@amd.com>
- <CAP-5=fW4Vzhs7BOeAhom5csRUk+UkCFdc1H9HT4AhMdei8FRKQ@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAP-5=fW4Vzhs7BOeAhom5csRUk+UkCFdc1H9HT4AhMdei8FRKQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PEPF00000189.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c04::54) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zo4ffk/i"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-aa68952272bso494791566b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jan 2025 01:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1737971954; x=1738576754; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UkxAk9+lBkQHO0K5ooSsWH+26gvlSdhoYUGXyajZA0A=;
+        b=Zo4ffk/ia5U/R2LP7yuQPutOWq4eN/kIl+PKOMVKrahqfgW5vknb+hd2JzdMwkCRkk
+         cptFG21PjWX1G6IJsJErR3Q4sWqjAU/ZX67rNOzxNDu3wQNBu19K6tz1x4waQo+a0YB9
+         ugQvdHSPqM+ApFaHCzn7weR9b6xOiRyB1XYfUomnl7ShQ+BmF0htfm8a+yy34iAt3bTR
+         6tamsSnQJqOM7YvGoCKYnx/N9YHurTGEmFHsD7lmntcnywi1zaNvKrJTQPy+J9jx4sXc
+         eLKISnB04sRaMYNVVDFZF0az43h2SfaRJ2lNdroIiZGVxlJrgfr7OESm23fat7URO4dx
+         lBCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737971954; x=1738576754;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UkxAk9+lBkQHO0K5ooSsWH+26gvlSdhoYUGXyajZA0A=;
+        b=nWgq3v0HKBR3D7cvNF7qDaOEnUuW4jD3Saxx3n0168q4ZtqZpPxd2ZXk+/KOS2TiqU
+         ZxpMgFHhtxSwyHkvRUW7MZ03NaLNackfvgZevwb9mjIiWwa/QHaH07O+4A+l8SEDpuiC
+         oYzNBCADmeroJ8+3bWW4u1a8k/kp8nA4VS1tbxACEQN7ohiY49+NhrZz7h+8hicDuqdw
+         8t6wpOjx9eQwePeGNYzaO7Pjbwfqby71QZIFOWcq+sJRntIJiqNlwhYybRIYsWqwVeyb
+         FWNiQoMTrTaUQriMc7JMQSXs/TjjTJtgD0ClwWubz4Hfq+fXCUoIRUd4X13tx2BtsMXF
+         dv7Q==
+X-Gm-Message-State: AOJu0YyJKH9qbcCtX8boV4jJIvaPXIK5FukU6OmxnG8mmIxo9VGMI0WY
+	UcxjcVpSCPK/HK2P23byTQLV32H2uZj0IV5Q8eQMxvNl5fM9QqNYk63fVtW1FNf6ucuz750N4gx
+	6lOM7tg==
+X-Google-Smtp-Source: AGHT+IFEg39chTS5McLJ9jmrQk89u/wZ/PbfXPm0viwkAh0oOKAGWcCuQyAW6Uc1Lh0xB3XH9NhqSfrrUghf
+X-Received: from edah3.prod.google.com ([2002:a05:6402:e83:b0:5cb:85ff:8366])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:3489:b0:5d0:e826:f0dc
+ with SMTP id 4fb4d7f45d1cf-5db7d2f9c54mr34992120a12.12.1737971953937; Mon, 27
+ Jan 2025 01:59:13 -0800 (PST)
+Date: Mon, 27 Jan 2025 10:58:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH0PR12MB8128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e5ca47f-4ff4-4b07-3fd3-08dd3eb0f044
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U0huN1RINjFseGtEbDlSZXhVVjNWSXZoTW5nckJjOERPKzlhQjA1VHFhWmYx?=
- =?utf-8?B?SUpRL3F1VkNsTHhkLzFpdWd2TmdYQUpFUmh3b1VjVTdLSngzMEo2SXNvZGpK?=
- =?utf-8?B?VWNteEt6ZFh2dStya0tsZ2IwaUhwbjhIU05lUCs3NHNyc2puRjZyZXIyV1ZV?=
- =?utf-8?B?YUNkTHFvelRzbFpOV0hvTUFHZzViaWtSQ2NoSVNiSDdpcXVSOEtKM0d3SWlN?=
- =?utf-8?B?Kzc5M3dzejhuVFZqcGtLbUtmQkkrWEZRZ3dXbnZzZVllbXdtM0hBMTZOSUNs?=
- =?utf-8?B?SitkQXRIWFdYMTh4SlBJVmRFendoV0dWbE1iVmlCYS9BTWV0ZitzV1BCa2ta?=
- =?utf-8?B?YXVnbjd4cFFncTVST2t1VlNRNitiVG5VSktJMlhsYjIzWXBBS1RIbkFlTkNP?=
- =?utf-8?B?dTZZVVBnaWd3dmt2TmdwMCtwUytRSWRxZGZvRm5lbk1jMXlUajNJQThtUzlF?=
- =?utf-8?B?SkxKanlMZHBGSzh1dnA4a1pEYkQ4SlVic2dtaWlqWjBDMUhCQ001cjB0bm9s?=
- =?utf-8?B?aThyL3NYSTNpc3l3d24xMXJ1ekprWkZPT1hBa29YWXpPV1k3OSt2RWNiVzY1?=
- =?utf-8?B?c0grbktzQUM1a1NhK3Fkb0pDampvRGp1VUpxc3JiVWdRSHN5UFpoSHJqUjMx?=
- =?utf-8?B?QldJOEsyd09neGtleklCOWdpWll3L24wK0s3Tng3SFpSbGIwaXhCZFYxYW5i?=
- =?utf-8?B?U2Uyb2c5NEFPM2tYVkp1dXFvcmNCZTJlcWo3bHpOWGMrSnRWTGF3cnpieHR4?=
- =?utf-8?B?UGVoNkhwYUVKckI2R3pmZklHb2V2bmFRdmNHOXkvRDBjUnVsR1hmYlc4WGdZ?=
- =?utf-8?B?VlJ6QUxDaytNYVVrSDVaa2NkQml6emUvWUxVci9SRnk3UElVeW0vWS9pODlQ?=
- =?utf-8?B?d1l5U0pacit3cjUvU3pvSmNya1RVVXd5OTQzdmRhaUJweHZ6aGVVS0NTZWJS?=
- =?utf-8?B?ZmE1UzZmRmZXUVpvak1NbVErd1ZiQzEyS1A0ZnZSb1Vrckl6THlXdU5Ucm40?=
- =?utf-8?B?dThvWGpha21Kb1ZhWDlWTHQrTHpBZGxzdVR3cW8yeWZ6UEZaczVmcnFBK3NZ?=
- =?utf-8?B?Q0Nmdk96M05NNjBoSUhycmVNN3JPa2hzQTkxVXhOdk85enI1TjlaOXlIK1ZG?=
- =?utf-8?B?NzdDNlZKMkd6ZWFycVNwdEhJQW5jVytDbzZPUjUzb0VaT1VXeHN2Q0lGK1I3?=
- =?utf-8?B?d1R5aEVTczU4OGdQbzFZc0ttaGdrKzVZZW9waW9mVkpxU1RucDFKUld3T3VF?=
- =?utf-8?B?bWk4WWxJSFFBVlM1QnhmZ2lMSTJFVHNpNFpYVFRRRkVoRWtTdHVzSm50MGZs?=
- =?utf-8?B?NUJBS0lteXNJWXl6QzZpTG5rSGg5OU53dnY5V2h2TjkzMHhuMWFSY01IOHZ2?=
- =?utf-8?B?NG05WjdSK1ZYd0w2WWN5Rkcrb2dETFZxYWx3b3Q1a2VZQ0tzVUdnRjdTakV1?=
- =?utf-8?B?ZkhKZnZvSGVqZGpkcjZyUVdheTAwekVucnRZeTBpUkxJMUc5NHpzTW9iN0RQ?=
- =?utf-8?B?czhTZXhaNUJyRFVvL1NnVHdFa2FFRVplR3dVVVI0QVd5dFJtNVIyTG1sMVhV?=
- =?utf-8?B?WHFoYkZvTkdjQ0VOQ2FncWxRdTB3VnRsUjZqalQ5d2dmVURyQ1Bqa2JIMlJO?=
- =?utf-8?B?QVJCc0p0Z0dRYU9NTDdvRE5mL3ZFZ1dsa3pOL2Ntb3NqeEc4ZHkwT1dOdExQ?=
- =?utf-8?B?NjNHMzZOR2ZwVFYvSnVJWlFTOXc2WlJMN0xqRjF0YkVkaXpEYWxocjRTNW9q?=
- =?utf-8?B?SVBxV0VubHU1N0sxVmJpcHdNQmFrSjN0eG9TSzlScjErS1dLbU1xbVk2bzZV?=
- =?utf-8?B?WEpnVndIaUJUVlpyODYzdz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cktLRlBaQTE4U0tKeTkvSHV1UDZPNUxoYlNSbWZNQjVIYitPTkQzOGVQM0pm?=
- =?utf-8?B?SGZoN1VRNU9NZG03UjdHdFhlSi9rRU9HdFRpbWtYZXFJeDdQeFc5WVVOT2Qr?=
- =?utf-8?B?aXpEcmtQZEw5SDE5c3VaUFNYc0trWkpxZlFYRXZDM2FRSlM2eExVUHlYQTEz?=
- =?utf-8?B?bmhsenFkVTc3aUlBcTB0MW5xZlN1TE9iaWpldzQrbXczY1V3Y0poMHpYUllD?=
- =?utf-8?B?UjFGeWZINzVXcWRuSjFta0c3RUNLb2tHUUNucGNCS0ZIZWo2dDlvamRPdXM1?=
- =?utf-8?B?eXpFVkJ3RSszRlRWYVNBYndrNTc5YTRmcnJ1enhLZnNqYmltdUNNakhjY3lB?=
- =?utf-8?B?OGdRcFBuWGIwbXpjZXJGWU40M2RzRUg4SVhueHVGSDVBWE05WWdBakw1cjg4?=
- =?utf-8?B?Z0JhQUNoaHRtb0lLbVBaaDRlazBwZUxvdmtubXRtNTl3cXJCdDNDQ0dydUFR?=
- =?utf-8?B?ZEt5ekQwU3VINkwxK0N5dDNWRElmbk92aXVnMDluRVZCdkRYV2NwdXFYOTNM?=
- =?utf-8?B?aEswK0txWXYvREJwclNROHVSOVRlcUx5ZDhBeHpnUjdoY0JUc3Fmd2Zhemls?=
- =?utf-8?B?VU5tZDBZWTVIbjN4RGZmNEg1K1RVOG9yNHRQVXVyNFhDN1ppdGJVUXdrSytj?=
- =?utf-8?B?dUVrRmVEeVFKb2xHRTZ0eVdOdmE4cCs4citMMkM5cjBPR0dYTWpPRUxvS3Za?=
- =?utf-8?B?by9tTWZna0pURE5sUSthNWk3YzNVUGc4ODY5TGt4bDdES0pGR1UrNWE4eGUw?=
- =?utf-8?B?WURBclNiWlBPKzRFa3hzMFdFZlBNTWRrRnp5UFBPMlJOVCtlM3VnL1VSeEk5?=
- =?utf-8?B?TWgwaDVYR0haYmtFQ250QXJZVEhucGVTMGNRb0dDaUZJZ0g5YlJ5WFNZbml2?=
- =?utf-8?B?NVVvRjNpbGRrdndSMHVId3BpRmdsY09EVGNEUTFsSjlCTUhucGtPYmh5d1dt?=
- =?utf-8?B?eDlaSVRid29Tc3o0L1hLbUtwOHVmV1M0b0Y3Zm80b1BYTnp4T1NFOTJ2dDQ1?=
- =?utf-8?B?T09UT3cvWCtPYXdaL0tUVEdjV2lLUk5ZYkZCQThNYlEvN2dkVSsvc1kwSDlm?=
- =?utf-8?B?UWNrQkR2T0Z2c0gzejh1dzhTQUlhdElKa0p5K05HN25zQ2Nzc2JpdXd2TGJJ?=
- =?utf-8?B?aGt0bzE5SDJhM25MMitwV1VDZk94bDY5Z3ZrV1VwaFNIcE9pMEptQm8xeGNH?=
- =?utf-8?B?azlVNURjNW1TdE9mYTVxVzZlK1lSNWlpYzBZMGZta3hMbkUzVzNyNmxMVi9Y?=
- =?utf-8?B?TXBhdCtSM3JPY0FlNEhSVkIxMkwvQkFqSEZZNjgwN1diZDBKWCtsSWdTTEFx?=
- =?utf-8?B?UlBiZTA2ZTVXMUZCU3IyZDZKMGsyYm4rUE84ZWVzanBNYnlVV1RrMjE0M21t?=
- =?utf-8?B?S3IyK1M4TUhWUXVMM2EzZmFiNC9QRUs5Q3REUkUvSmdWWUtYOW91VXZZQ0Jz?=
- =?utf-8?B?Z3V2dWFWZ3ZxYVE0K2ZMZW9veWJocjZ1aWdsV28yTWtZZGRxS05PVWdZdDZm?=
- =?utf-8?B?MDdYWWwzOTloUWtpNDJBOVEvY3RDV1ExbU42RWxCMUtpd01pSFpBTzBGTFJL?=
- =?utf-8?B?SzhpbmZXeWdpbU5BdDloTE5vaUJLNmJCNlk3Qml2MnZ6RGRzdWlXNWJGbnBN?=
- =?utf-8?B?aElMRE5zdTdTZFJMQzlkTzVOMjltSEE0MXpxTWxlQTJwbDlVYlk3WCtWMFd1?=
- =?utf-8?B?UEVwWE1IZjBSUzlld0o3NVc3TW0ra1ZaNWNTMHo0TENLMzcyMVpxSWg2Y0hG?=
- =?utf-8?B?VGV1K1FDVG50MGNGQlEvZTkrdDdZS3VYSkc3RmE3cm9wbi9HYlAvS09BSzRC?=
- =?utf-8?B?aGhKSFVDUFpRcUt5dCtkK2dvVkNDZ09TTjkwajVSYml4WWRpZlhsd3kxd29Q?=
- =?utf-8?B?Mmo3cHNxOFpkSEVXRG5YdzV2V3BmcHlXNnhJWW9wd2dxQlN2bTF6cG9YRDg0?=
- =?utf-8?B?dkdPU3pzK2d5ZzhVMXl1UVJKVjlxczhRaEYrNU14Z0FrNk5Pb21mbnUxME4w?=
- =?utf-8?B?SXRQRllLTk9xVURZbC9XRjVLZ3d2SmdIRW5pcVc5bDRJNmRacjEyem11eVdw?=
- =?utf-8?B?MjVpWWF2WEdCMlZYUi96dFJsM043MXF5R1g2NVFHYjg5cHJrdlA2QnhONVZa?=
- =?utf-8?Q?ps5t/WKnlt42Bxt5Np3kRlyv4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5ca47f-4ff4-4b07-3fd3-08dd3eb0f044
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 08:59:42.5999
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eb51tTH8opeOYUS+ubowWMyjvNEwfCTWUrj4patl8UvuyJz3LhgDtK24yeUtcsA+xS9b/f7ZW/EZeT7uezxTqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8128
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Message-ID: <cover.1737971364.git.dvyukov@google.com>
+Subject: [PATCH v3 0/7] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ian,
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
 
->> diff --git a/tools/perf/scripts/python/amd-ibs-fetch-metrics.py b/tools/perf/scripts/python/amd-ibs-fetch-metrics.py
->> new file mode 100644
->> index 000000000000..63a91843585f
->> --- /dev/null
->> +++ b/tools/perf/scripts/python/amd-ibs-fetch-metrics.py
->> @@ -0,0 +1,219 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Copyright (C) 2025 Advanced Micro Devices, Inc.
->> +#
->> +# Print various metric events at function granularity using AMD IBS Fetch PMU.
->> +
->> +from __future__ import print_function
-> 
-> I think at some future point we should go through the perf python code
-> and strip out python2-isms like this. There's no need to add more as
-> python2 doesn't exist any more.
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
 
-Ack.
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
 
->> +allowed_sort_keys = ("nr_samples", "oc_miss", "ic_miss", "l2_miss", "l3_miss", "abort", "l1_itlb_miss", "l2_itlb_miss")
->> +default_sort_order = ("nr_samples",) # Trailing comman is needed for single member tuple
-> 
-> Given these are lists of strings, I'm not sure why you're trying to use tuples?
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
 
-I'm not a python expert, but AFAIU, tuple is the data-structure for
-immutable list. No?
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
 
->> +data = {};
->> +
->> +def init_data_element(symbol, cpumode, dso):
-> 
-> Consider types and using mypy? Fwiw, I sent this (reviewed but not merged):
-> https://lore.kernel.org/lkml/20241025172303.77538-1-irogers@google.com/
-> which adds build support for mypy and pylint, although not enabled by
-> default given the number of errors.
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
 
-Sure. I'll explore this.
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
 
->> +def get_cpumode(cpumode):
->> +    if (cpumode == 1):
->> +        return 'K'
->> +    if (cpumode == 2):
->> +        return 'U'
->> +    if (cpumode == 3):
->> +        return 'H'
->> +    if (cpumode == 4):
->> +        return 'GK'
->> +    if (cpumode == 5):
->> +        return 'GU'
->> +    return '?'
-> 
-> Perhaps use a dictionary? Something like:
-> ```
-> def get_cpumode(cpumode: int)- > str:
->     modes = {
->          1: 'K',
->          2: 'U',
->          3: 'H',
->          4: 'GK',
->          5: 'GU',
->      }
->      return modes[cpumode] if cpumode in modes else '?'
-> ```
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
 
-+1
+Dmitry Vyukov (7):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
 
->> +        print("%-45s| %7d | %7d (%6.2f%%) %7d (%6.2f%%) %7d (%6.2f%%) %7d (%6.2f%%)"
->> +              " %7d %7d | %7d (%6.2f%%) | %7d (%6.2f%%) %7d (%6.2f%%) | %s" %
->> +              (symbol_cpumode, d[1]['nr_samples'], d[1]['oc_miss'], oc_miss_perc,
->> +               d[1]['ic_miss'], ic_miss_perc, d[1]['l2_miss'], l2_miss_perc,
->> +               d[1]['l3_miss'], l3_miss_perc, pct_lat, avg_lat, d[1]['abort'],
->> +               abort_perc, d[1]['l1_itlb_miss'], l1_itlb_miss_perc,
->> +               d[1]['l2_itlb_miss'], l2_itlb_miss_perc, d[1]['dso']))
-> 
-> Fwiw, I'm letting gemini convert these to f-strings. If I trust AI this becomes:
-> ```
-> print(f"{symbol_cpumode:<45s}| {d[1]['nr_samples']:7d} |
-> {d[1]['oc_miss']:7d} ({oc_miss_perc:6.2f}%) {d[1]['ic_miss']:7d}
-> ({ic_miss_perc:6.2f}%) {d[1]['l2_miss']:7d} ({l2_miss_perc:6.2f}%)
-> {d[1]['l3_miss']:7d} ({l3_miss_perc:6.2f}%) {pct_lat:7d} {avg_lat:7d}
-> | {d[1]['abort']:7d} ({abort_perc:6.2f}%) | {d[1]['l1_itlb_miss']:7d}
-> ({l1_itlb_miss_perc:6.2f}%) {d[1]['l2_itlb_miss']:7d}
-> ({l2_itlb_miss_perc:6.2f}%) | {d[1]['dso']:s}")
-> ```
-> But given that keeping all these prints in sync is error prone, I
-> think a helper function is the way to go.
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Sure. will convert it into a helper function.
+ .../callchain-overhead-calculation.txt        |  5 +-
+ .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
+ tools/perf/Documentation/perf-report.txt      | 49 ++++++----
+ tools/perf/Documentation/tips.txt             |  3 +
+ tools/perf/builtin-record.c                   | 20 +++++
+ tools/perf/builtin-report.c                   | 39 ++++++++
+ tools/perf/ui/browsers/hists.c                | 27 +++---
+ tools/perf/ui/hist.c                          | 64 +++++++++----
+ tools/perf/util/addr_location.c               |  1 +
+ tools/perf/util/addr_location.h               |  7 +-
+ tools/perf/util/event.c                       | 11 +++
+ tools/perf/util/events_stats.h                |  2 +
+ tools/perf/util/hist.c                        | 90 +++++++++++++++----
+ tools/perf/util/hist.h                        | 26 +++++-
+ tools/perf/util/machine.c                     |  7 ++
+ tools/perf/util/machine.h                     |  6 ++
+ tools/perf/util/session.c                     | 12 +++
+ tools/perf/util/session.h                     |  1 +
+ tools/perf/util/sort.c                        | 69 ++++++++++++--
+ tools/perf/util/sort.h                        |  3 +-
+ tools/perf/util/symbol.c                      | 34 +++++++
+ tools/perf/util/symbol_conf.h                 |  8 +-
+ 22 files changed, 498 insertions(+), 71 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
 
->> +annotate_symbol = None
->> +annodate_dso = None
-> 
-> annotate_dso?
 
-Ack.
+base-commit: 91b7747dc70d64b5ec56ffe493310f207e7ffc99
+-- 
+2.48.1.262.g85cc9f2d1e-goog
 
->> +def disassemble_symbol(symbol, dso):
->> +    global data
->> +
->> +    readelf = subprocess.Popen(["readelf", "-WsC", "--sym-base=16", dso],
->> +                               stdout=subprocess.PIPE, text=True)
->> +    grep = subprocess.Popen(["grep", "-w", symbol], stdin=readelf.stdout,
->> +                            stdout=subprocess.PIPE, text=True)
->> +    output, error = grep.communicate()
-> 
-> Perhaps the pyelftools would be better here?
-> https://eli.thegreenplace.net/2012/01/06/pyelftools-python-library-for-parsing-elf-and-dwarf
-
-Right, using library instead of hardcoded shell command would be
-better.
-
-Thanks for the feedback,
-Ravi
