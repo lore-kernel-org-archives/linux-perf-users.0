@@ -1,152 +1,117 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B131D5789D;
-	Tue, 28 Jan 2025 10:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE401CD3F;
+	Tue, 28 Jan 2025 11:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738061672; cv=none; b=Y/8qAk3zUgiVnCC1HUp3+CowLotvshKfltCVZOgrtKZG33vFzjl7RX6Zu67GwpX9V5mq9ihCKvO+GsRb6ztAb2+hJ5JvBXKJEQnGJf4epZgirbASvV2kqdfdUO0wo9v8Vbm87lt+0+e0ffrbZYjXOTDEIdjI7+J5bzfbTciNYi4=
+	t=1738063333; cv=none; b=I6FcVnppA3lRCZu/aPRTJ1ZevxeLY4n5nPcQ1TLA1+yD4j2/ghbO56rH47Du+88VTjWkuC5DPJQsmjsD16eOah6kZSWKXnMlcd3fTRBGHJVT851aBnojg5lfciZbs+OkfJqZDY75FmMzrvd3W2pgpuqB8i4xiAReD3BXSQYpGkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738061672; c=relaxed/simple;
-	bh=iC7HvqQ6UHru+N7NxQ958qSLw2xOa49IzeH1GfgxxKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fNo9cBifLCRKmaMwCO2wcB3nJfYET2CArE/C0G7otJhnM5XGPmM4CPzpELiNQT7U2mpAGSdkkZsXL0WlzZf0BbLnouuyYvPaKoQHEhmayxGg8hUqBRHEEtBmbzuujBjDH4oj0Mg4TtXr0pFH4k4u6cHnZY5w+Yr1lknuCFAUQYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HZ6Z9Nm2; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738063333; c=relaxed/simple;
+	bh=Qz5GHf1dJZb+VFFjhcFvqY91drX8kVQ4WuTicvqgm5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4oKaGRuzpQchqD3yPUDFfXd8vnrS/WeCNi+YN0l3rfXSrhz/4W0Rnk4w26ZlNbDhp20/gFcplTBHS96+jwMK3G/8eu4u4ENYUjuI4TUAkmtRCo/ygiexMtoQR+gAyOyPiQxV7xvDhFyPM7xbQkxU/pkimcd/HfSWNrRUjuYyw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gaBwAJ64; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HZ6Z9Nm2"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50SA6fPG009939;
-	Tue, 28 Jan 2025 10:54:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=J1+/22
-	Mdi31Fgq0RG8YRwsw37nD6Txx0qMMlsyHg32k=; b=HZ6Z9Nm2V0uOaMIE8TX9x4
-	DruoAQCQmQ0cXNB3XXQTwOhNhoaxFwyWTTtZYq1II5u/dLfNdQXrLe6oHa60DQ1n
-	KIU0s/XYBNZkVNFSXHLV/7qpK22mKskURia9IL1TEyBc33LE7e7NTBnrblN12qGA
-	ntXVpC2RU+0dZP0xBDWQmQiQLQda8pr1SbzQkXVMKBEc+SSXGtrmTISRLp8qwxvM
-	lnFvd8EmRwwJVd3ccUSSm2Cw+xr9mpiRf5ssn0HTbwpeQjjpzTKS51ES9Mkag6k8
-	mIqDWCPImBCWE6h+0+cHyXhNof1hxu9LrvUC8jFpkR+R+s5J9AN1qP6q1CHk1FLw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycuqd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:54:16 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50SAjmYj011423;
-	Tue, 28 Jan 2025 10:54:15 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycuqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:54:15 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50S75DcT018889;
-	Tue, 28 Jan 2025 10:54:14 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dd01ag57-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:54:14 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50SAsCgd54985098
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Jan 2025 10:54:12 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 640E4201EE;
-	Tue, 28 Jan 2025 10:54:12 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E2DA7201EC;
-	Tue, 28 Jan 2025 10:54:11 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 28 Jan 2025 10:54:11 +0000 (GMT)
-Message-ID: <bcb5ddee-c8d3-4f2b-9d84-8a2e1f1236fa@linux.ibm.com>
-Date: Tue, 28 Jan 2025 11:54:11 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gaBwAJ64"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9F2rOXV5rzpbOZhu1LAwlvj6RbrDMa9WlnEnmJdBLCE=; b=gaBwAJ64ichzGbahqZ5GBl9azS
+	eAqxmtuMttir6AfqNwhOwnBGNde4WoTdij8WsEXxzdBHEbZUMe1z9B0L7nfL2cPRQW1CYNASERtoT
+	ZDYyNrv1rqEsV51IeUANQdlvWw8icMX9q6XKoszm4DJ1QYmQKZ0O8FxRnARU9+qNcqIJKvX55QGxf
+	a4FczBuLmSvxTSbiricPVrdiQNNCj6CF12qReDWNyMmWLvJS2vF0tgZ2F8ADHhbjfeuH9rxPHF+9f
+	y+KwqEErPagTHX/JdzCtfywcW5dAQgy/R+7SE4xURBVDZQClvR5mczSFRRPe+6WYEL0DnfU5WoYaz
+	sn90gY4A==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tcjfP-0000000AWdg-0Zjx;
+	Tue, 28 Jan 2025 11:22:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6E65A30050D; Tue, 28 Jan 2025 12:22:02 +0100 (CET)
+Date: Tue, 28 Jan 2025 12:22:02 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [PATCH 06/20] perf/x86/intel: Initialize architectural PEBS
+Message-ID: <20250128112202.GA7145@noisy.programming.kicks-ass.net>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-7-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <CAEf4Bzb=YFhsLFuK2Zowb1dsXnQPA1uyQUuQ0yXXQbEpeeyDaw@mail.gmail.com>
- <20250124214107.ycccp4gapbdudzux@jpoimboe>
- <CAEf4BzYqDk5pGbmCz3XX1a-RXRKSLw9QwD+wUEABinVG+HZ1qQ@mail.gmail.com>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <CAEf4BzYqDk5pGbmCz3XX1a-RXRKSLw9QwD+wUEABinVG+HZ1qQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: AXIQR8knhemm6G70G5RyZ_gr5iBVy9i5
-X-Proofpoint-ORIG-GUID: EXUZoO8Jxqim8bKyyJptyCnarRLu770P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-28_03,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=732 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501280077
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250123140721.2496639-7-dapeng1.mi@linux.intel.com>
 
-On 28.01.2025 01:39, Andrii Nakryiko wrote:
-> On Fri, Jan 24, 2025 at 1:41 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->> On Fri, Jan 24, 2025 at 10:02:46AM -0800, Andrii Nakryiko wrote:
->>> On Tue, Jan 21, 2025 at 6:32 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Thu, Jan 23, 2025 at 02:07:07PM +0000, Dapeng Mi wrote:
 
->>>> +       fre_addr = sec->fres_start + fde->fres_off;
->>>> +
->>>> +       for (i = 0; i < fde->fres_num; i++) {
->>>
->>> why not binary search? seem more logical to guard against cases with
->>> lots of FREs and be pretty fast in common case anyways.
->>
->> That would be nice, but the FREs are variable-sized and you don't know
->> how big one is until you start reading it.
-> 
-> ah, another non-obvious thing, yeah... do you think it's worth fixing
-> this and making FREs binary searchable in v3?
-> 
-> Indu, do you have some stats on distribution of FRE count per FDE in practice?
-> 
-> Tbh, FRE format is bothering me quite a lot... but let's discuss that
-> in another thread with you and Indu
 
-I would be interested to be part of that discussion.  I could share some
-preliminary stats from my s390 work.
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index e8a06c8486af..1b33a6a60584 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -1537,6 +1537,9 @@ void intel_pmu_pebs_enable(struct perf_event *event)
+>  
+>  	cpuc->pebs_enabled |= 1ULL << hwc->idx;
+>  
+> +	if (x86_pmu.arch_pebs)
+> +		return;
+> +
+>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
+>  		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
+>  	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
+> @@ -1606,6 +1609,11 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+>  
+>  	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
+>  
+> +	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
+> +
+> +	if (x86_pmu.arch_pebs)
+> +		return;
+> +
+>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
+>  	    (x86_pmu.version < 5))
+>  		cpuc->pebs_enabled &= ~(1ULL << (hwc->idx + 32));
+> @@ -1616,15 +1624,13 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+>  
+>  	if (cpuc->enabled)
+>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+> -
+> -	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
+>  }
+>  
+>  void intel_pmu_pebs_enable_all(void)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  
+> -	if (cpuc->pebs_enabled)
+> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
+>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+>  }
+>  
+> @@ -1632,7 +1638,7 @@ void intel_pmu_pebs_disable_all(void)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  
+> -	if (cpuc->pebs_enabled)
+> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
+>  		__intel_pmu_pebs_disable_all();
+>  }
 
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+So there's a ton of if (arch_pebs) sprinkled around. Can't we avoid that
+by using a few static_call()s ?
