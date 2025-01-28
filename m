@@ -1,124 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B5218C004;
-	Tue, 28 Jan 2025 18:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E481DF725;
+	Tue, 28 Jan 2025 18:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738088186; cv=none; b=IgKoyFCC48/7Tq+QXQVG4ToQSsoxZ6inY94zuxQbKXESI+i4lav/knalea2U51212n+xitBqrKD7lHwnwWDTR7vijZkhkepPAns5u2IpgFXz/6HXmCMq37H2OopjGnDvHskvjIpkZaerrr8NCwgX2Uh+y8rfddmvg1PVO8woQuI=
+	t=1738089076; cv=none; b=KcSFqb0Y0Q12OBBHsQxI8ruqwFzAot5CEbjvY5LhrLqSQCkVYCSDDhh8QF5elnfSpOQiphUmrpwrOJ0dcc92jL0ESVZo0TvePCnShRq100dHz95oUHNgYPj154fEAnybSYXp1Ca6d9RQCh5qFl4/TW27PzDp0d/WzxyWe4kGRas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738088186; c=relaxed/simple;
-	bh=dAhBIZe0NzGrk1yP7ba0F2cmDA+lcqNfDyuYt8ErwRU=;
+	s=arc-20240116; t=1738089076; c=relaxed/simple;
+	bh=15HeAI6DdGorNatwFpioUx0BZ9HG723Ock9S8WXd1vA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQF+ZC9cp8A5PvzEqOOIpSx4WTLrvec0PlH9gNzTC7Oln7waBOa+vppeFRMK35sCxiodXi7seAFWmuK5iqGf4M6aer4rfjWRMFX997VXEoPMGLRei/4ucR7JwlrOGkAj/AaKKlmorzMMXW8Yf+nQ3i1YgskZWlG/k1dAVPh9irY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrftOapN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTg9H4Kv1w1LQ/DVTC+mMEYmEBgT9vrfigEpYJimILl9PaDAwRuPi56bTHTw38284SJzxQ8dk91d/GTfT6DKeP0CpJrrxmsom1IC7+O1s5og3yZ8wcsDoRRtgbtEZJRoklH4fLuBtNoQOu1a+KPOMYlxH0O9zvgG4iiBbOoNfWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlXJechc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrftOapN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36FAC4CED3;
-	Tue, 28 Jan 2025 18:16:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlXJechc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D66C4CED3;
+	Tue, 28 Jan 2025 18:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738088185;
-	bh=dAhBIZe0NzGrk1yP7ba0F2cmDA+lcqNfDyuYt8ErwRU=;
+	s=k20201202; t=1738089075;
+	bh=15HeAI6DdGorNatwFpioUx0BZ9HG723Ock9S8WXd1vA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrftOapNA8Eyku0qCpJKq83E+TD2XmaWlujUh9CFP4XK8vS31y6coss+9ZWtBusns
-	 AHcEsFX0JlmC8QYGEOggefw0efgPihS9eUzUIHHdUDwtDhWtJAPPHnWvv3LraZhB6E
-	 XGOMQNebgjk4IBWQg3Wa6c3K2FziMHBNWSm2tsu2g1FMDrCwJbxqDO9Agg6/0gqfzl
-	 I+XiSOsd7PN/30899VQtArlsbbAjsvaCoojBh4I6UPEO2cNsB1+PTHf8oyVmAqPSC6
-	 /i56wCYOR4kLHGDO1W9UH4FEJvDF8MhbIsVZ19awk2Svz+J3luKa52D1KTi4JciHUy
-	 z0BCn2hK8R5rA==
-Date: Tue, 28 Jan 2025 18:16:18 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	b=HlXJechcmm6SPFJr9Jp7MZhuzNVpL4KkcoQymNCGuArV1GcYC/zPMQyGsVjfkmz0Q
+	 zd6llgibNYoAVyfSHhwNKBdgiUQwyQM5Hjt5sVdVm6uugELw1Ccud+4+yzP2x9o4MB
+	 tjRnY9Mz4nqo+FgqNjJQ94senB9YLguLdnd4xOYz20EcRQHfnsyb62z9swlg0hl2BP
+	 9xjOKa6PTfnWkwq7+h01r+3oCuARMzWsTkRA1x09TvhtPBRNl1LuA4zNk/P9MHef+r
+	 AC6UNWNlv/2FWbsOeebxw2X42a3e1ma9gwLLH+t5BQAFFK01lef5u2EYJO9yyIUxXR
+	 jxk2wpzFr2eKw==
+Date: Tue, 28 Jan 2025 10:31:14 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 10/21] dt-bindings: riscv: add Smcntrpmf ISA extension
- description
-Message-ID: <20250128-alkalize-gains-d7ff05cb8c71@spud>
-References: <20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com>
- <20250127-counter_delegation-v3-10-64894d7e16d5@rivosinc.com>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexis =?utf-8?Q?Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: fix in-tree build
+Message-ID: <Z5kiciNxDk-G-Zhr@google.com>
+References: <20250124-perf-fix-intree-build-v1-1-485dd7a855e4@bootlin.com>
+ <Z5aiWiqJbkNaVG2Y@google.com>
+ <20250127144849.744ec7e0@booty>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9yLtu4dFJkbHyVHb"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250127-counter_delegation-v3-10-64894d7e16d5@rivosinc.com>
+In-Reply-To: <20250127144849.744ec7e0@booty>
 
+On Mon, Jan 27, 2025 at 02:48:49PM +0100, Luca Ceresoli wrote:
+> Hello Namhyung Kim, 
+> 
+> thanks for having a look!
+> 
+> On Sun, 26 Jan 2025 13:00:10 -0800
+> Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+> > Hello,
+> > 
+> > On Fri, Jan 24, 2025 at 02:06:08PM +0100, Luca Ceresoli wrote:
+> > > Building perf in-tree is broken after commit 890a1961c812 ("perf tools:
+> > > Create source symlink in perf object dir") which added a 'source' symlink
+> > > in the output dir pointing to the source dir.  
+> > 
+> > I cannot reproduce it - both `make -C tools/perf` and `cd tools/perf; make`
+> > work well for me.  What do you mean by in-tree build exactly?  Can you
+> > please share your command line and the error messages?
+> 
+> I have narrowed down my reproducer script from the initial report to a
+> fairly minimal one, and here it is:
+> 
+> ------------------------8<------------------------
+> #!/bin/sh
+> 
+> set -eu
+> 
+> OUT_DIR=${1:-$(pwd)/tools/perf}
+> DESTDIR=/tmp/aaa
+> 
+> RET=0
+> 
+> echo "Kernel version: $(git describe)"
+> echo "OUT_DIR = ${OUT_DIR}"
+> echo "DESTDIR = ${DESTDIR}"
+> echo
+> 
+> git clean -xdfq
+> rm -fr ${DESTDIR}/
+> 
+> # Only for out of tree builds: clear the build dir
+> if ! echo ${OUT_DIR} | grep -q "tools/perf"; then
+>     rm -fr ${OUT_DIR}
+>     mkdir -p ${OUT_DIR}
+> fi
+> 
+> LINUX_MAKE_FLAGS="\
+>     -C tools/perf \
+>     O=${OUT_DIR} \
+>     DESTDIR=${DESTDIR} \
+> "
+> 
+> make ${LINUX_MAKE_FLAGS}
+> make ${LINUX_MAKE_FLAGS} install
+> 
+> echo
+>     
+> if [ -h ${OUT_DIR}/perf ]; then
+>     echo "*** ERROR: ${OUT_DIR}/perf is a symlink, should be an exectuable file: ***" >&2
+>     ls -l ${OUT_DIR}/perf
+>     RET=255
+> fi
+> 
+> if ! find ${DESTDIR}/ -name perf -not -type d | xargs file | grep 'ELF.*executable'; then
+>     echo "*** ERROR: perf executable not preseint in install dir ${DESTDIR} ***" >&2
+>     RET=255
+> fi
+> 
+> exit $RET
+> ------------------------8<------------------------
+> 
+> Just put it outside of your kernel dir (or it will be removed by the
+> 'git clean' command) and run it in your kernel source dir. E.g. right
+> now I'm doing:
+> 
+> cd <kernel dir>
+> git checkout v6.13
+> ../build-perf
+> 
+> You should see it failing as:
+> 
+> *** ERROR: /.../linux/tools/perf/perf is a symlink, should be an exectuable file: ***
+> lrwxrwxrwx 1 user user 39 Jan 27 14:10 /.../linux/tools/perf/perf -> /.../linux/tools/perf
+> *** ERROR: perf executable not preseint in install dir /tmp/aaa ***
+> 
+> Note that in the broken case the kernel build continues and returns 0,
+> but there is no perf exectuable.
 
---9yLtu4dFJkbHyVHb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for sharing this.  I've reproduced it and found it had a
+symlink to a directory rather than an executable.
 
-On Mon, Jan 27, 2025 at 08:59:51PM -0800, Atish Patra wrote:
-> Add the description for Smcntrpmf ISA extension
->=20
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  Documentation/devicetree/bindings/riscv/extensions.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
-cumentation/devicetree/bindings/riscv/extensions.yaml
-> index 1706a77729db..0afe47259c55 100644
-> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> @@ -136,6 +136,14 @@ properties:
->              20240213 version of the privileged ISA specification. This e=
-xtension
->              depends on Sscsrind, Zihpm, Zicntr extensions.
-> =20
-> +        - const: smcntrpmf
-> +          description: |
-> +            The standard Smcntrpmf supervisor-level extension for the ma=
-chine mode
-> +            to enable privilege mode filtering for cycle and instret cou=
-nters as
-> +            ratified in the 20240326 version of the privileged ISA speci=
-fication.
-> +            The Ssccfg extension depends on this as *cfg CSRs are availa=
-ble only
-> +            if smcntrpmf is present.
+> 
+> PS:
+> 
+> And after having come up with the above script, I also found that the
+> build succeeds with the following change:
+> 
+> ------------------------8<------------------------
+> @@ -24,11 +24,10 @@
+>  LINUX_MAKE_FLAGS="\
+>      -C tools/perf \
+>      O=${OUT_DIR} \
+> -    DESTDIR=${DESTDIR} \
+>  "
+>  
+>  make ${LINUX_MAKE_FLAGS}
+> -make ${LINUX_MAKE_FLAGS} install
+> +make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+> ------------------------8<------------------------
+> 
+> In other words:
+> 
+>  * This fails:
+>      make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR}
+>      make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+>  * This succeeds:
+>      make ${LINUX_MAKE_FLAGS}
+>      make ${LINUX_MAKE_FLAGS} DESTDIR=${DESTDIR} install
+> 
+> The only difference is the presence of 'DESTDIR' in the compile command.
+> 
+> My understanding and expectation is that DESTDIR has no effect on the
+> make process except in the 'install' target. This is clearly not
+> happening here.
+> 
+> I have not yet found an obvious reason why 'DESTDIR' is special in the
+> compilation stage, after a quick look.
 
-Same here, this Ssccfg dep on Smcntrpmf should be in schema.
+Interesting, maybe some install commands were called internally.  I'll
+take a look.
 
-> +
->          - const: smmpm
->            description: |
->              The standard Smmpm extension for M-mode pointer masking as
->=20
-> --=20
-> 2.34.1
->=20
+Thanks,
+Namhyung
 
---9yLtu4dFJkbHyVHb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5ke8gAKCRB4tDGHoIJi
-0vPhAQDx+AuPwwIGi1but7cc+ZSuNL3hdXEnMDZgYqVgWvZYyQD/XAo/U+6tF1Qq
-aDwsQLtFmnRh8LNdj2PoYC0npPteJQg=
-=WLCX
------END PGP SIGNATURE-----
-
---9yLtu4dFJkbHyVHb--
