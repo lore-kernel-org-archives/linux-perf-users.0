@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2781A725A;
-	Tue, 28 Jan 2025 18:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C5D1DE3DB;
+	Tue, 28 Jan 2025 18:15:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738088017; cv=none; b=ScHZ1Vhiu03DFexPsPYOecdJegak/oEC1hQTd7ksUBJt4ovxDOMlNBxG1PPCdtZfvsgP3lWI3jyAUVVnXmcn0+yzmVZqdXalaSQBD/HNpWrbMbJtV0UcDV76MNHa7/JkiN7lGrLraiHVJReRJGLn0pWqCJHMo93QoZFF3lp5wLw=
+	t=1738088131; cv=none; b=X9mUYe7JEPtXWYiaV28c0ETuvH5vw3kICREqtaJ2YyHrAqM9GDcFvlRM2yCMMfR2wzLGms5sougqZTZRDkun4q7zjXj1e+IEAPz6AeTXo2WhsdLXQi+2ciC69PX5SnjDs2Ul9r3ZY66/2bMloPvkMCEZV8wuHEEOGEPIei5oemI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738088017; c=relaxed/simple;
-	bh=ZII8PZSI4LeKQp3xZZFOwVUjjXkbI08cdwKGSeAU3ts=;
+	s=arc-20240116; t=1738088131; c=relaxed/simple;
+	bh=6075frjmGf2CUp9HJ5/vQDRATQCGJ5BP/XrPZq5Nprg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JsB4EF7sCQppV6LTSFUNUcoRj8ZRQ4Bz/KZwQBAi7r33UTjcw2BAKM3oMU/M8AXuVwGK/6VQhM8AVdNQMhriBzTdXWu/Qlfs78bRqyj7fmpV8uF0HerF2jND7yUti+8ZkHt8KK78mnGOoOJr4OVTNRfD9wk0H/kOU0D3xPhHG14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkDeNu+H; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=l6P5gzaQrPx3WdtbMyc/BbjIzkGQXlMFu8lUCHb0caGR3fdynwTA9/WrSiv/BgvgeWFkdcvgeb4O2c0F1lFgciSE5emf5OSJROwXJkT0aj6/suiSRU89u8v8HU+kAwER+p5JLswcOd5bGo/ZwbG3ccdKQQmyqWKSUM2ZlqI/aUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHBk+2KB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkDeNu+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5BCC4CED3;
-	Tue, 28 Jan 2025 18:13:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHBk+2KB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1923CC4CED3;
+	Tue, 28 Jan 2025 18:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738088016;
-	bh=ZII8PZSI4LeKQp3xZZFOwVUjjXkbI08cdwKGSeAU3ts=;
+	s=k20201202; t=1738088130;
+	bh=6075frjmGf2CUp9HJ5/vQDRATQCGJ5BP/XrPZq5Nprg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fkDeNu+H4AejWPaGDdgyWju3XPs4aU/s9RSc7SlhVr/J6tDUE6ZmioABJ+DSYiMNX
-	 BjeO0bFLPmdToOwoOw3aZY5CQ3nxHiQxWl4cL45dpkXkefQUfGx+bhJGJsHGZ8kdrd
-	 Bkv4imXVAH0fW9cjrYmabvwIdLd+DDQUMznxv7ffVZ8C6VKKgBlkRYKFhKcv8Mu4B7
-	 KQfqSYz6ycODwT65fpfPm6QlooCW9e+zS2U78LPvLIDqv8DmG/P6mbdr0z0CtIQ0IP
-	 mRBZ8pNDW7+69UKXQpgaY+dZ9+qvxeQgAFPtpFbR7Ez4UXubpRQHGHagw336p6ddg3
-	 w3wAg5HDt4GiA==
-Date: Tue, 28 Jan 2025 18:13:30 +0000
+	b=ZHBk+2KBtaE1HOUtjCqrKseXmeqGHBEUiU1op0fxaYBtVY2NXJ5z/1iewzUG0d7MI
+	 Fir+fc7UdqpYikHjmDTwnbmVvtZlf4Ey/93imq2a1I3mct7h7Nzrotkr1Yuj6EVz+o
+	 CqdQZ8mDeXV/XYRI3z7ZVC+EdscMSxmZq73iVQ0GPZgOXS1ImdlXtp4LzVB/MMF84w
+	 tFZPMdBoM4NW9cK9mpbHR4Bi3QOb7v4sFDlDjxkMWsKEzZQto798CEhGs5enRMlRWe
+	 98x2v/SuhQlUY0AfZxEMWWZ0z1lMzF6kUgp8zeHCEqrn3ZolLzwun1WrCAmiPehQ9j
+	 CrcGJOPVn8rcQ==
+Date: Tue, 28 Jan 2025 18:15:24 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Atish Patra <atishp@rivosinc.com>
 Cc: Paul Walmsley <paul.walmsley@sifive.com>,
@@ -49,9 +49,10 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v3 08/21] dt-bindings: riscv: add Counter delegation ISA
  extensions description
-Message-ID: <20250128-crazed-crudeness-f7b1fbc87f1d@spud>
+Message-ID: <20250128-murky-shack-0ba8e6e65db6@spud>
 References: <20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com>
  <20250127-counter_delegation-v3-8-64894d7e16d5@rivosinc.com>
+ <20250128-crazed-crudeness-f7b1fbc87f1d@spud>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,32 +60,37 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GvgqpjPPPGH/clyG"
+	protocol="application/pgp-signature"; boundary="/eM+/vjEehefq9Br"
 Content-Disposition: inline
-In-Reply-To: <20250127-counter_delegation-v3-8-64894d7e16d5@rivosinc.com>
+In-Reply-To: <20250128-crazed-crudeness-f7b1fbc87f1d@spud>
 
 
---GvgqpjPPPGH/clyG
+--/eM+/vjEehefq9Br
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 27, 2025 at 08:59:49PM -0800, Atish Patra wrote:
-> Add description for the Smcdeleg/Ssccfg extension.
+On Tue, Jan 28, 2025 at 06:13:30PM +0000, Conor Dooley wrote:
+> On Mon, Jan 27, 2025 at 08:59:49PM -0800, Atish Patra wrote:
+> > Add description for the Smcdeleg/Ssccfg extension.
+> >=20
+> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
 >=20
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Actually no, I take this back. Don't describe dependencies in text,
+there's examples at the end of the file for how to set up dependencies
+between extensions in schema. If you get stuck, lmk and I'll help.
 
---GvgqpjPPPGH/clyG
+--/eM+/vjEehefq9Br
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5keSQAKCRB4tDGHoIJi
-0rDgAPwON9XqyKUy23jJH1lSiqhZdCPhX0R4hX2MfIgKmnZOeQEA77rnupIw+zEX
-DD6TjYVZE8nXtyNpDTjlWlsM7onJhwM=
-=kpCk
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5keuwAKCRB4tDGHoIJi
+0tECAP4paJ3J93SR4l7JboJVyX3iK+3HsvDkfh03Tg6KWjjrzgD/daARcIoPZWNF
+iNl1rW5lnWyTZ4vN+TrR+hLHXd6XmwU=
+=h1bm
 -----END PGP SIGNATURE-----
 
---GvgqpjPPPGH/clyG--
+--/eM+/vjEehefq9Br--
