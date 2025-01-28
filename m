@@ -1,67 +1,67 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804AC19DF4F;
-	Tue, 28 Jan 2025 10:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B131D5789D;
+	Tue, 28 Jan 2025 10:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738061461; cv=none; b=XmE3DsA75kEXsX+uDyK+s6eN1QfnR/5n/jBpOC6FtmK62ymrAtEVKVm4xjq3hk+eZkbBlqoCh7AtUz6NpNWwDxMGvIVSxLPdHPc1V8TQYInRf75dpmVlAJq5jz5DpBf6it7XL/Fl55pApnofHnvSUwdf2cpjXiB7pggNYhu9jXs=
+	t=1738061672; cv=none; b=Y/8qAk3zUgiVnCC1HUp3+CowLotvshKfltCVZOgrtKZG33vFzjl7RX6Zu67GwpX9V5mq9ihCKvO+GsRb6ztAb2+hJ5JvBXKJEQnGJf4epZgirbASvV2kqdfdUO0wo9v8Vbm87lt+0+e0ffrbZYjXOTDEIdjI7+J5bzfbTciNYi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738061461; c=relaxed/simple;
-	bh=Fmckq6eLrCsTVvHraxN+jtJZV3xsnJsHxJ1AoOqAMMc=;
+	s=arc-20240116; t=1738061672; c=relaxed/simple;
+	bh=iC7HvqQ6UHru+N7NxQ958qSLw2xOa49IzeH1GfgxxKs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7JHwYaci7pNxYekQV3OFV1JdqgWNbpugV6Gzev3qrpgBoLeCbbqT3nI5gmNa1yxyZ6ZGKkELw6tgL4gux12IdIxQM/VlrDXY9TpiTPH47HLuRxQ4VxXINWVAv+v/6s3l7ca2PqRnbL8antb1ZIMKJ2LjEvoHfqlo2obh7dlWzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QMBIsfhd; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=fNo9cBifLCRKmaMwCO2wcB3nJfYET2CArE/C0G7otJhnM5XGPmM4CPzpELiNQT7U2mpAGSdkkZsXL0WlzZf0BbLnouuyYvPaKoQHEhmayxGg8hUqBRHEEtBmbzuujBjDH4oj0Mg4TtXr0pFH4k4u6cHnZY5w+Yr1lknuCFAUQYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HZ6Z9Nm2; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QMBIsfhd"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HZ6Z9Nm2"
 Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50RLIScW009888;
-	Tue, 28 Jan 2025 10:50:39 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50SA6fPG009939;
+	Tue, 28 Jan 2025 10:54:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=NrNcpE
-	fDgCysWZuUGE5E/DhhI7cTkATbuiP5HwIgKdM=; b=QMBIsfhd/6d51n08FCT2vS
-	eG6nf8QX+stSoikVqDwNPkUAR+Ej0cnIB1GFoy5ZtPyZU8CBiiMQfoCoDm8+nvF5
-	YUswC6NVFD5Ae2tNWL3uEG11i9BcYBmNohf6TSZdLRUl0d/KzojRXYuiYByG7j01
-	TBosM4mY5SN3QtTU8WLkk9UJeGh2K0WuVrbpHDHDF8nS+C3xIZmbAly2sfRAtnYv
-	XjDiF0oyJmkAWkBVCvIRuf8y4rewY81BxnsR1kLoA+ZgpobfwGJlfVmF562UCUpa
-	CC4Qs2CQ/biaNwd3MY8+FGQScjr8IVfLFklR1aQjR4UMFISUY0U4PwcrbILZNlqQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=J1+/22
+	Mdi31Fgq0RG8YRwsw37nD6Txx0qMMlsyHg32k=; b=HZ6Z9Nm2V0uOaMIE8TX9x4
+	DruoAQCQmQ0cXNB3XXQTwOhNhoaxFwyWTTtZYq1II5u/dLfNdQXrLe6oHa60DQ1n
+	KIU0s/XYBNZkVNFSXHLV/7qpK22mKskURia9IL1TEyBc33LE7e7NTBnrblN12qGA
+	ntXVpC2RU+0dZP0xBDWQmQiQLQda8pr1SbzQkXVMKBEc+SSXGtrmTISRLp8qwxvM
+	lnFvd8EmRwwJVd3ccUSSm2Cw+xr9mpiRf5ssn0HTbwpeQjjpzTKS51ES9Mkag6k8
+	mIqDWCPImBCWE6h+0+cHyXhNof1hxu9LrvUC8jFpkR+R+s5J9AN1qP6q1CHk1FLw
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycubb-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycuqd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:50:38 +0000 (GMT)
+	Tue, 28 Jan 2025 10:54:16 +0000 (GMT)
 Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50SAk57N012730;
-	Tue, 28 Jan 2025 10:50:38 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycub8-1
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50SAjmYj011423;
+	Tue, 28 Jan 2025 10:54:15 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecdycuqa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:50:38 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50SAeUP7022172;
-	Tue, 28 Jan 2025 10:50:37 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjjjmc-1
+	Tue, 28 Jan 2025 10:54:15 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50S75DcT018889;
+	Tue, 28 Jan 2025 10:54:14 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dd01ag57-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jan 2025 10:50:36 +0000
+	Tue, 28 Jan 2025 10:54:14 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50SAoXrc56361376
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50SAsCgd54985098
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Jan 2025 10:50:33 GMT
+	Tue, 28 Jan 2025 10:54:12 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 626EB20214;
-	Tue, 28 Jan 2025 10:50:33 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 640E4201EE;
+	Tue, 28 Jan 2025 10:54:12 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 20755201F1;
-	Tue, 28 Jan 2025 10:50:26 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id E2DA7201EC;
+	Tue, 28 Jan 2025 10:54:11 +0000 (GMT)
 Received: from [9.152.222.93] (unknown [9.152.222.93])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 28 Jan 2025 10:50:26 +0000 (GMT)
-Message-ID: <672a4d84-219c-4d45-b3a7-8d9d96e90e01@linux.ibm.com>
-Date: Tue, 28 Jan 2025 11:50:25 +0100
+	Tue, 28 Jan 2025 10:54:11 +0000 (GMT)
+Message-ID: <bcb5ddee-c8d3-4f2b-9d84-8a2e1f1236fa@linux.ibm.com>
+Date: Tue, 28 Jan 2025 11:54:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -87,8 +87,7 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
  <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
  <CAEf4Bzb=YFhsLFuK2Zowb1dsXnQPA1uyQUuQ0yXXQbEpeeyDaw@mail.gmail.com>
@@ -101,14 +100,14 @@ In-Reply-To: <CAEf4BzYqDk5pGbmCz3XX1a-RXRKSLw9QwD+wUEABinVG+HZ1qQ@mail.gmail.com
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Jf3DGzU5Ec_3YVf9446Filh3w1fdaaGJ
-X-Proofpoint-ORIG-GUID: jJorG7VDgbyLEkM_bvHWA7VsVRorC6dN
+X-Proofpoint-GUID: AXIQR8knhemm6G70G5RyZ_gr5iBVy9i5
+X-Proofpoint-ORIG-GUID: EXUZoO8Jxqim8bKyyJptyCnarRLu770P
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-28_03,2025-01-27_01,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
  lowpriorityscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=732 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2411120000 definitions=main-2501280077
 
@@ -117,39 +116,28 @@ On 28.01.2025 01:39, Andrii Nakryiko wrote:
 >> On Fri, Jan 24, 2025 at 10:02:46AM -0800, Andrii Nakryiko wrote:
 >>> On Tue, Jan 21, 2025 at 6:32 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
->>>> +       UNSAFE_GET_USER_INC(info, cur, 1, Efault);
->>>> +       offset_count = SFRAME_FRE_OFFSET_COUNT(info);
->>>> +       offset_size  = offset_size_enum_to_size(SFRAME_FRE_OFFSET_SIZE(info));
->>>> +       if (!offset_count || !offset_size)
->>>> +               return -EFAULT;
+>>>> +       fre_addr = sec->fres_start + fde->fres_off;
 >>>> +
->>>> +       if (cur + (offset_count * offset_size) > sec->fres_end)
+>>>> +       for (i = 0; i < fde->fres_num; i++) {
 >>>
->>> offset_count * offset_size done in u8 can overflow, no? maybe upcast
->>> to unsigned long or use check_add_overflow?
+>>> why not binary search? seem more logical to guard against cases with
+>>> lots of FREs and be pretty fast in common case anyways.
+>>
+>> That would be nice, but the FREs are variable-sized and you don't know
+>> how big one is until you start reading it.
+> 
+> ah, another non-obvious thing, yeah... do you think it's worth fixing
+> this and making FREs binary searchable in v3?
+> 
+> Indu, do you have some stats on distribution of FRE count per FDE in practice?
+> 
+> Tbh, FRE format is bothering me quite a lot... but let's discuss that
+> in another thread with you and Indu
 
-The maximum offset_count * offset_size is 15 * 4 = 60 if I am not wrong:
+I would be interested to be part of that discussion.  I could share some
+preliminary stats from my s390 work.
 
->> offset_size is <= 2 as returned by offset_size_enum_to_size().
-
-SFrame V2 FRE offset sizes are either 1, 2, or 4 bytes.  This is also
-reflected in offset_size_enum_to_size().
-
->> offset_count is expected to be <= 3, enforced by the !offset_count check
->> at the bottom.
-
-SFrame V2 FRE offset count is 4 bits unsigned, so 0 <= offset_count <= 15.
-  
->> An overflow here would be harmless as it would be caught by the
->> !offset_count anyway.  Though I also notice offset_count isn't big
->> enough to hold the 2-byte SFRAME_FRE_OFFSET_COUNT() value.  Which is
->> harmless for the same reason, but yeah I'll make offset_count an
->> unsigned int.
-
-As mentioned above the FRE offset count is 4 bits, not 2 bytes.  This is
-also reflected in SFRAME_FRE_OFFSET_COUNT().
-
-Regards,
+Thanks and regards,
 Jens
 -- 
 Jens Remus
