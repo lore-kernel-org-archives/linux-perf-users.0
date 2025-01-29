@@ -1,134 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745481917C7;
-	Wed, 29 Jan 2025 22:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D881B415B
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 23:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738188613; cv=none; b=lxzMz1qVKVrQHTHqaxWzkKsJzeElcFHikDdOhcbniKLsV/m/wmf5VuEyDRznWv+aNEy0TfkQ9iumJ2Egse5X0InqfVad5zb8EWjTN09/xTaB0QOTFR0QVg6Q3D/lXgMRfk/DAs2rJLeZeNdXciLjnh+nOl4nV8EB1+UABhLWZXs=
+	t=1738193967; cv=none; b=tc+Jy/8i0QEoMmwSVrwqHWvreIN8MKJ9ZXEsX2vXHY6xLqLkt5AD88upzzi1FdqvTf3zFeKlRk6UQSOHXRBuvJi30z3OWvTd8L9t0Ch0fZM1J65PCB6dsEK0YXq0qSiub84uJ/AhgaLYD5jIH+9PmyJiKwCxEnO6rwUGnIQ8W7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738188613; c=relaxed/simple;
-	bh=KynBO6SBPmxTKFKxGxSAiRWxnW4naD/h9oswXbTiyDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EFYmZbHlFKnCrPSzsZW1lo05U40tdScQCUEB815LUZKgcAwLYzF6KNt9SO1eRKk6Elj2XPeMNgYjRh/Lt0u1PwzZUXPMSFx+5XjauLs04xTNvRxYg8/yDaUFCQt6mbNNxJQFumJFCJa3Dff6X3K2JRxf61RRYMfDzKNc0PLd7ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpRRgd0G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738193967; c=relaxed/simple;
+	bh=AkSOBqesdCgmlr//WvbqaUN/Vyb/Qmi9h7fRqvUqHwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cE49P3BDDChCsSH1jPXpQU4YC++TRa8+tPg+B2juMua9Dyc15ENgBCPanOu/Y0Fk8ZHYv0ERKQ71mtZr5iH3N2OYD0Uz/ld+Zi+zgeB0Vq3MYJhjZmM1oAwZQDYabKniM2EOiio3k56mh79YFQoj0B1XEfKSuD9Hzouf4Vjvnmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o+S8btMz; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpRRgd0G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58650C4CED1;
-	Wed, 29 Jan 2025 22:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738188612;
-	bh=KynBO6SBPmxTKFKxGxSAiRWxnW4naD/h9oswXbTiyDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OpRRgd0GMAzjkqMFB6Zk0KICeXTqScxXA0FE+aHyBDTGHpZE7wM+9ZqUi8YyWuZu+
-	 pnet5aaDBPOIREhYM78dlXlU4RYW/wMSVjDWKwB3NQe+8ukIcosR+DrmDQI1mdyp2Y
-	 ZP1jLR/ItAcxZmJBVZe0o126hrDdZ340YKX6Bq8yxzpoWXR43hLHsYw3MBmz/iSrwu
-	 KRrJW85HVZPsj4Ehn20YsOC4fSCEepUdpF9u9Z4RFesj+1WkmdzI3orSbClLo/X4sP
-	 +6Dt9bAt96jLhsNmdcGEMXuJ5/aSeEAVJFHVOvLPUT0cvDIgR45p4tmqKVPgoTRUVB
-	 WRh06njM9Wf5g==
-Date: Wed, 29 Jan 2025 14:10:10 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: Skip Intel TPEBS under hypervisor
-Message-ID: <Z5qnQnnkxGjYkTAM@google.com>
-References: <20250128043739.256305-1-irogers@google.com>
- <Z5kW69biAERrAFxe@google.com>
- <CAP-5=fUw2v9+Ufai3HQBUB8LcHNDL=88w+J2SZtunn_B4iLGiw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+S8btMz"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso20135ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 15:39:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738193965; x=1738798765; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gz0whKbBG5sXEswMf7L/dv0ztGv/l6uXtzaue0oLH3w=;
+        b=o+S8btMzgz41qwBIJuZ/0nNm0cbFmKnpoofd7gAnLLow2py2fWfSkm2Mtdjs+KG1a1
+         hSNn6lRNmkVVjRbbmZUQu7JcJrO6NV9VlxKlWc9YIUQ4MSfb7nTnHSpJe3uxlZvdDPgC
+         5nmsULXm0HAeYh2/wGD4UGVOai0JQt1lwgfnTwLElEi5PdK16CAZXj8cyrZHWV3XBBbC
+         EZl8Sv3lmJ7k1n8uPNTKlDDSlR2QuDNKTgprGL5VX2ZHzFQWeuywyU0ez6iOzUM1qM6p
+         acEc7GzKuJ36wDqvRPo0jCbJB4seF/oh145P6rkrCgQ7+pDUiebSk1C0lv/LvgvJHf2+
+         3PEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738193965; x=1738798765;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gz0whKbBG5sXEswMf7L/dv0ztGv/l6uXtzaue0oLH3w=;
+        b=BDwLHXZY3KnTDGy+m2baCrpPr0xsbBRH7tHESI0onxWiTf8ExFmgMxOBwwaRxbS6Sk
+         so07YiPB+xNYWaUZoAaGbAFZAKKwpk1EKuuaFHeSnCWQSpVY2hpa5jb0tBTM46PB/l5R
+         ofYXXXPa2tByQ0MYiBilpxSg2OEFkn8IdaUFLYYntnOff2QshH0iiQNzasOwR3NnTKE4
+         k8+S2NkCNze7n8VoGAOx/ck6f6GUsZ86O9W59YAwM2hWDeAOEufiOoprtb+JSlruSnqB
+         QVb3uWp0pm40pgFsnQecMONzQWuFLY7LLSk2xqEehDryeX9gQxOjv1hHIbQpLpB0+1sk
+         58Ag==
+X-Gm-Message-State: AOJu0YyOGsY5JNh4SsgPTtQZfvIFKjYiR47AkfcQV9tmPCVZWeP/UfP0
+	X7FPEJF+kF1q6kJ1kYejZxhuHJi3yfIJawMSzTWZ2AqB/enJlzbuzNoCiyH2NFxXfpuHRj6gGJk
+	dXJ1weMulyzmA6g0ICO/GXXqgxGVN9USrsjK9
+X-Gm-Gg: ASbGncuuVk85i+mWGZ7+JWvK5ilUNCCWEBqvVypS8QD8VwHR2W/em//9l5as+ldYBKm
+	qPgll0mnVedYFkH3Yrnu7G4cHR7+Ul2E6qv+CdoZTi+Ui0QtU0a3DDqAhaem16oZ9ji9hwZxanC
+	mgAJutq1jl6YH0HKuv/twF5WQ6
+X-Google-Smtp-Source: AGHT+IEEi7CKsuJWJUwchtoyuIekBDyDvrAMUfyssJJJ1oReMkk/qGduMnGB9jCYH6g9kldOFkdoyzIivXaqFTZhu5Q=
+X-Received: by 2002:a05:6e02:1a02:b0:3ce:3873:48d4 with SMTP id
+ e9e14a558f8ab-3d009815b88mr1279785ab.4.1738193964491; Wed, 29 Jan 2025
+ 15:39:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUw2v9+Ufai3HQBUB8LcHNDL=88w+J2SZtunn_B4iLGiw@mail.gmail.com>
+References: <20250129154405.777533-1-james.clark@linaro.org>
+In-Reply-To: <20250129154405.777533-1-james.clark@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 15:39:13 -0800
+X-Gm-Features: AWEUYZlpJHNjcwYBk2SlqO-JWrSR1iXNStr3ZwGWPzCWTLxaNxIIBB-53FZp-wc
+Message-ID: <CAP-5=fUS4P6dFXXQ23pvv8+yP6XDt4YmL+NqnGu-+i1EmjmOkA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Always feature test reallocarray
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Ali Utku Selen <ali.utku.selen@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 28, 2025 at 09:59:38AM -0800, Ian Rogers wrote:
-> On Tue, Jan 28, 2025 at 9:42 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Jan 27, 2025 at 08:37:39PM -0800, Ian Rogers wrote:
-> > > Intel TPEBS test skips on non-Intel CPUs. On Intel CPUs under a
-> > > hypervisor the cache-misses event may not be present. Skip the test
-> > > under this condition.
-> > >
-> > > Refactor the output code to be placed in a file so that on a signal
-> > > the file can be dumped. This was necessary to catch the issue above as
-> > > the failing perf record command would fail without output.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > > v2: Fix lost :R and use :p with record as it is ignored by perf stat.
-> > > ---
-> > >  .../perf/tests/shell/test_stat_intel_tpebs.sh | 36 +++++++++++--------
-> > >  1 file changed, 22 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > > index 695dcb93bb5e..a330ecdb7ba5 100755
-> > > --- a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > > +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > > @@ -20,31 +20,39 @@ then
-> > >    exit 2
-> > >  fi
-> > >
-> > > +stat_output=$(mktemp /tmp/__perf_stat_tpebs_output.XXXXX)
-> > > +
-> > >  cleanup() {
-> > > +  rm -rf "${stat_output}"
-> > >    trap - EXIT TERM INT
-> > >  }
-> > >
-> > >  trap_cleanup() {
-> > >    echo "Unexpected signal in ${FUNCNAME[1]}"
-> > > +  cat "${stat_output}"
-> > >    cleanup
-> > >    exit 1
-> > >  }
-> > >  trap trap_cleanup EXIT TERM INT
-> > >
-> > > -# Use this event for testing because it should exist in all platforms
-> > > -event=cache-misses:R
-> > > -
-> > > -# Hybrid platforms output like "cpu_atom/cache-misses/R", rather than as above
-> > > -alt_name=/cache-misses/R
-> > > +# Event to be used in tests
-> > > +event=cache-misses
-> > >
-> > > -# Without this cmd option, default value or zero is returned
-> > > -#echo "Testing without --record-tpebs"
-> > > -#result=$(perf stat -e "$event" true 2>&1)
-> > > -#[[ "$result" =~ $event || "$result" =~ $alt_name ]] || exit 1
-> > > +if ! perf record -e "${event}:p" -a -o /dev/null sleep 0.01 > "${stat_output}" 2>&1
-> >
-> > Shouldn't it simply be
-> >
-> >   if ! perf list hw | grep -q cache-misses
-> 
-> No, because that would succeed even if precise events weren't supported.
+On Wed, Jan 29, 2025 at 7:44=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> This is also used in util/comm.c now, so instead of selectively doing
+> the feature test, always do it. If it's ever used anywhere else it's
+> less likely to cause another build failure.
+>
+> This doesn't remove the need to manually include libc_compat.h, and
+> missing that will still cause an error for glibc < 2.26. There isn't a
+> way to fix that without poisoning reallocarray like libbpf did, but that
+> has other downsides like making memory debugging tools less useful. So
+> for Perf keep it like this and we'll have to fix up any missed includes.
+>
+> Fixes the following build error:
+>
+>   util/comm.c:152:31: error: implicit declaration of function
+>                       'reallocarray' [-Wimplicit-function-declaration]
+>   152 |                         tmp =3D reallocarray(comm_strs->strs,
+>       |                               ^~~~~~~~~~~~
+>
+> Fixes: 13ca628716c6 ("perf comm: Add reference count checking to 'struct =
+comm_str'")
+> Reported-by: Ali Utku Selen <ali.utku.selen@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Oh I see.
-
-> 
-> > ?  Doesn't it work on hybrid?
-> 
-> Untested, but I don't see a difference between grepping an event from
-> a file to using a match in a bash line. Neither specify a PMU so it is
-> unclear to me why you'd think this would break.
-
-No specific reason.  I thought checking `perf list` would be more
-intuitive and then started to think there should be a reason.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
+Ian
 
+> ---
+>  tools/perf/Makefile.config | 10 ++++------
+>  tools/perf/util/comm.c     |  2 ++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a148ca9efca9..ed3ba13f1018 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -497,13 +497,14 @@ ifeq ($(feature-setns), 1)
+>    $(call detected,CONFIG_SETNS)
+>  endif
+>
+> +ifeq ($(feature-reallocarray), 0)
+> +      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> +endif
+> +
+>  ifdef CORESIGHT
+>    $(call feature_check,libopencsd)
+>    ifeq ($(feature-libopencsd), 1)
+>      CFLAGS +=3D -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
+> -    ifeq ($(feature-reallocarray), 0)
+> -      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> -    endif
+>      LDFLAGS +=3D $(LIBOPENCSD_LDFLAGS)
+>      EXTLIBS +=3D $(OPENCSDLIBS)
+>      $(call detected,CONFIG_LIBOPENCSD)
+> @@ -1103,9 +1104,6 @@ ifndef NO_AUXTRACE
+>    ifndef NO_AUXTRACE
+>      $(call detected,CONFIG_AUXTRACE)
+>      CFLAGS +=3D -DHAVE_AUXTRACE_SUPPORT
+> -    ifeq ($(feature-reallocarray), 0)
+> -      CFLAGS +=3D -DCOMPAT_NEED_REALLOCARRAY
+> -    endif
+>    endif
+>  endif
+>
+> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+> index 49b79cf0c5cc..8aa456d7c2cd 100644
+> --- a/tools/perf/util/comm.c
+> +++ b/tools/perf/util/comm.c
+> @@ -5,6 +5,8 @@
+>  #include <internal/rc_check.h>
+>  #include <linux/refcount.h>
+>  #include <linux/zalloc.h>
+> +#include <tools/libc_compat.h> // reallocarray
+> +
+>  #include "rwsem.h"
+>
+>  DECLARE_RC_STRUCT(comm_str) {
+> --
+> 2.34.1
+>
