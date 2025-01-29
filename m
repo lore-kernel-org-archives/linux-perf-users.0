@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61AC372;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62141DF271;
 	Wed, 29 Jan 2025 17:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738172365; cv=none; b=dglAVygtnMeEBi5FY4gwTD1NS3juVflz5vkpVpbiTLJizCvwef2AvVPZWgcqMvN9aunjRJuHZQoKl/XNjwN3m7WrqGiSldapEkvJe34ouWbL53hzluOZNFH55MHQuMpKGvqayLX6m0mqN4W61l66txQ2B4SIUq8pPKTWZBjK8gM=
+	t=1738172365; cv=none; b=Ik0tRD3TzywNiZJaGuUBVTsG7qNJYOhJceusDJr+kZ/nIAU6lwL1YtQtiVdhsQYCLYFnhrAWO3SAFRhxkpGSayZeB5oA6ojLlIX7+WoX5BEMB4YnHHeztayQRNhbKjKWRsOIrN72h7ORSpFADReP3oe2MtLMQmm+JEdnXP8ld3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738172365; c=relaxed/simple;
-	bh=OUcKoKwz4+cAo4QoML8nMwUAwHEHYbpyL2eh7nmMeWQ=;
+	bh=N/trOawW8zW8kIfWITPPjLkmw1yysrCMHn9BOCzKgAs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fm+JPRL3ORJAw5xrEXec1j5zg9YqEHhdIEAz6nDrU/BYQ4oGPRflHqKyE2HwNue9PJMm6wfSIiNaWqH5SjHHABq4gcJMPt8v+p8YdGGkd90fQZoEo1KAmSar7ulU1EC5lVn/CJT5wvDebLje/RBQqw0qzLG7obyHKPzePSYL3Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWhkxoai; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=baKLgfZfiTeR4RKTAnnFdvjD2IJc2EC6nu5yCsBaqTX9Fwf6v1HFvMBvAdH3lPYpd+j23w/89x/RBDnVD6JTB/hMVBbr7x8GRt+ov3wO7hJhPt4ykgL3AzRtms74+Su2P0l67zw0OjIVJYKsdRRD/I3dHmomDFUMY3QXwPhxUfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0LtX1cT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWhkxoai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32AC3C4CED1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0LtX1cT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8C8C4CEE2;
 	Wed, 29 Jan 2025 17:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738172365;
-	bh=OUcKoKwz4+cAo4QoML8nMwUAwHEHYbpyL2eh7nmMeWQ=;
+	bh=N/trOawW8zW8kIfWITPPjLkmw1yysrCMHn9BOCzKgAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GWhkxoai5EqMLW3Yn2lUP5BpxpJWHYI0/xKobTOfVZ3WehsodI1hjQwCpedZZ6G2E
-	 XZ3pv8ZuTSIhBImADAIOMjK5QAk6MC6dlJSNKyQNEj7fg6EIlM7z/N5/X6x/Bg+uof
-	 lRVXB8c4qXRxZjbA2gvNxIk2l20aRKMjdoxEd0ITAibLFMXjLafT4/NVp4txvZwW/J
-	 KMG2lpcCWHazUSRf1m+uir1iIW/pZkIqAjRWb+7qW1gsD1Mq0TDMafQDQl3ctVC3Xr
-	 JTwy4jlWdEl9Ncvzd9VOgw4g3X0ZOyCR3NZ/AkzTwHl1Ec3KBzr+BrmOARn/HRsQgx
-	 WqnncJpsLQbJQ==
+	b=j0LtX1cTVNPRiOHizosd6+mswH0+XqTf3GNL3DZ6m7qGvZNYE8xPCBbFY1A58m/ts
+	 MndkeGQr9pGpH6wj3F2pget3ATE/0xKvpzXoOLJqK4JR7yBeF9rGm+l/i7XUJvsn4w
+	 g4jhulgVkvDsspaJ9gYZBCKXzDWsU1aG3MivZDcRz8rAUSusIC/C7GRKbvHDdyLyVh
+	 c/36jFF57ah04jNRdd1f9kcUUIquxkGUQgy8urmoBOrD0SjIqvmidGuMqKkxF6uZQ2
+	 l3j8wAJKFciIXeIDR5XABD6e2SRHZqV7VduVsvFq2kmc5zsg9QUgNNlhyMF9lbLhsi
+	 XiL+/mSFdshSg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tdC26-00000004SdQ-3X9a;
+	id 1tdC26-00000004SdM-3PuA;
 	Wed, 29 Jan 2025 18:39:22 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -47,9 +47,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/6] tools: perf: task-analyzer: drop support for Python 2
-Date: Wed, 29 Jan 2025 18:39:06 +0100
-Message-ID: <54d6cc84b9b8408b7857fb2a5d72994cd5acf196.1738171937.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 3/6] tools: perf: tools: perf: exported-sql-viewer: drop support for Python 2
+Date: Wed, 29 Jan 2025 18:39:05 +0100
+Message-ID: <761ec2ebe518b5506e67d088797b559f89c396bb.1738171937.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1738171937.git.mchehab+huawei@kernel.org>
 References: <cover.1738171937.git.mchehab+huawei@kernel.org>
@@ -67,44 +67,25 @@ version is 3.x, so drop support for EOL python 2.x.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/perf/scripts/python/task-analyzer.py | 23 +++++-----------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/scripts/python/task-analyzer.py b/tools/perf/scripts/python/task-analyzer.py
-index 3f1df9894246..9dc18875630c 100755
---- a/tools/perf/scripts/python/task-analyzer.py
-+++ b/tools/perf/scripts/python/task-analyzer.py
-@@ -50,25 +50,12 @@ LEN_IN_IN = len("99999999999.999")  # 15
- LEN_IN_OUT = len("99999999999.999")  # 15
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index 121cf61ba1b3..b096592fd35f 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -3939,9 +3939,8 @@ def CopyTreeCellsToClipboard(view, as_csv=False, with_hdr=False):
+ 	indent_str = " " * indent_sz
  
- 
--# py2/py3 compatibility layer, see PEP469
--try:
--    dict.iteritems
--except AttributeError:
--    # py3
--    def itervalues(d):
--        return iter(d.values())
--
--    def iteritems(d):
--        return iter(d.items())
--
--else:
--    # py2
--    def itervalues(d):
--        return d.itervalues()
--
--    def iteritems(d):
--        return d.iteritems()
-+# py3
-+def itervalues(d):
-+    return iter(d.values())
- 
-+def iteritems(d):
-+    return iter(d.items())
- 
- def _check_color():
-     global _COLORS
+ 	expanded_mark_sz = 2
+-	if sys.version_info[0] == 3:
+-		expanded_mark = "\u25BC "
+-		not_expanded_mark = "\u25B6 "
++    expanded_mark = "\u25BC "
++    not_expanded_mark = "\u25B6 "
+ 	else:
+ 		expanded_mark = unicode(chr(0xE2) + chr(0x96) + chr(0xBC) + " ", "utf-8")
+ 		not_expanded_mark =  unicode(chr(0xE2) + chr(0x96) + chr(0xB6) + " ", "utf-8")
 -- 
 2.48.1
 
