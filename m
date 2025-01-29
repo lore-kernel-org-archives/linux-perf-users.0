@@ -1,189 +1,186 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02841E0DCB
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 19:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19219CC33;
+	Wed, 29 Jan 2025 21:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179377; cv=none; b=GklSidU06S2W2Ith7pzqi1WcFbIEYMOp0HwK/hal/cG8W3w1dnATQpQOF9GtBpGBeiAzNPYAQ7dzollJ8gzEJJlOfajlN4AEb52vRhzhnTSqfbp/nMWhlFI6s5NBjItHsxM9MbOWYYZKxukYtsKZcqYmsB5McBKer4GtHAlBkvE=
+	t=1738185851; cv=none; b=Fo8nn/rZcfbq/RJJ3XptXQoddmApJX3GV871v8gWBpWr6JDBAbPeUf4JlxufdSMKynzdO3vT2XGw0jHV/8jMvYKKUy6h7fDH4SRpV/aqGyT5GWq0Y8d1ICblYpP7gxeRL7QAnXPes9t93sA8i3woiluZ4C/qOVnIBaoQTwJ94+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179377; c=relaxed/simple;
-	bh=aog1npG7zbwvqSDpQbzTFt1LmdJAZBP9KpuHlfTmsXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ARNIJlZ2bs5RrboGcKEBJgyhkHnGphu/SiKsGp47NRMv82n8tDrgb7EiQeEiRB6Mt1FmfJdL25/sCHHrsfNnFNE51pSzUUqdE//vSOkmlbnDdsHNjZrO8EIvDD4/+P0ajPf9p63KMxQFqi5/SnbOnVl11ROlfesYMGot1hpFZr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0HmYxwJ4; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738185851; c=relaxed/simple;
+	bh=QmMDy4hSKkSGdkNKClNFLZcY0gag8iYZv1FwISiITCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHB2Gj0WxD+OEfvtyERUnJZJQQ8mIx/froByj724nLR22vMfgxjMG0gTb+YS9Yq3W4HdJQob6NWGIPTjTk+L6SVatMXqPGFTJUYmMSVR6BCf6+W0BX4cthNjt6v8UlD4WmesZ+grpOeLMqAd3438Ba79hQ4GkNJPI8ptZbkWoiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HoRPa/11; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0HmYxwJ4"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so19155ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 11:36:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738179374; x=1738784174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VfFH/icuVW98ZGt4CSx3c++Z8r68yk+i5Ztzc10SRjo=;
-        b=0HmYxwJ4LOW9bFJKd2cFv7WQuYJsfOZJNlwOs6IdItWZpgvBlJqhHkzQr/g4hXWTRU
-         AuWi6m4fH8YkWsT+NFNhX7UcxCm7iC+/xtNreTpArKBeQ3CHVf1NYFSDCXPIXT5YPGdg
-         xp22RKdq0fgySY+XEMiKJtupSm0JpQ7/prUw1p005ET1z0+QBjeGWdJUKety7/Nv9c6d
-         YMh7zPCao7lyAYELpYxKjYRWgUdio+TiWcv3ISnubJnH+LEqkqFSqAd5eSn2hi26vVjj
-         O56/Hh2cw5paVlg5cQlHUo+pxq5n7049eSXecn9TucJ88+KHyvpWPObEsVB+JBsm7xTE
-         Ywow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738179374; x=1738784174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VfFH/icuVW98ZGt4CSx3c++Z8r68yk+i5Ztzc10SRjo=;
-        b=iIMgVi31fzxbfNtS00wiEwNm8wZX0BFnfdj/l5/LVRoJw0AG/WOMKmZgjLRNUm3TSZ
-         82PfvNLfvZAPwFRyPyJq3xIc6JWS3kLGgEnayaB33m87XaVT41RriCqYMVV8Len5rLjr
-         nquNPJkaNad2u8PjhgBq5ZG+nSSrpl3Ij3ALO/3xWktGukTicSXpDodxFb58ATGBEX2i
-         G4idLSe6Di6JtRNsX+graTImZ6Ytbr4rMNMgyxfK+KeUnkVeuQoFWwsExvBEBBjxOqE5
-         k9Y6BZ3ZrpLILD3tBktCTf1yL1WSAomJE1nz+yD/DmBOY8+yEoE95ljREr9vYF+wXbfT
-         qwmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXNFzEEZMA2JFsFGSAnLN/dFmhE5ydbvwR9XNhl66MTdOh/2aamFfPdxBphkw0xARi2jF3lKKuhM5e9GtT8s69@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy2lICVpi+Cn3slzDduTzG/j8iqNTJVG1OlLtQCbOjLO6XzsWb
-	3K4TKvpXh4R0X3sducA9EVO8VgjeSPmLqY4T18W0bA0ecImg2aty22wztVh7jFGP3abFy8PLqE3
-	9mZcK4GHZ4D8mliAsO6bx/iHRyhUCshV327gU
-X-Gm-Gg: ASbGnct7tImAh8SuQEbkFqmp/ttcoND74fVRDUUHSGihMpIoRlxg2AD/42VzxjAkLZV
-	o/p4VYEEt1MWXPHf/4kuDqVT/ZNTiCIN1Gxt7JLq4Xdt+698xwv8KytEew7Xv/j+3XCTjvjy8ga
-	3lMX8uCMApDhaIy+1ICbhw3rwh
-X-Google-Smtp-Source: AGHT+IHyvEbAe7I0uASeZ+x+1BrZI4xyMO5ykKohX5lInnnPkEZRh2gj5blNBgj45TmtVMq4eUjQ2lW7CVyEyBVLIP8=
-X-Received: by 2002:a05:6e02:1987:b0:3ce:471b:1ae4 with SMTP id
- e9e14a558f8ab-3d009a2f410mr216695ab.5.1738179373545; Wed, 29 Jan 2025
- 11:36:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HoRPa/11"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A664C4CED1;
+	Wed, 29 Jan 2025 21:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738185850;
+	bh=QmMDy4hSKkSGdkNKClNFLZcY0gag8iYZv1FwISiITCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HoRPa/11Ni4HPEGxiGEh6wiztJMtzAUy3Z/81nQktNBVT2tLAOqAdNWR1C1oYpTA+
+	 /UN69mZqQoXlvvAfOuyJuB9eslpawixmAD6d+rJgOCJkS7ovPKPDZvRyB/hXasaVy9
+	 n1sGTeEWGE6zugv2RZnAg7xOrI8kAmeixpXAfQCB+Dt6EMimdM3bAZo87WCuraruh1
+	 +ar1HKKZguzlXoGd3pIlHEUiUlMN2kApLvmthrq+zgU+//OsiOqxXf5+bKhpU9G6X4
+	 6xxEIP0/DYuZ/6D02wQ6MSPYb2WS82xeAAOppCa8lgi0DDisJuyK3o3FNipQx9f/Zi
+	 vpC1ErAR2GIRQ==
+Date: Wed, 29 Jan 2025 13:24:07 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH v5 3/4] perf record: Skip don't fail for events that
+ don't open
+Message-ID: <Z5qcd6upvrPOqayY@google.com>
+References: <20250109222109.567031-4-irogers@google.com>
+ <Z4B279zu_8Kz5N6u@google.com>
+ <Z4EsUAtOKZUzcw2S@x1>
+ <CAP-5=fV2cYjxf6jvYcKkd=2wcQrbR=58qafiSJ-qzE17EmWqGQ@mail.gmail.com>
+ <Z4F0bKnCHCaqdvFw@google.com>
+ <CAP-5=fVn=0n=gN6ngMmBTry3A+US3z=bX5SzVP6Zs0J0t2HLuA@mail.gmail.com>
+ <Z4V8ykyHErC89iYj@google.com>
+ <CAP-5=fXSjLWd4j08Um7deqB3dHbk+1DpTpddr7wkYOUJTeScrg@mail.gmail.com>
+ <Z4fxAQAHZ9JtdHiL@google.com>
+ <CAP-5=fUz6Nkj+iRuAjjTGXib==jYCvqopa4Zg7TK2MAT7Ns+iA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-14-irogers@google.com>
- <gnwmibvjtwboisw7uv32bdo4ziw4qzgwzvndqg2czpa6vp4olv@44n36ndbwobc>
- <CAP-5=fW9nM9zoQ5SQOq2HQfkougRotm=EBw99cvGDOpD=giK2g@mail.gmail.com> <jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb>
-In-Reply-To: <jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Jan 2025 11:36:02 -0800
-X-Gm-Features: AWEUYZkc7cnANysO6DBXAQ06kDYu_R25G9BqfZ2LqG1BThHYjZpq_jsx4qaWxvk
-Message-ID: <CAP-5=fVcF+F7ST3Ya0_3hXq69ArhZv0gy30U4SPC7Cqih7HAWA@mail.gmail.com>
-Subject: Re: [PATCH v3 13/18] perf build: Remove libbfd support
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUz6Nkj+iRuAjjTGXib==jYCvqopa4Zg7TK2MAT7Ns+iA@mail.gmail.com>
 
-On Wed, Jan 29, 2025 at 8:47=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> On Tue, Jan 28, 2025 at 05:40:44PM -0800, Ian Rogers wrote:
-> > On Tue, Jan 28, 2025 at 4:31=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote=
-:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Wed, Jan 22, 2025 at 09:43:03AM -0800, Ian Rogers wrote:
-> > > > libbfd is license incompatible with perf and building requires the
-> > > > BUILD_NONDISTRO=3D1 build flag. Remove the code to simplify the cod=
-e
-> > > > base.
+Hi Ian,
+
+Sorry for the delay.
+
+On Wed, Jan 15, 2025 at 09:56:59AM -0800, Ian Rogers wrote:
+> On Wed, Jan 15, 2025 at 9:31 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jan 13, 2025 at 03:04:26PM -0800, Ian Rogers wrote:
+> > > On Mon, Jan 13, 2025 at 12:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/Documentation/perf-check.txt |   1 -
-> > > >  tools/perf/Makefile.config              |  38 +---
-> > > >  tools/perf/builtin-check.c              |   1 -
-> > > >  tools/perf/tests/Build                  |   1 -
-> > > >  tools/perf/tests/builtin-test.c         |   1 -
-> > > >  tools/perf/tests/pe-file-parsing.c      | 101 ----------
-> > > >  tools/perf/tests/tests.h                |   1 -
-> > > >  tools/perf/util/demangle-cxx.cpp        |  13 +-
-> > > >  tools/perf/util/disasm_bpf.c            | 166 ----------------
-> > > >  tools/perf/util/srcline.c               | 243 +-------------------=
-----
-> > > >  tools/perf/util/symbol-elf.c            |  86 +--------
-> > > >  tools/perf/util/symbol.c                | 135 -------------
-> > > >  tools/perf/util/symbol.h                |   4 -
-> > > >  13 files changed, 7 insertions(+), 784 deletions(-)
-> > > >  delete mode 100644 tools/perf/tests/pe-file-parsing.c
+> > > > Hi Ian,
+> > > >
+> > > > On Fri, Jan 10, 2025 at 01:33:57PM -0800, Ian Rogers wrote:
+> > > > > On Fri, Jan 10, 2025 at 11:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > On Fri, Jan 10, 2025 at 08:42:02AM -0800, Ian Rogers wrote:
+[...]
+> > > > > > > A patch lowering the priority of error messages should be independent
+> > > > > > > of the 4 changes here. I'd be happy if someone follows this series
+> > > > > > > with a patch doing it.
+> > > > > >
+> > > > > > I think the error behavior is a part of this change.
+> > > > >
+> > > > > I disagree with it, so I think you need to address my comments.
+> > > >
+> > > > You are changing the error behavior by skipping failed events then the
+> > > > relevant error messages should be handled properly in this patchset.
 > > >
-> > > [..]
+> > > I'm not sure what you are asking and I'm not sure why it matters?
+> > > Previously you'd asked for all the output to be moved under verbose.
 > > >
-> > > I was briefly investigating why the centos build of perf was not
-> > > demangling rust v0 symbols [0]. From looking at the rust issue [1], i=
-t
-> > > appears the rust team somehow delivered support for v0 demangling
-> > > through libbfd. The code itself looked a bit odd (relying on cxx
-> > > demangle to run first?), but that's a separate thing.
-> >
-> > There is still C++ demangling support by way of cxxabi:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/demangle-cxx.cpp?h=3Dperf-tools-next#n44
-> > that was in libstdc++ (GNU) and libcxx (LLVM) when I looked.
-> >
-> > > The centos build does not build with libbfd for the license issues yo=
-u
-> > > mentioned. So your change probably won't regress any distro use cases=
-.
-> > > But it does remove support for motivated users who don't have
-> > > re-distribution requirements.
+> > > If I specify an event that doesn't work with perf record today then it
+> > > fails. With this patch it fails too. If that event is a core PMU event
+> > > then there will be an error message for each core PMU that doesn't
+> > > support the event. So I get 2 error messages on hybrid. This doesn't
+> > > feel egregious or warrant a new error message mechanism. I would like
+> > > it so that evsels supported 1 or more PMUs, in which case this would
+> > > be 1 error message.
 > > >
-> > > But since this patchset came up first in my search, I thought it'd be
-> > > good to mention that someone probably needs to add v0 support to
-> > > tools/perf/util/demangle-rust.c.
+> > > If I specify perf record today on an uncore event then perf record
+> > > fails and I get 1 error message for the uncore PMU. The new behavior
+> > > will be to get 1 error message per uncore PMU. If I'm on a server with
+> > > 10s of uncore PMUs then maybe the message is spammy, but the command
+> > > fails today and will continue to fail with this series. I don't see a
+> > > motivation to change or optimize for this case and again, evsels that
+> > > support >1 PMU would be the most appropriate fix.
+> > >
+> > > The only case where there is no message today but would be with this
+> > > patch series is for cycles on ARM's neoverse. There will be one
+> > > warning for the evsel on the SLC PMU. That's one warning and not many.
+> > >
+> > > As I've said, if you want a more elaborate error reporting system then
+> > > take these patches and add it to them. There's a larger refactor to
+> > > make evsels support >1 PMU that would clean up the many events on
+> > > server uncore PMUs issue, but that shouldn't be part of this series
+> > > nor gate it. If you are trying to perf record on uncore PMUs then you
+> > > already have problems and optimizing the error messages for your
+> > > mistake, I don't get why it matters?
 > >
-> > So I don't see any libbfd dependencies in demangle-rust.c:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/demangle-rust.c?h=3Dperf-tools-next#n8
-> > Unusually we don't have any tests on the Rust demangling, we do for
-> > Java and OCaml:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/demangle-java-test.c?h=3Dperf-tools-next
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/demangle-ocaml-test.c?h=3Dperf-tools-next
-> >
-> > Reading a bit more it seems that previous libiberty was coming to the
-> > rescue by way of C++ demangling. I'll see if I can write a demangler
-> > by way of lex and yacc.
->
-> Cool :)
+> > What about with multiple events in the command line - one of them
+> > failing with >1 PMUs and the command now succeeds?
+> 
+> So this would be something like:
+> ```
+> $ perf record -e cycles,instructions,data_read -a sleep 1
+> ```
+> where data_read is an uncore PMU event. The current behavior is:
+> ```
+> $ perf record -e cycles,instructions,data_read -a sleep 1
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
+> ```
+> The new behavior is:
+> ```
+> $ perf record -e cycles,instructions,data_read -a sleep 1
+> Error:
+> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0'
+> which will be removed.
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
+> 
+> Error:
+> Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1'
+> which will be removed.
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (data_read).
+> "dmesg | grep -i perf" may provide additional information.
+> 
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 3.138 MB perf.data (11670 samples) ]
+> ```
+> 
+> We know nobody does this, as the command currently fails. It succeeds
+> with this change, because that's the whole point of the change.
 
-Not by way of lex and yacc, as it seemed overkill, but I sent out:
-https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
-I only tested with the examples from the doc. If you could take a look.
+Well, I think it's because it failed before.  New users can come anytime
+and do whatever they want (or can).  They might pass 100 failing events
+with 1 successful event and it will give a ton of warnings with this.
+So it'd be better ratelimit the message and make it optional (with -v).
 
-> > If we have a v0 standard one is there any
-> > value in the existing demangler or legacy demangling? It seems this
-> > has been broken for the best part of 5 years.
->
-> I believe the "legacy" symbol format is still the rust default. So
-> probably can't remove that. Looks like there's some desire to change
-> that, probably probably not very soon [0].
->
-> That probably also explains why nobody reported the breakage - only very
-> cool kids are using v0 scheme currently.
-
-Ok. I wasn't sure on the status so I've tried to incorporate the
-previous legacy support and the v0 support in my patch.
+But more importantly, I think we should agree on the patch 4 first.
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Daniel
->
->
-> [0]: https://github.com/rust-lang/rust/pull/89917
+
+> I'm not offended by seeing the event was being opened on >1 PMU. For the
+> only currently succeeding situation where this will now warn, the
+> cycles case on Neoverse because of the buggy event name in ARM's SLC
+> PMU, there will be 1 warning. For my example the appropriate fix is to
+> remove the data_read event. For the Neoverse case, specifying the PMU
+> resolves the issue until ARM fixes their driver.
