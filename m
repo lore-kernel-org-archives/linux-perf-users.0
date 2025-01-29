@@ -1,162 +1,299 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D15154449
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 01:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9A117BBF;
+	Wed, 29 Jan 2025 02:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738114859; cv=none; b=iPiZIYXt8yEm3u+ArzCpMtJozdIUH3+2mwDgKfUHSo0hxY0TjaFF52iotsD80deYhP6Jc6PaY/GRW9ZHUsX689miAsrJNLzBno386CXI+u4P2FScG3/MZYOj8MGLXlNq7lyiEBm053er0rpss/ZbR+UVLeUuwc5Pt+mWpSusQvo=
+	t=1738116173; cv=none; b=M1+7RWP+DMRXXYHpTPB/Zm66SQfI+WzPbHEGBBr5y9MG6n59PxRnHPd4T/wOXAinRd6fv0kHlz0Rgkq2a3xdahi3rtovI6QBlJd1W7KBu+LrQvF0G2t3b8r2owvmCUNVDL+/Rm+FIzvKL63kYmeN4detbNy9dJdz8UoPTjyK4z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738114859; c=relaxed/simple;
-	bh=3IaWesmiWr2cicrwXcF3eLCCczCO762Csg6QxbQA5w4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CZUzTJ8WvrC4Y5ifiyQ1R0mguZwI1alpLxgqgpzsQEVTmm33hUQmJbrCrirYI/ipPAAenrwViXNIs9jLvT2CmBae3GMIDukROJlhlmsU2GKrYw8GPZIdzcwnORkXE9itJFpSHlUbZXxyeEzcXi1MxiU/g9KVV17quxsJt7dYyVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RQRZ/T15; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738116173; c=relaxed/simple;
+	bh=Xx4BE3ryJcejEPU8ipJ4zovS4sQsOFwjiDmzGoMGHnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHJboTjpo9aul1MIfoWhH1SVVREalu/boIV6+0H9/RvFBrnQucMMrvzHfyNHTsFj/UVPgUAsgacV/m/X66XLORvnRImN7PdWrOnsXREttdct3sBSNp+H//WNkEau4XshUw0chulfq0QpiicdSBtTMIZNgKThWH23lgDTN4e6d30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5yi6hJe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RQRZ/T15"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so193495ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jan 2025 17:40:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738114857; x=1738719657; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gDsy6RSZpz9ow77za79sOYqCvwLqRyj79gdVd/xMSAY=;
-        b=RQRZ/T15JG+nd0KF3n2FMbmTJX1oVt2HmeLlxWSsfNdc1hC78s+M+Fk54EdxVxaG0y
-         KKmdssyfUX5w1s9WeRNl2gLtSwcEBN5+dyicec2Cka+MlrUrF0pUi5+VuU/A7sMfDGaE
-         JeP8bc+CFWkj5Res5UvAu4F98VL/R+RKA76uPJtHwMYTMmKwGKF7mP3RpoCIEto+XV91
-         1K9UZXJe/9GW5IbeWXIQzAH17q+rWgYsIXYejvzZbxq/isctWVID+IVTcPqzSJ2s2Op0
-         x6JQR1tM3W82SE5zcmFZrCXecYiPr19rvQmxHbixwC2iV6qKPtXna81aYUFeowbB6K65
-         yWdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738114857; x=1738719657;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gDsy6RSZpz9ow77za79sOYqCvwLqRyj79gdVd/xMSAY=;
-        b=Z5mqr4ayKcMLMeGJ8eS5XvvdrDQS++r0nC6zMRHm0UfQJH1RvXc7H2dS7SYQ3Jw3h/
-         Ax/P3chd37Nqf8ZeR8Njl9NuAHxJmp0EAICErXWmdjV1R0YT+vqGOvzP8LSq0692hIbo
-         NMTi6sJZ8TyWXEmr/uXA6qq1Ca2KfzXRNLfXOCYtpyL+etPLKtJBfsohtNPn99XLSmxC
-         LQwv4gYnI3vPPeIlyvzwydWTMbilPODik4Jb67PIUPXFaEleiw+pFZ+BI7j60oQo8Goj
-         pbQUMqlScIaThlqg4i2AdeA8ZyxwXXxfXos7ara/JkRhdyHtk234HZEco3G+FYumaBeb
-         SMpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBhPr/kovuq40BZHIaOBHDbl1C+FTOOvRufn6Mc5o8SDLZBZTeou32Yky8GhGXI5y3VmN1qSRg5r9yzM04JQPr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7U1kg4rHNxYJetlLWPJgCyzcSbv3pP5dlz+or3vJ7RnIbWakW
-	pGrBp5hYtXbWmGQi0DhVxcVTDHy/SITOZ1pN5BsboKZYf5bA2djYcsRPaaiF57BterlLjEDF+Ms
-	rJzZ2c8IUuVr8nDJqcfDEuKYHG6RB5skMxc5O
-X-Gm-Gg: ASbGncsbJp/eXc1SeG2rUwsQ/mG0H1GDHX2MbosPZUMMWIZJ49mvO7lUw8of8KyLSKx
-	PuHTiy8nBvci04/yBXl1ydGGRmBD/HZX5Ar08EZKyhksI7cvgm7xXD5BH6Xjk9K7oGeT8mnVMlA
-	==
-X-Google-Smtp-Source: AGHT+IFtwPircGx0cNqjWjLXFmuseDyJD49YXj0Fjsi0wsyI07WjwQhxx/Ru+LcHanJh3mJtoFcQQlcSOkqFnI4iTpw=
-X-Received: by 2002:a05:6e02:1fc3:b0:3cf:c8b9:8826 with SMTP id
- e9e14a558f8ab-3cffeb833fdmr1919285ab.10.1738114856600; Tue, 28 Jan 2025
- 17:40:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5yi6hJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20B8C4CED3;
+	Wed, 29 Jan 2025 02:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738116172;
+	bh=Xx4BE3ryJcejEPU8ipJ4zovS4sQsOFwjiDmzGoMGHnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D5yi6hJejy319ZcaBiBjU8yadiznzX6YqauEM7v1mQY0cE1+8nQutDUKVp4ODIKp2
+	 xo2LiHJfEGiISga20IpJZZJ2g3gHinw4mUVGseLlRF2ubP5+KdVVs68VIqNqw7YDSE
+	 Ryo89YL4fJW5gl/QIvvuXtC+If7chg0kSGrKfQhcc4dfOWg4wku59BAYe4e9cww3tr
+	 nNOrfZdAUU0mxZSx2a+o17j8f5wj9GRErYwzaMe0vznx2Wtca8yVtj4kUfIuegHf6T
+	 i5BZkkZ2gRxVN6taG9D4yj/GvxARJdKYRNism52zADIwOZjK0mo6dX8ZUZiQPMksO7
+	 sGjszHSO3FX1Q==
+Date: Tue, 28 Jan 2025 18:02:49 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+Message-ID: <20250129020249.owmklacvuvss7z7n@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-14-irogers@google.com>
- <gnwmibvjtwboisw7uv32bdo4ziw4qzgwzvndqg2czpa6vp4olv@44n36ndbwobc>
-In-Reply-To: <gnwmibvjtwboisw7uv32bdo4ziw4qzgwzvndqg2czpa6vp4olv@44n36ndbwobc>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 Jan 2025 17:40:44 -0800
-X-Gm-Features: AWEUYZlLjbLqgBHdACScPUyTzPQSG4bYslu6-GduAeDhlw3y6CZbVRjCdWJ9YaA
-Message-ID: <CAP-5=fW9nM9zoQ5SQOq2HQfkougRotm=EBw99cvGDOpD=giK2g@mail.gmail.com>
-Subject: Re: [PATCH v3 13/18] perf build: Remove libbfd support
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
 
-On Tue, Jan 28, 2025 at 4:31=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Hi Ian,
->
-> On Wed, Jan 22, 2025 at 09:43:03AM -0800, Ian Rogers wrote:
-> > libbfd is license incompatible with perf and building requires the
-> > BUILD_NONDISTRO=3D1 build flag. Remove the code to simplify the code
-> > base.
+On Mon, Jan 27, 2025 at 05:10:27PM -0800, Andrii Nakryiko wrote:
+> > Yes, in theory, it is allowed (as per the specification) to have an
+> > SFrame section with zero number of FDEs/FREs.  But since such a section
+> > will not be useful, I share the opinion that it makes sense to disallow
+> > it in the current unwinding contexts, for now (JIT usecase may change
+> > things later).
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/Documentation/perf-check.txt |   1 -
-> >  tools/perf/Makefile.config              |  38 +---
-> >  tools/perf/builtin-check.c              |   1 -
-> >  tools/perf/tests/Build                  |   1 -
-> >  tools/perf/tests/builtin-test.c         |   1 -
-> >  tools/perf/tests/pe-file-parsing.c      | 101 ----------
-> >  tools/perf/tests/tests.h                |   1 -
-> >  tools/perf/util/demangle-cxx.cpp        |  13 +-
-> >  tools/perf/util/disasm_bpf.c            | 166 ----------------
-> >  tools/perf/util/srcline.c               | 243 +-----------------------
-> >  tools/perf/util/symbol-elf.c            |  86 +--------
-> >  tools/perf/util/symbol.c                | 135 -------------
-> >  tools/perf/util/symbol.h                |   4 -
-> >  13 files changed, 7 insertions(+), 784 deletions(-)
-> >  delete mode 100644 tools/perf/tests/pe-file-parsing.c
->
-> [..]
->
-> I was briefly investigating why the centos build of perf was not
-> demangling rust v0 symbols [0]. From looking at the rust issue [1], it
-> appears the rust team somehow delivered support for v0 demangling
-> through libbfd. The code itself looked a bit odd (relying on cxx
-> demangle to run first?), but that's a separate thing.
+> 
+> I disagree, actually. If it's a legal thing, it shouldn't be randomly
+> rejected. If we later make use of that, we'd have to worry not to
+> accidentally cause problems on older kernels that arbitrarily rejected
+> empty FDE just because it didn't make sense at some point (without
+> causing any issues).
 
-There is still C++ demangling support by way of cxxabi:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/demangle-cxx.cpp?h=3Dperf-tools-next#n44
-that was in libstdc++ (GNU) and libcxx (LLVM) when I looked.
+If such older kernels don't do anything with the section anyway, what's
+the point of pretending they do?
 
-> The centos build does not build with libbfd for the license issues you
-> mentioned. So your change probably won't regress any distro use cases.
-> But it does remove support for motivated users who don't have
-> re-distribution requirements.
->
-> But since this patchset came up first in my search, I thought it'd be
-> good to mention that someone probably needs to add v0 support to
-> tools/perf/util/demangle-rust.c.
+Returning an error would actually make more sense as it communicates
+that the kernel doesn't support whatever hypothetical thing you're
+trying to do with 0 FDEs.
 
-So I don't see any libbfd dependencies in demangle-rust.c:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/demangle-rust.c?h=3Dperf-tools-next#n8
-Unusually we don't have any tests on the Rust demangling, we do for
-Java and OCaml:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/demangle-java-test.c?h=3Dperf-tools-next
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/demangle-ocaml-test.c?h=3Dperf-tools-next
+> > SFRAME_F_FRAME_POINTER flag is not being set currently by GAS/GNU ld at all.
+> >
+> > >>> +               dbg("no fde/fre entries\n");
+> > >>> +               return -EINVAL;
+> > >>> +       }
+> > >>> +
+> > >>> +       header_end = sec->sframe_start + SFRAME_HEADER_SIZE(shdr);
+> > >>> +       if (header_end >= sec->sframe_end) {
+> > >>
+> > >> if we allow zero FDEs/FREs, header_end == sec->sframe_end is legal, right?
+> > >
+> > > I suppose so, but again I'm not seeing any reason to support that.
+> 
+> Let's invert this. Is there any reason why it shouldn't be supported? ;)
 
-Reading a bit more it seems that previous libiberty was coming to the
-rescue by way of C++ demangling. I'll see if I can write a demangler
-by way of lex and yacc. If we have a v0 standard one is there any
-value in the existing demangler or legacy demangling? It seems this
-has been broken for the best part of 5 years.
+It's simple, we don't add code to "support" some vague hypothetical.
 
-Thanks,
-Ian
+For whatever definition of "support", since there's literally nothing
+the kernel can do with that.
 
-> Thanks,
-> Daniel
->
->
-> [0]: https://doc.rust-lang.org/rustc/symbol-mangling/v0.html
-> [1]: https://github.com/rust-lang/rust/issues/60705
+> But what if we take a struct-of-arrays approach and represent it more like:
+> 
+> struct FDE_and_FREs {
+>     struct sframe_func_desc_entry fde_metadata;
+>     u8|u16|u32 start_addrs[N]; /* can extend to u64 as well */
+>     u8 sfre_infos[N];
+>     u8 offsets8[M8];
+>     u16 offsets16[M16] __aligned(2);
+>     u32 offsets32[M32] __aligned(4);
+>     /* we can naturally extend to support also u64 offsets */
+> };
+> 
+> i.e., we split all FRE records into their three constituents: start
+> addresses, info bytes, and then each FRE can fall into either 8-, 16-,
+> or 32-bit offsets "bucket". We collect all the offsets, depending on
+> their size, into these aligned offsets{8,16,32} arrays (with natural
+> extension to 64 bits, if necessary), with at most wasting 1-3 bytes to
+> ensure proper alignment everywhere.
+
+Makes sense.  Though I also have another idea below.
+
+> Note, at this point we need to decide if we want to make FREs binary
+> searchable or not.
+> 
+> If not, we don't really need anything extra. As we process each
+> start_addrs[i] and sfre_infos[i] to find matching FRE, we keep track
+> of how many 8-, 16-, and 32-bit offsets already processed FREs
+> consumed, and when we find the right one, we know exactly the starting
+> index within offset{8,16,32}. Done.
+> 
+> But if we were to make FREs binary searchable, we need to basically
+> have an index of offset pointers to quickly find offsetsX[j] position
+> corresponding to FRE #i. For that, we can have an extra array right
+> next to start_addrs, "semantically parallel" to it:
+> 
+> u8|u16|u32 start_addrs[N];
+> u8|u16|u32 offset_idxs[N];
+
+Binary search would definitely help.  I did a crude histogram for "FREs
+per FDE" for a few binaries on my test system:
+
+gdb (the biggest binary on my test system):
+
+10th Percentile: 1
+20th Percentile: 1
+30th Percentile: 1
+40th Percentile: 3
+50th Percentile: 5
+60th Percentile: 8
+70th Percentile: 11
+80th Percentile: 14
+90th Percentile: 16
+100th Percentile: 472
+
+bash:
+
+10th Percentile: 1
+20th Percentile: 1
+30th Percentile: 3
+40th Percentile: 5
+50th Percentile: 7
+60th Percentile: 9
+70th Percentile: 12
+80th Percentile: 16
+90th Percentile: 17
+100th Percentile: 46
+
+glibc:
+
+10th Percentile: 1
+20th Percentile: 1
+30th Percentile: 1
+40th Percentile: 1
+50th Percentile: 4
+60th Percentile: 6
+70th Percentile: 9
+80th Percentile: 14
+90th Percentile: 16
+100th Percentile: 44
+
+libpython:
+
+10th Percentile: 1
+20th Percentile: 3
+30th Percentile: 4
+40th Percentile: 6
+50th Percentile: 8
+60th Percentile: 11
+70th Percentile: 12
+80th Percentile: 16
+90th Percentile: 20
+100th Percentile: 112
+
+So binary search would help in a lot of cases.
+
+However, if we're going that route, we might want to even consider a
+completely revamped data layout.  For example:
+
+One insight is that the vast majority of (cfa, fp, ra) tuples aren't
+unique.  They could be deduped by storing the unique tuples in a
+standalone 'fre_data' array which is referenced by another
+address-specific array.
+
+  struct fre_data {
+	s8|s16|s32 cfa, fp, ra;
+	u8 info;
+  };
+  struct fre_data fre_data[num_fre_data];
+
+The storage sizes of cfa/fp/ra can be a constant specified in the global
+sframe header.  It's fine all being the same size as it looks like this
+array wouldn't typically be more than a few hundred entries anyway.
+
+Then there would be an array of sorted FRE entries which reference the
+fre_data[] entries:
+
+  struct fre {
+  	s32|s64 start_address;
+	u8|u16 fre_data_idx;
+	
+  } __packed;
+  struct fre fres[num_fres];
+
+(For alignment reasons that should probably be two separate arrays, even
+though not ideal for cache locality)
+
+Here again the field storage sizes would be specified in the global
+sframe header.
+
+Note FDEs aren't even needed here as the unwinder doesn't need to know
+when a function begins/ends.  The only info needed by the unwinder is
+just the fre_data struct.  So a simple binary search of fres[] is all
+that's really needed.
+
+But wait, there's more...
+
+The binary search could be made significantly faster using a small fast
+lookup array which is indexed evenly across the text address offset
+space, similar to what ORC does:
+
+  u32 fre_chunks[num_chunks];
+
+The text address space (starting at offset 0) can be split into
+'num_chunks' chunks of size 'chunk_size'.  The value of
+fre_chunks[offset/chunk_size] is an index into the fres[] array.
+
+Taking my gdb binary as an example:
+
+.text is 6417058 bytes, with 146997 total sframe FREs.  Assuming a chunk
+size of 1024, fre_chunks[] needs 6417058/1024 = 6267 entries.
+
+For unwinding at text offset 0x400000, the index into fre_chunks[] would
+be 0x400000/1024 = 4096.  If fre_chunks[4096] == 96074 and
+fre_chunks[4096+1] == 96098, you need only do a binary search of the 24
+entries between fres[96074] && fres[96098] rather than searching the
+entire 146997 byte array.
+
+.sframe size calculation:
+
+    374 unique fre_data entries (out of 146997 total FREs!)
+    = 374 * (2 * 3) = 2244 bytes
+
+    146997 fre entries
+    = 146997 * (4 + 2) = 881982 bytes
+
+    .text size 6417058 (chunk_size = 1024, num_chunks=6267)
+    = 6267 * 8 = 43869 bytes
+
+Approximate total .sframe size would be 2244 + 881982 + 8192 = 906k,
+plus negligible header size.  Which is smaller than the v2 .sframe on my
+gdb binary (985k).
+
+With the chunked lookup table, the avg lookup is:
+
+  log2(146997/6267) = ~4.5 iterations
+
+whereas a full binary search would be:
+
+  log2(146997) = 17 iterations
+
+So assuming I got all that math right, it's over 3x faster and the
+binary is smaller (or at least should be roughly comparable).
+
+Of course the downside is it's an all new format.  Presumably the linker
+would need to do more work than it's currently doing, e.g., find all the
+duplicates and set up the data accordingly.
+
+-- 
+Josh
