@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C815672;
-	Wed, 29 Jan 2025 05:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D18D5672;
+	Wed, 29 Jan 2025 05:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738126983; cv=none; b=j8Hr48BhQxluWd1lVYQHtRGL3ptBa3kbO0dUoZ2b6zWbmS9rKVH5qk8Fg2kXz9/DGj545MM9HY2YOvhfsdbp7Y59NXdJjrsbz+/U33jeqbpa66aQsJrqpJSKwfjf5EUXj6QX4gbL+/ulhTPiry0YLgax26W1Asm6JeW8RW9tQWQ=
+	t=1738127116; cv=none; b=cJYgf64sYM1rCEspWgkxzTwFrJaH2dRvP7THYp+IEOydq27bUtvlQCM1Da6esYZX6l8rlDvrTI1y7SO7FMaCwoxWp1oQN9X9a4S3Mz0M2lRdjz9Es8yd1twMBB6dGgSk4DE9bA7o7DcQKHF5zDYJ62PDgCtE470KKhayMenrfeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738126983; c=relaxed/simple;
-	bh=SbKKHLYPiE//3PbTJJNXx5sAsvWGgBiRilF4LJcbESY=;
+	s=arc-20240116; t=1738127116; c=relaxed/simple;
+	bh=Cn2/Tcz0mdC7muCzzFJkp6Q+hEMzq3RnEMqbwK7sI3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=raoDqrE31V/p38qXsRF+gXSwW7ocV94Fiw58jSgRNDU+Q8xqsprtb/0W4xGRt5wh8SH3rcsd8BQ2DrOGmVv6F13HopZHDtXTmRdnbv8A3cY1cqRhCKhOKYfnzhvhrDwdrjhnCEHS8CYCZgeEKCm0OcvUViYfhmaaZeJN4igjRqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkpCRPt8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVqmTNO9eP1CHLfVDdksuzKnX4L7FGk2jYWrhuu272uniYhHEUQXUtofZ+t+WD2DRD/Zf8TAytciViFGvf7HmCV7Y1hOIdt38C7zP3pWnTNXoKPXEyiGPo2XNRzp/g7UGr2OI8kQsOOIzR6jZcFAoVzmIbCMH8NLvm9nLWSbxIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r99tIQ+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkpCRPt8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9831C4CED3;
-	Wed, 29 Jan 2025 05:03:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r99tIQ+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACAAC4CED3;
+	Wed, 29 Jan 2025 05:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738126983;
-	bh=SbKKHLYPiE//3PbTJJNXx5sAsvWGgBiRilF4LJcbESY=;
+	s=k20201202; t=1738127115;
+	bh=Cn2/Tcz0mdC7muCzzFJkp6Q+hEMzq3RnEMqbwK7sI3o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AkpCRPt8Fi21g5eTpJwM49Pqfl0IyeILbDPovE7KvCblGSfKhoKxmVCEq+uRlmycz
-	 FJmtAlIV2QtGrPKfVV3thZsu0fNBBxnDucGAW82UG0v1tN2QsrO18RJjftIP+b8Vpu
-	 osKWTxspvVBaIxHSyl9Jsx2Cl7z87Xs5LqGXoqemTqnDmLec2EnoFQRgHu7imZWmD4
-	 o35EHtxzoyBs/3R3gSkQ2iPu+s8J45cFYXd5kDUAHJ9sz2J4O+hK/03j5AIS9rtvfU
-	 rSzuzVJdh7l+70FMl5PkFO7qnB4bUbjIeJfGxaUsu0XKGwixflBv2mV2oVRYIP3Uzs
-	 cT3V+6SsC0zcA==
-Date: Tue, 28 Jan 2025 21:03:01 -0800
+	b=r99tIQ+lUYgK3YCqmuCwqtjCRH+a/xM4A8lKrpCCUYeGlc7O4dLQ6RUAd3JVwOoej
+	 P9s66MtRKoxrpbITDAa6lgol+HG8Bx/XCe94/CH8QSEiuift0SRahmV5NbQb8f53c5
+	 ZLFKUG1kczhrh1Rrt7xIMG1lPwTOoOMU+xze4vnPNJ+d2It0eGfo3f0pGeSfTMt9GC
+	 tww7ZhPf+/fvXyYrnd+H5nGcHlXe9x4uS/U/0+fHz0uEnUBssvxpFZLuK6eqDd0gIz
+	 kD1c4ZX+WLtljp85FixD0kR+P1165bZ1P5FZoKuWVJWfi+xYiq+4w8FZqqhUKZKQGb
+	 zLSY59w9jVpgg==
+Date: Tue, 28 Jan 2025 21:05:14 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Dmitry Vyukov <dvyukov@google.com>
 Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
-Message-ID: <Z5m2hdR3HZxIdhWR@google.com>
+Subject: Re: [PATCH v3 0/7] perf report: Add latency and parallelism profiling
+Message-ID: <Z5m3Co6TEnUiIQkG@google.com>
 References: <cover.1737971364.git.dvyukov@google.com>
- <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,133 +43,102 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
+In-Reply-To: <cover.1737971364.git.dvyukov@google.com>
 
-On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
-> Add record/report --latency flag that allows to capture and show
-> latency-centric profiles rather than the default CPU-consumption-centric
-> profiles. For latency profiles record captures context switch events,
-> and report shows Latency as the first column.
+On Mon, Jan 27, 2025 at 10:58:47AM +0100, Dmitry Vyukov wrote:
+> There are two notions of time: wall-clock time and CPU time.
+> For a single-threaded program, or a program running on a single-core
+> machine, these notions are the same. However, for a multi-threaded/
+> multi-process program running on a multi-core machine, these notions are
+> significantly different. Each second of wall-clock time we have
+> number-of-cores seconds of CPU time.
+> 
+> Currently perf only allows to profile CPU time. Perf (and all other
+> existing profilers to the be best of my knowledge) does not allow to
+> profile wall-clock time.
+> 
+> Optimizing CPU overhead is useful to improve 'throughput', while
+> optimizing wall-clock overhead is useful to improve 'latency'.
+> These profiles are complementary and are not interchangeable.
+> Examples of where latency profile is needed:
+>  - optimzing build latency
+>  - optimizing server request latency
+>  - optimizing ML training/inference latency
+>  - optimizing running time of any command line program
+> 
+> CPU profile is useless for these use cases at best (if a user understands
+> the difference), or misleading at worst (if a user tries to use a wrong
+> profile for a job).
+> 
+> This series add latency and parallelization profiling.
+> See the added documentation and flags descriptions for details.
+> 
+> Brief outline of the implementation:
+>  - add context switch collection during record
+>  - calculate number of threads running on CPUs (parallelism level)
+>    during report
+>  - divide each sample weight by the parallelism level
+> This effectively models that we were taking 1 sample per unit of
+> wall-clock time.
+> 
+> We still default to the CPU profile, so it's up to users to learn
+> about the second profiling mode and use it when appropriate.
+> 
+> Changes in v3:
+>  - rebase and split into patches
+>  - rename 'wallclock' to 'latency' everywhere
+>  - don't enable latency profiling by default,
+>    instead add record/report --latency flag
 
-It'd be nice if you could add a small example output in the commit
-message.
+Thanks for doing this, much better now.  I've added some comments in
+the thread.
+
+Thanks,
+Namhyung
 
 > 
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> Dmitry Vyukov (7):
+>   perf report: Add machine parallelism
+>   perf report: Add parallelism sort key
+>   perf report: Switch filtered from u8 to u16
+>   perf report: Add parallelism filter
+>   perf report: Add latency output field
+>   perf report: Add --latency flag
+>   perf report: Add latency and parallelism profiling documentation
+> 
 > Cc: Namhyung Kim <namhyung@kernel.org>
 > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 > Cc: Ian Rogers <irogers@google.com>
 > Cc: linux-perf-users@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
-> ---
-[SNIP]
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index bc4c3acfe7552..2b6023de7a53a 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -2622,6 +2622,7 @@ struct hpp_dimension {
->  	const char		*name;
->  	struct perf_hpp_fmt	*fmt;
->  	int			taken;
-> +	int			was_taken;
->  };
->  
->  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
-> @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
->  		return -1;
->  
->  	hd->taken = 1;
-> +	hd->was_taken = 1;
->  	perf_hpp_list__register_sort_field(list, fmt);
->  	return 0;
->  }
-> @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
->  	return 0;
->  }
->  
-> -int hpp_dimension__add_output(unsigned col)
-> +int hpp_dimension__add_output(unsigned col, bool implicit)
->  {
-> +	struct hpp_dimension *hd;
-> +
->  	BUG_ON(col >= PERF_HPP__MAX_INDEX);
-> -	return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-> +	hd = &hpp_sort_dimensions[col];
-> +	if (implicit && !hd->was_taken)
-> +		return 0;
-
-I don't understand why you need 'was_taken' field.  Can it use the
-'taken' field?
-
-
-> +	return __hpp_dimension__add_output(&perf_hpp_list, hd);
->  }
->  
->  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-> @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
->  	if (sort__mode == SORT_MODE__DIFF)
->  		return keys;
->  
-> -	keys = prefix_if_not_in("overhead", keys);
-> -
-> -	if (symbol_conf.cumulate_callchain)
-> -		keys = prefix_if_not_in("overhead_children", keys);
-> +	if (symbol_conf.prefer_latency) {
-> +		keys = prefix_if_not_in("overhead", keys);
-> +		keys = prefix_if_not_in("latency", keys);
-> +		if (symbol_conf.cumulate_callchain) {
-> +			keys = prefix_if_not_in("overhead_children", keys);
-> +			keys = prefix_if_not_in("latency_children", keys);
-> +		}
-> +	} else if (!keys || (!strstr(keys, "overhead") &&
-> +			!strstr(keys, "latency"))) {
-> +		if (symbol_conf.enable_latency)
-> +			keys = prefix_if_not_in("latency", keys);
-> +		keys = prefix_if_not_in("overhead", keys);
-> +		if (symbol_conf.cumulate_callchain) {
-> +			if (symbol_conf.enable_latency)
-> +				keys = prefix_if_not_in("latency_children", keys);
-> +			keys = prefix_if_not_in("overhead_children", keys);
-> +		}
-> +	}
-
-Do you really need this complexity?  I think it's better to fix the order
-of columns in both case.
-
-Thanks,
-Namhyung
-
->  
->  	return keys;
->  }
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 11fb15f914093..180d36a2bea35 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -141,7 +141,7 @@ int report_parse_ignore_callees_opt(const struct option *opt, const char *arg, i
->  
->  bool is_strict_order(const char *order);
->  
-> -int hpp_dimension__add_output(unsigned col);
-> +int hpp_dimension__add_output(unsigned col, bool implicit);
->  void reset_dimensions(void);
->  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
->  			struct evlist *evlist,
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index c5b2e56127e22..cd9aa82c7d5ad 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -49,7 +49,9 @@ struct symbol_conf {
->  			keep_exited_threads,
->  			annotate_data_member,
->  			annotate_data_sample,
-> -			skip_empty;
-> +			skip_empty,
-> +			enable_latency,
-> +			prefer_latency;
->  	const char	*vmlinux_name,
->  			*kallsyms_name,
->  			*source_prefix,
+> 
+>  .../callchain-overhead-calculation.txt        |  5 +-
+>  .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
+>  tools/perf/Documentation/perf-report.txt      | 49 ++++++----
+>  tools/perf/Documentation/tips.txt             |  3 +
+>  tools/perf/builtin-record.c                   | 20 +++++
+>  tools/perf/builtin-report.c                   | 39 ++++++++
+>  tools/perf/ui/browsers/hists.c                | 27 +++---
+>  tools/perf/ui/hist.c                          | 64 +++++++++----
+>  tools/perf/util/addr_location.c               |  1 +
+>  tools/perf/util/addr_location.h               |  7 +-
+>  tools/perf/util/event.c                       | 11 +++
+>  tools/perf/util/events_stats.h                |  2 +
+>  tools/perf/util/hist.c                        | 90 +++++++++++++++----
+>  tools/perf/util/hist.h                        | 26 +++++-
+>  tools/perf/util/machine.c                     |  7 ++
+>  tools/perf/util/machine.h                     |  6 ++
+>  tools/perf/util/session.c                     | 12 +++
+>  tools/perf/util/session.h                     |  1 +
+>  tools/perf/util/sort.c                        | 69 ++++++++++++--
+>  tools/perf/util/sort.h                        |  3 +-
+>  tools/perf/util/symbol.c                      | 34 +++++++
+>  tools/perf/util/symbol_conf.h                 |  8 +-
+>  22 files changed, 498 insertions(+), 71 deletions(-)
+>  create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
+> 
+> 
+> base-commit: 91b7747dc70d64b5ec56ffe493310f207e7ffc99
 > -- 
 > 2.48.1.262.g85cc9f2d1e-goog
 > 
