@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE83155C8C
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 00:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74D617B502
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 00:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738110352; cv=none; b=JwxU9bYZ3150v4sI210rrmrg2N05ZJis7PD0AIF9pkLbcb0UxcJssN/Dlj0ndpK9yEDh/4IfUEG3vTW2rlCvS4RZqn8Jy4+R9tNdiNLTl+hMOrgAubGGY7CEZqhN0t3BAe1ZgPLS6vHoHWsi3zhUc7CVJra8tqeDx7Bpx9cRk3U=
+	t=1738110390; cv=none; b=pyljv9rbdcX/xEm/yMC7Nr+UaQSORvC7ZsG8FE8cnasYCc1+fT9hcU/ZBng83F7FsfFlfkEo15lCFCoxmQyfu5uR8hJw53LeiBLeiYs8Kg/DhbTuE/RxjxJZtgVpJtmBpcfip0RMj+scF/SdNxVvuclIVRFOJAux6clPIerihjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738110352; c=relaxed/simple;
-	bh=SVTMW1S7JFSDg+bA7DmzZRGGAfUXEG2NGYwvrvXuhZY=;
+	s=arc-20240116; t=1738110390; c=relaxed/simple;
+	bh=ttHPeGDMTcjcBIoqQRbKRxvn64T3Ln0kMiIrAztObZo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ja2Gwlzp0dAvMUdR1dRXJ5+xN7tnq7QwCM18w+BkypygdlT7GhIu6rEbZrT1IvtBEPzcYRijv+0Ky3YQlgpxGaMPjNQhtQaYD42UU5fm+NjvuIxTMEZXwbDy729IjOEy58PKgi6LdrVBEDddsc1pXNM+dRDIQ59lolf/VidA0ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lOFJcyYr; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=QvFuFdUsHWyG7E4jRAz8xORjOK+saLxTOEhjI5zt6ttGi/4CKXuc482oD+rJ3/1iGqBdJaXMpc7Yn+mfBse4IPQhw5XF0LZKdWhwy12FdAYqCQYDVwJlsYh2jJIz5xDln1wWWobtzBR2rwYzyuW9E2V+FwPEIFlgZjL44+YeI7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VBRmaTqG; arc=none smtp.client-ip=209.85.160.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lOFJcyYr"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef91d5c863so12758970a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jan 2025 16:25:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBRmaTqG"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-29f9dcd1235so3723019fac.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jan 2025 16:26:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738110350; x=1738715150; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738110388; x=1738715188; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/FqegXtUqY4HfJigVh80j6ehxCeSFMBdL2Y3cibZPD8=;
-        b=lOFJcyYrUmaEGOA3esXyalGKCDfOduTZtWjF8PZjvzUSR4fEMyfoXXsK0c1HQ+Dj34
-         LfDZZbNfpdRoMJ72TKQXbphQ67wZyvO2d9Wwhu7QVUdQpp9Pz+0egZR2Equ5g4q0T/sT
-         3wLRMhjAbAbH10j9laeE1k6dfp7MRR8aclHF+wx0w07krtr/VzyJLdjtAspYZMEVkUEW
-         QwRQSklmGmzWmIa3oEFeId4t5gAwiDPW0czVvWUAEakBenxTCFTTayVB6w80ytHRJwLX
-         jYkgSU7YHnBzpa/wINMbBnX5yWuqnomyAgKBaHkjYv+A6Gm4YDgcvquVe8qSkTR7G7aS
-         cTFw==
+        bh=pWNil8Fjn4Jar+XAMcIdAlTx0TuFDQai1n5OzDTNvzE=;
+        b=VBRmaTqGQ4qYMo1iGsTK3FH/zCoaaQW7MoxpKwxsslOlGk/OuF3wICqLvZ0v4Ber0s
+         a7WXuYZp4pd0FPcvKGTTSivuAsu8JO4Sbu2Tp7Sj8RJORqAjs8eK0NAZx7AVY9c0uCHl
+         XafKEnV+fJcLZV3DqaHtBQEkCT86lJtfzVr53IWro21mfn5F/lhw0tjDPYzvNFn1Y6Q2
+         k4VzBx+maPMqGmYispp6vkQzZZH+HIq71mRXmX0V7DaW9HPQ6Achz0sKkXeiklgdJpT3
+         8HuaSpLkARSqc++c13BojKhXoSqZEarZ3n4/YbmfC5CBVBI0rcVEKlEi3a5NXGYoylvA
+         isuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738110350; x=1738715150;
+        d=1e100.net; s=20230601; t=1738110388; x=1738715188;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/FqegXtUqY4HfJigVh80j6ehxCeSFMBdL2Y3cibZPD8=;
-        b=wNj4DFXaOwLDddMloKAwfK7fNO21t8T5wjAU/5xBtZWrbsoy+cy6gStfVReBdkVAQe
-         mBb0YHSIv4R9mJoU/OREd7yO/cysGR6KbfACjI4xW9dIbm21AVLsqoFcrLsfB2EZhHDo
-         2QL8YW7APfDCY0oBqN1G2AplOol10wQvYq6cnKy4fMkPrb+zbTyyIT6KjF/zkSMfM8d7
-         HxQApVEk988bt9PNBcEIzazZKwrKCDzNpnxeoImbWJFOGHKwj5EQN7TLgF5r+OtNz6sY
-         D655iiYBP9XI2h22c+ZQ+n6wIfp5sB+l3L+yahV86Js8Dam2t3Kp2w7NvPnkkmPcI6Ud
-         /RVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJgDAQu22djGVRSTsqSEq7T4iLP8GwsDYNqBvIYuXBxVVJ6no4gaPq54nIzJUCUIg7oos+9XZ7HUlm15nFfvLY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWNamoqrU9coZE0GTCA3zY04/kukHOI3if5p6mVDPilhpupKq9
-	C/f90RwXzjnStvWnjdrCaw786liw2M6hD2La/4M0p3H/1KQW0ru1v6QW7s3KU8le/XUx1QugmZD
-	beA==
-X-Google-Smtp-Source: AGHT+IHTLBUhEsTI+ojUVsezlYeIKuENRrT3nfo1YAKzsVdV0xdMPKwAv1CFbEaTsZ8jmOKgYykzXqLPQG0=
-X-Received: from pfbay19.prod.google.com ([2002:a05:6a00:3013:b0:725:eeaa:65e2])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d0f:b0:725:96f2:9e63
- with SMTP id d2e1a72fcca58-72fd0c7cb59mr1768559b3a.24.1738110350325; Tue, 28
- Jan 2025 16:25:50 -0800 (PST)
-Date: Tue, 28 Jan 2025 16:14:58 -0800
+        bh=pWNil8Fjn4Jar+XAMcIdAlTx0TuFDQai1n5OzDTNvzE=;
+        b=MdSZFi6k0OYCxFCAatZ8vMLpe7lv4E0/JMSfjdwg+uRHZeGD6Oio46s4u7FOecSeBp
+         F4ZZ5Lo3+jDyXzVt03Pa5tDKhz747ja+CHnxOJKN5rScZ0oj1jujUgdTAMQWuHvo362L
+         b4XTOggV2izxwiG3GTr6gx853nq5Whlq9EhMQtWT1KoTDGm1eT8q1pvvYyFbuo/uuMi4
+         2t73KKttz1AI2fCRUoNqi3QDZXKeVDFhIB+qshCo3NK+lVAeO8JmKYlOceadLPFkucjC
+         LFfcQV1zAkDu7l0Qj2YWkc8j9Ybro/YcNXgQK/U8OHanOLbZz4Xkz/BVZtW8vaGC9beO
+         +XoA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGTOBN9Y1W/ZBur43796oyJwAEEqNkSS1QdudKks2FW3Ts4O1dtojfy5hkj31aMrVY+oWzf8NUDbWS3j9PNSns@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY1m/wYdgcEV1JGmvXdP77SHUzhBzPJBVR377O0HJ8jBCNpFNw
+	P0z5zT6W8IL0ViRrnBge1G4HRaHcm8+fyyW9m4sBF9rX/nQD+L8CHy2oRlr+KweWSTzci+eElpW
+	5gA==
+X-Google-Smtp-Source: AGHT+IHsDI3JvNuSMQ9/eovun24uNULLxtkUZVYW6kTWXvv63qVQ/psGtmGrSgUv9BBLi2ZcriE/74v7jeg=
+X-Received: from oabsa15.prod.google.com ([2002:a05:6871:210f:b0:297:1959:a097])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:71d6:b0:29e:49b4:92b2
+ with SMTP id 586e51a60fabf-2b32f0434e2mr647836fac.12.1738110387974; Tue, 28
+ Jan 2025 16:26:27 -0800 (PST)
+Date: Tue, 28 Jan 2025 16:14:59 -0800
 In-Reply-To: <20250129001905.619859-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250129001905.619859-1-ctshao@google.com>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250129001905.619859-3-ctshao@google.com>
-Subject: [PATCH v3 2/5] perf lock: Retrieve owner callstack in bpf program
+Message-ID: <20250129001905.619859-4-ctshao@google.com>
+Subject: [PATCH v3 3/5] perf lock: Make rb_tree helper functions generic
 From: Chun-Tse Shao <ctshao@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
@@ -71,315 +71,81 @@ Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com,
 	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Tracing owner callstack in `contention_begin()` and `contention_end()`,
-and storing in `owner_stat` bpf map.
+The rb_tree helper functions can be reused for parsing `owner_lock_stat`
+into rb tree for sorting.
 
 Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 ---
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 237 +++++++++++++++++-
- 1 file changed, 235 insertions(+), 2 deletions(-)
+ tools/perf/builtin-lock.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index b4961dd86222..1ad2a0793c37 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- // Copyright (c) 2022 Google
-+#include "linux/bpf.h"
- #include "vmlinux.h"
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_tracing.h>
-@@ -7,6 +8,7 @@
- #include <asm-generic/errno-base.h>
- 
- #include "lock_data.h"
-+#include <time.h>
- 
- /* for collect_lock_syms().  4096 was rejected by the verifier */
- #define MAX_CPUS  1024
-@@ -31,7 +33,7 @@ struct {
- struct {
- 	__uint(type, BPF_MAP_TYPE_HASH);
- 	__uint(key_size, sizeof(__u64)); // owner stacktrace
--	__uint(value_size, sizeof(__u64)); // owner stack id
-+	__uint(value_size, sizeof(__s32)); // owner stack id
- 	__uint(max_entries, 1);
- } owner_stacks SEC(".maps");
- 
-@@ -197,6 +199,9 @@ int data_fail;
- int task_map_full;
- int data_map_full;
- 
-+struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
-+void bpf_task_release(struct task_struct *p) __ksym;
-+
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -420,6 +425,27 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
- 	return pelem;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5d405cd8e696..9bebc186286f 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -418,16 +418,13 @@ static void combine_lock_stats(struct lock_stat *st)
+ 	rb_insert_color(&st->rb, &sorted);
  }
  
-+static inline s32 get_owner_stack_id(u64 *stacktrace)
+-static void insert_to_result(struct lock_stat *st,
+-			     int (*bigger)(struct lock_stat *, struct lock_stat *))
++static void insert_to(struct rb_root *rr, struct lock_stat *st,
++		      int (*bigger)(struct lock_stat *, struct lock_stat *))
+ {
+-	struct rb_node **rb = &result.rb_node;
++	struct rb_node **rb = &rr->rb_node;
+ 	struct rb_node *parent = NULL;
+ 	struct lock_stat *p;
+ 
+-	if (combine_locks && st->combined)
+-		return;
+-
+ 	while (*rb) {
+ 		p = container_of(*rb, struct lock_stat, rb);
+ 		parent = *rb;
+@@ -439,13 +436,21 @@ static void insert_to_result(struct lock_stat *st,
+ 	}
+ 
+ 	rb_link_node(&st->rb, parent, rb);
+-	rb_insert_color(&st->rb, &result);
++	rb_insert_color(&st->rb, rr);
+ }
+ 
+-/* returns left most element of result, and erase it */
+-static struct lock_stat *pop_from_result(void)
++static inline void insert_to_result(struct lock_stat *st,
++				    int (*bigger)(struct lock_stat *,
++						  struct lock_stat *))
 +{
-+	s32 *id;
-+	static s32 id_gen = 1;
-+
-+	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-+	if (id)
-+		return *id;
-+
-+	// FIXME: currently `a = __sync_fetch_and_add(...)` cause "Invalid usage of the XADD return
-+	// value" error in BPF program: https://github.com/llvm/llvm-project/issues/91888
-+	bpf_map_update_elem(&owner_stacks, stacktrace, &id_gen, BPF_NOEXIST);
-+	__sync_fetch_and_add(&id_gen, 1);
-+
-+	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-+	if (id)
-+		return *id;
-+
-+	return -1;
++	if (combine_locks && st->combined)
++		return;
++	insert_to(&result, st, bigger);
 +}
 +
- SEC("tp_btf/contention_begin")
- int contention_begin(u64 *ctx)
++static inline struct lock_stat *pop_from(struct rb_root *rr)
  {
-@@ -437,6 +463,91 @@ int contention_begin(u64 *ctx)
- 	pelem->flags = (__u32)ctx[1];
+-	struct rb_node *node = result.rb_node;
++	struct rb_node *node = rr->rb_node;
  
- 	if (needs_callstack) {
-+		u32 i = 0;
-+		u32 id = 0;
-+		int owner_pid;
-+		u64 *buf;
-+		struct task_struct *task;
-+		struct owner_tracing_data *otdata;
-+
-+		if (!lock_owner)
-+			goto skip_owner_begin;
-+
-+		task = get_lock_owner(pelem->lock, pelem->flags);
-+		if (!task)
-+			goto skip_owner_begin;
-+
-+		owner_pid = BPF_CORE_READ(task, pid);
-+
-+		buf = bpf_map_lookup_elem(&stack_buf, &i);
-+		if (!buf)
-+			goto skip_owner_begin;
-+		for (i = 0; i < max_stack; i++)
-+			buf[i] = 0x0;
-+
-+		task = bpf_task_from_pid(owner_pid);
-+		if (task) {
-+			bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
-+			bpf_task_release(task);
-+		}
-+
-+		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-+		id = get_owner_stack_id(buf);
-+
-+		// Contention just happens, or corner case `lock` is owned by process not
-+		// `owner_pid`. For the corner case we treat it as unexpected internal error and
-+		// just ignore the precvious tracing record.
-+		if (!otdata || otdata->pid != owner_pid) {
-+			struct owner_tracing_data first = {
-+				.pid = owner_pid,
-+				.timestamp = pelem->timestamp,
-+				.count = 1,
-+				.stack_id = id,
-+			};
-+			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
-+		}
-+		// Contention is ongoing and new waiter joins.
-+		else {
-+			__sync_fetch_and_add(&otdata->count, 1);
-+
-+			// The owner is the same, but stacktrace might be changed. In this case we
-+			// store/update `owner_stat` based on current owner stack id.
-+			if (id != otdata->stack_id) {
-+				u64 duration = otdata->timestamp - pelem->timestamp;
-+				struct contention_key ckey = {
-+					.stack_id = id,
-+					.pid = 0,
-+					.lock_addr_or_cgroup = 0,
-+				};
-+				struct contention_data *cdata =
-+					bpf_map_lookup_elem(&owner_stat, &ckey);
-+
-+				if (!cdata) {
-+					struct contention_data first = {
-+						.total_time = duration,
-+						.max_time = duration,
-+						.min_time = duration,
-+						.count = 1,
-+						.flags = pelem->flags,
-+					};
-+					bpf_map_update_elem(&owner_stat, &ckey, &first,
-+							    BPF_NOEXIST);
-+				} else {
-+					__sync_fetch_and_add(&cdata->total_time, duration);
-+					__sync_fetch_and_add(&cdata->count, 1);
-+
-+					/* FIXME: need atomic operations */
-+					if (cdata->max_time < duration)
-+						cdata->max_time = duration;
-+					if (cdata->min_time > duration)
-+						cdata->min_time = duration;
-+				}
-+
-+				otdata->timestamp = pelem->timestamp;
-+				otdata->stack_id = id;
-+			}
-+		}
-+skip_owner_begin:
- 		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
- 						  BPF_F_FAST_STACK_CMP | stack_skip);
- 		if (pelem->stack_id < 0)
-@@ -473,6 +584,7 @@ int contention_end(u64 *ctx)
- 	struct tstamp_data *pelem;
- 	struct contention_key key = {};
- 	struct contention_data *data;
-+	__u64 timestamp;
- 	__u64 duration;
- 	bool need_delete = false;
+ 	if (!node)
+ 		return NULL;
+@@ -453,8 +458,15 @@ static struct lock_stat *pop_from_result(void)
+ 	while (node->rb_left)
+ 		node = node->rb_left;
  
-@@ -499,12 +611,133 @@ int contention_end(u64 *ctx)
- 			return 0;
- 		need_delete = true;
- 	}
--	duration = bpf_ktime_get_ns() - pelem->timestamp;
-+	timestamp = bpf_ktime_get_ns();
-+	duration = timestamp - pelem->timestamp;
- 	if ((__s64)duration < 0) {
- 		__sync_fetch_and_add(&time_fail, 1);
- 		goto out;
- 	}
+-	rb_erase(node, &result);
++	rb_erase(node, rr);
+ 	return container_of(node, struct lock_stat, rb);
++
++}
++
++/* returns left most element of result, and erase it */
++static struct lock_stat *pop_from_result(void)
++{
++	return pop_from(&result);
+ }
  
-+	if (needs_callstack && lock_owner) {
-+		u64 owner_time;
-+		struct contention_key ckey = {};
-+		struct contention_data *cdata;
-+		struct owner_tracing_data *otdata;
-+
-+		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-+		if (!otdata)
-+			goto skip_owner_end;
-+
-+		// Update `owner_stat`.
-+		owner_time = timestamp - otdata->timestamp;
-+		ckey.stack_id = otdata->stack_id;
-+		cdata = bpf_map_lookup_elem(&owner_stat, &ckey);
-+
-+		if (!cdata) {
-+			struct contention_data first = {
-+				.total_time = owner_time,
-+				.max_time = owner_time,
-+				.min_time = owner_time,
-+				.count = 1,
-+				.flags = pelem->flags,
-+			};
-+			bpf_map_update_elem(&owner_stat, &ckey, &first, BPF_NOEXIST);
-+		} else {
-+			__sync_fetch_and_add(&cdata->total_time, owner_time);
-+			__sync_fetch_and_add(&cdata->count, 1);
-+
-+			/* FIXME: need atomic operations */
-+			if (cdata->max_time < owner_time)
-+				cdata->max_time = owner_time;
-+			if (cdata->min_time > owner_time)
-+				cdata->min_time = owner_time;
-+		}
-+
-+		// No contention is occurring, delete `lock` entry in `owner_data`.
-+		if (otdata->count <= 1)
-+			bpf_map_delete_elem(&owner_data, &pelem->lock);
-+		// Contention is still ongoing, with a new owner (current task). `owner_data`
-+		// should be updated accordingly.
-+		else {
-+			u32 i = 0;
-+			u64 *buf;
-+
-+			// FIXME: __sync_fetch_and_sub(&otdata->count, 1) causes compile error.
-+			otdata->count--;
-+
-+			buf = bpf_map_lookup_elem(&stack_buf, &i);
-+			if (!buf)
-+				goto skip_owner_end;
-+			for (i = 0; i < (u32)max_stack; i++)
-+				buf[i] = 0x0;
-+
-+			// ctx[1] has the return code of the lock function.
-+			// If ctx[1] is not 0, the current task terminates lock waiting without
-+			// acquiring it. Owner is not changed, but we still need to update the owner
-+			// stack.
-+			if (!ctx[1]) {
-+				s32 id = 0;
-+				struct task_struct *task = bpf_task_from_pid(otdata->pid);
-+
-+				if (task) {
-+					bpf_get_task_stack(task, buf,
-+							   max_stack * sizeof(unsigned long), 0);
-+					bpf_task_release(task);
-+				}
-+
-+				id = get_owner_stack_id(buf);
-+
-+				// If owner stack is changed, update `owner_data` and `owner_stat`
-+				// accordingly.
-+				if (id != otdata->stack_id) {
-+					u64 duration = otdata->timestamp - pelem->timestamp;
-+					struct contention_key ckey = {
-+						.stack_id = id,
-+						.pid = 0,
-+						.lock_addr_or_cgroup = 0,
-+					};
-+					struct contention_data *cdata =
-+						bpf_map_lookup_elem(&owner_stat, &ckey);
-+
-+					if (!cdata) {
-+						struct contention_data first = {
-+							.total_time = duration,
-+							.max_time = duration,
-+							.min_time = duration,
-+							.count = 1,
-+							.flags = pelem->flags,
-+						};
-+						bpf_map_update_elem(&owner_stat, &ckey, &first,
-+								    BPF_NOEXIST);
-+					} else {
-+						__sync_fetch_and_add(&cdata->total_time, duration);
-+						__sync_fetch_and_add(&cdata->count, 1);
-+
-+						/* FIXME: need atomic operations */
-+						if (cdata->max_time < duration)
-+							cdata->max_time = duration;
-+						if (cdata->min_time > duration)
-+							cdata->min_time = duration;
-+					}
-+
-+					otdata->timestamp = pelem->timestamp;
-+					otdata->stack_id = id;
-+				}
-+			}
-+			// If ctx[1] is 0, then update tracinng data with the current task, which is
-+			// the new owner.
-+			else {
-+				otdata->pid = pid;
-+				otdata->timestamp = timestamp;
-+
-+				bpf_get_task_stack(bpf_get_current_task_btf(), buf,
-+						   max_stack * sizeof(unsigned long), 0);
-+				otdata->stack_id = get_owner_stack_id(buf);
-+			}
-+		}
-+	}
-+skip_owner_end:
-+
- 	switch (aggr_mode) {
- 	case LOCK_AGGR_CALLER:
- 		key.stack_id = pelem->stack_id;
+ struct trace_lock_handler {
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
