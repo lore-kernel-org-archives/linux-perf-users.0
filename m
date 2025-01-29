@@ -1,98 +1,385 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CD81552F5
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 00:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE83155C8C
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 00:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738110338; cv=none; b=cWF2KzN2Tox33+Bv/URYasTzk+j1ZZrKeePNjbCazrqdaSVG2ti7NOK8pyAHf/IqO+yqvo+SSIS+gk+UOp0K/c869OBPv4EYa2w0RDJMzuK3m0hFTX7LA+C+b6EDc5Bdvpxvqtn78OslschrsnhyfhlSTHQtzonu/4uIL7I8peA=
+	t=1738110352; cv=none; b=JwxU9bYZ3150v4sI210rrmrg2N05ZJis7PD0AIF9pkLbcb0UxcJssN/Dlj0ndpK9yEDh/4IfUEG3vTW2rlCvS4RZqn8Jy4+R9tNdiNLTl+hMOrgAubGGY7CEZqhN0t3BAe1ZgPLS6vHoHWsi3zhUc7CVJra8tqeDx7Bpx9cRk3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738110338; c=relaxed/simple;
-	bh=2F/mqirbYF+fsE1NRh3Xsmdmr+sV4kXa+yk1EwVlPeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LURuOjFsXPs8Taf+ysksvg0EM40Sdkbs2AGgvtooUpVXlwU579U31fSfMYscrjgFhlNFL81Wo/YoLZ6/oxJtH9RF+l7bE9A6POVbW5ItBGsOwX1dktGFYL6Yt70oXdWTAAP19o75PNlyMytBqJAA3SfF7/TH83E6fvgsYb+g18I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mOLNm13u; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738110352; c=relaxed/simple;
+	bh=SVTMW1S7JFSDg+bA7DmzZRGGAfUXEG2NGYwvrvXuhZY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ja2Gwlzp0dAvMUdR1dRXJ5+xN7tnq7QwCM18w+BkypygdlT7GhIu6rEbZrT1IvtBEPzcYRijv+0Ky3YQlgpxGaMPjNQhtQaYD42UU5fm+NjvuIxTMEZXwbDy729IjOEy58PKgi6LdrVBEDddsc1pXNM+dRDIQ59lolf/VidA0ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lOFJcyYr; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mOLNm13u"
-Date: Tue, 28 Jan 2025 16:25:13 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738110319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MT13IexUZhkAAXhwE/N0PrSufPCrXu/MeHtXnJGqnn8=;
-	b=mOLNm13uTp1vCBsoCiMl443USr46+89cRqKasoOx3qvZ6rPiOKrAfMdyUmGK6Odgyd1abE
-	lEB1SUSXM8Guk9nu61FSeDbyqg+xDwSH/5kq/N+3XJZmfSh2jB0esZ9W/y+xDxrbE6ubqu
-	wBucS28Dl8oGS9oDRufiiSfn4F0AzPY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
-	peterz@infradead.org, mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rppt@kernel.org, liam.howlett@oracle.com, surenb@google.com, 
-	kees@kernel.org, jannh@google.com
-Subject: Re: [PATCH v2] mm,procfs: allow read-only remote mm access under
- CAP_PERFMON
-Message-ID: <i4i6vowepjshonekrr4flw7u2p42kyhe32t4zkkucmlcg7sjk5@y6pobovsxtol>
-References: <20250127222114.1132392-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lOFJcyYr"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef91d5c863so12758970a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jan 2025 16:25:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738110350; x=1738715150; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FqegXtUqY4HfJigVh80j6ehxCeSFMBdL2Y3cibZPD8=;
+        b=lOFJcyYrUmaEGOA3esXyalGKCDfOduTZtWjF8PZjvzUSR4fEMyfoXXsK0c1HQ+Dj34
+         LfDZZbNfpdRoMJ72TKQXbphQ67wZyvO2d9Wwhu7QVUdQpp9Pz+0egZR2Equ5g4q0T/sT
+         3wLRMhjAbAbH10j9laeE1k6dfp7MRR8aclHF+wx0w07krtr/VzyJLdjtAspYZMEVkUEW
+         QwRQSklmGmzWmIa3oEFeId4t5gAwiDPW0czVvWUAEakBenxTCFTTayVB6w80ytHRJwLX
+         jYkgSU7YHnBzpa/wINMbBnX5yWuqnomyAgKBaHkjYv+A6Gm4YDgcvquVe8qSkTR7G7aS
+         cTFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738110350; x=1738715150;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FqegXtUqY4HfJigVh80j6ehxCeSFMBdL2Y3cibZPD8=;
+        b=wNj4DFXaOwLDddMloKAwfK7fNO21t8T5wjAU/5xBtZWrbsoy+cy6gStfVReBdkVAQe
+         mBb0YHSIv4R9mJoU/OREd7yO/cysGR6KbfACjI4xW9dIbm21AVLsqoFcrLsfB2EZhHDo
+         2QL8YW7APfDCY0oBqN1G2AplOol10wQvYq6cnKy4fMkPrb+zbTyyIT6KjF/zkSMfM8d7
+         HxQApVEk988bt9PNBcEIzazZKwrKCDzNpnxeoImbWJFOGHKwj5EQN7TLgF5r+OtNz6sY
+         D655iiYBP9XI2h22c+ZQ+n6wIfp5sB+l3L+yahV86Js8Dam2t3Kp2w7NvPnkkmPcI6Ud
+         /RVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJgDAQu22djGVRSTsqSEq7T4iLP8GwsDYNqBvIYuXBxVVJ6no4gaPq54nIzJUCUIg7oos+9XZ7HUlm15nFfvLY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWNamoqrU9coZE0GTCA3zY04/kukHOI3if5p6mVDPilhpupKq9
+	C/f90RwXzjnStvWnjdrCaw786liw2M6hD2La/4M0p3H/1KQW0ru1v6QW7s3KU8le/XUx1QugmZD
+	beA==
+X-Google-Smtp-Source: AGHT+IHTLBUhEsTI+ojUVsezlYeIKuENRrT3nfo1YAKzsVdV0xdMPKwAv1CFbEaTsZ8jmOKgYykzXqLPQG0=
+X-Received: from pfbay19.prod.google.com ([2002:a05:6a00:3013:b0:725:eeaa:65e2])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d0f:b0:725:96f2:9e63
+ with SMTP id d2e1a72fcca58-72fd0c7cb59mr1768559b3a.24.1738110350325; Tue, 28
+ Jan 2025 16:25:50 -0800 (PST)
+Date: Tue, 28 Jan 2025 16:14:58 -0800
+In-Reply-To: <20250129001905.619859-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250127222114.1132392-1-andrii@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <20250129001905.619859-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Message-ID: <20250129001905.619859-3-ctshao@google.com>
+Subject: [PATCH v3 2/5] perf lock: Retrieve owner callstack in bpf program
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nathan@kernel.org, 
+	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 27, 2025 at 02:21:14PM -0800, Andrii Nakryiko wrote:
-> It's very common for various tracing and profiling toolis to need to
-> access /proc/PID/maps contents for stack symbolization needs to learn
-> which shared libraries are mapped in memory, at which file offset, etc.
-> Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
-> are looking at data for our own process, which is a trivial case not too
-> relevant for profilers use cases).
-> 
-> Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
-> discover memory layout of another process: it allows to fully control
-> arbitrary other processes. This is problematic from security POV for
-> applications that only need read-only /proc/PID/maps (and other similar
-> read-only data) access, and in large production settings CAP_SYS_PTRACE
-> is frowned upon even for the system-wide profilers.
-> 
-> On the other hand, it's already possible to access similar kind of
-> information (and more) with just CAP_PERFMON capability. E.g., setting
-> up PERF_RECORD_MMAP collection through perf_event_open() would give one
-> similar information to what /proc/PID/maps provides.
-> 
-> CAP_PERFMON, together with CAP_BPF, is already a very common combination
-> for system-wide profiling and observability application. As such, it's
-> reasonable and convenient to be able to access /proc/PID/maps with
-> CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
-> 
-> For procfs, these permissions are checked through common mm_access()
-> helper, and so we augment that with cap_perfmon() check *only* if
-> requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't be
-> permitted by CAP_PERFMON. So /proc/PID/mem, which uses
-> PTRACE_MODE_ATTACH, won't be permitted by CAP_PERFMON, but
-> /proc/PID/maps, /proc/PID/environ, and a bunch of other read-only
-> contents will be allowable under CAP_PERFMON.
-> 
-> Besides procfs itself, mm_access() is used by process_madvise() and
-> process_vm_{readv,writev}() syscalls. The former one uses
-> PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMON
-> seems like a meaningful allowable capability as well.
-> 
-> process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
-> permissions (though for readv PTRACE_MODE_READ seems more reasonable,
-> but that's outside the scope of this change), and as such won't be
-> affected by this patch.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Tracing owner callstack in `contention_begin()` and `contention_end()`,
+and storing in `owner_stat` bpf map.
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 237 +++++++++++++++++-
+ 1 file changed, 235 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index b4961dd86222..1ad2a0793c37 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ // Copyright (c) 2022 Google
++#include "linux/bpf.h"
+ #include "vmlinux.h"
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+@@ -7,6 +8,7 @@
+ #include <asm-generic/errno-base.h>
+ 
+ #include "lock_data.h"
++#include <time.h>
+ 
+ /* for collect_lock_syms().  4096 was rejected by the verifier */
+ #define MAX_CPUS  1024
+@@ -31,7 +33,7 @@ struct {
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_HASH);
+ 	__uint(key_size, sizeof(__u64)); // owner stacktrace
+-	__uint(value_size, sizeof(__u64)); // owner stack id
++	__uint(value_size, sizeof(__s32)); // owner stack id
+ 	__uint(max_entries, 1);
+ } owner_stacks SEC(".maps");
+ 
+@@ -197,6 +199,9 @@ int data_fail;
+ int task_map_full;
+ int data_map_full;
+ 
++struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
++void bpf_task_release(struct task_struct *p) __ksym;
++
+ static inline __u64 get_current_cgroup_id(void)
+ {
+ 	struct task_struct *task;
+@@ -420,6 +425,27 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+ 	return pelem;
+ }
+ 
++static inline s32 get_owner_stack_id(u64 *stacktrace)
++{
++	s32 *id;
++	static s32 id_gen = 1;
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	// FIXME: currently `a = __sync_fetch_and_add(...)` cause "Invalid usage of the XADD return
++	// value" error in BPF program: https://github.com/llvm/llvm-project/issues/91888
++	bpf_map_update_elem(&owner_stacks, stacktrace, &id_gen, BPF_NOEXIST);
++	__sync_fetch_and_add(&id_gen, 1);
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	return -1;
++}
++
+ SEC("tp_btf/contention_begin")
+ int contention_begin(u64 *ctx)
+ {
+@@ -437,6 +463,91 @@ int contention_begin(u64 *ctx)
+ 	pelem->flags = (__u32)ctx[1];
+ 
+ 	if (needs_callstack) {
++		u32 i = 0;
++		u32 id = 0;
++		int owner_pid;
++		u64 *buf;
++		struct task_struct *task;
++		struct owner_tracing_data *otdata;
++
++		if (!lock_owner)
++			goto skip_owner_begin;
++
++		task = get_lock_owner(pelem->lock, pelem->flags);
++		if (!task)
++			goto skip_owner_begin;
++
++		owner_pid = BPF_CORE_READ(task, pid);
++
++		buf = bpf_map_lookup_elem(&stack_buf, &i);
++		if (!buf)
++			goto skip_owner_begin;
++		for (i = 0; i < max_stack; i++)
++			buf[i] = 0x0;
++
++		task = bpf_task_from_pid(owner_pid);
++		if (task) {
++			bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
++			bpf_task_release(task);
++		}
++
++		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++		id = get_owner_stack_id(buf);
++
++		// Contention just happens, or corner case `lock` is owned by process not
++		// `owner_pid`. For the corner case we treat it as unexpected internal error and
++		// just ignore the precvious tracing record.
++		if (!otdata || otdata->pid != owner_pid) {
++			struct owner_tracing_data first = {
++				.pid = owner_pid,
++				.timestamp = pelem->timestamp,
++				.count = 1,
++				.stack_id = id,
++			};
++			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
++		}
++		// Contention is ongoing and new waiter joins.
++		else {
++			__sync_fetch_and_add(&otdata->count, 1);
++
++			// The owner is the same, but stacktrace might be changed. In this case we
++			// store/update `owner_stat` based on current owner stack id.
++			if (id != otdata->stack_id) {
++				u64 duration = otdata->timestamp - pelem->timestamp;
++				struct contention_key ckey = {
++					.stack_id = id,
++					.pid = 0,
++					.lock_addr_or_cgroup = 0,
++				};
++				struct contention_data *cdata =
++					bpf_map_lookup_elem(&owner_stat, &ckey);
++
++				if (!cdata) {
++					struct contention_data first = {
++						.total_time = duration,
++						.max_time = duration,
++						.min_time = duration,
++						.count = 1,
++						.flags = pelem->flags,
++					};
++					bpf_map_update_elem(&owner_stat, &ckey, &first,
++							    BPF_NOEXIST);
++				} else {
++					__sync_fetch_and_add(&cdata->total_time, duration);
++					__sync_fetch_and_add(&cdata->count, 1);
++
++					/* FIXME: need atomic operations */
++					if (cdata->max_time < duration)
++						cdata->max_time = duration;
++					if (cdata->min_time > duration)
++						cdata->min_time = duration;
++				}
++
++				otdata->timestamp = pelem->timestamp;
++				otdata->stack_id = id;
++			}
++		}
++skip_owner_begin:
+ 		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+ 						  BPF_F_FAST_STACK_CMP | stack_skip);
+ 		if (pelem->stack_id < 0)
+@@ -473,6 +584,7 @@ int contention_end(u64 *ctx)
+ 	struct tstamp_data *pelem;
+ 	struct contention_key key = {};
+ 	struct contention_data *data;
++	__u64 timestamp;
+ 	__u64 duration;
+ 	bool need_delete = false;
+ 
+@@ -499,12 +611,133 @@ int contention_end(u64 *ctx)
+ 			return 0;
+ 		need_delete = true;
+ 	}
+-	duration = bpf_ktime_get_ns() - pelem->timestamp;
++	timestamp = bpf_ktime_get_ns();
++	duration = timestamp - pelem->timestamp;
+ 	if ((__s64)duration < 0) {
+ 		__sync_fetch_and_add(&time_fail, 1);
+ 		goto out;
+ 	}
+ 
++	if (needs_callstack && lock_owner) {
++		u64 owner_time;
++		struct contention_key ckey = {};
++		struct contention_data *cdata;
++		struct owner_tracing_data *otdata;
++
++		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++		if (!otdata)
++			goto skip_owner_end;
++
++		// Update `owner_stat`.
++		owner_time = timestamp - otdata->timestamp;
++		ckey.stack_id = otdata->stack_id;
++		cdata = bpf_map_lookup_elem(&owner_stat, &ckey);
++
++		if (!cdata) {
++			struct contention_data first = {
++				.total_time = owner_time,
++				.max_time = owner_time,
++				.min_time = owner_time,
++				.count = 1,
++				.flags = pelem->flags,
++			};
++			bpf_map_update_elem(&owner_stat, &ckey, &first, BPF_NOEXIST);
++		} else {
++			__sync_fetch_and_add(&cdata->total_time, owner_time);
++			__sync_fetch_and_add(&cdata->count, 1);
++
++			/* FIXME: need atomic operations */
++			if (cdata->max_time < owner_time)
++				cdata->max_time = owner_time;
++			if (cdata->min_time > owner_time)
++				cdata->min_time = owner_time;
++		}
++
++		// No contention is occurring, delete `lock` entry in `owner_data`.
++		if (otdata->count <= 1)
++			bpf_map_delete_elem(&owner_data, &pelem->lock);
++		// Contention is still ongoing, with a new owner (current task). `owner_data`
++		// should be updated accordingly.
++		else {
++			u32 i = 0;
++			u64 *buf;
++
++			// FIXME: __sync_fetch_and_sub(&otdata->count, 1) causes compile error.
++			otdata->count--;
++
++			buf = bpf_map_lookup_elem(&stack_buf, &i);
++			if (!buf)
++				goto skip_owner_end;
++			for (i = 0; i < (u32)max_stack; i++)
++				buf[i] = 0x0;
++
++			// ctx[1] has the return code of the lock function.
++			// If ctx[1] is not 0, the current task terminates lock waiting without
++			// acquiring it. Owner is not changed, but we still need to update the owner
++			// stack.
++			if (!ctx[1]) {
++				s32 id = 0;
++				struct task_struct *task = bpf_task_from_pid(otdata->pid);
++
++				if (task) {
++					bpf_get_task_stack(task, buf,
++							   max_stack * sizeof(unsigned long), 0);
++					bpf_task_release(task);
++				}
++
++				id = get_owner_stack_id(buf);
++
++				// If owner stack is changed, update `owner_data` and `owner_stat`
++				// accordingly.
++				if (id != otdata->stack_id) {
++					u64 duration = otdata->timestamp - pelem->timestamp;
++					struct contention_key ckey = {
++						.stack_id = id,
++						.pid = 0,
++						.lock_addr_or_cgroup = 0,
++					};
++					struct contention_data *cdata =
++						bpf_map_lookup_elem(&owner_stat, &ckey);
++
++					if (!cdata) {
++						struct contention_data first = {
++							.total_time = duration,
++							.max_time = duration,
++							.min_time = duration,
++							.count = 1,
++							.flags = pelem->flags,
++						};
++						bpf_map_update_elem(&owner_stat, &ckey, &first,
++								    BPF_NOEXIST);
++					} else {
++						__sync_fetch_and_add(&cdata->total_time, duration);
++						__sync_fetch_and_add(&cdata->count, 1);
++
++						/* FIXME: need atomic operations */
++						if (cdata->max_time < duration)
++							cdata->max_time = duration;
++						if (cdata->min_time > duration)
++							cdata->min_time = duration;
++					}
++
++					otdata->timestamp = pelem->timestamp;
++					otdata->stack_id = id;
++				}
++			}
++			// If ctx[1] is 0, then update tracinng data with the current task, which is
++			// the new owner.
++			else {
++				otdata->pid = pid;
++				otdata->timestamp = timestamp;
++
++				bpf_get_task_stack(bpf_get_current_task_btf(), buf,
++						   max_stack * sizeof(unsigned long), 0);
++				otdata->stack_id = get_owner_stack_id(buf);
++			}
++		}
++	}
++skip_owner_end:
++
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+ 		key.stack_id = pelem->stack_id;
+-- 
+2.48.1.262.g85cc9f2d1e-goog
+
