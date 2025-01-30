@@ -1,67 +1,67 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADCB139B;
-	Thu, 30 Jan 2025 16:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C087B1DA5F;
+	Thu, 30 Jan 2025 16:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253883; cv=none; b=ZbQUppxqwEJBrtpAKckao2ARrCK7MJlDzxhIv11GT2v1M8xCOs7MHCY8zogFpzScLw2Z1gKt0mHP4qWfjaaq4MlYvHf5G6awGj9EC0nrohG4vrWVu+eGqCvynijjx5nL8UIIHtSV5jYWuf/5prwc8N6dlkaWyVJn9NumZgAKwxU=
+	t=1738255160; cv=none; b=ckcFqLv16c7TVZnv0Ljz8I1kXmyqOWtlN9dYanzKh0mkt1IWOJQ24shUZx4fkOBDhua8q0/MEK9FQKwq+RMQ8SJ9T6JD938WH3/bbdpPjlfKeHSFdHVOvwNE2cuKpazPtZK4rfIrW+1GYbDkoCAYi0XwwkbGInM8QS398iKC9Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253883; c=relaxed/simple;
-	bh=S4S2u3bfSglH+71zm4Wvz5COoS2wmHDDIUDA8s2ggvc=;
+	s=arc-20240116; t=1738255160; c=relaxed/simple;
+	bh=0Isufwi/Vgl2B6yLxZbTuWN6WZZj84rWZAtmvqaHWIA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5GNUwfvHtXSd3RaEfNIw2pUZLgXXjDD5GrYij5DfvRoTBNmYIcjao/sqknx0edulB0f5X1jcjBW9WKsDcVoIlri7h7mk3eZPclnA3u7M9ZANn7BdcpbsjKuHGdf5vAg11nArvO62Ap3enAfHbuARGiyYh0oP2ewP3YcY6ybq8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O1rmSlQf; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=g2EZ5VO3rPCFI3OYOCYWMWMq3DUSJT//QX2Vadlwxvoj6o8V9hj2txD+XFh+rbPJMK/+PHTEv6C4zXTFMbRDowj8jnPc1J7KG3h+CWgkypJk2LsT+Csobqg5V6p9mErIL66J7hpCy8B6JMs0wE4xWNNSot+5KZuYNH9VbcvdFM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IBUG4ShM; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O1rmSlQf"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDoBqW030334;
-	Thu, 30 Jan 2025 16:17:41 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBUG4ShM"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFdQAe010027;
+	Thu, 30 Jan 2025 16:38:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ONa1jU
-	BR1+S0gYygAhKAHl182u525Nr6+dP3anCG3us=; b=O1rmSlQfBhyNmx1ErVkuL9
-	LMRIxB//hmxP7LEOQRRwiDUq0JNcEqeYROetLvniZQ2JLgvhuoJVL1uwEUv4doVX
-	64gn9GKxooZfE2/3847gLC2vuF2qkuIhYZZbeE1bGe1nWhGKrG6sU79SMNI4b4v/
-	TSlB8rGbnZOSBVijT4J++91JT+/Nsa2vCvN4QwyWnnfZRwiGVTI402/msJdIVZ1z
-	wI+725ELhgCzlXKIqfFnu5HElSKnpXjvSf6xOxsVR1BSUTRwUE3vbb84gqD1bAbV
-	RJpiCXa0epUSmCZQ5CQHskWa8vEsXpkslJEe1VNqWmSXXBuRlze+m+g+K1rBgbJw
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FqYKzo
+	UiU8AE96roYOs5tofbhVt4DgoDku8NwKj7qTg=; b=IBUG4ShMLT4KYKAw5ij2x+
+	jlQp6/oH/OVpUP4u9eR5l2vI4hj1bTW6cAPLBfavxcnM9JCq8CqhloZo0es8rIOn
+	Z47yVWc16hB60rGNn748QAm81u2Sg+UJEbq2VsTqgBYPzsbfVhmDRlCRh+9q7O19
+	VluYw0SX4f6QItLEm1TotSePoEkeKAWgA/O6EJ+Nfr6fLhV9Qot5Ms9qnDJXWJh3
+	YfbtuxJARcz02NG16GqKft+LHebCwO1j4eAhJ15t6Rc7QJ1vd2OH/7/OhHJGDmaY
+	KkiGu3Q6ih8StWgVVGp+5s1HQ+f7xMuuQIzwRopAId1pzieTg00kMZM/v9JyPf+Q
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsuc-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGGJT6015503;
-	Thu, 30 Jan 2025 16:17:40 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsu4-1
+	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGbbKF005418;
+	Thu, 30 Jan 2025 16:38:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFwaRE028072;
-	Thu, 30 Jan 2025 16:17:38 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbskpvfd-1
+	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFAKH3012444;
+	Thu, 30 Jan 2025 16:38:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danyf4e8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:17:38 +0000
+	Thu, 30 Jan 2025 16:38:29 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGHYrH52167156
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGcP1s46006628
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 16:17:34 GMT
+	Thu, 30 Jan 2025 16:38:25 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE69C20040;
-	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5012A20089;
+	Thu, 30 Jan 2025 16:38:25 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 521A520063;
-	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C265520088;
+	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
 Received: from [9.152.222.93] (unknown [9.152.222.93])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
-Message-ID: <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
-Date: Thu, 30 Jan 2025 17:17:33 +0100
+	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
+Message-ID: <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
+Date: Thu, 30 Jan 2025 17:38:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,8 +69,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
- output
+Subject: Re: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess
+ regions
 To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
@@ -88,58 +88,72 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+ <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
 From: Jens Remus <jremus@linux.ibm.com>
 Content-Language: en-US
 Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+In-Reply-To: <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FuReBaQPsBGrG3b7x7hTPr8i33NIuhFq
-X-Proofpoint-GUID: wyvY3VdNH6x-f8eeALSpEObel0t6_amh
+X-Proofpoint-ORIG-GUID: K_c2hM8ukamBh75YQApb_Rgur0BqSUJI
+X-Proofpoint-GUID: WtxoNUNAKifqK37qQW2DZUi8svSipZdq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
- clxscore=1015 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501300121
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=959 clxscore=1015 priorityscore=1501 malwarescore=0
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300125
 
 On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> When debugging sframe issues, the error messages aren't all that helpful
-> without knowing what file a corresponding .sframe section belongs to.
-> Prefix debug output strings with the file name.
+> Objtool warns about calling pr_debug() from uaccess-enabled regions, and
+> rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
+> uaccess before doing the dynamic printk, and use that to add debug
+> messages throughout the uaccess-enabled regions.
 > 
 > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
+> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
 
-> +static inline void dbg_init(struct sframe_section *sec)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	struct vm_area_struct *vma;
-> +
-> +	guard(mmap_read_lock)(mm);
-> +	vma = vma_lookup(mm, sec->sframe_start);
-> +	if (!vma)
-> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
-> +	else if (vma->vm_file)
-> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
-> +	else if (!vma->vm_mm)
+> @@ -53,12 +53,15 @@ static __always_inline int __read_fde(struct sframe_section *sec,
+>   			      sizeof(struct sframe_fde), Efault);
+>   
+>   	ip = sec->sframe_start + fde->start_addr;
+> -	if (ip < sec->text_start || ip > sec->text_end)
+> +	if (ip < sec->text_start || ip > sec->text_end) {
+> +		dbg_sec_uaccess("bad fde num %d\n", fde_num);
+>   		return -EINVAL;
+> +	}
+>   
+>   	return 0;
+>   
+>   Efault:
+> +	dbg_sec_uaccess("fde %d usercopy failed\n", fde_num);
+>   	return -EFAULT;
+>   }
 
-This condition does not appear to work for vdso on s390.  The following
-does:
+Add a similar debug message for SFRame FDE user copy failures?
 
-	else if (in_range(sec->sframe_start, current->mm->context.vdso_base, vdso_text_size()))
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
 
-> +		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
-> +	else
-> +		sec->filename = kstrdup("(anonymous)", GFP_KERNEL);
-> +}
+@@ -125,6 +125,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
+         return 0;
+
+  Efault:
++       dbg_sec_uaccess("fde usercopy failed\n");
+         return -EFAULT;
+  }
+
+
+Printing the IP is probably not an option due to security concerns?
+Printing the the CFA, FP, and RA offsets is too much traffic?  To debug
+issues on s390 I had to add tons of additional debug messages to make
+sense of what was actually going on.
 
 Regards,
 Jens
