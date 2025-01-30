@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5BA13D28F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CBE14A099;
 	Thu, 30 Jan 2025 03:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738206328; cv=none; b=BMZQI/+bcHvsSrmAfXGKAEf8TJgsGED+uyfOCU/h9+AMtA3atzfbUCu2u1xo8fjoa/xi5RVV4imM6sUNzcS97Vyr4yxkNqKjjplJ3Hvlk4hmRf76JpIhYUyKMn3Aq6F6fdcq0R3QaI70TOTt+5Kd9RTMt4iMFLPBIE9CvRXsZKA=
+	t=1738206329; cv=none; b=KrqNXhEOs9FHm6d9iQcHLls63yAdf5/+CrPHXcd6yunv6RiufICtDPMtEZQRfo5osbJKUApSXkS2UoDxGAwrXP6Sxu2zfZUldtCmtJWgVY+MilEeqUU/DRXl3WoyBeki6EDUKrBofMSfQhCu4QMZACoZ7MJ4u9VhMVTwn9Y9n2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738206328; c=relaxed/simple;
-	bh=4NYr1/szl5X5kPM8KWdP0HWnkuF/JjvH/op5FqDfAho=;
+	s=arc-20240116; t=1738206329; c=relaxed/simple;
+	bh=dRxF3rM6JIJWJD4qa40Fr5ggE1pW+YJ48ZOzx1uwT8c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adh7tkAwAsgq9SQbJJKWDPT7QBIbqKDwm4FZMG3GH2BMVZCS9KNzKhV3Updt+0vgCQx6DUJ09/cIa9pjEf+UJKFhQ9AwSJMIXBofHILisXmW7T+iuv+R5CxW80SgoXihSxDzG9tu9WXT6DhqMg+bFDyE32uGmoZJKc7W92/pyGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mq4lezGB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=j2dP9tXiwHia6kl7k6wNXpMGj9i9inbR+AM2XPPvMFExlv+bQ80gDsRB+hwoAPhr8EddG7RkKE0r92njN5LWCY1vTOikTbiyXUje4ny00qDXWuu/SnVsKEPuXOIShtk0PIgD7jgUKcE8KdPeN6uG2OblMUR8XPAWCL7B7X3qc1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZG+LDcQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mq4lezGB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6CAC4CED1;
-	Thu, 30 Jan 2025 03:05:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZG+LDcQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178F6C4CEE8;
+	Thu, 30 Jan 2025 03:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738206327;
-	bh=4NYr1/szl5X5kPM8KWdP0HWnkuF/JjvH/op5FqDfAho=;
+	s=k20201202; t=1738206328;
+	bh=dRxF3rM6JIJWJD4qa40Fr5ggE1pW+YJ48ZOzx1uwT8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mq4lezGBa3KNcoRb23LQcbajj1QloNWhD8Mt2nMA9yqaeAZnVn4j6c8a5KICFr5JG
-	 eY/SUO5LzaaVbw80P+gUZZgZ9bWhFqn20XbHFzKwgqONZa58Pp85t3aIg5cDte63lS
-	 0atVktWcOEdxRlJmcPcDasqyNQT5uloREFzTq2wVjtD9mi4P/+kqxGFfwVNB3Uc59V
-	 yKComjVHrhSPn7XHx39hcCXRHxyu7iCQZuFtchqERO+QjIdHk2U5+086npyRrXkzAN
-	 HVjtdztl4iyzV4YEpV6m/17FcfxH5/ILsjNu6PeY8xYHS0cQF8R1goyiXOj5Jc27uX
-	 ppvw3DDSPnNWw==
+	b=BZG+LDcQJRQFX9PJgABI52KkbYqoetvh3wtQ0HT5hagbTAnDmU9xiY5h3JGliuIN4
+	 dWvesis2fzRrXjlYwF/sJ/o22i3AB2+XJkV3nZycnBQomS9Hx3YlDvb/SLPBVau3fc
+	 vm39fii8uZg/Nd4o4OAUCKjPZ32i6s3yK1PtB4HT2wBvBueC/UYvoyF98wM0y3WTpH
+	 JTTST5iw7SDad02pRbddOnlroDKMgqnoxNpMtGFeXM9uAjQpCZTgrPrQM6637d+jXt
+	 JWzDbANXG8YQPLnjFUfaFUg6UN4Ofl6ns20DxtznaMIJ44wVOLsUJy+VAHsWMVuY2L
+	 F9KUPOTpJiAmQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v2 3/4] perf tools: Get rid of now-unused rb_resort.h
-Date: Wed, 29 Jan 2025 19:05:24 -0800
-Message-ID: <20250130030525.1482498-4-namhyung@kernel.org>
+Subject: [PATCH v2 4/4] perf trace: Add --summary-mode option
+Date: Wed, 29 Jan 2025 19:05:25 -0800
+Message-ID: <20250130030525.1482498-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 In-Reply-To: <20250130030525.1482498-1-namhyung@kernel.org>
 References: <20250130030525.1482498-1-namhyung@kernel.org>
@@ -51,167 +51,377 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It was only used in perf trace and it switched to use hashmap instead.
-Let's delete the code.
+The --summary-mode option will select how to show the syscall summary at
+the end.  By default, it'll show the summary for each thread and it's
+the same as if --summary-mode=thread is passed.
+
+The other option is to show total summary, which is --summary-mode=total.
+I'd like to have this instead of a separate option like --total-summary
+because we may want to add a new summary mode (by cgroup) later.
+
+  $ sudo ./perf trace -as --summary-mode=total sleep 1
+
+   Summary of events:
+
+   total, 21580 events
+
+     syscall            calls  errors  total       min       avg       max       stddev
+                                       (msec)    (msec)    (msec)    (msec)        (%)
+     --------------- --------  ------ -------- --------- --------- ---------     ------
+     epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+     futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+     poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+     ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+     clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+     epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+     nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+     ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+     recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+     write               1393      0     2.854     0.001     0.002     0.017      1.79%
+     read                1063    100     2.236     0.000     0.002     0.083      5.11%
+     ...
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/rb_resort.h | 146 ------------------------------------
- 1 file changed, 146 deletions(-)
- delete mode 100644 tools/perf/util/rb_resort.h
+ tools/perf/Documentation/perf-trace.txt |   4 +
+ tools/perf/builtin-trace.c              | 129 ++++++++++++++++++++----
+ 2 files changed, 114 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/util/rb_resort.h b/tools/perf/util/rb_resort.h
-deleted file mode 100644
-index d927a0d250528505..0000000000000000
---- a/tools/perf/util/rb_resort.h
-+++ /dev/null
-@@ -1,146 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _PERF_RESORT_RB_H_
--#define _PERF_RESORT_RB_H_
--/*
-- * Template for creating a class to resort an existing rb_tree according to
-- * a new sort criteria, that must be present in the entries of the source
-- * rb_tree.
-- *
-- * (c) 2016 Arnaldo Carvalho de Melo <acme@redhat.com>
-- *
-- * Quick example, resorting threads by its shortname:
-- *
-- * First define the prefix (threads) to be used for the functions and data
-- * structures created, and provide an expression for the sorting, then the
-- * fields to be present in each of the entries in the new, sorted, rb_tree.
-- *
-- * The body of the init function should collect the fields, maybe
-- * pre-calculating them from multiple entries in the original 'entry' from
-- * the rb_tree used as a source for the entries to be sorted:
--
--DEFINE_RB_RESORT_RB(threads, strcmp(a->thread->shortname,
--				    b->thread->shortname) < 0,
--	struct thread *thread;
--)
--{
--	entry->thread = rb_entry(nd, struct thread, rb_node);
--}
--
-- * After this it is just a matter of instantiating it and iterating it,
-- * for a few data structures with existing rb_trees, such as 'struct machine',
-- * helpers are available to get the rb_root and the nr_entries:
--
--	DECLARE_RESORT_RB_MACHINE_THREADS(threads, machine_ptr);
--
-- * This will instantiate the new rb_tree and a cursor for it, that can be used as:
--
--	struct rb_node *nd;
--
--	resort_rb__for_each_entry(nd, threads) {
--		struct thread *t = threads_entry;
--		printf("%s: %d\n", t->shortname, t->tid);
--	}
--
-- * Then delete it:
--
--	resort_rb__delete(threads);
--
-- * The name of the data structures and functions will have a _sorted suffix
-- * right before the method names, i.e. will look like:
-- *
-- * 	struct threads_sorted_entry {}
-- * 	threads_sorted__insert()
-- */
--
--#define DEFINE_RESORT_RB(__name, __comp, ...)					\
--struct __name##_sorted_entry {							\
--	struct rb_node	rb_node;						\
--	__VA_ARGS__								\
--};										\
--static void __name##_sorted__init_entry(struct rb_node *nd,			\
--					struct __name##_sorted_entry *entry);	\
--										\
--static int __name##_sorted__cmp(struct rb_node *nda, struct rb_node *ndb)	\
--{										\
--	struct __name##_sorted_entry *a, *b;					\
--	a = rb_entry(nda, struct __name##_sorted_entry, rb_node);		\
--	b = rb_entry(ndb, struct __name##_sorted_entry, rb_node);		\
--	return __comp;								\
--}										\
--										\
--struct __name##_sorted {							\
--       struct rb_root		    entries;					\
--       struct __name##_sorted_entry nd[0];					\
--};										\
--										\
--static void __name##_sorted__insert(struct __name##_sorted *sorted,		\
--				      struct rb_node *sorted_nd)		\
--{										\
--	struct rb_node **p = &sorted->entries.rb_node, *parent = NULL;		\
--	while (*p != NULL) {							\
--		parent = *p;							\
--		if (__name##_sorted__cmp(sorted_nd, parent))			\
--			p = &(*p)->rb_left;					\
--		else								\
--			p = &(*p)->rb_right;					\
--	}									\
--	rb_link_node(sorted_nd, parent, p);					\
--	rb_insert_color(sorted_nd, &sorted->entries);				\
--}										\
--										\
--static void __name##_sorted__sort(struct __name##_sorted *sorted,		\
--				    struct rb_root *entries)			\
--{										\
--	struct rb_node *nd;							\
--	unsigned int i = 0;							\
--	for (nd = rb_first(entries); nd; nd = rb_next(nd)) {			\
--		struct __name##_sorted_entry *snd = &sorted->nd[i++];		\
--		__name##_sorted__init_entry(nd, snd);				\
--		__name##_sorted__insert(sorted, &snd->rb_node);			\
--	}									\
--}										\
--										\
--static struct __name##_sorted *__name##_sorted__new(struct rb_root *entries,	\
--						    int nr_entries)		\
--{										\
--	struct __name##_sorted *sorted;						\
--	sorted = malloc(sizeof(*sorted) + sizeof(sorted->nd[0]) * nr_entries);	\
--	if (sorted) {								\
--		sorted->entries = RB_ROOT;					\
--		__name##_sorted__sort(sorted, entries);				\
--	}									\
--	return sorted;								\
--}										\
--										\
--static void __name##_sorted__delete(struct __name##_sorted *sorted)		\
--{										\
--	free(sorted);								\
--}										\
--										\
--static void __name##_sorted__init_entry(struct rb_node *nd,			\
--					struct __name##_sorted_entry *entry)
--
--#define DECLARE_RESORT_RB(__name)						\
--struct __name##_sorted_entry *__name##_entry;					\
--struct __name##_sorted *__name = __name##_sorted__new
--
--#define resort_rb__for_each_entry(__nd, __name)					\
--	for (__nd = rb_first(&__name->entries);					\
--	     __name##_entry = rb_entry(__nd, struct __name##_sorted_entry,	\
--				       rb_node), __nd;				\
--	     __nd = rb_next(__nd))
--
--#define resort_rb__delete(__name)						\
--	__name##_sorted__delete(__name), __name = NULL
--
--/*
-- * Helpers for other classes that contains both an rbtree and the
-- * number of entries in it:
-- */
--
--/* For 'struct intlist' */
--#define DECLARE_RESORT_RB_INTLIST(__name, __ilist)				\
--	DECLARE_RESORT_RB(__name)(&__ilist->rblist.entries.rb_root,		\
--				  __ilist->rblist.nr_entries)
--
--#endif /* _PERF_RESORT_RB_H_ */
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index fb3d2af33844c06b..887dc37773d0f4d6 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -150,6 +150,10 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	To be used with -s or -S, to show stats for the errnos experienced by
+ 	syscalls, using only this option will trigger --summary.
+ 
++--summary-mode=mode::
++	To be used with -s or -S, to select how to show summary.  By default it'll
++	show the syscall summary by thread.  Possible values are: thread, total.
++
+ --tool_stats::
+ 	Show tool stats such as number of times fd->pathname was discovered thru
+ 	hooking the open syscall return + vfs_getname or via reading /proc/pid/fd, etc.
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1d32ef2b05ae8c1c..ad5899076cfa590d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -139,6 +139,12 @@ struct syscall_fmt {
+ 	bool	   hexret;
+ };
+ 
++enum summary_mode {
++	SUMMARY__NONE = 0,
++	SUMMARY__BY_TOTAL,
++	SUMMARY__BY_THREAD,
++};
++
+ struct trace {
+ 	struct perf_tool	tool;
+ 	struct syscalltbl	*sctbl;
+@@ -177,14 +183,17 @@ struct trace {
+ 		pid_t		*entries;
+ 		struct bpf_map  *map;
+ 	}			filter_pids;
++	struct hashmap		*syscall_stats;
+ 	double			duration_filter;
+ 	double			runtime_ms;
++	unsigned long		pfmaj, pfmin;
+ 	struct {
+ 		u64		vfs_getname,
+ 				proc_getname;
+ 	} stats;
+ 	unsigned int		max_stack;
+ 	unsigned int		min_stack;
++	enum summary_mode	summary_mode;
+ 	int			raw_augmented_syscalls_args_size;
+ 	bool			raw_augmented_syscalls;
+ 	bool			fd_path_disabled;
+@@ -2499,18 +2508,23 @@ struct syscall_stats {
+ };
+ 
+ static void thread__update_stats(struct thread *thread, struct thread_trace *ttrace,
+-				 int id, struct perf_sample *sample, long err, bool errno_summary)
++				 int id, struct perf_sample *sample, long err,
++				 struct trace *trace)
+ {
++	struct hashmap *syscall_stats = ttrace->syscall_stats;
+ 	struct syscall_stats *stats = NULL;
+ 	u64 duration = 0;
+ 
+-	if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
++	if (trace->summary_mode == SUMMARY__BY_TOTAL)
++		syscall_stats = trace->syscall_stats;
++
++	if (!hashmap__find(syscall_stats, id, &stats)) {
+ 		stats = zalloc(sizeof(*stats));
+ 		if (stats == NULL)
+ 			return;
+ 
+ 		init_stats(&stats->stats);
+-		if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
++		if (hashmap__add(syscall_stats, id, stats) < 0) {
+ 			free(stats);
+ 			return;
+ 		}
+@@ -2524,7 +2538,7 @@ static void thread__update_stats(struct thread *thread, struct thread_trace *ttr
+ 	if (err < 0) {
+ 		++stats->nr_failures;
+ 
+-		if (!errno_summary)
++		if (!trace->errno_summary)
+ 			return;
+ 
+ 		err = -err;
+@@ -2816,7 +2830,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
+ 
+ 	if (trace->summary)
+-		thread__update_stats(thread, ttrace, id, sample, ret, trace->errno_summary);
++		thread__update_stats(thread, ttrace, id, sample, ret, trace);
+ 
+ 	if (!trace->fd_path_disabled && sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
+ 		trace__set_fd_pathname(thread, ret, ttrace->filename.name);
+@@ -3254,10 +3268,13 @@ static int trace__pgfault(struct trace *trace,
+ 	if (ttrace == NULL)
+ 		goto out_put;
+ 
+-	if (evsel->core.attr.config == PERF_COUNT_SW_PAGE_FAULTS_MAJ)
++	if (evsel->core.attr.config == PERF_COUNT_SW_PAGE_FAULTS_MAJ) {
+ 		ttrace->pfmaj++;
+-	else
++		trace->pfmaj++;
++	} else {
+ 		ttrace->pfmin++;
++		trace->pfmin++;
++	}
+ 
+ 	if (trace->summary_only)
+ 		goto out;
+@@ -3416,6 +3433,7 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
+ }
+ 
+ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
++static size_t trace__fprintf_total_summary(struct trace *trace, FILE *fp);
+ 
+ static bool evlist__add_vfs_getname(struct evlist *evlist)
+ {
+@@ -4328,6 +4346,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		goto out_delete_evlist;
+ 	}
+ 
++	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
++		trace->syscall_stats = alloc_syscall_stats();
++		if (trace->syscall_stats == NULL)
++			goto out_delete_evlist;
++	}
++
+ 	evlist__config(evlist, &trace->opts, &callchain_param);
+ 
+ 	if (forks) {
+@@ -4488,8 +4512,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
+ 
+ 	if (!err) {
+-		if (trace->summary)
+-			trace__fprintf_thread_summary(trace, trace->output);
++		if (trace->summary) {
++			if (trace->summary_mode == SUMMARY__BY_TOTAL)
++				trace__fprintf_total_summary(trace, trace->output);
++			else
++				trace__fprintf_thread_summary(trace, trace->output);
++		}
+ 
+ 		if (trace->show_tool_stats) {
+ 			fprintf(trace->output, "Stats:\n "
+@@ -4501,6 +4529,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	}
+ 
+ out_delete_evlist:
++	delete_syscall_stats(trace->syscall_stats);
+ 	trace__symbols__exit(trace);
+ 	evlist__free_syscall_tp_fields(evlist);
+ 	evlist__delete(evlist);
+@@ -4628,6 +4657,12 @@ static int trace__replay(struct trace *trace)
+ 			evsel->handler = trace__pgfault;
+ 	}
+ 
++	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
++		trace->syscall_stats = alloc_syscall_stats();
++		if (trace->syscall_stats == NULL)
++			goto out;
++	}
++
+ 	setup_pager();
+ 
+ 	err = perf_session__process_events(session);
+@@ -4638,12 +4673,13 @@ static int trace__replay(struct trace *trace)
+ 		trace__fprintf_thread_summary(trace, trace->output);
+ 
+ out:
++	delete_syscall_stats(trace->syscall_stats);
+ 	perf_session__delete(session);
+ 
+ 	return err;
+ }
+ 
+-static size_t trace__fprintf_threads_header(FILE *fp)
++static size_t trace__fprintf_summary_header(FILE *fp)
+ {
+ 	size_t printed;
+ 
+@@ -4666,19 +4702,19 @@ static int entry_cmp(const void *e1, const void *e2)
+ 	return entry1->msecs > entry2->msecs ? -1 : 1;
+ }
+ 
+-static struct syscall_entry *thread__sort_stats(struct thread_trace *ttrace)
++static struct syscall_entry *syscall__sort_stats(struct hashmap *syscall_stats)
+ {
+ 	struct syscall_entry *entry;
+ 	struct hashmap_entry *pos;
+ 	unsigned bkt, i, nr;
+ 
+-	nr = ttrace->syscall_stats->sz;
++	nr = syscall_stats->sz;
+ 	entry = malloc(nr * sizeof(*entry));
+ 	if (entry == NULL)
+ 		return NULL;
+ 
+ 	i = 0;
+-	hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
++	hashmap__for_each_entry(syscall_stats, pos, bkt) {
+ 		struct syscall_stats *ss = pos->pvalue;
+ 		struct stats *st = &ss->stats;
+ 
+@@ -4693,14 +4729,14 @@ static struct syscall_entry *thread__sort_stats(struct thread_trace *ttrace)
+ 	return entry;
+ }
+ 
+-static size_t thread__dump_stats(struct thread_trace *ttrace,
+-				 struct trace *trace, FILE *fp)
++static size_t syscall__dump_stats(struct trace *trace, FILE *fp,
++				  struct hashmap *syscall_stats)
+ {
+ 	size_t printed = 0;
+ 	struct syscall *sc;
+ 	struct syscall_entry *entries;
+ 
+-	entries = thread__sort_stats(ttrace);
++	entries = syscall__sort_stats(syscall_stats);
+ 	if (entries == NULL)
+ 		return 0;
+ 
+@@ -4710,7 +4746,7 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+ 	printed += fprintf(fp, "                                     (msec)    (msec)    (msec)    (msec)        (%%)\n");
+ 	printed += fprintf(fp, "   --------------- --------  ------ -------- --------- --------- ---------     ------\n");
+ 
+-	for (size_t i = 0; i < ttrace->syscall_stats->sz; i++) {
++	for (size_t i = 0; i < syscall_stats->sz; i++) {
+ 		struct syscall_entry *entry = &entries[i];
+ 		struct syscall_stats *stats = entry->stats;
+ 
+@@ -4747,6 +4783,17 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+ 	return printed;
+ }
+ 
++static size_t thread__dump_stats(struct thread_trace *ttrace,
++				 struct trace *trace, FILE *fp)
++{
++	return syscall__dump_stats(trace, fp, ttrace->syscall_stats);
++}
++
++static size_t system__dump_stats(struct trace *trace, FILE *fp)
++{
++	return syscall__dump_stats(trace, fp, trace->syscall_stats);
++}
++
+ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trace *trace)
+ {
+ 	size_t printed = 0;
+@@ -4800,7 +4847,7 @@ static int trace_nr_events_cmp(void *priv __maybe_unused,
+ 
+ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
+ {
+-	size_t printed = trace__fprintf_threads_header(fp);
++	size_t printed = trace__fprintf_summary_header(fp);
+ 	LIST_HEAD(threads);
+ 
+ 	if (machine__thread_list(trace->host, &threads) == 0) {
+@@ -4815,6 +4862,27 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
+ 	return printed;
+ }
+ 
++static size_t trace__fprintf_total_summary(struct trace *trace, FILE *fp)
++{
++	size_t printed = trace__fprintf_summary_header(fp);
++
++	printed += fprintf(fp, " total, ");
++	printed += fprintf(fp, "%lu events", trace->nr_events);
++
++	if (trace->pfmaj)
++		printed += fprintf(fp, ", %lu majfaults", trace->pfmaj);
++	if (trace->pfmin)
++		printed += fprintf(fp, ", %lu minfaults", trace->pfmin);
++	if (trace->sched)
++		printed += fprintf(fp, ", %.3f msec\n", trace->runtime_ms);
++	else if (fputc('\n', fp) != EOF)
++		++printed;
++
++	printed += system__dump_stats(trace, fp);
++
++	return printed;
++}
++
+ static int trace__set_duration(const struct option *opt, const char *str,
+ 			       int unset __maybe_unused)
+ {
+@@ -5086,6 +5154,23 @@ static int trace__parse_cgroups(const struct option *opt, const char *str, int u
+ 	return 0;
+ }
+ 
++static int trace__parse_summary_mode(const struct option *opt, const char *str,
++				     int unset __maybe_unused)
++{
++	struct trace *trace = opt->value;
++
++	if (!strcmp(str, "thread")) {
++		trace->summary_mode = SUMMARY__BY_THREAD;
++	} else if (!strcmp(str, "total")) {
++		trace->summary_mode = SUMMARY__BY_TOTAL;
++	} else {
++		pr_err("Unknown summary mode: %s\n", str);
++		return -1;
++	}
++
++	return 0;
++}
++
+ static int trace__config(const char *var, const char *value, void *arg)
+ {
+ 	struct trace *trace = arg;
+@@ -5233,6 +5318,9 @@ int cmd_trace(int argc, const char **argv)
+ 		    "Show all syscalls and summary with statistics"),
+ 	OPT_BOOLEAN(0, "errno-summary", &trace.errno_summary,
+ 		    "Show errno stats per syscall, use with -s or -S"),
++	OPT_CALLBACK(0, "summary-mode", &trace, "mode",
++		     "How to show summary: select thread (default) or total",
++		     trace__parse_summary_mode),
+ 	OPT_CALLBACK_DEFAULT('F', "pf", &trace.trace_pgfaults, "all|maj|min",
+ 		     "Trace pagefaults", parse_pagefaults, "maj"),
+ 	OPT_BOOLEAN(0, "syscalls", &trace.trace_syscalls, "Trace syscalls"),
+@@ -5529,8 +5617,11 @@ int cmd_trace(int argc, const char **argv)
+ 		trace.summary = trace.summary_only;
+ 
+ 	/* Keep exited threads, otherwise information might be lost for summary */
+-	if (trace.summary)
++	if (trace.summary) {
+ 		symbol_conf.keep_exited_threads = true;
++		if (trace.summary_mode == SUMMARY__NONE)
++			trace.summary_mode = SUMMARY__BY_THREAD;
++	}
+ 
+ 	if (output_name != NULL) {
+ 		err = trace__open_output(&trace, output_name);
 -- 
 2.48.1.262.g85cc9f2d1e-goog
 
