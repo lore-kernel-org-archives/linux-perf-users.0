@@ -1,282 +1,215 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5AE190055
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 06:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFB5145B24;
+	Thu, 30 Jan 2025 06:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738217548; cv=none; b=a3yjSpaI1oz22pYt35HLnENVhrKlQ0QVwhUQM28feVZR4wPxKRugnSK8s6owCg94QZ9eAok/1iNCUjaslwDMFMc926YiJvrLySIMhcxPrme5D8QyZicGVGD8RHK2Qef8HkmlgKlP1nurDF9ag3wLq5aNLcpTnrQehK/SF9+h1tM=
+	t=1738218610; cv=none; b=pei0WUh0IGXfYUmktbsmlegbTjTjF8cyGjXcumYL/7zaAKbkZaDjJBZ9jxUmJJMkLn1ZT0OoIkVymP4c56p5nJNC4eIfVPBJcT5edum0wreVE2aqdBVARpTF7oDXSwDUqxvQeW6eXhnf3YtYGNSdJZ8eFmQ/POgMe0zLUvJitEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738217548; c=relaxed/simple;
-	bh=S/NTeMlyAbCUacMsVp7UZqbtzI+r/cIlVY3VvfYXXU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PT8jidmGFZ6ps8UHShI6bJkfxhajQpVqDZhKFhz+NbQ2G0T0/+L5AfjFeToZtrl9bKSZXjgHq5vvDiRbCjGAjigPpg97Xj3vA/y1n3NrxNFSrIDvSpPRmeQ8rhEW3nFJQN8K4WkY+3fs4Owyx2/DsvusYE2SvbVrz498xKZWDy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=L7RP5mcq; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738218610; c=relaxed/simple;
+	bh=sVkmUUPh4YLSPorZuqJX284KUinJpLgBrTR6CpJDNsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g70HcR7Kil8VJsv/9BRzCuVGzCPF0CHrVKdpnJUteLUWzqZ4XZ4pjpDsuE2VjSX4b+h4MWzFiAdgJvS5ZhKyOE0D1n+2MtUfFRYr3QIc4IffFekdCvmhgs8F7bSIAQQkkY7fx4mB6xl6clwc8YLMHiVUOuP2B3jBXx0QuITnSwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6cBWVOC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="L7RP5mcq"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2166f1e589cso9565635ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 22:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738217545; x=1738822345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ck4YiQJSe/CiIleYZC+p8vhI5mOkS1kJp721Y7KAM/I=;
-        b=L7RP5mcqJZ4CuzqJNxpIbl8jFceB3JMUwOC0Pl14z65nQJMP4oMTOXc4JK2ItfV5+t
-         /7YxIWMXfAkcLYJEbR06ZjCOF4TVC7OUnvGK4p0MEH5S9QhN4lJ+Tpljh9v2mKQQIKbq
-         I4DToqC2q6T0Qhe+uYsSh69CyVDHQIcc3SftSQ8IxInlaILeTy9F/v62981ZQY/M4wWj
-         UlOUVxGhoXuSy8VatoFjuRMm9Xo5CWM87KI5TabWdRvXEFKk9soKXsEKJI8G6g1og1d/
-         T2axpXbxmuFw61hk5EFeOmD27XlB1OMP9JfG9rn7knAsUjsNvZLuxfMMYMS5uo1yfLVX
-         VIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738217545; x=1738822345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ck4YiQJSe/CiIleYZC+p8vhI5mOkS1kJp721Y7KAM/I=;
-        b=ZPByuIK6FU0d2EGZo/WSfDJvVQypuEioQpXgfXWIm2FeYEGv4IQS4C0mvnlhmcv0f4
-         tDMttqquXD03swgboRiu+LAKAPXbrkzC3IdQ7cPlA9KOJl4HTVsEWGxMpo117avBsAte
-         MZmYkplwN8FVT6nSsAhO0bwNVKIX2cKu3XeVZEppOryBvdlsfB9MKYp0pmN3CTfdxs40
-         kHcar78iscrIB930ySOXKYf/g+QS5kKXDl5ied1/oYss0jfZVHI45YaiKPcUYMICpH7G
-         AoYzKg+AA5Y3jJjyNeoQ55scg0oUbYgospvSY4UrVUPWRThcDPP8KizhxsjUV6c4z5gg
-         dA5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU4/r/6YhbU1epk7FHxt9pJpmrFoa8jBJoFz9zNieZ6oDpY40WuAXMcvVsZAm+Jhhu4nPTm+NINVQaDO45IIaYw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd1ghDYMYBt7MX6djT0TmydnQpDvUqX3Hme/UXmoKEYYlIqv0U
-	AHBKyKgAO4773LvfJrs2cVt0WuLM/FqH5H9npO4I70t1ANzx7M+THjWdkwMj4xaY2k06JpYtc1F
-	ggHi02Qp/cRVNI1jZ7m0550kazepqv5a1+t96HQ==
-X-Gm-Gg: ASbGncsR78sp0/8213OiLXbOc5dnNCVeZ8Vjse72wfC3VYv8nrUEejtfCu0XZUplVM1
-	Kv0TZ9klfr77vQoxNDh3MJwq1F9J0hWgGASY6G8Fn61KZ9ZuvsuwPqsXqdxT4YcnMhSqiWdpPVR
-	4SQNN3fP2RvO87XT/POj0GK7PX3jR+8w==
-X-Google-Smtp-Source: AGHT+IEWh8JLbIO2bvwIUp5R+rreTpLm9XLHfdDrsKThuDLqmksDsfExOMAt6jPcPBSDPCsLfeMfjzZWh8ZFH2As8w0=
-X-Received: by 2002:a05:6a00:2406:b0:72d:9cbc:730d with SMTP id
- d2e1a72fcca58-72fd0c2246cmr8329616b3a.11.1738217545514; Wed, 29 Jan 2025
- 22:12:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6cBWVOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00CEC4CED2;
+	Thu, 30 Jan 2025 06:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738218609;
+	bh=sVkmUUPh4YLSPorZuqJX284KUinJpLgBrTR6CpJDNsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c6cBWVOCRHsdDwCsmKvQUfDXErr/YDNAeqfgEBD/CUMI4aA/qUSkIDhrS2+iDqM8N
+	 T6Ee580cCzy5dIDFFC0F4diBziXau08LZYNcfT2gOf39BI7L7/woBlxjmeCgde+kwl
+	 VW4olio1SjZz/dXx3M5bNKU1tH7kBstVOXj1IdXhXvmnkM02tHzk1Sll+bfw8XJkQ7
+	 f3vbQi8yKMX+c08o+1TLfHi8fpUKRlHRryuaCgSKUB9wBs1J8GqYpLfIPl6Q4/J/5P
+	 hnY92PawlXUHL5JPOQM1gzUl+ROCKFdvAcwEkSyyhGazIepZALQzmyKGwIqWFa2z6m
+	 NqU7X7vCoILbA==
+Date: Wed, 29 Jan 2025 22:30:08 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
+Message-ID: <Z5sccIPaYBeB_yab@google.com>
+References: <cover.1737971364.git.dvyukov@google.com>
+ <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
+ <Z5m2hdR3HZxIdhWR@google.com>
+ <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
- <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
- <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
- <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
-In-Reply-To: <Z5qjwRG5jX9zAGtf@google.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Wed, 29 Jan 2025 22:12:14 -0800
-X-Gm-Features: AWEUYZnK6efdcPp8zZmUSR82f5uqYNABSDrUdweCv75p4kdK2gHG_RNIRiXiTIg
-Message-ID: <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
 
-On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
-> > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
+On Wed, Jan 29, 2025 at 08:12:51AM +0100, Dmitry Vyukov wrote:
+> On Wed, 29 Jan 2025 at 06:03, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
+> > > Add record/report --latency flag that allows to capture and show
+> > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > profiles. For latency profiles record captures context switch events,
+> > > and report shows Latency as the first column.
+> >
+> > It'd be nice if you could add a small example output in the commit
+> > message.
+> >
 > > >
-> > > > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > > There was an explicit, and reviewed by Jiri and Arnaldo, intent w=
-ith
-> > > > > the hybrid work that using a legacy event with a hybrid PMU, even
-> > > > > though the PMU doesn't advertise through json or sysfs the legacy
-> > > > > event, the perf tool supports it.
+> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: linux-perf-users@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > [SNIP]
+> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > --- a/tools/perf/util/sort.c
+> > > +++ b/tools/perf/util/sort.c
+> > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > >       const char              *name;
+> > >       struct perf_hpp_fmt     *fmt;
+> > >       int                     taken;
+> > > +     int                     was_taken;
+> > >  };
 > > >
-> > > I thought legacy events on hybrid were converted to PMU events.
-> >
-> > No, when BIG.little was created nothing changed in perf events but
-> > when Intel did hybrid they wanted to make the hybrid CPUs (atom and
-> > performance) appear as if they were one type. The PMU event encodings
-> > vary a lot for this on Intel, ARM has standards for the encoding.
-> > Intel extended the legacy format to take a PMU type id:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
-> > "EEEEEEEE: PMU type ID"
-> > that is in the top 32-bits of the config.
->
-> Oh right, I forgot the extended type thing.  Then we can keep the legacy
-> encoding with it on hybrid systems when users give well-known names (w/o
-> PMU) for legacy event.
->
-> >
-> > > > >
-> > > > > Making it so that events without PMUs are only legacy events just
-> > > > > doesn't work. There are far too many existing uses of non-legacy
-> > > > > events without PMU, the metrics contain 100s of examples.
+> > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > >               return -1;
 > > >
-> > > That's unfortunate.  It'd be nice if metrics were written with PMU
-> > > names.
-> >
-> > But then we'd end up with things like on Intel:
-> > UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
-> > becoming:
-> > uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-> > or just:
-> > cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
-> > As a user the first works for me and doesn't have any ambiguity over
-> > PMUs as the event name already encodes the PMU. AMD similarly place
-> > the part of a pipeline into event names. Were we to break everybody by
-> > requiring the PMU we'd also need to explain which PMU to use. Sites
-> > with event lists (like https://perfmon-events.intel.com/) don't
-> > explain the PMU and it'd be messy as on Intel you have a CHA PMU for
-> > server chips but a CBOX on client chips, etc.
->
-> While I prefer having PMU names in the JSON events/metrics, it may not
-> be pratical to change them all.  Probably we can allow them without PMU
-> and hope that they have unique prefixes.
->
-> >
-> > > I have a question.  What if an event name in a metric matches to
-> > > multiple unrelated PMUs?
-> >
-> > The metric may break or we'd aggregate the unrelated counts together.
->
-> Ok, then they should use unique names.
->
->
-> > Take a metric like IPC as "instructions/cycles", that metric should
-> > work on a hybrid system as they have instructions and cycles. If you
-> > used an event for instructions like inst_retired.any then maybe the
-> > metric will fail on one kind of core that didn't have that event. Now
->
-> The metrics is for specific CPU model then the vendor should be
-> responsible to provide accurate metrics using approapriate PMU/events
-> IMHO.
->
->
-> > if we have accelerators advertising instructions and cycles events, we
-> > should be able to compute the metric for the accelerator. What could
-> > happen today is that the accelerator will have a cpumask of a single
-> > CPU, we could aggregate the accelerator counter into the CPU event
-> > with the same CPU as the cpumask, we'd end up with a weird quasi CPU
-> > and accelerator IPC metric for that CPU. What should happen is that we
-> > get an IPC for the accelerator and IPC for each hybrid core
-> > independently, but the way we handle evsels, CPUs, PMUs is not really
-> > set up for that. Hopefully getting a set of PMUs into the evsel will
-> > clear that up. Assuming all of that is cleared up, is it wrong if the
-> > IPC metric is computed for the accelerator if it was originally
-> > written as a CPU metric? Not really. Could there be metrics where that
-> > is the case?
->
-> Yes, I think there should be separate metrics for the accelerators.
->
->
-> > Probably, and specifying PMUs in the event names would be
-> > a fix. There have also been proposals that we restrict the PMUs for
-> > certain metrics. As event names are currently so distinct it isn't a
-> > problem we've faced yet and it is not clear it is a problem other than
-> > highlighting tech debt in areas of the tool like aggregation.
-> >
-> > > > >
-> > > > > Prior to switching json/sysfs to being the priority when a PMU is
-> > > > > specified, it was the case that all encodings were the same, with=
- or
-> > > > > without a PMU.
-> > > > >
-> > > > > I don't think there is anything natural about assuming things abo=
-ut
-> > > > > event names. Take cycles, cpu-cycles and cpu_cycles:
-> > > > >  - cycles on x86 is only encoded via a legacy event;
-> > > > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycles is=
- also
-> > > > > a legacy event name;
-> > > > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have a
-> > > > > corresponding legacy event name.
+> > >       hd->taken = 1;
+> > > +     hd->was_taken = 1;
+> > >       perf_hpp_list__register_sort_field(list, fmt);
+> > >       return 0;
+> > >  }
+> > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > >       return 0;
+> > >  }
 > > >
-> > > I think the behavior should be:
+> > > -int hpp_dimension__add_output(unsigned col)
+> > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > >  {
+> > > +     struct hpp_dimension *hd;
+> > > +
+> > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > +     hd = &hpp_sort_dimensions[col];
+> > > +     if (implicit && !hd->was_taken)
+> > > +             return 0;
+> >
+> > I don't understand why you need 'was_taken' field.  Can it use the
+> > 'taken' field?
+> 
+> I've started getting failed asserts in
+> perf_hpp__cancel_cumulate/latency when removing columns still linked
+> into sort order list.
+
+Ok.
+
+> 
+> I've figured out that columns we implicitly add in setup_overhead and
+> perf_hpp__init must match exactly. If we add one in setup_overhead,
+> but not in perf_hpp__init, then it starts failing.
+
+Right, I don't remember why we don't have unregister_sort_field or let
+the perf_hpp__column_unregister() remove it from the sort_list too.
+
+> 
+> Taken does not work b/c there is reset_dimensions call between these
+> functions, so they actually add the same columns twice to field/sort
+> lists (and that prevents failures in
+> perf_hpp__cancel_cumulate/latency).
+
+I see.
+
+> 
+> Initially I've just tried to match logic in setup_overhead and in
+> perf_hpp__init. But it turned out quite messy, duplicate logic, and
+> e.g. in setup_overhead we look at sort_order, but in perf_hpp__init we
+> already can't look at it b/c we already altered it in setup_overhead.
+> That logic would also be quite fragile. Adding was_taken looks like
+> the simplest, most reliable, and less fragile with respect to future
+> changes approach.
+
+Maybe just remove it from the sort_list.  There should be no reason to
+keep it in the list.
+
+> 
+> 
+> > > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
+> > >  }
 > > >
-> > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu_cycles -> no legacy -> sysfs or json
-> > >   cpu/cycles/ -> sysfs or json
-> > >   cpu/cpu-cycles/ -> sysfs or json
+> > >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
+> > >       if (sort__mode == SORT_MODE__DIFF)
+> > >               return keys;
+> > >
+> > > -     keys = prefix_if_not_in("overhead", keys);
+> > > -
+> > > -     if (symbol_conf.cumulate_callchain)
+> > > -             keys = prefix_if_not_in("overhead_children", keys);
+> > > +     if (symbol_conf.prefer_latency) {
+> > > +             keys = prefix_if_not_in("overhead", keys);
+> > > +             keys = prefix_if_not_in("latency", keys);
+> > > +             if (symbol_conf.cumulate_callchain) {
+> > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > +                     keys = prefix_if_not_in("latency_children", keys);
+> > > +             }
+> > > +     } else if (!keys || (!strstr(keys, "overhead") &&
+> > > +                     !strstr(keys, "latency"))) {
+> > > +             if (symbol_conf.enable_latency)
+> > > +                     keys = prefix_if_not_in("latency", keys);
+> > > +             keys = prefix_if_not_in("overhead", keys);
+> > > +             if (symbol_conf.cumulate_callchain) {
+> > > +                     if (symbol_conf.enable_latency)
+> > > +                             keys = prefix_if_not_in("latency_children", keys);
+> > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > +             }
+> > > +     }
 > >
-> > So I disagree as if you add a PMU to an event name the encoding
-> > shouldn't change:
-> > 1) This historically was perf's behavior.
->
-> Well.. I'm not sure about the history.  I believe the logic I said above
-> is the historic and (I think) right behavior.
->
-> > 2) Different event encodings can have different behaviors (broken in
-> > some notable cases).
->
-> Yep, let's make it clear.
->
-> > 3) Intuitively what wildcarding does is try to open "*/event/" where *
-> > is every possible PMU name. Having different event encodings is
-> > breaking that intuition it could also break situations where you try
-> > to assert equivalence based on type/config.
->
-> While I don't like the wildcard matching, I think it doesn't matter as
-> long as we keep the above behavior.  If it can find a legacy name, then
-> go with it, done.  If not, try all PMUs as if it's given with PMU name
-> in the event.
->
-> > 4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
-> > that's why the priority was changed.
->
-> I guess that why they use cpu_cycles.
->
-> > 5) RISC-V would like the tool tackle the legacy to config mapping
-> > challenge, rather than the PMU driver, given the potential diversity
-> > of hardware implementations.
->
-> I hope they can find a better solution. :)
->
+> > Do you really need this complexity?  I think it's better to fix the order
+> > of columns in both case.
+> 
+> This is sort order which affects ordering of row, and order of rows is
+> basically the most important thing for a profiler. If we fix the
+> order, it will be showing completely different things.
+> 
+> "latency" and "overhead" are equivalent with respect to their
+> fundamentality for a profile. So we shouldn't be adding any of them,
+> if any of them are already explicitly specified by the user.
+> 
+> For example, the command from tips.txt:
+> 
+> perf report --hierarchy --sort latency,parallelism,comm,symbol
+> 
+> if we prepend "overhead", it all falls apart.
+> 
+> Or for 2 default modes (normals and latency) we want "overhead" or
+> "latency" to come first. Prepending "latency" for the current CPU mode
+> would lead to completely different ordering.
 
-Sorry for reposing. Gmail converted it to html for some reason.
+I see.  You want to sort by overhead in the default mode even if it has
+implicitly-added latency field, and to sort by latency if --latency is
+given explicitly.
 
-I have posted the latest support here.
-https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e16d5@=
-rivosinc.com/T/
+I think it can be done with the following command line.
 
-As of now, we have adopted a hybrid approach where a vendor can decide
-whether to encode the legacy events
-in the json or in the driver (if this series is merged). In absence of
-that, every vendor has to define it in the driver.
-We will deal with the fall out of the exploding driver when the
-situation arrives.
+  $ perf report -F overhead,latency,parallelism,comm,sym -s overhead
 
-If a vendor chooses to define in both places, driver encoding will
-take precedence.
-I have tried to describe the scheme in the cover letter. Please let me
-know if I should clarify more.
+or
 
-> >
-> > To this end we hosted RISC-V's perf people at Google and they
-> > expressed that their preference was what this series does, and they
-> > expressed this directly to you.
-> >
-> > I don't think there would be an issue in this area if it wasn't for
-> > Neoverse and Linus - that's why the revert happened. This change in
-> > behavior was proposed by Arnaldo:
-> > https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
-> > and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry it
-> > in Google's tree.
->
-> Maybe it's because of Linus.  But anyway it reminds me of behaviors that
-> need to be discussed.  And we can (and should) improve things always.
->
-> Thanks,
-> Namhyung
->
+  $ perf report -F overhead,latency,parallelism,comm,sym -s latency
+
+IOW, you can keep the same output column ordering and sort the result
+differently.  But I'm not sure if it'd make the code simpler. :)
+
+Thanks,
+Namhyung
+
