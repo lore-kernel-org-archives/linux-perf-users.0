@@ -1,206 +1,1063 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5191E8823;
-	Thu, 30 Jan 2025 19:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738265423; cv=fail; b=TwP06YDtKs6CyBJeIca2GH0u2/pwGoTrGQ0qeKZwzTohb4fIRZicEi3ziYSqEH+BPUqExTuBEpKd1/qcysPl/ev/8WoYPKw9mzhc851DbHg7e+BlGKcueNj3MoSr5JSq/imZ5isuFdL/ioDCiSlDEEwHDFaNQoDSH1XmBbMjQDY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738265423; c=relaxed/simple;
-	bh=KjSiCE0Sv7cQZ7Fj0wNuiLQ7xNVS7stWnA7I4lQYwzk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=d6ZzCMI4iNtPK5d9mOQ2EP2CEY4DPs+OLtVdkkwLg0WQsr+C5KlfP2eSavPI82z5U6EoPslYxNZmigGIQuj8GK1ppuaX2jbBkEWynyvnRm+6CBmZC2MZLFqwcTaAumNoAd//JrOL8Qy3LP8XqThhlmfNCV5Xck1tO025EekyDoY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSxEuemu; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B2F1E522;
+	Thu, 30 Jan 2025 19:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738265734; cv=none; b=PtPcX88L0i9/l0aoipCZoG9Cn3sXmFx3M8+ca/XqyxCBHiXZTptwJ6WJwhT8JDg8gTlfDQvB2um3rKSm74Fs0XQ6v7i+spX5QE9deIaC0Tj/HaplbXZMPq6PLxAGVkxK2mz0Eq2Y9arjvEA1OP1KblbbpBb6u4xMuKZlpjbd7hw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738265734; c=relaxed/simple;
+	bh=CYCedbzrRqYfHYhbfyiSepZ11q6WvcBC2kdzpoZTMp8=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NhsKvKs9YYhmKPl0HKA+JuBFc0CyiS08/5V+2SaKSw+351/oNAuw65QGseE6q2xtrJ7Qb1oqXX1MHzW1QaK2TfIaMA77gEJtYI1lKOwgyodE8GM+6GZpWeCWo+sZFedu4brHMYzoqmvIE8Am84Kw9qIvQAjoY1tWJitxwojdx30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=MQFjTo+8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aV2ONUtD; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSxEuemu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738265421; x=1769801421;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=KjSiCE0Sv7cQZ7Fj0wNuiLQ7xNVS7stWnA7I4lQYwzk=;
-  b=ZSxEuemuUgiT8uCemrzXZe7dBY9wn1r7BWgvmvj+yUJ1uM6gZrGPmG25
-   TM/tu3CUscW4V+iDvRgtg27jBmaMSqmhk1Y9LRWfynbiUnFTLd7+yQaMS
-   x2ZUYuh6D1GeXkmsALBDm6yzqhhoavk08JunAyabxTGSJImpZUbQl4waH
-   krOo2ZyGWX4P8n9/E5ds6wQyuDsCwr/CAAvPLswkicvWT3zIHmlOObngr
-   +Bg892JIqU6zYONk67kFWayyIpLEU8LYHivs0KJGskZrczEPzl2ymMWrS
-   y+ujCziNtth8Gk9sf/rbQHFnlCUQreBEkd2/hEb+b1Ugn72PUgpBgbSjm
-   A==;
-X-CSE-ConnectionGUID: RzXIGt4qT1apLpExKbMERA==
-X-CSE-MsgGUID: TXRVv4/2RvGPUPrZaFFYHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11331"; a="49816794"
-X-IronPort-AV: E=Sophos;i="6.13,246,1732608000"; 
-   d="scan'208";a="49816794"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 11:30:20 -0800
-X-CSE-ConnectionGUID: tnVh7kd+SsCcsjTR0khBYg==
-X-CSE-MsgGUID: faVvoSR8SReJYwoc3LZQaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113442136"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Jan 2025 11:30:21 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 30 Jan 2025 11:30:19 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 30 Jan 2025 11:30:19 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 30 Jan 2025 11:30:18 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TbT541r2KpEOrCpIl6W9E7PIalZfDqucMKwE8xCV80bLzZwL0EEfq2aOFH8KBrXtJTXWFyYIU9oBTgDiblEfvpu5C3pwQyNIyKSZ8kaVFzkL4IePrd6fsu4WYCCdCxkXGm1tr5a00OLsCDBl+Pw5JrGAZMlh1uk4RMk2ZLwPVqEMaQjjKBsqJOwaMcZRZBb29XccfTdgHtpBagqSBFjfRA5cytpqYfuNODyVnWdmC6SfVQX/tLI2KGtaztkEr8HYm4hNNNZO04xqNdg08avUXbk7+epzF9lee/MaOT9VjpnPyLvrM4tjytrg1PpAKZXCU/pbehvyFfpqqXFPurDMWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KjSiCE0Sv7cQZ7Fj0wNuiLQ7xNVS7stWnA7I4lQYwzk=;
- b=kyTsOF+U3RJlLnY72IQlCgM4JPoTsAFjXaUXjPFbF0TrztngPuXpyKUeYkcmotqWGlU1y2h4OXanNTG3nlNZFwxAayGueH6nJRjiMrBl85VyWhvEMv4IMBIvM+JIzptttpE506NQ6JiCvPmes+LN67CR121rlXfvXppczNI1CP0cN81SgG4K557D9ljLauS4JzUwrlMklR48C/XC7oCtDjzkJ8UQCWDDcYaKQuzz5Sm4NNC1AE1WsBhAiKyOyPlZCvutut1sV/mOIvRIQ0ZJxrdVKmXzltipBgP5fZR1YShPTypgUaMA9V79IEkb1u2J1BzpfHza/iAJQGlAGOpIgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB5921.namprd11.prod.outlook.com (2603:10b6:806:22a::15)
- by LV2PR11MB6000.namprd11.prod.outlook.com (2603:10b6:408:17c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Thu, 30 Jan
- 2025 19:29:58 +0000
-Received: from SA1PR11MB5921.namprd11.prod.outlook.com
- ([fe80::8e9b:65e0:d7a:e149]) by SA1PR11MB5921.namprd11.prod.outlook.com
- ([fe80::8e9b:65e0:d7a:e149%4]) with mapi id 15.20.8377.021; Thu, 30 Jan 2025
- 19:29:57 +0000
-From: "Baker, Edward" <edward.baker@intel.com>
-To: =?utf-8?B?Q2hhcmxlcyBIYW4o6Z+p5pil6LaFKQ==?= <hanchunchao@inspur.com>,
-	"irogers@google.com" <irogers@google.com>
-CC: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>, "kan.liang@linux.intel.com"
-	<kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] perf vendor events: Fix double word in BriefDescription
-Thread-Topic: [PATCH] perf vendor events: Fix double word in BriefDescription
-Thread-Index: AQHbbhZ9279gf30ZZ0qIMgfUWOmRY7MldmSAgApGBKA=
-Date: Thu, 30 Jan 2025 19:29:57 +0000
-Message-ID: <SA1PR11MB5921ECBD44F3C8E8B91513CC9FE92@SA1PR11MB5921.namprd11.prod.outlook.com>
-References: <a86efa823973af905ad349aeba28b3b024-1-25google.com@sslemail.net>
- <CAP-5=fXY8a1yv7DpYPcZ+TeO+_sxv0MNyh3RVMav2JEGyiCn1w@mail.gmail.com>
- <8d7019038b4e4448960233855c28d5e8@inspur.com>
-In-Reply-To: <8d7019038b4e4448960233855c28d5e8@inspur.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB5921:EE_|LV2PR11MB6000:EE_
-x-ms-office365-filtering-correlation-id: f9a86243-d2cd-407e-bb6e-08dd41647b37
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?OEFLMHl6Nk9XanRHNW4ycUM3K2k2R1N2ZVI0cnVBTnhxNEwyaEJsSVEzSHBx?=
- =?utf-8?B?MUV2RUNLbFZjOVdKL0tZV2pKMDZNeDBubmZ3WGFibEVoYnB1TzJVelhsUElK?=
- =?utf-8?B?SXVEb2t5S1llZ1h6ZVpjL1BMb0FwVHlsTzNqOW52OUpzRkdJZEZLNTRZNDNB?=
- =?utf-8?B?bEhscFRUZUdQTGFDKzlmU0NLNEpRTDdWTTFmblJ2blpTaGtvKzhLWm8zVVY0?=
- =?utf-8?B?UU9ucGpSY2x0THFTUjc3SU93RjRXY2JBUk02Y2plYlo0bnd6UFhCdzFPSGc0?=
- =?utf-8?B?blhWWGFkL0RRMmhqaE9kZXNWQ1VlWkk4cW1qSlpFb0ZnRHhaUmYvNFNyem1y?=
- =?utf-8?B?NU1WTDBWNm91Q1h0eEFHck1jcGZZUHc5cjdmb0tJeFM2Y1doV1Zrbmp1bGZy?=
- =?utf-8?B?V0c2Tk5SclJrZUVpMG5sZDlEVk5VUGgwd1R0U3U2ZFV1U1pqYVZTNkMvQzBl?=
- =?utf-8?B?L09hd1NONzFKdDU0a0w1MEtqQlZBNGNheFdpN0tob0o0dm1WUDhpSGloNzZy?=
- =?utf-8?B?d2VaSElHUGI4Y2xuNkl1WnZWNFdCK1hqS2taOWxZQXRQQ3FrTm9kVnNhOFJt?=
- =?utf-8?B?enltTXp0YkIzZm1EZkt0bjVxaFpZQ2lXZ1p1QWpNY29Iaml2cHdGa2laM3pC?=
- =?utf-8?B?UW9QS2Rqblg4Sm1LbEVIQjczWTZiYUxlQTEzM2RWUWM0V0NiZFZPTEdtcTcz?=
- =?utf-8?B?TmxxNmw0aDhqOHZUVFFSam9haXl3elRBQlNYajZrL2FNemp3WXJhRXJlZUtz?=
- =?utf-8?B?cVU2a2s3U1ZjYXJrZlpqV1JmK21DS2FEZDUweHZrOHZSM1hGc3FBQ1ZyMGZD?=
- =?utf-8?B?aHQvanp3RS8vbS80c0R1UzR5VTBGZzlBTFVteU96VTljMHRsR3BxSmVocU5G?=
- =?utf-8?B?M0VPWHZFQ1UrZ00rSmg1YjBJRVlNTlFaMDgyN244ZmdBZ2Q3NWx5TVRVanBH?=
- =?utf-8?B?eFhCV0pwcEZUaW85OFpTanVoMXFhODZ6T1Y4VmRtK3IyMnIrYUpjci9sK3pX?=
- =?utf-8?B?TElnME52VXd3d0g5SnlCaldVY0VHOWVsWGRkcUJBTEh5cEI2WmhJSmpWMUhV?=
- =?utf-8?B?bk1JcGV1WEc4K3lQdC9oQzZWT0pPUFhtMnhWOFF1ZnpkLzFZY3U0TmR5WFEx?=
- =?utf-8?B?SFAyS3NFS0FWQ01SQmZ2ZDdGT3UrMUx6ZU55bWNLT3UrcEU0MVRIL1FiVStw?=
- =?utf-8?B?dnZOdHRzODF0VHVnOC9SOWhaemExVnBBNHdqL1Q5UkpHS2VuY2RHNEZJVDh6?=
- =?utf-8?B?bk5LaXdubXltT2Zyc09EWHl6M29wT2MrUCswS29rMm1uWmVxSHhseUJOcVhI?=
- =?utf-8?B?S2U2Z0k0U3NzK1d3bWYwZ05WcnY5RC9zT2x5Sko3Um50dHUyV3UzWmd1Q2VN?=
- =?utf-8?B?TjI2Qi92bHNSV2Vua1RXZEdvNW1pZ0g2czZTdzg3Y3d3RGE1aTlMRnd3bUxL?=
- =?utf-8?B?U25SWTZoNHplWDAya3BDOVE4Y2Y1RXpFQjJXSUkzUWFreEVrUE5saFFIbUsz?=
- =?utf-8?B?b3EvQnVzTzQ1dGJjMWp2azB1cnFRK0Y1U082NGp0ZDB5SGpiRlBlQWdKT3dX?=
- =?utf-8?B?SXVIUS9naXB5M1B2am1LcU0yaXQ5MXhwRFNVeUNNSzMvc0EzZ3o5eXdrelMw?=
- =?utf-8?B?d2orbXA3RWpmU0dDNFkxamVva1FjWm50YStWOGtMcnZ6ZUthV2FuQ0djM3BP?=
- =?utf-8?B?R3NrUlFOZEY3b1VHQUpjT1RNTVRQQnhOR2JBYnlscXRjY3V3LzRDUm9IZmxS?=
- =?utf-8?B?VFhFZGFaZllJdHlGNGlZS0JxeUF3dUl4c3prbFVRY2MrNE1kcTJYODUrNk9G?=
- =?utf-8?B?ZXJ0ZmI3U05rZTR0UzR2ZGx0R044YnliaXpheC9rRlQwSHRjZUlGSFlVV2Zt?=
- =?utf-8?B?OTNjUk5lU1A0d3U2Wlh5TGFjZGM1S1E3cytBRnhIUWg3dGlDRGJxMElITURF?=
- =?utf-8?Q?jM29PQvp9W0vWt+QnDK8rg04DPCmd5Tc?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB5921.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cHhMRFBRcWxOcFBpMzNFNVlFaENJRy9PVUdRKzFFc1hXVWZnT1BWM1lEdVFx?=
- =?utf-8?B?OGtEbGZPWTMrejVBTjBUNlVYanpHclNRTWMxVW5qZFpKNWpkREc3UjF1U04y?=
- =?utf-8?B?UmxKSXI2TTJ6UHlQOUJiZ1hhd1dVczZmYVZCdFFsQlVaOFFVaEJrREM5TG1q?=
- =?utf-8?B?U2dmTjEzYkk3emZrUTZxanJ3ZTNhejFjTUFkZEJOSlVIVUJPaU5IOG85RVQ4?=
- =?utf-8?B?NSswc2RIYUs3aENEc21vbHR3VytxQWJGTmYrbTB5TVBidldIcTA0QTVBU2J0?=
- =?utf-8?B?UnM1bTIvMENaM1F0Y3UyRThINy9JVU5PWEFXbVMrak5YR0VEMGNEci9rOEZ1?=
- =?utf-8?B?NlI0VWcwRDR4aEg2SFdJTEpyOG5JdXRyQ2FweEZTWHdKOFR6K3BqclRKbEdM?=
- =?utf-8?B?Uis1NFdPcGdMUnJKaWdBY2xsZnJTSEEzTmQ3ZUd6REdNODJxS1EzdGlyMWxQ?=
- =?utf-8?B?VzFEMUljZzhtVHBFSVpHQzVTZ2ZIY1VERXByd2FCTDZ3NjdiYTEyMk9pcVRI?=
- =?utf-8?B?TzFqSTEvSS9IcHdCRHFEdGNRMUhteWhIU2F4STBzRjRLWmRmcENvSW00WmFI?=
- =?utf-8?B?S1Fkc1JybUMxenVhZm8zVVg5MWZxWHVtTFdjbXozdXRhZEtXUHdVdnUxVzdZ?=
- =?utf-8?B?eHZuMXN2VGduSDBjaTFrYjhvMW04UFNObys3d0JLQWhWQndTTWNqRXZhdlA4?=
- =?utf-8?B?ejQxei9KWWl6cnI5SThaU3FGMXhJTElaajNhUEVvb1I0SVlKYmF5a2RZUitH?=
- =?utf-8?B?Y3hDQ2dqeVdydGovMms1QXpyOFAvamtFWFRQYUFhMXBPeHJsWWt1Q3J2VGhp?=
- =?utf-8?B?N1VSL2p4cVpmd1NmeGpmcjltb1B4U1VTdHVqNkhEVldBdDJNNVNmTDhaeVU4?=
- =?utf-8?B?dDh4cjJ0cW5tWHFaUGVWL29RMHlLRTNLYkREdHc1WHF4TUZvWEMyaG1Fak4w?=
- =?utf-8?B?SmNHM1ZnV2JCWmlNUVVmandGNjlvT1V2My9WWlhDYkVDVTh3bTRlc0plTkJx?=
- =?utf-8?B?UHlZK3E5L0krSVNTSkdKNWw5OC8vM3c0bTFRQlNPYmZBVDRuYUpXdFduYzFW?=
- =?utf-8?B?bUtvYUtJMWhMd21tdW42YmVoTkdJbXJLS1NiOUZ0dExCYjNLMG1jeHZNaHBI?=
- =?utf-8?B?NTVJTlhoWDd6eFFoeHRGd3AvRGpQN2FWbzA4TTJSMmd6Y1NHRHArTFk5SFFV?=
- =?utf-8?B?Z3IydmZkSU1uT3h6dFRZdUQ4M3RBbVNMM3pIMi9qczlTNFIrbzZBaHFPVlhM?=
- =?utf-8?B?b2ZyY214Qm9UTy9CendIRHNTSjAxbnJUMEprM0poekc5WU1kd1AzSUprdjc2?=
- =?utf-8?B?d2ZuZFRVNDMyeE1Cd25GanRaa3JXRXREOFZTUHArS1l5cXpnV25rV1JrdWNt?=
- =?utf-8?B?VW8vNUNKSFVGYTRwdFZCbjNpc3Y0ZEJjenJsNDlzMjBQNGNLVDVILzhGNHMy?=
- =?utf-8?B?dTRIOVdQVnU0RElvWFZYVVNyNjVPbWRKVlhRSHlCNENmUWNEKzRwcXhrelE5?=
- =?utf-8?B?eDNmZ1Y0RktiRW5RU1RrbmtYcFRXQUNuSDg1Q3lmNmljSjM0WGdIVEllVDlO?=
- =?utf-8?B?V3J6TGY0MWVTRjAwazlwa0NlRGVRTld5alh4U0VoR1Bua0krdDBqV1NQeks3?=
- =?utf-8?B?R2RrdVBEc2NhTFN4cGFTV012TVNzOWVLdWl5QXE4Tms3RFlxWkhwWXlmREdR?=
- =?utf-8?B?cmRFRlZLNTBzN1lqVG5WR2xHa3hzMFIzQXlqN3UrQkRYUzhubktRUFVKcjEv?=
- =?utf-8?B?WElKcWdXcG53b1BpWmFqRG1oZkVGWnQ0cXlKQ0dKZXh5bGt2bmZPckx6TCs1?=
- =?utf-8?B?QzdvdFhpOWhBUlRFVmRLUXJWNUVFWHF1cXdpZG02L1IwNmRBazd5QWRPcDFW?=
- =?utf-8?B?QTM5dkNXcVBmK2R6Rkdob3NMZ0FSdWwva3FiOUJvSWtjN2N4SVJGWWRCQVkw?=
- =?utf-8?B?dktjWDZJRzJrVVBXZ2JtMm9DNmFNK1ZkR2JsZ2Q0M1hyQTFUa2Q2dXAxVkpC?=
- =?utf-8?B?SmpkQmFIUnpFNmE1ZGhlNGxSWE1LSmRWdmIzZVhIRDdEckw2dTNFOGtFM296?=
- =?utf-8?B?aFFnQXN2T2VIY1Q4cnlxRk1CYlhibkVycG5ENC93eCtGQzJTRnBOc3hHeTJ4?=
- =?utf-8?Q?ia11JDPaM/FYalcwUUTkD8BAV?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="MQFjTo+8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aV2ONUtD"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id 25FA11140168;
+	Thu, 30 Jan 2025 14:35:30 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Thu, 30 Jan 2025 14:35:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738265729;
+	 x=1738352129; bh=jN4r+MW+uM/Jb3r3K5HNEebpConefEg979mB2bUVrbE=; b=
+	MQFjTo+8Ps2V2gv6+PC0hygA83af23HKMPdxhm6lRrXmQ5end/3jOJhHJqZK9vn8
+	Uzmdt7SNGm/34g5JUYXRZvE4d0uvsxUnsS9H4zfxBQo98iV2tjrTqLCTAJ83clWl
+	D+H1DvhLdToxaikJtC/6v2ddZ7/2w8RlBjF/RlXp5AKQ+WnpHw5d62BiGdThIohY
+	KFR824JQpPMCy1Wypvn9+v0CcJuxz6QnLbeMg0mcl+jCueP0PlX3VFLs2yZzJXta
+	WJpvtbE4/Oz4+ItqLWQqlO+jrm7u0Sd0sqiRR95WJEcQ2WK2uIbPD7Ie4ZCQqoyl
+	Vl2aqS+SjfC0e4KC2no/Rg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1738265729; x=1738352129; bh=j
+	N4r+MW+uM/Jb3r3K5HNEebpConefEg979mB2bUVrbE=; b=aV2ONUtDYNcsqgzhf
+	XtACOzgGadj28UQ8TGNQVMyfrkRSl575EK6SSp9TUmNOm/4S/eCJN5vdEN2V6DqX
+	+vKiGTKxwjufcrHdo7Qu0o8OjIXgOcTRBp7xIuAxHb4KLxMslL+h/UYp/w172MiS
+	dwJB5Y6ir99JFDFEJHir641JjV/C71t0+ihUQfYFMAXeVyUv7jHzV2ZMellSEWcD
+	nE/yy5771eMnwrfC99mBQeGYN0ryIBYuo3vLF3Qas/uWmznpageBWDpUnGQCz0UF
+	2X5WAwPdJG4AZY8iHNfKXimov99/ImVAkDciPCTyDfCs9o31yad/1e9AAcfhgxCI
+	sYlZg==
+X-ME-Sender: <xms:gdSbZ--9ce92BfMRsWvEPeBA1_dOM_2QzmzBCv8ZkhhEsRcmkorz2g>
+    <xme:gdSbZ-u0XMYm5WbGLFqXluGR27RNnDbZuHRPmWoXe9T-9GO-SkKzUXI3hGGhgqpZX
+    eoWdYXyHXUWbinr3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdlvdefmdenucfjughrpefoggffhffvkfgj
+    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguh
+    esugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhephffghfevvedttdefheffgeel
+    heekvdfhudefjeefuedvvdfgkeffveffheeiffeunecuffhomhgrihhnpehruhhsthdqlh
+    grnhhgrdhorhhgpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiipdhnsggprhgtph
+    htthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgrvhhirdgsrghn
+    ghhorhhirgesrghmugdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrg
+    hrmhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphht
+    thhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqh
+    hunhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhofigrrhgutghhuhel
+    heesghhmrghilhdrtghomhdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvg
+    drtghomhdprhgtphhtthhopehirhhoghgvrhhssehgohhoghhlvgdrtghomhdprhgtphht
+    thhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:gdSbZ0CCCEqf6ZsxjJd93BmePWHMMgsnZGmLnEsFPpSpQ1vSHDdUHA>
+    <xmx:gdSbZ2dhiAJqtq-j7SxCHlmLivgfw9RsZJ2GZcQ1KhtIWT2VWIuvZg>
+    <xmx:gdSbZzPHy_TOrDAdghkpK6AQaPYMVtlRyexUJrePKQDmQZVgi3OSyg>
+    <xmx:gdSbZwk_pq09YIESxlbC-unKf79Q1lqrdPJJT5HLufkGHeWflUnXEg>
+    <xmx:gdSbZ9WmD49f5M0biBR_bVn3VgZ2c19r2RMFuQDEtm5XsIVYCLC-CmE_>
+Feedback-ID: i6a694271:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0511918A006B; Thu, 30 Jan 2025 14:35:29 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB5921.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9a86243-d2cd-407e-bb6e-08dd41647b37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2025 19:29:57.5941
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X13G1hL+UfiOEPr2jL6OB1u1XnEGStRjpi3+didPXVc9k0311H6HFZGKzrWN+GddHdSS/FzkHkKbpBSQmRL+Hg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6000
-X-OriginatorOrg: intel.com
+Date: Thu, 30 Jan 2025 11:35:08 -0800
+From: "Daniel Xu" <dxu@dxuuu.xyz>
+To: "Ian Rogers" <irogers@google.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Jiri Olsa" <jolsa@kernel.org>,
+ "Adrian Hunter" <adrian.hunter@intel.com>,
+ "Kan Liang" <kan.liang@linux.intel.com>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "James Clark" <james.clark@linaro.org>,
+ "Howard Chu" <howardchu95@gmail.com>,
+ "Ravi Bangoria" <ravi.bangoria@amd.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org
+Message-Id: <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
+In-Reply-To: <20250129193037.573431-1-irogers@google.com>
+References: <20250129193037.573431-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-PiBIae+8jA0KPiBJIGNyZWF0ZWQgYSBwdWxsIHJlcXVlc3QgICBmaXggaXQgIG9uICBnaXRodWIu
-DQo+IA0KDQpIaSBDaGFybGVzLA0KDQpUaGFua3MgZm9yIG9wZW5pbmcgYSBwdWxsIHJlcXVlc3Qu
-IEV2ZW50IGZpbGVzIG9uIGh0dHBzOi8vZ2l0aHViLmNvbS9pbnRlbC9wZXJmbW9uIGFyZSBnZW5l
-cmF0ZWQgZnJvbSBhIGRhdGFiYXNlLiBJJ3ZlIHVwZGF0ZWQgdGhlIGRhdGFiYXNlIHdpdGggeW91
-ciBmaXhlcyBhbmQgdGhleSB3aWxsIGJlIGluY2x1ZGVkIGluIHRoZSBuZXh0IHJvdW5kIG9mIGV2
-ZW50IGZpbGVzLg0KDQpUaGFua3MsDQpFZCANCg==
+Hi Ian,
+
+Thanks so much for working on this!
+
+Only did a quick skim. Seems like it'd be nice to reuse the official
+demangler now that we know about it. Will be interesting to
+see how that gets packaged for distros.
+
+On Wed, Jan 29, 2025, at 11:30 AM, Ian Rogers wrote:
+> Implement symbol demangling based on:
+> https://doc.rust-lang.org/rustc/symbol-mangling/index.html
+>
+> Ensure recommended demangling examples match the expectations in the
+> documentation.
+>
+> This was requested by Daniel Xu <dxu@dxuuu.xyz> in:
+> https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb/
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> This change is on top of the 18 patch v3 series:
+> https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+> ---
+>  tools/perf/tests/Build                   |   1 +
+>  tools/perf/tests/builtin-test.c          |   1 +
+>  tools/perf/tests/demangle-rust-v0-test.c |  82 +++
+>  tools/perf/tests/tests.h                 |   1 +
+>  tools/perf/util/Build                    |   1 +
+>  tools/perf/util/demangle-rust-v0.c       | 661 +++++++++++++++++++++++
+>  tools/perf/util/demangle-rust-v0.h       |   7 +
+>  tools/perf/util/symbol-elf.c             |  31 +-
+>  8 files changed, 771 insertions(+), 14 deletions(-)
+>  create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
+>  create mode 100644 tools/perf/util/demangle-rust-v0.c
+>  create mode 100644 tools/perf/util/demangle-rust-v0.h
+>
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 165ba84dc93f..d59d88abf0da 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -56,6 +56,7 @@ perf-test-y += genelf.o
+>  perf-test-y += api-io.o
+>  perf-test-y += demangle-java-test.o
+>  perf-test-y += demangle-ocaml-test.o
+> +perf-test-y += demangle-rust-v0-test.o
+>  perf-test-y += pfm.o
+>  perf-test-y += parse-metric.o
+>  perf-test-y += expand-cgroup.o
+> diff --git a/tools/perf/tests/builtin-test.c 
+> b/tools/perf/tests/builtin-test.c
+> index e77bf446e821..16937e7e313a 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -126,6 +126,7 @@ static struct test_suite *generic_tests[] = {
+>  	&suite__maps__merge_in,
+>  	&suite__demangle_java,
+>  	&suite__demangle_ocaml,
+> +	&suite__demangle_rust,
+>  	&suite__parse_metric,
+>  	&suite__expand_cgroup_events,
+>  	&suite__perf_time_to_tsc,
+> diff --git a/tools/perf/tests/demangle-rust-v0-test.c 
+> b/tools/perf/tests/demangle-rust-v0-test.c
+> new file mode 100644
+> index 000000000000..ab6613e02c94
+> --- /dev/null
+> +++ b/tools/perf/tests/demangle-rust-v0-test.c
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +#include "tests.h"
+> +#include "debug.h"
+> +#include "demangle-rust-v0.h"
+> +#include <linux/kernel.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +
+> +static int test__demangle_rust(struct test_suite *test __maybe_unused, 
+> int subtest __maybe_unused)
+> +{
+> +	int ret = TEST_OK;
+> +	char *buf = NULL;
+> +	size_t i;
+> +
+> +	struct {
+> +		const char *mangled, *demangled;
+> +	} test_cases[] = {
+> +		{ 
+> "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs15kBYyAo9fc_7mycrate",
+> +		  "<std::path::PathBuf>::new" },
+> +		{ "_RNvCs15kBYyAo9fc_7mycrate7example",
+> +		  "mycrate::example" },
+> +		{ "_RNvMs_Cs4Cv8Wi1oAIB_7mycrateNtB4_7Example3foo",
+> +		  "<mycrate::Example>::foo" },
+> +		{ "_RNvXCs15kBYyAo9fc_7mycrateNtB2_7ExampleNtB2_5Trait3foo",
+> +		  "<mycrate::Example as mycrate::Trait>::foo" },
+> +		{ "_RNvMCs7qp2U7fqm6G_7mycrateNtB2_7Example3foo",
+> +		  "<mycrate::Example>::foo" },
+> +		{ "_RNvMs_Cs7qp2U7fqm6G_7mycrateNtB4_7Example3bar",
+> +		  "<mycrate::Example>::bar" },
+> +		{ "_RNvYNtCs15kBYyAo9fc_7mycrate7ExampleNtB4_5Trait7exampleB4_",
+> +		  "<mycrate::Example as mycrate::Trait>::example" },
+> +		{ "_RNCNvCsgStHSCytQ6I_7mycrate4main0B3_",
+> +		  "mycrate::main::{closure#0}" },
+> +		{ "_RNCNvCsgStHSCytQ6I_7mycrate4mains_0B3_",
+> +		  "mycrate::main::{closure#1}" },
+> +		{ "_RINvCsgStHSCytQ6I_7mycrate7examplelKj1_EB2_",
+> +		  "mycrate::example::<i32, 1>" },
+> +		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleFG0_RL1_hRL0_tEuEB2_",
+> +		  "mycrate::example::<(&'_2 u8, &'_1 u16) -> ()>",
+> +		  /*
+> +		   * TODO: the recommended demangling is:
+> +		   * mycrate::example::<for<'a, 'b> fn(&'a u8, &'b u16)>
+> +		   */
+> +		},
+> +		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleKy12345678_EB2_",
+> +		  "mycrate::example::<305419896>" },
+> +		{ 
+> "_RNvNvMCsd9PVOYlP1UU_7mycrateINtB4_7ExamplepKpE3foo14EXAMPLE_STATIC",
+> +		  "<mycrate::Example::<_, _>>::foo::EXAMPLE_STATIC"
+> +		  /*
+> +		   * TODO: the recommended demangling is (the :: is optional):
+> +		   * <mycrate::Example<_, _>>::foo::EXAMPLE_STATIC
+> +		   */
+> +		},
+> +		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleAtj8_EB2_",
+> +		  "mycrate::example::<[u16; 8]>" },
+> +		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleNtB2_7ExampleBw_EB2_",
+> +		  "mycrate::example::<mycrate::Example, mycrate::Example>" },
+> +		{ 
+> "_RINvMsY_NtCseXNvpPnDBDp_3std4pathNtB6_4Path3neweECs7qp2U7fqm6G_7mycrate",
+> +		  "<std::path::Path>::new::<str>" },
+> +		{ "_RNvNvNvCs7qp2U7fqm6G_7mycrate7EXAMPLE7___getit5___KEY",
+> +		  "mycrate::EXAMPLE::__getit::__KEY" },
+> +	};
+> +
+> +	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
+> +		buf = rust_v0_demangle_sym(test_cases[i].mangled);
+> +		if (!buf) {
+> +			pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n", 
+> test_cases[i].mangled,
+> +				 test_cases[i].demangled);
+> +			continue;
+> +		}
+> +		if (strcmp(buf, test_cases[i].demangled)) {
+> +			pr_debug("FAILED: %s: %s != %s\n", test_cases[i].mangled,
+> +				 buf, test_cases[i].demangled);
+> +			ret = TEST_FAIL;
+> +		}
+> +		free(buf);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +DEFINE_SUITE("Demangle Rust", demangle_rust);
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 751c8489059a..e1e846c9da4e 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -157,6 +157,7 @@ DECLARE_SUITE(jit_write_elf);
+>  DECLARE_SUITE(api_io);
+>  DECLARE_SUITE(demangle_java);
+>  DECLARE_SUITE(demangle_ocaml);
+> +DECLARE_SUITE(demangle_rust);
+>  DECLARE_SUITE(pfm);
+>  DECLARE_SUITE(parse_metric);
+>  DECLARE_SUITE(expand_cgroup_events);
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 43408d2de4a2..d1c82d9ab4d7 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -240,6 +240,7 @@ perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
+>  perf-util-y += demangle-ocaml.o
+>  perf-util-y += demangle-java.o
+>  perf-util-y += demangle-rust.o
+> +perf-util-y += demangle-rust-v0.o
+> 
+>  ifdef CONFIG_JITDUMP
+>  perf-util-$(CONFIG_LIBELF) += jitdump.o
+> diff --git a/tools/perf/util/demangle-rust-v0.c 
+> b/tools/perf/util/demangle-rust-v0.c
+> new file mode 100644
+> index 000000000000..8839cf2e63a0
+> --- /dev/null
+> +++ b/tools/perf/util/demangle-rust-v0.c
+> @@ -0,0 +1,661 @@
+> +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +#include "demangle-rust-v0.h"
+> +#include "debug.h"
+> +#include "strbuf.h"
+> +
+> +static bool show_crate_root_disambiguator = false;
+> +
+> +struct parse_state {
+> +	/*
+> +	 * The string itself after the initial "_R" from which all back
+> +	 * references are decoded from.
+> +	 */
+> +	const char *str;
+> +	/* Length of str. */
+> +	size_t len;
+> +	/* Offset within the string. */
+> +	size_t offset;	
+> +};
+> +
+> +static char parse_state__peek(const struct parse_state *state)
+> +{
+> +	pr_debug3("Peek '%c'\n", state->str[state->offset]);
+> +	if (state->offset >= state->len)
+> +		return '\0';
+> +	return state->str[state->offset];
+> +}
+> +
+> +static char parse_state__read(struct parse_state *state)
+> +{
+> +	pr_debug3("Read '%c'\n", state->str[state->offset]);
+> +	if (state->offset >= state->len)
+> +		return '\0';
+> +	return state->str[state->offset++];
+> +}
+> +
+> +static bool read_path(struct parse_state *state, struct strbuf* buf);
+> +static bool read_type(struct parse_state *state, struct strbuf* buf);
+> +
+> +static bool read_decimal(struct parse_state *state, size_t *res)
+> +{
+> +	size_t orig_offset = state->offset;
+> +
+> +	*res = 0;
+> +	while (true) {
+> +		char ch = parse_state__read(state);
+> +
+> +		if (ch >= '0' && ch <= '9') {
+> +			*res = (*res * 10) + ch - '0';
+> +			continue;
+> +		}
+> +		state->offset--;
+> +		break;
+> +	}
+> +
+> +	pr_debug3("Read decimal: %zu\n", *res);
+> +	/* Something was read if the offset changed. */
+> +	return orig_offset != state->offset;
+> +}
+> +
+> +static bool read_hexadecimal(struct parse_state *state, size_t *res)
+> +{
+> +	size_t orig_offset = state->offset;
+> +
+> +	*res = 0;
+> +	while (true) {
+> +		char ch = parse_state__read(state);
+> +
+> +		if (ch >= '0' && ch <= '9') {
+> +			*res = (*res * 16) + ch - '0';
+> +			continue;
+> +		}
+> +		if (ch >= 'a' && ch <= 'f') {
+> +			*res = (*res * 16) + ch - 'a';
+> +			continue;
+> +		}
+> +		if (ch >= 'A' && ch <= 'F') {
+> +			*res = (*res * 16) + ch - 'A';
+> +			continue;
+> +		}
+> +		state->offset--;
+> +		break;
+> +	}
+> +
+> +	pr_debug3("Read hexadecimal: %zu\n", *res);
+> +	/* Something was read if the offset changed. */
+> +	return orig_offset != state->offset;
+> +}
+> +
+> +static bool read_base62(struct parse_state *state, size_t *res)
+> +{
+> +	char ch;
+> +
+> +	*res = 0;
+> +	ch = parse_state__read(state);
+> +	if (ch == '_') {
+> +		pr_debug3("Read base62: %zu\n", *res);
+> +		return true;
+> +	}
+> +	do {
+> +		if (ch >= '0' && ch <= '9') {
+> +			*res = (*res * 62) + ch - '0';
+> +		} else if (ch >= 'a' && ch <= 'z') {
+> +			*res = (*res * 62) + ch - 'a' + 10;
+> +		} else 	if (ch >= 'A' && ch <= 'Z') {
+> +			*res = (*res * 62) + ch - 'A' + 36;
+> +		} else {
+> +			pr_debug3("Unexpected base62 character '%c'\n", ch);
+> +			return false;
+> +		}
+> +		ch = parse_state__read(state);
+> +	} while (ch != '_');
+> +
+> +	/* The empty string encodes 0, 0_ encodes 1, etc. so adjust up. */
+> +	(*res)++;
+> +
+> +	/* Something was read if the offset changed. */
+> +	pr_debug3("Read base62: %zu\n", *res);
+> +	return true;
+> +}
+> +
+> +static bool read_optional_base62(struct parse_state *state, char 
+> opt_char,
+> +				 size_t *res, bool *has_res)
+> +{
+> +	*has_res = parse_state__peek(state) == opt_char;
+> +	if (!*has_res)
+> +		return true;
+> +
+> +	state->offset++;
+> +	return read_base62(state, res);
+> +}
+> +
+> +struct identifier {
+> +	const char *bytes;
+> +	size_t len;
+> +	size_t disambiguator;
+> +	bool has_disambiguator;
+> +};
+> +
+> +static bool read_identifier(struct parse_state *state, struct 
+> identifier *identifier)
+> +{
+> +	size_t num;
+> +
+> +	pr_debug3("Reading identifier\n");
+> +	if (!read_optional_base62(state, 's', &identifier->disambiguator,
+> +				  &identifier->has_disambiguator))
+> +		return false;
+> +	
+> +	if (parse_state__peek(state) == 'u') {
+> +		pr_warning("Punycode encoding ignored\n");
+> +		state->offset++;
+> +	}
+> +	if (!read_decimal(state, &num)) {
+> +		pr_debug3("Bad undisambiguated-identifier decimal-number\n");
+> +		return false;
+> +	}
+> +	if (parse_state__peek(state) == '_') {
+> +		/* Optional separator. */
+> +		state->offset++;
+> +	}
+> +	identifier->bytes = &state->str[state->offset];
+> +	identifier->len = num;
+> +	if (state->offset + num > state->len) {
+> +		pr_debug3("Identifier beyond end of input\n");
+> +		return false;
+> +	}
+> +	state->offset += num;
+> +	pr_debug3("Read identifer '%.*s'\n", (int)identifier->len, 
+> identifier->bytes);
+> +	return true;
+> +}
+> +
+> +static bool read_crate_root(struct parse_state *state, struct strbuf* 
+> buf)
+> +{
+> +	struct identifier identifier;
+> +
+> +	pr_debug3("Reading crate-root\n");
+> +	if (!read_identifier(state, &identifier))
+> +		return false;
+> +
+> +	if (strbuf_addf(buf, "%.*s", (int)identifier.len, identifier.bytes))
+> +		return false;
+> +	if (show_crate_root_disambiguator && identifier.has_disambiguator) {
+> +		/* Ignore failure. */
+> +		strbuf_addf(buf, "[%zu]", identifier.disambiguator);
+> +	}
+> +	return true;
+> +}
+> +
+> +static bool read_impl_path(struct parse_state *state, struct strbuf* 
+> buf)
+> +{
+> +	size_t disambiguator;
+> +	bool has_disambiguator;
+> +
+> +	pr_debug3("Reading impl-path\n");
+> +
+> +	/* Ignore impl-path. */
+> +	if (!read_optional_base62(state, 's', &disambiguator, 
+> &has_disambiguator))
+> +		return false;
+> +	return read_path(state, buf);
+> +}
+> +
+> +static bool read_tuple(struct parse_state *state, struct strbuf* buf)
+> +{
+> +	bool first = true;
+> +
+> +	pr_debug3("Reading tuple\n");
+> +
+> +	if (strbuf_addch(buf, '('))
+> +		return false;
+> +	while (parse_state__peek(state) != 'E') {
+> +		if (!first && strbuf_addstr(buf, ", "))
+> +			return false;
+> +		first = false;
+> +		if (!read_type(state, buf))
+> +			return false;
+> +	}
+> +	state->offset++;
+> +	return strbuf_addch(buf, ')') == 0;
+> +}
+> +
+> +static bool read_backref(struct parse_state *state, size_t *new_offset)
+> +{
+> +	size_t backref_offset = state->offset - 1;
+> +
+> +	if (!read_base62(state, new_offset))
+> +		return false;
+> +
+> +	if (*new_offset >= backref_offset) {
+> +		pr_debug3("Backref offset (%zu) should be before current offset 
+> (%zu)\n",
+> +			  *new_offset, backref_offset);
+> +		return false;
+> +	}
+> +	pr_debug3("Read backref to %zu\n", *new_offset);
+> +	return true;
+> +}
+> +
+> +static bool read_const(struct parse_state *state, struct strbuf* buf)
+> +{
+> +	size_t const_data;
+> +	char ch = parse_state__read(state);
+> +	bool negative = false, bracket;
+> +
+> +	pr_debug3("Reading const\n");
+> +
+> +	if (ch == 'p')
+> +		return strbuf_addch(buf, '_') == 0;
+> +
+> +	if (ch == 'B') {
+> +		size_t backref_off, saved_off;
+> +
+> +		if (!read_backref(state, &backref_off))
+> +			return false;
+> +		saved_off = state->offset;
+> +		state->offset = backref_off;
+> +		if (!read_const(state, buf))
+> +			return false;
+> +		state->offset = saved_off;
+> +		return true;
+> +	}
+> +
+> +	bracket = !(ch >= 'a' && ch <= 'z');
+> +
+> +	if (bracket) {
+> +		state->offset--;
+> +		if (!read_type(state, buf))
+> +			return false;
+> +	}
+> +	if (parse_state__peek(state) == 'n') {
+> +		state->offset++;
+> +		negative = true;
+> +	}
+> +
+> +	if (!read_hexadecimal(state, &const_data))
+> +		return false;
+> +
+> +	if (parse_state__read(state) != '_') {
+> +		pr_debug3("Missing const-data terminator\n");
+> +		return false;
+> +	}
+> +	if (bracket && strbuf_addstr(buf, "::<"))
+> +		return false;
+> +	if (ch == 'b') {
+> +		if (strbuf_addstr(buf, const_data ? "true" : "false"))
+> +			return false;
+> +	} else if (ch == 'c') {
+> +		if (strbuf_addch(buf, const_data))
+> +			return false;
+> +	} else {
+> +		if (negative) {
+> +			if (strbuf_addch(buf, '-'))
+> +				return false;
+> +		}
+> +		if (strbuf_addf(buf, "%zu", const_data))
+> +			return false;
+> +	}
+> +	return !bracket || strbuf_addch(buf, '>') == 0;
+> +}
+> +
+> +
+> +static bool read_type(struct parse_state *state, struct strbuf* buf)
+> +{
+> +	char ch = parse_state__read(state);
+> +
+> +	pr_debug3("Reading type '%c'\n", ch);
+> +
+> +	switch (ch) {
+> +		/* Basic types. */
+> +	case 'a':
+> +		return strbuf_addstr(buf, "i8") == 0;
+> +	case 'b':
+> +		return strbuf_addstr(buf, "bool") == 0;
+> +	case 'c':
+> +		return strbuf_addstr(buf, "char") == 0;
+> +	case 'd':
+> +		return strbuf_addstr(buf, "f64") == 0;
+> +	case 'e':
+> +		return strbuf_addstr(buf, "str") == 0;
+> +	case 'f':
+> +		return strbuf_addstr(buf, "f32") == 0;
+> +	case 'h':
+> +		return strbuf_addstr(buf, "u8") == 0;
+> +	case 'i':
+> +		return strbuf_addstr(buf, "isize") == 0;
+> +	case 'j':
+> +		return strbuf_addstr(buf, "usize") == 0;
+> +	case 'l':
+> +		return strbuf_addstr(buf, "i32") == 0;
+> +	case 'm':
+> +		return strbuf_addstr(buf, "u32") == 0;
+> +	case 'n':
+> +		return strbuf_addstr(buf, "i128") == 0;
+> +	case 'o':
+> +		return strbuf_addstr(buf, "u128") == 0;
+> +	case 's':
+> +		return strbuf_addstr(buf, "i16") == 0;
+> +	case 't':
+> +		return strbuf_addstr(buf, "u16") == 0;
+> +	case 'u':
+> +		return strbuf_addstr(buf, "()") == 0;
+> +	case 'v':
+> +		return strbuf_addstr(buf, "...") == 0;
+> +	case 'x':
+> +		return strbuf_addstr(buf, "i64") == 0;
+> +	case 'y':
+> +		return strbuf_addstr(buf, "u64") == 0;
+> +	case 'z':
+> +		return strbuf_addstr(buf, "!") == 0;
+> +	case 'p':
+> +		return strbuf_addstr(buf, "_") == 0;
+> +		/* Array type. */
+> +	case 'A':
+> +		if (strbuf_addch(buf, '['))
+> +			return false;
+> +		if (!read_type(state, buf))
+> +			return false;
+> +		if (strbuf_addstr(buf, "; "))
+> +			return false;
+> +		if (!read_const(state, buf))
+> +			return false;
+> +		return strbuf_addch(buf, ']') == 0;
+> +		/*  Slice. */
+> +	case 'S':
+> +		if (strbuf_addch(buf, '['))
+> +			return false;
+> +		if (!read_type(state, buf))
+> +			return false;
+> +		return strbuf_addch(buf, ']') == 0;
+> +		/*  Tuple. */
+> +	case 'T':
+> +		return read_tuple(state, buf);
+> +		/* Mutable reference/reference. */
+> +	case 'Q':
+> +	case 'R': {
+> +		size_t lifetime;
+> +		bool has_lifetime;
+> +
+> +		if (strbuf_addstr(buf, ch == 'Q' ? "&mut " : "&"))
+> +			return false;
+> +		if (!read_optional_base62(state, 'L', &lifetime, &has_lifetime))
+> +			return false;
+> +		if (has_lifetime) {
+> +			/* TODO: proper lifetime naming. */
+> +			if (strbuf_addf(buf, "'_%zu ", lifetime))
+> +				return false;
+> +		}
+> +		return read_type(state, buf);
+> +	}
+> +		/* Constant raw pointer. */
+> +	case 'P':
+> +		if (strbuf_addstr(buf, "*const "))
+> +			return false;
+> +		return read_type(state, buf);
+> +		/* Mutable raw pointer. */
+> +	case 'O':
+> +		if (strbuf_addstr(buf, "*mut "))
+> +			return false;
+> +		return read_type(state, buf);
+> +		/* Function pointer. */
+> +	case 'F': {
+> +		size_t binder;
+> +		bool has_binder;
+> +
+> +		if (!read_optional_base62(state, 'G', &binder, &has_binder))
+> +			return false;
+> +		if (parse_state__peek(state) == 'U') {
+> +			/* Unsafe, ignored. */
+> +			state->offset++;
+> +		}
+> +		if (parse_state__peek(state) == 'K') {
+> +			/* ABI. */
+> +			state->offset++;
+> +			if (parse_state__peek(state) == 'C') {
+> +				state->offset++;
+> +			} else {
+> +				struct identifier abi; /* Ignored. */
+> +
+> +				if (!read_identifier(state, &abi))
+> +					return false;
+> +			}
+> +		}
+> +		if (!read_tuple(state, buf))
+> +			return false;
+> +		if (strbuf_addstr(buf, " -> "))
+> +			return false;
+> +		return read_type(state, buf);		
+> +	}
+> +		/* Trait object. */
+> +	case 'D':
+> +		pr_err("Todo: rust trait demangling\n");
+> +		return false;
+> +		/* Path. */
+> +	case 'C':
+> +	case 'M':
+> +	case 'X':
+> +	case 'Y':
+> +	case 'N':
+> +	case 'I':
+> +		state->offset--;
+> +		return read_path(state, buf);
+> +		/* Backref. */
+> +	case 'B': {
+> +		size_t backref_off, saved_off;
+> +
+> +		if (!read_backref(state, &backref_off))
+> +			return false;
+> +		saved_off = state->offset;
+> +		state->offset = backref_off;
+> +		if (!read_type(state, buf))
+> +			return false;
+> +		state->offset = saved_off;
+> +		return true;
+> +	}
+> +	default:
+> +		pr_err("Unexpected type character '%c'\n", ch);
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool read_inherent_impl(struct parse_state *state, struct 
+> strbuf* buf)
+> +{
+> +	struct strbuf impl_path_buf = STRBUF_INIT; /* Ignored. */
+> +
+> +	pr_debug3("Reading inherent-impl\n");
+> +
+> +	if (!read_impl_path(state, &impl_path_buf))
+> +		goto err_out;
+> +	if (strbuf_addch(buf, '<'))
+> +		goto err_out;
+> +	if (!read_type(state, buf))
+> +		goto err_out;
+> +	return strbuf_addch(buf, '>') == 0;
+> +err_out:
+> +	strbuf_release(&impl_path_buf);
+> +	return false;
+> +}
+> +
+> +static bool read_trait_impl(struct parse_state *state __maybe_unused, 
+> struct strbuf* buf __maybe_unused)
+> +{
+> +	struct strbuf impl_path_buf = STRBUF_INIT; /* Ignored. */
+> +
+> +	pr_debug3("Reading trait-impl\n");
+> +
+> +	if (!read_impl_path(state, &impl_path_buf))
+> +		goto err_out;
+> +	if (strbuf_addch(buf, '<'))
+> +		goto err_out;
+> +	if (!read_type(state, buf))
+> +		goto err_out;
+> +	if (strbuf_addstr(buf, " as "))
+> +		goto err_out;
+> +	if (!read_path(state, buf))
+> +		goto err_out;
+> +	return strbuf_addch(buf, '>') == 0;
+> +err_out:
+> +	strbuf_release(&impl_path_buf);
+> +	return false;
+> +}
+> +
+> +static bool read_trait_def(struct parse_state *state __maybe_unused, 
+> struct strbuf* buf __maybe_unused)
+> +{
+> +	pr_debug3("Reading trait-def\n");
+> +
+> +	if (strbuf_addch(buf, '<'))
+> +		return false;
+> +	if (!read_type(state, buf))
+> +		return false;
+> +	if (strbuf_addstr(buf, " as "))
+> +		return false;
+> +	if (!read_path(state, buf))
+> +		return false;
+> +	return strbuf_addch(buf, '>') == 0;
+> +}
+> +
+> +static bool read_nested_path(struct parse_state *state __maybe_unused, 
+> struct strbuf* buf __maybe_unused)
+> +{
+> +	struct identifier identifier;
+> +	size_t orig_buf_len = buf->len;
+> +	char namespace = parse_state__read(state);
+> +
+> +	pr_debug3("Reading nested-path\n");
+> +
+> +	if (!read_path(state, buf))
+> +		return false;
+> +	if (strbuf_addstr(buf, "::"))
+> +		return false;
+> +	if (!read_identifier(state, &identifier))
+> +		return false;
+> +	if (strbuf_addf(buf, "%.*s", (int)identifier.len, identifier.bytes))
+> +		return false;
+> +	if (namespace == 'C' || namespace == 'S') {
+> +		if (strbuf_addstr(buf, namespace == 'C' ? "{closure#" : "{shim#"))
+> +			return false;
+> +		if (identifier.has_disambiguator) {
+> +			if (strbuf_addf(buf, "%zu}", identifier.disambiguator + 1))
+> +				return false;
+> +		} else {
+> +			if (strbuf_addstr(buf, "0}"))
+> +				return false;
+> +		}
+> +	} else if (namespace >= 'a' && namespace <= 'z') {
+> +		/* Internal namespace character, don't show. */
+> +	} else if (namespace >= 'A' && namespace <= 'Z') {
+> +		if (strbuf_addch(buf, namespace))
+> +			return false;
+> +	} else {
+> +		pr_debug3("Bad namespace '%c'\n", namespace);
+> +		return false;
+> +	}
+> +
+> +	pr_debug3("Read nested-path '%.*s'\n", (int)(buf->len - 
+> orig_buf_len), &buf->buf[orig_buf_len]);
+> +	return true;
+> +}
+> +
+> +static bool read_generic_args(struct parse_state *state 
+> __maybe_unused, struct strbuf* buf __maybe_unused)
+> +{
+> +	bool first = true;
+> +	char ch;
+> +
+> +	pr_debug3("Reading generic-args\n");
+> +
+> +	if (!read_path(state, buf))
+> +		return false;
+> +	if (strbuf_addstr(buf, "::<"))
+> +		return false;
+> +
+> +	ch = parse_state__read(state);
+> +	while (ch != 'E') {
+> +		if (!first && strbuf_addstr(buf, ", "))
+> +			return false;
+> +		first = false;
+> +		if (ch == 'L') {
+> +			size_t lifetime;
+> +
+> +			if (!read_base62(state, &lifetime))
+> +				return false;
+> +			/* TODO: proper lifetime naming. */
+> +			if (strbuf_addf(buf, "'_%zu ", lifetime))
+> +				return false;
+> +		} else if (ch == 'K') {
+> +			if (!read_const(state, buf))
+> +				return false;
+> +		} else {
+> +			state->offset--;
+> +			if (!read_type(state, buf))
+> +				return false;
+> +		}
+> +		ch = parse_state__read(state);
+> +	}
+> +	return strbuf_addch(buf, '>') == 0;
+> +}
+> +
+> +static bool read_path(struct parse_state *state, struct strbuf* buf)
+> +{
+> +	char ch = parse_state__read(state);
+> +
+> +	switch (ch) {
+> +	case 'C':
+> +		return read_crate_root(state, buf);
+> +	case 'M':
+> +		return read_inherent_impl(state, buf);
+> +	case 'X':
+> +		return read_trait_impl(state, buf);
+> +	case 'Y':
+> +		return read_trait_def(state, buf);
+> +	case 'N':
+> +		return read_nested_path(state, buf);
+> +	case 'I':
+> +		return read_generic_args(state, buf);
+> +	case 'B': {
+> +		size_t backref_off, saved_off;
+> +
+> +		if (!read_backref(state, &backref_off))
+> +			return false;
+> +		saved_off = state->offset;
+> +		state->offset = backref_off;
+> +		if (!read_path(state, buf))
+> +			return false;
+> +		state->offset = saved_off;
+> +		return true;
+> +	}
+> +	default:
+> +		pr_err("Unexpected path character '%c'\n", ch);
+> +		return false;
+> +	}
+> +}
+> +
+> +char *rust_v0_bdemangle_sym(const char *str)
+
+Typo? Extra `b`.
+
+> +{
+> +	struct parse_state state = {
+> +		.str = str,
+> +		.len = strlen(str),
+> +		.offset = 0,
+> +	};
+> +	struct strbuf buf = STRBUF_INIT;
+> +	size_t encoding_version;
+> +
+> +	pr_debug3("Rust parsing of '%s'\n", str);
+> +
+> +	/* Check "_R" prefix is present. */
+> +	if (parse_state__read(&state) != '_' || parse_state__read(&state) != 
+> 'R')
+> +		goto err_out;
+> +
+> +	/* Strip initial "_R" to make backrefs easier to decode. */
+> +	state.str += 2;
+> +	state.len -= 2;
+> +	state.offset = 0;
+> +
+> +	/* Read optional encoding version. */
+> +	if (read_decimal(&state, &encoding_version))
+> +		pr_debug("Rust encoding version %zu\n", encoding_version);
+> +
+> +	if (!read_path(&state, &buf))
+> +		goto err_out;
+> +
+> +	/* Ignore optional instantiating create. */
+> +	/* Ignore optional vendor specific suffix. */
+> +
+> +	return strbuf_detach(&buf, NULL);
+> +err_out:
+> +	strbuf_release(&buf);
+> +	return NULL;
+> +}
+> diff --git a/tools/perf/util/demangle-rust-v0.h 
+> b/tools/perf/util/demangle-rust-v0.h
+> new file mode 100644
+> index 000000000000..d342c5319748
+> --- /dev/null
+> +++ b/tools/perf/util/demangle-rust-v0.h
+> @@ -0,0 +1,7 @@
+> +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+> +#ifndef __PERF_DEMANGLE_RUST_V0
+> +#define __PERF_DEMANGLE_RUST_V0 1
+> +
+> +char *rust_v0_demangle_sym(const char *str);
+> +
+> +#endif /* __PERF_DEMANGLE_RUST_V0 */
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 121db55b9709..41707425fc1a 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -16,6 +16,7 @@
+>  #include "demangle-ocaml.h"
+>  #include "demangle-java.h"
+>  #include "demangle-rust.h"
+> +#include "demangle-rust-v0.h"
+>  #include "machine.h"
+>  #include "vdso.h"
+>  #include "debug.h"
+> @@ -285,7 +286,7 @@ char *cxx_demangle_sym(const char *str 
+> __maybe_unused, bool params __maybe_unuse
+> 
+>  static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+>  {
+> -	char *demangled = NULL;
+> +	char *demangled;
+> 
+>  	/*
+>  	 * We need to figure out if the object was created from C++ sources
+> @@ -293,23 +294,25 @@ static char *demangle_sym(struct dso *dso, int 
+> kmodule, const char *elf_name)
+>  	 * to it...
+>  	 */
+>  	if (!want_demangle(dso__kernel(dso) || kmodule))
+> -		return demangled;
+> +		return NULL;
+> 
+>  	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+> -	if (demangled == NULL) {
+> -		demangled = ocaml_demangle_sym(elf_name);
+> -		if (demangled == NULL) {
+> -			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+> -		}
+> +	if (demangled) {
+> +		/* Legacy rust demangling input is already C++ demangled. */
+> +		if (rust_is_mangled(demangled))
+> +			rust_demangle_sym(demangled);
+
+In util/demangle-rust.c, I see:
+
+     * INPUT:
+     *     sym: symbol that has been through BFD-demangling
+
+Perhaps double check that cxxabi is sufficient and update the comment?
+
+> +		return demangled;
+>  	}
+> -	else if (rust_is_mangled(demangled))
+> -		/*
+> -		    * Input to Rust demangling is the BFD-demangled
+> -		    * name which it Rust-demangles in place.
+> -		    */
+> -		rust_demangle_sym(demangled);
+> 
+> -	return demangled;
+> +	demangled = rust_v0_demangle_sym(elf_name);
+> +	if (demangled)
+> +		return demangled;
+> +
+> +	demangled = ocaml_demangle_sym(elf_name);
+> +	if (demangled)
+> +		return demangled;
+> +
+> +	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+>  }
+> 
+>  struct rel_info {
+> -- 
+> 2.48.1.262.g85cc9f2d1e-goog
