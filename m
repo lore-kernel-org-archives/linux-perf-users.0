@@ -1,427 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CBE14A099;
-	Thu, 30 Jan 2025 03:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFCC129A78
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 04:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738206329; cv=none; b=KrqNXhEOs9FHm6d9iQcHLls63yAdf5/+CrPHXcd6yunv6RiufICtDPMtEZQRfo5osbJKUApSXkS2UoDxGAwrXP6Sxu2zfZUldtCmtJWgVY+MilEeqUU/DRXl3WoyBeki6EDUKrBofMSfQhCu4QMZACoZ7MJ4u9VhMVTwn9Y9n2Y=
+	t=1738211363; cv=none; b=Vf2A8o+Zuwk/8fdQE2i3U75L22K3spb9v4xb7W8YNeIvZ8ak9QnM9gg+up3NgBEca5L9Vozhmaqv1jOdDAa6MZBhXR7M6psbal78wyN4Hx2wVAiDkxHX523lJn7tTRFEdfGC1AVO9GP7flJ8Nm2wTJSTcVgD85fdE3pu717W3yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738206329; c=relaxed/simple;
-	bh=dRxF3rM6JIJWJD4qa40Fr5ggE1pW+YJ48ZOzx1uwT8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j2dP9tXiwHia6kl7k6wNXpMGj9i9inbR+AM2XPPvMFExlv+bQ80gDsRB+hwoAPhr8EddG7RkKE0r92njN5LWCY1vTOikTbiyXUje4ny00qDXWuu/SnVsKEPuXOIShtk0PIgD7jgUKcE8KdPeN6uG2OblMUR8XPAWCL7B7X3qc1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZG+LDcQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738211363; c=relaxed/simple;
+	bh=XkZUUAzYq2VdR+SnU8f+2BvINi56b1QAaZY8AfY1MOU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=bo4MJYsVtA86HNFSt63XNdWzYbdsjhKP8A1eZBmebNFnyUb2E55wDWoYAq0SQsxQ9EqGE97E1xPPE1bRU2RH9sKtAED9HyrzPgzhAovIEVG6Z19DLj3fV0hQPjL3r3wNH5iEVErlmrev4eiEIBIw1Xi+bfEXbyNrC5aCJDvC2p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQ7KLfq2; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZG+LDcQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178F6C4CEE8;
-	Thu, 30 Jan 2025 03:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738206328;
-	bh=dRxF3rM6JIJWJD4qa40Fr5ggE1pW+YJ48ZOzx1uwT8c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BZG+LDcQJRQFX9PJgABI52KkbYqoetvh3wtQ0HT5hagbTAnDmU9xiY5h3JGliuIN4
-	 dWvesis2fzRrXjlYwF/sJ/o22i3AB2+XJkV3nZycnBQomS9Hx3YlDvb/SLPBVau3fc
-	 vm39fii8uZg/Nd4o4OAUCKjPZ32i6s3yK1PtB4HT2wBvBueC/UYvoyF98wM0y3WTpH
-	 JTTST5iw7SDad02pRbddOnlroDKMgqnoxNpMtGFeXM9uAjQpCZTgrPrQM6637d+jXt
-	 JWzDbANXG8YQPLnjFUfaFUg6UN4Ofl6ns20DxtznaMIJ44wVOLsUJy+VAHsWMVuY2L
-	 F9KUPOTpJiAmQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v2 4/4] perf trace: Add --summary-mode option
-Date: Wed, 29 Jan 2025 19:05:25 -0800
-Message-ID: <20250130030525.1482498-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-In-Reply-To: <20250130030525.1482498-1-namhyung@kernel.org>
-References: <20250130030525.1482498-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQ7KLfq2"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so61585ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 20:29:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738211361; x=1738816161; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u1i1AoIWx1zHF/T3IVKv0v+96uu83BILbTfH1uwyBWc=;
+        b=rQ7KLfq2l3HPyhJ1y3kYhlFOXNHsiA3wxPXW+LQjkZXlLpdZfvYJ5cNQxAryVv+gMc
+         ru4Rjr/i7/KQz+QQMKspNN1Lm8XLjyg0A+s0Dw2CPRUR+L/uv6hee/ccZtt/k90YYJZv
+         /IXGcAfR+8wyFF0/ysA/qTZIkoKoUT5Ek4t5AEKnWYulBg+c9XYT4W8ia0paNCXGpjvj
+         0QTDhLu/ZxK3LOb+74nwBUf8djS6FGzf29BuPb8FKnaR1Y0bgy3Y4khPDuTWmpXsiwPE
+         n+P3JQD0JYFQGrPaFjCxJW9biP/fgCb0HhYRxZUkBaqkjfZPt+WikopXxPR33ZbfMtyh
+         jcEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738211361; x=1738816161;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u1i1AoIWx1zHF/T3IVKv0v+96uu83BILbTfH1uwyBWc=;
+        b=efTJR90z7Lui5zzr6wuWcQ2rY5KhM4NxWacLt59JDVITjgZwrkuDFx1F09qnM2ZPo1
+         FIZFJt+5FfOJ9aYIMPpyQSjTlaIRU2ZB3zzts6b3bBjExwtrw1x4nx3bMyIRlBB1upOZ
+         PwfQUJTTHze9LP8ybHecKPiLlguj8domGZ4Hm/8gsoztScCUYgzKayBo7qqcM/AcjSLf
+         G2XuGf9XzWwLrI47jp/9IjaoHJCbjs7KgsJR0H/Vfn226wejdORK4pmD6LgMZp05mig6
+         vEk05GNEtZ3PeXiwLCwFNqSThMQT2j2JxgmRcXDcSIaOeRoGDixr1o2ViB7bzMHy4wSX
+         BMCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVE0XjAQWyvT7W77wQe3Nu3sP7K4wexm7YkhNvRvW9mmhm8CbzGCN5SYd1K+bTz3aW+eEDz0nxlvkH6KWYMGjUO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFTnIix1yoyf2a/TTQbj4vMsQowoN/kQ8AimNQW/QA51ZRjKPi
+	KLzTashFGN+K3Ykum/YciHsSjaxP3ah/8wu0SSaIzSkZjBeiyhYSs/HfwetN0AkMimUavDLY3np
+	d09BkRMC5dsfC21e8e/j56Ulek5Q3tLdSWefV
+X-Gm-Gg: ASbGncvOWUCxTrE5NVihvdg/9MM46WTKEwoQzwAUYe4u4r9SIhqrihVGXdbx+ZN5K4Y
+	i18xE7s/WwKxBkOrN83rLH3prsLSb6DMxlRFeRm0FRcVXwh+l0dAREAKXEPwzLimNLzSpedTpPA
+	==
+X-Google-Smtp-Source: AGHT+IEYsVtf4DjQppZMbQavtkgPg4WZGbr0zycmlgAXq2lMzIZmP6fyTP9R31pyi/iDI2WTzbV6XtapfuC+Hu6PrQw=
+X-Received: by 2002:a05:6e02:1cad:b0:3a7:683e:2fb0 with SMTP id
+ e9e14a558f8ab-3d00982fee9mr2299615ab.6.1738211360828; Wed, 29 Jan 2025
+ 20:29:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250123074659.698123-1-irogers@google.com>
+In-Reply-To: <20250123074659.698123-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 20:29:09 -0800
+X-Gm-Features: AWEUYZljnPgcRGAk0urV782d1e9WAh2Wm_5PCIIo0Lu0bAdkjglskriRJhacY-4
+Message-ID: <CAP-5=fXtRFiZ=MAVbiifbc-1G3Dg-oxPweV9KqLTDrMK-hkL8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf hwmon related improvements
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The --summary-mode option will select how to show the syscall summary at
-the end.  By default, it'll show the summary for each thread and it's
-the same as if --summary-mode=thread is passed.
+On Wed, Jan 22, 2025 at 11:47=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Try to do less scanning of files/directories with or without hwmon
+> PMUs. Don't merge all events with the same name, only merge those on
+> the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
+> suffix or wildcard matching. Refactor uniquification so the evsels
+> with the same name as other evsels in the evlist are uniquified.
+>
+> v2: Rename ignore suffix PMU name matching that is really a
+>     wildcard/prefix match. Use a proper ignore suffix when not merging
+>     counters purely on name.
+>
+> Ian Rogers (5):
+>   perf evsel: Reduce scanning core PMUs in is_hybrid
+>   perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
+>   perf pmu: Rename name matching for no suffix or wildcard variants
+>   perf stat: Don't merge counters purely on name
+>   perf stat: Changes to event name uniquification
 
-The other option is to show total summary, which is --summary-mode=total.
-I'd like to have this instead of a separate option like --total-summary
-because we may want to add a new summary mode (by cgroup) later.
+Hi, this series (v1 sent over 2 weeks ago) fixes broken event
+aggregation where all events with the same name on different PMUs are
+merged. For example, arm_cmn/cycles/ would be merged with
+armv8_pmuv3/cycles/ if parsed through a glob. The bug was introduced
+by:
+https://lore.kernel.org/r/20221018020227.85905-16-namhyung@kernel.org
+and the hope was this would be in v6.14 and the Fixes tag would see
+the changes backported.
 
-  $ sudo ./perf trace -as --summary-mode=total sleep 1
+Thanks,
+Ian
 
-   Summary of events:
-
-   total, 21580 events
-
-     syscall            calls  errors  total       min       avg       max       stddev
-                                       (msec)    (msec)    (msec)    (msec)        (%)
-     --------------- --------  ------ -------- --------- --------- ---------     ------
-     epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
-     futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
-     poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
-     ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
-     clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
-     epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
-     nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
-     ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
-     recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
-     write               1393      0     2.854     0.001     0.002     0.017      1.79%
-     read                1063    100     2.236     0.000     0.002     0.083      5.11%
-     ...
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-trace.txt |   4 +
- tools/perf/builtin-trace.c              | 129 ++++++++++++++++++++----
- 2 files changed, 114 insertions(+), 19 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index fb3d2af33844c06b..887dc37773d0f4d6 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -150,6 +150,10 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	To be used with -s or -S, to show stats for the errnos experienced by
- 	syscalls, using only this option will trigger --summary.
- 
-+--summary-mode=mode::
-+	To be used with -s or -S, to select how to show summary.  By default it'll
-+	show the syscall summary by thread.  Possible values are: thread, total.
-+
- --tool_stats::
- 	Show tool stats such as number of times fd->pathname was discovered thru
- 	hooking the open syscall return + vfs_getname or via reading /proc/pid/fd, etc.
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1d32ef2b05ae8c1c..ad5899076cfa590d 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -139,6 +139,12 @@ struct syscall_fmt {
- 	bool	   hexret;
- };
- 
-+enum summary_mode {
-+	SUMMARY__NONE = 0,
-+	SUMMARY__BY_TOTAL,
-+	SUMMARY__BY_THREAD,
-+};
-+
- struct trace {
- 	struct perf_tool	tool;
- 	struct syscalltbl	*sctbl;
-@@ -177,14 +183,17 @@ struct trace {
- 		pid_t		*entries;
- 		struct bpf_map  *map;
- 	}			filter_pids;
-+	struct hashmap		*syscall_stats;
- 	double			duration_filter;
- 	double			runtime_ms;
-+	unsigned long		pfmaj, pfmin;
- 	struct {
- 		u64		vfs_getname,
- 				proc_getname;
- 	} stats;
- 	unsigned int		max_stack;
- 	unsigned int		min_stack;
-+	enum summary_mode	summary_mode;
- 	int			raw_augmented_syscalls_args_size;
- 	bool			raw_augmented_syscalls;
- 	bool			fd_path_disabled;
-@@ -2499,18 +2508,23 @@ struct syscall_stats {
- };
- 
- static void thread__update_stats(struct thread *thread, struct thread_trace *ttrace,
--				 int id, struct perf_sample *sample, long err, bool errno_summary)
-+				 int id, struct perf_sample *sample, long err,
-+				 struct trace *trace)
- {
-+	struct hashmap *syscall_stats = ttrace->syscall_stats;
- 	struct syscall_stats *stats = NULL;
- 	u64 duration = 0;
- 
--	if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
-+	if (trace->summary_mode == SUMMARY__BY_TOTAL)
-+		syscall_stats = trace->syscall_stats;
-+
-+	if (!hashmap__find(syscall_stats, id, &stats)) {
- 		stats = zalloc(sizeof(*stats));
- 		if (stats == NULL)
- 			return;
- 
- 		init_stats(&stats->stats);
--		if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
-+		if (hashmap__add(syscall_stats, id, stats) < 0) {
- 			free(stats);
- 			return;
- 		}
-@@ -2524,7 +2538,7 @@ static void thread__update_stats(struct thread *thread, struct thread_trace *ttr
- 	if (err < 0) {
- 		++stats->nr_failures;
- 
--		if (!errno_summary)
-+		if (!trace->errno_summary)
- 			return;
- 
- 		err = -err;
-@@ -2816,7 +2830,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
- 	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
- 
- 	if (trace->summary)
--		thread__update_stats(thread, ttrace, id, sample, ret, trace->errno_summary);
-+		thread__update_stats(thread, ttrace, id, sample, ret, trace);
- 
- 	if (!trace->fd_path_disabled && sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
- 		trace__set_fd_pathname(thread, ret, ttrace->filename.name);
-@@ -3254,10 +3268,13 @@ static int trace__pgfault(struct trace *trace,
- 	if (ttrace == NULL)
- 		goto out_put;
- 
--	if (evsel->core.attr.config == PERF_COUNT_SW_PAGE_FAULTS_MAJ)
-+	if (evsel->core.attr.config == PERF_COUNT_SW_PAGE_FAULTS_MAJ) {
- 		ttrace->pfmaj++;
--	else
-+		trace->pfmaj++;
-+	} else {
- 		ttrace->pfmin++;
-+		trace->pfmin++;
-+	}
- 
- 	if (trace->summary_only)
- 		goto out;
-@@ -3416,6 +3433,7 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
- }
- 
- static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
-+static size_t trace__fprintf_total_summary(struct trace *trace, FILE *fp);
- 
- static bool evlist__add_vfs_getname(struct evlist *evlist)
- {
-@@ -4328,6 +4346,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		goto out_delete_evlist;
- 	}
- 
-+	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
-+		trace->syscall_stats = alloc_syscall_stats();
-+		if (trace->syscall_stats == NULL)
-+			goto out_delete_evlist;
-+	}
-+
- 	evlist__config(evlist, &trace->opts, &callchain_param);
- 
- 	if (forks) {
-@@ -4488,8 +4512,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
- 
- 	if (!err) {
--		if (trace->summary)
--			trace__fprintf_thread_summary(trace, trace->output);
-+		if (trace->summary) {
-+			if (trace->summary_mode == SUMMARY__BY_TOTAL)
-+				trace__fprintf_total_summary(trace, trace->output);
-+			else
-+				trace__fprintf_thread_summary(trace, trace->output);
-+		}
- 
- 		if (trace->show_tool_stats) {
- 			fprintf(trace->output, "Stats:\n "
-@@ -4501,6 +4529,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	}
- 
- out_delete_evlist:
-+	delete_syscall_stats(trace->syscall_stats);
- 	trace__symbols__exit(trace);
- 	evlist__free_syscall_tp_fields(evlist);
- 	evlist__delete(evlist);
-@@ -4628,6 +4657,12 @@ static int trace__replay(struct trace *trace)
- 			evsel->handler = trace__pgfault;
- 	}
- 
-+	if (trace->summary_mode == SUMMARY__BY_TOTAL) {
-+		trace->syscall_stats = alloc_syscall_stats();
-+		if (trace->syscall_stats == NULL)
-+			goto out;
-+	}
-+
- 	setup_pager();
- 
- 	err = perf_session__process_events(session);
-@@ -4638,12 +4673,13 @@ static int trace__replay(struct trace *trace)
- 		trace__fprintf_thread_summary(trace, trace->output);
- 
- out:
-+	delete_syscall_stats(trace->syscall_stats);
- 	perf_session__delete(session);
- 
- 	return err;
- }
- 
--static size_t trace__fprintf_threads_header(FILE *fp)
-+static size_t trace__fprintf_summary_header(FILE *fp)
- {
- 	size_t printed;
- 
-@@ -4666,19 +4702,19 @@ static int entry_cmp(const void *e1, const void *e2)
- 	return entry1->msecs > entry2->msecs ? -1 : 1;
- }
- 
--static struct syscall_entry *thread__sort_stats(struct thread_trace *ttrace)
-+static struct syscall_entry *syscall__sort_stats(struct hashmap *syscall_stats)
- {
- 	struct syscall_entry *entry;
- 	struct hashmap_entry *pos;
- 	unsigned bkt, i, nr;
- 
--	nr = ttrace->syscall_stats->sz;
-+	nr = syscall_stats->sz;
- 	entry = malloc(nr * sizeof(*entry));
- 	if (entry == NULL)
- 		return NULL;
- 
- 	i = 0;
--	hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
-+	hashmap__for_each_entry(syscall_stats, pos, bkt) {
- 		struct syscall_stats *ss = pos->pvalue;
- 		struct stats *st = &ss->stats;
- 
-@@ -4693,14 +4729,14 @@ static struct syscall_entry *thread__sort_stats(struct thread_trace *ttrace)
- 	return entry;
- }
- 
--static size_t thread__dump_stats(struct thread_trace *ttrace,
--				 struct trace *trace, FILE *fp)
-+static size_t syscall__dump_stats(struct trace *trace, FILE *fp,
-+				  struct hashmap *syscall_stats)
- {
- 	size_t printed = 0;
- 	struct syscall *sc;
- 	struct syscall_entry *entries;
- 
--	entries = thread__sort_stats(ttrace);
-+	entries = syscall__sort_stats(syscall_stats);
- 	if (entries == NULL)
- 		return 0;
- 
-@@ -4710,7 +4746,7 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
- 	printed += fprintf(fp, "                                     (msec)    (msec)    (msec)    (msec)        (%%)\n");
- 	printed += fprintf(fp, "   --------------- --------  ------ -------- --------- --------- ---------     ------\n");
- 
--	for (size_t i = 0; i < ttrace->syscall_stats->sz; i++) {
-+	for (size_t i = 0; i < syscall_stats->sz; i++) {
- 		struct syscall_entry *entry = &entries[i];
- 		struct syscall_stats *stats = entry->stats;
- 
-@@ -4747,6 +4783,17 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
- 	return printed;
- }
- 
-+static size_t thread__dump_stats(struct thread_trace *ttrace,
-+				 struct trace *trace, FILE *fp)
-+{
-+	return syscall__dump_stats(trace, fp, ttrace->syscall_stats);
-+}
-+
-+static size_t system__dump_stats(struct trace *trace, FILE *fp)
-+{
-+	return syscall__dump_stats(trace, fp, trace->syscall_stats);
-+}
-+
- static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trace *trace)
- {
- 	size_t printed = 0;
-@@ -4800,7 +4847,7 @@ static int trace_nr_events_cmp(void *priv __maybe_unused,
- 
- static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
- {
--	size_t printed = trace__fprintf_threads_header(fp);
-+	size_t printed = trace__fprintf_summary_header(fp);
- 	LIST_HEAD(threads);
- 
- 	if (machine__thread_list(trace->host, &threads) == 0) {
-@@ -4815,6 +4862,27 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
- 	return printed;
- }
- 
-+static size_t trace__fprintf_total_summary(struct trace *trace, FILE *fp)
-+{
-+	size_t printed = trace__fprintf_summary_header(fp);
-+
-+	printed += fprintf(fp, " total, ");
-+	printed += fprintf(fp, "%lu events", trace->nr_events);
-+
-+	if (trace->pfmaj)
-+		printed += fprintf(fp, ", %lu majfaults", trace->pfmaj);
-+	if (trace->pfmin)
-+		printed += fprintf(fp, ", %lu minfaults", trace->pfmin);
-+	if (trace->sched)
-+		printed += fprintf(fp, ", %.3f msec\n", trace->runtime_ms);
-+	else if (fputc('\n', fp) != EOF)
-+		++printed;
-+
-+	printed += system__dump_stats(trace, fp);
-+
-+	return printed;
-+}
-+
- static int trace__set_duration(const struct option *opt, const char *str,
- 			       int unset __maybe_unused)
- {
-@@ -5086,6 +5154,23 @@ static int trace__parse_cgroups(const struct option *opt, const char *str, int u
- 	return 0;
- }
- 
-+static int trace__parse_summary_mode(const struct option *opt, const char *str,
-+				     int unset __maybe_unused)
-+{
-+	struct trace *trace = opt->value;
-+
-+	if (!strcmp(str, "thread")) {
-+		trace->summary_mode = SUMMARY__BY_THREAD;
-+	} else if (!strcmp(str, "total")) {
-+		trace->summary_mode = SUMMARY__BY_TOTAL;
-+	} else {
-+		pr_err("Unknown summary mode: %s\n", str);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- static int trace__config(const char *var, const char *value, void *arg)
- {
- 	struct trace *trace = arg;
-@@ -5233,6 +5318,9 @@ int cmd_trace(int argc, const char **argv)
- 		    "Show all syscalls and summary with statistics"),
- 	OPT_BOOLEAN(0, "errno-summary", &trace.errno_summary,
- 		    "Show errno stats per syscall, use with -s or -S"),
-+	OPT_CALLBACK(0, "summary-mode", &trace, "mode",
-+		     "How to show summary: select thread (default) or total",
-+		     trace__parse_summary_mode),
- 	OPT_CALLBACK_DEFAULT('F', "pf", &trace.trace_pgfaults, "all|maj|min",
- 		     "Trace pagefaults", parse_pagefaults, "maj"),
- 	OPT_BOOLEAN(0, "syscalls", &trace.trace_syscalls, "Trace syscalls"),
-@@ -5529,8 +5617,11 @@ int cmd_trace(int argc, const char **argv)
- 		trace.summary = trace.summary_only;
- 
- 	/* Keep exited threads, otherwise information might be lost for summary */
--	if (trace.summary)
-+	if (trace.summary) {
- 		symbol_conf.keep_exited_threads = true;
-+		if (trace.summary_mode == SUMMARY__NONE)
-+			trace.summary_mode = SUMMARY__BY_THREAD;
-+	}
- 
- 	if (output_name != NULL) {
- 		err = trace__open_output(&trace, output_name);
--- 
-2.48.1.262.g85cc9f2d1e-goog
-
+>  tools/perf/pmu-events/empty-pmu-events.c |   8 +-
+>  tools/perf/pmu-events/jevents.py         |   8 +-
+>  tools/perf/tests/pmu.c                   |  85 ++++----
+>  tools/perf/util/evsel.c                  |   4 +-
+>  tools/perf/util/evsel.h                  |   1 +
+>  tools/perf/util/parse-events.c           |   2 +-
+>  tools/perf/util/pmu.c                    | 252 ++++++++++++++++-------
+>  tools/perf/util/pmu.h                    |   7 +-
+>  tools/perf/util/pmus.c                   | 144 ++++++++-----
+>  tools/perf/util/stat-display.c           | 111 +++++++---
+>  tools/perf/util/stat.c                   |  13 +-
+>  11 files changed, 418 insertions(+), 217 deletions(-)
+>
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
+>
