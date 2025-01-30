@@ -1,239 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC44431;
-	Thu, 30 Jan 2025 05:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBB11494B2
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 06:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738215213; cv=none; b=D+snZYZygE0TInsZ8itSWnRzL4eTSDR19AJlkcctArAydzC+8UgUlyA5qK3rX/RF4QChAKtgdokigydy7TXlGZawiMN/rWXlSVKl0kdJCTIq2ZLix0VEhbrczTYbrE0z+NtBVif4RT5VN5Ydy3fzFhaOd6HVnkgGFNZP2ydrzio=
+	t=1738216998; cv=none; b=D36Miy1sKKy3eV/q9hCVU0hoSAtmNMIeOYLpjKNZ0Quyw7ByZx7HLNbG9yDBIyAkzxomAq/rRTkdi4AGoJPo1/gO5uKiqYlTZEwyZAnuskwDMq/DBRaRhYZ/j3pKHXzYn7CC1SoKMjF2tC1BTjMVHAPWPLApyizEcCOvmD4kadk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738215213; c=relaxed/simple;
-	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gABD+7M0qJWsUDyKVV7TGxA63goxZhNtvRYLpY+FZjMl4M4dm/qm31YlN9yZd0EOD0iZ4XS8JCe30u3kJ1Fd5eC33ap+3aYq8K8yBevPG4ZJHlLzKew3QlCfdGc8Jt5HoUkGzxvAbjMXkE8TzU1DwPRZLt1MyvYUt66V6mb9haE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlEUSZkM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738216998; c=relaxed/simple;
+	bh=oWGw9zHIGHKeMe5UKOq/ra6FucSB6XTYH8/uPHPEy7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JicroQCJdiqaOKVQlZVTk+GKS7bquncUbzJFKA9uRWirH0NRS4zrJBhbikkaytuqZhlC/f9a5MmDWj7b2fs3KaG45IBLCATdH/NERJuxP+54OZYGAQXp8ZamG1rZ/kULSeKlB0nENYSBE/jtPluf3/NNFXeRo0DCCT4Y+k/JRA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hoiodxtz; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlEUSZkM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC85C4CED2;
-	Thu, 30 Jan 2025 05:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738215212;
-	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LlEUSZkM/CMeOK3mA9N5OwUv9ImhdqmB8aAxUCZkB2h5lWIqqj51vZ8RXe8Go0qQt
-	 LFk3NclON4hWNm3umt6ZPirPIZQwNS20RoeXqzYlbF2bNooUeIbS43Zxk03FfPNYg3
-	 8S+tkFNCyAFF2KeVd9O7T+CWml8ckyeWW6J7gj/0iefsBYhrcxKMEiLK1PFeDugnsE
-	 obr/IUZ2E3/u4uI+BzekBPfJIO8n3YEc5oRXVeXD01uCG6IV2PAQBJlTJ5IHXjVfrS
-	 JemfoeieBSciOAvY5GRLSl46ApnGFGHl7Cp3YupmIpGoL3lMCVzkcsZa3BOcX+Gfja
-	 MlnyymLJUddZA==
-Date: Wed, 29 Jan 2025 21:33:31 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3 5/7] perf report: Add latency output field
-Message-ID: <Z5sPK-doMUvHS9v4@google.com>
-References: <cover.1737971364.git.dvyukov@google.com>
- <e78918ee05f9aaa623f0cb402e3c53e7b8a6185b.1737971364.git.dvyukov@google.com>
- <Z5m1DqB2SK_Cj3iC@google.com>
- <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hoiodxtz"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so97675ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 22:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738216995; x=1738821795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K2Q6UcIc4PGXAsHOkvLpiqRFBRRcsEgb9coO2t90kXo=;
+        b=HoiodxtzK3vEdtiFD77wegRTEUk5RXzvce2GG0hNYRnf3V81BvnVL3vx1TZKbfrV5V
+         RnnRBqr0SkmQrGjeW6tfogBqae6cbqkmuW7q1IWlGRdHEJWSEAM7HYRh24IObbpfkNsM
+         O8teUfveknrUaK7SpUG2rbq7ha7CKI8+huVnMJnyUgrPCYLn8nXxLFuddXSWhETyDcFF
+         tgWHUvX6tom8Dy1LrHnDglSBsh2DGRgkHCobR6caIwzBLLUwfkuwa7VPfIYMC/TwUTnJ
+         vdguLbXWW5T5fg0aKFQOEppUWfLzKVkTCkPkrTZsVhe4Ut38OannmN9iWiv1plZ+Qe37
+         xNZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738216995; x=1738821795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K2Q6UcIc4PGXAsHOkvLpiqRFBRRcsEgb9coO2t90kXo=;
+        b=CQKiLByafksiUGxI++CJFeO4266U/+lSfUNEnkEmdG2IGaplunWk6JJtV0aY6OSEYq
+         Zij4VQN/ozQzO7pe3pL3TF7UZy5TFZzAg/DlI9RPy9kt1oHtVmjG91zCAWfXFdNP4poM
+         kBCRGa6g9MJSq4nA0+R0Bevsa4irXN6k2INxHhJiI2WFBLxDne7QdWkHQIZ9otETwQc4
+         anGYYCicYhBqJfpyM7LcqYiwsycwGm9rVC4zkPQlj14SJ5IkYja91G4jMUTd8l0dTEQh
+         INshGwh+jizCmqAUstL5c/gPovgXdeOIMkbem+AMKrFX/npXgTAp0aALVHci7ACYxgMA
+         fgTw==
+X-Forwarded-Encrypted: i=1; AJvYcCU31outIEjJ6bqrGOPLHVx7Ib8D6zUlazkZ46ZdPr2FsmyyWZYaVJyRzdPw0ThxL6G3Bs6Nig1S3YCyLx7O3qzT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+iCCpeM7enYEV75y4OP8IoW2HBVYZ+2feD6VRrIuKK8EnghwR
+	9AcTieVKIZjsA04e9iTCq3kesWfX4652G+nceCd1R7oeO9YPZazuRLgMYOfAlA3OEEmFZMJinxM
+	/X5e/Xejrrtq+3Lq/NPMEkg6efTMWEOoTV/ix
+X-Gm-Gg: ASbGncvy9OF04bQl3zUqbKytmKMPR3KwrJ/OdCEePMDlTaS0ZM4dQBycgFUV8tcZ1Fh
+	uuaC31CRRbxjLR1W1LptAIe5uOMGGwAmt18/nH+dDwX+vFSnXI3BFVLlRciUsCEpViwKMDgDrwA
+	==
+X-Google-Smtp-Source: AGHT+IFHzVhMXvUnn9VwRutFPGkQv1pkOqgyHubMbKWWcsDCfVwiS1XBYCxqWpL1TyAKTQZ8GVoXBMEXCjw+qobWal8=
+X-Received: by 2002:a05:6e02:144e:b0:3a7:e301:a1f2 with SMTP id
+ e9e14a558f8ab-3d00a937f4amr1330055ab.15.1738216995337; Wed, 29 Jan 2025
+ 22:03:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
+References: <20250109222109.567031-5-irogers@google.com> <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
+ <Z5sLIiU7D6GwpWY1@google.com>
+In-Reply-To: <Z5sLIiU7D6GwpWY1@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Jan 2025 22:03:03 -0800
+X-Gm-Features: AWEUYZl872MFdgcO8clNe045ru989pjy5VODtjPfzJKZqjiort1kw_xtslpQuuA
+Message-ID: <CAP-5=fXHuR37Q-1qhZx_wLeSTh6k-T1DrV0EquDuLEpwnHa21A@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 07:55:55AM +0100, Dmitry Vyukov wrote:
-> On Wed, 29 Jan 2025 at 05:56, Namhyung Kim <namhyung@kernel.org> wrote:
+On Wed, Jan 29, 2025 at 9:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Jan 29, 2025 at 05:16:58PM -0800, Ian Rogers wrote:
+> > On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > > I think the behavior should be:
+> > > > >
+> > > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > > >   cpu/cycles/ -> sysfs or json
+> > > > >   cpu/cpu-cycles/ -> sysfs or json
+> > > >
+> > > > So I disagree as if you add a PMU to an event name the encoding
+> > > > shouldn't change:
+> > > > 1) This historically was perf's behavior.
+> > >
+> > > Well.. I'm not sure about the history.  I believe the logic I said ab=
+ove
+> > > is the historic and (I think) right behavior.
 > >
-> > On Mon, Jan 27, 2025 at 10:58:52AM +0100, Dmitry Vyukov wrote:
-> > > Latency output field is similar to overhead, but represents overhead for
-> > > latency rather than CPU consumption. It's re-scaled from overhead by dividing
-> > > weight by the current parallelism level at the time of the sample.
-> > > It effectively models profiling with 1 sample taken per unit of wall-clock
-> > > time rather than unit of CPU time.
-> > >
-> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: linux-perf-users@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > ---
-> > >  tools/perf/ui/browsers/hists.c  | 27 ++++++++++------
-> > >  tools/perf/ui/hist.c            | 29 ++++++++++-------
-> > >  tools/perf/util/addr_location.h |  2 ++
-> > >  tools/perf/util/event.c         |  6 ++++
-> > >  tools/perf/util/events_stats.h  |  2 ++
-> > >  tools/perf/util/hist.c          | 55 ++++++++++++++++++++++++---------
-> > >  tools/perf/util/hist.h          | 12 +++++++
-> > >  tools/perf/util/sort.c          |  2 ++
-> > >  8 files changed, 100 insertions(+), 35 deletions(-)
-> > >
-> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > > index 49ba82bf33918..35c10509b797f 100644
-> > > --- a/tools/perf/ui/browsers/hists.c
-> > > +++ b/tools/perf/ui/browsers/hists.c
-> > > @@ -1226,7 +1226,7 @@ int __hpp__slsmg_color_printf(struct perf_hpp *hpp, const char *fmt, ...)
-> > >       return ret;
-> > >  }
-> > >
-> > > -#define __HPP_COLOR_PERCENT_FN(_type, _field)                                \
-> > > +#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)                      \
-> > >  static u64 __hpp_get_##_field(struct hist_entry *he)                 \
-> > >  {                                                                    \
-> > >       return he->stat._field;                                         \
-> > > @@ -1238,10 +1238,10 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
-> > >                               struct hist_entry *he)                  \
-> > >  {                                                                    \
-> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_##_field, " %*.2f%%",   \
-> > > -                     __hpp__slsmg_color_printf, true);               \
-> > > +                     __hpp__slsmg_color_printf, _fmttype);           \
-> > >  }
-> > >
-> > > -#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)                    \
-> > > +#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)          \
-> > >  static u64 __hpp_get_acc_##_field(struct hist_entry *he)             \
-> > >  {                                                                    \
-> > >       return he->stat_acc->_field;                                    \
-> > > @@ -1262,15 +1262,18 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
-> > >               return ret;                                             \
-> > >       }                                                               \
-> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_acc_##_field,           \
-> > > -                     " %*.2f%%", __hpp__slsmg_color_printf, true);   \
-> > > +                     " %*.2f%%", __hpp__slsmg_color_printf,          \
-> > > +                     _fmttype);                                      \
-> > >  }
-> > >
-> > > -__HPP_COLOR_PERCENT_FN(overhead, period)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_us, period_us)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys)
-> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us)
-> > > -__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period)
-> > > +__HPP_COLOR_PERCENT_FN(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
-> > > +__HPP_COLOR_ACC_PERCENT_FN(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
-> > >
-> > >  #undef __HPP_COLOR_PERCENT_FN
-> > >  #undef __HPP_COLOR_ACC_PERCENT_FN
-> > > @@ -1279,6 +1282,8 @@ void hist_browser__init_hpp(void)
-> > >  {
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD].color =
-> > >                               hist_browser__hpp_color_overhead;
-> > > +     perf_hpp__format[PERF_HPP__LATENCY].color =
-> > > +                             hist_browser__hpp_color_latency;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_SYS].color =
-> > >                               hist_browser__hpp_color_overhead_sys;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_US].color =
-> > > @@ -1289,6 +1294,8 @@ void hist_browser__init_hpp(void)
-> > >                               hist_browser__hpp_color_overhead_guest_us;
-> > >       perf_hpp__format[PERF_HPP__OVERHEAD_ACC].color =
-> > >                               hist_browser__hpp_color_overhead_acc;
-> > > +     perf_hpp__format[PERF_HPP__LATENCY_ACC].color =
-> > > +                             hist_browser__hpp_color_latency_acc;
-> > >
-> > >       res_sample_init();
-> > >  }
-> > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> > > index 34fda1d5eccb4..22e31d835301e 100644
-> > > --- a/tools/perf/ui/hist.c
-> > > +++ b/tools/perf/ui/hist.c
-> > > @@ -27,9 +27,10 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
-> > >                           int nr_samples, const char *fmt, int len,
-> > >                           hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> > >  {
-> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY) {
-> > >               double percent = 0.0;
-> > > -             u64 total = hists__total_period(hists);
-> > > +             u64 total = fmtype == PERF_HPP_FMT_TYPE__PERCENT ? hists__total_period(hists) :
-> > > +                     hists__total_latency(hists);
-> > >
-> > >               if (total)
-> > >                       percent = 100.0 * val / total;
-> > > @@ -128,7 +129,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > >                                 print_fn, fmtype);
-> > >       }
-> > >
-> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
-> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY)
-> > >               len -= 2; /* 2 for a space and a % sign */
-> > >       else
-> > >               len -= 1;
-> > > @@ -472,11 +473,13 @@ __HPP_ENTRY_AVERAGE_FN(_type, _field)                                   \
-> > >  __HPP_SORT_AVERAGE_FN(_type, _field)
-> > >
-> > >  HPP_PERCENT_FNS(overhead, period)
-> > > +HPP_PERCENT_FNS(latency, latency)
-> > >  HPP_PERCENT_FNS(overhead_sys, period_sys)
-> > >  HPP_PERCENT_FNS(overhead_us, period_us)
-> > >  HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys)
-> > >  HPP_PERCENT_FNS(overhead_guest_us, period_guest_us)
-> > >  HPP_PERCENT_ACC_FNS(overhead_acc, period)
-> > > +HPP_PERCENT_ACC_FNS(latency_acc, latency)
-> > >
-> > >  HPP_RAW_FNS(samples, nr_events)
-> > >  HPP_RAW_FNS(period, period)
-> > > @@ -548,11 +551,13 @@ static bool hpp__equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-> > >
-> > >  struct perf_hpp_fmt perf_hpp__format[] = {
-> > >       HPP__COLOR_PRINT_FNS("Overhead", overhead, OVERHEAD),
-> > > +     HPP__COLOR_PRINT_FNS("Latency", latency, LATENCY),
-> > >       HPP__COLOR_PRINT_FNS("sys", overhead_sys, OVERHEAD_SYS),
-> > >       HPP__COLOR_PRINT_FNS("usr", overhead_us, OVERHEAD_US),
-> > >       HPP__COLOR_PRINT_FNS("guest sys", overhead_guest_sys, OVERHEAD_GUEST_SYS),
-> > >       HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
-> > >       HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
-> > > +     HPP__COLOR_ACC_PRINT_FNS("Latency", latency_acc, LATENCY_ACC),
+> > You're wrong as you are describing the behavior post:
+> > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> > commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+> > somehow without legacy event fall backs which Intel added with a PMU
+> > for hybrid.
 > >
-> > Hmm.. two latency fields have the same name.  Maybe better to
-> > distinguish them but "Children Latency" or "Total Latency" would be
-> > too long.. :(
-> >
-> > I think it's mostly ok since users will see them together with overhead
-> > columns and it'll give the context ("Children" or "Self").  But it can
-> > e called with -F or -s option to manually select those columns only.
-> 
-> Yes, the motivation for calling them the same was the column name length.
-> 
-> And, with the default flags it looks reasonable:
-> 
->   Children  Latency      Self   Latency  Command
-> 
-> The fields seem to be selected based on the names in sort.c rather
-> than these names, e.g. I can do:
-> 
-> perf report -F latency_children,overhead_children,latency,overhead,symbol
-> 
-> and get:
-> 
-> Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
->   Latency  Children   Latency  Overhead  Symbol
-> +  19.35%    18.69%     0.00%     0.00%  [k] 0000000000000000
-> +   4.86%     4.21%     4.86%     4.21%  [.] htab_find_slot_with_hash
-> +   4.15%     4.48%     0.00%     0.00%  [.] 0xffffffff9ce012a6
-> 
-> So it seems to be possible to select these columns as needed.
+> > The behavior in this patch series is best for RISC-V, presumably ARM
+> > (particularly for Apple M? CPUs), carries ARM and Intel's tags,
+> > implements the behavior Arnaldo asked for, and solves the
+> > inconsistency that I think is fundamentally wrong in the tool that PMU
+> > names shouldn't matter on an event name (an inconsistency my past
+> > fixes introduced). It is also part of solving other problems:
+> > https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3=
+-0-64894d7e16d5@rivosinc.com/
+>
+> So you think the below behavior is preferred, right?
+>
+>   cycles -> cpu/cycles/ (or whatever PMU name) -> sysfs or json
+>
+> And there's no way to use legacy event encodings anymore?
 
-Right, it's possible to use -F latency,latency_children,symbol and get:
+This is absolutely the right thing to do! If sysfs/json knows better
+than to allow a legacy event named cycles, advertises it, then perf
+should select it. Not doing this was the cause of the ARM Apple M?
+breakage - because their PMUs looked uncore before hybrid fixes and so
+weren't known previously to accept legacy events and always used the
+sysfs/json encodings in preference. Why would or not having the PMU in
+the event name imply a different and sometimes known broken encoding?
+And then in the perf stat uniquification we can rename the event to be
+the version with a different encoding. It is madness to me.
 
-  Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
-    Latency  Latency  Symbol
-  +   0.00%   19.35%  [k] 0000000000000000
-  +   4.86%    4.86%  [.] htab_find_slot_with_hash
-  +   0.00%    4.15%  [.] 0xffffffff9ce012a6
+If a user wants to force a legacy event, even though most typically
+the driver is saying it knows better, they can use a raw event
+encoding or in the case of cycles its alias cpu-cycles. If there
+really is a use-case for using legacy encodings, we could introduce
+new legacy-cpu and legacy-cache PMUs that advertise the events, but
+then the wildcard behavior would be weird.
+
+To be clear, I do not know of a single use-case where the legacy
+encodings are actually wanted when sysfs/json have an encoding. The
+opposite is very much true, that legacy encodings are not wanted -
+hence wanting the lowering of their priority everywhere originally by
+ARM to fix Apple M? and then by RISC-V.
+
+> >
+> > You've not pointed at anything wrong in the scheme that these patches
+> > introduce, and are supported by vendors, except that it is a behavior
+> > change. I can, and have, pointed at many issues with your proposal
+> > above and the current behavior. The behavior change came about to work
+> > around PMU bugs over 2 years ago but only partially did so. It makes
+> > sense to remedy this and for the clean, consistent behavior this
+> > series achieves. It is unfortunate that it is a behavior change, but
+> > the first step for that was made 2 years ago. I think it also makes
+> > sense that something self described as legacy is a lower priority and
+> > of the past (wrt event naming moving forward).
+>
+> I want to clarify the event parsing behavior and to find the right way
+> to deal with various cases.  I haven't followed the activities in this
+> area closely so I missed some changes in the past.  Maybe the problem
+> is that the behavior is complex and not clarified.  Hopefully we can
+> write it down in a doc.
+
+I think what is typical in the kernel is the source is the best
+documentation. By simplifying event parsing, for example,
+parse-events.y has been reduced from 952 lines (in v5.10) to 762 lines
+- so we're about 25% simpler whilst being more correct (I've fixed all
+the memory leaks, etc.) and avoiding expensive start-up costs, lazy
+initialization, etc.
+
+Having a single priority for which events are preferred, legacy vs
+sysfs/json with or without PMU, will further make the code base
+simpler and easy to understand.
 
 Thanks,
-Namhyung
-
+Ian
