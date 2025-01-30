@@ -1,419 +1,144 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCD61E1C22;
-	Thu, 30 Jan 2025 15:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE7D1EE7A9
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 16:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252055; cv=none; b=Xsn5HZ7SA4Prnqwy15Ld1HxIPSIoIJT+9ZU0n2Z3mW3B08VN/9GuMmo9iCKtnLLvcD1Yg+CR0UiyasmbWaw4OgbMm2vqFnqn84uGnP+mRwl+uve7op5cCrPfWE3uSc+2ELtyvxR9UbGGuW0f30JjX24BWecvfs5LvBLSoG2eWC0=
+	t=1738253095; cv=none; b=hvi87N0b3/5iMjv64atF+jqRgANN9He8AMpZ2feYj4IVXoRTC7WHhiKbVa1XvipFcPizZ6e4wyzButPPOq1LscAI03ZjthR0+h9IM16c7cbgUM7p8S0k4Axlj37QbC3/GOBock+QixjWhGlkzaqjsT+1wJV5ZNsWl2GZ138aAfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252055; c=relaxed/simple;
-	bh=01XrsdRjYQUuzCV/8wdpwj2XzP4Wh4EpvEWE2NQy0f4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=alcpzcTDCkgwPXXjEgej7xMGEo+AonwzfhqWRNMCF4wttvCKXDM0aPs3wAhJAdba4LfbT5NiRi6Z/OT7hWr4JNDgYNDSvzEhNgJDUdILUVlK02G1nGn+OTWL4wlpiCB0b8UrBMrVMkEsg13VqNNLIdytETf7nxS+RXOAxJS+hrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=najRa96U; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738253095; c=relaxed/simple;
+	bh=TJe6Oti42gnc8y1EQcc+dQyLmjTZ+8mL1WIqxrxJl+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mdaRHb2M+J/R8KFwWnTN/NWiYkUBbTfSOk//Xc0SL75j5LehXcA+gft+sHPNrgJYwnOdSZHt3bdJkhDtF7uuZanPW/nLJ4QphkYaOY1h8tpoRNCs/LqaYzLfQWn2N8KghER0KGsjxvjdwJQdxRaSP256S3RE6pWuUahjw6AVX6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cKwYzthx; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="najRa96U"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDM7FJ029090;
-	Thu, 30 Jan 2025 15:47:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=5yPzKn
-	HlC5hmM8wTxP5pPtfQVF3ni708QzQ5fobgJ6E=; b=najRa96UzVbBilid3CsBHt
-	QazQVQbeI5BOuiVuOdIoC9u+XxvP8soFoiWL2Qnrly3fznsNKAjOGDN0X2wefX0H
-	xtTpKCFZHVBh2MtES8Fll15cfyhvyXEYwTBP+MB6iabLCpqBkndct5Z8jP/drybF
-	p6NBtAJWw+i/lxRkOcgS6rfhPATzg/hx2FO7CNhpOtWV2ycznq4rDzM3olE21vEN
-	D57RgH8EcBBwMlC9kOrMkiGek6wIfLuf6cJgxjmHdgnvU8nTF7BYNcaLcStok/YK
-	6/hY0lSpsooXL526LYatMrvZMPzOiiyinO1r1SkgIJBJuLcSm7UaLlZCxR+haBpw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bn7r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 15:47:07 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UFh59W023787;
-	Thu, 30 Jan 2025 15:47:06 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bn7h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 15:47:06 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UCNZ8E019368;
-	Thu, 30 Jan 2025 15:47:05 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44db9n6rtm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 15:47:05 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UFl1Ml20578590
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 15:47:01 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3012320063;
-	Thu, 30 Jan 2025 15:47:01 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD2332004E;
-	Thu, 30 Jan 2025 15:47:00 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 15:47:00 +0000 (GMT)
-Message-ID: <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
-Date: Thu, 30 Jan 2025 16:47:00 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cKwYzthx"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so161115ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 08:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738253092; x=1738857892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pPh8SNBlC/ltN7aoJoUpkmZsEYqEPN3D9x/qQGTzeIE=;
+        b=cKwYzthx7AXGVUIPliXe0YSfrPqnna8fq5NfQwP4KP5N6kKdsMGa7aDB3PnnTc5vwX
+         WpSz0MJfj4kgSCxCFIbSChOpnPF6rogEe/+M67vnrVRAEAvulBmt8KDGTQUg61MlgDtW
+         nq4RLHugeL4Pv3sHUji46Qg3gnlAPxCrW4hWr0vvAAhudnpqneMfOe0ZFrC5wN2qqEou
+         5OKH4eLctAwKI3DmEvpf3di8k65eLUZAc1mQs62f4VChagzIpdDNlKLOnXENPNGnHgGh
+         7U5fR1JEG+wDcvYiNmH9x26g6/3M0FnChPmNh0Wi4Tq8lBBqzHAvaCcSLUPgmqXrusEJ
+         FMvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738253092; x=1738857892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pPh8SNBlC/ltN7aoJoUpkmZsEYqEPN3D9x/qQGTzeIE=;
+        b=c9HbkNCrmzyvfZYAc0eoa4dtJLpPmOjL6cTk9t7c6NuOo5r73KlvqKJN/mQzuyoV+v
+         /ly7M/SUYg/5nG/CikHZfLR12xuoJw/C0N7Xj/iK4XEUCmWFXDMNF10eRWXBUtSsl8dS
+         16e6tFNITyo3nlkhbaZOBsVQM4l7jtnGFnrfacn4Z5sJHnfyxYcbibJTmklmGqxJYBdf
+         R0X9lkTeGHlA2noUSj6FqvQdTKJfYpdNIUSBTcxkENVg0eCKJp53u6yNyqhSBTwDlUNs
+         frFNn/q89blsOKMxGYHtXGji0GWI/xTC7sYd2MY9/VcpXtVqgJBqRzFXFJmJG/Cs+02L
+         LdQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbE8OG2ZOWuuxElit6JoGe5CLwWyOGWsohZwfBom+IYrNTN1qm/IUbVmUxQAsIFJtr6LV58v2+I8Uc7btFnzcT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp5P5NBH/1LkFBYMz1Me7VT29F6Ww7iZZoMFc1As2J3okjeLyn
+	aqLiZ7mSafYDMB/dg4cp3fBcYjG2WhpbjaMlCpkjs/PEHfZV6xRejmvL9GZrG7R4P0xEoiP+7FO
+	/ilespjH88KOSTuxYcVSD8xnBpujbiSYQg0I3
+X-Gm-Gg: ASbGnctB7t09hR7YfpnAUaQtP8E7FOrDsinh1egeAczVALdmxwN9bDH+Y8WnwBu6rYS
+	cfq93a7JOL63n6mHuJSR96BSf31yoshMd9tAiX5ElqK32hekvzeooQ/E3me8qJgy0gi7XAbCv77
+	2JqpjQJFy8N21Lkk5NgjK76l+e
+X-Google-Smtp-Source: AGHT+IG7c0x2vFKVtywyaCppZA86z8ekLLQ96x1TooaThNI7KgpJ+D4Uyuvh7InPQo6ptw/4l1VWrvqVTOD0CFt3qN4=
+X-Received: by 2002:a05:6e02:1b03:b0:3a0:9f85:d768 with SMTP id
+ e9e14a558f8ab-3d00a939322mr3044115ab.11.1738253091750; Thu, 30 Jan 2025
+ 08:04:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 33ZbN1Z8UbxAnSiJj-nHHtlrR_ATxvRs
-X-Proofpoint-GUID: cuqClh0N30bGX-bPNVFxrv8rzrZyY5n6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
- clxscore=1015 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501300117
+References: <20250129193037.573431-1-irogers@google.com> <CAH5fLggW1i+eO1hhuHrX-LX7B4=M5a0-dZw4En990fD2biJU1A@mail.gmail.com>
+In-Reply-To: <CAH5fLggW1i+eO1hhuHrX-LX7B4=M5a0-dZw4En990fD2biJU1A@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 30 Jan 2025 08:04:40 -0800
+X-Gm-Features: AWEUYZmTsdBZGD_xIYxs_a-W4tsK3R9eMD5nOt35FP93TUvTvKxvB-J1ATa3eDI
+Message-ID: <CAP-5=fWcbrzNwD4NYzEUiY2d6f2cUYSMLMxZfh5we_82gVqD=A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> In preparation for using sframe to unwind user space stacks, add an
-> sframe_find() interface for finding the sframe information associated
-> with a given text address.
-> 
-> For performance, use user_read_access_begin() and the corresponding
-> unsafe_*() accessors.  Note that use of pr_debug() in uaccess-enabled
-> regions would break noinstr validation, so there aren't any debug
-> messages yet.  That will be added in a subsequent commit.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+On Thu, Jan 30, 2025 at 12:40=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+>
+> On Wed, Jan 29, 2025 at 8:30=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Implement symbol demangling based on:
+> > https://doc.rust-lang.org/rustc/symbol-mangling/index.html
+> >
+> > Ensure recommended demangling examples match the expectations in the
+> > documentation.
+> >
+> > This was requested by Daniel Xu <dxu@dxuuu.xyz> in:
+> > https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhy=
+nd6wvrsu@fcz6vrvepybb/
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > This change is on top of the 18 patch v3 series:
+> > https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com=
+/
+> > ---
+[..snip..]
+> > +static int test__demangle_rust(struct test_suite *test __maybe_unused,=
+ int subtest __maybe_unused)
+> > +{
+> > +       int ret =3D TEST_OK;
+> > +       char *buf =3D NULL;
+> > +       size_t i;
+> > +
+> > +       struct {
+> > +               const char *mangled, *demangled;
+> > +       } test_cases[] =3D {
+> > +               { "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs=
+15kBYyAo9fc_7mycrate",
+> > +                 "<std::path::PathBuf>::new" },
+>
+> I think you would normally not have the < and > here? I usually only
+> see that when you do <type as trait>.
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+Thanks Alice! The example comes from here:
+https://doc.rust-lang.org/rustc/symbol-mangling/v0.html#symbol-name
+so maybe it is just trying to show what the mangling can do rather
+than show an actual symbol. Fwiw, I did compare the output with that
+from rustfilt and it matches.
 
-> +struct sframe_fre {
-> +	unsigned int	size;
-> +	s32		ip_off;
+On the Rust bug for this change:
+https://github.com/rust-lang/rust/issues/60705
+it was pointed out that using:
+https://github.com/rust-lang/rustc-demangle/blob/main/crates/native-c/src/d=
+emangle.c
+that supports legacy and v0 symbols would probably be better than this
+patch. It would be nice if that code's author could contribute it.
 
-The IP offset (from function start) in the SFrame V2 FDE is unsigned:
+Thanks,
+Ian
 
-u32 ip_off;
-
-> +	s32		cfa_off;
-> +	s32		ra_off;
-> +	s32		fp_off;
-> +	u8		info;
-> +};
-
-...
-
-> +#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
-> +({									\
-> +	type __to;							\
-> +	unsafe_get_user(__to, (type __user *)from, label);		\
-> +	from += sizeof(__to);						\
-> +	to = (typeof(to))__to;							\
-> +})
-> +
-> +#define UNSAFE_GET_USER_INC(to, from, size, label)			\
-> +({									\
-> +	switch (size) {							\
-> +	case 1:								\
-> +		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
-> +		break;							\
-> +	case 2:								\
-> +		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
-> +		break;							\
-> +	case 4:								\
-> +		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
-> +		break;							\
-> +	default:							\
-> +		return -EFAULT;						\
-> +	}								\
-> +})
-
-This does not work for the signed SFrame fields, such as the FRE CFA,
-RA, and FP offsets, as it does not perform the required sign extension.
-One option would be to rename to UNSAFE_GET_USER_UNSIGNED_INC() and
-re-introduce UNSAFE_GET_USER_SIGNED_INC() using s8, s16, and s32.
-
-> +static __always_inline int __read_fre(struct sframe_section *sec,
-> +				      struct sframe_fde *fde,
-> +				      unsigned long fre_addr,
-> +				      struct sframe_fre *fre)
-> +{
-> +	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
-> +	unsigned char fre_type = SFRAME_FUNC_FRE_TYPE(fde->info);
-> +	unsigned char offset_count, offset_size;
-> +	s32 ip_off, cfa_off, ra_off, fp_off;
-
-The IP offset (from function start) in the SFrame V2 FRE is unsigned:
-
-u32 ip_off;
-s32 cfa_off, ra_off, fp_off;
-
-> +	unsigned long cur = fre_addr;
-> +	unsigned char addr_size;
-> +	u8 info;
-> +
-> +	addr_size = fre_type_to_size(fre_type);
-> +	if (!addr_size)
-> +		return -EFAULT;
-> +
-> +	if (fre_addr + addr_size + 1 > sec->fres_end)
-> +		return -EFAULT;
-> +
-> +	UNSAFE_GET_USER_INC(ip_off, cur, addr_size, Efault);
-
-Ok: The SFrame V2 FRE IP offset is unsigned u8, u16, or u32.
-
-> +	if (fde_type == SFRAME_FDE_TYPE_PCINC && ip_off > fde->func_size)
-> +		return -EFAULT;
-> +
-> +	UNSAFE_GET_USER_INC(info, cur, 1, Efault);
-
-Ok: The SFrame V2 FRE info word is one byte of data.
-
-> +	offset_count = SFRAME_FRE_OFFSET_COUNT(info);
-> +	offset_size  = offset_size_enum_to_size(SFRAME_FRE_OFFSET_SIZE(info));
-> +	if (!offset_count || !offset_size)
-> +		return -EFAULT;
-> +
-> +	if (cur + (offset_count * offset_size) > sec->fres_end)
-> +		return -EFAULT;
-> +
-> +	fre->size = addr_size + 1 + (offset_count * offset_size);
-> +
-> +	UNSAFE_GET_USER_INC(cfa_off, cur, offset_size, Efault);
-
-Issue: The SFrame V2 FRE CFA offset is signed s8, s16, or s32.  Sign
-extension required when storing in s32.
-
-> +	offset_count--;
-> +
-> +	ra_off = sec->ra_off;
-> +	if (!ra_off) {
-> +		if (!offset_count--)
-> +			return -EFAULT;
-> +
-> +		UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
-
-Issue: The SFrame V2 FRE RA offset is signed s8, s16, or s32.  Sign
-extension required when storing in s32.
-
-> +	}
-> +
-> +	fp_off = sec->fp_off;
-> +	if (!fp_off && offset_count) {
-> +		offset_count--;
-> +		UNSAFE_GET_USER_INC(fp_off, cur, offset_size, Efault);
-
-Issue: The SFrame V2 FRE FP offset is signed s8, s16, or s32.  Sign
-extension required when storing in s32.
-
-> +	}
-> +
-> +	if (offset_count)
-> +		return -EFAULT;
-> +
-> +	fre->ip_off		= ip_off;
-> +	fre->cfa_off		= cfa_off;
-> +	fre->ra_off		= ra_off;
-> +	fre->fp_off		= fp_off;
-> +	fre->info		= info;
-> +
-> +	return 0;
-> +
-> +Efault:
-> +	return -EFAULT;
-> +}
-> +
-> +static __always_inline int __find_fre(struct sframe_section *sec,
-> +				      struct sframe_fde *fde, unsigned long ip,
-> +				      struct unwind_user_frame *frame)
-> +{
-> +	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
-> +	struct sframe_fre *fre, *prev_fre = NULL;
-> +	struct sframe_fre fres[2];
-> +	unsigned long fre_addr;
-> +	bool which = false;
-> +	unsigned int i;
-> +	s32 ip_off;
-> +
-> +	ip_off = (s32)(ip - sec->sframe_start) - fde->start_addr;
-
-The IP offset (from function start) in the SFrame V2 FRE is unsigned.
-The function start address offset (from .sframe section begin) is signed.
-Therefore:
-
-u32 ip_off;
-
-ip_off = ip - (sec->sframe_start + fde->start_addr);
-
-> +
-> +	if (fde_type == SFRAME_FDE_TYPE_PCMASK)
-> +		ip_off %= fde->rep_size;
-
-Following is a patch with the suggested changes, that were required to
-make unwinding of user space using SFrame work on s390:
-
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index bba14c5fe0f5..ea2d491ea68f 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -19,7 +19,7 @@
-  
-  struct sframe_fre {
-  	unsigned int	size;
--	s32		ip_off;
-+	u32		ip_off;
-  	s32		cfa_off;
-  	s32		ra_off;
-  	s32		fp_off;
-@@ -136,7 +136,26 @@ static __always_inline int __find_fde(struct sframe_section *sec,
-  	to = (typeof(to))__to;							\
-  })
-  
--#define UNSAFE_GET_USER_INC(to, from, size, label)			\
-+#define UNSAFE_GET_USER_SIGNED_INC(to, from, size, label)		\
-+({									\
-+	switch (size) {							\
-+	case 1:								\
-+		__UNSAFE_GET_USER_INC(to, from, s8, label);		\
-+		break;							\
-+	case 2:								\
-+		__UNSAFE_GET_USER_INC(to, from, s16, label);		\
-+		break;							\
-+	case 4:								\
-+		__UNSAFE_GET_USER_INC(to, from, s32, label);		\
-+		break;							\
-+	default:							\
-+		dbg_sec_uaccess("%d: bad UNSAFE_GET_USER_SIGNED__INC size %u\n",\
-+				__LINE__, size);			\
-+		return -EFAULT;						\
-+	}								\
-+})
-+
-+#define UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label)		\
-  ({									\
-  	switch (size) {							\
-  	case 1:								\
-@@ -149,7 +168,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
-  		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
-  		break;							\
-  	default:							\
--		dbg_sec_uaccess("%d: bad UNSAFE_GET_USER_INC size %u\n",\
-+		dbg_sec_uaccess("%d: bad UNSAFE_GET_USER_UNSIGNED_INC size %u\n",\
-  				__LINE__, size);			\
-  		return -EFAULT;						\
-  	}								\
-@@ -163,7 +182,8 @@ static __always_inline int __read_fre(struct sframe_section *sec,
-  	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
-  	unsigned char fre_type = SFRAME_FUNC_FRE_TYPE(fde->info);
-  	unsigned char offset_count, offset_size;
--	s32 ip_off, cfa_off, ra_off, fp_off;
-+	u32 ip_off;
-+	s32 cfa_off, ra_off, fp_off;
-  	unsigned long cur = fre_addr;
-  	unsigned char addr_size;
-  	u8 info;
-@@ -179,14 +199,14 @@ static __always_inline int __read_fre(struct sframe_section *sec,
-  		return -EFAULT;
-  	}
-  
--	UNSAFE_GET_USER_INC(ip_off, cur, addr_size, Efault);
-+	UNSAFE_GET_USER_UNSIGNED_INC(ip_off, cur, addr_size, Efault);
-  	if (fde_type == SFRAME_FDE_TYPE_PCINC && ip_off > fde->func_size) {
-  		dbg_sec_uaccess("fre starts past end of function: ip_off=0x%x, func_size=0x%x\n",
-  				ip_off, fde->func_size);
-  		return -EFAULT;
-  	}
-  
--	UNSAFE_GET_USER_INC(info, cur, 1, Efault);
-+	UNSAFE_GET_USER_UNSIGNED_INC(info, cur, 1, Efault);
-  	offset_count = SFRAME_FRE_OFFSET_COUNT(info);
-  	offset_size  = offset_size_enum_to_size(SFRAME_FRE_OFFSET_SIZE(info));
-  	if (!offset_count || !offset_size) {
-@@ -200,7 +220,7 @@ static __always_inline int __read_fre(struct sframe_section *sec,
-  
-  	fre->size = addr_size + 1 + (offset_count * offset_size);
-  
--	UNSAFE_GET_USER_INC(cfa_off, cur, offset_size, Efault);
-+	UNSAFE_GET_USER_SIGNED_INC(cfa_off, cur, offset_size, Efault);
-  	offset_count--;
-  
-  	ra_off = sec->ra_off;
-@@ -210,13 +230,13 @@ static __always_inline int __read_fre(struct sframe_section *sec,
-  			return -EFAULT;
-  		}
-  
--		UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
-+		UNSAFE_GET_USER_SIGNED_INC(ra_off, cur, offset_size, Efault);
-  	}
-  
-  	fp_off = sec->fp_off;
-  	if (!fp_off && offset_count) {
-  		offset_count--;
--		UNSAFE_GET_USER_INC(fp_off, cur, offset_size, Efault);
-+		UNSAFE_GET_USER_SIGNED_INC(fp_off, cur, offset_size, Efault);
-  	}
-  
-  	if (offset_count) {
-@@ -247,9 +267,9 @@ static __always_inline int __find_fre(struct sframe_section *sec,
-  	unsigned long fre_addr;
-  	bool which = false;
-  	unsigned int i;
--	s32 ip_off;
-+	u32 ip_off;
-  
--	ip_off = (s32)(ip - sec->sframe_start) - fde->start_addr;
-+	ip_off = ip - (sec->sframe_start + fde->start_addr);
-  
-  	if (fde_type == SFRAME_FDE_TYPE_PCMASK)
-  		ip_off %= fde->rep_size;
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+> Alice
