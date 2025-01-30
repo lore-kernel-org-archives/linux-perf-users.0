@@ -1,119 +1,239 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E48155322
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 05:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC44431;
+	Thu, 30 Jan 2025 05:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738214940; cv=none; b=P2TEg6r1ceiaXyCr3YwhO3x3c1TiJiEfV9iYKpo3ie4C/VggbjutRScC6Om4tuNfVvMlMg7tnCEbSUt4ps+uCXefc2h9aLYmSJrzCOxo5iezR/5ecTEstaaH0YhLkx3p+oke2q2kdt4+HMyifDpL5vr60TzQcMlEu+pwrJ6pL94=
+	t=1738215213; cv=none; b=D+snZYZygE0TInsZ8itSWnRzL4eTSDR19AJlkcctArAydzC+8UgUlyA5qK3rX/RF4QChAKtgdokigydy7TXlGZawiMN/rWXlSVKl0kdJCTIq2ZLix0VEhbrczTYbrE0z+NtBVif4RT5VN5Ydy3fzFhaOd6HVnkgGFNZP2ydrzio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738214940; c=relaxed/simple;
-	bh=u6YkVusD/Op7sqnbvcd5wk9G8T1i8o928y5G6z6230Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j5jRlLzbb8a7bAVUcFLQruwh3wOBMfm5HHMMVVntMS567eiWifbMsZSFc1lf2huBB+GtYPhCzeE6G9GKpULJFgKygpuJrirMAhKLHWir/RV3KPf831Ca9Zgdwbceir8LOqF8tBtDqNV95G75AwYVdUPqr887S6PHVBRnuZMbI7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQbWsjfW; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1738215213; c=relaxed/simple;
+	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gABD+7M0qJWsUDyKVV7TGxA63goxZhNtvRYLpY+FZjMl4M4dm/qm31YlN9yZd0EOD0iZ4XS8JCe30u3kJ1Fd5eC33ap+3aYq8K8yBevPG4ZJHlLzKew3QlCfdGc8Jt5HoUkGzxvAbjMXkE8TzU1DwPRZLt1MyvYUt66V6mb9haE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlEUSZkM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQbWsjfW"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef6ef86607so3023503a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 21:28:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738214938; x=1738819738; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0ShH9N5Xn6KPuPHJxS7CDMVtVwzvZCJ66gbSr17EIs=;
-        b=bQbWsjfWDiiBc437PwMiY3W+X8Y/xqCxzfik1FMZyZUl6M51Ih+YjNrC0IK1t5UinZ
-         jtjjHe+P0wQY/0iE0OH7V8SxZHGwzgVNcXS9fSypWtb8S4xccVXxn43SK3n5TmrcKNNP
-         bo0Df8pSmrb2Gupahpnfp9nCXbNF1CP5gl3SsrP89voqqH0KC1FDT+NdVB1CcOcBuLtL
-         k7+18RZ8NQ1CO+sip31TCI+hbDQHfY9nR8+0OlEr+XivwEw2Zw4S5No0EwScsBrs88iG
-         n8YZArMzpR/rnOiypT4IvF17QjyDUX6P6GPL4QOyTqHOyvDYYneaNXuAEi40uYeTMRNq
-         XEnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738214938; x=1738819738;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0ShH9N5Xn6KPuPHJxS7CDMVtVwzvZCJ66gbSr17EIs=;
-        b=oiLpUmYMrzU8FVG+JwFBowkBTPAcS/B11XNPVBe1GUmvQd7O3/phMTXQ9GBboWTTVP
-         pWFuLilKdWPvun7hjwa4jinut/xIZLwfAAC1jyydD24uvrzNsxJg6k91g6ibEbBFLG7/
-         KHs+ejkMXZrelPWwC4w01/DVOzp+yq2/VzprWBsGiYKOVTOAybSkycoKy2mB1BUymrHb
-         9wEdIy8RrQmmAU+n4UreMH77ykPQClC3A0T/ADIgnu4PnpJQ1KgoPygqWFKGXJKQNg35
-         Wke7+x9XV7owwQwzFobAgV4SJaGOLDYvOjCj54VUGMdtFtWUFWVpbU4s3bSPWoYVsMcO
-         fFYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfQil3tVfG7qVN4+PeJpRoTeDvy/YbRqi1xL8yKP/sWTOOCPGw6HrInWPO4A3gsTaXhiLs1JKVjFnCFCRVyrMr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlYWm0nKcuzoJTb8VjHVHqUoxakyB1G6rJW2VmLZ9Evex5qOJl
-	bcPT0AwJVr9p/97kXEmXmvYZDfrYWe0iAzkBgVSwe1FXXxyUGUd8fgAOj+RUj75jcQBH+c27CoH
-	vGg==
-X-Google-Smtp-Source: AGHT+IGAa4sALHMHuka14HUWGEWJicF6lkEI38f6YBOpiimEmEVwBwfSoQdPngmhzipeF6VwLNy0lnnvIIA=
-X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2da:5868:311c])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:518b:b0:2ee:8cbb:de28
- with SMTP id 98e67ed59e1d1-2f846388b5cmr3469102a91.8.1738214938246; Wed, 29
- Jan 2025 21:28:58 -0800 (PST)
-Date: Wed, 29 Jan 2025 21:21:39 -0800
-In-Reply-To: <20250130052510.860318-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlEUSZkM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC85C4CED2;
+	Thu, 30 Jan 2025 05:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738215212;
+	bh=aLbmUOWgdsJp7mJHOAYeXhRp9ZyIODmLh0re3gPsRYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LlEUSZkM/CMeOK3mA9N5OwUv9ImhdqmB8aAxUCZkB2h5lWIqqj51vZ8RXe8Go0qQt
+	 LFk3NclON4hWNm3umt6ZPirPIZQwNS20RoeXqzYlbF2bNooUeIbS43Zxk03FfPNYg3
+	 8S+tkFNCyAFF2KeVd9O7T+CWml8ckyeWW6J7gj/0iefsBYhrcxKMEiLK1PFeDugnsE
+	 obr/IUZ2E3/u4uI+BzekBPfJIO8n3YEc5oRXVeXD01uCG6IV2PAQBJlTJ5IHXjVfrS
+	 JemfoeieBSciOAvY5GRLSl46ApnGFGHl7Cp3YupmIpGoL3lMCVzkcsZa3BOcX+Gfja
+	 MlnyymLJUddZA==
+Date: Wed, 29 Jan 2025 21:33:31 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v3 5/7] perf report: Add latency output field
+Message-ID: <Z5sPK-doMUvHS9v4@google.com>
+References: <cover.1737971364.git.dvyukov@google.com>
+ <e78918ee05f9aaa623f0cb402e3c53e7b8a6185b.1737971364.git.dvyukov@google.com>
+ <Z5m1DqB2SK_Cj3iC@google.com>
+ <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250130052510.860318-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250130052510.860318-6-ctshao@google.com>
-Subject: [PATCH v4 5/5] perf lock: Update documentation for -o option in
- contention mode
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZZhPZMtDdkShhJ5qZqG4BR9DBpCuWNz_H1wc1eQ0tFRg@mail.gmail.com>
 
-This patch also decouple -o with -t, and shows warning to notify the new
-behavior for -ov.
+On Wed, Jan 29, 2025 at 07:55:55AM +0100, Dmitry Vyukov wrote:
+> On Wed, 29 Jan 2025 at 05:56, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jan 27, 2025 at 10:58:52AM +0100, Dmitry Vyukov wrote:
+> > > Latency output field is similar to overhead, but represents overhead for
+> > > latency rather than CPU consumption. It's re-scaled from overhead by dividing
+> > > weight by the current parallelism level at the time of the sample.
+> > > It effectively models profiling with 1 sample taken per unit of wall-clock
+> > > time rather than unit of CPU time.
+> > >
+> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: linux-perf-users@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > >  tools/perf/ui/browsers/hists.c  | 27 ++++++++++------
+> > >  tools/perf/ui/hist.c            | 29 ++++++++++-------
+> > >  tools/perf/util/addr_location.h |  2 ++
+> > >  tools/perf/util/event.c         |  6 ++++
+> > >  tools/perf/util/events_stats.h  |  2 ++
+> > >  tools/perf/util/hist.c          | 55 ++++++++++++++++++++++++---------
+> > >  tools/perf/util/hist.h          | 12 +++++++
+> > >  tools/perf/util/sort.c          |  2 ++
+> > >  8 files changed, 100 insertions(+), 35 deletions(-)
+> > >
+> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> > > index 49ba82bf33918..35c10509b797f 100644
+> > > --- a/tools/perf/ui/browsers/hists.c
+> > > +++ b/tools/perf/ui/browsers/hists.c
+> > > @@ -1226,7 +1226,7 @@ int __hpp__slsmg_color_printf(struct perf_hpp *hpp, const char *fmt, ...)
+> > >       return ret;
+> > >  }
+> > >
+> > > -#define __HPP_COLOR_PERCENT_FN(_type, _field)                                \
+> > > +#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)                      \
+> > >  static u64 __hpp_get_##_field(struct hist_entry *he)                 \
+> > >  {                                                                    \
+> > >       return he->stat._field;                                         \
+> > > @@ -1238,10 +1238,10 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
+> > >                               struct hist_entry *he)                  \
+> > >  {                                                                    \
+> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_##_field, " %*.2f%%",   \
+> > > -                     __hpp__slsmg_color_printf, true);               \
+> > > +                     __hpp__slsmg_color_printf, _fmttype);           \
+> > >  }
+> > >
+> > > -#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)                    \
+> > > +#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)          \
+> > >  static u64 __hpp_get_acc_##_field(struct hist_entry *he)             \
+> > >  {                                                                    \
+> > >       return he->stat_acc->_field;                                    \
+> > > @@ -1262,15 +1262,18 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,             \
+> > >               return ret;                                             \
+> > >       }                                                               \
+> > >       return hpp__fmt(fmt, hpp, he, __hpp_get_acc_##_field,           \
+> > > -                     " %*.2f%%", __hpp__slsmg_color_printf, true);   \
+> > > +                     " %*.2f%%", __hpp__slsmg_color_printf,          \
+> > > +                     _fmttype);                                      \
+> > >  }
+> > >
+> > > -__HPP_COLOR_PERCENT_FN(overhead, period)
+> > > -__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys)
+> > > -__HPP_COLOR_PERCENT_FN(overhead_us, period_us)
+> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys)
+> > > -__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us)
+> > > -__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period)
+> > > +__HPP_COLOR_PERCENT_FN(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_PERCENT_FN(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
+> > > +__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_PERCENT_FN(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
+> > > +__HPP_COLOR_ACC_PERCENT_FN(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
+> > >
+> > >  #undef __HPP_COLOR_PERCENT_FN
+> > >  #undef __HPP_COLOR_ACC_PERCENT_FN
+> > > @@ -1279,6 +1282,8 @@ void hist_browser__init_hpp(void)
+> > >  {
+> > >       perf_hpp__format[PERF_HPP__OVERHEAD].color =
+> > >                               hist_browser__hpp_color_overhead;
+> > > +     perf_hpp__format[PERF_HPP__LATENCY].color =
+> > > +                             hist_browser__hpp_color_latency;
+> > >       perf_hpp__format[PERF_HPP__OVERHEAD_SYS].color =
+> > >                               hist_browser__hpp_color_overhead_sys;
+> > >       perf_hpp__format[PERF_HPP__OVERHEAD_US].color =
+> > > @@ -1289,6 +1294,8 @@ void hist_browser__init_hpp(void)
+> > >                               hist_browser__hpp_color_overhead_guest_us;
+> > >       perf_hpp__format[PERF_HPP__OVERHEAD_ACC].color =
+> > >                               hist_browser__hpp_color_overhead_acc;
+> > > +     perf_hpp__format[PERF_HPP__LATENCY_ACC].color =
+> > > +                             hist_browser__hpp_color_latency_acc;
+> > >
+> > >       res_sample_init();
+> > >  }
+> > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> > > index 34fda1d5eccb4..22e31d835301e 100644
+> > > --- a/tools/perf/ui/hist.c
+> > > +++ b/tools/perf/ui/hist.c
+> > > @@ -27,9 +27,10 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
+> > >                           int nr_samples, const char *fmt, int len,
+> > >                           hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
+> > >  {
+> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
+> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY) {
+> > >               double percent = 0.0;
+> > > -             u64 total = hists__total_period(hists);
+> > > +             u64 total = fmtype == PERF_HPP_FMT_TYPE__PERCENT ? hists__total_period(hists) :
+> > > +                     hists__total_latency(hists);
+> > >
+> > >               if (total)
+> > >                       percent = 100.0 * val / total;
+> > > @@ -128,7 +129,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> > >                                 print_fn, fmtype);
+> > >       }
+> > >
+> > > -     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
+> > > +     if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY)
+> > >               len -= 2; /* 2 for a space and a % sign */
+> > >       else
+> > >               len -= 1;
+> > > @@ -472,11 +473,13 @@ __HPP_ENTRY_AVERAGE_FN(_type, _field)                                   \
+> > >  __HPP_SORT_AVERAGE_FN(_type, _field)
+> > >
+> > >  HPP_PERCENT_FNS(overhead, period)
+> > > +HPP_PERCENT_FNS(latency, latency)
+> > >  HPP_PERCENT_FNS(overhead_sys, period_sys)
+> > >  HPP_PERCENT_FNS(overhead_us, period_us)
+> > >  HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys)
+> > >  HPP_PERCENT_FNS(overhead_guest_us, period_guest_us)
+> > >  HPP_PERCENT_ACC_FNS(overhead_acc, period)
+> > > +HPP_PERCENT_ACC_FNS(latency_acc, latency)
+> > >
+> > >  HPP_RAW_FNS(samples, nr_events)
+> > >  HPP_RAW_FNS(period, period)
+> > > @@ -548,11 +551,13 @@ static bool hpp__equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
+> > >
+> > >  struct perf_hpp_fmt perf_hpp__format[] = {
+> > >       HPP__COLOR_PRINT_FNS("Overhead", overhead, OVERHEAD),
+> > > +     HPP__COLOR_PRINT_FNS("Latency", latency, LATENCY),
+> > >       HPP__COLOR_PRINT_FNS("sys", overhead_sys, OVERHEAD_SYS),
+> > >       HPP__COLOR_PRINT_FNS("usr", overhead_us, OVERHEAD_US),
+> > >       HPP__COLOR_PRINT_FNS("guest sys", overhead_guest_sys, OVERHEAD_GUEST_SYS),
+> > >       HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
+> > >       HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
+> > > +     HPP__COLOR_ACC_PRINT_FNS("Latency", latency_acc, LATENCY_ACC),
+> >
+> > Hmm.. two latency fields have the same name.  Maybe better to
+> > distinguish them but "Children Latency" or "Total Latency" would be
+> > too long.. :(
+> >
+> > I think it's mostly ok since users will see them together with overhead
+> > columns and it'll give the context ("Children" or "Self").  But it can
+> > e called with -F or -s option to manually select those columns only.
+> 
+> Yes, the motivation for calling them the same was the column name length.
+> 
+> And, with the default flags it looks reasonable:
+> 
+>   Children  Latency      Self   Latency  Command
+> 
+> The fields seem to be selected based on the names in sort.c rather
+> than these names, e.g. I can do:
+> 
+> perf report -F latency_children,overhead_children,latency,overhead,symbol
+> 
+> and get:
+> 
+> Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
+>   Latency  Children   Latency  Overhead  Symbol
+> +  19.35%    18.69%     0.00%     0.00%  [k] 0000000000000000
+> +   4.86%     4.21%     4.86%     4.21%  [.] htab_find_slot_with_hash
+> +   4.15%     4.48%     0.00%     0.00%  [.] 0xffffffff9ce012a6
+> 
+> So it seems to be possible to select these columns as needed.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/builtin-lock.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Right, it's possible to use -F latency,latency_children,symbol and get:
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 3dc100cf30ef..e16bda6ce525 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1817,7 +1817,7 @@ static void print_contention_result(struct lock_contention *con)
- 			break;
- 	}
- 
--	if (con->owner && con->save_callstack) {
-+	if (con->owner && con->save_callstack && verbose > 0) {
- 		struct rb_root root = RB_ROOT;
- 
- 		if (symbol_conf.field_sep)
-@@ -1978,6 +1978,11 @@ static int check_lock_contention_options(const struct option *options,
- 		}
- 	}
- 
-+	if (show_lock_owner && !show_thread_stats) {
-+		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
-+		pr_warning("Please use -t option too to keep the old behavior.\n");
-+	}
-+
- 	return 0;
- }
- 
-@@ -2569,7 +2574,8 @@ int cmd_lock(int argc, const char **argv)
- 		     "Filter specific address/symbol of locks", parse_lock_addr),
- 	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
- 		     "Filter specific function in the callstack", parse_call_stack),
--	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-+	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters.\n"
-+		"\t\t\tThis option can be combined with -t, which shows owner's per thread lock stats, or -v, which shows owner's stacktrace"),
- 	OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep, "separator",
- 		   "print result in CSV format with custom separator"),
- 	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
--- 
-2.48.1.362.g079036d154-goog
+  Samples: 45K of event 'cycles:Pu', Event count (approx.): 10457486861
+    Latency  Latency  Symbol
+  +   0.00%   19.35%  [k] 0000000000000000
+  +   4.86%    4.86%  [.] htab_find_slot_with_hash
+  +   0.00%    4.15%  [.] 0xffffffff9ce012a6
+
+Thanks,
+Namhyung
 
