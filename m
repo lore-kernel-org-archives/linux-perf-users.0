@@ -1,144 +1,156 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE7D1EE7A9
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 16:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADCB139B;
+	Thu, 30 Jan 2025 16:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253095; cv=none; b=hvi87N0b3/5iMjv64atF+jqRgANN9He8AMpZ2feYj4IVXoRTC7WHhiKbVa1XvipFcPizZ6e4wyzButPPOq1LscAI03ZjthR0+h9IM16c7cbgUM7p8S0k4Axlj37QbC3/GOBock+QixjWhGlkzaqjsT+1wJV5ZNsWl2GZ138aAfw=
+	t=1738253883; cv=none; b=ZbQUppxqwEJBrtpAKckao2ARrCK7MJlDzxhIv11GT2v1M8xCOs7MHCY8zogFpzScLw2Z1gKt0mHP4qWfjaaq4MlYvHf5G6awGj9EC0nrohG4vrWVu+eGqCvynijjx5nL8UIIHtSV5jYWuf/5prwc8N6dlkaWyVJn9NumZgAKwxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253095; c=relaxed/simple;
-	bh=TJe6Oti42gnc8y1EQcc+dQyLmjTZ+8mL1WIqxrxJl+A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mdaRHb2M+J/R8KFwWnTN/NWiYkUBbTfSOk//Xc0SL75j5LehXcA+gft+sHPNrgJYwnOdSZHt3bdJkhDtF7uuZanPW/nLJ4QphkYaOY1h8tpoRNCs/LqaYzLfQWn2N8KghER0KGsjxvjdwJQdxRaSP256S3RE6pWuUahjw6AVX6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cKwYzthx; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738253883; c=relaxed/simple;
+	bh=S4S2u3bfSglH+71zm4Wvz5COoS2wmHDDIUDA8s2ggvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r5GNUwfvHtXSd3RaEfNIw2pUZLgXXjDD5GrYij5DfvRoTBNmYIcjao/sqknx0edulB0f5X1jcjBW9WKsDcVoIlri7h7mk3eZPclnA3u7M9ZANn7BdcpbsjKuHGdf5vAg11nArvO62Ap3enAfHbuARGiyYh0oP2ewP3YcY6ybq8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O1rmSlQf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cKwYzthx"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so161115ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 08:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738253092; x=1738857892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPh8SNBlC/ltN7aoJoUpkmZsEYqEPN3D9x/qQGTzeIE=;
-        b=cKwYzthx7AXGVUIPliXe0YSfrPqnna8fq5NfQwP4KP5N6kKdsMGa7aDB3PnnTc5vwX
-         WpSz0MJfj4kgSCxCFIbSChOpnPF6rogEe/+M67vnrVRAEAvulBmt8KDGTQUg61MlgDtW
-         nq4RLHugeL4Pv3sHUji46Qg3gnlAPxCrW4hWr0vvAAhudnpqneMfOe0ZFrC5wN2qqEou
-         5OKH4eLctAwKI3DmEvpf3di8k65eLUZAc1mQs62f4VChagzIpdDNlKLOnXENPNGnHgGh
-         7U5fR1JEG+wDcvYiNmH9x26g6/3M0FnChPmNh0Wi4Tq8lBBqzHAvaCcSLUPgmqXrusEJ
-         FMvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738253092; x=1738857892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pPh8SNBlC/ltN7aoJoUpkmZsEYqEPN3D9x/qQGTzeIE=;
-        b=c9HbkNCrmzyvfZYAc0eoa4dtJLpPmOjL6cTk9t7c6NuOo5r73KlvqKJN/mQzuyoV+v
-         /ly7M/SUYg/5nG/CikHZfLR12xuoJw/C0N7Xj/iK4XEUCmWFXDMNF10eRWXBUtSsl8dS
-         16e6tFNITyo3nlkhbaZOBsVQM4l7jtnGFnrfacn4Z5sJHnfyxYcbibJTmklmGqxJYBdf
-         R0X9lkTeGHlA2noUSj6FqvQdTKJfYpdNIUSBTcxkENVg0eCKJp53u6yNyqhSBTwDlUNs
-         frFNn/q89blsOKMxGYHtXGji0GWI/xTC7sYd2MY9/VcpXtVqgJBqRzFXFJmJG/Cs+02L
-         LdQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbE8OG2ZOWuuxElit6JoGe5CLwWyOGWsohZwfBom+IYrNTN1qm/IUbVmUxQAsIFJtr6LV58v2+I8Uc7btFnzcT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp5P5NBH/1LkFBYMz1Me7VT29F6Ww7iZZoMFc1As2J3okjeLyn
-	aqLiZ7mSafYDMB/dg4cp3fBcYjG2WhpbjaMlCpkjs/PEHfZV6xRejmvL9GZrG7R4P0xEoiP+7FO
-	/ilespjH88KOSTuxYcVSD8xnBpujbiSYQg0I3
-X-Gm-Gg: ASbGnctB7t09hR7YfpnAUaQtP8E7FOrDsinh1egeAczVALdmxwN9bDH+Y8WnwBu6rYS
-	cfq93a7JOL63n6mHuJSR96BSf31yoshMd9tAiX5ElqK32hekvzeooQ/E3me8qJgy0gi7XAbCv77
-	2JqpjQJFy8N21Lkk5NgjK76l+e
-X-Google-Smtp-Source: AGHT+IG7c0x2vFKVtywyaCppZA86z8ekLLQ96x1TooaThNI7KgpJ+D4Uyuvh7InPQo6ptw/4l1VWrvqVTOD0CFt3qN4=
-X-Received: by 2002:a05:6e02:1b03:b0:3a0:9f85:d768 with SMTP id
- e9e14a558f8ab-3d00a939322mr3044115ab.11.1738253091750; Thu, 30 Jan 2025
- 08:04:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O1rmSlQf"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDoBqW030334;
+	Thu, 30 Jan 2025 16:17:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ONa1jU
+	BR1+S0gYygAhKAHl182u525Nr6+dP3anCG3us=; b=O1rmSlQfBhyNmx1ErVkuL9
+	LMRIxB//hmxP7LEOQRRwiDUq0JNcEqeYROetLvniZQ2JLgvhuoJVL1uwEUv4doVX
+	64gn9GKxooZfE2/3847gLC2vuF2qkuIhYZZbeE1bGe1nWhGKrG6sU79SMNI4b4v/
+	TSlB8rGbnZOSBVijT4J++91JT+/Nsa2vCvN4QwyWnnfZRwiGVTI402/msJdIVZ1z
+	wI+725ELhgCzlXKIqfFnu5HElSKnpXjvSf6xOxsVR1BSUTRwUE3vbb84gqD1bAbV
+	RJpiCXa0epUSmCZQ5CQHskWa8vEsXpkslJEe1VNqWmSXXBuRlze+m+g+K1rBgbJw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsuc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGGJT6015503;
+	Thu, 30 Jan 2025 16:17:40 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsu4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFwaRE028072;
+	Thu, 30 Jan 2025 16:17:38 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbskpvfd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGHYrH52167156
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 16:17:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BE69C20040;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 521A520063;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Received: from [9.152.222.93] (unknown [9.152.222.93])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Message-ID: <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
+Date: Thu, 30 Jan 2025 17:17:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129193037.573431-1-irogers@google.com> <CAH5fLggW1i+eO1hhuHrX-LX7B4=M5a0-dZw4En990fD2biJU1A@mail.gmail.com>
-In-Reply-To: <CAH5fLggW1i+eO1hhuHrX-LX7B4=M5a0-dZw4En990fD2biJU1A@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 30 Jan 2025 08:04:40 -0800
-X-Gm-Features: AWEUYZmTsdBZGD_xIYxs_a-W4tsK3R9eMD5nOt35FP93TUvTvKxvB-J1ATa3eDI
-Message-ID: <CAP-5=fWcbrzNwD4NYzEUiY2d6f2cUYSMLMxZfh5we_82gVqD=A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Daniel Xu <dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
+ output
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FuReBaQPsBGrG3b7x7hTPr8i33NIuhFq
+X-Proofpoint-GUID: wyvY3VdNH6x-f8eeALSpEObel0t6_amh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501300121
 
-On Thu, Jan 30, 2025 at 12:40=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> On Wed, Jan 29, 2025 at 8:30=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > Implement symbol demangling based on:
-> > https://doc.rust-lang.org/rustc/symbol-mangling/index.html
-> >
-> > Ensure recommended demangling examples match the expectations in the
-> > documentation.
-> >
-> > This was requested by Daniel Xu <dxu@dxuuu.xyz> in:
-> > https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhy=
-nd6wvrsu@fcz6vrvepybb/
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> > This change is on top of the 18 patch v3 series:
-> > https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com=
-/
-> > ---
-[..snip..]
-> > +static int test__demangle_rust(struct test_suite *test __maybe_unused,=
- int subtest __maybe_unused)
-> > +{
-> > +       int ret =3D TEST_OK;
-> > +       char *buf =3D NULL;
-> > +       size_t i;
-> > +
-> > +       struct {
-> > +               const char *mangled, *demangled;
-> > +       } test_cases[] =3D {
-> > +               { "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs=
-15kBYyAo9fc_7mycrate",
-> > +                 "<std::path::PathBuf>::new" },
->
-> I think you would normally not have the < and > here? I usually only
-> see that when you do <type as trait>.
+On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> When debugging sframe issues, the error messages aren't all that helpful
+> without knowing what file a corresponding .sframe section belongs to.
+> Prefix debug output strings with the file name.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Thanks Alice! The example comes from here:
-https://doc.rust-lang.org/rustc/symbol-mangling/v0.html#symbol-name
-so maybe it is just trying to show what the mangling can do rather
-than show an actual symbol. Fwiw, I did compare the output with that
-from rustfilt and it matches.
+> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
 
-On the Rust bug for this change:
-https://github.com/rust-lang/rust/issues/60705
-it was pointed out that using:
-https://github.com/rust-lang/rustc-demangle/blob/main/crates/native-c/src/d=
-emangle.c
-that supports legacy and v0 symbols would probably be better than this
-patch. It would be nice if that code's author could contribute it.
+> +static inline void dbg_init(struct sframe_section *sec)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	guard(mmap_read_lock)(mm);
+> +	vma = vma_lookup(mm, sec->sframe_start);
+> +	if (!vma)
+> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+> +	else if (vma->vm_file)
+> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
+> +	else if (!vma->vm_mm)
 
-Thanks,
-Ian
+This condition does not appear to work for vdso on s390.  The following
+does:
 
-> Alice
+	else if (in_range(sec->sframe_start, current->mm->context.vdso_base, vdso_text_size()))
+
+> +		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
+> +	else
+> +		sec->filename = kstrdup("(anonymous)", GFP_KERNEL);
+> +}
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
