@@ -1,137 +1,107 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F21DC2FB
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 01:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B1D8BEC;
+	Thu, 30 Jan 2025 03:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738199832; cv=none; b=iL+6v4DA94udKVaLiNlOogTvm7uq0iaZcb+4/S8my5tpa0ROw35BFskpoGsHZubNY9mPAuTEYXTZRvgcHTYWpamW67pIs1TFDPiD0XcExzZWCorztSiYL0T7cDIxe174uKwKyvs0LaUQa0bwuEIKTT9IqMm6cmrAJFgZ2WA8XC8=
+	t=1738206327; cv=none; b=AO/k+yus2P2YzMIE4N/zXd1jDvXwuMiDAoXjyyNPYFYJQxKrBY4xCSWduHLwD+e2Jg7BpGAGcuzJWu56szkR8h+VhYfne3LP4wG8GUjP1vD+UmFNn+SYEAGz3eR6wWEVZTXUZjuSI25wujYJpdjpA4kUv/2furkAmvHQf67Q0CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738199832; c=relaxed/simple;
-	bh=ffujUAFbgmhz7ZUYLUcWVIeAykLQM4Ew03siKaJwKrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RCKmcdbryNeLOIbRFitjH4KlYdXb7OCVUZ9Ao0vvafagephBEd8tmxK8I89xRiso7RYXYOQuykp5MtcubDWgTd9hRCdOTnNfVO7pZZcN6/XJoB08bpORCO3BV0z4Mq7JtzZjMqTsf6q9o0wtSKTLg4F+SGoN+fPZsMi5/J/07JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MWayy1YE; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738206327; c=relaxed/simple;
+	bh=ncr38Mw95epPDAj1M2Fo7DYw4ha8nWMWZikJd2uPCig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KecCJOc95w8vg0k6E5u3uPRPH/uLaN4Eng9pWVuzih/B+SYV91kHE+Tilp2zMQ8vpY9sBtMXrZ2y97h4Goi03YECWtI4KFKh8Apy8oqplrPnTe9Qcj6opV3vG9zqGnih3FaNktkoSWhkhMMKOFG67Dvr6RUFJRLZvsluLScys4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5cYTlDn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MWayy1YE"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so61785ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 17:17:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738199829; x=1738804629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aV812xzV0e8aXKpif8S9KTZu09HRGN+g2VGxhmlJ8I0=;
-        b=MWayy1YEu7zt6yH03dE+6yhskyWCiBc2wRS5gaMUZZtUs8JZvO5cR9k2C30bl6s4YT
-         jTOGJmf5YQmmpl4LCQTsyOy8t8+/FPZwFElLM7Qcr4bT11yxTKwTmulqdRXq8Bfty9TY
-         7arM6E3wuAY9dzyEXgKtzjW8+9yDDeH2mrkTf4NlaHJQ8v/c0OEtVEXqDT26WTac/nAh
-         KaHRlnt69Gdwd3jSBPOdWL6iqAa8CEefb0yvXHalrpduj/oVCZyAVFgfZUXCbWsPxj1k
-         QKlI7i6W9hUkXeeqnrNWsgiOZwckrigknwYLR5AsiSj/kjmDoOVpd4STzh764naehdxg
-         8ehQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738199829; x=1738804629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aV812xzV0e8aXKpif8S9KTZu09HRGN+g2VGxhmlJ8I0=;
-        b=BGg95nHQn2iDay8FBowl0YjXXgut0OuRQYCokBJbzDRi6s5Pfptr5L8yaZW7tO0j+S
-         r3a9kxZEeIZipu1AQU9+KLdIfVYMvhLBeCuGGNoWto7+zZi0HNQMyNRAE4jgnXrHIR1d
-         IX1YrBsGTbO25W//wpzH70uWkrX0wvNzmITU+3MLRq41oZdVMEUAUJkHeHS/XWlKM/+s
-         sBs0Hwu+X4Z/4iw1wTEf+FRFVvQXMJDT+R3WAr2cNWw6VCEHUx3kyp0lxPgJxGQTCrbd
-         KAgcT159MoTteBjIrJ2rpiPo+4Z1oc9bKoPE/eswlEDVHoWBLlNs38qw/1YDJ7e0ocjF
-         YzcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyMDG1bTJ3h8AQORca0CqMcSYw3bVGNqkE7Ey8W2kU8/171HDcql8qKU6xpSX6kkC8giwTEaGNvNk8jcny+Whn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl+btBJNHvpOmrEkClIFgJ0bJ5fhs5lh93cEFqMUxUWeswaBRk
-	VkWV0t989VdAdpODBQBIot+Fjca9VmyysFyUlbEXXOXR5J0uiRNLWXd4g4e5o6+IWWaJ5tc4CUC
-	P1CjKpwqHkcVAyPGAmb4h48LxQXkM2C/jkTWR
-X-Gm-Gg: ASbGncuMnNIgESNh9nzsXEEo3zQea8SZyv0wm7ibEjEMj2+q30yHArusDgOK0fKJYUq
-	VPioOX90Uztodf6m+PmmP93t1NMgZ8szE8lweKBoBp9toY3jfcLXGTfKyt7c84dLaYOBG9OX1lw
-	==
-X-Google-Smtp-Source: AGHT+IFhocnKz4pRt+VZ0uZ9s3H2wf4R31X+Xz/KNOrL7es1lE5yacExWvi0pwSx5uErWY3GdGGuofp+Or8NaGNpP0g=
-X-Received: by 2002:a05:6e02:1fe7:b0:3cf:fbc9:5c10 with SMTP id
- e9e14a558f8ab-3d0098e6eeamr1546535ab.26.1738199829397; Wed, 29 Jan 2025
- 17:17:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5cYTlDn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B79C4CED1;
+	Thu, 30 Jan 2025 03:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738206326;
+	bh=ncr38Mw95epPDAj1M2Fo7DYw4ha8nWMWZikJd2uPCig=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A5cYTlDnryUSFaO2Xo2oE6ehhP6n6zEcu9bzkhi+mGR079huwXqnvqwx+ahSYt1Mr
+	 zK/WkjSE6gHNS55mOvYtX1ltPeaova6YkuqReGy/8vihKqe9AIKSZqSApI2GLjzUfS
+	 B+mLJ3ugRX0anTaxLi/ZVUEOXU2z8cZcFJalOKEolbjONCBrOl278DU/jGEEykH2DY
+	 CQydbQWoQZIvRRli+Il9HIvuL5nAKkEiax0hi546ToUcQymNZnVEebPgAGDSGlRMDG
+	 3IqQJaeduXFnPlXR6DBnczXGbGr+WUp3eQnkNiwZvpUIJTq83IPEpDyBQ4Gy+F/nkg
+	 vmjJdfRJL3Miw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v2 0/4] perf trace: Add --summary-mode option
+Date: Wed, 29 Jan 2025 19:05:21 -0800
+Message-ID: <20250130030525.1482498-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109222109.567031-1-irogers@google.com> <20250109222109.567031-5-irogers@google.com>
- <Z4F3qxFaYnMTtPw7@google.com> <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
- <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
- <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
- <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
-In-Reply-To: <Z5qjwRG5jX9zAGtf@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Jan 2025 17:16:58 -0800
-X-Gm-Features: AWEUYZkyz1aRG7eZlk2U-0ehtuXuPlJRKOQYBIhCifcFv0gorlC6qNGUTSogmnQ
-Message-ID: <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, 
-	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
-	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
-> On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
-> > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > > I think the behavior should be:
-> > >
-> > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
-> > >   cpu_cycles -> no legacy -> sysfs or json
-> > >   cpu/cycles/ -> sysfs or json
-> > >   cpu/cpu-cycles/ -> sysfs or json
-> >
-> > So I disagree as if you add a PMU to an event name the encoding
-> > shouldn't change:
-> > 1) This historically was perf's behavior.
->
-> Well.. I'm not sure about the history.  I believe the logic I said above
-> is the historic and (I think) right behavior.
+Hello,
 
-You're wrong as you are describing the behavior post:
-https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
-commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
-somehow without legacy event fall backs which Intel added with a PMU
-for hybrid.
+I've realized that perf trace shows system call summary at the end for
+each thread.  But sometimes users want to see the global whole system
+summary or statistics instead.
 
-The behavior in this patch series is best for RISC-V, presumably ARM
-(particularly for Apple M? CPUs), carries ARM and Intel's tags,
-implements the behavior Arnaldo asked for, and solves the
-inconsistency that I think is fundamentally wrong in the tool that PMU
-names shouldn't matter on an event name (an inconsistency my past
-fixes introduced). It is also part of solving other problems:
-https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3-0-6=
-4894d7e16d5@rivosinc.com/
+So I've added --summary-mode option like below:
 
-You've not pointed at anything wrong in the scheme that these patches
-introduce, and are supported by vendors, except that it is a behavior
-change. I can, and have, pointed at many issues with your proposal
-above and the current behavior. The behavior change came about to work
-around PMU bugs over 2 years ago but only partially did so. It makes
-sense to remedy this and for the clean, consistent behavior this
-series achieves. It is unfortunate that it is a behavior change, but
-the first step for that was made 2 years ago. I think it also makes
-sense that something self described as legacy is a lower priority and
-of the past (wrt event naming moving forward).
+    $ sudo ./perf trace -as --summary-mode=total sleep 1
+
+     Summary of events:
+
+     total, 21580 events
+
+       syscall            calls  errors  total       min       avg       max       stddev
+                                         (msec)    (msec)    (msec)    (msec)        (%)
+       --------------- --------  ------ -------- --------- --------- ---------     ------
+       epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+       futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+       poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+       ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+       clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+       epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+       nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+       ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+       recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+       write               1393      0     2.854     0.001     0.002     0.017      1.79%
+       read                1063    100     2.236     0.000     0.002     0.083      5.11%
+       ...
+
+Also it changes internal data structure to hash table to track
+statistics of syscalls.  And removes the rb_resort code.
+
+v2 changes)
+* Rebase to current perf-tools-next
+* Fix some style issues  (Howard)
+* Rename to --summary-mode  (Howard)
 
 Thanks,
-Ian
+Namhyung
+
+
+Namhyung Kim (4):
+  perf trace: Allocate syscall stats only if summary is on
+  perf trace: Convert syscall_stats to hashmap
+  perf tools: Get rid of now-unused rb_resort.h
+  perf trace: Add --summary-mode option
+
+ tools/perf/Documentation/perf-trace.txt |   4 +
+ tools/perf/builtin-trace.c              | 252 +++++++++++++++++++-----
+ tools/perf/util/rb_resort.h             | 146 --------------
+ 3 files changed, 208 insertions(+), 194 deletions(-)
+ delete mode 100644 tools/perf/util/rb_resort.h
+
+-- 
+2.48.1.262.g85cc9f2d1e-goog
+
