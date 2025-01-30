@@ -1,170 +1,203 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C087B1DA5F;
-	Thu, 30 Jan 2025 16:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49C1EC00D
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 16:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738255160; cv=none; b=ckcFqLv16c7TVZnv0Ljz8I1kXmyqOWtlN9dYanzKh0mkt1IWOJQ24shUZx4fkOBDhua8q0/MEK9FQKwq+RMQ8SJ9T6JD938WH3/bbdpPjlfKeHSFdHVOvwNE2cuKpazPtZK4rfIrW+1GYbDkoCAYi0XwwkbGInM8QS398iKC9Ao=
+	t=1738255284; cv=none; b=HE7UvSxgpcApyGtFGF5KlexFP7luqEM5Ggb/51OLDJEY62K8rNH9ZsSlKsTUA5q2Yt4YQ7pc/mrLFH31CV4SZh2dmotH44n920z2+IvBi10tL52DAMduUnmOK/FKFUe6c3hJa+B9LdTNY6daq1c8sROprcH6gqh5sdNFVx1kmd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738255160; c=relaxed/simple;
-	bh=0Isufwi/Vgl2B6yLxZbTuWN6WZZj84rWZAtmvqaHWIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2EZ5VO3rPCFI3OYOCYWMWMq3DUSJT//QX2Vadlwxvoj6o8V9hj2txD+XFh+rbPJMK/+PHTEv6C4zXTFMbRDowj8jnPc1J7KG3h+CWgkypJk2LsT+Csobqg5V6p9mErIL66J7hpCy8B6JMs0wE4xWNNSot+5KZuYNH9VbcvdFM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IBUG4ShM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738255284; c=relaxed/simple;
+	bh=ZItmoUSrezmWaSrGmd9zJrY5IS4u22ZGs81RzNgZe6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=it0qJii0PXyWu3JSrVmeetZ0fI/feTz+UY4aNge1zLStLRbJ/ILell/4TeTm9I52V//ie9z/4YdZGliF1yqpkrCKXUNIWyS+qgyqKls4unQbYE54eqIbAM4Ph4J/SdgjkSvBxqa7dNZdUIaicIajCxV3Hozhs/cTxkJnkOAs38w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VXt9AWy6; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBUG4ShM"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFdQAe010027;
-	Thu, 30 Jan 2025 16:38:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FqYKzo
-	UiU8AE96roYOs5tofbhVt4DgoDku8NwKj7qTg=; b=IBUG4ShMLT4KYKAw5ij2x+
-	jlQp6/oH/OVpUP4u9eR5l2vI4hj1bTW6cAPLBfavxcnM9JCq8CqhloZo0es8rIOn
-	Z47yVWc16hB60rGNn748QAm81u2Sg+UJEbq2VsTqgBYPzsbfVhmDRlCRh+9q7O19
-	VluYw0SX4f6QItLEm1TotSePoEkeKAWgA/O6EJ+Nfr6fLhV9Qot5Ms9qnDJXWJh3
-	YfbtuxJARcz02NG16GqKft+LHebCwO1j4eAhJ15t6Rc7QJ1vd2OH/7/OhHJGDmaY
-	KkiGu3Q6ih8StWgVVGp+5s1HQ+f7xMuuQIzwRopAId1pzieTg00kMZM/v9JyPf+Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGbbKF005418;
-	Thu, 30 Jan 2025 16:38:30 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFAKH3012444;
-	Thu, 30 Jan 2025 16:38:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danyf4e8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:29 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGcP1s46006628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 16:38:25 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5012A20089;
-	Thu, 30 Jan 2025 16:38:25 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C265520088;
-	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
-Message-ID: <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
-Date: Thu, 30 Jan 2025 17:38:24 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VXt9AWy6"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso134575ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 08:41:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738255281; x=1738860081; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4wMQsnr2uFsr4X07RVHYhMP0NI/4Zw3OWxDmZwurf3E=;
+        b=VXt9AWy6oBtcWbVCs7XTs92lBWYmCeiVCKzSRYHZGhkrHvnqLuvt6GBJPRLr4jeUME
+         BXjqoUQ3vnZZSEKc+/Nol0Ex4ISULcsnReBOcoU5q3jjxy40IhiupdZ9vzoUlvQC1gz4
+         sjFdl8l5lxxdAoQuSkSFJ2myIAUlQxTRKgegstZmPGsN4xVtbH/8DDvlgrUPcR2fSnxk
+         GqrvOWqmFbLbjk8R6H2KuM6i7s06ao6J6ID4TPyZ2IMeEyo1yXf0tQoV72Guqk+Lm+oO
+         FciEK+D41Bz5Ad/D+w4ZJhKTJWzA7nQPQ+DpaZVQZvw27BYIXanLbJEXMK+QLYY30zFF
+         Ub6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738255281; x=1738860081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4wMQsnr2uFsr4X07RVHYhMP0NI/4Zw3OWxDmZwurf3E=;
+        b=wogNW6Mnwakh/gNGHPXiv4uRq6miHyld1sRt10yrhFnjaDzP7XRN4grmhGyC/jUY5D
+         QBtPdWsFLT8prUjAOWoOCvw2DhBVPTuHWrcMXIKx9VMDafACHr7xOpD4x5VHs61XjOOo
+         F6TMCzLCDxa9V89OkLtinWEan4951aiEPcAqQCC8xNuo9YWtEqoJJLgAtYnboa0bSjNu
+         ar2JMXu1ipsv0GReiMp2kfa4jcFZHuHqB0nlH7ye2I8KjceeUIrXIGv34psxANxrzVzb
+         PtcpZlKfWD2BvyFTrjLK0wZVwXu8kNEjZffk5BBnQSUiDAGgc4U3uXvGavEtjHn3b0Eq
+         wobQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/2kEICyvq8L5dlrPmdrJHCrYjJMF0qfUBFJcCDEYHJOIKF2atW5QdbqGw6mW57iz8oKddCz1Hniusr6lXqgK3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4deBEfyQZJ9VITmZ+uYeCrEboHSeeEUW2o+VWkjvBKSst+Ojg
+	PsPUlp3YvfXkKXsJscjh2aohEW2sZmvbY+cHzQcYh3glM6E10/f9zsVHDEEx4tCPsUSqYvqMfX5
+	LyX8TSLBWXFYJY1wTvOw0zYgXq0RdU1J4paCy5pqXUr5FHrNmFwx8Drw=
+X-Gm-Gg: ASbGncs7DdY8AqpYmDYb+CvzqBalRUd51AwGMzgLixB4m+o04spciZ5l7o6ejrSgzDH
+	pRVs57uCoKZRxEgA08jA+X6Z6bbNhDltAfzJ2MVPwzIwPjmkEf+RcxRW5/AQ2zPwFAOfdL4hsMi
+	tU6JAGsmcN+YnO+v7ySsDKYAHQ
+X-Google-Smtp-Source: AGHT+IHegSarmb1U3KGrFXHDklrdcsFlO22m5Npd0XXTwOoca3eq99QXVlSOsp+at1UZC5VcBm7cVZDYKgl4hTWBIO8=
+X-Received: by 2002:a05:6e02:12c7:b0:3ce:79c5:56e0 with SMTP id
+ e9e14a558f8ab-3d00a937efemr2968265ab.9.1738255281292; Thu, 30 Jan 2025
+ 08:41:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess
- regions
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: K_c2hM8ukamBh75YQApb_Rgur0BqSUJI
-X-Proofpoint-GUID: WtxoNUNAKifqK37qQW2DZUi8svSipZdq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=959 clxscore=1015 priorityscore=1501 malwarescore=0
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300125
+References: <20250128043739.256305-1-irogers@google.com> <838b1fe1a3a303db5b050c787160a77a96e24ca5.camel@intel.com>
+In-Reply-To: <838b1fe1a3a303db5b050c787160a77a96e24ca5.camel@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 30 Jan 2025 08:41:10 -0800
+X-Gm-Features: AWEUYZlJujF0yaOuFA97YCYQLB0Ium46iyXmBFSU8I0VYjLgXLTi1shfvJbmM54
+Message-ID: <CAP-5=fXSupL7xLgpRmey=VpG1azcxQ9851-WRtFMO72ny+Ni-A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Skip Intel TPEBS under hypervisor
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "james.clark@linaro.org" <james.clark@linaro.org>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, "namhyung@kernel.org" <namhyung@kernel.org>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
+	"Wang, Weilin" <weilin.wang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> Objtool warns about calling pr_debug() from uaccess-enabled regions, and
-> rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
-> uaccess before doing the dynamic printk, and use that to add debug
-> messages throughout the uaccess-enabled regions.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+On Wed, Jan 29, 2025 at 9:57=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
+.com> wrote:
+>
+> On Mon, 2025-01-27 at 20:37 -0800, Ian Rogers wrote:
+> > Intel TPEBS test skips on non-Intel CPUs. On Intel CPUs under a
+> > hypervisor the cache-misses event may not be present. Skip the test
+> > under this condition.
+> >
+> > Refactor the output code to be placed in a file so that on a signal
+> > the file can be dumped. This was necessary to catch the issue above
+> > as
+> > the failing perf record command would fail without output.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Hi, sorry, but I'm unable to apply this patch to perf-tools or perf-
+> tools-next? What repository should I use to test this?
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+Hi Tom,
 
-> @@ -53,12 +53,15 @@ static __always_inline int __read_fde(struct sframe_section *sec,
->   			      sizeof(struct sframe_fde), Efault);
->   
->   	ip = sec->sframe_start + fde->start_addr;
-> -	if (ip < sec->text_start || ip > sec->text_end)
-> +	if (ip < sec->text_start || ip > sec->text_end) {
-> +		dbg_sec_uaccess("bad fde num %d\n", fde_num);
->   		return -EINVAL;
-> +	}
->   
->   	return 0;
->   
->   Efault:
-> +	dbg_sec_uaccess("fde %d usercopy failed\n", fde_num);
->   	return -EFAULT;
->   }
+sorry for this. I'll rebase/squash Google's patches [1] for this test
+and resend as v2. I hadn't realized how much was missing when sending
+this.
 
-Add a similar debug message for SFRame FDE user copy failures?
+Thanks,
+Ian
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+[1] https://github.com/googleprodkernel/linux-perf/commits/google_tools_mas=
+ter/tools/perf/tests/shell/test_stat_intel_tpebs.sh
 
-@@ -125,6 +125,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
-         return 0;
-
-  Efault:
-+       dbg_sec_uaccess("fde usercopy failed\n");
-         return -EFAULT;
-  }
-
-
-Printing the IP is probably not an option due to security concerns?
-Printing the the CFA, FP, and RA offsets is too much traffic?  To debug
-issues on s390 I had to add tons of additional debug messages to make
-sense of what was actually going on.
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+> Thanks,
+> Tom
+>
+> > ---
+> > v2: Fix lost :R and use :p with record as it is ignored by perf stat.
+> > ---
+> >  .../perf/tests/shell/test_stat_intel_tpebs.sh | 36 +++++++++++------
+> > --
+> >  1 file changed, 22 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > index 695dcb93bb5e..a330ecdb7ba5 100755
+> > --- a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > @@ -20,31 +20,39 @@ then
+> >    exit 2
+> >  fi
+> >
+> > +stat_output=3D$(mktemp /tmp/__perf_stat_tpebs_output.XXXXX)
+> > +
+> >  cleanup() {
+> > +  rm -rf "${stat_output}"
+> >    trap - EXIT TERM INT
+> >  }
+> >
+> >  trap_cleanup() {
+> >    echo "Unexpected signal in ${FUNCNAME[1]}"
+> > +  cat "${stat_output}"
+> >    cleanup
+> >    exit 1
+> >  }
+> >  trap trap_cleanup EXIT TERM INT
+> >
+> > -# Use this event for testing because it should exist in all
+> > platforms
+> > -event=3Dcache-misses:R
+> > -
+> > -# Hybrid platforms output like "cpu_atom/cache-misses/R", rather
+> > than as above
+> > -alt_name=3D/cache-misses/R
+> > +# Event to be used in tests
+> > +event=3Dcache-misses
+> >
+> > -# Without this cmd option, default value or zero is returned
+> > -#echo "Testing without --record-tpebs"
+> > -#result=3D$(perf stat -e "$event" true 2>&1)
+> > -#[[ "$result" =3D~ $event || "$result" =3D~ $alt_name ]] || exit 1
+> > +if ! perf record -e "${event}:p" -a -o /dev/null sleep 0.01 >
+> > "${stat_output}" 2>&1
+> > +then
+> > +  echo "Missing ${event} support"
+> > +  cleanup
+> > +  exit 2
+> > +fi
+> >
+> >  test_with_record_tpebs() {
+> >    echo "Testing with --record-tpebs"
+> > -  result=3D$(perf stat -e "$event" --record-tpebs -a sleep 0.01 2>&1)
+> > +  if ! perf stat -e "${event}:R" --record-tpebs -a sleep 0.01 >
+> > "${stat_output}" 2>&1
+> > +  then
+> > +    echo "Testing with --record-tpebs [Failed perf stat]"
+> > +    cat "${stat_output}"
+> > +    exit 1
+> > +  fi
+> >
+> >    # Expected output:
+> >    # $ perf stat --record-tpebs -e cache-misses:R -a sleep 0.01
+> > @@ -57,16 +65,16 @@ test_with_record_tpebs() {
+> >    #                  0      cache-misses:R
+> >    #
+> >    #        0.013963299 seconds time elapsed
+> > -  if [[ ! "$result" =3D~ "perf record" ]]
+> > +  if ! grep "perf record" "${stat_output}"
+> >    then
+> >      echo "Testing with --record-tpebs [Failed missing perf record]"
+> > -    echo "$result"
+> > +    cat "${stat_output}"
+> >      exit 1
+> >    fi
+> > -  if [[ ! "$result" =3D~ $event && ! "$result" =3D~ $alt_name ]]
+> > +  if ! grep "${event}:R" "${stat_output}" && ! grep "/${event}/R"
+> > "${stat_output}"
+> >    then
+> >      echo "Testing with --record-tpebs [Failed missing event name]"
+> > -    echo "$result"
+> > +    cat "${stat_output}"
+> >      exit 1
+> >    fi
+> >    echo "Testing with --record-tpebs [Success]"
+>
