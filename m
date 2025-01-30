@@ -1,129 +1,132 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFCC129A78
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jan 2025 04:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35681ACA;
+	Thu, 30 Jan 2025 05:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738211363; cv=none; b=Vf2A8o+Zuwk/8fdQE2i3U75L22K3spb9v4xb7W8YNeIvZ8ak9QnM9gg+up3NgBEca5L9Vozhmaqv1jOdDAa6MZBhXR7M6psbal78wyN4Hx2wVAiDkxHX523lJn7tTRFEdfGC1AVO9GP7flJ8Nm2wTJSTcVgD85fdE3pu717W3yc=
+	t=1738214181; cv=none; b=sAGGWc8yKKd1JES/5Y4gooIlUOjp9zDdWGR2YW/4vx80u9oymg7966B2QAvrXbVXoaVwx4EIm0MsGkUIOrP+BLegWPeZK/OU5a2YcJdVKlfxc1AIPzI7y2Sj7eTezjmvWyxOorCirS1Ct9g/Rgy6L86h2Lk67YotAYZFh+iHhnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738211363; c=relaxed/simple;
-	bh=XkZUUAzYq2VdR+SnU8f+2BvINi56b1QAaZY8AfY1MOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=bo4MJYsVtA86HNFSt63XNdWzYbdsjhKP8A1eZBmebNFnyUb2E55wDWoYAq0SQsxQ9EqGE97E1xPPE1bRU2RH9sKtAED9HyrzPgzhAovIEVG6Z19DLj3fV0hQPjL3r3wNH5iEVErlmrev4eiEIBIw1Xi+bfEXbyNrC5aCJDvC2p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQ7KLfq2; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738214181; c=relaxed/simple;
+	bh=cLUpj3kV03tlAWcGGhPSQJcKBlfouIcZLliSR9dhHmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWgS6Rt/gz1DxOENAodwsuXFEdjwF3EdxW8dhNQsSrOguFeXbMmR/M07vu66ru4/JjQBAGR9sm41JQXOPhUmk+8/uVLGqL/mW36V+syw5oPDXP3WNlBpAIGgBmtzqB/UYhvxwbOUW7hoEJWiqioeViT5QG5gosMpkuzvrAHsJqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOoQIMqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQ7KLfq2"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so61585ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jan 2025 20:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738211361; x=1738816161; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u1i1AoIWx1zHF/T3IVKv0v+96uu83BILbTfH1uwyBWc=;
-        b=rQ7KLfq2l3HPyhJ1y3kYhlFOXNHsiA3wxPXW+LQjkZXlLpdZfvYJ5cNQxAryVv+gMc
-         ru4Rjr/i7/KQz+QQMKspNN1Lm8XLjyg0A+s0Dw2CPRUR+L/uv6hee/ccZtt/k90YYJZv
-         /IXGcAfR+8wyFF0/ysA/qTZIkoKoUT5Ek4t5AEKnWYulBg+c9XYT4W8ia0paNCXGpjvj
-         0QTDhLu/ZxK3LOb+74nwBUf8djS6FGzf29BuPb8FKnaR1Y0bgy3Y4khPDuTWmpXsiwPE
-         n+P3JQD0JYFQGrPaFjCxJW9biP/fgCb0HhYRxZUkBaqkjfZPt+WikopXxPR33ZbfMtyh
-         jcEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738211361; x=1738816161;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u1i1AoIWx1zHF/T3IVKv0v+96uu83BILbTfH1uwyBWc=;
-        b=efTJR90z7Lui5zzr6wuWcQ2rY5KhM4NxWacLt59JDVITjgZwrkuDFx1F09qnM2ZPo1
-         FIZFJt+5FfOJ9aYIMPpyQSjTlaIRU2ZB3zzts6b3bBjExwtrw1x4nx3bMyIRlBB1upOZ
-         PwfQUJTTHze9LP8ybHecKPiLlguj8domGZ4Hm/8gsoztScCUYgzKayBo7qqcM/AcjSLf
-         G2XuGf9XzWwLrI47jp/9IjaoHJCbjs7KgsJR0H/Vfn226wejdORK4pmD6LgMZp05mig6
-         vEk05GNEtZ3PeXiwLCwFNqSThMQT2j2JxgmRcXDcSIaOeRoGDixr1o2ViB7bzMHy4wSX
-         BMCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE0XjAQWyvT7W77wQe3Nu3sP7K4wexm7YkhNvRvW9mmhm8CbzGCN5SYd1K+bTz3aW+eEDz0nxlvkH6KWYMGjUO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFTnIix1yoyf2a/TTQbj4vMsQowoN/kQ8AimNQW/QA51ZRjKPi
-	KLzTashFGN+K3Ykum/YciHsSjaxP3ah/8wu0SSaIzSkZjBeiyhYSs/HfwetN0AkMimUavDLY3np
-	d09BkRMC5dsfC21e8e/j56Ulek5Q3tLdSWefV
-X-Gm-Gg: ASbGncvOWUCxTrE5NVihvdg/9MM46WTKEwoQzwAUYe4u4r9SIhqrihVGXdbx+ZN5K4Y
-	i18xE7s/WwKxBkOrN83rLH3prsLSb6DMxlRFeRm0FRcVXwh+l0dAREAKXEPwzLimNLzSpedTpPA
-	==
-X-Google-Smtp-Source: AGHT+IEYsVtf4DjQppZMbQavtkgPg4WZGbr0zycmlgAXq2lMzIZmP6fyTP9R31pyi/iDI2WTzbV6XtapfuC+Hu6PrQw=
-X-Received: by 2002:a05:6e02:1cad:b0:3a7:683e:2fb0 with SMTP id
- e9e14a558f8ab-3d00982fee9mr2299615ab.6.1738211360828; Wed, 29 Jan 2025
- 20:29:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOoQIMqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F49DC4CED2;
+	Thu, 30 Jan 2025 05:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738214180;
+	bh=cLUpj3kV03tlAWcGGhPSQJcKBlfouIcZLliSR9dhHmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UOoQIMqj4iYcRGiPSJxynhAC2g158QewZHPFf5mpBRA8HI5G7KruT6K1WbTrd75qp
+	 aHaFdOki9RCYDRu0Xte5MLrIVEqtkv7ihV0uqG9KRQllqS9nCTv2W1ublhL4kS7REZ
+	 uaM//aLfOe/cC5lmpM7Z0+mvyjEki4NPJK00lyqGKL2UrzhuhzbyiSEEmVm4SsWNCF
+	 Um1BmKo97xI0NhTE1Ey5L1yUZSdxPR5YgRAOhUnoMW8C9tYbzg4wPyd7DzfThVG8BH
+	 SjzRf8AusjZOnen0V35YLpXsJyAvzAEaCi48L1HgCJBDyVRi59GOt0xnR/gObCmdn4
+	 cpqakdna72iNQ==
+Date: Wed, 29 Jan 2025 21:16:18 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+	Atish Patra <atishp@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z5sLIiU7D6GwpWY1@google.com>
+References: <20250109222109.567031-5-irogers@google.com>
+ <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com>
+ <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com>
+ <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com>
+ <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123074659.698123-1-irogers@google.com>
-In-Reply-To: <20250123074659.698123-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Jan 2025 20:29:09 -0800
-X-Gm-Features: AWEUYZljnPgcRGAk0urV782d1e9WAh2Wm_5PCIIo0Lu0bAdkjglskriRJhacY-4
-Message-ID: <CAP-5=fXtRFiZ=MAVbiifbc-1G3Dg-oxPweV9KqLTDrMK-hkL8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf hwmon related improvements
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV4Q-J+Coybk5Uw=Xpx9sm5MG=2b-fvRLX14K+ZJcmz5Q@mail.gmail.com>
 
-On Wed, Jan 22, 2025 at 11:47=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Try to do less scanning of files/directories with or without hwmon
-> PMUs. Don't merge all events with the same name, only merge those on
-> the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
-> suffix or wildcard matching. Refactor uniquification so the evsels
-> with the same name as other evsels in the evlist are uniquified.
->
-> v2: Rename ignore suffix PMU name matching that is really a
->     wildcard/prefix match. Use a proper ignore suffix when not merging
->     counters purely on name.
->
-> Ian Rogers (5):
->   perf evsel: Reduce scanning core PMUs in is_hybrid
->   perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
->   perf pmu: Rename name matching for no suffix or wildcard variants
->   perf stat: Don't merge counters purely on name
->   perf stat: Changes to event name uniquification
+On Wed, Jan 29, 2025 at 05:16:58PM -0800, Ian Rogers wrote:
+> On Wed, Jan 29, 2025 at 1:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > On Wed, Jan 15, 2025 at 9:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > I think the behavior should be:
+> > > >
+> > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > >   cpu/cycles/ -> sysfs or json
+> > > >   cpu/cpu-cycles/ -> sysfs or json
+> > >
+> > > So I disagree as if you add a PMU to an event name the encoding
+> > > shouldn't change:
+> > > 1) This historically was perf's behavior.
+> >
+> > Well.. I'm not sure about the history.  I believe the logic I said above
+> > is the historic and (I think) right behavior.
+> 
+> You're wrong as you are describing the behavior post:
+> https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> commit a24d9d9dc096fc0d0bd85302c9a4fe4fe3b1107b from Nov 2022, but
+> somehow without legacy event fall backs which Intel added with a PMU
+> for hybrid.
+> 
+> The behavior in this patch series is best for RISC-V, presumably ARM
+> (particularly for Apple M? CPUs), carries ARM and Intel's tags,
+> implements the behavior Arnaldo asked for, and solves the
+> inconsistency that I think is fundamentally wrong in the tool that PMU
+> names shouldn't matter on an event name (an inconsistency my past
+> fixes introduced). It is also part of solving other problems:
+> https://lore.kernel.org/linux-perf-users/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com/
 
-Hi, this series (v1 sent over 2 weeks ago) fixes broken event
-aggregation where all events with the same name on different PMUs are
-merged. For example, arm_cmn/cycles/ would be merged with
-armv8_pmuv3/cycles/ if parsed through a glob. The bug was introduced
-by:
-https://lore.kernel.org/r/20221018020227.85905-16-namhyung@kernel.org
-and the hope was this would be in v6.14 and the Fixes tag would see
-the changes backported.
+So you think the below behavior is preferred, right?
+
+  cycles -> cpu/cycles/ (or whatever PMU name) -> sysfs or json
+
+And there's no way to use legacy event encodings anymore?
+
+> 
+> You've not pointed at anything wrong in the scheme that these patches
+> introduce, and are supported by vendors, except that it is a behavior
+> change. I can, and have, pointed at many issues with your proposal
+> above and the current behavior. The behavior change came about to work
+> around PMU bugs over 2 years ago but only partially did so. It makes
+> sense to remedy this and for the clean, consistent behavior this
+> series achieves. It is unfortunate that it is a behavior change, but
+> the first step for that was made 2 years ago. I think it also makes
+> sense that something self described as legacy is a lower priority and
+> of the past (wrt event naming moving forward).
+
+I want to clarify the event parsing behavior and to find the right way
+to deal with various cases.  I haven't followed the activities in this
+area closely so I missed some changes in the past.  Maybe the problem
+is that the behavior is complex and not clarified.  Hopefully we can
+write it down in a doc.
 
 Thanks,
-Ian
+Namhyung
 
->  tools/perf/pmu-events/empty-pmu-events.c |   8 +-
->  tools/perf/pmu-events/jevents.py         |   8 +-
->  tools/perf/tests/pmu.c                   |  85 ++++----
->  tools/perf/util/evsel.c                  |   4 +-
->  tools/perf/util/evsel.h                  |   1 +
->  tools/perf/util/parse-events.c           |   2 +-
->  tools/perf/util/pmu.c                    | 252 ++++++++++++++++-------
->  tools/perf/util/pmu.h                    |   7 +-
->  tools/perf/util/pmus.c                   | 144 ++++++++-----
->  tools/perf/util/stat-display.c           | 111 +++++++---
->  tools/perf/util/stat.c                   |  13 +-
->  11 files changed, 418 insertions(+), 217 deletions(-)
->
-> --
-> 2.48.1.262.g85cc9f2d1e-goog
->
