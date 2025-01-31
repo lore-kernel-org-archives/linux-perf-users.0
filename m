@@ -1,192 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE051F2378;
-	Fri, 31 Jan 2025 18:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0832F1F37B9;
+	Fri, 31 Jan 2025 20:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738349102; cv=none; b=ntNQg/PViEAfE1XElJwkRQeqS+iSmXnBOSqPA6KDNf7YnghSkqqN2cXd5VWkN3BJ5qsIsRyw/pl872EXEW5QmsCOTfQIe1TOQ5NHN4w5hAQVMqSFc8GHwS4lBApUgnE90KuE0fMbw0L4mHr7kffwpBrE/mwbTj7bLQuQbPBKe4g=
+	t=1738356087; cv=none; b=oOBstEcHuSwVg65zZG1KHhueqZ4AvAzm6CVrRBHBhipVbF4IvFWX6CWzPQug+n8iuZpfSfOQ5gcHbF6MxJTh47wQTwquLmn4GmLjdbpinuUk9phHxjW5PF/ZQG5dEHxjEYNgcNV9fvJbz4IvhmGc1aafmdt3sIQcWt8+hz6rAFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738349102; c=relaxed/simple;
-	bh=cQsC6tDl5EQr2iuL6pyC4jq/l/V08Im/xS6qGQAz6kw=;
+	s=arc-20240116; t=1738356087; c=relaxed/simple;
+	bh=T56hHME+s4l3JGPnRkWuFu5+rVZe4vwr68GJHupz4Ic=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pibyhd499EU8JsJkc5N97+4ddvoL6b43I9FFQLXvhOZxaRN59Z8+DG7r5i5wAwHK/cIDqz3/4jm6XyTxcoPpHHAi3r2qTUFxftkkLZen43RiElMFFMKe4e1H2qKLIDoXklSDFT3RUZ4m6xjuUH4YlWoAOTIsZZ+IvnDRca059nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPi6Mhyv; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=GsPCyccPAUEqprpXMCuh2cRxq8jOS4t42oAz/l48bDPTqqleSiWZiueMjrVzhpi10smT9N7L7BvxQNLXRQWytT/WCCg/LBlCThZEimm1uM4goGaVoNbxnF4uWhg4b750Ul6OfzudSj4ds4Zwc+4Jt1JAzuDH+4cdoKUUpIG6qx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVWwHYz9; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPi6Mhyv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D32BC4CED3;
-	Fri, 31 Jan 2025 18:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738349101;
-	bh=cQsC6tDl5EQr2iuL6pyC4jq/l/V08Im/xS6qGQAz6kw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IPi6Mhyv4NH0h4lAdw6pt05foXsn454u6RrjOOLwMBUPzBLm97mmoOpTImwTvyxHH
-	 gEAsh+dkp4mK7szoOtGETrQ0ho7pZu9qzvfyhLQtyXelCKGsV9asyCBD5BYdsTwKmn
-	 fQdKoYE9DJI2XgpZoeRF70XKIDVR93FMlYfjhGT4M29iO8aO7w0/hoPG3wltDiHgcX
-	 +kqVKCWF5gi/EEXtJV6w4qowqCmBetWIf/dkmmenzDA8AFQFn5m5S05qsgJp8o0NwE
-	 swV+85z9V5SVXKo9GNZBT+fRKq+zSwarctpwpXb/qWb33bDQ34noQuTsOz3OK6kZXQ
-	 qLbTkSJrqsbFA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dc149e14fcso4224004a12.2;
-        Fri, 31 Jan 2025 10:45:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVQ1NDlo3pO1vcYmJvvR0CMVFmZ8iEkW3qchMRXWX6zXznlJQUDbK3xqf1xb6iy5rYn4GsN5O85l4GmQLU=@vger.kernel.org, AJvYcCW/DsdsjjZxT3xtcmnr2Vq/FYjAZWrvmbYn5JLNJshsrD2hB9jtKdSxECmMhdSE/TC/l7KzG0r8tEmvPfvlrCQNzA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7v/VgT4/KPJd+0KJtGR05ratYamQqAln9BuxRXHRSDwSDTAxD
-	c0SsR84nX6m9wSZWHKA0W4dGcdI1qnv185Md4e5DUpCQyM8JVhuhMKUAjcVV5eUuyFehdLeZTtf
-	Po44aYMuZ1en5LOk3ZdTvMKQbxw==
-X-Google-Smtp-Source: AGHT+IFHF8MfBt9NpoLVUs6BNYyid6J7PvublAYTpghRTlfvjimuwnxup2PdE3Y6lfcYsRdhtBtZRLY2su2c8B2OK/Q=
-X-Received: by 2002:a05:6402:a001:b0:5dc:88dd:38aa with SMTP id
- 4fb4d7f45d1cf-5dc88dd39aemr1762094a12.8.1738349099936; Fri, 31 Jan 2025
- 10:44:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVWwHYz9"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f6cc13d103so10346897b3.0;
+        Fri, 31 Jan 2025 12:41:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738356085; x=1738960885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fZDmQ9DZ4bDsxoBK6DzuqHEe8zHAyvfJAig+1wU30fk=;
+        b=dVWwHYz91dSIkcUNx8dZXS8LaT4OhEV1mmItdcrnYI57G1FLU6I7TY6tb7fYLr839X
+         Ty+UeSBxrLd2kQNO6hgi4tOXaVnqYRNjwPzzqnpSDVuGZFTdGeKkFIifD3WM+381ZWsi
+         v5tEnCpbCkUeBwtRnKECZeWRvF1/KklBNWHDsqskP6UrYWeFFDQcs3P4QNPetNc+cEOs
+         2Soi+pTUKWW0q0JpG1Qt3+KvNRdsPPbZeUUilxNUa1QPF/2WttQw9nkHSAIAi9xuZumn
+         BRvSm2AL7AJsP0rrp+HXW21KBDYwa5V3PnX6hsHjHGPiDqx0dKwgY+adcSb0vXyktGYk
+         TGjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738356085; x=1738960885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fZDmQ9DZ4bDsxoBK6DzuqHEe8zHAyvfJAig+1wU30fk=;
+        b=svmE2Q3vCk2443zKRjR884hy+7ZZxhmIrIKbq4nXXz7motO5GGiirslK6m1KD5DCWB
+         VuuEYwtNKjoXr6OqBc3ciu8tj9df2FtZl/pjhOGhyl5g4c6Ht79/wosPnSa5xau/fHZl
+         OHUENsZYf0PjDMUuzWy6lnkIweh+Dpt00jBddSV9fk7A2ANTci/uwqMvDOOhKFdcVGt4
+         JdFtHOxWN6TyDFW58eLIX248A4GMqxAG8+5nw8NTyIHjKNRjtXwkvYH97wdCnhdkypBZ
+         ryzNoOner+05Li03Dn/WNvQ2dqG0Dyo85jKolVVCCGEHlFXl4PCPn3GBIBh1aTebAMLB
+         A6wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBXHRZ49RjQ6Vv5LWw5O9CVUoPDgHDYHfbzydwIIUzTEDBLPP/f7BsVMSPrbxr9t22sBFR6cz6qsdInLQ=@vger.kernel.org, AJvYcCXEb1ELHlh+ETDw97jdTOe9b8GG3OCPQnVxR7kRHHC3AxJUBYVgB2AJqpQClumiVoyf0T0n0sE57n9iSASJO949/Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG3c86RJcJaGGY4I9xBvBRd0D/sOa/3zxm+gTyqdjgep3x6PIM
+	Es695nlSxP8IEcRY4d70w4vIunS9N+iAFxd5MfAZTQFlVnN9rCrpDCA2qS/lkPJHpif2HgvjqV7
+	U9C8USiENlG/Ku6xPtwH8OoTIxo4=
+X-Gm-Gg: ASbGncv+vmfeX7f91QcaxuuyzncDnhpyAuw/icHxSIeSZ10PDLHHX/h3buBIkoNF2Jx
+	XeQyfX+abjYmDN8s2PILd8rk7tO8YzlgkpCzMs2szZObpBDWTAKVYgqslO0D7yABrGQUTBp8=
+X-Google-Smtp-Source: AGHT+IFoR9WyU52W4rsctDI7diSPf9JMY0U9tWkrumaFvznREZgah7y87+RlZLPQZU4NxtXD+v46+YLn+iFzDKvLsV4=
+X-Received: by 2002:a05:690c:6185:b0:6f6:d149:d64a with SMTP id
+ 00721157ae682-6f7a84246f5mr112470567b3.27.1738356084787; Fri, 31 Jan 2025
+ 12:41:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250106120156.227273-1-mark.barnett@arm.com> <20250106120156.227273-2-mark.barnett@arm.com>
-In-Reply-To: <20250106120156.227273-2-mark.barnett@arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 31 Jan 2025 12:44:48 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq++8-yadgbyTvNZkhML-j73UP6VS+qiaD3gQB=rc=w08w@mail.gmail.com>
-X-Gm-Features: AWEUYZmBnZzun44g7IbcJejw8mJzjjTZvTzP9yBPr9jEvMFNoL0zPdGjRLwkLYo
-Message-ID: <CAL_Jsq++8-yadgbyTvNZkhML-j73UP6VS+qiaD3gQB=rc=w08w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] perf: Allow periodic events to alternate between
- two sample periods
-To: mark.barnett@arm.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com, 
-	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org, 
-	james.clark@arm.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250130030525.1482498-1-namhyung@kernel.org>
+In-Reply-To: <20250130030525.1482498-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 31 Jan 2025 12:41:14 -0800
+X-Gm-Features: AWEUYZmmfiq-aWtkAxFDdX_X0s2IAIAjTjfIRovcOkOOQtexwyV-Z2876FWAcjw
+Message-ID: <CAH0uvog9WWvBeMgnkdrr0=rP8y5Ea1P=a-TqbLEYYKSS25+wqA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf trace: Add --summary-mode option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 6, 2025 at 6:12=E2=80=AFAM <mark.barnett@arm.com> wrote:
->
-> From: Ben Gainey <ben.gainey@arm.com>
->
-> This change modifies perf_event_attr to add a second, alternative
-> sample period field, and modifies the core perf overflow handling
-> such that when specified an event will alternate between two sample
-> periods.
->
-> Currently, perf does not provide a  mechanism for decoupling the period
-> over which counters are counted from the period between samples. This is
-> problematic for building a tool to measure per-function metrics derived
-> from a sampled counter group. Ideally such a tool wants a very small
-> sample window in order to correctly attribute the metrics to a given
-> function, but prefers a larger sample period that provides representative
-> coverage without excessive probe effect, triggering throttling, or
-> generating excessive amounts of data.
->
-> By alternating between a long and short sample_period and subsequently
-> discarding the long samples, tools may decouple the period between
-> samples that the tool cares about from the window of time over which
-> interesting counts are collected.
->
-> It is expected that typically tools would use this feature with the
-> cycles or instructions events as an approximation for time, but no
-> restrictions are applied to which events this can be applied to.
->
-> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
-> Signed-off-by: Mark Barnett <mark.barnett@arm.com>
-> ---
->  include/linux/perf_event.h      |  5 +++++
->  include/uapi/linux/perf_event.h |  3 +++
->  kernel/events/core.c            | 37 ++++++++++++++++++++++++++++++++-
->  3 files changed, 44 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index cb99ec8c9e96..cbb332f4e19c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -276,6 +276,11 @@ struct hw_perf_event {
->          */
->         u64                             freq_time_stamp;
->         u64                             freq_count_stamp;
-> +
-> +       /*
-> +        * Indicates that the alternative sample period is used
-> +        */
-> +       bool                            using_alt_sample_period;
+Hello Namhyung,
 
-8 bytes more for a single bit of data. I think we can avoid it. More below.
+On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> I've realized that perf trace shows system call summary at the end for
+> each thread.  But sometimes users want to see the global whole system
+> summary or statistics instead.
+>
+> So I've added --summary-mode option like below:
+>
+>     $ sudo ./perf trace -as --summary-mode=3Dtotal sleep 1
+>
+>      Summary of events:
+>
+>      total, 21580 events
+>
+>        syscall            calls  errors  total       min       avg       =
+max       stddev
+>                                          (msec)    (msec)    (msec)    (m=
+sec)        (%)
+>        --------------- --------  ------ -------- --------- --------- ----=
+-----     ------
+>        epoll_wait          1305      0 14716.712     0.000    11.277   55=
+1.529      8.87%
+>        futex               1256     89 13331.197     0.000    10.614   73=
+3.722     15.49%
+>        poll                 669      0  6806.618     0.000    10.174   45=
+9.316     11.77%
+>        ppoll                220      0  3968.797     0.000    18.040   51=
+6.775     25.35%
+>        clock_nanosleep        1      0  1000.027  1000.027  1000.027  100=
+0.027      0.00%
+>        epoll_pwait           21      0   592.783     0.000    28.228   52=
+2.293     88.29%
+>        nanosleep             16      0    60.515     0.000     3.782    1=
+0.123     33.33%
+>        ioctl                510      0     4.284     0.001     0.008     =
+0.182      8.84%
+>        recvmsg             1434    775     3.497     0.001     0.002     =
+0.174      6.37%
+>        write               1393      0     2.854     0.001     0.002     =
+0.017      1.79%
+>        read                1063    100     2.236     0.000     0.002     =
+0.083      5.11%
+>        ...
+>
+> Also it changes internal data structure to hash table to track
+> statistics of syscalls.  And removes the rb_resort code.
+>
+> v2 changes)
+> * Rebase to current perf-tools-next
+> * Fix some style issues  (Howard)
+> * Rename to --summary-mode  (Howard)
 
->  #endif
->  };
->
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_ev=
-ent.h
-> index 0524d541d4e3..499a8673df8e 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -379,6 +379,7 @@ enum perf_event_read_format {
->  #define PERF_ATTR_SIZE_VER6    120     /* add: aux_sample_size */
->  #define PERF_ATTR_SIZE_VER7    128     /* add: sig_data */
->  #define PERF_ATTR_SIZE_VER8    136     /* add: config3 */
-> +#define PERF_ATTR_SIZE_VER9    144     /* add: alt_sample_period */
->
->  /*
->   * Hardware event_id to monitor via a performance monitoring event:
-> @@ -531,6 +532,8 @@ struct perf_event_attr {
->         __u64   sig_data;
->
->         __u64   config3; /* extension of config2 */
-> +
-> +       __u64   alt_sample_period;
->  };
->
->  /*
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 065f9188b44a..7e339d12363a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4178,6 +4178,8 @@ static void perf_adjust_period(struct perf_event *e=
-vent, u64 nsec, u64 count, bo
->         s64 period, sample_period;
->         s64 delta;
->
-> +       WARN_ON_ONCE(hwc->using_alt_sample_period);
-> +
->         period =3D perf_calculate_period(event, nsec, count);
->
->         delta =3D (s64)(period - hwc->sample_period);
-> @@ -9850,6 +9852,7 @@ static int __perf_event_overflow(struct perf_event =
-*event,
->                                  int throttle, struct perf_sample_data *d=
-ata,
->                                  struct pt_regs *regs)
->  {
-> +       struct hw_perf_event *hwc =3D &event->hw;
->         int events =3D atomic_read(&event->event_limit);
->         int ret =3D 0;
->
-> @@ -9869,6 +9872,18 @@ static int __perf_event_overflow(struct perf_event=
- *event,
->             !bpf_overflow_handler(event, data, regs))
->                 goto out;
->
-> +       /*
-> +        * Swap the sample period to the alternative period
-> +        */
-> +       if (event->attr.alt_sample_period) {
-> +               bool using_alt =3D hwc->using_alt_sample_period;
-> +               u64 sample_period =3D (using_alt ? event->attr.sample_per=
-iod
-> +                                              : event->attr.alt_sample_p=
-eriod);
-> +
-> +               hwc->sample_period =3D sample_period;
-> +               hwc->using_alt_sample_period =3D !using_alt;
-> +       }
+perf $ sudo ./perf trace -s -C 0 --summary-mode=3Dtotal
+^C
+ Summary of events:
 
-Wouldn't something like this avoid the need for using_alt_sample_period:
+ total, 185 events
 
-if (event->attr.alt_sample_period) {
-  if (hwc->sample_period =3D=3D event->attr.sample_period)
-    hwc->sample_period =3D event->attr.alt_sample_period;
-  else
-    hwc->sample_period =3D event->attr.sample_period;
-}
+   syscall            calls  errors  total       min       avg
+max       stddev
+                                     (msec)    (msec)    (msec)
+(msec)        (%)
+   --------------- --------  ------ -------- --------- ---------
+---------     ------
+   ppoll                 29      0   188.684     0.000     6.506
+62.504     54.91%
+   read                  20      0     0.415     0.002     0.021
+0.345     82.16%
+   write                 24      0     0.085     0.001     0.004
+0.012     12.09%
+   sendmsg                4      0     0.039     0.005     0.010
+0.014     24.12%
+   recvmsg                8      0     0.034     0.003     0.004
+0.005      4.81%
+   poll                   8      0     0.020     0.002     0.003
+0.003      8.96%
 
-Rob
+The new option is working as expected, thank you.
+
+Acked-by: Howard Chu <howardchu95@gmail.com>
+
+Thanks,
+Howard
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (4):
+>   perf trace: Allocate syscall stats only if summary is on
+>   perf trace: Convert syscall_stats to hashmap
+>   perf tools: Get rid of now-unused rb_resort.h
+>   perf trace: Add --summary-mode option
+>
+>  tools/perf/Documentation/perf-trace.txt |   4 +
+>  tools/perf/builtin-trace.c              | 252 +++++++++++++++++++-----
+>  tools/perf/util/rb_resort.h             | 146 --------------
+>  3 files changed, 208 insertions(+), 194 deletions(-)
+>  delete mode 100644 tools/perf/util/rb_resort.h
+>
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
+>
