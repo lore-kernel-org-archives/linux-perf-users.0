@@ -1,272 +1,307 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61B186A;
-	Sat,  1 Feb 2025 00:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C1B2C9A
+	for <linux-perf-users@vger.kernel.org>; Sat,  1 Feb 2025 07:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738368863; cv=none; b=oyGmH2sj4D+qVPj0HCiza8ZPNt1b6xVK0Laaq6MrmPL7AfAwR3mnpzpgCNhOICrIkIS6pwx7UzTVWC3MfA8rr9gjY7xUK16HvWOMwDcdAtN3P1po34rN8zyVHuM5Q94qK85g5/ZWAKbLVnhVxvGJfxHVp9GdgOxU8DyoKnmf3Vw=
+	t=1738393245; cv=none; b=ifV4+v4cPuqbA/E8XUo245u926KLalvWfBCBKvgEEYua6XGCnNW2uOgX5miA+Mg7BM3o25J5to5bgyV1HNL3fTsPvMbYoaOJMYqzcsV4bII2anS3VNhigoTk8JifLoqSEYtOrPi7CdKPSt7O8XoNyi+vgNWgQFGe5I7MUfup0Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738368863; c=relaxed/simple;
-	bh=/A5SoDz7LSIXfvnEgiwZHYpu4g9JIraM8Pn1nn2qzok=;
+	s=arc-20240116; t=1738393245; c=relaxed/simple;
+	bh=qMTNwUOqj6NbWVkC8zDJU6wWwxkM9OscN1Nwes7cuOw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dbDHLaNf+6z70oA9A/lqZOGPMzlIagZBUvS74l5TTjVImq7/cLiyD2TcXWUr0DYg+HV8JHvK3Pl1GEtaZR/fFBGmhqk92VwI+JXQMXwQHYKYtChaS7e0kbfFRbzt1AdwjQJwSfOpNJD6y1DBL5ANL9lnSWMEhb2KEtr2+Ri+dwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etPLMon4; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=eJescvNxZE/kg6P+JcUkwTEj03nc1rfZdkJxx7NIUBhIyNOGY25HvaCl27nIJm8wZaIErDyr2esaHEcvpYilW4II7vj5drutOGtIZxvMhRoZawF493C/jALjYvsGiZVHo7qU9sW7XhO7MvHs7zanRvcWX+95qNfb2Ekhh96gqXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mSUGGXKX; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etPLMon4"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6efc58fae20so14301957b3.0;
-        Fri, 31 Jan 2025 16:14:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mSUGGXKX"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so97555ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 Jan 2025 23:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738368860; x=1738973660; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738393242; x=1738998042; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sjt3WE0fuhhnqx66YNfrENAdfkskKj5pJFcQO4ahr+M=;
-        b=etPLMon4gtzb/IDIzHJ+AtXaSma09gyl6oimw+l9hDlPz3pvTXxCr2v+M7qrhgmArN
-         k89g1/qS4fLbzL4JK1tBObOBC+oATKZs9iWJ4YAoV1Q/y2XflLM6Okh5RjIH3xj9Ies9
-         NtOEPhxerx2bLx9Dz3HiXiKYuPpLyUoNBMaOXaeFx5NqgVt40UZ7FZ085U+DN1l4aovC
-         VeE+S2IQTgz+IKeZzcKXvnLZTCbXqLqpLGHqc3mo2KMmM8BCD9pwveu/JAD7lh9TEFBx
-         QkvgjisD08LhtVwsAlXlpXRSZJM8dMk0APCMIr1V++Ere8NmZA1UdgnwnaY6LixFCN1i
-         tZ7w==
+        bh=NlUH0toT5TGu6PN1P+trJsIboeFtqEWlbpiNAeIZK94=;
+        b=mSUGGXKXqsXdqu6Xn8jLbZH8MMCjXg+GoJcAzHYa/uoMhguS844SWUtBggHWId4e6A
+         yo4KTeIJF/yyKsoat8kUeeKgiMRgoCkDSgneoYcB7majWwcwoCHr9l0K9a0k4V7YQ/C1
+         jYOoRT2S1v85Qrtcq8vjwmX2GS4bo4d5DNJ4LV0L2b47ixSfT6WMOBWNVTy8+kEjW7l7
+         Rbb02s0JyoSzuVJbUFbUCOosJht+6xIRLbI1IJRqwhIS5L9T1CZGiJk2OFbmd3kI/C95
+         FsSzh1pA/Z1cy1kbclRtK8GW4KWwoF4Gi3Y/zgbJPYPMgRFggW/bHQRDlQBWutjp2Iv+
+         ASYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738368860; x=1738973660;
+        d=1e100.net; s=20230601; t=1738393242; x=1738998042;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sjt3WE0fuhhnqx66YNfrENAdfkskKj5pJFcQO4ahr+M=;
-        b=RmKk2VM7L0JVKyYn0ZfqtGA3jJJJjx4anlVHJtQDei9d8Rm4QcR4CQ8pFR+G7+UNKJ
-         U2DshC3rRIJEYatJLG13ixiOhuZrl5RTwbpiVxIM7BgoqIbzKsgliTkD3EwQGnvmgB/z
-         Bs3NNDi8izKpBwbzrBJ6T8LeGEuXQmMDCntfHgXkAPGoO8PwKtaiaFXnlruQAtoRKhc0
-         LXHk0ffNh4TDVaK/OyOPyQl0jYVn5k2g5y8QixtiDzk8hdemMrS7yhIV5Eral1d8hEs5
-         UGqYogfoMK407Bs+KPHgW+Ysy+X3uie09W1NCQeyuvwnpItfSDDvAcxsm6pwk7VcJzut
-         QuIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVcYIm4mBoiE9AvlmRNDEOUHRqsPV/yufk+UctRagBytiXygTKfa/DDsjoIAaOIjBCE7Py9cTH1xMFRAE=@vger.kernel.org, AJvYcCUkGcJE8MGRPCuhcwT+oEElLcCr4vb7Zk0yklLEVZomoCfceKOTe6OK4PmKxFdw3dNhMdNDhspbVzg6+bbXZ17qDg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh/nMidXni+TNOBLwbNmMyn0k19qoxfzeyHlmUlKEVYMjoSDum
-	cNi2A8xx61f8ufBaCupn/LMoASsDBpGysE/mftbDrlksSteKSVEhYKVLCtyX7JPvezPbMOfXGNy
-	noOfPbSsU2B/BnIgbWM5UlhU5ut4=
-X-Gm-Gg: ASbGnct1SCH8AR8vDZyoHrLhwPxnijKVNQCKu8b6vcSB7geib9W6rFFkm/D2e+5o9G+
-	P3ueDVfRfA4sqcYJIiyvW/i33DN/o7UCrYoXa7++SktGQlhlQkcuCK5otYxi+W4ocHIZ1KbU=
-X-Google-Smtp-Source: AGHT+IGvsMuCmPj7gT3SIglsSG2Gow5tWVFoi561kHvD/JyEd0rZtDpb3Yu/7ldMuFSbucWPedIdoTa423PPduvBNWw=
-X-Received: by 2002:a05:690c:b1e:b0:6ef:aae1:ac5d with SMTP id
- 00721157ae682-6f7a83f2a2bmr113306867b3.27.1738368860424; Fri, 31 Jan 2025
- 16:14:20 -0800 (PST)
+        bh=NlUH0toT5TGu6PN1P+trJsIboeFtqEWlbpiNAeIZK94=;
+        b=Q7WEyX2cJXqTDOf7NSBR7ryOcEH3WI9eFjM2InM9HVHBgj7csh0ZTvt7FfEJ6qkynq
+         hCZHwI51NULjIbrbTCUt+ijlBIIEzYrJYuBD5kkBqyU9AEms/Nfk0qBl76nykBj0ZQ0z
+         /FSBGtjySHaYntt1jc7kj7qQAqAEQCfCtUCTQjkK+hiEDlW/fhIFbKp44NlAYaBekhmH
+         Llpb/9qlMqUDC/eTRp0j89FZs/bWVV2813YIqdvUy+y2a1G/L2qdMsnO9HBgdNmUyWmt
+         JZDekuVrvqgAkeBAKnnl68x7z2TXnmQzj1aQUP8vAJV/8PVzXZf27lGpxP6CLG68wyrs
+         zFsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUteshw+aK/swcg/5lTvHD7bwph02EX8AF5K3arkg0/hUSVZUMGgHdDOyulTO6AzyCqwVYct76yigxby2KFRPfS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDhvoy0+XxZgGZMBAL0pBLcHKWTTmGxE2uDEX9s82jK0Q85o0O
+	wkYOCU3dsXwfjYhy6cK2aZ3gwNeRBnSLhvNXLDMxVl/EQqtz+AL2rHLu+AEHc+tfkz3or6OQ/po
+	fV5WR0OwqzuwueOTkQ4vTAjHsEsL2PjVPxJreY3kd3IjtIUZ0Anh7
+X-Gm-Gg: ASbGncvhRSq+rZkN/f+sdXkBAiF/RlBQPBG5H/A0rsCdImKSNXxIKfsf+TfZkfGuKAO
+	kExAS+7/nw8Co885gjfyOvcHnxf5zRriCvslgW6LtURyy7lNAluEa0ND/nJXwjsKECEOAe8kPGA
+	==
+X-Google-Smtp-Source: AGHT+IE4n3U84QUfbLQnJnUyA1TzpOEhS52Drot1jC3LRx5aT+dz+9D32y8IZ499NzvxMSVVZWdAyxrSFA/pZ+A83EM=
+X-Received: by 2002:a05:6e02:1b05:b0:3a7:9ec6:2cff with SMTP id
+ e9e14a558f8ab-3d0220232d4mr995145ab.25.1738393241506; Fri, 31 Jan 2025
+ 23:00:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241215190712.787847-1-howardchu95@gmail.com>
- <Z2CGdi5xpJy6C6sv@google.com> <Z2mzzytPOpjF0Hxe@x1> <Z2m8qzyLdm1BEYuF@x1>
- <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
- <Z4U343yQUDF3H7qs@x1> <Z4vyvNChyXZx33xf@google.com> <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
- <Z5LWkMPTu6mUtdJ-@google.com>
-In-Reply-To: <Z5LWkMPTu6mUtdJ-@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 31 Jan 2025 16:14:09 -0800
-X-Gm-Features: AWEUYZlbEpaMTaV3W232vXZXCF18M9akyEVKSwdIEJWe4PeU17lJGsQzwys_hVo
-Message-ID: <CAH0uvoit+6nhADW_d61VcaSE17Wp5DH7BtUVjQdT=kU9rMqaaA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf trace
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250131112400.568975-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250131112400.568975-1-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 31 Jan 2025 23:00:30 -0800
+X-Gm-Features: AWEUYZksCGBFTmtkS-T7mDYDAIodRX0c_XzFfccfrYYEjZvFBzXG_qUhoLkdVAE
+Message-ID: <CAP-5=fU08m2nTzykWQ07cZY08j5rzSz7wZUYMBiTSabwVvPYMg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
-
-Sorry for somehow missing this reply...
-
-On Thu, Jan 23, 2025 at 3:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, Jan 31, 2025 at 3:24=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> On Tue, Jan 21, 2025 at 04:19:35PM -0800, Howard Chu wrote:
-> > Hello Namhyung,
-> >
-> > On Sat, Jan 18, 2025 at 10:28=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Mon, Jan 13, 2025 at 12:57:23PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > On Fri, Jan 10, 2025 at 04:52:08PM -0800, Howard Chu wrote:
-> > > > > Hello Arnaldo,
-> > > > >
-> > > > > On Mon, Dec 23, 2024 at 11:40=E2=80=AFAM Arnaldo Carvalho de Melo
-> > > > > <acme@kernel.org> wrote:
-> > > > > >
-> > > > > > On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de M=
-elo wrote:
-> > > > > > > On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
-> > > > > > > > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
-> > > > > > > > > Changes in v4:
-> > > > > > > > >  - Use if -f to check the existence of vmlinux BTF, and e=
-xit if it
-> > > > > > > > >    doesn't, so trace_test_string will not overwrite $err,=
- and keep
-> > > > > > > > >    running the test.
-> > > > > > > > >
-> > > > > > > > > Changes in v3:
-> > > > > > > > >  - Add vmlinux BTF check, and skip the tests if it doesn'=
-t exist
-> > > > > > > > >
-> > > > > > > > > v1, v2:
-> > > > > > > > >
-> > > > > > > > > The previous version of the perf trace BTF general augmen=
-tation tests
-> > > > > > > > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Mel=
-o
-> > > > > > > > > <acme@kernel.org> for pointing this out), this version us=
-es bash instead
-> > > > > > > > > of POSIX shell to pass Shellcheck.
-> > > > > > > > >
-> > > > > > > > > This patch series also adds documentation for the new opt=
-ion
-> > > > > > > > > --force-btf, which is used in the tests.
-> > > > > > > > >
-> > > > > > > > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-=
-W6I274@x1/
-> > > > > > > > >
-> > > > > > > > > Howard Chu (2):
-> > > > > > > > >   perf trace: Add tests for BTF general augmentation
-> > > > > > > > >   perf docs: Add documentation for --force-btf option
-> > > > > > > >
-> > > > > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > > >
-> > > > > > > Thanks, applied to perf-tools-next,
-> > > > > >
-> > > > > > It fails when running in parallel mode, sometimes:
-> > > > > >
-> > > > > > 109: perf trace BTF general tests                              =
-      : FAILED!
-> > > > > >
-> > > > > > Then:
-> > > > > >
-> > > > > > root@number:~# perf stat --null -r 10 perf test "BTF general"
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : FAILED!
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : FAILED!
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > > 109: perf trace BTF general tests                              =
-      : Ok
-> > > > > >
-> > > > > >  Performance counter stats for 'perf test BTF general' (10 runs=
-):
-> > > > > >
-> > > > > >              2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
-> > > > > >
-> > > > > > root@number:~#
-> > > > > >
-> > > > > >
-> > > > > > So its not just when running in paralell, anyway, its merged, w=
-e can go
-> > > > > > on from what we got there.
-> > > > >
-> > > > > It never fails on my machine, I think the reason is my machine is=
- not
-> > > > > fully-loaded. Can you please run
-> > > > > ```
-> > > > > perf stat --null -r 10 perf test -vv "BTF general"
-> > > > > ```
-> > > > > And provide the output?
-> > > >
-> > > > root@number:~# grep -m1 'model name' /proc/cpuinfo
-> > > > model name    : Intel(R) Core(TM) i7-14700K
-> > > > root@number:~#
-> > > >
-> > > > root@number:~# perf stat --null -r 10 perf test -vv "BTF general"
-> > > > 106: perf trace BTF general tests:
-> > > > --- start ---
-> > > > test child forked, pid 47824
-> > > > Checking if vmlinux BTF exists
-> > > > Testing perf trace's string augmentation
-> > > > String augmentation test failed
-> > > > ---- end(-1) ----
-> > > > 106: perf trace BTF general tests                                  =
-  : FAILED!
-> > > > 106: perf trace BTF general tests:
-> > > > --- start ---
-> > > > test child forked, pid 47842
-> > > > Checking if vmlinux BTF exists
-> > > > Testing perf trace's string augmentation
-> > > > String augmentation test failed
-> > > > ---- end(-1) ----
-> > > > 106: perf trace BTF general tests                                  =
-  : FAILED!
-> > > > ...
-> > >
-> > > I also see the failure on not fully-loaded machines (both Intel and
-> > > AMD).
-> > >
-> > >   $ sudo ./perf test -v BTF
-> > >   --- start ---
-> > >   test child forked, pid 525025
-> > >   Checking if vmlinux BTF exists
-> > >   Testing perf trace's string augmentation
-> > >   String augmentation test failed
-> > >   ---- end(-1) ----
-> > >   106: perf trace BTF general tests                                  =
-  : FAILED!
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> >
-> > Just wondering, did you and Arnaldo apply this patch:
-> > https://lore.kernel.org/linux-perf-users/20241213023047.541218-1-howard=
-chu95@gmail.com/
+> perf test 11 hwmon fails on s390 with this error
 >
-> I don't think we applied it, will add to perf-tools.
+>  # ./perf test -Fv 11
+>  --- start ---
+>  ---- end ----
+>  11.1: Basic parsing test             : Ok
+>  --- start ---
+>  Testing 'temp_test_hwmon_event1'
+>  Using CPUID IBM,3931,704,A01,3.7,002f
+>  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
+>  ---- end ----
+>  11.2: Parsing without PMU name       : FAILED!
+>  --- start ---
+>  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+>     292470092988416 !=3D 655361
+>  ---- end ----
+>  11.3: Parsing with PMU name          : FAILED!
+>  #
 >
-> >
-> > This seems to solve the problem for me...
+> The root cause is in member test_event::config which is initialized
+> to 0xA0001 or 655361. During event parsing a long list event parsing
+> functions are called and end up with this gdb call stack:
 >
-> But I'm not sure if it fixes the problem.  IIUC the patch fixes the
-> loading problem.
-
-Yes. However, if the machine is unable to load the BPF program, the
-error message will be:
-
-perf $ sudo ./perf test general -v
---- start ---
-test child forked, pid 173990
-Checking if vmlinux BTF exists
-Testing perf trace's string augmentation
-String augmentation test failed
----- end(-1) ----
-106: perf trace BTF general tests                                    : FAIL=
-ED!
-
-Which is indistinguishable from an actual string augmentation error
-that has a string mismatch...
-
-> And for some reason, I don't see the problem any more.
-> But I remember this sometimes happened in the past.
-
-Do you mean that perf trace breaks occasionally? This sounds urgent.
-Could you please provide me with your kernel version and Clang
-version? Thank you very much! :)
-
-Thanks,
-Howard
+>  #0  hwmon_pmu__config_term (hwm=3D0x168dfd0, attr=3D0x3ffffff5ee8,
+>         term=3D0x168db60, err=3D0x3ffffff81c8) at util/hwmon_pmu.c:623
+>  #1  hwmon_pmu__config_terms (pmu=3D0x168dfd0, attr=3D0x3ffffff5ee8,
+>         terms=3D0x3ffffff5ea8, err=3D0x3ffffff81c8) at util/hwmon_pmu.c:6=
+62
+>  #2  0x00000000012f870c in perf_pmu__config_terms (pmu=3D0x168dfd0,
+>         attr=3D0x3ffffff5ee8, terms=3D0x3ffffff5ea8, zero=3Dfalse,
+>         apply_hardcoded=3Dfalse, err=3D0x3ffffff81c8) at util/pmu.c:1519
+>  #3  0x00000000012f88a4 in perf_pmu__config (pmu=3D0x168dfd0, attr=3D0x3f=
+fffff5ee8,
+>         head_terms=3D0x3ffffff5ea8, apply_hardcoded=3Dfalse, err=3D0x3fff=
+fff81c8)
+>         at util/pmu.c:1545
+>  #4  0x00000000012680c4 in parse_events_add_pmu (parse_state=3D0x3ffffff7=
+fb8,
+>         list=3D0x168dc00, pmu=3D0x168dfd0, const_parsed_terms=3D0x3ffffff=
+6090,
+>         auto_merge_stats=3Dtrue, alternate_hw_config=3D10)
+>         at util/parse-events.c:1508
+>  #5  0x00000000012684c6 in parse_events_multi_pmu_add (parse_state=3D0x3f=
+fffff7fb8,
+>         event_name=3D0x168ec10 "temp_test_hwmon_event1", hw_config=3D10,
+>         const_parsed_terms=3D0x0, listp=3D0x3ffffff6230, loc_=3D0x3ffffff=
+70e0)
+>         at util/parse-events.c:1592
+>  #6  0x00000000012f0e4e in parse_events_parse (_parse_state=3D0x3ffffff7f=
+b8,
+>         scanner=3D0x16878c0) at util/parse-events.y:293
+>  #7  0x00000000012695a0 in parse_events__scanner (str=3D0x3ffffff81d8
+>         "temp_test_hwmon_event1", input=3D0x0, parse_state=3D0x3ffffff7fb=
+8)
+>         at util/parse-events.c:1867
+>  #8  0x000000000126a1e8 in __parse_events (evlist=3D0x168b580,
+>         str=3D0x3ffffff81d8 "temp_test_hwmon_event1", pmu_filter=3D0x0,
+>         err=3D0x3ffffff81c8, fake_pmu=3Dfalse, warn_if_reordered=3Dtrue,
+>         fake_tp=3Dfalse) at util/parse-events.c:2136
+>  #9  0x00000000011e36aa in parse_events (evlist=3D0x168b580,
+>         str=3D0x3ffffff81d8 "temp_test_hwmon_event1", err=3D0x3ffffff81c8=
+)
+>         at /root/linux/tools/perf/util/parse-events.h:41
+>  #10 0x00000000011e3e64 in do_test (i=3D0, with_pmu=3Dfalse, with_alias=
+=3Dfalse)
+>         at tests/hwmon_pmu.c:164
+>  #11 0x00000000011e422c in test__hwmon_pmu (with_pmu=3Dfalse)
+>         at tests/hwmon_pmu.c:219
+>  #12 0x00000000011e431c in test__hwmon_pmu_without_pmu (test=3D0x1610368
+>         <suite.hwmon_pmu>, subtest=3D1) at tests/hwmon_pmu.c:23
 >
-> Thanks,
-> Namhyung
+> where the attr::config is set to value 292470092988416 or 0x10a0000000000
+> in line 625 of file ./util/hwmon_pmu.c:
+>
+>    attr->config =3D key.type_and_num;
+>
+> However member key::type_and_num is defined as union and bit field:
+>
+>    union hwmon_pmu_event_key {
+>         long type_and_num;
+>         struct {
+>                 int num :16;
+>                 enum hwmon_type type :8;
+>         };
+>    };
+>
+> s390 is big endian and Intel is little endian architecture.
+> The events for the hwmon dummy pmu have num =3D 1 or num =3D 2 and
+> type is set to HWMON_TYPE_TEMP (which is 10).
+> On s390 this assignes member key::type_and_num the value of
+> 0x10a0000000000 (which is 292470092988416) as shown in above
+> trace output.
+>
+> Fix this and export the structure/union hwmon_pmu_event_key
+> so the test shares the same implementation as the event parsing
+> functions for union and bit fields. This should avoid
+> endianess issues on all platforms.
+>
+> Output after:
+>  # ./perf test -F 11
+>  11.1: Basic parsing test         : Ok
+>  11.2: Parsing without PMU name   : Ok
+>  11.3: Parsing with PMU name      : Ok
+>  #
+>
+> Fixes: 531ee0fd4836 ("perf test: Add hwmon "PMU" test")
+> Cc: Ian Rogers <irogers@google.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks!
+Ian
+
+> ---
+>  tools/perf/tests/hwmon_pmu.c | 16 +++++++++++-----
+>  tools/perf/util/hwmon_pmu.c  | 14 --------------
+>  tools/perf/util/hwmon_pmu.h  | 16 ++++++++++++++++
+>  3 files changed, 27 insertions(+), 19 deletions(-)
+>
+> diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
+> index d2b066a2b557..0837aca1cdfa 100644
+> --- a/tools/perf/tests/hwmon_pmu.c
+> +++ b/tools/perf/tests/hwmon_pmu.c
+> @@ -13,17 +13,23 @@
+>  static const struct test_event {
+>         const char *name;
+>         const char *alias;
+> -       long config;
+> +       union hwmon_pmu_event_key key;
+>  } test_events[] =3D {
+>         {
+>                 "temp_test_hwmon_event1",
+>                 "temp1",
+> -               0xA0001,
+> +               .key =3D {
+> +                       .num =3D 1,
+> +                       .type =3D 10
+> +               },
+>         },
+>         {
+>                 "temp_test_hwmon_event2",
+>                 "temp2",
+> -               0xA0002,
+> +               .key =3D {
+> +                       .num =3D 2,
+> +                       .type =3D 10
+> +               },
+>         },
+>  };
+>
+> @@ -183,11 +189,11 @@ static int do_test(size_t i, bool with_pmu, bool wi=
+th_alias)
+>                     strcmp(evsel->pmu->name, "hwmon_a_test_hwmon_pmu"))
+>                         continue;
+>
+> -               if (evsel->core.attr.config !=3D (u64)test_events[i].conf=
+ig) {
+> +               if (evsel->core.attr.config !=3D (u64)test_events[i].key.=
+type_and_num) {
+>                         pr_debug("FAILED %s:%d Unexpected config for '%s'=
+, %lld !=3D %ld\n",
+>                                 __FILE__, __LINE__, str,
+>                                 evsel->core.attr.config,
+> -                               test_events[i].config);
+> +                               test_events[i].key.type_and_num);
+>                         ret =3D TEST_FAIL;
+>                         goto out;
+>                 }
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index 4acb9bb19b84..acd889b2462f 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -107,20 +107,6 @@ struct hwmon_pmu {
+>         int hwmon_dir_fd;
+>  };
+>
+> -/**
+> - * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
+> - * represents an event.
+> - *
+> - * Related hwmon files start <type><number> that this key represents.
+> - */
+> -union hwmon_pmu_event_key {
+> -       long type_and_num;
+> -       struct {
+> -               int num :16;
+> -               enum hwmon_type type :8;
+> -       };
+> -};
+> -
+>  /**
+>   * struct hwmon_pmu_event_value: Value in hwmon_pmu->events.
+>   *
+> diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+> index 882566846df4..b3329774d2b2 100644
+> --- a/tools/perf/util/hwmon_pmu.h
+> +++ b/tools/perf/util/hwmon_pmu.h
+> @@ -91,6 +91,22 @@ enum hwmon_item {
+>         HWMON_ITEM__MAX,
+>  };
+>
+> +/**
+> + * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
+> + * represents an event.
+> + * union is exposed for testing to ensure problems are avoided on big
+> + * endian machines.
+> + *
+> + * Related hwmon files start <type><number> that this key represents.
+> + */
+> +union hwmon_pmu_event_key {
+> +       long type_and_num;
+> +       struct {
+> +               int num :16;
+> +               enum hwmon_type type :8;
+> +       };
+> +};
+> +
+>  bool perf_pmu__is_hwmon(const struct perf_pmu *pmu);
+>  bool evsel__is_hwmon(const struct evsel *evsel);
+>
+> --
+> 2.48.1
 >
