@@ -1,602 +1,459 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD47153838
-	for <linux-perf-users@vger.kernel.org>; Sat,  1 Feb 2025 07:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DA3A935
+	for <linux-perf-users@vger.kernel.org>; Sat,  1 Feb 2025 07:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738394128; cv=none; b=IttZKSChHCKhfDsdTJA47UZJ6gooUhGz2YeA4wSqOUvdTo1K8X9IYciwtRZ4hjshhACwrfNCW+yfQjASZEEMLQOA7Icw2XB0pECnyv2Avo/zoV8TqGaLOGj9UBFZ4BIYo+eCpyUKqaNwdHC1fUGQBxRiy3EaIhed2wIo3TIuGbY=
+	t=1738394778; cv=none; b=tJ7YGYvwP/zEGT330NHe20CKqkOWCvTN7WPJ1sCUCTU9vwONimqAlaERajOhAZdAMDXC53lI8L1EGDsRDtM2PXqf9yEHI+K1Dhrztgd204UMlI42Mtoa02yaEfePDs3yeyJeX5+2bTgqxLo9uCoMifiZ7vVO0yET/gkfo9UtQNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738394128; c=relaxed/simple;
-	bh=FMNgchTb8Bwy7CFd6Lez7b3FoQaixr9LacMpTC9MSF8=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=aNjV0a8HZ7zY3JZdJ1gEZKH597X6uCHzsUaKieslvHioZYSDWl6oR/uoBBVWg9KfD6jzsudr4I7T0ltMlrN8YjvV3VwNZ7zyIh4w4pQPe+jcztAl7FemBroVLE9kePzQnzM3qO1wcmSOC2GGNuQ2wAwQ05Ts1CcIAfPhGjBEYz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YB8KXW4E; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1738394778; c=relaxed/simple;
+	bh=OzRFvH6dX3ZDYOR1kCoI/27ihgInrvKzLfxTrSJtCJQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mXc6GiX1fq6lKwpDj5QP2REELDIIvIlw0di7ntRqxfVp9qtC5MDliSTIpuq5g7j9aL8mhUkuDwCkgcv/OIVnWjVKbU6e+KpifESG/hHZVsG6+HJ3YOg+tPZn1AZQjSddZNS0GMINIUUFkF6A2pmsuUBoCmll4J/2n0NQukV6ijQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qbnb1/ar; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YB8KXW4E"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572df6db3eso4785089276.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Jan 2025 23:15:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbnb1/ar"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so81325ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 Jan 2025 23:26:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738394125; x=1738998925; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mnARD5KmGmI9P8GbP7nb7uxAUaUR8F2fPUYVmgT12+I=;
-        b=YB8KXW4EynmKLTsoGe/NGP7e/7nQSL2PkIRNTgls122rwgt4CR5y0auLEUB8nGnPGZ
-         D0SxYaLCgBZceDi2W8JieR/WMm9gSy4NOqCKXMO2LkWcHCQfdYvX1pDw/pUvFqNYvABw
-         jVvVCWblWvwYDc7xdzItvRQ2xdT0OE4OXsxIkEwHl9kw78n/KqFrnzHI0TdYJpdP/Icv
-         ZDF1LEYI/icUJNrCQbnv3KKO5Bz8xdDG+hB/O/JDjX7tZrH9CEfi+xfwA9eIwDCbMrwn
-         oqcvcDOReIaNMT1r9cS8Q6rGrxR1btIFH4aBh8VgJsKpK/djTrW+2sMOHpqSLHptcxW7
-         jbLg==
+        d=google.com; s=20230601; t=1738394774; x=1738999574; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rux43aa/DTem+yepz3mKs1gCKlwGfSPEvQiGocgr7AQ=;
+        b=qbnb1/arXE4XrDonIZNxqvSMPDF4hUUQUrbkp/YzYvIJdNSR5bvT6KAMX5gWEZpGnX
+         lSPZLHrim92rDHdLStISptStXLVblniE0efyl01RBpa8lXfImqU7ToftzLmWSHO87OYs
+         +FhCEEFi3bczQx5JfuTV/r2/oQwpOhsEYHIYfpx7XYDsTJo+fGcuLz+ro2/UpzyYtq/U
+         GwW3zl4AADoCiEpGgEck3OUbSGalvqdh4mJUv92rNiD663iUBagTH9gYHqIWd+nZj/0U
+         M05N1jvoo63rDqW51B9coYgCc3eppDmvJHPYWumjc/fwlvgozhE21eiETKdOnbvNPZLA
+         8JIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738394125; x=1738998925;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mnARD5KmGmI9P8GbP7nb7uxAUaUR8F2fPUYVmgT12+I=;
-        b=oQsHL7lVqhCsK2d9jUZknOfstWZ6ncc2NApgFIKXdAhngNo4IMTv+eEe6VwZzpvv8o
-         6falA9F6K57Rxd5sSq6aALL3RN+iYcmVNYHen3HRjWLBKFRnZqg3SvaQUN4mn33NMSiY
-         BaDSbz9lX0bmih4BGwtGb53G6hOwpLrKTXtXDyM7PNsAktIHYfFAnOiT1tJEMfWEwbiy
-         VDypOlDinNV03/ngfv5sXg9FTU8h3qAEy73ozMqDmlwSy57AbGhV5ieiDZ7P0uaw5EoB
-         gVP25PTLTeUm4yBcomvVB5xiRlKTLrDy1gsriXjh/3TJAcws2k2u2AQuOiN4eXXviSwO
-         igUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjJlJMgNNyitKsF+UGe6BpxY/GR0eox2ecwOsUH2SEJ8t5ha14PXz4g9Iog9RKtNpgMYpeIAc4yP6f3Ckm0wB+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3gm0ofxRBybegAW0tMbI7vC7ivwn1S0QJw1J/yF6QM2oLpVit
-	xII5kCF+bPS+Z0SoFldSokuM3WDlUxmRKc5sLge4ek+U59ZLMzHZmoG2rPLvw5ECvltGHNlehqV
-	R4vnsfg==
-X-Google-Smtp-Source: AGHT+IHix7zsQvtDjY0A+vbsU8RPoUQxN5ZBhIyZ7EO/J0fvd3y5jVEcBIy+V/L5DENYEoJ5DQmhRVevWS/s
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de26:87db:e4d0:62b6])
- (user=irogers job=sendgmr) by 2002:a25:bc09:0:b0:e5a:c925:164a with SMTP id
- 3f1490d57ef6-e5ac9251994mr22239276.8.1738394124528; Fri, 31 Jan 2025 23:15:24
- -0800 (PST)
-Date: Fri, 31 Jan 2025 23:14:55 -0800
-In-Reply-To: <20250201071455.718247-1-irogers@google.com>
-Message-Id: <20250201071455.718247-8-irogers@google.com>
+        d=1e100.net; s=20230601; t=1738394774; x=1738999574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rux43aa/DTem+yepz3mKs1gCKlwGfSPEvQiGocgr7AQ=;
+        b=CBYcDdAawBf/FRHSkdNI6JHolKsOZPe+3BxI1haIERGVp5nM8XPdFAVt23oRs+ONbY
+         jNeqGfy+bQWTbtwj7Yi3qX7Por22zn+cA9XsoGO8lr+oY/mX7Su/1JBHoAsPIZS4yRq7
+         nSCAPPHNOosgpFfZkpA9K8Ycp+yF5DHNvuYQAQuF/AC/2A71UxblH2TByJJPmU6j1JgD
+         0L/9dIqCbiGs6BgwQz/5BLPvm/H2G7c73Z+kOEDOlRGB+0uzgsepf3Kh1sfmlNVXeXft
+         P4DaxfojH4BOArNoEI5LvjvYUnTG3UNeE+C9ugEqB51KYZRNDgMLbJLz4xtKxWqscyVr
+         M51A==
+X-Forwarded-Encrypted: i=1; AJvYcCXPGz4JpEzKfretK5x/gO4c41F41SoFk/YMq7zdNPeZBLp0w1UlB3TPw5wRiKWd4xcZ0HVWn/ByS2HkXIPpACNX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO33QiVxQLJiJ2qA5X5nG3etP0kQpZbQ+JK6yg3H/sA0mV6pgz
+	6BgMVOQL9KqRpBNTEYtIAMDtLa2pxLAkHdY3HIhUxLYmMcpCn5xvIneRzrfDd5/fB0DUVJczf60
+	m/uO5+n/8NzXx1YWWVO//w09GMo/wdYqJ+ufQ
+X-Gm-Gg: ASbGncuzSjoJy60lvii/9kyPjHZvCLTYcmdYUEcr5rYQzm6kToaxmMTEl6/DsWkpBMq
+	/6VRu3ka9tlV5EgHTR/glPNi8uZLckIm3/czhqbdwhHVXaCGvEAvKB0kc2TUa17zv40MO/c1iQw
+	==
+X-Google-Smtp-Source: AGHT+IEDBdollJUgNSeH4FxdqnN1fjXQBSz3pqxWx9cxWDQky66sKbdbOod/UoGCyNvBa3LCKGHDSRxtLRW2F5dhnFw=
+X-Received: by 2002:a05:6e02:1a48:b0:3a7:c962:95d1 with SMTP id
+ e9e14a558f8ab-3d021f92aa0mr1290945ab.5.1738394773697; Fri, 31 Jan 2025
+ 23:26:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Subject: [PATCH v1 7/7] perf build: Remove Makefile.syscalls
+MIME-Version: 1.0
+References: <20250123074659.698123-1-irogers@google.com> <20250123074659.698123-3-irogers@google.com>
+ <2763b783-c316-46e8-b4db-469d1ba55ac4@linux.intel.com>
+In-Reply-To: <2763b783-c316-46e8-b4db-469d1ba55ac4@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Fri, 31 Jan 2025 23:26:02 -0800
+X-Gm-Features: AWEUYZl1JQd9Z9f4tlbIeVkd3Oa4u1Fq8jhNEUf7qYUss8N5aYCbd1-RZYmEE8c
+Message-ID: <CAP-5=fU2sGSS+OsKmn8C+Y7Msm-5qUFpotRc2rfgprhGpsroew@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] perf pmus: Restructure pmu_read_sysfs to scan
+ fewer PMUs
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?=" <bjorn@rivosinc.com>, Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now a single beauty file is generated and used by all architectures,
-remove the per-architecture Makefiles, Kbuild files and previous
-generator script.
+On Thu, Jan 30, 2025 at 11:24=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2025-01-23 2:46 a.m., Ian Rogers wrote:
+> > Rather than scanning core or all PMUs, allow pmu_read_sysfs to read
+> > some combination of core, other, hwmon and tool PMUs. The PMUs that
+> > should be read and are already read are held as bitmaps. It is known
+> > that a "hwmon_" prefix is necessary for a hwmon PMU's name, similarly
+> > with "tool", so only scan those PMUs in situations the PMU name or the
+> > PMU's type number make sense to.
+> >
+> > The number of openat system calls reduces from 276 to 98 for a hwmon
+> > event. The number of openats for regular perf events isn't changed.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/pmu.h  |   2 +
+> >  tools/perf/util/pmus.c | 144 ++++++++++++++++++++++++++---------------
+> >  2 files changed, 95 insertions(+), 51 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index dbed6c243a5e..edd36c20aedc 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -37,6 +37,8 @@ struct perf_pmu_caps {
+> >  };
+> >
+> >  enum {
+> > +     PERF_PMU_TYPE_PE_START    =3D 0,
+> > +     PERF_PMU_TYPE_PE_END      =3D 0xFFFEFFFF,
+> >       PERF_PMU_TYPE_HWMON_START =3D 0xFFFF0000,
+> >       PERF_PMU_TYPE_HWMON_END   =3D 0xFFFFFFFD,
+> >       PERF_PMU_TYPE_TOOL =3D 0xFFFFFFFE,
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index b493da0d22ef..3e3ffafcad71 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -37,10 +37,23 @@
+> >   */
+> >  static LIST_HEAD(core_pmus);
+> >  static LIST_HEAD(other_pmus);
+> > -static bool read_sysfs_core_pmus;
+> > -static bool read_sysfs_all_pmus;
+> > +enum perf_tool_pmu_type {
+> > +     PERF_TOOL_PMU_TYPE_PE_CORE,
+> > +#define PERF_TOOL_PMU_TYPE_PE_CORE_MASK (1 << PERF_TOOL_PMU_TYPE_PE_CO=
+RE)
+> > +     PERF_TOOL_PMU_TYPE_PE_OTHER,
+>
+> What is the PE short for?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.perf                      |  1 -
- tools/perf/arch/alpha/entry/syscalls/Kbuild   |  2 -
- .../alpha/entry/syscalls/Makefile.syscalls    |  5 --
- tools/perf/arch/arc/entry/syscalls/Kbuild     |  2 -
- .../arch/arc/entry/syscalls/Makefile.syscalls |  3 -
- tools/perf/arch/arm/entry/syscalls/Kbuild     |  4 -
- .../arch/arm/entry/syscalls/Makefile.syscalls |  2 -
- tools/perf/arch/arm64/entry/syscalls/Kbuild   |  3 -
- .../arm64/entry/syscalls/Makefile.syscalls    |  6 --
- tools/perf/arch/csky/entry/syscalls/Kbuild    |  2 -
- .../csky/entry/syscalls/Makefile.syscalls     |  3 -
- .../perf/arch/loongarch/entry/syscalls/Kbuild |  2 -
- .../entry/syscalls/Makefile.syscalls          |  3 -
- tools/perf/arch/mips/entry/syscalls/Kbuild    |  2 -
- .../mips/entry/syscalls/Makefile.syscalls     |  5 --
- tools/perf/arch/parisc/entry/syscalls/Kbuild  |  3 -
- .../parisc/entry/syscalls/Makefile.syscalls   |  6 --
- tools/perf/arch/powerpc/entry/syscalls/Kbuild |  3 -
- .../powerpc/entry/syscalls/Makefile.syscalls  |  6 --
- tools/perf/arch/riscv/entry/syscalls/Kbuild   |  2 -
- .../riscv/entry/syscalls/Makefile.syscalls    |  4 -
- tools/perf/arch/s390/entry/syscalls/Kbuild    |  2 -
- .../s390/entry/syscalls/Makefile.syscalls     |  5 --
- tools/perf/arch/sh/entry/syscalls/Kbuild      |  2 -
- .../arch/sh/entry/syscalls/Makefile.syscalls  |  4 -
- tools/perf/arch/sparc/entry/syscalls/Kbuild   |  3 -
- .../sparc/entry/syscalls/Makefile.syscalls    |  5 --
- tools/perf/arch/x86/entry/syscalls/Kbuild     |  3 -
- .../arch/x86/entry/syscalls/Makefile.syscalls |  6 --
- tools/perf/arch/xtensa/entry/syscalls/Kbuild  |  2 -
- .../xtensa/entry/syscalls/Makefile.syscalls   |  4 -
- tools/perf/scripts/Makefile.syscalls          | 61 ---------------
- tools/perf/scripts/syscalltbl.sh              | 76 -------------------
- 33 files changed, 242 deletions(-)
- delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuild
- delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
- delete mode 100644 tools/perf/scripts/Makefile.syscalls
- delete mode 100755 tools/perf/scripts/syscalltbl.sh
+Perf event, rather than type numbers being used for things like the fake PM=
+U.
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 793e702f9aaf..62176d685445 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -339,7 +339,6 @@ ifeq ($(filter feature-dump,$(MAKECMDGOALS)),feature-dump)
- FEATURE_TESTS := all
- endif
- endif
--include $(srctree)/tools/perf/scripts/Makefile.syscalls
- include Makefile.config
- endif
- 
-diff --git a/tools/perf/arch/alpha/entry/syscalls/Kbuild b/tools/perf/arch/alpha/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9a41e3572c3a..000000000000
---- a/tools/perf/arch/alpha/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls b/tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 690168aac34d..000000000000
---- a/tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_64  +=
--
--syscalltbl = $(srctree)/tools/perf/arch/alpha/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/arc/entry/syscalls/Kbuild b/tools/perf/arch/arc/entry/syscalls/Kbuild
-deleted file mode 100644
-index 11707c481a24..000000000000
---- a/tools/perf/arch/arc/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
-diff --git a/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls b/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 391d30ab7a83..000000000000
---- a/tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += arc time32 renameat stat64 rlimit
-diff --git a/tools/perf/arch/arm/entry/syscalls/Kbuild b/tools/perf/arch/arm/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9d777540f089..000000000000
---- a/tools/perf/arch/arm/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += oabi
--syscalltbl = $(srctree)/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/arm/entry/syscalls/Makefile.syscalls b/tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 11707c481a24..000000000000
---- a/tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
-diff --git a/tools/perf/arch/arm64/entry/syscalls/Kbuild b/tools/perf/arch/arm64/entry/syscalls/Kbuild
-deleted file mode 100644
-index 84c6599b4ea6..000000000000
---- a/tools/perf/arch/arm64/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls b/tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index e7e78c2d1c02..000000000000
---- a/tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 +=
--syscall_abis_64 += renameat rlimit memfd_secret
--
--syscalltbl = $(srctree)/tools/perf/arch/arm64/entry/syscalls/syscall_%.tbl
-diff --git a/tools/perf/arch/csky/entry/syscalls/Kbuild b/tools/perf/arch/csky/entry/syscalls/Kbuild
-deleted file mode 100644
-index 11707c481a24..000000000000
---- a/tools/perf/arch/csky/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
-diff --git a/tools/perf/arch/csky/entry/syscalls/Makefile.syscalls b/tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index ea2dd10d0571..000000000000
---- a/tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += csky time32 stat64 rlimit
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/Kbuild b/tools/perf/arch/loongarch/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9a41e3572c3a..000000000000
---- a/tools/perf/arch/loongarch/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls b/tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 47d32da2aed8..000000000000
---- a/tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_64 +=
-diff --git a/tools/perf/arch/mips/entry/syscalls/Kbuild b/tools/perf/arch/mips/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9a41e3572c3a..000000000000
---- a/tools/perf/arch/mips/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/mips/entry/syscalls/Makefile.syscalls b/tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 9ee914bdfb05..000000000000
---- a/tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_64 += n64
--
--syscalltbl = $(srctree)/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-diff --git a/tools/perf/arch/parisc/entry/syscalls/Kbuild b/tools/perf/arch/parisc/entry/syscalls/Kbuild
-deleted file mode 100644
-index 84c6599b4ea6..000000000000
---- a/tools/perf/arch/parisc/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls b/tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index ae326fecb83b..000000000000
---- a/tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32  +=
--syscall_abis_64  +=
--
--syscalltbl = $(srctree)/tools/perf/arch/parisc/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/Kbuild b/tools/perf/arch/powerpc/entry/syscalls/Kbuild
-deleted file mode 100644
-index 84c6599b4ea6..000000000000
---- a/tools/perf/arch/powerpc/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls b/tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index e35afbc57c79..000000000000
---- a/tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += nospu
--syscall_abis_64 += nospu
--
--syscalltbl = $(srctree)/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/riscv/entry/syscalls/Kbuild b/tools/perf/arch/riscv/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9a41e3572c3a..000000000000
---- a/tools/perf/arch/riscv/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls b/tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 9668fd1faf60..000000000000
---- a/tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += riscv memfd_secret
--syscall_abis_64 += riscv rlimit memfd_secret
-diff --git a/tools/perf/arch/s390/entry/syscalls/Kbuild b/tools/perf/arch/s390/entry/syscalls/Kbuild
-deleted file mode 100644
-index 9a41e3572c3a..000000000000
---- a/tools/perf/arch/s390/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/s390/entry/syscalls/Makefile.syscalls b/tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 9762d7abf17c..000000000000
---- a/tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_64 += renameat rlimit memfd_secret
--
--syscalltbl = $(srctree)/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/sh/entry/syscalls/Kbuild b/tools/perf/arch/sh/entry/syscalls/Kbuild
-deleted file mode 100644
-index 11707c481a24..000000000000
---- a/tools/perf/arch/sh/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
-diff --git a/tools/perf/arch/sh/entry/syscalls/Makefile.syscalls b/tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 25080390e4ed..000000000000
---- a/tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 +=
--syscalltbl = $(srctree)/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/sparc/entry/syscalls/Kbuild b/tools/perf/arch/sparc/entry/syscalls/Kbuild
-deleted file mode 100644
-index 84c6599b4ea6..000000000000
---- a/tools/perf/arch/sparc/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls b/tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index 212c1800b644..000000000000
---- a/tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32  +=
--syscall_abis_64  +=
--syscalltbl = $(srctree)/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/arch/x86/entry/syscalls/Kbuild b/tools/perf/arch/x86/entry/syscalls/Kbuild
-deleted file mode 100644
-index 84c6599b4ea6..000000000000
---- a/tools/perf/arch/x86/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,3 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
--syscall-y += syscalls_64.h
-diff --git a/tools/perf/arch/x86/entry/syscalls/Makefile.syscalls b/tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index db3d5d6d4e56..000000000000
---- a/tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32 += i386
--syscall_abis_64 +=
--
--syscalltbl = $(srctree)/tools/perf/arch/x86/entry/syscalls/syscall_%.tbl
-diff --git a/tools/perf/arch/xtensa/entry/syscalls/Kbuild b/tools/perf/arch/xtensa/entry/syscalls/Kbuild
-deleted file mode 100644
-index 11707c481a24..000000000000
---- a/tools/perf/arch/xtensa/entry/syscalls/Kbuild
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--syscall-y += syscalls_32.h
-diff --git a/tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls b/tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
-deleted file mode 100644
-index d4aa2358460c..000000000000
---- a/tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--syscall_abis_32  +=
--syscalltbl = $(srctree)/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-diff --git a/tools/perf/scripts/Makefile.syscalls b/tools/perf/scripts/Makefile.syscalls
-deleted file mode 100644
-index 8bf55333262e..000000000000
---- a/tools/perf/scripts/Makefile.syscalls
-+++ /dev/null
-@@ -1,61 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# This Makefile generates headers in
--# tools/perf/arch/$(SRCARCH)/include/generated/asm from the architecture's
--# syscall table. This will either be from the generic syscall table, or from a
--# table that is specific to that architecture.
--
--PHONY := all
--all:
--
--obj := $(OUTPUT)arch/$(SRCARCH)/include/generated/asm
--
--syscall_abis_32  := common,32
--syscall_abis_64  := common,64
--syscalltbl := $(srctree)/tools/scripts/syscall.tbl
--
--# let architectures override $(syscall_abis_%) and $(syscalltbl)
---include $(srctree)/tools/perf/arch/$(SRCARCH)/entry/syscalls/Makefile.syscalls
--include $(srctree)/tools/build/Build.include
---include $(srctree)/tools/perf/arch/$(SRCARCH)/entry/syscalls/Kbuild
--
--systbl := $(srctree)/tools/perf/scripts/syscalltbl.sh
--
--syscall-y   := $(addprefix $(obj)/, $(syscall-y))
--
--# Remove stale wrappers when the corresponding files are removed from generic-y
--old-headers := $(wildcard $(obj)/*.h)
--unwanted    := $(filter-out $(syscall-y),$(old-headers))
--
--quiet_cmd_remove = REMOVE  $(unwanted)
--      cmd_remove = rm -f $(unwanted)
--
--quiet_cmd_systbl = SYSTBL  $@
--      cmd_systbl = $(CONFIG_SHELL) $(systbl) \
--		   $(if $(systbl-args-$*),$(systbl-args-$*),$(systbl-args)) \
--		   --abis $(subst $(space),$(comma),$(strip $(syscall_abis_$*))) \
--		   $< $@
--
--all: $(syscall-y)
--	$(if $(unwanted),$(call cmd,remove))
--	@:
--
--$(obj)/syscalls_%.h: $(syscalltbl) $(systbl) FORCE
--	$(call if_changed,systbl)
--
--targets := $(syscall-y)
--
--# Create output directory. Skip it if at least one old header exists
--# since we know the output directory already exists.
--ifeq ($(old-headers),)
--$(shell mkdir -p $(obj))
--endif
--
--PHONY += FORCE
--
--FORCE:
--
--existing-targets := $(wildcard $(sort $(targets)))
--
---include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
--
--.PHONY: $(PHONY)
-diff --git a/tools/perf/scripts/syscalltbl.sh b/tools/perf/scripts/syscalltbl.sh
-deleted file mode 100755
-index a39b3013b103..000000000000
---- a/tools/perf/scripts/syscalltbl.sh
-+++ /dev/null
-@@ -1,76 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--#
--# Generate a syscall table header.
--#
--# Each line of the syscall table should have the following format:
--#
--# NR ABI NAME [NATIVE] [COMPAT]
--#
--# NR       syscall number
--# ABI      ABI name
--# NAME     syscall name
--# NATIVE   native entry point (optional)
--# COMPAT   compat entry point (optional)
--
--set -e
--
--usage() {
--	echo >&2 "usage: $0 [--abis ABIS] INFILE OUTFILE" >&2
--	echo >&2
--	echo >&2 "  INFILE    input syscall table"
--	echo >&2 "  OUTFILE   output header file"
--	echo >&2
--	echo >&2 "options:"
--	echo >&2 "  --abis ABIS        ABI(s) to handle (By default, all lines are handled)"
--	exit 1
--}
--
--# default unless specified by options
--abis=
--
--while [ $# -gt 0 ]
--do
--	case $1 in
--	--abis)
--		abis=$(echo "($2)" | tr ',' '|')
--		shift 2;;
--	-*)
--		echo "$1: unknown option" >&2
--		usage;;
--	*)
--		break;;
--	esac
--done
--
--if [ $# -ne 2 ]; then
--	usage
--fi
--
--infile="$1"
--outfile="$2"
--
--sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
--grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | sort -n > $sorted_table
--
--echo "static const char *const syscall_num_to_name[] = {" > $outfile
--# the params are: nr abi name entry compat
--# use _ for intentionally unused variables according to SC2034
--while read nr _ name _ _; do
--	echo "	[$nr] = \"$name\"," >> $outfile
--done < $sorted_table
--echo "};" >> $outfile
--
--echo "static const uint16_t syscall_sorted_names[] = {" >> $outfile
--
--# When sorting by name, add a suffix of 0s upto 20 characters so that system
--# calls that differ with a numerical suffix don't sort before those
--# without. This default behavior of sort differs from that of strcmp used at
--# runtime. Use sed to strip the trailing 0s suffix afterwards.
--grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | awk '{printf $3; for (i = length($3); i < 20; i++) { printf "0"; }; print " " $1}'| sort | sed 's/\([a-zA-Z1-9]\+\)0\+ \([0-9]\+\)/\1 \2/' > $sorted_table
--while read name nr; do
--	echo "	$nr,	/* $name */" >> $outfile
--done < $sorted_table
--echo "};" >> $outfile
--
--rm -f $sorted_table
--- 
-2.48.1.362.g079036d154-goog
+> The terminology "other" confused me at first glance.
 
+Agreed. It corresponds to the other list immediately above this code.
+
+> I think the PE_OTHER means the PMUs not core, hwmon or tool.
+> There is a "other_pmus" nearby, which means the PMUs not core, but
+> include hwmon and tool.
+>
+> Please add some comments to explain the scope of the TYPE_PE_OTHER.
+
+This is already this immediately above:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n31
+```
+ * other_pmus: All other PMUs which are not part of core_pmus list. It does=
+n't
+*             matter whether PMU is present per SMT-thread or outside of th=
+e
+*             core in the hw. For e.g., an instance of AMD ibs_fetch// and
+*             ibs_op// PMUs is present in each hw SMT thread, however they
+*             are captured under other_pmus. PMUs belonging to other_pmus
+*             must have pmu->is_core=3D0 but pmu->is_uncore could be 0 or 1=
+.
+```
+
+> > +#define PERF_TOOL_PMU_TYPE_PE_OTHER_MASK (1 << PERF_TOOL_PMU_TYPE_PE_O=
+THER)
+> > +     PERF_TOOL_PMU_TYPE_TOOL,
+> > +#define PERF_TOOL_PMU_TYPE_TOOL_MASK (1 << PERF_TOOL_PMU_TYPE_TOOL)
+> > +     PERF_TOOL_PMU_TYPE_HWMON,
+> > +#define PERF_TOOL_PMU_TYPE_HWMON_MASK (1 << PERF_TOOL_PMU_TYPE_HWMON)
+> > +#define PERF_TOOL_PMU_TYPE_ALL_MASK (PERF_TOOL_PMU_TYPE_PE_CORE_MASK |=
+       \
+> > +                                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK =
+| \
+> > +                                     PERF_TOOL_PMU_TYPE_TOOL_MASK |  \
+> > +                                     PERF_TOOL_PMU_TYPE_HWMON_MASK)
+> > +};
+>
+> Nit: Maybe it's better to split the enum perf_tool_pmu_type and #define.
+> It's a little bit hard for me to locate how many types there are at
+> first glance.
+
+Ok, will do in v3.
+
+> > +static unsigned int read_pmu_types;
+> >
+> > -static void pmu_read_sysfs(bool core_only);
+> > +static void pmu_read_sysfs(unsigned int to_read_pmus);
+> >
+> >  size_t pmu_name_len_no_suffix(const char *str)
+> >  {
+> > @@ -102,8 +115,7 @@ void perf_pmus__destroy(void)
+> >
+> >               perf_pmu__delete(pmu);
+> >       }
+> > -     read_sysfs_core_pmus =3D false;
+> > -     read_sysfs_all_pmus =3D false;
+> > +     read_pmu_types =3D 0;
+> >  }
+> >
+> >  static struct perf_pmu *pmu_find(const char *name)
+> > @@ -129,6 +141,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
+> >       struct perf_pmu *pmu;
+> >       int dirfd;
+> >       bool core_pmu;
+> > +     unsigned int to_read_pmus =3D 0;
+> >
+> >       /*
+> >        * Once PMU is loaded it stays in the list,
+> > @@ -139,11 +152,11 @@ struct perf_pmu *perf_pmus__find(const char *name=
+)
+> >       if (pmu)
+> >               return pmu;
+> >
+> > -     if (read_sysfs_all_pmus)
+> > +     if (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK)
+> >               return NULL;
+> >
+> >       core_pmu =3D is_pmu_core(name);
+> > -     if (core_pmu && read_sysfs_core_pmus)
+> > +     if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK=
+))
+> >               return NULL;
+> >
+> >       dirfd =3D perf_pmu__event_source_devices_fd();
+> > @@ -151,15 +164,27 @@ struct perf_pmu *perf_pmus__find(const char *name=
+)
+> >                              /*eager_load=3D*/false);
+> >       close(dirfd);
+> >
+> > -     if (!pmu) {
+> > -             /*
+> > -              * Looking up an inidividual PMU failed. This may mean na=
+me is
+> > -              * an alias, so read the PMUs from sysfs and try to find =
+again.
+> > -              */
+> > -             pmu_read_sysfs(core_pmu);
+> > +     if (pmu)
+> > +             return pmu;
+> > +
+> > +     /* Looking up an individual perf event PMU failed, check if a too=
+l PMU should be read. */
+> > +     if (!strncmp(name, "hwmon_", 6))
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_HWMON_MASK;
+> > +     else if (!strcmp(name, "tool"))
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_TOOL_MASK;
+> > +
+> > +     if (to_read_pmus) {
+> > +             pmu_read_sysfs(to_read_pmus);
+> >               pmu =3D pmu_find(name);
+> > +             if (pmu)
+> > +                     return pmu;
+> >       }
+> > -     return pmu;
+> > +     /* Read all necessary PMUs from sysfs and see if the PMU is found=
+. */
+> > +     to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_CORE_MASK;
+> > +     if (!core_pmu)
+> > +             to_read_pmus |=3D PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> > +     pmu_read_sysfs(to_read_pmus);
+> > +     return pmu_find(name);
+> >  }
+> >
+> >  static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
+> > @@ -176,11 +201,11 @@ static struct perf_pmu *perf_pmu__find2(int dirfd=
+, const char *name)
+> >       if (pmu)
+> >               return pmu;
+> >
+> > -     if (read_sysfs_all_pmus)
+> > +     if (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK)
+> >               return NULL;
+> >
+> >       core_pmu =3D is_pmu_core(name);
+> > -     if (core_pmu && read_sysfs_core_pmus)
+> > +     if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK=
+))
+> >               return NULL;
+> >
+> >       return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirf=
+d, name,
+> > @@ -197,52 +222,60 @@ static int pmus_cmp(void *priv __maybe_unused,
+> >  }
+> >
+> >  /* Add all pmus in sysfs to pmu list: */
+> > -static void pmu_read_sysfs(bool core_only)
+> > +static void pmu_read_sysfs(unsigned int to_read_types)
+> >  {
+> > -     int fd;
+> > -     DIR *dir;
+> > -     struct dirent *dent;
+> >       struct perf_pmu *tool_pmu;
+> >
+> > -     if (read_sysfs_all_pmus || (core_only && read_sysfs_core_pmus))
+> > +     if ((read_pmu_types & to_read_types) =3D=3D to_read_types) {
+> > +             /* All requested PMU types have been read. */
+> >               return;
+> > +     }
+> >
+> > -     fd =3D perf_pmu__event_source_devices_fd();
+> > -     if (fd < 0)
+> > -             return;
+> > +     if (to_read_types & (PERF_TOOL_PMU_TYPE_PE_CORE_MASK | PERF_TOOL_=
+PMU_TYPE_PE_OTHER_MASK)) {
+> > +             int fd =3D perf_pmu__event_source_devices_fd();
+> > +             DIR *dir;
+> > +             struct dirent *dent;
+> > +             bool core_only =3D (to_read_types & PERF_TOOL_PMU_TYPE_PE=
+_OTHER_MASK) =3D=3D 0;
+> >
+> > -     dir =3D fdopendir(fd);
+> > -     if (!dir) {
+> > -             close(fd);
+> > -             return;
+> > -     }
+> > +             if (fd < 0)
+> > +                     goto skip_pe_pmus;
+> >
+> > -     while ((dent =3D readdir(dir))) {
+> > -             if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "=
+.."))
+> > -                     continue;
+> > -             if (core_only && !is_pmu_core(dent->d_name))
+> > -                     continue;
+> > -             /* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_=
+pmus): */
+> > -             perf_pmu__find2(fd, dent->d_name);
+> > -     }
+> > +             dir =3D fdopendir(fd);
+> > +             if (!dir) {
+> > +                     close(fd);
+> > +                     goto skip_pe_pmus;
+> > +             }
+> >
+> > -     closedir(dir);
+> > -     if (list_empty(&core_pmus)) {
+> > +             while ((dent =3D readdir(dir))) {
+> > +                     if (!strcmp(dent->d_name, ".") || !strcmp(dent->d=
+_name, ".."))
+> > +                             continue;
+> > +                     if (core_only && !is_pmu_core(dent->d_name))
+> > +                             continue;
+> > +                     /* add to static LIST_HEAD(core_pmus) or LIST_HEA=
+D(other_pmus): */
+> > +                     perf_pmu__find2(fd, dent->d_name);
+> > +             }
+> > +
+> > +             closedir(dir);
+> > +     }
+> > +skip_pe_pmus:
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_emp=
+ty(&core_pmus)) {
+> >               if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
+> >                       pr_err("Failure to set up any core PMUs\n");
+> >       }
+> >       list_sort(NULL, &core_pmus, pmus_cmp);
+> > -     if (!core_only) {
+> > +
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) !=3D 0 &&
+> > +         (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) =3D=3D 0) {
+>
+> Nit: Maybe
+>
+>         if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) &&
+>             !(read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK))
+
+Thanks. I'm not convinced on the readability, which was why I was
+being a bit more verbose in what I wrote. I worrited the & reads like
+an && and the ! is hard to miss.
+
+Thanks,
+Ian
+
+> >               tool_pmu =3D perf_pmus__tool_pmu();
+> >               list_add_tail(&tool_pmu->list, &other_pmus);
+> > -             perf_pmus__read_hwmon_pmus(&other_pmus);
+> >       }
+> > +     if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) !=3D 0 &&
+> > +         (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) =3D=3D 0)
+>
+> ditto
+>
+> Thanks,
+> Kan
+> > +             perf_pmus__read_hwmon_pmus(&other_pmus);
+> > +
+> >       list_sort(NULL, &other_pmus, pmus_cmp);
+> > -     if (!list_empty(&core_pmus)) {
+> > -             read_sysfs_core_pmus =3D true;
+> > -             if (!core_only)
+> > -                     read_sysfs_all_pmus =3D true;
+> > -     }
+> > +
+> > +     read_pmu_types |=3D to_read_types;
+> >  }
+> >
+> >  static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
+> > @@ -263,12 +296,21 @@ static struct perf_pmu *__perf_pmus__find_by_type=
+(unsigned int type)
+> >
+> >  struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+> >  {
+> > +     unsigned int to_read_pmus;
+> >       struct perf_pmu *pmu =3D __perf_pmus__find_by_type(type);
+> >
+> > -     if (pmu || read_sysfs_all_pmus)
+> > +     if (pmu || (read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK))
+> >               return pmu;
+> >
+> > -     pmu_read_sysfs(/*core_only=3D*/false);
+> > +     if (type >=3D PERF_PMU_TYPE_PE_START && type <=3D PERF_PMU_TYPE_P=
+E_END) {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
+> > +                     PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
+> > +     } else if (type >=3D PERF_PMU_TYPE_HWMON_START && type <=3D PERF_=
+PMU_TYPE_HWMON_END) {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_HWMON_MASK;
+> > +     } else {
+> > +             to_read_pmus =3D PERF_TOOL_PMU_TYPE_TOOL_MASK;
+> > +     }
+> > +     pmu_read_sysfs(to_read_pmus);
+> >       pmu =3D __perf_pmus__find_by_type(type);
+> >       return pmu;
+> >  }
+> > @@ -282,7 +324,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
+mu)
+> >       bool use_core_pmus =3D !pmu || pmu->is_core;
+> >
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/false);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
+> >               pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> >       }
+> >       if (use_core_pmus) {
+> > @@ -300,7 +342,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *p=
+mu)
+> >  struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+> >  {
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/true);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_PE_CORE_MASK);
+> >               return list_first_entry_or_null(&core_pmus, typeof(*pmu),=
+ list);
+> >       }
+> >       list_for_each_entry_continue(pmu, &core_pmus, list)
+> > @@ -316,7 +358,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplic=
+ates(struct perf_pmu *pmu)
+> >       const char *last_pmu_name =3D (pmu && pmu->name) ? pmu->name : ""=
+;
+> >
+> >       if (!pmu) {
+> > -             pmu_read_sysfs(/*core_only=3D*/false);
+> > +             pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
+> >               pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> >       } else
+> >               last_pmu_name_len =3D pmu_name_len_no_suffix(pmu->name ?:=
+ "");
+>
