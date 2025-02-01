@@ -1,143 +1,135 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676E52B9A9
-	for <linux-perf-users@vger.kernel.org>; Sat,  1 Feb 2025 09:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FB225760;
+	Sat,  1 Feb 2025 11:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738403497; cv=none; b=mpMcWnt4B13JIdKjMj8jTdBYDRwURGCEHnr80FkRzeypXRnm3fCWtdQSkfhD6PEJyVhVE2TerR11jaAgloGVA0sn8YHjzUjWmMepx7IS3psLMwRuLid/I8FQM3h+D5KUp++YiDICBHJScHCTVrh08Ubjfhypod9rWsNl7pFP8Us=
+	t=1738409652; cv=none; b=Z8TE8lhCjCZXflp/J2F9zO17vwYPJZuex8qNB0CK9V/lxulhYf9tqq/ipGMKneMuZZvD61TWv4VKZXiothOAQ6iFcvzT3tShpcUeFshLxEfL3+m6jt4Kcbp6aDmJsGIb829B/D+vpl0XWS7eY235hKdvK/fMM73xOMhBGamLO3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738403497; c=relaxed/simple;
-	bh=/Lc2YIVYZMDWtzJOASQ91vr/NwUHANkE56YZql48Cvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iApKPOsUIK2q2/SRC+gkC63Jp2+Ev0FK1UT4letxQejul9w01Ro3u6HxUQwYDAE0HJDlKxYIrnf4E2gRh12ASNzeJENP80wlw11fRCI3e0CV9XUoFlizmWNUpuL41j91/nChr0fP1LxWynQnDsXZezVFM4ZIR8IpbL3M+CXQkNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aSuHUaOF; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1738409652; c=relaxed/simple;
+	bh=2E0q54b3eypL3Ri2OP5FYkG06AqSFV2huCTuS8ngfn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AxiN/2OiCv76aJyH4MgMxzDPoqv9/av/aZSluWis7qsZvqDcTycpfucVwpuPlXilQ9EhGzb2IyBZvuzLcsRqrXdDNB2L8aCy8l8fBEPisBeW9EZ9tbcP0FtmZhgwX/3tKui+2gjwTEuxhTffY1rHZkj3XQZXmVaPdKmovELa8NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaqgJn8S; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aSuHUaOF"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-29e5aedbebdso1362483fac.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 01:51:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaqgJn8S"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436281c8a38so20555985e9.3;
+        Sat, 01 Feb 2025 03:34:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1738403494; x=1739008294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738409647; x=1739014447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
-        b=aSuHUaOFXwEysvdBDhkbIgOaX3w9jq2YJXpGwp5NDFUGaJdHGwmegwYf2Le7mriryp
-         yJ1mFWUsbATOmqc2hhqOqBXr/UuA/+5AL6eoUdS3bNAAmMJ6Ivr4iZVvvNkpLlEKCoob
-         sEu6WXMU4SX14crbAaRlabpcIuZHHL6+W5L8CftEwH0iCfx745vigOr47KzUaLlTUMSX
-         bdZUcRVEt3Xg3j7o0QgiLgyrCsj4YhosbCCzAvULQKSgatXOfNyFbG3G3DftTsDTJMAd
-         Yg5Osq1CavgDheMIz52+7Egyqo/4jZ4MBxnulDi6bcEX5iVJkfYNq2cz7YtvfS6Ww3ib
-         dSCA==
+        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
+        b=gaqgJn8Scloe+tZ8749PO59kUBdJNUScqXUjE1WmLFoBB5ppceXLLNg66B9R4+fAbL
+         EITRwIgjzBCGv0YR+ZDFzgddUKGXLVC+qnFU/H68ZHnJWTswPHWt1W8KeNvqpqWYDr0+
+         YJJMvSGK//+wGtrHervyzvA7lo7LMCTkUkloac5hUWzLHmlrHcbtuUEoFQT/b+AY9W+G
+         FhNUwnSTJ5FJyGFQQdbT+sYh/kWclfs+Cg1X/xUiFsIwo5fSTgj6BVQOClJk5Hql/bk2
+         Qi1bRDxFdurF4+7hlUtX/YxbfSijtbVPHH/WCnJYvxzlARKN9ekG0l9Jc4Q4oA7H+nEl
+         G3ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738403494; x=1739008294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738409647; x=1739014447;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L+AAdkcmZc4lSXsMOcapYBhFqOepj7d/gBINmIU6crc=;
-        b=WJvIJPGVNv6OYKG9R0WxQrscmYs6D4KMIZnuUMCwzBGb8LyoNpQABYUBaR5FADFYs0
-         Pr1mOg69VyL7ZiBRw2y6F87IsI6fClEwAUI59dROa8Mvu6cOdPIoMcfDjGe0s3NBuf0h
-         7o1pCxKyFW/gPTW0yGm71mUV/zcqJW5ol1WhtnyyQ5YVSUthgTz9W2sUrd8TQGis7+7/
-         hxMP1yZ3Gs4oomZDUGWfrAxT+PyUiFWC9p5Jx2Wjb8+QvU9AGyOBQCVX6vLjijF+5K9z
-         MWR48d8ICZAG5yilXpv13Yl0xs3Q41LZ/hLw9+SKMmL2jY4XToILee2iLzdytrTc8AwD
-         Pxwg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Ssp9wRyKpdNIoS+c28OIZrtTGUs5eweiRIxd9EjnG6vZ/E+LvYpjUWHw9yRh0BXaYOZErezWdlnFmbbqA29X@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaU5+4O4nRTxbsRT0JQ9fyDqj9m23pWO8sA3h+OLC82Y9UpHqx
-	69bQs4gShHCGOldz5OVPbhvC2qbXTksNPZwMBVpm26hJvbQCr6FSGmv7TzRbQmYSfRqdHaR1rza
-	dxtWzkQVIg3V6qPGvAud2Ub32/ycTAEs3FAtW2w==
-X-Gm-Gg: ASbGncsBcDDIa/qM0rg5Ju92jthEdW145KVnc0UTwLE3/OyVNrPUFxP8oMxD33EpJQs
-	PnCOzqzhLLJGjFpbXZNPGriRNS3H+3dA938ayJWSyOExHtOwoDYCbx7leJX4BY/uZzehpy2uErh
-	U=
-X-Google-Smtp-Source: AGHT+IEIIfBdNVn8LDpeA6rFY2D9do+Hyc1wDJ+qpODyAMtmiFvSiXtuvbFiuEmS1fHjZJ/7xlgvm9YLi2f51OwMYUg=
-X-Received: by 2002:a05:6871:8802:b0:29e:563c:2dbf with SMTP id
- 586e51a60fabf-2b32f286144mr9462267fac.26.1738403494288; Sat, 01 Feb 2025
- 01:51:34 -0800 (PST)
+        bh=PQomFJ4ChnU4fj4lFRCI9h/dmZzlSZdFogkPyQv5YjU=;
+        b=fspzqWyWv0snFhkw8GzJS1xjKFUx9vBVLo+9qKf+Ei2nG3QgVWvG+2k7KJKgOT8HMu
+         PCbrCqPQ9oRNxE/hCT7kYj5uEn1oMEv3fRB1k19Z6y2hBg/Zlb6qhdINk7PB0XlIjaPG
+         lJI010VQ6luFQAUy2IGOqDK3j+lgwbjkJvSdYHilv7NcZ7JjKDAhO3GEuKu6jETzDcmx
+         htBCUEZmp+GMK70JeY3LUt/dlIdLAXN1dVNtWwgi+8H8my7Bm1w0ksOM54bc9Qv4e9vh
+         F7dMB3l6gRAGbbWYIBKyjpK/oRBSuN2y34DoHj3cVwRVJkNXFamz8iQJtNf/lr+NYQBH
+         2pVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu8xynsBUcHEZr4pQA26nv17LKh58HhddbdcO+GWMc4zBfU6ePdQXEorQuBMsiCo+6oxfcqQp183kuCcBfYuPQ@vger.kernel.org, AJvYcCX3ry8p+mbQEv1E+5Dy5DnhGTXPWxueEY/TgWev8lq4aonf2c3WgG11bxgbL0P+uPxGVV7/m5PZtTyBcQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHJvCd3Xt88bG0qOyf/XcCW99mSiyDZ+F2EhfS1Qp/qB9tYOEG
+	jGW3UqHqZ/qqostfqcz0E2bccW38JA6WdHCN5KR/6xqAo5+7ec5y
+X-Gm-Gg: ASbGncvKKXAppBRLJ2pqwHvI7X6kJCglHY+ztpD/aS+OAdopxuX5RTO2guUEd7pFmH6
+	DjML5Re5KJvaY2C9YA9EHsz0JntBaj1fPSidklmNycW+9FPR5HPvRI8jH/AZcZnDjAGp0Lxkl8S
+	sq6OO2n/WVitutsT7bV1vXMN1SY18SagIAI9R5CQPGPG1J3m1JQ9AHrgxsWoskBKu/7JXQrQ2lh
+	alejYpHnV3KT8G0Y3Z7a1q5/AiIYZDYuGfl/S37VBPuioyHPlxIRhB5oMTJcMR+XLnC5PoFOSxE
+	Vhc9RY3kSTZUF5C3OMxJj28jevKpgdA/9OeAVOvjIregrdB6MGfF4Q==
+X-Google-Smtp-Source: AGHT+IFnnAAw3xF3oDUKUQhc4FZRLZaD+TRflMNSpfR1uTA1CXslNeBfeoL7eV4BqL2DdUjlQsg+Fw==
+X-Received: by 2002:a5d:6d0c:0:b0:38a:88b8:97a9 with SMTP id ffacd0b85a97d-38c51949b38mr11350742f8f.2.1738409647375;
+        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm7224343f8f.16.2025.02.01.03.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2025 03:34:07 -0800 (PST)
+Date: Sat, 1 Feb 2025 11:34:06 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+ sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
+Message-ID: <20250201113406.4312a601@pumpkin>
+In-Reply-To: <20250131112400.568975-1-tmricht@linux.ibm.com>
+References: <20250131112400.568975-1-tmricht@linux.ibm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
- <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com> <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
- <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com> <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
- <20250124122952.GB23438@willie-the-truck> <CAEEQ3wnTMfWSZRhTax3N60W=m3a=zxnJF6dOfiGnqJzBQs8WEg@mail.gmail.com>
- <20250127165156.GE25757@willie-the-truck>
-In-Reply-To: <20250127165156.GE25757@willie-the-truck>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Sat, 1 Feb 2025 17:51:21 +0800
-X-Gm-Features: AWEUYZmAdXUmi37d66_VLF0H-K_x7oGaiWsf00mIojMN1X-oiLjeCpkGsMu0T7E
-Message-ID: <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
-To: Will Deacon <will@kernel.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com, 
-	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Will,
+On Fri, 31 Jan 2025 12:24:00 +0100
+Thomas Richter <tmricht@linux.ibm.com> wrote:
 
-On Tue, Jan 28, 2025 at 12:52=E2=80=AFAM Will Deacon <will@kernel.org> wrot=
-e:
->
-> On Sun, Jan 26, 2025 at 09:54:35AM +0800, yunhui cui wrote:
-> > Hi Will,
-> >
-> > On Fri, Jan 24, 2025 at 8:30=E2=80=AFPM Will Deacon <will@kernel.org> w=
-rote:
-> > >
-> > > On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
-> > > > > >>>        vsec =3D dwc_pcie_des_cap(pdev);
-> > > > > >>>        if (!vsec)
-> > > > > >>>                return -ENODEV;
-> > > > > >>>
-> > > > > >>>        sbdf =3D plat_dev->id;
-> > > > > >>> -     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
-c_rootport_%x", sbdf);
-> > > > > >>> +     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dw=
-c_rootport_%d_pmu", sbdf);
-> > > > > >>
-> > > > > >> A new name will break previous user tools.
-> > > > > > This name isn't suitable. It can't clearly show which is the PM=
-U
-> > > > > > device. Userspace tools don't have binding relationships, like =
-perf.
-> > > > > > Tools must traverse PMU devices before use.
-> > > > >
-> > > > > The device is under /sys/bus/event_source/ which indates it is PM=
-U device.
-> > > > > As far as I know, most of PMU devices do not endup with a '_pmu' =
-prefix.
-> > > >
-> > > > The point is the name "dwc_rootport_" is misleading, suggesting an
-> > > > extra PCIE RP in the system. Best to change the name to intuitive
-> > > > "xx_pmu".
-> > >
-> > > As pointed out above, changing the name will break userspace. So it's
-> > > simply not an option, sorry.
-> >
-> > Could you specify what in the userspace is broken and give an example?
->
-> Can't I just take the documented example from dwc_pcie_pmu.rst:
->
-> $# perf stat -a -e dwc_rootport_13018/Rx_PCIe_TLP_Data_Payload/
->
-> If I have a script that uses that command on a machine today, then
-> applying your kernel patch will break the script, no?
+> perf test 11 hwmon fails on s390 with this error
+> 
+>  # ./perf test -Fv 11
+>  --- start ---
+>  ---- end ----
+>  11.1: Basic parsing test             : Ok
+>  --- start ---
+>  Testing 'temp_test_hwmon_event1'
+>  Using CPUID IBM,3931,704,A01,3.7,002f
+>  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'temp_test_hwmon_event1', 292470092988416 != 655361
+>  ---- end ----
+>  11.2: Parsing without PMU name       : FAILED!
+>  --- start ---
+>  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
+>  FAILED tests/hwmon_pmu.c:189 Unexpected config for
+>     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
+>     292470092988416 != 655361
+>  ---- end ----
+>  11.3: Parsing with PMU name          : FAILED!
+>  #
+> 
+> The root cause is in member test_event::config which is initialized
+> to 0xA0001 or 655361. During event parsing a long list event parsing
+> functions are called and end up with this gdb call stack:
+...
+> However member key::type_and_num is defined as union and bit field:
+> 
+>    union hwmon_pmu_event_key {
+>         long type_and_num;
+>         struct {
+>                 int num :16;
+>                 enum hwmon_type type :8;
+>         };
+>    };
 
-Well, this is just a usage guide for the PCIe PMU and has no binding
-with perf. In user space, the existing PCIe PMUs in the system should
-be traversed first, and then perf stat/record ... can be executed.
+That is entirely horrid.
 
-It's okay not to change the name, but it's better to change
-dwc_rootport_%x to dwc_rootport_%d to correspond with
-platform_device_register_data(NULL, "dwc_pcie_pmu", ...). It'll be
-more intuitive. What do you think?
+I'm surprised this even compiles:
+static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __maybe_unused)
+{
+	return ((union hwmon_pmu_event_key)key).type_and_num;
+}
+It has to be just 'return key', but I'm not sure what the hashmap code is doing.
 
->
-> Will
+AFAICT the code is just trying to generate a value for the hashmap to hash on?
+Why not just use (type << 16 | num) instead of 'trying to be clever' with a union?
 
-Thanks,
-Yunhui
+	David
+
+
