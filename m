@@ -1,72 +1,71 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732CF2F3B
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Feb 2025 06:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9700DDBC
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Feb 2025 07:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738479435; cv=none; b=kCm3OzqA+6FlzOmGtUrf4XkcDHSFdx0ost0v1lwQ+s5N8agoDEtezIKj2lQY3O7gEZO+nQg/J6BZN9ni4ZH1mHb/JsJZbiAKtsiwOYFmtnZTJRYocpzMagenB3WsEdrSDB8SykdqC+y7jPdDoD1PrTmsjJbfpxuVwkSWKWBT+6E=
+	t=1738479849; cv=none; b=te47uGe0cko+r4U6PNnJKge9pNwdvOtFxwPrwGCFAV3OqiaKpSagZJo0rj0AtzOa1dkxqaDTZgmPHX4o3z+Fl6Dl629AbETn/y805TDKXOxujhpCj3FHS89ysNGZ2isjJeqSjf5j3gTmMa8P+RJW/LwhsB6UPgEM+zCqDqCKgpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738479435; c=relaxed/simple;
-	bh=5teypsgM7KPW8wWLWYbC6E6LDTEAvO58nbAX0sShsYk=;
+	s=arc-20240116; t=1738479849; c=relaxed/simple;
+	bh=S/ODEyu/sDQz5ZMVmnTyP7uX15WIsg1hop4S/PCd2+w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tRLwtCRmccoFOedWxCBQGNIkQCbKWeQHA5pxqzicU7SlZsJnFo1JxYuUJ78YT4RLc3iMViffIImJ04grZCQf5sU+PMxZUa8BdHN1umao2uktRH2xv6IwhT6xSJquL0uYaeGAAKWiytQ34mF50ab7F2ivczuuNUeeQ1533J/heXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5A0+Pat; arc=none smtp.client-ip=209.85.166.176
+	 To:Cc:Content-Type; b=oijfnCFQckWNlpPDlJXTGTZmoSuTimLmMconwSJaWtyotALKyXsEBf6dRz4fJyfRvwD0TQoP3WIUNeOr1RqiyhmWa7Y9fQ7cfExSPHsNj5RI5CrMM9Cts1SZ+5t8CeDIPkpXPrBExazrhqwASWNba3VmZGp9oN6dnnCIvegCsDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3gwl0fC6; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5A0+Pat"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso154685ab.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 22:57:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3gwl0fC6"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so199615ab.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 23:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738479432; x=1739084232; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738479847; x=1739084647; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f4IJ2VWGSsCYGlLun85YbmIwAy0c5JB+K75XIx659PY=;
-        b=Z5A0+PatQgAzKF6nOsQWIUn3cBmcN7KMd1xy562CbXMETnpf9tYBRL4DNfRIrGDzOU
-         EEvdairN9YRcebSiGh6+6ffLuceVrjg+YGUuj5VqpzsyxQo3kK9sWQQ/t1Dyt5wRoK9J
-         34wgKPFMxwN1+AEG4mxGglO4xlEnO6jM94yDepglaZQTB1zso9HA5Qi4n2xh4Rlw+vqY
-         XiC07YSt7OerM8sI9zI9VvrStdusTMyhMK/qK4UngXegcEu2hUxffsWsQpRF3Mhj1JPj
-         /jpKeoMFWfvi9lf1ZBE5F1tEKmZsUM1Bwd1eRKB0xVTapNKDmPFUmFgyXGtye70zke5s
-         K08A==
+        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
+        b=3gwl0fC6UU6YhRMIVY+/d1Ho6NdMXlqTo0S3uFpvmpPkYeiTDTj2L8F5BuYORXqNo6
+         Y8Hm/s3csQ0LmyYsP1IQiGuJy27hdBs9DbE7jH87oyiqdR53N30emDd+HUVBrz+YZeCp
+         4Q5iBBGkA0ujPneueEyHIvNV8X2kuP/tRVICu0KYgWM1KuiDWG/lr3SLUe+QrNJyoDrX
+         3jH8QdkC+qQwkoBGfFfEzlEiqoz2uNA6wgRNnwdcoFK5eewuu30VnZi6Hy08ZNrHK8Y1
+         yjpLEMZYNBjIjCjaqzmUZtW4IKwB52rxE8iLeL1jX+0hjTRuta3KgyTgtG4hC7ePksVL
+         bO8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738479432; x=1739084232;
+        d=1e100.net; s=20230601; t=1738479847; x=1739084647;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f4IJ2VWGSsCYGlLun85YbmIwAy0c5JB+K75XIx659PY=;
-        b=SSyMo9T7E1modxOPfs6Gl+cVgnOmyT7+9Vtq/c3EllKWgekwc0qImXNNeq7EvzSXI8
-         eXjV1Wos2i/UZO3fKFg0jzvRtB+EIln0G+FR5zMr+DwdmNUaYR6r+kjw6UXig99SGCpl
-         1fPteMtTHU3itqqOTtjqmTmDwD/butaW7sG1iF1hG7pJEWt3s/yA7IHU0ZY0u75wubJY
-         mtY4kCyHyXcEOiQCd/PR0nVX92qIEjWiGO2NJExqOMZEiNtQ7Bh9rhBLvgY4qjD8H5GR
-         UyVN4WHg+dbjUDTR5MRgs4A2kRfmz4/qN/QU9Tpa/Mb8abKeOZ1uUygguzYOr6Hv2K4Y
-         pXWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBraQtOCByABmDwAMIkAc8Sjh2GY5jkbttGHvdOCHohxIQ7ehFf9qxjeJarrfDP3oNCmoEhBmAkQIy6SqgN6AC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdfr15DwLQmcFticO4N5yUAUX0dntXqCVo1gRNUqxvMWZ7WFHX
-	IntH2XatXFec/aAJ8k2kKr8TmC0yPHcDuvdqDNlYwgzJNCZ9g+Cz/Zv3eZjKjNJeQZ800S80JCT
-	zWQcc6FQxQHhG3WXpXAPqYUhWZ1s28x5K2ILl
-X-Gm-Gg: ASbGncutiCytnHyPNoSD3CHo34ovG6ddJjkAZsHDtLHBMaUFKq4pUBtVilQvR6kmBOi
-	mAUPw3MlnDiA/pwcu7geOlXG7m4ZLLDgTI4SIEgF7etUwUoXuET8278Ox7SFQ0hDRsZUerF7HWA
+        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
+        b=AZf1ArJt0ZnzEVcANlSP7fxXZmjkRyw7uxALNd9Wi1hVUhVwxWH5Brwi8Xpy/JtrIe
+         M5co3MWJZ51KgiwRKc8X1ZPNBb+S4yhbpHo0MSk3VTl1FXr2wyYMyYPJz+0vdgfhfxKm
+         IuiDAXUt4o/x/xwtu0kNVO/1yOpb2mzbgt9JyHr8RCaSddlznufWgE+uroG/JDsJ0RK4
+         powRVYgJIBJTJ80RpLxE14teTe1tNZj4DWvsPxPzN6HJChioum8rItv/tfwLeuqy4kqF
+         Ju/xMSnFtzL1CFEGkVKfHbJj943/WVbwt8HVHQjbOYpoT47wY182bog9N5Y4uJHCLgaT
+         c6sA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsR1WCPQEoHBsv/53TWtGI6L6ajUEvxzawNdTuSc6KdQN99Lp9L6IhbxoiVdSwQRQ9xgx+KnryTOX9UcjxUNdH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2e05bdFetSCjb6B9tirQxCpPnUvYWXKZMRMJadhx+Gs3GUxwI
+	oslwcnMiljgMcRj3c02vfb8LHWyev7PjE4hAms224heRORetx9XuGEqS/0CNrSyh2Wzc4vtvBpP
+	tuz7ZWdWxbBEQetLp5SBmhrK1TnTmuN8sLjb/
+X-Gm-Gg: ASbGnctnKdLisAJCIjBkGqNaIS88KjmZp0sBSxxUNu6NtwucZm0NNLxHXjrB1/f9Z0S
+	zORhRBMKfqNNn+HQCaceOUSFRxJ49+Omtx+PXSzCvedL0SZ+0NN6cAwXM5+WFVNjNa+hTvirc9Q
 	==
-X-Google-Smtp-Source: AGHT+IEMCGMsEyNaEz5vqStfpqcfIbTu0nLBbJusx3hcdEWYef+1X6P/IiWKbJv1IMaDw0Zpbbp1fMZ4G1/qJFnSb0c=
-X-Received: by 2002:a05:6e02:1fe7:b0:3cf:fcc5:793c with SMTP id
- e9e14a558f8ab-3d02029d2dcmr2933215ab.16.1738479432379; Sat, 01 Feb 2025
- 22:57:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF81ZqX7vPK+R4u8VMmH12X+xPYTa5N3v2X5iXJS2kZJ97rHSYVaKM/TO/f6Z+3eRjFf95QVWBU/TBSyno57Cw=
+X-Received: by 2002:a05:6e02:1caa:b0:3cf:fe9a:4d4 with SMTP id
+ e9e14a558f8ab-3d020184ba6mr3180435ab.6.1738479846565; Sat, 01 Feb 2025
+ 23:04:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
-In-Reply-To: <20250130030525.1482498-2-namhyung@kernel.org>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-3-namhyung@kernel.org>
+In-Reply-To: <20250130030525.1482498-3-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 1 Feb 2025 22:57:00 -0800
-X-Gm-Features: AWEUYZlW-7ky4mflKVsXFwM9ET-AgsQ7PYMTYeOtFujoP5P6CP1MThqpCgJWl1c
-Message-ID: <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
- is on
+Date: Sat, 1 Feb 2025 23:03:54 -0800
+X-Gm-Features: AWEUYZmHzgE77FMjNC4oCHjXnM1LEFv0B-W4EyO4EP6wb-nUuLjcJmaLn8D-7fA
+Message-ID: <CAP-5=fUK_aMf8ZYJxmbOLzbu_zZWKYwx_Vvj64x3_2=0u7jbMw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf trace: Convert syscall_stats to hashmap
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -79,128 +78,278 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> The syscall stats are used only when summary is requested.  Let's avoid
-> unnecessary operations.  Pass 'trace' pointer to check summary and give
-> output file together.
+> It was using a RBtree-based int-list as a hash and a custome resort
+> logic for that.  As we have hashmap, let's convert to it and add a
+> sorting function using an array.
 
-I don't think this last sentence makes sense.
+How is a hashmap connected to a sorting function of an array?
 
-Thanks,
-Ian
-
+>  It's also to prepare supporting
+> system-wide syscall stats.
+>
+> No functional changes intended.
+>
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/builtin-trace.c | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
+>  tools/perf/builtin-trace.c | 122 ++++++++++++++++++++++++++++---------
+>  1 file changed, 93 insertions(+), 29 deletions(-)
 >
 > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index ac97632f13dc8f7c..7e0324a2e9182088 100644
+> index 7e0324a2e9182088..1d32ef2b05ae8c1c 100644
 > --- a/tools/perf/builtin-trace.c
 > +++ b/tools/perf/builtin-trace.c
-> @@ -1522,13 +1522,14 @@ struct thread_trace {
->         struct intlist *syscall_stats;
+> @@ -39,6 +39,7 @@
+>  #include "util/synthetic-events.h"
+>  #include "util/evlist.h"
+>  #include "util/evswitch.h"
+> +#include "util/hashmap.h"
+>  #include "util/mmap.h"
+>  #include <subcmd/pager.h>
+>  #include <subcmd/exec-cmd.h>
+> @@ -63,7 +64,6 @@
+>  #include "print_binary.h"
+>  #include "string2.h"
+>  #include "syscalltbl.h"
+> -#include "rb_resort.h"
+>  #include "../perf.h"
+>  #include "trace_augment.h"
+>
+> @@ -1519,17 +1519,55 @@ struct thread_trace {
+>                 struct file   *table;
+>         } files;
+>
+> -       struct intlist *syscall_stats;
+> +       struct hashmap *syscall_stats;
 >  };
 >
-> -static struct thread_trace *thread_trace__new(void)
-> +static struct thread_trace *thread_trace__new(struct trace *trace)
+> +static size_t id_hash(long key, void *ctx __maybe_unused)
+
+I find the use of "id" in this code confusing - it is a pre-existing
+problem, but you add to it here. I think a more intention revealing
+name would be something like system_call_number_hash.
+
+> +{
+> +       return key;
+> +}
+> +
+> +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
+> +{
+> +       return key1 =3D=3D key2;
+> +}
+> +
+> +static struct hashmap *alloc_syscall_stats(void)
+> +{
+> +       struct hashmap *stats =3D hashmap__new(id_hash, id_equal, NULL);
+> +
+> +       /* just for simpler error check */
+
+What is "just for simpler error check" ?
+
+> +       if (IS_ERR(stats))
+> +               stats =3D NULL;
+> +       return stats;
+> +}
+> +
+> +static void delete_syscall_stats(struct hashmap *syscall_stats)
+> +{
+> +       struct hashmap_entry *pos;
+> +       size_t bkt;
+> +
+> +       if (syscall_stats =3D=3D NULL)
+> +               return;
+> +
+> +       hashmap__for_each_entry(syscall_stats, pos, bkt)
+> +               free(pos->pvalue);
+> +       hashmap__free(syscall_stats);
+> +}
+> +
+>  static struct thread_trace *thread_trace__new(struct trace *trace)
 >  {
 >         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_trac=
 e));
 >
 >         if (ttrace) {
 >                 ttrace->files.max =3D -1;
-> -               ttrace->syscall_stats =3D intlist__new(NULL);
-> +               if (trace->summary)
-> +                       ttrace->syscall_stats =3D intlist__new(NULL);
+> -               if (trace->summary)
+> -                       ttrace->syscall_stats =3D intlist__new(NULL);
+> +               if (trace->summary) {
+> +                       ttrace->syscall_stats =3D alloc_syscall_stats();
+> +                       if (ttrace->syscall_stats =3D=3D NULL) {
+> +                               free(ttrace);
+> +                               ttrace =3D NULL;
+
+This looks overly indented.
+
+Thanks,
+Ian
+
+> +                       }
+> +               }
 >         }
 >
 >         return ttrace;
-> @@ -1550,7 +1551,7 @@ static void thread_trace__delete(void *pttrace)
->         free(ttrace);
->  }
+> @@ -1544,7 +1582,7 @@ static void thread_trace__delete(void *pttrace)
+>         if (!ttrace)
+>                 return;
 >
-> -static struct thread_trace *thread__trace(struct thread *thread, FILE *f=
-p)
-> +static struct thread_trace *thread__trace(struct thread *thread, struct =
-trace *trace)
+> -       intlist__delete(ttrace->syscall_stats);
+> +       delete_syscall_stats(ttrace->syscall_stats);
+>         ttrace->syscall_stats =3D NULL;
+>         thread_trace__free_files(ttrace);
+>         zfree(&ttrace->entry_str);
+> @@ -2463,22 +2501,19 @@ struct syscall_stats {
+>  static void thread__update_stats(struct thread *thread, struct thread_tr=
+ace *ttrace,
+>                                  int id, struct perf_sample *sample, long=
+ err, bool errno_summary)
 >  {
->         struct thread_trace *ttrace;
+> -       struct int_node *inode;
+> -       struct syscall_stats *stats;
+> +       struct syscall_stats *stats =3D NULL;
+>         u64 duration =3D 0;
 >
-> @@ -1558,7 +1559,7 @@ static struct thread_trace *thread__trace(struct th=
-read *thread, FILE *fp)
->                 goto fail;
+> -       inode =3D intlist__findnew(ttrace->syscall_stats, id);
+> -       if (inode =3D=3D NULL)
+> -               return;
+> -
+> -       stats =3D inode->priv;
+> -       if (stats =3D=3D NULL) {
+> +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
+>                 stats =3D zalloc(sizeof(*stats));
+>                 if (stats =3D=3D NULL)
+>                         return;
 >
->         if (thread__priv(thread) =3D=3D NULL)
-> -               thread__set_priv(thread, thread_trace__new());
-> +               thread__set_priv(thread, thread_trace__new(trace));
+>                 init_stats(&stats->stats);
+> -               inode->priv =3D stats;
+> +               if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
+> +                       free(stats);
+> +                       return;
+> +               }
+>         }
 >
->         if (thread__priv(thread) =3D=3D NULL)
->                 goto fail;
-> @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct th=
-read *thread, FILE *fp)
->
->         return ttrace;
->  fail:
-> -       color_fprintf(fp, PERF_COLOR_RED,
-> +       color_fprintf(trace->output, PERF_COLOR_RED,
->                       "WARNING: not enough memory, dropping samples!\n");
->         return NULL;
+>         if (ttrace->entry_time && sample->time > ttrace->entry_time)
+> @@ -4617,18 +4652,45 @@ static size_t trace__fprintf_threads_header(FILE =
+*fp)
+>         return printed;
 >  }
-> @@ -2622,7 +2623,7 @@ static int trace__sys_enter(struct trace *trace, st=
-ruct evsel *evsel,
->                 return -1;
 >
->         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
-le->tid);
-> -       ttrace =3D thread__trace(thread, trace->output);
-> +       ttrace =3D thread__trace(thread, trace);
->         if (ttrace =3D=3D NULL)
->                 goto out_put;
+> -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
+> +struct syscall_entry {
+>         struct syscall_stats *stats;
+>         double               msecs;
+>         int                  syscall;
+> -)
+> +};
+> +
+> +static int entry_cmp(const void *e1, const void *e2)
+>  {
+> -       struct int_node *source =3D rb_entry(nd, struct int_node, rb_node=
+);
+> -       struct syscall_stats *stats =3D source->priv;
+> +       const struct syscall_entry *entry1 =3D e1;
+> +       const struct syscall_entry *entry2 =3D e2;
 >
-> @@ -2699,7 +2700,7 @@ static int trace__fprintf_sys_enter(struct trace *t=
-race, struct evsel *evsel,
->                 return -1;
+> -       entry->syscall =3D source->i;
+> -       entry->stats   =3D stats;
+> -       entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&stat=
+s->stats) / NSEC_PER_MSEC) : 0;
+> +       return entry1->msecs > entry2->msecs ? -1 : 1;
+> +}
+> +
+> +static struct syscall_entry *thread__sort_stats(struct thread_trace *ttr=
+ace)
+> +{
+> +       struct syscall_entry *entry;
+> +       struct hashmap_entry *pos;
+> +       unsigned bkt, i, nr;
+> +
+> +       nr =3D ttrace->syscall_stats->sz;
+> +       entry =3D malloc(nr * sizeof(*entry));
+> +       if (entry =3D=3D NULL)
+> +               return NULL;
+> +
+> +       i =3D 0;
+> +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
+> +               struct syscall_stats *ss =3D pos->pvalue;
+> +               struct stats *st =3D &ss->stats;
+> +
+> +               entry[i].stats =3D ss;
+> +               entry[i].msecs =3D (u64)st->n * (avg_stats(st) / NSEC_PER=
+_MSEC);
+> +               entry[i].syscall =3D pos->key;
+> +               i++;
+> +       }
+> +       assert(i =3D=3D nr);
+> +
+> +       qsort(entry, nr, sizeof(*entry), entry_cmp);
+> +       return entry;
+>  }
 >
->         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
-le->tid);
-> -       ttrace =3D thread__trace(thread, trace->output);
-> +       ttrace =3D thread__trace(thread, trace);
->         /*
->          * We need to get ttrace just to make sure it is there when sysca=
-ll__scnprintf_args()
->          * and the rest of the beautifiers accessing it via struct syscal=
-l_arg touches it.
-> @@ -2771,7 +2772,7 @@ static int trace__sys_exit(struct trace *trace, str=
-uct evsel *evsel,
->                 return -1;
+>  static size_t thread__dump_stats(struct thread_trace *ttrace,
+> @@ -4636,10 +4698,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>  {
+>         size_t printed =3D 0;
+>         struct syscall *sc;
+> -       struct rb_node *nd;
+> -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stats);
+> +       struct syscall_entry *entries;
 >
->         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
-le->tid);
-> -       ttrace =3D thread__trace(thread, trace->output);
-> +       ttrace =3D thread__trace(thread, trace);
->         if (ttrace =3D=3D NULL)
->                 goto out_put;
+> -       if (syscall_stats =3D=3D NULL)
+> +       entries =3D thread__sort_stats(ttrace);
+> +       if (entries =3D=3D NULL)
+>                 return 0;
 >
-> @@ -2960,7 +2961,7 @@ static int trace__sched_stat_runtime(struct trace *=
-trace, struct evsel *evsel,
->         struct thread *thread =3D machine__findnew_thread(trace->host,
->                                                         sample->pid,
->                                                         sample->tid);
-> -       struct thread_trace *ttrace =3D thread__trace(thread, trace->outp=
-ut);
-> +       struct thread_trace *ttrace =3D thread__trace(thread, trace);
+>         printed +=3D fprintf(fp, "\n");
+> @@ -4648,8 +4710,10 @@ static size_t thread__dump_stats(struct thread_tra=
+ce *ttrace,
+>         printed +=3D fprintf(fp, "                                     (m=
+sec)    (msec)    (msec)    (msec)        (%%)\n");
+>         printed +=3D fprintf(fp, "   --------------- --------  ------ ---=
+----- --------- --------- ---------     ------\n");
 >
->         if (ttrace =3D=3D NULL)
->                 goto out_dump;
-> @@ -3214,7 +3215,7 @@ static int trace__pgfault(struct trace *trace,
+> -       resort_rb__for_each_entry(nd, syscall_stats) {
+> -               struct syscall_stats *stats =3D syscall_stats_entry->stat=
+s;
+> +       for (size_t i =3D 0; i < ttrace->syscall_stats->sz; i++) {
+> +               struct syscall_entry *entry =3D &entries[i];
+> +               struct syscall_stats *stats =3D entry->stats;
+> +
+>                 if (stats) {
+>                         double min =3D (double)(stats->stats.min) / NSEC_=
+PER_MSEC;
+>                         double max =3D (double)(stats->stats.max) / NSEC_=
+PER_MSEC;
+> @@ -4660,10 +4724,10 @@ static size_t thread__dump_stats(struct thread_tr=
+ace *ttrace,
+>                         pct =3D avg ? 100.0 * stddev_stats(&stats->stats)=
+ / avg : 0.0;
+>                         avg /=3D NSEC_PER_MSEC;
+>
+> -                       sc =3D &trace->syscalls.table[syscall_stats_entry=
+->syscall];
+> +                       sc =3D &trace->syscalls.table[entry->syscall];
+>                         printed +=3D fprintf(fp, "   %-15s", sc->name);
+>                         printed +=3D fprintf(fp, " %8" PRIu64 " %6" PRIu6=
+4 " %9.3f %9.3f %9.3f",
+> -                                          n, stats->nr_failures, syscall=
+_stats_entry->msecs, min, avg);
+> +                                          n, stats->nr_failures, entry->=
+msecs, min, avg);
+>                         printed +=3D fprintf(fp, " %9.3f %9.2f%%\n", max,=
+ pct);
+>
+>                         if (trace->errno_summary && stats->nr_failures) {
+> @@ -4677,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_trac=
+e *ttrace,
 >                 }
 >         }
 >
-> -       ttrace =3D thread__trace(thread, trace->output);
-> +       ttrace =3D thread__trace(thread, trace);
->         if (ttrace =3D=3D NULL)
->                 goto out_put;
+> -       resort_rb__delete(syscall_stats);
+> +       free(entries);
+>         printed +=3D fprintf(fp, "\n\n");
 >
+>         return printed;
 > --
 > 2.48.1.262.g85cc9f2d1e-goog
 >
