@@ -1,203 +1,206 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DB061FCE
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Feb 2025 06:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732CF2F3B
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Feb 2025 06:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738478912; cv=none; b=bOd9T+mgyj+sqCy4PJjhUzmRm1zA6H2vTLK4URtfXK4Plsu/ne34WbQCwkHJzgLPojxPRr/yqA9k8ojgyrBzoN1ScMTGjOMNSIJ7u7QYdtInEfSU7z6b+OLqSUBXz3HqYdBSS792E5EADVTF9Neaak06iTxuMGc7s6vlZBsAxog=
+	t=1738479435; cv=none; b=kCm3OzqA+6FlzOmGtUrf4XkcDHSFdx0ost0v1lwQ+s5N8agoDEtezIKj2lQY3O7gEZO+nQg/J6BZN9ni4ZH1mHb/JsJZbiAKtsiwOYFmtnZTJRYocpzMagenB3WsEdrSDB8SykdqC+y7jPdDoD1PrTmsjJbfpxuVwkSWKWBT+6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738478912; c=relaxed/simple;
-	bh=sLmp6xHNXRTUeReI1bD3dZuLC6sS6eL6CNF124KZbTA=;
+	s=arc-20240116; t=1738479435; c=relaxed/simple;
+	bh=5teypsgM7KPW8wWLWYbC6E6LDTEAvO58nbAX0sShsYk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hgYTcHSeisw6EDAuqvzMuKMcU8M+srQFZP6x5eg3jtq1H2RbQcNAOjJHlak/ij/D02yCqm4u97odkwt4h0Qc9O5izEZ0KFxGrhhr3cwLZ5hof0NEVDFyB6q8xlTbEsmcZtGP1NJe4lFgALW4PZtYfiSrX4YM5PBe5eGsz1PLR1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SQTFPfKa; arc=none smtp.client-ip=209.85.166.173
+	 To:Cc:Content-Type; b=tRLwtCRmccoFOedWxCBQGNIkQCbKWeQHA5pxqzicU7SlZsJnFo1JxYuUJ78YT4RLc3iMViffIImJ04grZCQf5sU+PMxZUa8BdHN1umao2uktRH2xv6IwhT6xSJquL0uYaeGAAKWiytQ34mF50ab7F2ivczuuNUeeQ1533J/heXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5A0+Pat; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SQTFPfKa"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so197375ab.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 22:48:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5A0+Pat"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso154685ab.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 22:57:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738478910; x=1739083710; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738479432; x=1739084232; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IgeU84PIblBYIhQweVeMYLOZOfYeIUW0M5IhdSU3ktY=;
-        b=SQTFPfKaK1sFZ7W5SLERIR7mP2zxUbMVkE9gth8IOd64NP5bOMclmCaECS+bdgSPCR
-         tGcpYToG7+/eU++hamlP9tpDkCcbc1WAx4tFdqwZqOIQlz0XHilADsPY1KOqhgagdctf
-         z9+AkWOnyfZUsMVs+upFay9iy+GCGI6E1eAG+6KLzRb9jOnnvDEqjVuN4YNEQsTZVllc
-         Y+sfRiGnl6pH8JrXp0rpL6bGFr7g5ze64IceOBC817vbr18TdZBRz5JwqK5JXiM7WscD
-         cJjZKjAuw5zSSZHyhzDaQRsr5tJlRPmV4t5jJRbDi7Ol2wKzXBnLf6WOacBIXbVTHIDN
-         EIww==
+        bh=f4IJ2VWGSsCYGlLun85YbmIwAy0c5JB+K75XIx659PY=;
+        b=Z5A0+PatQgAzKF6nOsQWIUn3cBmcN7KMd1xy562CbXMETnpf9tYBRL4DNfRIrGDzOU
+         EEvdairN9YRcebSiGh6+6ffLuceVrjg+YGUuj5VqpzsyxQo3kK9sWQQ/t1Dyt5wRoK9J
+         34wgKPFMxwN1+AEG4mxGglO4xlEnO6jM94yDepglaZQTB1zso9HA5Qi4n2xh4Rlw+vqY
+         XiC07YSt7OerM8sI9zI9VvrStdusTMyhMK/qK4UngXegcEu2hUxffsWsQpRF3Mhj1JPj
+         /jpKeoMFWfvi9lf1ZBE5F1tEKmZsUM1Bwd1eRKB0xVTapNKDmPFUmFgyXGtye70zke5s
+         K08A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738478910; x=1739083710;
+        d=1e100.net; s=20230601; t=1738479432; x=1739084232;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IgeU84PIblBYIhQweVeMYLOZOfYeIUW0M5IhdSU3ktY=;
-        b=ecFkWRKx1mLu7AGa1kUYJSpowYPDx9Va/1wh5V6QPdnr0U76ewcDZYTrBYPWTzp6XD
-         Mp+Rwe2KsoaXk8mV4ibcxmzUvVH5bVydHqhvoNxLQ9Yzhi8RCGe903oZfjxzF+cJ1Smk
-         58c43PuAXosY4g9HUjFhAVctv68gdrWbuXBxFQyQH/WyAbM0NdXGnnIMuSBBgj3EGhj8
-         iux/MIF5J+10Ce+zIsp8qOc6SolfDD2/LWgrxFqLX9KyxBfzRhXLf78vvrmM9bfuO6Y5
-         Y1rXJBeCML59c1Q//6CN6SVb4r6evCeMQvprTAUPiaq9JL8vslK8PMG7Zjm6daUnGRHi
-         WVZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF2UoNAbpfHGfejkWdCUJv0kwi0jS0eJG1PgmdOXJa7u4ws5dS/TEl+I3YZxnLDaXKD9bg3MffcCP1Bwl7n4rb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7ls5D4+Q7W3RfNBE+aiodlGTXeXYd8zf1oxkXUmshchHuVngv
-	FmTLU11CJwFlvJbxzhCEaWpcm2puwO3SrkXKJm5yPmDaT0y/ILs2NtDblsjv2abujnTEXtrAf+9
-	SwvL3rVoc7KIoUB294mf52xSOMf/zyrdf4AXQ
-X-Gm-Gg: ASbGncscDmU0c/cDYRJSlKxyIcI6SMwaGSD4KFCxOY9uyMSMs56M2G3A9ECKgpiEjfz
-	Q97bfdRzDHpmW7hKMU3UJDpv0DDnd8u/WxgYT72MiyTznfIENs4idymxt7/YkWW5gMeanl27iBQ
+        bh=f4IJ2VWGSsCYGlLun85YbmIwAy0c5JB+K75XIx659PY=;
+        b=SSyMo9T7E1modxOPfs6Gl+cVgnOmyT7+9Vtq/c3EllKWgekwc0qImXNNeq7EvzSXI8
+         eXjV1Wos2i/UZO3fKFg0jzvRtB+EIln0G+FR5zMr+DwdmNUaYR6r+kjw6UXig99SGCpl
+         1fPteMtTHU3itqqOTtjqmTmDwD/butaW7sG1iF1hG7pJEWt3s/yA7IHU0ZY0u75wubJY
+         mtY4kCyHyXcEOiQCd/PR0nVX92qIEjWiGO2NJExqOMZEiNtQ7Bh9rhBLvgY4qjD8H5GR
+         UyVN4WHg+dbjUDTR5MRgs4A2kRfmz4/qN/QU9Tpa/Mb8abKeOZ1uUygguzYOr6Hv2K4Y
+         pXWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBraQtOCByABmDwAMIkAc8Sjh2GY5jkbttGHvdOCHohxIQ7ehFf9qxjeJarrfDP3oNCmoEhBmAkQIy6SqgN6AC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdfr15DwLQmcFticO4N5yUAUX0dntXqCVo1gRNUqxvMWZ7WFHX
+	IntH2XatXFec/aAJ8k2kKr8TmC0yPHcDuvdqDNlYwgzJNCZ9g+Cz/Zv3eZjKjNJeQZ800S80JCT
+	zWQcc6FQxQHhG3WXpXAPqYUhWZ1s28x5K2ILl
+X-Gm-Gg: ASbGncutiCytnHyPNoSD3CHo34ovG6ddJjkAZsHDtLHBMaUFKq4pUBtVilQvR6kmBOi
+	mAUPw3MlnDiA/pwcu7geOlXG7m4ZLLDgTI4SIEgF7etUwUoXuET8278Ox7SFQ0hDRsZUerF7HWA
 	==
-X-Google-Smtp-Source: AGHT+IHDuXaMAdD5ocfiKBkx4DIie9oQrDvdnfqdAWCh6ZMKIAkF+q3joiOtL0hu6HokU+BrkokOafRdFvU47R4GRiw=
-X-Received: by 2002:a05:6e02:13a1:b0:3a7:a468:69df with SMTP id
- e9e14a558f8ab-3d021f8ddb2mr2533065ab.3.1738478909521; Sat, 01 Feb 2025
- 22:48:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEMCGMsEyNaEz5vqStfpqcfIbTu0nLBbJusx3hcdEWYef+1X6P/IiWKbJv1IMaDw0Zpbbp1fMZ4G1/qJFnSb0c=
+X-Received: by 2002:a05:6e02:1fe7:b0:3cf:fcc5:793c with SMTP id
+ e9e14a558f8ab-3d02029d2dcmr2933215ab.16.1738479432379; Sat, 01 Feb 2025
+ 22:57:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131112400.568975-1-tmricht@linux.ibm.com>
- <20250201113406.4312a601@pumpkin> <CAP-5=fUOS6ZmfVdzwNL6+5VfUr9fms0zE4FXW6vsRqSfS9F7sA@mail.gmail.com>
- <20250201171435.4bd5578e@pumpkin>
-In-Reply-To: <20250201171435.4bd5578e@pumpkin>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
+In-Reply-To: <20250130030525.1482498-2-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 1 Feb 2025 22:48:17 -0800
-X-Gm-Features: AWEUYZm7CRLEhubOw4Q8ZrinZn7ZTOkhLsJoCqWrkUc0Ijuw0r0iTqnW-ALz0c4
-Message-ID: <CAP-5=fV55Tn0j0+ceKZeWheCuMw4RHHvVp0qOu3csZT=ojP_nQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-s390@vger.kernel.org, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	sumanth Korikkar <sumanthk@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>
+Date: Sat, 1 Feb 2025 22:57:00 -0800
+X-Gm-Features: AWEUYZlW-7ky4mflKVsXFwM9ET-AgsQ7PYMTYeOtFujoP5P6CP1MThqpCgJWl1c
+Message-ID: <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
+ is on
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 1, 2025, 9:14=E2=80=AFAM David Laight <david.laight.linux@gmail=
-.com> wrote:
+On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Sat, 1 Feb 2025 08:12:38 -0800
-> Ian Rogers <irogers@google.com> wrote:
->
-> > On Sat, Feb 1, 2025 at 3:34=E2=80=AFAM David Laight
-> > <david.laight.linux@gmail.com> wrote:
-> > >
-> > > On Fri, 31 Jan 2025 12:24:00 +0100
-> > > Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > >
-> > > > perf test 11 hwmon fails on s390 with this error
-> > > >
-> > > >  # ./perf test -Fv 11
-> > > >  --- start ---
-> > > >  ---- end ----
-> > > >  11.1: Basic parsing test             : Ok
-> > > >  --- start ---
-> > > >  Testing 'temp_test_hwmon_event1'
-> > > >  Using CPUID IBM,3931,704,A01,3.7,002f
-> > > >  temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_e=
-vent1/
-> > > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> > > >     'temp_test_hwmon_event1', 292470092988416 !=3D 655361
-> > > >  ---- end ----
-> > > >  11.2: Parsing without PMU name       : FAILED!
-> > > >  --- start ---
-> > > >  Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
-> > > >  FAILED tests/hwmon_pmu.c:189 Unexpected config for
-> > > >     'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
-> > > >     292470092988416 !=3D 655361
-> > > >  ---- end ----
-> > > >  11.3: Parsing with PMU name          : FAILED!
-> > > >  #
-> > > >
-> > > > The root cause is in member test_event::config which is initialized
-> > > > to 0xA0001 or 655361. During event parsing a long list event parsin=
-g
-> > > > functions are called and end up with this gdb call stack:
-> > > ...
-> > > > However member key::type_and_num is defined as union and bit field:
-> > > >
-> > > >    union hwmon_pmu_event_key {
-> > > >         long type_and_num;
-> > > >         struct {
-> > > >                 int num :16;
-> > > >                 enum hwmon_type type :8;
-> > > >         };
-> > > >    };
-> > >
-> > > That is entirely horrid.
-> >
-> > It also has the side-effect that if you initialize the struct bits in
-> > the type_and_num will be undefined and sanitizers will try to trip you
-> > up.
-> >
-> > > I'm surprised this even compiles:
-> > > static size_t hwmon_pmu__event_hashmap_hash(long key, void *ctx __may=
-be_unused)
-> > > {
-> > >         return ((union hwmon_pmu_event_key)key).type_and_num;
-> > > }
-> > > It has to be just 'return key', but I'm not sure what the hashmap cod=
-e is doing.
-> > >
-> > > AFAICT the code is just trying to generate a value for the hashmap to=
- hash on?
-> > > Why not just use (type << 16 | num) instead of 'trying to be clever' =
-with a union?
-> >
-> > The purpose wasn't so much to be 'clever' as you say. Perf event
-> > configs, which is where type_and_num lives in the events, have their
-> > bitfields described either by convention or by files in
-> > /sys/devices/<pmu>/format. On an Intel laptop:
-> > ```
-> > $ cat /sys/devices/cpu/format/inv
-> > config:23
-> > ```
-> > So I can go:
-> > ```
-> > $ perf stat -e 'inst_retired.any/inv=3D1/' true
-> >
-> > Performance counter stats for 'true':
-> >
-> >         1,069,756      inst_retired.any/inv=3D1/
-> >
-> >       0.001539265 seconds time elapsed
-> >
-> >       0.001719000 seconds user
-> >       0.000000000 seconds sys
-> > ```
-> > and the configuration of my inst_retired.any event now has bit 23 in
-> > the config set. Just as the format files try to break down what the
-> > bitfields within a config u64 are doing, the union was trying to do
-> > similar. Making an attempt to have the value be intention revealing
-> > which the shift and masking may lose, for example, by making it look
-> > like bits in the num could overlap with and modify the type.
->
-> Except that is really doesn't work for big-endian at all.
-> The 'fix' doesn't even really paper over the cracks properly.
->
-> I'm not even sure the hashing works on 64bit BE.
-> (assuming the int:n are also BE - but that is a different ABI option.)
-> The 'num' and 'type' will be in the high 24 bits of the 64bit 'long'.
-> If we assume the rest of the union is actually initialised the other
-> bits are all zero.
-> And I guess that the hash function is masking with 2^n-1 - so always gets=
- zero.
+> The syscall stats are used only when summary is requested.  Let's avoid
+> unnecessary operations.  Pass 'trace' pointer to check summary and give
+> output file together.
 
-No, as is typical in any hash table you always do a secondary hash:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/hashmap.h#n15
+I don't think this last sentence makes sense.
 
 Thanks,
 Ian
 
->         David
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-trace.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 >
-> >
-> > Thanks,
-> > Ian
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index ac97632f13dc8f7c..7e0324a2e9182088 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1522,13 +1522,14 @@ struct thread_trace {
+>         struct intlist *syscall_stats;
+>  };
+>
+> -static struct thread_trace *thread_trace__new(void)
+> +static struct thread_trace *thread_trace__new(struct trace *trace)
+>  {
+>         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_trac=
+e));
+>
+>         if (ttrace) {
+>                 ttrace->files.max =3D -1;
+> -               ttrace->syscall_stats =3D intlist__new(NULL);
+> +               if (trace->summary)
+> +                       ttrace->syscall_stats =3D intlist__new(NULL);
+>         }
+>
+>         return ttrace;
+> @@ -1550,7 +1551,7 @@ static void thread_trace__delete(void *pttrace)
+>         free(ttrace);
+>  }
+>
+> -static struct thread_trace *thread__trace(struct thread *thread, FILE *f=
+p)
+> +static struct thread_trace *thread__trace(struct thread *thread, struct =
+trace *trace)
+>  {
+>         struct thread_trace *ttrace;
+>
+> @@ -1558,7 +1559,7 @@ static struct thread_trace *thread__trace(struct th=
+read *thread, FILE *fp)
+>                 goto fail;
+>
+>         if (thread__priv(thread) =3D=3D NULL)
+> -               thread__set_priv(thread, thread_trace__new());
+> +               thread__set_priv(thread, thread_trace__new(trace));
+>
+>         if (thread__priv(thread) =3D=3D NULL)
+>                 goto fail;
+> @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct th=
+read *thread, FILE *fp)
+>
+>         return ttrace;
+>  fail:
+> -       color_fprintf(fp, PERF_COLOR_RED,
+> +       color_fprintf(trace->output, PERF_COLOR_RED,
+>                       "WARNING: not enough memory, dropping samples!\n");
+>         return NULL;
+>  }
+> @@ -2622,7 +2623,7 @@ static int trace__sys_enter(struct trace *trace, st=
+ruct evsel *evsel,
+>                 return -1;
+>
+>         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
+le->tid);
+> -       ttrace =3D thread__trace(thread, trace->output);
+> +       ttrace =3D thread__trace(thread, trace);
+>         if (ttrace =3D=3D NULL)
+>                 goto out_put;
+>
+> @@ -2699,7 +2700,7 @@ static int trace__fprintf_sys_enter(struct trace *t=
+race, struct evsel *evsel,
+>                 return -1;
+>
+>         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
+le->tid);
+> -       ttrace =3D thread__trace(thread, trace->output);
+> +       ttrace =3D thread__trace(thread, trace);
+>         /*
+>          * We need to get ttrace just to make sure it is there when sysca=
+ll__scnprintf_args()
+>          * and the rest of the beautifiers accessing it via struct syscal=
+l_arg touches it.
+> @@ -2771,7 +2772,7 @@ static int trace__sys_exit(struct trace *trace, str=
+uct evsel *evsel,
+>                 return -1;
+>
+>         thread =3D machine__findnew_thread(trace->host, sample->pid, samp=
+le->tid);
+> -       ttrace =3D thread__trace(thread, trace->output);
+> +       ttrace =3D thread__trace(thread, trace);
+>         if (ttrace =3D=3D NULL)
+>                 goto out_put;
+>
+> @@ -2960,7 +2961,7 @@ static int trace__sched_stat_runtime(struct trace *=
+trace, struct evsel *evsel,
+>         struct thread *thread =3D machine__findnew_thread(trace->host,
+>                                                         sample->pid,
+>                                                         sample->tid);
+> -       struct thread_trace *ttrace =3D thread__trace(thread, trace->outp=
+ut);
+> +       struct thread_trace *ttrace =3D thread__trace(thread, trace);
+>
+>         if (ttrace =3D=3D NULL)
+>                 goto out_dump;
+> @@ -3214,7 +3215,7 @@ static int trace__pgfault(struct trace *trace,
+>                 }
+>         }
+>
+> -       ttrace =3D thread__trace(thread, trace->output);
+> +       ttrace =3D thread__trace(thread, trace);
+>         if (ttrace =3D=3D NULL)
+>                 goto out_put;
+>
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
 >
