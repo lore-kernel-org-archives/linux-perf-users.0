@@ -1,84 +1,91 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016502080E4
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12267212B3B
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593668; cv=none; b=JtgfImIBzUJrLgoL7uI+xG6Fvt37P0a8eFfnVK199vkzj7Oa/4A8L8NnM5JafvCfL8BLWiPikPpHawvyG5DwVinOkDzsGx6S+cH8ZGhPgBdFgatAjvV1FEEAx4z2xm/BF8vmH4Kb0Dk9XS3tHUNOJNZhrz+EvLonOrm3yT5WZZs=
+	t=1738593929; cv=none; b=VACIZF027nCmWycwNf+fiyTfsSFDSsAgZzP11sGx1MYDwIVZFMYSzte+RQoXS5n0QnVAoeemVdXicQoeWY1DaCeS6CVNvoGVmtTJ+mc+3Slr/Z6xMRijbNmXL7jR4CzaKv7c3RvONBZwNUxAL8jqYTD/IJs8YoWnvT0VnwrwprE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593668; c=relaxed/simple;
-	bh=rWXAYlD+TzBh3XGY/ZAw9xD93eT7AYlyZhnjh2C+AeE=;
+	s=arc-20240116; t=1738593929; c=relaxed/simple;
+	bh=OpxJMFnv/T1gzYLzng4N96zBL35qTrhkXO4t27HLNeI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZreQhv7hE/h+rCO0R5nxclJcrJKGkAyWotZxO8YRal2xuTIUaJpZC9MroB2pfF2ncCPvyIxBHBx+CQeMylee9rji+4XmSSdeuPd5lcYQYo8sI1scpXTttfH0DzFWuxtzqqYsOQwbOnL9KiYmOaQB69mIC8Fo4oRG7lbNV40OMxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w6UBtWy0; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=f54OE91WKrqQp4EEKStYKruUZxT8SrQawKJq/igsGgKt1t85MwLYMx0et8SWoJj/hsycr6yXxAASxy8hhK1FubWu6RUdvpbLNtREafQjiwwUzW1VD3yMsrMZVKOr9cscSLEVB02QuM5F3sxBaHyecMQ/tMQxiwDs+Pcd1clo9D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vVY3d/I0; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w6UBtWy0"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-305f529a987so33881281fa.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:41:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vVY3d/I0"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30225b2586cso52004491fa.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:45:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738593664; x=1739198464; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738593925; x=1739198725; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mWTNcQUdYjTpDLebPW6Jb1fVqaJc/ojxvHYu6zZeggA=;
-        b=w6UBtWy0VKYGMl/LhQw4Y9VkufkdPEz/GsSH66vj3WvTCIS9fljYdxd1Onc5ySX8hN
-         EGne5uQw0wriZO/kDXun/XtSmvVFj7xlfaFaeZ+3I17P3kQNdxNJvXlR0XLo3+tEc2BN
-         Vf/9hSb12HhTYD5McsjCkg6papNp2bhbP2EmalpzzpIfXBUEB9+6ezURnYmzvRKuPVrT
-         iVhrndnnlqijVQXUXn2b/UBM36x+Z0ZsjyeIAIthECdKk6TAwqQ8pIQRV9O0/VkjEPl3
-         CIOnFJBC+LpE6MiLNmg1tvsLkIlOBZ7WiAYlTRHwI3Gqkf7o6LC93WOZOwwldUw9LEWN
-         Aphw==
+        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
+        b=vVY3d/I0GwjAAmSDLnS5UCFyxYNVcyE0FbOgswCCsKXenCbCaOuqxXhQ15w1f74c9R
+         dn9obe3CZYI5/vM0NQXfHmz5XgOPbHoES+BCpebeIryU0JVxWe9NfJjwNXF3Y9cOxgB2
+         /X5bdTUSugayAF+GY+p+PboAHSB+j4z3ZleQlOu/oKj001e5yGmqCrbV7mFCixV4N+iK
+         sk9F6Qy+OwNwOjx8yP+gCV0q2BB/JXDJYqwgs1vaKlE/mN94ZGZgQWOyUvLHqM/ceu/a
+         vFDBaQp3dbmjwQZ39k+griaajW0qHU7ADTDooXiQUffNpygfMgSh4OWTMk0TE/RLfHd7
+         +RGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593664; x=1739198464;
+        d=1e100.net; s=20230601; t=1738593925; x=1739198725;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mWTNcQUdYjTpDLebPW6Jb1fVqaJc/ojxvHYu6zZeggA=;
-        b=jKBG6LiPuI8aGs85/q7f+blHKPkpPMtQbdnduGabBkdfKwYp3eGVxgwoiPaCmiOEcc
-         9W/TAUGPMrlkshLIls8X6EsSmoECOht4wv+FppvBjblleJ2919P4k8xxZE0Q+0zJaUX3
-         sHvGtYkIat2/RJQvUvD6L4jJWSherLQ2tHJseGO/IyIgpFd3RtLkVjc/9015LUX4PfZp
-         wnZzH1ThVylKvjILimwq9I4IoBvaNdRo2EYx47U4+ooq0daLJq5UQDeRbqHG6vNrXoYz
-         JWMnTeBVTksmKXkKu9nEiCqxskyzXz7ppJBLZ62UsTgXZsFV1NXcJP66GXQqczSfSjfK
-         q1Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfygAvfVxOsU5gLiYKnzXJV7FrRtgYuGLgJl4Y2MKzL41NBmO+SYr1+WAU2wledG0cEeaPFy4SJaqzb5UnSDQS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT6hSHOfkJYnsdehvYoZPmy45ZGUA3WvArSOfUFXvzYquL8SUs
-	C2QqLvMtV839xsl45sqK/2QW+JhxG9GjvVgNPnITWVq2302Ev+H/FnBJgjK9stLi7xgCWUCKmay
-	62EFt+Ft7RcjL7/xnXaSVMq5W3Smpae/l1B+N
-X-Gm-Gg: ASbGncto8Xcmn7HbX751C4nEeKNRHytuEuU/yVF0MGLVgTxWhdLR8toGfKVkHPNIMLY
-	avRga/FxXgx06MTp7FJ42k/sEhI5slGaYUiRuEwEB0J3s9iLNCp4gmXFcDEh35Ru8z+Lf7OdDVv
-	gkXzHbrg+il1EWuudTjgB9CDzT
-X-Google-Smtp-Source: AGHT+IEFMpl6ZcgcJrXIsSwQqE5R01vnpkBqhD4eS64Yg+k728wpZWGR9nA+Uj3tda4TUg9TM6+sB3c2ckjBoq19VXA=
-X-Received: by 2002:a05:651c:2126:b0:302:1b18:2bfe with SMTP id
- 38308e7fff4ca-3079694dfbdmr88941761fa.25.1738593663833; Mon, 03 Feb 2025
- 06:41:03 -0800 (PST)
+        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
+        b=pca89jtfAy4fti2TVSHLvNP+XdvCWk0P1CswFtEezvoygayysmHl0Hmu0LpguCPPrg
+         LxqSiCx0+XdOuG34wmmReo2a0a9K0jNBOSgKATRHXCpzfM/TQFORnfsVP58eNEX+AMmA
+         nUUUgWTJ8XtklNHq14ijDveAhN1mOx4ITXAjFCxWOxAyphBcWyfL3hWYcLaLk6/uVG5l
+         4e+qslMthus0xJr5jQdxOS0ajfhDkPq6y6BHmvZ/0CL2ndY5OTfsMxl0JnWAlp7eRhGm
+         8T+Xyl39OOZrrxr6ceVSUmd7BUYtziM0pu2Wp1iwqsx9JZBbfUh5otBWcv7F3Q11XzmS
+         40Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtDtErefoazXfonZlLB5ds+yw0tS8Zy46sXGP/JU8SN9AwtSMCRwaD4Uw7Ed9lY+SsxhrE06goy2rH3BCSW4ch@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW1K/rsardcESesfI3q2kXMKzZp/TxSaOw+tJtlyWAysUMwmDP
+	xiJATc/Ko9+agge17lw1mweud6x0n6CUABiMuT+BtvrBXidDmkAn3XMr4yMJ/2wLwHY8DTcr8QU
+	Sokb9x43vrJeJK6e22GaYRkle9Olw/5GJs+NW
+X-Gm-Gg: ASbGncvePX4DIFND6ECR0MIidzpiTbxL5fD34KyK2vLVq0qVRTuU52vZijvZ1l0NOsK
+	Dy7ZGCWnFo/PYaUETXc2QfaiKFYi1HBot2xETNcREwGf8B9B88LKdl7Nn78KeXunQqMs5Sg6CV+
+	0+1Xqm/D6s16U+KaCT7o/lPJG8
+X-Google-Smtp-Source: AGHT+IFdX20Dg79dKyo+FKKkKsITuCwGf69uB9vyO+Cx2mCC0SBMPBW7bLxT/A6zbwHn6Q/jEPB7m6Y2AjpSO0ySv00=
+X-Received: by 2002:a2e:86d3:0:b0:306:10cd:7bbe with SMTP id
+ 38308e7fff4ca-307aa37d20cmr37648251fa.4.1738593924922; Mon, 03 Feb 2025
+ 06:45:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737971364.git.dvyukov@google.com> <3e52ed435e0ce98e1108b172fdcadc4749a25c98.1737971364.git.dvyukov@google.com>
- <Z5mxzGdXJ27O4x-Y@google.com> <CACT4Y+Z1hFt6ttPPdoDSxw-BDjBhnhxDAunHQ4do2o56Ne3BDQ@mail.gmail.com>
- <Z5sOEPVh4-WGmhc-@google.com>
-In-Reply-To: <Z5sOEPVh4-WGmhc-@google.com>
+References: <cover.1737971364.git.dvyukov@google.com> <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
+ <Z5m2hdR3HZxIdhWR@google.com> <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
+ <Z5sccIPaYBeB_yab@google.com>
+In-Reply-To: <Z5sccIPaYBeB_yab@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 3 Feb 2025 15:40:52 +0100
-X-Gm-Features: AWEUYZnB5QhHlg9oBpSHk3bt3d1zFOdL1ywgZCEzDcp3V6rE95Dh1I1lIh71sHw
-Message-ID: <CACT4Y+YCxX2TV0jP58p2j3YutSCgOu1+MwXdgZk3MKVTkHQSfQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] perf report: Add parallelism sort key
+Date: Mon, 3 Feb 2025 15:45:13 +0100
+X-Gm-Features: AWEUYZlCJLC2kCWpCd-EenFvSdwDDoS87usTiieBHkpVbB4VVnJRh8jqXqhYW10
+Message-ID: <CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 30 Jan 2025 at 06:28, Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, 30 Jan 2025 at 07:30, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Jan 29, 2025 at 08:18:34AM +0100, Dmitry Vyukov wrote:
-> > On Wed, 29 Jan 2025 at 05:42, Namhyung Kim <namhyung@kernel.org> wrote:
+> On Wed, Jan 29, 2025 at 08:12:51AM +0100, Dmitry Vyukov wrote:
+> > On Wed, 29 Jan 2025 at 06:03, Namhyung Kim <namhyung@kernel.org> wrote:
 > > >
-> > > On Mon, Jan 27, 2025 at 10:58:49AM +0100, Dmitry Vyukov wrote:
-> > > > Show parallelism level in profiles if requested by user.
+> > > On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
+> > > > Add record/report --latency flag that allows to capture and show
+> > > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > > profiles. For latency profiles record captures context switch events,
+> > > > and report shows Latency as the first column.
+> > >
+> > > It'd be nice if you could add a small example output in the commit
+> > > message.
+> > >
 > > > >
 > > > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 > > > > Cc: Namhyung Kim <namhyung@kernel.org>
@@ -87,104 +94,175 @@ On Thu, 30 Jan 2025 at 06:28, Namhyung Kim <namhyung@kernel.org> wrote:
 > > > > Cc: linux-perf-users@vger.kernel.org
 > > > > Cc: linux-kernel@vger.kernel.org
 > > > > ---
-> > > >  tools/perf/builtin-report.c | 11 +++++++++++
-> > > >  tools/perf/util/hist.c      |  2 ++
-> > > >  tools/perf/util/hist.h      |  3 +++
-> > > >  tools/perf/util/session.c   | 12 ++++++++++++
-> > > >  tools/perf/util/session.h   |  1 +
-> > > >  tools/perf/util/sort.c      | 23 +++++++++++++++++++++++
-> > > >  tools/perf/util/sort.h      |  1 +
-> > > >  7 files changed, 53 insertions(+)
+> > > [SNIP]
+> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > > --- a/tools/perf/util/sort.c
+> > > > +++ b/tools/perf/util/sort.c
+> > > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > > >       const char              *name;
+> > > >       struct perf_hpp_fmt     *fmt;
+> > > >       int                     taken;
+> > > > +     int                     was_taken;
+> > > >  };
 > > > >
-> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > > > index 0d9bd090eda71..14d49f0625881 100644
-> > > > --- a/tools/perf/builtin-report.c
-> > > > +++ b/tools/perf/builtin-report.c
-> > > > @@ -1720,6 +1720,17 @@ int cmd_report(int argc, const char **argv)
-> > > >               symbol_conf.annotate_data_sample = true;
-> > > >       }
+> > > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > > >               return -1;
 > > > >
-> > > > +     if (report.disable_order || !perf_session__has_switch_events(session)) {
-> > > > +             if ((sort_order && strstr(sort_order, "parallelism")) ||
-> > > > +                             (field_order && strstr(field_order, "parallelism"))) {
-> > > > +                     if (report.disable_order)
-> > > > +                             ui__error("Use of parallelism is incompatible with --disable-order.\n");
-> > > > +                     else
-> > > > +                             ui__error("Use of parallelism requires --switch-events during record.\n");
-> > > > +                     return -1;
+> > > >       hd->taken = 1;
+> > > > +     hd->was_taken = 1;
+> > > >       perf_hpp_list__register_sort_field(list, fmt);
+> > > >       return 0;
+> > > >  }
+> > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -int hpp_dimension__add_output(unsigned col)
+> > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > >  {
+> > > > +     struct hpp_dimension *hd;
+> > > > +
+> > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > > +     hd = &hpp_sort_dimensions[col];
+> > > > +     if (implicit && !hd->was_taken)
+> > > > +             return 0;
+> > >
+> > > I don't understand why you need 'was_taken' field.  Can it use the
+> > > 'taken' field?
+> >
+> > I've started getting failed asserts in
+> > perf_hpp__cancel_cumulate/latency when removing columns still linked
+> > into sort order list.
+>
+> Ok.
+>
+> >
+> > I've figured out that columns we implicitly add in setup_overhead and
+> > perf_hpp__init must match exactly. If we add one in setup_overhead,
+> > but not in perf_hpp__init, then it starts failing.
+>
+> Right, I don't remember why we don't have unregister_sort_field or let
+> the perf_hpp__column_unregister() remove it from the sort_list too.
+>
+> >
+> > Taken does not work b/c there is reset_dimensions call between these
+> > functions, so they actually add the same columns twice to field/sort
+> > lists (and that prevents failures in
+> > perf_hpp__cancel_cumulate/latency).
+>
+> I see.
+>
+> >
+> > Initially I've just tried to match logic in setup_overhead and in
+> > perf_hpp__init. But it turned out quite messy, duplicate logic, and
+> > e.g. in setup_overhead we look at sort_order, but in perf_hpp__init we
+> > already can't look at it b/c we already altered it in setup_overhead.
+> > That logic would also be quite fragile. Adding was_taken looks like
+> > the simplest, most reliable, and less fragile with respect to future
+> > changes approach.
+>
+> Maybe just remove it from the sort_list.  There should be no reason to
+> keep it in the list.
+
+I've tried that (and removing setup_overhead entirely), but none of
+that yielded the same result.
+
+E.g.:
+
+perf report --sort latency,symbol
+
+currently gives intended:
+
+ Latency  Symbol
+   4.37%  [k] native_queued_spin_lock_slowpath
+   2.71%  [.] _PyEval_EvalFrameDefault
+   2.18%  [.] iterative_hash
+   2.00%  [k] clear_page_erms
+
+but if I remove was_taken logic and make perf_hpp__column_unregister()
+remove from the sort list, I get:
+
+Overhead   Latency  Symbol
+  38.17%     4.37%  [k] native_queued_spin_lock_slowpath
+   0.86%     2.71%  [.] _PyEval_EvalFrameDefault
+   0.47%     2.18%  [.] iterative_hash
+   0.68%     2.00%  [k] clear_page_erms
+
+So, so far the current version of the code is unfortunately the
+simplest version with intended behavior that I come up with.
+
+
+
+> > > > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
+> > > >  }
+> > > >
+> > > >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > > > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
+> > > >       if (sort__mode == SORT_MODE__DIFF)
+> > > >               return keys;
+> > > >
+> > > > -     keys = prefix_if_not_in("overhead", keys);
+> > > > -
+> > > > -     if (symbol_conf.cumulate_callchain)
+> > > > -             keys = prefix_if_not_in("overhead_children", keys);
+> > > > +     if (symbol_conf.prefer_latency) {
+> > > > +             keys = prefix_if_not_in("overhead", keys);
+> > > > +             keys = prefix_if_not_in("latency", keys);
+> > > > +             if (symbol_conf.cumulate_callchain) {
+> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > > +                     keys = prefix_if_not_in("latency_children", keys);
+> > > > +             }
+> > > > +     } else if (!keys || (!strstr(keys, "overhead") &&
+> > > > +                     !strstr(keys, "latency"))) {
+> > > > +             if (symbol_conf.enable_latency)
+> > > > +                     keys = prefix_if_not_in("latency", keys);
+> > > > +             keys = prefix_if_not_in("overhead", keys);
+> > > > +             if (symbol_conf.cumulate_callchain) {
+> > > > +                     if (symbol_conf.enable_latency)
+> > > > +                             keys = prefix_if_not_in("latency_children", keys);
+> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
 > > > > +             }
 > > > > +     }
-> > > > +
-> > > >       if (sort_order && strstr(sort_order, "ipc")) {
-> > > >               parse_options_usage(report_usage, options, "s", 1);
-> > > >               goto error;
-> > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > > index 0f30f843c566d..cafd693568189 100644
-> > > > --- a/tools/perf/util/hist.c
-> > > > +++ b/tools/perf/util/hist.c
-> > > > @@ -207,6 +207,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
-> > > >
-> > > >       hists__new_col_len(hists, HISTC_CGROUP, 6);
-> > > >       hists__new_col_len(hists, HISTC_CGROUP_ID, 20);
-> > > > +     hists__new_col_len(hists, HISTC_PARALLELISM, 11);
-> > > >       hists__new_col_len(hists, HISTC_CPU, 3);
-> > > >       hists__new_col_len(hists, HISTC_SOCKET, 6);
-> > > >       hists__new_col_len(hists, HISTC_MEM_LOCKED, 6);
-> > > > @@ -741,6 +742,7 @@ __hists__add_entry(struct hists *hists,
-> > > >               .ip      = al->addr,
-> > > >               .level   = al->level,
-> > > >               .code_page_size = sample->code_page_size,
-> > > > +             .parallelism    = al->parallelism,
-> > > >               .stat = {
-> > > >                       .nr_events = 1,
-> > > >                       .period = sample->period,
-> > > > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > > > index 46c8373e31465..a6e662d77dc24 100644
-> > > > --- a/tools/perf/util/hist.h
-> > > > +++ b/tools/perf/util/hist.h
-> > > > @@ -42,6 +42,7 @@ enum hist_column {
-> > > >       HISTC_CGROUP_ID,
-> > > >       HISTC_CGROUP,
-> > > >       HISTC_PARENT,
-> > > > +     HISTC_PARALLELISM,
-> > > >       HISTC_CPU,
-> > > >       HISTC_SOCKET,
-> > > >       HISTC_SRCLINE,
-> > > > @@ -228,6 +229,7 @@ struct hist_entry {
-> > > >       u64                     transaction;
-> > > >       s32                     socket;
-> > > >       s32                     cpu;
-> > > > +     int                     parallelism;
 > > >
-> > > Can you make it u16 and move to around cpumode to remove paddings?
+> > > Do you really need this complexity?  I think it's better to fix the order
+> > > of columns in both case.
 > >
-> > It generally should be the same size as cpu/socket/etc. And these are
-> > 32-bits throughout the codebase (the previous fields). Are there any
-> > checks that MAX_NR_CPUS<64K?
+> > This is sort order which affects ordering of row, and order of rows is
+> > basically the most important thing for a profiler. If we fix the
+> > order, it will be showing completely different things.
+> >
+> > "latency" and "overhead" are equivalent with respect to their
+> > fundamentality for a profile. So we shouldn't be adding any of them,
+> > if any of them are already explicitly specified by the user.
+> >
+> > For example, the command from tips.txt:
+> >
+> > perf report --hierarchy --sort latency,parallelism,comm,symbol
+> >
+> > if we prepend "overhead", it all falls apart.
+> >
+> > Or for 2 default modes (normals and latency) we want "overhead" or
+> > "latency" to come first. Prepending "latency" for the current CPU mode
+> > would lead to completely different ordering.
 >
-> I don't think there's such a check.  But practically it used be 4K and
-> you can add the check. :)
+> I see.  You want to sort by overhead in the default mode even if it has
+> implicitly-added latency field, and to sort by latency if --latency is
+> given explicitly.
 >
-> Anyway hist_entry is getting bigger and we may need to shrink it later.
-> I don't stringly insist on u16 though.  It's up to you.
-
-Added this commit to v4:
-
-perf hist: Shrink struct hist_entry size
-https://lore.kernel.org/linux-perf-users/75dd56a2d467515dc354d8fc8d5acd841d63b565.1738592865.git.dvyukov@google.com/T/#u
-
-It cuts 8 bytes, which I hope is enough to compensate for my 4 added bytes :)
-
-However, it's 584 bytes, so it saves like 1%.
-
-If hist_entry size is a problem I think the following approaches will
-have more impact (not saying I want to do it as part of this series
-:)):
-
-1. Make hist_entry layout dynamic (like the kernel perf event data) to
-completely exclude unused parts when they are unused.
-
-2. Add slab allocator for hist_entry which won't round up allocation size.
-E.g. if you take default TCMalloc size classes, that's 576 and then
-640. So this messing with padding actually doesn't save anything. We
-shave off 1%, but the actual heap block is still 10% wasted.
+> I think it can be done with the following command line.
+>
+>   $ perf report -F overhead,latency,parallelism,comm,sym -s overhead
+>
+> or
+>
+>   $ perf report -F overhead,latency,parallelism,comm,sym -s latency
+>
+> IOW, you can keep the same output column ordering and sort the result
+> differently.  But I'm not sure if it'd make the code simpler. :)
+>
+> Thanks,
+> Namhyung
+>
