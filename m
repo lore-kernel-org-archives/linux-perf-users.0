@@ -1,141 +1,96 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79EF202C45
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 11:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9841DF27D;
+	Mon,  3 Feb 2025 11:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582129; cv=none; b=M4fH1bo0YjuDqBeX+yzhxhyDu76RMNnqh5F8dRcP+wWTNCLHc6CfhY3vlIZw8we0sXkE9yk1Qeo4Z32yfgsC8Mp+0ks2oZVqcFghkXl+ltckUjJ0r4zY14kMX+hrLL8+AxmIdNYQEJvZTJmM0M/an0WcOoesoZdptxcEap1niZ8=
+	t=1738582999; cv=none; b=gK4dGNbETZqTQnpU/IvN1Zdsv7KCRdHOihJBRACCKFfkhwVkMLYxaCAxvgrDnmrTfnz0WoDh4RV/2rhaaGrGLwSF9Un1BVYGPxHm/mrLB4u0m/es+xLorLYZ3xz0M8I+cpN4GwNHOhPRunfMAllI3N81ETIAOUBOEMZ8sY5zGQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582129; c=relaxed/simple;
-	bh=/K5N3VJS4zbstl2ynRET37Jk72zu8/TikndeVhgoKOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FwFa9psFlwO2SnitG9QedMJ4YcoM6Dt8CsdAwPwNQQq9TkKUj2QeV0qBPWu/2bUqiW2pF1iM3McyI4fc/g1NpDOSkdwry8z4K/MQUZZOiQr29KYJi5nJGwFDI3GMutGxl2SQu639+DN4MlkzLvLIX7uoExg2cApcHn1+SrG77LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u+wz0x9K; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738582999; c=relaxed/simple;
+	bh=LxtA9+OyABAgOu4Ko+tn7o4gfdQ2ERBebHBgYT/EBX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mYmKGK8Txz1otRvLSQn3IjVWgEgw8Pl0Zx/6AwhcvyJugH2HkJrn0NdC+ixZWSW4Mu8R8gQGyqcCnzzH29VVOu0VM+uQFc+HQ+JU7y4UDFkBi9GOXmHZGcNmgdNEAc49PsVtosAjAiB29l+wHEqbm7ons4QSUK2buVIBmGIhQGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M0ifH9fI; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+wz0x9K"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso25871155e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 03:28:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738582126; x=1739186926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=03gUTOPYMxUMcZhmVIjGAOR45IAzZBtmIXb7cPKWi+Y=;
-        b=u+wz0x9KvcUUUBwqnXMdO7FesLQyf/niFr/EiDUhTYKudUod7KiWSsIkfms7rD+w2B
-         YxRdUVp6Z1E1jq6WGbLO+BCV3+qz31Hai1ILRjF4sdqaLMVGhFWk/g8Jo8yxR05CC/SP
-         lUusisefWIa9flIx/Blhlg95MY7jtRj7b4m5RNnzM2TMBohpMO6Gavk9N3C+EPBU7ZIW
-         h8l9shy4PlFUsSX4KRtbhKkUXf5BwRhEcI+ckSuPjhir4CGUJxowiZrvLhyMqnLiexqA
-         s2ku1CGiuaXCoF+uuww0VOEK/2ZNGHMuazxBTqBiaukFjwYFBAq2T/l7fyOgi3sopKk2
-         rT+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738582126; x=1739186926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=03gUTOPYMxUMcZhmVIjGAOR45IAzZBtmIXb7cPKWi+Y=;
-        b=PAmdC+h0xCe09PL/jclzQtjiVBgMfJVsV3kubGm5sIZBk/uTVLsfJsxCbmXlo4iJxS
-         YVMPPSRKaN0bZOerok84+iwnsEgQ+N8XQq1CZc7o4085iNjvti8MYKW5Z7MgMgPkdTvU
-         0EJucC98gskgzEYMGEieeNZ9d0n7qyQhnxjnjsnHLp+4cA19KvNB2vKv8FBtyEa58mkM
-         e3WNYEWEOW27gbHqdiK3uspT5amx+9xTwZz/PbGuLBqA20aVQWrqR0nOFh9qw5TOzhNG
-         2hZLD6FbtCi7YvKFF1n0wnJbEvWQ+W8PRnnSclNq4gJJ4/BHkHUB0B3oNjSwJFZXjuvG
-         MZaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+E0qcmKujqjGAxOm9q/nYyOfDqqpimEc194pTvAHHmWQ2q9ySWMZqDBXb+AAR2p6uMIlZ7e1dQ7Up2t8sh5ck@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYHgmYPnhQsnXXbniiTxkqUhLaAPXepT6UR0V8dpQxQjJfmo/1
-	y8SQadxEEuW/+pIcMSd+5h99iVRsikLMklqTHRQ25zx3OkxCAtHg0BZ6SI9Xc94=
-X-Gm-Gg: ASbGnctBd90V9ewTmyZg2CZB5nhKDb43mtkFtNvwe5Jy4Uui36YyoV/bsNJXnV5aaDV
-	/C65v8q+XU8iGkyoecBJ9+Zqu+xgKwvsf50yiKRglOatW4Xqi5RsabXRbX/poV8cY89duhd1II/
-	Pax/LyOZHX+2mjo/DTbOD0ZTBXZkoE6N+eoxjaFQ00AaBQ+0kAqHspj6zcXSya9+8HKrF1WhzlP
-	aIY62yjJ7iJxIAEPD1aEuDOQlirYR86K7hXNRZ3K0XpTqTJfzBCWnrBnrCQDY+Z4YSEzIifu10R
-	wU3bB/irZpTpmt3etODXSQLRDg==
-X-Google-Smtp-Source: AGHT+IGzdk+Sqe63Mv9Bm/BPmdRTVGijSJCqG2+aE5exrBjEFpqR+uegx/hrDwI77yjfzrbFRZf6LQ==
-X-Received: by 2002:a05:600c:1e08:b0:438:e521:1a4d with SMTP id 5b1f17b1804b1-438e52122eamr113014465e9.5.1738582126037;
-        Mon, 03 Feb 2025 03:28:46 -0800 (PST)
-Received: from [192.168.68.163] ([145.224.90.107])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc81911sm185351695e9.38.2025.02.03.03.28.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 03:28:45 -0800 (PST)
-Message-ID: <4aaaa1de-ec5d-433b-96c2-3b28a8cffe7e@linaro.org>
-Date: Mon, 3 Feb 2025 11:28:44 +0000
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M0ifH9fI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=btXXAPOazkj5DVi+1L404K6Uyxw16gswkuGE52yhV0o=; b=M0ifH9fITMzADf34o4YPQNJdHp
+	6X3eJAjlJiputSGI+Vsv/oTXw7axc6T8dl/2Ue10pZEVDpNe9qBupAlqffD0kE5EoOXx733Ffzuuw
+	xKObyxDGAom/pCU89PRq09baaeibRFD4ZkEaAH3pbz8ltKPvAzoV4qhJUodeIs2Dy4gQWJVvJAPrD
+	0c7g9Ic6sQrkeyicDZhRZ+VI51J3OkpplkZ6jy/Nrb2LxbuuiPcapYLbmyis9qMZg1ovSe/bu/bzC
+	SrAPxjITpYNZNjfKp+tplNmanQT7yAe7+iGvvmztSa+P2Hnwahirk0/K3Ce9r4flcaF62ua3N5W5t
+	V51nRMEg==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1teur8-00000000yxa-3Io8;
+	Mon, 03 Feb 2025 11:43:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 62B1930035F; Mon,  3 Feb 2025 12:43:10 +0100 (CET)
+Date: Mon, 3 Feb 2025 12:43:10 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Ensure LBRs are disabled when a CPU is
+ starting
+Message-ID: <20250203114310.GF505@noisy.programming.kicks-ass.net>
+References: <20250131010721.470503-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 10/11] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131010721.470503-1-seanjc@google.com>
 
-
-
-On 03/02/2025 12:43 am, Rob Herring (Arm) wrote:
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
+On Thu, Jan 30, 2025 at 05:07:21PM -0800, Sean Christopherson wrote:
+> Explicitly clear DEBUGCTL.LBR when a CPU is starting, prior to purging the
+> LBR MSRs themselves, as at least one system has been found to transfer
+> control to the kernel with LBRs enabled (it's unclear whether it's a BIOS
+> flaw or a CPU goof).  Because the kernel preserves the original DEBUGCTL,
+> even when toggling LBRs, leaving DEBUGCTL.LBR as is results in running
+> with LBRs enabled at all times.
 > 
-> While BRBE can record branches within guests, the host recording
-> branches in guests is not supported by perf. Therefore, BRBE needs to be
-> disabled on guest entry and restored on exit.
-
-I don't think this is strictly true. You only need a Perf session in the 
-guest to records sideband events. That allows you to make sense of the 
-userspace addresses, but by then you might as well record BRBE in the 
-guest in the first place. See [1] for an example.
-
-With kernel addresses it might be even easier as all you need is 
---guestvmlinux, --guestkallsyms etc and no sideband events.
-
-[1]: 
-https://lore.kernel.org/all/20220711093218.10967-25-adrian.hunter@intel.com/
-
+> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Closes: https://lore.kernel.org/all/c9d8269bff69f6359731d758e3b1135dedd7cc61.camel@redhat.com
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/events/intel/core.c     | 5 ++++-
+>  arch/x86/include/asm/msr-index.h | 3 ++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> For nVHE, this requires explicit handling for guests. Before
-> entering a guest, save the BRBE state and disable the it. When
-> returning to the host, restore the state.
-> 
-> For VHE, it is not necessary. We initialize
-> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
-> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
-> branch recording in the host. When entering the guest, we set
-> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
-> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
-> running a guest.
-> 
-> Should recording in guests (by the host) ever be desired, the perf ABI
-> will need to be extended to distinguish guest addresses (struct
-> perf_branch_entry.priv) for starters. 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index e76e892f44cd..efd069bc9c28 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -5038,8 +5038,11 @@ static void intel_pmu_cpu_starting(int cpu)
+>  
+>  	init_debug_store_on_cpu(cpu);
+>  	/*
+> -	 * Deal with CPUs that don't clear their LBRs on power-up.
+> +	 * Deal with CPUs that don't clear their LBRs on power-up, and that may
+> +	 * even boot with LBRs enabled.
+>  	 */
+> +	if (!static_cpu_has(X86_FEATURE_ARCH_LBR) && x86_pmu.lbr_nr)
+> +		msr_clear_bit(MSR_IA32_DEBUGCTLMSR, DEBUGCTLMSR_LBR_BIT);
+>  	intel_pmu_lbr_reset();
 
-There's already this which would be enough (if every entry in the branch 
-buffer matches it):
+Gotta love this stuff.
 
-   sample->cpumode == PERF_RECORD_MISC_GUEST_KERNEL
-   sample->cpumode == PERF_RECORD_MISC_GUEST_USER
-
-But I don't think we need all the extra complexity. Just let the guest 
-use all of BRBE and then there isn't really a use case that's not 
-supported. I assume a lot of these workflows were added for trace 
-because it's not supported in guests, but I don't think that applies to 
-BRBE so we can skip them and go straight to full BRBE in guest support. 
-As a later change obviously, these comments are more about the commit 
-message.
-
-James
-
+Thanks!
