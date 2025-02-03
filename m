@@ -1,54 +1,54 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC0E213E86
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE5D214211
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593087; cv=none; b=aQEo8hVFet3IA7OOQ3+UMNkQ6ARXdGsy2k5Y0IzEruoExPhq7FNL9+TgYaxgzfzfu5u7GqUmECQMzNM9JuWw+J5AL6cjSEGTkf1Ne2DP8zWsgVZKfrGhAaqFPjprcPNSAmdNJiQCONtGza8dYeVJWn7ZGIM8hvxEZVTlIY8+Q5g=
+	t=1738593089; cv=none; b=gbuffi/EAgT8TLkhYHLEyNd9jpjybNj/QlGvM5FWOirZ2ILQdQxDzpT4wNf6BMqornmxZdN1CsdJPcu8pviwN8xfAaGlsko1AM7uOny1r0SCZPXnjQ/bwPrwJJCzyrPoepC/9GbXQV461/IrvvN2SpwkU6IaNdFI+QWQ5LLLxn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593087; c=relaxed/simple;
-	bh=he/ttlTg7UBOPG2kUlUnGi5DNhFEcfh7CDF2gxIq/8g=;
+	s=arc-20240116; t=1738593089; c=relaxed/simple;
+	bh=Flm72J3X3TDvLIeQHIIlYLGaUwFP9lEWoVmqSXmZ1ZQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ANNSWIJQq2R0f0PvOTBPXFqXgNtikWP3S3lCI0G1Dch/Dxwy7z25VesS2mDaUGlch9Eu7ef7SXB/ZtmzX/1nyjxU5wH0Mozjs2KLkkrBED5YfVAIh0TZd4gBZG/bI+2O8kbbYPpkChFwTN2HvWHeK1EpfSy0TnW1KMOu6sdpS44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qXuGdlxL; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=BouIkKwebrkAyGzEufbxzZZOa5Kyl+zuEXYC9jr5k5rKHnWlWpObjzDGODudOGXDDxSaQMXiiZYoDwhVvuGO23oQJSFf7abk5EIbANWyx8mQPWVSF7cxSY/MljAljyYeNxzgFjsdMEOdC866PFGk+gTajefA6aCCbfCha5OmLjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cvj2hamA; arc=none smtp.client-ip=209.85.218.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXuGdlxL"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d90b88322aso3965819a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:31:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cvj2hamA"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab6fe8d375eso239990666b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:31:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738593083; x=1739197883; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738593085; x=1739197885; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ud39mVNdcf/cx83PH97ng5LK820bFNL8bQsh6grdsDo=;
-        b=qXuGdlxLPZlCdYTAvlt9AlmJs4z9SiJugFIpqDU1xx4JYkXzUE+y4oQbc0FCumr9xR
-         Lvxafu8LsARQbXKjblSOChE5o5sAPS6mWTvj94sbiAGb4ntSgzxPlHIvGhTf9HgRP20j
-         UqLcsHy+zGLabwfNPVvs47TbB1qy39Bg/naIJyHjxLG7SWTfefrC8SWwZ0c9VK/TjHHt
-         eHnGaYuZ0t7Pn+SpOyJwYMrz+1B0nJbmz7J8VS2T1pFg4jt53iY00LPxC+D7bsBDG+Vl
-         zSww0vN49DuS22pDJ2LS8nu6pdgsuqDsFaU5QLLGV8GfFbHJC+ISJFx66SUoe7r6QBmW
-         oRdg==
+        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
+        b=cvj2hamAai2/9ImeLSc7Cj2UzUCDy61eWDZzMf7BGDoKk4MxmIJkOP/M+rDWihXYwy
+         6vNPB/7yzH8/dkfNjy/uXNnWyH+l5Ukfvfd1m191ITGIjpwnQ2ee52YSp4FiPMRLjJ0U
+         I2+JHTl4oYueWJDHW/z0o3gEAcSB0PINHZ66YhwnFLvimzKGphiwTDxFaU571Y11E+jK
+         opvYJCmU0fem80/q1S4BS/z6JMQf2o3lDw6Te/fGGuD3EUlX2owOQmV1mk/W/0THfBZG
+         VLcmHXEuh+Fws/QqiK2pDVtEmMQWIo8l9C1W7rbrCADWlAi4cFPQSqivy7wRDR/IszPS
+         vGzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593083; x=1739197883;
+        d=1e100.net; s=20230601; t=1738593085; x=1739197885;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ud39mVNdcf/cx83PH97ng5LK820bFNL8bQsh6grdsDo=;
-        b=a0A2KDh9/9HLnd83fHAoDDw1tML5eRWw0LBXlN3exZoM1WPg83dJY67iM9hn6gzQmw
-         a/OVO7oj0+vz/uzBpImvUxKKfqT3Rbhn5veYgpwmHLDCcLoduA984cdgsoiSnRHLHlOI
-         rS9JNkOglLtUh+mFr+PE+MOYNdBeJFZG+wGsX3e3WNc/NEx0KDJYyVrmMNbQ880X+2+w
-         kRdISrz4Dy8OATcvxdqRSx3lahqVE4+pB9cdMEPKIExJlTpMdNGyEIBoyvoSvz038/Q3
-         0N8/GerAGJrBaZfqrjmZLnw8i8pTkOGVmEwAZaDNcsHrlHr9O5GFBVomOAw1r7RZHX0L
-         x3sw==
-X-Gm-Message-State: AOJu0YxZWVbJ2HEgfWOLN5LuSu3z+sOGcaL/1z5v6wjEAAgeQ0aDZvda
-	HanhFl3xlbCdwI1BZuiPmOU4QeLasgbUc89yEahQMlK5vVINpUmm3fROq4efv0Mua8RSRbgi08J
-	Mq0V7yQ==
-X-Google-Smtp-Source: AGHT+IGjrgTOy6/5siR9CbzzJWLS94oMsLVKhrls8AXKeZ5MDT/fBTEhYomBATiq9dOPdZCebFiWTwowVdpk
-X-Received: from edbio8.prod.google.com ([2002:a05:6402:2188:b0:5cf:eada:32a8])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2551:b0:5d0:e615:39fe
- with SMTP id 4fb4d7f45d1cf-5dc5efc6853mr27382218a12.18.1738593083288; Mon, 03
- Feb 2025 06:31:23 -0800 (PST)
-Date: Mon,  3 Feb 2025 15:30:42 +0100
+        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
+        b=hi9WZq6Tx7J60mrPt7VLw16o2w0NX6LkxOx38gvUyPjSpku2klCvS1dz5vQfAKm/8r
+         vAEeCpsm+eof+DjfhqTccUPbopXZ7ruviRgkM4UPj6o/BK0eQtoKNITKNIPh+21P3XXW
+         3i1hh7u6pdJe+ZDFHdeNFG6VJDfhj8O2fTFtLbh8wTqMdjEQKFnCHC6c/GG4zbZljQZZ
+         V6PsoOKfycgDRdzgDJpuFYGH/DyX9DZxzNp9s7YGSXKyOlIB9+SX2iq/cFRgo+L1BfJf
+         TBESrR5pJcHo4aAiQ56fRQnn9hKlTdBgqR0IwIcQ0Fl2Aka2+TOGJUuRAwk/ckhAbNzL
+         uYhg==
+X-Gm-Message-State: AOJu0Yw4UlamtS26/ox8mz3YrorqybdhIJO6jO5cLUZHBnUH8TLmiqht
+	awakTyf2IrTjTzJh7SCnRGE/TH+pm1WelAPUryXajt7PRWiORwJd3RCSLSMzKjp6Gx39dRscU+a
+	UbDR5UQ==
+X-Google-Smtp-Source: AGHT+IESlhe7llB78fQq9cR6AMRTd5TrK+EdBY2CrigYoNTWQ4dq1OthZTxMn6H/ntBH49eMrwOOSPH/Mle4
+X-Received: from edbfj18.prod.google.com ([2002:a05:6402:2b92:b0:5dc:4848:561d])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:51ce:b0:5db:efcc:c19c
+ with SMTP id 4fb4d7f45d1cf-5dc5efc4e33mr23491573a12.19.1738593085721; Mon, 03
+ Feb 2025 06:31:25 -0800 (PST)
+Date: Mon,  3 Feb 2025 15:30:43 +0100
 In-Reply-To: <cover.1738592865.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,16 +58,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1738592865.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <4b49d5dd316f5d7119d8b16d5d70f13574158dc6.1738592865.git.dvyukov@google.com>
-Subject: [PATCH v3 7/8] perf report: Add latency and parallelism profiling documentation
+Message-ID: <75dd56a2d467515dc354d8fc8d5acd841d63b565.1738592865.git.dvyukov@google.com>
+Subject: [PATCH v3 8/8] perf hist: Shrink struct hist_entry size
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com, acme@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Dmitry Vyukov <dvyukov@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Describe latency and parallelism profiling, related flags, and differences
-with the currently only supported CPU-consumption-centric profiling.
+Reorder the struct fields by size to reduce paddings and reduce
+struct simd_flags size from 8 to 1 byte.
+
+This reduces struct hist_entry size by 8 bytes (592->584),
+and leaves a single more usable 6 byte padding hole.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -75,258 +78,243 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
----
- .../callchain-overhead-calculation.txt        |  5 +-
- .../cpu-and-latency-overheads.txt             | 85 +++++++++++++++++++
- tools/perf/Documentation/perf-report.txt      | 49 +++++++----
- tools/perf/Documentation/tips.txt             |  3 +
- 4 files changed, 123 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/Documentation/callchain-overhead-calculation.txt b/tools/perf/Documentation/callchain-overhead-calculation.txt
-index 1a757927195ed..e0202bf5bd1a0 100644
---- a/tools/perf/Documentation/callchain-overhead-calculation.txt
-+++ b/tools/perf/Documentation/callchain-overhead-calculation.txt
-@@ -1,7 +1,8 @@
- Overhead calculation
- --------------------
--The overhead can be shown in two columns as 'Children' and 'Self' when
--perf collects callchains.  The 'self' overhead is simply calculated by
-+The CPU overhead can be shown in two columns as 'Children' and 'Self'
-+when perf collects callchains (and corresponding 'Wall' columns for
-+wall-clock overhead).  The 'self' overhead is simply calculated by
- adding all period values of the entry - usually a function (symbol).
- This is the value that perf shows traditionally and sum of all the
- 'self' overhead values should be 100%.
-diff --git a/tools/perf/Documentation/cpu-and-latency-overheads.txt b/tools/perf/Documentation/cpu-and-latency-overheads.txt
-new file mode 100644
-index 0000000000000..3b6d637054651
---- /dev/null
-+++ b/tools/perf/Documentation/cpu-and-latency-overheads.txt
-@@ -0,0 +1,85 @@
-+CPU and latency overheads
-+-------------------------
-+There are two notions of time: wall-clock time and CPU time.
-+For a single-threaded program, or a program running on a single-core machine,
-+these notions are the same. However, for a multi-threaded/multi-process program
-+running on a multi-core machine, these notions are significantly different.
-+Each second of wall-clock time we have number-of-cores seconds of CPU time.
-+Perf can measure overhead for both of these times (shown in 'overhead' and
-+'latency' columns for CPU and wall-clock time correspondingly).
-+
-+Optimizing CPU overhead is useful to improve 'throughput', while optimizing
-+latency overhead is useful to improve 'latency'. It's important to understand
-+which one is useful in a concrete situation at hand. For example, the former
-+may be useful to improve max throughput of a CI build server that runs on 100%
-+CPU utilization, while the latter may be useful to improve user-perceived
-+latency of a single interactive program build.
-+These overheads may be significantly different in some cases. For example,
-+consider a program that executes function 'foo' for 9 seconds with 1 thread,
-+and then executes function 'bar' for 1 second with 128 threads (consumes
-+128 seconds of CPU time). The CPU overhead is: 'foo' - 6.6%, 'bar' - 93.4%.
-+While the latency overhead is: 'foo' - 90%, 'bar' - 10%. If we try to optimize
-+running time of the program looking at the (wrong in this case) CPU overhead,
-+we would concentrate on the function 'bar', but it can yield only 10% running
-+time improvement at best.
-+
-+By default, perf shows only CPU overhead. To show latency overhead, use
-+'perf record --latency' and 'perf report':
-+
-+-----------------------------------
-+Overhead  Latency  Command
-+  93.88%   25.79%  cc1
-+   1.90%   39.87%  gzip
-+   0.99%   10.16%  dpkg-deb
-+   0.57%    1.00%  as
-+   0.40%    0.46%  sh
-+-----------------------------------
-+
-+To sort by latency overhead, use 'perf report --latency':
-+
-+-----------------------------------
-+Latency  Overhead  Command
-+ 39.87%     1.90%  gzip
-+ 25.79%    93.88%  cc1
-+ 10.16%     0.99%  dpkg-deb
-+  4.17%     0.29%  git
-+  2.81%     0.11%  objtool
-+-----------------------------------
-+
-+To get insight into the difference between the overheads, you may check
-+parallelization histogram with '--sort=latency,parallelism,comm,symbol --hierarchy'
-+flags. It shows fraction of (wall-clock) time the workload utilizes different
-+numbers of cores ('Parallelism' column). For example, in the following case
-+the workload utilizes only 1 core most of the time, but also has some
-+highly-parallel phases, which explains significant difference between
-+CPU and wall-clock overheads:
-+
-+-----------------------------------
-+  Latency  Overhead     Parallelism / Command / Symbol
-++  56.98%     2.29%     1
-++  16.94%     1.36%     2
-++   4.00%    20.13%     125
-++   3.66%    18.25%     124
-++   3.48%    17.66%     126
-++   3.26%     0.39%     3
-++   2.61%    12.93%     123
-+-----------------------------------
-+
-+By expanding corresponding lines, you may see what commands/functions run
-+at the given parallelism level:
-+
-+-----------------------------------
-+  Latency  Overhead     Parallelism / Command / Symbol
-+-  56.98%     2.29%     1
-+      32.80%     1.32%     gzip
-+       4.46%     0.18%     cc1
-+       2.81%     0.11%     objtool
-+       2.43%     0.10%     dpkg-source
-+       2.22%     0.09%     ld
-+       2.10%     0.08%     dpkg-genchanges
-+-----------------------------------
-+
-+To see the normal function-level profile for particular parallelism levels
-+(number of threads actively running on CPUs), you may use '--parallelism'
-+filter. For example, to see the profile only for low parallelism phases
-+of a workload use '--latency --parallelism=1-2' flags.
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 87f8645194062..7e0ba990d71e8 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -44,7 +44,7 @@ OPTIONS
- --comms=::
- 	Only consider symbols in these comms. CSV that understands
- 	file://filename entries.  This option will affect the percentage of
--	the overhead column.  See --percentage for more info.
-+	the overhead and latency columns.  See --percentage for more info.
- --pid=::
-         Only show events for given process ID (comma separated list).
+---
+Pahole output before:
+
+struct hist_entry {
+	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
+	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
+	union {
+		struct list_head   node;                 /*    48    16 */
+		struct list_head   head;                 /*    48    16 */
+	} pairs;                                         /*    48    16 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	struct he_stat             stat;                 /*    64    80 */
+
+	/* XXX last struct has 4 bytes of padding */
+
+	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
+	struct he_stat *           stat_acc;             /*   144     8 */
+	struct map_symbol          ms;                   /*   152    24 */
+	struct thread *            thread;               /*   176     8 */
+	struct comm *              comm;                 /*   184     8 */
+	/* --- cacheline 3 boundary (192 bytes) --- */
+	struct namespace_id        cgroup_id;            /*   192    16 */
+	u64                        cgroup;               /*   208     8 */
+	u64                        ip;                   /*   216     8 */
+	u64                        transaction;          /*   224     8 */
+	s32                        socket;               /*   232     4 */
+	s32                        cpu;                  /*   236     4 */
+	int                        parallelism;          /*   240     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	u64                        code_page_size;       /*   248     8 */
+	/* --- cacheline 4 boundary (256 bytes) --- */
+	u64                        weight;               /*   256     8 */
+	u64                        ins_lat;              /*   264     8 */
+	u64                        p_stage_cyc;          /*   272     8 */
+	u8                         cpumode;              /*   280     1 */
+	u8                         depth;                /*   281     1 */
+
+	/* XXX 2 bytes hole, try to pack */
+
+	int                        mem_type_off;         /*   284     4 */
+	struct simd_flags          simd_flags;           /*   288     8 */
+	_Bool                      dummy;                /*   296     1 */
+	_Bool                      leaf;                 /*   297     1 */
+	char                       level;                /*   298     1 */
+
+	/* XXX 1 byte hole, try to pack */
+
+	filter_mask_t              filtered;             /*   300     2 */
+	u16                        callchain_size;       /*   302     2 */
+	union {
+		struct hist_entry_diff diff;             /*   304   120 */
+		struct {
+			u16        row_offset;           /*   304     2 */
+			u16        nr_rows;              /*   306     2 */
+			_Bool      init_have_children;   /*   308     1 */
+			_Bool      unfolded;             /*   309     1 */
+			_Bool      has_children;         /*   310     1 */
+			_Bool      has_no_entry;         /*   311     1 */
+		};                                       /*   304     8 */
+	};                                               /*   304   120 */
+	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
+	char *                     srcline;              /*   424     8 */
+	char *                     srcfile;              /*   432     8 */
+	struct symbol *            parent;               /*   440     8 */
+	/* --- cacheline 7 boundary (448 bytes) --- */
+	struct branch_info *       branch_info;          /*   448     8 */
+	long int                   time;                 /*   456     8 */
+	struct hists *             hists;                /*   464     8 */
+	struct mem_info *          mem_info;             /*   472     8 */
+	struct block_info *        block_info;           /*   480     8 */
+	struct kvm_info *          kvm_info;             /*   488     8 */
+	void *                     raw_data;             /*   496     8 */
+	u32                        raw_size;             /*   504     4 */
+	int                        num_res;              /*   508     4 */
+	/* --- cacheline 8 boundary (512 bytes) --- */
+	struct res_sample *        res_samples;          /*   512     8 */
+	void *                     trace_output;         /*   520     8 */
+	struct perf_hpp_list *     hpp_list;             /*   528     8 */
+	struct hist_entry *        parent_he;            /*   536     8 */
+	struct hist_entry_ops *    ops;                  /*   544     8 */
+	struct annotated_data_type * mem_type;           /*   552     8 */
+	union {
+		struct {
+			struct rb_root_cached hroot_in;  /*   560    16 */
+			/* --- cacheline 9 boundary (576 bytes) --- */
+			struct rb_root_cached hroot_out; /*   576    16 */
+		};                                       /*   560    32 */
+		struct rb_root     sorted_chain;         /*   560     8 */
+	};                                               /*   560    32 */
+	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
+	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
+
+	/* size: 592, cachelines: 10, members: 49 */
+	/* sum members: 585, holes: 3, sum holes: 7 */
+	/* paddings: 1, sum paddings: 4 */
+	/* forced alignments: 3 */
+	/* last cacheline: 16 bytes */
+} __attribute__((__aligned__(8)));
+
+After:
+
+struct hist_entry {
+	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
+	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
+	union {
+		struct list_head   node;                 /*    48    16 */
+		struct list_head   head;                 /*    48    16 */
+	} pairs;                                         /*    48    16 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	struct he_stat             stat;                 /*    64    80 */
+
+	/* XXX last struct has 4 bytes of padding */
+
+	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
+	struct he_stat *           stat_acc;             /*   144     8 */
+	struct map_symbol          ms;                   /*   152    24 */
+	struct thread *            thread;               /*   176     8 */
+	struct comm *              comm;                 /*   184     8 */
+	/* --- cacheline 3 boundary (192 bytes) --- */
+	struct namespace_id        cgroup_id;            /*   192    16 */
+	u64                        cgroup;               /*   208     8 */
+	u64                        ip;                   /*   216     8 */
+	u64                        transaction;          /*   224     8 */
+	u64                        code_page_size;       /*   232     8 */
+	u64                        weight;               /*   240     8 */
+	u64                        ins_lat;              /*   248     8 */
+	/* --- cacheline 4 boundary (256 bytes) --- */
+	u64                        p_stage_cyc;          /*   256     8 */
+	s32                        socket;               /*   264     4 */
+	s32                        cpu;                  /*   268     4 */
+	int                        parallelism;          /*   272     4 */
+	int                        mem_type_off;         /*   276     4 */
+	u8                         cpumode;              /*   280     1 */
+	u8                         depth;                /*   281     1 */
+	struct simd_flags          simd_flags;           /*   282     1 */
+	_Bool                      dummy;                /*   283     1 */
+	_Bool                      leaf;                 /*   284     1 */
+	char                       level;                /*   285     1 */
+	filter_mask_t              filtered;             /*   286     2 */
+	u16                        callchain_size;       /*   288     2 */
+
+	/* XXX 6 bytes hole, try to pack */
+
+	union {
+		struct hist_entry_diff diff;             /*   296   120 */
+		struct {
+			u16        row_offset;           /*   296     2 */
+			u16        nr_rows;              /*   298     2 */
+			_Bool      init_have_children;   /*   300     1 */
+			_Bool      unfolded;             /*   301     1 */
+			_Bool      has_children;         /*   302     1 */
+			_Bool      has_no_entry;         /*   303     1 */
+		};                                       /*   296     8 */
+	};                                               /*   296   120 */
+	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
+	char *                     srcline;              /*   416     8 */
+	char *                     srcfile;              /*   424     8 */
+	struct symbol *            parent;               /*   432     8 */
+	struct branch_info *       branch_info;          /*   440     8 */
+	/* --- cacheline 7 boundary (448 bytes) --- */
+	long int                   time;                 /*   448     8 */
+	struct hists *             hists;                /*   456     8 */
+	struct mem_info *          mem_info;             /*   464     8 */
+	struct block_info *        block_info;           /*   472     8 */
+	struct kvm_info *          kvm_info;             /*   480     8 */
+	void *                     raw_data;             /*   488     8 */
+	u32                        raw_size;             /*   496     4 */
+	int                        num_res;              /*   500     4 */
+	struct res_sample *        res_samples;          /*   504     8 */
+	/* --- cacheline 8 boundary (512 bytes) --- */
+	void *                     trace_output;         /*   512     8 */
+	struct perf_hpp_list *     hpp_list;             /*   520     8 */
+	struct hist_entry *        parent_he;            /*   528     8 */
+	struct hist_entry_ops *    ops;                  /*   536     8 */
+	struct annotated_data_type * mem_type;           /*   544     8 */
+	union {
+		struct {
+			struct rb_root_cached hroot_in;  /*   552    16 */
+			struct rb_root_cached hroot_out; /*   568    16 */
+		};                                       /*   552    32 */
+		struct rb_root     sorted_chain;         /*   552     8 */
+	};                                               /*   552    32 */
+	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
+	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
+
+	/* size: 584, cachelines: 10, members: 49 */
+	/* sum members: 578, holes: 1, sum holes: 6 */
+	/* paddings: 1, sum paddings: 4 */
+	/* forced alignments: 3 */
+	/* last cacheline: 8 bytes */
+} __attribute__((__aligned__(8)));
+---
+ tools/perf/util/hist.h   | 8 ++++----
+ tools/perf/util/sample.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 29d4c7a3d1747..317d06cca8b88 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -239,16 +239,16 @@ struct hist_entry {
+ 	u64			cgroup;
+ 	u64			ip;
+ 	u64			transaction;
+-	s32			socket;
+-	s32			cpu;
+-	int			parallelism;
+ 	u64			code_page_size;
+ 	u64			weight;
+ 	u64			ins_lat;
+ 	u64			p_stage_cyc;
++	s32			socket;
++	s32			cpu;
++	int			parallelism;
++	int			mem_type_off;
+ 	u8			cpumode;
+ 	u8			depth;
+-	int			mem_type_off;
+ 	struct simd_flags	simd_flags;
  
-@@ -54,12 +54,12 @@ OPTIONS
- --dsos=::
- 	Only consider symbols in these dsos. CSV that understands
- 	file://filename entries.  This option will affect the percentage of
--	the overhead column.  See --percentage for more info.
-+	the overhead and latency columns.  See --percentage for more info.
- -S::
- --symbols=::
- 	Only consider these symbols. CSV that understands
- 	file://filename entries.  This option will affect the percentage of
--	the overhead column.  See --percentage for more info.
-+	the overhead and latency columns.  See --percentage for more info.
+ 	/* We are added by hists__add_dummy_entry. */
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 70b2c3135555e..ab756d61cbcd6 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -67,7 +67,7 @@ struct aux_sample {
+ };
  
- --symbol-filter=::
- 	Only show symbols that match (partially) with this filter.
-@@ -68,6 +68,16 @@ OPTIONS
- --hide-unresolved::
-         Only display entries resolved to a symbol.
+ struct simd_flags {
+-	u64	arch:1,	/* architecture (isa) */
++	u8	arch:1,	/* architecture (isa) */
+ 		pred:2;	/* predication */
+ };
  
-+--parallelism::
-+        Only consider these parallelism levels. Parallelism level is the number
-+        of threads that actively run on CPUs at the time of sample. The flag
-+        accepts single number, comma-separated list, and ranges (for example:
-+        "1", "7,8", "1,64-128"). This is useful in understanding what a program
-+        is doing during sequential/low-parallelism phases as compared to
-+        high-parallelism phases. This option will affect the percentage of
-+        the overhead and latency columns. See --percentage for more info.
-+        Also see the `CPU and latency overheads' section for more details.
-+
- -s::
- --sort=::
- 	Sort histogram entries by given key(s) - multiple keys can be specified
-@@ -87,6 +97,7 @@ OPTIONS
- 	entries are displayed as "[other]".
- 	- cpu: cpu number the task ran at the time of sample
- 	- socket: processor socket number the task ran at the time of sample
-+	- parallelism: number of running threads at the time of sample
- 	- srcline: filename and line number executed at the time of sample.  The
- 	DWARF debugging info must be provided.
- 	- srcfile: file name of the source file of the samples. Requires dwarf
-@@ -97,12 +108,14 @@ OPTIONS
- 	- cgroup_id: ID derived from cgroup namespace device and inode numbers.
- 	- cgroup: cgroup pathname in the cgroupfs.
- 	- transaction: Transaction abort flags.
--	- overhead: Overhead percentage of sample
--	- overhead_sys: Overhead percentage of sample running in system mode
--	- overhead_us: Overhead percentage of sample running in user mode
--	- overhead_guest_sys: Overhead percentage of sample running in system mode
-+	- overhead: CPU overhead percentage of sample.
-+	- latency: latency (wall-clock) overhead percentage of sample.
-+	  See the `CPU and latency overheads' section for more details.
-+	- overhead_sys: CPU overhead percentage of sample running in system mode
-+	- overhead_us: CPU overhead percentage of sample running in user mode
-+	- overhead_guest_sys: CPU overhead percentage of sample running in system mode
- 	on guest machine
--	- overhead_guest_us: Overhead percentage of sample running in user mode on
-+	- overhead_guest_us: CPU overhead percentage of sample running in user mode on
- 	guest machine
- 	- sample: Number of sample
- 	- period: Raw number of event count of sample
-@@ -125,8 +138,8 @@ OPTIONS
- 	- weight2: Average value of event specific weight (2nd field of weight_struct).
- 	- weight3: Average value of event specific weight (3rd field of weight_struct).
- 
--	By default, comm, dso and symbol keys are used.
--	(i.e. --sort comm,dso,symbol)
-+	By default, overhead, comm, dso and symbol keys are used.
-+	(i.e. --sort overhead,comm,dso,symbol).
- 
- 	If --branch-stack option is used, following sort keys are also
- 	available:
-@@ -201,9 +214,9 @@ OPTIONS
- --fields=::
- 	Specify output field - multiple keys can be specified in CSV format.
- 	Following fields are available:
--	overhead, overhead_sys, overhead_us, overhead_children, sample, period,
--	weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.  The
--	last 3 names are alias for the corresponding weights.  When the weight
-+	overhead, latency, overhead_sys, overhead_us, overhead_children, sample,
-+	period, weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.
-+	The last 3 names are alias for the corresponding weights.  When the weight
- 	fields are used, they will show the average value of the weight.
- 
- 	Also it can contain any sort key(s).
-@@ -289,7 +302,7 @@ OPTIONS
- 	Accumulate callchain of children to parent entry so that then can
- 	show up in the output.  The output will have a new "Children" column
- 	and will be sorted on the data.  It requires callchains are recorded.
--	See the `overhead calculation' section for more details. Enabled by
-+	See the `Overhead calculation' section for more details. Enabled by
- 	default, disable with --no-children.
- 
- --max-stack::
-@@ -442,9 +455,9 @@ OPTIONS
- 	--call-graph option for details.
- 
- --percentage::
--	Determine how to display the overhead percentage of filtered entries.
--	Filters can be applied by --comms, --dsos and/or --symbols options and
--	Zoom operations on the TUI (thread, dso, etc).
-+	Determine how to display the CPU and latency overhead percentage
-+	of filtered entries. Filters can be applied by --comms, --dsos, --symbols
-+	and/or --parallelism options and Zoom operations on the TUI (thread, dso, etc).
- 
- 	"relative" means it's relative to filtered entries only so that the
- 	sum of shown entries will be always 100%.  "absolute" means it retains
-@@ -627,6 +640,8 @@ include::itrace.txt[]
- --skip-empty::
- 	Do not print 0 results in the --stat output.
- 
-+include::cpu-and-latency-overheads.txt[]
-+
- include::callchain-overhead-calculation.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 67b326ba00407..f6f71e70ff2cb 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -62,3 +62,6 @@ To show context switches in perf report sample context add --switch-events to pe
- To show time in nanoseconds in record/report add --ns
- To compare hot regions in two workloads use perf record -b -o file ... ; perf diff --stream file1 file2
- To compare scalability of two workload samples use perf diff -c ratio file1 file2
-+For latency profiling, try: perf record/report --latency
-+For parallelism histogram, try: perf report --hierarchy --sort latency,parallelism,comm,symbol
-+To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
 -- 
 2.48.1.362.g079036d154-goog
 
