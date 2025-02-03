@@ -1,448 +1,326 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEE72B2D7;
-	Mon,  3 Feb 2025 23:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7991FFC6A
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 23:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738623651; cv=none; b=dtJK8TR2SaIzTW9QVW9MYU3LEwrMvJF++C3/MSEG8kCPIpHzjFh6W93skixx2X9zgbil/I6QKCCO+DrvO+uuJHuULf0PfpzKut+jiAIW+UO2Vk3qSrZpHlTCea+Egzr4NnotG4h35zNcwVzwyEjxgKyPYz3iFcWgovSxAH7+0GI=
+	t=1738623743; cv=none; b=Hnhyc0PAeNMrG/CUEEZZVgtvoTQfZQmWwMzExi3wSorhR5Mzj0r2PXqorm/cnAmXMpAcL6GMeQ2RGtiuz9iLvfHS+5Fo1fWgsQbZpOKqr192LAE5yxJnreTdvipmXyTFbG/5w/8Ol6xfXUkitQJO+2CRSd9pM1N3QROwCT/0WYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738623651; c=relaxed/simple;
-	bh=UuLsrrtIQ9EGNdf/Z2srTqdy1WKORJrbeTLu34pu0Rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGP62bVcsOwqQyRhuPRWhFCN3NyC9YFAJ3I4oOLrwOTkmSBNTVxJ7Zvaf1fW6+7y3UflkEYoLbkjWUCbAG0rW0Cv+y2DeBlLhQW5DqxnnoMFYjb6u5ARIVfQcLjWlNk6H47UCBZ82Va9y3DrdHDcQC7WJVhGl8CdnMw7B+y6CXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOQpeMvf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738623743; c=relaxed/simple;
+	bh=zFt1m4kFG61TDMENF2uKT1MyI0/xeMQwdgnBYpp7L6Y=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=jSofxbmxg/09e/ThLK8NghgAscETaWTCb29MDlN/NJw4TagLb7BEUZHPtX1DqFlvZZFtJkC2bgKOuuMfj9Rw1kvzGvvnNeABAu94wYmAg1EpJCfUzcZG/0QKRUi69JE7OQ8BxETv3TV6Gl/VMvcq75hgMQx8XzqMsTWU2SVtA6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTlFDufW; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOQpeMvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EE4C4CEE0;
-	Mon,  3 Feb 2025 23:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738623651;
-	bh=UuLsrrtIQ9EGNdf/Z2srTqdy1WKORJrbeTLu34pu0Rw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eOQpeMvf6+1NlZHSjN/OVOHPUW55LIbJpefKxLHpj9AImfWNcJf16TmCzD3f2Chah
-	 BnivGG6a1bx7ca3cnPUmDPP7dnjZWDk6sey5ixc+p2WvnpSpXvLnLGhR4XGVdAWvmG
-	 Oa2MUeK6vJ9ghPSF4CfM4oP+KxcCQaU3mJ/ne3AK3BZqQ8Ig9ExfY++cwa/3X+X/UZ
-	 XoMDJui61XUXTm0wIO2MMVGpFDfBgktbTMUOw8IhdfElxiWbSHjpf75LBHtBJFcPQG
-	 yblddBYhT1jUHqklaOd5V5j4FD4DNVtl0akBLsHpiLJaEHtgWzrQWemF0ZHZ02IkvI
-	 rXsswpHReHipQ==
-Date: Mon, 3 Feb 2025 15:00:49 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] perf pmu: Rename name matching for no suffix or
- wildcard variants
-Message-ID: <Z6FKoQfY2zBNzIZV@google.com>
-References: <20250201074320.746259-1-irogers@google.com>
- <20250201074320.746259-4-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTlFDufW"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e54da6701d2so8404110276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 15:02:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738623740; x=1739228540; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6cfvZjsDeJEKq3KdZXbUuVBzu96pird85CM7ifvYT0Q=;
+        b=eTlFDufWqJ8jwPoOY2c8lTY9cT0cf9ZZHE9wiR8DFWE6lDe+KmM5NALKP00A63pzLH
+         w8AKkfKib8mcpSPE1R0jfXTtnNGcaB6+f0LsML2Wjrkvk5g/rDtNqCJnYrxaOQKuGxi2
+         Y7GhI8m5pzjX9KwgrTMxPpDrBZVUcoIa94G+QpbaF86BSvb6MgqV+PfAxu4/aJa1H9NG
+         VhvHZgfOyeTRPDIbrpf/000Sz0oAwst9sG67NOrW0H4Hrem+Ac499XSyUABTinuzSDoV
+         xeUqm9hunEJ9Jl8VpOgmM9K4z+7CUCFPN7EsYNR6VIltOB/9gQ+BZ/4FiBO1iNS7X41P
+         9YYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738623740; x=1739228540;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6cfvZjsDeJEKq3KdZXbUuVBzu96pird85CM7ifvYT0Q=;
+        b=WIMp01zfrk+YBiNiBvYXPMc3CcduVYavP2u6t6ZQGItbfzKEz21J65y/JvD2BBcrU6
+         wZPWxLZBK5U0cy60jJDCNwpJqTOMqEXycw+AnGsXc+CsPycdeESfwu1xMDpeQatdzlIl
+         kYFTA5t+H4UM1qkLRr3VD8QUDemcfieZ8OW6xLVYCoPtutOrgCaG3LT1ER+pqbT4VYjq
+         KhcuYNPb8KbE6F8O0eR0FnZTA5afTPnPCDfnbGsbKLEiMiszpazqzP0hjlnIAsLGgEx0
+         eJeikKtaV9HDkXjgi6yTem8WS2wrw2dI+2FksoX5+/JeGarS39fZbPKO6Lia0gRLsRYp
+         5UXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUaBPlnzzkKeBZ1x0RVYkOMVd0Xg9uhX81ex1i66ycUzt21nzDO5ySMElBwR1A9+0Hj8eaMRSDiMx9RDxa7jt7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy3QnUZoFMaaF1XEhsE0bMf8YOn4ntPeMBJ12XTmyA+MCgQ1Lg
+	/WLxH9mkKqNfXpw7TevIFX0DLkMKaptWMzkhg2IHVSMa7kot8UqJe48Fh3vcGi9rkekQG1YddMN
+	khfVAcw==
+X-Google-Smtp-Source: AGHT+IGu78fk4EXsRFrs7l2msVGJMHp0kV9xwpOFinPGkf+/7IdhhuflOlLxO2QqkOq44l4dp+hdiBy5IazQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:b2d:fb9c:cc86:c014])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1c2:b0:e5a:cbb9:4d4a with SMTP id
+ 3f1490d57ef6-e5acbb9502cmr48856276.2.1738623740468; Mon, 03 Feb 2025 15:02:20
+ -0800 (PST)
+Date: Mon,  3 Feb 2025 15:01:26 -0800
+Message-Id: <20250203230150.106823-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250201074320.746259-4-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Subject: [PATCH v3 00/23] Intel vendor events and TMA 5.01 metrics
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ian,
+Update the Intel vendor events to the latest.
+Update the metrics to TMA 5.01.
+Add Arrowlake and Clearwaterforest support.
+Add metrics for LNL and GNR.
+Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
 
-On Fri, Jan 31, 2025 at 11:43:18PM -0800, Ian Rogers wrote:
-> Wildcard PMU naming will match a name like pmu_1 to a PMU name like
-> pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
-> the match. No suffix matching will match pmu_10 to either pmu_1 or
-> pmu_2. Add or rename matching functions on PMU to make it clearer what
-> kind of matching is being performed.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/empty-pmu-events.c |   8 +-
->  tools/perf/pmu-events/jevents.py         |   8 +-
->  tools/perf/tests/pmu.c                   |  85 ++++----
->  tools/perf/util/parse-events.c           |   2 +-
->  tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
->  tools/perf/util/pmu.h                    |   5 +-
->  6 files changed, 235 insertions(+), 129 deletions(-)
-> 
-[...]
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 6206c8fe2bf9..c2a15b0259cf 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -847,21 +847,23 @@ static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
->  }
->  
->  /**
-> - * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
-> - *                                   trailing suffix? The Suffix must be in form
-> - *                                   tok_{digits}, or tok{digits}.
-> + * perf_pmu__match_wildcard - Does the pmu_name start with tok and is then only
-> + *                            followed by nothing or a suffix? tok may contain
-> + *                            part of a suffix.
->   * @pmu_name: The pmu_name with possible suffix.
-> - * @tok: The possible match to pmu_name without suffix.
-> + * @tok: The wildcard argument to match.
->   */
-> -static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *tok)
-> +static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
+The perf json was generated using the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+with the generated json being in:
+https://github.com/intel/perfmon/tree/main/scripts/perf
 
-It'd be nice if we use a function prefix with "__" only if the first
-argument is the corresponding type.  How about renaming it to
-pmu_name_match_wildcard() and others?
+Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+<caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
+Weilin Wang <weilin.wang@intel.com> for helping get this patch series
+together.
 
-Otherwise, looks good to me.
+v3: Fixes for hybrid metrics that were missing PMU. Update to the
+    latest events.
+v2: Fix hybrid and Co-authored-by tag issues reported by
+    Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
+    Clearwaterforest.
 
-Thanks,
-Namhyung
+Ian Rogers (23):
+  perf vendor events: Update Alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Add Arrowlake events/metrics
+  perf vendor events: Update Broadwell events/metrics
+  perf vendor events: Update BroadwellDE events/metrics
+  perf vendor events: Update BroadwellX events/metrics
+  perf vendor events: Update CascadelakeX events/metrics
+  perf vendor events: Add Clearwaterforest events
+  perf vendor events: Update EmeraldRapids events/metrics
+  perf vendor events: Update GrandRidge events/metrics
+  perf vendor events: Update/add Graniterapids events/metrics
+  perf vendor events: Update Haswell events/metrics
+  perf vendor events: Update HaswellX events/metrics
+  perf vendor events: Update Icelake events/metrics
+  perf vendor events: Update IcelakeX events/metrics
+  perf vendor events: Update/add Lunarlake events/metrics
+  perf vendor events: Update Meteorlake events/metrics
+  perf vendor events: Update Rocketlake events/metrics
+  perf vendor events: Update Sapphirerapids events/metrics
+  perf vendor events: Update Sierraforest events/metrics
+  perf vendor events: Update Skylake metrics
+  perf vendor events: Update SkylakeX events/metrics
+  perf vendor events: Update Tigerlake events/metrics
 
+ .../arch/x86/alderlake/adl-metrics.json       | 3379 +++++++++---
+ .../pmu-events/arch/x86/alderlake/cache.json  |  292 +-
+ .../arch/x86/alderlake/floating-point.json    |   19 +-
+ .../arch/x86/alderlake/frontend.json          |   19 -
+ .../pmu-events/arch/x86/alderlake/memory.json |   32 +-
+ .../arch/x86/alderlake/metricgroups.json      |   10 +-
+ .../pmu-events/arch/x86/alderlake/other.json  |   92 +-
+ .../arch/x86/alderlake/pipeline.json          |  127 +-
+ .../arch/x86/alderlake/virtual-memory.json    |   33 +
+ .../arch/x86/alderlaken/adln-metrics.json     |   83 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  227 +-
+ .../arch/x86/alderlaken/floating-point.json   |   17 +-
+ .../arch/x86/alderlaken/memory.json           |   20 +
+ .../pmu-events/arch/x86/alderlaken/other.json |   81 +-
+ .../arch/x86/alderlaken/pipeline.json         |   97 +-
+ .../arch/x86/alderlaken/virtual-memory.json   |   30 +
+ .../arch/x86/arrowlake/arl-metrics.json       | 4597 ++++++++++++++++
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 1491 ++++++
+ .../arch/x86/arrowlake/floating-point.json    |  532 ++
+ .../arch/x86/arrowlake/frontend.json          |  609 +++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  387 ++
+ .../arch/x86/arrowlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/arrowlake/other.json  |  279 +
+ .../arch/x86/arrowlake/pipeline.json          | 2308 +++++++++
+ .../arch/x86/arrowlake/uncore-cache.json      |   20 +
+ .../x86/arrowlake/uncore-interconnect.json    |   47 +
+ .../arch/x86/arrowlake/uncore-memory.json     |  160 +
+ .../{haswell => arrowlake}/uncore-other.json  |    0
+ .../arch/x86/arrowlake/virtual-memory.json    |  522 ++
+ .../arch/x86/broadwell/bdw-metrics.json       |  312 +-
+ .../pmu-events/arch/x86/broadwell/cache.json  |   10 +-
+ .../arch/x86/broadwell/frontend.json          |    4 +-
+ .../pmu-events/arch/x86/broadwell/memory.json |    8 +-
+ .../arch/x86/broadwell/metricgroups.json      |    5 +
+ .../arch/x86/broadwell/pipeline.json          |   10 +-
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  256 +-
+ .../arch/x86/broadwellde/cache.json           |   10 +-
+ .../arch/x86/broadwellde/frontend.json        |    4 +-
+ .../arch/x86/broadwellde/memory.json          |    6 +-
+ .../arch/x86/broadwellde/metricgroups.json    |    5 +
+ .../arch/x86/broadwellde/pipeline.json        |   10 +-
+ .../arch/x86/broadwellde/uncore-cache.json    |   28 +-
+ .../x86/broadwellde/uncore-interconnect.json  |   16 +-
+ .../arch/x86/broadwellx/bdx-metrics.json      |  344 +-
+ .../pmu-events/arch/x86/broadwellx/cache.json |   10 +-
+ .../arch/x86/broadwellx/frontend.json         |    4 +-
+ .../arch/x86/broadwellx/memory.json           |    6 +-
+ .../arch/x86/broadwellx/metricgroups.json     |    5 +
+ .../arch/x86/broadwellx/pipeline.json         |   10 +-
+ .../arch/x86/broadwellx/uncore-cache.json     |   28 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   36 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |    1 +
+ .../arch/x86/cascadelakex/clx-metrics.json    |  767 +--
+ .../arch/x86/cascadelakex/metricgroups.json   |    9 +-
+ .../arch/x86/cascadelakex/uncore-cache.json   |   60 +-
+ .../x86/cascadelakex/uncore-interconnect.json |   11 -
+ .../arch/x86/clearwaterforest/cache.json      |  144 +
+ .../arch/x86/clearwaterforest/counter.json    |    7 +
+ .../arch/x86/clearwaterforest/frontend.json   |   18 +
+ .../arch/x86/clearwaterforest/memory.json     |   22 +
+ .../arch/x86/clearwaterforest/other.json      |   22 +
+ .../arch/x86/clearwaterforest/pipeline.json   |  113 +
+ .../x86/clearwaterforest/virtual-memory.json  |   29 +
+ .../arch/x86/emeraldrapids/cache.json         |   28 +-
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 1036 ++--
+ .../arch/x86/emeraldrapids/frontend.json      |   19 -
+ .../arch/x86/emeraldrapids/memory.json        |   15 +-
+ .../arch/x86/emeraldrapids/metricgroups.json  |   10 +-
+ .../arch/x86/emeraldrapids/pipeline.json      |   23 -
+ .../arch/x86/emeraldrapids/uncore-io.json     |  218 +-
+ .../arch/x86/grandridge/grr-metrics.json      |  284 +-
+ .../arch/x86/grandridge/pipeline.json         |    3 +-
+ .../arch/x86/grandridge/uncore-cache.json     |    4 +-
+ .../x86/grandridge/uncore-interconnect.json   |   60 +
+ .../arch/x86/grandridge/uncore-io.json        |  214 +-
+ .../arch/x86/grandridge/uncore-memory.json    |    2 +-
+ .../arch/x86/graniterapids/cache.json         |  130 +-
+ .../arch/x86/graniterapids/counter.json       |   24 +-
+ .../arch/x86/graniterapids/frontend.json      |   24 +-
+ .../arch/x86/graniterapids/gnr-metrics.json   | 2313 +++++++++
+ .../arch/x86/graniterapids/memory.json        |  121 +-
+ .../arch/x86/graniterapids/metricgroups.json  |  145 +
+ .../arch/x86/graniterapids/other.json         |  109 +
+ .../arch/x86/graniterapids/pipeline.json      |   40 +-
+ .../arch/x86/graniterapids/uncore-cache.json  |   48 +-
+ .../arch/x86/graniterapids/uncore-cxl.json    |    2 -
+ .../graniterapids/uncore-interconnect.json    |   87 +
+ .../arch/x86/graniterapids/uncore-io.json     |  280 +-
+ .../arch/x86/graniterapids/uncore-memory.json |  122 +-
+ .../arch/x86/graniterapids/uncore-power.json  |   98 +
+ .../arch/x86/haswell/hsw-metrics.json         |  260 +-
+ .../pmu-events/arch/x86/haswell/memory.json   |    2 +-
+ .../arch/x86/haswell/metricgroups.json        |    5 +
+ .../arch/x86/haswellx/hsx-metrics.json        |  296 +-
+ .../arch/x86/haswellx/metricgroups.json       |    5 +
+ .../arch/x86/haswellx/uncore-cache.json       |   28 +-
+ .../x86/haswellx/uncore-interconnect.json     |   38 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |   34 +-
+ .../pmu-events/arch/x86/icelake/frontend.json |   17 -
+ .../arch/x86/icelake/icl-metrics.json         |  849 +--
+ .../pmu-events/arch/x86/icelake/memory.json   |   13 +-
+ .../arch/x86/icelake/metricgroups.json        |   10 +-
+ .../pmu-events/arch/x86/icelake/pipeline.json |   30 +-
+ .../arch/x86/icelake/uncore-interconnect.json |   76 -
+ .../arch/x86/icelake/uncore-other.json        |    2 +-
+ .../arch/x86/icelake/virtual-memory.json      |   18 +
+ .../pmu-events/arch/x86/icelakex/cache.json   |   41 +-
+ .../arch/x86/icelakex/frontend.json           |   17 -
+ .../arch/x86/icelakex/icx-metrics.json        |  852 +--
+ .../pmu-events/arch/x86/icelakex/memory.json  |   13 +-
+ .../arch/x86/icelakex/metricgroups.json       |   10 +-
+ .../arch/x86/icelakex/pipeline.json           |   30 +-
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 1352 ++++-
+ .../arch/x86/lunarlake/floating-point.json    |  484 ++
+ .../arch/x86/lunarlake/frontend.json          |  654 ++-
+ .../arch/x86/lunarlake/lnl-metrics.json       | 4611 +++++++++++++++++
+ .../pmu-events/arch/x86/lunarlake/memory.json |  262 +-
+ .../arch/x86/lunarlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/lunarlake/other.json  |  496 +-
+ .../arch/x86/lunarlake/pipeline.json          | 2105 +++++++-
+ .../arch/x86/lunarlake/uncore-memory.json     |   36 +
+ .../arch/x86/lunarlake/virtual-memory.json    |  428 ++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   42 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |  109 +-
+ .../arch/x86/meteorlake/frontend.json         |   30 +-
+ .../arch/x86/meteorlake/memory.json           |   22 +-
+ .../arch/x86/meteorlake/metricgroups.json     |   10 +-
+ .../arch/x86/meteorlake/mtl-metrics.json      | 3554 ++++++++++---
+ .../pmu-events/arch/x86/meteorlake/other.json |   54 +
+ .../arch/x86/meteorlake/pipeline.json         |   89 +-
+ .../pmu-events/arch/x86/rocketlake/cache.json |   34 +-
+ .../arch/x86/rocketlake/frontend.json         |   17 -
+ .../arch/x86/rocketlake/memory.json           |   13 +-
+ .../arch/x86/rocketlake/metricgroups.json     |   10 +-
+ .../arch/x86/rocketlake/pipeline.json         |   30 +-
+ .../arch/x86/rocketlake/rkl-metrics.json      |  849 +--
+ .../x86/rocketlake/uncore-interconnect.json   |   10 -
+ .../arch/x86/rocketlake/uncore-other.json     |    2 +-
+ .../arch/x86/rocketlake/virtual-memory.json   |   18 +
+ .../arch/x86/sapphirerapids/cache.json        |   30 +-
+ .../arch/x86/sapphirerapids/frontend.json     |   19 -
+ .../arch/x86/sapphirerapids/memory.json       |   15 +-
+ .../arch/x86/sapphirerapids/metricgroups.json |   10 +-
+ .../arch/x86/sapphirerapids/pipeline.json     |   23 -
+ .../arch/x86/sapphirerapids/spr-metrics.json  |  968 ++--
+ .../arch/x86/sapphirerapids/uncore-io.json    |  138 +-
+ .../arch/x86/sierraforest/cache.json          |  130 +-
+ .../arch/x86/sierraforest/counter.json        |   24 +-
+ .../arch/x86/sierraforest/frontend.json       |    8 +
+ .../arch/x86/sierraforest/other.json          |   20 +
+ .../arch/x86/sierraforest/pipeline.json       |   46 +-
+ .../arch/x86/sierraforest/srf-metrics.json    |  308 +-
+ .../arch/x86/sierraforest/uncore-cache.json   |   61 +-
+ .../arch/x86/sierraforest/uncore-cxl.json     |    2 -
+ .../x86/sierraforest/uncore-interconnect.json |   87 +
+ .../arch/x86/sierraforest/uncore-io.json      |  280 +-
+ .../arch/x86/sierraforest/uncore-memory.json  |  122 +-
+ .../arch/x86/sierraforest/uncore-power.json   |   98 +
+ .../arch/x86/skylake/metricgroups.json        |    9 +-
+ .../arch/x86/skylake/skl-metrics.json         |  684 ++-
+ .../arch/x86/skylakex/metricgroups.json       |    9 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  740 +--
+ .../arch/x86/skylakex/uncore-cache.json       |   60 +-
+ .../x86/skylakex/uncore-interconnect.json     |   11 -
+ .../pmu-events/arch/x86/tigerlake/cache.json  |   45 +-
+ .../arch/x86/tigerlake/frontend.json          |   17 -
+ .../pmu-events/arch/x86/tigerlake/memory.json |   13 +-
+ .../arch/x86/tigerlake/metricgroups.json      |   10 +-
+ .../arch/x86/tigerlake/pipeline.json          |   30 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |  745 +--
+ .../x86/tigerlake/uncore-interconnect.json    |    4 +-
+ .../arch/x86/tigerlake/uncore-other.json      |    2 +-
+ .../arch/x86/tigerlake/virtual-memory.json    |   18 +
+ 173 files changed, 38476 insertions(+), 7876 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/arl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-memory.json
+ rename tools/perf/pmu-events/arch/x86/{haswell => arrowlake}/uncore-other.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/lnl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-memory.json
 
->  {
->  	const char *p, *suffix;
->  	bool has_hex = false;
-> +	size_t tok_len = strlen(tok);
->  
-> -	if (strncmp(pmu_name, tok, strlen(tok)))
-> +	/* Check start of pmu_name for equality. */
-> +	if (strncmp(pmu_name, tok, tok_len))
->  		return false;
->  
-> -	suffix = p = pmu_name + strlen(tok);
-> +	suffix = p = pmu_name + tok_len;
->  	if (*p == 0)
->  		return true;
->  
-> @@ -887,60 +889,84 @@ static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *to
->  }
->  
->  /**
-> - * pmu_uncore_alias_match - does name match the PMU name?
-> - * @pmu_name: the json struct pmu_event name. This may lack a suffix (which
-> + * perf_pmu__match_ignoring_suffix_uncore - Does the pmu_name match tok ignoring
-> + *                                          any trailing suffix on pmu_name and
-> + *                                          tok?  The Suffix must be in form
-> + *                                          tok_{digits}, or tok{digits}.
-> + * @pmu_name: The pmu_name with possible suffix.
-> + * @tok: The possible match to pmu_name.
-> + */
-> +static bool perf_pmu__match_ignoring_suffix_uncore(const char *pmu_name, const char *tok)
-> +{
-> +	size_t pmu_name_len, tok_len;
-> +
-> +	/* For robustness, check for NULL. */
-> +	if (pmu_name == NULL)
-> +		return tok == NULL;
-> +
-> +	/* uncore_ prefixes are ignored. */
-> +	if (!strncmp(pmu_name, "uncore_", 7))
-> +		pmu_name += 7;
-> +	if (!strncmp(tok, "uncore_", 7))
-> +		tok += 7;
-> +
-> +	pmu_name_len = pmu_name_len_no_suffix(pmu_name);
-> +	tok_len = pmu_name_len_no_suffix(tok);
-> +	if (pmu_name_len != tok_len)
-> +		return false;
-> +
-> +	return strncmp(pmu_name, tok, pmu_name_len) == 0;
-> +}
-> +
-> +
-> +/**
-> + * perf_pmu__match_wildcard_uncore - does to_match match the PMU's name?
-> + * @pmu_name: The pmu->name or pmu->alias to match against.
-> + * @to_match: the json struct pmu_event name. This may lack a suffix (which
->   *            matches) or be of the form "socket,pmuname" which will match
->   *            "socketX_pmunameY".
-> - * @name: a real full PMU name as from sysfs.
->   */
-> -static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
-> +static bool perf_pmu__match_wildcard_uncore(const char *pmu_name, const char *to_match)
->  {
-> -	char *tmp = NULL, *tok, *str;
-> -	bool res;
-> -
-> -	if (strchr(pmu_name, ',') == NULL)
-> -		return perf_pmu__match_ignoring_suffix(name, pmu_name);
-> +	char *mutable_to_match, *tok, *tmp;
->  
-> -	str = strdup(pmu_name);
-> -	if (!str)
-> +	if (!pmu_name)
->  		return false;
->  
-> -	/*
-> -	 * uncore alias may be from different PMU with common prefix
-> -	 */
-> -	tok = strtok_r(str, ",", &tmp);
-> -	if (strncmp(pmu_name, tok, strlen(tok))) {
-> -		res = false;
-> -		goto out;
-> -	}
-> +	/* uncore_ prefixes are ignored. */
-> +	if (!strncmp(pmu_name, "uncore_", 7))
-> +		pmu_name += 7;
-> +	if (!strncmp(to_match, "uncore_", 7))
-> +		to_match += 7;
->  
-> -	/*
-> -	 * Match more complex aliases where the alias name is a comma-delimited
-> -	 * list of tokens, orderly contained in the matching PMU name.
-> -	 *
-> -	 * Example: For alias "socket,pmuname" and PMU "socketX_pmunameY", we
-> -	 *	    match "socket" in "socketX_pmunameY" and then "pmuname" in
-> -	 *	    "pmunameY".
-> -	 */
-> -	while (1) {
-> -		char *next_tok = strtok_r(NULL, ",", &tmp);
-> +	if (strchr(to_match, ',') == NULL)
-> +		return perf_pmu__match_wildcard(pmu_name, to_match);
->  
-> -		name = strstr(name, tok);
-> -		if (!name ||
-> -		    (!next_tok && !perf_pmu__match_ignoring_suffix(name, tok))) {
-> -			res = false;
-> -			goto out;
-> +	/* Process comma separated list of PMU name components. */
-> +	mutable_to_match = strdup(to_match);
-> +	if (!mutable_to_match)
-> +		return false;
-> +
-> +	tok = strtok_r(mutable_to_match, ",", &tmp);
-> +	while (tok) {
-> +		size_t tok_len = strlen(tok);
-> +
-> +		if (strncmp(pmu_name, tok, tok_len)) {
-> +			/* Mismatch between part of pmu_name and tok. */
-> +			free(mutable_to_match);
-> +			return false;
->  		}
-> -		if (!next_tok)
-> -			break;
-> -		tok = next_tok;
-> -		name += strlen(tok);
-> +		/* Move pmu_name forward over tok and suffix. */
-> +		pmu_name += tok_len;
-> +		while (*pmu_name != '\0' && isdigit(*pmu_name))
-> +			pmu_name++;
-> +		if (*pmu_name == '_')
-> +			pmu_name++;
-> +
-> +		tok = strtok_r(NULL, ",", &tmp);
->  	}
-> -
-> -	res = true;
-> -out:
-> -	free(str);
-> -	return res;
-> +	free(mutable_to_match);
-> +	return *pmu_name == '\0';
->  }
->  
->  bool pmu_uncore_identifier_match(const char *compat, const char *id)
-> @@ -1003,11 +1029,19 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
->  {
->  	struct perf_pmu *pmu = vdata;
->  
-> -	if (!pe->compat || !pe->pmu)
-> +	if (!pe->compat || !pe->pmu) {
-> +		/* No data to match. */
->  		return 0;
-> +	}
-> +
-> +	if (!perf_pmu__match_wildcard_uncore(pmu->name, pe->pmu) &&
-> +	    !perf_pmu__match_wildcard_uncore(pmu->alias_name, pe->pmu)) {
-> +		/* PMU name/alias_name don't match. */
-> +		return 0;
-> +	}
->  
-> -	if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> -	    pmu_uncore_identifier_match(pe->compat, pmu->id)) {
-> +	if (pmu_uncore_identifier_match(pe->compat, pmu->id)) {
-> +		/* Id matched. */
->  		perf_pmu__new_alias(pmu,
->  				pe->name,
->  				pe->desc,
-> @@ -1016,7 +1050,6 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
->  				pe,
->  				EVENT_SRC_SYS_JSON);
->  	}
-> -
->  	return 0;
->  }
->  
-> @@ -1974,15 +2007,82 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
->  	return ret;
->  }
->  
-> -bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
-> +static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_match, bool wildcard)
->  {
-> -	return !strcmp(pmu->name, pmu_name) ||
-> -		(pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
-> +	const char *names[2] = {
-> +		pmu->name,
-> +		pmu->alias_name,
-> +	};
-> +	if (pmu->is_core) {
-> +		for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
-> +			const char *name = names[i];
-> +
-> +			if (!name)
-> +				continue;
-> +
-> +			if (!strcmp(name, to_match)) {
-> +				/* Exact name match. */
-> +				return true;
-> +			}
-> +		}
-> +		if (!strcmp(to_match, "default_core")) {
-> +			/*
-> +			 * jevents and tests use default_core as a marker for any core
-> +			 * PMU as the PMU name varies across architectures.
-> +			 */
-> +			return true;
-> +		}
-> +		return false;
-> +	}
-> +	if (!pmu->is_uncore) {
->  		/*
-> -		 * jevents and tests use default_core as a marker for any core
-> -		 * PMU as the PMU name varies across architectures.
-> +		 * PMU isn't core or uncore, some kind of broken CPU mask
-> +		 * situation. Only match exact name.
->  		 */
-> -	        (pmu->is_core && !strcmp(pmu_name, "default_core"));
-> +		for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
-> +			const char *name = names[i];
-> +
-> +			if (!name)
-> +				continue;
-> +
-> +			if (!strcmp(name, to_match)) {
-> +				/* Exact name match. */
-> +				return true;
-> +			}
-> +		}
-> +		return false;
-> +	}
-> +	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
-> +		const char *name = names[i];
-> +
-> +		if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
-> +			return true;
-> +		if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +/**
-> + * perf_pmu__name_wildcard_match - Called by the jevents generated code to see
-> + *                                 if pmu matches the json to_match string.
-> + * @pmu: The pmu whose name/alias to match.
-> + * @to_match: The possible match to pmu_name.
-> + */
-> +bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match)
-> +{
-> +	return perf_pmu___name_match(pmu, to_match, /*wildcard=*/true);
-> +}
-> +
-> +/**
-> + * perf_pmu__name_no_suffix_match - Does pmu's name match to_match ignoring any
-> + *                                  trailing suffix on the pmu_name and/or tok?
-> + * @pmu: The pmu whose name/alias to match.
-> + * @to_match: The possible match to pmu_name.
-> + */
-> +bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match)
-> +{
-> +	return perf_pmu___name_match(pmu, to_match, /*wildcard=*/false);
->  }
->  
->  bool perf_pmu__is_software(const struct perf_pmu *pmu)
-> @@ -2229,29 +2329,31 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->  		   name ?: "N/A", buf, config_name, config);
->  }
->  
-> -bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
-> +bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match)
->  {
-> -	const char *name = pmu->name;
-> -	bool need_fnmatch = strisglob(tok);
-> +	const char *names[2] = {
-> +		pmu->name,
-> +		pmu->alias_name,
-> +	};
-> +	bool need_fnmatch = strisglob(wildcard_to_match);
->  
-> -	if (!strncmp(tok, "uncore_", 7))
-> -		tok += 7;
-> -	if (!strncmp(name, "uncore_", 7))
-> -		name += 7;
-> +	if (!strncmp(wildcard_to_match, "uncore_", 7))
-> +		wildcard_to_match += 7;
->  
-> -	if (perf_pmu__match_ignoring_suffix(name, tok) ||
-> -	    (need_fnmatch && !fnmatch(tok, name, 0)))
-> -		return true;
-> +	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
-> +		const char *pmu_name = names[i];
->  
-> -	name = pmu->alias_name;
-> -	if (!name)
-> -		return false;
-> +		if (!pmu_name)
-> +			continue;
->  
-> -	if (!strncmp(name, "uncore_", 7))
-> -		name += 7;
-> +		if (!strncmp(pmu_name, "uncore_", 7))
-> +			pmu_name += 7;
->  
-> -	return perf_pmu__match_ignoring_suffix(name, tok) ||
-> -		(need_fnmatch && !fnmatch(tok, name, 0));
-> +		if (perf_pmu__match_wildcard(pmu_name, wildcard_to_match) ||
-> +		    (need_fnmatch && !fnmatch(wildcard_to_match, pmu_name, 0)))
-> +			return true;
-> +	}
-> +	return false;
->  }
->  
->  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size)
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index edd36c20aedc..f5306428c03f 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -240,7 +240,8 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name);
->  size_t perf_pmu__num_events(struct perf_pmu *pmu);
->  int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
->  			     void *state, pmu_event_callback cb);
-> -bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name);
-> +bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match);
-> +bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match);
->  
->  /**
->   * perf_pmu_is_software - is the PMU a software PMU as in it uses the
-> @@ -275,7 +276,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->  				   const char *config_name);
->  void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
->  
-> -bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok);
-> +bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match);
->  
->  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
->  int perf_pmu__pathname_scnprintf(char *buf, size_t size,
-> -- 
-> 2.48.1.362.g079036d154-goog
-> 
+-- 
+2.48.1.362.g079036d154-goog
+
