@@ -1,96 +1,154 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9841DF27D;
-	Mon,  3 Feb 2025 11:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DC1213228
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582999; cv=none; b=gK4dGNbETZqTQnpU/IvN1Zdsv7KCRdHOihJBRACCKFfkhwVkMLYxaCAxvgrDnmrTfnz0WoDh4RV/2rhaaGrGLwSF9Un1BVYGPxHm/mrLB4u0m/es+xLorLYZ3xz0M8I+cpN4GwNHOhPRunfMAllI3N81ETIAOUBOEMZ8sY5zGQ8=
+	t=1738593070; cv=none; b=umC0HOT+URYyY2zZ/eumtKurRlKV4UX9dhWESiUdURfpJ89qSH47nUCnDx9wUYwo2ZiSkLIP51Ze9OvU9oFH7lESSxC7BMIj2PcJJtvjC/LCIELy1u68w81TVl7mVvS4O6mPNuncfNjgxLoEl10ydESnN4/dL8v57s/kT5ZvRMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582999; c=relaxed/simple;
-	bh=LxtA9+OyABAgOu4Ko+tn7o4gfdQ2ERBebHBgYT/EBX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mYmKGK8Txz1otRvLSQn3IjVWgEgw8Pl0Zx/6AwhcvyJugH2HkJrn0NdC+ixZWSW4Mu8R8gQGyqcCnzzH29VVOu0VM+uQFc+HQ+JU7y4UDFkBi9GOXmHZGcNmgdNEAc49PsVtosAjAiB29l+wHEqbm7ons4QSUK2buVIBmGIhQGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M0ifH9fI; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738593070; c=relaxed/simple;
+	bh=PVbFWCN7HItodTQ7x+MpdorA3QHoDoHexz9bhRZGmus=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GwaYSjj3jphSvTyLBCfAcQWM/er0OvmC7Ts7Vuj/BrpEormc2VsAUvF5I1jriHL2X/BWrYjTQnIr/HHbYRbuEBY/y3ML5zfU3MvQeMWcCP5aiAknq5VmW1r/zoRpV44BqzXhBNa+DmOehx6/CTOWdo+X4W8X6DREIspvHIR/oc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9pfs2ke; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M0ifH9fI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=btXXAPOazkj5DVi+1L404K6Uyxw16gswkuGE52yhV0o=; b=M0ifH9fITMzADf34o4YPQNJdHp
-	6X3eJAjlJiputSGI+Vsv/oTXw7axc6T8dl/2Ue10pZEVDpNe9qBupAlqffD0kE5EoOXx733Ffzuuw
-	xKObyxDGAom/pCU89PRq09baaeibRFD4ZkEaAH3pbz8ltKPvAzoV4qhJUodeIs2Dy4gQWJVvJAPrD
-	0c7g9Ic6sQrkeyicDZhRZ+VI51J3OkpplkZ6jy/Nrb2LxbuuiPcapYLbmyis9qMZg1ovSe/bu/bzC
-	SrAPxjITpYNZNjfKp+tplNmanQT7yAe7+iGvvmztSa+P2Hnwahirk0/K3Ce9r4flcaF62ua3N5W5t
-	V51nRMEg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1teur8-00000000yxa-3Io8;
-	Mon, 03 Feb 2025 11:43:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 62B1930035F; Mon,  3 Feb 2025 12:43:10 +0100 (CET)
-Date: Mon, 3 Feb 2025 12:43:10 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Maxim Levitsky <mlevitsk@redhat.com>
-Subject: Re: [PATCH] perf/x86/intel: Ensure LBRs are disabled when a CPU is
- starting
-Message-ID: <20250203114310.GF505@noisy.programming.kicks-ass.net>
-References: <20250131010721.470503-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9pfs2ke"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-aa67fcbb549so22962366b.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738593067; x=1739197867; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZoYuftsJovCPiMK5YLE5Tz6ZOId2A3gszI9fRt9aptA=;
+        b=Y9pfs2ke1doV3Om8jDzxiFkFQz5ufV2Ks4mO8tNMacUeDgFV5d1KtRy6F5nuP4d4PR
+         k9Ub4BOJe995Djf6B36BGTvlsM+tJ758EsrZfhmjlyLy7bAbDFuVtxERod4Q6qnkPPTR
+         9qR349dNUYJmXQB8Awuakf1y+RA8UIS6qlgLv2TMxBW+You/9bBUsWvwmYhGh5GV5/sD
+         4vP/8SvEcT8zld3ZBxFVNbBDl1moqxIC1nJHQVKhxH/2U6zI+W4UQi4U/sBF9dQ8mOpG
+         MYxB6OAWddjfFYEfesSFhOp08Ctc1nOIazIfgMOtmsBjtzQHzYKwY4P9/q/sv3ZmvL5v
+         G/oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738593067; x=1739197867;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZoYuftsJovCPiMK5YLE5Tz6ZOId2A3gszI9fRt9aptA=;
+        b=QneeZ5TkFfpNI2CBayAvUpJ8buoyeMsGM3LDShZyya2rJz2z2NSo60Qk53YkSANQyT
+         D+ugHMwFtIEFQ4sRjlL91enrvAzkYmF1Y81m5laOU+QAbA7j4hz0bb9y4KwRskl2EOXx
+         8kKq/HpePhkVYmZjH69AMZd/juvnbYZREeIi//lRFv9bcXW7eqYPSH8pcO+ofvvGdkJC
+         OUM+RqGiUU4VZHAN+q6NhsYGJizOIHZDeyzQ7BTtUUEvSHmH4yK+qWr2urgRCy/VbY2A
+         5/EeB2J8Gbsr1OVfFvdKcKY0T3Ag9pvC5QlxaV2aQubRxNFx5mc+v9QNbe4PoG0CAEg/
+         EkAQ==
+X-Gm-Message-State: AOJu0Yy28PMtZ+BxVaqjee4gZrAxX7bUmcRJTJIqj9drTcSWsypj0Bpk
+	09eGBpJrLqAZsJIWdTQ6UcUiGJSCQaid98ZlMg7kXoOi2JiJPf2Z7hUsIkq3UvIj77E4Le0MMdc
+	mIc6//Q==
+X-Google-Smtp-Source: AGHT+IECppgacT++xJLUxgVzyFh92FyH95V1O4u0p40+2AOGv/Oah3vC8US1Upz3woTGzfV6BHPnUIZGdjuW
+X-Received: from edbef12.prod.google.com ([2002:a05:6402:28cc:b0:5db:f38e:f8c9])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7d93:b0:aae:c3c1:1361
+ with SMTP id a640c23a62f3a-ab6cfdd6b4fmr2453177766b.44.1738593067429; Mon, 03
+ Feb 2025 06:31:07 -0800 (PST)
+Date: Mon,  3 Feb 2025 15:30:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131010721.470503-1-seanjc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <cover.1738592865.git.dvyukov@google.com>
+Subject: [PATCH v4 0/8] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 30, 2025 at 05:07:21PM -0800, Sean Christopherson wrote:
-> Explicitly clear DEBUGCTL.LBR when a CPU is starting, prior to purging the
-> LBR MSRs themselves, as at least one system has been found to transfer
-> control to the kernel with LBRs enabled (it's unclear whether it's a BIOS
-> flaw or a CPU goof).  Because the kernel preserves the original DEBUGCTL,
-> even when toggling LBRs, leaving DEBUGCTL.LBR as is results in running
-> with LBRs enabled at all times.
-> 
-> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Closes: https://lore.kernel.org/all/c9d8269bff69f6359731d758e3b1135dedd7cc61.camel@redhat.com
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/events/intel/core.c     | 5 ++++-
->  arch/x86/include/asm/msr-index.h | 3 ++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index e76e892f44cd..efd069bc9c28 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -5038,8 +5038,11 @@ static void intel_pmu_cpu_starting(int cpu)
->  
->  	init_debug_store_on_cpu(cpu);
->  	/*
-> -	 * Deal with CPUs that don't clear their LBRs on power-up.
-> +	 * Deal with CPUs that don't clear their LBRs on power-up, and that may
-> +	 * even boot with LBRs enabled.
->  	 */
-> +	if (!static_cpu_has(X86_FEATURE_ARCH_LBR) && x86_pmu.lbr_nr)
-> +		msr_clear_bit(MSR_IA32_DEBUGCTLMSR, DEBUGCTLMSR_LBR_BIT);
->  	intel_pmu_lbr_reset();
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
 
-Gotta love this stuff.
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
 
-Thanks!
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
+
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
+
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
+
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
+
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
+
+Changes in v4:
+ - added "Shrink struct hist_entry size" commit
+ - rebased to perf-tools-next HEAD
+
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
+
+Dmitry Vyukov (8):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
+  perf hist: Shrink struct hist_entry size
+
+ .../callchain-overhead-calculation.txt        |  5 +-
+ .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
+ tools/perf/Documentation/perf-report.txt      | 49 ++++++----
+ tools/perf/Documentation/tips.txt             |  3 +
+ tools/perf/builtin-record.c                   | 20 +++++
+ tools/perf/builtin-report.c                   | 39 ++++++++
+ tools/perf/ui/browsers/hists.c                | 27 +++---
+ tools/perf/ui/hist.c                          | 64 +++++++++----
+ tools/perf/util/addr_location.c               |  1 +
+ tools/perf/util/addr_location.h               |  7 +-
+ tools/perf/util/event.c                       | 11 +++
+ tools/perf/util/events_stats.h                |  2 +
+ tools/perf/util/hist.c                        | 90 +++++++++++++++----
+ tools/perf/util/hist.h                        | 32 +++++--
+ tools/perf/util/machine.c                     |  7 ++
+ tools/perf/util/machine.h                     |  6 ++
+ tools/perf/util/sample.h                      |  2 +-
+ tools/perf/util/session.c                     | 12 +++
+ tools/perf/util/session.h                     |  1 +
+ tools/perf/util/sort.c                        | 69 ++++++++++++--
+ tools/perf/util/sort.h                        |  3 +-
+ tools/perf/util/symbol.c                      | 34 +++++++
+ tools/perf/util/symbol_conf.h                 |  8 +-
+ 23 files changed, 502 insertions(+), 75 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
+
+
+base-commit: 8ce0d2da14d3fb62844dd0e95982c194326b1a5f
+-- 
+2.48.1.362.g079036d154-goog
+
