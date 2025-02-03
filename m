@@ -1,355 +1,141 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9700DDBC
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Feb 2025 07:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F7EB65C;
+	Mon,  3 Feb 2025 00:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738479849; cv=none; b=te47uGe0cko+r4U6PNnJKge9pNwdvOtFxwPrwGCFAV3OqiaKpSagZJo0rj0AtzOa1dkxqaDTZgmPHX4o3z+Fl6Dl629AbETn/y805TDKXOxujhpCj3FHS89ysNGZ2isjJeqSjf5j3gTmMa8P+RJW/LwhsB6UPgEM+zCqDqCKgpw=
+	t=1738543398; cv=none; b=j5sFTOxdxYrrRSBUSTH5Pq9i5hwawouk62OdPVnstdphBuXG55Ky3A4zHUFcruxvIIo4oD1BCy/mgYeD8yvev5pNCFKNc/KYU26c4hrTX7dBgoNwppDhzJR4igoCoz6psFa99kDRxkSDw9u4mAM9Ukf3fcUqcZTSQrWqIwhoqZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738479849; c=relaxed/simple;
-	bh=S/ODEyu/sDQz5ZMVmnTyP7uX15WIsg1hop4S/PCd2+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oijfnCFQckWNlpPDlJXTGTZmoSuTimLmMconwSJaWtyotALKyXsEBf6dRz4fJyfRvwD0TQoP3WIUNeOr1RqiyhmWa7Y9fQ7cfExSPHsNj5RI5CrMM9Cts1SZ+5t8CeDIPkpXPrBExazrhqwASWNba3VmZGp9oN6dnnCIvegCsDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3gwl0fC6; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738543398; c=relaxed/simple;
+	bh=GpuZv6X9a6Iwav9fDexP5CTqJHFoGKqBKJpUPFkjJQs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JxUdCzcGWqLva002N/5J6tQ6mwzrY0sW32D+6MwHeTceNKga+v8kLDROKOYqY6gl2qFpOrHNCLfJwTwfnRK8FG4JotqtWL6ANbBbPJhQYazPCwecS6OJYyVYCOCAu/ApPfdoExOF3esNCq/EkCm+HYeNUerpnTvNHeGf4Q99xXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwN2gbFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3gwl0fC6"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so199615ab.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 01 Feb 2025 23:04:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738479847; x=1739084647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
-        b=3gwl0fC6UU6YhRMIVY+/d1Ho6NdMXlqTo0S3uFpvmpPkYeiTDTj2L8F5BuYORXqNo6
-         Y8Hm/s3csQ0LmyYsP1IQiGuJy27hdBs9DbE7jH87oyiqdR53N30emDd+HUVBrz+YZeCp
-         4Q5iBBGkA0ujPneueEyHIvNV8X2kuP/tRVICu0KYgWM1KuiDWG/lr3SLUe+QrNJyoDrX
-         3jH8QdkC+qQwkoBGfFfEzlEiqoz2uNA6wgRNnwdcoFK5eewuu30VnZi6Hy08ZNrHK8Y1
-         yjpLEMZYNBjIjCjaqzmUZtW4IKwB52rxE8iLeL1jX+0hjTRuta3KgyTgtG4hC7ePksVL
-         bO8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738479847; x=1739084647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TW2WXdFoJdL4hr/KMjHXmSx3JuLPpNVrDh3bvonRhpk=;
-        b=AZf1ArJt0ZnzEVcANlSP7fxXZmjkRyw7uxALNd9Wi1hVUhVwxWH5Brwi8Xpy/JtrIe
-         M5co3MWJZ51KgiwRKc8X1ZPNBb+S4yhbpHo0MSk3VTl1FXr2wyYMyYPJz+0vdgfhfxKm
-         IuiDAXUt4o/x/xwtu0kNVO/1yOpb2mzbgt9JyHr8RCaSddlznufWgE+uroG/JDsJ0RK4
-         powRVYgJIBJTJ80RpLxE14teTe1tNZj4DWvsPxPzN6HJChioum8rItv/tfwLeuqy4kqF
-         Ju/xMSnFtzL1CFEGkVKfHbJj943/WVbwt8HVHQjbOYpoT47wY182bog9N5Y4uJHCLgaT
-         c6sA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsR1WCPQEoHBsv/53TWtGI6L6ajUEvxzawNdTuSc6KdQN99Lp9L6IhbxoiVdSwQRQ9xgx+KnryTOX9UcjxUNdH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2e05bdFetSCjb6B9tirQxCpPnUvYWXKZMRMJadhx+Gs3GUxwI
-	oslwcnMiljgMcRj3c02vfb8LHWyev7PjE4hAms224heRORetx9XuGEqS/0CNrSyh2Wzc4vtvBpP
-	tuz7ZWdWxbBEQetLp5SBmhrK1TnTmuN8sLjb/
-X-Gm-Gg: ASbGnctnKdLisAJCIjBkGqNaIS88KjmZp0sBSxxUNu6NtwucZm0NNLxHXjrB1/f9Z0S
-	zORhRBMKfqNNn+HQCaceOUSFRxJ49+Omtx+PXSzCvedL0SZ+0NN6cAwXM5+WFVNjNa+hTvirc9Q
-	==
-X-Google-Smtp-Source: AGHT+IF81ZqX7vPK+R4u8VMmH12X+xPYTa5N3v2X5iXJS2kZJ97rHSYVaKM/TO/f6Z+3eRjFf95QVWBU/TBSyno57Cw=
-X-Received: by 2002:a05:6e02:1caa:b0:3cf:fe9a:4d4 with SMTP id
- e9e14a558f8ab-3d020184ba6mr3180435ab.6.1738479846565; Sat, 01 Feb 2025
- 23:04:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwN2gbFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CA5C4CED1;
+	Mon,  3 Feb 2025 00:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738543396;
+	bh=GpuZv6X9a6Iwav9fDexP5CTqJHFoGKqBKJpUPFkjJQs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=TwN2gbFcustSVQowbpDiSu3hDdQ5n7MYCaOg3+uUa6Ar/XcJBfkMu1jb2OgKVD/Q4
+	 s7BYp78utgencj8QXwYswiRUQ3IbwABey4810SZvhuV7woxFX9znp4UbvaAcco3VTg
+	 pz3iNYNj7T8fEMQdExBXZNsaJO2oBRxRMInAKx5rk8iqaTOqJeisTpaFc0dDDlECr3
+	 2wgajwRkIsUSDibsQEEI1QtBLukE5o5oK3Y79bT0Q6pxdTTBfTt+QHT9SWuxMVHPA4
+	 5enNChqZ4+ypGpoBfytmoPcqGJ3b7p+4ZVifBnlBnNh7lKl8XEx6V7rsgmfNQrM+Ai
+	 FXjKZHaTDvMiw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v19 00/11] arm64/perf: Enable branch stack sampling
+Date: Sun, 02 Feb 2025 18:42:54 -0600
+Message-Id: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-3-namhyung@kernel.org>
-In-Reply-To: <20250130030525.1482498-3-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 1 Feb 2025 23:03:54 -0800
-X-Gm-Features: AWEUYZmHzgE77FMjNC4oCHjXnM1LEFv0B-W4EyO4EP6wb-nUuLjcJmaLn8D-7fA
-Message-ID: <CAP-5=fUK_aMf8ZYJxmbOLzbu_zZWKYwx_Vvj64x3_2=0u7jbMw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf trace: Convert syscall_stats to hashmap
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Howard Chu <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA4RoGcC/x2MQQqAMAzAviI9W3DVCfMr4mG6qj04pQMRhn93e
+ EwgyZBYhRMMVQblW5KcsYBxdQXL7uPGKKEIoIZsY8ih1wNnnRlv45C6YINjyz21UJJLeZXn/43
+ T+34amuVzXwAAAA==
+X-Change-ID: 20250129-arm-brbe-v19-24d5d9e5e623
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev
 
-On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> It was using a RBtree-based int-list as a hash and a custome resort
-> logic for that.  As we have hashmap, let's convert to it and add a
-> sorting function using an array.
+This series enables perf branch stack sampling support on arm64 via a 
+v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details 
+on BRBE can be found in the Arm ARM[1] chapter D18.
 
-How is a hashmap connected to a sorting function of an array?
+I've picked up this series from Anshuman. This version has been reworked 
+quite a bit by Mark and myself. The bulk of those changes are in patch 
+11.
 
->  It's also to prepare supporting
-> system-wide syscall stats.
->
-> No functional changes intended.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-trace.c | 122 ++++++++++++++++++++++++++++---------
->  1 file changed, 93 insertions(+), 29 deletions(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 7e0324a2e9182088..1d32ef2b05ae8c1c 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -39,6 +39,7 @@
->  #include "util/synthetic-events.h"
->  #include "util/evlist.h"
->  #include "util/evswitch.h"
-> +#include "util/hashmap.h"
->  #include "util/mmap.h"
->  #include <subcmd/pager.h>
->  #include <subcmd/exec-cmd.h>
-> @@ -63,7 +64,6 @@
->  #include "print_binary.h"
->  #include "string2.h"
->  #include "syscalltbl.h"
-> -#include "rb_resort.h"
->  #include "../perf.h"
->  #include "trace_augment.h"
->
-> @@ -1519,17 +1519,55 @@ struct thread_trace {
->                 struct file   *table;
->         } files;
->
-> -       struct intlist *syscall_stats;
-> +       struct hashmap *syscall_stats;
->  };
->
-> +static size_t id_hash(long key, void *ctx __maybe_unused)
+Patches 1-7 are new clean-ups/prep which stand on their own. They 
+were previously posted here[2]. Please pick them up if there's no issues 
+with them.
 
-I find the use of "id" in this code confusing - it is a pre-existing
-problem, but you add to it here. I think a more intention revealing
-name would be something like system_call_number_hash.
+Patches 8-11 add BRBE support with the actual support in patch 11.
 
-> +{
-> +       return key;
-> +}
-> +
-> +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
-> +{
-> +       return key1 =3D=3D key2;
-> +}
-> +
-> +static struct hashmap *alloc_syscall_stats(void)
-> +{
-> +       struct hashmap *stats =3D hashmap__new(id_hash, id_equal, NULL);
-> +
-> +       /* just for simpler error check */
+[1] https://developer.arm.com/documentation/ddi0487/latest/
+[2] https://lore.kernel.org/all/20250107-arm-pmu-cleanups-v1-v1-0-313951346a25@kernel.org/
 
-What is "just for simpler error check" ?
+v19:
+ - Drop saving of branch records when task scheduled out (Mark). Make 
+   sched_task() callback actually get called. Enabling requires a call 
+   to perf_sched_cb_inc(). So the saving of branch records never 
+   happened.
+ - Got rid of added armpmu ops. All BRBE support is contained within 
+   pmuv3 code.
+ - Fix freeze on overflow for VHE
+ - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
+   it when BRBE is enabled.
+ - Drop all the Arm specific exception branches. Not a clear need for
+   them.
+ - Fix handling of branch 'cycles' reading. CC field is
+   mantissa/exponent, not an integer.
+ - Rework s/w filtering to better match h/w filtering
+ - Reject events with disjoint event filter and branch filter or with 
+   exclude_host set
+ - Dropped perf test patch which has been applied for 6.14
+ - Dropped patch "KVM: arm64: Explicitly handle BRBE traps as UNDEFINED"
+   which has been applied for 6.14
 
-> +       if (IS_ERR(stats))
-> +               stats =3D NULL;
-> +       return stats;
-> +}
-> +
-> +static void delete_syscall_stats(struct hashmap *syscall_stats)
-> +{
-> +       struct hashmap_entry *pos;
-> +       size_t bkt;
-> +
-> +       if (syscall_stats =3D=3D NULL)
-> +               return;
-> +
-> +       hashmap__for_each_entry(syscall_stats, pos, bkt)
-> +               free(pos->pvalue);
-> +       hashmap__free(syscall_stats);
-> +}
-> +
->  static struct thread_trace *thread_trace__new(struct trace *trace)
->  {
->         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_trac=
-e));
->
->         if (ttrace) {
->                 ttrace->files.max =3D -1;
-> -               if (trace->summary)
-> -                       ttrace->syscall_stats =3D intlist__new(NULL);
-> +               if (trace->summary) {
-> +                       ttrace->syscall_stats =3D alloc_syscall_stats();
-> +                       if (ttrace->syscall_stats =3D=3D NULL) {
-> +                               free(ttrace);
-> +                               ttrace =3D NULL;
+v18:
+ - https://lore.kernel.org/all/20240613061731.3109448-1-anshuman.khandual@arm.com/
 
-This looks overly indented.
+For v1-v17, see the above link. Not going to duplicate it all here...
 
-Thanks,
-Ian
+Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+---
+Anshuman Khandual (4):
+      arm64/sysreg: Add BRBE registers and fields
+      arm64: Handle BRBE booting requirements
+      KVM: arm64: nvhe: Disable branch generation in nVHE guests
+      perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)
 
-> +                       }
-> +               }
->         }
->
->         return ttrace;
-> @@ -1544,7 +1582,7 @@ static void thread_trace__delete(void *pttrace)
->         if (!ttrace)
->                 return;
->
-> -       intlist__delete(ttrace->syscall_stats);
-> +       delete_syscall_stats(ttrace->syscall_stats);
->         ttrace->syscall_stats =3D NULL;
->         thread_trace__free_files(ttrace);
->         zfree(&ttrace->entry_str);
-> @@ -2463,22 +2501,19 @@ struct syscall_stats {
->  static void thread__update_stats(struct thread *thread, struct thread_tr=
-ace *ttrace,
->                                  int id, struct perf_sample *sample, long=
- err, bool errno_summary)
->  {
-> -       struct int_node *inode;
-> -       struct syscall_stats *stats;
-> +       struct syscall_stats *stats =3D NULL;
->         u64 duration =3D 0;
->
-> -       inode =3D intlist__findnew(ttrace->syscall_stats, id);
-> -       if (inode =3D=3D NULL)
-> -               return;
-> -
-> -       stats =3D inode->priv;
-> -       if (stats =3D=3D NULL) {
-> +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
->                 stats =3D zalloc(sizeof(*stats));
->                 if (stats =3D=3D NULL)
->                         return;
->
->                 init_stats(&stats->stats);
-> -               inode->priv =3D stats;
-> +               if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
-> +                       free(stats);
-> +                       return;
-> +               }
->         }
->
->         if (ttrace->entry_time && sample->time > ttrace->entry_time)
-> @@ -4617,18 +4652,45 @@ static size_t trace__fprintf_threads_header(FILE =
-*fp)
->         return printed;
->  }
->
-> -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
-> +struct syscall_entry {
->         struct syscall_stats *stats;
->         double               msecs;
->         int                  syscall;
-> -)
-> +};
-> +
-> +static int entry_cmp(const void *e1, const void *e2)
->  {
-> -       struct int_node *source =3D rb_entry(nd, struct int_node, rb_node=
-);
-> -       struct syscall_stats *stats =3D source->priv;
-> +       const struct syscall_entry *entry1 =3D e1;
-> +       const struct syscall_entry *entry2 =3D e2;
->
-> -       entry->syscall =3D source->i;
-> -       entry->stats   =3D stats;
-> -       entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&stat=
-s->stats) / NSEC_PER_MSEC) : 0;
-> +       return entry1->msecs > entry2->msecs ? -1 : 1;
-> +}
-> +
-> +static struct syscall_entry *thread__sort_stats(struct thread_trace *ttr=
-ace)
-> +{
-> +       struct syscall_entry *entry;
-> +       struct hashmap_entry *pos;
-> +       unsigned bkt, i, nr;
-> +
-> +       nr =3D ttrace->syscall_stats->sz;
-> +       entry =3D malloc(nr * sizeof(*entry));
-> +       if (entry =3D=3D NULL)
-> +               return NULL;
-> +
-> +       i =3D 0;
-> +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
-> +               struct syscall_stats *ss =3D pos->pvalue;
-> +               struct stats *st =3D &ss->stats;
-> +
-> +               entry[i].stats =3D ss;
-> +               entry[i].msecs =3D (u64)st->n * (avg_stats(st) / NSEC_PER=
-_MSEC);
-> +               entry[i].syscall =3D pos->key;
-> +               i++;
-> +       }
-> +       assert(i =3D=3D nr);
-> +
-> +       qsort(entry, nr, sizeof(*entry), entry_cmp);
-> +       return entry;
->  }
->
->  static size_t thread__dump_stats(struct thread_trace *ttrace,
-> @@ -4636,10 +4698,10 @@ static size_t thread__dump_stats(struct thread_tr=
-ace *ttrace,
->  {
->         size_t printed =3D 0;
->         struct syscall *sc;
-> -       struct rb_node *nd;
-> -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stats);
-> +       struct syscall_entry *entries;
->
-> -       if (syscall_stats =3D=3D NULL)
-> +       entries =3D thread__sort_stats(ttrace);
-> +       if (entries =3D=3D NULL)
->                 return 0;
->
->         printed +=3D fprintf(fp, "\n");
-> @@ -4648,8 +4710,10 @@ static size_t thread__dump_stats(struct thread_tra=
-ce *ttrace,
->         printed +=3D fprintf(fp, "                                     (m=
-sec)    (msec)    (msec)    (msec)        (%%)\n");
->         printed +=3D fprintf(fp, "   --------------- --------  ------ ---=
------ --------- --------- ---------     ------\n");
->
-> -       resort_rb__for_each_entry(nd, syscall_stats) {
-> -               struct syscall_stats *stats =3D syscall_stats_entry->stat=
-s;
-> +       for (size_t i =3D 0; i < ttrace->syscall_stats->sz; i++) {
-> +               struct syscall_entry *entry =3D &entries[i];
-> +               struct syscall_stats *stats =3D entry->stats;
-> +
->                 if (stats) {
->                         double min =3D (double)(stats->stats.min) / NSEC_=
-PER_MSEC;
->                         double max =3D (double)(stats->stats.max) / NSEC_=
-PER_MSEC;
-> @@ -4660,10 +4724,10 @@ static size_t thread__dump_stats(struct thread_tr=
-ace *ttrace,
->                         pct =3D avg ? 100.0 * stddev_stats(&stats->stats)=
- / avg : 0.0;
->                         avg /=3D NSEC_PER_MSEC;
->
-> -                       sc =3D &trace->syscalls.table[syscall_stats_entry=
-->syscall];
-> +                       sc =3D &trace->syscalls.table[entry->syscall];
->                         printed +=3D fprintf(fp, "   %-15s", sc->name);
->                         printed +=3D fprintf(fp, " %8" PRIu64 " %6" PRIu6=
-4 " %9.3f %9.3f %9.3f",
-> -                                          n, stats->nr_failures, syscall=
-_stats_entry->msecs, min, avg);
-> +                                          n, stats->nr_failures, entry->=
-msecs, min, avg);
->                         printed +=3D fprintf(fp, " %9.3f %9.2f%%\n", max,=
- pct);
->
->                         if (trace->errno_summary && stats->nr_failures) {
-> @@ -4677,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_trac=
-e *ttrace,
->                 }
->         }
->
-> -       resort_rb__delete(syscall_stats);
-> +       free(entries);
->         printed +=3D fprintf(fp, "\n\n");
->
->         return printed;
-> --
-> 2.48.1.262.g85cc9f2d1e-goog
->
+Mark Rutland (3):
+      perf: arm_pmu: Don't disable counter in armpmu_add()
+      perf: arm_pmuv3: Don't disable counter in armv8pmu_enable_event()
+      perf: arm_pmu: Move PMUv3-specific data
+
+Rob Herring (Arm) (4):
+      perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
+      perf: arm_v7_pmu: Drop obvious comments for enabling/disabling counters and interrupts
+      perf: arm_v7_pmu: Don't disable counter in (armv7|krait_|scorpion_)pmu_enable_event()
+      perf: apple_m1: Don't disable counter in m1_pmu_enable_event()
+
+ Documentation/arch/arm64/booting.rst |  21 +
+ arch/arm64/include/asm/el2_setup.h   |  86 +++-
+ arch/arm64/include/asm/kvm_host.h    |   2 +
+ arch/arm64/include/asm/sysreg.h      |  17 +-
+ arch/arm64/kvm/debug.c               |   4 +
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c   |  32 ++
+ arch/arm64/tools/sysreg              | 132 ++++++
+ drivers/perf/Kconfig                 |  11 +
+ drivers/perf/Makefile                |   1 +
+ drivers/perf/apple_m1_cpu_pmu.c      |   4 -
+ drivers/perf/arm_brbe.c              | 794 +++++++++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h              |  47 +++
+ drivers/perf/arm_pmu.c               |  23 +-
+ drivers/perf/arm_pmuv3.c             |  96 ++++-
+ drivers/perf/arm_v7_pmu.c            |  50 ---
+ include/linux/perf/arm_pmu.h         |  21 +-
+ 16 files changed, 1250 insertions(+), 91 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250129-arm-brbe-v19-24d5d9e5e623
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
+
