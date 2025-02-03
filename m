@@ -1,268 +1,124 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12267212B3B
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Feb 2025 14:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB07209F59;
+	Mon,  3 Feb 2025 16:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593929; cv=none; b=VACIZF027nCmWycwNf+fiyTfsSFDSsAgZzP11sGx1MYDwIVZFMYSzte+RQoXS5n0QnVAoeemVdXicQoeWY1DaCeS6CVNvoGVmtTJ+mc+3Slr/Z6xMRijbNmXL7jR4CzaKv7c3RvONBZwNUxAL8jqYTD/IJs8YoWnvT0VnwrwprE=
+	t=1738598763; cv=none; b=uejrHCJj/Sfw0+hCryQFfV9D14tlhR5bvL7tWT1XsApE+kiDKmf+2a7MyA9fawPWXUuM12z4/scsMFup2kEZq2BZedIX8KuB1K8xJJdk/9rpCrKnKSrAPTt6huW4ET6Ga1tLHNA5d9fGxMN9ZA5JiJqKdfHBm3LoJUDs96HYzbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593929; c=relaxed/simple;
-	bh=OpxJMFnv/T1gzYLzng4N96zBL35qTrhkXO4t27HLNeI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f54OE91WKrqQp4EEKStYKruUZxT8SrQawKJq/igsGgKt1t85MwLYMx0et8SWoJj/hsycr6yXxAASxy8hhK1FubWu6RUdvpbLNtREafQjiwwUzW1VD3yMsrMZVKOr9cscSLEVB02QuM5F3sxBaHyecMQ/tMQxiwDs+Pcd1clo9D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vVY3d/I0; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738598763; c=relaxed/simple;
+	bh=GMxT679nrKOSVT27eHqv8mA9W6VoZ8CApmuTH/wJ4xE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZUhCm5zrW3MKa5d88ryvHaVgww5ZUnOdOBHsfd+ANAkLkwfZz/bXbVt3MV89hLuRzRQt4v7VUTWrL8GIASmTfHvNIj9A2l3NR2LSu7kCx2L9wO3NqTVuCwsldggbAlfxF48dDAWxT9KlKeLg91zR1WYHFYe73acDpDSeygOXVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GR+ZLyd5; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vVY3d/I0"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30225b2586cso52004491fa.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 06:45:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738593925; x=1739198725; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
-        b=vVY3d/I0GwjAAmSDLnS5UCFyxYNVcyE0FbOgswCCsKXenCbCaOuqxXhQ15w1f74c9R
-         dn9obe3CZYI5/vM0NQXfHmz5XgOPbHoES+BCpebeIryU0JVxWe9NfJjwNXF3Y9cOxgB2
-         /X5bdTUSugayAF+GY+p+PboAHSB+j4z3ZleQlOu/oKj001e5yGmqCrbV7mFCixV4N+iK
-         sk9F6Qy+OwNwOjx8yP+gCV0q2BB/JXDJYqwgs1vaKlE/mN94ZGZgQWOyUvLHqM/ceu/a
-         vFDBaQp3dbmjwQZ39k+griaajW0qHU7ADTDooXiQUffNpygfMgSh4OWTMk0TE/RLfHd7
-         +RGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593925; x=1739198725;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
-        b=pca89jtfAy4fti2TVSHLvNP+XdvCWk0P1CswFtEezvoygayysmHl0Hmu0LpguCPPrg
-         LxqSiCx0+XdOuG34wmmReo2a0a9K0jNBOSgKATRHXCpzfM/TQFORnfsVP58eNEX+AMmA
-         nUUUgWTJ8XtklNHq14ijDveAhN1mOx4ITXAjFCxWOxAyphBcWyfL3hWYcLaLk6/uVG5l
-         4e+qslMthus0xJr5jQdxOS0ajfhDkPq6y6BHmvZ/0CL2ndY5OTfsMxl0JnWAlp7eRhGm
-         8T+Xyl39OOZrrxr6ceVSUmd7BUYtziM0pu2Wp1iwqsx9JZBbfUh5otBWcv7F3Q11XzmS
-         40Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtDtErefoazXfonZlLB5ds+yw0tS8Zy46sXGP/JU8SN9AwtSMCRwaD4Uw7Ed9lY+SsxhrE06goy2rH3BCSW4ch@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW1K/rsardcESesfI3q2kXMKzZp/TxSaOw+tJtlyWAysUMwmDP
-	xiJATc/Ko9+agge17lw1mweud6x0n6CUABiMuT+BtvrBXidDmkAn3XMr4yMJ/2wLwHY8DTcr8QU
-	Sokb9x43vrJeJK6e22GaYRkle9Olw/5GJs+NW
-X-Gm-Gg: ASbGncvePX4DIFND6ECR0MIidzpiTbxL5fD34KyK2vLVq0qVRTuU52vZijvZ1l0NOsK
-	Dy7ZGCWnFo/PYaUETXc2QfaiKFYi1HBot2xETNcREwGf8B9B88LKdl7Nn78KeXunQqMs5Sg6CV+
-	0+1Xqm/D6s16U+KaCT7o/lPJG8
-X-Google-Smtp-Source: AGHT+IFdX20Dg79dKyo+FKKkKsITuCwGf69uB9vyO+Cx2mCC0SBMPBW7bLxT/A6zbwHn6Q/jEPB7m6Y2AjpSO0ySv00=
-X-Received: by 2002:a2e:86d3:0:b0:306:10cd:7bbe with SMTP id
- 38308e7fff4ca-307aa37d20cmr37648251fa.4.1738593924922; Mon, 03 Feb 2025
- 06:45:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GR+ZLyd5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738598762; x=1770134762;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=GMxT679nrKOSVT27eHqv8mA9W6VoZ8CApmuTH/wJ4xE=;
+  b=GR+ZLyd5jQtE4YunCqteLgXEumce+Ow4hgdfpd3oisrwTMmlUnC1VqlJ
+   T9LhFgq0xmuwMLL2wzlr8WAfPeK2WaiiHg4gSJogMuvjGuhEd6Hz6U/5O
+   wHRudSVlGnQD1tjei1Clx3UvuIAmLSxJQVon0ZjdwvnHaIKrFc9XlUT7c
+   fcuo9HAeD5yfKczSBhfW50leBGJ/1f/m5GEPs6sJVVuT7BKvXL6Hr+gfG
+   c3zpbTEUp3KHS4w/j/C8v/Y6j3RbWbezjkA115DaDMwtUVRiSODpvVFIx
+   Wp5MotP9PawYobcRNa9oCx58HvfmzhtSBhEMQTPsiKmR8CDV5vVJyU/Vk
+   A==;
+X-CSE-ConnectionGUID: Jmabskc5RHm0eag1emrTFw==
+X-CSE-MsgGUID: 4VIs8AoZTjK84o898vmtnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50088713"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="50088713"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:06:01 -0800
+X-CSE-ConnectionGUID: M/1ygkzARymibtrYrdm3jQ==
+X-CSE-MsgGUID: +LjIrMpMQMaE/mSZYcsywg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="141200470"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:06:01 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id F0EBE20B5713;
+	Mon,  3 Feb 2025 08:05:58 -0800 (PST)
+Message-ID: <b4fcdcb2-455d-4523-9a92-14dc9cc8be2b@linux.intel.com>
+Date: Mon, 3 Feb 2025 11:05:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737971364.git.dvyukov@google.com> <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
- <Z5m2hdR3HZxIdhWR@google.com> <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
- <Z5sccIPaYBeB_yab@google.com>
-In-Reply-To: <Z5sccIPaYBeB_yab@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 3 Feb 2025 15:45:13 +0100
-X-Gm-Features: AWEUYZlCJLC2kCWpCd-EenFvSdwDDoS87usTiieBHkpVbB4VVnJRh8jqXqhYW10
-Message-ID: <CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-
-On Thu, 30 Jan 2025 at 07:30, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Wed, Jan 29, 2025 at 08:12:51AM +0100, Dmitry Vyukov wrote:
-> > On Wed, 29 Jan 2025 at 06:03, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
-> > > > Add record/report --latency flag that allows to capture and show
-> > > > latency-centric profiles rather than the default CPU-consumption-centric
-> > > > profiles. For latency profiles record captures context switch events,
-> > > > and report shows Latency as the first column.
-> > >
-> > > It'd be nice if you could add a small example output in the commit
-> > > message.
-> > >
-> > > >
-> > > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > Cc: Ian Rogers <irogers@google.com>
-> > > > Cc: linux-perf-users@vger.kernel.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > ---
-> > > [SNIP]
-> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > > > index bc4c3acfe7552..2b6023de7a53a 100644
-> > > > --- a/tools/perf/util/sort.c
-> > > > +++ b/tools/perf/util/sort.c
-> > > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
-> > > >       const char              *name;
-> > > >       struct perf_hpp_fmt     *fmt;
-> > > >       int                     taken;
-> > > > +     int                     was_taken;
-> > > >  };
-> > > >
-> > > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
-> > > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
-> > > >               return -1;
-> > > >
-> > > >       hd->taken = 1;
-> > > > +     hd->was_taken = 1;
-> > > >       perf_hpp_list__register_sort_field(list, fmt);
-> > > >       return 0;
-> > > >  }
-> > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > -int hpp_dimension__add_output(unsigned col)
-> > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
-> > > >  {
-> > > > +     struct hpp_dimension *hd;
-> > > > +
-> > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
-> > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-> > > > +     hd = &hpp_sort_dimensions[col];
-> > > > +     if (implicit && !hd->was_taken)
-> > > > +             return 0;
-> > >
-> > > I don't understand why you need 'was_taken' field.  Can it use the
-> > > 'taken' field?
-> >
-> > I've started getting failed asserts in
-> > perf_hpp__cancel_cumulate/latency when removing columns still linked
-> > into sort order list.
->
-> Ok.
->
-> >
-> > I've figured out that columns we implicitly add in setup_overhead and
-> > perf_hpp__init must match exactly. If we add one in setup_overhead,
-> > but not in perf_hpp__init, then it starts failing.
->
-> Right, I don't remember why we don't have unregister_sort_field or let
-> the perf_hpp__column_unregister() remove it from the sort_list too.
->
-> >
-> > Taken does not work b/c there is reset_dimensions call between these
-> > functions, so they actually add the same columns twice to field/sort
-> > lists (and that prevents failures in
-> > perf_hpp__cancel_cumulate/latency).
->
-> I see.
->
-> >
-> > Initially I've just tried to match logic in setup_overhead and in
-> > perf_hpp__init. But it turned out quite messy, duplicate logic, and
-> > e.g. in setup_overhead we look at sort_order, but in perf_hpp__init we
-> > already can't look at it b/c we already altered it in setup_overhead.
-> > That logic would also be quite fragile. Adding was_taken looks like
-> > the simplest, most reliable, and less fragile with respect to future
-> > changes approach.
->
-> Maybe just remove it from the sort_list.  There should be no reason to
-> keep it in the list.
-
-I've tried that (and removing setup_overhead entirely), but none of
-that yielded the same result.
-
-E.g.:
-
-perf report --sort latency,symbol
-
-currently gives intended:
-
- Latency  Symbol
-   4.37%  [k] native_queued_spin_lock_slowpath
-   2.71%  [.] _PyEval_EvalFrameDefault
-   2.18%  [.] iterative_hash
-   2.00%  [k] clear_page_erms
-
-but if I remove was_taken logic and make perf_hpp__column_unregister()
-remove from the sort list, I get:
-
-Overhead   Latency  Symbol
-  38.17%     4.37%  [k] native_queued_spin_lock_slowpath
-   0.86%     2.71%  [.] _PyEval_EvalFrameDefault
-   0.47%     2.18%  [.] iterative_hash
-   0.68%     2.00%  [k] clear_page_erms
-
-So, so far the current version of the code is unfortunately the
-simplest version with intended behavior that I come up with.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] perf hwmon related improvements
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+ Weilin Wang <weilin.wang@intel.com>,
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+ Junhao He <hejunhao3@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250201074320.746259-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250201074320.746259-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-> > > > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
-> > > >  }
-> > > >
-> > > >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-> > > > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
-> > > >       if (sort__mode == SORT_MODE__DIFF)
-> > > >               return keys;
-> > > >
-> > > > -     keys = prefix_if_not_in("overhead", keys);
-> > > > -
-> > > > -     if (symbol_conf.cumulate_callchain)
-> > > > -             keys = prefix_if_not_in("overhead_children", keys);
-> > > > +     if (symbol_conf.prefer_latency) {
-> > > > +             keys = prefix_if_not_in("overhead", keys);
-> > > > +             keys = prefix_if_not_in("latency", keys);
-> > > > +             if (symbol_conf.cumulate_callchain) {
-> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
-> > > > +                     keys = prefix_if_not_in("latency_children", keys);
-> > > > +             }
-> > > > +     } else if (!keys || (!strstr(keys, "overhead") &&
-> > > > +                     !strstr(keys, "latency"))) {
-> > > > +             if (symbol_conf.enable_latency)
-> > > > +                     keys = prefix_if_not_in("latency", keys);
-> > > > +             keys = prefix_if_not_in("overhead", keys);
-> > > > +             if (symbol_conf.cumulate_callchain) {
-> > > > +                     if (symbol_conf.enable_latency)
-> > > > +                             keys = prefix_if_not_in("latency_children", keys);
-> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
-> > > > +             }
-> > > > +     }
-> > >
-> > > Do you really need this complexity?  I think it's better to fix the order
-> > > of columns in both case.
-> >
-> > This is sort order which affects ordering of row, and order of rows is
-> > basically the most important thing for a profiler. If we fix the
-> > order, it will be showing completely different things.
-> >
-> > "latency" and "overhead" are equivalent with respect to their
-> > fundamentality for a profile. So we shouldn't be adding any of them,
-> > if any of them are already explicitly specified by the user.
-> >
-> > For example, the command from tips.txt:
-> >
-> > perf report --hierarchy --sort latency,parallelism,comm,symbol
-> >
-> > if we prepend "overhead", it all falls apart.
-> >
-> > Or for 2 default modes (normals and latency) we want "overhead" or
-> > "latency" to come first. Prepending "latency" for the current CPU mode
-> > would lead to completely different ordering.
->
-> I see.  You want to sort by overhead in the default mode even if it has
-> implicitly-added latency field, and to sort by latency if --latency is
-> given explicitly.
->
-> I think it can be done with the following command line.
->
->   $ perf report -F overhead,latency,parallelism,comm,sym -s overhead
->
-> or
->
->   $ perf report -F overhead,latency,parallelism,comm,sym -s latency
->
-> IOW, you can keep the same output column ordering and sort the result
-> differently.  But I'm not sure if it'd make the code simpler. :)
->
-> Thanks,
-> Namhyung
->
+On 2025-02-01 2:43 a.m., Ian Rogers wrote:
+> Try to do less scanning of files/directories with or without hwmon
+> PMUs. Don't merge all events with the same name, only merge those on
+> the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
+> suffix or wildcard matching. Refactor uniquification so the evsels
+> with the same name as other evsels in the evlist are uniquified.
+> 
+> v3: Address potential segv and styling nits from Kan Liang.
+> v2: Rename ignore suffix PMU name matching that is really a
+>     wildcard/prefix match. Use a proper ignore suffix when not merging
+>     counters purely on name.
+> 
+> Ian Rogers (5):
+>   perf evsel: Reduce scanning core PMUs in is_hybrid
+>   perf pmus: Restructure pmu_read_sysfs to scan fewer PMUs
+>   perf pmu: Rename name matching for no suffix or wildcard variants
+>   perf stat: Don't merge counters purely on name
+>   perf stat: Changes to event name uniquification
+> 
+
+I didn't do much tests on the hwmon. But it changes the common codes
+which impact other PMUs. I did tests mainly on core, uncore and other HW
+PMUs on a hybrid platform. No regression is found.
+The patches look good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+>  tools/perf/pmu-events/empty-pmu-events.c |   8 +-
+>  tools/perf/pmu-events/jevents.py         |   8 +-
+>  tools/perf/tests/pmu.c                   |  85 ++++----
+>  tools/perf/util/evsel.c                  |   4 +-
+>  tools/perf/util/evsel.h                  |   1 +
+>  tools/perf/util/parse-events.c           |   2 +-
+>  tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
+>  tools/perf/util/pmu.h                    |   7 +-
+>  tools/perf/util/pmus.c                   | 146 ++++++++-----
+>  tools/perf/util/stat-display.c           | 111 +++++++---
+>  tools/perf/util/stat.c                   |  13 +-
+>  11 files changed, 424 insertions(+), 217 deletions(-)
+> 
+
