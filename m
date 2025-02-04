@@ -1,92 +1,154 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EB31FAC5C
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 22:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11341FF7A5;
+	Tue,  4 Feb 2025 23:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738707818; cv=none; b=RHBZ8QedDmpsGQFVOr+VMhIDvuOodSMexXksR56yBgz0puQ/CbUvJ8iQ86Z2zV1ea/r/EmDKuGg+5Tx63udE0+R+8DLmRMHBMjxxPqq1mZxJOPBDRebJokm7laK54mbsatTIMbteEVK2rRsE80eMdSiNmCqAsAkgUB6v/1+evKA=
+	t=1738710177; cv=none; b=a9rHeG1jir3xBbmRh4SF7FD1FuyJD3hdh3AdTJ1wU/mleYi+cJultz7LJIm0AV/iqX1u8xBSVKmFasW/pkJv6S3HB9IXiaZHLJs8psh/Sxvzt01bOmEaP1zOEnXRE4UCivzAGCMMqM6XI2nC9prhoY8lDJse3wslLfj2VpoDS70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738707818; c=relaxed/simple;
-	bh=NL+88Ui5xhbUBhQW26o2YlcV12I+N2LlNIyfy3OECHM=;
+	s=arc-20240116; t=1738710177; c=relaxed/simple;
+	bh=4chpXDmqz5lXX5/+XxyEMN/H71iHm9gxiF5XFQT7cTY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=nKtcihOXkGDvTs8mtd52OKalORTJ29j2UgjLFVPx8GjGX4vazG+XF21jGDpAZ7wsSqZVrW3LfSCwo0/HusHbsY/ZGZfhuyixtZxsusJkBY+3waBuahA/Sy+f0rZvpJq2Qrcof+6NVpK7NJ0EvXl9aEmasXf2vTd231nZcwdHDXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V0AoCC88; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Lo4pojSp+KSSj6KBxczUz3a0cMhaunv7JC70dnvJGjZpRTI24+lXhIgXOwV4IxzcWb5OfXa9ofH8FgAg314t8Z3FPxat0wfDG6+sDzXN4yspUaK1e1gXAqzYriv0QD+KLRymPM2AeF10Kjo9S2MjC3mUAyNKfsVxvR2l0qYgido=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUk8M4eu; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V0AoCC88"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so170335ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 14:23:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUk8M4eu"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38db10ab86cso570510f8f.3;
+        Tue, 04 Feb 2025 15:02:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738707816; x=1739312616; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1738710174; x=1739314974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NL+88Ui5xhbUBhQW26o2YlcV12I+N2LlNIyfy3OECHM=;
-        b=V0AoCC880+nd1NCKRsOmMaA1DX0lXUAvEL/WaeBt13pJE9JpeqYqEbnO7dTQeNCe3z
-         T5jBn6i1jLvOO0ncKyYJMR+H2pGyBnvslST+3NjDZ+q4EXsSj0BA2IUPI+fOkccuLq9a
-         w5SA9mnDADPEY8lDbBGcCjsG3cO9naw4gk9HDlokOd+Z18XTalMZ44f0o+sP4P4n46JE
-         65roqge1BC3tH2WI/ncsz61/6dR0kGqyCa/bEtJuMhB3yyw1q64awVRUfxm8XQe3nBTv
-         VqMo1vmAH/5gc6ZzRXcDBMFJBp0zu/r3olOW82TKSJzZIRp9D7Jo/m4adlmt3QAMYdk7
-         1APw==
+        bh=IhWUg+d3sCFwJhzK5U92SB6xZl56i8PiqJiND+AD1bg=;
+        b=dUk8M4eu1llzfiD1mVJ6Ij7draREF0DbUyY0v2MifbdaN9pfJ1+id0C9F8RBENijmR
+         Lde0wrIb1iMsfbPIQ30jSp8aAlyuJrUu4YcLODXbmkNTrXeY+jCqf+hjBg7Emj4/tLy2
+         iZPhITz8DnKBUwsgb86Y8/VHKNa9XAUrfCJkMAiH/3nsCRIZK0v5etZBA+xL3vLv7sKh
+         TYI5DYYfgDJtvfhiN3KRe+D7Ngz7wVgNh2PP2icoOCWFRP4w2Gufo599ikK74FhwsVI+
+         q/bbYXdb9vbRRaIkOa1+2fHNmolurGOcZ7ueDLSL8vwB09GAaU6hMKe238SMFRhYbz4S
+         yZlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738707816; x=1739312616;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1738710174; x=1739314974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NL+88Ui5xhbUBhQW26o2YlcV12I+N2LlNIyfy3OECHM=;
-        b=r5yyqljvA/AG0RD/X2NGcRbF+KqyVjcauvyZAl/X9XuTNmKm6+jKDUEHQLvZgYvM2C
-         +SvHM5410Ih6SercLQgE4DPyfv/PzVYPjW8EGRsijNU0ZsGaItzE1TUkzCYybPCBVlk8
-         8DAb4yZG5lJT7R73eel59YeoCfQMrTb/lYkfSzPdi9Bl8vqm+Ro2+tX6hl4BBh8N7hj/
-         4FV/SO/+YNFHTJwJiQEDFPpOjvnfEpdSmSvUSMzX55rFSc0Z2m2XqUSFez/SEO96sblf
-         HNw7iPtJ+w9IoGt0PrSqN/9wxTBtIVqmcOo9o1kGhwGznQaH3tWbwwpaT7Dtd1dxkzOv
-         PhSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw+74IuJ6itFQjXIMoBh18ehqM42akERRWeD+75XlzQmXRaVMX1VvhblJHF03nQ5dxFyhcNnfwxSwbUipyPjqP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0X7Ma5IPgAJUmeXVdxESxiihqU4+WuyjawfiuN4InLrUBUudg
-	mYW+YDPVhbckgBE/v+26ulF5Plhl/S6TEUC5UPiOgde7zFDOmbTjrFAn43g0ZvtlOEK4UurNz3t
-	tibCu3GcY/FG1MT6nrHagDhRFtkJhbfxdHnz8
-X-Gm-Gg: ASbGncsMlbAzZj1PDAQ1+LXWkYpCDX8c7XTfpEilgKHKKN0RWkBN3CeNcauBhFP7DI7
-	pWRRaUlUugVo9lIywTdwezaQZmHXsCuZ3IW8kWoWlsvklq5CuJqL0Dgv2SeleVV2nurYkNCef3/
-	0tIyQdLagclTwHCMKck0QlRBPo
-X-Google-Smtp-Source: AGHT+IGKBd2X6Idca1/mgKT1zkDMQR9uqrUOqhVDlQt25SdyHg7XmFYSkgsNjaL8rr/gYT1SPEFN3J2argG4vQccbG0=
-X-Received: by 2002:a05:6e02:308c:b0:3ce:464a:fd2d with SMTP id
- e9e14a558f8ab-3d03fc66229mr6700015ab.28.1738707816383; Tue, 04 Feb 2025
- 14:23:36 -0800 (PST)
+        bh=IhWUg+d3sCFwJhzK5U92SB6xZl56i8PiqJiND+AD1bg=;
+        b=BpScS6wa6YJRZWtOEY0csTwsg4fwINdiTT75V7F3LN6V4jALuK4nNrWhDcnLbYiGNl
+         zXNpv9uRrYsqs7MHF9z8x8JraNQiUISOSAYnrrgvrXQxkvyApe/B24GWaudccvv8Nvrb
+         zer1uPzJjjVJEgfFeQL4EMGXQEqALgr56LhXGOMbJmDRkAM6iPhr3wBa0QU4DsnoPl0d
+         MvMEL0xaFCkBzFj12oivU/UEefiqSA1TO2oFHZxQzsGqqEynwiWrwYDgvIDvcMiy7S+8
+         SMhXR7MJFdee8ngsIaj8wGEAZp1aZ65li822BVEKb31n6PXd3qaqB0YBgxzNYBxrRg4+
+         UqSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAnqCiaGVWifGgKYoB7x0gPXtO320m4pqcVol0p13/YpS6aapXP+M174AN2/i7WfPfe49Z8Z1R+A/II7aa@vger.kernel.org, AJvYcCW+aenhEO1n4RP9C1dUOxI1aWouTSN08kzUcI9g6x97Q90Cv/QwoZDg82TYbwIeuuIVLuGplnxXvZI9GCB6Bn96gD8p@vger.kernel.org, AJvYcCWNE8e38yv8wWzFJzoV/VjwG4mmNYLvLtvoN5w/TXGYUfpuwrrUN0wFmToYlyG4MmWVsE0oj08/0EY=@vger.kernel.org, AJvYcCWQjQKMWeFHjdyU6SwWuizR6nGKzjnbms51D13USRj7drF1es7dd1BpqXEFdGwiA8CU/OY=@vger.kernel.org, AJvYcCWYg2xlEOlBmTmp4fETDPmxigchcYB1vmLR1/5ho1xDh+9kbwL7OK7PubYDlOkOnZlbrDhlvd8tkXp6Dp6MC55q@vger.kernel.org, AJvYcCXFRfdv7qTzU9MjbaagtfI1PXvCCnCniPn1Oq0vJ+2jqB1sUFPRXBSN9n/UDGv1dMz1bfECq11kZWW4Uf1BkkXQqQ==@vger.kernel.org, AJvYcCXqkSQdQYBluuTHTrmrFVE7KGTREFyeS4iRQ3oIN9/0uFYYrG8ykQB2y9ZYOtIMnY5M6gedbUxMav27lmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydjOCPiah1msFc729uQoKSoVZFoTanL8+9y1AV4SQJIXD+e8z5
+	Sydwq4vueWnJ5841tSBFBgJgeBoRM8WTPejTo1fzv+J75oC42FWqVRnKAZOhHtARJMPQE+vPNcS
+	TuNFchsJ0XZCEwkMcpwGGANri5jM=
+X-Gm-Gg: ASbGnctPPPItwq0EVanpqJGT0frvj3gXJtv4oDmYFIF4giQTq/vF/JBBMXVVS50FWv1
+	wbDvidjBukLfLrIDUhPzD6ITkn6I9BrmAo3misoKiRSdN2oNwwprcvuwk7SEhCltw3ZB2RSCK
+X-Google-Smtp-Source: AGHT+IGyAesYgSc23Slj9Jv3XtZGRWcCp0H3F9Kqsj8a9rDodsyQAVoifJDYZlGi89eBGwL+TzarCw79qmfJ114u8NM=
+X-Received: by 2002:a5d:69c8:0:b0:386:37f5:99e7 with SMTP id
+ ffacd0b85a97d-38db48f3787mr319907f8f.33.1738710173606; Tue, 04 Feb 2025
+ 15:02:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109075108.7651-1-irogers@google.com>
-In-Reply-To: <20250109075108.7651-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 14:23:25 -0800
-X-Gm-Features: AWEUYZkFyU4srdNLncxGi-Vj2Ed-9pI1VtzBEz0G0sX0lENqzqw5jjQUz597s0c
-Message-ID: <CAP-5=fXL=nS1-m1+gJsYfWfvyn0ouikX3=RvyKdiM7+ewS9-mg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] Python improvements for a real use of parse_events
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost> <Z6JksXDRh8OSAh-u@google.com>
+In-Reply-To: <Z6JksXDRh8OSAh-u@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 4 Feb 2025 23:02:42 +0000
+X-Gm-Features: AWEUYZlmDbliSpI2sm1GIy7yJu4eHOxWwrFAjie_1pp1QQTtFuZzNJaDrMgxEhU
+Message-ID: <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	Linux Power Management <linux-pm@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 8, 2025 at 11:51=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Feb 4, 2025 at 7:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> While parse_events access in python was added, it wasn't used by any
-> python script. In enabling this for the tracepoint.py script a number
-> of latent bugs and necessary improvements were discovered.
+> Hello,
+>
+> On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > On Tue, Feb 4, 2025 at 12:10=E2=80=AFAM Charlie Jenkins <charlie@rivo=
+sinc.com> wrote:
+> > > >
+> > > > The quiet infrastructure was moved out of Makefile.build to accomid=
+ate
+> > > > the new syscall table generation scripts in perf. Syscall table
+> > > > generation wanted to also be able to be quiet, so instead of again
+> > > > copying the code to set the quiet variables, the code was moved int=
+o
+> > > > Makefile.perf to be used globally. This was not the right solution.=
+ It
+> > > > should have been moved even further upwards in the call chain.
+> > > > Makefile.include is imported in many files so this seems like a pro=
+per
+> > > > place to put it.
+> > > >
+> > > > To:
+> > > >
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > ---
+> > > > Charlie Jenkins (2):
+> > > >       tools: Unify top-level quiet infrastructure
+> > > >       tools: Remove redundant quiet setup
+> > > >
+> > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > >  tools/bpf/Makefile                        |  6 -----
+> > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > >  tools/build/Makefile                      |  8 +-----
+> > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > >
+> > > Nack.
+> > > libbpf and bpftool are synced independently to github
+> > > and released from there.
+> > > This change breaks it.
+>
+> Sorry, I overlooked this part and merged a change that touched the
+> common files into the perf tree.
+>
+> f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile=
+.perf")
+>
+> Unfortunately, it's already in v6.14-rc1.
+>
+> >
+> > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > don't build quietly so this was an attempt to fix that.
+>
+> So I think you will need something like this for v6.14.  Again, sorry
+> about the trouble.
 
-Ping.
-
-Thanks,
-Ian
+Just revert f2868b1a66d4f40f that created this mess.
