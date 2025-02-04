@@ -1,115 +1,106 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230E0212F9E
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 17:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5588D216E12
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 17:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691409; cv=none; b=qAm6g2TyskNKtA5ih0sKNjuRqoSBpwfpiN30duU9m6TDxER9S8YwXAd1caB0/tMZUPl1M0zHy9fdfTgwKX2M4B4ajPI8i54GsYvV+ulMYitU40uwyCbDdPTXtd4y9/22JWhLLORnYfqIYGSy5OwjiHYTUaCJFiJ2dm8ns2NP/fE=
+	t=1738691816; cv=none; b=iLQfUZJKIeqgZlMqyUuu9crr1Dy1pEJ+wlNZg0tqNfoKAGVgoAnIDxKgnSsha8w7PWg2/t1QUWhvyjynZJSDDF/YY9BRRT45kqiQ0CRDhgz+xLRreaCOIXZvF48hcrw3sh9IvElB6zbP1e5I+nSwdMf0r1MenZogFrsFijWHjVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691409; c=relaxed/simple;
-	bh=e9lXk2KILvMrWAeBCb5anAWINuB4KplwAt5cSr6oTpY=;
+	s=arc-20240116; t=1738691816; c=relaxed/simple;
+	bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KYwtJdd6JAUtyNI1dm/xgcDtXrQlV9rOfHTC2muTcqomz4NmqedhYYhsHriWQLAzo9o92pEWzO6j78YyJaHbcwxfbPeKiQvJ7QRQgqFGPjJof3952d4I/rcfrSfxGWlWFHi4PvIUFetLbBPTSa8vt/WpHAJSn/6twxmf1NO1xFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i/ALBM7K; arc=none smtp.client-ip=209.85.166.174
+	 To:Cc:Content-Type; b=i4e9Oi2biK91WBdfA+YJIhWTnEYw5B52Q7tE4O13+lwTYD1IMfb8DZ1FxYe0taq54Xdvd0pzYodOtl/4xtgLOeRWdayI7TUibDDl4dQcIF0qlweePirIk7Uwf8l49EUXgHBCrZq4ce3Ok9F3N3wtM5qwYbhC/d4j/dpr8gR/hC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i6x9NV9P; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i/ALBM7K"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a814c54742so170585ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 09:50:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6x9NV9P"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so12555ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 09:56:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738691407; x=1739296207; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738691814; x=1739296614; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dXY9WAEJPwalZKXt5PSHz3ksNwPYvzUFx1AjklywXew=;
-        b=i/ALBM7K6FhY5d7da18+TZszr6w1j9tEETgzo6fe3gJaR9JdUU2OG+FCHpafCegYaG
-         OeAZDIVyn8lkB3VJ63X7atHdodE/xgYHX+ObTZ7PeRdApyMy0sw+lQOuc4FGklMt7yIN
-         8SvdEN4B0y7JeQ/fvWGGHqa/kksDcmuZYVIUhGHp3eVML9V4ZAbu/vb5Cq7S2hTQyQSq
-         6xWQypeckvs5DYlbo09fFy7D5XZBFy2whgmbXofeKyX+KwTt2VyuA4pFS1V7jaw+TWUc
-         O+gkWZVW6ThbNJ21kz2bUUu46NCeZAnI+iGptVHb3HQQWPZxGuLl2LcjfSANcj68aHjz
-         bARg==
+        bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
+        b=i6x9NV9PZxC/hxVZZp1y3iN0ax1w9CIJ68O47lGfKS7vJLkmiGnoiP3h4B1OC9MExR
+         jP1RucHlwzMd0THbuzCV4hbuH0TqDhygkLW7zLYQWBhLUfeMOSjAho0MJRUG74UwDsrl
+         PmZ5KdTx1WLdm0mGiHULJS1Lk0uvoeWw4RQ0GRk1XSRVeH4a2fSGD2kkCSIIC0CGtzUU
+         FnQJ1Lo3imk2KGdhe6ocTLs8yzWLG8kNnSEazoFWA/1hZNhFGfH6okSR15vljDxILOIr
+         frfbrHOrMWjW/Z59q3YtYU2+XNEHLZNmQRfEfWGca3fssok5+0xvdCAaK1FblnEqyWNg
+         vswA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738691407; x=1739296207;
+        d=1e100.net; s=20230601; t=1738691814; x=1739296614;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dXY9WAEJPwalZKXt5PSHz3ksNwPYvzUFx1AjklywXew=;
-        b=fX2RDNUv9KvEn7Z4I6nYLv9sQwUg/PrwOJqNOqDW12lGqUmBTv92eckF98HPgk3iBO
-         ODRIvPHmhkw4cs+rtjKpVMlWCx+wL/Mp9gErC6jNZSw66lCGCWJ9WkeDswkYvVLVXOUB
-         mzpLMDqmL8glr+cXPRkLqVipRe9F4qv9eUVMbU/pZBwvpanSRRYbdxL+LqYNh4Xzguz0
-         y6D1SBV02YZqwiTH31S6i2NVkqyT12vPj47QHg0AcmLE3SjYdcstieRxrULevj9qfH0u
-         GFpcx1HE9H8x+Hg8R8BW9EPAaxUF1xzQOHfbKivacH2oFwawPlKDTxUUbi6VpjsH3FN0
-         nQmg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8pMtAxKfWYidAiPahkkArx7WQkDisx4I2bVYkyGpdaPyKUyM8VRr9Ac9NAyWRTTXfVAmVQdwbrIKb8PxiFyx8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvwGp7QSA0QXW/F0HtviOPqY+DDyb+OBxvWyskvX76fWBrXJn/
-	YM5tY5q0UGYgL9wc22CFIrGcf9dG2w3HfSw62WeNJngcG8H5N4HQBE5r+HQKY4UqPFQyFMJZIrU
-	awtHgEZT9POuAwNZ872a2A/Oc4I6aZoxQtZ2K
-X-Gm-Gg: ASbGncvdO5gxt8a/mnrJ0kJqV7O/MPQZxyhkDG62lD0udUFbTkOK9v0yYrQfv64Iemg
-	yKHM/gC1ua6GN9w2x9JFQhlgjwKU1x2yXi4DKd3J6x86WgjXDWEL5UpBvNnwKYgOjMa6Pq3u/VA
-	Pw12IMA7G2CDspkduUz2LrxbI=
-X-Google-Smtp-Source: AGHT+IFTRfRedM8Hrqvn//iHW8JZF0D7oHcsYTwMHHSYCjttPyU6Am1/z8FDdTDsPZAay61ZfVic2tlmrAYU86w24no=
-X-Received: by 2002:a05:6e02:1985:b0:3a7:c721:57e2 with SMTP id
- e9e14a558f8ab-3d040f65d20mr3285835ab.21.1738691406906; Tue, 04 Feb 2025
- 09:50:06 -0800 (PST)
+        bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
+        b=nW+Ue58NG/khABogzDxBCP2Vkudeea/gmBu8n6oSt0/IjVUNxoEuTlGfK0Ar7nEFAe
+         q6/KN3jHL5Osbi8zeBil0DRpzLkOp8Yswwqi4z+YgNcbXAl0swjFKQIue5MZXPvqV8m1
+         dUM9t6UvPCYYl+nj2QWtgNjvFzkOqadmfPVsKjiC5BRFKmJulkq5LnAiRieq1OKaEdYl
+         cAmUZnlT/dj7nu+N80Z9oBwfMp9iNq+28hkx/5yRI9RVsb0Q/KbMd/Gvs4CZU4SPFqA+
+         b3tmSAN3IUhZRjqZicLRB//JatzPo5W81j902wGHWtUGeeuxlPTGKGI8VsgryN5YNR0i
+         i94w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgfJpcmI+oZ/o7eUDm2YE/hWKn8+RtiIoU1ELR+U/xtTWKOw6gtgAq3GOLl71vnL74UjdDBQrWlLm0sg2gfhTG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyCwCF+Oh/jH0jhM9eh7VaV99UfY80GYLe0a9SdkL6vWZHD5LR
+	casDbMfH25PgU+JKcoK8rr78v7v0zDupMSEgOfCWoE+PbKCEnjSco+soqSyZNMgkA2DBAkxe7QS
+	yHb16Jcbk1mZZH4gcIbUVsg4FZraCct93CAOT
+X-Gm-Gg: ASbGncvCakd62uI+CSsMCIQlJ7coEC9k7BUE3BqBpvhXSkUb0ZiW8s1zOkuA980Wfba
+	4BLTSWen4gaEs1RvMXmSz5DRz4B53OxcKcrcNcBin78h5SJpzN7BZSXVW/KCEYwb9rTW5TB548K
+	/6LdieJ85ofrYLIXfQltBK+ws=
+X-Google-Smtp-Source: AGHT+IG1acNH4dX8Vb0s5oxx9ddSfzVUNv/AaN82ZPUmm9fX6OxCbLVTvL2daR2maEwM0AH0L4ztS+4bA7GtmkxfApc=
+X-Received: by 2002:a05:6e02:1566:b0:3a7:c9eb:accc with SMTP id
+ e9e14a558f8ab-3d03fbfd550mr4313095ab.14.1738691814257; Tue, 04 Feb 2025
+ 09:56:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com>
- <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
- <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
- <2025020447-gyration-wireless-f7da@gregkh>
-In-Reply-To: <2025020447-gyration-wireless-f7da@gregkh>
+References: <20241215181220.754822-1-howardchu95@gmail.com>
+ <Z2CJW0vFT005gmIe@google.com> <CAH0uvogp4GB6ZkB=79wCNVtOhsGw-aofzGmW6nPc--b=g-D9OQ@mail.gmail.com>
+ <CA+JHD92xXH=6K0-imdObf+dw3=B0uiGdFH16DO3ArdHv3r1Zzg@mail.gmail.com>
+In-Reply-To: <CA+JHD92xXH=6K0-imdObf+dw3=B0uiGdFH16DO3ArdHv3r1Zzg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 09:49:55 -0800
-X-Gm-Features: AWEUYZk3nRfzq951X9O4C_tXcKqwof2dziDIaNme5_Y_gVu_IZvGD-ODLAPYLVs
-Message-ID: <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephane Eranian <eranian@google.com>, 
-	Vince Weaver <vincent.weaver@maine.edu>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>
+Date: Tue, 4 Feb 2025 09:56:43 -0800
+X-Gm-Features: AWEUYZmt0EhyS_vNxi6_NAMLvcI8PJ4wAkE-Tn2ZgXvM9XCRHXIsR_7itjC3TSI
+Message-ID: <CAP-5=fXRBssmhBZDTbk0=0_qzo6R6f5Kg4BGnE9M1AA2viR3=Q@mail.gmail.com>
+Subject: Re: [PATCH v14 00/10] perf record --off-cpu: Dump off-cpu samples directly
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 9:12=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Mon, Dec 16, 2024 at 12:55=E2=80=AFPM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
-> > On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
-> >
-> > >
-> > > It seems that the majority of the perf code IS looking in the correct
-> > > place, just mem-events.c seemed wrong.
-> >
-> > I hate to tell you, but other places in userspace are depending on the
-> > current setup.  libpfm4, used by PAPI, is looking directly in /sys/devi=
-ces
-> > for pmus and will break with the changes you are planning.
->
-> Then that too needs to be fixed, sorry.  Again, devices can, and will,
-> move around in /sys/devices/ you can never hard-code any paths there.
-> Any userspace code must ALWAYS be able to handle that, that's a sysfs
-> requirement.
->
-> And do you have a link to the source for that code?  Good news is that
-> if the code is fixed in userspace, it will work for any kernel (old or
-> new).
+> Now it's my turn.. ;-)
 
-+Stephane Eranian
-
-I see use of /sys/devices in at least:
-https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/pfmlib_perf_e=
-vent_pmu.c
-I imagine it isn't a big job to clean it up.
+Perhaps this could land?
 
 Thanks,
 Ian
+
+> On Mon, Dec 16, 2024, 5:49=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>>
+>> Hello Namhyung,
+>>
+[snip]
+>> On Mon, Dec 16, 2024 at 12:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+>> > Thanks for your work and the persistence.
+>>
+>> I think you misspelled 'procrastination' :). All jokes aside, thank
+>> you for the reviews=E2=80=94it=E2=80=99s much harder on your side.
+>>
+>> >
+>> > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+>> >
+>> > Thanks,
+>> > Namhyung
