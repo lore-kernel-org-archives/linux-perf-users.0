@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2855215F4A;
-	Tue,  4 Feb 2025 17:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797722163AE
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 17:26:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689967; cv=none; b=LhixwZyfBXYTo8zQC84ojmVHSLBQANoJzgtChFlCj9+piYWZwT9fAVy2iAr7UzE4TyeKT8gnzaYOyM6VKaIaitqzUV9E4VXwn6evExZAPhuQkCWhflSIPIGW4g17n5heADrabQa5OTtPGE+SU5fAO0qdAlm2DJk4r+ZLxh0GEtU=
+	t=1738689968; cv=none; b=uugVvqmQd8gqRsURFpfHtQz4uxVbeGRjMX02PCJ6VDxnR75bs4ymiF/fajvsVoVwz0xjskk7fVey7zXm7elpX6w/oRSxzHS/FKizMKW5mY0mHpYYc6jkALx+3XmGsmacmN5REnZeUCzkmxLiJP0+pl5PLy9Ilc2bLTKSPnL4LzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689967; c=relaxed/simple;
-	bh=+AHruaIUOZFLWqMc+ElaINCkYXUbqogkFO1qg8qSoIk=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HZ8EVJNhcXiH1VQu1sk7GTdytIrK/gd36EKy96sltD+w/sQxXhEbFsDhQ922mRpW4WWIIBKJ2lGDzjGhMUBL/l3OdzThK3VA08SNX2LZOcNAYeM1Siq0bSOnuHVW8bDDYiq5iyCvAYiTOCWyM+CrqdsTdo8AZMpJNgO+nCt4VV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcjpDWPc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738689968; c=relaxed/simple;
+	bh=0YzfeZdjLY9NVB3hSD+K0c0P5Etexu/0jXDH/iRQvJo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IvqDcbKhUJmbJEumS2ybmzjridfXEZHU0pHtGG1Ekx7VQyLfxlyrRJBk9S1tXemxmeutO1jSEhmRTuKaGKatMv0t6gTb9IHk4lBvh7W1Arj1DnqDh0xWoRI7FVFVWcEKqkwN2OUkO6ws2La1ah2+JHJxKrRMfYfydy4ijaHCghY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIEpWhsP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcjpDWPc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777ADC4CEDF;
-	Tue,  4 Feb 2025 17:26:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIEpWhsP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43267C4AF09;
+	Tue,  4 Feb 2025 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738689967;
-	bh=+AHruaIUOZFLWqMc+ElaINCkYXUbqogkFO1qg8qSoIk=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=KcjpDWPcRBcTmJQvo5GqEiOUEl0fBHag3mmS09x2MiA9t7BTbvd5OVk5G/wwj19h0
-	 Mko4yyxkMm20xHHxVA88Hi9BiuzziXNgbu1V8MLu8oTyhHmIEBznKa5lHGQMDPoJza
-	 w2fEKuQGd1MIj9CLGrLMNWRVv52zh1FiYdni5wH/4CBJigFKTW5ILH/5MQRp2jtH25
-	 FSe8Y8Ay55bJpa7vZCcbjqjtcGWiqqI7G3ZpJiPFDcREtnad3kPXo2UJ8s7TXLVkUh
-	 8iMzpuWiJp96zD0rYrO/VQkTTAXQl2vAn5BQp0hqP4F0MRKu8sU/5j0FI9FY0XHP3d
-	 C059IRMx5GhIg==
+	bh=0YzfeZdjLY9NVB3hSD+K0c0P5Etexu/0jXDH/iRQvJo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=PIEpWhsPq/eR+z5UJhI/TWhzlHvtv226u92jC55JAIeS7hh4GZo284AvKG4fSOPsi
+	 a1G1FOrS49CGcHfruZNVingRUkuPTV0Nw1W0/TQvzQOKOW2i9K46V15ddM+pK8OLnY
+	 gAyQ3Q2+7ZXqUsTwlHrmbvvP6rZrextc9g/Tl8GWFLrKC58ZM/0+66JEuZauTtnKJt
+	 /vxpv1KsYTxs384zT8KLxKvPl7kMxUGXDrckDY/rJ0r34vOyqdTNoWSx5rjocGEdCh
+	 nhSzhpszuovMvxS73B7SdXqUmMIIdMUWZfNkOFyvyhA/84nL+jY6x4ayK16A7XOi0n
+	 Xz7n59NvBbZZg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
- Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20250130170135.5817-1-irogers@google.com>
-References: <20250130170135.5817-1-irogers@google.com>
-Subject: Re: [PATCH v3] perf test shell tpebs: Extra verbosity and
- hypervisor skip
-Message-Id: <173868996642.666026.11209605803068738109.b4-ty@kernel.org>
-Date: Tue, 04 Feb 2025 09:26:06 -0800
+To: mpetlan@redhat.com, acme@kernel.org, irogers@google.com, 
+ linux-perf-users@vger.kernel.org, Anubhav Shelat <ashelat@redhat.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+ dapeng1.mi@linux.intel.com, james.clark@linaro.org, ldoskova@redhat.com, 
+ kcarcia@redhat.com
+In-Reply-To: <20250131145704.3164542-2-ashelat@redhat.com>
+References: <20250131145704.3164542-2-ashelat@redhat.com>
+Subject: Re: [PATCH v2] perf script flamegraph: force flamegraph-report
+ script to run in live mode
+Message-Id: <173868996721.666026.14385333375077778002.b4-ty@kernel.org>
+Date: Tue, 04 Feb 2025 09:26:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,14 +50,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 30 Jan 2025 09:01:35 -0800, Ian Rogers wrote:
-> When not running as root and with higher perf event paranoia values
-> the perf record forked by TPEBS can fail to attach to the process. Skip
-> the test in these scenarios.
+On Fri, 31 Jan 2025 09:57:05 -0500, Anubhav Shelat wrote:
+> Currently, running "perf script flamegraph -a -F 99 sleep 1" should
+> produce flamegraph.html containing the flamegraph. Howevever, it gives a
+> segmentation fault.
 > 
-> Intel TPEBS test skips on non-Intel CPUs. On Intel CPUs under a
-> hypervisor the cache-misses event may not be present or precise. Skip
-> the test under this condition.
+> This is caused because the flamegraph.py script is
+> supposed to take as input the output of "perf record", which should be
+> in stdin. This would require passing "-i -" to flamegraph.py. However,
+> the "flamegraph-report" script causes "perf script" command to take the
+> "-i -" option instead of flamegraph.py, which causes no problem for
+> "perf script", but causes a seg fault since flamegraph.py has no input
+> file. To fix this I added the "-i -" option directly to the
+> flamegraph-report script to ensure flamegraph.py gets input from stdin.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
