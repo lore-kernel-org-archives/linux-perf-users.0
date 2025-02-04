@@ -1,112 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16D41A29A;
-	Tue,  4 Feb 2025 12:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C9E15D5C5;
+	Tue,  4 Feb 2025 14:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738672277; cv=none; b=TcCWsd2scMHopChIl5QTfDh9+WGJHaADfnu74z/wOaq6Skt9QxLYtqlccfVQA29SBYvgLsiqGH0RxV/zw7EzDouESwHsgxU/luErR1YuavMUtpguDppNWQjWj6XvDs0KnVdLmCaso4WLbbfOeh2AOpSIoJkFv2OkimtdZGlFvSQ=
+	t=1738677983; cv=none; b=sv6Ne7WRYZw717HanmuofKnMHJuIuXp2RJ9ls+PsWCAhXP/gbJdTWGUDjoJej6F0sf+2NbW0qg4W/TlRqetfS7niDRt3JY9+8HWNZt6sDCd80FEEjFl+aq0ju6a8DaFFBDSkeF5iQbCOPZNFdRCzhuzF8SpkBK1rUhjMUk4SOp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738672277; c=relaxed/simple;
-	bh=HxAkbimq7JMlFE4Bz6VGGVMJ41FYZ/9aQ2pKvT02Esw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMO4W9BX+zuVyJO3bXMb86Ckn+5NaYobfZ+cp2994zkowZe9i9V/UgeTYD5SkeZk+8YItZ5/IvFwFmovkFnCjV1I/fJ50v7dSuM8xhHgDvz8iylhd2tFLoDfA9UvKRHD3tEA3Qyy1KsorItjITQ6LLY1vhFJBzkuO7nv7y1NGbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1RMc+sA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738677983; c=relaxed/simple;
+	bh=xIUeRZOz538kb61SgWNqCAOCBZIbbvPiphScunkYzWY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MmVMRG2MLIGc2EzOSXiEswO+S4tQHT8K03DiARM7tJvu3+BPV4HzCy1I01pY7e3xtBrC8iux/5dAZ47lyqIhKIOqJ+AlaWllcZe+64s0eFle33CGBJCxjouj1O5Azq3vV+0Bc+261vtn/TxX7incYExWsxUL0QKucNH/akflI2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OSwkTGS6; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1RMc+sA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8E6C4CEDF;
-	Tue,  4 Feb 2025 12:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738672277;
-	bh=HxAkbimq7JMlFE4Bz6VGGVMJ41FYZ/9aQ2pKvT02Esw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u1RMc+sAdgAMKIR1SHTTGIWoqhMNZCsiXW5nE8tAkK8Di6Cq5IdJH7/TspTlBcWGm
-	 D3jUXaKZLiSmca8hxEFrh0eVKMKvHkaI3X+1/X0EkOzseoQ5DWai0zEQow2OyEL7x4
-	 c0AhJOjFsFwBfzL3qulTMUWB+HehKAq4tBzlxt8Yy0bpP5/mFW7vBoCKSpSmZMW0v5
-	 p5W8nYPz2Fj3Zp6vMHyQmEJ5PjLGFuOxn4b9BvABVXo326spebyZUOPO/mbhenYHTL
-	 6IZMQYK/IiGK9HNZtfwHukB54iB/Xu5rYM4JC4LDvdKB/y4NBYYXmUu0KQRK9AZAQC
-	 onNraGJMt8lkg==
-Date: Tue, 4 Feb 2025 12:31:12 +0000
-From: Will Deacon <will@kernel.org>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com,
-	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev
- devices
-Message-ID: <20250204123111.GC1063@willie-the-truck>
-References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
- <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com>
- <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
- <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com>
- <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
- <20250124122952.GB23438@willie-the-truck>
- <CAEEQ3wnTMfWSZRhTax3N60W=m3a=zxnJF6dOfiGnqJzBQs8WEg@mail.gmail.com>
- <20250127165156.GE25757@willie-the-truck>
- <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OSwkTGS6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738677982; x=1770213982;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xIUeRZOz538kb61SgWNqCAOCBZIbbvPiphScunkYzWY=;
+  b=OSwkTGS6AonnhZMSU9xK3glQfuAb943Himz9fYSSKT6PcVSIpORzZ7Fc
+   0zBh5QZAlNzNMROmfCqUrg/aRwTPjaNbrJIUgVL00uBwQonfcoXpFedW0
+   IMy0PaVuD4L/QU+uNqf4qAceJl/DbkP7uygYLLUgSQx00f9iqJYgi7pD2
+   PwJG5mG98GA/TSFx2YQfFfZxyKvgWUZcKXmwgWwpZjXnJaRvlQNC3IVVX
+   coIJIfvGq64MOmSjbKbJjE6CuPW/1Tchihg1QmiWcCWz8ph25RO7o60oA
+   9Sv9A+ge/L1ZwkvAh2M6v8SHvgJA6heCBrV/UXVF+KPzxypZSTwRmRkDk
+   w==;
+X-CSE-ConnectionGUID: j6NV1p//TuSONT9m7yP8pA==
+X-CSE-MsgGUID: SsLEpQLETISCY3jivE8fJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50198786"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="50198786"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:06:21 -0800
+X-CSE-ConnectionGUID: tS9l5w1xTFCZdpuxcMKIMA==
+X-CSE-MsgGUID: 9cqS46PnQCGPJ9OXrBiy9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111048095"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:06:21 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 40DC220B5713;
+	Tue,  4 Feb 2025 06:06:19 -0800 (PST)
+Message-ID: <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
+Date: Tue, 4 Feb 2025 09:06:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>
+References: <2025020304-chip-trench-4e56@gregkh>
+ <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <2025020426-spool-refreeze-2870@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 01, 2025 at 05:51:21PM +0800, yunhui cui wrote:
-> On Tue, Jan 28, 2025 at 12:52 AM Will Deacon <will@kernel.org> wrote:
-> > On Sun, Jan 26, 2025 at 09:54:35AM +0800, yunhui cui wrote:
-> > > On Fri, Jan 24, 2025 at 8:30 PM Will Deacon <will@kernel.org> wrote:
-> > > >
-> > > > On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
-> > > > > > >>>        vsec = dwc_pcie_des_cap(pdev);
-> > > > > > >>>        if (!vsec)
-> > > > > > >>>                return -ENODEV;
-> > > > > > >>>
-> > > > > > >>>        sbdf = plat_dev->id;
-> > > > > > >>> -     name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
-> > > > > > >>> +     name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%d_pmu", sbdf);
-> > > > > > >>
-> > > > > > >> A new name will break previous user tools.
-> > > > > > > This name isn't suitable. It can't clearly show which is the PMU
-> > > > > > > device. Userspace tools don't have binding relationships, like perf.
-> > > > > > > Tools must traverse PMU devices before use.
-> > > > > >
-> > > > > > The device is under /sys/bus/event_source/ which indates it is PMU device.
-> > > > > > As far as I know, most of PMU devices do not endup with a '_pmu' prefix.
-> > > > >
-> > > > > The point is the name "dwc_rootport_" is misleading, suggesting an
-> > > > > extra PCIE RP in the system. Best to change the name to intuitive
-> > > > > "xx_pmu".
-> > > >
-> > > > As pointed out above, changing the name will break userspace. So it's
-> > > > simply not an option, sorry.
-> > >
-> > > Could you specify what in the userspace is broken and give an example?
-> >
-> > Can't I just take the documented example from dwc_pcie_pmu.rst:
-> >
-> > $# perf stat -a -e dwc_rootport_13018/Rx_PCIe_TLP_Data_Payload/
-> >
-> > If I have a script that uses that command on a machine today, then
-> > applying your kernel patch will break the script, no?
+
+
+On 2025-02-04 5:16 a.m., Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2025 at 09:41:03AM +0200, Alexander Shishkin wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>>
+>>> In sysfs, for some reason, all pmu devices seem to show up in the "root"
+>>> of /sys/devices/ making for a confusing mess as these devices are not
+>>> really at the root of the system at all.
+>>>
+>>> Create a fake root devices, "pmu_bus" and place them all under there if
+>>> they do not already have a parent device set, cleaning up sysfs to look
+>>> more sane.
+>>
+>> Yeah, so what happens to the userspace that uses them via /sys/devices/*
+>> directly? Even I have scripts that do that.
 > 
-> Well, this is just a usage guide for the PCIe PMU and has no binding
-> with perf. In user space, the existing PCIe PMUs in the system should
-> be traversed first, and then perf stat/record ... can be executed.
+> You should never be doing that, as you have no idea what type of devices
+> are in that location in the tree.  You should be doing what the
+> documentation says to do, and look in /sys/bus/event_source/devices/
+> instead.  That didn't change here.
+>
 
-"should be". ha! You know we can't rely on userspace doing whatever we
-think it "should" do.
+Not just the script, the /sys/devices/ is also used in the current perf
+tool. For example,
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/mem-events.c#n192
 
-> It's okay not to change the name, but it's better to change
-> dwc_rootport_%x to dwc_rootport_%d to correspond with
-> platform_device_register_data(NULL, "dwc_pcie_pmu", ...). It'll be
-> more intuitive. What do you think?
+And the comments and document in the perf tool.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/pmu.c#n39
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-list.txt#n191
 
-No, as I said earlier, we cannot break userspace like this. Please stop
-trying to rename things that cannot be changed.
+I think it should bring big impact for the end user, especially when
+they still use an older perf tool and script.
 
-Will
+Thanks,
+Kan
+
+> Again, system topology can, and will, change all the time in
+> /sys/devices/ so expect that.  The only "stable" locations are the
+> symlinks in the /sys/bus/ and /sys/class/ locations, which is why those
+> symlinks are present.
+> 
+> Been that way for over a decade now :)
+> 
+> thanks,
+> 
+> greg k-h
+
