@@ -1,114 +1,154 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331D721D004
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 21:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A18204F9B;
+	Tue,  4 Feb 2025 22:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738704974; cv=none; b=dOPFMKZoRWiTGk2zhsyYpnx09rPkMYg44ROESy88Rp/3e5SpxlnDZjlZzTzRG1mzDO9BcP2kmHFYppD+xregQfzbxodxdMm+ATZSPF8yQNQEMOYkE5+3yBJhQHjqrmh2NVXqF4vaKr+zYFznyBw4DICfrisQ+Cs3QSQFi5xx4Bo=
+	t=1738706769; cv=none; b=qpuZutsygK0rE+Zs41yWME6m6MBNXGsYNDDIrV5xliPB/smI2zYO63QsPaBaWfBrF+nnZcluKa1wvh65OfhfQeZMJLuso06PoEyL0RK9buEveJu4Ys3cP0qciqCUNPxTf8BZu2dwacqu4vKBGV540neDXqT9QPoh8m2WIThWFeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738704974; c=relaxed/simple;
-	bh=bT7hvS/ZYY6Ak4uuMsfFoKJXK/xQE/NGQVPJdiI4sXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=e83D/uNg0GNkqEmFj5xikkBoiyP/2QyvKo4pqbajpFEuK6OaX5LpEdKox8QUQRwT/aYcQtIyMVuN9+mgcQ5Dx6XH06xfUvDAxuSX40ejmv0CHqxmhTJByly8Mapg16PAqSa6wy780E/nrzpwFcrYOwhPW0W3e7PF3GKveu8E7Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cwW+1/xf; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738706769; c=relaxed/simple;
+	bh=VxDhPrT+HEja1iMpSqKbmt39s6MisQxh39e0g7u5lUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jszgxfBklhR7pDjqth2Gq3On7Ls2t06ndixOwfGLJrfghLC/AMpQavUxZ+pLx2L5SH6RrbPOLmXSHbb1uCtsGnj1FAIRi7KhZ/lyQSre5T0FUXzF/YyE7raafenyVKKzQPFGHioabDqlNXUCA7WPXYqEseS5di4PngXqolWMnsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=eNiGNKfv; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cwW+1/xf"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so41455ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 13:36:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738704971; x=1739309771; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PyqnYt3RtRH3y8pJQLi994V0D5622X/Hs/LqyBZBhrU=;
-        b=cwW+1/xfjyV9fz+lfE439yRWMgHC8igpnR2zkM4nmboya2nB3F1bn9bTfh6aBIRzm+
-         I0Rg6LoEZnsbR/KNjBT6FAm69+Q96QcACx70HECK91cDcs3oON51u/Xq9FhzZqG7yqj/
-         YTetbyd5iHYVXRvLqAu7GLGQN1pV6uvEUxIsv1hafAYNhWotxxOF062sWoiOZWt/WPVo
-         kN/9PlemGq5drE04ofQm5INJa1XbmsJMrlHgAOcBaWhQwKnQDL/Bk3MHcv51/KVqnNN/
-         gU4GYZR1l1z09HruVEFE4ZSPdmBUoAVTcHSUOsDHszWoBnIj2vf8Xp4sJ2K9B7H6qHwK
-         pbKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738704971; x=1739309771;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PyqnYt3RtRH3y8pJQLi994V0D5622X/Hs/LqyBZBhrU=;
-        b=CcwQNQ9tP3+3nBUvyUcouWTongNJ8hk+sqfKJa+YfIhqs7SO8DJJhsk4dWaHwLZFVI
-         9HhPkoAzp9e+ZyyVTqZETu2l+FlUVsRjSNznLUIOo615ftApf7Ipppe6Vit2mfnnVgM5
-         Z/zC+5Fl03TDqcFryFVmAn3uBdWMpU5AJG/GRajGfqWwKrFRxH+7htan3qjNsnQbO33g
-         KFFVqR6E6AVHebEmxS/OBAeni+6KzVX9nK2me8cJ8ppva/UFd7b9GCFZXqrqCMiQGmaO
-         Bot0iPq/2vNdaxpa3qwp8Jj0YRkRl984wHGp4PcuOCThbx0JV1a3iv6y3qNUAHM5nqfo
-         hIOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXC2WV8UuJZ24tPpKZJIsQMAEfnqc05QUxHf3criqHZI9Ywv1Oj9sTgqqwJUM2vMu7pOUqOmkQT+yf+IBLmuh8P@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZUhs0TSZLQk+Pq8uu4lTJM2ohd+RaJvA/1LfS3tsfO4BN3ym7
-	TUmMUHjN45lKD9itK5whtWiD1bf2TYoixYGVRtOiJVZ4DQiy6SzCE3ZevcPTsbUIPCCSkTOjAsS
-	pf7VXWbZ8id2AY6IqD0QLFGOe8F4X8Qu+21Ie
-X-Gm-Gg: ASbGncsRX+3Ru6x3pRuPv/Anf95qB4Q9sVY/bN+0qkp3YXaY8D6yIIOYbeWeSyW2mfq
-	0vPTriGWdCxQVXPyM8Ws7syqxCIkBbpQ7hbSVFo3La1MLpzKSoJv8ubkQ8Aq2cPeKCCjtoz+PFj
-	qAqUgtXEkn3gXJNcFY76u0yNmP
-X-Google-Smtp-Source: AGHT+IEvGqk3JKeKBvN4xrv1v5kK2jNOZhYwNebudYCprfH6LzVQ0SNVV8Odwhxo5sNMhcUT7RwwwYMyoSfdIwaze6M=
-X-Received: by 2002:a05:6e02:3cc6:b0:3a7:6126:ca3 with SMTP id
- e9e14a558f8ab-3d03fc62e21mr5703915ab.24.1738704970969; Tue, 04 Feb 2025
- 13:36:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="eNiGNKfv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=cjRPmO318o0QM4HZgBJKyI73yAH7m/wyY/u5sUKuQ+c=; b=eNiGNKfv21bKpgEO
+	mjy9asILz2wHBWQLG+/umz4dsv/p8to8o0u7R0REaZhaFSZ3dCNJN8/W1S0AHXmFB8ie9dwYiGJFm
+	91g/QIk60sthKRdT7HVmcj1jv4z7pw2h5NcbzC0171bPbB7YqSt+JN79Mlg8HCyuCqGdNpAbVefFL
+	sBW8ZEt24JaYnteydwEjpVVbMXXRMpNOp8hgJgrW0nkdXBpvICznR//E2An9JGLlxCLAVoG3LydgB
+	IIDcjNQtTdW07TlFlssvhyczt/FrVkDQr98yKXjNTM4lZi9HV5/4JaI+w85R/ZQqpFgy7dswjBKAU
+	rAMT+b0sLlWFRkDi/A==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tfR3C-00Dbvw-23;
+	Tue, 04 Feb 2025 22:05:46 +0000
+From: linux@treblig.org
+To: irogers@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] perf: Deadcode removal
+Date: Tue,  4 Feb 2025 22:05:45 +0000
+Message-ID: <20250204220545.456435-1-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204213259.127939-1-irogers@google.com>
-In-Reply-To: <20250204213259.127939-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 13:35:59 -0800
-X-Gm-Features: AWEUYZke3Vm-fYtRYAFOY_ga8pxmzbMpH61s5zB0pRVidP-0XGKJYr2PjA6ZHOU
-Message-ID: <CAP-5=fXpuND+kNe16CJMETkMOW+__eQpB8No0ra5gyEcfqCCKQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 4, 2025 at 1:33=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Update the Intel vendor events to the latest.
-> Update the metrics to TMA 5.01.
-> Add Arrowlake and Clearwaterforest support.
-> Add metrics for LNL and GNR.
-> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
->
-> The perf json was generated using the script:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> with the generated json being in:
-> https://github.com/intel/perfmon/tree/main/scripts/perf
->
-> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
-> Weilin Wang <weilin.wang@intel.com> for helping get this patch series
-> together.
->
-> v4: Fix TSC events on hybrid mistakenly specifying the core PMU
->     inhibiting the use of the msr PMU.
-> v3: Fixes for hybrid metrics that were missing PMU. Update to the
->     latest events.
-> v2: Fix hybrid and Co-authored-by tag issues reported by
->     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
->     Clearwaterforest.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Sorry, forgot to add Thomas again.
-https://lore.kernel.org/lkml/20250204213259.127939-1-irogers@google.com/
+The last use of machine__fprintf_vmlinux_path() was removed in 2011 by
+commit ab81f3fd350c ("perf top: Reuse the 'report' hist_entry/hists
+classes")
 
-Thanks,
-Ian
+mmap_cpu_mask__duplicate() was added in 2021 by
+commit 6bd006c6eb7f ("perf mmap: Introduce mmap_cpu_mask__duplicate()")
+but hasn't been used since.
+
+Remove them.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ tools/perf/util/machine.c | 20 --------------------
+ tools/perf/util/machine.h |  2 --
+ tools/perf/util/mmap.c    | 11 -----------
+ tools/perf/util/mmap.h    |  3 ---
+ 4 files changed, 36 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2d51badfbf2e..321cc110698c 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -886,26 +886,6 @@ size_t machines__fprintf_dsos_buildid(struct machines *machines, FILE *fp,
+ 	return ret;
+ }
+ 
+-size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
+-{
+-	int i;
+-	size_t printed = 0;
+-	struct dso *kdso = machine__kernel_dso(machine);
+-
+-	if (dso__has_build_id(kdso)) {
+-		char filename[PATH_MAX];
+-
+-		if (dso__build_id_filename(kdso, filename, sizeof(filename), false))
+-			printed += fprintf(fp, "[0] %s\n", filename);
+-	}
+-
+-	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
+-		printed += fprintf(fp, "[%d] %s\n", i + dso__has_build_id(kdso),
+-				   vmlinux_path[i]);
+-	}
+-	return printed;
+-}
+-
+ struct machine_fprintf_cb_args {
+ 	FILE *fp;
+ 	size_t printed;
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 2e5a4cb342d8..ae3e5542d57d 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -266,8 +266,6 @@ int machines__create_kernel_maps(struct machines *machines, pid_t pid);
+ int machines__create_guest_kernel_maps(struct machines *machines);
+ void machines__destroy_kernel_maps(struct machines *machines);
+ 
+-size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp);
+-
+ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *priv);
+ 
+ int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 43b02293f1d2..a7ef4d8d57d8 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -356,14 +356,3 @@ int perf_mmap__push(struct mmap *md, void *to,
+ out:
+ 	return rc;
+ }
+-
+-int mmap_cpu_mask__duplicate(struct mmap_cpu_mask *original, struct mmap_cpu_mask *clone)
+-{
+-	clone->nbits = original->nbits;
+-	clone->bits  = bitmap_zalloc(original->nbits);
+-	if (!clone->bits)
+-		return -ENOMEM;
+-
+-	memcpy(clone->bits, original->bits, MMAP_CPU_MASK_BYTES(original));
+-	return 0;
+-}
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 0df6e1621c7e..4d72c5fa5084 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -61,7 +61,4 @@ size_t mmap__mmap_len(struct mmap *map);
+ 
+ void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag);
+ 
+-int mmap_cpu_mask__duplicate(struct mmap_cpu_mask *original,
+-				struct mmap_cpu_mask *clone);
+-
+ #endif /*__PERF_MMAP_H */
+-- 
+2.48.1
+
