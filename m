@@ -1,101 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC08158558;
-	Tue,  4 Feb 2025 19:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59005219A9D;
+	Tue,  4 Feb 2025 21:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738699147; cv=none; b=RCfM3CDqU9OD8nq0hBzsiTwLnNhe6IpXV6dANQmP/1JGsbcZ7mD+zKePsnpPZFHbRCpG3pEWobe5PisSK0cJLIleiquCXYnQ798v5USz6PLIVuMmzdTO41U7Ki+5qPRBXEQLF4Rzj1jadeQYu+tRZXWWtABjJZeUIvAt3WpZ8hM=
+	t=1738703357; cv=none; b=qbK9h8dlfZEiGz+0NtSVbBcBdgsdt4IaomRkrDlb0Ycqa321gjbcSY1zw+0Fw144BdcNdo9RfF5WL1+tzGY6n/wem9cSt4thRxSKJ11qjc/5UmZvRenosu9uuPiYEGLprmPC5lLhK3EeFhjyoLDRs6kot2fOAk9SgVKPVSpPNes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738699147; c=relaxed/simple;
-	bh=IWzaGhk9Qj3LEU460SqdAUhaJoZcr4o4neZbqWa19nI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABRwzrUssnk0IPpfWHH1BrEV7mnH1gKK78DaZB8XRIi3F1AemsXixwlh1N4/JFZojrGTcONxwAwryyLchM17QGkBhXMnjC3glv3iGu9CCtV5rsSbDGnUcOXVF4Bef3UFFaNvoSULsdnBxoct0bO6eMW7hTFOVbC7XsssLMK7cU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpKje2qv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738703357; c=relaxed/simple;
+	bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UBsLJYzZXlHDZDoMq5jpr1K8IVTnzHN9bZ+wcn+hjZgc0Coa08KpW6PCRql+96fu00nuE886YQiZ7X4UcIvIblxPQHZmr05Bj/EPLy72KljRht2+fZw0yI3T3WoY/7XMkCMNFOKp+qIPgxG7E23Z7j8PVP5KUmtqnNKwNHQIhHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QUFwFsoe; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpKje2qv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB149C4CEDF;
-	Tue,  4 Feb 2025 19:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738699146;
-	bh=IWzaGhk9Qj3LEU460SqdAUhaJoZcr4o4neZbqWa19nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JpKje2qvF9+lpyx85m42wOB+O30DF/jhcA51qBnG6Q9VfTe+ESYpESWcO4KhStBfZ
-	 pHkfFWrNs2efVBgcACh1sm4A77mSuFi9S4zdfd1NqApH6RASS+xX7gk/AKTRpFegRo
-	 PulXQKnLnWQlxj7hDpZ3o1oyek7+kumFhhaFlEgCtTiPhDRtqGdKx6H9yvdphFpk6A
-	 QBsZhb/Q5DlTzNuhbWoKUo9ilMLAQ2wDjT9EuUDI8XmQFR0KuNF+NZLEzUUiwqL+GL
-	 U3D79wKgaPpbWSHGRzEi2Hb7wW/baG0/3ujlN6yiVyxKugJgkRDIdwWikv0JBM2utT
-	 YV8GUgm89SWag==
-Date: Tue, 4 Feb 2025 11:59:03 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-Message-ID: <20250204195903.egpqdseckhfuih2s@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
- <12cef882-b5b2-43e5-9d78-abe4354069dd@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QUFwFsoe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738703356; x=1770239356;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
+  b=QUFwFsoeFSFn2wUJxVeeBlhrtGVol8pu2Mgb9Db/f1t5VQBVwRWCgsaF
+   ssb66eUYX7f61I484d5MWocSXYtpFPYrAKG4ci8Az5qY400lomGtgWH1u
+   kTx5/9ndRn4SSurbG7vdrfQTFMhyNtuemwRLegLOlhEMgWpVXFqQhwQMO
+   3+kzd7y3i9QhgudTv8NMEqOa4vgixtyjHrsw5Bk0zzQW11jcMCz4UXCZ5
+   RWKAmFctIAsEuVQkedMULhQsy4fYqhWBdjbrNvx9jvTo15p4QcSyjq+AY
+   jXVJLl94ivzvR9lPZYDcpQzIeThf6+uICaT/xqsrcRCRWebkaDodR5VI7
+   A==;
+X-CSE-ConnectionGUID: /2XXNbqXS7eTrT90IifWNA==
+X-CSE-MsgGUID: 3lW4QkiNTrCjpRM7sV7g7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43170427"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="43170427"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
+X-CSE-ConnectionGUID: /SsNr1C3TguOMFe+DLAx+A==
+X-CSE-MsgGUID: mELU3NwzRwOj0NTyxPHEVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="110480812"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7202720B5713;
+	Tue,  4 Feb 2025 13:09:11 -0800 (PST)
+Message-ID: <f3b71bfb-4e04-48a2-b606-bac81cd3f50e@linux.intel.com>
+Date: Tue, 4 Feb 2025 16:09:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <12cef882-b5b2-43e5-9d78-abe4354069dd@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V10 4/4] perf/x86/intel: Support PEBS counters
+ snapshotting
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
+ dapeng1.mi@linux.intel.com
+References: <20250121152303.3128733-1-kan.liang@linux.intel.com>
+ <20250121152303.3128733-4-kan.liang@linux.intel.com>
+ <20250127155107.GI16742@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250127155107.GI16742@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 01:21:21PM -0800, Indu Bhagat wrote:
-> > Yeah, and it's actually bothering me quite a lot 🙂 I have a tentative
-> > proposal, maybe we can discuss this for SFrame v3? Let me briefly
-> > outline the idea.
-> > 
+Hi Peter,
+
+On 2025-01-27 10:51 a.m., Peter Zijlstra wrote:
+> On Tue, Jan 21, 2025 at 07:23:03AM -0800, kan.liang@linux.intel.com wrote:
 > 
-> I looked at the idea below.  It could work wrt unaligned accesses.
+>> @@ -471,6 +477,15 @@ struct pebs_xmm {
+>>  
+>>  #define IBS_CPUID_FEATURES		0x8000001b
+>>  
+>> +struct pebs_cntr_header {
+>> +	u32 cntr;
+>> +	u32 fixed;
+>> +	u32 metrics;
+>> +	u32 reserved;
+>> +};
+>> +
+>> +#define INTEL_CNTR_METRICS		0x3
 > 
-> Speaking of unaligned accesses, I will ask away: Is the reason to avoid
-> unaligned accesses performance hit or are there other practical reasons to
-> it ?
-
-I think performance is the main concern, though there are still some CPU
-arches out there which don't support unaligned accesses.
-
-> Combining the requirements from your email and Josh's follow up:
->   - No unaligned accesses
->   - Sorted FREs
+> I've moved this up a little, so that all the adaptive pebs crud is
+> together.
 > 
-> I would put compaction as a "good to have" requirement.  It appears to me
-> that any compaction will mean a sort of post-processing which will interfere
-> with JIT usecase.
+> Other than that, I've picked up these patches and will merge the lot
+> past -rc1.
+> 
 
-I think we should still consider the fast lookup table.  We might want
-to prototype something just to see what the speedup looks like.  Similar
-to compaction it could just be an optional feature implemented by the
-linker which JIT doesn't have to use.
+We found a bug when testing with some non-precise events in freq mode.
+I've submitted a patch to fix it.
+https://lore.kernel.org/lkml/20250204210514.4089680-1-kan.liang@linux.intel.com/
 
--- 
-Josh
+Could you please fold it into the patch ("perf/x86/intel: Support PEBS
+counters snapshotting")?
+
+Sorry for any inconvenience.
+
+Thanks,
+Kan
