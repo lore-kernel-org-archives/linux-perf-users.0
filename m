@@ -1,128 +1,142 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160AE211A0A
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 18:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D4578F4A;
+	Tue,  4 Feb 2025 18:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693051; cv=none; b=RRfjE3nCTyyV4k8W2tt2FUAcKVrxc0j0Y1ar+vnvEHZdWISDS0sHXTF52dWOjrveiWgk21gExXi6pi7ebLMgARoBz+XzN+U2l0lmH3y7Uoz3Pgog4dnaIz+4ZvXx6SPPHeet1YGW+NvJ5Dyf6mky5eFLwn85xRv3O2dIxUZZRkI=
+	t=1738693437; cv=none; b=g4eTTp1OH5HtswBgZZUTl5DYcKtjaeqBF6QRdwH9UV41c/d80lLeAX9UUsc23g1F21nR7KkonZFuYXBW4c10Frd4dIhJvPGuxsCctgi+qPuDb7seSed9OIpFBPOXuZUfmxDSEsRhue9LKlqkxVnw7EyqVqvfV/9TEVqzgR/onPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693051; c=relaxed/simple;
-	bh=pWaBP0CVleItpcklVYbBi++6w91KDe9zBdArHRpRrWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QpvwmENUWQ/y88FibwaPMy5xDlbHqyjTbVngf15CI5QPw4AUzNSp7PWdQHaz4aZ8hBByXCyJ24G5OIPCuSfIreuyXvjbVK05tXcTKDsI/byWYYyQ52bkdot7/EI/iDF6r/X5vGdlr9N7KzWRUUwBX+kdsXnLX5mrM9SC59gVoJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MGdX0wjR; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738693437; c=relaxed/simple;
+	bh=jIJQfLnWt//hklNtiZN38RPULNlKpKsyubMrM4kG1l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E/6H6jDac30J4Ec4ZCW9L0MAsTYWrDc5/yT44xA8f9dV1D7GIzG0YOcetVJz//LKX0t10JKaUlVzHCt0vI5mh7l9j5dnXjusmxtRHvCpM16DHka+9H6YUYJ6bk8X3LGjwJGq2ArDxVeqwXnc3c4wPu92O8FPSU78TIWlMxzR0LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fr+M7JkF; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MGdX0wjR"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so16085ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 10:17:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738693049; x=1739297849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o3UvNoN7gqpsLO22STOhC2pxClv5CftaFh/u/6+uCJk=;
-        b=MGdX0wjRCBWUCfm7WlqnxIHuW3MU9MiFDJ24A5nAQ9qo2q73qhHowpsJ/NQSlZ1Rc8
-         4Pu3/biL/EkyL2urfCSQtUj6hOlMYowQtGZhxSWCW+TrQ//bFdN9j/W1hUj0n6hMMZq/
-         8dUBVjEe1oSkAHMRKL6XVIKKVAFBF8XjN02PfaEu+gkMxMmD+AV/c7KwWGMuVrgJ+y05
-         jiDFmKJrmewJEXsIKAIrBBNjacTdAi4XA+SbT3Hr9nOOtmYns8pKTBbaVdNXJWajUAfn
-         6BkOuiX42ZfjSvIqX5fMsxDVsE/eqFWHISlNOI8eNjxV8TA1yhSiqm/fjU/9ziJCh1Cs
-         OFDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738693049; x=1739297849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o3UvNoN7gqpsLO22STOhC2pxClv5CftaFh/u/6+uCJk=;
-        b=n3rTOmB4gB6Ydb7gH1RS/hSfdkZH1zLU4aJtU2t2he0mXC6snwTaXjCTgrhMCZ2yUl
-         1LwaP1Oh2iruNOY8MPvswyqG+hMMghFdGKrsvXS4ZmatNxAMVPA0R18MQ/24+cGe68vw
-         df7ZZGRh69T1PAEqEmjbgKBukUZqJY7SMiyL/DWRmLLs5Hn41i1omSSurwzM86ba257Z
-         q8UDS46AukEJkHN/LS8/idpj6daIaA6Vtyk4yfIJquY50bsgS0KnQ4wIsadn+luDumX0
-         xvty5veOwO/P9jUzCtROv0TaohMnHMWzQHXNpVU5d9dfUy5er1bVVb2uLU3D5ttrdSBX
-         ZKRA==
-X-Gm-Message-State: AOJu0YzEP3p7+kEU+57iq0n9BJVEA1Sm1ae3zY/gqkulkg6qZScrvYlD
-	DIHQtIwql7yX32ISDJfN18Q+A4QRG5VlYkaVm+l2xmwblYcaVTkMoeYiY04kk8u2h7Z7DSj2A55
-	AX3C5CP5eAFGY7mDQ5jSmXY/Pv+Y1aNXE5qgJ
-X-Gm-Gg: ASbGnctE+3PYG+Xh3q19Ju73e+rrNRB74NEUshUNUBcxfIxG/YXXbdzEBK1ELdQrLXV
-	C+6DdM9e0Yfl2P2q9KU7YMfuUHPBH7Y/NmZDKYqM0vqk2KBibvhCZd99NsbgAd7Q7XiCrT35EbS
-	4KeJuoo8j88g4htmTVIHN1L2A=
-X-Google-Smtp-Source: AGHT+IFSb6p+y33pvkXVKpplGE3ncyZOropQ02NFuyiOGkQJgIOV4Fnl+vR4vOLwj59ExMNx49afv7Vgb7F1KNqUL2g=
-X-Received: by 2002:a92:c544:0:b0:3ce:3873:48d4 with SMTP id
- e9e14a558f8ab-3d03fbc113dmr4328295ab.4.1738693048936; Tue, 04 Feb 2025
- 10:17:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fr+M7JkF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738693436; x=1770229436;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jIJQfLnWt//hklNtiZN38RPULNlKpKsyubMrM4kG1l8=;
+  b=fr+M7JkF8F8RHgYVKELcLS0X+m+dEY2zpQRnw60pw7ZoXix60q61ZU8U
+   7Apo5v3+wE2MDhCOhz88pNcAQ1IIw+yrBukvzFCSi2CwXN9sNR/rYDfoU
+   qJF00TIjfq4JfYAE9HgfKYkDJn6/HweJe4pCIoa4S7OW0GafZbyZIzfKf
+   bnLcOpHZoO3hgnJyz8JkIbekVUm2cZwZ6QGRI9c1JkWlLZ5ZSiqvyCvot
+   MFCiChf8Vd+wn300hnylMrf8aAjeANfXe3Y4Qm33Rg7qAVwYl/BHmPTHc
+   jqfpdMWhMr8BmOuRPU/tmhIlUc+DxIyYg9YRKEDG8JkRAplhPoj+GEd5x
+   g==;
+X-CSE-ConnectionGUID: tugKT94tRP6YBqT3bfWHrQ==
+X-CSE-MsgGUID: q2JIvmM9QUKyPaN/6IvVpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56660306"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="56660306"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 10:23:55 -0800
+X-CSE-ConnectionGUID: EzYWgQXKQGSZv8KJOPWBBA==
+X-CSE-MsgGUID: TRslo0PORk+3LEC+bN9NYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111109456"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 10:23:55 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id F29D020B5713;
+	Tue,  4 Feb 2025 10:23:52 -0800 (PST)
+Message-ID: <9656a86c-30fb-48d9-9327-920cd449e73a@linux.intel.com>
+Date: Tue, 4 Feb 2025 13:23:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025020304-chip-trench-4e56@gregkh> <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
- <2025020444-chivalry-wanting-7f0c@gregkh>
-In-Reply-To: <2025020444-chivalry-wanting-7f0c@gregkh>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 10:17:17 -0800
-X-Gm-Features: AWEUYZkf_zL-nqp7mLrmVj3RIJAOBqhUHw3vAZ2mCHhPzzWvQTYIBpDsD-wJCns
-Message-ID: <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>
+References: <2025020304-chip-trench-4e56@gregkh>
+ <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh>
+ <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
+ <2025020408-apron-fled-d29e@gregkh>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <2025020408-apron-fled-d29e@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 3, 2025 at 11:05=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 11:25=E2=80=AFAM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-[snip]
-> > > Note, if you all don't like "pmu_bus" for the name, that's fine, plea=
-se
-> > > let me know and I can rename it to something else, but it should be
-> > > something to get these objects out of the root sysfs directory.
-> >
-> > Excuse my ignorance, does the event_source bus already provide a
-> > similar solution?
-> > ```
-> > $ ls /sys/bus/event_source/devices
-> > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
-> > uncore_cbox_7              uprobe
-> > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncor=
-e_clock
-> > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
-> > uncore_imc_free_running_0
-> > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
-> > uncore_imc_free_running_1
-> > $ ls /sys/devices
-> > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
-> >          uprobe
-> > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
-> >          virtual
-> > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
-> > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
-> > i915         msr          system      uncore_cbox_3  uncore_imc_free_ru=
-nning_0
-> > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_ru=
-nning_1
-> > ```
->
-> Those are the exact same device structures :)
->
-> Look at /sys/bus/event_source/devices/ those are symlinks back to
-> /sys/devices.  In other words, that's the exact same structures, and
-> the mess in /sys/devices/ with these event devices is what I am trying
-> to clean up.
 
-Thanks! Again my ignorance, why do we need pmu_bus? Could the symlinks
-in event_source be the actual devices? Perhaps for temporary
-compatibility some symlinks could be placed in /sys/devices?
+
+On 2025-02-04 11:28 a.m., Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2025 at 09:06:18AM -0500, Liang, Kan wrote:
+>>
+>>
+>> On 2025-02-04 5:16 a.m., Greg Kroah-Hartman wrote:
+>>> On Tue, Feb 04, 2025 at 09:41:03AM +0200, Alexander Shishkin wrote:
+>>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>>>>
+>>>>> In sysfs, for some reason, all pmu devices seem to show up in the "root"
+>>>>> of /sys/devices/ making for a confusing mess as these devices are not
+>>>>> really at the root of the system at all.
+>>>>>
+>>>>> Create a fake root devices, "pmu_bus" and place them all under there if
+>>>>> they do not already have a parent device set, cleaning up sysfs to look
+>>>>> more sane.
+>>>>
+>>>> Yeah, so what happens to the userspace that uses them via /sys/devices/*
+>>>> directly? Even I have scripts that do that.
+>>>
+>>> You should never be doing that, as you have no idea what type of devices
+>>> are in that location in the tree.  You should be doing what the
+>>> documentation says to do, and look in /sys/bus/event_source/devices/
+>>> instead.  That didn't change here.
+>>>
+>>
+>> Not just the script, the /sys/devices/ is also used in the current perf
+>> tool. For example,
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/mem-events.c#n192
+>>
+>> And the comments and document in the perf tool.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/pmu.c#n39
+> 
+> Note, this file looks to work properly, it's just the comment that is
+> incorrect.
+> 
+> Any hints on what perf command or test I should run to verify I did get
+> this all right?
+
+For the perf tool, "perf test" should be run at minimum.
+
+> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-list.txt#n191
+> 
+> I'll fix that.
+> 
+>> I think it should bring big impact for the end user, especially when
+>> they still use an older perf tool and script.
+> 
+> It seems that the majority of the perf code IS looking in the correct
+> place, just mem-events.c seemed wrong.
+> 
+
+There should be two more.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c#n100
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/x86/util/iostat.c#n35
 
 Thanks,
-Ian
+Kan
