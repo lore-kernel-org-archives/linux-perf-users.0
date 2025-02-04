@@ -1,100 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ADA4CB5B;
-	Tue,  4 Feb 2025 19:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062672054F0;
+	Tue,  4 Feb 2025 19:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697640; cv=none; b=WCuJCMM52lwB+OAqPqtFtyqJMRWMZjZAloSExW/JwFwVSOQQK1Ph3s+N5lp5z3FwDFEgErRL0DfjnubteMtD2e0IdZbjxxR9AlnaGhOjJYAaQwtilePqfW2jG7HTpkTndh16SZaU4DPk1pbjt8utVNHw4J9h9/WtaIbhuu8MePQ=
+	t=1738698067; cv=none; b=MYm3+jxhpFFxVQTyyTbsPuqMDY3D+JobPXz2qhrxOv0jMrtGm4vPubZkI0a8ygRzIeGXJJajDCIUWcHFYMZIA4fntzFSJcM/xhzIZ/XfdbxHHBKUkbjMHlyghUS+UlQw3yBwRcPZJ3lI56Y6ETVlzfMU60GhuqvbxnvgpxbYAH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697640; c=relaxed/simple;
-	bh=58yFNr7ClvRQHRC03uxlYrcj9NoegSe4a6JsWMk6y4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BO971rQkOkxnu96irL81Qh99pEU2hCJep+E21B/UkGe0j46qVwl4JUsvTB0Mfgt5C0KzKwXVdE2q2VIte95rfhxC3pGuQt5UcrCFXLEXhZbzUruI1YgL4m2HM/tl683f4AWgrPX2JluyHjNojdQb2NKa3o81dW6KzQGwSjjenNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOsrjP7U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738698067; c=relaxed/simple;
+	bh=ZPd5d3LP4lSPJ0S+PvFfBrMSrUEFNR/QGVnE/v8NhkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EL/BvQqAMDyjKlZ92IoQ3dIg27SKHjwzqFa0CHeZdXtuc18YGKD1ZB1SkFp8jdRLuReMerJblDd5STiTHwhVAW/4joBTZoWOaDS346Z0i1CXXW3hG/AwJ+MGBjxnMVXbUH546nrcc3NbmU7zwVC3Zu1VFQh+igtxUez7xrHPSF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O+aWIPh/; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOsrjP7U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C27C4CEDF;
-	Tue,  4 Feb 2025 19:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738697640;
-	bh=58yFNr7ClvRQHRC03uxlYrcj9NoegSe4a6JsWMk6y4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pOsrjP7UvMkuRwKJEmzxhOe4rX1fLWG2XIRU+EJu3yqUQMDqz1xosTUMYKR5JVCtN
-	 SPD2rLaSh10jhA4+WjxZFpXq/lRh7/dN2iSvxupzHfSi6BNquXmPO0XzDwHDQEQEuy
-	 oWXMaXr/d2tvTKbnroeKJoNAFD5wE2LOLLPQ6JMoRB0NaqmJt2vp6ZIQSeGXvTy58z
-	 YSi3uchWOlF7a5A4PiBKJTyw5Puuzjtrtgj7ntg1SgQoLsdcZg2D3LEAUaYoRH19N+
-	 Rpd+CgcxsUoIWV0m3eE3X5qm3BWuOnwj2wayKZBI7wBI/xvNgmPpBPEx9XSK+Ia33K
-	 PqkV6d7i+/Dtg==
-Date: Tue, 4 Feb 2025 11:33:57 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess
- regions
-Message-ID: <20250204193357.wdlram4qfghccre6@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
- <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O+aWIPh/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738698062; x=1770234062;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZPd5d3LP4lSPJ0S+PvFfBrMSrUEFNR/QGVnE/v8NhkM=;
+  b=O+aWIPh/KkmKPVNCN72vDB7tVaGLMk/Z5JgTL8b/7JLUO19ccj0kSwq+
+   kYWWbkQbB3ol96/fuA5Sn0YQHgMAV9eaPxxcWAv6SScy9RhyQbTlmHrCh
+   xqE/oYLrmnnED27DY+IPE0i8AD9fITXBp8fxVux3uElnhr1NIWSfgVEk1
+   jXjmdwouoAQdKDYFgb0Rhqsr2ou/xLuXWGjykCC0ICX0BrLKmdcO2S4g4
+   giGnoj+8kJke2EOVEWTsmnos1zGHkGmmNCdN+oEnoOxfSazw+g46ygfcF
+   I4biy0BPyOu13k0w/t72WogOGdUzv4kvf4Y9D9+vzOMGgn34BUFe59YAU
+   g==;
+X-CSE-ConnectionGUID: ichWZ9klScOQ7X2VYtNIyg==
+X-CSE-MsgGUID: Wg+8xyWcQkythiIneRKOvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38452874"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="38452874"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 11:41:01 -0800
+X-CSE-ConnectionGUID: /XafOi5JTy+zcaEwQmVqsw==
+X-CSE-MsgGUID: fIWPPb2CSEGKPV779jLAzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="111230834"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 11:41:00 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 00B6020B5713;
+	Tue,  4 Feb 2025 11:40:58 -0800 (PST)
+Message-ID: <5da59431-e21f-42fa-927d-e5d346ae9713@linux.intel.com>
+Date: Tue, 4 Feb 2025 14:40:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
+ record test subtest test_leader_sampling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org,
+ linux-s390@vger.kernel.org, james.clark@linaro.org, agordeev@linux.ibm.com,
+ gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+ <20250131102756.4185235-3-tmricht@linux.ibm.com>
+ <Z6GMmxKvXd0-fd_-@google.com>
+ <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+ <Z6JrkYYOkGcuKQOh@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <Z6JrkYYOkGcuKQOh@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 30, 2025 at 05:38:24PM +0100, Jens Remus wrote:
-> Add a similar debug message for SFRame FDE user copy failures?
+
+
+On 2025-02-04 2:33 p.m., Namhyung Kim wrote:
+> Hello Kan,
 > 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+> On Tue, Feb 04, 2025 at 10:55:44AM -0500, Liang, Kan wrote:
+>>
+>>
+>> On 2025-02-03 10:42 p.m., Namhyung Kim wrote:
+>>> Add Kan and Dapeng to CC.
+>>>
+>>> Thanks,
+>>> Namhyung
+>>>
+>>>
+>>> On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
+>>>> On s390 the event instructions can not be used for recording.
+>>>> This event is only supported by perf stat.
+>>>>
+>>>> Change the event from instructions to cycles in
+>>>> subtest test_leader_sampling.
+>>>>
+>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>>> Suggested-by: James Clark <james.clark@linaro.org>
+>>>> Reviewed-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>  tools/perf/tests/shell/record.sh | 10 +++++-----
+>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>>> index fe2d05bcbb1f..ba8d873d3ca7 100755
+>>>> --- a/tools/perf/tests/shell/record.sh
+>>>> +++ b/tools/perf/tests/shell/record.sh
+>>>> @@ -231,7 +231,7 @@ test_cgroup() {
+>>>>  
+>>>>  test_leader_sampling() {
+>>>>    echo "Basic leader sampling test"
+>>>> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
+>>>> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
+>>>>      perf test -w brstack 2> /dev/null
+>>
+>>
+>> As a non-precise test, using cycles instead should be fine. But we
+>> should never use it for precise test, e.g., with p. Because cycles is a
+>> non-precise event. It would not surprise me if there is a skid when
+>> reading two cycles events at the point when the event overflow occurs.
 > 
-> @@ -125,6 +125,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
->         return 0;
+> Sorry, I don't think I'm following.  Are you saying "{cycles:p,cycles:p}:S"
+> cannot guarantee that they will have the same period?
+
+Only sampling can supports p modifier. So it should be
+{cycles:p,cycles}:S. The "{cycles:p,cycles:p}:S" will error out.
+Yes, it's not guaranteed that they have the same period.
+
+Thanks,
+Kan
 > 
->  Efault:
-> +       dbg_sec_uaccess("fde usercopy failed\n");
->         return -EFAULT;
->  }
+>>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Thanks for your review and the comment!
+> Namhyung
+> 
+> 
 
-Indeed.
-
-> Printing the IP is probably not an option due to security concerns?
-> Printing the the CFA, FP, and RA offsets is too much traffic?  To debug
-> issues on s390 I had to add tons of additional debug messages to make
-> sense of what was actually going on.
-
-I guess it depends on what you're trying to debug.  These messages are
-intended to help diagnose problems with the section format.  It gets
-unloaded if any of these errors are detected, so it helps to try to
-communicate why that happened.
-
-So yeah, they're intended to be very low traffic, only used for errors
-where an .sframe section is getting unloaded (i.e., all the -EFAULTs).
-
-Corrupt CFA/FP/RA offset values are harder to detect, that could also be
-related to some other issue like stack corruption.
-
--- 
-Josh
