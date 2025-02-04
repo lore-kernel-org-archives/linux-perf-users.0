@@ -1,355 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F00204698;
-	Tue,  4 Feb 2025 19:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55B821517F
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 19:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697418; cv=none; b=VBVOtDlNOePcMGrIIUN7iBJ8zYIbAQ8gTC7P9MroS958dW3IJ1GO6EugW+ig9bNUPWmm1vW/X4D7ZgcXggYd72wKPh4bHWw/8ucX0HJLfgY8+TFeQGPq0cXyuKGZupeJlI3dzAc0xbhpvC+9SjHEBEnQdqoSV/04bjoB0sEkfO0=
+	t=1738697453; cv=none; b=N/fuRm8sZfJCkhtPkZR9IDPQttcT3agH1axI3tstKYn8hygIQOr3nffHJC+JmEQhXQRfS/b1L3XPJAmhgictrA7imuvrw/A7NtLl3nwRllSu8LDmcwk4F4yie+qjwaswkRjFYY64vIhtvnFCk8XGHtdZCsQ4NJNq1imcEnQBTD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697418; c=relaxed/simple;
-	bh=imTEKMI08W146RNX1SRWUHYvcJwqiFbxPIRXmyovK8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPdbdZNcJ1MPX+tb0XqAgLPjd0Fyg+ZyvNJgsVBDbuq66lK2xBlUuuMhuWqQNHH14HdQLH2jFoJ0d573BLMfefsCWJomnOXNlOMvwZaG52o35Ze8K0fqeLTEjwZavJBv1TY4YSysMHKm+Sno7ceofRAmAxR1Pg6DlzwMGZ3Rg6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvezSJIk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738697453; c=relaxed/simple;
+	bh=reyF95bfUBAYffil9IVz3eSYyOLzt08HZXE9QNJTfns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WQp87hX6D6bZROPg/YovUaxF7nc3yHprGevVVRfWk3mK8jTqpmk7zWXQ+ZGHA7QDXmlpkpdgMWfWQatJwuF4ZMY1QeFnYDahiSddd0p7H4fOJm8YTkxzKWkv+CrFYlNN0tQwugZJfsjUgfxuLfxEsCjQfzmcL5otuWujOkjfbd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUUwvac7; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvezSJIk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC1FC4CEDF;
-	Tue,  4 Feb 2025 19:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738697417;
-	bh=imTEKMI08W146RNX1SRWUHYvcJwqiFbxPIRXmyovK8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YvezSJIkoKnkVzO8j6mWzzzpDZWHj9ZWl0Txn8O76JFLwQlg8ThhXjAOghxMl7jiT
-	 z1hmI8U54N76Z4JTn/Dhpmw5OAWvQvy9Zw30dajlaUg0/Hx/EX8Tv1Iv0wfMvMf5OX
-	 Ce9sd7vQY8TKfF06RUXEIrtn/m+MyZpBTl23F8Zxp3BHQvyKEbD/2rIN+4dkvTR5Yx
-	 PGLsCEIT8iNqpDSeWBIWqUJPgUoslMfOaGfU1J+kJEUJqyh6P1RQTbBpgKUWZSZ4j7
-	 c3WlWRdBQi/x8OrhAn6lOc+hh2H19Rf4TcW/hoPiaIJSxZyZUfZmrIB7QPIuO6fpYQ
-	 fEik0XfxrLbkA==
-Date: Tue, 4 Feb 2025 11:30:15 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 2/4] perf trace: Convert syscall_stats to hashmap
-Message-ID: <Z6JqxzMDP9Y2I3LQ@google.com>
-References: <20250130030525.1482498-1-namhyung@kernel.org>
- <20250130030525.1482498-3-namhyung@kernel.org>
- <CAP-5=fUK_aMf8ZYJxmbOLzbu_zZWKYwx_Vvj64x3_2=0u7jbMw@mail.gmail.com>
- <Z6GFxj4ksBG78Pbu@google.com>
- <CAP-5=fU9Bh0_AiNhEKCKKyaWZxPyzQKNeOODL-yZFo-cMSB8Jg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUUwvac7"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a814c54742so189255ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 11:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738697451; x=1739302251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
+        b=aUUwvac7owWb1HIFdOrk9wrCojnTNckgp3T3yLO8OMdfRQNwW6DaKzQdM2/njv+jSi
+         cWtq2clV63tCWoCvqJDjBm2w2A9S5R66jGWZYLfiDkpNRcNr2FHDIdOk+b17oXP4VWRx
+         lHqGoJOuN5AyXbOD6AbaGNigCSw6HmJztrfTuwCZd35+kKm6Wn/I1SjodOY/FMx0RjrR
+         EA4XR79sKDy9bfvA0Rs2Sb5zE4sHh+mK7KAkEjqPmiWa7wJQPOQegf2N0lPuk6d5fcQP
+         cTfEqv50cB2yoP+XUovtJzYXtDEv1A+MFVq9F/U2x1+xjAlY9fYqjHzsvUPmdiLoMBup
+         O6TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738697451; x=1739302251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
+        b=jJ5kqVA2aUh01TGr3NRQR7Bxrdw0sYYK5OKxZjjnJsKQg5fA38zhJ8aZBOm130kukb
+         pCnjZIXPjSnpHMHwn3nAPBI6J4D3tQO1VfLWJht6GFAuV7+S/a0MwwUX5DgxL5hJGLGp
+         U22WsBWLW1oOTH+lTMlWW+OcFoIVeAoVyBAvAO2jFx2vhdS4/a8Yd9kS86zg6/TF2DAl
+         m0hQNX2+ikPOueW+9S04IqB1KNQ9Vpyd5eaEovWoSwXkVuQYx/R7UYuli+YG7CJdcGzF
+         mULfIC5RzQGV4IoM341OXSWEw+zQ/x7gZaZCdUjF6Bq2LR9/qTbqZVlC1u6+SKOPPIIB
+         voSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1lz1oQhJBL+yYg95mN9wDjpLUAnMRyHWQ+ecuqPgocmAL4EPk+FyVelPxboNytRIAv14GV3Lfk2p8mgkxjgE1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz44T1dca6bIUs95qY2vG7y+OyaIqf5zT1eGVJUKerduQ0CJAUF
+	ga7EJzfhoBAxX6V+Nj/i/nR2Tuy44V1QAfgQIGXlMqyJkjF0x9NrXuc0CF1orOYhUQNPkzSeHOo
+	yYcdtOMeAn/c1F2lKxN6TKSFy0otcH0YQz4jU
+X-Gm-Gg: ASbGncs7J//fLC7TXeCZJgYzHGaAk96l6xdcVNDFQnp6XNKWc3DtHYU1Xlu5TCDT6Ky
+	mL2xlL1nBcaz4vJp2CGOS47evEc7Uh7Gc79+Que/8DvH8g6y/EDCZRycC6LS69i/NvIPAX3Oxc2
+	WtSBNYjg/kmtu4FiCeRdNrs1k=
+X-Google-Smtp-Source: AGHT+IE8mPPweGD/XpLRwVh6HXIUhzMbEoHxkKV6IW0N3/GvKW/3kqA/gHoDCh3vemR2crcapQey99/lhfZZf4RzBOc=
+X-Received: by 2002:a05:6e02:3790:b0:3cf:a4e4:8f89 with SMTP id
+ e9e14a558f8ab-3d03fbc5fd6mr3884605ab.4.1738697450707; Tue, 04 Feb 2025
+ 11:30:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU9Bh0_AiNhEKCKKyaWZxPyzQKNeOODL-yZFo-cMSB8Jg@mail.gmail.com>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
+ <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+ <Z6GCde4XqCuEZlgz@google.com> <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
+ <Z6JosmbJBmiRHBKK@google.com>
+In-Reply-To: <Z6JosmbJBmiRHBKK@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 11:30:39 -0800
+X-Gm-Features: AWEUYZk4s0UOeMvph36Z_mNa6fGMDDI7NG0jb-zIPxCg8YiaKMAHQHX4CtxQlDg
+Message-ID: <CAP-5=fXdF41qVwUnZ1XjPM9PuiDa8owYwK=3eRznPEnMKrVkdw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
+ is on
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 08:28:08PM -0800, Ian Rogers wrote:
-> On Mon, Feb 3, 2025 at 7:13 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Feb 4, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Feb 04, 2025 at 07:59:01AM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > The syscall stats are used only when summary is requested.  Let's=
+ avoid
+> > > > > unnecessary operations.  Pass 'trace' pointer to check summary an=
+d give
+> > > > > output file together.
+> > > >
+> > > > I don't think this last sentence makes sense.
+> > >
+> > > Thanks for your review.  I'd say:  Pass 'trace' pointer instead of do=
+ing
+> > > 'summary' option and 'output' file pointer separately.
 > >
-> > On Sat, Feb 01, 2025 at 11:03:54PM -0800, Ian Rogers wrote:
-> > > On Wed, Jan 29, 2025 at 7:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > It was using a RBtree-based int-list as a hash and a custome resort
-> > > > logic for that.  As we have hashmap, let's convert to it and add a
-> > > > sorting function using an array.
-> > >
-> > > How is a hashmap connected to a sorting function of an array?
+> > This still doesn't make sense. There is lazier initialization:
+> > ```
+> > -               ttrace->syscall_stats =3D intlist__new(NULL);
+> > +               if (trace->summary)
+> > +                       ttrace->syscall_stats =3D intlist__new(NULL);
+> > ```
+> > and there are functions that take a FILE* but now we're going to use
+> > the one in trace instead:
+>
+> Yep, those FILE* (fp) was from trace->output.
+>
+>
+> > ```
+> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
+> > thread *thread, FILE *fp)
 > >
-> > By not using the int-list (and rb_resort code), it needs a new (re)sort
-> > function.  So I added one by copying pointers to hashmap entries to an
-> > array and calling qsort(3).  Anyway, I'll update the description.
-> 
-> Wouldn't pointers to entries be broken by rehashing?
-
-I think it's ok since the hashmap uses dynamically allocated entries.
-But the hashmap is fixed at this point because it's called after
-finishing the trace.  So it should be fine anyway.
-
-> 
-> > >
-> > > >  It's also to prepare supporting
-> > > > system-wide syscall stats.
-> > > >
-> > > > No functional changes intended.
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/builtin-trace.c | 122 ++++++++++++++++++++++++++++---------
-> > > >  1 file changed, 93 insertions(+), 29 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > > > index 7e0324a2e9182088..1d32ef2b05ae8c1c 100644
-> > > > --- a/tools/perf/builtin-trace.c
-> > > > +++ b/tools/perf/builtin-trace.c
-> > > > @@ -39,6 +39,7 @@
-> > > >  #include "util/synthetic-events.h"
-> > > >  #include "util/evlist.h"
-> > > >  #include "util/evswitch.h"
-> > > > +#include "util/hashmap.h"
-> > > >  #include "util/mmap.h"
-> > > >  #include <subcmd/pager.h>
-> > > >  #include <subcmd/exec-cmd.h>
-> > > > @@ -63,7 +64,6 @@
-> > > >  #include "print_binary.h"
-> > > >  #include "string2.h"
-> > > >  #include "syscalltbl.h"
-> > > > -#include "rb_resort.h"
-> > > >  #include "../perf.h"
-> > > >  #include "trace_augment.h"
-> > > >
-> > > > @@ -1519,17 +1519,55 @@ struct thread_trace {
-> > > >                 struct file   *table;
-> > > >         } files;
-> > > >
-> > > > -       struct intlist *syscall_stats;
-> > > > +       struct hashmap *syscall_stats;
-> > > >  };
-> > > >
-> > > > +static size_t id_hash(long key, void *ctx __maybe_unused)
-> > >
-> > > I find the use of "id" in this code confusing - it is a pre-existing
-> > > problem, but you add to it here. I think a more intention revealing
-> > > name would be something like system_call_number_hash.
+> >         return ttrace;
+> >  fail:
+> > -       color_fprintf(fp, PERF_COLOR_RED,
+> > +       color_fprintf(trace->output, PERF_COLOR_RED,
+> >                       "WARNING: not enough memory, dropping samples!\n"=
+);
+> >         return NULL;
+> > ```
+> > So why does the one passed to trace still exist? Unfortunately names
+> > like "fp" and "output" are not intention revealing.
+>
+> I think "fp" is a conventional name for file pointers (probably from
+> K&R?).
+>
 > >
-> > Yep, probably 'syscall_id_hash'.
-> 
-> What is with "id"? man syscall calls them numbers. Calling the ids
-> makes me think they have a value other than the system call number.
+> > Anyway, from the commit message and the code I don't understand what
+> > this change is trying to do.
+>
+> I don't know where you didn't get it.  Apparently my English is not good
+> enough.  So this commit does two things.
+>
+> 1. check trace->summary before allocating syscall_stats
+> 2. change signature of thread__trace from (thread, fp) to (thread,
+>    trace) so that it can use trace->output (fp) and trace->summary.
+>
+> I thought the change #2 is trivial enough to be in the same commit.  But
+> I can split that if you want.
 
-But it's already used in this code widely so renaming it now may bring
-another confusion.
-
-> 
-> > >
-> > > > +{
-> > > > +       return key;
-> > > > +}
-> > > > +
-> > > > +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
-> > > > +{
-> > > > +       return key1 == key2;
-> > > > +}
-> > > > +
-> > > > +static struct hashmap *alloc_syscall_stats(void)
-> > > > +{
-> > > > +       struct hashmap *stats = hashmap__new(id_hash, id_equal, NULL);
-> > > > +
-> > > > +       /* just for simpler error check */
-> > >
-> > > What is "just for simpler error check" ?
-> >
-> > Probably it can go away.  hashmap__new() returns a pointer or an error.
-> > But normally allocation functions tend to return NULL in error cases.
-> > So I changed it.
-> 
-> 
-> It would be easier to read something like ",If error is returned
-> change to NULL for a simpler error checking by callers. "
-
-Thanks for the suggestion, but I think I'll remove the part.
+Ah, the diff was showing the function signature still taking fp which
+was confusing me. Looking above I see:
+```
+-static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
++static struct thread_trace *thread__trace(struct thread *thread,
+struct trace *trace)
+```
+Keeping the context in trace and not splitting the patch both make
+sense to me. It'd be nice to capture your more verbose description in
+the commit message.
 
 Thanks,
-Namhyung
-
-> 
-> > >
-> > > > +       if (IS_ERR(stats))
-> > > > +               stats = NULL;
-> > > > +       return stats;
-> > > > +}
-> > > > +
-> > > > +static void delete_syscall_stats(struct hashmap *syscall_stats)
-> > > > +{
-> > > > +       struct hashmap_entry *pos;
-> > > > +       size_t bkt;
-> > > > +
-> > > > +       if (syscall_stats == NULL)
-> > > > +               return;
-> > > > +
-> > > > +       hashmap__for_each_entry(syscall_stats, pos, bkt)
-> > > > +               free(pos->pvalue);
-> > > > +       hashmap__free(syscall_stats);
-> > > > +}
-> > > > +
-> > > >  static struct thread_trace *thread_trace__new(struct trace *trace)
-> > > >  {
-> > > >         struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
-> > > >
-> > > >         if (ttrace) {
-> > > >                 ttrace->files.max = -1;
-> > > > -               if (trace->summary)
-> > > > -                       ttrace->syscall_stats = intlist__new(NULL);
-> > > > +               if (trace->summary) {
-> > > > +                       ttrace->syscall_stats = alloc_syscall_stats();
-> > > > +                       if (ttrace->syscall_stats == NULL) {
-> > > > +                               free(ttrace);
-> > > > +                               ttrace = NULL;
-> > >
-> > > This looks overly indented.
-> >
-> > I'm not sure.  Maybe we can change the code to return early if some more
-> > logic would be added.  But I didn't feel the strong needs for that.
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > > > +                       }
-> > > > +               }
-> > > >         }
-> > > >
-> > > >         return ttrace;
-> > > > @@ -1544,7 +1582,7 @@ static void thread_trace__delete(void *pttrace)
-> > > >         if (!ttrace)
-> > > >                 return;
-> > > >
-> > > > -       intlist__delete(ttrace->syscall_stats);
-> > > > +       delete_syscall_stats(ttrace->syscall_stats);
-> > > >         ttrace->syscall_stats = NULL;
-> > > >         thread_trace__free_files(ttrace);
-> > > >         zfree(&ttrace->entry_str);
-> > > > @@ -2463,22 +2501,19 @@ struct syscall_stats {
-> > > >  static void thread__update_stats(struct thread *thread, struct thread_trace *ttrace,
-> > > >                                  int id, struct perf_sample *sample, long err, bool errno_summary)
-> > > >  {
-> > > > -       struct int_node *inode;
-> > > > -       struct syscall_stats *stats;
-> > > > +       struct syscall_stats *stats = NULL;
-> > > >         u64 duration = 0;
-> > > >
-> > > > -       inode = intlist__findnew(ttrace->syscall_stats, id);
-> > > > -       if (inode == NULL)
-> > > > -               return;
-> > > > -
-> > > > -       stats = inode->priv;
-> > > > -       if (stats == NULL) {
-> > > > +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
-> > > >                 stats = zalloc(sizeof(*stats));
-> > > >                 if (stats == NULL)
-> > > >                         return;
-> > > >
-> > > >                 init_stats(&stats->stats);
-> > > > -               inode->priv = stats;
-> > > > +               if (hashmap__add(ttrace->syscall_stats, id, stats) < 0) {
-> > > > +                       free(stats);
-> > > > +                       return;
-> > > > +               }
-> > > >         }
-> > > >
-> > > >         if (ttrace->entry_time && sample->time > ttrace->entry_time)
-> > > > @@ -4617,18 +4652,45 @@ static size_t trace__fprintf_threads_header(FILE *fp)
-> > > >         return printed;
-> > > >  }
-> > > >
-> > > > -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
-> > > > +struct syscall_entry {
-> > > >         struct syscall_stats *stats;
-> > > >         double               msecs;
-> > > >         int                  syscall;
-> > > > -)
-> > > > +};
-> > > > +
-> > > > +static int entry_cmp(const void *e1, const void *e2)
-> > > >  {
-> > > > -       struct int_node *source = rb_entry(nd, struct int_node, rb_node);
-> > > > -       struct syscall_stats *stats = source->priv;
-> > > > +       const struct syscall_entry *entry1 = e1;
-> > > > +       const struct syscall_entry *entry2 = e2;
-> > > >
-> > > > -       entry->syscall = source->i;
-> > > > -       entry->stats   = stats;
-> > > > -       entry->msecs   = stats ? (u64)stats->stats.n * (avg_stats(&stats->stats) / NSEC_PER_MSEC) : 0;
-> > > > +       return entry1->msecs > entry2->msecs ? -1 : 1;
-> > > > +}
-> > > > +
-> > > > +static struct syscall_entry *thread__sort_stats(struct thread_trace *ttrace)
-> > > > +{
-> > > > +       struct syscall_entry *entry;
-> > > > +       struct hashmap_entry *pos;
-> > > > +       unsigned bkt, i, nr;
-> > > > +
-> > > > +       nr = ttrace->syscall_stats->sz;
-> > > > +       entry = malloc(nr * sizeof(*entry));
-> > > > +       if (entry == NULL)
-> > > > +               return NULL;
-> > > > +
-> > > > +       i = 0;
-> > > > +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
-> > > > +               struct syscall_stats *ss = pos->pvalue;
-> > > > +               struct stats *st = &ss->stats;
-> > > > +
-> > > > +               entry[i].stats = ss;
-> > > > +               entry[i].msecs = (u64)st->n * (avg_stats(st) / NSEC_PER_MSEC);
-> > > > +               entry[i].syscall = pos->key;
-> > > > +               i++;
-> > > > +       }
-> > > > +       assert(i == nr);
-> > > > +
-> > > > +       qsort(entry, nr, sizeof(*entry), entry_cmp);
-> > > > +       return entry;
-> > > >  }
-> > > >
-> > > >  static size_t thread__dump_stats(struct thread_trace *ttrace,
-> > > > @@ -4636,10 +4698,10 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
-> > > >  {
-> > > >         size_t printed = 0;
-> > > >         struct syscall *sc;
-> > > > -       struct rb_node *nd;
-> > > > -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stats);
-> > > > +       struct syscall_entry *entries;
-> > > >
-> > > > -       if (syscall_stats == NULL)
-> > > > +       entries = thread__sort_stats(ttrace);
-> > > > +       if (entries == NULL)
-> > > >                 return 0;
-> > > >
-> > > >         printed += fprintf(fp, "\n");
-> > > > @@ -4648,8 +4710,10 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
-> > > >         printed += fprintf(fp, "                                     (msec)    (msec)    (msec)    (msec)        (%%)\n");
-> > > >         printed += fprintf(fp, "   --------------- --------  ------ -------- --------- --------- ---------     ------\n");
-> > > >
-> > > > -       resort_rb__for_each_entry(nd, syscall_stats) {
-> > > > -               struct syscall_stats *stats = syscall_stats_entry->stats;
-> > > > +       for (size_t i = 0; i < ttrace->syscall_stats->sz; i++) {
-> > > > +               struct syscall_entry *entry = &entries[i];
-> > > > +               struct syscall_stats *stats = entry->stats;
-> > > > +
-> > > >                 if (stats) {
-> > > >                         double min = (double)(stats->stats.min) / NSEC_PER_MSEC;
-> > > >                         double max = (double)(stats->stats.max) / NSEC_PER_MSEC;
-> > > > @@ -4660,10 +4724,10 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
-> > > >                         pct = avg ? 100.0 * stddev_stats(&stats->stats) / avg : 0.0;
-> > > >                         avg /= NSEC_PER_MSEC;
-> > > >
-> > > > -                       sc = &trace->syscalls.table[syscall_stats_entry->syscall];
-> > > > +                       sc = &trace->syscalls.table[entry->syscall];
-> > > >                         printed += fprintf(fp, "   %-15s", sc->name);
-> > > >                         printed += fprintf(fp, " %8" PRIu64 " %6" PRIu64 " %9.3f %9.3f %9.3f",
-> > > > -                                          n, stats->nr_failures, syscall_stats_entry->msecs, min, avg);
-> > > > +                                          n, stats->nr_failures, entry->msecs, min, avg);
-> > > >                         printed += fprintf(fp, " %9.3f %9.2f%%\n", max, pct);
-> > > >
-> > > >                         if (trace->errno_summary && stats->nr_failures) {
-> > > > @@ -4677,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
-> > > >                 }
-> > > >         }
-> > > >
-> > > > -       resort_rb__delete(syscall_stats);
-> > > > +       free(entries);
-> > > >         printed += fprintf(fp, "\n\n");
-> > > >
-> > > >         return printed;
-> > > > --
-> > > > 2.48.1.262.g85cc9f2d1e-goog
-> > > >
+Ian
