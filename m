@@ -1,331 +1,397 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FD618858A;
-	Tue,  4 Feb 2025 04:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8188D5CDF1
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Feb 2025 04:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738643271; cv=none; b=K8Dd0HVy7ZmQ8MduJV0RSSKe4+SKz/SgI033ZN7SdVZIRPo6C0t1NurebfbhYhTo056FKWcrmkjWqFn4Ql1FLkYU09DekLplMpri8ZzrX2C6nJ+Dewr9OBq/zOE2vUzy5iypx49Anv8o3Tc6JJizGICxPi/58+UGD6iPO3EQppE=
+	t=1738643303; cv=none; b=ET3i73eqs8ThITkKeQwiShMMffdVRzyoBHKy9Pb1DMVq7il1iygjvuidBQoQZrvgmHfBJY/CvKSrGtD3We5e68SxQG5hrwhj8nhjK9sOGtFlGfoOCJtvAFpUQhg/olT1xKqOivjSODc8HqQkk4iGJf3IBBv8UNOdSZfvOmsSkUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738643271; c=relaxed/simple;
-	bh=U/EzLb92gORbHR+90FsDZyMbFuAxD8VZ4ZDPbBb34VA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YU8+KhYeVwpLzvpnR+MI7+2h4kLCBljNYHfv/osynW6prGHqsPcvGxRUq55JX1ocNdfq4RWV0Zy1N0UT46fKt2alXtw5eISWush4BQhyn56BNea1bNQiaMA82FdHCAiK04a+uYCR8iscFfbu495K86JK+9vo1O2NgmOIn2jxh1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXLSx0ba; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738643303; c=relaxed/simple;
+	bh=P78iZ9xQ8UbxmGzLqt/friDtY6KM5QhDtpi5/tVpgbc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o12gwSFF7mxeYE55nhla3fh40FYT73R2nBqSkybW+kp52OGGiQ70O2ADqCMku16oC37YRV52nITub/bRZUlOPW0G4VuxifJMq4ia5vO0zEINcBH/N+Fo9JXsHnZhrmRDNZidNyLxxb1teCyUPJalJs6yfktQOxpfJSf+4A7sbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pk6qAzPi; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXLSx0ba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB92C4CEDF;
-	Tue,  4 Feb 2025 04:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738643271;
-	bh=U/EzLb92gORbHR+90FsDZyMbFuAxD8VZ4ZDPbBb34VA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NXLSx0baNRTpaFMrnJvAqnbs8yGNJ7HNpYb1lwD6TYhY6dXVPQYhGzio+xv7r80yj
-	 B5z8TGpCQvAWegcU1J8qML1ZDg8rpQTvrsjJfX4JfUh7eg8sUgQwY7TyCUTylT8N2f
-	 lZ/xKi2wEzMLtQu7vIU9D562asUlZIln/0bY4fHObk8haj0rmEnUgWYhIYEdLxxVH8
-	 pX96UXU6ftwAtg8owKHBTEv+WPqZedCgyELGV1m53ghnl36A87Yr/Ffm3w7ezuTFr2
-	 TsaC0Zb+/a66R2GFEnnokHRRvkyM0//o8/gPnmehcqYOBKRG+4XxZEHOiIKhuSdUCk
-	 /4xadKAFRqmjA==
-Date: Mon, 3 Feb 2025 20:27:49 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, acme@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] perf report: Add latency and parallelism
- profiling documentation
-Message-ID: <Z6GXRZ9NWVQVAanZ@google.com>
-References: <cover.1738592865.git.dvyukov@google.com>
- <4b49d5dd316f5d7119d8b16d5d70f13574158dc6.1738592865.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pk6qAzPi"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a814c54742so52705ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Feb 2025 20:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738643300; x=1739248100; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=isQ8sVd/ZYdXX10+exMeQWn6lcwAN9m7lwK6b1dvzDk=;
+        b=Pk6qAzPiTS4wyCiPDv9YeW+nD23selvZh31KZMCUieW3wushE/Zs2/XpSygQh1yvx1
+         GZ43lkgDrFRQ0wYtfVH574PkFxjlnj+OqyuuWdqFHMnZ/ln2kd93I9hltlv2aWc6YZvB
+         XuvkEL8Pbmp5JzCfuMNAMiOwwPBTRljMiOoYyV6BUNOVxz0ElmsuFJhNkWmY61UWJnOB
+         cpraMjdPzGXWAxOh3g0AhBwz95cxk9oWmP0rNYErIxTEoNAYZMt2nnRLdEWS7AhRuYyX
+         lzkdFlKdUVDRW0g3fjqn1IuU8XoKPvb6Heuopqg23t9M70921BqGiRK7KaLzSQI5sMSM
+         C3jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738643300; x=1739248100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=isQ8sVd/ZYdXX10+exMeQWn6lcwAN9m7lwK6b1dvzDk=;
+        b=Oqa5xa3ZXr55bLEzvywM9Epuyn2g7QXtuzMUbGOJgG/mhKtH5FqgCro9+udZMxI376
+         1OBGuBK4+MfFEsSREhaL1hcPRwtDMDqR8qqcUgwVplQ5b88NZjy4zTf4y5bVqzL2NtPX
+         ww76ET5wyQXzr4fQt1U0fBg5pib6A6BbURlYrm3CL+6dQnpcwfkth0FKBkgsNDjazvCb
+         dVAetXXVcUF8bETpe8c2sRQUBJDQcvvETPx4BeJzeefPQa28FEF4/cV2TLGFFFMaZd14
+         OwOJozxrE2gKDMcpc7efqJB91K3lH4Z56tgtVLellqOGOWi4EHSLRBG/auRrcSX4us0e
+         XSgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpdpUT2cL7d5xbDo64n+wRPPeQ8rGKLvZpKWySbYdF9OX/nQlDG+nj3+e1wc/ifac2FM5r5W49Yech+dtTla0p@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJmDzyAJsyn97Qk3FW1C1i/oSDTAqtNRsnV+wrS89/ImDRdDK/
+	u/0C5oY+XixZbQd+E6hTxIOucR+mr5ZpP3jPxV8z3Q9EP0k6EE1PACJ0fAzZO8kXoF4VARhNvX9
+	/NHg6a2qikzPzLTMtev+G7U8+qURCV+mEdny1
+X-Gm-Gg: ASbGncsc4ZNRg1LuZ+8CjARjG5pibJRHXKMjzCzftXbzTKJ/Etxf8uN+TXinyOeOSUU
+	iits3N4MmIUgjn7fvdetK8HgG5eT3Krk7lkgPUSoazazpFHBGR/ZMNCuEHtqdgUJN1MtTY9s+Lg
+	==
+X-Google-Smtp-Source: AGHT+IG5sTzG4j4YPq4xO+O9ef7TyR2xB59ZmGBmUkPqmg96LmPVUmcN8SRQ57RjaaxfneElC7JIk0BXDOEJWkYakS4=
+X-Received: by 2002:a05:6e02:1a86:b0:3a7:e616:8d36 with SMTP id
+ e9e14a558f8ab-3d040f54d14mr1314175ab.9.1738643300377; Mon, 03 Feb 2025
+ 20:28:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4b49d5dd316f5d7119d8b16d5d70f13574158dc6.1738592865.git.dvyukov@google.com>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-3-namhyung@kernel.org>
+ <CAP-5=fUK_aMf8ZYJxmbOLzbu_zZWKYwx_Vvj64x3_2=0u7jbMw@mail.gmail.com> <Z6GFxj4ksBG78Pbu@google.com>
+In-Reply-To: <Z6GFxj4ksBG78Pbu@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 3 Feb 2025 20:28:08 -0800
+X-Gm-Features: AWEUYZlOB_rJalcOqCZ5ujU9FwPrE54gubqbIz1zz5GcuR0UF1v4I94Az6o-okA
+Message-ID: <CAP-5=fU9Bh0_AiNhEKCKKyaWZxPyzQKNeOODL-yZFo-cMSB8Jg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf trace: Convert syscall_stats to hashmap
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 03:30:42PM +0100, Dmitry Vyukov wrote:
-> Describe latency and parallelism profiling, related flags, and differences
-> with the currently only supported CPU-consumption-centric profiling.
+On Mon, Feb 3, 2025 at 7:13=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Sat, Feb 01, 2025 at 11:03:54PM -0800, Ian Rogers wrote:
+> > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > It was using a RBtree-based int-list as a hash and a custome resort
+> > > logic for that.  As we have hashmap, let's convert to it and add a
+> > > sorting function using an array.
+> >
+> > How is a hashmap connected to a sorting function of an array?
+>
+> By not using the int-list (and rb_resort code), it needs a new (re)sort
+> function.  So I added one by copying pointers to hashmap entries to an
+> array and calling qsort(3).  Anyway, I'll update the description.
 
-It doesn't seem to have descriptions for the --latency option (for perf
-record and report).  Probably better to put them in the previous patch.
+Wouldn't pointers to entries be broken by rehashing?
 
-> 
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../callchain-overhead-calculation.txt        |  5 +-
->  .../cpu-and-latency-overheads.txt             | 85 +++++++++++++++++++
->  tools/perf/Documentation/perf-report.txt      | 49 +++++++----
->  tools/perf/Documentation/tips.txt             |  3 +
->  4 files changed, 123 insertions(+), 19 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/callchain-overhead-calculation.txt b/tools/perf/Documentation/callchain-overhead-calculation.txt
-> index 1a757927195ed..e0202bf5bd1a0 100644
-> --- a/tools/perf/Documentation/callchain-overhead-calculation.txt
-> +++ b/tools/perf/Documentation/callchain-overhead-calculation.txt
-> @@ -1,7 +1,8 @@
->  Overhead calculation
->  --------------------
-> -The overhead can be shown in two columns as 'Children' and 'Self' when
-> -perf collects callchains.  The 'self' overhead is simply calculated by
-> +The CPU overhead can be shown in two columns as 'Children' and 'Self'
-> +when perf collects callchains (and corresponding 'Wall' columns for
-> +wall-clock overhead).  The 'self' overhead is simply calculated by
->  adding all period values of the entry - usually a function (symbol).
->  This is the value that perf shows traditionally and sum of all the
->  'self' overhead values should be 100%.
-> diff --git a/tools/perf/Documentation/cpu-and-latency-overheads.txt b/tools/perf/Documentation/cpu-and-latency-overheads.txt
-> new file mode 100644
-> index 0000000000000..3b6d637054651
-> --- /dev/null
-> +++ b/tools/perf/Documentation/cpu-and-latency-overheads.txt
-> @@ -0,0 +1,85 @@
-> +CPU and latency overheads
-> +-------------------------
-> +There are two notions of time: wall-clock time and CPU time.
-> +For a single-threaded program, or a program running on a single-core machine,
-> +these notions are the same. However, for a multi-threaded/multi-process program
-> +running on a multi-core machine, these notions are significantly different.
-> +Each second of wall-clock time we have number-of-cores seconds of CPU time.
-> +Perf can measure overhead for both of these times (shown in 'overhead' and
-> +'latency' columns for CPU and wall-clock time correspondingly).
-> +
-> +Optimizing CPU overhead is useful to improve 'throughput', while optimizing
-> +latency overhead is useful to improve 'latency'. It's important to understand
-> +which one is useful in a concrete situation at hand. For example, the former
-> +may be useful to improve max throughput of a CI build server that runs on 100%
-> +CPU utilization, while the latter may be useful to improve user-perceived
-> +latency of a single interactive program build.
-> +These overheads may be significantly different in some cases. For example,
-> +consider a program that executes function 'foo' for 9 seconds with 1 thread,
-> +and then executes function 'bar' for 1 second with 128 threads (consumes
-> +128 seconds of CPU time). The CPU overhead is: 'foo' - 6.6%, 'bar' - 93.4%.
-> +While the latency overhead is: 'foo' - 90%, 'bar' - 10%. If we try to optimize
-> +running time of the program looking at the (wrong in this case) CPU overhead,
-> +we would concentrate on the function 'bar', but it can yield only 10% running
-> +time improvement at best.
-> +
-> +By default, perf shows only CPU overhead. To show latency overhead, use
-> +'perf record --latency' and 'perf report':
-> +
-> +-----------------------------------
-> +Overhead  Latency  Command
-> +  93.88%   25.79%  cc1
-> +   1.90%   39.87%  gzip
-> +   0.99%   10.16%  dpkg-deb
-> +   0.57%    1.00%  as
-> +   0.40%    0.46%  sh
-> +-----------------------------------
-> +
-> +To sort by latency overhead, use 'perf report --latency':
-> +
-> +-----------------------------------
-> +Latency  Overhead  Command
-> + 39.87%     1.90%  gzip
-> + 25.79%    93.88%  cc1
-> + 10.16%     0.99%  dpkg-deb
-> +  4.17%     0.29%  git
-> +  2.81%     0.11%  objtool
-> +-----------------------------------
-> +
-> +To get insight into the difference between the overheads, you may check
-> +parallelization histogram with '--sort=latency,parallelism,comm,symbol --hierarchy'
+> >
+> > >  It's also to prepare supporting
+> > > system-wide syscall stats.
+> > >
+> > > No functional changes intended.
+> > >
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/builtin-trace.c | 122 ++++++++++++++++++++++++++++-------=
+--
+> > >  1 file changed, 93 insertions(+), 29 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > index 7e0324a2e9182088..1d32ef2b05ae8c1c 100644
+> > > --- a/tools/perf/builtin-trace.c
+> > > +++ b/tools/perf/builtin-trace.c
+> > > @@ -39,6 +39,7 @@
+> > >  #include "util/synthetic-events.h"
+> > >  #include "util/evlist.h"
+> > >  #include "util/evswitch.h"
+> > > +#include "util/hashmap.h"
+> > >  #include "util/mmap.h"
+> > >  #include <subcmd/pager.h>
+> > >  #include <subcmd/exec-cmd.h>
+> > > @@ -63,7 +64,6 @@
+> > >  #include "print_binary.h"
+> > >  #include "string2.h"
+> > >  #include "syscalltbl.h"
+> > > -#include "rb_resort.h"
+> > >  #include "../perf.h"
+> > >  #include "trace_augment.h"
+> > >
+> > > @@ -1519,17 +1519,55 @@ struct thread_trace {
+> > >                 struct file   *table;
+> > >         } files;
+> > >
+> > > -       struct intlist *syscall_stats;
+> > > +       struct hashmap *syscall_stats;
+> > >  };
+> > >
+> > > +static size_t id_hash(long key, void *ctx __maybe_unused)
+> >
+> > I find the use of "id" in this code confusing - it is a pre-existing
+> > problem, but you add to it here. I think a more intention revealing
+> > name would be something like system_call_number_hash.
+>
+> Yep, probably 'syscall_id_hash'.
 
-I think you need to omit latency in the sort key and recommend users to
-use --latency option instead.
+What is with "id"? man syscall calls them numbers. Calling the ids
+makes me think they have a value other than the system call number.
 
-  'perf report --hierarchy --latency --sort=parallelism,comm,symbol'
+> >
+> > > +{
+> > > +       return key;
+> > > +}
+> > > +
+> > > +static bool id_equal(long key1, long key2, void *ctx __maybe_unused)
+> > > +{
+> > > +       return key1 =3D=3D key2;
+> > > +}
+> > > +
+> > > +static struct hashmap *alloc_syscall_stats(void)
+> > > +{
+> > > +       struct hashmap *stats =3D hashmap__new(id_hash, id_equal, NUL=
+L);
+> > > +
+> > > +       /* just for simpler error check */
+> >
+> > What is "just for simpler error check" ?
+>
+> Probably it can go away.  hashmap__new() returns a pointer or an error.
+> But normally allocation functions tend to return NULL in error cases.
+> So I changed it.
 
 
-> +flags. It shows fraction of (wall-clock) time the workload utilizes different
-> +numbers of cores ('Parallelism' column). For example, in the following case
-> +the workload utilizes only 1 core most of the time, but also has some
-> +highly-parallel phases, which explains significant difference between
-> +CPU and wall-clock overheads:
-> +
-> +-----------------------------------
-> +  Latency  Overhead     Parallelism / Command / Symbol
-> ++  56.98%     2.29%     1
-> ++  16.94%     1.36%     2
-> ++   4.00%    20.13%     125
-> ++   3.66%    18.25%     124
-> ++   3.48%    17.66%     126
-> ++   3.26%     0.39%     3
-> ++   2.61%    12.93%     123
-> +-----------------------------------
-> +
-> +By expanding corresponding lines, you may see what commands/functions run
-> +at the given parallelism level:
-> +
-> +-----------------------------------
-> +  Latency  Overhead     Parallelism / Command / Symbol
-> +-  56.98%     2.29%     1
-> +      32.80%     1.32%     gzip
-> +       4.46%     0.18%     cc1
-> +       2.81%     0.11%     objtool
-> +       2.43%     0.10%     dpkg-source
-> +       2.22%     0.09%     ld
-> +       2.10%     0.08%     dpkg-genchanges
-> +-----------------------------------
-> +
-> +To see the normal function-level profile for particular parallelism levels
-> +(number of threads actively running on CPUs), you may use '--parallelism'
-> +filter. For example, to see the profile only for low parallelism phases
-> +of a workload use '--latency --parallelism=1-2' flags.
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index 87f8645194062..7e0ba990d71e8 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -44,7 +44,7 @@ OPTIONS
->  --comms=::
->  	Only consider symbols in these comms. CSV that understands
->  	file://filename entries.  This option will affect the percentage of
-> -	the overhead column.  See --percentage for more info.
-> +	the overhead and latency columns.  See --percentage for more info.
->  --pid=::
->          Only show events for given process ID (comma separated list).
->  
-> @@ -54,12 +54,12 @@ OPTIONS
->  --dsos=::
->  	Only consider symbols in these dsos. CSV that understands
->  	file://filename entries.  This option will affect the percentage of
-> -	the overhead column.  See --percentage for more info.
-> +	the overhead and latency columns.  See --percentage for more info.
->  -S::
->  --symbols=::
->  	Only consider these symbols. CSV that understands
->  	file://filename entries.  This option will affect the percentage of
-> -	the overhead column.  See --percentage for more info.
-> +	the overhead and latency columns.  See --percentage for more info.
->  
->  --symbol-filter=::
->  	Only show symbols that match (partially) with this filter.
-> @@ -68,6 +68,16 @@ OPTIONS
->  --hide-unresolved::
->          Only display entries resolved to a symbol.
->  
-> +--parallelism::
-> +        Only consider these parallelism levels. Parallelism level is the number
-> +        of threads that actively run on CPUs at the time of sample. The flag
-> +        accepts single number, comma-separated list, and ranges (for example:
-> +        "1", "7,8", "1,64-128"). This is useful in understanding what a program
-> +        is doing during sequential/low-parallelism phases as compared to
-> +        high-parallelism phases. This option will affect the percentage of
-> +        the overhead and latency columns. See --percentage for more info.
-> +        Also see the `CPU and latency overheads' section for more details.
-> +
->  -s::
->  --sort=::
->  	Sort histogram entries by given key(s) - multiple keys can be specified
-> @@ -87,6 +97,7 @@ OPTIONS
->  	entries are displayed as "[other]".
->  	- cpu: cpu number the task ran at the time of sample
->  	- socket: processor socket number the task ran at the time of sample
-> +	- parallelism: number of running threads at the time of sample
->  	- srcline: filename and line number executed at the time of sample.  The
->  	DWARF debugging info must be provided.
->  	- srcfile: file name of the source file of the samples. Requires dwarf
-> @@ -97,12 +108,14 @@ OPTIONS
->  	- cgroup_id: ID derived from cgroup namespace device and inode numbers.
->  	- cgroup: cgroup pathname in the cgroupfs.
->  	- transaction: Transaction abort flags.
-> -	- overhead: Overhead percentage of sample
-> -	- overhead_sys: Overhead percentage of sample running in system mode
-> -	- overhead_us: Overhead percentage of sample running in user mode
-> -	- overhead_guest_sys: Overhead percentage of sample running in system mode
-> +	- overhead: CPU overhead percentage of sample.
-> +	- latency: latency (wall-clock) overhead percentage of sample.
-> +	  See the `CPU and latency overheads' section for more details.
-> +	- overhead_sys: CPU overhead percentage of sample running in system mode
-> +	- overhead_us: CPU overhead percentage of sample running in user mode
-> +	- overhead_guest_sys: CPU overhead percentage of sample running in system mode
->  	on guest machine
-> -	- overhead_guest_us: Overhead percentage of sample running in user mode on
-> +	- overhead_guest_us: CPU overhead percentage of sample running in user mode on
->  	guest machine
->  	- sample: Number of sample
->  	- period: Raw number of event count of sample
-> @@ -125,8 +138,8 @@ OPTIONS
->  	- weight2: Average value of event specific weight (2nd field of weight_struct).
->  	- weight3: Average value of event specific weight (3rd field of weight_struct).
->  
-> -	By default, comm, dso and symbol keys are used.
-> -	(i.e. --sort comm,dso,symbol)
-> +	By default, overhead, comm, dso and symbol keys are used.
-> +	(i.e. --sort overhead,comm,dso,symbol).
->  
->  	If --branch-stack option is used, following sort keys are also
->  	available:
-> @@ -201,9 +214,9 @@ OPTIONS
->  --fields=::
->  	Specify output field - multiple keys can be specified in CSV format.
->  	Following fields are available:
-> -	overhead, overhead_sys, overhead_us, overhead_children, sample, period,
-> -	weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.  The
-> -	last 3 names are alias for the corresponding weights.  When the weight
-> +	overhead, latency, overhead_sys, overhead_us, overhead_children, sample,
-> +	period, weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.
-> +	The last 3 names are alias for the corresponding weights.  When the weight
->  	fields are used, they will show the average value of the weight.
->  
->  	Also it can contain any sort key(s).
-> @@ -289,7 +302,7 @@ OPTIONS
->  	Accumulate callchain of children to parent entry so that then can
->  	show up in the output.  The output will have a new "Children" column
->  	and will be sorted on the data.  It requires callchains are recorded.
-> -	See the `overhead calculation' section for more details. Enabled by
-> +	See the `Overhead calculation' section for more details. Enabled by
->  	default, disable with --no-children.
->  
->  --max-stack::
-> @@ -442,9 +455,9 @@ OPTIONS
->  	--call-graph option for details.
->  
->  --percentage::
-> -	Determine how to display the overhead percentage of filtered entries.
-> -	Filters can be applied by --comms, --dsos and/or --symbols options and
-> -	Zoom operations on the TUI (thread, dso, etc).
-> +	Determine how to display the CPU and latency overhead percentage
-> +	of filtered entries. Filters can be applied by --comms, --dsos, --symbols
-> +	and/or --parallelism options and Zoom operations on the TUI (thread, dso, etc).
->  
->  	"relative" means it's relative to filtered entries only so that the
->  	sum of shown entries will be always 100%.  "absolute" means it retains
-> @@ -627,6 +640,8 @@ include::itrace.txt[]
->  --skip-empty::
->  	Do not print 0 results in the --stat output.
->  
-> +include::cpu-and-latency-overheads.txt[]
-> +
->  include::callchain-overhead-calculation.txt[]
->  
->  SEE ALSO
-> diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-> index 67b326ba00407..f6f71e70ff2cb 100644
-> --- a/tools/perf/Documentation/tips.txt
-> +++ b/tools/perf/Documentation/tips.txt
-> @@ -62,3 +62,6 @@ To show context switches in perf report sample context add --switch-events to pe
->  To show time in nanoseconds in record/report add --ns
->  To compare hot regions in two workloads use perf record -b -o file ... ; perf diff --stream file1 file2
->  To compare scalability of two workload samples use perf diff -c ratio file1 file2
-> +For latency profiling, try: perf record/report --latency
-> +For parallelism histogram, try: perf report --hierarchy --sort latency,parallelism,comm,symbol
-
-Ditto.
+It would be easier to read something like ",If error is returned
+change to NULL for a simpler error checking by callers. "
 
 Thanks,
-Namhyung
+Ian
 
-
-> +To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
-> -- 
-> 2.48.1.362.g079036d154-goog
-> 
+> >
+> > > +       if (IS_ERR(stats))
+> > > +               stats =3D NULL;
+> > > +       return stats;
+> > > +}
+> > > +
+> > > +static void delete_syscall_stats(struct hashmap *syscall_stats)
+> > > +{
+> > > +       struct hashmap_entry *pos;
+> > > +       size_t bkt;
+> > > +
+> > > +       if (syscall_stats =3D=3D NULL)
+> > > +               return;
+> > > +
+> > > +       hashmap__for_each_entry(syscall_stats, pos, bkt)
+> > > +               free(pos->pvalue);
+> > > +       hashmap__free(syscall_stats);
+> > > +}
+> > > +
+> > >  static struct thread_trace *thread_trace__new(struct trace *trace)
+> > >  {
+> > >         struct thread_trace *ttrace =3D  zalloc(sizeof(struct thread_=
+trace));
+> > >
+> > >         if (ttrace) {
+> > >                 ttrace->files.max =3D -1;
+> > > -               if (trace->summary)
+> > > -                       ttrace->syscall_stats =3D intlist__new(NULL);
+> > > +               if (trace->summary) {
+> > > +                       ttrace->syscall_stats =3D alloc_syscall_stats=
+();
+> > > +                       if (ttrace->syscall_stats =3D=3D NULL) {
+> > > +                               free(ttrace);
+> > > +                               ttrace =3D NULL;
+> >
+> > This looks overly indented.
+>
+> I'm not sure.  Maybe we can change the code to return early if some more
+> logic would be added.  But I didn't feel the strong needs for that.
+>
+> Thanks,
+> Namhyung
+>
+>
+> > > +                       }
+> > > +               }
+> > >         }
+> > >
+> > >         return ttrace;
+> > > @@ -1544,7 +1582,7 @@ static void thread_trace__delete(void *pttrace)
+> > >         if (!ttrace)
+> > >                 return;
+> > >
+> > > -       intlist__delete(ttrace->syscall_stats);
+> > > +       delete_syscall_stats(ttrace->syscall_stats);
+> > >         ttrace->syscall_stats =3D NULL;
+> > >         thread_trace__free_files(ttrace);
+> > >         zfree(&ttrace->entry_str);
+> > > @@ -2463,22 +2501,19 @@ struct syscall_stats {
+> > >  static void thread__update_stats(struct thread *thread, struct threa=
+d_trace *ttrace,
+> > >                                  int id, struct perf_sample *sample, =
+long err, bool errno_summary)
+> > >  {
+> > > -       struct int_node *inode;
+> > > -       struct syscall_stats *stats;
+> > > +       struct syscall_stats *stats =3D NULL;
+> > >         u64 duration =3D 0;
+> > >
+> > > -       inode =3D intlist__findnew(ttrace->syscall_stats, id);
+> > > -       if (inode =3D=3D NULL)
+> > > -               return;
+> > > -
+> > > -       stats =3D inode->priv;
+> > > -       if (stats =3D=3D NULL) {
+> > > +       if (!hashmap__find(ttrace->syscall_stats, id, &stats)) {
+> > >                 stats =3D zalloc(sizeof(*stats));
+> > >                 if (stats =3D=3D NULL)
+> > >                         return;
+> > >
+> > >                 init_stats(&stats->stats);
+> > > -               inode->priv =3D stats;
+> > > +               if (hashmap__add(ttrace->syscall_stats, id, stats) < =
+0) {
+> > > +                       free(stats);
+> > > +                       return;
+> > > +               }
+> > >         }
+> > >
+> > >         if (ttrace->entry_time && sample->time > ttrace->entry_time)
+> > > @@ -4617,18 +4652,45 @@ static size_t trace__fprintf_threads_header(F=
+ILE *fp)
+> > >         return printed;
+> > >  }
+> > >
+> > > -DEFINE_RESORT_RB(syscall_stats, a->msecs > b->msecs,
+> > > +struct syscall_entry {
+> > >         struct syscall_stats *stats;
+> > >         double               msecs;
+> > >         int                  syscall;
+> > > -)
+> > > +};
+> > > +
+> > > +static int entry_cmp(const void *e1, const void *e2)
+> > >  {
+> > > -       struct int_node *source =3D rb_entry(nd, struct int_node, rb_=
+node);
+> > > -       struct syscall_stats *stats =3D source->priv;
+> > > +       const struct syscall_entry *entry1 =3D e1;
+> > > +       const struct syscall_entry *entry2 =3D e2;
+> > >
+> > > -       entry->syscall =3D source->i;
+> > > -       entry->stats   =3D stats;
+> > > -       entry->msecs   =3D stats ? (u64)stats->stats.n * (avg_stats(&=
+stats->stats) / NSEC_PER_MSEC) : 0;
+> > > +       return entry1->msecs > entry2->msecs ? -1 : 1;
+> > > +}
+> > > +
+> > > +static struct syscall_entry *thread__sort_stats(struct thread_trace =
+*ttrace)
+> > > +{
+> > > +       struct syscall_entry *entry;
+> > > +       struct hashmap_entry *pos;
+> > > +       unsigned bkt, i, nr;
+> > > +
+> > > +       nr =3D ttrace->syscall_stats->sz;
+> > > +       entry =3D malloc(nr * sizeof(*entry));
+> > > +       if (entry =3D=3D NULL)
+> > > +               return NULL;
+> > > +
+> > > +       i =3D 0;
+> > > +       hashmap__for_each_entry(ttrace->syscall_stats, pos, bkt) {
+> > > +               struct syscall_stats *ss =3D pos->pvalue;
+> > > +               struct stats *st =3D &ss->stats;
+> > > +
+> > > +               entry[i].stats =3D ss;
+> > > +               entry[i].msecs =3D (u64)st->n * (avg_stats(st) / NSEC=
+_PER_MSEC);
+> > > +               entry[i].syscall =3D pos->key;
+> > > +               i++;
+> > > +       }
+> > > +       assert(i =3D=3D nr);
+> > > +
+> > > +       qsort(entry, nr, sizeof(*entry), entry_cmp);
+> > > +       return entry;
+> > >  }
+> > >
+> > >  static size_t thread__dump_stats(struct thread_trace *ttrace,
+> > > @@ -4636,10 +4698,10 @@ static size_t thread__dump_stats(struct threa=
+d_trace *ttrace,
+> > >  {
+> > >         size_t printed =3D 0;
+> > >         struct syscall *sc;
+> > > -       struct rb_node *nd;
+> > > -       DECLARE_RESORT_RB_INTLIST(syscall_stats, ttrace->syscall_stat=
+s);
+> > > +       struct syscall_entry *entries;
+> > >
+> > > -       if (syscall_stats =3D=3D NULL)
+> > > +       entries =3D thread__sort_stats(ttrace);
+> > > +       if (entries =3D=3D NULL)
+> > >                 return 0;
+> > >
+> > >         printed +=3D fprintf(fp, "\n");
+> > > @@ -4648,8 +4710,10 @@ static size_t thread__dump_stats(struct thread=
+_trace *ttrace,
+> > >         printed +=3D fprintf(fp, "                                   =
+  (msec)    (msec)    (msec)    (msec)        (%%)\n");
+> > >         printed +=3D fprintf(fp, "   --------------- --------  ------=
+ -------- --------- --------- ---------     ------\n");
+> > >
+> > > -       resort_rb__for_each_entry(nd, syscall_stats) {
+> > > -               struct syscall_stats *stats =3D syscall_stats_entry->=
+stats;
+> > > +       for (size_t i =3D 0; i < ttrace->syscall_stats->sz; i++) {
+> > > +               struct syscall_entry *entry =3D &entries[i];
+> > > +               struct syscall_stats *stats =3D entry->stats;
+> > > +
+> > >                 if (stats) {
+> > >                         double min =3D (double)(stats->stats.min) / N=
+SEC_PER_MSEC;
+> > >                         double max =3D (double)(stats->stats.max) / N=
+SEC_PER_MSEC;
+> > > @@ -4660,10 +4724,10 @@ static size_t thread__dump_stats(struct threa=
+d_trace *ttrace,
+> > >                         pct =3D avg ? 100.0 * stddev_stats(&stats->st=
+ats) / avg : 0.0;
+> > >                         avg /=3D NSEC_PER_MSEC;
+> > >
+> > > -                       sc =3D &trace->syscalls.table[syscall_stats_e=
+ntry->syscall];
+> > > +                       sc =3D &trace->syscalls.table[entry->syscall]=
+;
+> > >                         printed +=3D fprintf(fp, "   %-15s", sc->name=
+);
+> > >                         printed +=3D fprintf(fp, " %8" PRIu64 " %6" P=
+RIu64 " %9.3f %9.3f %9.3f",
+> > > -                                          n, stats->nr_failures, sys=
+call_stats_entry->msecs, min, avg);
+> > > +                                          n, stats->nr_failures, ent=
+ry->msecs, min, avg);
+> > >                         printed +=3D fprintf(fp, " %9.3f %9.2f%%\n", =
+max, pct);
+> > >
+> > >                         if (trace->errno_summary && stats->nr_failure=
+s) {
+> > > @@ -4677,7 +4741,7 @@ static size_t thread__dump_stats(struct thread_=
+trace *ttrace,
+> > >                 }
+> > >         }
+> > >
+> > > -       resort_rb__delete(syscall_stats);
+> > > +       free(entries);
+> > >         printed +=3D fprintf(fp, "\n\n");
+> > >
+> > >         return printed;
+> > > --
+> > > 2.48.1.262.g85cc9f2d1e-goog
+> > >
