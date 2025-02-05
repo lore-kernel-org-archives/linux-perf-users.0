@@ -1,172 +1,125 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A716F25A647
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 04:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F44C2EF
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 05:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738731507; cv=none; b=LFDS94QEOwgUmWaXXUGhqAJa83vYfVSIDcbPM4ndXstWoUL7OSS/dX9RfUhTyhp2CBmdsqVENj5hVQsOn8W0pOMwiLiXkn7zlNAmUGxp0BWSgHHS5ZCmkqc7V3eiXSLaj+jwOvejdQUX0Qs4Noo5m2CqdHKcn/wzgpZjpI9L3ew=
+	t=1738731628; cv=none; b=MmsUUpmXxX6U3q/fgH+zpFK3ew4psW8dl2KgkCDAJ7O1hVbI1HN5afffFsh5PVoqih8gVY/LBdPhz5LCkWdlvrxiM5hPVCBYDNEOyrnjZFh4XzjTWZnUzBz3YT8CD3rK4PA/2oRPRYRpEzcrL0a9BtOD8IybWp48KNSWTZeHOHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738731507; c=relaxed/simple;
-	bh=9WFzx6J/v5Plw43RdCEUd6Vhg328nO/Nojg4b0wrzWU=;
+	s=arc-20240116; t=1738731628; c=relaxed/simple;
+	bh=XoHgY57qdbAKv8uWUYNfx7XWO/S0+Vz8NkbzUcrg87Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t4llyLTzmirhZ2XkIcw112aS9RKcImzhd7VpOiVFh7AdmlrqAfljk/HtJVA1atYcbVW/Cz1rB2Gep5B7562sutj4Jq/oMyUVvBYgg6eFrbyD7VuYdWkybLQRV+3UZnW69VE1bvAHLn7wOiHh4kVWtNy6wQkXnxxE5XI1TY2Vw/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eHpxrkyj; arc=none smtp.client-ip=209.85.166.180
+	 To:Cc:Content-Type; b=ENaBprP7HeEVhQiRGk9LDaYEIZSfuCn5tca3u6J735T843oTDjuz6ntTG2hsCUGTrhOiDsVQnVrshO8xi+5S1j4E6yo41FtiSrWsr0qqYxIe6OC1INwDyFbTXhkRpTjweOd7ofXvuAOLuzd9hYyptf432J+N92BruBbTtz9yv+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eoixNFmE; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHpxrkyj"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so96395ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 20:58:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eoixNFmE"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so212565ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 21:00:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738731504; x=1739336304; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738731625; x=1739336425; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b4hCTtW+UNQasE56z17WAMyt4tEPi3GvC0a1WQoJPkA=;
-        b=eHpxrkyj4ExAp0uiYiEpnRnXThXcWccjcOpC8bA9Fa6xEcZwgMv5+FS3o9hF9ngeiW
-         5iJiRFvXNAh/yRnNwjsD25OBuakS7kA5Mp+MkpAV2Hxs/w55TLBBf0joMAcw6BF3gG44
-         T9vghv2yg3COWmfyYa6hDVh/tfHzTPDIOROvULULcWz2PGE5K0hPli+XrcSPt33+S804
-         DXCTfZfF4n3sgyrwQrXuG0sOY1PWhUWjYrlwgGwDehnvQSbcZTW8p0Whib/B+D0sTCYs
-         wUVuB1DUHyW9judx2Lg5xayE5pUE3lw4u8KAW7d96QkZeDCIcB7Ljt16Pc7JYdSqPmn5
-         FxCg==
+        bh=DBrAJ33Lv27IH622MIOkF0t5tIX46ic8QrDeWtn4wec=;
+        b=eoixNFmEX68JlxnaYLurIKdqSWOhSiGJFSzu2jmHgNx4kp9zODr2UWmTF5WgWROV+Q
+         uwFpL7fpkiQRKWB+fexlIztGvecToTC4VckpUkN6yphGA7BiCZboWGN9fr5Zg1DrsPqD
+         VBS1ip6QSbd4dSi+Yf8+2Dah9KFyGqKJHbqj8V0BZLtIbLQCIdcvxmzeq55QhU+4LqRV
+         Nfrc6yrxVZq/l6AJ/bVD6SJoX4pOcoKmt8FBHGjZ3ZYtC+G6bS1iLmWu4jIDVhwK89vN
+         5RDcVvsD1CdsPHB7XxfG1lJ32bZxpRkufBKTd2+eVT94S8VeZgXDv93+ow6Wu6yI1QmE
+         Lz7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738731504; x=1739336304;
+        d=1e100.net; s=20230601; t=1738731625; x=1739336425;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b4hCTtW+UNQasE56z17WAMyt4tEPi3GvC0a1WQoJPkA=;
-        b=a84U+aGw9E+Qovq06Sz4VbMDlA7o22SyUMXMOKlqT44sEoiCxRnnBoWvwkxp7QKhJP
-         lAhsu4QDOgLI066ItuFe00gkj8y32MaUCb9RmtjQ8dDxquwFdZPqf7VlbU8rQPckGlFf
-         uTeQgzAVYg3jjBXEP/padwG00FuzFDGvDw9La/FYhmk7YYAgdKudef9h5AkDaedV9peH
-         ervLkvOpJIeqqg9gkCiR6LWU7WwvKqQlU1SbzvyLALAafpZ1bEu4blKNcjQd3oHgPGB5
-         dz3UUJghCklTi398lx2Kyr30k3jU0X4Np2ixJLwK5fuSW3Mq8JkVeZ1dk5JfVCKmmJoO
-         GKqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJMAkUiqTTEQZxR0RmCjU5HKQ83wkXtfIK2NP38QAdT4+3eVZz8GpcNh6rOLi9kpmG1ycnWgfkccGNPeDfVIJV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzANDqRkiFfjHSbbgK5yNvj3d8qEsHf5SjC9ICUfnH14d+HvZ20
-	GHAeCMiIj2bcv31Ew50/hjbP3Dq3IhTY7vj7tovvNRukNAQB+0XZiqjqucqTe1IgIBt4WOYN5ZK
-	0UE6K6M3KdEEvpv0E69IQATsA+NC1Kd6lzjuA
-X-Gm-Gg: ASbGncvq2OtBbDzH8yXT3k+arZ3aCEGq9lABo5MZ8OfCzF3SsdzC+YvfHBoxOjutjc6
-	cemu4RrcCQqDYW6cGLFmiCcSyqT7YQ7sh1xrJOslC9TqUU5XmMTHysrlyzjVjhTM6Nc+fHp3Eng
+        bh=DBrAJ33Lv27IH622MIOkF0t5tIX46ic8QrDeWtn4wec=;
+        b=omenoYrhityGQUJEC/Fscru6WWEAtlHtFe5ZXXs3sNDKhQHmXcVyU4oPdvDjpEWzHC
+         swpWcEnKZXCrFjOzysg5vTW4INHPr0XqK2V0KuybJw7f/kEFxSpnJv7UnUlJLsMXxkm2
+         HV7SwBCzh63SSr5es+JzA7F66uxgTN/0zSlakytXDvsnRGwyhEDvwLNvG3HB7wpr2q3T
+         j4DwhTOM/3O0YWzF81Mg1Phij75hBN0QjNKgK5GUqfMuqE0FKMaXcI8c69zkllCojms+
+         H/la4222fm6nZPuWHsVnNiG+jIkW+GGwNBe9s9yFuQc8PgU6jFrQtWg1sjPlMJDaVqKp
+         H14Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOAePbBcf63sv2VanMlwvRoZTI5FbC9lLp/4wW3B8N0F50jdio7GAustSRVPA7EkFXKjdfpyiBgpk5Gz8oZpqZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpFwM7iDcklcU8fLyniP31lKhj/faEvaz/qqmqvfUlz3/1e23l
+	PTawtwOzAq/PRGzmX5SjzbwSa4oTF9Qk1cU1FKpwHbbyAshea3RPMQyZeguP+fvNC0EoZ3r4I7i
+	L3+PnMTnXXpxQQykMI+YQQIaEKM998w2cud7R
+X-Gm-Gg: ASbGnctlSmTxFZ+JFC0xqBiUin1hrS8LIbHwRsYdq8UQC4YrAcrrj5lCBInNzWQQ2iu
+	57vtoDqkoQV884lICeLhCPORT/aFLULi5uZKaDWW0kLj0oHDgUe7klPqTp6pEbQuBM9o8EPe3WQ
 	==
-X-Google-Smtp-Source: AGHT+IF7DCtlwiws+AUFDCWEi3ZzJPfywo536Jiu42HJH2ResZCuFJd3GpfNEGoINBVZsPY6DKofge8JxcTbg6yh2Rk=
-X-Received: by 2002:a05:6e02:1a01:b0:3cf:fcc5:793c with SMTP id
- e9e14a558f8ab-3d03fbedef4mr6698925ab.16.1738731503647; Tue, 04 Feb 2025
- 20:58:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE5v6UIxUtbhZWXvQ6xeQiRfsd1Lh1y3K7nKT+DdV2MV+Ch6CX6fJX9kXWxtmkarMn0roBxr/1rIM2Ik8IIu/M=
+X-Received: by 2002:a05:6e02:1f0f:b0:3cf:c98a:ceba with SMTP id
+ e9e14a558f8ab-3d03fc6611dmr7494995ab.22.1738731625326; Tue, 04 Feb 2025
+ 21:00:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204213259.127939-1-irogers@google.com> <CAP-5=fXpuND+kNe16CJMETkMOW+__eQpB8No0ra5gyEcfqCCKQ@mail.gmail.com>
- <d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com>
-In-Reply-To: <d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com>
+References: <20250201071455.718247-1-irogers@google.com> <20250201071455.718247-3-irogers@google.com>
+ <CAH0uvogeG9rUw+1huquE=8fEq8AdJaSygS94G8a05=cHckjndg@mail.gmail.com>
+In-Reply-To: <CAH0uvogeG9rUw+1huquE=8fEq8AdJaSygS94G8a05=cHckjndg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 20:58:12 -0800
-X-Gm-Features: AWEUYZnSgAq-mLU5zO-rhdGZGS5UNLRNVu_ntvMGNswSGB_r4g5_i1RrsiHp-8w
-Message-ID: <CAP-5=fV8EcxVZR0Be6wb57_VvssE9FYFBTmbd415CqmidGWT7g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "Baker, Edward" <edward.baker@intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
-	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Date: Tue, 4 Feb 2025 21:00:14 -0800
+X-Gm-Features: AWEUYZlxJYAftveNvjFByQ6RA0wq7gWZe-nwQuI2bmCaSivCz6TrVnDN2aRhlBs
+Message-ID: <CAP-5=fX1bePwr5QGZQAMxWv1zvBY3dxOhbMd0H5UYQDXMrSKMQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/7] perf trace: Reorganize syscalls
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 8:28=E2=80=AFPM Falcon, Thomas <thomas.falcon@intel.=
-com> wrote:
+On Tue, Feb 4, 2025 at 4:12=E2=80=AFPM Howard Chu <howardchu95@gmail.com> w=
+rote:
 >
-> On Tue, 2025-02-04 at 13:35 -0800, Ian Rogers wrote:
-> > On Tue, Feb 4, 2025 at 1:33=E2=80=AFPM Ian Rogers <irogers@google.com> =
+> Hello Ian,
+>
+> Thanks for doing this.
+>
+> On Fri, Jan 31, 2025 at 11:15=E2=80=AFPM Ian Rogers <irogers@google.com> =
 wrote:
-> > >
-> > > Update the Intel vendor events to the latest.
-> > > Update the metrics to TMA 5.01.
-> > > Add Arrowlake and Clearwaterforest support.
-> > > Add metrics for LNL and GNR.
-> > > Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
-> > >
-> > > The perf json was generated using the script:
-> > > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.p=
-y
-> > > with the generated json being in:
-> > > https://github.com/intel/perfmon/tree/main/scripts/perf
-> > >
-> > > Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> > > <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>
-> > > and
-> > > Weilin Wang <weilin.wang@intel.com> for helping get this patch
-> > > series
-> > > together.
-> > >
-> > > v4: Fix TSC events on hybrid mistakenly specifying the core PMU
-> > >     inhibiting the use of the msr PMU.
-> > > v3: Fixes for hybrid metrics that were missing PMU. Update to the
-> > >     latest events.
-> > > v2: Fix hybrid and Co-authored-by tag issues reported by
-> > >     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition
-> > > of
-> > >     Clearwaterforest.
+[snip]
+> > @@ -2104,11 +2123,12 @@ static int trace__read_syscall_info(struct trac=
+e *trace, int id)
+> >          */
+> >         if (IS_ERR(sc->tp_format)) {
+> >                 sc->nonexistent =3D true;
+> > -               return PTR_ERR(sc->tp_format);
+> > +               err =3D PTR_ERR(sc->tp_format);
+> > +               sc->tp_format =3D NULL;
+> > +               return err;
+> >         }
 > >
-> > Sorry, forgot to add Thomas again.
-> > https://lore.kernel.org/lkml/20250204213259.127939-1-irogers@google.com=
-/
+> > -       if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
+> > -                                       RAW_SYSCALL_ARGS_NUM : sc->tp_f=
+ormat->format.nr_fields))
+> > +       if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields=
+))
 >
-> Hi, I'm seeing some warnings like this and the all metrics test is
-> skipped:
->
-> Testing tma_info_inst_mix_iparith
-> FP issues
-> Cannot resolve IDs for tma_info_inst_mix_iparith:
-> cpu_core@INST_RETIRED.ANY@ / (cpu_core@FP_ARITH_INST_RETIRED.SCALAR@ +
-> cpu_core@FP_ARITH_INST_RETIRED.VECTOR@)
-> Testing tma_info_inst_mix_iparith_avx128
-> FP issues
-> Cannot resolve IDs for tma_info_inst_mix_iparith_avx128:
-> cpu_core@INST_RETIRED.ANY@ /
-> (cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE@ +
-> cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE@)
-> Testing tma_info_inst_mix_iparith_avx256
-> FP issues
-> Cannot resolve IDs for tma_info_inst_mix_iparith_avx256:
-> cpu_core@INST_RETIRED.ANY@ /
-> (cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE@ +
-> cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE@)
-> Testing tma_info_inst_mix_iparith_scalar_dp
-> FP issues
-> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_dp:
-> cpu_core@INST_RETIRED.ANY@ /
-> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_DOUBLE@
-> Testing tma_info_inst_mix_iparith_scalar_sp
-> FP issues
-> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_sp:
-> cpu_core@INST_RETIRED.ANY@ /
-> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_SINGLE@
+> Makes sense because IS_ERR(sc->tp_format) is checked a few lines
+> above. However, nr_fields can be 7 with the __syscall_nr prefix. I
+> sent a patch to fix this, but it's not included here... Never mind,
+> it's off-topic. This patch looks good.
 
-Thanks Tom, we've gone from a fail to skip - so progress! I think it
-actually isn't something to worry about. These metrics are measuring
-vector and floating point things. We run a workload, when testing the
-metrics, that doesn't have floating point and vector operations. This
-causes issues with metrics for these instructions as the counters
-don't count anything. Because of this I added some logic to just skip
-when we see these failures:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/shell/stat_all_metrics.sh?h=3Dperf-tools-next#n51
-but a better fix would be to have a workload with FP and AMX operations.
-
-You could test these metrics work manually, by running something like:
-$ perf stat -M tma_info_inst_mix_iparith <benchmark>
-where <benchmark> would need to contain FP or AMX instructions.
+:-) So is this a reviewed-by? What about the other patches?
 
 Thanks,
 Ian
