@@ -1,96 +1,146 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9AD8C11;
-	Wed,  5 Feb 2025 12:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A7114A630;
+	Wed,  5 Feb 2025 13:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760387; cv=none; b=SfGGcroI5EtizQyhnPWM5tqP84AanI75TmoYgifIw9tD2dGdx9yAWO3XOfkfckSl3wIi/8oe6ZU/s5SkxXpqQKkbaZusp372/bLJQNF+OWZINbffhQXUEu35LzlXarq6LREDwwfta1bOmvuhUJ5DkMdcL4XYGqLH/s3P3o7DHSI=
+	t=1738763854; cv=none; b=J0yH4oaj3ceRmLMYd/+xs2PBNkY/e68t3EAu6JcEe9+SwAPICVNcuqokohQBQMqi89tD5CX4B67o0+tQt04As9WyAofqEry2lP9o6tqTMLWGd7S9An/MxhnpijAi82rr9fNi2rdlEuXuJLx6UVEoJZyKRbepqIc1OthE/L2KXRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760387; c=relaxed/simple;
-	bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MKv1JxeD8TCnCnhPWv8mwBwyY6AxXH7Km5KbnImV38EN6D3a4HPeajaQBaca9Kupq7/SkLjd+c6Vqugg36NLz/PW1+FnEMRs0t9R2h4SbH3GoiUhmwPcz+a/LxAcHGbk7jTtLKbW10ICdnxevmXcP6qx8j9aXSSDvmLbnzxWEcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzadPKl/; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738763854; c=relaxed/simple;
+	bh=CuN4O/okRhmL3T/tFN3PX7Pjjfe6bHksYyoSXflNtyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nHrQUX63lSDXDUVGyGOcT+fpzYH9/29iv0larrEsVb/Bd8TGGtKR2CEL5+rGRJEWTF83sgKDoe7deT91i25vddXNf4tz7eV2w+WDCgCa5W9hPus1sw0XUbG7YNiND/kE5w/AB3ghmRjVH68Qi7o4KUSWhjRYOMTdgFD+bPAx8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pR5o6rFl; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzadPKl/"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f075df4faso3025855ad.1;
-        Wed, 05 Feb 2025 04:59:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738760385; x=1739365185; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
-        b=KzadPKl/OY8u2i8dSIy+abZ8nKMlVt+AqY0Z1V4s5UuBTOep5uiTMKYlqhyxBVqkes
-         i1nFeAcksNXh5P8133kZTr1SvmvKJXMrAEDFhLMSZ0parw+TLyDnpDDjM2/zz8i0Kwcb
-         opfOvQflc9jVw8kty1Cd+qY/5oOPp0I2RAAkFIgNryfeUwVKxBteqqETNBdLkAwVfmNx
-         Vwx+rMZlU45ziLsO0Vd1O+a4fpuQqsEsgxpnLbfPvL2sEI5wXIUML+hYbtAMuisZMLjV
-         nE6d3rHp1ltAC5Oy7gWsrKKxyyyUrC+aUjp3ykwnBcTWIMRUKoyx60NWnmrlh1xQEjuk
-         zTsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738760385; x=1739365185;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
-        b=Jsnbr66MhGH/iitMQUL4SpmmtvCWPq2iblfCzWn7wxMroniJJbQpw5A/mc3sN1ywyX
-         nyJ1GijqNDVN/GCymX8vYtqaL4DWtBEmZupcul43W2b7R/30ZLqaDneIVvsb5/DKwkYe
-         nL7orkBi/zZmPMU8iUueiD6+n5STRnYhXKnMIsMPaeyZeO9Ix5AQLxJhfZHqzhgEZM3j
-         Slhz95/QY3zNawPN07RFYQBJRjG4D7GCPoH38tByf/KVBiorP0JSQ0sK2UXK6hmG4QDs
-         dkKslNYPdK2COfMx4nNtX/fv0XWvkPfW46eDA81jArPVVH9MNsN1vyEuRFkN9AzKVHXm
-         C9Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6xMt14VN7Sm7ZopCZniDL5vzgh7yUGxCYS6ys/02Az8HrAW1jt/HMT2JmQJR5RPe4+0dZGMXRkhEfWOj1xE8=@vger.kernel.org, AJvYcCUfs4I+lbXZ3vDw2AmmV0LMQRY6VKAA3mLpjcaiHHM6KpYUt+M5Tj1uyeUoCOpsdzB8qTORzJZRe879bdChe0CacQ==@vger.kernel.org, AJvYcCXP2yTDW6oZq0PQT2r5e3FO60GhkVHjdNFKTEUzY4wSyga1FCRZBwkco5/XHrgiH8d4QOCaYOVNppe+III=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWTvzvbUseCtHfue0A+QxAlpVaSvx/fLJsS/jseUBID80qXtQj
-	O9hJk0HoW7f5oQerfWgIgE8o6HbizWvKHgTPR9sv/7km/l25J2qOye9rQ3wMRRQEwTC5pT3XP9k
-	MfdVZObyJooXkbaqZddHLzfQguCk=
-X-Gm-Gg: ASbGncuHnzjhB6dIEFHPy+P4/690Ycb9p7dTBiwdLomrV10Dtm0uUolQTwsTt7wIdiv
-	uI4LMk845S6e1k0JYPzwqKNAgcY6h1tDwUasxXFBCCB+gZfIn6bL2PdKMdYjj6pkNhsTwZK+W
-X-Google-Smtp-Source: AGHT+IHkri6TNGTSz3U98mXqrXR+r+m35ZqBww+i9hywgTl9AhUoiMtLMP5LF8FnMwbhi4COMqrpcJa3lx42SSdu2wM=
-X-Received: by 2002:a17:902:f54b:b0:215:3862:603a with SMTP id
- d9443c01a7336-21f17ec5e6fmr17560075ad.10.1738760384836; Wed, 05 Feb 2025
- 04:59:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pR5o6rFl"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515DZE6l001123;
+	Wed, 5 Feb 2025 13:56:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0NQVCW
+	7ciVcsY6yIsEmBk8qk7Ck7u9JVtbUaIlIbdlA=; b=pR5o6rFlCSP4fu40C4ahwc
+	wwAMudaG/LpU9mfik7Q7L4rLpcuUsWhJ1SFrw0ZEb3cnigUz32rpfuTlrikqSozK
+	i5U5+cnfa+YBX2hI1pdt0zEy9MGwxseHIedbz+PeMcRzVG1T3jeWr71xeIvbitAy
+	VKoLRh6xkEfeO+fGh6C3vxJf25Er8IPeb9ggvMy5SCUxOTvHLoHIM3Q5WUHd0PWT
+	TE7YXtc85HUYBupRt12BNDHvTaHnKv7aeUW7IQZutG64ffezWcV9rZCkoOwwpMg/
+	IwtTUn95Ogv8qieS5mZbMO57cACZt5p8+P449/qIjFzlBfexSwYUf48kp+5gsj0Q
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m1t82c9m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 13:56:43 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515Dqmrt008327;
+	Wed, 5 Feb 2025 13:56:42 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m1t82c9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 13:56:42 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515CO4pK007139;
+	Wed, 5 Feb 2025 13:56:40 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxays46t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 13:56:40 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515DucM948693620
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 13:56:38 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B6BDA2004B;
+	Wed,  5 Feb 2025 13:56:38 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C4B3C20043;
+	Wed,  5 Feb 2025 13:56:37 +0000 (GMT)
+Received: from [9.171.165.127] (unknown [9.171.165.127])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 13:56:37 +0000 (GMT)
+Message-ID: <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
+Date: Wed, 5 Feb 2025 14:56:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129193037.573431-1-irogers@google.com> <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
- <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 5 Feb 2025 13:59:32 +0100
-X-Gm-Features: AWEUYZlorAPRmvHCC4L-KWXHG1tDMTWJUpQRUhJNRpESCja4Y70e9BTk5q_UtPE
-Message-ID: <CANiq72=ynvE9k2=78wsVoM5-YVFBhTfNCKBeW7SOrNasPdihzg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
-To: Ian Rogers <irogers@google.com>
-Cc: Daniel Xu <dxu@dxuuu.xyz>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+ <20250129020249.owmklacvuvss7z7n@jpoimboe>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250129020249.owmklacvuvss7z7n@jpoimboe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FoeKv70vsKAME6cJt7w4lE4LUboDqNi8
+X-Proofpoint-ORIG-GUID: UmYpWnbvFFL0sEps-RqOV8VpRzmTO1NE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_05,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050108
 
-On Mon, Feb 3, 2025 at 6:20=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> I think the best solution is to use the official demangler but in
-> general we'd like fewer rather than more library dependencies. For
+On 29.01.2025 03:02, Josh Poimboeuf wrote:
 
-I agree, solution 4) seems the best, at least for the time being.
+> Note FDEs aren't even needed here as the unwinder doesn't need to know
+> when a function begins/ends.  The only info needed by the unwinder is
+> just the fre_data struct.  So a simple binary search of fres[] is all
+> that's really needed.
 
-Cheers,
-Miguel
+In SFrame V2 FDEs specify ranges bound by function start address and
+length.  FREs in contrast specify open ranges bounded by start address.
+Their effect ends either with the next FRE becoming into effect or when
+their FDE range ends.
+This concept enables holes in the .text section which do not have any
+valid FDE/FRE information associated.
+
+Your proposal lacks some sort of mechanism to replicate those holes.
+It could be FDEs with a flag (or no offsets?) that specifies their
+range has no valid information.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
