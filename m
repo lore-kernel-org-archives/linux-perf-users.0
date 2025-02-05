@@ -1,320 +1,233 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F201FDE3A
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 16:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2481E1DB363
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 16:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738772928; cv=none; b=Tv2CJmwgknqXdR0VL6c76YExn6tNcMpFZUVlAyxeQ+e8H43t71AjW4GASXeC17ZfLFkwn1qSMvrHlmiduVvRqMCE8BQEYGpEkj6J9aOn1glKVp61Ulxfj8baows/UuPcRbq95tW7LBT/yXZCivXsZfJlMj8kiUKIPYaPUUzdFa8=
+	t=1738773314; cv=none; b=IS4UTX/G2GFdDhlbKcuuPAgYGiNdlFaSudSfjvEjoqV9mzMaeUnufH9CiVcOTbCGDviFZjHmmb2+2mIDgPkzyWB2ZxMuQK+6ol5TPTJ81kWSmE39opCvnV5ftS+rMKjDeA2nzSfYY34ubY2zxHIUIiwD6oMrINg8NK3BJrmaPTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738772928; c=relaxed/simple;
-	bh=Flm72J3X3TDvLIeQHIIlYLGaUwFP9lEWoVmqSXmZ1ZQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G3QDQyJ9r2P1sKZ+i9Ezqf5myf2NkNR+UF68sA2uKTTJ0mNBl93Z3iRbFWDhyMR2yagbW1VKswYnMD7Y96LqbbVjmSWuhcd+jjY+7+U0z92YHzJF04kd09OfA8IOzQPwthPKXXAMyjMLZxJ7WRrDFylXhnS9xBGKPhUOqD5avJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eXV4Sr15; arc=none smtp.client-ip=209.85.208.74
+	s=arc-20240116; t=1738773314; c=relaxed/simple;
+	bh=dvp1QCVxxQcqxWUgrzP1J6jShJ84IWNo4DvyPXhOUnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qb74475WRKXn1QRiKboieRfq1rbyciP6AEQBhrpJWRRngKZ+A/W0IhB+lrUJuCRQwArjh/fzkt8t1aL85rmuN9iP5OTqBfY50+gU9ra9+8LYPlEqXhky4s6WPD98+60EuruJwWcY9POTq0eZiHoUX9b/gEeWLB4Aq/OQUUg2hms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RyGzLloF; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eXV4Sr15"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5dcd3120b24so1532362a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Feb 2025 08:28:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RyGzLloF"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so178835ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Feb 2025 08:35:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738772924; x=1739377724; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=eXV4Sr15c+apJtHWDWhJ5OWoqs1y8579w48cXMrV4qQcJ9/4jLN9y2ChMSN4AWZQtW
-         kO6O6T0yXX8evZ4uU10bQPlofDWWn7vRpm9YOfFiArgBK9322hw6LBy5lgzHbFaq1j/P
-         9K6Ac6BGm5lsZqjBDRFml9tDWPgAFIv1njDQLgk83QT0uPE6RNuD46lteWnDwztuS3PD
-         PKgA7qwlFyw0we30DIL4NRi65yBLyflGdT9N749tUBRLWRTuH00rNvn/OKNiyzGer1by
-         wkL1NS+geh1BIAnKQWun0PbKFPr/el429+Xr62TAu5B0PzLnSP6cWm2KXX495HMlvgv4
-         bz+A==
+        d=google.com; s=20230601; t=1738773312; x=1739378112; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
+        b=RyGzLloF9kIVcBWhCsnkVQBGQ41bihbdA8eLhEzHXenjAJAWsxgJhvVUbGMyRpW2ld
+         xXo9b8UR9PQ+W/CbAgefTz/n6kRrbOsFN6b+Ln+4L3EUZEzBmfzjwnninQZ+FJ3uIijz
+         c3161FMCXB4saBGecUv0gpXIzZSUvB/1uZV4vS+C3CzpqCvKypU0/VaBjhbSTWumwl+R
+         avWgq2kcgDASsPg96FLa78tFoL+5Hd0nD73D7/1WGPwkDhiBMilIR3gCSTFIsPn2+CzF
+         aBpfe0odas+IM8Iw9mM7VDjFrwru95ReTUJiUirDnTKusTeCIQ6kyCiGGkrBkDcVumDF
+         jSPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738772924; x=1739377724;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=QvGGrrnlbJ1IkZbSd1QfUvFEykml1ljGivdZkZ7Wf2ntfV3bPdKbvB6fjyLZePVDpJ
-         YjSxhOPuTXCkBQH7quZ05HimN0qMyWg2VujnI1kE5fLquxJzUMrtMyjfawesFZknTz1p
-         943di4/d8vap2cNBRzBV7650X1QqoNXqRaVcFIyf/Di1dEboBBsyDmLo8VJkW0yZP2pZ
-         UitfKMiFrAuxCKkvkKRf9EDTnUoDpiJGoSyenOPKlNsiidpg1gh/CHILjSQ1c0zEG6Zm
-         sJ3+CLikFmyTXresxzKhFfh5HcoN9Y2GP4KUExxMBZRJMesukRNmMl3ri+47GJL0CEaF
-         Pq5Q==
-X-Gm-Message-State: AOJu0YyTONSvcBJGUWqAjCYkqy4sp/c3QEuNAcZXO5SdPYXtFcUwsc/2
-	V1UQy1kUq8OS7rPuEDtK/6y2v0+5cEO2IjrAOP6LJA7eV2Nj/0iVCesaK1nKZ4fQe3c3aUMmLa9
-	0IZCdqw==
-X-Google-Smtp-Source: AGHT+IEWO5sJTSfqHdmMX8GbBn26uPrUyFmrXzY3rYMz3tkbrHB3NIxMZxhjCRe2TdCG65Yo+MIiPi2RQ9Sb
-X-Received: from edbeo6.prod.google.com ([2002:a05:6402:5306:b0:5dc:e158:572c])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:13c8:b0:5dc:7fbe:730a
- with SMTP id 4fb4d7f45d1cf-5dcdb58fb0cmr3841951a12.0.1738772924696; Wed, 05
- Feb 2025 08:28:44 -0800 (PST)
-Date: Wed,  5 Feb 2025 17:27:47 +0100
-In-Reply-To: <cover.1738772628.git.dvyukov@google.com>
+        d=1e100.net; s=20230601; t=1738773312; x=1739378112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CeDW3SOPT0I7+guyMByE6uP86Z41s6fPZV6qcWyTgnI=;
+        b=LxPja/jRFn0NKKELSl6ARqZDMy7KwLyU1+eE3WzmDWP7upirBHiAVDtsFb/KAAscXC
+         t2YpmFT+c3fc3x1Scljx7HfczQvQNsTMEH89YbYEIeUj8ZuJUKV0pfdPTVsfhpcYaqw6
+         9qrSe915mSNm7AGOrLM+o5UwdH2UpNHBFnO8+pbwDxqkuEoSCnVOsux6oYBnjmzFqkKG
+         kp24RE51yM9bo4fScC1g6UyKizButTXrsGgfUWZVO5dum+FR8Y1gZI5uv3fZ1weAI8dO
+         YWEdiPu6PqjOJgHOW0vELiR5hvMrt/hjkS0JBrKoA9PdkkG9H9JnZNbtjUTVvrPamPqa
+         H4rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaK4cZN87QZqlLY1VPl7cK8ep6gXiJvsizWzMMgeHsVsnwjy562OZ9C5Ie4VMA9RMFRvkjqYoLoie/Uh9IYozF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwftoN59hKMKlf1U9/U5FHdmNg2zhM09fJlLrLU/p3qg4KszK77
+	FM1lkOzXG/93kLsyrppZTjn66A+J7GXbp73CvdvNxePXPoQp5qY84rIAi8yxeJCmZSEkwDUl6pE
+	INjXXOQWn9SoLtroMsusXYog4QEH+LpIS81pi
+X-Gm-Gg: ASbGncvEOvEF/7Jde4J4RAe2g4JV0bxMYz9PIsszmiraaxfbG7Ky4KNZECntzC7sihS
+	ImgAK9sq48xNpjo9o5tYidSeYc+KcQl5qQPKTTQ7b25OLhl626xq8myUDB/C0L0xeZuDWC87d8D
+	C3k5Pb9eFCtIczVKH8HlCkST2X
+X-Google-Smtp-Source: AGHT+IF/1cvo8Gb+iy3C21tsS3O07s4tko4EtPhMOkFSCFs9t9K/CXygGAtFKu1l5fy6ofdFJnQ7W/55GFIwVZIjuhw=
+X-Received: by 2002:a05:6e02:3c06:b0:3d0:507f:38dd with SMTP id
+ e9e14a558f8ab-3d0507f3b50mr3538025ab.5.1738773311918; Wed, 05 Feb 2025
+ 08:35:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <7aa4afff6a1aeaef671393d414f142bec0ead68b.1738772628.git.dvyukov@google.com>
-Subject: [PATCH v5 8/8] perf hist: Shrink struct hist_entry size
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+MIME-Version: 1.0
+References: <20250204213259.127939-1-irogers@google.com> <CAP-5=fXpuND+kNe16CJMETkMOW+__eQpB8No0ra5gyEcfqCCKQ@mail.gmail.com>
+ <d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com>
+ <CAP-5=fV8EcxVZR0Be6wb57_VvssE9FYFBTmbd415CqmidGWT7g@mail.gmail.com> <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
+In-Reply-To: <ca45ff5e-3d1a-4149-8efe-7615dd3581ff@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Feb 2025 08:35:00 -0800
+X-Gm-Features: AWEUYZmYPCX1ExEW0FD8i7hkzrOSM3YXwFUPDROL1WGpdGtGQFKZ-hVUs5o_THc
+Message-ID: <CAP-5=fW7gaskkJKnJcsfe0UO0V0wDsQaa-2NSNr3ho9urUeKBw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: "Falcon, Thomas" <thomas.falcon@intel.com>, "Baker, Edward" <edward.baker@intel.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
+On Wed, Feb 5, 2025 at 7:47=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+> On 2025-02-04 11:58 p.m., Ian Rogers wrote:
+> > On Tue, Feb 4, 2025 at 8:28=E2=80=AFPM Falcon, Thomas <thomas.falcon@in=
+tel.com> wrote:
+> >>
+> >> On Tue, 2025-02-04 at 13:35 -0800, Ian Rogers wrote:
+> >>> On Tue, Feb 4, 2025 at 1:33=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> >>>>
+> >>>> Update the Intel vendor events to the latest.
+> >>>> Update the metrics to TMA 5.01.
+> >>>> Add Arrowlake and Clearwaterforest support.
+> >>>> Add metrics for LNL and GNR.
+> >>>> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
+> >>>>
+> >>>> The perf json was generated using the script:
+> >>>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.=
+py
+> >>>> with the generated json being in:
+> >>>> https://github.com/intel/perfmon/tree/main/scripts/perf
+> >>>>
+> >>>> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+> >>>> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>
+> >>>> and
+> >>>> Weilin Wang <weilin.wang@intel.com> for helping get this patch
+> >>>> series
+> >>>> together.
+> >>>>
+> >>>> v4: Fix TSC events on hybrid mistakenly specifying the core PMU
+> >>>>     inhibiting the use of the msr PMU.
+> >>>> v3: Fixes for hybrid metrics that were missing PMU. Update to the
+> >>>>     latest events.
+> >>>> v2: Fix hybrid and Co-authored-by tag issues reported by
+> >>>>     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition
+> >>>> of
+> >>>>     Clearwaterforest.
+> >>>
+> >>> Sorry, forgot to add Thomas again.
+> >>> https://lore.kernel.org/lkml/20250204213259.127939-1-irogers@google.c=
+om/
+> >>
+> >> Hi, I'm seeing some warnings like this and the all metrics test is
+> >> skipped:
+> >>
+> >> Testing tma_info_inst_mix_iparith
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith:
+> >> cpu_core@INST_RETIRED.ANY@ / (cpu_core@FP_ARITH_INST_RETIRED.SCALAR@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.VECTOR@)
+> >> Testing tma_info_inst_mix_iparith_avx128
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx128:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> (cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE@)
+> >> Testing tma_info_inst_mix_iparith_avx256
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_avx256:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> (cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE@ +
+> >> cpu_core@FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE@)
+> >> Testing tma_info_inst_mix_iparith_scalar_dp
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_dp:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_DOUBLE@
+> >> Testing tma_info_inst_mix_iparith_scalar_sp
+> >> FP issues
+> >> Cannot resolve IDs for tma_info_inst_mix_iparith_scalar_sp:
+> >> cpu_core@INST_RETIRED.ANY@ /
+> >> cpu_core@FP_ARITH_INST_RETIRED.SCALAR_SINGLE@
+> >
+> > Thanks Tom, we've gone from a fail to skip - so progress! I think it
+> > actually isn't something to worry about. These metrics are measuring
+> > vector and floating point things. We run a workload, when testing the
+> > metrics, that doesn't have floating point and vector operations. This
+> > causes issues with metrics for these instructions as the counters
+> > don't count anything. Because of this I added some logic to just skip
+> > when we see these failures:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/tests/shell/stat_all_metrics.sh?h=3Dperf-tools-next#n51
+> > but a better fix would be to have a workload with FP and AMX operations=
+.
+> >
+> > You could test these metrics work manually, by running something like:
+> > $ perf stat -M tma_info_inst_mix_iparith <benchmark>
+> > where <benchmark> would need to contain FP or AMX instructions.
+> >
+>
+> It should be OK to skip the "FP issues", but the "Cannot resolve IDs"
+> seems a different issue.
+>
+> I found the similar error when I run perf stat on my Arrow Lake machine.
+>
+> $ sudo ./perf stat
+> Cannot resolve IDs for tma_memory_bound: topdown\-mem\-bound /
+> (topdown\-fe\-bound + topdown\-bad\-spec + topdown\-retiring +
+> topdown\-be\-bound) + 0 * slots
+>
+> I think the warning is because perf doesn't find all the matched events.
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/metricgroup.c?h=3Dtmp.perf-tools-next#n326
+>
+>
+> Then I go to check the event list of tma_memory_bound.
+> For cpu_atom, it requires slots and topdown-mem-bound, which should be
+> only available on p-core.
+>
+> +    {
+> +        "BriefDescription": "This metric represents fraction of slots
+> the Memory subsystem within the Backend was a bottleneck",
+> +        "DefaultMetricgroupName": "TopdownL2",
+> +        "MetricExpr": "topdown\\-mem\\-bound / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 *
+> slots",
+> +        "MetricGroup":
+> "Backend;Default;Slots;TmaL2;TopdownL2;tma_L2_group;tma_backend_bound_gro=
+up",
+> +        "MetricName": "tma_memory_bound",
+> +        "MetricThreshold": "tma_memory_bound > 0.2 & tma_backend_bound
+> > 0.2",
+> +        "MetricgroupNoGroup": "TopdownL2;Default",
+> +        "PublicDescription": "This metric represents fraction of slots
+> the Memory subsystem within the Backend was a bottleneck.  Memory Bound
+> estimates fraction of slots where pipeline is likely stalled due to
+> demand load or store instructions. This accounts mainly for (1)
+> non-completed in-flight memory demand loads which coincides with
+> execution units starvation; in addition to (2) cases where stores could
+> impose backpressure on the pipeline when many of them get buffered at
+> the same time (less common out of the two)",
+> +        "ScaleUnit": "100%",
+> +        "Unit": "cpu_atom"
+> +    },
+>
+> I didn't check the tma_info_inst_mix_iparith which Thomas mentioned
+> above yet. But I suspect it should be the same issue.
+>
+> The perf test may have to error out when the "Cannot resolve IDs"
+> message is detected.
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
+Agreed. I think I see the issue. We're adding the extra/Valkyrie
+metrics to both core types during conversion, a quick fix is to just
+skip doing this for atom. I'll cut a v4 with this.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
----
-Pahole output before:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-
-	/* XXX 2 bytes hole, try to pack */
-
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
-
-	/* XXX 1 byte hole, try to pack */
-
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
-
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-
-After:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
-
-	/* XXX 6 bytes hole, try to pack */
-
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
- 
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
- };
- 
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
- 
--- 
-2.48.1.362.g079036d154-goog
-
+Thanks,
+Ian
