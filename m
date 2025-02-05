@@ -1,127 +1,101 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60E944F;
-	Wed,  5 Feb 2025 19:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06381FE457;
+	Wed,  5 Feb 2025 19:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738782378; cv=none; b=A4PqORlKNqBEYTXXSMFmu6JlZN0G58WqRgffETlMFiDXVaUGn8exeMEF2Oq3LNQSbG3RsEuoRlFFsIeuC+b3E56gt1ZGzY9RnJOgHkqKGlm7I1nz1KfwQZ7fcTjVLoP4mklcDR0ltbOIboi3zFAZT2YJVNyU2+vSaFckFjHQJ2Y=
+	t=1738782511; cv=none; b=cRSX53xIh37ozpuvHx7adSS2cDB/HQcSbJenDEp7aoIcAtYiN6JTBiAxMwdlMzDonXFMVPj5rwYNBPMLhjt8JdPLiZgxpOtuaMMEnemz3HvCJsHVTLNlww/r57pXttHNmh4pg6QlLI/F7U+Y1s1e389RvtJWpoBSTVKJxdf8zI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738782378; c=relaxed/simple;
-	bh=wv7QUcMqmQJcMdaqtvzsXi7KdkhOSU6Nucm1BVG+rJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZJoDCQHjuD1YRPPrB7d4Cgb0sKhq6hW/KPBnIQNU3A88UsbbZTfOytEETmNiTaK/MtflQ96QgDNUVG0+n55DkhMC2RFBH7nnUOydjXHwRjsT/LNT/Hbx6LCTZDdRkFeXqUTDaGu9KVguyyKUbwQgZ1fLT3Q9leDMNRjp0APB/80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FE/vqXtO; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738782511; c=relaxed/simple;
+	bh=dnJgMi4zg/epD10uQJ6bbgev+61srshHSuWv4akvbGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DO9JpdJdswhpBit8Subq8pOsP7rrmrihxLmWa+C2zTK1RnAneNJ1J91v3hWlrOTHzf3STMOeWa0cwqoGe1wvfgSGhofTgGMoQiwMWJRS2G+mOVKkA9yfU9L9BIB5P/O86XFS1oqrhZ29LOQYFZ/tQudxsxa4iV9awAYqZlYGuLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FRw8EnxO; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FE/vqXtO"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2161eb95317so3741795ad.1;
-        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738782376; x=1739387176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
-        b=FE/vqXtOR1bXFzp2IVvlUZ0pUgiMzAOfX9OqJF7cXU0IH+w/wc+yDidzy1982rBMUi
-         rRv01F2DtYahbgdj7D4m4nC+lspvA7PPwHlQgjyN0n+y2RJquqscerEcWsTh5ZzU6/5g
-         pQoCL+fbB6lffHrewT9o8aHgnEadeHYuFK9dN5z29uKnylzEV9HWXmsQtWvbb1x0hwzl
-         c/P1Re2UAUdFvIMxMycXNwbIjxMg5TvplpbSLahXc88EW+fYz8+KdgvH8wcmDf03lhiP
-         3biBEMlzhCHbNwXkX1waZ2mD4zeOOdjuOKg+3Kl9hd8VUz1AV5mC9LdntGNa6kinZEhq
-         GWQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738782376; x=1739387176;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
-        b=UA03pL6pOUsPZkyg00KKdjHpVWIdYN6v3e1NopWKE+rSqEcmw1VzER0ep99bDEJyEy
-         Rnjw67Ocjm7J9qu6eW11E8fVuaYzP3CsNF/oXu14o48HWbIvpRSzdbPebSDAOBKUdKFY
-         4Eo2NT4xds7lYdwkjAdwKRolWNkeJnWj9D3DrN3bgXVcfNFr8Lw3oG6KfpBJbFF3ooaq
-         hUwNb5ynWGr3nv5h6ZR8tNCzreqM6BAj8c+gq7GyPuNKGHlJYXmtXp6eHhnyFdEe17bs
-         0oHZoz+vL/CPxq49EemKQS0yeF/uZ4Y2JcPlAkP6dsj+ZQTA109FVGjlj3AuVET808mP
-         emvg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+omfGUaNIUheRIEKh0tTCK3gpE5xx6WhFYhKPUstBqMAGbC7uokAS5Mn2IKWkjOmXmUufNAwkKhBkPYs=@vger.kernel.org, AJvYcCVzk63DM8ift2kekK4EO5pMy3l1SoaivLMkfafD610u0QVivgISeF49DUVqlFPONh1eo9OyTdsrxIaceODHVLeepA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz91sxHqOI+eLd11uiYCY9fp6syo1N37RghVU9+QzUoW+NibyHL
-	4IrZP4mInyUY1TCdYSARGfbiBg9wKNtHf4zN5n0xic0vt2uH5Ul0
-X-Gm-Gg: ASbGncvULWS0ld1WssGsHqpYX1vS7O4H1mbNP+gWsDL2sIyUVaybK4O86MZezgZWdEe
-	prog0grVhmJrvs121jRujuW+3sqp0Brd+3tBpF/RW7LVQ8UKgR9sYkM6P8gUs2lxRtEkVJoyZ6z
-	PNJAnKQTNKQtHIIJoqb9zL1CqTnaBHCer+4hxHp77Aq3P8cJMes0wKWBLeDnYK+ajnZX9F99hCz
-	DJzZh0mz6e0bNT1xdS6EwqfvHyWAgL22+P6Q7WaiMu+cFnJQoCTyXTL3aPo/0F9u9fhYhhCgm2s
-	CZmbmoy8YQsgPTfv00wFDE6nWKHdc/4taytLuhXLsdBVVw==
-X-Google-Smtp-Source: AGHT+IHKqldEMmvfEqeRBZkBH83z+bWZgrX2UowzmDa9skIUAfl6ELjXshIVfFyh1cu/qWHsUGePzg==
-X-Received: by 2002:a17:902:e888:b0:215:4a31:47d8 with SMTP id d9443c01a7336-21f17dde27bmr58334165ad.9.1738782376224;
-        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:e6df:5ab5:fc4f:a680])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f07afc5c1sm34494785ad.170.2025.02.05.11.06.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:06:15 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: mark.rutland@arm.com
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	shuah@kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH] perf/core: Prevent dereferencing NULL pointer
-Date: Thu,  6 Feb 2025 03:06:08 +0800
-Message-ID: <20250205190608.93508-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FRw8EnxO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738782510; x=1770318510;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=dnJgMi4zg/epD10uQJ6bbgev+61srshHSuWv4akvbGw=;
+  b=FRw8EnxOfgEVQ3DOTtf7BWQ3zm2Rh47j4VeMImXpyfJEh84cE3EfKm2V
+   uZ9YTbXtglL1WRQBbIsWoet7nGj8plM8GoRpA171wXBRa+sPRVrQBWlYL
+   TiALaanuBcmyRpLnTbJOaTztBSl1H0P1uSIvns78EihJpPng/7LNLrNTu
+   oKAu5Cybdrst/p1WMUS8fky0df5ElG9eDJ4ENkS6x8cbXDqIRwvMabz6I
+   +wn55PS5F1VSVyZ4vaZlR9hPt1FaBp9HTFsumM7+3Ill1X0aXOcwiHmtS
+   MXDT1LgZkfuureOgn8k6MaoPw5cRkIdefu9YkKfIQqq70sYgsispQgxjd
+   A==;
+X-CSE-ConnectionGUID: NJqDUSeZS3GYLZcLCglTKg==
+X-CSE-MsgGUID: VZitAcs8SbKw6KvKQg7+yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26968208"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="26968208"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 11:08:29 -0800
+X-CSE-ConnectionGUID: 5TVZYAUYSZGl9vM8BqJdIA==
+X-CSE-MsgGUID: uwjm7/IuQ7SdWutshFWmAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111880153"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 11:08:29 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C083820B5713;
+	Wed,  5 Feb 2025 11:08:26 -0800 (PST)
+Message-ID: <53e43c87-9052-4e4a-88fc-a5bc3b713ae5@linux.intel.com>
+Date: Wed, 5 Feb 2025 14:08:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/24] perf vendor events: Add Arrowlake events/metrics
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+References: <20250205173140.238294-1-irogers@google.com>
+ <20250205173140.238294-4-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250205173140.238294-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-According to coverity scan check, there's possible cases where
-"ring_buffer_get()" returns a NULL in "perf_mmap_close".
 
-Use a "BUG_ON()" to check for NULL pointer existence, panic if it does
-exist, otherwise it's safe to dereference "rb" and access its members.
 
-The scan check report link is:
-scan5.scan.coverity.com/#/project-view/63416/10063?selectedIssue=1636067
+On 2025-02-05 12:31 p.m., Ian Rogers wrote:
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots that result in retirement slots",
+> +        "MetricExpr": "cpu_atom@TOPDOWN_RETIRING.ALL@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)",
+> +        "MetricGroup": "TopdownL1;tma_L1_group",
+> +        "MetricName": "tma_retiring",
+> +        "MetricThreshold": "(tma_retiring >0.75)",
+> +        "MetricgroupNoGroup": "TopdownL1",
+> +        "ScaleUnit": "100%",
+> +        "Unit": "cpu_atom"
+> +    },
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- kernel/events/core.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+The "Default" tag is missed at least for all TopdownL1 metrics on Arrow
+Lake.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bcb09e011e9e..fe83d4754746 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6410,11 +6410,17 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- {
- 	struct perf_event *event = vma->vm_file->private_data;
- 	struct perf_buffer *rb = ring_buffer_get(event);
--	struct user_struct *mmap_user = rb->mmap_user;
--	int mmap_locked = rb->mmap_locked;
--	unsigned long size = perf_data_size(rb);
-+	struct user_struct *mmap_user;
-+	int mmap_locked;
-+	unsigned long size;
- 	bool detach_rest = false;
- 
-+	BUG_ON(!rb);
-+
-+	mmap_user = rb->mmap_user;
-+	mmap_locked = rb->mmap_locked;
-+	size = perf_data_size(rb);
-+
- 	if (event->pmu->event_unmapped)
- 		event->pmu->event_unmapped(event, vma->vm_mm);
- 
--- 
-2.43.0
-
+Thanks,
+Kan
