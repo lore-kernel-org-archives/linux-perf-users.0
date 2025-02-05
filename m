@@ -1,160 +1,111 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C5F21423A
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 20:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D964521423A;
+	Wed,  5 Feb 2025 20:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738788473; cv=none; b=ALksZVUAs8u77nKDtmlo08rvyoggzAaxb4M313VaLmrw109u5TrUrwdKBoqSLEbjDqYRP4GHnxlDAXuNGpUdwZV3xzZC1anFfnxBxCtSmcAWUFD5zcnYKJokTV9COUeRjHxYYLqVZZAHTD4eiCFiMjaJPXPCuvAj6orALMV1BYM=
+	t=1738788885; cv=none; b=nzWObOPPC49d5uBxjMcqxFbk+js2PxQJjtlkmg1bzvAVkd2R+doUVASizF28LQvVbN+b6e+aeMN1hevO5YBbSnKFV7ODAUHGlV50dlsGHhcqC8AOH1rv+YCxhU8ljR6dBQ0TPWtHZ8fNlJc12vWIKFlwkwPtucIbd8d6xlZiBuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738788473; c=relaxed/simple;
-	bh=rU0ctC7rOtBbtvVcAjSEvVnzlmDJ2Rez5/8BZgHt+xk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SuhLNnOfGwCF2N5UfxIdTXfCYszMowsxLm7sTiPnoQ1r/AvZT9ylgdcox2ffnu5rh3BQx9GmuMCVBOW1a2hKI+M+EREYi+uUy2u3QEZtZoV4CGklPo3L7Fs0DtKlkdyShrwZegR1PKQC9maCeqFRiHlHyjN7szPBKVyRzSJOAbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BKi6i9Ad; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738788885; c=relaxed/simple;
+	bh=qW1/tokewwrr7dHGg+c3qpiuiMGzPpt3a8q4viUCY1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WAgYcZFCsWhHO9fXNV6EKRziF7999ZXv70LCFFMjEg47S/Owe0Q0FJg+8CC8cpi9lElJlWc/whrzN53gryKSTurz9dyFlsWiR/e9DjlF2mFI6nCEX4dh4qpfXvChAkphFc65iKBrgLel2ZIB838ietwdilpSb5ycL4B2xotw6rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baS9uUjO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BKi6i9Ad"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d04b70fe79so25195ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Feb 2025 12:47:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738788470; x=1739393270; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qO3VLGfpIyW7n/mpkrRU9S3W3XvjrnoMDTo4eY/G6UA=;
-        b=BKi6i9Ad/3CLLMV1AOC6F03JbxYWiiQnpt9jInEYQprYUY37RTrkdGk+LYcSIjcCbk
-         U8Rdgtp3ykGT0tnFi5gWFPF301CpVQdlt48UQ/w26PjzD8MMBYy5Eb+2SCCKEHOVAcJC
-         tCJYLMmYcyUGgY4/H6WOEz0lqgR8xiEqrP/YqVYo3EM4A+Xnh3rGaCmMhcXYTwBvTzE3
-         MiIAk6MlqVsxEmTaPd9iMcAaHAsx0gFww8tO3faJlTKY8AC/Wk8rO2vYn6E7J4JPu+xp
-         zYzSWhIUmitv70ny6kmXh6Sotlxijgf0tk92+xPZe6i3yJ8O4Dln2Qq53lR1UZQeL3Bv
-         ws9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738788470; x=1739393270;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qO3VLGfpIyW7n/mpkrRU9S3W3XvjrnoMDTo4eY/G6UA=;
-        b=pjWZlfQt8DKslEb1Z1tAWZUpkthO4FomntV+NdsASs9Gltxt1qRnIfUBCefTEA+/Z2
-         ZiFU/L8BP+axJTR9jKNLMMvj1tvLtIwhhJ+KNIvtvUAH8cIwocNeIFMTaoaswMryWMTR
-         T0jXXMABuFtBT2mXegASxacrXGQgHQz+J4Cw3f/4RP2TE7HOawu49YbpMhxQVwUVZYMS
-         VcoUmh5Yu2HiH0ewVZx9pikTi6YUSKE6PdvlBgJ+2SEsztULLNs3jBFkLnWLZS6T2WiG
-         rcu0w6/cN1srPDl/VV9cn4VH0a2sqJ2ko/eBRt3tB1m/GALdz1+9NVUETX28PPM2Xci6
-         5u8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXr2NY8DOf+CnLn1XpS5NAeH5GzKo0O/p6MJptwIUsmHgooYJSpws6ymR7yXHoMg0ZF1Jbm7/t5Qden+HzcCnNa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3ib9cykKa4WRbJU+pGVn32JQCLXlzSPcTig5h8POrh1yv5l3J
-	6Vn3iNxpEUVOIGyv0mtmYWo2wDdyg7ejxgjB8Z2cRTNL74iet4BJg4S03vgKXS3SqV62FL1bope
-	1nV1UnyuP9zB+yYR0gjfdBZbfN7XzP7hZsN74
-X-Gm-Gg: ASbGncsILrVBBSdj6Jgy44/9KuHzUwYfHUWSxEyk9oWx+nbzhEEVzL5Gxwf0t8Cpx7a
-	sGKjXrvrfZwSTasX5ZCMwfztbTHoCT4BCedgQRKZbvLW5kAiRYvn3rGbMy6OrBs8Ds8TMzutB11
-	lCNhVq7b0WewsoLwAN8rHVuboQ
-X-Google-Smtp-Source: AGHT+IHJnefBKwcS3pswiENouUkaAd3Hiy1kZfPbDXW7Wl7NrpVnF9fY6D5TADaLx1tGX8uwqg0KXDS/aO+qCYmly/k=
-X-Received: by 2002:a92:d1cf:0:b0:3d0:507f:38dd with SMTP id
- e9e14a558f8ab-3d05b4befcfmr423545ab.5.1738788469762; Wed, 05 Feb 2025
- 12:47:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baS9uUjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500F4C4CEEA;
+	Wed,  5 Feb 2025 20:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738788884;
+	bh=qW1/tokewwrr7dHGg+c3qpiuiMGzPpt3a8q4viUCY1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=baS9uUjOEkJVYIpggR4O/q8UntSeqAyq5Lb3xdusnX8oubUbGya8n2sidLjsh2jI2
+	 kz9TcTmjEzv7dK1Z8i5JKH9MBXPOp0/XcvzRPo47vFe7cR11A4O168fMYLbB/+LoM6
+	 j++cGdgbg9QN5bkGFU/TgQkW6w+h7RECErsy37ThdHsOSq0JshxOycNvq3LtvHQTh2
+	 lNBTFsuM7MdYEzcAWefwLQdsevBN2/LA/XBCnonNi8kpf0zWnbd7BlR5ztema5d1/g
+	 PkWjp3BppepbMAernmoiChXCf6Lo0fZGulqjZwSvxvNd4QkGp6afdZWsOmrJxakn/F
+	 KnzXrhW4M3sAA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v3 0/4] perf trace: Add --summary-mode option
+Date: Wed,  5 Feb 2025 12:54:39 -0800
+Message-ID: <20250205205443.1986408-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205173140.238294-1-irogers@google.com> <4f42946ffdf474fbf8aeaa142c25a25ebe739b78.camel@intel.com>
-In-Reply-To: <4f42946ffdf474fbf8aeaa142c25a25ebe739b78.camel@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Feb 2025 12:47:38 -0800
-X-Gm-Features: AWEUYZkjLLl2RiWIh_PBTKbSre4apLrTUqpKx5SDeXneyEXwT4EWNR30bpCGuKs
-Message-ID: <CAP-5=fUjx3PTHfjgkam9Q0xE+TrYx+FSzF8wUscbD9X36gJ1Tg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/24] Intel vendor events and TMA 5.01 metrics
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "Baker, Edward" <edward.baker@intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"Biggers, Caleb" <caleb.biggers@intel.com>, "mpetlan@redhat.com" <mpetlan@redhat.com>, 
-	"Taylor, Perry" <perry.taylor@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 5, 2025 at 11:44=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
-.com> wrote:
->
-> On Wed, 2025-02-05 at 09:31 -0800, Ian Rogers wrote:
-> > Update the Intel vendor events to the latest.
-> > Update the metrics to TMA 5.01.
-> > Add Arrowlake and Clearwaterforest support.
-> > Add metrics for LNL and GNR.
-> > Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
-> >
-> > The perf json was generated using the script:
-> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> > with the generated json being in:
-> > https://github.com/intel/perfmon/tree/main/scripts/perf
-> >
-> > Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
-> > <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>,
-> > Weilin Wang <weilin.wang@intel.com>, Kan Liang
-> > <kan.liang@linux.intel.com> and Thomas Falcon
-> > <thomas.falcon@intel.com> for helping get this patch series together.
-> >
-> > v5: Remove Valkyrie metrics mistakenly added on atom. Ensure "perf
-> > all
-> >     metrics test" doesn't skip for missing events.
-> > v4: Fix TSC events on hybrid mistakenly specifying the core PMU
-> >     inhibiting the use of the msr PMU.
-> > v3: Fixes for hybrid metrics that were missing PMU. Update to the
-> >     latest events.
-> > v2: Fix hybrid and Co-authored-by tag issues reported by
-> >     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
-> >     Clearwaterforest.
-> >
->
-> Thanks, I'm seeing some errors during the perf all metrics test:
->
-> Metric 'tma_info_system_cpus_utilized' not printed in:
-> event syntax error: '{cpu_core/TSC,metric-
-> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
->                       \___ Bad event or PMU
->
-> Unable to find PMU or event on a PMU of 'cpu_core'
->
-> event syntax error: '{cpu_core/TSC,metric-
-> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
->                                \___ unknown term 'TSC' for pmu
-> 'cpu_core'
->
-> valid terms:
-> event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,config,config1
-> ,config2,config3,name,period,percore,metric-id
->
-> event syntax error: '{cpu_core/TSC,metric-
-> id=3Dcpu_core!3TSC!3/,cpu_core/CPU_CL..'
->                                \___ unknown term 'TSC' for pmu
-> 'cpu_core'
->
-> valid terms:
-> event,pc,edge,offcore_rsp,ldlat,inv,umask,frontend,cmask,config,config1
-> ,config2,config3,name,period,percore,metric-id
->
-> There are all some errors like this,
->
-> Testing tma_cisc
-> Metric contains missing events
-> Cannot resolve IDs for tma_cisc: cpu_atom@TOPDOWN_FE_BOUND.CISC@ / (5 *
-> cpu_atom@CPU_CLK_UNHALTED.CORE@)
->
+Hello,
 
-Thanks, I forgot to reapply the TSC fix. You can do it with
-$ find tools/perf/pmu-events/arch/x86 -type f -exec sed -i
-'s/cpu_core@TSC@/TSC/g' {} \;
-I can't eyeball this later missing events problem. What model type
-does it happen on?
+I've realized that perf trace shows system call summary at the end for
+each thread.  But sometimes users want to see the global whole system
+summary or statistics instead.
+
+So I've added --summary-mode option like below:
+
+    $ sudo ./perf trace -as --summary-mode=total sleep 1
+
+     Summary of events:
+
+     total, 21580 events
+
+       syscall            calls  errors  total       min       avg       max       stddev
+                                         (msec)    (msec)    (msec)    (msec)        (%)
+       --------------- --------  ------ -------- --------- --------- ---------     ------
+       epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+       futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+       poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+       ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+       clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+       epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+       nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+       ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+       recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+       write               1393      0     2.854     0.001     0.002     0.017      1.79%
+       read                1063    100     2.236     0.000     0.002     0.083      5.11%
+       ...
+
+Also it changes internal data structure to hash table to track
+statistics of syscalls.  And removes the rb_resort code.
+
+v3 changes)
+* Add Acked-by from Howard
+* Update commit messages  (Ian)
+
+v2 changes)
+* Rebase to current perf-tools-next
+* Fix some style issues  (Howard)
+* Rename to --summary-mode  (Howard)
 
 Thanks,
-Ian
+Namhyung
+
+
+Namhyung Kim (4):
+  perf trace: Allocate syscall stats only if summary is on
+  perf trace: Convert syscall_stats to hashmap
+  perf tools: Get rid of now-unused rb_resort.h
+  perf trace: Add --summary-mode option
+
+ tools/perf/Documentation/perf-trace.txt |   4 +
+ tools/perf/builtin-trace.c              | 247 +++++++++++++++++++-----
+ tools/perf/util/rb_resort.h             | 146 --------------
+ 3 files changed, 203 insertions(+), 194 deletions(-)
+ delete mode 100644 tools/perf/util/rb_resort.h
+
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+
