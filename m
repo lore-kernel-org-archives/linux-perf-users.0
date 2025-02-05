@@ -1,166 +1,176 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DA8200B8A
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 16:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29419193436;
+	Wed,  5 Feb 2025 16:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738774116; cv=none; b=o7wWd2VpzxXpJ/1U5Eah4BIUIVJenHFSyLF+kwDIHTWOFSM7c9luXdJqfD6/mU7dHoPgFvDVh8+LIZGwjw3NOI3tCblG7wNiH5kzv/vMYFV4pQMrpEm2saHa/3OqAp7eTv509+sSDEBqucf764Crzy5g+KVvlfmbeCFlhC1ST4I=
+	t=1738774375; cv=none; b=mb5CgYplEJh+Vf3hozlnCYZ0o2BkqyeL+B78w/wtYeue2ZWUYNqYMcDOCpTAVK+JVjd2yQgdDIWJsfVfUKCEl2ZKbJHW+mZFxqFpyhrn6fxVeH2C48xLachDI7VM33P0LZP26gmYIM8NBHIDq6C0lpwDQRXuxPrZbRw16sQLNWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738774116; c=relaxed/simple;
-	bh=Y/Umkqwe0FIFVuLibuGdbJdwz39Eetp01h2On5mupYU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mqmKZs9wHxuEV73osCfR6Gru/lenb+Q7msGOx4EOPKXhwpri9TS1ZxwOLK6usOtJVba7tFGOXUSDGCBjRG6+ep93LNIzGW23f6Xb8oxE9RFqR6KJutL9EAFK3IqijUD2jY3K+0/SEtyhpcu8FhcSnoJ+/I1oJLNzEn2JbSLD6dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HELNsKeW; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738774375; c=relaxed/simple;
+	bh=MZX1aiElAf/wBBYEzwG0LmNRp3/R5sTvrYMDQ486w4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7dmDayRDL3VcAcH0O1JQi7fFw8eHd/TRLy3OMgdBM5tbGwZbfPadLWlhVpLMunn2tuE+oc8yU9XJ8LVqy4hvzcziijKwz7PAyT7Or3Hzaewd6/81cB0d27Cj+klUToi/JS8IwCi6QYKJbLrErUIaKajqtV2DXpVUlo6fw+R8rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=IEQDOg7t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=04gnE32p; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HELNsKeW"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so181645ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Feb 2025 08:48:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738774114; x=1739378914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=joDS1tDCk7LOHCWDnLrasLgdXk4VSPOTTauZQpvavb4=;
-        b=HELNsKeWb5rrqeHd4/txw58bWe7uvYeLA5jCJnBthQ862i0UzB1O8eA3gn77CgHAkP
-         YZ5prLCRsmfQnQN8KO46wAKLvO6w4fst6lB3CDUQDPo7UgX68coHws7JCIIjRdHqjQDq
-         cGWeC+DBXQfXaX1YMVB6Oqs3wcV2F6gkqg/slkcG7jsZSyYBsXvW8m9MI4sxsOaUkL7c
-         tSKa52fXgIUKpMaRWQC7Qw6rJZBzYSkiw5Oi1RR9QNMGuSLNCsBk5yvFAlw1sFyiY/LT
-         nRuMEzd60jgrRvJ1tqPA6pcDgBz12kE9G1gONC/GlBcVqJVZFnCfDW5rhTzhgdRnhx/4
-         fNOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738774114; x=1739378914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=joDS1tDCk7LOHCWDnLrasLgdXk4VSPOTTauZQpvavb4=;
-        b=U6U02SZJ/tMdJf1/4fjfSOj+Hjrgwxy9Y4TnIvDTizH30rKOkJhzqkia0at8VPNenn
-         E4nsKwzhTpJcyGoFmBIp6HrzCO/nmWaFt00wZAN3xZ+Gxc0oAl4C6rVKrQ8QmYymQnR6
-         vQ3NYnRbXz3WjNPo8z+3BzMdfQyKaHnLjwY/Qo+1RwP1QEhdYBoR7PwDstzYusDGc0LK
-         Sxg+PBsdV0peOiDAmTxH5FQMAloM0bNIJWs2qKuG/3oEK/grpKoTFu/Zh8FfTsLk9R2H
-         zZCNQ9pvZ9aGskS2mhZKuAtG+1xAE5YinYlUzLO6SyIKYSGl2RdIUnWLtQHYGUq0Q0uQ
-         108A==
-X-Gm-Message-State: AOJu0Yw9VyW5hH6wbrLM6UohA1vGMdCqr+9nV+0yUvSrFINOVn+sRoiI
-	Y649MEzqXh6AxCTzrsLNzFYv2KvGpJQ2ubLaYVKZkeNnXBcT5gMSoj2FbbQ/QE6aZO6XvfGNiIS
-	M1ELx6xAtZO8LH8yC+8mI5bxQQfJMafQjvccTlLQyIS1JvjlQZ8G27CE=
-X-Gm-Gg: ASbGncusS/iEPSC5pjQQNB5P/ZmRrnBVrBVuyvICwLQ/4nX0+kkDbs62SP8E1Zn8MvM
-	ldYNjagvxsTFt+iDx4HbXsYdeCx7IlfNCH23Tov0xSIVjHOaCGJ6hCBkr8j+LU2eP5QBXb5vNKW
-	Ft7obxsS1SjYG5U9FUKVkbrvcy
-X-Google-Smtp-Source: AGHT+IFBUDCW0QOzk0qZc7xsHuzYmV8hEI79AVi8A9RlcnQDhTtG7Bg/QLXgqjJzzrVyQLJUjOYea8ZwUceIWLC9ImI=
-X-Received: by 2002:a92:d751:0:b0:3d0:4e5d:4782 with SMTP id
- e9e14a558f8ab-3d04e5d48b9mr4103095ab.10.1738774113670; Wed, 05 Feb 2025
- 08:48:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="IEQDOg7t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="04gnE32p"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 30F1F138017B;
+	Wed,  5 Feb 2025 11:52:52 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Wed, 05 Feb 2025 11:52:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738774372;
+	 x=1738860772; bh=4Ff8uNZFWrL12Ts+CTuP9c/TuX47E65KwL5a+LkGyJo=; b=
+	IEQDOg7tAB/7oZOJzwMeHDyFcJx6MvkaM2fvdzm33tj2RvJeETvmE9lE6pqePQip
+	q4caQS1d86MNYY/UHuf6DFrsv9rvP6SZuPJe2+Fs6UEVPPreh+S9Gn5P5flGFyN+
+	INz9Txbm/3+99P2q1Hcb8l2KTI7jd0Ghmi0hsYPJylbVQaaywDXKZ/gYSSdPh0+N
+	PBkki8PCZhYH63WOjtJ2B735XwJdR+lOHfnDWDLb2+BpmvErvFC7qhNKJrzQVo5f
+	55SErNtFSpUY6R/FiU2meXSomsIxJPAmgamRi9K1VjubKUOEGYj6qMLEsemoYXGz
+	rVSgWF30t8uNW0BsXcgmJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738774372; x=
+	1738860772; bh=4Ff8uNZFWrL12Ts+CTuP9c/TuX47E65KwL5a+LkGyJo=; b=0
+	4gnE32pga9ATr+XaUD7yWKJ3BpoEOFptRMy7pcsx5v/7au/7mr3hKv2T0u5T0v56
+	pgd52tz6REIgJ3qGfVy2TY4MI3Mfbg0oMvoxzpzGwh711hpNR7IXD56+v7x13HR9
+	1NIYfscMlHXbs9xPhge7p8H00RoHdnM7GTRrHIY4Fqe7zHX5xp6FgUarHVzJYhBI
+	YtzbAQtu8AcE8ClsYPumLX8qakXjrEPye2HmlrxuGzlBFMSu3H8m11hTtAQA4q4k
+	gAeAa5H/g9G7x014ooQGWp4VzEgueVSdAbCcnRJQkICy7mxaYPCtewqzXwkZhzOA
+	GtQI09BZyLQDyg5tz3atg==
+X-ME-Sender: <xms:YpejZ9yRpRJLr48UvUdYuFpxqhSLnnu98pEwzbYna4zVlWm92HNqQg>
+    <xme:YpejZ9TeUDidyCqkKT3zPXvdDoz7346qZDntowKBtbIrU_dVoQAKaB1Nrh5Sv8-dl
+    6BUyQVGHwy7qbgjSA>
+X-ME-Received: <xmr:YpejZ3Wwcd3khW0befiVSXcw0rpAcTfRF18FUetqY3VJB5vtrnZdbZXsW6ZAnatds-Qw52zUZBfDdP9vfAJ-H-eson_UzUGLac3RXHX2rkvvXA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeellecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenfghrlhcuvffnffculddvfedmnecujfgurhepfffhvfevuffk
+    fhggtggugfgjsehtkefstddttdejnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguh
+    esugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepffduhffgudehueeiiedvhefg
+    jedugeeuveehveegheefkeeiudfhhfehledvgfdunecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihiidpnhgspghrtghpthhtoh
+    epvdeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehirhhoghgvrhhssehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
+    dprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegrtghm
+    vgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrmhhhhihunhhgsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomhdprhgt
+    phhtthhopegrlhgvgigrnhguvghrrdhshhhishhhkhhinheslhhinhhugidrihhnthgvlh
+    drtghomhdprhgtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegrughrihgrnhdrhhhunhhtvghrsehinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:YpejZ_irsNQF8wt3lKn_DARv-ff4rgeZgWPYPmSIH180Nr5EOY-6kw>
+    <xmx:YpejZ_DMnR4PowZUIh8K6IfY17TRvPeV60zY2c4je1R86JqgIYZQOA>
+    <xmx:YpejZ4J-dl18h0anSM_6IXcLYCnhcjmqj9TqC4iLHgUCAOulqURm1Q>
+    <xmx:YpejZ-A6kg_t06OmiI7ssBMvQ4rBz-oA135Nb-U-XbImgkuxmQANYQ>
+    <xmx:ZJejZ6VoJm1Emn4tDnPex1BbxpsIkoL1X5SnFb50sao0J_oE-s_xQ_WW>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 5 Feb 2025 11:52:48 -0500 (EST)
+Date: Wed, 5 Feb 2025 09:52:46 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+Message-ID: <bnf37cpripiwvsadi7pmtgdqech2e6zqktk3u4dr72toug6i27@mftn3hsa3yz7>
+References: <20250129193037.573431-1-irogers@google.com>
+ <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
+ <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025020304-chip-trench-4e56@gregkh> <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
- <2025020444-chivalry-wanting-7f0c@gregkh> <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
- <2025020507-anteater-icy-44ab@gregkh>
-In-Reply-To: <2025020507-anteater-icy-44ab@gregkh>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Feb 2025 08:48:21 -0800
-X-Gm-Features: AWEUYZlSO_3FBGh77aFbt88gk14mgpW2VfIIA-t_-2vKEukz3TJzdP1tCQWYhQA
-Message-ID: <CAP-5=fUCDA1YLDrMgMpr=o4ESFey1b51+DfBwCF+cG7+-yidwg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
 
-On Tue, Feb 4, 2025 at 9:41=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Feb 04, 2025 at 10:17:17AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 11:05=E2=80=AFPM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
-> > > > On Mon, Feb 3, 2025 at 11:25=E2=80=AFAM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > [snip]
-> > > > > Note, if you all don't like "pmu_bus" for the name, that's fine, =
-please
-> > > > > let me know and I can rename it to something else, but it should =
-be
-> > > > > something to get these objects out of the root sysfs directory.
-> > > >
-> > > > Excuse my ignorance, does the event_source bus already provide a
-> > > > similar solution?
-> > > > ```
-> > > > $ ls /sys/bus/event_source/devices
-> > > > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
-> > > > uncore_cbox_7              uprobe
-> > > > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  u=
-ncore_clock
-> > > > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
-> > > > uncore_imc_free_running_0
-> > > > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
-> > > > uncore_imc_free_running_1
-> > > > $ ls /sys/devices
-> > > > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
-> > > >          uprobe
-> > > > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
-> > > >          virtual
-> > > > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
-> > > > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
-> > > > i915         msr          system      uncore_cbox_3  uncore_imc_fre=
-e_running_0
-> > > > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_fre=
-e_running_1
-> > > > ```
-> > >
-> > > Those are the exact same device structures :)
-> > >
-> > > Look at /sys/bus/event_source/devices/ those are symlinks back to
-> > > /sys/devices.  In other words, that's the exact same structures, and
-> > > the mess in /sys/devices/ with these event devices is what I am tryin=
-g
-> > > to clean up.
+On Mon, Feb 03, 2025 at 09:20:30AM -0800, Ian Rogers wrote:
+> On Thu, Jan 30, 2025 at 11:35 AM Daniel Xu <dxu@dxuuu.xyz> wrote:
 > >
-> > Thanks! Again my ignorance, why do we need pmu_bus?
->
-> You need some sort of "bus" to group all of your devices on.  It could
-> also be a class, your call.  This is how the driver model in the kernel
-> works.
+> > Hi Ian,
+> >
+> > Thanks so much for working on this!
+> >
+> > Only did a quick skim. Seems like it'd be nice to reuse the official
+> > demangler now that we know about it. Will be interesting to
+> > see how that gets packaged for distros.
+> 
+> I think the best solution is to use the official demangler but in
+> general we'd like fewer rather than more library dependencies. For
+> example your initial comments were to work to make the coupling with
+> capstone and LLVM disassemblers more loose via dlopen:
+> https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+> 
+> Thinking through the options (note I'm not doing Rust things and so my
+> level of skin in the game is minimal):
+> 1) stay as we are - well this is a mess as there is no v0 support and
+> the legacy support comes from libbfd/libiberty.
+> 2) option (1) plus this change cleaned up - there's still the mess
+> with the legacy support, which is probably more important given v0
+> isn't widely adopted.
+> 3) wait for the official demangler to be packaged as a library and
+> depend upon it, add testing from here - solves legacy and v0 issues,
+> but brings in an extra library dependency to the build. Timeline not
+> clear.
+> 4) "contribute"/copy-paste the official demangler into perf tree and
+> do like (3). Perhaps remove the forked file when a dependable library
+> exists (there's some precedent for this with how libtraceevent was in
+> and then removed from the linux tree) - solves the timeline, not great
+> to fork the official demangler, so far not heard from the author Ariel
+> Ben-Yehuda and I would strongly prefer they contribute rather than I
+> copy-paste it.
+> 
+> For (3) and (4) it is probably a good idea to engage the Rust folks in:
+> https://github.com/rust-lang/rust/issues/60705
+> 
+> Having broken Rust demangling seems like a high priority issue for the
+> perf tool.
+> 
 
-Sure, I wasn't clear how this mapped out in sysfs.
+FWIW, while I quite enjoy rust, I don't write much of it day to day
+anymore. I was only investigating on behalf of someone else. So whatever
+other folks prefer is fine with me.
 
-> > Could the symlinks in event_source be the actual devices?
->
-> That's not how the driver model works.
+[...]
 
-Ok, so I guess that's what's confusing me. Where will the new devices
-be in sysfs? If it is /sys/bus/pmu_bus then why is
-/sys/bus/event_source a different case? I guess I should read docs and
-the source :-)
+> >
+> >      * INPUT:
+> >      *     sym: symbol that has been through BFD-demangling
+> >
+> > Perhaps double check that cxxabi is sufficient and update the comment?
+> 
+> I've not tested this change beyond making it pass the tests the change
+> contains, that are based on the v0 specification's examples. I believe
+> this/legacy may be working as most C++ implies libstdc++ which I
+> believe uses libiberty in cxxabi, so BFD demangling. Given the
+> popularity of libstdc++ I imagine things like LLVM's libcxx will try
+> to be compatible. Perhaps if there are examples of legacy Rust symbols
+> we can add a test?
 
-> > Perhaps for temporary compatibility some symlinks could be placed in
-> > /sys/devices?
->
-> No, /sys/devices/ is never guaranteed to have stable placement.
->
-> And define "temporary" :)
+Like you said above, let's see which direction the community prefers
+first.
 
-I need to finish my time machine to resolve issues like this :-) An
-unfortunate thing with the PMU acronym is that it is overloaded and
-can mean Power Management Unit. Events and perf are other names used
-in the code and they don't seem overloaded, but it isn't clear to me
-we care about the name being overloaded. I'm afflicted by thinking of
-Digital Rights Management every time I hear DRM.
-
-Thanks,
-Ian
-
-> thanks,
->
-> greg k-h
+Thanks again,
+Daniel
