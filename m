@@ -1,74 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9C8209F3E;
-	Wed,  5 Feb 2025 18:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60E944F;
+	Wed,  5 Feb 2025 19:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780800; cv=none; b=Of4F//ZsTiISxixfiq7rAdR7W2dVX1xQQqmcb9m+Bg/+bNh1or8MK3tS14pskyTH2Qqsyf3lk9WnaCVSMxdQZoEsPg2GWrvFcEqt0A1Xfu9Hmhm6LjQU/kd+kEecg9sBfdm8Xkm2ErwGVFPqaJJa0VryGpzTJdxESzMdsVEmdxs=
+	t=1738782378; cv=none; b=A4PqORlKNqBEYTXXSMFmu6JlZN0G58WqRgffETlMFiDXVaUGn8exeMEF2Oq3LNQSbG3RsEuoRlFFsIeuC+b3E56gt1ZGzY9RnJOgHkqKGlm7I1nz1KfwQZ7fcTjVLoP4mklcDR0ltbOIboi3zFAZT2YJVNyU2+vSaFckFjHQJ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780800; c=relaxed/simple;
-	bh=VcT6029LRl5PwvYgOEc1CaNbCG53BPuWJX5gM6/0FUA=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=c7dyNooT5AV+qXik7DMePKIdXllNIM44uGF/7BMVnpYh0Je4PdhAmYt+A54VKE0APauu7ysPhX0x1Jexd4A8EmTEv+hLk3F+vANOu+5zI48N//V2kYQ+dPjY2zLz2wGbmxdb0V0apw++f1WTA+b8+0gdlVQOiwyQ5rgCLQRGpX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hf+vdiwS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738782378; c=relaxed/simple;
+	bh=wv7QUcMqmQJcMdaqtvzsXi7KdkhOSU6Nucm1BVG+rJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZJoDCQHjuD1YRPPrB7d4Cgb0sKhq6hW/KPBnIQNU3A88UsbbZTfOytEETmNiTaK/MtflQ96QgDNUVG0+n55DkhMC2RFBH7nnUOydjXHwRjsT/LNT/Hbx6LCTZDdRkFeXqUTDaGu9KVguyyKUbwQgZ1fLT3Q9leDMNRjp0APB/80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FE/vqXtO; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hf+vdiwS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38622C4CEE2;
-	Wed,  5 Feb 2025 18:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738780799;
-	bh=VcT6029LRl5PwvYgOEc1CaNbCG53BPuWJX5gM6/0FUA=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=Hf+vdiwSHd/HQQ3gFOLIyjPbaVlQRXz7NqPjh2FaioYlFijgN8w7Ty3Df8k7/I/J5
-	 GCNehp+VeNNY5dJSoihhE9/nmn3+TrccoHWgnn7dsWnSnzHnzKTFnzoyKWj8w4mI2R
-	 DB7FNNudArGVTosZF9R4TeDSbxQQHeipsHoK23gZqhp+VI/B7oKhdQjhCYrWgShMGz
-	 P9b/8EsuLs8Ch6uTN+HqAESwVP6zIXrmlIBwLKC/dya1hmLmqZn8V4XS7/7/+rOqLs
-	 Ku12OdztMmx6JVR3nJCK5HIchcZNyQz6ZHhvgl7l0tVDvWKfm8Ju5yAy/9eVk3KOtf
-	 ExfPklwmw9lng==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
- Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
- Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, 
- Junhao He <hejunhao3@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20250201074320.746259-1-irogers@google.com>
-References: <20250201074320.746259-1-irogers@google.com>
-Subject: Re: [PATCH v3 0/5] perf hwmon related improvements
-Message-Id: <173878079918.596119.6286788073934483189.b4-ty@kernel.org>
-Date: Wed, 05 Feb 2025 10:39:59 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FE/vqXtO"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2161eb95317so3741795ad.1;
+        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738782376; x=1739387176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
+        b=FE/vqXtOR1bXFzp2IVvlUZ0pUgiMzAOfX9OqJF7cXU0IH+w/wc+yDidzy1982rBMUi
+         rRv01F2DtYahbgdj7D4m4nC+lspvA7PPwHlQgjyN0n+y2RJquqscerEcWsTh5ZzU6/5g
+         pQoCL+fbB6lffHrewT9o8aHgnEadeHYuFK9dN5z29uKnylzEV9HWXmsQtWvbb1x0hwzl
+         c/P1Re2UAUdFvIMxMycXNwbIjxMg5TvplpbSLahXc88EW+fYz8+KdgvH8wcmDf03lhiP
+         3biBEMlzhCHbNwXkX1waZ2mD4zeOOdjuOKg+3Kl9hd8VUz1AV5mC9LdntGNa6kinZEhq
+         GWQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738782376; x=1739387176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2XTZ2XIu3m9RP+qJyYD+g3KKohZkkqFE7uro5AlY+lA=;
+        b=UA03pL6pOUsPZkyg00KKdjHpVWIdYN6v3e1NopWKE+rSqEcmw1VzER0ep99bDEJyEy
+         Rnjw67Ocjm7J9qu6eW11E8fVuaYzP3CsNF/oXu14o48HWbIvpRSzdbPebSDAOBKUdKFY
+         4Eo2NT4xds7lYdwkjAdwKRolWNkeJnWj9D3DrN3bgXVcfNFr8Lw3oG6KfpBJbFF3ooaq
+         hUwNb5ynWGr3nv5h6ZR8tNCzreqM6BAj8c+gq7GyPuNKGHlJYXmtXp6eHhnyFdEe17bs
+         0oHZoz+vL/CPxq49EemKQS0yeF/uZ4Y2JcPlAkP6dsj+ZQTA109FVGjlj3AuVET808mP
+         emvg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+omfGUaNIUheRIEKh0tTCK3gpE5xx6WhFYhKPUstBqMAGbC7uokAS5Mn2IKWkjOmXmUufNAwkKhBkPYs=@vger.kernel.org, AJvYcCVzk63DM8ift2kekK4EO5pMy3l1SoaivLMkfafD610u0QVivgISeF49DUVqlFPONh1eo9OyTdsrxIaceODHVLeepA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz91sxHqOI+eLd11uiYCY9fp6syo1N37RghVU9+QzUoW+NibyHL
+	4IrZP4mInyUY1TCdYSARGfbiBg9wKNtHf4zN5n0xic0vt2uH5Ul0
+X-Gm-Gg: ASbGncvULWS0ld1WssGsHqpYX1vS7O4H1mbNP+gWsDL2sIyUVaybK4O86MZezgZWdEe
+	prog0grVhmJrvs121jRujuW+3sqp0Brd+3tBpF/RW7LVQ8UKgR9sYkM6P8gUs2lxRtEkVJoyZ6z
+	PNJAnKQTNKQtHIIJoqb9zL1CqTnaBHCer+4hxHp77Aq3P8cJMes0wKWBLeDnYK+ajnZX9F99hCz
+	DJzZh0mz6e0bNT1xdS6EwqfvHyWAgL22+P6Q7WaiMu+cFnJQoCTyXTL3aPo/0F9u9fhYhhCgm2s
+	CZmbmoy8YQsgPTfv00wFDE6nWKHdc/4taytLuhXLsdBVVw==
+X-Google-Smtp-Source: AGHT+IHKqldEMmvfEqeRBZkBH83z+bWZgrX2UowzmDa9skIUAfl6ELjXshIVfFyh1cu/qWHsUGePzg==
+X-Received: by 2002:a17:902:e888:b0:215:4a31:47d8 with SMTP id d9443c01a7336-21f17dde27bmr58334165ad.9.1738782376224;
+        Wed, 05 Feb 2025 11:06:16 -0800 (PST)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:e6df:5ab5:fc4f:a680])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f07afc5c1sm34494785ad.170.2025.02.05.11.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 11:06:15 -0800 (PST)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: mark.rutland@arm.com
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	shuah@kernel.org,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] perf/core: Prevent dereferencing NULL pointer
+Date: Thu,  6 Feb 2025 03:06:08 +0800
+Message-ID: <20250205190608.93508-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Transfer-Encoding: 8bit
 
-On Fri, 31 Jan 2025 23:43:15 -0800, Ian Rogers wrote:
-> Try to do less scanning of files/directories with or without hwmon
-> PMUs. Don't merge all events with the same name, only merge those on
-> the same PMU ignoring suffix. Tidy PMU name matching to distinguish no
-> suffix or wildcard matching. Refactor uniquification so the evsels
-> with the same name as other evsels in the evlist are uniquified.
-> 
-> v3: Address potential segv and styling nits from Kan Liang.
-> v2: Rename ignore suffix PMU name matching that is really a
->     wildcard/prefix match. Use a proper ignore suffix when not merging
->     counters purely on name.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+According to coverity scan check, there's possible cases where
+"ring_buffer_get()" returns a NULL in "perf_mmap_close".
 
-Best regards,
-Namhyung
+Use a "BUG_ON()" to check for NULL pointer existence, panic if it does
+exist, otherwise it's safe to dereference "rb" and access its members.
 
+The scan check report link is:
+scan5.scan.coverity.com/#/project-view/63416/10063?selectedIssue=1636067
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ kernel/events/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e011e9e..fe83d4754746 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6410,11 +6410,17 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ {
+ 	struct perf_event *event = vma->vm_file->private_data;
+ 	struct perf_buffer *rb = ring_buffer_get(event);
+-	struct user_struct *mmap_user = rb->mmap_user;
+-	int mmap_locked = rb->mmap_locked;
+-	unsigned long size = perf_data_size(rb);
++	struct user_struct *mmap_user;
++	int mmap_locked;
++	unsigned long size;
+ 	bool detach_rest = false;
+ 
++	BUG_ON(!rb);
++
++	mmap_user = rb->mmap_user;
++	mmap_locked = rb->mmap_locked;
++	size = perf_data_size(rb);
++
+ 	if (event->pmu->event_unmapped)
+ 		event->pmu->event_unmapped(event, vma->vm_mm);
+ 
+-- 
+2.43.0
 
