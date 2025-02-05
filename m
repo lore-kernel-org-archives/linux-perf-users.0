@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6138022D4F1;
-	Wed,  5 Feb 2025 12:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5589F22DF9D;
+	Wed,  5 Feb 2025 12:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757782; cv=none; b=TC4siY5h3Umx6JWZsi+NFaMHN46nrtUZ34s5UByehCTFSuFmU9NLJI6rbiBRnMIG7mcPTvtIOtNS2wFL/bF3hcA3cDPzFfE+wWxVxupa9m8A+CSELnXAmWpL2jxUlKOstUd/kIKkNy1JuhM5agJGhOfoQZPx4f7NbK/XvP7Wbx4=
+	t=1738757785; cv=none; b=T6Ve6Vmm/ydytYJGOYTBxnbmlooNBDcb6wkPQVfE6Ar7JDegrGZOyyZDlGDFqydOIxu447E3bBR8wxjEjVpTnzENz4XBXiQwAwfMZKQdfOqXmDE0X/ZLhAu4SQcgWMfAZJlySRIhGMQH2r6HyagnXzoBw1grxn4RsqPq+NybsLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757782; c=relaxed/simple;
-	bh=VmHHQFgO+JH2z8YV5WZUtOPKjZ9wyFVcbyEP7Ez3FTM=;
+	s=arc-20240116; t=1738757785; c=relaxed/simple;
+	bh=vgKhNi+L9i3Sr0y8suoI0PsYPUjUY9hgP3pcrNYWTqQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lVdipbDqrEKuWSOGgWK8tKv/bpiTnBgl/xg3KAw0fcqI3uIk7fbrgWwcsmT05HEcmh3Cgs5VTNST5gxvKvvWuGKtzwhi5SN+cU4akH1y71pSGaujnSotLFoXOEEmQ1AErnigOfrlDfN9DRKaWc72/wGGobTxfrVhGSqaebEr+Fg=
+	 MIME-Version; b=kHAE7Sf94O0l8NRqILbw60OuojFCj/xmuh+DvZ6AxERGryw1YPoOKUcuuUfGDSgaT1/sBIB7OUboEiBMwIZl/DzCvhE3GyiD/yROvRIAdWPt1Tl2W7Sgyl1UaJJmu0DTGpneLUukp3+xy6eFz9HKGI+DTtG+gNsIxPeSGsTg0gs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABADB11FB;
-	Wed,  5 Feb 2025 04:16:44 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 580131515;
+	Wed,  5 Feb 2025 04:16:47 -0800 (PST)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A40FA3F63F;
-	Wed,  5 Feb 2025 04:16:18 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 500A73F63F;
+	Wed,  5 Feb 2025 04:16:21 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -36,9 +36,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	Graham Woodward <graham.woodward@arm.com>
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 04/11] perf script: Add not taken event for branches
-Date: Wed,  5 Feb 2025 12:15:48 +0000
-Message-Id: <20250205121555.180606-5-leo.yan@arm.com>
+Subject: [PATCH v1 05/11] perf script: Add not taken event for branch stack
+Date: Wed,  5 Feb 2025 12:15:49 +0000
+Message-Id: <20250205121555.180606-6-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250205121555.180606-1-leo.yan@arm.com>
 References: <20250205121555.180606-1-leo.yan@arm.com>
@@ -50,53 +50,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some hardware (e.g., Arm SPE) can trace the not taken event for
-branches.  Add a flag for this event and support printing it.
+The branch stack has an existed field for printing mispredict, extend
+the field for printing events and add support not-taken event.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/event.h                 | 6 ++++--
- tools/perf/util/trace-event-scripting.c | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-script.c | 20 +++++++++++++-------
+ tools/perf/util/branch.h    |  3 ++-
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 962fbc1714cf..c7f4b4b841ca 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -67,9 +67,10 @@ enum {
- 	PERF_IP_FLAG_INTR_DISABLE	= 1ULL << 13,
- 	PERF_IP_FLAG_INTR_TOGGLE	= 1ULL << 14,
- 	PERF_IP_FLAG_BRANCH_MISS	= 1ULL << 15,
-+	PERF_IP_FLAG_NOT_TAKEN		= 1ULL << 16,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index e7f79a3f1fd2..5e1c9a803d66 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -929,19 +929,25 @@ static int perf_sample__fprintf_start(struct perf_script *script,
+ 	return printed;
+ }
+ 
+-static inline char
+-mispred_str(struct branch_entry *br)
++static inline size_t
++bstack_event_str(struct branch_entry *br, char *buf, size_t sz)
+ {
+-	if (!(br->flags.mispred  || br->flags.predicted))
+-		return '-';
++	if (!(br->flags.mispred || br->flags.predicted || br->flags.not_taken))
++		return snprintf(buf, sz, "-");
+ 
+-	return br->flags.predicted ? 'P' : 'M';
++	return snprintf(buf, sz, "%s%s",
++			br->flags.predicted ? "P" : "M",
++			br->flags.not_taken ? "N" : "");
+ }
+ 
+ static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+ {
+-	return fprintf(fp, "/%c/%c/%c/%d/%s/%s ",
+-		       mispred_str(br),
++	char events[16] = { 0 };
++	size_t pos;
++
++	pos = bstack_event_str(br, events, sizeof(events));
++	return fprintf(fp, "/%s/%c/%c/%d/%s/%s ",
++		       pos < 0 ? "-" : events,
+ 		       br->flags.in_tx ? 'X' : '-',
+ 		       br->flags.abort ? 'A' : '-',
+ 		       br->flags.cycles,
+diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+index b80c12c74bbb..99338f26f5e5 100644
+--- a/tools/perf/util/branch.h
++++ b/tools/perf/util/branch.h
+@@ -18,6 +18,7 @@ struct branch_flags {
+ 		struct {
+ 			u64 mispred:1;
+ 			u64 predicted:1;
++			u64 not_taken:1;
+ 			u64 in_tx:1;
+ 			u64 abort:1;
+ 			u64 cycles:16;
+@@ -25,7 +26,7 @@ struct branch_flags {
+ 			u64 spec:2;
+ 			u64 new_type:4;
+ 			u64 priv:3;
+-			u64 reserved:31;
++			u64 reserved:30;
+ 		};
+ 	};
  };
- 
--#define PERF_IP_FLAG_CHARS "bcrosyiABExghDtm"
-+#define PERF_IP_FLAG_CHARS "bcrosyiABExghDtmn"
- 
- #define PERF_ADDITIONAL_STATE_MASK	\
- 	(PERF_IP_FLAG_IN_TX |		\
-@@ -91,7 +92,8 @@ enum {
- 	PERF_IP_FLAG_VMEXIT)
- 
- #define PERF_IP_FLAG_BRACH_EVENT_MASK	\
--	PERF_IP_FLAG_BRANCH_MISS
-+	(PERF_IP_FLAG_BRANCH_MISS |	\
-+	 PERF_IP_FLAG_NOT_TAKEN)
- 
- #define PERF_MEM_DATA_SRC_NONE \
- 	(PERF_MEM_S(OP, NA) |\
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index 55d7e4e612d5..29cc467be14a 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -317,6 +317,7 @@ static const struct {
- 	const char *name;
- } branch_events[] = {
- 	{PERF_IP_FLAG_BRANCH_MISS, "miss"},
-+	{PERF_IP_FLAG_NOT_TAKEN, "not_taken"},
- 	{0, NULL}
- };
- 
 -- 
 2.34.1
 
