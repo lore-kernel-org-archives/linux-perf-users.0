@@ -1,384 +1,464 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC872770B
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 05:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F340621D583;
+	Wed,  5 Feb 2025 05:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738732666; cv=none; b=OE9js89W0qcbzoQSumbjw/zax8dKfuHT/5E2R937SF+V26snC8xp14JxEWapREVbvTMx5GOdTGdJIgvKyRc5CePDSfK8LqxYbrNUjpDVpnl3x6BoWF8vBb15g80ljuxqE6s1ybYqfcX4J1EJeCsIZ6Q3GSYrbZZ3caIDswXQ4tw=
+	t=1738733217; cv=none; b=LlZlsQHdsc/jA5EW9KCJAqJTI05bz7hmkCUsNsmvDEdjAAHXau51XuZFq0xK1/y5M226orrqqEOV1ZTKBDI2uQcddRCLAu5iFgSrDGaMWCkuIMVlrUPlqGsn89T9kWTQXXjqDg+m8SZF8kXqbxODLXHxFMaKPNBJ6zwX7JXZ/Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738732666; c=relaxed/simple;
-	bh=Chy2x7VQAnWc+n/BOReHxmlc0WFyMV0I80HNUn8XL/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fwMv6FZJ7M3Uena6/yH8skaJ/wvQKyNZm10pF1hqwmc+S/m5PVPVUIayWTHnRY4wyigH7ndW84tK5YghN+mrh1ITxzAiqSFgSQkUZQ2O1nw3/KmasDM5DatBDONy1xXZ69vcmuifzJJ9KfQHTQtRh/5eZ3O5CAVd3wypsyQgJbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vLEmO9g+; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738733217; c=relaxed/simple;
+	bh=hSH/r3YeLaiBL1FD9BdDhseoi/ETyYAwAYwQsByKGwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gIcJ/FZeDdKz8ATKvBBwUT9rDDKQruMSnaurDUAqro7gfqtu8jWc1l0r603OybAtbT1wocFZS7KzbH+OwQVaJILyY5XD1txPJlMkYvBj0GwhwZqIf6HHqPF09j4Tw4iGXQU4+lvhpubWJDofeNdYm9mRmldrQQEk976zUQtwlo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hD/+uLxI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vLEmO9g+"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9d0c28589so214985ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 21:17:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738732664; x=1739337464; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E6VkJiHrbbbiMXK+JGzdxYkUUTdtB+kySQbb5/AnBMY=;
-        b=vLEmO9g+OiOgPBEgjt/yA7daLM/+ttOSyliQktsO9I7XHqktCITjzO1t57T+Mxw5mL
-         TNRxsifGwtmq1v+qVDoDsOQu1maB3FiqZ+jSpOgvXuLz/Do1f9UGhBNhHSgEaDZ2BwZT
-         4EODlcy5Z2kaGvs+al+uNsl4+bdC1sry8/QCJSzh9Kd/7PfxQhsqVlMLB/noDjH0eJ52
-         WeWYV2DodWhGq64votj9bJ9Q56SbUw4rmWPDQupmn4Bz1hvPMnQk2EndKb7b4ls3XTW7
-         PTsEwP8l727v8WCuTCiCIpvDFMd/POBs5sOr2U5u2cGeyEtZjQSoBd+NYgow9IJ52F0/
-         wbuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738732664; x=1739337464;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E6VkJiHrbbbiMXK+JGzdxYkUUTdtB+kySQbb5/AnBMY=;
-        b=kmYPA9y0rzqWpsfdQxUedYoB8/j+c3hHIjU6XxRHAry9zhllMVAO6wmbTKNd1VDTSl
-         wzbY8uj8vY9uSjVYWG/gEM+ZZTaGOsljeEq825BkZE99WI+7YDjMPHQEqLgR52SrftzX
-         Oou/gzKaU1Z4aP8eeU++LZZ1te9cJsaEntXdsejp/Jcr7v4XauoxCZOGXr7WBdST+lWU
-         JP0MJQptoDAAHPIlgNNcElvMQzBFTjhEdMRyW5ykts0efwDvayOpfgLeAy+497Po3I1T
-         JErs3oqoOAidOfHvdU2pQjtouC8mrJd6tcOubcC6gHmSzDNfkqcEqzGiTI913J9UjTJn
-         07yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOQ0dJOOkAYTzQpqeAvIQaJGKzQB8taPaBcg/x/bB2orAG88CQuO2ejuyY8QDdeVGif4OLpq3vCHMan/biuypz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0r3pmXDB7Davcu840+A37mxl06B47d+yzQ0LBGfvxM4NrZNfh
-	O8hOzioqfB+6RH66W6fF1ArxHjElO7cUsAmLGhsMs4Fjz+pkS33fhonyjMLIGVd29wtqC58+jNa
-	kn6gTwcADlowLiCWaHPNmOKrZfHeWde41YExs
-X-Gm-Gg: ASbGncv9DCy033ybfqfAKMQuF6Y7sgTe8V4/RzrmFz0lqSCSLb4T1mVShvKC/DlMTk7
-	tmzo3p6nccIMKnYb23OuhmrXPS0boOHXM8UAwOlJhqiR1ILbRyVC3b4kV2RzVU/SpzxB7VrqT3A
-	==
-X-Google-Smtp-Source: AGHT+IHl43XIfltfroT4EjSgvT6hOpSgzPYI/2ybrdT40o1qTAC93Bg80SiKQtuZ3DF01gNUQSS3XhZ1wvdntIpiYP8=
-X-Received: by 2002:a05:6e02:747:b0:3a7:e3b3:2e3 with SMTP id
- e9e14a558f8ab-3d040f54185mr6074905ab.17.1738732663644; Tue, 04 Feb 2025
- 21:17:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hD/+uLxI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0199EC4CED1;
+	Wed,  5 Feb 2025 05:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738733216;
+	bh=hSH/r3YeLaiBL1FD9BdDhseoi/ETyYAwAYwQsByKGwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hD/+uLxIfUVqFnyBNvw1ne2jB8XQkg1C8tYuLMtgZUg0ISrcPRc6D1qTs6KySfqMG
+	 A3hfSzQSjTVwOnyBMBIaHdK7ws5/6Bu9bKEMQ0lC3cv7MEa2IfvdK++WtPM1B4drnZ
+	 U/a5raaj7xhrwKasokguzWDafKbPHAdtqnnOyWhcoppqSYBknC7zaXVgTtAPjh4/Vb
+	 xKHAD6UNpZWhiVAApwyy1caerG/oTLM4iEFjYm6zUTkp/oCKVGfWCo94j+v3CWW1AB
+	 ye1W+jU+i2aDNPj3hxN7ho8V+Adbu58Q/fars+kyD8CbSYlibydK6NNsqI+AKeBch5
+	 wiIBwPnmXJkBg==
+Date: Tue, 4 Feb 2025 21:26:54 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] perf pmu: Rename name matching for no suffix or
+ wildcard variants
+Message-ID: <Z6L2nliySuNEQ_IU@google.com>
+References: <20250201074320.746259-1-irogers@google.com>
+ <20250201074320.746259-4-irogers@google.com>
+ <Z6FKoQfY2zBNzIZV@google.com>
+ <CAP-5=fXuH=5Tq0gpVn7tAQX3cSLd=vjXZ6vp7Szde6i_RQNq+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com> <20250201071455.718247-7-irogers@google.com>
- <CAH0uvoiAAYcKOUVMd9saq7FabroD-VcWdD2JTxQ5ZRf2OHkh=w@mail.gmail.com>
-In-Reply-To: <CAH0uvoiAAYcKOUVMd9saq7FabroD-VcWdD2JTxQ5ZRf2OHkh=w@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 21:17:32 -0800
-X-Gm-Features: AWEUYZlH2MGjNuj5WJ1EYAmYujPw2uUlEhGiKDZ_YCUl2QUP1jM32KceJo_gAPs
-Message-ID: <CAP-5=fXV6Jyd6pN7nWWy2mg1XUzbx4x=GNekyEWh9wgPDiF2kg@mail.gmail.com>
-Subject: Re: [PATCH v1 6/7] perf syscalltbl: Use lookup table containing
- multiple architectures
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXuH=5Tq0gpVn7tAQX3cSLd=vjXZ6vp7Szde6i_RQNq+A@mail.gmail.com>
 
-On Tue, Feb 4, 2025 at 4:24=E2=80=AFPM Howard Chu <howardchu95@gmail.com> w=
-rote:
->
-> Hello,
->
-> On Fri, Jan 31, 2025 at 11:15=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
+On Mon, Feb 03, 2025 at 03:10:04PM -0800, Ian Rogers wrote:
+> On Mon, Feb 3, 2025 at 3:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Switch to use the lookup table containing all architectures rather
-> > than tables matching the perf binary.
+> > Hi Ian,
 > >
-> > This fixes perf trace when executed on a 32-bit i386 binary on an
-> > x86-64 machine. Note in the following the system call names of the
-> > 32-bit i386 binary as seen by an x86-64 perf.
+> > On Fri, Jan 31, 2025 at 11:43:18PM -0800, Ian Rogers wrote:
+> > > Wildcard PMU naming will match a name like pmu_1 to a PMU name like
+> > > pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
+> > > the match. No suffix matching will match pmu_10 to either pmu_1 or
+> > > pmu_2. Add or rename matching functions on PMU to make it clearer what
+> > > kind of matching is being performed.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/pmu-events/empty-pmu-events.c |   8 +-
+> > >  tools/perf/pmu-events/jevents.py         |   8 +-
+> > >  tools/perf/tests/pmu.c                   |  85 ++++----
+> > >  tools/perf/util/parse-events.c           |   2 +-
+> > >  tools/perf/util/pmu.c                    | 256 ++++++++++++++++-------
+> > >  tools/perf/util/pmu.h                    |   5 +-
+> > >  6 files changed, 235 insertions(+), 129 deletions(-)
+> > >
+> > [...]
+> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > > index 6206c8fe2bf9..c2a15b0259cf 100644
+> > > --- a/tools/perf/util/pmu.c
+> > > +++ b/tools/perf/util/pmu.c
+> > > @@ -847,21 +847,23 @@ static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
+> > >  }
+> > >
+> > >  /**
+> > > - * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
+> > > - *                                   trailing suffix? The Suffix must be in form
+> > > - *                                   tok_{digits}, or tok{digits}.
+> > > + * perf_pmu__match_wildcard - Does the pmu_name start with tok and is then only
+> > > + *                            followed by nothing or a suffix? tok may contain
+> > > + *                            part of a suffix.
+> > >   * @pmu_name: The pmu_name with possible suffix.
+> > > - * @tok: The possible match to pmu_name without suffix.
+> > > + * @tok: The wildcard argument to match.
+> > >   */
+> > > -static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *tok)
+> > > +static bool perf_pmu__match_wildcard(const char *pmu_name, const char *tok)
 > >
-> > Before:
-> > ```
-> >          ? (         ): a.out/447296  ... [continued]: munmap())       =
-                                    =3D 0
-> >      0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 41605857=
-08, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|=
-ERRQUEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEX=
-EC|0x91f80000, addr: 0xe30, addr_len: 0xffce438c) =3D 1475198976
-> >      0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, si=
-ze: 34)                             =3D 4160344064
-> >      0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4) =
-                                    =3D -1 ENOENT (No such file or director=
-y)
-> >      0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struc=
-t iovec){.iov_base =3D (void *)0x2e646c2f6374652f,.iov_len =3D (__kernel_si=
-ze_t)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) =3D 3
-> >      0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, si=
-ze: 2)                              =3D 4160237568
-> >      0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193=
-f6)                                 =3D 0
-> >      0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struc=
-t iovec){.iov_base =3D (void *)0x3833692f62696c2f,.iov_len =3D (__kernel_si=
-ze_t)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) =3D 3
-> >      0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>) =
-                                    =3D 512
-> >      0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, si=
-ze: 2050)                           =3D 4157935616
-> >      0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
-value: 0x5, size: 2066)             =3D 4158078976
-> >      0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
-value: 0x1, size: 2066)             =3D 4159639552
-> >      0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
-value: 0x3, size: 2066)             =3D 4160184320
-> >      0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", =
-value: 0x3, size: 50)               =3D 4160196608
-> >      0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")               =
-                                    =3D 0
-> >      0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800,=
- u_msg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_t=
-imeout: (struct __kernel_timespec){.tv_sec =3D (__kernel_time64_t)-57817402=
-7777317696,.tv_nsec =3D (long long int)4160349376,}) =3D 0
-> >      0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname:=
- " =EF=BF=BD=EF=BF=BD=EF=BF=BD =EF=BF=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=EF=BF=BD=EF=BF=BD", mode: IFREG|ISU=
-ID|IRUSR|IWGRP|0xf7fd0000) =3D 447296
-> >      0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812,=
- lvec: (struct iovec){.iov_base =3D (void *)0xf7f9e9c8f7f9e4c0,.iov_len =3D=
- (__kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}=
-, riovcnt: 4160585708, flags: 4291707352) =3D 0
-> >      0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr=
-: 8192)                             =3D 0
-> >      0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr=
-: 4096)                             =3D 0
-> >      0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr=
-: 8192)                             =3D 0
-> >      0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD", value: 0xf7f77e34, si=
-ze: 1)  =3D 0
-> >      0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO=
-|IWUGO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) =3D 0
-> >      0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658=
-e008, pos_h: 4160192052)            =3D 3
-> >      0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>) =
-                                    =3D 1436
-> >      0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce=
-32ac)                               =3D 1436
-> >      0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufs=
-iz: 4291703244)                       =3D 0
-> > ```
+> > It'd be nice if we use a function prefix with "__" only if the first
+> > argument is the corresponding type.  How about renaming it to
+> > pmu_name_match_wildcard() and others?
 > >
-> > After:
-> > ```
-> >          ? (         ): a.out/442930  ... [continued]: execve())       =
-                                    =3D 0
-> >      0.023 ( 0.002 ms): a.out/442930 brk()                             =
-                                    =3D 0x57760000
-> >      0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode:=
- R)                                 =3D -1 ENOENT (No such file or director=
-y)
-> >      0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/l=
-d.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
-> >      0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>) =
-                                    =3D 0
-> >      0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i=
-386-linux-", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
-> >      0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, b=
-uf: 0xffbdbb70, count: 512)         =3D 512
-> >      0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>) =
-                                    =3D 0
-> >      0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528=
-)                                   =3D 442930 (a.out)
-> >      0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, =
-len: 12)                            =3D
-> >      0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 8=
-192, prot: READ)                    =3D 0
-> >      0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 4=
-096, prot: READ)                    =3D 0
-> >      0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 8=
-192, prot: READ)                    =3D 0
-> >      0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 1034=
-14)                                 =3D 0
-> >      0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d=
-008)                                =3D 3
-> >      0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, b=
-uf: 0xffbdb67c, count: 4096)        =3D 1436
-> >      0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , co=
-unt: 1436)                          =3D 1436
-> >      0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec:=
- 17866546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) =3D 0
-> >   1000.478 (         ): a.out/442930 exit_group()                      =
-                                    =3D ?
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
-> >  1 file changed, 64 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.=
-c
-> > index 760ac4d0869f..572083ba1efe 100644
-> > --- a/tools/perf/util/syscalltbl.c
-> > +++ b/tools/perf/util/syscalltbl.c
-> > @@ -15,16 +15,39 @@
-> >  #include <string.h>
-> >  #include "string2.h"
-> >
-> > -#if __BITS_PER_LONG =3D=3D 64
-> > -  #include <asm/syscalls_64.h>
-> > -#else
-> > -  #include <asm/syscalls_32.h>
-> > -#endif
-> > +#include "trace/beauty/generated/syscalltbl.c"
-> >
-> > -const char *syscalltbl__name(int e_machine __maybe_unused, int id)
-> > +static const struct syscalltbl *find_table(int e_machine)
-> >  {
-> > -       if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
-> > -               return syscall_num_to_name[id];
-> > +       static const struct syscalltbl *last_table;
-> > +       static int last_table_machine =3D EM_NONE;
-> > +
-> > +       /* Tables only exist for EM_SPARC. */
-> > +       if (e_machine =3D=3D EM_SPARCV9)
-> > +               e_machine =3D EM_SPARC;
-> > +
-> > +       if (last_table_machine =3D=3D e_machine && e_machine !=3D EM_NO=
-NE)
->
-> I don't think it should be && e_machine !=3D EM_NONE. last_table_machine
-> =3D=3D e_machine =3D=3D EM_NONE could mean last_table being uninitialized=
-, but
-> what if the called *is* trying to search for e_machine =3D=3D EM_NONE? No=
-w
-> perf will need to traverse the whole syscalltbls array just to find
-> the last EM_NONE table.
->
-> My suggestion is:
->
-> static const struct syscalltbl *last_table =3D NULL;
->
-> and then:
->
-> if (last_table_machine =3D=3D e_machine && last_table)
->     return last_table;
+> > Otherwise, looks good to me.
+> 
+> I think the intent is to make them look like (in the C++ sense) static
+> member functions. I was following the existing convention as with
+> perf_pmu__event_source_devices_scnprintf,
+> perf_pmu__pathname_scnprintf, perf_pmu__convert_scale,
+> perf_pmu__event_source_devices_fd,  perf_pmu__pathname_fd, all the
+> perf_pmus functions, etc.
 
-Agreed this is better. I'll add it in v2 with your tags :-)
+I still think it's better to match the prefix with the data type but we
+can fix them all later.
 
 Thanks,
-Ian
+Namhyung
 
-> > +               return last_table;
-> > +
-> > +       for (size_t i =3D 0; i < ARRAY_SIZE(syscalltbls); i++) {
-> > +               const struct syscalltbl *entry =3D &syscalltbls[i];
-> > +
-> > +               if (entry->e_machine !=3D e_machine && entry->e_machine=
- !=3D EM_NONE)
-> > +                       continue;
-> > +
-> > +               last_table =3D entry;
-> > +               last_table_machine =3D e_machine;
-> > +               return entry;
-> > +       }
-> > +       return NULL;
-> > +}
-> > +
-> > +const char *syscalltbl__name(int e_machine, int id)
-> > +{
-> > +       const struct syscalltbl *table =3D find_table(e_machine);
-> > +
-> > +       if (table && id >=3D 0 && id < table->num_to_name_len)
-> > +               return table->num_to_name[id];
-> >         return NULL;
-> >  }
 > >
-> > @@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const v=
-oid *ventry)
-> >         return strcmp(key->name, key->tbl[*entry]);
-> >  }
-> >
-> > -int syscalltbl__id(int e_machine __maybe_unused, const char *name)
-> > +int syscalltbl__id(int e_machine, const char *name)
-> >  {
-> > -       struct syscall_cmp_key key =3D {
-> > -               .name =3D name,
-> > -               .tbl =3D syscall_num_to_name,
-> > -       };
-> > -       const int *id =3D bsearch(&key, syscall_sorted_names,
-> > -                               ARRAY_SIZE(syscall_sorted_names),
-> > -                               sizeof(syscall_sorted_names[0]),
-> > -                               syscallcmpname);
-> > +       const struct syscalltbl *table =3D find_table(e_machine);
-> > +       struct syscall_cmp_key key;
-> > +       const int *id;
-> > +
-> > +       if (!table)
-> > +               return -1;
-> > +
-> > +       key.name =3D name;
-> > +       key.tbl =3D table->num_to_name;
-> > +       id =3D bsearch(&key, table->sorted_names, table->sorted_names_l=
-en,
-> > +                    sizeof(table->sorted_names[0]), syscallcmpname);
-> >
-> >         return id ? *id : -1;
-> >  }
-> >
-> > -int syscalltbl__num_idx(int e_machine __maybe_unused)
-> > +int syscalltbl__num_idx(int e_machine)
-> >  {
-> > -       return ARRAY_SIZE(syscall_sorted_names);
-> > +       const struct syscalltbl *table =3D find_table(e_machine);
-> > +
-> > +       if (!table)
-> > +               return 0;
-> > +
-> > +       return table->sorted_names_len;
-> >  }
-> >
-> > -int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
-> > +int syscalltbl__id_at_idx(int e_machine, int idx)
-> >  {
-> > -       return syscall_sorted_names[idx];
-> > +       const struct syscalltbl *table =3D find_table(e_machine);
-> > +
-> > +       if (!table)
-> > +               return -1;
-> > +
-> > +       assert(idx >=3D 0 && idx < table->sorted_names_len);
-> > +       return table->sorted_names[idx];
-> >  }
-> >
-> > -int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const =
-char *syscall_glob, int *idx)
-> > +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_g=
-lob, int *idx)
-> >  {
-> > -       for (int i =3D *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_nam=
-es); ++i) {
-> > -               const char *name =3D syscall_num_to_name[syscall_sorted=
-_names[i]];
-> > +       const struct syscalltbl *table =3D find_table(e_machine);
-> > +
-> > +       for (int i =3D *idx + 1; table && i < table->sorted_names_len; =
-++i) {
-> > +               const char *name =3D table->num_to_name[table->sorted_n=
-ames[i]];
-> >
-> >                 if (strglobmatch(name, syscall_glob)) {
-> >                         *idx =3D i;
-> > -                       return syscall_sorted_names[i];
-> > +                       return table->sorted_names[i];
-> >                 }
-> >         }
-> >
-> > --
-> > 2.48.1.362.g079036d154-goog
-> >
+> > >  {
+> > >       const char *p, *suffix;
+> > >       bool has_hex = false;
+> > > +     size_t tok_len = strlen(tok);
+> > >
+> > > -     if (strncmp(pmu_name, tok, strlen(tok)))
+> > > +     /* Check start of pmu_name for equality. */
+> > > +     if (strncmp(pmu_name, tok, tok_len))
+> > >               return false;
+> > >
+> > > -     suffix = p = pmu_name + strlen(tok);
+> > > +     suffix = p = pmu_name + tok_len;
+> > >       if (*p == 0)
+> > >               return true;
+> > >
+> > > @@ -887,60 +889,84 @@ static bool perf_pmu__match_ignoring_suffix(const char *pmu_name, const char *to
+> > >  }
+> > >
+> > >  /**
+> > > - * pmu_uncore_alias_match - does name match the PMU name?
+> > > - * @pmu_name: the json struct pmu_event name. This may lack a suffix (which
+> > > + * perf_pmu__match_ignoring_suffix_uncore - Does the pmu_name match tok ignoring
+> > > + *                                          any trailing suffix on pmu_name and
+> > > + *                                          tok?  The Suffix must be in form
+> > > + *                                          tok_{digits}, or tok{digits}.
+> > > + * @pmu_name: The pmu_name with possible suffix.
+> > > + * @tok: The possible match to pmu_name.
+> > > + */
+> > > +static bool perf_pmu__match_ignoring_suffix_uncore(const char *pmu_name, const char *tok)
+> > > +{
+> > > +     size_t pmu_name_len, tok_len;
+> > > +
+> > > +     /* For robustness, check for NULL. */
+> > > +     if (pmu_name == NULL)
+> > > +             return tok == NULL;
+> > > +
+> > > +     /* uncore_ prefixes are ignored. */
+> > > +     if (!strncmp(pmu_name, "uncore_", 7))
+> > > +             pmu_name += 7;
+> > > +     if (!strncmp(tok, "uncore_", 7))
+> > > +             tok += 7;
+> > > +
+> > > +     pmu_name_len = pmu_name_len_no_suffix(pmu_name);
+> > > +     tok_len = pmu_name_len_no_suffix(tok);
+> > > +     if (pmu_name_len != tok_len)
+> > > +             return false;
+> > > +
+> > > +     return strncmp(pmu_name, tok, pmu_name_len) == 0;
+> > > +}
+> > > +
+> > > +
+> > > +/**
+> > > + * perf_pmu__match_wildcard_uncore - does to_match match the PMU's name?
+> > > + * @pmu_name: The pmu->name or pmu->alias to match against.
+> > > + * @to_match: the json struct pmu_event name. This may lack a suffix (which
+> > >   *            matches) or be of the form "socket,pmuname" which will match
+> > >   *            "socketX_pmunameY".
+> > > - * @name: a real full PMU name as from sysfs.
+> > >   */
+> > > -static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+> > > +static bool perf_pmu__match_wildcard_uncore(const char *pmu_name, const char *to_match)
+> > >  {
+> > > -     char *tmp = NULL, *tok, *str;
+> > > -     bool res;
+> > > -
+> > > -     if (strchr(pmu_name, ',') == NULL)
+> > > -             return perf_pmu__match_ignoring_suffix(name, pmu_name);
+> > > +     char *mutable_to_match, *tok, *tmp;
+> > >
+> > > -     str = strdup(pmu_name);
+> > > -     if (!str)
+> > > +     if (!pmu_name)
+> > >               return false;
+> > >
+> > > -     /*
+> > > -      * uncore alias may be from different PMU with common prefix
+> > > -      */
+> > > -     tok = strtok_r(str, ",", &tmp);
+> > > -     if (strncmp(pmu_name, tok, strlen(tok))) {
+> > > -             res = false;
+> > > -             goto out;
+> > > -     }
+> > > +     /* uncore_ prefixes are ignored. */
+> > > +     if (!strncmp(pmu_name, "uncore_", 7))
+> > > +             pmu_name += 7;
+> > > +     if (!strncmp(to_match, "uncore_", 7))
+> > > +             to_match += 7;
+> > >
+> > > -     /*
+> > > -      * Match more complex aliases where the alias name is a comma-delimited
+> > > -      * list of tokens, orderly contained in the matching PMU name.
+> > > -      *
+> > > -      * Example: For alias "socket,pmuname" and PMU "socketX_pmunameY", we
+> > > -      *          match "socket" in "socketX_pmunameY" and then "pmuname" in
+> > > -      *          "pmunameY".
+> > > -      */
+> > > -     while (1) {
+> > > -             char *next_tok = strtok_r(NULL, ",", &tmp);
+> > > +     if (strchr(to_match, ',') == NULL)
+> > > +             return perf_pmu__match_wildcard(pmu_name, to_match);
+> > >
+> > > -             name = strstr(name, tok);
+> > > -             if (!name ||
+> > > -                 (!next_tok && !perf_pmu__match_ignoring_suffix(name, tok))) {
+> > > -                     res = false;
+> > > -                     goto out;
+> > > +     /* Process comma separated list of PMU name components. */
+> > > +     mutable_to_match = strdup(to_match);
+> > > +     if (!mutable_to_match)
+> > > +             return false;
+> > > +
+> > > +     tok = strtok_r(mutable_to_match, ",", &tmp);
+> > > +     while (tok) {
+> > > +             size_t tok_len = strlen(tok);
+> > > +
+> > > +             if (strncmp(pmu_name, tok, tok_len)) {
+> > > +                     /* Mismatch between part of pmu_name and tok. */
+> > > +                     free(mutable_to_match);
+> > > +                     return false;
+> > >               }
+> > > -             if (!next_tok)
+> > > -                     break;
+> > > -             tok = next_tok;
+> > > -             name += strlen(tok);
+> > > +             /* Move pmu_name forward over tok and suffix. */
+> > > +             pmu_name += tok_len;
+> > > +             while (*pmu_name != '\0' && isdigit(*pmu_name))
+> > > +                     pmu_name++;
+> > > +             if (*pmu_name == '_')
+> > > +                     pmu_name++;
+> > > +
+> > > +             tok = strtok_r(NULL, ",", &tmp);
+> > >       }
+> > > -
+> > > -     res = true;
+> > > -out:
+> > > -     free(str);
+> > > -     return res;
+> > > +     free(mutable_to_match);
+> > > +     return *pmu_name == '\0';
+> > >  }
+> > >
+> > >  bool pmu_uncore_identifier_match(const char *compat, const char *id)
+> > > @@ -1003,11 +1029,19 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+> > >  {
+> > >       struct perf_pmu *pmu = vdata;
+> > >
+> > > -     if (!pe->compat || !pe->pmu)
+> > > +     if (!pe->compat || !pe->pmu) {
+> > > +             /* No data to match. */
+> > >               return 0;
+> > > +     }
+> > > +
+> > > +     if (!perf_pmu__match_wildcard_uncore(pmu->name, pe->pmu) &&
+> > > +         !perf_pmu__match_wildcard_uncore(pmu->alias_name, pe->pmu)) {
+> > > +             /* PMU name/alias_name don't match. */
+> > > +             return 0;
+> > > +     }
+> > >
+> > > -     if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
+> > > -         pmu_uncore_identifier_match(pe->compat, pmu->id)) {
+> > > +     if (pmu_uncore_identifier_match(pe->compat, pmu->id)) {
+> > > +             /* Id matched. */
+> > >               perf_pmu__new_alias(pmu,
+> > >                               pe->name,
+> > >                               pe->desc,
+> > > @@ -1016,7 +1050,6 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
+> > >                               pe,
+> > >                               EVENT_SRC_SYS_JSON);
+> > >       }
+> > > -
+> > >       return 0;
+> > >  }
+> > >
+> > > @@ -1974,15 +2007,82 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+> > >       return ret;
+> > >  }
+> > >
+> > > -bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+> > > +static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_match, bool wildcard)
+> > >  {
+> > > -     return !strcmp(pmu->name, pmu_name) ||
+> > > -             (pmu->is_uncore && pmu_uncore_alias_match(pmu_name, pmu->name)) ||
+> > > +     const char *names[2] = {
+> > > +             pmu->name,
+> > > +             pmu->alias_name,
+> > > +     };
+> > > +     if (pmu->is_core) {
+> > > +             for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+> > > +                     const char *name = names[i];
+> > > +
+> > > +                     if (!name)
+> > > +                             continue;
+> > > +
+> > > +                     if (!strcmp(name, to_match)) {
+> > > +                             /* Exact name match. */
+> > > +                             return true;
+> > > +                     }
+> > > +             }
+> > > +             if (!strcmp(to_match, "default_core")) {
+> > > +                     /*
+> > > +                      * jevents and tests use default_core as a marker for any core
+> > > +                      * PMU as the PMU name varies across architectures.
+> > > +                      */
+> > > +                     return true;
+> > > +             }
+> > > +             return false;
+> > > +     }
+> > > +     if (!pmu->is_uncore) {
+> > >               /*
+> > > -              * jevents and tests use default_core as a marker for any core
+> > > -              * PMU as the PMU name varies across architectures.
+> > > +              * PMU isn't core or uncore, some kind of broken CPU mask
+> > > +              * situation. Only match exact name.
+> > >                */
+> > > -             (pmu->is_core && !strcmp(pmu_name, "default_core"));
+> > > +             for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+> > > +                     const char *name = names[i];
+> > > +
+> > > +                     if (!name)
+> > > +                             continue;
+> > > +
+> > > +                     if (!strcmp(name, to_match)) {
+> > > +                             /* Exact name match. */
+> > > +                             return true;
+> > > +                     }
+> > > +             }
+> > > +             return false;
+> > > +     }
+> > > +     for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+> > > +             const char *name = names[i];
+> > > +
+> > > +             if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
+> > > +                     return true;
+> > > +             if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
+> > > +                     return true;
+> > > +     }
+> > > +     return false;
+> > > +}
+> > > +
+> > > +/**
+> > > + * perf_pmu__name_wildcard_match - Called by the jevents generated code to see
+> > > + *                                 if pmu matches the json to_match string.
+> > > + * @pmu: The pmu whose name/alias to match.
+> > > + * @to_match: The possible match to pmu_name.
+> > > + */
+> > > +bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match)
+> > > +{
+> > > +     return perf_pmu___name_match(pmu, to_match, /*wildcard=*/true);
+> > > +}
+> > > +
+> > > +/**
+> > > + * perf_pmu__name_no_suffix_match - Does pmu's name match to_match ignoring any
+> > > + *                                  trailing suffix on the pmu_name and/or tok?
+> > > + * @pmu: The pmu whose name/alias to match.
+> > > + * @to_match: The possible match to pmu_name.
+> > > + */
+> > > +bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match)
+> > > +{
+> > > +     return perf_pmu___name_match(pmu, to_match, /*wildcard=*/false);
+> > >  }
+> > >
+> > >  bool perf_pmu__is_software(const struct perf_pmu *pmu)
+> > > @@ -2229,29 +2329,31 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+> > >                  name ?: "N/A", buf, config_name, config);
+> > >  }
+> > >
+> > > -bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
+> > > +bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match)
+> > >  {
+> > > -     const char *name = pmu->name;
+> > > -     bool need_fnmatch = strisglob(tok);
+> > > +     const char *names[2] = {
+> > > +             pmu->name,
+> > > +             pmu->alias_name,
+> > > +     };
+> > > +     bool need_fnmatch = strisglob(wildcard_to_match);
+> > >
+> > > -     if (!strncmp(tok, "uncore_", 7))
+> > > -             tok += 7;
+> > > -     if (!strncmp(name, "uncore_", 7))
+> > > -             name += 7;
+> > > +     if (!strncmp(wildcard_to_match, "uncore_", 7))
+> > > +             wildcard_to_match += 7;
+> > >
+> > > -     if (perf_pmu__match_ignoring_suffix(name, tok) ||
+> > > -         (need_fnmatch && !fnmatch(tok, name, 0)))
+> > > -             return true;
+> > > +     for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+> > > +             const char *pmu_name = names[i];
+> > >
+> > > -     name = pmu->alias_name;
+> > > -     if (!name)
+> > > -             return false;
+> > > +             if (!pmu_name)
+> > > +                     continue;
+> > >
+> > > -     if (!strncmp(name, "uncore_", 7))
+> > > -             name += 7;
+> > > +             if (!strncmp(pmu_name, "uncore_", 7))
+> > > +                     pmu_name += 7;
+> > >
+> > > -     return perf_pmu__match_ignoring_suffix(name, tok) ||
+> > > -             (need_fnmatch && !fnmatch(tok, name, 0));
+> > > +             if (perf_pmu__match_wildcard(pmu_name, wildcard_to_match) ||
+> > > +                 (need_fnmatch && !fnmatch(wildcard_to_match, pmu_name, 0)))
+> > > +                     return true;
+> > > +     }
+> > > +     return false;
+> > >  }
+> > >
+> > >  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size)
+> > > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > > index edd36c20aedc..f5306428c03f 100644
+> > > --- a/tools/perf/util/pmu.h
+> > > +++ b/tools/perf/util/pmu.h
+> > > @@ -240,7 +240,8 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name);
+> > >  size_t perf_pmu__num_events(struct perf_pmu *pmu);
+> > >  int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+> > >                            void *state, pmu_event_callback cb);
+> > > -bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name);
+> > > +bool perf_pmu__name_wildcard_match(const struct perf_pmu *pmu, const char *to_match);
+> > > +bool perf_pmu__name_no_suffix_match(const struct perf_pmu *pmu, const char *to_match);
+> > >
+> > >  /**
+> > >   * perf_pmu_is_software - is the PMU a software PMU as in it uses the
+> > > @@ -275,7 +276,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+> > >                                  const char *config_name);
+> > >  void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
+> > >
+> > > -bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok);
+> > > +bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_to_match);
+> > >
+> > >  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
+> > >  int perf_pmu__pathname_scnprintf(char *buf, size_t size,
+> > > --
+> > > 2.48.1.362.g079036d154-goog
+> > >
