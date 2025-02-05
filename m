@@ -1,111 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 143A6195FEC;
-	Wed,  5 Feb 2025 18:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2D41FDE2E;
+	Wed,  5 Feb 2025 18:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780224; cv=none; b=ewqZ4HrQAyrRRjCrcc6rUz2XdtyN8XYxTyka2xNRbmVYLq1lymMTEVvYYbXeWGkLdgajtdnfK+Z8xOOc/kpgt2+shVajcOUqalob+H061eWrFBwyke4KDNOkgvxipeB4rURneLzyO965HwTmhbJTlqkcJmdHtRx4hLxvYpXwLTg=
+	t=1738780799; cv=none; b=T6VI68MZlqcL5FPmfHz8/XamVRvGVtU+RdHG11GZ5oOwMU2ZufkZw2e22L6q+LbiwVhLlN6nvULTi/VUWO3he2DKCqyvs6335StTGvM90Z5jNCiXSWjXJqwBNjTHGgHsw+DVHnKObW21wmqE9GyK8mUJIe186B3x9zFPBVrFQ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780224; c=relaxed/simple;
-	bh=6NpsNs4VlUdk7cX/aYSR3zR2uoRLZASGWWUnYKpsF+M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CZligK6IhHgQAGl1KJ3PiWCm8TvVC//D48wdRRycwgzfxV81z4AfB1T1K+pnwmP85rr5vOTo+aX5biq3ST5Ap6Sij/FPFMMiG2R6vNWnCEpbePRIvVnlNXhztiP+TXwDvAHlVZX990GxvRb0cZTQgc6wyr/oq3JkX3DglwDju08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B62981063;
-	Wed,  5 Feb 2025 10:30:44 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48C4E3F58B;
-	Wed,  5 Feb 2025 10:30:19 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] perf arm-spe: Report error if set frequency
-Date: Wed,  5 Feb 2025 18:30:09 +0000
-Message-Id: <20250205183009.224182-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738780799; c=relaxed/simple;
+	bh=7sWFejsI1UCl+uJkGzueUtnSh1WmqUnOFRxmBVHo/xM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VL82D/ooZFU/FYmh9m3s7K8eg07VjwUnyvdtq3trMB1ixxv6okeoc+NcI2Zh/Nalm2bjHetrL0xxDOhwUinouvaNN68Te1HYDU4QS/oXcDT+vMgJZu9zEBVW7Ko0O/uKbz/RgqVYVuPXTGJqiv07WvQSsAN3Xv4erI6/rnEwT5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/8axFdO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/8axFdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46FE1C4CED1;
+	Wed,  5 Feb 2025 18:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738780798;
+	bh=7sWFejsI1UCl+uJkGzueUtnSh1WmqUnOFRxmBVHo/xM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=N/8axFdO2VtANlm9amv+GOX1rf+wmuZiSP6HZ2Dn97Vs3k6J7lRjauVwsMaIir9my
+	 7bptf4SdPsyjbSWAD9pejTdZbUQrS1DfGblSWthHyeyFj0pbiBluOFym+OMEDXxcNV
+	 vAle1qHYmUgT1mO5jAQYjMwNUU4wpSwXkGHDL5siMn9XlWtnTyD+7hLzWVWEeGMUgH
+	 8uqAgNZVViM26gqe8+2HiKBuW2RzmHa+GZpbEdlqu4EOVkoFbm8db+MP/OvYE8bxZv
+	 OOrfIxZn0mVnhoOI0mAP9VlHdX8GIH6OlhNG2bG5TjE6uQUqu1j8Qsy73oH6LpXKA5
+	 XEbrYpPsTkzgQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org, 
+ Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+ hca@linux.ibm.com
+In-Reply-To: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH 0/2 v3] perf test: perf record tests (114) changes
+Message-Id: <173878079824.596119.8970944890321793548.b4-ty@kernel.org>
+Date: Wed, 05 Feb 2025 10:39:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-When users set the parameter '-F' to specify frequency for Arm SPE, the
-tool reports error:
+On Fri, 31 Jan 2025 11:27:54 +0100, Thomas Richter wrote:
+> Change event intructions to cycles for subtests
+>  - precise_max attribute
+>  - Basic leader sampling
+> as event instructions can not be used for sampling on s390.
+> 
+> Thomas Richter (2):
+>   perf test: Fix perf test 114 perf record test subtest precise_max
+>   perf test: Change event in perf test 114 perf record test subtest
+>     test_leader_sampling
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-  perf record -F 1000 -e arm_spe_0// -- sleep 1
-  Error:
-  Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
+Best regards,
+Namhyung
 
-The output logs are confused and it does not give the correct reminding.
-Arm SPE does not support frequency setting given it adopts a statistical
-based approach.
-
-Alternatively, Arm SPE supports setting period.  This commit adds a
-for frequency setting.  It reports error and reminds users to set period
-instead.
-
-After:
-
-  perf record -F 100 -e arm_spe_0// -- sleep 1
-  Arm SPE: Frequency is not supported. Check manual 'man perf-record' on how to set period.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/arch/arm64/util/arm-spe.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 4301181b8e45..baef0812dc19 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -40,6 +40,19 @@ struct arm_spe_recording {
- 	bool			*wrapped;
- };
- 
-+/* Iterate config list to detect if the "freq" parameter is set */
-+static bool arm_spe_is_set_freq(struct evsel *evsel)
-+{
-+	struct evsel_config_term *term;
-+
-+	list_for_each_entry(term, &evsel->config_terms, list) {
-+		if (term->type == EVSEL__CONFIG_TERM_FREQ)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /*
-  * arm_spe_find_cpus() returns a new cpu map, and the caller should invoke
-  * perf_cpu_map__put() to release the map after use.
-@@ -389,6 +402,13 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 				return -EINVAL;
- 			}
- 			opts->full_auxtrace = true;
-+
-+			if (opts->user_freq != UINT_MAX ||
-+			    arm_spe_is_set_freq(evsel)) {
-+				pr_err("Arm SPE: Frequency is not supported. "
-+				       "Check manual 'man perf-record' on how to set period.\n");
-+				return -EINVAL;
-+			}
- 		}
- 	}
- 
--- 
-2.34.1
 
