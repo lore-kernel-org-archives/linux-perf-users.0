@@ -1,145 +1,156 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BD825A63B
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 01:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3802F46
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 01:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738718483; cv=none; b=AS0QKqfaR49/YY2h8LiREFapuV8txjo+oiw1THr/HZWbFWAAcy6AmzPYe8IwQ/vav0R2sV3344HFab+TvSLSMN+ZOE/G80ImPlP6m9P7gJyp5za+SDsJB1wix0neHkxIEcbJuTMVom/KhOO6d/r70Y4Rsc/o53JnvWV7jPz6QRU=
+	t=1738719954; cv=none; b=IdMXiEtyNAN0OZ+n57rKjJMAgIpO8q2Yu1KPzTOZDuOcFDIhkDh2cqZPqd+q/gW0U+b46iwxc1/HHk7z0HoqJvGV6PqRsvFrMS1aP8F0TBPeX27SH9vbhA9gKA0co1UgVl5DMr33i8XNkXdFod5btjM3CEg436L5KVjLGln9NSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738718483; c=relaxed/simple;
-	bh=elxw/Cb3AinIJCEDdm2pNEMVJo2/KaPU9rV5QdCllag=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XsDhTEigNkseZfpg7psAjTIx2S7mzqPx7ncdWqYWSKfBBd7uCaOIx9a6LIZPx/txSt4eU5yMG17aKganPtr4DvpG1KdaEVc9f/6kWAa0ApyOddbABbei9rf7TVeaiWcUa9aDrAXg58N5FGreLEbh8w3K4gnVDBLebfuqelX/9Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=AWro0b6u; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1738719954; c=relaxed/simple;
+	bh=ZoEiT11FirZk0Rvcwi7FZfncpwTglMOW6FlwroEyjeg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Miq2PFxELRFA8BzbgkKm03TEajFHN4o34SJnG8JtrmMIz1ZQdxiaRaOQYEI19ft2/RtpKN42eJCtPB4Lg4U2WNVHgKmjBi90cysi8tU2ez9zuFoczMvAnPNl2xLe1v0QSABLlqse4+4rEbOYk9L0e9mXLIom2YkSnmO0bWoudRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=iuR7fZN7; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="AWro0b6u"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e2362ea655so47727526d6.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 17:21:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iuR7fZN7"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2a3939a758dso1983187fac.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Feb 2025 17:45:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1738718480; x=1739323280; darn=vger.kernel.org;
-        h=content-id:mime-version:references:message-id:in-reply-to:subject
-         :cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KGJSA2M5r04qmcaGq4dBhsJp0m/yyyGoLMkkQDwhyIQ=;
-        b=AWro0b6u21uc7TKEX+kDl42B4r3YepJ7O3dJdUW4/PRhiQvUlcIq/x/rPhItdzmg4r
-         E5cHov1IIyVgl2khW7WduiYigQ8NGj5BwSicrAXKeZZTVIbPTyEPaFoe8uKcpFXsm04K
-         WzJiYc2m/UJlR+1+0pzpepozPSn8jV9Pm0uCw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738718480; x=1739323280;
-        h=content-id:mime-version:references:message-id:in-reply-to:subject
-         :cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1738719952; x=1739324752; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KGJSA2M5r04qmcaGq4dBhsJp0m/yyyGoLMkkQDwhyIQ=;
-        b=VvlW0go1xDxoainXx627zXjkP4Emv9S/MmK6ZM66DUGMJ2OIzRlyctWmibcheBhnc5
-         YrBEeeg4gTW5E0amqoLE49hG7YVqk2BWHhzuWjGn3k2o6BlWDR22GVcTN6ShNGMoaPiB
-         VC8PPC7L5QpvnBb8j7Y17XpMAeKuCKt3Ou7Gv2aXcbtUczq65BIjF0sPW+P5mAnaPh6A
-         n04JpYiIvXULyDvLEt/qpyla2JRgQzzSVRKuZVZD/e4QC69x2d3u2zNbrNJOXhnBU+QY
-         jZXi/Pd6CwUzT2FRtI5S71xYleVFjsGxDKD7yfhclZ8w3TwDP58uX6sKp8jfyLEYu44B
-         lbsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMzSZ9glmOED53kcUrzCzUKc5ntreWjLqC2IEq0MpafALtsjPAD7MBMZbmU9ubQ+PVNL7EEcIpgrjogShdhdyT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRHkWyhT8CnLqU+F+KngVi1nBvyPFRGTZq8M0/+0aQdq1sAV7a
-	7dIkwSX3sHeRk2M9QRqxR2xb6zCAwkOUGh5Fi2pbbyTaDhmiy6uFft05k7wodA==
-X-Gm-Gg: ASbGncv7rQTTvt9VtCllMxlo3eMNXpQjaXl2mi2oACUoEMQbNXlpMMX7uW+mCVNzd4G
-	o/sPmRvYQyCu6OYuxHoMNCLoYmRZVfIlWcogoJPyngWdGChLtxqB2ojFvuljLuShcKsMLGttA1l
-	f/xwbNC/rltCE6mJFVXvxQNa9gNQ3BYauBkTnRUQyOwxCA6jbfL3Pk6LQS8/VbYNlzVp88mmI3C
-	RZqw3q0396xKWnmAUXN+s0QndEvslon1kQsd5q+cbPRHalsvzTvtN34YaLwaZS/2Wlhz9QSLoO+
-	8ZwfpOKlUsddZqE6kMJYN5/G+WrHz0HLIJ0hVA==
-X-Google-Smtp-Source: AGHT+IFoe/TwfVNIRmGcd79B7JiWTpmqXMz7rGfR/u4epwE1xo9o8V9cAvnDP5nb9bLhDFTGF7TdUg==
-X-Received: by 2002:a05:6214:252f:b0:6d8:876e:ef41 with SMTP id 6a1803df08f44-6e42fbbe225mr19067016d6.21.1738718480240;
-        Tue, 04 Feb 2025 17:21:20 -0800 (PST)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e4279e0ae0sm11939866d6.107.2025.02.04.17.21.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 17:21:19 -0800 (PST)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Tue, 4 Feb 2025 20:21:17 -0500 (EST)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Ian Rogers <irogers@google.com>, Stephane Eranian <eranian@google.com>, 
-    Vince Weaver <vincent.weaver@maine.edu>, 
-    "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-In-Reply-To: <2025020444-savage-latrine-0c31@gregkh>
-Message-ID: <97541134-7c32-94a8-7642-a82f3292dc38@maine.edu>
-References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com> <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
- <2025020447-gyration-wireless-f7da@gregkh> <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com> <2025020444-savage-latrine-0c31@gregkh>
+        bh=B7IAX40SIwOCKUJKjDGDjSIt4+fAEfgGp/BRmQSe+AM=;
+        b=iuR7fZN7j0Lt4NNcHjIOO2D4xR9jI9bmGUmUqJQ6GW/YfIh0wLx9aVhD3ecOkRzmCr
+         ZXooSd1Lq/+J1YihsGrJn/XXhtPtIkJlkHxUns5I6xC5WhzNnEtjQkGU5WOd+PfPbIIO
+         0HnvKcolaKHXuqDXpKyyoXLWu5kTcblKnPihrnVubzRmydN1Y+Ph7XCyQZRDrp8lZ7NB
+         2Yg5R5sCCOwHyR1XDAeNXlvQQksmDCsekBo5Jw++EvYVshIP9MaNbyiYbXLYYfdL1sWE
+         v9WQK2o5Vqz/99+hlCt4GoxZeuxVt4Gpsg+MiO+RrRIW8iH0wK+diVOF072Wx16Qugd0
+         lCCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738719952; x=1739324752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B7IAX40SIwOCKUJKjDGDjSIt4+fAEfgGp/BRmQSe+AM=;
+        b=PA7DNzy8hluchmdGaHTg05+G729nv6Dq4dKQ4oxpqtXLHt94Pnz855Riv+AWo1S4fx
+         HVuOROa3mEKsNsWPobxLEaHU1hKru5s/r/6ODC/yiQM4Z0rAdZ615t/aiZzhyYRKyYk8
+         4bsKkaFkGw5XkQPlnnF8r+P+ZNHRH2XnNCj/mWRD4a27uJBTG5YEQvyGp7U55z9Viahk
+         XzFnn5b+M5PFNIsQu2gq4bAYjN4GcRWQWl3vORLDauNhfVd2T1iEKgMbSURfohqORIvZ
+         PY9xW5USnei5Jk+Q+myzuKBJj0Mf5DKyeXtNyZtkjiqGnvdHsQOgLTLcgk1doxMLhxhc
+         tifQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZdzq3BfvWwVsnO8G8+4rIT/PDxOyXISyWppNQ7gf0g+dwZgcJa735pbvjXXItK0MCJZ+hi/wGP6eJSI864hSJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0gt+SaUe/hcG2PqAIEnk8JdhCH4zSWByuyEOWHgkcacGlrhGR
+	by7iAXAie0cpvsq9RKhunD+wD/geVi6qRvYyqxU9pgmoH9SmssUmLSxGY2tnjoZqeL9DvTMEl/y
+	yrccWwjbiyoOWoJpPH0pmElGczgjh1aVkdKYxNQ==
+X-Gm-Gg: ASbGncsujX+YAdEC17AAwcYQI5zshWJpnznrgii3gd6DfSFMdgRatWmygyJueQNz43K
+	ze7UzjPWuFldmmIF5Xb+RnuzjqWGttjo20+1d4pXFykFZJu9EHQwBuiYpV/mSSCh/4uaU0s+2mY
+	A=
+X-Google-Smtp-Source: AGHT+IEEJSiApgxtxkGvC1xkEun8OovYoTlWGkz+UQfZ8HucQFQwWaCsmxUZdvb+jMWhRMNgUFoinaHR5BnA3MfwaiE=
+X-Received: by 2002:a05:6870:5491:b0:29e:43ce:a172 with SMTP id
+ 586e51a60fabf-2b805126ddbmr804659fac.28.1738719951653; Tue, 04 Feb 2025
+ 17:45:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463802360-824231151-1738718361=:1323835"
-Content-ID: <d47ac0b9-659d-2821-602b-44ae00b9f0ea@maine.edu>
+References: <20250123074830.90923-1-cuiyunhui@bytedance.com>
+ <344c53cd-d856-4c03-9deb-743b65acd8aa@linux.alibaba.com> <CAEEQ3wmDej9bbPUmkx-ZrD4FG9Z7gTHMeCrVszx64g90O0RyiQ@mail.gmail.com>
+ <31e00081-8695-4ca6-a1ef-af5a007a7565@linux.alibaba.com> <CAEEQ3wm+f_SM7evwL=YrGy8gPLS5YdJm=qhJNT8bbMH7QBOzEA@mail.gmail.com>
+ <20250124122952.GB23438@willie-the-truck> <CAEEQ3wnTMfWSZRhTax3N60W=m3a=zxnJF6dOfiGnqJzBQs8WEg@mail.gmail.com>
+ <20250127165156.GE25757@willie-the-truck> <CAEEQ3wkj=6WPNFpet=A9JppiO52agw6HZArwhfWsWS9JOY6Dng@mail.gmail.com>
+ <20250204123111.GC1063@willie-the-truck>
+In-Reply-To: <20250204123111.GC1063@willie-the-truck>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Wed, 5 Feb 2025 09:45:40 +0800
+X-Gm-Features: AWEUYZllMpq2zJ1npesrHO1aKImtAqIVbLmJaSG6r67qE0xNiTPEAJWsfWgmnw4
+Message-ID: <CAEEQ3wm4_oeBbVqsVrZ373j1SFBo6-DegL6ojH-ZCMwcw_-jVg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] perf/dwc_pcie: fix duplicate pci_dev devices
+To: Will Deacon <will@kernel.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, renyu.zj@linux.alibaba.com, 
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Will,
 
----1463802360-824231151-1738718361=:1323835
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <ad06df10-0d54-9425-4385-e5dfc731d79b@maine.edu>
-
-On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
-
-> On Tue, Feb 04, 2025 at 09:49:55AM -0800, Ian Rogers wrote:
-> > On Tue, Feb 4, 2025 at 9:12 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
-> > > > On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
-> > > >
+On Tue, Feb 4, 2025 at 8:31=E2=80=AFPM Will Deacon <will@kernel.org> wrote:
+>
+> On Sat, Feb 01, 2025 at 05:51:21PM +0800, yunhui cui wrote:
+> > On Tue, Jan 28, 2025 at 12:52=E2=80=AFAM Will Deacon <will@kernel.org> =
+wrote:
+> > > On Sun, Jan 26, 2025 at 09:54:35AM +0800, yunhui cui wrote:
+> > > > On Fri, Jan 24, 2025 at 8:30=E2=80=AFPM Will Deacon <will@kernel.or=
+g> wrote:
 > > > > >
-> > > > > It seems that the majority of the perf code IS looking in the correct
-> > > > > place, just mem-events.c seemed wrong.
+> > > > > On Fri, Jan 24, 2025 at 05:11:05PM +0800, yunhui cui wrote:
+> > > > > > > >>>        vsec =3D dwc_pcie_des_cap(pdev);
+> > > > > > > >>>        if (!vsec)
+> > > > > > > >>>                return -ENODEV;
+> > > > > > > >>>
+> > > > > > > >>>        sbdf =3D plat_dev->id;
+> > > > > > > >>> -     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL,=
+ "dwc_rootport_%x", sbdf);
+> > > > > > > >>> +     name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL,=
+ "dwc_rootport_%d_pmu", sbdf);
+> > > > > > > >>
+> > > > > > > >> A new name will break previous user tools.
+> > > > > > > > This name isn't suitable. It can't clearly show which is th=
+e PMU
+> > > > > > > > device. Userspace tools don't have binding relationships, l=
+ike perf.
+> > > > > > > > Tools must traverse PMU devices before use.
+> > > > > > >
+> > > > > > > The device is under /sys/bus/event_source/ which indates it i=
+s PMU device.
+> > > > > > > As far as I know, most of PMU devices do not endup with a '_p=
+mu' prefix.
+> > > > > >
+> > > > > > The point is the name "dwc_rootport_" is misleading, suggesting=
+ an
+> > > > > > extra PCIE RP in the system. Best to change the name to intuiti=
+ve
+> > > > > > "xx_pmu".
+> > > > >
+> > > > > As pointed out above, changing the name will break userspace. So =
+it's
+> > > > > simply not an option, sorry.
 > > > >
-> > > > I hate to tell you, but other places in userspace are depending on the
-> > > > current setup.  libpfm4, used by PAPI, is looking directly in /sys/devices
-> > > > for pmus and will break with the changes you are planning.
+> > > > Could you specify what in the userspace is broken and give an examp=
+le?
 > > >
-> > > Then that too needs to be fixed, sorry.  Again, devices can, and will,
-> > > move around in /sys/devices/ you can never hard-code any paths there.
-> > > Any userspace code must ALWAYS be able to handle that, that's a sysfs
-> > > requirement.
+> > > Can't I just take the documented example from dwc_pcie_pmu.rst:
 > > >
-> > > And do you have a link to the source for that code?  Good news is that
-> > > if the code is fixed in userspace, it will work for any kernel (old or
-> > > new).
-> > 
-> > +Stephane Eranian
-> > 
-> > I see use of /sys/devices in at least:
-> > https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/pfmlib_perf_event_pmu.c
-> > I imagine it isn't a big job to clean it up.
-> 
-> Nope, all that has to happen is this line:
-> 	snprintf(buf, PATH_MAX, "/sys/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
-> be changed to:
-> 	snprintf(buf, PATH_MAX, "/sys/bus/event_source/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
+> > > $# perf stat -a -e dwc_rootport_13018/Rx_PCIe_TLP_Data_Payload/
+> > >
+> > > If I have a script that uses that command on a machine today, then
+> > > applying your kernel patch will break the script, no?
+> >
+> > Well, this is just a usage guide for the PCIe PMU and has no binding
+> > with perf. In user space, the existing PCIe PMUs in the system should
+> > be traversed first, and then perf stat/record ... can be executed.
+>
+> "should be". ha! You know we can't rely on userspace doing whatever we
+> think it "should" do.
+>
+> > It's okay not to change the name, but it's better to change
+> > dwc_rootport_%x to dwc_rootport_%d to correspond with
+> > platform_device_register_data(NULL, "dwc_pcie_pmu", ...). It'll be
+> > more intuitive. What do you think?
+>
+> No, as I said earlier, we cannot break userspace like this. Please stop
+> trying to rename things that cannot be changed.
+>
 
-it doesn't matter if it's a one line change, your proposed change breaks 
-userspace.
+All right, I'll update it to v2.
 
-I thought the rule was Linux didn't break userspace.
-Has that changed recently?
+> Will
 
-libpfm4/PAPI are widely used and deployed and in some cases possibly 
-statically linked into other projects.  It will take years for the change 
-to filter out to all users.
-
-Is there a technical reason for this proposed change of yours, or are you 
-just arbitrarily breaking userspace programs because you think /sys looks 
-cluttered to your personal taste?
-
-Vince Weaver
-vincent.weaver@maine.edu
----1463802360-824231151-1738718361=:1323835--
+Thanks,
+Yunhui
