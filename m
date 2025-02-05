@@ -1,204 +1,152 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE0B22A4FC;
-	Wed,  5 Feb 2025 11:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49DF41519A0;
+	Wed,  5 Feb 2025 12:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738753344; cv=none; b=LkknX81Ec+3Y6kizfvaf1LEyM29yIhmwAMtimmomPgqZ3xkg+OGhajdnZ5TEXUOaa5bel4WXHUMtmdSEY5MY68sj9C6dyeQbAhDgeWedGGAGxOUZhTKL/dABwPYCpcXpmP5c+KoxLQmOhkC4tbNK0K54w57CxBwqLOk813021ps=
+	t=1738757773; cv=none; b=YR3Ils3jZ6X44Jq/LIn8/ZycKKjUG3pLEm2oLB9uDSodKI8r49QFw58ht7lyBucjYc08Yxzey933ro5zmiRf2RhtIFV0xRpR14OgvAa6gDyrWdF9x5RJBJNs33V0ab3cT99Gd2LWslm6IcGSA2LWWCVFyYFJvr+ugqvW4L8VD28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738753344; c=relaxed/simple;
-	bh=21iZlA3+pBUERxi/Phwgzt2HE4TTIA44xavTnIvfDhg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dgEcNvunNB4NDrcf+tjuBz6kA0Vq5enMRQUI/Mj7xj/ORlyOKJMJ73DakZlIZyCCOYNJTmAM1aD9Nker+fKsPby/hMrARUnm4Wfqur5UMz9D/y1JiiOs2sNJNw0hgkIDYmEgYQpDT8i1rcfuSYlqT6ZKv41gv8RwpBd7gzc7Tr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rFPyKt5N; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rFPyKt5N"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5153ZgaO028577;
-	Wed, 5 Feb 2025 11:02:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=rIsNwe
-	JAGDoYvayRmwL0H3ULsnZKE6A2R6leZJKDpaQ=; b=rFPyKt5NKlIDZPhbtEkiLi
-	99s6/XGfhLSDsCAQksAJhbJSF99E6B/Dv9hgYmUUTrLFeWUkmLl28gNSCZ4pigs8
-	K64bJTiNejHnCUxPHOrJ24hpKdvERkzX+DJ371iX8+pHEQ1WfexlWV2giQqriK8w
-	Hbl0+dDnkeoKFu0m/En5R4ztUNLkx42249TXKCzKh05DxV5Nz6+XDBY8c7PMc4z2
-	WYIGmdOaqRVWwN4etEEwwUpYoI3UBWlPcjkrl+Sge45f3gIWsp3ThxQGp/NMWvFt
-	UnutCCp49/em8xhWyuCvhE/YM17XLMWabdAek9AFOHN1SzbXVTsQj/gtX7J4X5mQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44knqtvmv9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 11:02:01 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AmEmW003041;
-	Wed, 5 Feb 2025 11:02:00 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44knqtvmv6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 11:02:00 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515947qx006543;
-	Wed, 5 Feb 2025 11:01:59 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekgad3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 11:01:59 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515B1vq735128056
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 11:01:57 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4306B20063;
-	Wed,  5 Feb 2025 11:01:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 551CB20043;
-	Wed,  5 Feb 2025 11:01:56 +0000 (GMT)
-Received: from [9.171.163.71] (unknown [9.171.163.71])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 11:01:56 +0000 (GMT)
-Message-ID: <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
-Date: Wed, 5 Feb 2025 12:01:55 +0100
+	s=arc-20240116; t=1738757773; c=relaxed/simple;
+	bh=PnrX7LRqf6LxC+SrcAB+LzJ5Es2hiwGk8s6CGixBO4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGzRuQHMNgsFsgyKro2ovFfz6/BJHkYvDgCHV39JkZoOUBlnfzhb6GHXc76+1ngRogZSC2KqveJgFzLhOLiVf/K9om1OlyFv6Z8MZU+rr3mZzJPZsKFNmJWB2EUHW7SEQGPY/Tzu2RCbqaMIyD7x97GR9Dgb5sRbbi/i4SGxh9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 160DE1007;
+	Wed,  5 Feb 2025 04:16:34 -0800 (PST)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0C1163F63F;
+	Wed,  5 Feb 2025 04:16:07 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Graham Woodward <graham.woodward@arm.com>
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v1 00/11] perf script: Refactor branch flags for Arm SPE
+Date: Wed,  5 Feb 2025 12:15:44 +0000
+Message-Id: <20250205121555.180606-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: TIaRcJkInjtllFxr2tjyWifseTZRUQWg
-X-Proofpoint-ORIG-GUID: n0QAURNQRXXTJmkGluYOqBZgqxUv06jy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050088
 
-On 28.01.2025 02:10, Andrii Nakryiko wrote:
+This patch series refactors branch flags for support Arm SPE.  The patch
+set is divided into two parts, the first part is for refactoring common
+code and the second part is for enabling Arm SPE.
 
-> So, currently in v2, FREs within FDEs use an array-of-structs layout.
-> If we use preudo-C type definitions, it would be something like this
-> for FDE + its FREs:
-> 
-> struct FDE_and_FREs {
->      struct sframe_func_desc_entry fde_metadata;
-> 
->      union FRE {
->          struct FRE8 {
->              u8 sfre_start_address;
->              u8 sfre_info;
->              u8|u16|u32 offsets[M];
->          }
->          struct FRE16 {
->              u16 sfre_start_address;
->              u16 sfre_info;
->              u8|u16|u32 offsets[M];
->          }
->          struct FRE32 {
->              u32 sfre_start_address;
->              u32 sfre_info;
->              u8|u16|u32 offsets[M];
->          }
->      } fres[N] __packed;
-> };
-> 
-> where all fres[i]s are one of those FRE8/FRE16/FRE32, so start
-> addresses have the same size, but each FRE has potentially different
-> offsets sizing, so there is no common alignment, and so everything has
-> to be packed and unaligned.
+For refactoring branch flags, the sample flaghs are classified as branch
+types and events.  A program branch type can be conditional branch,
+function call, return or expection taken.  A branch event happens when
+taking a branch.  This series combines branch types and the associated
+events to present a sample flag.
 
-Just for clarification of the SFrame V2 format, as there may be some
-misconception. Using pseudo-C type definition:
+The second part is to enable Arm SPE's sample flags for expressing
+branch types and events, and support branch stack.
 
-struct sframe_fre8 {
-	u8 sfre_start_address;
-	u8 sfre_info;
-	s8|s16|s32 offsets[M];
-};
-struct sframe_fre16 {
-	u16 sfre_start_address;
-	u8 sfre_info;
-	s8|s16|s32 offsets[M];
-};
-struct sframe_fre32 {
-	u32 sfre_start_address;
-	u8 sfre_info;
-	s8|s16|s32 offsets[M];
-};
+Patches 01 - 03 are to refactor branch types and branch events.
+Patches 04, 05 extend to support not-taken event.
 
-struct sframe_section {
-	/* Headers. */
-	struct sframe_preamble preamble;
-	struct sframe_header header;
-	struct sframe_auxiliary_header auxhdr;
+Patches 06 - 09 enables branch flags in Arm SPE.  This allows to print
+out sample flags for samples.
 
-	/* FDEs. */
-	struct sframe_fde fdes[N_FDE];
+Patch 10 supports branch stack for Arm SPE.  Patch 11 is an enhancement
+for PBT feature.
 
-	/* FRE8s / FRE16s / FRE32s per FDE. */
-	struct sframe_fre{8|16|32} fres_fde1[N_FRE_FDE1] __packed;
-	...
-	struct sframe_fre{8|16|32} fres_fdeN[N_FRE_FDEN] __packed;
-};
+Before:
+  perf record -e arm_spe_0/load_filter=1,store_filter=1,branch_filter=1/ \
+    -- ~/perf-c2c-usage-files/false_sharing.exe 1
+  perf script --itrace=i1ibl -F,+flags,+addr,+brstack
+   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jmp                   ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jmp                   ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jmp                   ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jmp                   ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   br miss                   ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)
+   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   br miss                   ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)
+   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   br miss                   ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)
+   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   br miss                   ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)
+   false_sharing.e  414489 [005] 775348.899298:          1                                            instructions:                                        0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899300:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:                                        0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899301:          1                                                  branch:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899306:          1                                            instructions:                                        0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899307:          1                                                  branch:   jmp                   ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:   jmp                   ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899308:          1                                                  branch:   jmp                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899308:          1                                            instructions:   jmp                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899310:          1                                                  branch:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899310:          1                                            instructions:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
+   ...
 
-Where:
-- fdes[] can be binary searched: All fdes[i] are of equal size and
-   sorted on start address.
-- Each fdes[i] points at its fres_fdei[].
-- fres_fdei[] cannot be binary searched: For each fdes[i] they are
-   one of those FRE8/FRE16/FRE32, so start addresses have the same
-   size, but each FRE has potentially different offsets sizing, so
-   there is no common alignment, and so everything has to be packed
-   and unaligned.
+After:
+  perf script --itrace=i1ibl -F,+flags,+addr,+brstack
+   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   return                ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffffc0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-/-/5/RET/- 
+   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   return                ffffc0fad9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffffc0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-/-/5/RET/- 
+   false_sharing.e  414489 [005] 775348.899294:          1                                                  branch:   jcc/not_taken/        ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffffc0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/-/-/6/COND/- 
+   false_sharing.e  414489 [005] 775348.899294:          1                                            instructions:   jcc/not_taken/        ffffc0fad98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffffc0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/-/-/6/COND/- 
+   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   return/miss/              ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/RET/- 
+   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   return/miss/              ffff8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/RET/- 
+   false_sharing.e  414489 [005] 775348.899297:          1                                                  branch:   jcc/miss,not_taken/       ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/- 
+   false_sharing.e  414489 [005] 775348.899297:          1                                            instructions:   jcc/miss,not_taken/       ffff826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/- 
+   false_sharing.e  414489 [005] 775348.899298:          1                                            instructions:                                        0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899300:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:                                        0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899301:          1                                                  branch:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms]) 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsyms])/P/-/-/8//- 
+   false_sharing.e  414489 [005] 775348.899301:          1                                            instructions:   jmp                   ffffc0fad9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms]) 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsyms])/P/-/-/8//- 
+   false_sharing.e  414489 [005] 775348.899306:          1                                            instructions:                                        0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899307:          1                                                  branch:   jcc/not_taken/        ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xffffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/PN/-/-/15/COND/- 
+   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:   jcc/not_taken/        ffffc0fad9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xffffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/PN/-/-/15/COND/- 
+   false_sharing.e  414489 [005] 775348.899307:          1                                            instructions:                                        0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+   false_sharing.e  414489 [005] 775348.899308:          1                                                  branch:   jcc                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND/- 
+   false_sharing.e  414489 [005] 775348.899308:          1                                            instructions:   jcc                   ffffc0fad9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND/- 
+   false_sharing.e  414489 [005] 775348.899310:          1                                                  branch:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fad98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5//- 
+   false_sharing.e  414489 [005] 775348.899310:          1                                            instructions:   jmp                   ffffc0fad98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fad98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5//- 
+   ...
 
-Regards,
-Jens
+
+Leo Yan (11):
+  perf script: Make printing flags reliable
+  perf script: Refactor sample_flags_to_name() function
+  perf script: Separate events from branch types
+  perf script: Add not taken event for branches
+  perf script: Add not taken event for branch stack
+  perf arm-spe: Extend branch operations
+  perf arm-spe: Decode transactional event
+  perf arm-spe: Fill branch operations and events to record
+  perf arm-spe: Set sample flags with supplement info
+  perf arm-spe: Add branch stack
+  perf arm-spe: Support previous branch target (PBT) address
+
+ tools/perf/builtin-script.c                   |  30 ++--
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |  23 ++-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  11 +-
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 +-
+ .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  12 +-
+ tools/perf/util/arm-spe.c                     | 135 ++++++++++++++++++
+ tools/perf/util/branch.h                      |   3 +-
+ tools/perf/util/event.h                       |  12 +-
+ tools/perf/util/trace-event-scripting.c       | 116 +++++++++++----
+ tools/perf/util/trace-event.h                 |   2 +
+ 10 files changed, 307 insertions(+), 51 deletions(-)
+
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.34.1
 
