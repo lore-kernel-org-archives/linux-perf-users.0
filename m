@@ -1,286 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A9822F397;
-	Wed,  5 Feb 2025 12:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9AD8C11;
+	Wed,  5 Feb 2025 12:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757801; cv=none; b=LHYM20n9iDGooOuTB9TC/Z2zhWhwpjCUhnjEpOZbTHgGQczRWyultPnkwDW25p0Z0+IMN49FmNiS5ogFg3a0Nh87SFyBczvhrykCQVIJKzIZ8X7z0CSsf1lU4bZDinNtPijgzQnVKMN3y5yRrh7u5d41+o3/hGkD5cRlPoMUOyM=
+	t=1738760387; cv=none; b=SfGGcroI5EtizQyhnPWM5tqP84AanI75TmoYgifIw9tD2dGdx9yAWO3XOfkfckSl3wIi/8oe6ZU/s5SkxXpqQKkbaZusp372/bLJQNF+OWZINbffhQXUEu35LzlXarq6LREDwwfta1bOmvuhUJ5DkMdcL4XYGqLH/s3P3o7DHSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757801; c=relaxed/simple;
-	bh=uuMSNaBC9AotIkZWkOOsuQNqWhUw727k6l4k9GoefF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O7N8RWAX16LsQTEajgv0KW6cXc1RoAryIV0Rft1/jP+4SaD6cv2dlXzrlmtQQdS2fG60HoKjsBIDNdWmxeKxtwqo9ecwES7ohiLTUGDb51De28qKPQgt2g1FzAaT/S3FdnNuxdo3fvVvCnHv+rzGPbGnQR5CtaOZ9Ue/Hqd4LaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CFB01007;
-	Wed,  5 Feb 2025 04:17:03 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 450803F63F;
-	Wed,  5 Feb 2025 04:16:37 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Graham Woodward <graham.woodward@arm.com>
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 11/11] perf arm-spe: Support previous branch target (PBT) address
-Date: Wed,  5 Feb 2025 12:15:55 +0000
-Message-Id: <20250205121555.180606-12-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250205121555.180606-1-leo.yan@arm.com>
-References: <20250205121555.180606-1-leo.yan@arm.com>
+	s=arc-20240116; t=1738760387; c=relaxed/simple;
+	bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MKv1JxeD8TCnCnhPWv8mwBwyY6AxXH7Km5KbnImV38EN6D3a4HPeajaQBaca9Kupq7/SkLjd+c6Vqugg36NLz/PW1+FnEMRs0t9R2h4SbH3GoiUhmwPcz+a/LxAcHGbk7jTtLKbW10ICdnxevmXcP6qx8j9aXSSDvmLbnzxWEcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzadPKl/; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzadPKl/"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f075df4faso3025855ad.1;
+        Wed, 05 Feb 2025 04:59:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738760385; x=1739365185; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
+        b=KzadPKl/OY8u2i8dSIy+abZ8nKMlVt+AqY0Z1V4s5UuBTOep5uiTMKYlqhyxBVqkes
+         i1nFeAcksNXh5P8133kZTr1SvmvKJXMrAEDFhLMSZ0parw+TLyDnpDDjM2/zz8i0Kwcb
+         opfOvQflc9jVw8kty1Cd+qY/5oOPp0I2RAAkFIgNryfeUwVKxBteqqETNBdLkAwVfmNx
+         Vwx+rMZlU45ziLsO0Vd1O+a4fpuQqsEsgxpnLbfPvL2sEI5wXIUML+hYbtAMuisZMLjV
+         nE6d3rHp1ltAC5Oy7gWsrKKxyyyUrC+aUjp3ykwnBcTWIMRUKoyx60NWnmrlh1xQEjuk
+         zTsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738760385; x=1739365185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=26CJ6eCx9sOjWqCu2BT3cZKrGbPD0dZZbBOZtjTojz4=;
+        b=Jsnbr66MhGH/iitMQUL4SpmmtvCWPq2iblfCzWn7wxMroniJJbQpw5A/mc3sN1ywyX
+         nyJ1GijqNDVN/GCymX8vYtqaL4DWtBEmZupcul43W2b7R/30ZLqaDneIVvsb5/DKwkYe
+         nL7orkBi/zZmPMU8iUueiD6+n5STRnYhXKnMIsMPaeyZeO9Ix5AQLxJhfZHqzhgEZM3j
+         Slhz95/QY3zNawPN07RFYQBJRjG4D7GCPoH38tByf/KVBiorP0JSQ0sK2UXK6hmG4QDs
+         dkKslNYPdK2COfMx4nNtX/fv0XWvkPfW46eDA81jArPVVH9MNsN1vyEuRFkN9AzKVHXm
+         C9Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6xMt14VN7Sm7ZopCZniDL5vzgh7yUGxCYS6ys/02Az8HrAW1jt/HMT2JmQJR5RPe4+0dZGMXRkhEfWOj1xE8=@vger.kernel.org, AJvYcCUfs4I+lbXZ3vDw2AmmV0LMQRY6VKAA3mLpjcaiHHM6KpYUt+M5Tj1uyeUoCOpsdzB8qTORzJZRe879bdChe0CacQ==@vger.kernel.org, AJvYcCXP2yTDW6oZq0PQT2r5e3FO60GhkVHjdNFKTEUzY4wSyga1FCRZBwkco5/XHrgiH8d4QOCaYOVNppe+III=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWTvzvbUseCtHfue0A+QxAlpVaSvx/fLJsS/jseUBID80qXtQj
+	O9hJk0HoW7f5oQerfWgIgE8o6HbizWvKHgTPR9sv/7km/l25J2qOye9rQ3wMRRQEwTC5pT3XP9k
+	MfdVZObyJooXkbaqZddHLzfQguCk=
+X-Gm-Gg: ASbGncuHnzjhB6dIEFHPy+P4/690Ycb9p7dTBiwdLomrV10Dtm0uUolQTwsTt7wIdiv
+	uI4LMk845S6e1k0JYPzwqKNAgcY6h1tDwUasxXFBCCB+gZfIn6bL2PdKMdYjj6pkNhsTwZK+W
+X-Google-Smtp-Source: AGHT+IHkri6TNGTSz3U98mXqrXR+r+m35ZqBww+i9hywgTl9AhUoiMtLMP5LF8FnMwbhi4COMqrpcJa3lx42SSdu2wM=
+X-Received: by 2002:a17:902:f54b:b0:215:3862:603a with SMTP id
+ d9443c01a7336-21f17ec5e6fmr17560075ad.10.1738760384836; Wed, 05 Feb 2025
+ 04:59:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250129193037.573431-1-irogers@google.com> <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
+ <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 5 Feb 2025 13:59:32 +0100
+X-Gm-Features: AWEUYZlorAPRmvHCC4L-KWXHG1tDMTWJUpQRUhJNRpESCja4Y70e9BTk5q_UtPE
+Message-ID: <CANiq72=ynvE9k2=78wsVoM5-YVFBhTfNCKBeW7SOrNasPdihzg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+To: Ian Rogers <irogers@google.com>
+Cc: Daniel Xu <dxu@dxuuu.xyz>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When FEAT_SPE_PBT is implemented, the previous branch target address
-(named as PBT) before the sampled operation, will be recorded.
+On Mon, Feb 3, 2025 at 6:20=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> I think the best solution is to use the official demangler but in
+> general we'd like fewer rather than more library dependencies. For
 
-This commit first introduces a 'prev_br_tgt' field in the record for
-saving the PBT address in the decoder.
+I agree, solution 4) seems the best, at least for the time being.
 
-If the current operation is a branch instruction, by combining with PBT,
-it can create a chain with two consecutive branches.  As the branch
-stack stores branches in descending order, meaning a newer branch is
-stored in a lower entry in the stack.  Arm SPE stores the latest branch
-in the first entry of branch stack, and the previous branch coming from
-PBT is stored into the second entry.
-
-Otherwise, if current operation is not a branch, the last branch will be
-saved for PBT only.  PBT lacks associated information such as branch
-source address, branch type, and events.  The branch entry fills zeros
-for the corresponding fields and only set its target address.
-
-After:
-
-  perf script -f --itrace=bl -F flags,addr,brstack
-  jcc/not_taken/        ff00000000000000 0xffff80008141e920/0xff00000000000000/PN/-/-/1/COND/- 0x0/0xffff8000803607d8/-/-/-/0//-
-  jcc                   ffff800080187914 0xffff8000801878fc/0xffff800080187914/P/-/-/1/COND/-  0x0/0xffff8000801878f8/-/-/-/0//-
-  jcc                   ffff8000802d12d8 0xffff8000802d12f8/0xffff8000802d12d8/P/-/-/1/COND/-  0x0/0xffff8000802d12ec/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jmp                   ffff800081410980 0xffff800081419108/0xffff800081410980/P/-/-/1//-  0x0/0xffff800081419104/-/-/-/0//-
-  return                ffff80008036e064 0xffff80008141ba84/0xffff80008036e064/P/-/-/1/RET/-  0x0/0xffff80008141ba60/-/-/-/0//-
-  jcc                   ffff8000803d54f0 0xffff8000803d54e8/0xffff8000803d54f0/P/-/-/1/COND/-  0x0/0xffff8000803d54e0/-/-/-/0//-
-  jmp                   ffff80008015e468 0xffff8000803d46dc/0xffff80008015e468/P/-/-/1//-  0x0/0xffff8000803d46c8/-/-/-/0//-
-  jmp                   ffff8000806e2d50 0xffff80008040f710/0xffff8000806e2d50/P/-/-/1//-  0x0/0xffff80008040f6e8/-/-/-/0//-
-  jcc                   ffff800080721704 0xffff8000807216b4/0xffff800080721704/P/-/-/1/COND/-  0x0/0xffff8000807216ac/-/-/-/0//-
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../util/arm-spe-decoder/arm-spe-decoder.c    |   5 +-
- .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
- tools/perf/util/arm-spe.c                     | 114 ++++++++++--------
- 3 files changed, 70 insertions(+), 50 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 52bd0a4ea96d..688fe6d75244 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -28,7 +28,8 @@ static u64 arm_spe_calc_ip(int index, u64 payload)
- 
- 	/* Instruction virtual address or Branch target address */
- 	if (index == SPE_ADDR_PKT_HDR_INDEX_INS ||
--	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH) {
-+	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH ||
-+	    index == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH) {
- 		ns = SPE_ADDR_PKT_GET_NS(payload);
- 		el = SPE_ADDR_PKT_GET_EL(payload);
- 
-@@ -181,6 +182,8 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 				decoder->record.virt_addr = ip;
- 			else if (idx == SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS)
- 				decoder->record.phys_addr = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH)
-+				decoder->record.prev_br_tgt = ip;
- 			break;
- 		case ARM_SPE_COUNTER:
- 			if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 85b688a97436..5d232188643b 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -89,6 +89,7 @@ struct arm_spe_record {
- 	u32 latency;
- 	u64 from_ip;
- 	u64 to_ip;
-+	u64 prev_br_tgt;
- 	u64 timestamp;
- 	u64 virt_addr;
- 	u64 phys_addr;
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index c0176de6a51b..b4a2bc349b54 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -235,8 +235,9 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
- 	if (spe->synth_opts.last_branch) {
- 		size_t sz = sizeof(struct branch_stack);
- 
--		/* Allocate one entry for TGT */
--		sz += sizeof(struct branch_entry);
-+		/* Allocate up to two entries for PBT + TGT */
-+		sz += sizeof(struct branch_entry) *
-+			min(spe->synth_opts.last_branch_sz, 2U);
- 		speq->last_branch = zalloc(sz);
- 		if (!speq->last_branch)
- 			goto out_free;
-@@ -360,68 +361,83 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 
- static void arm_spe__prep_branch_stack(struct arm_spe_queue *speq)
- {
-+	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
- 	struct branch_stack *bstack = speq->last_branch;
- 	struct branch_flags *bs_flags;
-+	unsigned int last_branch_sz = spe->synth_opts.last_branch_sz;
-+	bool have_tgt = !!(speq->flags & PERF_IP_FLAG_BRANCH);
-+	bool have_pbt = last_branch_sz >= (have_tgt + 1U) && record->prev_br_tgt;
- 	size_t sz = sizeof(struct branch_stack) +
--		    sizeof(struct branch_entry) /* TGT */;
-+		    sizeof(struct branch_entry) * min(last_branch_sz, 2U) /* PBT + TGT */;
-+	int i = 0;
- 
- 	/* Clean up branch stack */
- 	memset(bstack, 0x0, sz);
- 
--	if (!(speq->flags & PERF_IP_FLAG_BRANCH))
-+	if (!have_tgt && !have_pbt)
- 		return;
- 
--	bstack->entries[0].from = record->from_ip;
--	bstack->entries[0].to = record->to_ip;
-+	if (have_tgt) {
-+		bstack->entries[i].from = record->from_ip;
-+		bstack->entries[i].to = record->to_ip;
- 
--	bs_flags = &bstack->entries[0].flags;
--	bs_flags->value = 0;
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->value = 0;
- 
--	if (record->op & ARM_SPE_OP_BR_CR_BL) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_CALL;
--		else
--			bs_flags->type |= PERF_BR_CALL;
--	/*
--	 * Indirect branch instruction without link (e.g. BR),
--	 * take this case as function return.
--	 */
--	} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
--		   record->op & ARM_SPE_OP_BR_INDIRECT) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_RET;
--		else
--			bs_flags->type |= PERF_BR_RET;
--	} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNCOND;
--	} else {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNKNOWN;
--	}
-+		if (record->op & ARM_SPE_OP_BR_CR_BL) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_CALL;
-+			else
-+				bs_flags->type |= PERF_BR_CALL;
-+		/*
-+		 * Indirect branch instruction without link (e.g. BR),
-+		 * take this case as function return.
-+		 */
-+		} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
-+			   record->op & ARM_SPE_OP_BR_INDIRECT) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_RET;
-+			else
-+				bs_flags->type |= PERF_BR_RET;
-+		} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNCOND;
-+		} else {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNKNOWN;
-+		}
- 
--	if (record->type & ARM_SPE_BRANCH_MISS) {
--		bs_flags->mispred = 1;
--		bs_flags->predicted = 0;
--	} else {
--		bs_flags->mispred = 0;
--		bs_flags->predicted = 1;
--	}
-+		if (record->type & ARM_SPE_BRANCH_MISS) {
-+			bs_flags->mispred = 1;
-+			bs_flags->predicted = 0;
-+		} else {
-+			bs_flags->mispred = 0;
-+			bs_flags->predicted = 1;
-+		}
-+
-+		if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
-+			bs_flags->not_taken = 1;
- 
--	if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
--		bs_flags->not_taken = 1;
-+		if (record->type & ARM_SPE_IN_TXN)
-+			bs_flags->in_tx = 1;
- 
--	if (record->type & ARM_SPE_IN_TXN)
--		bs_flags->in_tx = 1;
-+		bs_flags->cycles = min(record->latency, 0xFFFFU);
-+		i++;
-+	}
- 
--	bs_flags->cycles = min(record->latency, 0xFFFFU);
-+	if (have_pbt) {
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->type |= PERF_BR_UNKNOWN;
-+		bstack->entries[i].to = record->prev_br_tgt;
-+		i++;
-+	}
- 
--	bstack->nr = 1;
-+	bstack->nr = i;
- 	bstack->hw_idx = -1ULL;
- }
- 
-@@ -1566,8 +1582,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	}
- 
- 	if (spe->synth_opts.last_branch) {
--		if (spe->synth_opts.last_branch_sz > 1)
--			pr_debug("Arm SPE supports only one bstack entry (TGT).\n");
-+		if (spe->synth_opts.last_branch_sz > 2)
-+			pr_debug("Arm SPE supports only two bstack entries (PBT+TGT).\n");
- 
- 		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
- 		/*
--- 
-2.34.1
-
+Cheers,
+Miguel
