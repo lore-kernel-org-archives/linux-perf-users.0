@@ -1,67 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A7114A630;
-	Wed,  5 Feb 2025 13:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677116DC3C
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Feb 2025 14:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738763854; cv=none; b=J0yH4oaj3ceRmLMYd/+xs2PBNkY/e68t3EAu6JcEe9+SwAPICVNcuqokohQBQMqi89tD5CX4B67o0+tQt04As9WyAofqEry2lP9o6tqTMLWGd7S9An/MxhnpijAi82rr9fNi2rdlEuXuJLx6UVEoJZyKRbepqIc1OthE/L2KXRw=
+	t=1738766323; cv=none; b=HAlBwCjuP35K1m4qH5geMVfBIwG2Bx+vCUQujpEhIS3EmvlJWsOpaZBdb7jwvSpQlNddLULJdw104JmLFghDqBYfSLba9gqsEhDBh2G/DzW1EKEP9LJNLj+bE+UO0uYTcF7Yp1y77nOGYbZVIdgGnH4NtkNgjesHJDXRR2Dko5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738763854; c=relaxed/simple;
-	bh=CuN4O/okRhmL3T/tFN3PX7Pjjfe6bHksYyoSXflNtyc=;
+	s=arc-20240116; t=1738766323; c=relaxed/simple;
+	bh=W8pTV2F5CfjNvMsVyaS37HH67zy6RULqeWFDQxut2AQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nHrQUX63lSDXDUVGyGOcT+fpzYH9/29iv0larrEsVb/Bd8TGGtKR2CEL5+rGRJEWTF83sgKDoe7deT91i25vddXNf4tz7eV2w+WDCgCa5W9hPus1sw0XUbG7YNiND/kE5w/AB3ghmRjVH68Qi7o4KUSWhjRYOMTdgFD+bPAx8lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pR5o6rFl; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=e3yCNJ/01OUk/YxuvtqB+vzcsIh2qGq+RCQab7yWF6Fnz9WMwfBsL4uYkU5VXlWRT/PcCGpjkbegIzlrj4bxB241B3T64eSdBJxD3jzjrY7h4ZswfvFHkiiqyLHsjtlT4Sxu6e4dNkLq3ka/KWdGV/dDJW011iZ2UwyQKfEjblA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vqu6duD1; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pR5o6rFl"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515DZE6l001123;
-	Wed, 5 Feb 2025 13:56:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0NQVCW
-	7ciVcsY6yIsEmBk8qk7Ck7u9JVtbUaIlIbdlA=; b=pR5o6rFlCSP4fu40C4ahwc
-	wwAMudaG/LpU9mfik7Q7L4rLpcuUsWhJ1SFrw0ZEb3cnigUz32rpfuTlrikqSozK
-	i5U5+cnfa+YBX2hI1pdt0zEy9MGwxseHIedbz+PeMcRzVG1T3jeWr71xeIvbitAy
-	VKoLRh6xkEfeO+fGh6C3vxJf25Er8IPeb9ggvMy5SCUxOTvHLoHIM3Q5WUHd0PWT
-	TE7YXtc85HUYBupRt12BNDHvTaHnKv7aeUW7IQZutG64ffezWcV9rZCkoOwwpMg/
-	IwtTUn95Ogv8qieS5mZbMO57cACZt5p8+P449/qIjFzlBfexSwYUf48kp+5gsj0Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m1t82c9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 13:56:43 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515Dqmrt008327;
-	Wed, 5 Feb 2025 13:56:42 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44m1t82c9h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 13:56:42 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515CO4pK007139;
-	Wed, 5 Feb 2025 13:56:40 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxays46t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 13:56:40 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515DucM948693620
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 13:56:38 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B6BDA2004B;
-	Wed,  5 Feb 2025 13:56:38 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C4B3C20043;
-	Wed,  5 Feb 2025 13:56:37 +0000 (GMT)
-Received: from [9.171.165.127] (unknown [9.171.165.127])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 13:56:37 +0000 (GMT)
-Message-ID: <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
-Date: Wed, 5 Feb 2025 14:56:36 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vqu6duD1"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38da72cc47bso1475321f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Feb 2025 06:38:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738766319; x=1739371119; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6SylEMFUGGjut9Z/r0Vs1FQy1begfn1Z+13Ei115fRk=;
+        b=Vqu6duD1e2nIqPQqtehpr7YxVvVE0Q6IF7A4X8aG6iJVv2RJOaMgCtTY0ab9Pev6TD
+         K+t6unWt3z9ZSrnYQemnpsAJC7OrF1yNY/8ACwnCfE5a3tgjOwUmccFA0wAjelp7RS6L
+         eV8OJ5iu553uMmK0/QWoIKTNfEVTQ2w67EWe+3WgFIvBj20roZicXe4gKbVy2JvDWKNG
+         D+9NY3Y5Wax8dMwksl0XbE5DFngnBl72Hl0/zRaxOTA+qeITyA3kKKWnyk6df6B4U2mQ
+         bxGxpd7V5R6QUDorGl2/GK29XGEQk3KOs0xMAlX7lQ27esSkTdjZZDXiM1f8P3DUeIe8
+         pMyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738766319; x=1739371119;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6SylEMFUGGjut9Z/r0Vs1FQy1begfn1Z+13Ei115fRk=;
+        b=wy7aQyzB2AGZACgP5GDpdZVJjn+GdZeMJirLDW3htm4XcvZwzOVSMBSVLf/JciiBS1
+         xhS22uaF9YWsx9lD4I7AlG+Ci0tj9rG+PyvM5QPx5/KLhCEaF8Qt6Cm/NiU9Lc70fSME
+         i0YZxR8i2O5bySgucoXmWUadzxVNn5aou4TwKE6S2i3OuvMniN+WvWGv5EMZJzKqE92L
+         J7Xz8g/fC5gx/4lNN4bQQHeLf15TR9zjXwE3xSt3e45Mv7mbDIHh9NMxmCP7nQ53PSeY
+         a+qyowF1VHI58RoI/LZ732jNa45XBiKBoJmlJZnFwKGyM0WQgVLA7579QkNcJxX8KQT6
+         5sWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmc8c2fxEmmT7sEf/aCpqurBy2TwkhwwqFqgToihEBndlLeiogfCbanoY19x7laoLQgX6+N9hxjHwqeMTVVCPo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIs7QGQU//obhJNRJzpvtPW/LeOYl/nO+37PJV5usNCx+dSXeN
+	kEQhF1HTUwcR89Ox0e6sTghOK9vM5Xevv8grXozHNz/KvuXexWD2kSnWyCJmQTU=
+X-Gm-Gg: ASbGncvGNYp1pICVGJ1jnd8QeOeF6+HOkKW0VtDXIcKsqeV+1czJqCLXSjer+54tzzG
+	jxPAXo+KATtTxRfXPP4cQIXgHnoKR5JFySke7UigBbhYdHGCgy6P6b4/retbENgsroEGvCF5Zo9
+	2Yd49vIP4uSCGrbY4+XFopGTxYgsSFCOMjihJlKc18fqrCJfdu8SdFMCcoR6yE53olTVPTsD7XX
+	iIcNzEdyENKfeYH/0LzY6KeNO+V1r3Uv46jQfwS6S00kaP83UcWY4H0CAkho5ssH5zywW0rUyQx
+	jOfnAaWK0f/nErjP5EDfnkahMg==
+X-Google-Smtp-Source: AGHT+IF9xdlTonnwajQxmm/s81j9yPZ4l8Yo6pPEF/b8p2ODFzyRC4+PB3bu63yEZdkCTZrHfqloFw==
+X-Received: by 2002:adf:f243:0:b0:38a:5df9:f86a with SMTP id ffacd0b85a97d-38db48d34e5mr1766240f8f.26.1738766318785;
+        Wed, 05 Feb 2025 06:38:38 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.66.245])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da8f6691bsm4950042f8f.42.2025.02.05.06.38.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 06:38:38 -0800 (PST)
+Message-ID: <3c7e1ce0-9a5d-43fb-9767-8e4ca92a450d@linaro.org>
+Date: Wed, 5 Feb 2025 14:38:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,78 +66,254 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
- <20250129020249.owmklacvuvss7z7n@jpoimboe>
-From: Jens Remus <jremus@linux.ibm.com>
+Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
+ <0415d354-0c44-4fff-b92b-b0f5c9c72b11@linaro.org>
+ <CAL_JsqKTNDQn9omG3g=6Rb4Nwt6hG9Gw7-VXL_fjQeEQmmtJQg@mail.gmail.com>
+ <630f630d-241e-45f5-b449-243147fb888b@linaro.org>
+ <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
 Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250129020249.owmklacvuvss7z7n@jpoimboe>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: FoeKv70vsKAME6cJt7w4lE4LUboDqNi8
-X-Proofpoint-ORIG-GUID: UmYpWnbvFFL0sEps-RqOV8VpRzmTO1NE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_05,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050108
 
-On 29.01.2025 03:02, Josh Poimboeuf wrote:
 
-> Note FDEs aren't even needed here as the unwinder doesn't need to know
-> when a function begins/ends.  The only info needed by the unwinder is
-> just the fre_data struct.  So a simple binary search of fres[] is all
-> that's really needed.
 
-In SFrame V2 FDEs specify ranges bound by function start address and
-length.  FREs in contrast specify open ranges bounded by start address.
-Their effect ends either with the next FRE becoming into effect or when
-their FDE range ends.
-This concept enables holes in the .text section which do not have any
-valid FDE/FRE information associated.
+On 04/02/2025 3:03 pm, Rob Herring wrote:
+> On Tue, Feb 4, 2025 at 6:03 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 03/02/2025 5:58 pm, Rob Herring wrote:
+>>> On Mon, Feb 3, 2025 at 10:53 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 03/02/2025 12:43 am, Rob Herring (Arm) wrote:
+>>>>> From: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>>
+>>>>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
+>>>>> Extension (BRBE), which records information about branches as they are
+>>>>> executed into set of branch record registers. BRBE is similar to x86's
+>>>>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+>>>>> (BHRB).
+> 
+> [...]
+> 
+>>>>> +     /*
+>>>>> +      * Require that the event filter and branch filter permissions match.
+>>>>> +      *
+>>>>> +      * The event and branch permissions can only mismatch if the user set
+>>>>> +      * at least one of the privilege branch filters in PERF_SAMPLE_BRANCH_PLM_ALL.
+>>>>> +      * Otherwise, the core will set the branch sample permissions in
+>>>>> +      * perf_copy_attr().
+>>>>> +      */
+>>>>> +     if ((event->attr.exclude_user != !(branch_type & PERF_SAMPLE_BRANCH_USER)) ||
+>>>>> +         (event->attr.exclude_kernel != !(branch_type & PERF_SAMPLE_BRANCH_KERNEL)) ||
+>>>>
+>>>> I don't think this one is right. By default perf_copy_attr() copies the
+>>>> exclude_ settings into the branch settings so this works, but if the
+>>>> user sets any _less_ permissive branch setting this fails. For example:
+>>>>
+>>>>     # perf record -j any,u -- true
+>>>>     Error:
+>>>>     cycles:PH: PMU Hardware or event type doesn't support branch stack
+>>>>     sampling.
+>>>>
+>>>> Here we want the default sampling permissions (exclude_kernel == 0,
+>>>> exclude_user == 0), but only user branch records, which doesn't match.
+>>>> It should be allowed because it doesn't include anything that we're not
+>>>> allowed to see.
+>>>
+>>> I know it is allowed(on x86), but why would we want that? If you do
+>>> something even more restricted:
+>>>
+>>> perf record -e cycles:k -j any,u -- true
+>>>
+>>> That's allowed on x86 and gives you samples with user addresses. But
+>>> all the events happened in the kernel. How does that make any sense?
+>>>
+>>> I suppose in your example, we could avoid attaching branch stack on
+>>> samples from the kernel. However, given how my example works, I'm
+>>> pretty sure that's not what x86 does.
+>>>
+>>> There's also combinations that are allowed, but record no samples.
+>>> Though I think that was with guest events. I've gone with reject
+>>> non-sense combinations as much as possible. We can easily remove those
+>>> restrictions later if needed. Changing the behavior later (for the
+>>> same configuration) wouldn't be good.
+>>>
+>>>
+>>
+>> Rejecting ones that produce no samples is fair enough, but my example
+>> does produce samples. To answer the question "why would we want that?",
+>> nothing major, but there are a few small reasons:
+>>
+>>    * Perf includes both user and kernel by default, so the shortest
+>>      command to only gather user branches doesn't work (-j any,u)
+>>    * The test already checks for branch stack support like this, so old
+>>      Perf test versions don't work
+> 
+> I would be more concerned about this one except that *we* wrote that
+> test. (I'm not sure why we wrote a new test rather than adapting
+> record_lbr.sh...)
+> 
 
-Your proposal lacks some sort of mechanism to replicate those holes.
-It could be FDEs with a flag (or no offsets?) that specifies their
-range has no valid information.
+record_lbr.sh was added 6 months ago, test_brstack.sh 3 years ago so 
+it's the other way around.
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+Although record_lbr.sh also tests --call-graph and --stitch-lbr as well, 
+so I think it's fine for test_brstack.sh to test only --branch-filter 
+options at the lowest level.
 
-IBM
+Looking at that test though I see there is a capability 
+"/sys/devices/cpu/caps/branches". I'm wondering whether we should be 
+adding that on the Arm PMU for BRBE?
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Ignoring the tests, the man pages (and some pages on the internet) give 
+this example: "--branch-filter any_ret,u,k". This doesn't work either 
+because it doesn't match the default exclude_hv option. It just seems a 
+bit awkward and incompatible to me, for not much gain.
+
+>>    * You might only be optimising userspace, but still interested in the
+>>      proportion of time spent or particular place in the kernel
+> 
+> How do you see that? It looks completely misleading to me. 'perf
+> report' seems to only list branch stack addresses in this case. There
+> doesn't seem to be any matching of the event address to branch stack
+> addresses.
+> 
+
+Perf script will show everything with all it's various options, or 
+--branch-history on perf report will show both too. Also there are tools 
+other than Perf, AutoFDO seems like something that BRBE can be used with.
+
+>>    * Consistency with existing implementations and for people porting
+>>      existing tools to Arm
+>>    * It doesn't cost anything to support it (I think we just
+>>      only check if exclude_* is set rather than !=)
+>>    * Permissions checks should be handled by the core code so that
+>>      they're consistent
+>>    * What's the point of separate branch filters anyway if they always
+>>      have to match the event filter?
+> 
+> IDK, I wish someone could tell me. I don't see the usecase for them
+> being mismatched.
+> 
+> In any case, I don't care too much one way or the other what we do
+> here. If everyone thinks we should relax this, then that's fine with
+> me.
+> 
+
+Seeing the branch history from userspace that led up to a certain thing 
+in the kernel happening doesn't seem like that much of an edge case to 
+me. If you always have to have both on then you lose the userspace 
+branch history because the buffer isn't that big and gets overwritten.
+
+>> Some of these things could be fixed in Perf, but not in older versions.
+>> Even if we can't think of a real use case now, it doesn't sound like the
+>> driver should be so restrictive of an option that doesn't do any harm.
+>>
+>>>> This also makes the Perf branch test skip because it uses
+>>>> any,save_type,u to see if BRBE exists.
+>>>
+>>> Yes, I plan to update that if we keep this behavior.
+>>>
+>>>>> +         (!is_kernel_in_hyp_mode() &&
+>>>>> +          (event->attr.exclude_hv != !(branch_type & PERF_SAMPLE_BRANCH_HV))))
+>>>>> +             return false;
+>>>>> +
+>>>>> +     event->hw.branch_reg.config = branch_type_to_brbfcr(event->attr.branch_sample_type);
+>>>>> +     event->hw.extra_reg.config = branch_type_to_brbcr(event->attr.branch_sample_type);
+>>>>> +
+>>>>> +     return true;
+>>>>> +}
+>>>>> +
+>>>> [...]
+>>>>> +static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2] = {
+>>>>> +     [BRBINFx_EL1_TYPE_DIRECT_UNCOND] = { PERF_BR_UNCOND, 0 },
+>>>>
+>>>> Does the second field go into 'new_type'? They all seem to be zero so
+>>>> I'm not sure why new_type isn't ignored instead of having it mapped.
+>>>
+>>> Well, left over from when all the Arm specific types were supported.
+>>> So yeah, that can be simplified.
+>>>
+>>>>> +     [BRBINFx_EL1_TYPE_INDIRECT] = { PERF_BR_IND, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_DIRECT_LINK] = { PERF_BR_CALL, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_INDIRECT_LINK] = { PERF_BR_IND_CALL, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_RET] = { PERF_BR_RET, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_DIRECT_COND] = { PERF_BR_COND, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_CALL] = { PERF_BR_CALL, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_ERET] = { PERF_BR_ERET, 0 },
+>>>>> +     [BRBINFx_EL1_TYPE_IRQ] = { PERF_BR_IRQ, 0 },
+>>>>
+>>>> How do ones that don't map to anything appear in Perf? For example
+>>>> BRBINFx_EL1_TYPE_TRAP is missing, and the test that was attached to the
+>>>> previous versions fails because it doesn't see the trap that jumps to
+>>>> the kernel, but it does still see the ERET back to userspace:
+>>>>
+>>>>      [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
+>>>>
+>>>> In older versions we'd also have BRBINFx_EL1_TYPE_TRAP mapping to
+>>>> PERF_BR_SYSCALL so you could see it go into the kernel before the return:
+>>>>
+>>>>      trap_bench+0x1C/[unknown]/-/-/-/0/SYSCALL/-
+>>>>      [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
+>>>
+>>> My read of that was we should see a CALL in this case. Whether SVC
+>>> generates a TRAP or CALL depends on HFGITR_EL2.SVC_EL0 (table D18-2).
+>>> I assumed "SVC due to HFGITR_EL2.SVC_EL0" means when SVC_EL0 is set
+>>> (and set has additional conditions). We have SVC_EL0 cleared, so that
+>>> should be a CALL. Maybe the FVP has this wrong?
+>>>
+>>
+>> The test is doing this rather than a syscall:
+>>
+>>     asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
+>>
+>> So I think trap is right. Whether that should be mapped to SYSCALL or
+>> some other branch type I don't know, but the point is that it's missing now.
+> 
+> We aren't supporting any of the Arm specific traps/exceptions. One
+> reason is for consistency with x86 like you just argued for. The only
+
+Does x86 leave holes in the program flow though, or is it complete? IMO 
+it makes it harder for tools to make sense of the branch buffer if there 
+are things like an ERET with no previous trap to match it up to.
+
+> exception types supported are syscall and IRQ. Part of the issue is
+> there is no userspace control over enabling all the extra Arm ones.
+> There's no way to say enable all branches except debug, fault, etc.
+> exceptions. If we want to support these, I think there should be user
+> control over enabling them. But that can come later if there's any
+> demand for them.
+> 
+> Rob
+
+In this patchset we enable PERF_BR_IRQ with PERF_SAMPLE_BRANCH_ANY, 
+without any way to selectively disable it. I would assume trap could be 
+done with the same option.
+
+If we're filtering some of them out it might be worth documenting that 
+"PERF_SAMPLE_BRANCH_ANY" doesn't actually mean 'any' branch type on Arm, 
+and some types are recorded but discarded out before sending to userspace.
+
+There could be some confusion when there are partially filled or empty 
+branch buffers, and the reason wouldn't be that there weren't any 
+branches recorded, but they were all filtered out even with the 'any' 
+option.
 
