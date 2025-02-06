@@ -1,187 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7561624D4;
-	Thu,  6 Feb 2025 15:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C398F23534B
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Feb 2025 16:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738854113; cv=none; b=gPsTlHseSkXMzMhPm+dzFFcmorfEMTY4FqI5i+de3rPxsZ6ozK994pEC+ECDveKLbTo8dg94n1V+rrk6sekz7Id4HOUUumKzVpMOs0Cz3NiSrY983xh7cu6Psanmm/JTI1rjwgMFILKl/fxnQkmcY4mOSKKIvfmcOXqqlOC0Ev8=
+	t=1738860035; cv=none; b=fLPRtdoSKgMFrhy+qb222JlFskIESfauGZZDC9lZUF9zk6zoINLP5OLRgQpLYVOOoNz2PSeWlN7F/sgFYU6zBpl9dw9lOZAkSJZC/kftgnwJpDMVgBD0ZYG2On6hlSOqGARFghI3IfQjragKUPImxSv5yNd7Lf2mT56f4V5lBCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738854113; c=relaxed/simple;
-	bh=ygPGbTCM/PVy4HlH+Dd1yrCQqg3MzBk6HpQSOnvkrRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QgWrRGD5NlTgdTTXpSnEQLqtSeOsCblEwRrDRakMLc8AN8IunJbmUtmzUn5o4ztMDLXJ3lCCRCbp8XKXk3EZVY/SYvZ7IBVKsSkwSldqFqk3529FYymDs1R7sKUFt3+6jimvlkGWRuFgl82LvFq9HmoYtBp2rBEBNR7rrTBUGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DbRsD7Nv; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738860035; c=relaxed/simple;
+	bh=N8LaKVz6Sr+5Y91hCshuCZW809GeV+AbChKifv0j7No=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i3TbUqZA8iEvKKi5pF6U/S1418mRtugsF51ryclIKa1lJm1gCxQ/zECXLsgSX6mVH/80G02d6M7uaYev4F9Rfk95dl6/x5c15tKTL8CxsV/ABXx4uNDmMN12NuhQHVtjnTJpfkb/KZNUNEk/R3kGtx5YQIJins+6CPcL33sUR64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ykKIDZI9; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DbRsD7Nv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738854112; x=1770390112;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ygPGbTCM/PVy4HlH+Dd1yrCQqg3MzBk6HpQSOnvkrRs=;
-  b=DbRsD7NvUf2NZ8O4I3QcqEKtQEeYv4v8aPKbIyoGcnoqQVtDJh4SrstD
-   uuDQNtybVmr5sgHWU+/wxPPyetFNh247Al6GZFLuLFo5b4dDwleclWLHC
-   xhMsMuN8FyVzmlQOCds5+VbKYP9s9XHiA9teU+LWHSjg49D7WNpdRFh2B
-   xU4pqUiD/myKKcCIx/JQ4hY+JqNsxdF7nOkFTygCZBsVqIvTA3bGt4H7C
-   zsSJPApiZqP057+eSpDoUMWlslqbEBEp4zvEJpGHI7ovWkTMzywvAwvmL
-   B57Uq9Ry1whGq4zzG9YoOjAvE3e57JkK6d62Nwp8Ju/Lb9OfkRbpmjEaf
-   A==;
-X-CSE-ConnectionGUID: iUBYHeeOR6OR3i63G2KISQ==
-X-CSE-MsgGUID: /Yn9MkcyQN6jc/aavkM/ew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39357494"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39357494"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:01:51 -0800
-X-CSE-ConnectionGUID: VoHBk7z0SGmokJKKgiWfIQ==
-X-CSE-MsgGUID: xSMmApdfRC2XgiFg9E9kNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="142115505"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:01:51 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E7B2720B5713;
-	Thu,  6 Feb 2025 07:01:48 -0800 (PST)
-Message-ID: <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:01:47 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ykKIDZI9"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so22995ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Feb 2025 08:40:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738860033; x=1739464833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wvaLQbYrpkz6oaxKPG/e/JRHpRGrA3lEpDx5RhfGgrA=;
+        b=ykKIDZI9t2uLyTJ5fTz6AKqtuF/oggkl/WM4AiarkLNN9EozepyszVwEJWwh7cJEVB
+         YxfL8STpnnnxpEKwvUCF1aXvEwGG4nNlAGEnNx/HnNS6P7SV52pH5bfEebKVlf18vOa1
+         uh7BKuR2R8B//2Of2L0+9Di0S2IJmAS7XfCDmdwPATiIoRnLb69bJOwdN7HFTuFOaX+L
+         5pGldBqd9q4bYJYmKsoJ4s5CgI7TvSMUwOD9xiTmPLFSRS0HtK7mSrVm76z/9zSDrIjL
+         c5cPDr8y1heHhXk9Yq6bL12ihrn0/OJYh+iZCuvh327Th3FvF6z8AckNhVdC/8etNVGa
+         wkwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738860033; x=1739464833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wvaLQbYrpkz6oaxKPG/e/JRHpRGrA3lEpDx5RhfGgrA=;
+        b=Tk6svbMX4l+qU+4sMxO3FmA50LP7W9MQQGWZHdzXeRlzd6qts89sFbPVN8DHOEpKAX
+         9sm4QkknqygLxzZGPICBZz8GmNn8mis4/E8JEvi28B+yedQNEUSC3ytZcplOIZeb/qiF
+         GS1zgKJizazW+99xDrv0soi14mDbSejuHR9U9psKPJQHSpHhVlT4Aj9fBWFRyYokpKPs
+         vweSfBiFzWS9OM+I3lV16HZVGauG4kg/HW2q9BJ1X27eeb26mT0Uwb28cP1ebm7TSx8A
+         Ma7//tHh+oXTzDtvdfh+9XYme8dgmPFSGa1Iz9hH38UdyDdzUE06dZrxgRJNFDKMb7Ot
+         YOxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2wkpx96CeZ9vMtREjh46HW0txg60gr7fTwWJuU9/z4dOstxE38DtQe2km+kTVcj9AAdrDjDmU+L22hHZVypk1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1JUDvrUcYZU3BZMSQFhzOq7qdeKgHZ44I30JT3nSa21AsEawR
+	Vnu9odILtKnTlrLfU4YBE6ZYQFQVY+4GU06j78zs2zb3RjP2SWbZ4aQkF4h9cLfgDhBO6G6S7tG
+	pSYw4rPkexyjomNzsaVYtRFuzS4k+zpmcOwze
+X-Gm-Gg: ASbGnctv44anxYRooO6QHJoHLi9UH4/UgtYPncM+j00LL5Aus5IBix6Xa/PTdWc22US
+	Ojnw5GD/UCac0rAugO2MSb3GrU0svx6/9ePSQNGz+3GMfQvhbbF+CEIx4kTA1JwoGVPV2MH5mCC
+	7106uOfnHzyYVTYBS4gWOG4z72
+X-Google-Smtp-Source: AGHT+IHLh3L3HufG9Uu/dBT96ccYmbNC6w5WpBwncZSnSYxA2d+Xfq9AEVk/1w67dwiAq9/ZZ+qMtxXsh5A22cgDgyA=
+X-Received: by 2002:a05:6e02:3113:b0:3a7:e301:a1f2 with SMTP id
+ e9e14a558f8ab-3d135cc2b82mr252015ab.15.1738860032611; Thu, 06 Feb 2025
+ 08:40:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
- counter & pdist map
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
- <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
- <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250205173140.238294-1-irogers@google.com> <20250205173140.238294-12-irogers@google.com>
+ <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com> <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
+ <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com> <CAP-5=fWpbXSwZq5biRZ1fjcSJY2DO4g=cv-0K8jZ1Gzv3bOfhA@mail.gmail.com>
+ <58e08371-8d43-4f84-baaf-64b0af95c7cb@linux.intel.com>
+In-Reply-To: <58e08371-8d43-4f84-baaf-64b0af95c7cb@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 6 Feb 2025 08:40:20 -0800
+X-Gm-Features: AWEUYZkBblHkw2VPUKClA4hYnNXC-LPOEuDEkju6NG2NP_KPrRAMbPb2jLB4fpI
+Message-ID: <CAP-5=fX+u_Un-WYKA35sc366kniuXFVfRDT+dzWd-axTG5PmpA@mail.gmail.com>
+Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids events/metrics
+To: "Liang, Kan" <kan.liang@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 6, 2025 at 6:32=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+> On 2025-02-05 4:33 p.m., Ian Rogers wrote:
+> > On Wed, Feb 5, 2025 at 1:10=E2=80=AFPM Liang, Kan <kan.liang@linux.inte=
+l.com> wrote:
+> >>
+> >> On 2025-02-05 3:23 p.m., Ian Rogers wrote:
+> >>> On Wed, Feb 5, 2025 at 11:11=E2=80=AFAM Liang, Kan <kan.liang@linux.i=
+ntel.com> wrote:
+> >>>>
+> >>>> On 2025-02-05 12:31 p.m., Ian Rogers wrote:
+> >>>>> +    {
+> >>>>> +        "BriefDescription": "This category represents fraction of =
+slots utilized by useful work i.e. issued uops that eventually get retired"=
+,
+> >>>>> +        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound =
++ topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * s=
+lots",
+> >>>>> +        "MetricGroup": "BvUW;TmaL1;TopdownL1;tma_L1_group",
+> >>>>> +        "MetricName": "tma_retiring",
+> >>>>> +        "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operati=
+ons > 0.1",
+> >>>>> +        "MetricgroupNoGroup": "TopdownL1",
+> >>>>> +        "PublicDescription": "This category represents fraction of=
+ slots utilized by useful work i.e. issued uops that eventually get retired=
+. Ideally; all pipeline slots would be attributed to the Retiring category.=
+  Retiring of 100% would indicate the maximum Pipeline_Width throughput was=
+ achieved.  Maximizing Retiring typically increases the Instructions-per-cy=
+cle (see IPC metric). Note that a high Retiring value does not necessary me=
+an there is no room for more performance.  For example; Heavy-operations or=
+ Microcode Assists are categorized under Retiring. They often indicate subo=
+ptimal performance and can often be optimized or avoided. Sample with: UOPS=
+_RETIRED.SLOTS",
+> >>>>> +        "ScaleUnit": "100%"
+> >>>>> +    },
+> >>>>
+> >>>> The "Default" tag is missed for GNR as well.
+> >>>> It seems the new CPUIDs are not added in the script?
+> >>>
+> >>> Spotted it, we need to manually say which architectures with TopdownL=
+1
+> >>> should be in Default because it was insisted upon that pre-Icelake
+> >>> CPUs with TopdownL1 not have TopdownL1 in Default. As you know, my
+> >>> preference would be to always put TopdownL1 metrics into Default.
+> >>>
+> >>
+> >> For the future platforms, there should be always at least TopdownL1
+> >> support. Intel even adds extra fixed counters for the TopdownL1 events=
+.
+> >>
+> >> Maybe the script should be changed to only mark the old pre-Icelake as
+> >> no TopdownL1 Default. For the other platforms, always add TopdownL1 as
+> >> Default. It would avoid manually adding it for every new platforms.
+> >
+> > That's fair. What about TopdownL2 that is currently only in the
+> > Default set for SPR?
+> >
+>
+> Yes, the TopdownL2 is a bit tricky, which requires much more events.
+> Could you please set it just for SPR/EMR/GNR for now?
+>
+> I will ask around internally and make a long-term solution for the
+> TopdownL2.
 
+Thanks Kan, I've updated the script the existing way for now. Thomas
+saw another issue with TSC which is also fixed. I'm trying to
+understand what happened with it before sending out v6:
+https://lore.kernel.org/lkml/4f42946ffdf474fbf8aeaa142c25a25ebe739b78.camel=
+@intel.com/
+"""
+There are all some errors like this,
 
-On 2025-02-05 9:47 p.m., Mi, Dapeng wrote:
-> 
-> On 1/28/2025 12:07 AM, Liang, Kan wrote:
->>
->> On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
->>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>> can be dynamically configured base on these counter and precise
->>> distribution bitmap instead of defining them statically.
->>>
->>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>> ---
->>>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
->>>  arch/x86/events/intel/ds.c   |  1 +
->>>  2 files changed, 21 insertions(+)
->>>
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index 7775e1e1c1e9..0f1be36113fa 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>  			    struct perf_event *event)
->>>  {
->>>  	struct event_constraint *c1, *c2;
->>> +	struct pmu *pmu = event->pmu;
->>>  
->>>  	c1 = cpuc->event_constraint[idx];
->>>  
->>> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>  		c2->weight = hweight64(c2->idxmsk64);
->>>  	}
->>>  
->>> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
->>> +		u64 pebs_cntrs_mask;
->>> +		u64 cntrs_mask;
->>> +
->>> +		if (event->attr.precise_ip >= 3)
->>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
->>> +		else
->>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
->>> +
->>> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
->>> +			     hybrid(pmu, cntr_mask64);
->>> +
->>> +		if (pebs_cntrs_mask != cntrs_mask) {
->>> +			c2 = dyn_constraint(cpuc, c2, idx);
->>> +			c2->idxmsk64 &= pebs_cntrs_mask;
->>> +			c2->weight = hweight64(c2->idxmsk64);
->>> +		}
->>> +	}
->> The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
->> boot. I don't think it's efficient to calculate them every time.
->>
->> Maybe adding a local pebs_event_constraints_pdist[] and update both
->> pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
->> enumerated mask at initialization time.
->>
->> Update the intel_pebs_constraints() to utilize the corresponding array
->> according to the precise_ip.
->>
->> The above may be avoided.
-> 
-> Even we have these two arrays, we still need the dynamic constraint, right?
-> We can't predict what the event is, the event may be mapped to a quite
-> specific event constraint and we can know it in advance.
-
-The dynamic constraint is not necessary, but two arrays seems not
-enough. Because a PEBS event may fall back to the event_constraints as
-well. Sigh.
-Four arrays should be required. pebs_event_constraints[],
-pebs_event_constraints_pdist[], event_constraints_for_pebs[],
-event_constraints_for_pdist_pebs[].
-But it seems too complicated. It may not be implemented now.
-
-But, at least the pebs_cntrs_mask and cntrs_mask can be calculated in
-the hw_config(), or even intel_pmu_init() once. It should not be
-calculated every time in the critical path.
+Testing tma_cisc
+Metric contains missing events
+Cannot resolve IDs for tma_cisc: cpu_atom@TOPDOWN_FE_BOUND.CISC@ / (5
+* cpu_atom@CPU_CLK_UNHALTED.CORE@)
+"""
+But checking the json I wasn't able to spot a model with the metric
+and without these json events. Knowing the model would make my life
+easier :-)
 
 Thanks,
-Kan
-> 
-> 
->>
->> Thanks,
->> Kan
->>
->>> +
->>>  	return c2;
->>>  }
->>>  
->>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>> index 2f2c6b7c801b..a573ce0e576a 100644
->>> --- a/arch/x86/events/intel/ds.c
->>> +++ b/arch/x86/events/intel/ds.c
->>> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
->>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
->>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
->>>  	x86_pmu.pebs_capable = ~0ULL;
->>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
->>>  }
->>>  
->>>  /*
-> 
-
+Ian
