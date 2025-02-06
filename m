@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBFBD529;
-	Thu,  6 Feb 2025 02:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F29B44C94;
+	Thu,  6 Feb 2025 02:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738807810; cv=none; b=Nh1DsJJOExgxywvDI5W3dMR/9Wdx5zTHkewggmA88fkhrjX/3f+vxetZyhRYwNf9awYlKOro9i9QcZutO5345gg8AxOQmT2EtUo31vneNhqzw36nmHzdvOc/crPmzzl4/d0LFkyw546hFE5SqxU3ZQ0cjpH46lnJ2J9kJMh1fkM=
+	t=1738808774; cv=none; b=a4q7SO+9JQFVCY1BT24/CtNAqpx/JGvkZ90dF3zaNSk8Llgzsn7yV2ekNq1HFZhmubarTXQzp5zRS2HtxDvG69Tz56ebu9S+as9pu7yuODMEiNbFxkHp46OyJjX4uR/5jiEsQqwE1k0i2z9fyLdJwkItt8pps65aUx25Ur37vlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738807810; c=relaxed/simple;
-	bh=TYvtC+W5mN7cCLPG6BLgPSWaXZOFmBGSrrIwDYv2SsU=;
+	s=arc-20240116; t=1738808774; c=relaxed/simple;
+	bh=Ce/LAj70TOZue3UX1FV2yx0zOjmbrJlrGqVBFBMr7wE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BLOm0SsvHIRm+U3k1biAyV0yr3985cxg+aNpfcnp2ceSJSv25Tf2t6z27qj4D9iIuXqbLUmzVOigiyM2lyIe6VlK+JeyMRzIxDzMtJe3pLJv2zZfDCkfuYLpz+PdYlnV05/nre8pkGzZo5zEx2y9OSy0RzlmZE5jOj3spxxcq9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrVw4DXN; arc=none smtp.client-ip=198.175.65.14
+	 In-Reply-To:Content-Type; b=jPMBLHORloKIInrlkJwW+T010jMvuukGQXUWr+Hnh2M2QVq/KUVmHfL0oVnbCn3iwpCJ24/o5bI2OQAoCegzGChObsvUqKWSfEIKXDdMf1qvaiuqu/ghJrt3wWVgCudhWn3+EJVJy0So7Ts7jJVqxIeDN3vo9L1O1xFTLyn1PUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HltVj3Eb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrVw4DXN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HltVj3Eb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738807809; x=1770343809;
+  t=1738808773; x=1770344773;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=TYvtC+W5mN7cCLPG6BLgPSWaXZOFmBGSrrIwDYv2SsU=;
-  b=GrVw4DXNMh7GhN0iJLDqI1+WH2dq7Kul/4MlNnHIPTsvm4RnJUMmpJuu
-   omRUSeFKsTLYzJBCN69JdSqYLd1RWNbf9mHGfs+FLqEETA6w4DHE/3/cw
-   6FZCyW8A9D+Nbh/DDP/AnsTZ+BAy+J9xNATgk/SQXL/piMyO9eSg72XBT
-   oqZIXkyRotkfbAcRbD0kGA51u4MqqnibdU53/gpSEmErhRhYC/YZuGmcA
-   R1GwtQhJCyCzEH0/7gU7pL6ii3s+EjfiUqgyUOdvB/cXZQ68k+lFlYLB+
-   bunJrzTyocFUndK+7TU7fNz6ljoXY2zupU1Yfec5PYOyfl4qdFzuJCLgH
-   w==;
-X-CSE-ConnectionGUID: FLs9GT5ORSuZTnDjCEf0Zw==
-X-CSE-MsgGUID: s6mvjepvRqCrT4LvY1ptpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43151030"
+  bh=Ce/LAj70TOZue3UX1FV2yx0zOjmbrJlrGqVBFBMr7wE=;
+  b=HltVj3EbNZ24l9vcfAfZ4nvEHbMi9gq75hsS2x4QPAB9/9rC41TNmU0E
+   sJo1D3Axy/IS6013r6gx61wO0fbAL9cLQ7HMAJ+GM+wIXs3/imdH32scE
+   HKVt3hLq0d2ncomXqvTzqp8Bdg5JwXeF7KcLy514CqITuyHMDzRFjpHoY
+   8ldQtxrEaBHFCu+xMBFqct5M6NJ+F82iAAF5TPe22aQTNbi1L2xhls0vu
+   V0v9IVNuAU0g9f7sXeQ1fPd+T0UZdbZrovygmi8a+oF8fAMeB8r7cVEnm
+   XwRU1PasT2j/RwcxCLxmDr23SnThqmdsy4C+jhm9tzU8aDupfqzn/Q9WZ
+   A==;
+X-CSE-ConnectionGUID: T4A9ibPHSlasJN8aVk03Ag==
+X-CSE-MsgGUID: dYA07eNsS6enzt21zDNsag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56815412"
 X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="43151030"
+   d="scan'208";a="56815412"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:10:08 -0800
-X-CSE-ConnectionGUID: Uclb2hTASz2j9ZdZrSajHg==
-X-CSE-MsgGUID: axTy98l/TUqXoU2HLE6gew==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:26:12 -0800
+X-CSE-ConnectionGUID: WIiYFZmXSxS00ld9/ptZCg==
+X-CSE-MsgGUID: pVMeW+KrR6i9EDcRi5JvcA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115150872"
+   d="scan'208";a="115154167"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:09:45 -0800
-Message-ID: <bc002854-85b8-4f55-a253-791d5f222620@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:09:31 +0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:26:02 -0800
+Message-ID: <7a03fdf5-f080-4580-8850-20dc88003d14@linux.intel.com>
+Date: Thu, 6 Feb 2025 10:25:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,60 +52,83 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/20] perf/x86/intel: Parse CPUID archPerfmonExt leaves
- for non-hybrid CPUs
-To: Peter Zijlstra <peterz@infradead.org>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH 06/20] perf/x86/intel: Initialize architectural PEBS
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
  Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-4-dapeng1.mi@linux.intel.com>
- <Z5KRT-F7MbTs6g6y@tassilo>
- <85588439-ec0e-4824-8193-f0737880ecb9@linux.intel.com>
- <20250127164406.GN16742@noisy.programming.kicks-ass.net>
+ <20250123140721.2496639-7-dapeng1.mi@linux.intel.com>
+ <20250128112202.GA7145@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250127164406.GN16742@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250128112202.GA7145@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 1/28/2025 12:44 AM, Peter Zijlstra wrote:
-> On Mon, Jan 27, 2025 at 10:19:34AM -0500, Liang, Kan wrote:
->>
->> On 2025-01-23 1:58 p.m., Andi Kleen wrote:
->>>> +	/*
->>>> +	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
->>>> +	 * PMU architectural features with a per-core view. For non-hybrid,
->>>> +	 * each core has the same PMU capabilities. It's good enough to
->>>> +	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
->>>> +	 * is used to keep the common capabilities. Still keep the values
->>>> +	 * from the leaf 0xa. The core specific update will be done later
->>>> +	 * when a new type is online.
->>>> +	 */
->>>> +	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
->>>> +		update_pmu_cap(NULL);
->>> It seems ugly to have these different code paths. Couldn't non hybrid
->>> use x86_pmu in the same way? I assume it would be a larger patch.
->> The current non-hybrid is initialized in the intel_pmu_init(). But some
->> of the initialization code for the hybrid is in the
->> intel_pmu_cpu_starting(). Yes, it's better to move it together. It
->> should be a larger patch. Since it's impacted other features, a separate
->> patch set should be required.
-> IIRC the problem was that there were SKUs with the same FMS that were
-> both hybrid and non-hybrid and we wouldn't know until we brought up the
-> CPUs.
+On 1/28/2025 7:22 PM, Peter Zijlstra wrote:
+> On Thu, Jan 23, 2025 at 02:07:07PM +0000, Dapeng Mi wrote:
 >
-> Thomas rewrote the topology bits since, so maybe we can do beter these
-> days.
+>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index e8a06c8486af..1b33a6a60584 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -1537,6 +1537,9 @@ void intel_pmu_pebs_enable(struct perf_event *event)
+>>  
+>>  	cpuc->pebs_enabled |= 1ULL << hwc->idx;
+>>  
+>> +	if (x86_pmu.arch_pebs)
+>> +		return;
+>> +
+>>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
+>>  		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
+>>  	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
+>> @@ -1606,6 +1609,11 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+>>  
+>>  	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
+>>  
+>> +	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
+>> +
+>> +	if (x86_pmu.arch_pebs)
+>> +		return;
+>> +
+>>  	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
+>>  	    (x86_pmu.version < 5))
+>>  		cpuc->pebs_enabled &= ~(1ULL << (hwc->idx + 32));
+>> @@ -1616,15 +1624,13 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+>>  
+>>  	if (cpuc->enabled)
+>>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+>> -
+>> -	hwc->config |= ARCH_PERFMON_EVENTSEL_INT;
+>>  }
+>>  
+>>  void intel_pmu_pebs_enable_all(void)
+>>  {
+>>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>  
+>> -	if (cpuc->pebs_enabled)
+>> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
+>>  		wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+>>  }
+>>  
+>> @@ -1632,7 +1638,7 @@ void intel_pmu_pebs_disable_all(void)
+>>  {
+>>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>  
+>> -	if (cpuc->pebs_enabled)
+>> +	if (!x86_pmu.arch_pebs && cpuc->pebs_enabled)
+>>  		__intel_pmu_pebs_disable_all();
+>>  }
+> So there's a ton of if (arch_pebs) sprinkled around. Can't we avoid that
+> by using a few static_call()s ?
 
-This optimization would be a fundamental and large change. As Kan said,
-we'd better put it as a separate patch series, then it won't block this
-arch-PEBS enabling patches.
+Sure. Let me try it.
 
 
