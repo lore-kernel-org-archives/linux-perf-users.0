@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FAC2A8D0;
-	Thu,  6 Feb 2025 01:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBFBD529;
+	Thu,  6 Feb 2025 02:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738805540; cv=none; b=ta9AQzQEF3cGzRqIFzpi42sZYJhgDPU3UDDerpbaJhVNy/392aKdDbNtNN86jHEx1sXlnw9wd0Q6tSyB0drdRhEiSwEOv5LTN7WS92LgFE8+voJHD1sE/mwJJES99mArm42urqt0UcaSevTcRuudciBp0xhaiKp22xFhOGU45NA=
+	t=1738807810; cv=none; b=Nh1DsJJOExgxywvDI5W3dMR/9Wdx5zTHkewggmA88fkhrjX/3f+vxetZyhRYwNf9awYlKOro9i9QcZutO5345gg8AxOQmT2EtUo31vneNhqzw36nmHzdvOc/crPmzzl4/d0LFkyw546hFE5SqxU3ZQ0cjpH46lnJ2J9kJMh1fkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738805540; c=relaxed/simple;
-	bh=SZUfLrOq5zFNJDq8tAihCiFfZ15937c+cni40sXRVgQ=;
+	s=arc-20240116; t=1738807810; c=relaxed/simple;
+	bh=TYvtC+W5mN7cCLPG6BLgPSWaXZOFmBGSrrIwDYv2SsU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uWi171AfvYbUa4KotEYdxS/cRQy4WsCLhMY5yzJXFUwIiAzQ7xLvHtC7x/BrsvfnIOV3Pw0gC3NfcDoLG9/orB1Kuqur6CPYSJUPQebZBTijywZ3TruI3tqu94malFsaX6izH4OFGk+n2+5tr0H/nhyHnBdP8fVFIqQWG79VDjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbjJQVjz; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=BLOm0SsvHIRm+U3k1biAyV0yr3985cxg+aNpfcnp2ceSJSv25Tf2t6z27qj4D9iIuXqbLUmzVOigiyM2lyIe6VlK+JeyMRzIxDzMtJe3pLJv2zZfDCkfuYLpz+PdYlnV05/nre8pkGzZo5zEx2y9OSy0RzlmZE5jOj3spxxcq9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrVw4DXN; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbjJQVjz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrVw4DXN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738805538; x=1770341538;
+  t=1738807809; x=1770343809;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=SZUfLrOq5zFNJDq8tAihCiFfZ15937c+cni40sXRVgQ=;
-  b=nbjJQVjzTV/YJQBYEIETYAV9RZ8/n2GNHxGprIEvrwdEfH5tu+B1SODv
-   38Xeuls3eaZTMI/WMVLD8DoDVzwUL+gcwcAQBktow8+pe+hNUOsu0G1CV
-   43fO2Kh07n4/GpFOn77SCP3Miv52BhVa5lkig+bL8N8pgPOxpNWq7l/L8
-   8X+f2nUKtvglmkd2OHLBve6UF5t+P2XjyH4JUIJ3riqln73PnFVAPB3tW
-   6SGtNVUysa6yKn74xweNh5GgG4oqBwaNA7w5dlmkdMrmzx3q/VExM4jX0
-   qB0y0Mw1XUBsGh+2pBgYQRr76UBIDNvCeBY3GGq0bIO6Cz5ZSaHMgbEI1
-   g==;
-X-CSE-ConnectionGUID: dTo1V/vtRKynkuYib3uWkA==
-X-CSE-MsgGUID: AECJC0WRTkiOcCLeHz55NQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26996302"
+  bh=TYvtC+W5mN7cCLPG6BLgPSWaXZOFmBGSrrIwDYv2SsU=;
+  b=GrVw4DXNMh7GhN0iJLDqI1+WH2dq7Kul/4MlNnHIPTsvm4RnJUMmpJuu
+   omRUSeFKsTLYzJBCN69JdSqYLd1RWNbf9mHGfs+FLqEETA6w4DHE/3/cw
+   6FZCyW8A9D+Nbh/DDP/AnsTZ+BAy+J9xNATgk/SQXL/piMyO9eSg72XBT
+   oqZIXkyRotkfbAcRbD0kGA51u4MqqnibdU53/gpSEmErhRhYC/YZuGmcA
+   R1GwtQhJCyCzEH0/7gU7pL6ii3s+EjfiUqgyUOdvB/cXZQ68k+lFlYLB+
+   bunJrzTyocFUndK+7TU7fNz6ljoXY2zupU1Yfec5PYOyfl4qdFzuJCLgH
+   w==;
+X-CSE-ConnectionGUID: FLs9GT5ORSuZTnDjCEf0Zw==
+X-CSE-MsgGUID: s6mvjepvRqCrT4LvY1ptpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43151030"
 X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="26996302"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 17:32:16 -0800
-X-CSE-ConnectionGUID: qzTUOincTQuh3bw99CXjRg==
-X-CSE-MsgGUID: P6M9K01nSLqfWcroKRzTNg==
+   d="scan'208";a="43151030"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:10:08 -0800
+X-CSE-ConnectionGUID: Uclb2hTASz2j9ZdZrSajHg==
+X-CSE-MsgGUID: axTy98l/TUqXoU2HLE6gew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116258824"
+   d="scan'208";a="115150872"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 17:32:06 -0800
-Message-ID: <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
-Date: Thu, 6 Feb 2025 09:31:46 +0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:09:45 -0800
+Message-ID: <bc002854-85b8-4f55-a253-791d5f222620@linux.intel.com>
+Date: Thu, 6 Feb 2025 10:09:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,70 +52,60 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] perf/x86/intel: Add PMU support for Clearwater
- Forest
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH 03/20] perf/x86/intel: Parse CPUID archPerfmonExt leaves
+ for non-hybrid CPUs
+To: Peter Zijlstra <peterz@infradead.org>,
+ "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
  Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-2-dapeng1.mi@linux.intel.com>
- <20250127162651.GL16742@noisy.programming.kicks-ass.net>
+ <20250123140721.2496639-4-dapeng1.mi@linux.intel.com>
+ <Z5KRT-F7MbTs6g6y@tassilo>
+ <85588439-ec0e-4824-8193-f0737880ecb9@linux.intel.com>
+ <20250127164406.GN16742@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250127162651.GL16742@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250127164406.GN16742@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 1/28/2025 12:26 AM, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2025 at 02:07:02PM +0000, Dapeng Mi wrote:
->> From PMU's perspective, Clearwater Forest is similar to the previous
->> generation Sierra Forest.
+On 1/28/2025 12:44 AM, Peter Zijlstra wrote:
+> On Mon, Jan 27, 2025 at 10:19:34AM -0500, Liang, Kan wrote:
 >>
->> The key differences are the ARCH PEBS feature and the new added 3 fixed
->> counters for topdown L1 metrics events.
->>
->> The ARCH PEBS is supported in the following patches. This patch provides
->> support for basic perfmon features and 3 new added fixed counters.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index b140c1473a9d..5e8521a54474 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2220,6 +2220,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
->>  	EVENT_EXTRA_END
->>  };
->>  
->> +EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
->> +EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
->> +EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
->> +
->> +static struct attribute *skt_events_attrs[] = {
->> +	EVENT_PTR(td_fe_bound_skt),
->> +	EVENT_PTR(td_retiring_skt),
->> +	EVENT_PTR(td_bad_spec_cmt),
->> +	EVENT_PTR(td_be_bound_skt),
->> +	NULL,
->> +};
-> The skt here is skymont, which is what Sierra Forest was based on, and
-> you just said that these counters are new with Darkmont, and as such the
-> lot should be called: dmt or whatever the proper trigraph is.
-
-Sorry for late response since the Chinese new year holiday.
-
-Sierra Forest is based on Crestmont instead of Skymont. The 3 new fixed
-counters are introduced from Skymont and Darkmont inherits them. So these
-attributes are named with "skt" suffix.
-
-
+>> On 2025-01-23 1:58 p.m., Andi Kleen wrote:
+>>>> +	/*
+>>>> +	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
+>>>> +	 * PMU architectural features with a per-core view. For non-hybrid,
+>>>> +	 * each core has the same PMU capabilities. It's good enough to
+>>>> +	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
+>>>> +	 * is used to keep the common capabilities. Still keep the values
+>>>> +	 * from the leaf 0xa. The core specific update will be done later
+>>>> +	 * when a new type is online.
+>>>> +	 */
+>>>> +	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
+>>>> +		update_pmu_cap(NULL);
+>>> It seems ugly to have these different code paths. Couldn't non hybrid
+>>> use x86_pmu in the same way? I assume it would be a larger patch.
+>> The current non-hybrid is initialized in the intel_pmu_init(). But some
+>> of the initialization code for the hybrid is in the
+>> intel_pmu_cpu_starting(). Yes, it's better to move it together. It
+>> should be a larger patch. Since it's impacted other features, a separate
+>> patch set should be required.
+> IIRC the problem was that there were SKUs with the same FMS that were
+> both hybrid and non-hybrid and we wouldn't know until we brought up the
+> CPUs.
 >
+> Thomas rewrote the topology bits since, so maybe we can do beter these
+> days.
+
+This optimization would be a fundamental and large change. As Kan said,
+we'd better put it as a separate patch series, then it won't block this
+arch-PEBS enabling patches.
+
+
