@@ -1,137 +1,135 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC321198E6F
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Feb 2025 17:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76391A23A8;
+	Thu,  6 Feb 2025 18:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864463; cv=none; b=WvwKgU7Uupwv3JLHdkOpKDwTPTsoUX8y5q22/wtJ8pOkGT5ZUSr84CXPYrZl8sLAZozxMgXexlCFGLfGYMEpDxZ/WXzNMSLBQSyVsDdg2UNYoVbEFUpbRL7n6ExeTpEfWydzx1O8+N07+JsDgmSIcgrtoc3zsP/j5zBCaMbdukk=
+	t=1738866648; cv=none; b=LKvUf1AQ41U1+wTcKPp04j0BUkKrPLUEPj/XUJf19veyT62nMTzU31m9JWiE1cAsEb0NolcONqJlszBghkjWY/Y7gIA68xK/wDYfJKmHqb7Li0JxEduAIwik/szRLx+V5i4u8JTvxFMNOgR8KbyB+HUYWKfAvm/6SZZ18JsD39Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864463; c=relaxed/simple;
-	bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZHPGF6r7srlVDtSy4ShD9nj5BiYV8yx3wpv2QR63kvPxmeBonJQJT7G5uCuDNoVZkBF3IlapOt7AdmQ/Z3a8cfsq+fn+n5SlsV0esMJljZP4D86lTQ3vC7d2KFFWYtLfj1Zf0Aos+iUh5NPj/3jJi0GLmnCaZaerQ9Mogn5JuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1C7EZF0W; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738866648; c=relaxed/simple;
+	bh=W37gjZs+MxawhXaaJ7d9hAleIryWG96BRnEP1Ati5aE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S9RU9eE3XfsUd5/0qH7ikKoFTVekMz+oSdb9YCVTjmCjnS90umdBXL9xQsuL+3MEDAeRtqCA2t+QgziQPa7bjOUlcucKhsUPLygEiGwp0A6Z8zVSGQKQgIPWaH8mZYJgWqoHf0TR3brjsMy47evlUZTElyMWFuKNQGALzOpidoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bG7XElMm; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1C7EZF0W"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d05815e89dso2215ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Feb 2025 09:54:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738864460; x=1739469260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
-        b=1C7EZF0WbDikys0zxntsrRX7OoG7NuM/7iWq9i27aV592t7GgKt/UJe1BPe3W4Hfsl
-         KE9HPqUi+jx7G5O2X/zsvywxVz9kuj1N3WnW912BkdqxSpe95fQuPicTTnkcH1VOMjjG
-         VAUD0Py+MVk5K+xXeTFP0iCTfdatN6hC8mI+zxYOcsFcnn+ioeNyRlifXPP49CSsWuhC
-         OB1WnCDBzNBJXqBZ+8wOoSHVtdB8mgyvpNqtV7uqF6Yw4lj5gG0KtHPbq8t0qyKJlkou
-         9qjZXu3TxikVq88V9qX+T4iop1hRzdICsJ0sV7dG/fF7+YlF9agtna6xM9pv4WKQpXyL
-         EVvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738864460; x=1739469260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
-        b=YFu5KKKhdmIBJzTJaFIWCwElne7QWFTKAsMocaVxPeVfJki88r2iS8DZhZbmiQG+Wx
-         4MVP/m9JwjFG6gxc3WTTI4GD4RCJZrRMI3QBiXd1CiPCybAeELmq+nFiAPBfVE5DOf2w
-         vHZBSkVxywNxL+roz4nlrp8jRby1Ez/goIQ8VpNcrfThKm3+Y+3YaOHh5yRmLJzZhlKy
-         T7gBfUzWxolDjtVS5GLxgocfBPJTaPT5OD3YyOdT4jlEajW+lcpn2+dpN3vG0FgJiXaw
-         w4gliHdzyjxDQ019XLjaLKJcQ6sB7XY3ziqhGcNt3ZFI8cINpyB8qBGn1J3QRUWgVwzS
-         kKfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSO81g/YO5zfGCDaLk4sT2QGoLDRss7PaMs7pU61KiKQGEFY9NU6NC9hMhcuBVBWHmIk2MZ+chD1aJ7FKlccnJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8xaLFqIWF23nxxYt7HDpLGGzbiZDpj7kSB9CxZrTKlzZzBgi2
-	0ZSNk7ZT0UXdrAG5slD/eUxT2zhvL1rKk5bi8khxAIEaj5ma+wr1GpAPZLaezlrBtkyAG/fKD2f
-	lARkM5fLhBZM6llRnGqGa5BhPysdXrxj3+x1Z
-X-Gm-Gg: ASbGncv1GFNzGyUi5SezpjeHd0D5a3h0/yVWE72sz4OrffefYmdAB50FtwUD1beb2G5
-	7UT1jpb8lBT0nminvdRA5DMNfB5cPPB0zKSCroCodf6+fiG0L8Zg9StZLNlcMOQUVsiSnUXokGX
-	NlG5BjGfCtIn263d1IP3LATq8X
-X-Google-Smtp-Source: AGHT+IHjRfAEWOgF09ADnBFeQssh9J2LLV+7w2g1Ey2qvdksWuX/fXYlxc7n2cyjQutjoGNaI0Pi1u97ZrsTCB7CmCM=
-X-Received: by 2002:a05:6e02:3113:b0:3cf:cedd:b5ea with SMTP id
- e9e14a558f8ab-3d135dbd377mr646515ab.7.1738864460397; Thu, 06 Feb 2025
- 09:54:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bG7XElMm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738866647; x=1770402647;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=W37gjZs+MxawhXaaJ7d9hAleIryWG96BRnEP1Ati5aE=;
+  b=bG7XElMm7hEuFNcHrw3273vRi5GrSt6sRspheO5gdUVu7vBYnQXHBtLD
+   21hLOWm7ZzFTe+mtQwDPXmpvemrfzRZ6VxjGDq2MgMNEgRproCySFxDSC
+   DpzVo6mRXnx5pN5dZ2GGNPnJn6pw24MhVmWsjAHJ6RFKy2zrBePtWAd22
+   wwwh1WMd5bJhF7wLY1Hp0PRe2svmrg7HtGQOwROyz8dUhm6SdVPqPFNgC
+   SJfNaJdMSoCdNdZ2rYHHpZg7oQYoOVj5fnXjF7Y9dyRk3yFalvFrzZ/TD
+   1G6Gr4yWXLsgvJ0QheIup5Qou6IlP60iWfAAXXqDOK0UI2H1ugjfUxXkN
+   w==;
+X-CSE-ConnectionGUID: k2a+PgYqQKePC+KdDKsy3A==
+X-CSE-MsgGUID: HpFoCPXNShGXf9p+/AwMOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43148940"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="43148940"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:30:38 -0800
+X-CSE-ConnectionGUID: VQsEHjhBTqy2QLrIOgOtMw==
+X-CSE-MsgGUID: xvzSPsyUR4GrtIxcssSA4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="116231174"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by orviesa003.jf.intel.com with ESMTP; 06 Feb 2025 10:30:38 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id ECE60301B19; Thu, 06 Feb 2025 10:30:37 -0800 (PST)
+From: Andi Kleen <ak@linux.intel.com>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: namhyung@kernel.org,  irogers@google.com,
+  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org,  Arnaldo
+ Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
+In-Reply-To: <cover.1738772628.git.dvyukov@google.com> (Dmitry Vyukov's
+	message of "Wed, 5 Feb 2025 17:27:39 +0100")
+References: <cover.1738772628.git.dvyukov@google.com>
+Date: Thu, 06 Feb 2025 10:30:37 -0800
+Message-ID: <87ldujkjsi.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-In-Reply-To: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Feb 2025 09:54:07 -0800
-X-Gm-Features: AWEUYZnIi6UrXFoluEJsHxcLNKVze0a8CepMT-61FiOjqL1rQAfhVBDuQsJX3Ow
-Message-ID: <CAP-5=fXV6b2g9QxPe1EsSTcHZpSPq+EAR71jvpBGW7ehydN+Uw@mail.gmail.com>
-Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
-To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
-Cc: namhyung@kernel.org, acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 6, 2025 at 3:35=E2=80=AFAM Krzysztof =C5=81opatowski
-<krzysztof.m.lopatowski@gmail.com> wrote:
+Dmitry Vyukov <dvyukov@google.com> writes:
+
+> There are two notions of time: wall-clock time and CPU time.
+> For a single-threaded program, or a program running on a single-core
+> machine, these notions are the same. However, for a multi-threaded/
+> multi-process program running on a multi-core machine, these notions are
+> significantly different. Each second of wall-clock time we have
+> number-of-cores seconds of CPU time.
+
+I'm curious how does this interact with the time / --time-quantum sort key?
+
+I assume it just works, but might be worth checking.
+
+It was intended to address some of these issues too.
+
+> Optimizing CPU overhead is useful to improve 'throughput', while
+> optimizing wall-clock overhead is useful to improve 'latency'.
+> These profiles are complementary and are not interchangeable.
+> Examples of where latency profile is needed:
+>  - optimzing build latency
+>  - optimizing server request latency
+>  - optimizing ML training/inference latency
+>  - optimizing running time of any command line program
 >
-> When testing perf trace on NixOS, I noticed significant startup delays:
-> - `ls`: ~2ms
-> - `strace ls`: ~10ms
-> - `perf trace ls`: ~550ms
->
-> Profiling showed that 51% of the time is spent reading files,
-> 26% in loading BPF programs, and 11% in `newfstatat`.
->
-> This patch optimizes module path exploration by avoiding `stat()` calls
-> unless necessary. For filesystems that do not implement `d_type`
-> (DT_UNKNOWN), it falls back to the old behavior.
-> See `readdir(3)` for details.
->
-> This reduces `perf trace ls` time to ~500ms.
->
-> A more thorough startup optimization based on command parameters would
-> be ideal, but that is a larger effort.
+> CPU profile is useless for these use cases at best (if a user understands
+> the difference), or misleading at worst (if a user tries to use a wrong
+> profile for a job).
+
+I would agree in the general case, but not if the time sort key
+is chosen with a suitable quantum. You can see how the parallelism
+changes over time then which is often a good enough proxy. 
 
 
- Hi Krzysztof,
+> We still default to the CPU profile, so it's up to users to learn
+> about the second profiling mode and use it when appropriate.
 
-Thanks for the contribution! I did a series and a new io_dir set of
-primitives. The last version of which is:
-https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
-That did something very similar along with mainly memory usage
-optimizations. In patch2:
-```
-+static inline bool io_dir__is_dir(const struct io_dir *iod, struct
-io_dirent64 *dent)
-+{
-+ if (dent->d_type =3D=3D DT_UNKNOWN) {
-+ struct stat st;
-+
-+ if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=3D*/0))
-+ return false;
-+
-+ if (S_ISDIR(st.st_mode)) {
-+ dent->d_type =3D DT_DIR;
-+ return true;
-+ }
-+ }
-+ return dent->d_type =3D=3D DT_DIR;
-+}
-```
-I stopped pursuing the series as the maintainers were complaining
-about unpopular libcs/platforms missing system call definitions
-(getdents) and the series breaking on those platforms. I tried to go
-the usual feature testing route, etc. but we seemed to have entered
-into wac-a-mole wrt those libcs/platforms and my patience had worn
-thin. I carry the changes in Google's tree where the libc/platform
-issue isn't a concern.
+You should add it to tips.txt then
 
-I mention this as I think that series may be a better route than this
-change as it solves a little bit more of the performance issue. I can
-and do rebase the changes for Google in the tree:
-https://github.com/googleprodkernel/linux-perf
-I don't mind this patch as an expedient, obvious performance win.
+>  .../callchain-overhead-calculation.txt        |   5 +-
+>  .../cpu-and-latency-overheads.txt             |  85 ++++++++++++++
+>  tools/perf/Documentation/perf-record.txt      |   4 +
+>  tools/perf/Documentation/perf-report.txt      |  54 ++++++---
+>  tools/perf/Documentation/tips.txt             |   3 +
+>  tools/perf/builtin-record.c                   |  20 ++++
+>  tools/perf/builtin-report.c                   |  39 +++++++
+>  tools/perf/ui/browsers/hists.c                |  27 +++--
+>  tools/perf/ui/hist.c                          | 104 ++++++++++++------
+>  tools/perf/util/addr_location.c               |   1 +
+>  tools/perf/util/addr_location.h               |   7 +-
+>  tools/perf/util/event.c                       |  11 ++
+>  tools/perf/util/events_stats.h                |   2 +
+>  tools/perf/util/hist.c                        |  90 ++++++++++++---
+>  tools/perf/util/hist.h                        |  32 +++++-
+>  tools/perf/util/machine.c                     |   7 ++
+>  tools/perf/util/machine.h                     |   6 +
+>  tools/perf/util/sample.h                      |   2 +-
+>  tools/perf/util/session.c                     |  12 ++
+>  tools/perf/util/session.h                     |   1 +
+>  tools/perf/util/sort.c                        |  69 +++++++++++-
+>  tools/perf/util/sort.h                        |   3 +-
+>  tools/perf/util/symbol.c                      |  34 ++++++
+>  tools/perf/util/symbol_conf.h                 |   8 +-
 
-Thanks,
-Ian
+We traditionally didn't do it, but in general test coverage
+of perf report is too low, so I would recommend to add some simple
+test case in the perf test scripts.
+
+-Andi
