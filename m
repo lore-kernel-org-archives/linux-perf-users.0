@@ -1,56 +1,49 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EA1225403;
-	Thu,  6 Feb 2025 07:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED9F2248AC;
+	Thu,  6 Feb 2025 08:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828447; cv=none; b=U7nhD0nPg5qus15EpJCU4NKwq1VKlkpzAz2n0YgGWRXFagSG/uRfTgjkyWoZrpV4vjo9SVoW1vnNL5GWwIJSSs2PioF2uGwIP7Hn1zG6I8fj/5OeCQZagPSWF+fnT73BpsCFgIgzzEuGvXbYBs5QtzLrunyaYo6MUjfkrddWjCA=
+	t=1738829130; cv=none; b=WjrUF33dp3kL67P02qIYStxLJJjvkw3YvaJBEWH0ab58n3L3Nx/cNVJlU2tQsiHSn7fibvDUx98DGkN5X2swz7mG/ii0b0tilun06ax4LcNAVsi6LXWgeYbwiZeqFioLy9HdzWxSgg2IrB+v0rhvoxUl9Pstd26EiPwZmde/zos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828447; c=relaxed/simple;
-	bh=v/9j4H1SumVNswTEB2Bzev+qU+VGsBh3b/2fynpUEI0=;
+	s=arc-20240116; t=1738829130; c=relaxed/simple;
+	bh=ApYFjmEsxpSM59JtDQ/pIORkEOwlMgn2oMqmpGvZh3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OvlPaHJAbj+a6BW/W8frZMbzgBsF0aDwIimnW9XNSBNeODvYz8KCvJoJ3bg1QlsEbMbC7DB0DDBMzx0pqI9jd4qBY9WMpLvj4xKrFhcnttmbv/4gdZdirl4YYr+3d7W0q19Q/yfZOa+xfdolDo8E0s/nhTCUAF0KuxzN5fcVJI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DcqhBu4J; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPlIkjbiFyv2V4kSc011uZSbpOvkruGaxtTb6yEVahEwly82RtDL2ufvc6vB5KW0Agzo3wRyPwz2tQQAUn5XHD77zc//z3M+J1Du78WyL3irNDv/Cgt0IaRVzB/bhG4vj5O7VZRFh42Ju+87N3K67QBRAhD+8w5ky2X7eCs/kNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ph6QGPgz; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DcqhBu4J"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ph6QGPgz"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=a9pYqLRoxBjhQQODtbQiPWkuyLKJRbcRMir3jVYiFx4=; b=DcqhBu4JKY5iso98bZeB9UaC/k
-	SiJBbdAaSE6gY3TZwACzBjb3tQ+J7Ppnrq92twnFeped0uSKDQwHirPg+NmQ7kKEgW9NSihuE50D3
-	UTSUYIUxDWffmEEMJJHRu3qXlNXi+CFnlmQDbc0ITATVEfQM5EvKH4ZQBMiyVXSkgpmBJfcLYby5N
-	wc1zDSeZF4olcmQBEPh5cGL9HoRUyPUs9iNL+LPL4udcX2TqEXKd8l2jNR2jg6k7EfyjZFHraLB6T
-	Q8J33oU6GRtfmzrE/dDXlbtT1OA7w2saG9rAN2+VBZeQg57eDcXJaXovyA8tywYdeHNsg7urE6aqG
-	9M6k5QGA==;
+	bh=ApYFjmEsxpSM59JtDQ/pIORkEOwlMgn2oMqmpGvZh3o=; b=Ph6QGPgzdBy+pCoIyHrAfu5plb
+	CZjFP5wPOe7OQyK6pKx2Bbtn3D5848oeJVx8fkbvlVf+R+oZBOLJ0vPT9/00Cua8W+VWLx20gGT5Y
+	4uR4Ia/Kff7JnTyad3PeMm1AIhfNDlinQQrPny+gTOZrtn0NT9TckA0/WX3a4ZyclAmj86UGuP0WF
+	n2BGI/G4wZleudbI6cMy16q3mMkuVOh7MbFuZPEgfQG42nYonGfg9qSwuZ4X3Yta1ralq+vps9Vhz
+	C2Fnu0AT91OZsvAc3fjQZUynKi69GCUhiGjS9XsSxts/ym0LEavWt0l8qrkIAq2+V5rokAXX8nJMz
+	ZlmF7QtQ==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfwhy-00000005f1r-0vQ6;
-	Thu, 06 Feb 2025 07:53:58 +0000
+	id 1tfwsz-00000005fpe-1O10;
+	Thu, 06 Feb 2025 08:05:21 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D6DCC3003AF; Thu,  6 Feb 2025 08:53:56 +0100 (CET)
-Date: Thu, 6 Feb 2025 08:53:56 +0100
+	id DBF8130031C; Thu,  6 Feb 2025 09:05:20 +0100 (CET)
+Date: Thu, 6 Feb 2025 09:05:20 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [PATCH 01/20] perf/x86/intel: Add PMU support for Clearwater
- Forest
-Message-ID: <20250206075356.GF7145@noisy.programming.kicks-ass.net>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-2-dapeng1.mi@linux.intel.com>
- <20250127162651.GL16742@noisy.programming.kicks-ass.net>
- <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: mark.rutland@arm.com, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	shuah@kernel.org
+Subject: Re: [RFC PATCH] perf/core: Prevent dereferencing NULL pointer
+Message-ID: <20250206080520.GG7145@noisy.programming.kicks-ass.net>
+References: <20250205190608.93508-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,60 +52,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
+In-Reply-To: <20250205190608.93508-1-richard120310@gmail.com>
 
-On Thu, Feb 06, 2025 at 09:31:46AM +0800, Mi, Dapeng wrote:
-> 
-> On 1/28/2025 12:26 AM, Peter Zijlstra wrote:
-> > On Thu, Jan 23, 2025 at 02:07:02PM +0000, Dapeng Mi wrote:
-> >> From PMU's perspective, Clearwater Forest is similar to the previous
-> >> generation Sierra Forest.
-> >>
-> >> The key differences are the ARCH PEBS feature and the new added 3 fixed
-> >> counters for topdown L1 metrics events.
-> >>
-> >> The ARCH PEBS is supported in the following patches. This patch provides
-> >> support for basic perfmon features and 3 new added fixed counters.
-> >>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> ---
-> >>  arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
-> >>  1 file changed, 24 insertions(+)
-> >>
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> >> index b140c1473a9d..5e8521a54474 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -2220,6 +2220,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
-> >>  	EVENT_EXTRA_END
-> >>  };
-> >>  
-> >> +EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
-> >> +EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
-> >> +EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
-> >> +
-> >> +static struct attribute *skt_events_attrs[] = {
-> >> +	EVENT_PTR(td_fe_bound_skt),
-> >> +	EVENT_PTR(td_retiring_skt),
-> >> +	EVENT_PTR(td_bad_spec_cmt),
-> >> +	EVENT_PTR(td_be_bound_skt),
-> >> +	NULL,
-> >> +};
-> > The skt here is skymont, which is what Sierra Forest was based on, and
-> > you just said that these counters are new with Darkmont, and as such the
-> > lot should be called: dmt or whatever the proper trigraph is.
-> 
-> Sorry for late response since the Chinese new year holiday.
-> 
-> Sierra Forest is based on Crestmont instead of Skymont. 
+On Thu, Feb 06, 2025 at 03:06:08AM +0800, I Hsin Cheng wrote:
+> According to coverity scan check, there's possible cases where
+> "ring_buffer_get()" returns a NULL in "perf_mmap_close".
 
-I hate all these names :-( But yeah, you're right.
+That makes no sense. Having a mmap should pin the buffer.
 
-> The 3 new fixed counters are introduced from Skymont and Darkmont
-> inherits them. So these attributes are named with "skt" suffix.
+> Use a "BUG_ON()" to check for NULL pointer existence, panic if it does
+> exist, otherwise it's safe to dereference "rb" and access its members.
 
-Fair enough.
-
-But how come this is new for darkmont and wasn't done for
-arrowlake/lunarlake which have skymont based e-cores?
+How the hell is a BUG_ON() any better than a NULL deref?
 
