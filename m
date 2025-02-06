@@ -1,194 +1,337 @@
-Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazon11023091.outbound.protection.outlook.com [52.101.44.91])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8821123C366
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Feb 2025 22:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.44.91
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879257; cv=fail; b=WHietjg2gQrOM21wT6LmdE2uR4Hz+iwh0BgxpA9j3WpkpVGHXYvqhKBQr3c9j/y4n6OtYhNIe+8lAF4qJq2hvZVFsBroPCKjYL7eEanTX8Uj0lOKHrCLT5WFSbWASPM+/KZX1wEP3fCtdScMmPA3ccNw64DiVNHkNvI+IuIomdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879257; c=relaxed/simple;
-	bh=v783y0OugajbmmRXlLUj4DIo4q2JUoyFTZwQNiiGoq4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 Content-Type:MIME-Version; b=URtuxHYbAoQUNJcJsDrJuADOfckLPIkPz4/T2hddMB4YUoZ1O/M5olzmZq68ODEX4wW3Xb7NGhb37DYAEPRw045Vg4h0ne+XoyKLN1seHxuDOynm2nAFpxsWqd51b7eieitbkFrxgVzGxxLuDDQEQzVSHIQZ1Ms8sXeuh0aI8MY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=NPNsUyuH; arc=fail smtp.client-ip=52.101.44.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077D31DF96E;
+	Thu,  6 Feb 2025 22:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738879759; cv=none; b=q5XI6TukBaq7g31kkLK6SOAFtuhSLDft/Y4yq6GuinesgYv4wHIgj40YCu5+H6oGdNKI1jWD2vjaTkZH2yrqtiuCas45yITGtNX8b49JdxW9yu0y1JVKfSP6Z2jpAc6rq9bOSbr9LzRDHi0KxzTLviI5kwh1xIf9gGQTqTodRKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738879759; c=relaxed/simple;
+	bh=C0O1HP8xhbAgcrX6+/kH2eP7TCZJdrbdIByOFmK5xlw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SrZg8JPe0b9Oth3CAf8uIIzeZS74SA912b7YWWsx1XH9KyMzhveR8YvLY1fs3GkqsYZVfbn/JNgQnjyoHFG9xfz9QJiYD4cn2jo/qx7Hg/cgMmC6kLqDwIMMZlRUpUOVCeFuNTLqzR8z9NJAvMsmZPaPva57eslyU/lela3YXBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnhUWElU; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="NPNsUyuH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kov3p7yxbyn51qyST0m4/A6PCXvlRAXjupHrbqgwF58SXrv9ouqlAwIZfBabJUqslN5qBl1NUB74oXRX+Xl19rys6ysQKd+PSLfr6wURPFZf7h6G0ZzXrSJdqkQqmCT91VUF5Eo8UpZFBwzQrNJOIGvtROOx8rKtun5H5JbX6gHrtX3iivQoSFj8jgq7pmg7twnjOYwSd1SiazU+WKHoq2Hr4PBGT2UcRjv8wRprYuxu5a9EQZlCM/FyeCgjByBrH0dTxRQ83GjTSHS5qWiyr4jLwprza60/94Fm5PTfuuUk3KlhA3ZKhxu3lOGI6LLgke577NrvucGsHPM3rCGdoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rSMIqyO7jPzRiaCUYwLv11VSPRxRIhRCwYKl+AeVMXo=;
- b=yrQocGdnWxzdDguIdaMLgLX2GlRZeSoQw1ZJjSm1BTAc8+cBQ41XZp51XPzO0ebRgu2vfyGJBbt3GbI4qK2zFoJrQrxuxV2cvQBSVXE7jNA7wArn81CNHcF4Kk6BcqZEmclpm71G06HKILJhlnR/faeLLZeGryEevLV5s35qrZ2qpKeFmFp4rnHwfDHB8FTbMIxlpWxjtvqSAmN5VOtoFtDRFKtp1xpwnTOHi9XO3CPCv7scf8qwNO4eaBELiWWpFG5yVpIpHR5vuIdp1XqhN4Yl0wv/Ovdt/hnwxGxJBr+l5DlrYvcuLiiLgIyvdxjOaW+I7OMbRifNw0faRvgAZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnhUWElU"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e545c1e8a15so1284270276.1;
+        Thu, 06 Feb 2025 14:09:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rSMIqyO7jPzRiaCUYwLv11VSPRxRIhRCwYKl+AeVMXo=;
- b=NPNsUyuH3TgMyYK9nKwIMPAbz+kv3lj4+I7l9m9EMSCqHh4hkItW1X7KqfhFAT8QLZ0RTs9rF7T1z4DpcOoYTOythxjN+zK7VpgVDr3QAzUJkueI6T+r7b3ougA1Ud/LKRk/wwPduIA80wMi8iZi1u3xIuaIyO1d6q9gTSd2lkk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
- SA6PR01MB8760.prod.exchangelabs.com (2603:10b6:806:40a::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.11; Thu, 6 Feb 2025 22:00:51 +0000
-Received: from MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
- ([fe80::13ba:df5b:8558:8bba%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 22:00:50 +0000
-Date: Thu, 6 Feb 2025 14:00:37 -0800 (PST)
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: Robin Murphy <robin.murphy@arm.com>
-cc: will@kernel.org, mark.rutland@arm.com, 
-    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-    ilkka@os.amperecomputing.com
-Subject: Re: [PATCH] perf/arm-cmn: Minor event type housekeeping
-In-Reply-To: <ef46a47fc4ab909093f14b2b4289a4835836ab6c.1738851844.git.robin.murphy@arm.com>
-Message-ID: <60ad53bb-5672-b2f6-ed25-6f1e748de151@os.amperecomputing.com>
-References: <ef46a47fc4ab909093f14b2b4289a4835836ab6c.1738851844.git.robin.murphy@arm.com>
-Content-Type: text/plain; format=flowed; charset=US-ASCII
-X-ClientProxiedBy: SN1PR12CA0061.namprd12.prod.outlook.com
- (2603:10b6:802:20::32) To MW4PR01MB6228.prod.exchangelabs.com
- (2603:10b6:303:76::7)
+        d=gmail.com; s=20230601; t=1738879754; x=1739484554; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KjgXj0CUYH9Bv190fbSnudV5Idq06JKQoyp91xyEpaM=;
+        b=LnhUWElUW3KuQ4zIDlCgERGppkq5XnfhJEKzA2NI/+QphdIEP081KcKs2k08PrpdV5
+         BGvc1pEaC306DaOfT+UKB9IbjlYBJucXmZMAo1OG/yfhJPJqNV5MB6yEbHFd2K8dnifp
+         0y64IgsSfsWV6e16AxGwBm5B1v5KAytkpwv+25JEfn5yo+ICsHHbjLQ17qQovYbBOQdG
+         vzK35o0IqicWCxg2+WuXGu2kGS4OaMp/sH/6CJslY6X2kzanA5o4U5QEPfdO6Kv1v0mq
+         6AVZnofklY6GFzHe23chz4SrXsTUkvEo9wAA7NbAP4Tj7juwKXrDDfQD3qzsCnDn4+3T
+         o+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738879754; x=1739484554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KjgXj0CUYH9Bv190fbSnudV5Idq06JKQoyp91xyEpaM=;
+        b=OZ2sohLhFyrnvW7V3oRUi6REwJdGGGOgEk+t62KV8B/7esicd/om2gJ9FVUVyczM89
+         +s5hV0QLn7mMjSd5jIF1ZsFL1EKskcjFOocmeDLwT3yOIk69IM6rAchb9QSMD4lpfnie
+         84YUfvd2qv+YtKeTbfi10cWcxO3vfDJsw9Ib8zGVy/lcGrQSYy7jZqIDBdYpeYtL8X4e
+         6zQFHxnoM4BMC0+klkBW5G5FuC4AEAgBxTupCMcoUefSjmiyh7XiwwWbc0UFXhGyooJn
+         3n0LNuk90z931E9i9HMcvtgJ+TAlPrOeV91vKcco1aZZ7lFlRroHNuTTPFI4tX2VzcYl
+         zwOg==
+X-Forwarded-Encrypted: i=1; AJvYcCU126zFS48VdWEUkPC5NgeY+Y1zDYaqFrc4+47on84i++fHmixH4NhzRGcV4WF/fOVt04iXWQ7ZWhdPID+C69wNQQ==@vger.kernel.org, AJvYcCWFcvDmfOiD9D/ctYxSGSG3KLJv+MTszowfNxa4vB+3y3cJ5I7o6jLoe6JFhVcqjyNNbF15l8RoR3PWdZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5eqMzhmgoz2oXpkIqIGZeSuNO0kNzZLjrPDE8N30HpQ8zb5sL
+	8SbKicJ5//62nsBya4VXez9EXQUOhR/eGei+hdbbJs+yPyfP5fWDzZUGD6QEb2gFVnlEcK3yg9Z
+	BqTwT7UB2f/EyOqg7cAGkk8s9t00=
+X-Gm-Gg: ASbGncvStFEBkKKGY2tj/+rxgUqj8YClfoIgT3/4xSUeGGVMDHpLBq2cgPECaWv67EO
+	gJutv10MOJm60QLNckdIg/qdDMy7ABe3Bgcb9n36W9ZuwZg5KBBB5gHLfQuyAvRsP5LGuqTc=
+X-Google-Smtp-Source: AGHT+IGJoV5ZqBZGNCGygnvg5DoMJOhouWvNuw+ShXWC+tVIV3BnkgICVZGbi04eVwww8zkSxuVnkc7CYVOWfznEBLY=
+X-Received: by 2002:a05:6902:2e11:b0:e5b:1dda:8f72 with SMTP id
+ 3f1490d57ef6-e5b4625a80bmr642455276.36.1738879753745; Thu, 06 Feb 2025
+ 14:09:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|SA6PR01MB8760:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f9e211f-ca54-4499-cdac-08dd46f9b823
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0/gD2bGVHpCB+Fu3qehuycmO1NXR+HsCw6a+TjvF5g6kZtjAgelhx93JZdUa?=
- =?us-ascii?Q?r4RDCyTcRPjm2p4tJvpOjsEFa8PgID70B0MckjPXtmOGD4EH0nAExwfEFfOe?=
- =?us-ascii?Q?hVaGrZCGuPOGyY45k1sT0fJ04JsTwcP/2Xv66YGE4jji1cfv2WDO1tlNGIEn?=
- =?us-ascii?Q?/T+2XTPIguSEGknOO8355449HwpsG8JMEml3CfzrOYFYeso/9CVOxzkhvtU+?=
- =?us-ascii?Q?qZEewuLKYjTKtVluZTFpwBB8nO+5VsSHSfmDYQ0uRw/O5G7ILjlhu3TMtwip?=
- =?us-ascii?Q?vjOrE35fxdkkpX2SrVizvxvX6IFyp5I7oMzQB8b9GV/sAQAvP9fhxpwM/cha?=
- =?us-ascii?Q?Hyah3Z2K2RtEgR51h4aCH9eIuuSCxtJtcZT+lZGQ74coZp5r+63ecNVRiQ99?=
- =?us-ascii?Q?P+qvqfYIbIzOoq2LGvtnXuBMW/3bzla4Me2vgMKAwev+4kRZAMHIF/GFLmOe?=
- =?us-ascii?Q?pBC16WARBDsrs+9C3v+1PGpDQPM/plprAH8omRFoVVGyU7wMCBBq2woQM4zq?=
- =?us-ascii?Q?2NPlkCO4aft2Al4FxuqRVERoxQiR/SyaW39E/GHv8wFCizS6tlsffu2MjEvw?=
- =?us-ascii?Q?LaYFo7se78hxlugkv0EGBN1EOMYsBe9E96B1mojf2g5jI9Y3bKqU/NMJzY0P?=
- =?us-ascii?Q?hcFuysdaln641K7wr1UeriH3OtN9Puj7vTfnUIx9nXcE/ZvXBu6Opmj3VH4Z?=
- =?us-ascii?Q?j4rpPZidipq5oJDmC1SdGM0tvoxkv9X3hxVqWPSn0E4jpZIhNEuHgj0VhgCf?=
- =?us-ascii?Q?leNSNj8Wyphygk9A7ZuYcFL6tq9plHZQX0kqPolr+Oe+3EXVpO6SnqurVs/c?=
- =?us-ascii?Q?hwSkJaJkyNH73t9KzF1LOedO46gqMgSvReDSehc3uky+q28w0qhQjw13mkjj?=
- =?us-ascii?Q?uu8y+z8pMtjPFXojcK1WhS+2iYGAHvx8GGYLWE06BZ7DT/umn4fXIx9Hp5+X?=
- =?us-ascii?Q?Pc7JCxCzDSMOrB4fNnAgVcoVloAbDHSdSuOhyQabMRagfc0Q4IlSf2b5IIZC?=
- =?us-ascii?Q?kG612N4pfYWnyGq6zletXHC0sD6ryDb0CAonmTXcpsLRtKXJ5hiilunR3qFt?=
- =?us-ascii?Q?N5MUbDFcWvYAtDfPJYAWrnalkJLeZbzVKzi4JSUHCyh7b2uRf55GBKoHi5vD?=
- =?us-ascii?Q?HMAJoW0j8oIJ7uEP6m7bl5wL1HNcPKXUaQYVmaOUktto3DEVDA7v0fP6ItOV?=
- =?us-ascii?Q?1rsg8bkjx2hfRN7HFYhOYqozym++Kmjgt+8OQp0xcwQlSG2VAr/AdONtn3WU?=
- =?us-ascii?Q?7SeeG6M2F3JH+bg8rD6Lzz3P8mvrIoMZfHEjpn9LICvA6RqJXBHE3zt0JVHr?=
- =?us-ascii?Q?eTkXNKb3IO5Rv1vRe5cgy9fUIkm+6DCytDDwTdcu4FRlJSfGWV9gcKmzLvZs?=
- =?us-ascii?Q?od8sTZPBUEfwpu31fiTfqf0Hg5rI12Hf3lIK4m7LsVJg/VO+nLsGoIWghZaB?=
- =?us-ascii?Q?UH1VgqjdLr3OLfj/ve6M97HIVIwhjQl3?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?P43kLNud2uIgedjVOSU/WDbnp4r2Zv6glDBdGFqOr3V/P4DGgcX9w6nFipoR?=
- =?us-ascii?Q?xyWiTzeDPi1P6jNTuuOroY5pyCn0PRWMy2PbJ2udCHS3IyeCQH8U69x1k8hv?=
- =?us-ascii?Q?rS8A64Sbo4HzZus8TqbpF8dITErLnbJBoi58bt8+G16dYfhrwxOEV71I2mov?=
- =?us-ascii?Q?WQirCL4ZugN1frcoUAjziafsYk9DooxMpj81Fmf1iyCfl4JQYXho45jVLJfU?=
- =?us-ascii?Q?QpwU1k9Uv5L1k6/qs6X4Fh+TTW8dBKOgtbxSIpEpCmLQF7WmP7w3mtiX0Mwo?=
- =?us-ascii?Q?k5lzC8BsL1OI9Giti+K6C1TIdVPfnwwtSB1aJT+DFHOjmAdKmua5T0gZSSTR?=
- =?us-ascii?Q?t3tYlXyGNduXfDo4rvHDY87DH1A0BH3AkN0TLA+T5gvXtZh+X1VLsxPsN+TP?=
- =?us-ascii?Q?hJcvAyzj9jQx77logT+ZiauUTjPtsFTR5lyYzryNBS49ytNsW2cOinDPXtUu?=
- =?us-ascii?Q?NiW3V3X+eWXHjKdiqaDG8LtAI8/LiC7aQZ9fZVAsPSGO6xTwb5R4rXAL1nIp?=
- =?us-ascii?Q?3dOhscM/PeTdICkQR1XaRJjrclUJF38Fr2LFKOtOL5fiqZMh68yQRC1nzyH7?=
- =?us-ascii?Q?SsXKjt8FvY/6iIM6zl57Cl+6VJOXf8/a0hfufO1CvmOh98/xajIJlk6/Ysa4?=
- =?us-ascii?Q?2Nj7QhlPiZIVKZaKv4U+ZJZGxzkAZmySAV/oUnA6ZDlANrrLJWfQzhkKwpqD?=
- =?us-ascii?Q?wvTcqksZe4BRIhmorNrwxQVY8n0ID4xxjH++XCTK/hbpSY/dpIXqI7bLlu5k?=
- =?us-ascii?Q?GIn4M4ttuZX5sl+VDh/1NrdpQMbPNgtAKbBmgJGuTq+brPX58tXpMN2RzM2o?=
- =?us-ascii?Q?mclqzTOh2/D9fXAd3KbfE8Kkg+6LGjGRfT40D3bsP55mc90IJwY6x0Dxb9yM?=
- =?us-ascii?Q?/qogk4+oiUS98ge/ySNAlEWRFuh/7kZY1SrTYrLkdby/xKIqZAYT6wRvpnif?=
- =?us-ascii?Q?YlwSM7WrXw7q4gIig5aB8wYpqVwMxZ2F91GHPBpKwIuQ+MXZKSQ8/WaAcHl2?=
- =?us-ascii?Q?CdzvvsxPpFMRSFeUyU1TEQBO48bIqG7T0vZ+S4DKCNrwtsxOYrvBxa79DnFT?=
- =?us-ascii?Q?/ZvjactqIY7oSAo9CF5L78UYHgVpVvTcXjghnec6pGSfOYOlmLmQRUpNeCpX?=
- =?us-ascii?Q?YzlW/wYriSnyQzk0XbWxILIEiVDAvwFEqXR3apfqfrNMJX8PycF4XDrcqfWG?=
- =?us-ascii?Q?lqmABGhKO0LR/6m4n0t2z1PmJCpdsQqlO8ogDBwWFzfk90KP2brnNmqj/EZ1?=
- =?us-ascii?Q?BcZIQ/r4ogK/TnQ3i0K1hHkHR5wtzBIEO8TtdH8So6pSlezYD1VvcFfqHKJW?=
- =?us-ascii?Q?v8kod7mj+prIdyvXtdSoRl3rDRhjZWmwsjtdVaXpPUa0lhNdyGynfvn4tNDQ?=
- =?us-ascii?Q?/JR+WnXjXWSGHhSw1KnyHNza6zDLI25aZUwBkbQ+/5Zgl9MVBNytvkbPX7y/?=
- =?us-ascii?Q?34GhwGDEfpMkRUxdbTBC1sdQtgH3/pPN/OksLTQ3bH3VKLZwDW/aggZQoxOP?=
- =?us-ascii?Q?F09Hr1Ut1cqEkWDc7GYTKVSI5Xdyg+eB6i4ZDCLfXLdN3BbyB7ooDTf0J7VN?=
- =?us-ascii?Q?M8Ov3QKRURGl6Tiw1CGJhC+nfAph07nVYiM59Vb/Eemx7uC9iIj34mj++kFV?=
- =?us-ascii?Q?zB2oaC3CkXm+TuGZAtQ+PAw=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f9e211f-ca54-4499-cdac-08dd46f9b823
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 22:00:50.7936
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7ipr9t9Wjb5u6izVGjOqagnQcVJutYLNxYEIj422pGgaRGRxLXta8gw4dPkzm+bRgQElSWT6DJCJ5sIOeh9dF6znzjvSGa79yv3/XxkGaaqCcCe7Jdh2/k5lrwJlD2Qt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR01MB8760
+References: <20241215181220.754822-1-howardchu95@gmail.com>
+ <20241215181220.754822-6-howardchu95@gmail.com> <Z6UNFXZUlo4wMZ7V@x1>
+In-Reply-To: <Z6UNFXZUlo4wMZ7V@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 6 Feb 2025 14:08:59 -0800
+X-Gm-Features: AWEUYZnVEK8uN85MJwwlmTJ0sKDbL977-KmR9Jvbu6D-0IxGT9c68M2TJLjcWKk
+Message-ID: <CAH0uvog_RgX7wmOZ6=-rBY3YtSqJ5mRmUMOE+hehEmJ6cMEPsA@mail.gmail.com>
+Subject: Re: [PATCH v14 05/10] perf evsel: Assemble offcpu samples
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello Arnaldo,
 
+On Thu, Feb 6, 2025 at 11:27=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Sun, Dec 15, 2024 at 10:12:15AM -0800, Howard Chu wrote:
+> > Use the data in bpf-output samples, to assemble offcpu samples. In
+> > evsel__is_offcpu_event(), Check if sample_type is PERF_SAMPLE_RAW to
+> > support off-cpu sample data created by an older version of perf.
+>
+> > Testing compatibility on offcpu samples collected by perf before this p=
+atch series:
+>
+> > See below, the sample_type still uses PERF_SAMPLE_CALLCHAIN
+>
+> Getting back from vacation, so bear with me, please :-)
 
-On Thu, 6 Feb 2025, Robin Murphy wrote:
+Good to have you back :), no worries at all.
 
-> While handling RN-D nodes under the functionally-identical RN-I type
-> works fine for perf tool users using the "rnid_" event aliases, and that
-> is the documented and expected ABI, there's little reason not to be
-> permissive and accept the actual RN-D type as an additional encoding for
-> the same events as well. This may be convenient for other tooling
-> generating event configs directly from its own topology data.
 >
-> In the RN-I event mood, it also seems as good a time as any to clean up
-> a forgotten macro for CCLA_RNI events which ended up being unnecessary.
+> So, while at this point:
 >
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$ git log --oneline -5
+> bfd7461c25a5e667 (HEAD) perf record --off-cpu: Dump off-cpu samples in BP=
+F
+> e75f8ce63bfa6cb9 perf record --off-cpu: Preparation of off-cpu BPF progra=
+m
+> 0ffab9d26971c91c perf record --off-cpu: Parse off-cpu event
+> efc3fe2070853b7d perf evsel: Expose evsel__is_offcpu_event() for future u=
+se
+> 357b965deba9fb71 (perf-tools-next/perf-tools-next) perf stat: Changes to =
+event name uniquification
+> =E2=AC=A2 [acme@toolbox perf-tools-next]$
+>
+> And trying to test this series I do:
+>
+> root@number:~# perf -v
+> perf version 6.13.rc2.gbfd7461c25a5
+> root@number:~#
+>
+> root@number:~# perf record --off-cpu sleep 5s
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+> root@number:~# perf evlist
+> cpu_atom/cycles/P
+> cpu_core/cycles/P
+> offcpu-time
+> dummy:u
+> root@number:~#
+>
+> And:
+>
+> root@number:~# perf evlist -v
+> cpu_atom/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0xa00=
+000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERI=
+OD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enab=
+le_on_exec: 1, precise_ip: 3, sample_id_all: 1
+> cpu_core/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x400=
+000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERI=
+OD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enab=
+le_on_exec: 1, precise_ip: 3, sample_id_all: 1
+> offcpu-time: type: 1 (software), size: 136, config: 0xa (PERF_COUNT_SW_BP=
+F_OUTPUT), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|=
+PERIOD|IDENTIFIER, read_format: ID|LOST, disabled: 1, enable_on_exec: 1, sa=
+mple_id_all: 1
+> dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY)=
+, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|IDENTIFIER, r=
+ead_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1,=
+ comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec:=
+ 1, ksymbol: 1, bpf_event: 1
+> root@number:~#
+>
+> Above the "offcpu-time" event doesn't have the PERF_SAMPLE_CALLCHAIN in
+> sample_type, so I should be using some other 'perf record --off-cpu'
+> specific option?
+>
+> The HEAD mentions:
+>
+> "Collect tid, period, callchain, and cgroup id and dump them when off-cpu
+> time threshold is reached."
 
+These are collected in BPF, not from perf_event. I can change the
+commit message for clarity if you=E2=80=99d like.
 
-Looks good to me.
+>
+> But that doesn't match the "offcpu-time" sample_type, right?
 
-Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Nope, I'm sorry. If offcpu-time has PERF_SAMPLE_CALLCHAIN, it will
+collect the wrong call chain.
 
-> ---
-> drivers/perf/arm-cmn.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
+Say I have task1 scheduling in and task2 scheduling out. For off-CPU
+analysis, I want to save task2's call chain and check if task1 has
+been scheduled out for longer than a threshold. If it has, a sample
+for task1 should be emitted.
+
+When a sched_switch happens, the call chain belongs to task2, and perf
+should only emit task1's call chain if there is one. Therefore,
+PERF_SAMPLE_CALLCHAIN, which collects an instant stack call chain at
+sched_switch, cannot be used.
+
 >
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index ef959e66db7c..d4fe30ff225b 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -802,8 +802,6 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
-> 	CMN_EVENT_ATTR(_model, ccha_##_name, CMN_TYPE_CCHA, _event)
-> #define CMN_EVENT_CCLA(_name, _event)				\
-> 	CMN_EVENT_ATTR(CMN_ANY, ccla_##_name, CMN_TYPE_CCLA, _event)
-> -#define CMN_EVENT_CCLA_RNI(_name, _event)				\
-> -	CMN_EVENT_ATTR(CMN_ANY, ccla_rni_##_name, CMN_TYPE_CCLA_RNI, _event)
-> #define CMN_EVENT_HNS(_name, _event)				\
-> 	CMN_EVENT_ATTR(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
+> > $ perf script --header -i ./perf.data.ptn | grep "event : name =3D offc=
+pu-time"
+> >  # event : name =3D offcpu-time, , id =3D { 237917, 237918, 237919, 237=
+920 }, type =3D 1 (software), size =3D 136, config =3D 0xa (PERF_COUNT_SW_B=
+PF_OUTPUT), { sample_period, sample_freq } =3D 1, sample_type =3D IP|TID|TI=
+ME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format =3D ID|LOST, disabled =3D 1=
+, freq =3D 1, sample_id_all =3D 1
+> >
+> > The output is correct.
 >
-> @@ -1798,6 +1796,9 @@ static int arm_cmn_event_init(struct perf_event *event)
-> 	} else if (type == CMN_TYPE_XP &&
-> 		   (cmn->part == PART_CMN700 || cmn->part == PART_CMN_S3)) {
-> 		hw->wide_sel = true;
-> +	} else if (type == CMN_TYPE_RND) {
-> +		/* Secretly permit this as an alias for "rnid" events */
-> +		type = CMN_TYPE_RNI;
-> 	}
+> You mean because it has PERF_SAMPLE_CALLCHAIN in the sample_type?
+
+The motivation for this patch is to add backward compatibility, i.e.,
+to ensure that perf script processes the previously collected off-cpu
+perf.data correctly before the change to offcpu-time's sample_type.
+
 >
-> 	/* This is sufficiently annoying to recalculate, so cache it */
-> -- 
-> 2.39.2.101.g768bb238c484.dirty
+> > $ perf script -i ./perf.data.ptn | grep offcpu-time
+> > gmain    2173 [000] 18446744069.414584:  100102015 offcpu-time:
+> > NetworkManager     901 [000] 18446744069.414584:    5603579 offcpu-time=
+:
+> > Web Content 1183550 [000] 18446744069.414584:      46278 offcpu-time:
+> > gnome-control-c 2200559 [000] 18446744069.414584: 11998247014 offcpu-ti=
+me:
 >
+> > And after this patch series:
 >
+> After the _whole_ series? Or at this point in the series?
+
+I should mention that the two perf.data files I used in the commit
+message, perf.data.ptn and perf.data.off-cpu-v9, were collected from
+perf without this series and perf with the whole series, respectively
+(since only then can I use the --off-cpu-thresh option).
+
+Again, I can add an explanation to the commit message if you=E2=80=99d like=
+.
+Sorry for the confusion.
+
 >
+> I'm trying to test it patch by patch, to see from output from 'perf
+> report -D', perf script, etc that the patch descriptions match what the
+> code does and then double checking by trying to reproduce it, step by
+> step.
+
+Thank you very much, talking about meticulousness :)
+
+>
+> I'll try to do it at the end of the series, but thought about trowing in
+> these questions to help me understand your work.
+
+Sure! Throw me some more if you want, because it has been some time.
+
+Thanks,
+Howard
+>
+> Thanks!
+>
+> - Arnaldo
+>
+> > $ perf script --header -i ./perf.data.off-cpu-v9 | grep "event : name =
+=3D offcpu-time"
+> >  # event : name =3D offcpu-time, , id =3D { 237959, 237960, 237961, 237=
+962 }, type =3D 1 (software), size =3D 136, config =3D 0xa (PERF_COUNT_SW_B=
+PF_OUTPUT), { sample_period, sample_freq } =3D 1, sample_type =3D IP|TID|TI=
+ME|CPU|PERIOD|RAW|IDENTIFIER, read_format =3D ID|LOST, disabled =3D 1, freq=
+ =3D 1, sample_id_all =3D 1
+> >
+> > perf $ ./perf script -i ./perf.data.off-cpu-v9 | grep offcpu-time
+> >      gnome-shell    1875 [001] 4789616.361225:  100097057 offcpu-time:
+> >      gnome-shell    1875 [001] 4789616.461419:  100107463 offcpu-time:
+> >          firefox 2206821 [002] 4789616.475690:  255257245 offcpu-time:
+> >
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Link: https://lore.kernel.org/r/20241108204137.2444151-7-howardchu95@gm=
+ail.com
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/evsel.c | 35 ++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 34 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index fc33104cd659..277b5babd63e 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1244,7 +1244,8 @@ static void evsel__set_default_freq_period(struct=
+ record_opts *opts,
+> >
+> >  bool evsel__is_offcpu_event(struct evsel *evsel)
+> >  {
+> > -     return evsel__is_bpf_output(evsel) && evsel__name_is(evsel, OFFCP=
+U_EVENT);
+> > +     return evsel__is_bpf_output(evsel) && evsel__name_is(evsel, OFFCP=
+U_EVENT) &&
+> > +            evsel->core.attr.sample_type & PERF_SAMPLE_RAW;
+> >  }
+> >
+> >  /*
+> > @@ -2846,6 +2847,35 @@ static inline bool evsel__has_branch_counters(co=
+nst struct evsel *evsel)
+> >       return false;
+> >  }
+> >
+> > +static int __set_offcpu_sample(struct perf_sample *data)
+> > +{
+> > +     u64 *array =3D data->raw_data;
+> > +     u32 max_size =3D data->raw_size, *p32;
+> > +     const void *endp =3D (void *)array + max_size;
+> > +
+> > +     if (array =3D=3D NULL)
+> > +             return -EFAULT;
+> > +
+> > +     OVERFLOW_CHECK_u64(array);
+> > +     p32 =3D (void *)array++;
+> > +     data->pid =3D p32[0];
+> > +     data->tid =3D p32[1];
+> > +
+> > +     OVERFLOW_CHECK_u64(array);
+> > +     data->period =3D *array++;
+> > +
+> > +     OVERFLOW_CHECK_u64(array);
+> > +     data->callchain =3D (struct ip_callchain *)array++;
+> > +     OVERFLOW_CHECK(array, data->callchain->nr * sizeof(u64), max_size=
+);
+> > +     data->ip =3D data->callchain->ips[1];
+> > +     array +=3D data->callchain->nr;
+> > +
+> > +     OVERFLOW_CHECK_u64(array);
+> > +     data->cgroup =3D *array;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+> >                       struct perf_sample *data)
+> >  {
+> > @@ -3197,6 +3227,9 @@ int evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
+> >               array =3D (void *)array + sz;
+> >       }
+> >
+> > +     if (evsel__is_offcpu_event(evsel))
+> > +             return __set_offcpu_sample(data);
+> > +
+> >       return 0;
+> >  }
+> >
+> > --
+> > 2.43.0
