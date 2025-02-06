@@ -1,245 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA771FCCED;
-	Thu,  6 Feb 2025 05:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90A222370D;
+	Thu,  6 Feb 2025 06:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738818543; cv=none; b=qoVbdSQ4uASqXZhWaMtDMwtaP634adPKqbMZ33zfWue8Jwuh1IRS3FV1V8lnz+egZrhjUQiGBKFoxPvCj4sUf5z34clhiLr9AHzk3WlMZcampw6kz5XdqeNr6l3wNcPV0e/cGumr/T8dQdWfJ2WOjFg6Zstxg7zQxfzVgJdgfCo=
+	t=1738821971; cv=none; b=e5frxMPtpn9HDj9nxUNY01tbENjQqvTEoZ7hHiF8mOvQVFdRyfmsW87yisxTvmvv4XxvgFUBLOWeOOTBK68ALNl8tC3EKIi2Dbf4ye0yryY9lq/8c3oEeWTZeG9aFV4VJmJZ7rCu0bdkOGwSQYfkUGavN15H1Yau9/9LTczRfac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738818543; c=relaxed/simple;
-	bh=BM3EHrnwN7ELuwzLXads97EF6hGC4Psya3GZjPkDWsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JwCjkVDxkToMNoCypXyV9QjPacIwkN4zOzdWIxvxA5tOgV6tNzbNwi0LXKB0sbjv5XDLBffkAFzqVJwvpfinT6a/QBTJzkKW6wP6ulzT6+2G9uUpF+Syp8LCej/cktoU5EWNMOMPlt54PMhKPhS1V60wPp082K3OVLS3QRerIlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSql8nxU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738821971; c=relaxed/simple;
+	bh=+sxzlzrNtZjx+em7KXC8/phrKF6st5ThSNbzCs5vdJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LZJYvBDGheg/V3vTwtB0hXpoh7YwX1tHFueLeWuFB8T8mBopo6KxOIiwVqv76256ye1TxvcOqTfIWO2SqnWpBmXO+xbEsOXPOvAL97dgOY5QxH74I1jIGmQhNGFx0i7D+PcO4q8EpBLsRXdOw5GlvAQRV50eGwluCjL1jGq6RcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZLnlOQg; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSql8nxU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34721C4CEDD;
-	Thu,  6 Feb 2025 05:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738818543;
-	bh=BM3EHrnwN7ELuwzLXads97EF6hGC4Psya3GZjPkDWsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSql8nxUuNkMHi0BTlIlo9nxun/736F0fVTV5XtseR8DLwgbLm9WidEJIx7G2O40u
-	 1gCyKtFn7uufd+DwXLf9vBzx99V6KnErRoxKWYHPdAu0xj4T+EvPqAB2DtSL6vZCJR
-	 VCDoR3WONPZ/T0TUu5J8Hz/3O20piX8fxQmAhwXrU9rjqnjUlFaL/hMrgnzBFxGKCu
-	 KadSxiveBHqJ96KVT5y+RNng/qucUvJCdGJyg/Z4muygIG7NSOwKHLvakdhDEuqDp+
-	 Tz0Czvw0w+/hxDR8bSZUgDxQN8PWFDbWz2IcnoexiH2T95vrSk9iMM1Pi1n7XUJgyv
-	 qxEBT5Ge4nD8g==
-Date: Wed, 5 Feb 2025 21:09:00 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Atish Kumar Patra <atishp@rivosinc.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
-	Beeman Strong <beeman@rivosinc.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
- hardware events over legacy"
-Message-ID: <Z6RD7NuT9IPhOkIV@google.com>
-References: <Z4f3fDXemAMpBNMS@google.com>
- <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
- <Z5qjwRG5jX9zAGtf@google.com>
- <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
- <Z51RxQslsfSrW2ub@google.com>
- <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
- <Z6FcHJFYGc7HzSna@google.com>
- <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
- <Z6LFp5jiED7_-weN@google.com>
- <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZLnlOQg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738821970; x=1770357970;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+sxzlzrNtZjx+em7KXC8/phrKF6st5ThSNbzCs5vdJw=;
+  b=nZLnlOQgNSDiIgCCrK9eh6WgdVlxHteI1NRNW9jZGPCkV5V9UpQ3H1A0
+   IvSx2P44upHmjWtZWxyufbFQV94Nak5k94lJf2yuAphUAo122RnNepOh5
+   jmo6P08ZW1g7jv7AotXIDfln6svwPyx5TkCjOXqJFdUxcuqw0VhBaayj6
+   R3jSMZN5/SaEWkFI1AZZaIB0/D1JiINE6zZiKAVio7wnFHCl8yPKTnofo
+   f91kA36Yq4D+MxnSdYftwABlpRS7yzKmBI3mUPIkQ5YRhkKS/G0Fuuapf
+   6VrY/eeVjv9r8WsC5DVXZTCZ1VMTygbG9pNt+17B54SRt1xcMeqVP3kix
+   Q==;
+X-CSE-ConnectionGUID: 8atJGDo0QR2SKyTmwT/kyg==
+X-CSE-MsgGUID: ImgnSc87RTSIfsMuQjHUIw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43071761"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="43071761"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:06:09 -0800
+X-CSE-ConnectionGUID: JJOacnduSKmwDmmFhlOoXQ==
+X-CSE-MsgGUID: Tu0xr7jmRRKiRISW8l/LIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="110896776"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 22:06:06 -0800
+Message-ID: <688e9a7f-0b98-4f8a-b575-90d7de244589@linux.intel.com>
+Date: Thu, 6 Feb 2025 13:42:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
-
-On Tue, Feb 04, 2025 at 08:48:20PM -0800, Ian Rogers wrote:
-> On Tue, Feb 4, 2025 at 5:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Feb 03, 2025 at 04:41:11PM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 3, 2025 at 4:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > [snip]
-> > > > Yep, I agree it's confusing.  So my opinion is to use legacy encoding
-> > > > and no default wildcard. :)
-> > >
-> > > Making it so that all non-legacy, non-core PMU events require a PMU is
-> > > a breaking change and a regression for all users, command line event
-> > > name suggesting, any tool built off of perf, and so on. Breaking all
-> > > perf users and requiring all perf metrics be rewritten is well..
-> > > something..
-> >
-> > Well, I guess the majority of users don't use non-core PMU events.  And
-> > we used to have PMU prefix on those events for years so old users should
-> > not be affected.  Actually perf list shows them with PMU prefix so I
-> > think new users are also expected to use the PMU name.
-> >
-> >   $ perf list pmu
-> >   ...
-> >   cstate_pkg/c2-residency/                           [Kernel PMU event]
-> >   ...
-> >   i915/actual-frequency/                             [Kernel PMU event]
-> >   i915/bcs0-busy/                                    [Kernel PMU event]
-> >   ...
-> >   msr/tsc/                                           [Kernel PMU event]
-> >   ...
-> >   power/energy-cores/                                [Kernel PMU event]
-> >   ...
-> >   uncore_clock/clockticks/                           [Kernel PMU event]
-> >   uncore_imc_free_running/data_read/                 [Kernel PMU event]
-> >   ...
-> >
-> > The exception is the JSON events like below.
-> >
-> >   uncore interconnect:
-> >     unc_arb_coh_trk_requests.all
-> >          [UNC_ARB_COH_TRK_REQUESTS.ALL. Unit: uncore_arb]
-> >
-> > which I hoped to be 'uncore_arb/unc_arb_coh_trk_requests.all/' or even
-> > 'uncore_arb/coh_trk_requests.all/'.  But it would be hard to change the
-> > all metric expressions now.  Also users can directly use them as they
-> > are listed by `perf list`.  So we need to support that without PMUs.
-> 
-> So there's nothing wrong with your proposal except it breaks non-core
-> events. We can't agree to flip the default on a flag for perf top:
-> https://lore.kernel.org/lkml/20240516222159.3710131-1-irogers@google.com/
-> to make perf top behave as, you know, top does as it could be an
-> option people depend on. A behavior that matters if you do user
-> filtering as exited processes stay in perf top (both confusing and
-> un-top like). Fwiw, that reminds me of another patch series being
-> unreviewed:
-> https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
-
-Ok, I'll review that later.  Sorry my review bandwidth is not very high.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
+ record test subtest test_leader_sampling
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org,
+ agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+ <20250131102756.4185235-3-tmricht@linux.ibm.com>
+ <Z6GMmxKvXd0-fd_-@google.com>
+ <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> Anyway, the perf top flag is one that no-one knows exists on a command
-> most people don't know exists - Julia Evans' zine of course loves it
-> and we love Julia's work and the zine.
+On 2/4/2025 11:55 PM, Liang, Kan wrote:
+>
+> On 2025-02-03 10:42 p.m., Namhyung Kim wrote:
+>> Add Kan and Dapeng to CC.
+>>
+>> Thanks,
+>> Namhyung
+>>
+>>
+>> On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
+>>> On s390 the event instructions can not be used for recording.
+>>> This event is only supported by perf stat.
+>>>
+>>> Change the event from instructions to cycles in
+>>> subtest test_leader_sampling.
+>>>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>> Suggested-by: James Clark <james.clark@linaro.org>
+>>> Reviewed-by: James Clark <james.clark@linaro.org>
+>>> ---
+>>>  tools/perf/tests/shell/record.sh | 10 +++++-----
+>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>> index fe2d05bcbb1f..ba8d873d3ca7 100755
+>>> --- a/tools/perf/tests/shell/record.sh
+>>> +++ b/tools/perf/tests/shell/record.sh
+>>> @@ -231,7 +231,7 @@ test_cgroup() {
+>>>  
+>>>  test_leader_sampling() {
+>>>    echo "Basic leader sampling test"
+>>> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
+>>> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
+>>>      perf test -w brstack 2> /dev/null
+>
+> As a non-precise test, using cycles instead should be fine. But we
+> should never use it for precise test, e.g., with p. Because cycles is a
+> non-precise event. It would not surprise me if there is a skid when
+> reading two cycles events at the point when the event overflow occurs.
+>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-You mean the -z flag which is documented in the man page and also it the
-help message (perf top -h).  Anyone can read the doc can know it's
-there.  Of course, people would prefer reading zines than man pages. :)
-
-
-> So, it would seem to me that
-> changing something as fundamental as how all non-core events behave
-> would be seen as a regression.
-
-Yep, it'd be a regression.  And that's why we cannot simply change the
-behavior.  But I guess not much users would be affected by that since
-it's undocumented behavior.
-
-
-> Imagine the person going to
-> perfmon-events.intel.com, finding an event name and expecting to be
-> able to use it with perf. Now they need to grub around in perf list to
-> locate the PMU. What is appropriate for them to know about how
-> suffixes work and show in perf list..? Well that's assuming suffixes
-> work in the future as ARM will probably launch an a1000 CPU and the
-> PMU will look like a hex suffix and the whole naming convention
-> implodes.
-
-Which suffix do you mean?
-
-Anyway, the person looked up the intel webpage would be eager to learn
-about performance related things.  Can we also assume if they also want
-to learn about the perf tool itself? :)
-
-If it's not the case, we have this:
-
-  $ perf record -e xxx
-  event syntax error: 'xxx'
-                       \___ Bad event name
-  
-  Unable to find event on a PMU of 'xxx'
-  Run 'perf list' for a list of valid events
-  
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
-  
-      -e, --event <event>   event selector. use 'perf list' to list available events
-
-So it says twice to run 'perf list' to see the events.  Then they can
-run either:
-
-  $ perf list | grep xxx
-
-or
-
-  $ perf list xxx
-
-to see the actual name of the event available in the perf tool.
-
-> 
-> Even with this what would be the behavior of core events? You want
-> legacy events to have priority over sysfs/json when there is no PMU.
-> You know, and have stated not caring, RISC-V wants different and that
-> it breaks Apple-M's PMUs for a fairly large range of kernel releases
-> including 1 LTS kernel - the only reason I'm writing patches in this
-> area in the 1st place. Software is soft and you can go fix software
-> anywhere in the stack. Listening to vendors and not breaking everyone
-> is the point-of-view these patches have been coming from. I find it
-> very hard to have a conversation where this is just forgotten about
-> and we're working on hypotheticals which seem to be both unwanted and
-> implausible.
-
-Sorry I don't want to repeat that too.  Correct me if I'm wrong:
-
-1. RISC-V is working on a solution with the current status and it's not
-   absoluted needed to change the current behavior.
-
-2. Apple-M is fixed already.
-
-> 
-> I don't know why people (yourself, Linus) keep wanting to show me the
-> perf list output. It is arbitrary. I rewrote it and changed the
-> behavior of all uncore PMUs within it (we didn't used to deduplicate
-> based on the PMU suffix). It is nice that people think it reads like
-> some religious text.
-
-I think it's what we want users to know how to use the events.
+Kan, I suppose you mean only the case without counter snapshot, right? With
+counter snapshot's help, there would be same period even for non-precise
+events, right?
 
 
-> Why is the formatting different in perf list for
-> json specified events? Well it is because json events have
-> descriptions and the events you are showing with a PMU don't have a
-> description. I think because there is no description, an effort was
-> made to keep the output compact and put the PMU and event name
-> together. It wasn't trying to enter some kind of long lasting marriage
-> that the event name should only ever be used with the PMU.
+>
+> Thanks,
+> Kan
+>
+>>>    then
+>>>      echo "Leader sampling [Failed record]"
+>>> @@ -243,15 +243,15 @@ test_leader_sampling() {
+>>>    while IFS= read -r line
+>>>    do
+>>>      # Check if the two instruction counts are equal in each record
+>>> -    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
+>>> -    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
+>>> +    cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>>> +    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>>>      then
+>>> -      echo "Leader sampling [Failed inconsistent instructions count]"
+>>> +      echo "Leader sampling [Failed inconsistent cycles count]"
+>>>        err=1
+>>>        return
+>>>      fi
+>>>      index=$(($index+1))
+>>> -    prev_instructions=$instructions
+>>> +    prev_cycles=$cycles
+>>>    done < $script_output
+>>>    echo "Basic leader sampling test [Success]"
+>>>  }
+>>> -- 
+>>> 2.48.1
 
-I like the description but I don't like the formatting.  I think I
-understand why it looks like that but it could be different.  Anyway,
-I don't think showing PMU name is related to having descriptions.
+The code changes look good for me.
 
 
-> What happens if an event is both in sysfs and json? Well the sysfs event
-> will get the description from the json and then I believe it won't
-> behave as you show. Did the event get broken, as perf list no longer
-> shows it with a PMU, by having a json description written? I think not
-> and I think having descriptions with events is a good thing.
-
-That's bad.  Probably we should fix it takes only one of the sources and
-change the JSON event not to clash with sysfs.
-
-Thanks,
-Namhyung
-
+>
