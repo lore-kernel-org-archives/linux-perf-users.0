@@ -1,130 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E264B4F5E0;
-	Thu,  6 Feb 2025 14:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985C1236427;
+	Thu,  6 Feb 2025 14:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852036; cv=none; b=Y4OM/Hcs7fPjEjSOLgF3Bpl7jLH/CJxyK2fWhViQx3LNE33n5vzIRJ+vvI4iu3GwSo9QNrd50/yPjv4IjZO3D/nR1yB29RU53h4IinudZSsC3HY7jQTGlyAJy06Mqpn+OiU7mmQaH6in8xfUYQ3exbwxlhuIFUMMTW+Mq9avvmM=
+	t=1738852331; cv=none; b=OenKnP/f+d37iGWz8UnqvHe2pUx4TYYttHJkrV9RPfS5SgC7BtkTJlJXchGzsaawcyGnpqtKWYM5dQKmhY4reGWevJihoOTfX2uj6q3WWNt9/+r3ktNhTitC7m+quRnQh13VENwEsHWmOdsCLZU7eBlgFIo4qNHjJjK/k0OL+jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852036; c=relaxed/simple;
-	bh=3tAWcnKNqDoBbrghD8bFuVei6JTnTZIxA7LitV8jDSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejva7Nso78yuSgs/2BS3DTmKHgPkJ9CxUiXaY7gniuE5bfh6d6ajwomiycYkLgpxXIVNyaYIe/AMOlowNgVH+SdhG3UJfS6MrN5AZcSyTd9Wd0fHdkkO8H4+2+Mu9rk6MhoUl0bZffpYeL4zPbEzx2s19B6kWqnpRymxUTO1OyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bkiKAwKc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738852331; c=relaxed/simple;
+	bh=G5dh0UKXIi+e1dh9vbIu0vvEm9Mf7XSH5g3nKKaAbFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jkDibjNVv+oy5AsxvkydMNu/8OP8NS5D/44QmxQ18TmyyAkknwDZEKLRlM5g3toLIKz8zuvzhR4EozJigVD2W8xbWtHppW1FitVtAA303YMGjb7ncdmJW5VkUfic9YydtgSrh8NIuis9VRPXJcDdL7yCJdmzoFfUuo7z1RI10KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hx1GuIOQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bkiKAwKc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77F5C4CEDD;
-	Thu,  6 Feb 2025 14:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738852035;
-	bh=3tAWcnKNqDoBbrghD8bFuVei6JTnTZIxA7LitV8jDSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bkiKAwKcGBNkb4hFno2C+qPBVfdLZiJKE1hWM8FsawRhtjRwiei04dyGsxqE1S7KH
-	 cdyr0oSE3zLh/ZKPjoPii+9JLrjzGF/bQqmMlt7PhFEcnHBKitT6TFSig8y1bTRUvF
-	 28/EF32FjQF3PwczmN6hfiJRBB4BYriDj4G5PAAY=
-Date: Wed, 5 Feb 2025 19:45:07 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-Message-ID: <2025020544-shakily-flattered-93b7@gregkh>
-References: <2025020304-chip-trench-4e56@gregkh>
- <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
- <2025020444-chivalry-wanting-7f0c@gregkh>
- <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
- <2025020507-anteater-icy-44ab@gregkh>
- <CAP-5=fUCDA1YLDrMgMpr=o4ESFey1b51+DfBwCF+cG7+-yidwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hx1GuIOQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738852329; x=1770388329;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=G5dh0UKXIi+e1dh9vbIu0vvEm9Mf7XSH5g3nKKaAbFk=;
+  b=Hx1GuIOQ2UI/qnBsToLMluRIc5RvA/jz3HkKOxFUgAJfXMe48Pdfs3nb
+   FOjZAI2yN4GtzHWlUw09wWa4jcW61E7yF25Oz3Ogd6c6Ze+C8TD8XaRSf
+   0XNfBUKip0/l7oxz+fps0jzXhAOUM0MCakXIIKzrVTUBdeXiZ/KrjmS0U
+   ZO1JfTygJz7nih7r8vt/c4OL617l4EK/76IBju55asPfEo6xnuoH2hrRr
+   gnsMs0bdMKG27T3/0zf3JFVnDl/cBqYNbdlYjtX22uUBEWsybUSu8R5UD
+   /griJU5B5LTaAVNBPpEMaAnumJkOvdJFeNjoWNNkA2Ukhy4JG+xfeHo7X
+   w==;
+X-CSE-ConnectionGUID: n8/XKwS/Tvm2v9S/qiqoVA==
+X-CSE-MsgGUID: 5p0Z9cmiT+KDDTXjR7eeIw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61934737"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="61934737"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 06:32:09 -0800
+X-CSE-ConnectionGUID: xdikWh++SZuyxgRRLP6D2w==
+X-CSE-MsgGUID: FzOoPO+bTdSRmEIO54eT9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116419574"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 06:32:08 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CE4F120B5713;
+	Thu,  6 Feb 2025 06:32:06 -0800 (PST)
+Message-ID: <58e08371-8d43-4f84-baaf-64b0af95c7cb@linux.intel.com>
+Date: Thu, 6 Feb 2025 09:32:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids
+ events/metrics
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+References: <20250205173140.238294-1-irogers@google.com>
+ <20250205173140.238294-12-irogers@google.com>
+ <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com>
+ <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
+ <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com>
+ <CAP-5=fWpbXSwZq5biRZ1fjcSJY2DO4g=cv-0K8jZ1Gzv3bOfhA@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWpbXSwZq5biRZ1fjcSJY2DO4g=cv-0K8jZ1Gzv3bOfhA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUCDA1YLDrMgMpr=o4ESFey1b51+DfBwCF+cG7+-yidwg@mail.gmail.com>
 
-On Wed, Feb 05, 2025 at 08:48:21AM -0800, Ian Rogers wrote:
-> On Tue, Feb 4, 2025 at 9:41 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Feb 04, 2025 at 10:17:17AM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 3, 2025 at 11:05 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
-> > > > > On Mon, Feb 3, 2025 at 11:25 AM Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org> wrote:
-> > > [snip]
-> > > > > > Note, if you all don't like "pmu_bus" for the name, that's fine, please
-> > > > > > let me know and I can rename it to something else, but it should be
-> > > > > > something to get these objects out of the root sysfs directory.
-> > > > >
-> > > > > Excuse my ignorance, does the event_source bus already provide a
-> > > > > similar solution?
-> > > > > ```
-> > > > > $ ls /sys/bus/event_source/devices
-> > > > > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
-> > > > > uncore_cbox_7              uprobe
-> > > > > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncore_clock
-> > > > > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
-> > > > > uncore_imc_free_running_0
-> > > > > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
-> > > > > uncore_imc_free_running_1
-> > > > > $ ls /sys/devices
-> > > > > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
-> > > > >          uprobe
-> > > > > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
-> > > > >          virtual
-> > > > > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
-> > > > > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
-> > > > > i915         msr          system      uncore_cbox_3  uncore_imc_free_running_0
-> > > > > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_running_1
-> > > > > ```
-> > > >
-> > > > Those are the exact same device structures :)
-> > > >
-> > > > Look at /sys/bus/event_source/devices/ those are symlinks back to
-> > > > /sys/devices.  In other words, that's the exact same structures, and
-> > > > the mess in /sys/devices/ with these event devices is what I am trying
-> > > > to clean up.
-> > >
-> > > Thanks! Again my ignorance, why do we need pmu_bus?
-> >
-> > You need some sort of "bus" to group all of your devices on.  It could
-> > also be a class, your call.  This is how the driver model in the kernel
-> > works.
+
+
+On 2025-02-05 4:33 p.m., Ian Rogers wrote:
+> On Wed, Feb 5, 2025 at 1:10 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>> On 2025-02-05 3:23 p.m., Ian Rogers wrote:
+>>> On Wed, Feb 5, 2025 at 11:11 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>> On 2025-02-05 12:31 p.m., Ian Rogers wrote:
+>>>>> +    {
+>>>>> +        "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
+>>>>> +        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * slots",
+>>>>> +        "MetricGroup": "BvUW;TmaL1;TopdownL1;tma_L1_group",
+>>>>> +        "MetricName": "tma_retiring",
+>>>>> +        "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operations > 0.1",
+>>>>> +        "MetricgroupNoGroup": "TopdownL1",
+>>>>> +        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum Pipeline_Width throughput was achieved.  Maximizing Retiring typically increases the Instructions-per-cycle (see IPC metric). Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Heavy-operations or Microcode Assists are categorized under Retiring. They often indicate suboptimal performance and can often be optimized or avoided. Sample with: UOPS_RETIRED.SLOTS",
+>>>>> +        "ScaleUnit": "100%"
+>>>>> +    },
+>>>>
+>>>> The "Default" tag is missed for GNR as well.
+>>>> It seems the new CPUIDs are not added in the script?
+>>>
+>>> Spotted it, we need to manually say which architectures with TopdownL1
+>>> should be in Default because it was insisted upon that pre-Icelake
+>>> CPUs with TopdownL1 not have TopdownL1 in Default. As you know, my
+>>> preference would be to always put TopdownL1 metrics into Default.
+>>>
+>>
+>> For the future platforms, there should be always at least TopdownL1
+>> support. Intel even adds extra fixed counters for the TopdownL1 events.
+>>
+>> Maybe the script should be changed to only mark the old pre-Icelake as
+>> no TopdownL1 Default. For the other platforms, always add TopdownL1 as
+>> Default. It would avoid manually adding it for every new platforms.
 > 
-> Sure, I wasn't clear how this mapped out in sysfs.
+> That's fair. What about TopdownL2 that is currently only in the
+> Default set for SPR?
 > 
-> > > Could the symlinks in event_source be the actual devices?
-> >
-> > That's not how the driver model works.
-> 
-> Ok, so I guess that's what's confusing me. Where will the new devices
-> be in sysfs? If it is /sys/bus/pmu_bus then why is
-> /sys/bus/event_source a different case? I guess I should read docs and
-> the source :-)
 
-Look at what is in /sys/bus/event_source/devices/ today.  That's a bunch
-of symlinks to where in /sys/devices/ the devices are located.
+Yes, the TopdownL2 is a bit tricky, which requires much more events.
+Could you please set it just for SPR/EMR/GNR for now?
 
-I just moved all of the pmu bus devices under /sys/devices/pmu_bus/
-instead of them showing up in the root at /sys/devices/ as that's not
-where a bus should be placing individual devices like this.
+I will ask around internally and make a long-term solution for the
+TopdownL2.
 
-thanks,
+Thanks,
+Kan
 
-greg k-h
