@@ -1,287 +1,170 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEF8151982;
-	Wed,  5 Feb 2025 23:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBE833CFC;
+	Thu,  6 Feb 2025 00:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738797395; cv=none; b=F9eirJSJpwVMXauipkWkw29jLQ6UkRlt4FHXhtPofJhFQ5b2HUNxBqjQvy5zPNhPY5UhR/mqJY808+9Vi5hwZZ5NwkpzqDqWhOBlhMh//7G0HZv9zjNaOhw2reHiKwkarJ8LtvGlhIxDVuhgnbDCN1jsrxqVBLOiMmfUQ/S0iHE=
+	t=1738800099; cv=none; b=GOtCXkRMqr6ZwZbokBk1oxoOBTtyY199cZIb7eL6SSVuBk0vZ4TMRs6rJvmqqMO3kJiihA88O4kdrVT89uHlTfOiECq6rAMq0EdIau++q+jiPJvAixDw1GrEID9CEAol85ML91sG2qkNSK9CIwQV5TUdyKRSNULEFzoo8hQvkKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738797395; c=relaxed/simple;
-	bh=Wj/CVGRDhj0AMnzehxYIMirf36EFQvNnh80CifiIIdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQakeDau8GQ34O3KASjWsNQD1eb1uHdOySNVNUVEv6L56fqDGqeEKEThMo2lSOfVi3+JEtjAalRb3RcQNsJo7M0xNZ/fLC2Fu0jBQVSUvAoMeRUE0u7hVFns85TYWKJUBkzO/9sV5V6soXaVv0gfqqKbFtJCK/i8Lsts2T/XIfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzyA0aXk; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738800099; c=relaxed/simple;
+	bh=lHGCmvkQaSwlIeBnvSwgoGeaKYjo33PXy6fzIqDI08Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AKQVBHWRWlQoGO1jBUiRZ1zPo329BdsU0s9HEyDqmCA8QM7G/fTB8BVzmu+3NEcjYwJRHvhPTdF0ZbBlLTRdMIqkTjMhMnZZYhoMO9GZXNJRSO1foBxd4NsPQS7E+P3QOeBvOoXGLcz/SrfEaNJKKVK5a9kVqVNyYAZLv8n46W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSHo3iF1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzyA0aXk"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so71372366b.3;
-        Wed, 05 Feb 2025 15:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738797391; x=1739402191; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3DLDGFQsA5eYi3/SKJsY3AMMc7oAiwthh6U/3j6aiA8=;
-        b=KzyA0aXkoqkq93C9tJ+5WWOLwGSOWi27AeXN8tYsZWQqmN66jXQlxiCQw9ThGcfo1O
-         dWgwFxGrSq1bVMpiYQrNSbxNUoQuWQ8FucibRfaZowiWO5mgZWojH+4JIgfVnBJY4C1z
-         50J4sBeEydbl8H8EzjqcR/Wjg8PjPNwAOyEFgITYoyNarh+xWZwmlvR8tNnI9Dd5bVVk
-         yfP+HTrz9iFKuHwUaMM6uwV3VMXjnSKG6EtIVK8F9y+Bu6xUVuKOdnD+Z3G1lSnOaLrK
-         2lYafX82PqakIRdnkyrJunEtNM9hp5aCM26CBdB4nlwKc0Cklq41dahei69mI+AhAmuh
-         PjiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738797391; x=1739402191;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3DLDGFQsA5eYi3/SKJsY3AMMc7oAiwthh6U/3j6aiA8=;
-        b=Ya1oOJZTVWAIuWFMQyxQ86vqbdBDiQVXRHGo4yOv2nYRRX7oOVnI69b5XjILt80l4/
-         FwMhuUP586ruGilOBrXOYaaxnWxZseOtG/K62wLyVHls9HWu5F+TonPODb+K+yfe4nPq
-         RG3Ci1cVimP+7zDWB5/6KE4a6xuLI3EqwypQ1dTpXHRcpmHzduRVKbxw5noUCaEwk6iM
-         LeLlQjUVnj72BBmTlOoS+H4lPVwwglQIuj7LQDzex8M5+tJ78rV4E1PbxB9S9ujjOXaK
-         OWlnNRHSRhDsMeyQV6FkDN477ae1lDIfVtfyq72PJzDK+KHZyda40Txgzymm9P7or6N8
-         2Ipw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmQWlOQjkmCjqEZt+Z6EUtvtW3Wmgb71vJx0zk+QFfdrjkza5EIKYwARUYZzO3OFPm67jcAiZUfzu7wO/dy5VWTd3S@vger.kernel.org, AJvYcCWPRfe+v9hghrndFSzYPpnkCm8jdP6alt0pksD4mF4ZIegA5AlZfem9/XaSwFUpAl21EKDm5bys81PRwutwP25ctA==@vger.kernel.org, AJvYcCWig0EnOT2XoavNXOqLDrjvDD8xhMlphP8yp/iI+JoxGeCmrOlTx0mR+XBMS8NwtNxs0JmdaFL21EIPb+E=@vger.kernel.org, AJvYcCX62cZZVVX4eupxmH2bbA3hboD5m0eWTLFrkkhJE7btLqtBsh/s6z1ef1J+hgf+v3CxwirbebLo91MqBkurWNHDkw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yynitwhgv4a5yzCcJ2evQnXxGB2m2mgiKKH+p11lNALAp2cYIPW
-	iw6ezAVkCBAcvwf6xNSi1aqVopxqiCDM72hO1MABGuyVPq1ZKkqwJSm/L2l3nHUlLvXRhml+B8o
-	CSho7/vHCsBlTNJG7Bm2f1exwt0w=
-X-Gm-Gg: ASbGncvUywV9+Du4iAxAsxscPmNxKpVpkmSrpB7bwy/PkuRF2TvoDm7/T0ZFvvdiCq5
-	Y5d1VHaIcTYt/3tKnts7koo14WvRNiLH3nMf4+hWjuhnopM3ITY+H4J6MQbyqn66jP9cBK1LIcv
-	0uWYpkUtmet3Ql
-X-Google-Smtp-Source: AGHT+IEJDfbh7SEDUe4tondcRVHUutSHBoPjnGuZCyC2km7vCq9pS3l2q0aVyzOzD/58UCHeqMYto6aRmA7bywUIb+s=
-X-Received: by 2002:a17:907:7ba8:b0:ab6:ed8a:601f with SMTP id
- a640c23a62f3a-ab75e23496emr420053766b.12.1738797391080; Wed, 05 Feb 2025
- 15:16:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSHo3iF1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49ECBC4CED1;
+	Thu,  6 Feb 2025 00:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738800098;
+	bh=lHGCmvkQaSwlIeBnvSwgoGeaKYjo33PXy6fzIqDI08Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rSHo3iF1uEfCCzmt942L7ujDnKIr/h6x2nSBN/erAEgqeU0rqEez9BgGSlJMTb0+6
+	 dhwVwIxdUO30hV1hf8FVEyE8hxyy7QqXqpduDzBdtBFZhcFYiCR2Tz8HjPTrdMU5DI
+	 Uiufna+usqoyVUkimue8uEUDhDr6Y/ac8HGDPDVkDELxkx9fjBB/n+q1wxSP0URUt/
+	 2Up0AjqFbeLZwrrNoBxrTRI2kCWMJtkgIC+DHwodT9/DSNaSDygY+ll3gUdIwF0BeG
+	 0YpKTpvi8CEiWICOxpRUWTWbCfbGfcCV2FEnSS4gDoPJAYh/zg+s4Xsft/HmNFDPOr
+	 z5BuvDSu3As2w==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: [PATCH] perf report: Add 'tgid' sort key
+Date: Wed,  5 Feb 2025 16:01:37 -0800
+Message-ID: <20250206000137.2026034-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737511963.git.jpoimboe@kernel.org> <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe> <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com> <12cef882-b5b2-43e5-9d78-abe4354069dd@oracle.com>
-In-Reply-To: <12cef882-b5b2-43e5-9d78-abe4354069dd@oracle.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Feb 2025 15:16:11 -0800
-X-Gm-Features: AWEUYZnxkFChWkdis277aPTXT7H2tb7k8z7GpjlJm_lHO1y5rltDUpAyKQMlV-s
-Message-ID: <CAEf4BzaU+citw78376tnN11R0ypyN+nZKTjYN7P1y67Rq+_D+g@mail.gmail.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
-	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, 
-	Jens Remus <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025 at 1:21=E2=80=AFPM Indu Bhagat <indu.bhagat@oracle.com=
-> wrote:
->
-> On 1/27/25 5:10 PM, Andrii Nakryiko wrote:
-> >>>>> +struct sframe_preamble {
-> >>>>> +       u16     magic;
-> >>>>> +       u8      version;
-> >>>>> +       u8      flags;
-> >>>>> +} __packed;
-> >>>>> +
-> >>>>> +struct sframe_header {
-> >>>>> +       struct sframe_preamble preamble;
-> >>>>> +       u8      abi_arch;
-> >>>>> +       s8      cfa_fixed_fp_offset;
-> >>>>> +       s8      cfa_fixed_ra_offset;
-> >>>>> +       u8      auxhdr_len;
-> >>>>> +       u32     num_fdes;
-> >>>>> +       u32     num_fres;
-> >>>>> +       u32     fre_len;
-> >>>>> +       u32     fdes_off;
-> >>>>> +       u32     fres_off;
-> >>>>> +} __packed;
-> >>>>> +
-> >>>>> +struct sframe_fde {
-> >>>>> +       s32     start_addr;
-> >>>>> +       u32     func_size;
-> >>>>> +       u32     fres_off;
-> >>>>> +       u32     fres_num;
-> >>>>> +       u8      info;
-> >>>>> +       u8      rep_size;
-> >>>>> +       u16 padding;
-> >>>>> +} __packed;
-> >>>> I couldn't understand from SFrame itself, but why do sframe_header,
-> >>>> sframe_preamble, and sframe_fde have to be marked __packed, if it's
-> >>>> all naturally aligned (intentionally and by design)?..
-> >>> Right, but the spec says they're all packed.  Maybe the point is that
-> >>> some future sframe version is free to introduce unaligned fields.
-> >>>
-> >> SFrame specification aims to keep SFrame header and SFrame FDE members
-> >> at aligned boundaries in future versions.
-> >>
-> >> Only SFrame FRE related accesses may have unaligned accesses.
-> > Yeah, and it's actually bothering me quite a lot =F0=9F=99=82 I have a =
-tentative
-> > proposal, maybe we can discuss this for SFrame v3? Let me briefly
-> > outline the idea.
-> >
->
-> I looked at the idea below.  It could work wrt unaligned accesses.
->
-> Speaking of unaligned accesses, I will ask away: Is the reason to avoid
-> unaligned accesses performance hit or are there other practical reasons
-> to it ?
+Sometimes we need to analyze the data in process level but current sort
+keys only work on thread level.  Let's add 'tgid' sort key for that as
+'pid' is already taken for thread.
 
-Performance hit on architectures like x86-64 that do support
-unaligned, but it's actually a CPU error for some other architectures,
-so you'd need to code with that in mind, making local aligned copies,
-etc. In general, I'd say it's a bit of a red flag that a format that
-is meant to be memory-mapped (effectively) and used without
-pre-processing requires dealing with unaligned accesses. So if we can
-fix that, that would be a win.
+This will look mostly the same, but it only uses tgid instead of tid.
+Here's an example of a process with two threads (thloop).
 
->
-> > So, currently in v2, FREs within FDEs use an array-of-structs layout.
-> > If we use preudo-C type definitions, it would be something like this
-> > for FDE + its FREs:
-> >
-> > struct FDE_and_FREs {
-> >      struct sframe_func_desc_entry fde_metadata;
-> >
-> >      union FRE {
-> >          struct FRE8 {
-> >              u8 sfre_start_address;
-> >              u8 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >          struct FRE16 {
-> >              u16 sfre_start_address;
-> >              u16 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >          struct FRE32 {
-> >              u32 sfre_start_address;
-> >              u32 sfre_info;
-> >              u8|u16|u32 offsets[M];
-> >          }
-> >      } fres[N] __packed;
-> > };
-> >
-> > where all fres[i]s are one of those FRE8/FRE16/FRE32, so start
-> > addresses have the same size, but each FRE has potentially different
-> > offsets sizing, so there is no common alignment, and so everything has
-> > to be packed and unaligned.
-> >
-> > But what if we take a struct-of-arrays approach and represent it more l=
-ike:
-> >
-> > struct FDE_and_FREs {
-> >      struct sframe_func_desc_entry fde_metadata;
-> >      u8|u16|u32 start_addrs[N]; /* can extend to u64 as well */
-> >      u8 sfre_infos[N];
-> >      u8 offsets8[M8];
-> >      u16 offsets16[M16] __aligned(2);
-> >      u32 offsets32[M32] __aligned(4);
-> >      /* we can naturally extend to support also u64 offsets */
-> > };
-> >
-> > i.e., we split all FRE records into their three constituents: start
-> > addresses, info bytes, and then each FRE can fall into either 8-, 16-,
-> > or 32-bit offsets "bucket". We collect all the offsets, depending on
-> > their size, into these aligned offsets{8,16,32} arrays (with natural
-> > extension to 64 bits, if necessary), with at most wasting 1-3 bytes to
-> > ensure proper alignment everywhere.
-> >
-> > Note, at this point we need to decide if we want to make FREs binary
-> > searchable or not.
-> >
-> > If not, we don't really need anything extra. As we process each
-> > start_addrs[i] and sfre_infos[i] to find matching FRE, we keep track
-> > of how many 8-, 16-, and 32-bit offsets already processed FREs
-> > consumed, and when we find the right one, we know exactly the starting
-> > index within offset{8,16,32}. Done.
-> >
-> > But if we were to make FREs binary searchable, we need to basically
-> > have an index of offset pointers to quickly find offsetsX[j] position
-> > corresponding to FRE #i. For that, we can have an extra array right
-> > next to start_addrs, "semantically parallel" to it:
-> >
-> > u8|u16|u32 start_addrs[N];
-> > u8|u16|u32 offset_idxs[N];
-> >
-> > where start_addrs[i] corresponds to offset_idxs[i], and offset_idxs[i]
-> > points to the first offset corresponding to FRE #i in offsetX[] array
-> > (depending on FRE's "bitness"). This is a bit more storage for this
-> > offset index, but for FDEs with lots of FREs this might be a
-> > worthwhile tradeoff.
-> >
-> > Few points:
-> >    a) we can decide this "binary searchability" per-FDE, and for FDEs
-> > with 1-2-3 FREs not bother, while those with more FREs would be
-> > searchable ones with index. So we can combine both fast lookups,
-> > natural alignment of on-disk format, and compactness. The presence of
-> > index is just another bit in FDE metadata.
->
-> I have been going back and forth on this one. So there seem to be the
-> following options here:
->    #1. Make "binary searchability" a per-FDE decision.
->    #2. Make "binary searchability" a per-section decision (I expect
-> aarch64 to have very low number of FREs per FDE).
->    #3. Bake "binary searchability" into the SFrame FRE specification.
-> So its always ON for all FDEs.  The advantage is that it makes stack
-> tracers simpler to implement with less code.
->
-> I do think #2, #3 appear simpler in concept.
+  $ perf record -- perf test -w thloop
 
-Whichever makes it easier across the entire stack (compiler, linker,
-kernel/unwinder). As long as binary searchability is possible,
-especially for FDEs with lots of FREs. Making it per-FDE just allows
-to pick most compact (but still with good performance) representation.
+  $ perf report --stdio -s tgid,pid -H
+  ...
+  #
+  #    Overhead  Tgid:Command / Pid:Command
+  # ...........  ..........................
+  #
+     100.00%     2018407:perf
+         50.34%     2018407:perf
+         49.66%     2018409:perf
 
->
-> >    b) bitness of offset_idxs[] can be coupled with bitness of
-> > start_addrs (for simplicity), or could be completely independent and
-> > identified by FDE's metadata (2 more bits to define this just like
-> > start_addr bitness is defined). Independent probably would be my
-> > preference, with linker (or whoever will be producing .sframe data)
-> > can pick the smallest bitness that is sufficient to represent
-> > everything.
-> >
->
-> ATM, GAS does apply special logic to decide the bitness of start_addrs
-> per function, and ld just uses that info.  Coupling the bitness of
-> offset_idx with bitness of start_addrs will be easy (or _easier_ I
-> think), but for now, I leave it as "should be doable" :)
+Suggested-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 35 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  1 +
+ 4 files changed, 38 insertions(+)
 
-Those offsets are relative to fde's start_addr, right? So, generally
-speaking, should be usually small? I my understanding is correct, then
-yeah, coupling is probably ok.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 87f86451940623f3..4050ec4038425bf0 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -79,6 +79,7 @@ OPTIONS
+ 
+ 	- comm: command (name) of the task which can be read via /proc/<pid>/comm
+ 	- pid: command and tid of the task
++	- tgid: command and tgid of the task
+ 	- dso: name of library or module executed at the time of sample
+ 	- dso_size: size of library or module executed at the time of sample
+ 	- symbol: name of function executed at the time of sample
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 46c8373e314657fa..c164e178e0a48a8e 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -38,6 +38,7 @@ enum hist_column {
+ 	HISTC_TIME,
+ 	HISTC_DSO,
+ 	HISTC_THREAD,
++	HISTC_TGID,
+ 	HISTC_COMM,
+ 	HISTC_CGROUP_ID,
+ 	HISTC_CGROUP,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 3dd33721823f365d..5987438174967fd6 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -141,6 +141,40 @@ struct sort_entry sort_thread = {
+ 	.se_width_idx	= HISTC_THREAD,
+ };
+ 
++/* --sort tgid */
++
++static int64_t
++sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	return thread__pid(right->thread) - thread__pid(left->thread);
++}
++
++static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
++				       size_t size, unsigned int width)
++{
++	int tgid = thread__pid(he->thread);
++	const char *comm = NULL;
++
++	if (thread__pid(he->thread) == thread__tid(he->thread)) {
++		comm = thread__comm_str(he->thread);
++	} else {
++		struct maps *maps = thread__maps(he->thread);
++		struct thread *leader = machine__find_thread(maps__machine(maps),
++							     tgid, tgid);
++		if (leader)
++			comm = thread__comm_str(leader);
++	}
++	width = max(7U, width) - 8;
++	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
++}
++
++struct sort_entry sort_tgid = {
++	.se_header	= "   Tgid:Command",
++	.se_cmp		= sort__tgid_cmp,
++	.se_snprintf	= hist_entry__tgid_snprintf,
++	.se_width_idx	= HISTC_TGID,
++};
++
+ /* --sort simd */
+ 
+ static int64_t
+@@ -2501,6 +2535,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
+ 
+ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_PID, "pid", sort_thread),
++	DIM(SORT_TGID, "tgid", sort_tgid),
+ 	DIM(SORT_COMM, "comm", sort_comm),
+ 	DIM(SORT_DSO, "dso", sort_dso),
+ 	DIM(SORT_SYM, "symbol", sort_sym),
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index a8572574e1686be6..6044eb1d61447c0d 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -72,6 +72,7 @@ enum sort_type {
+ 	SORT_ANNOTATE_DATA_TYPE_OFFSET,
+ 	SORT_SYM_OFFSET,
+ 	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
++	SORT_TGID,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
->
-> > Yes, it's a bit more complicated to draw and explain, but everything
-> > will be nicely aligned, extensible to 64 bits, and (optionally at
-> > least) binary searchable. Implementation-wise on the kernel side it
-> > shouldn't be significantly more involved. Maybe the compiler would
-> > need to be a bit smarter when producing FDE data, but it's no rocket
-> > science.
-> >
-> > Thoughts?
->
-> Combining the requirements from your email and Josh's follow up:
->    - No unaligned accesses
->    - Sorted FREs
->
-> I would put compaction as a "good to have" requirement.  It appears to
-> me that any compaction will mean a sort of post-processing which will
-> interfere with JIT usecase.
->
-
-sgtm
