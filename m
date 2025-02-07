@@ -1,165 +1,130 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6E81DF25D
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE06FC1D
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928542; cv=none; b=snX2sO+6ZMbrqtynGqAvY4RQB7p2ADa/A2hT3zTwg+8t/mmxORPtCSpz8/DZac0fiPAmtbH0uSz9hLhg12Wa58aM988O3TnEKu0ABkjJ7zYq/ldD/wcULYPEfYJcCuSJBj72lcHkhSXFTbYCThiO0D0SJTMg28WzOphZ7ZVbhrs=
+	t=1738928679; cv=none; b=Nu6Oy0zNUVuG7QAjfOnbU72HCMo00nHi/YDwY0wi0Wggi4N0BfnYiYMz/Gv5fc4JGhCqZTYq6rEgwwVL98vGd7JNCqhvf220KNiCUILQyB+Slzd8Ifu1ZEnw8dTQt+qxRwaBcmnxPsK6oeJLNeBnnCGSb3gsc+GVU+f9qVxtd18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928542; c=relaxed/simple;
-	bh=klwOF03lrs5WfgpLMCHzDkvspHlKzduFjJXTk1pvuwI=;
+	s=arc-20240116; t=1738928679; c=relaxed/simple;
+	bh=JGu5JKj8jpkSVK3yYAVXPTbMrFO/6XIzUyJoj353e50=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZG5LyCQovEumGI+Xh+ti7QGj1w45vxQg7qMzYZcNWl8GKX8TdxcOH+9KlVWVWmPtal53ItPcbOoB5K10ygum3g9xOGQ8mDrnMZCW+o5J+qZIgyDx4b6+PjUcxVBHIUiyxEvHOFZDqq7QyTpZPOMhYJI8/C18IU4qiXs5spjsHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wFC5wsbU; arc=none smtp.client-ip=209.85.208.181
+	 To:Cc:Content-Type; b=Mh5jl36xgX6o2RP3QAbvqbka+YYMmcDC8SGh58FE0Mgo8NXufNuMNOiYRYHzj5wrYSX1huo4oFJOcKrZPyuPZdZACeO6iQ2WvGOW3uKqE5F9uuTvieQYJdxgmH8euEoRdLxSCQKt7fLK4xzzubzeb+Z/omsIDXJ0S4O8Z/zSNKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1oXZJbCm; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFC5wsbU"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30613802a6bso21751281fa.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:42:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1oXZJbCm"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3082334d1a0so4994101fa.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:44:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738928538; x=1739533338; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gj3cqRMH8oEJS0PPwBCkwaddutVKDKmEi7zTls5x5g=;
-        b=wFC5wsbUuXPr/p0kYOqPGndUVZYiB5+aTon7JaJNtGCMuN0GklTBTwL19AhbeePjni
-         9JWvRXMSCSvUSpzRvUO7E+4pVZVgK+rJqTYcU1ICmQu365iiAwHFMXY8cKw2OWwb03Yb
-         Ewqehus3rAtRXNY9QsaMh+Kh/ZKEOdAAYw+spDdsf9uW2XPy5DHEbMHSIlhF82XgZAa9
-         CDmn++Nzps/VCXEWedNtpDai8V8G/PARmLB1LDE4iZ/ZGCqTHGnKQcfWpEiTuMs9WU3R
-         cH6EP+XDloDIG+H8htNKsStv/ibG+UhCQddmuU3oiN65vd6H7pWTunAq3NXNgIr9Ffr8
-         EnSQ==
+        d=google.com; s=20230601; t=1738928676; x=1739533476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
+        b=1oXZJbCmfxmJNPNi6O1mHtivr84eVIXwahsR+6TvyZHHRlYkB+eRaKCqRYZqzjhp73
+         uFOt8h9ZQnJBop5c6FzTt1rk8v0so+OaEopEpY5u8wRjCzBo/AMsGBWEFmi05m4CPWRi
+         9g/SuERpGvOEipNgFKEpSgs46i1jHfwrKlBKl0GOn336YIM8B0wGfi6xvTdB2ZjcBUSp
+         xPmV4+xmUCMm2tgZgFfM5HSv5Mt7RmzJt/iHYYv0Qk2+SDqoyISeMym8DINNV9zycUV0
+         O/Kk4NaAA7Uz99kC4xJbJdnliPu1tyTtx8Xmb+qJfpmmSjUoo/ZFo+kdL1j0XmY2/Tkm
+         7AAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928538; x=1739533338;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2gj3cqRMH8oEJS0PPwBCkwaddutVKDKmEi7zTls5x5g=;
-        b=KMQB9g1Gp05RFQaMo/t3yxghPOUB2CAE9hkh2t4OZUDCxwLTdYt9doz0ubYM7VZ+M8
-         ygefXGJu8O2aod+oYtfRnSH62lqYDObJkWu51RBz6jcWTbGQcCb6r97TJDOrb12kNgaC
-         6Zw57woEQdRIO/YH3O1ntZSpCzDVuRPy+bTRXgDOu20O65MYJRQqL+eDnrHE0OMk6+xH
-         OM/6jtP7kI+Cz2KHnPH4YWC0vRWqv6AXUnRvlUg4lXAXx4ONuZJ6VC3IfQsn0q3P4/pT
-         94eaCpMXSJGaIJlALyqKjDgeR58mUktIxrBMHvIueerFKlQdOpncfVq3DJobkiEQA/Hb
-         GPyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaE162o2ztBnCEbUV1zhpvyt0MswhcDsYjt5grlYjUC151ZCt7nb1tSq5tbTaHOHet2YueMGVyr8br/2WL2LL/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR9e75apFeTUjXWTex2idJRnJ0L6EnnEuGBZLUGBgE6dN+L/B9
-	coWptffrWGrgi5Rq0UfESycNwdN09Sf9dTUk978GRoYyOLF25GciPj+Hz46DqC5O/nOZnnGI8NE
-	BD+KgPkCmKdA9wOs3qLxNystZhbI0DdxhqX8r
-X-Gm-Gg: ASbGnctNLQZeyrthAU/L6iPTNiPeM0nDL6uZyLlTkpUv1QA8RJ4jOTAxdrJ/sXz4OOH
-	6h58FbibXMA/v4Rj6xRRANLRVNOaMQR2TTxPwsd33df9N2r57SFlj/4eP2fvWq+QCpyy1C06CqU
-	0B5d6C4hh/5hnZHF0h9SppuV8Xt38=
-X-Google-Smtp-Source: AGHT+IGFHU+CN4cItl1wzJ30Ez4MneuGaUaIS5CR/Ym/3wJ5p/73tbwANprWw+B8TuE3yzX/oSTjZjhz/uIP4GiNa/k=
-X-Received: by 2002:a05:651c:1613:b0:300:1f12:bbc9 with SMTP id
- 38308e7fff4ca-307e5a80f68mr11633481fa.34.1738928538087; Fri, 07 Feb 2025
- 03:42:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738928676; x=1739533476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
+        b=qFZ1ePFIctsDD0lyffazt2O/wgokJdfrWWYd6eZcUZvIUTTskU6aO8pjYvA5bbutVF
+         XuR2SSke2GHU0nF/kFbUmuDMYw9ppNJFU7rNSqQgBhhIq7WO8ZUN48qf53IK/VTPQdHY
+         Ld5KQ2OwRZ7Anlck59640q5Jdsy+l0MMbOrYh8UL00/OzVvkyBYtso3tPMSkBU+4h83b
+         wmCinFNPXsmfttuoehjgpIY7j/0v19ZJqG1CZiRrwonB+llMhlvz00vZ1U2dvoJXMYjz
+         7V0L3vm0uwpIM0xfKVS9kd++K85gDr2HOGUAwXHVMZmiWzUkQ1/zv86Fmd7g+x+Ka56s
+         gc0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUtd3MU7b455vXa0Ccdw4aaG/aetibQHuh/BN8Cf6P2zQ+QGRtO3PumIHngrCws14RLlkPy8SOohSoa+LGak6XB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKbp1VQLhH7mZYaep6onDga/0clbBMqZCPHmTIa/LAfnzgr9z+
+	cqKFsfOYLac9qgrcrzwr/t0erXEsjOixOTSeB8RQUXKomvJdb0CYpRDc/T0Wo/CHGbaPCJ2jGPC
+	ZXm2U0RDhqJGa5EaPLKji7KpfgSbyd53jfhh0
+X-Gm-Gg: ASbGncs4iQtW3CtpY7k4lSDz3zpx12Nohj2UbNutAxtUy7rG1xJtsiXAmXhh/qyBEFA
+	i6uh0lNlQESEh83q2Nj3zsCCciVlkO/250kD9SePTbgkPVT40cNV5+IHI7edgGQaQEzqgdEqWOL
+	IUtEFP6Y9cWcEx0CqGeV/ALD4H50U=
+X-Google-Smtp-Source: AGHT+IFBD05bWatFNIOO3CjU1frhz0tzz0FlpHNb00Eyed6A0AXOGuMdcR8AEQ1ya2IawmyznAQ/JPQadiMtzM4HLe4=
+X-Received: by 2002:a2e:900e:0:b0:2ff:4e4b:cbe2 with SMTP id
+ 38308e7fff4ca-307da58e04dmr21221901fa.14.1738928675866; Fri, 07 Feb 2025
+ 03:44:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
- <Z6WDsmeVr7qPk0te@google.com>
-In-Reply-To: <Z6WDsmeVr7qPk0te@google.com>
+References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
+ <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
+ <CAP-5=fUxY1KYXN-HcJPd2D66j5cC6DFTGPzYFVvJKvBLqyz6-Q@mail.gmail.com> <Z6WEkAPxtpVmx8cO@google.com>
+In-Reply-To: <Z6WEkAPxtpVmx8cO@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 7 Feb 2025 12:42:06 +0100
-X-Gm-Features: AWEUYZnlDsvkjivC9zZ9T2cWpIcIDgBO6AtZZ9MOQ3v9j-G2dUtWDsnhG8Fwp8E
-Message-ID: <CACT4Y+ZtFQdA+EkWfxkdt_6NU-u7BvARRuU6fZvxa+Kf_7g9SQ@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+Date: Fri, 7 Feb 2025 12:44:24 +0100
+X-Gm-Features: AWEUYZknqnNJQVXcj50I7GgYjjXVJVRJ6QKmq5lQDRQ69NY3CN35CUU5DSIPf7E
+Message-ID: <CACT4Y+ZrFOWZodAM_Ay5hZRht=7D5KWcK7q4=DBpf-E2vs+JmA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 7 Feb 2025 at 04:53, Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, 7 Feb 2025 at 04:57, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
-> > Add record/report --latency flag that allows to capture and show
-> > latency-centric profiles rather than the default CPU-consumption-centric
-> > profiles. For latency profiles record captures context switch events,
-> > and report shows Latency as the first column.
+> On Thu, Feb 06, 2025 at 10:51:16AM -0800, Ian Rogers wrote:
+> > On Thu, Feb 6, 2025 at 10:41=E2=80=AFAM Dmitry Vyukov <dvyukov@google.c=
+om> wrote:
+> > > On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
+> > [snip]
+> > > > We traditionally didn't do it, but in general test coverage
+> > > > of perf report is too low, so I would recommend to add some simple
+> > > > test case in the perf test scripts.
+> > >
+> > > What of this is testable within the current testing framework?
+> > > Also how do I run tests? I failed to figure it out.
 > >
-> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> >
-> > ---
-> [SNIP]
-> > +void perf_hpp__cancel_latency(void)
-> > +{
-> > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
-> > +
-> > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
-> > +             return;
+> > Often just having a test that ensure a command doesn't segfault is
+> > progress :-) The shell tests Andi mentions are here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/tests/shell?h=3Dperf-tools-next
+> > There's no explicit `perf report` test there but maybe the annotate,
+> > diff or record tests could give you some ideas.
 >
-> This also needs to be changed since you call setup_overhead even if you
-> have a strict sort_order.
+> Well, we have. :)
 >
-> For example, it's strange these two are different.
->
-> With default sort order:
->
->   $ perf record --latency -- ls /
->
->   $ perf report --stdio
->   ...
->   # Overhead  Command  Shared Object         Symbol
->   # ........  .......  ....................  ........................
->   #
->       64.50%  ls       ld-linux-x86-64.so.2  [.] do_lookup_x
->       33.41%  ls       [kernel.kallsyms]     [k] chacha_block_generic
->        2.00%  perf-ex  [kernel.kallsyms]     [k] put_ctx
->        0.09%  perf-ex  [kernel.kallsyms]     [k] native_write_msr
->
-> Same sort order, but explicitly:
->
->   $ perf report --stdio -s comm,dso,sym
->   ...
->   # Overhead   Latency  Command  Shared Object         Symbol
->   # ........  ........  .......  ....................  ........................
->   #
->       64.50%    64.50%  ls       ld-linux-x86-64.so.2  [.] do_lookup_x
->       33.41%    33.41%  ls       [kernel.kallsyms]     [k] chacha_block_generic
->        2.00%     2.00%  perf-ex  [kernel.kallsyms]     [k] put_ctx
->        0.09%     0.09%  perf-ex  [kernel.kallsyms]     [k] native_write_msr
->
-> Maybe you want to cancel the latency field even if sort key is given
-> (unless it has 'latency').
->
-> Something like this?
-
-Makes sense! Done in v6.
-
-> ---8<---
-> @@ -714,7 +715,9 @@ void perf_hpp__cancel_latency(void)
->  {
->         struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
->
-> -       if (is_strict_order(field_order) || is_strict_order(sort_order))
-> +       if (is_strict_order(field_order))
-> +               return;
-> +       if (is_strict_order(sort_order) && strstr(sort_order, "latency"))
->                 return;
->
->         lat = &perf_hpp__format[PERF_HPP__LATENCY];
-> ---8<---
+>   $ ./perf test -vv report
+>   116: perftool-testsuite_report:
+>   --- start ---
+>   test child forked, pid 109653
+>   -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
+>   ## [ PASS ] ## perf_report :: setup SUMMARY
+>   -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase sk=
+ipped
+>   -- [ PASS ] -- perf_report :: test_basic :: basic execution
+>   -- [ PASS ] -- perf_report :: test_basic :: number of samples
+>   -- [ PASS ] -- perf_report :: test_basic :: header
+>   -- [ PASS ] -- perf_report :: test_basic :: header timestamp
+>   -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
+>   -- [ PASS ] -- perf_report :: test_basic :: pid
+>   -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
+>   -- [ PASS ] -- perf_report :: test_basic :: symbol filter
+>   ## [ PASS ] ## perf_report :: test_basic SUMMARY
+>   ---- end(0) ----
+>   116: perftool-testsuite_report                                       : =
+Ok
 >
 > Thanks,
 > Namhyung
->
-> > +
-> > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
-> > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
-> > +
-> > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
-> > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
-> > +                     perf_hpp__column_unregister(fmt);
-> > +     }
-> > +}
-> > +
-> >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
-> >  {
-> >       struct perf_hpp_fmt *fmt;
+
+
+Thanks, Namhyung, Andi, Ian, this is useful.
+
+Added tests in v6:
+https://lore.kernel.org/linux-perf-users/eb8506dfa5998da3b891ba3d36f7ed4a7d=
+b4ca2b.1738928210.git.dvyukov@google.com/T/#u
