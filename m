@@ -1,43 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27121D90DB;
-	Fri,  7 Feb 2025 03:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65DD47F4A;
+	Fri,  7 Feb 2025 04:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738900627; cv=none; b=ncDYBfIWxGo7F2D/5WPlU61JbZGI5XzA9IIAb0cEC+tfgxbTwLMmr7iRQ7wXsbwD3BcFEWy/L8TO4FYuajIu30vuapsJ8HcIafy8RuQfnzokNqRlUOiyYCQc9YMr4ioc2C/tXVZaNbJH/BOT22/RPONFodpoTon4sTxlUCnw+dI=
+	t=1738903452; cv=none; b=OYXN4xSueskcYWgzbMALTtAJj+B7/vpyy951dTsvp5O9OmTzyP7OPAkbKLlQB3Em7057W/79ylRiBxkG0ZWgFJUlwbS2B4WnhWLc0kxwKGY1KWOo2w4b+Sx1FMba9gbN9DbaNM5VuMCsFU0RMOrcgxB+YUXSMyLKkOz2SC2GUfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738900627; c=relaxed/simple;
-	bh=NCkjgWm0IBctfXMDtWxGTmY1UTxXS+wCSGlCXvRBNHw=;
+	s=arc-20240116; t=1738903452; c=relaxed/simple;
+	bh=RYg5bvdCTTZKWyfRpejJaqTJz2+N6XZXC5Z9yJT7Iik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwWy3+r1M/MxLQIpOu9B9Io6TeisW8c0LaCvJblfqt4zP1X5tAEp3WLhZBQ7tzJyGghVrMTMwrdTTtxa3K5zDxtkaUONws8Dv/LNSQkru5lrMe0ahL/nKQfF/jRePpEP9rTIls3e3NtjjFg/QZnzxKrhbEqp+fMF7XTwismZ9y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouFoUmLp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZLZ5JaIq3zoaHosrkA6RinkdUF1YOgTSBm+oak1rXOe/+FGI61oLnwxOLq3KNukTqVPvW04+N6ZWpjL9ax/Vp3hvxbsgpOLs4+jbkz3j3cKqIy4PjJTxu7jQVImU9h89DnjIUAtx2XT8/YESX46ONp6DF29B7W5FcXagqKIKaZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxypApCK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouFoUmLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8485BC4CED1;
-	Fri,  7 Feb 2025 03:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxypApCK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78BFFC4CED1;
+	Fri,  7 Feb 2025 04:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738900627;
-	bh=NCkjgWm0IBctfXMDtWxGTmY1UTxXS+wCSGlCXvRBNHw=;
+	s=k20201202; t=1738903451;
+	bh=RYg5bvdCTTZKWyfRpejJaqTJz2+N6XZXC5Z9yJT7Iik=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ouFoUmLpbYsuL+rQdOo4X8/TnCZ1KQ+39cpiKlfjvEBXLtxOX9GimfB6bzTh/IFaN
-	 1wEFY7BvZvHBy3yHmZ4AihcvebaI9/pi7ipJWlhiPcCQdOSskSAG7s3zRhbsPbwxVn
-	 z+85Sw3PSAyW35tHtpW6Rs63GOU0nx1UGr2Uu5VXaM85WrVEqzMfiPLXqdpduvwrfq
-	 EGkRunvq1F3VjbDFWoiFo6gdHFmr0Wtpk0bQjpi6IlfIzkxF3Y9J6SY9ybXxz+WQ/j
-	 164Buhky2eIreCa3aYzAszFHAjcGLbLOEry+PR8jOblIiTfhmJrZt5AwJQQxc6EYTF
-	 0a2GeTuS618mw==
-Date: Thu, 6 Feb 2025 19:57:04 -0800
+	b=BxypApCKI8oB5QzO1cbBExu8Xjz1WTbVG/kgKyduXz8mjFTxfl9SZfIZ2ulG1EzC6
+	 4qG6gQBh4016BNA1KQSCf9RjAHWsWBMzJHSj3cRgBeuUhONVnSdNj4SKd8n3OSHW1b
+	 dO+XEp8fvHptdY3Dg0piFopOr1Qtjn5aWy7lni3D/KmbfcXWQy1Jx4fcxgPajSDIEL
+	 +Co0ZaOWvNIPtY//VMMJ1sKtIc9JHqwarrsfY4V2N5SelTsKbYOR+XSY1AchI1sNRV
+	 L0mzoZZkqq2iNKAjV3hkaMAiUfRcJn8XzyOuecUsVzeScLlrBNbzNX0JpU9enOGzBQ
+	 80BKxhOZg3RbQ==
+Date: Thu, 6 Feb 2025 20:44:09 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
-Message-ID: <Z6WEkAPxtpVmx8cO@google.com>
-References: <cover.1738772628.git.dvyukov@google.com>
- <87ldujkjsi.fsf@linux.intel.com>
- <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
- <CAP-5=fUxY1KYXN-HcJPd2D66j5cC6DFTGPzYFVvJKvBLqyz6-Q@mail.gmail.com>
+Cc: Atish Kumar Patra <atishp@rivosinc.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>,
+	Beeman Strong <beeman@rivosinc.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+Message-ID: <Z6WPmYCJcc6pPKDA@google.com>
+References: <Z5qjwRG5jX9zAGtf@google.com>
+ <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com>
+ <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com>
+ <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+ <Z6LFp5jiED7_-weN@google.com>
+ <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+ <Z6RD7NuT9IPhOkIV@google.com>
+ <CAP-5=fV8rRMQyMDuy1vcxyEX9Gf8x0QJdVEP-K5krBec_A7mpA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,45 +69,237 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUxY1KYXN-HcJPd2D66j5cC6DFTGPzYFVvJKvBLqyz6-Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fV8rRMQyMDuy1vcxyEX9Gf8x0QJdVEP-K5krBec_A7mpA@mail.gmail.com>
 
-On Thu, Feb 06, 2025 at 10:51:16AM -0800, Ian Rogers wrote:
-> On Thu, Feb 6, 2025 at 10:41 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
-> [snip]
-> > > We traditionally didn't do it, but in general test coverage
-> > > of perf report is too low, so I would recommend to add some simple
-> > > test case in the perf test scripts.
+On Wed, Feb 05, 2025 at 11:44:57PM -0800, Ian Rogers wrote:
+> On Wed, Feb 5, 2025 at 9:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > What of this is testable within the current testing framework?
-> > Also how do I run tests? I failed to figure it out.
+> > On Tue, Feb 04, 2025 at 08:48:20PM -0800, Ian Rogers wrote:
+> > > On Tue, Feb 4, 2025 at 5:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > You mean the -z flag which is documented in the man page and also it the
+> > help message (perf top -h).  Anyone can read the doc can know it's
+> > there.  Of course, people would prefer reading zines than man pages. :)
 > 
-> Often just having a test that ensure a command doesn't segfault is
-> progress :-) The shell tests Andi mentions are here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell?h=perf-tools-next
-> There's no explicit `perf report` test there but maybe the annotate,
-> diff or record tests could give you some ideas.
+> I link to the patch. My point is that something as minor as making
+> "perf top" behave as "top" does was too big a (user command line)
+> regression to land - I strongly suspect nobody would notice. Your
+> proposal breaks all non-core events on every perf command that takes
+> PMU events. It is a bigger change.
 
-Well, we have. :)
+I also suspect not much people is using non-core events without PMU.
+But I won't argue that since I don't have any data.
 
-  $ ./perf test -vv report
-  116: perftool-testsuite_report:
-  --- start ---
-  test child forked, pid 109653
-  -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
-  ## [ PASS ] ## perf_report :: setup SUMMARY
-  -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase skipped
-  -- [ PASS ] -- perf_report :: test_basic :: basic execution
-  -- [ PASS ] -- perf_report :: test_basic :: number of samples
-  -- [ PASS ] -- perf_report :: test_basic :: header
-  -- [ PASS ] -- perf_report :: test_basic :: header timestamp
-  -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
-  -- [ PASS ] -- perf_report :: test_basic :: pid
-  -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
-  -- [ PASS ] -- perf_report :: test_basic :: symbol filter
-  ## [ PASS ] ## perf_report :: test_basic SUMMARY
-  ---- end(0) ----
-  116: perftool-testsuite_report                                       : Ok
+> 
+> > > So, it would seem to me that
+> > > changing something as fundamental as how all non-core events behave
+> > > would be seen as a regression.
+> >
+> > Yep, it'd be a regression.
+> 
+> Agreed, you are arguing for a regression.
+
+Right, but I thought it won't affect many.  But who knows..
+And yes, I don't want to create new troubles.
+
+> 
+> > Which suffix do you mean?
+> 
+> It's off topic. ARM added hex suffixes to PMUs representing physical
+> memory addresses of memory controllers but then that makes cortex_a72
+> look like it has a 3 character suffix. So perf assumes hex digits more
+> than 4 characters long is a hex suffix, which of course it wouldn't be
+> for a1000 (which is also somewhat close to being an old Acorn
+> archimedes machine number ;-) ).
+
+ok.
+
+> 
+> > Anyway, the person looked up the intel webpage would be eager to learn
+> > about performance related things.  Can we also assume if they also want
+> > to learn about the perf tool itself? :)
+> 
+> I'm not sure how turning data_read into
+> uncore_imc_free_running/data_read/ is in anyway helping people
+> understand perf? They want an event name that matches the
+> documentation, manual, web site. It is what the vendors I've spoken to
+> want as they use the event names across tools (fwiw oprofile doesn't
+> even have a notion of a PMU). To my knowledge the PMU names are the
+> wild west, often illogical and never mentioned in any kind of
+> documentation. I have a hard time explaining how the suffixes work and
+> I believe there are more conventions in the works where there can be
+> multiple what we are currently calling suffixes.
+
+I mean if something doesn't work, they will look 'perf list' and find
+the event name it supports.  For me, PMU name gives a tiny bit more
+information about the 'data_read' event.  But proper decscription for
+the event is preferred.
+
+> 
+> > If it's not the case, we have this:
+> >
+> >   $ perf record -e xxx
+> >   event syntax error: 'xxx'
+> >                        \___ Bad event name
+> >
+> >   Unable to find event on a PMU of 'xxx'
+> >   Run 'perf list' for a list of valid events
+> >
+> >    Usage: perf record [<options>] [<command>]
+> >       or: perf record [<options>] -- <command> [<options>]
+> >
+> >       -e, --event <event>   event selector. use 'perf list' to list available events
+> >
+> > So it says twice to run 'perf list' to see the events.  Then they can
+> > run either:
+> >
+> >   $ perf list | grep xxx
+> >
+> > or
+> >
+> >   $ perf list xxx
+> >
+> > to see the actual name of the event available in the perf tool.
+> 
+> Why was adding a PMU to an event name, working around ARM's PMU bug,
+> such an unsurmontable problem that the original change was reverted?
+> Because 1 person didn't want to have to write a PMU prefix and
+> considered it a monumental regression having to do so.
+
+Because it's a legacy event 'cycles' and he didn't expect the wildcard
+behavior?
+
+> 
+> > >
+> > > Even with this what would be the behavior of core events? You want
+> > > legacy events to have priority over sysfs/json when there is no PMU.
+> > > You know, and have stated not caring, RISC-V wants different and that
+> > > it breaks Apple-M's PMUs for a fairly large range of kernel releases
+> > > including 1 LTS kernel - the only reason I'm writing patches in this
+> > > area in the 1st place. Software is soft and you can go fix software
+> > > anywhere in the stack. Listening to vendors and not breaking everyone
+> > > is the point-of-view these patches have been coming from. I find it
+> > > very hard to have a conversation where this is just forgotten about
+> > > and we're working on hypotheticals which seem to be both unwanted and
+> > > implausible.
+> >
+> > Sorry I don't want to repeat that too.  Correct me if I'm wrong:
+> 
+> You are wrong.
+
+Hmm.. ok.
+
+> 
+> > 1. RISC-V is working on a solution with the current status and it's not
+> >    absoluted needed to change the current behavior.
+> 
+> They said to you directly it was what they wanted, that's why I
+> reposted this change and it is, has always been, in the cover letter.
+> They've then followed up expressing their desire for this behavior but
+> having to have a plan b as the original change was reverted and you
+> are blocking this change landing.
+
+So they have the plan B.  But still prefer overriding legacy with JSON?
+
+> 
+> > 2. Apple-M is fixed already.
+> 
+> No, James tried to repro the bug on a Juno board, not an Apple M, and
+> didn't succeed. I don't know what kernel he tried. I was told by Mark
+> Rutland (at LPC) that the tool fix was absolutely necessary and the
+> PMU driver wouldn't be fixed, hence the series flipping behavior that
+> I thought Intel would most likely block and wasn't keen to do in the
+> 1st place (not least wade through all the test behavior changes and
+> the bug tail). All of this was premised on a threat of reverting all
+> of the hybrid support so that Apple M could be made to work again, and
+> I was trying to do a less worse alternative.
+> https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+
+Sorry, it's not clear to me what's the problem exactly.  Can you give me
+an example command line?
+
+> 
+> > >
+> > > I don't know why people (yourself, Linus) keep wanting to show me the
+> > > perf list output. It is arbitrary. I rewrote it and changed the
+> > > behavior of all uncore PMUs within it (we didn't used to deduplicate
+> > > based on the PMU suffix). It is nice that people think it reads like
+> > > some religious text.
+> >
+> > I think it's what we want users to know how to use the events.
+> 
+> I don't understand what you are trying to say. I'm saying the behavior
+> of perf list in its output is arbitrary. We use the same printing code
+> for every kind of event. An aesthetic decision to put things on a line
+> does not imply that it is more valid to use or not use a PMU, it just
+> happens to be what the tool does. Did I break perf list as if you look
+> in old perf list you see:
+> ```
+> $ perf list
+> List of pre-defined events (to be used in -e or -M):
+> 
+>  duration_time                                      [Tool event]
+> ...
+> ```
+> while now you see:
+> ```
+> $ perf list
+> List of pre-defined events (to be used in -e or -M):
+> ...
+> tool:
+>  duration_time
+>       [Wall clock interval time in nanoseconds. Unit: tool]
+> ...
+> ```
+> I'm hoping people find it useful to have the unit documented.
+
+The most important information I think is the name of the event
+(duration_time).  It'd be appropriate if you could call it
+'tool/duration_time/' but I'm not sure if it's acceptable cause
+tool events are not real PMU events.  If so, maybe
+
+ duration_time or tool/duration_time/
+
+?
+
+> 
+> > > Why is the formatting different in perf list for
+> > > json specified events? Well it is because json events have
+> > > descriptions and the events you are showing with a PMU don't have a
+> > > description. I think because there is no description, an effort was
+> > > made to keep the output compact and put the PMU and event name
+> > > together. It wasn't trying to enter some kind of long lasting marriage
+> > > that the event name should only ever be used with the PMU.
+> >
+> > I like the description but I don't like the formatting.  I think I
+> > understand why it looks like that but it could be different.  Anyway,
+> > I don't think showing PMU name is related to having descriptions.
+> 
+> No, it has more to do with how I was feeling about filling in two
+> string fields called name and alias when rewriting the perf list code.
+> I added aliases containing the PMU name just to add a little bit more
+> detail when there seemed to be little documentation with certain
+> events. I never intended placing the PMU names into any events to be a
+> commitment that all non-core PMU events would need a PMU prefix and to
+> break all such people using those events.
+
+I think people should use a PMU prefix before wildcard is enabled.
+
+> 
+> > > What happens if an event is both in sysfs and json? Well the sysfs event
+> > > will get the description from the json and then I believe it won't
+> > > behave as you show. Did the event get broken, as perf list no longer
+> > > shows it with a PMU, by having a json description written? I think not
+> > > and I think having descriptions with events is a good thing.
+> >
+> > That's bad.  Probably we should fix it takes only one of the sources and
+> > change the JSON event not to clash with sysfs.
+> 
+> No, you are talking about breaking everything already, let's not break
+> it yet further - not least as we lack a reasonable way to test it. I
+> think if you are serious about having such breaking changes then it is
+> best you add a new command line option, like with libpfm events.
+
+I don't want to break things.  What's the intended behavior in that case?
 
 Thanks,
 Namhyung
