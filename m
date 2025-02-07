@@ -1,54 +1,54 @@
 Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C790F1DF25E
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B06B1DEFE7
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928482; cv=none; b=FLHVQKRWZYHogw/0B4J/cfFkSB+fiWHoibDMYuvUCNJGF235yfYleyi3PrFYl2V426bJSPzPtB/qtQyCxE4Kl/RosThRQVHeMx46CD+0McWfpBXLOR1aBIGELCQut/bqzxuB0VfN3+aNUvCfOwYhZOoEVBl8a+rKrV50piVhVdE=
+	t=1738928485; cv=none; b=CdOmwWSIGUPo3RNqZwizjh6sI4bbhHk5iVhdXeNIoFKSUnx25Wx0qIy7VzGfepabBNkZ+yEb2xgsLKjNxdpEVT6Py+LQX8tmrLopAxYw/3wPCzXfYkIG7fEKSdWuHP4MuwHsI4om2AWmKah89i+Ew30YjQcNB+KZ52bsetcrkLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928482; c=relaxed/simple;
-	bh=JrTATGJXLXPnfT36NRdWEwRMkJqStLNhLoyrpg87QNc=;
+	s=arc-20240116; t=1738928485; c=relaxed/simple;
+	bh=9gukdcfV9Nf9Mc/TOrp11xJ/gBhYjmqkZTKk9PTNb30=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GfzDa83vfRfixsOe7HJMS+rv4G9aiCDSGDOydxVQzZUCm5Xk6+PnDF0MGIrEYR/HBsxAGZP12MHa7TX6GYvc22Gy5H0CjZfwFhaGkiFe316z/9TvP5kd58O5pKqx1IU81DS50TcBGhEjTmJYSu8HhW/MdVIGHt8gm/DFzGdzaWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=na2zzlSX; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=UM7I7hFFNoQp+MgFZeIYP6N9N1zliWRhJyw6GK0PyD4QgV9l4rx6nLK+zuJLxgpheIeM/jFbPhGEsTOvBdOtG4TlFviqJEzuAlHaEZXedqRAUswjCKcdoUWmbmlCd6/CyKjCOBFxu2Hq3bEFsGyZK78wou4Newd71Oj5Z+h5M10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQc9HDjO; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na2zzlSX"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5de4d9cc915so389046a12.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:41:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQc9HDjO"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5de4ae51b71so511727a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:41:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738928479; x=1739533279; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738928481; x=1739533281; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjAFE95s2BudHj4Rh3WJBU6cX4YpZYt+tVJ8vz3xHhE=;
-        b=na2zzlSXYcHHR4lHoiGdO/j4aWe9LmrbRs6/Ys/1VRZJB7B/xVfTzivc2p7gBHTtre
-         FvLpP4SD3NsKMf+r2jne2AeZVnDGidfIfNCLuOeFzk+SMbvQrv/fMbhSQRshvhMwENbF
-         CwC2Mw7+MIymbMPMJ2YCiEe8vXkI+RCePs+CLgH0LJxeL7g51vnAlfQ6OJRSFeJnlIiu
-         OTMIM9UfUxBC3GACwZ9KiOCYMeS9bGARAn85jF4ZAQh0DXPtc9soasCXoyDDruHGepL+
-         BeWGZyNITWbctDfq5fHC5fEoLj7sX4xrOt2QOrw865xZkpDPkRpGYaPyP2sJNBl5vdAZ
-         ep2Q==
+        bh=+9f+e9kCTsyr4pVok6kl9UHneh9IdRYlU7MPwMhOzrI=;
+        b=rQc9HDjOQjtE5DcJALnXyDwWGt8MYAeqe90p2hOba4rmQiM+i78NESkKryzEEWjZi7
+         SumBeocAU13txvAXiN5mOWVR4gf2uFwD6vXliXe7ZtTKA+Oh+6bTdTeZX549Tpu1cvJ2
+         BYWsXXtsBRtLwBibUf0sLGW8rgEVV3QJ66hnjyV9GuKc+hjoGAXb1QZXYMEMxERrndvn
+         LtI9ESjuQaRLBungRDUBV8FXwbWKc+oxvnHPE+9Wzp2W5Vjue2HXwVdkFRoE8oNV/2Jl
+         pCNtPufZ1Ei3e2TSJ3aMo/eejhXSL1owg/PdLg4XIMaiKqnFniCH4qMHKTgl6I7mR5c7
+         jh1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928479; x=1739533279;
+        d=1e100.net; s=20230601; t=1738928481; x=1739533281;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjAFE95s2BudHj4Rh3WJBU6cX4YpZYt+tVJ8vz3xHhE=;
-        b=Zl/F6mNrZQcXNlk/b1tn9N7t01SYU5U7Qi9q7wwajVEF0bxFP0oBkCfO7/knEv0fao
-         bicrlRq2H1VK/1u7vnm7pRUBj6XGOSd+tTinyA01XkmTNLhZxI81pB728/70xTEccSGh
-         OWq+P//CKwraOXdXTGNlj0fhZRqCOkMte6dhgdDpq9lzwu3PNgwZNJZdFEID7FJn9765
-         htBrWGcQeDqH1yOVHRza9CTLvOl+Qv3lugt+dzk8lYKYv4MyAZ5UooxtUILXMqkJwPVW
-         GN5fsCU2U8neiqyaTOMSYhutFTqjTCOR+ir8aleccPKspUrHwfSTwXhfitvSBhe62XxM
-         mPMw==
-X-Gm-Message-State: AOJu0YyaShfYiwpigjPesx6GXPv640wzFGSvRl0DakDi6/Re1V4w7ix0
-	DV0LPAtiQZH0O8/rDCIkzKO31ShB2nMDEL86TuXTgyekKOcalYc5HH1XcaHPVY3K+j5ACF0ZFsm
-	lDDKriQ==
-X-Google-Smtp-Source: AGHT+IHMCaxJwhN3b35vofvhjLQWUnuYR19i1hbqbz2zViRW2xF8n0bIBTGUvJ0aty3IvlWxGQQSnNt3z9Cv
-X-Received: from edat9.prod.google.com ([2002:a05:6402:2409:b0:5dc:de15:859c])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:210e:b0:5dc:ebf3:b967
- with SMTP id 4fb4d7f45d1cf-5de451074f3mr3228263a12.23.1738928479229; Fri, 07
- Feb 2025 03:41:19 -0800 (PST)
-Date: Fri,  7 Feb 2025 12:40:30 +0100
+        bh=+9f+e9kCTsyr4pVok6kl9UHneh9IdRYlU7MPwMhOzrI=;
+        b=i92QKRYin/0UanhuJOMMODnfN+yOoo2dDoqaT+/dREYJMk8gkxvkAoZE5hP+TUv4Nd
+         t7b1mwCmic9WZmsTEu54uq5m5Mp5o5yTJrqKPi3IbTaqMaAbPNre0CU0pq6VvnNCSpg2
+         g4wMwtTE8jSEIamUDjSCBESgJ6b3duejrblsGcD7G3iePD0iyfBRCiHWD8lSvy2CDVOV
+         +MMNXQkBinYQ2ssaiRDjPGnxOr7qqXvALLc3qVKRgcwww1TONvsrkWveLQkWjxhew2+h
+         Pe2YChG52w4IVxZK73HMoczKoTNLEcBYkjQEaRpE+SPI80ShV6Jxm46yp3DUGvszqNem
+         VGyw==
+X-Gm-Message-State: AOJu0Ywj/OYVxt4vT9CYXgeUPMS9xmcY8m6Bco6FhkR+DI10dkw2+2Qz
+	iLYIkNP6Cwhql7QqCZQN+r0g9KF0ljhfN1Nmv3tc/eSOci/EjjvZXx8URXQ4CUIh2jZRaZfY3qg
+	u761kcQ==
+X-Google-Smtp-Source: AGHT+IFL9lnTtuz7VarTWV3hyrHPHIZJudSlo7/ZJLDPs7uiZULw4HGtKW2wb4f0dMp7VtQwjRwn9oXK+gj1
+X-Received: from edbij12.prod.google.com ([2002:a05:6402:158c:b0:5de:4d9e:2863])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2804:b0:5d9:8877:895a
+ with SMTP id 4fb4d7f45d1cf-5de45022bc6mr3267494a12.17.1738928481526; Fri, 07
+ Feb 2025 03:41:21 -0800 (PST)
+Date: Fri,  7 Feb 2025 12:40:31 +0100
 In-Reply-To: <cover.1738928210.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,17 +58,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1738928210.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <b6ec169be9e2827ac417935886b466683775ee03.1738928210.git.dvyukov@google.com>
-Subject: [PATCH v6 3/9] perf report: Switch filtered from u8 to u16
+Message-ID: <703dbb1a0f47c7148bc61e7f1e7d0e764aeb2572.1738928210.git.dvyukov@google.com>
+Subject: [PATCH v6 4/9] perf report: Add parallelism filter
 From: Dmitry Vyukov <dvyukov@google.com>
 To: namhyung@kernel.org, irogers@google.com, ak@linux.intel.com
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-We already have all u8 bits taken, adding one more filter leads to unpleasant
-failure mode, where code compiles w/o warnings, but the last filters silently
-don't work. Add a typedef and switch to u16.
+Add parallelism filter that can be used to look at specific parallelism
+levels only. The format is the same as cpu lists. For example:
+
+Only single-threaded samples: --parallelism=1
+Low parallelism only: --parallelism=1-4
+High parallelism only: --parallelism=64-128
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -77,67 +80,287 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/perf/util/addr_location.h | 3 ++-
- tools/perf/util/hist.c          | 2 +-
- tools/perf/util/hist.h          | 4 +++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/builtin-report.c   |  5 ++++-
+ tools/perf/util/event.c       |  2 ++
+ tools/perf/util/hist.c        | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/hist.h        |  6 +++++-
+ tools/perf/util/sort.c        | 11 +++++++++++
+ tools/perf/util/symbol.c      | 34 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/symbol_conf.h |  4 ++++
+ 7 files changed, 91 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-index 36aaa45445f24..f83d74e370b2f 100644
---- a/tools/perf/util/addr_location.h
-+++ b/tools/perf/util/addr_location.h
-@@ -3,6 +3,7 @@
- #define __PERF_ADDR_LOCATION 1
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 14d49f0625881..2a19abdc869a1 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1390,6 +1390,8 @@ int cmd_report(int argc, const char **argv)
+ 		     symbol__config_symfs),
+ 	OPT_STRING('C', "cpu", &report.cpu_list, "cpu",
+ 		   "list of cpus to profile"),
++	OPT_STRING(0, "parallelism", &symbol_conf.parallelism_list_str, "parallelism",
++		   "only consider these parallelism levels (cpu set format)"),
+ 	OPT_BOOLEAN('I', "show-info", &report.show_full_info,
+ 		    "Display extended information about perf.data file"),
+ 	OPT_BOOLEAN(0, "source", &annotate_opts.annotate_src,
+@@ -1721,7 +1723,8 @@ int cmd_report(int argc, const char **argv)
+ 	}
  
- #include <linux/types.h>
-+#include "hist.h"
+ 	if (report.disable_order || !perf_session__has_switch_events(session)) {
+-		if ((sort_order && strstr(sort_order, "parallelism")) ||
++		if (symbol_conf.parallelism_list_str ||
++				(sort_order && strstr(sort_order, "parallelism")) ||
+ 				(field_order && strstr(field_order, "parallelism"))) {
+ 			if (report.disable_order)
+ 				ui__error("Use of parallelism is incompatible with --disable-order.\n");
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 2f10e31157572..6ceed46acd5a4 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -769,6 +769,8 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
  
- struct thread;
- struct maps;
-@@ -17,7 +18,7 @@ struct addr_location {
- 	const char    *srcline;
- 	u64	      addr;
- 	char	      level;
--	u8	      filtered;
-+	filter_mask_t filtered;
- 	u8	      cpumode;
- 	s32	      cpu;
- 	s32	      socket;
+ 	/* Account for possible out-of-order switch events. */
+ 	al->parallelism = max(1, min(machine->parallelism, machine__nr_cpus_avail(machine)));
++	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
++		al->filtered |= (1 << HIST_FILTER__PARALLELISM);
+ 
+ 	if (al->map) {
+ 		if (symbol_conf.dso_list &&
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index cafd693568189..6b8f8da8d3b66 100644
+index 6b8f8da8d3b66..446342246f5ee 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -585,7 +585,7 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template,
- 	return he;
+@@ -43,6 +43,8 @@ static bool hists__filter_entry_by_symbol(struct hists *hists,
+ 					  struct hist_entry *he);
+ static bool hists__filter_entry_by_socket(struct hists *hists,
+ 					  struct hist_entry *he);
++static bool hists__filter_entry_by_parallelism(struct hists *hists,
++					       struct hist_entry *he);
+ 
+ u16 hists__col_len(struct hists *hists, enum hist_column col)
+ {
+@@ -1457,6 +1459,10 @@ static void hist_entry__check_and_remove_filter(struct hist_entry *he,
+ 		if (symbol_conf.sym_list == NULL)
+ 			return;
+ 		break;
++	case HIST_FILTER__PARALLELISM:
++		if (__bitmap_weight(symbol_conf.parallelism_filter, MAX_NR_CPUS + 1) == 0)
++			return;
++		break;
+ 	case HIST_FILTER__PARENT:
+ 	case HIST_FILTER__GUEST:
+ 	case HIST_FILTER__HOST:
+@@ -1515,6 +1521,9 @@ static void hist_entry__apply_hierarchy_filters(struct hist_entry *he)
+ 	hist_entry__check_and_remove_filter(he, HIST_FILTER__SYMBOL,
+ 					    perf_hpp__is_sym_entry);
+ 
++	hist_entry__check_and_remove_filter(he, HIST_FILTER__PARALLELISM,
++					    perf_hpp__is_parallelism_entry);
++
+ 	hists__apply_filters(he->hists, he);
  }
  
--static u8 symbol__parent_filter(const struct symbol *parent)
-+static filter_mask_t symbol__parent_filter(const struct symbol *parent)
+@@ -1711,6 +1720,7 @@ static void hists__apply_filters(struct hists *hists, struct hist_entry *he)
+ 	hists__filter_entry_by_thread(hists, he);
+ 	hists__filter_entry_by_symbol(hists, he);
+ 	hists__filter_entry_by_socket(hists, he);
++	hists__filter_entry_by_parallelism(hists, he);
+ }
+ 
+ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+@@ -2197,6 +2207,16 @@ static bool hists__filter_entry_by_socket(struct hists *hists,
+ 	return false;
+ }
+ 
++static bool hists__filter_entry_by_parallelism(struct hists *hists,
++					       struct hist_entry *he)
++{
++	if (test_bit(he->parallelism, hists->parallelism_filter)) {
++		he->filtered |= (1 << HIST_FILTER__PARALLELISM);
++		return true;
++	}
++	return false;
++}
++
+ typedef bool (*filter_fn_t)(struct hists *hists, struct hist_entry *he);
+ 
+ static void hists__filter_by_type(struct hists *hists, int type, filter_fn_t filter)
+@@ -2366,6 +2386,16 @@ void hists__filter_by_socket(struct hists *hists)
+ 				      hists__filter_entry_by_socket);
+ }
+ 
++void hists__filter_by_parallelism(struct hists *hists)
++{
++	if (symbol_conf.report_hierarchy)
++		hists__filter_hierarchy(hists, HIST_FILTER__PARALLELISM,
++					hists->parallelism_filter);
++	else
++		hists__filter_by_type(hists, HIST_FILTER__PARALLELISM,
++				      hists__filter_entry_by_parallelism);
++}
++
+ void events_stats__inc(struct events_stats *stats, u32 type)
  {
- 	if (symbol_conf.exclude_other && parent == NULL)
- 		return 1 << HIST_FILTER__PARENT;
+ 	++stats->nr_events[0];
+@@ -2872,6 +2902,7 @@ int __hists__init(struct hists *hists, struct perf_hpp_list *hpp_list)
+ 	hists->entries = RB_ROOT_CACHED;
+ 	mutex_init(&hists->lock);
+ 	hists->socket_filter = -1;
++	hists->parallelism_filter = symbol_conf.parallelism_filter;
+ 	hists->hpp_list = hpp_list;
+ 	INIT_LIST_HEAD(&hists->hpp_formats);
+ 	return 0;
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index a6e662d77dc24..4035106a74087 100644
+index 4035106a74087..c2236e0d89f2a 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -33,6 +33,8 @@ enum hist_filter {
+@@ -31,6 +31,7 @@ enum hist_filter {
+ 	HIST_FILTER__HOST,
+ 	HIST_FILTER__SOCKET,
  	HIST_FILTER__C2C,
++	HIST_FILTER__PARALLELISM,
  };
  
-+typedef u16 filter_mask_t;
+ typedef u16 filter_mask_t;
+@@ -112,6 +113,7 @@ struct hists {
+ 	const struct dso	*dso_filter;
+ 	const char		*uid_filter_str;
+ 	const char		*symbol_filter_str;
++	unsigned long		*parallelism_filter;
+ 	struct mutex		lock;
+ 	struct hists_stats	stats;
+ 	u64			event_stream;
+@@ -388,11 +390,13 @@ void hists__filter_by_dso(struct hists *hists);
+ void hists__filter_by_thread(struct hists *hists);
+ void hists__filter_by_symbol(struct hists *hists);
+ void hists__filter_by_socket(struct hists *hists);
++void hists__filter_by_parallelism(struct hists *hists);
+ 
+ static inline bool hists__has_filter(struct hists *hists)
+ {
+ 	return hists->thread_filter || hists->dso_filter ||
+-		hists->symbol_filter_str || (hists->socket_filter > -1);
++		hists->symbol_filter_str || (hists->socket_filter > -1) ||
++		hists->parallelism_filter;
+ }
+ 
+ u16 hists__col_len(struct hists *hists, enum hist_column col);
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 7eef43f5be360..3055496358ebb 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -900,6 +900,16 @@ sort__parallelism_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	return right->parallelism - left->parallelism;
+ }
+ 
++static int hist_entry__parallelism_filter(struct hist_entry *he, int type, const void *arg)
++{
++	const unsigned long *parallelism_filter = arg;
 +
- enum hist_column {
- 	HISTC_SYMBOL,
- 	HISTC_TIME,
-@@ -244,7 +246,7 @@ struct hist_entry {
- 	bool			leaf;
++	if (type != HIST_FILTER__PARALLELISM)
++		return -1;
++
++	return test_bit(he->parallelism, parallelism_filter);
++}
++
+ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
+ 				    size_t size, unsigned int width)
+ {
+@@ -909,6 +919,7 @@ static int hist_entry__parallelism_snprintf(struct hist_entry *he, char *bf,
+ struct sort_entry sort_parallelism = {
+ 	.se_header      = "Parallelism",
+ 	.se_cmp	        = sort__parallelism_cmp,
++	.se_filter	= hist_entry__parallelism_filter,
+ 	.se_snprintf    = hist_entry__parallelism_snprintf,
+ 	.se_width_idx	= HISTC_PARALLELISM,
+ };
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 49b08adc6ee34..315f74b5bac06 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -18,6 +18,7 @@
+ #include "annotate.h"
+ #include "build-id.h"
+ #include "cap.h"
++#include "cpumap.h"
+ #include "dso.h"
+ #include "util.h" // lsdir()
+ #include "debug.h"
+@@ -2471,6 +2472,36 @@ int symbol__annotation_init(void)
+ 	return 0;
+ }
  
- 	char			level;
--	u8			filtered;
-+	filter_mask_t		filtered;
++static int setup_parallelism_bitmap(void)
++{
++	struct perf_cpu_map *map;
++	struct perf_cpu cpu;
++	int i, err = -1;
++
++	if (symbol_conf.parallelism_list_str == NULL)
++		return 0;
++
++	map = perf_cpu_map__new(symbol_conf.parallelism_list_str);
++	if (map == NULL) {
++		pr_err("failed to parse parallelism filter list\n");
++		return -1;
++	}
++
++	bitmap_fill(symbol_conf.parallelism_filter, MAX_NR_CPUS + 1);
++	perf_cpu_map__for_each_cpu(cpu, i, map) {
++		if (cpu.cpu <= 0 || cpu.cpu > MAX_NR_CPUS) {
++			pr_err("Requested parallelism level %d is invalid.\n", cpu.cpu);
++			goto out_delete_map;
++		}
++		__clear_bit(cpu.cpu, symbol_conf.parallelism_filter);
++	}
++
++	err = 0;
++out_delete_map:
++	perf_cpu_map__put(map);
++	return err;
++}
++
+ int symbol__init(struct perf_env *env)
+ {
+ 	const char *symfs;
+@@ -2490,6 +2521,9 @@ int symbol__init(struct perf_env *env)
+ 		return -1;
+ 	}
  
- 	u16			callchain_size;
- 	union {
++	if (setup_parallelism_bitmap())
++		return -1;
++
+ 	if (setup_list(&symbol_conf.dso_list,
+ 		       symbol_conf.dso_list_str, "dso") < 0)
+ 		return -1;
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index a9c51acc722fe..c5b2e56127e22 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -3,6 +3,8 @@
+ #define __PERF_SYMBOL_CONF 1
+ 
+ #include <stdbool.h>
++#include <linux/bitmap.h>
++#include "perf.h"
+ 
+ struct strlist;
+ struct intlist;
+@@ -62,6 +64,7 @@ struct symbol_conf {
+ 			*pid_list_str,
+ 			*tid_list_str,
+ 			*sym_list_str,
++			*parallelism_list_str,
+ 			*col_width_list_str,
+ 			*bt_stop_list_str;
+ 	const char		*addr2line_path;
+@@ -82,6 +85,7 @@ struct symbol_conf {
+ 	int		pad_output_len_dso;
+ 	int		group_sort_idx;
+ 	int		addr_range;
++	DECLARE_BITMAP(parallelism_filter, MAX_NR_CPUS + 1);
+ };
+ 
+ extern struct symbol_conf symbol_conf;
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
