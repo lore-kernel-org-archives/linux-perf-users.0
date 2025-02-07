@@ -1,108 +1,139 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B4617B502
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 16:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE09A18DB0A
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 16:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738947143; cv=none; b=figVdSl87LHitE3MyqvH1beinFPTIxm4lhn9NjR/OrEkH9f3WQld4Kw8jJ27Tuatz8z86UIhQzLxwr/ml50DNXJcR3B/TxZPvjBQisIG/YCNloElGUuqy+48y5gBBb45G6fOyQnBerziF1Og3mkn0eK/j9jQ/XmCHlwmwvPv5FQ=
+	t=1738947252; cv=none; b=FHhUYJbd4Wbodv1uf18SS/Ei6VL3YSA2g7T7qGJlV+zR2N16WMjQj+70K8KRcRTNLLZUZqJNAPa0TI6ri4eAr6YQiiAa8wN49MJYZ17l6l2Jp3iCGFvc9pXo+MJcWuIfGQbeclT2uufWuVZTOwO2FyOrzEjWvyfKWrwu8C3Bysc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738947143; c=relaxed/simple;
-	bh=lBczyWVcEwxF4Ttj3nziaoQ4DK0ZpgMsW5CwuhpOyMY=;
+	s=arc-20240116; t=1738947252; c=relaxed/simple;
+	bh=RBG51+4Lfr8vrZH4BvUqvMXfCP96AceZstCxlo2AYWA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J6k2K0tdl4DS2spGfqUbEEILuEhlAI0vIJAS1fvr48IKYruUPKdAuhqnfzew5OADeYeXguIfOVTPjb11vvZMyZnQCwHh0O2YGWVOijZNKj5tWpK9hheb7PzwGcIG40ghHwR6Bn4D3Uth0CnUyUd2B/i+tC0vZEFkgVxdp+u0mZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v1onWQ2n; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tjrVw35qQ6KQtOCVJgsy5SDNm9WmOTndCUSWw3BiC+l2q/u4OD3wYYJZIf4yRiPTrFHsssPkZG8NnT+j4YuswbS2didO4vvXDShpojZ4y5UDaotJQifGyrUyBp+doWSPaS8N3rDivCmHdWYq6sgRvt2fJ3rcdW2zrYlEdOLVRvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FScusrU6; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v1onWQ2n"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d146357fb2so80095ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 08:52:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FScusrU6"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2166651f752so52457065ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 08:54:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738947141; x=1739551941; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738947249; x=1739552049; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xaQn6K7jyorHitw/wTj9hI+PJlPLgdCagiVogzW2LvQ=;
-        b=v1onWQ2n7gFHKO2n+7GHoyZNmEsJdd7nIhrBrpE7XqoeTaAg83PnbPCfUiPy5B+ovx
-         xfPYIcF4c56f/YBLELhAGJgWqE+ALTG+92kAytniHc8TFOy2G72E8BN5fbeKtK3Qi5Ao
-         eR9k7TuM7XeKHQ62bea+DfCuKjmgATNtjMPU2nsw5aHWqlx2Udx9YLum9VxW1EGUPDbp
-         5YnONKaG5AUbWHOu0fzXetCQI4eeG4C3isst/Z8IzxWT/VlYsil/11bSPRomBqX/bsxZ
-         zhHt0FeD/ADDIDDsZqd0KN1wn5iT8ezdVeeU67InZsBCqwkCSWcseWdB1ZZFs2juEzNt
-         6WDw==
+        bh=0UvshL8nXVJdd7vp4+YSGo25p1rD7pCcETOL1e0fbZQ=;
+        b=FScusrU6GtU2JbOsxqOOu2ijBPENshOfq6kNCSn+EvDcOrm5JAecHIRHlMJ4hV+n6p
+         5LlmEcqlH0XwH+uZTsHuoRvdKQWIMYB4Cyve03u0VB1FKwT7YkA67l+m97WeYKQEGLqQ
+         8h4JhVBR9MMFTq9Hb8hDBBM6k4jTQG+GEDuexm7QnFxyR7M8ACM2yF3HEqJMvilcG4Wp
+         hWa76er9zQadEYnS/JH8pJKJpHyqNTzDHFe43kd6q97jSTKJTGzFZ2b7zTv4q/mBnq+w
+         TC/caD9UYZDoQDzry5XxrtJsguX9jQqYykIoKTpw6/7QcMdnAu1rr8aecII0iN4kSOqp
+         068A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738947141; x=1739551941;
+        d=1e100.net; s=20230601; t=1738947249; x=1739552049;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xaQn6K7jyorHitw/wTj9hI+PJlPLgdCagiVogzW2LvQ=;
-        b=CptZ6R5QG8k79K9awlZgzmrzOJXM3i9Rqp385LaGSSDpa3g54gu10PrNEVkHmb0qMM
-         ffWIB93UX5xGZcfHaYNWERMMZG2MckaIN98kwOXBblyYVoAYQmOeMz+EZlrNfF8c4Dgw
-         S/BV7vYHkZB5hHdg+vuO8Ps0pB35wb5NjdTMxm7vgoEhy/T//VOrS2hwSZvGs5wCX36b
-         X5yj8YiJjmvLSVKLm75raa3wsbVCKP9DPLaqc6rwfC6L8njxLp12lXGE3JN6zLJSuLtb
-         XTF1z30x2yfDO1Sup/UAjFkaic5jrxuhntbfVUllGOehybwjFqYoc+K2ij10cnWYi3TF
-         EvHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXBhk0bv/7esidnwRYYjB5DLOPBrPFX2x/z46A4484quv8g87R+tTw5xtG6ZMoz9HDA2mU+OPSIG3iNx0ZY9a6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBbEZzEJvg8XLcaOLOR9GiA2/BHkV5QuANMWK6MqLZvHVoVjzc
-	QqfGZ6degCW0FIN2M7VWsiIQhiCKNgp4VLnuwj6hJZYi/kXZJef/tQ6cQ/HUT7JDyYbrKtXz0vv
-	LqXEGXUoXts3tkW2KAh+yKPC8moz6Np5F369e
-X-Gm-Gg: ASbGncsbEMI1eIlkYxMWY2HKmpCPx8c61crsX46d/tmBLp1KgpIZkzPVRb1mhAml0li
-	bh+vsolPsDjzjB4YVQYXru8p2Tud0ulhbYMwwyjBEr8U25LoAeANydpVqlmQJSsQlWReoXsx9ng
+        bh=0UvshL8nXVJdd7vp4+YSGo25p1rD7pCcETOL1e0fbZQ=;
+        b=BFDqftOTh+joXTgg/l2/OLX0uIK8VZlpBxG6ZY1Nola3VuXRliekq8zc2TOuLEG0YZ
+         NZK9qjztuFLIHGGD/2lBBdIbjVUdi879S6P/1ttxm/9d3XrXlvbJxI1YhkEuryc7B1JI
+         NDNwkgg/x8ZVKTPgPkljKFvYPEuNOym/0gdtlxj6FEB25OpA54nJT1zRCvm6/qpLY47k
+         nQnWiFEJZfGhqQxaaazk5lyaNH7YkSYjCOpVjUbXL4pesm49GqjcX128I9tA79LvvwSN
+         f9kQs1WTRlLuLr2xLh4HmHN0nLLkXyWFpGz1Ft7sb6EnDR5JMbwb1SRJcSQzbpN3qhUs
+         htpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEN3tXnfZRTM+TQfcAcaWYs4RX9qPUpvS7tiYy6t4FLGgF3wkHvGvRvtLAGyuRTWyA/fiIP8yfCosjHnpYlhqC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSqy7S+I/dFGYs9p0t3M3ZsYZQ/7FEl8Zi0SRdskkLr2e34yMu
+	KLcOT6JRfk2VIHjRyXNyIBenH+A+iWn8O87etmbKFZB6rZDKkdsHn0EvLL50/Rq5H33JTnZy04I
+	Dis0ssexSg/Iw13ILGlpmeUSLdsvVOMvgn70afA==
+X-Gm-Gg: ASbGncvPEOoqP92hHzWDcxD3jcXuNtvAaNH8iDk3S8ODePMIW0IBKVFjuzEIThloWtX
+	udsb/NMgWsLa2K2PNnHaAztkC9xoJ76SYM8Y8AWzVyBPfPdQoCZVF+uMFNUgbH2q9qJ3AW79Gnw
 	==
-X-Google-Smtp-Source: AGHT+IH+eccZeVWVRooHatPRWms97tl2ixYWDBvCtisUhE2l0dgUs4cNDVp2DO8WirI/llb9F18uQzOyaVmYC+rKfN0=
-X-Received: by 2002:a05:6e02:1c8a:b0:3ce:3873:48d4 with SMTP id
- e9e14a558f8ab-3d13def5cebmr4524575ab.4.1738947140907; Fri, 07 Feb 2025
- 08:52:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGcOreyYzVTdgMb0QBe7xfS8Hq4n/vBf0b22MVHxkWExD11jxox3l4GddXf+HqClKoe976BaxK99Tn7Vq/+DBg=
+X-Received: by 2002:a05:6a21:3399:b0:1e0:d4f4:5b39 with SMTP id
+ adf61e73a8af0-1ee03a9b0afmr7073525637.24.1738947249048; Fri, 07 Feb 2025
+ 08:54:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207152844.302167-1-kan.liang@linux.intel.com>
-In-Reply-To: <20250207152844.302167-1-kan.liang@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 7 Feb 2025 08:52:08 -0800
-X-Gm-Features: AWEUYZlD4rHHScB2ecuCe1drW1pyGKqdAiE92k6K4hUGUg3ZtHT9u6XBaEP-kI4
-Message-ID: <CAP-5=fWoRhg6eY8OEhKA-TbWb42pOZiiDF1PENuu5dHPMp-dpg@mail.gmail.com>
-Subject: Re: [PATCH] perf tool_pmu: Add skip check in tool_pmu__event_to_str()
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	thomas.falcon@intel.com
+References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
+ <20250205-counter_delegation-v4-11-835cfa88e3b1@rivosinc.com> <20250206105100.GA2971@willie-the-truck>
+In-Reply-To: <20250206105100.GA2971@willie-the-truck>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Fri, 7 Feb 2025 08:53:59 -0800
+X-Gm-Features: AWEUYZl2-SoqDPQ6r-GdOfUPJBX1qdNjRlIcNpQpRwZeLOQULWh9MTRajFVfra0
+Message-ID: <CAHBxVyEtxoRHLO791r6uFzHnX0vAcpeWMOcS+0tbVN+p6Oh2tQ@mail.gmail.com>
+Subject: Re: [PATCH v4 11/21] RISC-V: perf: Restructure the SBI PMU code
+To: Will Deacon <will@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 7:28=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+On Thu, Feb 6, 2025 at 2:51=E2=80=AFAM Will Deacon <will@kernel.org> wrote:
 >
-> From: Kan Liang <kan.liang@linux.intel.com>
+> On Wed, Feb 05, 2025 at 11:23:16PM -0800, Atish Patra wrote:
+> > With Ssccfg/Smcdeleg, we no longer need SBI PMU extension to program/
+> > access hpmcounter/events. However, we do need it for firmware counters.
+> > Rename the driver and its related code to represent generic name
+> > that will handle both sbi and ISA mechanism for hpmcounter related
+> > operations. Take this opportunity to update the Kconfig names to
+> > match the new driver name closely.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> > ---
+> >  MAINTAINERS                                       |   4 +-
+> >  arch/riscv/include/asm/kvm_vcpu_pmu.h             |   4 +-
+> >  arch/riscv/include/asm/kvm_vcpu_sbi.h             |   2 +-
+> >  arch/riscv/kvm/Makefile                           |   4 +-
+> >  arch/riscv/kvm/vcpu_sbi.c                         |   2 +-
+> >  drivers/perf/Kconfig                              |  16 +-
+> >  drivers/perf/Makefile                             |   4 +-
+> >  drivers/perf/{riscv_pmu.c =3D> riscv_pmu_common.c}  |   0
+> >  drivers/perf/{riscv_pmu_sbi.c =3D> riscv_pmu_dev.c} | 214 ++++++++++++=
++---------
 >
-> Some topdown related metrics may fail on hybrid machines.
+> This seems... gratuitous? It feels like renaming the file could be a pain
+> for managing backports and renaming the driver might cause some headaches
+> in userspace.
 >
->  $perf stat -M tma_frontend_bound
->  Cannot resolve IDs for tma_frontend_bound:
->  cpu_atom@TOPDOWN_FE_BOUND.ALL@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)
+> What do you gain from such an invasive change?
 >
-> In the find_tool_events(), the tool_pmu__event_to_str() is used to
-> compare the tool_events. It only checks the event name, no PMU or arch.
-> So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
-> p-core Topdown metrics has "slots" event.
-> The tool_events is shared. So when parsing the e-core metrics, the
-> "slots" is automatically added.
->
-> The "slots" event as a tool event should only be available on arm64. It
-> has a different meaning on X86. The tool_pmu__skip_event() intends
-> handle the case. Apply it for tool_pmu__event_to_str() as well.
->
-> There is a lack of sanity check in the expr__get_id(). Add the check.
->
-> Closes: https://lore.kernel.org/lkml/608077bc-4139-4a97-8dc4-7997177d95c4=
-@linux.intel.com/
-> Fixes: 069057239a67 ("perf tool_pmu: Move expr literals to tool_pmu")
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Thanks Kan!
+The current upstream driver was developed only for SBI PMU[1] due to
+lack of any ISA extension support that allows PMU programming from the
+kernel.
+Thus, the name of the file and the functions reflect those assumptions.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+IMO, it would be confusing to use a driver named sbi that also uses
+the new ISA extensions that allows direct PMU programming from the
+kernel.
+This patch allows the internal functions and structure to clearly
+identify two ways of PMU programming.
+There are more PMU related ISA extensions planned in the future as
+well. Thus, I felt it would be best to do these changes now rather
+than later.
+I understand that managing the backport would be a pain as a result
+but I didn't quite understand the concern about the userspace
+headances.
+Can you please clarify that ?
 
-Ian
+[1] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.=
+adoc
+
+
+> Will
