@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA65195FE5;
-	Fri,  7 Feb 2025 21:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF7D191F62;
+	Fri,  7 Feb 2025 21:13:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738962377; cv=none; b=LVKIU0gQP4bmm/ZGsUmDG+tTp3tygEcE9n+9xwEBI053r1yqmfYzMAdk0clCf1c84KgefvCklx1Z+C1g76PPRIC8HV3Jrk20oI/VNQlvc5QkoQRufRU6uQ9oHivR3j6ruQxd6JLaHOF78SUyRH1B9HTUTPz0k4+Sc9sOvKj2OAU=
+	t=1738962808; cv=none; b=ZO7YaESEx7THsVNgsUWlycBL93whip/UMEsIFKQLIcvxaw+q9w5r77o37WUaA6XrqozNiFrIYxGchuvTH1h0DOYp7iDIVTN1gT7+MTozazm98AZArrZMZkZBbRj9NvKGksVQ5OJdt0wcC9FWdbxvjN5U8PAZ5rIeECsV1Gnmx1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738962377; c=relaxed/simple;
-	bh=CWHgdZOppLmmnI46ZiNcfojftqw4NwN4AdkDsU0kazE=;
+	s=arc-20240116; t=1738962808; c=relaxed/simple;
+	bh=i+FPbLfb3FeZGf8iVI9Kn0P0WUY2o6LfvZIp2136khc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLPNfOccAvpOSEqlyIf1Jt11WP+Np3TNA9X8PQjWL3N2WQwxmgIelptQRK3bDkPBHIAKjlTCio7Y6K+FIbgb31/EFckOgfGEPb3HkzrQelE7TpJVS+xGN6EcmfmQcfod8DF1biP8VStj15LeeuNwPxFqNrcQ9MAzgMZc6zAz0rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lA9CadGx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlrjKskJB9DWJDOO/d18vfspcynMLOQLW+55PNMDX7m6OBQjPfLYlw+depcbb03CesKY/rewwfpzsAhqOeuoN91tlvHK8zsXoNBxBJBF/0mJLk89KIHtOSiSbHxs0JkYSf0yO8cEU6H0JtF5HcmQwjiNisHu26BleVvEwoJc/ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIHiE1PX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lA9CadGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA878C4CEE2;
-	Fri,  7 Feb 2025 21:06:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIHiE1PX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CC5C4CED1;
+	Fri,  7 Feb 2025 21:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738962376;
-	bh=CWHgdZOppLmmnI46ZiNcfojftqw4NwN4AdkDsU0kazE=;
+	s=k20201202; t=1738962807;
+	bh=i+FPbLfb3FeZGf8iVI9Kn0P0WUY2o6LfvZIp2136khc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lA9CadGxW+5SWtL6mD1Ai28l9ccyQ3Kz2ZucS0KfsHm62u1rJ2n7eeFeC24FMOwjI
-	 wTGAcb+7RkzA69BG1Tu+spDhw53E0J+RZY9DW7FlZd+AJsp2WV1ZDiR5lL/xK+2nj3
-	 xbkb4lrtjmoBXVAmL7HO2fYugE0b9HWlLNMjKr4AbsZzkbZLtU/y5dSTfkdZeil32X
-	 PEZ8SqxRQ2cXLJONfjeyWYhuatZbgESFXbyS+MEbcaNAo/nneQEzQr38n0Pb/wbqOP
-	 YcIK+H0FzkWUv8nZHPtKJcueQIX5MmN4ReYhBwk45KdsKBwoO+uTB4KtQSsZVCgbGP
-	 AmANWcKa4UbVg==
-Date: Fri, 7 Feb 2025 13:06:14 -0800
+	b=hIHiE1PXvwu/RZaOU381Yxl961zrhQfjJ/FjF7vm1gr9JDA4FgwbhIKgWC97jRl98
+	 98LKU7idXQKvb1j2/O3amjKUtC0fNIWQzdVAlXoJkb6AaoiRs4BBtHB/Myz9SWx6GN
+	 onG3LwdCvGZejOYKC4BV7CKnRRVw3EfmDAnt82i9AJwDSkko10uCVDsuADqQjX0Zkq
+	 rwYsPL9tF6jOHAfHhYFsrlOyvYKN+TEI1p88x9c4H0eopvfKg25xW2JXIF6ryufrD6
+	 ix1TTK1G26mSZIMmXhUCWOT+z+/Sqftr0d9SzeC/JjBxURkScVxbDYiG5loXQ9kSJq
+	 HZairn7WZzGEg==
+Date: Fri, 7 Feb 2025 13:13:24 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Jens Remus <jremus@linux.ibm.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,21 +43,22 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
 	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
 	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
-Message-ID: <20250207210614.nks6bxad4jhdulwg@jpoimboe>
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+Message-ID: <20250207211324.jwtyy3z5ud2jwegi@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
- <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
- <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+ <20250129020249.owmklacvuvss7z7n@jpoimboe>
+ <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,71 +67,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
+In-Reply-To: <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
 
-On Wed, Feb 05, 2025 at 10:47:58AM +0100, Jens Remus wrote:
-> UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
+On Wed, Feb 05, 2025 at 02:56:36PM +0100, Jens Remus wrote:
+> On 29.01.2025 03:02, Josh Poimboeuf wrote:
 > 
-> With offset_size=1 expands into:
+> > Note FDEs aren't even needed here as the unwinder doesn't need to know
+> > when a function begins/ends.  The only info needed by the unwinder is
+> > just the fre_data struct.  So a simple binary search of fres[] is all
+> > that's really needed.
 > 
-> __UNSAFE_GET_USER_INC(/*to=*/ra_off, /*from=*cur, /*type=*/u8, /*label=*/Efault);
+> In SFrame V2 FDEs specify ranges bound by function start address and
+> length.  FREs in contrast specify open ranges bounded by start address.
+> Their effect ends either with the next FRE becoming into effect or when
+> their FDE range ends.
+> This concept enables holes in the .text section which do not have any
+> valid FDE/FRE information associated.
 > 
-> Expands into:
-> 
-> {
-> 	u8 __to;
-> 	unsafe_get_user(__to, (u8 __user *)cur, Efault);
-> 	cur += sizeof(__to);
-> 	ra_off = (typeof(ra_off))__to;
-> }
-> 
-> The issue is that on the last line __to is u8 instead of s8 and thus
-> u8 gets casted to s32, which is performed without sign extension.  __to
-> would need to be s8 or get casted to s8 for sign extension to take
-> place.
+> Your proposal lacks some sort of mechanism to replicate those holes.
+> It could be FDEs with a flag (or no offsets?) that specifies their
+> range has no valid information.
 
-Ah, I get it now, thanks for spelling that out for me.
+In ORC, a hole is simply specified by an ORC entry (aka "FRE") of type
+UNDEFINED.
 
-Here's what I have at the moment:
+That could be done here as well: the linker would replace a gap with an
+"undefined" FRE which could be identified either by setting a bit in the
+FRE header, or by using a special fre_data[] entry.  For example,
+fre_data index 0 could just be a placeholder for the undefined FRE type.
 
-#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
-({									\
-	type __to;							\
-	unsafe_get_user(__to, (type __user *)from, label);		\
-	from += sizeof(__to);						\
-	to = __to;							\
-})
-
-#define __UNSAFE_GET_USER_INC(to, from, size, label, u_or_s)		\
-({									\
-	switch (size) {							\
-	case 1:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##8, label);	\
-		break;							\
-	case 2:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##16, label);	\
-		break;							\
-	case 4:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##32, label);	\
-		break;							\
-	default:							\
-		dbg_sec_uaccess("%d: bad unsafe_get_user() size %u\n",	\
-				__LINE__, size);			\
-		return -EFAULT;						\
-	}								\
-})
-
-#define UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label)		\
-	__UNSAFE_GET_USER_INC(to, from, size, label, u)
-
-#define UNSAFE_GET_USER_SIGNED_INC(to, from, size, label)		\
-	__UNSAFE_GET_USER_INC(to, from, size, label, s)
-
-#define UNSAFE_GET_USER_INC(to, from, size, label)				\
-	_Generic(to,								\
-		 u8:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 u16:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 u32:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 s8:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-		 s16:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-		 s32:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label))
+-- 
+Josh
