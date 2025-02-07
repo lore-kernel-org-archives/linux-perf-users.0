@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737722417EF;
-	Fri,  7 Feb 2025 01:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ED52417D3;
+	Fri,  7 Feb 2025 02:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738891643; cv=none; b=ht266sSgG0BZQ8wGOcHo3RZOgw+97qNU0ggefycX3xhq0qwdqVpJgFQmWo3a3c1nnOPy+nswLs2NBt/cikUDPx+MgrWCy1YB4NVjA+tBw8vqkJuUesvGYMld4YN+PAjk6E2YFiuxZGMxeHiNYbyjlyqtwhFvl9j3iWJGhQ7dMZA=
+	t=1738894540; cv=none; b=fXqAUINJxs4C1TjqZmXk4ahFcCMy5p9J8cfI7orOrAuFTXLu1VOkVt3iQcOs3QhpTuLAPvopHbWIovGq/xW247cZKY3vPbAZvQzNAQIiQtYQyFA2ifVAcQ04DzLpByfuaDXSNEUmPZvtvhlMW5peXCOr09GpGHk7b5wSHbsGDGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738891643; c=relaxed/simple;
-	bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
+	s=arc-20240116; t=1738894540; c=relaxed/simple;
+	bh=SWS1Hs+K2WCvk8+cgOLlEWSMg01BIf79cpM9X5fqRs0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Af6tvikJK0BJiDF1xnXaRnNYoWSMOQ9rWSDJzPymsoo3UNIljcBj/72T5ORQvkifYN4zzdmDHRIlj/QJ/29MbMg3JbEcivn3qkivPFtn2gdNse3fnzYZEtvhNYoELeg1Lxp2Q4yKhwJl0mdnr8tN4Y3DqLk5Lp7Slbob4s7jwiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+wlvxod; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:Content-Type; b=SCgfEy/UNjgeP4EYL9obKliqkQ7WCwTb+dkLu/xEt+NYwBPuB7zO87B644eJN3ztIkLBaNP0N8x9wrz8POniV/17yNb0QIyEFEHx8lBlGb+2YmGpwl2BU2XKU2sHVCaDHdfp5tG1zFttxV3nfsz8eqyODDYPN7YiYRHp3Hfu+9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOG/n/HF; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+wlvxod"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOG/n/HF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738891642; x=1770427642;
+  t=1738894539; x=1770430539;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
-  b=G+wlvxodxqmbZ8YSqerzk4cLp8InoG3/+ut3lQ+93HjHxl2WrZ+gkdKk
-   L4MxoNJypzd8mUhwio+aQ7Gab5Dq1nkLXN7v8rtp7fz5cyB6KaEG4BrO5
-   HnXCOgUnsvJFYyatcaovhgF0ua7bX01H5OXA8fFoW69zLO2fzKFjAjf03
-   0u493xeCVisAv/0nqiHl2IcCkFxzLoADw6f6iL62yIaNjW1H274jWhEp7
-   t1Ign1vSkTy0E9i2B96wjXqyxwSA01xdSeDGdxy2+nc/AAQZD3L4X/uFB
-   qUGCszmQKNSWjqeym+xpPrLu/UpRzi7Yh9ZKlGizxGMNXam73mD3B7jsx
-   g==;
-X-CSE-ConnectionGUID: zzBE5cT0RWeKtrIUxKu+Yw==
-X-CSE-MsgGUID: y/q9QFdmTy+zVLRGUHPUhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64879768"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="64879768"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:21 -0800
-X-CSE-ConnectionGUID: cwjFxGppQ/iOrh+wD8YrsQ==
-X-CSE-MsgGUID: RmvB7V7xTCWUIEencciG7g==
+  bh=SWS1Hs+K2WCvk8+cgOLlEWSMg01BIf79cpM9X5fqRs0=;
+  b=fOG/n/HFL+xW92b2nT3aXgF9YhIoAxITpKJ/JLWL0oVUpODN4No+s2pN
+   sWDoGCZMfhxGKJorTM1VYB8Xi1w6LZocTH0Z6ziiLfq0TBswWx7Oy8lgN
+   40rsG+SSCHgNeSz0lrHNIdajoaPm7BGefBa6EpnDqp9eKdEhXht7n5snU
+   Sr8l03cIRKXTaLCdKbCDqqeEdt/zh6sAfY+0OqLfNto/jA67NXa+3Zr8I
+   swOc52fxXSqqbcFJdj2fvdUaLBzVyfAFIUv4hGs/Vf68BdNTfPlev04r7
+   LZNSaOnoNRcUMbfR4X5xbP1QDvTkOislb4qhMU01wBNe/LGonOj7VEUlS
+   A==;
+X-CSE-ConnectionGUID: /zcTTFh4QsqeMA9A1YoMgA==
+X-CSE-MsgGUID: ImG9bJ8JSXqxFI5vr5QhwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50510603"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="50510603"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:15:38 -0800
+X-CSE-ConnectionGUID: amFlnjj3T/2qc320CG/riQ==
+X-CSE-MsgGUID: U7CRgg7iR4upalKRpijatA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="142264979"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116013783"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:17 -0800
-Message-ID: <5fb71690-06a4-4140-ace0-63e19c186139@linux.intel.com>
-Date: Fri, 7 Feb 2025 09:27:14 +0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:15:35 -0800
+Message-ID: <d041a9b4-3948-4aa0-985c-632b2eb9b64c@linux.intel.com>
+Date: Fri, 7 Feb 2025 10:15:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,108 +52,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
- counter & pdist map
+Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
+ record test subtest test_leader_sampling
 To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+ Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
- <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
- <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
- <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
+ acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org,
+ agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+ <20250131102756.4185235-3-tmricht@linux.ibm.com>
+ <Z6GMmxKvXd0-fd_-@google.com>
+ <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
+ <688e9a7f-0b98-4f8a-b575-90d7de244589@linux.intel.com>
+ <69f7d048-e7dd-4863-a21f-2d8fafafd280@linux.intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
+In-Reply-To: <69f7d048-e7dd-4863-a21f-2d8fafafd280@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 2/6/2025 11:01 PM, Liang, Kan wrote:
+On 2/6/2025 10:25 PM, Liang, Kan wrote:
 >
-> On 2025-02-05 9:47 p.m., Mi, Dapeng wrote:
->> On 1/28/2025 12:07 AM, Liang, Kan wrote:
->>> On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
->>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>>> can be dynamically configured base on these counter and precise
->>>> distribution bitmap instead of defining them statically.
+> On 2025-02-06 12:42 a.m., Mi, Dapeng wrote:
+>> On 2/4/2025 11:55 PM, Liang, Kan wrote:
+>>> On 2025-02-03 10:42 p.m., Namhyung Kim wrote:
+>>>> Add Kan and Dapeng to CC.
 >>>>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> ---
->>>>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
->>>>  arch/x86/events/intel/ds.c   |  1 +
->>>>  2 files changed, 21 insertions(+)
+>>>> Thanks,
+>>>> Namhyung
 >>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 7775e1e1c1e9..0f1be36113fa 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>>  			    struct perf_event *event)
->>>>  {
->>>>  	struct event_constraint *c1, *c2;
->>>> +	struct pmu *pmu = event->pmu;
->>>>  
->>>>  	c1 = cpuc->event_constraint[idx];
->>>>  
->>>> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>>  		c2->weight = hweight64(c2->idxmsk64);
->>>>  	}
->>>>  
->>>> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
->>>> +		u64 pebs_cntrs_mask;
->>>> +		u64 cntrs_mask;
->>>> +
->>>> +		if (event->attr.precise_ip >= 3)
->>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
->>>> +		else
->>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
->>>> +
->>>> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
->>>> +			     hybrid(pmu, cntr_mask64);
->>>> +
->>>> +		if (pebs_cntrs_mask != cntrs_mask) {
->>>> +			c2 = dyn_constraint(cpuc, c2, idx);
->>>> +			c2->idxmsk64 &= pebs_cntrs_mask;
->>>> +			c2->weight = hweight64(c2->idxmsk64);
->>>> +		}
->>>> +	}
->>> The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
->>> boot. I don't think it's efficient to calculate them every time.
+>>>>
+>>>> On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
+>>>>> On s390 the event instructions can not be used for recording.
+>>>>> This event is only supported by perf stat.
+>>>>>
+>>>>> Change the event from instructions to cycles in
+>>>>> subtest test_leader_sampling.
+>>>>>
+>>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>>>> Suggested-by: James Clark <james.clark@linaro.org>
+>>>>> Reviewed-by: James Clark <james.clark@linaro.org>
+>>>>> ---
+>>>>>  tools/perf/tests/shell/record.sh | 10 +++++-----
+>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>>>> index fe2d05bcbb1f..ba8d873d3ca7 100755
+>>>>> --- a/tools/perf/tests/shell/record.sh
+>>>>> +++ b/tools/perf/tests/shell/record.sh
+>>>>> @@ -231,7 +231,7 @@ test_cgroup() {
+>>>>>  
+>>>>>  test_leader_sampling() {
+>>>>>    echo "Basic leader sampling test"
+>>>>> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
+>>>>> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
+>>>>>      perf test -w brstack 2> /dev/null
+>>> As a non-precise test, using cycles instead should be fine. But we
+>>> should never use it for precise test, e.g., with p. Because cycles is a
+>>> non-precise event. It would not surprise me if there is a skid when
+>>> reading two cycles events at the point when the event overflow occurs.
 >>>
->>> Maybe adding a local pebs_event_constraints_pdist[] and update both
->>> pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
->>> enumerated mask at initialization time.
->>>
->>> Update the intel_pebs_constraints() to utilize the corresponding array
->>> according to the precise_ip.
->>>
->>> The above may be avoided.
->> Even we have these two arrays, we still need the dynamic constraint, right?
->> We can't predict what the event is, the event may be mapped to a quite
->> specific event constraint and we can know it in advance.
-> The dynamic constraint is not necessary, but two arrays seems not
-> enough. Because a PEBS event may fall back to the event_constraints as
-> well. Sigh.
-> Four arrays should be required. pebs_event_constraints[],
-> pebs_event_constraints_pdist[], event_constraints_for_pebs[],
-> event_constraints_for_pdist_pebs[].
-> But it seems too complicated. It may not be implemented now.
+>>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>> Kan, I suppose you mean only the case without counter snapshot, right? With
+>> counter snapshot's help, there would be same period even for non-precise
+>> events, right?
+> No, the counter-snapshot doesn't help. That's why I suggested to not
+> utilize it via enabling the modifier p. It should work for most of the
+> cases. But it's not 100% guaranteed for some non-precise events that the
+> same period is got at overflow. Since it's a test that could be run
+> everywhere, the occasional false alarm would just bring troubles.
 >
-> But, at least the pebs_cntrs_mask and cntrs_mask can be calculated in
-> the hw_config(), or even intel_pmu_init() once. It should not be
-> calculated every time in the critical path.
+> Without p, it falls back to the traditional way of handling the sampling
+> read. In the PMI handler, the global control is disabled first, then all
+> the counters are read. The value may not be very accurate, since it's
+> stopped at the PMI handler, not the counter overflow. But because of the
+> global control, all the counters stop at the same time. The skid would
+> be the same. The test should work.
 
-Yeah, these two counters mask are unnecessary to calculate at each call. It
-looks we can further optimize this base on your dynamic constraints
-optimization patch. Thanks.
+Got it. Thanks for explaining.
 
 
 >
@@ -163,20 +141,30 @@ optimization patch. Thanks.
 >>> Thanks,
 >>> Kan
 >>>
->>>> +
->>>>  	return c2;
->>>>  }
->>>>  
->>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>>> index 2f2c6b7c801b..a573ce0e576a 100644
->>>> --- a/arch/x86/events/intel/ds.c
->>>> +++ b/arch/x86/events/intel/ds.c
->>>> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
->>>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
->>>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
->>>>  	x86_pmu.pebs_capable = ~0ULL;
->>>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
->>>>  }
->>>>  
->>>>  /*
->
+>>>>>    then
+>>>>>      echo "Leader sampling [Failed record]"
+>>>>> @@ -243,15 +243,15 @@ test_leader_sampling() {
+>>>>>    while IFS= read -r line
+>>>>>    do
+>>>>>      # Check if the two instruction counts are equal in each record
+>>>>> -    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
+>>>>> -    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
+>>>>> +    cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>>>>> +    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>>>>>      then
+>>>>> -      echo "Leader sampling [Failed inconsistent instructions count]"
+>>>>> +      echo "Leader sampling [Failed inconsistent cycles count]"
+>>>>>        err=1
+>>>>>        return
+>>>>>      fi
+>>>>>      index=$(($index+1))
+>>>>> -    prev_instructions=$instructions
+>>>>> +    prev_cycles=$cycles
+>>>>>    done < $script_output
+>>>>>    echo "Basic leader sampling test [Success]"
+>>>>>  }
+>>>>> -- 
+>>>>> 2.48.1
+>> The code changes look good for me.
+>>
+>>
