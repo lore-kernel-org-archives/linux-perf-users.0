@@ -1,29 +1,29 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013054.outbound.protection.outlook.com [40.107.162.54])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B04518DB0E;
-	Fri,  7 Feb 2025 19:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0321A3159;
+	Fri,  7 Feb 2025 19:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
 ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955914; cv=fail; b=nDqlzXmnQuq/c14MB1+qyQTm/sMZWnWhSpoPvgwkSrayP7j6eEtnH63tLy54gIgkCmjgiXeHzucsMiySUQ5GLksQa+3bhUXlxnvbjfWEqmTiuMoHUkGI62M/UgbzFGJGO49ANFmWSEoxxXZkOnh/v+ayy70ikayD+oI0rCfT2m0=
+	t=1738956227; cv=fail; b=dxtr48AnxeTfAd0ycFu970LFsui/2c9U5Mhmd+ljGe9q6tvqcegepqraPu8VlTzJKySbEVh3ZTeinFCXufUfbU+VV+/gT/lnNDj5AvW+Ee9f1zX3gWQI/0PLHJNr+QJUeSvfAtK+k8R5OXyUaKOY9pi9vnIGvoZ6Achg7q3gZH0=
 ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955914; c=relaxed/simple;
-	bh=jx61rH4qW/cbTSFAQDpykuJNYGzoXjx7+s43JBt6R4Q=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qWk6oODI1P9eFqlXd8maJV+VtJ7wTMVK/BaL6r6eFiIzUa1iDW7Ka/mmsGIf5czHXiXRHPYbd/d4z8Cdk5NWJmzAvzuemr2I8yWh1AuOoOROS8cqSBLBAJoCbf8uiFcjhg2ojz6DUEo6JctI3sXZgjI3geNHVB7D3KwkeiItkTM=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HMZeCR7n; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HMZeCR7n; arc=fail smtp.client-ip=40.107.162.54
+	s=arc-20240116; t=1738956227; c=relaxed/simple;
+	bh=IILhsrHuHpowGgizqop6elXBxcYmYF6eQGklgO8AUbA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HivsZTjnmusVBZffqawJL6dIK90vbmPJ4n3i6wPHUWFxXYa3k/1cgGL4Nt7InAOfzhsWB/g2FzqD0nuemsRSFuhQ0ImneTtCL98AKWeavhG2mX1tZDRcWecF85Ebs/uuOBCo4bOTYy78J/fYSL8H62Y42wt1NYb0BV6xF7a63ro=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Pkzu+YS2; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Pkzu+YS2; arc=fail smtp.client-ip=40.107.20.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="HMZeCR7n";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="HMZeCR7n"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Pkzu+YS2";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Pkzu+YS2"
 ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=SmSb6zVuAfafsCJisdLRTGc2/3Xuj2g+fOGi1PTBDwzzG4HMfmBKlEBt7y+IltosMx7q9cPD6wdYoc9l3/iNVWQRfQiaTUIaZIS/cvQ6pQ9AscyWHzrNCWqOaSPkqq3XzOJP8qpIM40VAXDpCFPtYVPgaLDv9zZybDSsW6/FMx0pRmGLGmcvkxql+7GclmuFbJXyGxBlq6evOgBQmghn60GhX6aEnGKq3Qam2hAEHUD6YW+c8BPeTTA6/aGleXXKqRuxS902ZiWqh6kzSy7RlEcgaE5azz7c4Y9iHFgy28PeXTY6VKije7ekMXIiNfZweCImlRwzlA3D/ttAVr3G3A==
+ b=jW+H/sdCeLdvugJO0SWxVdaGIpKmd1ktZi4c23CAFavyo+w+jRClpG215j+BSUh8WMhvQ35nrbMgDSzhvDk56MThBK1Mk2arAMI7PuK7jW/7cV894VKWY3CVylwFlMs4sV+ZWKaqU5n1HWAnpfvX3DkJiYv2KiF7E+Kwa7PH3Vzqpy50nw2y6pGMfIWWZBJDlAn8hFflvuxSUNHf8xIR76ntcpJ+c/MgFNt5aerpIHqaUE6OUjiQ8sboqr1RSWBx9Inpb+6TG2yiJh2XK9JvBcpFbrYLR2l1dopyN4b97RdpIIu/vG3o2wHynmWZ6NLknTzIrFKcG1YV2mgy6uhhNQ==
 ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0C1pdnIBazGJ5kTMuCiNNnOGr2jrVCJHgeiK6ubzIj8=;
- b=bESj/i7dvlLLasWQGM8LdmTNK85A3NcSf4Xwz8ZdD99fXG1Z+0KS8ytpu/tcP4rmBC5ES4kqh1xN5HBrWYAs1GSphl4KHpphA5crJ7iLaLgt+iOC0z7xE5V6NuAOQDMbn0WfP32yaVzDDsWaortsYRtccKGMt7T1Xirtwjed0zw/UM2ekNmsMrHVvnTvv4waB0bWtGh6GGg3Q9hc3gGvk+bz0C3M+2MhnvgdoqpRKWiPXNFBkGkJnGBMsS6pcUD4G+YfYeuBthRaPcIZk1UzvLotir1Lx8bxPLpUmVqklCo73xez0AdseGV9mX33j3oYKJxQAdafo92QQ5u+42f+yg==
+ bh=aipSqgLpoDnEPQysiAsIkB3yfOtvsCXrv8LkMUaF/OA=;
+ b=GdjQUO8YQyXfWxpB7U2NQ44CMrpFwFQJWmtwo9cUZ+cpTycNcZJ4spYYbubJGVU5xGZRfIMFGuKyIOXMZtS3zbpJdzbhks8Pivq21PLSEHl3IfsJuqyxzdCgcZFqzD6lJC65YDIg8N5ViHipe/KEZj43mimB/pm43qlVGxRFoE+mi8UuorMQ3teeGa2Uiw5FVYQbPiMMfjNKiIUrriT/jC/TivNpSDC7ALPm3RolA4iBzR8jt4pgOX4PjC5nyPk9VF8b0pDMyAa/Y2IR3fYnKTTLqJMhDQgSf3Y6IBW4XxAwX7uGP//jJh4S0Ji9ehLnqijXl9QQ5JDyf0D8bnoMAw==
 ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
@@ -32,18 +32,18 @@ ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
  dmarc=[1,1,header.from=arm.com])
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0C1pdnIBazGJ5kTMuCiNNnOGr2jrVCJHgeiK6ubzIj8=;
- b=HMZeCR7n+9+9mUGiyFyQPCiASfsS+l9L8Y0glQFRwbXcIZ49O6l6xE79khIE+9vkUiouCF024mPdcmdiS5ojYVW7tJkArO6KCJQ7liUfiQPV5cddalgsF6fuJoHRE+otDYznHzT4S60wzQZoQCnPgUThrPPT+5AsNGrswKGVF7U=
-Received: from CWLP123CA0058.GBRP123.PROD.OUTLOOK.COM (2603:10a6:401:59::22)
- by DU0PR08MB9751.eurprd08.prod.outlook.com (2603:10a6:10:445::17) with
+ bh=aipSqgLpoDnEPQysiAsIkB3yfOtvsCXrv8LkMUaF/OA=;
+ b=Pkzu+YS2wKlXLGWc/spq+KkLPUu9dzZnpNmSUOJdAWY9LnucFvS0v2oJh0FHz0pXMXlerfPnSAjR5YJXFadhsYxQkS38TsC/iKaJ/Wj+8PqsTdt/vWIZJ43ev37VhkksJgAM3Xcwbyy/RogfVCBpB+eyRDUQvIlYkhdeOgpazMY=
+Received: from AM0PR02CA0206.eurprd02.prod.outlook.com (2603:10a6:20b:28f::13)
+ by DB9PR08MB8316.eurprd08.prod.outlook.com (2603:10a6:10:3dc::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
- 2025 19:18:26 +0000
-Received: from AMS1EPF0000004C.eurprd04.prod.outlook.com
- (2603:10a6:401:59:cafe::c0) by CWLP123CA0058.outlook.office365.com
- (2603:10a6:401:59::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.29 via Frontend Transport; Fri,
- 7 Feb 2025 19:18:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.15; Fri, 7 Feb
+ 2025 19:23:37 +0000
+Received: from AMS0EPF000001A5.eurprd05.prod.outlook.com
+ (2603:10a6:20b:28f:cafe::d4) by AM0PR02CA0206.outlook.office365.com
+ (2603:10a6:20b:28f::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.30 via Frontend Transport; Fri,
+ 7 Feb 2025 19:23:37 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; dkim=pass (signature was verified)
  header.d=arm.com;dmarc=pass action=none header.from=arm.com;
@@ -52,69 +52,68 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
  pr=C
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AMS1EPF0000004C.mail.protection.outlook.com (10.167.16.137) with Microsoft
+ AMS0EPF000001A5.mail.protection.outlook.com (10.167.16.232) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.14
- via Frontend Transport; Fri, 7 Feb 2025 19:18:26 +0000
-Received: ("Tessian outbound 31e949b9df6b:v567"); Fri, 07 Feb 2025 19:18:25 +0000
+ via Frontend Transport; Fri, 7 Feb 2025 19:23:35 +0000
+Received: ("Tessian outbound c79bb2535b53:v567"); Fri, 07 Feb 2025 19:23:35 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: d195c47640a804fd
-X-TessianGatewayMetadata: RVcM+2kEFlKO//cRfylcSxe+dv186kRKi2mrtFDdFIwxZsyA63dYnINapg618eN6z3ArvB9CQlwJPmSUiU5794BYjFPGHR17ZZJ989IlUX5WiPLeO5SHdF1ooi6hN8wR2WjZ4/GuJ91WZcN4hVGZy/YEueLvYMYGYerUUj9wbcw=
+X-CR-MTA-CID: 1fe9282f02dec424
+X-TessianGatewayMetadata: 6ZFWwtMxPats07uXs2Jlpe/t2p8z61JyJgJ0auCJmvHHluNGCl2HGGLEvl7ySz5HQg5DziM80bzSYROt0tw/DpJHNWg2byQKPITvoe1RX76ZrJiPndgU532eUPcThL9GjOFlJz+XYRQwnyJBXae0ZwZze6tXN/Vo0erYWisN8Do=
 X-CR-MTA-TID: 64aa7808
-Received: from L3f283fb91734.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E07E2323-8071-4F6A-9B9C-3F3ACE6B1B52.1;
-	Fri, 07 Feb 2025 19:18:14 +0000
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L3f283fb91734.2
+Received: from L7dae6bd2ee6b.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id DD93DFF3-9155-4AA0-ADC0-642EB00ACE57.1;
+	Fri, 07 Feb 2025 19:23:24 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L7dae6bd2ee6b.1
     (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-    Fri, 07 Feb 2025 19:18:14 +0000
+    Fri, 07 Feb 2025 19:23:24 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H+ScWfeA6ZZwnFGxwjct7ipz91CQAsbXE0t/Pbbpce2J/wlrVJym2ke7fOAr9IWHO122PLbQMixDJNd3Yh28afqizxJTKITbnL2GYDsB+9VQs3N2sXJuVsHUdtuQ3wEoB7Y1Z/3AGppr3PV4l+Z9Xjd0P9pRr8L1TI1yeFmv/zLXK57KJNcW6sOH2cnOR7j2fGi+YtOx0P2ua9N746MvoJjp7x4M3VP6SyAv8bIQxdTNcUqVVMv7MDtmNLM3w7clDRWSGeD+rhZY+9YlWjnR+8np01+uAEpMkfwrDRCDUJ5eZ9qqdLrlJ/xm4+Nqunx9rSzrwez0GPwuTj084mGcPw==
+ b=FBX1n+ZtW82DpBOAnLmh1dXkIYs7KvrB67jPcJFLMh1Opj4S+T1pPr56eDFcuZpwipOmoS317NWx1G61lVYw2+/KljK3RXtZoVnafhPFAyM9JwZ7fQ/83/nt477llMKEoVFJmGS0clfFC6Dd2JdetU10I3s43mBy7YOHca+IXRGGb8r6HNATfsY6VrIC+0pIwDfxRpdPkUClS0yat4asq0BUu1ftMi1/kN2AMj/zgMANXolhh4/TjWHH116BDx26T2zZTSwO7jH2prrQf7YbgajrxjQvUKfHtwqllVqxihiJYXoD37O1VP0W3q7HA4XdbNZ+nABlX2u0B5Dd2eij6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0C1pdnIBazGJ5kTMuCiNNnOGr2jrVCJHgeiK6ubzIj8=;
- b=gz/of/Q3gLkosIhXwcdqim/G83DWq68GyPyyQEeCTFp4oSxk2OmUi+CGpTMQJrGrWMUgEZ+MenzMUfQHur/uoxRzs6amPcgc9Fvv/tZ6eUXVGL6VtO5ZNQCC89FbdGY59P+A/36DIcoZ+LVTNAGVpy9Jh282YpNO92pwiXf0wtnvG27ELc/lQ6bpfkXJ2JAutqGAaStZYtKDVx4E0d16B116sj6mzyHOYDYEKk+MuLQG462A6luPPEE60xWUmU5BaKwt8SVLEhecGlfuK4tu8LQl/LIIK3AA3FqXu+Thhb+9NjmeevHBkOaMU3RDve3vO041JoloEMlcNGr0q19EOA==
+ bh=aipSqgLpoDnEPQysiAsIkB3yfOtvsCXrv8LkMUaF/OA=;
+ b=BjAN/p/cErzRqCMlYY+qZ/7q/Cv1/T4J0Ix7IActhMa1Hgto/nc/lhqcIjv0pHSW2JKwomBwI0I34S1GEIvboqQd4n8Am00iEMrc3RPMlfi7bF9ZDUzr2ycCbqf/TAB0ERrJw/JSoC1jfQzQbyRxWqsjo7xwN9s1KLCbQgBc3GP6n0vvrxDI4NYZX97K8uXeb26iUNe8BOet6g4TVixLITtKB8EYv+x7VX3LSeP172Nq1eZ77aG5yEGF/3oKVKwIM26nt570z3GoNgYhFN5Gy3pkN16gdWfVn03ZVnEHdBspMRu+GOQlUHT87/dYWw6OQeng/yGE84jsfhcADUkOLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0C1pdnIBazGJ5kTMuCiNNnOGr2jrVCJHgeiK6ubzIj8=;
- b=HMZeCR7n+9+9mUGiyFyQPCiASfsS+l9L8Y0glQFRwbXcIZ49O6l6xE79khIE+9vkUiouCF024mPdcmdiS5ojYVW7tJkArO6KCJQ7liUfiQPV5cddalgsF6fuJoHRE+otDYznHzT4S60wzQZoQCnPgUThrPPT+5AsNGrswKGVF7U=
+ bh=aipSqgLpoDnEPQysiAsIkB3yfOtvsCXrv8LkMUaF/OA=;
+ b=Pkzu+YS2wKlXLGWc/spq+KkLPUu9dzZnpNmSUOJdAWY9LnucFvS0v2oJh0FHz0pXMXlerfPnSAjR5YJXFadhsYxQkS38TsC/iKaJ/Wj+8PqsTdt/vWIZJ43ev37VhkksJgAM3Xcwbyy/RogfVCBpB+eyRDUQvIlYkhdeOgpazMY=
 Authentication-Results-Original: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=arm.com;
 Received: from DB9PR08MB7584.eurprd08.prod.outlook.com (2603:10a6:10:308::6)
  by PAXPR08MB7442.eurprd08.prod.outlook.com (2603:10a6:102:2b8::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
- 2025 19:18:11 +0000
+ 2025 19:23:22 +0000
 Received: from DB9PR08MB7584.eurprd08.prod.outlook.com
  ([fe80::5144:343:7017:bacb]) by DB9PR08MB7584.eurprd08.prod.outlook.com
  ([fe80::5144:343:7017:bacb%5]) with mapi id 15.20.8398.021; Fri, 7 Feb 2025
- 19:18:11 +0000
-Message-ID: <92a463cc-608c-4efd-ba78-6da74b99b08b@arm.com>
-Date: Fri, 7 Feb 2025 19:18:08 +0000
+ 19:23:22 +0000
+Message-ID: <b4302bc7-f2c2-4105-a39e-57a60aa242ff@arm.com>
+Date: Fri, 7 Feb 2025 19:23:19 +0000
 User-Agent: Mozilla Thunderbird
-From: Mark Barnett <mark.barnett@arm.com>
-Subject: Re: [PATCH v2 1/5] perf: Allow periodic events to alternate between
- two sample periods
-To: Rob Herring <robh@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
- deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
- james.clark@arm.com, mark.rutland@arm.com,
+Subject: Re: [PATCH v2 0/5] A mechanism for efficient support for per-function
+ metrics
+To: James Clark <james.clark@linaro.org>
+Cc: ben.gainey@arm.com, deepak.surti@arm.com, ak@linux.intel.com,
+ will@kernel.org, james.clark@arm.com, mark.rutland@arm.com,
  alexander.shishkin@linux.intel.com, jolsa@kernel.org,
  adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, irogers@google.com
 References: <20250106120156.227273-1-mark.barnett@arm.com>
- <20250106120156.227273-2-mark.barnett@arm.com>
- <CAL_Jsq++8-yadgbyTvNZkhML-j73UP6VS+qiaD3gQB=rc=w08w@mail.gmail.com>
+ <ca8de228-68c2-4b2c-bb58-30f275afc49e@linaro.org>
 Content-Language: en-US
-In-Reply-To: <CAL_Jsq++8-yadgbyTvNZkhML-j73UP6VS+qiaD3gQB=rc=w08w@mail.gmail.com>
+From: Mark Barnett <mark.barnett@arm.com>
+In-Reply-To: <ca8de228-68c2-4b2c-bb58-30f275afc49e@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0135.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c4::10) To DB9PR08MB7584.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LO4P265CA0238.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:350::11) To DB9PR08MB7584.eurprd08.prod.outlook.com
  (2603:10a6:10:308::6)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -123,8 +122,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-TrafficTypeDiagnostic:
-	DB9PR08MB7584:EE_|PAXPR08MB7442:EE_|AMS1EPF0000004C:EE_|DU0PR08MB9751:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12d8166f-c31e-4d3a-6d6f-08dd47ac325d
+	DB9PR08MB7584:EE_|PAXPR08MB7442:EE_|AMS0EPF000001A5:EE_|DB9PR08MB8316:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7bae4927-0d67-4f47-0450-08dd47aceaff
 x-checkrecipientrouted: true
 NoDisclaimer: true
 X-MS-Exchange-SenderADCheck: 1
@@ -132,38 +131,38 @@ X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted:
  BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
 X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?cEpEa0RtTU5NM0I1RitBY0FuR1JSK2NvVzdMUHpBZ0pIN09SalZJZEk4WXNB?=
- =?utf-8?B?RUU2clc2L3E2bUNKZG5ZNzd1K1JKZ09IUUMzWkpZcXdmWXgrNXBHWi9xYVIv?=
- =?utf-8?B?eXVZaEhJT1MweTFDdnZRenFrdW0rZEF1YkhvdjEvQkgzRm9BaUdlcTdabnFB?=
- =?utf-8?B?aHMwOWIyRUpzaU1GNVpmQUVmOU9CL1VYck91ZXJDWHd3VlZzanpCOUtKMDdG?=
- =?utf-8?B?MlEzaytiRU91TVJoY0Zubkk0VDRSUHRONkoyVENQY1JqdVJTem8xaS9jaVI1?=
- =?utf-8?B?UlNMcVY4Rjltc1Q1VlhGSzJ0eEpEc3cwNll4NGpxTnVFNDVZQzdtY3pVdjQ2?=
- =?utf-8?B?aDgyZEZqWDVOYzIxYzU5cm1MaENPc2NSWE9DQ09uLzhNaGREU3NHSW1RbVVR?=
- =?utf-8?B?Ukx1dWorWWVUTyt4dGJWUFpPY0dYSDM1RUR1R09kcHN3QkZ6cWFkTzlrZU1O?=
- =?utf-8?B?TzZzTitmem9tYjZjM1krMnVMZjBPeVVqeVJvenBWMlBLN09rMEhneW9nK0F5?=
- =?utf-8?B?dDVnRnNpT2l0NVJhUFFNQkxRV3VKdFlQS29xSit6NHZxSHFFaHFQQm9RYkFk?=
- =?utf-8?B?Ti9tSW8yQjQ1S0xPaDZMSStXeWM1dnlYZFZqRG5aT2lvQWxEOW1EeitQRDhp?=
- =?utf-8?B?MHVDRkZsb1g3N0lUVGV4NjNJNkNwb1lZSmYrenUrTm9kclA3akgweForUjdR?=
- =?utf-8?B?R2N5b2dUclJzUVBKdk4zREZ0cVBMSHE3WXF3TWQxdXFZVUpUNE13VXl4REF1?=
- =?utf-8?B?clpnWEx1S2toQUx6MFh6djk0L1JacklmQ3p5bHh2VmFhSmVWT0lhbTVEa1R2?=
- =?utf-8?B?YWVEdy9ubWIzMnBOSUQ3OUVUOWpXd0tlRGd1UzNVZlh6d2E1QTlWMWhJV3NI?=
- =?utf-8?B?c21XaklEcXVpZ0w2SjcybXlTbjdYdEdTR0xraTdYdDF0VU1lZTg1bHpmY3Zw?=
- =?utf-8?B?c2EwSHBUYVpNKzFBaFcxdG1vOUhQME5rMm1MbFo0SjlGQkVXTGdYVVVHVFhq?=
- =?utf-8?B?K0FqSmd4WTdObndhRDdzZWlmUnBaR2hKa0xtOS82aWxGWFdyUnlBNUViVE9U?=
- =?utf-8?B?VlhhYmtUaExPQ2pyTVZ0YUVpclN6anJEQk44NDRyNzU5VDZ1VEV5WlpSUW1Q?=
- =?utf-8?B?SytUYXRKbHNEQW1aeGt4V2dsTG1UOThmSnQybnczbkQzeEJGa2VYeStUY2Z2?=
- =?utf-8?B?Yk1uZ3RiR2h5YXNFZkUxNDVCbmM5YWxVUHZ5THYxbzFsbUhkNngreGRVVGwx?=
- =?utf-8?B?cXdpejNDME5mRkV0aEJFV3Fua0cvTTB5SXhrKzU5WllHQXBzZGhoQndPUFlk?=
- =?utf-8?B?eVI3ekRuQTlwK3RvSjJRTERoQ3RFaVJWWVRxeWVQK1NpT3M3WXdrWGdkNUs4?=
- =?utf-8?B?WkszSjh3V2tlcVRQdE1JMlpRaWVTTTA2a1plUGZuelNYQTVEeENUcFRXYVNr?=
- =?utf-8?B?MGZJTllyak9FVkpwQUdNaWJMM1lzb050cmZOd3JwbFhvU1g3dWlSSHV1OWRP?=
- =?utf-8?B?T0JwNTN1dXhoOFhPQm9PcVBCcUZEY1dhMmp0VXJiSW5zRnM5SEFKakpLZ2V1?=
- =?utf-8?B?NXhpOVR6UzJ0RkRHbXF4bFloNlk2UzZuOUVDUUx0cEoyMk9HSWxVd1VGaEtj?=
- =?utf-8?B?bWtRMC80WWpIbE9xUjRMUWZmd0NsMThBTk43dldJR2VjeWJucUF1OFFRSFpN?=
- =?utf-8?B?a2cvSTI5KzVBWUwzR29yZE5qZ1NYdWNjdDkyQ3RRMitMcjF1Z1lNckhxcElK?=
- =?utf-8?B?V04vL1p4R2xSTnh4TllQeGRjMHd1SXNIdXBacGw1R2EyVVlzdUxualNpckdU?=
- =?utf-8?B?Z3Q5L25jZXNVMWVWeDc3T2RCbHhKdHB1bkhHbVZnU1dqRFRYV0ZIL1I3Vk4x?=
- =?utf-8?Q?ALdv9imNUKpW0?=
+ =?utf-8?B?Qno3Q0U4QWVrZUlhRm5WSElpV2RobzBMTHplY0FkZllkWjZBNEpvYTg3d0No?=
+ =?utf-8?B?d1o2WHZlMytQWm5rZmpVNzV6MDJURFVNY0ZvNHVIK2JtRmJpOW9ESGwxQzFR?=
+ =?utf-8?B?MWl1SWlvVXJpcjdWY0lhNGNJbXhKNlg5K0NYMko4WGpnaDhMT0wzSTlvbGZN?=
+ =?utf-8?B?N1dTTmpoUnRZOE96bmRwc2RleUYwL3MvOGJsMmFwYmVocWZnSXRRK2k0amZs?=
+ =?utf-8?B?YWozWlFheU5jeFNvRk0zTDBaRkVJaFV3ZUQ4bGo3ektXVlJ1OGxIQ2JkaTh5?=
+ =?utf-8?B?K25RbmpEZVpqMzY5cVlrTUNRYlpzV3h0RDVuT2s5QXAvWnBRd3FsWU85WThD?=
+ =?utf-8?B?RTlRNWs4WlBYNEpJdFQvT1NtOU1MRWJIYmJGTnVGekxFdTkzZzBwYkVuT2pQ?=
+ =?utf-8?B?L2p1Z0hQSEpaU1RGYjZFeFFUQWxqVXh1ZUwrcVJ2aTVRQ09mdGZ2ejR0Y0hV?=
+ =?utf-8?B?Q0U1cUw3S0JzYUw1am8vb2U3NklxL3BoRVQ3ZUFQRTVuYitQTmw1R1c2UW1p?=
+ =?utf-8?B?VFp6MElPQjRzVDVvYVU4UVY0aWRYVUJsRHJGdFlFUlBoK1FCSC8reFh4eFVG?=
+ =?utf-8?B?am1IRkRYR1ltSm9ONVpDQlQvSXVBUVBmL0NDZVVlRWFZNkNpa1hub1pUM2lr?=
+ =?utf-8?B?dnRqcUdmQkJ1KzQ0RWh2VGNVL00xMHZZUkFHS0NSU0ZjTnNOYTlLbWNEbFY0?=
+ =?utf-8?B?aS9KUU9oblJkL3NSMVErWmhlUFo2d3VhdkxUMGt5WnpMaTBpeHFqcFAxZTg4?=
+ =?utf-8?B?OVJnVWhaSHEvNjJ2cG12bGlUNkY1cUJPUStKTDFETGxEM3JzN0l3SDZ4ckY0?=
+ =?utf-8?B?dEY0cHdxd2VKd29acHErYkNFWE5maUIzd0lLbXhjTjlGc256ZWR1eW5ob2VB?=
+ =?utf-8?B?K2MzNU90M0FTaXZxb2UzUUNwUUZrUi8zYkJ4MjM5eU5xYWhXdTFZR21YNGl2?=
+ =?utf-8?B?di9od3lmMWhLbkx5QVl3YUdtUlloV21wbEc5dE02dUhhLzhaWC8rWEZTTmJa?=
+ =?utf-8?B?bDdDS1Z2WlNLMUdGclZjM1NVekdtMzQybjE5aDBMLytaTnNPY0NjWDZrbmU1?=
+ =?utf-8?B?S0d3WEI0VkJmaW56d1d0c1RUa3V3Vk1xSFpFVlB1VkNyS2xuVUdhSERwcnpa?=
+ =?utf-8?B?ZGxYQldUaStjZFgyL3lJc2l2clViTG82anIrMHBCR2lZQmpTUXo2ekNWZTVK?=
+ =?utf-8?B?QWE4VHZXOUpxNlpBWHBjZHRyTDNWR0ZMa21aZW44UE9SZTVMN2hQSHJmaHpM?=
+ =?utf-8?B?TjVTL1VSUlhTK01KTjBhcUVSUHZvL1l2cXAyUUovdG5TZUZRUmhEOFcranE3?=
+ =?utf-8?B?WmtSKytROVF2UzgvUGJScnZKbW5Xa3A5OWs1ek5ZNzNmZmxCd21MOS9hbzNw?=
+ =?utf-8?B?aWxUTnRJZU1COUdhcFZITlpKS0V5Ym9GbXJwemsrMUloamowbWJIOENlVFBv?=
+ =?utf-8?B?U0RrMENyRGZaSFBadlJEUDdsOFdaQTBVdDJVZnBjdHIvVnpBb2JyZW8vUUlN?=
+ =?utf-8?B?M0FGL3g1Y0laYURPQkdkM3dSckNkSnJVWmNwejFUalQwRlJZVk14V2VibFhl?=
+ =?utf-8?B?M0IrQVBSTm5WVWdBN3ZvS2Q1WVBhVTJmVUl1Nk9FSnFBcm9TRDRSaEFtMEtR?=
+ =?utf-8?B?dkVlMm5ScXI3YVF2Z0ZEazdKVUpqKy9JWkxBZDc1S3F5NHRWUUJ0cGtFdWhE?=
+ =?utf-8?B?bTJBVEcwTys3Z3gvK3RXeUJVbU5xRnNCS2d5UVI2d0dsQUNkb2Jwemw1Zlhi?=
+ =?utf-8?B?NG5zZVV6K0laalZDTS9xeHFDQklWTlpZeHB5Tks3YXhyRFJ3dVRFSEk2Mjla?=
+ =?utf-8?B?R2VTUTNDRnRLSnByakFnUDVWZjExekJ4V0UxZlJreHpTdDMwM3B4cUUwSFAw?=
+ =?utf-8?Q?hg01URj39EYvh?=
 X-Forefront-Antispam-Report-Untrusted:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB7584.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7442
@@ -173,190 +172,90 @@ X-EOPAttributedMessage: 0
 X-MS-Exchange-SkipListedInternetSender:
  ip=[2603:10a6:10:308::6];domain=DB9PR08MB7584.eurprd08.prod.outlook.com
 X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS1EPF0000004C.eurprd04.prod.outlook.com
+ AMS0EPF000001A5.eurprd05.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	4018be7d-1b1d-4192-cc9f-08dd47ac29a9
+	14c3fc49-cef2-4de1-8a85-08dd47ace302
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|14060799003|1800799024|376014|36860700013|35042699022|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QUhBYkVPZVU0bkkxczc3YXhxbkFrRFRBS0tVNG51MHJLWVErOGxYUHAwUys5?=
- =?utf-8?B?VDY0R29uOUN2UFhFaThNS2huL0JiU2w4eUoxL2NkY3VLd0loZXF4ajFmcGxM?=
- =?utf-8?B?c3cwcnYzcEt6QUI3TU1UZ25SOUluWDYwV3pnOVM1RDJVd1gxalorcTVCNU1p?=
- =?utf-8?B?eEdwZzVPUjdjM0h0ODZiRG0randVbStjS2pwNWpsZ1ZHTnREK0dBeU5IUjNk?=
- =?utf-8?B?eFdrZGMwTm1GV3MrK2hHZUhLZUo1T0NjKzlocU1QZ1BmNkZ1enZaVGplMTcr?=
- =?utf-8?B?dUZRTnRNS2VJOUdlNGl0dWk3c1pQMmFGMGlNWTZnc1JrejlDNkwxM3NYdXY5?=
- =?utf-8?B?L3Evd1JCdWlaZ1JJTFlvaGVnM2JCcUErRHAzcVI0WG0rczdpODhtQTZZNVZY?=
- =?utf-8?B?emxnZ2VLRW5IVlhQSzNUaWV4WG45YllCQXIwVy9DRU9LSDdDQWZSMEJvQ1Ft?=
- =?utf-8?B?Tk9ROWRiTGwrL2VMbmxQQmtrUnA0azVpbFJ4em5LMU5TQVNGeDVVbkRqemVO?=
- =?utf-8?B?dWUyM3E0V2t6QVQ0TGcrWjg2MG52WVNURlV3RW9zd2sveWlQazFFOXFrOXpI?=
- =?utf-8?B?b24xbFhXM21CT1c4clBNa2FrbWVtVlZjL3MrWHBQQXJ1aDd4UmZ6ZFo4dnVl?=
- =?utf-8?B?QWI4Y3JnKzU5TzRobUJnM21RU1pjRllZaEJXQXo1OXJPU3JRTGV1OHc5K3lm?=
- =?utf-8?B?Qlo1NGQrbUdKK1dWaHkyQmtjVXhiSG0ydW9FUGdlb0pTQVpZNkR4bC9YY2dr?=
- =?utf-8?B?VFlhRGk0OVZMVzd3ZEN2VWY4Z3VuYmxCQVppbUlkS1VNeE5wZmsxRnpoeDZh?=
- =?utf-8?B?OUcxb1o0empGNlVLVzdTVDhNYTBwYXJkMHVybUdVbVMvMWpJTXVqMVZIWEJ1?=
- =?utf-8?B?Wk12cGZJNTZndmxDMWY1WDlIRG4zeHEwdFFXUWMzSno1aFZtZGxUM1ArdDZo?=
- =?utf-8?B?MjBzd2Z3NFF5MllRZ3NwbkJkYTF4RnREb2M5Y01aYXArWGJCa2xQY2FmdnhZ?=
- =?utf-8?B?YldaZmQreU5oWW0zTTE3S0pMZVpZbTlUUFhIaHF3WVdJYXBjaHJyMTV2eUQ1?=
- =?utf-8?B?VitBYmlxWWRhaUdtUkhLUzk0MTk4b1h0RUdIMkVCYTI3YkdUaWNjYitYWW1v?=
- =?utf-8?B?dEM5b1REZTE2VzlReFFuZzNRaEhLQWxBTTg4aSthY2hqeXlPWDBZcGV2R2Rt?=
- =?utf-8?B?dTNZS212NUQvd1Uxdmp3QzVxT0FuR2taOEtXVWZHdTRQbnlweVRZUkJkZVVa?=
- =?utf-8?B?eFBDYkJFZkpsZHZQOGlNamxuSGtqY1Zmb21uMnQ0NmttYStaTFNUNTB0cWlp?=
- =?utf-8?B?WDQ1cngwZGl2bThEUUZwRTRUakMrSFJXemkxdCs0NHViYU9LZGNia2NWQkxm?=
- =?utf-8?B?OW1pcHRvWkFJd1ZTcW4zMmV2RXBHZkJOTzgybGNpZk1HYVFxVFVCeTVTc0xV?=
- =?utf-8?B?enRJRCt2cjRhUXhpZDhpQVg2UHZCa1BWK01qRHVoTEFMUEhGWVRyQ1AwZEZV?=
- =?utf-8?B?MHEvdGNXS1l1RVhzb0k5NXVFNGREOVdNc2YyTGQzY1lzM3FRTHRhRmxsUVJJ?=
- =?utf-8?B?Yk1VQVpmWTY1TE9zUFV3SS9qNXRPcUlpckJ6RmVVNTI0WmQxdnBFdTlZeWI1?=
- =?utf-8?B?aE1nVmpkeWRTWlNjYllYMndmaDg0NzI1V0syQ0JyQzRzVitUWnFBK0xVZDVj?=
- =?utf-8?B?YkZFTFdaUDlGRGdTYVRIZEgzMHdCd1lkVTRncTdLU2tVVzNrYkZnYmpTNFFV?=
- =?utf-8?B?cEM0blgySHJha0c3UmFlNldXaHByUVpSc1BubnhlMjBOWXQ0bFZvSmh3aFBO?=
- =?utf-8?B?ekV2ZEpaNG1wWW5WZVRvZXpqL2g1T0dWWDFGb1plMEhPbC95NnVZcmd6ZjY3?=
- =?utf-8?B?UlhuUEdFTFBjT3ovTGNjeTJrMmo4aEdQNTRHeDNvK1A1VjJsRHpMYnR1TXMw?=
- =?utf-8?B?aHFjSWllYmdocEpnVnBxUlB1YUpDVFVrZzlYNmhybjc4VzFqbm5USnpRTXJ0?=
- =?utf-8?Q?eU+CAYweeGQIWvZxN1NQ63uK1HWVC8=3D?=
+	=?utf-8?B?bVdqTHNUMkJnQTRaL3Z4VDE4U0NaZURubzcyeVplR0VZYUgxQURvdDJyNU1j?=
+ =?utf-8?B?SmU5Tm1IWGxmU3NRMEJXRCtZWUhuRUV5eGYyZ2FVK3luRVk5SUZrRVNFTHdh?=
+ =?utf-8?B?MUdXbUdjUHVJUFpqZllGcElxeXlFb09EcEtBZ0dLTVhvV1hDZkV1V1VSTHJh?=
+ =?utf-8?B?R2g0djRLeWo4cDB6SjFYQm1TQXRqNFJSRG1WbkF5N29mVFBReWxxVnVqVGRj?=
+ =?utf-8?B?V05LVXNHU2REWm9sZUhmTHFPeWdFazZUSHpqYlEydHRld0xZa3Q4eEZHZWNK?=
+ =?utf-8?B?NUtQYUx4d0ZZM2hZQ1dnN3cwdlhwUG9IbTArUDlmUjFWREVTdG1JQlJCdG9W?=
+ =?utf-8?B?TUZrR1BwRkF6cWxVSjhFek01N0U0Zm1xbldmdmxWV3dvb2lhaVdVWXM1SXlr?=
+ =?utf-8?B?YmRHd1pISTUvWmdBMS93VlVRaTY2azJNVC91ZlF4MjJlVE5VZXo5TXZGMHcw?=
+ =?utf-8?B?a0dxZmdFaCtVZjJCMkc4bnB6RkkzaUU0dGU1SW5vWnU4RjNJUmx4VDNkNFpF?=
+ =?utf-8?B?SSswS2ZHQUZ4eC9oRXNNNkZVUzZHbUhZWkhydll6dzdXZ0JqcFNTR2t1SndX?=
+ =?utf-8?B?NHRwZFJIc0JUZ2lUazNpVFQ3SXkvaGsxRUlqdDZxRDZPWmVmY3Njdzg2Q1hX?=
+ =?utf-8?B?a1JEOHgxNmN0OVdULytOVTExYzM3dnd4eFpiZDlweEpaSTlBUDM3RUdrck1H?=
+ =?utf-8?B?bnZBa1BBTXFCR3drUFU0cWVYWmxYejRzOENHUXZzODU3L01KZUdCa29RUlQz?=
+ =?utf-8?B?UmU2c2hrOG9uU2lmazBIL3FJQzJJbFozVk9sdzM5THNLSWxocmt3SlhWWGs5?=
+ =?utf-8?B?NkxvSHBVL01IT2ZhdWF4bHJZWU9kM0RSYnduQ1pjaytQOERITGYxTjRIU0Rs?=
+ =?utf-8?B?cnFUTTNFVlhhemFJV1VwSTh4UWZUVUI4bGFycmUyUVcvRU9NTU5rUi9ZcE9K?=
+ =?utf-8?B?TVdra0JHYmlLZzljcVNPS05YcXdDckp0M1g2eGEvc1pkb3FmYUhKYjRSNml0?=
+ =?utf-8?B?UXVSN2VPME9TTFBDbGhBMmk0VHJ3d2hWaEF4S0p5dzM5N2w3akdHQmx1UlZF?=
+ =?utf-8?B?RXRPY1pGakw2TzVLaDdJemYrdW1IQ2Q0a3RVM0RaTnpDaGE0dElqZUFsRjhU?=
+ =?utf-8?B?ZFJHRnBudldrQy9meFpGcjhhUGYzYnBFcCtKZU81Vitmd2hWNVpmZVNJUkVh?=
+ =?utf-8?B?S2pwdHZQd3ZLMklZYXQvVlN1UkRVQTUwWlVPbzFadDdMczlIL2JQSXFPVDlv?=
+ =?utf-8?B?Z0VYOCtKcmVjTlZ4YXJyWElLMStrdVdHamtsMWI5L2ZoRG01c3lLQUpVdEtK?=
+ =?utf-8?B?VVVWMThBakZlVWlEN3JCTG1TZGZFVjdFZndLYUtEYlE2ZWpjdUlld1I3RU1R?=
+ =?utf-8?B?dllLQnFJcFRMdDZ4b0swRWN3ZWRwNjJwTDZWTnlhMGtTK1RpR2c5c242dnRr?=
+ =?utf-8?B?Rkt3YkYvdC9JYVI1WHE1c0JSc0FwVjBCS09acXBMVjRmZEcyYUFldmxTamNB?=
+ =?utf-8?B?TCt2UXQ5ckMzK2pxVng4d0RVeVkxVllhLzFlNTZOeW5XbThDdXp0eE1aM043?=
+ =?utf-8?B?eHZCMk1kRVg3VnQxYzEwdmpFTytqOEhsNll3c0diYjg3SUNzaDNMZ0tHbC9a?=
+ =?utf-8?B?aSthM2FkTDllSWxHOGVZelJRZDRtYllyOUpCN3R5aGRlck4yOWR2VkhKNXRv?=
+ =?utf-8?B?cXNuakdoK3VnN3dNYVlkSFdnNXpJdXEyaSs0VjBmT2xEOFZrMStiVVViSmM3?=
+ =?utf-8?B?ai9LQ3FQMlhHSytxUEVJS2E1QkRqRVNqY2ZsM2lSZTl0T2w5T3doZFJuU0M2?=
+ =?utf-8?B?Z2RDaXVYcXB4WEdSSjgyNFpYVGpBc0N5eXJpaUxjdlAzRVhadmsweDhab0pK?=
+ =?utf-8?B?WEpLa0oveUVrL3VTcG8yT2E0L2l1YlhkOVgxc2t1dnc0V29MSUFqVlNSL3cz?=
+ =?utf-8?B?QkdtL21ybkRhcXhUT2tBQkNiWEhRamVVM0dNZFdmYTdybVJSeFRVSkF0NnZp?=
+ =?utf-8?Q?L+/w826NMVEKs3XKYUpUWbzcZoA4ms=3D?=
 X-Forefront-Antispam-Report:
 	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(14060799003)(1800799024)(376014)(36860700013)(35042699022)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:18:26.0315
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:23:35.8381
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12d8166f-c31e-4d3a-6d6f-08dd47ac325d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bae4927-0d67-4f47-0450-08dd47aceaff
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF0000004C.eurprd04.prod.outlook.com
+	AMS0EPF000001A5.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9751
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB8316
 
-On 1/31/25 18:44, Rob Herring wrote:
-> On Mon, Jan 6, 2025 at 6:12 AM <mark.barnett@arm.com> wrote:
->>
->> From: Ben Gainey <ben.gainey@arm.com>
->>
->> This change modifies perf_event_attr to add a second, alternative
->> sample period field, and modifies the core perf overflow handling
->> such that when specified an event will alternate between two sample
->> periods.
->>
->> Currently, perf does not provide a  mechanism for decoupling the period
->> over which counters are counted from the period between samples. This is
->> problematic for building a tool to measure per-function metrics derived
->> from a sampled counter group. Ideally such a tool wants a very small
->> sample window in order to correctly attribute the metrics to a given
->> function, but prefers a larger sample period that provides representative
->> coverage without excessive probe effect, triggering throttling, or
->> generating excessive amounts of data.
->>
->> By alternating between a long and short sample_period and subsequently
->> discarding the long samples, tools may decouple the period between
->> samples that the tool cares about from the window of time over which
->> interesting counts are collected.
->>
->> It is expected that typically tools would use this feature with the
->> cycles or instructions events as an approximation for time, but no
->> restrictions are applied to which events this can be applied to.
->>
->> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
->> Signed-off-by: Mark Barnett <mark.barnett@arm.com>
->> ---
->>   include/linux/perf_event.h      |  5 +++++
->>   include/uapi/linux/perf_event.h |  3 +++
->>   kernel/events/core.c            | 37 ++++++++++++++++++++++++++++++++-
->>   3 files changed, 44 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index cb99ec8c9e96..cbb332f4e19c 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -276,6 +276,11 @@ struct hw_perf_event {
->>           */
->>          u64                             freq_time_stamp;
->>          u64                             freq_count_stamp;
->> +
->> +       /*
->> +        * Indicates that the alternative sample period is used
->> +        */
->> +       bool                            using_alt_sample_period;
+On 1/22/25 16:47, James Clark wrote:
 > 
-> 8 bytes more for a single bit of data. I think we can avoid it. More below.
 > 
->>   #endif
->>   };
+> On 06/01/2025 12:01 pm, mark.barnett@arm.com wrote:
+>> From: Mark Barnett <mark.barnett@arm.com>
 >>
->> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index 0524d541d4e3..499a8673df8e 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -379,6 +379,7 @@ enum perf_event_read_format {
->>   #define PERF_ATTR_SIZE_VER6    120     /* add: aux_sample_size */
->>   #define PERF_ATTR_SIZE_VER7    128     /* add: sig_data */
->>   #define PERF_ATTR_SIZE_VER8    136     /* add: config3 */
->> +#define PERF_ATTR_SIZE_VER9    144     /* add: alt_sample_period */
+>> This patch introduces the concept of an alternating sample rate to perf
+>> core and provides the necessary basic changes in the tools to activate
+>> that option.
 >>
->>   /*
->>    * Hardware event_id to monitor via a performance monitoring event:
->> @@ -531,6 +532,8 @@ struct perf_event_attr {
->>          __u64   sig_data;
->>
->>          __u64   config3; /* extension of config2 */
->> +
->> +       __u64   alt_sample_period;
->>   };
->>
->>   /*
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 065f9188b44a..7e339d12363a 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -4178,6 +4178,8 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
->>          s64 period, sample_period;
->>          s64 delta;
->>
->> +       WARN_ON_ONCE(hwc->using_alt_sample_period);
->> +
->>          period = perf_calculate_period(event, nsec, count);
->>
->>          delta = (s64)(period - hwc->sample_period);
->> @@ -9850,6 +9852,7 @@ static int __perf_event_overflow(struct perf_event*event,
->>                                   int throttle, struct perf_sample_data *data,
->>                                   struct pt_regs *regs)
->>   {
->> +       struct hw_perf_event *hwc = &event->hw;
->>          int events = atomic_read(&event->event_limit);
->>          int ret = 0;
->>
->> @@ -9869,6 +9872,18 @@ static int __perf_event_overflow(struct perf_event *event,
->>              !bpf_overflow_handler(event, data, regs))
->>                  goto out;
->>
->> +       /*
->> +        * Swap the sample period to the alternative period
->> +        */
->> +       if (event->attr.alt_sample_period) {
->> +               bool using_alt = hwc->using_alt_sample_period;
->> +               u64 sample_period = (using_alt ? event->attr.sample_period
->> +                                              : event->attr.alt_sample_period);
->> +
->> +               hwc->sample_period = sample_period;
->> +               hwc->using_alt_sample_period = !using_alt;
->> +       }
 > 
-> Wouldn't something like this avoid the need for using_alt_sample_period:
+> [...]
 > 
-> if (event->attr.alt_sample_period) {
->    if (hwc->sample_period == event->attr.sample_period)
->      hwc->sample_period = event->attr.alt_sample_period;
->    else
->      hwc->sample_period = event->attr.sample_period;
-> }
+>> Changes since v1:
+>>   - Rebased onto perf-tools-next, as per request from Ian Rogers.
+>>   - Removed unnecessary code that truncated period_left to 0 and 
+>> restarted
+>>     the PMU.
+>>   - Renamed variables to use the shorter 'alt_period' instead of
+>>     'alterantive_period'.
+>>   - Added patch #5 that addresses an issue in the x86 and PowerPC 
+>> drivers that
+>>     caused the opposite period to be reported in the sample record.
 > 
-> Rob
+> It sounds like it would be better if patch 5 comes first otherwise the 
+> feature is introduced as broken.
+> 
+> 
 
-Hi Rob,
-
-Thanks for looking it over. That would work for this patch but the 
-second patch in this series adds a variable jitter to the sample 
-periods. So 'hwc->sample_period' wouldn't be directly comparable to 
-'attr.sample_period'.
+Thanks, James. I'll re-order them with the next submission.
 
 Mark
