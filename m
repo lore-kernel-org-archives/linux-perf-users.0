@@ -1,55 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581EB234965
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33781A7264
 	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 08:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738915504; cv=none; b=M+tx/VW618nHrlX+Ovg53pnyWNuV1dh8NB1wP5Vv1fyA1puHaaoNNssTRAF0fuJukCw8q7KLCDlKdlCfA158XYHi2skBSKn+HV0cSwQ4zNHp6ty/Dh53FAq7t4Y1l9d44V8g5zcaO11sYH1CqKjV0Jh2UV8ufBkqsTmn+luiS2E=
+	t=1738915504; cv=none; b=nlSV/GY8TBVbSw2qRVpaMhTLNfVVJw2z2K0ITcrmYmvU/1JFVQSu3YGA7oJ62Ejde6TywJ/fbEzNz/rZQKWMdqd5MyJn8QD7t0nKXkRxk86rziTj9qHasKSEaXt534hRWsUDx8MnIg448sbWsh/sKSeMi9ZsUBOblweakhvCKs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738915504; c=relaxed/simple;
-	bh=8Dg1edHtzpGjPoUJj1U8Rm0XiMWeIXtGAvfeQc0xIyw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uc5NHARFg+DtbIBhUkMCc9HIubCUdEJM49E5ZLfIxj7/oXPIpiC0Le3NHD/v56LD6Xq41gF+ddDlwLjmUTUCzWARVy74w1xK+8SAokZHZgxBq77RNTTlJy7PIvraYnkJh3e6fOGsbDmYy9KbbEvAhU9xeat8+jbESdOHNCpDj7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B2ym40LE; arc=none smtp.client-ip=170.10.129.124
+	bh=BSKBeFyWHOzWBU58Cj1kZacbB3HaPZt/3iFqJPGblTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CaougBxP5lE8UjjsHtid/HjNXgbPx27VJxUjENPPWczNJ+SdW4BGILapp7/YqxOHe0OWu+8HNBkY3ZD1j/TFAGXyiLDtwixYRjquKs9C0cJzqsIF0pFfO24O9CXqizU72aJuVYsWYHawyzqbnRLa8ISj2yGfBcJ8zyyFTRIdBno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KsS/mngX; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2ym40LE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KsS/mngX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1738915501;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CY4Wvi20EGqS3EzyUzAA1xdoQD2kiUj7fdKbqPTL8ds=;
-	b=B2ym40LEBHoRXeVeEqnvncIaQOmg00KQbrQkLwN8dXH9iMoNAvdZvl/Hw69lSIr1A7d59E
-	SgstxLPtF1ioTGiUNUN3cMv8NCGC//cwEfb7OvTMEk0M0t0bin2wntJfI9RmnEU1PNYo3l
-	NHVBhV7FN0+in5BfUotm9oVKkahjuq8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cdc5LzPg4RkoSPb+OJ+dIV2Ns6AgRXDDbraNaOEpzDk=;
+	b=KsS/mngXhJ0FenG62GNM+4Vd0Bke4E0bUzDht/f0ne8rJEpwi3NRs6OcueJBxyWPj9s/AP
+	cm6nGMQUDnUhRaY+n4dpkA7rrEdmGMzr1YS7phEbNc/np4O8csoYrkW9df4zal6yG9EjsB
+	vLUW8IQRPEDmJtcvVa8m2rrAHJ566bY=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-R6Q2vGL-PlmbOlAOfY5kyw-1; Fri,
- 07 Feb 2025 03:04:57 -0500
-X-MC-Unique: R6Q2vGL-PlmbOlAOfY5kyw-1
-X-Mimecast-MFC-AGG-ID: R6Q2vGL-PlmbOlAOfY5kyw
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-487-YQlP7HEwOEm43m-rOBtPDQ-1; Fri,
+ 07 Feb 2025 03:05:00 -0500
+X-MC-Unique: YQlP7HEwOEm43m-rOBtPDQ-1
+X-Mimecast-MFC-AGG-ID: YQlP7HEwOEm43m-rOBtPDQ
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A55A1801A10;
-	Fri,  7 Feb 2025 08:04:56 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 124251801A38;
+	Fri,  7 Feb 2025 08:04:59 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.67])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D1BA118004A7;
-	Fri,  7 Feb 2025 08:04:53 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1C57718004A7;
+	Fri,  7 Feb 2025 08:04:56 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
+	linux-perf-users@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 1/2] perf ftrace latency: variable histogram buckets
-Date: Fri,  7 Feb 2025 09:04:44 +0100
-Message-ID: <20250207080446.77630-1-gmonaco@redhat.com>
+Subject: [PATCH 2/2] perf ftrace latency: allow to hide empty buckets
+Date: Fri,  7 Feb 2025 09:04:45 +0100
+Message-ID: <20250207080446.77630-2-gmonaco@redhat.com>
+In-Reply-To: <20250207080446.77630-1-gmonaco@redhat.com>
+References: <20250207080446.77630-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,254 +62,149 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The max-latency value can make the histogram smaller, but not larger, we
-have a maximum of 22 buckets and specifying a max-latency that would
-require more buckets has no effect.
+Especially while using several buckets, it isn't uncommon to have some
+of them empty and reading the histogram may be a bit more complex:
 
-Dynamically allocate the buckets and compute the bucket number from the
-max latency as (max-min) / range + 2
+  # perf ftrace latency -a -T mutex_lock --bucket-range 5 --max-latency 200
+  #   DURATION     |  COUNT | GRAPH                                  |
+       0 -    5 us |  14816 | ###################################### |
+       5 -   10 us |   1228 | ###                                    |
+      10 -   15 us |    438 | #                                      |
+      15 -   20 us |    106 |                                        |
+      20 -   25 us |     21 |                                        |
+      25 -   30 us |     11 |                                        |
+      30 -   35 us |      1 |                                        |
+      35 -   40 us |      2 |                                        |
+      40 -   45 us |      4 |                                        |
+      45 -   50 us |      0 |                                        |
+      50 -   55 us |      1 |                                        |
+      55 -   60 us |      0 |                                        |
+      60 -   65 us |      1 |                                        |
+      65 -   70 us |      1 |                                        |
+      70 -   75 us |      1 |                                        |
+      75 -   80 us |      2 |                                        |
+      80 -   85 us |      0 |                                        |
+      85 -   90 us |      1 |                                        |
+      90 -   95 us |      0 |                                        |
+      95 -  100 us |      1 |                                        |
+     100 -  105 us |      0 |                                        |
+     105 -  110 us |      0 |                                        |
+     110 -  115 us |      0 |                                        |
+     115 -  120 us |      0 |                                        |
+     120 -  125 us |      1 |                                        |
+     125 -  130 us |      0 |                                        |
+     130 -  135 us |      0 |                                        |
+     135 -  140 us |      1 |                                        |
+     140 -  145 us |      0 |                                        |
+     145 -  150 us |      0 |                                        |
+     150 -  155 us |      0 |                                        |
+     155 -  160 us |      0 |                                        |
+     160 -  165 us |      0 |                                        |
+     165 -  170 us |      0 |                                        |
+     170 -  175 us |      0 |                                        |
+     175 -  180 us |      0 |                                        |
+     180 -  185 us |      0 |                                        |
+     185 -  190 us |      0 |                                        |
+     190 -  195 us |      0 |                                        |
+     195 -  200 us |      0 |                                        |
+     200 -  ... us |      2 |                                        |
 
-If the maximum is not specified, we still set the bucket number to 22
-and compute the maximum accordingly.
+Allow the optional flag --hide-empty to remove buckets with no element
+and produce a more compact graph. This feature could be misleading since
+there is no clear indication for missing buckets, for this reason it's
+disabled by default.
 
-Fail if the maximum is smaller than min+range, this way we make sure we
-always have 3 buckets: those below min, those above max and one in the
-middle.
-
-Since max-latency is not available in log2 mode, always use 22 buckets.
+  # perf ftrace latency -a -T mutex_lock --bucket-range 5 --max-latency --hide-empty 200
+  #   DURATION     |  COUNT | GRAPH                                  |
+       0 -    5 us |  14816 | ###################################### |
+       5 -   10 us |   1228 | ###                                    |
+      10 -   15 us |    438 | #                                      |
+      15 -   20 us |    106 |                                        |
+      20 -   25 us |     21 |                                        |
+      25 -   30 us |     11 |                                        |
+      30 -   35 us |      1 |                                        |
+      35 -   40 us |      2 |                                        |
+      40 -   45 us |      4 |                                        |
+      50 -   55 us |      1 |                                        |
+      60 -   65 us |      1 |                                        |
+      65 -   70 us |      1 |                                        |
+      70 -   75 us |      1 |                                        |
+      75 -   80 us |      2 |                                        |
+      85 -   90 us |      1 |                                        |
+      95 -  100 us |      1 |                                        |
+     120 -  125 us |      1 |                                        |
+     135 -  140 us |      1 |                                        |
+     200 -  ... us |      2 |                                        |
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/perf/builtin-ftrace.c                 | 57 +++++++++++++++------
- tools/perf/util/bpf_ftrace.c                |  6 ++-
- tools/perf/util/bpf_skel/func_latency.bpf.c |  7 +--
- tools/perf/util/ftrace.h                    |  1 +
- 4 files changed, 51 insertions(+), 20 deletions(-)
+ tools/perf/builtin-ftrace.c | 14 +++++++++++---
+ tools/perf/util/ftrace.h    |  1 +
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index cfd770ec72867..4f76094ea06d4 100644
+index 4f76094ea06d4..7caa18d5ffc38 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -733,6 +733,7 @@ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
- {
- 	int min_latency = ftrace->min_latency;
- 	int max_latency = ftrace->max_latency;
-+	unsigned int bucket_num = ftrace->bucket_num;
- 	char *p, *q;
- 	char *unit;
- 	double num;
-@@ -797,10 +798,10 @@ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
- 			if (num > 0) // 1st entry: [ 1 unit .. bucket_range units ]
- 				i = num / ftrace->bucket_range + 1;
- 			if (num >= max_latency - min_latency)
--				i = NUM_BUCKET -1;
-+				i = bucket_num -1;
- 		}
--		if (i >= NUM_BUCKET)
--			i = NUM_BUCKET - 1;
-+		if ((unsigned)i >= bucket_num)
-+			i = bucket_num - 1;
+@@ -841,14 +841,17 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
  
- 		num += min_latency;
- do_inc:
-@@ -820,13 +821,14 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
- {
- 	int min_latency = ftrace->min_latency;
- 	bool use_nsec = ftrace->use_nsec;
--	int i;
-+	unsigned int bucket_num = ftrace->bucket_num;
-+	unsigned int i;
- 	int total = 0;
- 	int bar_total = 46;  /* to fit in 80 column */
- 	char bar[] = "###############################################";
- 	int bar_len;
+ 	bar_len = buckets[0] * bar_total / total;
  
--	for (i = 0; i < NUM_BUCKET; i++)
-+	for (i = 0; i < bucket_num; i++)
- 		total += buckets[i];
+-	printf("  %4d - %4d %s | %10d | %.*s%*s |\n",
+-	       0, min_latency ?: 1, use_nsec ? "ns" : "us",
+-	       buckets[0], bar_len, bar, bar_total - bar_len, "");
++	if (!ftrace->hide_empty || buckets[0])
++		printf("  %4d - %4d %s | %10d | %.*s%*s |\n",
++		       0, min_latency ?: 1, use_nsec ? "ns" : "us",
++		       buckets[0], bar_len, bar, bar_total - bar_len, "");
  
- 	if (total == 0) {
-@@ -843,7 +845,7 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
- 	       0, min_latency ?: 1, use_nsec ? "ns" : "us",
- 	       buckets[0], bar_len, bar, bar_total - bar_len, "");
- 
--	for (i = 1; i < NUM_BUCKET - 1; i++) {
-+	for (i = 1; i < bucket_num - 1; i++) {
+ 	for (i = 1; i < bucket_num - 1; i++) {
  		unsigned int start, stop;
  		const char *unit = use_nsec ? "ns" : "us";
  
-@@ -881,11 +883,11 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
- 		       bar_total - bar_len, "");
++		if (ftrace->hide_empty && !buckets[i])
++			continue;
+ 		if (!ftrace->bucket_range) {
+ 			start = (1 << (i - 1));
+ 			stop  = 1 << i;
+@@ -884,6 +887,8 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
  	}
  
--	bar_len = buckets[NUM_BUCKET - 1] * bar_total / total;
-+	bar_len = buckets[bucket_num - 1] * bar_total / total;
+ 	bar_len = buckets[bucket_num - 1] * bar_total / total;
++	if (ftrace->hide_empty && !buckets[bucket_num - 1])
++		goto print_stats;
  	if (!ftrace->bucket_range) {
  		printf("  %4d - %-4s %s", 1, "...", use_nsec ? "ms" : "s ");
  	} else {
--		unsigned int upper_outlier = (NUM_BUCKET - 2) * ftrace->bucket_range + min_latency;
-+		unsigned int upper_outlier = (bucket_num - 2) * ftrace->bucket_range + min_latency;
- 		if (upper_outlier > ftrace->max_latency)
- 			upper_outlier = ftrace->max_latency;
- 
-@@ -897,7 +899,7 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
- 			printf("  %4d - %4s %s", upper_outlier, "...", use_nsec ? "ns" : "us");
- 		}
- 	}
--	printf(" | %10d | %.*s%*s |\n", buckets[NUM_BUCKET - 1],
-+	printf(" | %10d | %.*s%*s |\n", buckets[bucket_num - 1],
+@@ -902,6 +907,7 @@ static void display_histogram(struct perf_ftrace *ftrace, int buckets[])
+ 	printf(" | %10d | %.*s%*s |\n", buckets[bucket_num - 1],
  	       bar_len, bar, bar_total - bar_len, "");
  
++print_stats:
  	printf("\n# statistics  (in %s)\n", ftrace->use_nsec ? "nsec" : "usec");
-@@ -997,7 +999,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
- 	struct pollfd pollfd = {
- 		.events = POLLIN,
- 	};
--	int buckets[NUM_BUCKET] = { };
-+	int *buckets;
- 
- 	trace_fd = prepare_func_latency(ftrace);
- 	if (trace_fd < 0)
-@@ -1011,6 +1013,12 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
- 
- 	evlist__start_workload(ftrace->evlist);
- 
-+	buckets = calloc(ftrace->bucket_num, sizeof(*buckets));
-+	if (buckets == NULL) {
-+		pr_err("failed to allocate memory for the buckets\n");
-+		goto out;
-+	}
-+
- 	line[0] = '\0';
- 	while (!done) {
- 		if (poll(&pollfd, 1, -1) < 0)
-@@ -1030,7 +1038,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
- 	if (workload_exec_errno) {
- 		const char *emsg = str_error_r(workload_exec_errno, buf, sizeof(buf));
- 		pr_err("workload failed: %s\n", emsg);
--		goto out;
-+		goto out_free_buckets;
- 	}
- 
- 	/* read remaining buffer contents */
-@@ -1045,6 +1053,8 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
- 
- 	display_histogram(ftrace, buckets);
- 
-+out_free_buckets:
-+	free(buckets);
- out:
- 	close(trace_fd);
- 	cleanup_func_latency(ftrace);
-@@ -1634,7 +1644,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_UINTEGER(0, "min-latency", &ftrace.min_latency,
+ 	printf("  total time: %20.0f\n", latency_stats.mean * latency_stats.n);
+ 	printf("    avg time: %20.0f\n", latency_stats.mean);
+@@ -1645,6 +1651,8 @@ int cmd_ftrace(int argc, const char **argv)
  		    "Minimum latency (1st bucket). Works only with --bucket-range."),
  	OPT_UINTEGER(0, "max-latency", &ftrace.max_latency,
--		    "Maximum latency (last bucket). Works only with --bucket-range and total buckets less than 22."),
-+		    "Maximum latency (last bucket). Works only with --bucket-range."),
+ 		    "Maximum latency (last bucket). Works only with --bucket-range."),
++	OPT_BOOLEAN(0, "hide-empty", &ftrace.hide_empty,
++		    "Hide empty buckets in the histogram"),
  	OPT_PARENT(common_options),
  	};
  	const struct option profile_options[] = {
-@@ -1751,10 +1761,25 @@ int cmd_ftrace(int argc, const char **argv)
- 			ret = -EINVAL;
- 			goto out_delete_filters;
- 		}
--		if (ftrace.bucket_range && !ftrace.max_latency) {
--			/* default max latency should depend on bucket range and num_buckets */
--			ftrace.max_latency = (NUM_BUCKET - 2) * ftrace.bucket_range +
--						ftrace.min_latency;
-+		if (ftrace.bucket_range && ftrace.max_latency &&
-+		    ftrace.max_latency < ftrace.min_latency + ftrace.bucket_range) {
-+			/* we need at least 1 bucket excluding min and max buckets */
-+			pr_err("--max-latency must be larger than min-latency + bucket-range\n");
-+			parse_options_usage(ftrace_usage, options,
-+					    "max-latency", /*short_opt=*/false);
-+			ret = -EINVAL;
-+			goto out_delete_filters;
-+		}
-+		/* set default unless max_latency is set and valid */
-+		ftrace.bucket_num = NUM_BUCKET;
-+		if (ftrace.bucket_range) {
-+			if (ftrace.max_latency)
-+				ftrace.bucket_num = (ftrace.max_latency - ftrace.min_latency) /
-+							ftrace.bucket_range + 2;
-+			else
-+				/* default max latency should depend on bucket range and num_buckets */
-+				ftrace.max_latency = (NUM_BUCKET - 2) * ftrace.bucket_range +
-+							ftrace.min_latency;
- 		}
- 		cmd_func = __cmd_latency;
- 		break;
-diff --git a/tools/perf/util/bpf_ftrace.c b/tools/perf/util/bpf_ftrace.c
-index 25fc280e414ac..51f407a782d6c 100644
---- a/tools/perf/util/bpf_ftrace.c
-+++ b/tools/perf/util/bpf_ftrace.c
-@@ -39,6 +39,10 @@ int perf_ftrace__latency_prepare_bpf(struct perf_ftrace *ftrace)
- 
- 	skel->rodata->bucket_range = ftrace->bucket_range;
- 	skel->rodata->min_latency = ftrace->min_latency;
-+	skel->rodata->bucket_num = ftrace->bucket_num;
-+	if (ftrace->bucket_range && ftrace->bucket_num) {
-+		bpf_map__set_max_entries(skel->maps.latency, ftrace->bucket_num);
-+	}
- 
- 	/* don't need to set cpu filter for system-wide mode */
- 	if (ftrace->target.cpu_list) {
-@@ -138,7 +142,7 @@ int perf_ftrace__latency_read_bpf(struct perf_ftrace *ftrace __maybe_unused,
- 	if (hist == NULL)
- 		return -ENOMEM;
- 
--	for (idx = 0; idx < NUM_BUCKET; idx++) {
-+	for (idx = 0; idx < skel->rodata->bucket_num; idx++) {
- 		err = bpf_map_lookup_elem(fd, &idx, hist);
- 		if (err) {
- 			buckets[idx] = 0;
-diff --git a/tools/perf/util/bpf_skel/func_latency.bpf.c b/tools/perf/util/bpf_skel/func_latency.bpf.c
-index fb144811b34fc..09e70d40a0f4d 100644
---- a/tools/perf/util/bpf_skel/func_latency.bpf.c
-+++ b/tools/perf/util/bpf_skel/func_latency.bpf.c
-@@ -50,6 +50,7 @@ const volatile int use_nsec = 0;
- const volatile unsigned int bucket_range;
- const volatile unsigned int min_latency;
- const volatile unsigned int max_latency;
-+const volatile unsigned int bucket_num = NUM_BUCKET;
- 
- SEC("kprobe/func")
- int BPF_PROG(func_begin)
-@@ -124,16 +125,16 @@ int BPF_PROG(func_end)
- 			if (delta > 0) { // 1st entry: [ 1 unit .. bucket_range units )
- 				// clang 12 doesn't like s64 / u32 division
- 				key = (__u64)delta / bucket_range + 1;
--				if (key >= NUM_BUCKET ||
-+				if (key >= bucket_num ||
- 					delta >= max_latency - min_latency)
--					key = NUM_BUCKET - 1;
-+					key = bucket_num - 1;
- 			}
- 
- 			delta += min_latency;
- 			goto do_lookup;
- 		}
- 		// calculate index using delta
--		for (key = 0; key < (NUM_BUCKET - 1); key++) {
-+		for (key = 0; key < (bucket_num - 1); key++) {
- 			if (delta < (cmp_base << key))
- 				break;
- 		}
 diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
-index 5dee2caba0fe4..395f97b203ead 100644
+index 395f97b203ead..a9bc47da83a56 100644
 --- a/tools/perf/util/ftrace.h
 +++ b/tools/perf/util/ftrace.h
-@@ -24,6 +24,7 @@ struct perf_ftrace {
- 	unsigned int		bucket_range;
+@@ -25,6 +25,7 @@ struct perf_ftrace {
  	unsigned int		min_latency;
  	unsigned int		max_latency;
-+	unsigned int		bucket_num;
+ 	unsigned int		bucket_num;
++	bool			hide_empty;
  	int			graph_depth;
  	int			func_stack_trace;
  	int			func_irq_info;
-
-base-commit: 92514ef226f511f2ca1fb1b8752966097518edc0
 -- 
 2.48.1
 
