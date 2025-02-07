@@ -1,139 +1,194 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE09A18DB0A
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 16:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAF2194147
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 17:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738947252; cv=none; b=FHhUYJbd4Wbodv1uf18SS/Ei6VL3YSA2g7T7qGJlV+zR2N16WMjQj+70K8KRcRTNLLZUZqJNAPa0TI6ri4eAr6YQiiAa8wN49MJYZ17l6l2Jp3iCGFvc9pXo+MJcWuIfGQbeclT2uufWuVZTOwO2FyOrzEjWvyfKWrwu8C3Bysc=
+	t=1738948017; cv=none; b=AVyFG6XrdpxOIQaXB8Q/7prAY+YKX9KwWwQZTKA7m3A5kQm/+u7gg4sj6KVfaGxqXsMH8z6J7M1TmktTgtkrOOtXE73xX+xIuzdMj3ZLBPkaIHKGnsRYVylLhIy98ND2sU+DXfXnul1DF89fd9vRQ/BSIqPR8iSVDc4XsZ4KFSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738947252; c=relaxed/simple;
-	bh=RBG51+4Lfr8vrZH4BvUqvMXfCP96AceZstCxlo2AYWA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tjrVw35qQ6KQtOCVJgsy5SDNm9WmOTndCUSWw3BiC+l2q/u4OD3wYYJZIf4yRiPTrFHsssPkZG8NnT+j4YuswbS2didO4vvXDShpojZ4y5UDaotJQifGyrUyBp+doWSPaS8N3rDivCmHdWYq6sgRvt2fJ3rcdW2zrYlEdOLVRvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FScusrU6; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738948017; c=relaxed/simple;
+	bh=I2e5fwjdOHrC389H955xUrW7Yt08enQx3eznrVoldiA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sjz1+b/4mZJT28x4u3hkzGC4pnnW8mRAccAkh6gyljAOMCnapcJJ917ti819J5Q5HYup6ZyAFrmI/zy+pojJ+MuMKVM4SK9rwQIfHCPcYKaKrn7tBZlf7S1LzNrpWac83bESe37SLUMasgXgvZAAnLbUjchi6h/u9KYlnV93Lbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gy5PdcJb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FScusrU6"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2166651f752so52457065ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 08:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738947249; x=1739552049; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0UvshL8nXVJdd7vp4+YSGo25p1rD7pCcETOL1e0fbZQ=;
-        b=FScusrU6GtU2JbOsxqOOu2ijBPENshOfq6kNCSn+EvDcOrm5JAecHIRHlMJ4hV+n6p
-         5LlmEcqlH0XwH+uZTsHuoRvdKQWIMYB4Cyve03u0VB1FKwT7YkA67l+m97WeYKQEGLqQ
-         8h4JhVBR9MMFTq9Hb8hDBBM6k4jTQG+GEDuexm7QnFxyR7M8ACM2yF3HEqJMvilcG4Wp
-         hWa76er9zQadEYnS/JH8pJKJpHyqNTzDHFe43kd6q97jSTKJTGzFZ2b7zTv4q/mBnq+w
-         TC/caD9UYZDoQDzry5XxrtJsguX9jQqYykIoKTpw6/7QcMdnAu1rr8aecII0iN4kSOqp
-         068A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy5PdcJb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738948013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
+	b=Gy5PdcJbnHjL7K0E4kK4hk3QCTNCqxEyPsiDCzCFlFUSBHIc2grmLHdmMAyVhBThY98kTo
+	Rn3nUgHYCdFM20G/rcpSBWwefwHz9jwJs8u6D1csMFh2MzOkHWti/C/jlaIelyw2LMpFUx
+	xd9R5MoGiQw5qzU+xqO34VUPB//H/a4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-418-MnEocQ2EMn2tHgAUuREW2w-1; Fri, 07 Feb 2025 12:06:52 -0500
+X-MC-Unique: MnEocQ2EMn2tHgAUuREW2w-1
+X-Mimecast-MFC-AGG-ID: MnEocQ2EMn2tHgAUuREW2w
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dc56ef418so730697f8f.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 09:06:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738947249; x=1739552049;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0UvshL8nXVJdd7vp4+YSGo25p1rD7pCcETOL1e0fbZQ=;
-        b=BFDqftOTh+joXTgg/l2/OLX0uIK8VZlpBxG6ZY1Nola3VuXRliekq8zc2TOuLEG0YZ
-         NZK9qjztuFLIHGGD/2lBBdIbjVUdi879S6P/1ttxm/9d3XrXlvbJxI1YhkEuryc7B1JI
-         NDNwkgg/x8ZVKTPgPkljKFvYPEuNOym/0gdtlxj6FEB25OpA54nJT1zRCvm6/qpLY47k
-         nQnWiFEJZfGhqQxaaazk5lyaNH7YkSYjCOpVjUbXL4pesm49GqjcX128I9tA79LvvwSN
-         f9kQs1WTRlLuLr2xLh4HmHN0nLLkXyWFpGz1Ft7sb6EnDR5JMbwb1SRJcSQzbpN3qhUs
-         htpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEN3tXnfZRTM+TQfcAcaWYs4RX9qPUpvS7tiYy6t4FLGgF3wkHvGvRvtLAGyuRTWyA/fiIP8yfCosjHnpYlhqC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSqy7S+I/dFGYs9p0t3M3ZsYZQ/7FEl8Zi0SRdskkLr2e34yMu
-	KLcOT6JRfk2VIHjRyXNyIBenH+A+iWn8O87etmbKFZB6rZDKkdsHn0EvLL50/Rq5H33JTnZy04I
-	Dis0ssexSg/Iw13ILGlpmeUSLdsvVOMvgn70afA==
-X-Gm-Gg: ASbGncvPEOoqP92hHzWDcxD3jcXuNtvAaNH8iDk3S8ODePMIW0IBKVFjuzEIThloWtX
-	udsb/NMgWsLa2K2PNnHaAztkC9xoJ76SYM8Y8AWzVyBPfPdQoCZVF+uMFNUgbH2q9qJ3AW79Gnw
-	==
-X-Google-Smtp-Source: AGHT+IGcOreyYzVTdgMb0QBe7xfS8Hq4n/vBf0b22MVHxkWExD11jxox3l4GddXf+HqClKoe976BaxK99Tn7Vq/+DBg=
-X-Received: by 2002:a05:6a21:3399:b0:1e0:d4f4:5b39 with SMTP id
- adf61e73a8af0-1ee03a9b0afmr7073525637.24.1738947249048; Fri, 07 Feb 2025
- 08:54:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738948011; x=1739552811;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
+        b=iLwt+p82JY2PH7ep1fbsw+1b83IfCDdtE0ADKVFJ6oDx3EByTdLBYVA69fhXMdaUC5
+         1atTFG9zuQ2uOYYH6V6CS03P7mpAG+a/458dAvvWMWFuu0QxxiCC3ofJ/ZdvrohzglN2
+         QKmIqkRc04O25FuvuZL1Fva6v3iJdjrFcSi6c2L+Feukhq/NJFRJ/U8Icnxmag5mXdzQ
+         eXbkv68SuEHdZIg7BmM+5t5kttX+0gpGB4I8M584YQ1UrbWkbSZ5NU4OjUPWjx2yr3tY
+         5p6yvo9llgJnVyufwIw4H6cO9EcgpGTyiR3gqdcK7BsOEcjkrxnlo4KYfdUB8k/1Zt+Q
+         AUtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlu76vTCmXt3J5JZW+BZzsFOdA6kEhhKSsqzXzJzHElz9dLs5LWCiGlwso1aXoRWdI/dfBeBN9QtTeFd+IGIM4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBTuepLqUBRTst/p4kQ2je7APy91ia7wI8KKm5/IGl9bcRI5Z1
+	mnzaNCeyac8oU3/ADCuuAM2ruLrpm0D9i2VI7kiWtLGDqp3Eq3NVQDiCeqPHPbTd0h1byzeKQzw
+	lOdIGIz8EQr0S2kWxptRcFKMdFDw6135cDXWlcQ7xk6Py/5uoH115E/hHmcr0R+JJvVE=
+X-Gm-Gg: ASbGncucJbim7EIMsx35WQynorivvPknmUm9UacKkDZ1HTf2Ig7+WHzj0vUBFkdb4mZ
+	KyyRnbjUoyvqF0tFrBh42f0UR9fsUX7EeQa9ZS5t1LUrDTf1tDrDnWP0yiYfiVB4PlTxHnyXfVk
+	N5bLkm5i5Zkb50joeIh88wAFJrLeuqajVCUXdVyirkwP0Op4RUZHmWzNqCulPzPML1KFhP/i/2/
+	YlAT5D7RYlVdSGqOTUtG+/5tQZCaa2Lo0ts2GMFASvp0ENaVRMlmDggYS3DcXI9K0a1c5XrrYnI
+	ru66dYyrM6kOinEspnEo/RTZFJhdm+MDGjYTsv3EPqxmTg9nUu1J6x3m/84DkdGf3Q==
+X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923948f8f.53.1738948010998;
+        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOdkgTDMixdzesAbzZ6LQT5F1eKCI9U7dpB+ZFF0HwYFgHj2Fc571j17/M7jlf73QfQ/8NiQ==
+X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923876f8f.53.1738948010215;
+        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0041sm59887155e9.14.2025.02.07.09.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:06:49 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+In-Reply-To: <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-23-vschneid@redhat.com>
+ <Z5A6NPqVGoZ32YsN@pavilion.home>
+ <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Date: Fri, 07 Feb 2025 18:06:45 +0100
+Message-ID: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
- <20250205-counter_delegation-v4-11-835cfa88e3b1@rivosinc.com> <20250206105100.GA2971@willie-the-truck>
-In-Reply-To: <20250206105100.GA2971@willie-the-truck>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Fri, 7 Feb 2025 08:53:59 -0800
-X-Gm-Features: AWEUYZl2-SoqDPQ6r-GdOfUPJBX1qdNjRlIcNpQpRwZeLOQULWh9MTRajFVfra0
-Message-ID: <CAHBxVyEtxoRHLO791r6uFzHnX0vAcpeWMOcS+0tbVN+p6Oh2tQ@mail.gmail.com>
-Subject: Re: [PATCH v4 11/21] RISC-V: perf: Restructure the SBI PMU code
-To: Will Deacon <will@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 6, 2025 at 2:51=E2=80=AFAM Will Deacon <will@kernel.org> wrote:
+On 27/01/25 12:17, Valentin Schneider wrote:
+> On 22/01/25 01:22, Frederic Weisbecker wrote:
+>> And NMIs interrupting userspace don't call
+>> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
+>> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
+>> implementing common entry code, I can't speak for the others.
+>>
 >
-> On Wed, Feb 05, 2025 at 11:23:16PM -0800, Atish Patra wrote:
-> > With Ssccfg/Smcdeleg, we no longer need SBI PMU extension to program/
-> > access hpmcounter/events. However, we do need it for firmware counters.
-> > Rename the driver and its related code to represent generic name
-> > that will handle both sbi and ISA mechanism for hpmcounter related
-> > operations. Take this opportunity to update the Kconfig names to
-> > match the new driver name closely.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> > ---
-> >  MAINTAINERS                                       |   4 +-
-> >  arch/riscv/include/asm/kvm_vcpu_pmu.h             |   4 +-
-> >  arch/riscv/include/asm/kvm_vcpu_sbi.h             |   2 +-
-> >  arch/riscv/kvm/Makefile                           |   4 +-
-> >  arch/riscv/kvm/vcpu_sbi.c                         |   2 +-
-> >  drivers/perf/Kconfig                              |  16 +-
-> >  drivers/perf/Makefile                             |   4 +-
-> >  drivers/perf/{riscv_pmu.c =3D> riscv_pmu_common.c}  |   0
-> >  drivers/perf/{riscv_pmu_sbi.c =3D> riscv_pmu_dev.c} | 214 ++++++++++++=
-+---------
+> That I didn't realize, so thank you for pointing it out. Having another
+> look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
+> when it really isn't :(
 >
-> This seems... gratuitous? It feels like renaming the file could be a pain
-> for managing backports and renaming the driver might cause some headaches
-> in userspace.
+>> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
+>> CT_STATE can be interesting but I fear this may not come for free. You would
+>> need to save the old state on IRQ/NMI entry and restore it on exit.
+>>
 >
-> What do you gain from such an invasive change?
+> That's what I tried to avoid, but it sounds like there's no nice way around it.
 >
+>> Do we really need it?
+>>
+>
+> Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
+> this leads the IPI deferral logic to observe a technically-out-of-sync sate
+> for remote CPUs. Consider:
+>
+>   CPUx            CPUy
+>                     state := CT_STATE_IDLE
+>                     ...
+>                     ~>IRQ
+>                     ...
+>                     ct_nmi_enter()
+>                     [in the kernel proper by now]
+>
+>   text_poke_bp_batch()
+>     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
+>       READ CPUy ct->state
+>       `-> CT_IDLE_STATE
+>       `-> defer IPI
+>
+>
+> I thought this meant I would need to throw out the "defer IPIs if CPU is
+> idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
+> which is a bummer :(
 
-The current upstream driver was developed only for SBI PMU[1] due to
-lack of any ISA extension support that allows PMU programming from the
-kernel.
-Thus, the name of the file and the functions reflect those assumptions.
+Soooo I've been thinking...
 
-IMO, it would be confusing to use a driver named sbi that also uses
-the new ISA extensions that allows direct PMU programming from the
-kernel.
-This patch allows the internal functions and structure to clearly
-identify two ways of PMU programming.
-There are more PMU related ISA extensions planned in the future as
-well. Thus, I felt it would be best to do these changes now rather
-than later.
-I understand that managing the backport would be a pain as a result
-but I didn't quite understand the concern about the userspace
-headances.
-Can you please clarify that ?
+Isn't
 
-[1] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.=
-adoc
+  (context_tracking.state & CT_RCU_WATCHING)
 
+pretty much a proxy for knowing whether a CPU is executing in kernelspace,
+including NMIs?
 
-> Will
+NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
+IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
+IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
+IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
+
+IOW, if I gate setting deferred work by checking for this instead of
+explicitely CT_STATE_KERNEL, "it should work" and prevent the
+aforementioned issue? Or should I be out drinking instead? :-)
+
