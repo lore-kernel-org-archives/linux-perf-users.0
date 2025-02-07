@@ -1,320 +1,165 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF201EEA2A
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6E81DF25D
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928497; cv=none; b=PRZ1rhUu3x/P69DDQfh/CYiBNmvmUFFuRFuRe673xpLxo6A9OVFtSb6KncC9aGoEBvPF9e5BPEHSjtRrbwS8fPtv9RVKdj2AZNZqyntGYIFey89lzzvFOFEEGD935YJyJNX0/3N3TQ1mLJ5Pwflj1el7GKk+DJmmXPPSqVpUS7c=
+	t=1738928542; cv=none; b=snX2sO+6ZMbrqtynGqAvY4RQB7p2ADa/A2hT3zTwg+8t/mmxORPtCSpz8/DZac0fiPAmtbH0uSz9hLhg12Wa58aM988O3TnEKu0ABkjJ7zYq/ldD/wcULYPEfYJcCuSJBj72lcHkhSXFTbYCThiO0D0SJTMg28WzOphZ7ZVbhrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928497; c=relaxed/simple;
-	bh=XfN24f35OJ2vk/m+e6pUtd4T3vptKtMhhNopu2gMhYw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bZmtF3HpMKHUDphJt9Qk1MH3x//Gv9cCrx9f5GkpRhEnIVUeltNIQlrG8Cex1IomaQ5kZ7MQ0YOO8uYEemXCgUVgrAClEc6LrPxtt0hgEYYl0Qs7WJgbz1VuyOCRjh6tMtl9y44EsSB0eZqDKzuxCMLNMwVBifDafMfFdxDU//E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YAnMJ0Ks; arc=none smtp.client-ip=209.85.208.74
+	s=arc-20240116; t=1738928542; c=relaxed/simple;
+	bh=klwOF03lrs5WfgpLMCHzDkvspHlKzduFjJXTk1pvuwI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nZG5LyCQovEumGI+Xh+ti7QGj1w45vxQg7qMzYZcNWl8GKX8TdxcOH+9KlVWVWmPtal53ItPcbOoB5K10ygum3g9xOGQ8mDrnMZCW+o5J+qZIgyDx4b6+PjUcxVBHIUiyxEvHOFZDqq7QyTpZPOMhYJI8/C18IU4qiXs5spjsHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wFC5wsbU; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YAnMJ0Ks"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5de4a465673so628347a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:41:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFC5wsbU"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30613802a6bso21751281fa.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:42:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738928493; x=1739533293; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=YAnMJ0KsdtoCGwl1Netexiz03LByWH+aMZjzT4Tljdz6bEdbt9kKQhebJttDkATDV7
-         Kr7G2julVpmV9LGnAqwSzOg1AuIz9qcIkrFyzjE4Qe6ib70t5v4e3vPqsN/XY4Rowfc6
-         ksimRXFUJAZYTvSnAjirT0CujsURxQ01nMpD8jF3GTIXuNeALc3cFBw+BEvbVW69k6lw
-         krFhsLgOQZfA61ZugcA+j4/D6j+fL4P8hMPrN8qjxzVTu0QM2ciGwehNX8+DVARk8xIi
-         QZgU/3pzTlvGyM55r3aY4JO/O+fRdl5yjqomDIAgUjB3+XzyNy7inWr1ARl8+EjRa3dG
-         g0+Q==
+        d=google.com; s=20230601; t=1738928538; x=1739533338; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2gj3cqRMH8oEJS0PPwBCkwaddutVKDKmEi7zTls5x5g=;
+        b=wFC5wsbUuXPr/p0kYOqPGndUVZYiB5+aTon7JaJNtGCMuN0GklTBTwL19AhbeePjni
+         9JWvRXMSCSvUSpzRvUO7E+4pVZVgK+rJqTYcU1ICmQu365iiAwHFMXY8cKw2OWwb03Yb
+         Ewqehus3rAtRXNY9QsaMh+Kh/ZKEOdAAYw+spDdsf9uW2XPy5DHEbMHSIlhF82XgZAa9
+         CDmn++Nzps/VCXEWedNtpDai8V8G/PARmLB1LDE4iZ/ZGCqTHGnKQcfWpEiTuMs9WU3R
+         cH6EP+XDloDIG+H8htNKsStv/ibG+UhCQddmuU3oiN65vd6H7pWTunAq3NXNgIr9Ffr8
+         EnSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928493; x=1739533293;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=gIVgfQiaQxm2jRi6yK3N4HqOP+RhnqqgGhjvjBWTslMT3DPBEePOKd8gf+iWMxbJKq
-         gJGAEWo8xwQXzI1OoAk0OyY+eSZrWI0sluOWf7eJ/DBV7WjO01FmUU85auMASXCXCBqn
-         7RfdQDrYFPibbJWdIyCFOEwKlD7SZWU4tQQdj1MIILI8psd818FjXCp8YcSN1MmfWoLD
-         dJ7GZ5PM3N3DgMES3Uh1GJV54KgZp1yIwK10AqXDHpjzP6JoVH2nF/65vzsmIfJNf2nR
-         NwPXabPcdqdW1P7wLCIDKRFP/DWs0fdbgxZADvpdqbGbgMPiSywoCbx3igrY47hT/n7o
-         kcbA==
-X-Gm-Message-State: AOJu0YzoeMpNr5lHGHGoRlpXShFZlaxaVTJOcMYcF+Czgqdpx4aQURzJ
-	lQHwMpjakb46WQ6ieAGr023dSp98ktSHFkSOI8YITm2XbUGY36eXt5UeSoHAC5hiBKw75eM5pCZ
-	KGUlupA==
-X-Google-Smtp-Source: AGHT+IEgqMLZEOhuu8fW/Hxav2kpPrvG0r3hs2lMyY5C3Wx2zME8kZcFwpYlF+q9270MEA2ls6IZ5o7zmM1B
-X-Received: from edber14.prod.google.com ([2002:a05:6402:448e:b0:5dc:c943:7c1])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:5290:b0:5dc:7725:a0c7
- with SMTP id 4fb4d7f45d1cf-5de450401b6mr3216242a12.3.1738928493597; Fri, 07
- Feb 2025 03:41:33 -0800 (PST)
-Date: Fri,  7 Feb 2025 12:40:36 +0100
-In-Reply-To: <cover.1738928210.git.dvyukov@google.com>
+        d=1e100.net; s=20230601; t=1738928538; x=1739533338;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2gj3cqRMH8oEJS0PPwBCkwaddutVKDKmEi7zTls5x5g=;
+        b=KMQB9g1Gp05RFQaMo/t3yxghPOUB2CAE9hkh2t4OZUDCxwLTdYt9doz0ubYM7VZ+M8
+         ygefXGJu8O2aod+oYtfRnSH62lqYDObJkWu51RBz6jcWTbGQcCb6r97TJDOrb12kNgaC
+         6Zw57woEQdRIO/YH3O1ntZSpCzDVuRPy+bTRXgDOu20O65MYJRQqL+eDnrHE0OMk6+xH
+         OM/6jtP7kI+Cz2KHnPH4YWC0vRWqv6AXUnRvlUg4lXAXx4ONuZJ6VC3IfQsn0q3P4/pT
+         94eaCpMXSJGaIJlALyqKjDgeR58mUktIxrBMHvIueerFKlQdOpncfVq3DJobkiEQA/Hb
+         GPyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXaE162o2ztBnCEbUV1zhpvyt0MswhcDsYjt5grlYjUC151ZCt7nb1tSq5tbTaHOHet2YueMGVyr8br/2WL2LL/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR9e75apFeTUjXWTex2idJRnJ0L6EnnEuGBZLUGBgE6dN+L/B9
+	coWptffrWGrgi5Rq0UfESycNwdN09Sf9dTUk978GRoYyOLF25GciPj+Hz46DqC5O/nOZnnGI8NE
+	BD+KgPkCmKdA9wOs3qLxNystZhbI0DdxhqX8r
+X-Gm-Gg: ASbGnctNLQZeyrthAU/L6iPTNiPeM0nDL6uZyLlTkpUv1QA8RJ4jOTAxdrJ/sXz4OOH
+	6h58FbibXMA/v4Rj6xRRANLRVNOaMQR2TTxPwsd33df9N2r57SFlj/4eP2fvWq+QCpyy1C06CqU
+	0B5d6C4hh/5hnZHF0h9SppuV8Xt38=
+X-Google-Smtp-Source: AGHT+IGFHU+CN4cItl1wzJ30Ez4MneuGaUaIS5CR/Ym/3wJ5p/73tbwANprWw+B8TuE3yzX/oSTjZjhz/uIP4GiNa/k=
+X-Received: by 2002:a05:651c:1613:b0:300:1f12:bbc9 with SMTP id
+ 38308e7fff4ca-307e5a80f68mr11633481fa.34.1738928538087; Fri, 07 Feb 2025
+ 03:42:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738928210.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <9e988aaa57e78735b8b6cb18232fb94c813b2768.1738928210.git.dvyukov@google.com>
-Subject: [PATCH v6 9/9] perf hist: Shrink struct hist_entry size
+MIME-Version: 1.0
+References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
+ <Z6WDsmeVr7qPk0te@google.com>
+In-Reply-To: <Z6WDsmeVr7qPk0te@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, ak@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Date: Fri, 7 Feb 2025 12:42:06 +0100
+X-Gm-Features: AWEUYZnlDsvkjivC9zZ9T2cWpIcIDgBO6AtZZ9MOQ3v9j-G2dUtWDsnhG8Fwp8E
+Message-ID: <CACT4Y+ZtFQdA+EkWfxkdt_6NU-u7BvARRuU6fZvxa+Kf_7g9SQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
+On Fri, 7 Feb 2025 at 04:53, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
+> > Add record/report --latency flag that allows to capture and show
+> > latency-centric profiles rather than the default CPU-consumption-centric
+> > profiles. For latency profiles record captures context switch events,
+> > and report shows Latency as the first column.
+> >
+> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: linux-perf-users@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> >
+> > ---
+> [SNIP]
+> > +void perf_hpp__cancel_latency(void)
+> > +{
+> > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
+> > +
+> > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
+> > +             return;
+>
+> This also needs to be changed since you call setup_overhead even if you
+> have a strict sort_order.
+>
+> For example, it's strange these two are different.
+>
+> With default sort order:
+>
+>   $ perf record --latency -- ls /
+>
+>   $ perf report --stdio
+>   ...
+>   # Overhead  Command  Shared Object         Symbol
+>   # ........  .......  ....................  ........................
+>   #
+>       64.50%  ls       ld-linux-x86-64.so.2  [.] do_lookup_x
+>       33.41%  ls       [kernel.kallsyms]     [k] chacha_block_generic
+>        2.00%  perf-ex  [kernel.kallsyms]     [k] put_ctx
+>        0.09%  perf-ex  [kernel.kallsyms]     [k] native_write_msr
+>
+> Same sort order, but explicitly:
+>
+>   $ perf report --stdio -s comm,dso,sym
+>   ...
+>   # Overhead   Latency  Command  Shared Object         Symbol
+>   # ........  ........  .......  ....................  ........................
+>   #
+>       64.50%    64.50%  ls       ld-linux-x86-64.so.2  [.] do_lookup_x
+>       33.41%    33.41%  ls       [kernel.kallsyms]     [k] chacha_block_generic
+>        2.00%     2.00%  perf-ex  [kernel.kallsyms]     [k] put_ctx
+>        0.09%     0.09%  perf-ex  [kernel.kallsyms]     [k] native_write_msr
+>
+> Maybe you want to cancel the latency field even if sort key is given
+> (unless it has 'latency').
+>
+> Something like this?
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
+Makes sense! Done in v6.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
----
-Pahole output before:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-
-	/* XXX 2 bytes hole, try to pack */
-
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
-
-	/* XXX 1 byte hole, try to pack */
-
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
-
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-
-After:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
-
-	/* XXX 6 bytes hole, try to pack */
-
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
- 
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
- };
- 
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
- 
--- 
-2.48.1.502.g6dc24dfdaf-goog
-
+> ---8<---
+> @@ -714,7 +715,9 @@ void perf_hpp__cancel_latency(void)
+>  {
+>         struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
+>
+> -       if (is_strict_order(field_order) || is_strict_order(sort_order))
+> +       if (is_strict_order(field_order))
+> +               return;
+> +       if (is_strict_order(sort_order) && strstr(sort_order, "latency"))
+>                 return;
+>
+>         lat = &perf_hpp__format[PERF_HPP__LATENCY];
+> ---8<---
+>
+> Thanks,
+> Namhyung
+>
+> > +
+> > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
+> > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
+> > +
+> > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
+> > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
+> > +                     perf_hpp__column_unregister(fmt);
+> > +     }
+> > +}
+> > +
+> >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
+> >  {
+> >       struct perf_hpp_fmt *fmt;
