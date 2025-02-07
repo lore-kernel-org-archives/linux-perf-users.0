@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8720F1D8A16
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 23:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07FA1DD529
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 23:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738970701; cv=none; b=aLwIHP5Flkgj9Tj+08v7+OfF5aGalXwYgla8CU0oqf3/hwVzJ5meR0r3G/3lHwWQVmO0jx20rP9uJuTrG47R5Muz+Q0KJ/YQzAQPdZwtlQBEKvHcptiLroUcZ+BqqQ6V40GvLe/CvC/xfScdpmS2HNtfISBXTcAi7sTJ6nsPVDw=
+	t=1738970703; cv=none; b=s/EOuuRBqxGNIQamlPHseflU4cpzSfBxJTW/a50sAYcP+VcadNMaIOXAx1ez6so6+68NGCwQiQgrM3RVudVbOLT2dGC5M55Wl+TZCQxAL1CVYQvhilJ1o/zxr4oqC5iTVMue2POfOGn2nbD7SPk6Xy/ALgh5XWbFyvu6qT54y4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738970701; c=relaxed/simple;
-	bh=ElWenOyfvaucerfCny5mEDKaWfo6X8s3yJAt0bwuZO0=;
+	s=arc-20240116; t=1738970703; c=relaxed/simple;
+	bh=zYNGAkgMdd9XUiROyIWPJ+Mlzc02RJhIL7WMmuG/ANk=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=oPlJ1GeI0Tczo/SmkWMs+PJPhxkyvJmcCOJh5BJbHJwc15SxKoKK8gwvsVU/W3bbGotLObPwIFk+LxSy3fUpH/1toC746NhhHVajrH05WhU4zdrO+y2qeTLI60LDTgPc8syyKzi29Br/AbYYftkneVtMmiozhvscSw96HCCjhu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BLiaoEYq; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=hZqwBY2WGv5x1c9FIbMTMao9LQb3ekFcrp8ftKgU7MCXy8HDE2NGoPDrrlNbHxPVWqjKZDg47Z1Gg04SjC77X7zTH77Ok5hD9WaN1MKxt/V7pnyGnDGn46rwSJqmlzXQv/eVnZEaUmVYUDUzRcOVHVgDk/W9Lump3Zh0hHDhVbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YCH63TyX; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BLiaoEYq"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5b48736dcfso1749361276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 15:24:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YCH63TyX"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f97ec73df7so15166847b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 15:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738970698; x=1739575498; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738970701; x=1739575501; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5W/64OKdjEHEkY7BmxbGDOrXjI8zGvJwzbQ9pnE/HiI=;
-        b=BLiaoEYqbS6vJ8bzVhDUsHQq5Y1g/9My7CyszTub7pcLEF50MqnAZYtUXGoXElK+gK
-         fMdrM3bhkakCw631W9UHgmbgXR3CAk9MTnDb3bbx/+updGA/G8rKftAfMHCIFo220TZx
-         TJWAX31bdjtg3eqhoVJxGE18LDuJc6lcBre5edGNh5Tjn7weJYFxCq7pKx8saWKkmemz
-         E9djRK/YQ/yA4wcAqixW2BZJWsDhCKhFB9Q0Ao0A//dG0mi+RY93AGeS6eI/SJJ6mf8z
-         d5Mr6ab3CqbFL8S+jLkxYII/7P+6svbNSbU1wsDZsoaTh98nvD1vkQ4BoNwQUWAWdMM7
-         LAmw==
+        bh=SK5AV+lqqx4bn5Q1XZOeQFYE3IU1Rh1nSkTxsM9kwPs=;
+        b=YCH63TyXDwQb4STHaWAL+hUqUdTcrNhfKwB/o5vzjOUIhohBRztfM98IeRkAgI8f3P
+         xG6ZiXJywzOdS88kNfJ1dLlw72k9jZs9KSZZdyptKiaybvwMqoPYDO2z7VQCI7pGD4So
+         Ae9hLOyE+07dsXSbysyhcIWma8368O7apF+phCD/6edwa5qjRFCd53Vg2R9gG4cCVo6i
+         hQmqXh2faIIi1U/pClngYCA9h0gAb/q5zXC8J2mcpnkNO2Vz5oq8JGmcKFDkJWUNhwjc
+         7teFCT9ujYgvTflwda37iIIUa7f3LWFK/80VlCQ3TpTbe6iCONyIqktPnTC+Ze2yvzXX
+         zgGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738970698; x=1739575498;
+        d=1e100.net; s=20230601; t=1738970701; x=1739575501;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5W/64OKdjEHEkY7BmxbGDOrXjI8zGvJwzbQ9pnE/HiI=;
-        b=gXVlFmVHUCf0hdUZ5Sp4Sz+wJrMAS5t13Pqjv1bgE1SyjkNPmgrbad2I8SGp/ZmIMo
-         xFqvgG3m7tKQ5tspgjSK12JvgJcrv/dWADaezWA7MsCXuMNEBj7CZ23ty0tFi8Wgt3xM
-         jAYX4pmBf+64qt8QsFXbF4F8AFZYP143LwPYFGYj1nZZPB8BiLwTBvKMWx8DSbOZMHJE
-         Wof+5D5qBdhUONQzK/BjtR3FzauxAo1cnBF5cW8p3hRTYgNE1Ush0EoSJukZ09+AlhLx
-         mvqIZQ4mtQ7QuFmK7ya6qzv1hA8VwWvMl1iDkzNF0LVwR476Jt9gFuL2EfUzkXx/LvRB
-         jBsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRP+ZHjEVLTpoTZbv3qSy2Gn2QD+ljqsHH1+v+smBXvIrFU/tdp1s2I0kctQFpi57ttXljRTGeR+0m42+fxWwJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnAvk+UM6CAgEGL8TsiE47Phg91nSo1LLaviyipR4mp6L9AwFC
-	cdEZ+e5QkQiudYdKvUqn4w/3ejKZF4U4UPnn5lJdApmKGU+pIYYANA3wWoWd2K+TYhHNoCIWDoO
-	ZI7tA7A==
-X-Google-Smtp-Source: AGHT+IE6ysQvWeGLDwktkI386nBL83Kpeyvrn6R1QrqV1e8oodaSQ2vxtnD60YGacTEEgesF2jQk8jzy/LsC
+        bh=SK5AV+lqqx4bn5Q1XZOeQFYE3IU1Rh1nSkTxsM9kwPs=;
+        b=CwqteWxlSdIntX7MUR/n4aZVWD6SOdY+s1oOEKT7fX01c9yGUNcu9nz4Ww2KSgUrox
+         ixfn7Kf3n9hvcs7l3rUYErkueSl86tvCNxhOPKSd3KzoHNJ3WSz5kztP4w+8GUrjdLdi
+         HKoibEf4xehQ5+xqe5DK+dkj8AmWFk388R1stOI5itCfTBU8h4369XmQrE9HuXkgzWXy
+         LGJpj8n0LnxxJMf9lBj7LGuiyX/O8NKXmQVDOMgqnsskDpnxSoc0ibCVOt8lTRQCH33z
+         FYeKlyvlaayR7fWc6YtytBlW2TWVngOcq3wprU7LFVfGysua/vBJkdT6sVJXQ/tmIJs+
+         fvSg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/I6bB8e7WlKIPz4i7j7QfU+JyUmZSakyLaF2R57u+Ye8XfevFqeW+evGPvQK0bHA7YCO7UuPPZs6+VU2xZ6v8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJBB/f0q5JotLZs868V99BEVfsSLNz0qontBJmpY9195UGEI4T
+	GacbjmaSDbYJ1ZPmr5ozR9BVKklDl7tTor43SZz5JQN6CEdjKJRs47qd36E0gjgCMCI6idHnNlN
+	YOVnFjQ==
+X-Google-Smtp-Source: AGHT+IGNMSvc4/dmPsVB5ZKRDbOu0NNtmtkE0ZYHFYRHCb/11YooZqZk50AbSjXlheuxley0tKZG/Im1zyjt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a25:c1c2:0:b0:e57:3500:2294 with SMTP id
- 3f1490d57ef6-e5b4618c4b0mr33944276.3.1738970698544; Fri, 07 Feb 2025 15:24:58
- -0800 (PST)
-Date: Fri,  7 Feb 2025 15:24:42 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:9315:b0:6f9:a402:ff3e with SMTP
+ id 00721157ae682-6f9b2960936mr337647b3.5.1738970700926; Fri, 07 Feb 2025
+ 15:25:00 -0800 (PST)
+Date: Fri,  7 Feb 2025 15:24:43 -0800
 In-Reply-To: <20250207232452.994822-1-irogers@google.com>
-Message-Id: <20250207232452.994822-2-irogers@google.com>
+Message-Id: <20250207232452.994822-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250207232452.994822-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v2 1/7] tools lib api: Add io_dir an allocation free readdir alternative
+Subject: [PATCH v2 2/7] perf maps: Switch modules tree walk to io_dir__readdir
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,138 +78,68 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-glibc's opendir allocates a minimum of 32kb, when called recursively
-for a directory tree the memory consumption can add up - nearly 300kb
-during perf start-up when processing modules. Add a stack allocated
-variant of readdir sized a little more than 1kb.
+Compared to glibc's opendir/readdir this lowers the max RSS of perf
+record by 1.8MB on a Debian machine.
 
-As getdents64 may be missing from libc, add support using syscall.
-Note, an earlier version of this patch had a feature test for
-getdents64 but there were problems on certains distros where
-getdents64 would be #define renamed to getdents breaking the code. The
-syscall use was made uncondtional to work around this. There is
-context in:
-https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
-
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/Makefile |  2 +-
- tools/lib/api/io_dir.h | 93 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 94 insertions(+), 1 deletion(-)
- create mode 100644 tools/lib/api/io_dir.h
+ tools/perf/util/machine.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index 7f6396087b46..8665c799e0fa 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
-@@ -95,7 +95,7 @@ install_lib: $(LIBFILE)
- 		$(call do_install_mkdir,$(libdir_SQ)); \
- 		cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2d51badfbf2e..bdd7969533c6 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -37,6 +37,7 @@
+ #include <internal/lib.h> // page_size
+ #include "cgroup.h"
+ #include "arm64-frame-pointer-unwind-support.h"
++#include <api/io_dir.h>
  
--HDRS := cpu.h debug.h io.h
-+HDRS := cpu.h debug.h io.h io_dir.h
- FD_HDRS := fd/array.h
- FS_HDRS := fs/fs.h fs/tracing_path.h
- INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/api
-diff --git a/tools/lib/api/io_dir.h b/tools/lib/api/io_dir.h
-new file mode 100644
-index 000000000000..c84738923c96
---- /dev/null
-+++ b/tools/lib/api/io_dir.h
-@@ -0,0 +1,93 @@
-+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-+/*
-+ * Lightweight directory reading library.
-+ */
-+#ifndef __API_IO_DIR__
-+#define __API_IO_DIR__
-+
-+#include <dirent.h>
-+#include <fcntl.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sys/stat.h>
-+#include <sys/syscall.h>
-+
-+#if !defined(SYS_getdents64)
-+#if defined(__x86_64__)
-+#define SYS_getdents64 217
-+#elif defined(__aarch64__)
-+#define SYS_getdents64 61
-+#endif
-+#endif
-+
-+static inline ssize_t perf_getdents64(int fd, void *dirp, size_t count)
-+{
-+#ifdef MEMORY_SANITIZER
-+	memset(dirp, 0, count);
-+#endif
-+	return syscall(SYS_getdents64, fd, dirp, count);
-+}
-+#endif
-+
-+struct io_dirent64 {
-+	ino64_t        d_ino;    /* 64-bit inode number */
-+	off64_t        d_off;    /* 64-bit offset to next structure */
-+	unsigned short d_reclen; /* Size of this dirent */
-+	unsigned char  d_type;   /* File type */
-+	char           d_name[NAME_MAX + 1]; /* Filename (null-terminated) */
-+};
-+
-+struct io_dir {
-+	int dirfd;
-+	ssize_t available_bytes;
-+	struct io_dirent64 *next;
-+	struct io_dirent64 buff[4];
-+};
-+
-+static inline void io_dir__init(struct io_dir *iod, int dirfd)
-+{
-+	iod->dirfd = dirfd;
-+	iod->available_bytes = 0;
-+}
-+
-+static inline void io_dir__rewinddir(struct io_dir *iod)
-+{
-+	lseek(iod->dirfd, 0, SEEK_SET);
-+	iod->available_bytes = 0;
-+}
-+
-+static inline struct io_dirent64 *io_dir__readdir(struct io_dir *iod)
-+{
-+	struct io_dirent64 *entry;
-+
-+	if (iod->available_bytes <= 0) {
-+		ssize_t rc = perf_getdents64(iod->dirfd, iod->buff, sizeof(iod->buff));
-+
-+		if (rc <= 0)
-+			return NULL;
-+		iod->available_bytes = rc;
-+		iod->next = iod->buff;
-+	}
-+	entry = iod->next;
-+	iod->next = (struct io_dirent64 *)((char *)entry + entry->d_reclen);
-+	iod->available_bytes -= entry->d_reclen;
-+	return entry;
-+}
-+
-+static inline bool io_dir__is_dir(const struct io_dir *iod, struct io_dirent64 *dent)
-+{
-+	if (dent->d_type == DT_UNKNOWN) {
-+		struct stat st;
-+
-+		if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=*/0))
-+			return false;
-+
-+		if (S_ISDIR(st.st_mode)) {
-+			dent->d_type = DT_DIR;
-+			return true;
-+		}
-+	}
-+	return dent->d_type == DT_DIR;
-+}
-+
-+#endif
+ #include <linux/ctype.h>
+ #include <symbol/kallsyms.h>
+@@ -1354,25 +1355,21 @@ static int maps__set_module_path(struct maps *maps, const char *path, struct kmo
+ 
+ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, int depth)
+ {
+-	struct dirent *dent;
+-	DIR *dir = opendir(dir_name);
++	struct io_dirent64 *dent;
++	struct io_dir iod;
+ 	int ret = 0;
+ 
+-	if (!dir) {
++	io_dir__init(&iod, open(dir_name, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
++	if (iod.dirfd < 0) {
+ 		pr_debug("%s: cannot open %s dir\n", __func__, dir_name);
+ 		return -1;
+ 	}
+ 
+-	while ((dent = readdir(dir)) != NULL) {
++	while ((dent = io_dir__readdir(&iod)) != NULL) {
+ 		char path[PATH_MAX];
+-		struct stat st;
+ 
+-		/*sshfs might return bad dent->d_type, so we have to stat*/
+ 		path__join(path, sizeof(path), dir_name, dent->d_name);
+-		if (stat(path, &st))
+-			continue;
+-
+-		if (S_ISDIR(st.st_mode)) {
++		if (io_dir__is_dir(&iod, dent)) {
+ 			if (!strcmp(dent->d_name, ".") ||
+ 			    !strcmp(dent->d_name, ".."))
+ 				continue;
+@@ -1405,7 +1402,7 @@ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, i
+ 	}
+ 
+ out:
+-	closedir(dir);
++	close(iod.dirfd);
+ 	return ret;
+ }
+ 
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
