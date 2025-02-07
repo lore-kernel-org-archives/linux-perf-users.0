@@ -1,130 +1,125 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE06FC1D
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 11:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35D1EB1BA;
+	Fri,  7 Feb 2025 15:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928679; cv=none; b=Nu6Oy0zNUVuG7QAjfOnbU72HCMo00nHi/YDwY0wi0Wggi4N0BfnYiYMz/Gv5fc4JGhCqZTYq6rEgwwVL98vGd7JNCqhvf220KNiCUILQyB+Slzd8Ifu1ZEnw8dTQt+qxRwaBcmnxPsK6oeJLNeBnnCGSb3gsc+GVU+f9qVxtd18=
+	t=1738942110; cv=none; b=mBbd9wc4TebJL0WTQAKuOqSKqCd3SvL1yJ8Q2aSt1aMWs2Dm/iuo5nKNGp8IDPym+i8IGhATeZUXsqVnbylr4AIk/q/vq8kSw2qTNmDfj0uQesHYOLC7hOlfkrkrVYLK7MS4g3M+zFKr9yoSvC4wvHdA5UxdhyL4LfSjTxjBmnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928679; c=relaxed/simple;
-	bh=JGu5JKj8jpkSVK3yYAVXPTbMrFO/6XIzUyJoj353e50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mh5jl36xgX6o2RP3QAbvqbka+YYMmcDC8SGh58FE0Mgo8NXufNuMNOiYRYHzj5wrYSX1huo4oFJOcKrZPyuPZdZACeO6iQ2WvGOW3uKqE5F9uuTvieQYJdxgmH8euEoRdLxSCQKt7fLK4xzzubzeb+Z/omsIDXJ0S4O8Z/zSNKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1oXZJbCm; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738942110; c=relaxed/simple;
+	bh=GDvYfrwJg6xhYEviS7QdZmI6UsPNPpB1aJnYGm6S3sc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WmJl2WFG86+ii3Ky3TueHhIviwOcLhxaYpAb4RM84uU6A8IO0Kk9hBTuFn87y7+lSZaQeDQm/ZCvfv20cG2gG4kXKvCvoFke4e8ca/e5DOVb0bNFgvEdTfQGu35IDEu4YUeP1HjLccb/9lW+1wAVujTMVvBLTdNe80RnQTf2Ges=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B6wSvLaD; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1oXZJbCm"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3082334d1a0so4994101fa.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 03:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738928676; x=1739533476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
-        b=1oXZJbCmfxmJNPNi6O1mHtivr84eVIXwahsR+6TvyZHHRlYkB+eRaKCqRYZqzjhp73
-         uFOt8h9ZQnJBop5c6FzTt1rk8v0so+OaEopEpY5u8wRjCzBo/AMsGBWEFmi05m4CPWRi
-         9g/SuERpGvOEipNgFKEpSgs46i1jHfwrKlBKl0GOn336YIM8B0wGfi6xvTdB2ZjcBUSp
-         xPmV4+xmUCMm2tgZgFfM5HSv5Mt7RmzJt/iHYYv0Qk2+SDqoyISeMym8DINNV9zycUV0
-         O/Kk4NaAA7Uz99kC4xJbJdnliPu1tyTtx8Xmb+qJfpmmSjUoo/ZFo+kdL1j0XmY2/Tkm
-         7AAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928676; x=1739533476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
-        b=qFZ1ePFIctsDD0lyffazt2O/wgokJdfrWWYd6eZcUZvIUTTskU6aO8pjYvA5bbutVF
-         XuR2SSke2GHU0nF/kFbUmuDMYw9ppNJFU7rNSqQgBhhIq7WO8ZUN48qf53IK/VTPQdHY
-         Ld5KQ2OwRZ7Anlck59640q5Jdsy+l0MMbOrYh8UL00/OzVvkyBYtso3tPMSkBU+4h83b
-         wmCinFNPXsmfttuoehjgpIY7j/0v19ZJqG1CZiRrwonB+llMhlvz00vZ1U2dvoJXMYjz
-         7V0L3vm0uwpIM0xfKVS9kd++K85gDr2HOGUAwXHVMZmiWzUkQ1/zv86Fmd7g+x+Ka56s
-         gc0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtd3MU7b455vXa0Ccdw4aaG/aetibQHuh/BN8Cf6P2zQ+QGRtO3PumIHngrCws14RLlkPy8SOohSoa+LGak6XB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKbp1VQLhH7mZYaep6onDga/0clbBMqZCPHmTIa/LAfnzgr9z+
-	cqKFsfOYLac9qgrcrzwr/t0erXEsjOixOTSeB8RQUXKomvJdb0CYpRDc/T0Wo/CHGbaPCJ2jGPC
-	ZXm2U0RDhqJGa5EaPLKji7KpfgSbyd53jfhh0
-X-Gm-Gg: ASbGncs4iQtW3CtpY7k4lSDz3zpx12Nohj2UbNutAxtUy7rG1xJtsiXAmXhh/qyBEFA
-	i6uh0lNlQESEh83q2Nj3zsCCciVlkO/250kD9SePTbgkPVT40cNV5+IHI7edgGQaQEzqgdEqWOL
-	IUtEFP6Y9cWcEx0CqGeV/ALD4H50U=
-X-Google-Smtp-Source: AGHT+IFBD05bWatFNIOO3CjU1frhz0tzz0FlpHNb00Eyed6A0AXOGuMdcR8AEQ1ya2IawmyznAQ/JPQadiMtzM4HLe4=
-X-Received: by 2002:a2e:900e:0:b0:2ff:4e4b:cbe2 with SMTP id
- 38308e7fff4ca-307da58e04dmr21221901fa.14.1738928675866; Fri, 07 Feb 2025
- 03:44:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B6wSvLaD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738942109; x=1770478109;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GDvYfrwJg6xhYEviS7QdZmI6UsPNPpB1aJnYGm6S3sc=;
+  b=B6wSvLaDl4vOq/OJuF1RpvQNL0hcSWMRb7kOp02FwbYxG2yDGQ296uFH
+   CXyThFZ8+/JiM+VL1bFOxdB5ms5Vt/bUz6YaZxon3s38/fXlMeJvSjnOA
+   WzNHiEezGMeBn1OA1klLCWqndIkM/nSF8etifrylHexQw6ny9lYyr1FDZ
+   vzpduAGu/a3U9wvL2h93AqDOazOHVtb1pHDPK8NY+fTmIaNEqy5mrDqP1
+   ljiJ9HqMUo49lFkr4I2lLUk74rV8BstB8IiJhLkcxDGeEaZDBELJvvokG
+   jOI6OtLQE6Ywejg1JzQFUadxffWtgWFTV6IK/8X38InQi/b8643PvFgrX
+   w==;
+X-CSE-ConnectionGUID: MmMshfyETbKEfVC/MTxN/g==
+X-CSE-MsgGUID: yq9l2Mm9QVW/WyUGuKPhQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39702315"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39702315"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:28:28 -0800
+X-CSE-ConnectionGUID: EASXZdtFScKmoBX9hvwXow==
+X-CSE-MsgGUID: f+zV0DLaQsa/hRDw6RXbpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116161825"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa005.fm.intel.com with ESMTP; 07 Feb 2025 07:28:28 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	thomas.falcon@intel.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] perf tool_pmu: Add skip check in tool_pmu__event_to_str()
+Date: Fri,  7 Feb 2025 07:28:44 -0800
+Message-Id: <20250207152844.302167-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
- <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
- <CAP-5=fUxY1KYXN-HcJPd2D66j5cC6DFTGPzYFVvJKvBLqyz6-Q@mail.gmail.com> <Z6WEkAPxtpVmx8cO@google.com>
-In-Reply-To: <Z6WEkAPxtpVmx8cO@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 7 Feb 2025 12:44:24 +0100
-X-Gm-Features: AWEUYZknqnNJQVXcj50I7GgYjjXVJVRJ6QKmq5lQDRQ69NY3CN35CUU5DSIPf7E
-Message-ID: <CACT4Y+ZrFOWZodAM_Ay5hZRht=7D5KWcK7q4=DBpf-E2vs+JmA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025 at 04:57, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Thu, Feb 06, 2025 at 10:51:16AM -0800, Ian Rogers wrote:
-> > On Thu, Feb 6, 2025 at 10:41=E2=80=AFAM Dmitry Vyukov <dvyukov@google.c=
-om> wrote:
-> > > On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
-> > [snip]
-> > > > We traditionally didn't do it, but in general test coverage
-> > > > of perf report is too low, so I would recommend to add some simple
-> > > > test case in the perf test scripts.
-> > >
-> > > What of this is testable within the current testing framework?
-> > > Also how do I run tests? I failed to figure it out.
-> >
-> > Often just having a test that ensure a command doesn't segfault is
-> > progress :-) The shell tests Andi mentions are here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell?h=3Dperf-tools-next
-> > There's no explicit `perf report` test there but maybe the annotate,
-> > diff or record tests could give you some ideas.
->
-> Well, we have. :)
->
->   $ ./perf test -vv report
->   116: perftool-testsuite_report:
->   --- start ---
->   test child forked, pid 109653
->   -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
->   ## [ PASS ] ## perf_report :: setup SUMMARY
->   -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase sk=
-ipped
->   -- [ PASS ] -- perf_report :: test_basic :: basic execution
->   -- [ PASS ] -- perf_report :: test_basic :: number of samples
->   -- [ PASS ] -- perf_report :: test_basic :: header
->   -- [ PASS ] -- perf_report :: test_basic :: header timestamp
->   -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
->   -- [ PASS ] -- perf_report :: test_basic :: pid
->   -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
->   -- [ PASS ] -- perf_report :: test_basic :: symbol filter
->   ## [ PASS ] ## perf_report :: test_basic SUMMARY
->   ---- end(0) ----
->   116: perftool-testsuite_report                                       : =
-Ok
->
-> Thanks,
-> Namhyung
+From: Kan Liang <kan.liang@linux.intel.com>
 
+Some topdown related metrics may fail on hybrid machines.
 
-Thanks, Namhyung, Andi, Ian, this is useful.
+ $perf stat -M tma_frontend_bound
+ Cannot resolve IDs for tma_frontend_bound:
+ cpu_atom@TOPDOWN_FE_BOUND.ALL@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)
 
-Added tests in v6:
-https://lore.kernel.org/linux-perf-users/eb8506dfa5998da3b891ba3d36f7ed4a7d=
-b4ca2b.1738928210.git.dvyukov@google.com/T/#u
+In the find_tool_events(), the tool_pmu__event_to_str() is used to
+compare the tool_events. It only checks the event name, no PMU or arch.
+So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
+p-core Topdown metrics has "slots" event.
+The tool_events is shared. So when parsing the e-core metrics, the
+"slots" is automatically added.
+
+The "slots" event as a tool event should only be available on arm64. It
+has a different meaning on X86. The tool_pmu__skip_event() intends
+handle the case. Apply it for tool_pmu__event_to_str() as well.
+
+There is a lack of sanity check in the expr__get_id(). Add the check.
+
+Closes: https://lore.kernel.org/lkml/608077bc-4139-4a97-8dc4-7997177d95c4@linux.intel.com/
+Fixes: 069057239a67 ("perf tool_pmu: Move expr literals to tool_pmu")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/util/expr.c     | 2 ++
+ tools/perf/util/tool_pmu.c | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index c221dcce6666..6413537442aa 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -215,6 +215,8 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+ 		 struct expr_id_data **data)
+ {
++	if (!ctx || !id)
++		return -1;
+ 	return hashmap__find(ctx->ids, id, data) ? 0 : -1;
+ }
+ 
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 4fb097578479..3a68debe7143 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -62,7 +62,8 @@ int tool_pmu__num_skip_events(void)
+ 
+ const char *tool_pmu__event_to_str(enum tool_pmu_event ev)
+ {
+-	if (ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX)
++	if ((ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX) &&
++	    !tool_pmu__skip_event(tool_pmu__event_names[ev]))
+ 		return tool_pmu__event_names[ev];
+ 
+ 	return NULL;
+-- 
+2.38.1
+
