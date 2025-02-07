@@ -1,337 +1,187 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077D31DF96E;
-	Thu,  6 Feb 2025 22:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B17A2417DB;
+	Fri,  7 Feb 2025 01:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738879759; cv=none; b=q5XI6TukBaq7g31kkLK6SOAFtuhSLDft/Y4yq6GuinesgYv4wHIgj40YCu5+H6oGdNKI1jWD2vjaTkZH2yrqtiuCas45yITGtNX8b49JdxW9yu0y1JVKfSP6Z2jpAc6rq9bOSbr9LzRDHi0KxzTLviI5kwh1xIf9gGQTqTodRKQ=
+	t=1738890283; cv=none; b=t/SNgRstALn0nO58GC8DVl6ADWSMs92XRkIDFS8kuS1TQwAJ+2ez1w4AvHmaRe+mFJLql8tUpM8pM3caOqJpBkv6x+f9iKBmeJfcALV5DTcPT+b+72IIul5+z/CHfnW+wBR3aHELjOeKbLh1/Z03fWaLZ3m3Gm5iqwlNBh847do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738879759; c=relaxed/simple;
-	bh=C0O1HP8xhbAgcrX6+/kH2eP7TCZJdrbdIByOFmK5xlw=;
+	s=arc-20240116; t=1738890283; c=relaxed/simple;
+	bh=ZL+ndmNfqd3tamYa3VWakgMQzhn04vpvwNH6uRi65lk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrZg8JPe0b9Oth3CAf8uIIzeZS74SA912b7YWWsx1XH9KyMzhveR8YvLY1fs3GkqsYZVfbn/JNgQnjyoHFG9xfz9QJiYD4cn2jo/qx7Hg/cgMmC6kLqDwIMMZlRUpUOVCeFuNTLqzR8z9NJAvMsmZPaPva57eslyU/lela3YXBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnhUWElU; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=pwdXAVWwjYg4rkGSfSWyMTx8eZvqImZ8N+2Zu1CqKAeY6XznCpC8IiJeWpb8qxeYln+ruFN5u3EjQpHvCA/gLZ+qZre/oZ11JdwNcCp7TaYGHvf3ZonOU3KDCVH1kxMcv8z23og4pyPIMCbibAXIzncJTzZXShsUZXk0/nQWTBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DX5vGF3G; arc=none smtp.client-ip=209.85.219.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnhUWElU"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e545c1e8a15so1284270276.1;
-        Thu, 06 Feb 2025 14:09:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DX5vGF3G"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so1215686276.2;
+        Thu, 06 Feb 2025 17:04:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738879754; x=1739484554; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738890279; x=1739495079; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KjgXj0CUYH9Bv190fbSnudV5Idq06JKQoyp91xyEpaM=;
-        b=LnhUWElUW3KuQ4zIDlCgERGppkq5XnfhJEKzA2NI/+QphdIEP081KcKs2k08PrpdV5
-         BGvc1pEaC306DaOfT+UKB9IbjlYBJucXmZMAo1OG/yfhJPJqNV5MB6yEbHFd2K8dnifp
-         0y64IgsSfsWV6e16AxGwBm5B1v5KAytkpwv+25JEfn5yo+ICsHHbjLQ17qQovYbBOQdG
-         vzK35o0IqicWCxg2+WuXGu2kGS4OaMp/sH/6CJslY6X2kzanA5o4U5QEPfdO6Kv1v0mq
-         6AVZnofklY6GFzHe23chz4SrXsTUkvEo9wAA7NbAP4Tj7juwKXrDDfQD3qzsCnDn4+3T
-         o+ng==
+        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
+        b=DX5vGF3GL+Ol+/EjTKhHvzptqmfA23Cb+wWdI9NnjqoiO2veRTngMUcN7LobvMtiOP
+         QDiIf1s4UA5GhZjT4XrsIcc2173jTgFmj8lQDQJhwGW4ejXP0slwkgasriWa2mN8/0Ls
+         DngvEoYy2H2JDZnY5bMWJmPRjgO7v12L7Nc9evswNGrzVQSgxZ0QbC8Z+pU2HfLd5Ksc
+         TORGfHrfMuhIciih2+wKmyAo/iOITm7ITZUIiBjN0o23XSpCON57yzrKz+FlQ3YRCiDl
+         rR3yHSCdDtqttN4nxlkY5QllGzK6For0dTWyassk4LbC3aayp+he/O+PINCMzk+tIcWP
+         0+Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738879754; x=1739484554;
+        d=1e100.net; s=20230601; t=1738890279; x=1739495079;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KjgXj0CUYH9Bv190fbSnudV5Idq06JKQoyp91xyEpaM=;
-        b=OZ2sohLhFyrnvW7V3oRUi6REwJdGGGOgEk+t62KV8B/7esicd/om2gJ9FVUVyczM89
-         +s5hV0QLn7mMjSd5jIF1ZsFL1EKskcjFOocmeDLwT3yOIk69IM6rAchb9QSMD4lpfnie
-         84YUfvd2qv+YtKeTbfi10cWcxO3vfDJsw9Ib8zGVy/lcGrQSYy7jZqIDBdYpeYtL8X4e
-         6zQFHxnoM4BMC0+klkBW5G5FuC4AEAgBxTupCMcoUefSjmiyh7XiwwWbc0UFXhGyooJn
-         3n0LNuk90z931E9i9HMcvtgJ+TAlPrOeV91vKcco1aZZ7lFlRroHNuTTPFI4tX2VzcYl
-         zwOg==
-X-Forwarded-Encrypted: i=1; AJvYcCU126zFS48VdWEUkPC5NgeY+Y1zDYaqFrc4+47on84i++fHmixH4NhzRGcV4WF/fOVt04iXWQ7ZWhdPID+C69wNQQ==@vger.kernel.org, AJvYcCWFcvDmfOiD9D/ctYxSGSG3KLJv+MTszowfNxa4vB+3y3cJ5I7o6jLoe6JFhVcqjyNNbF15l8RoR3PWdZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5eqMzhmgoz2oXpkIqIGZeSuNO0kNzZLjrPDE8N30HpQ8zb5sL
-	8SbKicJ5//62nsBya4VXez9EXQUOhR/eGei+hdbbJs+yPyfP5fWDzZUGD6QEb2gFVnlEcK3yg9Z
-	BqTwT7UB2f/EyOqg7cAGkk8s9t00=
-X-Gm-Gg: ASbGncvStFEBkKKGY2tj/+rxgUqj8YClfoIgT3/4xSUeGGVMDHpLBq2cgPECaWv67EO
-	gJutv10MOJm60QLNckdIg/qdDMy7ABe3Bgcb9n36W9ZuwZg5KBBB5gHLfQuyAvRsP5LGuqTc=
-X-Google-Smtp-Source: AGHT+IGJoV5ZqBZGNCGygnvg5DoMJOhouWvNuw+ShXWC+tVIV3BnkgICVZGbi04eVwww8zkSxuVnkc7CYVOWfznEBLY=
-X-Received: by 2002:a05:6902:2e11:b0:e5b:1dda:8f72 with SMTP id
- 3f1490d57ef6-e5b4625a80bmr642455276.36.1738879753745; Thu, 06 Feb 2025
- 14:09:13 -0800 (PST)
+        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
+        b=fcc9okwEJTu3HaAEEIDCMZfnmI0szEn6MDOOET2asTYornpbaXiPUx5q7VDEX/yTzr
+         kctO0UWx+A1hjCn8ieAHb5Zdm0vofd6deV35n9miZRyqEr3zMGAQHDo3DqaYg5pNFWdH
+         EKCCH6B1r0XkYN6U72Po5lR3dyp1btNz6B5qlzFy5kB96ZH8TTXC88N5yIoyIYDoja3Y
+         ccIr+vv2KL1hjvZ5w0g+Z4ai7D3fe0piZRS1wmpq3MiJknlrOrvAeJv6nr7WnA7u+uc5
+         2zKof1oBCTH9JeOSfqPRHIOGrQq7Lgo/Lg5RLjMh5d3XaDBdDVaoqK2L5mNM6iR7AMLv
+         n70Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEjBQ+E35jp64E0jCc/vv/EzJSRh2PTcISfId5pmH2fJwxESfoxxbGTLj33IZ/8bVF7STPSJuxug1ddAI=@vger.kernel.org, AJvYcCWtFNKhcTQajioLOoqT+ocibto4duPsFLrqnD5Ta4GhtjoEFT2drm9AMBl1RlBf/yYsPVbbVEHzELGZG7ppTY0ZJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUK0Zy9DKH9rLHecycog8ZPw9vp/ZzjkGh5xgmXojnp82n9M5A
+	KwNyMyUbqe9yJGgYkAnsfupP59XMwRXkod09MQTpJ4Uvpje3z5Smkmm+ndkfXa7axes+DhAcxIv
+	0lG9J8UGemRA0r87FhPtck7uLKWXH4rCBcnw=
+X-Gm-Gg: ASbGncsf7Aq3hfG8SPvbElw5FnoU4iVtv9IfTFSjxVIuoco/pggZEfqoKHR4uhdQKZp
+	7/iKjx/xQ2BwNfMG8++A/HidKj6pIxs2GdsQq3nhocrH1P3AdHEa6HgfxBWaKNrCNEc4XVGECSA
+	==
+X-Google-Smtp-Source: AGHT+IH3PuVwAoFUjAULcqQwIb0hR5Y6wMOWun5P+e33kfKR85xoqXMtJOVgBAjytAxqIK3Qwa4LXHfXrr1ZVH51WVs=
+X-Received: by 2002:a05:690c:c96:b0:6f7:5868:86ea with SMTP id
+ 00721157ae682-6f9b27e746bmr13652667b3.8.1738890279357; Thu, 06 Feb 2025
+ 17:04:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241215181220.754822-1-howardchu95@gmail.com>
- <20241215181220.754822-6-howardchu95@gmail.com> <Z6UNFXZUlo4wMZ7V@x1>
-In-Reply-To: <Z6UNFXZUlo4wMZ7V@x1>
+References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
+In-Reply-To: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 6 Feb 2025 14:08:59 -0800
-X-Gm-Features: AWEUYZnVEK8uN85MJwwlmTJ0sKDbL977-KmR9Jvbu6D-0IxGT9c68M2TJLjcWKk
-Message-ID: <CAH0uvog_RgX7wmOZ6=-rBY3YtSqJ5mRmUMOE+hehEmJ6cMEPsA@mail.gmail.com>
-Subject: Re: [PATCH v14 05/10] perf evsel: Assemble offcpu samples
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Thu, 6 Feb 2025 17:04:28 -0800
+X-Gm-Features: AWEUYZlfkHpBVzqXbre-MsSMpmUHF-Og9KBIsqtpvym-LfMnbMzQLHpCrvsUUYE
+Message-ID: <CAH0uvoj-aS44f78iQiVqDZiR1mN5SHcXgR17_Lnu_b5CC-ZsPQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
+To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Cc: namhyung@kernel.org, acme@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Arnaldo,
+Hello Krzysztof,
 
-On Thu, Feb 6, 2025 at 11:27=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Thu, Feb 6, 2025 at 3:36=E2=80=AFAM Krzysztof =C5=81opatowski
+<krzysztof.m.lopatowski@gmail.com> wrote:
 >
-> On Sun, Dec 15, 2024 at 10:12:15AM -0800, Howard Chu wrote:
-> > Use the data in bpf-output samples, to assemble offcpu samples. In
-> > evsel__is_offcpu_event(), Check if sample_type is PERF_SAMPLE_RAW to
-> > support off-cpu sample data created by an older version of perf.
->
-> > Testing compatibility on offcpu samples collected by perf before this p=
-atch series:
->
-> > See below, the sample_type still uses PERF_SAMPLE_CALLCHAIN
->
-> Getting back from vacation, so bear with me, please :-)
+> When testing perf trace on NixOS, I noticed significant startup delays:
+> - `ls`: ~2ms
+> - `strace ls`: ~10ms
+> - `perf trace ls`: ~550ms
 
-Good to have you back :), no worries at all.
+Thank you so much for this insight.
 
 >
-> So, while at this point:
->
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$ git log --oneline -5
-> bfd7461c25a5e667 (HEAD) perf record --off-cpu: Dump off-cpu samples in BP=
-F
-> e75f8ce63bfa6cb9 perf record --off-cpu: Preparation of off-cpu BPF progra=
-m
-> 0ffab9d26971c91c perf record --off-cpu: Parse off-cpu event
-> efc3fe2070853b7d perf evsel: Expose evsel__is_offcpu_event() for future u=
-se
-> 357b965deba9fb71 (perf-tools-next/perf-tools-next) perf stat: Changes to =
-event name uniquification
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$
->
-> And trying to test this series I do:
->
-> root@number:~# perf -v
-> perf version 6.13.rc2.gbfd7461c25a5
-> root@number:~#
->
-> root@number:~# perf record --off-cpu sleep 5s
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> root@number:~# perf evlist
-> cpu_atom/cycles/P
-> cpu_core/cycles/P
-> offcpu-time
-> dummy:u
-> root@number:~#
->
-> And:
->
-> root@number:~# perf evlist -v
-> cpu_atom/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0xa00=
-000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERI=
-OD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enab=
-le_on_exec: 1, precise_ip: 3, sample_id_all: 1
-> cpu_core/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x400=
-000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERI=
-OD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enab=
-le_on_exec: 1, precise_ip: 3, sample_id_all: 1
-> offcpu-time: type: 1 (software), size: 136, config: 0xa (PERF_COUNT_SW_BP=
-F_OUTPUT), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|=
-PERIOD|IDENTIFIER, read_format: ID|LOST, disabled: 1, enable_on_exec: 1, sa=
-mple_id_all: 1
-> dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY)=
-, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|IDENTIFIER, r=
-ead_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1,=
- comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec:=
- 1, ksymbol: 1, bpf_event: 1
-> root@number:~#
->
-> Above the "offcpu-time" event doesn't have the PERF_SAMPLE_CALLCHAIN in
-> sample_type, so I should be using some other 'perf record --off-cpu'
-> specific option?
->
-> The HEAD mentions:
->
-> "Collect tid, period, callchain, and cgroup id and dump them when off-cpu
-> time threshold is reached."
+> Profiling showed that 51% of the time is spent reading files,
+> 26% in loading BPF programs, and 11% in `newfstatat`.
 
-These are collected in BPF, not from perf_event. I can change the
-commit message for clarity if you=E2=80=99d like.
+That's a valuable piece of info, thank you.
 
 >
-> But that doesn't match the "offcpu-time" sample_type, right?
+> This patch optimizes module path exploration by avoiding `stat()` calls
+> unless necessary. For filesystems that do not implement `d_type`
+> (DT_UNKNOWN), it falls back to the old behavior.
+> See `readdir(3)` for details.
+>
+> This reduces `perf trace ls` time to ~500ms.
 
-Nope, I'm sorry. If offcpu-time has PERF_SAMPLE_CALLCHAIN, it will
-collect the wrong call chain.
+Before:
 
-Say I have task1 scheduling in and task2 scheduling out. For off-CPU
-analysis, I want to save task2's call chain and check if task1 has
-been scheduled out for longer than a threshold. If it has, a sample
-for task1 should be emitted.
+perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
+         ? (         ): :2278675/2278675  ... [continued]: read())
+                                        =3D 1
+real    0m0.833s
 
-When a sched_switch happens, the call chain belongs to task2, and perf
-should only emit task1's call chain if there is one. Therefore,
-PERF_SAMPLE_CALLCHAIN, which collects an instant stack call chain at
-sched_switch, cannot be used.
+So 833ms.
+
+After:
+
+perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
+         ? (         ): :2274650/2274650  ... [2: No such file or directory
+<SNIP>
+real    0m0.805s
+user    0m0.004s
+sys     0m0.011s
+
+805ms.
+
+And the results are consistent. Apparently works for me, thank you :)
 
 >
-> > $ perf script --header -i ./perf.data.ptn | grep "event : name =3D offc=
-pu-time"
-> >  # event : name =3D offcpu-time, , id =3D { 237917, 237918, 237919, 237=
-920 }, type =3D 1 (software), size =3D 136, config =3D 0xa (PERF_COUNT_SW_B=
-PF_OUTPUT), { sample_period, sample_freq } =3D 1, sample_type =3D IP|TID|TI=
-ME|CALLCHAIN|CPU|PERIOD|IDENTIFIER, read_format =3D ID|LOST, disabled =3D 1=
-, freq =3D 1, sample_id_all =3D 1
-> >
-> > The output is correct.
+> A more thorough startup optimization based on command parameters would
+> be ideal, but that is a larger effort.
 >
-> You mean because it has PERF_SAMPLE_CALLCHAIN in the sample_type?
-
-The motivation for this patch is to add backward compatibility, i.e.,
-to ensure that perf script processes the previously collected off-cpu
-perf.data correctly before the change to offcpu-time's sample_type.
-
+> Signed-off-by: Krzysztof =C5=81opatowski <krzysztof.m.lopatowski@gmail.co=
+m>
+> ---
+>  tools/perf/util/machine.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 >
-> > $ perf script -i ./perf.data.ptn | grep offcpu-time
-> > gmain    2173 [000] 18446744069.414584:  100102015 offcpu-time:
-> > NetworkManager     901 [000] 18446744069.414584:    5603579 offcpu-time=
-:
-> > Web Content 1183550 [000] 18446744069.414584:      46278 offcpu-time:
-> > gnome-control-c 2200559 [000] 18446744069.414584: 11998247014 offcpu-ti=
-me:
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2d51badfbf2e..76b857fd752b 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1354,7 +1354,7 @@ static int maps__set_module_path(struct maps *maps,=
+ const char *path, struct kmo
 >
-> > And after this patch series:
+>  static int maps__set_modules_path_dir(struct maps *maps, const char *dir=
+_name, int depth)
+>  {
+> -       struct dirent *dent;
+> +       const struct dirent *dent;
+
+Is it necessary to constify dent?
+
+>         DIR *dir =3D opendir(dir_name);
+>         int ret =3D 0;
 >
-> After the _whole_ series? Or at this point in the series?
-
-I should mention that the two perf.data files I used in the commit
-message, perf.data.ptn and perf.data.off-cpu-v9, were collected from
-perf without this series and perf with the whole series, respectively
-(since only then can I use the --off-cpu-thresh option).
-
-Again, I can add an explanation to the commit message if you=E2=80=99d like=
-.
-Sorry for the confusion.
-
+> @@ -1365,14 +1365,20 @@ static int maps__set_modules_path_dir(struct maps=
+ *maps, const char *dir_name, i
 >
-> I'm trying to test it patch by patch, to see from output from 'perf
-> report -D', perf script, etc that the patch descriptions match what the
-> code does and then double checking by trying to reproduce it, step by
-> step.
-
-Thank you very much, talking about meticulousness :)
-
+>         while ((dent =3D readdir(dir)) !=3D NULL) {
+>                 char path[PATH_MAX];
+> -               struct stat st;
+> +               unsigned char d_type =3D dent->d_type;
 >
-> I'll try to do it at the end of the series, but thought about trowing in
-> these questions to help me understand your work.
+> -               /*sshfs might return bad dent->d_type, so we have to stat=
+*/
+>                 path__join(path, sizeof(path), dir_name, dent->d_name);
+> -               if (stat(path, &st))
+> -                       continue;
+>
+> -               if (S_ISDIR(st.st_mode)) {
+> +               if (d_type =3D=3D DT_UNKNOWN) {
+> +                       struct stat st;
+> +
+> +                       if (stat(path, &st))
+> +                               continue;
+> +                       if (S_ISDIR(st.st_mode))
+> +                               d_type =3D DT_DIR;
+> +               }
+> +
+> +               if (d_type =3D=3D DT_DIR) {
+>                         if (!strcmp(dent->d_name, ".") ||
+>                             !strcmp(dent->d_name, ".."))
+>                                 continue;
+> --
+> 2.47.2
+>
+>
 
-Sure! Throw me some more if you want, because it has been some time.
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
 Howard
->
-> Thanks!
->
-> - Arnaldo
->
-> > $ perf script --header -i ./perf.data.off-cpu-v9 | grep "event : name =
-=3D offcpu-time"
-> >  # event : name =3D offcpu-time, , id =3D { 237959, 237960, 237961, 237=
-962 }, type =3D 1 (software), size =3D 136, config =3D 0xa (PERF_COUNT_SW_B=
-PF_OUTPUT), { sample_period, sample_freq } =3D 1, sample_type =3D IP|TID|TI=
-ME|CPU|PERIOD|RAW|IDENTIFIER, read_format =3D ID|LOST, disabled =3D 1, freq=
- =3D 1, sample_id_all =3D 1
-> >
-> > perf $ ./perf script -i ./perf.data.off-cpu-v9 | grep offcpu-time
-> >      gnome-shell    1875 [001] 4789616.361225:  100097057 offcpu-time:
-> >      gnome-shell    1875 [001] 4789616.461419:  100107463 offcpu-time:
-> >          firefox 2206821 [002] 4789616.475690:  255257245 offcpu-time:
-> >
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Link: https://lore.kernel.org/r/20241108204137.2444151-7-howardchu95@gm=
-ail.com
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/evsel.c | 35 ++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 34 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index fc33104cd659..277b5babd63e 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1244,7 +1244,8 @@ static void evsel__set_default_freq_period(struct=
- record_opts *opts,
-> >
-> >  bool evsel__is_offcpu_event(struct evsel *evsel)
-> >  {
-> > -     return evsel__is_bpf_output(evsel) && evsel__name_is(evsel, OFFCP=
-U_EVENT);
-> > +     return evsel__is_bpf_output(evsel) && evsel__name_is(evsel, OFFCP=
-U_EVENT) &&
-> > +            evsel->core.attr.sample_type & PERF_SAMPLE_RAW;
-> >  }
-> >
-> >  /*
-> > @@ -2846,6 +2847,35 @@ static inline bool evsel__has_branch_counters(co=
-nst struct evsel *evsel)
-> >       return false;
-> >  }
-> >
-> > +static int __set_offcpu_sample(struct perf_sample *data)
-> > +{
-> > +     u64 *array =3D data->raw_data;
-> > +     u32 max_size =3D data->raw_size, *p32;
-> > +     const void *endp =3D (void *)array + max_size;
-> > +
-> > +     if (array =3D=3D NULL)
-> > +             return -EFAULT;
-> > +
-> > +     OVERFLOW_CHECK_u64(array);
-> > +     p32 =3D (void *)array++;
-> > +     data->pid =3D p32[0];
-> > +     data->tid =3D p32[1];
-> > +
-> > +     OVERFLOW_CHECK_u64(array);
-> > +     data->period =3D *array++;
-> > +
-> > +     OVERFLOW_CHECK_u64(array);
-> > +     data->callchain =3D (struct ip_callchain *)array++;
-> > +     OVERFLOW_CHECK(array, data->callchain->nr * sizeof(u64), max_size=
-);
-> > +     data->ip =3D data->callchain->ips[1];
-> > +     array +=3D data->callchain->nr;
-> > +
-> > +     OVERFLOW_CHECK_u64(array);
-> > +     data->cgroup =3D *array;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> >                       struct perf_sample *data)
-> >  {
-> > @@ -3197,6 +3227,9 @@ int evsel__parse_sample(struct evsel *evsel, unio=
-n perf_event *event,
-> >               array =3D (void *)array + sz;
-> >       }
-> >
-> > +     if (evsel__is_offcpu_event(evsel))
-> > +             return __set_offcpu_sample(data);
-> > +
-> >       return 0;
-> >  }
-> >
-> > --
-> > 2.43.0
