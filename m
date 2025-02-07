@@ -1,187 +1,182 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B17A2417DB;
-	Fri,  7 Feb 2025 01:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737722417EF;
+	Fri,  7 Feb 2025 01:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738890283; cv=none; b=t/SNgRstALn0nO58GC8DVl6ADWSMs92XRkIDFS8kuS1TQwAJ+2ez1w4AvHmaRe+mFJLql8tUpM8pM3caOqJpBkv6x+f9iKBmeJfcALV5DTcPT+b+72IIul5+z/CHfnW+wBR3aHELjOeKbLh1/Z03fWaLZ3m3Gm5iqwlNBh847do=
+	t=1738891643; cv=none; b=ht266sSgG0BZQ8wGOcHo3RZOgw+97qNU0ggefycX3xhq0qwdqVpJgFQmWo3a3c1nnOPy+nswLs2NBt/cikUDPx+MgrWCy1YB4NVjA+tBw8vqkJuUesvGYMld4YN+PAjk6E2YFiuxZGMxeHiNYbyjlyqtwhFvl9j3iWJGhQ7dMZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738890283; c=relaxed/simple;
-	bh=ZL+ndmNfqd3tamYa3VWakgMQzhn04vpvwNH6uRi65lk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pwdXAVWwjYg4rkGSfSWyMTx8eZvqImZ8N+2Zu1CqKAeY6XznCpC8IiJeWpb8qxeYln+ruFN5u3EjQpHvCA/gLZ+qZre/oZ11JdwNcCp7TaYGHvf3ZonOU3KDCVH1kxMcv8z23og4pyPIMCbibAXIzncJTzZXShsUZXk0/nQWTBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DX5vGF3G; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738891643; c=relaxed/simple;
+	bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Af6tvikJK0BJiDF1xnXaRnNYoWSMOQ9rWSDJzPymsoo3UNIljcBj/72T5ORQvkifYN4zzdmDHRIlj/QJ/29MbMg3JbEcivn3qkivPFtn2gdNse3fnzYZEtvhNYoELeg1Lxp2Q4yKhwJl0mdnr8tN4Y3DqLk5Lp7Slbob4s7jwiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+wlvxod; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DX5vGF3G"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so1215686276.2;
-        Thu, 06 Feb 2025 17:04:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738890279; x=1739495079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
-        b=DX5vGF3GL+Ol+/EjTKhHvzptqmfA23Cb+wWdI9NnjqoiO2veRTngMUcN7LobvMtiOP
-         QDiIf1s4UA5GhZjT4XrsIcc2173jTgFmj8lQDQJhwGW4ejXP0slwkgasriWa2mN8/0Ls
-         DngvEoYy2H2JDZnY5bMWJmPRjgO7v12L7Nc9evswNGrzVQSgxZ0QbC8Z+pU2HfLd5Ksc
-         TORGfHrfMuhIciih2+wKmyAo/iOITm7ITZUIiBjN0o23XSpCON57yzrKz+FlQ3YRCiDl
-         rR3yHSCdDtqttN4nxlkY5QllGzK6For0dTWyassk4LbC3aayp+he/O+PINCMzk+tIcWP
-         0+Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738890279; x=1739495079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
-        b=fcc9okwEJTu3HaAEEIDCMZfnmI0szEn6MDOOET2asTYornpbaXiPUx5q7VDEX/yTzr
-         kctO0UWx+A1hjCn8ieAHb5Zdm0vofd6deV35n9miZRyqEr3zMGAQHDo3DqaYg5pNFWdH
-         EKCCH6B1r0XkYN6U72Po5lR3dyp1btNz6B5qlzFy5kB96ZH8TTXC88N5yIoyIYDoja3Y
-         ccIr+vv2KL1hjvZ5w0g+Z4ai7D3fe0piZRS1wmpq3MiJknlrOrvAeJv6nr7WnA7u+uc5
-         2zKof1oBCTH9JeOSfqPRHIOGrQq7Lgo/Lg5RLjMh5d3XaDBdDVaoqK2L5mNM6iR7AMLv
-         n70Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEjBQ+E35jp64E0jCc/vv/EzJSRh2PTcISfId5pmH2fJwxESfoxxbGTLj33IZ/8bVF7STPSJuxug1ddAI=@vger.kernel.org, AJvYcCWtFNKhcTQajioLOoqT+ocibto4duPsFLrqnD5Ta4GhtjoEFT2drm9AMBl1RlBf/yYsPVbbVEHzELGZG7ppTY0ZJw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUK0Zy9DKH9rLHecycog8ZPw9vp/ZzjkGh5xgmXojnp82n9M5A
-	KwNyMyUbqe9yJGgYkAnsfupP59XMwRXkod09MQTpJ4Uvpje3z5Smkmm+ndkfXa7axes+DhAcxIv
-	0lG9J8UGemRA0r87FhPtck7uLKWXH4rCBcnw=
-X-Gm-Gg: ASbGncsf7Aq3hfG8SPvbElw5FnoU4iVtv9IfTFSjxVIuoco/pggZEfqoKHR4uhdQKZp
-	7/iKjx/xQ2BwNfMG8++A/HidKj6pIxs2GdsQq3nhocrH1P3AdHEa6HgfxBWaKNrCNEc4XVGECSA
-	==
-X-Google-Smtp-Source: AGHT+IH3PuVwAoFUjAULcqQwIb0hR5Y6wMOWun5P+e33kfKR85xoqXMtJOVgBAjytAxqIK3Qwa4LXHfXrr1ZVH51WVs=
-X-Received: by 2002:a05:690c:c96:b0:6f7:5868:86ea with SMTP id
- 00721157ae682-6f9b27e746bmr13652667b3.8.1738890279357; Thu, 06 Feb 2025
- 17:04:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+wlvxod"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738891642; x=1770427642;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
+  b=G+wlvxodxqmbZ8YSqerzk4cLp8InoG3/+ut3lQ+93HjHxl2WrZ+gkdKk
+   L4MxoNJypzd8mUhwio+aQ7Gab5Dq1nkLXN7v8rtp7fz5cyB6KaEG4BrO5
+   HnXCOgUnsvJFYyatcaovhgF0ua7bX01H5OXA8fFoW69zLO2fzKFjAjf03
+   0u493xeCVisAv/0nqiHl2IcCkFxzLoADw6f6iL62yIaNjW1H274jWhEp7
+   t1Ign1vSkTy0E9i2B96wjXqyxwSA01xdSeDGdxy2+nc/AAQZD3L4X/uFB
+   qUGCszmQKNSWjqeym+xpPrLu/UpRzi7Yh9ZKlGizxGMNXam73mD3B7jsx
+   g==;
+X-CSE-ConnectionGUID: zzBE5cT0RWeKtrIUxKu+Yw==
+X-CSE-MsgGUID: y/q9QFdmTy+zVLRGUHPUhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64879768"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="64879768"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:21 -0800
+X-CSE-ConnectionGUID: cwjFxGppQ/iOrh+wD8YrsQ==
+X-CSE-MsgGUID: RmvB7V7xTCWUIEencciG7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="142264979"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:17 -0800
+Message-ID: <5fb71690-06a4-4140-ace0-63e19c186139@linux.intel.com>
+Date: Fri, 7 Feb 2025 09:27:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-In-Reply-To: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 6 Feb 2025 17:04:28 -0800
-X-Gm-Features: AWEUYZlfkHpBVzqXbre-MsSMpmUHF-Og9KBIsqtpvym-LfMnbMzQLHpCrvsUUYE
-Message-ID: <CAH0uvoj-aS44f78iQiVqDZiR1mN5SHcXgR17_Lnu_b5CC-ZsPQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
-To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
-Cc: namhyung@kernel.org, acme@kernel.org, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
+ counter & pdist map
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
+ <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
+ <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
+ <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
+ <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Krzysztof,
 
-On Thu, Feb 6, 2025 at 3:36=E2=80=AFAM Krzysztof =C5=81opatowski
-<krzysztof.m.lopatowski@gmail.com> wrote:
+On 2/6/2025 11:01 PM, Liang, Kan wrote:
 >
-> When testing perf trace on NixOS, I noticed significant startup delays:
-> - `ls`: ~2ms
-> - `strace ls`: ~10ms
-> - `perf trace ls`: ~550ms
+> On 2025-02-05 9:47 p.m., Mi, Dapeng wrote:
+>> On 1/28/2025 12:07 AM, Liang, Kan wrote:
+>>> On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
+>>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+>>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+>>>> can be dynamically configured base on these counter and precise
+>>>> distribution bitmap instead of defining them statically.
+>>>>
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
+>>>>  arch/x86/events/intel/ds.c   |  1 +
+>>>>  2 files changed, 21 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index 7775e1e1c1e9..0f1be36113fa 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>>>>  			    struct perf_event *event)
+>>>>  {
+>>>>  	struct event_constraint *c1, *c2;
+>>>> +	struct pmu *pmu = event->pmu;
+>>>>  
+>>>>  	c1 = cpuc->event_constraint[idx];
+>>>>  
+>>>> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+>>>>  		c2->weight = hweight64(c2->idxmsk64);
+>>>>  	}
+>>>>  
+>>>> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
+>>>> +		u64 pebs_cntrs_mask;
+>>>> +		u64 cntrs_mask;
+>>>> +
+>>>> +		if (event->attr.precise_ip >= 3)
+>>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
+>>>> +		else
+>>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
+>>>> +
+>>>> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
+>>>> +			     hybrid(pmu, cntr_mask64);
+>>>> +
+>>>> +		if (pebs_cntrs_mask != cntrs_mask) {
+>>>> +			c2 = dyn_constraint(cpuc, c2, idx);
+>>>> +			c2->idxmsk64 &= pebs_cntrs_mask;
+>>>> +			c2->weight = hweight64(c2->idxmsk64);
+>>>> +		}
+>>>> +	}
+>>> The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
+>>> boot. I don't think it's efficient to calculate them every time.
+>>>
+>>> Maybe adding a local pebs_event_constraints_pdist[] and update both
+>>> pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
+>>> enumerated mask at initialization time.
+>>>
+>>> Update the intel_pebs_constraints() to utilize the corresponding array
+>>> according to the precise_ip.
+>>>
+>>> The above may be avoided.
+>> Even we have these two arrays, we still need the dynamic constraint, right?
+>> We can't predict what the event is, the event may be mapped to a quite
+>> specific event constraint and we can know it in advance.
+> The dynamic constraint is not necessary, but two arrays seems not
+> enough. Because a PEBS event may fall back to the event_constraints as
+> well. Sigh.
+> Four arrays should be required. pebs_event_constraints[],
+> pebs_event_constraints_pdist[], event_constraints_for_pebs[],
+> event_constraints_for_pdist_pebs[].
+> But it seems too complicated. It may not be implemented now.
+>
+> But, at least the pebs_cntrs_mask and cntrs_mask can be calculated in
+> the hw_config(), or even intel_pmu_init() once. It should not be
+> calculated every time in the critical path.
 
-Thank you so much for this insight.
+Yeah, these two counters mask are unnecessary to calculate at each call. It
+looks we can further optimize this base on your dynamic constraints
+optimization patch. Thanks.
+
 
 >
-> Profiling showed that 51% of the time is spent reading files,
-> 26% in loading BPF programs, and 11% in `newfstatat`.
-
-That's a valuable piece of info, thank you.
-
+> Thanks,
+> Kan
+>>
+>>> Thanks,
+>>> Kan
+>>>
+>>>> +
+>>>>  	return c2;
+>>>>  }
+>>>>  
+>>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>>>> index 2f2c6b7c801b..a573ce0e576a 100644
+>>>> --- a/arch/x86/events/intel/ds.c
+>>>> +++ b/arch/x86/events/intel/ds.c
+>>>> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
+>>>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+>>>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
+>>>>  	x86_pmu.pebs_capable = ~0ULL;
+>>>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
+>>>>  }
+>>>>  
+>>>>  /*
 >
-> This patch optimizes module path exploration by avoiding `stat()` calls
-> unless necessary. For filesystems that do not implement `d_type`
-> (DT_UNKNOWN), it falls back to the old behavior.
-> See `readdir(3)` for details.
->
-> This reduces `perf trace ls` time to ~500ms.
-
-Before:
-
-perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
-         ? (         ): :2278675/2278675  ... [continued]: read())
-                                        =3D 1
-real    0m0.833s
-
-So 833ms.
-
-After:
-
-perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
-         ? (         ): :2274650/2274650  ... [2: No such file or directory
-<SNIP>
-real    0m0.805s
-user    0m0.004s
-sys     0m0.011s
-
-805ms.
-
-And the results are consistent. Apparently works for me, thank you :)
-
->
-> A more thorough startup optimization based on command parameters would
-> be ideal, but that is a larger effort.
->
-> Signed-off-by: Krzysztof =C5=81opatowski <krzysztof.m.lopatowski@gmail.co=
-m>
-> ---
->  tools/perf/util/machine.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2d51badfbf2e..76b857fd752b 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -1354,7 +1354,7 @@ static int maps__set_module_path(struct maps *maps,=
- const char *path, struct kmo
->
->  static int maps__set_modules_path_dir(struct maps *maps, const char *dir=
-_name, int depth)
->  {
-> -       struct dirent *dent;
-> +       const struct dirent *dent;
-
-Is it necessary to constify dent?
-
->         DIR *dir =3D opendir(dir_name);
->         int ret =3D 0;
->
-> @@ -1365,14 +1365,20 @@ static int maps__set_modules_path_dir(struct maps=
- *maps, const char *dir_name, i
->
->         while ((dent =3D readdir(dir)) !=3D NULL) {
->                 char path[PATH_MAX];
-> -               struct stat st;
-> +               unsigned char d_type =3D dent->d_type;
->
-> -               /*sshfs might return bad dent->d_type, so we have to stat=
-*/
->                 path__join(path, sizeof(path), dir_name, dent->d_name);
-> -               if (stat(path, &st))
-> -                       continue;
->
-> -               if (S_ISDIR(st.st_mode)) {
-> +               if (d_type =3D=3D DT_UNKNOWN) {
-> +                       struct stat st;
-> +
-> +                       if (stat(path, &st))
-> +                               continue;
-> +                       if (S_ISDIR(st.st_mode))
-> +                               d_type =3D DT_DIR;
-> +               }
-> +
-> +               if (d_type =3D=3D DT_DIR) {
->                         if (!strcmp(dent->d_name, ".") ||
->                             !strcmp(dent->d_name, ".."))
->                                 continue;
-> --
-> 2.47.2
->
->
-
-Acked-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
