@@ -1,194 +1,268 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAF2194147
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 17:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7402A1D8
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 17:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738948017; cv=none; b=AVyFG6XrdpxOIQaXB8Q/7prAY+YKX9KwWwQZTKA7m3A5kQm/+u7gg4sj6KVfaGxqXsMH8z6J7M1TmktTgtkrOOtXE73xX+xIuzdMj3ZLBPkaIHKGnsRYVylLhIy98ND2sU+DXfXnul1DF89fd9vRQ/BSIqPR8iSVDc4XsZ4KFSU=
+	t=1738948743; cv=none; b=lHUYE0Du/4DZ1XO18jAflnpBpuljBEhpzfB7Aaiip5JKJuKKjxCOmBvDUyAqMQh9Ooi4ggi4uc+oLf1syB/BoUrBiuUlM3qIPd7UMHayROkiy/PI1PfAIPRBeJaOelc9LVLLNr7NCTQAhl/8pahebNbkm6Wyu9BJSjobrCB9WYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738948017; c=relaxed/simple;
-	bh=I2e5fwjdOHrC389H955xUrW7Yt08enQx3eznrVoldiA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sjz1+b/4mZJT28x4u3hkzGC4pnnW8mRAccAkh6gyljAOMCnapcJJ917ti819J5Q5HYup6ZyAFrmI/zy+pojJ+MuMKVM4SK9rwQIfHCPcYKaKrn7tBZlf7S1LzNrpWac83bESe37SLUMasgXgvZAAnLbUjchi6h/u9KYlnV93Lbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gy5PdcJb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738948743; c=relaxed/simple;
+	bh=bCyLI4LdJFH3HYJ+mp58RKBb7vU+yOgcEAiFrzYDgxQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=guv7/ZawCeeZqL2E90cttou0NLuHNvm27k7BCvnJK+goWcvMtW74EH2VThs2TiZOXfOY0I44lqM+L6bf9aOFmmWdk5N5J7N+DDY5bm+x+mgRV+en1ZatjPxACjSN0x6WfqmpO2Fh1JiWUfLaIaN6ziJpjjhQ7Cp1g8PbBTi7drk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=m9h8IScZ; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy5PdcJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738948013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
-	b=Gy5PdcJbnHjL7K0E4kK4hk3QCTNCqxEyPsiDCzCFlFUSBHIc2grmLHdmMAyVhBThY98kTo
-	Rn3nUgHYCdFM20G/rcpSBWwefwHz9jwJs8u6D1csMFh2MzOkHWti/C/jlaIelyw2LMpFUx
-	xd9R5MoGiQw5qzU+xqO34VUPB//H/a4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-418-MnEocQ2EMn2tHgAUuREW2w-1; Fri, 07 Feb 2025 12:06:52 -0500
-X-MC-Unique: MnEocQ2EMn2tHgAUuREW2w-1
-X-Mimecast-MFC-AGG-ID: MnEocQ2EMn2tHgAUuREW2w
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dc56ef418so730697f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 09:06:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="m9h8IScZ"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5f2e31139d9so1170040eaf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 09:19:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738948741; x=1739553541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ur5RSQfj/6q4nsk1ykW3bsaGkSYhTmlbRHhJKO1AJt4=;
+        b=m9h8IScZ9/MusYk77DltC9SySE5u6Uy+jNNGobYeoT6U6sCY4UnYbObe0hsdnXuNn0
+         0eofyT7rCRQaiAt8tSFeStzaZGnFj+3yZ2O8G9OsyDrBgeCVWSKzvbuGsIof95dSlhyM
+         BAILhNj2GvviHz+2/PElo7QYCcAEDFVVIsIyGLtVWjNTMlTAj978CHYRYkIGQ7KZ/Zir
+         ZubWwFU4JDPIkdz6PssfOGocm4XAb22qBSZ+diFZVfoI6/8wtm9LvbYE8matoOmUHO7t
+         H1RMNBZjTvWm+VnA9Me4rpYp/4NlDfE4iCpyRBZ1hnm9OSXDoBFom2VJby4gBCBMxNJL
+         SXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738948011; x=1739552811;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
-        b=iLwt+p82JY2PH7ep1fbsw+1b83IfCDdtE0ADKVFJ6oDx3EByTdLBYVA69fhXMdaUC5
-         1atTFG9zuQ2uOYYH6V6CS03P7mpAG+a/458dAvvWMWFuu0QxxiCC3ofJ/ZdvrohzglN2
-         QKmIqkRc04O25FuvuZL1Fva6v3iJdjrFcSi6c2L+Feukhq/NJFRJ/U8Icnxmag5mXdzQ
-         eXbkv68SuEHdZIg7BmM+5t5kttX+0gpGB4I8M584YQ1UrbWkbSZ5NU4OjUPWjx2yr3tY
-         5p6yvo9llgJnVyufwIw4H6cO9EcgpGTyiR3gqdcK7BsOEcjkrxnlo4KYfdUB8k/1Zt+Q
-         AUtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlu76vTCmXt3J5JZW+BZzsFOdA6kEhhKSsqzXzJzHElz9dLs5LWCiGlwso1aXoRWdI/dfBeBN9QtTeFd+IGIM4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBTuepLqUBRTst/p4kQ2je7APy91ia7wI8KKm5/IGl9bcRI5Z1
-	mnzaNCeyac8oU3/ADCuuAM2ruLrpm0D9i2VI7kiWtLGDqp3Eq3NVQDiCeqPHPbTd0h1byzeKQzw
-	lOdIGIz8EQr0S2kWxptRcFKMdFDw6135cDXWlcQ7xk6Py/5uoH115E/hHmcr0R+JJvVE=
-X-Gm-Gg: ASbGncucJbim7EIMsx35WQynorivvPknmUm9UacKkDZ1HTf2Ig7+WHzj0vUBFkdb4mZ
-	KyyRnbjUoyvqF0tFrBh42f0UR9fsUX7EeQa9ZS5t1LUrDTf1tDrDnWP0yiYfiVB4PlTxHnyXfVk
-	N5bLkm5i5Zkb50joeIh88wAFJrLeuqajVCUXdVyirkwP0Op4RUZHmWzNqCulPzPML1KFhP/i/2/
-	YlAT5D7RYlVdSGqOTUtG+/5tQZCaa2Lo0ts2GMFASvp0ENaVRMlmDggYS3DcXI9K0a1c5XrrYnI
-	ru66dYyrM6kOinEspnEo/RTZFJhdm+MDGjYTsv3EPqxmTg9nUu1J6x3m/84DkdGf3Q==
-X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923948f8f.53.1738948010998;
-        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEOdkgTDMixdzesAbzZ6LQT5F1eKCI9U7dpB+ZFF0HwYFgHj2Fc571j17/M7jlf73QfQ/8NiQ==
-X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923876f8f.53.1738948010215;
-        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0041sm59887155e9.14.2025.02.07.09.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:06:49 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-In-Reply-To: <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Date: Fri, 07 Feb 2025 18:06:45 +0100
-Message-ID: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1738948741; x=1739553541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ur5RSQfj/6q4nsk1ykW3bsaGkSYhTmlbRHhJKO1AJt4=;
+        b=r7n0+DazvqCzGKmw8SFXuRS78Eu472RJ1Z91ekj0Gx2u2O9M7AGrx6YEQpDjkCfpzy
+         O/iu1L5ZqhldcAApgD/M06cPsZMkOSXlWYpU9ZCpywPuDCHu2q6X/6b+JLNOtNR5UrHI
+         ZxaOOzmtZBmc9UWS9xsuQ2+H1Wt0HyVem8sOvddCU0iWJl3RCso06fY20F9e4FQ2atCJ
+         AFVy2QajD9q/n7NxK2Y4Z3CQEsJrIMVFwgxZ7BBdZxLulDXMOAtIRa4iYqG144jMws64
+         gSvdr/ZDWMaHbKzZZPFf3Hadp/HiMm3Ukrq+nIqHF1uoDhtso2307ramJVV7jDoZQRcI
+         7T8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrbHKa2Dq63Lg1VdTYEEDA+Cj5pK9qCJmlbGRHI9mccUo5vLyFj/RNOD+/gi5LqkBi0WuSfCu2pgw3W8Y1oPN1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUhL1NM3dDqMVMUNkNxv/zz9vL8dvm209S3Xj5pybdIQ5ok7gE
+	IJTcStzIRxuAbtfu/h7uovGnmBFyoOqItw0Tp1dE49vF6wPSsbm7CJ0iebVK9B6bizXxF4eepJl
+	22A2T8ICgk91xp0+GYk80C9I7DfOoi3Ee750Jxw==
+X-Gm-Gg: ASbGncuEor31ZoFyFxot3skgBrjd7BT1sy8iw7ok3HfJhVQf5wi8fO8tNy2reOqae9D
+	qRSY1Z1Ip7W8HRAxtxCtN2DbP+pub7ofk0mAC0uClGSh04W64sYuEMXSs7flxugMQMMv6zUs81A
+	==
+X-Google-Smtp-Source: AGHT+IHsi/ZbRUCDTbGa+S4gwnuDQ0P9Att1TuOKE8XNTpFBKDDvlXJ7rYRr+HChTgTlCLe9hSF0zVph0a2miEpRufY=
+X-Received: by 2002:a05:6820:1803:b0:5f8:89bd:b99b with SMTP id
+ 006d021491bc7-5fc5e746f98mr2746002eaf.8.1738948740668; Fri, 07 Feb 2025
+ 09:19:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com> <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+ <Z6LFp5jiED7_-weN@google.com> <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+ <Z6RD7NuT9IPhOkIV@google.com> <CAP-5=fV8rRMQyMDuy1vcxyEX9Gf8x0QJdVEP-K5krBec_A7mpA@mail.gmail.com>
+ <Z6WPmYCJcc6pPKDA@google.com> <CAP-5=fU0263rZx+i_dpeBWVUiKHuNNp4ER7WhDe2zHPUsq=wmw@mail.gmail.com>
+In-Reply-To: <CAP-5=fU0263rZx+i_dpeBWVUiKHuNNp4ER7WhDe2zHPUsq=wmw@mail.gmail.com>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Fri, 7 Feb 2025 09:18:49 -0800
+X-Gm-Features: AWEUYZk70S5T78s7X_Ye6HV7heVIayUb8TmEoaV5jzwQHEtQtI3ikzbJKW6UgUg
+Message-ID: <CAHBxVyH1q5CRW3emWTZu1oLZEfTWWVRH6B0OVggFxt-0NRzvwQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/01/25 12:17, Valentin Schneider wrote:
-> On 22/01/25 01:22, Frederic Weisbecker wrote:
->> And NMIs interrupting userspace don't call
->> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
->> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
->> implementing common entry code, I can't speak for the others.
->>
+On Thu, Feb 6, 2025 at 10:15=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> That I didn't realize, so thank you for pointing it out. Having another
-> look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
-> when it really isn't :(
+> On Thu, Feb 6, 2025 at 8:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> > On Wed, Feb 05, 2025 at 11:44:57PM -0800, Ian Rogers wrote:
+> > > Why was adding a PMU to an event name, working around ARM's PMU bug,
+> > > such an unsurmontable problem that the original change was reverted?
+> > > Because 1 person didn't want to have to write a PMU prefix and
+> > > considered it a monumental regression having to do so.
+> >
+> > Because it's a legacy event 'cycles' and he didn't expect the wildcard
+> > behavior?
 >
->> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
->> CT_STATE can be interesting but I fear this may not come for free. You would
->> need to save the old state on IRQ/NMI entry and restore it on exit.
->>
+> And someone who say with perf v6.14 can type `perf stat -e data_read
+> ...` and then with your proposal now has to type `perf stat -e
+> uncore_imc_free_running/data_read/ ...` because data_read isn't a core
+> event, this is expected behavior because the error message mentions
+> perf list?
 >
-> That's what I tried to avoid, but it sounds like there's no nice way around it.
+> > > > 1. RISC-V is working on a solution with the current status and it's=
+ not
+> > > >    absoluted needed to change the current behavior.
+> > >
+> > > They said to you directly it was what they wanted, that's why I
+> > > reposted this change and it is, has always been, in the cover letter.
+> > > They've then followed up expressing their desire for this behavior bu=
+t
+> > > having to have a plan b as the original change was reverted and you
+> > > are blocking this change landing.
+> >
+> > So they have the plan B.  But still prefer overriding legacy with JSON?
 >
->> Do we really need it?
->>
+> Yes.
 >
-> Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
-> this leads the IPI deferral logic to observe a technically-out-of-sync sate
-> for remote CPUs. Consider:
->
->   CPUx            CPUy
->                     state := CT_STATE_IDLE
->                     ...
->                     ~>IRQ
->                     ...
->                     ct_nmi_enter()
->                     [in the kernel proper by now]
->
->   text_poke_bp_batch()
->     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
->       READ CPUy ct->state
->       `-> CT_IDLE_STATE
->       `-> defer IPI
->
->
-> I thought this meant I would need to throw out the "defer IPIs if CPU is
-> idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
-> which is a bummer :(
+Even though the driver encoding was envisioned as plan B, I think we
+have to keep that irrespective of
+legacy overriding with json is available or not due to the reasons I
+iterated earlier
+(e.g direct legacy event usage and hypervisor) and some renewed
+interest in standardizing event encodings in RISC-V[1]
 
-Soooo I've been thinking...
+If the overriding legacy with JSON is available, each future vendor
+may just provide the json file instead of modifying the driver.
+However, it will be a matter of convenience and clutter free future
+rather than a necessity at this point.
 
-Isn't
+[1] https://lists.riscv.org/g/sig-perf-analysis/topic/110906276#msg458
 
-  (context_tracking.state & CT_RCU_WATCHING)
-
-pretty much a proxy for knowing whether a CPU is executing in kernelspace,
-including NMIs?
-
-NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
-IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
-IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
-IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
-
-IOW, if I gate setting deferred work by checking for this instead of
-explicitely CT_STATE_KERNEL, "it should work" and prevent the
-aforementioned issue? Or should I be out drinking instead? :-)
-
+> > > > 2. Apple-M is fixed already.
+> > >
+> > > No, James tried to repro the bug on a Juno board, not an Apple M, and
+> > > didn't succeed. I don't know what kernel he tried. I was told by Mark
+> > > Rutland (at LPC) that the tool fix was absolutely necessary and the
+> > > PMU driver wouldn't be fixed, hence the series flipping behavior that
+> > > I thought Intel would most likely block and wasn't keen to do in the
+> > > 1st place (not least wade through all the test behavior changes and
+> > > the bug tail). All of this was premised on a threat of reverting all
+> > > of the hybrid support so that Apple M could be made to work again, an=
+d
+> > > I was trying to do a less worse alternative.
+> > > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> >
+> > Sorry, it's not clear to me what's the problem exactly.  Can you give m=
+e
+> > an example command line?
+>
+> What broke: when arm PMUs were recognized as core and not uncore PMUs,
+> as part of fixing hybrid, we encoded legacy events on them. So
+> arm_blah/cycles/ became a type 0 config 0 event, no extended type as
+> PMU support for that is tested first. A type 0 config 0 event is
+> broken on the Apple-M PMUs, an event that doesn't count or something
+> like that. Because they had a sysfs event of arm_blah/cycles/ before
+> the change the broken legacy encoding on the PMU was never used, the
+> legacy event broke things.
+>
+> Because they had this problem the Apple-M users were used to using
+> arm_blah/cycles/ rather than cycles to avoid legacy events. This
+> change, not your proposal, is making it so that without a PMU they
+> also don't get legacy events because in no uncertain terms it was
+> expressed they weren't going to work. There was a lot of advocating
+> for removing all hybrid support from the tool.
+>
+> > > I don't understand what you are trying to say. I'm saying the behavio=
+r
+> > > of perf list in its output is arbitrary. We use the same printing cod=
+e
+> > > for every kind of event. An aesthetic decision to put things on a lin=
+e
+> > > does not imply that it is more valid to use or not use a PMU, it just
+> > > happens to be what the tool does. Did I break perf list as if you loo=
+k
+> > > in old perf list you see:
+> > > ```
+> > > $ perf list
+> > > List of pre-defined events (to be used in -e or -M):
+> > >
+> > >  duration_time                                      [Tool event]
+> > > ...
+> > > ```
+> > > while now you see:
+> > > ```
+> > > $ perf list
+> > > List of pre-defined events (to be used in -e or -M):
+> > > ...
+> > > tool:
+> > >  duration_time
+> > >       [Wall clock interval time in nanoseconds. Unit: tool]
+> > > ...
+> > > ```
+> > > I'm hoping people find it useful to have the unit documented.
+> >
+> > The most important information I think is the name of the event
+> > (duration_time).  It'd be appropriate if you could call it
+> > 'tool/duration_time/' but I'm not sure if it's acceptable cause
+> > tool events are not real PMU events.  If so, maybe
+> >
+> >  duration_time or tool/duration_time/
+> >
+> > ?
+>
+> I don't mind showing a PMU and not showing a PMU. duration_time isn't
+> a core event, does it also get allowed no PMU prefix in your new
+> scheme? My point isn't to discuss duration_time it is to point out
+> that `perf list` output isn't sacred and says different things over
+> time. Those things may or may not include a PMU as there has never
+> been any rigor, it is a mush of strings that are printed.
+>
+> In the perf list code we have an event and an alias. In my opinion if
+> something is an alias of something else then it implies having the
+> same perf_event_attr encoding. In your proposal this wouldn't be true
+> for legacy events as it isn't true today. Which has always been my
+> point about wanting to get this fixed.
+>
+> > I think people should use a PMU prefix before wildcard is enabled.
+>
+> I don't understand. You want to break uncore events without a PMU and
+> disable wild carding, then enable wildcarding again. Like I say I
+> think it is better you work on this behavior under a non `-e` command
+> line option.
+>
+> > > > > What happens if an event is both in sysfs and json? Well the sysf=
+s event
+> > > > > will get the description from the json and then I believe it won'=
+t
+> > > > > behave as you show. Did the event get broken, as perf list no lon=
+ger
+> > > > > shows it with a PMU, by having a json description written? I thin=
+k not
+> > > > > and I think having descriptions with events is a good thing.
+> > > >
+> > > > That's bad.  Probably we should fix it takes only one of the source=
+s and
+> > > > change the JSON event not to clash with sysfs.
+> > >
+> > > No, you are talking about breaking everything already, let's not brea=
+k
+> > > it yet further - not least as we lack a reasonable way to test it. I
+> > > think if you are serious about having such breaking changes then it i=
+s
+> > > best you add a new command line option, like with libpfm events.
+> >
+> > I don't want to break things.  What's the intended behavior in that cas=
+e?
+>
+> The behavior is in pmu's update_event, but basically we prefer the
+> json data over the sysfs data:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n506
+> This allows the json/tool data to correct the sysfs data - as well as
+> to add information like descriptions and topic.
+> But my point isn't that I support your let's have two events instead
+> of updating events. I have maintained this behavior as it has always
+> been the behavior and I care about not breaking everything. Something
+> that I assumed was taken for granted hence making `perf top` behave in
+> a way where it is showing samples for processes that have terminated
+> by default.
+>
+> Thanks,
+> Ian
