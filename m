@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA831DE4CE
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 23:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4051DE4CE
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 23:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738970708; cv=none; b=JodKzWvZShiW+ly3JgJP1TKV8jxN2nj5KT/55Qio6Dev1KzKFKH1cI09Of/x+PAcaAKG/eKjaoHk4wKBMV1yNJqkNNPVfXb13XMkP/36fNyRZscRytowg8z26WYwQb/Uya2AmYpzpJ01IhQXcpQpaJB+cqIweFT2tHvgK9LGWuc=
+	t=1738970710; cv=none; b=fN+3Vh1iAYvjixHo1vj+JdcY9a534+wpwrUKsRAkB4VciDdU7omLVxxGcANs5wbDLnT/9SJymbkjb9pmmSFDQrQfSLio353rqRxoYPtPtn9lJPoQodnbjhI+j2cptBRE9l6RQBtjsqBmIsJCV4sL1aOnGq6XJZ4iQE9Vgij+k34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738970708; c=relaxed/simple;
-	bh=5aRNT+AFzX7JKDjBTlrIYAKWaFe7b1kC3Ps8PgQ3sAg=;
+	s=arc-20240116; t=1738970710; c=relaxed/simple;
+	bh=ObEhRCyFV6ghYkayj4qkPZWcTOssCEFkt4QMyf1+G88=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=tBHhwYk8QN8j0/mA0Pe83gMi9dRyUCFhhCMdIw+5UmkwZ2Ndy9Iimww7tW30UztG5qoEC4e0plIfevnO/g9qzx3svN0sHtsTMwLTkkrEeVOX+4ozKewaKe4amWseHFFHi/jwSKxoz9LdrsYDif1ui50jJobabrz+b+y6iQwTRTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4gteXJ6G; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=XKSKuXCzIlHPlxD3nERc2rFl+EPjj12f698MVHi3cSTmko+HzyZvtW2zrP0AdLyRYrq8BcTlIfahCXedA+t0UULFY7BgIg6CGnlDXhEhcAUR7sIs2ksOe861x+j1UCq3zK5F9+bN6B6o3fdJwAenmFHEeeAAZGj+Mt0Tu/a1h3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YF4+1A2o; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4gteXJ6G"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2a2ab50f6so36966137b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 15:25:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YF4+1A2o"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e54da6701d2so3886929276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 15:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738970705; x=1739575505; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738970708; x=1739575508; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KS+tqbMW67c9gn9HPH93hQ26ck+oWW3I2CAzT0FW6oo=;
-        b=4gteXJ6GPpm+0dqem38U4iZGdC593KVy1HjwiMQaGMA6hxD0c9wXjRVva8fD9lHFcj
-         SjG3lBpfh0W7WPYOyRLcNb2cQFUqKyrGxr2WNOmFyLOlk0v5QLHB2OzOhl25ZbmWR4Qc
-         LTXLuwAqLZIYI+R7GjrSLiyMa4MJBE58NoBogLQPcsPss7lRr4nVb9n8QpIBIJMbghS+
-         zNpAoyj4VuEbCIbmxk/EZbJPEH+9lHTFWyinYz41ThdcbWTeXQNW97yIm6MrfMMEe0+h
-         1TivzFFgHE03Om8Xf47INV1/rxMl9URePHztoJ04rtlm7SySKQZ6XULMBwsnCIsvwh+u
-         QThw==
+        bh=vdb9tKccQmSzInyuTYu1/jMSVTG4YqjN0UDkWk/dVpA=;
+        b=YF4+1A2o606w2PX0Tc14McR9bG0X29DR/20v16yuuxvC+6Xeu2rYZRdKQ5NSUsuzet
+         wj4o0n5W6eRgRTt+8/pUEqI1QEDwh9g0ZGu4hIolXOFFBhWde6+YcRW7qYnar5jZdBfg
+         cvzBso458wj5l8JQQgybFH7WYtsQFjv+ewfx19iEobSiSqAXy5DjOIhEaKAdKImtSAqh
+         el/6YXiJUZedh0/NSbyxPyFCDEOc9GGC5UpGKQEhC9wsXuqq76WT3rAobfTm8GaGZbS+
+         BMC9aY2BpyEvPzbyinzINscmUpjv/pilQ/MSePiVOQi/lB9IjkZ3U2o7n7xOQdj4EziS
+         rggw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738970705; x=1739575505;
+        d=1e100.net; s=20230601; t=1738970708; x=1739575508;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KS+tqbMW67c9gn9HPH93hQ26ck+oWW3I2CAzT0FW6oo=;
-        b=d7aj4NURR8jrzshb/jch9QkQcBP4TofOFJAOKR4G4bBU1eo65aGb5620W38tXFgfUP
-         D1CBp8HxZ7srk1GuhSeD2UyvIWSsSM+CI4tQeiXNHzc2br0aL030ukTpElH4gyB1heR3
-         K1UbElOFYCwNH6dvrlTumEPsBP5CFm6Y0RQFUABB7XMB4IhAyhp17yGuB4dR8casOY4l
-         TY1rHiYmCEQv+vcmZ7jAGoEnvtOrUy7I0t1rTG4YFm19x45ZBO0Vs/kd0sT6wM7hFycm
-         5HSppby4JfXz0gqAfkANUuSkxdbDl3IH31U7N5aYwe80x+WK6i0w/JOalBvewlzCa2jF
-         d5PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6tNeejr8M7IysI9OCf+u+y1YNcicHpO7GEzJBSYjP5BB4a3aT6gugTu+xxUQ5MlcnB6Q6hwKUiOSeaHV1PM25@vger.kernel.org
-X-Gm-Message-State: AOJu0YztkFHyR9+ykXV+mTNhOW1sqF3tzVT9asuom132JM4oYbB28G2P
-	d/gCaqzCZ9KhRanFfowrhzZYGWdsoZqrGKU4MUeDpJJsNKRnGGy3e4Q06sGiB4mcRG5UrPXT/bi
-	7pH7jWA==
-X-Google-Smtp-Source: AGHT+IENQY6UASBJx0jxxx9ueRpM6qeWuNuVIi1ghJIH/SvVzdy0j/DypkgqZpMb2qmbWhaduC8Lvc2+e2cx
+        bh=vdb9tKccQmSzInyuTYu1/jMSVTG4YqjN0UDkWk/dVpA=;
+        b=idmp3Huks7zr7SSAktkQpGo6+zS5GSKu6BqBnslKyjNPt5OWUuY/2p/DYWBX0+P9YR
+         mzsXNEV4zcDS/lPx/4lO8igBjp3geMo6v2pbi29NSvvmc3XHPVIrLy7+kurwl35WmwGF
+         b+l0vN+IjAL988XOigxts5HO1bqBZnhhtAu9c97pVDNKmwXLlEzRo5NRD3u8i68De5K1
+         Toa0OhYZ0L5vAndJIzKEeVQocolte+monCZRGmZ5qJl//t8aUXDprn+GzsETiI2cVf37
+         0emBxwl7UYuN/ImDYNp6uD1PMJuamWTj5AV41Q8RomCoFeTQM0PbHy0NydP8yJR/t5RE
+         7W6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBT0191Ck0NSe6vgjlm0wXLciu6VLwnPCQqb5n3L+/8MQHXU7QCg5LNTygO21H0RtMv1NZUNlaT2yxP/V06z7J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4WhQAKnQxX5+/YuMZqTVq9p4zF4edvrc3DSdtLZeWj/11Z3lW
+	4CThzv/hdtlLGR/ahVu+jtL/O2P2HQstTO2/5YdBjhYXbqXj3VTbnjNpklV4DmAxmrX/AssKSpK
+	AlhsSjQ==
+X-Google-Smtp-Source: AGHT+IERCib+1uyyjqUgaird04HbEnd296RFEB5jEzvAoiTwxBqmnTh0Azo5wFkQiLmJsdm2RtuNyjy39V4M
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a05:690c:25c2:b0:6f3:e216:9dd with SMTP id
- 00721157ae682-6f9b2914de9mr477627b3.4.1738970705693; Fri, 07 Feb 2025
- 15:25:05 -0800 (PST)
-Date: Fri,  7 Feb 2025 15:24:45 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:d04:0:b0:e5b:423e:4757 with SMTP id
+ 3f1490d57ef6-e5b4625ad03mr43743276.4.1738970707967; Fri, 07 Feb 2025 15:25:07
+ -0800 (PST)
+Date: Fri,  7 Feb 2025 15:24:46 -0800
 In-Reply-To: <20250207232452.994822-1-irogers@google.com>
-Message-Id: <20250207232452.994822-5-irogers@google.com>
+Message-Id: <20250207232452.994822-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250207232452.994822-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v2 4/7] perf header: Switch mem topology to io_dir__readdir
+Subject: [PATCH v2 5/7] perf events: Remove scandir in thread synthesis
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,117 +78,76 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Switch memory_node__read and build_mem_topology from opendir/readdir
-to io_dir__readdir, with smaller stack allocations. Reduces peak
-memory consumption of perf record by 10kb.
+This avoids scanddir reading the directory into memory that's
+allocated and instead allocates on the stack.
 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ tools/perf/util/synthetic-events.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index d06aa86352d3..1900965f8752 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -44,6 +44,7 @@
- #include "build-id.h"
- #include "data.h"
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 6923b0d5efed..2c1ba39dfdde 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -38,6 +38,7 @@
+ #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
  #include <api/fs/fs.h>
+ #include <api/io.h>
 +#include <api/io_dir.h>
- #include "asm/bug.h"
- #include "tool.h"
- #include "time-utils.h"
-@@ -1311,11 +1312,11 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -767,10 +768,10 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+ 				      bool needs_mmap, bool mmap_data)
  {
- 	unsigned int phys, size = 0;
- 	char path[PATH_MAX];
--	struct dirent *ent;
--	DIR *dir;
-+	struct io_dirent64 *ent;
-+	struct io_dir dir;
+ 	char filename[PATH_MAX];
+-	struct dirent **dirent;
++	struct io_dir iod;
++	struct io_dirent64 *dent;
+ 	pid_t tgid, ppid;
+ 	int rc = 0;
+-	int i, n;
  
- #define for_each_memory(mem, dir)					\
--	while ((ent = readdir(dir)))					\
-+	while ((ent = io_dir__readdir(&dir)) != NULL)			\
- 		if (strcmp(ent->d_name, ".") &&				\
- 		    strcmp(ent->d_name, "..") &&			\
- 		    sscanf(ent->d_name, "memory%u", &mem) == 1)
-@@ -1324,9 +1325,9 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
- 		  "%s/devices/system/node/node%lu",
- 		  sysfs__mountpoint(), idx);
+ 	/* special case: only send one comm event using passed in pid */
+ 	if (!full) {
+@@ -802,16 +803,19 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+ 	snprintf(filename, sizeof(filename), "%s/proc/%d/task",
+ 		 machine->root_dir, pid);
  
--	dir = opendir(path);
--	if (!dir) {
--		pr_warning("failed: can't open memory sysfs data\n");
-+	io_dir__init(&dir, open(path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (dir.dirfd < 0) {
-+		pr_warning("failed: can't open memory sysfs data '%s'\n", path);
- 		return -1;
+-	n = scandir(filename, &dirent, filter_task, NULL);
+-	if (n < 0)
+-		return n;
++	io_dir__init(&iod, open(filename, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
++	if (iod.dirfd < 0)
++		return -1;
+ 
+-	for (i = 0; i < n; i++) {
++	while ((dent = io_dir__readdir(&iod)) != NULL) {
+ 		char *end;
+ 		pid_t _pid;
+ 		bool kernel_thread = false;
+ 
+-		_pid = strtol(dirent[i]->d_name, &end, 10);
++		if (!isdigit(dent->d_name[0]))
++			continue;
++
++		_pid = strtol(dent->d_name, &end, 10);
+ 		if (*end)
+ 			continue;
+ 
+@@ -845,9 +849,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+ 		}
  	}
  
-@@ -1338,20 +1339,20 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+-	for (i = 0; i < n; i++)
+-		zfree(&dirent[i]);
+-	free(dirent);
++	close(iod.dirfd);
  
- 	n->set = bitmap_zalloc(size);
- 	if (!n->set) {
--		closedir(dir);
-+		close(dir.dirfd);
- 		return -ENOMEM;
- 	}
- 
- 	n->node = idx;
- 	n->size = size;
- 
--	rewinddir(dir);
-+	io_dir__rewinddir(&dir);
- 
- 	for_each_memory(phys, dir) {
- 		__set_bit(phys, n->set);
- 	}
- 
--	closedir(dir);
-+	close(dir.dirfd);
- 	return 0;
+ 	return rc;
  }
- 
-@@ -1374,8 +1375,8 @@ static int memory_node__sort(const void *a, const void *b)
- static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
- {
- 	char path[PATH_MAX];
--	struct dirent *ent;
--	DIR *dir;
-+	struct io_dirent64 *ent;
-+	struct io_dir dir;
- 	int ret = 0;
- 	size_t cnt = 0, size = 0;
- 	struct memory_node *nodes = NULL;
-@@ -1383,14 +1384,14 @@ static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
- 	scnprintf(path, PATH_MAX, "%s/devices/system/node/",
- 		  sysfs__mountpoint());
- 
--	dir = opendir(path);
--	if (!dir) {
-+	io_dir__init(&dir, open(path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (dir.dirfd < 0) {
- 		pr_debug2("%s: couldn't read %s, does this arch have topology information?\n",
- 			  __func__, path);
- 		return -1;
- 	}
- 
--	while (!ret && (ent = readdir(dir))) {
-+	while (!ret && (ent = io_dir__readdir(&dir))) {
- 		unsigned int idx;
- 		int r;
- 
-@@ -1419,7 +1420,7 @@ static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
- 			cnt += 1;
- 	}
- out:
--	closedir(dir);
-+	close(dir.dirfd);
- 	if (!ret) {
- 		*cntp = cnt;
- 		*nodesp = nodes;
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
