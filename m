@@ -1,31 +1,31 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CA6174EF0;
-	Fri,  7 Feb 2025 02:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA937E0FF;
+	Fri,  7 Feb 2025 02:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738894807; cv=none; b=EjwTlzHUIyXgE9AfqFo+e6Ap2e6Q3IYE85NKAmqOK8AsWVfBCw9NFvL0uTd5MoDVEjxrM3Wx60GXHuuqOrpF67MbCEcxmlB3TS94+i3xM4OO4l/1kRZhL8EJRHqOdwy8XwvKAjTrnshLPv6SgXiGC0EcXmtKGnV7HOf5YaFV2R4=
+	t=1738896083; cv=none; b=nguNz315rPBYaE9QTfmo6HqFNeDT91X4kaHETOaLJ16OL6sMdRKAtgV/u1JqzbR/VDlql9cEiihfDsoHW0CvCDxK8ZsOAPMV4XiJFDxc6P79BULt3JLiDhjcdJycHdz7Can/Q9vqfW/8akVgODb2qi/AiL3YN5RjC2SQTDz1sM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738894807; c=relaxed/simple;
-	bh=Ggtl3+tapFujgU4WanDZRKGcgAgXmjbWlHKoycU8AtI=;
+	s=arc-20240116; t=1738896083; c=relaxed/simple;
+	bh=usW+bz6oKgsv1kDpCKBbEVSEOKdp156abvluOOct4us=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=unLPLSyUcrhpiToFsdZIhsjxO4UzIw7DKNYRtFuEduegtvYx+gxE3t5O49dRPBY6rltRkDwDilDufNKZJnUtRqG7uBZbPcxlNjJVzxZxtXWDPgSzGKikzfyeTaPDtVDWnhjfVcLC3idJ0zNlycTnW4zpzkXzJ6vVyTvG+5SkdmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nCaOzaF1; arc=none smtp.client-ip=115.124.30.110
+	 In-Reply-To:Content-Type; b=eOM652tuYikcsUWHBGAixYu9YfFGX0ehR4KobnpUwM6kOAgerD0vjRgC2/gOZSCE3ECR5GIQ/SvdHRVtwH0yVhBNxJ4sz0SPJsYIMtG/4AkvpiPfd9/LDrl8N1TH5KqD+grqhypcOwL0bWPNqbojOLNmgZDHjUASqQuqOvxcA4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fSoTASgr; arc=none smtp.client-ip=115.124.30.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nCaOzaF1"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fSoTASgr"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1738894801; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=MIJQd8/xiO8zk0JzBELYAOXAcVPyFlMXoXFFjOZkwuA=;
-	b=nCaOzaF1M0QqssoLW21Q1c5trNnfcLnre3qhJ4BLdlLuOCpetcM7xd2VXhTSw8G4O4ss2oDyze53XuJp9caPTOw12Z5iuqtkhwEfeVlFNjIfYz21GW5gD+Yz0ryzWxXggkqry6QnDp0S7rlC67quEKyOpRByDYVKRp3ZOwxqWAI=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOxloU6_1738894800 cluster:ay36)
+	t=1738896077; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=/zEhfB3CHplqCB7IjBn91aPxxiAsdOK81yimcuizNvU=;
+	b=fSoTASgrAlyHJgl9XIlBAmqOX0LrcD7QfOK2Cm+GYbqBOl9P8Vm0OMXExRtJBL1jWKtk5I0EB0BWlAynVsXad4zwGbYoJhtGK2uN0I5fWpV8cBruPklPq/EBAtx8GbSztxA4l0eb7SCKxyLlbowVfREJlvuj+RhpwCypv781zw8=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOxlwo8_1738895757 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 10:20:00 +0800
-Message-ID: <76dad20a-0180-46a0-9840-6d8444d1749a@linux.alibaba.com>
-Date: Fri, 7 Feb 2025 10:19:59 +0800
+          Fri, 07 Feb 2025 10:35:57 +0800
+Message-ID: <0961be9f-87be-4ecc-9e60-faa78119affc@linux.alibaba.com>
+Date: Fri, 7 Feb 2025 10:35:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -33,95 +33,93 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] perf/dwc_pcie: fix the incorrect reference count
+Subject: Re: [PATCH v2 2/2] perf/dwc_pcie: fix duplicate pci_dev devices
 To: Yunhui Cui <cuiyunhui@bytedance.com>, renyu.zj@linux.alibaba.com,
  will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250205031425.67265-1-cuiyunhui@bytedance.com>
- <20250205031425.67265-2-cuiyunhui@bytedance.com>
+ <20250205031425.67265-3-cuiyunhui@bytedance.com>
 From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250205031425.67265-2-cuiyunhui@bytedance.com>
+In-Reply-To: <20250205031425.67265-3-cuiyunhui@bytedance.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
 在 2025/2/5 11:14, Yunhui Cui 写道:
-> for_each_pci_dev increments pdev refcount. Call pci_dev_put after access
-> to decrement it.
+> During platform_device_register, wrongly using struct device
+> pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
+> still, accessing the duplicated device leads to list corruption as its
+> mutex content (e.g., list, magic) remains the same as the original.
 > 
 > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 > ---
->   drivers/perf/dwc_pcie_pmu.c | 42 ++++++++++++++++++++++++++-----------
->   1 file changed, 30 insertions(+), 12 deletions(-)
+>   drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
+>   1 file changed, 13 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> index cccecae9823f..4ac53167d7ab 100644
+> index 4ac53167d7ab..fd9d87b4f201 100644
 > --- a/drivers/perf/dwc_pcie_pmu.c
 > +++ b/drivers/perf/dwc_pcie_pmu.c
-> @@ -553,6 +553,7 @@ static u16 dwc_pcie_des_cap(struct pci_dev *pdev)
+> @@ -566,9 +566,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+>   	u32 sbdf;
 >   
->   static void dwc_pcie_unregister_dev(struct dwc_pcie_dev_info *dev_info)
->   {
-> +	pci_dev_put(dev_info->pdev);
->   	platform_device_unregister(dev_info->plat_dev);
->   	list_del(&dev_info->dev_node);
->   	kfree(dev_info);
-> @@ -572,8 +573,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+>   	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
+> -	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
+> -						 pdev, sizeof(*pdev));
+> -
+> +	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
+>   	if (IS_ERR(plat_dev))
 >   		return PTR_ERR(plat_dev);
 >   
->   	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
-> -	if (!dev_info)
-> +	if (!dev_info) {
-> +		platform_device_unregister(plat_dev);
->   		return -ENOMEM;
-> +	}
+> @@ -620,18 +618,26 @@ static struct notifier_block dwc_pcie_pmu_nb = {
 >   
->   	/* Cache platform device to handle pci device hotplug */
->   	dev_info->plat_dev = plat_dev;
-> @@ -594,8 +597,11 @@ static int dwc_pcie_pmu_notifier(struct notifier_block *nb,
->   	case BUS_NOTIFY_ADD_DEVICE:
->   		if (!dwc_pcie_des_cap(pdev))
->   			return NOTIFY_DONE;
-> -		if (dwc_pcie_register_dev(pdev))
-> +		pci_dev_get(pdev);
-> +		if (dwc_pcie_register_dev(pdev)) {
-> +			pci_dev_put(pdev);
->   			return NOTIFY_BAD;
-> +		}
->   		break;
->   	case BUS_NOTIFY_DEL_DEVICE:
->   		dev_info = dwc_pcie_find_dev_info(pdev);
-> @@ -730,20 +736,29 @@ static struct platform_driver dwc_pcie_pmu_driver = {
->   	.driver = {.name = "dwc_pcie_pmu",},
->   };
->   
-> +static void dwc_pcie_cleanup_devices(void)
-> +{
-> +	struct dwc_pcie_dev_info *dev_info, *tmp;
-> +
-> +	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
-> +		dwc_pcie_unregister_dev(dev_info);
-> +	}
-> +}
-> +
->   static int __init dwc_pcie_pmu_init(void)
+>   static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
 >   {
->   	struct pci_dev *pdev = NULL;
+> -	struct pci_dev *pdev = plat_dev->dev.platform_data;
+> +	struct pci_dev *pdev;
+>   	struct dwc_pcie_pmu *pcie_pmu;
+>   	char *name;
+>   	u32 sbdf;
+>   	u16 vsec;
 >   	int ret;
 >   
->   	for_each_pci_dev(pdev) {
-> -		if (!dwc_pcie_des_cap(pdev))
-> +		if (!dwc_pcie_des_cap(pdev)) {
-> +			pci_dev_put(pdev);
+> +	sbdf = plat_dev->id;
+> +	pdev = pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf & 0xffff),
+> +					   sbdf & 0xff);
+> +	if (!pdev) {
+> +		pr_err("No pdev found for the sbdf");
 
-If the pdev has no RAS cap, we do not need to put the device.
+How about also adding the sbdf to print?
 
-> The reference count for @from is
-> always decremented if it is not %NULL.
-
-Please see comments from pci_get_device() for more details.
-
-Shuai
+> +		return -ENODEV;
+> +	}
+> +
+>   	vsec = dwc_pcie_des_cap(pdev);
+>   	if (!vsec)
+>   		return -ENODEV;
+>   
+> -	sbdf = plat_dev->id;
+> +	pci_dev_put(pdev);
+>   	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
+>   	if (!name)
+>   		return -ENOMEM;
+> @@ -646,7 +652,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+>   	pcie_pmu->on_cpu = -1;
+>   	pcie_pmu->pmu = (struct pmu){
+>   		.name		= name,
+> -		.parent		= &pdev->dev,
+> +		.parent		= &plat_dev->dev,
+>   		.module		= THIS_MODULE,
+>   		.attr_groups	= dwc_pcie_attr_groups,
+>   		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> @@ -733,7 +739,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
+>   
+>   static struct platform_driver dwc_pcie_pmu_driver = {
+>   	.probe = dwc_pcie_pmu_probe,
+> -	.driver = {.name = "dwc_pcie_pmu",},
+> +	.driver = {.name = "platform_dwc_pcie",},
+>   };
+>   
+>   static void dwc_pcie_cleanup_devices(void)
 
