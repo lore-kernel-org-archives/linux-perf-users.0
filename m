@@ -1,64 +1,64 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BA1199254
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 08:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039EC1547CA
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Feb 2025 08:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738915693; cv=none; b=qoLLWGTl0t7GNEYpvovpoUllfSzqehYZtG0KCuuZazYnPEVtsVmCux3DE6l6elh+PjAGwjcL8SNpc/KDnF1aY8iXHdozymLN2ZWFvyVap8VN+xzP/uNWg4V633qA5U+BlbkJc3KsUHVhbKidY48z+MKc/s9DOvlnaGVT056NewM=
+	t=1738916042; cv=none; b=eMmw6TMmid66ALODUztGIAPpv7rVCTHauwi0GOn7wlmjWXazVH5soRZK5w5Di8miF0EwrpyOsf3VZbzuaE9zHxB2xEHzoc78I9jvwzFbLM1kP6R1EtFQgv7BTzjV8s5jCaiNF4dnNqj0Ccemd7COndHtjrR72tG2fDegrU4F1v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738915693; c=relaxed/simple;
-	bh=mGnLpccjRRFhssRkLpnaUDhik6CTmCZ9AVgqJcR8GI4=;
+	s=arc-20240116; t=1738916042; c=relaxed/simple;
+	bh=DzRl7T8sIjvlyYTMPc+CcYOkIjrhZ4zBf6aWJ7k8aKQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DKhm0qTQJxLVwDatg9VFMI5RcPw1KTkMywbVcfHpRopV8DIF5dAlmWL1w9GdgjsdFzcUjDywAxFWb/vegrrfCu5x11YZRueAcC3HEpzfWARDWOHa1MtmCnfFDQ5gEGgpL8TzHZG/I8ovFjbfvLTwC11+50k4xJzXVtvHENn3HYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SxlRlTHK; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:Content-Type; b=g7UnSKkhN9UBTDrUA0IUAkPvodeOH/V1FvrdBStulkXWT7AcbDbpDMKF2nBKGDDLvq8gy6BUCaJShpCwem9pvZni8kVHEXFfPDCE9xtSENnxf9OBZymnVt71oSMBZIp9wNWY9PxB+030PGWDNqyp+2Rd/PfAS8JqbX3FRtj20Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Bq6YVLY5; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SxlRlTHK"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361815b96cso11667335e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 00:08:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Bq6YVLY5"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso11549545e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 00:13:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738915689; x=1739520489; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738916038; x=1739520838; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=N7+57nAAv8QP4u/IKjzXqebMrcWsPnCBFtc7wCFJPUQ=;
-        b=SxlRlTHK5KEuGx22XbO1QgpCu9KBjqonBUDaMKQNMoeJJ6uhMgwwnuUnJrm/KHL8Nv
-         K/A0AyYSu4O7rdH3A3qA7RzUV7D8anZQKQKY764GI08FGxsemgZ5s4z3oXoAdYhxxpiO
-         oqClhT/TdJc4GvJK/lWy1U7ZySknNDSLQviKcgT+2qkXTxvpQwONmzFvcCBxmZ4Gap3N
-         APJMHeaBgtW6DdgQNT0OMFafuhvHu7SB1tfLjfYtlIqwUCfZN25DQ59r+Fqpxh/kRc/q
-         WrC+GtsBcNT9eY+SNJxDsH+hHn95SIR5I/CxY9VPcSdFfQ2dQ163BriAOGriQQ7wJNpL
-         MHUQ==
+        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
+        b=Bq6YVLY5jlP5t/oj0RASV7dDXvJI2VBVua8urckQG+4Wlf0Tt/V5efn95XhxZGexDE
+         WZFL5H38mPJqGQvc+ntjj5eXih/0rQJc3aK8gKHRnLRvrlc+tiB+kKEd7+0C7M1NDeul
+         /iKtRz2V1okrSOpp48WFWHGORBxA2izRX4e0G81JSPxs1IBc++v8Ylr69bqxEK8zy4tn
+         O44grSmOc61ZgTf1+aUL+qrnUYV4BmrOFNjXmOmGWR8AM5O8RzEVgmTnnwRGPL/4GG7k
+         IR1o0uh2ggftfP7+l9G38PEMtvKbQW6coufUU1XCJv2MtvkVhDY9EyAbyBChW+FTqUIS
+         i2HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738915689; x=1739520489;
+        d=1e100.net; s=20230601; t=1738916038; x=1739520838;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N7+57nAAv8QP4u/IKjzXqebMrcWsPnCBFtc7wCFJPUQ=;
-        b=qTTKdLeLoKSjnKdWGifS1m75W4/PNYHYnEx3xf4zHI1Q55WJ8IFKnMb4MY0s1LhF+q
-         CGFS6r6MKkPMkTbzGbUbrCZtLKFHs/vLPAD9FAPk54wcOqVcWolq67BH5RmNM0doObxo
-         nU8JdatzsxQKFchOeCq9CuIvXj71S6N/lr8SSaiGkIzB9CVC6RMxIzniAHtbYC0WrCRH
-         q6JEoHvTkw5rr0yhvbn4m+3iDae6UCeuPbhEQPQd4oMUuCMA40AznMjUdk+dKwipjfsD
-         t3mMXqQV88n2073a7+glZ/9yp//kk0WNTGF2YJzCrFtGLRUDLOPk7X9eLY8cDTHF26/a
-         yDDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlAdDWZ3dV6og8C8SFaIkAiFtYHAgLjRrtFbFzM/y9+j58q3vVeYdUUKY+G62sOPC01QtsutF3v4Zoyi7+slxy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxxfMLWc2nuTNTtYqOZ/CGOCphFshTmbIsC05hupOgcdl2EQGx
-	EWSKpQ/motkMVVaZjSGZFZ6ZHn9vq0c0uT4BWdo4uertL7SCRFQZ+dFu18NrkBE=
-X-Gm-Gg: ASbGncvVCJG60OVRJ07koNF4pr/Is2n1nL+xz0xGacpnBDYelQGKqgBrO35FP7jkDfi
-	pMhUOlb3yMBLRMb4zI95f2DdxUmkyqxQyxgP6Piu54NrhWQk7ReBSHrk2g0hGXVZixtZ8EV/F1d
-	3Yg5ifhZu2TMQUVrBN1z96Ct1WTR/JOXA0n6hC5TAedcKpqLxRXul7a7xYsEA7AhOJ5ObyuRm47
-	8iXvIG8Suy+rXMnYQ5ASR5z5nNnDEaXbIa8jEtQPysrUSExYjwIEOoBmCNy+QA+83U2OwGRc5Qe
-	qNC8dSIqYVbTgxdytbF4tP9KHBNPPA7mvK8pXVSwvLNNePIzZrmuFFUQP64A
-X-Google-Smtp-Source: AGHT+IEpCAnzMJ9gzxKx250V5bllvFofCg+NZdnX2FF6QiB0L9kNIhtil4j6rsAH/g8Ai7a/4f4w3g==
-X-Received: by 2002:a05:600c:6c52:b0:434:f335:83b with SMTP id 5b1f17b1804b1-43924a27b10mr19870375e9.5.1738915689136;
-        Fri, 07 Feb 2025 00:08:09 -0800 (PST)
+        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
+        b=LI3ye6ozNYjHF1AdS0STJTO2Rf2yA11JrWknQ8bBoM/L7whnb1rrsBsCuH43GcH/g9
+         tfFUt+N+ajCR00le1kpIYjNc8bYdSbcai24gl1B9EltidmNI1gmBpeIeX+cx9cbME+HD
+         ijuQNowYqAspSfJjWzQyPp3vC8CtR5py1MGDXGQbaeb77FsrkG1tZ32awSp5NADOp5u2
+         1D2ty5ISWPKeVYx2/rW2XzgCuQ8g0TmViVZCe1cMzHFe4/zsMO0xcCFFU75bF9N23tc9
+         WCvLiO+CT9PtkjEX8+424qU2ja65H4W85dqYh4fRACHEeKn9mg90jCIS6/NusjwFxuyK
+         Su+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWHkn5IL8L6Vh+GLQz5raFCrTmPmWOYRryTElaY9X8RRKXO1vcntg/sGPEx3nvK/6NfNV6euO+GQvEWh+VL58pH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlDSFJMZ4l9NB/7jUVa+1u83rqx1lS6o7su3cQ7ZEicTpbe0Fx
+	7FjdrxdB6CVfton0rIPYlg3TJOKyxrTllOekRCuZL2V3hvDohWsdKiFr5EzOvsg=
+X-Gm-Gg: ASbGncsP8TOo2lEhJVFi5dPzhiRmsDRnTnUbBLHjBmvbbhj9XcjwO5As/hQtliHOfvD
+	GoT79VVZVvNs0l8WSGCZuENZCaSo8Fp4fqSTNUY/9Q8xx3nvMfpquk1Bq5LNuKtvxDpVkehCGf9
+	rfPS3xmZbnyBTqm7oLPQ3aq8IAq19XIGHzWHJo6u1tuhYU3HPjrdwYkwfPrTXf0qMgvSaqrq20+
+	8L477KDZ94CXckPkHI7Da3n5hPX9BEVLA13dx9PsIVGA8x+jYshjSYjTX8DwB2OPuydDXqmKWvO
+	TqFhcE8Qg7bFIxOia88vAvoYzQrr7G/0DnlM2Ghpx/IMxwkoEEDiMBHSEP/A
+X-Google-Smtp-Source: AGHT+IEGr/YRTYNXaAzVLspq4nx30yqY6bs6EtU6OBmGn64/zPMRjPnpKtSGL4mxDnpbYdH0c6ehyw==
+X-Received: by 2002:a05:600c:35c5:b0:438:e231:d35e with SMTP id 5b1f17b1804b1-439248b6ebamr20948965e9.0.1738916038069;
+        Fri, 07 Feb 2025 00:13:58 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca004esm45229805e9.13.2025.02.07.00.08.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc09fc2d9sm3167994f8f.6.2025.02.07.00.13.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 00:08:08 -0800 (PST)
-Message-ID: <d5138234-b0c3-4f78-af9e-33e0d5039ea3@rivosinc.com>
-Date: Fri, 7 Feb 2025 09:08:07 +0100
+        Fri, 07 Feb 2025 00:13:57 -0800 (PST)
+Message-ID: <d03581a9-495d-47df-99f2-96065b06ee8f@rivosinc.com>
+Date: Fri, 7 Feb 2025 09:13:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -98,17 +98,6 @@ On 06/02/2025 08:23, Atish Patra wrote:
 > Ssccfg (‘Ss’ for Privileged architecture and Supervisor-level
 > extension, ‘ccfg’ for Counter Configuration) provides access to
 > delegated counters and new supervisor-level state.
-
-Hi Atish,
-
-The spec seems to primarly use Smcdeleg rather than Ssccfg. This commits
-adds both but only mention Ssccfg in the commit title/description. Maybe
-it could be nice to mention both as well.
-
-Thanks,
-
-Clément
-
 > 
 > This patch just enables the definitions and enable parsing.
 > 
@@ -140,6 +129,26 @@ Clément
 >  	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
 >  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
 > +	__RISCV_ISA_EXT_DATA(smcdeleg, RISCV_ISA_EXT_SMCDELEG),
+
+Hi Atish,
+
+based on your dt-binding commit, if smcdeleg depends on Sscsrind, Zihpm,
+Zicntr, then you could add a validation callback here:
+
+static int riscv_smcdeleg_validate(const struct riscv_isa_ext_data
+*data, const unsigned long *isa_bitmap)
+{
+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SSCSRIND) &&
+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZIHPM) &&
+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZICNTR))
+		return 0;
+
+	return -EPROBE_DEFER;
+}
+
+__RISCV_ISA_EXT_DATA_VALIDATE(smcdeleg, RISCV_ISA_EXT_SMCDELEG,
+riscv_smcdeleg_validate),
+
 >  	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
 >  	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
 >  	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
@@ -147,6 +156,14 @@ Clément
 >  	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
 >  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
 > +	__RISCV_ISA_EXT_DATA(ssccfg, RISCV_ISA_EXT_SSCCFG),
+
+Ditto for this one with Smcdeleg, Sscsrind, Zihpm, Zicntr, Sscofpmf,
+Smcntrpmf.
+
+Thanks,
+
+Clément
+
 >  	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
 >  	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
 >  	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
