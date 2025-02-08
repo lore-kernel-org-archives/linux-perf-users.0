@@ -1,115 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7E74594A;
-	Sat,  8 Feb 2025 01:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87704219FF
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Feb 2025 02:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738977590; cv=none; b=nun5OlQQ69qoiger9RyK/7dHhpDGJf34l3XzH/t8PeBXXtOJGahxhj/GeAanJVcTT/+DXWg6ukWnGVhp/QPrz+EITO7iOcAGJy8sfTttdaiXU3H1kuooDDhAb4S1BEoo+kkIGyeWkYMQPsQM1W7u/AKODxL/usYPCdYWdcluQZg=
+	t=1738980085; cv=none; b=MZuufw6+eOlhIs1AmA8A3pztT1Frhw39udKvrEQMxdbIXvEzy2o7h7wZ7IDDnS0u0SQfyZXOCmq4yI1VGYVqdYTdvScoIs5uS7LTrr/fRWO8slp8cNDWRFTg6Q/WyF1KmzX1ZNB+Es9BjZ/czVVfNScqyhQAo28pTgHQ9+bRgzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738977590; c=relaxed/simple;
-	bh=N1dozlyB/Ante9985QURFeCAXIe2kcoHVsrIRvYtPUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eCESWvznF6tHkLs0c5a4bZ/pYz64bdDMgPo6pEdy88thvNnDowi3n/TwXqj79q1lPOpg3Iq+4taWjkqIP3evZL6vPgXPlL5+i/pKbz7jx4flngIl8Dbh7REtgJd9adwGn/ehj0XwM0QfuSmfKDxYxF6nKgrWsfFRqzEsKAgOKRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itMLp/rG; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738980085; c=relaxed/simple;
+	bh=bktEbC11ltHTmoTnljhEe9hWX6Banqk9ZcBh6U+q9gg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Jx/CTTMcS/Wj9lJLz2iyD9iJAONktnZlcZvF7S5eEpCLnelPz0TlYha7IYAQ0hgHVSuVlgJjYGNb86kmQWvoTmuFto0eG7MFGWcPQJH2NsK/IEJ0gvwxcAYGWrK6bTDi8KuDvyHSh9qNqB9mx21/3/SCvKAL2xqAtcIwSKnuFQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c1rhVlNl; arc=none smtp.client-ip=209.85.210.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itMLp/rG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738977589; x=1770513589;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N1dozlyB/Ante9985QURFeCAXIe2kcoHVsrIRvYtPUE=;
-  b=itMLp/rG1MEKNzBmpq8YDvRt1673tgtvv0I/4XeWJS1cRAjX6ard2drN
-   oEMLgJZtXv2xcQtywrU38OL8q24O/KLSbbeQqFCbA+rcmCa8rKqE201g7
-   ZcBBx7V5UUvPTczgtgvDLYwPnrT0ryMiXst+lB2zZwke8YS69Rbhe2Eyh
-   wiUsdyKNx64rZkk3M1EB3DQ57RJ+GUvd1Kw4BUBveCj/FgDDy5apZxRzb
-   eyL+4aDLgPj9qER3DOsW1cRuiNz6S2eEeBLu2q1iLn6XquaLO8MFbyLl9
-   djvdcsznd82KQZWvAkThLdCWyD7TuNmHCxasQYvcnl2M+YyrHm/VqSmS/
-   A==;
-X-CSE-ConnectionGUID: PVAzbnNBTYy2TGiAEcN3pg==
-X-CSE-MsgGUID: qXXAnaPSSq+p8FAjBUwArQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="50613098"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="50613098"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 17:19:48 -0800
-X-CSE-ConnectionGUID: 6XoOJxNbTAuEsLuqDKke/w==
-X-CSE-MsgGUID: z2z3Vt4mQPWXZ3JzOSAhAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="116719027"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 17:19:47 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7FC2D20B5713;
-	Fri,  7 Feb 2025 17:19:44 -0800 (PST)
-Message-ID: <309171b2-430f-4169-a396-d8bc34b637bd@linux.intel.com>
-Date: Fri, 7 Feb 2025 20:19:43 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1rhVlNl"
+Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-71e23aac69bso991699a34.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Feb 2025 18:01:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738980082; x=1739584882; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=h057a6wBvbw/h7/thrY5CNdcIWE5bhRIXwUHBVJJdVc=;
+        b=c1rhVlNlymaLSr1XLRaN75MUBjp/RgAMFd3JTJHV3xpBuCABr6k9aD8aR/kN18bPLo
+         OesCk1RaEHMFJBXLvGOyLeGyymbIXKD/Ukpqa2IbIeYmuqCdOaqCguBy2NOP6l1JqkC/
+         HJw3AptAdjgtdluQKDEc/uQZxKLLZbZ7lzY6GSiE9NC583BuWQ56cojQGml86/ny2dyd
+         M/Lfa6qZBI+VmFdnP22svs807Pjlac0mQ0O0PweflANVNFaxJ/AFi9lVCGKGBTdEUQSN
+         OO5ohlg25Dgg5FnDDVs4/P7CH7t2QlmEObYtY1PiX/5t1ZDJO19x37s4rI50J3kTzRW0
+         UlbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738980082; x=1739584882;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h057a6wBvbw/h7/thrY5CNdcIWE5bhRIXwUHBVJJdVc=;
+        b=cz0lddufdJXvvdQDrodpYVXr4b6QcF39X6a2juiLYoJoIzQDgistezHG49PbrmQXKM
+         B3SDZr2DrtX+Fgap2eBivtsBeEk+CysT11FEJSjKL0mFquTxFVuFIocYVfILdFpW2QDj
+         HhzvqmGnlGewU539X5heCXVCw18560MXEklmj9qmu4AfcloYLWOKANqlIJGL+FyyeF2U
+         v6Gd5XH6oFhuicJkh5dxEZMDelGMVLsLArif3r3Srh+4MiNM2FE7b8CSogoqk3IJghvo
+         3TbiCdWJ66Y8janzn6YDPCVasJ/KJG5ne652ZbXE9oZll2knADMcf1GmEcjjl9CDCCrz
+         dK5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/qsgwBedoGFmqnV+4Q39dMxG3I77H5x93YZ+G+37e3aVrxrk4XffM78AGV5hOR4bcCVHeS+cYdPYU0TCNKOOx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfhEyIh9LVkRrWutbGZhQJyQBCry8ewH2Yx6qP6SNDU6KehGnE
+	TQV0U0KtzdlqL7cIsxzcLPgGSf6tj/1fkh6iIecmc9DauD5JypsjvX6nJrebrX9iLi6MoXpTgPM
+	FKdgFCTMp/qLvQFWbzibImA==
+X-Google-Smtp-Source: AGHT+IEeIQl7ICG4+Tc/ss00exHzkJsS1m2K/kNfEhqSBG/Hd5ytT4t77wwZci5K7lAYgGA5tByy2i89yzSGB3II1A==
+X-Received: from otbel32.prod.google.com ([2002:a05:6830:71a0:b0:71d:e05c:915b])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6830:4989:b0:71d:62bc:85ec with SMTP id 46e09a7af769-726b87f4aecmr3709624a34.13.1738980082581;
+ Fri, 07 Feb 2025 18:01:22 -0800 (PST)
+Date: Sat,  8 Feb 2025 02:01:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/24] perf vendor events: Add Arrowlake events/metrics
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
- Thomas Falcon <thomas.falcon@intel.com>
-References: <20250207185154.824433-1-irogers@google.com>
- <20250207185154.824433-4-irogers@google.com>
- <0990a674-d8ab-4abc-a904-299513773f90@linux.intel.com>
- <CAP-5=fXCtWZicFAk+d8KSWkNDNREjk-Djz0jh=EZXX1f29Dd1w@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fXCtWZicFAk+d8KSWkNDNREjk-Djz0jh=EZXX1f29Dd1w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250208020111.2068239-1-coltonlewis@google.com>
+Subject: [RFC PATCH v2 0/4] PMU partitioning driver support
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This series introduces support in the ARM PMUv3 driver for
+partitioning PMU counters into two separate ranges by taking advantage
+of the MDCR_EL2.HPMN register field.
+
+The advantage of a partitioned PMU would be to allow KVM guests direct
+access to a subset of PMU functionality, greatly reducing the overhead
+of performance monitoring in guests.
+
+While this feature could be accepted on its own merits, practically
+there is a lot more to be done before it will be fully useful, so I'm
+sending as an RFC for now.
+
+v2:
+* Rebase to v6.14-rc1, and take into account Oliver's debug cleanup
+  changing some KVM handling of MDCR_EL2.
+
+* Reorder patches to put related things closer together for easier
+  reading.
+
+* Ensure driver compiles for 32-bit ARM by defining 32-bit access to
+  MDCR_EL2 correctly, which is called HDCR there. These will not be
+  called due to the below requirement for VHE mode but a functionally
+  correct definition seemed preferable to making it a no op.
+
+* Rename parameter to reserved_host_counters to better reflect
+  underlying hardware semantics and ensure host counters are easier to
+  preserve.
+
+* Document parameter with MODULE_PARM_DESC
+
+* Restrict partitioning to VHE mode only. Using HPMN restricts the
+  host counters to EL2 access only. Trying to make this work for the
+  driver running at EL1 would require hypercalls for every access of
+  those registers and a lot of additional handling at the KVM level.
+  This would defeat the whole purpose of having the feature at
+  all. Define has_vhe() on 32-bit arm to always return false.
+
+* While Rob asked about making the parameter configurable at run time
+  rather than boot time through sysfs, that is potentially very tricky
+  because it is only safe to reprogram HPMN when we are certain no
+  one, host or guest, is using any counters that might change
+  ownership. If this is determined to be worthwhile, it should come
+  after getting the core infrastructure right.
+
+* While Marc asked about reusing the sysreg masks instead of
+  redefining them for MDCR_EL2, that doesn't work because sysreg masks
+  are only defined for arm64. I'm not sure how to avoid the
+  duplication.
+
+* Wrap code for determining if a counter index belongs to the host or
+  guest partition in functions
+
+* Typo fixes and additional testing
+
+v1:
+https://lore.kernel.org/kvm/20250127222031.3078945-1-coltonlewis@google.com/
+
+Colton Lewis (4):
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Introduce module param to partition the PMU
+  perf: arm_pmuv3: Keep out of guest counter partition
+  KVM: arm64: Make guests see only counters they can access
+
+ arch/arm/include/asm/arm_pmuv3.h              |  13 ++
+ arch/arm64/include/asm/arm_pmuv3.h            |  10 ++
+ arch/arm64/kvm/debug.c                        |   3 +-
+ arch/arm64/kvm/pmu-emul.c                     |   8 +-
+ drivers/perf/arm_pmuv3.c                      | 117 ++++++++++++++++--
+ include/linux/perf/arm_pmu.h                  |   2 +
+ include/linux/perf/arm_pmuv3.h                |  34 ++++-
+ .../selftests/kvm/arm64/vpmu_counter_access.c |   2 +-
+ 8 files changed, 168 insertions(+), 21 deletions(-)
 
 
-
-On 2025-02-07 6:00 p.m., Ian Rogers wrote:
-> On Fri, Feb 7, 2025 at 12:44 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->> On 2025-02-07 1:51 p.m., Ian Rogers wrote:
->>> +    {
->>> +        "BriefDescription": "Percentage of time that the core is stalled due to a TPAUSE or UMWAIT instruction",
->>> +        "MetricExpr": "100 * cpu_atom@SERIALIZATION.C01_MS_SCB@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)",
->>> +        "MetricName": "tma_info_serialization _%_tpause_cycles",
->> It doesn't seem a correct MetricName. A convert script bug?
-> They come from the E-core_TMA_Metrics.csv line 91:
-> https://github.com/captain5050/perfmon/blob/main/E-core_TMA_Metrics.csv
-> Info.Serialization %_Tpause_Cycles 100 * SERIALIZATION.C01_MS_SCB /
-> #SLOTS 100 * SERIALIZATION.C01_MS_SCB / #SLOTS 100 *
-> SERIALIZATION.C01_MS_SCB / #SLOTS 100 * SERIALIZATION.C01_MS_SCB /
-> #SLOTS Percentage of time that the core is stalled due to a TPAUSE or
-> UMWAIT instruction
-> 
-> The % works okay in the metric name but we could swap it if you wan
-
-Yes, the % works, but there is a space between tma_info_serialization
-and _%_tpause_cycles.
-
-I'm not sure if it's an issue of E-core_TMA_Metrics.csv or the convertor
-script.
-
-Thanks,
-Kan
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+--
+2.48.1.502.g6dc24dfdaf-goog
