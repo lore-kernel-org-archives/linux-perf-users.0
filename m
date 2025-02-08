@@ -1,157 +1,109 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D040F1B85D6
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Feb 2025 10:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554751B6D08;
+	Sat,  8 Feb 2025 10:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739011219; cv=none; b=WzsGUJU7aB5sYMefLodbTMQf1fInnQ8IZ2h0j49QH1QT0YwWEoQfRf7UjLMmdyadJVSSiJPJu5JNaM2AT1LFxl5x5L5LX/XiV3QTqgD8A/fYp0UOzz7CrexrvJ8qVpduHo3fO11K5KSArzhjV6qqF8XWaeJpMi25yLAPsmRrQG8=
+	t=1739012307; cv=none; b=pDogr5xXPUvCozwD15S21BjQgpFKwSzl+BOjfP5meL3g5qk9xUiJgB8EgUzGu9iHCe47tz3R6EtLyNiM6xVG/e///adS8zw+b5+OyOuh+qV1ST8zxRw9TVl0skFGGOwMkYz8pppL8mnFyLaM+Fqhn6XFXiC+RQWnXJAIrdUzOug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739011219; c=relaxed/simple;
-	bh=n03AzBOBWmT08Gaw2Fpnbf95ax4MQddkTuaxTNL3zP8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bj3Bm1jrzdk1crQBGNM1woHvEPRcxjT8IAjr/Q/aAWm92ounZiP8JFuXd0eG+ldEvEHNr/KHW9Q9+qHkfIml6eojAoZBgxuJ0xARSXXiK2X98jS1moltiS3J3mDA+6AWxqXtORCgEfjeakJYrWPq1K3qEwvvhig2N+weZtb+sVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JboYmYA5; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739012307; c=relaxed/simple;
+	bh=HC59Proqu7a5kKk3YadUGL5qeCaPIya4GivGfD9Q6n4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pJstHzH/n54LdDrh95tgO1xg+I04tS8j+kgKF9WH0b2RPZLWvbJfOU2rDRFTSEwyHtFDfrEu/dPABlR5G+HMGP4fDGeH3of2PmKxilbpAcUO7K0ge+sr29Jr6IYnow/r/tAhPEU3wrVESyxOkrssCVXURLt22gc0a7+II4WUSTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoLycnIb; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JboYmYA5"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f5660c2fdso27062145ad.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 08 Feb 2025 02:40:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoLycnIb"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43932b9b09aso2759565e9.3;
+        Sat, 08 Feb 2025 02:58:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739011217; x=1739616017; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739012305; x=1739617105; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SQGQvZxBQgd+2Ma/k6f6Q/GLYBdp+hkg2ZeYWxhonnA=;
-        b=JboYmYA56F94fUshJ0HZ2gOFmCF0Wdw5txp0sj6ReP5FGnUPHbbIalHDpoefzrGMGx
-         PWgcEr3c0qxPWd6Yg6B2YtAzgNm+Hyzp96YdXvv5G6CYr0ZNAylgvxCzYCC52c2Y4aw6
-         cLUYudS54DSUsSnavOD2pICevDWj5VqKO1YbhVfj9z0R5PKUEkcV6ckr4Zshq8lbswDF
-         udNZgfKRPPRfb3M0lIUQWWuaU8Vesfw/mQg3GOSr4Mru8pZ73tgy0kxDFq9mspIkwcBi
-         gPbVzbZMa4/wPZsKjKjCrgfkAVLsPQsVDxrZ41fJYeT9UzGlc6lxLQXbQxR3hXMGay/t
-         Li3g==
+        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
+        b=XoLycnIb7R1FP0gtlOpTHKvN6AUHYbOWko2bcI/bvbMTkwlqYAxz5i8mWHdgmP01W8
+         bht6JQZQ50N/JxB/bsEM9ZmY6Qsty7+v9hwNuq6RCz2MpXJjaGGmqBea1kuEJk30P8a+
+         +7w+jGNMpNqbvJchlRViKinHA7aGZFDDmXW1K2BjUElfRLuRSJ0zJV4Zdfk1rhxYRhMw
+         60y4b7DCE6pGSq6/lZM+SLaj6ZIigHotyvrbdvT6JeVcgt1eVIJlzSAKT88T8wKEgCw1
+         y27+B2hB7L6K26unUqGRSptWtlFEyxtJAzuLNA56XO8Zoy4S3DelbJ5QkNNfJ9DEXcTF
+         Y7uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739011217; x=1739616017;
+        d=1e100.net; s=20230601; t=1739012305; x=1739617105;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SQGQvZxBQgd+2Ma/k6f6Q/GLYBdp+hkg2ZeYWxhonnA=;
-        b=UJuhhRGcs5JA37Y5EKmgvk/HUiuD1zTvhb8vCU4dz/diDAOvmF7tLSaSWU/41zCFKM
-         3KTUAxkIsRXqxsDBnQfVBlUiYmASoA7ieWRu+Llqoq26SJY061Qmya6OhE0icNH9gbtl
-         cjvqkGFEPC0i44gyf1IH64tR4brMpRw3DFKqPrtuid39JfaQa5BLdhLZG5vjVf788/aK
-         kt89FUjPhg56QzGKxoAyrSBjMufwooF6YswhqWOnWKmEdVKfmSp6bUiC+XzvER0ocjue
-         E5A+Dp6K5ZhBXJFXCDU+FCTttV2vCbi3CEG1zlaqCTWV2q/BvRLN4JDuUzYq3IU3lSFJ
-         sC0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFqDxio7kq/gHr9wcI5nRjp95MWbTAJBYU5WrwVrT+CAeUvL3PkqL5uF1o7JD3LY0k5/XKzfJPi8JjvaGPEUL1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZpWJxkaFcB4dIFAbxYxD6uDvcTzlcyxLpD+gbcEPjdi4AoHCI
-	MEgLbmAwAmIlBpX7QKJib9savyQklR4vPu3x0hE0uMU8gZAXbeR24rBsFr+vOsA=
-X-Gm-Gg: ASbGnctUNtG5Q6o1aEKTyVk60LMKykUu4r898iZpWI3Xact+wIexRmqY6rPNwpOVvqQ
-	X6jkuxQ2iTLc2mCtx0DcHvJ/lhm/Bw2YrfYAnEV3N7x1jfnyhBIsxdMPtxIlERpMDlrAb+VcWfl
-	B6qTUCRZgDgIamzUF/tV1s0AOO4xaui5ER9Odl3Gb2KlgGzrZcxIohkAy/vuag34V1ElX6c6bjt
-	zIEizn+xkXViXmsgq82YMcZMiEFAJ1WA/qkbPTJ+B8OXxad9uX6oknYKW/JLq+HQlWB/ZZXKpJ1
-	JGrdaC6HzLn6IrNFxzxkNqkm5tWNn6ALjjjHLc1Ob9o2P7Yv/A==
-X-Google-Smtp-Source: AGHT+IFwKZ4ENzUKalHf5+THzKNZ277YQzoHoj85tFF8ysZVymo0KlkXTEeb4xQMHVqxLg83ynp2eA==
-X-Received: by 2002:a05:6a21:918b:b0:1ea:ddd1:2fcf with SMTP id adf61e73a8af0-1ee03a22bb9mr10999850637.4.1739011217015;
-        Sat, 08 Feb 2025 02:40:17 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad5460b8d4bsm216325a12.11.2025.02.08.02.40.14
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 08 Feb 2025 02:40:16 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH v3 2/2] perf/dwc_pcie: fix duplicate pci_dev devices
-Date: Sat,  8 Feb 2025 18:40:02 +0800
-Message-Id: <20250208104002.60332-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20250208104002.60332-1-cuiyunhui@bytedance.com>
-References: <20250208104002.60332-1-cuiyunhui@bytedance.com>
+        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
+        b=PlBZhP+JXfSKqegi8AXjnLMKraZgOyjmaWJm8vgHMaKXe8vRuspQFIz13Ewaw3KG+d
+         d6yAL9T3tkNEj6LrDncYR9e8JwddG0J8vhWazdKYUOd2eZRo2Pk+LvHnJzf8D95fma/i
+         mmOfxWQKsAlHe+6u8QCv44mt/GzlyO/jngX6COkilFElzmnwtTP3ekITNJf3Wnu++Jvw
+         JVfrRyI3GYI06taymsDw0QwuVh9wXRVdxAeAXqJTswqcUn7LOJdaQ8W4xIlGC21aJhOJ
+         8mwtde4NxZDQXq2Txfm1Xeo8rMXGy4w9IyG9EBN9gRkepBq1mjkdorzZ06W8PhBUAFyj
+         Rx7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVlxmPmC0BoNOp8jq+kTcJg4p/UNyRYMLirbkK3NfHUzM06AXFD0df9VTORBmkJ7SFtx7bfXHWJ8syboEw=@vger.kernel.org, AJvYcCXUnq846iYG46PfRfIQu08P9pRhiHDMVTSm+R9YkbRFfEWitG5HJQZzCme2oaROd2X5ERnfcDTpOez3mZadCaPRCQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH9Z/7yS/iUzPIFoJio16o/GcmM5gm68KFpTRtwM3n9c6//gPN
+	8x+m9KXfUvied5uGkXO3xyQvckm2EXF3DRzGAYxt+kmyDsbvzpOC
+X-Gm-Gg: ASbGncvfplcrv9DDWXIaMjhEf1U/x5pjMKx/oZZMER3I5J5mXu2w0J1cL0FRmjsg3Ga
+	gZnwuwNmf56jjltOi29eEPLlfXCEv0EFdDH7y0KGszy+2h2LESzYjcaYGDOWkX9TrR2G2AxuAgj
+	3+HD09I500ZX1Lbl2P0E56cDOFUT3AUAsB8+h9hzvmwW5S6LY0zEnrZMQxixNWe+SIp+jo3E5CT
+	dqZoOLpdHRKNsSsrQDmGOfUFYQ35VdAybIl7FB6Q/VmkNwabx51YRDvwnimq9mcjnY841QQgWnK
+	WWrQGckNVhQmltABYMtQzSHdZgefIIxppMCY9d4NmDUgnL0DI+PcBA==
+X-Google-Smtp-Source: AGHT+IGI6rjXAZop36zSG90oUjlAUybcAcwzJW/10yNuGLLIJasyrmCRrjJ5ueyR9wWlflLpnHpCXQ==
+X-Received: by 2002:a05:600c:1da7:b0:439:34e2:455f with SMTP id 5b1f17b1804b1-43934e24665mr7757815e9.12.1739012304348;
+        Sat, 08 Feb 2025 02:58:24 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11200sm116292145e9.38.2025.02.08.02.58.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 02:58:23 -0800 (PST)
+Date: Sat, 8 Feb 2025 10:58:21 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+ <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>, Jesper Juhl
+ <jesperjuhl76@gmail.com>, James Clark <james.clark@linaro.org>, Zhongqiu
+ Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Michael Petlan
+ <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Anne Macedo
+ <retpolanne@posteo.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He
+ <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, "Krzysztof =?UTF-8?B?xYFvcGF0b3dza2k=?="
+ <krzysztof.m.lopatowski@gmail.com>
+Subject: Re: [PATCH v2 0/7] Add io_dir to avoid memory overhead from opendir
+Message-ID: <20250208105821.1cdb54fc@pumpkin>
+In-Reply-To: <20250207232452.994822-1-irogers@google.com>
+References: <20250207232452.994822-1-irogers@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-During platform_device_register, wrongly using struct device
-pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
-still, accessing the duplicated device leads to list corruption as its
-mutex content (e.g., list, magic) remains the same as the original.
+On Fri,  7 Feb 2025 15:24:41 -0800
+Ian Rogers <irogers@google.com> wrote:
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+> glibc's opendir allocates a minimum of 32kb, when called recursively
+> for a directory tree the memory consumption can add up - nearly 300kb
+> during perf start-up when processing modules. Add a stack allocated
+> variant of readdir sized a little more than 1kb
 
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index 19fa2ba8dd67..4f6599e32bba 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
- 	u32 sbdf;
- 
- 	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
--	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
--						 pdev, sizeof(*pdev));
--
-+	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
- 	if (IS_ERR(plat_dev))
- 		return PTR_ERR(plat_dev);
- 
-@@ -616,18 +614,26 @@ static struct notifier_block dwc_pcie_pmu_nb = {
- 
- static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- {
--	struct pci_dev *pdev = plat_dev->dev.platform_data;
-+	struct pci_dev *pdev;
- 	struct dwc_pcie_pmu *pcie_pmu;
- 	char *name;
- 	u32 sbdf;
- 	u16 vsec;
- 	int ret;
- 
-+	sbdf = plat_dev->id;
-+	pdev = pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf & 0xffff),
-+					   sbdf & 0xff);
-+	if (!pdev) {
-+		pr_err("No pdev found for the sbdf 0x%x\n", sbdf);
-+		return -ENODEV;
-+	}
-+
- 	vsec = dwc_pcie_des_cap(pdev);
- 	if (!vsec)
- 		return -ENODEV;
- 
--	sbdf = plat_dev->id;
-+	pci_dev_put(pdev);
- 	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
- 	if (!name)
- 		return -ENOMEM;
-@@ -642,7 +648,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- 	pcie_pmu->on_cpu = -1;
- 	pcie_pmu->pmu = (struct pmu){
- 		.name		= name,
--		.parent		= &pdev->dev,
-+		.parent		= &plat_dev->dev,
- 		.module		= THIS_MODULE,
- 		.attr_groups	= dwc_pcie_attr_groups,
- 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-@@ -729,7 +735,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
- 
- static struct platform_driver dwc_pcie_pmu_driver = {
- 	.probe = dwc_pcie_pmu_probe,
--	.driver = {.name = "dwc_pcie_pmu",},
-+	.driver = {.name = "platform_dwc_pcie",},
- };
- 
- static void dwc_pcie_cleanup_devices(void)
--- 
-2.39.2
+Does 300kB really matter?
 
+You seem to be trading memory allocation against system calls.
+My 'gut feel' is that the system call cost will dominate.
+(Unless all the directories are small.)
+
+There might, of course, be other code in glibc that is designed
+to make it all slower than necessary.
+
+	David
