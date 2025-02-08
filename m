@@ -1,72 +1,76 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654A817DE2D;
-	Sat,  8 Feb 2025 05:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77396149E16;
+	Sat,  8 Feb 2025 05:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738992315; cv=none; b=XcPqhdvIUvqpAV3QDShFe4kSTS90og6dsi8gMMR6xxQ+WbItRY173pjy6cQAIZd03hfn1rdw5KpMn5LOo+C1ZAnz9re/U6sqWI8zDjhpJ1plZ7YQM0DHk9a5kOARK0t5qokQVellJK2bMc+G5/ZezkqoLjzTAJwYAVQxDhCLWrc=
+	t=1738992338; cv=none; b=dC/wtW4zJipg8q4MpXGM5efdMOeAY4l5l5Y+CWZGHB5SsNvfLajYYikdWrsdyaU+xH+g7h097sIYTYGlm3UYPsLXYEq6RU0xkmEA4fJb8s4SVvtzkqhH3nb8lJC6o+7h3dmuzMZI6ZFV1bdjZ+RCxFe7rGTB7MofrG0T7AlIdeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738992315; c=relaxed/simple;
-	bh=dS+gHUB51Qy4KVng7tLl3ipMB2TdjJ74Rnq49bkQNVI=;
+	s=arc-20240116; t=1738992338; c=relaxed/simple;
+	bh=0smO9XkikRJHjHLhsl4Z55KXOlo/iN4VDmT24NDqpzo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elR3lyIhEkS2haWOEUni37NhdSPVRg2N+2KV8kemp6NAjXU7vep+sgyW2JwaOmPvF3cdcu63RK9KbiK+Rhqb2aa1V/pHEyi/CVWyzp6Gj1/speWugtzDdwFXOvlGpmZTxXVx7Bm/ebeQWytjJozard4TjPjp3RShBx826Zz/eng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3qeqb0U; arc=none smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=pEQ0+PlAfjZiL+/7DRgPd0bcoh6073MenIbH2mMHSuIuqeZXUVXJ4AWn1w6l2O8uJr1jHJHCC4RXdmpQzUES6cVfilg+t7ieuXIhErDO4Rgf/l6QGYySk3zkK0/NZGWW4+s6tJ0T6hAPnmX6Be9/jrwQPOhW/g8JoQC9YYNJN+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvkqFV3k; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3qeqb0U"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f6715734d9so25243267b3.3;
-        Fri, 07 Feb 2025 21:25:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvkqFV3k"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f6c90b51c3so22513517b3.2;
+        Fri, 07 Feb 2025 21:25:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738992313; x=1739597113; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738992335; x=1739597135; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r6ye5i7ngncVTyxZ/vrpkYP4Udn+2F4lFb54LtwSQHU=;
-        b=F3qeqb0UKRsHCbLF4Ku5fzOQpQvPOu+RLACq4Z3aVAfRgkOZL7Pl5sg0t+DTtUr5/9
-         v2IE3SuZ+XawkxnZ02feSfCKDU1ENyMCtv0jrYEfdaWypcP1Qi+at9AUp15XVYFenHd+
-         yH3lEcSav3yJdJluJsTCAFUq7d1cf6pEpJbvHr5CQsf9HkLGDzyvra9lC6N6H/SFCsbg
-         OKR883SVaFXKCcfohbX4CHAJsWlQhl/4I6giirh1dezwwEFxKBmuL+w2EFy6qU8ITKD6
-         kGUWJ5bV6I1CvkF+yEfO20uxXbX62HB8O7lP6Erz5wyrLVOJBh8yelndGHrtNNhV7Bf3
-         rn1w==
+        bh=OF4xeNuYmWKv0YV6IejqFGNZBvcjnf68cZWsTxDa3ec=;
+        b=hvkqFV3kYGfpNfLLpGLfEvCcgRjG9DItGmy4SH151prvhhG6ZVkCSeZrbkVn43YavP
+         wfds0hH6HzUXWBZXiGlBA1jlF7tJF25ZQkkgJi2smVf7S7Kyfex9uttjHi5T3aTezESJ
+         VfqURSWUkuPqvXAX85KxiXMmLBao9K3163PHf8BbojTXIYWKFdiA0KJimUwXR2+zMMKK
+         X6avIE9czZpgjHj32wlunc3zZlVueTpfsEVCsLa4p/qbAeycZrYAnN18mcCrrzFv0Gdp
+         9F3QVfEX8w0T9Mt2yZz9pF9IAjRlyk0En/BqvAal/Noe0g2VaphBUYdFiiqg04f6H5pO
+         F/sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738992313; x=1739597113;
+        d=1e100.net; s=20230601; t=1738992335; x=1739597135;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r6ye5i7ngncVTyxZ/vrpkYP4Udn+2F4lFb54LtwSQHU=;
-        b=a5tIDWOczXSKriMT+mJTpgSrB0L2wBgH8XpUOh99mO1Ph79QuLz0A2H0U0kVwewqPb
-         rDHW26UEbj/z36rKKQbGUDpMw8bPhJOagbSqxhX4QpLPjcbC7gG0BBQjEAoRkMVDZOd4
-         6RZoVVB7FiOHFyHHkYBIg03hNIOzZy7WUvv7db4z6V2DdtOasibQ3iKRKxH5u4sBjPNL
-         0wikrOlunEyxIfPteRqLX11Im/METWDKQxBThAclYWccsJfTdPcTOu2PBEjg7QgZt6SV
-         gGIr+r+2BzhhyLN0aUGAk3wKv/pMGKKOm4+a8ovdWmMxsGl8Ijow+27m8e0nfwzrE/U2
-         YuDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1EZziYTxTL7Z/zmKnCWgL5WOTiTKsXpJKukgunxazt+C7RpE5EEH9SFl0Eo0FBGueLklQWdo2azp1R3CYEn/RSg==@vger.kernel.org, AJvYcCVifYyNCq4CelUEyzAedesMyblD4tHoLp/B6LPz2POZVoTTXFYUisyNtmTcQ+EhVFFCIJ2imjm2Kyh6ewk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTb7w+fpczGsQubnL6vUOruGv1zxc4n3jBMcRN6GRqRkXFymda
-	abN9W5pPlFmRFV/9QsBcrysMw++hsJmeWZbqskqqpt3b+rBE4eqVi6/YbXOvvkaav/TP1PdT5Jq
-	rpr+PINceuicRb2fBf27W9PxhYPE=
-X-Gm-Gg: ASbGncumVkiDpwwPUyNfEt0SK275fOoTZx9N47fq5FgTuYpmQpaApTW4GErYOxRAOnm
-	CGk20A9uzyEfafL9wf4gQXto6VvpLmdtaWFAuPhhBhlev3YS6MB7eoL8hhAQ/vtpWQz6Hawk=
-X-Google-Smtp-Source: AGHT+IHxC4/WuGPZSTqlSqH0jOLk9RROkA/zMyyTmOEzkL2qG2GFb8ZfppnL4/HJ931Y2HPzon3/OoVsQxVfCVZ1zsw=
-X-Received: by 2002:a05:690c:6488:b0:6f9:aeee:8f10 with SMTP id
- 00721157ae682-6f9b29e35bfmr48635197b3.24.1738992312948; Fri, 07 Feb 2025
- 21:25:12 -0800 (PST)
+        bh=OF4xeNuYmWKv0YV6IejqFGNZBvcjnf68cZWsTxDa3ec=;
+        b=P23A81IkACJqR2CMOXuMR5Y9tC7PMEZ8UTnMTxELK6B9F3gwu1zSyRvKY+11pQIkBy
+         jz0nqEpFTx39JhK07rn5t3V8DyP8RR2lJ9re3okxyNXMOIpWSgO1keFReMQEKSc+RVu4
+         zT3/INRLaS3YSFHrsG1VKSiDZDj3iwJd+OdCrUcPiOWgyPEWyhHY4lRqDzo09AnblZDz
+         XIagBnry1gO9Q67X6+6sh/Hk9uR2vk9eFoKld6Q58lEJiZqyy+d7r1UAVUr4fVez+Z2W
+         xkjZVeqtUj3BfY9fC4x3Da/m1l/FB5ETO2bmv8lUNb0hvzHzN2FJMiKuL8lMoX6QDF5X
+         xUrA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8QzvJsHIpAos97EZq+DN3aHHRJuRIR/DSUcYbtzRhu5MP8StSXyt5stM5FFM/ZMCeGO/YOlBS2YN8MFd6kqQG0Q==@vger.kernel.org, AJvYcCXAIHl3eMu5RotfIS+RbiBhDwbJvzHJCF2gmxRo/OZg6mgbm6cxIruxxwsXejQLXZE+aDh4O0Lmzr0QlhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQkl4y7L/3jhN5u4nPzx8I/8QranUifjIKQjgH3S2xdYPlY8Ou
+	7ZhI9qtGGD3pXPTFmVzdAK5H8qRytU6EOs+4Xzqyj+voigPTai0pqtH0/TE0qIuCd31ttIK7Ir6
+	hGJVCNliQMUaJdC7N6YP2Awp5dEM=
+X-Gm-Gg: ASbGnctYBa2MLZefTJmngrTNSLhFUmNvjWOBkeWDuLY8glsUsyWeSuSOb4YN0OYTUX4
+	qPZ7gpBYUjATKwxN54blWM9TGv4bO4wCL87oSFjf+wuM+DZD0EXS+iuJ3g1OwIr9PQoigA38=
+X-Google-Smtp-Source: AGHT+IHRJprD1huFADTVuVRMYonFd5A03KQn7mQ86Ll8vexC8rJh2lc9dxjfOMOmLSPzMAsUWdzw2FfxoXKXDCG3eiM=
+X-Received: by 2002:a05:690c:690f:b0:6ef:4a57:fc98 with SMTP id
+ 00721157ae682-6f9b286125bmr62303867b3.16.1738992335302; Fri, 07 Feb 2025
+ 21:25:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205205443.1986408-1-namhyung@kernel.org>
-In-Reply-To: <20250205205443.1986408-1-namhyung@kernel.org>
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
+ <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+ <Z6GCde4XqCuEZlgz@google.com> <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
+ <Z6JosmbJBmiRHBKK@google.com>
+In-Reply-To: <Z6JosmbJBmiRHBKK@google.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 7 Feb 2025 21:25:02 -0800
-X-Gm-Features: AWEUYZknLKCuyiuFJF9VAmJ_2TAsyVv31SlnJ0R8C1MZ3yfAlGRT44SqaGlUuJM
-Message-ID: <CAH0uvoinT1ZH3Cifj_skJOjfKrvQ8jdbU_3gFp21eD4PwGOwkQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] perf trace: Add --summary-mode option
+Date: Fri, 7 Feb 2025 21:25:24 -0800
+X-Gm-Features: AWEUYZlfkjXbRRmX0GGEkubcOp71j8vYwaX8UyWMtiebFMXMvXUMdsgMV46atqg
+Message-ID: <CAH0uvohMSS263T1ELDyy=OsOnjc8xDURpBqCfQPER5Urgwu2JA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
+ is on
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
@@ -76,88 +80,67 @@ Content-Transfer-Encoding: quoted-printable
 
 Hello Namhyung,
 
-On Wed, Feb 5, 2025 at 12:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Tue, Feb 4, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> Hello,
+> On Tue, Feb 04, 2025 at 07:59:01AM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > The syscall stats are used only when summary is requested.  Let's=
+ avoid
+> > > > > unnecessary operations.  Pass 'trace' pointer to check summary an=
+d give
+> > > > > output file together.
+> > > >
+> > > > I don't think this last sentence makes sense.
+> > >
+> > > Thanks for your review.  I'd say:  Pass 'trace' pointer instead of do=
+ing
+> > > 'summary' option and 'output' file pointer separately.
+> >
+> > This still doesn't make sense. There is lazier initialization:
+> > ```
+> > -               ttrace->syscall_stats =3D intlist__new(NULL);
+> > +               if (trace->summary)
+> > +                       ttrace->syscall_stats =3D intlist__new(NULL);
+> > ```
+> > and there are functions that take a FILE* but now we're going to use
+> > the one in trace instead:
 >
-> I've realized that perf trace shows system call summary at the end for
-> each thread.  But sometimes users want to see the global whole system
-> summary or statistics instead.
+> Yep, those FILE* (fp) was from trace->output.
 >
-> So I've added --summary-mode option like below:
 >
->     $ sudo ./perf trace -as --summary-mode=3Dtotal sleep 1
+> > ```
+> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
+> > thread *thread, FILE *fp)
+> >
+> >         return ttrace;
+> >  fail:
+> > -       color_fprintf(fp, PERF_COLOR_RED,
+> > +       color_fprintf(trace->output, PERF_COLOR_RED,
+> >                       "WARNING: not enough memory, dropping samples!\n"=
+);
+> >         return NULL;
+> > ```
+> > So why does the one passed to trace still exist? Unfortunately names
+> > like "fp" and "output" are not intention revealing.
 >
->      Summary of events:
+> I think "fp" is a conventional name for file pointers (probably from
+> K&R?).
 >
->      total, 21580 events
+> >
+> > Anyway, from the commit message and the code I don't understand what
+> > this change is trying to do.
 >
->        syscall            calls  errors  total       min       avg       =
-max       stddev
->                                          (msec)    (msec)    (msec)    (m=
-sec)        (%)
->        --------------- --------  ------ -------- --------- --------- ----=
------     ------
->        epoll_wait          1305      0 14716.712     0.000    11.277   55=
-1.529      8.87%
->        futex               1256     89 13331.197     0.000    10.614   73=
-3.722     15.49%
->        poll                 669      0  6806.618     0.000    10.174   45=
-9.316     11.77%
->        ppoll                220      0  3968.797     0.000    18.040   51=
-6.775     25.35%
->        clock_nanosleep        1      0  1000.027  1000.027  1000.027  100=
-0.027      0.00%
->        epoll_pwait           21      0   592.783     0.000    28.228   52=
-2.293     88.29%
->        nanosleep             16      0    60.515     0.000     3.782    1=
-0.123     33.33%
->        ioctl                510      0     4.284     0.001     0.008     =
-0.182      8.84%
->        recvmsg             1434    775     3.497     0.001     0.002     =
-0.174      6.37%
->        write               1393      0     2.854     0.001     0.002     =
-0.017      1.79%
->        read                1063    100     2.236     0.000     0.002     =
-0.083      5.11%
->        ...
->
-> Also it changes internal data structure to hash table to track
-> statistics of syscalls.  And removes the rb_resort code.
->
-> v3 changes)
-> * Add Acked-by from Howard
-> * Update commit messages  (Ian)
+> I don't know where you didn't get it.  Apparently my English is not good
+> enough.  So this commit does two things.
 
-Sorry for the delay.
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
+I don't think so. Please don't say that to yourself. :)
 
 Thanks,
 Howard
->
-> v2 changes)
-> * Rebase to current perf-tools-next
-> * Fix some style issues  (Howard)
-> * Rename to --summary-mode  (Howard)
->
-> Thanks,
-> Namhyung
->
->
-> Namhyung Kim (4):
->   perf trace: Allocate syscall stats only if summary is on
->   perf trace: Convert syscall_stats to hashmap
->   perf tools: Get rid of now-unused rb_resort.h
->   perf trace: Add --summary-mode option
->
->  tools/perf/Documentation/perf-trace.txt |   4 +
->  tools/perf/builtin-trace.c              | 247 +++++++++++++++++++-----
->  tools/perf/util/rb_resort.h             | 146 --------------
->  3 files changed, 203 insertions(+), 194 deletions(-)
->  delete mode 100644 tools/perf/util/rb_resort.h
->
-> --
-> 2.48.1.502.g6dc24dfdaf-goog
->
