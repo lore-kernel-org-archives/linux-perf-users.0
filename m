@@ -1,181 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A9B25B661;
-	Mon, 10 Feb 2025 17:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5106025B67D
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 18:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210360; cv=none; b=aKI97G3AJ95SxMLI9pkPnr275HFKVAZwhFlQaLEY2Cujx5de1llO/6Oz0plzUsEbR8DEugrXfvkheaOaBBzwY7sJAwEpuFSqWF0Jk5hD0gmKoim5zK88AA985RV4SfqVwLAeao96daUbNiR2KXvV1IQwlQpy7iQQSjhOW58DL14=
+	t=1739210809; cv=none; b=Zk81Nxzn4bLpA8ZfpxlHEsdbacvo6Qp7BY3BFlTeHMLJAnZH4kPPKqPztbhM0L3pAK+CHMRz+KEuor0ALiL0z59ojbTH4Vk4A6uoixTq3rfuzrBUWSpmebQgokDBo4148b/3vRwm3jtcnVK5+/NiJoYfXmif+DM+Nj9iQDZdXuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210360; c=relaxed/simple;
-	bh=u5MWiglvMYpVPnnl2XtTYQSrlAvvwRm1PAIItwlkrR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aI5P8nDZ/vhJWqT0G0cLbeLfbFcwDUu+FqbnyPPNWVfYPyURerlb3RGkZFaNgqfv4eHOIXwhI5lcYOMj3/NOod7NSCctxXCEOpoE16BSI5Qvx2V8PSMn25gBEaFlWtn3U0VG8m2qPt2vrWZd7TCC2OIoTBh56QXxziiAQzmxkII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+EHStNW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739210809; c=relaxed/simple;
+	bh=zWHQ/xQzS0SVky8j3UXIWdJ6YcNh5e0HYTnqYtA1fh4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IfWZxbzsG/hJPz6OJUudEscZ+SP9qvKeF++fNkPll2+cAmDViz28TPqfYnxdn4V4l0qk3U7Q/4ihfhkuhLS7hVr2FhKi+2yBhx+JLEBVy/RPjOUXWmMaHxh9ZP9YprMaAICk19hC71zFcZVd8Rj0XEU/j4lHcb9Nz3r2CJpVaaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OfVU4E1o; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+EHStNW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1426FC4CEE5;
-	Mon, 10 Feb 2025 17:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739210359;
-	bh=u5MWiglvMYpVPnnl2XtTYQSrlAvvwRm1PAIItwlkrR8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=D+EHStNWvbNMb1Cq0Rn0LtpHIBp0y6BL3Q/rVG9OcfExg2TR8DRwheUW7aOrIQN7o
-	 0mAUMelGc+G2JeJ7g4Us/O73mSDAg9KWEtx7GCx7C+7588L0mXZkElmmz2XqBDIQZn
-	 jwmDO8lIW5c8Uxg7HqyHH+bWFeFRQnCMQ+XJJiLCIldf9yWuvQkt1QsvZPwLpotLqT
-	 Ucdl7N4KGh4J/ZQ/Pz94697Lotiv9mHQfWx6xHXkET7k7W6G26eYSVsLZYrDZadTfT
-	 abjETxRW+dcs6+mZjp8Q8eyLjBsBocPCY9mB7jqaAKvN73KytwEmMhpSV46w8iNBj0
-	 t1qrQsKgyaCFw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Subject: [PATCH bpf-next] bpf: Add tracepoints with null-able arguments
-Date: Mon, 10 Feb 2025 18:59:13 +0100
-Message-ID: <20250210175913.2893549-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OfVU4E1o"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d146357fb2so1535ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 10:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739210806; x=1739815606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SLOx8uZKOqbSMHNZbZfwBaDXMWD7wne+WuTTmhB+k4g=;
+        b=OfVU4E1oR4hQnex/JieEltu7IvU7gUTapbSfvu2Ebw7ecBxZKEUoBtUn7epx7jIjGP
+         CTrZuLu94MtWQsU5r7qorRZ4vBdTIVmTaR22uP7QbvzzVwnGUPRQhiO9rD4ye9KhMS7h
+         OhGyvDTWo5lNbGA/nWmq6TF+enmYvsFIx/THdx17ryRRSUHq3EXToI3IBQuiNmk45rTN
+         38cJrpkLIKAw2K8dDheAzTgmyc9IBnPyfumNqBeEWB9qqm51PasMFDbAtf7PNrS+G14y
+         r2QzqMJ9JpjcDzHjXTCX082sgZi2+fq/znR83yTJQS1c9CUUlgs9rRXy3pE7UO6xHAB8
+         +UlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739210806; x=1739815606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SLOx8uZKOqbSMHNZbZfwBaDXMWD7wne+WuTTmhB+k4g=;
+        b=EIvIK16s3SNmMGnFfJx1UcAIV3KAejUul8KLRbeYvOmdT9BVTbOCS/mZs1MLxcdgxn
+         ois42rpS04CpU/KhyshzLvljjsOhgWUUDKUrJj//VqxknAam4QZWodNpkI0Cqgol0gEr
+         8WbUEAzO23hV08yYWeLEdesNCOxbCizhTDKi8peg+V3HicE3R5wjtIFWSnGRmAiIHLtd
+         LYDYL9QITMG9nVzrvsZO63v/zUbV7/PCz+WWcl82Wb7yhF4rBJOngcvJk02+dTuLVZAn
+         /Wfys2oojvZBgxUIDHyfpLDDrbfxg/x0JAHBCR2LQQYYu9yOrKQXLryDJzG0q2RKREWU
+         +3BA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFZASoRKowSG4me6JETHsAetyO4IJvBWGiNFpayNtnr7CMGG0xVdcjW1li5ceURimp2CAKaFOU85OLo6Lr0Npx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5iS2Pk2ko89TXZqbJxEdlIXs+PDiZXUSq0EQPdxyOukCmcjzy
+	GOxFRl7b8VpaFlZ67VqyfC7hEhrawmrglFADc87clVP9wnxYtQURXvCjeLlkpCRf3s+EyAB05bf
+	kc1ljO2yzg/4Qj93MH2f3EJ6RIy9aOCvyWuE9
+X-Gm-Gg: ASbGncu0wZ+10bT4xxDe5CmnfpmxOUSAUC3HGDa3wzRNSppYfYiSBOZ004Fnt9W24Tz
+	xA1GxP80jxOJqHumQXIcet+mbz/NDbj2QzcjIoKs7KtMulHCmtM3vtHroywl8Jk0f/WnTqk3yc7
+	dJt0ldVaUk/VSqM/aE3WSZ2NFp
+X-Google-Smtp-Source: AGHT+IFQyFzL4toKjST54JeKC5iEPw/FRNhzC05ypK58dUkv8jG9yKJ7k/Rc5cXiBrhxLzre2Y5FkHw43ZhurdlnnSM=
+X-Received: by 2002:a05:6e02:2198:b0:3cf:fbc9:5c10 with SMTP id
+ e9e14a558f8ab-3d14cde2865mr7402415ab.26.1739210806086; Mon, 10 Feb 2025
+ 10:06:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
+ <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 10:06:34 -0800
+X-Gm-Features: AWEUYZmqaHEjcEf5hPT16AA9v5ALYmeBI5HqSnlIc7uBGpS_AVyNMa9dTNcQdl0
+Message-ID: <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some of the tracepoints slipped when we did the first scan, adding them now.
+On Thu, Jan 23, 2025 at 3:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> On Thu, Jan 23, 2025 at 1:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> > I like changes up to this in general.  Let me take a look at the
+> > patches.
 
-Fixes: 838a10bd2ebf ("bpf: Augment raw_tp arguments with PTR_MAYBE_NULL")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- kernel/bpf/btf.c | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+So it would be nice to make progress with this series given some level
+of happiness, I don't see any actions currently on the patch series as
+is. If I may be so bold as to recap the issues that have come up:
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 9433b6467bbe..f8335bdc8bf8 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -6505,6 +6505,8 @@ static const struct bpf_raw_tp_null_args raw_tp_null_args[] = {
- 	/* rxrpc */
- 	{ "rxrpc_recvdata", 0x1 },
- 	{ "rxrpc_resend", 0x10 },
-+	{ "rxrpc_tq", 0x10 },
-+	{ "rxrpc_client", 0x1 },
- 	/* sunrpc */
- 	{ "xs_stream_read_data", 0x1 },
- 	/* ... from xprt_cong_event event class */
-@@ -6525,6 +6527,103 @@ static const struct bpf_raw_tp_null_args raw_tp_null_args[] = {
- 	{ "mr_integ_alloc", 0x2000 },
- 	/* bpf_testmod */
- 	{ "bpf_testmod_test_read", 0x0 },
-+	/* amdgpu */
-+	{ "amdgpu_vm_bo_map", 0x1 },
-+	{ "amdgpu_vm_bo_unmap", 0x1 },
-+	/* netfs */
-+	{ "netfs_folioq", 0x1 },
-+	/* xfs from xfs_defer_pending_class */
-+	{ "xfs_defer_create_intent", 0x1 },
-+	{ "xfs_defer_cancel_list", 0x1 },
-+	{ "xfs_defer_pending_finish", 0x1 },
-+	{ "xfs_defer_pending_abort", 0x1 },
-+	{ "xfs_defer_relog_intent", 0x1 },
-+	{ "xfs_defer_isolate_paused", 0x1 },
-+	{ "xfs_defer_item_pause", 0x1 },
-+	{ "xfs_defer_item_unpause", 0x1 },
-+	/* xfs from xfs_defer_pending_item_class */
-+	{ "xfs_defer_add_item", 0x1 },
-+	{ "xfs_defer_cancel_item", 0x1 },
-+	{ "xfs_defer_finish_item", 0x1 },
-+	/* xfs from xfs_icwalk_class */
-+	{ "xfs_ioc_free_eofblocks", 0x10 },
-+	{ "xfs_blockgc_free_space", 0x10 },
-+	/* xfs from xfs_btree_cur_class */
-+	{ "xfs_btree_updkeys", 0x100 },
-+	{ "xfs_btree_overlapped_query_range", 0x100 },
-+	/* xfs from xfs_imap_class*/
-+	{ "xfs_map_blocks_found", 0x10000 },
-+	{ "xfs_map_blocks_alloc", 0x10000 },
-+	{ "xfs_iomap_alloc", 0x1000 },
-+	{ "xfs_iomap_found", 0x1000 },
-+	/* xfs from xfs_fs_class */
-+	{ "xfs_inodegc_flush", 0x1 },
-+	{ "xfs_inodegc_push", 0x1 },
-+	{ "xfs_inodegc_start", 0x1 },
-+	{ "xfs_inodegc_stop", 0x1 },
-+	{ "xfs_inodegc_queue", 0x1 },
-+	{ "xfs_inodegc_throttle", 0x1 },
-+	{ "xfs_fs_sync_fs", 0x1 },
-+	{ "xfs_blockgc_start", 0x1 },
-+	{ "xfs_blockgc_stop", 0x1 },
-+	{ "xfs_blockgc_worker", 0x1 },
-+	{ "xfs_blockgc_flush_all", 0x1 },
-+	/* xfs_scrub */
-+	{ "xchk_nlinks_live_update", 0x10 },
-+	/* xfs_scrub from xchk_metapath_class */
-+	{ "xchk_metapath_lookup", 0x100 },
-+	/* nfsd */
-+	{ "nfsd_dirent", 0x1 },
-+	{ "nfsd_file_acquire", 0x1001 },
-+	{ "nfsd_file_insert_err", 0x1 },
-+	{ "nfsd_file_cons_err", 0x1 },
-+	/* nfs4 */
-+	{ "nfs4_setup_sequence", 0x1 },
-+	{ "pnfs_update_layout", 0x10000 },
-+	{ "nfs4_inode_callback_event", 0x200 },
-+	{ "nfs4_inode_stateid_callback_event", 0x200 },
-+	/* nfs from pnfs_layout_event */
-+	{ "pnfs_mds_fallback_pg_init_read", 0x10000 },
-+	{ "pnfs_mds_fallback_pg_init_write", 0x10000 },
-+	{ "pnfs_mds_fallback_pg_get_mirror_count", 0x10000 },
-+	{ "pnfs_mds_fallback_read_done", 0x10000 },
-+	{ "pnfs_mds_fallback_write_done", 0x10000 },
-+	{ "pnfs_mds_fallback_read_pagelist", 0x10000 },
-+	{ "pnfs_mds_fallback_write_pagelist", 0x10000 },
-+	/* coda */
-+	{ "coda_dec_pic_run", 0x10 },
-+	{ "coda_dec_pic_done", 0x10 },
-+	/* cfg80211 */
-+	{ "cfg80211_scan_done", 0x11 },
-+	{ "rdev_set_coalesce", 0x10 },
-+	{ "cfg80211_report_wowlan_wakeup", 0x100 },
-+	{ "cfg80211_inform_bss_frame", 0x100 },
-+	{ "cfg80211_michael_mic_failure", 0x10000 },
-+	/* cfg80211 from wiphy_work_event */
-+	{ "wiphy_work_queue", 0x10 },
-+	{ "wiphy_work_run", 0x10 },
-+	{ "wiphy_work_cancel", 0x10 },
-+	{ "wiphy_work_flush", 0x10 },
-+	/* hugetlbfs */
-+	{ "hugetlbfs_alloc_inode", 0x10 },
-+	/* spufs */
-+	{ "spufs_context", 0x10 },
-+	/* kvm_hv */
-+	{ "kvm_page_fault_enter", 0x100 },
-+	/* dpu */
-+	{ "dpu_crtc_setup_mixer", 0x100 },
-+	/* binder */
-+	{ "binder_transaction", 0x100 },
-+	/* bcachefs */
-+	{ "btree_path_free", 0x100 },
-+	/* hfi1_tx */
-+	{ "hfi1_sdma_progress", 0x1000 },
-+	/* iptfs */
-+	{ "iptfs_ingress_postq_event", 0x1000 },
-+	/* neigh */
-+	{ "neigh_update", 0x10 },
-+	/* snd_firewire_lib */
-+	{ "amdtp_packet", 0x100 },
- };
- 
- bool btf_ctx_access(int off, int size, enum bpf_access_type type,
--- 
-2.48.1
+1) Andi Kleen mentions that dlopen is inferior to linking against
+libraries and those libraries aren't a memory overhead if unused.
 
+I agree but pointed-out the data center use case means that saving
+size on binaries can be important to some (me). We've also been trying
+to reduce perf's dependencies for distributions as perf dragging in
+say the whole of libLLVM can be annoying for making minimal
+distributions that contain perf. Perhaps somebody (Arnaldo?) more
+involved with distributions can confirm or deny the distribution
+problem, I'm hoping it is self-evident.
+
+2) Namhyung Kim was uncomfortable with the code defining
+types/constants that were in header files as the two may drift over
+time
+
+I agree but in the same way as a function name is an ABI for dlysym,
+the types/constants are too. Yes a header file may change, but in
+doing so the ABI has changed and so it would be an incompatible change
+and everything would be broken. We'd need to fix the code for this,
+say as we did when libbpf moved to version 1.0, but using a header
+file would only weakly guard against this problem. The problem with
+including the header files is that then the build either breaks
+without the header or we need to support a no linking against a
+library and not using dlopen case. I suspect a lot of distributions
+wouldn't understand the build subtlety in this, the necessary build
+options and things installed, and we'd end up not using things like
+libLLVM even when it is known to be a large performance win. I also
+hope one day we can move from parsing text out of forked commands, as
+it is slower and more brittle, to just directly using libraries.
+Making dlopen the fallback (probably with a warning on failure) seems
+like the right direction for this except we won't get it if we need to
+drag in extra dependency header files for the build to succeed (well
+we could have a no library or dlopen option, but then we'd probably
+find distributions packaging this and things like perf annotate
+getting broken as they don't even know how to dlopen a library).
+
+3) Namhyung Kim (and I) also raises that the libcapstone patch can be
+smaller by dropping the print_capstone_detail support on x86
+
+Note, given the similarity between capstone and libLLVM for
+disassembly, it is curious that only capstone gives the extra detail.
+
+I agree. Given the capstone disassembly output will be compromised we
+should warn for this, probably in Makefile.config to avoid running
+afoul of -Werror. It isn't clear that having a warning is a good move
+given the handful of structs needed to support print_capstone_detail.
+I'd prefer to keep the structs so that we haven't got a warning that
+looks like it needs cleaning up.
+
+4) Namhyung Kim raised concerns over #if placement
+
+Namhyung raised that he'd prefer:
+```
+#if HAVE_LIBCAPSTONE_SUPPORT
+// lots of code
+#else
+// lots of code
+#endif
+```
+rather than the #ifs being inside or around individual functions. I
+raised that the large #ifs is a problem in the current code as you
+lose context when trying to understand a function. You may look at a
+function but not realize it isn't being used because of a #if 10s or
+100s of lines above. Namhyung raised that the large #ifs is closer to
+kernel style, I disagreed as I think kernel style is only doing this
+when it stubs out a bunch of API functions, not when more context
+would be useful. Hopefully as the person writing the patches the style
+choice I've made can be respected.
+
+5) Daniel Xu raised issues with the removal of libbfd for Rust
+support, as the code implies libbfd C++ demangling is a pre-requisite
+of legacy rust symbol demangling
+
+A separate patch was posted adding Rust v0 symbol demangling with no
+libbfd dependency:
+https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
+The legacy support should work with the non-libbfd demanglers as
+that's what we have today. We should really clean up Rust demangling
+and have tests. This is blocked on the Rust community responding to:
+https://github.com/rust-lang/rust/issues/60705
+
+Thanks,
+Ian
