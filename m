@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D32725A359
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 19:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CC024C690
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 19:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216324; cv=none; b=Ng4DkoWWIvLi+wgnVikIZIkxVtGli7JkRtreXKBUA1whgCcMaoT2mN31WKG42HVNG4JLvZS5yC0xYQ2Se76C6KhZG7LxPPM88nI2y/+dvvZThRU47e2SSeYKu5ZjBWnOQN4sfnXanZ10niUVEegBDCitm2f+dOzrqyBjm8/JXbs=
+	t=1739216330; cv=none; b=DkPR6/p9RHGHEitOdoyQGFogd8LyVNofzHsAaZklkrOZMhBlSibu27nsQTojpokpnW5M0wvRErnuoNcHb5iT2iyWuAZGEh91OH7l9e/y3IYvklYkUPT8kegSvTH7fpDgsqCAzBk3b0Zson5wVlOXv9sUV8JFAvsw9H5C/KUB3dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216324; c=relaxed/simple;
-	bh=4e5JAQXYU1EozA5iJ8OMoEmE9HBCSMZ+9l2eMTqKdcE=;
+	s=arc-20240116; t=1739216330; c=relaxed/simple;
+	bh=wTEfnlnRBIWds4A4VWjgD0zaJLq1iJwNdx86V2VqPGE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WR9SXKB51uYqSoV6PrPguwAslOapd7wHa003QlnGWvE4ZkIGwG0ZrNE2PsYVOlh7s9zqAjzA9QE1ThRU6wwMi7ldxE6PQh9mrYYzmx4gDhcyn7wEX/xh//o+tdddctt5TMBLnAyclXTc5rHF1cwBylPpCx2bfFKHokG8DdSVDIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FxekkGlu; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=L3O/cxWfGQcVLPVP53OJdUmYE9vBExo7x+H5VHaZVpR2rqkF/y9g9ZSR8IeWd/PNBBvkqxFIlTOun49MvnZLoun8fHG1MsXyG7UUYRM6Gtm3jejvZkZDeC0ga1zWz7zaJw8T/gw6+4PKzhETArFLSfe30eb+mi8FBEeMresJ8kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gdu5zyAc; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FxekkGlu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdu5zyAc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739216320;
+	s=mimecast20190719; t=1739216327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PTNkd4QUaFJn8BXhdNDgA0x2CIZMe/1M0YGUP/Aku4s=;
-	b=FxekkGluejyxj8wE4UXaj14N610GgWoBmHJ4yWeCtUZGnFLx1MzWdZCKPLDou3SqIQTy5+
-	3TXEAmjamUCNFVw9R62Eb6SlNfhlop60zv0hhclgTlACxirrdCWzc1xy1GRoGVFTKqVfPZ
-	Sp34900twjbL2ANmqWPNBt29G2Oa4P4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=LvU1uLGkpTPZRA0QaV3EggyJAUMnys9Fj6An1hzKeYY=;
+	b=gdu5zyAcZ60TdH9uF/EklFsXF7D3FOjO93CX6LunM95f4Q7FwyXBlvpzryMM54S1M+L3NE
+	7uC1o/6M9GufIF9nEGGahJFXK3KiE4DkVjqFecVAHNS2RHZo0Z1du+wEw9q7Mvi5/AZ5pc
+	M0Q8gpm13pMpZE+H6vPltaFlhXuQGBE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-0bs30tA_OrifIJ-ra84_TQ-1; Mon, 10 Feb 2025 14:38:33 -0500
-X-MC-Unique: 0bs30tA_OrifIJ-ra84_TQ-1
-X-Mimecast-MFC-AGG-ID: 0bs30tA_OrifIJ-ra84_TQ
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4393535043bso11596775e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 11:38:25 -0800 (PST)
+ us-mta-594-004anHdTN6-DL9FG4oFt_w-1; Mon, 10 Feb 2025 14:38:44 -0500
+X-MC-Unique: 004anHdTN6-DL9FG4oFt_w-1
+X-Mimecast-MFC-AGG-ID: 004anHdTN6-DL9FG4oFt_w
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4392fc6bceaso13134915e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 11:38:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739216300; x=1739821100;
+        d=1e100.net; s=20230601; t=1739216322; x=1739821122;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PTNkd4QUaFJn8BXhdNDgA0x2CIZMe/1M0YGUP/Aku4s=;
-        b=sHKGbhG3ZUm99KTe6tnKeDu5BQKfyULeuEc86Uk+WdvNECaN/l2AJc1klA54Kjofyx
-         +GKptJUZDoAotLRDF2SwYNa7JwMNVJ65w8yV7AiWcVaHqorcBgxvtXhdNxW4qnjC84Ho
-         KLBADsCjHgoHHI2TzHgRUL+9DycIVD4xvxpjgVDNJjilPpBPmsijYpM4r7Bt46GVnLKV
-         wsSySfmJQxJLoEME726PUuxIzHziAjZ44KVkf6jOMamRCCdpwaqGvTiJIJVC+YlrtZbY
-         z5asKfw72ccFUERqC8fRaMHNsLJVdFC1JQWzl3NSlUmDnSzVGIKao40teVWJ73M3UF0Q
-         1pTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuH9HNGBpPRNvp7O5yZawr1e5CD/VSyAtmlB1GxV38oIz7dlwLiNW7saycKpltXDgoaJ1mJFBYo9+hLXGbYfv7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzicMqlxXiW/O2dq+S+SPttmajOfqbkxxhtDxIA2EF89aQIEadR
-	hTzybKQQodNdwM0d5sZMdanY6RamDMVdZWU/zmwNd7mMIKwiHNtNqnjtFGDr8Yr2k7cZ3YmaPFl
-	IyzYNmfrpOYz/Tx+jdYwbFKPrMAHIasJmAupgQmmk6AxJTWBv/ZYyyQb1QuMC5WTlAUw=
-X-Gm-Gg: ASbGnctse2GUwYC0AeA511za4KMmoqhfHgY2hxV3iGJbOXHuhX6lRv9ax+Aq6IVOPAe
-	O76O2nSCIqxeQ5/WbW2vuHlud/u0QG8gbnFFKXVymQ/oiH9cbQhz6CuXo/j2F4uvEeMPQZb8UdE
-	yA0HDpsiF/r+sZ95mi7W8qCY9Hkb6G1irrPdS7r1T7w3AlQtikBbhSkfGe40NTFFsX0lrzLbMI8
-	s1LbPAsd4WmgeH8vOUPGhS4cprtQZVYR3SxWRyK9FXEjK2eNMJZlpfXABtm0y5EPkBc/bEAzmka
-	cRhqiQCjEYQOIGaWXYago73bL7+kQXLXPHNrnhVDgsDlqBOctj4/cAvg6OymsuJWTA==
-X-Received: by 2002:a05:600c:490f:b0:438:9280:61d5 with SMTP id 5b1f17b1804b1-4394ceb21e5mr4501725e9.5.1739216299918;
-        Mon, 10 Feb 2025 11:38:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFc0kj/uTsAeIklzzlg0/rE3LVYXx2C/9ALcZ7/TUEZYAL5lOHh0P4FpVZlZXUmD9AHXTDheA==
-X-Received: by 2002:a05:600c:490f:b0:438:9280:61d5 with SMTP id 5b1f17b1804b1-4394ceb21e5mr4501495e9.5.1739216299521;
-        Mon, 10 Feb 2025 11:38:19 -0800 (PST)
+        bh=LvU1uLGkpTPZRA0QaV3EggyJAUMnys9Fj6An1hzKeYY=;
+        b=jIuVuyPI9jMHn0BqU+HvFchc7B2Z5IqMKXO+S8+fYicga9p4EiFCJ9VkgSORKsa0Cn
+         tbIvnBybyjCpJlEN05b4rqSjYNw+YfEb0Wvi1peI+i7NWb+HeS4g9HrX4Ds/FWZXF7aQ
+         TOyrj6hVt98mmQKfZOx9RS7tfQcOo1ii2zZstY2bCUmbbqtTnP53VLd7QbpbwYo0MNKW
+         KTcCG04S65K//bxOGlst8VQGcibWcOqEYGN/oCPcj/B+JJzwE4TdsU/Vq2YIJhe15aPl
+         HKtxPBTow6Nk/4NwPeE9QMBCw+Xnj3UZtNPfYJb6MGXz/qMFrlO3elEiC7kinXAC3e6A
+         KLzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyaCXBImGYEQkYHjXpRgVPjmSMu8fzvQd+ICWrUF4Q5TV5uYsU/yneTWfkpUAyWTbfg9dbf3WRWZaLJM/tIsHO@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDJxZAd8rphTQKBCu7uJ5afq7fQeA2ZGbiVsvVYPlFdZP1xb4l
+	CX11hn8r975CcSIhfnIE5fO3oLdGSFiF0UuVBcIci5DwTDfc/Y2+2JAeF3tQJxz+WyYq8CG6gXF
+	M7zO3inbsv3fQDpeowdbjmxFayTXYYRg6xe8613zk3JFbqbiPrWdJseUQl/7bRRysZR0=
+X-Gm-Gg: ASbGnctL5w6JTefQFF0AUAnRZUStXkmKOM44PMPHNLg8rU3xFH+c52dwIsXs4ZBgISu
+	F+RAKOCf7KpQf4F8wYrZoxDjAg5ypMhtiIF8ZoYguFRwLsuLlzXwIU23c0NjkOKgVSISUOpzRRk
+	FPaL97VWm0j2RElRgY7DnxzqEr4XPprAMp4w/QvzGIen6GjfwMPky2oVxqOPl3yrTdObruRrP37
+	cl2JvQFk8JNYUNtvUjQJR8NcOBcJ+o2QHjelQBIwTae531rJrTxQERMpmP7oBBO+BoDZ9E/sRNv
+	tewF12l/zEgXv7MHl1SymUeUZtDnKzs3nuSKxqS0RFkXNvY8SWJcyKkUHeM8Ttd0fQ==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117196265e9.8.1739216322491;
+        Mon, 10 Feb 2025 11:38:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGjSKW3zWL6vzVGiNBIPirrt7XpGCC7ElTlo8fIz4HKSkBODD3ovt81FL+SvLTQ6DCkqg1UrQ==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117195855e9.8.1739216321998;
+        Mon, 10 Feb 2025 11:38:41 -0800 (PST)
 Received: from localhost (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38dc2f6aeafsm11910943f8f.20.2025.02.10.11.38.17
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38ddaf333c5sm5084761f8f.36.2025.02.10.11.38.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 11:38:19 -0800 (PST)
+        Mon, 10 Feb 2025 11:38:40 -0800 (PST)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -96,9 +96,9 @@ Cc: linux-doc@vger.kernel.org,
 	Peter Xu <peterx@redhat.com>,
 	Alistair Popple <apopple@nvidia.com>,
 	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v2 04/17] mm/rmap: implement make_device_exclusive() using folio_walk instead of rmap walk
-Date: Mon, 10 Feb 2025 20:37:46 +0100
-Message-ID: <20250210193801.781278-5-david@redhat.com>
+Subject: [PATCH v2 10/17] mm/rmap: handle device-exclusive entries correctly in try_to_unmap_one()
+Date: Mon, 10 Feb 2025 20:37:52 +0100
+Message-ID: <20250210193801.781278-11-david@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250210193801.781278-1-david@redhat.com>
 References: <20250210193801.781278-1-david@redhat.com>
@@ -110,273 +110,146 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We require a writable PTE and only support anonymous folio: we can only
-have exactly one PTE pointing at that page, which we can just lookup
-using a folio walk, avoiding the rmap walk and the anon VMA lock.
+Ever since commit b756a3b5e7ea ("mm: device exclusive memory access")
+we can return with a device-exclusive entry from page_vma_mapped_walk().
 
-So let's stop doing an rmap walk and perform a folio walk instead, so we
-can easily just modify a single PTE and avoid relying on rmap/mapcounts.
+try_to_unmap_one() is not prepared for that, so teach it about these
+PFN swap PTEs. Note that device-private entries are so far not
+applicable on that path, as we expect ZONE_DEVICE pages so far only in
+migration code when it comes to the RMAP.
 
-We now effectively work on a single PTE instead of multiple PTEs of
-a large folio, allowing for conversion of individual PTEs from
-non-exclusive to device-exclusive -- note that the opposite direction
-always works on single PTEs: restore_exclusive_pte().
+Note that we could currently only run into this case with
+device-exclusive entries on THPs. We still adjust the mapcount on
+conversion to device-exclusive; this makes the rmap walk
+abort early for small folios, because we'll always have
+!folio_mapped() with a single device-exclusive entry. We'll adjust the
+mapcount logic once all page_vma_mapped_walk() users can properly
+handle device-exclusive entries.
 
-With this change, device-exclusive handling is fully compatible with THPs /
-large folios. We still require PMD-sized THPs to get PTE-mapped, and
-supporting PMD-mapped THP (without the PTE-remapping) is a different
-endeavour that might not be worth it at this point: it might even have
-negative side-effects [1].
+Further note that try_to_unmap() calls MMU notifiers and holds the
+folio lock, so any device-exclusive users should be properly prepared
+for a device-exclusive PTE to "vanish".
 
-This gets rid of the "folio_mapcount()" usage and let's us fix ordinary
-rmap walks (migration/swapout) next. Spell out that messing with the
-mapcount is wrong and must be fixed.
-
-[1] https://lkml.kernel.org/r/Z5tI-cOSyzdLjoe_@phenom.ffwll.local
-
+Fixes: b756a3b5e7ea ("mm: device exclusive memory access")
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/rmap.c | 200 ++++++++++++++++++------------------------------------
- 1 file changed, 67 insertions(+), 133 deletions(-)
+ mm/rmap.c | 52 +++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 39 insertions(+), 13 deletions(-)
 
 diff --git a/mm/rmap.c b/mm/rmap.c
-index 7ccf850565d33..0cd2a2d3de00d 100644
+index 1129ed132af94..47142a656ae51 100644
 --- a/mm/rmap.c
 +++ b/mm/rmap.c
-@@ -2375,131 +2375,6 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
- }
+@@ -1648,9 +1648,9 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
++	bool anon_exclusive, ret = true;
+ 	pte_t pteval;
+ 	struct page *subpage;
+-	bool anon_exclusive, ret = true;
+ 	struct mmu_notifier_range range;
+ 	enum ttu_flags flags = (enum ttu_flags)(long)arg;
+ 	unsigned long pfn;
+@@ -1722,7 +1722,18 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 		/* Unexpected PMD-mapped THP? */
+ 		VM_BUG_ON_FOLIO(!pvmw.pte, folio);
  
- #ifdef CONFIG_DEVICE_PRIVATE
--struct make_exclusive_args {
--	struct mm_struct *mm;
--	unsigned long address;
--	void *owner;
--	bool valid;
--};
--
--static bool page_make_device_exclusive_one(struct folio *folio,
--		struct vm_area_struct *vma, unsigned long address, void *priv)
--{
--	struct mm_struct *mm = vma->vm_mm;
--	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, address, 0);
--	struct make_exclusive_args *args = priv;
--	pte_t pteval;
--	struct page *subpage;
--	bool ret = true;
--	struct mmu_notifier_range range;
--	swp_entry_t entry;
--	pte_t swp_pte;
--	pte_t ptent;
--
--	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_EXCLUSIVE, 0,
--				      vma->vm_mm, address, min(vma->vm_end,
--				      address + folio_size(folio)),
--				      args->owner);
--	mmu_notifier_invalidate_range_start(&range);
--
--	while (page_vma_mapped_walk(&pvmw)) {
--		/* Unexpected PMD-mapped THP? */
--		VM_BUG_ON_FOLIO(!pvmw.pte, folio);
--
--		ptent = ptep_get(pvmw.pte);
--		if (!pte_present(ptent)) {
--			ret = false;
--			page_vma_mapped_walk_done(&pvmw);
--			break;
--		}
--
--		subpage = folio_page(folio,
--				pte_pfn(ptent) - folio_pfn(folio));
--		address = pvmw.address;
--
--		/* Nuke the page table entry. */
--		flush_cache_page(vma, address, pte_pfn(ptent));
--		pteval = ptep_clear_flush(vma, address, pvmw.pte);
--
+-		pfn = pte_pfn(ptep_get(pvmw.pte));
++		/*
++		 * Handle PFN swap PTEs, such as device-exclusive ones, that
++		 * actually map pages.
++		 */
++		pteval = ptep_get(pvmw.pte);
++		if (likely(pte_present(pteval))) {
++			pfn = pte_pfn(pteval);
++		} else {
++			pfn = swp_offset_pfn(pte_to_swp_entry(pteval));
++			VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
++		}
++
+ 		subpage = folio_page(folio, pfn - folio_pfn(folio));
+ 		address = pvmw.address;
+ 		anon_exclusive = folio_test_anon(folio) &&
+@@ -1778,7 +1789,9 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 				hugetlb_vma_unlock_write(vma);
+ 			}
+ 			pteval = huge_ptep_clear_flush(vma, address, pvmw.pte);
+-		} else {
++			if (pte_dirty(pteval))
++				folio_mark_dirty(folio);
++		} else if (likely(pte_present(pteval))) {
+ 			flush_cache_page(vma, address, pfn);
+ 			/* Nuke the page table entry. */
+ 			if (should_defer_flush(mm, flags)) {
+@@ -1796,6 +1809,10 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 			} else {
+ 				pteval = ptep_clear_flush(vma, address, pvmw.pte);
+ 			}
++			if (pte_dirty(pteval))
++				folio_mark_dirty(folio);
++		} else {
++			pte_clear(mm, address, pvmw.pte);
+ 		}
+ 
+ 		/*
+@@ -1805,10 +1822,6 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 		 */
+ 		pte_install_uffd_wp_if_needed(vma, address, pvmw.pte, pteval);
+ 
 -		/* Set the dirty flag on the folio now the pte is gone. */
 -		if (pte_dirty(pteval))
 -			folio_mark_dirty(folio);
 -
--		/*
--		 * Check that our target page is still mapped at the expected
--		 * address.
--		 */
--		if (args->mm == mm && args->address == address &&
--		    pte_write(pteval))
--			args->valid = true;
--
--		/*
--		 * Store the pfn of the page in a special migration
--		 * pte. do_swap_page() will wait until the migration
--		 * pte is removed and then restart fault handling.
--		 */
--		if (pte_write(pteval))
--			entry = make_writable_device_exclusive_entry(
--							page_to_pfn(subpage));
--		else
--			entry = make_readable_device_exclusive_entry(
--							page_to_pfn(subpage));
--		swp_pte = swp_entry_to_pte(entry);
--		if (pte_soft_dirty(pteval))
--			swp_pte = pte_swp_mksoft_dirty(swp_pte);
--		if (pte_uffd_wp(pteval))
--			swp_pte = pte_swp_mkuffd_wp(swp_pte);
--
--		set_pte_at(mm, address, pvmw.pte, swp_pte);
--
--		/*
--		 * There is a reference on the page for the swap entry which has
--		 * been removed, so shouldn't take another.
--		 */
--		folio_remove_rmap_pte(folio, subpage, vma);
--	}
--
--	mmu_notifier_invalidate_range_end(&range);
--
--	return ret;
--}
--
--/**
-- * folio_make_device_exclusive - Mark the folio exclusively owned by a device.
-- * @folio: The folio to replace page table entries for.
-- * @mm: The mm_struct where the folio is expected to be mapped.
-- * @address: Address where the folio is expected to be mapped.
-- * @owner: passed to MMU_NOTIFY_EXCLUSIVE range notifier callbacks
-- *
-- * Tries to remove all the page table entries which are mapping this
-- * folio and replace them with special device exclusive swap entries to
-- * grant a device exclusive access to the folio.
-- *
-- * Context: Caller must hold the folio lock.
-- * Return: false if the page is still mapped, or if it could not be unmapped
-- * from the expected address. Otherwise returns true (success).
-- */
--static bool folio_make_device_exclusive(struct folio *folio,
--		struct mm_struct *mm, unsigned long address, void *owner)
--{
--	struct make_exclusive_args args = {
--		.mm = mm,
--		.address = address,
--		.owner = owner,
--		.valid = false,
--	};
--	struct rmap_walk_control rwc = {
--		.rmap_one = page_make_device_exclusive_one,
--		.done = folio_not_mapped,
--		.anon_lock = folio_lock_anon_vma_read,
--		.arg = &args,
--	};
--
--	rmap_walk(folio, &rwc);
--
--	return args.valid && !folio_mapcount(folio);
--}
--
- /**
-  * make_device_exclusive() - Mark a page for exclusive use by a device
-  * @mm: mm_struct of associated target process
-@@ -2541,22 +2416,31 @@ static bool folio_make_device_exclusive(struct folio *folio,
- struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
- 		void *owner, struct folio **foliop)
- {
--	struct folio *folio;
-+	struct mmu_notifier_range range;
-+	struct folio *folio, *fw_folio;
-+	struct vm_area_struct *vma;
-+	struct folio_walk fw;
- 	struct page *page;
--	long npages;
-+	swp_entry_t entry;
-+	pte_t swp_pte;
+ 		/* Update high watermark before we lower rss */
+ 		update_hiwater_rss(mm);
  
- 	mmap_assert_locked(mm);
-+	addr = PAGE_ALIGN_DOWN(addr);
- 
- 	/*
- 	 * Fault in the page writable and try to lock it; note that if the
- 	 * address would already be marked for exclusive use by a device,
- 	 * the GUP call would undo that first by triggering a fault.
-+	 *
-+	 * If any other device would already map this page exclusively, the
-+	 * fault will trigger a conversion to an ordinary
-+	 * (non-device-exclusive) PTE and issue a MMU_NOTIFY_EXCLUSIVE.
- 	 */
--	npages = get_user_pages_remote(mm, addr, 1,
--				       FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
--				       &page, NULL);
--	if (npages != 1)
--		return ERR_PTR(npages);
-+	page = get_user_page_vma_remote(mm, addr,
-+					FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
-+					&vma);
-+	if (IS_ERR(page))
-+		return page;
- 	folio = page_folio(page);
- 
- 	if (!folio_test_anon(folio) || folio_test_hugetlb(folio)) {
-@@ -2569,11 +2453,61 @@ struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
- 		return ERR_PTR(-EBUSY);
- 	}
- 
--	if (!folio_make_device_exclusive(folio, mm, addr, owner)) {
-+	/*
-+	 * Inform secondary MMUs that we are going to convert this PTE to
-+	 * device-exclusive, such that they unmap it now. Note that the
-+	 * caller must filter this event out to prevent livelocks.
-+	 */
-+	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_EXCLUSIVE, 0,
-+				      mm, addr, addr + PAGE_SIZE, owner);
-+	mmu_notifier_invalidate_range_start(&range);
+@@ -1822,8 +1835,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 				dec_mm_counter(mm, mm_counter(folio));
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+ 			}
+-
+-		} else if (pte_unused(pteval) && !userfaultfd_armed(vma)) {
++		} else if (likely(pte_present(pteval)) && pte_unused(pteval) &&
++			   !userfaultfd_armed(vma)) {
+ 			/*
+ 			 * The guest indicated that the page content is of no
+ 			 * interest anymore. Simply discard the pte, vmscan
+@@ -1902,6 +1915,12 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+ 				goto walk_abort;
+ 			}
 +
-+	/*
-+	 * Let's do a second walk and make sure we still find the same page
-+	 * mapped writable. Note that any page of an anonymous folio can
-+	 * only be mapped writable using exactly one PTE ("exclusive"), so
-+	 * there cannot be other mappings.
-+	 */
-+	fw_folio = folio_walk_start(&fw, vma, addr, 0);
-+	if (fw_folio != folio || fw.page != page ||
-+	    fw.level != FW_LEVEL_PTE || !pte_write(fw.pte)) {
-+		if (fw_folio)
-+			folio_walk_end(&fw, vma);
-+		mmu_notifier_invalidate_range_end(&range);
- 		folio_unlock(folio);
- 		folio_put(folio);
- 		return ERR_PTR(-EBUSY);
- 	}
-+
-+	/* Nuke the page table entry so we get the uptodate dirty bit. */
-+	flush_cache_page(vma, addr, page_to_pfn(page));
-+	fw.pte = ptep_clear_flush(vma, addr, fw.ptep);
-+
-+	/* Set the dirty flag on the folio now the PTE is gone. */
-+	if (pte_dirty(fw.pte))
-+		folio_mark_dirty(folio);
-+
-+	/*
-+	 * Store the pfn of the page in a special device-exclusive PFN swap PTE.
-+	 * do_swap_page() will trigger the conversion back while holding the
-+	 * folio lock.
-+	 */
-+	entry = make_writable_device_exclusive_entry(page_to_pfn(page));
-+	swp_pte = swp_entry_to_pte(entry);
-+	if (pte_soft_dirty(fw.pte))
-+		swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+	/* The pte is writable, uffd-wp does not apply. */
-+	set_pte_at(mm, addr, fw.ptep, swp_pte);
-+
-+	/*
-+	 * TODO: The device-exclusive PFN swap PTE holds a folio reference but
-+	 * does not count as a mapping (mapcount), which is wrong and must be
-+	 * fixed, otherwise RMAP walks don't behave as expected.
-+	 */
-+	folio_remove_rmap_pte(folio, page, vma);
-+
-+	folio_walk_end(&fw, vma);
-+	mmu_notifier_invalidate_range_end(&range);
- 	*foliop = folio;
- 	return page;
- }
++			/*
++			 * arch_unmap_one() is expected to be a NOP on
++			 * architectures where we could have PFN swap PTEs,
++			 * so we'll not check/care.
++			 */
+ 			if (arch_unmap_one(mm, vma, address, pteval) < 0) {
+ 				swap_free(entry);
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+@@ -1926,10 +1945,17 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 			swp_pte = swp_entry_to_pte(entry);
+ 			if (anon_exclusive)
+ 				swp_pte = pte_swp_mkexclusive(swp_pte);
+-			if (pte_soft_dirty(pteval))
+-				swp_pte = pte_swp_mksoft_dirty(swp_pte);
+-			if (pte_uffd_wp(pteval))
+-				swp_pte = pte_swp_mkuffd_wp(swp_pte);
++			if (likely(pte_present(pteval))) {
++				if (pte_soft_dirty(pteval))
++					swp_pte = pte_swp_mksoft_dirty(swp_pte);
++				if (pte_uffd_wp(pteval))
++					swp_pte = pte_swp_mkuffd_wp(swp_pte);
++			} else {
++				if (pte_swp_soft_dirty(pteval))
++					swp_pte = pte_swp_mksoft_dirty(swp_pte);
++				if (pte_swp_uffd_wp(pteval))
++					swp_pte = pte_swp_mkuffd_wp(swp_pte);
++			}
+ 			set_pte_at(mm, address, pvmw.pte, swp_pte);
+ 		} else {
+ 			/*
 -- 
 2.48.1
 
