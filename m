@@ -1,50 +1,74 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E0619DF99
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 07:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCBA57C93;
+	Mon, 10 Feb 2025 08:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173079; cv=none; b=R4rZZO+HhMsCds91d1pcDAkXnxjv+nxpp4kGEmb7iLvZ13QIDc+MYE7yzxHAg+wqzfPYmO4BdLRk0qNv3mvUsILuXluS0mHQHr3D6ptt5avdM/EZOAKKP9Ic8HHH+e9vifbjY62Gy2ge95sGvvNZ1zRX8ab1ANzTalXWS0rLbJI=
+	t=1739174877; cv=none; b=LRh0tJsGucUw75AdyaMt4twr50kXTozlM2IXmHAIJzPC0sR2MmnH8erNXrHckFZEcxORNkrSt5Mpr+MjULsq5zKSpLp2zwh3yhcnC3o8yP9JaKFDuFpjFEXEVB3EvdcuzpT0/O97466czMWMg7zETn4gEaREacyI3Pij87m71pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173079; c=relaxed/simple;
-	bh=TaXGkoKUS8R+zFSCLF80h16FwvqPvX+aex6ojMA0n/4=;
+	s=arc-20240116; t=1739174877; c=relaxed/simple;
+	bh=2LRJVRKLYQz5EMJwU5FJQIXfGkiJH1b6znzeZD9uI8w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYk0Z+5ZMVjzn9krN0SODjftxbB+rYj2Cjhrv4MRDRq+Qsln3DRYbuZ6W0JxMrn0QRW63gtYpdZsc3JQ3ODDb75XNq9twxyzP3TGLGYIbqe9bwkfKWVSvJX9zZmV5D7GUOglpOZXMJY0yqIEiXDtqWPLkObsRW1dJBCyp5ZATWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vE+uFLIC; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSRcVTxuJh8lxuK9PcqEfRJTFO2eKAl7efNXYbfygJG0zzVw41CiFY2WgGdQFU0qlWmHKm+Wy/tOGN2inYoT8/oMo37pCmyTPPvsxh/7XsPni+AzJc8Y7qaf/RW9pdeH37YDD4Iqz7Qi9nV+iQ728S9OuYd7dMpbMyNL1oSKLQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLpivudh; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vE+uFLIC"
-Date: Sun, 9 Feb 2025 23:37:45 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739173074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZOcYg4xLzinXROvIPIR5xsQLZpAtozt5q5hAITBaMhs=;
-	b=vE+uFLICHjimFS+ICMuI/HAxyfSAu4mZ77bZ828qh8f1L3qfRfmo59IMZeBXvGqrssiFNy
-	fCDND8KVpd50CISMkA7uHWCg7qYodaAjGO7IKKFCD9XIxPUn6IH9CRdkFsXbLsLOLX8lhP
-	OfDwEiCmz/G8voMwdIN56pm3FuFnd8I=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v2 4/4] KVM: arm64: Make guests see only counters
- they can access
-Message-ID: <Z6msyUG0HWM2EImQ@linux.dev>
-References: <20250208020111.2068239-1-coltonlewis@google.com>
- <20250208020111.2068239-5-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLpivudh"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f5268cf50so36163015ad.1;
+        Mon, 10 Feb 2025 00:07:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739174875; x=1739779675; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OTmm0PHUXfi39PwAXSrGI9Ypgz+NFnq7yOVej0ZtiOo=;
+        b=aLpivudh92aW4NCCCqsGblzFQlULOvDpKLTkOetu0IsUauHg92JrRdHbirTRON0aCs
+         hoBBaiPSjPpwz6QBLTlHqMcj3zLwfxT6nJF0ESIqRgwxfzHHJCvuzgqZMu10Nl4T8g54
+         FxFx/ziQySmBDhSCPngV2k4N6bPi3YMe+HJRRP/7ibbSoRg8dfeIHyq1xAGYRxu6wXaZ
+         UIoA10osUmsoDPtSh/o+FLSstzKD7D37TEX+5Py3ePOY2E9GypJFaTkPCKDXKIRNXAA5
+         X0bJIVk/OGGkBQeCZElb+x5pRJbskom6NzP4r8pqn67YpEoC5IFzQUL7hm/+1mvw+II5
+         2VMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739174875; x=1739779675;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OTmm0PHUXfi39PwAXSrGI9Ypgz+NFnq7yOVej0ZtiOo=;
+        b=ZRreaZz5O75K8C84mNqEW0Zgbd54hN0+DP+ZJTX0I1OQrjXOJTwGC0d0W8RSAGo5Hn
+         mg+Xu4i/jxhPnhN1V0NFdgH2PgY7J6slUKlB1owtNHQmkgs5PXQDTUzUj7q77Dj6PnvR
+         jEO7SrE7ZEiIWdVp79Jzlm87pqStSOR4k9auOfxnNqc/S9Qm4Bw7MpUEH/UujQRk7J/H
+         V0kwgJ6tdQSlyZQ7wghxSfbgFkVla8fQRgieoBHvwRHSpzCBvp5d2c99AIaO3tNOVCLd
+         9P6S/nLkpCGxmAP1tOuxwRaAi6eQIrkb6Ug/aKTz7pH9YU5ljRXzEc9yunvY9wqul8NM
+         yENw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqzoF1//yZcl9HvPQWIb9O90dN+q2LVkjxeBgjpB74lQNnWR26a0iGPJEzkCEyRWQwPk8KNFnaInzWPNBqW4hBRg==@vger.kernel.org, AJvYcCXT6NXytwoEA+b1kOoguJWr4kP0HD6wRw1bnKO2n4KUX12g+puTPb2og/ndxlVXiBN73HQDJpVATVTyVps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhC1Uek9YMDyTzjIgLF5g5AWedz8YpuT0lIpwukmpEZ7vC74Vf
+	LVg4Ozhq+18NFFX3YygGtftk75KQH6Qd3weaK69N89AePsaF7R+n
+X-Gm-Gg: ASbGnctSBDyIWMFqTSmU1R6YOds3xu7KbYzB8q3HTjMZ4dglxwJLHbWk+UkowR/Rrjd
+	wV4QVh7/XqkjIZUJvZBCf9PdZSheQaJjBKVzFFUf1+EHSi4qn2gqGjBh+TbeAg3hjH6JDYW4ERr
+	PpCePNWVO+WrPDIiQv1txvX+Vf9COkVDn6RP1FQBbsVAyixDTeuoGdyfMJm/pEPpLwc9oZiGvSe
+	t0+4uyYbS8GJLNGg4EEeTXHD1hgHrntbI1k0ydsUafz9twvW/E4g0WlsrhHs8USDBZ+Tga+IbiU
+	g4gq7zCHH0T4Sdw0TTqteLGfHeNCJtXm
+X-Google-Smtp-Source: AGHT+IFI+RjVRpgCMuA67GC17LqKlBuAAncpG2inIA+67se5Feg5ic9vNECUOImGzCZct/EKaAFWfw==
+X-Received: by 2002:a17:903:2449:b0:21f:71b1:70d8 with SMTP id d9443c01a7336-21f71b17573mr124532065ad.51.1739174874938;
+        Mon, 10 Feb 2025 00:07:54 -0800 (PST)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:83e6:5a50:60c5:d373])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad55c04ea47sm104706a12.4.2025.02.10.00.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 00:07:54 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:07:48 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mark.rutland@arm.com, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	shuah@kernel.org
+Subject: Re: [RFC PATCH] perf/core: Prevent dereferencing NULL pointer
+Message-ID: <Z6mz1A804NXZpFm-@vaxr-BM6660-BM6360>
+References: <20250205190608.93508-1-richard120310@gmail.com>
+ <20250206080520.GG7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,103 +77,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250208020111.2068239-5-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250206080520.GG7145@noisy.programming.kicks-ass.net>
 
-On Sat, Feb 08, 2025 at 02:01:11AM +0000, Colton Lewis wrote:
-> The ARM architecture specifies that when MDCR_EL2.HPMN is set, EL1 and
-> EL0, which includes KVM guests, should read that value for PMCR.N.
+On Thu, Feb 06, 2025 at 09:05:20AM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 03:06:08AM +0800, I Hsin Cheng wrote:
+> > According to coverity scan check, there's possible cases where
+> > "ring_buffer_get()" returns a NULL in "perf_mmap_close".
 > 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->  arch/arm64/kvm/debug.c                                  | 3 +--
->  arch/arm64/kvm/pmu-emul.c                               | 8 +++++++-
->  tools/testing/selftests/kvm/arm64/vpmu_counter_access.c | 2 +-
->  3 files changed, 9 insertions(+), 4 deletions(-)
+> That makes no sense. Having a mmap should pin the buffer.
 > 
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 0e4c805e7e89..7c04db00bf6c 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -36,8 +36,7 @@ static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
->  	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
->  	 * to disable guest access to the profiling and trace buffers
->  	 */
-> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
-> -					 *host_data_ptr(nr_event_counters));
-> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, read_mdcr());
+> > Use a "BUG_ON()" to check for NULL pointer existence, panic if it does
+> > exist, otherwise it's safe to dereference "rb" and access its members.
+> 
+> How the hell is a BUG_ON() any better than a NULL deref?
+> 
 
-Please avoid unnecessary accesses to MDCR_EL2 at all costs. This is a
-guaranteed trap to EL2 with nested virt.
+Hi Peter,
 
->  	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
->  				MDCR_EL2_TPMS |
->  				MDCR_EL2_TTRF |
-> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-> index 6c5950b9ceac..052ce8c721fe 100644
-> --- a/arch/arm64/kvm/pmu-emul.c
-> +++ b/arch/arm64/kvm/pmu-emul.c
-> @@ -993,12 +993,18 @@ static bool pmu_irq_is_valid(struct kvm *kvm, int irq)
->  u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->  {
->  	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
-> +	u8 limit;
-> +
-> +	if (arm_pmu->partitioned)
-> +		limit = arm_pmu->hpmn - 1;
-> +	else
-> +		limit = ARMV8_PMU_MAX_GENERAL_COUNTERS;
->  
->  	/*
->  	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
->  	 * Ignore those and return only the general-purpose counters.
->  	 */
-> -	return bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
-> +	return bitmap_weight(arm_pmu->cntr_mask, limit);
->  }
+Thanks for the review ! I get it so I think this issue reported by
+coverity scan should be marked as false positive or disgard.
 
-This isn't necessary and is likely to regress the existing behavior.
+> That makes no sense. Having a mmap should pin the buffer.
 
-When the architecture says the lower ELs should see PMCR_EL0.N have the
-same value as MDCR_EL2.HPMN, what it really means is direct reads from
-hardware will return the value.
+I see, so if I understand correctly, the "event" in perf_mmap_close()
+is guaranteed to have available buffer and the buffer's refcount is 
+zero, so returning a NULL will never happen right?
 
-So my expectation would be that a VM using the partitioned PMU
-implementation would never reach any of the *emulated* PMU handlers, as
-we would've disabled the associated traps.
-
-The partitioned PMU will not replace the emulated vPMU implementation in
-KVM, so it'd be good to refactor what we have today to make room for
-your work. I think that'd be along the lines of:
-
- - Shared code for event filter enforcement and handling of the vPMU
-   overflow IRQ.
-
- - Emulated PMU implementation that provides trap handlers for all PMUv3
-   registers and backs into host perf
-
- - Partitioned PMU implementation that doesn't rely on traps and instead
-   saves / restores a portion of the PMU that contains the guest
-   context.
-
-These should be done in separate files, i.e. I do not want to see a
-bunch of inline handling to cope with emulated v. partitioned PMUs.
-
->  static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
-> diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-> index f16b3b27e32e..b5bc18b7528d 100644
-> --- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-> +++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-> @@ -609,7 +609,7 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
->   */
->  static void run_error_test(uint64_t pmcr_n)
->  {
-> -	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-> +	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
-
-NBD for an RFC, but in the future please do selftests changes in a
-separate patch.
-
--- 
-Thanks,
-Oliver
+Regards,
+I Hsin
