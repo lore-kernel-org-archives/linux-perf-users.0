@@ -1,192 +1,306 @@
-Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A00F2586FA
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 23:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D51253356
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 23:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228895; cv=none; b=vAdvaQkBTwcxwo0Rm9TB+3wb18Ne5zDggZCP3h7dloCXDHA/3vwaCXBFxrUYxb3ac1QG9q1uuNdRTOncgwlWNzGIQu5CUwEfj9kgSbLcPvBNBFOuWS9wle8BqL2M69Kh89XCaoW85IBh5UbmDFpSr/NHSCbx4nRBmIwnnUFWXBk=
+	t=1739230756; cv=none; b=IhcbfkANBUz7TCSubyzMxsuDWPh7xOp5mhtfcDkR564Glf9nJDsidYkkAC898EZxWMxwcYt/dO/garXWwCTTYyddQZPZoYxgjK8fYWk6mujF0LH4EKGywrHCGdgmQ3uvbPYZS5Y5JtUuao0EoKEaU6CVK4/70uykUTmxZS8ErSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228895; c=relaxed/simple;
-	bh=s/ssfNn4b7bCXjP2GKwiQQgiKWJx78QfbpNKZtSS6Q4=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=Rrp5b3OiD640ZhYAHmJmqfN3t8EcJKB1LNI3jKugtcc+DmYV1gvcXjRv2wdHzYfu+30Qnvrq4lnKsN8xgBh4+IAjiLnfXLK6NowKdfWe/mjV3/7plBAIEEff+P16hDm+UNpzeQ5GtQhARR+nwgDm9B6JLfThldOTC/9clkzX91M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ao33QvaD; arc=none smtp.client-ip=209.85.166.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1739230756; c=relaxed/simple;
+	bh=NBLy9sjpkFvhCAgVrcm8a/UReEgJNNQ1iBvUUeDsSIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaL/aXTTxm/sOksovsm9vb/c47I0vKp0NGEc6md2WxtHDIESoPPkzW6a0ujWVO8gRp0NmeB7gtsW6Jvm0h6B/rXVskq92XdjhdB2ziVDkcBo1hcXqB4IOGZAeuJjCXXKqyRcHMRAkHdXDvmJz4U6a/D5ZroSFtnugt//mWYJshI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=vOR49wvz; arc=none smtp.client-ip=209.85.219.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ao33QvaD"
-Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3d1466cbaddso24471895ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 15:08:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="vOR49wvz"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e3983426f80so3800425276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 15:39:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739228892; x=1739833692; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739230752; x=1739835552; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=CXinvutFgPziM7RxPNDr3Edga1bpxeAp0Ov8Puttle0=;
-        b=Ao33QvaDqLBfzcYuOSvLYfq+o96q/+BbX+Pbb21EuoerhsSxeODMPQTRIsKNEH34EG
-         wHMMd1dZcEuclV++vpCezIT1xj8Hp1lTYfI62i1WTxMlTcfx3Q8o2lSpLyBtvdG26cL2
-         2LY6+K4dJxlp67e7/iAlurx7F7pvyvWGfFGe0pR6Ut3CymKI2V6p0KEy1uBMllKnmsbR
-         wp90AScnRgqcaFTW9htr2U9hNC7NRfD1Eio6WVOa7iCl4ZeSl9cAuWcJCi0Dr+IxoaaY
-         BZ34DCyvu+Hz2HtzoB9okY7a9q5AHbixBW4ffRCuY9P8OkwKd70hCtxZr+ef8qLJ80W3
-         uVqg==
+        bh=kXxJ1jFzWbWJEOO3pmkHS53hnSaPSIVREc8BxzJcJIQ=;
+        b=vOR49wvzsT7Gd9bX74sYxzYafwWu2RgqGKFmP+sKQws/XtdR9l5iByK8aLB8SU6UvS
+         4yQzpl6hY9zZ7KpUHsgSFxKLv+0bwtrl+AHas6aqQVA1rEIZqn76amokz5owZLyRHXsC
+         FeCnHnT5yGq+RavDLrzMzBi1mKFFYFAVAdjPwS1Bm+5k8S0DfnF60BiB/M+TbN1ENUtM
+         nbewWFcrRzyksjkmlQ2K/yPxDFSL/f2z8qp51si8mpuPdPgYvZtKbRN8xgWAJvImzfny
+         XWERWGLRPrMJDK0euXMA16vwuQjT8Px6lfB7s6PQiTNk/JwL0Mra6UZ6FMlBhyQgDevH
+         0mig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739228892; x=1739833692;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+        d=1e100.net; s=20230601; t=1739230752; x=1739835552;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CXinvutFgPziM7RxPNDr3Edga1bpxeAp0Ov8Puttle0=;
-        b=ndiHINwYhGg5sx1iMFiQbPPGjNMEBaflRybXVQXp7S0Ltfohl4kQLPHRfr4nDs4qUB
-         /+itSwaLVmtIYeRwUI+vhSEsXx2rlXDXPGEwQMG0i0OgFWk4EgEX8TqT9ntbt4Bup2ZD
-         vKHD1xlneafSufdJeDofLgP92Kza0PHPbNak0KejvFFoUif+jiMRAxqvYp66ioLAbqL8
-         QwkgD6WEyr6Ts6rAxjS4t3q4evAhetgcW9o/x2FUhP2OiRzO7Ut8jWfj67sbOBDtZ1/O
-         /EKKXK36DjmxSxiC3ZmdBuE0v3aLsgY5j/XD6rX2oPhncwJbtJ3dFeJP6PnLmIJDXisf
-         LsCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzOu6l47auzTkw8ORa+YT7y6bI+GFLhkkEQQ00OT1FQb9Z5GNBLpvKFnZTdqdh3/8Y9SdGSgye/GGeS8ndnpUw@vger.kernel.org
-X-Gm-Message-State: AOJu0YysICNuDmbJdLRELlmFHSw9EEJYPBis/AffzAYvcnxFlTyxIPun
-	/COKe9VM6yDerK/dCLQ6WquFqhryApwjAalZ8MnRamD+YnV9zMEFFv7V/YZ8O4gjbRvpgTwViwf
-	Ygoqg5dxB+xVKYBmZfk7l0A==
-X-Google-Smtp-Source: AGHT+IFUZhu2OwBm9Xl4P9gAhtgSkcN1rVy5kcIM68xBXK4rcWyV4/0jaNvjvAieMThFeK6tg2McyqvG5JOCTsu70Q==
-X-Received: from ilbec1.prod.google.com ([2002:a05:6e02:4701:b0:3d1:3d59:434b])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c01:b0:3d0:f2ca:65aa with SMTP id e9e14a558f8ab-3d16f40b648mr9951285ab.4.1739228891849;
- Mon, 10 Feb 2025 15:08:11 -0800 (PST)
-Date: Mon, 10 Feb 2025 23:08:11 +0000
-In-Reply-To: <Z6msyUG0HWM2EImQ@linux.dev> (message from Oliver Upton on Sun, 9
- Feb 2025 23:37:45 -0800)
+        bh=kXxJ1jFzWbWJEOO3pmkHS53hnSaPSIVREc8BxzJcJIQ=;
+        b=YuqGZiFcNV2tjVGk2Q4V31V5KbAPmMnKYQPlXBAVwlBqBoIFJnlAf5BxnkMj9BMXvV
+         YrrpXa0wS1ohBypdSFAWv3CJUAv8DSR82WXOqcHzN3DWkJjml15KPdwbOcYHVL3V3Gu0
+         7shYuAgJ6nAkNva3bhIew4IrcdOyBbGalTyn62Xxuf3V2bLKJFcUnv7SHgm5oDcKfpJH
+         6hGWed9OnEOTP5QYhw4jmE8JPtIkvjkIX/n7iT7vOO5l3tjaR+JTplwKtGjKMQr0K7lH
+         OMvRUA+083lzYoqdLa27hVouBLDS6BpCUDgA6EmEcssWE1KX//Lms9IozOLLePuccMla
+         TcFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ9MnPCJVWEXt7p+Svil2rcnGoB2nK1fRpmhY6bc+kzrg0POGRO7iuUOa689fSLBWGSae7UCaJ8uCvU5DdKwG2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpwtCSlrBsUCsPjM76oHcp8Tom1+9r2bigVTNnNGZgbltO9srB
+	RILmXXI1Faukmgg7PArLNbw5MeSeZ3IEvAPHECOOD2SrS/MVCq6nlSVyzTVo1Z0=
+X-Gm-Gg: ASbGnctk9Cus9bf2n/r89LE42OXTYW9jiGBYndhiKXFBsiWclpN44+fdyCCdkwjn6tT
+	BwZBzq2CWLPPmTvtO9SlQUbgTb0NfvZBluCRUA9H9phKx386w/hb74qdKef41s6rm9tDEDqrVME
+	RjANn6D5//rsbKKV1UvQsQnT9tBU3GyFcBo3gneZLz6Tau0OXU7PShQFbim1sgtI8k84Tddc8MT
+	8Qtz9awTtHd9N7WKo5VeEutKYkGywVZbZAs1THFfPcOEwv0XOdUw688b3cPbNZbm9PAVGyMvpKj
+	hvY=
+X-Google-Smtp-Source: AGHT+IG71jAKEw7FJpT77SS9sjNFLR4JmA/QwoakSSs+2sWovO33XZJsi9MG3conuVTCN8p77CfPYQ==
+X-Received: by 2002:a05:6902:2683:b0:e57:3e85:60f6 with SMTP id 3f1490d57ef6-e5b461c3296mr14877224276.27.1739230752604;
+        Mon, 10 Feb 2025 15:39:12 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a45dbfcsm2898666276.38.2025.02.10.15.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 15:39:11 -0800 (PST)
+Date: Mon, 10 Feb 2025 15:39:10 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 6/7] perf syscalltbl: Use lookup table containing
+ multiple architectures
+Message-ID: <Z6qOHi0D89o1pdQl@ghost>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsnted051jqc.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [RFC PATCH v2 4/4] KVM: arm64: Make guests see only counters they
- can access
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com, 
-	shuah@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250210165108.95894-7-irogers@google.com>
 
-Hi Oliver, thanks for the review.
+On Mon, Feb 10, 2025 at 08:51:07AM -0800, Ian Rogers wrote:
+> Switch to use the lookup table containing all architectures rather
+> than tables matching the perf binary.
+> 
+> This fixes perf trace when executed on a 32-bit i386 binary on an
+> x86-64 machine. Note in the following the system call names of the
+> 32-bit i386 binary as seen by an x86-64 perf.
+> 
+> Before:
+> ```
+>          ? (         ): a.out/447296  ... [continued]: munmap())                                           = 0
+>      0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 4160585708, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ERRQUEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC|0x91f80000, addr: 0xe30, addr_len: 0xffce438c) = 1475198976
+>      0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, size: 34)                             = 4160344064
+>      0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4)                                     = -1 ENOENT (No such file or directory)
+>      0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct iovec){.iov_base = (void *)0x2e646c2f6374652f,.iov_len = (__kernel_size_t)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) = 3
+>      0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: 2)                              = 4160237568
+>      0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193f6)                                 = 0
+>      0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct iovec){.iov_base = (void *)0x3833692f62696c2f,.iov_len = (__kernel_size_t)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) = 3
+>      0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>)                                     = 512
+>      0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: 2050)                           = 4157935616
+>      0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x5, size: 2066)             = 4158078976
+>      0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x1, size: 2066)             = 4159639552
+>      0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x3, size: 2066)             = 4160184320
+>      0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", value: 0x3, size: 50)               = 4160196608
+>      0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")                                                   = 0
+>      0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800, u_msg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_timeout: (struct __kernel_timespec){.tv_sec = (__kernel_time64_t)-578174027777317696,.tv_nsec = (long long int)4160349376,}) = 0
+>      0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname: " ��� ���▒���▒���", mode: IFREG|ISUID|IRUSR|IWGRP|0xf7fd0000) = 447296
+>      0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812, lvec: (struct iovec){.iov_base = (void *)0xf7f9e9c8f7f9e4c0,.iov_len = (__kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}, riovcnt: 4160585708, flags: 4291707352) = 0
+>      0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr: 8192)                             = 0
+>      0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr: 4096)                             = 0
+>      0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr: 8192)                             = 0
+>      0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c������", value: 0xf7f77e34, size: 1)  = 0
+>      0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO|IWUGO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) = 0
+>      0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658e008, pos_h: 4160192052)            = 3
+>      0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>)                                     = 1436
+>      0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce32ac)                               = 1436
+>      0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufsiz: 4291703244)                       = 0
+> ```
+> 
+> After:
+> ```
+>          ? (         ): a.out/442930  ... [continued]: execve())                                           = 0
+>      0.023 ( 0.002 ms): a.out/442930 brk()                                                                 = 0x57760000
+>      0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode: R)                                 = -1 ENOENT (No such file or directory)
+>      0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)                                     = 0
+>      0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i386-linux-", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: 0xffbdbb70, count: 512)         = 512
+>      0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)                                     = 0
+>      0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528)                                   = 442930 (a.out)
+>      0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, len: 12)                            =
+>      0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 8192, prot: READ)                    = 0
+>      0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 4096, prot: READ)                    = 0
+>      0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 8192, prot: READ)                    = 0
+>      0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 103414)                                 = 0
+>      0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d008)                                = 3
+>      0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: 0xffbdb67c, count: 4096)        = 1436
+>      0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , count: 1436)                          = 1436
+>      0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec: 17866546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) = 0
+>   1000.478 (         ): a.out/442930 exit_group()                                                          = ?
+> ```
+> 
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+I think I am conflating some things in my mind here. This change doesn't
+impact perf report does it? perf report reports syscall numbers only,
+but it could be hooked up into this change to correctly report the
+correct syscall name from a perf.data generated on any architecture?
 
-> On Sat, Feb 08, 2025 at 02:01:11AM +0000, Colton Lewis wrote:
->> The ARM architecture specifies that when MDCR_EL2.HPMN is set, EL1 and
->> EL0, which includes KVM guests, should read that value for PMCR.N.
+I believe that question is tangential to this patch but let me know!
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm64/kvm/debug.c                                  | 3 +--
->>   arch/arm64/kvm/pmu-emul.c                               | 8 +++++++-
->>   tools/testing/selftests/kvm/arm64/vpmu_counter_access.c | 2 +-
->>   3 files changed, 9 insertions(+), 4 deletions(-)
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 
->> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
->> index 0e4c805e7e89..7c04db00bf6c 100644
->> --- a/arch/arm64/kvm/debug.c
->> +++ b/arch/arm64/kvm/debug.c
->> @@ -36,8 +36,7 @@ static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu  
->> *vcpu)
->>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
->>   	 * to disable guest access to the profiling and trace buffers
->>   	 */
->> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
->> -					 *host_data_ptr(nr_event_counters));
->> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, read_mdcr());
-
-> Please avoid unnecessary accesses to MDCR_EL2 at all costs. This is a
-> guaranteed trap to EL2 with nested virt.
-
-I thought it was necessary when I wrote this, but I see it's not after
-thinking about it for a while.
-
-The intended value is accessible from vcpu->kvm->arch.arm_pmu.hpmn as
-written, but could be somewhere else after addressing your suggestion to
-lift all MDCR handling into KVM.
-
->>   	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
->>   				MDCR_EL2_TPMS |
->>   				MDCR_EL2_TTRF |
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 6c5950b9ceac..052ce8c721fe 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -993,12 +993,18 @@ static bool pmu_irq_is_valid(struct kvm *kvm, int  
->> irq)
->>   u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->>   {
->>   	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
->> +	u8 limit;
->> +
->> +	if (arm_pmu->partitioned)
->> +		limit = arm_pmu->hpmn - 1;
->> +	else
->> +		limit = ARMV8_PMU_MAX_GENERAL_COUNTERS;
-
->>   	/*
->>   	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
->>   	 * Ignore those and return only the general-purpose counters.
->>   	 */
->> -	return bitmap_weight(arm_pmu->cntr_mask,  
->> ARMV8_PMU_MAX_GENERAL_COUNTERS);
->> +	return bitmap_weight(arm_pmu->cntr_mask, limit);
->>   }
-
-> This isn't necessary and is likely to regress the existing behavior.
-
-> When the architecture says the lower ELs should see PMCR_EL0.N have the
-> same value as MDCR_EL2.HPMN, what it really means is direct reads from
-> hardware will return the value.
-
-> So my expectation would be that a VM using the partitioned PMU
-> implementation would never reach any of the *emulated* PMU handlers, as
-> we would've disabled the associated traps.
-
-Understood. The change was here to see be able to read PMCR_EL0.N from
-inside a VM since I haven't disabled the associated traps yet.
-
-It shouldn't be in this patch.
-
-> The partitioned PMU will not replace the emulated vPMU implementation in
-> KVM, so it'd be good to refactor what we have today to make room for
-> your work. I think that'd be along the lines of:
-
->   - Shared code for event filter enforcement and handling of the vPMU
->     overflow IRQ.
-
->   - Emulated PMU implementation that provides trap handlers for all PMUv3
->     registers and backs into host perf
-
->   - Partitioned PMU implementation that doesn't rely on traps and instead
->     saves / restores a portion of the PMU that contains the guest
->     context.
-
-> These should be done in separate files, i.e. I do not want to see a
-> bunch of inline handling to cope with emulated v. partitioned PMUs.
-
-Agreed.
-
->>   static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
->> diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c  
->> b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> index f16b3b27e32e..b5bc18b7528d 100644
->> --- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> +++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> @@ -609,7 +609,7 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
->>    */
->>   static void run_error_test(uint64_t pmcr_n)
->>   {
->> -	pr_debug("Error test with pmcr_n %lu (larger than the host)\n",  
->> pmcr_n);
->> +	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n",  
->> pmcr_n);
-
-> NBD for an RFC, but in the future please do selftests changes in a
-> separate patch.
-
-Ok, I'll do that in the future.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
+>  1 file changed, 64 insertions(+), 25 deletions(-)
+> 
+> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+> index 760ac4d0869f..db0d2b81aed1 100644
+> --- a/tools/perf/util/syscalltbl.c
+> +++ b/tools/perf/util/syscalltbl.c
+> @@ -15,16 +15,39 @@
+>  #include <string.h>
+>  #include "string2.h"
+>  
+> -#if __BITS_PER_LONG == 64
+> -  #include <asm/syscalls_64.h>
+> -#else
+> -  #include <asm/syscalls_32.h>
+> -#endif
+> +#include "trace/beauty/generated/syscalltbl.c"
+>  
+> -const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> +static const struct syscalltbl *find_table(int e_machine)
+>  {
+> -	if (id >= 0 && id <= (int)ARRAY_SIZE(syscall_num_to_name))
+> -		return syscall_num_to_name[id];
+> +	static const struct syscalltbl *last_table;
+> +	static int last_table_machine = EM_NONE;
+> +
+> +	/* Tables only exist for EM_SPARC. */
+> +	if (e_machine == EM_SPARCV9)
+> +		e_machine = EM_SPARC;
+> +
+> +	if (last_table_machine == e_machine && last_table != NULL)
+> +		return last_table;
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(syscalltbls); i++) {
+> +		const struct syscalltbl *entry = &syscalltbls[i];
+> +
+> +		if (entry->e_machine != e_machine && entry->e_machine != EM_NONE)
+> +			continue;
+> +
+> +		last_table = entry;
+> +		last_table_machine = e_machine;
+> +		return entry;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +const char *syscalltbl__name(int e_machine, int id)
+> +{
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (table && id >= 0 && id < table->num_to_name_len)
+> +		return table->num_to_name[id];
+>  	return NULL;
+>  }
+>  
+> @@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const void *ventry)
+>  	return strcmp(key->name, key->tbl[*entry]);
+>  }
+>  
+> -int syscalltbl__id(int e_machine __maybe_unused, const char *name)
+> +int syscalltbl__id(int e_machine, const char *name)
+>  {
+> -	struct syscall_cmp_key key = {
+> -		.name = name,
+> -		.tbl = syscall_num_to_name,
+> -	};
+> -	const int *id = bsearch(&key, syscall_sorted_names,
+> -				ARRAY_SIZE(syscall_sorted_names),
+> -				sizeof(syscall_sorted_names[0]),
+> -				syscallcmpname);
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +	struct syscall_cmp_key key;
+> +	const int *id;
+> +
+> +	if (!table)
+> +		return -1;
+> +
+> +	key.name = name;
+> +	key.tbl = table->num_to_name;
+> +	id = bsearch(&key, table->sorted_names, table->sorted_names_len,
+> +		     sizeof(table->sorted_names[0]), syscallcmpname);
+>  
+>  	return id ? *id : -1;
+>  }
+>  
+> -int syscalltbl__num_idx(int e_machine __maybe_unused)
+> +int syscalltbl__num_idx(int e_machine)
+>  {
+> -	return ARRAY_SIZE(syscall_sorted_names);
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (!table)
+> +		return 0;
+> +
+> +	return table->sorted_names_len;
+>  }
+>  
+> -int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
+> +int syscalltbl__id_at_idx(int e_machine, int idx)
+>  {
+> -	return syscall_sorted_names[idx];
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	if (!table)
+> +		return -1;
+> +
+> +	assert(idx >= 0 && idx < table->sorted_names_len);
+> +	return table->sorted_names[idx];
+>  }
+>  
+> -int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const char *syscall_glob, int *idx)
+> +int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glob, int *idx)
+>  {
+> -	for (int i = *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names); ++i) {
+> -		const char *name = syscall_num_to_name[syscall_sorted_names[i]];
+> +	const struct syscalltbl *table = find_table(e_machine);
+> +
+> +	for (int i = *idx + 1; table && i < table->sorted_names_len; ++i) {
+> +		const char *name = table->num_to_name[table->sorted_names[i]];
+>  
+>  		if (strglobmatch(name, syscall_glob)) {
+>  			*idx = i;
+> -			return syscall_sorted_names[i];
+> +			return table->sorted_names[i];
+>  		}
+>  	}
+>  
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
+> 
