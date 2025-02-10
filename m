@@ -1,139 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295F21C2DA2;
-	Mon, 10 Feb 2025 22:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF741B85FD;
+	Mon, 10 Feb 2025 23:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227998; cv=none; b=CmSinVPlG1t5IwH9Jl0mG5naIiLNHZNBB7Fki9jCFUPooIQeB29hseWgPfP0rHJEnCNsUEHQ85PFEbnddiVojR5ai6mWAduS1FnN75wo5PBEsvck6q6vjNWqFu6WxUHRDeZuHx2sU3lvR5K9r0VsQ9TWoOmA7q4NNZzU+HbNyKQ=
+	t=1739228717; cv=none; b=Z8N14KrOWFR0T1QV/INF9E35PLn/vBCMMmxGsFKWu1iR1PE7FLHAQW+8m4fDSExI8ESPteBXLAoaZckbxCBRvP+J5s5Tqo1zaoQkYfe3KeG8l+2wskrR7lelis46AgFKgXwa5d+WGVsM+/OYm4C30fudNyd3Pnqja7a4GngUNoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227998; c=relaxed/simple;
-	bh=Ti5D3L7xPBlXSUbXtfzn95u+P4NW+jleJ2mO4P9rbb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuWTAyLDioRdL9kx/oaH0MnLCOlKNgN9Qa8+fq2LZV7cMJuJLVNcf22UmFysqxyuHxSb3XT4J5xuzR/jiY5Ko1nCCXqvC3XNR4ahiJdsfuKCXXeaX86b4O4agJctTQ0VLsFireE1xMVSTeqFIJDKf+XQmeiyIt1qtAoLM/G5Lbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3jzJBsS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739228717; c=relaxed/simple;
+	bh=a+20u3F0olFhn2ger6QyJLQ5lx1Ke3LUoxDGzvt6t8E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KNBF2m3rNNwE5ZBevcyGjFlL9VAH+ltP7JR1xV/CqvcXcZDr8Tvc/lL6pX2tNAjRSy4ComHIRoa2btUlmBVT4wpeAj+s4iGctsQYIFe7xso59wOwLfUCRfow33ih9Q8MkGJxluCMZeMIXfDrIGHEVl0OqIT8NUB0WybZJfArKTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ywk5yFm7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3jzJBsS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69EBDC4CED1;
-	Mon, 10 Feb 2025 22:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739227997;
-	bh=Ti5D3L7xPBlXSUbXtfzn95u+P4NW+jleJ2mO4P9rbb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o3jzJBsSQAImlJJSLT2Drw97OvB16ck4/Bg9z6z8KkRCNxgIkGyhEpCKZ0e68jchE
-	 2mWHC0eQbw4Y8VZ4HdSsBcaq5B9n3h4kZXKU42+HeE6vzPDIY3bCmWhd6NCAJvee97
-	 swn4wYRWmCAmGp2M17uApYdlFND7N+1eUkHK/gpFDG9t57DFp3RwAdiYmkUVO3h9SU
-	 IJ3vO+a0rUi2PWfM1eoLQYVkKTS+2IUeEqfGFmmus3hsydmkbEvXVT5iHJkGKgJd8r
-	 DO4yK+QV+LQX5FNTpLtlbbFo1SRumk1is35JuorXb68bKbXPC27mdCshMFItIZbp8V
-	 7HbJ7Mnqpf5Ag==
-Date: Mon, 10 Feb 2025 14:53:16 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, irogers@google.com
-Subject: Re: [PATCH] perf report: Fix input reload/switch functionality
-Message-ID: <Z6qDXAjJBISQmvGA@google.com>
-References: <20250108063628.215577-1-dvyukov@google.com>
- <384d6c4b-d2ce-47f8-9030-6225758b5923@linaro.org>
- <CACT4Y+bUrZHD5H+z5-+dKGbtBPO9EQNzBoOwYGhp7zHGrHYrQg@mail.gmail.com>
- <89e678bc-f0af-4929-a8a6-a2666f1294a4@linaro.org>
- <CACT4Y+ayg0oo0sX54DuJ9n+L4MJJU5LsEJtEDS13Zu7ifOyq3g@mail.gmail.com>
- <20d97acb-bcf8-481e-a898-a13580c566b0@linaro.org>
- <CACT4Y+b8X7PnUwQtuU2QXSqumNDbN8pWDm8EX+wnvgNAKbW0xw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ywk5yFm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB13C4CED1;
+	Mon, 10 Feb 2025 23:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1739228717;
+	bh=a+20u3F0olFhn2ger6QyJLQ5lx1Ke3LUoxDGzvt6t8E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ywk5yFm7ctuCPKJQ9+BCPXUz/RzUhWb19Ww4mTtphZcClJDthieFzci4pzmtFsB2I
+	 Yp0xaownlpeRYsr5jbwGmNoxuPqSzXm8ItDVb71qJ3LuODj6XFApcFUVl6eL6hlFDA
+	 RkQ1jhvczfJ6AIkjUhJS3bVUC+B1AyLXWs+uA/LA=
+Date: Mon, 10 Feb 2025 15:05:15 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev, =?ISO-8859-1?Q?J?=
+ =?ISO-8859-1?Q?=E9r=F4me?= Glisse <jglisse@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si
+ <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
+ <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, SeongJae Park <sj@kernel.org>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Alistair Popple <apopple@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
+Message-Id: <20250210150515.c71078f212ff4661eafc15bf@linux-foundation.org>
+In-Reply-To: <20250210193801.781278-1-david@redhat.com>
+References: <20250210193801.781278-1-david@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+b8X7PnUwQtuU2QXSqumNDbN8pWDm8EX+wnvgNAKbW0xw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Mon, 10 Feb 2025 20:37:42 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-On Mon, Jan 13, 2025 at 04:39:57PM +0100, Dmitry Vyukov wrote:
-> On Mon, 13 Jan 2025 at 16:19, James Clark <james.clark@linaro.org> wrote:
-> >
-> > On 10/01/2025 12:19 pm, Dmitry Vyukov wrote:
-> > > On Thu, 9 Jan 2025 at 15:50, James Clark <james.clark@linaro.org> wrote:
-> > >> On 08/01/2025 3:35 pm, Dmitry Vyukov wrote:
-> > >>> On Wed, 8 Jan 2025 at 16:23, James Clark <james.clark@linaro.org> wrote:
-> > >>>>
-> > >>>> On 08/01/2025 6:36 am, Dmitry Vyukov wrote:
-> > >>>>> Currently the code checks that there is no "ipc" in the sort order
-> > >>>>> and add an ipc string. This will always error out on the second pass
-> > >>>>> after input reload/switch, since the sort order already contains "ipc".
-> > >>>>> Do the ipc check/fixup only on the first pass.
-> > >>>>>
-> > >>>>
-> > >>>> Hi Dmitry,
-> > >>>>
-> > >>>> A reproducer with before and after behavior might be helpful for the review.
-> > >>>>
-> > >>>> It might be unrelated to your change here, but the input switch thing
-> > >>>> didn't seem to do anything for me. If I record two files, open the first
-> > >>>> one, press S and select the second file nothing seems to change. I
-> > >>>> assumed it would show the other file but nothing changes?
-> > >>>>
-> > >>>>     $ perf record -- true
-> > >>>>     $ perf record -o 2.data -- ls
-> > >>>>     $ perf report
-> > >>>>     S key
-> > >>>>     load 2.data
-> > >>>
-> > >>> Yes, sure. This needs "--sort symbol":
-> > >>>
-> > >>> perf report --sort symbol
-> > >>>
-> > >>> then press 's', select file, and it terminates.
-> > >>>
-> > >>> Affects fewer cases then I initially assumed, since I happened to run
-> > >>> with "--sort symbol" when I discovered it.
-> > >>>
-> > >>>
-> > >>
-> > >> Ah yeah I can reproduce the bug with --sort, which is fixed by the
-> > >> patch. But 's' doesn't actually reload a new histogram for me, I just
-> > >> get the original file again. Maybe I'm misunderstanding what 's' is
-> > >> supposed to do?
-> > >
-> > > As far as I understand, 's' allows you to select and load a new
-> > > profile w/o existing (fwiw, if you select a different file). If the
-> >
-> > By 'without existing' do you mean running perf report with no perf.data
-> > file? It won't run like that it just says "failed to open perf.data"
-> >
-> > > file has changed, I guess you can also reload it and see the changes.
-> > >
-> >
-> > I wasn't able to make that work. How do you reload? If I change screen
-> > between different events I still get the old file and I didn't see
-> > 'reload' mentioned in the keybinding popup.
-> >
-> > I suppose my point is maybe it's not worth fixing the sort order bug if
-> > we can just remove input file switching. The behavior doesn't seem any
-> > different to v5.8 in case its a regression. Maybe I'm just doing
-> > something wrong though.
+> Against mm-hotfixes-stable for now.
 > 
+> Discussing the PageTail() call in make_device_exclusive_range() with
+> Willy, I recently discovered [1] that device-exclusive handling does
+> not properly work with THP, making the hmm-tests selftests fail if THPs
+> are enabled on the system.
 > 
-> Humm... indeed, it does not seem to actually reload anything (even
-> though the "Processing events..." progress bar progresses again).
+> Looking into more details, I found that hugetlb is not properly fenced,
+> and I realized that something that was bugging me for longer -- how
+> device-exclusive entries interact with mapcounts -- completely breaks
+> migration/swapout/split/hwpoison handling of these folios while they have
+> device-exclusive PTEs.
 > 
-> I tried to use the reloading feature while implementing:
+> The program below can be used to allocate 1 GiB worth of pages and
+> making them device-exclusive on a kernel with CONFIG_TEST_HMM.
 > 
-> perf report: Add wall-clock and parallelism profiling
-> https://lore.kernel.org/linux-perf-users/20250113134022.2545894-1-dvyukov@google.com/
+> Once they are device-exclusive, these folios cannot get swapped out
+> (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
+> much one forces memory reclaim), and when having a memory block onlined
+> to ZONE_MOVABLE, trying to offline it will loop forever and complain about
+> failed migration of a page that should be movable.
 > 
-> to change some of the flags that can't be changed otherwise, but then
-> dropped this idea since it was too messy, but decided to fix the
-> failure I discovered.
+> # echo offline > /sys/devices/system/memory/memory136/state
+> # echo online_movable > /sys/devices/system/memory/memory136/state
+> # ./hmm-swap &
+> ... wait until everything is device-exclusive
+> # echo offline > /sys/devices/system/memory/memory136/state
+> [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
+>   index:0x7f20671f7 pfn:0x442b6a
+> [  285.196618][T14882] memcg:ffff888179298000
+> [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
+>   dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
+> [  285.201734][T14882] raw: ...
+> [  285.204464][T14882] raw: ...
+> [  285.207196][T14882] page dumped because: migration failure
+> [  285.209072][T14882] page_owner tracks the page as allocated
+> [  285.210915][T14882] page last allocated via order 0, migratetype
+>   Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
+>   id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
+> [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
+> [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
+> [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
+> [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
+> [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
+> [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
+> [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
+> [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
+> ...
 > 
-> So, yes, I guess we can drop this patch (I don't need it anymore).
+> This series fixes all issues I found so far.
 
-Sorry for the long delay but I think we need this fix anyway.  I'll take
-a look at the reload issue later.
+Cool.
 
-Thanks,
-Namhyung
-
+Barry, could you please redo your series "mm: batched unmap lazyfree
+large folios during reclamation" on top of this (on top of mm-unstable,
+ideally).
