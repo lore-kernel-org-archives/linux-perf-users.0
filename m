@@ -1,95 +1,99 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2568B247DD3
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 16:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6992580D9
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 16:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203608; cv=none; b=MhA94pJac9hUtpEJ3vqvPVRmFsTfvFdnb+05I/3kw/23mFlP0poQEKV72aDTxwZA4e9R72zAcKZd6QcitUH9mcCEufOOA46YYrU3oMAPwT1nlpIikZwsnEGT4CjQ27i98+LenA4kBegy8IlikmbOMvhr7UKv4m7vKNTge9+Cti4=
+	t=1739204103; cv=none; b=udk2akFvfuFptG0LQReHyFzWmfq1DRinUCUJ1qsWJbuxpJnkFPUhinRUyb6QRFhMqVUDoLaQy3aY8OHgL33MTP4nYdzJ7nosPXcGzejKAZrGqjnaM8ZXWyyCLwjmJRkcL/JeqwdEHNnZ0a98C6XTRNAMfzvoVJ4oHi6nhB/24CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203608; c=relaxed/simple;
-	bh=Olzjpcb+w+3A57LrTJ+oJsty2EVJPRVXqH/zLH5m3+k=;
+	s=arc-20240116; t=1739204103; c=relaxed/simple;
+	bh=ZpXrG2sN2wi6UN4HqvAALsWh0lmAcUxywTgURpW7JMo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=uLy6g66Kj7qnoEpBH4ygeEGOR4tKgpW3dDd41whTIcAPOwX1mEJx2XN8ZOW9sGDdY5u7id86ds45I6muSOJ+OpG67d/rEolAVI0iC1mKby2U9TWC8MBEh0K1fhzsd71MyDiV+2s6Nax4/JlTSZdGrrikcppHLFo4gAq4cJTB+dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nZg88tbk; arc=none smtp.client-ip=209.85.166.180
+	 To:Cc:Content-Type; b=DL+QbgKkWThHVI/p2NNSb+m70D0rOuTzoe+2Oqx72DAT51lmNF4aVyPNE/DQWv2f4vz58AIGUPA71vLKZGLCMYmcIYHGaKV11pKBD5GVDXAtVrceZqjj1vQy5ja9AHplODQxNQPu9Jc+EPm8Qt6+pIJ7ilu0JCI6d6gxmhvE/IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VnXiivay; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZg88tbk"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d147331fb5so461815ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 08:06:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VnXiivay"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d146357fb2so469555ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 08:15:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739203606; x=1739808406; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1739204101; x=1739808901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Olzjpcb+w+3A57LrTJ+oJsty2EVJPRVXqH/zLH5m3+k=;
-        b=nZg88tbkCF/ZLr+o4hjG0MpCbmFvrC1NPLhA0kbkugmrXa388GtIxXIqENix8FxwSn
-         uSDboYTiZm9IGJgveXDmwgREVTeaCx9a/616bYwReVGz2yHAEoin9sThkggfOKFlBk60
-         AQJccbjdssxeHZeU+KzpGayyFOxNIq0kdHtHauG4d7AIBq+biQ0fhDvZIicOksYxkcJ4
-         jopMjyvr3kerCsiQHZ0si7kyG8uIaPVZ7+hWdOj2Rx70Z2t8/u4jQ8ROVQDxy/A4w+Ve
-         uqLEo2EMWBqQxh+VEPpH+G/MnRFmste7FgWR0aF43sMoKp3uw7i1OcG19IVF8kEYydsW
-         sBVw==
+        bh=ZpXrG2sN2wi6UN4HqvAALsWh0lmAcUxywTgURpW7JMo=;
+        b=VnXiivaygbahmSWYwFaeJOou2rM9V6G0Gv0fddEF1x0LU9ytf2NlNgt6/vfIGNbpKn
+         YdRMy5QlrdmNidedTrJZy+Ii0uRqLJDqoQ0JmjPDTN9axSS2AbVCuyoM+cT4l1FvN8+c
+         EIvQm0YC3FXRGoZ/bB1gBrQYQ2t5gMP43mp6oJ65CwpsQBaO9nFzRa8qoMJt4ws5z8R1
+         O6SQig4fw6uYT3bhuGCfXNtfP+AQP03e0FCo4DpIm2FTmVGTGrv2XyUOoN6BAAza7iQ8
+         WTOMpZABJ9eoEBsANoCmZZajq6TFMY0p2teMYVSWOnZN7+TINxrbIzdd/qzpDoJwXO/Z
+         9SFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739203606; x=1739808406;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1739204101; x=1739808901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Olzjpcb+w+3A57LrTJ+oJsty2EVJPRVXqH/zLH5m3+k=;
-        b=LOobdP5kEGpqNEJXLkXUTnb42wLsBuRwCxw/YZnOms8z6yqF9NqRX6+RsoQpYbBic1
-         UpJ8E7fMGm8ELUllXIT+pV5dJXAdJhYhF5CqhfoMZbf3E/HaUXygsBOGldm9UxIz00Ge
-         yzRaqgkFoM2E4yfmkRhPjR1GIKft9ySgklOwN1XfGkCyiCuEOtjGPpIcCsDqHxuxP0Cm
-         2VD3q7Z5yc7E+OdkJSf8juRoIAK6Ymf06+Jko/d4u1jZChWpnAF0YQh3cbAngifRtkiz
-         6xFfKbJtE0smUMZdg+qzfa+jgtdUPpz/3DvJ9O1MFB03lZeMX4ldYECWOCacIRj/ZNu5
-         Ev4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUtDHWIO9DMyGtCJZu6/bQ7SzKoP6pd59pC/b3ulAHLOgguSFupnnMdASA59sAFH31PJK9ph920Auu7QdgA2/xS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbEUkRu9eZhr4LFJtT8tfs+AwNBfaTMhFtFa0gz3ywyNRxrQkp
-	P6uxINJqxuN4v/NTgIEoMR3ly8jaDavk9zqs4Z+obXBupkdhJKCIxhN2ClFqW/AZSErg8fkWIE2
-	dUpXJK5DSYW3eOiQ/LKZFSP4rJhNNu3tncgQG
-X-Gm-Gg: ASbGncva6GeC+h35ONiCHUaxKVf8OOkbxCDE0gc82CdCi8f3DHm3/0affL4JpRVUB/K
-	I8iaNyURiprf1DZN4f83LZftU18wFNVXNwc1aAQT4HDYQ90AV3SwrNoNfEpPNoKxkcGKuj+gA8k
-	4f/q3PABwO59w6Cb/VFd6NBp3D
-X-Google-Smtp-Source: AGHT+IEn7qcZK0y1O32iGhtabjLE5FOvyLkUu+evcFif5hHQbnRDOMZauWsp/8NYcRCYQqbVTjH3a+jsSUqrRuLGrAM=
-X-Received: by 2002:a05:6e02:1ca9:b0:3cf:c075:da88 with SMTP id
- e9e14a558f8ab-3d14f123828mr5278305ab.23.1739203605922; Mon, 10 Feb 2025
- 08:06:45 -0800 (PST)
+        bh=ZpXrG2sN2wi6UN4HqvAALsWh0lmAcUxywTgURpW7JMo=;
+        b=DlePWTJBMUdw41Mj7gKmBRuI0kgLizI8URXtYXYr0Zd9gO+mThVZk7G1asuIVbX1ng
+         Vvj2HiWENPorsqOoLd4+x/QBlVAkTD45oy+M+r3sp4KiB2eXnQaKYv/1gxgO8B1EUGzA
+         ehkb8vF93DdVwuCWR/D76hHb/yNrW4jc+OU/POdC9oybsoFj8irEF4Z8gnhRJ7IKn8ol
+         MfL4ig8ok7v7mbztrdwZgQlTwAhbfuV/0Mb971p8gsjQCNn1s8CjrvZpMcYpSHTANt73
+         HtwPMCfMY4rQvCCBKbUSxVMXGDov8n16tmF0KhH2+XDCYIxDaRBu3NFmTXKfuM7Wxg8v
+         KcWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Y67crgad1Pxcn2ZaP84rJ2xeBSbpca+OWjy6iW1juHUmm/acysXIw5cEJ3HzMSZiCsj2qh3rBg2Ptn69g8lm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7RsrvDsTKoNicj8RjeBfNb6dVujdKMh+/aPaBGqoQun58WhvD
+	Nu2YY9HL0k9YjR/Ln6jfp/IkB6lCPUT6Rs7+FEMxQO1IPqaQ62JW/d4+0/AbwyZHEiZYn2cAyE/
+	ZIjDasc2/MyDpkzBpOMVQmCL8vGwMYYPBEIAk
+X-Gm-Gg: ASbGncu5UUrGusRUIRZd3m0AfoFEjkXuI+07dAmfD+dQozPzfm2DWXq1pWEkOCSYP5T
+	kQX9zCJ0GK6VvRPXL+UP/TrrbH7XUkd38m4dScC95E9Fluz6kYkakVwE2f76ayZvEvhhCkKMNIB
+	T9fbqBA4A3x5Of7jZj0tJ3oaHj
+X-Google-Smtp-Source: AGHT+IF0F+MN337EGtx3MgZDKjVRiYrWMi34Aaeh7u0FXEkx5GRN2Sri6JuckHmlmUmGxVz1Vu080YIFGVuzEeT3MUw=
+X-Received: by 2002:a05:6e02:16c5:b0:3d0:5855:85a3 with SMTP id
+ e9e14a558f8ab-3d14cc6576bmr6276765ab.8.1739204100912; Mon, 10 Feb 2025
+ 08:15:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109075108.7651-1-irogers@google.com> <CAP-5=fXL=nS1-m1+gJsYfWfvyn0ouikX3=RvyKdiM7+ewS9-mg@mail.gmail.com>
-In-Reply-To: <CAP-5=fXL=nS1-m1+gJsYfWfvyn0ouikX3=RvyKdiM7+ewS9-mg@mail.gmail.com>
+References: <20250204220545.456435-1-linux@treblig.org> <CAP-5=fWMp-ePPHUsBD_pe5NPoyCpHVZ2gzSn1HRyu_gO3Ghmkg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWMp-ePPHUsBD_pe5NPoyCpHVZ2gzSn1HRyu_gO3Ghmkg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 10 Feb 2025 08:06:34 -0800
-X-Gm-Features: AWEUYZnE2XLv9epQXHXfgD7vbBK_XUhKNaQU6ZOpF1_J3_u4h3FTCaw-aXF08Qg
-Message-ID: <CAP-5=fU3beskCJLQdKE8Mjdsx0wTiihh7Z9k7VQtZuJBZC5b6Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] Python improvements for a real use of parse_events
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+Date: Mon, 10 Feb 2025 08:14:49 -0800
+X-Gm-Features: AWEUYZlTnPSbdHY0P6JUo3a7VHYIiUQ9YxMPf6d1ews8ZaqkgkoWKjrOhIRJWc0
+Message-ID: <CAP-5=fXHTnvxVOGSWjGbodMH_rKOqfOV8+qkQDCSWf01LGSzRA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Deadcode removal
+To: linux@treblig.org
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 2:23=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+On Tue, Feb 4, 2025 at 2:11=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
 e:
 >
-> On Wed, Jan 8, 2025 at 11:51=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
+> On Tue, Feb 4, 2025 at 2:05=E2=80=AFPM <linux@treblig.org> wrote:
 > >
-> > While parse_events access in python was added, it wasn't used by any
-> > python script. In enabling this for the tracepoint.py script a number
-> > of latent bugs and necessary improvements were discovered.
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >
+> > The last use of machine__fprintf_vmlinux_path() was removed in 2011 by
+> > commit ab81f3fd350c ("perf top: Reuse the 'report' hist_entry/hists
+> > classes")
+> >
+> > mmap_cpu_mask__duplicate() was added in 2021 by
+> > commit 6bd006c6eb7f ("perf mmap: Introduce mmap_cpu_mask__duplicate()")
+> > but hasn't been used since.
+> >
+> > Remove them.
+> >
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 >
-> Ping.
+> Tested-by: Ian Rogers <irogers@google.com>
 
 Ping.
 
