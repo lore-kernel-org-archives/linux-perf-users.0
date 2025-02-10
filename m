@@ -1,170 +1,129 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5E481749
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 07:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1561A199FBA
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 07:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739171842; cv=none; b=av26kiMDypYxl1F7N/qSfpwOQ73fe0ZBWIgVeqNJ9EnJ6LZj8qejjZ7VkQ6TCVPrwWmHSGqepk5DG8eXBElwbER2SYe9yua4YkMm96Q+X6KYYJfcgyWxpuNc4rz2quvjslz55bUsFvWjjMz0TnmxZ8tMlV9MeDopCRkJzkL+FkA=
+	t=1739172335; cv=none; b=GHW6A5I+YEwgDhw66M+Bze9SQDIigbotkmye8MvLNmRZd6952S/qyVbXNTihHLB57cbMP8CUQS5L0OFYx2BCi11LYItAvqMJldITLci4MVYmok5GvB920uLkGJIj2nkcrCv9kkkGQhLHKy7HdUcT/BhH3jqhzD66nGht2VJExEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739171842; c=relaxed/simple;
-	bh=PqU5A4FMZFlxYJ6n4cp0rMsHR8kXG5WST25sekbrfMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m3ijkIi5UAwR7sHsQ2GFoYili/Sr9lTwL9/SzgRkLMgfwK5z4bOSQiWggpDovbBygq/1PMUIcoMb4O4Z6rGkQvzPEeMSYhyuq8/A2qpRuzDCFKvKpPL9Yy8b4yA8DpJLlc8TU1Pr56yQUYaF2b9cnbL9fM+oDeECqXlQsz77atE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wF2BRsyI; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739172335; c=relaxed/simple;
+	bh=WEi94AOxFT0BGKWJYlk93RgBEivYtkgEu7vcoa48KDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ox5al1iCDLHiaVm9X8UgjoT+DuFMIHFCDh5ZXHRflbapFFDVeqt3pD0vy6d1pjYhT4fFi0Pd/RnYcJbSIaDgiTOWGKJaDDudWWqiA4KbIMdFQdwVoGbPMdFDSB/jF06Zj89sPCOxrWAmr0Z9S1SFCOzfK6uVDbunBBcGFH7Vdx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kXBzap/g; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wF2BRsyI"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-308e9ff235bso8598981fa.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Feb 2025 23:17:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739171838; x=1739776638; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GxiCixcf/BZLPpNs6FKNBHElHTuusaAfh8RJs/w71Nc=;
-        b=wF2BRsyI9QF+hB+ZcHVeKVkVi3DwOo2IJszPIi3YnNI3jVXv3FI4XcwgINMQ9Z7ijX
-         3Fj2bR5r3Wj5Y3wSiHpji+9cq0nMxqXF/zs5Jv/z9tUCHxMlTHxLS/qkdWSkh6UecIWQ
-         GPhtb7ttc7ak+6Uz/GuDLBK9jueD3uU2EMyo8hyogzCc7MxwyXVbOzUbXHcIon9P1x5M
-         fkG+tjmwqCeZ4v8M0ruSE022F+lH+4fyqoAIfTqEshyUC9ZwaChYM2JwkUOf/PwvYhnc
-         uB5XLYMcFPltBePPIpMDxXsl+Y6Wk2qyCqU+rDPs5Hp43NCT+D5zQEmQunrvlZdO/ayB
-         +ckg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739171838; x=1739776638;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GxiCixcf/BZLPpNs6FKNBHElHTuusaAfh8RJs/w71Nc=;
-        b=FWa90RprdJ2L7dEajj+Mm1a3CM5H7xj++veyDRv4oDgrxyjySYB3kQGsoXnJ3QSXXw
-         eEYVAM7LtAUAYymeyCTEEG3FiyiPCkhtdpxdD79GTQoF8fEEcVre3aEWTHYoiu/R4ysk
-         B22vXzO6s6m+C2ZGYr9qMRQyLtKzr6yfKVmHq5CSDpuBe6mZsXA7W1FEtmLeMf7TVZS1
-         QcMm1C38JQwMbXWMuPG6PmvtpyQmwgalkkpqzt/PSA8sR0ZUjHaTVnxRBgJ64hTbNcxD
-         8+QZgYIZ2LuK+eAOProExBPznRW6WxaFEpR/1vGouiQBfxcOIcqD/K916tr4RAIhcu6W
-         lFPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHjw5YdSXM2ynqr41RXKAST9ByjOlBJVoDTsj9h7eQ/0MhsyXyHEzaWZThKyoV7p42pMRB0MTMMof4UDwbp4Zn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9V4iUU5MogKzhqG61sZIPb5x4gejbIxXw113/Zl26nyG2XCp7
-	AyAp/3k78ISpsa2HkOEg68iYYlTqO1hscT85nWg+ZzsXWw/0bg8iO2TUjTW06Y3VaexgZLtzkeC
-	591o+OIr3/86ki0nATxwMYflvHmGVA3dRVeaa
-X-Gm-Gg: ASbGnct1BpX92biCveZJDXKZNmfmydgwxtyTU6fAwy4gCemHNcfTeyhucw4Kz4BwDJf
-	nlLBnY40Hc+B5TQ9rcK/oA533oBv4vcy2YNBCJPXv8Ms32m0guSWv4jranK5B/kQDz8Jk5p/9DS
-	nsGe+R8ijAlXNylvqkPw0g9TgSux0IGw==
-X-Google-Smtp-Source: AGHT+IGLhFLNb1n+WrmHp8E6o8lZALCn+qvMi+KnDesdv7ZGzAxB5bSmJ2j9mR41XtqD20dXheJ8AwH3v6zs+SFKvfY=
-X-Received: by 2002:a05:651c:221c:b0:308:eb58:6591 with SMTP id
- 38308e7fff4ca-308eb586865mr15288651fa.25.1739171838058; Sun, 09 Feb 2025
- 23:17:18 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kXBzap/g"
+Date: Sun, 9 Feb 2025 23:25:20 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739172327;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hwD1lIdtcJvdTFhSGkZrNjpxJv3lx+G0x/gy4Oqkqlg=;
+	b=kXBzap/gTr4HWJcRXQDm7DOBGfeTNHMzoNaXlGUNiV7By6TX5/ld3/RKw3r36+uzamfZRI
+	9kgaxEmEWNycuEOd4PYpqoSR5TDvsEOojoBeDhe2bivBUMSPju67z9EPUaf4pn2VbQBK1g
+	p83LqS1ZQhg3kef6BQ6B20f6CBvi5hs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v2 2/4] perf: arm_pmuv3: Introduce module param to
+ partition the PMU
+Message-ID: <Z6mp4NeklzORJg5y@linux.dev>
+References: <20250208020111.2068239-1-coltonlewis@google.com>
+ <20250208020111.2068239-3-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
- <CACT4Y+awFXT2j+HMeAy2RKnoBzb--+heFzJUoBZWp9iJevy1Dw@mail.gmail.com> <Z6ZRVeoFxT0NV9yb@tassilo>
-In-Reply-To: <Z6ZRVeoFxT0NV9yb@tassilo>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 10 Feb 2025 08:17:06 +0100
-X-Gm-Features: AWEUYZnHFduaB6kEOZO1RVzeSKo8nMj3KreybZn7JDEc96KYZaaLwsoJ8m1r8ko
-Message-ID: <CACT4Y+bOVd4hw2fkE4ahJnbyAuc_=wMu_HMkAUbAhL--dTxBiA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
-To: Andi Kleen <ak@linux.intel.com>
-Cc: namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208020111.2068239-3-coltonlewis@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 7 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
->
-> > > I assume it just works, but might be worth checking.
-> >
-> > Yes, it seems to just work as one would assume. Things just combine as intended.
->
-> Great.
->
-> >
-> > > It was intended to address some of these issues too.
-> >
-> > What issue? Latency profiling? I wonder what approach you had in mind?
->
-> The problem with gaps in parallelism is usually how things change
-> over time. If you have e.g. idle periods they tend to look different
-> in the profile. with the full aggregation you don't see it, but with
-> a time series it tends to stand out.
->
-> But yes that approach usually only works for large gaps. I guess
-> yours is better for more fine grained issues.
->
-> And I guess it might not be the most intutive for less experienced
-> users.
->
-> This is BTW actually a case for using a perf data GUI like hotspot or
-> vtune which can visualize this better and you can zoom arbitrarily.
-> Standard perf has only timechart for it, but it's a bit clunky to use
-> and only shows the reschedules.
->
-> > Also (1) user still needs to understand the default profile is wrong,
-> > (2) be proficient with perf features, (3) manually aggregate lots of
-> > data (time slicing increases amount of data in the profile X times),
-> > (4) deal with inaccuracy caused by edge effects (e.g. slice is 1s, but
-> > program phase changed mid-second).
->
-> If you're lucky and the problem is not long tail you can use a high
-> percentage cut off (--percent-limit) to eliminate most of the data.
->
-> Then you just have "topN functions over time" which tends to be quite
-> readable. One drawback of that approach is that it doesn't show
-> the "other", but perhaps we'll fix that one day.
->
-> But yes that perf has too many options and is not intuitive and most
-> people miss most of the features is an inherent problem. I don't have
-> a good solution for that unfortunately, other than perhaps better
-> documentation.
+Hi Colton,
 
-I don't think this is a solution :(
+On Sat, Feb 08, 2025 at 02:01:09AM +0000, Colton Lewis wrote:
+> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
+> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
+> allowed, EL0 while counters HPMN..N are only accessible by EL2.
+> 
+> Introduce a module parameter in the PMUv3 driver to set this
+> register. The name reserved_host_counters reflects the intent to
+> reserve some counters for the host so the guest may eventually be
+> allowed direct access to a subset of PMU functionality for increased
+> performance.
+> 
+> Track HPMN and whether the pmu is partitioned in struct arm_pmu
+> because KVM will need to know that to handle guests correctly.
+> 
+> While FEAT_HPMN0 does allow HPMN to be set to 0, this patch
+> specifically disallows that case because it's not useful given the
+> intention to allow guests access to their own counters.
 
-I provided lots of rationale for making this latency profiling enabled
-by default in this patch series for this reason. If we just capture
-context switches, then we can show both overhead and latency, even if
-we sort by overhead by default, people would still see the latency
-column and may start thinking/asking questions.
-But this is not happening, so mostly people on this thread will know about it :)
+Quite the contrary.
 
+FEAT_HPMN0 is useful if userspace wants to provide a vPMU that has a
+fixed cycle counter w/o event counters. Certain OSes refuse to boot
+without it...
 
-> > But it does open some interesting capabilities in combination with a
-> > latency profile, e.g. the following shows how parallelism was changing
-> > over time.
-> >
-> > for perf make profile:
->
-> Very nice! Looks useful.
->
-> Perhaps add that variant to tips.txt too.
+> static inline u32 read_mdcr(void)
+> {
+> 	return read_sysreg(HDCR);
+> }
+> 
+> static inline void write_mdcr(u32 val)
+> {
+> 	write_sysreg(val, HDCR);
+> }
+> 
 
-That's a good idea.
-I am waiting for other feedback to not resend the series just because of this.
+Hmm... While this fixes the 32bit compilation issues, it opens a new can
+of worms.
 
+VHE is a 64bit only feature, so you're *guaranteed* that these accessors
+will undef (running at EL1).
 
-> > perf report -F time,latency,parallelism --time-quantum=1s
-> >
-> > # Time           Latency  Parallelism
-> > # ............  ........  ...........
-> > #
-> >   1795957.0000     1.42%            1
-> >   1795957.0000     0.07%            2
-> >   1795957.0000     0.01%            3
-> >   1795957.0000     0.00%            4
-> >
-> >   1795958.0000     4.82%            1
-> >   1795958.0000     0.11%            2
-> >   1795958.0000     0.00%            3
-> > ...
-> >   1795964.0000     1.76%            2
-> >   1795964.0000     0.58%            4
-> >   1795964.0000     0.45%            1
-> >   1795964.0000     0.23%           10
-> >   1795964.0000     0.21%            6
-> >
-> > /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-> >
-> > Here it finally started running on more than 1 CPU.
->
->
-> -Andi
+> +static void armv8pmu_partition(u8 hpmn)
+> +{
+> +	u64 mdcr = armv8pmu_mdcr_read();
+> +
+> +	mdcr &= ~ARMV8_PMU_MDCR_HPMN;
+> +	mdcr |= FIELD_PREP(ARMV8_PMU_MDCR_HPMN, hpmn);
+> +	/* Prevent guest counters counting at EL2 */
+> +	mdcr |= ARMV8_PMU_MDCR_HPMD;
+> +
+> +	armv8pmu_mdcr_write(mdcr);
+> +}
+> +
+
+After giving this a read, I don't think the host PMU driver should care
+about MDCR_EL2 at all. The only time that 'guest' events are loaded into
+the PMU is between vcpu_load() / vcpu_put(), at which point *KVM* has
+reconfigured MDCR_EL2.
+
+I'm not sure if there's much involvement with the host PMU driver beyond
+it pinky-swearing to only use the specified counters. KVM is what
+actually will program HPMN.
+
+That'd alleviate the PMU driver from having VHE awareness or caring
+about MDCR_EL2.
+
+-- 
+Thanks,
+Oliver
