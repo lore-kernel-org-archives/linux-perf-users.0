@@ -1,116 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF741B85FD;
-	Mon, 10 Feb 2025 23:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C60925EF9F
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 23:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228717; cv=none; b=Z8N14KrOWFR0T1QV/INF9E35PLn/vBCMMmxGsFKWu1iR1PE7FLHAQW+8m4fDSExI8ESPteBXLAoaZckbxCBRvP+J5s5Tqo1zaoQkYfe3KeG8l+2wskrR7lelis46AgFKgXwa5d+WGVsM+/OYm4C30fudNyd3Pnqja7a4GngUNoA=
+	t=1739228878; cv=none; b=kedJLwYl3tBx4zWesIVbKN40T6RMEssHGuqxGffKB/Qe+Vy1kD41+ozcida25W4qjYhh6gOYFakmhueAHoJfSwcvvZaxJ+mHpr6Lo1+0+TKtWMQZlw2VeyVLvPuEXkj4TBH5IQqxta+BWCbBOw7ERFMQtb1EGn07UG2ctWT9KeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228717; c=relaxed/simple;
-	bh=a+20u3F0olFhn2ger6QyJLQ5lx1Ke3LUoxDGzvt6t8E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KNBF2m3rNNwE5ZBevcyGjFlL9VAH+ltP7JR1xV/CqvcXcZDr8Tvc/lL6pX2tNAjRSy4ComHIRoa2btUlmBVT4wpeAj+s4iGctsQYIFe7xso59wOwLfUCRfow33ih9Q8MkGJxluCMZeMIXfDrIGHEVl0OqIT8NUB0WybZJfArKTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ywk5yFm7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739228878; c=relaxed/simple;
+	bh=AxQ0BatG3tWnwllw3i3I8ZpefXtmDeo0wa5eJwy1kCw=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=R0Pc5m8BcUyctreSQiTakZKnHU3mDxnCLzVVjbwSEFfH8CxbfckEdinFDwAeRmdESPb9qOlvDFu5D7ydpvgyy59tdotAuZZZJQPYSi6pR4tR2Wu0AiZy4uAR9ieVcxcbIZiyEWZySSjlLeOtk4WJ8YO2vbCP8VuC9FmapMG3tHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WTM6Kw6O; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ywk5yFm7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB13C4CED1;
-	Mon, 10 Feb 2025 23:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1739228717;
-	bh=a+20u3F0olFhn2ger6QyJLQ5lx1Ke3LUoxDGzvt6t8E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ywk5yFm7ctuCPKJQ9+BCPXUz/RzUhWb19Ww4mTtphZcClJDthieFzci4pzmtFsB2I
-	 Yp0xaownlpeRYsr5jbwGmNoxuPqSzXm8ItDVb71qJ3LuODj6XFApcFUVl6eL6hlFDA
-	 RkQ1jhvczfJ6AIkjUhJS3bVUC+B1AyLXWs+uA/LA=
-Date: Mon, 10 Feb 2025 15:05:15 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, damon@lists.linux.dev, =?ISO-8859-1?Q?J?=
- =?ISO-8859-1?Q?=E9r=F4me?= Glisse <jglisse@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si
- <si.yanteng@linux.dev>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
- <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, SeongJae Park <sj@kernel.org>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pasha
- Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
- Alistair Popple <apopple@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Barry Song <v-songbaohua@oppo.com>
-Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
-Message-Id: <20250210150515.c71078f212ff4661eafc15bf@linux-foundation.org>
-In-Reply-To: <20250210193801.781278-1-david@redhat.com>
-References: <20250210193801.781278-1-david@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTM6Kw6O"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso95692555ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 15:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739228876; x=1739833676; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NzOtRn06dmJeLMt6lIohnur0KCLnTsq8EA/pFJWvUPc=;
+        b=WTM6Kw6Oq/0/pFVlJhgSfg25VRe4w318dx3x3tDoY5irJ3qYxQxm1BqBuZqYetjgaD
+         bO1tl5Om6YGrtqRNLP2icuDGBpJTujwGiNrwtdltyfX4A8oTkpZQgP8Px/fcIs5Xu1tW
+         B+O6HbR4YXXJs10k558a1MAQP9SLczBOhItOSULb5rYzk6iGyYyCSh+0L8cvaOKAaYMY
+         pqja/JCY5j2J3Po3WB2Eg/BFF71bXnUxqaxvmTG7+/seqTpH3BYB0IOTMypkHfxD49Tk
+         SgLQJ6nhWP76uS92hfitTS+qYrWLAUByUyVjOelDuXhluZNmAumHUbkuz75BD7AtrYJ8
+         3wCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739228876; x=1739833676;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NzOtRn06dmJeLMt6lIohnur0KCLnTsq8EA/pFJWvUPc=;
+        b=DUSdyZdEzTYfk5o3Bhl1y46FkeDjs3D61k/LWnOZQSLGJ/W7OprnDudWARLDZGCuv8
+         lfGW+LGXq3Z/YUmsZQuiAI9PV8lW8gZkQAvn1e0qUgXIYYk/OpVYUKCaj0o9hcNLD4jG
+         YOS5lhD8mafMXD3qPmt5nEFD4LwHILbeVwzinAZmM/d/pbiKvdmb7ys0RyftZrnBJhAV
+         yqbYTgjZqa9Aa9Ri68VhAnG9w1qbb9eeON/Ffg/jRV+eTTkIa+6Cny6k3BGv9o/9NYKq
+         Xz5fwWIT3kOwFC+P4m3e85579fcmD7qkxMdazFSDtDgvTGIzD7v1N0TzpYRAk1W28ok+
+         rb8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWo87l/DNIfNL91+zMU98MCKJoAnGu2GuICfFLGHDFYH85c4BPiQ2Ec+051y0JkwO8tH/gkGPqXK/t8WBvUnocF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4X63d9uY+ZX3BWoVavWpbr48gZ6Liqb47DH9hG87h5wQUa8zx
+	BSU+Y7U/rkygmRtCyPeXfQrQZeS7BfyZJm/gTQoMhEs9ipEsO5tIUTSXDA6YasKSMhFlXmHOiGW
+	4RNSDedoWoAFPLJSRX9DNqw==
+X-Google-Smtp-Source: AGHT+IEYUiomyuN/bGInuZpdaF2fRRM/BetqkFJjxK+LoWD1u4DPDFiIADjLJWFWyB1MEsSvhotxG42I2ZAf1MOJBQ==
+X-Received: from ilbbn13.prod.google.com ([2002:a05:6e02:338d:b0:3d0:23fd:8ce4])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:481c:b0:3cf:b626:66c2 with SMTP id e9e14a558f8ab-3d13df546c4mr121244895ab.19.1739228875706;
+ Mon, 10 Feb 2025 15:07:55 -0800 (PST)
+Date: Mon, 10 Feb 2025 23:07:54 +0000
+In-Reply-To: <Z6mp4NeklzORJg5y@linux.dev> (message from Oliver Upton on Sun, 9
+ Feb 2025 23:25:20 -0800)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Message-ID: <gsntfrkl1jqt.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH v2 2/4] perf: arm_pmuv3: Introduce module param to
+ partition the PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com, 
+	shuah@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Mon, 10 Feb 2025 20:37:42 +0100 David Hildenbrand <david@redhat.com> wrote:
+Hi Oliver, thanks for the review.
 
-> Against mm-hotfixes-stable for now.
-> 
-> Discussing the PageTail() call in make_device_exclusive_range() with
-> Willy, I recently discovered [1] that device-exclusive handling does
-> not properly work with THP, making the hmm-tests selftests fail if THPs
-> are enabled on the system.
-> 
-> Looking into more details, I found that hugetlb is not properly fenced,
-> and I realized that something that was bugging me for longer -- how
-> device-exclusive entries interact with mapcounts -- completely breaks
-> migration/swapout/split/hwpoison handling of these folios while they have
-> device-exclusive PTEs.
-> 
-> The program below can be used to allocate 1 GiB worth of pages and
-> making them device-exclusive on a kernel with CONFIG_TEST_HMM.
-> 
-> Once they are device-exclusive, these folios cannot get swapped out
-> (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
-> much one forces memory reclaim), and when having a memory block onlined
-> to ZONE_MOVABLE, trying to offline it will loop forever and complain about
-> failed migration of a page that should be movable.
-> 
-> # echo offline > /sys/devices/system/memory/memory136/state
-> # echo online_movable > /sys/devices/system/memory/memory136/state
-> # ./hmm-swap &
-> ... wait until everything is device-exclusive
-> # echo offline > /sys/devices/system/memory/memory136/state
-> [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
->   index:0x7f20671f7 pfn:0x442b6a
-> [  285.196618][T14882] memcg:ffff888179298000
-> [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
->   dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
-> [  285.201734][T14882] raw: ...
-> [  285.204464][T14882] raw: ...
-> [  285.207196][T14882] page dumped because: migration failure
-> [  285.209072][T14882] page_owner tracks the page as allocated
-> [  285.210915][T14882] page last allocated via order 0, migratetype
->   Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
->   id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
-> [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
-> [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
-> [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
-> [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
-> [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
-> [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
-> [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
-> [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
-> ...
-> 
-> This series fixes all issues I found so far.
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-Cool.
+> Hi Colton,
 
-Barry, could you please redo your series "mm: batched unmap lazyfree
-large folios during reclamation" on top of this (on top of mm-unstable,
-ideally).
+> On Sat, Feb 08, 2025 at 02:01:09AM +0000, Colton Lewis wrote:
+>> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
+>> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
+>> allowed, EL0 while counters HPMN..N are only accessible by EL2.
+
+>> Introduce a module parameter in the PMUv3 driver to set this
+>> register. The name reserved_host_counters reflects the intent to
+>> reserve some counters for the host so the guest may eventually be
+>> allowed direct access to a subset of PMU functionality for increased
+>> performance.
+
+>> Track HPMN and whether the pmu is partitioned in struct arm_pmu
+>> because KVM will need to know that to handle guests correctly.
+
+>> While FEAT_HPMN0 does allow HPMN to be set to 0, this patch
+>> specifically disallows that case because it's not useful given the
+>> intention to allow guests access to their own counters.
+
+> Quite the contrary.
+
+> FEAT_HPMN0 is useful if userspace wants to provide a vPMU that has a
+> fixed cycle counter w/o event counters. Certain OSes refuse to boot
+> without it...
+
+Cool. I'll make sure writing 0 is allowed if we have FEAT_HPMN0.
+
+>> static inline u32 read_mdcr(void)
+>> {
+>> 	return read_sysreg(HDCR);
+>> }
+
+>> static inline void write_mdcr(u32 val)
+>> {
+>> 	write_sysreg(val, HDCR);
+>> }
+
+
+> Hmm... While this fixes the 32bit compilation issues, it opens a new can
+> of worms.
+
+> VHE is a 64bit only feature, so you're *guaranteed* that these accessors
+> will undef (running at EL1).
+
+True. I mentioned in the cover letter they aren't intended to actually
+run in the PMU driver because I guard for VHE there.
+
+>> +static void armv8pmu_partition(u8 hpmn)
+>> +{
+>> +	u64 mdcr = armv8pmu_mdcr_read();
+>> +
+>> +	mdcr &= ~ARMV8_PMU_MDCR_HPMN;
+>> +	mdcr |= FIELD_PREP(ARMV8_PMU_MDCR_HPMN, hpmn);
+>> +	/* Prevent guest counters counting at EL2 */
+>> +	mdcr |= ARMV8_PMU_MDCR_HPMD;
+>> +
+>> +	armv8pmu_mdcr_write(mdcr);
+>> +}
+>> +
+
+> After giving this a read, I don't think the host PMU driver should care
+> about MDCR_EL2 at all. The only time that 'guest' events are loaded into
+> the PMU is between vcpu_load() / vcpu_put(), at which point *KVM* has
+> reconfigured MDCR_EL2.
+
+> I'm not sure if there's much involvement with the host PMU driver beyond
+> it pinky-swearing to only use the specified counters. KVM is what
+> actually will program HPMN.
+
+> That'd alleviate the PMU driver from having VHE awareness or caring
+> about MDCR_EL2.
+
+That does seem like a cleaner solution. I can lift that handling into
+KVM code, but I will still need the variables I introduced in struct
+arm_pmu to be populated so the driver knows what counters to use.
+
+Without looking, I'm concerned there might be an initilization ordering
+issue with that where KVM will get the value for HPMN first because it's
+initialized first but then can't store them somewhere accessible to the
+driver because the driver hasn't been initialized yet. Then the driver
+is initialized and used without knowing HPMN and is now using counters
+we wanted the guest to have.
+
+There is probably an easy way around this, but I'll need to do some
+digging.
