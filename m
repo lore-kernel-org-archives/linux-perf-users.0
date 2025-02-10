@@ -1,168 +1,145 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1EF264604
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 22:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D41B26462C
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 22:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225193; cv=none; b=UJd130zyGizmzpzIRDvEVvC8UPd3glbBbHDb1utPbinih9A6P41YYvbamarFiyFbeHCKfHtp6/Hzdon7qAHAL/sXGCg5UkKYowmcjf1id/tMNvdYUa/bBWuPWCTIWfKESwEQpaZHo27PH+5dZB/+7dP/cUhMKt805KIbDjwZLMc=
+	t=1739225377; cv=none; b=jYEJzRTO/6sKXNO5Oo8VQ0sQE+Ni07XHPFLqIXlM6AzvkrC+23s13Lvr2x+Zg6SRpzlQdPcCV9z/+uOhHDlJdS+ycQD6/3l7x9oIV52ZZJvUm8sPzThzuLHrGuHsy+MeNo0GaWLBnIVbaOl+EeYmflU+0enNZwgnemjULO3RoZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225193; c=relaxed/simple;
-	bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
+	s=arc-20240116; t=1739225377; c=relaxed/simple;
+	bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QFLR6D8Tcn0wF2YVO1XFQbrDA817s8ueaENPoeUV6bK9OfamHR1HA+dLThm0q42AYiBOaHQnb8QiwGRzcKf2NvGVDanjxip+LjyMzzxzxXaeLheqfcPnZkGhse7zRQOyJ58QP5xjqhR3hPqWnDQiYUztuAvv193wr+3OZQg9TCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PxjBMIBp; arc=none smtp.client-ip=209.85.166.178
+	 To:Cc:Content-Type; b=L6Nfu8VSCAlVE4W7gyi2cIVys0tfzsAr9MsL9DQgIF4J6EbULm12F9oZYXJQTqqi/2VZis6AFUXEhbPfZPV0z8C/8x54UV2TBG2vIaA1rNka2xYajvW1synGqxiY9NdUJPUAC/vuQlGsfik/p7dFM4VHDizLxG4HemJz1QfRsDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Er4k8Jgg; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PxjBMIBp"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d05815e89dso14965ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 14:06:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Er4k8Jgg"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de6d412ee9so897a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Feb 2025 14:09:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739225190; x=1739829990; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739225374; x=1739830174; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
-        b=PxjBMIBp4xyHRWGyHh/7cvP+TFtwQgw5NhmcW2SFZfyFKIGA1lO6QangHMlYlLOOlA
-         ZgkIZZtIdo1EJnjH+BdsnE0A7xFU1u+IV/UnMixGQmAOFrkfxrK8y2utFqzgvbOXQKGx
-         r9TZ2q5pbQsAey32RIGlF/YJAgQoxiP6giuGlvCfaW+5r++wXEtb1jViFbysiJCOUFpo
-         9x4rW8lF9AWnlhCiUfHWwvSEHoKURPRwS3uw+3ktG45hGDeBGboSdrPTOGy8+E2KUDRv
-         ACHVwWrMTqAYA6tTQ4MB2x3zMIQrxxr0kkztXWoLTrjyWMWSXWuu0+N8Ov54GbmbnOon
-         8asg==
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=Er4k8Jggi+SM4CnJwm27bFFKeQkowgsaqOyOh89teRf+uRTV8W9l50Gr/9vDaBFO2l
+         DdtALmmisHwzd0PONwPMwil4vpdlJoTeTDFTI3ixQL7x7X8vLAV4839xH0GVspld/V+6
+         96JBHWoYyIJDLDlzGZC/6SyFOwuKXU6qjZY/YzEQ8WeXnGJ1AsmfW2qXHUaA2we5g0v/
+         ArIgVC/8Sq4RykAHj7LkOYAzsNPoLcj/bsq01O5TmO1a6pxI+7SI8q9/zDIrXXSR8D6Y
+         AZAXikH7tZA/LJrwUl9A5DHiVLl+THQrcU87unLFsk16627Gmr4dY3LrCGoj8FQzh2mc
+         KLnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739225190; x=1739829990;
+        d=1e100.net; s=20230601; t=1739225374; x=1739830174;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
-        b=PNbmoNKW0quLnttJsgtuF8GrPRamUTmeMyM+p4joug56ydlg5IzvTSVsYdFgCDmIZs
-         W87L4j1R73GlTwl01+dmcNlpI2WGVNrs+3S3kmjxDYNzBlocNKc7lK4DlvKWGOWBhtii
-         PQkaEcIv5X176BplT+h9FCjtjSW2Ds62ZeVEd7ssF4QdHlgfiY0yVKFrm0lhRV7r6TBs
-         rq1YD9GFGjQ5dK8H3RX8J0R8cO1IEmoW4djNoFs+Rm/RH+gApWxyIfcARe6+6XPjdSXH
-         mtKMMfcsMQZqUILd2wG/Hvknpsw92cKI9jT8y8KdzucwMeHQjquPWLU4fNbq3X807Mjt
-         X3Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOUVUHhQZxNcIs4lXZ5pDBn12+MmXdTYR7z5XAUdmX/vpuFcKdjl0K7Z9gwdih2R62KSwcosvYVdyuESrqMA5M@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSnUTALjdBrrAYmSh3OIVQonCn9Q4Z3jIatro1MD0y5pszpNjQ
-	EF+R24Qd64Toadp+9X/oVR1DX8u6oUL5+eZYEvbjQqCY7GAdF0surfdgVKQJenmoQXK3OE6RuRc
-	Dggo67sKoIjiM2M3dzN9A2WvDobYHTxe2Ne+T
-X-Gm-Gg: ASbGncsG96Wj29iCrtYXjoVOBs2VaehF6ZbMBOMzisgnNIVEQ+KnAk3fmUIv4Dh/3/l
-	2jeJrQmaohvxp4YR1hcsGzdCgzTD/VJB0Z28DqAr+DXNIMcSvlpBPO6ebZx75AJR5fhd+hKUJdr
-	OfLWGlIK7NEUDNJBv/eKwLKXnB
-X-Google-Smtp-Source: AGHT+IHbmaFsg0uQPoONiAHkOtoySaUgQ9K2OpFMnMHTj6dQRyAljGoHjrvfihITbTh3+H7DHH+dost7jlKkscY54Fk=
-X-Received: by 2002:a05:6e02:b45:b0:3cf:a4e4:8f89 with SMTP id
- e9e14a558f8ab-3d16fde3fbdmr1033355ab.4.1739225190504; Mon, 10 Feb 2025
- 14:06:30 -0800 (PST)
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=l58c+VuYQjl+QEom4Wsmr2fjYf4QF24LvqZOdNGza52llo5VvWzamkKq3xNO3Rp9H8
+         iFvyi1NblBgO3fbbB/NSAdrZpZ5FNXV5QNMqmVHdMjy6qlNqM0vtgF9XJGGxOidnZPne
+         ELDSu3a/U1LzbHOI4uK8OVpuBZkaGMGKyfw3Bp5tuw7aGVApHJ/YrbngrQmVbqYvmBzE
+         TPpZUpBvxEDoUKS0unRitArZKVSegy5DAzpVZ4sBOuG0ZdRRssXIWkHDeBGfip42yiJe
+         4SCgFRW9FmTrw8ub6jNne+4RTqxMO50URKUnfcT99Zx+ZaAk/qr6WZEIK6B0DQ6+vf50
+         aPKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQIKFzk+i/BgSSyrqFibrSF4m21gzmZUnDl/vsVImeGm5YNuP2izEm7+5XzqwF61VP8catAj3wR6Tu65g+cvUB@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd6W1CC/jePAK1hSqrhC3E0Gs6t/N21R4fgo1KofEnwA+ZgY7W
+	qmxSNZAWjDFGDqbIL/bVUk0DLo8BP3nHCpoQMvvwCr8Z0Vd7CETUcRlw+gowAAxSeUTEQHbz/fc
+	4Xl9iRcw90IMRlB68ZMTJFbMiFAexpotMXb2v
+X-Gm-Gg: ASbGnctl827iG23rYeg63uJCcURD/aX4OWdrplOGjOgrLrA4Rrfs0ceXA13CWtcvhtU
+	fql2dzCGSmnwjl4+JO96kmC9lLcSSZH9JFJUpxWQRe6M748liy5c+JViWejeIo4qotqyTCLp2PX
+	Ckpoc0Fy9UJXQm6DdI633haYU=
+X-Google-Smtp-Source: AGHT+IG6JmQxBrqAHiHQy9r7fd0aAn9Heiw/iaJpJbhcsh707Pq8kG+sl2h6STthD8Ujnt3Wdn5OEmJdDMQ5PMlBL9s=
+X-Received: by 2002:a50:aa93:0:b0:5dc:d08e:e128 with SMTP id
+ 4fb4d7f45d1cf-5dea05e7838mr1520a12.5.1739225373121; Mon, 10 Feb 2025 14:09:33
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250111190143.1029906-1-irogers@google.com> <Z6panMzNSm1op8Di@google.com>
-In-Reply-To: <Z6panMzNSm1op8Di@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 10 Feb 2025 14:06:18 -0800
-X-Gm-Features: AWEUYZlOOA-fIoE8-LlW-53jmuF6Hg-u3vSRU9Gu28Ay0nhYmrBf7WlcZRy7N58
-Message-ID: <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com> <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 10 Feb 2025 23:08:55 +0100
+X-Gm-Features: AWEUYZmtdNVDV_xq3vvo5TVQ7aaS79EFzdycTCfl72XGpztchND9QHjN9zcxWNo
+Message-ID: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
+ targeting NOHZ_FULL CPUs
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Hao Ge <gehao@kylinos.cn>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
+	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
+	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 11:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
-> > Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> > BPF filters for uid filtering. The /proc scanning in thread_map is
-> > racy as the PID may exit before the perf_event_open causing perf to
-> > abort. BPF UID filters are more robust as they avoid the race. Add a
-> > helper for commands that support UID filtering and wire up. Remove the
-> > non-BPF UID filtering support.
->
-> Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
-> Also non-root users will be limited unless it pinned the BPF program in
-> advance.
->
-> I think you can keep the original behavior and convert to BPF only when
-> it's available.
+On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+> What if isolated CPUs unconditionally did a TLBi as late as possible in
+> the stack right before returning to userspace? This would mean that upon
+> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
+> range translation - with the exception of whatever lies between the
+> last-minute flush and the actual userspace entry, which should be feasibl=
+e
+> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
+> could be entirely silenced if it targets an isolated CPU.
 
-Using BPF when available would be limited progress. The issues I have
-with not removing the existing approach are:
+Two issues with that:
 
-1) It is broken
-Scanning /proc for pids and then doing perf_event_open means that any
-time a process exits the perf_event_open fails.
-Steps to reproduce:
-This bug reproduces easily but if your machine is lightly loaded in
-one terminal run `perf test`, in another terminal run `sudo perf top
--u $(id -u)` the perf top command will exit with:
-```
-Error:
-The sys_perf_event_open() syscall returned with 3 (No such process)
-for event (cycles:P).
-/bin/dmesg | grep -i perf may provide additional information.
-```
+1. I think the "Common not Private" feature Will Deacon referred to is
+incompatible with this idea:
+<https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-=
+not-Private>
+says "When the CnP bit is set, the software promises to use the ASIDs
+and VMIDs in the same way on all processors, which allows the TLB
+entries that are created by one processor to be used by another"
 
-2) It is a work in progress that isn't progressing. Scanning /proc
-will only tell you about started processes; it won't tell you about
-processes that start during the profiling run, whether it be perf top
-or perf record. Extra work would be necessary to make this most basic
-of use-cases work, perhaps you could use tracepoints to capture
-starting processes and then enable user profiling on those processes.
-It would be horribly complicated, suffer from delays between observing
-things happen and doing the perf_event_open, biases in the samples,
-etc. I don't expect anyone to do it, especially when BPF filtering
-already solves the problem better. There have been 13 years that
-someone could have fixed it.
-
-3) it adds significant useless complexity to the code base. Having
-'user' in the target makes it look like perf_event_open can work on a
-pid, system wide or user basis. The user basis doesn't exist so the
-majority of the code base is just ignoring it - search for users of
-uid_str on target. Those that do run into problems (1) and (2).
-
-4) It is redundant and leads to confusion with BPF filtering. Having
-the BPF filter on evsels is non-zero cost in terms of the code base
-complexity, but it is something broadly useful. As user filtering has
-never worked (see above) it isn't broadly used but is adding
-complexity. If both approaches were wanted then it is unclear what the
-code should be doing, presumably the mish-mash of BPF filtering and
-/proc scanning that happens today and will be broken due to (1) and
-(2). Putting everything into the BPF filter makes sense as you can
-combine a BPF filter with an additional BPF filter on user.
-
-5) It is untested and adding a test leads to an always broken test due
-to testing being an example of where things break, see point 1 and its
-example.
-
-6) Nobody wants the non-BPF approach. As it was broken nobody used the
-previous feature, maintaining it for no users is overhead. Let me know
-if someone is using this option (I doubt it given points 1 and 2) and
-they wouldn't be better served by BPF. People building perf today have
-to explicitly opt-out of wanting BPF in their tooling. I posted this
-change a month ago and nobody has jumped up saying please don't remove
-the old approach.
-
-7) The interaction with this feature and changes in behavior, say
-ignoring events that fail to open, is non-obvious and not testable as
-testing would be broken as the functionality itself is broken. Having
-the broken feature hanging around and being untestable means that we
-slow progress on new features, testing and other improvements.
-
-Yes, we could try to fix all of that but why? Nobody has cared or
-tried in 13 years and I would like the tech debt off our plate with a
-better approach in its place.
-
-Thanks,
-Ian
+2. It's wrong to assume that TLB entries are only populated for
+addresses you access - thanks to speculative execution, you have to
+assume that the CPU might be populating random TLB entries all over
+the place.
