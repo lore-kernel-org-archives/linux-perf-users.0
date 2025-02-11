@@ -1,205 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA7B1E47A8;
-	Tue, 11 Feb 2025 18:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD5026E659;
+	Tue, 11 Feb 2025 19:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299755; cv=none; b=Av3dHznBouS1HbBeR9ZKIULR1JfWLgVSVFIBEKY+F3P2VKUtoXtK26S1CK4r7s5L6aoQMBmN57TH3+pCjLsqS3qTKOxyWMHx8oz/luW0x+VwnTULDnkdD4qmLY57EWK/o4uEwtZPxVAAhpYb8tlbOd97XHMM5IIJ4FhgVHlqfHg=
+	t=1739303191; cv=none; b=jp4FcELdNyTIiY1lSU1vafC1WuPhlE+rgWRpic2xcC1rA2IuHBuAhbPka3CZJdK1wjmR4hgTznbkeDX/4gijLNgLy6Vvp7KZeBzucp4PXR0KxexXFKVn3O/eFa+fh4b0p4IPNYHYhGDNnDk3hbQItnWQaB4blpicVoLAy580sKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299755; c=relaxed/simple;
-	bh=1fSp9O78MatFqFQr2w/MPuTzexQ8JPLX3xFindEdAr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lv9SUmmCXdlN6kgnB9Q0W9+ql9YmsB304UHzl0FdbdBVR6lVZsqadW59BaUNNnayGWxSl1rc3EL5y9O+ZBdxONI95dy0eBB7l7rUm2MKsV4N55vZj/5EgZqc5LcnA5a++92qQK5QDGEYZRi6HHZhOT2LTrKeXnn6n462z4ui2BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdGNcXXu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739303191; c=relaxed/simple;
+	bh=aWJmVmjzQS1ECgDv7o5K7l5ZvaKWihh1ZJL/R6XH5jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EEgUK4LrbTFoKWejZuSLDFo1oDrTB7fOVMSjrydLd2vorUpzsdteKxeHwFNcrmt7fqwituUkWud2Kx1f9/SdbZyQguBEOjp6fVr/tesP+UXDzt6Xxkkkd80TdOvKiFA7vOpgLEXHa0koWKdv9Tpoi2uemjGpljA/6MlAnyf86rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AevZ0nYj; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdGNcXXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CB1C4CEDD;
-	Tue, 11 Feb 2025 18:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739299754;
-	bh=1fSp9O78MatFqFQr2w/MPuTzexQ8JPLX3xFindEdAr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FdGNcXXua31qk+70FnANdqYehm2pnj6Dwig7yxiUTed03KSjuNvMdYkm22LgCDEKL
-	 D8O0Y5bMZVwn8XFqwW1hMLNnI7yIbViHUghDwl0WhP8awyY481B/CyWuP3ERFElbVA
-	 Mnt1k3/ShwfTEl2NhyfuGxCMZXcQFtQygf1VjGXTwbSyl0XwF8GBQkHfOQie2xk1iC
-	 a7+pMZmW0ssAA0HeK0p0VlRmy8pkucwtVP5aEzsxB9OprFP1DZXEhYl3RxNUhjrhW7
-	 LJVEowE1frBEHRsMEC9TypdKVjJU1ddoEZgcn+j+lEKZzGGqmC2f5vPHcw7VBeb9A6
-	 aTae2la6Av90Q==
-Date: Tue, 11 Feb 2025 19:49:11 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 00/10] perf record --off-cpu: Dump off-cpu samples
- directly
-Message-ID: <Z6ubp1k2_bm2pKf1@x1>
-References: <20241215181220.754822-1-howardchu95@gmail.com>
- <Z2CJW0vFT005gmIe@google.com>
- <Z6uQmcLllm1wR3-h@x1>
- <CAH0uvog9x1eD4P=hyU5eO+c9z5dNDfffMiZOBwTgdwLhfPi06w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AevZ0nYj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739303190; x=1770839190;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aWJmVmjzQS1ECgDv7o5K7l5ZvaKWihh1ZJL/R6XH5jg=;
+  b=AevZ0nYjztvteMVPXD518bWrNF/gAu2h//H8vPpssCZmKKrwWxxrio9p
+   YQutxNY+Ke3k5LaTI9UW/Sag1A6uDShSgCUq7BzbqrPcG6DPZKUn3Ny0e
+   mGc2V378lldc5jaMuIT+k/+gjWv5gV5nxrkpN14dVys9tfpNEK3HfA/CV
+   Lv6o0AH6FAwfnkMEwiD39DnafckKAm/Ys68MZUJp2ggsyMR371BSTc5Om
+   L6Rg2EQ1aHP5L+4H7XvAljOTS3rDAdUHpTAAIavovXid8FMiRtKa4ycSL
+   XvN6I50ynj4iXJe0RdJu62GU2w4m/9K4M9hnBc5n5LHGYoVVmfKrxNhwa
+   g==;
+X-CSE-ConnectionGUID: t8hiI62hSYCCAYDgtiiMJA==
+X-CSE-MsgGUID: CeA2CeQCR0mQ7/UpcceIIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39854775"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39854775"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:46:28 -0800
+X-CSE-ConnectionGUID: XEK8Je+8TkqjxwyZGopdEQ==
+X-CSE-MsgGUID: jJz7N6gTQvO9f5ZKmLwwsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="143519247"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmviesa001.fm.intel.com with ESMTP; 11 Feb 2025 11:46:27 -0800
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v2 00/17] Prepare for new Intel Family numbers
+Date: Tue, 11 Feb 2025 19:43:50 +0000
+Message-ID: <20250211194407.2577252-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvog9x1eD4P=hyU5eO+c9z5dNDfffMiZOBwTgdwLhfPi06w@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 10:30:16AM -0800, Howard Chu wrote:
-> On Tue, Feb 11, 2025 at 10:02 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > When running just one workload:
+---Summary---
+Mainstream Intel processors have been using Family 6 for a couple of decades.
+Audit all the Intel Family-model checks to get ready for the upcoming Family 18
+and 19 models.
 
-> > root@number:~# for a in `seq 10` ; do perf record --off-cpu sleep 1s ; perf script | grep offcpu-time ; done
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (13 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (16 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (14 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (12 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-> > root@number:~#
+Patch 1: Preparatory cleanup in smpboot.
+Patch 2-7: Fixes in arch/x86 and drivers.
+Patch 8-17: Cleanups in arch/x86 to convert x86_model checks to VFM ones.
 
-> > Have you tested it like that? Is this a known issue/current limitation?
+This series does not include cleanups in drivers/.
 
-> With your command:
-> Tuel $ for a in `seq 10` ; do sudo perf record --off-cpu sleep 1s ;
-> sudo perf script | grep offcpu-time ; done
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (8 samples) ]
-> :56645   56645 18446744069.414584: 1000127411 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (8 samples) ]
-> :56723   56723 18446744069.414584: 1000058038 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (8 samples) ]
-> :56778   56778 18446744069.414584: 1000230651 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (9 samples) ]
-> :56810   56810 18446744069.414584: 1000140263 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (17 samples) ]
-> :56877   56877 18446744069.414584: 1001209864 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (9 samples) ]
-> :56919   56919 18446744069.414584: 1000230734 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (9 samples) ]
-> :56975   56975 18446744069.414584: 1000080484 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (9 samples) ]
-> :57008   57008 18446744069.414584: 1000057996 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (9 samples) ]
-> :57040   57040 18446744069.414584: 1000084270 offcpu-time:
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.017 MB perf.data (8 samples) ]
-> :57072   57072 18446744069.414584: 1000081663 offcpu-time:
-> 
-> It works for me... I'm trying to think of a reason. I have no perf config btw.
+Please feel free to pick up whichever patches seem ready. Most of the patches
+can be applied out of order except patches 1 and 2 which should be applied
+together.
 
-root@number:~# uname -a
-Linux number 6.12.11-100.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jan 23 22:07:15 UTC 2025 x86_64 GNU/Linux
-root@number:~# cat ~/.perfconfig 
-# this file is auto-generated.
-[report]
-	children = no
-root@number:~# rm -f ~/.perfconfig 
-root@number:~# for a in `seq 10` ; do perf record --off-cpu sleep 1s ; perf script | grep offcpu-time ; done
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (14 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (13 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-root@number:~#
+---v2 changes---
 
-Some more data:
+* Improve commit messages.
+* Split and reorder patches for better readability.
+* Added a cleanup patch in the beginning.
 
-root@number:~# perf record --off-cpu sleep 1s
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
-root@number:~# perf evlist
-cpu_atom/cycles/P
-cpu_core/cycles/P
-offcpu-time
-dummy:u
-root@number:~# perf evlist -v
-cpu_atom/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0xa00000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
-cpu_core/cycles/P: type: 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x400000000, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
-offcpu-time: type: 1 (software), size: 136, config: 0xa (PERF_COUNT_SW_BPF_OUTPUT), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER, read_format: ID|LOST, disabled: 1, enable_on_exec: 1, sample_id_all: 1
-dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|IDENTIFIER, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-root@number:~# perf report -D | grep PERF_RECORD_SAMPLE
-4294967295 20129389592917 0x9240 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a376ff1 period: 1 addr: 0
-4294967295 20129389596787 0x9270 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a01e8b6 period: 1 addr: 0
-4294967295 20129389598447 0x92a0 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a053e64 period: 13 addr: 0
-4294967295 20129389599368 0x92d0 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a00f052 period: 398 addr: 0
-4294967295 20129389600270 0x9300 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8b401fad period: 15226 addr: 0
-4294967295 20129389604095 0x9360 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a405930 period: 607346 addr: 0
-4294967295 20129389739536 0x94e8 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4002): 474261/474261: 0x7f9bf499fe7c period: 5436975 addr: 0
-root@number:~#
+RFC-v1: https://lore.kernel.org/lkml/20241220213711.1892696-1-sohil.mehta@intel.com/
 
-root@number:~# perf report -D | grep PERF_RECORD_SAMPLE -A2
-4294967295 20129389592917 0x9240 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a376ff1 period: 1 addr: 0
- ... thread: perf-exec:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389596787 0x9270 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a01e8b6 period: 1 addr: 0
- ... thread: perf-exec:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389598447 0x92a0 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a053e64 period: 13 addr: 0
- ... thread: perf-exec:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389599368 0x92d0 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a00f052 period: 398 addr: 0
- ... thread: perf-exec:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389600270 0x9300 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8b401fad period: 15226 addr: 0
- ... thread: perf-exec:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389604095 0x9360 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4001): 474261/474261: 0xffffffff8a405930 period: 607346 addr: 0
- ... thread: sleep:474261
- ...... dso: /proc/kcore
---
-4294967295 20129389739536 0x94e8 [0x30]: PERF_RECORD_SAMPLE(IP, 0x4002): 474261/474261: 0x7f9bf499fe7c period: 5436975 addr: 0
- ... thread: sleep:474261
- ...... dso: /usr/lib64/ld-linux-x86-64.so.2
-root@number:~# 
+---Background---
+The last mainstream Intel processors that deviated from Family 6 were the
+Netburst architecture based Pentium 4s that had a Family number of 15. Intel
+has recently started to introduce extended Family numbers greater than 15, as
+seen in commit d1fb034b75a8 ("x86/cpu: Add two Intel CPU model numbers").
+Though newer CPUs can have any Family number, the currently planned CPUs lie in
+Families 18 and 19.
 
-- Arnaldo
+Some kernel code assumes that the Family number would always remain 6.  There
+are checks that apply to recent Family 6 models such as Lunar Lake and
+Clearwater Forest but don't automatically extend to Family 19 models such as
+Diamond Rapids. This series aims to fix and cleanup all of such Intel specific
+checks (mainly in arch/x86) to avoid such issues in the future. It also
+converts almost all of the x86_model checks in arch/x86 to the new VFM ones.
+
+OTOH, x86_model usage in drivers/ is a huge mess. Some drivers might need to be
+completely rewritten to make them future-proof. I have attempted a couple of
+fixes in cpufreq and hwmon, but they are mostly superficial.  A more thorough
+clean up of drivers is needed to replace all x86_model usage with the new VFM
+checks.
+
+---Assumptions and Trade-offs---
+Newer CPUs will have model numbers only in Family 6 or after Family 15.  No new
+processors would be added between Family 6 and 15.
+
+As a convention, Intel Family numbers are referenced using decimals (Family 15,
+19, etc.) even though the AMD-specific code might prefer hexadecimals in
+similar situations.
+
+It would be preferable to have simpler and more maintainable checks that might
+in a rare situation change the behavior on really old platforms. If someone
+pops up with an issue, the code would be fixed later.
+For example, the check,
+	c->x86_vfm >= INTEL_PENTIUM_PRO
+is preferred over,
+	c->x86 == 6 || c->x86 > 15
+if the likelihood of adversely affecting Family 15 is low.
+
+Also, the CPU defines in intel-family.h have been added as and when needed to
+make reviewing and applying patches out of order easier.
+
+Sohil Mehta (17):
+  x86/smpboot: Remove confusing quirk usage in INIT delay
+  x86/smpboot: Fix INIT delay optimization for extended Intel Families
+  x86/apic: Fix 32-bit APIC initialization for extended Intel Families
+  x86/cpu/intel: Fix the movsl alignment preference for extended
+    Families
+  x86/cpu/intel: Fix page copy performance for extended Families
+  cpufreq: Fix the efficient idle check for Intel extended Families
+  hwmon: Fix Intel Family-model checks to include extended Families
+  x86/microcode: Update the Intel processor flag scan check
+  x86/mtrr: Modify a x86_model check to an Intel VFM check
+  x86/cpu/intel: Replace early Family 6 checks with VFM ones
+  x86/cpu/intel: Replace Family 15 checks with VFM ones
+  x86/cpu/intel: Replace Family 5 model checks with VFM ones
+  x86/pat: Replace Intel x86_model checks with VFM ones
+  x86/acpi/cstate: Improve Intel Family model checks
+  x86/cpu/intel: Bound the non-architectural constant_tsc model checks
+  perf/x86: Simplify P6 PMU initialization
+  perf/x86/p4: Replace Pentium 4 model checks with VFM ones
+
+ arch/x86/events/intel/p4.c            |  7 +--
+ arch/x86/events/intel/p6.c            | 28 +++--------
+ arch/x86/include/asm/intel-family.h   | 21 ++++++++-
+ arch/x86/kernel/acpi/cstate.c         |  8 ++--
+ arch/x86/kernel/apic/apic.c           |  4 +-
+ arch/x86/kernel/cpu/intel.c           | 68 +++++++++++++--------------
+ arch/x86/kernel/cpu/microcode/intel.c |  2 +-
+ arch/x86/kernel/cpu/mtrr/generic.c    |  4 +-
+ arch/x86/kernel/smpboot.c             | 17 ++++---
+ arch/x86/mm/pat/memtype.c             |  7 +--
+ drivers/cpufreq/cpufreq_ondemand.c    | 15 +++---
+ drivers/hwmon/coretemp.c              | 26 ++++++----
+ 12 files changed, 111 insertions(+), 96 deletions(-)
+
+-- 
+2.43.0
+
