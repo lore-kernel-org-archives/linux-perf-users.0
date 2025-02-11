@@ -1,265 +1,331 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196C51E1C36;
-	Tue, 11 Feb 2025 17:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CF5261567;
+	Tue, 11 Feb 2025 18:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296422; cv=none; b=dAJdwXDvqguZHaNmbXunlMsmQy+OjAFctfFUApfNPMEysJykNO4QXJjmVcWrJ7pTWSs8wJD0golV2QHODRjoQykye22FWk+8E/drOr6b4H9OlPhOM5TZbNmpFbeX1R2oO1fXKflLUH7wY4jZMTJ/UyPOJ4pTBewO37s6TMtBe4g=
+	t=1739296924; cv=none; b=KW20q59o80OC3CrvGRZS7crxZBe0t4NgAsJFgLgflca3uwVnhNAChvETr5H7oW68UITWjVfJeZ0jGHP80H7rjZ+5X/WTLpWx8wMggahqOeBYi7lbwt6JclADRXii4nYu6T79+x/Qyqr/BlX94SXGrZ+8FOfQe+mQ36qc5fPbkQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296422; c=relaxed/simple;
-	bh=GE1kldghOgP70TaKSUomVIQtR7kYLCPGRgIKUi7/aQQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=jMHTfJMirv+nAJ+1yVr8TM4Sgt9bAKTqGatukGmdE/KXj4acKnIao6RhK0PO1pKv8QLWr5/Y1WPSX9ucZgBjANXkcdX81SHQdQVLmoZkQUZcJWe28ycemQ7gD1gGM+ldnoOu0O5cxSLvL3BLNEV0KOITyrbKZzG1mwFVnOXc5PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=xdIFMDyt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=0DlcNb++; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1739296924; c=relaxed/simple;
+	bh=9q1j9mbK6taSlO9Ko0itXO+3nwGf6IaO51i+WTz7fxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szsxc35vNegO8F1UGe8rOTscCmyyT3TguRcFJAkdaD79pp0+AunX8ux2zJA/WRLYgyRayvTdE02h0F8Vn6XOMvYNnaKoQahj04FynHiZdKOCiBYFPTGL9wejJM8wP9oDUa1zwDHlt9CsGrfP3g92hE7P6zspolYXeCdFBy5eVo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4Tg4Kqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="xdIFMDyt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0DlcNb++"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3FF6725400A1;
-	Tue, 11 Feb 2025 12:53:38 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 12:53:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1739296418;
-	 x=1739382818; bh=Rt/0iFar5WRl6aZpHewFb36ggb3LydDYcBs0BC+08Ys=; b=
-	xdIFMDytym6Gl76ox2nUrc/+Rjo4HHYbnFvPzDNfmVJOT9CbDLyBqAyNfdN20VvJ
-	cgRQoXlnRZjr2VYKwkjXMlgUTPljbfnh7gMsvoEUjJsBMIDHV2ycpiRFGvSn+mil
-	WJRoThppckQb3/r9fdkuv3RUB1qUQJWR/u+7qNoLliX7o8gbH0WV88JyiLr8EwCI
-	xRHB0HrK2VgTGXyk0gkmNLjj2ZJGz7JVHmtpqFfxgJbJXF6guOsss8jWZpQINLcW
-	PBGs2Hlu+BY2FpZGBn3wt/8ZYhkMR7IGByPbF9e6AYceOoo1ZeGciKOZXIxsgMcg
-	4COTvD+U4Lft3Q6iJanI5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739296418; x=
-	1739382818; bh=Rt/0iFar5WRl6aZpHewFb36ggb3LydDYcBs0BC+08Ys=; b=0
-	DlcNb++aMvOAm9oNraH3ejZxfReC6Y5fc46AmdRDkwW41nHo/qiXXIiPqElpcSU3
-	ncLOLV0a4ryIT2HlNb1QYW9yzWYjth1gqibyvMZ45CJB/v8EWZ9yMMYiryM2aY18
-	MOryAESqjt4NKB2WC56yFBkPay4H+V1JixCq4pJdJHOo35lzPew+aub6VXmzOBED
-	A8q2k/UfbmT1N3+eez9ZV8Wpc9ujl4wfznFJDVrVJ4X6n3DccfCHzSaj9iE2W6mr
-	rvZFlSThPkLhKse2UvhMbsBzctqVUyzuHFqqMGDbTNZrBEMXrYYIW3r35Gwlh8AL
-	CooNgkovAVGWzDnuxzE6Q==
-X-ME-Sender: <xms:n46rZ1jbUikOuSHxPTNNI2Cn7iRliRmpGRTsc3wYuJIXL8oZqFXn6w>
-    <xme:n46rZ6CQbtYAPvcFaBPAwgi143Vf5FX51PXqi39uc7VVRDo4tSUoKSfCWwJcZOZ_J
-    iJ-mByPO2v0FNoTaGw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeihecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpeetfeduheevuddtuefgueevffeludehheefheff
-    ueejudelvdehiedvffelffejtdenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
-    rhhnuggsrdguvgdpnhgspghrtghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthht
-    ohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphgrlhhmvg
-    hrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgv
-    lhgvhidrvgguuhdprhgtphhtthhopehhohifrghruggthhhuleehsehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepihhrohhgvghrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
-    phgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprggurhhirghnrd
-    hhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtphhtthhopegrtghmvgeskhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:n46rZ1Gs461BZbHoB9llQOxf7KMqllCx5S0qZC49xXmC6Ekq-z9a_Q>
-    <xmx:n46rZ6SQUPRD6LEilvVLC7euKo6wczwsgWyqxzrWXi1iq-sAjHGEJg>
-    <xmx:n46rZyyytDPl5S3GDTuFiezwfj_9ZZfJ5VcUxIg-xVlUFZ0Z7MgTcA>
-    <xmx:n46rZw4BekUScJ0AeZP8wT0i2Ihr0coN7ugZeUxPwPHwDHTGC5FweQ>
-    <xmx:oo6rZ78X6Hck3eR5im0KEY5fY3R-pQAhJVlM8zz_igsWuAdMEONPZbEH>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 76E112220072; Tue, 11 Feb 2025 12:53:35 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4Tg4Kqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6DAC4CEDD;
+	Tue, 11 Feb 2025 18:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739296924;
+	bh=9q1j9mbK6taSlO9Ko0itXO+3nwGf6IaO51i+WTz7fxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F4Tg4KqplSiGhbtaGLoG4jctttHxqUsEUQoZIzH3meCwihdJnclA5DEn9U4banEMr
+	 /1UHRYUoCEfZoH76qCnVmJaLeWIMp12K0WVs+GLtH90jegM0X2PblqVNXnuf74njfV
+	 eCg2L/ONWgewOgYZ8thZsQIfZfyR4TBmpp8T33wVqAhYT86W7CZom6xhCpkmNf7t1q
+	 ueMJV2OuC78KNSKtp5NvTgBbMHOSxkzPB1XU6PhPx1NgjK+M8/gKEGlUEW5LHidnKP
+	 AOupEPGTNq913L4KYt/Yp045XCLudBK/R2Y45gt/TCIkPCbDhxWy+f8+8j7rccXEIx
+	 3HRyHDLNhZXPw==
+Date: Tue, 11 Feb 2025 19:02:01 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v14 00/10] perf record --off-cpu: Dump off-cpu samples
+ directly
+Message-ID: <Z6uQmcLllm1wR3-h@x1>
+References: <20241215181220.754822-1-howardchu95@gmail.com>
+ <Z2CJW0vFT005gmIe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 18:53:14 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ian Rogers" <irogers@google.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Howard Chu" <howardchu95@gmail.com>
-Cc: "Peter Zijlstra" <peterz@infradead.org>,
- "Ingo Molnar" <mingo@redhat.com>, "Namhyung Kim" <namhyung@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Jiri Olsa" <jolsa@kernel.org>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Kan Liang" <kan.liang@linux.intel.com>,
- "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
- "James Clark" <james.clark@linaro.org>,
- "Mike Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>,
- guoren <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Charlie Jenkins" <charlie@rivosinc.com>,
- "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-riscv@lists.infradead.org
-Message-Id: <0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
-In-Reply-To: 
- <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
-References: <20250210165108.95894-1-irogers@google.com>
- <20250210165108.95894-6-irogers@google.com>
- <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
- <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating all system
- call tables
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z2CJW0vFT005gmIe@google.com>
 
-On Tue, Feb 11, 2025, at 18:24, Ian Rogers wrote:
-> On Tue, Feb 11, 2025 at 12:09=E2=80=AFAM Arnd Bergmann <arnd@arndb.de>=
- wrote:
->> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
->> > "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfil=
-e"
->> > common,64,renameat,rlimit,memfd_secret EM_AARCH64
->> > +cat >> "$outfile" <<EOF
->> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) ||
->> > defined(__aarch64__)
->>
->> Hardcoding the set of ABIs in the middle of the script seems
->> too fragile to me, I'm worried that these get out of sync quickly.
->
-> I agree, again this is carrying forward a behavior and at least after
-> these changes the location is just one place. Do you have any
-> suggestions on how to do better?
+On Mon, Dec 16, 2024 at 12:11:07PM -0800, Namhyung Kim wrote:
+> On Sun, Dec 15, 2024 at 10:12:10AM -0800, Howard Chu wrote:
+> > As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+> > 
+> > Currently, off-cpu samples are dumped when perf record is exiting. This
+> > results in off-cpu samples being after the regular samples. This patch
+> > series makes possible dumping off-cpu samples on-the-fly, directly into
+> > perf ring buffer. And it dispatches those samples to the correct format
+> > for perf.data consumers.
+> > 
+> > Before:
+> > ```
+> >      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  ffffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+> >             perf  770116 [001] 27981.041375:          1    cycles:P:  ffffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+> >             perf  770116 [001] 27981.041377:          1    cycles:P:  ffffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+> >             perf  770116 [001] 27981.041379:      51611    cycles:P:  ffffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+> >      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  ffffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+> >      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  ffffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+> > 
+> > sshd  708098 [000] 18446744069.414584:     286392 offcpu-time: 
+> > 	    79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+> > 	    585690935cca [unknown] (/usr/bin/sshd)
+> > ```
+> > 
+> > After:
+> > ```
+> >             perf  774767 [003] 28178.033444:        497           cycles:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+> >             perf  774767 [003] 28178.033445:     399440           cycles:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+> >          swapper       0 [001] 28178.036639:  376650973           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+> >          swapper       0 [003] 28178.182921:  348779378           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+> >     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time: 
+> > 	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+> > 	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+> > 	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+> > 	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+> > 	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+> > 	    7fff24e862d8 [unknown] ([unknown])
+> > 
+> > 
+> >     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time: 
+> > 	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+> > 	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+> > 	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+> > 	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+> > 	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+> > 	    7fff24e862d8 [unknown] ([unknown])
+> > 
+> > 
+> >          swapper       0 [000] 28178.463253:  195945410           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+> >      dbus-broker     412 [002] 28178.464855:  376737008           cycles:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+> > ```
 
-Not sure, but I have some patches that I was planning to send
-that puts these into arch/*/kernel/Makefile.syscalls for all
-architectures in a consistent way. Ideally we'd use the same
-Makefile contents for tools/perf in order to trivially sync
-them, but I'm also happy to hear other suggestions.
+So I'm trying to reproduce your results, with:
 
-Your patches are currently ahead of mine, so I don't want to
-hold you up.=20
+root@number:~# perf record --off-cpu sleep 0.6
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+root@number:~# perf trace -e *sleep sleep 0.6
+     0.000 (600.137 ms): sleep/466769 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 600000000 }, rmtp: 0x7ffe024dea30) = 0
+root@number:~#
 
-> Fwiw, I wonder a related problem/question that has come up primarily
-> with Arnaldo and Howard is in having a way to determine system call
-> argument types so that perf trace can pretty print them. For example,
-> if via BTF it is found an argument is a "const char*" then it is
-> assumed to be a string, but a "char *" is not as it may just be an out
-> argument. There's a source for more information in the syzkaller
-> project:
-> https://github.com/google/syzkaller/blob/master/sys/linux/sys.txt
-> Perhaps there's a way to generate this information from the Linux
-> build and feed it into perf's build. It is out-of-scope for what I'm
-> trying to do here, but I thought it worth a mention given my general
-> ignorance on wider things.
+So a simple test that crosses that 500ms threshold and thus should
+produce an offcpu-time sample, right?
 
-Yes, this is also something I've been trying to work on. In particular
-the calling conventions for 64-bit register arguments on 32-bit
-targets need some help. My plan for this is to have a consistent
-mapping of internal (sys_foo()) function names to argument lists,
-instead of having some calls that are slightly different depending
-on the architecture or ABI.
+root@number:~# perf record --off-cpu sleep 0.6
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+root@number:~# perf evlist
+cpu_atom/cycles/P
+cpu_core/cycles/P
+offcpu-time
+dummy:u
+root@number:~#
 
-This should be in a machine-readable format so it can be parsed
-not only by perf but also any other project that needs a list
-(libc, gdb, qemu, strace, rust, ...)
+root@number:~# perf script | grep offcpu
+root@number:~#
 
->> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
->> > +EOF
->> > +build_tables
->> > "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfil=
-e"
->> > common,64,n64 EM_MIPS
->> > +cat >> "$outfile" <<EOF
->> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
->>
->> What about n32/o32? The syscall tables are completely different here.
->
-> So perf hasn't historically supported them and no one is asking for
-> support. Generating more tables isn't the problem, but we need to have
-> some way of determining which table to use for n32/o32. I see
-> EF_MIPS_ABI_O32 and EF_MIPS_ABI_O64, so we could add support by
-> extending the lookup of the table to be both of e_machine and e_flags.
-> I'm less clear on choosing n32. That said, back in the 90s I was
-> working to port MIPS code to Itanium via binary translation. Given now
-> Itanium is obsolete, I'm not sure it is worth adding complexity for
-> the sake of MIPS. I'm happy to do what others feel is best here, but
-> my default position is just to carry what the existing behavior is
-> forward.
+What I have:
 
-I think the way it actually works on mips is that all syscalls are
-allowed in any task and the actual number identifies both the
-ABI and the syscall. In some variant, the same is true on arm
-(oabi/eabi) and x86-64 (64/x32), but oabi and x32 are both too
-obsolete to put much work into them.
+⬢ [acme@toolbox perf-tools-next]$ git log --oneline -11
+cd59081880e89df8 (HEAD -> perf-tools-next) perf test: Add direct off-cpu test
+56cbd794c0c46ba9 perf record --off-cpu: Add --off-cpu-thresh option
+28d9b19c5455556f perf record --off-cpu: Dump the remaining samples in BPF's stack trace map
+2bc05b02743b50a7 perf script: Display off-cpu samples correctly
+bfa457a621596947 perf record --off-cpu: Disable perf_event's callchain collection
+eca732cc42d20266 perf evsel: Assemble offcpu samples
+74ce50e40c569e90 perf record --off-cpu: Dump off-cpu samples in BPF
+e75f8ce63bfa6cb9 perf record --off-cpu: Preparation of off-cpu BPF program
+0ffab9d26971c91c perf record --off-cpu: Parse off-cpu event
+efc3fe2070853b7d perf evsel: Expose evsel__is_offcpu_event() for future use
+357b965deba9fb71 (perf-tools-next/perf-tools-next) perf stat: Changes to event name uniquification
+⬢ [acme@toolbox perf-tools-next]$
 
-There is still some interest in mips, maybe you can poke the
-maintainers and see if someone is willing to help out since you
-have done the bulk of the work already.
+The only change was the one I mentioned about 'struct __stack'
+replacing 'struct stack' to avoid the clash with the vmlinux.h generated
+using GEN_VMLINUX_H=1.
 
->> > +EOF
->> > +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl"
->> > "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
->> > +cat >> "$outfile" <<EOF
->> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
->>
->> This skips the 32-bit table, though I think that one is already
->> planned to be discontinued in the future.
->
-> Thankfully we have awesome s390 devs on the mailing list, hopefully
-> they'll shout out if I'm doing things wrong.
+Perhaps that is because my test is not being system wide, if I use '-a'
+we get:
 
-I also remembered that I had a patch to bring the s390 syscall.tbl
-into the same format as the others, since the behavior is currently
-a bit different for compat calls. I think there is also a chance
-that they want to discontinue 32-bit mode entirely, given that
-the last 32-bit machine was discontinued over 20 years ago, and
-support for native 32-bit kernels got removed 10 years ago
-after Debian 8 moved to 64 bit.
+root@number:~# perf record --off-cpu -a sleep 0.6
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.868 MB perf.data (443 samples) ]
+root@number:~# perf script | grep offcpu
+         firefox    4010 [004] 16746.571035:  518930922       offcpu-time: 
+           sleep  466955 [019] 16746.629875:  600279888       offcpu-time: 
+            perf  466953 [027] 16746.630541:  601731496       offcpu-time: 
+  IPC I/O Parent    4039 [000] 18446744069.414584:      20781       offcpu-time: 
+ TaskCon~ller #3    4454 [000] 18446744069.414584:     117724       offcpu-time: 
+ Isolated Servic    4253 [000] 18446744069.414584:  387311029       offcpu-time: 
+  IPC I/O Parent    4039 [000] 18446744069.414584:  520075456       offcpu-time: 
+           Timer    4040 [000] 18446744069.414584:  581156755       offcpu-time: 
+           Timer    4380 [000] 18446744069.414584:   22520305       offcpu-time: 
+ sqldb:c~lite #6    4327 [000] 18446744069.414584:    2073583       offcpu-time: 
+ Isolated Web Co  156033 [000] 18446744069.414584:      23277       offcpu-time: 
+ sqldb:c~lite #6    4327 [000] 18446744069.414584:      24974       offcpu-time: 
+     dbus-broker    2526 [000] 18446744069.414584:    1175447       offcpu-time: 
+ IPDL Background    4043 [000] 18446744069.414584:      12055       offcpu-time: 
+ glean.dispatche    4037 [000] 18446744069.414584:      62321       offcpu-time: 
+          podman   12139 [000] 18446744069.414584:  502656763       offcpu-time: 
+     gnome-shell    2709 [000] 18446744069.414584:  579190477       offcpu-time: 
+          podman    3936 [000] 18446744069.414584:   60777801       offcpu-time: 
+      KMS thread    2739 [000] 18446744069.414584:   14578641       offcpu-time: 
+   IPC I/O Child    7113 [000] 18446744069.414584:  386343655       offcpu-time: 
+    WaylandProxy    4027 [000] 18446744069.414584:   46989879       offcpu-time: 
+           Timer  156048 [000] 18446744069.414584:  404662799       offcpu-time: 
+  URL Classifier    4234 [000] 18446744069.414584:      55337       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:      57229       offcpu-time: 
+ Isolated Web Co    4261 [000] 18446744069.414584:      26671       offcpu-time: 
+          podman   12130 [000] 18446744069.414584:  450853233       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:      56800       offcpu-time: 
+          podman    3951 [000] 18446744069.414584:  502100761       offcpu-time: 
+          podman   12131 [000] 18446744069.414584:  501954466       offcpu-time: 
+           Timer    4306 [000] 18446744069.414584:  360125199       offcpu-time: 
+ RemoteLzyStream    4230 [000] 18446744069.414584:     172647       offcpu-time: 
+ TaskCon~ller #1    4452 [000] 18446744069.414584:      38083       offcpu-time: 
+ Isolated Web Co  156033 [000] 18446744069.414584:  496574141       offcpu-time: 
+   Socket Thread    4042 [000] 18446744069.414584:  295030041       offcpu-time: 
+ IPDL Background    4043 [000] 18446744069.414584:      13990       offcpu-time: 
+ Inotify~tThread    7430 [000] 18446744069.414584:  300841349       offcpu-time: 
+           Timer    7186 [000] 18446744069.414584:     117536       offcpu-time: 
+ Backgro~ol #163  466653 [000] 18446744069.414584:      29312       offcpu-time: 
+ Isolated Web Co    7107 [000] 18446744069.414584:  418466228       offcpu-time: 
+ Isolated Web Co  156033 [000] 18446744069.414584:      22049       offcpu-time: 
+   Socket Thread    4295 [000] 18446744069.414584:  309685524       offcpu-time: 
+          podman   12130 [000] 18446744069.414584:   60960566       offcpu-time: 
+   Socket Thread    4042 [000] 18446744069.414584:       9726       offcpu-time: 
+ glean.dispatche    4037 [000] 18446744069.414584:      30560       offcpu-time: 
+ TaskCon~ller #0    4451 [000] 18446744069.414584:    3661284       offcpu-time: 
+  URL Classifier    4234 [000] 18446744069.414584:      18112       offcpu-time: 
+ Isolated Web Co    4261 [000] 18446744069.414584:  380745777       offcpu-time: 
+   IPC I/O Child    7039 [000] 18446744069.414584:   54365677       offcpu-time: 
+   IPC I/O Child    4292 [000] 18446744069.414584:  386687065       offcpu-time: 
+ glean.dispatche    4037 [000] 18446744069.414584:      48091       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:  570509826       offcpu-time: 
+          podman    3936 [000] 18446744069.414584:  451176929       offcpu-time: 
+ Isolated Web Co    7034 [000] 18446744069.414584:   57005742       offcpu-time: 
+ gnome-terminal-    3583 [000] 18446744069.414584:   97027967       offcpu-time: 
+ sqldb:c~lite #6    4327 [000] 18446744069.414584:      27118       offcpu-time: 
+ TaskCon~ller #1    4452 [000] 18446744069.414584:      20008       offcpu-time: 
+  IPC I/O Parent    4039 [000] 18446744069.414584:      58205       offcpu-time: 
+           Timer  157669 [000] 18446744069.414584:     180649       offcpu-time: 
+   IPC I/O Child    4265 [000] 18446744069.414584:  387442919       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:     215006       offcpu-time: 
+          podman    3949 [000] 18446744069.414584:  502715978       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:      94719       offcpu-time: 
+           gdbus    4032 [000] 18446744069.414584:    1330625       offcpu-time: 
+ Worker Launcher    4348 [000] 18446744069.414584:   83393104       offcpu-time: 
+   Socket Thread    4042 [000] 18446744069.414584:      48713       offcpu-time: 
+ IPDL Background    4043 [000] 18446744069.414584:  386560332       offcpu-time: 
+           Timer    7123 [000] 18446744069.414584:  422634111       offcpu-time: 
+ Isolated Web Co    4358 [000] 18446744069.414584:   18063623       offcpu-time: 
+ glean.dispatche    4037 [000] 18446744069.414584:  302249112       offcpu-time: 
+  IPC I/O Parent    4039 [000] 18446744069.414584:      16204       offcpu-time: 
+ Inotify~tThread    7430 [000] 18446744069.414584:  300780100       offcpu-time: 
+ RemoteLzyStream    4230 [000] 18446744069.414584:      14778       offcpu-time: 
+      DOM Worker   10133 [000] 18446744069.414584:     331946       offcpu-time: 
+  URL Classifier    4234 [000] 18446744069.414584:    5003953       offcpu-time: 
+           gdbus    2729 [000] 18446744069.414584:     331119       offcpu-time: 
+ TaskCon~ller #2    4453 [000] 18446744069.414584:     125448       offcpu-time: 
+         firefox    4010 [000] 18446744069.414584:      40894       offcpu-time: 
+   IPC I/O Child  156038 [000] 18446744069.414584:    4079439       offcpu-time: 
+      DOM Worker   10228 [000] 18446744069.414584:    3397046       offcpu-time: 
+root@number:~# 
 
-If they are confident that there are no more remaining users that
-rely on 32-bit binaries, we could both save some work.
+With 'offcpu-time' samples intermixed with the other cycles events:
 
->> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_=
-64__)
->> > +EOF
->> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.t=
-bl"
->> > "$outfile" common,32,i386 EM_386
->> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.t=
-bl"
->> > "$outfile" common,64 EM_X86_64
->> > +cat >> "$outfile" <<EOF
->> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) ||
->> > defined(__x86_64__)
->>
->> This misses the x32 table.
->
-> Again I'm carrying forward a behavior. Would it be worth adding x32?
+<SNIP>
+ Isolated Web Co    4261 [010] 16746.570827:     287731 cpu_core/cycles/P:  ffffffff8b145b24 __get_user_nocheck_8+0x4 ([kernel.kallsyms])
+ Isolated Web Co    7107 [006] 16746.570834:     235654 cpu_core/cycles/P:      7f08bf336592 pthread_mutex_trylock@@GLIBC_2.34+0xe2 (/usr/lib64/libc.so.6)
+         firefox    4010 [004] 16746.571035:  518930922       offcpu-time: 
+            7f2dab89eda9 dlsym@@GLIBC_2.34+0x59 (/usr/lib64/libc.so.6)
+            7f2dab8a17f9 pthread_cond_broadcast@@GLIBC_2.3.2+0x399 (/usr/lib64/libc.so.6)
+            556309ec5bca mozilla::detail::ConditionVariableImpl::wait(mozilla::detail::MutexImpl&)+0xa (/usr/lib64/firefox/firefox)
 
-I would probably document it in the file as an intentional
-omission, same as for arm oabi
+         swapper       0 [019] 16746.571151:     315218 cpu_atom/cycles/P:  ffffffff8adf4ad0 menu_select+0x1b0 ([kernel.kallsyms])
+<SNIP>
+ Isolated Web Co    7107 [010] 16746.607631:     288723 cpu_core/cycles/P:      34d114ccce4a [unknown] (/tmp/perf-7107.map)
+         swapper       0 [008] 16746.622828:     136175 cpu_core/cycles/P:  ffffffff8b213d7a intel_idle+0x6a ([kernel.kallsyms])
+           Timer    4306 [008] 16746.622977:     129681 cpu_core/cycles/P:  ffffffff8b134e46 rb_erase+0x46 ([kernel.kallsyms])
+         swapper       0 [000] 16746.623018:     298081 cpu_core/cycles/P:  ffffffff8a13d3ea update_rq_clock+0x7a ([kernel.kallsyms])
+         swapper       0 [019] 16746.629839:     256701 cpu_atom/cycles/P:  ffffffff8a148455 __dequeue_entity+0x5 ([kernel.kallsyms])
+           sleep  466955 [019] 16746.629875:  600279888       offcpu-time: 
+            7f6feb8bf497 clock_nanosleep@GLIBC_2.2.5+0x27 (/usr/lib64/libc.so.6)
+            5608d1601a9f [unknown] (/usr/bin/sleep)
+            7f6feb805088 __libc_start_call_main+0x78 (/usr/lib64/libc.so.6)
+            7f6feb80514b __libc_start_main@@GLIBC_2.34+0x8b (/usr/lib64/libc.so.6)
+            5608d1601c05 [unknown] (/usr/bin/sleep)
 
-> That said there is likely other context
-> that I'm unaware of as I'm surprised x32 still exists.
+           sleep  466955 [006] 16746.630223:     225700 cpu_core/cycles/P:  ffffffff8a40ec5a folio_remove_rmap_ptes+0x1a ([kernel.kallsyms])
+         :466955  466955 [006] 16746.630442:     225700 cpu_core/cycles/P:  ffffffff8b1387eb timerqueue_add+0x3b ([kernel.kallsyms])
+            perf  466953 [027] 16746.630541:  601731496       offcpu-time: 
+            7f818451c1fd __poll+0x4d (/usr/lib64/libc.so.6)
+                  49606e fdarray__poll+0x2e (/home/acme/bin/perf)
+                  429eed __cmd_record.constprop.0+0x18ad (/home/acme/bin/perf)
+                  42c77e cmd_record+0xd9e (/home/acme/bin/perf)
+                  495700 run_builtin+0x70 (/home/acme/bin/perf)
+                  495a1b handle_internal_command+0xab (/home/acme/bin/perf)
+                  413473 main+0x2f3 (/home/acme/bin/perf)
+            7f8184438088 __libc_start_call_main+0x78 (/usr/lib64/libc.so.6)
+            7f818443814b __libc_start_main@@GLIBC_2.34+0x8b (/usr/lib64/libc.so.6)
+                  413ac5 _start+0x25 (/home/acme/bin/perf)
 
-There are a handful of people still testing it, and some still
-using it, but I agree it completely failed to get enough
-traction to be worth maintaining.
+            perf  466953 [000] 16746.630831:     298081 cpu_core/cycles/P:  ffffffff8b40012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
+         swapper       0 [019] 16746.630985:     250096 cpu_atom/cycles/P:  ffffffff8b213d7a intel_idle+0x6a ([kernel.kallsyms])
+            perf  466953 [010] 16746.632045:     286467 cpu_core/cycles/P:  ffffffff8a1c3f21 __rcu_read_lock+0x11 ([kernel.kallsyms])
+  IPC I/O Parent    4039 [000] 18446744069.414584:      20781       offcpu-time: 
+            7f2dab89f000 __GI___pthread_enable_asynccancel+0x20 (/usr/lib64/libc.so.6)
+            556309ebede4 moz_xmalloc+0x104 (/usr/lib64/firefox/firefox)
+           3bbdf3d834830 [unknown] ([unknown])
 
-I view x32 (and the corresponding arm64 ilp32 mode that never
-made it in) mostly as an exercise in benchmark(et)ing, since
-it showed noticeably higher results in some versions of specint
-and some compiler workloads, compared to both normal 32-bit and
-64-bit modes. The time that we already wasted on maintaining
-it must have long surpassed any such benefits though, so I
-certainly don't want to waste more time on it.
 
-     Arnd
+And if I install the 'coreutils' debuginfo I get the sleep backtraces
+resolved, nice, but again only when I'm running in system wide (-a)
+mode.
+
+ Isolated Web Co    7167 [008] 16915.115432:     188682 cpu_core/cycles/P:      7fe85f558260 nsBaseHashtable<nsStringHashKey, mozilla::UniquePtr<nsBaseHashtable<nsIntegralHashKey<unsigned lo>
+         swapper       0 [013] 16915.126739:     120783 cpu_core/cycles/P:  ffffffff8a15221d enqueue_task_fair+0x22d ([kernel.kallsyms])
+           sleep  467147 [013] 16915.126780:  600336127       offcpu-time: 
+            7ff010611497 clock_nanosleep@GLIBC_2.2.5+0x27 (/usr/lib64/libc.so.6)
+            563f045a3a9f main+0x4af (/usr/bin/sleep)
+            7ff010557088 __libc_start_call_main+0x78 (/usr/lib64/libc.so.6)
+            7ff01055714b __libc_start_main@@GLIBC_2.34+0x8b (/usr/lib64/libc.so.6)
+            563f045a3c05 _start+0x25 (/usr/bin/sleep)
+
+           sleep  467147 [013] 16915.126861:     120783 cpu_core/cycles/P:  ffffffff8a3ef391 unmap_page_range+0x661 ([kernel.kallsyms])
+           sleep  467147 [013] 16915.126973:     139106 cpu_core/cycles/P:  ffffffff8a3a5b4d folios_put_refs+0x8d ([kernel.kallsyms])
+         swapper       0 [013] 16915.127102:     160383 cpu_core/cycles/P:  ffffffff8a14b5c4 sched_balance_update_blocked_averages+0xb4 ([kernel.kallsyms])
+
+When running just one workload:
+
+root@number:~# for a in `seq 10` ; do perf record --off-cpu sleep 1s ; perf script | grep offcpu-time ; done
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (13 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (16 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (14 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (12 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.037 MB perf.data (7 samples) ]
+root@number:~#
+
+Have you tested it like that? Is this a known issue/current limitation?
+
+I'm reading the patches to see I understand this better.
+
+- Arnaldo
