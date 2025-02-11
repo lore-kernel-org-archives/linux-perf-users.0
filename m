@@ -1,174 +1,328 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49862676D2;
-	Tue, 11 Feb 2025 21:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C9E267715
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 22:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739310316; cv=none; b=ef1zXD/UCRROTMYWXCqHeJDJC/qpL7umR8JTzuNFpBLAZ7xDzwbCYAf+DG0GmKkjCSg80eVrKBjCpV8Kn3XGsDi+enD5atYnrJqYDAXtwMnAdiyKEYFAsziCrYb3WBhKORDjhnOgIRQn9eRWhC731IzN5Gj4BhGMvR7wqwZlQHY=
+	t=1739313300; cv=none; b=YMTk015szxzYPP9SUNGqo9Jeh4MApqJUkVP6aduQ/1ikFXos49yZVfpejmlAq6rxowP1miRaqHJWtNsk5vyU/7kgH4Qx19tWhKyCE1Ih3jQA1oXda+uIUPdQXbA+vLIi0ZkCAIelu9nHrZYVVkwETxeDgPQ2YE9RktuvH75SJtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739310316; c=relaxed/simple;
-	bh=z7yrne3lH+j+1s6AtvmZ4Bzg6adoesjnw/4Ul78d4yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JSza2OYtv63CvdL9GpKlSkr8JpIjZD+LtskvKD6fUevIxf076t5uZXUd6SxKg58mzVrFkIiI2+0BJyhdAVUjtMpslrckLg8BhZqQbDXh7+EwQ9jnavUGtOvkI/P8Dbk9upn1GQFfDSSCWFWL5onsgiHZXKoptg3PpEpahz6xPqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZInSFJt; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739313300; c=relaxed/simple;
+	bh=kbDjq5tUv4vG4501STjqXx+cmqZ1GC1gcH0Z0vZHRAg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nSjx/66WvaVGAqSUk6tDrAsIDoyGf1sVgLca2iZRAw0CExRzwB5YKStJIaHfPibTR6oRjc6156hnEOb45tYcyLGloR/orXJ3QUPyn1tpqSd7IMU+IV2ZUSI5VbZkJPX7/mkkOikccW2DtDxNPtTXwts7T9epcDNq6K3Icbbmvqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GApyKiki; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZInSFJt"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso15539415e9.0;
-        Tue, 11 Feb 2025 13:45:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GApyKiki"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d05815e89dso14565ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 14:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739310313; x=1739915113; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1739313297; x=1739918097; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l9QVqFb0F4vJH3S/5y/Imik4nUJo70kordZ2BPM5ORk=;
-        b=jZInSFJtaTuyMpE43bC0DURFwGq+En4CCvOk3ViVbDZqzYLUW9n7IAiJfCMxvAJeMn
-         MSwjsWX0KlxsF25zFxxMCj4jce3Wemi5XjO5tIIBlqBsEtfkdREFyUIontiDTmYhcESR
-         Jy/6FwBQqZAtnQmGu3t6LqxtCZtrtryYrjsIwQ4m03iJKfxiDgPL/RFDhO0cfXoIWcEP
-         9qv3oWpHVdIKmwl51nicPWglol81kgG7FYSxFrrHG46hm2Dt8kK+PG8hBrNPdRfPBg2x
-         lhWne//+6eT66H9wVPEXojaO8jcNCTZ67c0Vdy0t0M18j3PdXQ8jVDDTgOTIn2BxX/zX
-         GVmA==
+        bh=4LJOvaQN1uD4Gb9j8aBY0XDTg/U6cKrEXmin878seh4=;
+        b=GApyKikijjJoXav8Uh8B9FHo4lL9o5n0Y2TNpoU1pgCMXWPtPGgZgxQC1rPnVl/Dut
+         VCyXoqWp9PNEeCCszr+3OlUbWc6lUIZsPw+gdtVjpwFq0zL3bpwinJLe9V+p/B+sQQaz
+         Y4y7G7MCS/yYEsgju7A1Lphr9oKgv6MwxjbMrQ7Y2quk9jkwH3UWACpdzHNdU9QIIiU5
+         ONI45vVMvmUAom+aoLRL+vr5CGo33/xCg4+ii6xVj6IYoocbhjXjadLgOxgUIe9G/ddt
+         CKkJNrCouFb1KjEuFuqR68lSamkFUmcTFBtjNWLEbTl0wb8jYPVxK0yrfUOMM93mmahS
+         prVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739310313; x=1739915113;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739313297; x=1739918097;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l9QVqFb0F4vJH3S/5y/Imik4nUJo70kordZ2BPM5ORk=;
-        b=YSrJ7eO1xi2OmnpwMto16uFkFLDzl9Uwu81O+guNScJOsJMcSTm03MdFi81Trwm9Oi
-         hjaCChOc94N0hY1aMi3K3gowbPyuSVznVkVNvZp91az7TighqAHb/IxKwRv6u7bzKf2T
-         KFcPmXuLUq9kxT279h3SQo5sbZ21DYOxx77zqtzoEgkgGDMdZT1A/8l4LGCHt6TLGz3j
-         Oem9xeJRJ6dTt/UVSIjM9FAlrDOWJPMQPXXSjc4YRkUDFst/jsk3W2Zv90/UlR4D4eVq
-         LlxNStEXgPCXqXdRIxVxmRqoc8yqZoZPvn/mUTl6GdZIInJ5FwNjSFJNGYHlRwMyd/J1
-         zUfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCvlbfaVzTN6hOqyz/mImk7WwYFnxToDmUfeAJ7bt8mqrm0nDhtyfEGrnTRBTh5JptvY9v1Sj0f+I=@vger.kernel.org, AJvYcCUORwNvlgqlc41DGZTDOB8+BboM+5nB63X7SEh164FtlJ84grO0+RQO+eh9YHifUoRx6llMN7t4NKYQa2UtHnwCWw==@vger.kernel.org, AJvYcCVOyHa+oovZbf7sktM0Z/tdCCDr8jHJ4LAha98RsRBYfGSvtC1CgFNhjN0jr1zJNVzBKoGS1qopkBxO5SE=@vger.kernel.org, AJvYcCVykrv6NTqpDmVKnZTXgLjVhO6nvkHbXLwdZCvDXrifiZeUi4gsFraKHM0Rmp2625j0qFASEPglYYZ82Bf9@vger.kernel.org, AJvYcCXsIn6ZVG8G1sJMWUIVFc8LymCVv4ns0LjpmbIZBZQuMujlY/IVIZokBSHzZD+MPiw5Vu/kkL9KVnxp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOwpJFeMik+opMZTLGyABjJCO7dMNCKToW532VOmzq5NpO2KTm
-	GIv62qu+HgKNAo4cKY5sLfTowse0MQd6WEyywZ9BMO0kSKU82hWR
-X-Gm-Gg: ASbGncuzasa/PbeCVC7EFPsO0p5KNhDJZzvotGhXQc8XGcql4td7DdMm4LiHSLba77s
-	HYFJa9NvFfRlz7dNh/KXJf5vabJIiM9uh47I2I+fKXxffK6kp4ST4+mTpnt7w58LYV62W3UtEPm
-	pGkZowZHgEDnUYqmtbcW3fM7nDaHp499KsYMQ3tLfkSusmRwo9MrhGWVw/XlG+bLuDelciszIP+
-	ATsJ0KexlFDwBo65wZ4kdMHM+SyBSwXBg8XaZj4w5C9IXvMZvhz0kbq35TeNapmwhB+9Kmu+REt
-	yLit5H1N0OBrwTt3v5OrQ3cPKB5vR3w+KLvsUOHOoj314IWkMhI48w==
-X-Google-Smtp-Source: AGHT+IEjFMRaO0UZ6wft/wxo/+IRAbLWtbO1fwLdZMCQbltj99k8Ofj68ppzmanMrEJJGKF4/cn8cw==
-X-Received: by 2002:a05:600c:1d1b:b0:434:a468:4a57 with SMTP id 5b1f17b1804b1-439581bfdc2mr6022405e9.26.1739310312538;
-        Tue, 11 Feb 2025 13:45:12 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395076a2a2sm14643765e9.3.2025.02.11.13.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 13:45:11 -0800 (PST)
-Date: Tue, 11 Feb 2025 21:45:09 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Kan
- Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "Rafael
- J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Andy
- Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>, Andrew
- Cooper <andrew.cooper3@citrix.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2 04/17] x86/cpu/intel: Fix the movsl alignment
- preference for extended Families
-Message-ID: <20250211214509.281dc3be@pumpkin>
-In-Reply-To: <5b954a96-1034-467d-a5dc-3d3f7bc112a1@intel.com>
-References: <20250211194407.2577252-1-sohil.mehta@intel.com>
-	<20250211194407.2577252-5-sohil.mehta@intel.com>
-	<5b954a96-1034-467d-a5dc-3d3f7bc112a1@intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=4LJOvaQN1uD4Gb9j8aBY0XDTg/U6cKrEXmin878seh4=;
+        b=kqrCILHNTsFrmQIn80aGWIDB5gZqT7KrzO4fmzwwCksLNziwVTJ2Vw6bCpZUHLJK8U
+         P6aK6tQjaavgdrJoru88v0Zen2fF8Qks8ILsc/PzaTtnhEyRO0RyzL6/7kIefyeElv4f
+         HQhouDJPQPyxdx7AS5jCJ02/NGmVTVA+6uUG9FsT8yQX7YrHqlyTUzqQM63on0m++T+K
+         OINhHQED4wV1jhITqZ7FKbV+drYAfe/u9abyklFar+ABky0Q7TqoQhJCeukZTkkZtwVb
+         Knkir+YTP+K+YGMpmfAXXuctl4A/ehyyBeddHPaMbQPZP9Z0eEw7+O9dBzjHfeQt5i8N
+         8vRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQLoPF98HRxrdVuJqd0QH1RTlWXVFQfCql0bhcdx1yB15heSPrX7i0w+qSV/tp9080mRNSLSjDTx5vlaI8TOVz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5eF4xW1g7PMUGSsQq3l8akihdqZPM4Si1HmI0l8DlzbDyajTq
+	TdtoFopn/V7dgs/AI9TCNcOKklt5bJZQNKPl8K6xwcJkDVzvd5u2JdBNJkz378dEarZQA7RS2+c
+	/93bj5SXQZaCs2FZ2anOhYr9GNwc3p8Cfc26l
+X-Gm-Gg: ASbGnct5GneMklGr7EyzyWYXsI48F2/RJOcoDmV+yg9ULKuk3n/DIHSEzrfAmj6Xupv
+	jQLqvqA69jqXbC2oNRzx/83OUmL07owTyHgERu538OG/kLo519uE/GsK+167+UwbU/jjfjxTsOE
+	6RUtY2Pv1pi456MPEJMKAckxGy
+X-Google-Smtp-Source: AGHT+IFpq/X6sl+JYhqIrdvJS3oHdPv0NT2XLFxyoKOkSWcjaLA3F0FA/5h+ObyGxJaY07ihxeweG2UjHT8idfOSfTE=
+X-Received: by 2002:a05:6e02:1c03:b0:3cf:a4e4:8f89 with SMTP id
+ e9e14a558f8ab-3d17cd5f2a3mr1050775ab.4.1739313297203; Tue, 11 Feb 2025
+ 14:34:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250205121555.180606-1-leo.yan@arm.com>
+In-Reply-To: <20250205121555.180606-1-leo.yan@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 11 Feb 2025 14:34:46 -0800
+X-Gm-Features: AWEUYZlxuKPWdrL07IcP7PrJXbaGbljBlIOoo18dt_4E8e3ScRzR3nTGDqPPcv8
+Message-ID: <CAP-5=fUH6X2F5S5eH+iU+-hT0vNvMKPTqbGt=E9W06sG=MzxEg@mail.gmail.com>
+Subject: Re: [PATCH v1 00/11] perf script: Refactor branch flags for Arm SPE
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Graham Woodward <graham.woodward@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Feb 2025 12:26:48 -0800
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Wed, Feb 5, 2025 at 4:16=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> This patch series refactors branch flags for support Arm SPE.  The patch
+> set is divided into two parts, the first part is for refactoring common
+> code and the second part is for enabling Arm SPE.
+>
+> For refactoring branch flags, the sample flaghs are classified as branch
+> types and events.  A program branch type can be conditional branch,
+> function call, return or expection taken.  A branch event happens when
+> taking a branch.  This series combines branch types and the associated
+> events to present a sample flag.
+>
+> The second part is to enable Arm SPE's sample flags for expressing
+> branch types and events, and support branch stack.
+>
+> Patches 01 - 03 are to refactor branch types and branch events.
+> Patches 04, 05 extend to support not-taken event.
+>
+> Patches 06 - 09 enables branch flags in Arm SPE.  This allows to print
+> out sample flags for samples.
+>
+> Patch 10 supports branch stack for Arm SPE.  Patch 11 is an enhancement
+> for PBT feature.
+>
+> Before:
+>   perf record -e arm_spe_0/load_filter=3D1,store_filter=3D1,branch_filter=
+=3D1/ \
+>     -- ~/perf-c2c-usage-files/false_sharing.exe 1
+>   perf script --itrace=3Di1ibl -F,+flags,+addr,+brstack
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                                   branch:   br miss                   ffff=
+8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu=
+/libnuma.so.1.0.0)
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                             instructions:   br miss                   ffff=
+8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu=
+/libnuma.so.1.0.0)
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                                   branch:   br miss                   ffff=
+826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.s=
+o)
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                             instructions:   br miss                   ffff=
+826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.s=
+o)
+>    false_sharing.e  414489 [005] 775348.899298:          1               =
+                             instructions:                                 =
+       0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899300:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                             instructions:                                 =
+       0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899306:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899308:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899308:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899310:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899310:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms])
+>    ...
+>
+> After:
+>   perf script --itrace=3Di1ibl -F,+flags,+addr,+brstack
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                                   branch:   return                ffffc0fa=
+d9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffff=
+c0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-=
+/-/5/RET/-
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                             instructions:   return                ffffc0fa=
+d9ef3d68 ffffc0fad98b2c68 search_cmp_ftr_reg+0x8 ([kernel.kallsyms]) 0xffff=
+c0fad98b2c68 ([kernel.kallsyms])/0xffffc0fad9ef3d68 ([kernel.kallsyms])/P/-=
+/-/5/RET/-
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                                   branch:   jcc/not_taken/        ffffc0fa=
+d98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffff=
+c0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/=
+-/-/6/COND/-
+>    false_sharing.e  414489 [005] 775348.899294:          1               =
+                             instructions:   jcc/not_taken/        ffffc0fa=
+d98b3708 ffffc0fad98b3704 get_arm64_ftr_reg+0x30 ([kernel.kallsyms]) 0xffff=
+c0fad98b3704 ([kernel.kallsyms])/0xffffc0fad98b3708 ([kernel.kallsyms])/PN/=
+-/-/6/COND/-
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                                   branch:   return/miss/              ffff=
+8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu=
+/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.=
+0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/=
+RET/-
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                             instructions:   return/miss/              ffff=
+8266da60     ffff8266dafc __sprintf_chk@plt+0xc (/usr/lib/aarch64-linux-gnu=
+/libnuma.so.1.0.0) 0xffff8266dafc (/usr/lib/aarch64-linux-gnu/libnuma.so.1.=
+0.0)/0xffff8266da60 (/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0)/M/-/-/12/=
+RET/-
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                                   branch:   jcc/miss,not_taken/       ffff=
+826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.s=
+o) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/=
+usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/-
+>    false_sharing.e  414489 [005] 775348.899297:          1               =
+                             instructions:   jcc/miss,not_taken/       ffff=
+826a44ec     ffff826a44e8 strcmp+0xa8 (/usr/lib/aarch64-linux-gnu/ld-2.31.s=
+o) 0xffff826a44e8 (/usr/lib/aarch64-linux-gnu/ld-2.31.so)/0xffff826a44ec (/=
+usr/lib/aarch64-linux-gnu/ld-2.31.so)/MN/-/-/23/COND/-
+>    false_sharing.e  414489 [005] 775348.899298:          1               =
+                             instructions:                                 =
+       0 ffffc0fadaad6124 mas_walk+0x274 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899300:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                             instructions:                                 =
+       0 ffffc0fad98c3dcc __sync_icache_dcache+0x5c ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])=
+ 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsym=
+s])/P/-/-/8//-
+>    false_sharing.e  414489 [005] 775348.899301:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d9ba7f24 ffffc0fad9ba99c0 folio_add_file_rmap_ptes+0x48 ([kernel.kallsyms])=
+ 0xffffc0fad9ba99c0 ([kernel.kallsyms])/0xffffc0fad9ba7f24 ([kernel.kallsym=
+s])/P/-/-/8//-
+>    false_sharing.e  414489 [005] 775348.899306:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3f184 filemap_map_pages+0x178 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                                   branch:   jcc/not_taken/        ffffc0fa=
+d9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xff=
+ffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/P=
+N/-/-/15/COND/-
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                             instructions:   jcc/not_taken/        ffffc0fa=
+d9b3d7b0 ffffc0fad9b3d7ac next_uptodate_folio+0xc4 ([kernel.kallsyms]) 0xff=
+ffc0fad9b3d7ac ([kernel.kallsyms])/0xffffc0fad9b3d7b0 ([kernel.kallsyms])/P=
+N/-/-/15/COND/-
+>    false_sharing.e  414489 [005] 775348.899307:          1               =
+                             instructions:                                 =
+       0 ffffc0fad9b3d98c next_uptodate_folio+0x2a4 ([kernel.kallsyms])
+>    false_sharing.e  414489 [005] 775348.899308:          1               =
+                                   branch:   jcc                   ffffc0fa=
+d9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d=
+70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND=
+/-
+>    false_sharing.e  414489 [005] 775348.899308:          1               =
+                             instructions:   jcc                   ffffc0fa=
+d9ef3da4 ffffc0fad9ef3d70 bsearch+0x58 ([kernel.kallsyms]) 0xffffc0fad9ef3d=
+70 ([kernel.kallsyms])/0xffffc0fad9ef3da4 ([kernel.kallsyms])/P/-/-/20/COND=
+/-
+>    false_sharing.e  414489 [005] 775348.899310:          1               =
+                                   branch:   jmp                   ffffc0fa=
+d98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fa=
+d98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5=
+//-
+>    false_sharing.e  414489 [005] 775348.899310:          1               =
+                             instructions:   jmp                   ffffc0fa=
+d98a2158 ffffc0fad98a159c el0t_64_sync+0x198 ([kernel.kallsyms]) 0xffffc0fa=
+d98a159c ([kernel.kallsyms])/0xffffc0fad98a2158 ([kernel.kallsyms])/P/-/-/5=
+//-
+>    ...
 
-> We should really rename intel_workarounds() to make it more clear that
-> it's 32-bit only. But I digress...
-> 
-> On 2/11/25 11:43, Sohil Mehta wrote:
-> > The alignment preference for 32-bit movsl based bulk memory move has
-> > been 8-byte for a long time. However this preference is only set for
-> > Family 6 and 15 processors.
-> > 
-> > Extend the preference to upcoming Family numbers 18 and 19 to maintain
-> > legacy behavior. Also, use a VFM based check instead of switching based
-> > on Family numbers. Refresh the comment to reflect the new check.  
-> "Legacy behavior" is not important here. If anyone is running 32-bit
-> kernel binaries on their brand new CPUs they (as far as I know) have a
-> few screws loose. They don't care about performance or security and we
-> shouldn't care _for_ them.
-> 
-> If the code yielded the "wrong" movsl_mask.mask for 18/19, it wouldn't
-> matter one bit.
-> 
-> The thing that _does_ matter is someone auditing to figure out whether
-> the code comprehends families>15 or whether it would break in horrible
-> ways. The new check is shorter and it's more obvious that it will work
-> forever.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-For any Intel non-atom processors since the Ivy bridge the only alignment
-that makes real difference is aligning the destination to a 32 byte boundary.
-That does make it twice as fast (32 bytes/clock rather than 16).
-The source alignment never matters.
-(I've got access to one of the later 64-bit 8 core atoms - but can't
-remember how it behaves.)
+Built and tested (on x86). A little strange patch 5 adds a new bit not
+at the end, but "Sample parsing" test wasn't broken so looks like it
+is good. I was surprised the use of value in the union:
+```
+struct branch_flags {
+union {
+u64 value;
+struct {
+u64 mispred:1;
+u64 predicted:1;
+...
+```
+didn't get broken. Perhaps there's an opportunity for additional tests.
 
-For short (IRC 1..32) byte transfers the cost is constant.
-The cost depends on the cpu, Ivy bridge is something like 40 clocks.
-Lower for later cpu.
-(Unlike the P4 where the overhead is some 163 clocks.)
-It also makes no difference whether you do 'rep movsb' or 'rep movsq'.
-
-For any of those cpu I'm not sure it is ever worth using anything
-other than 'rep movsb' unless the length is known to be very short,
-likely a multiply of 4/8 and preferably constant.
-Doing a function call and a one or two mispredictable branches will
-soon eat into the overhead. Not to mention displacing code from the I-cache.
-Unless you are micro-optimising a very hot path it really isn't worth
-doing anything else.
-
-OTOH even some recent AMD cpu are reported not to have FRSM and will
-execute 'rep movsb' slowly.
-
-I did 'discover' that code at the weekend, just the memory load to
-get the mask is going to slow things down.
-Running a benchmark test it'll be in cache and the branch predictor
-will remember what you are doing.
-Come in 'cold cache' and (IIRC) Intel cpu have a 50% chance of predicting
-a branch taken (no static predict - eg backward taken).
-
-Even for normal memory accesses I've not seen any significant slowdown
-for misaligned memory accesses.
-Ones that cross a cache line might end up being 2 uops, but the cpu
-can do two reads/clock (with a following wind) and it is hard to write
-a code loop that gets close to sustaining that.
-
-I'll have tested the IP checksum (adc loop) code with misaligned buffers.
-I don't even remember a significant slowdown for the version that does
-three memory reads every two clocks (which seems to be the limit).
-
-I actually suspect that any copies that matter are aligned so the cost
-of the check far outways the benefit across all the calls.
-
-One optimisation that seems to be absent is that if you are doing a
-register copy loop, then any trailing bytes can be copied by doing
-a misaligned copy of the last word (and I mean word, not 16 bits)
-of the buffer - copying a few bytes twice.
-
-	David
+Thanks,
+Ian
 
 
+> Leo Yan (11):
+>   perf script: Make printing flags reliable
+>   perf script: Refactor sample_flags_to_name() function
+>   perf script: Separate events from branch types
+>   perf script: Add not taken event for branches
+>   perf script: Add not taken event for branch stack
+>   perf arm-spe: Extend branch operations
+>   perf arm-spe: Decode transactional event
+>   perf arm-spe: Fill branch operations and events to record
+>   perf arm-spe: Set sample flags with supplement info
+>   perf arm-spe: Add branch stack
+>   perf arm-spe: Support previous branch target (PBT) address
+>
+>  tools/perf/builtin-script.c                   |  30 ++--
+>  .../util/arm-spe-decoder/arm-spe-decoder.c    |  23 ++-
+>  .../util/arm-spe-decoder/arm-spe-decoder.h    |  11 +-
+>  .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 +-
+>  .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  12 +-
+>  tools/perf/util/arm-spe.c                     | 135 ++++++++++++++++++
+>  tools/perf/util/branch.h                      |   3 +-
+>  tools/perf/util/event.h                       |  12 +-
+>  tools/perf/util/trace-event-scripting.c       | 116 +++++++++++----
+>  tools/perf/util/trace-event.h                 |   2 +
+>  10 files changed, 307 insertions(+), 51 deletions(-)
+>
+> --
+> 2.34.1
+>
