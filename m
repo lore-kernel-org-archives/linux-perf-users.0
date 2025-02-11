@@ -1,197 +1,474 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CB11EE01A;
-	Tue, 11 Feb 2025 08:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AA61C5D59
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 08:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261364; cv=none; b=uvSDw51D6fHCj+9SlcVGgx4wSZj8pDq4xMalb8QBaNpveN2Ws4HnmGI5qOmHPI3Vhac7AIhO/GpxYy8roBZXvcQ5NLy0lHsmGuwInU9sQ6rSFdRF5TYvlKJU2NVN3nNWhLwtycQyZvI83aOv2m9+71vf72W3p0S3wwn0GkDnxOw=
+	t=1739262656; cv=none; b=tpM698d4Y2VpzpvKuUP9kyyHRIWGwkgTjV9x7P4QpE3yWWufCZgF9Ka9trjW3gTk/GyH+1Aqar1KwZ2lkQnQgoJjb5P0qBNZFenx/FECus58Y7vCPuefcKjRecl/8SXbin1bWuFrOjHy+KFnsR/RCuoMpV2AdMNUs+teci9S2BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261364; c=relaxed/simple;
-	bh=8zbYpb03k265T2/tmJHBW9ZDLDeyG/KjxMcK0OIakq8=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZIiKg/pFl9aqTP/8Yx9hytZnhvOzcIwtGktSMX8lda9b+MC1lxvfPDR5unrTtAmf8eSU2ZOsytjrKszsM1OBGOYJivnplnWXXentSnph2BC1eCt5KVUIDM/ueZPWLCMRZZl96ZJJikRS9AuEplNbf/oq2QNoVg/RnWw7yy7a5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=JU9ZdgJE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Y/qcIq11; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1739262656; c=relaxed/simple;
+	bh=ibheOxOPF5NyMlxpAcCK1HD7tVcYEbx/0evZRvh78So=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E35qzgAhiUFI4gikJCCFSOyUxVwB8/dIZgAwSH0qF26cpUHzDGqGGhSVKM+bDTfDJGaEneBx68uTtaw5oTfbAm+bhRf3pTLYduF+4/aH2VqmGhZzL9xkmiG1g/kFYa9bb8jxwEQfRSXJfTSe0gJ15OUTAaoGOqeOA9lL5iWvOaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0ro1GTSt; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="JU9ZdgJE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y/qcIq11"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id DEC151380188;
-	Tue, 11 Feb 2025 03:09:21 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 03:09:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1739261361;
-	 x=1739347761; bh=slWw1TiRIa+fnLGWH63JJF/dAx3EWeR1a3tRrHk8+u8=; b=
-	JU9ZdgJE5Tf33djcc75aebLdMNBe8w47L+vuLeLb/AOYoZos8niDLnLZvnGlwalK
-	iYKxL53dmvMiJUFHPtBuHqWiHWxbWmPd2btMeRgMrdLHEfmg3Ve/tZQlW8Fj38Ka
-	phWf+YPSO7iZwTttd0gVP006zPfSQNAfklGZgjGAdmRC7RDDtigLlkbjGyt9f0+4
-	5tF/KbVxl11Y5GefKt4XX3QO2ecovLZwUYeE0kOt4WsIMVaMez9Ft+zSRWiMnfXZ
-	qEqgAS11b3rToDh4XPqx7qrqOMwNH3h7SgOET17njLz8sW96ZE7ca4vUkfBTD0jF
-	XCVhwHmgenRUwofwb3eiXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1739261361; x=1739347761; bh=s
-	lWw1TiRIa+fnLGWH63JJF/dAx3EWeR1a3tRrHk8+u8=; b=Y/qcIq11BcnE0QQAy
-	URxL+it+DGPHmzD7SxsY0zqubOCab/kOAhNrAzwI0xZhD42O17aOzTWq29aX1tfu
-	aildwrM8zBsfR1fmUkZAtFpZd2nsZar/uznPC6s31yrISYsLs2jC4SDrK+ykmnNq
-	eWnbN+rt1OdBfvrobmmUZ1iF9vzE9EF9IKwwPqmZm6Yrb+ztogBUrRWqZfQfamdu
-	kRKbPc5XY+LgJ9KYIdUFNBdYBOEoujjti2rbhQcWSq/kb3POnr5LfDgexwpvx5NY
-	ZHSqohe0kVBQacsNbHYpP7TqGymU6X/O1GjdM7Ze6cMkhCFN38iXpb6pDouEJvTP
-	nsFJw==
-X-ME-Sender: <xms:rwWrZ7NrJjhqwazfmoyzQtVyBjqV9iRQwxY4o-dh_ZLO4sOhq_-Q7w>
-    <xme:rwWrZ1_JGDjp4PMLSfSUvNvNXobU9RQHG3IVgTLjF_b-PwbGKAulOazDx2OfSrtqe
-    YRlFJJROZIVSmnMHpQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdegjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
-    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfedu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
-    hssegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgt
-    ohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoh
-    eprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehhohifrghr
-    uggthhhuleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhrohhgvghrshesghhooh
-    hglhgvrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtoheprggurhhirghnrdhhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtph
-    htthhopegrtghmvgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:rwWrZ6RvbSTCiJfZhcc1wviX371cOxFdxpy1jgK3YWb8t3Ly9O97fg>
-    <xmx:rwWrZ_tM-TyjUy98K7B6J9NsnL96ZP9LPTCHE9Cgaqe3-9tFrg1diQ>
-    <xmx:rwWrZzcN985Xxl6Id4XCdL8uVRy3FAYMAvVIspf2ggoy2F44d2KQBw>
-    <xmx:rwWrZ72mqnYlgFqEb-_n2xkmTnUMexXg2qVZ1hfH-r7-3zCk_FHi5Q>
-    <xmx:sQWrZ_oxO7aagZ_10p5YRjluCqaet_alPpnufAcGM4EYfH3nvoSxklK2>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 371CA2220072; Tue, 11 Feb 2025 03:09:19 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0ro1GTSt"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30761be8fa8so51826331fa.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 00:30:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739262651; x=1739867451; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OQDr0m846oUUSSE1rGTFoIm7k+JWCw2Rinad5pl0eF4=;
+        b=0ro1GTStn8Vr3P2MI0xVJG+X7CBQ5Dp6FtbTvBjjG9oLLxwm0rg7eoUMBg/oRK02OX
+         Z8jgwHsxqiDx+1pz/Xrg7QNPBFDeFegC+u0i+JXQrFS5sgIf3Pwt/eEYUlZ+x9H8q//i
+         8g6E/BzREmV3romoAO3ce+p+wKE7PAlxZv6boEbSHQkRZkMRdJ4y5Z/zF7do8NulMn6W
+         hv4II97V7x3ZeLlCmEZ1VvrU9n+pkqfMv/WcMmsGWQ0qQYL/VAXdJ/uBYo/v52146cHu
+         DkwINYIkyg0hRuiGunSap3XgGqyemtjKAwZpuNjahwhEOnUqk/HY8x2VuCbCd74a8dDy
+         xHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739262651; x=1739867451;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OQDr0m846oUUSSE1rGTFoIm7k+JWCw2Rinad5pl0eF4=;
+        b=TI0pWVgRuU8xjQlDjfzKZFr41EY38CygNPpya7acYU8D9YvQgDcXfMYiZcihIbm1pI
+         Hs/gOxME7RCZw7bgE7+NFy2hjie8AElxgZPCgWQcrPb5uOwQWae8QXRjxA/+qJp1iumr
+         QMb3RxqpkUJn4A9bE/0NB6TxW2X9AF2QPCfuUgaALAYd6LeSXId+mSdbLQn/SaMejXcK
+         w62P01V7WID0dHIma4GDtKaos/LYd5rqunf4tqAaF8xA18o528aEZOcyXe2j9MkDzR+u
+         rNCDRLTusoOlxiiqGUHcwzgcyeBgmi8Gecp7/UyV5DAcaL22BpCsvRfl8KQ9PDQjYWhE
+         CAIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2nB77NZKOkDQYfzLkADCJPpZStFohFEERyrIsBQIl24YFtqhNz00r6kWf0T/LmSDE8BChAm403yyzhXYC4CGg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTNF+6tdGfmcmB+EdPmsNlUmOd20Ubx0qkKrYNHvGKvssYxrmR
+	kyIVJpavS6trI7b44JGkk04X70y8zXCwd1laR06mTk+37LUUZYoQs+KJQnl9FxogCczCqTSLRXd
+	/izk5nDF1n3vApEr4XS30XYRv71cbji9D9mkw
+X-Gm-Gg: ASbGncsIxdcwIyMM0Wjm0Y0bzBOhYdbp0aF8FQYCUJ0mWdNLenp7O0HEi/rpGSTP5ZL
+	3bX7Qytns+QIXhRTd0PIn6ptYkk3mRgRwdtWrYIdan9cvXMeJNC4X+CtvhKyoofXBVt+i/fydQq
+	kSpUfJ9YM4MphEdVqldcxQX99aQQXT
+X-Google-Smtp-Source: AGHT+IECPtdQP1iqUudIoQ4/LOFGrnngjRkA8q9mZIwV+G6y1O00iqyHUEiz7cs9Uzb4qefMkhnfXEwUQJSAsfi1nQQ=
+X-Received: by 2002:a05:651c:210d:b0:308:f455:1f8f with SMTP id
+ 38308e7fff4ca-308f45521ccmr19828051fa.16.1739262650768; Tue, 11 Feb 2025
+ 00:30:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 09:08:58 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ian Rogers" <irogers@google.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Jiri Olsa" <jolsa@kernel.org>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Kan Liang" <kan.liang@linux.intel.com>,
- "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
- "James Clark" <james.clark@linaro.org>,
- "Mike Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>,
- guoren <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Charlie Jenkins" <charlie@rivosinc.com>,
- "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
- "Howard Chu" <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-riscv@lists.infradead.org
-Message-Id: <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
-In-Reply-To: <20250210165108.95894-6-irogers@google.com>
-References: <20250210165108.95894-1-irogers@google.com>
- <20250210165108.95894-6-irogers@google.com>
-Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating all system
- call tables
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
+ <Z6WBsruddcx0SFV5@google.com> <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+ <Z6qhjFs0YOMTzk9W@google.com>
+In-Reply-To: <Z6qhjFs0YOMTzk9W@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 11 Feb 2025 09:30:39 +0100
+X-Gm-Features: AWEUYZmNDvYzucRT4A5_TRjiMbCvfJ11CFT2DJ4CTqvov2m8ziEF48HrH3Du59Q
+Message-ID: <CACT4Y+bsozKqNTesXNTmF8bNj16iibLt2sKCwr-Wj409BswXNg@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
+On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
+> > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
+> > > > Add record/report --latency flag that allows to capture and show
+> > > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > > profiles. For latency profiles record captures context switch events,
+> > > > and report shows Latency as the first column.
+> > > >
+> > > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > Cc: Ian Rogers <irogers@google.com>
+> > > > Cc: linux-perf-users@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > >
+> > > > ---
+> > > > Changes in v5:
+> > > >  - added description of --latency flag in Documentation flags
+> > > > ---
+> > > >  tools/perf/Documentation/perf-record.txt |  4 +++
+> > > >  tools/perf/Documentation/perf-report.txt |  5 +++
+> > > >  tools/perf/builtin-record.c              | 20 ++++++++++++
+> > > >  tools/perf/builtin-report.c              | 32 +++++++++++++++---
+> > > >  tools/perf/ui/hist.c                     | 41 +++++++++++++++++++-----
+> > > >  tools/perf/util/hist.h                   |  1 +
+> > > >  tools/perf/util/sort.c                   | 33 +++++++++++++++----
+> > > >  tools/perf/util/sort.h                   |  2 +-
+> > > >  tools/perf/util/symbol_conf.h            |  4 ++-
+> > > >  9 files changed, 122 insertions(+), 20 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> > > > index 80686d590de24..c7fc1ba265e27 100644
+> > > > --- a/tools/perf/Documentation/perf-record.txt
+> > > > +++ b/tools/perf/Documentation/perf-record.txt
+> > > > @@ -227,6 +227,10 @@ OPTIONS
+> > > >       '--filter' exists, the new filter expression will be combined with
+> > > >       them by '&&'.
+> > > >
+> > > > +--latency::
+> > > > +     Enable data collection for latency profiling.
+> > > > +     Use perf report --latency for latency-centric profile.
+> > > > +
+> > > >  -a::
+> > > >  --all-cpus::
+> > > >          System-wide collection from all CPUs (default if no target is specified).
+> > > > diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+> > > > index 87f8645194062..66794131aec48 100644
+> > > > --- a/tools/perf/Documentation/perf-report.txt
+> > > > +++ b/tools/perf/Documentation/perf-report.txt
+> > > > @@ -68,6 +68,11 @@ OPTIONS
+> > > >  --hide-unresolved::
+> > > >          Only display entries resolved to a symbol.
+> > > >
+> > > > +--latency::
+> > > > +        Show latency-centric profile rather than the default
+> > > > +        CPU-consumption-centric profile
+> > > > +        (requires perf record --latency flag).
+> > > > +
+> > > >  -s::
+> > > >  --sort=::
+> > > >       Sort histogram entries by given key(s) - multiple keys can be specified
+> > > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > > index 5db1aedf48df9..e219639ac401b 100644
+> > > > --- a/tools/perf/builtin-record.c
+> > > > +++ b/tools/perf/builtin-record.c
+> > > > @@ -161,6 +161,7 @@ struct record {
+> > > >       struct evlist           *sb_evlist;
+> > > >       pthread_t               thread_id;
+> > > >       int                     realtime_prio;
+> > > > +     bool                    latency;
+> > > >       bool                    switch_output_event_set;
+> > > >       bool                    no_buildid;
+> > > >       bool                    no_buildid_set;
+> > > > @@ -3371,6 +3372,9 @@ static struct option __record_options[] = {
+> > > >                    parse_events_option),
+> > > >       OPT_CALLBACK(0, "filter", &record.evlist, "filter",
+> > > >                    "event filter", parse_filter),
+> > > > +     OPT_BOOLEAN(0, "latency", &record.latency,
+> > > > +                 "Enable data collection for latency profiling.\n"
+> > > > +                 "\t\t\t  Use perf report --latency for latency-centric profile."),
+> > > >       OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
+> > > >                          NULL, "don't record events from perf itself",
+> > > >                          exclude_perf),
+> > > > @@ -4017,6 +4021,22 @@ int cmd_record(int argc, const char **argv)
+> > > >
+> > > >       }
+> > > >
+> > > > +     if (record.latency) {
+> > > > +             /*
+> > > > +              * There is no fundamental reason why latency profiling
+> > > > +              * can't work for system-wide mode, but exact semantics
+> > > > +              * and details are to be defined.
+> > > > +              * See the following thread for details:
+> > > > +              * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
+> > > > +              */
+> > > > +             if (record.opts.target.system_wide) {
+> > > > +                     pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
+> > > > +                     err = -EINVAL;
+> > > > +                     goto out_opts;
+> > > > +             }
+> > > > +             record.opts.record_switch_events = true;
+> > > > +     }
+> > > > +
+> > > >       if (rec->buildid_mmap) {
+> > > >               if (!perf_can_record_build_id()) {
+> > > >                       pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
+> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > > > index 2a19abdc869a1..69de6dbefecfa 100644
+> > > > --- a/tools/perf/builtin-report.c
+> > > > +++ b/tools/perf/builtin-report.c
+> > > > @@ -112,6 +112,8 @@ struct report {
+> > > >       u64                     nr_entries;
+> > > >       u64                     queue_size;
+> > > >       u64                     total_cycles;
+> > > > +     u64                     total_samples;
+> > > > +     u64                     singlethreaded_samples;
+> > > >       int                     socket_filter;
+> > > >       DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> > > >       struct branch_type_stat brtype_stat;
+> > > > @@ -331,6 +333,10 @@ static int process_sample_event(const struct perf_tool *tool,
+> > > >                                    &rep->total_cycles, evsel);
+> > > >       }
+> > > >
+> > > > +     rep->total_samples++;
+> > > > +     if (al.parallelism == 1)
+> > > > +             rep->singlethreaded_samples++;
+> > > > +
+> > > >       ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+> > > >       if (ret < 0)
+> > > >               pr_debug("problem adding hist entry, skipping event\n");
+> > > > @@ -1079,6 +1085,11 @@ static int __cmd_report(struct report *rep)
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > +     /* Don't show Latency column for non-parallel profiles by default. */
+> > > > +     if (rep->singlethreaded_samples * 100 / rep->total_samples >= 99 &&
+> > > > +                     !symbol_conf.prefer_latency)
+> > > > +             perf_hpp__cancel_latency();
+> > > > +
+> > > >       evlist__check_mem_load_aux(session->evlist);
+> > > >
+> > > >       if (rep->stats_mode)
+> > > > @@ -1468,6 +1479,10 @@ int cmd_report(int argc, const char **argv)
+> > > >                   "Disable raw trace ordering"),
+> > > >       OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+> > > >                   "Do not display empty (or dummy) events in the output"),
+> > > > +     OPT_BOOLEAN(0, "latency", &symbol_conf.prefer_latency,
+> > > > +                 "Show latency-centric profile rather than the default\n"
+> > > > +                 "\t\t\t  CPU-consumption-centric profile\n"
+> > > > +                 "\t\t\t  (requires perf record --latency flag)."),
+> > > >       OPT_END()
+> > > >       };
+> > > >       struct perf_data data = {
+> > > > @@ -1722,16 +1737,25 @@ int cmd_report(int argc, const char **argv)
+> > > >               symbol_conf.annotate_data_sample = true;
+> > > >       }
+> > > >
+> > > > +     symbol_conf.enable_latency = true;
+> > > >       if (report.disable_order || !perf_session__has_switch_events(session)) {
+> > > >               if (symbol_conf.parallelism_list_str ||
+> > > > -                             (sort_order && strstr(sort_order, "parallelism")) ||
+> > > > -                             (field_order && strstr(field_order, "parallelism"))) {
+> > > > +                     symbol_conf.prefer_latency ||
+> > > > +                     (sort_order && (strstr(sort_order, "latency") ||
+> > > > +                             strstr(sort_order, "parallelism"))) ||
+> > > > +                     (field_order && (strstr(field_order, "latency") ||
+> > > > +                             strstr(field_order, "parallelism")))) {
+> > > >                       if (report.disable_order)
+> > > > -                             ui__error("Use of parallelism is incompatible with --disable-order.\n");
+> > > > +                             ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
+> > > >                       else
+> > > > -                             ui__error("Use of parallelism requires --switch-events during record.\n");
+> > > > +                             ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
+> > > >                       return -1;
+> > > >               }
+> > > > +             /*
+> > > > +              * If user did not ask for anything related to
+> > > > +              * latency/parallelism explicitly, just don't show it.
+> > > > +              */
+> > > > +             symbol_conf.enable_latency = false;
+> > > >       }
+> > > >
+> > > >       if (sort_order && strstr(sort_order, "ipc")) {
+> > > > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> > > > index 6de6309595f9e..b453f8eb579cc 100644
+> > > > --- a/tools/perf/ui/hist.c
+> > > > +++ b/tools/perf/ui/hist.c
+> > > > @@ -632,27 +632,36 @@ void perf_hpp__init(void)
+> > > >               return;
+> > > >
+> > > >       if (symbol_conf.cumulate_callchain) {
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC);
+> > > > +             /* Use idempotent addition to avoid more complex logic. */
+> > > > +             if (symbol_conf.prefer_latency)
+> > > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC, true);
+> > > > +             if (symbol_conf.enable_latency)
+> > > > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
+> > > >               perf_hpp__format[PERF_HPP__OVERHEAD].name = "Self";
+> > > >       }
+> > > >
+> > > > -     hpp_dimension__add_output(PERF_HPP__OVERHEAD);
+> > > > +     if (symbol_conf.prefer_latency)
+> > > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
+> > > > +     hpp_dimension__add_output(PERF_HPP__OVERHEAD, true);
+> > > > +     if (symbol_conf.enable_latency)
+> > > > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
+> > > >
+> > > >       if (symbol_conf.show_cpu_utilization) {
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS);
+> > > > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS, false);
+> > > > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US, false);
+> > > >
+> > > >               if (perf_guest) {
+> > > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS);
+> > > > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US);
+> > > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS, false);
+> > > > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US, false);
+> > > >               }
+> > > >       }
+> > > >
+> > > >       if (symbol_conf.show_nr_samples)
+> > > > -             hpp_dimension__add_output(PERF_HPP__SAMPLES);
+> > > > +             hpp_dimension__add_output(PERF_HPP__SAMPLES, false);
+> > > >
+> > > >       if (symbol_conf.show_total_period)
+> > > > -             hpp_dimension__add_output(PERF_HPP__PERIOD);
+> > > > +             hpp_dimension__add_output(PERF_HPP__PERIOD, false);
+> > > >  }
+> > > >
+> > > >  void perf_hpp_list__column_register(struct perf_hpp_list *list,
+> > > > @@ -701,6 +710,22 @@ void perf_hpp__cancel_cumulate(void)
+> > > >       }
+> > > >  }
+> > > >
+> > > > +void perf_hpp__cancel_latency(void)
+> > > > +{
+> > > > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
+> > > > +
+> > > > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
+> > > > +             return;
+> > > > +
+> > > > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
+> > > > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
+> > > > +
+> > > > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
+> > > > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
+> > > > +                     perf_hpp__column_unregister(fmt);
+> > > > +     }
+> > > > +}
+> > > > +
+> > > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
+> > > >  {
+> > > >       struct perf_hpp_fmt *fmt;
+> > > > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > > > index 91159f16c60b2..29d4c7a3d1747 100644
+> > > > --- a/tools/perf/util/hist.h
+> > > > +++ b/tools/perf/util/hist.h
+> > > > @@ -582,6 +582,7 @@ enum {
+> > > >
+> > > >  void perf_hpp__init(void);
+> > > >  void perf_hpp__cancel_cumulate(void);
+> > > > +void perf_hpp__cancel_latency(void);
+> > > >  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
+> > > >  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
+> > > >  void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
+> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > > --- a/tools/perf/util/sort.c
+> > > > +++ b/tools/perf/util/sort.c
+> > > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > > >       const char              *name;
+> > > >       struct perf_hpp_fmt     *fmt;
+> > > >       int                     taken;
+> > > > +     int                     was_taken;
+> > > >  };
+> > > >
+> > > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > > >               return -1;
+> > > >
+> > > >       hd->taken = 1;
+> > > > +     hd->was_taken = 1;
+> > > >       perf_hpp_list__register_sort_field(list, fmt);
+> > > >       return 0;
+> > > >  }
+> > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -int hpp_dimension__add_output(unsigned col)
+> > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > >  {
+> > > > +     struct hpp_dimension *hd;
+> > > > +
+> > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > > +     hd = &hpp_sort_dimensions[col];
+> > > > +     if (implicit && !hd->was_taken)
+> > > > +             return 0;
+> > >
+> > > I don't think you need these implicit and was_taken things.
+> > > Just removing from the sort list when it's unregistered seems to work.
+> > >
+> > > ---8<---
+> > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
+> > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+> > >  {
+> > >         list_del_init(&format->list);
+> > > +       list_del_init(&format->sort_list);
+> > >         fmt_free(format);
+> > >  }
+> > >
+> > > ---8<---
+> >
+> > It merely suppresses the warning, but does not work the same way. See
+> > this for details:
+> > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
+>
+> But I think it's better to pass --latency option rather than adding it
+> to -s option.  If you really want to have specific output fields, then
+> please use -F latency,sym instead.
 
-> +# Each line of the syscall table should have the following format:
-> +#
-> +# NR ABI NAME [NATIVE] [COMPAT]
-> +#
-> +# NR       syscall number
-> +# ABI      ABI name
-> +# NAME     syscall name
-> +# NATIVE   native entry point (optional)
-> +# COMPAT   compat entry point (optional)
+-F does not work in all cases, e.g. the command from tips.txt with -F
+instead of --sort:
 
-On x86, there is now a sixth optional field.
+perf report --hierarchy -F latency,parallelism,comm,symbol
+Error: --hierarchy and --fields options cannot be used together
 
-> +#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
-> +EOF
-> +build_tables "$tools_dir/perf/arch/arm/entry/syscalls/syscall.tbl" 
-> "$outfile" common,32,oabi EM_ARM
-> +build_tables 
+I also don't understand how you see it working. Please elaborate.
 
-The oabi syscalls probably shouldn't be part of the default set here.
-Technically these are two separate ABIs, though EABI is a subset of
-OABI for the most most part. Some of the calling conventions are
-also different.
+--latency is no more than a handy present for the default case so that
+a user does not need to learn other flags, field names, etc. It's
+just:
 
-> "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfile" 
-> common,64,renameat,rlimit,memfd_secret EM_AARCH64
-> +cat >> "$outfile" <<EOF
-> +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || 
-> defined(__aarch64__)
+perf report --latency
 
-Hardcoding the set of ABIs in the middle of the script seems
-too fragile to me, I'm worried that these get out of sync quickly.
+Then there are gazillions of custom permutations of various flags with
+sort/field orders. It's impossible to second guess what a user means
+in all of these cases and simplify with a magic --latency flag. For
+example, possible commands may be different just by field order:
+"latency", or "latency,overhead", or "overhead,latency", all of the
+are "latency" in some sense, but which one of these 3 a user wants in
+a particular case is impossible to infer.
 
-> +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-> +EOF
-> +build_tables 
-> "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfile" 
-> common,64,n64 EM_MIPS
-> +cat >> "$outfile" <<EOF
-> +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
+Also, I don't see lots of value in using --latency flag instead of
+latency sort field. It's just a bit longer command and nothing more.
+Am I missing something? If a user is proficient with perf and a custom
+specific configuration, I would let users specify what they want
+rather than try to second guess their intentions.
 
-What about n32/o32? The syscall tables are completely different here.
 
-> +#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || 
-> defined(__powerpc64__)
-> +EOF
-> +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" 
-> "$outfile" common,32,nospu EM_PPC
-> +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" 
-> "$outfile" common,64,nospu EM_PPC64
-> +cat >> "$outfile" <<EOF
-> +#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || 
-> defined(__powerpc64__)
 
-This skips the SPU table, but I think that's fine.
-
-> +EOF
-> +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl" 
-> "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
-> +cat >> "$outfile" <<EOF
-> +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
-
-This skips the 32-bit table, though I think that one is already
-planned to be discontinued in the future.
-
-> +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-> +EOF
-> +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tbl" 
-> "$outfile" common,32,i386 EM_386
-> +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tbl" 
-> "$outfile" common,64 EM_X86_64
-> +cat >> "$outfile" <<EOF
-> +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || 
-> defined(__x86_64__)
-
-This misses the x32 table.
-
-   Arnd
+> Also I've realized that it should add one sort key in setup_overhead()
+> to support hierarchy mode properly.  Something like this?
+>
+> Thanks,
+> Namhyung
+>
+>
+> ---8<---
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
+>                 return keys;
+>
+>         if (symbol_conf.prefer_latency) {
+> -               keys = prefix_if_not_in("overhead", keys);
+> -               keys = prefix_if_not_in("latency", keys);
+> -               if (symbol_conf.cumulate_callchain) {
+> -                       keys = prefix_if_not_in("overhead_children", keys);
+> +               if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("latency_children", keys);
+> -               }
+> -       } else if (!keys || (!strstr(keys, "overhead") &&
+> -                       !strstr(keys, "latency"))) {
+> -               if (symbol_conf.enable_latency)
+> +               else
+>                         keys = prefix_if_not_in("latency", keys);
+> -               keys = prefix_if_not_in("overhead", keys);
+> -               if (symbol_conf.cumulate_callchain) {
+> -                       if (symbol_conf.enable_latency)
+> -                               keys = prefix_if_not_in("latency_children", keys);
+> +       } else {
+> +               if (symbol_conf.cumulate_callchain)
+>                         keys = prefix_if_not_in("overhead_children", keys);
+> -               }
+> +               else
+> +                       keys = prefix_if_not_in("overhead", keys);
+>         }
+>
+>         return keys;
+> ---8<---
+>
