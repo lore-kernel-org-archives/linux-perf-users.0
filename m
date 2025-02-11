@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471692641CA;
-	Tue, 11 Feb 2025 21:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128A3263C8B;
+	Tue, 11 Feb 2025 21:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739308019; cv=none; b=mbt6DYg2buJpeU580N8DARRTYGdqz9jVXBSVDaQtQXK4m7MW303iAfacac1v09qtEg7VuJ4jkJsiKkPT7GNg95m8ZR3NDjOIT18tk1u2DpthRthwylT4MWvlClAoqBW1fFK68i0wsJOTdnXOuc5HNJIHmutCtXbv+1xn+PGB3Do=
+	t=1739308174; cv=none; b=r/DLIkL5KB+57PlXXHFfjdpe2h+TadSNof0kNqDF8eA8tY6AvENgZwuOBFkO463P81e/jmoFG8K5Uo8GVTJXnxvCc/6HAJP4p+5OK3wjYpGSo62pComXYXXKJM1UFi1u0OdYOid5biPnRzy2c+QfNYXtndXpZOM0kuZvL+MXHoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739308019; c=relaxed/simple;
-	bh=1cZnpbpTOiIQg9CEPVzPEcN13HtPcQ50VtV/KHNo+Sg=;
+	s=arc-20240116; t=1739308174; c=relaxed/simple;
+	bh=Eik7GN3oK6YsklpWUv2HtvzPSL/Bm/ft9wxu/zYgIH0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=czaPyVU66bKSJUkMePdgbUL5whKjGVae7AO3dlhCF3A5dxfLKJJ6ETJX2RPojc6eL+s6AlcUoALJQ3yBb1dRh+7X94MsEIkXdZils859XEfcdFKQGYFvGif1UZpzkDJBc5ouD8atK7qIJ5GuESwKwyjwHriZmliF4F5++NZ/17E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIQ9LDXt; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=FEF/gyOh1CwIUw6NDJe7xSiZlvy5Fl/GS3dPDr+5Rhbq1OwFrxcGsYssG89C3Yx+XVhnJztLVccNeG3n9S9LwteuOZSBTPax8w6+EwI+XNgkDy6Mpjj8vzlCZ/ttrwmjuYBhojkuQ+54X2U+l+TbQvld9G/L3C3xkRYOPp29vz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aPujvhJq; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIQ9LDXt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aPujvhJq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739308018; x=1770844018;
+  t=1739308174; x=1770844174;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=1cZnpbpTOiIQg9CEPVzPEcN13HtPcQ50VtV/KHNo+Sg=;
-  b=NIQ9LDXtSjo539gMRSGVQv+81t5pc9HI4ruylHRk2pp3MDa3aWcrvh1g
-   51SohZoNinTsjbd1hBgKoI+6XSp5QC+YnIjaKsfaPvbfWRculeOX5rdXt
-   QC4olPSGV6nybh94CpPPbnw458YBSRE/FhQlh/Mn4ZajM9Al/lOI9bIwT
-   ZBviLLFvzUPGXDuqdw1gdLq4tRDrqZkk105sBQOv7Ka/OpqJhMM975vFn
-   CIccBZxb1n8XsxY3pHY/SDbuu6s9Beyr9tIlKQiYJ/aC+VoLeK5ZuGUI1
-   Qe3orNE3cdnNfSaI5qvyHajHYV5A79h1YM2KYZMPu0BIE3iHXbVddVE2x
-   Q==;
-X-CSE-ConnectionGUID: zQIRdT09TfOxMkMSnwBbdQ==
-X-CSE-MsgGUID: RfvTMey5SV+p1kDocDNLaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="27547695"
+  bh=Eik7GN3oK6YsklpWUv2HtvzPSL/Bm/ft9wxu/zYgIH0=;
+  b=aPujvhJq1gm49ghaGFZZiV+exV1rHLVjyzVMqwnYG9w0qLSFghRivuFj
+   jylmTTD5Z/lUpVpXzuq04Zder22tka6rjCNdeJo1UAgjRwzFZ9umvO1Fd
+   Nhi0XlHkgIJXArxVQfGeQ19WgFPTRK+RKJD+VfzVRaom7CmV4XHqLuTPT
+   3kod+SqpHLd8grqwShwmwqnWgxeqmZMCAaM9H/0C9KZCaA2jXm1iYFgst
+   F26AwWeZeI7LbSyKgr+INkad4r4K41/YoowzCszDLcJnR/YeSlkKqGXNK
+   QDLmXO0m68jrHV1FEirgKaUTIg7v7/NOZAAXY5dh9PJzPK8NoPZJlxgS2
+   A==;
+X-CSE-ConnectionGUID: NNsDpPTER1KLTyefV20QzQ==
+X-CSE-MsgGUID: +m63ZJpQShK4ud/0TFcntw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="40071797"
 X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="27547695"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:06:56 -0800
-X-CSE-ConnectionGUID: mUH0w3szSq6RSnhlYXVfrg==
-X-CSE-MsgGUID: mcj59dfEStSmHZWVKo7q8A==
+   d="scan'208";a="40071797"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:09:33 -0800
+X-CSE-ConnectionGUID: Z2O5YulITUCjg8+GCP7Fog==
+X-CSE-MsgGUID: y6s4qKzWQseTeCj42yU/bA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135887755"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="113132651"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.48]) ([10.125.108.48])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:06:54 -0800
-Message-ID: <58147675-d5be-438d-8d5e-c32bc981a59d@intel.com>
-Date: Tue, 11 Feb 2025 13:06:53 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:09:30 -0800
+Message-ID: <24acb878-2b5c-486d-ad8c-72a46b8463e7@intel.com>
+Date: Tue, 11 Feb 2025 13:09:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/17] x86/cpu/intel: Replace Family 5 model checks
- with VFM ones
+Subject: Re: [PATCH v2 13/17] x86/pat: Replace Intel x86_model checks with VFM
+ ones
 To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
  Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -74,7 +74,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
  linux-hwmon@vger.kernel.org
 References: <20250211194407.2577252-1-sohil.mehta@intel.com>
- <20250211194407.2577252-13-sohil.mehta@intel.com>
+ <20250211194407.2577252-14-sohil.mehta@intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -120,19 +120,26 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250211194407.2577252-13-sohil.mehta@intel.com>
+In-Reply-To: <20250211194407.2577252-14-sohil.mehta@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/11/25 11:44, Sohil Mehta wrote:
-> Introduce names for some Family 5 models and convert some of the checks
-> to be VFM based.
-> 
-> Also, to keep the file sorted by family, move Family 5 to the top of the
-> header file.
+> +	if (c->x86_vendor == X86_VENDOR_INTEL &&
+> +	    ((c->x86_vfm >= INTEL_PENTIUM_PRO && c->x86_vfm <= INTEL_PENTIUM_M_DOTHAN) ||
+> +	    (c->x86_vfm >= INTEL_P4_WILLAMETTE && c->x86_vfm <= INTEL_P4_CEDARMILL))) {
 
-It seems a little crazy to be naming all these old CPUs, but it does
-make the code a lot more readable. Seeing INTEL_PENTIUM_MMX actually in
-the code also *SCREAMS* how horribly ancient these CPUs are. :)
+Since these are both closed checks and not open-ended, is the
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+	if (c->x86_vendor == X86_VENDOR_INTEL &&
+
+bit needed or superfluous?
+
+Also, super nit, can you vertically align the two range checks, please?
+
+	    ((c->x86_vfm >= INTEL_PENTIUM_PRO   && c->x86_vfm <=
+INTEL_PENTIUM_M_DOTHAN) ||
+	     (c->x86_vfm >= INTEL_P4_WILLAMETTE && c->x86_vfm <=
+INTEL_P4_CEDARMILL))) {
+
+
