@@ -1,236 +1,151 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FE41EE7D5
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 20:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF61D8DF6;
+	Tue, 11 Feb 2025 20:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739305425; cv=none; b=YJSq5ULPZ5ebQSKhxYnmemEIawM92W+/mjThrel1WuWOdeVVK8nlSCnSt8C1tXI0mkZqETl0rqlXMV7+exQDgmK0/uFJMp7e8qOJIOVnwa0WXNAtM5GUujE01x/HufE65O2VU7QoxI+hf4/Al0Gn5sdTT5WF3/zYWAGrhB+1NfY=
+	t=1739305613; cv=none; b=eilsGeTc84CVAAl7Uk0qMXDle7LsySUTyZBxikkzeHhPLjozqR3nHtB9g+T1bDMABh+VKafQowoRXJXJZDhqPNL1HtBaKfdbzz815nXu5+3LXYTakahwGvTR6ac3YCMVjOz96+nFSLIBjFvbU3viOpD39K6YBXE5/tPG8blVpI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739305425; c=relaxed/simple;
-	bh=nu+g8braZFq/6RFMloNF0B+jDmX+cvEIsch6YG8svfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FGdZdRuJqdS/ke5OoAkpXJ09Ng3nzQq4hvzpuWjpqOw3wWeSv/TzoiKq+NBwRyfB0S+quBbF5rkw1a2TZ1I5fIk/5WFltvxlEgHijz/t7MDeTSq6n6jA8bKTU48IjFWwgmRbNNDl/dXtWWkWKt0RMn+84mo1n78nqjBi1cSPM/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SgQLnEF8; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739305613; c=relaxed/simple;
+	bh=+fClqH3t9Av9cG/CYZpvXyUGwAqU8nH5zY+gHkCMoro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mu0bqT1y/kEQKivC2orx3Jds4iTjSKwUrKHwWdQ5pblICz70W95oah2VWj7Yg0KE0DvecJvHC/rrgNl1CWYg1urH/HomVtp8VCsP1zNEtVWy7yOuVE2CNiSDZXxAXmuyin2vOePcwupitHcjp9Ud2FLm7MFtfYxyJ6AqVAI3kzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dTAwEfJV; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SgQLnEF8"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30797730cbdso58773701fa.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 12:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739305422; x=1739910222; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C3/MT8ys+ADgAinGP2p8Ypnjpy09+xK2m843XIGFUfg=;
-        b=SgQLnEF8+4HJJzYimZiq+Rmt45Jjwb605rXyH22UOuvVhL96oqbWKbP+WUYe0EfKmk
-         Xxy1HTsgoy1hHol3hopMj0XW1cWUfcbbgo2jLplymUgvZzRxUrLyqFnxx1th6ahoxXFb
-         IUVDGr1iRnLCQNhsHI22AtzPaY8hknAN+Moj+B88rktF5la1A0dOimeTADG4DcdXrWlM
-         okpl24Fa7qYVDm/IftQ1BT7nH6Z5Vev+oKOwsH8pujb0S8p04rwqRI6phlz7Ckgydm+X
-         Z/IJTxQaLe8Eyy4iaKTl43AeIPvwTQbkyB6NZjrthSNPUyQSkRpUGjKPaJHAL5gcgWBp
-         gv4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739305422; x=1739910222;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C3/MT8ys+ADgAinGP2p8Ypnjpy09+xK2m843XIGFUfg=;
-        b=YuYyt2GpRCjiKFl0ylJCvSZ8o4Ql4Eu85krex0ju90GjfUlkeT5e1l9Wy4+2XVQqQD
-         ellM5HWYze1GaKP1rRbI2AtGUHRbM7Fq6fgfTJNIVpy86kFkxGrcAL6hmynmUMXjTN24
-         Z2VWXUWeVJupnEEhnMJyJhJ/Tn5plkOCuKTwL9iW7Ut5rmlOdgcIooIHtAX1BSWcyCLR
-         c7c136C7n2uO0+EjN7xrn1JqPYcqVma80O1SV1HGQ8Pei2/LypKqn5JYAEoo8sk4Hiu0
-         XkYputHJxC1H9hPMuerGgWWM/Hpj7mUNj8m7HwSZu4VYPtQTI1TaJtzgZ8O2KeVpVUEb
-         4nuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXP8kOJhlRkHbBpwjKtFUldViC5QqEoo8soIYMyalRKG00vPJSzt1yOnZCoq3bhFQbK/pOzikRsEABfNfX2Bpq7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPDzt8vriLELrqZWlz3Ymv5fbLZ884y8UUbUWCwm2ERFxr5sga
-	MxOwcbYeOQ2+R1geVTNtuT8DpA3cAhwhdgfPbijZAU2eZLrrfZoPRVEzK9bwryAEwlCIzzcgXXB
-	5HTeBWR2SAW3Nr3y1U3XPhIcExQh0V/VYiKIK
-X-Gm-Gg: ASbGncvXTw9e50VDlIO9+8jETV4yNHzugG9Pq1xQagi6NjNuBaYGfilGugfHQge/mP+
-	M2biwyhbnroynNucFa8w1EvWLcKh1L8Mm1wYpliqaImYee2i8kBN198qdMuFhNUhm7+2aapsJZq
-	BateoCq0dD9XB5Pylz9sQCJZ0wcgqp
-X-Google-Smtp-Source: AGHT+IGgl5B7zUqu81I0TwqtVrMY+eV6m3uWOl98IEqX+slWfixAz3v1LsERZWIH12oCRxOrXAn7eBXhd9Ac5XOUGco=
-X-Received: by 2002:a2e:bc84:0:b0:308:db61:34cf with SMTP id
- 38308e7fff4ca-309036b585cmr4091181fa.14.1739305421668; Tue, 11 Feb 2025
- 12:23:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dTAwEfJV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739305612; x=1770841612;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+fClqH3t9Av9cG/CYZpvXyUGwAqU8nH5zY+gHkCMoro=;
+  b=dTAwEfJVkE6N2a33oKKNF9Fx1OF2v89PPMZ3EQB7qWG/1zUkR/8V7t+e
+   LAAXQAjdd05t0LWdSMLkHL/vKiCcspLVs8yxMZIDInljuioTMJISSTJ2G
+   fZ9z7f/NrLaN8wV55LKfukRnJ40tHOpAh/wxeFcIUw5EwEWiA9XwVUz0e
+   H9U1MwTPJqv69IUCDz0fqVeAP9Sma/W/7ucMKlZkZvgMQaV4pbk9l7aK4
+   jWW/VpMWK0hwiU29mlrlwLX4RvJLGkEA8oBX2tPMxOYNaePotJpA4Zqg7
+   /JpJz7+5MeEAzPlTsEm+SZfkBKZPXM8/XyYM0nqqgLnKyRHw0X45sDdkP
+   w==;
+X-CSE-ConnectionGUID: /geln+N4Qp++x/yYExFlEg==
+X-CSE-MsgGUID: SrSvyDy9Q+OyUVwLkuon4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39179283"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39179283"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 12:26:50 -0800
+X-CSE-ConnectionGUID: +AQkDedoTIKh72G7pqxSBg==
+X-CSE-MsgGUID: Ol+TZdIeQLup+dPw9nkEAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149801495"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.48]) ([10.125.108.48])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 12:26:49 -0800
+Message-ID: <5b954a96-1034-467d-a5dc-3d3f7bc112a1@intel.com>
+Date: Tue, 11 Feb 2025 12:26:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
- <Z6WBsruddcx0SFV5@google.com> <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
- <Z6qhjFs0YOMTzk9W@google.com> <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
- <Z6uMBAG0hePL9JV3@google.com>
-In-Reply-To: <Z6uMBAG0hePL9JV3@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 11 Feb 2025 21:23:30 +0100
-X-Gm-Features: AWEUYZmnWnJVRraAWQ7AI5WqYVsmniGSEUXqGNvUJVrlwdwG8bV_gV1ty1WHGmI
-Message-ID: <CACT4Y+YB_Ckfptkyu6yiF5Daa8q4MgGyf_1u7RPjoTsdQ3h=qw@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/17] x86/cpu/intel: Fix the movsl alignment
+ preference for extended Families
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ David Laight <david.laight.linux@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+ <20250211194407.2577252-5-sohil.mehta@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250211194407.2577252-5-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025 at 18:42, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Tue, Feb 11, 2025 at 09:42:16AM +0100, Dmitry Vyukov wrote:
-> > On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
-> > > > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
-> [SNIP]
-> > > > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
-> > > > > >       return 0;
-> > > > > >  }
-> > > > > >
-> > > > > > -int hpp_dimension__add_output(unsigned col)
-> > > > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
-> > > > > >  {
-> > > > > > +     struct hpp_dimension *hd;
-> > > > > > +
-> > > > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
-> > > > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-> > > > > > +     hd = &hpp_sort_dimensions[col];
-> > > > > > +     if (implicit && !hd->was_taken)
-> > > > > > +             return 0;
-> > > > >
-> > > > > I don't think you need these implicit and was_taken things.
-> > > > > Just removing from the sort list when it's unregistered seems to work.
-> > > > >
-> > > > > ---8<---
-> > > > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
-> > > > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
-> > > > >  {
-> > > > >         list_del_init(&format->list);
-> > > > > +       list_del_init(&format->sort_list);
-> > > > >         fmt_free(format);
-> > > > >  }
-> > > > >
-> > > > > ---8<---
-> > > >
-> > > > It merely suppresses the warning, but does not work the same way. See
-> > > > this for details:
-> > > > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
-> > >
-> > > But I think it's better to pass --latency option rather than adding it
-> > > to -s option.  If you really want to have specific output fields, then
-> > > please use -F latency,sym instead.
-> > >
-> > > Also I've realized that it should add one sort key in setup_overhead()
-> > > to support hierarchy mode properly.  Something like this?
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > >
-> > > ---8<---
-> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > > index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
-> > > --- a/tools/perf/util/sort.c
-> > > +++ b/tools/perf/util/sort.c
-> > > @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
-> > >                 return keys;
-> > >
-> > >         if (symbol_conf.prefer_latency) {
-> > > -               keys = prefix_if_not_in("overhead", keys);
-> > > -               keys = prefix_if_not_in("latency", keys);
-> > > -               if (symbol_conf.cumulate_callchain) {
-> > > -                       keys = prefix_if_not_in("overhead_children", keys);
-> > > +               if (symbol_conf.cumulate_callchain)
-> > >                         keys = prefix_if_not_in("latency_children", keys);
-> > > -               }
-> > > -       } else if (!keys || (!strstr(keys, "overhead") &&
-> > > -                       !strstr(keys, "latency"))) {
-> > > -               if (symbol_conf.enable_latency)
-> > > +               else
-> > >                         keys = prefix_if_not_in("latency", keys);
-> > > -               keys = prefix_if_not_in("overhead", keys);
-> > > -               if (symbol_conf.cumulate_callchain) {
-> > > -                       if (symbol_conf.enable_latency)
-> > > -                               keys = prefix_if_not_in("latency_children", keys);
-> > > +       } else {
-> > > +               if (symbol_conf.cumulate_callchain)
-> > >                         keys = prefix_if_not_in("overhead_children", keys);
-> > > -               }
-> > > +               else
-> > > +                       keys = prefix_if_not_in("overhead", keys);
-> > >         }
-> > >
-> > >         return keys;
-> >
-> >
-> > Have I decoded the patch correctly?
-> >
-> >         if (symbol_conf.prefer_latency) {
-> >                 if (symbol_conf.cumulate_callchain)
-> >                         keys = prefix_if_not_in("latency_children", keys);
-> >                 else
-> >                         keys = prefix_if_not_in("latency", keys);
-> >         } else {
-> >                 if (symbol_conf.cumulate_callchain)
-> >                         keys = prefix_if_not_in("overhead_children", keys);
-> >                 else
-> >                         keys = prefix_if_not_in("overhead", keys);
-> >         }
-> >
->
-> Yep, that's correct.
->
->
-> > If I decoded the patch correctly, it's not what we want.
-> >
-> > For the default prefer_latency case we also want to add overhead, that
-> > was intentional for the --latency preset. It does not harm, and allows
-> > to see/compare differences in latency and overhead.
-> > Again, if a user wants something custom, there is no way to second
-> > guess all possible intentions. For non-default cases, we just let the
-> > user say what exactly they want, and we will follow that.
-> >
-> > "latency" should be added even if cumulate_callchain.
->
-> Please note that it just sets the sort key - which column you want to
-> order the result.  The output fields for overhead and children will be
-> added in perf_hpp__init() if you remove the 'was_taken' logic.  So I
-> think this change will have the same output with that.
+We should really rename intel_workarounds() to make it more clear that
+it's 32-bit only. But I digress...
 
-Yes, but perf_hpp__init() does not have the logic that's currently
-contained in setup_overhead().
+On 2/11/25 11:43, Sohil Mehta wrote:
+> The alignment preference for 32-bit movsl based bulk memory move has
+> been 8-byte for a long time. However this preference is only set for
+> Family 6 and 15 processors.
+> 
+> Extend the preference to upcoming Family numbers 18 and 19 to maintain
+> legacy behavior. Also, use a VFM based check instead of switching based
+> on Family numbers. Refresh the comment to reflect the new check.
+"Legacy behavior" is not important here. If anyone is running 32-bit
+kernel binaries on their brand new CPUs they (as far as I know) have a
+few screws loose. They don't care about performance or security and we
+shouldn't care _for_ them.
 
-If the user specified a "latency" field, and we don't want to add
-"overhead" in that case, then _both_ setup_overhead() and
-perf_hpp__init() must not add "overhead".
+If the code yielded the "wrong" movsl_mask.mask for 18/19, it wouldn't
+matter one bit.
 
-If we do what you proposed, then perf_hpp__init() will still add
-"overhead" and we go back to square 0.
+The thing that _does_ matter is someone auditing to figure out whether
+the code comprehends families>15 or whether it would break in horrible
+ways. The new check is shorter and it's more obvious that it will work
+forever.
 
-I used was_taken to not duplicate this non-trivial logic in both
-functions. As I mentioned in the previous replies, I tried that but it
-was messier/more complex. was_taken is a simple way to not duplicate
-logic and keep these functions consistent.
-
-
-> > For the !prefer_latency case, we don't want to mess with
-> > overhead/latency fields if the user specified any of them explicitly.
-> > Otherwise this convenience part gets in the user's way and does not
-> > allow them to do what they want. User says "I want X" and perf says
-> > "screw you, I will give you Y instead, and won't allow you to possibly
-> > do X".
->
-> That's what -F option does.  The -s option used to specify how to group
-> the histogram entries and it will add 'overhead' (and/or 'latency') if
-> it's not even requested.  So I think it's ok to add more output column
-> when -s option is used.
->
-> But unfortunately, using -F and -s together is confusing and change the
-> meaning of -s option - it now says how it sort the result.
->
-> >
-> > And see above: -F does not work with --hierarchy, so this part is unskippable.
->
-> Yep, but I mean it fixes --hierarchy and --latency.  I'm thinking of a
-> way to support -F and --hierarchy in general.
-
-I don't know why it was disabled. There are likely other things to
-improve, but please let's not tie that to this change.
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
