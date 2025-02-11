@@ -1,180 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D6C1E22E6;
-	Tue, 11 Feb 2025 17:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196C51E1C36;
+	Tue, 11 Feb 2025 17:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296284; cv=none; b=F9ZvaZZFMvFLL8uCXh8br5jTP3Y79RsIs1HGe6QaVzDXHOH/UOdgIFjePmcBCCqDaaqaR7nOQS+/CoLEXPGkArkK3oUMXbQIjhsjoIyWBLV2GJFmVb6t3HLmPW+bsBPKZH1jdG1lsKrXBHbhgOS9k6/RkBm04RQfMum4Tuf97pA=
+	t=1739296422; cv=none; b=dAJdwXDvqguZHaNmbXunlMsmQy+OjAFctfFUApfNPMEysJykNO4QXJjmVcWrJ7pTWSs8wJD0golV2QHODRjoQykye22FWk+8E/drOr6b4H9OlPhOM5TZbNmpFbeX1R2oO1fXKflLUH7wY4jZMTJ/UyPOJ4pTBewO37s6TMtBe4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296284; c=relaxed/simple;
-	bh=pOmYe+CzKZBKLzOG405L6ieNnxry6wJDC3YnqgayBh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kc2v1csOZXsCLhQxgp0zPtSEer3IQE2gCpg0FOjth8dRMOeeZfjgKmfcrwajxNWG7FbQu9Bhbsll5F+niciy22HMbWAFGV7CCJGsbDBJAwbyN/PH0OgMocal0XKGDStfvbxh9u+pAsY1wFLPgnNaLJY5is4A8sUBNh6PsapiXAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbFXRVog; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739296422; c=relaxed/simple;
+	bh=GE1kldghOgP70TaKSUomVIQtR7kYLCPGRgIKUi7/aQQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=jMHTfJMirv+nAJ+1yVr8TM4Sgt9bAKTqGatukGmdE/KXj4acKnIao6RhK0PO1pKv8QLWr5/Y1WPSX9ucZgBjANXkcdX81SHQdQVLmoZkQUZcJWe28ycemQ7gD1gGM+ldnoOu0O5cxSLvL3BLNEV0KOITyrbKZzG1mwFVnOXc5PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=xdIFMDyt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=0DlcNb++; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbFXRVog"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BA5C4CEDD;
-	Tue, 11 Feb 2025 17:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739296283;
-	bh=pOmYe+CzKZBKLzOG405L6ieNnxry6wJDC3YnqgayBh4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YbFXRVogRNaFHzI0n1livDh5s/I9s0iwrHPQvU0h9KJihLz/ZffZurV+E9rYOPy+H
-	 MuBoDNNAvM91AgiLWFfVPMtl+Hi4802P9HQKwnlJiCHpZVnHqni7TUs6ROKD3Ss4ca
-	 ijyxH4ngpKOT9+OPUyN+PK9WVuwlfYyOIE1bHcsUikg7ljI1HOUt4nYlmG+bimvxJn
-	 Clj/oD/MvPqjt7UHxjwXrjsssqdpRer6+5UYLgyMyXO5LJCIvC5ShXTyupvmhbN5mk
-	 IDIX+k+ltDUMXnBKa6f94V8XjzMfu0g4HZno1GFDOiPBwbwPd0aGwfnKSv5SuA69Z3
-	 XkKOvKucyZzqQ==
-Date: Tue, 11 Feb 2025 09:51:20 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-Message-ID: <Z6uOGNO6p7i9Fese@google.com>
-References: <20250111190143.1029906-1-irogers@google.com>
- <Z6panMzNSm1op8Di@google.com>
- <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
- <Z6rAHhAIdlkAryGJ@google.com>
- <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="xdIFMDyt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0DlcNb++"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 3FF6725400A1;
+	Tue, 11 Feb 2025 12:53:38 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 12:53:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739296418;
+	 x=1739382818; bh=Rt/0iFar5WRl6aZpHewFb36ggb3LydDYcBs0BC+08Ys=; b=
+	xdIFMDytym6Gl76ox2nUrc/+Rjo4HHYbnFvPzDNfmVJOT9CbDLyBqAyNfdN20VvJ
+	cgRQoXlnRZjr2VYKwkjXMlgUTPljbfnh7gMsvoEUjJsBMIDHV2ycpiRFGvSn+mil
+	WJRoThppckQb3/r9fdkuv3RUB1qUQJWR/u+7qNoLliX7o8gbH0WV88JyiLr8EwCI
+	xRHB0HrK2VgTGXyk0gkmNLjj2ZJGz7JVHmtpqFfxgJbJXF6guOsss8jWZpQINLcW
+	PBGs2Hlu+BY2FpZGBn3wt/8ZYhkMR7IGByPbF9e6AYceOoo1ZeGciKOZXIxsgMcg
+	4COTvD+U4Lft3Q6iJanI5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739296418; x=
+	1739382818; bh=Rt/0iFar5WRl6aZpHewFb36ggb3LydDYcBs0BC+08Ys=; b=0
+	DlcNb++aMvOAm9oNraH3ejZxfReC6Y5fc46AmdRDkwW41nHo/qiXXIiPqElpcSU3
+	ncLOLV0a4ryIT2HlNb1QYW9yzWYjth1gqibyvMZ45CJB/v8EWZ9yMMYiryM2aY18
+	MOryAESqjt4NKB2WC56yFBkPay4H+V1JixCq4pJdJHOo35lzPew+aub6VXmzOBED
+	A8q2k/UfbmT1N3+eez9ZV8Wpc9ujl4wfznFJDVrVJ4X6n3DccfCHzSaj9iE2W6mr
+	rvZFlSThPkLhKse2UvhMbsBzctqVUyzuHFqqMGDbTNZrBEMXrYYIW3r35Gwlh8AL
+	CooNgkovAVGWzDnuxzE6Q==
+X-ME-Sender: <xms:n46rZ1jbUikOuSHxPTNNI2Cn7iRliRmpGRTsc3wYuJIXL8oZqFXn6w>
+    <xme:n46rZ6CQbtYAPvcFaBPAwgi143Vf5FX51PXqi39uc7VVRDo4tSUoKSfCWwJcZOZ_J
+    iJ-mByPO2v0FNoTaGw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpeetfeduheevuddtuefgueevffeludehheefheff
+    ueejudelvdehiedvffelffejtdenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
+    rhhnuggsrdguvgdpnhgspghrtghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthht
+    ohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphgrlhhmvg
+    hrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgv
+    lhgvhidrvgguuhdprhgtphhtthhopehhohifrghruggthhhuleehsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepihhrohhgvghrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
+    phgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprggurhhirghnrd
+    hhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtphhtthhopegrtghmvgeskhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:n46rZ1Gs461BZbHoB9llQOxf7KMqllCx5S0qZC49xXmC6Ekq-z9a_Q>
+    <xmx:n46rZ6SQUPRD6LEilvVLC7euKo6wczwsgWyqxzrWXi1iq-sAjHGEJg>
+    <xmx:n46rZyyytDPl5S3GDTuFiezwfj_9ZZfJ5VcUxIg-xVlUFZ0Z7MgTcA>
+    <xmx:n46rZw4BekUScJ0AeZP8wT0i2Ihr0coN7ugZeUxPwPHwDHTGC5FweQ>
+    <xmx:oo6rZ78X6Hck3eR5im0KEY5fY3R-pQAhJVlM8zz_igsWuAdMEONPZbEH>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 76E112220072; Tue, 11 Feb 2025 12:53:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Tue, 11 Feb 2025 18:53:14 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ian Rogers" <irogers@google.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Howard Chu" <howardchu95@gmail.com>
+Cc: "Peter Zijlstra" <peterz@infradead.org>,
+ "Ingo Molnar" <mingo@redhat.com>, "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Jiri Olsa" <jolsa@kernel.org>,
+ "Adrian Hunter" <adrian.hunter@intel.com>,
+ "Kan Liang" <kan.liang@linux.intel.com>,
+ "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
+ "James Clark" <james.clark@linaro.org>,
+ "Mike Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>,
+ guoren <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Charlie Jenkins" <charlie@rivosinc.com>,
+ "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-riscv@lists.infradead.org
+Message-Id: <0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
+In-Reply-To: 
+ <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-6-irogers@google.com>
+ <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
+ <CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating all system
+ call tables
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 08:40:01PM -0800, Ian Rogers wrote:
-> On Mon, Feb 10, 2025 at 7:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 10, 2025 at 11:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
-> > > > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> > > > > BPF filters for uid filtering. The /proc scanning in thread_map is
-> > > > > racy as the PID may exit before the perf_event_open causing perf to
-> > > > > abort. BPF UID filters are more robust as they avoid the race. Add a
-> > > > > helper for commands that support UID filtering and wire up. Remove the
-> > > > > non-BPF UID filtering support.
-> > > >
-> > > > Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
-> > > > Also non-root users will be limited unless it pinned the BPF program in
-> > > > advance.
-> > > >
-> > > > I think you can keep the original behavior and convert to BPF only when
-> > > > it's available.
-> > >
-> > > Using BPF when available would be limited progress. The issues I have
-> > > with not removing the existing approach are:
-> > >
-> > > 1) It is broken
-> > > Scanning /proc for pids and then doing perf_event_open means that any
-> > > time a process exits the perf_event_open fails.
-> > > Steps to reproduce:
-> > > This bug reproduces easily but if your machine is lightly loaded in
-> > > one terminal run `perf test`, in another terminal run `sudo perf top
-> > > -u $(id -u)` the perf top command will exit with:
-> > > ```
-> > > Error:
-> > > The sys_perf_event_open() syscall returned with 3 (No such process)
-> > > for event (cycles:P).
-> > > /bin/dmesg | grep -i perf may provide additional information.
-> > > ```
-> > >
-> > > 2) It is a work in progress that isn't progressing. Scanning /proc
-> > > will only tell you about started processes; it won't tell you about
-> > > processes that start during the profiling run, whether it be perf top
-> > > or perf record. Extra work would be necessary to make this most basic
-> > > of use-cases work, perhaps you could use tracepoints to capture
-> > > starting processes and then enable user profiling on those processes.
-> > > It would be horribly complicated, suffer from delays between observing
-> > > things happen and doing the perf_event_open, biases in the samples,
-> > > etc. I don't expect anyone to do it, especially when BPF filtering
-> > > already solves the problem better. There have been 13 years that
-> > > someone could have fixed it.
-> > >
-> > > 3) it adds significant useless complexity to the code base. Having
-> > > 'user' in the target makes it look like perf_event_open can work on a
-> > > pid, system wide or user basis. The user basis doesn't exist so the
-> > > majority of the code base is just ignoring it - search for users of
-> > > uid_str on target. Those that do run into problems (1) and (2).
-> > >
-> > > 4) It is redundant and leads to confusion with BPF filtering. Having
-> > > the BPF filter on evsels is non-zero cost in terms of the code base
-> > > complexity, but it is something broadly useful. As user filtering has
-> > > never worked (see above) it isn't broadly used but is adding
-> > > complexity. If both approaches were wanted then it is unclear what the
-> > > code should be doing, presumably the mish-mash of BPF filtering and
-> > > /proc scanning that happens today and will be broken due to (1) and
-> > > (2). Putting everything into the BPF filter makes sense as you can
-> > > combine a BPF filter with an additional BPF filter on user.
-> > >
-> > > 5) It is untested and adding a test leads to an always broken test due
-> > > to testing being an example of where things break, see point 1 and its
-> > > example.
-> > >
-> > > 6) Nobody wants the non-BPF approach. As it was broken nobody used the
-> > > previous feature, maintaining it for no users is overhead. Let me know
-> > > if someone is using this option (I doubt it given points 1 and 2) and
-> > > they wouldn't be better served by BPF. People building perf today have
-> > > to explicitly opt-out of wanting BPF in their tooling. I posted this
-> > > change a month ago and nobody has jumped up saying please don't remove
-> > > the old approach.
-> > >
-> > > 7) The interaction with this feature and changes in behavior, say
-> > > ignoring events that fail to open, is non-obvious and not testable as
-> > > testing would be broken as the functionality itself is broken. Having
-> > > the broken feature hanging around and being untestable means that we
-> > > slow progress on new features, testing and other improvements.
-> > >
-> > > Yes, we could try to fix all of that but why? Nobody has cared or
-> > > tried in 13 years and I would like the tech debt off our plate with a
-> > > better approach in its place.
-> >
-> > Thanks for writing this up.  I agree BPF approach is better but it has
-> > its own limitation - basically it requires root.  And I know a few of
-> > people who don't use BPF. :)  And maybe we need to check if user passes
-> > filters to the event already.
-> 
-> I thought you were working on making the BPF filters pin-able? So root
-> could enable the filter but then users have access to it.
+On Tue, Feb 11, 2025, at 18:24, Ian Rogers wrote:
+> On Tue, Feb 11, 2025 at 12:09=E2=80=AFAM Arnd Bergmann <arnd@arndb.de>=
+ wrote:
+>> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
+>> > "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfil=
+e"
+>> > common,64,renameat,rlimit,memfd_secret EM_AARCH64
+>> > +cat >> "$outfile" <<EOF
+>> > +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) ||
+>> > defined(__aarch64__)
+>>
+>> Hardcoding the set of ABIs in the middle of the script seems
+>> too fragile to me, I'm worried that these get out of sync quickly.
+>
+> I agree, again this is carrying forward a behavior and at least after
+> these changes the location is just one place. Do you have any
+> suggestions on how to do better?
 
-Right, 'perf record --setup-filter pin' would do the job.  But it has to
-be run in advance.
+Not sure, but I have some patches that I was planning to send
+that puts these into arch/*/kernel/Makefile.syscalls for all
+architectures in a consistent way. Ideally we'd use the same
+Makefile contents for tools/perf in order to trivially sync
+them, but I'm also happy to hear other suggestions.
 
-> You have to be root to be looking at other users in any case.
+Your patches are currently ahead of mine, so I don't want to
+hold you up.=20
 
-That's true.  But at least you can profile your processes. :)
+> Fwiw, I wonder a related problem/question that has come up primarily
+> with Arnaldo and Howard is in having a way to determine system call
+> argument types so that perf trace can pretty print them. For example,
+> if via BTF it is found an argument is a "const char*" then it is
+> assumed to be a string, but a "char *" is not as it may just be an out
+> argument. There's a source for more information in the syzkaller
+> project:
+> https://github.com/google/syzkaller/blob/master/sys/linux/sys.txt
+> Perhaps there's a way to generate this information from the Linux
+> build and feed it into perf's build. It is out-of-scope for what I'm
+> trying to do here, but I thought it worth a mention given my general
+> ignorance on wider things.
 
-> 
-> > Also, I admit that I don't know who actually uses this.  But I can say
-> > sometimes people uses tools in a creative way.  Anyway, I can imagine
-> > an use case that system is in a steady state and each user has dedicated
-> > jobs.  Then scanning /proc would work well.
-> 
-> Another one for Google's tree then.
+Yes, this is also something I've been trying to work on. In particular
+the calling conventions for 64-bit register arguments on 32-bit
+targets need some help. My plan for this is to have a consistent
+mapping of internal (sys_foo()) function names to argument lists,
+instead of having some calls that are slightly different depending
+on the architecture or ABI.
 
-Any chance you update the patchset to retain the old behavior and use
-BPF only if available?
+This should be in a machine-readable format so it can be parsed
+not only by perf but also any other project that needs a list
+(libc, gdb, qemu, strace, rust, ...)
 
-Thanks,
-Namhyung
+>> > +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
+>> > +EOF
+>> > +build_tables
+>> > "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfil=
+e"
+>> > common,64,n64 EM_MIPS
+>> > +cat >> "$outfile" <<EOF
+>> > +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
+>>
+>> What about n32/o32? The syscall tables are completely different here.
+>
+> So perf hasn't historically supported them and no one is asking for
+> support. Generating more tables isn't the problem, but we need to have
+> some way of determining which table to use for n32/o32. I see
+> EF_MIPS_ABI_O32 and EF_MIPS_ABI_O64, so we could add support by
+> extending the lookup of the table to be both of e_machine and e_flags.
+> I'm less clear on choosing n32. That said, back in the 90s I was
+> working to port MIPS code to Itanium via binary translation. Given now
+> Itanium is obsolete, I'm not sure it is worth adding complexity for
+> the sake of MIPS. I'm happy to do what others feel is best here, but
+> my default position is just to carry what the existing behavior is
+> forward.
 
+I think the way it actually works on mips is that all syscalls are
+allowed in any task and the actual number identifies both the
+ABI and the syscall. In some variant, the same is true on arm
+(oabi/eabi) and x86-64 (64/x32), but oabi and x32 are both too
+obsolete to put much work into them.
+
+There is still some interest in mips, maybe you can poke the
+maintainers and see if someone is willing to help out since you
+have done the bulk of the work already.
+
+>> > +EOF
+>> > +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl"
+>> > "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
+>> > +cat >> "$outfile" <<EOF
+>> > +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
+>>
+>> This skips the 32-bit table, though I think that one is already
+>> planned to be discontinued in the future.
+>
+> Thankfully we have awesome s390 devs on the mailing list, hopefully
+> they'll shout out if I'm doing things wrong.
+
+I also remembered that I had a patch to bring the s390 syscall.tbl
+into the same format as the others, since the behavior is currently
+a bit different for compat calls. I think there is also a chance
+that they want to discontinue 32-bit mode entirely, given that
+the last 32-bit machine was discontinued over 20 years ago, and
+support for native 32-bit kernels got removed 10 years ago
+after Debian 8 moved to 64 bit.
+
+If they are confident that there are no more remaining users that
+rely on 32-bit binaries, we could both save some work.
+
+>> > +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_=
+64__)
+>> > +EOF
+>> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.t=
+bl"
+>> > "$outfile" common,32,i386 EM_386
+>> > +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.t=
+bl"
+>> > "$outfile" common,64 EM_X86_64
+>> > +cat >> "$outfile" <<EOF
+>> > +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) ||
+>> > defined(__x86_64__)
+>>
+>> This misses the x32 table.
+>
+> Again I'm carrying forward a behavior. Would it be worth adding x32?
+
+I would probably document it in the file as an intentional
+omission, same as for arm oabi
+
+> That said there is likely other context
+> that I'm unaware of as I'm surprised x32 still exists.
+
+There are a handful of people still testing it, and some still
+using it, but I agree it completely failed to get enough
+traction to be worth maintaining.
+
+I view x32 (and the corresponding arm64 ilp32 mode that never
+made it in) mostly as an exercise in benchmark(et)ing, since
+it showed noticeably higher results in some versions of specint
+and some compiler workloads, compared to both normal 32-bit and
+64-bit modes. The time that we already wasted on maintaining
+it must have long surpassed any such benefits though, so I
+certainly don't want to waste more time on it.
+
+     Arnd
