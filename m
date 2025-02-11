@@ -1,55 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD981CAA75;
-	Tue, 11 Feb 2025 02:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E7926BD9E;
+	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242260; cv=none; b=soo2VwMy3EFTqRp2ICjeLHw0mSUcMjxsyaLMv5pKx6NJUyEFQ6V7xU6Ls95bSmwBnMZcyuvuz8MBdmgh2iwQua8A9QOnMMFeaed0sLOnGl/DowGZvzb+HR8ZRIYLpPfiqN4PvjLflEVE9u5qZ3qzBYBauwnvWeK41qF4xLMqyPs=
+	t=1739243553; cv=none; b=VwmHjdsS1VFqaZy2t4ZVW0cF0nhwWLzF+eQoFP4Ou22mqKNj7qAiqq1i/d4QHTzdkhkq2grW2oi0Ju5KBJVh3RIIz1zo62gGkCavS6ZeeTNFiSjfRPOTbzdoXRU6A2S4ljMX8tn2umemTsX514CIdkWu/7iongfxjU3ekVq860c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242260; c=relaxed/simple;
-	bh=W2Jnw9t+bdCtAUM79lKQHiCogtFzeFZgQuCi6Zt5dSg=;
+	s=arc-20240116; t=1739243553; c=relaxed/simple;
+	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eF54l3S9x2YRhraOMW/Uyrg6Acj4cdMxZ7DrpPQzMGECOfFvfnfUDksoN4/aF00JinlwtXfdkHYGw7fJziZqYqT5oFpgcilLtbvNFWd/icHTnDQZnPodg1kvTFEKantt0oRGk0mPmm2XNoBmFG+PaKI0HuKLksKnnMZ+2hATdV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CplYxa37; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UWck1HSyk7k/3HghQgfJ4XJgdzZoLrJAGMh63H7/B6TtRQHrBgUu8vSaw19P5Qm4ky8aGwDhi20LhAfRuJfaB8IlJjF4fUr5gZfmx8FEhlfoq5P6fQfr8eLsMGnvU7/Nb/OhvIT9hDKxts5c/oSjHIUlnJwnOU0s9zo4ctVocYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VU96MbxS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CplYxa37"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 507C5C4CED1;
-	Tue, 11 Feb 2025 02:50:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VU96MbxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3F7C4CED1;
+	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739242260;
-	bh=W2Jnw9t+bdCtAUM79lKQHiCogtFzeFZgQuCi6Zt5dSg=;
+	s=k20201202; t=1739243552;
+	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CplYxa37C0+A1Kvn8MffZPOPk2q9uwTL75xoaRHaSsiIaHRr0f8llxJWXLUHWLOhD
-	 8FhcQbiITZYfFbjXrSydylcje5v5dorMD+fGJuEJkfHzAmS2+Wwhzj/eWo7CcNigOI
-	 lN/nY0uGSZgxq86/7w56lZ8rqalyP0uZ0cELMUtIH2UksDu7599fpncPEp6m/U5u6j
-	 zT4cxvoBhd6AWmzck71ZITTrOjgusBOFfPGpw+NnJElOZD7PiZB5AsEIVPPQ+XybRG
-	 ngZk/kNseN8IgsvysZvz8Mx0axW1ZeqJj5cIssoB96q7JDOa+fbTR05rcDGEQVWgLq
-	 AdZtrk/+R+Qow==
-Date: Mon, 10 Feb 2025 18:50:57 -0800
+	b=VU96MbxS2YnMFE5Ad3eEFcmnSkUafRG/k0/NNrfEBjQi9Z0CQsmFUq4nuwnSCn/Tt
+	 Pn5NdOjGqtOhKVhPeKfg1QsSwCQPkSDS0CJxeaDuSWmyf6xLYV8WWfYirxTTA59xjr
+	 5bZixJWguHhPxQ1F7Z1e0SDO/1D4Abt5AHxIL/6movGIlDJnxG5X4kjvYy/LYoDmM1
+	 p/xyPWFjUf1gu9vF98v79Iy+J+GxarL/eQY8fDLEiAYjw57w8jS6sOnvdmC3lJqXVj
+	 fN8CO+OiMMRJF1aDAISImuwJltQ/wP0IEcpCZQzKWbYxW77sWF1dQgKvx5C8hY2F9n
+	 TQpn98TgWCCzA==
+Date: Mon, 10 Feb 2025 19:12:30 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Tavian Barnes <tavianator@tavianator.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Michael Petlan <mpetlan@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v1] perf sample: Make user_regs and intr_regs optional
-Message-ID: <Z6q7EZxAvskBE4H3@google.com>
-References: <20250113194345.1537821-1-irogers@google.com>
- <CAP-5=fVoQRhd-8jyXfjc2dCuwt7_o1sU208aADT1FriwCNa9qw@mail.gmail.com>
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+Message-ID: <Z6rAHhAIdlkAryGJ@google.com>
+References: <20250111190143.1029906-1-irogers@google.com>
+ <Z6panMzNSm1op8Di@google.com>
+ <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,36 +57,102 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVoQRhd-8jyXfjc2dCuwt7_o1sU208aADT1FriwCNa9qw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
 
-On Mon, Feb 10, 2025 at 10:15:22AM -0800, Ian Rogers wrote:
-> On Mon, Jan 13, 2025 at 11:43 AM Ian Rogers <irogers@google.com> wrote:
+On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
+> On Mon, Feb 10, 2025 at 11:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The struct dump_regs contains 512 bytes of cache_regs, meaning the two
-> > values in perf_sample contribute 1088 bytes of its total 1384 bytes
-> > size. Initializing this much memory has a cost reported by Tavian
-> > Barnes <tavianator@tavianator.com> as about 2.5% when running `perf
-> > script --itrace=i0`:
-> > https://lore.kernel.org/lkml/d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com/
+> > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
+> > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> > > BPF filters for uid filtering. The /proc scanning in thread_map is
+> > > racy as the PID may exit before the perf_event_open causing perf to
+> > > abort. BPF UID filters are more robust as they avoid the race. Add a
+> > > helper for commands that support UID filtering and wire up. Remove the
+> > > non-BPF UID filtering support.
 > >
-> > Adrian Hunter <adrian.hunter@intel.com> replied that the zero
-> > initialization was necessary and couldn't simply be removed.
+> > Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
+> > Also non-root users will be limited unless it pinned the BPF program in
+> > advance.
 > >
-> > This patch aims to strike a middle ground of still zeroing the
-> > perf_sample, but removing 79% of its size by make user_regs and
-> > intr_regs optional pointers to zalloc-ed memory. To support the
-> > allocation accessors are created for user_regs and intr_regs. To
-> > support correct cleanup perf_sample__init and perf_sample__exit
-> > functions are created and added throughout the code base.
+> > I think you can keep the original behavior and convert to BPF only when
+> > it's available.
 > 
-> Ping. Given the memory savings and performance wins it would be nice
-> to see this land. Andi Kleen commented on doing a reimplementation,
-> which is fine but out-of-scope of what I'm doing here.
+> Using BPF when available would be limited progress. The issues I have
+> with not removing the existing approach are:
+> 
+> 1) It is broken
+> Scanning /proc for pids and then doing perf_event_open means that any
+> time a process exits the perf_event_open fails.
+> Steps to reproduce:
+> This bug reproduces easily but if your machine is lightly loaded in
+> one terminal run `perf test`, in another terminal run `sudo perf top
+> -u $(id -u)` the perf top command will exit with:
+> ```
+> Error:
+> The sys_perf_event_open() syscall returned with 3 (No such process)
+> for event (cycles:P).
+> /bin/dmesg | grep -i perf may provide additional information.
+> ```
+> 
+> 2) It is a work in progress that isn't progressing. Scanning /proc
+> will only tell you about started processes; it won't tell you about
+> processes that start during the profiling run, whether it be perf top
+> or perf record. Extra work would be necessary to make this most basic
+> of use-cases work, perhaps you could use tracepoints to capture
+> starting processes and then enable user profiling on those processes.
+> It would be horribly complicated, suffer from delays between observing
+> things happen and doing the perf_event_open, biases in the samples,
+> etc. I don't expect anyone to do it, especially when BPF filtering
+> already solves the problem better. There have been 13 years that
+> someone could have fixed it.
+> 
+> 3) it adds significant useless complexity to the code base. Having
+> 'user' in the target makes it look like perf_event_open can work on a
+> pid, system wide or user basis. The user basis doesn't exist so the
+> majority of the code base is just ignoring it - search for users of
+> uid_str on target. Those that do run into problems (1) and (2).
+> 
+> 4) It is redundant and leads to confusion with BPF filtering. Having
+> the BPF filter on evsels is non-zero cost in terms of the code base
+> complexity, but it is something broadly useful. As user filtering has
+> never worked (see above) it isn't broadly used but is adding
+> complexity. If both approaches were wanted then it is unclear what the
+> code should be doing, presumably the mish-mash of BPF filtering and
+> /proc scanning that happens today and will be broken due to (1) and
+> (2). Putting everything into the BPF filter makes sense as you can
+> combine a BPF filter with an additional BPF filter on user.
+> 
+> 5) It is untested and adding a test leads to an always broken test due
+> to testing being an example of where things break, see point 1 and its
+> example.
+> 
+> 6) Nobody wants the non-BPF approach. As it was broken nobody used the
+> previous feature, maintaining it for no users is overhead. Let me know
+> if someone is using this option (I doubt it given points 1 and 2) and
+> they wouldn't be better served by BPF. People building perf today have
+> to explicitly opt-out of wanting BPF in their tooling. I posted this
+> change a month ago and nobody has jumped up saying please don't remove
+> the old approach.
+> 
+> 7) The interaction with this feature and changes in behavior, say
+> ignoring events that fail to open, is non-obvious and not testable as
+> testing would be broken as the functionality itself is broken. Having
+> the broken feature hanging around and being untestable means that we
+> slow progress on new features, testing and other improvements.
+> 
+> Yes, we could try to fix all of that but why? Nobody has cared or
+> tried in 13 years and I would like the tech debt off our plate with a
+> better approach in its place.
 
-Yeah, I like the core of the change.  Andi's concern is that it touches
-too many places.  It'd be nice if we can do that without allocating
-memory for regs and eliminating the perf_sample__{init,exit}.  But I'm
-not if it's possible.
+Thanks for writing this up.  I agree BPF approach is better but it has
+its own limitation - basically it requires root.  And I know a few of
+people who don't use BPF. :)  And maybe we need to check if user passes
+filters to the event already.
+
+Also, I admit that I don't know who actually uses this.  But I can say
+sometimes people uses tools in a creative way.  Anyway, I can imagine
+an use case that system is in a steady state and each user has dedicated
+jobs.  Then scanning /proc would work well.
 
 Thanks,
 Namhyung
