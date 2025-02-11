@@ -1,180 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B40D254B0B
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AF51D63D2
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 16:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290246; cv=none; b=PCDAqs2Z2SSnAapkQDQ5WaWUOKsBDJPKwhyg+TkhRog4WNcIa/oPfW1zHoqY0AQnVXpThMpfWKFGVMGBv5n6NuuIB+/R1OPiMNu9AjnPoFNx6EPBTa3sxS8B34dGspKtsKwOVGjYt7ogZrUlVF2hguiYKBzgfxgHaRPHptQfhgY=
+	t=1739290750; cv=none; b=TwMuQaaIKRxttuD9bndWsKKQOcYCmiI4NoYWN4e3PDxrvFcx6dT0dL2BmNe4ZcoZQwVhCzaJw3OYZZg/ZnUnNmNz5Mx6/UCsGrVetHkCuH91rsYPSrriXD2tloFHaB3HNSEFp2Zl52UXrdaYLJQYrr0l2ekvr8ApVXTEZIjWsQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290246; c=relaxed/simple;
-	bh=nE7GJqZw+gIEdhcV99Kpd2q5ds+/vCptECGTizt6klE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pGtP1JqZa5z52bvlwVafWrSk3ZMBm1/i+a+fLjta7Gtv6Dbfosz1oAPWJmDVrleBJLBFbc+jA42WCymv5Y8DknWAl0lD6qCGALghx5Bk6h0sa8wE6BIGcPqbgMEFEXs9ZQ1cySMgRfQ2y4u1h9BD6EXUKe0UD9O/Ja3l9gW7fXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i1HUBeyt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739290750; c=relaxed/simple;
+	bh=ClIVXb1x+2dZfzmgI0PvHc3Nl/BWDi3XQGQRYx+Me5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OBYbDnuyEg31a9kcLyedl5zjTMDm8lmlaoGlYIo14fpFQeVv0H7J+OWbmqyCgYx9NiSmML/i1ujhCEMpZi9r6C9P/iSVMXQPCmcl8b6CeZoGALhEXdlwU9u92nJXiX/hx7jiYGmwQmZtJSZnOfXw/Ohrem7KvzbMtV6jWjXCf2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nu7MCfNz; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1HUBeyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739290243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-	b=i1HUBeytVZQfuTjrexbgjP7YEuXhfQTbb6pRe91MQPsrHrNvdDzSOfyC/EERd6n8ZWPDjF
-	+lZ5tsIl54r4itAaxVJ7JLggTgV7punI/95D8cHSFkAUzbdWyJUgYCJxsfKBbdpQAXbDp7
-	n1YwDMda2zzuC6MFCw8XkhNYDMwIpOc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-280-dVLTKvMmMD-FrTVJEu2F6w-1; Tue, 11 Feb 2025 11:10:42 -0500
-X-MC-Unique: dVLTKvMmMD-FrTVJEu2F6w-1
-X-Mimecast-MFC-AGG-ID: dVLTKvMmMD-FrTVJEu2F6w
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-438da39bb69so43407575e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 08:10:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nu7MCfNz"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so177405ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Feb 2025 08:19:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739290747; x=1739895547; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wPuoFgyUqShqiHXq7m4WJY26nDOJr72a7sYiaqDAkZ8=;
+        b=Nu7MCfNza5gHONz9k5muMcFxcI09J+wweV2B3XUUFmLFX6J2XqJsuw/tRhkOczDw4A
+         KwM2Rgg6ZT+U4S5shFHuk8eFfc0wYMEVHf8hcK5isY0teIBz9Ru8z6pp5YVj2iiFSqqj
+         wjqi4EBC/yyPqpl0v00gYT1oYO1PTn0sLIUhpLMKD2YwbJzHkdAKZaCKULe68ZNdIAur
+         2lcUfv65b5Kk1TWKdZj0OHwv0kK2N4N8zJviqN2YvliveGNjydkRUlap/Y5SZVU6GInh
+         /dL5RNBzlbYEzgXhIbZYdy97YIeyL1Hyd8k0c8QWaNqyi43xWUQNpc2AMLcXNa7NArKY
+         931g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290241; x=1739895041;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-        b=wAVwWaY15B0KA27ZVRZ4CAVaLoQ2okIZJMzkpyMgxrhlNHw6g+AVddVsqp7EskcmIc
-         w5WtcoT4WWlijdEPO4PPI1qXBYozicB5bpHgCm/DUL6CCJl/1fkMMdhYwDCS7t635+H8
-         u9FXr8GHpYP7Ui2kIvF1WMh4MOL833MIqND9lL11daYHaF568MMI0EAvNe4EbxYUGOML
-         oviajD7nepzGLJfN4PNEXUUxdugB/EaRysNj70phYzpOcKzNTgX6ilhi9Yi1NRll3w6q
-         NcAjZc6JCgohMbdZNh/9WmKI7QDbBxRvCP9V+xZxmM0cKWgF/d+SwE1w6vByeZQDwJi5
-         2nmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHo0dpSvXGJUYlY0lA4p/5Ht4U1kMv7C8zWAhRfHvqVA/Ab3L/eOf/SsmQAoXHpHL9su0U6O+5gpRq+h+l2Dqh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYhajVZpafDA2QXrbsPWKjnsEA7UcyusugKGk+d+7DQc5TQ70C
-	CP9l4j/RtlBkjmTz4BpO7Ne7Kx3vfqanVy2+trdI0lxv3GqQmdK70rh3SkhuEXCOytEndqLPYtt
-	Ad3Ub/PyEsASTCDsc94+mlXSoTt0RLy8OOCYXMGDaaTrpMi7KJZaW5PiuJBEHN2HtY0g=
-X-Gm-Gg: ASbGnctbHLerc9HLFykCJPLVtBumVaJo3j4uJSe0YgqjVvArKtrfS1+knry+fQUINqS
-	gjRGxQCc17ynRPVt3krOU9xcZtvDwgiJJwNtS7R4Z+a7+3I5Yv0UDRdl77H8E0EdwTEquZwieU7
-	/nGshV5OGF+qnyQCgJ2GnB18nrroSbs1ujP1jFRnM0SfsZrfsDMD094agJ0s9/0Am8ohiiX+txz
-	uSW4gRCjQDxyB+RZvSbZaSOrC/DOJZOk8Spb5GE6ORLC47ZhEEfeSIy2TMWOo2VMZnqlTGXxs2C
-	7YkkDF9Z1cZR4/X3v75OaM0IBB6F/+B/Gog9x6GidrZsKxrAN4yp9cMBq/qJcFy74w==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73108475e9.16.1739290240845;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxNXfn5PLr2I3O9shVB9BLvMIo6l6XNn4GHuv5+NRtXPlNDWEKqGeQnOp/tv15slnT46loqA==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73107295e9.16.1739290240325;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc9ef8ac6sm12561610f8f.27.2025.02.11.08.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 08:10:39 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-Date: Tue, 11 Feb 2025 17:10:36 +0100
-Message-ID: <xhsmhv7tgihs3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1739290747; x=1739895547;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wPuoFgyUqShqiHXq7m4WJY26nDOJr72a7sYiaqDAkZ8=;
+        b=GPFlGsF9BSvsQrWoAT2kv7qCRxWT1qCm6jB/39Gzm+d1VkguRHahcMmK3HmT2ZK4L8
+         weWefY9iu/OcIJuRxqhjgOaAeoKX9/50zXkNDzdMy3pFC8zFtyJIJ98nmelGtOpN395P
+         1P4jDvviH9/GTUxJxDhK9ta2ZI8SyX7fneLBKwqNhLtR69LH+EvgvejgDMj+FxcDaZM9
+         lb7De+n1W1sPUOkPu5LokvTZ34irbWvkXgTJnHM1x9dQOokiM6B+4MpAUmkl+D1eDFjJ
+         MV/JaDTISfj/C3/96FGfcTjmlx/qST3qNoCA4Mzb6jmILZkCiwKyqKYWdfVcz5wOpHa0
+         X37g==
+X-Forwarded-Encrypted: i=1; AJvYcCVjZfJVklqD6dVKK1ZN/qS5uL5TMqxsGGNM9PPHV6a2I9kVTBM//6D11mBg+c9IDY03csRvcvtJ7TwHZ4Ei9yNl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzei+6PF/2Urr2JdS95TwtycmAjKxLjy8gGgWtFf+ZkUy7qyFyJ
+	n+k/2wgyqOAEHJvJyF6dAQwVeuRvDS9poAbUQXtKXXAk4HB474U2zCVK7MQ6dASImvG42wkbVL4
+	8bEvsxzNQWvH9DZNoqkuxEpxC9wkwtvqJF4Sl
+X-Gm-Gg: ASbGncuK/60qhYIcfjf7tc4vWJtxgvkjRBsyT6KCyenwZ5UIfUATz6PmLHDkRrjJlt5
+	yeUWG/m0jJKvbJoV6AaNJEUyrixOQJb7YRjnLxe7QCy0LGa94sFS9wLANDddb0rWZe72XJ4Z1FT
+	xpbvJl/8coKnC18qTMj68aWSRr
+X-Google-Smtp-Source: AGHT+IGBRJUYM7eB7GRcv7zbcCLNqRmCzTZKJzAh5FAel3+2vWVb9N+g6mOuPoRoTCDTrgVk0gX8MyeGCqZ63HpU/Co=
+X-Received: by 2002:a05:6e02:1848:b0:3a7:df79:71b3 with SMTP id
+ e9e14a558f8ab-3d171e30ba1mr3350285ab.19.1739290746485; Tue, 11 Feb 2025
+ 08:19:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-4-irogers@google.com>
+ <07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastmail.com>
+In-Reply-To: <07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 11 Feb 2025 08:18:54 -0800
+X-Gm-Features: AWEUYZnsI21FqO05tMc19ZFoLQwRQjxl2-W2xUAqGcaU1HeGa3Km7KpVudfKIf8
+Message-ID: <CAP-5=fV0AVEp1uEtKjAqOmwqKSRuUzTwrXnBiqc=Lopfj4hBSA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] perf syscalltbl: Remove struct syscalltbl
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/02/25 06:22, Dave Hansen wrote:
-> On 2/11/25 05:33, Valentin Schneider wrote:
->>> 2. It's wrong to assume that TLB entries are only populated for
->>> addresses you access - thanks to speculative execution, you have to
->>> assume that the CPU might be populating random TLB entries all over
->>> the place.
->> Gotta love speculation. Now it is supposed to be limited to genuinely
->> accessible data & code, right? Say theoretically we have a full TLBi as
->> literally the last thing before doing the return-to-userspace, speculation
->> should be limited to executing maybe bits of the return-from-userspace
->> code?
+On Mon, Feb 10, 2025 at 11:48=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
+e:
 >
-> In practice, it's mostly limited like that.
+> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
+> > The syscalltbl held entries of system call name and number pairs,
+> > generated from a native syscalltbl at start up. As there are gaps in
+> > the system call number there is a notion of index into the
+> > table. Going forward we want the system call table to be identifiable
+> > by a machine type, for example, i386 vs x86-64. Change the interface
+> > to the syscalltbl so (1) a (currently unused machine type of EM_HOST)
+> > is passed (2) the index to syscall number and system call name mapping
+> > is computed at build time.
+> >
+> > Two tables are used for this, an array of system call number to name,
+> > an array of system call numbers sorted by the system call name. The
+> > sorted array doesn't store strings in part to save memory and
+> > relocations. The index notion is carried forward and is an index into
+> > the sorted array of system call numbers, the data structures are
+> > opaque (held only in syscalltbl.c), and so the number of indices for a
+> > machine type is exposed as a new API.
+> >
+> > The arrays are computed in the syscalltbl.sh script and so no start-up
+> > time computation and storage is necessary.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
 >
-> Architecturally, there are no promises from the CPU. It is within its
-> rights to cache anything from the page tables at any time. If it's in
-> the CR3 tree, it's fair game.
+> Your changes look fine to me, but I noticed one part that may
+> be wrong before and after your patch:
 >
->> Furthermore, I would hope that once a CPU is executing in userspace, it's
->> not going to populate the TLB with kernel address translations - AIUI the
->> whole vulnerability mitigation debacle was about preventing this sort of
->> thing.
+> >
+> > -const int syscalltbl_native_max_id =3D SYSCALLTBL_MAX_ID;
+> > -static const char *const *syscalltbl_native =3D syscalltbl;
+> > +const char *syscalltbl__name(int e_machine __maybe_unused, int id)
+> > +{
+> > +     if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
+> > +             return syscall_num_to_name[id];
+> > +     return NULL;
+> > +}
 >
-> Nope, unfortunately. There's two big exception to this. First, "implicit
-> supervisor-mode accesses". There are structures for which the CPU gets a
-> virtual address and accesses it even while userspace is running. The LDT
-> and GDT are the most obvious examples, but there are some less
-> ubiquitous ones like the buffers for PEBS events.
->
-> Second, remember that user versus supervisor is determined *BY* the page
-> tables. Before Linear Address Space Separation (LASS), all virtual
-> memory accesses walk the page tables, even userspace accesses to kernel
-> addresses.  The User/Supervisor bit is *in* the page tables, of course.
->
-> A userspace access to a kernel address results in a page walk and the
-> CPU is completely free to cache all or part of that page walk. A
-> Meltdown-style _speculative_ userspace access to kernel memory won't
-> generate a fault either. It won't leak data like it used to, of course,
-> but it can still walk the page tables. That's one reason LASS is needed.
+> The syscall numbers on mips (and previously on ia64) are offset by
+> a large number depending on the ABI (o32/n32/n64). I assume what
+> we want here is to have the small numbers without the offset in
+> syscall_num_to_name[], but that requires adding the offset during
+> the lookup. Can you check if this is handled correctly?
 
-Bummer, now I have at least two architectures proving me wrong :-) Thank
-you as well for the education, I really appreciate it.
+Thanks Arnd! I agree the tables are large and can be sparse, they'll
+also be full of relocations. MIPS doesn't look like an outlier to me
+here:
+```
+#if defined(ALL_SYSCALLTBL) || defined(__mips__)
+static const char *const syscall_num_to_name_EM_MIPS[] =3D {
+       [0] =3D "read",
+       [1] =3D "write",
+       [2] =3D "open",
+...
+        [465] =3D "listxattrat",
+        [466] =3D "removexattrat",
+};
+```
+For contrast x86:
+```
+#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
+static const char *const syscall_num_to_name_EM_386[] =3D {
+        [0] =3D "restart_syscall",
+        [1] =3D "exit",
+        [2] =3D "fork",
+...
+        [464] =3D "getxattrat",
+        [465] =3D "listxattrat",
+        [466] =3D "removexattrat",
+};
+```
+Looking through the tables I see alpha having the highest number
+syscall with 572 being mseal.
 
+I don't think this is great but in the current code (on x86-64) we
+have in arch/x86/include/generated/asm/syscalls_64.h:
+```
+static const char *const syscalltbl[] =3D {
+       [0] =3D "read",
+       [1] =3D "write",
+       [2] =3D "open",
+...
+        [465] =3D "listxattrat",
+        [466] =3D "removexattrat",
+};
+#define SYSCALLTBL_MAX_ID 466
+```
+So the change is carrying forward a bad behavior, the table is still
+only around 4kb. We could be more aggressive in compressing the
+strings and pointers, for example how we compress the perf events and
+metrics. I think it is getting out-of-scope here as that logic is
+written in python, with the aid of lots of dictionaries, whilst this
+code is currently a shell script. It becomes more of an issue if we
+enable all of the tables in the build at once.
+
+Thanks,
+Ian
