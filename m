@@ -1,115 +1,182 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2000220E326;
-	Wed, 12 Feb 2025 13:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D0D1A5AA;
+	Wed, 12 Feb 2025 14:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739368764; cv=none; b=WI0RSveKx6oOWLbbR1KewAlrpK0MUclQAcPW7R8kHkm9r2LQN1rMKdi8YPQX9RtEXbK/7e42/Y9Ht/Los9wVTUpbhFgTBoJR1URQOxFlo8ycAXeyl/zEdIueC2MK4aST9pDLJQl7Z/IbI6mRPmd+7rNkrtKj2/goE8AaRtU3BqM=
+	t=1739369861; cv=none; b=AlD5GoF1n7pDYRG3+y5PqJsun3eNspPbkjkhJUrr+nwsIBybYVi0TrCdj8b73HfsgDSYZDnswOJfH1dNHC/Lh3RbI3IgjeXRyOt5ZJ8CHn403hoZ59saLiuSxZviX/wxvhbFXT5cwgaN4JKxQso2OzgJapIKexfFMhK+bB84Fwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739368764; c=relaxed/simple;
-	bh=UMusHU1t5zzmDkuA9Xf7Kq0KXr1+7v+GF+RicmDuKyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bgTxa2Hm2x/vTQffbU5MX2jjHvuTIpoLEf4ALstjjANlcQXuEzcg0yyJiJyNloG+wof//pG6r89bsxfOcAY0QQPVIakKfG5ODLue0x+9XZU8o8HBVwL89JAjQEq4blhy/hn9Jgdz+y5/SFgGSJK3/6DdUn59g+ydqOX2Ya/OrFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=foJGN7wR; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739369861; c=relaxed/simple;
+	bh=6WAvBJBHdVzn+myfwRDMnLWtYz9ymtVmvd7tzc8LxD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEyyZQ/d9uIcqWsDSmRbeh9cHjmwSxzOLmtOhX3TaAkN51UuYB/ZDUVcfrG5YW/MqS0oI/cQRcJAUjEwXB9PgfctY1QkzDAJ0xLf41+rhx1Sms7RK17968Knmnj5uNtl78jjXFYwMO6sHlCQfOEDt6viy0vxjgggPcNJBRueTr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmWiEwQO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foJGN7wR"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dcb7122c1so4572215f8f.2;
-        Wed, 12 Feb 2025 05:59:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739368761; x=1739973561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A+ede4RrUjYL6rNcNJR8w+SRtlFFhYFYyooGZI9RRMA=;
-        b=foJGN7wRFOn6VD5JkJBT5YP9/BgO4pxIDislSwcPkemPIJIh214JQEfXuDn/KYKhBt
-         Sdt36uY2dC4iIIe40biz/UiHuDr3pqEwCDGV1blQw4lnPa0DBzwKz6blxNjkG86FN5hC
-         DmGUvokgRLcJa1h3W+lGUJPg7VunNB9ayxh/N9A5Lu4WnI1UCCycDw4ewIYnZa/tOLVe
-         b3jSSTsqu6kjRhPThzrGVImbOOCG5er56XMcKuLbEwlyRSKK+e7+TH0WD+/AUy7m6ZC9
-         UAxoUZQMhM+hSMMLogE4N5FEPMUNchOONwnoU+3TGfirrGdyCtCzj8hNQgeDpVYZbNHM
-         od7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739368761; x=1739973561;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A+ede4RrUjYL6rNcNJR8w+SRtlFFhYFYyooGZI9RRMA=;
-        b=SFgb0T73Ofvdf6UetX9vskfgPrLtW6ib5AHYTe0JecNwksWv8YIyzVXH26TqH+YZXq
-         hFQW0hCFrbD5fkDp2lZgdsU6HLCVfisaUzu2AwEDDwWxSE6y9OA/TAPU/dU+Q9byfw21
-         4O0sj0HlAvjYQIKDr18IFQbJds5gFA7Y4i2TUR5UNn4JVu3+aCnSZ9qe7TDfkvMTSdfB
-         AwZhw9SlMsR2FdFo9ymeUROXLHtO9+s+fZvYw8Yfz5/mXyUBzAd5RJ/g/VsNzt1wRwmS
-         HvMJmv4K6FMAE8gwamRuApGnFMPobQ2MV1riJHM9E3kc2noAet4KiZZUYh2Htx8AR9GX
-         qiZg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ulQHsBR4O8o1u0nUsxgf8wDKw7TU2+vnrqrrPw11vq/cw8NzjA7gnjfhExm1OyfW8eKAzaJi4WzNTCgzY0CQxQ==@vger.kernel.org, AJvYcCWfZfFseLlKIN3xh3/DwkOYiq6vmYzxbGJPh5UU1fKNNzayh/Sod7ZRXWXtNtN78gmQT21To1ytaXUbaWgV@vger.kernel.org, AJvYcCXrvHfWiaxUTrXotPy/ViS7Tsv+DavjLXYj0XZ0TQQnDLV33zn/fLY6HbdWLYBUDVZeWxNHoq0uHsC4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr4cl7JPz/I6rTgwxioLVZDdoZk0XMNtb3FUEmVV8eiohOMKqf
-	whzLexMzaN7mNurcHUrT+FkDwgtknJtkZThhwEHNdC3e44Uj8v0r
-X-Gm-Gg: ASbGncu0TWWEy22yZFTV6zCsAC7KYLj6xSspqCvGK6fhkBabUHheUCZMSsoxAFczEqW
-	xUw61vpTzr4igRcfXuDzJaNqKUs3i4rWQi4vRnvLTxIw+grmGC2FBzO9I1WzkmkBOx42WKv93u5
-	Jw35Je3Mr837NKiOaHlQtM6/OPYAWH+KL2j8tb7Zta/93/hO8GxU8HBWsi72+FQaj2i51iDKv7x
-	mXaKMocvcFN7nE2l/7uKL/RnoSahH4pnQGie3TwnvyVBOl/mvNgS/ezG087Xr3qzCgAqnqvx+zQ
-	lR50qphCh6qgaQQ3Y9jmDOO/0XGUdz0fQqQ1zaLNzxuMOat8cGKPeg==
-X-Google-Smtp-Source: AGHT+IEKCoDJGY1lmlxzGAZbmqw2zwD51cxjE08/BzvCDXeJUL1uvgupw74+KSMNg7LFxI/1rdLUpQ==
-X-Received: by 2002:a5d:64e2:0:b0:38f:21eb:5d02 with SMTP id ffacd0b85a97d-38f21eb5f2dmr1041208f8f.22.1739368761091;
-        Wed, 12 Feb 2025 05:59:21 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a058930sm20853795e9.17.2025.02.12.05.59.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 05:59:20 -0800 (PST)
-Date: Wed, 12 Feb 2025 13:59:19 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Ian Rogers" <irogers@google.com>, "Arnaldo Carvalho de Melo"
- <acme@kernel.org>, "Howard Chu" <howardchu95@gmail.com>, "Peter Zijlstra"
- <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Namhyung Kim"
- <namhyung@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Adrian Hunter" <adrian.hunter@intel.com>, "Kan Liang"
- <kan.liang@linux.intel.com>, "John Garry" <john.g.garry@oracle.com>, "Will
- Deacon" <will@kernel.org>, "James Clark" <james.clark@linaro.org>, "Mike
- Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>, guoren
- <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Charlie Jenkins" <charlie@rivosinc.com>, "Bibo Mao" <maobibo@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Jiri Slaby" <jirislaby@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, "linux-csky@vger.kernel.org"
- <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating
- all system call tables
-Message-ID: <20250212135919.4e7a26fd@pumpkin>
-In-Reply-To: <0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
-References: <20250210165108.95894-1-irogers@google.com>
-	<20250210165108.95894-6-irogers@google.com>
-	<d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
-	<CAP-5=fUi4RYebxCGYZVHVEt0BpWVmUA6+-vDQfbai25_KJRs7A@mail.gmail.com>
-	<0195f9a0-5198-4ee0-b4ff-ea7126dc8299@app.fastmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmWiEwQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5E8C4CEDF;
+	Wed, 12 Feb 2025 14:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739369859;
+	bh=6WAvBJBHdVzn+myfwRDMnLWtYz9ymtVmvd7tzc8LxD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rmWiEwQO0Zi4JldM+xfFQxXB0k8MeS1mtTD2dy04YRB3u+qlMq6mjHoo886TnBnNU
+	 RO7+Qi42NLTegVL2HCJdO8q7Y+hckRrXKAYH5y3uezIDGsQBhyCvCZTyS7/+KtPBAR
+	 PSlsC4ry/Fmm1Tg0nDuZaOio2+FtHsSxJl31ci5FbR9Kjr+4HT4BDKElqWSR43TO/n
+	 jUT5LIK1aZ1eRBDyVNIaw5FXz+0GzvNPvjcdv6G5OilGwsJ69t38pbtyFcosVb93Lj
+	 qlkEL4k8DU/O6z10fXbGK3bihRrSS+jW4RTsjdoFamNXkfE/A+b/mAk50A0ZEsxN7n
+	 YrYma0+swJNVA==
+Date: Wed, 12 Feb 2025 15:17:36 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 01/10] perf bench evlist-open-close: Reduce scope of 2
+ variables
+Message-ID: <Z6ytgCGkdl07DewQ@x1>
+References: <20250111190143.1029906-1-irogers@google.com>
+ <20250111190143.1029906-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250111190143.1029906-2-irogers@google.com>
 
-On Tue, 11 Feb 2025 18:53:14 +0100
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+On Sat, Jan 11, 2025 at 11:01:34AM -0800, Ian Rogers wrote:
+> Make 2 global variables local. Reduces ELF binary size by removing
+> relocations. For a no flags build, the perf binary size is reduced by
+> 4,144 bytes on x86-64.
 
-...
-> I think the way it actually works on mips is that all syscalls are
-> allowed in any task and the actual number identifies both the
-> ABI and the syscall. In some variant, the same is true on arm
-> (oabi/eabi) and x86-64 (64/x32), but oabi and x32 are both too
-> obsolete to put much work into them.
+I'm trying to reproduce your results:
 
-IIRC x86-64 processes can also just make i386 system calls.
-Even switching to/from 64bit mode isn't privileged.
+  $ gcc --version | head -1
+  gcc (GCC) 14.2.1 20240912 (Red Hat 14.2.1-3)
+  $
+  $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/  
+  $ make -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
 
-	David
+Without your patch:
 
+  $ ls -la ~/bin/perf
+  -rwxr-xr-x. 2 acme acme 11411680 Feb 12 10:57 /home/acme/bin/perf
+  $ size ~/bin/perf
+      text     data     bss       dec     hex  filename
+  10071297   302496   34540  10408333  9ed18d  /home/acme/bin/perf
+  $
+
+Then, with your patch:
+
+  $ git log --oneline -1
+  abd904389b3f0807 (HEAD -> perf-tools-next) perf bench evlist-open-close: Reduce scope of 2 variables
+  $ perf -v
+  perf version 6.13.rc2.gabd904389b3f
+  $ size ~/bin/perf
+      text     data     bss       dec     hex  filename
+  10072001   301568   34540  10408109  9ed0ad  /home/acme/bin/perf
+  $
+  $ ls -la ~/bin/perf
+  -rwxr-xr-x. 2 acme acme 11411632 Feb 12 11:02 /home/acme/bin/perf
+  $
+
+So a more modest 224 bytes reduction in the perf binary size.
+
+In the distant past several of these moves from global to local were
+made, for instance:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d20deb64e0490ee9442b5181bc08a62d2cadcb90
+
+I tried but didn't find the before/after effects on binary size...
+
+Anyways,
+
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Thanks,
+
+- Arnaldo
  
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/bench/evlist-open-close.c | 42 +++++++++++++++-------------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+> index 5a27691469ed..79cedcf94a39 100644
+> --- a/tools/perf/bench/evlist-open-close.c
+> +++ b/tools/perf/bench/evlist-open-close.c
+> @@ -46,25 +46,6 @@ static struct record_opts opts = {
+>  	.ctl_fd_ack          = -1,
+>  };
+>  
+> -static const struct option options[] = {
+> -	OPT_STRING('e', "event", &event_string, "event", "event selector. use 'perf list' to list available events"),
+> -	OPT_INTEGER('n', "nr-events", &nr_events,
+> -		     "number of dummy events to create (default 1). If used with -e, it clones those events n times (1 = no change)"),
+> -	OPT_INTEGER('i', "iterations", &iterations, "Number of iterations used to compute average (default=100)"),
+> -	OPT_BOOLEAN('a', "all-cpus", &opts.target.system_wide, "system-wide collection from all CPUs"),
+> -	OPT_STRING('C', "cpu", &opts.target.cpu_list, "cpu", "list of cpus where to open events"),
+> -	OPT_STRING('p', "pid", &opts.target.pid, "pid", "record events on existing process id"),
+> -	OPT_STRING('t', "tid", &opts.target.tid, "tid", "record events on existing thread id"),
+> -	OPT_STRING('u', "uid", &opts.target.uid_str, "user", "user to profile"),
+> -	OPT_BOOLEAN(0, "per-thread", &opts.target.per_thread, "use per-thread mmaps"),
+> -	OPT_END()
+> -};
+> -
+> -static const char *const bench_usage[] = {
+> -	"perf bench internals evlist-open-close <options>",
+> -	NULL
+> -};
+> -
+>  static int evlist__count_evsel_fds(struct evlist *evlist)
+>  {
+>  	struct evsel *evsel;
+> @@ -225,6 +206,29 @@ static char *bench__repeat_event_string(const char *evstr, int n)
+>  
+>  int bench_evlist_open_close(int argc, const char **argv)
+>  {
+> +	const struct option options[] = {
+> +		OPT_STRING('e', "event", &event_string, "event",
+> +			   "event selector. use 'perf list' to list available events"),
+> +		OPT_INTEGER('n', "nr-events", &nr_events,
+> +			    "number of dummy events to create (default 1). If used with -e, it clones those events n times (1 = no change)"),
+> +		OPT_INTEGER('i', "iterations", &iterations,
+> +			    "Number of iterations used to compute average (default=100)"),
+> +		OPT_BOOLEAN('a', "all-cpus", &opts.target.system_wide,
+> +			    "system-wide collection from all CPUs"),
+> +		OPT_STRING('C', "cpu", &opts.target.cpu_list, "cpu",
+> +			   "list of cpus where to open events"),
+> +		OPT_STRING('p', "pid", &opts.target.pid, "pid",
+> +			   "record events on existing process id"),
+> +		OPT_STRING('t', "tid", &opts.target.tid, "tid",
+> +			   "record events on existing thread id"),
+> +		OPT_STRING('u', "uid", &opts.target.uid_str, "user", "user to profile"),
+> +		OPT_BOOLEAN(0, "per-thread", &opts.target.per_thread, "use per-thread mmaps"),
+> +		OPT_END()
+> +	};
+> +	const char *const bench_usage[] = {
+> +		"perf bench internals evlist-open-close <options>",
+> +		NULL
+> +	};
+>  	char *evstr, errbuf[BUFSIZ];
+>  	int err;
+>  
+> -- 
+> 2.47.1.613.gc27f4b7a9f-goog
+> 
