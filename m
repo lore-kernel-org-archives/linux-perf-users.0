@@ -1,119 +1,111 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BCA2036F4
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 22:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85622045A1;
+	Wed, 12 Feb 2025 22:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739399519; cv=none; b=iyEUCcdmVDGvWXRedk107cVGFKDdc/4ivD0BIdocggXFf+ajs0Py9XS65SEr45LMV2rzdvU8LlCffG8KTNkXar2SVgrlFz4oxcigfrSbrnj0tmzix39POHA7rQN6/JUCAzprn4CtprfdP4zw+r/R9Sdq/hZEgh73H4DuXdllmz4=
+	t=1739400967; cv=none; b=D3Clkz0cVICx2GPz2STiW9zE9vXhOqWNiNLoIuE4rm72hDoAupMGe+kuHBpxRPBWfE1iOaEKRvD0TJvTNDzbn8npPP7Ls/wVc6wRUEOb6acpNrH/8VhcUCvQqRGnjv3BZvmi0TKvid64MvboToiXEl1jv9NE6lOv1SotXZbDSiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739399519; c=relaxed/simple;
-	bh=9xYAmC7Odj+wcG5scUKb2hxhqBVZwbTv98XQABN1UOE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R0kKYUTFRxDRVPTc1fg45De+le21jetSioxixxqEEnvjQDq46AHCXW7sgPaXWzyhflB6K3/0cm6IJTN2bhK7e+nvRo6djbZyRW8pNxnC3SiXBvBucP+o0apTzQomM5ssJrrvpC4US1hjnQl+Sr7gO4UsSnjgnqYMeS5gV9p0T3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sLT1C2rD; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1739400967; c=relaxed/simple;
+	bh=/ixeuw+sP1h2HlhY+xFvfHUHI7nevOOg8s37LSTC0tI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzx8OfbDn1nB8e6BhYala7hfzWt2ayNLGZlFt5lMoSJssgVvKX+Oq8wFd8q5ICHyZYFlshGixq9L/CtLYvRSjljOnatk98DQKTHh3Dq0mNgfm+yT4CDB3wwFY4HidkaYz3fCvzEus3ZTXBdNyEtA2lFJjkPB5U0q+67BVI0bdLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LqkU3JYR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLT1C2rD"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f2a9f056a8so522742a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 14:31:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739399517; x=1740004317; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P4u0lqhDVCs3kWFzXSRSy88eSlq3hW173Ud7Yk2USkk=;
-        b=sLT1C2rDOEyzzLjEjuaRckKwaQ00FSPM7NcwXHLowCOWOBl7jqp258G7LJ6nhbMS3N
-         3KCYLouS3RjIFHy+L6x32LYG/wvm4gdvQ92X3Lmf7eeRZvMcIMZUiPFq1iHrpdJM7sj+
-         /1Vq/Ul3gknf1Q9T1DviNgGoT67r/Dxz8Ce4oOBWyvjPqeLT2+ihOMXr6AXpngEJjxPL
-         om5whT5SD6ile3O21yTz2NxFZLQTTgjVruCtLeSUCT7bXdF2X9OD+6lf8AEH+0pi6oo0
-         n7IvgLC7MsPON58ug2Ah5HAjyUAdwUGb0kwtbZGAo2PibTzeWSmYid8jA/Yqd8zmavmg
-         2hIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739399517; x=1740004317;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P4u0lqhDVCs3kWFzXSRSy88eSlq3hW173Ud7Yk2USkk=;
-        b=UEfUabpFrZ9tli0g6/xsTknQBq6ScYpTIn2X/7Nku/OcKjBORNEQBmYBbGe4CWhmeG
-         Cq94fHaNgm45r2wEQHC1i1ygJo6tVH64pxTcuNSZ6Z1TdAFWqxd2Hn7+bpTEXBNTRCJl
-         1+LPI5NYJFDfeXO+CivryuFCOciPswn1KEM7yZ6IfkK+Ghr8YTCBL3rjG+pti3elt0y2
-         bDAKB0Om44Rg1/6iBei1KqcQNnadyTFDmFBK3k6wpBdeoPAvhPmZVMrup2rJH31ZSq78
-         OY/2M2144mN2HyJljbJxcfMimKlb1PVnexo7pZMhuoPe+un51zo/ozNPgiIT7eUvAhDn
-         Vdcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuDCfmbHcP7mbdam7nZEHjORnIWgOHrvY8MF3L+2qapo6me/HG/ucdjlQvhX47N6zx9Tkutc2ONoWZ04BDYDC4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSYLQcrGumxK0ZyEXNaGpJNJDNPmTTySTUvGGbginKLz7WpJL2
-	KpK6pElRw3Z+2JfQguNDLWocmtBmyivp2mPe8Hb0PBpMCUPQTbpqOLZN7jwi/qv7k8bBv0uCUif
-	URw==
-X-Google-Smtp-Source: AGHT+IHCkcBnyBvA5rBqb0nlmu6y/i7b8JGoyzx+WFgpOL9irq8xmcP/AfVCc/JAi46e7AZbhgN0hE+xX1s=
-X-Received: from pjbpt6.prod.google.com ([2002:a17:90b:3d06:b0:2ef:7af4:5e8e])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c04:b0:2fa:f8d:65e7
- with SMTP id 98e67ed59e1d1-2fbf5bb574fmr8098207a91.2.1739399516973; Wed, 12
- Feb 2025 14:31:56 -0800 (PST)
-Date: Wed, 12 Feb 2025 14:24:56 -0800
-In-Reply-To: <20250212222859.2086080-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LqkU3JYR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B7AC4CEDF;
+	Wed, 12 Feb 2025 22:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739400967;
+	bh=/ixeuw+sP1h2HlhY+xFvfHUHI7nevOOg8s37LSTC0tI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LqkU3JYRAbcPqbKej9sprTUJgj/cBZNUa+KqErDX9CnNGplxQ60VrA2ly+wwcOfk/
+	 bMaIPZkIHYSe5FOoV09z1pbFnTX5s+ix+V75AYrZIBSd2bvm1QtGIqDwThZ9MyLN0r
+	 SKs3d1HXw1teBKyx9XGACfic1E36RQjOhn7qTgPWvtE6WeiH3mBh3TvwHoUc1kehFa
+	 itecSmpwrGQw+dijYNvt7/6HmlOuNYh4mvIE74NmNkkyxhx3RMSVG6SkUxmUVHebI2
+	 LL4lh0GCvrxIEzOqPUR58mnO2nZaIocA6zUQUU5JZuV0NRKDGg2DxEdDyndf1GBXuv
+	 UCCQt81cDqKrw==
+Date: Wed, 12 Feb 2025 14:56:05 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+Message-ID: <Z60nBQCetMzhRg5b@google.com>
+References: <Z6panMzNSm1op8Di@google.com>
+ <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
+ <Z6rAHhAIdlkAryGJ@google.com>
+ <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+ <Z6uOGNO6p7i9Fese@google.com>
+ <CAP-5=fVxFe4nMS_dHmO=6-ddA40XbVdvouPLuOxj5cenjUr8ng@mail.gmail.com>
+ <Z6v-mPJq6m61pFA4@google.com>
+ <CAP-5=fU+-4igQomO4Q41=7xo6YWyDdVqJdZd34dcMUS-Ua=N1Q@mail.gmail.com>
+ <Z6zslLa8XM1ubwXj@google.com>
+ <CAP-5=fUrzPvV3sD1_wMzQ7dF8xk3hL9_nkdS6toFjt7L+SRsgg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250212222859.2086080-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250212222859.2086080-6-ctshao@google.com>
-Subject: [PATCH v5 5/5] perf lock: Update documentation for -o option in
- contention mode
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUrzPvV3sD1_wMzQ7dF8xk3hL9_nkdS6toFjt7L+SRsgg@mail.gmail.com>
 
-This patch also decouple -o with -t, and shows warning to notify the new
-behavior for -ov.
+On Wed, Feb 12, 2025 at 12:00:42PM -0800, Ian Rogers wrote:
+> On Wed, Feb 12, 2025 at 10:46 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > It's not completely broken and works sometimes.
+> 
+> No this is the definition of completely broken. If it only works
+> sometimes then you can't use it, we can't put a test on it, there is
+> no point in it. Even when it doesn't fail on perf_event_open, does it
+> work for processes that start after /proc is scanned? No, it is
+> completely broken.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/builtin-lock.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Ok, we have a different definition for it.  Let's ignore the imaginary
+users of the broken features.  Have you added a test for this change?
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 3dc100cf30ef..e16bda6ce525 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1817,7 +1817,7 @@ static void print_contention_result(struct lock_contention *con)
- 			break;
- 	}
- 
--	if (con->owner && con->save_callstack) {
-+	if (con->owner && con->save_callstack && verbose > 0) {
- 		struct rb_root root = RB_ROOT;
- 
- 		if (symbol_conf.field_sep)
-@@ -1978,6 +1978,11 @@ static int check_lock_contention_options(const struct option *options,
- 		}
- 	}
- 
-+	if (show_lock_owner && !show_thread_stats) {
-+		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
-+		pr_warning("Please use -t option too to keep the old behavior.\n");
-+	}
-+
- 	return 0;
- }
- 
-@@ -2569,7 +2574,8 @@ int cmd_lock(int argc, const char **argv)
- 		     "Filter specific address/symbol of locks", parse_lock_addr),
- 	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
- 		     "Filter specific function in the callstack", parse_call_stack),
--	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-+	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters.\n"
-+		"\t\t\tThis option can be combined with -t, which shows owner's per thread lock stats, or -v, which shows owner's stacktrace"),
- 	OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep, "separator",
- 		   "print result in CSV format with custom separator"),
- 	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
--- 
-2.48.1.502.g6dc24dfdaf-goog
+Anyway I've tested your change and found some issues:
+
+1. It silently exited when BPF-skel is not built.  Better to put some
+   messages at least.
+
+  $ sudo ./perf record -u $(id -u) -- sleep 1
+
+2. Even with BPF-skel, perf record doesn't work well.  It did something
+   but failed to get sample data for some reason.
+
+  $ sudo ./perf record -u $(id -u) -- sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.045 MB perf.data ]
+   
+   Oh, I think you now need to pass -a because it now works in
+   system-wide mode and drops samples for other users.
+
+3. With BPF-skel, non-root users will see this.
+
+  $ ./perf record -u $(id -u) -- sleep 1
+  cannot get fd for 'filters' map
+  failed to set filter "BPF" on event cycles:P with 13 (Permission denied)
+
+   I think it's confusing and better to tell user that you need to run 
+   'perf record --setup-filter pin' as root first.  But maybe due to the
+   issue #2, you still need to run it as root.
+
+Thanks,
+Namhyung
 
