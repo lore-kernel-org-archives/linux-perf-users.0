@@ -1,265 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFBB271822;
-	Wed, 12 Feb 2025 12:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C73E207A15
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 12:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739362254; cv=none; b=jsYgi/V5MBW6iSuCy6GDX/rpRgbXTeET2eo2bS5ZRvTp+9ured2EeD1bxwQnTbTSmb7X2T6K0aOc/mGDum70pptzSHwMRR89y6SVgyhc9pYOP5RgbR8FUNYhkRdHel9xXbLt4Uu4kDdaCw6+AGKvI8xP6m9kQWLU9rMSLE25QJo=
+	t=1739363082; cv=none; b=muOJEovsLNB4zJ01xwmw4LzrV6N7VYjQO1YWXdgmBNyG/rpRe8z7e4is6apoQQHOZxBW349UXhaTqMyBvc3pcoVgmNJlaVxuQGNdvQWHKiEim0AxHgGHU2K0qUNauDRHVCLSeBZV1y5FF+YN3zCDk8kDfEJKbmtic40kXmKlx3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739362254; c=relaxed/simple;
-	bh=3cMlbShasNaTjDQlhgec8F70jWl3atG199Ep1PjuelQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Obuo7pH5UJXPXDkCkCevsgKGxJRW5N4dBzuqHm2v86yzjGlju6rRzoso5E5MotwtDRAea4A9vx6eQir6stWzIMyKlA6j5Yj6q8wm9FJXByqTMNMGD8bFtAuqgmRz3So0SWkme4b+YUyemyiwmVFs5h1dqVReSbUi9hGgME2aMX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC7A1113E;
-	Wed, 12 Feb 2025 04:11:12 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 399C53F58B;
-	Wed, 12 Feb 2025 04:10:51 -0800 (PST)
-Date: Wed, 12 Feb 2025 12:10:46 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
+	s=arc-20240116; t=1739363082; c=relaxed/simple;
+	bh=Jj5P7lsHwRRACyRdpFpJidnBldboUVSsGulb+KW5U8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lt2+iGKbCDFj0MjcPMIMpfR9weGfVwJOI+vUt16joD4qgvQ5y26QBuhD32YWdFMPYIOn3DC6GEdT3NaslVvj7wOHiA2wCPKejp8LeOi8j/Wa46Gav9esL5i8Zaf611/ZRkrcQ1hBBpb2VIHVgGHi2kd4LrVd0dEzDui7wcVvjys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+acD+PF; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+acD+PF"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38dd91c313bso2129393f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 04:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739363078; x=1739967878; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c5dUatvfzva4ZYttIH7CzveR/pu2c86Tt8pcZSDn9PI=;
+        b=C+acD+PFVYJ+3arHmrXYE/HTSFPsox4GB97uD6bAmO/iqifBcAXE+1gx52F1epmZnl
+         QG86fvQHW4/pCYdJD8yS9yScahhIKEaa3KT8EX4pO1AuFFK39f9Wki6DJOYFmmm9cDJS
+         04s7ShnmQZ++PfvBeIImtl4moXFmuyp4JcfDOc/ftJ78GTEHUX3C5T+L6X45XodAA43c
+         +hKxPzm+NcsZiW1xpNz5kA1zgsUAYA4c7HKWU2nXkCDDOUfrmooQlL9FfZkdVuOMh5xs
+         1HtTT3FHYBDl/QqMfUhpx3ksIyNeYYanL5njFHzC0/BgJV/riJmXErvFUly7eFGGwDZe
+         WNsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739363078; x=1739967878;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c5dUatvfzva4ZYttIH7CzveR/pu2c86Tt8pcZSDn9PI=;
+        b=aLqUWAKNz4e2sSqwH/kGeh4Md4KVNAw/jvs4bLYqyvChK7nDmAHedC9xfAHRVpW+BZ
+         XzNtPovAv2tZ1V7IigfBCZmmgKO8TKlBjnhcimkv5S4N7vzeg05UxHckf7LVK+XcNZ2y
+         UCvjnijIYp9uQ1OjDVmxpypPPsGdt5/eFAt48y+toHvEP08XGj1lk6js2WoJ8ObksNW5
+         anYUfBHPRBSkj94V3PbJfnlapkP0x3+iGOutthzaqHcBwFVVhoSIydSQ8XveW414oJ+5
+         rmfgpvSAc8eDpY6dxEAEjl+HzWrwKiWf24YX6i4bAu6YO3hxpzpdFQsm3QOf1AP2FHNS
+         5GIQ==
+X-Gm-Message-State: AOJu0Yy7JmCNPlsLiaQ/FgY290Sa2+Ibbrz90xNmHBOSm1ULLJr0u2o3
+	lIQFjD4JEvlLW7/Sb8d92fkassJue1f9rof56Np7Guu+JSu+lWKMck6XJpFqQmSzryPTyMulp6i
+	NCkw=
+X-Gm-Gg: ASbGnct8r8toCBRk7bJlLKIfq3FGHPkS62sQJ74K0I9WJL1ckZDf5W0sQbLwmit2XeY
+	ksGh7UDksJCp/JZl1L57om0kyBmvtE1FRFk7gztGFwA/iEIN6Wmrkq1FdPDwLlBJienahooY1gt
+	RFALUxpU/rQ2AXH6cAuevkcQ6Od84gp4c8MVJow/ytvVUuy3BrB0+oTzJlf0yp9uKbHMs5w7tlG
+	MWXi4l33Yj2YjB460KXOaaNnad74QWvTG109mvBoc6BW6S2xHYZw59Ri81/e6VBZkp6JPww1vDa
+	Oiol6y/FKU/LyrQ=
+X-Google-Smtp-Source: AGHT+IHURBlQWis9afi1mL83V75xfgS+gg8SDfHCPxDC8+IXutihLiENYqrtgOOvxV5P7aw+tiwlCw==
+X-Received: by 2002:a05:6000:144e:b0:38d:dcc4:1dcb with SMTP id ffacd0b85a97d-38dea3c42e9mr2448660f8f.2.1739363078483;
+        Wed, 12 Feb 2025 04:24:38 -0800 (PST)
+Received: from pop-os.. ([145.224.90.174])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38ddbfbb4ffsm9287276f8f.94.2025.02.12.04.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 04:24:38 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org
+Cc: Robin.Murphy@arm.com,
 	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v19 09/11] arm64: Handle BRBE booting requirements
-Message-ID: <20250212121046.GB235556@e132581.arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf stat: Fix non-uniquified hybrid legacy events
+Date: Wed, 12 Feb 2025 12:24:12 +0000
+Message-Id: <20250212122413.1184503-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 02, 2025 at 06:43:03PM -0600, Rob Herring (Arm) wrote:
-> 
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> To use the Branch Record Buffer Extension (BRBE), some configuration is
-> necessary at EL3 and EL2. This patch documents the requirements and adds
-> the initial EL2 setup code, which largely consists of configuring the
-> fine-grained traps and initializing a couple of BRBE control registers.
-> 
-> Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
-> HDFGWTR_EL2 with the same value, relying on the read/write trap controls
-> for a register occupying the same bit position in either register. The
-> 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
-> 59 of HDFGRTR_EL2 is RES0, and so this assumption no longer holds.
+Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+like plain legacy events if we only look at attr.type. But legacy events
+should still be uniquified if they were opened on a non-legacy PMU.
+Previously we looked at the PMU type to determine legacy vs hybrid
+events here so revert this particular check to how it was before the
+linked fixes commit.
 
-s/HDFGRTR_EL2/HDFGWTR_EL2
+counter->pmu doesn't need to be null checked twice, in fact it is
+required for any kind of uniquification so make that a separate check.
 
-> To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
-> layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
-> HDFGWTR_EL2 control bits separately. While making this change the
-> open-coded value (1 << 62) is replaced with
-> HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
-> 
-> The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
-> initialisation: even though they are subject to E2H renaming, both have
-> an effect regardless of HCR_EL2.TGE, even when running at EL2, and
-> consequently both need to be initialised. This is handled in
-> __init_el2_brbe() with a comment to explain the situation.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> [Mark: rewrite commit message, fix typo in comment]
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/arch/arm64/booting.rst | 21 +++++++++
->  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
->  2 files changed, 104 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-> index cad6fdc96b98..0a421757cacf 100644
-> --- a/Documentation/arch/arm64/booting.rst
-> +++ b/Documentation/arch/arm64/booting.rst
-> @@ -352,6 +352,27 @@ Before jumping into the kernel, the following conditions must be met:
-> 
->      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
-> 
-> +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
-> +
-> +  - If EL3 is present:
-> +
-> +    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
+This restores PMU names on hybrid systems and also changes "perf stat
+metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+test was gated on "cycles" appearing alone which doesn't happen on
+here.
 
-Can MDCR_EL3.SBRBE be 0b01 ?
+Before:
 
-> +
-> +  - If the kernel is entered at EL1 and EL2 is present:
-> +
-> +    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
-> +    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
+  $ perf stat -- true
+  ...
+     <not counted>      instructions:u                           (0.00%)
+           162,536      instructions:u            # 0.58  insn per cycle
+  ...
 
-Should clarify BRBCR_EL2.TS to be initialised to 0b00 ?  Arm ARM
-claims the reset behaviour of the TS field is unknown value.  The
-assembly code below actually has initializes the TS field as zero.
+After:
 
-Except the above minor comments, I read the assembly code and it looks
-good to me:
+ $ perf stat -- true
+ ...
+     <not counted>      cpu_atom/instructions/u                  (0.00%)
+           162,541      cpu_core/instructions/u   # 0.62  insn per cycle
+ ...
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/util/stat-display.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-> +
-> +    - HDFGRTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
-> +    - HDFGRTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
-> +    - HDFGRTR_EL2.nBRBIDR  (bit 59) must be initialised to 0b1.
-> +
-> +    - HDFGWTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
-> +    - HDFGWTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
-> +
-> +    - HFGITR_EL2.nBRBIALL (bit 56) must be initialised to 0b1.
-> +    - HFGITR_EL2.nBRBINJ  (bit 55) must be initialised to 0b1.
-> +
->    For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
-> 
->    - If EL3 is present:
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index 25e162651750..bf21ce513aff 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -163,6 +163,39 @@
->  .Lskip_set_cptr_\@:
->  .endm
-> 
-> +/*
-> + * Configure BRBE to permit recording cycle counts and branch mispredicts.
-> + *
-> + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
-> + * BRBCR_EL1.CC=1.
-> + *
-> + * At any EL, to record branch mispredicts BRBE requires that both
-> + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
-> + *
-> + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
-> + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
-> + *
-> + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
-> + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
-> + * ends up executing in EL1 or EL2.
-> + */
-> +.macro __init_el2_brbe
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_\@
-> +
-> +       mov_q   x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
-> +       msr_s   SYS_BRBCR_EL2, x0
-> +
-> +       __check_hvhe .Lset_brbe_nvhe_\@, x1
-> +       msr_s   SYS_BRBCR_EL12, x0      // VHE
-> +       b       .Lskip_brbe_\@
-> +
-> +.Lset_brbe_nvhe_\@:
-> +       msr_s   SYS_BRBCR_EL1, x0       // NVHE
-> +.Lskip_brbe_\@:
-> +.endm
-> +
->  /* Disable any fine grained traps */
->  .macro __init_el2_fgt
->         mrs     x1, id_aa64mmfr0_el1
-> @@ -170,16 +203,48 @@
->         cbz     x1, .Lskip_fgt_\@
-> 
->         mov     x0, xzr
-> +       mov     x2, xzr
->         mrs     x1, id_aa64dfr0_el1
->         ubfx    x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
->         cmp     x1, #3
->         b.lt    .Lskip_spe_fgt_\@
-> +
->         /* Disable PMSNEVFR_EL1 read and write traps */
-> -       orr     x0, x0, #(1 << 62)
-> +       orr     x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
-> +       orr     x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
-> 
->  .Lskip_spe_fgt_\@:
-> +#ifdef CONFIG_ARM64_BRBE
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_reg_fgt_\@
-> +
-> +       /*
-> +        * Disable read traps for the following registers
-> +        *
-> +        * [BRBSRC|BRBTGT|RBINF]_EL1
-> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
-> +        */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
-> +
-> +       /*
-> +        * Disable write traps for the following registers
-> +        *
-> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
-> +        */
-> +       orr     x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
-> +
-> +       /* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
-> +       orr     x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
-> +
-> +       /* Disable read traps for BRBIDR_EL1 */
-> +       orr     x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
-> +
-> +.Lskip_brbe_reg_fgt_\@:
-> +#endif /* CONFIG_ARM64_BRBE */
->         msr_s   SYS_HDFGRTR_EL2, x0
-> -       msr_s   SYS_HDFGWTR_EL2, x0
-> +       msr_s   SYS_HDFGWTR_EL2, x2
-> 
->         mov     x0, xzr
->         mrs     x1, id_aa64pfr1_el1
-> @@ -220,7 +285,21 @@
->  .Lset_fgt_\@:
->         msr_s   SYS_HFGRTR_EL2, x0
->         msr_s   SYS_HFGWTR_EL2, x0
-> -       msr_s   SYS_HFGITR_EL2, xzr
-> +       mov     x0, xzr
-> +#ifdef CONFIG_ARM64_BRBE
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_insn_fgt_\@
-> +
-> +       /* Disable traps for BRBIALL instruction */
-> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL_MASK
-> +
-> +       /* Disable traps for BRBINJ instruction */
-> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ_MASK
-> +
-> +.Lskip_brbe_insn_fgt_\@:
-> +#endif /* CONFIG_ARM64_BRBE */
-> +       msr_s   SYS_HFGITR_EL2, x0
-> 
->         mrs     x1, id_aa64pfr0_el1             // AMU traps UNDEF without AMU
->         ubfx    x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
-> @@ -275,6 +354,7 @@
->         __init_el2_hcrx
->         __init_el2_timers
->         __init_el2_debug
-> +       __init_el2_brbe
->         __init_el2_lor
->         __init_el2_stage2
->         __init_el2_gicv3
-> 
-> --
-> 2.47.2
-> 
-> 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e65c7e9f15d1..eae34ba95f59 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1688,12 +1688,17 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
+-	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
++	if (!counter->pmu) {
++		/* evsel__uniquify_counter() uses counter->pmu for the name */
++		return;
++	}
++
++	if (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW) {
+ 		/* Legacy event, don't uniquify. */
+ 		return;
+ 	}
+ 
+-	if (counter->pmu && counter->pmu->is_core &&
++	if (counter->pmu->is_core &&
+ 	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
+ 		/* A sysfs or json event replacing a legacy event, don't uniquify. */
+ 		return;
+-- 
+2.34.1
+
