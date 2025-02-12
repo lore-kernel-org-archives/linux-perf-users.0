@@ -1,59 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7711FBC93;
-	Wed, 12 Feb 2025 18:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C151F76A5;
+	Wed, 12 Feb 2025 18:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739386007; cv=none; b=TlyTqQmOW0aC7ikSNddvjuB7684wG1GqfRyIt0BqrglqJKwXmqW8LoCfMVAsl/HnRCq6i7GgiozJNE489RmEPGIfHXCgUrn9YVOqXk8vut4tCPQZnZ/vU4qMcmWLNvewULT5sV0qSxbIVNtSRxcRu0vvLgUoC9cJgTDS7YpxklE=
+	t=1739386186; cv=none; b=PAcjPjef0j95fvoSWKhJrzsscGQXhjKknpzQ7N+eCQS9KuNmlg7p7lkc57rX4Tp011GuRcEBotyLUEJe6ImzHtQ8iXUlOtMeneLOAJosZUfa8+qRYZCWQtrpss0t901XQpoT+z/CZMXdzRhacI3qyRH5EXhEmjH55lE4bcSajnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739386007; c=relaxed/simple;
-	bh=mXUx/Su0ni4gs9IkbRbwq74MoOPQS+NIqIcKQLmjdas=;
+	s=arc-20240116; t=1739386186; c=relaxed/simple;
+	bh=RqfhnIV3YItta8b9FGmPv++jTM3WitRHhMgMDo7CxQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPKwhpXWU9sA64RHPW1IE6ooOXCffUAqFjZySDVj5d7FheFBCr/TloBTmWqJXpw5DGWGTzwyoz2xEdtcPRS6VKDPLnfRNYzKr5l/9i/UFZCsYAOyfePuFUYT2Ao3G9foGsYtUjSZhwBH8ETN+gOKBJbTBtFoB9pLqK0//Kl57Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecgqAQQw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNcPuL9WtBuqiVrnCAeDP58+uOEqMWwl3BwlWfQzJHIdpzq9YNIgQeGwmDjjAAFSEDDDhGaovTsjcLvLHCRKw2FvD8Cxd9Udy2j11PXyzGZdQSGQyHKs9SoMkwoGaInES1win9ISMyjtMkptpg5YRntZWvxhErcElYdsk65zsXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udY+qVWH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecgqAQQw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8FFC4CEDF;
-	Wed, 12 Feb 2025 18:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udY+qVWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89A5C4CEDF;
+	Wed, 12 Feb 2025 18:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739386006;
-	bh=mXUx/Su0ni4gs9IkbRbwq74MoOPQS+NIqIcKQLmjdas=;
+	s=k20201202; t=1739386186;
+	bh=RqfhnIV3YItta8b9FGmPv++jTM3WitRHhMgMDo7CxQo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ecgqAQQwLEl4rB4SbIESqHg7i/JSNEcwxBLTC5FHSKnpbo6EkvQMZinHkcOxEtzmx
-	 Olx18momsCe+29R53kH5zLtp2uK0thPNaGxDzrvh6ap89fRGAmQa8iQatq0UqNBsYx
-	 6S7OoWKHIjzHn7rEWdyZJ8cfxI5iyfq+3+oU0sXSilV7/LblJRHC/905p3nRDnDWn4
-	 310NCzuMvGCLnMNksMZ5BkCVSWzo7Azxpdx0S5tAVN1tLKt+A3k8Az7CkmqdDWpEbL
-	 PlPa8D3UDOmf98Pw08bk1gLGYD7+VWmNStBSp8xwfq0m+8xSVQJ2EeBtZAmAqvpV8j
-	 8FEaR2O1q80Qw==
-Date: Wed, 12 Feb 2025 10:46:44 -0800
+	b=udY+qVWHqcMx0ldKogKNsjtHDvADgFstVaxgyau4tRgQOSiO5HFIGwkL0u3xIerIO
+	 o159wFltZ+d+L6V3OprpIFU8/qoWqjmlEsHlEQUWaskVNm3vrU+iHPqbhKsvlEyLaG
+	 gQ9E3kSrcYUf54KYV29fNvEcrAjFdLl76UKeGyS/Ar2/PTGWS0DCJUKgk2EajzZMmX
+	 Gsx1AKRs7gSJ60xk2MaE9MpHHn8/CfV0P50gc1IQMMaPrVF1UNppNja5JD9cn8dJxo
+	 2ZCNmWHvSaayvy0o8AB+/NwzU7d1n9JKSgcT6UEvVtOQE17W84e+R4YmYCDZqvpqdX
+	 sXVLa+78gXsyg==
+Date: Wed, 12 Feb 2025 10:49:44 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+To: Howard Chu <howardchu95@gmail.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-Message-ID: <Z6zslLa8XM1ubwXj@google.com>
-References: <20250111190143.1029906-1-irogers@google.com>
- <Z6panMzNSm1op8Di@google.com>
- <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
- <Z6rAHhAIdlkAryGJ@google.com>
- <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
- <Z6uOGNO6p7i9Fese@google.com>
- <CAP-5=fVxFe4nMS_dHmO=6-ddA40XbVdvouPLuOxj5cenjUr8ng@mail.gmail.com>
- <Z6v-mPJq6m61pFA4@google.com>
- <CAP-5=fU+-4igQomO4Q41=7xo6YWyDdVqJdZd34dcMUS-Ua=N1Q@mail.gmail.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] perf trace: Add --summary-mode option
+Message-ID: <Z6ztSE_yo2t28w45@google.com>
+References: <20250205205443.1986408-1-namhyung@kernel.org>
+ <CAH0uvoinT1ZH3Cifj_skJOjfKrvQ8jdbU_3gFp21eD4PwGOwkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,78 +49,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU+-4igQomO4Q41=7xo6YWyDdVqJdZd34dcMUS-Ua=N1Q@mail.gmail.com>
+In-Reply-To: <CAH0uvoinT1ZH3Cifj_skJOjfKrvQ8jdbU_3gFp21eD4PwGOwkQ@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 09:41:04PM -0800, Ian Rogers wrote:
-> On Tue, Feb 11, 2025 at 5:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > But you removed non-BPF and non-root (w/o pinning BPF) use cases.
+On Fri, Feb 07, 2025 at 09:25:02PM -0800, Howard Chu wrote:
+> Hello Namhyung,
 > 
-> I didn't think this was a hard series to understand. It moves the -u
-> options of perf top and perf record to using BPF filters. The many
-> reasons for this I already explained:
-> https://lore.kernel.org/lkml/CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com/
+> On Wed, Feb 5, 2025 at 12:54 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > I've realized that perf trace shows system call summary at the end for
+> > each thread.  But sometimes users want to see the global whole system
+> > summary or statistics instead.
+> >
+> > So I've added --summary-mode option like below:
+> >
+> >     $ sudo ./perf trace -as --summary-mode=total sleep 1
+> >
+> >      Summary of events:
+> >
+> >      total, 21580 events
+> >
+> >        syscall            calls  errors  total       min       avg       max       stddev
+> >                                          (msec)    (msec)    (msec)    (msec)        (%)
+> >        --------------- --------  ------ -------- --------- --------- ---------     ------
+> >        epoll_wait          1305      0 14716.712     0.000    11.277   551.529      8.87%
+> >        futex               1256     89 13331.197     0.000    10.614   733.722     15.49%
+> >        poll                 669      0  6806.618     0.000    10.174   459.316     11.77%
+> >        ppoll                220      0  3968.797     0.000    18.040   516.775     25.35%
+> >        clock_nanosleep        1      0  1000.027  1000.027  1000.027  1000.027      0.00%
+> >        epoll_pwait           21      0   592.783     0.000    28.228   522.293     88.29%
+> >        nanosleep             16      0    60.515     0.000     3.782    10.123     33.33%
+> >        ioctl                510      0     4.284     0.001     0.008     0.182      8.84%
+> >        recvmsg             1434    775     3.497     0.001     0.002     0.174      6.37%
+> >        write               1393      0     2.854     0.001     0.002     0.017      1.79%
+> >        read                1063    100     2.236     0.000     0.002     0.083      5.11%
+> >        ...
+> >
+> > Also it changes internal data structure to hash table to track
+> > statistics of syscalls.  And removes the rb_resort code.
+> >
+> > v3 changes)
+> > * Add Acked-by from Howard
+> > * Update commit messages  (Ian)
 > 
-> Your case is a user that isn't exiting and starting processes and
-> wants to process themself or some other user they some how have
-> permissions for? They need to not be starting and exiting processes as
-> new processes are ignored and exiting processes cause the
-> perf_event_open to fail. What stops such a user passing the list of
-> processes they have that aren't starting and exiting as a -p option?
+> Sorry for the delay.
 > 
-> If you try something like:
-> $ perf top -p $(ps --no-headers -u $USER -o pid | awk '{printf "%s%s",
-> sep, $1; sep=","}')
-> this is exactly what you get. Does it work? No, the ps and awk
-> processes terminating but being in the list of processes causes the
-> perf_event_open for those pids to fail. This is exactly the same
-> problem as the -u option that you want to keep for this case. The
-> approach just doesn't work.
-> 
-> Why not make failing to add a -u option fallback on doing the /proc
-> scan and pretend the processes are a -p option? So now there's a
-> silent fallback to a broken behavior. New processes won't be profiled
-> and the data race between the scan and the perf_event_open will cause
-> failures with non-obvious causes/solutions - mainly, use sudo to run
-> as root. I'd say this isn't ideal.
-> 
-> This series fixes an option on two commands so that it works in the
-> sensible use-case, perf running with privileges trying to filter
-> samples belonging to a specific user. We can say the patch series
-> doesn't work for the case you give, I don't think anybody cares about
-> that case, they can get near identical behavior from -p, the behavior
-> from -p will be clearer than just having -u doing something similar,
-> namely failing to open for a process and terminate.
-> 
-> You may hate and ignore every point I make and still want to keep the
-> existing broken behavior. As I've already tried to make clear, you're
-> adding to the maintenance burden to everyone working in the code base
-> as the notion of target is fundamental and because you are insisting
-> on keeping a broken behavior you are also making it untestable. Given
-> the -u option doesn't work, I strongly suspect nobody uses it. Do I
-> worry about this series causing harm to the people who aren't using
-> the option? No I don't as there is a better opportunity in having an
-> option that (1) does work and (2) results in a simpler code base.
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
-It's not completely broken and works sometimes.  And it seems we have an
-issue with BPF sideband events.  But it worked when you ran it as root.
+Thanks for your review!
 
-  $ sudo perf record -u $(id -u) --no-bpf-event -- sleep 1
-  WARNING: Ignored open failure for pid 404758
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 2.754 MB perf.data (3638 samples) ]
+Arnaldo and Ian, are you ok with this?
 
-  $ sudo perf report -s sym --stdio -q | head
-       1.43%  [k] audit_filter_rules.isra.0
-       1.33%  [.] pthread_mutex_lock@@GLIBC_2.2.5
-       1.06%  [k] __audit_filter_op
-       1.05%  [.] __vdso_clock_gettime
-       0.94%  [.] _dbus_type_reader_get_current_type
-       0.82%  [.] pthread_mutex_trylock@@GLIBC_2.34
-       0.76%  [k] __fdget
-       0.72%  [.] _dbus_first_type_in_signature
-       0.61%  [.] __GI___pthread_mutex_unlock_usercnt
-       0.56%  [k] native_sched_clock
-  
 Thanks,
 Namhyung
 
+> >
+> > v2 changes)
+> > * Rebase to current perf-tools-next
+> > * Fix some style issues  (Howard)
+> > * Rename to --summary-mode  (Howard)
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > Namhyung Kim (4):
+> >   perf trace: Allocate syscall stats only if summary is on
+> >   perf trace: Convert syscall_stats to hashmap
+> >   perf tools: Get rid of now-unused rb_resort.h
+> >   perf trace: Add --summary-mode option
+> >
+> >  tools/perf/Documentation/perf-trace.txt |   4 +
+> >  tools/perf/builtin-trace.c              | 247 +++++++++++++++++++-----
+> >  tools/perf/util/rb_resort.h             | 146 --------------
+> >  3 files changed, 203 insertions(+), 194 deletions(-)
+> >  delete mode 100644 tools/perf/util/rb_resort.h
+> >
+> > --
+> > 2.48.1.502.g6dc24dfdaf-goog
+> >
