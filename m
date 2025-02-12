@@ -1,155 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5812F201025;
-	Wed, 12 Feb 2025 21:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6825200138
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 21:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739395319; cv=none; b=ft0UAbMUzmqtV8KYH/ZVMEDJQ1S0FPYvQK/eAcWJ1lt+vW9EC/0ZQARjKT7aNxSSUubU79O2+0KJD/+Ki6xhjPbd5TgzKVgbjAa+fvovtw2HLk2bmRtO5rztpLcVF5MUkSqlO2+T1KsXcF4I4gA+OfF0ZT/Ks4gVzQ4GeuAeddU=
+	t=1739396308; cv=none; b=S2pQUKYeNfMwXF5x49amjwxnl1/8o7BL53Pxdrfg00sMuHhKYOJgperot6WLSypCKDwBiFUsVZrEOLf4736xy6BWx5HI7iyASoOueeNWLrYh4TAN+wzdtCUi4nfTM56n03CqiLhlChL0hd7hFwHbcNEvs0BaEmoIqtBB2iKI4uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739395319; c=relaxed/simple;
-	bh=SDZa3yUm8eMdJ+DopChXzTIddTJbX082smra7ftQugI=;
+	s=arc-20240116; t=1739396308; c=relaxed/simple;
+	bh=rs8N/GL1JM0sKBZY/muU+0DekJkqdnHQWij3XtDwrPs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdGDOcd8cdXTFoV8jN/UwIiSE5PJ0yV1GWsjM7ogcvZgpiRwMES9SfdnAupr/D/sucBvlwt5JQJGROHBTIE223KmT0W6hMTSGYIyxZRy2BJ2xbyguSJtiRNKDmtXlgy4rNF4IO7JDlqMfmgF3ZWIxgPQe5eow7xNt6oybUE62DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6bdEUdf; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=XBhTKTEuaEhxtYkTSSttWh2HDnoLpUdcuwmaeuSdScK0L+76f8i93RmR/fEtSFSw6PZByb1S9VNL/2PlltZE4OEy/uKnsPo06p6ZRV80lNMhw0orXfIA7FJzuRNHQQv6TptreWQ1VubYd3j46ZsYpgKhJQmMFuvO1ToUjaiLkpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q8HlChAu; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6bdEUdf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30A7C4CEEA;
-	Wed, 12 Feb 2025 21:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739395318;
-	bh=SDZa3yUm8eMdJ+DopChXzTIddTJbX082smra7ftQugI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f6bdEUdfML2EJLLPqg7oaAXEjreiiaxpuZdeZWIxWkX5BmnlI0Ns759BlRI74/ghp
-	 vlVgph/ATbAjK77TQBzVlecxO6C+iWWMxveBRLtx607UZaZxPtPTghFa2NGlDWHUIB
-	 qcaQUxIFE1+Eopk2tEOQdBGiAnFTTtVcchpWQJI2h87vRfPIlURe3eS+kCY2rZ0sHn
-	 /bLEGnqFEIAdBU3scK7hpgMC7d8tgl8sURqolclfRY/kVirYBXYiIHglR3FIUy4aph
-	 vjLaGBIfbBictiI7k5kzzI9clvUha/7xwGMCLwfsWcNEpNDV9QBnAubXIVDChjE5sE
-	 diLydIzy/k5UQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de5a853090so246596a12.3;
-        Wed, 12 Feb 2025 13:21:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUSLL+Bj6w6DnM0UDHARRwYLc9NUS/hrD7Vx4V6m1acvG3CmMeRWszU36qFPo1LilbxiDc7Q/6XBt4=@vger.kernel.org, AJvYcCVaidkTZgp7Pxs4xQhs/Y8tFLuNPCtDl342BI9VOSWPjW6MoePgoVooJk/JUNLfmeUwbqgAqnJl1u3wsL3q@vger.kernel.org, AJvYcCWYI1CPOt7dTL1U6NUSMn2RQhC6WuFOqZT3NV3aTYf5SZsB03pjydnFFq2VHtIYmc7NHJWWk3wcOZcqFMYd8TYVfA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8M7+kE1HeqV3wiMFw55hNilTYtLD8UyTkzmoplIZoz0lnJm0+
-	dISMTquLq5sADbLiebWRjr80DVgl4ipLsM6YlaaCN58nmwyF+CsPO3qbPzFD0/1ChxM9fyWSfUi
-	eRDR8WIJaa1dfiK1s4oxhDWZeUQ==
-X-Google-Smtp-Source: AGHT+IFzNMN/u5YAaysblVxEg4Q+YFw5JVxdjuFd8OWB8P+QVfyf5SOjL1mYN6bjNAiily+WW5rOwbdgh3DBkVg+tMY=
-X-Received: by 2002:a05:6402:34c3:b0:5dc:c943:7b6 with SMTP id
- 4fb4d7f45d1cf-5deadd7bca4mr4791826a12.3.1739395317322; Wed, 12 Feb 2025
- 13:21:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q8HlChAu"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d18c325ee4so2615ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 13:38:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739396306; x=1740001106; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZYGd3wINgKYYi8KyuxMJe+1xZs2xd7jGE3Yssdq90MA=;
+        b=q8HlChAuCpMt9DJpLd1/8DlnCg/02XiRx/qHkHz+J+7Rll8Na6Szw9kb0DeJWG1pm0
+         y7sQlrR2anDBXpPNJ3r01ak6TtNmU9RwimCrwpFHu0m8yew1Pidk38Cm8kzvUMEh1Xab
+         Fnyos833x90+WktXGr+tIYc1Cd7dViHLD41dTcraXhXKLC5a5dc5dcC1gLhQ2+bUxGo9
+         mAFK71aUAbKZXqTgd0bmMYM2QWzL86Y84ZlrCdv9y4MKc5fNFQzU7s8cBE0W6Y/umjCO
+         znKpAWvMjoKlzSDmiAs/nw9hdLgDofLMYFtIbwC212Z/JN1fcXujT3FXRPyujdEQs04e
+         Lbng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739396306; x=1740001106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZYGd3wINgKYYi8KyuxMJe+1xZs2xd7jGE3Yssdq90MA=;
+        b=G4MnXAQDabg2GpY4vvu7MIFFsA00avWikSSS7ds+f/qV5leSyVeZllTOufPlNFDg7k
+         LFJ1fnPhvJAg+9V/wODpofQkkR+X83fhb+5iEru6nEVju09yD2j9BUIrOh087oEdCkZu
+         moYLtuqTtzxNwAgQyyDqMU7xzHpGUPDha1fYApEV3tuY6glokc4sPokt+yafrv2xHXFg
+         bez6swjHv+faZNUZzhZ9uaEYrMNuGOCkD0lPIEEYCotn2Du6FC8L+RXj7OB6yQc8coaO
+         8Zv3WkIVdzrKV+6srfnfGOAkt9egvXzEm3SmiPqvH7g1Kn9UWUzVAnDDVQgUHlpXPXAU
+         zvPg==
+X-Gm-Message-State: AOJu0YziBojKRw3XNYoyGk21mg6sxGhVTEZINXbaCnJuDIXagwMfeWnl
+	1mEp71dh6iEGLl46sQbTWuxCO9h4O047Ma+/MJPN+ihR1mBtVqt1+YWWitCtZLBjxA8m+z4rUnf
+	KQPjbvc5+6648LpGZexni3NBYV+gW6Xz0W5KI2ZcUddrZzuO2ZDWeMYg=
+X-Gm-Gg: ASbGncvMB+4/LRK6BYmnMV2eRMywzEZBk5RMQHBzqexzl01w9wA/LZqssNW6ky5xiP9
+	VxcTv08/6B4PyJLQFxttVOJ2iSagSB5ZiEY+8ZSe07obS8Ao2IY3jhzRWUSGdzTQVYvdURIEPDK
+	Vfs5f4T7JwuiZLKHGSL3RrnnxN
+X-Google-Smtp-Source: AGHT+IFkHaAQcVKqOrFRwN4yJ80hrx+BfOBW/ZZbRDPmVrhiHFq3FEkfpIAv6+GvNshJQca9GKZuXQBZp2XpA5A94vM=
+X-Received: by 2002:a05:6e02:3b88:b0:3a7:683e:2fb0 with SMTP id
+ e9e14a558f8ab-3d18cc8b9e4mr906985ab.6.1739396305534; Wed, 12 Feb 2025
+ 13:38:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org> <20250212121046.GB235556@e132581.arm.com>
-In-Reply-To: <20250212121046.GB235556@e132581.arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 12 Feb 2025 15:21:46 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK7eBmRKL0AC99hj5AipL4jki5rrhSvbZCbUxa0vnEKMg@mail.gmail.com>
-X-Gm-Features: AWEUYZnpE68nyNL9FKHPUcQGBCYNpGz2uQm3i3tX-PhnGVffxXGKE7Ii1zlyHSc
-Message-ID: <CAL_JsqK7eBmRKL0AC99hj5AipL4jki5rrhSvbZCbUxa0vnEKMg@mail.gmail.com>
-Subject: Re: [PATCH v19 09/11] arm64: Handle BRBE booting requirements
-To: Leo Yan <leo.yan@arm.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvmarm@lists.linux.dev
+References: <20250212122413.1184503-1-james.clark@linaro.org> <CAP-5=fWywDB40-RgV8LaPqsoffOLdDcYkUB_LHoPvV=R8yas4w@mail.gmail.com>
+In-Reply-To: <CAP-5=fWywDB40-RgV8LaPqsoffOLdDcYkUB_LHoPvV=R8yas4w@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Feb 2025 13:38:14 -0800
+X-Gm-Features: AWEUYZkCGNrWwK4dINGEiwu4h9Rf93MQLYg3MnWB9UBrfxF84934Nh0HgkDPrEY
+Message-ID: <CAP-5=fV0rWEL-ewGpoDwaJ3rvbTPXSx0YTuF5p9=6+h5oUhsfg@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Fix non-uniquified hybrid legacy events
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Robin.Murphy@arm.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 6:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+On Wed, Feb 12, 2025 at 9:48=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Sun, Feb 02, 2025 at 06:43:03PM -0600, Rob Herring (Arm) wrote:
+> On Wed, Feb 12, 2025 at 4:24=E2=80=AFAM James Clark <james.clark@linaro.o=
+rg> wrote:
 > >
-> > From: Anshuman Khandual <anshuman.khandual@arm.com>
-> >
-> > To use the Branch Record Buffer Extension (BRBE), some configuration is
-> > necessary at EL3 and EL2. This patch documents the requirements and add=
+> > Legacy hybrid events have attr.type =3D=3D PERF_TYPE_HARDWARE, so they =
+look
+> > like plain legacy events if we only look at attr.type. But legacy event=
 s
-> > the initial EL2 setup code, which largely consists of configuring the
-> > fine-grained traps and initializing a couple of BRBE control registers.
+> > should still be uniquified if they were opened on a non-legacy PMU.
+> > Previously we looked at the PMU type to determine legacy vs hybrid
+> > events here so revert this particular check to how it was before the
+> > linked fixes commit.
 > >
-> > Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
-> > HDFGWTR_EL2 with the same value, relying on the read/write trap control=
-s
-> > for a register occupying the same bit position in either register. The
-> > 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
-> > 59 of HDFGRTR_EL2 is RES0, and so this assumption no longer holds.
->
-> s/HDFGRTR_EL2/HDFGWTR_EL2
->
-> > To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
-> > layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
-> > HDFGWTR_EL2 control bits separately. While making this change the
-> > open-coded value (1 << 62) is replaced with
-> > HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
+> > counter->pmu doesn't need to be null checked twice, in fact it is
+> > required for any kind of uniquification so make that a separate check.
 > >
-> > The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
-> > initialisation: even though they are subject to E2H renaming, both have
-> > an effect regardless of HCR_EL2.TGE, even when running at EL2, and
-> > consequently both need to be initialised. This is handled in
-> > __init_el2_brbe() with a comment to explain the situation.
+> > This restores PMU names on hybrid systems and also changes "perf stat
+> > metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+> > test was gated on "cycles" appearing alone which doesn't happen on
+> > here.
 > >
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Oliver Upton <oliver.upton@linux.dev>
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > [Mark: rewrite commit message, fix typo in comment]
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > Before:
+> >
+> >   $ perf stat -- true
+> >   ...
+> >      <not counted>      instructions:u                           (0.00%=
+)
+> >            162,536      instructions:u            # 0.58  insn per cycl=
+e
+> >   ...
+> >
+> > After:
+> >
+> >  $ perf stat -- true
+> >  ...
+> >      <not counted>      cpu_atom/instructions/u                  (0.00%=
+)
+> >            162,541      cpu_core/instructions/u   # 0.62  insn per cycl=
+e
+> >  ...
+> >
+> > Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+> > Signed-off-by: James Clark <james.clark@linaro.org>
 > > ---
-> >  Documentation/arch/arm64/booting.rst | 21 +++++++++
-> >  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++=
-++++++--
-> >  2 files changed, 104 insertions(+), 3 deletions(-)
+> >  tools/perf/util/stat-display.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/=
-arm64/booting.rst
-> > index cad6fdc96b98..0a421757cacf 100644
-> > --- a/Documentation/arch/arm64/booting.rst
-> > +++ b/Documentation/arch/arm64/booting.rst
-> > @@ -352,6 +352,27 @@ Before jumping into the kernel, the following cond=
-itions must be met:
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
+lay.c
+> > index e65c7e9f15d1..eae34ba95f59 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -1688,12 +1688,17 @@ static void evsel__set_needs_uniquify(struct ev=
+sel *counter, const struct perf_s
+> >                 return;
+> >         }
 > >
-> >      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+> > -       if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.a=
+ttr.type !=3D PERF_TYPE_RAW) {
+> > +       if (!counter->pmu) {
+>
+> Thanks James, I wish I had a hybrid laptop so I didn't keep breaking
+> things like this. I'm uncomfortable using an evsel having/not-having a
+> PMU as an indication of whether uniquification is necessary. It is
+> kind of a side-effect of parsing whether the PMU variable is non-NULL,
+> it'd kind of be nice to stop things using `evsel->pmu` directly and
+> switch them to `evsel__find_pmu(evsel)`, in the future maybe legacy
+> events will get the core PMU, a tracepoint PMU, etc. so we'd never
+> expect this variable to be NULL.
+>
+> Your commit message gives me enough to think about what the issue is,
+> so let me give it some thought.
+
+I wonder we should just hoist the hybrid test earlier:
+```
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.=
+c
+index e65c7e9f15d1..e852ac0d9847 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1688,6 +1688,12 @@ static void evsel__set_needs_uniquify(struct
+evsel *counter, const struct per
+f_s
+               return;
+       }
+
++       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++               /* Unique hybrid counters necessary. */
++               counter->needs_uniquify =3D true;
++               return;
++       }
++
+       if  (counter->core.attr.type < PERF_TYPE_MAX &&
+counter->core.attr.type !=3D PERF_TYPE_RAW) {
+               /* Legacy event, don't uniquify. */
+               return;
+@@ -1705,12 +1711,6 @@ static void evsel__set_needs_uniquify(struct
+evsel *counter, const struct per
+f_s
+               return;
+       }
+
+-       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+-               /* Unique hybrid counters necessary. */
+-               counter->needs_uniquify =3D true;
+-               return;
+-       }
+-
+       /*
+        * Do other non-merged events in the evlist have the same name? If s=
+o
+        * uniquify is necessary.
+
+```
+
+The hybrid test is unfortunately expensive at it needs to search for
+>1 core PMU, which means loading all sysfs PMUs. I think we're already
+paying the cost though.
+
+Could you check this works James?
+
+Thanks,
+Ian
+
+> Thanks!
+> Ian
+>
+> > +               /* evsel__uniquify_counter() uses counter->pmu for the =
+name */
+> > +               return;
+> > +       }
+> > +
+> > +       if (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type !=
+=3D PERF_TYPE_RAW) {
+> >                 /* Legacy event, don't uniquify. */
+> >                 return;
+> >         }
 > >
-> > +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
-> > +
-> > +  - If EL3 is present:
-> > +
-> > +    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
->
-> Can MDCR_EL3.SBRBE be 0b01 ?
-
-Yes, in fact I think that should be required instead. If it is 0b11,
-then recording of secure EL0, EL1, and EL2 would be allowed and
-accessible to non-secure world. Though I suppose EL3 could explicitly
-pause BRBE instead.
-
-> > +
-> > +  - If the kernel is entered at EL1 and EL2 is present:
-> > +
-> > +    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
-> > +    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
->
-> Should clarify BRBCR_EL2.TS to be initialised to 0b00 ?  Arm ARM
-> claims the reset behaviour of the TS field is unknown value.  The
-> assembly code below actually has initializes the TS field as zero.
-
-Humm, we don't currently care what it is initialized to because the
-timestamp is never used. We would care in the future if we use
-timestamps. Will 0b00 be the only correct value? I'm not sure.
-
-> Except the above minor comments, I read the assembly code and it looks
-> good to me:
->
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-Thank you.
-
-Rob
+> > -       if (counter->pmu && counter->pmu->is_core &&
+> > +       if (counter->pmu->is_core &&
+> >             counter->alternate_hw_config !=3D PERF_COUNT_HW_MAX) {
+> >                 /* A sysfs or json event replacing a legacy event, don'=
+t uniquify. */
+> >                 return;
+> > --
+> > 2.34.1
+> >
