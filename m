@@ -1,292 +1,225 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B09F1F76A5;
-	Wed, 12 Feb 2025 18:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B40D25EF81
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 18:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739386355; cv=none; b=Ce5UVO+qooNZbEEkEbZh/gQqJAeecKfPoxJA9lDS2n/RCrptZCpR3DpjrqoQHFNDWL8W/mxnJDfgX1X5GtBSWwni8YAzng+obmLOiJhfbJ9MsIim5ZXO1XPUP9p0/jzUYMl9Fwc/nhUnbIs2sZi7hGf8CS4NdSwBkE/0xETTl9M=
+	t=1739386516; cv=none; b=MLOa7kUnWyHQkSwy4Oicv4U7xG3Fw3XVDjuQ8W8sl27MVpdI+xeBhYTwjS83vjEOM+K27Vo5JFCaxT5pAqBOrMIoM5m/jl00JvfAaSTSWJnVNltUewlvqK+4gdbjiv8pTLr6sFbsEfnAmz4gK4OCBNUdYDqG9djUziA64JOaj2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739386355; c=relaxed/simple;
-	bh=ZQz2wDiHbpxEQ/ba2T+aRTX+dXIYHn4rkX+/YB/MagY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kqs7TVjiUzYqzE8H8xdRsQ1o7Mqt8H/NCb/0cPSgrpnmtFykZi2ANhuFTgFADi0yMAO907MSL47bbw3uJVRumG89VdWJkUUu6Q6BD0OAsK28IpY7mOQx3OgA/xgz48BoJzAHwlnbJUVcXDtTvPYsfWjQXbriQNk5Ls2OYt9GBtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA44E12FC;
-	Wed, 12 Feb 2025 10:52:53 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8007A3F58B;
-	Wed, 12 Feb 2025 10:52:32 -0800 (PST)
-Date: Wed, 12 Feb 2025 18:52:27 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250212185227.GC235556@e132581.arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
+	s=arc-20240116; t=1739386516; c=relaxed/simple;
+	bh=FAUccaaJyMVVcj/Z6D4oVe+lH12VYK8xJUR3YK7D/5k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lPTx3JZgD7KcrsRu4QpfpbtmJHXCoF1axxoU+gqTq/W/SKINuNpHpqki9NOfXYwYqbOk7HBtOMEv/QM18bDI5c6xaveK5YoDkg9kQiXuG8YfL94KeQ6tegSHbRY0z7HjbP3HBCKg9WuhQ70ppAzGRGfSRlOyXu8wUJcyLaO8OpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dSfP+bxc; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dSfP+bxc"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CEMDgP013592;
+	Wed, 12 Feb 2025 18:54:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=hNaASAwSyMz0cHnAmOfiK5nkgAILPIlea5cj1Lx13
+	Hg=; b=dSfP+bxcj9wck3KYOw1Yk1FMUUrLhZ+xZ8WeLoZ39GfXUYTsUZdaiwvt/
+	/7cZTWzjn4ZRIR31eqlQjEwQHs08i7xpdDiNucvn95Pl1jZz6KwcfvcQlRLC6t+h
+	W6dESTryqER6tfnWFR07jGKOftpouNNRmxncZw4RESAqbFPQ7bqypLAyyydbQ14g
+	3QX47tPog6fotohrxtXcgDUSUIVG4MUiFjr9HOy2RMQhPM+JR9lSl5Sr6geB2Osp
+	mCpUf5Mwv3Fhoaa+gIPZZQAKp7e78gToBW5cQtzaOuARe8iOFXfX0QsS/F5TYZrq
+	TM1LHBnZUP4vyKpFjY4J0X9Jgdvog==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rfpa5fd0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 18:54:55 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51CIqHm5023406;
+	Wed, 12 Feb 2025 18:54:54 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44rfpa5fcy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 18:54:54 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51CIct3g028217;
+	Wed, 12 Feb 2025 18:54:53 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyyjgmu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Feb 2025 18:54:53 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51CIsnui32637450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Feb 2025 18:54:49 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72DE420043;
+	Wed, 12 Feb 2025 18:54:49 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F23120040;
+	Wed, 12 Feb 2025 18:54:43 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.61.242.147])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 12 Feb 2025 18:54:42 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
+        Aditya.Bodkhe1@ibm.com
+Subject: [PATCH] tools/perf: Add check to tool pmu tests to ensure if the event is valid
+Date: Thu, 13 Feb 2025 00:24:38 +0530
+Message-Id: <20250212185438.15251-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: laO6AjK1xfUch_gsKFzKR8x3u91gWI5W
+X-Proofpoint-ORIG-GUID: p5ML_pkDheJMdUFJNed9q1JBWNEyZGZi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 clxscore=1015 phishscore=0 impostorscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502120134
 
-On Sun, Feb 02, 2025 at 06:43:05PM -0600, Rob Herring (Arm) wrote:
-> 
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> The ARMv9.2 architecture introduces the optional Branch Record Buffer
-> Extension (BRBE), which records information about branches as they are
-> executed into set of branch record registers. BRBE is similar to x86's
-> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-> (BHRB).
+"Tool PMU" tests fails on powerpc as below:
 
-[...]
+   12.1: Parsing without PMU name:
+   --- start ---
+   test child forked, pid 48492
+   Using CPUID 0x00800200
+   Attempt to add: tool/duration_time/
+   ..after resolving event: tool/config=0x1/
+   duration_time -> tool/duration_time/
+   Attempt to add: tool/user_time/
+   ..after resolving event: tool/config=0x2/
+   user_time -> tool/user_time/
+   Attempt to add: tool/system_time/
+   ..after resolving event: tool/config=0x3/
+   system_time -> tool/system_time/
+   Attempt to add: tool/has_pmem/
+   ..after resolving event: tool/config=0x4/
+   has_pmem -> tool/has_pmem/
+   Attempt to add: tool/num_cores/
+   ..after resolving event: tool/config=0x5/
+   num_cores -> tool/num_cores/
+   Attempt to add: tool/num_cpus/
+   ..after resolving event: tool/config=0x6/
+   num_cpus -> tool/num_cpus/
+   Attempt to add: tool/num_cpus_online/
+   ..after resolving event: tool/config=0x7/
+   num_cpus_online -> tool/num_cpus_online/
+   Attempt to add: tool/num_dies/
+   ..after resolving event: tool/config=0x8/
+   num_dies -> tool/num_dies/
+   Attempt to add: tool/num_packages/
+   ..after resolving event: tool/config=0x9/
+   num_packages -> tool/num_packages/
 
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> new file mode 100644
-> index 000000000000..18eb9bfa1f9c
-> --- /dev/null
-> +++ b/drivers/perf/arm_brbe.c
-> @@ -0,0 +1,794 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Branch Record Buffer Extension Driver.
-> + *
-> + * Copyright (C) 2022-2025 ARM Limited
-> + *
-> + * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-> + */
-> +#include <linux/types.h>
-> +#include <linux/bitmap.h>
-> +#include <linux/perf/arm_pmu.h>
-> +#include "arm_brbe.h"
-> +
-> +#define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
-> +                                  BRBFCR_EL1_INDIRECT | \
-> +                                  BRBFCR_EL1_RTN      | \
-> +                                  BRBFCR_EL1_INDCALL  | \
-> +                                  BRBFCR_EL1_DIRCALL  | \
-> +                                  BRBFCR_EL1_CONDDIR)
-> +
-> +/*
-> + * BRBTS_EL1 is currently not used for branch stack implementation
-> + * purpose but BRBCR_ELx.TS needs to have a valid value from all
-> + * available options. BRBCR_ELx_TS_VIRTUAL is selected for this.
-> + */
-> +#define BRBCR_ELx_DEFAULT_TS      FIELD_PREP(BRBCR_ELx_TS_MASK, BRBCR_ELx_TS_VIRTUAL)
-> +
-> +/*
-> + * BRBE Buffer Organization
-> + *
-> + * BRBE buffer is arranged as multiple banks of 32 branch record
-> + * entries each. An individual branch record in a given bank could
-> + * be accessed, after selecting the bank in BRBFCR_EL1.BANK and
-> + * accessing the registers i.e [BRBSRC, BRBTGT, BRBINF] set with
-> + * indices [0..31].
-> + *
-> + * Bank 0
-> + *
-> + *     ---------------------------------       ------
-> + *     | 00 | BRBSRC | BRBTGT | BRBINF |       | 00 |
-> + *     ---------------------------------       ------
-> + *     | 01 | BRBSRC | BRBTGT | BRBINF |       | 01 |
-> + *     ---------------------------------       ------
-> + *     | .. | BRBSRC | BRBTGT | BRBINF |       | .. |
-> + *     ---------------------------------       ------
-> + *     | 31 | BRBSRC | BRBTGT | BRBINF |       | 31 |
-> + *     ---------------------------------       ------
-> + *
-> + * Bank 1
-> + *
-> + *     ---------------------------------       ------
-> + *     | 32 | BRBSRC | BRBTGT | BRBINF |       | 00 |
-> + *     ---------------------------------       ------
-> + *     | 33 | BRBSRC | BRBTGT | BRBINF |       | 01 |
-> + *     ---------------------------------       ------
-> + *     | .. | BRBSRC | BRBTGT | BRBINF |       | .. |
-> + *     ---------------------------------       ------
-> + *     | 63 | BRBSRC | BRBTGT | BRBINF |       | 31 |
-> + *     ---------------------------------       ------
-> + */
-> +#define BRBE_BANK_MAX_ENTRIES  32
-> +#define BRBE_MAX_BANK          2
-> +#define BRBE_MAX_ENTRIES       (BRBE_BANK_MAX_ENTRIES * BRBE_MAX_BANK)
+   ---- unexpected signal (11) ----
+   12.1: Parsing without PMU name                                      : FAILED!
 
-BRBE_MAX_BANK and BRBE_MAX_ENTRIES are not used.  Should remove them?
+Same fail is observed for "Parsing with PMU name" as well.
 
-> +
-> +struct brbe_regset {
-> +       unsigned long brbsrc;
-> +       unsigned long brbtgt;
-> +       unsigned long brbinf;
+The testcase loops through events in tool_pmu__for_each_event()
+and access event name using "tool_pmu__event_to_str()".
+Here tool_pmu__event_to_str returns null for "slots" event
+and "system_tsc_freq" event. These two events are only applicable
+for arm64 and x86 respectively. So the function tool_pmu__event_to_str()
+skips for unsupported events and returns null. This null value is
+causing testcase fail.
 
-Explicitly define as 'u64' type for 64-bit registers.
+To address this in "Tool PMU" testcase, add a helper function
+tool_pmu__all_event_to_str() which returns the name for all
+events mapping to the tool_pmu_event index including the
+skipped ones. So that even if its a skipped event, the
+helper function helps to resolve the tool_pmu_event index to
+its mapping event name. Update the testcase to check for null event
+names before proceeding the test.
 
-> +};
-> +
-> +#define PERF_BR_ARM64_MAX (PERF_BR_MAX + PERF_BR_NEW_MAX)
-> +
-> +struct brbe_hw_attr {
-> +       int     brbe_version;
-> +       int     brbe_cc;
-> +       int     brbe_nr;
-> +       int     brbe_format;
-> +};
-> +
-> +#define BRBE_REGN_CASE(n, case_macro) \
-> +       case n: case_macro(n); break
-> +
-> +#define BRBE_REGN_SWITCH(x, case_macro)                                \
-> +       do {                                                    \
-> +               switch (x) {                                    \
-> +               BRBE_REGN_CASE(0, case_macro);                  \
-> +               BRBE_REGN_CASE(1, case_macro);                  \
-> +               BRBE_REGN_CASE(2, case_macro);                  \
-> +               BRBE_REGN_CASE(3, case_macro);                  \
-> +               BRBE_REGN_CASE(4, case_macro);                  \
-> +               BRBE_REGN_CASE(5, case_macro);                  \
-> +               BRBE_REGN_CASE(6, case_macro);                  \
-> +               BRBE_REGN_CASE(7, case_macro);                  \
-> +               BRBE_REGN_CASE(8, case_macro);                  \
-> +               BRBE_REGN_CASE(9, case_macro);                  \
-> +               BRBE_REGN_CASE(10, case_macro);                 \
-> +               BRBE_REGN_CASE(11, case_macro);                 \
-> +               BRBE_REGN_CASE(12, case_macro);                 \
-> +               BRBE_REGN_CASE(13, case_macro);                 \
-> +               BRBE_REGN_CASE(14, case_macro);                 \
-> +               BRBE_REGN_CASE(15, case_macro);                 \
-> +               BRBE_REGN_CASE(16, case_macro);                 \
-> +               BRBE_REGN_CASE(17, case_macro);                 \
-> +               BRBE_REGN_CASE(18, case_macro);                 \
-> +               BRBE_REGN_CASE(19, case_macro);                 \
-> +               BRBE_REGN_CASE(20, case_macro);                 \
-> +               BRBE_REGN_CASE(21, case_macro);                 \
-> +               BRBE_REGN_CASE(22, case_macro);                 \
-> +               BRBE_REGN_CASE(23, case_macro);                 \
-> +               BRBE_REGN_CASE(24, case_macro);                 \
-> +               BRBE_REGN_CASE(25, case_macro);                 \
-> +               BRBE_REGN_CASE(26, case_macro);                 \
-> +               BRBE_REGN_CASE(27, case_macro);                 \
-> +               BRBE_REGN_CASE(28, case_macro);                 \
-> +               BRBE_REGN_CASE(29, case_macro);                 \
-> +               BRBE_REGN_CASE(30, case_macro);                 \
-> +               BRBE_REGN_CASE(31, case_macro);                 \
-> +               default: WARN(1, "Invalid BRB* index %d\n", x); \
-> +               }                                               \
-> +       } while (0)
-> +
-> +#define RETURN_READ_BRBSRCN(n) \
-> +       return read_sysreg_s(SYS_BRBSRC_EL1(n))
-> +static inline u64 get_brbsrc_reg(int idx)
-> +{
-> +       BRBE_REGN_SWITCH(idx, RETURN_READ_BRBSRCN);
-> +       return 0;
-> +}
-> +
-> +#define RETURN_READ_BRBTGTN(n) \
-> +       return read_sysreg_s(SYS_BRBTGT_EL1(n))
-> +static u64 get_brbtgt_reg(int idx)
-> +{
-> +       BRBE_REGN_SWITCH(idx, RETURN_READ_BRBTGTN);
-> +       return 0;
-> +}
-> +
-> +#define RETURN_READ_BRBINFN(n) \
-> +       return read_sysreg_s(SYS_BRBINF_EL1(n))
-> +static u64 get_brbinf_reg(int idx)
-> +{
-> +       BRBE_REGN_SWITCH(idx, RETURN_READ_BRBINFN);
-> +       return 0;
-> +}
-> +
-> +static u64 brbe_record_valid(u64 brbinf)
-> +{
-> +       return FIELD_GET(BRBINFx_EL1_VALID_MASK, brbinf);
-> +}
-> +
-> +static bool brbe_invalid(u64 brbinf)
-> +{
-> +       return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_NONE;
-> +}
-> +
-> +static bool brbe_record_is_complete(u64 brbinf)
-> +{
-> +       return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_FULL;
-> +}
-> +
-> +static bool brbe_record_is_source_only(u64 brbinf)
-> +{
-> +       return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_SOURCE;
-> +}
-> +
-> +static bool brbe_record_is_target_only(u64 brbinf)
-> +{
-> +       return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_TARGET;
-> +}
-> +
-> +static int brbinf_get_in_tx(u64 brbinf)
-> +{
-> +       return FIELD_GET(BRBINFx_EL1_T_MASK, brbinf);
-> +}
-> +
-> +static int brbinf_get_mispredict(u64 brbinf)
-> +{
-> +       return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
-> +}
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/tool_pmu.c | 12 ++++++++++++
+ tools/perf/util/tool_pmu.c  | 17 +++++++++++++++++
+ tools/perf/util/tool_pmu.h  |  1 +
+ 3 files changed, 30 insertions(+)
 
-I would expect the naming of brbinf_get_mispredict() will cause
-confusion.  When the function returns 1, it means "Branch was
-incorrectly predicted".
+diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
+index 187942b749b7..e468e5fb3c73 100644
+--- a/tools/perf/tests/tool_pmu.c
++++ b/tools/perf/tests/tool_pmu.c
+@@ -19,6 +19,18 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+ 		return TEST_FAIL;
+ 	}
+ 
++	/*
++	 * if tool_pmu__event_to_str returns NULL, Check if the event is
++	 * valid for the platform.
++	 * Example:
++	 * slots event is only on arm64.
++	 * system_tsc_freq event is only on x86.
++	 */
++	if (!tool_pmu__event_to_str(ev) && tool_pmu__skip_event(tool_pmu__all_event_to_str(ev))) {
++		ret = TEST_OK;
++		goto out;
++	}
++
+ 	if (with_pmu)
+ 		snprintf(str, sizeof(str), "tool/%s/", tool_pmu__event_to_str(ev));
+ 	else
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 3a68debe7143..572422797f6e 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -60,6 +60,15 @@ int tool_pmu__num_skip_events(void)
+ 	return num;
+ }
+ 
++/*
++ * tool_pmu__event_to_str returns only supported event names.
++ * For events which are supposed to be skipped in the platform,
++ * return NULL
++ *
++ * tool_pmu__all_event_to_str returns the name for all
++ * events mapping to the tool_pmu_event index including the
++ * skipped ones.
++ */
+ const char *tool_pmu__event_to_str(enum tool_pmu_event ev)
+ {
+ 	if ((ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX) &&
+@@ -69,6 +78,14 @@ const char *tool_pmu__event_to_str(enum tool_pmu_event ev)
+ 	return NULL;
+ }
+ 
++const char *tool_pmu__all_event_to_str(enum tool_pmu_event ev)
++{
++	if (ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX)
++		return tool_pmu__event_names[ev];
++
++	return NULL;
++}
++
+ enum tool_pmu_event tool_pmu__str_to_event(const char *str)
+ {
+ 	int i;
+diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
+index a60184859080..da76808ae71e 100644
+--- a/tools/perf/util/tool_pmu.h
++++ b/tools/perf/util/tool_pmu.h
+@@ -30,6 +30,7 @@ enum tool_pmu_event {
+ 	for ((ev) = TOOL_PMU__EVENT_DURATION_TIME; (ev) < TOOL_PMU__EVENT_MAX; ev++)
+ 
+ const char *tool_pmu__event_to_str(enum tool_pmu_event ev);
++const char *tool_pmu__all_event_to_str(enum tool_pmu_event ev);
+ enum tool_pmu_event tool_pmu__str_to_event(const char *str);
+ bool tool_pmu__skip_event(const char *name);
+ int tool_pmu__num_skip_events(void);
+-- 
+2.43.5
 
-Maybe consider to use '!FIELD_GET(...)' for a reversed value?
-
-> +
-> +static int brbinf_get_lastfailed(u64 brbinf)
-> +{
-> +       return FIELD_GET(BRBINFx_EL1_LASTFAILED_MASK, brbinf);
-> +}
-> +
-> +static u16 brbinf_get_cycles(u64 brbinf)
-> +{
-> +       u32 exp, mant, cycles;
-> +       /*
-> +        * Captured cycle count is unknown and hence
-> +        * should not be passed on to userspace.
-> +        */
-> +       if (brbinf & BRBINFx_EL1_CCU)
-> +               return 0;
-> +
-> +       exp = FIELD_GET(BRBINFx_EL1_CC_EXP_MASK, brbinf);
-> +       mant = FIELD_GET(BRBINFx_EL1_CC_MANT_MASK, brbinf);
-> +
-> +       if (!exp)
-> +               return mant;
-> +
-> +       cycles = (mant | 0x100) << (exp - 1);
-> +
-> +       return (cycles > U16_MAX) ? U16_MAX : cycles;
-
-min(cycles, (u32)U16_MAX);
-
-Please expect more comments in my tomorrow.
-
-Thanks,
-Leo
