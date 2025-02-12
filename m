@@ -1,67 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987AE1FC0FD;
-	Wed, 12 Feb 2025 19:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC871D5CCC;
+	Wed, 12 Feb 2025 19:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739386810; cv=none; b=hbaEnf+RJ8zFaoYFi1mDcD9yhd1vRmWKvIALj1TWk6+ME/VgyONoafVbrAlAQwk+5aCODT6uVGS2RUNRdNz/v4xz6CWZv2SR/hBZQkYgEVd2ed9mOcS1zc9LULg+a79+DRTxBYET8C1Ct4f4mJmNb4Gma8WLQ9T+iC2Ko1fvQxc=
+	t=1739387860; cv=none; b=sVPpRLa25RTl/1Tzo4xn5KmP/MQjW8kthhVPd8Ju74DOx1fX6V8k0WDykGe86WZzD0D5UusPIpDykwz/7cJ4ESaguV57lvaDQyvj3tYDnBliqP+BhF8dL8coKeZnKHd4iiuiw+T42FX8oQiyV2Pbj0G/W9sCWUK229CoiAaUA0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739386810; c=relaxed/simple;
-	bh=jbZyenDy1ie9/HpamaTs6p37iRE24HZQMtK8SCh2RNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nU6asJx4cxXUtCC4ZYyKi26YDUhdSiAuNvwdczsYqsmWykKnI28CPLeMdoO6Lphuz6sc+SfFIPC5sD8EWpYN7OInU4lh/vIaFB6OwgSKxLW/nKRv7gua8rkUiXaxBzlMKtWczqFcoIdK5wA94Z9YR+5xgwc/aYzZev4MuWti1ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3CD812FC;
-	Wed, 12 Feb 2025 11:00:28 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732B63F58B;
-	Wed, 12 Feb 2025 11:00:07 -0800 (PST)
-Date: Wed, 12 Feb 2025 19:00:05 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250212190005.GD235556@e132581.arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
- <20250212185227.GC235556@e132581.arm.com>
+	s=arc-20240116; t=1739387860; c=relaxed/simple;
+	bh=iDANxj1a8pKBbLBKgMgUAZ8w+gbe0M8ohVrU0JVPfhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uOHq8LgbSXtNp6nXAyIlLtvvLCNuCtuaNMX2GCmUX19ookI1cwNoWICS5U27YRbV4+yTYKd0I8411Wz4Z0x7COaD+O05+tYKZeiuiEuTxc7tdjKZHxoYdB70YTq6Z1trEIC0ETZ271ISPbfZ+9bDMNDy877OyWos/+RLcXxyF9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ule1N44n; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ule1N44n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739387860; x=1770923860;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iDANxj1a8pKBbLBKgMgUAZ8w+gbe0M8ohVrU0JVPfhw=;
+  b=Ule1N44nRszzT+d4ZYy28+uWcUPZLNYDp7ariF2XF4OwGcc143BwzbXj
+   MZVENfbrU2C8VA1eM3kDqmQc0iRayfxc5dMUgbQyfbT5MFU6x003zms8f
+   o1H6NBcHpPzpbvMXkaZMKnx65i+eOj/hlG2GebyNHD1YGFZhZjbk+vFFp
+   dkeCNqHxXZCuYsIPq9XMKs454rnNzEtvI97C6cdBuNecse1cejCtaqPyL
+   3dySNRqYO8nXLfwmiMeVKnRQS8MaCdXCTUl1ms1ef7zwohKpTpIvhuxd0
+   oOJ95yHFPTtTo5XfLbzjc1MKE0W0JTnIod2BNV+q52jTQyjarBK6yogcc
+   A==;
+X-CSE-ConnectionGUID: eIsHsw0ARS2XsWu+hBylTg==
+X-CSE-MsgGUID: r61dNiWmRfumwoifiA1wHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="62531822"
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="62531822"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:17:37 -0800
+X-CSE-ConnectionGUID: LEpZf7YaQqGKUwXn3Le6jg==
+X-CSE-MsgGUID: XJtNep4kQg+2E5IarIu8bg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="112877815"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:17:36 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C77FF20B5713;
+	Wed, 12 Feb 2025 11:17:34 -0800 (PST)
+Message-ID: <b9915fb7-ad8c-40ff-b53a-fb6936c141b1@linux.intel.com>
+Date: Wed, 12 Feb 2025 14:17:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212185227.GC235556@e132581.arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tests: Fix Tool PMU test segfault
+To: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+References: <20250212163859.1489916-1-james.clark@linaro.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250212163859.1489916-1-james.clark@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 12, 2025 at 06:52:27PM +0000, Leo Yan wrote:
 
-[...]
 
-> > +static int brbinf_get_mispredict(u64 brbinf)
-> > +{
-> > +       return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
-> > +}
+On 2025-02-12 11:38 a.m., James Clark wrote:
+> tool_pmu__event_to_str() now handles skipped events by returning NULL,
+> so it's wrong to re-check for a skip on the resulting string. Calling
+> tool_pmu__skip_event() with a NULL string results in a segfault so
+> remove the unnecessary skip to fix it:
 > 
-> I would expect the naming of brbinf_get_mispredict() will cause
-> confusion.  When the function returns 1, it means "Branch was
-> incorrectly predicted".
+>   $ perf test -vv "parsing with PMU name"
 > 
-> Maybe consider to use '!FIELD_GET(...)' for a reversed value?
+>   12.2: Parsing with PMU name:
+>   ...
+>   ---- unexpected signal (11) ----
+>   12.2: Parsing with PMU name         : FAILED!
+> 
 
-Please ignore this comment. Sorry for my misreading and noise.
+Oops, right. Thanks for the fix.
+
+Acked-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> Fixes: ee8aef2d2321 ("perf tools: Add skip check in tool_pmu__event_to_str()")
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> --->  tools/perf/tests/tool_pmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
+> index 187942b749b7..1e900ef92e37 100644
+> --- a/tools/perf/tests/tool_pmu.c
+> +++ b/tools/perf/tests/tool_pmu.c
+> @@ -27,7 +27,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+>  	parse_events_error__init(&err);
+>  	ret = parse_events(evlist, str, &err);
+>  	if (ret) {
+> -		if (tool_pmu__skip_event(tool_pmu__event_to_str(ev))) {
+> +		if (!tool_pmu__event_to_str(ev)) {
+>  			ret = TEST_OK;
+>  			goto out;
+>  		}
+> @@ -59,7 +59,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+>  		}
+>  	}
+>  
+> -	if (!found && !tool_pmu__skip_event(tool_pmu__event_to_str(ev))) {
+> +	if (!found && tool_pmu__event_to_str(ev)) {
+>  		pr_debug("FAILED %s:%d Didn't find tool event '%s' in parsed evsels\n",
+>  			 __FILE__, __LINE__, str);
+>  		ret = TEST_FAIL;
+
