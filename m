@@ -1,146 +1,127 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598E6212B06
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 16:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9D1211A12
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 16:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739376904; cv=none; b=KEcjcl3omGa++cDZ1xqiBWNqo7LsDdPCixFc5X7MCjW2ONjh/UMT5x2zFjcK3IbAvsAP35ESxSUlnSxuK3EoEKtsFoXWekTImlXRNB+rZRIXEy5zvTvlCmEicsDnI+66snEiejfpGLQDA09nRShKKzjQxYIvWmVCsuucSJa2N40=
+	t=1739378367; cv=none; b=qvsGo0HaEUKI9Fv7KKWdZQ+NnU96W/Bk2uT837U+hFt7WR/F/j2cuzc1sdu8qtcLS1TG9+h3M4u10uNBIhnEJdlVmZZzVSiljZZ9Y7YKWMoRx6fEYAzguLJX14xyyGnnIMpMhgvWqcDtTWTwZxqezbatX3VIXBk1eXkhnPaXYLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739376904; c=relaxed/simple;
-	bh=MDqrHIfZj6e7W+JxWMoVUShv7t5v0ULvbo+g0V4L/8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uayIUcMd7ej76JRkDEsxucX1KW74vIRlGV8lKiDcnR0HQ5h+zdSodgg9HySqxo9dpDS5ZkrmzBsxG7uj3orG31bqc3uRKUtGZsZJNceC24D6g6uTtM9GuPoMEw92wwGrAYno5BzkZAhorVYnhOPZjr5HgYEriosQSYcSNegbBes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xDpDGyPn; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739378367; c=relaxed/simple;
+	bh=+eMDq7a1WASW1tK78E/Cqn+dmwMKWRI9Ii6VvIFaW+A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmQqlKae+QYUafHunfzZqwZKIjW+Pq28HhvtKuXJmqhhDwObrmHCYE+Q5boKfiMvNVjfGkxmFo9Ci6sltX3/2904b4xhS7NAdtmKKcRCb/8BJA7l/29Wr9D8pRbt4WYsKTrozPvtDQ9ZWOK1eWe69S4kRhXoSc6FrEr4UFPATJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YUYlGpuP; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xDpDGyPn"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so172555ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 08:15:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YUYlGpuP"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so49424515e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Feb 2025 08:39:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739376900; x=1739981700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wwnDpSs6k4nd6H907qUqxRrSXuSL7kW89rp9oZHglM=;
-        b=xDpDGyPnLGU/0evWCuiehK2YnX7FdmgLUvwoPTxhUM7CtsdEIEKcC2AY9a6vEcyGgI
-         Y2CyWYQmZusUT9acLqGjU9rARMgDqMJZzDCTRYlYf/XeX6nOTECL0/w8dp0d/BF5YKzs
-         kScPSRiqp33ccdbtZRro+ZBRCC8Secesx49wCMLGwxzJapEME9iWf1b81Mdal/ZNQ+kd
-         ofa8h1UVSUn6n6g9H35dpsf/Rq6ICX5lsiG6EZUL9gS3ZPEfZNmmu58IuQDhrIJhcDmX
-         EV14ZkJ2v6CFeaBwA1icBL8IKHGkAc2u/n+ZXswjr6PQ20oT3G0pUz+gjTUELRfgDV45
-         S7cg==
+        d=linaro.org; s=google; t=1739378363; x=1739983163; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HuH5juQfbtVrRriQ2swAO0bGkJ18n/NWAw2oombbKL4=;
+        b=YUYlGpuPIZoMa36IxXhXz7EFjODz9mylITVi9/gj5QVb5wBPTUbpyfzwZ9T8lewvoW
+         ZSTY3ecZ71JOZID9OsE+SL3wybQ6yOnvAK8yhdp/d/OGTUQWDg38NMiDaIE0xZzlCVez
+         xQYaSJXSEtn8gPCtIqZsCh/apTIs0ldo0Tl90yHgO0yNxoEMFe/+HQUC3cJKVRle4Bpf
+         kRU2J1Ba4ik2w3UalQagxXj/wk32tW5gi/vbnDm7elWX8uWapcGHO0VGwS/xP0BLogGZ
+         RxZofNEnpjFL/PguH1MyqRrV5lb35ghT3ZuSI5LMcKFV3Wd0WeTGDvlIsQEJOPM3rx8m
+         yr8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739376900; x=1739981700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wwnDpSs6k4nd6H907qUqxRrSXuSL7kW89rp9oZHglM=;
-        b=MoVdegyDDtb9IXne4LCmKihr0BYe5PkvdMBBBhDOn80gbltK6vSdu2oOtf4LYZaY1a
-         HjP6bZ9fGmRGhPsIW0WO8QLO9k/XIwcokj863E3pFdHpqrIu0O3R/6HLFF/X2EFDCs3X
-         wWmICSHkUSxiesF1KC3DFAOLSEuDM9ia1FAN52IpWq7gFhM7lKKzpxrh6wRPmW1HHrsF
-         lxPGMCpGNyE3ZgXSsIDoN7wAH1iCQlqWlFEIP8wUtSWH2p+EefZpUJYEWgv0O2d++EpF
-         E12m/Te5vUo/kmu5DsKE6gyJ82gx8Xf/ydm2Tj+uiTqI7i48VEOYm7pPgxqK9dgM97Uf
-         6mCw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9PWTrjGCwNMBwAwKKFbIqclwYkbhJdEEx4WnJSSC1gkZQZHJKmp0WSjMUBo1u5FOO2uR0GTpGPS84/1QKSFPk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw4mODLmIsJEeNhj8R3d1id8Cbe0eTZ+wAsFDlz+0qWzZ1nWWL
-	7xgEacAb6arVxCMjjcdt3llvYHj1urx4o6oF/Gx9eefVZxrqU3tuU5UsRyZzKE671t8aVG33D5Z
-	lPOGOSx0VQUGU97TdyYTL8za0Zxtda45PIxGO
-X-Gm-Gg: ASbGncuZTxm2+JLGS1xlgWI/hFqn0oN3HJboiM6nloSN7F+hv9O4Z7Kphsp894qcW1B
-	j7jNyO9VAQHaRmc2fRa6lBEESZwtUZH7SsvTN3nlDi1FMnYjJNuyn6aouMeiuGE6NjPhEA6wc1K
-	vwAzTl/fBinjs8EXfeVIWzBgVp
-X-Google-Smtp-Source: AGHT+IFViHLwQLmi2S4fRUAHfeLMmKJzllXKVBj5UiLdy2wf7Yhu89RSuIkkeynjo+yeyKpP8rOlVPse9pvCr3q/7BU=
-X-Received: by 2002:a92:cd8c:0:b0:3d0:bd4:e46e with SMTP id
- e9e14a558f8ab-3d17cdf7875mr3578465ab.22.1739376900297; Wed, 12 Feb 2025
- 08:15:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739378363; x=1739983163;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HuH5juQfbtVrRriQ2swAO0bGkJ18n/NWAw2oombbKL4=;
+        b=gUAumFnZ/+5dRVjDtpzueMb4nDWFfwPGtlkhuFNspZ2MtKPzwUUNt6SlPv1o5Zdep+
+         A+HZpLqQ7xUt/lKlBLLUmFRHrM1mLPhr4AO9ezt1jyPeUOG5/ZJh8bCnzjM4dT64DMSW
+         BcE/+zhQBLHV7tAJ2Blkz7FvpssCr9FQXf8N/VYZ/8Q+VssNa+3YRICXJJwpv1yY9SHc
+         /10a/RkndYldQl9WPBcGxYJ4Gyb/TL3NsZDhzlr5EIb48LC3McSVNslvEA2q38d5/4pI
+         tVHIzqgl/DM535lz7eEbjVcsKxiNMnxqsQ+VG7nrJjSZkYEG7+NyScMsKKTI8TxLbmIY
+         guVA==
+X-Gm-Message-State: AOJu0YzpDktgGTdvpiKoDLQdU5NbrOdDQ7pmFALDZ2A0Z9zoN348Igp5
+	qsOsSuXISzvx+AQOvzN275gEKUdRVSGX9cdbEfr1ywKKIcnfm8kUOgDwvveq0LD2cybeO5qxnRi
+	IZYg=
+X-Gm-Gg: ASbGncsP/3p8G9f0hI4zZLERWJFDHGSw6hiYF+Tl6210irmcemo7I8689NeVG/pSOiA
+	mgRVReSeqNFYCilJIfUFpUztGehLXIiWWbiBfSoci2KyRzueV0WTNs42WPndZWmQpSNhpG1a/jt
+	amBVcZNw9VGPY+guTQaxfsNinMf3fsTuKo7XHtscnAOrNKl8wh3n4DlApphkj6Qbh41WagdFKPr
+	EiBFsKpzmpd50XFbUXc3YtKznJBBdBtHx3qpDRpfoifNIJkR9QQHjQAfD4aqb2P9+VRbqwTS1DL
+	RYUnz8A2w69W5f0=
+X-Google-Smtp-Source: AGHT+IFQkNgSgj+b+OY+U68LNI2iDcNuJlSGY5kCTa6FX0VTYZQH0d+xekmaicVjKu0OmPPm3D2EZA==
+X-Received: by 2002:a05:600c:3b92:b0:439:35d2:ed1 with SMTP id 5b1f17b1804b1-43958173d7cmr41389945e9.7.1739378363549;
+        Wed, 12 Feb 2025 08:39:23 -0800 (PST)
+Received: from pop-os.. ([145.224.90.174])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a05392csm24519645e9.10.2025.02.12.08.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 08:39:23 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tests: Fix Tool PMU test segfault
+Date: Wed, 12 Feb 2025 16:38:56 +0000
+Message-Id: <20250212163859.1489916-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205121555.180606-1-leo.yan@arm.com> <CAP-5=fUH6X2F5S5eH+iU+-hT0vNvMKPTqbGt=E9W06sG=MzxEg@mail.gmail.com>
- <20250212085439.GA235556@e132581.arm.com>
-In-Reply-To: <20250212085439.GA235556@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Feb 2025 08:14:48 -0800
-X-Gm-Features: AWEUYZmSFu5F2ImV4w6AzGF-ggSlE124u-8a9PvKBUylFvr5MdJbF2XYRhCN5Y4
-Message-ID: <CAP-5=fX6veqJYbTRfOiOqtpg8Dq+m3nZJRd4zEBCZeNiwB5Xpw@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] perf script: Refactor branch flags for Arm SPE
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Graham Woodward <graham.woodward@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 12:54=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> Hi Ian,
->
-> On Tue, Feb 11, 2025 at 02:34:46PM -0800, Ian Rogers wrote:
-> > On Wed, Feb 5, 2025 at 4:16=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
-> > >
-> > > This patch series refactors branch flags for support Arm SPE.  The pa=
-tch
-> > > set is divided into two parts, the first part is for refactoring comm=
-on
-> > > code and the second part is for enabling Arm SPE.
->
-> [...]
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> >
-> > Built and tested (on x86). A little strange patch 5 adds a new bit not
-> > at the end, but "Sample parsing" test wasn't broken so looks like it
-> > is good. I was surprised the use of value in the union:
-> > ```
-> > struct branch_flags {
-> > union {
-> > u64 value;
-> > struct {
-> > u64 mispred:1;
-> > u64 predicted:1;
-> > ...
-> > ```
-> > didn't get broken. Perhaps there's an opportunity for additional tests.
->
-> If the branch stack's flag sticks to a hardware format, then the patch 5
-> is concerned.  My understanding is the branch flag is a synthesized
-> value (see intel_pt_lbr_flags() for x86).  So it is fine for rearrange
-> the bit layout.
->
-> The "Sample parsing" test is for big/little endian test, it does not
-> test for specific bit ordering, this is why the test passes.
->
-> If you think it is safer to move the new added bit at the tail of the
-> bit definitions (just before the 'reserved' field), I can send a new
-> version for this.  Please let me know your preference.
+tool_pmu__event_to_str() now handles skipped events by returning NULL,
+so it's wrong to re-check for a skip on the resulting string. Calling
+tool_pmu__skip_event() with a NULL string results in a segfault so
+remove the unnecessary skip to fix it:
 
-I think it is fine as is. I was worried that because the bit fields
-are checked here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/sample-parsing.c?h=3Dperf-tools-next#n35
-```
-/*
- * Hardcode the expected values for branch_entry flags.
- * These are based on the input value (213) specified
- * in branch_stack variable.
- */
-#define BS_EXPECTED_BE 0xa000d00000000000
-#define BS_EXPECTED_LE 0x1aa00000000
-```
-that the adjustment would break it. But I ran the test and it passed :-)
+  $ perf test -vv "parsing with PMU name"
 
-Thanks,
-Ian
+  12.2: Parsing with PMU name:
+  ...
+  ---- unexpected signal (11) ----
+  12.2: Parsing with PMU name         : FAILED!
 
-> Thanks for review and test!
->
-> Leo
+Fixes: ee8aef2d2321 ("perf tools: Add skip check in tool_pmu__event_to_str()")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/tests/tool_pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
+index 187942b749b7..1e900ef92e37 100644
+--- a/tools/perf/tests/tool_pmu.c
++++ b/tools/perf/tests/tool_pmu.c
+@@ -27,7 +27,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+ 	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, str, &err);
+ 	if (ret) {
+-		if (tool_pmu__skip_event(tool_pmu__event_to_str(ev))) {
++		if (!tool_pmu__event_to_str(ev)) {
+ 			ret = TEST_OK;
+ 			goto out;
+ 		}
+@@ -59,7 +59,7 @@ static int do_test(enum tool_pmu_event ev, bool with_pmu)
+ 		}
+ 	}
+ 
+-	if (!found && !tool_pmu__skip_event(tool_pmu__event_to_str(ev))) {
++	if (!found && tool_pmu__event_to_str(ev)) {
+ 		pr_debug("FAILED %s:%d Didn't find tool event '%s' in parsed evsels\n",
+ 			 __FILE__, __LINE__, str);
+ 		ret = TEST_FAIL;
+-- 
+2.34.1
+
