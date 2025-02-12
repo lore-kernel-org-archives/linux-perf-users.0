@@ -1,93 +1,265 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B411D86DC;
-	Wed, 12 Feb 2025 08:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFBB271822;
+	Wed, 12 Feb 2025 12:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739350493; cv=none; b=pbRXpTgEP7VHKEc7sQNO2jimagaM30+6+OdH4FM9Wt1JxKuhH3EnaJO3fMbvKT4v/cY6vVN2S9puXTW87mpcihQB74aAMPlw4BZNiCz0TDdOTbMBRVTdtpPD/cjSuk+ZO0UvyLf9Iqx9x7NKC027IQokHOTIIQA24XMQ36joGZA=
+	t=1739362254; cv=none; b=jsYgi/V5MBW6iSuCy6GDX/rpRgbXTeET2eo2bS5ZRvTp+9ured2EeD1bxwQnTbTSmb7X2T6K0aOc/mGDum70pptzSHwMRR89y6SVgyhc9pYOP5RgbR8FUNYhkRdHel9xXbLt4Uu4kDdaCw6+AGKvI8xP6m9kQWLU9rMSLE25QJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739350493; c=relaxed/simple;
-	bh=q4qjlXSbEk4GE+l8gdUlOYcqXFlyOKo7nv5rvR/GczM=;
+	s=arc-20240116; t=1739362254; c=relaxed/simple;
+	bh=3cMlbShasNaTjDQlhgec8F70jWl3atG199Ep1PjuelQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=roqs7wnls5MKRf+ABTdtrhmOwGjLGb9oOff6ZiycoTYVYPBYACq/PgIN5DYVe8M4nnrPUZtAArA9y/lFZwl2InDiV7q/RNUmBOuXYQPdvDniXUJ2pOpeE2xF0NwsCUnQNAXe24gw+upngabv2UNgEL/QjFJCg5d6KLDzYQAveX8=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Obuo7pH5UJXPXDkCkCevsgKGxJRW5N4dBzuqHm2v86yzjGlju6rRzoso5E5MotwtDRAea4A9vx6eQir6stWzIMyKlA6j5Yj6q8wm9FJXByqTMNMGD8bFtAuqgmRz3So0SWkme4b+YUyemyiwmVFs5h1dqVReSbUi9hGgME2aMX0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9D0413D5;
-	Wed, 12 Feb 2025 00:55:04 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC7A1113E;
+	Wed, 12 Feb 2025 04:11:12 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6925B3F58B;
-	Wed, 12 Feb 2025 00:54:43 -0800 (PST)
-Date: Wed, 12 Feb 2025 08:54:39 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 399C53F58B;
+	Wed, 12 Feb 2025 04:10:51 -0800 (PST)
+Date: Wed, 12 Feb 2025 12:10:46 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
 	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
-	Graham Woodward <graham.woodward@arm.com>
-Subject: Re: [PATCH v1 00/11] perf script: Refactor branch flags for Arm SPE
-Message-ID: <20250212085439.GA235556@e132581.arm.com>
-References: <20250205121555.180606-1-leo.yan@arm.com>
- <CAP-5=fUH6X2F5S5eH+iU+-hT0vNvMKPTqbGt=E9W06sG=MzxEg@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v19 09/11] arm64: Handle BRBE booting requirements
+Message-ID: <20250212121046.GB235556@e132581.arm.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUH6X2F5S5eH+iU+-hT0vNvMKPTqbGt=E9W06sG=MzxEg@mail.gmail.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-9-1c1300802385@kernel.org>
 
-Hi Ian,
-
-On Tue, Feb 11, 2025 at 02:34:46PM -0800, Ian Rogers wrote:
-> On Wed, Feb 5, 2025 at 4:16 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > This patch series refactors branch flags for support Arm SPE.  The patch
-> > set is divided into two parts, the first part is for refactoring common
-> > code and the second part is for enabling Arm SPE.
-
-[...]
+On Sun, Feb 02, 2025 at 06:43:03PM -0600, Rob Herring (Arm) wrote:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> Built and tested (on x86). A little strange patch 5 adds a new bit not
-> at the end, but "Sample parsing" test wasn't broken so looks like it
-> is good. I was surprised the use of value in the union:
-> ```
-> struct branch_flags {
-> union {
-> u64 value;
-> struct {
-> u64 mispred:1;
-> u64 predicted:1;
-> ...
-> ```
-> didn't get broken. Perhaps there's an opportunity for additional tests.
+> To use the Branch Record Buffer Extension (BRBE), some configuration is
+> necessary at EL3 and EL2. This patch documents the requirements and adds
+> the initial EL2 setup code, which largely consists of configuring the
+> fine-grained traps and initializing a couple of BRBE control registers.
+> 
+> Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
+> HDFGWTR_EL2 with the same value, relying on the read/write trap controls
+> for a register occupying the same bit position in either register. The
+> 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
+> 59 of HDFGRTR_EL2 is RES0, and so this assumption no longer holds.
 
-If the branch stack's flag sticks to a hardware format, then the patch 5
-is concerned.  My understanding is the branch flag is a synthesized
-value (see intel_pt_lbr_flags() for x86).  So it is fine for rearrange
-the bit layout.
+s/HDFGRTR_EL2/HDFGWTR_EL2
 
-The "Sample parsing" test is for big/little endian test, it does not
-test for specific bit ordering, this is why the test passes.
+> To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
+> layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
+> HDFGWTR_EL2 control bits separately. While making this change the
+> open-coded value (1 << 62) is replaced with
+> HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
+> 
+> The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
+> initialisation: even though they are subject to E2H renaming, both have
+> an effect regardless of HCR_EL2.TGE, even when running at EL2, and
+> consequently both need to be initialised. This is handled in
+> __init_el2_brbe() with a comment to explain the situation.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> [Mark: rewrite commit message, fix typo in comment]
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  Documentation/arch/arm64/booting.rst | 21 +++++++++
+>  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
+>  2 files changed, 104 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> index cad6fdc96b98..0a421757cacf 100644
+> --- a/Documentation/arch/arm64/booting.rst
+> +++ b/Documentation/arch/arm64/booting.rst
+> @@ -352,6 +352,27 @@ Before jumping into the kernel, the following conditions must be met:
+> 
+>      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+> 
+> +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
+> +
+> +  - If EL3 is present:
+> +
+> +    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
 
-If you think it is safer to move the new added bit at the tail of the
-bit definitions (just before the 'reserved' field), I can send a new
-version for this.  Please let me know your preference.
+Can MDCR_EL3.SBRBE be 0b01 ?
 
-Thanks for review and test!
+> +
+> +  - If the kernel is entered at EL1 and EL2 is present:
+> +
+> +    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
+> +    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
 
-Leo
+Should clarify BRBCR_EL2.TS to be initialised to 0b00 ?  Arm ARM
+claims the reset behaviour of the TS field is unknown value.  The
+assembly code below actually has initializes the TS field as zero.
+
+Except the above minor comments, I read the assembly code and it looks
+good to me:
+
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+> +
+> +    - HDFGRTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
+> +    - HDFGRTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
+> +    - HDFGRTR_EL2.nBRBIDR  (bit 59) must be initialised to 0b1.
+> +
+> +    - HDFGWTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
+> +    - HDFGWTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
+> +
+> +    - HFGITR_EL2.nBRBIALL (bit 56) must be initialised to 0b1.
+> +    - HFGITR_EL2.nBRBINJ  (bit 55) must be initialised to 0b1.
+> +
+>    For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
+> 
+>    - If EL3 is present:
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index 25e162651750..bf21ce513aff 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -163,6 +163,39 @@
+>  .Lskip_set_cptr_\@:
+>  .endm
+> 
+> +/*
+> + * Configure BRBE to permit recording cycle counts and branch mispredicts.
+> + *
+> + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
+> + * BRBCR_EL1.CC=1.
+> + *
+> + * At any EL, to record branch mispredicts BRBE requires that both
+> + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
+> + *
+> + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
+> + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
+> + *
+> + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
+> + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
+> + * ends up executing in EL1 or EL2.
+> + */
+> +.macro __init_el2_brbe
+> +       mrs     x1, id_aa64dfr0_el1
+> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +       cbz     x1, .Lskip_brbe_\@
+> +
+> +       mov_q   x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
+> +       msr_s   SYS_BRBCR_EL2, x0
+> +
+> +       __check_hvhe .Lset_brbe_nvhe_\@, x1
+> +       msr_s   SYS_BRBCR_EL12, x0      // VHE
+> +       b       .Lskip_brbe_\@
+> +
+> +.Lset_brbe_nvhe_\@:
+> +       msr_s   SYS_BRBCR_EL1, x0       // NVHE
+> +.Lskip_brbe_\@:
+> +.endm
+> +
+>  /* Disable any fine grained traps */
+>  .macro __init_el2_fgt
+>         mrs     x1, id_aa64mmfr0_el1
+> @@ -170,16 +203,48 @@
+>         cbz     x1, .Lskip_fgt_\@
+> 
+>         mov     x0, xzr
+> +       mov     x2, xzr
+>         mrs     x1, id_aa64dfr0_el1
+>         ubfx    x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+>         cmp     x1, #3
+>         b.lt    .Lskip_spe_fgt_\@
+> +
+>         /* Disable PMSNEVFR_EL1 read and write traps */
+> -       orr     x0, x0, #(1 << 62)
+> +       orr     x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
+> +       orr     x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+> 
+>  .Lskip_spe_fgt_\@:
+> +#ifdef CONFIG_ARM64_BRBE
+> +       mrs     x1, id_aa64dfr0_el1
+> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +       cbz     x1, .Lskip_brbe_reg_fgt_\@
+> +
+> +       /*
+> +        * Disable read traps for the following registers
+> +        *
+> +        * [BRBSRC|BRBTGT|RBINF]_EL1
+> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> +        */
+> +       orr     x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
+> +
+> +       /*
+> +        * Disable write traps for the following registers
+> +        *
+> +        * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> +        */
+> +       orr     x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
+> +
+> +       /* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
+> +       orr     x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
+> +       orr     x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
+> +
+> +       /* Disable read traps for BRBIDR_EL1 */
+> +       orr     x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
+> +
+> +.Lskip_brbe_reg_fgt_\@:
+> +#endif /* CONFIG_ARM64_BRBE */
+>         msr_s   SYS_HDFGRTR_EL2, x0
+> -       msr_s   SYS_HDFGWTR_EL2, x0
+> +       msr_s   SYS_HDFGWTR_EL2, x2
+> 
+>         mov     x0, xzr
+>         mrs     x1, id_aa64pfr1_el1
+> @@ -220,7 +285,21 @@
+>  .Lset_fgt_\@:
+>         msr_s   SYS_HFGRTR_EL2, x0
+>         msr_s   SYS_HFGWTR_EL2, x0
+> -       msr_s   SYS_HFGITR_EL2, xzr
+> +       mov     x0, xzr
+> +#ifdef CONFIG_ARM64_BRBE
+> +       mrs     x1, id_aa64dfr0_el1
+> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +       cbz     x1, .Lskip_brbe_insn_fgt_\@
+> +
+> +       /* Disable traps for BRBIALL instruction */
+> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL_MASK
+> +
+> +       /* Disable traps for BRBINJ instruction */
+> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ_MASK
+> +
+> +.Lskip_brbe_insn_fgt_\@:
+> +#endif /* CONFIG_ARM64_BRBE */
+> +       msr_s   SYS_HFGITR_EL2, x0
+> 
+>         mrs     x1, id_aa64pfr0_el1             // AMU traps UNDEF without AMU
+>         ubfx    x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
+> @@ -275,6 +354,7 @@
+>         __init_el2_hcrx
+>         __init_el2_timers
+>         __init_el2_debug
+> +       __init_el2_brbe
+>         __init_el2_lor
+>         __init_el2_stage2
+>         __init_el2_gicv3
+> 
+> --
+> 2.47.2
+> 
+> 
