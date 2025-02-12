@@ -1,252 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75C0201269;
-	Wed, 12 Feb 2025 21:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739394426; cv=none; b=IhHOtgOzfY9Ye6TW/T5WYuf+wbDPKL8jjq7NTQQ3bE1xESxIUciEi4FVlisLNW7gGFCCkVYH/IyP8jSbNKWwCYyoH/pMaLUEtq3TxrnBfWQ9etMm5/AhPyxj0JeNv0pc3J6B0eUyajRhc/COxp8ftWwnkTXnSArvk73MeOQvFdI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739394426; c=relaxed/simple;
-	bh=wocYZo5gW+t7bu0YpWlDKB7vx4UV/EHEFSUdsgZuovw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HubW/E0QHvT4On2M3xIUntG6mEW5pGFE0iIbE3b+nksgFnJVfouQ4xMh7kt0hApWb9jJr2pNTyXzjT7+43lU1xw81mSV1LJ1qr9qfIv/dp5ndq8b0zHTVeNnIz7/qwn5Gva9Y776wolgyTQcJ1BtF3XB8DKPfo0yvD4MWrN75nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLDTVdpf; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0AA1FBC8D;
+	Wed, 12 Feb 2025 21:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739395217; cv=fail; b=V6SLNudNeGEkUGyPDWR11eU/2PKUSHsBAyg6NBRz6ejptR/z7jI7KjfNOnWtSgY1YrlMaZRo1yFyzNFIAnzLKRPU5hdzlENgjhtUnLIKuptUAmwM2h8YqBwxcB28av61peV3Wc//3/9z1PPQaJmCfIqglvZ6TuIztsgcPfFdWqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739395217; c=relaxed/simple;
+	bh=szP2sOZEO/0qJi2QUvElLrNRQuQokfYnJ9Vwm4C5dvM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KoCN0gorXllcKEWMB+AOnWvHceRY0y9hnIK420UA5USMIx1jWZg/W8Da3VWb4Ss3ky6bFRc1PCoAo7Ml8oBLCGqLtrOIc90jGf3mihYSxgEhK0gna4GT97HsXGHzQO73QzSmGWKgix7g6qh7xHDSLW6huaj5m1RO+l4aOKR7BBM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MhAlK7jm; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLDTVdpf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F48C4CEDF;
-	Wed, 12 Feb 2025 21:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739394425;
-	bh=wocYZo5gW+t7bu0YpWlDKB7vx4UV/EHEFSUdsgZuovw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CLDTVdpfedNnAB5ZoigALcQgb1ycOUeCaratiDCaa6pPZKTLri3qgZIPZIXUvHXet
-	 m7d54WRJYjrTKOo1sxK+lvl2KECi/xF1TiMN4hNd57xADkL8aqgI+pgrhWbIFlOzmZ
-	 pOoxdeN6FG8Ib+ReuYGt5NML7tFifhvjRAf07qADr8gHxuMJt+SoZHheVDOU5/OmW8
-	 s745Hj2eaU1KlxoSP9YORkPJCcgEEdnw5WFXYByr28Rvsgd4b4xf5ww8clsjXhuuUC
-	 wHVfy77e9fyOEYFkwuur8qvxLheT9nl7oHTfnwx6soIzgw1Go1A5JjmUqzSzVYeMvL
-	 xeUdVZD/DWqvA==
-Date: Wed, 12 Feb 2025 22:07:02 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z60Ndm8VVI4Ao31U@x1>
-References: <20250206000137.2026034-1-namhyung@kernel.org>
- <Z60NFEAf2C8cL8Xh@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MhAlK7jm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739395216; x=1770931216;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=szP2sOZEO/0qJi2QUvElLrNRQuQokfYnJ9Vwm4C5dvM=;
+  b=MhAlK7jmq8mnycUJa1YEcme8lzLMdk7v8JWhQqRjd751zkN13jnUEuvL
+   62AcO97v6lAfQi+U7YWNoDnl+1yCHsN2VkPSgrN9USlJA4T2GgItFpLMc
+   v03Tk4WV1OQvLDF0s2qxQTp5Vxb5OAU+9up6XnHUOIOFjsanbsEiuAsZI
+   GIVhGqjHbiY+FZJL92/OqPUoZ8hev92d+FlsfeSJCn4cRoP27JNIvUgXs
+   Yfkem8wLMdm2Gk9+hP4Fk1Yb/HLT5OqzbseP6aPE95WnJ1GjgIKieQEBY
+   e9H/80TDyP5ikQq0Omiu02do/8oNVIiXHNNbB29WYRGsNEcpoWs0u7uOf
+   A==;
+X-CSE-ConnectionGUID: /MXIdjozT7+7MZpAn62fdA==
+X-CSE-MsgGUID: 4ZexPsIYTMmJKbA625BA/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40340237"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="40340237"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 13:20:14 -0800
+X-CSE-ConnectionGUID: 5H6IRHxzSRS/yzHDZqbVPA==
+X-CSE-MsgGUID: Bs9vTAcRSFGhtq39UXaH/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="117883941"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 13:20:14 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 12 Feb 2025 13:20:13 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 12 Feb 2025 13:20:13 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 12 Feb 2025 13:19:54 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i0eBXa/7NhIqVHi3GYR8coKFmvphE9ndiyq5RMJFW6/5Qx8+Mrkk2VzXv9AJT8qzwwNRr+/M88srHmd22vDJ9nDBWFKEt+EgMT8QHAkNiMSQNDPgn5suqDXCZLyZ3Aps1qHqM/Gy2B6velijag9HNE0jL99TUWJSLV1WJVA4aVYtAemFWfWI+dSuMIOC9ArvZhhFzEWW8i42504mPPBTrh1PpAEpbSfInlPvp+hJ6hMaPcJ+FIQHBnZ1hOempRjTZuz65C7Ldgf/asSCIKHY4eb+HMtX+bsnG9/lGTZjIahjnznEPU+4c5JPfsVPuMaBSt3AFYm49pCiVrzXdcQtyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AUouwerO+o0mfbEBrQp4b489c8T931iSVsAkK24KMQA=;
+ b=WbXE8uKbc6C/izhvTakaBt+WYz1F6qEuiDIb6HISc3z2vzGUKZu+F0Tz4mBw/QAdq7jFz+gMHHNhoYs6zTZ0CNrBJq9/400peQvkpFDfw35vOJM2q95aF6rmpQKBPzUuBDjXitr00HyKQSyA+Vu+yFQVZbYKTlSgt98zqHVizuKa0OpHM8LqDYzrsNLSLF4TLv0NhEScwjEr41BzOhQC2JfAmRPDgwA7I4HCymE+0koCu+GY1RutG31Cet0E0wwG+VRqMLHYoS0z94tzv4PLG48AJ3Ri0sqBqrBtzI7KDTlv4XmzLKww5U3J8V90gnXS4lbvGIGnkAILDBA9Ee1Mqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by PH0PR11MB4903.namprd11.prod.outlook.com (2603:10b6:510:36::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Wed, 12 Feb
+ 2025 21:19:53 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%6]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
+ 21:19:53 +0000
+Message-ID: <90eb900b-0b75-4c0d-be65-a4357729e5cd@intel.com>
+Date: Wed, 12 Feb 2025 13:19:51 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] x86/cpu/intel: Fix page copy performance for
+ extended Families
+To: Andrew Cooper <andrew.cooper3@citrix.com>, Dave Hansen
+	<dave.hansen@intel.com>, <x86@kernel.org>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Kan Liang" <kan.liang@linux.intel.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin"
+	<hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Viresh Kumar
+	<viresh.kumar@linaro.org>, Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare
+	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui
+	<rui.zhang@intel.com>, David Laight <david.laight.linux@gmail.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-hwmon@vger.kernel.org>
+References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+ <20250211194407.2577252-6-sohil.mehta@intel.com>
+ <b9c21518-54fc-4907-8fc3-d492a3f33bdf@intel.com>
+ <2299c94f-aa46-47b5-bd25-9436a8fbd619@citrix.com>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <2299c94f-aa46-47b5-bd25-9436a8fbd619@citrix.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0290.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::25) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z60NFEAf2C8cL8Xh@x1>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|PH0PR11MB4903:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1cafc9ce-5f84-4a1e-9b13-08dd4baafda6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dGFocGhyOXJRdWNzQmx2WjU4MU92L2twL01FaWEzSnlEdnNlRkhMZGNQdE82?=
+ =?utf-8?B?OXltbVZWaHV1ZmVOSlIyTkVrcU05RC92WElZTDlBR2xzOHZTNkNmNUFxQ2Fp?=
+ =?utf-8?B?L2RvdGlPY2FuSlUrQ0RkWm1OVkdsSEVIWllkKzFwZ05GOFg2TzhYZXc2c3Ro?=
+ =?utf-8?B?aFVZSWJZS2FOdk4vTUNjenBrTWNVYXE4Q3YyaHpTdEZRK05KNHlzcFpBQ3F1?=
+ =?utf-8?B?T3l4M21PODNsRURodUpHSEFPTVlIeUtUMU9PV202M2l6T2lwVXdlRXNHRkN3?=
+ =?utf-8?B?dWxLK1lEK2kxWmI0VUdIamUzMDBzMjJhSmJ5TWVuS2lRV2FDNmRhTFNZbGRF?=
+ =?utf-8?B?YnNnZ1NGcm54SHQ1UW1DbERVdHU2cjdYdzVYamd4akQvNCtBTjRRWHR4bHFF?=
+ =?utf-8?B?b3Zydzh1Qy9XbS83R0h5QWVLbFZSdVZ6Q3FRYzVsVG1jRHFSSmRvVG9pMkJk?=
+ =?utf-8?B?RU9VQ1lMNUtab283ZFV4TGV2VGpUM0hYV3ZtV1dkT2dyZkxtOTdqWmFUSTdM?=
+ =?utf-8?B?VEtKNzluSE1CeS9ZUWJPd1FOYzBpZ0hSR0IzQ25HZ3FocVhIQ2JQOXp1MlZz?=
+ =?utf-8?B?SW5xQlRmTTFzYncrT2VyU2NxemlWcUFYcmZ4NXJ6Smp1NHlzQ0d5T1BST1JV?=
+ =?utf-8?B?VUp2NW92Ykw2aTNUZVc0cE8vaUVrdGx0dnV5MnI3T0pxMjVRdmFwZTExcTgx?=
+ =?utf-8?B?WnNTemkxUlEvZzlzSE5vdzFObXZoY1U4WFVucE5oQTBQZUJucU0zOCs0SVpr?=
+ =?utf-8?B?ZGk0eldEb3ZCYU85QmkyNzRUMmMrdS9Hc1VQMXN3YjhIQ1BZUEhLYnBUdE1x?=
+ =?utf-8?B?dFFDNGtnYmpkdDVkQmE1OFRnS1JXelZRcWdsSnN4WmZ6bHVZdklPelFVZjNw?=
+ =?utf-8?B?N3BNbTJjYWVja0VjS2hlU2pZMVRlcnhzMG9FT0tEbW1XdHM1WExMampuTGFT?=
+ =?utf-8?B?c0YxNTM3Und2c2dFVTVxN3BuTHg1L0VFb0ZoemdIcTVJTnU2dC95Z3YrYjkz?=
+ =?utf-8?B?amt1bHpVeExoOGUrZVJaeDZiaGJWTVM4NHJlTEU4RnhQMGNicjlQNVZ4VEhL?=
+ =?utf-8?B?S28wQktNZ0w3cDBPQS96Q3lueVcwMVNTSkNiR3F5SVp4TFFWZ2lSc0lFZ3BN?=
+ =?utf-8?B?NGZmOHg5eDNyTnYrVG9OKzQvZG04Q1BscG1ETDNDcXFLNWpJVVJPcDV3WVFq?=
+ =?utf-8?B?a0pzWElOTE5BdVdjSkN3RUQ1WU9JUjIrNW1WV2dWQVhZOHpGSklrcTltVnVv?=
+ =?utf-8?B?amhWR2RUdTdqd0JXS1JmbzhKSTlwOXRBSWRZZk9Rakp0bnhKODRPOTlqbnFK?=
+ =?utf-8?B?b0ZoNDRueVdKNlRBc1h4d3ZhNCtZYVpBdzVoMmJvdlNUUU10UHdJM3ZsNVJh?=
+ =?utf-8?B?QVdsTmcvL2RGbFlqMUZsVXVKUC9PTHp6Y3BFNWRKTGh6ZkNWU0VwZGNxN3pZ?=
+ =?utf-8?B?V1ltS1ZCY1FRVXd2Y2ZmdnB5MHBtVy9qNW5kbmNlRGpFK3E4N0hwNWp4U1Jy?=
+ =?utf-8?B?NWllV3lBejYydkFSUllhb0wxekZub1daQStuWC9aZlRlc3pSZ1Y1TW4vVkFL?=
+ =?utf-8?B?SFRtbXI5WnIvWUZQSG1kRWNkRzl3ZnRLV25LQkdhZnJzR2tDZFk5eDV2STFj?=
+ =?utf-8?B?MW9QL0hpaVZ4bWdQOU1SQXdTOHA3RmFxMG5GK3ZYWmFKRlpRdE56ZGZOVnNH?=
+ =?utf-8?B?VWM2ZUhSZDYxeWVkUzB1dExZVWJXU0JuaDJHaUFreUNnSjFIdWtYUDljOVRE?=
+ =?utf-8?B?cksxcE16cHJxWWV2dGlQTFBRdC9xcjVzMHczQms5Mmo5Y0hwZVVJYVlBMzNH?=
+ =?utf-8?B?MGc2T1UrRm8wT09tbG0yeHVybHBMSW1NZjRYbEUzUXZmdkZUVWtOTFpjbi8x?=
+ =?utf-8?Q?lnwehJLWHUAJN?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dVlFM0FXYTJpZjR5WVZ3blVwRWlXdWtnTENIZGVxTytOQ052K2VuYVJxK0cv?=
+ =?utf-8?B?MTZCekNUclZjaGFSWi9KZkR2NlRZaWorVUROckVRREtpdEx3bTRjenhqeUVn?=
+ =?utf-8?B?blQ0eC9zOHY0V1dYbnI0R243c29PKzM1QU44QkxFVGdCNlJVaGdZcGl6QkVN?=
+ =?utf-8?B?VjlWTTdpWU9SMGNDWWwvdG1VMW1OR1dhZldYSHlqanFRVG9kQkkxUWFFVXc5?=
+ =?utf-8?B?ZFM0ek1GM3NybzJiN0pZaDloeDZHTkYvUjlGRFFsbFB5a3c2STg1b2pFRk5l?=
+ =?utf-8?B?d1VXRGtRVlhFYVpzOXFDODR0MFBjeUlQQmZiSUpnOXc4SEJxa0pnSVA3UUls?=
+ =?utf-8?B?N0RqNzdmOUpPSHVrRTlVRjFrR0l5cE15UnZldy9FUmhNNEVMNjRnMmt2RUw0?=
+ =?utf-8?B?WHZ0ci8yWWYzRDhTS05uSk1LN0xpL3hyZ2NPY2FGdzhtTkFyNW5QVlByNy9y?=
+ =?utf-8?B?NjYvazdaZlVpeTU4a045QzBIL1NPaTJIbU1CaGNxdXhPcE9qZmtUc1pPaWdz?=
+ =?utf-8?B?WFU0YkhYQ2pDREZ0dmh1M3F2dUYybTExNXpwcmVOZUF1WURiR2p6Rjc1RnhQ?=
+ =?utf-8?B?QzNaTXh6RFdkUDcvVkEraDY3cnhpQ1BJczMzM0pDOEw1bEEyWmlzVHBPREVj?=
+ =?utf-8?B?c2pnT1l3UjlrZHN1dURQMkhIbk4yZlRRK2xYcW91L29tSGZLR21iM1FHYzFn?=
+ =?utf-8?B?a1B2THZqSnAvYWtqRG12YzY5SkQzZkZrRmtKbS81RFpUTTNjL285TEV5amtV?=
+ =?utf-8?B?dUgyeXI0Q0dUemppT3Bmc05QZU13a1RpeDY4VHBYeEFCaTh4OG96ZHM3Qysr?=
+ =?utf-8?B?Y1o0T2pzZDM5NWhCSTFZWXJ1T2ErY2JFRzRwbTk0WmNSSWNZYUpubDFRR3dM?=
+ =?utf-8?B?OTBYWHg0WmJFL0JycFhzdWF4TUlVVzdWYUh2SkdKRjNXbDhMQlV0dXdYay9B?=
+ =?utf-8?B?L2paSmJxbXlHbWJlRVVETVJkTWY3eFJCellqVTBoaDZNT09KbkxSODVYcFI3?=
+ =?utf-8?B?UmFzMFFVOW9IOWg1NklmeCtKdFBqUHFvT1hKcWRmQk5SeFoxNWNadXJLS0dJ?=
+ =?utf-8?B?MnUrWGh1ZWR0a3UvYzVMTmlTOTREUGRkblpyR1FkOXFYSldUQzg2ZmlwTUVU?=
+ =?utf-8?B?d2NJMlJDUTlMUEdDdjZ4Q1h5SGg4ejU1b0c5R1hocXBzTjdsQUVrNVhWMXh0?=
+ =?utf-8?B?MW80OWY1aGZmVEdtRHI5VTZNVDBqNndydm42K2VlQUFlb1RrU1ptam1LTXIz?=
+ =?utf-8?B?RUYwNzVDUWc2aFhsSkZDME1ua0pWVzRLN20yWEs5SE9XaVdvNThMd1U5bWx2?=
+ =?utf-8?B?MS9sR0Y2WEFRVDJvV2U2cnZ2bWZxTFRPa0VhYTAxMU5SUU5ORDBLQlNTdHov?=
+ =?utf-8?B?c2l3V2FhSnBENlJKSmRpYXJxc3ZjSUcyUWo3NGJEWHVXVWZFS1N6WXNSQTRH?=
+ =?utf-8?B?c2M2KzMzK2J1c2lJSzNOOGVaYWl6NDU5WmhzV2l5bHdRY2NzNHVpVk9HWlpp?=
+ =?utf-8?B?N2VmVzRta1FwMWFiVEVoVlBGRWsxK3FyUStKREI1UGlEeGdnVURCSXhrc0tl?=
+ =?utf-8?B?VUVHVlA0OUtOa0ZyNkZjbm1KOVBVRko2a3JuUEVyODNOTTN0TWxMZDQ3T2o2?=
+ =?utf-8?B?bkV2YytoaTMya251NlZhbitBRnlxbmV6NVR0VEpCWUZGZ3J6TVIrTm1xb0JS?=
+ =?utf-8?B?MzJ5ckxyWjkrODBxTnhuSkNWVGNJSUs5VmowRWZCaVBpbEVuRnF5SmlIMGVC?=
+ =?utf-8?B?WVNsbWp5RGZyeU5STk16UHI3M3NGS0F4VWF2MFJlVGdtSjdPK2FkNzkzczU0?=
+ =?utf-8?B?UFNJdy9zajcwbjczZnJUZkw4R016SU9qc0VnK3I0ejJGcGl5eXVNYTdXZFpw?=
+ =?utf-8?B?Q2ZMOFVidG8wN2tOTkdwcTAvN2svTmZlVnFKT0hZc0lKTWhGZlAxbkFuck9m?=
+ =?utf-8?B?WXJlK0NiWmtwWS9UMGdMMVdTMW01RzlRMkUzN0xBaVh5UjduRWFySHJreXYw?=
+ =?utf-8?B?QjFKeUNGMDUwNEx6ZW5tZ200SE1QYUc2TWtUYmF0QTkzSzhOaGxZdG5pRmY4?=
+ =?utf-8?B?ejRobzBmaGlSOUN0Um8vT3loR0sxZVJLTXdYWWJuM1BtNkRQRDFqWUxkVklQ?=
+ =?utf-8?Q?LoYYmAy0wHy6FQmCt8M/zTe+O?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cafc9ce-5f84-4a1e-9b13-08dd4baafda6
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 21:19:53.0079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mhv0C7OO8bRJafBdFAsDcYqd+sI3AQmwEeS7n0YY/Tufq6f6nP0mdh1nhxg+ni0QdHR7nxCSPSLMKZTeVA/e5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4903
+X-OriginatorOrg: intel.com
 
-On Wed, Feb 12, 2025 at 10:05:27PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Wed, Feb 05, 2025 at 04:01:37PM -0800, Namhyung Kim wrote:
-> > Sometimes we need to analyze the data in process level but current sort
-> > keys only work on thread level.  Let's add 'tgid' sort key for that as
-> > 'pid' is already taken for thread.
-> > 
-> > This will look mostly the same, but it only uses tgid instead of tid.
-> > Here's an example of a process with two threads (thloop).
-> > 
-> >   $ perf record -- perf test -w thloop
-> 
-> Unrelated, but when building perf with DEBUG=1 and trying to test the
-> above I noticed:
-> 
-> root@number:~# perf record -- perf test -w thloop
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.404 MB perf.data (7968 samples) ]
-> perf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-> Aborted (core dumped)
-> root@number:~# perf record -- perf test -w offcpu
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.040 MB perf.data (23 samples) ]
-> perf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-> Aborted (core dumped)
-> root@number:~#
-> 
-> I have:
-> 
-> ⬢ [acme@toolbox perf-tools-next]$ git log --oneline perf-tools-next/perf-tools-next..
-> 9de1ed6fa3b73cb1 (HEAD -> perf-tools-next) perf report: Add 'tgid' sort key
-> 23e98ede2a353530 perf trace: Add --summary-mode option
-> e6d6104625a3790b perf tools: Get rid of now-unused rb_resort.h
-> 173ec14e72ef4ed7 perf trace: Convert syscall_stats to hashmap
-> 66edfb5d404e743d perf trace: Allocate syscall stats only if summary is on
-> ca6637e1ea08e6f4 perf parse-events filter: Use evsel__find_pmu()
-> bd1ac4a678f7f2c8 perf bench evlist-open-close: Reduce scope of 2 variables
-> cd59081880e89df8 perf test: Add direct off-cpu test
-> 56cbd794c0c46ba9 perf record --off-cpu: Add --off-cpu-thresh option
-> 28d9b19c5455556f perf record --off-cpu: Dump the remaining samples in BPF's stack trace map
-> 2bc05b02743b50a7 perf script: Display off-cpu samples correctly
-> bfa457a621596947 perf record --off-cpu: Disable perf_event's callchain collection
-> eca732cc42d20266 perf evsel: Assemble offcpu samples
-> 74ce50e40c569e90 perf record --off-cpu: Dump off-cpu samples in BPF
-> e75f8ce63bfa6cb9 perf record --off-cpu: Preparation of off-cpu BPF program
-> 0ffab9d26971c91c perf record --off-cpu: Parse off-cpu event
-> efc3fe2070853b7d perf evsel: Expose evsel__is_offcpu_event() for future use
-> ⬢ [acme@toolbox perf-tools-next]$
-> 
-> locally, that is the stuff I've been testing lately, doubt it is related
-> to these patches, I'll investigate later, have to go AFK, so FWIW as a
-> heads up.
+On 2/11/2025 4:54 PM, Andrew Cooper wrote:
 
-Had time to extract this, now going really AFK:
-
-[New Thread 0x7fffdf24c6c0 (LWP 580622)]
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.403 MB perf.data (7948 samples) ]
-[Thread 0x7fffdf24c6c0 (LWP 580622) exited]
-perf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-
-Thread 1 "perf" received signal SIGABRT, Aborted.
-Downloading 4.06 K source file /usr/src/debug/glibc-2.39-37.fc40.x86_64/nptl/pthread_kill.c
-__pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44                                                                      
-44	      return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
-(gdb) bt
-#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-#1  0x00007ffff6ea80a3 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:78
-#2  0x00007ffff6e4ef1e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
-#3  0x00007ffff6e36902 in __GI_abort () at abort.c:79
-#4  0x00007ffff6e3681e in __assert_fail_base (fmt=0x7ffff6fc3bb8 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7bef08 "map__end(prev) <= map__end(map)", 
-    file=file@entry=0x7bedf8 "util/maps.c", line=line@entry=95, function=function@entry=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:96
-#5  0x00007ffff6e47047 in __assert_fail (assertion=0x7bef08 "map__end(prev) <= map__end(map)", file=0x7bedf8 "util/maps.c", line=95, 
-    function=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:105
-#6  0x00000000006347a1 in check_invariants (maps=0xf987e0) at util/maps.c:95
-#7  0x0000000000635ae2 in maps__remove (maps=0xf987e0, map=0xf98a80) at util/maps.c:538
-#8  0x000000000062afd2 in machine__destroy_kernel_maps (machine=0xf98178) at util/machine.c:1176
-#9  0x000000000062b32b in machines__destroy_kernel_maps (machines=0xf98178) at util/machine.c:1238
-#10 0x00000000006388af in perf_session__destroy_kernel_maps (session=0xf97f60) at util/session.c:105
-#11 0x0000000000638df0 in perf_session__delete (session=0xf97f60) at util/session.c:248
-#12 0x0000000000431f18 in __cmd_record (rec=0xecace0 <record>, argc=4, argv=0x7fffffffde60) at builtin-record.c:2888
-#13 0x00000000004351fb in cmd_record (argc=4, argv=0x7fffffffde60) at builtin-record.c:4286
-#14 0x00000000004bd4d4 in run_builtin (p=0xecddc0 <commands+288>, argc=6, argv=0x7fffffffde60) at perf.c:351
-#15 0x00000000004bd77b in handle_internal_command (argc=6, argv=0x7fffffffde60) at perf.c:404
-#16 0x00000000004bd8d4 in run_argv (argcp=0x7fffffffdc4c, argv=0x7fffffffdc40) at perf.c:448
-#17 0x00000000004bdc1d in main (argc=6, argv=0x7fffffffde60) at perf.c:556
-(gdb)
- 
-> - Arnaldo
+> If you're going to override the BIOS setting, then you need to
+> explicitly set MSR_MISC_ENABLE.FAST_STRINGS.
 > 
-> >   $ perf report --stdio -s tgid,pid -H
-> >   ...
-> >   #
-> >   #    Overhead  Tgid:Command / Pid:Command
-> >   # ...........  ..........................
-> >   #
-> >      100.00%     2018407:perf
-> >          50.34%     2018407:perf
-> >          49.66%     2018409:perf
-> > 
-> > Suggested-by: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/Documentation/perf-report.txt |  1 +
-> >  tools/perf/util/hist.h                   |  1 +
-> >  tools/perf/util/sort.c                   | 35 ++++++++++++++++++++++++
-> >  tools/perf/util/sort.h                   |  1 +
-> >  4 files changed, 38 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> > index 87f86451940623f3..4050ec4038425bf0 100644
-> > --- a/tools/perf/Documentation/perf-report.txt
-> > +++ b/tools/perf/Documentation/perf-report.txt
-> > @@ -79,6 +79,7 @@ OPTIONS
-> >  
-> >  	- comm: command (name) of the task which can be read via /proc/<pid>/comm
-> >  	- pid: command and tid of the task
-> > +	- tgid: command and tgid of the task
-> >  	- dso: name of library or module executed at the time of sample
-> >  	- dso_size: size of library or module executed at the time of sample
-> >  	- symbol: name of function executed at the time of sample
-> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > index 46c8373e314657fa..c164e178e0a48a8e 100644
-> > --- a/tools/perf/util/hist.h
-> > +++ b/tools/perf/util/hist.h
-> > @@ -38,6 +38,7 @@ enum hist_column {
-> >  	HISTC_TIME,
-> >  	HISTC_DSO,
-> >  	HISTC_THREAD,
-> > +	HISTC_TGID,
-> >  	HISTC_COMM,
-> >  	HISTC_CGROUP_ID,
-> >  	HISTC_CGROUP,
-> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > index 3dd33721823f365d..5987438174967fd6 100644
-> > --- a/tools/perf/util/sort.c
-> > +++ b/tools/perf/util/sort.c
-> > @@ -141,6 +141,40 @@ struct sort_entry sort_thread = {
-> >  	.se_width_idx	= HISTC_THREAD,
-> >  };
-> >  
-> > +/* --sort tgid */
-> > +
-> > +static int64_t
-> > +sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
-> > +{
-> > +	return thread__pid(right->thread) - thread__pid(left->thread);
-> > +}
-> > +
-> > +static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
-> > +				       size_t size, unsigned int width)
-> > +{
-> > +	int tgid = thread__pid(he->thread);
-> > +	const char *comm = NULL;
-> > +
-> > +	if (thread__pid(he->thread) == thread__tid(he->thread)) {
-> > +		comm = thread__comm_str(he->thread);
-> > +	} else {
-> > +		struct maps *maps = thread__maps(he->thread);
-> > +		struct thread *leader = machine__find_thread(maps__machine(maps),
-> > +							     tgid, tgid);
-> > +		if (leader)
-> > +			comm = thread__comm_str(leader);
-> > +	}
-> > +	width = max(7U, width) - 8;
-> > +	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
-> > +}
-> > +
-> > +struct sort_entry sort_tgid = {
-> > +	.se_header	= "   Tgid:Command",
-> > +	.se_cmp		= sort__tgid_cmp,
-> > +	.se_snprintf	= hist_entry__tgid_snprintf,
-> > +	.se_width_idx	= HISTC_TGID,
-> > +};
-> > +
-> >  /* --sort simd */
-> >  
-> >  static int64_t
-> > @@ -2501,6 +2535,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
-> >  
-> >  static struct sort_dimension common_sort_dimensions[] = {
-> >  	DIM(SORT_PID, "pid", sort_thread),
-> > +	DIM(SORT_TGID, "tgid", sort_tgid),
-> >  	DIM(SORT_COMM, "comm", sort_comm),
-> >  	DIM(SORT_DSO, "dso", sort_dso),
-> >  	DIM(SORT_SYM, "symbol", sort_sym),
-> > diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> > index a8572574e1686be6..6044eb1d61447c0d 100644
-> > --- a/tools/perf/util/sort.h
-> > +++ b/tools/perf/util/sort.h
-> > @@ -72,6 +72,7 @@ enum sort_type {
-> >  	SORT_ANNOTATE_DATA_TYPE_OFFSET,
-> >  	SORT_SYM_OFFSET,
-> >  	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
-> > +	SORT_TGID,
-> >  
-> >  	/* branch stack specific sort keys */
-> >  	__SORT_BRANCH_STACK,
-> > -- 
-> > 2.48.1.502.g6dc24dfdaf-goog
+> Otherwise you're claiming to Linux that REP is good even when hardware
+> is prohibited from using optimisations.
+> 
+
+I think the current checks have unnecessary overlap which makes them
+confusing. We should be fine if we only rely on the architectural
+MSR_MISC_ENABLE.FAST_STRINGS bit and rely just on the BIOS setting. My
+justification is below.
+
+The simplified version of the current checks is as follows:
+
+Check 1 (Based on Family Model numbers):
+> /*
+>  * Unconditionally set REP_GOOD on early Family 6 processors
+>  */
+> if (IS_ENABLED(CONFIG_X86_64) &&
+>     (c->x86_vfm >= INTEL_PENTIUM_PRO && c->x86_vfm < INTEL_PENTIUM_M_DOTHAN))
+> 	set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+
+This check is mostly redundant since it is targeted for 64 bit and very
+few if any of those CPUs support 64 bit processing. I suggest that we
+get rid of this check completely. The risk here is fairly limited as well.
+
+Check 2 (Based on MISC_ENABLE.FAST_STRING):
+> /*
+>  * If fast string is not enabled in IA32_MISC_ENABLE for any reason,
+>  * clear the fast string and enhanced fast string CPU capabilities.
+>  */
+> if (c->x86_vfm >= INTEL_PENTIUM_M_DOTHAN) {
+> 	rdmsrl(MSR_IA32_MISC_ENABLE, misc_enable);
+> 	if (misc_enable & MSR_IA32_MISC_ENABLE_FAST_STRING) {
+> 		/* X86_FEATURE_ERMS will be automatically set based on CPUID */
+> 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+> 	} else {
+> 		pr_info("Disabled fast string operations\n");
+> 		setup_clear_cpu_cap(X86_FEATURE_REP_GOOD);
+> 		setup_clear_cpu_cap(X86_FEATURE_ERMS);
+> 	}
+> }
+
+This is the only real check that is needed and should likely suffice in
+all meaningful scenarios.
+
+Comments?
+
+
