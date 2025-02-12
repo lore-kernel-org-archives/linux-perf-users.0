@@ -1,531 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176DA50;
-	Wed, 12 Feb 2025 01:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44F4A50;
+	Wed, 12 Feb 2025 01:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739324758; cv=none; b=jqS1iOAW4yv08ZtYmcu5rkBmE4b19tkquabFXT5Qayj8FEE9n2EYf0nTvdMhE0YHI4n7pol9+nYimoPJwUWHrgVnmZfuSRBTwfG7qM+dJxtGvxjj8+ttDwbxWmb43BIkGSBLG2Xpv11QnnebAUtM2bR849DdKbF9465VY5+GonQ=
+	t=1739324807; cv=none; b=ciBSxGD0lOpGgQAAgsZeA2c4vAv+nvKKmEP01rvDMgbr5c2OjEXFg3yukv+1y3zS5LGc9+2XwM3AmwfWjuj5tI1TutoDUEk1NQzi0R5gG2np8We3FEgoiy8U3BC3P8+THtxp3k4YezLnNWgsaYaKsi24D3CKZHGHgn2bNkc1tW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739324758; c=relaxed/simple;
-	bh=/wrB/IB/ErPpmUc52uvbnwbH5IqnmYRyb1eJF4T7HxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c3xXeG0A0jSXlpO8gSy46Kf8qExCVHXp+fS+oOftCGS+njOg5WGt2vP86cFVxY5n5uapFAwUazN8Xzaikx4vI9SvE2vhjhJHQoX3hMf/xwDa4ULfj2x7DMm/I3DGEI6GkYX495XouSqL80fuI3PoMuaGqdvxV56dsnj5xwIHrO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfUV/Clg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739324807; c=relaxed/simple;
+	bh=PSCzs3ngD+C1yXihEL4cFezGLCaJyzWjlhrxKXNCgrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V595FYSg8xIZybJhU8xAtImPcvtLB7aXjy8PlfQLFblP16G9F4+KXVFMdzFLoDjd89nA07Cs/olNDv7XRckqHhQ2v6e22JKl7IYcoxIexMSJ6vh7MNi3vNd1w6nDtTkraTii+Ro33FRCKtxC0OOFQuQo2YbEtX7UA4+Xdt+AxPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NM59lqKm; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfUV/Clg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4607AC4CEDD;
-	Wed, 12 Feb 2025 01:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739324757;
-	bh=/wrB/IB/ErPpmUc52uvbnwbH5IqnmYRyb1eJF4T7HxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TfUV/Clg/6pcPf/UyV2Ycutj1DE3g2qqktQPR/6/q8/1jtT2w5b7h6Lm59kf547iI
-	 HGKZdFNmrov1hSwstQWOvQ28ltHhWx5jYADTKNBaaGeYx2iNoiXSLOOCBDF8KFxe5D
-	 frrWcDiAbgxnX8WZpxj5XwkUI+UFzF49dB30Ep7ihRWayR/+CGz4Va08BKBT5hZOUv
-	 eOqTbPmBR2v1/IAN8mFFYD6gZH7HsgD6NIwtZ9dRZF01V2x+XcE8wWq6KNAYVhwJCn
-	 BMK4u619bXkKtfEsA0DQVpZ6I4QQ9ZjEHkx5NojktqPaGxZNhoI3O7Ri/POybhkDdT
-	 qYzNLGgECAI/Q==
-Date: Tue, 11 Feb 2025 17:45:54 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] perf lock: Retrieve owner callstack in bpf program
-Message-ID: <Z6v9Up1SRto4N4b7@google.com>
-References: <20250130052510.860318-1-ctshao@google.com>
- <20250130052510.860318-3-ctshao@google.com>
- <Z51hO-0TCmayVc7F@google.com>
- <CAJpZYjVPfWznVm2Zcvk77Np-vfKKNiWH2ipB58QCJ4ZQ6h_afw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM59lqKm"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f44e7eae4so105384935ad.2;
+        Tue, 11 Feb 2025 17:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739324803; x=1739929603; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a1PecfJ/ulEmOVAcJ2BrU2idsARRJ75dqEtuR45WJos=;
+        b=NM59lqKm70LVrrNltM9UP2xw4Hn+I6rN/LaUGueXGidU/eas7CD7MwLkdb7aGuqvfm
+         8eGRv48Y5yb7hKRdEWOKHyRnF1o4HtYulLjUsUBrTx3PvoWOgD7JCPpLvwUbfsGruL65
+         OIgtW/z3wzA4F1qNohxBHaAbt1adDFRCNEFmd3mGe2y7pqElD1abwQBvOGtCDcmqUB1Y
+         fR7HoRfEi6T/XDeu4ncnnmb3wNjGdf2RlBY4/je9qOprfRJ+oMXtSxMb40zlW7lVRKs6
+         rLWVDZM+3czatuAgfsrORH09b+H5Ly/gHQ5FkNO/T0hWDxFCn521QZHbPIXdJXFzKTVs
+         K9DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739324803; x=1739929603;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a1PecfJ/ulEmOVAcJ2BrU2idsARRJ75dqEtuR45WJos=;
+        b=bU71n85bHXEB76ilT7uO0QcY1pjn4OZnoHkzSQdNT1qwidtgOdZw42Ve/K2cBtNHs1
+         pblzD9kxuDrdnDrEpRUXxmUgTmPZtAA+QrH3sCvAXCUJmchi3AUxI7i/vwC6p607HMob
+         7plYFV02LKXWozbiJZ03QuZXqS+Fsu8Tgc7JDaG7pO7Hct1p36WEvWrSag8gNBUa9pDb
+         ky7z/oeAiZV6qwEvJGzxTB2AcRkMXp36iL/5IGMupQ/LvVnBz3xx2dqTq6tyHaKHG4W3
+         y90vjTXNMH3AHJmgeDU95ZIgJo4EvrA/mawW1x0JDN7M7spX28E45m+KOX2Rz/bD0IzQ
+         74Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaO6idz8cPOHnmFWsJXF0ZcOaCCQoQti3kQF5bUcq816afPMgI60kqqYcJ2X0Yp3eXVRnebjI38P1XIkdFYpOVtw==@vger.kernel.org, AJvYcCVyk5ZJ2Gp598qK0DO0MReHi/7BSiA7TVGYz+Z3lKgIeYYJdAyXC8MofJXsMcLkm8+1pT0JQbZTrwdRTxae@vger.kernel.org, AJvYcCXjBsZizoK2hhTr19Q/TSGVnbjBZSoLQRxEcijsPW1mI0dhQOlZJC4Z2OUKNlOvwbujOT3Xk0gIZJrf@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi2YGW8tWyDi8LmFEwrqwDf0MSpt9X6gLX1Pz1vWW6kTFsWVbl
+	sZWTPf7Z6SYjjdOahCUyCCo41kmVDX2I1JSe/b0aZKxikdIcWLFs
+X-Gm-Gg: ASbGncv59UvoVFedp8HaaLp35/P++oujlF/AKBAdmqSiGuFni7NzxDkxZNwCb3AWF0y
+	WsQYxx5fmrn8KMJT2u1urfY10rLRI4tGWZV+cX1gH6B7s1fEBwRSdBDQv3ywgjC1atSezvpIJ9k
+	7L8ET65du1xWjyi2AAHp9fKVKEY1F2OME7SdJ8V8ZxzcEaGkbTQ9vV5yV/ocfbo6sCCsFbrRAiw
+	lTG3gKetFG4DXakvl6TdIsLEesss3Ej7yHCvmNYjGssHWhMiXmTklSm5a+q4Otmz6eyI64ijzVl
+	5xsVroEu7U9hjPCLwtkhvUkgnoDNAko4fkn0aW1JiWfMIKCyHOU=
+X-Google-Smtp-Source: AGHT+IHynglCW7bmaS/rFXo/7iC4aLmIduuaHZeoNU0TbMyLvmCKS9G7NEptuYzgov+wProVrfEplQ==
+X-Received: by 2002:a17:903:234e:b0:216:282d:c69b with SMTP id d9443c01a7336-220bbca3a8dmr19893075ad.50.1739324802807;
+        Tue, 11 Feb 2025 17:46:42 -0800 (PST)
+Received: from [10.89.236.32] (wf126-032.ust.hk. [175.159.126.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687bde1sm102872645ad.195.2025.02.11.17.46.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 17:46:42 -0800 (PST)
+Message-ID: <23db2d80-cfc4-4c15-a4fe-11e677185344@gmail.com>
+Date: Wed, 12 Feb 2025 09:46:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] drivers/perf: apple_m1: Support per-implementation
+ event tables
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com>
+ <20250212-apple-cpmu-v1-2-f8c7f2ac1743@gmail.com>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250212-apple-cpmu-v1-2-f8c7f2ac1743@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJpZYjVPfWznVm2Zcvk77Np-vfKKNiWH2ipB58QCJ4ZQ6h_afw@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 03:26:04PM -0800, Chun-Tse Shao wrote:
-> Hi Namhyung, thanks for your review first!
-> 
-> 
-> On Fri, Jan 31, 2025 at 3:48 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Wed, Jan 29, 2025 at 09:21:36PM -0800, Chun-Tse Shao wrote:
-> > > Tracks lock contention by tracing owner callstacks in
-> > > `contention_begin()` and `contention_end()`, storing data in the
-> > > owner_stat BPF map. `contention_begin()` records the owner and their
-> > > callstack. `contention_end()` updates contention statistics (count,
-> > > time), decrements the waiter count, and removes the record when no
-> > > waiters remain. Statistics are also updated if the owner's callstack
-> > > changes. Note that owner and its callstack retrieval may fail.
-> > >
-> > > To elaborate the process in detail:
-> > >   /*
-> > >    * In `contention_begin(), the current task is the lock waiter`. We
-> > >    * create/update `owner_data` for the given `lock` address.
-> > >   contention_begin() {
-> > >     Try to get owner task. Skip entire process if fails.
-> > >     Try to get owner stack based on task. Use empty stack if fails.
-> > >     Store owner stack into `owner_stacks` and create `stack_id`. If fail
-> > >       to store, use negative `stack_id`, which will be ignored while
-> > >       reporting in usermode.
-> > >     Retrieve `owner_tracing_data` in `owner_data` with given `lock`
-> > >       address.
-> > >
-> > >     /*
-> > >      * The first case means contention just happens, or mismatched owner
-> > >      * infomation so we just drop the previous record.
-> > >      */
-> > >     if (`owner_tracing_data` does not exist ||
-> > >         the recorded owner `pid` does not match with the detected owner) {
-> > >       Create `owner_tracing_data` with info from detected owner, and
-> > >         store it in `owner_data` with key `lock` address.
-> > >     }
-> > >     /*
-> > >      * The second case means contention is on going. One more waiter is
-> > >      * joining the lock contention. Both `owner_data` and `owner_stat`
-> > >      * should be updated.
-> > >      */
-> > >     else {
-> > >       `owner_tracing_data.count`++
-> > >
-> > >       Create `contention_key` with owner `stack_id` and lookup
-> > >         `contention_data` in `owner_stat`.
-> > >       if (`contention_data` does not exist) {
-> > >         Create new entry for `contention_key`:`contention_data` in
-> > >           `owner_stat`.
-> > >       }
-> > >       else {
-> > >         Update the `count` and `total_time` in existing
-> > >         `contention_data`.
-> > >       }
-> > >
-> > >       Update `timestamp` and `stack_id` in `owner_tracing_data`.
-> > >     }
-> > >   }
-> > >
-> > >   /*
-> > >    * In `contention_end()`, the current task will be the new owner of
-> > >    * the `lock`, if `ctx[1]` is not 0.
-> > >    */
-> > >   contention_end() {
-> > >     Lookup `owner_tracing_data` in `owner_data` with key `lock`.
-> > >
-> > >     Create `contention_key` with `owner_tracing_data.stack_id` and
-> > >       lookup `contention_data` in `owner_stat`.
-> > >     if (`contention_data` does not exist) {
-> > >       Create new entry for `contention_key`:`contention_data` in
-> > >         `owner_stat`.
-> > >     }
-> > >     else {
-> > >       Update the `count` and `total_time` in existing `contention_data`.
-> > >     }
-> > >
-> > >     /*
-> > >      * There is no more waiters, contention is over, delete the record.
-> > >      */
-> > >     if (`owner_tracing_data.count` <= 1) {
-> > >       delete this record in `owner_data`.
-> > >     }
-> > >     /*
-> > >      * Contention is still on going.
-> > >      */
-> > >     else {
-> > >       `owner_tracing_data.count`--
-> > >
-> > >       if (`!ctx[0]`) {
-> > >         The current task exits without acquiring the lock. However we
-> > >           check for the recorded owner if the stack is changed, and
-> > >           update `onwer_data` and `owner_stat` accordingly.
-> > >       }
-> > >       else {
-> > >         The current task is the new owner, retrieve its stack, store it
-> > >           in `owner_stack` and update `owner_tracing_data`.
-> > >       }
-> > >     }
-> > >   }
-> >
-> > I think this is too much detail. :)
-> >
-> > I'd say something like this:
-> >
-> > This implements per-callstack aggregation of lock owners in addition to
-> > per-thread.  The owner callstack is captured using bpf_get_task_stack()
-> > at contention_begin and it also adds a custom stackid function for the
-> > owner stacks to be compared easily.
-> >
-> > The owner info is kept in a hash map using lock addr as a key to handle
-> > multiple waiters for the same lock.  At contention_end, it updates the
-> > owner lock stat based on the info that was saved at contention_begin.
-> > If there are more waiters, it'd update the owner pid to itself as
-> > contention_end means it gets the lock now.  But it also needs to check
-> > the return value of the lock function in case task was killed by a signal
-> > or something.
-> >
-> 
-> Thanks, I will just reuse this description. :D
-> 
-> > >
-> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > ---
-> > >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 248 +++++++++++++++++-
-> > >  1 file changed, 247 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > index 23fe9cc980ae..b12df873379f 100644
-> > > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > > @@ -197,6 +197,9 @@ int data_fail;
-> > >  int task_map_full;
-> > >  int data_map_full;
-> > >
-> > > +struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
-> > > +void bpf_task_release(struct task_struct *p) __ksym __weak;
-> > > +
-> > >  static inline __u64 get_current_cgroup_id(void)
-> > >  {
-> > >       struct task_struct *task;
-> > > @@ -420,6 +423,26 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
-> > >       return pelem;
-> > >  }
-> > >
-> > > +static inline s32 get_owner_stack_id(u64 *stacktrace)
-> > > +{
-> > > +     s32 *id, new_id;
-> > > +     static s64 id_gen = 1;
-> > > +
-> > > +     id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-> > > +     if (id)
-> > > +             return *id;
-> > > +
-> > > +     new_id = (s32)__sync_fetch_and_add(&id_gen, 1);
-> > > +
-> > > +     bpf_map_update_elem(&owner_stacks, stacktrace, &new_id, BPF_NOEXIST);
-> > > +
-> > > +     id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
-> > > +     if (id)
-> > > +             return *id;
-> > > +
-> > > +     return -1;
-> > > +}
-> > > +
-> > >  SEC("tp_btf/contention_begin")
-> > >  int contention_begin(u64 *ctx)
-> > >  {
-> > > @@ -437,6 +460,97 @@ int contention_begin(u64 *ctx)
-> > >       pelem->flags = (__u32)ctx[1];
-> > >
-> > >       if (needs_callstack) {
-> > > +             u32 i = 0;
-> > > +             u32 id = 0;
-> > > +             int owner_pid;
-> > > +             u64 *buf;
-> > > +             struct task_struct *task;
-> > > +             struct owner_tracing_data *otdata;
-> > > +
-> > > +             if (!lock_owner)
-> > > +                     goto skip_owner_begin;
-> > > +
-> > > +             task = get_lock_owner(pelem->lock, pelem->flags);
-> > > +             if (!task)
-> > > +                     goto skip_owner_begin;
-> > > +
-> > > +             owner_pid = BPF_CORE_READ(task, pid);
-> > > +
-> > > +             buf = bpf_map_lookup_elem(&stack_buf, &i);
-> > > +             if (!buf)
-> > > +                     goto skip_owner_begin;
-> > > +             for (i = 0; i < max_stack; i++)
-> > > +                     buf[i] = 0x0;
-> > > +
-> > > +             if (bpf_task_from_pid) {
-> >
-> > I think you can do this instead:
-> >
-> >                 if (bpf_task_from_pid == NULL)
-> >                         goto skip_owner_begin;
-> >
-> > nit: it can be just 'skip_owner'. :)
-> >
-> >
-> > > +                     task = bpf_task_from_pid(owner_pid);
-> > > +                     if (task) {
-> > > +                             bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
-> > > +                             bpf_task_release(task);
-> > > +                     }
-> > > +             }
-> > > +
-> > > +             otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-> > > +             id = get_owner_stack_id(buf);
-> > > +
-> > > +             /*
-> > > +              * Contention just happens, or corner case `lock` is owned by process not
-> > > +              * `owner_pid`. For the corner case we treat it as unexpected internal error and
-> > > +              * just ignore the precvious tracing record.
-> > > +              */
-> > > +             if (!otdata || otdata->pid != owner_pid) {
-> > > +                     struct owner_tracing_data first = {
-> > > +                             .pid = owner_pid,
-> > > +                             .timestamp = pelem->timestamp,
-> > > +                             .count = 1,
-> > > +                             .stack_id = id,
-> > > +                     };
-> > > +                     bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
-> > > +             }
-> > > +             /* Contention is ongoing and new waiter joins */
-> > > +             else {
-> > > +                     __sync_fetch_and_add(&otdata->count, 1);
-> > > +
-> > > +                     /*
-> > > +                      * The owner is the same, but stacktrace might be changed. In this case we
-> > > +                      * store/update `owner_stat` based on current owner stack id.
-> > > +                      */
-> > > +                     if (id != otdata->stack_id) {
-> > > +                             u64 duration = otdata->timestamp - pelem->timestamp;
-> >
-> > Isn't it the opposite?
-> >
-> >         u64 duration = pelem->timestamp - otdata->timestamp;
-> >
-> >
-> > > +                             struct contention_key ckey = {
-> > > +                                     .stack_id = id,
-> > > +                                     .pid = 0,
-> > > +                                     .lock_addr_or_cgroup = 0,
-> > > +                             };
-> > > +                             struct contention_data *cdata =
-> > > +                                     bpf_map_lookup_elem(&owner_stat, &ckey);
-> > > +
-> > > +                             if (!cdata) {
-> > > +                                     struct contention_data first = {
-> > > +                                             .total_time = duration,
-> > > +                                             .max_time = duration,
-> > > +                                             .min_time = duration,
-> > > +                                             .count = 1,
-> > > +                                             .flags = pelem->flags,
-> > > +                                     };
-> > > +                                     bpf_map_update_elem(&owner_stat, &ckey, &first,
-> > > +                                                         BPF_NOEXIST);
-> > > +                             } else {
-> > > +                                     __sync_fetch_and_add(&cdata->total_time, duration);
-> > > +                                     __sync_fetch_and_add(&cdata->count, 1);
-> > > +
-> > > +                                     /* FIXME: need atomic operations */
-> > > +                                     if (cdata->max_time < duration)
-> > > +                                             cdata->max_time = duration;
-> > > +                                     if (cdata->min_time > duration)
-> > > +                                             cdata->min_time = duration;
-> > > +                             }
-> >
-> > And as I said before, can we move this block out as a function?
-> >
-> > > +
-> > > +                             otdata->timestamp = pelem->timestamp;
-> > > +                             otdata->stack_id = id;
-> > > +                     }
-> > > +             }
-> > > +skip_owner_begin:
-> > >               pelem->stack_id = bpf_get_stackid(ctx, &stacks,
-> > >                                                 BPF_F_FAST_STACK_CMP | stack_skip);
-> > >               if (pelem->stack_id < 0)
-> > > @@ -473,6 +587,7 @@ int contention_end(u64 *ctx)
-> > >       struct tstamp_data *pelem;
-> > >       struct contention_key key = {};
-> > >       struct contention_data *data;
-> > > +     __u64 timestamp;
-> > >       __u64 duration;
-> > >       bool need_delete = false;
-> > >
-> > > @@ -500,12 +615,143 @@ int contention_end(u64 *ctx)
-> > >               need_delete = true;
-> > >       }
-> > >
-> > > -     duration = bpf_ktime_get_ns() - pelem->timestamp;
-> > > +     timestamp = bpf_ktime_get_ns();
-> > > +     duration = timestamp - pelem->timestamp;
-> > >       if ((__s64)duration < 0) {
-> > >               __sync_fetch_and_add(&time_fail, 1);
-> > >               goto out;
-> > >       }
-> > >
-> > > +     if (needs_callstack && lock_owner) {
-> > > +             u64 owner_time;
-> > > +             struct contention_key ckey = {};
-> > > +             struct contention_data *cdata;
-> > > +             struct owner_tracing_data *otdata;
-> > > +
-> > > +             otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
-> > > +             if (!otdata)
-> > > +                     goto skip_owner_end;
-> > > +
-> > > +             /* Update `owner_stat` */
-> > > +             owner_time = timestamp - otdata->timestamp;
-> > > +             ckey.stack_id = otdata->stack_id;
-> > > +             cdata = bpf_map_lookup_elem(&owner_stat, &ckey);
-> > > +
-> > > +             if (!cdata) {
-> > > +                     struct contention_data first = {
-> > > +                             .total_time = owner_time,
-> > > +                             .max_time = owner_time,
-> > > +                             .min_time = owner_time,
-> > > +                             .count = 1,
-> > > +                             .flags = pelem->flags,
-> > > +                     };
-> > > +                     bpf_map_update_elem(&owner_stat, &ckey, &first, BPF_NOEXIST);
-> > > +             } else {
-> > > +                     __sync_fetch_and_add(&cdata->total_time, owner_time);
-> > > +                     __sync_fetch_and_add(&cdata->count, 1);
-> > > +
-> > > +                     /* FIXME: need atomic operations */
-> > > +                     if (cdata->max_time < owner_time)
-> > > +                             cdata->max_time = owner_time;
-> > > +                     if (cdata->min_time > owner_time)
-> > > +                             cdata->min_time = owner_time;
-> > > +             }
-> > > +
-> > > +             /* No contention is occurring, delete `lock` entry in `owner_data` */
-> > > +             if (otdata->count <= 1)
-> > > +                     bpf_map_delete_elem(&owner_data, &pelem->lock);
-> > > +             /*
-> > > +              * Contention is still ongoing, with a new owner (current task). `owner_data`
-> > > +              * should be updated accordingly.
-> > > +              */
-> > > +             else {
-> > > +                     u32 i = 0;
-> > > +                     u64 *buf;
-> > > +
-> > > +                     __sync_fetch_and_add(&otdata->count, -1);
-> > > +
-> > > +                     buf = bpf_map_lookup_elem(&stack_buf, &i);
-> > > +                     if (!buf)
-> > > +                             goto skip_owner_end;
-> > > +                     for (i = 0; i < (u32)max_stack; i++)
-> > > +                             buf[i] = 0x0;
-> > > +
-> > > +                     /*
-> > > +                      * ctx[1] has the return code of the lock function.
-> >
-> > Then I think it's clearer to have a local variable named 'ret' or so.
-> >
-> >
-> > > +                      * If ctx[1] is not 0, the current task terminates lock waiting without
-> > > +                      * acquiring it. Owner is not changed, but we still need to update the owner
-> > > +                      * stack.
-> > > +                      */
-> > > +                     if (!ctx[1]) {
-> >
-> > This doesn't match to the comment.  It should be:
-> >
-> >                         if (ret < 0) {
-> >
-> >
-> > > +                             s32 id = 0;
-> > > +                             struct task_struct *task = NULL;
-> > > +
-> > > +                             if (bpf_task_from_pid)
-> >
-> > Same as the above.  No need to go down if you cannot get the task and
-> > stack.
-> >
-> >                                 if (bpf_task_from_pid == NULL)
-> >                                         goto skip_owner;
-> >
-> >
-> > > +                                     task = bpf_task_from_pid(otdata->pid);
-> > > +
-> > > +                             if (task) {
-> > > +                                     bpf_get_task_stack(task, buf,
-> > > +                                                        max_stack * sizeof(unsigned long), 0);
-> > > +                                     bpf_task_release(task);
-> > > +                             }
-> > > +
-> > > +                             id = get_owner_stack_id(buf);
-> > > +
-> > > +                             /*
-> > > +                              * If owner stack is changed, update `owner_data` and `owner_stat`
-> > > +                              * accordingly.
-> > > +                              */
-> > > +                             if (id != otdata->stack_id) {
-> > > +                                     u64 duration = otdata->timestamp - pelem->timestamp;
-> > > +                                     struct contention_key ckey = {
-> > > +                                             .stack_id = id,
-> > > +                                             .pid = 0,
-> > > +                                             .lock_addr_or_cgroup = 0,
-> > > +                                     };
-> > > +                                     struct contention_data *cdata =
-> > > +                                             bpf_map_lookup_elem(&owner_stat, &ckey);
-> > > +
-> > > +                                     if (!cdata) {
-> > > +                                             struct contention_data first = {
-> > > +                                                     .total_time = duration,
-> > > +                                                     .max_time = duration,
-> > > +                                                     .min_time = duration,
-> > > +                                                     .count = 1,
-> > > +                                                     .flags = pelem->flags,
-> > > +                                             };
-> > > +                                             bpf_map_update_elem(&owner_stat, &ckey, &first,
-> > > +                                                                 BPF_NOEXIST);
-> > > +                                     } else {
-> > > +                                             __sync_fetch_and_add(&cdata->total_time, duration);
-> > > +                                             __sync_fetch_and_add(&cdata->count, 1);
-> > > +
-> > > +                                             /* FIXME: need atomic operations */
-> > > +                                             if (cdata->max_time < duration)
-> > > +                                                     cdata->max_time = duration;
-> > > +                                             if (cdata->min_time > duration)
-> > > +                                                     cdata->min_time = duration;
-> > > +                                     }
-> > > +
-> > > +                                     otdata->timestamp = pelem->timestamp;
-> > > +                                     otdata->stack_id = id;
-> > > +                             }
-> > > +                     }
-> > > +                     /*
-> > > +                      * If ctx[1] is 0, then update tracinng data with the current task, which is
-> > > +                      * the new owner.
-> > > +                      */
-> > > +                     else {
-> > > +                             otdata->pid = pid;
-> > > +                             otdata->timestamp = timestamp;
-> > > +
-> > > +                             bpf_get_task_stack(bpf_get_current_task_btf(), buf,
-> > > +                                                max_stack * sizeof(unsigned long), 0);
-> >
-> > This would be meaningless since it's still in the contention path.
-> > Current callstack will be the same as the waiter callstack.  You'd
-> > better just invalidate callstack here and let the next waiter update
-> > it.
-> 
-> I wonder why this is meaningless. In this situation, the lock owner is
-> transferred to the current task, and there is at least one more
-> waiter, the contention is still ongoing. `otdata` is for tracing the
-> lock owner, so it should be correctly updated with the new owner,
-> which is the current task.
 
-Yep, but I meant it has the same callstack as with waiters and provides
-no additional information about the owner.
+Nick Chan 於 2025/2/12 凌晨12:07 寫道:
+> Use per-implementation event tables to allow supporting implementations
+> with a different list of events and event affinities.
+>
+> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+> ---
+>  drivers/perf/apple_m1_cpu_pmu.c | 65 +++++++++++++++++++++++++----------------
+>  1 file changed, 40 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+> index 06fd317529fcbab0f1485228efe8470be565407c..1bf7ce5c09846c699d66bdfcca129f418a9dad9e 100644
+> --- a/drivers/perf/apple_m1_cpu_pmu.c
+> +++ b/drivers/perf/apple_m1_cpu_pmu.c
+[...]
+>  static void m1_pmu_reset(void *info)
+> @@ -572,25 +588,16 @@ static int m1_pmu_set_event_filter(struct hw_perf_event *event,
+>  	return 0;
+>  }
+>  
+> -static int m1_pmu_init(struct arm_pmu *cpu_pmu, u32 flags)
+> +static int apple_pmu_init_common(struct arm_pmu *cpu_pmu, u32 flags)
+>  {
+>  	cpu_pmu->handle_irq	  = m1_pmu_handle_irq;
+>  	cpu_pmu->enable		  = m1_pmu_enable_event;
+>  	cpu_pmu->disable	  = m1_pmu_disable_event;
+>  	cpu_pmu->read_counter	  = m1_pmu_read_counter;
+>  	cpu_pmu->write_counter	  = m1_pmu_write_counter;
+> -	cpu_pmu->get_event_idx	  = m1_pmu_get_event_idx;
+>  	cpu_pmu->clear_event_idx  = m1_pmu_clear_event_idx;
+>  	cpu_pmu->start		  = m1_pmu_start;
+>  	cpu_pmu->stop		  = m1_pmu_stop;
+> -
+> -	if (flags & ARMPMU_EVT_47BIT)
+> -		cpu_pmu->map_event = m1_pmu_map_event;
+> -	else if (flags & ARMPMU_EVT_63BIT)
+> -		cpu_pmu->map_event = m2_pmu_map_event;
+> -	else
+> -		return WARN_ON(-EINVAL);
+> -
+>  	cpu_pmu->reset		  = m1_pmu_reset;
+>  	cpu_pmu->set_event_filter = m1_pmu_set_event_filter;
 
-Thanks,
-Namhyung
+[...]
 
-> >
-> > > +                             otdata->stack_id = get_owner_stack_id(buf);
-> > > +                     }
-> > > +             }
-> > > +     }
-> > > +skip_owner_end:
-> > > +
-> > >       switch (aggr_mode) {
-> > >       case LOCK_AGGR_CALLER:
-> > >               key.stack_id = pelem->stack_id;
-> > > --
-> > > 2.48.1.362.g079036d154-goog
-> > >
+The flags parameter is no longer used, so I will send a v2 with the parameter dropped.
+
+Nick Chan
+
