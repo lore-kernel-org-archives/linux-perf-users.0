@@ -1,48 +1,48 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE72645
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 15:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6BA26B0B5
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 15:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739459580; cv=none; b=czt4GdlhgYGum0BZeShxSc1ydWNsr73q2HJuteZGPxzHqcrDqCDp2EQfXYz5zOO1VlSTee9wfXAfL6TUINDY0OIFe7cuUMCNXJIA5AZ4HFS9+28je0uk7No2gmS/WpOVoQFixNQcRHN+5YzwCDmJM3YPOXlD9sJHEGbIBcbOtkA=
+	t=1739459601; cv=none; b=kOfgA1B9UVBjsszKGKoamFn+iqr0UcsXSz6k3AhDlETlcfa1qfBZiiPfGxZjW8Fi9zDD8z/4R2G1Zq8zmQD1ciDg7hXHPszDNk/7117k89qv2yFUZgKnKi5Ls9lF5vGHCvGdRBei54KFdj7oCGSWg3M00kriJXvVy0+Oj9C9dio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739459580; c=relaxed/simple;
-	bh=2jcKfs8j2570hfqmJFobbtJr+YFiijx6fS5+6LD050o=;
+	s=arc-20240116; t=1739459601; c=relaxed/simple;
+	bh=75WtKV97demkDyvVvsBSVI/sHIJRofn2uIxOHJA6Cfk=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=dvT00uW/hc0zCRt8oQL5TmmHJ6wUb1TCvYnAYmFsD7OPgMGBbDugtG7H1t/Q+4VNTDdis7BifjAzUIM7MpIDm4bHgpaR/xP2FN6DjMmI0Of9bqJudfHu8n44jW4j4USfPCs1jF1ijgIOTD+c0zbHrwc5fGbdZXg/ZpruVM+f33E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=RwWb1wN1; arc=none smtp.client-ip=203.205.221.202
+	 MIME-Version; b=u4cdQam14Pt66WyOdDNYGVBnAyU1Q/ETQVdnnLYPcPyOg8bzy5m1KbhrMCuG+VSfm2uZQ5kNlWsXOH8SlEkFKjIMmiD0gXfbNx0+XnfXxe5oz6AllmfVuWgkeS0Ae156oEPLkKLgA4L/joN/olJYasRtGmmiecO7yh3ykryRnvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=I3u6SAEi; arc=none smtp.client-ip=203.205.221.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="RwWb1wN1"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="I3u6SAEi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739459564; bh=U37SpgKCfAQXTOl9oGsbvq6Zo2b4aluskpRdxYnCskE=;
+	t=1739459582; bh=Nzt2vQH7DSa3tUtAyFdTa0J3/Ncy+l1J5I0wQF068Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RwWb1wN1vp/tid0PisEYue1mRPojFuTaLlyZo7v+OAP8O9oKyYOR8mTYU+HW6QF1j
-	 7Cg+zyt/5I39jjODB/mS32gjjV2n+ubb3Ev8kPVRcFVkdLhhf+IRgKqhyW+ccpMAad
-	 PuYeeY2BFeIZPTWAbMznNdipLYcJ9ICxT7s7Juf0=
+	b=I3u6SAEitu8khPZyov+B8skt7/J2vohZ1W50RWKfNoqlAZXPToST5ftKny/AyhZWN
+	 +QiY7z4Qe0JLi6DFPFxAX9IovKqAD8Sm4XOCrVoCn8I+idViAZPEP4U3W46Gu1EOtJ
+	 t8atP3YHrE8eexCrcUBax9Babi/aUwCEqKOKEa8Y=
 Received: from cyy-pc.lan ([240e:379:2251:3600:f57b:26f9:9718:486c])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 3212741D; Thu, 13 Feb 2025 23:12:33 +0800
-X-QQ-mid: xmsmtpt1739459553t5bpdbvqy
-Message-ID: <tencent_0434DA8D8E21B8C4318A213C8D6B7CC08208@qq.com>
-X-QQ-XMAILINFO: NnIX2CK8LSsJ3nFwDszqQ65PatHZarqNE0mnYsZsqegbGZxPt75uhFbjNEJ9u4
-	 Cox/zl30YWP1PXQZdh/tHMM1D+EmgORCQvbsbRYVXdHZYOLo3g80Jc1rckUcHPM54LMNBfJjxlvw
-	 ecw6YIYZdlBaSBT/siR+8+ZEzv16r/rYQQIUgik86Jtdr0j4pNgedMfVpFDoM9OzfpH/cqnYH6Ft
-	 iYtWU6p4ErA7f6KSTU0/+glN626I8JlEu046Pm4aMJA/KOkPa5uu3ZQUNWS5+/r3Fl3SDCLcTjNb
-	 EKbcArcEHOu1/JbjWhhDI81/VzWsQJ7Ifd0s96PWOn08bnJIQeLvM/q+lud7RACo7xYLJ/CySKvX
-	 IdItbCFSfDKhCYP4hCzQ1dmUlj9DTDnH7EJz3G/+VwFOklhD9f52pGdxhu3fwRSfmCw5ov+EstVE
-	 vOQRJjnp1WIZIVh/wuinmeuG+adKoks2EZN6QAEUnLJdVqRqrxlU0b87vdipl0xnf1LRULxQIybV
-	 Q+ivDM/QA1Xkq6ffVQZKJLyVdz6FWoFHw89iwJZj97lEFi9jT55kmENXsrajTgk7sqKFJg78vlsK
-	 aduYgdl8kHveBgBCyJj8lrtzV+LPorL4oEzahKa6xsbTMDXVeu75h204ae7IFjX79GKrVJBATaqX
-	 IiG/zhbxxKvgAwigMQcGBCC0mn+ISgSGYTDysjLblqpQLIrMXWC9LTqSGCc67QrtSwOQKbgU/wKe
-	 5dzODMn1JxU+OfAj1Co5PvIS/Z44YAO6Y/4VlrLRcrMykVjPZStLmeY86tj/XASCvpxFmJlgyFpW
-	 s72S9EnYdeDuKx3uS5sYqIvOa6KjeWFMeyPTYr2L1eluSYOXIpgzjcd5+wZupd1+paguIbbqCv2v
-	 EE7SgDPV6MB4T04a2+62sCYUMP3BT7YtjJqKnj/RUlSAPeAk7zunUJi3/CZ5KKWgc6G4jlPFF8aw
-	 YY15TJ/p+Lnv6IVCuHR0oYknbLl95Iv8/3RhXpkAvOHMNRdj+JWW3EhyXpLVwfrMTbXUPsFlArO+
-	 wRWMwEXg==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 338A58E8; Thu, 13 Feb 2025 23:12:56 +0800
+X-QQ-mid: xmsmtpt1739459576tgw6byg21
+Message-ID: <tencent_E5686B3956E04AC548862C35FAF03909E20A@qq.com>
+X-QQ-XMAILINFO: OIJV+wUmQOUAhsKvSrCboBKxoZ5TS2wuovy/4FSdvWKxhHFyehT7Mwr6nb1BVM
+	 UGsdKQjSd1PANX6UJ+LvUiaI5Ve38sAMRV1nELAOdZKCXB6HAc2aJLpa3qdYAUZ+3/huaJiMNQY8
+	 CIFAF/EDJGU+39weutf9O5zhpL9MGQPCzhDuPlBc9OSSicHrtM+0A67bIzNIHgCnJmYQM5Xu6h3O
+	 c4lv7B5uUt5uoeT6EWnncKgZt8gSyh5W2Vqqw36qFp3hfGwNKn9PgsptjFsYkzUD7d3ffqwC5bu/
+	 YKsYanM1qbZSVtfFgfCSGaSgDqpm5/jImpQk0IWI+ekCSpqyrTUJ+jEF38KzpFsUjwvYlVk5Xih4
+	 VQ276N6xp80lUbBuEorLanWDG3nPmtlHPWBimaoUe/x5p5TGPKIVzgwaZQ2MHWXrCu75B7tJmGb3
+	 uOJGJaHtgkRSnVcNWIKo/+bbLP2/0B2CrtcbMcWmRc3UfzNo4UXwJ6+FQ/RzwJ9pzrwdc00+G+eZ
+	 3UBg/ONATwEN0AHv92nZPp54K0N7bHljJOVVEy3cRng5lUbkSn4VYnncL/OugO72pd7Ki1zUSBOI
+	 sU0+4+Y0b7sWTnNScFfBt/iaNXuRJiY52Hw5HY7SzSixEppM2gTsKfbBTDkVzHoTcAmInwxu2bdJ
+	 R1EnHIKts4WWRvngj1ljy+YRkL+7bN5mLZSkDvsMRvM+yipn0RTQQvlIYlOJfChPMK83AiksDLXo
+	 cwKdPqct8AA6B8iWtmBUBO+s/YukeH8e+3Pu9qvkkJwHj6wCFoYTqql7WdqXZrcimzlc+92aIoEa
+	 3QqVBkMQHANBhzN1STF4uSzOslw8eVfnKnhUoq/lMRx9nP1JGm0q5UBfq5OQACzrDprS1lmDkVYv
+	 bQMLfTjgdvjoXOMJphY6fhE4fOWRYAYZvIHoe86+niC1JQkE2Odp4mCzftSFwKYotQR7GLp2brry
+	 tNr8QZtLugy3M1MoACDtsNOeweUhRzdHQrT5n6nLf4VBJOk8aR9yGjB6II1U/gv09rqjOXlXF2b2
+	 1XAwWUFg/TcwzR/mrNJjU6dtlPrzNvjPlkKqhMS8yEjF3sSVWQ
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-perf-users@vger.kernel.org
 Cc: John Garry <john.g.garry@oracle.com>,
@@ -64,9 +64,9 @@ Cc: John Garry <john.g.garry@oracle.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH 1/2] perf vendor events arm64: Add Cortex-A720 events/metrics
-Date: Thu, 13 Feb 2025 23:12:25 +0800
-X-OQ-MSGID: <20250213151226.187205-1-cyy@cyyself.name>
+Subject: [PATCH 2/2] perf vendor events arm64: Add Cortex-A520 events/metrics
+Date: Thu, 13 Feb 2025 23:12:52 +0800
+X-OQ-MSGID: <20250213151252.187475-1-cyy@cyyself.name>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
 References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
@@ -78,63 +78,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add JSON files for Cortex-A720 events and metrics. Using the existing
+Add JSON files for Cortex-A520 events and metrics. Using the existing
 Neoverse N3 JSON files as a template, I manually checked the missing and
 extra events/metrics using my script [1] and modified them according to
-the Arm Cortex-A720 Core Technical Reference Manual [2].
+the Arm Cortex-A520 Core Technical Reference Manual [2].
 
 [1] https://github.com/cyyself/arm-pmu-check/tree/1075bebeb3f1441067448251a387df35af15bf16
-[2] https://developer.arm.com/documentation/102530/0002/Performance-Monitors-Extension-support-/Performance-monitors-events
+[2] https://developer.arm.com/documentation/102517/0004/Performance-Monitors-Extension-support-/Performance-monitors-events/Common-event-PMU-events
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 ---
- .../arch/arm64/arm/cortex-a720/bus.json       |  18 +
- .../arch/arm64/arm/cortex-a720/exception.json |  62 +++
- .../arm64/arm/cortex-a720/fp_operation.json   |  22 +
- .../arch/arm64/arm/cortex-a720/general.json   |  10 +
- .../arch/arm64/arm/cortex-a720/l1d_cache.json |  50 ++
- .../arch/arm64/arm/cortex-a720/l1i_cache.json |  14 +
- .../arch/arm64/arm/cortex-a720/l2_cache.json  |  62 +++
- .../arch/arm64/arm/cortex-a720/l3_cache.json  |  22 +
- .../arch/arm64/arm/cortex-a720/ll_cache.json  |  10 +
- .../arch/arm64/arm/cortex-a720/memory.json    |  54 +++
- .../arch/arm64/arm/cortex-a720/metrics.json   | 436 ++++++++++++++++++
- .../arch/arm64/arm/cortex-a720/pmu.json       |   8 +
- .../arch/arm64/arm/cortex-a720/retired.json   |  90 ++++
- .../arch/arm64/arm/cortex-a720/spe.json       |  42 ++
- .../arm64/arm/cortex-a720/spec_operation.json |  90 ++++
- .../arch/arm64/arm/cortex-a720/stall.json     |  82 ++++
- .../arch/arm64/arm/cortex-a720/sve.json       |  50 ++
- .../arch/arm64/arm/cortex-a720/tlb.json       |  74 +++
- .../arch/arm64/arm/cortex-a720/trace.json     |  32 ++
+ .../arch/arm64/arm/cortex-a520/bus.json       |  26 ++
+ .../arch/arm64/arm/cortex-a520/exception.json |  18 +
+ .../arm64/arm/cortex-a520/fp_operation.json   |  14 +
+ .../arch/arm64/arm/cortex-a520/general.json   |   6 +
+ .../arch/arm64/arm/cortex-a520/l1d_cache.json |  50 +++
+ .../arch/arm64/arm/cortex-a520/l1i_cache.json |  14 +
+ .../arch/arm64/arm/cortex-a520/l2_cache.json  |  46 +++
+ .../arch/arm64/arm/cortex-a520/l3_cache.json  |  21 +
+ .../arch/arm64/arm/cortex-a520/ll_cache.json  |  10 +
+ .../arch/arm64/arm/cortex-a520/memory.json    |  58 +++
+ .../arch/arm64/arm/cortex-a520/metrics.json   | 373 ++++++++++++++++++
+ .../arch/arm64/arm/cortex-a520/pmu.json       |   8 +
+ .../arch/arm64/arm/cortex-a520/retired.json   |  90 +++++
+ .../arm64/arm/cortex-a520/spec_operation.json |  70 ++++
+ .../arch/arm64/arm/cortex-a520/stall.json     |  82 ++++
+ .../arch/arm64/arm/cortex-a520/sve.json       |  22 ++
+ .../arch/arm64/arm/cortex-a520/tlb.json       |  78 ++++
+ .../arch/arm64/arm/cortex-a520/trace.json     |  32 ++
+ .../arch/arm64/common-and-microarch.json      |  15 +
  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
- 20 files changed, 1229 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
+ 20 files changed, 1034 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
 new file mode 100644
-index 000000000000..2e11a8c4a484
+index 000000000000..884e42ab6a49
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
-@@ -0,0 +1,18 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
+@@ -0,0 +1,26 @@
 +[
 +    {
 +        "ArchStdEvent": "BUS_ACCESS",
@@ -151,14 +150,22 @@ index 000000000000..2e11a8c4a484
 +    {
 +        "ArchStdEvent": "BUS_ACCESS_WR",
 +        "PublicDescription": "Counts memory write transactions seen on the external bus. Each beat of data is counted individually."
++    },
++    {
++        "ArchStdEvent": "BUS_REQ_RD_PERCYC",
++        "PublicDescription": "Bus read transactions in progress."
++    },
++    {
++        "ArchStdEvent": "BUS_REQ_RD",
++        "BriefDescription": "Bus request, read"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
 new file mode 100644
-index 000000000000..7126fbf292e0
+index 000000000000..fbe580e15c2e
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
-@@ -0,0 +1,62 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
+@@ -0,0 +1,18 @@
 +[
 +    {
 +        "ArchStdEvent": "EXC_TAKEN",
@@ -169,64 +176,20 @@ index 000000000000..7126fbf292e0
 +        "PublicDescription": "Counts any architecturally executed exception return instructions. For example: AArch64: ERET"
 +    },
 +    {
-+        "ArchStdEvent": "EXC_UNDEF",
-+        "PublicDescription": "Counts the number of synchronous exceptions which are taken locally that are due to attempting to execute an instruction that is UNDEFINED. Attempting to execute instruction bit patterns that have not been allocated. Attempting to execute instructions when they are disabled. Attempting to execute instructions at an inappropriate Exception level. Attempting to execute an instruction when the value of PSTATE.IL is 1."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SVC",
-+        "PublicDescription": "Counts SVC exceptions taken locally."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_PABORT",
-+        "PublicDescription": "Counts synchronous exceptions that are taken locally and caused by Instruction Aborts."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_DABORT",
-+        "PublicDescription": "Counts exceptions that are taken locally and are caused by data aborts or SErrors. Conditions that could cause those exceptions are attempting to read or write memory where the MMU generates a fault, attempting to read or write memory with a misaligned address, interrupts from the nSEI inputs and internally generated SErrors."
-+    },
-+    {
 +        "ArchStdEvent": "EXC_IRQ",
 +        "PublicDescription": "Counts IRQ exceptions including the virtual IRQs that are taken locally."
 +    },
 +    {
 +        "ArchStdEvent": "EXC_FIQ",
 +        "PublicDescription": "Counts FIQ exceptions including the virtual FIQs that are taken locally."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SMC",
-+        "PublicDescription": "Counts SMC exceptions take to EL3."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_HVC",
-+        "PublicDescription": "Counts HVC exceptions taken to EL2."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_PABORT",
-+        "PublicDescription": "Counts exceptions which are traps not taken locally and are caused by Instruction Aborts. For example, attempting to execute an instruction with a misaligned PC."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_DABORT",
-+        "PublicDescription": "Counts exceptions which are traps not taken locally and are caused by Data Aborts or SError interrupts. Conditions that could cause those exceptions are:\n\n1. Attempting to read or write memory where the MMU generates a fault,\n2. Attempting to read or write memory with a misaligned address,\n3. Interrupts from the SEI input.\n4. internally generated SErrors."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_OTHER",
-+        "PublicDescription": "Counts the number of synchronous trap exceptions which are not taken locally and are not SVC, SMC, HVC, data aborts, Instruction Aborts, or interrupts."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_IRQ",
-+        "PublicDescription": "Counts IRQ exceptions including the virtual IRQs that are not taken locally."
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_FIQ",
-+        "PublicDescription": "Counts FIQs which are not taken locally but taken from EL0, EL1,\n or EL2 to EL3 (which would be the normal behavior for FIQs when not executing\n in EL3)."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
 new file mode 100644
-index 000000000000..cec3435ac766
+index 000000000000..da0c4b05ad5b
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
-@@ -0,0 +1,22 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
+@@ -0,0 +1,14 @@
 +[
 +    {
 +        "ArchStdEvent": "FP_HP_SPEC",
@@ -239,37 +202,25 @@ index 000000000000..cec3435ac766
 +    {
 +        "ArchStdEvent": "FP_DP_SPEC",
 +        "PublicDescription": "Counts speculatively executed double precision floating point operations."
-+    },
-+    {
-+        "ArchStdEvent": "FP_SCALE_OPS_SPEC",
-+        "PublicDescription": "Counts speculatively executed scalable single precision floating point operations."
-+    },
-+    {
-+        "ArchStdEvent": "FP_FIXED_OPS_SPEC",
-+        "PublicDescription": "Counts speculatively executed non-scalable single precision floating point operations."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
 new file mode 100644
-index 000000000000..c5dcdcf43c58
+index 000000000000..20fada95ef97
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
-@@ -0,0 +1,10 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
+@@ -0,0 +1,6 @@
 +[
 +    {
 +        "ArchStdEvent": "CPU_CYCLES",
 +        "PublicDescription": "Counts CPU clock cycles (not timer cycles). The clock measured by this event is defined as the physical clock driving the CPU logic."
-+    },
-+    {
-+        "ArchStdEvent": "CNT_CYCLES",
-+        "PublicDescription": "Increments at a constant frequency equal to the rate of increment of the System Counter, CNTPCT_EL0."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
 new file mode 100644
-index 000000000000..a6fee569f4c6
+index 000000000000..90e871c8986a
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
 @@ -0,0 +1,50 @@
 +[
 +    {
@@ -297,6 +248,14 @@ index 000000000000..a6fee569f4c6
 +        "PublicDescription": "Counts level 1 data cache accesses generated by store operations. This event also counts accesses caused by a DC ZVA (data cache zero, specified by virtual address) instruction. Near atomic operations that resolve in the CPUs caches count as a write access and read access."
 +    },
 +    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++        "PublicDescription": "Counts level 1 data cache refills caused by speculatively executed load instructions where the memory read operation misses in the level 1 data cache. This event only counts one event per cache line."
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++        "PublicDescription": "Counts level 1 data cache refills caused by speculatively executed store instructions where the memory write operation misses in the level 1 data cache. This event only counts one event per cache line."
++    },
++    {
 +        "ArchStdEvent": "L1D_CACHE_REFILL_INNER",
 +        "PublicDescription": "Counts level 1 data cache refills where the cache line data came from caches inside the immediate cluster of the core."
 +    },
@@ -305,27 +264,19 @@ index 000000000000..a6fee569f4c6
 +        "PublicDescription": "Counts level 1 data cache refills for which the cache line data came from outside the immediate cluster of the core, like an SLC in the system interconnect or DRAM."
 +    },
 +    {
-+        "ArchStdEvent": "L1D_CACHE_INVAL",
-+        "PublicDescription": "Counts each explicit invalidation of a cache line in the level 1 data cache caused by:\n\n- Cache Maintenance Operations (CMO) that operate by a virtual address.\n- Broadcast cache coherency operations from another CPU in the system.\n\nThis event does not count for the following conditions:\n\n1. A cache refill invalidates a cache line.\n2. A CMO which is executed on that CPU and invalidates a cache line specified by set/way.\n\nNote that CMOs that operate by set/way cannot be broadcast from one CPU to another."
++        "ArchStdEvent": "L1D_CACHE_HWPRF",
++        "PublicDescription": "Counts level 1 data cache accesses from any load/store operations generated by the hardware prefetcher."
 +    },
 +    {
-+        "ArchStdEvent": "L1D_CACHE_RW",
-+        "PublicDescription": "Counts level 1 data demand cache accesses from any load or store operation. Near atomic operations that resolve in the CPUs caches counts as both a write access and read access."
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_PRF",
-+        "BriefDescription": "This event counts fetch counted by either Level 1 data hardware prefetch or Level 1 data software prefetch."
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_PRF",
-+        "BriefDescription": "This event counts hardware prefetch counted by L1D_CACHE_PRF that causes a refill of the Level 1 data cache from outside of the Level 1 data cache."
++        "ArchStdEvent": "L1D_CACHE_REFILL_HWPRF",
++        "PublicDescription": "Counts level 1 data cache refills where the cache line is requested by a hardware prefetcher."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
 new file mode 100644
 index 000000000000..633f1030359d
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
 @@ -0,0 +1,14 @@
 +[
 +    {
@@ -341,12 +292,12 @@ index 000000000000..633f1030359d
 +        "PublicDescription": "Counts cache line refills into the level 1 instruction cache, that incurred additional latency."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
 new file mode 100644
-index 000000000000..3806fef42b30
+index 000000000000..9874b1a7c94b
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
-@@ -0,0 +1,62 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
+@@ -0,0 +1,46 @@
 +[
 +    {
 +        "ArchStdEvent": "L2D_CACHE",
@@ -381,49 +332,25 @@ index 000000000000..3806fef42b30
 +        "PublicDescription": "Counts refills for memory accesses due to memory write operation counted by L2D_CACHE_WR. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
-+        "PublicDescription": "Counts evictions from the level 2 cache because of a line being allocated into the L2 cache."
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
-+        "PublicDescription": "Counts write-backs from the level 2 cache that are a result of either:\n\n1. Cache maintenance operations,\n\n2. Snoop responses or,\n\n3. Direct cache transfers to another CPU due to a forwarding snoop request."
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_INVAL",
-+        "PublicDescription": "Counts each explicit invalidation of a cache line in the level 2 cache by cache maintenance operations that operate by a virtual address, or by external coherency operations. This event does not count if either:\n\n1. A cache refill invalidates a cache line or,\n2. A Cache Maintenance Operation (CMO), which invalidates a cache line specified by set/way, is executed on that CPU.\n\nCMOs that operate by set/way cannot be broadcast from one CPU to another."
-+    },
-+    {
 +        "ArchStdEvent": "L2D_CACHE_LMISS_RD",
 +        "PublicDescription": "Counts cache line refills into the level 2 unified cache from any memory read operations that incurred additional latency."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_RW",
-+        "PublicDescription": "Counts level 2 cache demand accesses from any load/store operations. Level 2 cache is a unified cache for data and instruction accesses, accesses are for misses in the level 1 data cache or translation resolutions due to accesses."
++        "ArchStdEvent": "L2D_CACHE_HWPRF",
++        "PublicDescription": "Counts level 2 data cache accesses generated by L2D hardware prefetchers."
 +    },
 +    {
-+        "ArchStdEvent": "L2D_CACHE_PRF",
-+        "PublicDescription": "Counts level 2 data cache accesses from software preload or prefetch instructions or hardware prefetcher."
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_PRF",
-+        "PublicDescription": "Counts refills due to accesses generated as a result of prefetches."
++        "ArchStdEvent": "L2D_CACHE_REFILL_HWPRF",
++        "BriefDescription": "This event counts hardware prefetch counted by L2D_CACHE_HWPRF that causes a refill of the Level 2 cache, or any Level 1 data and instruction cache of this PE, from outside of those caches."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
 new file mode 100644
-index 000000000000..4a2e72fc5ada
+index 000000000000..d5485d71babb
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
-@@ -0,0 +1,22 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
+@@ -0,0 +1,21 @@
 +[
-+    {
-+        "ArchStdEvent": "L3D_CACHE_ALLOCATE",
-+        "PublicDescription": "Counts level 3 cache line allocates that do not fetch data from outside the level 3 data or unified cache. For example, allocates due to streaming stores."
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_REFILL",
-+        "PublicDescription": "Counts level 3 accesses that receive data from outside the L3 cache."
-+    },
 +    {
 +        "ArchStdEvent": "L3D_CACHE",
 +        "PublicDescription": "Counts level 3 cache accesses. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
@@ -433,15 +360,22 @@ index 000000000000..4a2e72fc5ada
 +        "PublicDescription": "Counts level 3 cache accesses caused by any memory read operation. Level 3 cache is a unified cache for data and instruction accesses. Accesses are for misses in the lower level caches or translation resolutions due to accesses."
 +    },
 +    {
++        "ArchStdEvent": "L3D_CACHE_REFILL_RD"
++    },
++    {
 +        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
 +        "PublicDescription": "Counts any cache line refill into the level 3 cache from memory read operations that incurred additional latency."
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_HWPRF",
++        "PublicDescription": "Level 3 data cache hardware prefetch."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
 new file mode 100644
 index 000000000000..fd5a2e0099b8
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
 @@ -0,0 +1,10 @@
 +[
 +    {
@@ -453,20 +387,24 @@ index 000000000000..fd5a2e0099b8
 +        "PublicDescription": "Counts read transactions that were returned from outside the core cluster but missed in the system level cache. This event counts for external last level cache when the system register CPUECTLR.EXTLLC bit is set, otherwise it counts for L3 cache. This event counts read transactions returned from outside the core if those transactions are missed in the System level Cache. The data source of the transaction is indicated by a field in the CHI transaction returning to the CPU. This event does not count reads caused by cache maintenance operations."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
 new file mode 100644
-index 000000000000..f19204a5faae
+index 000000000000..e7f7914ecd2b
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
-@@ -0,0 +1,54 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
+@@ -0,0 +1,58 @@
 +[
 +    {
 +        "ArchStdEvent": "MEM_ACCESS",
 +        "PublicDescription": "Counts memory accesses issued by the CPU load store unit, where those accesses are issued due to load or store operations. This event counts memory accesses no matter whether the data is received from any level of cache hierarchy or external memory. If memory accesses are broken up into smaller transactions than what were specified in the load or store instructions, then the event counts those smaller memory transactions."
 +    },
 +    {
-+        "ArchStdEvent": "REMOTE_ACCESS",
-+        "PublicDescription": "Counts accesses to another chip, which is implemented as a different CMN mesh in the system. If the CHI bus response back to the core indicates that the data source is from another chip (mesh), then the counter is updated. If no data is returned, even if the system snoops another chip/mesh, then the counter is not updated."
++        "ArchStdEvent": "MEMORY_ERROR",
++        "PublicDescription": "Counts any detected correctable or uncorrectable physical memory errors (ECC or parity) in protected CPUs RAMs. On the core, this event counts errors in the caches (including data and tag rams). Any detected memory error (from either a speculative and abandoned access, or an architecturally executed access) is counted. Note that errors are only detected when the actual protected memory is accessed by an operation."
++    },
++    {
++        "ArchStdEvent": "REMOTE_ACCESS_RD",
++        "PublicDescription": "Counts memory access to another socket in a multi-socket system, read."
 +    },
 +    {
 +        "ArchStdEvent": "MEM_ACCESS_RD",
@@ -513,12 +451,12 @@ index 000000000000..f19204a5faae
 +        "PublicDescription": "Counts Instruction memory accesses that the PE makes."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
 new file mode 100644
-index 000000000000..d8e8b5155cfa
+index 000000000000..62cb910c8945
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
-@@ -0,0 +1,436 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
+@@ -0,0 +1,373 @@
 +[
 +    {
 +        "ArchStdEvent": "backend_bound"
@@ -541,20 +479,6 @@ index 000000000000..d8e8b5155cfa
 +        "MetricName": "backend_cache_l2d_bound",
 +        "MetricExpr": "STALL_BACKEND_MEM / (STALL_BACKEND_L1D + STALL_BACKEND_MEM) * 100",
 +        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to memory access latency issues caused by level 2 data cache misses.",
-+        "MetricGroup": "Topdown_Backend",
-+        "ScaleUnit": "1percent of cycles"
-+    },
-+    {
-+        "MetricName": "backend_core_bound",
-+        "MetricExpr": "STALL_BACKEND_CPUBOUND / STALL_BACKEND * 100",
-+        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend due to backend core resource constraints not related to instruction fetch latency issues caused by memory access components.",
-+        "MetricGroup": "Topdown_Backend",
-+        "ScaleUnit": "1percent of cycles"
-+    },
-+    {
-+        "MetricName": "backend_core_rename_bound",
-+        "MetricExpr": "STALL_BACKEND_RENAME / STALL_BACKEND_CPUBOUND * 100",
-+        "BriefDescription": "This metric is the percentage of total cycles stalled in the backend as the rename unit registers are unavailable.",
 +        "MetricGroup": "Topdown_Backend",
 +        "ScaleUnit": "1percent of cycles"
 +    },
@@ -598,13 +522,6 @@ index 000000000000..d8e8b5155cfa
 +        "MetricExpr": "(1 - STALL_SLOT / (10 * CPU_CYCLES)) * (1 - OP_RETIRED / OP_SPEC) * 100 + STALL_FRONTEND_FLUSH / CPU_CYCLES * 100"
 +    },
 +    {
-+        "MetricName": "barrier_percentage",
-+        "MetricExpr": "(ISB_SPEC + DSB_SPEC + DMB_SPEC) / INST_SPEC * 100",
-+        "BriefDescription": "This metric measures instruction and data barrier operations as a percentage of operations speculatively executed.",
-+        "MetricGroup": "Operation_Mix",
-+        "ScaleUnit": "1percent of operations"
-+    },
-+    {
 +        "MetricName": "branch_direct_ratio",
 +        "MetricExpr": "BR_IMMED_RETIRED / BR_RETIRED",
 +        "BriefDescription": "This metric measures the ratio of direct branches retired to the total number of branches architecturally executed.",
@@ -631,6 +548,13 @@ index 000000000000..d8e8b5155cfa
 +        "BriefDescription": "This metric measures the number of branch mispredictions per thousand instructions executed.",
 +        "MetricGroup": "MPKI;Branch_Effectiveness",
 +        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricName": "branch_percentage",
++        "MetricExpr": "PC_WRITE_SPEC / INST_SPEC * 100",
++        "BriefDescription": "This metric measures branch operations as a percentage of operations speculatively executed.",
++        "MetricGroup": "Operation_Mix",
++        "ScaleUnit": "1percent of operations"
 +    },
 +    {
 +        "MetricName": "branch_return_ratio",
@@ -680,13 +604,6 @@ index 000000000000..d8e8b5155cfa
 +        "BriefDescription": "This metric measures double-precision floating point operations as a percentage of operations speculatively executed.",
 +        "MetricGroup": "FP_Precision_Mix",
 +        "ScaleUnit": "1percent of operations"
-+    },
-+    {
-+        "MetricName": "fp_ops_per_cycle",
-+        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
-+        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-+        "MetricGroup": "FP_Arithmetic_Intensity",
-+        "ScaleUnit": "1operations per cycle"
 +    },
 +    {
 +        "MetricName": "frontend_cache_l1i_bound",
@@ -885,13 +802,6 @@ index 000000000000..d8e8b5155cfa
 +        "ScaleUnit": "1percent of operations"
 +    },
 +    {
-+        "MetricName": "nonsve_fp_ops_per_cycle",
-+        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
-+        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-+        "MetricGroup": "FP_Arithmetic_Intensity",
-+        "ScaleUnit": "1operations per cycle"
-+    },
-+    {
 +        "MetricName": "scalar_fp_percentage",
 +        "MetricExpr": "VFP_SPEC / INST_SPEC * 100",
 +        "BriefDescription": "This metric measures scalar floating point operations as a percentage of operations speculatively executed.",
@@ -918,48 +828,13 @@ index 000000000000..d8e8b5155cfa
 +        "BriefDescription": "This metric measures scalable vector operations, including loads and stores, as a percentage of operations speculatively executed.",
 +        "MetricGroup": "Operation_Mix",
 +        "ScaleUnit": "1percent of operations"
-+    },
-+    {
-+        "MetricName": "sve_fp_ops_per_cycle",
-+        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
-+        "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-+        "MetricGroup": "FP_Arithmetic_Intensity",
-+        "ScaleUnit": "1operations per cycle"
-+    },
-+    {
-+        "MetricName": "sve_predicate_empty_percentage",
-+        "MetricExpr": "SVE_PRED_EMPTY_SPEC / SVE_PRED_SPEC * 100",
-+        "BriefDescription": "This metric measures scalable vector operations with no active predicates as a percentage of sve predicated operations speculatively executed.",
-+        "MetricGroup": "SVE_Effectiveness",
-+        "ScaleUnit": "1percent of operations"
-+    },
-+    {
-+        "MetricName": "sve_predicate_full_percentage",
-+        "MetricExpr": "SVE_PRED_FULL_SPEC / SVE_PRED_SPEC * 100",
-+        "BriefDescription": "This metric measures scalable vector operations with all active predicates as a percentage of sve predicated operations speculatively executed.",
-+        "MetricGroup": "SVE_Effectiveness",
-+        "ScaleUnit": "1percent of operations"
-+    },
-+    {
-+        "MetricName": "sve_predicate_partial_percentage",
-+        "MetricExpr": "SVE_PRED_PARTIAL_SPEC / SVE_PRED_SPEC * 100",
-+        "BriefDescription": "This metric measures scalable vector operations with at least one active predicates as a percentage of sve predicated operations speculatively executed.",
-+        "MetricGroup": "SVE_Effectiveness",
-+        "ScaleUnit": "1percent of operations"
-+    },
-+    {
-+        "MetricName": "sve_predicate_percentage",
-+        "MetricExpr": "SVE_PRED_SPEC / INST_SPEC * 100",
-+        "BriefDescription": "This metric measures scalable vector operations with predicates as a percentage of operations speculatively executed.",
-+        "MetricGroup": "SVE_Effectiveness",
-+        "ScaleUnit": "1percent of operations"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
 new file mode 100644
 index 000000000000..d8b7b9f9e5fa
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
 @@ -0,0 +1,8 @@
 +[
 +    {
@@ -969,16 +844,24 @@ index 000000000000..d8b7b9f9e5fa
 +        "ArchStdEvent": "PMU_HOVFS"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
 new file mode 100644
-index 000000000000..69f9a0b0c7ff
+index 000000000000..152f15c1253c
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
 @@ -0,0 +1,90 @@
 +[
 +    {
 +        "ArchStdEvent": "SW_INCR",
 +        "PublicDescription": "Counts software writes to the PMSWINC_EL0 (software PMU increment) register. The PMSWINC_EL0 register is a manually updated counter for use by application software.\n\nThis event could be used to measure any user program event, such as accesses to a particular data structure (by writing to the PMSWINC_EL0 register each time the data structure is accessed).\n\nTo use the PMSWINC_EL0 register and event, developers must insert instructions that write to the PMSWINC_EL0 register into the source code.\n\nSince the SW_INCR event records writes to the PMSWINC_EL0 register, there is no need to do a read/increment/write sequence to the PMSWINC_EL0 register."
++    },
++    {
++        "ArchStdEvent": "LD_RETIRED",
++        "PublicDescription": "Counts instruction architecturally executed, Condition code check pass, load."
++    },
++    {
++        "ArchStdEvent": "ST_RETIRED",
++        "PublicDescription": "Counts instruction architecturally executed, Condition code check pass, store."
 +    },
 +    {
 +        "ArchStdEvent": "INST_RETIRED",
@@ -1017,8 +900,8 @@ index 000000000000..69f9a0b0c7ff
 +        "PublicDescription": "Counts micro-operations that are architecturally executed. This is a count of number of micro-operations retired from the commit queue in a single cycle."
 +    },
 +    {
-+        "ArchStdEvent": "BR_IMMED_TAKEN_RETIRED",
-+        "PublicDescription": "Counts architecturally executed immediate branches that were taken."
++        "ArchStdEvent": "SVE_INST_RETIRED",
++        "PublicDescription": "Counts architecturally executed SVE instructions."
 +    },
 +    {
 +        "ArchStdEvent": "BR_INDNR_TAKEN_RETIRED",
@@ -1031,14 +914,6 @@ index 000000000000..69f9a0b0c7ff
 +    {
 +        "ArchStdEvent": "BR_IMMED_MIS_PRED_RETIRED",
 +        "PublicDescription": "Counts architecturally executed direct branches that were mispredicted and caused a pipeline flush."
-+    },
-+    {
-+        "ArchStdEvent": "BR_IND_PRED_RETIRED",
-+        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were correctly predicted."
-+    },
-+    {
-+        "ArchStdEvent": "BR_IND_MIS_PRED_RETIRED",
-+        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns that were mispredicted and caused a pipeline flush."
 +    },
 +    {
 +        "ArchStdEvent": "BR_RETURN_PRED_RETIRED",
@@ -1065,60 +940,12 @@ index 000000000000..69f9a0b0c7ff
 +        "PublicDescription": "Counts architecturally executed indirect branches including procedure returns."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
 new file mode 100644
-index 000000000000..ca0217fa4681
+index 000000000000..40c29be53cc0
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
-@@ -0,0 +1,42 @@
-+[
-+    {
-+        "ArchStdEvent": "SAMPLE_POP",
-+        "PublicDescription": "Counts statistical profiling sample population, the count of all operations that could be sampled but may or may not be chosen for sampling."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED",
-+        "PublicDescription": "Counts statistical profiling samples taken for sampling."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FILTRATE",
-+        "PublicDescription": "Counts statistical profiling samples taken which are not removed by filtering."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_COLLISION",
-+        "PublicDescription": "Counts statistical profiling samples that have collided with a previous sample and so therefore not taken."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_BR",
-+        "PublicDescription": "Counts statistical profiling samples taken which are branches."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_LD",
-+        "PublicDescription": "Counts statistical profiling samples taken which are loads or load atomic operations."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_ST",
-+        "PublicDescription": "Counts statistical profiling samples taken which are stores or store atomic operations."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_OP",
-+        "PublicDescription": "Counts statistical profiling samples taken which are matching any operation type filters supported."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_EVENT",
-+        "PublicDescription": "Counts statistical profiling samples taken which are matching event packet filter constraints."
-+    },
-+    {
-+        "ArchStdEvent": "SAMPLE_FEED_LAT",
-+        "PublicDescription": "Counts statistical profiling samples taken which are exceeding minimum latency set by operation latency filter constraints."
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
-new file mode 100644
-index 000000000000..f91eb18d683c
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
-@@ -0,0 +1,90 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
+@@ -0,0 +1,70 @@
 +[
 +    {
 +        "ArchStdEvent": "BR_MIS_PRED",
@@ -1153,6 +980,10 @@ index 000000000000..f91eb18d683c
 +        "PublicDescription": "Counts speculatively executed store operations including Single Instruction Multiple Data (SIMD) store operations."
 +    },
 +    {
++        "ArchStdEvent": "LDST_SPEC",
++        "PublicDescription": "Counts speculatively executed load and store operations."
++    },
++    {
 +        "ArchStdEvent": "DP_SPEC",
 +        "PublicDescription": "Counts speculatively executed logical or arithmetic instructions such as MOV/MVN operations."
 +    },
@@ -1173,47 +1004,23 @@ index 000000000000..f91eb18d683c
 +        "PublicDescription": "Counts speculatively executed cryptographic operations except for PMULL and VMULL operations."
 +    },
 +    {
-+        "ArchStdEvent": "ISB_SPEC",
-+        "PublicDescription": "Counts ISB operations that are executed."
++        "ArchStdEvent": "BR_IMMED_SPEC",
++        "PublicDescription": "Counts direct branch operations which are speculatively executed."
 +    },
 +    {
-+        "ArchStdEvent": "DSB_SPEC",
-+        "PublicDescription": "Counts DSB operations that are speculatively issued to Load/Store unit in the CPU."
++        "ArchStdEvent": "BR_RETURN_SPEC",
++        "PublicDescription": "Counts procedure return operations (RET, RETAA and RETAB) which are speculatively executed."
 +    },
 +    {
-+        "ArchStdEvent": "DMB_SPEC",
-+        "PublicDescription": "Counts DMB operations that are speculatively issued to the Load/Store unit in the CPU. This event does not count implied barriers from load acquire/store release operations."
-+    },
-+    {
-+        "ArchStdEvent": "RC_LD_SPEC",
-+        "PublicDescription": "Counts any load acquire operations that are speculatively executed. For example: LDAR, LDARH, LDARB"
-+    },
-+    {
-+        "ArchStdEvent": "RC_ST_SPEC",
-+        "PublicDescription": "Counts any store release operations that are speculatively executed. For example: STLR, STLRH, STLRB"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_INST_SPEC",
-+        "PublicDescription": "Counts speculatively executed Advanced SIMD operations."
-+    },
-+    {
-+        "ArchStdEvent": "CAS_NEAR_PASS",
-+        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE and updated the location accessed."
-+    },
-+    {
-+        "ArchStdEvent": "CAS_NEAR_SPEC",
-+        "PublicDescription": "Counts compare and swap instructions that executed locally to the PE."
-+    },
-+    {
-+        "ArchStdEvent": "CAS_FAR_SPEC",
-+        "PublicDescription": "Counts compare and swap instructions that did not execute locally to the PE."
++        "ArchStdEvent": "BR_INDIRECT_SPEC",
++        "PublicDescription": "Counts indirect branch operations including procedure returns, which are speculatively executed. This includes operations that force a software change of the PC, other than exception-generating operations and direct branch instructions. Some examples of the instructions counted by this event include BR Xn, RET, etc..."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
 new file mode 100644
-index 000000000000..b1eae21bac07
+index 000000000000..d65aeb4b8808
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
 @@ -0,0 +1,82 @@
 +[
 +    {
@@ -1265,6 +1072,10 @@ index 000000000000..b1eae21bac07
 +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the CPU resources excluding memory resources."
 +    },
 +    {
++        "ArchStdEvent": "STALL_FRONTEND_FLOW",
++        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage due to resource constraints in the branch prediction unit."
++    },
++    {
 +        "ArchStdEvent": "STALL_FRONTEND_FLUSH",
 +        "PublicDescription": "Counts cycles when the frontend could not send any micro-operations to the rename stage as the frontend is recovering from a machine flush or resteer. Example scenarios that cause a flush include branch mispredictions, taken exceptions, micro-architectural flush etc."
 +    },
@@ -1285,56 +1096,24 @@ index 000000000000..b1eae21bac07
 +        "PublicDescription": "Counts cycles when the backend is stalled and there is a store that has not reached the pre-commit stage."
 +    },
 +    {
-+        "ArchStdEvent": "STALL_BACKEND_CPUBOUND",
-+        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to any resource constraints in the CPU excluding memory resources."
-+    },
-+    {
 +        "ArchStdEvent": "STALL_BACKEND_BUSY",
 +        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations because the issue queues are full to take any operations for execution."
 +    },
 +    {
-+        "ArchStdEvent": "STALL_BACKEND_RENAME",
-+        "PublicDescription": "Counts cycles when backend is stalled even when operations are available from the frontend but at least one is not ready to be sent to the backend because no rename register is available."
++        "ArchStdEvent": "STALL_BACKEND_ILOCK",
++        "PublicDescription": "Counts cycles when the backend could not accept any micro-operations due to resource constraints imposed by input dependency."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
 new file mode 100644
-index 000000000000..51dab48cb2ba
+index 000000000000..21810ce5de8d
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
-@@ -0,0 +1,50 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
+@@ -0,0 +1,22 @@
 +[
 +    {
 +        "ArchStdEvent": "SVE_INST_SPEC",
 +        "PublicDescription": "Counts speculatively executed operations that are SVE operations."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_SPEC",
-+        "PublicDescription": "Counts speculatively executed predicated SVE operations."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC",
-+        "PublicDescription": "Counts speculatively executed predicated SVE operations with no active predicate elements."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_FULL_SPEC",
-+        "PublicDescription": "Counts speculatively executed predicated SVE operations with all predicate elements active."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC",
-+        "PublicDescription": "Counts speculatively executed predicated SVE operations with at least one but not all active predicate elements."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_NOT_FULL_SPEC",
-+        "PublicDescription": "Counts speculatively executed predicated SVE operations with at least one non active predicate elements."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_SPEC",
-+        "PublicDescription": "Counts speculatively executed SVE first fault or non-fault load operations."
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC",
-+        "PublicDescription": "Counts speculatively executed SVE first fault or non-fault load operations that clear at least one bit in the FFR."
 +    },
 +    {
 +        "ArchStdEvent": "ASE_SVE_INT8_SPEC",
@@ -1353,12 +1132,12 @@ index 000000000000..51dab48cb2ba
 +        "PublicDescription": "Counts speculatively executed Advanced SIMD or SVE integer operations with the largest data type a 64-bit integer."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
 new file mode 100644
-index 000000000000..c7aa89c2f19f
+index 000000000000..1de56300e581
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
-@@ -0,0 +1,74 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
+@@ -0,0 +1,78 @@
 +[
 +    {
 +        "ArchStdEvent": "L1I_TLB_REFILL",
@@ -1431,13 +1210,17 @@ index 000000000000..c7aa89c2f19f
 +    {
 +        "ArchStdEvent": "ITLB_WALK_SMALL",
 +        "PublicDescription": "Counts number of instruction translation table walks caused by a miss in the L2 TLB and yielding a small page. The set of small pages is defined as all pages with a final size lower than 2MB. Translation table walks that end up taking a translation fault are not counted, as the page size would be undefined in that case. In this family, this is equal to ITLB_WALK_PAGE event. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
++    },
++    {
++        "ArchStdEvent": "DTLB_WALK_RW",
++        "PublicDescription": "Counts number of demand data translation table walks caused by a miss in the L2 TLB and performing at least one memory access. Translation table walks are counted even if the translation ended up taking a translation fault for reasons different than EPD, E0PD and NFD. Note that partial translations that cause a translation table walk are also counted. Also note that this event does not count walks triggered by TLB maintenance operations."
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
 new file mode 100644
 index 000000000000..33672a8711d4
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
 @@ -0,0 +1,32 @@
 +[
 +    {
@@ -1471,18 +1254,58 @@ index 000000000000..33672a8711d4
 +        "ArchStdEvent": "CTI_TRIGOUT7"
 +    }
 +]
+diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+index e40be37addf8..3e774c1e1413 100644
+--- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
++++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
+@@ -1339,6 +1339,11 @@
+         "EventName": "INST_FETCH",
+         "BriefDescription": "Instruction memory access"
+     },
++    {
++        "EventCode": "0x8125",
++        "EventName": "BUS_REQ_RD_PERCYC",
++        "BriefDescription": "Bus read transactions in progress"
++    },
+     {
+         "EventCode": "0x8128",
+         "EventName": "DTLB_WALK_PERCYC",
+@@ -1539,6 +1544,11 @@
+         "EventName": "L2D_CACHE_HWPRF",
+         "BriefDescription": "Level 2 data cache hardware prefetch."
+     },
++    {
++        "EventCode": "0x8156",
++        "EventName": "L3D_CACHE_HWPRF",
++        "BriefDescription": "Level 3 data cache hardware prefetch."
++    },
+     {
+         "EventCode": "0x8158",
+         "EventName": "STALL_FRONTEND_MEMBOUND",
+@@ -1674,6 +1684,11 @@
+         "EventName": "DTLB_WALK_PAGE",
+         "BriefDescription": "Data TLB page translation table walk."
+     },
++    {
++        "EventCode": "0x818D",
++        "EventName": "BUS_REQ_RD",
++        "BriefDescription": "Bus request, read"
++    },
+     {
+         "EventCode": "0x818B",
+         "EventName": "ITLB_WALK_PAGE",
 diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index bb3fa8a33496..ccfcae375750 100644
+index ccfcae375750..6b98632636e1 100644
 --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -33,6 +33,7 @@
+@@ -32,6 +32,7 @@
+ 0x00000000410fd440,v1,arm/cortex-x1,core
  0x00000000410fd4c0,v1,arm/cortex-x1,core
  0x00000000410fd460,v1,arm/cortex-a510,core
++0x00000000410fd800,v1,arm/cortex-a520,core
  0x00000000410fd470,v1,arm/cortex-a710,core
-+0x00000000410fd810,v1,arm/cortex-a720,core
+ 0x00000000410fd810,v1,arm/cortex-a720,core
  0x00000000410fd480,v1,arm/cortex-x2,core
- 0x00000000410fd490,v1,arm/neoverse-n2-v2,core
- 0x00000000410fd4f0,v1,arm/neoverse-n2-v2,core
 -- 
 2.47.2
 
