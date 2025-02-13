@@ -1,64 +1,64 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90C4245B1B
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 20:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422A324BC04
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 20:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739478977; cv=none; b=mRMtui1JTJUncazRU5i7flwdj/JyPqIBGQvGFPvDsDTL5Y3PwZYaqDZsn/UQnQjsaPhni+gfP81FTPjH9DgLGR8iUP9AlUHtFLzGa+VzlC0xGWCVDWuoXX2Kl25YWPZSfMQMN0g6pw8KpueX5MSiwXANmmwLnqVV55m0inJcYJs=
+	t=1739479043; cv=none; b=qBCNWiyPj9Cd7F5NPDZ48s3y1Ph/GXPHEF6mXu2DhhFtN0xjgb5CnkZUCDy7vXj7TWvI6vbYAT/dZuUW1o5TVOFpcixNgqZsaGlTt0rKEcChjypGfHRw6T7g0Ftsyto51ctFvg4y1+67riokP1uyAipuR2jfFoiN1WBt41R63Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739478977; c=relaxed/simple;
-	bh=3OmoPPtRJ3Eu45qzEZ5Fn9o4ggtZYUBS4BI+ZuxwU9A=;
+	s=arc-20240116; t=1739479043; c=relaxed/simple;
+	bh=VN2RuvBjkoJAPPb6ivIEGmI81z5fd0DOiMYmSzn4jFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0Y+kJLoKwPa11UlScLj7MIiotDaRI/OzduT6mSEZcJcO7xIwbp/+RMSgMcvySNA8pjrVkII0DZSLe0QXAobH88rxzEWGhKf/kUjVQKb2o9F9Pdoum3dJ0tZkRoAwLDf5IBRMXUo9QwlFyBm5ZJMH6DKr7TNl/EZ7JnCoGXTOrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=acmIhGlJ; arc=none smtp.client-ip=209.85.219.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXgsZ1r8wO+L6W6WrWqIc9LEtMvrQDmEIeQMWeTym1rU71hEv/tRAzJDYLDHLbkq6Azvc0ATQJDPY06X/ObgozTy5vPvkT5/3RxB+qWQCUorUH65a2HaqGi/X6yZaCixdbGGuToGvDx/m3MCosDNZVdnPGNmOXKov0QNClDby08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hhOt+KBE; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="acmIhGlJ"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e5b3dbd6732so1123483276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 12:36:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hhOt+KBE"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6ef7c9e9592so11825157b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 12:37:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739478974; x=1740083774; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739479039; x=1740083839; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FBViFwG3GkhnREQpuSeahWWDP1mD68WVlRn8a2dnxcU=;
-        b=acmIhGlJgUa5X6x/p6lGSR1OOTQm1fFvAnS8y5pnJIQNrmErCwufB/us5tLL+QCi3d
-         5/c2g9J/IeOzJDhW6nAaE+9xa3w0MILNPonFLCcxhj1nzE6uaU2zgaQxwGSg5wFjJMZH
-         wDe/5xMMaBdU8pupcqRhTla0MVHXbLiMtoU3+7wiYleKzhrGjYEoPoxQgRSvC70TiG9B
-         lGAZDAFhqkqInpWF4EkfE+mLuzrar8bs84DmX5t/UAG/neQjPpE5Ip7b9g3jNaLAsFYh
-         eXtEeYKTOeL1hqbOa+I/FU5/wNK0QtBeF6GIZV48r7NW3DupoIZKnYu5Z9y5DbuiFeHt
-         lUwg==
+        bh=VtL2Aljq7K18Ol8pwG2GMa8SAGuvgfRhHbhoMvrHKnE=;
+        b=hhOt+KBEg2QW8NduLPuray1Ii0hdOmoy0Oj5MZHePIWozygVuAPCROoKE6BRIPXmzQ
+         FcjE7qq4QZm18CP2gXSp/sghgp1SzPeZBF5At1X1l7NWsF4RTOqCpui5ymsW1n/ONZ8v
+         rSHubc67FRtZQTmNlRPrCQjac3qFvB3j8idDYa1w0L76VCoqHiY+TyCxwzjWwnn8OyWS
+         csx/DEoW5qQ/AecU2rnkNbCMj+MjCrxocf1hiWIR32b59sgvY5bPcVbXCJPixXiGcNb6
+         cvQuE2qBtf8h6REBEF6T13UwCScFaGGNQrEpsXoi50MXzsOvVqUCoolW8Qakeef6eqR+
+         Gfiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739478974; x=1740083774;
+        d=1e100.net; s=20230601; t=1739479039; x=1740083839;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FBViFwG3GkhnREQpuSeahWWDP1mD68WVlRn8a2dnxcU=;
-        b=ts1TpiutlbAPhhpt3xG21VvKX4uoiZGDlDNA/LlqyvbPnp+gghiTnZPs8DlvpNWu+f
-         jNxdSTHXtivxiM8kq6nbng8sgvk3R2V7X5ypcDPr6XrxJJFQACSwzcG9yU5pHjj/QREN
-         /D3pVRybGvTGdvyp6iu7C/Wk2mROqAWe48uxv5eRmvD+B3KrmJPrgR9z/9C37e/gQULG
-         xS0sswCQzr6cH1auOTPUFe4VoJlISjdbZevRsp9JrYPXqCFg8U4GpaWenwV/YMhruSVs
-         XWPRF2Mj0q8z0YD0RCRe28selXiOgHN0o722J6Sv/ZB3DIc+c2XW/T5Uk7D4GyjiLALa
-         h3Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCW+MzCCBkBKQKoC7k6DqCdh2rR4xfL6TYyzczJ96VLEPQKY7eiYexqEqaPbpWo0yPVYf+xMhbrwspt1QTSItHuh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUmaM9Vyc8RWwT9J5TZ5RfQVUeWE2SLFs6p69aUb8BLGUynsBM
-	Ct/1tx070jMMnNHl6vE5vONfck+Qb7lJVgeMzCfTzpYA06qCajj1l3MW0aqJCTo=
-X-Gm-Gg: ASbGncvJlCOLU+SzNR3t1tB8m7oaL7SoO11rX4BOAaQvlP8sT6nmQ536drNU5KTCMIM
-	VLXxKmUf1diPl8dOLbRSF+cxJOs9ltDl0HyeI9q4sKaYR4wP8yuPvTmrnWbHDN1Y4VuP94+nlVq
-	jHi/a+BF6TPkgl4+cJ7rFneJvw7rmdHnrfAQn8RtN2R1XOfYj4mjhmHNOgXx2vF+MS2lo7lhFxN
-	4hBV5z56+iiq4Nuxa4RbQw9+8IEP6rM42R+mxTxSibo/AeKy7vXTVq2m9kpYzugRkuMWCvLDvS4
-	VLI=
-X-Google-Smtp-Source: AGHT+IFli3J2pYxGrWlDhVf9piBN6Mt57GNwjDPRKZNkn4CDBVtemQHp9qzLUy0Yrgza7R0zwIrtIA==
-X-Received: by 2002:a05:6902:11c7:b0:e57:4db7:6d51 with SMTP id 3f1490d57ef6-e5d9f170324mr8763028276.32.1739478974506;
-        Thu, 13 Feb 2025 12:36:14 -0800 (PST)
+        bh=VtL2Aljq7K18Ol8pwG2GMa8SAGuvgfRhHbhoMvrHKnE=;
+        b=n35oOP0aXETy9Us72oIMnqJMUlLKcGxyBnoDSLozW7+ITqHeQ3Fnkb0I572LfbE9kA
+         otOEESBRmwfSPMwtsybNIEgR9xqHKc8SPO6/1D8vUvIW+Nom3pWvKM3dynEGIADtGOMq
+         k687CBlvri/+K2Jqfx3D6HUk0BH0kZwqX9hkmIpCz0SWiV5A8T652lVAt6/i4kdI2Sjb
+         PfyFPCac+BHScE0lcWF0JBs2SGLcnp6Gy9XWc08yxhTpG8zhWeJesX0SYmOtbJ34rjWd
+         YXWpWhHpIgcjUBU69yf05Mzw33OA1eIeObi+O9J4nze7FD5YhTDqfyYPMPNfLQWBAhH2
+         yEZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK7WANJ+Wp2Zl0i69a6iBtdiCvPNYZyHMiw7mJieWMHxFFEwnBMBh89CtjgeWdn3uJyVAFROPIAn5toPE1EeLS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZMLyWvphlo3K2u2B3bIdl+KnvE+w4+ExeKqDzr1zJ9gbToOek
+	fLWHIevo+pAMZG+B4RPSBRcB7dwCdVrsWWGJ6XUR6tY0Gdg4I5vFmsP5GeYE0Oo=
+X-Gm-Gg: ASbGnctkNA4FHB+abmm25/abDNLfJvHkI8W6w1Lmbf0hTgRk/1lCWVwK4/nWKZuRWCO
+	e/k5yGmw227W87eNgqo359wC8Gk+Y/QkGp+d/+jGfpwfDA9m0tkKMFzgbTHKATioUAlyZeiQ2Sn
+	sMT3QeJTPe/CJAIZ/fj9DrFFO+5r8qRdVof75h7kJyVFzkQ4PiFrVir6yQdDRT4RF2/H5GF20mU
+	FoQMjm7HWrsxgj5FeVzqG1wRNlPmcWs78Yw4w68wb/Wpl6XMgSfLNVrbl0shRAdtm/0rQoZsn7G
+	1Qs=
+X-Google-Smtp-Source: AGHT+IGMfdT8//izHzzVCxCUXm2NF65zwvxCB97iREjU4n/ssdZBJJcyfbQ0HsHUfaMDbqW4yx+Sxw==
+X-Received: by 2002:a05:690c:6181:b0:6fb:1f78:d9ee with SMTP id 00721157ae682-6fb32c7ff5emr48326527b3.15.1739479039148;
+        Thu, 13 Feb 2025 12:37:19 -0800 (PST)
 Received: from ghost ([50.146.0.9])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dadeca97bsm580863276.32.2025.02.13.12.36.13
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb3619bd74sm4583557b3.75.2025.02.13.12.37.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 12:36:13 -0800 (PST)
-Date: Thu, 13 Feb 2025 12:36:12 -0800
+        Thu, 13 Feb 2025 12:37:18 -0800 (PST)
+Date: Thu, 13 Feb 2025 12:37:16 -0800
 From: Charlie Jenkins <charlie@rivosinc.com>
-To: Jiri Olsa <olsajiri@gmail.com>
+To: Quentin Monnet <qmo@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Andrii Nakryiko <andrii@kernel.org>,
@@ -67,7 +67,8 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	Yonghong Song <yonghong.song@linux.dev>,
 	John Fastabend <john.fastabend@gmail.com>,
 	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -75,7 +76,6 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Quentin Monnet <qmo@kernel.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
@@ -87,11 +87,11 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tools: Unify top-level quiet infrastructure
-Message-ID: <Z65XvCrcBlf61LYw@ghost>
+Subject: Re: [PATCH v2 2/2] tools: Remove redundant quiet setup
+Message-ID: <Z65X_KimLfbE0DG2@ghost>
 References: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
- <20250210-quiet_tools-v2-1-b2f18cbf72af@rivosinc.com>
- <Z6tSvUt47FV60UJA@krava>
+ <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
+ <21f98687-f715-449c-86f0-c095ea499450@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -100,70 +100,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6tSvUt47FV60UJA@krava>
+In-Reply-To: <21f98687-f715-449c-86f0-c095ea499450@kernel.org>
 
-On Tue, Feb 11, 2025 at 02:38:05PM +0100, Jiri Olsa wrote:
-> On Mon, Feb 10, 2025 at 10:34:42AM -0800, Charlie Jenkins wrote:
+On Tue, Feb 11, 2025 at 12:00:49AM +0000, Quentin Monnet wrote:
+> 2025-02-10 10:34 UTC-0800 ~ Charlie Jenkins <charlie@rivosinc.com>
+> > Q is exported from Makefile.include so it is not necessary to manually
+> > set it.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  tools/arch/arm64/tools/Makefile           |  6 ------
+> >  tools/bpf/Makefile                        |  6 ------
+> >  tools/bpf/bpftool/Documentation/Makefile  |  6 ------
+> >  tools/bpf/bpftool/Makefile                |  6 ------
+> >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> >  tools/bpf/runqslower/Makefile             |  5 +----
+> >  tools/lib/bpf/Makefile                    | 13 -------------
+> >  tools/lib/perf/Makefile                   | 13 -------------
+> >  tools/lib/thermal/Makefile                | 13 -------------
+> >  tools/objtool/Makefile                    |  6 ------
+> >  tools/testing/selftests/bpf/Makefile.docs |  6 ------
+> >  tools/testing/selftests/hid/Makefile      |  2 --
+> >  tools/thermal/lib/Makefile                | 13 -------------
+> >  tools/tracing/latency/Makefile            |  6 ------
+> >  tools/tracing/rtla/Makefile               |  6 ------
+> >  tools/verification/rv/Makefile            |  6 ------
+> >  16 files changed, 1 insertion(+), 114 deletions(-)
+> > 
 > 
-> SNIP
 > 
-> > +# Beautify output
-> > +# ---------------------------------------------------------------------------
-> > +#
-> > +# Most of build commands in Kbuild start with "cmd_". You can optionally define
-> > +# "quiet_cmd_*". If defined, the short log is printed. Otherwise, no log from
-> > +# that command is printed by default.
-> > +#
-> > +# e.g.)
-> > +#    quiet_cmd_depmod = DEPMOD  $(MODLIB)
-> > +#          cmd_depmod = $(srctree)/scripts/depmod.sh $(DEPMOD) $(KERNELRELEASE)
-> > +#
-> > +# A simple variant is to prefix commands with $(Q) - that's useful
-> > +# for commands that shall be hidden in non-verbose mode.
-> > +#
-> > +#    $(Q)$(MAKE) $(build)=scripts/basic
-> > +#
-> > +# To put more focus on warnings, be less verbose as default
-> > +# Use 'make V=1' to see the full commands
-> > +
-> > +ifeq ($(V),1)
-> > +  quiet =
-> > +  Q =
-> > +else
-> > +  quiet = quiet_
-> > +  Q = @
-> > +endif
-> > +
-> >  # If the user is running make -s (silent mode), suppress echoing of commands
-> >  # make-4.0 (and later) keep single letter options in the 1st word of MAKEFLAGS.
-> >  ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> > @@ -145,9 +172,11 @@ short-opts := $(filter-out --%,$(MAKEFLAGS))
+> [...]
+> 
+> 
+> > diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
+> > index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
+> > --- a/tools/bpf/bpftool/Documentation/Makefile
+> > +++ b/tools/bpf/bpftool/Documentation/Makefile
+> > @@ -5,12 +5,6 @@ INSTALL ?= install
+> >  RM ?= rm -f
+> >  RMDIR ?= rmdir --ignore-fail-on-non-empty
+> >  
+> > -ifeq ($(V),1)
+> > -  Q =
+> > -else
+> > -  Q = @
+> > -endif
+> > -
+> >  prefix ?= /usr/local
+> >  mandir ?= $(prefix)/man
+> >  man8dir = $(mandir)/man8
+> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> > index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
+> > --- a/tools/bpf/bpftool/Makefile
+> > +++ b/tools/bpf/bpftool/Makefile
+> > @@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
+> >  srctree := $(patsubst %/,%,$(dir $(srctree)))
 > >  endif
 > >  
-> >  ifneq ($(findstring s,$(short-opts)),)
-> > -  silent=1
+> > -ifeq ($(V),1)
+> > -  Q =
+> > -else
+> > -  Q = @
+> > -endif
+> > -
+> >  BPF_DIR = $(srctree)/tools/lib/bpf
+> >  
+> >  ifneq ($(OUTPUT),)
 > 
-> hi,
-> I think you need to keep this one, there's "ifneq ($(silent),1)" condition
-> later in the file for the silent (-s) builds
+> 
+> This is OK from bpftool's side, the GitHub mirror has a Makefile.include
+> included from both main and doc Makefiles, and where I can move this
+> definition.
 
-Oh yes, thank you.
+I am glad to hear. Thank you for helping me unify this infrastructure!
 
 - Charlie
 
 > 
-> jirka
+> Acked-by: Quentin Monnet <qmo@kernel.org>
 > 
-> 
-> > +  quiet=silent_
-> >  endif
-> >  
-> > +export quiet Q
-> > +
-> >  #
-> >  # Define a callable command for descending to a new directory
-> >  #
-> > 
-> > -- 
-> > 2.43.0
-> > 
+> Thanks
