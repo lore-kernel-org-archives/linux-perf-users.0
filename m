@@ -1,58 +1,73 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E0C20AF66
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 11:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1B7268C69
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 11:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739445012; cv=none; b=HyevPDmEF9z0t8a8gkVNbNNqf1c4vmjL7JeksJx9mQsejp37RRl0jRDJV8OSdYB33WPTKhmJQwxQZrJ978Zh+nx/b4G6ycpI4j5DYLXKJGRhpNSzbrrxkItQoYjYwUlodcZDR4ElqO1SClq9uh0zS4ow7rSeZcqvX9RbObgGFOU=
+	t=1739445368; cv=none; b=PtxtDyf35gdk//v6YJQD9ruIJKW9QR+rdbiEFgXcflaAYCxXbujOCbl36VfS7dOfHW0j1/RbL9tUy9x1KTqdFHqa0eTs8/S33bTiOr/TYjYPu55kBzJdTv30c7rnuLKu1zUsO6i5F9lxkBGJFz5nPOccFYc54Dpg6OIGBmm9p10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739445012; c=relaxed/simple;
-	bh=uH0K6GShrEJy3bYMbc+eFzYclbRVKJaOsQeu0/nwWNs=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=ee2Y7jBFfYphqzsU/7buXfgiYzOosmnMnwjsD7mtkAilB97oX7Dg6XVWxK6Zo/C52HOiRBLPcAwt1MnYjwcUUlrexQRYByo2ejNEhzb1QACtkVg8bY3mhgvqAYXnqwPB4Fbaf3QXgDPbV1h6YLaMPo/K+XY7vOZtFSNiG8ueT60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CYM432Ge; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739445368; c=relaxed/simple;
+	bh=HZ8Dg27WUThGXXyr1DLe9QA6ph06DrAe0n7D2Y4KJ8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HRc/8FxaFehb8EErsQHijOlAQm1WB+5qG8oxnf2QA/1uGI9WCD2u5iMgy3/VuZbTfbpeXJIL26rlYECN0Z8ymJ0qntE2hn5mvfFu9RO6v9amLHgX2w1V7KGs+0Vvhi3GcvhtewdvNLgMLMYbv0Pl8Nq4ZD5yqtn1iOtwm69UVM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V3U9lK+V; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CYM432Ge"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51D17uMN008977;
-	Thu, 13 Feb 2025 11:10:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=clze/b7tSpztvAe4MjkprpKjE1Ta
-	4GWl0THyxBzmO54=; b=CYM432GeUtoYCtC6asZcWjhQCdl2fhSr1H/Wxgb5RL8Z
-	gG3BYDUvzwWUcK+WH5qf1TfoXiFVIoj3kMUsS/E6dwDnFsNYAGHV8KcCJNB65UuE
-	uTJr+iRfSM/5Cqj41A6VnmtBie3qlg2TUBnnXsLk0HucceQSiLgC6OO0hfO/NhX6
-	wMhh8kQqwaDIEYJ9AUHswa4bSapn0ApeGlPR+FSg1V2kl/yzpIJr84B4eGLe0l8F
-	T0ZnJhuWyjw1X1Vvwuy0IGWSo3JsX/a7KI4jOV/QLUq2zgyJ1UjrLsCBrsXk8EVS
-	QxbCFPOB/AgpHKQtTOsBkJcx6QZ7t01HZtDYtsaF4g==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44s6ta2e70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 11:10:07 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51D98RCI011648;
-	Thu, 13 Feb 2025 11:10:06 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pktk5m82-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 11:10:06 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51DBA4RS37880262
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Feb 2025 11:10:04 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BAF120146;
-	Thu, 13 Feb 2025 11:06:41 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7DBA020144;
-	Thu, 13 Feb 2025 11:06:41 +0000 (GMT)
-Received: from [9.152.212.90] (unknown [9.152.212.90])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Feb 2025 11:06:41 +0000 (GMT)
-Message-ID: <c41e4b04-e1fd-45ab-80b0-ec2ac6e94310@linux.ibm.com>
-Date: Thu, 13 Feb 2025 12:06:41 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3U9lK+V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739445366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MqBgnP/CgEjSGM61CsD0xppS2mhBqrdvYWeODyjEQ8M=;
+	b=V3U9lK+V4maViGHQ8wgT5H6Jr2VtLxzy2gvumL0nKL1FWe9GTIn8W34neVD2/GS2wPHNGK
+	f5URGt480GUIHxJHMR1l51QWoxxy18oQbsS0K0bM/xGcQ5SKqlShnPUZimDUyMYZ4VF499
+	pLR6BJwqrf2u4Hltc3Ieg89ynXhZU7I=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-Ch9t4rnCOiCyuPX7zIHYGg-1; Thu, 13 Feb 2025 06:16:04 -0500
+X-MC-Unique: Ch9t4rnCOiCyuPX7zIHYGg-1
+X-Mimecast-MFC-AGG-ID: Ch9t4rnCOiCyuPX7zIHYGg
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43947979ce8so4209575e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 03:16:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739445363; x=1740050163;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MqBgnP/CgEjSGM61CsD0xppS2mhBqrdvYWeODyjEQ8M=;
+        b=QnoMViSW3NlRHZu05QACryQYykepYXLfp6q2EwxNNPqAiMCuW5JbaIAJbgwQ+axgtU
+         nAhwr8zaVaRXaUnT7zYAXFaYZ0BOLVQm2MjqPyD0U1yoybOa99d+NUlVeyUz1RlMUOFg
+         yEOwT/ZQkU8sn8nVUnEE6rv8uQy0C8Xc0KlbFof8dVYSFYq74veQZBkuPu9D8Rd5Xsyy
+         fZSEuvWV5ZIURQnbUC6HhpedFsOdfkoJnbImxXkGd7DczUCEISdnc/zDZrNbAPzzb/cD
+         OE78FyKCWz0G3FAOzg3wKfXvINKUzcJYQa8HmCKd43FElWDqPGeGn7RYQ8/WPI7IJ1o9
+         oGFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtrITjrOxvEUBDq5YoRi9JPKYokm2I3+Hc9yZh5WXGTR1AfXoSSr4DvfsD6FdvKJGtGIZ1lRPArs8UcumxoKw7@vger.kernel.org
+X-Gm-Message-State: AOJu0YywFlr+82003+qs8AMnyhqZxHvlQ1YiQNbDlg0BitF2ghTlQBaO
+	zD5tLx6ZdUciDAE6zBJkb14YP2oTMRQRrXhuRsGJCv859Sob/nNDahVOfzYHg+275I5IuiDTUe4
+	IEJJIKaWIxqG4uVZaLc+BFsZDJl/x/hJAsecK/WWmuAmCzmiaKX3x/yvm+DcB4LUSd0A=
+X-Gm-Gg: ASbGnctXnpJ0zo0CdS3ICZeWHli612JqzZLCS4gkPm3qGVyqzs7OKeUu+QsTYHA2sVO
+	+MShZnRUbPFsUZYkmT07NvKd1f4n7tR3SYe+E5bcNifotpYC6/sipJToXvI+xvcwz4chYNM2NrN
+	ycWt+eB8PclcHfLqPDV2kyKRprpGoM/BRYV9rjiPuiOJVx9dZlBDoi/odgg1lmqy/fRLAqkdGNs
+	90jPka5yT1oWQdFNZij7SbRL2iUfJzszK4KeMogbj2GtwGWSD/5rzTgBJKsxHnqtDBxtPF7Ia3Z
+	rjH2Zq91l7ikb2qRpdRWqT7qXnpkxA9HRgy9P4DcBn3fXzOCP/tqgfKiVC+BQUfwwilRVp1b5e2
+	i7HyhB/wBeJXU0YtQePc64gldrfE2VA==
+X-Received: by 2002:a05:6000:2ce:b0:38f:287a:43e2 with SMTP id ffacd0b85a97d-38f287a45b1mr1243725f8f.11.1739445363525;
+        Thu, 13 Feb 2025 03:16:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFNb1T2Y6u+6rZWLCFG3K5jK4MKsiuwX2PBSjG3UR8Z0S96jlm3wlxln2RhnV2KuarUxPIcCQ==
+X-Received: by 2002:a05:6000:2ce:b0:38f:287a:43e2 with SMTP id ffacd0b85a97d-38f287a45b1mr1243510f8f.11.1739445361530;
+        Thu, 13 Feb 2025 03:16:01 -0800 (PST)
+Received: from ?IPV6:2003:cb:c718:100:347d:db94:161d:398f? (p200300cbc7180100347ddb94161d398f.dip0.t-ipconnect.de. [2003:cb:c718:100:347d:db94:161d:398f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25915785sm1623471f8f.58.2025.02.13.03.15.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 03:16:00 -0800 (PST)
+Message-ID: <039b2e48-1d7c-48dc-b832-24db12af216a@redhat.com>
+Date: Thu, 13 Feb 2025 12:15:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,72 +75,174 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250210193801.781278-1-david@redhat.com>
+ <6sejv2hauce3il5lq6sw53xmjjjglxkhz5copm62oryga6jioi@u66wl2nc3hoy>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>, ashelat@redhat.com,
-        Michael Petlan <mpetlan@redhat.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf script: perf script hangs forever in linux-next
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: v0t0nhw5_RqdTQIweqAJHGNGTrI_R7hR
-X-Proofpoint-GUID: v0t0nhw5_RqdTQIweqAJHGNGTrI_R7hR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_05,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- clxscore=1011 adultscore=0 suspectscore=0 priorityscore=1501
- mlxlogscore=936 malwarescore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502130084
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <6sejv2hauce3il5lq6sw53xmjjjglxkhz5copm62oryga6jioi@u66wl2nc3hoy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Command 'perf script report flamegraph' hangs for ever as can
-be seen with these commands:
+On 13.02.25 12:03, Alistair Popple wrote:
+> On Mon, Feb 10, 2025 at 08:37:42PM +0100, David Hildenbrand wrote:
+>> Against mm-hotfixes-stable for now.
+>>
+>> Discussing the PageTail() call in make_device_exclusive_range() with
+>> Willy, I recently discovered [1] that device-exclusive handling does
+>> not properly work with THP, making the hmm-tests selftests fail if THPs
+>> are enabled on the system.
+>>
+>> Looking into more details, I found that hugetlb is not properly fenced,
+>> and I realized that something that was bugging me for longer -- how
+>> device-exclusive entries interact with mapcounts -- completely breaks
+>> migration/swapout/split/hwpoison handling of these folios while they have
+>> device-exclusive PTEs.
+>>
+>> The program below can be used to allocate 1 GiB worth of pages and
+>> making them device-exclusive on a kernel with CONFIG_TEST_HMM.
+>>
+>> Once they are device-exclusive, these folios cannot get swapped out
+>> (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
+>> much one forces memory reclaim), and when having a memory block onlined
+>> to ZONE_MOVABLE, trying to offline it will loop forever and complain about
+>> failed migration of a page that should be movable.
+>>
+>> # echo offline > /sys/devices/system/memory/memory136/state
+>> # echo online_movable > /sys/devices/system/memory/memory136/state
+>> # ./hmm-swap &
+>> ... wait until everything is device-exclusive
+>> # echo offline > /sys/devices/system/memory/memory136/state
+>> [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
+>>    index:0x7f20671f7 pfn:0x442b6a
+>> [  285.196618][T14882] memcg:ffff888179298000
+>> [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
+>>    dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
+>> [  285.201734][T14882] raw: ...
+>> [  285.204464][T14882] raw: ...
+>> [  285.207196][T14882] page dumped because: migration failure
+>> [  285.209072][T14882] page_owner tracks the page as allocated
+>> [  285.210915][T14882] page last allocated via order 0, migratetype
+>>    Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
+>>    id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
+>> [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
+>> [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
+>> [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
+>> [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
+>> [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
+>> [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
+>> [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
+>> [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
+>> ...
+>>
+>> This series fixes all issues I found so far. There is no easy way to fix
+>> without a bigger rework/cleanup. I have a bunch of cleanups on top (some
+>> previous sent, some the result of the discussion in v1) that I will send
+>> out separately once this landed and I get to it.
+>> I wish we could just use some special present PROT_NONE PTEs instead of
+> 
+> First off David thanks for finding and fixing these issues. If you have further
+> clean-ups in mind that you need help with please let me know as I'd be happy
+> to help.
 
-  # perf record -- dd if=/dev/zero of=/dev/null bs=1M count=10K > /dev/null
-  10240+0 records in
-  10240+0 records out
-  10737418240 bytes (11 GB, 10 GiB) copied, 0.387818 s, 27.7 GB/s
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.074 MB perf.data (1520 samples) ]
-  #
-  # time perf script report flamegraph
-  ^C
+Sure! I have some cleanups TBD as result of the previous discussion, but 
+nothing bigger so far.
 
-  real  0m53.506s
-  user  0m0.017s
-  sys   0m0.012s
-  #
-  
-Control-C interrupt is needed to terminate the command.
+(removing the folio lock could be considered bigger, if we want to go 
+down that path)
 
-If I revert commit 23e0a63c6dd3f69cb7ee18411e5f6857cca55b30
- Author: Anubhav Shelat <ashelat@redhat.com>
- Date:   Fri Jan 31 09:57:05 2025 -0500
+> 
+>> these (non-present, non-none) fake-swap entries; but that just results in
+>> the same problem we keep having (lack of spare PTE bits), and staring at
+>> other similar fake-swap entries, that ship has sailed.
+>>
+>> With this series, make_device_exclusive() doesn't actually belong into
+>> mm/rmap.c anymore, but I'll leave moving that for another day.
+>>
+>> I only tested this series with the hmm-tests selftests due to lack of HW,
+>> so I'd appreciate some testing, especially if the interaction between
+>> two GPUs wanting a device-exclusive entry works as expected.
+> 
+> I'm still reviewing the series but so far testing on my single GPU system
+> appears to be working as expected. I will try and fire up a dual GPU system
+> tomorrow and test it there as well.
 
-    perf script: force stdin for flamegraph in live mode
+Great, thanks a bunch for testing!
 
-then everythings works fine again:
+Out of interest: does the nvidia driver make use of this interface as 
+well, and are you testing with that or with the nouveau driver? I saw 
+some reports that nvidia at least checks for it [1] when building the 
+module:
 
- # PERF_EXEC_PATH=/root/mirror-linux-next/tools/perf ./perf script report flamegraph
- # dumping data to flamegraph.html
- # 
+	CONFTEST: make_device_exclusive_range
 
-Can you fix this so above invocation works again or revert that patch?
+[1] 
+https://www.googlecloudcommunity.com/gc/AI-ML/Can-t-Install-Nvidia-Drivers-on-6-1-0-18-Kernel/m-p/722596
 
-Thanks a lot
-~                                                                                                   
-~                                                                                                   
-~                   
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+Cheers,
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+David / dhildenb
 
