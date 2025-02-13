@@ -1,242 +1,104 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966DC2753E3;
-	Thu, 13 Feb 2025 23:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729D327540C;
+	Thu, 13 Feb 2025 23:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487864; cv=none; b=BK8WmkLsEk62+WMQEUrLWTUr6vLfsx1jHDBPTGTvhwV1usrdwVZzUeOj0Z72AOB57ghGHVL03JjlMyI3U0Q3ROhPY2IBXFdPzlk+EdUwctkgcCZRkOHeRfI/tCMNZ6YMmgAykXrb15AFuZJBCvoTuv+82fg7wyJGgsVFpttwQlM=
+	t=1739488618; cv=none; b=o3lAovpgk5wMgS6hornKlqMw3oDgDRl9ybbUgYtmVF7EyEITdr+BZkrtP8uYl9nDKS+4Mgc354+eturqoGa1lvL/F6Qg0QLJOmqrvlWlidDKOwxzgC0zUSH+syywciLX/EdxVBuGfE+HEl84yXKlvEkNrnC6cioHjX48kIA3h28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487864; c=relaxed/simple;
-	bh=tME1r3eb+npPg/cagYeysBtN5xwt6+HUGL9+C4YO+mE=;
+	s=arc-20240116; t=1739488618; c=relaxed/simple;
+	bh=PbaotEZP+m8XRdqTM1LVCryKI8mpwAv32w3xxrZJ6bY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=faHDPKjE/r9UWaOnJ0Zk+ycSbq+wgFrHJVwCNaAVxXzywPe9aCiow66WDv/1v3mqP/5RkoET0IycoehmJjdKzHZfXOuUv1nCf2NpeDs8WqeKD6N4kXO9HixVSCF6Kxa92JCPFr8xQa6Hti1L3yVWzKyJ87qdNlY41sYe4GZgAJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iK6/eUE5; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=GlBnCUZvIIIVUCBn5YCYCqcm1xF7vmCO8vCwcuHTEwRJwP4QhegrRxg1BcS5Yr0hXGawhI6awdL0K4Rqe1F5TZQFzONN8zKDGsFr7xesSSaIUSYBnNJPMjCcI6+Za6LDt1XrTNcQdRJ+ck28SJir+Jt8tCHLxniduNUk9oVIxLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4DX/p8Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iK6/eUE5"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e5dab3f37b1so1245684276.0;
-        Thu, 13 Feb 2025 15:04:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739487861; x=1740092661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GAtgzun+5n0rcj2XnaUrKKmrlHyN6u/EkKA/VMQ6U98=;
-        b=iK6/eUE5KnbmtCtQPJ8u4pUXNYvN4l3rbXKA96eBlVAJ44qpAnUS/i0GU+5gVv1dDC
-         VN0yr2u0ty/iDNYM6kgDolUAx0y06nWCUr+5AeTCKuYh2HyLkaBLJPvnNqK7xGQGt31L
-         x/1VEZx57KukYZLsLUiPyPrW/cXZW4+Ysv7Y3vvZWMWPuyaNkqrfP2G0ji4fkwEUcRvK
-         PWo//4tp4ZNOXHkTYgsdvJuRC84du+l2K+3YtHGEMk/wbYIpLaLtWPZKRglNpxu8Tsr5
-         dHM1CcFFyAV3kbzMQRuO7H8K3TtFL+SnoU8ThkpEV3klk4ooL5ymsQhyZWnXBWZWblJi
-         LGyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739487861; x=1740092661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GAtgzun+5n0rcj2XnaUrKKmrlHyN6u/EkKA/VMQ6U98=;
-        b=ZPVWHtonTvQUe3pTAn99jKKOzsBtxsVCf7x2OJYgPW0H9eCb1JJyp+t2UkCsYpeP0h
-         /QuoRNkbLDGNEwV/elSj7ch6bT/TMLI3YmQ/QKhROPfE2UWhWPbGDKd1gJnlcaYNU37h
-         NuK7HL07lxXSXuh7ljTQ/BdntnmbW28xk7GAlkCdWg35YlcZj3Bm6+uLbzJ2Q5dYw3ph
-         uwiItKUHjKjwzEYx4utY6e3i1KLt275rnFJmpZOHTWqmKlfM9sP5G1B/SeNrHpR55I82
-         LIbkAJP0NzHAaLBMMShc5pjb5uFt8RWYTzLS9wD3AGkaWNb25IhWiVD1J1PavbZGvH6d
-         TH6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVURMlT8Wq/2tf9VlWWNF5X0otHmuZMGuUN9W2jMuv5Mmdygcs7sasK1HDkBGlIDyA6ITBa2pkDQAyJiyqGwEn6cQ==@vger.kernel.org, AJvYcCWp2pDq86f70ga+DoS/sxmTNne6UXpHjlap13kpc3Lw12VyQrpGmoJi6Sy9O5SGS8MSuo1JpuVgBTAFn38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlMuaKmfYa97Ou5ImwCxyPS9wbqJ+iAJBYJVvw1ch+pcczDpwV
-	LkmTz0RyGJcFj1PGoXiqvJQtKHBFWDDb0Rrs8X5SJysmOJv6/kX4AvgY5eQezbMGIlAQDyc7Pcz
-	DR+Z6zvlzkbUQEBPxNDTEU2vIbW8=
-X-Gm-Gg: ASbGnctvQwRgL06NzMTj3OnSng1BsVzxeMlso6ZTMhqzkWh+uJlNs4lU8LQIgNgvoSP
-	I6u96GUcJAzqHIxgGpqx0eZ6qhyGKAiZuWhHGRJhZwT/93q6upBubV8eYDWXQ4Eo1rCkIZAg=
-X-Google-Smtp-Source: AGHT+IFfEcuumnjY0wg8gMe/YN/sduK2x9y4CiNR9eS7oQNbPVerOrGlImvJU5L9JR6YWnmDFWO53VTEVNHTkaqbcvE=
-X-Received: by 2002:a05:6902:2187:b0:e57:fb5c:7ae3 with SMTP id
- 3f1490d57ef6-e5d9f0fa8damr9103494276.17.1739487861402; Thu, 13 Feb 2025
- 15:04:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4DX/p8Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1328C4CED1;
+	Thu, 13 Feb 2025 23:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739488618;
+	bh=PbaotEZP+m8XRdqTM1LVCryKI8mpwAv32w3xxrZJ6bY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=q4DX/p8YgONWF7jft3QA2zVg9bpHaWiEjzj1Lk5a7HJTwGrMuSN5ZSk7axKPE5pSO
+	 Gg6k34cRunocqRdktHghHjD8KEAf7VXXbuQMAYjvpf/60/ME3MDH660qBhLO1MM7p7
+	 fuULtg3lCK9tUr8UP9j+E8Yum/wP6+i3XYXfCDHCEKKzuFQXnFjW3Jc3GIHSiWEMJV
+	 qr5bJANPiopabQ9YXQrMzXriIXaI+6/kaMHRln48X5ZJuH8txC5dZy5MKwH0WkmlxB
+	 iXXbkHdEBcFuBQdNR37Uo3Gd7dmD2aqT8XWxnMwhGpL8L4haCQDUElZ1TNSe4yTJNf
+	 TRrvnSauK5k9g==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so2180717a12.0;
+        Thu, 13 Feb 2025 15:16:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU3CxUpE/UBLfT8O1YpP7rLyspI2CRaGlTo11dr0BLrvRpkJd1jc5VUz3Gg27X1wLjOcR5SuD/JjBJ9bdpD@vger.kernel.org, AJvYcCUGIHvvE4W5ICknDrAwBHWRzsuRoH/bJ/tdZVn635VyyLund6Pyfh6G5ir1pojvsg8VGr8kAHOuOOBSVmnmuUkn2A==@vger.kernel.org, AJvYcCUosEN1C3Xf6RPZM1dNd8XoYcs7U6g2lji0yXAyFtZ3/PHWS5LhYtPwIZxU3BQ2bnRbYBQaBLG70gw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlURLFt0mLf2Zi8+x+eTWCXz9tPzxBHryOoiU81bglXIhglk/i
+	0A8Dg24IU/pZQNCf2tnmeDaipLkXTP2aoC79yh9mBKfS4bK9xevLgDrwoPx/4318h3EeE1D3NXw
+	ITa6rSwIlzDMqeF7cdZms/uxTNA==
+X-Google-Smtp-Source: AGHT+IGLrIInhW0p35GiI23AsyVIN74+uSLw8U4olfJQyjWCTit8hu/L8OG/iKoT6DsuxRq4cMhDCBZc2Okeg3yqD4I=
+X-Received: by 2002:a05:6402:194b:b0:5de:b947:b22a with SMTP id
+ 4fb4d7f45d1cf-5dec9d393e8mr13551333a12.11.1739488616517; Thu, 13 Feb 2025
+ 15:16:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213230009.1450907-1-howardchu95@gmail.com> <20250213230009.1450907-11-howardchu95@gmail.com>
-In-Reply-To: <20250213230009.1450907-11-howardchu95@gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 13 Feb 2025 15:04:10 -0800
-X-Gm-Features: AWEUYZnjqMUN_SQ7AaTKaqUzSczx-HzzLpHHCUzqwStvuo6rz9p2P8e7_2YWOv4
-Message-ID: <CAH0uvohY6fBaJvMZNi-fcHEW1Dw7Zp5Q_+ZxNgcaaFary-3sWw@mail.gmail.com>
-Subject: Re: [PATCH v15 10/10] perf test: Add direct off-cpu test
-To: acme@kernel.org
-Cc: namhyung@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org> <20250213170316.GG235556@e132581.arm.com>
+In-Reply-To: <20250213170316.GG235556@e132581.arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 13 Feb 2025 17:16:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
+X-Gm-Features: AWEUYZlrsV2jIVl8kJ5LHYnXDNpl0R31s2FyNrbBoqdloE1Gq92xxV4Cm7lY0Lg
+Message-ID: <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
+Subject: Re: [PATCH v19 10/11] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+To: Leo Yan <leo.yan@arm.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Feb 13, 2025 at 11:03=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Sun, Feb 02, 2025 at 06:43:04PM -0600, Rob Herring (Arm) wrote:
+>
+> [...]
+>
+> > +static void __debug_save_brbe(u64 *brbcr_el1)
+> > +{
+> > +       *brbcr_el1 =3D 0;
+> > +
+> > +       /* Check if the BRBE is enabled */
+> > +       if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx=
+_ExBRE)))
+> > +               return;
+> > +
+> > +       /*
+> > +        * Prohibit branch record generation while we are in guest.
+> > +        * Since access to BRBCR_EL1 is trapped, the guest can't
+> > +        * modify the filtering set by the host.
+> > +        */
+> > +       *brbcr_el1 =3D read_sysreg_el1(SYS_BRBCR);
+> > +       write_sysreg_el1(0, SYS_BRBCR);
+> > +}
+>
+> Should flush branch record and use isb() before exit host kernel?
 
-On Thu, Feb 13, 2025 at 3:00=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> Why is there a --off-cpu-thresh 2000?
->
-> We collect an off-cpu period __ONLY ONCE__, either in direct sample form,
-> or in accumulated form (in BPF stack trace map).
->
-> If I don't add --off-cpu-thresh 2000, the sample in the original test
-> goes into the ring buffer instead of the BPF stack trace map.
->
-> Additionally, when using -e dummy, the ring buffer is not open, causing
-> us to lose a sample.
+I don't think so. The isb()'s in the other cases appear to be related
+to ordering WRT memory buffers. BRBE is just registers. I would assume
+that there's some barrier before we switch to the guest.
 
-Just noticed that this commit message is wrong, should be:
-"""
-Add tests for direct off-cpu samples and --off-cpu-thresh option.
-"""
+> I see inconsistence between the function above and BRBE's disable
+> function. Here it clears E0BRE / ExBRE bits for disabling BRBE, but the
+> BRBE driver sets the PAUSED bit in BRBFCR_EL1 for disabling BRBE.
 
-Sorry.
+Indeed. This works, but the enabled check won't work. I'm going to add
+clearing BRBCR to brbe_disable(), and this part will stay the same.
 
-Thanks,
-Howard
-
->
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20241108204137.2444151-11-howardchu95@gma=
-il.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/shell/record_offcpu.sh | 71 +++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->
-> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
-hell/record_offcpu.sh
-> index 678947fe69ee..c5d6cae94c65 100755
-> --- a/tools/perf/tests/shell/record_offcpu.sh
-> +++ b/tools/perf/tests/shell/record_offcpu.sh
-> @@ -7,6 +7,9 @@ set -e
->  err=3D0
->  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->
-> +ts=3D$(printf "%u" $((~0 << 32))) # OFF_CPU_TIMESTAMP
-> +dummy_timestamp=3D${ts%???} # remove the last 3 digits to match perf scr=
-ipt
-> +
->  cleanup() {
->    rm -f ${perfdata}
->    rm -f ${perfdata}.old
-> @@ -19,6 +22,9 @@ trap_cleanup() {
->  }
->  trap trap_cleanup EXIT TERM INT
->
-> +test_over_thresh=3D"Threshold test (over threshold)"
-> +test_below_thresh=3D"Threshold test (below threshold)"
-> +
->  test_offcpu_priv() {
->    echo "Checking off-cpu privilege"
->
-> @@ -88,6 +94,63 @@ test_offcpu_child() {
->    echo "Child task off-cpu test [Success]"
->  }
->
-> +# task blocks longer than the --off-cpu-thresh, perf should collect a di=
-rect sample
-> +test_offcpu_over_thresh() {
-> +  echo "${test_over_thresh}"
-> +
-> +  # collect direct off-cpu samples for tasks blocked for more than 999ms
-> +  if ! perf record -e dummy --off-cpu --off-cpu-thresh 999 -o ${perfdata=
-} -- sleep 1 2> /dev/null
-> +  then
-> +    echo "${test_over_thresh} [Failed record]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  # direct sample's timestamp should be lower than the dummy_timestamp o=
-f the at-the-end sample
-> +  # check if a direct sample exists
-> +  if ! perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F even=
-t | grep -q "offcpu-time"
-> +  then
-> +    echo "${test_over_thresh} [Failed missing direct samples]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  # there should only be one direct sample, and its period should be hig=
-her than off-cpu-thresh
-> +  if ! perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F peri=
-od | \
-> +       awk '{ if (int($1) > 999000000) exit 0; else exit 1; }'
-> +  then
-> +    echo "${test_over_thresh} [Failed off-cpu time too short]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  echo "${test_over_thresh} [Success]"
-> +}
-> +
-> +# task blocks shorter than the --off-cpu-thresh, perf should collect an =
-at-the-end sample
-> +test_offcpu_below_thresh() {
-> +  echo "${test_below_thresh}"
-> +
-> +  # collect direct off-cpu samples for tasks blocked for more than 1.2s
-> +  if ! perf record -e dummy --off-cpu --off-cpu-thresh 12000 -o ${perfda=
-ta} -- sleep 1 2> /dev/null
-> +  then
-> +    echo "${test_below_thresh} [Failed record]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  # see if there's an at-the-end sample
-> +  if ! perf script --time "${dummy_timestamp}," -i ${perfdata} -F event =
-| grep -q 'offcpu-time'
-> +  then
-> +    echo "${test_below_thresh} [Failed at-the-end samples cannot be foun=
-d]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  # plus there shouldn't be any direct samples
-> +  if perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F event =
-| grep -q 'offcpu-time'
-> +  then
-> +    echo "${test_below_thresh} [Failed direct samples are found when the=
-y shouldn't be]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  echo "${test_below_thresh} [Success]"
-> +}
->
->  test_offcpu_priv
->
-> @@ -99,5 +162,13 @@ if [ $err =3D 0 ]; then
->    test_offcpu_child
->  fi
->
-> +if [ $err =3D 0 ]; then
-> +  test_offcpu_over_thresh
-> +fi
-> +
-> +if [ $err =3D 0 ]; then
-> +  test_offcpu_below_thresh
-> +fi
-> +
->  cleanup
->  exit $err
-> --
-> 2.45.2
->
+Rob
