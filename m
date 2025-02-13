@@ -1,321 +1,345 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47FA2139A2
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 09:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F487215066
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 09:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437738; cv=none; b=ZR9oQVY95bHgBaTlZ09FPtxr0p3QZYi3+lLLyCRJ+o7UbwhHcr9ks/HjiRMuIKp4auv5akc/9s34OlyEZFes68JRS2b+FAiSGxftpeTPoqIg+u7/94wlPWKr7z4DxtuB/Oj/R3UbLW8t7pSaSeYbXSaHuSRcolER7FIUlfPU9hA=
+	t=1739437772; cv=none; b=cJ8msZUz+5y64Zxgt0kDa1teUuE//CHYbS0AUE5dImaLL+G5xai9myqqZkY5wTiG59gH0ArnsHLCu1WAnSOeEB9VfpL31Je4fgDC44eo0D246pyNQOXsPr2f2s14FqjzOKiEVhjhUCLZKhyKuovyVRYHTjeDeBxTKe6Lj4CilkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437738; c=relaxed/simple;
-	bh=XfN24f35OJ2vk/m+e6pUtd4T3vptKtMhhNopu2gMhYw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bpe+2ufX65EoBL4s//C9tGyfo1DOV0PuRfpdudKNYsx0Awuda1ae8QFvJHoatJyGzfqE4Yb+IYsbhzeOL+ucQ6ydEij9QBnPoEwCDICtjcQR5x0JaeniRfdmraghReRxL2TKf1KPh9jITGfWFjOvCwzKAc9L8XSh1LVOfGmHi70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AZkTIhPl; arc=none smtp.client-ip=209.85.218.74
+	s=arc-20240116; t=1739437772; c=relaxed/simple;
+	bh=KcBD2cPQmGBfq6elz01c8ijxlyjzLUstdIiX1VSTJv8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GUq8jscjHxB3Jx9I2l5w4LwfzUbZKUwVmGK3B8YsjxqQBtNOUXbw2Vq/Z1/vsqkrbLIi/uOoCXBZzI2CxVnRDgABFmHsrirnaiqKgU2jUfxrbGx0c+Gh4JRDaetfubwg7g/pxLngiJX05q6r/qsCDh9kpGEpvK5pnpNX3C96HTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWFrJCAn; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZkTIhPl"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab7e1285f55so73252366b.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 01:08:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWFrJCAn"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30795988ebeso6752041fa.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 01:09:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739437733; x=1740042533; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=AZkTIhPlKAICxka45kVGwQQindk/IfD24e6ylVuJ2Qy41Lyoc0Y8G0hEePhcOU/ffu
-         1e6EE6n4EaGV33DEAPCPHKkL2/SrL9C4iiyrlhWYz3KuEMfmqqDN9AOQDP8KfZ4Zt4Mv
-         VOl6KDnk8DP/DI6SeLA2dxk9PDdO8jAWEMJX29bO2gnMCN6QO6TzFkWMgBtwpdMwZW1g
-         t3YmAtnYn+6HgD+sly9+YvZZFSdHVtRa9dojFWGwUQZr17zthwMx/Vs5Fdz4he0rgBik
-         azsMrK8L2g/JkYyksdksPoHtiAzLoXRpadm3Vokc/4/hoWJRl2cenB83UqyZQKb1ilgf
-         fVhQ==
+        d=google.com; s=20230601; t=1739437768; x=1740042568; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kAudk4OBy3oQ5BFlJBkk/G/IpQ0/neUpevp/6wokGyc=;
+        b=dWFrJCAn8OeawCz9LqjsdNsRey0sTbVdVZ91WSXo4h1bysqlBAFkediTtx4/yia9lj
+         gWOqzID6sTBrWljJiKFRUf+PV2koiv3VyJkQLUPrirBrmafbuYPGRKJ52KllqFhUtFMh
+         RnX7mqhOafGdhrD/2KO73P4DA6qq4s0gKdmmmdC/MTvygva9v3XyLCkrrAnx5uegE3Nc
+         LAW+HRdTkJgA+GvP/TYPxw/S3+qhG1vcSLIkoWzToWZYhgyKSl3Vi1QPTzs0HAi+6xwG
+         7m81LrHrKQIpH/nO+QZkSC/u4tF5Gu2Zw42VtWoilcOD3mTr+2B3ewMEyPLPwrjztbVh
+         XEwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437733; x=1740042533;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgMJGG8J9qWcW3TupvJXIyqnEtZAoqP7JYM6BoJGJhw=;
-        b=uMn9F92mk+/z0z7u/k+9P1VzclAaxp23/iKU8HQ0whAE+aSXCpzSdWXal27LgdXo8a
-         YteBNypss+ywcJVKLHzyuN81O3a2M+/j4E4pGNnMlOBEyN2OA+hYdvjla8sYjwhJM7Es
-         BHQ4nd07w25ldVoku2Fp9nn3MVWYYzbtVKgZbTFJnaKzLWpFu5DLVg/BGZzUMJjOsDcb
-         E1RW2Hl0deVqpQp/PiRalgaIuufnXkaEKwK4XjPyqLLC0uDnl5GBKK/wVqUS8QhdsunN
-         KCGGCQrDpAdy+2U0h9HKLKrZ9oOxtubytmoeh9BnVW42Azc9nhcje4eNgfSMw6cik/yl
-         tjyA==
-X-Gm-Message-State: AOJu0YyuKpWy9I51msb7O4Hx56pTCUBu7Ru8xFaHaczLUwhW87bgA1jH
-	CuWpJQzU3XQplUUfD1re2DGY6F7Qkp+61feklNm603n+u7wZtJojwvpvOz7aNtv//aNZQMwmsJs
-	s8sBIFQ==
-X-Google-Smtp-Source: AGHT+IESQcCr8+K8FwNJFz7mKQPjJ9j9o1aqQnbiHg2o232jZMxRV6+6jYX0sYilojk6zt9/4a+CTtA4JxXR
-X-Received: from ejv1.prod.google.com ([2002:a17:906:3081:b0:ab7:b298:3b76])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:dab:b0:aa6:8cbc:8d15
- with SMTP id a640c23a62f3a-ab7f338ef2fmr650865366b.14.1739437733104; Thu, 13
- Feb 2025 01:08:53 -0800 (PST)
-Date: Thu, 13 Feb 2025 10:08:22 +0100
-In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
+        d=1e100.net; s=20230601; t=1739437768; x=1740042568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kAudk4OBy3oQ5BFlJBkk/G/IpQ0/neUpevp/6wokGyc=;
+        b=hN2FEu/ARQ5a0UCc/aNhJFi4XkfAeCIFlU5KOUBP77ts83wQ24qJF10tc6P3U0Qzcv
+         ycNtlZJcfs/TS0iisNfh2zzGnpIHaSwXG3qRuVInTem/VU5+kYXa2CnoZHbJf8P5revK
+         1mo6MY3tgVRq9j61BKs7FXd/a6jXIyww8w2skXtL2hneKy6ElL/Sd5W0KB+YZQZIHQbv
+         ouu/YN85VJaiYfxnUFWh3IHfZl2Bf7dtojCIkRLlqAO01in1JwtoXS55+ee0bnc3d+fV
+         z8XDB/kHGVEruRSoDuQ6w5lRxnxYk8grGt6n/K4Fuk/W0NJC2wW5OdLHYqi1GSiYtwHn
+         4bjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvhFjR2+kIF1uFGkXyvntKLzoT5SPU/v0pRM+FvOTY8PqIT2jOeQfVO8LyN9ZxB2GVBWopWsDRCO+Jbr1Zny36@vger.kernel.org
+X-Gm-Message-State: AOJu0YztOoLp1YDfeP8k5ChqqARZEzFQwkd4V3650zrjkAELrVj6vUou
+	MzDf0+2rfy+KjwryWNE4+xzRYWURPFBCUe1km7Pi6Kx1ItEZgNpzcg0oOUIPen4at4hVQvoKpiA
+	7o/qZfV0XclSbYuNtwaZFbC2+c7eDLb425ne6
+X-Gm-Gg: ASbGnctMVpzRuLEFR8RiZutQtu/0kHbd+YiVn9Mvi24Eh1paKgNmnWI8+w0wzg86O51
+	D3Iq3CySgjxOjMpfIKYLiEWPslMqDR70XwCoT0WpOl7hHl1ly9xzkY5n6Y8Mh/VN4EAGtvBhLV3
+	rF9JCuR/z+4zUUE14Xop4L4/JaOF7NyQ==
+X-Google-Smtp-Source: AGHT+IGytENfR1Y5HPvNb7G5JdouX7QcgKyJucqODl7HSF99koYksEWn58+z7u0X5kP6vJmWxmRVKbLTknVp9MubMeE=
+X-Received: by 2002:a2e:be9a:0:b0:307:c829:f170 with SMTP id
+ 38308e7fff4ca-3090dcba09cmr7118641fa.4.1739437767915; Thu, 13 Feb 2025
+ 01:09:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1739437531.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <7c1cb1c8f9901e945162701ba7269d0f9c70be89.1739437531.git.dvyukov@google.com>
-Subject: [PATCH v7 9/9] perf hist: Shrink struct hist_entry size
+MIME-Version: 1.0
+References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
+ <Z6WBsruddcx0SFV5@google.com> <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
+ <Z6qhjFs0YOMTzk9W@google.com> <CACT4Y+brgj5vRoxQtZ76hUVcHWUJJ2u_8n89EwuTAoyXXbGDCw@mail.gmail.com>
+ <Z6uMBAG0hePL9JV3@google.com> <CACT4Y+YB_Ckfptkyu6yiF5Daa8q4MgGyf_1u7RPjoTsdQ3h=qw@mail.gmail.com>
+ <Z6z6znWi3o-ewuNs@google.com>
+In-Reply-To: <Z6z6znWi3o-ewuNs@google.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
-	ak@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
+Date: Thu, 13 Feb 2025 10:09:15 +0100
+X-Gm-Features: AWEUYZnvPHNlsYlZPnafaUYgaXRAn2-afRgaVBuyItL5BtSYs1zIW7nxeO7UJYw
+Message-ID: <CACT4Y+aBsT5VddEHQPtkjWkO_2NF_Ra3BDzi=AwvjvxwYo1gMA@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
+On Wed, 12 Feb 2025 at 20:47, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Tue, Feb 11, 2025 at 09:23:30PM +0100, Dmitry Vyukov wrote:
+> > On Tue, 11 Feb 2025 at 18:42, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Tue, Feb 11, 2025 at 09:42:16AM +0100, Dmitry Vyukov wrote:
+> > > > On Tue, 11 Feb 2025 at 02:02, Namhyung Kim <namhyung@kernel.org> wr=
+ote:
+> > > > >
+> > > > > On Fri, Feb 07, 2025 at 08:23:58AM +0100, Dmitry Vyukov wrote:
+> > > > > > On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> > > [SNIP]
+> > > > > > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_out=
+put(struct perf_hpp_list *list,
+> > > > > > > >       return 0;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > -int hpp_dimension__add_output(unsigned col)
+> > > > > > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > > > > > >  {
+> > > > > > > > +     struct hpp_dimension *hd;
+> > > > > > > > +
+> > > > > > > >       BUG_ON(col >=3D PERF_HPP__MAX_INDEX);
+> > > > > > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &h=
+pp_sort_dimensions[col]);
+> > > > > > > > +     hd =3D &hpp_sort_dimensions[col];
+> > > > > > > > +     if (implicit && !hd->was_taken)
+> > > > > > > > +             return 0;
+> > > > > > >
+> > > > > > > I don't think you need these implicit and was_taken things.
+> > > > > > > Just removing from the sort list when it's unregistered seems=
+ to work.
+> > > > > > >
+> > > > > > > ---8<---
+> > > > > > > @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(st=
+ruct perf_hpp_list *list,
+> > > > > > >  static void perf_hpp__column_unregister(struct perf_hpp_fmt =
+*format)
+> > > > > > >  {
+> > > > > > >         list_del_init(&format->list);
+> > > > > > > +       list_del_init(&format->sort_list);
+> > > > > > >         fmt_free(format);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > ---8<---
+> > > > > >
+> > > > > > It merely suppresses the warning, but does not work the same wa=
+y. See
+> > > > > > this for details:
+> > > > > > https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRw=
+CGF0c8iUJtTTq0Lw@mail.gmail.com/
+> > > > >
+> > > > > But I think it's better to pass --latency option rather than addi=
+ng it
+> > > > > to -s option.  If you really want to have specific output fields,=
+ then
+> > > > > please use -F latency,sym instead.
+> > > > >
+> > > > > Also I've realized that it should add one sort key in setup_overh=
+ead()
+> > > > > to support hierarchy mode properly.  Something like this?
+> > > > >
+> > > > > Thanks,
+> > > > > Namhyung
+> > > > >
+> > > > >
+> > > > > ---8<---
+> > > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > > index 2b6023de7a53ae2e..329c2e9bbc69a725 100644
+> > > > > --- a/tools/perf/util/sort.c
+> > > > > +++ b/tools/perf/util/sort.c
+> > > > > @@ -3817,22 +3817,15 @@ static char *setup_overhead(char *keys)
+> > > > >                 return keys;
+> > > > >
+> > > > >         if (symbol_conf.prefer_latency) {
+> > > > > -               keys =3D prefix_if_not_in("overhead", keys);
+> > > > > -               keys =3D prefix_if_not_in("latency", keys);
+> > > > > -               if (symbol_conf.cumulate_callchain) {
+> > > > > -                       keys =3D prefix_if_not_in("overhead_child=
+ren", keys);
+> > > > > +               if (symbol_conf.cumulate_callchain)
+> > > > >                         keys =3D prefix_if_not_in("latency_childr=
+en", keys);
+> > > > > -               }
+> > > > > -       } else if (!keys || (!strstr(keys, "overhead") &&
+> > > > > -                       !strstr(keys, "latency"))) {
+> > > > > -               if (symbol_conf.enable_latency)
+> > > > > +               else
+> > > > >                         keys =3D prefix_if_not_in("latency", keys=
+);
+> > > > > -               keys =3D prefix_if_not_in("overhead", keys);
+> > > > > -               if (symbol_conf.cumulate_callchain) {
+> > > > > -                       if (symbol_conf.enable_latency)
+> > > > > -                               keys =3D prefix_if_not_in("latenc=
+y_children", keys);
+> > > > > +       } else {
+> > > > > +               if (symbol_conf.cumulate_callchain)
+> > > > >                         keys =3D prefix_if_not_in("overhead_child=
+ren", keys);
+> > > > > -               }
+> > > > > +               else
+> > > > > +                       keys =3D prefix_if_not_in("overhead", key=
+s);
+> > > > >         }
+> > > > >
+> > > > >         return keys;
+> > > >
+> > > >
+> > > > Have I decoded the patch correctly?
+> > > >
+> > > >         if (symbol_conf.prefer_latency) {
+> > > >                 if (symbol_conf.cumulate_callchain)
+> > > >                         keys =3D prefix_if_not_in("latency_children=
+", keys);
+> > > >                 else
+> > > >                         keys =3D prefix_if_not_in("latency", keys);
+> > > >         } else {
+> > > >                 if (symbol_conf.cumulate_callchain)
+> > > >                         keys =3D prefix_if_not_in("overhead_childre=
+n", keys);
+> > > >                 else
+> > > >                         keys =3D prefix_if_not_in("overhead", keys)=
+;
+> > > >         }
+> > > >
+> > >
+> > > Yep, that's correct.
+> > >
+> > >
+> > > > If I decoded the patch correctly, it's not what we want.
+> > > >
+> > > > For the default prefer_latency case we also want to add overhead, t=
+hat
+> > > > was intentional for the --latency preset. It does not harm, and all=
+ows
+> > > > to see/compare differences in latency and overhead.
+> > > > Again, if a user wants something custom, there is no way to second
+> > > > guess all possible intentions. For non-default cases, we just let t=
+he
+> > > > user say what exactly they want, and we will follow that.
+> > > >
+> > > > "latency" should be added even if cumulate_callchain.
+> > >
+> > > Please note that it just sets the sort key - which column you want to
+> > > order the result.  The output fields for overhead and children will b=
+e
+> > > added in perf_hpp__init() if you remove the 'was_taken' logic.  So I
+> > > think this change will have the same output with that.
+> >
+> > Yes, but perf_hpp__init() does not have the logic that's currently
+> > contained in setup_overhead().
+> >
+> > If the user specified a "latency" field, and we don't want to add
+> > "overhead" in that case, then _both_ setup_overhead() and
+> > perf_hpp__init() must not add "overhead".
+>
+> Ok, I see your point.  But I think it'd be much easier if you allow the
+> 'overhead' column in that case too.
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+It may be possible. However, one of my motivations that I did not
+fully explain and realized myself is as follows.
 
----
-Pahole output before:
+You referred to fields and sort order as to different things. However,
+for a person not working on perf code internals these are mostly the
+same thing.
 
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
+Fields are merged into sort order, sort order elements appear as fields.
+Say, if I do "-F symbol,overhead", output will be sorted by symbols
+first, so fields =3D=3D sort. Similarly, anything specified in --sort
+appears as fields in output, so sort =3D=3D fields.
 
-	/* XXX last struct has 4 bytes of padding */
+My current code keeps behavior for them consistent. Making it
+non-consistent may be confusing for users.
 
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
+For example, --hierarchy requires --sort (fails with -F), so I tend to
+use it more than F (commands with --sort are already in my bash
+history).
+So if I want latency and symbol I tend to do:
 
-	/* XXX 4 bytes hole, try to pack */
+perf report --sort latency,symbol
 
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
+and with my current code this behaves the same way as:
 
-	/* XXX 2 bytes hole, try to pack */
+perf report -F latency,symbol
 
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
+Which matches my mental model of F/sort being the same.
+However, if we remove was_taken, then the above commands behave
+differently, which for end user like me is:
+=C2=AF\_(=E3=83=84)_/=C2=AF
 
-	/* XXX 1 byte hole, try to pack */
 
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
+After reading the code, I think I understand the difference
+(hopefully), e.g. it allows me to do a subtle things like:
+-F symbol,overhead --sort overhead,symbol
+(not sure how useful this is compared to always sticking to field
+order for sorting)
 
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
 
-After:
 
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
 
-	/* XXX last struct has 4 bytes of padding */
+> > If we do what you proposed, then perf_hpp__init() will still add
+> > "overhead" and we go back to square 0.
+>
+> Right, but currently the default perf report and with --latency option,
+> will show both overhead and latency columns.  That's why I thought you
+> wanted to display them together.
+>
+> Actually I don't want to use -s option to describe output fields (like
+> overhead and latency) but I cannot prevent people from doing that. :(
+> Maybe you can skip the setup_overhead() if user gives either 'overhead'
+> or 'latency' explicitly - oh, you have that in the !prefer_latency case.
+>
+> >
+> > I used was_taken to not duplicate this non-trivial logic in both
+> > functions. As I mentioned in the previous replies, I tried that but it
+> > was messier/more complex. was_taken is a simple way to not duplicate
+> > logic and keep these functions consistent.
+>
+> Hmm.. ok.  Maybe we can update this part later.  Can you please add a
+> comment in the perf_hpp__init() that says overhead and latency columns
+> are added to the sort list in setup_overhead() so it's added implicitly
+> here only if it's already taken?
 
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
+Added a comment capturing some of this discussion in v7
 
-	/* XXX 6 bytes hole, try to pack */
 
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
- 
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
- };
- 
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
- 
--- 
-2.48.1.502.g6dc24dfdaf-goog
-
+> > > > For the !prefer_latency case, we don't want to mess with
+> > > > overhead/latency fields if the user specified any of them explicitl=
+y.
+> > > > Otherwise this convenience part gets in the user's way and does not
+> > > > allow them to do what they want. User says "I want X" and perf says
+> > > > "screw you, I will give you Y instead, and won't allow you to possi=
+bly
+> > > > do X".
+> > >
+> > > That's what -F option does.  The -s option used to specify how to gro=
+up
+> > > the histogram entries and it will add 'overhead' (and/or 'latency') i=
+f
+> > > it's not even requested.  So I think it's ok to add more output colum=
+n
+> > > when -s option is used.
+> > >
+> > > But unfortunately, using -F and -s together is confusing and change t=
+he
+> > > meaning of -s option - it now says how it sort the result.
+> > >
+> > > >
+> > > > And see above: -F does not work with --hierarchy, so this part is u=
+nskippable.
+> > >
+> > > Yep, but I mean it fixes --hierarchy and --latency.  I'm thinking of =
+a
+> > > way to support -F and --hierarchy in general.
+> >
+> > I don't know why it was disabled. There are likely other things to
+> > improve, but please let's not tie that to this change.
+>
+> Right, it's a separate issue.  I was afraid of mixing output fields and
+> sort keys in an unexpected order.  But maybe we can support that if
+> that's what user wants.
+>
+> Thanks,
+> Namhyung
+>
