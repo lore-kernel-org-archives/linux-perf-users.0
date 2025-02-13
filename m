@@ -1,62 +1,62 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5A026FA6A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFA122D781;
 	Thu, 13 Feb 2025 23:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487625; cv=none; b=CjXdViQC3oc1lheocqH/zakpDvOrJFiRPwxe72GWUgyUMiuDLrcVe46izHCNZpO4EUqQp0B95wixYTWV5wVA8XUks+o+UnAh5KzVAQlWfA8Fk/DDrTRhkn2XZ6F5tDxxZnzMeZ2rBNqE9Uj3unB36TlwCZ4pId6zn1lqX6uWnE0=
+	t=1739487625; cv=none; b=KZCMj5m9Ah7B2vKdD8Sdh9XE8/uOhq0kW0M52grLiYZtsRbMzmXe3dIsH/gDveHLFGctNH55FORMIWbrLe+03Tu7MZiky/0tM+qVJjnk3GnVx8wzKYF7WZd/oNLbWsOn9ZC1w5tFr85jl7AvTI/YoWwNwMKUl1wmVeGuUclrpBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739487625; c=relaxed/simple;
-	bh=Pqez/aGnMBPJahMHse06GPvbqP7rG0cCe15F1SQqc0o=;
+	bh=UjjR7OdU1VMuMu0dk05ePpEpKY020R6nckVERK33lt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MEgAIzGyc9605wJOTH9yLN/o6Ac4qxiDOrwUmkKTnoNUoVDATV6SrHfsXfo/vNeUmDz4wy5qOk7WUjVpqporPV5IU+UlJgB0CDR9dLNXNNRZen/9ESsjgw3gRWfTO63rWjxtKqfzFOhx7yS30NWbiclHa7QjFXmloYGstLcMxKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcDBNVg+; arc=none smtp.client-ip=209.85.216.45
+	 MIME-Version:Content-Type; b=Wgqgd7swF11V22h0vYR2nGqVvSOeaJ1ujh/UVZOkklm6ogWTq1+3A6SksIFgxUuXZpyj578TQ9BfUO3fRYK8u2veS6Citquxc1YYKXjzq23f+uxe9k8GxVgboGO56MvYJbJmZJKXSB7qeTJtF5gAODtxHL2860lIHFExxLhWZtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZnLfDSLJ; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcDBNVg+"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa1fb3c445so2148532a91.2;
-        Thu, 13 Feb 2025 15:00:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnLfDSLJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220c8eb195aso27246095ad.0;
+        Thu, 13 Feb 2025 15:00:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739487622; x=1740092422; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739487623; x=1740092423; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mrDkT78AbLp193RSVHymTnt8PVvEiWM3gXo16d10Ee8=;
-        b=NcDBNVg+GfwxOmVPnC6oLo5x/etqWs6gSf981lAl3Z4XdA8ntvyviVpsRdsLfYUctY
-         JkXuoM1Jqn7kKnGm+Epbu7UCUGChULjLdhp8mEQnl4aRxB/8L84t8jnUns6/Jgl5HTeE
-         QhhTzJtuyQL6XdA5xOq2W0ZbCfkgTAFddAbJ5T1Zuac/TxWzxVqALdEOOgEAJXryd3uN
-         sePv3QGu3S8MBoAw4QqJ+OBHzAHaYcMIaFeZYiABjuqB3TM7L/PU2iPEbKddIjHSfzxa
-         IjmZOYpR4cWyzemRSYBjcubVTU0CeTvHnROxDbiju6WiBNKzXmpoGYA/pPvQUppRUwj6
-         sTnw==
+        bh=1aTgCNo0b7SsW3yuyjGgod0qmPvKeo0A7oK4bUI9QpQ=;
+        b=ZnLfDSLJUTrLTzO024/NrINjNLAin+idcfXYO8z0oyAxjezPdfN0BmyUrBglimLcg4
+         mC6PVzasXuhX26ABywWwawPNUkxiL/8eRAoO7+NxSFROCTBRSLcLQvEhcM090hiud3tD
+         s5/hdCAqfFrK9hvhpeg/R45D7TVhs9aTnv9hcKecpY8dbDpY8TGuUVzozbDQ4B4Q4NgT
+         a41X7CGTcQzHT/J2TtW732D1A4OkZZfM741V101/HyQ1cvYsr4BDJqNk7NcruOfkSjQy
+         8NHhAA71Lbl3Pkx/KoeMN5j0NZhmWearR8kDff0SqnaVic6tpCiO74vdUKSDFFu+BiFF
+         UxIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739487622; x=1740092422;
+        d=1e100.net; s=20230601; t=1739487623; x=1740092423;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mrDkT78AbLp193RSVHymTnt8PVvEiWM3gXo16d10Ee8=;
-        b=t+rAzntDMez9dR2L/Mhkjt57a6dSuczUYJz+EsgurNxFcaaf4oxaPO4igsBVdxUsQO
-         cOjXot0ZDUR3ZPqJX5WgpYC9rKmMrocgh8SpufjrSg0lf6T/yMjxsjifqzA5Mougv9Q4
-         NORP1AH2QDdBfjEN7xp0duxJ5J49ndsR3ZzH8oZ04deax5g3qlXQnJwm1I+hTbBzhI+F
-         xz1v1uDRwvlpaMyhttaAJsHJCFsDPkJY8am2i3vaqzM6NApFk5kLmV87gLf0FkoPh03/
-         S1pD7QTgGZkyvO6IPbFpYcxstyM/bSZt5Yb6AMj73nrLiSn+UbnFt9tbKQtfFdn5xHwm
-         Lsag==
-X-Forwarded-Encrypted: i=1; AJvYcCVBO2mLiDTnNUHMjBFy5l0UDAQ16uNHZYos96AUwPTq+M0OWDfaf7LThTIYJXmfyAR8DBLFUYLzd+jYqyE=@vger.kernel.org, AJvYcCVPU/ki0r2L8QH7+Amy/mGRzOquUiGdTwrF+1wVHpd1tQ/whwUZ2KCfntj/bGODejvLbx5DGXZTbn53M7otJwfjew==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGVbNOk5STEynEBjNtj6KCxN+8GHJsh3pREpoXX2NJ3MhWOUzX
-	WY3suXYTlZmrbhwJLpkOvPziFQHvy9/eVyqtG6nMzmAr/JyWJHiK
-X-Gm-Gg: ASbGncvxmV6T7OYJ6Aut2GpNWaHQC+hQYRI2CcoMaJu2DA8U06Swbn3bUTm/U31VGoO
-	QzlfyqPtSRF28aO7+8n8fH/gD/LcZXjvX4ldecr72fVA8BB04a0SH+2sR7YqbarXTEBQ8Mfd3D/
-	5LqfK46K+0LYlfY8dOEwXoIhp+hFZ8njdEPvCHjcj8WEYNlDW+oSZzPczI6uMzUPm6YldjT8EyX
-	PlvQj35/RcF37ZMwiwemTxZ2OGWbGOzjuCXsjpsVTHoqt7KoBYWNXWJ/TSAdOY3rda/0EjZBdMZ
-	ZpsIW6rc7nxgFEOApaQY5wbtaqZVXkdrM0JY1PX2TxQVZyk=
-X-Google-Smtp-Source: AGHT+IGVG4jPUE2Vy3GKr7ThKUQyZply+qxvizrvUmFRuNzLEG7JPuoxpuF3oziSYxBhOn3eRPUBwg==
-X-Received: by 2002:a17:90b:4a10:b0:2ee:b66d:6576 with SMTP id 98e67ed59e1d1-2fbf9134584mr11216916a91.30.1739487621585;
-        Thu, 13 Feb 2025 15:00:21 -0800 (PST)
+        bh=1aTgCNo0b7SsW3yuyjGgod0qmPvKeo0A7oK4bUI9QpQ=;
+        b=jZ5yB3RrIT6xjxmWF8fSGuuEu9JMG6BheUsnCYbTRp1gtfvy9dMwY+IMK+v1ZaZo8N
+         pvELC4htxtK39wxsO+EXUr9JPOZbS7SFbtUidC9oSTmblDVdAQxOdnt7UNv9nGUqqHsZ
+         5mjJsqYBjK2mj1lfD7My+WTOBLSO0PjCmTmU40FzzrIfkTBWpnO3CEyP4XPm3Sbybcla
+         hN0mimiIIccV3aO9eJZSJg5f3sAJ4M0OgkeciqEmqkqaLfaD24EjVic4H0I50Tfrl/6c
+         n3yXitdreIyhv0vjq8tNt5XGQtdYrJqFLidLw8f6Y2b95m73FI0zkiFOpNYhs8X7keI4
+         VLHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeRQ4k5dx/SMJlTWLdJotoTlULOlFhMA5XVROaj6j+RvHcvS59WD8ZahM0tWLDMFdZhWjgxJIZwTvouyF2YGFTrQ==@vger.kernel.org, AJvYcCUgrpqlT9t1kLl43XFswcVhnVCmdBr2wbdbToJdKdVMoNGw4Q+0pqr+RwhqRP65ZgVbmgM+2OdoTPHfHaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygpyOD/hQWwYIh10PigF6yC+RnCNla3tf4xhFzllNbxrNip+uZ
+	ya4/uYBqk6/HjawEYX3nCfBGTE0H5Al6UjfQh0+NYEPn5eQhR0Gw
+X-Gm-Gg: ASbGncsJgNO0JqwPqp5rMBYB2E6ndHpLiFm9Gmih5lANJB91WRnZf1aPQA460d6B8IX
+	tkrvcNXQzNDIhksJxW0rnmLx09MpPqtCD08BWmf+xOgmy8jCXIteV7ix2W2fVgDFDWJNsBWp6vR
+	ugGlWkvUYUYURVWs3bJWi2N7JEobiVrabDIHuUgwVMnXXdzAzANXynKqy+m62lO5LC1T8Omnytx
+	HjBymbSR2OMBa2os2hrpSccT/6MknyQvrE9zXnLdWfYg8E6f0SnX+8akl8KBMRJfNhXcbs8tbRq
+	oYOfzu5Kvy7nHOzVXYK0B0pZ9Pvia0cXqialZAIA/646V0g=
+X-Google-Smtp-Source: AGHT+IFr+vj96n7kaUSAg360rDSVM3RSUvO0RDfO4cwkPjYnQqKwJRbpt1kdSySImQrQuX5ER2YwMA==
+X-Received: by 2002:a17:902:f64c:b0:21f:164d:93fe with SMTP id d9443c01a7336-220bbc8ba82mr175017795ad.53.1739487623151;
+        Thu, 13 Feb 2025 15:00:23 -0800 (PST)
 Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5349210sm17641735ad.11.2025.02.13.15.00.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5349210sm17641735ad.11.2025.02.13.15.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 15:00:21 -0800 (PST)
+        Thu, 13 Feb 2025 15:00:22 -0800 (PST)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: namhyung@kernel.org,
@@ -73,9 +73,9 @@ Cc: namhyung@kernel.org,
 	Mark Rutland <mark.rutland@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v15 06/10] perf record --off-cpu: Disable perf_event's callchain collection
-Date: Thu, 13 Feb 2025 15:00:05 -0800
-Message-ID: <20250213230009.1450907-7-howardchu95@gmail.com>
+Subject: [PATCH v15 07/10] perf script: Display off-cpu samples correctly
+Date: Thu, 13 Feb 2025 15:00:06 -0800
+Message-ID: <20250213230009.1450907-8-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250213230009.1450907-1-howardchu95@gmail.com>
 References: <20250213230009.1450907-1-howardchu95@gmail.com>
@@ -85,35 +85,39 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-There is a check in evsel.c that does this:
+No PERF_SAMPLE_CALLCHAIN in sample_type, but I need perf script to
+display a callchain, have to specify manually.
 
-if (evsel__is_offcpu_event(evsel))
-	evsel->core.attr.sample_type &= OFFCPU_SAMPLE_TYPES;
+Also, prefer displaying a callchain:
 
-This along with:
+ gvfs-afc-volume    2267 [001] 3829232.955656: 1001115340 offcpu-time:
+            77f05292603f __pselect+0xbf (/usr/lib/x86_64-linux-gnu/libc.so.6)
+            77f052a1801c [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6.0.0)
+            77f052a18d45 [unknown] (/usr/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6.0.0)
+            77f05289ca94 start_thread+0x384 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+            77f052929c3c clone3+0x2c (/usr/lib/x86_64-linux-gnu/libc.so.6)
 
- #define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
-			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
-			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
-			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
-			      PERF_SAMPLE_CGROUP)
+to a raw binary BPF output:
 
-will tell perf_event to collect callchain.
+BPF output: 0000: dd 08 00 00 db 08 00 00  <DD>...<DB>...
+	  0008: cc ce ab 3b 00 00 00 00  <CC>Ϋ;....
+	  0010: 06 00 00 00 00 00 00 00  ........
+	  0018: 00 fe ff ff ff ff ff ff  .<FE><FF><FF><FF><FF><FF><FF>
+	  0020: 3f 60 92 52 f0 77 00 00  ?`.R<F0>w..
+	  0028: 1c 80 a1 52 f0 77 00 00  ..<A1>R<F0>w..
+	  0030: 45 8d a1 52 f0 77 00 00  E.<A1>R<F0>w..
+	  0038: 94 ca 89 52 f0 77 00 00  .<CA>.R<F0>w..
+	  0040: 3c 9c 92 52 f0 77 00 00  <..R<F0>w..
+	  0048: 00 00 00 00 00 00 00 00  ........
+	  0050: 00 00 00 00              ....
 
-We don't need the callchain from perf_event when collecting off-cpu
-samples, because it's prev's callchain, not next's callchain.
-
-   (perf_event)     (task_storage) (needed)
-   prev             next
-   |                  |
-   ---sched_switch---->
-
+Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: James Clark <james.clark@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
@@ -121,24 +125,33 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20241108204137.2444151-8-howardchu95@gmail.com
+Link: https://lore.kernel.org/r/20241108204137.2444151-9-howardchu95@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/off_cpu.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-script.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
-index 2dd67c60f211..2a4b7f9b2c4c 100644
---- a/tools/perf/util/off_cpu.h
-+++ b/tools/perf/util/off_cpu.h
-@@ -13,7 +13,7 @@ struct record_opts;
- #define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
- 			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
- 			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
--			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
-+			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_RAW | \
- 			      PERF_SAMPLE_CGROUP)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d797cec4f054..16b500b23417 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -670,7 +670,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
  
+ 		evlist__for_each_entry(session->evlist, evsel) {
+ 			not_pipe = true;
+-			if (evsel__has_callchain(evsel)) {
++			if (evsel__has_callchain(evsel) || evsel__is_offcpu_event(evsel)) {
+ 				use_callchain = true;
+ 				break;
+ 			}
+@@ -2274,7 +2274,7 @@ static void process_event(struct perf_script *script,
+ 	else if (PRINT_FIELD(BRSTACKOFF))
+ 		perf_sample__fprintf_brstackoff(sample, thread, evsel, fp);
+ 
+-	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
++	if (evsel__is_bpf_output(evsel) && !evsel__is_offcpu_event(evsel) && PRINT_FIELD(BPF_OUTPUT))
+ 		perf_sample__fprintf_bpf_output(sample, fp);
+ 	perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
  
 -- 
 2.45.2
