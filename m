@@ -1,159 +1,181 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB914200112
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 08:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA0A20C029
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 09:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436671; cv=none; b=fZn3XoQhDGKGuf6ZhlDO19pF+BqbeQ5w0JMHIaBDNKxW3EPfXhjd9NyEUdUXVffgvCmM08gxeH2y6VMfDcPcDp84FxQswWiw8vA7sGTx6D4/k30+GcjDZpKUtP+/z+6IAfHDxAlZQcrnMWQvhIuxkXlM3fPbAHQtcThyRRZcswg=
+	t=1739437714; cv=none; b=WAml+CCP8JRBVhY55J8H+I6TSn8Fu2JpO7VnxK8kibzhB1n7cBxUdc47eFPM/Hekg88zO/fE1tmKvzY9ivt6vKuMBa/az+MgiIDD1eUWfFqBm7YACG53YscYhxkU0RuaSwJISgBLh6bOmOGMFaBGLMhE1WkqExAya8bp3x28KGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436671; c=relaxed/simple;
-	bh=UcvF4sBVk0HG0g4bnNFQQiWcgR0wcXqOPwEKfCEjei4=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=OPxpdbWnXDn7+7jV8VvChI/HT7P5BJaHAC+w2up6wH/dovPX97GvIAKL7CCRmRyPck7ClcPnO76vB9Jxk9K265ycNCTSOH9kRTb7T5o5KR7vMbYZZ6kJaibPP7Zr2Yhyt75CfRxSJFoiIJMegqGTFEb0Cte55gKMg7fXX/GgLcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=pass smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=DWjLhqCv; arc=none smtp.client-ip=203.205.221.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1739437714; c=relaxed/simple;
+	bh=ScTVU/MQJB7IkiEU4cB1inpPWCkD4EJVVuZEp7l1f5M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fXgYa53HVn83E74QppHXhGMYjx/DfRak800Jf+bCxSDHpzsUUCuZhy7mP/aPR9v+6ZJ1cesQ/WrPNjyR9NY4grezOaQBrqd3eTuMqWAXOzV3sR2o47Xae9N49Zovjr2abSFE+PleAUB7SgpZzV61hMY/pWFMA2eAqg/ywpxjBL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RYJ8uRZu; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="DWjLhqCv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739436653; bh=KhaBNpb95Gi1j4dcCqAqa7XYiZGUbfkjJsMy2avvVao=;
-	h=From:To:Cc:Subject:Date;
-	b=DWjLhqCvbHKswy/Ubp2jnlGdL9ZdLRFNIkUPl0mcYUKf6alkSr8sC6sxMIrQyjytm
-	 s5OAqnmx2BNAyU4YPAMPsLxZH6wMSrpgCqPg7hluwcLA9rdnouhmm1t7GzsGgpPwpY
-	 BTT1xVEA0OBb1lF0d3BpR89W8omAg47eR+8eS0Dk=
-Received: from cyy-pc.lan ([240e:379:2251:3600:f57b:26f9:9718:486c])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id B2330E54; Thu, 13 Feb 2025 16:44:35 +0800
-X-QQ-mid: xmsmtpt1739436275tf62qoxf2
-Message-ID: <tencent_D4ED18476ADCE818E31084C60E3E72C14907@qq.com>
-X-QQ-XMAILINFO: OcN56dxiYj5TKvs7kfZibyvxHrdbil8FBd+bY5ZT7gc3Jj7B62kZYye07kdBtv
-	 pkuNbbtuagFWAmjnpSOjxuKK0o1iYgXUiJjXtLZOOaCnJBPYTlxepxpofP2WkhWjt4vhlIt/G0mC
-	 xY5SlOCqxPl4E15O7QMr56o83XRpGTXACrbJzhaVw/Xf4qhwsFWtwYQ9mTJdkzc2RDI/sy8Wav9L
-	 f2lDSmD/5qDeP74cE1IxH43i30aYQxS5u5zkZQ0W0HVfggr5MNE9a/0LtMr/1YXcFFg0siA3Z8dL
-	 d5JjUkKemrm43RVWMmcQs3zw2dUC1XYFfYuJkecVyUnbRK4Mu5afolhmtpeMXA6v6sWYcGDWD5Hc
-	 79mzX9dGqozQmWwxbBGr3qJBCgARzGMQIJT488XmyVdS3toP1v9Al8Ab/cJc03sRLGBoyAD8sp0M
-	 ArH9veK8hEkcQXbQj8k7DTrT6jCye5YUs//rVGqi8EaLdm96nuCZLVcC+T/PUfL3xTYIZsj7GKxh
-	 4rzR8iUHtVFgFiPuPHcqy8dOKXOafineMmg+x9j8Sm3FbbQZrOcyHI1RDPWVPF2p01+IFyNMwKKK
-	 gd3ueMHNCFEbvLAag+ZbnO/FkpUhLzSrWEKN8NcpJnLrzF54F62mUe6PqShNTud5ph9NARB5yG0z
-	 HoL+2D24wD22QKSaoq9VgPiHJaN5KLSfukOgWjqbjcZBDjdA2/DbYMYhWKn2sw50csMJr66WU1b3
-	 bLLpTavxqwmyHbhux+RSG5Qe031tcHi1zegAsBGU1/RyBezTC5ZLBmbn0Z7TgNH/vo7ka9KV/fE4
-	 mw/ChjO2jX6QZijG27yuvldo0MPClGdFyi/AjMIGM/51lhweYHSFTWqoUI/C9el8XMJwKQh/IgCM
-	 MyyJHFKKbw9dB5+AZ0bpDXgC8qaaAu8rHPoMfroD0g4PoVtN89Oa/YD1SAaApLEPUqR64FoN0h9Q
-	 UAqqPMCoXeAJTTsfaMo8Y1qhRKLIywbRg7onUXhJyFcIip5Ex4OQ==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-perf-users@vger.kernel.org,
-	james.clark@linaro.org,
-	irogers@google.com,
-	namhyung@kernel.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	fj3333bs@aa.jp.fujitsu.com,
-	fj5100bi@fujitsu.com,
-	john.g.garry@oracle.com,
-	jolsa@kernel.org,
-	kan.liang@linux.intel.com,
-	leo.yan@linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	mark.rutland@arm.com,
-	mike.leach@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	will@kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH] perf vendor events arm64: Fix incorrect CPU_CYCLE in metrics expr
-Date: Thu, 13 Feb 2025 16:44:09 +0800
-X-OQ-MSGID: <20250213084409.109774-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RYJ8uRZu"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ab39f65dc10so79914666b.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 01:08:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739437710; x=1740042510; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lwq1U/9dmqMgTloqyJjS+/Baoe2IW32eAKGxqeymvb4=;
+        b=RYJ8uRZuEsW1GBqFdterOcGRmJAFREAsEqnF13nCNMV4gj9hxYyKe5rfbeSxGqbS8C
+         Ei8WH59rvd2RYled6wYCbFFxQ3f7iWz4TZQjXGD8j9auWhdCGn1eiN6wyDO62AI3glDk
+         Ke9mVXvSFrr3tXbVwkwFOf2Fg7lVmioM6FCnyT8RGLPHpZYgdMFZlegAtzKTfnQWAvGB
+         Sr7dc+EjsRZ/Q2F++YXr8+6+U1UvXHTc/7a7inInyb91LYxIo9n+ggZDPKyzwb0HWZu4
+         GZSerU2wd2HavEdXIntNLJvkpDvHAY58aejVCi9PJeGDDPThvp/orPTdmOLyHLuJzzFK
+         UdPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739437710; x=1740042510;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lwq1U/9dmqMgTloqyJjS+/Baoe2IW32eAKGxqeymvb4=;
+        b=e4defT84kMccEpwhyJAHlL8xK0QlXHRE+FheY80dbSffubXLv6FmVqCBLiXZOJazJP
+         XztQyEOn4nIM/4bXwdNDadNPnq7TCLpLU4hrI74Aby8v3q+H9G2JUaGe5kao/DhyAdCr
+         ha4nWZbMmtf6KIyKX6T3ry5IaQnJLtb+avr1vK8MQexVuPIrDA+Z8zlksTioJeJnPcv0
+         yWo5i0/GkrWYV4Nu7ffprxvG2AwMuYejwH0nFFfSIEZZs9ZNCs+y87g+B2s3aZnL6aoT
+         PZu1uhWs7KJG317TREfLFhTOSKvQDz9QwcaPCxAmjqrPNp7jxEPDOhZIxY6oLi0DrdHe
+         VSkA==
+X-Gm-Message-State: AOJu0YzjfHAXaAy0wYSasN5/YVnBZsgR8UZ2mu4eHEIE51SRV9bf+0SG
+	hAv7h/uX2QpKSlzh1QwBSwfIk7Rr4GmP25gf+CBqq/b+c1TW28RYL/2JxZwphgHctj5hsxN160P
+	vcudhbw==
+X-Google-Smtp-Source: AGHT+IGMQmMxtKN+kCWbG03liPyhiTe9RyjrrEbIb/9J2qaN+xdNDJm1mjpBtXp1gEA+vk6720DdFOl7ER0I
+X-Received: from ejcff15.prod.google.com ([2002:a17:906:9c0f:b0:ab7:c9e3:1bc6])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:1c08:b0:ab7:6d4c:a280
+ with SMTP id a640c23a62f3a-aba4eb88da1mr194377066b.12.1739437710757; Thu, 13
+ Feb 2025 01:08:30 -0800 (PST)
+Date: Thu, 13 Feb 2025 10:08:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <cover.1739437531.git.dvyukov@google.com>
+Subject: [PATCH v7 0/9] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
+	ak@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Some existing metrics for Neoverse N3 and V3 expressions use CPU_CYCLE
-to represent the number of cycles, but this is incorrect. The correct
-event to use is CPU_CYCLES.
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
 
-I encountered this issue while working on a patch to add pmu events for
-Cortex A720 and A520 by reusing the existing patch for Neoverse N3 and
-V3 by James Clark [1] and my check script [2] reported this issue.
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
 
-[1] https://lore.kernel.org/lkml/20250122163504.2061472-1-james.clark@linaro.org/
-[2] https://github.com/cyyself/arm-pmu-check
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- .../perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json | 6 +++---
- .../perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-index 1f7c9536cb88..eb3a35f244e7 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n3/metrics.json
-@@ -169,7 +169,7 @@
-     },
-     {
-         "MetricName": "fp_ops_per_cycle",
--        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
-+        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -383,7 +383,7 @@
-     },
-     {
-         "MetricName": "nonsve_fp_ops_per_cycle",
--        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -421,7 +421,7 @@
-     },
-     {
-         "MetricName": "sve_fp_ops_per_cycle",
--        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-index d022ae25c864..4a671f55eaf3 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v3/metrics.json
-@@ -169,7 +169,7 @@
-     },
-     {
-         "MetricName": "fp_ops_per_cycle",
--        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLE",
-+        "MetricExpr": "(FP_SCALE_OPS_SPEC + FP_FIXED_OPS_SPEC) / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by any instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -383,7 +383,7 @@
-     },
-     {
-         "MetricName": "nonsve_fp_ops_per_cycle",
--        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_FIXED_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by an instruction that is not an SVE instruction. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
-@@ -421,7 +421,7 @@
-     },
-     {
-         "MetricName": "sve_fp_ops_per_cycle",
--        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLE",
-+        "MetricExpr": "FP_SCALE_OPS_SPEC / CPU_CYCLES",
-         "BriefDescription": "This metric measures floating point operations per cycle in any precision performed by SVE instructions. Operations are counted by computation and by vector lanes, fused computations such as multiply-add count as twice per vector lane for example.",
-         "MetricGroup": "FP_Arithmetic_Intensity",
-         "ScaleUnit": "1operations per cycle"
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
+
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
+
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
+
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in v7:
+ - add comment perf_hpp__init() re was_taken logic
+ - add tips.txt example with time/time-quantum
+ - rebased to perf-tools-next HEAD
+
+Changes in v6:
+ - remove latency column in perf_hpp__cancel_latency if
+   sort order is specified, but does not include latency
+ - add tests
+ - rebased to perf-tools-next HEAD
+
+Changes in v5:
+ - fixed formatting of latency field in --stdout mode
+ - added description of --latency flag in Documentation flags
+
+Changes in v4:
+ - added "Shrink struct hist_entry size" commit
+ - rebased to perf-tools-next HEAD
+
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
+
+Dmitry Vyukov (9):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
+  perf test: Add tests for latency and parallelism profiling
+  perf hist: Shrink struct hist_entry size
+
+ .../callchain-overhead-calculation.txt        |   5 +-
+ .../cpu-and-latency-overheads.txt             |  85 +++++++++++++
+ tools/perf/Documentation/perf-record.txt      |   4 +
+ tools/perf/Documentation/perf-report.txt      |  54 +++++---
+ tools/perf/Documentation/tips.txt             |   4 +
+ tools/perf/builtin-record.c                   |  20 +++
+ tools/perf/builtin-report.c                   |  39 ++++++
+ tools/perf/tests/shell/base_report/setup.sh   |  18 ++-
+ .../tests/shell/base_report/test_basic.sh     |  52 ++++++++
+ tools/perf/ui/browsers/hists.c                |  27 ++--
+ tools/perf/ui/hist.c                          | 117 ++++++++++++------
+ tools/perf/util/addr_location.c               |   1 +
+ tools/perf/util/addr_location.h               |   7 +-
+ tools/perf/util/event.c                       |  11 ++
+ tools/perf/util/events_stats.h                |   2 +
+ tools/perf/util/hist.c                        |  90 +++++++++++---
+ tools/perf/util/hist.h                        |  32 ++++-
+ tools/perf/util/machine.c                     |   7 ++
+ tools/perf/util/machine.h                     |   6 +
+ tools/perf/util/sample.h                      |   2 +-
+ tools/perf/util/session.c                     |  12 ++
+ tools/perf/util/session.h                     |   1 +
+ tools/perf/util/sort.c                        |  69 ++++++++++-
+ tools/perf/util/sort.h                        |   3 +-
+ tools/perf/util/symbol.c                      |  34 +++++
+ tools/perf/util/symbol_conf.h                 |   8 +-
+ 26 files changed, 614 insertions(+), 96 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
+
+
+base-commit: ee8aef2d232142e5fdfed9c16132815969a0bf81
 -- 
-2.47.2
+2.48.1.502.g6dc24dfdaf-goog
 
