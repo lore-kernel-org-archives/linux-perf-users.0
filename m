@@ -1,48 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AEC2046A0;
-	Thu, 13 Feb 2025 03:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4702054FD;
+	Thu, 13 Feb 2025 04:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739418002; cv=none; b=C/1nFcIbKcigvfZzKgWwicMFeIHRimIBz5zuog/HuxP47h92tE8OdjogpIFTaWXr5ErNv7ONeyqaxq6PJNTmvxbnlIRXDeFtuljA+Nz+rtw7WnIxDDFmuzB0SoQIXTYK/21XduwFqlDkXxIQlz5SO+a3fJPu+L11YhQDvqkTLFs=
+	t=1739419558; cv=none; b=Kj6aw8cgvyLq5K0Gryfn/8WxMgs+Q4TTaj4SNBkMLn3VtId0OL2bbnW0pScsYqvBYhPiAg5Cbl1/B3CcwO+Khupq7eakdjHNhhXFY8k2NWCeiM1s40r4tb3MhgEPhHLoiYaZPCD5KPZoBO7nkXbkdQGtMXT+C9VFyHnRnbLltOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739418002; c=relaxed/simple;
-	bh=ULGd7LN0moouwdSR7PW3Hja/yJMbyk/hJ6bJyO3SQTA=;
+	s=arc-20240116; t=1739419558; c=relaxed/simple;
+	bh=u0CEnCfaVdP25a8GNpqFlUn1aE+Tvo2eIuxsK/SLlkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODIDmjHkJkEY13z7QQS1qLv65n5fZ2+H/zhzRproeOOLjzWx955IsN4hg8So7nBBV0rcnA4KKEgP+VDOL7+q0WeVvp0o2MMyxFHRJT01Tqybq6g0E5I7xQ18FXaHWdJdw3oWO0YZmG42BzCUpxCQwUj4DIZYTQ6+BoiJF6hAFTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwkwqKUx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z3HZKKd2RA2tfXAG9bmRyoVpfJN49Q9Y3LNgriZAqiZwnoNr5A2ND92bpnC7dVv5UnisRtdadayzmzWj877l9kfWTitu0KfMHwHI9hy7AqRZ9L8oQDzagzlURvRIWSrtLenkulkZ957uBuSUdrkSlJqZFYu+poXYx9GYmwRqScA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKusks44; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwkwqKUx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A871C4CED1;
-	Thu, 13 Feb 2025 03:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKusks44"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6EEC4CED1;
+	Thu, 13 Feb 2025 04:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739418001;
-	bh=ULGd7LN0moouwdSR7PW3Hja/yJMbyk/hJ6bJyO3SQTA=;
+	s=k20201202; t=1739419556;
+	bh=u0CEnCfaVdP25a8GNpqFlUn1aE+Tvo2eIuxsK/SLlkQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MwkwqKUxLME1gl73yQwJuxpnX0p2Ns4DpRCwbsfOvQWb0PUFh3l8ievI8FzrvsdRr
-	 8CDxSxmwnOZEspbsuh4AixLqEyXN15ixy7U7p0xVg25hitWJ/1HwNLZs6yHdP1wArg
-	 gDBcKX8dBup2o7e8neRmisBpNe+Tbjw3mnKY8mL99JKbLGylzK6CxPQRk3unhG37H6
-	 eqmhjlqjxzrxutvUzzFXlq4l1iqKm+CQhj2Y/rtNJWfvvFs+X7uUS4fouIAL7Dv9z4
-	 pt3RuzGicjGjCIwhzUwoL8BAMkcbZvoSEtfSzWwnGj/tFUJMTuZ1aFOMEGoPgsJB28
-	 aK16ssEAOi3sQ==
-Date: Wed, 12 Feb 2025 19:39:59 -0800
+	b=GKusks44ebGPBvDKT5blKuv+vNUXh25zFAzyvz2dvr7IGAVLx72bzJknEEkGrJ3C/
+	 9rdudCWVHQYDoJpvIvfNxg+it2HbDVR50DZ6b+B85a33SxbXIqK8lcqAWca7b1FXAv
+	 MRLZAS8MLBQyVuUSfBM0PskgbriS24jrLpewZK82vb665iW50HaIk7DRttDOdav0CX
+	 dm+5Z/bcHLrmVJswW2YpuehBcsLBauX7Er5OsZHyQnEmkXCpxclelToAoBQ4kOQ4d0
+	 EsUY3RuqK7fMIjoG8QrbzDsCshxEjFt3MEWwBlckzMD8XdQkyQrbnGzIAmueqmMLbX
+	 S9Xi1zr9sN/Nw==
+Date: Wed, 12 Feb 2025 20:05:54 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Tavian Barnes <tavianator@tavianator.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Michael Petlan <mpetlan@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>,
-	Wander Costa <wcosta@redhat.com>
-Subject: Re: [PATCH v3 1/4] perf trace: Allocate syscall stats only if
- summary is on
-Message-ID: <Z61pjzzG-y4Zp0hd@google.com>
-References: <20250205205443.1986408-1-namhyung@kernel.org>
- <20250205205443.1986408-2-namhyung@kernel.org>
- <Z60JmMKq-Do-VBUn@x1>
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+Subject: Re: [PATCH v1] perf sample: Make user_regs and intr_regs optional
+Message-ID: <Z61vosIP67VMUJAS@google.com>
+References: <20250113194345.1537821-1-irogers@google.com>
+ <CAP-5=fVoQRhd-8jyXfjc2dCuwt7_o1sU208aADT1FriwCNa9qw@mail.gmail.com>
+ <Z6q7EZxAvskBE4H3@google.com>
+ <CAP-5=fUTBJ_15f1WFuHjZzbWDwsAo3d90WX_hobfVWPjSOe3Vw@mail.gmail.com>
+ <Z6uM48_IJa-AEzEI@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,162 +61,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z60JmMKq-Do-VBUn@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6uM48_IJa-AEzEI@google.com>
 
-On Wed, Feb 12, 2025 at 09:50:32PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Wed, Feb 05, 2025 at 12:54:40PM -0800, Namhyung Kim wrote:
-> > The syscall stats are used only when summary is requested.  Let's avoid
-> > unnecessary operations.  While at it, let's pass 'trace' pointer
-> > directly instead of passing 'output' file pointer and 'summary' option
-> > in the 'trace' separately.
+On Tue, Feb 11, 2025 at 09:46:11AM -0800, Namhyung Kim wrote:
+> On Mon, Feb 10, 2025 at 08:43:40PM -0800, Ian Rogers wrote:
+> > On Mon, Feb 10, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Mon, Feb 10, 2025 at 10:15:22AM -0800, Ian Rogers wrote:
+> > > > On Mon, Jan 13, 2025 at 11:43 AM Ian Rogers <irogers@google.com> wrote:
+> > > > >
+> > > > > The struct dump_regs contains 512 bytes of cache_regs, meaning the two
+> > > > > values in perf_sample contribute 1088 bytes of its total 1384 bytes
+> > > > > size. Initializing this much memory has a cost reported by Tavian
+> > > > > Barnes <tavianator@tavianator.com> as about 2.5% when running `perf
+> > > > > script --itrace=i0`:
+> > > > > https://lore.kernel.org/lkml/d841b97b3ad2ca8bcab07e4293375fb7c32dfce7.1736618095.git.tavianator@tavianator.com/
+> > > > >
+> > > > > Adrian Hunter <adrian.hunter@intel.com> replied that the zero
+> > > > > initialization was necessary and couldn't simply be removed.
+> > > > >
+> > > > > This patch aims to strike a middle ground of still zeroing the
+> > > > > perf_sample, but removing 79% of its size by make user_regs and
+> > > > > intr_regs optional pointers to zalloc-ed memory. To support the
+> > > > > allocation accessors are created for user_regs and intr_regs. To
+> > > > > support correct cleanup perf_sample__init and perf_sample__exit
+> > > > > functions are created and added throughout the code base.
+> > > >
+> > > > Ping. Given the memory savings and performance wins it would be nice
+> > > > to see this land. Andi Kleen commented on doing a reimplementation,
+> > > > which is fine but out-of-scope of what I'm doing here.
+> > >
+> > > Yeah, I like the core of the change.  Andi's concern is that it touches
+> > > too many places.  It'd be nice if we can do that without allocating
+> > > memory for regs and eliminating the perf_sample__{init,exit}.  But I'm
+> > > not if it's possible.
+> > 
+> > Moving from no allocations to 2 possible allocations means there has
+> > to be corresponding frees. Putting the frees into an __exit function
+> > is the norm for this kind of cleanup. I don't see how you can move to
+> > the approach presented without adding the frees and not introduce a
+> > memory leak. I don't see what's actionable for me to do here.
 > 
-> root@number:~# perf probe -x ~/bin/perf intlist__new
-> Added new event:
->   probe_perf:intlist_new (on intlist__new in /home/acme/bin/perf)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_perf:intlist_new -aR sleep 1
-> 
-> root@number:~# perf trace -e probe_perf:intlist_new perf trace -e *nanosleep sleep 1
->      0.000 (1000.184 ms): sleep/574971 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7ffda05c1be0) = 0
-> root@number:~# perf trace -e probe_perf:intlist_new perf trace -e *nanosleep --summary sleep 1
->      0.000 :574984/574984 probe_perf:intlist_new(__probe_ip: 6861748)
-> 
->  Summary of events:
-> 
->  sleep (574985), 2 events, 25.0%
-> 
->    syscall            calls  errors  total       min       avg       max       stddev
->                                      (msec)    (msec)    (msec)    (msec)        (%)
->    --------------- --------  ------ -------- --------- --------- ---------     ------
->    clock_nanosleep        1      0  1000.205  1000.205  1000.205  1000.205      0.00%
-> 
-> root@number:~#
-> 
-> I'm trying to convince a colleague to have this short streamlined to
-> something like:
-> 
->   # perf trace -e ~/bin/perf/intlist_new()/ perf trace -e *nanosleep sleep 1
-> 
-> Or some other event syntax that allows us to specify compactly and
-> unambiguously that we want to put a probe if one isn't there yet and
-> inside the () to specify which of the arguments we want collected, etc,
-> to save the 'perf probe' step, adding the probe and removing it if it
-> isn't there or reusing a pre-existing, compatible one.
+> Right, I'm inclined to merge this patch.  But I need to think a bit more
+> about the Andi's approach before that.
 
-Yep, probably we need a syntax without '/' since it'd be confused by
-the path separators.
-
-> 
-> Anyway, for the patch tested:
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Probably we can use a global (or per-thread) variable, but I think it
+could grow to another pain point in the future.  Using __init/exit will
+make it easier for potential future changes.
 
 Thanks,
 Namhyung
 
-> 
-> - Arnaldo
->  
-> > Acked-by: Howard Chu <howardchu95@gmail.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/builtin-trace.c | 21 +++++++++++----------
-> >  1 file changed, 11 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index ac97632f13dc8f7c..7e0324a2e9182088 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -1522,13 +1522,14 @@ struct thread_trace {
-> >  	struct intlist *syscall_stats;
-> >  };
-> >  
-> > -static struct thread_trace *thread_trace__new(void)
-> > +static struct thread_trace *thread_trace__new(struct trace *trace)
-> >  {
-> >  	struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
-> >  
-> >  	if (ttrace) {
-> >  		ttrace->files.max = -1;
-> > -		ttrace->syscall_stats = intlist__new(NULL);
-> > +		if (trace->summary)
-> > +			ttrace->syscall_stats = intlist__new(NULL);
-> >  	}
-> >  
-> >  	return ttrace;
-> > @@ -1550,7 +1551,7 @@ static void thread_trace__delete(void *pttrace)
-> >  	free(ttrace);
-> >  }
-> >  
-> > -static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
-> > +static struct thread_trace *thread__trace(struct thread *thread, struct trace *trace)
-> >  {
-> >  	struct thread_trace *ttrace;
-> >  
-> > @@ -1558,7 +1559,7 @@ static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
-> >  		goto fail;
-> >  
-> >  	if (thread__priv(thread) == NULL)
-> > -		thread__set_priv(thread, thread_trace__new());
-> > +		thread__set_priv(thread, thread_trace__new(trace));
-> >  
-> >  	if (thread__priv(thread) == NULL)
-> >  		goto fail;
-> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
-> >  
-> >  	return ttrace;
-> >  fail:
-> > -	color_fprintf(fp, PERF_COLOR_RED,
-> > +	color_fprintf(trace->output, PERF_COLOR_RED,
-> >  		      "WARNING: not enough memory, dropping samples!\n");
-> >  	return NULL;
-> >  }
-> > @@ -2622,7 +2623,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
-> >  		return -1;
-> >  
-> >  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> > -	ttrace = thread__trace(thread, trace->output);
-> > +	ttrace = thread__trace(thread, trace);
-> >  	if (ttrace == NULL)
-> >  		goto out_put;
-> >  
-> > @@ -2699,7 +2700,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
-> >  		return -1;
-> >  
-> >  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> > -	ttrace = thread__trace(thread, trace->output);
-> > +	ttrace = thread__trace(thread, trace);
-> >  	/*
-> >  	 * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
-> >  	 * and the rest of the beautifiers accessing it via struct syscall_arg touches it.
-> > @@ -2771,7 +2772,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
-> >  		return -1;
-> >  
-> >  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> > -	ttrace = thread__trace(thread, trace->output);
-> > +	ttrace = thread__trace(thread, trace);
-> >  	if (ttrace == NULL)
-> >  		goto out_put;
-> >  
-> > @@ -2960,7 +2961,7 @@ static int trace__sched_stat_runtime(struct trace *trace, struct evsel *evsel,
-> >  	struct thread *thread = machine__findnew_thread(trace->host,
-> >  							sample->pid,
-> >  							sample->tid);
-> > -	struct thread_trace *ttrace = thread__trace(thread, trace->output);
-> > +	struct thread_trace *ttrace = thread__trace(thread, trace);
-> >  
-> >  	if (ttrace == NULL)
-> >  		goto out_dump;
-> > @@ -3214,7 +3215,7 @@ static int trace__pgfault(struct trace *trace,
-> >  		}
-> >  	}
-> >  
-> > -	ttrace = thread__trace(thread, trace->output);
-> > +	ttrace = thread__trace(thread, trace);
-> >  	if (ttrace == NULL)
-> >  		goto out_put;
-> >  
-> > -- 
-> > 2.48.1.502.g6dc24dfdaf-goog
