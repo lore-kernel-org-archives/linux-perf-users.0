@@ -1,134 +1,149 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9425F23F400;
-	Thu, 13 Feb 2025 13:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE31281349;
+	Thu, 13 Feb 2025 14:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739452249; cv=none; b=OqPR/rvGTIEVGSWNFHhC424VS23bh118o1Jy4kF4hmGvmb9ptZNK0Nmw+jD39oJrqEyydNDr1Rp8PTX5id/MjIfeGk9p2tbRuFITdbPERZgOaNRlUOUCoITvFtJ+kBq4gbh9KIKNQ7l3y1NUn7or7SFp/RAp46+BQ+LYL6Q/wCA=
+	t=1739457386; cv=none; b=lQsWmRNQHBoowDYEPH88UYRnjEYJ3oQSvmzzVvIGlCUkE/LLMJLXBf5jG8+lqpwsixzv4u06EexqrziNCUDYCY05U2FnteCI0c1uWEy/Ugjieu277fUtbONqlERxmn9ECA7yYxaTRQEsGbAH2IRA3Ys6aZ6wgl4iANWjDTtB+aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739452249; c=relaxed/simple;
-	bh=nST1KX2AtNlKcazAzA5bZyVqvZfjm3Kpn0TvSiraDaE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QenheQ6KzN8BHzsevjQLTUvPYK4AiKWVB2JiQW4Ih9p3gG63S2wfJHH7PypT5P/irGdmR7KjKNjEVPyo81y+ZqMUdoBrg5vcJRNNhIOVtEuWdW2UfVx6PybiclLIf8h8e93U+rhFnNcvwwjCrELn2Vd32tQTbshk1saVtgj/3i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jvLFSxC6; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1739457386; c=relaxed/simple;
+	bh=HlJsqhb8XnHHNzy8AdqFixPhoif08uRtRpp/JRim2Eo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CABg438vIZ2haBzrgub5Vau9c6QizHKwIxgax3KyHyZF5E4CBjdggSTZFWiStBm5nXrMaiJuDScw4AkhgmK4ofWelE7bWb+K/E8CCZ1gJ7Rzhkjo7F3VzIVqUI9pjAOK0JJD//qYluWFk5r/MriFENfGIpsGcUoquw1rLxuDKc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2GDkk8h; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvLFSxC6"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5ded51d31f1so561625a12.3;
-        Thu, 13 Feb 2025 05:10:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2GDkk8h"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fbfa8c73a6so1848789a91.2;
+        Thu, 13 Feb 2025 06:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739452246; x=1740057046; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a8p9IzEFHA6CvD9gtJ08mmZSSOlXbN8UwMCHkPFBaKU=;
-        b=jvLFSxC6UCdzINh6QtV92Ffsz+X/NEJJ7JQYeaE10NKdzZj8zx2OesJzHU6MWl4tMh
-         7nepGIcrH3I0Ryc0gWsCEVs2aLUHgbBxR6ShJokQwNdevlDYSowVsCgIYzPNu0o1ypv/
-         +P6vl/qJUKb2b3dZJ2JkZXVeOST5JwDaRNtRlcYoZ0yhBOuwtHrNM3gFuGEyvdZGK2Ai
-         rIvLXNarsuOBJnt5PWdR9enyyqLSwykaSfMMThj48r5uDsQnxOfCJEUX6TwfA6inCgZ1
-         UGzRn0IU/VvnNOwXs4k3cqLzcMAaWyhT0mJGJHFCVOekhTO3iCP7iFq2E4ZJNw+pczcv
-         evUg==
+        d=gmail.com; s=20230601; t=1739457383; x=1740062183; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7s1AnEsbDOxMifWlKKO96YvdNulNwpNMwNrlUq5WAgw=;
+        b=F2GDkk8hyPSXXPEh9mkExKzdjCxo3/SXeC+htdQqqZy5+InDSabOcB7yMLKPkfiOTq
+         tdx601pqd/TGxStbhiKtWlpfr9HqjgNY+U0kQKpiyjBP53hz3uWexvC3x32GftlOEfLY
+         g7jHxXV582zxG3i7LhxJ3QNtcTNQdidnqpBgJ+kDzvtL7IWbem1cGdVcENqQhXs6JlYz
+         V99+lWEoLShlvd+nXFWLjr0DwCEaK/YnGoxlg3e2eol3MwaGXD2mE8AaOZDyNFZ1GISB
+         P+/2dnPK+DxgkAMm/agFGVQRvaanbkqPXL5vKpNksX7D2ca6ezFpHoTw91gExMlI7wCl
+         HXQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739452246; x=1740057046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739457383; x=1740062183;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a8p9IzEFHA6CvD9gtJ08mmZSSOlXbN8UwMCHkPFBaKU=;
-        b=PoVqRHblmPwCF2bE4pD4APA1D7PBy6dwurGccdER/fUhdCNd+7w5RTeDRM24OSFxqw
-         zXdOFNRbRoMbX1VQ/Jjk2h2I+lfZ5sPsa03ZCr3RboVxx2SSdlKwo6WsZFier15QR01c
-         nPOV3TD4AoaK2xCTYrzXxMwNX/eYBT9qkgoDhdu5p4ljd9PB5gPxiBbcEfEHZEWHDD0r
-         yfWCO7q1lG0LgBnSS0kQFsu5x9xDRn1NyJDRR/O8XWEk15xao4YgUAGvjvpwyKaleNqV
-         8t+uK5n5gZdsotkN35FBakJY9mg/t0cSa884hD74bOSeCs3sUl013uBdI+YxkyhhpjyI
-         z5Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCViu02uQwwLYnqYuIeQotZl8iPXgr2NwZ1PqqaAoAAxeGY2Ddun1lyXAttGEy5AS8s65d4jbFj7ZrA/+ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL9zoHuWfrRoyiCHGNLfas7f03e7cdfQKAF0DVLwjJDLPS6SfI
-	We51l4REaajSLs66YrPVCVhrUELteCRL3coyZ494kLWnTUtQtkix8bxEUvgi7eeCmdUEEuq0jO3
-	OTlPON3DXCxy+aRjozFZhU7uTnMk=
-X-Gm-Gg: ASbGncu/wgubvjRPU30N2wr1jXj6jigHnQjwAqT1YfeWeAjQ6ahG96u8Oj9IuRdn8QI
-	KWY/IAygeRom6ghZUXBTlYUDEjl+CK1D8P/j/fn4oPj4n9XbOSiHFCmpsKQil4kLSmPaVCXtQow
-	==
-X-Google-Smtp-Source: AGHT+IG81x/h/nYYexjAldTSTTTyF/WQXnBTuMvGWRyQJuvAe08Q3WhAcuCQ5y4KXjSBrhkjiKvGkHZvk+nwt44i0MQ=
-X-Received: by 2002:a05:6402:2807:b0:5dc:da2f:9cda with SMTP id
- 4fb4d7f45d1cf-5deade07f66mr6394075a12.27.1739452245642; Thu, 13 Feb 2025
- 05:10:45 -0800 (PST)
+        bh=7s1AnEsbDOxMifWlKKO96YvdNulNwpNMwNrlUq5WAgw=;
+        b=v8yGn9KH/wCGgLY3CR4gv41Vm1wK3VOUbb6hCBPJ+dhsm3Ftu4jiPHl3NB4MoZyp/g
+         neWPEANwiQ5rwDueBsvWa3gKzXICHwZ102m8KF25PO9lho7NctgGmlbNvSvIh0KoCqpq
+         bS/rh7DbVoLWN5OpeO6sVdF1QTPvg6+3pjK/hSHWFkUvlbSmY3HzoM72XtAks4niLT5x
+         4/PN3KcaeP1ddGVHjelnpU02X9IoCUtL3K7iCcMikK5m8mPn5LNg1OezcqJBKiffAf7G
+         RYxfSnn5KK/qBO7jfHg8JZ7s7KJA4oTP7FpTSqK+3EyHJ8cmPJDQbzglVrSRC9is+eh9
+         Yggg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIJaZVeG2TinyY32Llydisdie/f4/NlFZ3/DbBi5yzQLyfKFDz4RDwJJ0oEIgxt9/SQ/5lYtEInB1QfBOiN7Vj2w==@vger.kernel.org, AJvYcCVilPTfdOoHDMQmMDeUtukNYguKGsAjNyWBi6prKood4L9FG5um695+Xo4SuJlh0GQmMqNd2DUSnLLQ@vger.kernel.org, AJvYcCW0Zw3oZqqryuH4Pl5qa2jbifCor/hhpxWaL25/jSRpspKUhX2vDpK0H4p59vxdkVZ3RAr5ncv0B+Z6T7dT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+GxPSlzo6yFl5sddEt7/LV6+jHkxK35wfTaSZJNmrklF/d8zE
+	3e9U6Br9jE21o62wTSxMBeC6hqWzCdk8ISRuAJAn/hqG+BXZzfrB
+X-Gm-Gg: ASbGncvYcvMUpqzmeGpCqZSFJr/rizu7ERZyLKHXdD1fYvPz2598eyrRbpYaagzU5yq
+	19BoizAn3m2vb4/fyxYoFQCuERHZPYJy4JtLUyJu7ta5QXWGoVlGvTZl9nMHr8yVKg4oqh0RvuC
+	7Cwqe0EWwouUvB0yY/KFlEKpEtfBFY7NCeki4retCK8GpT1fBDk+JfZSO9PB+loe+mVLEjsPXhq
+	koJFytUsLmm22XHo6G6xwWCBvYYiTEGwxgYfoC06jnH/POrl16Tr/kEE5trBYHgoK1He6pI6gKw
+	gyWLsGu1Ney1r6MWMg==
+X-Google-Smtp-Source: AGHT+IFhfs9TjAcjn/ErTnxMN1WJfk7JOQCk0pFIocG3OaK+NCISwQFpuudm6tJWQ1iLr3j32Tlxow==
+X-Received: by 2002:a17:90b:2c8e:b0:2ea:712d:9a82 with SMTP id 98e67ed59e1d1-2fbf5c71357mr11037562a91.29.1739457383189;
+        Thu, 13 Feb 2025 06:36:23 -0800 (PST)
+Received: from [127.0.1.1] ([59.188.211.160])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2fbf999b5b4sm3655165a91.30.2025.02.13.06.36.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 06:36:22 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH v3 00/10] drivers/perf: apple_m1: Add Apple A7-A11, T2 SoC
+ support
+Date: Thu, 13 Feb 2025 22:36:02 +0800
+Message-Id: <20250213-apple-cpmu-v3-0-be7f8aded81f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
-Date: Thu, 13 Feb 2025 14:10:34 +0100
-X-Gm-Features: AWEUYZkF1odEy8t_F7_NujJ3u-A-NDf2mNGsq9trTka2jWc78NOOPB6oY7gbzLE
-Message-ID: <CAOQCU67EsHyw_FsqGbRuityahZTSAtWzffU=hLUJ7K=aZ=1hhA@mail.gmail.com>
-Subject: perf: Question about machine__create_extra_kernel_maps and trampoline symbols
-To: Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFIDrmcC/1XMywrCMBCF4VcpWRtpZlobXfke4mJM03agl5BoU
+ Erf3bQg1OU58H+zCNazDeKSzcLbyIGnMQ08ZMJ0NLZWcp22gBzKHJSS5FxvpXHDS5ZUEtaE50K
+ jSIHztuH3ht3uaXccnpP/bHZU6/tjYM9EJXPZaFM1QEZVBV7bgbg/mmkQKxNhn+JfCinV1QNP6
+ oxgtd6ny7J8AfHpc4DfAAAA
+X-Change-ID: 20250211-apple-cpmu-5a5a3da39483
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1988; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=HlJsqhb8XnHHNzy8AdqFixPhoif08uRtRpp/JRim2Eo=;
+ b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBnrgNiM5TkmibLzic5zEE81YsjeEvk1L/dOVFUD
+ dU7mRTs/A2JAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ64DYgAKCRABygi3psUI
+ JKjfD/9mscaarB494OgyW4uYq1QJXorP6V5eRfYcimmfTN9369PcFCxeFReuiEaPK98qUT+2YF/
+ CBI/e3iAMHFZI3YcOgVE7ZNjBuYvLxxaqFPqhxYQRcJPG6MZZnZFDuT3tdL62Ue4NEGdDYeShaC
+ Er7IK91opJjC6qqaNrprt2d2GkuStvOK9TbZLJh+/OCVJSXzp+TsSzLurHBWHm/Bo4lpPf5RVhJ
+ oqXinanCkSZbovdZUJlPb+q6bpge/+kNpLSsc3/Zl2tfnz8zNXpr8MpPj8MRKYrwITwRKFnvDSp
+ uFNecTEscCTbURrjoFq34VMUYACEheQlq2v4AkOTA5jLpMWp3zmcayTEKsQuY98vBAvcoGeixiP
+ dhxsIKSMTSmEKPwNssoRtrdKMJCGKVSNlZP46Uxp3A18p6W0VOvQ7IMhvQBZG/B1px6CcXxD/di
+ rmCB3ispE2rueghdb1CgBCIK8UVdXYY6HCtFoUtKQBs+o6BXPBMMr2sPLIyeKQ49hs8fj9vH+FF
+ DsAn8Sqdm6Uyj0aUIxXA4eoiuOuc3C16QyvsL6IG427z/oEyGqEr4z/K10gkY5ZtWHKjfm1wTjX
+ 3M/d+NQZ8VCscIuB52fHn2zrHmsx3o9RdOLquraPTzyiKMto9DQiU2D7HV02uq2wKe6INiUl3vu
+ hC1DzYdr7M/KW5A==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-Hi,
+This series adds support for the CPU PMU in the older Apple A7-A11, T2
+SoCs. These PMUs may have a different event layout, less counters, or
+deliver their interrupts via IRQ instead of a FIQ. Since some of those
+older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
+be enabled by the driver where applicable.
 
-I'm investigating performance issues with perf's kallsyms parsing. Running
-`perf record -g perf trace -a --max-events 1` on an x86_64 Ubuntu 24.10 on =
-a VM
-(perf version 6.11) showed that about 61% of time was spent in
-'kallsyms__parse'.
-Total execution time was 370 ms. When running latest version from
-tmp.perf-tools-next
-It's 530ms total and 38% in 'kallsyms__parse' because the old version
-doesn't have
-bpf skeletons enabled.
-During regular execution this function is called three times:
+Patch 1 adds the DT bindings.
+Patch 2-5 prepares the driver to allow adding support for those 
+older SoCs.
+Patch 6-10 adds support for the older SoCs.
 
-1. In machine__get_running_kernel_start - searching for _text
-2. In machine__get_running_kernel_start - searching for _edata
-3. In machine__create_extra_kernel_maps - which is the focus of my question
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+Changes in v3:
+- Configure PMC8 and PMC9 for 32-bit EL0
+- Remove redundant _common suffix from shared functions
+- Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b361932e88@gmail.com
 
-Regarding the third call (implemented in tools/perf/arch/x86/util/machine.c=
-),
-I notice it searches for:
-- _entry_trampoline
-- __entry_SYSCALL_64_trampoline
+Changes in v2:
+- Remove unused flags parameter from apple_pmu_init_common()
+- Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com
 
-I'm puzzled by the dynamic allocation in add_extra_kernel_map, which seems =
-to
-expect multiple __entry_SYSCALL_64_trampoline symbols. This functionality w=
-as
-introduced in:
-https://lore.kernel.org/all/1526986485-6562-1-git-send-email-adrian.hunter@=
-intel.com/
+---
+Nick Chan (10):
+      dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
+      drivers/perf: apple_m1: Support per-implementation event tables
+      drivers/perf: apple_m1: Support a per-implementation number of counters
+      drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
+      drivers/perf: apple_m1: Support per-implementation PMU start
+      drivers/perf: apple_m1: Add Apple A7 support
+      drivers/perf: apple_m1: Add Apple A8/A8X support
+      drivers/perf: apple_m1: Add A9/A9X support
+      drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
+      drivers/perf: apple_m1: Add Apple A11 Support
 
-I've attempted to trigger the trampoline logic in two ways:
-
-1. Using the example provided (uname_x_n.c), which only recorded these symb=
-ols:
-   - entry_SYSCALL_64_after_hwframe
-   - entry_SYSCALL_64
-   - entry_SYSCALL_64_safe_stack
-
-2. Setting kprobes and kretprobes to try to make the kernel create these sp=
-ecial
-   trampoline symbols, but this approach also didn't work.
-
-Questions for the perf developer community:
-1. Is there a reliable way to trigger this trampoline logic in perf? I'd li=
-ke to
-   create a perf test for this functionality.
-2. If machine__create_extra_kernel_maps is obsolete (since it's
-x86_64-specific),
-   could we remove it to reduce /proc/kallsyms parsing time by at least 50%=
-?
-
-I'm working on a patch to simplify machine__create_kernel_maps to call
-kallsyms__parse only once. However, I would appreciate guidance from those =
-more
-familiar with perf.
-
-Side note: Could exposing the kernel's lookup_symbol_name function
-(from kernel/kallsyms.c) to userspace eliminate the need for reading
-/proc/kallsyms?
+ Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
+ arch/arm64/include/asm/apple_m1_pmu.h          |   3 +
+ drivers/perf/apple_m1_cpu_pmu.c                | 779 ++++++++++++++++++++++++-
+ 3 files changed, 756 insertions(+), 32 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250211-apple-cpmu-5a5a3da39483
 
 Best regards,
-Krzysztof =C5=81opatowski
+-- 
+Nick Chan <towinchenmi@gmail.com>
+
