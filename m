@@ -1,110 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF712753F5;
-	Thu, 13 Feb 2025 23:28:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265462753F0;
+	Thu, 13 Feb 2025 23:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739489297; cv=none; b=PE+PNrlAwgcXXvic/zB+Xl68uiiXeqvO+ceXXDqSLRAi8NwSEboJ8PgiIMc6/tql0VSmOR9eRm4GbmBhNM8yj2wbg1jeIT+SVHqI2lrbX89jNDZAnQVuw2MphZlGAUuC/CoOip2UjfKZ7XCBrPSUNH5yMTqmHHJXl1xHWcPmT4c=
+	t=1739489742; cv=none; b=ayy2Q+1F4LMGaS7XvV0O7eLZxOHOQ/tgRNqimnk0M4W4Di5W9SURuaOidMGrFusyREeigLpX7IaWHeAE8nUGek5pgfp60SQLe+oWWCLfXqBjTeZL01yyHWFNCHm2k4gd2T3KwocYWBoMBbssMH8+WlYGose2jxQq036Dab7rEpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739489297; c=relaxed/simple;
-	bh=1hpRD32+oTSKw4Be5mPLXZd2/5+RD6HWdyhv83wdPbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOVzVhEINGKW7L1IrFN8UL4Am4owZMjPUsSvWDhfDlxX/C5UEtP7psHqTxDyTomXERfpI6MrkZifxBuOC3EztpR6c6CMqZDnSw77fENJOS5YCG+sZoV81Xyrh/TMxu1z7PRA9vTOzM5Fca/d+LUGD96F2c3UR0RuvxFmkVeewcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBnbq6ax; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739489742; c=relaxed/simple;
+	bh=EZkv+Ho0qnfwzKUpS/CiR6zEjhpxu4+amaaWviz+BWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OK/X1NZF6s8BFaiNUhfW1666HDSsoN9me1/3SxVZsu+rvGEX0WvOhlzOr7QCla5m55xR20bTE34rybze+LT0u/rDH0o7ERS/Q23R/64a+dTsm9xwH19YyJPyAzmUwLN6IjQD1D7YMLCbE513prq8TjzkbsJGCBUNX1kHnqyDpvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBLZpCPz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBnbq6ax"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B44C4CED1;
-	Thu, 13 Feb 2025 23:28:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBLZpCPz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFBFC4CED1;
+	Thu, 13 Feb 2025 23:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739489295;
-	bh=1hpRD32+oTSKw4Be5mPLXZd2/5+RD6HWdyhv83wdPbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBnbq6axyW2OpH9mMeOGuPD2s5C5ZVNFJFk/dL32chk4zb4ivQ3puaxIOWYgoE9j/
-	 TgVEGIz3OwvM3laQ/nPEHYt4Oii8d4jzU6hB2pZJmoc4e+jrRKPnQsD7vXCEob6zxD
-	 qr8dc8jge7yERe168JfcdswqqgErPWXOh7M8sRivDd8zag7J57qC2hbRRy/GPCwiji
-	 ui+r/Sk3gyoSMnxuDGCGn0ylU4zb1g+5SuWfMw0gvOjtc+c9fv82S2fsLEWIi9nb+5
-	 wF5yeuyAkSjzH3D3NJENDYSiCRF6VcnnmEIK7tj53ztpluvjk3nditqs5/2nR+gEOn
-	 q/H6osl59cx9w==
-Date: Thu, 13 Feb 2025 15:28:13 -0800
+	s=k20201202; t=1739489741;
+	bh=EZkv+Ho0qnfwzKUpS/CiR6zEjhpxu4+amaaWviz+BWg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sBLZpCPz1NoNgOSv1mxpSLs+FNjXdraZqNTFB3c5QkEZtldUDUwcEaHRoOGhH0jHV
+	 1+MpjqpsUOHqDB4AJB4IV6znZsNCAJOd6XknfAhEvR6NR7OzRFBfFLLc+KVFov4ByJ
+	 ubaNRl4pUfnAdNLtpv9T+Bva70o3kQrBNBDMlIozNFJ2WSZsYZn6huJNt516pff30S
+	 To0IExRLA/JEE/JULyszAdyy0i3FANVaqcixojumjfz3wFOYOedm4fwM9Nre1F5YIf
+	 HcWAFkE7/ldK3DKFPJJHo2O6qKVzfmeY/ryLli6G+F0eIVtBP0TOzGE/B28lQqM38Q
+	 VaszY5PZoYaMA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] perf lock: Update documentation for -o option in
- contention mode
-Message-ID: <Z66ADd48l6lJnQSt@google.com>
-References: <20250212222859.2086080-1-ctshao@google.com>
- <20250212222859.2086080-6-ctshao@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: [PATCH v2] perf report: Add 'tgid' sort key
+Date: Thu, 13 Feb 2025 15:35:40 -0800
+Message-ID: <20250213233540.600006-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250212222859.2086080-6-ctshao@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 02:24:56PM -0800, Chun-Tse Shao wrote:
-> This patch also decouple -o with -t, and shows warning to notify the new
-> behavior for -ov.
+Sometimes we need to analyze the data in process level but current sort
+keys only work on thread level.  Let's add 'tgid' sort key for that as
+'pid' is already taken for thread.
 
-I think it's better to squash this commit to the previous.
+This will look mostly the same, but it only uses tgid instead of tid.
+Here's an example of a process with two threads (thloop).
 
-> 
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  tools/perf/builtin-lock.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 3dc100cf30ef..e16bda6ce525 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1817,7 +1817,7 @@ static void print_contention_result(struct lock_contention *con)
->  			break;
->  	}
->  
-> -	if (con->owner && con->save_callstack) {
-> +	if (con->owner && con->save_callstack && verbose > 0) {
->  		struct rb_root root = RB_ROOT;
->  
->  		if (symbol_conf.field_sep)
-> @@ -1978,6 +1978,11 @@ static int check_lock_contention_options(const struct option *options,
->  		}
->  	}
->  
-> +	if (show_lock_owner && !show_thread_stats) {
-> +		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
-> +		pr_warning("Please use -t option too to keep the old behavior.\n");
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -2569,7 +2574,8 @@ int cmd_lock(int argc, const char **argv)
->  		     "Filter specific address/symbol of locks", parse_lock_addr),
->  	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
->  		     "Filter specific function in the callstack", parse_call_stack),
-> -	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-> +	OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters.\n"
-> +		"\t\t\tThis option can be combined with -t, which shows owner's per thread lock stats, or -v, which shows owner's stacktrace"),
+  $ perf record -- perf test -w thloop
 
-I think this description should go to the man page and leave the option
-as is.  You made it to show the warning when it's actually used.
+  $ perf report --stdio -s tgid,pid -H
+  ...
+  #
+  #    Overhead  Tgid:Command / Pid:Command
+  # ...........  ..........................
+  #
+     100.00%     2018407:perf
+         50.34%     2018407:perf
+         49.66%     2018409:perf
 
-Thanks,
-Namhyung
+Suggested-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  1 +
+ 4 files changed, 41 insertions(+)
 
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 87f86451940623f3..4050ec4038425bf0 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -79,6 +79,7 @@ OPTIONS
+ 
+ 	- comm: command (name) of the task which can be read via /proc/<pid>/comm
+ 	- pid: command and tid of the task
++	- tgid: command and tgid of the task
+ 	- dso: name of library or module executed at the time of sample
+ 	- dso_size: size of library or module executed at the time of sample
+ 	- symbol: name of function executed at the time of sample
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 46c8373e314657fa..c164e178e0a48a8e 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -38,6 +38,7 @@ enum hist_column {
+ 	HISTC_TIME,
+ 	HISTC_DSO,
+ 	HISTC_THREAD,
++	HISTC_TGID,
+ 	HISTC_COMM,
+ 	HISTC_CGROUP_ID,
+ 	HISTC_CGROUP,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 3dd33721823f365d..b4034bd6629d4156 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -141,6 +141,43 @@ struct sort_entry sort_thread = {
+ 	.se_width_idx	= HISTC_THREAD,
+ };
+ 
++/* --sort tgid */
++
++static int64_t
++sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	return thread__pid(right->thread) - thread__pid(left->thread);
++}
++
++static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
++				       size_t size, unsigned int width)
++{
++	int tgid = thread__pid(he->thread);
++	const char *comm = NULL;
++
++	/* display comm of the thread-group leader */
++	if (thread__pid(he->thread) == thread__tid(he->thread)) {
++		comm = thread__comm_str(he->thread);
++	} else {
++		struct maps *maps = thread__maps(he->thread);
++		struct thread *leader = machine__find_thread(maps__machine(maps),
++							     tgid, tgid);
++		if (leader) {
++			comm = thread__comm_str(leader);
++			thread__put(leader);
++		}
++	}
++	width = max(7U, width) - 8;
++	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
++}
++
++struct sort_entry sort_tgid = {
++	.se_header	= "   Tgid:Command",
++	.se_cmp		= sort__tgid_cmp,
++	.se_snprintf	= hist_entry__tgid_snprintf,
++	.se_width_idx	= HISTC_TGID,
++};
++
+ /* --sort simd */
+ 
+ static int64_t
+@@ -2501,6 +2538,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
+ 
+ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_PID, "pid", sort_thread),
++	DIM(SORT_TGID, "tgid", sort_tgid),
+ 	DIM(SORT_COMM, "comm", sort_comm),
+ 	DIM(SORT_DSO, "dso", sort_dso),
+ 	DIM(SORT_SYM, "symbol", sort_sym),
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index a8572574e1686be6..6044eb1d61447c0d 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -72,6 +72,7 @@ enum sort_type {
+ 	SORT_ANNOTATE_DATA_TYPE_OFFSET,
+ 	SORT_SYM_OFFSET,
+ 	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
++	SORT_TGID,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
+-- 
+2.48.1.601.g30ceb7b040-goog
 
->  	OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep, "separator",
->  		   "print result in CSV format with custom separator"),
->  	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
-> -- 
-> 2.48.1.502.g6dc24dfdaf-goog
-> 
