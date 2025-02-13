@@ -1,222 +1,189 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF0E274248;
-	Thu, 13 Feb 2025 23:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710AC2753F8
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 23:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487630; cv=none; b=QRn/3wy+bcv3YE88e2rj+4nJOClQS+geNPHW4gGxpeP6Sti8FVM3Quxft79DCptJSiTSRXRXeZOVt+r/MILMY6F9eLHCODmeO0Zf2xyt1LRsudtgh1RkcV+mkWNFyZ+aq4zqo3nwiHkwJVslHKw3tZ7tGWJskcCqM+n5mwD4vY0=
+	t=1739487733; cv=none; b=anKPYWou3Tl+iaHkNCNkVWC64xpzBp6gfFBCGcwBbyiyqFPx76aQtXoiDrKJ66VjOSywova6k1u0O/bDNN6qaAOUsg/u0ztSMqTxb/+uyj2HdEwFDirLrRRDd/V0SuJ2E4okngO4iQXJgcfNQ4g7b3udZpowT/2MIgbEw1Z9si0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487630; c=relaxed/simple;
-	bh=ikG1TN6rDUOxIhapEuldyAS8weMydskL6gYwyosfnGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jqEiTvSlPaDrQwTzMn7xAd3WEai3wFTZh2DNKSgirlHxDuEBlAr8GkaPe8/N4nO6jvnGctvFrLiocoUnBD0Va0pPVK9p+dHiDGh0lJzMPIEnIjqqqEix3j8k8Z2Tr+GJh4shGQmejky0zN0uXidnNJX2HeJcEd5wLwv7CMxuNzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N9JsSv3M; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739487733; c=relaxed/simple;
+	bh=rArljYJMOfbDpgoZMM0tu7ipk28kvPE6eq6PBFLES/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WplgQxzJw1PuCH5COMu9mgJWPlNZPfRBMIyC8YbuIqJ0YxvtswmTOPXllqVD9OBBD0XRPu81s/fBGgWsGQljCP7uO/k/9c4o5qYL1PJlIDRWlUq/BrKWgJgnyNFUTAbwmRLiqh8MfWVo84ul8PwpbXW2Nf3uN0VL21gXOzS02e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=J41LyyK0; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9JsSv3M"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220bff984a0so24867525ad.3;
-        Thu, 13 Feb 2025 15:00:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="J41LyyK0"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4395dddb07dso15203725e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 15:02:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739487628; x=1740092428; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jEFFMAJ36x+7ZOWQGJAZsnY5Yqg+IxQ7p+2U41q9RK4=;
-        b=N9JsSv3MDUKQFp35g6f8TvawB89UuBaxIUnMiKvrlYoAzhCxZ1nsXe5pl2qRmEv7F0
-         CmsCaIYkStjpA+HZwMpeJGivVwgt/PZILyalvmjk4de8CL3gjRZqdlrBL6vu5SwN6vwA
-         B98O5l1TheA9RP8IWuyudGmv2VfSXEmZ5pUM6Q9bNs1YNuAOVWg9nmAtglLQuJkYXnon
-         wCsZk7Z1trGc+TAoy6vE2EMeFO1MW1jblAx3nzN41wNN6CiH8/FCtqYuKfLCg5yGurgE
-         jSmynDl5XnsmT+HcfcvHEkSbtxfWHkFclPVNCeCyI9yUdAxuitvEo4bsjCqxk1jllKO4
-         Vg3A==
+        d=citrix.com; s=google; t=1739487730; x=1740092530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3EJviBZVRfISojX2MI7jBzPekeh+nEUhxOfd45lGtk=;
+        b=J41LyyK0jGy7KB1lSYwCiU3aEavu/CSeYCIKlxoQh9GRl4nx4qAaaBMe7RiUBZTaG6
+         VXLpxAtOH8LA1dq50dFFd8qXXGkfgbEIN9wDZx8sXMrauS4QMqZcHZjwscuaOsfdfEgJ
+         9h9b7yDUzZgQzptGWljIxPL+rXUWOJmqsJyPw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739487628; x=1740092428;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jEFFMAJ36x+7ZOWQGJAZsnY5Yqg+IxQ7p+2U41q9RK4=;
-        b=UjyihSzyXqF6D4Jp/i+s+2iu/08w7ArEs1kOXTgkqcfUJ+6cSl9jp7uiRO9Zao3nN2
-         O/bxEjoUaDGO2fme9NUngXnfQ6fTIWY7qcD9bq0JZGB8QR1TEPXszGPB5XQTmdWkSO1G
-         1T60AWuj/e8moRke3fWczUNo46cDR7vkZey4Gy2C7wnMFlq0JWFWPUHiET5YnzszLjaw
-         mWQC58qJkf7V4vgiMA3CuNLtGId+i8pHm2pdq9QtX/WoCdA8US7uS3eTXXn1Mpcu5s2t
-         5UbHdmwwEKgwx7uFyQ5xRq3qns+y4YG4DhL8ZZMBLaUkhyHMfuokUBZdJmPdEOTgTofq
-         lZAA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWZw6m7nBsmh43O7613T5+n5hH1gMDOJbFSDC2aHzk7uTBD0AO5q6WaX92u4hgkTNdNm6f6zPrPxw7EtM8eZ1/vg==@vger.kernel.org, AJvYcCWXRAtQJCN5Jiov/CX9CovIIBOu14g3JEq1aP0LojsCNR5VMzLw9hEwGCKt6Fn7yyV5xg8NjvMJn9F55jA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1eu4cQVr3bghmvXCcp3WR05z29ct4t7T3+2QeLGGu38ArloSv
-	p/QWP73mBkp5qM2AHin5W1Uvfyjrej5Xdd+qwOq8LOmQA6Q9gDJe
-X-Gm-Gg: ASbGncsWULIiC15JrE2mLGWipvESs08uwZWOxpw3oFhbKbqUGLQGtFTi35HJmvWQUZ1
-	wQH23kFKZkwVTV8Ydb9fWRjx/fg/mA+NNwDxWX7pO0nLLLpd9ULmj1XAhDM4aRVU4TKgjsVCRxG
-	CEkRXiF+B4afA2MZuTNyi1G/TeFSY605X7bdxh2Sth+1QVExR32aEPwHwv7aQgo6WUImaIYbkZq
-	PAoDP36sOn0SG0rSSYY3jOf79yisHi2qL6NvB8aWOSzH1EYKHTMqNxFSQ0GUpDSo0jhtY9ik6AE
-	AQBbWaL1fMBLdb92Uoewaqy1ODQvE2Hh4cNiKp6favgXp8E=
-X-Google-Smtp-Source: AGHT+IFohfSbEB1liEUcnA4N3fAQDj2EifKHmSJglbrdlBIoeSc+y8q6nOwXo2yUfPiX8FmEQftthw==
-X-Received: by 2002:a17:903:1cc:b0:220:e9f5:263d with SMTP id d9443c01a7336-220e9f5288cmr21523915ad.7.1739487627614;
-        Thu, 13 Feb 2025 15:00:27 -0800 (PST)
-Received: from mbp.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5349210sm17641735ad.11.2025.02.13.15.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 15:00:27 -0800 (PST)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: namhyung@kernel.org,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v15 10/10] perf test: Add direct off-cpu test
-Date: Thu, 13 Feb 2025 15:00:09 -0800
-Message-ID: <20250213230009.1450907-11-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250213230009.1450907-1-howardchu95@gmail.com>
-References: <20250213230009.1450907-1-howardchu95@gmail.com>
+        d=1e100.net; s=20230601; t=1739487730; x=1740092530;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i3EJviBZVRfISojX2MI7jBzPekeh+nEUhxOfd45lGtk=;
+        b=C3arNB2JQi+quWF/qObFX57o/n5JFpsY+4cGqAS/C9KVzqo3vEBidkaD0X29e0vti0
+         kyTmwuZ3iAgCF+JcRQyib629i1nKN5l+SSh95U34KWq+fMs9FAdZpztes3TsKcvfn8jn
+         Oc6PV//XGDEE1fw53CO0m5B2pEy4ogLJwykfxQQOwYf54Cnm9kC3LjzojUuaY61T8YkI
+         jSpGLJRh0YxULqiLs73DskFKQT3gAYexieF8yOJ1zL2yfnEg/aYuQQ00N1gmWPDEW8/a
+         PK6Fia0wQi5XE33GkV3aRgL9H0nsdl24q7Q9e+iepb/oPGbvF/3OZRFP5JxxxcT6Iwpc
+         O/nA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+iMomWo17i4InwQpr6NleYh/pRAK8xLp4P6MzczdXWRfXwU9ihgsvK4epw+PyFC7MAR5s0cXf0Ui/SUQ/6DG3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHl5/Igq1ldtU+j0Y9mZssQA7KXxGYThc1ES8UBy9BnReLygwU
+	YsyYkTtso1s6NSrUnSFgIty7oBb3AKG0/YQNdBgGoqOUzIMoopqcvkZYxE5m0xw=
+X-Gm-Gg: ASbGncsjMn8yrscArP8hgTvAssL37uUU9DSjUHKuyyR/ePNebKll9ZcXiTrAx8JMtLi
+	i/9E2cPNZ+2wyGu1oeKvmkAOvwoX2lTwWrmGZPelDskvElMOL7X4LH3BtOK5hy+XKyvd01roP2m
+	6c5lbDWqpnmwogrUFN2zAw0j10mMt8/kbOH8Co5T2l5oSVn67EImsHCyZf5+HkzirchP1uWr+F2
+	qB/dua23AykP/EZQHPRz+U8VzOlkCGhA8Ill+qBQnsOpLKzY06jGPOkV4Bb/zS9+qVm9oyB+i7x
+	ioauezR5sfpLdF79ResDaURf81SJQblpFFTsuAycXyz7wntEydD+DOw=
+X-Google-Smtp-Source: AGHT+IE0uyHeHLCMBxq4Z4hX5//KBRVvvcvQgFQ/zStEwjaIUElrnH2cHxabdmecWAuAifE/TSbAoQ==
+X-Received: by 2002:a05:600c:5950:b0:439:5b4d:2b2e with SMTP id 5b1f17b1804b1-4395b4d2cfcmr82726945e9.19.1739487729679;
+        Thu, 13 Feb 2025 15:02:09 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a055910sm60424855e9.9.2025.02.13.15.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 15:02:09 -0800 (PST)
+Message-ID: <445ccf10-5ac8-42aa-ba09-5f4ba689ec19@citrix.com>
+Date: Thu, 13 Feb 2025 23:02:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] x86/cpu/intel: Fix page copy performance for
+ extended Families
+To: Sohil Mehta <sohil.mehta@intel.com>, Dave Hansen <dave.hansen@intel.com>,
+ x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
+ David Laight <david.laight.linux@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+ <20250211194407.2577252-6-sohil.mehta@intel.com>
+ <b9c21518-54fc-4907-8fc3-d492a3f33bdf@intel.com>
+ <2299c94f-aa46-47b5-bd25-9436a8fbd619@citrix.com>
+ <90eb900b-0b75-4c0d-be65-a4357729e5cd@intel.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ xsFNBFLhNn8BEADVhE+Hb8i0GV6mihnnr/uiQQdPF8kUoFzCOPXkf7jQ5sLYeJa0cQi6Penp
+ VtiFYznTairnVsN5J+ujSTIb+OlMSJUWV4opS7WVNnxHbFTPYZVQ3erv7NKc2iVizCRZ2Kxn
+ srM1oPXWRic8BIAdYOKOloF2300SL/bIpeD+x7h3w9B/qez7nOin5NzkxgFoaUeIal12pXSR
+ Q354FKFoy6Vh96gc4VRqte3jw8mPuJQpfws+Pb+swvSf/i1q1+1I4jsRQQh2m6OTADHIqg2E
+ ofTYAEh7R5HfPx0EXoEDMdRjOeKn8+vvkAwhviWXTHlG3R1QkbE5M/oywnZ83udJmi+lxjJ5
+ YhQ5IzomvJ16H0Bq+TLyVLO/VRksp1VR9HxCzItLNCS8PdpYYz5TC204ViycobYU65WMpzWe
+ LFAGn8jSS25XIpqv0Y9k87dLbctKKA14Ifw2kq5OIVu2FuX+3i446JOa2vpCI9GcjCzi3oHV
+ e00bzYiHMIl0FICrNJU0Kjho8pdo0m2uxkn6SYEpogAy9pnatUlO+erL4LqFUO7GXSdBRbw5
+ gNt25XTLdSFuZtMxkY3tq8MFss5QnjhehCVPEpE6y9ZjI4XB8ad1G4oBHVGK5LMsvg22PfMJ
+ ISWFSHoF/B5+lHkCKWkFxZ0gZn33ju5n6/FOdEx4B8cMJt+cWwARAQABzSlBbmRyZXcgQ29v
+ cGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXguY29tPsLBegQTAQgAJAIbAwULCQgHAwUVCgkI
+ CwUWAgMBAAIeAQIXgAUCWKD95wIZAQAKCRBlw/kGpdefoHbdD/9AIoR3k6fKl+RFiFpyAhvO
+ 59ttDFI7nIAnlYngev2XUR3acFElJATHSDO0ju+hqWqAb8kVijXLops0gOfqt3VPZq9cuHlh
+ IMDquatGLzAadfFx2eQYIYT+FYuMoPZy/aTUazmJIDVxP7L383grjIkn+7tAv+qeDfE+txL4
+ SAm1UHNvmdfgL2/lcmL3xRh7sub3nJilM93RWX1Pe5LBSDXO45uzCGEdst6uSlzYR/MEr+5Z
+ JQQ32JV64zwvf/aKaagSQSQMYNX9JFgfZ3TKWC1KJQbX5ssoX/5hNLqxMcZV3TN7kU8I3kjK
+ mPec9+1nECOjjJSO/h4P0sBZyIUGfguwzhEeGf4sMCuSEM4xjCnwiBwftR17sr0spYcOpqET
+ ZGcAmyYcNjy6CYadNCnfR40vhhWuCfNCBzWnUW0lFoo12wb0YnzoOLjvfD6OL3JjIUJNOmJy
+ RCsJ5IA/Iz33RhSVRmROu+TztwuThClw63g7+hoyewv7BemKyuU6FTVhjjW+XUWmS/FzknSi
+ dAG+insr0746cTPpSkGl3KAXeWDGJzve7/SBBfyznWCMGaf8E2P1oOdIZRxHgWj0zNr1+ooF
+ /PzgLPiCI4OMUttTlEKChgbUTQ+5o0P080JojqfXwbPAyumbaYcQNiH1/xYbJdOFSiBv9rpt
+ TQTBLzDKXok86M7BTQRS4TZ/ARAAkgqudHsp+hd82UVkvgnlqZjzz2vyrYfz7bkPtXaGb9H4
+ Rfo7mQsEQavEBdWWjbga6eMnDqtu+FC+qeTGYebToxEyp2lKDSoAsvt8w82tIlP/EbmRbDVn
+ 7bhjBlfRcFjVYw8uVDPptT0TV47vpoCVkTwcyb6OltJrvg/QzV9f07DJswuda1JH3/qvYu0p
+ vjPnYvCq4NsqY2XSdAJ02HrdYPFtNyPEntu1n1KK+gJrstjtw7KsZ4ygXYrsm/oCBiVW/OgU
+ g/XIlGErkrxe4vQvJyVwg6YH653YTX5hLLUEL1NS4TCo47RP+wi6y+TnuAL36UtK/uFyEuPy
+ wwrDVcC4cIFhYSfsO0BumEI65yu7a8aHbGfq2lW251UcoU48Z27ZUUZd2Dr6O/n8poQHbaTd
+ 6bJJSjzGGHZVbRP9UQ3lkmkmc0+XCHmj5WhwNNYjgbbmML7y0fsJT5RgvefAIFfHBg7fTY/i
+ kBEimoUsTEQz+N4hbKwo1hULfVxDJStE4sbPhjbsPCrlXf6W9CxSyQ0qmZ2bXsLQYRj2xqd1
+ bpA+1o1j2N4/au1R/uSiUFjewJdT/LX1EklKDcQwpk06Af/N7VZtSfEJeRV04unbsKVXWZAk
+ uAJyDDKN99ziC0Wz5kcPyVD1HNf8bgaqGDzrv3TfYjwqayRFcMf7xJaL9xXedMcAEQEAAcLB
+ XwQYAQgACQUCUuE2fwIbDAAKCRBlw/kGpdefoG4XEACD1Qf/er8EA7g23HMxYWd3FXHThrVQ
+ HgiGdk5Yh632vjOm9L4sd/GCEACVQKjsu98e8o3ysitFlznEns5EAAXEbITrgKWXDDUWGYxd
+ pnjj2u+GkVdsOAGk0kxczX6s+VRBhpbBI2PWnOsRJgU2n10PZ3mZD4Xu9kU2IXYmuW+e5KCA
+ vTArRUdCrAtIa1k01sPipPPw6dfxx2e5asy21YOytzxuWFfJTGnVxZZSCyLUO83sh6OZhJkk
+ b9rxL9wPmpN/t2IPaEKoAc0FTQZS36wAMOXkBh24PQ9gaLJvfPKpNzGD8XWR5HHF0NLIJhgg
+ 4ZlEXQ2fVp3XrtocHqhu4UZR4koCijgB8sB7Tb0GCpwK+C4UePdFLfhKyRdSXuvY3AHJd4CP
+ 4JzW0Bzq/WXY3XMOzUTYApGQpnUpdOmuQSfpV9MQO+/jo7r6yPbxT7CwRS5dcQPzUiuHLK9i
+ nvjREdh84qycnx0/6dDroYhp0DFv4udxuAvt1h4wGwTPRQZerSm4xaYegEFusyhbZrI0U9tJ
+ B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
+ d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
+ 6+ahAA==
+In-Reply-To: <90eb900b-0b75-4c0d-be65-a4357729e5cd@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Why is there a --off-cpu-thresh 2000?
+On 12/02/2025 9:19 pm, Sohil Mehta wrote:
+> Check 1 (Based on Family Model numbers):
+>> /*
+>>  * Unconditionally set REP_GOOD on early Family 6 processors
+>>  */
+>> if (IS_ENABLED(CONFIG_X86_64) &&
+>>     (c->x86_vfm >= INTEL_PENTIUM_PRO && c->x86_vfm < INTEL_PENTIUM_M_DOTHAN))
+>> 	set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+> This check is mostly redundant since it is targeted for 64 bit and very
+> few if any of those CPUs support 64 bit processing. I suggest that we
+> get rid of this check completely. The risk here is fairly limited as well.
 
-We collect an off-cpu period __ONLY ONCE__, either in direct sample form,
-or in accumulated form (in BPF stack trace map).
+PENTIUM_PRO is model 0x1.  M_DOTHAN isn't introduced until patch 10, but
+is model 0xd.
 
-If I don't add --off-cpu-thresh 2000, the sample in the original test
-goes into the ring buffer instead of the BPF stack trace map.
+And model 0xf (Memron) is the first 64bit capable fam6 CPU, so this is
+dead code given the CONFIG_X86_64 which the compiler can't actually
+optimise out.
 
-Additionally, when using -e dummy, the ring buffer is not open, causing
-us to lose a sample.
+>
+> Check 2 (Based on MISC_ENABLE.FAST_STRING):
+>> /*
+>>  * If fast string is not enabled in IA32_MISC_ENABLE for any reason,
+>>  * clear the fast string and enhanced fast string CPU capabilities.
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20241108204137.2444151-11-howardchu95@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/record_offcpu.sh | 71 +++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+I'd suggest that a better way of phrasing this is:
 
-diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
-index 678947fe69ee..c5d6cae94c65 100755
---- a/tools/perf/tests/shell/record_offcpu.sh
-+++ b/tools/perf/tests/shell/record_offcpu.sh
-@@ -7,6 +7,9 @@ set -e
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
- 
-+ts=$(printf "%u" $((~0 << 32))) # OFF_CPU_TIMESTAMP
-+dummy_timestamp=${ts%???} # remove the last 3 digits to match perf script
-+
- cleanup() {
-   rm -f ${perfdata}
-   rm -f ${perfdata}.old
-@@ -19,6 +22,9 @@ trap_cleanup() {
- }
- trap trap_cleanup EXIT TERM INT
- 
-+test_over_thresh="Threshold test (over threshold)"
-+test_below_thresh="Threshold test (below threshold)"
-+
- test_offcpu_priv() {
-   echo "Checking off-cpu privilege"
- 
-@@ -88,6 +94,63 @@ test_offcpu_child() {
-   echo "Child task off-cpu test [Success]"
- }
- 
-+# task blocks longer than the --off-cpu-thresh, perf should collect a direct sample
-+test_offcpu_over_thresh() {
-+  echo "${test_over_thresh}"
-+
-+  # collect direct off-cpu samples for tasks blocked for more than 999ms
-+  if ! perf record -e dummy --off-cpu --off-cpu-thresh 999 -o ${perfdata} -- sleep 1 2> /dev/null
-+  then
-+    echo "${test_over_thresh} [Failed record]"
-+    err=1
-+    return
-+  fi
-+  # direct sample's timestamp should be lower than the dummy_timestamp of the at-the-end sample
-+  # check if a direct sample exists
-+  if ! perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F event | grep -q "offcpu-time"
-+  then
-+    echo "${test_over_thresh} [Failed missing direct samples]"
-+    err=1
-+    return
-+  fi
-+  # there should only be one direct sample, and its period should be higher than off-cpu-thresh
-+  if ! perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F period | \
-+       awk '{ if (int($1) > 999000000) exit 0; else exit 1; }'
-+  then
-+    echo "${test_over_thresh} [Failed off-cpu time too short]"
-+    err=1
-+    return
-+  fi
-+  echo "${test_over_thresh} [Success]"
-+}
-+
-+# task blocks shorter than the --off-cpu-thresh, perf should collect an at-the-end sample
-+test_offcpu_below_thresh() {
-+  echo "${test_below_thresh}"
-+
-+  # collect direct off-cpu samples for tasks blocked for more than 1.2s
-+  if ! perf record -e dummy --off-cpu --off-cpu-thresh 12000 -o ${perfdata} -- sleep 1 2> /dev/null
-+  then
-+    echo "${test_below_thresh} [Failed record]"
-+    err=1
-+    return
-+  fi
-+  # see if there's an at-the-end sample
-+  if ! perf script --time "${dummy_timestamp}," -i ${perfdata} -F event | grep -q 'offcpu-time'
-+  then
-+    echo "${test_below_thresh} [Failed at-the-end samples cannot be found]"
-+    err=1
-+    return
-+  fi
-+  # plus there shouldn't be any direct samples
-+  if perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F event | grep -q 'offcpu-time'
-+  then
-+    echo "${test_below_thresh} [Failed direct samples are found when they shouldn't be]"
-+    err=1
-+    return
-+  fi
-+  echo "${test_below_thresh} [Success]"
-+}
- 
- test_offcpu_priv
- 
-@@ -99,5 +162,13 @@ if [ $err = 0 ]; then
-   test_offcpu_child
- fi
- 
-+if [ $err = 0 ]; then
-+  test_offcpu_over_thresh
-+fi
-+
-+if [ $err = 0 ]; then
-+  test_offcpu_below_thresh
-+fi
-+
- cleanup
- exit $err
--- 
-2.45.2
+/* BIOSes typically have a knob for Fast Strings.  Honour the user's
+wishes. */
 
+>>  */
+>> if (c->x86_vfm >= INTEL_PENTIUM_M_DOTHAN) {
+>> 	rdmsrl(MSR_IA32_MISC_ENABLE, misc_enable);
+>> 	if (misc_enable & MSR_IA32_MISC_ENABLE_FAST_STRING) {
+>> 		/* X86_FEATURE_ERMS will be automatically set based on CPUID */
+>> 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+>> 	} else {
+>> 		pr_info("Disabled fast string operations\n");
+>> 		setup_clear_cpu_cap(X86_FEATURE_REP_GOOD);
+>> 		setup_clear_cpu_cap(X86_FEATURE_ERMS);
+>> 	}
+>> }
+
+MSR_MISC_ENABLE exists on all 64bit CPUs, and some 32bit ones too. 
+Therefore, this section alone seems to suffice in order to set up
+REP_GOOD properly.
+
+~Andrew
