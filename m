@@ -1,435 +1,172 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9540E269824
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 21:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0798205E3B
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 22:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739481157; cv=none; b=Sy1ZNZ59+BO1rsjw5pmvFRF6uKPAWoP20yq/FkmsTC+rf0cJWydc9AIzOGcfls4YwF91ymaWScFrZR/CgBVOOIUoWAOOiIvvuwgutqJdOXXhbgSufcGT6FYxByos+cczxualJAl+jS6tOF0r5n5lTO6uT6uZr68zfj8l29NzE/o=
+	t=1739484226; cv=none; b=e9m3PlSVf6U60qaeMgF23JLNhwXNiSVex9j3jW+gHkrrji2Ce272KYx3CpvrZlqeiHsM9n5Y6JMbmXhiqdEOSOFYnPuc0kYYMtqGjRIv0+MfaB8MmyhXEjvDOIsH+TTiCFu3KSJsBKf+z4VmpvhUN/PdjossTKFJb1j43Okfjb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739481157; c=relaxed/simple;
-	bh=LaWY661hGGOsz8ab9A8tX3O52beRD/JORrirTIwPdYI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gqVzb09T3ARmxR2jHoe1Eet/TsTex7WeW72yGaxEQkiyLF5QO+RpilEUhH5QMaMeG26UyHfGT8ssch8/uSJYlckp3A2ic0dDBN7uv7TgdozozArFblwae344utW/iTIVcAnFGmWfz+M0qZZKea/P5YyCn4JIqOx0+cc5uh6TYOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PQgOjTPS; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739484226; c=relaxed/simple;
+	bh=vRm1GqPMyqXA4pzClKC7bvwwNmM1WifeOw0DDoJQWxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F4qrSoSCrnw2FhVSFhDEgsCH1oF8jQUuVjBkZDtgoL5psHrlJyoQOwIeqbKkpPksYUWq9bMpd6lJYZvDxEVGMJmvC4Dwe6dYjBs43sQxUkG3lixGmL+kvmS+wRjmxLbGjf11f1lhzPpehUnjVteZhi9FtWsiM5NLG6ZZkcgJBec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=mKZSZQHY; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PQgOjTPS"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f49bd087cso20664735ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 13:12:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mKZSZQHY"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fc0026eb79so2562503a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Feb 2025 14:03:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739481155; x=1740085955; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7dCT5jcbY95du2Tjjq6rItJv9SEP2f87N9w5dx/eCvk=;
-        b=PQgOjTPSZ018B7gXHtYTZ5cRL50oqDk9VjHlUmAM1ERVJShkmoz/p6hKEKzwtRjDNY
-         po6iTqmYTlvXp98UsSVtAkMNSQ/MBAAbYVQycjTeVLKTtnVOtrT5IwJx0pp7bJW8yzRM
-         zycNB69qQDWQLooo6hDzJfOC6QSax+5hV8oD04YhjuRF4dmcKVwW1ZnooFrXvHyLOnEJ
-         TFypj/qjuk49tse64lXBXoEyp5453DjrsmfnDxc6Tij4a0XpLwBOS7iCIdQlF5ru8Ock
-         Ueav0D4Msz4raWAfzewlOF1AGnZL0oQPiS4Es067DrW12AIveFAApfkEPV6L7S5W+Mwa
-         tbcQ==
+        d=sifive.com; s=google; t=1739484224; x=1740089024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vofSNuCMlReC+WuFTXGYAG+iOC4hNVftxe7EdwNqb5U=;
+        b=mKZSZQHYlozsiTZI+eZ2aZ9RN+TbJcsjaUfm7VZ3EPztIaJa8xcuNrBAu+K6JCjStr
+         NhMVjDIxXlx8Kr65ANodrFcnY0KeEF2X2uXuTZAs4z9OCk9iGl85RbucbEpxmObyIPp/
+         FtgA9yusEAv26k4XtiZqEO+6VYJoRITx6RF5hfb4nholpfgcFDtxApTKcQo9s1mQvjRu
+         XrlfRYpJgdes+1japH60Mgb2DgCCvRu8L1PnoUHaqq7CYriijXH8yoFX9cxWYfeNiCFX
+         B7T9F0WCiuyUhrJk+RFFvDxIe+I/1cq4eESLJWtJKxAt3W4F8z69rywNHFhG9Um/EOHs
+         SqPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739481155; x=1740085955;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7dCT5jcbY95du2Tjjq6rItJv9SEP2f87N9w5dx/eCvk=;
-        b=ls1GtvFE/4Rj8MXxOLMUwNEaMZZvSmuEKrDNL0D1ItheaJyKrHXo2fxMyvGZjJ+6+g
-         vqGeb3/qrNDTvny5ccdGiJLbF3k6+lxi/psHH89SWYLwN9E/r7DzUXrovIwiuF4HZ/rx
-         BQ0XCn0XflvDuYUngjMxoHlBEe+wdilcsdadea1shYPnJ3M4hSWshx/RXjRhhOMcPIhc
-         oKk/TuGbwxJs9WBejp3MzPj0FejxosDs8EYfLOX8Xr3JLoaH8uIeic/m544froLv/7+G
-         g3gWfOXwi/ZvACNTGXWuTC+OLtJieGPVinhMmN6lXy+N9gx2q0/C+NKBskkz+afdfwHz
-         EgQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF+raie+v2tzDUkY0WN7nsYL8d4hmIGjuk7Sx41VYSYmkLOd0qQCVNKM4x/38A8e7l9nuSbq/Mb/5liw2wbgi4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyarUGdVYRiVFzXrSPpEB+S17f3IKog4hqzTavZ9ECJL5vm8wfM
-	zTQOiuGMtKysHvec9qdpDem3tYtnugQEtVldeyDAub6oBEeBIbtNH7UJxUGpEVs=
-X-Gm-Gg: ASbGncu60NsGqugZOl85P+tizipRgq68kiFO9PAXhJqsCFaiEGFN2zhgAnyX8UBbDOi
-	uljChzzayMukJ1sgT+Zw39AqkmAxjA/eKdB4BSmZJTmEKk5XhU4raVCOX/bckLtRfnp4gpQ8ihN
-	qIFxlHqOnJ9GWOPI0D78W8PP2wl6m20gMGUR59EfYFgCJcb7rFP1sQuOJSRYZw71xZQZuiAZc1w
-	Zi0vGCaLXPZKxDaq4NZJ+AWjV8halNAm5wzZXdSutLRb6DY6LIPC3ebh0BwR8mlVqyqNu1Dk4Nl
-	f6hUv7tmGu7SLAThxwZGvmKnrUpAZ5U=
-X-Google-Smtp-Source: AGHT+IHWMlGwUiWdsiNRbvm7dD8sEMzLzmRqwl/PU5Ys8fbVS90IAlTNhDD0UoMI3fOVabW+kAQ4WQ==
-X-Received: by 2002:a05:6a00:3e04:b0:730:9334:18f3 with SMTP id d2e1a72fcca58-7323c1bcde7mr7654326b3a.19.1739481154657;
-        Thu, 13 Feb 2025 13:12:34 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324257fdd6sm1758072b3a.76.2025.02.13.13.12.32
+        d=1e100.net; s=20230601; t=1739484224; x=1740089024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vofSNuCMlReC+WuFTXGYAG+iOC4hNVftxe7EdwNqb5U=;
+        b=k+fKUABNH+mvOT85+Webw2X4+LOGAVG7el1wTRCFRSAr8rdpQ1qHnN8X+Z0xicyw9v
+         hbunnAs0pEVvKkj+P2JBpD+RDwb9TW4jEy9Dwgml8303tsKChOrPsmhSpwdQJbrfqC2Y
+         4sbBYU0Hxh5NdK7eEhh9TUH33hB3n0lRFdUp36KPh8CeVoj7yIPywryep6H+DwrsWizE
+         yfwPT3A6rfjCYJgfEBI0Kqm4OZc5k4W/Kz6NVVz74gOhDXF/SfeDf1xDOq9JkfDQIfiW
+         Kbqfa5xjqh+s1DWWIrrrcLmIjPTHa2Ct8qH8eUZM4pflk8V1hiSEteM/wpW/TO/htiVl
+         HGmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTMScb09b/GliB8GoBtlmOS5YuYKFv0SQIIagI87JHvzdKpuoHiQtNvW9fsr0YPY/40jz25p5M3dic7/Oeo8s+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIzg6DS+VPjcuvvRpIEUNPoXShIE3Ofc7wgqMmEOi5+up+GIeg
+	mWkXijkf6o8sB14h1SoiTDJdGrICg+leK6cRdYTYfqWga24gB51gwC4pg9u8BRA=
+X-Gm-Gg: ASbGncsmvVB8y1lKpi6Y7nGFQCTyjdfrA9FDpZ1wiVFt1e+cS+gvkPxEVmbUdnJ2XxT
+	SlbiXBMrQj6aKnibBdyV2nCGh1hRQug8nYWVTW5askRdYp7nyal496ZJQjqNJArRqJRaf3WDcL8
+	1r1lc+oTVIzju9nR7ZeCRdQeod8YBpsqv7EU0GEBLbesB6n8afMXgn2t7eYlXbmTisMLxrwhRG2
+	0r3olzTmeO1V9ZV7X4chCbGmBqqWeO40fQYL3IhH9jeLTATDIyc73+2kRuUAfx8G5elZHfpcCbD
+	fBpyPEPAIZudLKRL+SLgJ82nnSSVBgL3ZYtbRg==
+X-Google-Smtp-Source: AGHT+IHZZb2Jta84jO1YUZkaqS3bvyvNnQldZh8oh2u99VvWuVBNfNp7QsimOh8/7XV9ie22K9NXig==
+X-Received: by 2002:a05:6a00:3d46:b0:72f:f872:30a7 with SMTP id d2e1a72fcca58-7322c37d9b1mr13653146b3a.6.1739484224011;
+        Thu, 13 Feb 2025 14:03:44 -0800 (PST)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324273e438sm1847491b3a.94.2025.02.13.14.03.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 13:12:34 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 13 Feb 2025 13:06:22 -0800
-Subject: [PATCH v3 2/2] tools: Remove redundant quiet setup
+        Thu, 13 Feb 2025 14:03:43 -0800 (PST)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [RESEND PATCH 0/7] perf vendor events riscv: Update SiFive CPU PMU events
+Date: Wed, 12 Feb 2025 17:21:33 -0800
+Message-ID: <20250213220341.3215660-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-quiet_tools-v3-2-07de4482a581@rivosinc.com>
-References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
-In-Reply-To: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10133; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=LaWY661hGGOsz8ab9A8tX3O52beRD/JORrirTIwPdYI=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/q6BGu5TUfqNyQ4drwoiJ+XWX7zwBmVfSudWRT0mS+9f
- 6jGzv6oo5SFQYyLQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgImsvszwz7bS6cPv4DW/n82q
- c1vDlz51t8ZH3vIlkd7+d8qjXp67tpThf3xtgqCr1zKtYgkrh/mW1rFZmbr1cr4pv1r89977OvU
- rMwA=
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Transfer-Encoding: 8bit
 
-Q is exported from Makefile.include so it is not necessary to manually
-set it.
+This series updates the PMU event JSON files to add support for newer
+SiFive CPUs, including those used in the HiFive Premier P550 board.
+Since most changes are incremental, symbolic links are used when a set
+of events is unchanged from the previous CPU series.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Acked-by: Quentin Monnet <qmo@kernel.org>
----
- tools/arch/arm64/tools/Makefile           |  6 ------
- tools/bpf/Makefile                        |  6 ------
- tools/bpf/bpftool/Documentation/Makefile  |  6 ------
- tools/bpf/bpftool/Makefile                |  6 ------
- tools/bpf/resolve_btfids/Makefile         |  2 --
- tools/bpf/runqslower/Makefile             |  5 +----
- tools/lib/bpf/Makefile                    | 13 -------------
- tools/lib/perf/Makefile                   | 13 -------------
- tools/lib/thermal/Makefile                | 13 -------------
- tools/objtool/Makefile                    |  6 ------
- tools/testing/selftests/bpf/Makefile.docs |  6 ------
- tools/testing/selftests/hid/Makefile      |  2 --
- tools/thermal/lib/Makefile                | 13 -------------
- tools/tracing/latency/Makefile            |  6 ------
- tools/tracing/rtla/Makefile               |  6 ------
- tools/verification/rv/Makefile            |  6 ------
- 16 files changed, 1 insertion(+), 114 deletions(-)
+I originally sent this series about a year ago[1], but received no
+feedback. The P550 board is now available (and I have tested this series
+on it), so it would be good to get perf support for it upstream.
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index 7b42feedf647190ad498de0937e8fb557e40f39c..de4f1b66ef0148b7bfd0fd16655ad854c7542240 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -13,12 +13,6 @@ AWK	?= awk
- MKDIR	?= mkdir
- RM	?= rm
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
--endif
--
- arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 243b79f2b451e52ca196f79dc46befd1b3dab458..062bbd6cd048e9e42f9bc8f9972ec96594f3dbd2 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -27,12 +27,6 @@ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- FEATURE_USER = .bpf
- FEATURE_TESTS = libbfd disassembler-four-args disassembler-init-styled
- FEATURE_DISPLAY = libbfd
-diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
-index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
---- a/tools/bpf/bpftool/Documentation/Makefile
-+++ b/tools/bpf/bpftool/Documentation/Makefile
-@@ -5,12 +5,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man8dir = $(mandir)/man8
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BPF_DIR = $(srctree)/tools/lib/bpf
- 
- ifneq ($(OUTPUT),)
-diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
-index 4b8079f294f65b284481e9a2bf6ff52594a4669a..afbddea3a39c64ffb2efc874a3637b6401791c5b 100644
---- a/tools/bpf/resolve_btfids/Makefile
-+++ b/tools/bpf/resolve_btfids/Makefile
-@@ -5,10 +5,8 @@ include ../../scripts/Makefile.arch
- srctree := $(abspath $(CURDIR)/../../../)
- 
- ifeq ($(V),1)
--  Q =
-   msg =
- else
--  Q = @
-   ifeq ($(silent),1)
-     msg =
-   else
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index c4f1f1735af659c2e660a322dbf6912d9a5724bc..e49203ebd48c18607a6136a9e805ccf16ee960d3 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -26,10 +26,7 @@ VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)		\
- VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword			       \
- 					  $(wildcard $(VMLINUX_BTF_PATHS))))
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
-+ifneq ($(V),1)
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
- endif
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 857a5f7b413d6dc4cbe7bc4167496674dd08d875..168140f8e6461bd06db40e23d21a3fb8847ccbf4 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -53,13 +53,6 @@ include $(srctree)/tools/scripts/Makefile.include
- 
- # copy a bit from Linux kbuild
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
- INCLUDES = -I$(or $(OUTPUT),.) \
- 	   -I$(srctree)/tools/include -I$(srctree)/tools/include/uapi \
- 	   -I$(srctree)/tools/arch/$(SRCARCH)/include
-@@ -96,12 +89,6 @@ override CFLAGS += $(CLANG_CROSS_FLAGS)
- # flags specific for shared library
- SHLIB_FLAGS := -DSHARED -fPIC
- 
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Disable command line variables (CFLAGS) override from top
- # level Makefile (perf), otherwise build Makefile will get
- # the same command line setup.
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa048ea919c69ed2240bf0ea444dbf21..e9a7ac2c062e2b398c2f22af41907b62815ca07e 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- TEST_ARGS := $(if $(V),-v)
- 
- # Set compile option CFLAGS
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 8890fd57b110ccc1a837d37624a5dead00f18656..a1f5e388644d31d36f973d3ddce48d036ee0a083 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index f56e2772753414ff8d3462bdebbc8e95e7667fcd..7a65948892e569cbe1d6e5a78db68bb35102cd26 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -46,12 +46,6 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
- AWK = awk
- MKDIR = mkdir
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BUILD_ORC := n
- 
- ifeq ($(SRCARCH),x86)
-diff --git a/tools/testing/selftests/bpf/Makefile.docs b/tools/testing/selftests/bpf/Makefile.docs
-index eb6a4fea8c794d8354363ac8daa0baac3e3bd060..f7f9e7088bb38c7507282990fb62921ca7a636d2 100644
---- a/tools/testing/selftests/bpf/Makefile.docs
-+++ b/tools/testing/selftests/bpf/Makefile.docs
-@@ -7,12 +7,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man2dir = $(mandir)/man2
-diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-index 0336353bd15f0d56dbed6c8fa02f53c234f949e1..2839d2612ce3a70f4332f8e886586e9cca6f03cb 100644
---- a/tools/testing/selftests/hid/Makefile
-+++ b/tools/testing/selftests/hid/Makefile
-@@ -43,10 +43,8 @@ TEST_GEN_PROGS = hid_bpf hidraw
- # $3 - target (assumed to be file); only file name will be emitted;
- # $4 - optional extra arg, emitted as-is, if provided.
- ifeq ($(V),1)
--Q =
- msg =
- else
--Q = @
- msg = @printf '  %-8s%s %s%s\n' "$(1)" "$(if $(2), [$(2)])" "$(notdir $(3))" "$(if $(4), $(4))";
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index f2552f73a64c7eb1be24c27b3a1414617391315b..056d212f25cf51cd8c02260fbe2ef28dda5e4acb 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/tracing/latency/Makefile b/tools/tracing/latency/Makefile
-index 6518b03e05c71b4fa84498f9628adf81a38c9f56..257a56b1899f23837de533353e9c2cebdb6035bd 100644
---- a/tools/tracing/latency/Makefile
-+++ b/tools/tracing/latency/Makefile
-@@ -37,12 +37,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q 		=
--else
--  Q 		= @
--endif
--
- all: $(LATENCY-COLLECTOR)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 8b5101457c70b48e9c720f1ba53293f1307c15a2..0b61208db604ec0754024c3007db6b2fe74a613c 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -37,12 +37,6 @@ FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- FEATURE_DISPLAY	+= libcpupower
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RTLA)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 411d62b3d8eb93abf85526ad33cafd783df86bc1..5b898360ba4818b12e8a16c27bd88c75d0076fb9 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -35,12 +35,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RV)
- 
- include $(srctree)/tools/build/Makefile.include
+[1]: https://lore.kernel.org/linux-perf-users/20240509021531.680920-1-samuel.holland@sifive.com/
+
+
+Eric Lin (5):
+  perf vendor events riscv: Update SiFive Bullet events
+  perf vendor events riscv: Add SiFive Bullet version 0x07 events
+  perf vendor events riscv: Add SiFive Bullet version 0x0d events
+  perf vendor events riscv: Add SiFive P550 events
+  perf vendor events riscv: Add SiFive P650 events
+
+Samuel Holland (2):
+  perf vendor events riscv: Rename U74 to Bullet
+  perf vendor events riscv: Remove leading zeroes
+
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |  6 +-
+ .../cycle-and-instruction-count.json          | 12 +++
+ .../arch/riscv/sifive/bullet-07/firmware.json |  1 +
+ .../riscv/sifive/bullet-07/instruction.json   |  1 +
+ .../arch/riscv/sifive/bullet-07/memory.json   |  1 +
+ .../riscv/sifive/bullet-07/microarch.json     | 62 +++++++++++++
+ .../riscv/sifive/bullet-07/watchpoint.json    | 42 +++++++++
+ .../cycle-and-instruction-count.json          |  1 +
+ .../arch/riscv/sifive/bullet-0d/firmware.json |  1 +
+ .../riscv/sifive/bullet-0d/instruction.json   |  1 +
+ .../arch/riscv/sifive/bullet-0d/memory.json   |  1 +
+ .../riscv/sifive/bullet-0d/microarch.json     | 72 +++++++++++++++
+ .../riscv/sifive/bullet-0d/watchpoint.json    |  1 +
+ .../sifive/{u74 => bullet}/firmware.json      |  0
+ .../arch/riscv/sifive/bullet/instruction.json | 92 +++++++++++++++++++
+ .../arch/riscv/sifive/bullet/memory.json      | 32 +++++++
+ .../arch/riscv/sifive/bullet/microarch.json   | 57 ++++++++++++
+ .../arch/riscv/sifive/p550/firmware.json      |  1 +
+ .../arch/riscv/sifive/p550/instruction.json   |  1 +
+ .../arch/riscv/sifive/p550/memory.json        | 47 ++++++++++
+ .../arch/riscv/sifive/p550/microarch.json     |  1 +
+ .../p650/cycle-and-instruction-count.json     |  1 +
+ .../arch/riscv/sifive/p650/firmware.json      |  1 +
+ .../arch/riscv/sifive/p650/instruction.json   |  1 +
+ .../arch/riscv/sifive/p650/memory.json        | 57 ++++++++++++
+ .../arch/riscv/sifive/p650/microarch.json     | 62 +++++++++++++
+ .../arch/riscv/sifive/p650/watchpoint.json    |  1 +
+ .../arch/riscv/sifive/u74/instructions.json   | 92 -------------------
+ .../arch/riscv/sifive/u74/memory.json         | 32 -------
+ .../arch/riscv/sifive/u74/microarch.json      | 57 ------------
+ 30 files changed, 555 insertions(+), 182 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/cycle-and-instruction-count.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/firmware.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/instruction.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/microarch.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/watchpoint.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/cycle-and-instruction-count.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/firmware.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/instruction.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/microarch.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/watchpoint.json
+ rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/firmware.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/firmware.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p550/memory.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/microarch.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
+ create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
+ delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
+ delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
+ delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
 
 -- 
-2.43.0
+2.47.0
 
