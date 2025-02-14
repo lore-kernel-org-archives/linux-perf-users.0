@@ -1,270 +1,192 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2052.outbound.protection.outlook.com [40.107.101.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E65275411;
-	Fri, 14 Feb 2025 01:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739496342; cv=fail; b=azzqUisfEFpcPHfq7EAxwx0rdxt9vagxVIpB6zpXTRKZj6fvh9OOBpyEBdVTZYnWwNy9U081CUktGGCsx0gIDXFJFm6Q0SuUBT8N5578NtPtpSBkUPBeDUrpxVskZrrTh0kviG71JnlF6hEUxOHKf5KSIZJVIO5YnNqUYwv7T0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739496342; c=relaxed/simple;
-	bh=cvcm1ZBLLF3J8eywFdw/+1mgnMBTVIgBPaLLElNvR0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NXeYPEaoahcWBAUBNDeZHQA24jwBW8SpwmeSe1gJgCdp8Ci/XzpKiAKdlenxomCQ9ehbFrn4Dhy3567vKx/Spf8OJUurtlItz89brKjt4PkVMDAsoTgvYag2qW0VT6iAmhuzRG38dGngi7QdU/rN9Fxn2nOUZN8FkFOoBzHum/E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PQrvGnpR; arc=fail smtp.client-ip=40.107.101.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0F47081C;
+	Fri, 14 Feb 2025 01:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739496442; cv=none; b=Re66qGMFQUYWNtGggblLfQ3Oic8OKfivog47oQOI8K0kWAjacfhx9pDZNxYIeSB4i36+BUwIH0Mt+hMzJFr6mVc71Yuk9HHGCyKJy8427s5rSj4KQPWyKebzaZ3Gx32xOtWX6K6yYVk9et7RIEopGpEYoCsTGPuEKXInFu4W9Qs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739496442; c=relaxed/simple;
+	bh=Tw2ys3ocF6gdBGnWzCtn8X1+JhzVVjWEPt15oDLoFP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tj4xKk+4SatWJy9BFfUTautGLnyHfLTe1oZ/Cc5kU6bckEqx5KdsCD+nhD7F0jOT42ITtoO5j9tPg3dnOhoJlR4G0cwl5U3ach3IBCuID0Q2cmGKIKBzyiFHbXNYnEQcecQqGGHKT/kDI6QI31yC5c8U9mubPfzvyK22UBHBuT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLsqYtMC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PQrvGnpR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I2ia0pDYsY0hbUKJMw7li91tKhbCT2gX1h+wY6uvYABRkHM09ilUOkkxEVlrgmFjHOFZu+iD9R9XRPYEfrCKx19KLLsPh6dsU+DCnvTohpVSGhEzdgi/FjNaV9xJ+lLY3Y3O8gRpxfLfhIThLSKQEy3STO7qtFG8M1IRefKngRSOksvn+ExodG23xODs39fbF7X+aer8A2P96FZOef13IyUyPxcsVLWtZtzQJgOCzs65TyHx/tDz0+dk6a7Ab027W13D1+Yj3IDI+XeLnIw2mpzF6Khzu2x+M8LpHQSNdnf4n/1P5lQf6EKZf8k6dyuoDOsgEkOxK53RUAKVJUSoEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xxHVxA39KPbLIOi3pDWIRlYDxTo3oagZCKfVsBfAh18=;
- b=eqOApl8IAdnKNygLSGrk0HhnfxMdzLiR+6+34ks9aC2c8M2PzQhjPZFX3IfExK46gPqRsUhXEgHz4bqk9MoSUC5fk0YJG/5R7bAwvGLuciphJ0WIdPqLBXU85B0nw8WP02tdk/Qc8HibpE5laHvxqD0L5SEqP0ZQX29MdNI7SHDXDstQLoAXdAT5c04+WdCfcpCyxqtSndAOwpXdt0xB1AvhrTyTkInvs063iedUWFfNBvZniPlk/q7MbQHVOTjuHxpeYNCHkuzmAapY4JQBpnj1UXrwFGv8bdEZCbzAcaOKnFq9xRFPHf82LefTc7Z1gyuxQQynD6fAI83EJP5pMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xxHVxA39KPbLIOi3pDWIRlYDxTo3oagZCKfVsBfAh18=;
- b=PQrvGnpRv+vzy0x+M6ifYz85+BL3vF0HM6PrjoIUtUM8ZPRealrkLlb+xyYWaU7hUmQU1qfwCwtEv1y64gbRO/6Q/iQo9NMWeSuqJNyA1G5qOdZ0ZJveGg+Psr7xSfLkdCeoGxRdg/qE1NbEWUPnWNZLfZft1MGHtSWmdtmq1aL3okI4JgUXhIu+uMjrRPqV4eCncUblPYpPJaujT+TVuMdWhnVULty3Jbx+YRLXn57IRQgRW+oUbdk7st9rGzjBnZ7c1e1DFPuehgKxN4/QoQ15924Fi7oasyVKnwpqsQNvryltPDpSwU3Lt5PgatNGM+41BZKrWn+jCPowL+MjHw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- LV8PR12MB9359.namprd12.prod.outlook.com (2603:10b6:408:1fe::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Fri, 14 Feb
- 2025 01:25:35 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
- 01:25:35 +0000
-Date: Fri, 14 Feb 2025 12:25:29 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
-Message-ID: <pqxzfmb2ydjgplkiswb5oxtbvpxyzmfroh2fbeqeuywklmrw6i@jbj73xssektr>
-References: <20250210193801.781278-1-david@redhat.com>
- <6sejv2hauce3il5lq6sw53xmjjjglxkhz5copm62oryga6jioi@u66wl2nc3hoy>
- <039b2e48-1d7c-48dc-b832-24db12af216a@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <039b2e48-1d7c-48dc-b832-24db12af216a@redhat.com>
-X-ClientProxiedBy: SY8PR01CA0016.ausprd01.prod.outlook.com
- (2603:10c6:10:29c::8) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLsqYtMC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5EAC4CED1;
+	Fri, 14 Feb 2025 01:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739496442;
+	bh=Tw2ys3ocF6gdBGnWzCtn8X1+JhzVVjWEPt15oDLoFP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QLsqYtMCOieuWF8B+QYNWaHVU3taYQhMjlw0lytp54H0k6xcYIP53+mQPq1rm2J+O
+	 eT8iDoLi6LYKxcbtakEcwDk1SGJ4/E9750y/I7ygt3SuYbj9sxkHkjmWpJwVUzg9b8
+	 hTOKDCbzR5mO4fxQGk7ikJfxLEuInq2dXwDWvaG0F4imjecd39YlEOcnZ6bGltY+zq
+	 gA2wCpFLP8AA5vklKx32ocCJrM8zyMbvEMbmmE//acTZBLuwDUFoTZymcNPc+i6SOq
+	 5nDuV2MrIqI84BDhG5tRT/AKO4QiJ+ZT1KAXizeEd/xv3smcPjJkGXxEIMZsMSaQxC
+	 xL6Zp8kH16/IA==
+Date: Thu, 13 Feb 2025 17:27:19 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, Robin.Murphy@arm.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf stat: Fix non-uniquified hybrid legacy events
+Message-ID: <Z66b9-I_MkmX7pg5@google.com>
+References: <20250212122413.1184503-1-james.clark@linaro.org>
+ <CAP-5=fWywDB40-RgV8LaPqsoffOLdDcYkUB_LHoPvV=R8yas4w@mail.gmail.com>
+ <CAP-5=fV0rWEL-ewGpoDwaJ3rvbTPXSx0YTuF5p9=6+h5oUhsfg@mail.gmail.com>
+ <c672c3a3-64e3-495a-ae61-ae098d30c6b9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|LV8PR12MB9359:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21ceda00-ff33-43b2-731e-08dd4c967ac5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Wuunw6r4tdDakfc9xX/SOWGRwIb8uwVdpZlqMFRW1pyl2nQKNgy+4BVTiqoU?=
- =?us-ascii?Q?ZlxaoWx90eDxTi7JiH5TVkYGTXdtgNiMlNt41+/9vcZTmHtkpLElwOEDrXI6?=
- =?us-ascii?Q?jYjZspTZwOgM2ugQUHnr/EBnl6zTS+hh9uVPTfPbW6r5DBGVdOUzCF99wP0Y?=
- =?us-ascii?Q?GkVo2ReTHzGTD/1mw7z04w3StDTVUMcO95q3iZifD1YIOT3GB4BnmTCS5BJD?=
- =?us-ascii?Q?VWL0toaqhv1eROrVgCvVPkgxma0+MXyY0uK99WsS8fVkvenSDG1qRsnUXG86?=
- =?us-ascii?Q?GIRESjxUch6Ylnw2fUHv8Suuynxi6T6hbCfGcYQtOZm4WbofqtX5LbB+ioC3?=
- =?us-ascii?Q?bcXtE+vqS89xRu9gc+mMUhkdX7B/rKERCmW9rjBbahmE7c1C16FSbKvx8rGl?=
- =?us-ascii?Q?fXmsPayjwY4C3h90MUOknSfVjU05TaxwLNuJWkHz+GZB8pcoO6Ap0/rzHxF2?=
- =?us-ascii?Q?YDiRwyM4nLpt3dHfMcLdy2PZgHsui1V0Fn5NwiTRvwkoSnOdx9WbaoOUauXU?=
- =?us-ascii?Q?X+WU6f+0o6kokEubR9hzDYkuQ/NepTk9LSKNFXXZtDI/ka9SPnvSEfTzrVTL?=
- =?us-ascii?Q?3/e2ofGuaYjjscFWGbyckXgP0hlQv60BVsqyd2Lrd4VpvBKW8yW6Vul4BbFZ?=
- =?us-ascii?Q?Li/cQ9QodMlWrfda3Yuuwuu8kwtCyoN5xr3MZN8+K4/cPF00FZtYFuCvrSj8?=
- =?us-ascii?Q?Ez1/ANGM7C+qURvfa31YCfIPqyZXOpds8v5b5Lorw8HTZHm2QiQaf6bAlmk7?=
- =?us-ascii?Q?Ud2ZEglUbV5W8AuMQsjvxC6nm/zq2vsMppzisEnY8XSiWy3NR/XJ/5DuKJfU?=
- =?us-ascii?Q?Vl9OVakPtTZytxwzS1b8bvqB/LBH3+HOW4xh2D2wlYhNhTnSjjQDFfFDo9aR?=
- =?us-ascii?Q?TCPBO216a7Cy0wJ0kXeFoaANOvZWhLM4avVKYe2XFrQFTt4vvIDQDHIUyHFO?=
- =?us-ascii?Q?gXHHiHSuFGF2S7wrsD5H9PGHZZiZD2z5+/eanQbWsLjM7kTOl6R2A4/KdnJu?=
- =?us-ascii?Q?S6PV2tx6YCJuwox5PLXi0+xo4VR3mDSqiXc5jWvOUTrT0/u2A6gRibpXiDmM?=
- =?us-ascii?Q?ryidMGC3d1F4Ri6tyCR0+XCnstezugNtN59t9WsQWZP0ZEi115f9AXGTL3sN?=
- =?us-ascii?Q?y/QWf/yuLXNeqjgylJkRlDejRAJaHrbrlpe2W0ZepKjAnR2oax5k6pzOepbf?=
- =?us-ascii?Q?RZYbhUmt21kI0R1cqxVyXyCHbF9wgu71qcZ+OUa4XyjVD1mU7ze63ZjK7w3t?=
- =?us-ascii?Q?Sqe6NM2tGs9HTJ+HLTWhxLpQScYL9ahBnUAp300eMA7jqNd4V452lkQj2ECR?=
- =?us-ascii?Q?KB3UfG4oKo0EIpCUMwBoPKo2O1gHxbs/tFYBgKFbP2P3bboQyJKnQ0+T/VGl?=
- =?us-ascii?Q?8w4FSmugAPNAQiu6otEoF9fCkas7?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+hHE3ch9kBZLBY6CVJ6IQWHL7zWZHzjrOWyzQ9TWdtUtbiDqX1euuqz99mem?=
- =?us-ascii?Q?nV9oDgpw0fInVGiHokwn00u/yFsf9rSbjMZyL4Hz/RUYLdy/tZECCw+6mjIg?=
- =?us-ascii?Q?QxWC9kNlRxGIBZBDwYj0EyzDRRmi9cbzgAPXiVMDisKXVmLYJXOcV2wClGEY?=
- =?us-ascii?Q?ZqCt5J/BI9rFnktkln5lnaIZX1qRbJHpVSpeXovmoXpnGsD+Gwm0Bv8xqxVG?=
- =?us-ascii?Q?S/wcBmu/52g4ESLAw2lpI7igYZhrtoRU57Yh6Ha2XcyLiVS0T/H2P+0Glmr0?=
- =?us-ascii?Q?nhtk6SAJR3zKFARW4M+/aJ5twBbHlwL5yil4QTU1ESckyPGQ6McVQ0reUad2?=
- =?us-ascii?Q?8ixscDWd4NsHHRUhzFuVsuKea53YK0W79ikoIoVhRW9n+vNi0LeNAAvbvowq?=
- =?us-ascii?Q?AicSSr2hKvxt4PeHAqDD0EpGsTeg9Rf9dUg0y/qGjfu8gN90Ykmle46p2aCa?=
- =?us-ascii?Q?9n2xx8TJ0b3qkPXB/AXkVAgwvk8vzl7CL955delKxQQCW3AkKhDTQa22rpMA?=
- =?us-ascii?Q?SjGLd5LX8J6HzEqowCfqjjg3Fr80Za+i2mcCCzuNG1xxm9caO2rVmFd9vAvy?=
- =?us-ascii?Q?C68skAJ7Ub7rA3j0KaN9uT66E7+YLPwBGDpr526pGk73ArtcgLCMQusUA4R8?=
- =?us-ascii?Q?yqJUelMAlecPSW6KAqcEUl1prsicQAdr7u7Mf6dKmqpJcpkWAiZNoHwEDPFb?=
- =?us-ascii?Q?TokXS+yFr3WtPrjtEegMIOuIxRktA2J+I17w4Urv7sZr0ldD5rI7aSNGM7eG?=
- =?us-ascii?Q?KEyAKo2YNh4DelbLvYrBLLX5UqZtoiOwczifD1IjRPdqdpULx0d1pu5iScqn?=
- =?us-ascii?Q?jl1pY49yV/XZ7yFdSQXlEzqEdMZp7TPCZ5+qwZV9Fk4A/wpCF//4vBJO5PHR?=
- =?us-ascii?Q?cnAZfCm8WffhbE2mTaJoDNfA9uoppYa4WP2B7LiosfuUGk6rWMKOaxonfFnG?=
- =?us-ascii?Q?a15uyedjhuTaKnCOshU7mt0o44IioT9cFo/cN1FFSXoDVITK9XNglwnCuS++?=
- =?us-ascii?Q?JUjDobBN8AOGHDXmSEsLKjByhjCV7m4aXcmttc0QIu+DZiWuGPOe6YhlNhSM?=
- =?us-ascii?Q?K+JuxFxBA/TG6FhPoG/4YEGsAGiExIv4T/K2IfgG2fSkrI83fses/ln6KVeo?=
- =?us-ascii?Q?dvgbwGHgYoNTn+CweYiksNjhIKA/4hLwi7xmpcNZIWPsDzXv3TIdNVEtsuVO?=
- =?us-ascii?Q?nbayBnbUsu3BVJF6Re8bspY0JaJcMCfVBz2WD9ZqZe1mDkTdnILLfIQxkcSV?=
- =?us-ascii?Q?rhE98DrZ3V2Xo2bHR2ON1PEJeTeyghIhCFspv3PYt0PiO9Usj8zVSLhnMKNG?=
- =?us-ascii?Q?noKUcprNWH4p+YTVwTiWVnswIFoepjCoVj4iYLjVvqS/EkmGsIr6xtLNyk0C?=
- =?us-ascii?Q?tHTqyB3fINguxtQlqCVtdPZEsPJU4FBQRFv2tpNH8f00rpW2NCPKCXs2jhX/?=
- =?us-ascii?Q?g2TT4jqA99hNvZZt6krXA38NdegrnxkDjkZkaU9Yaw/4YcNN6MdAS/u9+lO2?=
- =?us-ascii?Q?0nGoYpbjwB5TEsj1b0hR4lDedZGzbzMXWNSz/1OLeJ+SCfcudWBhuqUTW6ho?=
- =?us-ascii?Q?fS86SeFXSQbBJ2QfIvdftuKRGhJoPfSoYoLedjui?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21ceda00-ff33-43b2-731e-08dd4c967ac5
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 01:25:34.9167
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wQmgmU+BAZQ5AbZphfcN/dj5YzfVYxRed7ObO6yQj8r/HN1pcb4usvfTGn7vnmhAMIA1OkjKR9PghVfQeq47JA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9359
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c672c3a3-64e3-495a-ae61-ae098d30c6b9@linaro.org>
 
-On Thu, Feb 13, 2025 at 12:15:58PM +0100, David Hildenbrand wrote:
-> On 13.02.25 12:03, Alistair Popple wrote:
-> > On Mon, Feb 10, 2025 at 08:37:42PM +0100, David Hildenbrand wrote:
-> > > Against mm-hotfixes-stable for now.
-> > > 
-> > > Discussing the PageTail() call in make_device_exclusive_range() with
-> > > Willy, I recently discovered [1] that device-exclusive handling does
-> > > not properly work with THP, making the hmm-tests selftests fail if THPs
-> > > are enabled on the system.
-> > > 
-> > > Looking into more details, I found that hugetlb is not properly fenced,
-> > > and I realized that something that was bugging me for longer -- how
-> > > device-exclusive entries interact with mapcounts -- completely breaks
-> > > migration/swapout/split/hwpoison handling of these folios while they have
-> > > device-exclusive PTEs.
-> > > 
-> > > The program below can be used to allocate 1 GiB worth of pages and
-> > > making them device-exclusive on a kernel with CONFIG_TEST_HMM.
-> > > 
-> > > Once they are device-exclusive, these folios cannot get swapped out
-> > > (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
-> > > much one forces memory reclaim), and when having a memory block onlined
-> > > to ZONE_MOVABLE, trying to offline it will loop forever and complain about
-> > > failed migration of a page that should be movable.
-> > > 
-> > > # echo offline > /sys/devices/system/memory/memory136/state
-> > > # echo online_movable > /sys/devices/system/memory/memory136/state
-> > > # ./hmm-swap &
-> > > ... wait until everything is device-exclusive
-> > > # echo offline > /sys/devices/system/memory/memory136/state
-> > > [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
-> > >    index:0x7f20671f7 pfn:0x442b6a
-> > > [  285.196618][T14882] memcg:ffff888179298000
-> > > [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
-> > >    dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
-> > > [  285.201734][T14882] raw: ...
-> > > [  285.204464][T14882] raw: ...
-> > > [  285.207196][T14882] page dumped because: migration failure
-> > > [  285.209072][T14882] page_owner tracks the page as allocated
-> > > [  285.210915][T14882] page last allocated via order 0, migratetype
-> > >    Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
-> > >    id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
-> > > [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
-> > > [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
-> > > [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
-> > > [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
-> > > [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
-> > > [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
-> > > [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
-> > > [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
-> > > ...
-> > > 
-> > > This series fixes all issues I found so far. There is no easy way to fix
-> > > without a bigger rework/cleanup. I have a bunch of cleanups on top (some
-> > > previous sent, some the result of the discussion in v1) that I will send
-> > > out separately once this landed and I get to it.
-> > > I wish we could just use some special present PROT_NONE PTEs instead of
+Hello,
 
-Yeah, that was my initial instinct when I first investigated this. As you point
-out a lack of spare PTE bits made it hard/impossible. Of course I'm about to
-give you all one back, maybe I should keep it :) I'm only kidding though - I'm
-sure there's more interesting things to spend it on.
-
+On Thu, Feb 13, 2025 at 12:15:30PM +0000, James Clark wrote:
+> 
+> 
+> On 12/02/2025 9:38 pm, Ian Rogers wrote:
+> > On Wed, Feb 12, 2025 at 9:48 AM Ian Rogers <irogers@google.com> wrote:
+> > > 
+> > > On Wed, Feb 12, 2025 at 4:24 AM James Clark <james.clark@linaro.org> wrote:
+> > > > 
+> > > > Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+> > > > like plain legacy events if we only look at attr.type. But legacy events
+> > > > should still be uniquified if they were opened on a non-legacy PMU.
+> > > > Previously we looked at the PMU type to determine legacy vs hybrid
+> > > > events here so revert this particular check to how it was before the
+> > > > linked fixes commit.
+> > > > 
+> > > > counter->pmu doesn't need to be null checked twice, in fact it is
+> > > > required for any kind of uniquification so make that a separate check.
+> > > > 
+> > > > This restores PMU names on hybrid systems and also changes "perf stat
+> > > > metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+> > > > test was gated on "cycles" appearing alone which doesn't happen on
+> > > > here.
+> > > > 
+> > > > Before:
+> > > > 
+> > > >    $ perf stat -- true
+> > > >    ...
+> > > >       <not counted>      instructions:u                           (0.00%)
+> > > >             162,536      instructions:u            # 0.58  insn per cycle
+> > > >    ...
+> > > > 
+> > > > After:
+> > > > 
+> > > >   $ perf stat -- true
+> > > >   ...
+> > > >       <not counted>      cpu_atom/instructions/u                  (0.00%)
+> > > >             162,541      cpu_core/instructions/u   # 0.62  insn per cycle
+> > > >   ...
+> > > > 
+> > > > Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+> > > > Signed-off-by: James Clark <james.clark@linaro.org>
+> > > > ---
+> > > >   tools/perf/util/stat-display.c | 9 +++++++--
+> > > >   1 file changed, 7 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > > > index e65c7e9f15d1..eae34ba95f59 100644
+> > > > --- a/tools/perf/util/stat-display.c
+> > > > +++ b/tools/perf/util/stat-display.c
+> > > > @@ -1688,12 +1688,17 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+> > > >                  return;
+> > > >          }
+> > > > 
+> > > > -       if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
+> > > > +       if (!counter->pmu) {
+> > > 
+> > > Thanks James, I wish I had a hybrid laptop so I didn't keep breaking
+> > > things like this. I'm uncomfortable using an evsel having/not-having a
+> > > PMU as an indication of whether uniquification is necessary. It is
+> > > kind of a side-effect of parsing whether the PMU variable is non-NULL,
+> > > it'd kind of be nice to stop things using `evsel->pmu` directly and
+> > > switch them to `evsel__find_pmu(evsel)`, in the future maybe legacy
+> > > events will get the core PMU, a tracepoint PMU, etc. so we'd never
+> > > expect this variable to be NULL.
+> 
+> As it stands evsel__uniquify_counter() unconditionally dereferences
+> evsel->pmu which is why I thought it made sense to check that first. But if
+> that might change then fair enough.
+> 
+> > > 
+> > > Your commit message gives me enough to think about what the issue is,
+> > > so let me give it some thought.
 > > 
-> > First off David thanks for finding and fixing these issues. If you have further
-> > clean-ups in mind that you need help with please let me know as I'd be happy
-> > to help.
-> 
-> Sure! I have some cleanups TBD as result of the previous discussion, but
-> nothing bigger so far.
-> 
-> (removing the folio lock could be considered bigger, if we want to go down
-> that path)
-> 
+> > I wonder we should just hoist the hybrid test earlier:
+> > ```
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index e65c7e9f15d1..e852ac0d9847 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -1688,6 +1688,12 @@ static void evsel__set_needs_uniquify(struct
+> > evsel *counter, const struct per
+> > f_s
+> >                 return;
+> >         }
 > > 
-> > > these (non-present, non-none) fake-swap entries; but that just results in
-> > > the same problem we keep having (lack of spare PTE bits), and staring at
-> > > other similar fake-swap entries, that ship has sailed.
-> > > 
-> > > With this series, make_device_exclusive() doesn't actually belong into
-> > > mm/rmap.c anymore, but I'll leave moving that for another day.
-> > > 
-> > > I only tested this series with the hmm-tests selftests due to lack of HW,
-> > > so I'd appreciate some testing, especially if the interaction between
-> > > two GPUs wanting a device-exclusive entry works as expected.
+> > +       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+> > +               /* Unique hybrid counters necessary. */
+> > +               counter->needs_uniquify = true;
+> > +               return;
+> > +       }
+> > +
+> >         if  (counter->core.attr.type < PERF_TYPE_MAX &&
+> > counter->core.attr.type != PERF_TYPE_RAW) {
+> >                 /* Legacy event, don't uniquify. */
+> >                 return;
+> > @@ -1705,12 +1711,6 @@ static void evsel__set_needs_uniquify(struct
+> > evsel *counter, const struct per
+> > f_s
+> >                 return;
+> >         }
 > > 
-> > I'm still reviewing the series but so far testing on my single GPU system
-> > appears to be working as expected. I will try and fire up a dual GPU system
-> > tomorrow and test it there as well.
+> > -       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+> > -               /* Unique hybrid counters necessary. */
+> > -               counter->needs_uniquify = true;
+> > -               return;
+> > -       }
+> > -
+> >         /*
+> >          * Do other non-merged events in the evlist have the same name? If so
+> >          * uniquify is necessary.
+> > 
+> > ```
+> > 
+> > The hybrid test is unfortunately expensive at it needs to search for
+> > > 1 core PMU, which means loading all sysfs PMUs. I think we're already
+> > paying the cost though.
+> > 
+> > Could you check this works James?
+> > 
+> > Thanks,
+> > Ian
+> > 
 > 
-> Great, thanks a bunch for testing!
-> 
-> Out of interest: does the nvidia driver make use of this interface as well,
-> and are you testing with that or with the nouveau driver? I saw some reports
-> that nvidia at least checks for it [1] when building the module:
+> Yep that works too.
 
-Both. I have tested Nouveau with the Mesa OpenCL stack and a simple stress test
-that just thrashes atomic accesses between CPU and GPU and a similar test for
-the nvidia driver.
+James, can I take it as your Tested-by?
 
-In practice the nvidia driver probably doesn't use this that often as it
-more aggressively migrates data but it does use this as a fallback. Also it's
-possible for users to force residency on the CPU in which case this is used,
-which is what the test does.
+Ian, can you please send a formal patch with that?
 
-Anyway I have just finished testing on a multi-GPU setup so please feel free to
-add for the series:
+Thanks,
+Namhyung
 
-Tested-by: Alistair Popple <apopple@nvidia.com>
-
-> 
-> 	CONFTEST: make_device_exclusive_range
-> 
-> [1] https://www.googlecloudcommunity.com/gc/AI-ML/Can-t-Install-Nvidia-Drivers-on-6-1-0-18-Kernel/m-p/722596
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
