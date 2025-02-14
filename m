@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7096134AB;
-	Fri, 14 Feb 2025 18:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0782AF16;
+	Fri, 14 Feb 2025 19:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739559295; cv=none; b=GRWUANZ6BzGPjSjLKgEElwkXfW2xlXk3EG1IXwXbEWubG8B/tWQksBjkSLy8V/XZpW0zDX7lKSuUj+iNVA01OKCKxH7pooMQw01xaAQFgbDmd7IkOKhhuoEApFJG67Y+D/hVSpuDj50dMolT7tz3ZHJCu5ha3jmeqg2YTfMb5do=
+	t=1739560602; cv=none; b=kInLZpOykLpkVkdm5zSfv72yS0udqyP8g+aPbF9+oD8FXosCi11Lfm99BMd43m1HumGloybd/OM767ZSb0Ydz0sDHMpZTO1/sO5INZR8xvHtw0PIIFq3/DgWv+DAyocrIYBHtqbYN1xHjDJchAlsT0R9kVkvDNt190QAWIwpyPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739559295; c=relaxed/simple;
-	bh=ia/ucavXjq6WnO3QZMyQf6RkJzq6OShVb4GpeeFZXo0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qD7kNOhdAaxSD1HoN3ffkSeNyg/QJMJXrGNKi7A8epftOapATrwqmsetx3DUM0+K4KWPgJfCnCEpKlBMWnBNQQ5/+M8O2AkbrgU3hixWr2GyAmc8bvx+tWhsEW8yDVUWWWViy8UA36X8cvWAiQDpG0+QyIynIjRrJPrfD5PVwo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUjpuxeO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739560602; c=relaxed/simple;
+	bh=rZZGuv2YyY62edJHzlcL7AnSAquJF3lbFxEnmjAzltA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QLy8HM3HQwE8+pJI4QTNoTnHas05/l2YTwcvuAU/qktg1BZI3zTByGpXrnrEEHSV4Md61uCXJX7H743YzZfwhLdAMMRWV9snjGl3WeV9mKb7yx4CpJYpu3KP92swlipO+JeNTn39CPXfm/S0kyZLnKWB43bfdRniHj7XIPXzuzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IR3zAzpY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUjpuxeO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EF4DC4CED1;
-	Fri, 14 Feb 2025 18:54:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IR3zAzpY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4B9C4CED1;
+	Fri, 14 Feb 2025 19:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739559295;
-	bh=ia/ucavXjq6WnO3QZMyQf6RkJzq6OShVb4GpeeFZXo0=;
+	s=k20201202; t=1739560602;
+	bh=rZZGuv2YyY62edJHzlcL7AnSAquJF3lbFxEnmjAzltA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=DUjpuxeOE2Es4StoHMlBPFQ3vBpaGtKI/AgNu3KjEqH08MkaR++I6oMZ2RGUGYcP/
-	 hM9GoCN5SIqgP2n+S8uQ3JiWxTuL/i5Wx9O45WPo7KgzO0H2uOBkgHFaYXqS9X9+9P
-	 7F8XKzFGlUUA580ycbm/Y5dVoY9dokaTYu6bBFS4G2rfWG+HvGgiyz9o7sswOT40xq
-	 EoeaTVE0Q8T5BSf/V5DO+wDIFHt6eNTaZ3zJvTxOxcxHEX9tinT3zim/Fi/WJAEi5V
-	 O30s1o99N5UVt/pocMypsR0Rbqx1zjHOW7bQk1hdkjqgK0GxwINoY1rAwdpfDRO/0A
-	 vYs5FgftM/glQ==
+	b=IR3zAzpY+E2Nq8gE/TT8d0C5krZAjfex9+I4nyoOzFILb+znz+OAj3dlJin+Cng88
+	 BpogjPVaOW3XHipYafq08rvySUHcXj0hsJ9wnq4Rt4BwV3zlBCfZu1Wu+Z7/+t9BKg
+	 Wp/AAl0KlSIFSjM9ijeyskUiYvcjuWZ+cQDGLjiGGYXtEwY8AfE19gQHpo2rzNpIVr
+	 AKNyIeov76AU8PNwzU8RWTaRjG8SWTZzZSHpg5vt6DHhqdRPrKKBa5so4SqUOEVXJv
+	 3s4qdFAB7nOiWNE1FJVeZToB6J2UhJ67BMM5dEfgpXon+6jrULv15IDvqXyDUi8B5U
+	 HE5G12nOnc4OA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] perf tools: Fix compile error on sample->user_regs
-Date: Fri, 14 Feb 2025 10:54:54 -0800
-Message-ID: <20250214185454.753122-1-namhyung@kernel.org>
+Subject: [PATCH v2] perf tools: Fix compile error on sample->user_regs
+Date: Fri, 14 Feb 2025 11:16:41 -0800
+Message-ID: <20250214191641.756664-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -55,14 +55,44 @@ Fixes: dc6d2bc2d893a878 ("perf sample: Make user_regs and intr_regs optional")
 Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
+v2) fix arm (32-bit) as well
+
+ tools/perf/arch/arm/tests/dwarf-unwind.c      | 2 +-
+ tools/perf/arch/arm/util/unwind-libdw.c       | 2 +-
  tools/perf/arch/csky/util/unwind-libdw.c      | 2 +-
  tools/perf/arch/loongarch/util/unwind-libdw.c | 2 +-
  tools/perf/arch/powerpc/tests/dwarf-unwind.c  | 2 +-
  tools/perf/arch/powerpc/util/unwind-libdw.c   | 2 +-
  tools/perf/arch/riscv/util/unwind-libdw.c     | 2 +-
  tools/perf/arch/s390/util/unwind-libdw.c      | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
+index 9bc304cb7762b5d1..f421910e07097152 100644
+--- a/tools/perf/arch/arm/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
+@@ -45,7 +45,7 @@ static int sample_ustack(struct perf_sample *sample,
+ int test__arch_unwind_sample(struct perf_sample *sample,
+ 			     struct thread *thread)
+ {
+-	struct regs_dump *regs = &sample->user_regs;
++	struct regs_dump *regs = perf_sample__user_regs(sample);
+ 	u64 *buf;
+ 
+ 	buf = calloc(1, sizeof(u64) * PERF_REGS_MAX);
+diff --git a/tools/perf/arch/arm/util/unwind-libdw.c b/tools/perf/arch/arm/util/unwind-libdw.c
+index 4e02cef461e3af34..fbb643f224ec4b27 100644
+--- a/tools/perf/arch/arm/util/unwind-libdw.c
++++ b/tools/perf/arch/arm/util/unwind-libdw.c
+@@ -8,7 +8,7 @@
+ bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+ {
+ 	struct unwind_info *ui = arg;
+-	struct regs_dump *user_regs = &ui->sample->user_regs;
++	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+ 	Dwarf_Word dwarf_regs[PERF_REG_ARM_MAX];
+ 
+ #define REG(r) ({						\
 diff --git a/tools/perf/arch/csky/util/unwind-libdw.c b/tools/perf/arch/csky/util/unwind-libdw.c
 index 79df4374ab18dc36..b20b1569783d7e98 100644
 --- a/tools/perf/arch/csky/util/unwind-libdw.c
