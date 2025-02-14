@@ -1,162 +1,119 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9BE2505C2;
-	Fri, 14 Feb 2025 10:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A9D256C62
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 10:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527699; cv=none; b=AMTbZtyi7XCN1iRvFvJzxSOPGdphwKYfzFh8SVHyiimNadfuHl2ffqA1eIgQaGCm5CqRBW8VrX5QIl4g9fA+FTNvxE+aAFEH4Yy8oEmzeP+B6lUFAONI/HYvsPnCRx2QLY7yRGn1iF4lbNvgQLNA8FW8ITfeazMBa/j6zLZAZNM=
+	t=1739528525; cv=none; b=HrScdfZyP1hhCAh6LhuImPwbykKwRgHDUNWtBmp32drgWPiBfBDafqNcyo53tB7t9cEOnYzEo5BltGXdfk+kE34vGoQK5Xob37TR4bLYkvjZMGjSf5pFnmQ97yRljnAO0hJznlgBOMMu5KlNbzbTfoTNnLIKRqJo62xAHdSY46s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527699; c=relaxed/simple;
-	bh=Jogrd7O7L0fZyAc7FlJcz8HqG9ZjCfH+uLAxpQ2sT9U=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aObDIdq7kCVzPQtbNhDiuDMEa38Eqw8HPTgMJH3fAOCrguk3V1cZj0ZsdnzmCx47Uontp0OYzkubEiJMe0nrNOKCP0zu8fyN8p1iYG4LDtQnlhnUwbBN1onedZNTjOkvgURYlFZACmEwQbCN341yLgX4wED+JbPbNVuKOjdgGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwS8nXJA; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739528525; c=relaxed/simple;
+	bh=ftyb/9BKtB7NhFJH+J4U/oyLZeJ0rM3YZGofXN7XW4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nqq6b4LisabXanDuJZwTglv7U9SylKgZosBT8iEZl1SoyssNYDjg6I1IhkyeQzZNpxVnfwfaI6shrIno8dw8IVzfJGkm1+T+kTCyXOJn1dEfuOBInzz4A9pE/DEHpZBh+2+tbTc1GiE84/0uCnMgBawa7JWoUsO7ZKcdN8+nYsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZaWDrrzF; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwS8nXJA"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5df07041c24so525530a12.0;
-        Fri, 14 Feb 2025 02:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739527696; x=1740132496; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
-        b=JwS8nXJAylYFB6CYGdNrk9l+KL+k6jl1LvFb3DGhHNjlnrp1ZjkRrPpkYHooeGkk6H
-         veYqjYAurbg2SNw9Cyj8u1lnZUNQ1h5Qor4H6z0sQ2raclA3D/hvba4X1Nn2lp/Q5LlK
-         EjXHSQVBAnbymOpTAqyDTlnxIBQCAA6NVOUweCjtCeS3mOkf+Mod7YVr+c53Ka1EVfpj
-         BgvK64a2rLTj2naopA/xokgvilna+xIXWrDBk6PJYNSP7n4r2zlYNWr5q8wQDcoavRWQ
-         mlbeMSeFtUTxT/epP52thKvgGVNehOp/2mkX/kpKhZRLhTgSvqxVzk65ectNJ4IQYxVs
-         lPLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739527696; x=1740132496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
-        b=k6qO9ovJYrPnTePzF5uqtsisvIBjBSj+uFOMzjeXpxhHoT7MDBxh5/OWa/kDKqV/h5
-         4yuRACqt0wrpWjWbJFKlYWslaMjx3rZbY42y6I9Wk+D+DSVmRxOr9IxcwpVMMy59TV9j
-         hpvaoh2OaLM+pDAuaUSgD3dJTQICVsG7XMHxNuJlyOUBEvCuJ5RB8tUoQ8rVmUIo4OPz
-         c6s9QTl+xPAgip/JoMSTzy0iRsX0Q/V0yqX1hfnKobWWb9Fyeio38oIvBkP+bHNMvK3K
-         8P2kjT7bPwhuNDeDc6jFhmfHCuXxUnRRCGGQxN9zXV/WvUX6vBtyT2ZrDct0zOU+XL1Y
-         hmRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5ObGWxTq3O6Q+hqlQ/KmUbFa6eyJFzLnvsrNnGyA9+m1lxznePc6sbObmaMlZ1RTDSXKUgodqkzBjxThMK+tm9jh7@vger.kernel.org, AJvYcCWVmG/Eqz+0KyEgCqH0PnCi+uHmg+MXFN5tRByZqVjgfImYEgFxGWnkvlCINfzA6FlZL3k5XhDL1wcFdgs=@vger.kernel.org, AJvYcCWnSSnUNbJj4rzrunOzy28ptVtQdy6o1Wjb0ufCaW0NfBbNYBJX2Sz5w2pdXAhGxNqhBK66VET6hgnN6+MesQ46@vger.kernel.org, AJvYcCWvPkUvlh+9k6IDMXoI2jUMKF5RjVlJCWvKwM9nyg33oI2iY13CLgMwukv5XsF484W2XZk=@vger.kernel.org, AJvYcCX4Rs9h/tj+nxYAhRliR8YQLSBN4zjFAG/9VRyxSOcry5PhDKcku5fo9wGmGFTlQsA62tDduUB6NzE8nw5QwuEY3A==@vger.kernel.org, AJvYcCXH1aMSiGO0gzSKKpFqx5hy571KmA7mvHpK9Zo3/HMI5vJR+SCuzy6zQy5pnS5dpvr96Vo7n/KBL4I=@vger.kernel.org, AJvYcCXyREquk7YhI8rtD5ORCdlOYd0P/YHmVfEbpqKbkVuBQHJGlcIfz28IADOE1/Kb2Ksb2t77FUCAjex1HIvu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKn/DWsz9nGJ49EMr4qjGzAvusowzPO9Wo3LxG7JucMndGg/kW
-	Cr+69FXxSdoZzNbVrv8S2PBGntSIaigPqedwtMh37c3BSpX2InbQ
-X-Gm-Gg: ASbGnctjLX8oQ9BRgk+soUDkzQula6M/uGbOmsAZZFj9OWVmFoR8IPKk18/nL0VOFBs
-	W0tb8nufufyOADI8s2b6dmTuIEFuhIvrRbkBqn1kppmYxoz/ommmYaIrnZnR/mjtIVP/Uv/Ia52
-	w4qrtGyM1yjKbJQTy5HX965e+3IehI8DELwsX2FVL98JD/Hwj3yurO6ufScoub9j/SkKaCbMXKL
-	Vp7Lo+SjNWfNc2pgKmBwZvPCKjU9ynBFShNC1SWjySl6311FPHjO6Df5Qn/RJrQ+JGyGaEdKmdh
-	ZA==
-X-Google-Smtp-Source: AGHT+IHfUA9MbFKK0cGZxcq1fnHrJJMJoWr8y/oBmtSB3GGdubTXz3Fdqd2b5Ipl+F4XZpRsok2xqA==
-X-Received: by 2002:a05:6402:4616:b0:5dc:d8e6:62a7 with SMTP id 4fb4d7f45d1cf-5deadd84b7bmr9556320a12.14.1739527695955;
-        Fri, 14 Feb 2025 02:08:15 -0800 (PST)
-Received: from krava ([173.38.220.59])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c43a0sm2672253a12.28.2025.02.14.02.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 02:08:14 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 14 Feb 2025 11:08:10 +0100
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Quentin Monnet <qmo@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] tools: Unify top-level quiet infrastructure
-Message-ID: <Z68WCtRqdrgqC5iN@krava>
-References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZaWDrrzF"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51E217Fv013379;
+	Fri, 14 Feb 2025 10:21:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Nxht2g
+	qC6hYRkE+gAhSX1mypj3264SfMDe4UK7IJDcc=; b=ZaWDrrzFmO44RpaXK6QH8P
+	IjhxHXo7dVNU2z7WgLSDkfwbQnLQK9gTEl9FJMze/wdijXzX9uFanNycD1sZC60f
+	gw1nSiSuIV6Ib3/rIPo6riPUfkOXpAHydRYWAZ0T+A7tpnlEAaMPz4fCIyWAg53s
+	WaI+vRQe/WKYEypCOWJRrpd1a4BU5fpsMdnyEdLZ8un2rqZVkqS+qQ6rwEjXFEEt
+	tnkAU727sQEnos1cCITDjnZ63Pb+sbg9zBJL5k6OkpDdnBzv66mtzYJC3MfXd3/n
+	dh0DgGQRMNiHaH+iJgZ9Tw4p9tFjsDvoNTp8+wqLOCBkfudbMluoeLrlTiqvj9cw
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44svp09xhm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 10:21:59 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51E6FGUF021713;
+	Fri, 14 Feb 2025 10:21:58 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44phkt378r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Feb 2025 10:21:58 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51EALuWw54854050
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Feb 2025 10:21:56 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B5B7620040;
+	Fri, 14 Feb 2025 10:21:56 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 86E902007A;
+	Fri, 14 Feb 2025 10:21:56 +0000 (GMT)
+Received: from [9.171.39.145] (unknown [9.171.39.145])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Feb 2025 10:21:56 +0000 (GMT)
+Message-ID: <b8b12ca5-28bd-4e17-923a-f4f5853b999a@linux.ibm.com>
+Date: Fri, 14 Feb 2025 11:21:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: perf script: perf script hangs forever in linux-next
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, ashelat@redhat.com,
+        Michael Petlan <mpetlan@redhat.com>
+References: <c41e4b04-e1fd-45ab-80b0-ec2ac6e94310@linux.ibm.com>
+ <Z66mwEOy06-6hvO_@google.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <Z66mwEOy06-6hvO_@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9FQ5Oau7OzcPaFwvm6J1s5obBEWGffav
+X-Proofpoint-GUID: 9FQ5Oau7OzcPaFwvm6J1s5obBEWGffav
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-14_04,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ adultscore=0 mlxlogscore=956 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502140072
 
-On Thu, Feb 13, 2025 at 01:06:20PM -0800, Charlie Jenkins wrote:
-> The quiet infrastructure was moved out of Makefile.build to accomidate
-> the new syscall table generation scripts in perf. Syscall table
-> generation wanted to also be able to be quiet, so instead of again
-> copying the code to set the quiet variables, the code was moved into
-> Makefile.perf to be used globally. This was not the right solution. It
-> should have been moved even further upwards in the call chain.
-> Makefile.include is imported in many files so this seems like a proper
-> place to put it.
-> 
-> To: 
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
-> Changes in v3:
-> - Add back erroneously removed "silent=1" (Jiri)
-> - Link to v2: https://lore.kernel.org/r/20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com
+On 2/14/25 03:13, Namhyung Kim wrote:
+> perf script flamegraph -a -F 99 sleep 1
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Thanks Namhyung,
 
-thanks,
-jirka
+i have tested your patch and both invocations of the perf script command
+work again as can be seen here:
 
-> 
-> Changes in v2:
-> - Fix spacing around Q= (Andrii)
-> - Link to v1: https://lore.kernel.org/r/20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com
-> 
-> ---
-> Charlie Jenkins (2):
->       tools: Unify top-level quiet infrastructure
->       tools: Remove redundant quiet setup
-> 
->  tools/arch/arm64/tools/Makefile           |  6 -----
->  tools/bpf/Makefile                        |  6 -----
->  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
->  tools/bpf/bpftool/Makefile                |  6 -----
->  tools/bpf/resolve_btfids/Makefile         |  2 --
->  tools/bpf/runqslower/Makefile             |  5 +---
->  tools/build/Makefile                      |  8 +-----
->  tools/lib/bpf/Makefile                    | 13 ----------
->  tools/lib/perf/Makefile                   | 13 ----------
->  tools/lib/thermal/Makefile                | 13 ----------
->  tools/objtool/Makefile                    |  6 -----
->  tools/perf/Makefile.perf                  | 41 -------------------------------
->  tools/scripts/Makefile.include            | 30 ++++++++++++++++++++++
->  tools/testing/selftests/bpf/Makefile.docs |  6 -----
->  tools/testing/selftests/hid/Makefile      |  2 --
->  tools/thermal/lib/Makefile                | 13 ----------
->  tools/tracing/latency/Makefile            |  6 -----
->  tools/tracing/rtla/Makefile               |  6 -----
->  tools/verification/rv/Makefile            |  6 -----
->  19 files changed, 32 insertions(+), 162 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250203-quiet_tools-9a6ea9d65a19
-> -- 
-> - Charlie
-> 
+# perf script flamegraph -a -- sleep 1
+dumping data to flamegraph.html
+#  perf record -- dd if=/dev/zero of=/dev/null bs=1M count=10K > /dev/null
+10240+0 records in
+10240+0 records out
+10737418240 bytes (11 GB, 10 GiB) copied, 0.294051 s, 36.5 GB/s
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.060 MB perf.data (1177 samples) ]
+#  perf script report flamegraph
+dumping data to flamegraph.html
+# 
+
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
