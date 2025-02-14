@@ -1,74 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E00209692
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 10:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76851245002
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 10:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739529472; cv=none; b=uVWSwDmNTSjDHsvEpmEMLOXZbDnMTKdP8OQUTB60PxPlGbJyIP8flrzRIyCFY2nzt2vUMS+hE13WAtQKWlN9lKru74QStCnaOKiyaDa4XilHV6qmBfHzElJh6eySGpt/bX7QygKayLmhPxJauCFFrUT3BynotoLYQwqWiEba8tg=
+	t=1739529914; cv=none; b=LUazXE++z8sKJZomr4VdXcFWoO0VCjSE6O/g/XNnuioUIq3eB9kHnn9SRJyAQTVYi+apJHlhqbfr9wHsRIL2CliibgR58JcJJuAd2QJE8pz4dpSvE+vNqxP8MHO8WXrfi7ODMxFYOs8c/Jaqa0g8hnuH/n4eSJU6gvuH5VgoBR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739529472; c=relaxed/simple;
-	bh=ZsyjMzGdyJqkrDeCLAABwQTLH7CfEZ7/s8ypCPoBKuA=;
+	s=arc-20240116; t=1739529914; c=relaxed/simple;
+	bh=Nx9EhElNnXdckJI528SZPNFesBEPptOwmd+Z/ThXERg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ip/zztnv3/KWSnMKpJA0OM4tmsuarN2rTKlH14d+p2y+SKIjjvZw7dBXRaFRkLKm3MKXC2C/GDuzfh227Y3IEdruXWlGmV3ifZziiQaXAIZdP3Tv0OxmajNkyYbI0LagbwclNoSptMfcqr5sEXVtrI/A+FnWajhz8r+9jhCdpyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0LpXaAZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=f6Cl4+78bARagc0zcVyqz3Bmr4gDDFcKU31Gydi1d/93bJcRD3PwoA4PWSrsWXX4By78EsWzybu5x6VbgNiS2ixbW26NfyenMq3K2W6m8YYb1En9rb1fqANr40Fr+pdY6OnpINDWl4S1qxdhcCLTuBmd7dbmJ4plXMkLO8o86Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jItG9VRH; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0LpXaAZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739529469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v1ELqJmSBEXwSdcynoIWjIw5bhWZWQeX4Q07dCSIZyk=;
-	b=M0LpXaAZuoSpRemWqexNxBbQkT1V7vxxUvCuigW7B3LUh2Lhb62vhZJjArZkkKtwHp9Co6
-	mJUzsJbOsOjHXZhKpO7g0Pe+/XWbBOiC//ZMYbdDI3tfXJFTClc41lOZNTAbk3QCZvErfx
-	dN48UoV+6lsKdBZC9cpFo6/+pxJ9mog=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-27-mmbqH7WmPbuMCs56FiYcYw-1; Fri, 14 Feb 2025 05:37:48 -0500
-X-MC-Unique: mmbqH7WmPbuMCs56FiYcYw-1
-X-Mimecast-MFC-AGG-ID: mmbqH7WmPbuMCs56FiYcYw_1739529467
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dbdc2926eso1999456f8f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 02:37:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jItG9VRH"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38f24fc466aso1311086f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 02:45:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739529911; x=1740134711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=He1s2OIxDgisgww5yn2VxjMheuTyHEWczA9ZBdr3hJQ=;
+        b=jItG9VRHHkFsfI+MT1J7M5cYcVAO8iWvhPqYjdDXizCjY/uxwWaje5gZjtNHr1UTq7
+         hzfU+t+36HOm/IurJObFc1clt0E6pdf7qwpzWfm2EYXmwXlyYim83AS67wi48rRxdDHW
+         57g1/LYSd4Ils0KSAAr1IKVPDsa+UfNpCjKvRg6Aa8TgUwq6LxQunLA166kHYcVUJK3C
+         jWQIZ9iznfFtnrFoXJPqaNGw60aph+nxMc4qXKjxtgd65D7+t5CJ1VdhaltlccgsCdGo
+         5+qeegzzLfc1eYWBI+8Y9bOApUKFgAKMK4dh4wb68nugfv/oqXzQFQFEu/Ff/SCm0vZn
+         2nlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739529467; x=1740134267;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=v1ELqJmSBEXwSdcynoIWjIw5bhWZWQeX4Q07dCSIZyk=;
-        b=j1NugEHjwDHkHGQszmkFj/Hp6C9jn3TGp7CYy8zI1X/i0u+bNhrJJGl4v942xTj38j
-         KzVR7RFki9KgOe1p/cQH5iSO9bV3EuN5+l2zdJVnYocgjOfPoUbXnElgY45EQ7cVl907
-         qUYST/St6Usx8i9z3m9pMT04QKISKgYai8TwYb30DNwa8gI8tbqnjErAO6a0gIZ+MfQi
-         VTsEOJRqIkUkbitxF3gvhpcTZXnkB7PUHBX4uPyhkWLnj+7PUGBKWYtv/crHcgr0yri7
-         uCAPjXf1WFReL7QGBc28I/yf0iHy8FVeKCA7JPNR+8JjN2masDS/9Sj9RGQA4irpMsab
-         fmcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWr5Ponx3W7oniQOLtdxX5FIXyktvU8Y9nCzTMm4xqazofpyDznJtVUNIcVstQfOtnqZH3lL+LxZ9xl6XWJSjBd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgDF9zbzy6i3BS5hu0xG1nEn03oLzeeJGVjNCRrmJqWgKatksn
-	nNsWR2ffnvM4KQiE7RL+SNwd+C6b1ngjr6JP2D3MiYbPDGhj6l7f8afnx8n1dy/vmd5B57FZ/c2
-	N9tQGogcspaOuLWtSlPFOpkpTjKRX0Jx7Ry1euEUiXB/1JCZKeVNdDkrLZyCbVBQhHkcdGCwJBn
-	sueA==
-X-Gm-Gg: ASbGncuNP9X2Ax3ISrIpyMQTq4CUWCkT2YjyRlZXI6KFRsUnOD2QL1iI6GCX0M6rx5M
-	OWcSsUyiUFVMmDhsbxEpmlsQwEQqrFBvjNb0bfcR7BsuY+bMnjSivm2ln5P0qLwypDBOKEFjoo1
-	Ah3vlkQ2qW4bPWZoxDvVxhqTVDNs395wAHpPac/88wbR1uPBfKh010F3Y1MhpmuZmpxygo2nyAB
-	29iknAx838dGs0bBBs/JLEa+m1ji6mN4hUClT4EvlDJFcXH+9UBXbAHqGMT9vixlwcwt+durYYV
-	TdfajgqMxz3Dhrz40H8jr8UgtAYz3TnbPVK5PwK+U+F2BHt0yuJ0jdXCDu8fRJcwp2bMMrTK5s9
-	pZ8YrprMP3dVtD8EFnLiMK+ULsbScPw==
-X-Received: by 2002:a05:6000:18a8:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-38f24132bb7mr9218058f8f.47.1739529466908;
-        Fri, 14 Feb 2025 02:37:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH4ObsXSu+uaHBcCGCpcGtfSdrcoS3HhFa3rCOolNFcAYKhUug8deHKDOqr2tqK+ZhCEHYNXw==
-X-Received: by 2002:a05:6000:18a8:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-38f24132bb7mr9218011f8f.47.1739529466461;
-        Fri, 14 Feb 2025 02:37:46 -0800 (PST)
-Received: from ?IPV6:2003:cb:c709:a00:7d7d:3665:5fe4:7127? (p200300cbc7090a007d7d36655fe47127.dip0.t-ipconnect.de. [2003:cb:c709:a00:7d7d:3665:5fe4:7127])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961e07252sm39337615e9.14.2025.02.14.02.37.43
+        d=1e100.net; s=20230601; t=1739529911; x=1740134711;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=He1s2OIxDgisgww5yn2VxjMheuTyHEWczA9ZBdr3hJQ=;
+        b=UycWWY+T17xDTxlueZCvSufOMMSY2sPvlJQ6EGZgrXCS6QrojpkqQqaiPdaxWM62Vl
+         OEsp4cyLIGxP7mMuIlWe0soLJ78sz75QrHHlP6WcYOK6C2CKyI5p2Ni7jY9W4g6VLYSX
+         /xm8N1N7wEEpTMt9oykW1wM4nMtXyl5vLHeDiRMNGsFqPV6m+Bu/JcwIJYh8qQhLzxak
+         h6tqXJa0MiLOi+6Z/fsxruYDYlsmOAfaJsxPHVsleFT6pfjqrhFJoznSbxN+Uc6bu+zY
+         lZLRjPqX1P1faNZ7LhP3Kfqat8Dv9v2pBHP6bQajhcz6VUKgctI2b+dT65qv3mC229rE
+         0qBQ==
+X-Gm-Message-State: AOJu0Yz+HlCTURTvnB7F87mwdNawB5ykYhC+1ObQyDVPbrV+kZTxcBB/
+	N12pu3Af5QxNTui2fOnFOC9zOeRSm8lYbQWplLYsBU6H4N93jEsvPKZfDBfWSV8=
+X-Gm-Gg: ASbGncuSq6OFPQHutX3AJ7JD4FPWZOIYpvJTNVAyUUzBj36ifbrE+vBdoNFUOfXALer
+	L1DAbrOLOWQ+ttEoLot4gKWTz45b5lM/5UkOlf7umTkrfzd3c2zfjCsiFUMDZfl55nBoWX+RWzU
+	nq/tTo1XVxexhKqP6ks1H1R5XX0tWrZMs9ZYYaFNkY1QtHNbOgRKhETmyaQYBK/0gcEi/88oOS6
+	UTIYN4O869lAbEUbWTPhN/yRix305VBIxI6Zzivu4pi6Z/xtyHZgSOFv+JY4trAtWPCKrzcDbv6
+	nGmB1el3k6HgvY3rO4MTapX1EA==
+X-Google-Smtp-Source: AGHT+IEsTwh5I/x8/HDxHBh6znue5a6A9yAG+hxspk3gf1dRGBn6Fcnb2VFbvG0klj0RG27F7iXfdg==
+X-Received: by 2002:a5d:5f8c:0:b0:38e:6cd0:f973 with SMTP id ffacd0b85a97d-38e6cd1122dmr12892583f8f.21.1739529910686;
+        Fri, 14 Feb 2025 02:45:10 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258f5fabsm4236425f8f.45.2025.02.14.02.45.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 02:37:45 -0800 (PST)
-Message-ID: <1404d6a3-c27d-4d51-8e3a-e10dc040dc6e@redhat.com>
-Date: Fri, 14 Feb 2025 11:37:42 +0100
+        Fri, 14 Feb 2025 02:45:09 -0800 (PST)
+Message-ID: <6c9d8c3a-d5f7-4b88-9dda-74b9b3d4484c@linaro.org>
+Date: Fri, 14 Feb 2025 10:45:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,212 +65,164 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>
-References: <20250210193801.781278-1-david@redhat.com>
- <6sejv2hauce3il5lq6sw53xmjjjglxkhz5copm62oryga6jioi@u66wl2nc3hoy>
- <039b2e48-1d7c-48dc-b832-24db12af216a@redhat.com>
- <pqxzfmb2ydjgplkiswb5oxtbvpxyzmfroh2fbeqeuywklmrw6i@jbj73xssektr>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] perf stat: Fix non-uniquified hybrid legacy events
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, Robin.Murphy@arm.com,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
+References: <20250212122413.1184503-1-james.clark@linaro.org>
+ <CAP-5=fWywDB40-RgV8LaPqsoffOLdDcYkUB_LHoPvV=R8yas4w@mail.gmail.com>
+ <CAP-5=fV0rWEL-ewGpoDwaJ3rvbTPXSx0YTuF5p9=6+h5oUhsfg@mail.gmail.com>
+ <c672c3a3-64e3-495a-ae61-ae098d30c6b9@linaro.org>
+ <Z66b9-I_MkmX7pg5@google.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <pqxzfmb2ydjgplkiswb5oxtbvpxyzmfroh2fbeqeuywklmrw6i@jbj73xssektr>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <Z66b9-I_MkmX7pg5@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14.02.25 02:25, Alistair Popple wrote:
-> On Thu, Feb 13, 2025 at 12:15:58PM +0100, David Hildenbrand wrote:
->> On 13.02.25 12:03, Alistair Popple wrote:
->>> On Mon, Feb 10, 2025 at 08:37:42PM +0100, David Hildenbrand wrote:
->>>> Against mm-hotfixes-stable for now.
->>>>
->>>> Discussing the PageTail() call in make_device_exclusive_range() with
->>>> Willy, I recently discovered [1] that device-exclusive handling does
->>>> not properly work with THP, making the hmm-tests selftests fail if THPs
->>>> are enabled on the system.
->>>>
->>>> Looking into more details, I found that hugetlb is not properly fenced,
->>>> and I realized that something that was bugging me for longer -- how
->>>> device-exclusive entries interact with mapcounts -- completely breaks
->>>> migration/swapout/split/hwpoison handling of these folios while they have
->>>> device-exclusive PTEs.
->>>>
->>>> The program below can be used to allocate 1 GiB worth of pages and
->>>> making them device-exclusive on a kernel with CONFIG_TEST_HMM.
->>>>
->>>> Once they are device-exclusive, these folios cannot get swapped out
->>>> (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
->>>> much one forces memory reclaim), and when having a memory block onlined
->>>> to ZONE_MOVABLE, trying to offline it will loop forever and complain about
->>>> failed migration of a page that should be movable.
->>>>
->>>> # echo offline > /sys/devices/system/memory/memory136/state
->>>> # echo online_movable > /sys/devices/system/memory/memory136/state
->>>> # ./hmm-swap &
->>>> ... wait until everything is device-exclusive
->>>> # echo offline > /sys/devices/system/memory/memory136/state
->>>> [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
->>>>     index:0x7f20671f7 pfn:0x442b6a
->>>> [  285.196618][T14882] memcg:ffff888179298000
->>>> [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
->>>>     dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
->>>> [  285.201734][T14882] raw: ...
->>>> [  285.204464][T14882] raw: ...
->>>> [  285.207196][T14882] page dumped because: migration failure
->>>> [  285.209072][T14882] page_owner tracks the page as allocated
->>>> [  285.210915][T14882] page last allocated via order 0, migratetype
->>>>     Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
->>>>     id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
->>>> [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
->>>> [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
->>>> [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
->>>> [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
->>>> [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
->>>> [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
->>>> [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
->>>> [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
->>>> ...
->>>>
->>>> This series fixes all issues I found so far. There is no easy way to fix
->>>> without a bigger rework/cleanup. I have a bunch of cleanups on top (some
->>>> previous sent, some the result of the discussion in v1) that I will send
->>>> out separately once this landed and I get to it.
->>>> I wish we could just use some special present PROT_NONE PTEs instead of
+
+
+On 14/02/2025 1:27 am, Namhyung Kim wrote:
+> Hello,
 > 
-> Yeah, that was my initial instinct when I first investigated this. As you point
-> out a lack of spare PTE bits made it hard/impossible. Of course I'm about to
-> give you all one back, maybe I should keep it :) I'm only kidding though - I'm
-> sure there's more interesting things to spend it on.
-
-Yes. And I think it could actually be valuable to have the option for 
-more fake-prot-none things.
-
-For example, right now we cannot really distinguish NUMA-hinting 
-prot-none from ordinary prot-none without guessing based on some VMA flags.
-
-One could implement NUMA-hinting using a PFN swap entry in an 
-arch-independent way I guess.
-
-So there are pros and cons to it. The biggest con is, that while RMAP 
-can now handle it, other page table walkers mostly skip these entries.
-
-> 
+> On Thu, Feb 13, 2025 at 12:15:30PM +0000, James Clark wrote:
+>>
+>>
+>> On 12/02/2025 9:38 pm, Ian Rogers wrote:
+>>> On Wed, Feb 12, 2025 at 9:48 AM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Wed, Feb 12, 2025 at 4:24 AM James Clark <james.clark@linaro.org> wrote:
+>>>>>
+>>>>> Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+>>>>> like plain legacy events if we only look at attr.type. But legacy events
+>>>>> should still be uniquified if they were opened on a non-legacy PMU.
+>>>>> Previously we looked at the PMU type to determine legacy vs hybrid
+>>>>> events here so revert this particular check to how it was before the
+>>>>> linked fixes commit.
+>>>>>
+>>>>> counter->pmu doesn't need to be null checked twice, in fact it is
+>>>>> required for any kind of uniquification so make that a separate check.
+>>>>>
+>>>>> This restores PMU names on hybrid systems and also changes "perf stat
+>>>>> metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+>>>>> test was gated on "cycles" appearing alone which doesn't happen on
+>>>>> here.
+>>>>>
+>>>>> Before:
+>>>>>
+>>>>>     $ perf stat -- true
+>>>>>     ...
+>>>>>        <not counted>      instructions:u                           (0.00%)
+>>>>>              162,536      instructions:u            # 0.58  insn per cycle
+>>>>>     ...
+>>>>>
+>>>>> After:
+>>>>>
+>>>>>    $ perf stat -- true
+>>>>>    ...
+>>>>>        <not counted>      cpu_atom/instructions/u                  (0.00%)
+>>>>>              162,541      cpu_core/instructions/u   # 0.62  insn per cycle
+>>>>>    ...
+>>>>>
+>>>>> Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+>>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>>> ---
+>>>>>    tools/perf/util/stat-display.c | 9 +++++++--
+>>>>>    1 file changed, 7 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>>>>> index e65c7e9f15d1..eae34ba95f59 100644
+>>>>> --- a/tools/perf/util/stat-display.c
+>>>>> +++ b/tools/perf/util/stat-display.c
+>>>>> @@ -1688,12 +1688,17 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+>>>>>                   return;
+>>>>>           }
+>>>>>
+>>>>> -       if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
+>>>>> +       if (!counter->pmu) {
+>>>>
+>>>> Thanks James, I wish I had a hybrid laptop so I didn't keep breaking
+>>>> things like this. I'm uncomfortable using an evsel having/not-having a
+>>>> PMU as an indication of whether uniquification is necessary. It is
+>>>> kind of a side-effect of parsing whether the PMU variable is non-NULL,
+>>>> it'd kind of be nice to stop things using `evsel->pmu` directly and
+>>>> switch them to `evsel__find_pmu(evsel)`, in the future maybe legacy
+>>>> events will get the core PMU, a tracepoint PMU, etc. so we'd never
+>>>> expect this variable to be NULL.
+>>
+>> As it stands evsel__uniquify_counter() unconditionally dereferences
+>> evsel->pmu which is why I thought it made sense to check that first. But if
+>> that might change then fair enough.
+>>
+>>>>
+>>>> Your commit message gives me enough to think about what the issue is,
+>>>> so let me give it some thought.
 >>>
->>> First off David thanks for finding and fixing these issues. If you have further
->>> clean-ups in mind that you need help with please let me know as I'd be happy
->>> to help.
->>
->> Sure! I have some cleanups TBD as result of the previous discussion, but
->> nothing bigger so far.
->>
->> (removing the folio lock could be considered bigger, if we want to go down
->> that path)
->>
+>>> I wonder we should just hoist the hybrid test earlier:
+>>> ```
+>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>>> index e65c7e9f15d1..e852ac0d9847 100644
+>>> --- a/tools/perf/util/stat-display.c
+>>> +++ b/tools/perf/util/stat-display.c
+>>> @@ -1688,6 +1688,12 @@ static void evsel__set_needs_uniquify(struct
+>>> evsel *counter, const struct per
+>>> f_s
+>>>                  return;
+>>>          }
 >>>
->>>> these (non-present, non-none) fake-swap entries; but that just results in
->>>> the same problem we keep having (lack of spare PTE bits), and staring at
->>>> other similar fake-swap entries, that ship has sailed.
->>>>
->>>> With this series, make_device_exclusive() doesn't actually belong into
->>>> mm/rmap.c anymore, but I'll leave moving that for another day.
->>>>
->>>> I only tested this series with the hmm-tests selftests due to lack of HW,
->>>> so I'd appreciate some testing, especially if the interaction between
->>>> two GPUs wanting a device-exclusive entry works as expected.
+>>> +       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+>>> +               /* Unique hybrid counters necessary. */
+>>> +               counter->needs_uniquify = true;
+>>> +               return;
+>>> +       }
+>>> +
+>>>          if  (counter->core.attr.type < PERF_TYPE_MAX &&
+>>> counter->core.attr.type != PERF_TYPE_RAW) {
+>>>                  /* Legacy event, don't uniquify. */
+>>>                  return;
+>>> @@ -1705,12 +1711,6 @@ static void evsel__set_needs_uniquify(struct
+>>> evsel *counter, const struct per
+>>> f_s
+>>>                  return;
+>>>          }
 >>>
->>> I'm still reviewing the series but so far testing on my single GPU system
->>> appears to be working as expected. I will try and fire up a dual GPU system
->>> tomorrow and test it there as well.
+>>> -       if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+>>> -               /* Unique hybrid counters necessary. */
+>>> -               counter->needs_uniquify = true;
+>>> -               return;
+>>> -       }
+>>> -
+>>>          /*
+>>>           * Do other non-merged events in the evlist have the same name? If so
+>>>           * uniquify is necessary.
+>>>
+>>> ```
+>>>
+>>> The hybrid test is unfortunately expensive at it needs to search for
+>>>> 1 core PMU, which means loading all sysfs PMUs. I think we're already
+>>> paying the cost though.
+>>>
+>>> Could you check this works James?
+>>>
+>>> Thanks,
+>>> Ian
+>>>
 >>
->> Great, thanks a bunch for testing!
->>
->> Out of interest: does the nvidia driver make use of this interface as well,
->> and are you testing with that or with the nouveau driver? I saw some reports
->> that nvidia at least checks for it [1] when building the module:
+>> Yep that works too.
 > 
-> Both. I have tested Nouveau with the Mesa OpenCL stack and a simple stress test
-> that just thrashes atomic accesses between CPU and GPU and a similar test for
-> the nvidia driver.
+> James, can I take it as your Tested-by?
 > 
-> In practice the nvidia driver probably doesn't use this that often as it
-> more aggressively migrates data but it does use this as a fallback. Also it's
-> possible for users to force residency on the CPU in which case this is used,
-> which is what the test does.
 
-Cool, thanks! (so even though nouveau is not enabled in RHEL, we'd 
-effectively be using that functionality in RHEL kernels using the nvidia 
-driver)
+Yep sure
 
+> Ian, can you please send a formal patch with that?
 > 
-> Anyway I have just finished testing on a multi-GPU setup so please feel free to
-> add for the series:
+> Thanks,
+> Namhyung
 > 
-> Tested-by: Alistair Popple <apopple@nvidia.com>
-
-Thanks a bunch!
-
--- 
-Cheers,
-
-David / dhildenb
 
