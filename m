@@ -1,174 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265462753F0;
-	Thu, 13 Feb 2025 23:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739489742; cv=none; b=ayy2Q+1F4LMGaS7XvV0O7eLZxOHOQ/tgRNqimnk0M4W4Di5W9SURuaOidMGrFusyREeigLpX7IaWHeAE8nUGek5pgfp60SQLe+oWWCLfXqBjTeZL01yyHWFNCHm2k4gd2T3KwocYWBoMBbssMH8+WlYGose2jxQq036Dab7rEpU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739489742; c=relaxed/simple;
-	bh=EZkv+Ho0qnfwzKUpS/CiR6zEjhpxu4+amaaWviz+BWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OK/X1NZF6s8BFaiNUhfW1666HDSsoN9me1/3SxVZsu+rvGEX0WvOhlzOr7QCla5m55xR20bTE34rybze+LT0u/rDH0o7ERS/Q23R/64a+dTsm9xwH19YyJPyAzmUwLN6IjQD1D7YMLCbE513prq8TjzkbsJGCBUNX1kHnqyDpvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBLZpCPz; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155CD2F46;
+	Fri, 14 Feb 2025 00:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739492976; cv=fail; b=uCs63p37/w4mm5Ciza5n7Mm2gWY7kz34qgf7GPSYix9nv7TUpwJxXQ+v7f+nH0XHTG1lRjqDBRjWov5u1r6SXnbgx/TaHX0prvZ1yNy3TBaEC4E5BODj3aWDSTu7eu4J1gcFZsHWdekfGJEK44xT9ItsRL/WcDiq6P9PFxuLdKg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739492976; c=relaxed/simple;
+	bh=6QyBxyPpcIDJb5xbZ0vtJ/1XRl3Blmm6lc5Cq+VbwKM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RxsI8yenb2PsAcY2gcj/1KDa2ckiq+BdCuwqIxlKSoomp4MDEZC41VERrxGdlfC9eRwESE9V2EKGxdWNxfhsvfyprJ+NxraAt5+SmjSccPMZsPkYUx7T9udHWOx6UyTATBOq9UCihUnQq7Ke2Y5JvOpMdnIPAMmurxj7dcag380=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BV2IlKHo; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBLZpCPz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFBFC4CED1;
-	Thu, 13 Feb 2025 23:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739489741;
-	bh=EZkv+Ho0qnfwzKUpS/CiR6zEjhpxu4+amaaWviz+BWg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sBLZpCPz1NoNgOSv1mxpSLs+FNjXdraZqNTFB3c5QkEZtldUDUwcEaHRoOGhH0jHV
-	 1+MpjqpsUOHqDB4AJB4IV6znZsNCAJOd6XknfAhEvR6NR7OzRFBfFLLc+KVFov4ByJ
-	 ubaNRl4pUfnAdNLtpv9T+Bva70o3kQrBNBDMlIozNFJ2WSZsYZn6huJNt516pff30S
-	 To0IExRLA/JEE/JULyszAdyy0i3FANVaqcixojumjfz3wFOYOedm4fwM9Nre1F5YIf
-	 HcWAFkE7/ldK3DKFPJJHo2O6qKVzfmeY/ryLli6G+F0eIVtBP0TOzGE/B28lQqM38Q
-	 VaszY5PZoYaMA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCH v2] perf report: Add 'tgid' sort key
-Date: Thu, 13 Feb 2025 15:35:40 -0800
-Message-ID: <20250213233540.600006-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BV2IlKHo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739492974; x=1771028974;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=6QyBxyPpcIDJb5xbZ0vtJ/1XRl3Blmm6lc5Cq+VbwKM=;
+  b=BV2IlKHoS97Uhc/k9NAoj/GtgfI7WRWOsLvRlUMLVCkJYev9xD2lBO8t
+   5HJ0eTEZ6GrFhdgXoDhHcJ0p88NWkHGECsDfKO9uHx84zYiiNUoluoN+3
+   fcmhBqm8SW1Lalk6fvMgQCOJUDQbAg/gL9VvENrdL2WY9FWvTX3Lvz5zW
+   gOYAchzyOoBNsdNrXun12zChBICA2tnjU5zRN8WvJXJ/t+KipvoZSByyK
+   VyAR1Hu6/esrNM09cdzLAW25LJyof5aRC9s6txp7vhsmf0cp6FbPfx7gl
+   ct/dVi7rsrQVSEgG1F2XvGj0nKfOr0tPos4w3YUIxCl6a6TFK93SJ0jac
+   A==;
+X-CSE-ConnectionGUID: URv82oeSR2aR+4b1IWHJtA==
+X-CSE-MsgGUID: eIsRTauIT1221IScuEclDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40486602"
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="40486602"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 16:29:33 -0800
+X-CSE-ConnectionGUID: /VhFZFY1SgquQZ1bXAcgAg==
+X-CSE-MsgGUID: HiYdAOYESuybMbehUVxPTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
+   d="scan'208";a="144168032"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 16:29:33 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 13 Feb 2025 16:29:32 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 13 Feb 2025 16:29:32 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.177)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 13 Feb 2025 16:29:32 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MIkc2BK3IKLBM9WpU+i/gLRxOq0TidC6+R1YdjMW2qRN+jhfBNS9YtuAI3zF3YvrvXuEXuX3k0dR2vE0qnn0jNmJsMRX9C6KrclPWlN1ZuQN04YZUnorqIVmOhmXDBvp92jrSGg6Q5VTfY8Zhe78147HFRONxI76gB7lKXiIZ4EU5XvghiM78fksrDaVpXcjtiZWd8qJYvZsTCvqk1x/K++exqueRowwVDhxTzvceh0w4DsTQ29T/xoXN9hhHSNkfe8aJS593yuVuGlLgPj/+4nhqfqXZCM1oqStZg5o0cpgjWde6vjeJkIkAO4Zn79FOS8aI/R0xBtvNy+jeqDmjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SM71QmjQN4HTbTB5fUJpvQtp13i+QS81pKAggVNxRvc=;
+ b=oeGKP2W60+3DuJ/V7x7MAGfv2FyHAuJ6wWpHt6BseZ5jbXzGmc9sXhsJV5HGUj1fZz0vh+QnW+YyvfSl4AQNVprq93eUPOrdicvUanxbezAXhTbivJeAyEek1K8LPQeLO31jE0kKNrsc0Eei6NgGQHvl6ZG2r4b3B1tnJOs7kFTrlt7mZYoS9nL+eOKfJKDaLwqWvx4ggtJJ3L+S3EPPHZo9eKc2JE0lgkqfx64iRrWfwDDzNgE5y5UXy3OntXs7kZ9FIlcr81jLyPU1/eCD0cqe7sxI3aIYqD8TQg7AaMXmMjCZ2/CMZeUqGbg74KRGoIbMSVJml4E6f727WJL3Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by DS0PR11MB7786.namprd11.prod.outlook.com (2603:10b6:8:f2::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.11; Fri, 14 Feb 2025 00:29:30 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%6]) with mapi id 15.20.8422.015; Fri, 14 Feb 2025
+ 00:29:30 +0000
+Message-ID: <066c8d9b-05fa-4380-ab2c-91a5e1475021@intel.com>
+Date: Thu, 13 Feb 2025 16:29:29 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] x86/cpu/intel: Fix page copy performance for
+ extended Families
+To: Andrew Cooper <andrew.cooper3@citrix.com>, Dave Hansen
+	<dave.hansen@intel.com>, <x86@kernel.org>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Kan Liang" <kan.liang@linux.intel.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin"
+	<hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Viresh Kumar
+	<viresh.kumar@linaro.org>, Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare
+	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui
+	<rui.zhang@intel.com>, David Laight <david.laight.linux@gmail.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-hwmon@vger.kernel.org>
+References: <20250211194407.2577252-1-sohil.mehta@intel.com>
+ <20250211194407.2577252-6-sohil.mehta@intel.com>
+ <b9c21518-54fc-4907-8fc3-d492a3f33bdf@intel.com>
+ <2299c94f-aa46-47b5-bd25-9436a8fbd619@citrix.com>
+ <90eb900b-0b75-4c0d-be65-a4357729e5cd@intel.com>
+ <445ccf10-5ac8-42aa-ba09-5f4ba689ec19@citrix.com>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <445ccf10-5ac8-42aa-ba09-5f4ba689ec19@citrix.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0224.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::19) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DS0PR11MB7786:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cbef6e8-6b08-40f5-2171-08dd4c8ea570
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NGpWcWZlNHhMaUJTQjNlYzYwWGNZa1Z3MGxtVFBTdWRtL3RyZkl0Rlk0L3ZE?=
+ =?utf-8?B?Rm1hYlBYV0pVZFZxSDlOWWIzazlmcmsrbzBZdHZlbmhVQW9mVktVb0xEWW9M?=
+ =?utf-8?B?UXhBZG1TVmowN2ZSM01wSzZ0SE01WEtRMnQ5SmxtU2diVHJLbGt2L2tENmFj?=
+ =?utf-8?B?UEswajVBTCt0U3ltYlk0U1ZpZWxwOG11NmE2MkxCaGJTMEViWHpLcGkwZytW?=
+ =?utf-8?B?U2p0YXh3SGIyQ2thOHE2K0FmU0dSSVV4RkN0RWk2cEJ5azVPNzc1VDRMd1lE?=
+ =?utf-8?B?Rm01bWhzcXJYbDM3aW5sWTBuM2FCWEpXWXpHdkFFSVV5WkhabklQT2Y2OTdN?=
+ =?utf-8?B?T1R3WndBVEdrVUU0ZXpTVllyYmx6OVQ1N0NWQzdPUWl6TmZwdHhLRm93eVpJ?=
+ =?utf-8?B?TjJITnJkb2pvOTJKN3R1dytrNk5aNzlVc2tDSUpOZ2FNNzY5N09ZQW1BcFNH?=
+ =?utf-8?B?SmNRNkpXTnZBcEZYTnFVRmp2OWFOU09PaVJPc2QrK0dyQk1iRHo3TjJkVzls?=
+ =?utf-8?B?TkhuUm12RlE3OVFUUVdJVUQ2dnNQVytCUTNZeFMraFNzUUh0SCsvdkpwM2Q3?=
+ =?utf-8?B?cHQwV3V0ZDhJaGg4T0NPZjc0aUk1SGNYZTlpYXpFaW5GRlhOcGlpZi9qOHlo?=
+ =?utf-8?B?NGh3NmNsclp2eUt5c0I4aUNHdExLaXorUlFBVFM2d0FDZ29OY3ZxR2loWkc0?=
+ =?utf-8?B?aW95RVh2WHRqekNxRXJiZktGQlZqYnd5N2tyZnRZVEpMZTRKYklzcHY4WFZi?=
+ =?utf-8?B?RW1vODdwaytwSEhxaUxRYXJ3cURKdDBOZjdWNzEwbFNXb1pmMlRTZ3NRYXNa?=
+ =?utf-8?B?ZkF3V2NFa21BbXU4elZkWWlKeXdSWjVUUXBpQ2x6NjZwUWRjNDZ0MWdSYVBp?=
+ =?utf-8?B?b3REU1JjTTg5OFNJQklkTjIvSXpqYVFVQU92TEZ2RG9HOFBmNG01QStZTVZh?=
+ =?utf-8?B?d1o4VHRjM2Fhd0NHdnNGM2Z1TGRrR01vaEhiQ1RtUDJ5WTk4VlZhSS9RWDQ2?=
+ =?utf-8?B?K20yNDZQZVMrR1RZVTFEZCszMjQ2OE1mbjBNMm9uOEhua09yV05SNmZ2VzNK?=
+ =?utf-8?B?MFI5aXNrM05QY0VzRjhLQmlZTHZtZ3lQOXBrZkxkRTcyN0VYZXlvb3BMK29k?=
+ =?utf-8?B?YlZZS08zRTFVWDB6cTNycnJGTmFadnhjNDdOSHQzblNKUzUveStOd1c0T0Mv?=
+ =?utf-8?B?aGNaVSs5SmdlMVJ0OHJDWW8yT1NMa2dSaXJ3RUdKRU41Wk16aTYyL1R0aW9M?=
+ =?utf-8?B?ekRPRkFWMHZscXlNbXc5VG5OQTQvRUlLbUp5SXNIQ1hhazBGamc2WFd3YTNG?=
+ =?utf-8?B?NFl0UUZVaGZ0dVhRYlR5KzNzRWVlcjFyMmNjUjdiTHFDTk1VRUVWcUd2eFNT?=
+ =?utf-8?B?eGVoekNlTzVRVWdTWUdGMTBDZVIwSG9WemZscVJkTUovdEZrWVhpZGdCUWVV?=
+ =?utf-8?B?NzR5dEhoQ1JKaERpU0NWS0FOdUZLQlJHRnFXUDUwZzRvVE9ENkY5bGw3dmNJ?=
+ =?utf-8?B?TTFjcEsxaDVJcEM4TjZ0RUxncHpSY1NJYVBsaWRyL1FidXJwVWlNaDNBY1Uz?=
+ =?utf-8?B?WHFId0UxcC9nQXFvZkFVSGQyazJCUFFhNHpEeUsrM09uTGpwT2VQUXFDL3NF?=
+ =?utf-8?B?bGRrbDZKbU5BQWFQa0xGT0FwYWpzUlptUWwvcHoxdW4xeGw5QlNPbnNCWUVC?=
+ =?utf-8?B?Nlo3bks5TU9jOEkwcjNrUDl0dHladjFZVUlDV0VreHQ5TkRHKzlzbVI5Q3BS?=
+ =?utf-8?B?UU8zTERSU3pleHlISU00NmtIbXJCcHhac25EQXVkMkhaRnhuVENkMU5LOS9n?=
+ =?utf-8?B?RlUrY2JlSVcwcnZiOHlja2x4WGNhNWtiN2FTOWFnc21LS3BsUDd4YTlPMGpi?=
+ =?utf-8?Q?bs4WtdRSvwHuG?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MlV4S1dETS9mVGxjNC91ZzJ4N0NzbzdSS3BlaXliemJNait0S09lRVh4MEF2?=
+ =?utf-8?B?aXRpenVCbitoczNlTGNBU1QvVitQMVAvUjNsakNUb1hrODBseFJ5aTBzTEFl?=
+ =?utf-8?B?eHVJZHliSzBWZHM2MUpiVUQxTURDblVpRlZnSFhlR3ZmMmpOVWRFVXZWWFdh?=
+ =?utf-8?B?UVpEQjBPQmZ1SEhyZ2xOeGI0Y2FYOXVKR0t0Wkh0UzFTbVhTNStUMEYwV2dH?=
+ =?utf-8?B?ZnVvTUh2TUt5L3FtVmJTMGNYUGExZ3FyNjlPRVN1SzdabnhQZ1pQM28rakY5?=
+ =?utf-8?B?bVVmQ0ZEQ3lQZ05VUm1nN2VXM2l3d283WnEyUUtSbkhONFJsMkpqeDJyZC9s?=
+ =?utf-8?B?QnNsYXpjUk5HaFhFRDZnbEJ5V1ZqUGk1YVRsY3ErQzNuSW92eUFsN3BnTWZN?=
+ =?utf-8?B?N0k3SXZLblNYVUdsNmlrTnlHOFBWTkRjMTY4dkI1MjM4cnpvN2hUeWVQWng5?=
+ =?utf-8?B?alhoZ1FqZDdyMnZhendCVUttUnZVL3ZkajNDUm82Y2M4L2lKSkp4R2VsVXBR?=
+ =?utf-8?B?STB6Y2JBcDFDVExTdjlFWnNsZU1hS0VHTTdwMUhWQmJXTy9KbGgvWVRuaW5p?=
+ =?utf-8?B?cnlhVElpd0FVdXZtQ0VYQWJkY3RQOGJTQUZUblFWY0NuOUtOSEM3amhZUXI3?=
+ =?utf-8?B?M2pzSy8vNWFhc0t5ZmZxZStPektlVUpEQ1dpRWlxSWFrMUlwWW1iNndIWFZC?=
+ =?utf-8?B?RVF6N3h4TTkvWWxZeXhmQnMyajhVQms3bWNVYUI0Q2hiUVlpRHNoanFGQ09v?=
+ =?utf-8?B?L1BkUG5KdnBqeGQvMlNDbDM5djk0UVNndGMweVl3QzhtMkFVNUhZNVowV1lM?=
+ =?utf-8?B?K2c0cXJnTGFnc3FZNnVlU1UxVUFpOGtwREpSRVVjNDVnNE45dU5yaW40b0Vy?=
+ =?utf-8?B?SmRHZ2Ntb3RCWEFuR21yZ0hWSXpNdVFIdnI4ZUV4ajFWMDN6RXo3ekZWWTE1?=
+ =?utf-8?B?azY3UmlSOTNHaVZ5UE9BVkZ3WGtXQS9PbytZZi8rREh1eTYvYmYzYUdUa2oz?=
+ =?utf-8?B?OHV5K0tON2JLQVYyTEEycitxRkRudEV2WjZMQ21pWC9TMkdpc2tFQUZMOERN?=
+ =?utf-8?B?M0dJRWdYZGk3elErVlNPdWhlTlFCUFNDOUc0Y2NpRFhWenkvYTQ3S0xWNWNa?=
+ =?utf-8?B?bnc2NmJCY1QvMjFmbjdhakdMZTFjZTZSTGFwTGsvM0xhS1BxNEFvYmN3Y2o2?=
+ =?utf-8?B?LzhBUUhkZVVXbkx0dFlqL2hFUmNKOWlJQ0hWNWNIT1kxUW5yMm9HM3Z3aEdX?=
+ =?utf-8?B?Z1BrUDBIMXVvZzEzbmRoQXZ3bGdXS1VXMDRPSkxsKzlVSE03RFZvSiswazB4?=
+ =?utf-8?B?bHYvSTg0TFRtbGFWWmFUTjNmdnoxaHg5VTNjZDM0dml6SFFlNWgraHA1UTl1?=
+ =?utf-8?B?elZBbFZnRWtnbmNXbGZhS0dUYzZjb1IyNTAyZ3RWZFpCdG5kM01PZHVlcFh1?=
+ =?utf-8?B?SWs5SFJwbEZDcG9uNzhXaTNLVDdrbUUzeGc4QTIxbFRtcXVBem1TUTBPb05Z?=
+ =?utf-8?B?cGhya1V5MHRiUzBhU0xYZFNPdUNMS3BEU1F4cUZyczhRdDllMG9mOEk0V0lD?=
+ =?utf-8?B?SVMzbHQxV21RcDZJa1dOdmZqbnJINjVnY3J6ekRFcjl1S0R6Q250WVRBa3hP?=
+ =?utf-8?B?ZDg1T2Ird1QwVnBpbU43Z2c0ZzJEQ3B6dWRSekltU1RCVlFDS0Vmci9hUGxz?=
+ =?utf-8?B?L29ZdCtLc1BNaUtmYkFTMEp3R2w1REhQT0dpRUNjNmFiTUhGR0JjSHBGSHV1?=
+ =?utf-8?B?NGFQK1ozLzRNZEgzZGFIRFpRSzRJZlpCS1ZlN056RjR1RUNMWlc3UUtIZW9J?=
+ =?utf-8?B?TGNyWkROdW5sQ24rd2ZYWkFYOVVnUEtieHd4ZzZNOTZWZzNFZnJXSEYvbnFP?=
+ =?utf-8?B?QnIxL3lkS2xKaEc3WTR0ZURHakdpVGpBVnZ3N3c5UlRhbmhWQ3dtaFMvc3ZR?=
+ =?utf-8?B?VHREM3dqQnZpdEVQK21NOTlIRjJadjNnUW5Rd0U2aDArci9Vck5LWVBaWkth?=
+ =?utf-8?B?dnl6T0VKM0JvTWNuMlZLUXI2UWxRL3MxYmFENXNBc1B4K2dxNlZTNXVUbVla?=
+ =?utf-8?B?TFlkSW9zbUxVZ2xRVUwrUmpCTkR5aFdHZFFRVnIxZXY0U0IrV09hSGMzSXNO?=
+ =?utf-8?Q?49APZitAjJq4uotZqUHo+pK2d?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cbef6e8-6b08-40f5-2171-08dd4c8ea570
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 00:29:30.3315
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UUdvYH7hPKbYO4JTbBco7FIgT0l4hkif8iuUhzJe0+RaMUuL5IqqqwWwzCXXWy42kZvutcYtb+hh8YTegkFqBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7786
+X-OriginatorOrg: intel.com
 
-Sometimes we need to analyze the data in process level but current sort
-keys only work on thread level.  Let's add 'tgid' sort key for that as
-'pid' is already taken for thread.
+On 2/13/2025 3:02 PM, Andrew Cooper wrote:
+> On 12/02/2025 9:19 pm, Sohil Mehta wrote:
+>> Check 1 (Based on Family Model numbers):
+>>> /*
+>>>  * Unconditionally set REP_GOOD on early Family 6 processors
+>>>  */
+>>> if (IS_ENABLED(CONFIG_X86_64) &&
+>>>     (c->x86_vfm >= INTEL_PENTIUM_PRO && c->x86_vfm < INTEL_PENTIUM_M_DOTHAN))
+>>> 	set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+>> This check is mostly redundant since it is targeted for 64 bit and very
+>> few if any of those CPUs support 64 bit processing. I suggest that we
+>> get rid of this check completely. The risk here is fairly limited as well.
+> 
+> PENTIUM_PRO is model 0x1.  M_DOTHAN isn't introduced until patch 10, but
+> is model 0xd.
+> 
+> And model 0xf (Memron) is the first 64bit capable fam6 CPU, so this is
+> dead code given the CONFIG_X86_64 which the compiler can't actually
+> optimise out.
+> 
 
-This will look mostly the same, but it only uses tgid instead of tid.
-Here's an example of a process with two threads (thloop).
+Thanks for confirming. I figured this is likely dead code but wasn't
+completely sure.
 
-  $ perf record -- perf test -w thloop
-
-  $ perf report --stdio -s tgid,pid -H
-  ...
-  #
-  #    Overhead  Tgid:Command / Pid:Command
-  # ...........  ..........................
-  #
-     100.00%     2018407:perf
-         50.34%     2018407:perf
-         49.66%     2018409:perf
-
-Suggested-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-report.txt |  1 +
- tools/perf/util/hist.h                   |  1 +
- tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
- tools/perf/util/sort.h                   |  1 +
- 4 files changed, 41 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 87f86451940623f3..4050ec4038425bf0 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -79,6 +79,7 @@ OPTIONS
- 
- 	- comm: command (name) of the task which can be read via /proc/<pid>/comm
- 	- pid: command and tid of the task
-+	- tgid: command and tgid of the task
- 	- dso: name of library or module executed at the time of sample
- 	- dso_size: size of library or module executed at the time of sample
- 	- symbol: name of function executed at the time of sample
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 46c8373e314657fa..c164e178e0a48a8e 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -38,6 +38,7 @@ enum hist_column {
- 	HISTC_TIME,
- 	HISTC_DSO,
- 	HISTC_THREAD,
-+	HISTC_TGID,
- 	HISTC_COMM,
- 	HISTC_CGROUP_ID,
- 	HISTC_CGROUP,
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 3dd33721823f365d..b4034bd6629d4156 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -141,6 +141,43 @@ struct sort_entry sort_thread = {
- 	.se_width_idx	= HISTC_THREAD,
- };
- 
-+/* --sort tgid */
-+
-+static int64_t
-+sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
-+{
-+	return thread__pid(right->thread) - thread__pid(left->thread);
-+}
-+
-+static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
-+				       size_t size, unsigned int width)
-+{
-+	int tgid = thread__pid(he->thread);
-+	const char *comm = NULL;
-+
-+	/* display comm of the thread-group leader */
-+	if (thread__pid(he->thread) == thread__tid(he->thread)) {
-+		comm = thread__comm_str(he->thread);
-+	} else {
-+		struct maps *maps = thread__maps(he->thread);
-+		struct thread *leader = machine__find_thread(maps__machine(maps),
-+							     tgid, tgid);
-+		if (leader) {
-+			comm = thread__comm_str(leader);
-+			thread__put(leader);
-+		}
-+	}
-+	width = max(7U, width) - 8;
-+	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
-+}
-+
-+struct sort_entry sort_tgid = {
-+	.se_header	= "   Tgid:Command",
-+	.se_cmp		= sort__tgid_cmp,
-+	.se_snprintf	= hist_entry__tgid_snprintf,
-+	.se_width_idx	= HISTC_TGID,
-+};
-+
- /* --sort simd */
- 
- static int64_t
-@@ -2501,6 +2538,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
- 
- static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_PID, "pid", sort_thread),
-+	DIM(SORT_TGID, "tgid", sort_tgid),
- 	DIM(SORT_COMM, "comm", sort_comm),
- 	DIM(SORT_DSO, "dso", sort_dso),
- 	DIM(SORT_SYM, "symbol", sort_sym),
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index a8572574e1686be6..6044eb1d61447c0d 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -72,6 +72,7 @@ enum sort_type {
- 	SORT_ANNOTATE_DATA_TYPE_OFFSET,
- 	SORT_SYM_OFFSET,
- 	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
-+	SORT_TGID,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
--- 
-2.48.1.601.g30ceb7b040-goog
 
