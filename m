@@ -1,77 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF506FC5;
-	Fri, 14 Feb 2025 18:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC10915FA7B;
+	Fri, 14 Feb 2025 18:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556323; cv=none; b=XH0NSAoKijq5n58qRCi/frtnI1G9qtJ1nK/omCdcG67CSzkK3Vt/cYxXxM+MitPYczBX5bvFwGi6a6mukED5WdkVooZqjYQXGczunAJROkH5BI3yP/QBAEDiGvtnnAIbvsdaulIHQBTHXxrR6keaXUFD3AtN3bP8yHBkNvQUt/o=
+	t=1739558723; cv=none; b=m1TN6xWEcSi46ZGYhU6AAiDeaNSxX2KMoKT7R0gSkR8Ps6rQsjhoGMS78aF+mCf3VrgFZvuSphh2ha8s6jSsfUmzOmjfHlE1g0aIJSxHi702ENyCxWXNUzFKY4+83xzA7Yv/TGNWaXz1rJULmwMnu9I0CVrb043EoeRUYVYo6+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556323; c=relaxed/simple;
-	bh=U/5KNCjmmxbPQLiOGusLqmw0uEnG/qtoUpSRDMK4wvs=;
+	s=arc-20240116; t=1739558723; c=relaxed/simple;
+	bh=hhnbXVudW3X9Ob2dmDCWIf7SoirkZhCcBkp92o1UP/A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Im20xbccTzlW24t9gnDFiUx7aCHaXHHDQxs3LbuAF11jsf/j2qvd8Ez5hXWJ5JzAIz+X0wdkx2rQGgoiFXCDtBy6hkk0JOMAyc6SdMKqZh8DGFCquUFsL6B2j/AYJ4lKg8f3FixFYodFMnpnU8cHpBIsuFk7PuF2yGjhg1SaRm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PU4EfdfM; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=H64E04lUDF2ES/HVKQFvVSEuOq2ncOMw5oiZxokNjcfK2C2yD8b0L31JU7KSKi28y8eqJEtIopqWoOOZvPi2BCnlMnYbf5J2/tWp6oYB4i+m9yG5I++gZ7h1SKUE1z+tEitMAW11tVBd2kspe+baxWoXRGrOS6O/v9udYp14UWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exnUPGgX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PU4EfdfM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739556322; x=1771092322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U/5KNCjmmxbPQLiOGusLqmw0uEnG/qtoUpSRDMK4wvs=;
-  b=PU4EfdfMQq1eeUcYmVcsXRVP/fWjhpA+rTXuv/aoWg2Oy/2hexu64Uo8
-   DcVo3+oLkY8Px74rn6IR/IGKsuR0zS25CtmqeBS3CwftfkZA7i9O6YXWY
-   gdaSrxBmL4xcJDZNjkDSKnvOogtnqf9gep2hu81rxuQNm+Y8SsmeMwu/g
-   /cqsfSdCBjpK7Usq7adv1/mAJgElwdSm2YxEh+28t+Z2HAo2jbdks8UhP
-   GddNhMbPUGjqhy0mxMZIBpdS6mWspvnBng1sVWwqdOEUs8L4KqsCt1pIf
-   CDk9/D2srPbNan7aJsTXEO09KnJ6XDGn1h+mGz4q4fYkQfUYeHRsuimUc
-   g==;
-X-CSE-ConnectionGUID: LEvpkEnKQy6O90rsJIKIcQ==
-X-CSE-MsgGUID: fl9NDyu6R9mUZVEI5VdFUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40580911"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="40580911"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 10:05:21 -0800
-X-CSE-ConnectionGUID: 87SwqQWLSqWIZVoP75YXhg==
-X-CSE-MsgGUID: ZEwEKscbSXqJmgxeSxIi0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113391276"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 10:05:20 -0800
-Date: Fri, 14 Feb 2025 10:05:19 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: namhyung@kernel.org, irogers@google.com, acme@kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exnUPGgX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CACCEC4CED1;
+	Fri, 14 Feb 2025 18:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739558723;
+	bh=hhnbXVudW3X9Ob2dmDCWIf7SoirkZhCcBkp92o1UP/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=exnUPGgXUpVDJXfejHV+qS8UhaO6MyTm9FhHIGy7axieRMhiCYpxEeV95XUqEQV/z
+	 dWba2REJty7aNMPZvd9Qp0s+t19qx39nouxaC7aOyQDi4gQdsE76u1ASz5BBjPuo7O
+	 d3XH7wnod77QHb+bL+nWASGq0iMT8Knn3iNc6FhfdD6ovJB/lIBbH13LgkHLcxVcA2
+	 SXkKx+ag/Lzr2L14KoHqK0SZhS9nFlpdA5PSXmR+XmBBk65mNp3Vdw+4keQWEwoCIm
+	 H64XCqnLZsYDQzUr7PH73nT8o2NSP5ql6wYrx6gf1Pguyni+nrMRlVp00fnzPZ/1NT
+	 1b0lxMUIoA9fw==
+Date: Fri, 14 Feb 2025 10:45:21 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/9] perf report: Add latency and parallelism profiling
-Message-ID: <Z6-F35N8fkhTvagn@tassilo>
-References: <cover.1739437531.git.dvyukov@google.com>
+Subject: Re: [PATCH] perf: arm64: Fix compilation error
+Message-ID: <Z6-PQVOVLrZqey-u@google.com>
+References: <20250214111025.14478-1-leo.yan@arm.com>
+ <aa347f0f-ebd3-4744-9053-14dab87d06b8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1739437531.git.dvyukov@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aa347f0f-ebd3-4744-9053-14dab87d06b8@linaro.org>
 
-On Thu, Feb 13, 2025 at 10:08:13AM +0100, Dmitry Vyukov wrote:
-> There are two notions of time: wall-clock time and CPU time.
-> For a single-threaded program, or a program running on a single-core
-> machine, these notions are the same. However, for a multi-threaded/
-> multi-process program running on a multi-core machine, these notions are
-> significantly different. Each second of wall-clock time we have
-> number-of-cores seconds of CPU time.
+On Fri, Feb 14, 2025 at 11:21:52AM +0000, James Clark wrote:
+> 
+> 
+> On 14/02/2025 11:10 am, Leo Yan wrote:
+> > Since the commit dc6d2bc2d893 ("perf sample: Make user_regs and
+> > intr_regs optional"), the building for Arm64 reports error:
+> > 
+> > arch/arm64/util/unwind-libdw.c: In function ‘libdw__arch_set_initial_registers’:
+> > arch/arm64/util/unwind-libdw.c:11:32: error: initialization of ‘struct regs_dump *’ from incompatible pointer type ‘struct regs_dump **’ [-Werror=incompatible-pointer-types]
+> >     11 |  struct regs_dump *user_regs = &ui->sample->user_regs;
+> >        |                                ^
+> > cc1: all warnings being treated as errors
+> > make[6]: *** [/home/niayan01/linux/tools/build/Makefile.build:85: arch/arm64/util/unwind-libdw.o] Error 1
+> > make[5]: *** [/home/niayan01/linux/tools/build/Makefile.build:138: util] Error 2
+> > arch/arm64/tests/dwarf-unwind.c: In function ‘test__arch_unwind_sample’:
+> > arch/arm64/tests/dwarf-unwind.c:48:27: error: initialization of ‘struct regs_dump *’ from incompatible pointer type ‘struct regs_dump **’ [-Werror=incompatible-pointer-types]
+> >     48 |  struct regs_dump *regs = &sample->user_regs;
+> >        |                           ^
+> > 
+> > To fix the issue, use the helper perf_sample__user_regs() to retrieve
+> > the user_regs.
+> > 
+> > Fixes: dc6d2bc2d893 ("perf sample: Make user_regs and intr_regs optional")
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-I read through it and it looks good to me.
+Thanks for the fix, I'll handle other archs too
+Namhyung
 
-For the patchkit.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-
+> > ---
+> >   tools/perf/arch/arm64/tests/dwarf-unwind.c | 2 +-
+> >   tools/perf/arch/arm64/util/unwind-libdw.c  | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+> > index b2603d0d3737..440d00f0de14 100644
+> > --- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
+> > +++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+> > @@ -45,7 +45,7 @@ static int sample_ustack(struct perf_sample *sample,
+> >   int test__arch_unwind_sample(struct perf_sample *sample,
+> >   		struct thread *thread)
+> >   {
+> > -	struct regs_dump *regs = &sample->user_regs;
+> > +	struct regs_dump *regs = perf_sample__user_regs(sample);
+> >   	u64 *buf;
+> >   	buf = calloc(1, sizeof(u64) * PERF_REGS_MAX);
+> > diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
+> > index e056d50ab42e..b89b0a7e5ad9 100644
+> > --- a/tools/perf/arch/arm64/util/unwind-libdw.c
+> > +++ b/tools/perf/arch/arm64/util/unwind-libdw.c
+> > @@ -8,7 +8,7 @@
+> >   bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+> >   {
+> >   	struct unwind_info *ui = arg;
+> > -	struct regs_dump *user_regs = &ui->sample->user_regs;
+> > +	struct regs_dump *user_regs = perf_sample__user_regs(ui->sample);
+> >   	Dwarf_Word dwarf_regs[PERF_REG_ARM64_MAX], dwarf_pc;
+> >   #define REG(r) ({						\
+> 
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> 
