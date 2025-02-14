@@ -1,110 +1,212 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17B8D24A049;
-	Fri, 14 Feb 2025 09:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F818A6D7
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 10:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526926; cv=none; b=DCN7i+UMPt68rmwq/SVWs44jY40nLq+B/kZIcYFJQ1lNbcYbCfnhd5wBMeZYLVlURlt0yRUWaLtUCdosKyQzyDJlz9/DCiHLs+wWDY+t302SQpuckKiMavhn63eWQfyAiYOltySagRYdIGwABJxuBPgi9WGDYT40w0dh4aQiW30=
+	t=1739527373; cv=none; b=aS28kgz2llMKx60mwjONBOa4M4/O4eGTJdKnGubspGoULeJrX0+VhJCKlcTFT72vy/Hw13c4y722qjlj8ZbTmq/kweeQftIL+d7nzNbEI/x8KanQsX+eRJfCWXe3qRRu+JS/Dzs3IQOEFYeaCXDhxOzqaXJ5dNAIoLtr1W7hEHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526926; c=relaxed/simple;
-	bh=OLmOhFPQmOFsK0TNWHCEK+PAnV5VzbU646k1Y+lVG6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SY8s7yIgr3rosWdYoWLk+5aE+FjTaFpGjs0w1kqeukgKlBum3Y5S6YFb6WwRFYazwrS2gAP9Zsst1W6VUW1BEjJQ1/43RYY/BWpvIQjIWYqEWoco5kvRThs9xScVmMsQKAw/H//zqI4prwqAL8TWzFglREys/QISklJ0pFvee9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B95C113E;
-	Fri, 14 Feb 2025 01:55:38 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43AEF3F6A8;
-	Fri, 14 Feb 2025 01:55:17 -0800 (PST)
-Date: Fri, 14 Feb 2025 09:55:12 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v19 10/11] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Message-ID: <20250214095512.GI235556@e132581.arm.com>
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org>
- <20250213170316.GG235556@e132581.arm.com>
- <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
+	s=arc-20240116; t=1739527373; c=relaxed/simple;
+	bh=6IIJKgD/OctiPI/Am9zaDQvl6XDddiVDhmizBXie3+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ziuji08XGRvWZXlXVeWRDAlfB5Oj6z+9MUeCf5ESh5gTjmM+/ADvwLKtUSTuCKeugzposijxA0ftUcFfJOZVIIVFjLX7ZYZDgkU7LskETXjw37IHL1CNRMJ/m/26jjwsJCsdygypHw5V0gf7dDlgm1dm3c7YDr4AbEZ4FjLCKK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RMNgjBdm; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMNgjBdm"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4395f81db4dso11229935e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Feb 2025 02:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739527369; x=1740132169; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WX8WwYpC/7CDpNuf00AfcD8uPd4813egQtu1K93XN+I=;
+        b=RMNgjBdmi14GdXF/e/FXOgFkspcAfCbTV6mCByCmutlxIded49f6GkLeesW3gdp/Yw
+         D/0cH5oMOQTqyO9QxDy4Mc20zgVLWO7YFbq7xC8fWUvR5050IE1uKIAYzgQ7G824Wg63
+         1lkkjYfFHiSU4sdkA5RRu3DVsQDwXOfopaezW2XVyyDQYyqRuyzki56mbsMBK4hL+tTS
+         RkH2yZodiqLDCsKfQdNxYXJJ+naScWDikIF8e2YQVZ2kz4KgsXDSM+S8pdQ8pnEo/St3
+         iWPXAGzhJYGDtHWYMtKRI8RzgJa3ZGT9StPC6eVWu1I8twf9sTA85F0CPGXCMioyoDz8
+         DWJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739527369; x=1740132169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WX8WwYpC/7CDpNuf00AfcD8uPd4813egQtu1K93XN+I=;
+        b=b2aJBVmMW4a0cTy+s/x6+4BBaL/T9ZnrQHjbX8q3AIGesICkhrPBN/c+M97UMWJjYn
+         6qZLC91XH4o6rlfTsc1sl34wY9cMS5socrEW/aFZzU5FpMQfGPf5RuF4MZnlYdzsRrSu
+         pXQhPB9WPz+kWHyL4pOilU45+Txtx9Rtg96G3efhw2RHW2CehpgOP7s52nJseVrOTjf5
+         7Vsbk0DVo/fwr1pCgmVXwwmM9GS9EHL+a2spBpbTuBB5eeYEJvqPiifwjR2dOtPVfVHD
+         5f6wuiT5dPgC7bil1p1NmxruQOgAAeJKDOybaSAUScwaw0LTWJyO/9pUSadq5DIUx5PR
+         S1eA==
+X-Gm-Message-State: AOJu0YwQ9DD+b1aWMsHiS9mfCb6GyoW9X198+xNl862uLKt9a3lDwWjo
+	7/njo2YEhxR+rmXps+dY6M8eItYXro3/s+M6pU5apIvNTlenXZjh94fXaTP2ihU=
+X-Gm-Gg: ASbGncuyfJm98tZjIgy7b1eFQ7WYaubdwELR4Ekw40LFHQENkgVkbOg8/ol+HocVP9R
+	LFLJKDmGs61mP0lvl6uOMuijyquRi5wQnQi1YHODm3/7ZQVoMDl43mkmK8Be2qKBzWGlDn5itZF
+	Vcv85soDT/c4gJHckkEk7XnxVIiarh3EIbjXvekB0n/lLsTUI9uNcDHyti2AF9nSB0u2jyfP2SW
+	kU7TCOSwRqPDzmOo8bfm120wb5XkvT3PwkNKpwQTKKIqUbf4d1k6Y3PvIUi400DDIiyWrsMcDJ9
+	ItALF2oOQy9ib5WC5RwNljlUtQ==
+X-Google-Smtp-Source: AGHT+IGXbOvw8S2GyqkxFIBv52Dq7Q6IHtiiNKaFsB5EmhnCm9g3CNMhqRiW6G3yKYM1hCJUjhidtA==
+X-Received: by 2002:a05:600c:a0c:b0:434:f1bd:1e40 with SMTP id 5b1f17b1804b1-43960e81b92mr70034575e9.6.1739527369462;
+        Fri, 14 Feb 2025 02:02:49 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4396b5267b6sm1615605e9.0.2025.02.14.02.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 02:02:47 -0800 (PST)
+Message-ID: <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org>
+Date: Fri, 14 Feb 2025 10:02:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520
+ events/metrics
+To: Yangyu Chen <cyy@cyyself.name>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>,
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
+ <Z66YjGvjD_yzEHUg@google.com>
+ <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 13, 2025 at 05:16:45PM -0600, Rob Herring wrote:
 
-[...]
 
-> > > +static void __debug_save_brbe(u64 *brbcr_el1)
-> > > +{
-> > > +       *brbcr_el1 = 0;
-> > > +
-> > > +       /* Check if the BRBE is enabled */
-> > > +       if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> > > +               return;
-> > > +
-> > > +       /*
-> > > +        * Prohibit branch record generation while we are in guest.
-> > > +        * Since access to BRBCR_EL1 is trapped, the guest can't
-> > > +        * modify the filtering set by the host.
-> > > +        */
-> > > +       *brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
-> > > +       write_sysreg_el1(0, SYS_BRBCR);
-> > > +}
-> >
-> > Should flush branch record and use isb() before exit host kernel?
+On 14/02/2025 5:49 am, Yangyu Chen wrote:
 > 
-> I don't think so. The isb()'s in the other cases appear to be related
-> to ordering WRT memory buffers. BRBE is just registers. I would assume
-> that there's some barrier before we switch to the guest.
-
-Given BRBCR is a system register, my understanding is the followd ISB
-can ensure the writing BRBCR has finished and take effect.  As a result,
-it is promised that the branch record has been stopped.
-
-However, with isb() it is not necessarily to say the branch records have
-been flushed to the buffer.  The purpose at here is just to stop record.
-The BRBE driver will take care the flush issue when it reads records.
-
-I agreed that it is likely barriers in the followed switch flow can assure
-the writing BRBCR to take effect.  It might be good to add a comment for
-easier maintenance.
-
-> > I see inconsistence between the function above and BRBE's disable
-> > function. Here it clears E0BRE / ExBRE bits for disabling BRBE, but the
-> > BRBE driver sets the PAUSED bit in BRBFCR_EL1 for disabling BRBE.
 > 
-> Indeed. This works, but the enabled check won't work. I'm going to add
-> clearing BRBCR to brbe_disable(), and this part will stay the same.
+>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> Hello,
+>>
+>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
+>>> This patchset adds the perf JSON files for the Cortex-A720 and Cortex-A520
+>>> processors. Some events have been tested on Raxda Orion 6 with Cix P1 SoC
+>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
+>>
+>> I'm curious how the name of PMUs look like.  It is cortex_a720 (or a520)?
+> 
+> The name of PMUs comes from Arm's documentation. I have included these
+> links in each patch.
+> 
+>> I remember there's a logic to check the length of hex digits at the end.
+>>
+> 
+> Could you provide more details about this?
+> 
+>> Ian, are you ok with this?
+>>
 
-Seems to me, a right logic would be:
+I think they wouldn't be merged because they're core PMUs, so should be 
+fine? Even though they would otherwise be merged because they're more 
+than 3 hex digits.
 
-- In BRBE driver, the brbe_disable() function should clear E0BRE and
-  ExBRE bits in BRBCR.  It can make sure the BRBE is totally disabled
-  when a perf session is terminated.
+>> Thanks,
+>> Namhyung
+>>
+>>>
+>>> Yangyu Chen (2):
+>>>   perf vendor events arm64: Add Cortex-A720 events/metrics
+>>>   perf vendor events arm64: Add Cortex-A520 events/metrics
+>>>
+>>> .../arch/arm64/arm/cortex-a520/bus.json       |  26 ++
+>>> .../arch/arm64/arm/cortex-a520/exception.json |  18 +
+>>> .../arm64/arm/cortex-a520/fp_operation.json   |  14 +
+>>> .../arch/arm64/arm/cortex-a520/general.json   |   6 +
+>>> .../arch/arm64/arm/cortex-a520/l1d_cache.json |  50 ++
+>>> .../arch/arm64/arm/cortex-a520/l1i_cache.json |  14 +
+>>> .../arch/arm64/arm/cortex-a520/l2_cache.json  |  46 ++
+>>> .../arch/arm64/arm/cortex-a520/l3_cache.json  |  21 +
+>>> .../arch/arm64/arm/cortex-a520/ll_cache.json  |  10 +
+>>> .../arch/arm64/arm/cortex-a520/memory.json    |  58 +++
+>>> .../arch/arm64/arm/cortex-a520/metrics.json   | 373 +++++++++++++++
+>>> .../arch/arm64/arm/cortex-a520/pmu.json       |   8 +
+>>> .../arch/arm64/arm/cortex-a520/retired.json   |  90 ++++
+>>> .../arm64/arm/cortex-a520/spec_operation.json |  70 +++
+>>> .../arch/arm64/arm/cortex-a520/stall.json     |  82 ++++
+>>> .../arch/arm64/arm/cortex-a520/sve.json       |  22 +
+>>> .../arch/arm64/arm/cortex-a520/tlb.json       |  78 ++++
+>>> .../arch/arm64/arm/cortex-a520/trace.json     |  32 ++
+>>> .../arch/arm64/arm/cortex-a720/bus.json       |  18 +
+>>> .../arch/arm64/arm/cortex-a720/exception.json |  62 +++
+>>> .../arm64/arm/cortex-a720/fp_operation.json   |  22 +
+>>> .../arch/arm64/arm/cortex-a720/general.json   |  10 +
+>>> .../arch/arm64/arm/cortex-a720/l1d_cache.json |  50 ++
+>>> .../arch/arm64/arm/cortex-a720/l1i_cache.json |  14 +
+>>> .../arch/arm64/arm/cortex-a720/l2_cache.json  |  62 +++
+>>> .../arch/arm64/arm/cortex-a720/l3_cache.json  |  22 +
+>>> .../arch/arm64/arm/cortex-a720/ll_cache.json  |  10 +
+>>> .../arch/arm64/arm/cortex-a720/memory.json    |  54 +++
+>>> .../arch/arm64/arm/cortex-a720/metrics.json   | 436 ++++++++++++++++++
+>>> .../arch/arm64/arm/cortex-a720/pmu.json       |   8 +
+>>> .../arch/arm64/arm/cortex-a720/retired.json   |  90 ++++
+>>> .../arch/arm64/arm/cortex-a720/spe.json       |  42 ++
+>>> .../arm64/arm/cortex-a720/spec_operation.json |  90 ++++
+>>> .../arch/arm64/arm/cortex-a720/stall.json     |  82 ++++
+>>> .../arch/arm64/arm/cortex-a720/sve.json       |  50 ++
+>>> .../arch/arm64/arm/cortex-a720/tlb.json       |  74 +++
+>>> .../arch/arm64/arm/cortex-a720/trace.json     |  32 ++
+>>> .../arch/arm64/common-and-microarch.json      |  15 +
+>>> tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
+>>> 39 files changed, 2263 insertions(+)
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
+>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
+>>>
+>>> -- 
+>>> 2.47.2
+>>>
+> 
 
-- For a kvm context switching, it is good to use PAUSED bit.  If a host
-  is branch record enabled, this is a light way for temporarily pause
-  branch record for the switched VM.
-
-Thanks,
-Leo
