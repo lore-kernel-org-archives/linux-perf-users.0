@@ -1,104 +1,110 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F0A228C86;
-	Fri, 14 Feb 2025 09:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17B8D24A049;
+	Fri, 14 Feb 2025 09:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739524468; cv=none; b=BtRzamg+DZkiYjYremXyq/4hv2C54tTdze8Q9baLfMbqZ5r1W6q9PpTDF9KK14UoMwp+zwV86vDiPHJ72EKV6hURqjvcvzTpi6sj1I8XJXKL5tg7FHm6cHyIo0NUPqXKobD1Neej/kFZ0PfesZgYkxmIVyOi2sdfcZxvHjml0xg=
+	t=1739526926; cv=none; b=DCN7i+UMPt68rmwq/SVWs44jY40nLq+B/kZIcYFJQ1lNbcYbCfnhd5wBMeZYLVlURlt0yRUWaLtUCdosKyQzyDJlz9/DCiHLs+wWDY+t302SQpuckKiMavhn63eWQfyAiYOltySagRYdIGwABJxuBPgi9WGDYT40w0dh4aQiW30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739524468; c=relaxed/simple;
-	bh=ePowDJlvLeT4lEJdpsBFzzU2Vfkn5XlCSc5paUDPKy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j5D/8OUCFybBMDqZkgsKr48SD8z1VkKNPrqIDWf35GrAoHA5wh0YlG8JO4ebmNxwswp1nkO5nWZZ8D7MTNQOyeIDciZmeLY+V8S7mIiVTu+ars0WBBGwd4bFTfk1eH43hN2zS6Gyu+jGtBH8N7f7/VpLXqTkO2kJ7+zPKGwCh7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U30m736F; arc=none smtp.client-ip=209.85.218.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U30m736F"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-ab7e9254bb6so277672966b.1;
-        Fri, 14 Feb 2025 01:14:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739524465; x=1740129265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ePowDJlvLeT4lEJdpsBFzzU2Vfkn5XlCSc5paUDPKy0=;
-        b=U30m736FmgEiAghDueP3vQjjcVJ3MGn1I0e5NUwC67O1nrYQUziQBHQKyhnoP7YU1C
-         03fp5HeWz0fj5X7iy4KZT+tmF/vPogjy3JlAcKgR13uDyGyuNgu5DN856Mp99y2OZndf
-         N33tO1Y/SaNRBXvn4W8O+BY68zqMCrKD+QvuXsq9HBqFRBBVl0Ggowj2rqVxW4J4mHZF
-         Aw6dfemQ+M/lxKO56kpwCuWLBLwn1esiCJMET/XMora1pv9YMPqdDKH8w+WUcwnKBe19
-         bE+RUVaZOz88VB0wQBAf/9WchH1WhAMVEWISiodXX2I7czvFzT5Mm+SMYR0Ostxc6002
-         iGLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739524465; x=1740129265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ePowDJlvLeT4lEJdpsBFzzU2Vfkn5XlCSc5paUDPKy0=;
-        b=elZ1tJOLKgAQbAEi9xndNN0Z6CBHTC04ErqwLt+4zAqFsmn22jtPJJfKkmwf5LPx9E
-         JWnQW9ZNdXSH5ZTaTFK+j9ifxg0veRUTekp27m1gVbUGzGgB8UAZrgKC8DkdeJTTtVY/
-         xE330Xk9wqzPpj4zHUWuGfw5XNcgK4wDqlZsSTvRUymPZqPeJbJFqEfH7fqXoMGsKgnh
-         FQE3G433omJIFEUP3vCl8UKPnlUSIZ7NIpMzDoU491Kr38ioEH9BQdH9lj04umcgrfyb
-         M8YpMf3FBTemEk+DmeL/N0BM7w+XpPfWLaYee/uyKFfpNQtwQDBk/D6BrogmQsyOVwKq
-         PjmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEkhKAsEH7csiCNImRvsr6pkTlyhvq7bjUQHWLNntSaK6un2JdtyXSDuheUsEDlXxy8qg=@vger.kernel.org, AJvYcCXPX3DAs0QrMLxGu9YgPrmFEQ0lSf5beEBLjMLyzeIew83TqYduvvUibjtOe1b0PRVjGRcNN//nCPsZupDg59nw+g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyODLHzDMv3SM9nj7gYUXeigSLKcwh/XbF8dBBKxa/+fsDDV8LS
-	fm7gQ9H6G96uNvMl98Kpv3g/t7zXMadLPPbK/3vo4HXvl8Y+QgxzyVEdOx/AiAxJqzz1crCpAl6
-	oADhwfcpbxvjnNzh0cKwyfsz12IY=
-X-Gm-Gg: ASbGncupVuw3oNiC+BO9+OShI1Q+WNQBKzLWcfJV34As1TvspJaTrrP4JOvdzednOFs
-	qhvdxB+b/P/VpuF2aKnbkpYCH6ONko8/HI5T9SbvMOp8Lc2/Ba5RYOnGrxcXxhTAHqcEgBRV3kQ
-	==
-X-Google-Smtp-Source: AGHT+IF9bs69MkfVdRsypWTr81KsiRClCr71Zt6Fua2ZmiXd96hiPhPmMxXIaeEMHZoFAGaY0pFLKbH5Jz+U5E+2dqY=
-X-Received: by 2002:a17:907:d26:b0:ab7:da56:af95 with SMTP id
- a640c23a62f3a-ab7f336e7b4mr949311166b.2.1739524465219; Fri, 14 Feb 2025
- 01:14:25 -0800 (PST)
+	s=arc-20240116; t=1739526926; c=relaxed/simple;
+	bh=OLmOhFPQmOFsK0TNWHCEK+PAnV5VzbU646k1Y+lVG6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SY8s7yIgr3rosWdYoWLk+5aE+FjTaFpGjs0w1kqeukgKlBum3Y5S6YFb6WwRFYazwrS2gAP9Zsst1W6VUW1BEjJQ1/43RYY/BWpvIQjIWYqEWoco5kvRThs9xScVmMsQKAw/H//zqI4prwqAL8TWzFglREys/QISklJ0pFvee9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B95C113E;
+	Fri, 14 Feb 2025 01:55:38 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43AEF3F6A8;
+	Fri, 14 Feb 2025 01:55:17 -0800 (PST)
+Date: Fri, 14 Feb 2025 09:55:12 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v19 10/11] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Message-ID: <20250214095512.GI235556@e132581.arm.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org>
+ <20250213170316.GG235556@e132581.arm.com>
+ <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210175913.2893549-1-jolsa@kernel.org> <CAADnVQJD1UeMZrRrrQEZ-_twryA61Au5oxacvamL+HwT+v9=oQ@mail.gmail.com>
- <Z68IMCpSrfDuO7iX@krava>
-In-Reply-To: <Z68IMCpSrfDuO7iX@krava>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Fri, 14 Feb 2025 10:13:48 +0100
-X-Gm-Features: AWEUYZlGHkW_VQOual8Mg_S73BOVRsHZfsv6ddjf_KzikMO-aCkqLBaK-c59TOw
-Message-ID: <CAP01T76sd0CE_69oiHdfKbOt2zvwBN9acDu+VjZQfpGxYxyb5Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Add tracepoints with null-able arguments
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com>
 
-On Fri, 14 Feb 2025 at 10:09, Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Thu, Feb 13, 2025 at 05:04:09PM -0800, Alexei Starovoitov wrote:
-> > On Mon, Feb 10, 2025 at 9:59=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wr=
-ote:
-> > >
-> > > Some of the tracepoints slipped when we did the first scan, adding th=
-em now.
-> > >
-> > > Fixes: 838a10bd2ebf ("bpf: Augment raw_tp arguments with PTR_MAYBE_NU=
-LL")
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On Thu, Feb 13, 2025 at 05:16:45PM -0600, Rob Herring wrote:
+
+[...]
+
+> > > +static void __debug_save_brbe(u64 *brbcr_el1)
+> > > +{
+> > > +       *brbcr_el1 = 0;
+> > > +
+> > > +       /* Check if the BRBE is enabled */
+> > > +       if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> > > +               return;
+> > > +
+> > > +       /*
+> > > +        * Prohibit branch record generation while we are in guest.
+> > > +        * Since access to BRBCR_EL1 is trapped, the guest can't
+> > > +        * modify the filtering set by the host.
+> > > +        */
+> > > +       *brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
+> > > +       write_sysreg_el1(0, SYS_BRBCR);
+> > > +}
 > >
-> > Applied, but at this point we better switch to Ed's llvm-based tool
-> > to generate this automatically.
->
-> nice, I'm not aware of this tool, where can I find it?
+> > Should flush branch record and use isb() before exit host kernel?
+> 
+> I don't think so. The isb()'s in the other cases appear to be related
+> to ordering WRT memory buffers. BRBE is just registers. I would assume
+> that there's some barrier before we switch to the guest.
 
-A prototype is available at this link:
-https://github.com/eddyz87/llvm-project/tree/nullness-for-tracepoint-params
+Given BRBCR is a system register, my understanding is the followd ISB
+can ensure the writing BRBCR has finished and take effect.  As a result,
+it is promised that the branch record has been stopped.
 
->
-> thanks,
-> jirka
+However, with isb() it is not necessarily to say the branch records have
+been flushed to the buffer.  The purpose at here is just to stop record.
+The BRBE driver will take care the flush issue when it reads records.
+
+I agreed that it is likely barriers in the followed switch flow can assure
+the writing BRBCR to take effect.  It might be good to add a comment for
+easier maintenance.
+
+> > I see inconsistence between the function above and BRBE's disable
+> > function. Here it clears E0BRE / ExBRE bits for disabling BRBE, but the
+> > BRBE driver sets the PAUSED bit in BRBFCR_EL1 for disabling BRBE.
+> 
+> Indeed. This works, but the enabled check won't work. I'm going to add
+> clearing BRBCR to brbe_disable(), and this part will stay the same.
+
+Seems to me, a right logic would be:
+
+- In BRBE driver, the brbe_disable() function should clear E0BRE and
+  ExBRE bits in BRBCR.  It can make sure the BRBE is totally disabled
+  when a perf session is terminated.
+
+- For a kvm context switching, it is good to use PAUSED bit.  If a host
+  is branch record enabled, this is a light way for temporarily pause
+  branch record for the switched VM.
+
+Thanks,
+Leo
