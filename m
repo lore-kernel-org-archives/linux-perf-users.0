@@ -1,107 +1,97 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0043F1B532F;
-	Sat, 15 Feb 2025 14:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283D914F98;
+	Sat, 15 Feb 2025 14:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739629250; cv=none; b=F3sQdMrHD8RCFXz/XgeCjKxJ9Hl7Si0wS42AC8SELCiQQU7fI8+UXgdsruxa3yS9rKwvvcEO0r5nNsy5/NqwaXsUwHyaYxJLVNrGd85KQcjDQxlnCRu+5RU8k+EzbTw3pz1qRfhMHEFhitXl/+H3oa5dA0MY5V0KRyoJr/bvcdY=
+	t=1739629667; cv=none; b=K0xhrlZLjCg2vGcrauc0Timnu2Jlz6ViODg43Qt0wUrcWFdUoUx66WqgUcTFrceE0QgEs0zwVQyDrY3xnzcGVFS/uMYIEq/N/db5Ius7WPGUa6V4qnCmP0fvKora5/4hZteM0PpemJhHEZS5/gke6oGol0b+vBWb7e2mbQaFUUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739629250; c=relaxed/simple;
-	bh=9uSRy5YwtCFQyHZsA76qYd3sx/h0OTyVxLvPXfU/XOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OftCMaZae3t6/JlwyTcwjlUOPkHyb45VcFmpk53B6SFJinr2VU8OvzxOUFHsXoCwKlnVjHI9jXu3oLfpzlyrU8bNjuCuEwry8+8wrMSiWcbxSZVnPnwDl0FGFxSSQCdMUqMx/c+xlnqzOsWQQjq2LgYLHi1Id1YXlL6q+h1BmT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HjhlUc1D; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1739629667; c=relaxed/simple;
+	bh=EDhHIvCfRXx2B2AUFH0IhXnEtgvUgeS2M27ttKC8lTk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ADWiXxvXAGxBciAxhDuATXoEpi8yiu5Ie1ZxFMLvEpOvnJtwQPHNZ5o2Y+7mu5tgiY1XnTqrLqP2ju5WOtYtV3Drq+mR/81c39Bqxcl/e+Em92JuOet1434sxuYFu9+Pd/s2SbDbxalsAj0QpI9zXMxVTZXLy9KBkWZLgz8cFDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FEK3+EIe; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HjhlUc1D"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6C42840E01A1;
-	Sat, 15 Feb 2025 14:20:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fLWYrGP1x5ap; Sat, 15 Feb 2025 14:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739629241; bh=FvtP+96Hz/CW7VSStEV/oT/LfP9o+DeYiDp94whDh+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HjhlUc1D2YERb3dMUSBRQO819si1b5MIvcs4vJ2Tl5qDX+8KsmehZDaz2DLl/AO0W
-	 bPBatnNAh16BZgOvCLe2SozMkoaX6xc4Sese+9/rRqm6ADg9YE1HEpOkZ5QJDUrNdr
-	 OWsHAuR8koEqE12mTTIEuz+hO95eRlyo/vcVVvgvzut5k4C1yeUSFZ/68lCwh0EpfO
-	 hpyGYIHdmzLvFJCaGUUXphDPJiCzBW0nqY87jFQAFSn2KtS4c+2gjtUdu/DfszFZU9
-	 rt8dSxZXaI0IYIJEDcmmcn1JBhdazos4UafnVml1CKsTyeoYKDW9AIoNgb7ICRxFIa
-	 QEj/j3rkz4G5bzW1D61602jqbbB1PQHh6jiM1sP5YoAAvauTInF0dup7Gaf01peqQE
-	 sTBjs+rpzgxlDM3JPm1Gw/QhvEUHNwB4tX2LsCfR6B2TOVWC+aWjlHrZcGXi/6/7+G
-	 2SUEprPliy8n/E47nGrjAC7XmBoAbadqfcGXR/fKcieikAea9mhPx4aqXm1Bkp1iff
-	 Uj+9dPHeuIZZtpZtZyUqjUkFI7jYDisblFnXgB/qjfkmlfK+uui37tfKm2Z9i1+qh6
-	 mhXMtedZmzxGv4m3P4xWEanTFVVNIioiikReWPOPUxqtN8+f6z/Fd4seCHF0QJbVVW
-	 RP7RFzgIx/cQtHmIQdWnN5EI=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 179E140E016A;
-	Sat, 15 Feb 2025 14:20:24 +0000 (UTC)
-Date: Sat, 15 Feb 2025 15:20:17 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: Re: [PATCH v5 1/5] x86/cpufeatures: Add {required,disabled} feature
- configs
-Message-ID: <20250215142017.GCZ7CioRHgpm6a-eIZ@fat_crate.local>
-References: <20250106070727.3211006-1-xin@zytor.com>
- <20250106070727.3211006-2-xin@zytor.com>
- <20250214215823.GEZ6-8f5wt--IWggtl@fat_crate.local>
- <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FEK3+EIe"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51FER5xd148073
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 15 Feb 2025 06:27:05 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51FER5xd148073
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025011701; t=1739629626;
+	bh=qxn+30dyi7ZczjFrixbDNX5zYUxOGDIJz5uTjCv8Vhc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=FEK3+EIeIVuZSk9G44lSifvEYkMmw7VSqyMrmshkTRqWPSHL8rfoWmmHkS0Uzmih7
+	 mQINh3LK7f9zENX78mHRvIxb9QettIBMRUt1/VUBEh21S4jqkKv6AayNTr6znMVm88
+	 HmHki8I91g3qrtBQJ01rYiQudRHY0uewCrK4JILtLpgUTZY6R39WKjtqCcWnBKFOYJ
+	 1MJqhtszIGMDi2usrg2pVTQkfJ8rEttqzKqQPDq4WyQvaDIl9DDBujImHtDrjxGoSb
+	 YIxw7U/4MN3ArOapSf1W3z2merHw77HwcZcynunLwWnNNHawJQwm7Ws22H/gt5C990
+	 jDExTTZRs0rvw==
+Date: Sat, 15 Feb 2025 06:27:04 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org, will@kernel.org,
+        peterz@infradead.org, yury.norov@gmail.com, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+        andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_1/5=5D_x86/cpufeatures=3A_A?=
+ =?US-ASCII?Q?dd_=7Brequired=2Cdisabled=7D_feature_configs?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250215142017.GCZ7CioRHgpm6a-eIZ@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com> <20250106070727.3211006-2-xin@zytor.com> <20250214215823.GEZ6-8f5wt--IWggtl@fat_crate.local> <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com> <20250215142017.GCZ7CioRHgpm6a-eIZ@fat_crate.local>
+Message-ID: <3B96E82B-7AA8-40FF-9401-829D408AA790@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <469D0BEE-76D6-4417-B5B0-0054D3F96784@zytor.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 15, 2025 at 02:12:35AM -0800, H. Peter Anvin wrote:
-> CX8 is the name of the CPUID flag, for better or worse. 
+On February 15, 2025 6:20:17 AM PST, Borislav Petkov <bp@alien8=2Ede> wrote=
+:
+>On Sat, Feb 15, 2025 at 02:12:35AM -0800, H=2E Peter Anvin wrote:
+>> CX8 is the name of the CPUID flag, for better or worse=2E=20
+>
+>Right, so a separate patch:
+>
+>git grep X86_CMPXCHG64
+>arch/x86/Kconfig:135:   select ARCH_USE_CMPXCHG_LOCKREF         if X86_CM=
+PXCHG64
+>arch/x86/Kconfig=2Ecpu:369:config X86_CMPXCHG64
+>arch/x86/Kconfig=2Ecpu:383:       default "5" if X86_32 && X86_CMPXCHG64
+>arch/x86/include/asm/asm-prototypes=2Eh:19:#ifndef CONFIG_X86_CMPXCHG64
+>arch/x86/include/asm/atomic64_32=2Eh:51:#ifdef CONFIG_X86_CMPXCHG64
+>arch/x86/include/asm/cmpxchg_32=2Eh:72:#ifdef CONFIG_X86_CMPXCHG64
+>arch/x86/include/asm/required-features=2Eh:26:#ifdef CONFIG_X86_CMPXCHG64
+>arch/x86/lib/Makefile:59:ifneq ($(CONFIG_X86_CMPXCHG64),y)
+>arch/x86/lib/cmpxchg8b_emu=2ES:10:#ifndef CONFIG_X86_CMPXCHG64
+>lib/atomic64_test=2Ec:257:#elif defined(CONFIG_X86_CMPXCHG64)
+>tools/arch/x86/include/asm/required-features=2Eh:26:#ifdef CONFIG_X86_CMP=
+XCHG64
+>
+>should be easy=2E
+>
+>> It seems to me to be a bit silly to have dummy symbols that mean litera=
+lly
+>> the same thing, but =2E=2E=2E
+>
+>Why if they're confined and encapsulated in a single file:
+>arch/x86/Kconfig=2Ecpufeatures ?
+>
+>Rest of the kernel doesn't need to know whether a feature is required or =
+not,
+>right?
+>
 
-Right, so a separate patch:
-
-git grep X86_CMPXCHG64
-arch/x86/Kconfig:135:   select ARCH_USE_CMPXCHG_LOCKREF         if X86_CMPXCHG64
-arch/x86/Kconfig.cpu:369:config X86_CMPXCHG64
-arch/x86/Kconfig.cpu:383:       default "5" if X86_32 && X86_CMPXCHG64
-arch/x86/include/asm/asm-prototypes.h:19:#ifndef CONFIG_X86_CMPXCHG64
-arch/x86/include/asm/atomic64_32.h:51:#ifdef CONFIG_X86_CMPXCHG64
-arch/x86/include/asm/cmpxchg_32.h:72:#ifdef CONFIG_X86_CMPXCHG64
-arch/x86/include/asm/required-features.h:26:#ifdef CONFIG_X86_CMPXCHG64
-arch/x86/lib/Makefile:59:ifneq ($(CONFIG_X86_CMPXCHG64),y)
-arch/x86/lib/cmpxchg8b_emu.S:10:#ifndef CONFIG_X86_CMPXCHG64
-lib/atomic64_test.c:257:#elif defined(CONFIG_X86_CMPXCHG64)
-tools/arch/x86/include/asm/required-features.h:26:#ifdef CONFIG_X86_CMPXCHG64
-
-should be easy.
-
-> It seems to me to be a bit silly to have dummy symbols that mean literally
-> the same thing, but ...
-
-Why if they're confined and encapsulated in a single file:
-arch/x86/Kconfig.cpufeatures ?
-
-Rest of the kernel doesn't need to know whether a feature is required or not,
-right?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+The point was that that is the *only* use of this particular flag, I belie=
+ve=2E
