@@ -1,195 +1,275 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D75215F61
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Feb 2025 09:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F2B218842
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Feb 2025 12:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784770; cv=none; b=DyxFII2zXGvYFtA5Besai91bVUwdi6xdeLVApa6KEvyt3/0uml3Ioaz/UP/5Yi5tHWPsf5NkFQ97WjV5wudOaeJ19l4j9fB7UudJMrEsUuUiUP1FqOead8Rc2QCo3ZND9a6Sy4a2QeANn4eT7O+avFGhXK29FA7wPss0fUHtn1Y=
+	t=1739795168; cv=none; b=LMah55LnfKunQrbpLMNGtu5gdhihwivNmJmdcJcs38AjcW1TmEh587idRTdmd7Zkh1dc0PtoZgrjlh7O9bDiSnhY0035/BEJGdE4e2OqW0bR/uVcRmx1pp7Ub2AtvdEo4cixbfJT2vTouZT0U3g4z+jbx7Oifa8E9liLyQDVLt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739784770; c=relaxed/simple;
-	bh=C18oNuSiRM+TIpqOyHblP4q4/wiZKl1/Sm7Ge/iJ9oU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4n8Q3fR6vt6oKdfHUsmMic9MEVqsvjkh12Y9cgW8p7oebxlPSI0ny1HONbPEs/Ovf7C6BST8mdgdftUJtCPUmAETad8pulRJikt1FtjXnfRJaS+evLJJhsQ9CzDD6gzhduoaTsCnKkQ6A/5juZU6Xxn1SKP5l3VrDBOEMrQSGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TiRRxlR/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739795168; c=relaxed/simple;
+	bh=vwvH4KtIOYM/cLE8/DJjpq8OSxyLO+ugq1qoW/WeVsU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=FYYDFMGck+Y7IktHSHWuWW9Nv/0QnBJVK/rPhkja3gnZ8/1J3Iz8pOZRhSH4nryo88FCqwyNZOHbNl3D4aO+gEAKeNzWc+NaRgo+dIZ/TQOVgx05EaS6lYxmcNDVsHvIDclyrHFqlAyNoCF6c7FZIAZSZq0HpNod7801zb3NfUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i4uV4dI3; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TiRRxlR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739784767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eeb7nv1cNhGbfxr+l0PpfHS4x7aSgl8Mgbc1lpE/bK0=;
-	b=TiRRxlR/6a/m9YJepzkTVOSgQ0gjqB3NkDKx+nKAnyGlubIM8RCBSNc8uMJC0TgoM+Bgjz
-	gPe8mBNhLX50JhHA2mq8ClIlIXV8jhzhlu4LrU0IBsyg1fePkCDw1cjfcvR6pKS3HDFCgz
-	/Ey8UB7oIQS7gI09r74LXGVm3niTzrw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-WxqKaT5pOay6LPzOkmEIhg-1; Mon, 17 Feb 2025 04:32:46 -0500
-X-MC-Unique: WxqKaT5pOay6LPzOkmEIhg-1
-X-Mimecast-MFC-AGG-ID: WxqKaT5pOay6LPzOkmEIhg_1739784765
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ab77e03f2c0so453581066b.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Feb 2025 01:32:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739784765; x=1740389565;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Eeb7nv1cNhGbfxr+l0PpfHS4x7aSgl8Mgbc1lpE/bK0=;
-        b=HjqQykua/KnM/3XTS0jQcZowgyFNKm1uWtqXzjGrQYSLwTkY6Sx/ImZq9biGYpmM/V
-         vBnhv35ed53LBoa8JxF+NRu6okNbZ1WRuNYh+aQG3jURQ2kTpLtVrSZqSEUPAu9Y9Gr3
-         +ucTdcsCMhQ5N/yeO1pEwUmv6cWVG4rqLSAbEWqq8vPKW4TQnSp3Cp7dnl1u9z2k6CS6
-         Dmsrq4tNs67Vmwm3mwXL05lxXM8hLgyJBb6ROBCIsdh2tPZ3jXRC2NLOy9ZzBySlxZKY
-         47MD+yxCJo/9FbjuW8n/bAY0iatV/umKvVCCSssltWtWVB74KgVyS9G2SDXXJRIu/5g5
-         /JmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdpdWSouzFiVJE75891wMht9ldEfy1Egi2kShz7fLl7iideSFXMcunVk5RBLhaerzgwkf7JbtPYX+VtwbUmdeJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVy7TULk16UFa3NrwK0WtlkwUOzMMfPQdHGYJM8tOUNUHfYeui
-	DJEQIb4AvncFxaSnIPhi/FNaRZ3KAmxsyAYOuwIYbUmojM6EeInACHBN8JFpJtxqj7t1BeEfZXz
-	KKZWFTlST11s3tFxhOpzlYAApXX9GR03KG2wLtBb7Hfmnv8TsPxu4BdbEx5fJmV2oBX4=
-X-Gm-Gg: ASbGncvZsy4CBBqGSM7cvtyAJZ8ObAYTj40GOAfZzuItwWMHoZQFme7ufKMRLi8Et1W
-	B/lq+4Jy1HOQIcPBoFuTG5HqJDnq7FcfPki/h7ywA6RKhVXgR+/YD9yL5swXmpwAOYYEezJ6XIf
-	UCtncPk5NCsYwj4XzX+up5vcQtD2+9/476/5jJxoj+l8i9uxfFf76C7n1YhyFbwnUhmu/ez/Rto
-	FMkb+8wq6eaYgF1IyS67T8TgLqTNJRg0w5b6OTeJkd1pMXZzJuRn54qPNyT9KIPn5KhIkXKybNM
-	MWLivunulu1UrBxGTJo66e5dQ+hKlxBKkercmwjYsjqI2HYqJ0JoHN8lWbOjwNGCbzD9UBiEBwL
-	Ai6a2HBxDqWLbtumrtxhIl9iZ5IGpbg==
-X-Received: by 2002:a17:906:31d6:b0:ab7:e943:4c1 with SMTP id a640c23a62f3a-abb7091ab36mr780765366b.11.1739784763494;
-        Mon, 17 Feb 2025 01:32:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH3Wgg/IfmYVp/LsQNMw7j+PPvq4aGzaMQEi/BT3iuWyQBhHI1flKgzEnpyKaqJ/zoXhyrMhQ==
-X-Received: by 2002:a17:906:31d6:b0:ab7:e943:4c1 with SMTP id a640c23a62f3a-abb7091ab36mr780753066b.11.1739784761522;
-        Mon, 17 Feb 2025 01:32:41 -0800 (PST)
-Received: from ?IPV6:2003:cb:c739:900:900f:3c9e:2f7b:5d0a? (p200300cbc7390900900f3c9e2f7b5d0a.dip0.t-ipconnect.de. [2003:cb:c739:900:900f:3c9e:2f7b:5d0a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53376bb3sm864425066b.109.2025.02.17.01.32.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 01:32:40 -0800 (PST)
-Message-ID: <76a9a0dc-4d2f-430c-a2be-a2371f3108d7@redhat.com>
-Date: Mon, 17 Feb 2025 10:32:38 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i4uV4dI3"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H7WkFp025556;
+	Mon, 17 Feb 2025 12:25:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=4VKw9C
+	3nSKpJ7C5bxloJo4w3wslMmJAucN4BmnqbP54=; b=i4uV4dI3s8Fmjw/CzlQYVo
+	TjngvZBpbpmCnkcS4IrF5tajkdipB66h6zJSOL8WKW12G4Os7rI6ZAoWvu8yDir3
+	q3xhbrK/zqIy3UQ5wFaA9jTPw7p1Z0a0nP1HylMkHQLD6X/l/nai4K1bB3CZEbeA
+	X52hcXDkeTZrm5HGh07nixN6DmqMRGId1n+LWCqbvdlgfz+k2OYN1+ZtSvd3BA43
+	LiZQDLpbeqUsU0/6fZ2Xg3ttUieXKrRHtWnwdLLqJHZzmej/EtzRSH+YDnBYOJ9t
+	VtCO9cyESyRu0DhEqVNt4d0B/84WYeUQi25NuIvJHcQv0e5ZOf0Smumyf6cCqlmw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44v0tp1c7e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 12:25:58 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51HCFxUf011215;
+	Mon, 17 Feb 2025 12:25:57 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44v0tp1c7d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 12:25:57 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51H8U3WO003891;
+	Mon, 17 Feb 2025 12:25:57 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u68np148-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 12:25:56 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51HCPrgF53674490
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Feb 2025 12:25:53 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4820320043;
+	Mon, 17 Feb 2025 12:25:53 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 556DF20040;
+	Mon, 17 Feb 2025 12:25:47 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.241.34])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 17 Feb 2025 12:25:46 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/17] mm/rmap: convert make_device_exclusive_range()
- to make_device_exclusive()
-To: Alistair Popple <apopple@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, nouveau@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- damon@lists.linux.dev, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Simona Vetter <simona.vetter@ffwll.ch>
-References: <20250210193801.781278-1-david@redhat.com>
- <20250210193801.781278-4-david@redhat.com>
- <20250210210001.5dc68b38eb1bfa44d0fd78f6@linux-foundation.org>
- <48fd75b9-696e-402c-95bd-55f2f0e24dfc@redhat.com>
- <vclmxoorivzhamd4smaaeyamdeangj3aqlbl27muzxuljasdrg@t4jj77rmiozu>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <vclmxoorivzhamd4smaaeyamdeangj3aqlbl27muzxuljasdrg@t4jj77rmiozu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH] tools/perf: Add check to tool pmu tests to ensure if the
+ event is valid
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <Z61oWlOoyF0BKwYV@google.com>
+Date: Mon, 17 Feb 2025 17:55:33 +0530
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BCC6464B-C112-4C00-B58D-62F4B1EB0F46@linux.ibm.com>
+References: <20250212185438.15251-1-atrajeev@linux.vnet.ibm.com>
+ <Z61oWlOoyF0BKwYV@google.com>
+To: Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>,
+        James Clark <james.clark@linaro.org>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ms6mcnvRpME2DgEE77fwcaGEbwsiqXxN
+X-Proofpoint-ORIG-GUID: 0hoxVe_OD-FkEb30E07nK7le8zWycRKe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ phishscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502170105
 
-On 17.02.25 01:01, Alistair Popple wrote:
-> On Tue, Feb 11, 2025 at 09:33:54AM +0100, David Hildenbrand wrote:
->> On 11.02.25 06:00, Andrew Morton wrote:
->>> On Mon, 10 Feb 2025 20:37:45 +0100 David Hildenbrand <david@redhat.com> wrote:
->>>
->>>> The single "real" user in the tree of make_device_exclusive_range() always
->>>> requests making only a single address exclusive. The current implementation
->>>> is hard to fix for properly supporting anonymous THP / large folios and
->>>> for avoiding messing with rmap walks in weird ways.
->>>>
->>>> So let's always process a single address/page and return folio + page to
->>>> minimize page -> folio lookups. This is a preparation for further
->>>> changes.
->>>>
->>>> Reject any non-anonymous or hugetlb folios early, directly after GUP.
->>>>
->>>> While at it, extend the documentation of make_device_exclusive() to
->>>> clarify some things.
->>>
->>> x86_64 allmodconfig:
->>>
->>> drivers/gpu/drm/nouveau/nouveau_svm.c: In function 'nouveau_atomic_range_fault':
->>> drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: error: 'folio' undeclared (first use in this function)
->>>     612 |                 page = make_device_exclusive(mm, start, drm->dev, &folio);
->>>         |                                                                    ^~~~~
->>> drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: note: each undeclared identifier is reported only once for each function it appears in
->>
->> Ah! Because I was carrying on the same branch SVM fixes [1] that are
->> getting surprisingly little attention so far.
-> 
-> I believe this has been picked up in drm-misc-fixes now:
-> 
-> https://lore.kernel.org/dri-devel/Z69eloo_7LM6NneO@cassiopeiae/
 
-Yes. Both trees should merge without conflicts. However, we can later 
-get rid of the now-superfluous page_folio() that was required in the drm 
-fix.
 
--- 
-Cheers,
+> On 13 Feb 2025, at 9:04=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>=20
+> On Thu, Feb 13, 2025 at 12:24:38AM +0530, Athira Rajeev wrote:
+>> "Tool PMU" tests fails on powerpc as below:
+>>=20
+>>   12.1: Parsing without PMU name:
+>>   --- start ---
+>>   test child forked, pid 48492
+>>   Using CPUID 0x00800200
+>>   Attempt to add: tool/duration_time/
+>>   ..after resolving event: tool/config=3D0x1/
+>>   duration_time -> tool/duration_time/
+>>   Attempt to add: tool/user_time/
+>>   ..after resolving event: tool/config=3D0x2/
+>>   user_time -> tool/user_time/
+>>   Attempt to add: tool/system_time/
+>>   ..after resolving event: tool/config=3D0x3/
+>>   system_time -> tool/system_time/
+>>   Attempt to add: tool/has_pmem/
+>>   ..after resolving event: tool/config=3D0x4/
+>>   has_pmem -> tool/has_pmem/
+>>   Attempt to add: tool/num_cores/
+>>   ..after resolving event: tool/config=3D0x5/
+>>   num_cores -> tool/num_cores/
+>>   Attempt to add: tool/num_cpus/
+>>   ..after resolving event: tool/config=3D0x6/
+>>   num_cpus -> tool/num_cpus/
+>>   Attempt to add: tool/num_cpus_online/
+>>   ..after resolving event: tool/config=3D0x7/
+>>   num_cpus_online -> tool/num_cpus_online/
+>>   Attempt to add: tool/num_dies/
+>>   ..after resolving event: tool/config=3D0x8/
+>>   num_dies -> tool/num_dies/
+>>   Attempt to add: tool/num_packages/
+>>   ..after resolving event: tool/config=3D0x9/
+>>   num_packages -> tool/num_packages/
+>>=20
+>>   ---- unexpected signal (11) ----
+>>   12.1: Parsing without PMU name                                      =
+: FAILED!
+>>=20
+>> Same fail is observed for "Parsing with PMU name" as well.
+>>=20
+>> The testcase loops through events in tool_pmu__for_each_event()
+>> and access event name using "tool_pmu__event_to_str()".
+>> Here tool_pmu__event_to_str returns null for "slots" event
+>> and "system_tsc_freq" event. These two events are only applicable
+>> for arm64 and x86 respectively. So the function =
+tool_pmu__event_to_str()
+>> skips for unsupported events and returns null. This null value is
+>> causing testcase fail.
+>>=20
+>> To address this in "Tool PMU" testcase, add a helper function
+>> tool_pmu__all_event_to_str() which returns the name for all
+>> events mapping to the tool_pmu_event index including the
+>> skipped ones. So that even if its a skipped event, the
+>> helper function helps to resolve the tool_pmu_event index to
+>> its mapping event name. Update the testcase to check for null event
+>> names before proceeding the test.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> Please take a look at:
+> =
+https://lore.kernel.org/r/20250212163859.1489916-1-james.clark@linaro.org
+>=20
+> Thanks,
+> Namhyung
 
-David / dhildenb
+Hi,
+
+Sure thanks for the fix James
+
+Thomas,
+Thanks for testing this patch.  But James already fixed this with a =
+different patch and it is part of perf-tools-next
+=
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/c=
+ommit/?h=3Dperf-tools-next&id=3D615ec00b06f78912c370b372426190768402a5b9
+
+Please test with latest perf-tools-next=20
+
+Thanks
+Athira
+
+>=20
+>> ---
+>> tools/perf/tests/tool_pmu.c | 12 ++++++++++++
+>> tools/perf/util/tool_pmu.c  | 17 +++++++++++++++++
+>> tools/perf/util/tool_pmu.h  |  1 +
+>> 3 files changed, 30 insertions(+)
+>>=20
+>> diff --git a/tools/perf/tests/tool_pmu.c =
+b/tools/perf/tests/tool_pmu.c
+>> index 187942b749b7..e468e5fb3c73 100644
+>> --- a/tools/perf/tests/tool_pmu.c
+>> +++ b/tools/perf/tests/tool_pmu.c
+>> @@ -19,6 +19,18 @@ static int do_test(enum tool_pmu_event ev, bool =
+with_pmu)
+>> return TEST_FAIL;
+>> }
+>>=20
+>> + /*
+>> +  * if tool_pmu__event_to_str returns NULL, Check if the event is
+>> +  * valid for the platform.
+>> +  * Example:
+>> +  * slots event is only on arm64.
+>> +  * system_tsc_freq event is only on x86.
+>> +  */
+>> + if (!tool_pmu__event_to_str(ev) && =
+tool_pmu__skip_event(tool_pmu__all_event_to_str(ev))) {
+>> + ret =3D TEST_OK;
+>> + goto out;
+>> + }
+>> +
+>> if (with_pmu)
+>> snprintf(str, sizeof(str), "tool/%s/", tool_pmu__event_to_str(ev));
+>> else
+>> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+>> index 3a68debe7143..572422797f6e 100644
+>> --- a/tools/perf/util/tool_pmu.c
+>> +++ b/tools/perf/util/tool_pmu.c
+>> @@ -60,6 +60,15 @@ int tool_pmu__num_skip_events(void)
+>> return num;
+>> }
+>>=20
+>> +/*
+>> + * tool_pmu__event_to_str returns only supported event names.
+>> + * For events which are supposed to be skipped in the platform,
+>> + * return NULL
+>> + *
+>> + * tool_pmu__all_event_to_str returns the name for all
+>> + * events mapping to the tool_pmu_event index including the
+>> + * skipped ones.
+>> + */
+>> const char *tool_pmu__event_to_str(enum tool_pmu_event ev)
+>> {
+>> if ((ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX) &&
+>> @@ -69,6 +78,14 @@ const char *tool_pmu__event_to_str(enum =
+tool_pmu_event ev)
+>> return NULL;
+>> }
+>>=20
+>> +const char *tool_pmu__all_event_to_str(enum tool_pmu_event ev)
+>> +{
+>> + if (ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX)
+>> + return tool_pmu__event_names[ev];
+>> +
+>> + return NULL;
+>> +}
+>> +
+>> enum tool_pmu_event tool_pmu__str_to_event(const char *str)
+>> {
+>> int i;
+>> diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
+>> index a60184859080..da76808ae71e 100644
+>> --- a/tools/perf/util/tool_pmu.h
+>> +++ b/tools/perf/util/tool_pmu.h
+>> @@ -30,6 +30,7 @@ enum tool_pmu_event {
+>> for ((ev) =3D TOOL_PMU__EVENT_DURATION_TIME; (ev) < =
+TOOL_PMU__EVENT_MAX; ev++)
+>>=20
+>> const char *tool_pmu__event_to_str(enum tool_pmu_event ev);
+>> +const char *tool_pmu__all_event_to_str(enum tool_pmu_event ev);
+>> enum tool_pmu_event tool_pmu__str_to_event(const char *str);
+>> bool tool_pmu__skip_event(const char *name);
+>> int tool_pmu__num_skip_events(void);
+>> --=20
+>> 2.43.5
+
 
