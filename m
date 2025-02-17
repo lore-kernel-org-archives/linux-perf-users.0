@@ -1,38 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE0A19CC02;
-	Mon, 17 Feb 2025 08:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2776819F424
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Feb 2025 08:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739780417; cv=none; b=TZFZKIc8mGUSXqb+pb/q/pyrMUXo+WkF9Z2g/0rFali1rlMfG2+4XUacO5ADT9vg8sPxLRIRbubl85oX+ktZ6y454Bg3Lqt706pySryjSqneQfuQeC41sel1mKxEZXsCiXU625SlbDB0D9p/+faKPAB590YNBlft0EW/78ijUpg=
+	t=1739780696; cv=none; b=CLhvswwxTu6MRMpM9rnkJ0kYk1BQE3jc/kLqSOkcO0HgvcuHobul9TC9OMrlY1BrwRVR/OyXrDZXQtdxKF5vY5nth75409adUrui06PwItg0sg8YL/vbxqx4lbIl+heHlMcQ3/+K1dp4/bX8EqiCVcHgYm96N2l7Kddy59/5fGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739780417; c=relaxed/simple;
-	bh=TvcxyVay6Lj7lTROLA2RkNt18bqPLK2uhonK8RJ0e38=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dR2SPZbMV02wTPhCoG6g9pFqcJ9ZTk6vCdJu09wcIDJM7CSaCUsz0xA9JjOyi6IBYDzB+Ueqwr9pf7+bRJFH6Mk70FO6g4eL+vFNbAQtRXBdP9A2KJxFiIaxo78cfbYYZbSriqrZpUhM1PvO2GycqSv3+M+5HWL4uosvTsmzJmc=
+	s=arc-20240116; t=1739780696; c=relaxed/simple;
+	bh=RUc43yBbpnO4JZzVyNeqGPwPoHy70gqSiiPq0LEJVgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSLY5ald/9rod6a4KwxNPwmr5p3VA8K0ja37ez4tQxVKwCxTQkJUDyzVkM1UcdSKWlQxSShFAEHh1mIi1510ChpaPTko5cvvy9fVPdsYdSH3Rsmpd82/qSlsZ+f/MAcw68EaooCdNCIRlT6OLXv02fzeNlear/nE4dEYI19WPBg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F4D31007;
-	Mon, 17 Feb 2025 00:20:34 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93F661007;
+	Mon, 17 Feb 2025 00:25:13 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 576B53F5A1;
-	Mon, 17 Feb 2025 00:20:14 -0800 (PST)
-Date: Mon, 17 Feb 2025 08:20:08 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFCA33F5A1;
+	Mon, 17 Feb 2025 00:24:53 -0800 (PST)
+Date: Mon, 17 Feb 2025 08:24:51 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf arm-spe: Report error if set frequency
-Message-ID: <20250217082008.GA8144@e132581.arm.com>
-References: <20250205183009.224182-1-leo.yan@arm.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com, acme@kernel.org,
+	namhyung@kernel.org, will@kernel.org, james.clark@linaro.org,
+	mike.leach@linaro.org, leo.yan@linux.dev
+Subject: Re: [PATCH] MAINTAINERS: Remove John Garry from arm64 perf tools
+Message-ID: <20250217082451.GB8144@e132581.arm.com>
+References: <20250214114646.1444305-1-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,75 +35,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205183009.224182-1-leo.yan@arm.com>
+In-Reply-To: <20250214114646.1444305-1-john.g.garry@oracle.com>
 
-On Wed, Feb 05, 2025 at 06:30:09PM +0000, Leo Yan wrote:
-> When users set the parameter '-F' to specify frequency for Arm SPE, the
-> tool reports error:
-> 
->   perf record -F 1000 -e arm_spe_0// -- sleep 1
->   Error:
->   Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
-> 
-> The output logs are confused and it does not give the correct reminding.
-> Arm SPE does not support frequency setting given it adopts a statistical
-> based approach.
-> 
-> Alternatively, Arm SPE supports setting period.  This commit adds a
-> for frequency setting.  It reports error and reminds users to set period
-> instead.
-> 
-> After:
-> 
->   perf record -F 100 -e arm_spe_0// -- sleep 1
->   Arm SPE: Frequency is not supported. Check manual 'man perf-record' on how to set period.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Hi John,
 
-Gentle ping.
-
-> ---
->  tools/perf/arch/arm64/util/arm-spe.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+On Fri, Feb 14, 2025 at 11:46:46AM +0000, John Garry wrote:
 > 
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 4301181b8e45..baef0812dc19 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -40,6 +40,19 @@ struct arm_spe_recording {
->  	bool			*wrapped;
->  };
->  
-> +/* Iterate config list to detect if the "freq" parameter is set */
-> +static bool arm_spe_is_set_freq(struct evsel *evsel)
-> +{
-> +	struct evsel_config_term *term;
-> +
-> +	list_for_each_entry(term, &evsel->config_terms, list) {
-> +		if (term->type == EVSEL__CONFIG_TERM_FREQ)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * arm_spe_find_cpus() returns a new cpu map, and the caller should invoke
->   * perf_cpu_map__put() to release the map after use.
-> @@ -389,6 +402,13 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->  				return -EINVAL;
->  			}
->  			opts->full_auxtrace = true;
-> +
-> +			if (opts->user_freq != UINT_MAX ||
-> +			    arm_spe_is_set_freq(evsel)) {
-> +				pr_err("Arm SPE: Frequency is not supported. "
-> +				       "Check manual 'man perf-record' on how to set period.\n");
-> +				return -EINVAL;
-> +			}
->  		}
->  	}
->  
-> -- 
-> 2.34.1
+> Unfortunately I don't have time to help review these days, but
+> hopefully will have in future.
+
+Thank you for your contribution for Arm perf development.  And you
+are always welcome to come back.
+
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 25c86f47353d..9e1e906014c7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18539,7 +18539,6 @@ F:      tools/lib/perf/
+>  F:     tools/perf/
+> 
+>  PERFORMANCE EVENTS TOOLING ARM64
+> -R:     John Garry <john.g.garry@oracle.com>
+>  R:     Will Deacon <will@kernel.org>
+>  R:     James Clark <james.clark@linaro.org>
+>  R:     Mike Leach <mike.leach@linaro.org>
+> --
+> 2.31.1
+> 
 > 
