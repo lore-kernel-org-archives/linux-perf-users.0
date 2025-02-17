@@ -1,142 +1,74 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62FE215F5F;
-	Mon, 17 Feb 2025 12:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9287821C186;
+	Mon, 17 Feb 2025 14:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739795928; cv=none; b=sGcP9idWRNzKUmEYfraaESN+Vr4fUcxt7UDzSfw+cIlX91MwQkCbPuABBfMte6a3v5x6mVk0S19EQ32AW2AX1xMEcZ4Kh7TkAJkxkJVTaNXSu8kcbEMF1U3YelzDjYrHkT6T27rXR9r3aiC5RTY3FLqsL2hD6V8Xw0B7jOjs0d4=
+	t=1739802301; cv=none; b=vGYirYEqCf8pMbvIElJXPBcpVvxFYGiJkveZrTGm03mCo9Am0caIUGfE7t/Kqw2tbPRub3XtpvU4ICKv9eEj1pDaK4NNJdMuZTjXbVIxf2U18U5KEPV2bpJUozG4+Q9lorjr1sGqMBqqTr1CGue8TKdDuat6Nn90Yc8eRsEN2Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739795928; c=relaxed/simple;
-	bh=L0NxWj2gdbSolslozxMjJ2YOfJlTTcwlTXmsra96jCA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H8tXRgl8FewnHG6Sl6lgb3IA2lh8H3mBuo83UNHzV93auWieCwIMqFpbgWXS/7kVjxMWFmhBqsusu1navsXNAVFRiv3jdLNX6HwUxzNfyh60hj4zPk66mGK8YGl4EBNGb+qnR0C4ftU/WNKr/7lkrbUglHFQgZhPHR56HkdIkvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YxMZR1HJvz22t0r;
-	Mon, 17 Feb 2025 20:35:43 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7938B180069;
-	Mon, 17 Feb 2025 20:38:41 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Feb 2025 20:38:40 +0800
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>, Tong Tiangen
-	<tongtiangen@huawei.com>, <wangkefeng.wang@huawei.com>
-Subject: [PATCH -next] uprobes: fix two zero old_folio bugs in __replace_page()
-Date: Mon, 17 Feb 2025 20:38:26 +0800
-Message-ID: <20250217123826.88503-1-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739802301; c=relaxed/simple;
+	bh=4O6pUbxU9WhZLQgMK95/BrypKre2S+YKMb4hZtOiXFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nQF+gx1KX9WS5k0ELAJaan0dbOMeTTbFcMnpjGlou5XYt+QcPAjNsw3fXW4DJugJaSFhVyiBR4ZTHoGMGqCU8WU7F66DVZmNOF67k0r13PblEUZA+ha4bj0tonEKx8/ksJAaG0FtGoORKrM7+uRoJ19hdyXT2ksPTmBGAhADkoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IhGT9vNn; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IhGT9vNn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MTfZEpj9A3ZPs39PczkqPfdLk2kt/FXHPcDnQdLDiQ4=; b=IhGT9vNnq7KY3wiwOFVEaFUuGD
+	TWu3bhkXjnhGHNkSUzOjccXBymT68+AhQiCUCEYr0XIfRquHjvKRLHFjvpjapYQUqemDg1J0+Uo0R
+	6JZomK7FBkaITfGoa+Gzk0C3XGa1fxOOzfFf8z37dXKEmqlLLtB6vtIavXa4PkKkZOxh+Z0yiAxPa
+	5926D4pPM4fQuJlCD+IR93c6Jc4f79rQqcRxeP9JyG9/cxNvpEVhkK6dMv51S991J3eTt5C2nUknA
+	9ybw4r+Sz0UEpnDe20c3pDeuwgbFL2cIuUtwKUWU9D/Do6CGXRQvAp6IcngwuHLw+F2ufd0C4oU8x
+	72/UXRGQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tk23C-00000001N3V-3H2B;
+	Mon, 17 Feb 2025 14:24:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B16C83002C7; Mon, 17 Feb 2025 15:24:45 +0100 (CET)
+Date: Mon, 17 Feb 2025 15:24:45 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	eranian@google.com, irogers@google.com, jolsa@kernel.org,
+	bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
+	ananth.narayan@amd.com, sandipan.das@amd.com
+Subject: Re: [RESEND][PATCH v3 0/7] perf/amd/ibs: Add Zen5 support
+Message-ID: <20250217142445.GA2076@noisy.programming.kicks-ass.net>
+References: <20250205060547.1337-1-ravi.bangoria@amd.com>
+ <65818316-434e-4468-9ead-2e55c15b62eb@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65818316-434e-4468-9ead-2e55c15b62eb@amd.com>
 
-We triggered the following error logs in syzkaller test:
+On Mon, Feb 17, 2025 at 02:00:14PM +0530, Ravi Bangoria wrote:
+> On 05-Feb-25 11:35 AM, Ravi Bangoria wrote:
+> > IBS on Zen5:
+> > - introduced Load Latency filtering capability.
+> > - shows DTLB and page size information differently from prior generations.
+> > 
+> > Incorporate these changes into IBS kernel driver as well as perf tool.
+> > Also include a perf unit-test to test IBS sample period constraints.
+> > 
+> > Patches are prepared on peterz/queue/perf/core (cffa473a06d2).
+> 
+> Ingo, Peter, gentle ping!
 
-  BUG: Bad page state in process syz.7.38  pfn:1eff3
-  page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
-  flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
-  raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
-  raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
-  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x32/0x50
-   bad_page+0x69/0xf0
-   free_unref_page_prepare+0x401/0x500
-   free_unref_page+0x6d/0x1b0
-   uprobe_write_opcode+0x460/0x8e0
-   install_breakpoint.part.0+0x51/0x80
-   register_for_each_vma+0x1d9/0x2b0
-   __uprobe_register+0x245/0x300
-   bpf_uprobe_multi_link_attach+0x29b/0x4f0
-   link_create+0x1e2/0x280
-   __sys_bpf+0x75f/0xac0
-   __x64_sys_bpf+0x1a/0x30
-   do_syscall_64+0x56/0x100
-   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+First 3 patches are in queue/perf/core, assuming the robots be happy,
+I'll push it into tip/perf/core.
 
-   BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
 
-The following syzkaller test case can be used to reproduce:
-
-  r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
-  write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
-  r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
-  mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
-  r5 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
-  r6 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
-  ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
-  ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
-  r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
-  bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
-
-The cause is that zero pfn is set to the pte without increasing the rss
-count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
-not increase accordingly. Then, the operation on the same pfn is performed
-in uprobe_write_opcode()->__replace_page() to unconditional decrease the
-rss count and old_folio's refcount.
-
-Therefore, two bugs are introduced:
-1. The rss count is incorrect, when process exit, the check_mm() report
-   error "Bad rss-count".
-2. The reserved folio (zero folio) is freed when folio->refcount is zero,
-   then free_pages_prepare->free_page_is_bad() report error "Bad page state".
-
-To fix it, add zero folio check before rss counter and refcount decrease.
-
-Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
-Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
-Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
----
- kernel/events/uprobes.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 46ddf3a2334d..ff5694acfa68 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 		dec_mm_counter(mm, MM_ANONPAGES);
- 
- 	if (!folio_test_anon(old_folio)) {
--		dec_mm_counter(mm, mm_counter_file(old_folio));
-+		if (!is_zero_folio(old_folio))
-+			dec_mm_counter(mm, mm_counter_file(old_folio));
- 		inc_mm_counter(mm, MM_ANONPAGES);
- 	}
- 
-@@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	if (!folio_mapped(old_folio))
- 		folio_free_swap(old_folio);
- 	page_vma_mapped_walk_done(&pvmw);
--	folio_put(old_folio);
-+	if (!is_zero_folio(old_folio))
-+		folio_put(old_folio);
- 
- 	err = 0;
-  unlock:
--- 
-2.25.1
-
+Thanks!
