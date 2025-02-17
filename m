@@ -1,287 +1,83 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 858A623ED70;
-	Mon, 17 Feb 2025 19:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F00227BAA;
+	Mon, 17 Feb 2025 20:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739822392; cv=none; b=Q7vvoTfLTeyUI/UTJyWJ5O8VtiKtwem6GMpXZPzdZ9sNIzv7cC1/PlbjZtN+NfFZ7FV030/axK905iwGdoVCQ+MBr/u7CFFtTsI5XGQgm67cfUmqolcSnNBY9W8ntOwI384dGdfWKK+Azxg30mk+7OcyrSCpMmDW/WYSKdZglIQ=
+	t=1739822658; cv=none; b=fuX7LOWuudBGib7aBjs+wzNc1TyORGhNPNAoO8MQs1Flfvck8MrCu45P00sj38NJuSRszkStHGfd9ZK2BnPf5MHiKZDs7QVQ3FSK5C0ec8qzcZ+3Fyp9AyXGaeyZV1CRtRU++wT4KbZ/Bd3T5MvUCK9wdAnZD1epDsIg50o9+iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739822392; c=relaxed/simple;
-	bh=FI4M+NdBukzqBXF/rdRTV7sGCrvsk+uVDIPEDVDlbIc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ImmIu+0w42sZkxOAWZ1NBJdXjWkdmgxFvI0mulcJn4L4D4MhOocdQZu6VGgASgphmPYwbQbSnrIxNoag7wT5tU/BUvRx26sVoW8DBSda1VngmlCIABs8M7ZjnE6nen/Vwl6dmWFIjkX8QWwEbgnryFnwqQPjccgcfYzEiC99xX0=
+	s=arc-20240116; t=1739822658; c=relaxed/simple;
+	bh=fMBnlLxk2mqjJMmrkkTbsI+W9nTHUXVEsSQOO5LWjB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtEiaixrcyPUatY0dQx+pQE3koC9ZQ+Rj3nvRsSKORIz9sFZ4XTAARVNvwkupiVpa9MQUUvnyRcxRgUfeKSF6wAlgomQ7hFIwlgGPV/LeImAbqMOodPgaM172nR6eB+KTi9kaiq2pTixAfS7JibrkQUgF6QxJyNQ0Q3LfPA66SM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E91D152B;
-	Mon, 17 Feb 2025 12:00:09 -0800 (PST)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CA5A73F6A8;
-	Mon, 17 Feb 2025 11:59:47 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AB2A152B;
+	Mon, 17 Feb 2025 12:04:34 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E09D73F6A8;
+	Mon, 17 Feb 2025 12:04:14 -0800 (PST)
+Date: Mon, 17 Feb 2025 20:04:09 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Paschalis.Mpeis@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 12/12] perf arm-spe: Support previous branch target (PBT) address
-Date: Mon, 17 Feb 2025 19:59:08 +0000
-Message-Id: <20250217195908.176207-13-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217195908.176207-1-leo.yan@arm.com>
-References: <20250217195908.176207-1-leo.yan@arm.com>
+Subject: Re: [PATCH v2 08/11] perf arm-spe: Fill branch operations and events
+ to record
+Message-ID: <20250217200409.GC8144@e132581.arm.com>
+References: <20250214111936.15168-1-leo.yan@arm.com>
+ <20250214111936.15168-9-leo.yan@arm.com>
+ <a5d99e7f-1d8d-41f1-976d-7d67a0d5decb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5d99e7f-1d8d-41f1-976d-7d67a0d5decb@linaro.org>
 
-When FEAT_SPE_PBT is implemented, the previous branch target address
-(named as PBT) before the sampled operation, will be recorded.
+On Mon, Feb 17, 2025 at 04:20:57PM +0000, James Clark wrote:
 
-This commit first introduces a 'prev_br_tgt' field in the record for
-saving the PBT address in the decoder.
+[...]
 
-If the current operation is a branch instruction, by combining with PBT,
-it can create a chain with two consecutive branches.  As the branch
-stack stores branches in descending order, meaning a newer branch is
-stored in a lower entry in the stack.  Arm SPE stores the latest branch
-in the first entry of branch stack, and the previous branch coming from
-PBT is stored into the second entry.
+> > diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> > index ba807071d3c1..52bd0a4ea96d 100644
+> > --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> > +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> > @@ -207,6 +207,18 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+> >                               break;
+> >                       case SPE_OP_PKT_HDR_CLASS_BR_ERET:
+> >                               decoder->record.op |= ARM_SPE_OP_BRANCH_ERET;
+> > +                             if (payload & SPE_OP_PKT_COND)
+> > +                                     decoder->record.op |= ARM_SPE_OP_BR_COND;
+> 
+> I think this results in memory events being synthesised for these
+> samples because of a bug in arm_spe__synth_data_source().
+> ARM_SPE_OP_BR_COND overlaps with bits from other packet types like
+> ARM_SPE_OP_LD:
+> 
+>        if (record->op & ARM_SPE_OP_LD)
+>                data_src.mem_op = PERF_MEM_OP_LOAD;
+> 
+> arm_spe__synth_data_source() needs to only interpret that as a data
+> source packet if ARM_SPE_OP_LDST is set. This was reported by Mike
+> Williams but you have the privilege of hitting it for real first.
 
-Otherwise, if current operation is not a branch, the last branch will be
-saved for PBT only.  PBT lacks associated information such as branch
-source address, branch type, and events.  The branch entry fills zeros
-for the corresponding fields and only set its target address.
+Good catching.  I have added a new patch 06 to fix the bug in the
+v3 series.  Thanks for hooking up the info.
 
-After:
-
-  perf script -f --itrace=bl -F flags,addr,brstack
-  jcc                   ffff800080187914 0xffff8000801878fc/0xffff800080187914/P/-/-/1/COND/-  0x0/0xffff8000801878f8/-/-/-/0//-
-  jcc                   ffff8000802d12d8 0xffff8000802d12f8/0xffff8000802d12d8/P/-/-/1/COND/-  0x0/0xffff8000802d12ec/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jcc                   ffff8000813fe200 0xffff8000813fe20c/0xffff8000813fe200/P/-/-/1/COND/-  0x0/0xffff8000813fe200/-/-/-/0//-
-  jmp                   ffff800081410980 0xffff800081419108/0xffff800081410980/P/-/-/1//-  0x0/0xffff800081419104/-/-/-/0//-
-  return                ffff80008036e064 0xffff80008141ba84/0xffff80008036e064/P/-/-/1/RET/-  0x0/0xffff80008141ba60/-/-/-/0//-
-  jcc                   ffff8000803d54f0 0xffff8000803d54e8/0xffff8000803d54f0/P/-/-/1/COND/-  0x0/0xffff8000803d54e0/-/-/-/0//-
-  jmp                   ffff80008015e468 0xffff8000803d46dc/0xffff80008015e468/P/-/-/1//-  0x0/0xffff8000803d46c8/-/-/-/0//-
-  jmp                   ffff8000806e2d50 0xffff80008040f710/0xffff8000806e2d50/P/-/-/1//-  0x0/0xffff80008040f6e8/-/-/-/0//-
-  jcc                   ffff800080721704 0xffff8000807216b4/0xffff800080721704/P/-/-/1/COND/-  0x0/0xffff8000807216ac/-/-/-/0//-
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../util/arm-spe-decoder/arm-spe-decoder.c    |   5 +-
- .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
- tools/perf/util/arm-spe.c                     | 114 ++++++++++--------
- 3 files changed, 70 insertions(+), 50 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 52bd0a4ea96d..688fe6d75244 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -28,7 +28,8 @@ static u64 arm_spe_calc_ip(int index, u64 payload)
- 
- 	/* Instruction virtual address or Branch target address */
- 	if (index == SPE_ADDR_PKT_HDR_INDEX_INS ||
--	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH) {
-+	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH ||
-+	    index == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH) {
- 		ns = SPE_ADDR_PKT_GET_NS(payload);
- 		el = SPE_ADDR_PKT_GET_EL(payload);
- 
-@@ -181,6 +182,8 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 				decoder->record.virt_addr = ip;
- 			else if (idx == SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS)
- 				decoder->record.phys_addr = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH)
-+				decoder->record.prev_br_tgt = ip;
- 			break;
- 		case ARM_SPE_COUNTER:
- 			if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 85b688a97436..5d232188643b 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -89,6 +89,7 @@ struct arm_spe_record {
- 	u32 latency;
- 	u64 from_ip;
- 	u64 to_ip;
-+	u64 prev_br_tgt;
- 	u64 timestamp;
- 	u64 virt_addr;
- 	u64 phys_addr;
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index ed89b7dbc244..2a9775649cc2 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -237,8 +237,9 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
- 	if (spe->synth_opts.last_branch) {
- 		size_t sz = sizeof(struct branch_stack);
- 
--		/* Allocate one entry for TGT */
--		sz += sizeof(struct branch_entry);
-+		/* Allocate up to two entries for PBT + TGT */
-+		sz += sizeof(struct branch_entry) *
-+			min(spe->synth_opts.last_branch_sz, 2U);
- 		speq->last_branch = zalloc(sz);
- 		if (!speq->last_branch)
- 			goto out_free;
-@@ -362,68 +363,83 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 
- static void arm_spe__prep_branch_stack(struct arm_spe_queue *speq)
- {
-+	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
- 	struct branch_stack *bstack = speq->last_branch;
- 	struct branch_flags *bs_flags;
-+	unsigned int last_branch_sz = spe->synth_opts.last_branch_sz;
-+	bool have_tgt = !!(speq->flags & PERF_IP_FLAG_BRANCH);
-+	bool have_pbt = last_branch_sz >= (have_tgt + 1U) && record->prev_br_tgt;
- 	size_t sz = sizeof(struct branch_stack) +
--		    sizeof(struct branch_entry) /* TGT */;
-+		    sizeof(struct branch_entry) * min(last_branch_sz, 2U) /* PBT + TGT */;
-+	int i = 0;
- 
- 	/* Clean up branch stack */
- 	memset(bstack, 0x0, sz);
- 
--	if (!(speq->flags & PERF_IP_FLAG_BRANCH))
-+	if (!have_tgt && !have_pbt)
- 		return;
- 
--	bstack->entries[0].from = record->from_ip;
--	bstack->entries[0].to = record->to_ip;
-+	if (have_tgt) {
-+		bstack->entries[i].from = record->from_ip;
-+		bstack->entries[i].to = record->to_ip;
- 
--	bs_flags = &bstack->entries[0].flags;
--	bs_flags->value = 0;
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->value = 0;
- 
--	if (record->op & ARM_SPE_OP_BR_CR_BL) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_CALL;
--		else
--			bs_flags->type |= PERF_BR_CALL;
--	/*
--	 * Indirect branch instruction without link (e.g. BR),
--	 * take this case as function return.
--	 */
--	} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
--		   record->op & ARM_SPE_OP_BR_INDIRECT) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND_RET;
--		else
--			bs_flags->type |= PERF_BR_RET;
--	} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNCOND;
--	} else {
--		if (record->op & ARM_SPE_OP_BR_COND)
--			bs_flags->type |= PERF_BR_COND;
--		else
--			bs_flags->type |= PERF_BR_UNKNOWN;
--	}
-+		if (record->op & ARM_SPE_OP_BR_CR_BL) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_CALL;
-+			else
-+				bs_flags->type |= PERF_BR_CALL;
-+		/*
-+		 * Indirect branch instruction without link (e.g. BR),
-+		 * take this case as function return.
-+		 */
-+		} else if (record->op & ARM_SPE_OP_BR_CR_RET ||
-+			   record->op & ARM_SPE_OP_BR_INDIRECT) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND_RET;
-+			else
-+				bs_flags->type |= PERF_BR_RET;
-+		} else if (record->op & ARM_SPE_OP_BR_CR_NON_BL_RET) {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNCOND;
-+		} else {
-+			if (record->op & ARM_SPE_OP_BR_COND)
-+				bs_flags->type |= PERF_BR_COND;
-+			else
-+				bs_flags->type |= PERF_BR_UNKNOWN;
-+		}
- 
--	if (record->type & ARM_SPE_BRANCH_MISS) {
--		bs_flags->mispred = 1;
--		bs_flags->predicted = 0;
--	} else {
--		bs_flags->mispred = 0;
--		bs_flags->predicted = 1;
--	}
-+		if (record->type & ARM_SPE_BRANCH_MISS) {
-+			bs_flags->mispred = 1;
-+			bs_flags->predicted = 0;
-+		} else {
-+			bs_flags->mispred = 0;
-+			bs_flags->predicted = 1;
-+		}
-+
-+		if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
-+			bs_flags->not_taken = 1;
- 
--	if (record->type & ARM_SPE_BRANCH_NOT_TAKEN)
--		bs_flags->not_taken = 1;
-+		if (record->type & ARM_SPE_IN_TXN)
-+			bs_flags->in_tx = 1;
- 
--	if (record->type & ARM_SPE_IN_TXN)
--		bs_flags->in_tx = 1;
-+		bs_flags->cycles = min(record->latency, 0xFFFFU);
-+		i++;
-+	}
- 
--	bs_flags->cycles = min(record->latency, 0xFFFFU);
-+	if (have_pbt) {
-+		bs_flags = &bstack->entries[i].flags;
-+		bs_flags->type |= PERF_BR_UNKNOWN;
-+		bstack->entries[i].to = record->prev_br_tgt;
-+		i++;
-+	}
- 
--	bstack->nr = 1;
-+	bstack->nr = i;
- 	bstack->hw_idx = -1ULL;
- }
- 
-@@ -1584,8 +1600,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	}
- 
- 	if (spe->synth_opts.last_branch) {
--		if (spe->synth_opts.last_branch_sz > 1)
--			pr_debug("Arm SPE supports only one bstack entry (TGT).\n");
-+		if (spe->synth_opts.last_branch_sz > 2)
-+			pr_debug("Arm SPE supports only two bstack entries (PBT+TGT).\n");
- 
- 		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
- 		/*
--- 
-2.34.1
-
+Leo
