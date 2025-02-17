@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CFA23C8AD;
-	Mon, 17 Feb 2025 19:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E78523C8C9;
+	Mon, 17 Feb 2025 19:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739822376; cv=none; b=Zt5x+fn2bWWxR7fQXbE/9kcE/HmEXPlYYEZRxZWQnK/dhXb05dvQWgRfWRA5DD2jrQlsnoEHf9uJ7o873dkPiftDVB8svXGWBsWN8PrwykCSgoUVRqo3BH7j31AXpdbonDsGPcDOJ/2iml1W9aTifIYRJDwRvmNQPfNnl/S1A+M=
+	t=1739822379; cv=none; b=NWIZ23TOQfPgUKgpDi5d+jEEGAVxx/0kMaoLCnG4WJnUiyKNccGn5ptGXFF7MbnomGv0ae5YMB7Hp4WXNLwdz0QjbO+WtyBmif7GSvV/xV4nQ2s+Tqz14v7gbIfuFcRmgAWFvunco9SFYYbIxllRet0zwMpJwBxBYkq3gbNFnME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739822376; c=relaxed/simple;
-	bh=BWuAcsNBTw4pRqVuUJk51mAjNVUbrJpBjXxGGaV96Es=;
+	s=arc-20240116; t=1739822379; c=relaxed/simple;
+	bh=w8c5p/0eH9XySzVR5LkRGe//0ZjFFicuESB+QRP+4+8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OSMTG2HzluBRnOHWjrLxuadgVcJirzIWJ6eel9Va2Z6J1SQGd0OZXCNSpZXuEc6BYj2SiFN6dUhpG+rdEIPQS4SjMXAyFN/CTHTKxxcYy2qgJLYjYdAstGJlsPmSNsuzIR8bY2uDjq7o8D9lw14xqGBC8uOX4BFiid5ylN9WcKE=
+	 MIME-Version; b=rG3IHFfxCURewBQXh57T0dE88g3h7EDeWV9MrphW0IYy9nZ0m7TWOMw4V9huEr+m7SoyXWCaVjtZsaDcJmOIHgTF+NkYpReZkV19JrMxBuqsXf3onzYG838a0Syqw1xbIK6OIME4pBPeSWIX+q13qRdzW0qSvtzg9CkB0XUuYu0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55125152B;
-	Mon, 17 Feb 2025 11:59:53 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 025A4152B;
+	Mon, 17 Feb 2025 11:59:56 -0800 (PST)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0D193F6A8;
-	Mon, 17 Feb 2025 11:59:31 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E73A3F6A8;
+	Mon, 17 Feb 2025 11:59:34 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -36,9 +36,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 06/12] perf arm-spe: Fix load-store operation checking
-Date: Mon, 17 Feb 2025 19:59:02 +0000
-Message-Id: <20250217195908.176207-7-leo.yan@arm.com>
+Subject: [PATCH v3 07/12] perf arm-spe: Extend branch operations
+Date: Mon, 17 Feb 2025 19:59:03 +0000
+Message-Id: <20250217195908.176207-8-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250217195908.176207-1-leo.yan@arm.com>
 References: <20250217195908.176207-1-leo.yan@arm.com>
@@ -50,54 +50,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ARM_SPE_OP_LD and ARM_SPE_OP_ST operations are secondary operation
-type, they are overlapping with other second level's operation types
-belonging to SVE and branch operations.  As a result, a non load-store
-operation can be parsed for data source and memory sample.
+In Arm ARM (ARM DDI 0487, L.a), the section "D18.2.7 Operation Type
+packet", the branch subclass is extended for Call Return (CR), Guarded
+control stack data access (GCS).
 
-To fix the issue, this commit introduces a is_ldst_op() macro for
-checking LDST operation, and apply the checking when synthesize data
-source and memory samples.
+This commit adds support CR and GCS operations.  The IND (indirect)
+operation is defined only in bit [1], its macro is updated accordingly.
 
-Fixes: a89dbc9b988f ("perf arm-spe: Set sample's data source field")
+Move the COND (Conditional) macro into the same group with other
+operations for better maintenance.
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c  | 12 +++++++++---
+ .../perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h  | 11 ++++++++---
+ 2 files changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 251d214adf7f..0e8e05c87fd7 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -37,6 +37,8 @@
- #include "../../arch/arm64/include/asm/cputype.h"
- #define MAX_TIMESTAMP (~0ULL)
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+index 4cef10a83962..625834da7e20 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+@@ -397,10 +397,16 @@ static int arm_spe_pkt_desc_op_type(const struct arm_spe_pkt *packet,
  
-+#define is_ldst_op(op)		(!!((op) & ARM_SPE_OP_LDST))
-+
- struct arm_spe {
- 	struct auxtrace			auxtrace;
- 	struct auxtrace_queues		queues;
-@@ -681,6 +683,10 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
- {
- 	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+ 		if (payload & SPE_OP_PKT_COND)
+ 			arm_spe_pkt_out_string(&err, &buf, &buf_len, " COND");
+-
+-		if (SPE_OP_PKT_IS_INDIRECT_BRANCH(payload))
++		if (payload & SPE_OP_PKT_INDIRECT_BRANCH)
+ 			arm_spe_pkt_out_string(&err, &buf, &buf_len, " IND");
+-
++		if (payload & SPE_OP_PKT_GCS)
++			arm_spe_pkt_out_string(&err, &buf, &buf_len, " GCS");
++		if (SPE_OP_PKT_CR_BL(payload))
++			arm_spe_pkt_out_string(&err, &buf, &buf_len, " CR-BL");
++		if (SPE_OP_PKT_CR_RET(payload))
++			arm_spe_pkt_out_string(&err, &buf, &buf_len, " CR-RET");
++		if (SPE_OP_PKT_CR_NON_BL_RET(payload))
++			arm_spe_pkt_out_string(&err, &buf, &buf_len, " CR-NON-BL-RET");
+ 		break;
+ 	default:
+ 		/* Unknown index */
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+index 464a912b221c..32d760ede701 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+@@ -7,6 +7,7 @@
+ #ifndef INCLUDE__ARM_SPE_PKT_DECODER_H__
+ #define INCLUDE__ARM_SPE_PKT_DECODER_H__
  
-+	/* Only synthesize data source for LDST operations */
-+	if (!is_ldst_op(record->op))
-+		return 0;
-+
- 	if (record->op & ARM_SPE_OP_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
- 	else if (record->op & ARM_SPE_OP_ST)
-@@ -779,7 +785,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 	 * When data_src is zero it means the record is not a memory operation,
- 	 * skip to synthesize memory sample for this case.
- 	 */
--	if (spe->sample_memory && data_src) {
-+	if (spe->sample_memory && is_ldst_op(record->op)) {
- 		err = arm_spe__synth_mem_sample(speq, spe->memory_id, data_src);
- 		if (err)
- 			return err;
++#include <linux/bitfield.h>
+ #include <stddef.h>
+ #include <stdint.h>
+ 
+@@ -116,8 +117,6 @@ enum arm_spe_events {
+ 
+ #define SPE_OP_PKT_IS_OTHER_SVE_OP(v)		(((v) & (BIT(7) | BIT(3) | BIT(0))) == 0x8)
+ 
+-#define SPE_OP_PKT_COND				BIT(0)
+-
+ #define SPE_OP_PKT_LDST_SUBCLASS_GET(v)		((v) & GENMASK_ULL(7, 1))
+ #define SPE_OP_PKT_LDST_SUBCLASS_GP_REG		0x0
+ #define SPE_OP_PKT_LDST_SUBCLASS_SIMD_FP	0x4
+@@ -148,7 +147,13 @@ enum arm_spe_events {
+ #define SPE_OP_PKT_SVE_PRED			BIT(2)
+ #define SPE_OP_PKT_SVE_FP			BIT(1)
+ 
+-#define SPE_OP_PKT_IS_INDIRECT_BRANCH(v)	(((v) & GENMASK_ULL(7, 1)) == 0x2)
++#define SPE_OP_PKT_CR_MASK			GENMASK_ULL(4, 3)
++#define SPE_OP_PKT_CR_BL(v)			(FIELD_GET(SPE_OP_PKT_CR_MASK, (v)) == 1)
++#define SPE_OP_PKT_CR_RET(v)			(FIELD_GET(SPE_OP_PKT_CR_MASK, (v)) == 2)
++#define SPE_OP_PKT_CR_NON_BL_RET(v)		(FIELD_GET(SPE_OP_PKT_CR_MASK, (v)) == 3)
++#define SPE_OP_PKT_GCS				BIT(2)
++#define SPE_OP_PKT_INDIRECT_BRANCH		BIT(1)
++#define SPE_OP_PKT_COND				BIT(0)
+ 
+ const char *arm_spe_pkt_name(enum arm_spe_pkt_type);
+ 
 -- 
 2.34.1
 
