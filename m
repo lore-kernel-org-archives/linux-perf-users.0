@@ -1,40 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D151EB5CF;
-	Tue, 18 Feb 2025 18:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E05271265;
+	Tue, 18 Feb 2025 19:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739904367; cv=none; b=Ywbd3b376sDcA2AA5HD0ASQpyFuY4UNNXQx6YnNn8qqk+W8eDqXD3ygFWBjE/ogbbuLWvp20rUaARomFfk8hBl3eSD1hVYygKyP3hXwIvGH+F5nrKMseT1VlWtg8dvIpva65r9E2ADGvsQydz5r54pzDoEHz3dNgZLpcg+l/dwE=
+	t=1739905879; cv=none; b=JWnuHVqEQ+JQpdgA6u67kvjqFlomSks09oJ+p8O1StDTj5aWh9izE+yXDdi5vlqTuvcqdVpmZJ+WXheMoEfeqw6tUV+JGgrY6/OocaplLb9ZEUW3laNfMWH3/eb96eZFk9DHngslHrBjKTejQA6/BoCQehkFVCXMcyf343d/2Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739904367; c=relaxed/simple;
-	bh=T1cnmcGTPhrweOE0+cTTV094VaS2Q0FwumZMJXVQSGA=;
+	s=arc-20240116; t=1739905879; c=relaxed/simple;
+	bh=HAhbVYY0BFTrXeNHjiE12Hv0whhqsPdEA7Z/cepHjdI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMX4aBJZs/8Uz2soQAg+WHAgvWnYMjKhUG6XYVALP3W/6nB/ixlaAR/TRKI1THedaYA14EI/nnkjVWcNmKKAeBr1+oZBXFMN7jIk+wsOslfJckryFQbVEEaRQPleWsxiUXQ4y9k0MwSNJYoRT8qhdyCDlOv8I0ZGLWsLBGZiJG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3qVxknY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BIP5Ighbnk/a8kPH5R59Cm7O2QgMkNW4/YcdFYphZRPTJtI5J0wbCYrnw9YBaK7mXadyqhGB6tba+2v6joaARa0Ual2Nlx65BejyZ7mFNmcZApraO2QwfoehlduNO3gsarUz/Xp0if5cjJZ7W7tAH5sljUeXGY234p4FCp9UcNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSGZJa4v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3qVxknY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E89D3C4CEE2;
-	Tue, 18 Feb 2025 18:46:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSGZJa4v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95CAC4CEE2;
+	Tue, 18 Feb 2025 19:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739904367;
-	bh=T1cnmcGTPhrweOE0+cTTV094VaS2Q0FwumZMJXVQSGA=;
+	s=k20201202; t=1739905876;
+	bh=HAhbVYY0BFTrXeNHjiE12Hv0whhqsPdEA7Z/cepHjdI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k3qVxknYs4hN528M5Hhh8bnCK3kbaoEGCGXryQnsKFiaOwey0rT/Mpb/a7KFM1Lz0
-	 /jxjwkB8YwC2LpmV7LW9xnuxi3bVOBR+VyYIaMS8RLIxwLQPCUhyq6f3l9oV3tOGj5
-	 zA6OLvjPE4RRxXrPRwUeM39KHvXzHgWS5LYR5uKsrERBM5uqsxfbDZvX1E4FBcQG/A
-	 Ckp0x86vLPqIZZdfQWFV0VNWAkq46LuSlhfaBVcGc6UxTjLszRg4NBIfZyS0HEFt/Y
-	 c+PDK7KWA/JxP7RYGYHwrud3mfXqEQ0nlzwOkXF5D9XppH9JSvhFHAUTrSF7VME3N2
-	 M91eybJlbMapw==
-Date: Tue, 18 Feb 2025 10:46:05 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: irogers@google.com, acme@kernel.org, ak@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/9] perf report: Switch filtered from u8 to u16
-Message-ID: <Z7TVbfUtD2LhYcj4@google.com>
-References: <cover.1739437531.git.dvyukov@google.com>
- <32b4ce1731126c88a2d9e191dc87e39ae4651cb7.1739437531.git.dvyukov@google.com>
+	b=HSGZJa4vmZo8KPPtt7ObQktcqNcxi/x/SlIp3NJC2JkgA2dKYg4o3yKvykS28TJ15
+	 CB4z3E2c616rmn1e+KNqe+srNCiDHJlxjOpCLD59DK0B1BnofPoT89A1AL8QXSPecU
+	 nnM295/8jhdbBvNPVxKg0Qmds9c+zHQLj+YV87ZPis3ChtApnLQPXkYsGrIYwHZ/Bq
+	 dbVdfzzbNY3eybrLBEtzEahE2nKu8mLg5fJASUXCMtHP1Rj7lCN/lFa4Qw6kHrEm/M
+	 JI4s31DmT5LIY4o0hLHat6Z+MAIuKIt5PIXnT+ZHnE+Je04QyTUeZSSuFu44k2jvwZ
+	 rAnFrsTwJVRbQ==
+Date: Tue, 18 Feb 2025 20:11:13 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z7TbUbs4nvuLF-rq@x1>
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost>
+ <Z6JksXDRh8OSAh-u@google.com>
+ <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+ <Z6Khl1rHIAb7wOXw@ghost>
+ <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
+ <Z6pF5pkH_bqvDwMK@ghost>
+ <CAEf4BzYqOtfOiYcHWRP44rwkrdzi3aMkjgD1-Td5DVAOLV=2kA@mail.gmail.com>
+ <Z7TT7Jw5QDx2G81v@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,89 +81,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <32b4ce1731126c88a2d9e191dc87e39ae4651cb7.1739437531.git.dvyukov@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7TT7Jw5QDx2G81v@x1>
 
-On Thu, Feb 13, 2025 at 10:08:16AM +0100, Dmitry Vyukov wrote:
-> We already have all u8 bits taken, adding one more filter leads to unpleasant
-> failure mode, where code compiles w/o warnings, but the last filters silently
-> don't work. Add a typedef and switch to u16.
+On Tue, Feb 18, 2025 at 07:39:44PM +0100, Arnaldo Carvalho de Melo wrote:
+> On Mon, Feb 10, 2025 at 04:23:49PM -0800, Andrii Nakryiko wrote:
+> > On Mon, Feb 10, 2025 at 10:31 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > On Wed, Feb 05, 2025 at 05:28:19PM -0800, Andrii Nakryiko wrote:
+> > > > On Tue, Feb 4, 2025 at 3:24 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > So, can you please check and fix?
+
+> > > I think I am misunderstanding what you are saying. The patch that we are
+> > > discussing on is the patch to fix this? You are showing the output from
+> > > the patch that is being fixed in this series.
+
+> > Ah, it's me getting confused. It was the earlier perf commit that
+> > broke all this, makes sense. I just double-checked with your patches
+> > applied locally. It indeed fixes the issue, LGTM.
+
+> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+> Thanks, b4 didn't pick this one, probably because you provided the Ack
+> for a previous version of this series, but the patch in it is the same
+> as in v2, so I'm keeping it, ok?
+
+> Also since you applied the patches and tested it, can I promote the tag
+> to Tested-by you?
+
+> Humm, there is a slight difference, checking that in the e-mails
+> thread...
+
+> +  quiet = quiet_
+> +  Q = @
 > 
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  tools/perf/util/addr_location.h | 3 ++-
->  tools/perf/util/hist.c          | 2 +-
->  tools/perf/util/hist.h          | 4 +++-
->  3 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-> index 36aaa45445f24..f83d74e370b2f 100644
-> --- a/tools/perf/util/addr_location.h
-> +++ b/tools/perf/util/addr_location.h
-> @@ -3,6 +3,7 @@
->  #define __PERF_ADDR_LOCATION 1
->  
->  #include <linux/types.h>
-> +#include "hist.h"
->  
->  struct thread;
->  struct maps;
-> @@ -17,7 +18,7 @@ struct addr_location {
->  	const char    *srcline;
->  	u64	      addr;
->  	char	      level;
-> -	u8	      filtered;
-> +	filter_mask_t filtered;
->  	u8	      cpumode;
->  	s32	      cpu;
->  	s32	      socket;
+> The above doesn´t  have spaces surrounding the = sign, lemme see...
 
-This change introduced a build failure on Fedora 40 with libcapstone
-like below.
+Got it, the comment about consistency, etc.
 
-  In file included from /usr/include/capstone/capstone.h:325,                     
-                   from util/disasm.c:1333:                                       
-  /usr/include/capstone/bpf.h:94:14: error: 'bpf_insn' defined as wrong kind of tag
-     94 | typedef enum bpf_insn {                                                 
-        |              ^~~~~~~~      
-  make[4]: *** [/linux/tools/build/Makefile.build:86: /build/util/disasm.o] Error 1
-  make[4]: *** Waiting for unfinished jobs....
-  make[3]: *** [/linux/tools/build/Makefile.build:138: util] Error 2              
-  make[2]: *** [Makefile.perf:822: /build/perf-util-in.o] Error 2                 
-  make[2]: *** Waiting for unfinished jobs....                                    
-  make[1]: *** [Makefile.perf:321: sub-make] Error 2                              
-  make: *** [Makefile:76: all] Error 2     
+Can I use the Tested-by: for the v3 series?
 
-I think we need the below change.  I'll fold it.
-
-Thanks,
-Namhyung
-
-
----8<---
-diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-index 663e9a55d8ed3e46..64b5510252169239 100644
---- a/tools/perf/util/addr_location.h
-+++ b/tools/perf/util/addr_location.h
-@@ -3,7 +3,6 @@
- #define __PERF_ADDR_LOCATION 1
- 
- #include <linux/types.h>
--#include "hist.h"
- 
- struct thread;
- struct maps;
-@@ -18,8 +17,8 @@ struct addr_location {
- 	const char    *srcline;
- 	u64	      addr;
- 	char	      level;
--	filter_mask_t filtered;
- 	u8	      cpumode;
-+	u16	      filtered;
- 	s32	      cpu;
- 	s32	      socket;
- 	/* Same as machine.parallelism but within [1, nr_cpus]. */
+- Arnaldo
