@@ -1,120 +1,91 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEF514A4E0;
-	Tue, 18 Feb 2025 02:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8EC1B0435
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 06:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739847240; cv=none; b=AWHGlUdUUK+omtlYSYcBcXktsQ1q7ESvKVGHCQbEj8p49Kk4RwOklJyl0hILQunGisJ2O27+jGu46XZWS7INtCRulPzXDJYMbNP6OCMOk6GmuXhw2LnJ4NDYIfalhzjF5j1s+WO5bliQwCabcE1MHj74aHsYjvQxwyjxhRYi16k=
+	t=1739860094; cv=none; b=UUDxxwbRm3ZZD0P9pp3I+s8JcO+Hw62ooWlyxSSuP1hSThXgKyFbGvvepVYDRbQeb+OYrOmSNlXwYgK0wtIN8xNFXLjkjf9f1FwLUpBU4r9L6zUCvG//BXre6Vade626j2niCabKa6Ig67eXU2vEfQ5vMszXoM3BUMgKfBelFd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739847240; c=relaxed/simple;
-	bh=493fq42fS56Pd9EQ89l57uN+C+1NmFHr9GOTDqiqx1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bSUqBISD5CmqEazeSMd5g+6eo2DLQMOxqPFaOMET2u4s/+v/rmL8h6qz6PmxlAFPwfhSN2LzLoqubTSOD9JAxM3UZoWUJNqW0/2tftwKfYZYx9AB4XG7KlmJ3NT+sRzuLPzEISDyL8VUNJJFWh5iR7a3xArqGIHrzS4iUOwmBZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YxkZr4BdBzcr0Y;
-	Tue, 18 Feb 2025 10:52:20 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3EF7E1402C1;
-	Tue, 18 Feb 2025 10:53:54 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 10:53:52 +0800
-Message-ID: <7dac9afa-9778-187d-8f69-53a7e92bbe97@huawei.com>
-Date: Tue, 18 Feb 2025 10:53:51 +0800
+	s=arc-20240116; t=1739860094; c=relaxed/simple;
+	bh=F8tO1I7sgq6bEUz3LQeyt2n1wCJx3tAujTQmrGimQNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=utAzjmguqj2vHPDwCSSJm6ZNjvR6lohTYTO/r6ZcCblimngpCny+g57+OSmV2p/G2VNLAjKQzK/TJnb/qNKdmwl8EZf2p0msCdFThRJ3EqYU/pgXisOydlQOA0PnErMltTvfhnEOd+CYxcvbS+8+CcmF3HzoLdEqLGtTINC9Yng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VAV15OkT; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VAV15OkT"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3061513d353so54020831fa.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Feb 2025 22:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739860091; x=1740464891; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8tO1I7sgq6bEUz3LQeyt2n1wCJx3tAujTQmrGimQNk=;
+        b=VAV15OkTuqDlh6L9qQiS4YSeRB7001GkZnMBHP13fc3cW7/Qo5N/7YW1dNIWkfvgC1
+         977VaCXAMqnvwBoTCE+0khaPyFm0Ko3ISyAHTCCbVu02AoIFPwZC/82qRfGaWI1zHB8K
+         LxWkkfzoHp36Py0W283Ka/IYuKTDUvV+ratgYYsH0T99LZIas7+DiWxEGGAP3l4WFZpd
+         JJIx7ai0+olmGt2wo8hT3V6lmm985CbOwjOisn/sBIfX9JT/SF9ho4EpdF4n4jyI1FVD
+         nxAw0qZIJiq0nFMh9tUwk7LkOwz1Erh8rdyBY8tluUNjbvfkq67KUfBqtPBVnP1s8kJE
+         ddsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739860091; x=1740464891;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F8tO1I7sgq6bEUz3LQeyt2n1wCJx3tAujTQmrGimQNk=;
+        b=IR1Qa3FRLugpeqNH5pavLzrWsFFv4kTsoSeezq7oMltay3yBeDcj2GPORkuGkdltLS
+         xQeRZdAzSugsi9JBk6rtFagDznOHbkSHtoCPkITqQSQr1XsQtjWHSrmnxGTbnxFYeCEy
+         NUztGWmbawNx2DREm9K8byPMGV0ysUzodHaocY7DON0J4jjUx/5OtyYzHQhLfW4eDK76
+         NsspswYrTnOTbKlE0yN1zxuHWTcGqs7B5K7tyYKZN6BzpFELEi06ExfCUa1dEEKijvbg
+         b6qyDgpwNpRtDrM77zaWG24Id6p/ehHPps7G804U71SAVuE7t7bUjpvikGNCIsDgW8X6
+         BGmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVykwRVRy7HgfFQLDjhUqRn5EIQ07UrkxZ+lvU7LILOibHcfz2CaiPCwxrE3Se5fhXgOPaDgEl8kG00Qcd5A63U@vger.kernel.org
+X-Gm-Message-State: AOJu0YzylWoyL6uzDEPrw3VSN3tJNxmx9xNUjBISwwTS5gGCQxTXN3LM
+	C51h6jfJhtgxDbf+jRw2bMcPb20yguJ9W7iJ3cff6ibwnvhEPT0HwFLUHTDEy8aoJ/BX+TXfLN+
+	9YhM884wdd91d63YjanhgYDTU1u9AjzNJKHxj
+X-Gm-Gg: ASbGncsaGgmtbUaZqwpKDa8E2cGvvVaHktr+KMInYMNgXGVJVg0kK6L9SmNOhW9MgTk
+	vozGDB3oTulMFwgyQ66cl/KlIMYA0tzjBp8roXromUKsQGoFjvD+EbDfPETwEURFBBP+/hBXant
+	3kMCIc7D8OHvrJ5fvGcgAnKrT2vGGOOg==
+X-Google-Smtp-Source: AGHT+IEj1HrgP+PRR64yxOZUY+DfSwtEqoT7Yuiu4KDug3Q8lx+H24sWHE2fgZDXyVsZuSpMdsxjQEadkTtzOQDKLAA=
+X-Received: by 2002:a2e:9057:0:b0:309:24df:f193 with SMTP id
+ 38308e7fff4ca-30927b1df4dmr34510241fa.28.1739860090588; Mon, 17 Feb 2025
+ 22:28:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH -next] uprobes: fix two zero old_folio bugs in
- __replace_page()
-To: Oleg Nesterov <oleg@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>, David Hildenbrand
-	<david@redhat.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
-	<linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <20250217161218.GD8082@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <20250217161218.GD8082@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+References: <cover.1739437531.git.dvyukov@google.com> <Z6-F35N8fkhTvagn@tassilo>
+In-Reply-To: <Z6-F35N8fkhTvagn@tassilo>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 18 Feb 2025 07:27:59 +0100
+X-Gm-Features: AWEUYZnVw1t0MMI0uARYWXZ6L-6yww7k_T1niGFQKgDkplpLNw3FIa_MIGLD7VI
+Message-ID: <CACT4Y+aWmc7fZuXKSVPj+dZ4DBOYHYHfCFq9fpmdKeD-QMsvPQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/9] perf report: Add latency and parallelism profiling
+To: Andi Kleen <ak@linux.intel.com>
+Cc: namhyung@kernel.org, irogers@google.com, acme@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 14 Feb 2025 at 19:05, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> On Thu, Feb 13, 2025 at 10:08:13AM +0100, Dmitry Vyukov wrote:
+> > There are two notions of time: wall-clock time and CPU time.
+> > For a single-threaded program, or a program running on a single-core
+> > machine, these notions are the same. However, for a multi-threaded/
+> > multi-process program running on a multi-core machine, these notions are
+> > significantly different. Each second of wall-clock time we have
+> > number-of-cores seconds of CPU time.
+>
+> I read through it and it looks good to me.
+>
+> For the patchkit.
+>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
 
+Thanks for the review!
 
-在 2025/2/18 0:12, Oleg Nesterov 写道:
-> Can't comment, my understanding of mm/ is not enough these days.
-> 
-> Just one question...
-> 
-> On 02/17, Tong Tiangen wrote:
->>
->> Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
->> Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
-> 
-> Are you sure this logic was wrong from the very beginning? Just curious.
-> 
-> Oleg.
-
-Yes, i checked the original code logic, and the put_page() didn't take 
-zero pages into account.
-
-Add Morton,Peter and David for discussion.
-
-Thanks,
-Tong.
-
-> 
->> Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
->> ---
->>   kernel/events/uprobes.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 46ddf3a2334d..ff5694acfa68 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->>   		dec_mm_counter(mm, MM_ANONPAGES);
->>   
->>   	if (!folio_test_anon(old_folio)) {
->> -		dec_mm_counter(mm, mm_counter_file(old_folio));
->> +		if (!is_zero_folio(old_folio))
->> +			dec_mm_counter(mm, mm_counter_file(old_folio));
->>   		inc_mm_counter(mm, MM_ANONPAGES);
->>   	}
->>   
->> @@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->>   	if (!folio_mapped(old_folio))
->>   		folio_free_swap(old_folio);
->>   	page_vma_mapped_walk_done(&pvmw);
->> -	folio_put(old_folio);
->> +	if (!is_zero_folio(old_folio))
->> +		folio_put(old_folio);
->>   
->>   	err = 0;
->>    unlock:
->> -- 
->> 2.25.1
->>
-> 
-> 
-> .
+Namhyung, Arnaldo, what's left for this series to be merged?
