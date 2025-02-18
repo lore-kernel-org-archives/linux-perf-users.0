@@ -1,188 +1,241 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090201B6D11
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 08:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C18A22CBF1
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 09:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739868382; cv=none; b=BzO5796EsEvsvY/uBy1lgHXdILNzI1D3Ws72RhjVn/7bseGSu5+h4M/HbDAJBLUajXE1da3OMz1lnbjhLaALcPSC5j8f5DGAkNrXQNcC7R3hMJMjPB2j0fiY/aqkJvFQCai47+kAiPGRKgZ0kXFxNZJSSYrGnhyQFx6Z0Ty0skg=
+	t=1739871030; cv=none; b=L9et9f01vV3OI0J7SRjSqhRu/Evia/pM+rI1lyPn2y/T2DBVhTT2EoKGguUSEG7lDB1Lt7OV1+em5VrkCKkY2XezwMWnYxtQmbVCQdCXqIG547SK2HpNmdOWr4lXS/h66YwRa5Lr9bcT7O5hIGJBE+SW4wZ4wPrAct4GeCVLMHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739868382; c=relaxed/simple;
-	bh=yDSnXVIa40AnZA99OPBLMMAd5wSVjLokTovYdqQrcNc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hbcLWag1fLjfOEx5eTwx6dJp2Efdugltqs17YJI/cNSEfc+kNqgKuSGwnHnwoZvMRQt4y2JhEgNlWYSvhSfh1kppOHYSmlWvzL6CkMK8y71hxmBNaqnk51NiQ20dQNt29b+0IREnFqxSiwMHt8CvvIBS+wa8+W402LXAYqBR5sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UllbpAq9; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739871030; c=relaxed/simple;
+	bh=0chrX0B3aSbge02bi2GD/Os7vwKtRKGXhmtR4Q7RfUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bPL9q0/uxqj6PavSY1U10UPmZ5+NcLch4VOdNhvi9aCWe/AR6yu642JhlT7ZCfO6rPHO1llguO4gefh0fiaBgpmgF08QGmZ+aeSThcCoOR9D8rlX+irAqcHW0fIjq5O4NevO7HICq4sS9vQin4bGFTvp60YZTSTCQjKiwq/0RrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RO4oOwoL; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UllbpAq9"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2addd5053c0so2994678fac.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 00:46:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RO4oOwoL"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-439714a799aso26923295e9.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 01:30:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739868380; x=1740473180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GJd7nq6QzBYjb9npIZDy/jgRU4O0VseneW2dwq1EDmY=;
-        b=UllbpAq9qJZRClX+hvn7DP1YB6SxCXtO4R04MByNwwdUZm2TsT4+bAhnvUKtJ+I76s
-         Cs0ZNpEAAqTI7P/QsVZanVjWKmcM2+E7tpavfmTf83Lk7NWlPfzGx8si8hYznoCgpFg/
-         kFvnm/It3cuyQeAbTqrJBI8J/t5m1mvexXGRdYTCTpm6wgxLC1jY4JVL/D3+leoue9W6
-         L6VPDwuS3kwxfUOz49KTSSeFEi3QIyRvwbVwPCBPmP5W6hmQILtBFXFeHu2gQ02EeR6k
-         1p76zquMMbDBNU7YkuVaXIJf4S/6381qplAClMIEtHH8TFe3FquGLlMgntZcxC0QrLbz
-         t6kA==
+        d=linaro.org; s=google; t=1739871027; x=1740475827; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wE00UcNy1SuGyWGuuvNBzcoUSeaUQC7bGOfR84asgzE=;
+        b=RO4oOwoLgT8nfcJs3ftVzltNq1OQlm1HZdSfzX6j72bylJyCwrbnoyi58Yw+07SEp8
+         1FHMFHxfTE98/ccrlk8Fs/2+JoGDy7IeTavGD1tXduqK/ksm9SbeDpiDwnIVeH0pQcch
+         e7sHScCpA6NTpaGM3FMvnXKr2nlKti7ppuYfIRF5WFYQS2PMNQi5ynWbASo8X6uDHLoG
+         eoQUK8yQDYULDk2hyrdKBRdt7KpVbnTgnX4kV+T2lLZtrVFN4khoWjnkiuHeLqqE3dEV
+         Z+IncUhnHevdSZS2aWxUNsw6dwzSQRgrUpS0CEeRUVgQTgKdsneiY03/GHULje7yY6GG
+         8Tfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739868380; x=1740473180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GJd7nq6QzBYjb9npIZDy/jgRU4O0VseneW2dwq1EDmY=;
-        b=Hiwt23JohYF0zeWbWW/dgBdKIuApPFX/QEB2gjRn5VVwsGeSpibEYCLszNP+P9ktBx
-         nqlo1UT7Uw71yn9f6EB4u0S+fTNZm4nVbG2A7aA9CFUT+CkJ+YmI64+p/4AcaVRfaP35
-         0Mvoi/5fTQrMTFKRw99VPKEbv1SEpTedxriek7tHyExP5xS39kC+QjA7yRmHW/W+cvfZ
-         2WJmtbYJEOXK7DEHETFBr0W0gWMYn/BSbfAWH2+/oRuM4nnMlpoKYDChjL6+eOjSslzC
-         S1ua53ymXPfrasbH46/4aXDhukLBzch3ydvgy0O5pu+KBkh6tEZj68KfcDTbFWSroCGL
-         EmFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTJ7eeeu8UjZSaihHM/DR4AwxqqfLY8c0p3/gbXy6aQGh3O3J+1VZ7heH780CdtGKQXQl0ABWzUMzgNSTCSvNC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTuq6aS21JQtyApDqHHWal0HJYrcvGGkxqgfCvfZabvo1dKGk2
-	8cXPt+5ywAlldo/tIa46zXcD+kdX6/LKIrBrJmPJ3GYDXd3UXEdm+IcqHTiYpNO/2u9uNGlIYpI
-	A+60KMk2yB4DdCqWXAH2H4dm5FB/sZmImhlFD5w==
-X-Gm-Gg: ASbGncvif/0cialoUJZnWzYBrqVUD001NRc/TP3XpW6lrGxXvpqqfJlBdZj/TvFxpWD
-	zg+h5pEUSobyg8wtvDVI/Yrm2ShJhTuIoyWnwfgypBq+ZEQbTOl3WgRfPmlDGB3Dq4fPbC3gTwb
-	g=
-X-Google-Smtp-Source: AGHT+IFm9vNEQ8X126IwADvLb9rT5XMr1pesOHyHKgcPIaN+xUJPxTGUWHrghfMYHG0o0nWqEBP/oKVjpG31b6OWn1o=
-X-Received: by 2002:a05:6870:b623:b0:297:23cf:d3db with SMTP id
- 586e51a60fabf-2bc99dcc23fmr8163637fac.37.1739868380048; Tue, 18 Feb 2025
- 00:46:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739871027; x=1740475827;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wE00UcNy1SuGyWGuuvNBzcoUSeaUQC7bGOfR84asgzE=;
+        b=fe5McVJujU60KDjrOZ/VhgFKa56ujyo9mhL7vf5WVRzFxnbl3wsVFkhlBJLViEyE6V
+         23yELOZzBQApo6T0AFgkbxMligq4++J+AI95t+cDsaUHllqYRgrCoCDwKbxmuhP2cnlf
+         lrN4kjFeJurQXzMXYRlSM1YoCDycWhuOkaTCfSjS8MSC27FTXGJOtupj8h1TSPMkdUsk
+         nRuvQR7ALV0RtyNE9f/nx4T5duNQvc8UXLX+dCBZRWOWlnzKvugj8/Gi8BqA5JU67W2N
+         QbXKJh1BucdUoBF/p6cmR4/9X0nFJ61+DBwXHnNiVopFdGiUmXO0Y6EbVjPGm7N+Qs+V
+         X8tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhRzQARds10FQ1s3g4H5gdb4tHAbrCAnPj9pwr7XVrTleh53xLpi4321M9MgLa5Via+cQbchcrxl6MeGs5l/1R@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEjJ8SQT+NNRkwH6HthZflabCT0ECs6n3+FygjIeZsvZRzFcpD
+	oCvHMGDaZRUWOh6nGz+Ix6INt0AynLnp3thd9OeecCLRMCEm1rXPD4ALK/V0hGc=
+X-Gm-Gg: ASbGncvVnisIpv71gTzL5P/C6rL8rGSUmDgrls+g4M9KbUfHYnesLptONZKOLrFW6xF
+	VGOvoVGV8h4GR8iYjAeH207ws6AVig+kSvWH4hahWLSpdrWoe35whj+cOfXEaOzib9aDFhNXScx
+	PebSus4f62jyd9WNYds8mf08bTWwsnoL7MnA6rDerNlraaZ1+uraUabnSAb2bVLOvWOWyWGOKf2
+	ksk4qfkhe8A0VMLPAthcGTG7yVPcChxScEgn/2AT3Sp8ZdgcOP6wZjPvX8yoJc7R6/k0ddg5ZAn
+	bJOJUDVxMBkdi8WpmeekOTJmJQ==
+X-Google-Smtp-Source: AGHT+IHYnyamw8QWwyVOjp9nBW/UYW7o5DDa8xsRZ9a2WsL6I1a5A5iV6efBKOc6QgGc1zCXFPOP2Q==
+X-Received: by 2002:a05:600c:1d1d:b0:439:8ada:e3b0 with SMTP id 5b1f17b1804b1-4398adae4e8mr39398645e9.19.1739871026824;
+        Tue, 18 Feb 2025 01:30:26 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439617fc885sm144181505e9.9.2025.02.18.01.30.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 01:30:26 -0800 (PST)
+Message-ID: <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org>
+Date: Tue, 18 Feb 2025 09:30:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208104002.60332-1-cuiyunhui@bytedance.com>
- <20250208104002.60332-3-cuiyunhui@bytedance.com> <2fedcf43-05f9-40da-a4f7-1b836f30b0df@linux.alibaba.com>
-In-Reply-To: <2fedcf43-05f9-40da-a4f7-1b836f30b0df@linux.alibaba.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Tue, 18 Feb 2025 16:46:08 +0800
-X-Gm-Features: AWEUYZlKaYI0ZGCGtjcpg77WiA6ZuKperDHgxYMipoc-2RT3j86BH0keI_z0DXQ
-Message-ID: <CAEEQ3wk5AhHK5cbZ-m1ibz93qqGJ1OPXM_NE_6rWjkuPM=Gw=g@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v3 2/2] perf/dwc_pcie: fix duplicate
- pci_dev devices
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520
+ events/metrics
+To: Ian Rogers <irogers@google.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, Namhyung Kim <namhyung@kernel.org>,
+ linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>,
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
+ <Z66YjGvjD_yzEHUg@google.com>
+ <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+ <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org>
+ <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Shuai,
 
-On Tue, Feb 11, 2025 at 4:02=E2=80=AFPM Shuai Xue <xueshuai@linux.alibaba.c=
-om> wrote:
->
->
->
-> =E5=9C=A8 2025/2/8 18:40, Yunhui Cui =E5=86=99=E9=81=93:
-> > During platform_device_register, wrongly using struct device
-> > pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
-> > still, accessing the duplicated device leads to list corruption as its
-> > mutex content (e.g., list, magic) remains the same as the original.
-> >
-> > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > ---
-> >   drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
-> >   1 file changed, 13 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> > index 19fa2ba8dd67..4f6599e32bba 100644
-> > --- a/drivers/perf/dwc_pcie_pmu.c
-> > +++ b/drivers/perf/dwc_pcie_pmu.c
-> > @@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pd=
-ev)
-> >       u32 sbdf;
-> >
-> >       sbdf =3D (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->=
-number, pdev->devfn);
-> > -     plat_dev =3D platform_device_register_data(NULL, "dwc_pcie_pmu", =
-sbdf,
-> > -                                              pdev, sizeof(*pdev));
-> > -
-> > +     plat_dev =3D platform_device_register_simple("platform_dwc_pcie",=
- sbdf, NULL, 0);
-> >       if (IS_ERR(plat_dev))
-> >               return PTR_ERR(plat_dev);
-> >
-> > @@ -616,18 +614,26 @@ static struct notifier_block dwc_pcie_pmu_nb =3D =
-{
-> >
-> >   static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
-> >   {
-> > -     struct pci_dev *pdev =3D plat_dev->dev.platform_data;
-> > +     struct pci_dev *pdev;
-> >       struct dwc_pcie_pmu *pcie_pmu;
-> >       char *name;
-> >       u32 sbdf;
-> >       u16 vsec;
-> >       int ret;
-> >
-> > +     sbdf =3D plat_dev->id;
-> > +     pdev =3D pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf=
- & 0xffff),
-> > +                                        sbdf & 0xff);
-> > +     if (!pdev) {
-> > +             pr_err("No pdev found for the sbdf 0x%x\n", sbdf);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> >       vsec =3D dwc_pcie_des_cap(pdev);
-> >       if (!vsec)
-> >               return -ENODEV;
->
-> pci_dev_put(pdev) should move ahead to aovid return here.
->
-> >
-> > -     sbdf =3D plat_dev->id;
-> > +     pci_dev_put(pdev);
-> >       name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport=
-_%x", sbdf);
-> >       if (!name)
-> >               return -ENOMEM;
-> > @@ -642,7 +648,7 @@ static int dwc_pcie_pmu_probe(struct platform_devic=
-e *plat_dev)
-> >       pcie_pmu->on_cpu =3D -1;
-> >       pcie_pmu->pmu =3D (struct pmu){
-> >               .name           =3D name,
-> > -             .parent         =3D &pdev->dev,
-> > +             .parent         =3D &plat_dev->dev,
-> >               .module         =3D THIS_MODULE,
-> >               .attr_groups    =3D dwc_pcie_attr_groups,
-> >               .capabilities   =3D PERF_PMU_CAP_NO_EXCLUDE,
-> > @@ -729,7 +735,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cp=
-u, struct hlist_node *cpuhp_n
-> >
-> >   static struct platform_driver dwc_pcie_pmu_driver =3D {
-> >       .probe =3D dwc_pcie_pmu_probe,
-> > -     .driver =3D {.name =3D "dwc_pcie_pmu",},
-> > +     .driver =3D {.name =3D "platform_dwc_pcie",},
->
-> Aha, it is very difficult to come up with a name that satisfies everyone.=
- The
-> original name uses the '_pmu' suffix to follow the unwritten convention o=
-f
-> other PMU drivers.
->
-> Personally, I think the original name is more appropriate, but I'll leave=
- the
-> decision to @Will.
 
-Since Will hasn't replied, I'll update to the next version to keep the
-original name.
+On 18/02/2025 12:41 am, Ian Rogers wrote:
+> On Fri, Feb 14, 2025 at 2:02 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 14/02/2025 5:49 am, Yangyu Chen wrote:
+>>>
+>>>
+>>>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrote:
+>>>>
+>>>> Hello,
+>>>>
+>>>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
+>>>>> This patchset adds the perf JSON files for the Cortex-A720 and Cortex-A520
+>>>>> processors. Some events have been tested on Raxda Orion 6 with Cix P1 SoC
+>>>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
+>>>>
+>>>> I'm curious how the name of PMUs look like.  It is cortex_a720 (or a520)?
+>>>
+>>> The name of PMUs comes from Arm's documentation. I have included these
+>>> links in each patch.
+>>>
+>>>> I remember there's a logic to check the length of hex digits at the end.
+>>>>
+>>>
+>>> Could you provide more details about this?
+>>>
+>>>> Ian, are you ok with this?
+>>>>
+>>
+>> I think they wouldn't be merged because they're core PMUs, so should be
+>> fine? Even though they would otherwise be merged because they're more
+>> than 3 hex digits.
+> 
+> Do we know the PMU names? If they are cortex_a520 and cortex_a720 then
 
->
-> Thanks.
-> Best Regards.
-> Shuai
+It will be "armv9_cortex_a720" from this line:
 
-Thanks,
-Yunhui
+   PMUV3_INIT_SIMPLE(armv9_cortex_a720)
+
+> this comment at least reads a little stale:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmus.c?h=perf-tools-next#n76
+> ```
+> /*
+> * There is a '_{num}' suffix. For decimal suffixes any length
+> * will do, for hexadecimal ensure more than 2 hex digits so
+> * that S390's cpum_cf PMU doesn't match.
+> */
+> ```
+> James is right that core PMUs aren't put on the same list as uncore/other PMUs.
+> 
+> Thanks,
+> Ian
+> 
+>>>> Thanks,
+>>>> Namhyung
+>>>>
+>>>>>
+>>>>> Yangyu Chen (2):
+>>>>>    perf vendor events arm64: Add Cortex-A720 events/metrics
+>>>>>    perf vendor events arm64: Add Cortex-A520 events/metrics
+>>>>>
+>>>>> .../arch/arm64/arm/cortex-a520/bus.json       |  26 ++
+>>>>> .../arch/arm64/arm/cortex-a520/exception.json |  18 +
+>>>>> .../arm64/arm/cortex-a520/fp_operation.json   |  14 +
+>>>>> .../arch/arm64/arm/cortex-a520/general.json   |   6 +
+>>>>> .../arch/arm64/arm/cortex-a520/l1d_cache.json |  50 ++
+>>>>> .../arch/arm64/arm/cortex-a520/l1i_cache.json |  14 +
+>>>>> .../arch/arm64/arm/cortex-a520/l2_cache.json  |  46 ++
+>>>>> .../arch/arm64/arm/cortex-a520/l3_cache.json  |  21 +
+>>>>> .../arch/arm64/arm/cortex-a520/ll_cache.json  |  10 +
+>>>>> .../arch/arm64/arm/cortex-a520/memory.json    |  58 +++
+>>>>> .../arch/arm64/arm/cortex-a520/metrics.json   | 373 +++++++++++++++
+>>>>> .../arch/arm64/arm/cortex-a520/pmu.json       |   8 +
+>>>>> .../arch/arm64/arm/cortex-a520/retired.json   |  90 ++++
+>>>>> .../arm64/arm/cortex-a520/spec_operation.json |  70 +++
+>>>>> .../arch/arm64/arm/cortex-a520/stall.json     |  82 ++++
+>>>>> .../arch/arm64/arm/cortex-a520/sve.json       |  22 +
+>>>>> .../arch/arm64/arm/cortex-a520/tlb.json       |  78 ++++
+>>>>> .../arch/arm64/arm/cortex-a520/trace.json     |  32 ++
+>>>>> .../arch/arm64/arm/cortex-a720/bus.json       |  18 +
+>>>>> .../arch/arm64/arm/cortex-a720/exception.json |  62 +++
+>>>>> .../arm64/arm/cortex-a720/fp_operation.json   |  22 +
+>>>>> .../arch/arm64/arm/cortex-a720/general.json   |  10 +
+>>>>> .../arch/arm64/arm/cortex-a720/l1d_cache.json |  50 ++
+>>>>> .../arch/arm64/arm/cortex-a720/l1i_cache.json |  14 +
+>>>>> .../arch/arm64/arm/cortex-a720/l2_cache.json  |  62 +++
+>>>>> .../arch/arm64/arm/cortex-a720/l3_cache.json  |  22 +
+>>>>> .../arch/arm64/arm/cortex-a720/ll_cache.json  |  10 +
+>>>>> .../arch/arm64/arm/cortex-a720/memory.json    |  54 +++
+>>>>> .../arch/arm64/arm/cortex-a720/metrics.json   | 436 ++++++++++++++++++
+>>>>> .../arch/arm64/arm/cortex-a720/pmu.json       |   8 +
+>>>>> .../arch/arm64/arm/cortex-a720/retired.json   |  90 ++++
+>>>>> .../arch/arm64/arm/cortex-a720/spe.json       |  42 ++
+>>>>> .../arm64/arm/cortex-a720/spec_operation.json |  90 ++++
+>>>>> .../arch/arm64/arm/cortex-a720/stall.json     |  82 ++++
+>>>>> .../arch/arm64/arm/cortex-a720/sve.json       |  50 ++
+>>>>> .../arch/arm64/arm/cortex-a720/tlb.json       |  74 +++
+>>>>> .../arch/arm64/arm/cortex-a720/trace.json     |  32 ++
+>>>>> .../arch/arm64/common-and-microarch.json      |  15 +
+>>>>> tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
+>>>>> 39 files changed, 2263 insertions(+)
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/bus.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/exception.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/fp_operation.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/general.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1d_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l1i_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l2_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/l3_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/ll_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/memory.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/metrics.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/pmu.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/retired.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/spec_operation.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/stall.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/sve.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/tlb.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a520/trace.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/bus.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/exception.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/fp_operation.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/general.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1d_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l1i_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l2_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/l3_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/ll_cache.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/memory.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/metrics.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/pmu.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/retired.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spe.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/spec_operation.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/stall.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/sve.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/tlb.json
+>>>>> create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a720/trace.json
+>>>>>
+>>>>> --
+>>>>> 2.47.2
+>>>>>
+>>>
+>>
+
