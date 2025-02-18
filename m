@@ -1,95 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 443722343C5;
-	Tue, 18 Feb 2025 10:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1B61A83E6;
+	Tue, 18 Feb 2025 10:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874710; cv=none; b=JE2ScuwlEDYV0s1fiDN5yByC4hZxnLHT39KxnCdznSC73Rn+oz7WaQQiIZx7CnzWics0vxaHU/NY3PwJnMRKF5ChGXGQ4vf4L6TFYgnYktg+3CwL/FkAqODQ5ajZlgRklaaewuQnjS2b1NXocY8fpVs4iG0HpegFSUI172kVrRw=
+	t=1739874928; cv=none; b=DITk07AbNjqeW2m3KdS7Uq0D5T2/6NXjAAlvl7kF+oB86gEN38HhyjaupEvfiNXqYGe84voTYzuPBH0AzMZjSfJEAi5al3QIkvGvwA6TtFjthlFDJk5eL37BIkNwk4Cq4JAcFUIYlKfoUCOJhvUfHGuwjnfAuT6pgEPfv536doo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739874710; c=relaxed/simple;
-	bh=qPKoMG2CpPHMmPIEpvnZcV7HmhE7XE3gK1J58Dp7ywk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CpMJvumLfaUmiKIq6E9LOKFlYrRFqGUSB8GqT/9W02yF+ioNvuK5H25RUfPB8y7gdQ8sqM3+/GpDf4wFpK118gz0NokZqDLtoB3H2NNb/Awac1UWS+Crfzr4mN2D8dI8bOtfOScyFNNV8cmKeLDyO7XhRPFsgPx0K45E+5/0osc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82F5C13D5;
-	Tue, 18 Feb 2025 02:32:07 -0800 (PST)
-Received: from [10.57.39.83] (unknown [10.57.39.83])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DDB23F6A8;
-	Tue, 18 Feb 2025 02:31:46 -0800 (PST)
-Message-ID: <d5040b5c-564d-4abf-be22-d2aa1183b633@arm.com>
-Date: Tue, 18 Feb 2025 10:31:42 +0000
+	s=arc-20240116; t=1739874928; c=relaxed/simple;
+	bh=79AO6bTHkKJw32dqRF2AF+8XNyX9+vCi3Y0PvNk8y84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmE99f2X3kqt+DwQ7BwVPeyYWoxRucPT31tv2+u6meqgymYXxDhdfLqM2RPDBVKCzXp9RD6VMA/Dyhcc1S3ooshuBOJ+2pxOF7aXyZOxbljs7/D3gQzwRwCQsfNMR72ZpGt1lpaifSx1htuQbeaU3aVAHgSlJTDrP9wypw3tAGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W4Y/EKVP; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W4Y/EKVP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=q4C/73vH91GCh7UHpZKzP24a0BJc42bSJY2IG/ewQfU=; b=W4Y/EKVPAAtPrMxbuTzp0xSsld
+	bxgXL8V+H54wLt1Tybtjaz5pMBhebgjBl1td2Wkzu4RVhDEja9QxKDHHdLwPeibT11EH+JRMlu1VJ
+	hbjU1v7zAl0+SRTglWnX5DX9C85FRyM+Kfrs5aVQY7L5uSiDbZtoGBiIVwpAauElZiIZAB5v4oYeP
+	/dvRiq5iL7OV0jAVUAzTL+MBAZTP2NBJSG/JQuLCVyWEsSZiWlPtpM6avqld/oS7uAaIBxfUAJzvK
+	4HJ9jcrlxnCD8WDNqUIbg4XW0QDY43U1A2nHbQyp9C0cRpjvZE0HNb6O2pNdEhvYKScVMty3Fq4ub
+	kMocr2hQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tkKwW-00000001yxF-0ipX;
+	Tue, 18 Feb 2025 10:35:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3740030066A; Tue, 18 Feb 2025 11:35:07 +0100 (CET)
+Date: Tue, 18 Feb 2025 11:35:07 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 5/8] events: Move perf_event sysctls into kernel/events
+Message-ID: <20250218103507.GC40464@noisy.programming.kicks-ass.net>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+ <20250218-jag-mv_ctltables-v1-5-cd3698ab8d29@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm-cmn: don't claim resource during ioremap() for
- CMN700 with ACPI
-To: Yin Fengwei <fengwei_yin@linux.alibaba.com>, will@kernel.org,
- mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jie.li.linux@linux.alibaba.com
-References: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-jag-mv_ctltables-v1-5-cd3698ab8d29@kernel.org>
 
-On 2025-02-18 1:21 am, Yin Fengwei wrote:
-> Currently, arm-cmn PMU driver assumes ACPI claim resource
-> for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
-> failed because of resource claim failes when ioremap() is
-> called:
-> [   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
-> [   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
-> [   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
-> [   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
+On Tue, Feb 18, 2025 at 10:56:21AM +0100, Joel Granados wrote:
+> Move ctl tables to two files:
+> * perf_event_{paranoid,mlock_kb,max_sample_rate} and
+>   perf_cpu_time_max_percent into kernel/events/core.c
+> * perf_event_max_{stack,context_per_stack} into
+>   kernel/events/callchain.c
 > 
-> Let CMN700 + ACPI do same as CMN600 + ACPI to allow CMN700
-> work in ACPI env.
-
-No, the CMN-600 routine is a special case for CMN-600 having two nested 
-memory resources of its own. CMN-700 and everything else only have one 
-memory resource, so that is not appropriate. What else is claiming the 
-region to cause a conflict?
-
-Thanks,
-Robin.
-
-> Signed-off-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
-> ---
-> I am also wondering whether we could just drop the CMN600 part id
-> check here if ACPI companion device claimed the resource?
+> Make static variables and functions that are fully contained in core.c
+> and callchain.cand remove them from include/linux/perf_event.h.
+> Additionally six_hundred_forty_kb is moved to callchain.c.
 > 
->   drivers/perf/arm-cmn.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+> Two new sysctl tables are added ({callchain,events_core}_sysctl_table)
+> with their respective sysctl registration functions.
 > 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index ef959e66db7c..8b5322a2aa6e 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -2559,7 +2559,8 @@ static int arm_cmn_probe(struct platform_device *pdev)
->   	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
->   	platform_set_drvdata(pdev, cmn);
->   
-> -	if (cmn->part == PART_CMN600 && has_acpi_companion(cmn->dev)) {
-> +	if (((cmn->part == PART_CMN600) || (cmn->part == PART_CMN700)) &&
-> +			has_acpi_companion(cmn->dev)) {
->   		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
->   	} else {
->   		rootnode = 0;
-> @@ -2649,7 +2650,7 @@ MODULE_DEVICE_TABLE(of, arm_cmn_of_match);
->   static const struct acpi_device_id arm_cmn_acpi_match[] = {
->   	{ "ARMHC600", PART_CMN600 },
->   	{ "ARMHC650" },
-> -	{ "ARMHC700" },
-> +	{ "ARMHC700", PART_CMN700 },
->   	{}
->   };
->   MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kerenel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
