@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E3222B5A6;
-	Tue, 18 Feb 2025 08:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CB322B8A5;
+	Tue, 18 Feb 2025 08:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866425; cv=none; b=B8YxLpC5rUlrDgFdSkGXwu9LqGuyAuZMk0r0zJUnMaq8fB5FNlWj0NT4SmBxHhwqxlQBF6FmnDOgSh4fuIlzxGpehphsOretBT+FejSh/GP5hmR6f2OKcN9rP5MaOUD+mAdKvMzQh1imaKW8xWcYF54DVimSno5OC1tLwPWJlBk=
+	t=1739866428; cv=none; b=I1NNLCPNnG1J3B8Js1D6brlnp2exf+1lzx3S32E2L7WotSgVXG0T5ipM5DOhio1tHIBgBbvHzRx6d4a78LBZava4lqPxzaif1Ju85zuyI7lSNNw1SVj98YoRZ4EAqPndWFHUVPtyDLZwNwjJrQ5eQBp2hBo0hqJ2NsMTFxEfKrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866425; c=relaxed/simple;
-	bh=xu0GUm83JyShHEqFmSwpkaZGPFW88VwKlL9uutQEx3w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n3vXsL2Dg2x+kapWTVRWM45p62M/ayQr3I8+XBwilAfS1qlvmWkncisoaa6uVLz6sx/VR3yXr+XX63Rk/HTtWwclExGq5YR+uCXwJkGesiDYDz1YhnVOiDD0boADFwpUmDCxvrZVLB5qkUBscECKC/8MfETowY1/l2iCcPA5d/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iRwy/V4g; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1739866428; c=relaxed/simple;
+	bh=yB/FZS4m/RR+fQhgDKhzUQfmQoLtxQ+kNlzFJkx9zaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P11wstzSuIvhtbnpJif8VuEZgiuVlkIT5Z7XxniMC8qXh5fJChoh+0WUX5ASlDSZP5XsoxRMwJM87OdxrA7lNtkNWY/rpO2wI1neTavQi0YaqUVon18NV8S4z9vuzS5Z9rgFlz17n0T4sZPVtyRZbgZPL7HHLf+usfIWxh2Ftrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JZCrYtXc; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iRwy/V4g"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JZCrYtXc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866424; x=1771402424;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xu0GUm83JyShHEqFmSwpkaZGPFW88VwKlL9uutQEx3w=;
-  b=iRwy/V4gJt0IO2bH1oToYqGViF1XrQbVpeuTVQeiCVc6p2/rGXoQCXvr
-   o3bYvOzL2rILiUufp5XxAVu54UyPEujxak+QAhViF8CGUT0iRWYb3XYPH
-   LCa8sS44CtkWOJCKc6bTawnY1CF7NKhChZGrKr9Y0UEW1XorFypa681fe
-   zIVFcFkhzl5Vz/HlPOEhLnq4kZAYURKFsX6H3uXeRRjB/Znlm6LqjLmjP
-   H4P+MW+2gQ9UWjmTlm52LjQDJCMjfXDRsgeivPZLKX5rKabpTMxLqb2BD
-   FWQ2YzSU5n4ZkHzwjDCBb/Uliulv/Ce+KacWVUod0eb5XuJF5+eS9KkZG
-   A==;
-X-CSE-ConnectionGUID: dJ7q2oqkT2Kp3LVTeqrd5w==
-X-CSE-MsgGUID: Lk7yldyXQxSmDqcN/gKvAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200667"
+  t=1739866427; x=1771402427;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yB/FZS4m/RR+fQhgDKhzUQfmQoLtxQ+kNlzFJkx9zaw=;
+  b=JZCrYtXcIoHaUVVf7hw25oIcjKwae10+79c5+Vh9yeLttLCdIrW4/4gV
+   s5+hiv8IC1VfG1zDUXWP4xLiBWCrwEvK3or+69UStN0V650BSrDyVVXRq
+   DbanY+PzQxS/oeoCy7zc1fCOcDaSH9LodO9qCpVdK0QdupCVv/Jg+toXR
+   Q2IV4PGdNDgskpFYQJCPo1c3rC+H1fK2Di/jv85z+vByGiSen8eCd7quA
+   eF7dq/um/bME7kLXYFPyBUF0pHdH25Puf9rPnY7PrSDy2Tcfv43YjLkUS
+   XxGeL/drTCym/PQjhvm7h95GgJQ+WYnD+5jFbWfZvvYVSKPYEhjTeA1by
+   Q==;
+X-CSE-ConnectionGUID: dOR2qsHhTUe8fBSjMb26Zg==
+X-CSE-MsgGUID: PyRIImO8RtK3FNpSZ1ixsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200679"
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200667"
+   d="scan'208";a="44200679"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:13:44 -0800
-X-CSE-ConnectionGUID: fXcKE2DmSdSc2Qy3bIAJjw==
-X-CSE-MsgGUID: KQp3vMk7S32t+ZQ3GULzgQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:13:47 -0800
+X-CSE-ConnectionGUID: RrNRhlLIQ4KDPuNbAtcHbQ==
+X-CSE-MsgGUID: KVMIirJrQryr9P5uge/b2A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166061"
+   d="scan'208";a="145166074"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:40 -0800
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:43 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,12 +56,13 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Eranian Stephane <eranian@google.com>
 Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 00/24] Arch-PEBS and PMU supports for Clearwater Forest and Panther Lake
-Date: Tue, 18 Feb 2025 15:27:54 +0000
-Message-Id: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@intel.com>
+Subject: [Patch v2 01/24] perf/x86: Add dynamic constraint
+Date: Tue, 18 Feb 2025 15:27:55 +0000
+Message-Id: <20250218152818.158614-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,186 +71,140 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This v2 patch series is based on latest perf/core tree "1623ced247f7
-(x86/events/amd/iommu: Increase IOMMU_NAME_SIZE)" + extra first two
-patches of patch set "Cleanup for Intel PMU initialization"[1].
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Changes:
+More and more features require a dynamic event constraint, e.g., branch
+counter logging, auto counter reload, Arch PEBS, etc.
 
-  v1 -> v2:
-    * Add Panther Lake PMU support (patch 02/24)
-    * Add PEBS static calls to avoid introducing too much
-      x86_pmu.arch_pebs checks (patch 07~08/24)
-    * Optimize PEBS constraints base on Kan's dynamic constranit patch
-      (patch 13/24)
-    * Split perf tools patch of supporting more vector registers to
-      several small patches (patch 20~22/24)
+Add a generic flag, PMU_FL_DYN_CONSTRAINT, to indicate the case. It
+avoids keeping adding the individual flag in intel_cpuc_prepare().
 
-Tests:
+Add a variable dyn_constraint in the struct hw_perf_event to track the
+dynamic constraint of the event. Apply it if it's updated.
 
-  * Run below tests on Clearwater Forest and no issue is found. Please
-    notice nmi_watchdog is disabled when running the tests.
+Apply the generic dynamic constraint for branch counter logging.
+Many features on and after V6 require dynamic constraint. So
+unconditionally set the flag for V6+.
 
-  a. Basic perf counting case.
-    perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/core.c       |  1 +
+ arch/x86/events/intel/core.c | 21 +++++++++++++++------
+ arch/x86/events/intel/lbr.c  |  2 +-
+ arch/x86/events/perf_event.h |  1 +
+ include/linux/perf_event.h   |  1 +
+ 5 files changed, 19 insertions(+), 7 deletions(-)
 
-  b. Basic PMI based perf sampling case.
-    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}' sleep 1
-
-  c. Basic PEBS based perf sampling case.
-    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles,topdown-bad-spec,topdown-fe-bound,topdown-retiring}:p' sleep 1
-
-  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
-    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 sleep 1
-
-  e. PEBS sampling case with auxiliary (memory info) group
-    perf mem record sleep 1
-
-  f. PEBS sampling case with counter group
-    perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
-
-  g. Perf stat and record test
-    perf test 95; perf test 119
-
-  h. perf-fuzzer test
-
-
-  * Run similar tests on Panther Lake P-cores and E-cores and no issue
-    is found. CPU 0 is P-core and CPU 9 is E-core. nmi_watchdog is
-    disabled as well.
-
-  P-core:
-
-  a. Basic perf counting case.
-    perf stat -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}' taskset -c 0 sleep 1
-
-  b. Basic PMI based perf sampling case.
-    perf record -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}' taskset -c 0 sleep 1
-
-  c. Basic PEBS based perf sampling case.
-    perf record -e '{cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/branches/,cpu_core/cycles/,cpu_core/instructions/,cpu_core/ref-cycles/,cpu_core/slots/}:p' taskset -c 0 sleep 1
-
-  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
-    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 taskset -c 0 sleep 1
-
-  e. PEBS sampling case for user space registers
-    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 taskset -c 0 sleep 1
-
-  f. PEBS sampling case with auxiliary (memory info) group
-    perf mem record taskset -c 0 sleep 1
-
-  g. PEBS sampling case with counter group
-    perf record -e '{branches:p,branches,cycles}:S' -c 10000 taskset -c 0 sleep 1
-
-  h. Perf stat and record test
-    perf test 95; perf test 119
-
-  E-core:
-
-  a. Basic perf counting case.
-    perf stat -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}' taskset -c 9 sleep 1
-
-  b. Basic PMI based perf sampling case.
-    perf record -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}' taskset -c 9 sleep 1
-  c. Basic PEBS based perf sampling case.
-    perf record -e '{cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/branches/,cpu_atom/cycles/,cpu_atom/instructions/,cpu_atom/ref-cycles/,cpu_atom/topdown-bad-spec/,cpu_atom/topdown-fe-bound/,cpu_atom/topdown-retiring/}:p' taskset -c 9 sleep 1
-
-  d. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
-    perf record -e branches:p -Iax,bx,ip,ssp,xmm0,ymmh0 -b -c 10000 taskset -c  sleep 1
-
-  e. PEBS sampling case for user space registers
-    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 taskset -c 9 sleep 1
-
-  f. PEBS sampling case with auxiliary (memory info) group
-    perf mem record taskset -c 9 sleep 1
-
-  g. PEBS sampling case with counter group
-    perf record -e '{branches:p,branches,cycles}:S' -c 10000 taskset -c 9 sleep 1
-
-History:
-  v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
-
-Ref:
-  [1]: https://lore.kernel.org/all/20250129154820.3755948-1-kan.liang@linux.intel.com/
-
-
-Dapeng Mi (22):
-  perf/x86/intel: Add PMU support for Clearwater Forest
-  perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
-  perf/x86/intel: Decouple BTS initialization from PEBS initialization
-  perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
-  perf/x86/intel: Introduce pairs of PEBS static calls
-  perf/x86/intel: Initialize architectural PEBS
-  perf/x86/intel/ds: Factor out common PEBS processing code to functions
-  perf/x86/intel: Process arch-PEBS records or record fragments
-  perf/x86/intel: Factor out common functions to process PEBS groups
-  perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
-  perf/x86/intel: Update dyn_constranit base on PEBS event precise level
-  perf/x86/intel: Setup PEBS data configuration and enable legacy groups
-  perf/x86/intel: Add SSP register support for arch-PEBS
-  perf/x86/intel: Add counter group support for arch-PEBS
-  perf/core: Support to capture higher width vector registers
-  perf/x86/intel: Support arch-PEBS vector registers group capturing
-  perf tools: Support to show SSP register
-  perf tools: Enhance arch__intr/user_reg_mask() helpers
-  perf tools: Enhance sample_regs_user/intr to capture more registers
-  perf tools: Support to capture more vector registers (x86/Intel)
-  perf tools/tests: Add vector registers PEBS sampling test
-  perf tools: Fix incorrect --user-regs comments
-
-Kan Liang (2):
-  perf/x86: Add dynamic constraint
-  perf/x86/intel: Add Panther Lake support
-
- arch/arm/kernel/perf_regs.c                   |   6 +
- arch/arm64/kernel/perf_regs.c                 |   6 +
- arch/csky/kernel/perf_regs.c                  |   5 +
- arch/loongarch/kernel/perf_regs.c             |   5 +
- arch/mips/kernel/perf_regs.c                  |   5 +
- arch/powerpc/perf/perf_regs.c                 |   5 +
- arch/riscv/kernel/perf_regs.c                 |   5 +
- arch/s390/kernel/perf_regs.c                  |   5 +
- arch/x86/events/core.c                        | 105 ++-
- arch/x86/events/intel/bts.c                   |   6 +-
- arch/x86/events/intel/core.c                  | 330 +++++++-
- arch/x86/events/intel/ds.c                    | 722 ++++++++++++++----
- arch/x86/events/intel/lbr.c                   |   2 +-
- arch/x86/events/perf_event.h                  |  69 +-
- arch/x86/include/asm/intel_ds.h               |  10 +-
- arch/x86/include/asm/msr-index.h              |  28 +
- arch/x86/include/asm/perf_event.h             | 145 +++-
- arch/x86/include/uapi/asm/perf_regs.h         |  87 ++-
- arch/x86/kernel/perf_regs.c                   |  55 +-
- include/linux/perf_event.h                    |   3 +
- include/linux/perf_regs.h                     |  10 +
- include/uapi/linux/perf_event.h               |  11 +
- kernel/events/core.c                          |  53 +-
- tools/arch/x86/include/uapi/asm/perf_regs.h   |  90 ++-
- tools/include/uapi/linux/perf_event.h         |  14 +
- tools/perf/arch/arm/util/perf_regs.c          |   8 +-
- tools/perf/arch/arm64/util/perf_regs.c        |  11 +-
- tools/perf/arch/csky/util/perf_regs.c         |   8 +-
- tools/perf/arch/loongarch/util/perf_regs.c    |   8 +-
- tools/perf/arch/mips/util/perf_regs.c         |   8 +-
- tools/perf/arch/powerpc/util/perf_regs.c      |  17 +-
- tools/perf/arch/riscv/util/perf_regs.c        |   8 +-
- tools/perf/arch/s390/util/perf_regs.c         |   8 +-
- tools/perf/arch/x86/util/perf_regs.c          | 112 ++-
- tools/perf/builtin-record.c                   |   2 +-
- tools/perf/builtin-script.c                   |  23 +-
- tools/perf/tests/shell/record.sh              |  55 ++
- tools/perf/util/evsel.c                       |  36 +-
- tools/perf/util/intel-pt.c                    |   2 +-
- tools/perf/util/parse-regs-options.c          |  23 +-
- .../perf/util/perf-regs-arch/perf_regs_x86.c  |  90 +++
- tools/perf/util/perf_regs.c                   |   8 +-
- tools/perf/util/perf_regs.h                   |  20 +-
- tools/perf/util/record.h                      |   4 +-
- tools/perf/util/sample.h                      |   6 +-
- tools/perf/util/session.c                     |  29 +-
- tools/perf/util/synthetic-events.c            |   6 +-
- 47 files changed, 1966 insertions(+), 308 deletions(-)
-
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 7b6430e5a77b..883e0ee893cb 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -675,6 +675,7 @@ static int __x86_pmu_event_init(struct perf_event *event)
+ 	event->hw.idx = -1;
+ 	event->hw.last_cpu = -1;
+ 	event->hw.last_tag = ~0ULL;
++	event->hw.dyn_constraint = ~0ULL;
+ 
+ 	/* mark unused */
+ 	event->hw.extra_reg.idx = EXTRA_REG_NONE;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a9b4f1099a86..5570d97b8f4f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3736,10 +3736,9 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 	if (cpuc->excl_cntrs)
+ 		return intel_get_excl_constraints(cpuc, event, idx, c2);
+ 
+-	/* Not all counters support the branch counter feature. */
+-	if (branch_sample_counters(event)) {
++	if (event->hw.dyn_constraint != ~0ULL) {
+ 		c2 = dyn_constraint(cpuc, c2, idx);
+-		c2->idxmsk64 &= x86_pmu.lbr_counters;
++		c2->idxmsk64 &= event->hw.dyn_constraint;
+ 		c2->weight = hweight64(c2->idxmsk64);
+ 	}
+ 
+@@ -4056,15 +4055,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		leader = event->group_leader;
+ 		if (branch_sample_call_stack(leader))
+ 			return -EINVAL;
+-		if (branch_sample_counters(leader))
++		if (branch_sample_counters(leader)) {
+ 			num++;
++			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
++		}
+ 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+ 
+ 		for_each_sibling_event(sibling, leader) {
+ 			if (branch_sample_call_stack(sibling))
+ 				return -EINVAL;
+-			if (branch_sample_counters(sibling))
++			if (branch_sample_counters(sibling)) {
+ 				num++;
++				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
++			}
+ 		}
+ 
+ 		if (num > fls(x86_pmu.lbr_counters))
+@@ -4864,7 +4867,7 @@ int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
+ 			goto err;
+ 	}
+ 
+-	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA | PMU_FL_BR_CNTR)) {
++	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA | PMU_FL_DYN_CONSTRAINT)) {
+ 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
+ 
+ 		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
+@@ -6582,6 +6585,12 @@ __init int intel_pmu_init(void)
+ 			pr_cont(" AnyThread deprecated, ");
+ 	}
+ 
++	/*
++	 * Many features on and after V6 require dynamic constraint,
++	 * e.g., Arch PEBS, ACR.
++	 */
++	if (version >= 6)
++		x86_pmu.flags |= PMU_FL_DYN_CONSTRAINT;
+ 	/*
+ 	 * Install the hw-cache-events table:
+ 	 */
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index dc641b50814e..743dcc322085 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1609,7 +1609,7 @@ void __init intel_pmu_arch_lbr_init(void)
+ 	x86_pmu.lbr_nr = lbr_nr;
+ 
+ 	if (!!x86_pmu.lbr_counters)
+-		x86_pmu.flags |= PMU_FL_BR_CNTR;
++		x86_pmu.flags |= PMU_FL_BR_CNTR | PMU_FL_DYN_CONSTRAINT;
+ 
+ 	if (x86_pmu.lbr_mispred)
+ 		static_branch_enable(&x86_lbr_mispred);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a698e6484b3b..f4693409e191 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1066,6 +1066,7 @@ do {									\
+ #define PMU_FL_MEM_LOADS_AUX	0x100 /* Require an auxiliary event for the complete memory info */
+ #define PMU_FL_RETIRE_LATENCY	0x200 /* Support Retire Latency in PEBS */
+ #define PMU_FL_BR_CNTR		0x400 /* Support branch counter logging */
++#define PMU_FL_DYN_CONSTRAINT	0x800 /* Needs dynamic constraint */
+ 
+ #define EVENT_VAR(_id)  event_attr_##_id
+ #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 2d07bc1193f3..c381ea7135df 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -158,6 +158,7 @@ struct hw_perf_event {
+ 		struct { /* hardware */
+ 			u64		config;
+ 			u64		last_tag;
++			u64		dyn_constraint;
+ 			unsigned long	config_base;
+ 			unsigned long	event_base;
+ 			int		event_base_rdpmc;
 -- 
 2.40.1
 
