@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE25923C8D3;
-	Tue, 18 Feb 2025 08:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3D823DE85;
+	Tue, 18 Feb 2025 08:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866511; cv=none; b=mnZHiW1JeB9S6O3fh4kwHFWtdlrTBVWdz5VKiOCiW7zRJB+8PFmMEBLqeHI+q+hhvFPSfgZt2WRfOghsKk3dn9/Vxwxzg0gPqxnOkVVmVqej8+XHxOwWTPbl67cBnH5k0QHQe3E2AOrRgk+dO4VR0G7ziF3VOHhyaATaT8aWBXc=
+	t=1739866515; cv=none; b=DGFqlYNRfNVMTuR330xIf/huoF8UFv00fvMfRjYIleFD1aH4f1RSD8CQSOd9DzLOBiAMA/RRMiNVbzrI23D7N8ERVuKPBfF3fl1QlzfjfFlNjU4XaFkvH6XT08wnWbyCDmfRqynhxF2KHCQBkb5cMR5Xt8J6D7uTpQIIjUQszto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866511; c=relaxed/simple;
-	bh=TlGL1UgwL0twzqF7sdYiEjdQ4TeIO9OLcbKqplcExwc=;
+	s=arc-20240116; t=1739866515; c=relaxed/simple;
+	bh=DuhbR+ynGET7/SbvltgjcHoLV20JGQCoa9eI9Vj6Q6E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q3zLq7+8juHrEWVqIqnIeJpEYOwkrkPmw4DTd1rhdN3bKOBYRiuM6MhQ8iwG56ZdoXeRbB3mUcknEKqyJN6+NCqcGeJbQGXjy55xRZHxHBmErKrOW+0Hfk2s5gTjLScKzUbz1WnsM1srNwZfSkV2QVKIp+w77v8UBEmyEpObDmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nUL3EAgP; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=VkQPjvQBbpBsR4dZG31TjDgibe7KWIEY01oz3VOjB/jSrbam6SmZfh4D2ZhpjURRaCoDhktIhd46qkran7djYLISPVnFmWt1yLzwwBmiGh6Ce6hOZjUu2swCxYFLGFzffN5H48gWiRI/jfxZO+hBoGs5++u3WXbkd0L3+2wraV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QyyeyiLi; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nUL3EAgP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QyyeyiLi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866511; x=1771402511;
+  t=1739866515; x=1771402515;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TlGL1UgwL0twzqF7sdYiEjdQ4TeIO9OLcbKqplcExwc=;
-  b=nUL3EAgPHJqmpai/s/xxJFjaef1AUiGbROqWf2SelLGP+5YeyBKMLNDY
-   F7UH0EHEq3Lnm+9IUsC59okHIB3wd3hKs3FiHYaGejtbnYMi0yuGnc3mb
-   2mQvB2mvDJfTMR2w8BxPZnlO2bgBJretAvZnaC7xSJGewtHzz2wawT+e4
-   vzjZEGDpGHROto6QNLnzx0vYlFtDN5thyQQgCdI/7/AcF+dVIN+ujs8R1
-   mx1Hbd3t7onlMfOnCF8jaf2/00dgXaNr9FNXCONbxccIn/C0fG6xIiZHX
-   rWxSRHeNb4dDyan/OOr0I2g6wSRNQS2pqXw99B1UlHlxh0t2bKx7YfdeZ
-   A==;
-X-CSE-ConnectionGUID: w1QYsIRnT6ac+pwveamAFQ==
-X-CSE-MsgGUID: Q8xKgh7uTlKbRWQ8KTypkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200892"
+  bh=DuhbR+ynGET7/SbvltgjcHoLV20JGQCoa9eI9Vj6Q6E=;
+  b=QyyeyiLiSUfkfQQoMP2JLWd2HIgk4DAAE8kR9PU6JihrpP3aazeLRuQc
+   h9u0EEwiDSXpM1pYWMUpgm7PYyWqReJGtKI+r5YyUbs88ClcadwHFj5+h
+   0ToE8z1nL1zS8IDBED+lowyAt4v5lgR9fSLAwUd43X8fENwaeOyGC+COq
+   +p45omWBwot6qqYQgbhaupjS+Oj5pkTZSLza91SyEmyCJEPZAC0t34sg7
+   hx1reQofvRN5CpoWs9W6/GDvapE0RjHK4KxlLTjFfGpackUlhX2lippoL
+   XCOv2ehJcbEdytKcDDNoreVR+f8igasGlt4cF6MwZvIEJjbUKKgMY+eJt
+   g==;
+X-CSE-ConnectionGUID: eCCZ5cLFQ9StPa9B+tkO/g==
+X-CSE-MsgGUID: Qd/Ai9WkTwSN0Yd/6sFdbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200897"
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200892"
+   d="scan'208";a="44200897"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:15:11 -0800
-X-CSE-ConnectionGUID: JKX2BRvmQHWNDHBvQ1MwGQ==
-X-CSE-MsgGUID: 9a8IR+HXSqWO0zMmnoO8Gw==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:15:14 -0800
+X-CSE-ConnectionGUID: IuogitN8TKCmzpkAijAotw==
+X-CSE-MsgGUID: dDjFNhj6QA2FFCay+fXllg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166355"
+   d="scan'208";a="145166364"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:15:06 -0800
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:15:09 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 21/24] perf tools: Enhance sample_regs_user/intr to capture more registers
-Date: Tue, 18 Feb 2025 15:28:15 +0000
-Message-Id: <20250218152818.158614-22-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 22/24] perf tools: Support to capture more vector registers (x86/Intel)
+Date: Tue, 18 Feb 2025 15:28:16 +0000
+Message-Id: <20250218152818.158614-23-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
 References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
@@ -75,439 +75,345 @@ Content-Transfer-Encoding: 8bit
 Intel architectural PEBS supports to capture more vector registers like
 OPMASK/YMM/ZMM registers besides already supported XMM registers.
 
-arch-PEBS vector registers (VCER) capturing on perf core/pmu driver
-(Intel) has been supported by previous patches. This patch adds perf
-tool's part support. In detail, add support for the new
-sample_regs_intr/user_ext register selector in perf_event_attr. These 32
-bytes bitmap is used to select the new register group OPMASK, YMMH, ZMMH
-and ZMM in VECR. Update perf regs to introduce the new registers.
+This patch adds Intel specific support to capture these new vector
+registers for perf tools.
 
-This single patch only introduces the generic support, x86/intel specific
-support would be added in next patch.
+Besides, add SSP in perf regs. SSP is stored in general register group
+and is selected by sample_regs_intr.
 
 Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/include/uapi/linux/perf_event.h | 14 +++++++++++++
- tools/perf/builtin-script.c           | 23 +++++++++++++++-----
- tools/perf/util/evsel.c               | 30 ++++++++++++++++++++-------
- tools/perf/util/parse-regs-options.c  | 23 ++++++++++++--------
- tools/perf/util/perf_regs.h           | 16 +++++++++++++-
- tools/perf/util/record.h              |  4 ++--
- tools/perf/util/sample.h              |  6 +++++-
- tools/perf/util/session.c             | 29 +++++++++++++++-----------
- tools/perf/util/synthetic-events.c    |  6 ++++--
- 9 files changed, 112 insertions(+), 39 deletions(-)
+ tools/arch/x86/include/uapi/asm/perf_regs.h   | 83 +++++++++++++++-
+ tools/perf/arch/x86/util/perf_regs.c          | 99 +++++++++++++++++++
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  | 88 +++++++++++++++++
+ 3 files changed, 269 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 0524d541d4e3..a46b4f33557f 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -379,6 +379,13 @@ enum perf_event_read_format {
- #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
- #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
- #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
-+#define PERF_ATTR_SIZE_VER9	168	/* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
-+
-+#define PERF_EXT_REGS_ARRAY_SIZE	4
-+#define PERF_NUM_EXT_REGS		(PERF_EXT_REGS_ARRAY_SIZE * 64)
-+
-+#define PERF_SAMPLE_ARRAY_SIZE		(PERF_EXT_REGS_ARRAY_SIZE + 1)
-+#define PERF_SAMPLE_REGS_NUM		((PERF_SAMPLE_ARRAY_SIZE) * 64)
+diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+index 9c45b07bfcf7..9d19eef7d7a2 100644
+--- a/tools/arch/x86/include/uapi/asm/perf_regs.h
++++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+@@ -36,7 +36,7 @@ enum perf_event_x86_regs {
+ 	/* PERF_REG_INTEL_PT_MAX ignores the SSP register. */
+ 	PERF_REG_INTEL_PT_MAX = PERF_REG_X86_R15 + 1,
  
- /*
-  * Hardware event_id to monitor via a performance monitoring event:
-@@ -531,6 +538,13 @@ struct perf_event_attr {
- 	__u64	sig_data;
+-	/* These all need two bits set because they are 128bit */
++	/* These all need two bits set because they are 128 bits */
+ 	PERF_REG_X86_XMM0  = 32,
+ 	PERF_REG_X86_XMM1  = 34,
+ 	PERF_REG_X86_XMM2  = 36,
+@@ -56,6 +56,87 @@ enum perf_event_x86_regs {
  
- 	__u64	config3; /* extension of config2 */
+ 	/* These include both GPRs and XMMX registers */
+ 	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
 +
 +	/*
-+	 * Extension sets of regs to dump for each sample.
-+	 * See asm/perf_regs.h for details.
++	 * YMM upper bits need two bits set because they are 128 bits.
++	 * PERF_REG_X86_YMMH0 = 64
 +	 */
-+	__u64	sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
-+	__u64   sample_regs_user_ext[PERF_EXT_REGS_ARRAY_SIZE];
++	PERF_REG_X86_YMMH0	= PERF_REG_X86_XMM_MAX,
++	PERF_REG_X86_YMMH1	= PERF_REG_X86_YMMH0 + 2,
++	PERF_REG_X86_YMMH2	= PERF_REG_X86_YMMH1 + 2,
++	PERF_REG_X86_YMMH3	= PERF_REG_X86_YMMH2 + 2,
++	PERF_REG_X86_YMMH4	= PERF_REG_X86_YMMH3 + 2,
++	PERF_REG_X86_YMMH5	= PERF_REG_X86_YMMH4 + 2,
++	PERF_REG_X86_YMMH6	= PERF_REG_X86_YMMH5 + 2,
++	PERF_REG_X86_YMMH7	= PERF_REG_X86_YMMH6 + 2,
++	PERF_REG_X86_YMMH8	= PERF_REG_X86_YMMH7 + 2,
++	PERF_REG_X86_YMMH9	= PERF_REG_X86_YMMH8 + 2,
++	PERF_REG_X86_YMMH10	= PERF_REG_X86_YMMH9 + 2,
++	PERF_REG_X86_YMMH11	= PERF_REG_X86_YMMH10 + 2,
++	PERF_REG_X86_YMMH12	= PERF_REG_X86_YMMH11 + 2,
++	PERF_REG_X86_YMMH13	= PERF_REG_X86_YMMH12 + 2,
++	PERF_REG_X86_YMMH14	= PERF_REG_X86_YMMH13 + 2,
++	PERF_REG_X86_YMMH15	= PERF_REG_X86_YMMH14 + 2,
++	PERF_REG_X86_YMMH_MAX	= PERF_REG_X86_YMMH15 + 2,
++
++	/*
++	 * ZMM0-15 upper bits need four bits set because they are 256 bits
++	 * PERF_REG_X86_ZMMH0 = 96
++	 */
++	PERF_REG_X86_ZMMH0	= PERF_REG_X86_YMMH_MAX,
++	PERF_REG_X86_ZMMH1	= PERF_REG_X86_ZMMH0 + 4,
++	PERF_REG_X86_ZMMH2	= PERF_REG_X86_ZMMH1 + 4,
++	PERF_REG_X86_ZMMH3	= PERF_REG_X86_ZMMH2 + 4,
++	PERF_REG_X86_ZMMH4	= PERF_REG_X86_ZMMH3 + 4,
++	PERF_REG_X86_ZMMH5	= PERF_REG_X86_ZMMH4 + 4,
++	PERF_REG_X86_ZMMH6	= PERF_REG_X86_ZMMH5 + 4,
++	PERF_REG_X86_ZMMH7	= PERF_REG_X86_ZMMH6 + 4,
++	PERF_REG_X86_ZMMH8	= PERF_REG_X86_ZMMH7 + 4,
++	PERF_REG_X86_ZMMH9	= PERF_REG_X86_ZMMH8 + 4,
++	PERF_REG_X86_ZMMH10	= PERF_REG_X86_ZMMH9 + 4,
++	PERF_REG_X86_ZMMH11	= PERF_REG_X86_ZMMH10 + 4,
++	PERF_REG_X86_ZMMH12	= PERF_REG_X86_ZMMH11 + 4,
++	PERF_REG_X86_ZMMH13	= PERF_REG_X86_ZMMH12 + 4,
++	PERF_REG_X86_ZMMH14	= PERF_REG_X86_ZMMH13 + 4,
++	PERF_REG_X86_ZMMH15	= PERF_REG_X86_ZMMH14 + 4,
++	PERF_REG_X86_ZMMH_MAX	= PERF_REG_X86_ZMMH15 + 4,
++
++	/*
++	 * ZMM16-31 need eight bits set because they are 512 bits
++	 * PERF_REG_X86_ZMM16 = 160
++	 */
++	PERF_REG_X86_ZMM16	= PERF_REG_X86_ZMMH_MAX,
++	PERF_REG_X86_ZMM17	= PERF_REG_X86_ZMM16 + 8,
++	PERF_REG_X86_ZMM18	= PERF_REG_X86_ZMM17 + 8,
++	PERF_REG_X86_ZMM19	= PERF_REG_X86_ZMM18 + 8,
++	PERF_REG_X86_ZMM20	= PERF_REG_X86_ZMM19 + 8,
++	PERF_REG_X86_ZMM21	= PERF_REG_X86_ZMM20 + 8,
++	PERF_REG_X86_ZMM22	= PERF_REG_X86_ZMM21 + 8,
++	PERF_REG_X86_ZMM23	= PERF_REG_X86_ZMM22 + 8,
++	PERF_REG_X86_ZMM24	= PERF_REG_X86_ZMM23 + 8,
++	PERF_REG_X86_ZMM25	= PERF_REG_X86_ZMM24 + 8,
++	PERF_REG_X86_ZMM26	= PERF_REG_X86_ZMM25 + 8,
++	PERF_REG_X86_ZMM27	= PERF_REG_X86_ZMM26 + 8,
++	PERF_REG_X86_ZMM28	= PERF_REG_X86_ZMM27 + 8,
++	PERF_REG_X86_ZMM29	= PERF_REG_X86_ZMM28 + 8,
++	PERF_REG_X86_ZMM30	= PERF_REG_X86_ZMM29 + 8,
++	PERF_REG_X86_ZMM31	= PERF_REG_X86_ZMM30 + 8,
++	PERF_REG_X86_ZMM_MAX	= PERF_REG_X86_ZMM31 + 8,
++
++	/*
++	 * OPMASK Registers
++	 * PERF_REG_X86_OPMASK0 = 288
++	 */
++	PERF_REG_X86_OPMASK0	= PERF_REG_X86_ZMM_MAX,
++	PERF_REG_X86_OPMASK1	= PERF_REG_X86_OPMASK0 + 1,
++	PERF_REG_X86_OPMASK2	= PERF_REG_X86_OPMASK1 + 1,
++	PERF_REG_X86_OPMASK3	= PERF_REG_X86_OPMASK2 + 1,
++	PERF_REG_X86_OPMASK4	= PERF_REG_X86_OPMASK3 + 1,
++	PERF_REG_X86_OPMASK5	= PERF_REG_X86_OPMASK4 + 1,
++	PERF_REG_X86_OPMASK6	= PERF_REG_X86_OPMASK5 + 1,
++	PERF_REG_X86_OPMASK7	= PERF_REG_X86_OPMASK6 + 1,
++
++	PERF_REG_X86_VEC_MAX	= PERF_REG_X86_OPMASK7 + 1,
  };
  
- /*
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 33667b534634..14aba0965a26 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -712,21 +712,32 @@ static int perf_session__check_output_opt(struct perf_session *session)
+ #define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index 5b163f0a651a..1902a715efa6 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -54,6 +54,67 @@ static const struct sample_reg sample_reg_masks[] = {
+ 	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
+ 	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
+ 	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
++
++	SMPL_REG2_EXT(YMMH0, PERF_REG_X86_YMMH0),
++	SMPL_REG2_EXT(YMMH1, PERF_REG_X86_YMMH1),
++	SMPL_REG2_EXT(YMMH2, PERF_REG_X86_YMMH2),
++	SMPL_REG2_EXT(YMMH3, PERF_REG_X86_YMMH3),
++	SMPL_REG2_EXT(YMMH4, PERF_REG_X86_YMMH4),
++	SMPL_REG2_EXT(YMMH5, PERF_REG_X86_YMMH5),
++	SMPL_REG2_EXT(YMMH6, PERF_REG_X86_YMMH6),
++	SMPL_REG2_EXT(YMMH7, PERF_REG_X86_YMMH7),
++	SMPL_REG2_EXT(YMMH8, PERF_REG_X86_YMMH8),
++	SMPL_REG2_EXT(YMMH9, PERF_REG_X86_YMMH9),
++	SMPL_REG2_EXT(YMMH10, PERF_REG_X86_YMMH10),
++	SMPL_REG2_EXT(YMMH11, PERF_REG_X86_YMMH11),
++	SMPL_REG2_EXT(YMMH12, PERF_REG_X86_YMMH12),
++	SMPL_REG2_EXT(YMMH13, PERF_REG_X86_YMMH13),
++	SMPL_REG2_EXT(YMMH14, PERF_REG_X86_YMMH14),
++	SMPL_REG2_EXT(YMMH15, PERF_REG_X86_YMMH15),
++
++	SMPL_REG4_EXT(ZMMH0, PERF_REG_X86_ZMMH0),
++	SMPL_REG4_EXT(ZMMH1, PERF_REG_X86_ZMMH1),
++	SMPL_REG4_EXT(ZMMH2, PERF_REG_X86_ZMMH2),
++	SMPL_REG4_EXT(ZMMH3, PERF_REG_X86_ZMMH3),
++	SMPL_REG4_EXT(ZMMH4, PERF_REG_X86_ZMMH4),
++	SMPL_REG4_EXT(ZMMH5, PERF_REG_X86_ZMMH5),
++	SMPL_REG4_EXT(ZMMH6, PERF_REG_X86_ZMMH6),
++	SMPL_REG4_EXT(ZMMH7, PERF_REG_X86_ZMMH7),
++	SMPL_REG4_EXT(ZMMH8, PERF_REG_X86_ZMMH8),
++	SMPL_REG4_EXT(ZMMH9, PERF_REG_X86_ZMMH9),
++	SMPL_REG4_EXT(ZMMH10, PERF_REG_X86_ZMMH10),
++	SMPL_REG4_EXT(ZMMH11, PERF_REG_X86_ZMMH11),
++	SMPL_REG4_EXT(ZMMH12, PERF_REG_X86_ZMMH12),
++	SMPL_REG4_EXT(ZMMH13, PERF_REG_X86_ZMMH13),
++	SMPL_REG4_EXT(ZMMH14, PERF_REG_X86_ZMMH14),
++	SMPL_REG4_EXT(ZMMH15, PERF_REG_X86_ZMMH15),
++
++	SMPL_REG8_EXT(ZMM16, PERF_REG_X86_ZMM16),
++	SMPL_REG8_EXT(ZMM17, PERF_REG_X86_ZMM17),
++	SMPL_REG8_EXT(ZMM18, PERF_REG_X86_ZMM18),
++	SMPL_REG8_EXT(ZMM19, PERF_REG_X86_ZMM19),
++	SMPL_REG8_EXT(ZMM20, PERF_REG_X86_ZMM20),
++	SMPL_REG8_EXT(ZMM21, PERF_REG_X86_ZMM21),
++	SMPL_REG8_EXT(ZMM22, PERF_REG_X86_ZMM22),
++	SMPL_REG8_EXT(ZMM23, PERF_REG_X86_ZMM23),
++	SMPL_REG8_EXT(ZMM24, PERF_REG_X86_ZMM24),
++	SMPL_REG8_EXT(ZMM25, PERF_REG_X86_ZMM25),
++	SMPL_REG8_EXT(ZMM26, PERF_REG_X86_ZMM26),
++	SMPL_REG8_EXT(ZMM27, PERF_REG_X86_ZMM27),
++	SMPL_REG8_EXT(ZMM28, PERF_REG_X86_ZMM28),
++	SMPL_REG8_EXT(ZMM29, PERF_REG_X86_ZMM29),
++	SMPL_REG8_EXT(ZMM30, PERF_REG_X86_ZMM30),
++	SMPL_REG8_EXT(ZMM31, PERF_REG_X86_ZMM31),
++
++	SMPL_REG_EXT(OPMASK0, PERF_REG_X86_OPMASK0),
++	SMPL_REG_EXT(OPMASK1, PERF_REG_X86_OPMASK1),
++	SMPL_REG_EXT(OPMASK2, PERF_REG_X86_OPMASK2),
++	SMPL_REG_EXT(OPMASK3, PERF_REG_X86_OPMASK3),
++	SMPL_REG_EXT(OPMASK4, PERF_REG_X86_OPMASK4),
++	SMPL_REG_EXT(OPMASK5, PERF_REG_X86_OPMASK5),
++	SMPL_REG_EXT(OPMASK6, PERF_REG_X86_OPMASK6),
++	SMPL_REG_EXT(OPMASK7, PERF_REG_X86_OPMASK7),
++
+ 	SMPL_REG_END
+ };
+ 
+@@ -283,6 +344,32 @@ const struct sample_reg *arch__sample_reg_masks(void)
+ 	return sample_reg_masks;
  }
  
- static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, const char *arch,
--				     FILE *fp)
-+				     unsigned long *mask_ext, FILE *fp)
- {
-+	unsigned int mask_size = sizeof(mask) * 8;
- 	unsigned i = 0, r;
- 	int printed = 0;
-+	u64 val;
- 
- 	if (!regs || !regs->regs)
- 		return 0;
- 
- 	printed += fprintf(fp, " ABI:%" PRIu64 " ", regs->abi);
- 
--	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
--		u64 val = regs->regs[i++];
-+	for_each_set_bit(r, (unsigned long *)&mask, mask_size) {
-+		val = regs->regs[i++];
- 		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r, arch), val);
- 	}
- 
-+	if (!mask_ext)
-+		return printed;
++static void check_intr_reg_ext_mask(struct perf_event_attr *attr, int idx,
++				    u64 fmask, unsigned long *mask)
++{
++	u64 src_mask[PERF_SAMPLE_ARRAY_SIZE] = { 0 };
++	int fd;
 +
-+	for_each_set_bit(r, mask_ext, PERF_NUM_EXT_REGS) {
-+		val = regs->regs[i++];
-+		printed += fprintf(fp, "%5s:0x%"PRIx64" ",
-+				   perf_reg_name(r + mask_size, arch), val);
++	attr->sample_regs_intr = 0;
++	attr->sample_regs_intr_ext[idx] = fmask;
++	src_mask[idx + 1] = fmask;
++
++	fd = sys_perf_event_open(attr, 0, -1, -1, 0);
++	if (fd != -1) {
++		close(fd);
++		bitmap_or(mask, mask, (unsigned long *)src_mask,
++			  PERF_SAMPLE_REGS_NUM);
 +	}
++}
 +
- 	return printed;
- }
- 
-@@ -784,14 +795,16 @@ static int perf_sample__fprintf_iregs(struct perf_sample *sample,
- 				      struct perf_event_attr *attr, const char *arch, FILE *fp)
- {
- 	return perf_sample__fprintf_regs(&sample->intr_regs,
--					 attr->sample_regs_intr, arch, fp);
-+					 attr->sample_regs_intr, arch,
-+					 (unsigned long *)attr->sample_regs_intr_ext, fp);
- }
- 
- static int perf_sample__fprintf_uregs(struct perf_sample *sample,
- 				      struct perf_event_attr *attr, const char *arch, FILE *fp)
- {
- 	return perf_sample__fprintf_regs(&sample->user_regs,
--					 attr->sample_regs_user, arch, fp);
-+					 attr->sample_regs_user, arch,
-+					 (unsigned long *)attr->sample_regs_user_ext, fp);
- }
- 
- static int perf_sample__fprintf_start(struct perf_script *script,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 78bcb12a9d96..45e06aeec4e5 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1037,7 +1037,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 			arch__user_reg_mask((unsigned long *)&mask);
- 			evsel__set_sample_bit(evsel, REGS_USER);
- 			evsel__set_sample_bit(evsel, STACK_USER);
--			if (opts->sample_user_regs &&
-+			if (bitmap_weight(opts->sample_user_regs, PERF_SAMPLE_REGS_NUM) &&
- 			    DWARF_MINIMAL_REGS(arch) != mask) {
- 				attr->sample_regs_user |= DWARF_MINIMAL_REGS(arch);
- 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
-@@ -1373,15 +1373,19 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (callchain && callchain->enabled && !evsel->no_aux_samples)
- 		evsel__config_callchain(evsel, opts, callchain);
- 
--	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
--	    !evsel__is_dummy_event(evsel)) {
--		attr->sample_regs_intr = opts->sample_intr_regs;
-+	if (bitmap_weight(opts->sample_intr_regs, PERF_SAMPLE_REGS_NUM) &&
-+	    !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
-+		attr->sample_regs_intr = opts->sample_intr_regs[0];
-+		memcpy(attr->sample_regs_intr_ext, &opts->sample_intr_regs[1],
-+		       PERF_NUM_EXT_REGS / 8);
- 		evsel__set_sample_bit(evsel, REGS_INTR);
- 	}
- 
--	if (opts->sample_user_regs && !evsel->no_aux_samples &&
--	    !evsel__is_dummy_event(evsel)) {
--		attr->sample_regs_user |= opts->sample_user_regs;
-+	if (bitmap_weight(opts->sample_user_regs, PERF_SAMPLE_REGS_NUM) &&
-+	    !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
-+		attr->sample_regs_user |= opts->sample_user_regs[0];
-+		memcpy(attr->sample_regs_user_ext, &opts->sample_user_regs[1],
-+		       PERF_NUM_EXT_REGS / 8);
- 		evsel__set_sample_bit(evsel, REGS_USER);
- 	}
- 
-@@ -3172,10 +3176,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 		if (data->user_regs.abi) {
- 			u64 mask = evsel->core.attr.sample_regs_user;
-+			unsigned long *mask_ext =
-+				(unsigned long *)evsel->core.attr.sample_regs_user_ext;
-+			u64 *user_regs_mask;
- 
- 			sz = hweight64(mask) * sizeof(u64);
-+			sz += bitmap_weight(mask_ext, PERF_NUM_EXT_REGS) * sizeof(u64);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->user_regs.mask = mask;
-+			user_regs_mask = (u64 *)&data->user_regs.mask_ext;
-+			memcpy(&user_regs_mask[1], mask_ext, PERF_NUM_EXT_REGS);
- 			data->user_regs.regs = (u64 *)array;
- 			array = (void *)array + sz;
- 		}
-@@ -3228,10 +3238,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 		if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
- 			u64 mask = evsel->core.attr.sample_regs_intr;
-+			unsigned long *mask_ext =
-+				(unsigned long *)evsel->core.attr.sample_regs_intr_ext;
-+			u64 *intr_regs_mask;
- 
- 			sz = hweight64(mask) * sizeof(u64);
-+			sz += bitmap_weight(mask_ext, PERF_NUM_EXT_REGS) * sizeof(u64);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->intr_regs.mask = mask;
-+			intr_regs_mask = (u64 *)&data->intr_regs.mask_ext;
-+			memcpy(&intr_regs_mask[1], mask_ext, PERF_NUM_EXT_REGS);
- 			data->intr_regs.regs = (u64 *)array;
- 			array = (void *)array + sz;
- 		}
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index 3dcd8dc4f81b..42b176705ccf 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -12,11 +12,13 @@
- static int
- __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- {
-+	unsigned int size = PERF_SAMPLE_REGS_NUM;
- 	uint64_t *mode = (uint64_t *)opt->value;
- 	const struct sample_reg *r = NULL;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
--	uint64_t mask = 0;
-+	DECLARE_BITMAP(mask, size);
-+	DECLARE_BITMAP(mask_tmp, size);
- 
- 	if (unset)
- 		return 0;
-@@ -24,13 +26,14 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	/*
- 	 * cannot set it twice
- 	 */
--	if (*mode)
-+	if (bitmap_weight((unsigned long *)mode, size))
- 		return -1;
- 
-+	bitmap_zero(mask, size);
- 	if (intr)
--		arch__intr_reg_mask((unsigned long *)&mask);
-+		arch__intr_reg_mask(mask);
- 	else
--		arch__user_reg_mask((unsigned long *)&mask);
-+		arch__user_reg_mask(mask);
- 
- 	/* str may be NULL in case no arg is passed to -I */
- 	if (str) {
-@@ -47,7 +50,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 			if (!strcmp(s, "?")) {
- 				fprintf(stderr, "available registers: ");
- 				for (r = arch__sample_reg_masks(); r->name; r++) {
--					if (r->mask & mask)
-+					bitmap_and(mask_tmp, mask, r->mask_ext, size);
-+					if (bitmap_weight(mask_tmp, size))
- 						fprintf(stderr, "%s ", r->name);
- 				}
- 				fputc('\n', stderr);
-@@ -55,7 +59,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 				goto error;
- 			}
- 			for (r = arch__sample_reg_masks(); r->name; r++) {
--				if ((r->mask & mask) && !strcasecmp(s, r->name))
-+				bitmap_and(mask_tmp, mask, r->mask_ext, size);
-+				if (bitmap_weight(mask_tmp, size) && !strcasecmp(s, r->name))
- 					break;
- 			}
- 			if (!r || !r->name) {
-@@ -64,7 +69,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 				goto error;
- 			}
- 
--			*mode |= r->mask;
-+			bitmap_or((unsigned long *)mode, (unsigned long *)mode, r->mask_ext, size);
- 
- 			if (!p)
- 				break;
-@@ -75,8 +80,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	ret = 0;
- 
- 	/* default to all possible regs */
--	if (*mode == 0)
--		*mode = mask;
-+	if (!bitmap_weight((unsigned long *)mode, size))
-+		bitmap_or((unsigned long *)mode, (unsigned long *)mode, mask, size);
- error:
- 	free(os);
- 	return ret;
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 316d280e5cd7..d60a74623a0f 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -4,18 +4,32 @@
- 
- #include <linux/types.h>
- #include <linux/compiler.h>
-+#include <linux/bitmap.h>
-+#include <linux/perf_event.h>
-+#include "util/record.h"
- 
- struct regs_dump;
- 
- struct sample_reg {
- 	const char *name;
--	uint64_t mask;
-+	union {
-+		uint64_t mask;
-+		DECLARE_BITMAP(mask_ext, PERF_SAMPLE_REGS_NUM);
-+	};
- };
- 
- #define SMPL_REG_MASK(b) (1ULL << (b))
- #define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
- #define SMPL_REG2_MASK(b) (3ULL << (b))
- #define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
-+#define SMPL_REG_EXT(n, b)	\
-+	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x1ULL << (b % __BITS_PER_LONG) }
-+#define SMPL_REG2_EXT(n, b)	\
-+	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x3ULL << (b % __BITS_PER_LONG) }
-+#define SMPL_REG4_EXT(n, b)	\
-+	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xfULL << (b % __BITS_PER_LONG) }
-+#define SMPL_REG8_EXT(n, b)	\
-+	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xffULL << (b % __BITS_PER_LONG) }
- #define SMPL_REG_END { .name = NULL }
- 
- enum {
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index a6566134e09e..2741bbbc2794 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -57,8 +57,8 @@ struct record_opts {
- 	unsigned int  auxtrace_mmap_pages;
- 	unsigned int  user_freq;
- 	u64	      branch_stack;
--	u64	      sample_intr_regs;
--	u64	      sample_user_regs;
-+	u64	      sample_intr_regs[PERF_SAMPLE_ARRAY_SIZE];
-+	u64	      sample_user_regs[PERF_SAMPLE_ARRAY_SIZE];
- 	u64	      default_interval;
- 	u64	      user_interval;
- 	size_t	      auxtrace_snapshot_size;
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555..a0bb7ba4b0c1 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -4,13 +4,17 @@
- 
- #include <linux/perf_event.h>
- #include <linux/types.h>
-+#include <linux/bitmap.h>
- 
- /* number of register is bound by the number of bits in regs_dump::mask (64) */
- #define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
- 
- struct regs_dump {
- 	u64 abi;
--	u64 mask;
-+	union {
-+		u64 mask;
-+		DECLARE_BITMAP(mask_ext, PERF_SAMPLE_REGS_NUM);
-+	};
- 	u64 *regs;
- 
- 	/* Cached values/mask filled by first register access. */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index c06e3020a976..ef42dbff82fc 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -910,12 +910,13 @@ static void branch_stack__printf(struct perf_sample *sample,
- 	}
- }
- 
--static void regs_dump__printf(u64 mask, u64 *regs, const char *arch)
-+static void regs_dump__printf(struct regs_dump *regs, const char *arch)
- {
-+	unsigned int size = PERF_SAMPLE_REGS_NUM;
- 	unsigned rid, i = 0;
- 
--	for_each_set_bit(rid, (unsigned long *) &mask, sizeof(mask) * 8) {
--		u64 val = regs[i++];
-+	for_each_set_bit(rid, regs->mask_ext, size) {
-+		u64 val = regs->regs[i++];
- 
- 		printf(".... %-5s 0x%016" PRIx64 "\n",
- 		       perf_reg_name(rid, arch), val);
-@@ -936,16 +937,20 @@ static inline const char *regs_dump_abi(struct regs_dump *d)
- 	return regs_abi[d->abi];
- }
- 
--static void regs__printf(const char *type, struct regs_dump *regs, const char *arch)
-+static void regs__printf(bool intr, struct regs_dump *regs, const char *arch)
- {
--	u64 mask = regs->mask;
-+	u64 *mask = (u64 *)&regs->mask_ext;
- 
--	printf("... %s regs: mask 0x%" PRIx64 " ABI %s\n",
--	       type,
--	       mask,
--	       regs_dump_abi(regs));
-+	if (intr)
-+		printf("... intr regs: mask 0x");
-+	else
-+		printf("... user regs: mask 0x");
++#define PERF_REG_EXTENDED_YMMH_MASK	GENMASK_ULL(31, 0)
++#define PERF_REG_EXTENDED_ZMMH_1ST_MASK	GENMASK_ULL(63, 32)
++#define PERF_REG_EXTENDED_ZMMH_2ND_MASK	GENMASK_ULL(31, 0)
++#define PERF_REG_EXTENDED_ZMM_1ST_MASK	GENMASK_ULL(63, 32)
++#define PERF_REG_EXTENDED_ZMM_2ND_MASK	GENMASK_ULL(63, 0)
++#define PERF_REG_EXTENDED_ZMM_3RD_MASK	GENMASK_ULL(31, 0)
++#define PERF_REG_EXTENDED_OPMASK_MASK	GENMASK_ULL(39, 32)
 +
-+	for (int i = 0; i < PERF_SAMPLE_ARRAY_SIZE; i++)
-+		printf("%" PRIx64 "", mask[i]);
-+	printf(" ABI %s\n", regs_dump_abi(regs));
- 
--	regs_dump__printf(mask, regs->regs, arch);
-+	regs_dump__printf(regs, arch);
+ void arch__intr_reg_mask(unsigned long *mask)
+ {
+ 	struct perf_event_attr attr = {
+@@ -325,6 +412,18 @@ void arch__intr_reg_mask(unsigned long *mask)
+ 		close(fd);
+ 		*(u64 *)mask = PERF_REG_EXTENDED_MASK | PERF_REGS_MASK;
+ 	}
++
++	/* Check YMMH regs */
++	check_intr_reg_ext_mask(&attr, 0, PERF_REG_EXTENDED_YMMH_MASK, mask);
++	/* Check ZMMLH0-15 regs */
++	check_intr_reg_ext_mask(&attr, 0, PERF_REG_EXTENDED_ZMMH_1ST_MASK, mask);
++	check_intr_reg_ext_mask(&attr, 1, PERF_REG_EXTENDED_ZMMH_2ND_MASK, mask);
++	/* Check ZMM16-31 regs */
++	check_intr_reg_ext_mask(&attr, 1, PERF_REG_EXTENDED_ZMM_1ST_MASK, mask);
++	check_intr_reg_ext_mask(&attr, 2, PERF_REG_EXTENDED_ZMM_2ND_MASK, mask);
++	check_intr_reg_ext_mask(&attr, 3, PERF_REG_EXTENDED_ZMM_3RD_MASK, mask);
++	/* Check OPMASK regs */
++	check_intr_reg_ext_mask(&attr, 3, PERF_REG_EXTENDED_OPMASK_MASK, mask);
  }
  
- static void regs_user__printf(struct perf_sample *sample, const char *arch)
-@@ -953,7 +958,7 @@ static void regs_user__printf(struct perf_sample *sample, const char *arch)
- 	struct regs_dump *user_regs = &sample->user_regs;
- 
- 	if (user_regs->regs)
--		regs__printf("user", user_regs, arch);
-+		regs__printf(false, user_regs, arch);
- }
- 
- static void regs_intr__printf(struct perf_sample *sample, const char *arch)
-@@ -961,7 +966,7 @@ static void regs_intr__printf(struct perf_sample *sample, const char *arch)
- 	struct regs_dump *intr_regs = &sample->intr_regs;
- 
- 	if (intr_regs->regs)
--		regs__printf("intr", intr_regs, arch);
-+		regs__printf(true, intr_regs, arch);
- }
- 
- static void stack_user__printf(struct stack_dump *dump)
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 6923b0d5efed..5d124e55167d 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1538,7 +1538,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_REGS_INTR) {
- 		if (sample->intr_regs.abi) {
- 			result += sizeof(u64);
--			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
-+			sz = bitmap_weight(sample->intr_regs.mask_ext,
-+					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
- 			result += sz;
- 		} else {
- 			result += sizeof(u64);
-@@ -1745,7 +1746,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 	if (type & PERF_SAMPLE_REGS_INTR) {
- 		if (sample->intr_regs.abi) {
- 			*array++ = sample->intr_regs.abi;
--			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
-+			sz = bitmap_weight(sample->intr_regs.mask_ext,
-+					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
- 			memcpy(array, sample->intr_regs.regs, sz);
- 			array = (void *)array + sz;
- 		} else {
+ void arch__user_reg_mask(unsigned long *mask)
+diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+index 9a909f02bc04..c926046ebddc 100644
+--- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
++++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+@@ -78,6 +78,94 @@ const char *__perf_reg_name_x86(int id)
+ 	XMM(14)
+ 	XMM(15)
+ #undef XMM
++
++#define YMMH(x)					\
++	case PERF_REG_X86_YMMH ## x:		\
++	case PERF_REG_X86_YMMH ## x + 1:	\
++		return "YMMH" #x;
++	YMMH(0)
++	YMMH(1)
++	YMMH(2)
++	YMMH(3)
++	YMMH(4)
++	YMMH(5)
++	YMMH(6)
++	YMMH(7)
++	YMMH(8)
++	YMMH(9)
++	YMMH(10)
++	YMMH(11)
++	YMMH(12)
++	YMMH(13)
++	YMMH(14)
++	YMMH(15)
++#undef YMMH
++
++#define ZMMH(x)					\
++	case PERF_REG_X86_ZMMH ## x:		\
++	case PERF_REG_X86_ZMMH ## x + 1:	\
++	case PERF_REG_X86_ZMMH ## x + 2:	\
++	case PERF_REG_X86_ZMMH ## x + 3:	\
++		return "ZMMLH" #x;
++	ZMMH(0)
++	ZMMH(1)
++	ZMMH(2)
++	ZMMH(3)
++	ZMMH(4)
++	ZMMH(5)
++	ZMMH(6)
++	ZMMH(7)
++	ZMMH(8)
++	ZMMH(9)
++	ZMMH(10)
++	ZMMH(11)
++	ZMMH(12)
++	ZMMH(13)
++	ZMMH(14)
++	ZMMH(15)
++#undef ZMMH
++
++#define ZMM(x)				\
++	case PERF_REG_X86_ZMM ## x:		\
++	case PERF_REG_X86_ZMM ## x + 1:	\
++	case PERF_REG_X86_ZMM ## x + 2:	\
++	case PERF_REG_X86_ZMM ## x + 3:	\
++	case PERF_REG_X86_ZMM ## x + 4:	\
++	case PERF_REG_X86_ZMM ## x + 5:	\
++	case PERF_REG_X86_ZMM ## x + 6:	\
++	case PERF_REG_X86_ZMM ## x + 7:	\
++		return "ZMM" #x;
++	ZMM(16)
++	ZMM(17)
++	ZMM(18)
++	ZMM(19)
++	ZMM(20)
++	ZMM(21)
++	ZMM(22)
++	ZMM(23)
++	ZMM(24)
++	ZMM(25)
++	ZMM(26)
++	ZMM(27)
++	ZMM(28)
++	ZMM(29)
++	ZMM(30)
++	ZMM(31)
++#undef ZMM
++
++#define OPMASK(x)				\
++	case PERF_REG_X86_OPMASK ## x:		\
++		return "opmask" #x;
++
++	OPMASK(0)
++	OPMASK(1)
++	OPMASK(2)
++	OPMASK(3)
++	OPMASK(4)
++	OPMASK(5)
++	OPMASK(6)
++	OPMASK(7)
++#undef OPMASK
+ 	default:
+ 		return NULL;
+ 	}
 -- 
 2.40.1
 
