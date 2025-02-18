@@ -1,165 +1,133 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F77243361;
-	Tue, 18 Feb 2025 14:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D3023958C;
+	Tue, 18 Feb 2025 14:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739887767; cv=none; b=N9PhUqFWlHLSHhN3lXiRWvLs/CSB01jMLCuqaCoS3X4qivcb0J+9G+nBeVOTtMXUUwZSs808WN0x+L5IwXojCZMlAh51lhdQbB+A2SjHw2fENuY3s3kqBE6h/XdxE2wzXi9teIUKaceYcUMMTCo2uTAtEFqkhIe1bO9fvVjoUOM=
+	t=1739888288; cv=none; b=P5zMAQHeboYrR4iE1P/C5AFtE4MxB3GOXQ+w33hcGx+pxx6pSouwSg9HZXg2x56/Xb/suO40C5er2drqoqRY3kCj6iewjSx0Gczx6EN9EblPMOVfw1+BMXbJ3tHUkl19x9tTpRmik3NvFFppbr8skSESTsIBF7G8HvABFWEeCoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739887767; c=relaxed/simple;
-	bh=I/RdCQPPn1wHaFmlp+tuRpK9XsLvtlVCcv5TFMGTqPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pkDgHp/UYeGz4Ia1oAtvIswY4OqAgB3kfJaChDrYcL6rN6NIF2WnvsbXoSJp9vbNhPBrcIgH+tZx67uMvP9Duny4bH4Z4AflQhsbk9BY1aVyJj+bXzzVE8mOWRj4m3qzsRZX8oXqa50IUp3l6F6bO4sHKB2GPO0r5qXvodmCu1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CV+RovXp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739888288; c=relaxed/simple;
+	bh=D8kZnHjA1rXfyapCTwJZXFhgI2zAmDfKIad3GOdpWqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IvJiJH+GafzGa5mbmXAs/9YPA4RjthadnnRn9iJ2c9KygaVlnVh87SsD3t4Q98tFHxKT26s5SZVswPBXHA0zsrYioLAEHeiK+Lhhgnkk01gZu7hkCxG78MveRO/BNXGXDnzdOlMy0bVIZFG3o3vmruMLP+dLG5whIgkmuRstKIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJR2eL0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CV+RovXp"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBML7J020389;
-	Tue, 18 Feb 2025 14:08:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=9AF1om8Lrm/xLDRHOLxFEifeKpnaLe
-	RhNPZT9gDLIQ0=; b=CV+RovXpmtr1HdW8oXhrmXR+yctXcF/BZ/igc+sObd4LmN
-	Q+YeZ1Zlb43eyfvWfHnVonpvcozFlMyS7RwWrXmeeapi/bJc0Xqnd/qGeGwkkqYx
-	zL1E7BNIE+kIXvk8qpAT60eq6qShVzwSUL2vNi2m4D6+XHL77xqXT+KRDpqxKNEw
-	VFv8m1cHcw3z3cUALoCO9xSlCFCDjwS7GjlwK3XN5pEwSMMC+4YXKqAp4mzE8/XH
-	/9saCZ8rgKGhg0d+fjm594PCQaoMsYHZqawndMZp+Wt2fIn9VzEBYa6q9a5OfePO
-	UhtAvSK5l82To9C9ygf3TkZ3thakqLmrVwcHailg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 14:08:28 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51IE7Lf0016617;
-	Tue, 18 Feb 2025 14:08:28 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 14:08:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBaUc3013259;
-	Tue, 18 Feb 2025 14:08:26 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44u7fkk9wb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Feb 2025 14:08:26 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51IE8NZ59306562
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 14:08:23 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 430722004E;
-	Tue, 18 Feb 2025 14:08:23 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAD4620043;
-	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
-Date: Tue, 18 Feb 2025 15:08:21 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: joel granados <joel.granados@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 7/8] s390: mv s390 sysctls into their own file under
- arch/s390 dir
-Message-ID: <20250218140821.7740Ab5-hca@linux.ibm.com>
-References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
- <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJR2eL0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348F8C4CEE6;
+	Tue, 18 Feb 2025 14:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739888288;
+	bh=D8kZnHjA1rXfyapCTwJZXFhgI2zAmDfKIad3GOdpWqA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pJR2eL0DvjA01+7CE7zYyDceU2Zqyou6TZvX9c/+zyYfoFJHbq2zBTFr6N3ODf6ws
+	 g1GopUwmjiNjDBgXwU9ByvlDuciZMbe8H2/mRccrpL7p9W2r3zXaUj65/RrTtBVUST
+	 1uKHaNW6eFDK1qWVRSep/QtMbtLG5p3AyinM5LIdYlk0/05CVIu3rIpSsqMzNPn85j
+	 zuiFQLeD/fLZOBS3m/JkfVyISZ+Q0yP6g/CcTk73oCczf3+NmLVxUtnQMRx+m2eIsd
+	 1BAzUHMlZoxPLSEryMluCuy1Gvp7vGWr0LTVnXzdjxbPC9T/oY9jjlVU6n7CrqIn/3
+	 /q6m4Mx1FRBDg==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abb90f68f8cso457440966b.3;
+        Tue, 18 Feb 2025 06:18:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5pUQ2qsc4VcPgOBWRWcH+YHVs9mn6/J2C/ESePsGMdrePaVYDWtCmx1YTfs8beqD6cwprDQ5Yt83rK7P23ezM8g==@vger.kernel.org, AJvYcCWhc0lygJdWg0T3bHCGLhqC1uiEH47H9Yb7fzJXWeFsYq6g9hFx82Nyi9NSJUk93hLgw3VH6kCgUD0=@vger.kernel.org, AJvYcCX/pWVry6j+oAXRIjXW6QpnqPvKpzGWyUpEdhfw8R3zCSDQLjEh8/9SEGM8EfthpwmO060N0eoCpprokQWp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg+gxCmLdVIJFqNJRE68V/GtTs1+R7UGONbvfs/Ekr+fMZouk9
+	omSncjMMA4r0qyRlK4FyzprDk6s1RQEtvmP6uBNPhXYa0YbA8odwA9YSA0OAchXDEp47S9ZxPFH
+	bouncEc0CIYecsYzC2J0uY5L7ow==
+X-Google-Smtp-Source: AGHT+IFQE4oOobZPiWrftCcgo9BjOEPo3oua0op7T6iVGDLGZJBO05pjxcR+PzST0w0ODcyv2rXV4Db+HB2amm1Z//Y=
+X-Received: by 2002:a17:906:395b:b0:abb:b12b:e103 with SMTP id
+ a640c23a62f3a-abbb12be1fbmr459701166b.34.1739888286742; Tue, 18 Feb 2025
+ 06:18:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: C1vwg1h0Wd1-AF41KNeLrehTep7PLEGd
-X-Proofpoint-ORIG-GUID: 6Qf1aZgnvDRrtDnExFplYp_kZP8KujkA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-18_06,2025-02-18_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 suspectscore=0 clxscore=1011 mlxlogscore=780
- priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502180106
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-10-1c1300802385@kernel.org> <20250213170316.GG235556@e132581.arm.com>
+ <CAL_JsqLG4gu6c6=x_wG6XT0WaCC_ahH5eWHk3K9RcF0ZQrDR=A@mail.gmail.com> <20250214095512.GI235556@e132581.arm.com>
+In-Reply-To: <20250214095512.GI235556@e132581.arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 18 Feb 2025 08:17:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK1EThLB3uc+udfOP8cbjMFn_peoW2CBk9D-yRF3sQStg@mail.gmail.com>
+X-Gm-Features: AWEUYZlO5g0ZR9Ma_W5K7w398a_T1PS6uFZonzgnuMJwLsaDJ9E3LMdaxbe1kkA
+Message-ID: <CAL_JsqK1EThLB3uc+udfOP8cbjMFn_peoW2CBk9D-yRF3sQStg@mail.gmail.com>
+Subject: Re: [PATCH v19 10/11] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+To: Leo Yan <leo.yan@arm.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 10:56:23AM +0100, joel granados wrote:
-> Move s390 sysctls (spin_retry and userprocess_debug) into their own
-> files under arch/s390. We create two new sysctl tables
-> (2390_{fault,spin}_sysctl_table) which will be initialized with
-> arch_initcall placing them after their original place in proc_root_init.
-> 
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kerenel/sysctl.c.
-  ^^^^^^^
-typo
+On Fri, Feb 14, 2025 at 3:55=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Thu, Feb 13, 2025 at 05:16:45PM -0600, Rob Herring wrote:
+>
+> [...]
+>
+> > > > +static void __debug_save_brbe(u64 *brbcr_el1)
+> > > > +{
+> > > > +       *brbcr_el1 =3D 0;
+> > > > +
+> > > > +       /* Check if the BRBE is enabled */
+> > > > +       if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR=
+_ELx_ExBRE)))
+> > > > +               return;
+> > > > +
+> > > > +       /*
+> > > > +        * Prohibit branch record generation while we are in guest.
+> > > > +        * Since access to BRBCR_EL1 is trapped, the guest can't
+> > > > +        * modify the filtering set by the host.
+> > > > +        */
+> > > > +       *brbcr_el1 =3D read_sysreg_el1(SYS_BRBCR);
+> > > > +       write_sysreg_el1(0, SYS_BRBCR);
+> > > > +}
+> > >
+> > > Should flush branch record and use isb() before exit host kernel?
+> >
+> > I don't think so. The isb()'s in the other cases appear to be related
+> > to ordering WRT memory buffers. BRBE is just registers. I would assume
+> > that there's some barrier before we switch to the guest.
+>
+> Given BRBCR is a system register, my understanding is the followd ISB
+> can ensure the writing BRBCR has finished and take effect.  As a result,
+> it is promised that the branch record has been stopped.
+>
+> However, with isb() it is not necessarily to say the branch records have
+> been flushed to the buffer.  The purpose at here is just to stop record.
+> The BRBE driver will take care the flush issue when it reads records.
+>
+> I agreed that it is likely barriers in the followed switch flow can assur=
+e
+> the writing BRBCR to take effect.  It might be good to add a comment for
+> easier maintenance.
+>
+> > > I see inconsistence between the function above and BRBE's disable
+> > > function. Here it clears E0BRE / ExBRE bits for disabling BRBE, but t=
+he
+> > > BRBE driver sets the PAUSED bit in BRBFCR_EL1 for disabling BRBE.
+> >
+> > Indeed. This works, but the enabled check won't work. I'm going to add
+> > clearing BRBCR to brbe_disable(), and this part will stay the same.
+>
+> Seems to me, a right logic would be:
+>
+> - In BRBE driver, the brbe_disable() function should clear E0BRE and
+>   ExBRE bits in BRBCR.  It can make sure the BRBE is totally disabled
+>   when a perf session is terminated.
+>
+> - For a kvm context switching, it is good to use PAUSED bit.  If a host
+>   is branch record enabled, this is a light way for temporarily pause
+>   branch record for the switched VM.
 
-> diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
-> index a81a01c44927..4483fdc9d472 100644
-> --- a/arch/s390/lib/spinlock.c
-> +++ b/arch/s390/lib/spinlock.c
-> @@ -17,6 +17,10 @@
->  #include <asm/alternative.h>
->  #include <asm/asm.h>
->  
-> +#if defined(CONFIG_SMP)
-> +#include <linux/sysctl.h>
-> +#endif
-> +
-...
-> +#if defined(CONFIG_SMP)
-> +static const struct ctl_table s390_spin_sysctl_table[] = {
-> +	{
-> +		.procname	= "spin_retry",
-> +		.data		= &spin_retry,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec,
-> +	},
-> +};
-> +
-> +static int __init init_s390_spin_sysctls(void)
-> +{
-> +	register_sysctl_init("kernel", s390_spin_sysctl_table);
-> +	return 0;
-> +}
-> +arch_initcall(init_s390_spin_sysctls);
-> +#endif
+We have to read BRBCR to see if it is enabled as PAUSED is unknown out
+of reset and the driver may not exist to initialize it. Either way, it
+is a register read and write, so same overhead for both.
 
-I see that you want to keep the existing CONFIG_SMP behaviour, but since a
-long time s390 enforces CONFIG_SMP=y (this was obviously never reflected in
-kernel/sysctl.c).
-Therefore the above ifdefs should be removed, and in addition the include
-statement should be added to the other linux includes at the top of the file.
+Rob
