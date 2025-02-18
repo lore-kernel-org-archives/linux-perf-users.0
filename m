@@ -1,188 +1,227 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05951B87EB
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 22:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731FB1D0F5A
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 22:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739918042; cv=none; b=fJM5/pXPm5Kjc1CKSI7+i14OwHYklZkFBHAyA1/HKV4fdoztu0+lZlO3WIcnadF3QR4OVHxCIklASao1TaG81OKMLHF0b2IuEEeb88NbViK9k7xXSB2pb2ORMWW7hYokZhad42KUOJSFMgq0AAxWo//nm/tWDVNijtLVEWOg6BY=
+	t=1739918207; cv=none; b=axtRcBpFiuCJvINtH8P3X+PmwiZddFJJwTzUzkR700DxW9gjNZRLDMae6MqFxlC9dCQCUpNBlppk7/ctFPxthhkKRiaEIQAvFhLdzG55wvRF6R3maeotV/6OsZbpEgIG8PM9mi9cnjcEHtvE2ZTvLGOv2MWpE+C26u+BJGAO/AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739918042; c=relaxed/simple;
-	bh=LMr3mAVEp9T0899OdsHcYNuOQbKwWhoX8JpQNIYLZ+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eegnbYZtCXjnpJXFcMn1e3mSrYjC3/yIyj2LdFAld3XaVDSZ7dDLHuGTW5E2kPGF3Vx5F4/w/0slBRejfhDULjnOFd6oFA9bbF7SetPtUwl/MYwu4fO3ZdkebSQOioG9FTzAXdh/ZBlesAyRKPBMdqNSzWTP0pRA3yf3JypOk+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oDh0iWYQ; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739918207; c=relaxed/simple;
+	bh=/+jngrR7RaUOqC99Mef2L3Iz0wPA/2tUx4T2hEeRdnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AjjqZZ2JMUkHg2vWkCieCX9q/dT1uFDkxaVlMQruMXnPAjcHQzkxHhhCKYq/AS8XZEolaGmtHqIY0w3GKttv1ROKrlb8YokUpbwZHBu3AVFe4ogearYv5PgUECBRO4cexHYYSCrELMKaoQORo95hyZrPfd2/F/lfrldVrABOIEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bS6pFcx3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oDh0iWYQ"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d2ad29f630so175855ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 14:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739918040; x=1740522840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/cgij1lFdZqKfhJzvdkh7LmAc2T325VXWYvJrhG6fY=;
-        b=oDh0iWYQRl2y+GBgwCET+eh4ecnW7iVY77Dsnn76nyKeV8bCkR2JJk3ll47VX4r+wb
-         bza3Wy8vKeeWSu0wuyeEu2RDuRdMym6Za6kRwB5WgsCu3GMBb2NVyoDEHNDZZdJihhOP
-         3YGJsaNy/Rrk6XdXZ5VPLTmfUNYP59jsEt2QlirZwOPBNrTDPZr+t/sk9sq0PU2PV2Od
-         jqLlzSXQ71PasDFriIHi0Mtz8xDDgqUMJXdobwUv1mSMdK9tA7TIC5Q7Q8xFAouApiqt
-         wihFAAyEST2b423lZr3n250/+gZ5iYsnPVNBWS59cIYmOfQo7qGEnRLWgxSnfTXDRcEi
-         1jyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739918040; x=1740522840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/cgij1lFdZqKfhJzvdkh7LmAc2T325VXWYvJrhG6fY=;
-        b=P061PHxKQezMMWNrRtzo6rGrTtEk0aYhebdpGgGhmnkCDfnVurKqGBeQQ2xIHzSNMb
-         rc510Cq9Q3t7QbAhls4+VQxgdTLlFhEnniYeB6G0WBjF2V356FL8KGVlwi3gXlCf6lSs
-         Ir6sqVWiCwGkfg+1HhrDT4Pyja1hWfZjmfircjcHsueiAFFoj4VQAq8X5cKdCwBsx3a0
-         bM9e/V6sjrH5HqTdnNis34BKioRpMdLRbGoQw5J6uMum9it0Ln13O+YfKZo3+0Bq+2JF
-         UoEhjVpn5Tzk8oDqSN6mfh9tlFjz1wLkwZQSv1pUse7iJPmbprjsT6L0UHNst9rbSkw4
-         qzgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVx6gKB4cmPVO/RaR8JZojnU3XA98GSEWB5gUhzZBaQCd5Rtv21MHPxU2riKoNtllaRR8INO/5MxSqYp1oqlm5k@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO8jaCl1ROpJFCQB2ub6Sfd/Hb970hoy01x9kapyQWO77gle2E
-	Wf2+HD2Zin7mCidqr0EF5IrtR5ODKd2t8nfu4EYFSpXZhpDFYFuwTwQ0p628jUZEovHWzktFKRd
-	zdL5jjsFYiXojN8+ZheFfNZ8O/Umc59JQPVJd
-X-Gm-Gg: ASbGncthaNy7KTCa/KFOuW6SFemsPr08TjU8weYa8TUSv8zadZ/lI7TBya55UVRwgcY
-	B3jQVEBMBE4tEUPfBjmOYixev0kmXLylyvQblnt5shvEL2P2p7rDIGRJxx/aj8R9oj+7FrRZ1y/
-	cFKFhKdXFxPs88/lUjh7CFgxri
-X-Google-Smtp-Source: AGHT+IHw3DoO4qf0xpi1Amzv3pmc+X9SJTYSaoh3aiUz35JKe6rXdAzYIXkiqfdS7Bg/GHnOCWs6r2oDH8RnN6nJDDg=
-X-Received: by 2002:a05:6e02:3287:b0:3d1:7971:e6d5 with SMTP id
- e9e14a558f8ab-3d2b6236f8amr1406365ab.0.1739918039639; Tue, 18 Feb 2025
- 14:33:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bS6pFcx3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C70C4CEE2;
+	Tue, 18 Feb 2025 22:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739918207;
+	bh=/+jngrR7RaUOqC99Mef2L3Iz0wPA/2tUx4T2hEeRdnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bS6pFcx3LPcbm2pJQ8YK0I1SriLAVJyrYojUqvAjMou3jlXRE1srDY35QkiOUhFNr
+	 I1DYRg4aHI77oOg+oIyl1iKi2rR/TeNLn4tWCkh2eB7dk7netI90QahkEZvBSnQwaD
+	 IzRkcckXCoc/oIDxlgal30wJw3wiB7R1YnctAeoRGWGAPkW4qhkpjidV26Rd2hoc4h
+	 8195RWRR3e7/TaQuxhbHhvdcb9HpZ3fYVTN4lmH538VpOXLlKDA1oV0lscruHsJgN8
+	 43J5wmJNGWC8LrA3BA2CF7i22O8YQxCI2eOCktd+zC7wMl46EIwRc/yiuTToyCct/v
+	 dD94rKgdV1qAw==
+Date: Tue, 18 Feb 2025 14:36:45 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+	hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com
+Subject: Re: [PATCH] tools/perf: Pick the correct dwarf die while adding
+ probe point for a function
+Message-ID: <Z7ULfdJXKWG0u9uY@google.com>
+References: <20250212131949.68706-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
- <Z66YjGvjD_yzEHUg@google.com> <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
- <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org> <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
- <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org> <Z7UHieRRnvRb5_oU@google.com>
-In-Reply-To: <Z7UHieRRnvRb5_oU@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Feb 2025 14:33:47 -0800
-X-Gm-Features: AWEUYZnCIRZ8gA78AOy7d6LlsQyiSAxYf8f5kf90YgWTOUXfQDLRg9JD7T1vwFY
-Message-ID: <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520 events/metrics
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250212131949.68706-1-atrajeev@linux.vnet.ibm.com>
 
-On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
-> >
-> >
-> > On 18/02/2025 12:41 am, Ian Rogers wrote:
-> > > On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark <james.clark@lina=
-ro.org> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 14/02/2025 5:49 am, Yangyu Chen wrote:
-> > > > >
-> > > > >
-> > > > > > On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wr=
-ote:
-> > > > > >
-> > > > > > Hello,
-> > > > > >
-> > > > > > On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
-> > > > > > > This patchset adds the perf JSON files for the Cortex-A720 an=
-d Cortex-A520
-> > > > > > > processors. Some events have been tested on Raxda Orion 6 wit=
-h Cix P1 SoC
-> > > > > > > (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
-> > > > > >
-> > > > > > I'm curious how the name of PMUs look like.  It is cortex_a720 =
-(or a520)?
-> > > > >
-> > > > > The name of PMUs comes from Arm's documentation. I have included =
-these
-> > > > > links in each patch.
-> > > > >
-> > > > > > I remember there's a logic to check the length of hex digits at=
- the end.
-> > > > > >
-> > > > >
-> > > > > Could you provide more details about this?
-> > > > >
-> > > > > > Ian, are you ok with this?
-> > > > > >
-> > > >
-> > > > I think they wouldn't be merged because they're core PMUs, so shoul=
-d be
-> > > > fine? Even though they would otherwise be merged because they're mo=
-re
-> > > > than 3 hex digits.
-> > >
-> > > Do we know the PMU names? If they are cortex_a520 and cortex_a720 the=
-n
-> >
-> > It will be "armv9_cortex_a720" from this line:
-> >
-> >   PMUV3_INIT_SIMPLE(armv9_cortex_a720)
->
-> I see, thanks!
->
-> >
-> > > this comment at least reads a little stale:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
-> > > ```
-> > > /*
-> > > * There is a '_{num}' suffix. For decimal suffixes any length
-> > > * will do, for hexadecimal ensure more than 2 hex digits so
-> > > * that S390's cpum_cf PMU doesn't match.
-> > > */
-> > > ```
-> > > James is right that core PMUs aren't put on the same list as uncore/o=
-ther PMUs.
->
-> Ok, then I guess we're good.
+Added Masami.
 
-I think you may be able to do things that look odd, like today the
-"i915" PMU can be called just "i", I think the a520/a720 naming will
-allow "armv9_cortex/cycles/" as an event name, then open it on two
-PMUs if they are present. We may only show one PMU in perf list as
-that code I think assumes they're the same PMU as they only differ by
-suffix:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
-I can imagine aggregation possibly being broken, but I think that
-works off the number of PMUs not the names of the PMUs, so it should
-be okay. Probably the only thing broken that matter is perf list when
-you have a BIG.little system with a520 and a720, this may be broken
-with say a a53 and a72 today as both of those suffix lengths are >2,
-but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
-convention. I suspect the >2 here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
-would still work and be correct if it were >4. If that changes then
-this will also need to change:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-tools-=
-next#n12
+On Wed, Feb 12, 2025 at 06:49:49PM +0530, Athira Rajeev wrote:
+> Perf probe on vfs_fstatat fails as below on a powerpc system
+> 
+> ./perf probe -nf --max-probes=512 -a 'vfs_fstatat $params'
+> Segmentation fault (core dumped)
+> 
+> This is observed while running perftool-testsuite_probe testcase.
+> 
+> While running with verbose, its observed that segfault happens
+> at:
+> 
+>    synthesize_probe_trace_arg ()
+>    synthesize_probe_trace_command ()
+>    probe_file.add_event ()
+>    apply_perf_probe_events ()
+>    __cmd_probe ()
+>    cmd_probe ()
+>    run_builtin ()
+>    handle_internal_command ()
+>    main ()
+> 
+> Code in synthesize_probe_trace_arg() access a null value and results in
+> segfault. Data structure which is null:
+> struct probe_trace_arg arg->value
+> 
+> We are hitting a case where arg->value is null in probe point:
+> "vfs_fstatat $params". This is happening since 'commit e896474fe485
+> ("getname_maybe_null() - the third variant of pathname copy-in")'
+> Before the commit, probe point for vfs_fstatat was getting added only
+> for one location:
+> 
+> Writing event: p:probe/vfs_fstatat _text+6345404 dfd=%gpr3:s32 filename=%gpr4:x64 stat=%gpr5:x64 flags=%gpr6:s32
+> 
+> With this change, vfs_fstatat code is inlined for other locations in the
+> code:
+> Probe point found: __do_sys_lstat64+48
+> Probe point found: __do_sys_stat64+48
+> Probe point found: __do_sys_newlstat+48
+> Probe point found: __do_sys_newstat+48
+> Probe point found: vfs_fstatat+0
+> 
+> When trying to find matching dwarf information entry (DIE)
+> from the debuginfo, the code incorrectly picks DIE which is
+> not referring to vfs_fstatat. Snippet from dwarf entry in vmlinux
+> debuginfo file.
+> 
+> The main abstract die is:
+>  <1><4214883>: Abbrev Number: 147 (DW_TAG_subprogram)
+>     <4214885>   DW_AT_external    : 1
+>     <4214885>   DW_AT_name        : (indirect string, offset: 0x17b9f3): vfs_fstatat
+> 
+> With formal parameters:
+>  <2><4214896>: Abbrev Number: 51 (DW_TAG_formal_parameter)
+>     <4214897>   DW_AT_name        : dfd
+>  <2><42148a3>: Abbrev Number: 23 (DW_TAG_formal_parameter)
+>     <42148a4>   DW_AT_name        : (indirect string, offset: 0x8fda9): filename
+>  <2><42148b0>: Abbrev Number: 23 (DW_TAG_formal_parameter)
+>     <42148b1>   DW_AT_name        : (indirect string, offset: 0x16bd9c): stat
+>  <2><42148bd>: Abbrev Number: 23 (DW_TAG_formal_parameter)
+>     <42148be>   DW_AT_name        : (indirect string, offset: 0x39832b): flags
+> 
+> While collecting variables/parameters for a probe point, the function
+> copy_variables_cb() also looks at dwarf debug entries based on the
+> instruction address. Snippet
+> 
+>         if (dwarf_haspc(die_mem, vf->pf->addr))
+>                 return DIE_FIND_CB_CONTINUE;
+>         else
+>                 return DIE_FIND_CB_SIBLING;
+> 
+> But incase of inlined function instance for vfs_fstatat, there are two
+> entries which has the instruction address entry point as same.
+> 
+> Instance 1: which is for vfs_fstatat and DW_AT_abstract_origin points to
+> 0x4214883 (reference above for main abstract die)
+> 
+> <3><42131fa>: Abbrev Number: 59 (DW_TAG_inlined_subroutine)
+>     <42131fb>   DW_AT_abstract_origin: <0x4214883>
+>     <42131ff>   DW_AT_entry_pc    : 0xc00000000062b1e0
+> 
+> Instance 2: which is not for vfs_fstatat but for getname
+> 
+>  <5><4213270>: Abbrev Number: 39 (DW_TAG_inlined_subroutine)
+>     <4213271>   DW_AT_abstract_origin: <0x4215b6b>
+>     <4213275>   DW_AT_entry_pc    : 0xc00000000062b1e0
+> 
+> But the copy_variables_cb() continues to add parameters from second
+> instance also based on the dwarf_haspc() check. This results in
+> formal parameters for getname also appended to params. But while
+> filling in the args->value for these parameters, since these args
+> are not part of dwarf with offset "42131fa". Hence value will be
+> null. This incorrect args results in segfault when value field is
+> accessed.
+> 
+> Save the Dwarf_Die which is the actual DW_TAG_subprogram as part of
+> "struct probe_finder". In copy_variables_cb(), include check to make
+> sure the DW_AT_abstract_origin points to the correct entry if the
+> dwarf_haspc() matches the instruction address.
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/util/probe-finder.c | 21 ++++++++++++++++++---
+>  tools/perf/util/probe-finder.h |  1 +
+>  2 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 1e769b68da37..361086a7adae 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -973,6 +973,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
+>  	pr_debug("Matched function: %s [%lx]\n", dwarf_diename(sp_die),
+>  		 (unsigned long)dwarf_dieoffset(sp_die));
+>  	pf->fname = fname;
+> +	memcpy(&pf->abstract_die, sp_die, sizeof(Dwarf_Die));
+
+Maybe just saving dieoffset is fine.
 
 Thanks,
-Ian
+Namhyung
 
->
-> Thanks,
-> Namhyung
->
+
+>  	if (pp->line) { /* Function relative line */
+>  		dwarf_decl_line(sp_die, &pf->lno);
+>  		pf->lno += pp->line;
+> @@ -1179,6 +1180,8 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
+>  	struct local_vars_finder *vf = data;
+>  	struct probe_finder *pf = vf->pf;
+>  	int tag;
+> +	Dwarf_Attribute attr;
+> +	Dwarf_Die var_die;
+>  
+>  	tag = dwarf_tag(die_mem);
+>  	if (tag == DW_TAG_formal_parameter ||
+> @@ -1196,10 +1199,22 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
+>  		}
+>  	}
+>  
+> -	if (dwarf_haspc(die_mem, vf->pf->addr))
+> +	if (dwarf_haspc(die_mem, vf->pf->addr)) {
+> +		/*
+> +		 * when DW_AT_entry_pc contains instruction address,
+> +		 * also check if the DW_AT_abstract_origin of die_mem
+> +		 * points to correct die.
+> +		 */
+> +		if (dwarf_attr(die_mem, DW_AT_abstract_origin, &attr)) {
+> +			dwarf_formref_die(&attr, &var_die);
+> +			if (dwarf_dieoffset(&pf->abstract_die) != dwarf_dieoffset(&var_die))
+> +				goto out;
+> +		}
+>  		return DIE_FIND_CB_CONTINUE;
+> -	else
+> -		return DIE_FIND_CB_SIBLING;
+> +	}
+> +
+> +out:
+> +	return DIE_FIND_CB_SIBLING;
+>  }
+>  
+>  static int expand_probe_args(Dwarf_Die *sc_die, struct probe_finder *pf,
+> diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
+> index dcf6cc1e1cbe..b3039635c94e 100644
+> --- a/tools/perf/util/probe-finder.h
+> +++ b/tools/perf/util/probe-finder.h
+> @@ -63,6 +63,7 @@ struct probe_finder {
+>  	const char		*fname;		/* Real file name */
+>  	Dwarf_Die		cu_die;		/* Current CU */
+>  	Dwarf_Die		sp_die;
+> +	Dwarf_Die		abstract_die;
+>  	struct intlist		*lcache;	/* Line cache for lazy match */
+>  
+>  	/* For variable searching */
+> -- 
+> 2.43.5
+> 
