@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B6B22ACE4;
-	Tue, 18 Feb 2025 08:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368B722B8AA;
+	Tue, 18 Feb 2025 08:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866454; cv=none; b=ZIkaXdCLi39k7fKjh+ZWtlHncl/adIJRsPEZjOdDv5RdqO06zTXzG/xGHlTRZ38wL+itaVYHPseV8D9DVLYc0O9sl3HObD9yNsdFHaYmLZt4igjme7Z7Qibj3yipVmh4gu0RYrwoPjgsPC9LNRXE+ELNLzFDBf8YbOLvwqbPwks=
+	t=1739866456; cv=none; b=h/O/l7n0dqLwhhPxA+aMibOdvuT6VakNwhiKlHRlsY9SJbAet4jGIwP6iY9oVp7H9W/j73uh9i3P45jCOI3cwwPF90nl2ib8N91ytWSvk0YOQA71JmcaU6JCYkLgGGyuRkXm+fZR9nddPqHm23LsaEyM5hxQ0Gio/u2c9Z/A7nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866454; c=relaxed/simple;
-	bh=LkAkZZj7J2kYejlOews8Y7GNR2FQyWsbjUFeggnHz50=;
+	s=arc-20240116; t=1739866456; c=relaxed/simple;
+	bh=jWLet2wrtoUWjmfoTwtF7/G2riMhMfoYKYV6FHLV/AQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lz1j7mo2StcRtBg1WzDpVens5Fje1AIvtQmeqDaqLYX6GpNsdT7Wn4beVqNrMgqVRulwO0GRbTI+bA4zPzVRj0up2klcbrx6lH+HjElC/UPXsJ0MZ6S4/8x6wkjpeGEfXm1i38Xll8nkfL2UavG01VYjx87ZqFtI1GTGZxqVfkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iahgi0iB; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=Y3vcUT0QWuO6PZkuy2I/3iIzPyIeBmot9pmlILDu6NoeQgZCHEiTrJHSPzJtkqNuMIN/HJDszXvEJ0l+FZjkumX5LxGTcfC4wLlYw+uuVHE2u3DRYJqDX4tcdyw4xuVSKfvYMLTaVbREQ8TFpccKjE1MnWNLeTTfCtxeBUbzkyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aGMhmsOu; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iahgi0iB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aGMhmsOu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866454; x=1771402454;
+  t=1739866455; x=1771402455;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LkAkZZj7J2kYejlOews8Y7GNR2FQyWsbjUFeggnHz50=;
-  b=Iahgi0iB2lZk3375LzOGFpXo7Nh9/xg25HX6fWyIvHaA3dFzQfh3kf4h
-   p9yhb0dZ/SXg6eTQ07D++ULRq406J7p2+X8XouFrRE4yf7gWqn37HSp7n
-   LblgA13VCq3fFGH/6C4W7Pi0oQKddlp0annQmzubhB48BTmhukVa6wg1D
-   FaJjA1iuXw6O8CG9NpbIUHMiQ73n5r8rhlObK+j9fiehy7FMXNx0lNLND
-   RNXju4LtcDR8cwrFpyNhifR7gOifO3NlySYopDv8bZEwDDyOdMzPr6S0g
-   JLLhHlLkFlxZEWDxk4nvgkI3/DvwmryxPK1LMA71GqvSEmnzbpk1rNN5g
-   Q==;
-X-CSE-ConnectionGUID: uMgCxlO7T86AhRfjUKMvtw==
-X-CSE-MsgGUID: Oh8yZ7IsSiS9/Ft450E7vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200763"
+  bh=jWLet2wrtoUWjmfoTwtF7/G2riMhMfoYKYV6FHLV/AQ=;
+  b=aGMhmsOuZTLB89quEo1FuD7WtHi6pMY44EoPzASMXCTAO94muqyEikWV
+   MCrZlFPceWO5KO6SpB9t+KA9BgkCKT5e34an+qZxDjskvVAXwNsEq7Kul
+   Xt50nZbpo5LmiSF2yZXH69BSM9CNfMElqri15WPjjAo9+MPNEJ5zJcYZx
+   J8AnaKxk+0W5eI00DlsFPZjM/m8AjC/8dwK3M3lRhniVJfbgPPX7ao6do
+   GZyVRLYEZ/JGbjh7Mwk59bvamq7oxsrABhWW1XSzjhDyE+fmwfObyOK9z
+   qiSMG/HfnySu46rL4QmDrwYzgwK6TzivPj07Gd11BSuhSRpNA5SvWNOz6
+   A==;
+X-CSE-ConnectionGUID: 6PVqSNH/R6ySP/w+mxLBsw==
+X-CSE-MsgGUID: J7XubUuDR46WYpV+51SUww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200770"
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200763"
+   d="scan'208";a="44200770"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:14:11 -0800
-X-CSE-ConnectionGUID: F5j/8fIyRe6Iwnr2+PP5gQ==
-X-CSE-MsgGUID: G4l70+FvQbiPjweoLlgFiQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:14:14 -0800
+X-CSE-ConnectionGUID: OD7kVZgDSCGgYXOMlzVYyw==
+X-CSE-MsgGUID: RIR/HFc9RjOupMX17XOcTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166165"
+   d="scan'208";a="145166186"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:14:01 -0800
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:14:08 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 06/24] perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
-Date: Tue, 18 Feb 2025 15:28:00 +0000
-Message-Id: <20250218152818.158614-7-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 07/24] perf/x86/intel: Introduce pairs of PEBS static calls
+Date: Tue, 18 Feb 2025 15:28:01 +0000
+Message-Id: <20250218152818.158614-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
 References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
@@ -72,150 +72,133 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since architectural PEBS would be introduced in subsequent patches,
-rename x86_pmu.pebs to x86_pmu.ds_pebs for distinguishing with the
-upcoming architectural PEBS.
+Arch-PEBS retires IA32_PEBS_ENABLE and MSR_PEBS_DATA_CFG MSRs, so
+intel_pmu_pebs_enable/disable() and intel_pmu_pebs_enable/disable_all()
+are not needed to call for ach-PEBS.
 
+To make code cleaner, introduces static calls
+x86_pmu_pebs_enable/disable() and x86_pmu_pebs_enable/disable_all()
+instead of adding "x86_pmu.arch_pebs" check directly in these helpers.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c |  6 +++---
- arch/x86/events/intel/ds.c   | 20 ++++++++++----------
- arch/x86/events/perf_event.h |  2 +-
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/events/core.c       | 10 ++++++++++
+ arch/x86/events/intel/core.c |  8 ++++----
+ arch/x86/events/intel/ds.c   |  5 +++++
+ arch/x86/events/perf_event.h |  8 ++++++++
+ 4 files changed, 27 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 883e0ee893cb..1c2ff407ef17 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -96,6 +96,11 @@ DEFINE_STATIC_CALL_NULL(x86_pmu_filter, *x86_pmu.filter);
+ 
+ DEFINE_STATIC_CALL_NULL(x86_pmu_late_setup, *x86_pmu.late_setup);
+ 
++DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_enable, *x86_pmu.pebs_enable);
++DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_disable, *x86_pmu.pebs_disable);
++DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_enable_all, *x86_pmu.pebs_enable_all);
++DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_disable_all, *x86_pmu.pebs_disable_all);
++
+ /*
+  * This one is magic, it will get called even when PMU init fails (because
+  * there is no PMU), in which case it should simply return NULL.
+@@ -2049,6 +2054,11 @@ static void x86_pmu_static_call_update(void)
+ 	static_call_update(x86_pmu_filter, x86_pmu.filter);
+ 
+ 	static_call_update(x86_pmu_late_setup, x86_pmu.late_setup);
++
++	static_call_update(x86_pmu_pebs_enable, x86_pmu.pebs_enable);
++	static_call_update(x86_pmu_pebs_disable, x86_pmu.pebs_disable);
++	static_call_update(x86_pmu_pebs_enable_all, x86_pmu.pebs_enable_all);
++	static_call_update(x86_pmu_pebs_disable_all, x86_pmu.pebs_disable_all);
+ }
+ 
+ static void _x86_pmu_read(struct perf_event *event)
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a977d4d631fe..f45296f30ec2 100644
+index f45296f30ec2..41c7243a4507 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -4281,7 +4281,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
- 	};
- 
--	if (!x86_pmu.pebs)
-+	if (!x86_pmu.ds_pebs)
- 		return arr;
- 
- 	/*
-@@ -5454,7 +5454,7 @@ static __init void intel_clovertown_quirk(void)
- 	 * these chips.
- 	 */
- 	pr_warn("PEBS disabled due to CPU errata\n");
--	x86_pmu.pebs = 0;
-+	x86_pmu.ds_pebs = 0;
- 	x86_pmu.pebs_constraints = NULL;
- }
- 
-@@ -5942,7 +5942,7 @@ tsx_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- static umode_t
- pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+@@ -2312,7 +2312,7 @@ static __always_inline void __intel_pmu_disable_all(bool bts)
+ static __always_inline void intel_pmu_disable_all(void)
  {
--	return x86_pmu.pebs ? attr->mode : 0;
-+	return x86_pmu.ds_pebs ? attr->mode : 0;
+ 	__intel_pmu_disable_all(true);
+-	intel_pmu_pebs_disable_all();
++	static_call_cond(x86_pmu_pebs_disable_all)();
+ 	intel_pmu_lbr_disable_all();
  }
  
- static umode_t
+@@ -2344,7 +2344,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ 
+ static void intel_pmu_enable_all(int added)
+ {
+-	intel_pmu_pebs_enable_all();
++	static_call_cond(x86_pmu_pebs_enable_all)();
+ 	__intel_pmu_enable_all(added, false);
+ }
+ 
+@@ -2601,7 +2601,7 @@ static void intel_pmu_disable_event(struct perf_event *event)
+ 	 * so we don't trigger the event without PEBS bit set.
+ 	 */
+ 	if (unlikely(event->attr.precise_ip))
+-		intel_pmu_pebs_disable(event);
++		static_call(x86_pmu_pebs_disable)(event);
+ }
+ 
+ static void intel_pmu_assign_event(struct perf_event *event, int idx)
+@@ -2905,7 +2905,7 @@ static void intel_pmu_enable_event(struct perf_event *event)
+ 	int idx = hwc->idx;
+ 
+ 	if (unlikely(event->attr.precise_ip))
+-		intel_pmu_pebs_enable(event);
++		static_call(x86_pmu_pebs_enable)(event);
+ 
+ 	switch (idx) {
+ 	case 0 ... INTEL_PMC_IDX_FIXED - 1:
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 9c8947d3413f..2a4dc0bbc4f7 100644
+index 2a4dc0bbc4f7..ab4a9a01336d 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -624,7 +624,7 @@ static int alloc_pebs_buffer(int cpu)
- 	int max, node = cpu_to_node(cpu);
- 	void *buffer, *insn_buff, *cea;
+@@ -2674,6 +2674,11 @@ void __init intel_pebs_init(void)
+ 		if (format < 4)
+ 			x86_pmu.intel_cap.pebs_baseline = 0;
  
--	if (!x86_pmu.pebs)
-+	if (!x86_pmu.ds_pebs)
- 		return 0;
- 
- 	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
-@@ -659,7 +659,7 @@ static void release_pebs_buffer(int cpu)
- 	struct cpu_hw_events *hwev = per_cpu_ptr(&cpu_hw_events, cpu);
- 	void *cea;
- 
--	if (!x86_pmu.pebs)
-+	if (!x86_pmu.ds_pebs)
- 		return;
- 
- 	kfree(per_cpu(insn_buffer, cpu));
-@@ -734,7 +734,7 @@ void release_ds_buffers(void)
- {
- 	int cpu;
- 
--	if (!x86_pmu.bts && !x86_pmu.pebs)
-+	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
- 		return;
- 
- 	for_each_possible_cpu(cpu)
-@@ -763,13 +763,13 @@ void reserve_ds_buffers(void)
- 	x86_pmu.bts_active = 0;
- 	x86_pmu.pebs_active = 0;
- 
--	if (!x86_pmu.bts && !x86_pmu.pebs)
-+	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
- 		return;
- 
- 	if (!x86_pmu.bts)
- 		bts_err = 1;
- 
--	if (!x86_pmu.pebs)
-+	if (!x86_pmu.ds_pebs)
- 		pebs_err = 1;
- 
- 	for_each_possible_cpu(cpu) {
-@@ -805,7 +805,7 @@ void reserve_ds_buffers(void)
- 		if (x86_pmu.bts && !bts_err)
- 			x86_pmu.bts_active = 1;
- 
--		if (x86_pmu.pebs && !pebs_err)
-+		if (x86_pmu.ds_pebs && !pebs_err)
- 			x86_pmu.pebs_active = 1;
- 
- 		for_each_possible_cpu(cpu) {
-@@ -2661,12 +2661,12 @@ void __init intel_pebs_init(void)
- 	if (!boot_cpu_has(X86_FEATURE_DTES64))
- 		return;
- 
--	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
-+	x86_pmu.ds_pebs = boot_cpu_has(X86_FEATURE_PEBS);
- 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
- 	if (x86_pmu.version <= 4)
- 		x86_pmu.pebs_no_isolation = 1;
- 
--	if (x86_pmu.pebs) {
-+	if (x86_pmu.ds_pebs) {
- 		char pebs_type = x86_pmu.intel_cap.pebs_trap ?  '+' : '-';
- 		char *pebs_qual = "";
- 		int format = x86_pmu.intel_cap.pebs_format;
-@@ -2758,7 +2758,7 @@ void __init intel_pebs_init(void)
- 
- 		default:
- 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
--			x86_pmu.pebs = 0;
-+			x86_pmu.ds_pebs = 0;
- 		}
- 	}
- }
-@@ -2767,7 +2767,7 @@ void perf_restore_debug_store(void)
- {
- 	struct debug_store *ds = __this_cpu_read(cpu_hw_events.ds);
- 
--	if (!x86_pmu.bts && !x86_pmu.pebs)
-+	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
- 		return;
- 
- 	wrmsrl(MSR_IA32_DS_AREA, (unsigned long)ds);
++		x86_pmu.pebs_enable = intel_pmu_pebs_enable;
++		x86_pmu.pebs_disable = intel_pmu_pebs_disable;
++		x86_pmu.pebs_enable_all = intel_pmu_pebs_enable_all;
++		x86_pmu.pebs_disable_all = intel_pmu_pebs_disable_all;
++
+ 		switch (format) {
+ 		case 0:
+ 			pr_cont("PEBS fmt0%c, ", pebs_type);
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 0a259c98056a..1e7884fdd990 100644
+index 1e7884fdd990..4bc6c9d66b94 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -888,7 +888,7 @@ struct x86_pmu {
- 	 */
- 	unsigned int	bts			:1,
- 			bts_active		:1,
--			pebs			:1,
-+			ds_pebs			:1,
- 			pebs_active		:1,
- 			pebs_broken		:1,
- 			pebs_prec_dist		:1,
+@@ -806,6 +806,10 @@ struct x86_pmu {
+ 	int		(*hw_config)(struct perf_event *event);
+ 	int		(*schedule_events)(struct cpu_hw_events *cpuc, int n, int *assign);
+ 	void		(*late_setup)(void);
++	void		(*pebs_enable)(struct perf_event *event);
++	void		(*pebs_disable)(struct perf_event *event);
++	void		(*pebs_enable_all)(void);
++	void		(*pebs_disable_all)(void);
+ 	unsigned	eventsel;
+ 	unsigned	perfctr;
+ 	unsigned	fixedctr;
+@@ -1116,6 +1120,10 @@ DECLARE_STATIC_CALL(x86_pmu_set_period, *x86_pmu.set_period);
+ DECLARE_STATIC_CALL(x86_pmu_update,     *x86_pmu.update);
+ DECLARE_STATIC_CALL(x86_pmu_drain_pebs,	*x86_pmu.drain_pebs);
+ DECLARE_STATIC_CALL(x86_pmu_late_setup,	*x86_pmu.late_setup);
++DECLARE_STATIC_CALL(x86_pmu_pebs_enable, *x86_pmu.pebs_enable);
++DECLARE_STATIC_CALL(x86_pmu_pebs_disable, *x86_pmu.pebs_disable);
++DECLARE_STATIC_CALL(x86_pmu_pebs_enable_all, *x86_pmu.pebs_enable_all);
++DECLARE_STATIC_CALL(x86_pmu_pebs_disable_all, *x86_pmu.pebs_disable_all);
+ 
+ static __always_inline struct x86_perf_task_context_opt *task_context_opt(void *ctx)
+ {
 -- 
 2.40.1
 
