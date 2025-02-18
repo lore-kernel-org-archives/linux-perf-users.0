@@ -1,208 +1,165 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5432826A088;
-	Tue, 18 Feb 2025 13:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F77243361;
+	Tue, 18 Feb 2025 14:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883753; cv=none; b=qk2NURERJQTRcWlQEslQWBD33Ff/RHZFr6WUb5F1Fvdu2ac2WyyB40ON3+WgK6aos1Q3YOgDV+OaXvvT2vreKEye3/WJzepVDprr5kLI9fVbQJmMNRYeXrqz2BlfQAaAxBcXOHIsCRzbsAw85RRqKPj6McGK6RlHJRQpnVNA9fw=
+	t=1739887767; cv=none; b=N9PhUqFWlHLSHhN3lXiRWvLs/CSB01jMLCuqaCoS3X4qivcb0J+9G+nBeVOTtMXUUwZSs808WN0x+L5IwXojCZMlAh51lhdQbB+A2SjHw2fENuY3s3kqBE6h/XdxE2wzXi9teIUKaceYcUMMTCo2uTAtEFqkhIe1bO9fvVjoUOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883753; c=relaxed/simple;
-	bh=6jGygvIpZ+inynCJibhgOfbOLfeSPLHzPo4VOrGkPLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cR+RM1uZ2sk2bQ6Xx48dvLZGevYj2WvGo9MQEeioSlYYID/DOtECQOlMhyqiJYygotD58S4oPbBJwAUBdmrocbxiCeyQwyUt928hjg0FE94b49u6csI8+ku8u2RLWQFOH655k8wj10WAuROyP2xszSINRwUnEzQT2gRf/ueCbd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yy02G6ckbz1wn8K;
-	Tue, 18 Feb 2025 20:58:30 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2688E18005F;
-	Tue, 18 Feb 2025 21:02:25 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 21:02:23 +0800
-Message-ID: <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
-Date: Tue, 18 Feb 2025 21:02:22 +0800
+	s=arc-20240116; t=1739887767; c=relaxed/simple;
+	bh=I/RdCQPPn1wHaFmlp+tuRpK9XsLvtlVCcv5TFMGTqPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkDgHp/UYeGz4Ia1oAtvIswY4OqAgB3kfJaChDrYcL6rN6NIF2WnvsbXoSJp9vbNhPBrcIgH+tZx67uMvP9Duny4bH4Z4AflQhsbk9BY1aVyJj+bXzzVE8mOWRj4m3qzsRZX8oXqa50IUp3l6F6bO4sHKB2GPO0r5qXvodmCu1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CV+RovXp; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CV+RovXp"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBML7J020389;
+	Tue, 18 Feb 2025 14:08:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=9AF1om8Lrm/xLDRHOLxFEifeKpnaLe
+	RhNPZT9gDLIQ0=; b=CV+RovXpmtr1HdW8oXhrmXR+yctXcF/BZ/igc+sObd4LmN
+	Q+YeZ1Zlb43eyfvWfHnVonpvcozFlMyS7RwWrXmeeapi/bJc0Xqnd/qGeGwkkqYx
+	zL1E7BNIE+kIXvk8qpAT60eq6qShVzwSUL2vNi2m4D6+XHL77xqXT+KRDpqxKNEw
+	VFv8m1cHcw3z3cUALoCO9xSlCFCDjwS7GjlwK3XN5pEwSMMC+4YXKqAp4mzE8/XH
+	/9saCZ8rgKGhg0d+fjm594PCQaoMsYHZqawndMZp+Wt2fIn9VzEBYa6q9a5OfePO
+	UhtAvSK5l82To9C9ygf3TkZ3thakqLmrVwcHailg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:28 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51IE7Lf0016617;
+	Tue, 18 Feb 2025 14:08:28 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBaUc3013259;
+	Tue, 18 Feb 2025 14:08:26 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44u7fkk9wb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:26 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51IE8NZ59306562
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:08:23 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 430722004E;
+	Tue, 18 Feb 2025 14:08:23 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AAD4620043;
+	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
+Date: Tue, 18 Feb 2025 15:08:21 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: joel granados <joel.granados@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 7/8] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
+Message-ID: <20250218140821.7740Ab5-hca@linux.ibm.com>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+ <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-To: David Hildenbrand <david@redhat.com>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<wangkefeng.wang@huawei.com>, linux-mm <linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: C1vwg1h0Wd1-AF41KNeLrehTep7PLEGd
+X-Proofpoint-ORIG-GUID: 6Qf1aZgnvDRrtDnExFplYp_kZP8KujkA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_06,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 suspectscore=0 clxscore=1011 mlxlogscore=780
+ priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502180106
 
+On Tue, Feb 18, 2025 at 10:56:23AM +0100, joel granados wrote:
+> Move s390 sysctls (spin_retry and userprocess_debug) into their own
+> files under arch/s390. We create two new sysctl tables
+> (2390_{fault,spin}_sysctl_table) which will be initialized with
+> arch_initcall placing them after their original place in proc_root_init.
+> 
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kerenel/sysctl.c.
+  ^^^^^^^
+typo
 
+> diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
+> index a81a01c44927..4483fdc9d472 100644
+> --- a/arch/s390/lib/spinlock.c
+> +++ b/arch/s390/lib/spinlock.c
+> @@ -17,6 +17,10 @@
+>  #include <asm/alternative.h>
+>  #include <asm/asm.h>
+>  
+> +#if defined(CONFIG_SMP)
+> +#include <linux/sysctl.h>
+> +#endif
+> +
+...
+> +#if defined(CONFIG_SMP)
+> +static const struct ctl_table s390_spin_sysctl_table[] = {
+> +	{
+> +		.procname	= "spin_retry",
+> +		.data		= &spin_retry,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +};
+> +
+> +static int __init init_s390_spin_sysctls(void)
+> +{
+> +	register_sysctl_init("kernel", s390_spin_sysctl_table);
+> +	return 0;
+> +}
+> +arch_initcall(init_s390_spin_sysctls);
+> +#endif
 
-在 2025/2/18 16:23, David Hildenbrand 写道:
-> On 18.02.25 03:47, Tong Tiangen wrote:
->>
->>
->> 在 2025/2/17 20:38, Tong Tiangen 写道:
->>> We triggered the following error logs in syzkaller test:
->>>
->>>     BUG: Bad page state in process syz.7.38  pfn:1eff3
->>>     page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 
->>> pfn:0x1eff3
->>>     flags: 
->>> 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
->>>     raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 
->>> 0000000000000000
->>>     raw: 0000000000000000 0000000000000000 00000000fffffffe 
->>> 0000000000000000
->>>     page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
->>>     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
->>> 1.13.0-1ubuntu1.1 04/01/2014
->>>     Call Trace:
->>>      <TASK>
->>>      dump_stack_lvl+0x32/0x50
->>>      bad_page+0x69/0xf0
->>>      free_unref_page_prepare+0x401/0x500
->>>      free_unref_page+0x6d/0x1b0
->>>      uprobe_write_opcode+0x460/0x8e0
->>>      install_breakpoint.part.0+0x51/0x80
->>>      register_for_each_vma+0x1d9/0x2b0
->>>      __uprobe_register+0x245/0x300
->>>      bpf_uprobe_multi_link_attach+0x29b/0x4f0
->>>      link_create+0x1e2/0x280
->>>      __sys_bpf+0x75f/0xac0
->>>      __x64_sys_bpf+0x1a/0x30
->>>      do_syscall_64+0x56/0x100
->>>      entry_SYSCALL_64_after_hwframe+0x78/0xe2
->>>
->>>      BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES 
->>> val:-1
->>>
->>> The following syzkaller test case can be used to reproduce:
->>>
->>>     r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
->>>     write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
->>>     r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 
->>> 0x42, 0x0)
->>>     mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 
->>> 0x0, 0x12, r4, 0x0)
->>>     r5 = userfaultfd(0x80801)
->>>     ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
->>>     r6 = userfaultfd(0x80801)
->>>     ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
->>>     ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, 
->>> &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
->>>     ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, 
->>> &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
->>>     r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, 
->>> &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 
->>> 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 
->>> 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
->>> 0x0, 0x10, 0x0, @void, @value}, 0x94)
->>>     bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 
->>> 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', 
->>> &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
->>>
->>> The cause is that zero pfn is set to the pte without increasing the rss
->>> count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
->>> not increase accordingly. Then, the operation on the same pfn is 
->>> performed
->>> in uprobe_write_opcode()->__replace_page() to unconditional decrease the
->>> rss count and old_folio's refcount.
->>>
->>> Therefore, two bugs are introduced:
->>> 1. The rss count is incorrect, when process exit, the check_mm() report
->>>      error "Bad rss-count".
->>> 2. The reserved folio (zero folio) is freed when folio->refcount is 
->>> zero,
->>>      then free_pages_prepare->free_page_is_bad() report error "Bad 
->>> page state".
->>>
->>> To fix it, add zero folio check before rss counter and refcount 
->>> decrease.
->>>
->>> Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement 
->>> logic account for rss_stat counters")
->>> Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install 
->>> and remove uprobes breakpoints")
->>> Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
->>> ---
->>>    kernel/events/uprobes.c | 6 ++++--
->>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->>> index 46ddf3a2334d..ff5694acfa68 100644
->>> --- a/kernel/events/uprobes.c
->>> +++ b/kernel/events/uprobes.c
->>> @@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>            dec_mm_counter(mm, MM_ANONPAGES);
->>>        if (!folio_test_anon(old_folio)) {
->>> -        dec_mm_counter(mm, mm_counter_file(old_folio));
->>> +        if (!is_zero_folio(old_folio))
->>> +            dec_mm_counter(mm, mm_counter_file(old_folio));
->>>            inc_mm_counter(mm, MM_ANONPAGES);
->>>        }
->>> @@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>        if (!folio_mapped(old_folio))
->>>            folio_free_swap(old_folio);
->>>        page_vma_mapped_walk_done(&pvmw);
->>> -    folio_put(old_folio);
->>> +    if (!is_zero_folio(old_folio))
->>> +        folio_put(old_folio);
->  >>    >>        err = 0;
->>>     unlock:
->>
-> 
-> The whole "manually replace pages" logic is fragile. I tried to rewrite 
-> it a while back:
-> 
-> https://lkml.kernel.org/r/20240604122548.359952-1-david@redhat.com
-> 
-> But didn't get to follow-up yet.
-> 
-> I'm not sure if the page_vma_mapped_walk() really does what we would 
-> expect here.
-> 
-> The folio_remove_rmap_pte(old_folio, old_page, vma); is certainly wrong 
-> as well for ero folios.
-> 
-> 
-> I don't think there is a sane use case right now where we would hit the 
-> shared zeropage.
-> 
-> So for the time being, I think we should just reject them immediately 
-> after get_user_page_vma_remote().
-> 
-> At some point I'll follow up with my rewrite that will clean this 
-> nastiness here up a bit.
-
-OK, Before your rewrite last merged, How about i change the solution to
-just reject them immediately after get_user_page_vma_remote()？
-
-Thanks,
-Tong.
-
-> 
+I see that you want to keep the existing CONFIG_SMP behaviour, but since a
+long time s390 enforces CONFIG_SMP=y (this was obviously never reflected in
+kernel/sysctl.c).
+Therefore the above ifdefs should be removed, and in addition the include
+statement should be added to the other linux includes at the top of the file.
