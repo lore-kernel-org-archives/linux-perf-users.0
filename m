@@ -1,443 +1,227 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4D526E636
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 17:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0922356D6;
+	Tue, 18 Feb 2025 18:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901272; cv=none; b=H31c9wOz9bVfRY/awrw4AY9/rH1bn9t2X85s0m0jty0Ue9++PZ0eP4s910tX+BQ7qpUAzakQJ7CmeQ/n+movu50Lon7mREPPohS5sSxk8DiuUOb2JcabUGAyosZ+IuyXSy5zOphgnSW5F0mH3M1rqvuIggnBF6ydRKwOsqJnEQU=
+	t=1739903984; cv=none; b=hcsQZQ/7S3x0RcmmGN7CtUfQwSymljFba9mQppFTvGTyl+5dO5xY/+uu/hircyZo7A+cfm4/GiaGe6M/fkIf4FsCep76/39OOKkJjOVLvrCQEhnT0AW9Cm9RMWkSm0o0/aWpXbS4kyVWTjoWFBm0tyLkt4npPIJUUEdKMsbkNG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901272; c=relaxed/simple;
-	bh=7O7gacnsM6mOex+DDr8AyxTmbm8LNjdmfOHtWP0MKZ0=;
+	s=arc-20240116; t=1739903984; c=relaxed/simple;
+	bh=Ou8KiLZLHzNrLWIVPdXFzquRxMgMgDClrgJgKs9eQE8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DKaFruWAvHQTwKc4U5DFYp7hPA7nlyULpXif1p2470KACBg+MxkfwLtoZggOE28nR/31IjK1/+NeGxkLs12rHQpCJxIFJ0EjCFQMiBb+CLzQk7RVEXT4ueibxycnILfcN5gLt2aTn5pGCQrImbqrD6x1xRKn7gwStzUHwQAXaWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NV2ML6bv; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=miK+t550iztEXXaXYIqBlcKm3EtDDul/datYPxGO3FxmQbEwm/u00ldIfpd+R7wtIUZDhvOnXKXMBAhCPWLnbAPv8tBgGR8/OVvCTEx759HaELmc8sRGjbYKjOgL+hUuuoSipLPkKp74GDTgXP3EtNzChMwYgn5weHi49NVfiWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIkr4LKr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NV2ML6bv"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3076262bfc6so61792051fa.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Feb 2025 09:54:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739901267; x=1740506067; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YI+znzuuXksA7qnH+pwXOwBdUnfrRNphP1Aa+shefSI=;
-        b=NV2ML6bvD9nkQSH+Ip2sZQbA54ijce2jAZmR4vrngKNrqK2ZEaAdF+/fuYrkzV+CY6
-         ndkscb0Vky2vPNRMq7dYtz1nGm2PbG0R3K4KuMtnmgnjUmB3zduYBBIyB8RXaSWIhSFH
-         YtylWBfZCx1NESM+kYRuyTc0s5Vl56C7G57QE+54D10Oz0HG2hV5JBH0lLq3GmglDQ3j
-         pv2jUlWlcjZdyunPQEcf3IbtpRk6J9TMo5Pt83j4goaEwQE1akN96hADXbpFNldBWrjZ
-         0CewrZ05wgdOCxqTnY8FBeCTs+IyXTNhJEt0lVkzahKA3JnpMrRbREwhLlyURI3JvKjN
-         yfcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739901267; x=1740506067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YI+znzuuXksA7qnH+pwXOwBdUnfrRNphP1Aa+shefSI=;
-        b=gYoAG2Z4aArJbqWd8IcJ1CVPiqhfLvgo9lB+enBeR9G7lFPYwKQV441w3cNkyhP7aL
-         btw8Wur81uJk4o0onDMyVwWAgEaKJC+Pn7Ah6zz+qRAqPl9DCcAGEZ47Q4T2Wf5p/EHW
-         Nr0vcNUZDhJRET8tPg4tzHKT2uQZttRe4QJlGdrIgjH0vlOPI3grFQA16GEp/Qt9EaQY
-         N5MbOGXcU9SBR894xqGyYYjr/h0TOnnVm4mKOmCAhsVE+XrO8yvs6d5sSWJRVwdq7S74
-         /coJpblfDDvrwEbe5q+zbez1ckHBfjyZBSADS8bR27QYGNjm8rqb3vRzQZ/I/e2xp4bP
-         C9gA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKBNLbTOo0M3NInz5NhgGBBIluUmlu6LmpVJLF8xQ+OB8NLMwxS73XydqehuxIxRNeJo4Pkn+CwKrtCy5F+h35@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP0VZdrmWaqusi9PwHF2Vb9e+wA158KpftxFatX+XV3EX71/r5
-	/D5XPEKzFD6/z5thAuS4XrxaBYhcTYMZvbjET6NgDZOOsyMz/WktebXvPGlTz3U=
-X-Gm-Gg: ASbGncvI0AkqjLUQEDPJjVCCkDXHzTk53gnRbd6TT6NNflticsXvFQICN4WYO7/WQWT
-	dadk9qof4eBdIdJodk/jhFyoaR4VK11Qd130xXU4swwKwJeG3hixUZYYgxVNjK5DNdZfiag3C2A
-	Bhc34Fa6DWzPd5bqmVU3KyQrtqb5lQOSEZYHAPut2tUpGU++pcrRcllGXi7TR6vuEVn9VvOLZq+
-	v7LNKEne6HuDX9kS85CXuBTW/0HkLCOfa/KeRLmR0ptEzDgByFg4lRxZHngs+SR66WslRqa5jnE
-	S3seFEV/mDu4z4Uq3TAMhusCe+T2E5134y5yS3+oLLVVoZ2zza/sc5IaQ9MTJ3ryTkmfQQk=
-X-Google-Smtp-Source: AGHT+IGgS2rblfca+YLr7ikEH5fosM1HrQ1yesZD3FLHOUzZMq39lE7Z3Ptzi8ujTytXRTzK6lCM7Q==
-X-Received: by 2002:a2e:878c:0:b0:2ff:e7c3:9e2e with SMTP id 38308e7fff4ca-30927a6f5d5mr43954511fa.17.1739901267137;
-        Tue, 18 Feb 2025 09:54:27 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a25195701sm11365691fa.4.2025.02.18.09.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 09:54:26 -0800 (PST)
-Date: Tue, 18 Feb 2025 19:54:24 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: manivannan.sadhasivam@linaro.org
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/4] PCI: dwc: Add sysfs support for PTM
-Message-ID: <qvkpasuxn54dpsvsq6vinuyjvnphvnvfcedqzvmhkpgbrgurvm@7e55l7rkkqo4>
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
- <20250218-pcie-qcom-ptm-v1-3-16d7e480d73e@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIkr4LKr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7189AC4CEE2;
+	Tue, 18 Feb 2025 18:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739903984;
+	bh=Ou8KiLZLHzNrLWIVPdXFzquRxMgMgDClrgJgKs9eQE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vIkr4LKr95n1sgWF9eEKIJtFMEX2I2pw8roaOiQU1XD153ZTLXDZ/mxRjmNnouq8f
+	 hCJAs1u7Lcmk1DsOmrf5X9sqrHdn6+BqgSxvoB9xQ48YhhDZVUkd095jxxSj64Q2A/
+	 dE3jGIV9Deg1JrO11Pjdtednrud/M5DAzOcVuvzGlWsSFobWfDsfA609icoCTjThG5
+	 H/5ftZ/mejgknk5xj8NRzZnmoBZ5pOHD/RKFznLFZlPXb0HoCZZWt/f/eqU1XMqgJh
+	 Ws4wCzl1lxD2gu5weFETthkXl8KvnCMevgDaweHSnsnVdtPAmnXTW9MWORDWIHj5bF
+	 MHI/IZhPoLTIw==
+Date: Tue, 18 Feb 2025 19:39:40 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z7TT7Jw5QDx2G81v@x1>
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost>
+ <Z6JksXDRh8OSAh-u@google.com>
+ <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+ <Z6Khl1rHIAb7wOXw@ghost>
+ <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
+ <Z6pF5pkH_bqvDwMK@ghost>
+ <CAEf4BzYqOtfOiYcHWRP44rwkrdzi3aMkjgD1-Td5DVAOLV=2kA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250218-pcie-qcom-ptm-v1-3-16d7e480d73e@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYqOtfOiYcHWRP44rwkrdzi3aMkjgD1-Td5DVAOLV=2kA@mail.gmail.com>
 
-On Tue, Feb 18, 2025 at 08:06:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Mon, Feb 10, 2025 at 04:23:49PM -0800, Andrii Nakryiko wrote:
+> On Mon, Feb 10, 2025 at 10:31 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >
+> > On Wed, Feb 05, 2025 at 05:28:19PM -0800, Andrii Nakryiko wrote:
+> > > On Tue, Feb 4, 2025 at 3:24 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > >
+> > > > On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
+> > > > > On Tue, Feb 4, 2025 at 7:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > > > > > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > > > > > > On Tue, Feb 4, 2025 at 12:10 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > > > > > >
+> > > > > > > > > The quiet infrastructure was moved out of Makefile.build to accomidate
+> > > > > > > > > the new syscall table generation scripts in perf. Syscall table
+> > > > > > > > > generation wanted to also be able to be quiet, so instead of again
+> > > > > > > > > copying the code to set the quiet variables, the code was moved into
+> > > > > > > > > Makefile.perf to be used globally. This was not the right solution. It
+> > > > > > > > > should have been moved even further upwards in the call chain.
+> > > > > > > > > Makefile.include is imported in many files so this seems like a proper
+> > > > > > > > > place to put it.
+> > > > > > > > >
+> > > > > > > > > To:
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > > > > > ---
+> > > > > > > > > Charlie Jenkins (2):
+> > > > > > > > >       tools: Unify top-level quiet infrastructure
+> > > > > > > > >       tools: Remove redundant quiet setup
+> > > > > > > > >
+> > > > > > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > > > > > > >  tools/bpf/Makefile                        |  6 -----
+> > > > > > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > > > > > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > > > > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > > > > > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > > > > > > >  tools/build/Makefile                      |  8 +-----
+> > > > > > > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > > > > > > >
+> > > > > > > > Nack.
+> > > > > > > > libbpf and bpftool are synced independently to github
+> > > > > > > > and released from there.
+> > > > > > > > This change breaks it.
+> > > > > >
+> > > > > > Sorry, I overlooked this part and merged a change that touched the
+> > > > > > common files into the perf tree.
+> > > > > >
+> > > > > > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile.perf")
+> > > > > >
+> > > > > > Unfortunately, it's already in v6.14-rc1.
+> > > > > >
+> > > > > > >
+> > > > > > > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > > > > > > don't build quietly so this was an attempt to fix that.
+> > > > > >
+> > > > > > So I think you will need something like this for v6.14.  Again, sorry
+> > > > > > about the trouble.
+> > > > >
+> > > > > Just revert f2868b1a66d4f40f that created this mess.
+> > > >
+> > > > Why are you opposed to unifying this helpers among the various projects
+> > > > in tools? Can you explain what about this breaks the Github syncing flow
+> > > > and why it cannot be resolved? It doesn't make sense to duplicate "Q="
+> > > > in every Makefile anybody ever wants to add to tools just because bpf
+> > > > syncing isn't robust.
+> > >
+> > > Alexei's concern about Github mirrors of bpftool and libbpf isn't
+> > > valid. Github versions of those projects use their own independent
+> > > Makefiles anyways, so your change doesn't break that aspect.
+> > >
+> > > But your change *does* break both libbpf's and bpftool's make output
+> > > *in the kernel repo*. With this patch we basically don't have "quiet"
+> > > mode anymore:
+> > >
+> > > $ git co f2868b1a66d4f40f07e985b0beead606b2753602
+> > > HEAD is now at f2868b1a66d4 perf tools: Expose quiet/verbose variables
+> > > in Makefile.perf
+> > > $ git log --oneline -n1
+> > > f2868b1a66d4 (HEAD) perf tools: Expose quiet/verbose variables in Makefile.perf
+> > > $ pwd
+> > > /home/andriin/linux/tools/lib/bpf
+> > > $ make
+> > >   gcc -Wp,-MD,/data/users/andriin/linux/tools/lib/bpf/staticobjs/.libbpf.o.d
+> > > -Wp,-MT,/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o -g
+> > > -O2 -std=gnu89 -Wbad-function-cast -Wdeclaration-after-statement
+> > > -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
+> > > -Wmissing-prototypes -Wnested-externs -Wno-system-headers
+> > > -Wold-style-definition -Wpacked -Wredundant-decls -Wstrict-prototypes
+> > > -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
+> > > -Wno-type-limits -Wstrict-aliasing=3 -Wshadow -Wno-switch-enum -Werror
+> > > -Wall -I/data/users/andriin/linux/tools/lib/bpf/
+> > > -I/data/users/andriin/linux/tools/include
+> > > -I/data/users/andriin/linux/tools/include/uapi
+> > > -I/data/users/andriin/linux/tools/arch/x86/include -fvisibility=hidden
+> > > -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D"BUILD_STR(s)=#s" -c -o
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o libbpf.c
+> > > ^Cmake[2]: *** [/data/users/andriin/linux/tools/build/Makefile.build:86:
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o] Interrupt
+> > > make[1]: *** [Makefile:165:
+> > > /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf-in.o]
+> > > Interrupt
+> > > make: *** [Makefile:143: all] Interrupt
+> > >
+> > > $ git co HEAD~
+> > > Previous HEAD position was f2868b1a66d4 perf tools: Expose
+> > > quiet/verbose variables in Makefile.perf
+> > > HEAD is now at e9cbc854d8b1 perf config: Add a function to set one
+> > > variable in .perfconfig
+> > > $ make
+> > >   CC      /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o
+> > > ^C
+> > >
+> > > So, can you please check and fix?
+> >
+> > I think I am misunderstanding what you are saying. The patch that we are
+> > discussing on is the patch to fix this? You are showing the output from
+> > the patch that is being fixed in this series.
 > 
-> Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
-> sec 6.22 allows precise coordination of timing information across multiple
-> components in a PCIe hierarchy with independent local time clocks.
+> Ah, it's me getting confused. It was the earlier perf commit that
+> broke all this, makes sense. I just double-checked with your patches
+> applied locally. It indeed fixes the issue, LGTM.
 > 
-> While the PTM support itself is indicated by the presence of PTM Extended
-> Capability structure, Synopsys Designware IPs expose the PTM context
-> (timing information) through Vendor Specific Extended Capability (VSEC)
-> registers.
-> 
-> Hence, add the sysfs support to expose the PTM context information to
-> userspace from both PCIe RC and EP controllers. Below PTM context are
-> exposed through sysfs:
-> 
-> PCIe RC
-> =======
-> 
-> 1. PTM Local clock
-> 2. PTM T2 timestamp
-> 3. PTM T3 timestamp
-> 4. PTM Context valid
-> 
-> PCIe EP
-> =======
-> 
-> 1. PTM Local clock
-> 2. PTM T1 timestamp
-> 3. PTM T4 timestamp
-> 4. PTM Master clock
-> 5. PTM Context update
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  Documentation/ABI/testing/sysfs-platform-dwc-pcie  |  70 ++++++
->  MAINTAINERS                                        |   1 +
->  drivers/pci/controller/dwc/Makefile                |   2 +-
->  drivers/pci/controller/dwc/pcie-designware-ep.c    |   3 +
->  drivers/pci/controller/dwc/pcie-designware-host.c  |   4 +
->  drivers/pci/controller/dwc/pcie-designware-sysfs.c | 278 +++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.c       |   6 +
->  drivers/pci/controller/dwc/pcie-designware.h       |  22 ++
->  include/linux/pcie-dwc.h                           |   8 +
->  9 files changed, 393 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dwc-pcie b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
-> new file mode 100644
-> index 000000000000..6b429108cd09
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Should be a class or just a ptm group in the PCIe controller device? How
-generic are those attributes?
+Thanks, b4 didn't pick this one, probably because you provided the Ack
+for a previous version of this series, but the patch in it is the same
+as in v2, so I'm keeping it, ok?
 
-> @@ -0,0 +1,70 @@
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_local_clock
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM local clock in nanoseconds. Applicable for both Root
-> +		Complex and Endpoint mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_master_clock
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM master clock in nanoseconds. Applicable only for
-> +		Endpoint mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t1
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM T1 timestamp in nanoseconds. Applicable only for
-> +		Endpoint mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t2
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM T2 timestamp in nanoseconds. Applicable only for
-> +		Root Complex mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t3
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM T3 timestamp in nanoseconds. Applicable only for
-> +		Root Complex mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t4
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RO) PTM T4 timestamp in nanoseconds. Applicable only for
-> +		Endpoint mode.
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_context_update
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RW) Control the PTM context update mode. Applicable only for
-> +		Endpoint mode.
-> +
-> +		Following values are supported:
-> +
-> +		* auto = PTM context auto update trigger for every 10ms
-> +
-> +		* manual = PTM context manual update. Writing 'manual' to this
-> +			   file triggers PTM context update (default)
-> +
-> +What:		/sys/devices/platform/*/dwc/ptm/ptm_context_valid
-> +Date:		February 2025
-> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +Description:
-> +		(RW) Control the PTM context validity (local clock timing).
-> +		Applicable only for Root Complex mode. PTM context is
-> +		invalidated by hardware if the Root Complex enters low power
-> +		mode or changes link frequency.
-> +
-> +		Following values are supported:
-> +
-> +		* 0 = PTM context invalid (default)
-> +
-> +		* 1 = PTM context valid
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b4d09d52a750..1c3e21cfbc6e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18120,6 +18120,7 @@ M:	Jingoo Han <jingoohan1@gmail.com>
->  M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-platform-dwc-pcie
->  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
->  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
->  F:	drivers/pci/controller/dwc/*designware*
+Also since you applied the patches and tested it, can I promote the tag
+to Tested-by you?
 
-[...]
+Humm, there is a slight difference, checking that in the e-mails
+thread...
 
-> +
-> +static struct attribute *ptm_attrs[] = {
-> +	&dev_attr_ptm_context_update.attr,
-> +	&dev_attr_ptm_context_valid.attr,
-> +	&dev_attr_ptm_local_clock.attr,
-> +	&dev_attr_ptm_master_clock.attr,
-> +	&dev_attr_ptm_t1.attr,
-> +	&dev_attr_ptm_t2.attr,
-> +	&dev_attr_ptm_t3.attr,
-> +	&dev_attr_ptm_t4.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t ptm_attr_visible(struct kobject *kobj, struct attribute *attr,
-> +				int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct dw_pcie *pci = dev_get_drvdata(dev);
-> +
-> +	/* RC only needs local, t2 and t3 clocks and context_valid */
-> +	if ((attr == &dev_attr_ptm_t1.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-> +	    (attr == &dev_attr_ptm_t4.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-> +	    (attr == &dev_attr_ptm_master_clock.attr && pci->mode == DW_PCIE_RC_TYPE) ||
-> +	    (attr == &dev_attr_ptm_context_update.attr && pci->mode == DW_PCIE_RC_TYPE))
-> +		return 0;
++  quiet = quiet_
++  Q = @
 
-The pci->mode checks definitely can be refactored to a top-level instead
-of being repeated on each line.
+The above doesn´t  have spaces surrounding the = sign, lemme see...
 
-> +
-> +	/* EP only needs local, master, t1, and t4 clocks and context_update */
-> +	if ((attr == &dev_attr_ptm_t2.attr && pci->mode == DW_PCIE_EP_TYPE) ||
-> +	    (attr == &dev_attr_ptm_t3.attr && pci->mode == DW_PCIE_EP_TYPE) ||
-> +	    (attr == &dev_attr_ptm_context_valid.attr && pci->mode == DW_PCIE_EP_TYPE))
-> +		return 0;
-> +
-> +	return attr->mode;
-
-I think it might be better to register two separate groups, one for RC,
-one for EP and use presense of the corresponding capability in the
-.is_visible callback to check if the PTM attributes should be visible at
-all.
-
-> +}
-> +
-> +static const struct attribute_group ptm_attr_group = {
-> +	.name = "ptm",
-> +	.attrs = ptm_attrs,
-> +	.is_visible = ptm_attr_visible,
-> +};
-> +
-> +static const struct attribute_group *dwc_pcie_attr_groups[] = {
-> +	&ptm_attr_group,
-> +	NULL,
-> +};
-> +
-> +static void pcie_designware_sysfs_release(struct device *dev)
-> +{
-> +	kfree(dev);
-> +}
-> +
-> +void pcie_designware_sysfs_init(struct dw_pcie *pci,
-> +				    enum dw_pcie_device_mode mode)
-> +{
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	/* Check for capabilities before creating sysfs attrbutes */
-> +	ret = dw_pcie_find_ptm_capability(pci);
-> +	if (!ret) {
-> +		dev_dbg(pci->dev, "PTM capability not present\n");
-> +		return;
-> +	}
-> +
-> +	pci->ptm_vsec_offset = ret;
-> +	pci->mode = mode;
-> +
-> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> +	if (!dev)
-> +		return;
-> +
-> +	device_initialize(dev);
-> +	dev->groups = dwc_pcie_attr_groups;
-> +	dev->release = pcie_designware_sysfs_release;
-> +	dev->parent = pci->dev;
-> +	dev_set_drvdata(dev, pci);
-> +
-> +	ret = dev_set_name(dev, "dwc");
-> +	if (ret)
-> +		goto err_free;
-> +
-> +	ret = device_add(dev);
-> +	if (ret)
-> +		goto err_free;
-> +
-> +	pci->sysfs_dev = dev;
-
-Why do you need to add a new device under the PCIe controller?
-
-> +
-> +	return;
-> +
-> +err_free:
-> +	put_device(dev);
-> +}
-> +
-> +void pcie_designware_sysfs_exit(struct dw_pcie *pci)
-> +{
-> +	if (pci->sysfs_dev)
-> +		device_unregister(pci->sysfs_dev);
-> +}
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index a7c0671c6715..30825ec0648e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -323,6 +323,12 @@ static u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci,
->  	return 0;
->  }
->  
-> +u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci)
-> +{
-> +	return dw_pcie_find_vsec_capability(pci, dwc_pcie_ptm_vsec_ids);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_find_ptm_capability);
-
-This API should go into the previous patch. Otherwise it will result in
-unused function warnings.
-
-> +
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->  {
->  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 501d9ddfea16..7d3cbdce37c8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -260,6 +260,21 @@
->  
->  #define PCIE_RAS_DES_EVENT_COUNTER_DATA		0xc
->  
-> +/* PTM register definitions */
-> +#define PTM_RES_REQ_CTRL		0x8
-> +#define PTM_RES_CCONTEXT_VALID		BIT(0)
-> +#define PTM_REQ_AUTO_UPDATE_ENABLED	BIT(0)
-> +#define PTM_REQ_START_UPDATE		BIT(1)
-> +
-> +#define PTM_LOCAL_LSB			0x10
-> +#define PTM_LOCAL_MSB			0x14
-> +#define PTM_T1_T2_LSB			0x18
-> +#define PTM_T1_T2_MSB			0x1c
-> +#define PTM_T3_T4_LSB			0x28
-> +#define PTM_T3_T4_MSB			0x2c
-> +#define PTM_MASTER_LSB			0x38
-> +#define PTM_MASTER_MSB			0x3c
-> +
->  /*
->   * The default address offset between dbi_base and atu_base. Root controller
->   * drivers are not required to initialize atu_base if the offset matches this
-> @@ -439,6 +454,7 @@ struct dw_pcie_ops {
->  
->  struct dw_pcie {
->  	struct device		*dev;
-> +	struct device		*sysfs_dev;
->  	void __iomem		*dbi_base;
->  	resource_size_t		dbi_phys_addr;
->  	void __iomem		*dbi_base2;
-> @@ -464,6 +480,8 @@ struct dw_pcie {
->  	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
->  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
->  	struct gpio_desc		*pe_rst;
-> +	u16			ptm_vsec_offset;
-> +	enum			dw_pcie_device_mode mode;
->  	bool			suspended;
->  };
->  
-> @@ -478,6 +496,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
->  
->  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-> +u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci);
->  
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->  int dw_pcie_write(void __iomem *addr, int size, u32 val);
-> @@ -499,6 +518,9 @@ void dw_pcie_setup(struct dw_pcie *pci);
->  void dw_pcie_iatu_detect(struct dw_pcie *pci);
->  int dw_pcie_edma_detect(struct dw_pcie *pci);
->  void dw_pcie_edma_remove(struct dw_pcie *pci);
-> +void pcie_designware_sysfs_init(struct dw_pcie *pci,
-> +				enum dw_pcie_device_mode mode);
-> +void pcie_designware_sysfs_exit(struct dw_pcie *pci);
->  
->  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
->  {
-> diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h
-> index 261ae11d75a4..13835896290a 100644
-> --- a/include/linux/pcie-dwc.h
-> +++ b/include/linux/pcie-dwc.h
-> @@ -31,4 +31,12 @@ static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
->  	{} /* terminator */
->  };
->  
-> +static const struct dwc_pcie_vsec_id dwc_pcie_ptm_vsec_ids[] = {
-> +	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* EP */
-> +	  .vsec_id = 0x03, .vsec_rev = 0x1 },
-> +	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* RC */
-> +	  .vsec_id = 0x04, .vsec_rev = 0x1 },
-> +	{ }
-> +};
-> +
->  #endif /* LINUX_PCIE_DWC_H */
-> 
-> -- 
-> 2.25.1
-> 
-> 
-
--- 
-With best wishes
-Dmitry
+- Arnaldo
