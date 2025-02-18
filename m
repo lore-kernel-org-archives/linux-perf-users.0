@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8013D22F152;
-	Tue, 18 Feb 2025 08:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAF222FACA;
+	Tue, 18 Feb 2025 08:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866438; cv=none; b=deWnkVFDUX0VPCGqlKol5VAifZJ6fPlTnq/eJH5/YjwJlAKE6AIqQg1t9sCg3AdMcuSDiGCbzFsPy/CQx9G1ZfSPzX8rG8PWl5180V/VUPWPxE27ot9sAedMEKW90LoIE77Wt40xwJww4dG/3Z8uCspXhX5Kgu+rg49knxuldxs=
+	t=1739866442; cv=none; b=X1/PiR2Ma8mvP+IwYixbmza419CmBsJFkiPsJU2WY3PxrzRHrOvf//gRrVbR+pmQvoB3lZFtFAxVHODp5yITnQ/TZNGUVdb5TilyeQi9X+TmM/onCvHKngBXSLerPtXYwTPT7SDkdoGicm4vq6eb1PwkbdSPCeMnfzLMWqT+jes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866438; c=relaxed/simple;
-	bh=Oljdb8yBE9U9IIdw7gWzTTVYt1jfySXv1NEKxX/rN08=;
+	s=arc-20240116; t=1739866442; c=relaxed/simple;
+	bh=OsqfMzB6SnzYJb3UaV6ZANkvNLCP9GGHqPTwOfzC0Yo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W47ASP+6HVjdjduKlQqVOGwduT6SMEX3KYk3F5V0yZb8XUfPlFAs2lTMYKenbn7nAg7tOI/Eu4M8BOpvWvwfEc3bZwrj1fIWI+gCarj0ECGWZ8f/LaiH7Q7UY+/dc6hy3G9Rq07x2HzOCXS54gdkIV1gEoDIN9EBmxUxZ/uDwv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DrYJaDsQ; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=KZFjp/UcdLZRUJJZKU0xy1ysPf9MoTQTTjwWTSwOSUgIzkSKkLP6xXYYSxxym7Hw1xkRl2kNriJ4Q+pEFegaKDVcvTKXzaN6098EFbm9KxY3zGSJZyeXqN6ozUsnevBg5NcGIFg1M9IwrkKF2VvQ1LRrT0TnOjhSStCvo7c48fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iF6OqvqT; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DrYJaDsQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iF6OqvqT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739866437; x=1771402437;
+  t=1739866442; x=1771402442;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Oljdb8yBE9U9IIdw7gWzTTVYt1jfySXv1NEKxX/rN08=;
-  b=DrYJaDsQUECZOZ5h9wi7YghMTdZyfohWpYZdxLoIVgooAD2rTUD4Miom
-   5pOtts5MO65Ei4ECprom+76t2kq10kau5WqtgLzbM7BYpSvhEPT8j29wP
-   NuU3Nb+LeMDel39f4xCA8sE15yYZGWQSF1Hd6o+QtO5PXGrMcfHxMvI44
-   FzddULSxpr7+hiayph5WqXA6MasX+30fLTSzDGNm8T0xg7DostGu3Zlnp
-   0xMvslc/H3SGbxoCdtpiIXIc421sDLOORsFzX6DuU6eewEhSq7/QIY4Vn
-   sixeKPyl+BvmGt7QROjyuyaopXyUJGOc+9LTTN5213RTXvaYazHW7JRmi
-   g==;
-X-CSE-ConnectionGUID: 4OkY/StwSgqdng12Xzz/uw==
-X-CSE-MsgGUID: oc8I87dxQ/+Y4UQvLG8XmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200738"
+  bh=OsqfMzB6SnzYJb3UaV6ZANkvNLCP9GGHqPTwOfzC0Yo=;
+  b=iF6OqvqTIXAso7EhUIM1nOEHP4s4FBxMExW6ypT1aQri4f6u9nR3Vv2p
+   W9YPlvBFNIZW2B98dAVX3lC2mBn96wo5JQIJL0ikoKZApJ4x3+3iUQPJr
+   V6qFjaOb5PRX35YB8rfGoUBXGFzeEat0+pJuM6NpSA8KzujUcVk/+9n6a
+   L4IqowHe8+BdgEgVRsi7lIirMFGwIAB2FYT/RlfWtxIIog+37bhmVuBKR
+   7MaCaSzlbsVg2Ao0MLiEUhGBoCRJM64prmFipZlPxk2w7MVU/pV7GVScE
+   OWObVNwjygOCNX17ywaQud2M/RTEN/tnQ9ZoDD2JUx371nBOli9QklttV
+   w==;
+X-CSE-ConnectionGUID: N1F5OynGSyu21ZEiSTAF7g==
+X-CSE-MsgGUID: +cqI4rnZT4WtiJSC/CNdiw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44200752"
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="44200738"
+   d="scan'208";a="44200752"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:13:57 -0800
-X-CSE-ConnectionGUID: 1Hk8XW8EREKdlJOz8EpFPQ==
-X-CSE-MsgGUID: 8QKleuf1R4qNltIYcUoE+A==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 00:14:02 -0800
+X-CSE-ConnectionGUID: /+k8ENEdTbCgcCT8NpHR/A==
+X-CSE-MsgGUID: ctYy0XUTRvOfltwsNx0Pnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,295,1732608000"; 
-   d="scan'208";a="145166121"
+   d="scan'208";a="145166139"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:54 -0800
+  by orviesa002.jf.intel.com with ESMTP; 18 Feb 2025 00:13:57 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 04/24] perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
-Date: Tue, 18 Feb 2025 15:27:58 +0000
-Message-Id: <20250218152818.158614-5-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 05/24] perf/x86/intel: Decouple BTS initialization from PEBS initialization
+Date: Tue, 18 Feb 2025 15:27:59 +0000
+Message-Id: <20250218152818.158614-6-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
 References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
@@ -72,94 +72,90 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CPUID archPerfmonExt (0x23) leaves are supported to enumerate CPU
-level's PMU capabilities on non-hybrid processors as well.
+Move x86_pmu.bts flag initialization into bts_init() from
+intel_ds_init() and rename intel_ds_init() to intel_pebs_init() since it
+fully initializes PEBS now after removing the x86_pmu.bts
+initialization.
 
-This patch supports to parse archPerfmonExt leaves on non-hybrid
-processors. Architectural PEBS leverages archPerfmonExt sub-leaves 0x4
-and 0x5 to enumerate the PEBS capabilities as well. This patch is a
-precursor of the subsequent arch-PEBS enabling patches.
+It's safe to move x86_pmu.bts into bts_init() since all x86_pmu.bts flag
+are called after bts_init() execution.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ arch/x86/events/intel/bts.c  | 6 +++++-
+ arch/x86/events/intel/core.c | 2 +-
+ arch/x86/events/intel/ds.c   | 5 ++---
+ arch/x86/events/perf_event.h | 2 +-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 8f78b0c900ef..a205d1fb37b1 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -584,7 +584,11 @@ static void bts_event_read(struct perf_event *event)
+ 
+ static __init int bts_init(void)
+ {
+-	if (!boot_cpu_has(X86_FEATURE_DTES64) || !x86_pmu.bts)
++	if (!boot_cpu_has(X86_FEATURE_DTES64))
++		return -ENODEV;
++
++	x86_pmu.bts = boot_cpu_has(X86_FEATURE_BTS);
++	if (!x86_pmu.bts)
+ 		return -ENODEV;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_PTI)) {
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 7521e1e55c0e..e1383a905cdc 100644
+index e1383a905cdc..a977d4d631fe 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -4968,7 +4968,7 @@ static inline bool intel_pmu_broken_perf_cap(void)
- 	return false;
+@@ -6588,7 +6588,7 @@ __init int intel_pmu_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
+ 		intel_pmu_arch_lbr_init();
+ 
+-	intel_ds_init();
++	intel_pebs_init();
+ 
+ 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+ 
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 46aaaeae0c8d..9c8947d3413f 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2650,10 +2650,10 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
  }
  
--static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
-+static void update_pmu_cap(struct pmu *pmu)
+ /*
+- * BTS, PEBS probe and setup
++ * PEBS probe and setup
+  */
+ 
+-void __init intel_ds_init(void)
++void __init intel_pebs_init(void)
  {
- 	unsigned int cntr, fixed_cntr, ecx, edx;
- 	union cpuid35_eax eax;
-@@ -4977,20 +4977,20 @@ static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
- 	cpuid(ARCH_PERFMON_EXT_LEAF, &eax.full, &ebx.full, &ecx, &edx);
- 
- 	if (ebx.split.umask2)
--		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_UMASK2;
-+		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_UMASK2;
- 	if (ebx.split.eq)
--		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_EQ;
-+		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_EQ;
- 
- 	if (eax.split.cntr_subleaf) {
- 		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
- 			    &cntr, &fixed_cntr, &ecx, &edx);
--		pmu->cntr_mask64 = cntr;
--		pmu->fixed_cntr_mask64 = fixed_cntr;
-+		hybrid(pmu, cntr_mask64) = cntr;
-+		hybrid(pmu, fixed_cntr_mask64) = fixed_cntr;
- 	}
- 
- 	if (!intel_pmu_broken_perf_cap()) {
- 		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
--		rdmsrl(MSR_IA32_PERF_CAPABILITIES, pmu->intel_cap.capabilities);
-+		rdmsrl(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
- 	}
- }
- 
-@@ -5076,7 +5076,7 @@ static bool init_hybrid_pmu(int cpu)
- 		goto end;
- 
- 	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
--		update_pmu_cap(pmu);
-+		update_pmu_cap(&pmu->pmu);
- 
- 	intel_pmu_check_hybrid_pmus(pmu);
- 
-@@ -6559,6 +6559,7 @@ __init int intel_pmu_init(void)
- 
- 	x86_pmu.pebs_events_mask	= intel_pmu_pebs_mask(x86_pmu.cntr_mask64);
- 	x86_pmu.pebs_capable		= PEBS_COUNTER_MASK;
-+	x86_pmu.config_mask		= X86_RAW_EVENT_MASK;
- 
  	/*
- 	 * Quirk: v2 perfmon does not report fixed-purpose events, so
-@@ -7375,6 +7376,18 @@ __init int intel_pmu_init(void)
- 		x86_pmu.attr_update = hybrid_attr_update;
- 	}
+ 	 * No support for 32bit formats
+@@ -2661,7 +2661,6 @@ void __init intel_ds_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_DTES64))
+ 		return;
  
-+	/*
-+	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
-+	 * PMU architectural features with a per-core view. For non-hybrid,
-+	 * each core has the same PMU capabilities. It's good enough to
-+	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
-+	 * is used to keep the common capabilities. Still keep the values
-+	 * from the leaf 0xa. The core specific update will be done later
-+	 * when a new type is online.
-+	 */
-+	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
-+		update_pmu_cap(NULL);
-+
- 	intel_pmu_check_counters_mask(&x86_pmu.cntr_mask64,
- 				      &x86_pmu.fixed_cntr_mask64,
- 				      &x86_pmu.intel_ctrl);
+-	x86_pmu.bts  = boot_cpu_has(X86_FEATURE_BTS);
+ 	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
+ 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+ 	if (x86_pmu.version <= 4)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index f4693409e191..0a259c98056a 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1662,7 +1662,7 @@ void intel_pmu_drain_pebs_buffer(void);
+ 
+ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
+ 
+-void intel_ds_init(void);
++void intel_pebs_init(void);
+ 
+ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
+ 				struct cpu_hw_events *cpuc,
 -- 
 2.40.1
 
