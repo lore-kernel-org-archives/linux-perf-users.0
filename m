@@ -1,226 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435401B6CF5;
-	Wed, 19 Feb 2025 18:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7971B6CF5
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 18:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990266; cv=none; b=mJqqZyPKB1KrVDNMilgZFXOUcfVNEeQUwkTaGLkqG1Rx5DM6c7312cfidVKGUfCbDPy+35FA9yiqorWJWakWLH5s0ACBXeYjIIwQcWN5s3hSVZa8RipWNp2hqa3yzTCQ5E4o/yjS3rbfN6/AhdRlAmATuE8B/CoUHXpC+5FJ8cA=
+	t=1739990289; cv=none; b=lcNCeySRcyKNDTMJ88GndGMqTCmnq5s+Q81663m/OIXnfOIyCiJGq+zHXfSCPsSg27E6PQDc8jDoObNDKVwdpGitB1247ShD1FeBmMKsNdloMMXT4tTzq4tFHQcCGmpePVSdKJsJYTNbAMKdOukkVyzi2ukkV4Sv6lib5pKHO+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990266; c=relaxed/simple;
-	bh=EmZ7KSeG00YMRhRCa8woOJEatfu3xhEfOh4AqXrg/ZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=od/uVy+pbMtl7jsQxHyl7FoMuzLMllHb6ug9KJfI7gMaPmvZqFmJ/TiTEsZai14RxgHYh3VYl5FGJwWisbQANHi1wtBL1zu8/2pFBkLeEIzZMpkLKVJVZcjp52KcTu5aObc4NLrS+gsxkL8T+L68/X5GbdcHuBVvf5eweUl3EHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nd5LR0LN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739990289; c=relaxed/simple;
+	bh=gBV2UZFIKjnRUsJGbf05jytvdaauuWzNkzGor8r73Lo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vwr7PxkZ91u0hRHO9LJGopTk9ICjW6ZckdmyP2Yb0OsldMUw4QbFF8rcC0unUEktJZXt7gVphsNM5Jv/bv+XcA8DLMh5WtnReHxlhVd/khf/Kel6AGHUyq67FYSgfoncZqydHb9B7VOL+Wr/Z79+30GrGkHwy4bpNXfYriFRKiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PTaSHOrk; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nd5LR0LN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739990264; x=1771526264;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EmZ7KSeG00YMRhRCa8woOJEatfu3xhEfOh4AqXrg/ZE=;
-  b=Nd5LR0LN807USzEh0J1qd6zv7iL55+fnt3e9JtUyVW/D3jRqtREXj/mD
-   /kXz0xBMHDT+bcVrhrOOB88hmegZJg3XSuoFbdulHG0M4v04hOCRPGCW/
-   fJUYKxyrOQPQHe9vM1vGLg7ThiZqdprmsJ0C6oB54k4lBovHJbWg42Kn/
-   Iq7TCTWNRAKKASRu4/DOMFcjTn+ofAEvLvaxGl4V1MgD+FgRN7JsrxyG1
-   fmf/tkSKlFEyHnVQd/5+/gmzVw107OWIZIuVkCdYYCaUDYJAGaM8SfYuz
-   U+Bd2p95Vz4SwJbfR2p6upEvcNpNvb9MqBxnI0RI6+i+jl/AfPx2GGlmg
-   g==;
-X-CSE-ConnectionGUID: AqsotApGQBuTg/LtHzdpGA==
-X-CSE-MsgGUID: 5rLokEpKTq+ajZWt08A4eQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="39975396"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="39975396"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:37:43 -0800
-X-CSE-ConnectionGUID: eZxDV/s7T+a4HyG0v8Zw/g==
-X-CSE-MsgGUID: WwArcHx1TNqVUFvNqBCvzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114628779"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:37:43 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 5837A20B5713;
-	Wed, 19 Feb 2025 10:37:41 -0800 (PST)
-Message-ID: <70aec50b-09a3-45b4-8eb9-138518a8476a@linux.intel.com>
-Date: Wed, 19 Feb 2025 13:37:40 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTaSHOrk"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d19702f977so10575ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739990287; x=1740595087; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
+        b=PTaSHOrkEwb/qtUrNkh0yZj0Xe1IXYm9RYznHRmt8vs/aa56TI6pW9sy5ZNahbF2rc
+         tcJKN4rAp5KH0A0HWVJ08NcnPJ8ObC8habCUYOxms4I71LVHPy/euiupC9Nh1PXH2abQ
+         /1qPVyBaBYDfKMXizpXutmYKyy3+bmHraFpjNw6aBZaJIFspnwF8OzdUBbNYG257qd/s
+         Yc9N9R/wHGEAB0Y3/lXNtu95MLO0KHcRuOGz0sWZIR8MD4GgzieVN1s9mqVIE0tW/D8F
+         bwN8kA2K6LiueiATIx9f16cGhjzLLWAcjVyQg2NYvrnbcDQ0aHZpgRGrrMPPff1XR2eA
+         9EzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739990287; x=1740595087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
+        b=OtBwg2/YMyt9mKgJOPIG/8bG3AODPH8N1Mf03m5uPtXLZQXulwjBYKYyIh0vcv7nm7
+         a6lJWDMKXXGRoLWEAn43C8PbdKRKhhGXTj1OKr4cKVPTJMDFMqJ91eneN6nKrjVRohQF
+         kR6b9ddL4D9S66hTWJgMLr9XAagv+Jf9iTymAsFbyTpF2EQXdCBcnN/W7GB8ggk04C+T
+         lzcJfePr6ym+K2Ds+AIW5LKtmHh033XKVEZncGM99Zl9jJjxYMPlJ1dsdGMTHFfRtUfK
+         qrSVp3CqwR5I0BvQIfDNvX9RLPhJj+VcW/nJ3cw5BWGniKD9vTk0QRAwGYY80wX+RIft
+         k7xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRD6j9Ocv+86kdNt96sKj20tM27JdFkzVFfPR0WFvYZx0RoTHsOr5g0XCM0g2B+E9gjqiAnsQlnOZgvbEu4EaU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjMuE2NPdYWWAoI7qgpLgjGIYBj0KpGMy8LEANvVai4rKp261N
+	NCYAidF2v3752+c6Vsr73oklPTR7mtNEUFZ/gYb5GrfVP+K4IVj/YKYfSUd+sRNt84wfodi7chj
+	JDS1Q0Zty0JOyvkg6VjdqYXoRXfU1+aSTqSNm
+X-Gm-Gg: ASbGncumZ6JgER3Eim8IdhoPD3KtOiIVXmiw/5fOvs5B5C/vRXZm+1RsnZmDDSCU+ZO
+	Q93qPdFm7FQUNE57MQARuuEEehpZ3P5lKzZsa+dM3qmngmHtLO23kK9xf+FSTcNiSE2fKE4sMV9
+	uKO/PYQlz3uB+nIwTH8jUWH25TRg==
+X-Google-Smtp-Source: AGHT+IEkPdMwZ8WcM0NCVDBRKNBfRF3H5QjAYRWB9xGokTDyk0HbI2IP6QgSQCQIroSqKz5jQL30tQKsNIXmV5emA5M=
+X-Received: by 2002:a05:6e02:170f:b0:3ce:7852:1e9 with SMTP id
+ e9e14a558f8ab-3d2b7622218mr3867015ab.17.1739990286725; Wed, 19 Feb 2025
+ 10:38:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: fix up some comments and code to properly use the
- event_source bus
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org
-Cc: stable <stable@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org
-References: <2025021955-implant-excavator-179d@gregkh>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <2025021955-implant-excavator-179d@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
+ <Z66YjGvjD_yzEHUg@google.com> <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
+ <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org> <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
+ <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org> <Z7UHieRRnvRb5_oU@google.com>
+ <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com> <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
+In-Reply-To: <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 19 Feb 2025 10:37:54 -0800
+X-Gm-Features: AWEUYZmb7ZDC7Xg-vuEYcAR-MFR4dQhVVLJv_XLUmWBSLQWG90K_v4rSjZP5nUo
+Message-ID: <CAP-5=fW_Sq4iFxoWPWuixz9fMLBPyPUO0RG0KPbYa-5T0DZbTA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520 events/metrics
+To: James Clark <james.clark@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Yangyu Chen <cyy@cyyself.name>, 
+	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 19, 2025 at 7:25=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+>
+>
+> On 18/02/2025 10:33 pm, Ian Rogers wrote:
+> > On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> >>
+> >> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
+> >>>
+> >>>
+> >>> On 18/02/2025 12:41 am, Ian Rogers wrote:
+> >>>> On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark <james.clark@lin=
+aro.org> wrote:
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> On 14/02/2025 5:49 am, Yangyu Chen wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrot=
+e:
+> >>>>>>>
+> >>>>>>> Hello,
+> >>>>>>>
+> >>>>>>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
+> >>>>>>>> This patchset adds the perf JSON files for the Cortex-A720 and C=
+ortex-A520
+> >>>>>>>> processors. Some events have been tested on Raxda Orion 6 with C=
+ix P1 SoC
+> >>>>>>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
+> >>>>>>>
+> >>>>>>> I'm curious how the name of PMUs look like.  It is cortex_a720 (o=
+r a520)?
+> >>>>>>
+> >>>>>> The name of PMUs comes from Arm's documentation. I have included t=
+hese
+> >>>>>> links in each patch.
+> >>>>>>
+> >>>>>>> I remember there's a logic to check the length of hex digits at t=
+he end.
+> >>>>>>>
+> >>>>>>
+> >>>>>> Could you provide more details about this?
+> >>>>>>
+> >>>>>>> Ian, are you ok with this?
+> >>>>>>>
+> >>>>>
+> >>>>> I think they wouldn't be merged because they're core PMUs, so shoul=
+d be
+> >>>>> fine? Even though they would otherwise be merged because they're mo=
+re
+> >>>>> than 3 hex digits.
+> >>>>
+> >>>> Do we know the PMU names? If they are cortex_a520 and cortex_a720 th=
+en
+> >>>
+> >>> It will be "armv9_cortex_a720" from this line:
+> >>>
+> >>>    PMUV3_INIT_SIMPLE(armv9_cortex_a720)
+> >>
+> >> I see, thanks!
+> >>
+> >>>
+> >>>> this comment at least reads a little stale:
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next=
+.git/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
+> >>>> ```
+> >>>> /*
+> >>>> * There is a '_{num}' suffix. For decimal suffixes any length
+> >>>> * will do, for hexadecimal ensure more than 2 hex digits so
+> >>>> * that S390's cpum_cf PMU doesn't match.
+> >>>> */
+> >>>> ```
+> >>>> James is right that core PMUs aren't put on the same list as uncore/=
+other PMUs.
+> >>
+> >> Ok, then I guess we're good.
+> >
+> > I think you may be able to do things that look odd, like today the
+> > "i915" PMU can be called just "i", I think the a520/a720 naming will
+> > allow "armv9_cortex/cycles/" as an event name, then open it on two
+> > PMUs if they are present.
+>
+> I assumed that was the intended behavior. It seems fairly useful to be
+> able to open on ones with common prefixes.
+>
+> > We may only show one PMU in perf list as
+> > that code I think assumes they're the same PMU as they only differ by
+> > suffix:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
+>
+> Yeah that is the case. I didn't realise it when looking at the previous
+> fixes to keep the suffixes in perf stat output.
+>
+> > I can imagine aggregation possibly being broken, but I think that
+> > works off the number of PMUs not the names of the PMUs, so it should
+> > be okay. Probably the only thing broken that matter is perf list when
+> > you have a BIG.little system with a520 and a720, this may be broken
+> > with say a a53 and a72 today as both of those suffix lengths are >2,
+> > but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
+> > convention. I suspect the >2 here:
+>
+> Also the case for a53 and a72 right now. Even "perf list --unit
+> armv8_cortex_a57" doesn't work because we deduplicate before filtering.
+> Adding -v fixes it though because that disables deduplication. Perhaps
+> we can change it to disable it with the --unit argument?
+>
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
+> > would still work and be correct if it were >4. If that changes then
+> > this will also need to change:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-to=
+ols-next#n12
+>
+> That could be an easy fix. If >4 is enough to still get rid of all the
+> uncore duplicates I can make the change?
 
+The change would be great. I think it is sufficient and doesn't break
+the suffix:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/drivers/perf/arm_dmc620_pmu.c?h=3Dperf-tools-next#n710
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/drivers/perf/arm_smmuv3_pmu.c?h=3Dperf-tools-next#n921
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/drivers/perf/marvell_cn10k_ddr_pmu.c?h=3Dperf-tools-next#n1062
+it is hard to tell as it is going to depend on the memory addresses
+placed in the PMU names. Perhaps you can clear this up and add zero
+padding in the drivers if the suffix is <=3D4 ?
 
-On 2025-02-19 8:40 a.m., Greg Kroah-Hartman wrote:
-> In sysfs, the perf events are all located in
-> /sys/bus/event_source/devices/ but some places ended up hard-coding the
-> location to be at the root of /sys/devices/ which could be very risky as
-> you do not exactly know what type of device you are accessing in sysfs
-> at that location.
-> 
-> So fix this all up by properly pointing everything at the bus device
-> list instead of the root of the sysfs devices/ tree.
-> 
-> Cc: stable <stable@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+No documentation here:
+https://www.kernel.org/doc/Documentation/admin-guide/perf/mrvl-odyssey-ddr-=
+pmu.rst
 
+On a test machine I see in /sys/devices :
+..
+arm_dmc620_10008c400
+..
+on a different one I see:
+..
+smmuv3_pmcg_20528a2
+..
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+so >4 but this is an ARM specific issue as far as I can tell, so you'd
+be better placed to judge correctness than me.
 
 Thanks,
-Kan
+Ian
 
-> ---
->  tools/perf/Documentation/intel-hybrid.txt | 12 ++++++------
->  tools/perf/Documentation/perf-list.txt    |  2 +-
->  tools/perf/arch/x86/util/iostat.c         |  2 +-
->  tools/perf/builtin-stat.c                 |  2 +-
->  tools/perf/util/mem-events.c              |  2 +-
->  tools/perf/util/pmu.c                     |  4 ++--
->  6 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
-> index e7a776ad25d7..0379903673a4 100644
-> --- a/tools/perf/Documentation/intel-hybrid.txt
-> +++ b/tools/perf/Documentation/intel-hybrid.txt
-> @@ -8,15 +8,15 @@ Part of events are available on core cpu, part of events are available
->  on atom cpu and even part of events are available on both.
->  
->  Kernel exports two new cpu pmus via sysfs:
-> -/sys/devices/cpu_core
-> -/sys/devices/cpu_atom
-> +/sys/bus/event_source/devices/cpu_core
-> +/sys/bus/event_source/devices/cpu_atom
->  
->  The 'cpus' files are created under the directories. For example,
->  
-> -cat /sys/devices/cpu_core/cpus
-> +cat /sys/bus/event_source/devices/cpu_core/cpus
->  0-15
->  
-> -cat /sys/devices/cpu_atom/cpus
-> +cat /sys/bus/event_source/devices/cpu_atom/cpus
->  16-23
->  
->  It indicates cpu0-cpu15 are core cpus and cpu16-cpu23 are atom cpus.
-> @@ -60,8 +60,8 @@ can't carry pmu information. So now this type is extended to be PMU aware
->  type. The PMU type ID is stored at attr.config[63:32].
->  
->  PMU type ID is retrieved from sysfs.
-> -/sys/devices/cpu_atom/type
-> -/sys/devices/cpu_core/type
-> +/sys/bus/event_source/devices/cpu_atom/type
-> +/sys/bus/event_source/devices/cpu_core/type
->  
->  The new attr.config layout for PERF_TYPE_HARDWARE:
->  
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> index d0c65fad419a..c3ffd93f94d7 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -188,7 +188,7 @@ in the CPU vendor specific documentation.
->  
->  The available PMUs and their raw parameters can be listed with
->  
-> -  ls /sys/devices/*/format
-> +  ls /sys/bus/event_source/devices/*/format
->  
->  For example the raw event "LSD.UOPS" core pmu event above could
->  be specified as
-> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
-> index 00f645a0c18a..7442a2cd87ed 100644
-> --- a/tools/perf/arch/x86/util/iostat.c
-> +++ b/tools/perf/arch/x86/util/iostat.c
-> @@ -32,7 +32,7 @@
->  #define MAX_PATH 1024
->  #endif
->  
-> -#define UNCORE_IIO_PMU_PATH	"devices/uncore_iio_%d"
-> +#define UNCORE_IIO_PMU_PATH	"bus/event_source/devices/uncore_iio_%d"
->  #define SYSFS_UNCORE_PMU_PATH	"%s/"UNCORE_IIO_PMU_PATH
->  #define PLATFORM_MAPPING_PATH	UNCORE_IIO_PMU_PATH"/die%d"
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 77e327d4a9a7..68ea7589c143 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -97,7 +97,7 @@
->  #include <internal/threadmap.h>
->  
->  #define DEFAULT_SEPARATOR	" "
-> -#define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
-> +#define FREEZE_ON_SMI_PATH	"bus/event_source/devices/cpu/freeze_on_smi"
->  
->  static void print_counters(struct timespec *ts, int argc, const char **argv);
->  
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 3692e988c86e..0277d3e1505c 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -189,7 +189,7 @@ static bool perf_pmu__mem_events_supported(const char *mnt, struct perf_pmu *pmu
->  	if (!e->event_name)
->  		return true;
->  
-> -	scnprintf(path, PATH_MAX, "%s/devices/%s/events/%s", mnt, pmu->name, e->event_name);
-> +	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/%s", mnt, pmu->name, e->event_name);
->  
->  	return !stat(path, &st);
->  }
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 6206c8fe2bf9..a8193ac8f2e7 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -36,12 +36,12 @@
->  #define UNIT_MAX_LEN	31 /* max length for event unit name */
->  
->  enum event_source {
-> -	/* An event loaded from /sys/devices/<pmu>/events. */
-> +	/* An event loaded from /sys/bus/event_source/devices/<pmu>/events. */
->  	EVENT_SRC_SYSFS,
->  	/* An event loaded from a CPUID matched json file. */
->  	EVENT_SRC_CPU_JSON,
->  	/*
-> -	 * An event loaded from a /sys/devices/<pmu>/identifier matched json
-> +	 * An event loaded from a /sys/bus/event_source/devices/<pmu>/identifier matched json
->  	 * file.
->  	 */
->  	EVENT_SRC_SYS_JSON,
-
+> >
+> > Thanks,
+> > Ian
+> >
+> >>
+> >> Thanks,
+> >> Namhyung
+> >>
+>
