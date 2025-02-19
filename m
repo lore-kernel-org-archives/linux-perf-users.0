@@ -1,139 +1,214 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E683F9D5;
-	Wed, 19 Feb 2025 00:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA4133E1;
+	Wed, 19 Feb 2025 01:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739926734; cv=none; b=I6hV7WSJYR1rIczR+QrTgyZrc6Oqv1vPpHNCUWDad/3I5a2AFHbblf6vnYUD9w48u/X/Pdl6ZVr84kStZ8rsce29F+h4qOjgAyVDgdGsEKl91SqWCwIKYlOAhnM4iabhXv6mRaUDgu4LfQrFXQxGuArjnp+mCer5ue+3KhOq81Y=
+	t=1739929825; cv=none; b=EVDz30Wu+GiIDj5+WsLZXGDHIDEzaKevtrg8SKFBHtD68rdjnuqoKlyBAUMBjJQ3EXpaKP16xvplaeF4YDNuVH1IwqNsL3dfQGZuG9FtYZydflbI+J1z+fuXBh9lPy7RPYmWigDYs6ln45CQtXKh7BzEYTPqFEWUP4P2wLFYo6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739926734; c=relaxed/simple;
-	bh=jmhrcWKkHilvljIZMViZu2rF01jndp2vBAJzdVRoh1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P/iggX5yX70oxSlHciC/H+FCX5oP5B5YiyJ78LCAPxwtIcSkkxqSqP3Hxs26sLpgMkp5uDC0HsUFJaE+YhBBGmJq9bexvsmOgFTo7pNUvEZzDwp5D8EjXPX/JErXC8Su7Fq7OgdIPfe9BOp/giuR8XQry73TblcT6QvWfx/ADhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXLcW8DP; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739929825; c=relaxed/simple;
+	bh=zqn9BhmZw8+2QxMzxqHl0XsOAzkp+wtATKqzfFzhVpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T39CLrs7JtrJNImPFSQKpKijcv3ZLB4+Eyd6WYfHXm6Vp4O4v9AWsqUHH46WHUS+TWGF8uxarahYwZTLIIYXchEvH+r+BVFXGaDSiapSmgS3ivmjZODSEh7rj83OyIybJ1a+y0H34PtXlRtXzFFp1lwzl2eUDjIz909jgcA5rN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=l7pkaMHh; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXLcW8DP"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6f6715734d9so54154457b3.3;
-        Tue, 18 Feb 2025 16:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739926732; x=1740531532; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3bJA8YmCnEAodhQF45ajT3K8Tf2jxKNSg9AlHiUTHU4=;
-        b=LXLcW8DP2P45u+EwbcVN9t0ANH9FVEVfSGmKOLEHTvclUDNPYliciwo3GH/bAPqJZ2
-         nYw7AFJsAWw8w0CWTXgWKJa0gZDcFKV+2tUiQ6g7TP51JB4dle+2RKXZD4ZlbH6NRRNN
-         5/u2pi9VQtONqVEZDEz1nBNHYx4LA1YKFpKdfiEtNVPJGVE0EnZwVITpm0nNwCr4M0w7
-         W8Rrq8WnIZoplkV3qS3fv4KGyXB0m41m/IzbH6xl2Hqx9aJjD2cKcG30ML+C72BpXLfM
-         avDKyyUX5fAvlBKLgDDKBMEsENZMGVtFRvGeFguq3hZoNlPZyWXoyc8NfxaBsdfiheWo
-         L+DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739926732; x=1740531532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3bJA8YmCnEAodhQF45ajT3K8Tf2jxKNSg9AlHiUTHU4=;
-        b=h42afGEBTPVsngSljcUqkWKVQiivkMFidugCPFRJ5kDkJqJbw9LpgZsUyDZHfD05f/
-         4bw4esrjUD+n2g+B1z+G6hG4Hjwk8/n587xS1K297pyxHZ1WOPvYc9adybb7/N0rDI2l
-         BjZZOERMtIIMx0ECWyZ+Cgc1DdW6zNWrhTGW1GuIm8NYaTX0hwbYmINdEN2xHxnT+5SI
-         0z2mVoVq5mNX8dJK2FAWU+umCGzLxZtaOQrdneIqm8dwG+JVu8OmPDxdjhyvX1absunw
-         VnS8LR7x7hI+/EhKzehLTh6oc7MX2MzRu2dYtjLecIrYWdsWt4JYbh5BmG/IRn0IIc1u
-         RWWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVh0eYu0zHKfOfcf0O8H4TDO6qj3GqJa2FIoZkflPi63lKdCVtVDqPo60lE387Vayq2oaUDe3FRW9TtPXg=@vger.kernel.org, AJvYcCXKGEh7kzwaKYcaA3/FNWuOfHTVmCawTJI3MaqX3CVjKMHn6DL5FyYuGjuQNdzpj7+vWCkqqb+Cl5MY6z7+L9B8nQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIL/gMm6zAHgrgNcq6NLGdAFn7xxs+gheD4PGenvuHprP9qtwL
-	FYb1C9M6Be9fjDjj8XUNTQVJYHmfsuMqrHNHbHf1CltBY8lPy+aG+U33kR2lqD6jJvH2GJT1BMp
-	soSjv7U6kXG4Zr+o47AsidcmotwDP71vxlTY=
-X-Gm-Gg: ASbGncv44xS7e6U5tRgaZuEdQN5jRBbG8aBAzDz17D5uLJY2q8qC9BSTbtOaXDYVZno
-	H2tr1znOCZh0ZQ9ipjmMgPHcwQNIIqy6O3FvH6p/gCPEJCKy94QAwWNh5Hv87rqnQt9ndmGc=
-X-Google-Smtp-Source: AGHT+IEeP/YT/u4I+5++spTx5STaz32WAdkPHQ0r6pEpxbcpGKMYWXOONHY3D8IgkB4l/Re67bza7kdwVs/5ZbJ1/AI=
-X-Received: by 2002:a05:690c:9314:b0:6fb:5f8f:1d13 with SMTP id
- 00721157ae682-6fb5f8f2431mr85409727b3.8.1739926731672; Tue, 18 Feb 2025
- 16:58:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="l7pkaMHh"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739929818; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=YA89qf4ISGMYbsVhcaULCxJhr4eNuObggSJrT8RDrw8=;
+	b=l7pkaMHhKkGUPM2vlaOcOpX6ncbP8mY0gROC0IuJjGR2PUS8PMgIDigqmSMbTrPy3zVsdKEPYQrAZmYpB7Gryrd4yb10ZLvVdssIPkpr5fd5Hmlc1U8Y29xKi2A/FU6XcKLOO7atR2oI7dVnrDvDGEBYeBwUFhH2ApOFwIpqloQ=
+Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WPnKkM2_1739929817 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 09:50:17 +0800
+Date: Wed, 19 Feb 2025 09:50:15 +0800
+From: YinFengwei <fengwei_yin@linux.alibaba.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: will@kernel.org, mark.rutland@arm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jie.li.linux@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH] perf/arm-cmn: don't claim resource during ioremap() for
+ CMN700 with ACPI
+Message-ID: <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
+References: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
+ <d5040b5c-564d-4abf-be22-d2aa1183b633@arm.com>
+ <hfip42i45jkumuvgdthxm2bk6qylqyqh6erzaq43yiqygvn6uu@dcui675lwtkm>
+ <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213230009.1450907-1-howardchu95@gmail.com>
- <20250213230009.1450907-11-howardchu95@gmail.com> <CAH0uvohY6fBaJvMZNi-fcHEW1Dw7Zp5Q_+ZxNgcaaFary-3sWw@mail.gmail.com>
- <CAP-5=fXae_851WezB5rNkv6cp2DfAWobJ-cbehKy3eiFe8F9Ow@mail.gmail.com>
-In-Reply-To: <CAP-5=fXae_851WezB5rNkv6cp2DfAWobJ-cbehKy3eiFe8F9Ow@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 18 Feb 2025 16:58:40 -0800
-X-Gm-Features: AWEUYZk51OITA1PnUtwP2-sCogR1IFXU3FVw0TaqLn9NcCVaKH6bgdGxvZlLvPI
-Message-ID: <CAH0uvoh7dcMN7BjzHspEdd3+HgQza1wgNxctGvxFKmOjVCrh7g@mail.gmail.com>
-Subject: Re: [PATCH v15 10/10] perf test: Add direct off-cpu test
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
 
-Hello Ian,
+Add Jing Zhang as we will continue discussion in this thread.
 
-Thanks for testing this patch :).
+On Tue, Feb 18, 2025 at 12:31:10PM +0800, Robin Murphy wrote:
+> On 2025-02-18 10:58 am, YinFengwei wrote:
+> > On Tue, Feb 18, 2025 at 10:31:42AM +0800, Robin Murphy wrote:
+> > > On 2025-02-18 1:21 am, Yin Fengwei wrote:
+> > > > Currently, arm-cmn PMU driver assumes ACPI claim resource
+> > > > for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
+> > > > failed because of resource claim failes when ioremap() is
+> > > > called:
+> > > > [   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
+> > > > [   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
+> > > > [   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+> > > > [   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
+> > > > 
+> > > > Let CMN700 + ACPI do same as CMN600 + ACPI to allow CMN700
+> > > > work in ACPI env.
+> > > 
+> > > No, the CMN-600 routine is a special case for CMN-600 having two nested
+> > > memory resources of its own. CMN-700 and everything else only have one
+> > > memory resource, so that is not appropriate. What else is claiming the
+> > > region to cause a conflict?
+> > Sorry. Forgot the link for the new proposed fix:
+> > https://lore.kernel.org/all/Z7QYlUP6nfBNMXsv@U-V2QX163P-2032.local/
+> 
+> Yes, I saw that. It's a broken diff that won't even compile, with no
+> explanation of what it's supposed to be trying to achieve or why. I'm not
+> sure what you're asking me to comment on.
+My bad. I will attatch the full patch at the end of this mail.
 
-On Tue, Feb 18, 2025 at 11:32=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Thu, Feb 13, 2025 at 3:04=E2=80=AFPM Howard Chu <howardchu95@gmail.com=
-> wrote:
-> >
-> > Hello,
-> >
-> > On Thu, Feb 13, 2025 at 3:00=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
-om> wrote:
-> > >
-> > > Why is there a --off-cpu-thresh 2000?
-> > >
-> > > We collect an off-cpu period __ONLY ONCE__, either in direct sample f=
-orm,
-> > > or in accumulated form (in BPF stack trace map).
-> > >
-> > > If I don't add --off-cpu-thresh 2000, the sample in the original test
-> > > goes into the ring buffer instead of the BPF stack trace map.
-> > >
-> > > Additionally, when using -e dummy, the ring buffer is not open, causi=
-ng
-> > > us to lose a sample.
-> >
-> > Just noticed that this commit message is wrong, should be:
-> > """
-> > Add tests for direct off-cpu samples and --off-cpu-thresh option.
-> > """
->
-> Tested-by: Ian Rogers <irogers@google.com>
-> ```
-> 121: perf record offcpu profiling tests                              : Ok
-> ```
-> I'd be tempted to keep the comments about why 2000 next to the actual
-> code rather than in the commit message. In the code the value is 12000
-> and not 2000 though?
+> 
+> > My understanding is that there are two problems here:
+> > 1. ACPI claim the memory range and that's why we see this -EBUSY error
+> >     with correct code path for CMN700 + ACPI table.
+> 
+> No, it's fine to claim the exact *same* range that the ACPI companion owns;
+> the identical requests just nest inside each other. I don't have a CMN-700
+> to hand but here's a selection of other drivers doing just that from
+> /proc/iomem on my system:
+> 
+> 12600000-12600fff : ARMH0011:00
+>   12600000-12600fff : ARMH0011:00 ARMH0011:00
+> 12610000-12610fff : ARMH0011:01
+>   12610000-12610fff : ARMH0011:01 ARMH0011:01
+> 126b0000-126b0fff : APMC0D0F:00
+>   126b0000-126b0fff : APMC0D0F:00 APMC0D0F:00
+> 126f0000-126f0fff : APMC0D81:00
+>   126f0000-126f0fff : APMC0D81:00 APMC0D81:00
+I believe this works only for parents/children resource node. Otherwise,
+there will be conflict.
 
-I actually deleted the --off-cpu-thresh 2000. It was intended to fix
-Namhyung's original test because I forgot to enable the off-cpu event.
-Now that recording the off-cpu time of a task is fixed, that
-workaround is no longer necessary. The --off-cpu-thresh 12000 option
-is used to force sleep 1 to produce an at-the-end sample, as only
-tasks that have been off the CPU for more than 1.2 seconds can emit
-direct samples, and since this is recording an off-cpu period below
-the threshold, I think it makes sense to put it here in
-test_offcpu_below_thresh(). That being said, if you=E2=80=99d like me to ad=
-d a
-comment or two, I=E2=80=99d be glad to do so.
+> 
+> And I know people are using the CMN-700 PMU on other ACPI systems without
+> issue, so there's nothing wrong with the binding or the driver in general.
+> 
+> The resource conflict only arises when a request overlaps an existing region
+> inexactly. Either your firmware is describing the CMN incorrectly, or some
+> other driver is claiming conflicting iomem regions for some reason.
+No. It's not ACPI table problem. The problem is mentioned in comments of
+function arm_cmn600_acpi_probe():
+        /*
+         * Note that devm_ioremap_resource() is dumb and won't let the platform
+         * device claim cfg when the ACPI companion device has already claimed
+         * root within it. But since they *are* already both claimed in the
+         * appropriate name, we don't really need to do it again here anyway.
+         */
 
-Thanks,
-Howard
-
->
+So I suppose for ACPI env, we should use devm_ioremap() as cmn600 does.
+And make CMN700 handling follow spec exactly.
+> 
 > Thanks,
-> Ian
+> Robin.
+
+Regards
+Yin, Fengwei
+
+Full patch here (base commit is: 2408a807bfc3f738850ef5ad5e3fd59d66168996):
+
+From a542d42626ec1c92cbe546b3012b1a913df35360 Mon Sep 17 00:00:00 2001
+From: Yin Fengwei <fengwei_yin@linux.alibaba.com>
+Date: Mon, 17 Feb 2025 15:48:24 +0800
+Subject: [PATCH 1/2] perf/arm-cmn: don't claim resource during ioremap() for
+ CMN700 with ACPI
+
+Currently, arm-cmn PMU driver assumes ACPI claim resource
+for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
+failed because of resource claim failes when function
+devm_platform_ioremap_resource(pdev, 0) is called:
+
+[   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
+[   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
+[   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+[   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
+
+Let all ACPI cases call devm_ioremap(cmn->dev, cfg) just
+like current CMN600 does.
+
+Signed-off-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
+---
+ drivers/perf/arm-cmn.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index ef959e66db7c..5993a46c5560 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2510,20 +2510,26 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	return 0;
+ }
+ 
+-static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
++static int arm_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+ {
+-	struct resource *cfg, *root;
++	struct resource *cfg, *root = NULL;
+ 
+ 	cfg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!cfg)
+ 		return -EINVAL;
+ 
+-	root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!root)
+-		return -EINVAL;
++	if (cmn->part == PART_CMN600) {
++		/* Per "ACPI for Arm Components" Table 16, CMN600 has
++		 * nested root node memory range.
++		 */
++		root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++		if (!root)
++			return -EINVAL;
++
++		if (!resource_contains(cfg, root))
++			swap(cfg, root);
++	}
+ 
+-	if (!resource_contains(cfg, root))
+-		swap(cfg, root);
+ 	/*
+ 	 * Note that devm_ioremap_resource() is dumb and won't let the platform
+ 	 * device claim cfg when the ACPI companion device has already claimed
+@@ -2534,7 +2540,7 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+ 	if (!cmn->base)
+ 		return -ENOMEM;
+ 
+-	return root->start - cfg->start;
++	return root ? (root->start - cfg->start) : 0;
+ }
+ 
+ static int arm_cmn600_of_probe(struct device_node *np)
+@@ -2559,9 +2565,9 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
+ 	platform_set_drvdata(pdev, cmn);
+ 
+-	if (cmn->part == PART_CMN600 && has_acpi_companion(cmn->dev)) {
+-		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
+-	} else {
++	if (has_acpi_companion(cmn->dev))
++		rootnode = arm_acpi_probe(pdev, cmn);
++	else {
+ 		rootnode = 0;
+ 		cmn->base = devm_platform_ioremap_resource(pdev, 0);
+ 		if (IS_ERR(cmn->base))
+-- 
+2.43.5
+
