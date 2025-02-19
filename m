@@ -1,246 +1,132 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7971B6CF5
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 18:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59271214818
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 18:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990289; cv=none; b=lcNCeySRcyKNDTMJ88GndGMqTCmnq5s+Q81663m/OIXnfOIyCiJGq+zHXfSCPsSg27E6PQDc8jDoObNDKVwdpGitB1247ShD1FeBmMKsNdloMMXT4tTzq4tFHQcCGmpePVSdKJsJYTNbAMKdOukkVyzi2ukkV4Sv6lib5pKHO+0=
+	t=1739990461; cv=none; b=T3Tc0fIr5Ha6jSXoBLEODXKUgkzlpt6P2qNzghZqlQ2wK/m/ZdHJdA/8VZM3GFVIR67bbz8Dm5xeeuFBvuCkUIzgo61ECGGvXLsZC4gfQ0zqBirbl+8Gpw7/zdWhyZfVFyCk+w4MKPdHHiurKOqiSIEPY5SHMZdiKmORakcYLA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990289; c=relaxed/simple;
-	bh=gBV2UZFIKjnRUsJGbf05jytvdaauuWzNkzGor8r73Lo=;
+	s=arc-20240116; t=1739990461; c=relaxed/simple;
+	bh=IIN8sKn/JkDRZScgnbnPLuVy4gfcXsV2gLrZze5I2Mk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vwr7PxkZ91u0hRHO9LJGopTk9ICjW6ZckdmyP2Yb0OsldMUw4QbFF8rcC0unUEktJZXt7gVphsNM5Jv/bv+XcA8DLMh5WtnReHxlhVd/khf/Kel6AGHUyq67FYSgfoncZqydHb9B7VOL+Wr/Z79+30GrGkHwy4bpNXfYriFRKiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PTaSHOrk; arc=none smtp.client-ip=209.85.166.180
+	 To:Cc:Content-Type; b=rbrvMNWUW0F+A3C/DhN20xYTQYmNOlFUVCXIrVWxiBoNOLlIzV2VWlT9pN+og6P/tADSCqshNMOYnxWmMofoCfqgSBvq0iSHQ9jzKhp005c2c65WNmFiGCtIkQHJFr/B1d4+LvMn2Ga0NKQO19sYDEc647ccI9wqQ7ONnDhovj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QNYBxTzX; arc=none smtp.client-ip=209.85.166.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTaSHOrk"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d19702f977so10575ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:38:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QNYBxTzX"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d2ad29f630so10335ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:40:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739990287; x=1740595087; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739990459; x=1740595259; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
-        b=PTaSHOrkEwb/qtUrNkh0yZj0Xe1IXYm9RYznHRmt8vs/aa56TI6pW9sy5ZNahbF2rc
-         tcJKN4rAp5KH0A0HWVJ08NcnPJ8ObC8habCUYOxms4I71LVHPy/euiupC9Nh1PXH2abQ
-         /1qPVyBaBYDfKMXizpXutmYKyy3+bmHraFpjNw6aBZaJIFspnwF8OzdUBbNYG257qd/s
-         Yc9N9R/wHGEAB0Y3/lXNtu95MLO0KHcRuOGz0sWZIR8MD4GgzieVN1s9mqVIE0tW/D8F
-         bwN8kA2K6LiueiATIx9f16cGhjzLLWAcjVyQg2NYvrnbcDQ0aHZpgRGrrMPPff1XR2eA
-         9EzQ==
+        bh=OjgEu2TRsYI02/jRPOsG5EqdBzkt36nQ7A/SJ6c3ACM=;
+        b=QNYBxTzXrRZNuTZLasN9hgu1C7D7u9MS4CbS0FwNQELeZuCNiGed+E/rlWn2dxiTIR
+         3TcbV95dW13O4hcxaJ5iw1enBsw/X9I2oBMhbdRTBv5g4D+XGcAz9Kci2OVWLZHk7epl
+         UqEyaWX6Dy006rcbk37KPR9+aQsLRtZ867H0RcIwbibXqiHnbyuy8KPg6Id9clwg/sHY
+         RymgulGMPp6aaXlHrBkjsaLpu1Yzm13yISMmLHNxSUZJ03ZjyKSNG93nzV/bPVlOmYE8
+         LOXNoUu5ApkggQHHd97lzRqq/+/8iQf1mvT0GKZSJzqLM3HCtX4A7El9dmu/LxdbkQHO
+         HXBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739990287; x=1740595087;
+        d=1e100.net; s=20230601; t=1739990459; x=1740595259;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SH6gCwcBfooV/1R4mxoSj5XvySZqaE4EBHJnx789OnA=;
-        b=OtBwg2/YMyt9mKgJOPIG/8bG3AODPH8N1Mf03m5uPtXLZQXulwjBYKYyIh0vcv7nm7
-         a6lJWDMKXXGRoLWEAn43C8PbdKRKhhGXTj1OKr4cKVPTJMDFMqJ91eneN6nKrjVRohQF
-         kR6b9ddL4D9S66hTWJgMLr9XAagv+Jf9iTymAsFbyTpF2EQXdCBcnN/W7GB8ggk04C+T
-         lzcJfePr6ym+K2Ds+AIW5LKtmHh033XKVEZncGM99Zl9jJjxYMPlJ1dsdGMTHFfRtUfK
-         qrSVp3CqwR5I0BvQIfDNvX9RLPhJj+VcW/nJ3cw5BWGniKD9vTk0QRAwGYY80wX+RIft
-         k7xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRD6j9Ocv+86kdNt96sKj20tM27JdFkzVFfPR0WFvYZx0RoTHsOr5g0XCM0g2B+E9gjqiAnsQlnOZgvbEu4EaU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjMuE2NPdYWWAoI7qgpLgjGIYBj0KpGMy8LEANvVai4rKp261N
-	NCYAidF2v3752+c6Vsr73oklPTR7mtNEUFZ/gYb5GrfVP+K4IVj/YKYfSUd+sRNt84wfodi7chj
-	JDS1Q0Zty0JOyvkg6VjdqYXoRXfU1+aSTqSNm
-X-Gm-Gg: ASbGncumZ6JgER3Eim8IdhoPD3KtOiIVXmiw/5fOvs5B5C/vRXZm+1RsnZmDDSCU+ZO
-	Q93qPdFm7FQUNE57MQARuuEEehpZ3P5lKzZsa+dM3qmngmHtLO23kK9xf+FSTcNiSE2fKE4sMV9
-	uKO/PYQlz3uB+nIwTH8jUWH25TRg==
-X-Google-Smtp-Source: AGHT+IEkPdMwZ8WcM0NCVDBRKNBfRF3H5QjAYRWB9xGokTDyk0HbI2IP6QgSQCQIroSqKz5jQL30tQKsNIXmV5emA5M=
-X-Received: by 2002:a05:6e02:170f:b0:3ce:7852:1e9 with SMTP id
- e9e14a558f8ab-3d2b7622218mr3867015ab.17.1739990286725; Wed, 19 Feb 2025
- 10:38:06 -0800 (PST)
+        bh=OjgEu2TRsYI02/jRPOsG5EqdBzkt36nQ7A/SJ6c3ACM=;
+        b=MpYFwfwfN9zero/pAwc2Yfa2Qbxtc5e4ZBAWmYN9jEwnK8HaOLDKzhO/YLlubOZPHA
+         /RtwYDLCu5oTlXDTpc7KE7w279eroj3ohvO/N31o2ue1h/imTKWfRSgVSsf71JeLLHd3
+         AyNJoRwf3pZRQYxW6EGnNROatsWuhE1CtqZMBUHmzVkEKC6tmW0FTXjAbb5nqw/yenqw
+         CikmJ0tm7Uo6BxM03/l6Rs9gaK2lNHre8anQwKeL1ssNSi0i37p+GO9lmfZxu24GiaUk
+         8jK0EPCnu3JCCtQA6FozVKnBOfMGNWhWRyQ95RKLSJAsLJGYRioElAhpgZliY3w8ZrS4
+         P5dg==
+X-Gm-Message-State: AOJu0Yxk+WjdbgASG26qtTDTp422xrGWhVlhl65kYXFJaSDOdd2y9nHe
+	cPyTjZvIgwfDUX6Q/dd44+lPIsp58S4LBttmdqYVNBWOvQzAvHRvH13YshFGvLRuuf2gin58bHQ
+	vOOrX+j9NRqDwjNpjTuu67ANIC3VxFPmrtWek
+X-Gm-Gg: ASbGncsLVvkGTz33Rncjt7pPU9tJ9qveIj6+LcBS0g2kijb6+eTQfJgjINWIrPiOgJN
+	gm6lokHlucNprFXDqr0bpOZCBEUtK8IAISqP4US/Dg1oHAuv2oqH7j+bOp2fypWKkGAzJFtT7cz
+	++KnyD43SLqRuFM1YyzCwWn+tlkg==
+X-Google-Smtp-Source: AGHT+IGpPLVjc/OqETD6R/4xC9CMaRClq2o7VPxZDVl2rJvmK/PatKKc7hT6bfH+UPDEtkyAPAGcviZQPAyjdHiSaL0=
+X-Received: by 2002:a05:6e02:13ab:b0:3d0:4ff1:1d5f with SMTP id
+ e9e14a558f8ab-3d2c08b03eamr88855ab.2.1739990459119; Wed, 19 Feb 2025 10:40:59
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_5360DA048EE5B8CF3104213F8D037C698208@qq.com>
- <Z66YjGvjD_yzEHUg@google.com> <tencent_45B4E91CA370C563D6420A1A25F992056D09@qq.com>
- <1b8b234f-6435-45cf-83e7-8e86c84f075f@linaro.org> <CAP-5=fVAhLLH-a0_wLo8dPoMLOb6rOJiTgGh-OFZJJoaLFE-8Q@mail.gmail.com>
- <fe46069e-c52e-45ee-b4b3-8b929fb83b31@linaro.org> <Z7UHieRRnvRb5_oU@google.com>
- <CAP-5=fWXmNoFLyWv+vo7hhLSqTDy7hf+-huKRD9OUWnO-GESRw@mail.gmail.com> <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
-In-Reply-To: <2834c9d7-f401-4b29-8f92-22193eb9ce31@linaro.org>
+References: <20250219151622.1097289-1-james.clark@linaro.org>
+In-Reply-To: <20250219151622.1097289-1-james.clark@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Feb 2025 10:37:54 -0800
-X-Gm-Features: AWEUYZmb7ZDC7Xg-vuEYcAR-MFR4dQhVVLJv_XLUmWBSLQWG90K_v4rSjZP5nUo
-Message-ID: <CAP-5=fW_Sq4iFxoWPWuixz9fMLBPyPUO0RG0KPbYa-5T0DZbTA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf vendor events arm64: Add A720/A520 events/metrics
+Date: Wed, 19 Feb 2025 10:40:46 -0800
+X-Gm-Features: AWEUYZkt4FMpT-EvL9wUxnZYAA1ze4S4h5OH5p0tAT8wjiwP1FOTcyW9pvnQBqc
+Message-ID: <CAP-5=fXRgsjh8_U=WhAM_Q6jd2JBxtFmDkHgCpXbWh=YTZgVDQ@mail.gmail.com>
+Subject: Re: [PATCH] perf list: Also append PMU name in verbose mode
 To: James Clark <james.clark@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, cyy@cyyself.name, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, linux-arm-kernel@lists.infradead.org, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 7:25=E2=80=AFAM James Clark <james.clark@linaro.org=
+On Wed, Feb 19, 2025 at 7:17=E2=80=AFAM James Clark <james.clark@linaro.org=
 > wrote:
 >
+> When listing in verbose mode, the long description is used but the PMU
+> name isn't appended. There doesn't seem to be a reason to exclude it
+> when asking for more information, so use the same print block for both
+> long and short descriptions.
 >
+> Before:
+>   $ perf list -v
+>   ...
+>   inst_retired
+>        [Instruction architecturally executed]
 >
-> On 18/02/2025 10:33 pm, Ian Rogers wrote:
-> > On Tue, Feb 18, 2025 at 2:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> >>
-> >> On Tue, Feb 18, 2025 at 09:30:23AM +0000, James Clark wrote:
-> >>>
-> >>>
-> >>> On 18/02/2025 12:41 am, Ian Rogers wrote:
-> >>>> On Fri, Feb 14, 2025 at 2:02=E2=80=AFAM James Clark <james.clark@lin=
-aro.org> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On 14/02/2025 5:49 am, Yangyu Chen wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>> On 14 Feb 2025, at 09:12, Namhyung Kim <namhyung@kernel.org> wrot=
-e:
-> >>>>>>>
-> >>>>>>> Hello,
-> >>>>>>>
-> >>>>>>> On Thu, Feb 13, 2025 at 11:11:01PM +0800, Yangyu Chen wrote:
-> >>>>>>>> This patchset adds the perf JSON files for the Cortex-A720 and C=
-ortex-A520
-> >>>>>>>> processors. Some events have been tested on Raxda Orion 6 with C=
-ix P1 SoC
-> >>>>>>>> (8xA720 + 4xA520) running mainline Kernel with ACPI mode.
-> >>>>>>>
-> >>>>>>> I'm curious how the name of PMUs look like.  It is cortex_a720 (o=
-r a520)?
-> >>>>>>
-> >>>>>> The name of PMUs comes from Arm's documentation. I have included t=
-hese
-> >>>>>> links in each patch.
-> >>>>>>
-> >>>>>>> I remember there's a logic to check the length of hex digits at t=
-he end.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Could you provide more details about this?
-> >>>>>>
-> >>>>>>> Ian, are you ok with this?
-> >>>>>>>
-> >>>>>
-> >>>>> I think they wouldn't be merged because they're core PMUs, so shoul=
-d be
-> >>>>> fine? Even though they would otherwise be merged because they're mo=
-re
-> >>>>> than 3 hex digits.
-> >>>>
-> >>>> Do we know the PMU names? If they are cortex_a520 and cortex_a720 th=
-en
-> >>>
-> >>> It will be "armv9_cortex_a720" from this line:
-> >>>
-> >>>    PMUV3_INIT_SIMPLE(armv9_cortex_a720)
-> >>
-> >> I see, thanks!
-> >>
-> >>>
-> >>>> this comment at least reads a little stale:
-> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next=
-.git/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n76
-> >>>> ```
-> >>>> /*
-> >>>> * There is a '_{num}' suffix. For decimal suffixes any length
-> >>>> * will do, for hexadecimal ensure more than 2 hex digits so
-> >>>> * that S390's cpum_cf PMU doesn't match.
-> >>>> */
-> >>>> ```
-> >>>> James is right that core PMUs aren't put on the same list as uncore/=
-other PMUs.
-> >>
-> >> Ok, then I guess we're good.
-> >
-> > I think you may be able to do things that look odd, like today the
-> > "i915" PMU can be called just "i", I think the a520/a720 naming will
-> > allow "armv9_cortex/cycles/" as an event name, then open it on two
-> > PMUs if they are present.
+> After:
+>   $ perf list -v
+>   ...
+>    inst_retired
+>        [Instruction architecturally executed. Unit: armv8_cortex_a57]
 >
-> I assumed that was the intended behavior. It seems fairly useful to be
-> able to open on ones with common prefixes.
->
-> > We may only show one PMU in perf list as
-> > that code I think assumes they're the same PMU as they only differ by
-> > suffix:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n384
->
-> Yeah that is the case. I didn't realise it when looking at the previous
-> fixes to keep the suffixes in perf stat output.
->
-> > I can imagine aggregation possibly being broken, but I think that
-> > works off the number of PMUs not the names of the PMUs, so it should
-> > be okay. Probably the only thing broken that matter is perf list when
-> > you have a BIG.little system with a520 and a720, this may be broken
-> > with say a a53 and a72 today as both of those suffix lengths are >2,
-> > but maybe they use the "armv8._pmuv3_0", "armv8._pmuv3_1", etc. naming
-> > convention. I suspect the >2 here:
->
-> Also the case for a53 and a72 right now. Even "perf list --unit
-> armv8_cortex_a57" doesn't work because we deduplicate before filtering.
-> Adding -v fixes it though because that disables deduplication. Perhaps
-> we can change it to disable it with the --unit argument?
->
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n80
-> > would still work and be correct if it were >4. If that changes then
-> > this will also need to change:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-to=
-ols-next#n12
->
-> That could be an easy fix. If >4 is enough to still get rid of all the
-> uncore duplicates I can make the change?
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-The change would be great. I think it is sufficient and doesn't break
-the suffix:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/arm_dmc620_pmu.c?h=3Dperf-tools-next#n710
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/arm_smmuv3_pmu.c?h=3Dperf-tools-next#n921
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/drivers/perf/marvell_cn10k_ddr_pmu.c?h=3Dperf-tools-next#n1062
-it is hard to tell as it is going to depend on the memory addresses
-placed in the PMU names. Perhaps you can clear this up and add zero
-padding in the drivers if the suffix is <=3D4 ?
-
-No documentation here:
-https://www.kernel.org/doc/Documentation/admin-guide/perf/mrvl-odyssey-ddr-=
-pmu.rst
-
-On a test machine I see in /sys/devices :
-..
-arm_dmc620_10008c400
-..
-on a different one I see:
-..
-smmuv3_pmcg_20528a2
-..
-
-so >4 but this is an ARM specific issue as far as I can tell, so you'd
-be better placed to judge correctness than me.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> >
-> > Thanks,
-> > Ian
-> >
-> >>
-> >> Thanks,
-> >> Namhyung
-> >>
+> ---
+>  tools/perf/builtin-list.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 9e7fdfcdd7ff..c19826f218a0 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -163,11 +163,10 @@ static void default_print_event(void *ps, const cha=
+r *topic, const char *pmu_nam
+>         } else
+>                 fputc('\n', fp);
+>
+> -       if (long_desc && print_state->long_desc) {
+> -               fprintf(fp, "%*s", 8, "[");
+> -               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+> -               fprintf(fp, "]\n");
+> -       } else if (desc && print_state->desc) {
+> +       if (long_desc && print_state->long_desc)
+> +               desc =3D long_desc;
+> +
+> +       if (desc && (print_state->desc || print_state->long_desc)) {
+>                 char *desc_with_unit =3D NULL;
+>                 int desc_len =3D -1;
+>
+> --
+> 2.34.1
 >
