@@ -1,117 +1,144 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC881B87CC
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 19:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AFD22ACD3;
+	Wed, 19 Feb 2025 19:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739991776; cv=none; b=GQgRFFVdF9LGst8Y0LQSD5PtG3rTgIWfWNBpFva1Ijjo2vkQhVYTA/aHZBhyC79KHlZAZ/l6atB8iL4zUlwR+jzgJSOwvYBBk2j5xvZ0rKyb1pZ+GOTc0OFJ3BgT2FTOpETlxkoeYV6IJhvf0Jzf/GlznCfZAfRr5pt8gpS/6qM=
+	t=1739993295; cv=none; b=bzakNKuVOpEmkup1JNp3fe7AbZmrRw0JU3cF5+l7Ka/CPKH2yvuhNndMOT5aKPTLtrv7R7FICQaD7d9YoVdEoB1qiml2yCATUfudBTu+8JCPHsmNVSvYHf3zRxO9xHpTIN0QlTd6rNbRPky7r/sdoW4Hw4FjKTzjm3RdCYKkKXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739991776; c=relaxed/simple;
-	bh=xqCqR/hufhb5P8/CLi7BzLgbexyw/GGhmOMSc6YxdVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=NHrZdJusmsL0UmYNQHCaMxYfaM+aluGXOd4o1xxmZUDpvuFd/pRGGQFIAWd4I9fRS1eGtveByiLRlH6vnuKE9nMwTzCf48CgPlqzEOg77G+GbSrOyklrktgwUwlUPf82vsfKBqbIFBsY1HmsboJiFAmkzFzYnpkoCdxuV8JWBp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GuSu2DcH; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739993295; c=relaxed/simple;
+	bh=GFfGVKb+6rQlP2ieo37lV1hk+auSeCSnZwEleBMmL24=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oR/e77X129F3CBcsqmxksSX+zXbGpNttDQZW7TTVSRxT826RC7xBnfLLhxysJ+baiVKdv87W43YnXbAZw09RJ5HHCVjEFAo3zES71yIo34lsW2oZLr9QAPqih2BhZotM2LjiRih9rfWLiWJinhPrAkLBsAgsNNd9VtdT7W4z4Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkeHyHxq; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GuSu2DcH"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d1925db9e7so14265ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 11:02:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739991773; x=1740596573; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xqCqR/hufhb5P8/CLi7BzLgbexyw/GGhmOMSc6YxdVA=;
-        b=GuSu2DcHnkPqOPuI51GdTuhRJWIOuRFR8z7JBtf+mrOCFAOKH+uurXURgXHI3tXEdo
-         Rqu443aZNwn5GUz4h6jzokPcuBY5OFh3sjbpQCRLp97X2COi+q4I6F6eFd5DvFIJ0cnf
-         GaEnZ8mbcEAgaPt7LvTzBfFHcb8t/tfNVe7dMOMswp/0gNtTN5O0XMX6QYAB4uSEuwRx
-         FS1s1CppzNEOmsepLs3726/CPLAJgHukkuS/HkzZvrEApKRN2PAZtq1MhnhooI6D7Ehb
-         nBmNP83ArDm2HxlR8HxaNlyp4QerB4N7a094IqBzap7wixOTkpf9e0FdSjPFAyGTRS94
-         JKhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739991773; x=1740596573;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xqCqR/hufhb5P8/CLi7BzLgbexyw/GGhmOMSc6YxdVA=;
-        b=i/qWovtgIC3+pVvXu3AhIshObo5xkh17A3NmlRnSmknPX7HBseNKZ4bRemaCBsJrRz
-         V4FgGlRfRIYJUv6+5nDJ6oKDRf2ylv6FlStCqgcINi4WHPmcZy/4GuNJVRbpCsIcG41E
-         Kx1xl611QoxotWUrvK0xeZ3fId3MouUnGLd+y5cHyNtXEFbyiMOnZrHfQR66NFC1chHW
-         ZAq+PfF8qCMUu2srDutGuIZFUKUdD31p0GUE9gu6FZF7+5zbW/KTGCCwsZFbodA1NhsW
-         Fxebzz9uEskfryeQfEO1aABylmQmTWBEtm4XknJQyw+pelJ28JBZavF/tc7iCl954doT
-         a4yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI2SiCb/c9fJBVm1/NNK7iaCUByOmWbA57Jl1VccRQ/UYH6LurwGbA1hdZbzF66JCeZ5U0UfwbYWEW8fXQKu8t@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2TsDcqKIXxpH0dG7MHQiDDs0Bb9Hum7/VFszPj4LUjVJ0teNT
-	doJ/9GnpjVoGLywFOlj9JJhAlz7ubShJ4eEMo1f/TZDEijLDgrtm4SHQQapPr1JFHskOeJCuI05
-	prdJs8KUiTAUdfMZEiQdULQEU1h03FlMX67OD
-X-Gm-Gg: ASbGnctIVdXCew34SCK1EEZqJ4OR4qAprsOQgHQV9J7PxI4U5Qk3Ts5WjmFSlSDX+/b
-	B+ayrXi47IWV+iUqh0FH8Nw1Ch37IkBU5AlbfiUnkcYLvTsyZl3jnaPBl+BMLzrL69426qrpwrg
-	zlhTCzNEAMLJRZk/E8ETuYjwpHQw==
-X-Google-Smtp-Source: AGHT+IFTTa9BmF/cvrRnLMexuFSYqNhnGoLFlnoL7/Nc/YaDz0GVAvlFhZqtew98n6t59Vt1hUPih85IrbvbGbZZDxs=
-X-Received: by 2002:a92:c56e:0:b0:3cf:fbc9:5c10 with SMTP id
- e9e14a558f8ab-3d2c0b75e6fmr148655ab.26.1739991773534; Wed, 19 Feb 2025
- 11:02:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkeHyHxq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739993294; x=1771529294;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GFfGVKb+6rQlP2ieo37lV1hk+auSeCSnZwEleBMmL24=;
+  b=QkeHyHxq49FzB4WaGQtIgGh5firEejFLPxu94nNsbA1sp0pTZ5HzykH+
+   AfpPAv0gVsRGcs3E7wYGFd+6SY9yWfMLRFC4qYw7hSTs3Ahwc/gPMyyZo
+   pWWyq622Zd7lIRrt0OUBprN8AaUYDrVuQ6O1onKYQFE2uG/yLxmeXYpvS
+   5AyxmxXLhL32i5E1JqLTP33fV3Amc1qE4T735JaNrkV9pg3BXP70PQBo3
+   8y0bOFQyLC9BwCeJJSFpd60JhGami2PFHbT4i/soJLruoUlySnFw34pC2
+   GKaVVKdg8lcQaZLtnhtZHFGGj2HJ2p2xf/P6Gop4ekle4/rG1Vd2LDpGL
+   w==;
+X-CSE-ConnectionGUID: FmThzyNpRiSBDuAGHnc5yQ==
+X-CSE-MsgGUID: iFyyG/NNQPWhrj+t8s8d8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52182712"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52182712"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 11:28:13 -0800
+X-CSE-ConnectionGUID: I3yiiJAiRh6BMNeDQiaZMw==
+X-CSE-MsgGUID: yO8bzx7MSqO+nkaADoxAMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="115343992"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 10:43:55 -0800
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 00/15]  Prepare for new Intel Family numbers
+Date: Wed, 19 Feb 2025 18:41:18 +0000
+Message-ID: <20250219184133.816753-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109175401.161340-1-irogers@google.com> <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Feb 2025 11:02:40 -0800
-X-Gm-Features: AWEUYZkGjeOagc7NGuKyV-tf79xYdyrj45f5ezlrCbEQXR619UXdXuxCSPih_AY
-Message-ID: <CAP-5=fWZAk7XqtL+=CanefkuFxhDsJ22+-uHkrxXi4g8123oew@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Tidy name token matching
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 11:23=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Thu, Jan 9, 2025 at 9:54=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs
-> > before parsing") names (generally event names) excluded hyphen (minus)
-> > symbols as the formation of legacy names with hyphens was handled in
-> > the yacc code. That commit allowed hyphens supposedly making
-> > name_minus unnecessary. However, changing name_minus to name has
-> > issues in the term config tokens as then name ends up having priority
-> > over numbers and name allows matching numbers since commit
-> > 5ceb57990bf4 ("perf parse: Allow tracepoint names to start with digits
-> > "). It is also permissable for a name to match with a colon (':') in
-> > it when its in a config term list. To address this rename name_minus
-> > to term_name, make the pattern match name's except for the colon, add
-> > number matching into the config term region with a higher priority
-> > than name matching. This addresses an inconsistency and allows greater
-> > matching for names inside of term lists, for example, they may start
-> > with a number.
-> >
-> > Rename name_tag to quoted_name and update comments and helper
-> > functions to avoid str detecting quoted strings which was already done
-> > by the lexer.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Ping. This patch addresses name parsing inconsistencies, in particular
-> events may start with a number without a PMU, but not with. It also
-> aims to give better names to patterns than name_minus and name_tag
-> (with term_name and quoted_name respectively) that have drifted from
-> their original meaning and become to me less than intention revealing.
+---Summary---
+Mainstream Intel processors have been using Family 6 for a couple of decades.
+This series is an audit of all the arch/x86 Intel Family-model checks to get
+ready for the upcoming Family 18 and 19 models. It also converts the last
+reamaining Intel x86_model checks to VFM ones.
 
-Ping.
+Patch 1-8 : Include Dave Hansen's Acked-by.
+Patch 9-15: Almost ready to merge but don't have review tags yet.
 
-Thanks,
-Ian
+---v3 changes---
+* Reordered the patches and moved the Acked ones to the front since they are
+  likely to get applied sooner.
+* Patches 11 and 14 have a slightly different approach now. 
+* Improved commit messages overall.
+* Dropped the drivers/ fixes. Will post them separately.
+
+---Previous versions---
+Refer the v2 cover letter for more background.
+
+v2: https://lore.kernel.org/lkml/20250211194407.2577252-1-sohil.mehta@intel.com/
+RFC-v1: https://lore.kernel.org/lkml/20241220213711.1892696-1-sohil.mehta@intel.com/
+
+Sohil Mehta (15):
+  x86/apic: Fix 32-bit APIC initialization for extended Intel Families
+  x86/cpu/intel: Fix the movsl alignment preference for extended
+    Families
+  x86/microcode: Update the Intel processor flag scan check
+  x86/mtrr: Modify a x86_model check to an Intel VFM check
+  x86/cpu/intel: Replace early Family 6 checks with VFM ones
+  x86/cpu/intel: Replace Family 15 checks with VFM ones
+  x86/cpu/intel: Replace Family 5 model checks with VFM ones
+  x86/acpi/cstate: Improve Intel Family model checks
+  x86/smpboot: Remove confusing quirk usage in INIT delay
+  x86/smpboot: Fix INIT delay assignment for extended Intel Families
+  x86/cpu/intel: Fix fast string initialization for extended Families
+  x86/pat: Replace Intel x86_model checks with VFM ones
+  x86/cpu/intel: Bound the non-architectural constant_tsc model checks
+  perf/x86: Simplify Intel PMU initialization
+  perf/x86/p4: Replace Pentium 4 model checks with VFM ones
+
+ arch/x86/events/intel/core.c          | 16 ++++--
+ arch/x86/events/intel/p4.c            |  7 +--
+ arch/x86/events/intel/p6.c            | 26 ++--------
+ arch/x86/include/asm/intel-family.h   | 21 +++++++-
+ arch/x86/kernel/acpi/cstate.c         |  8 +--
+ arch/x86/kernel/apic/apic.c           |  4 +-
+ arch/x86/kernel/cpu/intel.c           | 74 +++++++++++++--------------
+ arch/x86/kernel/cpu/microcode/intel.c |  2 +-
+ arch/x86/kernel/cpu/mtrr/generic.c    |  4 +-
+ arch/x86/kernel/smpboot.c             | 17 +++---
+ arch/x86/mm/pat/memtype.c             |  6 +--
+ 11 files changed, 93 insertions(+), 92 deletions(-)
+
+-- 
+2.43.0
+
