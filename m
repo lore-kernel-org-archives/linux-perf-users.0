@@ -1,167 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A46D1F55E0
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 15:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79491F30BE
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 15:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977989; cv=none; b=OtyQWK43koAvmr0JYOjCTKGH284aGrng+N9kCZ+HDZ+AdJ43C6ydRC+A6WQr4XKUUvaVDtDrzUmaSLT2jUd2QEtLs+ZDDyYO5tQfAjh9ABNCmc+1ztR0i8/iKinLdZL8WLW75SGTuUw6CPljLTBhHuyMg/qrLs2wPMp0QFBdQSc=
+	t=1739978227; cv=none; b=OW4OpFCb8cZA2w6oYdYCA6HSr00HeMg5kH5mLbYnZ7fpE1kNVUwH15D3EwLoaDISl7qzdRj+NAK5gzR7+NOUM0FEZu0b3/vZZ4OLqwlziRiApIrKqpjYVZUDJcPVj1IX7wT3yEnb+9fEXKc16u01UpBo3YatospDiCs4ItWbc3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977989; c=relaxed/simple;
-	bh=YEDFkhBYjRhP5Z93Fy/FXNH8qcO0tYdixMhBiEsACWQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ERSmJ+lB583A6mMspK40mrkHw7sIFcsCVEzhKlrT0JgUY6jvdtMv6B32MkbAnF12ARjdtOG3YdLRJE77KYhILm/XA2UzAe6azxKPkN4O0X/z3Hsik5iqyo/Gk+RHlVEnO/boSvg4qeDAZGiQOP5kOrHnTDTFrssS+JK8Zd+unLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GW9GPyek; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739978227; c=relaxed/simple;
+	bh=5Ef/H9SQz0qyD6vdyn2cJCrQtQNhElDaP1JYvY7e3sM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AKxs+NpggKm9wqJyB0taGppWsT3wPcCgTT1/r7mecTrRtL7EFXPWkf1UL6NxebAmhR68+dMZ02tqxgZhobe7EmN5TlFc23Cn5oI9roVSoI8KVNlDBU58WM356mLeXhfDbgJ6xK/SHXyY8mcQJUcNGhFYMU6Ze9xYSyQZUH3UKwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rvc2HCEm; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GW9GPyek"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739977986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YEDFkhBYjRhP5Z93Fy/FXNH8qcO0tYdixMhBiEsACWQ=;
-	b=GW9GPyekQTHonsiuL57zD47+u+pvv3Zl7lMu41Z4O6mg0ReVmlHevyBl3eQBcru2N3jwZu
-	k9R27JRRiNS53QWSMhSBaGNB9Ms8uh7mZTmLrVdVRZfz0VvxIJoPta3YcWzLr6/O0bp4GK
-	9E3HzKLwpohKweKhoeD8s1HfvoR3VBA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-623-kqGAZSqHOLSVC1i0I9YTxA-1; Wed, 19 Feb 2025 10:13:05 -0500
-X-MC-Unique: kqGAZSqHOLSVC1i0I9YTxA-1
-X-Mimecast-MFC-AGG-ID: kqGAZSqHOLSVC1i0I9YTxA_1739977984
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4393b6763a3so34885025e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 07:13:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvc2HCEm"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43996e95114so13317165e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 07:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739978224; x=1740583024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
+        b=rvc2HCEm003zi3oHKix3zVzhhJYyenN0h/SuqjE7ECNtQ35cAm2aq6QCF2MLsWBdbm
+         k1IpHQcDXREzOKBWz/ONaBCBLHkL2wysnqr9v2PwX53S4RE+/yAHx/8v/4GgH3tVzvdq
+         JriOpjotM9Zb6Znr+4JPDibbIjR+J6CpdVnyY5mziZs4aPtzrgMYf4lnwBdx+2MPKySG
+         nCr5dP5LTlPTdcFKorMzlzUeXol82e4KuGV5RC9hbY3vIng3L6qikjLkowtpjiHkyfRV
+         WJv093EwdiE2jH059rRJ1XNYjOBkhormcPGsUWyrOqo5WbdYaJEOZyR8iYfqzfgBFY+B
+         4ZoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739977984; x=1740582784;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YEDFkhBYjRhP5Z93Fy/FXNH8qcO0tYdixMhBiEsACWQ=;
-        b=L3ioEK9z9KrxHkBib9RVmmIFbiiUVkC1/4MKbFhTrIbNqPkWbRxte7mlEhs1KEikA1
-         g91Md6jx4Rcx62uUlWKRNeyVq0Mo5R7gWGrHaEKi/FYL4MkPoaQ1ZT+mmNu+DVEFtThL
-         0JAPufoE1thG4/GM0fdOCEbWQvKyPYHGdXExjrsI3Pzr4VjiA/gXB6jPtEsExsrReSXc
-         C522xr42RSyyJDU0/NcEgJQx1FVNNubcb/cNoSXnH54W6PRxJWp57RK439bn14bnPPdF
-         y19wZjZ+hF7961+Pmt/+Glky84lBiQ4PeVBUFvkC18H7RCZemcz62o9Ee5Ev40QXn8Z+
-         28+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWtyzHyvALyav8elDFN9cbvBV0ZqBFdd14pbF6bgLd5KFQpjIh4SiOEWQCPytlN1yTSNlvZ8t7CccQwZ0tMVjm4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8ti/7zh6BiFT/Heqdg6ED5Q7EbtxSq+qtvZIXl/eXA5IQS8g7
-	nj/p1C4qctNJA5AIaNaXcW7LzjnE+6M3IM9//bTvthai0GSnp+TEv1g3pX2KPfgHs5Hksl1JLpj
-	FsnNCl2IJwItOZxgB0WmClVUYsNX6t4Dq8XxzWrX/XETRG2ZgsNytU3dSYabKm4iGzPw=
-X-Gm-Gg: ASbGncvptncTe3T7bvdD8WTvu+1jmoMQK7+dJF0SyHOfSL9/qcHYIkjEC5HOxJtZfbh
-	IU9kG60yEps/y9fh++lMrsJcnokFyLJ9I2QZF5w3DZXkXT2ozRIH/DNG1mpEOY51luD8vwL5sV0
-	Ioi2ZbKmDwMiyvJTTAKVIX+O5/Y83oo1mRJWyE2EBEmhz+2uDF+pbESTh1BWyGV86oKCQufOXt3
-	U9MnJBvr5AE+dS/BhmwQhXpdet8Uz0FdaWZrMbMo9UyA/tKLqf7xhUQr/6cUAmS7pYu4M8UR9wv
-	jJgG02s2Ps55HBSxIqc/0fN00pQsEux8jBbG/sF9HK6wc4hEZl2bRrPfyOWI5hM9zw==
-X-Received: by 2002:a05:600c:3d0b:b0:439:88bb:d02d with SMTP id 5b1f17b1804b1-43988bbd322mr97619165e9.2.1739977984079;
-        Wed, 19 Feb 2025 07:13:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHqXB0SvUjV4zwF8A6smqwc0vRSLTkn6r2mJurV/wBBuDlOIkQeOJi/olfCVvoVfIVGXKI8cw==
-X-Received: by 2002:a05:600c:3d0b:b0:439:88bb:d02d with SMTP id 5b1f17b1804b1-43988bbd322mr97618455e9.2.1739977983617;
-        Wed, 19 Feb 2025 07:13:03 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439858ec5fasm88121225e9.29.2025.02.19.07.13.00
+        d=1e100.net; s=20230601; t=1739978224; x=1740583024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
+        b=cYXuWC9LkNqHfB2z4EQ09m3h69McfjKGcAltyvuRDtw99S6GOQLejPi9JrancEESiZ
+         VKxOg4qxHrkQI5XAk95DlyoqXsh7UlzFxvtsh8vBXfyW4qaHUjYNT70dYK78zvkS8y+b
+         46QYFT9+7rizgDsDzZI5wBPIh/MfA0wYQfwacPnGxxJ2ZmVj5FR+g2RU8gkjCw4tT5sZ
+         +z2IOz1HiePt+ZQdK0vvcjrqbwn8Pcdd8xhiAdBoCW1U5D5MZY4kj+q5uEUcxHBTh2Js
+         JUejMF8e5ep+KO3fgHp25wzBLg/tGHUxbQSzGgQGtCpMIht8xGxHqHa6uFjftejMLK7R
+         ZmPw==
+X-Gm-Message-State: AOJu0YzMz80wsJUOJM+BUOBE04FJ3aXKxt2QKpU2JuO0AGcugwoQSCD8
+	YJAog6GwjdiXZvQGZDuG8QiQxh3kLE5RRaGZMbAIKFwYy09gFVgk2PqfsTvL/5jpKz1HCXXrT0v
+	7osQ=
+X-Gm-Gg: ASbGnctDylm2R++Lfnon1SauTD6iYX/c3h82l1HPseILgwHdrEGBwVCGhRgbNEH0jov
+	V9gZVkTbG3ZF9Z8/2i6OGo0A+a1kVNO1EvO8Tkb6TNk1UArg4qhwCYDXbFDQeqpuKdG0p64tHGv
+	6CjJtxAUduUHvh3GAzmoytPGSyqCx2/Lp4druJJZDhZ0+mP+wiJjp1/Hv7MnBFVvhqcUI/xfUxO
+	6TExmw0pz6iBX3vciJ+D05ePrbygzZv1wyNlE+6ZWTEOkx2HPycTuj/ZldM+s42Ak3qy2b0h7IS
+	7R/lvie6Ig+I/8U=
+X-Google-Smtp-Source: AGHT+IFghAhU4CVYMM0z3nQZRvpFSkI5KSPb68OtzHjy/xmGIk0I938mkd7Bxd8Al9toNUNiuN4WlQ==
+X-Received: by 2002:a05:600c:1f0f:b0:439:8653:20bb with SMTP id 5b1f17b1804b1-439865322ddmr114719455e9.14.1739978224110;
+        Wed, 19 Feb 2025 07:17:04 -0800 (PST)
+Received: from pop-os.. ([145.224.90.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04f8a2sm214703065e9.2.2025.02.19.07.17.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 07:13:02 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
- <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
-Date: Wed, 19 Feb 2025 16:13:00 +0100
-Message-ID: <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Wed, 19 Feb 2025 07:17:03 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org,
+	cyy@cyyself.name
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf list: Also append PMU name in verbose mode
+Date: Wed, 19 Feb 2025 15:16:21 +0000
+Message-Id: <20250219151622.1097289-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On 18/02/25 16:39, Dave Hansen wrote:
-> On 2/18/25 14:40, Valentin Schneider wrote:
->>> In practice, it's mostly limited like that.
->>>
->>> Architecturally, there are no promises from the CPU. It is within its
->>> rights to cache anything from the page tables at any time. If it's in
->>> the CR3 tree, it's fair game.
->>>
->> So what if the VMEMMAP range *isn't* in the CR3 tree when a CPU is
->> executing in userspace?
->>
->> AIUI that's the case with kPTI - the remaining kernel pages should mostly
->> be .entry.text and cpu_entry_area, at least for x86.
->
-> Having part of VMEMMAP not in the CR3 tree should be harmless while
-> running userspace. VMEMMAP is a purely software structure; the hardware
-> doesn't do implicit supervisor accesses to it. It's also not needed in
-> super early entry.
->
-> Maybe I missed part of the discussion though. Is VMEMMAP your only
-> concern? I would have guessed that the more generic vmalloc()
-> functionality would be harder to pin down.
+When listing in verbose mode, the long description is used but the PMU
+name isn't appended. There doesn't seem to be a reason to exclude it
+when asking for more information, so use the same print block for both
+long and short descriptions.
 
-Urgh, that'll teach me to send emails that late - I did indeed mean the
-vmalloc() range, not at all VMEMMAP. IIUC *neither* are present in the user
-kPTI page table and AFAICT the page table swap is done before the actual vmap'd
-stack (CONFIG_VMAP_STACK=y) gets used.
+Before:
+  $ perf list -v
+  ...
+  inst_retired
+       [Instruction architecturally executed]
+
+After:
+  $ perf list -v
+  ...
+   inst_retired
+       [Instruction architecturally executed. Unit: armv8_cortex_a57]
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/builtin-list.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 9e7fdfcdd7ff..c19826f218a0 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -163,11 +163,10 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
+ 	} else
+ 		fputc('\n', fp);
+ 
+-	if (long_desc && print_state->long_desc) {
+-		fprintf(fp, "%*s", 8, "[");
+-		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+-		fprintf(fp, "]\n");
+-	} else if (desc && print_state->desc) {
++	if (long_desc && print_state->long_desc)
++		desc = long_desc;
++
++	if (desc && (print_state->desc || print_state->long_desc)) {
+ 		char *desc_with_unit = NULL;
+ 		int desc_len = -1;
+ 
+-- 
+2.34.1
 
