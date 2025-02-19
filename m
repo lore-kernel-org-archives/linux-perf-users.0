@@ -1,129 +1,94 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79491F30BE
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 15:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601AB1F461F
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 15:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978227; cv=none; b=OW4OpFCb8cZA2w6oYdYCA6HSr00HeMg5kH5mLbYnZ7fpE1kNVUwH15D3EwLoaDISl7qzdRj+NAK5gzR7+NOUM0FEZu0b3/vZZ4OLqwlziRiApIrKqpjYVZUDJcPVj1IX7wT3yEnb+9fEXKc16u01UpBo3YatospDiCs4ItWbc3o=
+	t=1739978614; cv=none; b=WLLXIi+R+jc0uqTAg6xfn+Z0NSAyMGq/t5VdHiXoL/DhPALRJFKQmB1BYrb57DCqtFI8R+mO9Ojog0ZeAGVrZaDX0GHb9Bbb+Y9UyWSbmOe6IA+exRu3G/HJPnPYZXQI+cGe9CEwUwnpoFuKsYR+qLKAPgUZScDIYUKC9uruh4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978227; c=relaxed/simple;
-	bh=5Ef/H9SQz0qyD6vdyn2cJCrQtQNhElDaP1JYvY7e3sM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AKxs+NpggKm9wqJyB0taGppWsT3wPcCgTT1/r7mecTrRtL7EFXPWkf1UL6NxebAmhR68+dMZ02tqxgZhobe7EmN5TlFc23Cn5oI9roVSoI8KVNlDBU58WM356mLeXhfDbgJ6xK/SHXyY8mcQJUcNGhFYMU6Ze9xYSyQZUH3UKwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rvc2HCEm; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739978614; c=relaxed/simple;
+	bh=/0kmnhcuXSDK/VJa/ZW0gcKx1grCl+oTBF/dgOBkbx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9PvnYbP79bfOhDC87uweVyDF8z6QppMlCc6vYMpZs+tWr3VnqGiaXAJGjq5dHCerU77v8RdbHSKI9a/sszMCECRWmNTM22Xv6B5HwOXRVdRnxq6gazGf/xbCYusr5YdGJHo9i8gUq45NAgy5e4ctCizQ95WBGmEzp8UWGwNPvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5cKr2Qk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvc2HCEm"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43996e95114so13317165e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 07:17:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739978224; x=1740583024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
-        b=rvc2HCEm003zi3oHKix3zVzhhJYyenN0h/SuqjE7ECNtQ35cAm2aq6QCF2MLsWBdbm
-         k1IpHQcDXREzOKBWz/ONaBCBLHkL2wysnqr9v2PwX53S4RE+/yAHx/8v/4GgH3tVzvdq
-         JriOpjotM9Zb6Znr+4JPDibbIjR+J6CpdVnyY5mziZs4aPtzrgMYf4lnwBdx+2MPKySG
-         nCr5dP5LTlPTdcFKorMzlzUeXol82e4KuGV5RC9hbY3vIng3L6qikjLkowtpjiHkyfRV
-         WJv093EwdiE2jH059rRJ1XNYjOBkhormcPGsUWyrOqo5WbdYaJEOZyR8iYfqzfgBFY+B
-         4ZoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739978224; x=1740583024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AB8I4wegTQXb4Nt4v2IoDrjBpPCGZeradmAL978Ns8Q=;
-        b=cYXuWC9LkNqHfB2z4EQ09m3h69McfjKGcAltyvuRDtw99S6GOQLejPi9JrancEESiZ
-         VKxOg4qxHrkQI5XAk95DlyoqXsh7UlzFxvtsh8vBXfyW4qaHUjYNT70dYK78zvkS8y+b
-         46QYFT9+7rizgDsDzZI5wBPIh/MfA0wYQfwacPnGxxJ2ZmVj5FR+g2RU8gkjCw4tT5sZ
-         +z2IOz1HiePt+ZQdK0vvcjrqbwn8Pcdd8xhiAdBoCW1U5D5MZY4kj+q5uEUcxHBTh2Js
-         JUejMF8e5ep+KO3fgHp25wzBLg/tGHUxbQSzGgQGtCpMIht8xGxHqHa6uFjftejMLK7R
-         ZmPw==
-X-Gm-Message-State: AOJu0YzMz80wsJUOJM+BUOBE04FJ3aXKxt2QKpU2JuO0AGcugwoQSCD8
-	YJAog6GwjdiXZvQGZDuG8QiQxh3kLE5RRaGZMbAIKFwYy09gFVgk2PqfsTvL/5jpKz1HCXXrT0v
-	7osQ=
-X-Gm-Gg: ASbGnctDylm2R++Lfnon1SauTD6iYX/c3h82l1HPseILgwHdrEGBwVCGhRgbNEH0jov
-	V9gZVkTbG3ZF9Z8/2i6OGo0A+a1kVNO1EvO8Tkb6TNk1UArg4qhwCYDXbFDQeqpuKdG0p64tHGv
-	6CjJtxAUduUHvh3GAzmoytPGSyqCx2/Lp4druJJZDhZ0+mP+wiJjp1/Hv7MnBFVvhqcUI/xfUxO
-	6TExmw0pz6iBX3vciJ+D05ePrbygzZv1wyNlE+6ZWTEOkx2HPycTuj/ZldM+s42Ak3qy2b0h7IS
-	7R/lvie6Ig+I/8U=
-X-Google-Smtp-Source: AGHT+IFghAhU4CVYMM0z3nQZRvpFSkI5KSPb68OtzHjy/xmGIk0I938mkd7Bxd8Al9toNUNiuN4WlQ==
-X-Received: by 2002:a05:600c:1f0f:b0:439:8653:20bb with SMTP id 5b1f17b1804b1-439865322ddmr114719455e9.14.1739978224110;
-        Wed, 19 Feb 2025 07:17:04 -0800 (PST)
-Received: from pop-os.. ([145.224.90.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04f8a2sm214703065e9.2.2025.02.19.07.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 07:17:03 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org,
-	cyy@cyyself.name
-Cc: James Clark <james.clark@linaro.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5cKr2Qk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739978612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/0kmnhcuXSDK/VJa/ZW0gcKx1grCl+oTBF/dgOBkbx8=;
+	b=L5cKr2QkWnv21d4OrXYLtiXrHknslGyGndc/5xhHdPPUS2e4vvtIDBPXE/YqSnqOV1M/tP
+	iiCCOlxnuzN/4Qb311G+8k/qrnuVHE5x4ajPdDN4q/a8iWy+yYjTNLWoMhXK1OIrJ53aw5
+	q6WeKHfU8peydRfL0ftxsahbuKRd8vA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-wy_-NrPsPJOUKZFcVv0X_g-1; Wed,
+ 19 Feb 2025 10:23:27 -0500
+X-MC-Unique: wy_-NrPsPJOUKZFcVv0X_g-1
+X-Mimecast-MFC-AGG-ID: wy_-NrPsPJOUKZFcVv0X_g_1739978604
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F12119783BC;
+	Wed, 19 Feb 2025 15:23:23 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.102])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 910421956094;
+	Wed, 19 Feb 2025 15:23:08 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Feb 2025 16:22:53 +0100 (CET)
+Date: Wed, 19 Feb 2025 16:22:38 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf list: Also append PMU name in verbose mode
-Date: Wed, 19 Feb 2025 15:16:21 +0000
-Message-Id: <20250219151622.1097289-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
+Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
+ uprobes: fix two zero old_folio bugs in __replace_page()
+Message-ID: <20250219152237.GB5948@redhat.com>
+References: <20250217123826.88503-1-tongtiangen@huawei.com>
+ <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
+ <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
+ <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-When listing in verbose mode, the long description is used but the PMU
-name isn't appended. There doesn't seem to be a reason to exclude it
-when asking for more information, so use the same print block for both
-long and short descriptions.
+On 02/18, Tong Tiangen wrote:
+>
+> OK, Before your rewrite last merged, How about i change the solution to
+> just reject them immediately after get_user_page_vma_remote()？
 
-Before:
-  $ perf list -v
-  ...
-  inst_retired
-       [Instruction architecturally executed]
+I agree, uprobe_write_opcode() should simply fail if is_zero_page(old_page).
 
-After:
-  $ perf list -v
-  ...
-   inst_retired
-       [Instruction architecturally executed. Unit: armv8_cortex_a57]
-
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/builtin-list.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 9e7fdfcdd7ff..c19826f218a0 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -163,11 +163,10 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
- 	} else
- 		fputc('\n', fp);
- 
--	if (long_desc && print_state->long_desc) {
--		fprintf(fp, "%*s", 8, "[");
--		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
--		fprintf(fp, "]\n");
--	} else if (desc && print_state->desc) {
-+	if (long_desc && print_state->long_desc)
-+		desc = long_desc;
-+
-+	if (desc && (print_state->desc || print_state->long_desc)) {
- 		char *desc_with_unit = NULL;
- 		int desc_len = -1;
- 
--- 
-2.34.1
+Oleg.
 
