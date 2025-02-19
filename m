@@ -1,153 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5CB24FC0D;
-	Wed, 19 Feb 2025 21:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEF020F082
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 21:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740000010; cv=none; b=Qu5zNFX0KVit4Jf3yaIhI4XMe9sjrnHNZyncPurtu3GNcqfcMUfkTkUaFHIBYilx5qItLLcxBgPulqqTBmklOVTpaWtAs1upjofH1jKaZ6wYGQygQGcpSWMbtYt6m1Xo/LzA/4FtUB7+Mwo07oGy0gHyzHKcXl0QM7JfAMkVuYw=
+	t=1740001455; cv=none; b=KlcIE5FfNSpRqkVn68OQPAmPwYG9oyqI250aGKimcNNUPKgz2FEi8rFQHRrh0NsPBwlampMTpUOSjcm/PgGnzMpbffpAlFtNDi3t/uJ85RYcpKc2UAqQw1oCUv1R4StvvK/8WMil7GzAXKA4nvvLF2URDJdK+GA99kJivOzh+Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740000010; c=relaxed/simple;
-	bh=Z0rIEzHSNJzDYz0lpdKgc1HXdQuUbUWngzVqExCfsqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYKrOU6GcuyzGP44ZnKtexvQGLhptLcBy77PoBS0UPH5iPc4E89njGDPMvFwvK32cVRAdb4+uDRQBB1/9ZQ6f3il56i2r4UH97xfmB/pGXKIzgJ93PoxJJ3AhZhSeMbYLiprwzzzuvKXjgHmlGWwO9GE6LJEuKnQs4lFj2MLtuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGSzxpem; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740001455; c=relaxed/simple;
+	bh=CTguHI9ra+AVpeiViEJMVcn8TOZbCheJ7ifbmczf1sE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AQUZh1AGSwzG4zvCafO1o2PNhEfxoE4tHCe5wYpgRDIzp7V6zE4u2h4o5O8zOgohJuH+oBH2hlCQZLnc7derlMlIHbvvUZQ7wUIin5yi92BCAULmPbNVeUteU3c2PBzrCroqhg8gN9Yoz4A0LmoeyWAyyIrmfGieTUwZ3JfqBEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uELtFqH5; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGSzxpem"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5653CC4CEDD;
-	Wed, 19 Feb 2025 21:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740000009;
-	bh=Z0rIEzHSNJzDYz0lpdKgc1HXdQuUbUWngzVqExCfsqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SGSzxpemh8Udu9H28hUtPpbAS5D1OG7CZLOG08m1vN+KtIknrfHJkE0sfF2SJ7k0Y
-	 CnIDA5SkHy+nJm2xQjVbiIXbMeUu8eOJXFTifq4hubnyKzsVAom2f9ZA9107HMMHYb
-	 M4fljMwLPqmf+CV0phFLWgEsH+5xzoWUc51MiRs7QpN2Ugu5JFXi9LA60y3MHJQVxy
-	 LAurVZhsuYPMjmHSlhZDNe7LXi4uGFHCflPsEoIABdgqtjE1miiTfYvxFvJmlCPbEK
-	 Dum7nXv5EOCZ4rKrn9QEW1PLKH7GE+PtmVVTQVVPDJnNGnBAm9u9t5pW01H/67+0HG
-	 /vQv2ClCRtHVA==
-Date: Wed, 19 Feb 2025 13:20:07 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-perf-users@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RESEND PATCH 0/7] perf vendor events riscv: Update SiFive CPU
- PMU events
-Message-ID: <Z7ZLB-wZY9wTZSBZ@google.com>
-References: <20250213220341.3215660-1-samuel.holland@sifive.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uELtFqH5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc5888c192so513037a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 13:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740001453; x=1740606253; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H9Jer7zFjUDPh822Asgplz1kcj6Jbt7KPnFYJhaZSsc=;
+        b=uELtFqH5rsfvYm+Z2wP2T8HgNE6Q69PByZq2CYeK26CDh3VbrdnN9Ux5iEsM3NXO+d
+         kmckFXETUmmz4Vh42Hf+StnJQxHit/EGGDvtC5lGOfPDXWeaL/csyniUv+vuo5urVE6/
+         AAjlztOUz7z5SdZqvQ1aiz6WjC6n+V6QUyJDRbb+OUYDHGJ/kNnRknsmfbV9cmk+hzov
+         ihm6G8O7kg0gn6poJvRmVF0AjB1d+cZ2+f0R/976gyXkTN469FYAi0WgM4SwI6vmpFJ5
+         kNK8Zz/wKB2q0c9xiTdqP/6tWkRgtfJf86cDXkvw5Eg0pURWZkNbx/mTEfM84DktkEpi
+         R0HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740001453; x=1740606253;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H9Jer7zFjUDPh822Asgplz1kcj6Jbt7KPnFYJhaZSsc=;
+        b=J7t7xHJNy5mAeYxU3B/a5sWZ16peV86r0VQcbrnDMpFHFJ7CgfKOqfvi5OBSb6zlhN
+         6ikg6zf8r1yU5VhVV8HqXRefuU9R3m4OiYeknBkj8pp1CIC3ONkel8qufRzANFCsA+GD
+         TbYsWWvCc8ZqjHtP8WZO7hgmDGMZLQLkEGN8+6xZykj1U1w5Q7NlyRFXUq7pjlLW6cUZ
+         87uBANEcAGFMu9/PgIlFq4KANpGMSrWAc9UfOPYGDGzKJOxU/Om5Nh7mzHEeVA+XqgMY
+         PoFumuv6fGNgqXJuaCDjsBeJ9jKlGXjjGyUhWj6pAl3HlsPNduJ8Z5o6hFXNDXBlXO5h
+         n43Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWHr5B5FxOp8Va5VA1qdezFYU42ufAZzaj8RiZ6+cH6RWgif80VEdKaI48QQgQ7TJZtvf731Jvg9AF5tcADT5Pg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXbcrUhFiB5rq6SVKI0SBWjhGuYhpECS7ZSwRl3/resmGYefVr
+	FAEe5F/OA2LKjIjxr2pOWd6V9//FwYevVBTN8+NRY7yOduGpP6U0MIku0gIfs74Ik8QvfXu2Olj
+	JcQ==
+X-Google-Smtp-Source: AGHT+IHX5qUfJaeakQrn3oXg8HX3xosiOB+02t7Xb8qpc65w1pTX+0PNjU+WzpQgPNL3xlQlXCZYy1OCKTA=
+X-Received: from pfay10.prod.google.com ([2002:a05:6a00:180a:b0:730:7bad:2008])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1acb:b0:72a:bcc2:eefb
+ with SMTP id d2e1a72fcca58-7329de4ee2bmr7801608b3a.2.1740001453578; Wed, 19
+ Feb 2025 13:44:13 -0800 (PST)
+Date: Wed, 19 Feb 2025 13:39:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250213220341.3215660-1-samuel.holland@sifive.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250219214400.3317548-1-ctshao@google.com>
+Subject: [PATCH v6 0/4] Tracing contention lock owner call stack
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+For perf lock contention, the current owner tracking (-o option) only
+works with per-thread mode (-t option). Enabling call stack mode for
+owner can be useful for diagnosing why a system running slow in
+lock contention.
 
-On Wed, Feb 12, 2025 at 05:21:33PM -0800, Samuel Holland wrote:
-> This series updates the PMU event JSON files to add support for newer
-> SiFive CPUs, including those used in the HiFive Premier P550 board.
-> Since most changes are incremental, symbolic links are used when a set
-> of events is unchanged from the previous CPU series.
-> 
-> I originally sent this series about a year ago[1], but received no
-> feedback. The P550 board is now available (and I have tested this series
-> on it), so it would be good to get perf support for it upstream.
-> 
-> [1]: https://lore.kernel.org/linux-perf-users/20240509021531.680920-1-samuel.holland@sifive.com/
-> 
-> 
-> Eric Lin (5):
->   perf vendor events riscv: Update SiFive Bullet events
->   perf vendor events riscv: Add SiFive Bullet version 0x07 events
->   perf vendor events riscv: Add SiFive Bullet version 0x0d events
->   perf vendor events riscv: Add SiFive P550 events
->   perf vendor events riscv: Add SiFive P650 events
-> 
-> Samuel Holland (2):
->   perf vendor events riscv: Rename U74 to Bullet
->   perf vendor events riscv: Remove leading zeroes
+Example output:
+  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex -E16 perf bench sched pipe
+   ...
+   contended   total wait     max wait     avg wait         type   caller
 
-It'd be nice if anyone in the RISC-V community can review this.
+         171      1.55 ms     20.26 us      9.06 us        mutex   pipe_read+0x57
+                          0xffffffffac6318e7  pipe_read+0x57
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+          36    193.71 us     15.27 us      5.38 us        mutex   pipe_write+0x50
+                          0xffffffffac631ee0  pipe_write+0x50
+                          0xffffffffac6241db  vfs_write+0x3bb
+                          0xffffffffac6244ab  ksys_write+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           4     51.22 us     16.47 us     12.80 us        mutex   do_epoll_wait+0x24d
+                          0xffffffffac691f0d  do_epoll_wait+0x24d
+                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
+                          0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           2     20.88 us     11.95 us     10.44 us        mutex   do_epoll_wait+0x24d
+                          0xffffffffac691f0d  do_epoll_wait+0x24d
+                          0xffffffffac693943  __x64_sys_epoll_wait+0x73
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           1      7.33 us      7.33 us      7.33 us        mutex   do_epoll_ctl+0x6c1
+                          0xffffffffac692e01  do_epoll_ctl+0x6c1
+                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           1      6.64 us      6.64 us      6.64 us        mutex   do_epoll_ctl+0x3d4
+                          0xffffffffac692b14  do_epoll_ctl+0x3d4
+                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
 
-Thanks,
-Namhyung
+  === owner stack trace ===
 
-> 
->  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  6 +-
->  .../cycle-and-instruction-count.json          | 12 +++
->  .../arch/riscv/sifive/bullet-07/firmware.json |  1 +
->  .../riscv/sifive/bullet-07/instruction.json   |  1 +
->  .../arch/riscv/sifive/bullet-07/memory.json   |  1 +
->  .../riscv/sifive/bullet-07/microarch.json     | 62 +++++++++++++
->  .../riscv/sifive/bullet-07/watchpoint.json    | 42 +++++++++
->  .../cycle-and-instruction-count.json          |  1 +
->  .../arch/riscv/sifive/bullet-0d/firmware.json |  1 +
->  .../riscv/sifive/bullet-0d/instruction.json   |  1 +
->  .../arch/riscv/sifive/bullet-0d/memory.json   |  1 +
->  .../riscv/sifive/bullet-0d/microarch.json     | 72 +++++++++++++++
->  .../riscv/sifive/bullet-0d/watchpoint.json    |  1 +
->  .../sifive/{u74 => bullet}/firmware.json      |  0
->  .../arch/riscv/sifive/bullet/instruction.json | 92 +++++++++++++++++++
->  .../arch/riscv/sifive/bullet/memory.json      | 32 +++++++
->  .../arch/riscv/sifive/bullet/microarch.json   | 57 ++++++++++++
->  .../arch/riscv/sifive/p550/firmware.json      |  1 +
->  .../arch/riscv/sifive/p550/instruction.json   |  1 +
->  .../arch/riscv/sifive/p550/memory.json        | 47 ++++++++++
->  .../arch/riscv/sifive/p550/microarch.json     |  1 +
->  .../p650/cycle-and-instruction-count.json     |  1 +
->  .../arch/riscv/sifive/p650/firmware.json      |  1 +
->  .../arch/riscv/sifive/p650/instruction.json   |  1 +
->  .../arch/riscv/sifive/p650/memory.json        | 57 ++++++++++++
->  .../arch/riscv/sifive/p650/microarch.json     | 62 +++++++++++++
->  .../arch/riscv/sifive/p650/watchpoint.json    |  1 +
->  .../arch/riscv/sifive/u74/instructions.json   | 92 -------------------
->  .../arch/riscv/sifive/u74/memory.json         | 32 -------
->  .../arch/riscv/sifive/u74/microarch.json      | 57 ------------
->  30 files changed, 555 insertions(+), 182 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/cycle-and-instruction-count.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/firmware.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/instruction.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/microarch.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/watchpoint.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/cycle-and-instruction-count.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/firmware.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/instruction.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/microarch.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/watchpoint.json
->  rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/firmware.json (100%)
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/firmware.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/instruction.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p550/memory.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/microarch.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
->  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
->  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
->  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
->  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-> 
-> -- 
-> 2.47.0
-> 
+           3     31.24 us     15.27 us     10.41 us        mutex   pipe_read+0x348
+                          0xffffffffac631bd8  pipe_read+0x348
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+  ...
+
+v6:
+  Free allocated memory in error patch.
+  Add description in man page.
+
+v5: lore.kernel.org/20250212222859.2086080-1-ctshao@google.com
+  Move duplicated code into function.
+  Remove code to retrieve undesired callstack at the end of `contention_end()`.
+  Other minor fix based on Namhyung's review.
+
+v4: lore.kernel.org/20250130052510.860318-1-ctshao@google.com
+  Use `__sync_fetch_and_add()` to generate owner stackid automatically.
+  Use `__sync_fetch_and_add(..., -1)` to workaround compiler error from
+    `__sync_fetch_and_sub()`
+  Remove unnecessary include headers.
+  Dedicate on C-style comment.
+  Other minor fix based on Namhyung's review.
+
+v3: lore.kernel.org/20250129001905.619859-1-ctshao@google.com
+  Rename/shorten multiple variables.
+  Implement owner stackid.
+  Add description for lock function return code in `contention_end()`.
+  Other minor fix based on Namhyung's review.
+
+v2: lore.kernel.org/20250113052220.2105645-1-ctshao@google.com
+  Fix logic deficit in v1 patch 2/4.
+
+v1: lore.kernel.org/20250110051346.1507178-1-ctshao@google.com
+
+Chun-Tse Shao (4):
+  perf lock: Add bpf maps for owner stack tracing
+  perf lock: Retrieve owner callstack in bpf program
+  perf lock: Make rb_tree helper functions generic
+  perf lock: Report owner stack in usermode
+
+ tools/perf/Documentation/perf-lock.txt        |   6 +-
+ tools/perf/builtin-lock.c                     |  56 +++-
+ tools/perf/util/bpf_lock_contention.c         |  72 ++++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 251 +++++++++++++++++-
+ tools/perf/util/bpf_skel/lock_data.h          |   7 +
+ tools/perf/util/lock-contention.h             |   7 +
+ 6 files changed, 372 insertions(+), 27 deletions(-)
+
+--
+2.48.1.601.g30ceb7b040-goog
+
