@@ -1,214 +1,231 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA4133E1;
-	Wed, 19 Feb 2025 01:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739929825; cv=none; b=EVDz30Wu+GiIDj5+WsLZXGDHIDEzaKevtrg8SKFBHtD68rdjnuqoKlyBAUMBjJQ3EXpaKP16xvplaeF4YDNuVH1IwqNsL3dfQGZuG9FtYZydflbI+J1z+fuXBh9lPy7RPYmWigDYs6ln45CQtXKh7BzEYTPqFEWUP4P2wLFYo6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739929825; c=relaxed/simple;
-	bh=zqn9BhmZw8+2QxMzxqHl0XsOAzkp+wtATKqzfFzhVpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T39CLrs7JtrJNImPFSQKpKijcv3ZLB4+Eyd6WYfHXm6Vp4O4v9AWsqUHH46WHUS+TWGF8uxarahYwZTLIIYXchEvH+r+BVFXGaDSiapSmgS3ivmjZODSEh7rj83OyIybJ1a+y0H34PtXlRtXzFFp1lwzl2eUDjIz909jgcA5rN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=l7pkaMHh; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0351BD9CB;
+	Wed, 19 Feb 2025 05:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739944792; cv=fail; b=lyiXhFhV1TlUsNO5nZoofh31gNKAjN/PPtzvJK+G4VRFlG9FNpbc5y1MRhCvZ0T0VlEQWDHjZU6XEURYUpynIAhSFlZUVpnh0yWgJRAhdzK4hbWyO/JfDC/7lHl8C9MdfFeT2yIF8Pnya8Rldqt5ST1mChMHk9097HSR45q71oI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739944792; c=relaxed/simple;
+	bh=Bxq7DX6O9ErAaHrKA/dpNs82XYAd1upXDBCCcDAyTBE=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=aGmKF9ZObH17N3NdGMc+VGg2xOEbDJpMWKQJZimmYMU5WuMMZI2MvNXD+nQuqtyuDoyV8HWcgCL9y6iPwJj2z/eBxP6wjt6d4PGtWbdLUe0tygHaG+RMt3wE5cI7/yObgiY9sfoxV5nlkAr0uedIm1QzIJDOJlEVxcdtl5VAXDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N1Izf1Ey; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="l7pkaMHh"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739929818; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=YA89qf4ISGMYbsVhcaULCxJhr4eNuObggSJrT8RDrw8=;
-	b=l7pkaMHhKkGUPM2vlaOcOpX6ncbP8mY0gROC0IuJjGR2PUS8PMgIDigqmSMbTrPy3zVsdKEPYQrAZmYpB7Gryrd4yb10ZLvVdssIPkpr5fd5Hmlc1U8Y29xKi2A/FU6XcKLOO7atR2oI7dVnrDvDGEBYeBwUFhH2ApOFwIpqloQ=
-Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WPnKkM2_1739929817 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Feb 2025 09:50:17 +0800
-Date: Wed, 19 Feb 2025 09:50:15 +0800
-From: YinFengwei <fengwei_yin@linux.alibaba.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: will@kernel.org, mark.rutland@arm.com, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jie.li.linux@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH] perf/arm-cmn: don't claim resource during ioremap() for
- CMN700 with ACPI
-Message-ID: <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
-References: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
- <d5040b5c-564d-4abf-be22-d2aa1183b633@arm.com>
- <hfip42i45jkumuvgdthxm2bk6qylqyqh6erzaq43yiqygvn6uu@dcui675lwtkm>
- <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1Izf1Ey"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739944791; x=1771480791;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Bxq7DX6O9ErAaHrKA/dpNs82XYAd1upXDBCCcDAyTBE=;
+  b=N1Izf1Ey87oJkmYhs9FQqJCANa/omPNLFF/9Wo/OodUthtYPS6K5hrgn
+   DCZNNzHUB6hVRVt5/nk0SMkk+uk38lrrSTIsvI/XJXVCOrlSOsYO3t7Yl
+   kTi+Iv+lB3vlvBpA7rfE2EcIhkUqq9M1quF92EiyXWkNNDu42jATgY2J8
+   mUgrux6WRKxALhA+ngd/xQPo0fGh9HSPKX9enqvf4hT7Kd9ky51QcETME
+   roTPx1NhQ6hqPXiVXVHwil4Dn4rov9L6PBw0JeIOy/8RxNLTkRZ5Bji3u
+   DVIBeQ9OxCG5U/w8eZw9MmU17urM8md43a0fsL8suEe7RfhIKeB6S2SPi
+   Q==;
+X-CSE-ConnectionGUID: tbFyM1yEQ5GlEjIEWkZoPA==
+X-CSE-MsgGUID: RqM5Hr6TTWaNJe2Hwb94pA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40925240"
+X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
+   d="scan'208";a="40925240"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 21:59:50 -0800
+X-CSE-ConnectionGUID: VMIh5i6ZR9Kcrw0BEZd+uA==
+X-CSE-MsgGUID: DNPTyJDSQGiHLJsbPR1t9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
+   d="scan'208";a="119728570"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 21:59:50 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 18 Feb 2025 21:59:49 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 18 Feb 2025 21:59:49 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.45) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 18 Feb 2025 21:59:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=daeXXObgvTzAJ4tG8FxadsmBKXluE+80+YpK58dMMygxGTMoNylUqPlAjQ77k7hDAaEvHAHqrsgSzeX6Z3ymiOH+2aEhAlhJsQuDkxRmrD5EuOPYAJilIasRJ4wFOu6QcR503lLXZgF1ssCh63zdWhTLBUAHzezT3YR2TcAihcw1gaSLhJxh/ngU+K54CFBQ1+KFT/+y7BdWQc9l4Fy0VnzopGQIskH7E/htFMC/FoJh0Mfieti9BFtEebyhNPF5Whf3B07wXHUcA0HlHe6qV+QcrBp3uTIvtP/xIe6X/0+Fy9fpb83RZhINXmxciOLOGwywBE4bfGOBGaIS+fkf5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nsaB2nTy1jkCDPf65Auur+Q3VR0EehE2KAqzR9n1Md8=;
+ b=Xw/9zPtsT7PNR+AbhVG0i1vIuHAFQNk1yt8fmXvQW5UK611gJ+urjfb20o1g3Nbn3ZnA7lUsBuriM40bgBKVVUFY/GquzDqQygm+BIharziZ8ZHLeDICXVjsHyO+rkptMOkNKdqn2Rwvfqjxmaj9oSPyjWssIp/ySBOevLFq93+yH9E3dX8c4q1NxK/GH/9yb5yBfamljfwyVdbbedHn7BkxGKKUT0EmRI5BttFvPPljT+wlvQXuevboGyMVZnL1yNbPqpXPGmBoIeDahonRO6ccmLeFlhQQdYE9muNKyx3Ft3nLSI1xS7xZ9l6+0wf+4B7MyQGCJshYGY8cPWFEVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by PH8PR11MB6778.namprd11.prod.outlook.com (2603:10b6:510:1c9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Wed, 19 Feb
+ 2025 05:59:41 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8445.019; Wed, 19 Feb 2025
+ 05:59:41 +0000
+Date: Wed, 19 Feb 2025 13:59:30 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <devel@driverdev.osuosl.org>,
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <oliver.sang@intel.com>
+Subject: [driver-core:pmu_bus] [perf/core]  8c8ac498a0:
+ sysfs:cannot_create_duplicate_filename
+Message-ID: <202502191352.b65c904c-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR04CA0207.apcprd04.prod.outlook.com
+ (2603:1096:4:187::9) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|PH8PR11MB6778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8bd618e2-ecf9-4bd4-13d4-08dd50aa99f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?IXBJdM8JoJssb7Um7fdOyhrYw3nZeNXjFxlI9wMCAozok8gp5zFN8ZjYolwd?=
+ =?us-ascii?Q?m4aHfgLH6Ggzq2jzJTD+KrZoh8i8Nx84Buvny1JcZKwQOJTaBgOOhNjJPLdA?=
+ =?us-ascii?Q?wZeqtSlzRu6wP0yokak8wZk6H73BnyeyPMJwS4VBsTOS9VREN3p2UOF3ZDAf?=
+ =?us-ascii?Q?jE4TxPPKI9WIf+y8RQBsUWaF1me6W/exsyod58bu8Cbd3C7WtL7uRjfcoNSn?=
+ =?us-ascii?Q?v63gyLSd0Oqjrb7pI/+tsvCLiwpHs9rWZ8oDS78wiCkx/SiVywglC+b2waJa?=
+ =?us-ascii?Q?Cuoz3VX1N3mZYrtvmKY+xBUTdFJ98eXgH+WSThEMLev1P+2n6NY0zBscfIOJ?=
+ =?us-ascii?Q?2gZqJW+bd9/6If3eg1Yl9JselCYpztv7phYcwYtwLJdNQbQd40E8EK/frek/?=
+ =?us-ascii?Q?XuZZyH+s4a+3tvqHriDGDlR9DjRdQtJ6gVjdT7bvto9mUbKgeaA2BXSe2k4V?=
+ =?us-ascii?Q?C1UrMiVIoeA+Vxc5Ur7GnKNfijC6x6xG0AdhnUjmHB5hlHIVD6v4OOUDSZT9?=
+ =?us-ascii?Q?EYAX7KzRoBAw8xHiU1bUnTwIUI6FvMRZ1nBz8pHf7ZIDoZALIdnRlxJE84IF?=
+ =?us-ascii?Q?cGBI045fr17pQDwRUTC4bcArFz50sst6eIwP5ZxLf/9LeTe4TLalJ7Blez8w?=
+ =?us-ascii?Q?/IFpbkQ5Bdy4Y/D/6ua0N+rjLlDeAeJKRKzOts6vBABXid6RB7Bsm0ZpaPao?=
+ =?us-ascii?Q?hbFqbHfVOUHEUQZokw2azg1MCp+7sHXXB/PR5ptci+jbHvNtz5ffMvw408/S?=
+ =?us-ascii?Q?2WprqXGCJEp8fc5K12yec6RTNx//XBD4xnZbTwr4zl4C+KosSpaMZLPst/GS?=
+ =?us-ascii?Q?i7t2dc5ssnUB9QwlG+4SvRZBNxYJHPoXjAFDkWniudp3ICAfLOoT0wN8WWR0?=
+ =?us-ascii?Q?gQG/qMDQTHfzbQLtTFeo0mzldbQjHrN5DUbLPcfvSxy8d35TpDotwIwaXUMX?=
+ =?us-ascii?Q?bS9zR98EVlBGXmclueiQm/IeMuGNvYqYoFHkc0vgjF0bxyZaUz8QtkA8oGLP?=
+ =?us-ascii?Q?BKegDVC4clOCyoWNgpXKuuZs2SjcMfaaWF/rmnTBR4M3jwFK0+mGlw1z0g7/?=
+ =?us-ascii?Q?aTz5wu2iVHSSFxJuEgbNC4W/L2BMHrvDf2AOxlW8+Q9qi7o4vp4KcARxafxw?=
+ =?us-ascii?Q?/bl82rA6ooGfbzeClPjWKeVPiY44M5xSQROKNp70hVFtZCyAV3iLr/h1Thz3?=
+ =?us-ascii?Q?Wa2EaJPPLIl7plWNFZobj0G6Qb8xZL8X+fiTArVH/f5N1YX4tsn0GafYRDH8?=
+ =?us-ascii?Q?4HWelixvUBjZyk4yrekgz3vV/+kJniPfcyQDhrtoHP0PNSN7Qjj6zc7Dt6xj?=
+ =?us-ascii?Q?jFKeMrIz5qoQDdMPrF+Ys0SOIc/M4Z6TZXY5ITXiRwt5YA=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?l3q+EH+KzT3vPrlFuDfd9iFu1JCmK6NTtdg0bVyaynlcJLQT/tlou+xAJ1+8?=
+ =?us-ascii?Q?NmctHM65Vqh98Lr4QzMhd8cXysPswsRyKgHhivEM6F2qGK2qcxiMPrhUTbRR?=
+ =?us-ascii?Q?vO+PDejlV/VSXrzwqKemyUnOfgbbWrCHIt685qpdw5OASY2XE99eZhilQvMd?=
+ =?us-ascii?Q?6GlM25X01r89fZppV5jdsGM4Msvf2Ym22ViDduRK4LBqhhyISHn3kbP+8qT9?=
+ =?us-ascii?Q?R35APpMlK2jv8wQIq4m5LvfTayxHesQEgkqJEFWnnvSSzzS65uO00+wj4Ldw?=
+ =?us-ascii?Q?ilq0mW9HGIlJqEzjZTlrh8eIuMOxEUHS81TwA44tSl0vJjfG/pvogF71QLjK?=
+ =?us-ascii?Q?BuYCalbzLAgMvL/cdLQGJ7EMSbAn5+e2Atbc6xOd3xQ/V0qyisopF43P2i2R?=
+ =?us-ascii?Q?8A4y5Nuvh93/kiNq5YuuwK5SX9rERFRa2hamtTXQQbEXQfuNGU3RAHcOxAIP?=
+ =?us-ascii?Q?41jBAtawvx/2AyvLMY7UJxUH4PMJcIzqGaB5FRQ3e+NLKdVqY7L24b+5ve1J?=
+ =?us-ascii?Q?qFIirc6H4ok5GZ0dgYmbLo5/6URj2VpNxZgHxNn2yyA3EXoP3/WPeAXzYFHk?=
+ =?us-ascii?Q?Tr6hk9YlBpNc/YEMGY0U4ai1b6l3LmXVXdket93kibOpvV9zDUWSwiU7AdJR?=
+ =?us-ascii?Q?v0W/irFYdxgLkQR7cltHOWJd0MvZB21hwVnEIuvUp0ED/lHwglTOs4CXHIrL?=
+ =?us-ascii?Q?X7ebDUwrozP7mX0q7YIOUbVLdRWmv0uwRta3AzUHfMVbv0DFqepW1nNhn278?=
+ =?us-ascii?Q?R8LZD+2HJ/D+x8c8rGYuS8+zynAvJldBct6hmXpS2rYtZ9NzsFZf4Jy/dK4D?=
+ =?us-ascii?Q?k8Lmto7zky2AlmO1EoVqxtSCIthVUvAJh3VRfbjvlWiSMVidjhj5gEI9Kr0B?=
+ =?us-ascii?Q?j85XKTtHoQJsCl08QgA5K/IDdZIclgmIka/SHM+5gOExFaKSstsylTa0bnzw?=
+ =?us-ascii?Q?E4gnArX3tBKw97vjkGm1RG7m4AMf47xIuTC3z1sj3W/Qi+1z9j9ck1clr5jP?=
+ =?us-ascii?Q?RrkLN6wsNoLwU5+VzE1yuCTTuFEg7wEzSaP8CtWcY4SbXGXzuui6SVXlhJ29?=
+ =?us-ascii?Q?vVJvXmCw2KzERjbcB+hLx9SY5tWT5etJLGzjuYUJ+OcQQNJUyCBOmoTnbu1H?=
+ =?us-ascii?Q?nfkSKfRNmbMLwBpW8Mly0W3mMAgFrkJg+TU05i+QdwzAgoYLhBbmXzkHWnR6?=
+ =?us-ascii?Q?WagsuVYNLc56YPsCTnwLY36wzWESui39Jly127gXH/dxPk1u3Y6vV5aZRyhu?=
+ =?us-ascii?Q?uiZGLcLNTfn7hMM5Rfxr6hcruK5XOocQhMrCkzpfRHEYGJWweUzeO5wIMtou?=
+ =?us-ascii?Q?LcKAtISNax+94sqxUxLGC9Wj5i7qzPKG5sZPY+60i9K5hl6GQb/jTYGDpi6q?=
+ =?us-ascii?Q?DaJHauDO441oeF2U/vEVKx5e/5Iz8uL4/feDVFvEBZKzX6TuIi+NmfXLFn3h?=
+ =?us-ascii?Q?YVb7nqNyLVavm1cVi9olQBXSbaXVcgsIzRyMAcWlT4BZqYBkObyDn7HKTVci?=
+ =?us-ascii?Q?A9XJiSuFQdrs9ILeQy6V9d3GxzPo8pbvQ64T/kYBr6xAMJMAJGDLJ18xODSX?=
+ =?us-ascii?Q?1RwHaeX7sDaim9jO99kyyJXd+iUAFty0u5N+ARGIQAG6NbZIAAz+dv3/E9vl?=
+ =?us-ascii?Q?+A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd618e2-ecf9-4bd4-13d4-08dd50aa99f9
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 05:59:41.5229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qMudu1hnRtzI487i9UYlM3Q6Yf9zVETBagFZMOXhzdE47s+vhXe2LhewJUDb/IL4G60QdrigrbJ6lTLnWUUWHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6778
+X-OriginatorOrg: intel.com
 
-Add Jing Zhang as we will continue discussion in this thread.
 
-On Tue, Feb 18, 2025 at 12:31:10PM +0800, Robin Murphy wrote:
-> On 2025-02-18 10:58 am, YinFengwei wrote:
-> > On Tue, Feb 18, 2025 at 10:31:42AM +0800, Robin Murphy wrote:
-> > > On 2025-02-18 1:21 am, Yin Fengwei wrote:
-> > > > Currently, arm-cmn PMU driver assumes ACPI claim resource
-> > > > for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
-> > > > failed because of resource claim failes when ioremap() is
-> > > > called:
-> > > > [   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
-> > > > [   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
-> > > > [   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
-> > > > [   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
-> > > > 
-> > > > Let CMN700 + ACPI do same as CMN600 + ACPI to allow CMN700
-> > > > work in ACPI env.
-> > > 
-> > > No, the CMN-600 routine is a special case for CMN-600 having two nested
-> > > memory resources of its own. CMN-700 and everything else only have one
-> > > memory resource, so that is not appropriate. What else is claiming the
-> > > region to cause a conflict?
-> > Sorry. Forgot the link for the new proposed fix:
-> > https://lore.kernel.org/all/Z7QYlUP6nfBNMXsv@U-V2QX163P-2032.local/
-> 
-> Yes, I saw that. It's a broken diff that won't even compile, with no
-> explanation of what it's supposed to be trying to achieve or why. I'm not
-> sure what you're asking me to comment on.
-My bad. I will attatch the full patch at the end of this mail.
 
-> 
-> > My understanding is that there are two problems here:
-> > 1. ACPI claim the memory range and that's why we see this -EBUSY error
-> >     with correct code path for CMN700 + ACPI table.
-> 
-> No, it's fine to claim the exact *same* range that the ACPI companion owns;
-> the identical requests just nest inside each other. I don't have a CMN-700
-> to hand but here's a selection of other drivers doing just that from
-> /proc/iomem on my system:
-> 
-> 12600000-12600fff : ARMH0011:00
->   12600000-12600fff : ARMH0011:00 ARMH0011:00
-> 12610000-12610fff : ARMH0011:01
->   12610000-12610fff : ARMH0011:01 ARMH0011:01
-> 126b0000-126b0fff : APMC0D0F:00
->   126b0000-126b0fff : APMC0D0F:00 APMC0D0F:00
-> 126f0000-126f0fff : APMC0D81:00
->   126f0000-126f0fff : APMC0D81:00 APMC0D81:00
-I believe this works only for parents/children resource node. Otherwise,
-there will be conflict.
+Hello,
 
-> 
-> And I know people are using the CMN-700 PMU on other ACPI systems without
-> issue, so there's nothing wrong with the binding or the driver in general.
-> 
-> The resource conflict only arises when a request overlaps an existing region
-> inexactly. Either your firmware is describing the CMN incorrectly, or some
-> other driver is claiming conflicting iomem regions for some reason.
-No. It's not ACPI table problem. The problem is mentioned in comments of
-function arm_cmn600_acpi_probe():
-        /*
-         * Note that devm_ioremap_resource() is dumb and won't let the platform
-         * device claim cfg when the ACPI companion device has already claimed
-         * root within it. But since they *are* already both claimed in the
-         * appropriate name, we don't really need to do it again here anyway.
-         */
+kernel test robot noticed "sysfs:cannot_create_duplicate_filename" on:
 
-So I suppose for ACPI env, we should use devm_ioremap() as cmn600 does.
-And make CMN700 handling follow spec exactly.
-> 
-> Thanks,
-> Robin.
+commit: 8c8ac498a0c5d8e68247800639bfb554bb65c782 ("perf/core: move all of the pmu devices into their own location")
+https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git pmu_bus
 
-Regards
-Yin, Fengwei
+in testcase: boot
 
-Full patch here (base commit is: 2408a807bfc3f738850ef5ad5e3fd59d66168996):
+config: x86_64-randconfig-071-20250217
+compiler: gcc-12
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
 
-From a542d42626ec1c92cbe546b3012b1a913df35360 Mon Sep 17 00:00:00 2001
-From: Yin Fengwei <fengwei_yin@linux.alibaba.com>
-Date: Mon, 17 Feb 2025 15:48:24 +0800
-Subject: [PATCH 1/2] perf/arm-cmn: don't claim resource during ioremap() for
- CMN700 with ACPI
+(please refer to attached dmesg/kmsg for entire log/backtrace)
 
-Currently, arm-cmn PMU driver assumes ACPI claim resource
-for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
-failed because of resource claim failes when function
-devm_platform_ioremap_resource(pdev, 0) is called:
 
-[   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
-[   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
-[   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
-[   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
++--------------------------------------------------------+------------+------------+
+|                                                        | 5c96041392 | 8c8ac498a0 |
++--------------------------------------------------------+------------+------------+
+| sysfs:cannot_create_duplicate_filename                 | 0          | 6          |
+| WARNING:at_kernel/events/core.c:#perf_event_sysfs_init | 0          | 6          |
+| RIP:perf_event_sysfs_init                              | 0          | 6          |
++--------------------------------------------------------+------------+------------+
 
-Let all ACPI cases call devm_ioremap(cmn->dev, cfg) just
-like current CMN600 does.
 
-Signed-off-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
----
- drivers/perf/arm-cmn.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202502191352.b65c904c-lkp@intel.com
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index ef959e66db7c..5993a46c5560 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -2510,20 +2510,26 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	return 0;
- }
- 
--static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
-+static int arm_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
- {
--	struct resource *cfg, *root;
-+	struct resource *cfg, *root = NULL;
- 
- 	cfg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!cfg)
- 		return -EINVAL;
- 
--	root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	if (!root)
--		return -EINVAL;
-+	if (cmn->part == PART_CMN600) {
-+		/* Per "ACPI for Arm Components" Table 16, CMN600 has
-+		 * nested root node memory range.
-+		 */
-+		root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		if (!root)
-+			return -EINVAL;
-+
-+		if (!resource_contains(cfg, root))
-+			swap(cfg, root);
-+	}
- 
--	if (!resource_contains(cfg, root))
--		swap(cfg, root);
- 	/*
- 	 * Note that devm_ioremap_resource() is dumb and won't let the platform
- 	 * device claim cfg when the ACPI companion device has already claimed
-@@ -2534,7 +2540,7 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
- 	if (!cmn->base)
- 		return -ENOMEM;
- 
--	return root->start - cfg->start;
-+	return root ? (root->start - cfg->start) : 0;
- }
- 
- static int arm_cmn600_of_probe(struct device_node *np)
-@@ -2559,9 +2565,9 @@ static int arm_cmn_probe(struct platform_device *pdev)
- 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
- 	platform_set_drvdata(pdev, cmn);
- 
--	if (cmn->part == PART_CMN600 && has_acpi_companion(cmn->dev)) {
--		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
--	} else {
-+	if (has_acpi_companion(cmn->dev))
-+		rootnode = arm_acpi_probe(pdev, cmn);
-+	else {
- 		rootnode = 0;
- 		cmn->base = devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(cmn->base))
+
+[    9.537939][    T1] RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl timer
+[    9.539489][    T1] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x2c9477ac655, max_idle_ns: 440795235027 ns
+[    9.555343][    T1] AVX2 or AES-NI instructions are not detected.
+[    9.557309][    T1] AES CTR mode by8 optimization enabled
+[    9.558531][    T1] sm3_avx_x86_64: BMI2 instruction are not detected.
+[    9.574389][    T1] sysfs: cannot create duplicate filename '/devices/pmu_bus/power'
+[    9.575589][    T1] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc1-00002-g8c8ac498a0c5 #1 95963aaeb84018cf4204d4190168e0e20d73ea75
+[    9.575599][    T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[    9.575602][    T1] Call Trace:
+[    9.575604][    T1]  <TASK>
+[ 9.575608][ T1] dump_stack_lvl (kbuild/src/consumer/lib/dump_stack.c:123) 
+[ 9.575629][ T1] sysfs_warn_dup (kbuild/src/consumer/fs/sysfs/dir.c:32) 
+[ 9.575636][ T1] sysfs_create_dir_ns (kbuild/src/consumer/fs/sysfs/dir.c:63) 
+[ 9.575641][ T1] ? __pfx_sysfs_create_dir_ns (kbuild/src/consumer/fs/sysfs/dir.c:41) 
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250219/202502191352.b65c904c-lkp@intel.com
+
+
+
 -- 
-2.43.5
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
