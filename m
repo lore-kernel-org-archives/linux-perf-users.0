@@ -1,400 +1,321 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2066.outbound.protection.outlook.com [40.107.102.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377391EA7DA;
-	Wed, 19 Feb 2025 14:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739976468; cv=none; b=K9fz/ugrxw74rpzrvV8d5h3Al/hsExALLCWmXZIUuVf6mU2kMA+DkwT40Kep1U02g7hvsyJ45Hmlb42CKFYasL0SkNT/6Nd0VsCTMxt7X5b2wrGMChQm3UiUtttMZk6dYMRxKZ3YX3doM7R/uEGcGlJadyyqhTl8kB26pxM6zR8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739976468; c=relaxed/simple;
-	bh=joEOF2wWeEjzxDI0b9i6oilQjPKxJJsBuH2yBbEaBmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiFdrJBsNu3OdYSpCR0z3c8XQbxnAH/HuzdilPIBkTcG8NTC42T3QeSQ59PSOq5h/9AYE72RH9HpXpeOayMOPvK/jMFLHXF+EzkXHKmH4fk4WLd0EUgVKEOUMp7LUQkW0CoySC3TrisvzHE6T7jpVysovo0PtVYBVJMIPzOzoIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YV/XmDuA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA9E1F3BBB;
+	Wed, 19 Feb 2025 15:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739977556; cv=fail; b=LNICMc0RfHU0nRH9Wpdeypy8HGJXcFSurx16IcviInI1ASxtnb2rJTEVSEEZ3MbNheSjksF3ddYag/JUP8IkELc50t4kr8Am89Z3M6UAyWrhl+3ckKUW024mYfSLH4fUyT6PiVQcKFu/HEYFVKrp5oXsZ5BO9x+wT51dRZRQTDA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739977556; c=relaxed/simple;
+	bh=6tV2Fnr8hRB5oyPLcltcpH6wnEo7heKapHqoi3wauFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OPwa08XkWFmbKY776i20XvEpNy1bVbtNTurfHKnyrnb5+Lna/Ov3HtgDDEhdUgVgd5xAJNtdHWU5RtQtL5dK7o0d4OILnFukunXwtu4MJLZxt6hmHFHW4/iWyjGF2lbzcy0rCivPvbkF0awjKW5RHjnUxpjcJg2dJUO9Cjciq2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fj9DPHjt; arc=fail smtp.client-ip=40.107.102.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YV/XmDuA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524F2C4CED6;
-	Wed, 19 Feb 2025 14:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739976467;
-	bh=joEOF2wWeEjzxDI0b9i6oilQjPKxJJsBuH2yBbEaBmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YV/XmDuApIdajTtGPDwg71AdOqq6SYLVSrycHfjLEfDLPkVwfJsWlzRVqfys9Wqx6
-	 RAUvKr6yEoRbM1A3Rwu47dhex7qDytvQA+682S/z5ByHjL1zZNgOd79E9XwsxwB4Wk
-	 egge43Mf0mREf5IilHAaefLWwXWnmYeSLzwD3zGcK8yTinoaPU/MJrHN0ZJyHhkwZp
-	 6fTzT1UxoI5RDtT1ZA/DQ47f3KyDKQ/2V9qCYBtYGUytFiv5iYbmOWdIdyBENb6UJp
-	 OyrYxHIIJ0s0w453QItd/A3Oa0WPnx1+wKU+F9TKxcrKAhe+Z82j291FQMdRw9UgOb
-	 uI9Is/GCvPSKA==
-Date: Wed, 19 Feb 2025 15:47:44 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fj9DPHjt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cKAsFn867LSBUrRDJRgLFFcPuio7g1kVjax6/5B3BxnD0mNuzin6h5zIkyj+1kkBfP20/PYEZl78XAAuVXtV/8JhTTv8Ye2FTDBOcX1At7bF/CKblzCwCvqUdClYox/JR/+k9mfHJTS9zIwl5GGUkPkRIfW8dQODkLBuMPM2JL/BkhGOcyy5ZWRkr2+bH2sAKpYZi2qXMLICJhcYOFmtzJQ6JrPLhB8kXWtWoJViYO/+2fm1xH9xaSt37BuzaPrOXw+6uDkpQmTeaRhbjSW+Xr7KiVGPhF4a9NkeMh79IS4/u8HisN5cyzQFHYZUHvaAKmBPHw+Sm8NL7oglePKu8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A1iOID2bcXBamzPTPoVujjbZLDwoclMiI2auzlDjDSo=;
+ b=I85RKatiZQHPpuolBakFVS11n8M3WGNuWjC+VksaKcPWHqrkYJM8oeL4MqgHhIyrYgvTmAjGfFcV8lSgBNvC70BFUwH5lD///njvN8vD4fqauGvGJl2zSNQH++yWxug118rdBLMHz2v0DbKyvPqu574bdY6d4oA4TfsAR6bCWfWL+QXrccxYu/1PSDASPA8Zj/lC19a7vTnImjdxHU5WmmjtwWSIEzrOuKzrDYS7Dz79SaIJ7joZBJI0XNc+5/6FzY63RRzsWPLNGWSiEkKaQxK6ohMTm3oRjCw+zqJ5wNct5jWFZMWP1tS1YxkHFNpsfU8P3A+QoRBpPx03gvbUDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A1iOID2bcXBamzPTPoVujjbZLDwoclMiI2auzlDjDSo=;
+ b=Fj9DPHjtaPs3OTzO7PDyEwIr0fW8Gz9vCl1el9BDTe4MuD2iQ/7s2ibQICNGHSs09onYv1adA2uEnZ9LwXDupyWfUm7FAqLlZ8L/DVr8nBNyrzfX/9apfbw3PBgxKhAIvecBFLDQc4o4vm0dr9nDpgVpjSlaPZUw2OvPjFwvzlP6F6DD6No/P64jZTWnYkvNCoGWGwHvPDIdn13+8OFpb9WfS+ZfxneL+1k8L9L+S/5yGitdkFCRhfxa/7kfhRcUZ+ZYBFK6rOvOxI8u+N7KtMVNe9Ym20kF9X5iC2DlKWQsFNZljEd+vHtQR0P9Bj0IhMVbZQeCOJjgTRDx7hvzIg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by IA1PR12MB9029.namprd12.prod.outlook.com (2603:10b6:208:3f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Wed, 19 Feb
+ 2025 15:05:50 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%5]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
+ 15:05:50 +0000
+Date: Wed, 19 Feb 2025 10:05:47 -0500
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z7XvEFEZtCRZKG7Y@x1>
-References: <20250206000137.2026034-1-namhyung@kernel.org>
- <Z60NFEAf2C8cL8Xh@x1>
- <Z60Ndm8VVI4Ao31U@x1>
- <CAP-5=fXw09MM5XyozJMM3FjMANJei1aNVmBghSEQFiCKAtJmXw@mail.gmail.com>
- <CAP-5=fUqcykMdApHVweETg9bp2EVPJhJOj_PR8cByOOA6OyQGw@mail.gmail.com>
- <Z6_CL0RpUUvw0lR7@x1>
- <Z7TvZGjVix2asYWI@x1>
- <Z7T1LVSLo8EEMmkM@x1>
- <Z7UDlZKnqXRqNqQa@google.com>
- <Z7XsltyqUWrdKma0@x1>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+Message-ID: <20250219145302.GA480110@joelnvbox>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmhzfjpfkky.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmhzfjpfkky.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+X-ClientProxiedBy: MN2PR18CA0005.namprd18.prod.outlook.com
+ (2603:10b6:208:23c::10) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7XsltyqUWrdKma0@x1>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|IA1PR12MB9029:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c25bda2-da56-4557-f687-08dd50f6e56c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NkhIL1FkR2JpVzRHUFVNR1R2VzhJRGMwTW1xdlRCU0JVMk4rZ091MnNnQjZ4?=
+ =?utf-8?B?NXdkclVldTdJY1NjTnBjYUNDOG1MUjF3em8vR0lOcFJsWTFGL0xhS1BqbDVY?=
+ =?utf-8?B?S0xTdERaaFFGekFheFN5YjRrU2Z5ZURTSXBmRXcyK0tpTUxvaTBDNmk1Sjh1?=
+ =?utf-8?B?WjdIalJ1cURXYlBwMzM2V2k4SG5JRG9uT0M4bjdBMlJna0J3S2JCWVFmYW9V?=
+ =?utf-8?B?V1Joa1JHUEJ0eFJvdjRJenlPbVRDNFRDajF4SFMxRWNOVEljeFA1RVgvVHpR?=
+ =?utf-8?B?K0xFMVExdHZXKzk3bFFBTkk1OVo2TzRQUm42S3BiU3ZJK0pBNDRaRlEzbVBm?=
+ =?utf-8?B?Z3B3NmtTbk5LaHpkMDNuRnMxRjIzRFl6OFVkT1lsSG1aQnRVcHJUVWdXSXlU?=
+ =?utf-8?B?TDFmZTczTmlVTndTQ2I5WnhMdklDbU5FcFZscmNVMXhqcUUvcU5RRm9ENmxL?=
+ =?utf-8?B?ck0zeHZLcUIyMERLUFNaQWd4UTVmWHorc3FzNFl3dGl1ZjEwWjRBclozcGlB?=
+ =?utf-8?B?NDVtTTcxeGhWUDNtTnZrTE5JVjJpSXpxVko2c2IwcVR1eUV3MG1zb3Byb3hV?=
+ =?utf-8?B?Ynk3a3gzZWcwS2oyVitMVWdRVS8xMU1mcUtkUlVTbXk2QktyVm9GV01DU0VS?=
+ =?utf-8?B?K1MyUkhHR0FQaE5sV1RsUEhkeEpISnJ1T0xGRndxc3dkaTZDZFZRWGZkNmdO?=
+ =?utf-8?B?NXNxenNjLy9YdjJTa05ITThxVkdReGUrdHhOdkZOTjZLWXJHNmE2Z3N1VXJ1?=
+ =?utf-8?B?bmhUUGpzR3dsaVB3a3NQMWp6MCtnTFdjM3c0OUN3ZllHekpFMkl6RHh6STE4?=
+ =?utf-8?B?ZjdOTGE0Mjk1RHdHLzNZM245VDlScFd4WkZKYW5VQ2x3dlg5WGNwNTExTDd3?=
+ =?utf-8?B?ZUU0VmlZYXo5dUNOMjMzUDlRR25EbVEyMnhJQlhLR201emphN0hab0xGSStN?=
+ =?utf-8?B?ZHEwOVVzQVB1UjQwTTE3QkRqUDg4RU9LOEgwZkZ0VUR2LzRMNHB6anhDNldB?=
+ =?utf-8?B?QTFkWUVudFhHcE9lZlFGS0JXdHZnUGtuNC8rRHFkSExJdHpXbzZIMUNxcDVq?=
+ =?utf-8?B?ZGl3bVh0cDVKRzl0QnZyZENZM2xuNmJxSVFXT0lDdzRScW8vWjlEblp3RERI?=
+ =?utf-8?B?ZU9hZ0EwZDFlNFk5K0xvalVQMFo3OWtGcmNyVG04dFE2MEltbU5qNUtsMDBy?=
+ =?utf-8?B?OTY2NUZKWkFxZXBvT3YxTWw3a2o2R3ExL2l3VFlYZjdHT1BQeThJdElicHcx?=
+ =?utf-8?B?dlphMDNCVGtnQ1FKbjFkRHJEdFlEQWtQV2lzbVZMbVpGWmsyaDVzVlVteVYv?=
+ =?utf-8?B?RnhXc3JQdjc5MWJGWDlUSzRMQXcyYklEQnh2YkxkNGtVVFdhTnkzVU44OGNk?=
+ =?utf-8?B?dXMvNHZBdjI5bFBjb1RYemJCMmFvT1NrWFl3YThnU2VwZG10TFM1ZFdTZ0lj?=
+ =?utf-8?B?VXlLK1dNUXh4YzE1TTZnbi9jQ1JxUEhHbzViblBtblJxRWpHcEMyMzNacmFl?=
+ =?utf-8?B?TmVOdVlpMlpjbndPY0hqNkJaV20xaU9wazRqM21hZWlUUXM0TE9XU2twQm4v?=
+ =?utf-8?B?aWFzWnhkZS9ITTNETkVtQUQ3ZlJFdm43RU9OYlRGaTJJTWorVHZTR3Q0YUlK?=
+ =?utf-8?B?dUlyOVFyN2ZOSTZKeHdWUnUyU2w3alI0ZkdKdTJkcG5FTjJpTkJwVTlVWE1L?=
+ =?utf-8?B?VDlyTU5JSXdIZFJDa1JMWTYvRkFGZkUwb1ZXQWs2bkRTaWpScVB6RjltdnFD?=
+ =?utf-8?B?TDJBMktqM2tnRjRJekxNL2FIUW5SUDVEZkQvQ29qSnR3amppbzNZVG9FanFi?=
+ =?utf-8?B?OEI5Z24rSTN1dll0ZTJZWFc4Wk03eUd4by9KR2VEci9Nci9NRWdzTk1xZmpW?=
+ =?utf-8?Q?DKrgDoGj60ipC?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dG5QQjRJRTdQMXJBS3BQOUNjU21LdWw5SzdyRFlQakRERlFib3JuclBOOERN?=
+ =?utf-8?B?UWc3U0VTUFlLVVFGMFFGUEpyWWlRZTlUc0xieDAwbHYrblkvTys1dnVCZ0l1?=
+ =?utf-8?B?Y1pnWUI3Q0pSY1ZaL1htNThQekg2UCtTMEhTZ0MvWjliYlRtVXVPejRybnd3?=
+ =?utf-8?B?Q1RRdi9aV0ZxVjMwdUdVWEZ1ajFYak9ZdFlINU12WDFqN043SXhtSFFnVVpo?=
+ =?utf-8?B?NWNXeXJwSWd4RkxsYlUxa3FtSVNZRkpjT0RjMmlyck9QVDI2ZnZaQ2hoMHEz?=
+ =?utf-8?B?OUVQNVBsTnk3VjFoUVp2bmszNjRSTWVxdVIxdlZNbE5QL1U3S09PaU5BaDRE?=
+ =?utf-8?B?RERBTjNJS25INVFYSGRhVzYvUHRBMlVVRHgwRU85QitiUjI0cTJ0RzN3eU9s?=
+ =?utf-8?B?Q2FkTDY1ZEtzRHIxRk9Bd2R1SUJzaW1uek10Tm1BcXlyamFYVW4zV05WMnVw?=
+ =?utf-8?B?YzZtTThnelZDTmwxSGgwOWt3dy8zcVl3NEhTQi9iV1NpK1hUdndObEsrT0lq?=
+ =?utf-8?B?Y0VjNXBuYU5tRU5LRnBhRkpVV25EQzlBL0FxdU5MeHVPRndQa05ZaUliTmN4?=
+ =?utf-8?B?QVkwdGswQkxZb0lxUHV5RGwxdXNUNTlGNjcyRTdER0x1TEN2TXF0aGNPTWJ6?=
+ =?utf-8?B?aWUzTjFjWGNBMEszeUVLQmdhZ3FVdm85amgxSGloZWVZRDd1WFZwNXhKMTdt?=
+ =?utf-8?B?SEp0S0wvcS9kb2cvdWVnKzVyUjk3N1dIaWUycVZjWU84Q3E0S00zYUZxWkNZ?=
+ =?utf-8?B?VC84UGlEdE1qTTZMQnUzWlJzbE5KTjlLL3cwWi8zUFAvNWFzb09HWjR0Yzln?=
+ =?utf-8?B?ZXM1Q2RwUmhmR2puUHpuTWI1WUV4NFh0VG1VSTBYZUg0ckcxeGljZll6d2tQ?=
+ =?utf-8?B?c0lEUkZRSFpSdWg3WEJZbm9XQndiZ0hIallnODFjVGxnQ3RHTTN5WGFmdmxX?=
+ =?utf-8?B?M1JhL28vV3NBYmk0TmhjMkZZQklYRW4vWWd4aC9YaktXUWxUQW83ME9MRkxn?=
+ =?utf-8?B?dDZ5a1JIVmUrOWZRNmd2VnFHY1h4KzRKKyszcmh3MElmbHpTYlpzQmZmZlRr?=
+ =?utf-8?B?QUgrS0NMN1Z6Q2RDV3NRWUwwWnQ0elZMQlVBWSt2VDE4RHBSM293TmtEdlNQ?=
+ =?utf-8?B?MVFnZldMVWJTMTNLY3FBZWRvM0NnQ3phSzlWM3U4dVlKZkNlU1o2Z0Fnc0JO?=
+ =?utf-8?B?ZjR3T3VNZ2ZTNHJUUkVaamNnRHhvU3VyRVM2ZitrRlIxV1hIbEpBUFptRUtU?=
+ =?utf-8?B?OWF5R0tPUEdZRWFuWGtOUEVmSUpUclVSV3lVMXpVdlpHVWhSeGdxRkd1RFMx?=
+ =?utf-8?B?VUgzUVZ5d3gwQlhPK2FTZmU5SUVCSi9EMXNkZGNaditxRzc0SER2SkEwRDEw?=
+ =?utf-8?B?RDVhWHlJUEtaNmp1eHlUVVNSZWllTmh5TGJYcm8wNU5ua3kya1dTL2V2Q3Nj?=
+ =?utf-8?B?YnorRUw5UmM4K3MrbEVJRTdhZGFoNkdtVmRwRlpDUmxrYnNTSVlXbStuOGVZ?=
+ =?utf-8?B?c0luRGpqYXdDRHozcW5wYlI0bkNYUXhUZnJrR0NHMzFWY3hjM3FidEtYQUJQ?=
+ =?utf-8?B?Ri9GV3pMQ3RsVUVZSmF4SGhGOHExMjY0ajRyaGs2MTBkQ0h0Nzc3QlNlVVhw?=
+ =?utf-8?B?UmdoYkd0U0RwNVBWeHZ3S3VaeWUwNDZxSkhmcUI4U2RDdVVGZHlKcXU0VGRy?=
+ =?utf-8?B?QzhlcVlCclJZU3RmU0lMV04wOVhUWVhvMDZtYXE5TGdoRUJlV245dERQNnFQ?=
+ =?utf-8?B?OE1XUk1CaWRhNHhzSllPNkxBRytSTE9hcmNCeXVTSGhvQjRhenJ2OGdFMU9C?=
+ =?utf-8?B?KytoQlpNUkg4RnhHZm4zOXh6MWNtTWw0T1ZlMUdFdnEwVXZ5WGtkUDFRS3pH?=
+ =?utf-8?B?clM4Z1hweG5lSGdhTnlhUUlzZEQzWWEvejlvOTliS0xtR2ppK3p6QWZsTE1O?=
+ =?utf-8?B?MFBCVEExTWRhbXRPNWFmM3JaazcxSFVSODFIc2N4Znl0UVZEbGkwQXBhdnZ3?=
+ =?utf-8?B?Zk9RMU8wdTZrbSsvOTlvajc0VmpTOGxwb1U3NzBTczV0QjlpYU1ia0hoaHNU?=
+ =?utf-8?B?QWJYT1M0MjZrMUpNYjFRR0ZBMWthYlhmcUNES1lwdEUvZkZSUUpjMjJhUUxC?=
+ =?utf-8?Q?f37H3uFx36Kce1SweEEnpii7O?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c25bda2-da56-4557-f687-08dd50f6e56c
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 15:05:49.9907
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vENyi1BqIDH2Vmt4z2lQDPuELFOWe5ymrHLk0eJ/9UyBz/j89j0TliQZuvZyk7Hk6bMN/M4gsP9X/jwzE3I/VQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9029
 
-On Wed, Feb 19, 2025 at 03:37:10PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Tue, Feb 18, 2025 at 02:03:01PM -0800, Namhyung Kim wrote:
-> > On Tue, Feb 18, 2025 at 10:01:33PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > On Tue, Feb 18, 2025 at 09:36:52PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > > So the call to maps_fixup_end() will set maps->end_broken to false,
-> > > > since it fixed up the map ends, etc, but then we insert more maps with
-> > > > broken ends:
-> > >  
-> > > > #6  0x0000000000633d52 in check_invariants (maps=0xf967c0) at util/maps.c:95
-> > > > 95						assert(map__end(prev) <= map__end(map));
-> > > > (gdb) p prev->dso->name
-> > > > $1 = 0xfc47ab "bpf_trampoline_6442522522"
-> > > 
-> > > So the above map is created overlapping a previously existing map:
-> > > 
-> > > root@number:~# perf probe -l
-> > >   probe_perf:maps_fixup_end (on maps__fixup_end:1@util/maps.c in /home/acme/bin/perf with maps)
-> > >   probe_perf:maps_insert (on maps__insert:1@util/maps.c in /home/acme/bin/perf with maps name start end)
-> > > root@number:~# 
-> > > 
-> > > root@number:~# perf trace --lib -e probe_perf:maps* perf record sleep
-> > > <SNIP>
-> > >    319.791 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_egress" start=0xffffffffc0160788 end=0xffffffffc01607c8)
-> > >    319.810 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01647b8 end=0xffffffffc01647f8)
-> > >    319.822 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_egress" start=0xffffffffc016482c end=0xffffffffc016486c)
-> > >    319.834 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01648ac end=0xffffffffc01648ec)
-> > >    319.845 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_prog_be31ae23198a0378_sd_devices" start=0xffffffffc0186388 end=0xffffffffc01864b2)
-> > >    319.857 perf/1732173 probe_perf:maps_insert((634e5e) maps=0x2d9715d0 name="bpf_trampoline_6442522522" start=0xffffffffc0147640 end=0xffffffffc0148640)
-> > > [ perf record: Captured and wrote 0.035 MB perf.data (7 samples) ]
-> > > perf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-> > > root@number:~# 
-> > > 
-> > > So a PERF_RECORD_KSYMBOL processing will add a map for
-> > > "bpf_trampoline_6442522522" that has its start after before the
-> > > "bpf_prog_40ddf486530245f5_sd_devices" start, ok, but ends after
-> > > "bpf_prog_40ddf486530245f5_sd_devices", overlapping it.
-> > > 
-> > > machine__process_ksymbol_register() does:
-> > > 
-> > > 713			map__set_start(map, event->ksymbol.addr);
-> > > 714			map__set_end(map, map__start(map) + event->ksymbol.len);
-> > > 715			err = maps__insert(machine__kernel_maps(machine), map);
-> > > 
-> > > And:
-> > > 
-> > > (gdb) p /x event->ksymbol.addr
-> > > $2 = 0xffffffffc0147a2c
-> > > (gdb) p event->ksymbol.len
-> > > $3 = 306
-> > 
-> > Hmm.. so I think the situation is like below.
-> > 
-> >                    (bpf_trampoline_6442522522)
-> >             +---------------------------------------+   
-> > 	    |                                       |
-> > 	    |       +------------------------+      |
-> > 	    |       | (bpf_prog_40ddf486...) | <----+----  adding this
-> > 	    |       |                        |      |
-> > 	    |       |                        |      |
-> > 	    |   c0147a2c                            |
-> > 	    |                                       |
-> >         c0147640                                 c0148640
-> > 
-> > And it failed to add bpf_prog_40ddf486... in check_invariants() because
-> > the end address is smaller than the previous map.
+On Fri, Jan 17, 2025 at 05:53:33PM +0100, Valentin Schneider wrote:
+> On 17/01/25 16:52, Jann Horn wrote:
+> > On Fri, Jan 17, 2025 at 4:25 PM Valentin Schneider <vschneid@redhat.com> wrote:
+> >> On 14/01/25 19:16, Jann Horn wrote:
+> >> > On Tue, Jan 14, 2025 at 6:51 PM Valentin Schneider <vschneid@redhat.com> wrote:
+> >> >> vunmap()'s issued from housekeeping CPUs are a relatively common source of
+> >> >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
+> >> >> flush_tlb_kernel_range() IPIs.
+> >> >>
+> >> >> Given that CPUs executing in userspace do not access data in the vmalloc
+> >> >> range, these IPIs could be deferred until their next kernel entry.
+> >> >>
+> >> >> Deferral vs early entry danger zone
+> >> >> ===================================
+> >> >>
+> >> >> This requires a guarantee that nothing in the vmalloc range can be vunmap'd
+> >> >> and then accessed in early entry code.
+> >> >
+> >> > In other words, it needs a guarantee that no vmalloc allocations that
+> >> > have been created in the vmalloc region while the CPU was idle can
+> >> > then be accessed during early entry, right?
+> >>
+> >> I'm not sure if that would be a problem (not an mm expert, please do
+> >> correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
+> >> deferred anyway.
+> >
+> > flush_cache_vmap() is about stuff like flushing data caches on
+> > architectures with virtually indexed caches; that doesn't do TLB
+> > maintenance. When you look for its definition on x86 or arm64, you'll
+> > see that they use the generic implementation which is simply an empty
+> > inline function.
+> >
+> >> So after vmapping something, I wouldn't expect isolated CPUs to have
+> >> invalid TLB entries for the newly vmapped page.
+> >>
+> >> However, upon vunmap'ing something, the TLB flush is deferred, and thus
+> >> stale TLB entries can and will remain on isolated CPUs, up until they
+> >> execute the deferred flush themselves (IOW for the entire duration of the
+> >> "danger zone").
+> >>
+> >> Does that make sense?
+> >
+> > The design idea wrt TLB flushes in the vmap code is that you don't do
+> > TLB flushes when you unmap stuff or when you map stuff, because doing
+> > TLB flushes across the entire system on every vmap/vunmap would be a
+> > bit costly; instead you just do batched TLB flushes in between, in
+> > __purge_vmap_area_lazy().
+> >
+> > In other words, the basic idea is that you can keep calling vmap() and
+> > vunmap() a bunch of times without ever doing TLB flushes until you run
+> > out of virtual memory in the vmap region; then you do one big TLB
+> > flush, and afterwards you can reuse the free virtual address space for
+> > new allocations again.
+> >
+> > So if you "defer" that batched TLB flush for CPUs that are not
+> > currently running in the kernel, I think the consequence is that those
+> > CPUs may end up with incoherent TLB state after a reallocation of the
+> > virtual address space.
+> >
 > 
-> No, it didn't fail to add, it managed to do it which left the kernel
-> maps in a broken state, with overlappings while it had a cleared
-> ends_broken, then, later, when the checks_invariant is finally called at
-> perf record exit time:
+> Ah, gotcha, thank you for laying this out! In which case yes, any vmalloc
+> that occurred while an isolated CPU was NOHZ-FULL can be an issue if said
+> CPU accesses it during early entry;
 
-Nope, __maps__insert() should notice that the ends are broken and set
-it:
+So the issue is:
 
-        if (nr_maps == 1) {
-                /* If there's just 1 entry then maps are sorted. */
-                maps__set_maps_by_address_sorted(maps, true);
-                maps__set_maps_by_name_sorted(maps, maps_by_name != NULL);
-        } else {
-                /* Sorted if maps were already sorted and this map starts after the last one. */
-                maps__set_maps_by_address_sorted(maps,
-                        maps__maps_by_address_sorted(maps) &&
-                        map__end(maps_by_address[nr_maps - 2]) <= map__start(new));
-                maps__set_maps_by_name_sorted(maps, false);
-        }
-        if (map__end(new) < map__start(new))
-                RC_CHK_ACCESS(maps)->ends_broken = true;
+CPU1: unmappes vmalloc page X which was previously mapped to physical page
+P1.
 
+CPU2: does a whole bunch of vmalloc and vfree eventually crossing some lazy
+threshold and sending out IPIs. It then goes ahead and does an allocation
+that maps the same virtual page X to physical page P2.
 
-humm, RC_CHK_ACCESS(maps)->ends_broken should be set for the case we
-have and I think it isn't being... Then the bpf trampoline map that is
-the last entry to be added is before the last entry and thus
-maps_by_address_sorted is set to false, ends_broken continues false and
-at the end maps_by_address_sorted is set to true and the last
-check_invariants triggerrs the asserts...
- 
-> > > > > #4  0x00007ffff6e3681e in __assert_fail_base (fmt=0x7ffff6fc3bb8 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7bef08 "map__end(prev) <= map__end(map)",
-> > > > >     file=file@entry=0x7bedf8 "util/maps.c", line=line@entry=95, function=function@entry=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:96
-> > > > > #5  0x00007ffff6e47047 in __assert_fail (assertion=0x7bef08 "map__end(prev) <= map__end(map)", file=0x7bedf8 "util/maps.c", line=95,
-> > > > >     function=0x7bf1c0 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:105
-> > > > > #6  0x00000000006347a1 in check_invariants (maps=0xf987e0) at util/maps.c:95
-> > > > > #7  0x0000000000635ae2 in maps__remove (maps=0xf987e0, map=0xf98a80) at util/maps.c:538
-> > > > > #8  0x000000000062afd2 in machine__destroy_kernel_maps (machine=0xf98178) at util/machine.c:1176
-> > > > > #9  0x000000000062b32b in machines__destroy_kernel_maps (machines=0xf98178) at util/machine.c:1238
-> > > > > #10 0x00000000006388af in perf_session__destroy_kernel_maps (session=0xf97f60) at util/session.c:105
-> > > > > #11 0x0000000000638df0 in perf_session__delete (session=0xf97f60) at util/session.c:248
-> > > > > #12 0x0000000000431f18 in __cmd_record (rec=0xecace0 <record>, argc=4, argv=0x7fffffffde60) at builtin-record.c:2888
-> 
-> is when we detect the problem, but I see what you mean, I'm trying to
-> figure out why this isn't caught here:
-> 
-> machine__process_ksymbol_register() ->
-> 	int maps__insert(struct maps *maps, struct map *map)
-> 	{       
-> 		int ret;
-> 
-> 		down_write(maps__lock(maps));
-> 		ret = __maps__insert(maps, map);
-> 		check_invariants(maps);
-> 		up_write(maps__lock(maps));
-> 		return ret;
-> 	}
-> 
-> Some more tracing:
-> 
-> root@number:~# perf probe -d probe_perf:* ; perf probe -qx ~/bin/perf check_invariants maps 'maps->maps_by_address_sorted' ; perf probe -qx ~/bin/perf maps__insert maps 'map->dso->name:string' 'map->start' 'map->end' ; perf probe -qx ~/bin/perf maps__fixup_end maps ; perf probe -l
-> Removed event: probe_perf:check_invariants
-> Removed event: probe_perf:maps_fixup_end
-> Removed event: probe_perf:maps_insert
->   probe_perf:check_invariants (on check_invariants:1@util/maps.c in /home/acme/bin/perf with maps maps_by_address_sorted)
->   probe_perf:maps_fixup_end (on maps__fixup_end:1@util/maps.c in /home/acme/bin/perf with maps)
->   probe_perf:maps_insert (on maps__insert:1@util/maps.c in /home/acme/bin/perf with maps name start end)
-> root@number:~#
-> 
-> And then:
-> 
-> root@number:~# perf trace --lib -e probe_perf:maps_*,probe_perf:check_invariants/max-stack=32/ perf record sleep
-> <SNIP>
->    316.283 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=0xffffffffc01648ac end=0xffffffffc01648ec)
->    316.284 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
->                                        check_invariants (/home/acme/bin/perf)
->                                        maps__insert (/home/acme/bin/perf)
->                                        machine__process_ksymbol_register (/home/acme/bin/perf)
->                                        machine__process_ksymbol (/home/acme/bin/perf)
->                                        perf_event__process_ksymbol (/home/acme/bin/perf)
->                                        machines__deliver_event (/home/acme/bin/perf)
->                                        perf_session__deliver_event (/home/acme/bin/perf)
->                                        perf_session__process_event (/home/acme/bin/perf)
->                                        process_simple (/home/acme/bin/perf)
->                                        reader__read_event (/home/acme/bin/perf)
->                                        reader__process_events (/home/acme/bin/perf)
->                                        __perf_session__process_events (/home/acme/bin/perf)
->                                        perf_session__process_events (/home/acme/bin/perf)
->                                        process_buildids (/home/acme/bin/perf)
->                                        record__finish_output (/home/acme/bin/perf)
->                                        __cmd_record (/home/acme/bin/perf)
->                                        cmd_record (/home/acme/bin/perf)
->                                        run_builtin (/home/acme/bin/perf)
->                                        handle_internal_command (/home/acme/bin/perf)
->                                        run_argv (/home/acme/bin/perf)
->                                        main (/home/acme/bin/perf)
->                                        __libc_start_call_main (/usr/lib64/libc.so.6)
->                                        __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
->                                        _start (/home/acme/bin/perf)
->    316.296 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_prog_be31ae23198a0378_sd_devices" start=0xffffffffc0186388 end=0xffffffffc01864b2)
->    316.298 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
->                                        check_invariants (/home/acme/bin/perf)
->                                        maps__insert (/home/acme/bin/perf)
->                                        machine__process_ksymbol_register (/home/acme/bin/perf)
->                                        machine__process_ksymbol (/home/acme/bin/perf)
->                                        perf_event__process_ksymbol (/home/acme/bin/perf)
->                                        machines__deliver_event (/home/acme/bin/perf)
->                                        perf_session__deliver_event (/home/acme/bin/perf)
->                                        perf_session__process_event (/home/acme/bin/perf)
->                                        process_simple (/home/acme/bin/perf)
->                                        reader__read_event (/home/acme/bin/perf)
->                                        reader__process_events (/home/acme/bin/perf)
->                                        __perf_session__process_events (/home/acme/bin/perf)
->                                        perf_session__process_events (/home/acme/bin/perf)
->                                        process_buildids (/home/acme/bin/perf)
->                                        record__finish_output (/home/acme/bin/perf)
->                                        __cmd_record (/home/acme/bin/perf)
->                                        cmd_record (/home/acme/bin/perf)
->                                        run_builtin (/home/acme/bin/perf)
->                                        handle_internal_command (/home/acme/bin/perf)
->                                        run_argv (/home/acme/bin/perf)
->                                        main (/home/acme/bin/perf)
->                                        __libc_start_call_main (/usr/lib64/libc.so.6)
->                                        __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
->                                        _start (/home/acme/bin/perf)
->    316.310 perf/1882053 probe_perf:maps_insert((634e64) maps=0x342785d0 name="bpf_trampoline_6442522522" start=0xffffffffc0147640 end=0xffffffffc0148640)
->    316.311 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x0)
->                                        check_invariants (/home/acme/bin/perf)
->                                        maps__insert (/home/acme/bin/perf)
->                                        machine__process_ksymbol_register (/home/acme/bin/perf)
->                                        machine__process_ksymbol (/home/acme/bin/perf)
->                                        perf_event__process_ksymbol (/home/acme/bin/perf)
->                                        machines__deliver_event (/home/acme/bin/perf)
->                                        perf_session__deliver_event (/home/acme/bin/perf)
->                                        perf_session__process_event (/home/acme/bin/perf)
->                                        process_simple (/home/acme/bin/perf)
->                                        reader__read_event (/home/acme/bin/perf)
->                                        reader__process_events (/home/acme/bin/perf)
->                                        __perf_session__process_events (/home/acme/bin/perf)
->                                        perf_session__process_events (/home/acme/bin/perf)
->                                        process_buildids (/home/acme/bin/perf)
->                                        record__finish_output (/home/acme/bin/perf)
->                                        __cmd_record (/home/acme/bin/perf)
->                                        cmd_record (/home/acme/bin/perf)
->                                        run_builtin (/home/acme/bin/perf)
->                                        handle_internal_command (/home/acme/bin/perf)
->                                        run_argv (/home/acme/bin/perf)
->                                        main (/home/acme/bin/perf)
->                                        __libc_start_call_main (/usr/lib64/libc.so.6)
->                                        __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
->                                        _start (/home/acme/bin/perf)
->    316.369 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342a6950 maps_by_address_sorted=0x1)
->                                        check_invariants (/home/acme/bin/perf)
->                                        __maps__insert_sorted (/home/acme/bin/perf)
->                                        __maps__fixup_overlap_and_insert (/home/acme/bin/perf)
->                                        maps__fixup_overlap_and_insert (/home/acme/bin/perf)
->                                        thread__insert_map (/home/acme/bin/perf)
->                                        machine__process_mmap2_event (/home/acme/bin/perf)
->                                        perf_event__process_mmap2 (/home/acme/bin/perf)
->                                        build_id__process_mmap2 (/home/acme/bin/perf)
->                                        machines__deliver_event (/home/acme/bin/perf)
->                                        perf_session__deliver_event (/home/acme/bin/perf)
->                                        ordered_events__deliver_event (/home/acme/bin/perf)
->                                        do_flush (/home/acme/bin/perf)
->                                        __ordered_events__flush (/home/acme/bin/perf)
->                                        ordered_events__flush (/home/acme/bin/perf)
->                                        __perf_session__process_events (/home/acme/bin/perf)
->                                        perf_session__process_events (/home/acme/bin/perf)
->                                        process_buildids (/home/acme/bin/perf)
->                                        record__finish_output (/home/acme/bin/perf)
->                                        __cmd_record (/home/acme/bin/perf)
->                                        cmd_record (/home/acme/bin/perf)
->                                        run_builtin (/home/acme/bin/perf)
->                                        handle_internal_command (/home/acme/bin/perf)
->                                        run_argv (/home/acme/bin/perf)
->                                        main (/home/acme/bin/perf)
->                                        __libc_start_call_main (/usr/lib64/libc.so.6)
->                                        __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
->                                        _start (/home/acme/bin/perf)
-> <SNIP>
-> [ perf record: Captured and wrote 0.035 MB perf.data (7 samples) ]
->   1195.433 perf/1882053 probe_perf:check_invariants((633b0f) maps=0x342785d0 maps_by_address_sorted=0x1)
->                                        check_invariants (/home/acme/bin/perf)
->                                        maps__remove (/home/acme/bin/perf)
->                                        machine__destroy_kernel_maps (/home/acme/bin/perfperf: util/maps.c:95: check_invariants: Assertion `map__end(prev) <= map__end(map)' failed.
-> )
->                                        machines__destroy_kernel_maps (/home/acme/bin/perf)
->                                        perf_session__destroy_kernel_maps (/home/acme/bin/perf)
->                                        perf_session__delete (/home/acme/bin/perf)
->                                        __cmd_record (/home/acme/bin/perf)
->                                        cmd_record (/home/acme/bin/perf)
->                                        run_builtin (/home/acme/bin/perf)
->                                        handle_internal_command (/home/acme/bin/perf)
->                                        run_argv (/home/acme/bin/perf)
->                                        main (/home/acme/bin/perf)
->                                        __libc_start_call_main (/usr/lib64/libc.so.6)
->                                        __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
->                                        _start (/home/acme/bin/perf)
-> root@number:~#
-> 
-> check_invariants() doesn't check the ends because the
-> maps_byh_address_sorted is not set, I'll soon disappear into a call, but
-> the above should help as a checkpoint, I'll be back.
-> 
-> - Arnaldo
-> 
->  
-> > > Thread 1 "perf" hit Breakpoint 1, machine__process_ksymbol_register (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:688
-> > > 688	{
-> > > (gdb) bt
-> > > #0  machine__process_ksymbol_register (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:688
-> > > #1  0x00000000006294ca in machine__process_ksymbol (machine=0xf96158, event=0x7ffff7fb9aa0, sample=0x7fffffffa860) at util/machine.c:779
-> > > #2  0x00000000005ce2fd in perf_event__process_ksymbol (tool=0xec8ce0 <record>, event=0x7ffff7fb9aa0, sample=0x7fffffffa860, machine=0xf96158) at util/event.c:296
-> > > #3  0x000000000063b6e4 in machines__deliver_event (machines=0xf96158, evlist=0xf521f0, event=0x7ffff7fb9aa0, sample=0x7fffffffa860, tool=0xec8ce0 <record>, file_offset=31392, 
-> > >     file_path=0xf96850 "perf.data") at util/session.c:1334
-> > > #4  0x000000000063b8c9 in perf_session__deliver_event (session=0xf95f40, event=0x7ffff7fb9aa0, tool=0xec8ce0 <record>, file_offset=31392, file_path=0xf96850 "perf.data")
-> > >     at util/session.c:1367
-> > > #5  0x000000000063c6bd in perf_session__process_event (session=0xf95f40, event=0x7ffff7fb9aa0, file_offset=31392, file_path=0xf96850 "perf.data") at util/session.c:1626
-> > > #6  0x000000000063de3d in process_simple (session=0xf95f40, event=0x7ffff7fb9aa0, file_offset=31392, file_path=0xf96850 "perf.data") at util/session.c:2203
-> > > #7  0x000000000063daf4 in reader__read_event (rd=0x7fffffffafa0, session=0xf95f40, prog=0x7fffffffaf70) at util/session.c:2132
-> > > #8  0x000000000063dcee in reader__process_events (rd=0x7fffffffafa0, session=0xf95f40, prog=0x7fffffffaf70) at util/session.c:2181
-> > > #9  0x000000000063df8b in __perf_session__process_events (session=0xf95f40) at util/session.c:2226
-> > > #10 0x000000000063e988 in perf_session__process_events (session=0xf95f40) at util/session.c:2390
-> > > #11 0x000000000042d98b in process_buildids (rec=0xec8ce0 <record>) at builtin-record.c:1475
-> > > #12 0x000000000042e963 in record__finish_output (rec=0xec8ce0 <record>) at builtin-record.c:1798
-> > > #13 0x0000000000431c46 in __cmd_record (rec=0xec8ce0 <record>, argc=2, argv=0x7fffffffde80) at builtin-record.c:2841
-> > > #14 0x000000000043513f in cmd_record (argc=2, argv=0x7fffffffde80) at builtin-record.c:4260
-> > > #15 0x00000000004bcf65 in run_builtin (p=0xecbd60 <commands+288>, argc=3, argv=0x7fffffffde80) at perf.c:351
-> > > #16 0x00000000004bd20c in handle_internal_command (argc=3, argv=0x7fffffffde80) at perf.c:404
-> > > #17 0x00000000004bd365 in run_argv (argcp=0x7fffffffdc6c, argv=0x7fffffffdc60) at perf.c:448
-> > > #18 0x00000000004bd6ae in main (argc=3, argv=0x7fffffffde80) at perf.c:556
-> > > (gdb)
-> > 
-> > > So, this one liner "refixes" the "modules" ends when processing the
-> > > records to find the build ids, unsure if it is the best solution tho:
-> 
-> > I think it "fixes" the problem by not clearing maps->ends_broken during
-> > the sample processing.  So check_invariants() will not check the end
-> > addresses of overlapping bpf_trampoline and bpf_prog.
-> 
-> You mean my one-liner?
-> 
-> I meant "refixes" as in maps__fixup_end() will fixup the overlapping of
-> the bpf_trampoline and bpf_prog and will re-clear maps->ends_broken
-> (needlessly, it was already cleared by the first call to
-> maps__fixup_end() after loading modules, at the start of the session).
-> 
-> Then check_invariants() _will_, check again, because maps->ends_broken
-> is cleared (was cleared twice even), the end addresses and there will
-> not be any overlapping, no?
-> 
-> - Arnaldo
->  
-> > I'm curious how other commands (like perf report) are affected.  I think
-> > the original concern was the output of `perf buildid-list -m`.
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > > 
-> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > > index 5db1aedf48df92d2..5c4603d08ab5f2cb 100644
-> > > --- a/tools/perf/builtin-record.c
-> > > +++ b/tools/perf/builtin-record.c
-> > > @@ -1797,6 +1797,8 @@ record__finish_output(struct record *rec)
-> > >  	if (!rec->no_buildid) {
-> > >  		process_buildids(rec);
-> > >  
-> > > +		maps__fixup_end(machine__kernel_maps(&rec->session->machines.host));
-> > > +
-> > >  		if (rec->buildid_all)
-> > >  			perf_session__dsos_hit_all(rec->session);
-> > >  	}
-> > > 
-> > > 
+CPU3 is isolated and executes some early entry code before receving said IPIs
+which are supposedly deferred by Valentin's patches.
+
+It does not receive the IPI becuase it is deferred, thus access by early
+entry code to page X on this CPU results in a UAF access to P1.
+
+Is that the issue?
+
+thanks,
+
+ - Joel
+
