@@ -1,116 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF7925745B;
-	Wed, 19 Feb 2025 21:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D820F082
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 21:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740002052; cv=none; b=YGBWfV11RUcbk2/DqUofNBJeo/h0/wgv5JBdom5oq09mY9bxtlS6rrP0TD/SMFpl3O+q6Gv1/6s+xXWHuR+oIQ75PePyhcijRetZT9nHNuBkr4iR1frDiF0na0oLwh5/yTyd68h9WPW9EixMLAAlW0Wnh6nZByJJQTe24OV8gxs=
+	t=1740002113; cv=none; b=gTtqFJi38a1uByHMZCBGA4sXZCMpdAUUwV0A06c+AQeKVC1yMr0Sn1dYDq4j4WQfUKDBBw0BmvjWGgFedz1dWaDI+F1pzB3Hym86d3HKMbUi0WyEsGXmFlyZw6Vjd0ig/76/Owd1QfZMGO9yQXDxOVfAL4LbljbIfM+3/vmJjxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740002052; c=relaxed/simple;
-	bh=kyMwcNXN8YDzje5Qw7hFShfVLdsBWRKu6y0nbvuD0t0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOJkW4z+rXQMNKPYGOcogVYFU3hvPD2dgAv7O/4Fvqvn+NB32hVS70mZ58npeix/PT2OC0MuZynJizZvRFwamnlNxoy7Q4FlKfrvN9a93Ta0hRRart2ooukoInX00j/IGReDa8j/t1DUv9Dtcgj4Ie88L7waaKWsPpmV090WqXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPVIrJ/n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740002113; c=relaxed/simple;
+	bh=qhE1DZk5+4EZUnpu7E62OwtQ+FM8uq/hSJxUyaLtFBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AC97NXUl/bSuY+Qhw4mNqXzyf4jeJpkOCXvqHul0RYa+FML19U/G5vXwvEi2ZyS/1IRwhwVK7h3XUcacmv4oB9OmrP5mYzI/eornT6OvEVX9oG2qVmL1j4QbQELJA48lkOrbD5OmKKXKvd8BhEZf042xINvxpQIdCkw9A90f8aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hSzivIOr; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPVIrJ/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D38C4CED1;
-	Wed, 19 Feb 2025 21:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740002051;
-	bh=kyMwcNXN8YDzje5Qw7hFShfVLdsBWRKu6y0nbvuD0t0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QPVIrJ/nLuVCPSjzrSNllgcZHE8N1cC/lrnmSAt7Y1Nc+VVn6N1zxy8QNAHIksvML
-	 kq7WlSXrkkUxQzSOJGB5Ht/BKBr8SwY9LcoTK4dHgvsOked0XooXXr7ADbxSXLYzsE
-	 iZAhJanZOKW93mk7MoMVkB0dooFIIqQcmNjIcIQEpljODmuI96/TuHY9gm2WPy9rY7
-	 nKh0pfcs4OqixLsyRyMmQqoFD29sLSFDqAPExeHYKqvXR8NFWM4/AigkQJyZxm8ev5
-	 MNbnXCMl83xV7Jo7NkY+cYLxDqUGtnAdYJvYWJalwUCyQof7hmC8VzWAgwgxeskfZD
-	 ifLEI+pqPnNiw==
-Date: Wed, 19 Feb 2025 13:54:09 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>,
-	Jesper Juhl <jesperjuhl76@gmail.com>,
-	James Clark <james.clark@linaro.org>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Anne Macedo <retpolanne@posteo.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
-Subject: Re: [PATCH v2 0/7] Add io_dir to avoid memory overhead from opendir
-Message-ID: <Z7ZTAR5cN3mqEq8L@google.com>
-References: <20250207232452.994822-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hSzivIOr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740002112; x=1771538112;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qhE1DZk5+4EZUnpu7E62OwtQ+FM8uq/hSJxUyaLtFBA=;
+  b=hSzivIOrBLsZx0ZnyD4pOxZu4Evgwng+eatWwh0FbZd3EbrsLo88Aykl
+   o4vBv/AjUB/IilAb4S7DZ7juptoBddMKZ2COf9UPS2zDGRvSwA4gHZ2EB
+   Sx02OdrzxHRlPLv5UUs1My4YoGHCrjoMd0mDmdbaED6wWMEVe8lDMhqJl
+   JhquUhLfqqQ3lOu9R6gcXmvIdXzuBCEIcsQKIB73FBoQLAgP4bUGnpBLR
+   BGfye7KbgKo0TIMuIvlnsnXwJkZim+q9ND+WobGLJ/e77eBfWWosht0yZ
+   IX5bzguZycsxoqkL6Q1XZONLr6aZlmCPaU7nyBM7OVbZ0qfQaDl3o2NDn
+   g==;
+X-CSE-ConnectionGUID: epuB3uVHThO8dQHwyepqMA==
+X-CSE-MsgGUID: n9BratMGQMaEbZmPKCKS4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40474823"
+X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
+   d="scan'208";a="40474823"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 13:55:11 -0800
+X-CSE-ConnectionGUID: +8Tbhd5lQnSsTgRNxffiyQ==
+X-CSE-MsgGUID: QC/5uP68T7yHCEiKJaFloQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115743642"
+Received: from uaeoff-desk2.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.221.160])
+  by orviesa008.jf.intel.com with ESMTP; 19 Feb 2025 13:53:20 -0800
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH] perf report: Fix sample number stats for branch entry mode
+Date: Wed, 19 Feb 2025 15:53:17 -0600
+Message-ID: <20250219215317.82905-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207232452.994822-1-irogers@google.com>
 
-On Fri, Feb 07, 2025 at 03:24:41PM -0800, Ian Rogers wrote:
-> glibc's opendir allocates a minimum of 32kb, when called recursively
-> for a directory tree the memory consumption can add up - nearly 300kb
-> during perf start-up when processing modules. Add a stack allocated
-> variant of readdir sized a little more than 1kb
-> 
-> v2: Remove the feature test and always use a perf supplied getdents64
->     to workaround an Alpine Linux issue in v1:
->     https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
->     As suggested by Krzysztof Łopatowski
->     <krzysztof.m.lopatowski@gmail.com> who also pointed to the perf
->     trace performance improvements in start-up time eliminating stat
->     calls can achieve:
->     https://lore.kernel.org/lkml/20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com/
+Currently, stats->nr_samples is incremented per entry in the sample's
+branch stack instead of per sample taken. As a result, statistics of
+samples taken during perf record in --branch-filter mode do not seem
+correct. Call hists__inc_nr_samples() only for each sample taken.
 
-Let me pick up Krzysztof's patch first.
+Before:
 
-Thanks,
-Namhyung
+$ ./perf record -e cycles:u -b -c 10000000000 ./tchain_edit
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.005 MB perf.data (2 samples) ]
+$ perf report -D | tail -n 16
+Aggregated stats:
+               TOTAL events:         16
+                COMM events:          2  (12.5%)
+                EXIT events:          1  ( 6.2%)
+              SAMPLE events:          2  (12.5%)
+               MMAP2 events:          2  (12.5%)
+             KSYMBOL events:          1  ( 6.2%)
+      FINISHED_ROUND events:          1  ( 6.2%)
+            ID_INDEX events:          1  ( 6.2%)
+          THREAD_MAP events:          1  ( 6.2%)
+             CPU_MAP events:          1  ( 6.2%)
+        EVENT_UPDATE events:          2  (12.5%)
+           TIME_CONV events:          1  ( 6.2%)
+       FINISHED_INIT events:          1  ( 6.2%)
+cpu_core/cycles/u stats:
+              SAMPLE events:         64
 
+After:
 
->     Convert parse-events and hwmon_pmu to use io_dir.
-> v1: This was previously part of the memory saving change set:
->     https://lore.kernel.org/lkml/20231127220902.1315692-1-irogers@google.com/
->     It is separated here and a feature check and syscall workaround
->     for missing getdents64 added.
-> 
-> Ian Rogers (7):
->   tools lib api: Add io_dir an allocation free readdir alternative
->   perf maps: Switch modules tree walk to io_dir__readdir
->   perf pmu: Switch to io_dir__readdir
->   perf header: Switch mem topology to io_dir__readdir
->   perf events: Remove scandir in thread synthesis
->   perf parse-events: Switch tracepoints to io_dir__readdir
->   perf hwmon_pmu: Switch event discovery to io_dir__readdir
-> 
->  tools/lib/api/Makefile             |  2 +-
->  tools/lib/api/io_dir.h             | 91 ++++++++++++++++++++++++++++++
->  tools/perf/util/header.c           | 31 +++++-----
->  tools/perf/util/hwmon_pmu.c        | 42 ++++++--------
->  tools/perf/util/machine.c          | 19 +++----
->  tools/perf/util/parse-events.c     | 32 ++++++-----
->  tools/perf/util/pmu.c              | 46 +++++++--------
->  tools/perf/util/pmus.c             | 30 ++++------
->  tools/perf/util/synthetic-events.c | 22 ++++----
->  9 files changed, 194 insertions(+), 121 deletions(-)
->  create mode 100644 tools/lib/api/io_dir.h
-> 
-> -- 
-> 2.48.1.502.g6dc24dfdaf-goog
-> 
+$ ./perf report -D | tail -n 16
+Aggregated stats:
+               TOTAL events:         16
+                COMM events:          2  (12.5%)
+                EXIT events:          1  ( 6.2%)
+              SAMPLE events:          2  (12.5%)
+               MMAP2 events:          2  (12.5%)
+             KSYMBOL events:          1  ( 6.2%)
+      FINISHED_ROUND events:          1  ( 6.2%)
+            ID_INDEX events:          1  ( 6.2%)
+          THREAD_MAP events:          1  ( 6.2%)
+             CPU_MAP events:          1  ( 6.2%)
+        EVENT_UPDATE events:          2  (12.5%)
+           TIME_CONV events:          1  ( 6.2%)
+       FINISHED_INIT events:          1  ( 6.2%)
+cpu_core/cycles/u stats:
+              SAMPLE events:          2
+
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+ tools/perf/util/hist.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 0f30f843c566..4ae56a2a4d34 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -975,8 +975,6 @@ iter_add_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *a
+ 	if (he == NULL)
+ 		return -ENOMEM;
+ 
+-	hists__inc_nr_samples(hists, he->filtered);
+-
+ out:
+ 	iter->he = he;
+ 	iter->curr++;
+@@ -995,9 +993,14 @@ static int
+ iter_finish_branch_entry(struct hist_entry_iter *iter,
+ 			 struct addr_location *al __maybe_unused)
+ {
++	struct evsel *evsel = iter->evsel;
++	struct hists *hists = evsel__hists(evsel);
++
+ 	for (int i = 0; i < iter->total; i++)
+ 		branch_info__exit(&iter->bi[i]);
+ 
++	hists__inc_nr_samples(hists, iter->he->filtered);
++
+ 	zfree(&iter->bi);
+ 	iter->he = NULL;
+ 
+-- 
+2.48.1
+
