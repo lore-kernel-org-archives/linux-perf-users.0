@@ -1,164 +1,194 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEFC1DE3A3;
-	Wed, 19 Feb 2025 13:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE50B1EB1B8;
+	Wed, 19 Feb 2025 13:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739970980; cv=none; b=jorri6wAPUG1IeB0+rSrdSOD4M9ff8hbc+Cz5LZ1chXZtRmBVK8TgUMOh697JiybFJHeECFTCCuPf0DXpeUD5dZjQ2OQvyhghEiScwePR5WE1Ui0+zIG+0Qc7uTczrzyy51QGy3fZ5CnRoTW9zlbhaPP1+a6N1rCKiuMfcv8H/c=
+	t=1739972462; cv=none; b=qXckfNpR5z8p9ICuy0ofI8Pyfd6r2rZlDge/C51ZUGkiFVBlxWYdGJtU7/kNHKA+BVJDnuuyGInkALeK24BdOSuQNgF5cZSDyXXsVaCWcettKoWuw3BZxTmYUXMtg5bZeMtExCje/mwrox0AkzYkLH7vCrxeciQArHREcLjc0Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739970980; c=relaxed/simple;
-	bh=r8blyfKkoBgz4CM/Mt3oOpqJ2xEDBrmHNX5i0zDp4Io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TwlFHIK0nE3UF0QTus7pXVKA44UP7QrZm62cWfpzEa1RaVomPc+33WV8BE0Gz01aWR9w6WzlpRw2bgTchxSzrIB4hI8s35THIX4073kZjPDIIuwebL4inotHvthLC8Cs/6dWpghtqJ5QVF0GnCPCzRRXFzq6NpX3G2XORLXb4Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAFC51682;
-	Wed, 19 Feb 2025 05:16:35 -0800 (PST)
-Received: from [10.57.36.80] (unknown [10.57.36.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 038E53F59E;
-	Wed, 19 Feb 2025 05:16:15 -0800 (PST)
-Message-ID: <a94c0622-ae31-46f1-b51e-a344b86aa47c@arm.com>
-Date: Wed, 19 Feb 2025 13:16:13 +0000
+	s=arc-20240116; t=1739972462; c=relaxed/simple;
+	bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FaCjCvchDsmfjTHtEH2oxJnST1OCXYbDMgL20+fIIMo4SU5nGPwYDJZqtoKaa3pdSmybEynmE6RSW2SPQPafmJeI6wyJAopdNeliZOan9+blYdM1xbymzo2UWIzZFgl8r1Syxwb1UwIPn6lfGlPu3bNzYlgnCiRpAK2IMe1HJlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vBdg6rzO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vBdg6rzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5617C4CEE7;
+	Wed, 19 Feb 2025 13:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739972461;
+	bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vBdg6rzOtRgIpF2ExgrdPZyFzcjdO/yMw8De+F+0Uu93VrR/30dOZetNZjReJaEbp
+	 BSfQfRYf2AxPzk8a70HfoB8C53PB6gPbTPAKv0HerNwi/+C2yFs32ASVXQel/GWbul
+	 L4EnK2IGxTdFiL0Nn8DV+hkYtGlLpduOZLipucck=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable <stable@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf: fix up some comments and code to properly use the event_source bus
+Date: Wed, 19 Feb 2025 14:40:56 +0100
+Message-ID: <2025021955-implant-excavator-179d@gregkh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm-cmn: don't claim resource during ioremap() for
- CMN700 with ACPI
-To: YinFengwei <fengwei_yin@linux.alibaba.com>
-Cc: will@kernel.org, mark.rutland@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, jie.li.linux@linux.alibaba.com,
- renyu.zj@linux.alibaba.com
-References: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
- <d5040b5c-564d-4abf-be22-d2aa1183b633@arm.com>
- <hfip42i45jkumuvgdthxm2bk6qylqyqh6erzaq43yiqygvn6uu@dcui675lwtkm>
- <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
- <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5486; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=Agd8dAvug++fNqH4Fy/1e7D6Lgjyatp74gkEX5NdNps=; b=owGbwMvMwCRo6H6F97bub03G02pJDOlb76ebbU9UnT+X4ZnUhoWH5R9O2PNTc3Pzo9v8O7ksO Hd33e2f2hHLwiDIxCArpsjyZRvP0f0VhxS9DG1Pw8xhZQIZwsDFKQAT6VrLsKD/3/tZr2bObREz Z1p6LnD1HuYCcz+G+XG2l1qW8QgKzCvoLeD43XleQlgkFQA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-19 1:50 am, YinFengwei wrote:
-> Add Jing Zhang as we will continue discussion in this thread.
-> 
-> On Tue, Feb 18, 2025 at 12:31:10PM +0800, Robin Murphy wrote:
->> On 2025-02-18 10:58 am, YinFengwei wrote:
->>> On Tue, Feb 18, 2025 at 10:31:42AM +0800, Robin Murphy wrote:
->>>> On 2025-02-18 1:21 am, Yin Fengwei wrote:
->>>>> Currently, arm-cmn PMU driver assumes ACPI claim resource
->>>>> for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
->>>>> failed because of resource claim failes when ioremap() is
->>>>> called:
->>>>> [   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
->>>>> [   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
->>>>> [   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
->>>>> [   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
->>>>>
->>>>> Let CMN700 + ACPI do same as CMN600 + ACPI to allow CMN700
->>>>> work in ACPI env.
->>>>
->>>> No, the CMN-600 routine is a special case for CMN-600 having two nested
->>>> memory resources of its own. CMN-700 and everything else only have one
->>>> memory resource, so that is not appropriate. What else is claiming the
->>>> region to cause a conflict?
->>> Sorry. Forgot the link for the new proposed fix:
->>> https://lore.kernel.org/all/Z7QYlUP6nfBNMXsv@U-V2QX163P-2032.local/
->>
->> Yes, I saw that. It's a broken diff that won't even compile, with no
->> explanation of what it's supposed to be trying to achieve or why. I'm not
->> sure what you're asking me to comment on.
-> My bad. I will attatch the full patch at the end of this mail.
-> 
->>
->>> My understanding is that there are two problems here:
->>> 1. ACPI claim the memory range and that's why we see this -EBUSY error
->>>      with correct code path for CMN700 + ACPI table.
->>
->> No, it's fine to claim the exact *same* range that the ACPI companion owns;
->> the identical requests just nest inside each other. I don't have a CMN-700
->> to hand but here's a selection of other drivers doing just that from
->> /proc/iomem on my system:
->>
->> 12600000-12600fff : ARMH0011:00
->>    12600000-12600fff : ARMH0011:00 ARMH0011:00
->> 12610000-12610fff : ARMH0011:01
->>    12610000-12610fff : ARMH0011:01 ARMH0011:01
->> 126b0000-126b0fff : APMC0D0F:00
->>    126b0000-126b0fff : APMC0D0F:00 APMC0D0F:00
->> 126f0000-126f0fff : APMC0D81:00
->>    126f0000-126f0fff : APMC0D81:00 APMC0D81:00
-> I believe this works only for parents/children resource node. Otherwise,
-> there will be conflict.
+In sysfs, the perf events are all located in
+/sys/bus/event_source/devices/ but some places ended up hard-coding the
+location to be at the root of /sys/devices/ which could be very risky as
+you do not exactly know what type of device you are accessing in sysfs
+at that location.
 
-I don't understand what you mean by that. The point here is that these
-are simple devices with a single memory resource (just like CMN-700),
-where in each case, a driver using devm_{platform_}ioremap_resource()
-(just like arm-cmn) has happily claimed (2nd line) the same resource
-already defined by the ACPI layer (1st line). Admittedly it's a little
-unclear since they both use the same name, but still.
+So fix this all up by properly pointing everything at the bus device
+list instead of the root of the sysfs devices/ tree.
 
->>
->> And I know people are using the CMN-700 PMU on other ACPI systems without
->> issue, so there's nothing wrong with the binding or the driver in general.
->>
->> The resource conflict only arises when a request overlaps an existing region
->> inexactly. Either your firmware is describing the CMN incorrectly, or some
->> other driver is claiming conflicting iomem regions for some reason.
-> No. It's not ACPI table problem. The problem is mentioned in comments of
-> function arm_cmn600_acpi_probe():
->          /*
->           * Note that devm_ioremap_resource() is dumb and won't let the platform
->           * device claim cfg when the ACPI companion device has already claimed
->           * root within it. But since they *are* already both claimed in the
->           * appropriate name, we don't really need to do it again here anyway.
->           */
+Cc: stable <stable@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/Documentation/intel-hybrid.txt | 12 ++++++------
+ tools/perf/Documentation/perf-list.txt    |  2 +-
+ tools/perf/arch/x86/util/iostat.c         |  2 +-
+ tools/perf/builtin-stat.c                 |  2 +-
+ tools/perf/util/mem-events.c              |  2 +-
+ tools/perf/util/pmu.c                     |  4 ++--
+ 6 files changed, 12 insertions(+), 12 deletions(-)
 
-Sigh... No, this is unique to CMN-600, because only the CMN-600 ACPI
-binding depends on nested resources, such that the resource tree
-starts off looking like this:
+diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
+index e7a776ad25d7..0379903673a4 100644
+--- a/tools/perf/Documentation/intel-hybrid.txt
++++ b/tools/perf/Documentation/intel-hybrid.txt
+@@ -8,15 +8,15 @@ Part of events are available on core cpu, part of events are available
+ on atom cpu and even part of events are available on both.
+ 
+ Kernel exports two new cpu pmus via sysfs:
+-/sys/devices/cpu_core
+-/sys/devices/cpu_atom
++/sys/bus/event_source/devices/cpu_core
++/sys/bus/event_source/devices/cpu_atom
+ 
+ The 'cpus' files are created under the directories. For example,
+ 
+-cat /sys/devices/cpu_core/cpus
++cat /sys/bus/event_source/devices/cpu_core/cpus
+ 0-15
+ 
+-cat /sys/devices/cpu_atom/cpus
++cat /sys/bus/event_source/devices/cpu_atom/cpus
+ 16-23
+ 
+ It indicates cpu0-cpu15 are core cpus and cpu16-cpu23 are atom cpus.
+@@ -60,8 +60,8 @@ can't carry pmu information. So now this type is extended to be PMU aware
+ type. The PMU type ID is stored at attr.config[63:32].
+ 
+ PMU type ID is retrieved from sysfs.
+-/sys/devices/cpu_atom/type
+-/sys/devices/cpu_core/type
++/sys/bus/event_source/devices/cpu_atom/type
++/sys/bus/event_source/devices/cpu_core/type
+ 
+ The new attr.config layout for PERF_TYPE_HARDWARE:
+ 
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index d0c65fad419a..c3ffd93f94d7 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -188,7 +188,7 @@ in the CPU vendor specific documentation.
+ 
+ The available PMUs and their raw parameters can be listed with
+ 
+-  ls /sys/devices/*/format
++  ls /sys/bus/event_source/devices/*/format
+ 
+ For example the raw event "LSD.UOPS" core pmu event above could
+ be specified as
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index 00f645a0c18a..7442a2cd87ed 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -32,7 +32,7 @@
+ #define MAX_PATH 1024
+ #endif
+ 
+-#define UNCORE_IIO_PMU_PATH	"devices/uncore_iio_%d"
++#define UNCORE_IIO_PMU_PATH	"bus/event_source/devices/uncore_iio_%d"
+ #define SYSFS_UNCORE_PMU_PATH	"%s/"UNCORE_IIO_PMU_PATH
+ #define PLATFORM_MAPPING_PATH	UNCORE_IIO_PMU_PATH"/die%d"
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 77e327d4a9a7..68ea7589c143 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -97,7 +97,7 @@
+ #include <internal/threadmap.h>
+ 
+ #define DEFAULT_SEPARATOR	" "
+-#define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
++#define FREEZE_ON_SMI_PATH	"bus/event_source/devices/cpu/freeze_on_smi"
+ 
+ static void print_counters(struct timespec *ts, int argc, const char **argv);
+ 
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 3692e988c86e..0277d3e1505c 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -189,7 +189,7 @@ static bool perf_pmu__mem_events_supported(const char *mnt, struct perf_pmu *pmu
+ 	if (!e->event_name)
+ 		return true;
+ 
+-	scnprintf(path, PATH_MAX, "%s/devices/%s/events/%s", mnt, pmu->name, e->event_name);
++	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/%s", mnt, pmu->name, e->event_name);
+ 
+ 	return !stat(path, &st);
+ }
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6206c8fe2bf9..a8193ac8f2e7 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -36,12 +36,12 @@
+ #define UNIT_MAX_LEN	31 /* max length for event unit name */
+ 
+ enum event_source {
+-	/* An event loaded from /sys/devices/<pmu>/events. */
++	/* An event loaded from /sys/bus/event_source/devices/<pmu>/events. */
+ 	EVENT_SRC_SYSFS,
+ 	/* An event loaded from a CPUID matched json file. */
+ 	EVENT_SRC_CPU_JSON,
+ 	/*
+-	 * An event loaded from a /sys/devices/<pmu>/identifier matched json
++	 * An event loaded from a /sys/bus/event_source/devices/<pmu>/identifier matched json
+ 	 * file.
+ 	 */
+ 	EVENT_SRC_SYS_JSON,
+-- 
+2.48.1
 
-50000000-5fffffff : ARMHC600:00
-   50d00000-50d03fff : ARMHC600:00
-
-If we wanted to, we can still quite happily claim the root node
-resource:
-
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -2410,6 +2410,8 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
-
-         if (!resource_contains(cfg, root))
-                 swap(cfg, root);
-+
-+       devm_request_mem_region(cmn->dev, root->start, resource_size(root), "arm-cmn!");
-         /*
-          * Note that devm_ioremap_resource() is dumb and won't let the platform
-          * device claim cfg when the ACPI companion device has already claimed
-
-
-...which then nests like so:
-
-50000000-5fffffff : ARMHC600:00
-   50d00000-50d03fff : ARMHC600:00
-     50d00000-50d03fff : arm-cmn!
-
-but what we cannot do is claim the whole 50000000-5fffffff region again
-because that cannot nest within the existing 50d00000-50d03fff region.
-
-> So I suppose for ACPI env, we should use devm_ioremap() as cmn600 does.
-> And make CMN700 handling follow spec exactly.
-
-As I said, the driver already supports the CMN-700 APCI binding
-perfectly well. If your CMN is described correctly then you need to
-answer my question of what *other* driver is claiming conflicting
-resources and why (and if so, also why that should be specific to ACPI).
-
-Thanks,
-Robin.
