@@ -1,189 +1,314 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0C61E47D6;
-	Wed, 19 Feb 2025 13:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739973168; cv=fail; b=OLN+NkIXv4DBWECL0c9CCkk+IiQ/uEPIvOU0vBk4ZKByF7vYL6XpKswPlM5Aja6axp3kpu8kPDmj+Dk4iWYhvzfT0l4AOcBA1o4wXtAGg1UPadgvLCuYUCbBCMevWigmfDMcPq/xEoHQoa8KjyovAcHJMNma0uTNg6N6W6FwbQ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739973168; c=relaxed/simple;
-	bh=jRljsKGUqGqhNdclz22Cu11rrcUtT1d19in0r8O1pt0=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LZoqKGqMKC9fqZQOQG+Yh/Ns5ETSSUl+PfaWU/mwROpZywu6XE99fcD0+CMgREjq+WmWkXPD3jZFlLn8+1+yrrDr6AYkHD3lsGsNWhkC6jdwOYaaPGO0DrSTkMHCZZsT2en5MjEuMTJUvTG/xnnb/LAgq8sMOwVKF6TYk3D37sw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FKrgisYH; arc=fail smtp.client-ip=40.107.93.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119071EF087
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 13:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739973198; cv=none; b=dRCaRNJL9npyjDrd4oQLqLcqBzvCfmvtbDPiHZm3ssNwRJftYfd22RPXewndS2cfAVZbVxq1hv6hyT2EWzoErQCX+fXEPx5dRlwAF7eFgr+wN4ueWcEk3NqNDkLdyg8x2wLXd/TFRmF6my0PI+KcjElKR3peiRfCnh0Qd4pZyuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739973198; c=relaxed/simple;
+	bh=+yGgqqM6m67SHcWQ5C/LyqeoOn2NxRwpbuq8bb0rr8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=krZ4gqK4PKZAammBKOk5QZJLyW2Apfix/+VeaXEewunHW69lPZ/CujcN9zwXWHjYATZF1hznKj6g5uhLIU/iPH8RR2O0xhFWiMYUJHGSwKUvpPlGe8OgwrEulR3T591y2/xBsXhbvh5MDxjIq1KLnf0xeEZgMWaW3WejfbSgoJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lSy1zEcG; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FKrgisYH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dnwo6EoG3V93F2yMH4NEVLTSp1Jy7wv57u1Ryt9bCs8dlQxLpmA+O+t+afLWlGCXjLnwePg9uATcwPN5qaMoe5SxlgXxJ18T0D0AdEN0EUbcY+rQK6KJkqD2lG3Rcj4orAnu9wE7LGLeFuUTdBpmogS7Lvt9mi0R1tqk9McCPzj+V+vo8Exx6mo+TOcI8qkbTLJ9E6vrXIbYPqDkaecXWKWSc/e7DnUL9aeCkUJ0C1w4V3LRcHxBLM+HU5CMA/tLQTU2d+2FjrefmVZG3loO6EXquJmbByA0HsBAifhS4yjNQEHKNxNtQ99lRnBI777iGUHB3VcyTM/cyGlXd1XZag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wDGKIWI7BGeik2jL8Q4HJQ/k/wO8Qhqn94Nt8SRxb1c=;
- b=QtwXHofXuIUNDhRk8VglInwtfoC1UkmFTusstWtRUDCLz9+FPKzRcKQqWuVPHR0iULhuzV5B9ScXeLE5Uq5MwzrLb3C2N8u3C2OR9y7W4ukvo/bKDyTGs2BxJHeYTslkuZN01WszWhBkC8qjeLO8PEpo7x6go66Mmx5PXE7vsJGXjxwVulbDrVsdkJDZ0WpGMg3hsyQw2qiCz2wx8HTb+2IRJrs22qDTkMjU/piYVfrQv7JRIZtDwEV26R2par72wh2xpGm6ANjBf3WShuPLIu+T1bjpHGZEuhOM46q9cWRC8gzLT6jzbtVId5BNzWRDh5QUps3Ap6K40TrA268Oxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wDGKIWI7BGeik2jL8Q4HJQ/k/wO8Qhqn94Nt8SRxb1c=;
- b=FKrgisYHKu0qfweg7bYVaeadIvIQ58CO5GRUmqmjezPFtD7pz0nMag9w17VuNLWgAsCHHhMxWfoLn4v+av77APliM6KNU8wQ1sq0qqyY8b925S7Xp1+sGXjHYdnlJR4EULjz4Av4rhYrlM8FHRr9a19zVZUnfQg7VyUTDnIOjCM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CH3PR12MB7764.namprd12.prod.outlook.com (2603:10b6:610:14e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Wed, 19 Feb
- 2025 13:52:38 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8445.017; Wed, 19 Feb 2025
- 13:52:38 +0000
-Message-ID: <71c5323c-5bf9-4503-8dbd-717372461550@amd.com>
-Date: Wed, 19 Feb 2025 19:22:28 +0530
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [RESEND][PATCH v3 0/7] perf/amd/ibs: Add Zen5 support
-To: Peter Zijlstra <peterz@infradead.org>, acme@kernel.org,
- namhyung@kernel.org
-Cc: mingo@redhat.com, eranian@google.com, irogers@google.com,
- jolsa@kernel.org, bp@alien8.de, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250205060547.1337-1-ravi.bangoria@amd.com>
- <65818316-434e-4468-9ead-2e55c15b62eb@amd.com>
- <20250217142445.GA2076@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-In-Reply-To: <20250217142445.GA2076@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXPR01CA0085.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::25) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSy1zEcG"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-471fa3b19bcso606911cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 05:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739973195; x=1740577995; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UdmAiMEeKrPEDg3p+jo+2xFKJGKxXYyTYb14zoBH7Bo=;
+        b=lSy1zEcGSTYGQw70X6tKAtWz/LXQxnAQVGCidhqUixZKNP4DnMDx3a/y6EVbyQhfUT
+         SBrZBOQaeFbQS8UyRxmavFpsGEZm6oNFcgkvJpDIOsH+0bw3JcpN6sUFfh3t5Qz3tsA9
+         62w6GpRcgcttSb4UcPefwaGJjhbBj5imkqEJTCvqt1KcYA1NdbYmN3ZmMzihkeFytWkv
+         DnSAC+JzANuLJZFt7KOrNCvZuXGWEl+LvlemmMkt7+FZ0BoIdcO6oPw9C18iez86S0ry
+         ENmUkJp03cZgfJvA4Ep5aEi6ZicaQIC2Spu0AkiTwL2Jv/CyKQthblEd51YI+fJ1tAgH
+         yl+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739973195; x=1740577995;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UdmAiMEeKrPEDg3p+jo+2xFKJGKxXYyTYb14zoBH7Bo=;
+        b=UVrquQ8pdIQgGPSEl25uOXfknpfEabttlm5n4NpVe6/Ye8QwrycjxF/DMifFngAKfN
+         8WiEYE/fEaDP5FFaZeIvD0RyudBii/I3PGdntCANKHb/fTJiRXxLRl3O218LJCVc+YH5
+         2CgQIZOZxDohLtVidaTDxHQgyYS6VIPDPa0Z8z/fjTPqrqOKaJ60GKZFN1u6qqAfNF2o
+         y6VQs/0pY92o4FL4/BUyhYeMV+mLRbUq4i6L+X0grN+uVm6EmvD2NHivTQYFj5GrK/qe
+         e3gbiMRK4OLRsuRF8I9mOMte7ZgjUgz+RlwPHC27dA1aFpml50rlyCHmeYC+n3dNeDck
+         oZ5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXY+s2OCtw3Db68LwFynok+U3eJg9aAuP54dn5tLXKU4ikq2hdWppZ7Yk9OxV101CHlLMwn3eM4Ftgms+FuuPi6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1dBYDm9XUkR9P+GmH5Om4JTKCCllVizXZVJ96qQlZZqgnSt0j
+	7unchikvc77Nwa0U7waeA5uoPjjPM0ttK0P5VfvqdeANX1JDTgrYx8IpKA/2FPLwSe7tJQQvMPK
+	0bLds84z7xMqEeAY5Da9ELm6dOMBoeC6d1I4N
+X-Gm-Gg: ASbGncv7t/kp3MqtUqJpQuwSF5Z/nMGLcSxq4rq3sw0fosFBVd1UL0GVWQSZUs7Lk26
+	+Dj24eUXLsr9bSfHddjGSUrJf2iXXX7JOZkn9zbmx+71mhJD+44tUPTnqt079suDKOS8WkqxYqS
+	am9d5zXF/90/3sWrJ0wxbHNcpidCs=
+X-Google-Smtp-Source: AGHT+IENNUmIuZuxSQylUApjIg4cKkgEiog4c3mRT0+zySA3cwktAnc8eGuiyh3/xKClKXO5dwBsFhWfn2uiV/6urfI=
+X-Received: by 2002:a05:622a:85:b0:471:b772:c717 with SMTP id
+ d75a77b69052e-472097c2b32mr3540781cf.26.1739973194577; Wed, 19 Feb 2025
+ 05:53:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH3PR12MB7764:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9bb8a8a-0a03-45e7-2385-08dd50ecabdd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y0QzRlhDanZVbW9NVEhoOWJJem4zeCs0cUh0Wmx1ZTFWQS9BNkczOGpKNXFI?=
- =?utf-8?B?T3FXU3JwZG5nMWx2RUR2b1ZVQUJkZ2N5a3E3YzhpekR2dlBWeEMyRkNtMUtQ?=
- =?utf-8?B?WU9tdVpFa3FEVTdid3N1K2FFNTdLamlPeW9nRjVRbDN0RTgrRktJMy82NWhy?=
- =?utf-8?B?eG1tYmI1TDVKNGtIbTIySURJblp1cEQxU0lSZmxzZVdzTXFYL1hoU2tnV09V?=
- =?utf-8?B?bEhxbnFLL3VlYWZvVVQ3R2xMWmRxV2VCSjhvZ2w2bkVOZ2lyc2VTdGpsWGtU?=
- =?utf-8?B?emhIWElvU2dUdWVBRERRdHpIMFd2Q1J2TWRMUm4xQnIzeEFUY09QZU8xUlRp?=
- =?utf-8?B?UU5WWUZaMksyWG5hUGhnb2c3QXZnazRvRklMRG9teXY3d2FxaTFKNC9oRGdz?=
- =?utf-8?B?ZGYxRHV5UkV6cWVRNzNNK1pCbk00UU40N1Y2ayt6QTNzd0VjQW9hT0NQNFNl?=
- =?utf-8?B?VG13STB0OGpwOHhsS3kxaXVKbWtIblE5MUpUTHdiQmhvcVdaVXRDTGNxeDFm?=
- =?utf-8?B?MTZ1Rktwb3RLUk5GaEZoRnkzaEptbmN0cnMvUUpXOFB2aVArMk5DalRCTEVt?=
- =?utf-8?B?cXZwb1NjbDBtSDlZQWx3ZFY4T2pJNnhhRTdoNmdWOUhUd2tUQlBvdGd1NllH?=
- =?utf-8?B?M1ZlK2p0MzlVd2V2SXlmeWExSWt6Nk0yd3VNNklFOHJrZVIzRHhWUXF4bFRJ?=
- =?utf-8?B?RVVtcmt5aHVIa2R6UndrTGhZT0x2bm9ZQmhwRTJsaVJFSTc1RzNxYUVZTDdo?=
- =?utf-8?B?L2ZPamkwdjlnU3BEUnNQNmZMU1VmVlV3WVZMVXpXOUp1Ym1aTVpIelpqUi92?=
- =?utf-8?B?cm12VC9KTzZjWWZxeFBxbGQ1cjAzQjJjUStONW9DdmFrZ2xsNFdWd1hkOUh1?=
- =?utf-8?B?SWdvTzQ1RzdqSWVOdmJwZUd5ZEdXcWtPZVdRVXBka3NxTjQ0NmIzY1JFSnN4?=
- =?utf-8?B?NWNtY0pPU1BQdXhMS0hNeVJjNTJMTDR5TGs2WVFQUzhheGtja3JaTm1Oc0s2?=
- =?utf-8?B?N0lFTDE2UlBZVTRhSW5rMU5VT3VibTdQTG5EcjNBWWlCNjJ5T0ZOZy9LcExZ?=
- =?utf-8?B?ZEFYRW92R2VocEMvOG8rZWEzUnNWazAxb1ljZzlldU10ODQ5Zmk1bldmQmU4?=
- =?utf-8?B?R0RDTG14akhuUEhuWHMzblBic21NcjN3bkdEdDBTS2xRWDdreEVZVVlhYVNM?=
- =?utf-8?B?L1ZOU0k1VzBBZHZ1U0JtSTFiQjFuZTN4SXZuc1ZCNjlFVFNQOVNYcUsyVUxL?=
- =?utf-8?B?T2xPNUxwRUZaejVuMDUyNjJmSWE2eGd4VTZheFBZa0YzSmNJeWFJeFdUOGZL?=
- =?utf-8?B?d0Q2WVkxSk5rQ2k4NUhuMXhCd1VHZ3NaZFUwM003TG5DbEhVRXZ3VHdJYVJj?=
- =?utf-8?B?eVA2L3ZjeExscUd5RGx4dVpyZHV0M0VZNUp2dlFxK3RtU25ERllGSDBtaFMv?=
- =?utf-8?B?RUxLOUdvRkduTlhQUUdnTTdiSDhnMVB3MWYyZHFmK0FoT2hzOVdjai95ckVt?=
- =?utf-8?B?UzJTVmtEay82Mncyb1hod2RwVmNpK3ZNRGxEMFhpYnE4SWpSeVFWdVhBMzNa?=
- =?utf-8?B?bFk1MWNtR1JTTGlaWnBuUEdvcFlnQ205dEdITDJTN2ZTc3ZGZHRYMGV5TVdv?=
- =?utf-8?B?OGFVbXRUWkdva3ZqOGdVa1VFenIxTWxERmI5VDQ0eWlhdHpqWEFYaE53djlz?=
- =?utf-8?B?UGEvUFF2TUU3cDI3Y25yOWI4WWhid3JSTndvb1U2VUplK1d4Tmp2cTlsZ3Ey?=
- =?utf-8?B?QWorR2ZFT0pmNWQ3V0FRSkxrYVhTVzdvRGJ3UlpZS2d1VWFNTXJCQlRTYUVj?=
- =?utf-8?B?ZG5NdlNaTnBId3pocCtuUTRmcFQrQ1JRNVBxUFAzaTdHcHFNZnNQREFHNHRO?=
- =?utf-8?Q?pnBcNXfqRDe9p?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c2VxNFEwWFRtQVl3K0M5N0Rvc1p4dDMvaGFGcUsrSWRNZXRQL2dVS1p2MTBG?=
- =?utf-8?B?WXRIdktUbmdXWGx0WXkvdnl6S2NXMER3MnMwUXZQN3ZxZ0R2OHFCMGdVQzNW?=
- =?utf-8?B?NG9xMG5oVmhXSlJNMVRVU0pGL1pqQllPdVBGTjhhUk1oZlR3L0M1bDJuQ0pC?=
- =?utf-8?B?OTRPOWJlV2tNRFVyakpSbHNDTVBpbmRZT2NDS0tyM2FLSzhRdUt3eWRRUXFx?=
- =?utf-8?B?Y2ExYlhHM0Y2eGhndEJ0ekkxcitLWXlYdTEzRHVVdFd2eGs1WnFJU2lyRW8v?=
- =?utf-8?B?MVpxTzJnbHpyUEhMSGN2Mmc4UW5RNlhMeTk4cHlvODFHVXFac3ZnWlU2dnpR?=
- =?utf-8?B?MGFaeHdzNDRTMk5XdjFNMGlpU3R4ZkpoR3kyOXVJKzBabnBzQ3JFSUl6Ymcy?=
- =?utf-8?B?S1RYZkt3b1gySFNIazJlRzdHdjF2MWNGNlhreThEU1lGZEhwN1JqNDhBUEFp?=
- =?utf-8?B?SnhXNEJIeHMxdWJjTzBWb2loYm9rajVvdENTcGlLSVBJdXFMeUFyMDNkcDNG?=
- =?utf-8?B?QXBMM3J5U3lpaEkzNXJiY1pBa0hCUjNjUnh2ZDdkQzF6Qkc4cndXRDZxNlJY?=
- =?utf-8?B?WUNIUURNbmhmNExiQ3hrOHBUK25mSlZKbC9HNDFHcFdFUmxFVTIxRnp5ckMv?=
- =?utf-8?B?STFsZXpGa3ViWGRBcHE1NklhenYzZEFzaUFsWlcwY1g3TDR3a25aQ2JMU3Rl?=
- =?utf-8?B?MWtDNWlTT0lRQWcvOVZtYXRUSlFOYVZhcjdwNUVzQUZERFhwRVNxeGNHekJQ?=
- =?utf-8?B?VE5MOUdkYmE1bklUc1R0UWJacVZ0WTcva3JpYjFnTFJheExtaytyejJLaHFM?=
- =?utf-8?B?ZHFuZ1ozekpjKzk3bm1Ba2hpVTJhb0hkZDM2aXF1b1NDQjBuZmxJdkNyQjVV?=
- =?utf-8?B?ZjhvYUJCeE5jNnhHSHk4WUs2V0krZFc3OUU2NnMzdHc4dWhZWDhSc2ROTWpZ?=
- =?utf-8?B?V01IbDVnWVJFeW11WjlRSzZ4SE9wRWZsbFVkYjBnOWMwT0FRKzVWSmZ6WXJr?=
- =?utf-8?B?dWlaSzVySW51akYwblN5V3ZOdGhHN2dHb3EvZFhOdzN2emt3Y2lpTmNEYnNM?=
- =?utf-8?B?UmZESjZSaW03by8zcVBQeG1JZ2N1TTQxMjFBdTNiVXRuUXJHMFJieDdKR25B?=
- =?utf-8?B?M0NXZWFad01mbytsMGhUQWdNcERkekhyN3RPVXhLcENGVnJpSFRzT2hZcHNU?=
- =?utf-8?B?SVFkOXBuc08wSU5yUDljOEhKRS96MCticXR2WFZWY3ZLUlRLNzdxTi8wbTg1?=
- =?utf-8?B?eHZFWjdSRVp2NU1hU2szYlRka2w4c2paRExBdzkwekRpUFp4aXozS0wrVmhw?=
- =?utf-8?B?UEVSWWFvODRTcW8vY2pZa0kxRDk4ZW1wVmsyVmh2dXkya0w1Z05YOTdHZU1Q?=
- =?utf-8?B?bUJuWTdDTHFDTmRpd1RjaytFclFiUDlJdEIvMHpNejZvNTZyYmtkWkpWWUNq?=
- =?utf-8?B?RlRkZDhDYTl5SVdzUWNWZnluMW9sRjRuR3RYV1U0VVJ6MkpQUk9ucnBDblNT?=
- =?utf-8?B?ZDVCU3pUSWtKdkZudEdLNEhQd3VlMFhMaHFRdnVuWW5vTklhc1R2QkVYWExG?=
- =?utf-8?B?UDBVWTY4RzBjYlNvSml2a1ZZUk96czJ4dWpUYnFYc2Flenk2bVlaYlQ5bkw4?=
- =?utf-8?B?dlVXdU0yZEZRUVBrc2NsVDczR2xnV2Rub055Z1l3Q1NmV2ZTUjdlTTJZaGRF?=
- =?utf-8?B?WStVc05XYXR0NFVRb2VKMzd1RktlMXJ2b3ZZMTJHbWlZWnhlNFhWc1BBUE5n?=
- =?utf-8?B?M2dXdTY3cWlqbzNjcGVVbUVlWDJUZzZHdDlnYlg2ZEJ1czJKZVZWaFgwTEpy?=
- =?utf-8?B?SGNvOEFYMXcwQUxWNlhvNHM3bmcvWWp4eDUxSUoybytob0MraG1TTnFMMlZD?=
- =?utf-8?B?d0RxbXRyN3FFZ0FiTHREa0FmOXVWekVWRlZVOUwrUXBkSVp4SG8xREIyTUU3?=
- =?utf-8?B?VVlCT3NzUE9tOWFGS3BuaXZLNGpucEgrdU1RZ1JrT0IvMUVvUCtWUXQwQzhn?=
- =?utf-8?B?bGYzSnJOay9vbG9CYnVJcnFCMW90K0FZbzliU3liSmlwRmxDVWMyTVl4QXU1?=
- =?utf-8?B?MmJxNnVIYys1VmhRUmZTdGorZ1Y2RkorbWJSdlFLa3hRcHBwR2Y2UmpEVjY3?=
- =?utf-8?Q?hrUkooDuH5hhYiZ4fE5rtNrD8?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9bb8a8a-0a03-45e7-2385-08dd50ecabdd
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 13:52:38.6128
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g6B30FNiMVBppRtizAvO2pg5xGG4Dn6bKhtHDf9xuBd/B7QQhTWF2HtAgE9N2lHrWaJB2ZpUdf3Yn1N7eQoPfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7764
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-3-8419288bc805@google.com> <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
+In-Reply-To: <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Wed, 19 Feb 2025 14:53:03 +0100
+X-Gm-Features: AWEUYZnAiIsbh62TRn4xLoxaltzDiT1dCIBY-Pnf2HWy-DCtrTT9-DxdH-ccpBo
+Message-ID: <CA+i-1C2xK8hzMQ8Y-=-7iYy+27nnouQZu1NdWG0qa35t+OQLqw@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <rppt@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Ofir Weisse <oweisse@google.com>, Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 17-Feb-25 7:54 PM, Peter Zijlstra wrote:
-> On Mon, Feb 17, 2025 at 02:00:14PM +0530, Ravi Bangoria wrote:
->> On 05-Feb-25 11:35 AM, Ravi Bangoria wrote:
->>> IBS on Zen5:
->>> - introduced Load Latency filtering capability.
->>> - shows DTLB and page size information differently from prior generations.
->>>
->>> Incorporate these changes into IBS kernel driver as well as perf tool.
->>> Also include a perf unit-test to test IBS sample period constraints.
->>>
->>> Patches are prepared on peterz/queue/perf/core (cffa473a06d2).
->>
->> Ingo, Peter, gentle ping!
-> 
-> First 3 patches are in queue/perf/core, assuming the robots be happy,
-> I'll push it into tip/perf/core.
+Argh, sorry, GMail switched back to HTML mode somehow. Maybe I have to
+get a proper mail client after all.
 
-Thanks Peter!
+Here's the clean version.
 
-Arnaldo, Namhyung,
+On Wed, 19 Feb 2025 at 11:57, Borislav Petkov <bp@alien8.de> wrote:
+>
+> > + * Runtime usage:
+> > + *
+> > + * 1. Call asi_enter() to switch to the restricted address space. This can't be
+> > + *    from an interrupt or exception handler and preemption must be disabled.
+> > + *
+> > + * 2. Execute untrusted code.
+> > + *
+> > + * 3. Call asi_relax() to inform the ASI subsystem that untrusted code execution
+> > + *    is finished. This doesn't cause any address space change. This can't be
+> > + *    from an interrupt or exception handler and preemption must be disabled.
+> > + *
+> > + * 4. Either:
+> > + *
+> > + *    a. Go back to 1.
+> > + *
+> > + *    b. Call asi_exit() before returning to userspace. This immediately
+> > + *       switches to the unrestricted address space.
+>
+> So only from reading this, it does sound weird. Maybe the code does it
+> differently - I'll see soon - but this basically says:
+>
+> I asi_enter(), do something, asi_relax() and then I decide to do something
+> more and to asi_enter() again!? And then I can end it all with a *single*
+> asi_exit() call?
+>
+> Hm, definitely weird API. Why?
 
-Patch 4-7 applies cleanly on perf-tools-next/perf-tools-next (commit
-20600b8aab73). However, perf tool build will break without patch 3.
-Wondering if you can pick patch 4-7 without patch 3?
 
-Thanks,
-Ravi
+OK, sounds like I need to rewrite this explanation! It's only been
+read before by people who already knew how this thing worked so this
+might take a few attempts to make it clear.
+
+Maybe the best way to make it clear is to explain this with reference
+to KVM. At a super high level, That looks like:
+
+ioctl(KVM_RUN) {
+    enter_from_user_mode()
+    while !need_userspace_handling() {
+        asi_enter();  // part 1
+        vmenter();  // part 2
+        asi_relax(); // part 3
+    }
+    asi _exit(); // part 4b
+    exit_to_user_mode()
+}
+
+So part 4a is just referring to continuation of the loop.
+
+This explanation was written when that was the only user of this API
+so it was probably clearer, now we have userspace it seems a bit odd.
+
+With my pseudocode above, does it make more sense? If so I'll try to
+think of a better way to explain it.
+
+> /*
+>  * Leave the "tense" state if we are in it, i.e. end the critical section. We
+>  * will stay relaxed until the next asi_enter.
+>  */
+> void asi_relax(void);
+>
+> Yeah, so there's no API functions balance between enter() and relax()...
+
+
+asi_enter() is actually balanced with asi_relax(). The comment says
+"if we are in it" because technically if you call this asi_relax()
+outside of the critical section, it's a nop. But, there's no reason to
+do that, so we could definitely change the comment and WARN if that
+happens.
+
+>
+> > +#define ASI_TAINT_OTHER_MM_CONTROL   ((asi_taints_t)BIT(6))
+> > +#define ASI_NUM_TAINTS                       6
+> > +static_assert(BITS_PER_BYTE * sizeof(asi_taints_t) >= ASI_NUM_TAINTS);
+>
+> Why is this a typedef at all to make the code more unreadable than it needs to
+> be? Why not a simple unsigned int or char or whatever you need?
+
+
+My thinking was just that it's nicer to see asi_taints_t and know that
+it means "it holds taint flags and it's big enough" instead of having
+to remember the space needed for these flags. But yeah I'm fine with
+making it a raw integer type.
+
+> > +#define ASI_TAINTS_CONTROL_MASK \
+> > +     (ASI_TAINT_USER_CONTROL | ASI_TAINT_GUEST_CONTROL | ASI_TAINT_OTHER_MM_CONTROL)
+> > +
+> > +#define ASI_TAINTS_DATA_MASK \
+> > +     (ASI_TAINT_KERNEL_DATA | ASI_TAINT_USER_DATA | ASI_TAINT_OTHER_MM_DATA)
+> > +
+> > +#define ASI_TAINTS_GUEST_MASK (ASI_TAINT_GUEST_DATA | ASI_TAINT_GUEST_CONTROL)
+> > +#define ASI_TAINTS_USER_MASK (ASI_TAINT_USER_DATA | ASI_TAINT_USER_CONTROL)
+> > +
+> > +/* The taint policy tells ASI how a class interacts with the CPU taints */
+> > +struct asi_taint_policy {
+> > +     /*
+> > +      * What taints would necessitate a flush when entering the domain, to
+> > +      * protect it from attack by prior domains?
+> > +      */
+> > +     asi_taints_t prevent_control;
+>
+> So if those necessitate a flush, why isn't this var called "taints_to_flush"
+> or whatever which exactly explains what it is?
+
+
+Well it needs to be disambiguated from the field below (currently
+protect_data) but it could be control_to_flush (and data_to_flush).
+
+The downside of that is that having one say "prevent" and one say
+"protect" is quite meaningful. prevent_control is describing things we
+need to do to protect the system from this domain, protect_data is
+about protecting the domain from the system. However, while that
+difference is meaningful it might not actually be helpful for the
+reader of the code so I'm not wed to it.
+
+Also worth noting that we could just combine these fields. At present
+they should have disjoint bits set. But, they're used in separate
+contexts and have separate (although conceptually very similar)
+meanings, so I think that would reduce clarity.
+
+>
+> Spellchecker please. Go over your whole set.
+
+
+Ack, I've set up a local thingy to spellcheck all my commits so
+hopefully you should encounter less of that noise in future.
+
+For the pronouns stuff I will do my best but you might still spot
+violations in older text, sorry about that.
+
+> > +     /* What taints should be set when entering the domain? */
+> > +     asi_taints_t set;
+>
+>
+> So "required_taints" or so... hm?
+
+
+What this field is describing is: when we run the untrusted code, what
+happens? I don't mean "what does the kernel do" but what physically
+happens on the CPU from an exploit point of view.
+
+For example setting ASI_TAINT_USER_DATA in this field means "when we
+run the untrusted code (i.e. userspace), userspace data gets left
+behind in sidechannels".
+
+"Should be set" in the comment means "this field should be set to
+record that a thing has happened" not "this field being set is a
+requirement for some API" or something. So I don't think "required" is
+right but this is hard to name.
+
+That commentary should also be expanded I think, since "should be set"
+is pretty ambiguous. And maybe if we called it "to_set" it would be
+more obvious that "set" is a verb? I'm very open to suggestions.
+
+>
+> > +
+> > +void asi_init_mm_state(struct mm_struct *mm);
+> > +
+> > +int asi_init_class(enum asi_class_id class_id, struct asi_taint_policy *taint_policy);
+> > +void asi_uninit_class(enum asi_class_id class_id);
+>
+> "uninit", meh. "exit" perhaps? or "destroy"
+
+
+>
+> And you have "asi_destroy" already so I guess you can do:
+>
+> asi_class_init()
+> asi_class_destroy()
+>
+> to have the namespace correct.
+
+
+Yeah, not sure what I was thinking here!
+
+>
+> > +static __always_inline bool asi_is_tense(void)
+> > +{
+> > +     return !asi_is_relaxed();
+> > +}
+>
+> So can we tone down the silly helpers above? You don't really need
+> asi_is_tense() for example. It is still very intuitive if I read
+>
+>         if (!asi_is_relaxed())
+>
+Yep that sounds good.
