@@ -1,65 +1,25 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B691DED51
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEFC1DE3A3;
+	Wed, 19 Feb 2025 13:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739962673; cv=none; b=j5tu1SJbOfwnZ+xKxwJH1J2LZCx9bMfcHWl+ljBeiCxQACrChZw10df2PyiiU0UGBjXR/ffUpAbdbLj8uo1A+/KGXYy4moiJ2PuV9MiipbX2OtXLFPe2ndLgYN0GidX8QILSONDz+WQazPj1yke++3eqyHigMeKvVsvkY1Bki3c=
+	t=1739970980; cv=none; b=jorri6wAPUG1IeB0+rSrdSOD4M9ff8hbc+Cz5LZ1chXZtRmBVK8TgUMOh697JiybFJHeECFTCCuPf0DXpeUD5dZjQ2OQvyhghEiScwePR5WE1Ui0+zIG+0Qc7uTczrzyy51QGy3fZ5CnRoTW9zlbhaPP1+a6N1rCKiuMfcv8H/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739962673; c=relaxed/simple;
-	bh=sXCCefIdgQ3NB9TFv5hsQtdwO7MhuwA0h0icDPzP/Z0=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=MndsdR2C41+gcTb4fDWXgfKbp42E9OHW3z7zg7ZHp7RnZUQCfXSu8N67JWoWSrggkYZf62okDe6BfUH5yhgDKBEEgMTsDnp4QCbzIpGe9IeWF788skpVOhCp6d/Hg5dTO1psYXU499V9iAezTAFZ6nirgyDd1rU+/JolGPL5lOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=olKLtH5U; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="olKLtH5U"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51J75DpC022176
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:57:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=JZKZX1jIPg1zNBISVkhmiqupB8zB
-	e1ifilqCHv8eHMc=; b=olKLtH5U7XO/At5U3puLtGIaqzuXWowvfcarxfOrupY4
-	yExScZ0N02aQe520Ec3JfP8xLGobFNgrsYwgF3rHR4Bdr5MJRMt/VL5shDdVG5mF
-	OrtZSulbpokQpYu4usuumTDowvkIRwLCOcAMM1n5Vt09V6UdLMr91L1bDpPFIZbY
-	mKcjPnkhd18Bwux0/ZZ4HXNQP8QmCEZXQ9DC94kLO/IBR3+wJZZn3vAT4eSE3Bg9
-	KVpXy1zWk7zYxAbgZIU5hmzT4ieBdJ6/r2XRadsQCi/g7x3/zLOM7cPyoCz0KyIO
-	pnlYVXhXmclfk0JMmwzWsOCIMcBMssyrQ1qiEBy/2Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wahjs35p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:57:50 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51JAWhmR003388
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 10:57:50 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wahjs35k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 10:57:50 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51JADCG6030138;
-	Wed, 19 Feb 2025 10:57:49 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w01x3mk9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Feb 2025 10:57:49 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51JAvlag35520894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Feb 2025 10:57:47 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6444420043;
-	Wed, 19 Feb 2025 10:57:47 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3920C20040;
-	Wed, 19 Feb 2025 10:57:47 +0000 (GMT)
-Received: from [9.171.69.222] (unknown [9.171.69.222])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Feb 2025 10:57:47 +0000 (GMT)
-Message-ID: <e2c7e654-5608-4206-ab3a-2a63b54cbc35@linux.ibm.com>
-Date: Wed, 19 Feb 2025 11:57:46 +0100
+	s=arc-20240116; t=1739970980; c=relaxed/simple;
+	bh=r8blyfKkoBgz4CM/Mt3oOpqJ2xEDBrmHNX5i0zDp4Io=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TwlFHIK0nE3UF0QTus7pXVKA44UP7QrZm62cWfpzEa1RaVomPc+33WV8BE0Gz01aWR9w6WzlpRw2bgTchxSzrIB4hI8s35THIX4073kZjPDIIuwebL4inotHvthLC8Cs/6dWpghtqJ5QVF0GnCPCzRRXFzq6NpX3G2XORLXb4Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAFC51682;
+	Wed, 19 Feb 2025 05:16:35 -0800 (PST)
+Received: from [10.57.36.80] (unknown [10.57.36.80])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 038E53F59E;
+	Wed, 19 Feb 2025 05:16:15 -0800 (PST)
+Message-ID: <a94c0622-ae31-46f1-b51e-a344b86aa47c@arm.com>
+Date: Wed, 19 Feb 2025 13:16:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,134 +27,138 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf record question regarding grouped events
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yJ5Jp9KGxRK2U65gkMDKhttbP2zErvdp
-X-Proofpoint-ORIG-GUID: LFziUcWoCtUwqM-J4dQIbCtg67qVhuww
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_04,2025-02-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502190084
+Subject: Re: [PATCH] perf/arm-cmn: don't claim resource during ioremap() for
+ CMN700 with ACPI
+To: YinFengwei <fengwei_yin@linux.alibaba.com>
+Cc: will@kernel.org, mark.rutland@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jie.li.linux@linux.alibaba.com,
+ renyu.zj@linux.alibaba.com
+References: <20250218012111.30068-1-fengwei_yin@linux.alibaba.com_quarantine>
+ <d5040b5c-564d-4abf-be22-d2aa1183b633@arm.com>
+ <hfip42i45jkumuvgdthxm2bk6qylqyqh6erzaq43yiqygvn6uu@dcui675lwtkm>
+ <73af368a-52a9-4922-876b-7a6e2d32a94e@arm.com>
+ <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <gfgtxwe3fmh4unleypyrp2qxchrqcz7wqzyoy7om2zjqev6ggf@gnnqnmusecc3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On 2025-02-19 1:50 am, YinFengwei wrote:
+> Add Jing Zhang as we will continue discussion in this thread.
+> 
+> On Tue, Feb 18, 2025 at 12:31:10PM +0800, Robin Murphy wrote:
+>> On 2025-02-18 10:58 am, YinFengwei wrote:
+>>> On Tue, Feb 18, 2025 at 10:31:42AM +0800, Robin Murphy wrote:
+>>>> On 2025-02-18 1:21 am, Yin Fengwei wrote:
+>>>>> Currently, arm-cmn PMU driver assumes ACPI claim resource
+>>>>> for CMN600 + ACPI. But with CMN700 + ACPI, the device probe
+>>>>> failed because of resource claim failes when ioremap() is
+>>>>> called:
+>>>>> [   10.837300] arm-cmn ARMHC700:00: error -EBUSY: can't request region for resource [mem 0x40000000-0x4fffffff]
+>>>>> [   10.847310] arm-cmn ARMHC700:00: probe with driver arm-cmn failed with error -16
+>>>>> [   10.854726] arm-cmn ARMHC700:02: error -EBUSY: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+>>>>> [   10.865085] arm-cmn ARMHC700:02: probe with driver arm-cmn failed with error -16
+>>>>>
+>>>>> Let CMN700 + ACPI do same as CMN600 + ACPI to allow CMN700
+>>>>> work in ACPI env.
+>>>>
+>>>> No, the CMN-600 routine is a special case for CMN-600 having two nested
+>>>> memory resources of its own. CMN-700 and everything else only have one
+>>>> memory resource, so that is not appropriate. What else is claiming the
+>>>> region to cause a conflict?
+>>> Sorry. Forgot the link for the new proposed fix:
+>>> https://lore.kernel.org/all/Z7QYlUP6nfBNMXsv@U-V2QX163P-2032.local/
+>>
+>> Yes, I saw that. It's a broken diff that won't even compile, with no
+>> explanation of what it's supposed to be trying to achieve or why. I'm not
+>> sure what you're asking me to comment on.
+> My bad. I will attatch the full patch at the end of this mail.
+> 
+>>
+>>> My understanding is that there are two problems here:
+>>> 1. ACPI claim the memory range and that's why we see this -EBUSY error
+>>>      with correct code path for CMN700 + ACPI table.
+>>
+>> No, it's fine to claim the exact *same* range that the ACPI companion owns;
+>> the identical requests just nest inside each other. I don't have a CMN-700
+>> to hand but here's a selection of other drivers doing just that from
+>> /proc/iomem on my system:
+>>
+>> 12600000-12600fff : ARMH0011:00
+>>    12600000-12600fff : ARMH0011:00 ARMH0011:00
+>> 12610000-12610fff : ARMH0011:01
+>>    12610000-12610fff : ARMH0011:01 ARMH0011:01
+>> 126b0000-126b0fff : APMC0D0F:00
+>>    126b0000-126b0fff : APMC0D0F:00 APMC0D0F:00
+>> 126f0000-126f0fff : APMC0D81:00
+>>    126f0000-126f0fff : APMC0D81:00 APMC0D81:00
+> I believe this works only for parents/children resource node. Otherwise,
+> there will be conflict.
 
-I have a question on the intended usage of the grouped events as
-in test case 114 perf record tests subtest 'Basic leader sampling' test
-where this command is executed:
+I don't understand what you mean by that. The point here is that these
+are simple devices with a single memory resource (just like CMN-700),
+where in each case, a driver using devm_{platform_}ioremap_resource()
+(just like arm-cmn) has happily claimed (2nd line) the same resource
+already defined by the ACPI layer (1st line). Admittedly it's a little
+unclear since they both use the same name, but still.
 
- # perf record -vv -e '{cycles,cycles}:uS' -- ...
+>>
+>> And I know people are using the CMN-700 PMU on other ACPI systems without
+>> issue, so there's nothing wrong with the binding or the driver in general.
+>>
+>> The resource conflict only arises when a request overlaps an existing region
+>> inexactly. Either your firmware is describing the CMN incorrectly, or some
+>> other driver is claiming conflicting iomem regions for some reason.
+> No. It's not ACPI table problem. The problem is mentioned in comments of
+> function arm_cmn600_acpi_probe():
+>          /*
+>           * Note that devm_ioremap_resource() is dumb and won't let the platform
+>           * device claim cfg when the ACPI companion device has already claimed
+>           * root within it. But since they *are* already both claimed in the
+>           * appropriate name, we don't really need to do it again here anyway.
+>           */
 
-In the debug output the following 2 event are installed:
+Sigh... No, this is unique to CMN-600, because only the CMN-600 ACPI
+binding depends on nested resources, such that the resource tree
+starts off looking like this:
 
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  disabled                         1
-  exclude_kernel                   1
-  exclude_hv                       1
-  freq                             1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  exclude_kernel                   1
-  exclude_hv                       1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8 = 6
+50000000-5fffffff : ARMHC600:00
+   50d00000-50d03fff : ARMHC600:00
 
-What puzzles me is that the first event with file descriptor 5
-is installed for sampling. The second event with file descriptor 6
-is installed for counting because event attribute members
-attr::freq and attr::sample_freq are zero.
+If we wanted to, we can still quite happily claim the root node
+resource:
 
-So of the 2 cycles events installed, the group leader is sampling
-and the other event is counting.
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2410,6 +2410,8 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
 
-Is this understanding correct?
-The test then checks if the number of samples matches the count
-from the counting event?
+         if (!resource_contains(cfg, root))
+                 swap(cfg, root);
++
++       devm_request_mem_region(cmn->dev, root->start, resource_size(root), "arm-cmn!");
+         /*
+          * Note that devm_ioremap_resource() is dumb and won't let the platform
+          * device claim cfg when the ACPI companion device has already claimed
 
-I have a question on the intended usage of the grouped events as
-in test case 114 perf record tests subtest 'Basic leader sampling' test
-where this command is executed:
 
- # perf record -vv -e '{cycles,cycles}:uS' -- ...
+...which then nests like so:
 
-In the debug output the following 2 event are installed:
+50000000-5fffffff : ARMHC600:00
+   50d00000-50d03fff : ARMHC600:00
+     50d00000-50d03fff : arm-cmn!
 
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  disabled                         1
-  exclude_kernel                   1
-  exclude_hv                       1
-  freq                             1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  exclude_kernel                   1
-  exclude_hv                       1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8 = 6
+but what we cannot do is claim the whole 50000000-5fffffff region again
+because that cannot nest within the existing 50d00000-50d03fff region.
 
-What puzzles me is that the first event with file descriptor 5
-is installed for sampling. The second event with file descriptor 6
-is installed for counting because event attribute members
-attr::freq and attr::sample_freq are zero.
+> So I suppose for ACPI env, we should use devm_ioremap() as cmn600 does.
+> And make CMN700 handling follow spec exactly.
 
-So of the 2 cycles events installed, the group leader is sampling
-and the other event is counting.
+As I said, the driver already supports the CMN-700 APCI binding
+perfectly well. If your CMN is described correctly then you need to
+answer my question of what *other* driver is claiming conflicting
+resources and why (and if so, also why that should be specific to ACPI).
 
-Is this understanding correct?
-The test then checks if the number of samples matches the count
-from the counting event?
-
-Thanks a lot for your help.
-
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Thanks,
+Robin.
