@@ -1,70 +1,70 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA56D262D39;
-	Thu, 20 Feb 2025 18:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9DA26388C;
+	Thu, 20 Feb 2025 18:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077747; cv=fail; b=DygSNwiRohf0R3nIk2LhDitvcqEugstpMFtbWDpChzWpBkUIqk7KurXLWBqiJeKmbwggRZKM9f5t/nscidznfQUSWBjgV01iQdh4IVULU4wa34J1zLrcP+Gsw3O2JfV2njDrRhAJ/N/0m0WVT6D45usnA2KJSL0tXNuaN5tIIzY=
+	t=1740077764; cv=fail; b=AauHHVD+nD72lF0VCN10Ov5P/wrM9ti5DZRdOEXe/Yim2cpt/trNo5O3Pdwd9KkLxpXvKvm3xzpq5X6WvT5p2R2/M6IsjYwoWctY92FIIbu1PlyneqYQ5R+iXTTVPqCgak+L5+v7pwcs679w5v24c7HNd2LKT+SshAAdW1cRysw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740077747; c=relaxed/simple;
-	bh=ACxDIzlyWKX/SCqt+4yCoyNVjV2JPvhv+c6Np3sdCUg=;
+	s=arc-20240116; t=1740077764; c=relaxed/simple;
+	bh=pAhwEsFnhfbSkOTTH6X/elljhdoRR2fu8Qo82iLWth8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I9hnYSZfyrE1y5qPmWC0kMii3y/crYHeLar4TWk4TfhOPFWbCLoFsIoDrSCbO3oy44XZzpJ/mHa6WxnKnf497CwOfuDjsW1mGcV18OZcj7QUxjhW5TNFV74fwMkI02TmZW46t9z1cFeK3FYTzxEz35gyWJlYy4Qn2QSra2Goboc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YSfzApUs; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=axvjFhjb; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=ANXH4RVEomlt3uZ28tWUsAHLhydlwiAhZB4jUYZQHQ+OijBsgsPBS+3uO6lpaqHCvSjac17FLXj6WZyLr91a4iVdXBbf1/zrr8UbHjlHNHlRrmVLCCfpbz5mf13zitqR2S2iIZ6Z1kLoQ//YrIaR9nV9Ls7hGgaA2MZKNOJ9c0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eT6BdXKC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=VgZ/46uV; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YSfzApUs";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="axvjFhjb"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFMfJ9012892;
-	Thu, 20 Feb 2025 18:55:33 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eT6BdXKC";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="VgZ/46uV"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KFMb8p027057;
+	Thu, 20 Feb 2025 18:55:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=M/5/VgEZCijeurYxNwPAXZhUuis+hKZc9TPXfdPQtdY=; b=
-	YSfzApUss4V77TM/wjth1h8hUJc4Bn9n5lOtR8OxjqrVncW6ObJslV9H04kFqXwZ
-	y0GNe8AHVmUk4uhEHSyQbuZjgvZ+/G2/3UfYYk10RgP/L5DQkHRvI5wGq7NRtAB3
-	1PE7vWhAQvhsnbFtaTPKf/86HVxXuN0DNN5UDGQdtmN3Cil31qgloWRR3AxaVzjV
-	Mx2WQmsk/RI0B3YTMxujmqU1Z4ONWothqQ6yE85BIzVAfBq4CIUgmVbkl1YglbI+
-	8T6/a8AUta/TJnog/WZCQhIk+jdMgUuTyj9r30MncuwY7hE1nXhOrpiy6QFT2ETd
-	BvPVu7s3pm85d5AxdscP1g==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00nmtcg-1
+	corp-2023-11-20; bh=xFTb3wdqEqDA/iGP8UXuzKrI9oszXMASQZbsEksZi00=; b=
+	eT6BdXKCEl94INxvKqIiU7vtxaiqpUBa/qPh3YkZFGBFppIu6NMfGPrtX+P+bn/7
+	hZpUzF4CWy91p21ipJvJvKPnzlONfeHxcehDEzeDwOVh/STleM79T0W5aXC7lBUM
+	s0xadMa6nTel6AtJ4dbMG6+6gxDTFysLRbh1orVJ1+uJpWfzoSeido2O3kw9BYps
+	MDXGqM0KJmswdU2NSju5OVGh328qACwVXJZoyKQ9de6yNMOi0XT0FpY5fAEnWnbo
+	yiabQgkl9p5tTq3jNqhasT5ZIpwcUpofJnvkzLHp5n4qSojBWCOAY8bOQAKRguI0
+	S0uM7VIygOLdnQhXw8HIzw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00pvt8e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 18:55:33 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51KIUCN1002092;
-	Thu, 20 Feb 2025 18:55:32 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2044.outbound.protection.outlook.com [104.47.58.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44w0tnm28r-1
+	Thu, 20 Feb 2025 18:55:40 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51KIOTva009656;
+	Thu, 20 Feb 2025 18:55:40 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2043.outbound.protection.outlook.com [104.47.58.43])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44w09ebav4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 18:55:31 +0000
+	Thu, 20 Feb 2025 18:55:40 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZCAr2ced5e+HGsRMTEN/u65GYmETZj61+BxJLNcY7jzd19vz7KcniF5DBLpUReKQ3giOP4fuLzpeds0m76dmx6kvhcwhT9l+yQdZikhlLo4tp0lazvHLuQ8EiwH/eO9J6IF7f+SThX87snUsBun/+8TjLzRtSKYYFphA2xt0gZ55W5lNVA9V5IMrNn7lFZSNeDR+9RYE7LZyhcw3mXFrHRsIr4LGPAoSeodDVdYjvClj32GyIeWDsTtTb3vxZKOia8kUuGRmwFENYjqfEs30YZRTKtinyfeZRwaMfWevS9pgubm7i05caIW39Pu8QcsMpk55jvrpdmiAEf1XrCp74Q==
+ b=Dnk1QpGu/NpGCCwpWMyMuhvU++ADM/S2K4u5kCbKpbnxT5z01RWjHwVTB86qyvmx2d2XCD3LpEXSTrIj+cp4O9lEKqETZpX0d4RrbfH/kJWIJHPy9p9vCpdesTG5ZlEb5EAwpQKtkvF2UO4y2v6uo3OKY+m1Tgkl74K+z8cpQThcYBFLF/PjtkZSgqzi9vlFGigQAGjuNcEUhPWFEmwv7ol/j2/XRjQa4kbSlOXBQtc+5JeKtH35AhZymnaEGYgfIstLWj2cA28yhSHs5kBJcOMxGtkz80u3Hm9/ah3Hw5EZ8f7qrSHPTQXbiCzul6lqDM8FzwALh8zruh7hjHQvZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M/5/VgEZCijeurYxNwPAXZhUuis+hKZc9TPXfdPQtdY=;
- b=JzcooUy1LVk5l/qvOOAvnBERwEi1mc6nRBtcedkdhLdMAXNgobI6Y4o/KzCK4QHslIiMBaY9ap1I1F9pw4rPIDnbNzngvsoZpBvdyCceqN9kJaXoUpRuwVyvejaKXSJZ5LrtoKadg8AtE21eMzBTupxaqncFeWDwKgY1xnHTDTMGtPoM0OsVdjhQ7G/wlg4Q7CRj76y/7Vh20QD2vdPmnsgMZ0HpG+Kw2YnLZEHGpy3XcBZofME25xCu8pxx32dLOIakBiixjdYToiDoPwl+CdXEa/MRbDHSquYaQ2Y2bqlvjDCQuhs9h9bV2ajiLS+bblSglqqKamKYqXA6GGWt8Q==
+ bh=xFTb3wdqEqDA/iGP8UXuzKrI9oszXMASQZbsEksZi00=;
+ b=SrbXqSfUU+40igx3hGyQIliLa6V36PG7N9mELn1i64QqTLd6MB/y99Q9g2R+l4pLSYbzNz5JPlXyvfvXKS5uADHXlANoD52QXr9gTMqzu6O0dtuA+UP7Vm1dZ6BlSPew1g/4MZOeT5aLRyGcQUCzDHJEcG+u7qfzikTGwetDvEUYOVnVb2nOzXaQmNYyd3NFGyk0ulP3sCmtrNe45OosI5V0RZ+zVsrOESOUyBbi9q5BQS++leq1j9hpOb/Zh2ONm/AAJKUaTiITlB24Ebtkbn1HI4A8FxgraFyWWVFq8N88+MImMaPG5JCUFBfyQsvWQ6kUkLEarCbcrYs0YaozdQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M/5/VgEZCijeurYxNwPAXZhUuis+hKZc9TPXfdPQtdY=;
- b=axvjFhjbkdSSbNvshrXJdWVC+Vwi0V5gh0CO4NILd7VaL9LTzRHTkU0G98/8nu3sH+Lu4PShfxA1tYj3zWIhUCcHBrnP92yrjrWXhIXIPNQUMwQoIcgoif/rgG36t6KVrplFqmnkIB94tS4Nfp+rkusbIXBxaeu3yuXSRRo7SbE=
+ bh=xFTb3wdqEqDA/iGP8UXuzKrI9oszXMASQZbsEksZi00=;
+ b=VgZ/46uVIN5huS+Fsid/MaetIoM+rsa3+6givGlX7uIw1t2deHoHrxT5lHLLPDNNRomOfNSyBVHdpihBEO8srXLO/3BiAFk7AtENxtKw5GyvDOvTmxSREfMVqXkqVzc709BZkdfLYZcjRIIuG7keIhBt0XV4fR/XLOCwy1Hpboo=
 Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
  by DM6PR10MB4186.namprd10.prod.outlook.com (2603:10b6:5:218::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
- 2025 18:55:30 +0000
+ 2025 18:55:37 +0000
 Received: from PH8PR10MB6597.namprd10.prod.outlook.com
  ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
  ([fe80::6874:4af6:bf0a:6ca%4]) with mapi id 15.20.8445.017; Thu, 20 Feb 2025
- 18:55:29 +0000
+ 18:55:37 +0000
 From: Stephen Brennan <stephen.s.brennan@oracle.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -80,16 +80,16 @@ Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
         Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 2/3] tools: perf: add LZMA decompression from FILE
-Date: Thu, 20 Feb 2025 10:55:10 -0800
-Message-ID: <20250220185512.3357820-3-stephen.s.brennan@oracle.com>
+Subject: [PATCH v2 3/3] tools: perf: support .gnu_debugdata for symbols
+Date: Thu, 20 Feb 2025 10:55:11 -0800
+Message-ID: <20250220185512.3357820-4-stephen.s.brennan@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250220185512.3357820-1-stephen.s.brennan@oracle.com>
 References: <20250220185512.3357820-1-stephen.s.brennan@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0407.namprd03.prod.outlook.com
- (2603:10b6:408:111::22) To PH8PR10MB6597.namprd10.prod.outlook.com
+X-ClientProxiedBy: BN0PR04CA0148.namprd04.prod.outlook.com
+ (2603:10b6:408:ed::33) To PH8PR10MB6597.namprd10.prod.outlook.com
  (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -99,193 +99,300 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|DM6PR10MB4186:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69d4699b-bf7e-472a-afef-08dd51e02558
+X-MS-Office365-Filtering-Correlation-Id: cd947c9c-f61f-4b20-14b2-08dd51e029ea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QZDjkLaWjLkooCqRVWHtyLq0u7yD/l/BEidNCU4dLg8qQYnNckz4TDQ7Dpaz?=
- =?us-ascii?Q?YSRLkbnIau/QdUTll0mnDsy4E7Cn9bJ7b0xyNsRSn9xeKWUGIuX/RRanyML7?=
- =?us-ascii?Q?sgHAeqYrkyIgVMpkAArC2uyCuZqZETPko3d97BThzvapdsIOkwYXErAMA9gL?=
- =?us-ascii?Q?2NWb8Hfi5OhKuzZsJVrXj7zXS3ye5QxNqnOs0xOZfjaEIi/+LVJ2idTnZ7Ne?=
- =?us-ascii?Q?pnaLJ5c13bqxJsn8OWpBHf7nF4WN+21DmO/SYWOZ4PfEoe+s8UD8DZy2Ors+?=
- =?us-ascii?Q?HtoL4kZrURelsgbfQkN6DGFzkDN2APPmgaDm0d9KllpHhcirYO+JRT1UsbDF?=
- =?us-ascii?Q?vwXFUM6YEorhygpDdaDXZZnesKwWmA8bln1RA8GhW3MM8OAWZUDmJ0SjRt2z?=
- =?us-ascii?Q?k67B3vZE7O7u3Wb0wYGFlqRCXHk9qWG8ccJJH0NntFzbUj0nyDHNbkXgDt3J?=
- =?us-ascii?Q?TlhooZgGr2t2b2+EdXGFrzsJ7ZywKV4owaff1FCldnw3n9as00DDC8zy4Eq0?=
- =?us-ascii?Q?6BMyd+WFgkOoAAEKqh+wjTUxULuF1eAxA9unvYoT+wWsl2UqenT7OhEqJgId?=
- =?us-ascii?Q?xQ4JW94R2YfMjF0Ng2vtiDbZqtWw70fYY97iPrnGMRJ8XlWQaaFIBdu9Oveu?=
- =?us-ascii?Q?JPsyF8duc3FsYOCTXt9GMsLEQ+8RKZCk7KXBzJwHbMrVCsPHP/d22C4iWE6c?=
- =?us-ascii?Q?S5+TG+TLPr6b39iTQTK3OxHHShxC0rNprvLVXmy7bLqnanjdlWq/CKhEErvK?=
- =?us-ascii?Q?h2YeWIon4gTqj0Y31EsrS3QywTjuK6aKqSUjY929bsCR5VfPrkde4/ozp7Gw?=
- =?us-ascii?Q?zNatrEbb/t/nVJUwE5YHJncgNxWsFj6BRPmf4NXrMjujMO2NMED9nqNx/MXR?=
- =?us-ascii?Q?N00mgn0mopsmzvqbeRmHcq0Bp7GwszxhwtyQf1/n9TlQJimugN7Li6ZZPui2?=
- =?us-ascii?Q?VPlcezC2J2kImOdsMJYmwB4kMgZvt2dtwYrFvfudIbC7cP0QN9+uCvzqac+m?=
- =?us-ascii?Q?zhdSH6GVzxBaN9Ppn6b7s7fj3ieKoZNPs8ZSMQyaUeoqnX/tdVK+zeRTYEkD?=
- =?us-ascii?Q?iPOnqARJw1UtHdul/A+MYmMiWAzEpJh/wOGE6WXQVvYdKznRdUrtpNqi9WHp?=
- =?us-ascii?Q?j105qeEnMuhSGbU2LctfyFAoLaecSirQPY+zNUeWxmlASXfafcY1XMsuI5rd?=
- =?us-ascii?Q?WbsnAwSl6F5xyszL9+dcKQnsMVhKDwK4XklD4kksfVuVrO0W2eKyfqKNJ7S3?=
- =?us-ascii?Q?xoy5QG6Of80eKLj58NHvsQqgdT9Wc5rS/5FrOjEocu8NSMxDXW3vSZdRsOtq?=
- =?us-ascii?Q?+tM9FZZTQt0bBabTRrItY7+88LxaPHPZIlUtb9AGa4qmUcmjDyoUr/OYyfND?=
- =?us-ascii?Q?Ns49Zv5e3nQmpN8W2IUDSbNSm7BU?=
+	=?us-ascii?Q?roeYw4HqbQb6j0HO2z29FhgtLw2y+GZVuyoop6tpItQ0ZC95DntB3xHz11Y+?=
+ =?us-ascii?Q?2eDOIZqsKF1O6UZie85guNf+k5IqwqujorC95etEsrMwhjnjAhIijMm2/doi?=
+ =?us-ascii?Q?drw/8G0u6O2pUXKCukmi270LAM9NFj3rvK9zSPSwgWqOn7gfHkaOx2dlB3uf?=
+ =?us-ascii?Q?qLf3SRCSAJxRKEcv1dadFnc/IkpatmYHeHQeIvklMYRBBKBKw/3nfzXSqj13?=
+ =?us-ascii?Q?GM4K3ZlTxoJJXsUXVVE6+8BsJFsvnYf4CAX2lWCZxz2IYLrZWQV6mElDnbpe?=
+ =?us-ascii?Q?lOHanqjXfRIYfzOplTMMvAQU5ywb6yepUo1rCv3SmeiOsBkv1CQ/4a8YKw4x?=
+ =?us-ascii?Q?rildG4h8dtynAcIs2Lpm7m1xkJa8H3w0CokKtxgjcapZud/U2/uPfjFz5xsq?=
+ =?us-ascii?Q?J7vJEOiqmauQxJeXuXyFlt9fGWajjCVXgzDgUTVTxUCbaSGK51twWM/jmwmM?=
+ =?us-ascii?Q?o+lrYZ4jffIpw2DuwYz2hxSnj3bWkTwhTUNoYOjRsavZPyWEyUbKsP1q8MIn?=
+ =?us-ascii?Q?51kIxHgXvukbqcDLvZfPImpQd8QNoiLJPL6rH6Yk27hOctFK1HyrANxP1wPT?=
+ =?us-ascii?Q?t0DkIm00xvahva/eq7F3QOSf9kc8giBTYDV37jOUdo1EPo/UAU+DXcHJPVo4?=
+ =?us-ascii?Q?xsuslKsgP6jctpP2EwEfNllRBg+NOu/QPwZnnehJL99GHNKPv+vjtNGCagTO?=
+ =?us-ascii?Q?sfJESwJE3RbVYags3BQ+qLYShSgQCT0d7CnNxLXqwpXlISjWF27gA7velFiS?=
+ =?us-ascii?Q?bSNSZbJGZZzyqX9pWuSCuV34PfPjhfzFdwOmIfG8AV2R/q3EQbCBF03HtiW/?=
+ =?us-ascii?Q?kxjKxpCr3RtPMD+sY2URhHGm0CK+BmwFyYVOsX/7OdLNfUWy15b7oyYIvi0b?=
+ =?us-ascii?Q?CutOdV29tsThx1vc6ONd/t0azugZVi87E/4qRkP3dYsP2BQKiLCWcxrybfQp?=
+ =?us-ascii?Q?08kuu77ShoOfWtWB9RTdOkVjO6NMajqCozKdnXG+1Su4utcv8gJq480yDT/X?=
+ =?us-ascii?Q?AcR9cizxkWj7Cq1rmFHMctrgsPNrDeU9A1T/DFPAxH7Cw5N/ypiiOoerCwFL?=
+ =?us-ascii?Q?d9NHYL0xIxCNBHoibd8NpaTWfzsA9j8oeCNQe+mS4J2T18FG8xeZM6RshYPj?=
+ =?us-ascii?Q?K8LAhIZiQTVCQp9bhbYRQXphAKV9e4szGWKoHvCtezL+KhJepWJlt7WLWtch?=
+ =?us-ascii?Q?M4n2jDNISvc3/3xBGl3WZFKREkqYCPdHDcyZTttL8Bh3xDxsNNp6Re9FWxdJ?=
+ =?us-ascii?Q?+3MKVcB2+FQNlhaC4DXQaCTlCcMlOO23J8QcVNU1IR+0Gt9hokVmBz1CdXQL?=
+ =?us-ascii?Q?3OOhyitBhbKiJKlWbnA6S5CqVOKOQdP6cIdrvfx/Mf+ZLAZMVBgIwLwudbAN?=
+ =?us-ascii?Q?dCuC3LK+eyeQYyhi0k9YrQ8Frha+?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7VJQvH9MruacKFF0mvArnJKDydIZWqJQkkDr5Xj2BiwfKKQcY3p7L/rXLv0h?=
- =?us-ascii?Q?Ex54+lenFuO6YFlGduDR09/53/+n0kvz1fQUei9mywDYGyziQOUW8pOEjgHq?=
- =?us-ascii?Q?GYl/X5tefA36UF2c5ickSLNtZeGrHA/RZxxq4yQZib0AgMLk7G11fkjCgnlE?=
- =?us-ascii?Q?NF6ak6IeHlrGXpyfx/RkEpq9pmsPj2TMxr0FkkJQtDNRqfMQQ3g32O/f94d/?=
- =?us-ascii?Q?kf3vvSc0esbuYsEUYw5uv0NXNHP+7SjjMOpdD6QSQG5rqsUQa0DuoO6C8ziY?=
- =?us-ascii?Q?ulUvQCsE9HHyXt6ki1pvVcMSU7Fg4KFYd84ZOXiBxuJpg8mWp0EQNZsDqkeX?=
- =?us-ascii?Q?M282gd9AtbRrcWJnx6osMJIHIN1SfxRAtj8QkpL7UB7O7OUVt8Y6uKqpoRfq?=
- =?us-ascii?Q?F9MFWMRV57kpSuLovQDSv++tzNC34w/ednNPVhBvr1BUasLU9cwGScukWfhV?=
- =?us-ascii?Q?yTgOCEIf4jpr1QLdp59dREhg2YsbwE7jq9qhE5DzIJzbWJUKUhk+pS2b9tk4?=
- =?us-ascii?Q?EQDYyrmrnT9byq4LsFDW0F8i1E3SG9bIrCkZiY0dtSzdZvkhQKYiWyupsfA+?=
- =?us-ascii?Q?ewHyvX13q6odGciLuj1lPBRhbyIp+ivtMYRyhdpz0QXUfoNeErLtfISB1P2u?=
- =?us-ascii?Q?G3e0ppndPysht5MIb50D8MiHGLKgO6Mk+VXb0mK3n1wbM2Pb1Bo/3/HOxzBY?=
- =?us-ascii?Q?z5HIdGefw1MsVjIzO5+QjrM67r5gIefSLvtv+IPEs32BqZH+erRweUvRLHmq?=
- =?us-ascii?Q?pwH0mHj+piNxb0e/dCIdci/To6EeHRfTmwiBvjzW5VvKrbVzaFpGDEuHXdgq?=
- =?us-ascii?Q?JoLn5jHWq2rrWT1EOHjzHzLkq8OBbSZ4HK7KJYayTwtAABg+dlS0O1nntlku?=
- =?us-ascii?Q?LSifiS+UryNTBsUcQzeNxluH5APUNc0Y+AaC27PbLfOwhCANL4aW0VrGM2VJ?=
- =?us-ascii?Q?kK/CMayOc9RCfvS+Agn3uB/1JFkstbi6dDU7/KMPEC90PK7Q/SZzrHOD+dHi?=
- =?us-ascii?Q?1E0/7R1ZHyUtAuS6CIgJj+iRD4VFeApBuj7FFUl7/DHpG4Jequ53VM2zPAXx?=
- =?us-ascii?Q?8iq5nidOWyzxKZhBe5OzbvoTw1ragHPQkRs1LtRpc701XsyF9ry06c4dtHjZ?=
- =?us-ascii?Q?eOaICG0FfvBgfNta5iS3nb3PvfOJZS+PKBAys3AQI/D37hFM2obCVwOWP8f6?=
- =?us-ascii?Q?wwgIXaWnOFJXCRLB3KL6duoXBc1uDqPeJN0YysxGCvAsemZpCBt66eGI9Q6T?=
- =?us-ascii?Q?ZdCDY2aEsASzq+YhF2jQZdmeNLhwq1aI9+LBX0t+Qp7YOJPqeiMYeLLqMGdg?=
- =?us-ascii?Q?YG/hysPdESGoYGFKoIht0sMrJvxgKHMaVzbOcJ+jyFSC3uQdM1VQp2756hQV?=
- =?us-ascii?Q?7fDzw6vCxhKYaRfm+DXUT1u4TghjAI39O4ujez5Ob6bXg1RVeVeEh2BlPATR?=
- =?us-ascii?Q?K2KRxohmPHEv91MtG5LALLftosqHewgmLtdDDxRddUIv37kCC1suqIjPQtwh?=
- =?us-ascii?Q?YtptyLm/8bO7Z5cuLIwg4RanZrqme7layExXdXyhXxhD/cycpZLUpYTyA5iT?=
- =?us-ascii?Q?I4mMtSXj/nP7UHy7GkUVz9IVK4/FT/+ggHuVRjXL2z9D7dPqNzJ+VxDNYUlA?=
- =?us-ascii?Q?Uw=3D=3D?=
+	=?us-ascii?Q?tOvIsxYhj6DnBM2W0ztjyf9kPjPTqoVUnW/jryGGrX8TV03LMzg8UV9/P2lB?=
+ =?us-ascii?Q?OPZGaJr4GOCk8Av+8LDxeJspAsOj0qHjTIfNnWEy6Yjfn1H2uAW8sSxeleBZ?=
+ =?us-ascii?Q?XWREC+RmQ3I23Fh3i3GFdvJCX51d06XfDcvrBySN0z+LIFo1zj/RT1ESs+FI?=
+ =?us-ascii?Q?OQf2pA5Oo556kvFlNjsPLunsUV/FxtAfT+yTjm1cCTC/J+UJOdr/hSsOoH0N?=
+ =?us-ascii?Q?1B1haMS1N3Jy5sdiTYZDEO+ZvLCD9Udd0dAGxMwDE9VViPn58Uds3BU1124Z?=
+ =?us-ascii?Q?kUL7udcMMpeVQBZp3VCEFCzN71qk/nIRfpwIKmiLC933GeHo+SzIphe+Rd9e?=
+ =?us-ascii?Q?dq1UKXfYU+Ee9FrDValdKTERdXhH7szeziuo7m72w40h/+xPhSIj3Msbv3qg?=
+ =?us-ascii?Q?aMGIheyjN1rLpk2PHuqnxgVWclpQub/wZxtNXnk6/csNPuIEZCBRRkk2s7JF?=
+ =?us-ascii?Q?WYrQvxWI2nZoXeyZpCoS4I1ANDCSePsBc+cNuLWLk7FBheWlOvDOhwnpMEnC?=
+ =?us-ascii?Q?LTjakHXe8+km98WqvMj0oD1s+8nVCxEumP93dOoTyAl1zbUKb+gQeukeNJfZ?=
+ =?us-ascii?Q?t/AvKMoNL3WCGdUfFdPGRR7+tFLxHLYyEUeGI+x+Va4aIAGva/AgYcUit/fB?=
+ =?us-ascii?Q?JSkq7jSk2Z2L4rKVC6IAUDO0/wCu//UnM0vSAx/ZTVBYhwd6NMONHZ5SkTqX?=
+ =?us-ascii?Q?2Apg/DOShSDSB7ty0aIHd/Eg4Fm6MOwiSgj9omF/iak8gXETv3/oRBFVkEXQ?=
+ =?us-ascii?Q?rWUiQIf2uF0SH7TQRQ2/w1c5RTfxYJKvl7Aqn9mVtLFoB2b2vPhqUVsh2OeE?=
+ =?us-ascii?Q?8vvvAAC5zN+mbCYkRzYgAhTbxe0xv8Xe2buXIeurEKMWNn4RVny3ZmOGp8N/?=
+ =?us-ascii?Q?Iv2ehTyECy5vyt+Z4WGUL1/BQbv0dX7Tho6IpjUOIQvvqhD6vqU+ks6sVdJq?=
+ =?us-ascii?Q?ex8JO01yKPQhR3Z8mQPX/cyOJw23DrfC6JC/ljoAvQcH9V9pmQxCCFUV58V4?=
+ =?us-ascii?Q?0lP4C5s2DrFxx0TQQDIBpsFUpA97Vxs4xCeHyvCTPr4iyv2FbVSmBvoLreeJ?=
+ =?us-ascii?Q?1mPxTVp3BxGcNEtOLNB7AHA3fxri1WZ/i6Hn1x09/WpqSerXm/E0dHehK0UI?=
+ =?us-ascii?Q?PuSyA1fAztip1W+MDs++mK0UQlYym8M3SGl8YnLczS+SWpL63qmyCdNfj7q/?=
+ =?us-ascii?Q?ylskS+DwRRAcRQKz5jM4ho1jRmmLhwOnk7cjV0yLO6cu7hH7xi9lVUjy5WKo?=
+ =?us-ascii?Q?wODK34AsjdPLcbUfNGTOB/icqVUSmgsfNqvUTvwFN8+HM2q8bTMZGzj+Z6XI?=
+ =?us-ascii?Q?wckUixjWPzTvdE6mrDiazpm02ucbj1XY90aCuQIbOqiJiQ8FV/XdSaBXQ+sL?=
+ =?us-ascii?Q?zJYkHtoZHJEP+TqFBsBB/e12NOXhjHFtSL3H+eh6BM/AkdqkA9aecUolubnv?=
+ =?us-ascii?Q?l5eiGYGdsIkIOjvDuvH/+r2StGHHCEXwMh/s7SqyCHlv5d91REqI6BV74+GZ?=
+ =?us-ascii?Q?Ycm6ZbbAHlTdHj/9udWpg94ka/z9eUiYHnslztXNdj2MFMMyEjZEE0SvTS7a?=
+ =?us-ascii?Q?Fqov8kN9ssgtPIbFyJqIwQqUrOrCWLzW25Kzd2AUpfv2kDcREantjx+3Xia5?=
+ =?us-ascii?Q?1A=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	f8PYOm6r66CmJAMhc2u9cXc20eP7H2iAAfAKM8g/vHwTSDTuNAbzCUqHHB+wMJHHY6q5CKYSfGEeudOoTnjGLOigMRjMgp7olelTsL48n6ABtFp3lJ2UULPQMbvD1sDREhxURNUJtca993ZtGBpBSHv4VjtmHJiBRJQQ3tPG7Y8KX180vefWFNin8vrM1dSdxhGv7EewDULjzpnR5j9k3EYXGG3sHqy6A4ak7CVJmMNQGlvDAuJr46GkKoJz2kxao/OGwtX9KuISECWUwxEFYc5FMSMaqGUmKycr35I7sMP1QyfoZjtcGsxV4SH6uEyJTHm62n1dETAOzy5FGzsTWSR/N7caB3LyOXmXBUcDjtroHw52wRIMpPZz6VbsZsyY2INTEQwyDiCsYiIvkYFcyfPjChhmGBbvAh7CQ9mYsw+RsfI1gK/syvoR9xuV5eP6Q4wXASFOitxWz7zWjyye8nSaTrKMLk/z7ezRMOLrqlpX18DJk/d9MWvC3CAPFLbPB4Qp+0bh4jVieMc6DKF0fqb9Jyfjf+aQG2zTLbyJxlLlVwmmBZqaCdsXbkdJWiEy7ds8y4hf5OD2iv4qneaVZZgNiE4L263DsmrGrDyJE1I=
+	NFiTrY0a+yxN7I3V5LGYUGajL8lAqECKtCWoYId8l++NCifgo0tFxWG2aBfSJbK3uslQ2yXNfexR/Hs4p49wROa9F3pAQu6v4U76ErbAkTRktroqdNo4sBVe9wd1ycTySpojnrhU1GIvpGQwgYBe47bhBpUykuVctOAtdG+1s9EJjg7BwQSJsPoKXxmbXNubg6navn8WyMuLSY6sPDC8n7MNPE6OnvsfuypJjGE00ESxzcU7FEvlFXZrQna5YBh2KQ7cIbmjdz0BwkgDox05KqQlR4da0sk8Cq231/Cvow3UzideeYQxAvyRq39GjJfN0SEVE5SlKW5C8VPU2WTc5HTU8JMAlKo80hcZ85+3Qq7JEnXBASQB6eyIhQWoDaiv6v/qU/tm2bS1utfeEmgJSnRgk//4QNy7g83jqkk009hZNxaHJjZpdCWWfF8ogTUyidnQJcfgyLlwY+pLo8oo26v2PelaNqBs+cVQKhha5/YUeiLcBqfFaFGEKT1PC8QJmA3noWUNSKDdFd63CtbfI3ndKXetEgrCKBTtRVF2HFa23pwoSY/FgapU17LlpCytaz27gWI93zqBhpkA4XLxO8B2jRbTVDASr7uF54oAZJc=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69d4699b-bf7e-472a-afef-08dd51e02558
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd947c9c-f61f-4b20-14b2-08dd51e029ea
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 18:55:29.9248
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 18:55:37.6163
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5Kb5WywkoXZkKtfK8U+yhfnfDBEX019Qh8etnoIa4ZRyq7FTjVr4lB+zGbC+LlhJG1FGt77Ql4ItJ6G2vXrQeVFyrioKwBlGFOaBs8Dwnyk=
+X-MS-Exchange-CrossTenant-UserPrincipalName: EKBJ/jVTKdoZTzXKhH9rqXSfC+d7icRDyL8nsq7EbFMlsQ2bIEmZbRKNdSitGFrfl5KoCKBdDnQ107eyjFwujviGFyCxOBo5i/Sm9efaufY=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4186
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-20_08,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502200130
-X-Proofpoint-ORIG-GUID: T2qEBr5hQ1UUh6Zc_ROlWh8K6mCQU3b9
-X-Proofpoint-GUID: T2qEBr5hQ1UUh6Zc_ROlWh8K6mCQU3b9
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502200130
+X-Proofpoint-ORIG-GUID: NVHa-OIFLT6oYr2wD1fsFqHzu_esdJ-L
+X-Proofpoint-GUID: NVHa-OIFLT6oYr2wD1fsFqHzu_esdJ-L
 
-Internally lzma_decompress_to_file() creates a FILE from the filename.
-Add an API that takes an existing FILE directly. This allows
-decompressing already-open files and even buffers opened by fmemopen().
-It is necessary for supporting .gnu_debugdata in the next patch.
+Fedora introduced a "MiniDebuginfo" feature, in which an LZMA-compressed
+ELF file is placed inside a section named ".gnu_debugdata". This file
+contains nothing but a symbol table, which can be used to supplement the
+.dynsym section which only contains required symbols for runtime.
+
+It is supported by GDB for stack traces, but it should be useful for
+tracing as well. Implement support for loading symbols from
+.gnu_debugdata.
 
 Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 ---
- tools/perf/util/compress.h |  8 ++++++++
- tools/perf/util/lzma.c     | 29 ++++++++++++++++++-----------
- 2 files changed, 26 insertions(+), 11 deletions(-)
+ tools/perf/util/dso.c        |   2 +
+ tools/perf/util/dso.h        |   1 +
+ tools/perf/util/symbol-elf.c | 106 ++++++++++++++++++++++++++++++++++-
+ tools/perf/util/symbol.c     |   2 +
+ 4 files changed, 109 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index a7650353c6622..6cfecfca16f24 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -4,6 +4,7 @@
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 5c6e85fdae0de..67c21999628d4 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -93,6 +93,7 @@ bool dso__is_object_file(const struct dso *dso)
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+ 	case DSO_BINARY_TYPE__GUEST_KMODULE:
+ 	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+@@ -224,6 +225,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 	case DSO_BINARY_TYPE__VMLINUX:
+ 	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
+ 		__symbol__join_symfs(filename, size, dso__long_name(dso));
+ 		break;
  
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdio.h>
- #include <sys/types.h>
- #include <linux/compiler.h>
- #ifdef HAVE_ZSTD_SUPPORT
-@@ -16,10 +17,17 @@ bool gzip_is_compressed(const char *input);
- #endif
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index bb8e8f444054d..84d5aac666aa1 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -33,6 +33,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++	DSO_BINARY_TYPE__GNU_DEBUGDATA,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE_COMP,
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 66fd1249660a3..3fa92697c457b 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -7,6 +7,7 @@
+ #include <unistd.h>
+ #include <inttypes.h>
  
- #ifdef HAVE_LZMA_SUPPORT
-+int lzma_decompress_stream_to_file(FILE *input, int output_fd);
- int lzma_decompress_to_file(const char *input, int output_fd);
- bool lzma_is_compressed(const char *input);
- #else
- static inline
-+int lzma_decompress_stream_to_file(FILE *input __maybe_unused,
-+				   int output_fd __maybe_unused)
-+{
-+	return -1;
-+}
-+static inline
- int lzma_decompress_to_file(const char *input __maybe_unused,
- 			    int output_fd __maybe_unused)
- {
-diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
-index af9a97612f9df..bbcd2ffcf4bd1 100644
---- a/tools/perf/util/lzma.c
-+++ b/tools/perf/util/lzma.c
-@@ -32,7 +32,7 @@ static const char *lzma_strerror(lzma_ret ret)
- 	}
++#include "compress.h"
+ #include "dso.h"
+ #include "map.h"
+ #include "maps.h"
+@@ -1228,6 +1229,81 @@ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+ 	       ehdr.e_type == ET_DYN;
  }
  
--int lzma_decompress_to_file(const char *input, int output_fd)
-+int lzma_decompress_stream_to_file(FILE *infile, int output_fd)
- {
- 	lzma_action action = LZMA_RUN;
- 	lzma_stream strm   = LZMA_STREAM_INIT;
-@@ -41,18 +41,11 @@ int lzma_decompress_to_file(const char *input, int output_fd)
- 
- 	u8 buf_in[BUFSIZE];
- 	u8 buf_out[BUFSIZE];
--	FILE *infile;
--
--	infile = fopen(input, "rb");
--	if (!infile) {
--		pr_debug("lzma: fopen failed on %s: '%s'\n", input, strerror(errno));
--		return -1;
--	}
- 
- 	ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
- 	if (ret != LZMA_OK) {
- 		pr_debug("lzma: lzma_stream_decoder failed %s (%d)\n", lzma_strerror(ret), ret);
--		goto err_fclose;
-+		return err;
- 	}
- 
- 	strm.next_in   = NULL;
-@@ -100,11 +93,25 @@ int lzma_decompress_to_file(const char *input, int output_fd)
- 	err = 0;
- err_lzma_end:
- 	lzma_end(&strm);
--err_fclose:
--	fclose(infile);
- 	return err;
- }
- 
-+int lzma_decompress_to_file(const char *input, int output_fd)
++static Elf *read_gnu_debugdata(struct dso *dso, Elf *elf, const char *name, int *fd_ret)
 +{
-+	FILE *infile;
-+	int ret;
++	Elf *elf_embedded;
++	GElf_Ehdr ehdr;
++	GElf_Shdr shdr;
++	Elf_Scn *scn;
++	Elf_Data *scn_data;
++	FILE *wrapped;
++	size_t shndx;
++	char temp_filename[] = "/tmp/perf.gnu_debugdata.elf.XXXXXX";
++	int ret, temp_fd;
 +
-+	infile = fopen(input, "rb");
-+	if (!infile) {
-+		pr_debug("lzma: fopen failed on %s: '%s'\n", input, strerror(errno));
-+		return -1;
++	if (gelf_getehdr(elf, &ehdr) == NULL) {
++		pr_debug("%s: cannot read %s ELF file.\n", __func__, name);
++		*dso__load_errno(dso) = DSO_LOAD_ERRNO__INVALID_ELF;
++		return NULL;
 +	}
 +
-+	ret = lzma_decompress_stream_to_file(infile, output_fd);
-+	fclose(infile);
-+	return ret;
++	scn = elf_section_by_name(elf, &ehdr, &shdr, ".gnu_debugdata", &shndx);
++	if (!scn) {
++		*dso__load_errno(dso) = -ENOENT;
++		return NULL;
++	}
++
++	if (shdr.sh_type == SHT_NOBITS) {
++		pr_debug("%s: .gnu_debugdata of ELF file %s has no data.\n", __func__, name);
++		*dso__load_errno(dso) = DSO_LOAD_ERRNO__INVALID_ELF;
++		return NULL;
++	}
++
++	scn_data = elf_rawdata(scn, NULL);
++	if (!scn_data) {
++		pr_debug("%s: error reading .gnu_debugdata of %s: %s\n", __func__,
++			 name, elf_errmsg(-1));
++		*dso__load_errno(dso) = DSO_LOAD_ERRNO__INVALID_ELF;
++		return NULL;
++	}
++
++	wrapped = fmemopen(scn_data->d_buf, scn_data->d_size, "r");
++	if (!wrapped) {
++		pr_debug("%s: fmemopen: %s\n", __func__, strerror(errno));
++		*dso__load_errno(dso) = -errno;
++		return NULL;
++	}
++
++	temp_fd = mkstemp(temp_filename);
++	if (temp_fd < 0) {
++		pr_debug("%s: mkstemp: %s\n", __func__, strerror(errno));
++		*dso__load_errno(dso) = -errno;
++		fclose(wrapped);
++		return NULL;
++	}
++	unlink(temp_filename);
++
++	ret = lzma_decompress_stream_to_file(wrapped, temp_fd);
++	fclose(wrapped);
++	if (ret < 0) {
++		*dso__load_errno(dso) = -errno;
++		close(temp_fd);
++		return NULL;
++	}
++
++	elf_embedded = elf_begin(temp_fd, PERF_ELF_C_READ_MMAP, NULL);
++	if (!elf_embedded) {
++		pr_debug("%s: error reading .gnu_debugdata of %s: %s\n", __func__,
++			 name, elf_errmsg(-1));
++		*dso__load_errno(dso) = DSO_LOAD_ERRNO__INVALID_ELF;
++		close(temp_fd);
++		return NULL;
++	}
++	pr_debug("%s: using .gnu_debugdata of %s\n", __func__, name);
++	*fd_ret = temp_fd;
++	return elf_embedded;
 +}
 +
- bool lzma_is_compressed(const char *input)
+ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+ 		 enum dso_binary_type type)
  {
- 	int fd = open(input, O_RDONLY);
+@@ -1256,6 +1332,19 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+ 		goto out_close;
+ 	}
+ 
++	if (type == DSO_BINARY_TYPE__GNU_DEBUGDATA) {
++		int new_fd;
++		Elf *embedded = read_gnu_debugdata(dso, elf, name, &new_fd);
++
++		if (!embedded)
++			goto out_close;
++
++		elf_end(elf);
++		close(fd);
++		fd = new_fd;
++		elf = embedded;
++	}
++
+ 	if (gelf_getehdr(elf, &ehdr) == NULL) {
+ 		*dso__load_errno(dso) = DSO_LOAD_ERRNO__INVALID_ELF;
+ 		pr_debug("%s: cannot get elf header.\n", __func__);
+@@ -1854,10 +1943,23 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 					     kmodule, 1);
+ 		if (err < 0)
+ 			return err;
+-		err += nr;
++		nr += err;
+ 	}
+ 
+-	return err;
++	/*
++	 * The .gnu_debugdata is a special situation: it contains a symbol
++	 * table, but the runtime file may also contain dynsym entries which are
++	 * not present there. We need to load both.
++	 */
++	if (syms_ss->type == DSO_BINARY_TYPE__GNU_DEBUGDATA && runtime_ss->dynsym) {
++		err = dso__load_sym_internal(dso, map, runtime_ss, runtime_ss,
++					     kmodule, 1);
++		if (err < 0)
++			return err;
++		nr += err;
++	}
++
++	return nr;
+ }
+ 
+ static int elf_read_maps(Elf *elf, bool exe, mapfn_t mapfn, void *data)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 49b08adc6ee34..a0767762d4d73 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -84,6 +84,7 @@ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++	DSO_BINARY_TYPE__GNU_DEBUGDATA,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE_COMP,
+@@ -1716,6 +1717,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
+ 		return !kmod && dso__kernel(dso) == DSO_SPACE__USER;
+ 
+ 	case DSO_BINARY_TYPE__KALLSYMS:
 -- 
 2.43.5
 
