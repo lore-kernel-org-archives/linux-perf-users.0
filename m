@@ -1,119 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B061F463D
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 12:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E021DB34B
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 12:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740053506; cv=none; b=XiQ4jR3yU/pdV9qXrcTc2n3grys2iLcIJrgvNApN10ZriiFX59XueGQGY7/T64KfISIN1qBUT7p4F4V7roHoYg6GnZM3IMEVdmJlusz9B2TcjiwBxZlIrPy4inrimIHY33I7XMEJY6/mdGdcG2YmBuGGVOMM8ew0/lk9ZyRs0Eo=
+	t=1740053881; cv=none; b=TshQPMPhs12I1SQRveiVnX2DM+YEnvNr784sSxlyRyCaNED8p63NCJa0ipLj9p/ZJ5O3eC73RcIP5jIu8GcNFSExB637yPpc1dJM6+920wcD+OZJ9f9yGSBEvFttRxHJUusmPSKg4IImvxw93RYisXJeOp+nbf2bD+Msg8H/dMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740053506; c=relaxed/simple;
-	bh=x8rxWQrvJ+M4LCHRipLM5Opmo7p0J0gyDNK7Shle7Og=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oFmk/dRa+spP7Y/V2qfnTECmjuQSrTp0LrHVgWDe4K/Nl//d8rdNXw09tGhXrBafSYtHotCAdoVDbgrgZ3wvcM51Q1+68JKR5EHoNCiOpurOz3CgCkhMjk0xoFknCLdw+hkNp11jViy6GUUakgtIMNajx9pvyVEcs6qWZSUmSAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HLGQaPcF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740053881; c=relaxed/simple;
+	bh=ovInfsJ96+xONzJYIftLY8ItKnYcVc+4SXbTYAmQao8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y1P7FDC34sD5hOBBmXjlZ7kXUPBW/1NlHsjl36TNU8U7T1FDSdPzgOj6pCuCuv2XD3drBAISwSI/gm37WnDj/zNyY/J/ZXeXQpuq/mPqPth0t3cuiHV6/L13qk8Iypn63M8hEf8pbMUbXNvOGijKwzXzxwTOxQKvYax82LKs1NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SjZ+KiG+; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLGQaPcF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740053504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RhrXFXQ5svBVQxo6ziu59a9sD3xm5P7Es03Gb2LJN0Y=;
-	b=HLGQaPcFpV9qJS2lecJSmWvCqWdc6u9QYCUuHSGhlyDYsc+LWx5BgyAWcCTvswOXym06Ix
-	AX/yv4bH7Sz2nSlEOrQ1ZbpijX80drnNgfNT9g23+LG4XO7J8Lp9gsO9UWgqCMtfkHRnTA
-	WFdIYwFVs+Q18TE6nsNLHL3mH9QKVzk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-536-MfjS2_HEPXqmcX64T2dq1A-1; Thu,
- 20 Feb 2025 07:11:42 -0500
-X-MC-Unique: MfjS2_HEPXqmcX64T2dq1A-1
-X-Mimecast-MFC-AGG-ID: MfjS2_HEPXqmcX64T2dq1A_1740053501
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 344411800570;
-	Thu, 20 Feb 2025 12:11:41 +0000 (UTC)
-Received: from Carbon (unknown [10.44.22.3])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 504591956094;
-	Thu, 20 Feb 2025 12:11:36 +0000 (UTC)
-Date: Thu, 20 Feb 2025 13:11:32 +0100 (CET)
-From: Michael Petlan <mpetlan@redhat.com>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: linux-perf-users@vger.kernel.org, irogers@google.com, 
-    weilin.wang@intel.com, caleb.biggers@intel.com, namhyung@kernel.org, 
-    acme@kernel.org, darcari@redhat.com
-Subject: Re: Broken intel uncore events on SPR
-In-Reply-To: <c481b5a2-6d1d-4c27-a32a-df131712a1a0@linux.intel.com>
-Message-ID: <5116e2a-57b8-475e-7a37-2f68ae1c15d7@redhat.com>
-References: <a2372e44-19fc-7eb4-c24b-1a568c742546@redhat.com> <c481b5a2-6d1d-4c27-a32a-df131712a1a0@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SjZ+KiG+"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220c8f38febso15514915ad.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 04:17:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1740053878; x=1740658678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Mhxc0Zvns6Yn1JJtRPi3TJJp5srNdU12f0u9NFGaDA=;
+        b=SjZ+KiG+85PWwNTuFGrqjAvwy002TYPYJWUiMSawMdMnB1+5PITTJvks6tIMBrEvbb
+         wT4uX8sdYwMM5jua464yjhOIJn6MCPdj4uptitZtazjIp5ebEbwD1op3z8ConAI4gXsE
+         WNJY49wb+xWUTve6pvzjQvwgu7mRQkPErqadiebR3Gazu8dbZ3qkGptA5ESGJWoVQ++7
+         akmK+NyAJcY7yUO8fokZ/d6D/Z2L6aEUvxIxtUfNE4akqdBa4xVXOTpnofBRGz1GdYqF
+         ZTGVssazxVwB0QsTs1Ak4HL/WHlQYyh92LSeOE/PecG4dmGDlB//DgcLLy89IYN2LrQf
+         sPhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740053878; x=1740658678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Mhxc0Zvns6Yn1JJtRPi3TJJp5srNdU12f0u9NFGaDA=;
+        b=izSvfme6eA9e7i33bFb1FXwAYJBEWnoUtj7d0eTxj0V/EVVz6OAkvAslQqS5PeD123
+         4zjpuVk2tgE5tO2JNeORVci9fClEpbm+T3ahfI8c01oewlrdU2jQNdadIK9qdvMIX0vi
+         g4XPKUfKszzkGtxvKg9wnM1rLKWJWf5QjAqx4gOCnHqpfApz/CXT/DgJgYB5B3331tuj
+         uqqEuYintz2J3cmtUzooRLteiorvhMwJep1GRYymxXjGa92Xrb8Gk7Va2OM7IcAT5Mc2
+         uCGuvYCaoJQwGne9ZN9vgoL/lv3j7L6po1h8FSUvEi4qR2r35ke/9HveOa2Tb0me7fMG
+         Cevg==
+X-Forwarded-Encrypted: i=1; AJvYcCU25c+9uFY/HUVUHl9tou0wBJpTXJEkwtM86KPmMuwXExg2GT5xzS1FiUpNAKi0YXtFL8aSH89RQuPSMUyvaehn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt1bwnYNsEfrsuOXGy1mvSX+x07kOH54kGs3VlwTe2sjhjb70d
+	fxiAbKspMbV8O/9tdlyEYACrd2UNIKWsBFFItf16ShxcPjPvGucC1+kLGG5Hclg=
+X-Gm-Gg: ASbGncujLAiTsrAeSaeQqh7Tw/GiSwgERXWDW9R0juoO968tkhhWcooaPaGbUfMCFbQ
+	YyaVj3TRQatEGc/Dk3TSY5zGHmE6lp6Nn6+51eEO2qGOmirz+Cb62UL+XlpExUg3HdOdAbDGl9G
+	gzXv94uin5Ztr8UuBmDccBicVD/kXiDDcnKjYXIrTSqufYLx/QaGqzYeVg/whoe93WbfprGbC34
+	GyIryajz7I6DiCvMieUK3Z+HbSk9fapbexUMjrA36GlB07knSMEeMutuNoiuY4IZMW7uzTKmfyh
+	wEjIclAA08J5cO3e/D/AOA8OMGY+/KrSfd1hbjvZL5BJIVG84w==
+X-Google-Smtp-Source: AGHT+IGDJ50LQRWaa3WO9QsRF4eufVt9fyhtOZXwrn91dXqUgW/zlEdNiAcm4tKuEZGfurYEc02gAQ==
+X-Received: by 2002:a17:902:e806:b0:21f:81f4:21b8 with SMTP id d9443c01a7336-221906a6c10mr37088815ad.50.1740053878554;
+        Thu, 20 Feb 2025 04:17:58 -0800 (PST)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-221040434d9sm87773895ad.196.2025.02.20.04.17.55
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 20 Feb 2025 04:17:58 -0800 (PST)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH v4 0/2] Fix dwc_pcie pmu driver issues
+Date: Thu, 20 Feb 2025 20:17:14 +0800
+Message-Id: <20250220121716.50324-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Feb 2025, Liang, Kan wrote:
-> On 2025-02-14 7:39 a.m., Michael Petlan wrote:
-> > Hello all,
-> > 
-> > our testing shows that some uncore events are broken on Intel Sapphire
-> > Rapids (family 6, model 143). I have tested v6.14-rc2 and the results
-> > are the same as with v6.12.
-> > 
-> > The full list of events that don't work is at the end of this mail.
-> > 
-> > The reason is that their umasks are too big in the JSON definitions, e.g.:
-> > 
-> >   {
-> >     "BriefDescription": "PCIe Completion Buffer Inserts of completions with data: Part 0",
-> >     "Counter": "0,1,2,3",
-> >     "EventCode": "0xc2",
-> >     "EventName": "UNC_IIO_COMP_BUF_INSERTS.CMPD.PART0",
-> >     "Experimental": "1",
-> >     "FCMask": "0x07",
-> >     "PerPkg": "1",
-> >     "PortMask": "0x0001",
-> >     "PublicDescription": "PCIe Completion Buffer Inserts of completions with data : Part 0 : x16 card plugged in to Lane 0/1/2/3, Or x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
-> >     "UMask": "0x7001004",
-> >     "Unit": "IIO"
-> >   },
-> > 
-> 
-> The issue should have been fixed with the latest update.
-> https://lore.kernel.org/lkml/20250211213031.114209-20-irogers@google.com/
-> 
-> It should be available in the perf-tools-next branch.
-> 
->     {
->         "BriefDescription": "PCIe Completion Buffer Inserts of
-> completions with data: Part 0",
->         "Counter": "0,1,2,3",
->         "EventCode": "0xc2",
->         "EventName": "UNC_IIO_COMP_BUF_INSERTS.CMPD.PART0",
->         "Experimental": "1",
->         "FCMask": "0x07",
->         "PerPkg": "1",
->         "PortMask": "0x0001",
->         "PublicDescription": "PCIe Completion Buffer Inserts of
-> completions with data : Part 0 : x16 card plugged in to Lane 0/1/2/3, Or
-> x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
->         "UMask": "0x4",
->         "Unit": "IIO"
->     },
-> 
-> Thanks,
-> Kan
+v1:
+Only sent the patch titled "fix duplicate pci_dev devices".
 
-Oh, thanks Kan!
-I have tested it and it fixes all the broken events. Great!
+v2:
+1. New patch: "fix the incorrect reference count".
+2. The "fix duplicate pci_dev devices" change is made in two places:
+One is to remove the modification of the PMU name. The other is to change
+"for_each_pci_dev" to "pci_get_domain_bus_and_slot".
 
-Michael
+v3:
+patch[1]: Remove the logic of "fixing the reference count".
+patch[2]: When pr_err, also output the sbdf.
+
+v4:
+patch[2]: Restore "platform_dwc_pcie" to "dwc_pcie_pmu".
+
+
+Yunhui Cui (2):
+  perf/dwc_pcie: fix some unreleased resources
+  perf/dwc_pcie: fix duplicate pci_dev devices
+
+ drivers/perf/dwc_pcie_pmu.c | 51 ++++++++++++++++++++++++-------------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
+
+-- 
+2.39.2
 
