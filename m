@@ -1,215 +1,183 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586B11E4937
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 07:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE181E9B05
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 08:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740036475; cv=none; b=jDJfEor9t5Yi5GUxa8lSlQ3P27aSybdpTf9ReYY6bnFHj9Bawx4vUyfqgQ2mM/IXoKMZlMnhf1BsNBX4kXuezRZhYwLM6Lz5naKV86S7Dws/Dk1ywPoHTneDz8uq1lyX1vnCMTuX7ijPdJfbcxjz4NOMzuqnuueHoAzFtTDAXZk=
+	t=1740040707; cv=none; b=jandiTZxItbR+/CsboderS02/UBOkWwqI2/tvGpCH8Ls+cfacEm5UHfkXAkj+MlZYfvb0vq2FRfZoNtsjAMAOfAjBRVD4y9WoB259TCsHtsMjQHIm+t1NxeiNsXrySSPfa9fz036UggsJh/pHXKFGvWqK/hM16XH+4Z6w6MTeKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740036475; c=relaxed/simple;
-	bh=p3TD4N5ncUSlR7g2MNebA4UOXXszC8KvLXpzVDZ+CJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZ2l2HHghpCqdyAOZHwE4+BzlkAlRMqYUsX0y8eyZGzrzcW1p+Ds7Bp03BrP5mIl6ZMSqb+jbLBPjcUx2gv56p5z/FK8mE/xVbj1XIUma59RtP1wQaQrGleEOKyhqEb0E5sGvKc2q7oLD+jZhS8SLMTCY4LpyKyqxfcq9G3lixU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PO0IGoc+; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740040707; c=relaxed/simple;
+	bh=FrcpVA1vsTxNxI1Gs/ep8rNytN9twIjnfOESK3tmuNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gju+yZLE/ae24cyIxvOvSjjcnk+hedBZ1wiZnP5aoRojD+63/M8LNV7J0s/Fr5ycLGnGE7Z+/jSQPK9NjB6+62kvW71hyX1kpyytqztTdOAckeQVX3aofLIyYo3Htnz8A++QQAPx55H+bs9l65Igiux9oBgKa+vwow4nsv4sVLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W16Lzwhj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PO0IGoc+"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220f048c038so10206685ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 23:27:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740036472; x=1740641272; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0YiPjJjyP/SfskdcyKsiE+Tu2gFKc0Gw/xXDAcrX5o4=;
-        b=PO0IGoc+eNnetJrPKHq+GZnngvfpWyQ3F6Ct2aD3YCNjVAIKOGShRuuvdbFU3nmfvM
-         v7QcEUsMYP0VgIML15pW2FPAI1IaeoDOTdeyqLEouV6Vt/fFGwvMZNdYMi91rXC+PWbR
-         8A96k76sJCt8dqjLhF+XcGQmcg5E72/ACYPcZf4xLz/vYYfWCkn1lAKUNgFNaqhBku4Q
-         J67X22SR+p1Q0Huq+UBtjxTQyjbEDSEl8Z97gms+Zn/3a6sfaW0w5xAm/gsa2M7nmLw9
-         tmhDz+r1CN73R0zldP2Ayp6kMMBBNBsuKCwBjI/aTegEvhYqbBpYLDnNkyT2wWH9Nix8
-         ErtQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W16Lzwhj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740040704;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jY7tYtFefzvHG4aShI6b5afWDaM1BnuW3bk8CDdolzk=;
+	b=W16Lzwhjl+qh0odmhxlSm/9qLcItfRFPopERH52eq5/m8dNKEXCV9UabzGrSL478PTt3PJ
+	BKQ2rFrh8j0U0NpEFmwx+Ve/kYsBoAbo5FrJkKO//cyn8tKlutJ8EgGVg3t8izJV87IeFI
+	jrAw2Xl1nKKgXWo44BWMZULzDO1uBwY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-527-8h_P6EwTNYuDJJCuKuj3BA-1; Thu, 20 Feb 2025 03:38:22 -0500
+X-MC-Unique: 8h_P6EwTNYuDJJCuKuj3BA-1
+X-Mimecast-MFC-AGG-ID: 8h_P6EwTNYuDJJCuKuj3BA_1740040702
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4388eee7073so7909585e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 00:38:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740036472; x=1740641272;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0YiPjJjyP/SfskdcyKsiE+Tu2gFKc0Gw/xXDAcrX5o4=;
-        b=Ls+cGGbeLjvCFPCtXcu0yvAUh00qQcOYCF6Y64DlDKjco1twnNZeo4PKF85z0DhhkU
-         hdHefx4CX24miIXPrxozn7rSXvReTGuOpDR89/JUaAHvT7rrNangmeq4CGoDKY3n5SwL
-         eb2uUAO4g/VLobKYUM6ZGmrSgPzWVw2m1NZfCaL0XguppsHATpC+ICPZg+YJ6g6ld3tW
-         XkKMfnlwAWfGwtklnkKKN/znZ7IkU2WTJtxdhfO/H2c6Ri2/igta5XKjMddizc9q8qN7
-         CqsNoJ71RqxDKtKM0OgTvreyZqhesaeEZ/7/pDcmLuZJNlK+g7zbWGvmQDCh1akGp1SB
-         pC6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ3KnxT2ZRsZIHO7kfUbPhI6wjuJ2zM/zJsOCTwGb62gQn3NEpZDYPUX5Iu03OoLd22UgqbYqoQ31cHs8f0t4S@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsSRTEkO0i2fpmgCd2KN1AF+3b12iXVlkNBc8f+W81JT+fCMO2
-	pdqdI6F8ufQ9jUgXqTmrzTgg16jjH9bqhyjQm75l4uBpfQo5FBAwHsvlAToc5Q==
-X-Gm-Gg: ASbGncur5qvzssb0bShou9I4TdWjKToJcc68l6R3sETdT6MxyudkQa0EqLOjLbxUMzl
-	pOeAbfq77p+ZmZ8dtQaQNA4LdYCChMFDv5zOZAzW0w1kZ07akDXyFcZbC8r9RTEpcoxue+w+p24
-	Uc0MCYRkfY4rpwuitetG6hEBygfmOZcYk7MsqNruIMo0AlSBWBtRysO2ufPtUu5FjE8/Dt2h+zF
-	KlRWmXL1mpy8ACcA2kYzZ5IYsJ/x0jakaWygh0XEhDsQcZfQ+/Z0B0hYXtl5l34o9dSmBp8eV8/
-	ui4CGgwwhPtUWqmgblLKOBMLfg==
-X-Google-Smtp-Source: AGHT+IEbtwoZL/ZxWNIg3lz+aSPbQjpyQnSpBy7VKI7Jg+TnXQypLzMP3r745tdSDFVEJjlsB7KSqg==
-X-Received: by 2002:a17:903:1a0e:b0:220:f1a1:b6e1 with SMTP id d9443c01a7336-22104028854mr364462485ad.19.1740036472649;
-        Wed, 19 Feb 2025 23:27:52 -0800 (PST)
-Received: from thinkpad ([120.60.70.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5366242sm115665795ad.87.2025.02.19.23.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 23:27:52 -0800 (PST)
-Date: Thu, 20 Feb 2025 12:57:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: 'Shuai Xue' <xueshuai@linux.alibaba.com>,
-	'Jing Zhang' <renyu.zj@linux.alibaba.com>,
-	'Will Deacon' <will@kernel.org>,
-	'Mark Rutland' <mark.rutland@arm.com>,
-	'Jingoo Han' <jingoohan1@gmail.com>,
-	'Bjorn Helgaas' <bhelgaas@google.com>,
-	'Lorenzo Pieralisi' <lpieralisi@kernel.org>,
-	'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>,
-	'Rob Herring' <robh@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions to
- 'pcie-dwc.h'
-Message-ID: <20250220072747.azfluj6mrkqy5osq@thinkpad>
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
- <CGME20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca@epcas5p2.samsung.com>
- <20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
- <02d901db835c$f0710450$d1530cf0$@samsung.com>
+        d=1e100.net; s=20230601; t=1740040701; x=1740645501;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jY7tYtFefzvHG4aShI6b5afWDaM1BnuW3bk8CDdolzk=;
+        b=seLIu5357GJp3y0dALEJPlqqJ2KSfKZ/nmo7/ITXgjok4+rB7HLWw/pzpBsaaGtPJ2
+         d3nmYQgSigcy8be7ea8iXtBmN1mr9gTnqQN2EAHrTU0OJKL566FT6VuuzFqsMeSOmPly
+         Et/BaYbrVioPEHvYbNd8mgndFwP2hcTZj486AJ8kAbdDL+ZCIPUPed8PE64FRFGEDlg5
+         5YbcG8XQYASQNWPKv/jRzmK1duqy9adTe+iQwXw2uJjHBopHenSzHT4SuAQx1/tj7hRN
+         viEeqqBFioDCwU8yzZbU25PjwN214gzEucZOrrerehOVnl717tnLZ04/Me9RSaMqFOLS
+         QrpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXI1H/vJcGwsv0WeJg0Bk4V9bSClgERt0m1pPJIXrRCU5UzvqepR9WNNKoaGKcH5LqA5V9+fF6wOQpe9+yuZr7G@vger.kernel.org
+X-Gm-Message-State: AOJu0YwELiIOWNpR7xelv7midehjw9c9LePeEt9viA+Mvf2L/YLZDU6B
+	nnx9agXDa3QvQEKAOTgRZikeulmMLZxJWAoZPiQjbZ2AKDWIlPbSbrxnm6Pd5Xu6UtSBMV2dtJv
+	z9W5jT3P84bR3/fMKjgtGxgaRSOvOVVtSD0H/csOhb5B1U8K8G2q856wWgTCX46NlrW8=
+X-Gm-Gg: ASbGncu17rgOl94bJ4RjOk6KZdJ1EWS5xsl+c+NfmPGTZCy1jXCMkry+4vi0W93KGJZ
+	wZiN7JQBXp1kyYs21M5h/5Eg716tORHRWY7ommF6TWbPyr1Pvr93Cw7OMdozIGh6vb2CAs0J+E7
+	DS0SbunRKS3YNsT+Md8uXxs/PXgl0H5jdS9ByDoEbF8Nlvqx+BKBT3YSVljU2hEYKappP67Cgmn
+	N2cbsg2hPwIg/KymAw2mHnCMZivadLTW/JE2zAcp4hOTs96A65nss0p2bJR3eGScQ6AVJKWt3F4
+	0gQY3K1JeVBLML1kJlcnbaifT7x3BeTzTQ==
+X-Received: by 2002:a5d:6d09:0:b0:38f:4f37:7504 with SMTP id ffacd0b85a97d-38f615be1c7mr1806802f8f.16.1740040701632;
+        Thu, 20 Feb 2025 00:38:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGp7d6SevuNhLuZV8/jkVX3ymo9iXEjPh8PEOuN3PjCQ/0IUnneKs02MbsGlPfYJTfyuY/WSA==
+X-Received: by 2002:a5d:6d09:0:b0:38f:4f37:7504 with SMTP id ffacd0b85a97d-38f615be1c7mr1806776f8f.16.1740040701197;
+        Thu, 20 Feb 2025 00:38:21 -0800 (PST)
+Received: from [192.168.3.141] (p5b0c6195.dip0.t-ipconnect.de. [91.12.97.149])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43990f53847sm83879685e9.1.2025.02.20.00.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 00:38:19 -0800 (PST)
+Message-ID: <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
+Date: Thu, 20 Feb 2025 09:38:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
+ uprobes: fix two zero old_folio bugs in __replace_page()
+To: Tong Tiangen <tongtiangen@huawei.com>, Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+ wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
+References: <20250217123826.88503-1-tongtiangen@huawei.com>
+ <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
+ <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
+ <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
+ <20250219152237.GB5948@redhat.com>
+ <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
+ <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <02d901db835c$f0710450$d1530cf0$@samsung.com>
 
-On Thu, Feb 20, 2025 at 11:31:49AM +0530, Shradha Todi wrote:
+On 20.02.25 03:31, Tong Tiangen wrote:
 > 
 > 
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-> > Sent: 18 February 2025 20:07
-> > To: Shuai Xue <xueshuai@linux.alibaba.com>; Jing Zhang <renyu.zj@linux.alibaba.com>; Will Deacon <will@kernel.org>; Mark Rutland
-> > <mark.rutland@arm.com>; Jingoo Han <jingoohan1@gmail.com>; Bjorn Helgaas <bhelgaas@google.com>; Lorenzo Pieralisi
-> > <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Rob Herring <robh@kernel.org>
-> > Cc: Shradha Todi <shradha.t@samsung.com>; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-perf-
-> > users@vger.kernel.org; linux-pci@vger.kernel.org; linux-arm-msm@vger.kernel.org; Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org>
-> > Subject: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions to 'pcie-dwc.h'
-> > 
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Since these are common to all Desginware PCIe IPs, move them to a new header, 'pcie-dwc.h' so that other drivers could make use of
-> > them.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  MAINTAINERS                 |  1 +
-> >  drivers/perf/dwc_pcie_pmu.c | 23 ++---------------------
-> >  include/linux/pcie-dwc.h    | 34 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 37 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 896a307fa065..b4d09d52a750 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -18123,6 +18123,7 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> >  F:	drivers/pci/controller/dwc/*designware*
-> > +F:	include/linux/pcie-dwc.h
-> > 
-> >  PCI DRIVER FOR TI DRA7XX/J721E
-> >  M:	Vignesh Raghavendra <vigneshr@ti.com>
-> > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c index cccecae9823f..05b37ea7cf16 100644
-> > --- a/drivers/perf/dwc_pcie_pmu.c
-> > +++ b/drivers/perf/dwc_pcie_pmu.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/errno.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/list.h>
-> > +#include <linux/pcie-dwc.h>
-> >  #include <linux/perf_event.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/platform_device.h>
-> > @@ -99,26 +100,6 @@ struct dwc_pcie_dev_info {
-> >  	struct list_head dev_node;
-> >  };
-> > 
-> > -struct dwc_pcie_pmu_vsec_id {
-> > -	u16 vendor_id;
-> > -	u16 vsec_id;
-> > -	u8 vsec_rev;
-> > -};
-> > -
-> > -/*
-> > - * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> > - * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> > - */
-> > -static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
-> > -	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> > -	{} /* terminator */
-> > -};
-> > -
-> >  static ssize_t cpumask_show(struct device *dev,
-> >  					 struct device_attribute *attr,
-> >  					 char *buf)
-> > @@ -529,7 +510,7 @@ static void dwc_pcie_unregister_pmu(void *data)
-> > 
-> >  static u16 dwc_pcie_des_cap(struct pci_dev *pdev)  {
-> > -	const struct dwc_pcie_pmu_vsec_id *vid;
-> > +	const struct dwc_pcie_vsec_id *vid;
-> >  	u16 vsec;
-> >  	u32 val;
-> > 
-> > diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h new file mode 100644 index 000000000000..261ae11d75a4
-> > --- /dev/null
-> > +++ b/include/linux/pcie-dwc.h
-> > @@ -0,0 +1,34 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2021-2023 Alibaba Inc.
-> > + *
-> > + * Copyright 2025 Linaro Ltd.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > + */
-> > +
-> > +#ifndef LINUX_PCIE_DWC_H
-> > +#define LINUX_PCIE_DWC_H
-> > +
-> > +#include <linux/pci_ids.h>
-> > +
-> > +struct dwc_pcie_vsec_id {
-> > +	u16 vendor_id;
-> > +	u16 vsec_id;
-> > +	u8 vsec_rev;
-> > +};
-> > +
-> > +/*
-> > + * VSEC IDs are allocated by the vendor, so a given ID may mean
-> > +different
-> > + * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> > + */
-> > +static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
+> 在 2025/2/20 0:12, David Hildenbrand 写道:
+>> On 19.02.25 16:22, Oleg Nesterov wrote:
+>>> On 02/18, Tong Tiangen wrote:
+>>>>
+>>>> OK, Before your rewrite last merged, How about i change the solution to
+>>>> just reject them immediately after get_user_page_vma_remote()？
+>>>
+>>> I agree, uprobe_write_opcode() should simply fail if
+>>> is_zero_page(old_page).
+>>
+>> Yes. That's currently only syzkaller that triggers it, not some sane use
+>> case.
 > 
-> Rename this to dwc_pcie_rasdes_vsec_ids? pmu was perf file specific but technically the vsec is rasdes.
+> OK, change as follows:
 > 
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
+> *auprobe, struct mm_struct *mm,
+>           if (ret <= 0)
+>                   goto put_old;
+> 
+> +       if (WARN(is_zero_page(old_page),
 
-Sure.
-
-- Mani
+This can likely be triggered by user space, so do not use WARN.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+
+David / dhildenb
+
