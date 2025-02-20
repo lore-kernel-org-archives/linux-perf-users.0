@@ -1,106 +1,119 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC411F150B;
-	Thu, 20 Feb 2025 12:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B061F463D
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 12:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052919; cv=none; b=TE+R2XyazMT+T+oYfCnJWhkhifiY3Km4vQIz99XZkIsU8BsowH+Omxj/t0eezKAEbVeohpCL/FhamJ6BqQ404rNbzEj5RM/95cHaxgM7666dkg0MZyAi0zWiv2ChP/ZNDxT76S2Bo95ZxoXamWPtJlfuX3BlSEdkRb13No4/NtM=
+	t=1740053506; cv=none; b=XiQ4jR3yU/pdV9qXrcTc2n3grys2iLcIJrgvNApN10ZriiFX59XueGQGY7/T64KfISIN1qBUT7p4F4V7roHoYg6GnZM3IMEVdmJlusz9B2TcjiwBxZlIrPy4inrimIHY33I7XMEJY6/mdGdcG2YmBuGGVOMM8ew0/lk9ZyRs0Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052919; c=relaxed/simple;
-	bh=xC4t5PNFRGnqdbnDdkkrRiU383ecZkkQlQNaoeaxAAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jNqj5JFPaPuuhVa6zTwqI3GwldQn5d5vdKHd9E4sI7PmeuWBwL7aDWNnFd6WFT5/vo9oa3Nf6hMtqRBGwZg0J+bSaBY/R/q4znjuC9ivfECyNc1Ph1ZBUQkB6CU/bL5J9u+Xcy7rs6GJUSFRTE0wvScmsuHg8GbQg3Emmz/hE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YzBcW1pQBz21mxG;
-	Thu, 20 Feb 2025 19:58:51 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id BA519140360;
-	Thu, 20 Feb 2025 20:01:52 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 20 Feb 2025 20:01:51 +0800
-Message-ID: <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
-Date: Thu, 20 Feb 2025 20:01:50 +0800
+	s=arc-20240116; t=1740053506; c=relaxed/simple;
+	bh=x8rxWQrvJ+M4LCHRipLM5Opmo7p0J0gyDNK7Shle7Og=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oFmk/dRa+spP7Y/V2qfnTECmjuQSrTp0LrHVgWDe4K/Nl//d8rdNXw09tGhXrBafSYtHotCAdoVDbgrgZ3wvcM51Q1+68JKR5EHoNCiOpurOz3CgCkhMjk0xoFknCLdw+hkNp11jViy6GUUakgtIMNajx9pvyVEcs6qWZSUmSAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HLGQaPcF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLGQaPcF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740053504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RhrXFXQ5svBVQxo6ziu59a9sD3xm5P7Es03Gb2LJN0Y=;
+	b=HLGQaPcFpV9qJS2lecJSmWvCqWdc6u9QYCUuHSGhlyDYsc+LWx5BgyAWcCTvswOXym06Ix
+	AX/yv4bH7Sz2nSlEOrQ1ZbpijX80drnNgfNT9g23+LG4XO7J8Lp9gsO9UWgqCMtfkHRnTA
+	WFdIYwFVs+Q18TE6nsNLHL3mH9QKVzk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-536-MfjS2_HEPXqmcX64T2dq1A-1; Thu,
+ 20 Feb 2025 07:11:42 -0500
+X-MC-Unique: MfjS2_HEPXqmcX64T2dq1A-1
+X-Mimecast-MFC-AGG-ID: MfjS2_HEPXqmcX64T2dq1A_1740053501
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 344411800570;
+	Thu, 20 Feb 2025 12:11:41 +0000 (UTC)
+Received: from Carbon (unknown [10.44.22.3])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 504591956094;
+	Thu, 20 Feb 2025 12:11:36 +0000 (UTC)
+Date: Thu, 20 Feb 2025 13:11:32 +0100 (CET)
+From: Michael Petlan <mpetlan@redhat.com>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: linux-perf-users@vger.kernel.org, irogers@google.com, 
+    weilin.wang@intel.com, caleb.biggers@intel.com, namhyung@kernel.org, 
+    acme@kernel.org, darcari@redhat.com
+Subject: Re: Broken intel uncore events on SPR
+In-Reply-To: <c481b5a2-6d1d-4c27-a32a-df131712a1a0@linux.intel.com>
+Message-ID: <5116e2a-57b8-475e-7a37-2f68ae1c15d7@redhat.com>
+References: <a2372e44-19fc-7eb4-c24b-1a568c742546@redhat.com> <c481b5a2-6d1d-4c27-a32a-df131712a1a0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
-	<linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
- <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
- <20250219152237.GB5948@redhat.com>
- <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
- <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
- <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-
-
-在 2025/2/20 16:38, David Hildenbrand 写道:
-> On 20.02.25 03:31, Tong Tiangen wrote:
->>
->>
->> 在 2025/2/20 0:12, David Hildenbrand 写道:
->>> On 19.02.25 16:22, Oleg Nesterov wrote:
->>>> On 02/18, Tong Tiangen wrote:
->>>>>
->>>>> OK, Before your rewrite last merged, How about i change the 
->>>>> solution to
->>>>> just reject them immediately after get_user_page_vma_remote()？
->>>>
->>>> I agree, uprobe_write_opcode() should simply fail if
->>>> is_zero_page(old_page).
->>>
->>> Yes. That's currently only syzkaller that triggers it, not some sane use
->>> case.
->>
->> OK, change as follows:
->>
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
->> *auprobe, struct mm_struct *mm,
->>           if (ret <= 0)
->>                   goto put_old;
->>
->> +       if (WARN(is_zero_page(old_page),
+On Fri, 14 Feb 2025, Liang, Kan wrote:
+> On 2025-02-14 7:39 a.m., Michael Petlan wrote:
+> > Hello all,
+> > 
+> > our testing shows that some uncore events are broken on Intel Sapphire
+> > Rapids (family 6, model 143). I have tested v6.14-rc2 and the results
+> > are the same as with v6.12.
+> > 
+> > The full list of events that don't work is at the end of this mail.
+> > 
+> > The reason is that their umasks are too big in the JSON definitions, e.g.:
+> > 
+> >   {
+> >     "BriefDescription": "PCIe Completion Buffer Inserts of completions with data: Part 0",
+> >     "Counter": "0,1,2,3",
+> >     "EventCode": "0xc2",
+> >     "EventName": "UNC_IIO_COMP_BUF_INSERTS.CMPD.PART0",
+> >     "Experimental": "1",
+> >     "FCMask": "0x07",
+> >     "PerPkg": "1",
+> >     "PortMask": "0x0001",
+> >     "PublicDescription": "PCIe Completion Buffer Inserts of completions with data : Part 0 : x16 card plugged in to Lane 0/1/2/3, Or x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
+> >     "UMask": "0x7001004",
+> >     "Unit": "IIO"
+> >   },
+> > 
 > 
-> This can likely be triggered by user space, so do not use WARN.
-
-OK,thanks.
-
-Hi Oleg, is that all right?
-
-Thanks,
-Tong.
-
+> The issue should have been fixed with the latest update.
+> https://lore.kernel.org/lkml/20250211213031.114209-20-irogers@google.com/
 > 
+> It should be available in the perf-tools-next branch.
+> 
+>     {
+>         "BriefDescription": "PCIe Completion Buffer Inserts of
+> completions with data: Part 0",
+>         "Counter": "0,1,2,3",
+>         "EventCode": "0xc2",
+>         "EventName": "UNC_IIO_COMP_BUF_INSERTS.CMPD.PART0",
+>         "Experimental": "1",
+>         "FCMask": "0x07",
+>         "PerPkg": "1",
+>         "PortMask": "0x0001",
+>         "PublicDescription": "PCIe Completion Buffer Inserts of
+> completions with data : Part 0 : x16 card plugged in to Lane 0/1/2/3, Or
+> x8 card plugged in to Lane 0/1, Or x4 card is plugged in to slot 0",
+>         "UMask": "0x4",
+>         "Unit": "IIO"
+>     },
+> 
+> Thanks,
+> Kan
+
+Oh, thanks Kan!
+I have tested it and it fixes all the broken events. Great!
+
+Michael
+
