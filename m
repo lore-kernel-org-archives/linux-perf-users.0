@@ -1,173 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E38F20C00D;
-	Thu, 20 Feb 2025 16:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730B212B0B
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 17:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070047; cv=none; b=Ib05OyMALr/ykVj2svW48JibBX8EobdpgYFOZGRofEbfwPpBWJHYc7/ZeJjrpePrm17kQsUQveXAAYob1nH+FV66/3AM3uQfc/2kA78XVMdRw4Ezan8HthbeeKOCn4TIL/l3M6Nc6WRttooM/gG6sQQYpD4FL9PVehx529iC5OM=
+	t=1740071424; cv=none; b=umlk23M3hkPf3Qxo0Oe5Tu4OezmO5Pv+xUXWFpz2tJ9q1u9BJek8YEc15KGGLiTUgnGVnRIqQiARpIWb8NtpcatasTMux6OpYoW2NCfFxJsoc26uYcvRtDXEKwrCloiQ8UgjCBOHaT70AmoLCMXjDCMop0U2bvZ+lZk8TakEz1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070047; c=relaxed/simple;
-	bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=smcuEg95KnZdimzwRypYMb8f2Zi+3cIckxm+2DlNx109ZFdoqZ/RO0WxJxTnLvziHQ9J7XIlRKvmnbR+f+p9px3pMiKRM2+oDvmJrs3SzG1k/5YM/EP3/W6s4LFNPIcmHqxJS15AQJBTa9KNaMU3BFmZAEI6MLjavpsqGfMwBP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGeWywHG; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740071424; c=relaxed/simple;
+	bh=kg7PYKt74NmqPx2oKNRGx3rLvGEcdQR61JIV5w6PyfE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Li55QK3cJe4MAbQaetR0qDag0fmmC5FRe2PwZQz457t5d20ApK8LmxKyoE8e9XTZeRLjuZybEx0GVPjjsbMYYVtTk6PvcWlEZRsDh6a4RjNFXi6xrm0uJ0u0wHOthQ7C2DfXfugWi4lHrAein3gR5X7y8QPC8JJraj5c9hwGeuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DyQcz2mb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGeWywHG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740070045; x=1771606045;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3OtB9akMB0pxoL9AejNzjcClgt8iH/E/EAXwsKV7QKM=;
-  b=GGeWywHG59KwjXp2z1prQ8QIm7CITuA/79kTarjmDJyu+OCg+pA445gI
-   840Msor8UbDN2EjcDJKHa/KyzwQgsxCz5b5pxQ9Z1jxX8eEzk5zzMBJVh
-   H2hX+CUV3lKOt+6VM5AEok8+5buZJkQ32XRoEWIsF1G0X1S7sbpb998LR
-   0JFL+eChPgIRlj2zzdG8lXkliLVWF/lpoxIoFLPw/pSzogx5zc+gVXKSv
-   qYm16Zm7nxZzezFY4S0TaZASNCP61+FHtdjqTiDT5g0HaYZrxgrdr79b3
-   xGMSHo1vvOMp1HacWVw4XAiaML5ezwHrvbLRWMMXblbmqMH+vAQLzkbiz
-   A==;
-X-CSE-ConnectionGUID: 2oRY97heQ+Wo0z+/6xYntQ==
-X-CSE-MsgGUID: uVunncHxTeyGJ0CgelCorQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44508163"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="44508163"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:24 -0800
-X-CSE-ConnectionGUID: /7uwIiSFTNWHbiSkGLSVCA==
-X-CSE-MsgGUID: +mazolK2Tge/cv+YU0RAGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="114819612"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:47:25 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 1046420B5713;
-	Thu, 20 Feb 2025 08:47:22 -0800 (PST)
-Message-ID: <7de719b4-1e5c-42ee-80fc-0563b68299ef@linux.intel.com>
-Date: Thu, 20 Feb 2025 11:47:21 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DyQcz2mb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740071421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kg7PYKt74NmqPx2oKNRGx3rLvGEcdQR61JIV5w6PyfE=;
+	b=DyQcz2mbIhCd7Vxrkn9ulxHcds8PLMgVrhq7RAvI4CAjGnZKtycuvEDoQZ/RwFBdQ0o53e
+	m4tBMmeD9f9zV1QIBNVuOR7azrvNIXv/8/1R/Z2WyNrtg39K0udjEz6B10lsibO4dNj4T7
+	aWL3dBzgF4mFZyuwLfF+/AukCJ1uDEo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-325-cSrZKSY3NY-5i6SXUWtVNw-1; Thu, 20 Feb 2025 12:10:20 -0500
+X-MC-Unique: cSrZKSY3NY-5i6SXUWtVNw-1
+X-Mimecast-MFC-AGG-ID: cSrZKSY3NY-5i6SXUWtVNw_1740071419
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43995bff469so8782795e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 09:10:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740071419; x=1740676219;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kg7PYKt74NmqPx2oKNRGx3rLvGEcdQR61JIV5w6PyfE=;
+        b=LVPts9qdNokXg6bDcHuQB+WE+qevWg5kmeAuvYHk5k7qbmmDdBsxmJGUdcqz1wmx3k
+         zTvplMFpNMQzDrJuuKQ+dzsJhaQPTzO2exTLfCKW0PoflP0x59RzBHdOI9Rxu9Daj4rQ
+         avSDExZl9vJ5GGOx11cvYGhX5bk9JGQW+ovi3RANRDehK4wlsZ/0k+cjj1+/v+hCUGcq
+         hNeLufZNLqJgAqloQhouDDwiDGrtjxltVe2/SwSoh5mNug+MP5vfZ5Uuz4a9DlCQWfK0
+         Y+qoYUAFe1gCsjzUXLiKO+4u9cugt5e7IUoyhiDR/eOI+MiDsFfJXlDJLKkRreSVhO3d
+         2RZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ86resABH5GsfzTLpGvWoiNKF1ljTB7Zrqeouhllwr4Se1HuZAE/V6pZoj00W8hcfaCnRrqmy4p4yJ9ABk7Pb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw0OZJzYa7QqO001Dr0Jc3uqAnYZboOYoWaS+ncD/CCKvkWLZZ
+	8ZIsI/oNNCc7kzfEe5zrEMG0oTaKF6q6TAUAERFrVHvvu6EzDa6OG8B633NyKzes7ijkvuSnbA2
+	4HTW4GmJ5dgQ/M6inj8Dw1Fo2cVUUxlx4igTkiQWv3wsyGmhED8evziBu5WYfIxXfBsE=
+X-Gm-Gg: ASbGncss4usd4i3wnkTBtbSi9kYtAFoJ1jBMCAU2dKZp166aBrxiiL8FGTatQjUkz3o
+	qKtHkpjdArOPCYEwLsKold6rGmS7KTP9hIbipvAL0AE2svgglgKvEMGILYG/EuwO5frm6XPRvGt
+	sZXc4sew8DXPIhzgSTWDCTAVFgOA/6YKVBDaPpMo4IHosDnO0NVS3dshH1uojaegoWcBA177MJQ
+	I8lNyDpzrzkcVrtUjDxuaS7yGL558UO8m+VHwDI5cPRB4dmLDWrlCrFqeCh3plPyUyCFSXmBaJA
+	jtfFwipDD6D2L2+GrL18FjL4aVrFj8aPOdeMycgkIkbj2TdjGZERlloTK1n2ZSicFA==
+X-Received: by 2002:a05:600c:4fc2:b0:439:985b:17be with SMTP id 5b1f17b1804b1-439ae1eaa78mr175645e9.9.1740071418807;
+        Thu, 20 Feb 2025 09:10:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFqI8Joi794bN8Kdq45efIzQ+6oEZ5Dcj9tQjLghCqHxxqvkD27DzVgOIJ2kmb/SIiCpoKjvg==
+X-Received: by 2002:a05:600c:4fc2:b0:439:985b:17be with SMTP id 5b1f17b1804b1-439ae1eaa78mr175145e9.9.1740071418347;
+        Thu, 20 Feb 2025 09:10:18 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a0558e2sm247191865e9.11.2025.02.20.09.10.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 09:10:17 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+ <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+Date: Thu, 20 Feb 2025 18:10:15 +0100
+Message-ID: <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Fix PP1 event for Intel Meteor/Lunar Lake
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- linux-perf-users@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dave.hansen@linux.intel.com, Zhang Rui <rui.zhang@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Ulisses Furquim <ulisses.furquim@intel.com>, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org
-References: <20250220153857.2593704-6-lucas.demarchi@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250220153857.2593704-6-lucas.demarchi@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+On 19/02/25 12:25, Dave Hansen wrote:
+> On 2/19/25 07:13, Valentin Schneider wrote:
+>>> Maybe I missed part of the discussion though. Is VMEMMAP your only
+>>> concern? I would have guessed that the more generic vmalloc()
+>>> functionality would be harder to pin down.
+>> Urgh, that'll teach me to send emails that late - I did indeed mean the
+>> vmalloc() range, not at all VMEMMAP. IIUC *neither* are present in the user
+>> kPTI page table and AFAICT the page table swap is done before the actual vmap'd
+>> stack (CONFIG_VMAP_STACK=y) gets used.
+>
+> OK, so rewriting your question... ;)
+>
+>> So what if the vmalloc() range *isn't* in the CR3 tree when a CPU is
+>> executing in userspace?
+>
+> The LDT and maybe the PEBS buffers are the only implicit supervisor
+> accesses to vmalloc()'d memory that I can think of. But those are both
+> handled specially and shouldn't ever get zapped while in use. The LDT
+> replacement has its own IPIs separate from TLB flushing.
+>
+> But I'm actually not all that worried about accesses while actually
+> running userspace. It's that "danger zone" in the kernel between entry
+> and when the TLB might have dangerous garbage in it.
+>
 
+So say we have kPTI, thus no vmalloc() mapped in CR3 when running
+userspace, and do a full TLB flush right before switching to userspace -
+could the TLB still end up with vmalloc()-range-related entries when we're
+back in the kernel and going through the danger zone?
 
-On 2025-02-20 10:36 a.m., Lucas De Marchi wrote:
-> On some boots the read of MSR_PP1_ENERGY_STATUS msr returns 0, causing
-> perf_msr_probe() to make the power/events/energy-gpu event non-visible.
-> When that happens, the msr always read 0 until the graphics module (i915
-> for Meteor Lake, xe for Lunar Lake) is loaded. Then it starts returning
-> something different and re-loading the rapl module "fixes" it.
-> 
-> This is tested on the following platforms with the fail rates before
-> this patch:
-> 
-> 	Alder Lake S	0/20
-> 	Arrow Lake H	0/20
-> 	Lunar Lake M	8/20
-> 	Meteor Lake U	6/20
-> 	Raptor Lake P	4/20
-> 	Raptor Lake S	0/20
-> 
-> For those platforms failing, use a separate msr list with .no_check
-> set so it doesn't check the runtime value to create the event - it will
-> just return 0 until the i915/xe module initializes the GPU.
-> 
-> The issue https://github.com/ulissesf/qmassa/issues/4 is workarounded by
-> reading the MSR directly since it works after xe is loaded, but the
-> issue with not having the perf event is still there.
-> 
-> Closes: https://github.com/ulissesf/qmassa/issues/4
-> Closes: https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/4241
-> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com
-> ---
-> 
-> Maybe a clearer alternative is to just move all the platforms after
-> RAPTORLAKE with a gpu to use the new msr list.
-> 
->  arch/x86/events/rapl.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 4952faf03e82d..18e324b8fa82c 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -588,6 +588,14 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
->  	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, true, RAPL_MSR_MASK },
->  };
->  
-> +static struct perf_msr intel_rapl_mtl_msrs[] = {
-> +	[PERF_RAPL_PP0]  = { MSR_PP0_ENERGY_STATUS,      &rapl_events_cores_group, test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_PKG]  = { MSR_PKG_ENERGY_STATUS,      &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_RAM]  = { MSR_DRAM_ENERGY_STATUS,     &rapl_events_ram_group,   test_msr, false, RAPL_MSR_MASK },
-> +	[PERF_RAPL_PP1]  = { MSR_PP1_ENERGY_STATUS,      &rapl_events_gpu_group,   test_msr, true,  RAPL_MSR_MASK },
-> +	[PERF_RAPL_PSYS] = { MSR_PLATFORM_ENERGY_STATUS, &rapl_events_psys_group,  test_msr, false, RAPL_MSR_MASK },
-> +};
-> +
->  /*
->   * Force to PERF_RAPL_PKG_EVENTS_MAX size due to:
->   * - perf_msr_probe(PERF_RAPL_PKG_EVENTS_MAX)
-> @@ -826,6 +834,16 @@ static struct rapl_model model_spr = {
->  	.rapl_pkg_msrs	= intel_rapl_spr_msrs,
->  };
->  
-> +static struct rapl_model model_rpl = {
-> +	.pkg_events	= BIT(PERF_RAPL_PP0) |
-> +			  BIT(PERF_RAPL_PKG) |
-> +			  BIT(PERF_RAPL_RAM) |
-> +			  BIT(PERF_RAPL_PP1) |
-> +			  BIT(PERF_RAPL_PSYS),
-> +	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-> +	.rapl_pkg_msrs  = intel_rapl_mtl_msrs,
+> BTW, I hope this whole thing is turned off on 32-bit. There, we can
+> actually take and handle faults on the vmalloc() area. If you get one of
+> those faults in your "danger zone", it'll start running page fault code
+> which will branch out to god-knows-where and certainly isn't noinstr.
 
-It's better to make the name consistent, e.g., intel_rapl_rpl_msrs.
-
-Thanks,
-Kan
-> +};
-> +
->  static struct rapl_model model_amd_hygon = {
->  	.pkg_events	= BIT(PERF_RAPL_PKG),
->  	.core_events	= BIT(PERF_RAPL_CORE),
-> @@ -873,13 +891,13 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
->  	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&model_spr),
->  	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&model_spr),
->  	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_rpl),
->  	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&model_skl),
-> -	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_rpl),
-> +	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_rpl),
->  	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&model_skl),
->  	X86_MATCH_VFM(INTEL_ARROWLAKE,		&model_skl),
-> -	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_skl),
-> +	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&model_rpl),
->  	{},
->  };
->  MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
+Sounds... Fun. Thanks for pointing out the landmines.
 
