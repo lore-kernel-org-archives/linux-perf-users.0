@@ -1,219 +1,215 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995041E8345
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 07:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586B11E4937
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 07:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740036155; cv=none; b=Uz8rCp7dkzpHz7VQ3IHdtS6FZHKgwCSugTkgOkVN1jeqSRAr8KEiIvEUzqitHTIEsh3AzfPNS9XGhlk6tE9GmjQUgG+tBda8nDYgdSp7crqkz26/MyxeD0nkRUmqx4szNd9rWy/TM/Shjy61ZQH9NdapqWLj5/EENZ3uvtr/AgQ=
+	t=1740036475; cv=none; b=jDJfEor9t5Yi5GUxa8lSlQ3P27aSybdpTf9ReYY6bnFHj9Bawx4vUyfqgQ2mM/IXoKMZlMnhf1BsNBX4kXuezRZhYwLM6Lz5naKV86S7Dws/Dk1ywPoHTneDz8uq1lyX1vnCMTuX7ijPdJfbcxjz4NOMzuqnuueHoAzFtTDAXZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740036155; c=relaxed/simple;
-	bh=RdupzPmikV/P65nVhhGwKWRWthUC+iidk838vqEzQ84=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=mPuGJw1Q74jXxT2ECSGGI0G2B4HC0/NWcb9oBXM4u015mHDIXH9F+EyW3s3wDsVHaiZt0IiMXZUWEgogm6rn93xKXy7EtmaYN8Oz3I4MtCaNCp2G1nc0Vhpv1jZ+QNY7ZIATcW9YPTRQb6VsGixAWAUjHzS6lx1/O0oAB0rOpEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=f2P2McsZ; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740036475; c=relaxed/simple;
+	bh=p3TD4N5ncUSlR7g2MNebA4UOXXszC8KvLXpzVDZ+CJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZ2l2HHghpCqdyAOZHwE4+BzlkAlRMqYUsX0y8eyZGzrzcW1p+Ds7Bp03BrP5mIl6ZMSqb+jbLBPjcUx2gv56p5z/FK8mE/xVbj1XIUma59RtP1wQaQrGleEOKyhqEb0E5sGvKc2q7oLD+jZhS8SLMTCY4LpyKyqxfcq9G3lixU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PO0IGoc+; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f2P2McsZ"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250220072231epoutp04864262e39b364c7892b9c67000f5903e~l2ak5xu_O0278202782epoutp044
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Feb 2025 07:22:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250220072231epoutp04864262e39b364c7892b9c67000f5903e~l2ak5xu_O0278202782epoutp044
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740036151;
-	bh=RdupzPmikV/P65nVhhGwKWRWthUC+iidk838vqEzQ84=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=f2P2McsZ+A9f+D/jhcNNnz8Xtj3NgVgB8/tqX5s84qEfpREN/XAkcAGxbKATZmpkd
-	 KrPrakSh4bffOfBKwl/ZcksLMbW9cbG2nHmb/xgeQYRUWKaMq+1zfKy1Ol5PVOftBo
-	 ZelX9jVNpAQnnBWwH7FJQN30m3EHlY5qbj0uZBmo=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250220072231epcas5p392bca22d09fed6b3b4da7a65131ba69b~l2akbD6MB1872018720epcas5p3P;
-	Thu, 20 Feb 2025 07:22:31 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Yz4Td3GmHz4x9QQ; Thu, 20 Feb
-	2025 07:22:29 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	61.08.19710.538D6B76; Thu, 20 Feb 2025 16:22:29 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250220060153epcas5p4f401dbb501378149ed3ef8f162c228a9~l1UKvso6a1980019800epcas5p4M;
-	Thu, 20 Feb 2025 06:01:53 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250220060153epsmtrp1167c9903277def94d25e9725d9b4615d~l1UKu7kPm3242832428epsmtrp16;
-	Thu, 20 Feb 2025 06:01:53 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-f3-67b6d835ab96
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4D.C7.18949.155C6B76; Thu, 20 Feb 2025 15:01:53 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250220060151epsmtip2bf3316cff94a9f18d49ac2d7e01b95ef~l1UIrTjn80534005340epsmtip2S;
-	Thu, 20 Feb 2025 06:01:51 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: <manivannan.sadhasivam@linaro.org>, "'Shuai Xue'"
-	<xueshuai@linux.alibaba.com>, "'Jing Zhang'" <renyu.zj@linux.alibaba.com>,
-	"'Will Deacon'" <will@kernel.org>, "'Mark Rutland'" <mark.rutland@arm.com>,
-	"'Jingoo Han'" <jingoohan1@gmail.com>, "'Bjorn Helgaas'"
-	<bhelgaas@google.com>, "'Lorenzo Pieralisi'" <lpieralisi@kernel.org>,
-	=?UTF-8?Q?'Krzysztof_Wilczy=C5=84ski'?= <kw@linux.com>, "'Rob Herring'"
-	<robh@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-arm-msm@vger.kernel.org>
-In-Reply-To: <20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
-Subject: RE: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions
- to 'pcie-dwc.h'
-Date: Thu, 20 Feb 2025 11:31:49 +0530
-Message-ID: <02d901db835c$f0710450$d1530cf0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PO0IGoc+"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220f048c038so10206685ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Feb 2025 23:27:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740036472; x=1740641272; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0YiPjJjyP/SfskdcyKsiE+Tu2gFKc0Gw/xXDAcrX5o4=;
+        b=PO0IGoc+eNnetJrPKHq+GZnngvfpWyQ3F6Ct2aD3YCNjVAIKOGShRuuvdbFU3nmfvM
+         v7QcEUsMYP0VgIML15pW2FPAI1IaeoDOTdeyqLEouV6Vt/fFGwvMZNdYMi91rXC+PWbR
+         8A96k76sJCt8dqjLhF+XcGQmcg5E72/ACYPcZf4xLz/vYYfWCkn1lAKUNgFNaqhBku4Q
+         J67X22SR+p1Q0Huq+UBtjxTQyjbEDSEl8Z97gms+Zn/3a6sfaW0w5xAm/gsa2M7nmLw9
+         tmhDz+r1CN73R0zldP2Ayp6kMMBBNBsuKCwBjI/aTegEvhYqbBpYLDnNkyT2wWH9Nix8
+         ErtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740036472; x=1740641272;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0YiPjJjyP/SfskdcyKsiE+Tu2gFKc0Gw/xXDAcrX5o4=;
+        b=Ls+cGGbeLjvCFPCtXcu0yvAUh00qQcOYCF6Y64DlDKjco1twnNZeo4PKF85z0DhhkU
+         hdHefx4CX24miIXPrxozn7rSXvReTGuOpDR89/JUaAHvT7rrNangmeq4CGoDKY3n5SwL
+         eb2uUAO4g/VLobKYUM6ZGmrSgPzWVw2m1NZfCaL0XguppsHATpC+ICPZg+YJ6g6ld3tW
+         XkKMfnlwAWfGwtklnkKKN/znZ7IkU2WTJtxdhfO/H2c6Ri2/igta5XKjMddizc9q8qN7
+         CqsNoJ71RqxDKtKM0OgTvreyZqhesaeEZ/7/pDcmLuZJNlK+g7zbWGvmQDCh1akGp1SB
+         pC6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ3KnxT2ZRsZIHO7kfUbPhI6wjuJ2zM/zJsOCTwGb62gQn3NEpZDYPUX5Iu03OoLd22UgqbYqoQ31cHs8f0t4S@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsSRTEkO0i2fpmgCd2KN1AF+3b12iXVlkNBc8f+W81JT+fCMO2
+	pdqdI6F8ufQ9jUgXqTmrzTgg16jjH9bqhyjQm75l4uBpfQo5FBAwHsvlAToc5Q==
+X-Gm-Gg: ASbGncur5qvzssb0bShou9I4TdWjKToJcc68l6R3sETdT6MxyudkQa0EqLOjLbxUMzl
+	pOeAbfq77p+ZmZ8dtQaQNA4LdYCChMFDv5zOZAzW0w1kZ07akDXyFcZbC8r9RTEpcoxue+w+p24
+	Uc0MCYRkfY4rpwuitetG6hEBygfmOZcYk7MsqNruIMo0AlSBWBtRysO2ufPtUu5FjE8/Dt2h+zF
+	KlRWmXL1mpy8ACcA2kYzZ5IYsJ/x0jakaWygh0XEhDsQcZfQ+/Z0B0hYXtl5l34o9dSmBp8eV8/
+	ui4CGgwwhPtUWqmgblLKOBMLfg==
+X-Google-Smtp-Source: AGHT+IEbtwoZL/ZxWNIg3lz+aSPbQjpyQnSpBy7VKI7Jg+TnXQypLzMP3r745tdSDFVEJjlsB7KSqg==
+X-Received: by 2002:a17:903:1a0e:b0:220:f1a1:b6e1 with SMTP id d9443c01a7336-22104028854mr364462485ad.19.1740036472649;
+        Wed, 19 Feb 2025 23:27:52 -0800 (PST)
+Received: from thinkpad ([120.60.70.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5366242sm115665795ad.87.2025.02.19.23.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 23:27:52 -0800 (PST)
+Date: Thu, 20 Feb 2025 12:57:47 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: 'Shuai Xue' <xueshuai@linux.alibaba.com>,
+	'Jing Zhang' <renyu.zj@linux.alibaba.com>,
+	'Will Deacon' <will@kernel.org>,
+	'Mark Rutland' <mark.rutland@arm.com>,
+	'Jingoo Han' <jingoohan1@gmail.com>,
+	'Bjorn Helgaas' <bhelgaas@google.com>,
+	'Lorenzo Pieralisi' <lpieralisi@kernel.org>,
+	'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>,
+	'Rob Herring' <robh@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions to
+ 'pcie-dwc.h'
+Message-ID: <20250220072747.azfluj6mrkqy5osq@thinkpad>
+References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
+ <CGME20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca@epcas5p2.samsung.com>
+ <20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
+ <02d901db835c$f0710450$d1530cf0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI3arGx4qNz+c5jkBcOUS0/Rx6ChQIRRsQWAieNK+yydh1aoA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCJsWRmVeSWpSXmKPExsWy7bCmhq7pjW3pBn3/xS2WNGVYrPgyk92i
-	oec3q8Wmx9dYLSbuP8tucXnXHDaLs/OOs1lc2bqOxaLlTwuLxd2WTlaLpdcvMlksbH7JaPF/
-	zw52i5Y7phbvf25mc+D3WDNvDaPHzll32T0WbCr12LSqk83jzrU9bB47H1p6PLkynclj85J6
-	j8+b5AI4o7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0y
-	c4CuV1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoY
-	GJkCFSZkZ/x+uZ2l4LRJxeUt29kbGD8adTFyckgImEi8ad7B1MXIxSEksJtR4vnuU1DOJ0aJ
-	llm3WSCcb4wSZw6cZIdp2XnvGFTVXkaJv9OuMIMkhAReMEpcea0CYrMJ6Eg8ufKHGaRIRGAj
-	s8T5Y8fZQBxmgQ2MEp8/nmUFqeIUcJKY2v2ODcQWFoiROD3jE9gkFgFViRNvLoGt4xWwlLjy
-	dTMjhC0ocXLmExYQm1lAW2LZwtfMECcpSPx8ugxspgjQzBdrdkDViEsc/dkDdoWEwBMOibbW
-	bSwQDS4SOzfPYoOwhSVeHd8C9ZuUxMv+Nig7XWLl5hlQC3Ikvm1ewgRh20scuDIHaA4H0AJN
-	ifW79CHCshJTT61jgtjLJ9H7+wlUOa/EjnkwtrLEl797oE6QlJh37DLrBEalWUhem4XktVlI
-	XpiFsG0BI8sqRsnUguLc9NRk0wLDvNRyeJQn5+duYgQnby2XHYw35v/TO8TIxMF4iFGCg1lJ
-	hLetfku6EG9KYmVValF+fFFpTmrxIUZTYHhPZJYSTc4H5o+8knhDE0sDEzMzMxNLYzNDJXHe
-	5p0t6UIC6YklqdmpqQWpRTB9TBycUg1Mx6U0v10zYRH/toDHUum1jU9/+dzgnSr7I8oaOv9o
-	+WQuWrh7u+WEV8duyy3bdmxC5s2WW0XqDN5zlM6td5Wae906bcW71tzg7oPb3ojncl5uUpa/
-	cy2B/Z+hjmZ6lAbDHM4jsUmGHy+IygSVH1LZqL8760rBvFDDjIOtk21+hcwQi0q7vGxL4bPX
-	x/bwLlf+pfL5yMp9Zmwr/DgYA6Qyb52rCzjxPft9yrOIjRtkDa3CF7uuO7qdQ9xLI7/kY/Q1
-	Bo/FMrf3F32uqO+1+3RWSe1z2+xeod1bOX5km0tJXHz4wHnG7rwZS3Z8XH9m2dWO3zNTFkc/
-	nuHJ/uVNIcuKfS6LjW/W7Xe/aFuRLHn6pRJLcUaioRZzUXEiACK7ckdnBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCSvG7g0W3pBhM2iVgsacqwWPFlJrtF
-	Q89vVotNj6+xWkzcf5bd4vKuOWwWZ+cdZ7O4snUdi0XLnxYWi7stnawWS69fZLJY2PyS0eL/
-	nh3sFi13TC3e/9zM5sDvsWbeGkaPnbPusnss2FTqsWlVJ5vHnWt72Dx2PrT0eHJlOpPH5iX1
-	Hp83yQVwRnHZpKTmZJalFunbJXBl7N/wnLlgvWpF/7N/rA2MF+S6GDk5JARMJHbeO8YEYgsJ
-	7GaUWN2sARGXlPh8cR0ThC0ssfLfc/YuRi6gmmeMEptapjCDJNgEdCSeXPkDZosIbGeWOPnN
-	B6SIWWALo8S2OZeZITpOMkr8evmADaSKU8BJYmr3OyCbg0NYIEpi6g5vkDCLgKrEiTeX2EFs
-	XgFLiStfNzNC2IISJ2c+YQGxmQW0JXoftjLC2MsWvmaGuE5B4ufTZawQRzhJvFizA6peXOLo
-	zx7mCYzCs5CMmoVk1Cwko2YhaVnAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM4
-	erW0djDuWfVB7xAjEwfjIUYJDmYlEd62+i3pQrwpiZVVqUX58UWlOanFhxilOViUxHm/ve5N
-	ERJITyxJzU5NLUgtgskycXBKNTCZKhzaqRm/q0YyxmODf+627kuOohNWL3b1vVPhcv2QSMGu
-	R0pOEwqmXiqQ/zXvimznG+WgwGffXJM81qzxnLjnZ5sWo/Ky0g1GWltud/8oUGcLer0gUfH2
-	Y/Vkj/g5c3cWS0qu5q8I25HB8/zExYje49e31HUUp+UtWJZuGJu8InyhNcdEoS2h0k8lejas
-	X9GXYOMoNt38AsPa3/2nmpRnpHkc3sQs3z7j4Lkg2Qb2Kbl2T/7sW+3BsWmxOvfUG8cWSm5U
-	5I7Y8DKuRHluhaWQRzFD9s+rCTpMZo2xzHwl6mVvj/u0/6+aKdHb4xJywT8sosHKPtJ1hv4C
-	PwXWTDEOjajn01123jBep/nvmBJLcUaioRZzUXEiAHQICo9NAwAA
-X-CMS-MailID: 20250220060153epcas5p4f401dbb501378149ed3ef8f162c228a9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
-	<CGME20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca@epcas5p2.samsung.com>
-	<20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <02d901db835c$f0710450$d1530cf0$@samsung.com>
 
+On Thu, Feb 20, 2025 at 11:31:49AM +0530, Shradha Todi wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+> > Sent: 18 February 2025 20:07
+> > To: Shuai Xue <xueshuai@linux.alibaba.com>; Jing Zhang <renyu.zj@linux.alibaba.com>; Will Deacon <will@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Jingoo Han <jingoohan1@gmail.com>; Bjorn Helgaas <bhelgaas@google.com>; Lorenzo Pieralisi
+> > <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Rob Herring <robh@kernel.org>
+> > Cc: Shradha Todi <shradha.t@samsung.com>; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-perf-
+> > users@vger.kernel.org; linux-pci@vger.kernel.org; linux-arm-msm@vger.kernel.org; Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org>
+> > Subject: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions to 'pcie-dwc.h'
+> > 
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Since these are common to all Desginware PCIe IPs, move them to a new header, 'pcie-dwc.h' so that other drivers could make use of
+> > them.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  MAINTAINERS                 |  1 +
+> >  drivers/perf/dwc_pcie_pmu.c | 23 ++---------------------
+> >  include/linux/pcie-dwc.h    | 34 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 37 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 896a307fa065..b4d09d52a750 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -18123,6 +18123,7 @@ S:	Maintained
+> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> >  F:	drivers/pci/controller/dwc/*designware*
+> > +F:	include/linux/pcie-dwc.h
+> > 
+> >  PCI DRIVER FOR TI DRA7XX/J721E
+> >  M:	Vignesh Raghavendra <vigneshr@ti.com>
+> > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c index cccecae9823f..05b37ea7cf16 100644
+> > --- a/drivers/perf/dwc_pcie_pmu.c
+> > +++ b/drivers/perf/dwc_pcie_pmu.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/errno.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/list.h>
+> > +#include <linux/pcie-dwc.h>
+> >  #include <linux/perf_event.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/platform_device.h>
+> > @@ -99,26 +100,6 @@ struct dwc_pcie_dev_info {
+> >  	struct list_head dev_node;
+> >  };
+> > 
+> > -struct dwc_pcie_pmu_vsec_id {
+> > -	u16 vendor_id;
+> > -	u16 vsec_id;
+> > -	u8 vsec_rev;
+> > -};
+> > -
+> > -/*
+> > - * VSEC IDs are allocated by the vendor, so a given ID may mean different
+> > - * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
+> > - */
+> > -static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
+> > -	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
+> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+> > -	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
+> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+> > -	{ .vendor_id = PCI_VENDOR_ID_QCOM,
+> > -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
+> > -	{} /* terminator */
+> > -};
+> > -
+> >  static ssize_t cpumask_show(struct device *dev,
+> >  					 struct device_attribute *attr,
+> >  					 char *buf)
+> > @@ -529,7 +510,7 @@ static void dwc_pcie_unregister_pmu(void *data)
+> > 
+> >  static u16 dwc_pcie_des_cap(struct pci_dev *pdev)  {
+> > -	const struct dwc_pcie_pmu_vsec_id *vid;
+> > +	const struct dwc_pcie_vsec_id *vid;
+> >  	u16 vsec;
+> >  	u32 val;
+> > 
+> > diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h new file mode 100644 index 000000000000..261ae11d75a4
+> > --- /dev/null
+> > +++ b/include/linux/pcie-dwc.h
+> > @@ -0,0 +1,34 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2021-2023 Alibaba Inc.
+> > + *
+> > + * Copyright 2025 Linaro Ltd.
+> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > + */
+> > +
+> > +#ifndef LINUX_PCIE_DWC_H
+> > +#define LINUX_PCIE_DWC_H
+> > +
+> > +#include <linux/pci_ids.h>
+> > +
+> > +struct dwc_pcie_vsec_id {
+> > +	u16 vendor_id;
+> > +	u16 vsec_id;
+> > +	u8 vsec_rev;
+> > +};
+> > +
+> > +/*
+> > + * VSEC IDs are allocated by the vendor, so a given ID may mean
+> > +different
+> > + * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
+> > + */
+> > +static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
+> 
+> Rename this to dwc_pcie_rasdes_vsec_ids? pmu was perf file specific but technically the vsec is rasdes.
+> 
 
+Sure.
 
-> -----Original Message-----
-> From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.l=
-inaro.org=40kernel.org>
-> Sent: 18 February 2025 20:07
-> To: Shuai Xue <xueshuai=40linux.alibaba.com>; Jing Zhang <renyu.zj=40linu=
-x.alibaba.com>; Will Deacon <will=40kernel.org>; Mark Rutland
-> <mark.rutland=40arm.com>; Jingoo Han <jingoohan1=40gmail.com>; Bjorn Helg=
-aas <bhelgaas=40google.com>; Lorenzo Pieralisi
-> <lpieralisi=40kernel.org>; Krzysztof Wilczy=C5=84ski=20<kw=40linux.com>;=
-=20Rob=20Herring=20<robh=40kernel.org>=0D=0A>=20Cc:=20Shradha=20Todi=20<shr=
-adha.t=40samsung.com>;=20linux-kernel=40vger.kernel.org;=20linux-arm-kernel=
-=40lists.infradead.org;=20linux-perf-=0D=0A>=20users=40vger.kernel.org;=20l=
-inux-pci=40vger.kernel.org;=20linux-arm-msm=40vger.kernel.org;=20Manivannan=
-=20Sadhasivam=0D=0A>=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20Subjec=
-t:=20=5BPATCH=201/4=5D=20perf/dwc_pcie:=20Move=20common=20DWC=20struct=20de=
-finitions=20to=20'pcie-dwc.h'=0D=0A>=20=0D=0A>=20From:=20Manivannan=20Sadha=
-sivam=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20=0D=0A>=20Since=20the=
-se=20are=20common=20to=20all=20Desginware=20PCIe=20IPs,=20move=20them=20to=
-=20a=20new=20header,=20'pcie-dwc.h'=20so=20that=20other=20drivers=20could=
-=20make=20use=20of=0D=0A>=20them.=0D=0A>=20=0D=0A>=20Signed-off-by:=20Maniv=
-annan=20Sadhasivam=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20---=0D=
-=0A>=20=20MAINTAINERS=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=7C=
-=20=201=20+=0D=0A>=20=20drivers/perf/dwc_pcie_pmu.c=20=7C=2023=20++--------=
--------------=0D=0A>=20=20include/linux/pcie-dwc.h=20=20=20=20=7C=2034=20++=
-++++++++++++++++++++++++++++++++=0D=0A>=20=203=20files=20changed,=2037=20in=
-sertions(+),=2021=20deletions(-)=0D=0A>=20=0D=0A>=20diff=20--git=20a/MAINTA=
-INERS=20b/MAINTAINERS=0D=0A>=20index=20896a307fa065..b4d09d52a750=20100644=
-=0D=0A>=20---=20a/MAINTAINERS=0D=0A>=20+++=20b/MAINTAINERS=0D=0A>=20=40=40=
-=20-18123,6=20+18123,7=20=40=40=20S:=09Maintained=0D=0A>=20=20F:=09Document=
-ation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml=0D=0A>=20=20F:=09Documen=
-tation/devicetree/bindings/pci/snps,dw-pcie.yaml=0D=0A>=20=20F:=09drivers/p=
-ci/controller/dwc/*designware*=0D=0A>=20+F:=09include/linux/pcie-dwc.h=0D=
-=0A>=20=0D=0A>=20=20PCI=20DRIVER=20FOR=20TI=20DRA7XX/J721E=0D=0A>=20=20M:=
-=09Vignesh=20Raghavendra=20<vigneshr=40ti.com>=0D=0A>=20diff=20--git=20a/dr=
-ivers/perf/dwc_pcie_pmu.c=20b/drivers/perf/dwc_pcie_pmu.c=20index=20cccecae=
-9823f..05b37ea7cf16=20100644=0D=0A>=20---=20a/drivers/perf/dwc_pcie_pmu.c=
-=0D=0A>=20+++=20b/drivers/perf/dwc_pcie_pmu.c=0D=0A>=20=40=40=20-13,6=20+13=
-,7=20=40=40=0D=0A>=20=20=23include=20<linux/errno.h>=0D=0A>=20=20=23include=
-=20<linux/kernel.h>=0D=0A>=20=20=23include=20<linux/list.h>=0D=0A>=20+=23in=
-clude=20<linux/pcie-dwc.h>=0D=0A>=20=20=23include=20<linux/perf_event.h>=0D=
-=0A>=20=20=23include=20<linux/pci.h>=0D=0A>=20=20=23include=20<linux/platfo=
-rm_device.h>=0D=0A>=20=40=40=20-99,26=20+100,6=20=40=40=20struct=20dwc_pcie=
-_dev_info=20=7B=0D=0A>=20=20=09struct=20list_head=20dev_node;=0D=0A>=20=20=
-=7D;=0D=0A>=20=0D=0A>=20-struct=20dwc_pcie_pmu_vsec_id=20=7B=0D=0A>=20-=09u=
-16=20vendor_id;=0D=0A>=20-=09u16=20vsec_id;=0D=0A>=20-=09u8=20vsec_rev;=0D=
-=0A>=20-=7D;=0D=0A>=20-=0D=0A>=20-/*=0D=0A>=20-=20*=20VSEC=20IDs=20are=20al=
-located=20by=20the=20vendor,=20so=20a=20given=20ID=20may=20mean=20different=
-=0D=0A>=20-=20*=20things=20to=20different=20vendors.=20=20See=20PCIe=20r6.0=
-,=20sec=207.9.5.2.=0D=0A>=20-=20*/=0D=0A>=20-static=20const=20struct=20dwc_=
-pcie_pmu_vsec_id=20dwc_pcie_pmu_vsec_ids=5B=5D=20=3D=20=7B=0D=0A>=20-=09=7B=
-=20.vendor_id=20=3D=20PCI_VENDOR_ID_ALIBABA,=0D=0A>=20-=09=20=20.vsec_id=20=
-=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=20-=09=7B=20.vendor_id=20=
-=3D=20PCI_VENDOR_ID_AMPERE,=0D=0A>=20-=09=20=20.vsec_id=20=3D=200x02,=20.vs=
-ec_rev=20=3D=200x4=20=7D,=0D=0A>=20-=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_=
-ID_QCOM,=0D=0A>=20-=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=
-=20=7D,=0D=0A>=20-=09=7B=7D=20/*=20terminator=20*/=0D=0A>=20-=7D;=0D=0A>=20=
--=0D=0A>=20=20static=20ssize_t=20cpumask_show(struct=20device=20*dev,=0D=0A=
->=20=20=09=09=09=09=09=20struct=20device_attribute=20*attr,=0D=0A>=20=20=09=
-=09=09=09=09=20char=20*buf)=0D=0A>=20=40=40=20-529,7=20+510,7=20=40=40=20st=
-atic=20void=20dwc_pcie_unregister_pmu(void=20*data)=0D=0A>=20=0D=0A>=20=20s=
-tatic=20u16=20dwc_pcie_des_cap(struct=20pci_dev=20*pdev)=20=20=7B=0D=0A>=20=
--=09const=20struct=20dwc_pcie_pmu_vsec_id=20*vid;=0D=0A>=20+=09const=20stru=
-ct=20dwc_pcie_vsec_id=20*vid;=0D=0A>=20=20=09u16=20vsec;=0D=0A>=20=20=09u32=
-=20val;=0D=0A>=20=0D=0A>=20diff=20--git=20a/include/linux/pcie-dwc.h=20b/in=
-clude/linux/pcie-dwc.h=20new=20file=20mode=20100644=20index=20000000000000.=
-.261ae11d75a4=0D=0A>=20---=20/dev/null=0D=0A>=20+++=20b/include/linux/pcie-=
-dwc.h=0D=0A>=20=40=40=20-0,0=20+1,34=20=40=40=0D=0A>=20+/*=20SPDX-License-I=
-dentifier:=20GPL-2.0=20*/=0D=0A>=20+/*=0D=0A>=20+=20*=20Copyright=20(C)=202=
-021-2023=20Alibaba=20Inc.=0D=0A>=20+=20*=0D=0A>=20+=20*=20Copyright=202025=
-=20Linaro=20Ltd.=0D=0A>=20+=20*=20Author:=20Manivannan=20Sadhasivam=20<mani=
-vannan.sadhasivam=40linaro.org>=0D=0A>=20+=20*/=0D=0A>=20+=0D=0A>=20+=23ifn=
-def=20LINUX_PCIE_DWC_H=0D=0A>=20+=23define=20LINUX_PCIE_DWC_H=0D=0A>=20+=0D=
-=0A>=20+=23include=20<linux/pci_ids.h>=0D=0A>=20+=0D=0A>=20+struct=20dwc_pc=
-ie_vsec_id=20=7B=0D=0A>=20+=09u16=20vendor_id;=0D=0A>=20+=09u16=20vsec_id;=
-=0D=0A>=20+=09u8=20vsec_rev;=0D=0A>=20+=7D;=0D=0A>=20+=0D=0A>=20+/*=0D=0A>=
-=20+=20*=20VSEC=20IDs=20are=20allocated=20by=20the=20vendor,=20so=20a=20giv=
-en=20ID=20may=20mean=0D=0A>=20+different=0D=0A>=20+=20*=20things=20to=20dif=
-ferent=20vendors.=20=20See=20PCIe=20r6.0,=20sec=207.9.5.2.=0D=0A>=20+=20*/=
-=0D=0A>=20+static=20const=20struct=20dwc_pcie_vsec_id=20dwc_pcie_pmu_vsec_i=
-ds=5B=5D=20=3D=20=7B=0D=0A=0D=0ARename=20this=20to=20dwc_pcie_rasdes_vsec_i=
-ds?=20pmu=20was=20perf=20file=20specific=20but=20technically=20the=20vsec=
-=20is=20rasdes.=0D=0A=0D=0A>=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_A=
-LIBABA,=0D=0A>=20+=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=
-=20=7D,=0D=0A>=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_AMPERE,=0D=0A>=
-=20+=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=
-=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_QCOM,=0D=0A>=20+=09=20=20.vse=
-c_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=20+=09=7B=7D=20/*=
-=20terminator=20*/=0D=0A>=20+=7D;=0D=0A>=20+=0D=0A>=20+=23endif=20/*=20LINU=
-X_PCIE_DWC_H=20*/=0D=0A>=20=0D=0A>=20--=0D=0A>=202.25.1=0D=0A>=20=0D=0A=0D=
-=0A=0D=0A
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
