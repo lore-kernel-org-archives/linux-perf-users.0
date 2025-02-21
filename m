@@ -1,143 +1,258 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057D70807;
-	Fri, 21 Feb 2025 01:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DB91E3DCF;
+	Fri, 21 Feb 2025 06:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740102683; cv=none; b=u7nv40hOrijAn6ka8Dp0BT3aaG9LJVGoHaXcgsNUy+9F3DWIpZpUnAB2cfUxHNdlPPmRb9H5dveoQUnUkGoQ/lxVbYloeyNzNYKyVaDi05ZeT4ea1tcEEoxGgAiRm5hgYPYWoFl0K7t8hFBHlTvwiyvas4Puqg+4pnazyNXjCCw=
+	t=1740119467; cv=none; b=eokYNAyHqoV+v4sSZqQtwjrIR9BYRt2nWYLyFBHXBds2KXI7+/YCDvOSkfLd91IaRV/8OkujoVl9KjBqaYYhZJUXmXcXrxcx7Jc2nacch0r6sNajA+B2xUKHSMA2n1MlihGGFhCRyyKsAduTEOarjTgFNzKg5e7KrzMEWkPgDvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740102683; c=relaxed/simple;
-	bh=pofo1p1sPAJ5BwZKidB+v48Bp+eCZ+Zmh0S5C0spgVY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fzxRtjhpYauJazi5NAWglM6fO0lMZNQMesdCh3Va2p7FvHH+Vkk12NfzKa7uMTbgkn/U8KA244TQdI4S2PUsowGuGOWRDYseuWtPdqkX8nNfaMQyDmPP8jNmwDi5HShNdXbzbO2rIkIsygkmQvtbJBU+4Y5qlXwmAorsl/+WCjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YzY0R1gvXz1wn7R;
-	Fri, 21 Feb 2025 09:47:19 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id A8D8B18001B;
-	Fri, 21 Feb 2025 09:51:16 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Feb 2025 09:51:15 +0800
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Peter Xu
-	<peterx@redhat.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Masami
- Hiramatsu <mhiramat@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, Tong Tiangen <tongtiangen@huawei.com>,
-	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
-Subject: [PATCH -next v2] uprobes: fix two zero old_folio bugs in __replace_page()
-Date: Fri, 21 Feb 2025 09:50:56 +0800
-Message-ID: <20250221015056.1269344-1-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740119467; c=relaxed/simple;
+	bh=P7Lf8hYvd8ISwW/UTT8lmB7v+1omLRT5e7HGLeY1S/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwK2VlGS8iO67bDHXGle4VyhiEn0LKIZrGOIvCphoBcnollmcZ2ZD43+VwoWvFD3FBsKSDGljdtNU1bWGw9wesC5pl6/copQT6J/2FDm+EBzfu5ekl3qmSHNbIqB6uZ6xYsEB/2fcawTauH4oL0GQww56f1qsdKnZ/qwyf70Azc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hU0MJqMW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hU0MJqMW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87CEC4CED6;
+	Fri, 21 Feb 2025 06:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740119466;
+	bh=P7Lf8hYvd8ISwW/UTT8lmB7v+1omLRT5e7HGLeY1S/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hU0MJqMWaVz6gBch0iHIwUGe/a0X9UfRIPOjL8Yg6d7pLzifVwla3d8nNu31KxHl2
+	 h7R8fmT9HgcY2zZL4T8G31jaHyNRjWss5oOa2iwfaVTAlObHmxioYdML/VFZ9tgRrP
+	 hBSSYxM+qniXprserA0IuUzYya9f7pjG1NakBYt1b6MSopOtY5tj2IeDrU2Wnd681q
+	 Xtxjh2xTnYgGyzdujYSOmSo0msohXYREXIq5KizedRrD3TXkZw8eBhVt6lqplkAvMh
+	 MMdqqNuYW6AHljLynoQGVCnoehVFd9EJywccRzjz467FiZ4HcTUS5jeqVaz3LbzNeo
+	 X6o+3+QvlRdwQ==
+Date: Thu, 20 Feb 2025 22:31:04 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>,
+	Jesper Juhl <jesperjuhl76@gmail.com>,
+	James Clark <james.clark@linaro.org>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Subject: Re: [PATCH v2 1/7] tools lib api: Add io_dir an allocation free
+ readdir alternative
+Message-ID: <Z7gdqIQA6lrwivXt@google.com>
+References: <20250207232452.994822-1-irogers@google.com>
+ <20250207232452.994822-2-irogers@google.com>
+ <Z7ZSVvmvYXD7Clnb@google.com>
+ <CAP-5=fWukOvV4EKbn1n=rhBO1LBf9m040=WXEweeFXAr3GCiQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+In-Reply-To: <CAP-5=fWukOvV4EKbn1n=rhBO1LBf9m040=WXEweeFXAr3GCiQA@mail.gmail.com>
 
-We triggered the following error logs in syzkaller test:
+On Wed, Feb 19, 2025 at 02:21:45PM -0800, Ian Rogers wrote:
+> On Wed, Feb 19, 2025 at 1:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Fri, Feb 07, 2025 at 03:24:42PM -0800, Ian Rogers wrote:
+> > > glibc's opendir allocates a minimum of 32kb, when called recursively
+> > > for a directory tree the memory consumption can add up - nearly 300kb
+> > > during perf start-up when processing modules. Add a stack allocated
+> > > variant of readdir sized a little more than 1kb.
+> > >
+> > > As getdents64 may be missing from libc, add support using syscall.
+> > > Note, an earlier version of this patch had a feature test for
+> > > getdents64 but there were problems on certains distros where
+> > > getdents64 would be #define renamed to getdents breaking the code. The
+> > > syscall use was made uncondtional to work around this. There is
+> > > context in:
+> > > https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/lib/api/Makefile |  2 +-
+> > >  tools/lib/api/io_dir.h | 93 ++++++++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 94 insertions(+), 1 deletion(-)
+> > >  create mode 100644 tools/lib/api/io_dir.h
+> > >
+> > > diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
+> > > index 7f6396087b46..8665c799e0fa 100644
+> > > --- a/tools/lib/api/Makefile
+> > > +++ b/tools/lib/api/Makefile
+> > > @@ -95,7 +95,7 @@ install_lib: $(LIBFILE)
+> > >               $(call do_install_mkdir,$(libdir_SQ)); \
+> > >               cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+> > >
+> > > -HDRS := cpu.h debug.h io.h
+> > > +HDRS := cpu.h debug.h io.h io_dir.h
+> > >  FD_HDRS := fd/array.h
+> > >  FS_HDRS := fs/fs.h fs/tracing_path.h
+> > >  INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/api
+> > > diff --git a/tools/lib/api/io_dir.h b/tools/lib/api/io_dir.h
+> > > new file mode 100644
+> > > index 000000000000..c84738923c96
+> > > --- /dev/null
+> > > +++ b/tools/lib/api/io_dir.h
+> > > @@ -0,0 +1,93 @@
+> > > +/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+> > > +/*
+> > > + * Lightweight directory reading library.
+> > > + */
+> > > +#ifndef __API_IO_DIR__
+> > > +#define __API_IO_DIR__
+> > > +
+> > > +#include <dirent.h>
+> > > +#include <fcntl.h>
+> > > +#include <stdlib.h>
+> > > +#include <unistd.h>
+> > > +#include <sys/stat.h>
+> > > +#include <sys/syscall.h>
+> > > +
+> > > +#if !defined(SYS_getdents64)
+> > > +#if defined(__x86_64__)
+> > > +#define SYS_getdents64 217
+> > > +#elif defined(__aarch64__)
+> > > +#define SYS_getdents64 61
+> > > +#endif
+> > > +#endif
+> > > +
+> > > +static inline ssize_t perf_getdents64(int fd, void *dirp, size_t count)
+> > > +{
+> > > +#ifdef MEMORY_SANITIZER
+> > > +     memset(dirp, 0, count);
+> > > +#endif
+> > > +     return syscall(SYS_getdents64, fd, dirp, count);
+> >
+> > Unfortunately this fails to build on my i386 vm (and probably other old
+> > archs don't have SYS_getdents64 yet).
+> >
+> >   In file included from util/pmus.c:6:
+> >   /build/libapi/include/api/io_dir.h: In function 'perf_getdents64':
+> >   /build/libapi/include/api/io_dir.h:28:24: error: 'SYS_getdents64' undeclared (first use in this function); did you mean 'perf_getdents64'?
+> >      28 |         return syscall(SYS_getdents64, fd, dirp, count);
+> >         |                        ^~~~~~~~~~~~~~
+> >         |                        perf_getdents64
+> >
+> > > +}
+> > > +#endif
+> >
+> > Maybe mismatched.
+> 
+> So even on 32-bit systems we want getdents64 as getdents encodes the
+> d_type at the end of dirent making it hard to index. On i386 we know
+> the number of the syscall for perf trace:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl?h=perf-tools-next#n235
+> So we can presumably change:
+> ```
+> #if !defined(SYS_getdents64)
+> #if defined(__x86_64__)
+> #define SYS_getdents64 217
+> #elif defined(__aarch64__)
+> #define SYS_getdents64 61
+> #endif
+> #endif
+> ```
+> to also have:
+> ```
+> #elif defined(__i386__)
+> #define SYS_getdents64 220
+> ```
+> Could you test this so that I don't need to resend 7 patches for each
+> architecture you test upon? The man page says <sys/syscall.h> and
+> <unistd.h> should be sufficient for the code to work, so I think
+> addressing this is adding workarounds for distros that aren't
+> conformant - ie its the distro's fault the code fails to compile and
+> not the tool's.
 
-  BUG: Bad page state in process syz.7.38  pfn:1eff3
-  page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
-  flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
-  raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
-  raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
-  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x32/0x50
-   bad_page+0x69/0xf0
-   free_unref_page_prepare+0x401/0x500
-   free_unref_page+0x6d/0x1b0
-   uprobe_write_opcode+0x460/0x8e0
-   install_breakpoint.part.0+0x51/0x80
-   register_for_each_vma+0x1d9/0x2b0
-   __uprobe_register+0x245/0x300
-   bpf_uprobe_multi_link_attach+0x29b/0x4f0
-   link_create+0x1e2/0x280
-   __sys_bpf+0x75f/0xac0
-   __x64_sys_bpf+0x1a/0x30
-   do_syscall_64+0x56/0x100
-   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+It fixes the issue on my machine but I'm afraid others will see the same
+issue on other archs.  I think <sys/syscall.h> should provide the number
+for the syscall but the problem is old distros which didn't ship recent
+headers.  So it's a matter of how long the tool needs to support such an
+old one. :(
 
-   BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
+Thanks,
+Namhyung
 
-The following syzkaller test case can be used to reproduce:
-
-  r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
-  write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
-  r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
-  mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
-  r5 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
-  r6 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
-  ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
-  ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
-  r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
-  bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
-
-The cause is that zero pfn is set to the pte without increasing the rss
-count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
-not increase accordingly. Then, the operation on the same pfn is performed
-in uprobe_write_opcode()->__replace_page() to unconditional decrease the
-rss count and old_folio's refcount.
-
-Therefore, two bugs are introduced:
-1. The rss count is incorrect, when process exit, the check_mm() report
-   error "Bad rss-count".
-2. The reserved folio (zero folio) is freed when folio->refcount is zero,
-   then free_pages_prepare->free_page_is_bad() report error
-   "Bad page state".
-
-Considering that uprobe hit the zero folio is a very rare scene, just
-reject zero old folio immediately after get_user_page_vma_remote().
-
-Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
-Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
-Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
----
-v2: Modified according to the comments of David and Oleg. 
----
- kernel/events/uprobes.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 46ddf3a2334d..daa46868faf3 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (ret <= 0)
- 		goto put_old;
- 
-+	if (is_zero_page(old_page)) {
-+		ret = -EINVAL;
-+		goto put_old;
-+	}
-+
- 	if (WARN(!is_register && PageCompound(old_page),
- 		 "uprobe unregister should never work on compound page\n")) {
- 		ret = -EINVAL;
--- 
-2.25.1
-
+> >
+> > > +
+> > > +struct io_dirent64 {
+> > > +     ino64_t        d_ino;    /* 64-bit inode number */
+> > > +     off64_t        d_off;    /* 64-bit offset to next structure */
+> > > +     unsigned short d_reclen; /* Size of this dirent */
+> > > +     unsigned char  d_type;   /* File type */
+> > > +     char           d_name[NAME_MAX + 1]; /* Filename (null-terminated) */
+> > > +};
+> > > +
+> > > +struct io_dir {
+> > > +     int dirfd;
+> > > +     ssize_t available_bytes;
+> > > +     struct io_dirent64 *next;
+> > > +     struct io_dirent64 buff[4];
+> > > +};
+> > > +
+> > > +static inline void io_dir__init(struct io_dir *iod, int dirfd)
+> > > +{
+> > > +     iod->dirfd = dirfd;
+> > > +     iod->available_bytes = 0;
+> > > +}
+> > > +
+> > > +static inline void io_dir__rewinddir(struct io_dir *iod)
+> > > +{
+> > > +     lseek(iod->dirfd, 0, SEEK_SET);
+> > > +     iod->available_bytes = 0;
+> > > +}
+> > > +
+> > > +static inline struct io_dirent64 *io_dir__readdir(struct io_dir *iod)
+> > > +{
+> > > +     struct io_dirent64 *entry;
+> > > +
+> > > +     if (iod->available_bytes <= 0) {
+> > > +             ssize_t rc = perf_getdents64(iod->dirfd, iod->buff, sizeof(iod->buff));
+> > > +
+> > > +             if (rc <= 0)
+> > > +                     return NULL;
+> > > +             iod->available_bytes = rc;
+> > > +             iod->next = iod->buff;
+> > > +     }
+> > > +     entry = iod->next;
+> > > +     iod->next = (struct io_dirent64 *)((char *)entry + entry->d_reclen);
+> > > +     iod->available_bytes -= entry->d_reclen;
+> > > +     return entry;
+> > > +}
+> > > +
+> > > +static inline bool io_dir__is_dir(const struct io_dir *iod, struct io_dirent64 *dent)
+> > > +{
+> > > +     if (dent->d_type == DT_UNKNOWN) {
+> > > +             struct stat st;
+> > > +
+> > > +             if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=*/0))
+> > > +                     return false;
+> > > +
+> > > +             if (S_ISDIR(st.st_mode)) {
+> > > +                     dent->d_type = DT_DIR;
+> > > +                     return true;
+> > > +             }
+> > > +     }
+> > > +     return dent->d_type == DT_DIR;
+> > > +}
+> > > +
+> > > +#endif
+> > > --
+> > > 2.48.1.502.g6dc24dfdaf-goog
+> > >
