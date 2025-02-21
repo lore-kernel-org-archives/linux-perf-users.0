@@ -1,147 +1,216 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6F7494;
-	Sat, 22 Feb 2025 07:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9159208986
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Feb 2025 10:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740208774; cv=none; b=PPjmr5SfCOdQB/hd+pnikGrIxQ3Kd4FINq28Nw8VoJb9lpir1KekZrPoerRn5mwz7VPtN4ALvFY3v5SO0pf8GhJVWeoOUj2SRYMtAHlJyxQs19AWx74WnoDKkncnCH1FSw8eAELeq1V8qRFfxL6h/8bEPCRXdg7VPSpzXNwlFvQ=
+	t=1740221850; cv=none; b=ZtJrf31iTpXxJHsV/dywpXJ3NazgdNU5Wg7MYL4wEKsq8Df54KrE9E5rS7CeqJeewSvVvRfOKhl/BZsmmwq6unJt1LiuIzhFZkPqiJ8HX5H6cpEK55fHYBXVdS0cuMHvB7E3qN04gmeQmZOHCbYjKD4LC+TD/RIobiOEJQ6t81s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740208774; c=relaxed/simple;
-	bh=R5+4K/Nzsi5fbnQc0W9jCxIEubmmJjFdB88aAxqxfu4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=bBGUPKogrHrAOHemJpl+KK7xRxKV33rElJ6ts6dqHaiHBHyOFsuJXwzK3COkMJvnAFVGT64wu01bxzN3uVlpp8d4HnqMQj7k/UuIYnj9mq0uPXbX0b/zDSS+hhI5PngDrF5n1ME1qH9SHwIK95y5mAl4bX10NfGq/VQ57JJigvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z0JDw3nVGzvWpS;
-	Sat, 22 Feb 2025 15:15:44 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 20EC4140154;
-	Sat, 22 Feb 2025 15:19:27 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 22 Feb 2025 15:19:25 +0800
-Message-ID: <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
-Date: Sat, 22 Feb 2025 15:19:24 +0800
+	s=arc-20240116; t=1740221850; c=relaxed/simple;
+	bh=e0erdF0twJYNSVrbGQobI/jjDPZ3kjL8JPlHMSiooE0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=l13GStFTl6Q2RNwqzjQ3QXjLHaC1NJIKtegC0r5cN+R/ffI4Dus1WfesKgRlUDHA5loeBtsc5EblefwnczDgQqSucu+JKjT7S//rWByCiZEBzxpUJbHG8QNxfimmORH9SGkS61jnobUKLfLHOl9yQfKJ2iaHWZY/Q98anOpjO2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=K2BjfV6J; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K2BjfV6J"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250222105720epoutp02e99eaff60de2235ac36ee36aa7ebea65~mgotVEzTv3101231012epoutp02l
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Feb 2025 10:57:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250222105720epoutp02e99eaff60de2235ac36ee36aa7ebea65~mgotVEzTv3101231012epoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740221841;
+	bh=GDrRxJdDKDeQsLoUyWU3HU1LlEhYeBjbVEKvneEwPbA=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=K2BjfV6J4lGxm2jng5QbMlEiDd/yVjk2Gf7pu/EKg9Pwtss+fG++f7ezAYmA97utv
+	 Dc8pesvP94ekih+7oTRj6sy4RzDvkfLeM1yFB2oYG4An3nTGrlPLDtFfvlXRwCcvO+
+	 tg7An4jbN48dfe6u59V9GPaVH/3YfcsPMgKPpF6Q=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250222105720epcas5p30631c60540b66daefad7ce8b0694f303~mgosqZVgq0573205732epcas5p3p;
+	Sat, 22 Feb 2025 10:57:20 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z0P8Z29D0z4x9Pv; Sat, 22 Feb
+	2025 10:57:18 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BF.F1.19710.E8DA9B76; Sat, 22 Feb 2025 19:57:18 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5~mO8JJOwUe2791427914epcas5p4r;
+	Fri, 21 Feb 2025 13:20:11 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250221132011epsmtrp22f7624b78aa3385ffea22835fa5d06a6~mO8JIRaK91906719067epsmtrp26;
+	Fri, 21 Feb 2025 13:20:11 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-8d-67b9ad8eb5a4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EB.3F.33707.B8D78B76; Fri, 21 Feb 2025 22:20:11 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250221132008epsmtip24b146ccec521cc047535442a2ce80e91~mO8GTgdud0684606846epsmtip2x;
+	Fri, 21 Feb 2025 13:20:08 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
+Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@Huawei.com, fan.ni@samsung.com, nifan.cxl@gmail.com,
+	a.manzanares@samsung.com, pankaj.dubey@samsung.com, cassel@kernel.org,
+	18255117159@163.com, xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com, Shradha Todi <shradha.t@samsung.com>
+Subject: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
+ PCIe DW
+Date: Fri, 21 Feb 2025 18:45:43 +0530
+Message-Id: <20250221131548.59616-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
- __replace_page()
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: Oleg Nesterov <oleg@redhat.com>
-CC: David Hildenbrand <david@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
-	<jolsa@kernel.org>, Peter Xu <peterx@redhat.com>, Ian Rogers
-	<irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan"
-	<kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, Guohanjun
-	<guohanjun@huawei.com>
-References: <20250221015056.1269344-1-tongtiangen@huawei.com>
- <20250221152841.GA24705@redhat.com>
- <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
-In-Reply-To: <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJsWRmVeSWpSXmKPExsWy7bCmum7f2p3pBpev8Fhcaf/NbjH9sKLF
+	kqYMi2MTVjBbNK2+y2qx4stMdotVC6+xWTT0/Ga12PT4GqvF5V1z2CzOzjvOZnFl6zoWi5Y/
+	LSwWd1s6WS2WXr/IZPF3215Gi0Vbv7BbLGx+yWjxf88Odovew7UWLXdMLd7/3MzmIOaxeMUU
+	Vo8189YweuycdZfdY8GmUo+WI29ZPTat6mTzuHNtD5vHzoeWHk+uTGfy2Lyk3qNvyypGj8+b
+	5AJ4orJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4C+
+	VVIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkC
+	FSZkZ9w5vYalYLZqxYb7X5gaGB/IdjFyckgImEi83vKXqYuRi0NIYDejxLsX7UwgCSGBT4wS
+	u6dkQySA7IMTF7PDdKyZ08QKkdjJKHFn3nso5wujxL2+j2BVbAJaEo1fu5hBbBGBVkaJI8/E
+	QIqYBbYxSxxYsQIsISwQJPFjXRsLiM0ioCrx/e98oGYODl4BK4k9K+0htslLrN5wAKycV0BQ
+	4uTMJ2DlzEDx5q2zmSFqvnBIfJnNB2G7SCzadQPqUmGJV8e3QNlSEp/f7WWDsNMlVm6eAdWb
+	I/Ft8xImCNte4sCVOSwgJzALaEqs36UPEZaVmHpqHRPEWj6J3t9PoMp5JXbMg7GVJb783cMC
+	YUtKzDt2mRXC9pDYufkh2EghgViJ/v+2ExjlZyF5ZhaSZ2YhLF7AyLyKUTK1oDg3PTXZtMAw
+	L7UcHq3J+bmbGMFJXstlB+ON+f/0DjEycTAeYpTgYFYS4dUt2ZEuxJuSWFmVWpQfX1Sak1p8
+	iNEUGMATmaVEk/OBeSavJN7QxNLAxMzMzMTS2MxQSZy3eWdLupBAemJJanZqakFqEUwfEwen
+	VAOTyWph2UVGD0z1j0+NvfvEdnGQ413ON1OnCFx4vMfJeqvN3Mp7Kx86NXwKsN+sdkziZXTt
+	kesTTnswSfQ/W1W2UrvUr+Mf14yGGbL9V1cY802NfhC1Su7CI57OFPH5lz5En/srKjG9MXbJ
+	wbvLF2vMuPtkX2nEE4bFtdvOlN1YvEY1xMF6apLnj5CG0sSSXn3PgKUsajzVWQ/TfU7n/lD5
+	bfjrwVJLhqPcRqoTSkq8zi29HTM1wO3dCcNfq6we9H4Sbrx8ef67MN+3L8NLzveyuAo5iV1+
+	s8+BVbngfu6khvO+c9YriUadC2QxkJvBY3eiVHQx3yuDqBXzeubVRsnkfzzpt9tl19/cGTOv
+	1GuzKrEUZyQaajEXFScCAMosolJ7BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsWy7bCSvG537Y50g2MLlC2utP9mt5h+WNFi
+	SVOGxbEJK5gtmlbfZbVY8WUmu8WqhdfYLBp6frNabHp8jdXi8q45bBZn5x1ns7iydR2LRcuf
+	FhaLuy2drBZLr19ksvi7bS+jxaKtX9gtFja/ZLT4v2cHu0Xv4VqLljumFu9/bmZzEPNYvGIK
+	q8eaeWsYPXbOusvusWBTqUfLkbesHptWdbJ53Lm2h81j50NLjydXpjN5bF5S79G3ZRWjx+dN
+	cgE8UVw2Kak5mWWpRfp2CVwZd06vYSmYrVqx4f4XpgbGB7JdjJwcEgImEmvmNLF2MXJxCAls
+	Z5Q4cm4FE0RCUuLzxXVQtrDEyn/P2SGKPjFKnLi3HyzBJqAl0fi1ixkkISLQySix98g7sCpm
+	gXPMEjM/tzCCVAkLBEicWbwezGYRUJX4/nc+UBEHB6+AlcSelfYQG+QlVm84wAxi8woISpyc
+	+YQFpIRZQF1i/TwhkDAzUEnz1tnMExj5ZyGpmoVQNQtJ1QJG5lWMoqkFxbnpuckFhnrFibnF
+	pXnpesn5uZsYwbGpFbSDcdn6v3qHGJk4GA8xSnAwK4nw6pbsSBfiTUmsrEotyo8vKs1JLT7E
+	KM3BoiTOq5zTmSIkkJ5YkpqdmlqQWgSTZeLglGpg4pjMtu2b3EL3R9/vnl2nEvFC55TM2YSA
+	my6J94qZeTt8782a/COa5zfzt5k3prcfseJ7luLkekH78Adlm03yN7mZkk1XMM56/M3uTPar
+	ex8KP295FMh6s2nhnKm/5osxdX5TKq3b61nX9iT1YXNdyKerQsdqYjgT+VaEJK99GX3A6He8
+	1XIWZ2vz9ffnsnQutJ2jtMajR/n7bM0NmbNmena/SZXhnfzD5alN2PFWrd0vK8Je8Blf3/b1
+	x9bwBX5/Yl/s/XhNzGKZrer2uvBbUQqvGNOWb17bYhX/xT3W2q3tpEjcHY7SxiIpxtc63+us
+	rinukH9y8IUFl3ej4vrW9/u/5z0wPMPHsW9quEntZSWW4oxEQy3mouJEAI4aFoM8AwAA
+X-CMS-MailID: 20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5
+References: <CGME20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5@epcas5p4.samsung.com>
 
+DesignWare controller provides a vendor specific extended capability
+called RASDES as an IP feature. This extended capability  provides
+hardware information like:
+ - Debug registers to know the state of the link or controller. 
+ - Error injection mechanisms to inject various PCIe errors including
+   sequence number, CRC
+ - Statistical counters to know how many times a particular event
+   occurred
 
+However, in Linux we do not have any generic or custom support to be
+able to use this feature in an efficient manner. This is the reason we
+are proposing this framework. Debug and bring up time of high-speed IPs
+are highly dependent on costlier hardware analyzers and this solution
+will in some ways help to reduce the HW analyzer usage.
 
-在 2025/2/22 10:37, Tong Tiangen 写道:
-> 
-> 
-> 在 2025/2/21 23:28, Oleg Nesterov 写道:
->> On 02/21, Tong Tiangen wrote:
->>>
->>> --- a/kernel/events/uprobes.c
->>> +++ b/kernel/events/uprobes.c
->>> @@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe 
->>> *auprobe, struct mm_struct *mm,
->>>       if (ret <= 0)
->>>           goto put_old;
->>>
->>> +    if (is_zero_page(old_page)) {
->>> +        ret = -EINVAL;
->>> +        goto put_old;
->>> +    }
->>
->> I agree with David, the subject looks a bit misleading.
->>
->> And. I won't insist, this is cosmetic, but if you send V2 please consider
->> moving the "verify_opcode()" check down, after the 
->> is_zero_page/PageCompound
->> checks.
->>
->> Oleg.
-> 
-> OK, check the validity of the old page first and modify the subject in
-> v3 .
-> 
-> Thanks.
+The debugfs entries can be used to get information about underlying
+hardware and can be shared with user space. Separate debugfs entries has
+been created to cater to all the DES hooks provided by the controller.
+The debugfs entries interacts with the RASDES registers in the required
+sequence and provides the meaningful data to the user. This eases the
+effort to understand and use the register information for debugging.
 
-I'm going to add a new patch to moving the "verify_opcode()" check down
-, IIUC that "!PageAnon(old_page)" below also needs to be moved together,
-and as David said this can be triggered by user space, so delete the use
-  of "WARN", as follows:
+This series creates a generic debugfs framework for DesignWare PCIe
+controllers where other debug features apart from RASDES can also be
+added as and when required.
 
+v7:
+    - Moved the patches to make finding VSEC IDs common from Mani's patchset [1]
+      into this series to remove dependancy as discussed
+    - Addressed style related change requests from v6
 
-@@ -502,20 +502,16 @@ int uprobe_write_opcode(struct arch_uprobe 
-*auprobe, struct mm_struct *mm,
-         if (IS_ERR(old_page))
-                 return PTR_ERR(old_page);
+v6: https://lore.kernel.org/all/20250214105007.97582-1-shradha.t@samsung.com/
+    - Addressed Niklas's comment to make vsec ID finding similar to perf
+    - Minor changes in the driver to make the debugfs file common and
+      not specefic to RASDES so that other developers can add debug
+      related features to this file.
 
--       ret = verify_opcode(old_page, vaddr, &opcode);
--       if (ret <= 0)
-+       ret = -EINVAL;
-+       if (is_zero_page(old_page))
-                 goto put_old;
+v5: https://lore.kernel.org/all/20250121111421.35437-1-shradha.t@samsung.com/
+    - Addressed Fan's comment to split the patches for easier review
+    - Addressed Bjorn's comment to fix vendor specific cap search
+    - Addressed style related change requests from v4
+    - Added rasdes debugfs init call to common designware files for host
+      and EP.
 
--       if (is_zero_page(old_page)) {
--               ret = -EINVAL;
-+       if (!is_register && (PageCompound(old_page) || !PageAnon(old_page)))
-                 goto put_old;
--       }
+v4: https://lore.kernel.org/lkml/20241206074456.17401-1-shradha.t@samsung.com/
+    - Addressed comments from Manivannan, Bjorn and Jonathan
+    - Addressed style related change requests from v3
+    - Added Documentation under Documentation/ABI/testing and kdoc stype
+      comments wherever required for better understanding
+    - Enhanced error injection to include all possible error groups
+    - Removed debugfs init call from common designware file and left it
+      up to individual platform drivers to init/deinit as required.
 
--       if (WARN(!is_register && PageCompound(old_page),
--                "uprobe unregister should never work on compound 
-page\n")) {
--               ret = -EINVAL;
-+       ret = verify_opcode(old_page, vaddr, &opcode);
-+       if (ret <= 0)
-                 goto put_old;
--       }
+v3: https://lore.kernel.org/all/20240625093813.112555-1-shradha.t@samsung.com/
+    - v2 had suggestions about moving this framework to perf/EDAC instead of a
+      controller specific debugfs but after discussions we decided to go ahead
+      with the same. Rebased and posted v3 with minor style changes.
 
-         /* We are going to replace instruction, update ref_ctr. */
-         if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-@@ -526,10 +522,6 @@ int uprobe_write_opcode(struct arch_uprobe 
-*auprobe, struct mm_struct *mm,
-                 ref_ctr_updated = 1;
-         }
+v2: https://lore.kernel.org/lkml/20231130115044.53512-1-shradha.t@samsung.com/
+    - Addressed comments from Krzysztof Wilczyński, Bjorn Helgaas and
+      posted v2 with a changed implementation for a better code design
 
--       ret = 0;
--       if (!is_register && !PageAnon(old_page))
--               goto put_old;
--
-         ret = anon_vma_prepare(vma);
+v1: https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
 
-Thanks.
-> 
->>
->>
->> .
-> 
-> .
+[1] https://lore.kernel.org/all/20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org/
+
+Manivannan Sadhasivam (1):
+  perf/dwc_pcie: Move common DWC struct definitions to 'pcie-dwc.h'
+
+Shradha Todi (4):
+  PCI: dwc: Add helper to find the Vendor Specific Extended Capability
+    (VSEC)
+  Add debugfs based silicon debug support in DWC
+  Add debugfs based error injection support in DWC
+  Add debugfs based statistical counter support in DWC
+
+ Documentation/ABI/testing/debugfs-dwc-pcie    | 144 +++++
+ MAINTAINERS                                   |   1 +
+ drivers/pci/controller/dwc/Kconfig            |  10 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ .../controller/dwc/pcie-designware-debugfs.c  | 564 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   5 +
+ .../pci/controller/dwc/pcie-designware-host.c |   6 +
+ drivers/pci/controller/dwc/pcie-designware.c  |  46 ++
+ drivers/pci/controller/dwc/pcie-designware.h  |  21 +
+ drivers/perf/dwc_pcie_pmu.c                   |  25 +-
+ include/linux/pcie-dwc.h                      |  36 ++
+ 11 files changed, 837 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-dwc-pcie
+ create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.c
+ create mode 100644 include/linux/pcie-dwc.h
+
+-- 
+2.17.1
+
