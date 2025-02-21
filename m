@@ -1,158 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA76221421E;
-	Thu, 20 Feb 2025 19:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057D70807;
+	Fri, 21 Feb 2025 01:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079218; cv=none; b=cfF7thq5lqPS0KHJOxoVEJVI64HzWFb3s0lBH2UWmsMldHLrNLH02R7PV5TSvbHc1I4q3OlZVAZV7WzMHxMaOzK7tcfp4snAtNwUYfvlvx8kcIVqJ5BuCijtPk6ZyDhx15UqcmX9AZOjH5eT9oJoWMuXI3emnY+5c8G6Tgw88o4=
+	t=1740102683; cv=none; b=u7nv40hOrijAn6ka8Dp0BT3aaG9LJVGoHaXcgsNUy+9F3DWIpZpUnAB2cfUxHNdlPPmRb9H5dveoQUnUkGoQ/lxVbYloeyNzNYKyVaDi05ZeT4ea1tcEEoxGgAiRm5hgYPYWoFl0K7t8hFBHlTvwiyvas4Puqg+4pnazyNXjCCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079218; c=relaxed/simple;
-	bh=eW/6EzbcporBkyLlJcaeoXZrQxrk9siNiuKHy0ERrCA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PqK1Vbfc4Olyue3gPvtF7DLFNZrwUDsOE97jPdHugbf/v5IfBApgmwCxcIxtFuO9x2Tp0+Lf8HHx+THYYVDWZG6ShU6GUhNYS71WDPO6GaEsk8M+1IZhi1lBJtKdAeXZThEyDpsvSFLPSktce8qciD44pD0Iy1KKMb0jMcqxwRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpPscSdC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpPscSdC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2129FC4CEED;
-	Thu, 20 Feb 2025 19:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740079218;
-	bh=eW/6EzbcporBkyLlJcaeoXZrQxrk9siNiuKHy0ERrCA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KpPscSdC77PJcDds3Sb3QPQ3KSEuyTfqCa5UE6SVRgFvdhVuiBF1TxAul/Pe1qapV
-	 NExxM6LcQ9OIePFJnlxb+naHiko5X4cUjSqG1P605tGjaK9n81l++GXYwHNJJvrFla
-	 mM1Bbz1m1YAEbb7xp1FCKW4XFyB+kJvIEbgXgQofbRecMUj7pHZ1s0KsKL/8vGbw88
-	 yCjZs54GPLcKpojvC/t8fNZBf4m6AQuzHeNWJOIj2/xfVnTAuRKD+ll++bWo/SvBAX
-	 HqBG5aFISe3kgZ4oHsoh6Cs0gnD6yLblYfvdWxcK6L/8Yv9Ni4rX8gW0YFPSxKEGYt
-	 ltSt/y9/4TlcA==
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7272cc739f7so1295386a34.1;
-        Thu, 20 Feb 2025 11:20:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVG23FVA0yvh2oC7Dc/N2A6a4pRalUIkBt3bEuD/KRg6ca8OGZa78KrQ8YhnKtOjS3lnbK3N6AaGYIjcS30/QkNfA==@vger.kernel.org, AJvYcCW4jxQAPWWc+qgWv/TQr/cRjqGrWAjLaIqLF3On0UzIb1YAMkla/AuKn4ZNAPNDmgKP8ocSuUhSyPQO@vger.kernel.org, AJvYcCWN9nLb1cjkBOM73Wgl6MMuZ1b3yIF/nNs+8wNHGZiFmexcdmlDMc5QpDIBwl2UiL9ppGsw4IUyP31VcI0K@vger.kernel.org, AJvYcCWryDD2vSVyf6jWT0Z3vfl2fzM4Fnjf5rWGGbLx27Svvv6UXd091Atf3+afytKH3OdxuGgbLcYU1Go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQh0FqmzZ3oa68wZ+Mo5PnzdWtkg+dwee8I4V+zC6Z3ThIKBz1
-	FrSibQif2kmJwI6k577FJjFCmUkqWHwDLjb43ga8/RLwux/RBx4IsjPu0XleUn5Pnk9y0tlLdcr
-	hEd7zL/X4vsTexFu6OU3GxWUTN9M=
-X-Google-Smtp-Source: AGHT+IFtnS7H25wVx2/d7TV4BBEAl89/Nsh8UjACXA0fSLmiZXsB9lLv52jTs/zoA8/wVyPENkWf8sIOSW/K78QcbJU=
-X-Received: by 2002:a05:6808:f0c:b0:3f4:7c4:ca27 with SMTP id
- 5614622812f47-3f419f14e7amr3783387b6e.9.1740079217083; Thu, 20 Feb 2025
- 11:20:17 -0800 (PST)
+	s=arc-20240116; t=1740102683; c=relaxed/simple;
+	bh=pofo1p1sPAJ5BwZKidB+v48Bp+eCZ+Zmh0S5C0spgVY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fzxRtjhpYauJazi5NAWglM6fO0lMZNQMesdCh3Va2p7FvHH+Vkk12NfzKa7uMTbgkn/U8KA244TQdI4S2PUsowGuGOWRDYseuWtPdqkX8nNfaMQyDmPP8jNmwDi5HShNdXbzbO2rIkIsygkmQvtbJBU+4Y5qlXwmAorsl/+WCjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YzY0R1gvXz1wn7R;
+	Fri, 21 Feb 2025 09:47:19 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id A8D8B18001B;
+	Fri, 21 Feb 2025 09:51:16 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 21 Feb 2025 09:51:15 +0800
+From: Tong Tiangen <tongtiangen@huawei.com>
+To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Peter Xu
+	<peterx@redhat.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, Tong Tiangen <tongtiangen@huawei.com>,
+	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
+Subject: [PATCH -next v2] uprobes: fix two zero old_folio bugs in __replace_page()
+Date: Fri, 21 Feb 2025 09:50:56 +0800
+Message-ID: <20250221015056.1269344-1-tongtiangen@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219184133.816753-1-sohil.mehta@intel.com> <20250219184133.816753-9-sohil.mehta@intel.com>
-In-Reply-To: <20250219184133.816753-9-sohil.mehta@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 20 Feb 2025 20:20:06 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iRxdpr9Lc9XJDbN5KbO6Ch=TEG39PC53gQJOTW_L9hnw@mail.gmail.com>
-X-Gm-Features: AWEUYZkHa_18F7_XRL1v6sTvE25boM9CeaseQIQ_yIgYuXVNMo5-nm0iD0EOlkk
-Message-ID: <CAJZ5v0iRxdpr9Lc9XJDbN5KbO6Ch=TEG39PC53gQJOTW_L9hnw@mail.gmail.com>
-Subject: Re: [PATCH v3 08/15] x86/acpi/cstate: Improve Intel Family model checks
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Tony Luck <tony.luck@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>, 
-	Andrew Cooper <andrew.cooper3@citrix.com>, David Laight <david.laight.linux@gmail.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-On Wed, Feb 19, 2025 at 8:29=E2=80=AFPM Sohil Mehta <sohil.mehta@intel.com>=
- wrote:
->
-> Update the Intel Family checks to consistently use Family 15 instead of
-> Family 0xF. Also, get rid of one of last usages of x86_model by using
-> the new VFM checks.
->
-> Update the incorrect comment since the check has changed[1][2] since the
-> initial commit ee1ca48fae7e ("ACPI: Disable ARB_DISABLE on platforms
-> where it is not needed").
->
-> [1]: commit 3e2ada5867b7 ("ACPI: fix Compaq Evo N800c (Pentium 4m) boot
-> hang regression") removed the P4 - Family 15.
->
-> [2]: commit 03a05ed11529 ("ACPI: Use the ARB_DISABLE for the CPU which
-> model id is less than 0x0f.") got rid of CORE_YONAH - Family 6, model E.
->
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+We triggered the following error logs in syzkaller test:
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  BUG: Bad page state in process syz.7.38  pfn:1eff3
+  page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
+  flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
+  raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
+  raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
+  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+  Call Trace:
+   <TASK>
+   dump_stack_lvl+0x32/0x50
+   bad_page+0x69/0xf0
+   free_unref_page_prepare+0x401/0x500
+   free_unref_page+0x6d/0x1b0
+   uprobe_write_opcode+0x460/0x8e0
+   install_breakpoint.part.0+0x51/0x80
+   register_for_each_vma+0x1d9/0x2b0
+   __uprobe_register+0x245/0x300
+   bpf_uprobe_multi_link_attach+0x29b/0x4f0
+   link_create+0x1e2/0x280
+   __sys_bpf+0x75f/0xac0
+   __x64_sys_bpf+0x1a/0x30
+   do_syscall_64+0x56/0x100
+   entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-and I'm assuming that this series will go in via x86.
+   BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
 
-Thanks!
+The following syzkaller test case can be used to reproduce:
 
-> ---
-> v3: Pick up Dave's Ack.
-> v2: Improve commit message.
-> ---
->  arch/x86/include/asm/intel-family.h | 3 +++
->  arch/x86/kernel/acpi/cstate.c       | 8 ++++----
->  2 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/i=
-ntel-family.h
-> index 9e6a13f03f0e..deb17c9c21e5 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -187,6 +187,9 @@
->  #define INTEL_XEON_PHI_KNL             IFM(6, 0x57) /* Knights Landing *=
-/
->  #define INTEL_XEON_PHI_KNM             IFM(6, 0x85) /* Knights Mill */
->
-> +/* Notational marker denoting the last Family 6 model */
-> +#define INTEL_FAM6_LAST                        IFM(6, 0xFF)
-> +
->  /* Family 15 - NetBurst */
->  #define INTEL_P4_WILLAMETTE            IFM(15, 0x01) /* Also Xeon Foster=
- */
->  #define INTEL_P4_PRESCOTT              IFM(15, 0x03)
-> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.=
-c
-> index 5854f0b8f0f1..444602a0a3dd 100644
-> --- a/arch/x86/kernel/acpi/cstate.c
-> +++ b/arch/x86/kernel/acpi/cstate.c
-> @@ -13,6 +13,7 @@
->  #include <linux/sched.h>
->
->  #include <acpi/processor.h>
-> +#include <asm/cpu_device_id.h>
->  #include <asm/cpuid.h>
->  #include <asm/mwait.h>
->  #include <asm/special_insns.h>
-> @@ -47,12 +48,11 @@ void acpi_processor_power_init_bm_check(struct acpi_p=
-rocessor_flags *flags,
->         /*
->          * On all recent Intel platforms, ARB_DISABLE is a nop.
->          * So, set bm_control to zero to indicate that ARB_DISABLE
-> -        * is not required while entering C3 type state on
-> -        * P4, Core and beyond CPUs
-> +        * is not required while entering C3 type state.
->          */
->         if (c->x86_vendor =3D=3D X86_VENDOR_INTEL &&
-> -           (c->x86 > 0xf || (c->x86 =3D=3D 6 && c->x86_model >=3D 0x0f))=
-)
-> -                       flags->bm_control =3D 0;
-> +           (c->x86 > 15 || (c->x86_vfm >=3D INTEL_CORE2_MEROM && c->x86_=
-vfm <=3D INTEL_FAM6_LAST)))
-> +               flags->bm_control =3D 0;
->
->         if (c->x86_vendor =3D=3D X86_VENDOR_CENTAUR) {
->                 if (c->x86 > 6 || (c->x86 =3D=3D 6 && c->x86_model =3D=3D=
- 0x0f &&
-> --
-> 2.43.0
->
+  r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
+  write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
+  r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
+  mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
+  r5 = userfaultfd(0x80801)
+  ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
+  r6 = userfaultfd(0x80801)
+  ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
+  ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
+  ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
+  r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
+  bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
+
+The cause is that zero pfn is set to the pte without increasing the rss
+count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
+not increase accordingly. Then, the operation on the same pfn is performed
+in uprobe_write_opcode()->__replace_page() to unconditional decrease the
+rss count and old_folio's refcount.
+
+Therefore, two bugs are introduced:
+1. The rss count is incorrect, when process exit, the check_mm() report
+   error "Bad rss-count".
+2. The reserved folio (zero folio) is freed when folio->refcount is zero,
+   then free_pages_prepare->free_page_is_bad() report error
+   "Bad page state".
+
+Considering that uprobe hit the zero folio is a very rare scene, just
+reject zero old folio immediately after get_user_page_vma_remote().
+
+Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
+Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
+Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+---
+v2: Modified according to the comments of David and Oleg. 
+---
+ kernel/events/uprobes.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 46ddf3a2334d..daa46868faf3 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (ret <= 0)
+ 		goto put_old;
+ 
++	if (is_zero_page(old_page)) {
++		ret = -EINVAL;
++		goto put_old;
++	}
++
+ 	if (WARN(!is_register && PageCompound(old_page),
+ 		 "uprobe unregister should never work on compound page\n")) {
+ 		ret = -EINVAL;
+-- 
+2.25.1
+
