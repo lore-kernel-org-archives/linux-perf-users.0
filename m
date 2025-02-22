@@ -1,70 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B28B2066CC
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Feb 2025 12:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9F13C81B;
+	Sat, 22 Feb 2025 16:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740228147; cv=none; b=TWT+s3+5aHBZ6b9/tm4y+P8AVGoDMbKzc41IHHc4zUG+7o997HboSy7w36w6H3UIrVUCuEIR9ZPGYGzHCCtf/gn7lMOudeX1bL3aXgHq6wBw/TkmVmX6lPH894Fbn8817dILaCFQlvC9qg8bCpBPDjDeGJZMjMmL9gwgQ1Yly0I=
+	t=1740241838; cv=none; b=erjNHKbPdVos6SsZh/MCE5EEeL78Fu5XKYO1Xux8kd3c8uGHajAhRCthdKt6ujgV7+P/c0Nq5JJgpNXzwGBpP9C9x3DTM6Kgel+4v/EDPyb/qpcDlNs4NJL7bV7mJg4zwQ3ss8qKVVzmYWdH3YYIrYAQ5ZVCZJs9p0P7RzQb4g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740228147; c=relaxed/simple;
-	bh=dlNurf6J/kF6jwdjyszmwDsz+iXM2ZJ+Sue3Mwroilc=;
+	s=arc-20240116; t=1740241838; c=relaxed/simple;
+	bh=TAgYvz4shjowE9LUaXwmfu6VLlUHFIppKrAy2sqc/g4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7Wk5xCpoi+38TGgW/IZ6do+IsYof55RlHIVNq8JI/cc4iNge2AYhkQ9mZys3N1smc0ZWOkpxVmCQ+snjoDq9xsSsqXLK+T7tc8OQ0oZVtHnh7x+3mI/eDmnlh7XS8IwNp+am56UndMXB/JCqSE0GL7uTQX540k9c3bNmLplMgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+pH9DQO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8g8YD4Elcn4eEZsyYNSMGN9JeOg4cyUN5yIqAfQajNCA1bI+mOr6999ZIMcG0KGPK/WfP1xP155/Ib8QP5uYnpmA3KOXAAnLN6VYkgMghzODaQI/j+upBoL7lpKPEr4Zpt3MpIXTe9iOLa4aQxMjEkQQgRgK2Q+PZLF9EM7PiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hx7NJJgY; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+pH9DQO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EDBC4CED1;
-	Sat, 22 Feb 2025 12:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740228147;
-	bh=dlNurf6J/kF6jwdjyszmwDsz+iXM2ZJ+Sue3Mwroilc=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hx7NJJgY"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EB66A40E0177;
+	Sat, 22 Feb 2025 16:30:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id inoskxphGDnD; Sat, 22 Feb 2025 16:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740241828; bh=GdarmdPYfhonxFe3eVsstixOM9edVzaHcDHd3EvNNVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D+pH9DQOXkxhQeEh+Ai6/XFiHNKLwNubwX/mHikU5yCIGNXSGur8XtPtfCNjtiAW2
-	 4nONXV+Pl9vj1oH0lwUA6GXI8ExTLfVT5HCgsPiLAippGOGVy90snc0krkRT+dnyEo
-	 qJgWlMooAOkhfdLz3P17m3Hh+JXHtlifflerO9psToO835MyZz8YECVTHj4PKjv2Yh
-	 wIvhe3VZjRynplNpJi0Iz+yNuNGLM+NdkwRN/UVD52ytYjcOoJABClElec37WOh76m
-	 1mWYMHp6zP0465OyWU0C1p2SjWezCbbVYfl9c5lJKCoB0ekSvA5CDJcPb1+mkRW+vI
-	 Grb+lQYZoipCw==
-Date: Sat, 22 Feb 2025 13:42:18 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: intel-xe@lists.freedesktop.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
-	Riana Tauro <riana.tauro@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v14 1/7] perf/core: Add PMU_EVENT_ATTR_ID_STRING
-Message-ID: <Z7nGKlY509BxgyUn@gmail.com>
-References: <20250122062341.1100173-1-lucas.demarchi@intel.com>
- <20250122062341.1100173-2-lucas.demarchi@intel.com>
+	b=hx7NJJgY74w3Yljy5RVXfBe9WIWZvtVAXM2saN2/A1odl5GsyR7DrmTj47+jNteJY
+	 nUUvoRw5BGY3ro/CUdojMu76zw4aTzcg2yIlM/CnyC2Rzh9RotNmVSKFnjdbBGnF7l
+	 vfGM030nM2HKT/muJ4wz6ynW8DTVsMWNtPsnkabDJyWzMUECPbJrheQKGiyQEBNM0A
+	 yqmR4iIdOP4JcEM+Zv58h3lGf55BdiyxDF9Cm6mU8/rQ6DQzi4aQzZh6p7vdgKCGUO
+	 Z0Mvp5NKD6roBJfTD++UmQj7bun218DcjwIo6vm/yVlrzuydN4sdW3WjLPzhzVxALW
+	 nWCCDtfUk6dnv+H2WOcdmqdJbBbrDMP9szCg3bJTaVGw9utmTh5b7y45Ym73IbdfJh
+	 TUywyY8XClcO/qgxBjEOCH1EcuO2qhacEphb+PbSiIytNj8AjLDkGi+iwBmHRZYbWi
+	 VJRpt4HdZHzzJVN4K3B9RhMFHM8/0nA4bC6b15JHC4Mbd/FE3952lEI6CsPdyL+AQP
+	 Jx6dorcQfOlUiOWywjfsyYorXWe2C1+264SeKeir0zH566Ae0ao/9fmKBpK0UpxFbB
+	 g363BrXjAYZfl/FU9NdtjXCoFDJ3Gi29FwwbQFXoUgNU9ovCIhkGFDdkpWeFZQNbcW
+	 cb4lqgDyh1wCucKf15Rwui9c=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A55E340E0176;
+	Sat, 22 Feb 2025 16:30:11 +0000 (UTC)
+Date: Sat, 22 Feb 2025 17:30:01 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, will@kernel.org,
+	peterz@infradead.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: Re: [PATCH v5 5/5] x86/cpufeatures: Add the CPU feature bit for MSR
+ immediate form instructions
+Message-ID: <20250222163001.GUZ7n7iRc88PTMQi9_@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250106070727.3211006-6-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250122062341.1100173-2-lucas.demarchi@intel.com>
+In-Reply-To: <20250106070727.3211006-6-xin@zytor.com>
 
-
-* Lucas De Marchi <lucas.demarchi@intel.com> wrote:
-
-> struct perf_pmu_events_attr has both id and event_str however zeroes
-> the id and only set event_str. Add another macro that allows to set both
-> so drivers can make use of them. The id is useful for determining the
-> visibility of the attributes without resorting to creating separate
-> groups passed via update_attr, while the event_str is still useful for
-> attributes like *.unit or *.scale.
+On Sun, Jan 05, 2025 at 11:07:27PM -0800, Xin Li (Intel) wrote:
+> The immediate form of MSR access instructions are primarily motivated by
+> performance, not code size: by having the MSR number in an immediate, it
+> is available *much* earlier in the pipeline, which allows the hardware
+> much more leeway about how a particular MSR is handled.
 > 
-> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> ---
->  include/linux/perf_event.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> Add a new CPU feature word for CPUID.7.1.ECX and then the CPU feature bit
+> for MSR immediate form.
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
+Nope, scattered.c.
 
-Thanks,
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index d5985e8eef29..59aa04915032 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -5,7 +5,7 @@
+>  /*
+>   * Defines x86 CPU feature bits
+>   */
+> -#define NCAPINTS			22	   /* N 32-bit words worth of info */
+> +#define NCAPINTS			23	   /* N 32-bit words worth of info */
+>  #define NBUGINTS			2	   /* N 32-bit bug flags */
+>  
+>  /*
+> @@ -476,6 +476,9 @@
+>  #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
+>  #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
+>  
+> +/* Intel-defined CPU features, CPUID level 0x00000007:1 (ECX), word 22 */
+> +#define X86_FEATURE_MSR_IMM		(22*32+ 5) /* "msr_imm" MSR immediate form instructions */
 
-	Ingo
+Also no "msr_imm": Documentation/arch/x86/cpuinfo.rst
+
+In any case, this patch doesn't belong in this set.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
