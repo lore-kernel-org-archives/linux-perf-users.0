@@ -1,527 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E505A252909;
-	Fri, 21 Feb 2025 18:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853133224;
+	Sat, 22 Feb 2025 02:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740162729; cv=none; b=qqSgIZb+WmtAnL3gR3y3eWInS9QjBaNOHGl0+XuhS5rR4v3szaX9j+nClOZIhNodCAZxKKvacpTXYRG2/jOGsAD7LVQdiDGUhmc1AV0h7kYa/Oh9DbuEXWjN7YcTVLfAHWc5cELYlRPbQ6Bvsuxl1r8705iAefU7zdv3/UMDGhQ=
+	t=1740191639; cv=none; b=Fqn4PQYMPbS0IZEhuAlg/T16jUOa/+dB7SjUCSPLRDjzjo9GUtCHMELgQzdTsVgz5Mtu//i/dQM99+QkuMPYWQ4blMmfiCrhMW3873zbjBQKu1XJ0MxO955LcJMSIYPp1zwcUwRMsmA4GXOdMCpXHcSlxyHQwHWYziIBE1mExaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740162729; c=relaxed/simple;
-	bh=TU7fF1/BjywL5plomZxreIyqK0H3q3X+EIpKzIVmk5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YPKJjYIpgCnfpF5iDDpoZON3jPPrSgAZLYHmQ6uHlVvTiRAsjeURkfLXLdBpR7rn6qKIdLif9iLv7T94Dqx5WC5ZPpcCUAnI/d1m1XrH4YJax567+0bTBgYrenjy47DL2bjQiA0CKkV3dsblhAjm849edNLghR1aIB3cSdrrp+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyDV7BXN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyDV7BXN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3656C4CEE2;
-	Fri, 21 Feb 2025 18:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740162728;
-	bh=TU7fF1/BjywL5plomZxreIyqK0H3q3X+EIpKzIVmk5o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZyDV7BXN9s1Q+uNHubEKL5VrjZ+sOG0ByRiUhmeR1yp5W6e1i2PCzCwe0egAAMmXE
-	 MNEHOl4K7Ddb3ehRRH7qHUoN0w/Js+PQKyxC3dsdOzhjSNtDljAVZdwFCI6lXWKQFy
-	 rs1B4tsf3G0oY0rTjaCutjNR1FoENHv0NJtWCpaBKUsYYhkGkjajcoFsQHSrHEq6zj
-	 nCuXRwUldLlGh04pLQTSFzwa15qT+OvVW6p0z7DnsMda5GzvloOesAE27aM/mB3HW/
-	 WO3kdHHa3h7d9l/vbvRIbLmaMTwSoXbUeT4tUkFKWsKJQOsP+4tOZVfz+fdOV/bPov
-	 inqWmWJV+3/bQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH] perf trace: Implement syscall summary in BPF
-Date: Fri, 21 Feb 2025 10:32:07 -0800
-Message-ID: <20250221183207.560262-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+	s=arc-20240116; t=1740191639; c=relaxed/simple;
+	bh=q7kEy/Ni+XozcMzpLRQqOvA0+qSOJELLfY6mN6pJumQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F4UsoU1KRxIIm++JYsS74wuB4tFLvTln4BJmUul/80iNOWHxRVp9SorbKQGE2jZe9YXdV/qjxcPpHxAkJgjjOfJz2/b/ZBecxWTqFmL2F//H7Ozstb3gv+QP7wo+gRXSCiVow8DD4LIPsLWpr4uA5s14aQst9OMRpvAH6mLvwKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z09vQ36StzvWjm;
+	Sat, 22 Feb 2025 10:30:10 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id E24A01400FD;
+	Sat, 22 Feb 2025 10:33:52 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 22 Feb 2025 10:33:51 +0800
+Message-ID: <2c86a39b-dd70-6fe1-7b97-d587a122e8aa@huawei.com>
+Date: Sat, 22 Feb 2025 10:33:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
+ __replace_page()
+To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Peter Xu
+	<peterx@redhat.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, Guohanjun
+	<guohanjun@huawei.com>
+References: <20250221015056.1269344-1-tongtiangen@huawei.com>
+ <bdc01d66-01a7-43f6-954f-12a274e294d4@redhat.com>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <bdc01d66-01a7-43f6-954f-12a274e294d4@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-When --summary-only option is used, it doesn't need (augmented) arguments
-of syscalls.  Let's skip the augmentation and load another small BPF
-program to collect the statistics in the kernel instead of copying the
-data to the ring-buffer to calculate the stats in userspace.  This will
-be much more light-weight than the existing approach and remove any lost
-events.
 
-For simplicity, it's only activated with --summary-mode=total in system-
-wide mode.  And it also skips to calculate stddev as doing it atomically
-would add more overheads (i.e. requiring a spinlock).  It can be extended
-to cover more use cases later, if needed.
 
-Cc: Howard Chu <howardchu95@gmail.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Makefile.perf                      |   2 +-
- tools/perf/builtin-trace.c                    |  41 ++++--
- tools/perf/util/Build                         |   1 +
- tools/perf/util/bpf-trace-summary.c           | 117 ++++++++++++++++++
- .../perf/util/bpf_skel/syscall_summary.bpf.c  | 109 ++++++++++++++++
- tools/perf/util/bpf_skel/syscall_summary.h    |  18 +++
- tools/perf/util/trace.h                       |  31 +++++
- 7 files changed, 311 insertions(+), 8 deletions(-)
- create mode 100644 tools/perf/util/bpf-trace-summary.c
- create mode 100644 tools/perf/util/bpf_skel/syscall_summary.bpf.c
- create mode 100644 tools/perf/util/bpf_skel/syscall_summary.h
- create mode 100644 tools/perf/util/trace.h
+在 2025/2/21 16:12, David Hildenbrand 写道:
+> On 21.02.25 02:50, Tong Tiangen wrote:
+>> We triggered the following error logs in syzkaller test:
+>>
+>>    BUG: Bad page state in process syz.7.38  pfn:1eff3
+>>    page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 
+>> pfn:0x1eff3
+>>    flags: 
+>> 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
+>>    raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 
+>> 0000000000000000
+>>    raw: 0000000000000000 0000000000000000 00000000fffffffe 
+>> 0000000000000000
+>>    page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+>>    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
+>> 1.13.0-1ubuntu1.1 04/01/2014
+>>    Call Trace:
+>>     <TASK>
+>>     dump_stack_lvl+0x32/0x50
+>>     bad_page+0x69/0xf0
+>>     free_unref_page_prepare+0x401/0x500
+>>     free_unref_page+0x6d/0x1b0
+>>     uprobe_write_opcode+0x460/0x8e0
+>>     install_breakpoint.part.0+0x51/0x80
+>>     register_for_each_vma+0x1d9/0x2b0
+>>     __uprobe_register+0x245/0x300
+>>     bpf_uprobe_multi_link_attach+0x29b/0x4f0
+>>     link_create+0x1e2/0x280
+>>     __sys_bpf+0x75f/0xac0
+>>     __x64_sys_bpf+0x1a/0x30
+>>     do_syscall_64+0x56/0x100
+>>     entry_SYSCALL_64_after_hwframe+0x78/0xe2
+>>
+>>     BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES 
+>> val:-1
+>>
+>> The following syzkaller test case can be used to reproduce:
+>>
+>>    r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
+>>    write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
+>>    r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 
+>> 0x42, 0x0)
+>>    mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 
+>> 0x12, r4, 0x0)
+>>    r5 = userfaultfd(0x80801)
+>>    ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
+>>    r6 = userfaultfd(0x80801)
+>>    ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
+>>    ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, 
+>> &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
+>>    ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, 
+>> &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
+>>    r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, 
+>> &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], 
+>> &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, 
+>> @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
+>> 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
+>>    bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 
+>> 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', 
+>> &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
+>>
+>> The cause is that zero pfn is set to the pte without increasing the rss
+>> count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
+>> not increase accordingly. Then, the operation on the same pfn is 
+>> performed
+>> in uprobe_write_opcode()->__replace_page() to unconditional decrease the
+>> rss count and old_folio's refcount.
+>>
+>> Therefore, two bugs are introduced:
+>> 1. The rss count is incorrect, when process exit, the check_mm() report
+>>     error "Bad rss-count".
+>> 2. The reserved folio (zero folio) is freed when folio->refcount is zero,
+>>     then free_pages_prepare->free_page_is_bad() report error
+>>     "Bad page state".
+> 
+> Well, there is more, like triggering the
+> 
+>      VM_WARN_ON_FOLIO(is_zero_folio(folio), folio);
+> 
+> in __folio_rmap_sanity_checks() I assume.
+> 
+> So maybe just call the patch
+> 
+>      "uprobes: reject the share zeropage in uprobe_write_opcode)()"
+> 
+> Thanks!
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 55d6ce9ea52fb2a5..3b68a57682ca991d 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1198,7 +1198,7 @@ SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
- SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
- SKELETONS += $(SKEL_OUT)/off_cpu.skel.h $(SKEL_OUT)/lock_contention.skel.h
- SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h $(SKEL_OUT)/sample_filter.skel.h
--SKELETONS += $(SKEL_OUT)/kwork_top.skel.h
-+SKELETONS += $(SKEL_OUT)/kwork_top.skel.h $(SKEL_OUT)/syscall_summary.skel.h
- SKELETONS += $(SKEL_OUT)/bench_uprobe.skel.h
- SKELETONS += $(SKEL_OUT)/augmented_raw_syscalls.skel.h
- 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f55a8a6481f27f99..1c7af7583bc560c4 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -55,6 +55,7 @@
- #include "util/thread_map.h"
- #include "util/stat.h"
- #include "util/tool.h"
-+#include "util/trace.h"
- #include "util/util.h"
- #include "trace/beauty/beauty.h"
- #include "trace-event.h"
-@@ -222,6 +223,7 @@ struct trace {
- 	bool			force;
- 	bool			vfs_getname;
- 	bool			force_btf;
-+	bool			summary_bpf;
- 	int			trace_pgfaults;
- 	char			*perfconfig_events;
- 	struct {
-@@ -4276,6 +4278,13 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 
- 	trace->live = true;
- 
-+	if (trace->summary_bpf) {
-+		if (trace_prepare_bpf_summary() < 0)
-+			goto out_delete_evlist;
-+
-+		goto create_maps;
-+	}
-+
- 	if (!trace->raw_augmented_syscalls) {
- 		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
- 			goto out_error_raw_syscalls;
-@@ -4334,6 +4343,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (trace->cgroup)
- 		evlist__set_default_cgroup(trace->evlist, trace->cgroup);
- 
-+create_maps:
- 	err = evlist__create_maps(evlist, &trace->opts.target);
- 	if (err < 0) {
- 		fprintf(trace->output, "Problems parsing the target to trace, check your options!\n");
-@@ -4426,9 +4436,11 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (err < 0)
- 		goto out_error_apply_filters;
- 
--	err = evlist__mmap(evlist, trace->opts.mmap_pages);
--	if (err < 0)
--		goto out_error_mmap;
-+	if (!trace->summary_bpf) {
-+		err = evlist__mmap(evlist, trace->opts.mmap_pages);
-+		if (err < 0)
-+			goto out_error_mmap;
-+	}
- 
- 	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
- 		evlist__enable(evlist);
-@@ -4441,6 +4453,9 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		evlist__enable(evlist);
- 	}
- 
-+	if (trace->summary_bpf)
-+		trace_start_bpf_summary();
-+
- 	trace->multiple_threads = perf_thread_map__pid(evlist->core.threads, 0) == -1 ||
- 		perf_thread_map__nr(evlist->core.threads) > 1 ||
- 		evlist__first(evlist)->core.attr.inherit;
-@@ -4508,12 +4523,17 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 
- 	evlist__disable(evlist);
- 
-+	if (trace->summary_bpf)
-+		trace_end_bpf_summary();
-+
- 	if (trace->sort_events)
- 		ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
- 
- 	if (!err) {
- 		if (trace->summary) {
--			if (trace->summary_mode == SUMMARY__BY_TOTAL)
-+			if (trace->summary_bpf)
-+				trace_print_bpf_summary(trace->sctbl, trace->output);
-+			else if (trace->summary_mode == SUMMARY__BY_TOTAL)
- 				trace__fprintf_total_summary(trace, trace->output);
- 			else
- 				trace__fprintf_thread_summary(trace, trace->output);
-@@ -4529,6 +4549,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	}
- 
- out_delete_evlist:
-+	trace_cleanup_bpf_summary();
- 	delete_syscall_stats(trace->syscall_stats);
- 	trace__symbols__exit(trace);
- 	evlist__free_syscall_tp_fields(evlist);
-@@ -5446,6 +5467,15 @@ int cmd_trace(int argc, const char **argv)
- 		goto skip_augmentation;
- 	}
- 
-+	if (!argc && target__none(&trace.opts.target))
-+		trace.opts.target.system_wide = true;
-+
-+	if (trace.summary_only && trace.opts.target.system_wide &&
-+	    trace.summary_mode == SUMMARY__BY_TOTAL && !trace.trace_pgfaults) {
-+		trace.summary_bpf = true;
-+		goto skip_augmentation;
-+	}
-+
- 	trace.skel = augmented_raw_syscalls_bpf__open();
- 	if (!trace.skel) {
- 		pr_debug("Failed to open augmented syscalls BPF skeleton");
-@@ -5649,9 +5679,6 @@ int cmd_trace(int argc, const char **argv)
- 		goto out_close;
- 	}
- 
--	if (!argc && target__none(&trace.opts.target))
--		trace.opts.target.system_wide = true;
--
- 	if (input_name)
- 		err = trace__replay(&trace);
- 	else
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 034a6603d5a8e8b0..ba4201a6f3c69753 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -171,6 +171,7 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
- 
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
-diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-trace-summary.c
-new file mode 100644
-index 0000000000000000..7e8b1c9b3faeee4f
---- /dev/null
-+++ b/tools/perf/util/bpf-trace-summary.c
-@@ -0,0 +1,117 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <inttypes.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+
-+#include "syscalltbl.h"
-+#include "util/trace.h"
-+#include "util/util.h"
-+#include <bpf/bpf.h>
-+#include <linux/time64.h>
-+
-+#include "bpf_skel/syscall_summary.h"
-+#include "bpf_skel/syscall_summary.skel.h"
-+
-+
-+static struct syscall_summary_bpf *skel;
-+
-+int trace_prepare_bpf_summary(void)
-+{
-+	skel = syscall_summary_bpf__open_and_load();
-+	if (skel == NULL) {
-+		fprintf(stderr, "failed to load syscall summary bpf skeleton\n");
-+		return -1;
-+	}
-+
-+	if (syscall_summary_bpf__attach(skel) < 0) {
-+		fprintf(stderr, "failed to attach syscall summary bpf skeleton\n");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+void trace_start_bpf_summary(void)
-+{
-+	skel->bss->enabled = 1;
-+}
-+
-+void trace_end_bpf_summary(void)
-+{
-+	skel->bss->enabled = 0;
-+}
-+
-+struct syscall_data {
-+	int syscall_nr;
-+	struct syscall_stats stats;
-+};
-+
-+static int datacmp(const void *a, const void *b)
-+{
-+	const struct syscall_data *sa = a;
-+	const struct syscall_data *sb = b;
-+
-+	return sa->stats.total_time > sb->stats.total_time ? -1 : 1;
-+}
-+
-+int trace_print_bpf_summary(struct syscalltbl *sctbl, FILE *fp)
-+{
-+	struct syscall_key *prev_key, key;
-+	struct syscall_data *data = NULL;
-+	struct bpf_map *map = skel->maps.syscall_stats_map;
-+	int nr_data = 0;
-+	int printed = 0;
-+
-+	/* get stats from the bpf map */
-+	prev_key = NULL;
-+	while (!bpf_map__get_next_key(map, prev_key, &key, sizeof(key))) {
-+		struct syscall_stats stat;
-+
-+		if (!bpf_map__lookup_elem(map, &key, sizeof(key), &stat, sizeof(stat), 0)) {
-+			struct syscall_data *tmp, *pos;
-+
-+			tmp = realloc(data, sizeof(*data) * (nr_data + 1));
-+			if (tmp == NULL)
-+				break;
-+
-+			data = tmp;
-+			pos = &data[nr_data++];
-+
-+			pos->syscall_nr = key.nr;
-+			memcpy(&pos->stats, &stat, sizeof(stat));
-+		}
-+
-+		prev_key = &key;
-+	}
-+
-+	qsort(data, nr_data, sizeof(*data), datacmp);
-+
-+	printed += fprintf(fp, "\n");
-+
-+	printed += fprintf(fp, "   syscall            calls  errors  total       min       avg       max       stddev\n");
-+	printed += fprintf(fp, "                                     (msec)    (msec)    (msec)    (msec)        (%%)\n");
-+	printed += fprintf(fp, "   --------------- --------  ------ -------- --------- --------- ---------     ------\n");
-+
-+	for (int i = 0; i < nr_data; i++) {
-+		struct syscall_data *pos = &data[i];
-+		double total = (double)(pos->stats.total_time) / NSEC_PER_MSEC;
-+		double min = (double)(pos->stats.min_time) / NSEC_PER_MSEC;
-+		double max = (double)(pos->stats.max_time) / NSEC_PER_MSEC;
-+		double avg = total / pos->stats.count;
-+
-+		printed += fprintf(fp, "   %-15s", syscalltbl__name(sctbl, pos->syscall_nr));
-+		printed += fprintf(fp, " %8u %6u %9.3f %9.3f %9.3f %9.3f %9.2f%%\n",
-+				   pos->stats.count, pos->stats.error, total, min, avg, max,
-+				   /*stddev=*/0.0);
-+	}
-+
-+	printed += fprintf(fp, "\n\n");
-+	free(data);
-+
-+	return printed;
-+}
-+
-+void trace_cleanup_bpf_summary(void)
-+{
-+	syscall_summary_bpf__destroy(skel);
-+}
-diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-new file mode 100644
-index 0000000000000000..e573ce39de73eaf3
---- /dev/null
-+++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Trace raw_syscalls tracepoints to collect system call statistics.
-+ */
-+
-+#include "vmlinux.h"
-+#include "syscall_summary.h"
-+
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+/* This is to calculate a delta between sys-enter and sys-exit for each thread */
-+struct syscall_trace {
-+	int nr; /* syscall number is only available at sys-enter */
-+	int unused;
-+	u64 timestamp;
-+};
-+
-+#define MAX_ENTRIES	(16 * 1024)
-+
-+struct syscall_trace_map {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__type(key, int); /* tid */
-+	__type(value, struct syscall_trace);
-+	__uint(max_entries, MAX_ENTRIES);
-+} syscall_trace_map SEC(".maps");
-+
-+struct syscall_stats_map {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__type(key, struct syscall_key);
-+	__type(value, struct syscall_stats);
-+	__uint(max_entries, MAX_ENTRIES);
-+} syscall_stats_map SEC(".maps");
-+
-+int enabled; /* controlled from userspace */
-+
-+static void update_stats(int nr, s64 duration, long ret)
-+{
-+	struct syscall_key key = { .nr = nr, };
-+	struct syscall_stats *stats;
-+
-+	stats = bpf_map_lookup_elem(&syscall_stats_map, &key);
-+	if (stats == NULL) {
-+		struct syscall_stats zero = {};
-+
-+		bpf_map_update_elem(&syscall_stats_map, &key, &zero, BPF_NOEXIST);
-+		stats = bpf_map_lookup_elem(&syscall_stats_map, &key);
-+		if (stats == NULL)
-+			return;
-+	}
-+
-+	__sync_fetch_and_add(&stats->count, 1);
-+	if (ret < 0)
-+		__sync_fetch_and_add(&stats->error, 1);
-+
-+	if (duration > 0) {
-+		__sync_fetch_and_add(&stats->total_time, duration);
-+		if (stats->max_time < duration)
-+			stats->max_time = duration;
-+		if (stats->min_time > duration || stats->min_time == 0)
-+			stats->min_time = duration;
-+	}
-+
-+	return;
-+}
-+
-+SEC("tp_btf/sys_enter")
-+int sys_enter(u64 *ctx)
-+{
-+	int tid;
-+	struct syscall_trace st;
-+
-+	if (!enabled)
-+		return 0;
-+
-+	st.nr = ctx[1]; /* syscall number */
-+	st.unused = 0;
-+	st.timestamp = bpf_ktime_get_ns();
-+
-+	tid = bpf_get_current_pid_tgid();
-+	bpf_map_update_elem(&syscall_trace_map, &tid, &st, BPF_ANY);
-+
-+	return 0;
-+}
-+
-+SEC("tp_btf/sys_exit")
-+int sys_exit(u64 *ctx)
-+{
-+	int tid;
-+	long ret = ctx[1]; /* return value of the syscall */
-+	struct syscall_trace *st;
-+	s64 delta;
-+
-+	if (!enabled)
-+		return 0;
-+
-+	tid = bpf_get_current_pid_tgid();
-+	st = bpf_map_lookup_elem(&syscall_trace_map, &tid);
-+	if (st == NULL)
-+		return 0;
-+
-+	delta = bpf_ktime_get_ns() - st->timestamp;
-+	update_stats(st->nr, delta, ret);
-+
-+	bpf_map_delete_elem(&syscall_trace_map, &tid);
-+	return 0;
-+}
-+
-+char _license[] SEC("license") = "GPL";
-diff --git a/tools/perf/util/bpf_skel/syscall_summary.h b/tools/perf/util/bpf_skel/syscall_summary.h
-new file mode 100644
-index 0000000000000000..644dc7049377147e
---- /dev/null
-+++ b/tools/perf/util/bpf_skel/syscall_summary.h
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/* Data structures shared between BPF and tools. */
-+#ifndef UTIL_BPF_SKEL_SYSCALL_SUMMARY_H
-+#define UTIL_BPF_SKEL_SYSCALL_SUMMARY_H
-+
-+struct syscall_key {
-+	int nr;
-+};
-+
-+struct syscall_stats {
-+	u64 total_time;
-+	u64 max_time;
-+	u64 min_time;
-+	u32 count;
-+	u32 error;
-+};
-+
-+#endif /* UTIL_BPF_SKEL_SYSCALL_SUMMARY_H */
-diff --git a/tools/perf/util/trace.h b/tools/perf/util/trace.h
-new file mode 100644
-index 0000000000000000..4d7a7c4544d94caf
---- /dev/null
-+++ b/tools/perf/util/trace.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef UTIL_TRACE_H
-+#define UTIL_TRACE_H
-+
-+#include <stdio.h>  /* for FILE */
-+
-+struct syscalltbl;
-+
-+#ifdef HAVE_BPF_SKEL
-+
-+int trace_prepare_bpf_summary(void);
-+void trace_start_bpf_summary(void);
-+void trace_end_bpf_summary(void);
-+int trace_print_bpf_summary(struct syscalltbl *sctbl, FILE *fp);
-+void trace_cleanup_bpf_summary(void);
-+
-+#else /* !HAVE_BPF_SKEL */
-+
-+static inline int trace_prepare_bpf_summary(void) { return -1; }
-+static inline void trace_start_bpf_summary(void) {}
-+static inline void trace_end_bpf_summary(void) {}
-+static inline int trace_print_bpf_summary(struct syscalltbl *sctbl __maybe_unused,
-+					  FILE *fp __maybe_unused)
-+{
-+	return 0;
-+}
-+static inline void trace_cleanup_bpf_summary(void) {}
-+
-+#endif /* HAVE_BPF_SKEL */
-+
-+#endif /* UTIL_TRACE_H */
--- 
-2.48.1.601.g30ceb7b040-goog
+OK, This subject is more appropriate.
 
+Thanks.
+
+> 
