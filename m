@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F272036FF
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Feb 2025 06:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AB81FFC58
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Feb 2025 06:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740204637; cv=none; b=N90FcOTCIWsQuRu/CkclSlU0VD5EwNkWUNyrmb2S6pQKjRvXDdUn53OL38Dc/rkZfzS1SnjHL/Ip8Qyh6ACXWoSGEnZgSow8FhYQT6HS+9xjxPZcR6XyAexGy0sOBrppnPbvN9sVXAvUK68FuyJ/Acx5Pf49eB7f4S1gJ7mQsto=
+	t=1740204639; cv=none; b=eNcEi0mpS7olWOzHNR/tB1ruKK05+52PtRk4OrR/Ha3VZmH8rlz2aSp8jw8nslM+5Vt942HAQr2j/cvMfDkfNs9DGNdzzqIlBhTIKqmTkNurhHH7lvYjJS6KIclDVaruEgGAVv8JfYow97nzkFMFU+86CFlfwjdAaXSFaeRG0Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740204637; c=relaxed/simple;
-	bh=LRozhCJXL5k6IKqHIrkVd30rMKT/7gwCcsKW8bf38xo=;
+	s=arc-20240116; t=1740204639; c=relaxed/simple;
+	bh=9ucfSZ+DSIqnt9/D0VSNTgbnBQ56WKkLObX9RoT/pvQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=MVPFUpWDcMsFegnQmDNd4XdeckfPsSuzzHsU0pJQpdFk3tQhtp+lkU+GlFq2nMYGJq+gXanfRSKXzZEJ6xZVYTNlNm8h5zwTXyIViU9BRV6XmSB5j1kMuSlH8lURxjcdfD154D9p7dDNdRlv9fAJzYJElXdqL32DvBT9LOyIzGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f0UgK3m8; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=KNfnBm+TAYtSIDyDWUZe8MqKBasOfDTFpNBqAlSQvOtuF3t+nSa8SnMNFsueFWjv5jKSRq8WhQTJu6NsZUzT26q4SCRu0FO3VTJlEBweM9SLe8ZFJjDqBWDLOEoq5OE8SV5N++RQR631FylUKI7BsRsOOQFuPKytsmJ4UGBK1Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2yk/MFg; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f0UgK3m8"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f6f2db824bso31430237b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Feb 2025 22:10:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2yk/MFg"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5b2c00f76bso5211433276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Feb 2025 22:10:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740204635; x=1740809435; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740204637; x=1740809437; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNqTKXDdLcTTDXYG7o7DuC+JW2tM4rFG1DmHs5toIAA=;
-        b=f0UgK3m8z1M6AuzVluTZbL5POerRmG5AXxyU0W+tQvVpiVimxNFenFtkkFomxgs+RK
-         ZvrlDi0bgAavJDkyab5YibwJjgJ3oPs7jsc0s02HTjNB3n6ZgBnOo8F7lTQNP3k8k1ha
-         TN61x5hSWV2FYbLlPkgp2zEa0tlBTs+/noQ0ShwzoPpC2NKnI2x4BVUWnO1k2AD7Rc9a
-         P95cz2RbkWYInk4CyHeQSq6me2KuaOV94QUezruAQciMpsDsrg6DufKrs+zaBJ3tfzKe
-         qQSVCOE8zEYF2ro5PDD9lqSyy9mMTo1GfpxOo+L5RL2AXIzk3hLOd27JN8lbn7Qt/kY/
-         KP8g==
+        bh=fJkz0HMkEeLA7dO/rwYMGkbidcoBGERjpw0WaVKXEv0=;
+        b=j2yk/MFgGhZZvVOMdrH5lD0d0tF/zSXnhXF8S9r+PWmAe7ro3qfPhmjnL67t+D3nq2
+         jGeN40Olg3B9aOVnQn4fzP3MtD0gjIBZzgK3z3bMH7EwmZy7SKzrBSksottgzRM7tZ7Z
+         F6djVB8m3/eoSNUaxrNoIAGOOo4cjjF37pXdW2V06DSlQz/QUixmcCTd2HRI/CTXEi1S
+         n7841tMRi4PWRvLRE54S5zh4IaMeg9SsJljvftbSb7dfia3FFZ2wKRp5PW/oiMEoC5hO
+         gt3PAiU7ziilRuQwnXQngXyCzEygK9+EXRRkP47wRl7MIKuSEN8WVvERxwi+7UFn+dNp
+         3Qhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740204635; x=1740809435;
+        d=1e100.net; s=20230601; t=1740204637; x=1740809437;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNqTKXDdLcTTDXYG7o7DuC+JW2tM4rFG1DmHs5toIAA=;
-        b=DETM9rcttqJDhb8PKkydWIKOpEF1aMthMRwTk7i/Ssfj6l3cChVPw+x+z4pKrGPS9F
-         Bq38gdB2wUc2uHQikJG1UGCxPSAbrK1nqJjs05RZEO+nH8B3TZvYkC1Go+SNN/Btt9c+
-         Zki8SrSYTzj+Td7cOet799bfo45ewaDRCyrapRCTX4P8MCs9D9a0O43PjndqYw/oi9hn
-         xVlZklusXeC8rYzL17/BjXbNTMJ05Nld14susuipfcJgjlVENRyf/+Mgkht5YY+wxa5s
-         br482S42ODdY0ZMMG4yHpO9yYQENW2/a+sUNZo2vvKLbtbGykdp8aJ5kbR3u3CENoilO
-         12fg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/X1aqtNdoX6AtFJGZc1wFxxoy2OVIIjVHhczWfc7SiJfAswMgUqnaS/eKusuJgjjzyLJWVM0xYbIDqv7jqx3Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+e6ukMqTDR6jBYfylC/+st6+MCfJ4eMEXSKX78aTST8wVbu/7
-	iffeqQhHmZRgBSPkeoF7I9v0Cs0jomYpTkCnsT6ZNC9XYQBkMCPPovFaM8blFmgi5KBm/g7QDU9
-	WB4jsVA==
-X-Google-Smtp-Source: AGHT+IEHISW9UexRhcuM6WLs8YyW+s2ZKyLI5YvTgb5iTjI0yLM9WEcZKp6clAbMyUZaJSQjrqAKYihmNOWq
+        bh=fJkz0HMkEeLA7dO/rwYMGkbidcoBGERjpw0WaVKXEv0=;
+        b=mVk9GiMhZ8yF3q0XACxP8iSJVlJ13i2ib7SVSsdWXpu+7iFFjlV2nbrYsSY0AZVaRo
+         +pwOpjZiNsys/0+r+TnEOvSwI8ldoCw/B3e4U2iYOPmijegk9R1DZmKCwffefztiaq5i
+         1q/fdDdE4PZAFgRAD+2apUac5b+oKvSPEBiVUo/2OR1jMXt35WCY6awr+88Cd/xhtXPE
+         I+jxIkNamFAUHtmG2y8uCPp8ptg1DosnewmsBLSGA3jRa5M+qCAY6PSV2YbaDw1VHQfP
+         vRDdmOGKfb9p5cEjbhM/GyqG7fs/3mI4Wp1fugV1gbC5fPI9ZubLh5b7Qgd/UktQVvNH
+         Ji1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWog52r9UhwwKHJnS2DgiKUnzPtYRWIo12zpEi/m71csivwTjrpQ/cJe9mEng3NTAgURGnV0eRTJug56ctn+e1Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxguHUtPFHV6xmJoaqpKgHzKJkMUHzXwlAtsul4sGOImGC4ZPYv
+	YsAucWctggZ7zULov3Lx4MY2PnFIo4cKqVoZOt387pIKW3YAGsUMVHve9NjgRWlp8YYDbjHvq3B
+	Gk9P93A==
+X-Google-Smtp-Source: AGHT+IEBspnJAKBzWkWTjIu1qILbutTNKhI5LZBLyodUxmyHgXnLBOW2hkoSK/Tlq102Fc0XLDK0NA1tOHlJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:5003:3a14:d4e7:121])
- (user=irogers job=sendgmr) by 2002:a05:690c:6e0f:b0:6fb:b96f:b3e7 with SMTP
- id 00721157ae682-6fbcc39fd50mr7540767b3.6.1740204634743; Fri, 21 Feb 2025
- 22:10:34 -0800 (PST)
-Date: Fri, 21 Feb 2025 22:10:10 -0800
+ (user=irogers job=sendgmr) by 2002:a25:dc4b:0:b0:e5b:3bfe:4bf4 with SMTP id
+ 3f1490d57ef6-e5e24844e2dmr471779276.1.1740204636687; Fri, 21 Feb 2025
+ 22:10:36 -0800 (PST)
+Date: Fri, 21 Feb 2025 22:10:11 -0800
 In-Reply-To: <20250222061015.303622-1-irogers@google.com>
-Message-Id: <20250222061015.303622-6-irogers@google.com>
+Message-Id: <20250222061015.303622-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250222061015.303622-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Subject: [PATCH v3 5/8] perf events: Remove scandir in thread synthesis
+Subject: [PATCH v3 6/8] perf parse-events: Switch tracepoints to io_dir__readdir
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -78,76 +78,103 @@ To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This avoids scanddir reading the directory into memory that's
-allocated and instead allocates on the stack.
+Avoid DIR allocations when scanning sysfs by using io_dir for the
+readdir implementation, that allocates about 1kb on the stack.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/synthetic-events.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ tools/perf/util/parse-events.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 2dfc4260d36d..2fc4d0537840 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -38,6 +38,7 @@
- #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
- #include <api/fs/fs.h>
- #include <api/io.h>
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6c36b98875bc..35e48fe56dfa 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -17,6 +17,7 @@
+ #include "strbuf.h"
+ #include "debug.h"
+ #include <api/fs/tracing_path.h>
 +#include <api/io_dir.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-@@ -767,10 +768,10 @@ static int __event__synthesize_thread(union perf_event *comm_event,
- 				      bool needs_mmap, bool mmap_data)
+ #include <perf/cpumap.h>
+ #include <util/parse-events-bison.h>
+ #include <util/parse-events-flex.h>
+@@ -554,8 +555,8 @@ static int add_tracepoint_multi_event(struct parse_events_state *parse_state,
+ 				      struct parse_events_terms *head_config, YYLTYPE *loc)
  {
- 	char filename[PATH_MAX];
--	struct dirent **dirent;
-+	struct io_dir iod;
-+	struct io_dirent64 *dent;
- 	pid_t tgid, ppid;
- 	int rc = 0;
--	int i, n;
+ 	char *evt_path;
+-	struct dirent *evt_ent;
+-	DIR *evt_dir;
++	struct io_dirent64 *evt_ent;
++	struct io_dir evt_dir;
+ 	int ret = 0, found = 0;
  
- 	/* special case: only send one comm event using passed in pid */
- 	if (!full) {
-@@ -802,16 +803,19 @@ static int __event__synthesize_thread(union perf_event *comm_event,
- 	snprintf(filename, sizeof(filename), "%s/proc/%d/task",
- 		 machine->root_dir, pid);
- 
--	n = scandir(filename, &dirent, filter_task, NULL);
--	if (n < 0)
--		return n;
-+	io_dir__init(&iod, open(filename, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (iod.dirfd < 0)
-+		return -1;
- 
--	for (i = 0; i < n; i++) {
-+	while ((dent = io_dir__readdir(&iod)) != NULL) {
- 		char *end;
- 		pid_t _pid;
- 		bool kernel_thread = false;
- 
--		_pid = strtol(dirent[i]->d_name, &end, 10);
-+		if (!isdigit(dent->d_name[0]))
-+			continue;
-+
-+		_pid = strtol(dent->d_name, &end, 10);
- 		if (*end)
- 			continue;
- 
-@@ -845,9 +849,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
- 		}
+ 	evt_path = get_events_file(sys_name);
+@@ -563,14 +564,14 @@ static int add_tracepoint_multi_event(struct parse_events_state *parse_state,
+ 		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
+ 		return -1;
+ 	}
+-	evt_dir = opendir(evt_path);
+-	if (!evt_dir) {
++	io_dir__init(&evt_dir, open(evt_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
++	if (evt_dir.dirfd < 0) {
+ 		put_events_file(evt_path);
+ 		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
+ 		return -1;
  	}
  
--	for (i = 0; i < n; i++)
--		zfree(&dirent[i]);
--	free(dirent);
-+	close(iod.dirfd);
+-	while (!ret && (evt_ent = readdir(evt_dir))) {
++	while (!ret && (evt_ent = io_dir__readdir(&evt_dir))) {
+ 		if (!strcmp(evt_ent->d_name, ".")
+ 		    || !strcmp(evt_ent->d_name, "..")
+ 		    || !strcmp(evt_ent->d_name, "enable")
+@@ -592,7 +593,7 @@ static int add_tracepoint_multi_event(struct parse_events_state *parse_state,
+ 	}
  
- 	return rc;
+ 	put_events_file(evt_path);
+-	closedir(evt_dir);
++	close(evt_dir.dirfd);
+ 	return ret;
  }
+ 
+@@ -615,17 +616,23 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+ 				    struct parse_events_error *err,
+ 				    struct parse_events_terms *head_config, YYLTYPE *loc)
+ {
+-	struct dirent *events_ent;
+-	DIR *events_dir;
++	struct io_dirent64 *events_ent;
++	struct io_dir events_dir;
+ 	int ret = 0;
++	char *events_dir_path = get_tracing_file("events");
+ 
+-	events_dir = tracing_events__opendir();
+-	if (!events_dir) {
++	if (!events_dir_path) {
++		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
++		return -1;
++	}
++	io_dir__init(&events_dir, open(events_dir_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
++	put_events_file(events_dir_path);
++	if (events_dir.dirfd < 0) {
+ 		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
+ 		return -1;
+ 	}
+ 
+-	while (!ret && (events_ent = readdir(events_dir))) {
++	while (!ret && (events_ent = io_dir__readdir(&events_dir))) {
+ 		if (!strcmp(events_ent->d_name, ".")
+ 		    || !strcmp(events_ent->d_name, "..")
+ 		    || !strcmp(events_ent->d_name, "enable")
+@@ -639,8 +646,7 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+ 		ret = add_tracepoint_event(parse_state, list, events_ent->d_name,
+ 					   evt_name, err, head_config, loc);
+ 	}
+-
+-	closedir(events_dir);
++	close(events_dir.dirfd);
+ 	return ret;
+ }
+ 
 -- 
 2.48.1.658.g4767266eb4-goog
 
