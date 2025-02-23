@@ -1,80 +1,63 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E882C1FCFE6
-	for <linux-perf-users@vger.kernel.org>; Sun, 23 Feb 2025 08:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBE11FC3;
+	Sun, 23 Feb 2025 10:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740300890; cv=none; b=LeGTvelvI60F/AMcZIjiOufIyJ24X/AWsvGWNJU659/YBiIWD9Y7xKn4n2zwCfj5KW/9hc01Jz2lr4xiJ/XzYE8vfI7U14C4xqAf5UTzeoh1qJ8QH3Wb6kpv7128Bp2WxJJdyPPkOH+KoOVxTghMT4mX0yI5Vm2CHsaBYjjxuW0=
+	t=1740306476; cv=none; b=LrsVbajKcSlQIqNecIVDCPmx34YrGjpHcNIfEtYEf4MsrI7S5WKXtajyixiHqsy1zL+OAkfgGZtt3XWPF0pZo3/SmXv2OGfraR8OzR9sHTQr1zwxHSCDW2c/DSMqt9Uzq9sfKOViw/DFYrvJsxFEGgkEsjlVAzO6TNm/EwWbntA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740300890; c=relaxed/simple;
-	bh=GMR3wHAQ7OLAK+0WIGs23NaDK/GUoW4XVGEi7BLl23E=;
+	s=arc-20240116; t=1740306476; c=relaxed/simple;
+	bh=YCr+PXOAVC+4yizPVskUfSZeUBP52WZFQiOwVxjfWqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fA/Ms98AraavTRNV1wAC0EJVIPrkaEp14GFd+Fctp3hW+0GXYMd7gAqq1ls1TRBidbd44faKjJLDkWPEFOQ2h3EtC02YHEDdCQu4xbeB0Yq0DmHGnQ7nLHG4V+w9mTl2jDlYiiHv0kbOh2NW3xXD4QRrzT7Pz7FFvr9bSkOz/zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mZZpN81q; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ICOS/rrr+Lj1rSTue5HaLr81DmsUGTrU/keOMCREXh6qPfErXBeSr2TKvVBYZquOEbAJnPYuzs04FCZ/JRHROAo0ieuFkOmekjbzIXXdOG6N4xDiNb0yQDslSoNGATv805DJQH5M9aEX33+bDpteMrbqHmJg45s3vhtCu7pmzUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jCzBDk1A; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZZpN81q"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fbf77b2b64so7122065a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Feb 2025 00:54:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740300887; x=1740905687; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qhtfFGtrm/r/EdIHI4NWAw5GAp/ALVl3MX5Mqx7Mu6w=;
-        b=mZZpN81q4EwmaNxbyQ76GUdXpvL0vVkpzq2qdDqCEZrVTkdQw4vziVlWHLXXhlc0gx
-         yJ7MK5S2zYwJoo3Az2QCeNp+YsagLtcYlG0ns1utCLOJVTaf7KLXIZPSaK4imimZS/AE
-         FbcEh+tM3qAIdfelXCiAStk+SKTcWBTdpdhG48/DKmUv3E0IZX5S4DkeyQ5rtfTU61Wa
-         fU0McnMyCLZl5J/QVrX/xbAfzVdBT5V/HnWlwo3WkiwG1uT36QOo1tw6KxVoExJKIPFI
-         Bb+hakIMfFt2NrFmpVfx8WXAe1Ja/tO0iL9U3/awXqRfyw7e9+CL8bMr1UOfgLnmdBHp
-         mD/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740300887; x=1740905687;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qhtfFGtrm/r/EdIHI4NWAw5GAp/ALVl3MX5Mqx7Mu6w=;
-        b=KBQOsR9ZZm1vfIrza4aLu1ft9DsykdltKrjkcf7jKFW4XI9oyUjnwCK53Aw6hb3qw4
-         3W6w9aNHSwbgSQwTf4yFs+Ef2AAZlyrw9haFnRTwLYs42cHfCIcEJYdPyI92vnJRD3IZ
-         ZUIPjP3acTMuVypo3nrjJAZokAECO9MsQONnWc8q8dLTQOziiY+OP+xfygrzQj1xbUuu
-         EqiiP3u7NhB2hYLBm/vAmCv+XhIqxENw+b4u87GF5fFZi/pyrszeHcOZLGfYIKhgy1Mu
-         TTO1TKu5vZ7qmpZgAaDyuuIIH4O7F3RnnCW4k792WtkSwUauHrgWHVFzt2dUh2kLLryh
-         /Uug==
-X-Forwarded-Encrypted: i=1; AJvYcCVPw+bfsuwiDhMntdn+2+2+9+OQ26dKHeyjyUPV3p3/QfS4ExWqwEnUbtGcOMvVxPvCWMSqwiqnGfKLf6hgIRBn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV6RwZ33mkdCMXPXDiEhyKosGR0QTBxbutTf2BhkfPq0wNeOYL
-	EucwtjfG9LK385JxoAkYkzO4noNdoIHBNVYt/oON1cZJAkoURBxxlv0jlAjDSw==
-X-Gm-Gg: ASbGnctKpjftEJgeAoSIWRt1p1JpEFuVCx9z4F2oYr3rqr2f/BlafWcXfN/4uEJWKUg
-	QN3s68fWvp5YjVPMPrk6/qyYT5VSbOx0o8hnXKjWaCNIRE8lMqgnfawnH/tUoOJ1Xtejiif5c+M
-	tGEs1qPruXpdgDuh2wPUIiVMZK8qg+JrUv83xc11Kye+KHmbb3O2px+Z/OupWdvscoFOEEO/I3f
-	yrzNbOXrZhfVJmdV6CYGrhSTYwJXRpps5RvEUVR/LdHVRga61YSMZNJA5en4wBMo72aO7XXjsuM
-	50D10wVF8GZl1kzeRRyICyWp8iL/77m6f+K3n3w=
-X-Google-Smtp-Source: AGHT+IEccR+ch+6Bpf4ueioZ0PgXfplXUF7AWlKJxIQS4x0ObG/yscvNDoElJGtPW6a87MTyMeTVtQ==
-X-Received: by 2002:a17:90b:5106:b0:2f9:9ddd:68b9 with SMTP id 98e67ed59e1d1-2fce7b1da4amr13812767a91.26.1740300887190;
-        Sun, 23 Feb 2025 00:54:47 -0800 (PST)
-Received: from thinkpad ([220.158.156.216])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fcbaaf9785sm6461472a91.1.2025.02.23.00.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 00:54:46 -0800 (PST)
-Date: Sun, 23 Feb 2025 14:24:39 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@Huawei.com,
-	fan.ni@samsung.com, nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in
- DWC
-Message-ID: <20250223085439.esnpificf3xxih56@thinkpad>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
- <20250221131548.59616-6-shradha.t@samsung.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jCzBDk1A"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7550F40E0176;
+	Sun, 23 Feb 2025 10:27:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 64ugc_ezh1-Y; Sun, 23 Feb 2025 10:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740306466; bh=Th8uIhRsScOvJKzwoZ4/oH5GbGZwgAt9CDdJXdgol48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jCzBDk1ARhr1DOyUebXYGa3AtG6jnVI7Cv1z9tc5iVAMnrJpd/I6WiY84HV6zvDYm
+	 Yav0Bw5c4sEdgjsFGJAGUP12ts9vBeUE25C/naHF18TxW59U7BSW3yNEuvAcFvHT2h
+	 6fQN/qje5Iej+qxbwMXW4Yrbd7HgN1aAXHtYn6oMp4przYxXmQxnhUbn/7+mrxSA8t
+	 aZ4RGyM+C8wjk6LPaSEuPRWf0Z5gPaEGX5sNHHf8Z4wa+SnTNyx1/uktZNNAkERIxn
+	 AWhTR/f1P2zXDRTUi5TMfeqnuOZ/8uQGY7V49i/LsPketySS/Ea+p9YTghfVBHl0ah
+	 AhlemiRr1DFl7D10V8EMBISuEeqcvF1PHkO0ah3TzWN3NWvYBCt/xZqMyo/fkEOC8p
+	 spVjlEkvnh+S1g6hhQMDsgUHzPqM8C0sBVMUpHFNw2Vrq2Y+NIptjlDPDQ9SYGa+mS
+	 6EWrOZNoGZR32aKek229v4ks4SrRGX2BP4+MqqZWVFIT2ZTvnxLdZ5vbs6gNdoyGi5
+	 2siTBWo5dWHrCo7LJ7Isw4/4JSozvZ71COAxhQCyJR+bgdoOdiUMXN638r9R+o42Ka
+	 /KxO0odpA+uIqH/lvmrvLh/3KnbCVMKcBj4wg9MVO5Tmed7e37wOAqrbE8yx+Dhcir
+	 qhR+rjXmQK9VqiLjuqFpS1rA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 23E5840E015D;
+	Sun, 23 Feb 2025 10:27:29 +0000 (UTC)
+Date: Sun, 23 Feb 2025 11:27:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, will@kernel.org,
+	peterz@infradead.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+Message-ID: <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -83,379 +66,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250221131548.59616-6-shradha.t@samsung.com>
+In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
 
-On Fri, Feb 21, 2025 at 06:45:48PM +0530, Shradha Todi wrote:
-> Add support to provide statistical counter interface to userspace. This set
-> of debug registers are part of the RASDES feature present in DesignWare
-> PCIe controllers.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+On Sun, Jan 05, 2025 at 11:07:22PM -0800, Xin Li (Intel) wrote:
+>  arch/x86/Kconfig                              |   4 +-
+>  arch/x86/Kconfig.cpu                          |  12 +-
+>  arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
+>  arch/x86/Makefile                             |  17 +-
+>  arch/x86/boot/cpucheck.c                      |   3 +-
+>  arch/x86/boot/cpuflags.c                      |   1 -
+>  arch/x86/boot/mkcpustr.c                      |   3 +-
+>  arch/x86/include/asm/Kbuild                   |   1 +
+>  arch/x86/include/asm/asm-prototypes.h         |   2 +-
+>  arch/x86/include/asm/atomic64_32.h            |   2 +-
+>  arch/x86/include/asm/bitops.h                 |   4 +-
+>  arch/x86/include/asm/cmpxchg_32.h             |   2 +-
+>  arch/x86/include/asm/cpufeature.h             |  71 +------
+>  arch/x86/include/asm/cpufeatures.h            |  13 +-
+>  arch/x86/include/asm/disabled-features.h      | 161 --------------
+>  arch/x86/include/asm/required-features.h      | 105 ----------
+>  arch/x86/kernel/cpu/common.c                  |   1 +
+>  arch/x86/kernel/verify_cpu.S                  |   4 +
+>  arch/x86/lib/Makefile                         |   2 +-
+>  arch/x86/lib/cmpxchg8b_emu.S                  |   2 +-
+>  arch/x86/tools/featuremasks.awk               |  88 ++++++++
+>  lib/atomic64_test.c                           |   2 +-
+>  tools/arch/x86/include/asm/cpufeatures.h      |   8 -
+>  .../arch/x86/include/asm/disabled-features.h  | 161 --------------
+>  .../arch/x86/include/asm/required-features.h  | 105 ----------
+>  tools/perf/check-headers.sh                   |   2 -
+>  26 files changed, 327 insertions(+), 646 deletions(-)
+>  create mode 100644 arch/x86/Kconfig.cpufeatures
+>  delete mode 100644 arch/x86/include/asm/disabled-features.h
+>  delete mode 100644 arch/x86/include/asm/required-features.h
+>  create mode 100755 arch/x86/tools/featuremasks.awk
+>  delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
+>  delete mode 100644 tools/arch/x86/include/asm/required-features.h
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+make --no-print-directory -C /home/kernel/linux \
+-f /home/kernel/linux/Makefile 
+# GEN     arch/x86/include/generated/asm/orc_hash.h
+  mkdir -p arch/x86/include/generated/asm/; sh ./scripts/orc_hash.sh < arch/x86/include/asm/orc_types.h > arch/x86/include/generated/asm/orc_hash.h
+make -f ./scripts/Makefile.build obj=scripts/basic
+set -e; mkdir -p include/config/; trap "rm -f include/config/.tmp_kernel.release" EXIT; { ./scripts/setlocalversion .; } > include/config/.tmp_kernel.release; if [ ! -r include/config/kernel.release ] || ! cmp -s include/config/kernel.release include/config/.tmp_kernel.release; then : '  UPD     include/config/kernel.release'; mv -f include/config/.tmp_kernel.release include/config/kernel.release; fi
+# GEN     arch/x86/include/generated/asm/featuremasks.h
+  awk -f ./arch/x86/tools/featuremasks.awk ./arch/x86/include/asm/cpufeatures.h .config > arch/x86/include/generated/asm/featuremasks.h
+make -f ./scripts/Makefile.asm-headers obj=arch/x86/include/generated/uapi/asm \
+generic=include/uapi/asm-generic
+awk: ./arch/x86/tools/featuremasks.awk: line 16: syntax error at or near {
+awk: ./arch/x86/tools/featuremasks.awk: line 20: syntax error at or near :
+awk: ./arch/x86/tools/featuremasks.awk: line 24: syntax error at or near }
+make[1]: *** [arch/x86/Makefile:285: arch/x86/include/generated/asm/featuremasks.h] Error 2
+make[1]: *** Deleting file 'arch/x86/include/generated/asm/featuremasks.h'
+make[1]: *** Waiting for unfinished jobs....
+# WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+  echo "#include <asm-generic/bpf_perf_event.h>" > arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+# WRAP    arch/x86/include/generated/uapi/asm/fcntl.h
+  echo "#include <asm-generic/fcntl.h>" > arch/x86/include/generated/uapi/asm/fcntl.h
+# WRAP    arch/x86/include/generated/uapi/asm/errno.h
+  echo "#include <asm-generic/errno.h>" > arch/x86/include/generated/uapi/asm/errno.h
+# WRAP    arch/x86/include/generated/uapi/asm/ioctl.h
+  echo "#include <asm-generic/ioctl.h>" > arch/x86/include/generated/uapi/asm/ioctl.h
+# WRAP    arch/x86/include/generated/uapi/asm/ioctls.h
+  echo "#include <asm-generic/ioctls.h>" > arch/x86/include/generated/uapi/asm/ioctls.h
+# WRAP    arch/x86/include/generated/uapi/asm/ipcbuf.h
+  echo "#include <asm-generic/ipcbuf.h>" > arch/x86/include/generated/uapi/asm/ipcbuf.h
+# WRAP    arch/x86/include/generated/uapi/asm/param.h
+  echo "#include <asm-generic/param.h>" > arch/x86/include/generated/uapi/asm/param.h
+# WRAP    arch/x86/include/generated/uapi/asm/poll.h
+  echo "#include <asm-generic/poll.h>" > arch/x86/include/generated/uapi/asm/poll.h
+# WRAP    arch/x86/include/generated/uapi/asm/resource.h
+  echo "#include <asm-generic/resource.h>" > arch/x86/include/generated/uapi/asm/resource.h
+# WRAP    arch/x86/include/generated/uapi/asm/socket.h
+  echo "#include <asm-generic/socket.h>" > arch/x86/include/generated/uapi/asm/socket.h
+# WRAP    arch/x86/include/generated/uapi/asm/sockios.h
+  echo "#include <asm-generic/sockios.h>" > arch/x86/include/generated/uapi/asm/sockios.h
+# WRAP    arch/x86/include/generated/uapi/asm/termbits.h
+  echo "#include <asm-generic/termbits.h>" > arch/x86/include/generated/uapi/asm/termbits.h
+# WRAP    arch/x86/include/generated/uapi/asm/termios.h
+  echo "#include <asm-generic/termios.h>" > arch/x86/include/generated/uapi/asm/termios.h
+# WRAP    arch/x86/include/generated/uapi/asm/types.h
+  echo "#include <asm-generic/types.h>" > arch/x86/include/generated/uapi/asm/types.h
+make: *** [Makefile:251: __sub-make] Error 2
 
-- Mani
+Probably due to:
 
-> ---
->  Documentation/ABI/testing/debugfs-dwc-pcie    |  61 +++++
->  .../controller/dwc/pcie-designware-debugfs.c  | 229 +++++++++++++++++-
->  2 files changed, 289 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
-> index 6ee0897fe753..650a89b0511e 100644
-> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
-> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
-> @@ -81,3 +81,64 @@ Description:	rasdes_err_inj is the directory which can be used to inject errors
->  
->  			<count>
->  				Number of errors to be injected
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/counter_enable
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	rasdes_event_counters is the directory which can be used to collect
-> +		statistical data about the number of times a certain event has occurred
-> +		in the controller. The list of possible events are:
-> +
-> +		1) EBUF Overflow
-> +		2) EBUF Underrun
-> +		3) Decode Error
-> +		4) Running Disparity Error
-> +		5) SKP OS Parity Error
-> +		6) SYNC Header Error
-> +		7) Rx Valid De-assertion
-> +		8) CTL SKP OS Parity Error
-> +		9) 1st Retimer Parity Error
-> +		10) 2nd Retimer Parity Error
-> +		11) Margin CRC and Parity Error
-> +		12) Detect EI Infer
-> +		13) Receiver Error
-> +		14) RX Recovery Req
-> +		15) N_FTS Timeout
-> +		16) Framing Error
-> +		17) Deskew Error
-> +		18) Framing Error In L0
-> +		19) Deskew Uncompleted Error
-> +		20) Bad TLP
-> +		21) LCRC Error
-> +		22) Bad DLLP
-> +		23) Replay Number Rollover
-> +		24) Replay Timeout
-> +		25) Rx Nak DLLP
-> +		26) Tx Nak DLLP
-> +		27) Retry TLP
-> +		28) FC Timeout
-> +		29) Poisoned TLP
-> +		30) ECRC Error
-> +		31) Unsupported Request
-> +		32) Completer Abort
-> +		33) Completion Timeout
-> +		34) EBUF SKP Add
-> +		35) EBUF SKP Del
-> +
-> +		(RW) Write 1 to enable the event counter and write 0 to disable the event counter.
-> +		Read will return whether the counter is currently enabled or disabled. Counter is
-> +		disabled by default.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/counter_value
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RO) Read will return the current value of the event counter. To reset the counter,
-> +		counter should be disabled and enabled back using the 'counter_enable' attribute.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/lane_select
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RW) Some lanes in the event list are lane specific events. These include
-> +		events 1) - 11) and 34) - 35).
-> +		Write lane number for which counter needs to be enabled/disabled/dumped.
-> +		Read will return the current selected lane number. Lane0 is selected by default.
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> index b7260edd2336..dca1e9999113 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -31,6 +31,17 @@
->  
->  #define ERR_INJ_ENABLE_REG		0x30
->  
-> +#define RAS_DES_EVENT_COUNTER_DATA_REG	0xc
-> +
-> +#define RAS_DES_EVENT_COUNTER_CTRL_REG	0x8
-> +#define EVENT_COUNTER_GROUP_SELECT	GENMASK(27, 24)
-> +#define EVENT_COUNTER_EVENT_SELECT	GENMASK(23, 16)
-> +#define EVENT_COUNTER_LANE_SELECT	GENMASK(11, 8)
-> +#define EVENT_COUNTER_STATUS		BIT(7)
-> +#define EVENT_COUNTER_ENABLE		GENMASK(4, 2)
-> +#define PER_EVENT_ON			0x3
-> +#define PER_EVENT_OFF			0x1
-> +
->  #define DWC_DEBUGFS_BUF_MAX		128
->  
->  /**
-> @@ -113,6 +124,61 @@ static const u32 err_inj_type_mask[] = {
->  	EINJ5_TYPE,
->  };
->  
-> +/**
-> + * struct dwc_pcie_event_counter - Store details about each event counter supported in DWC RASDES
-> + * @name: Name of the error counter
-> + * @group_no: Group number that the event belongs to. Value ranges from 0 - 4
-> + * @event_no: Event number of the particular event. Value ranges from -
-> + *		Group 0: 0 - 10
-> + *		Group 1: 5 - 13
-> + *		Group 2: 0 - 7
-> + *		Group 3: 0 - 5
-> + *		Group 4: 0 - 1
-> + */
-> +struct dwc_pcie_event_counter {
-> +	const char *name;
-> +	u32 group_no;
-> +	u32 event_no;
-> +};
-> +
-> +static const struct dwc_pcie_event_counter event_list[] = {
-> +	{"ebuf_overflow", 0x0, 0x0},
-> +	{"ebuf_underrun", 0x0, 0x1},
-> +	{"decode_err", 0x0, 0x2},
-> +	{"running_disparity_err", 0x0, 0x3},
-> +	{"skp_os_parity_err", 0x0, 0x4},
-> +	{"sync_header_err", 0x0, 0x5},
-> +	{"rx_valid_deassertion", 0x0, 0x6},
-> +	{"ctl_skp_os_parity_err", 0x0, 0x7},
-> +	{"retimer_parity_err_1st", 0x0, 0x8},
-> +	{"retimer_parity_err_2nd", 0x0, 0x9},
-> +	{"margin_crc_parity_err", 0x0, 0xA},
-> +	{"detect_ei_infer", 0x1, 0x5},
-> +	{"receiver_err", 0x1, 0x6},
-> +	{"rx_recovery_req", 0x1, 0x7},
-> +	{"n_fts_timeout", 0x1, 0x8},
-> +	{"framing_err", 0x1, 0x9},
-> +	{"deskew_err", 0x1, 0xa},
-> +	{"framing_err_in_l0", 0x1, 0xc},
-> +	{"deskew_uncompleted_err", 0x1, 0xd},
-> +	{"bad_tlp", 0x2, 0x0},
-> +	{"lcrc_err", 0x2, 0x1},
-> +	{"bad_dllp", 0x2, 0x2},
-> +	{"replay_num_rollover", 0x2, 0x3},
-> +	{"replay_timeout", 0x2, 0x4},
-> +	{"rx_nak_dllp", 0x2, 0x5},
-> +	{"tx_nak_dllp", 0x2, 0x6},
-> +	{"retry_tlp", 0x2, 0x7},
-> +	{"fc_timeout", 0x3, 0x0},
-> +	{"poisoned_tlp", 0x3, 0x1},
-> +	{"ecrc_error", 0x3, 0x2},
-> +	{"unsupported_request", 0x3, 0x3},
-> +	{"completer_abort", 0x3, 0x4},
-> +	{"completion_timeout", 0x3, 0x5},
-> +	{"ebuf_skp_add", 0x4, 0x0},
-> +	{"ebuf_skp_del", 0x4, 0x1},
-> +};
-> +
->  static ssize_t lane_detect_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
->  {
->  	struct dw_pcie *pci = file->private_data;
-> @@ -230,6 +296,127 @@ static ssize_t err_inj_write(struct file *file, const char __user *buf, size_t c
->  	return count;
->  }
->  
-> +static void set_event_number(struct dwc_pcie_rasdes_priv *pdata, struct dw_pcie *pci,
-> +			     struct dwc_pcie_rasdes_info *rinfo)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	val &= ~EVENT_COUNTER_ENABLE;
-> +	val &= ~(EVENT_COUNTER_GROUP_SELECT | EVENT_COUNTER_EVENT_SELECT);
-> +	val |= FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
-> +	val |= FIELD_PREP(EVENT_COUNTER_EVENT_SELECT, event_list[pdata->idx].event_no);
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +}
-> +
-> +static ssize_t counter_enable_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t pos;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_event_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	mutex_unlock(&rinfo->reg_event_lock);
-> +	val = FIELD_GET(EVENT_COUNTER_STATUS, val);
-> +	if (val)
-> +		pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter Enabled\n");
-> +	else
-> +		pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter Disabled\n");
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, pos);
-> +}
-> +
-> +static ssize_t counter_enable_write(struct file *file, const char __user *buf,
-> +				    size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	u32 val, enable;
-> +
-> +	val = kstrtou32_from_user(buf, count, 0, &enable);
-> +	if (val)
-> +		return val;
-> +
-> +	mutex_lock(&rinfo->reg_event_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	if (enable)
-> +		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_ON);
-> +	else
-> +		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_OFF);
-> +
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +	mutex_unlock(&rinfo->reg_event_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t counter_lane_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t pos;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_event_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	mutex_unlock(&rinfo->reg_event_lock);
-> +	val = FIELD_GET(EVENT_COUNTER_LANE_SELECT, val);
-> +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Lane: %d\n", val);
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, pos);
-> +}
-> +
-> +static ssize_t counter_lane_write(struct file *file, const char __user *buf,
-> +				  size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	u32 val, lane;
-> +
-> +	val = kstrtou32_from_user(buf, count, 0, &lane);
-> +	if (val)
-> +		return val;
-> +
-> +	mutex_lock(&rinfo->reg_event_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	val &= ~(EVENT_COUNTER_LANE_SELECT);
-> +	val |= FIELD_PREP(EVENT_COUNTER_LANE_SELECT, lane);
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +	mutex_unlock(&rinfo->reg_event_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t counter_value_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t pos;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_event_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> +	mutex_unlock(&rinfo->reg_event_lock);
-> +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter value: %d\n", val);
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, pos);
-> +}
-> +
->  #define dwc_debugfs_create(name)			\
->  debugfs_create_file(#name, 0644, rasdes_debug, pci,	\
->  			&dbg_ ## name ## _fops)
-> @@ -249,6 +436,23 @@ static const struct file_operations dwc_pcie_err_inj_ops = {
->  	.write = err_inj_write,
->  };
->  
-> +static const struct file_operations dwc_pcie_counter_enable_ops = {
-> +	.open = simple_open,
-> +	.read = counter_enable_read,
-> +	.write = counter_enable_write,
-> +};
-> +
-> +static const struct file_operations dwc_pcie_counter_lane_ops = {
-> +	.open = simple_open,
-> +	.read = counter_lane_read,
-> +	.write = counter_lane_write,
-> +};
-> +
-> +static const struct file_operations dwc_pcie_counter_value_ops = {
-> +	.open = simple_open,
-> +	.read = counter_value_read,
-> +};
-> +
->  static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
->  {
->  	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> @@ -258,7 +462,7 @@ static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
->  
->  static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->  {
-> -	struct dentry *rasdes_debug, *rasdes_err_inj;
-> +	struct dentry *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
->  	struct dwc_pcie_rasdes_info *rasdes_info;
->  	struct dwc_pcie_rasdes_priv *priv_tmp;
->  	struct device *dev = pci->dev;
-> @@ -277,6 +481,7 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->  	/* Create subdirectories for Debug, Error injection, Statistics */
->  	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
->  	rasdes_err_inj = debugfs_create_dir("rasdes_err_inj", dir);
-> +	rasdes_event_counter = debugfs_create_dir("rasdes_event_counter", dir);
->  
->  	mutex_init(&rasdes_info->reg_event_lock);
->  	rasdes_info->ras_cap_offset = ras_cap;
-> @@ -299,6 +504,28 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->  		debugfs_create_file(err_inj_list[i].name, 0200, rasdes_err_inj, priv_tmp,
->  				    &dwc_pcie_err_inj_ops);
->  	}
-> +
-> +	/* Create debugfs files for Statistical counter subdirectory */
-> +	for (i = 0; i < ARRAY_SIZE(event_list); i++) {
-> +		priv_tmp = devm_kzalloc(dev, sizeof(*priv_tmp), GFP_KERNEL);
-> +		if (!priv_tmp) {
-> +			ret = -ENOMEM;
-> +			goto err_deinit;
-> +		}
-> +
-> +		priv_tmp->idx = i;
-> +		priv_tmp->pci = pci;
-> +		rasdes_events = debugfs_create_dir(event_list[i].name, rasdes_event_counter);
-> +		if (event_list[i].group_no == 0 || event_list[i].group_no == 4) {
-> +			debugfs_create_file("lane_select", 0644, rasdes_events,
-> +					    priv_tmp, &dwc_pcie_counter_lane_ops);
-> +		}
-> +		debugfs_create_file("counter_value", 0444, rasdes_events, priv_tmp,
-> +				    &dwc_pcie_counter_value_ops);
-> +		debugfs_create_file("counter_enable", 0644, rasdes_events, priv_tmp,
-> +				    &dwc_pcie_counter_enable_ops);
-> +	}
-> +
->  	return 0;
->  
->  err_deinit:
-> -- 
-> 2.17.1
-> 
+$ awk --version
+mawk 1.3.4 20250131
+Copyright 2008-2024,2025, Thomas E. Dickey
+Copyright 1991-1996,2014, Michael D. Brennan
+
+random-funcs:       srandom/random
+regex-funcs:        internal
+
+compiled limits:
+sprintf buffer      8192
+maximum-integer     9223372036854775808
+
+while the other box has GNU awk where it obviously works.
+
+HTH.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
