@@ -1,46 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C9313F43B;
-	Mon, 24 Feb 2025 20:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D381DF982;
+	Mon, 24 Feb 2025 20:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740428305; cv=none; b=tOowTLS0mleXH8qxJvx2T5BBPelShDRJg8rXA4HE7GoBQIX3QG8XCSKkcMU8BaGHHFMpWBY/2Y3asfC5aQjzwzaM6gUjgMVnnC/OJ8qU2jFaCFXnZvUeD/8+Mc0iMsXb9KW9ZNXs92q5yVRGMk5KSot0H08eseXBefbw7eJ/fSg=
+	t=1740428752; cv=none; b=A3auS/mhQD4/ObthknJVyUZ0nSoFE8tmxxVfbqKsk4cPog/VbvrnsIfaeC1agFASYtY0EYAYC25KZk8kq84FGjNYycBeXPP5Hbg6/Qk4Nx7eyyvHHo4XhBBmTMMyMvJ+/e7Qpqt837v42cIrPFzDAJfIc4JZqE7N6fKvpOU+3Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740428305; c=relaxed/simple;
-	bh=1g9xLASHldpx7dH0s9gFHvkfuWIB1BBA0agbRxDRicE=;
+	s=arc-20240116; t=1740428752; c=relaxed/simple;
+	bh=w4pNywwb4ygLL2oNZMODmsolQRcIIc7lvBYr5AhWVDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+bvlGaFwrO4p1Wiw+bB8zLFDy0yC7cMbU8vHPVDKxda2hdw251zROQcRDBvUTfHojsgiVTKwVStMfR/lIteBzY5MZrXYBlvjqUbJAB534s4BQMVZlyUAh9Q7C0Z29rXaso2pQ6QRezodhkRY9G5YqonWuja5QJsHdZL/Emi92k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiZuQPDU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HA4xyoa1JbpEBg4I1fxhtkuXwvmYSD3G40sedsd9pqMIkQUctLvn/KphcTCxQw0dsgPjIjIHRnsMje8VGzpLGPeeFx2M8HW23vx4ckaUaIXU/Fhw//CGMLwSACm7wO7WOtLVdIAO09BpFcaIy5LHeHqS6OXg3GB22s+4GW+RA2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=brTdQTfz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiZuQPDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7A54C4CED6;
-	Mon, 24 Feb 2025 20:18:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="brTdQTfz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB6DC4CED6;
+	Mon, 24 Feb 2025 20:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740428305;
-	bh=1g9xLASHldpx7dH0s9gFHvkfuWIB1BBA0agbRxDRicE=;
+	s=k20201202; t=1740428751;
+	bh=w4pNywwb4ygLL2oNZMODmsolQRcIIc7lvBYr5AhWVDE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YiZuQPDULbpoaBAA/GVXAGVb90WdBtfdP1Krzb1RNuHqDF/K0uWTJKhWt6gM0qAak
-	 JbFGoSTGty1/vPO8jblG9QkYgAZxiV+lBZucxirh50vhOcMTWxV8bMvA1toLILtOjf
-	 8RsR8e6vjyymUyQbLTc9XZ7fFBFlMa+nyG0LQtfFWDyF0Iki6y6usQAjWASLHblcfa
-	 V973X6f0OFZNDuLe9y68dM1GS99eCMC1kT1qksD88bRuzhgSzyadyPRHOatpzdYwQ+
-	 69SA4Br0uO1MnycWL678Q4omDrEhJSwhhv5FLqCspVR2sdrMV1XnInN+vve8OD9LWR
-	 +8l8jYCePFhRQ==
-Date: Mon, 24 Feb 2025 12:18:23 -0800
-From: Namhyung Kim <namhyung@kernel.org>
+	b=brTdQTfzUMFpHWypeG89u7T0wGuCeY+yGqXD5o4xKSTk9ftwpSbBqmlmHRcNB5xwI
+	 zvI2x/RRl6VJlS/PB4DeQCqLM1YYvhjoSue/gfBQnaCdF+6LN1+bAo8rZig/xGqWhn
+	 7TUsl/q/SPbo8gSUUHua0gJHyt++Im1vbFYSQSNYwNXCM3psKfjzXKqk4d6tspYlhk
+	 RdcEA7/9tV54gkZDS6IxRjUI6Lh80ODql6Q6PC3CbFSMrXq0qf605YquXF53gD+7ns
+	 hf3UTm/0eNG1DXAyIYLbcjQopGfG6+F5rU8rFeSIgRn9DtYspOVHLWZvm7NVrSN37B
+	 PVkBf5CRtigYg==
+Date: Mon, 24 Feb 2025 21:25:48 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf stat: Use field separator in the metric header
-Message-ID: <Z7zUDxho5vLa_2fF@google.com>
-References: <20240627200353.1230407-1-namhyung@kernel.org>
- <CAP-5=fWSpM7NL7UjXZBN8WHNAE7hGe1ghQ6_DqFe2VjTCGoA7A@mail.gmail.com>
- <CAM9d7cibrW=K=GZB_zsURB1Ff6Eok7qy3rVt83VVM6pVhv+Agg@mail.gmail.com>
- <CAP-5=fVmybd=WTKS3kvsF+VU_Lrke9hEvNyBtunAHBw-6ViZig@mail.gmail.com>
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC] perf tools: About encodings of legacy event names
+Message-ID: <Z7zVzKbQIdB6-bFn@x1>
+References: <Z7Z5kv75BMML2A1q@google.com>
+ <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
+ <Z7yJ0Vpub6JeQyYo@x1>
+ <CAP-5=fXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3QhrTg1mtBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,118 +53,227 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVmybd=WTKS3kvsF+VU_Lrke9hEvNyBtunAHBw-6ViZig@mail.gmail.com>
+In-Reply-To: <CAP-5=fXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3QhrTg1mtBw@mail.gmail.com>
 
-On Mon, Feb 24, 2025 at 10:50:24AM -0800, Ian Rogers wrote:
-> On Thu, Jun 27, 2024 at 3:24 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Mon, Feb 24, 2025 at 09:36:16AM -0800, Ian Rogers wrote:
+> On Mon, Feb 24, 2025 at 7:01 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > Hi Ian,
+> > On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
+> > > On Wed, Feb 19, 2025 at 4:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > Ian and I have been discussing the behaviors of event encodings and it's
+> > > > hard to find a point so far that we can agree on.  So I'd like to hear
+> > > > your opinion to resolve this.  If you happen to have some time, you can
+> > > > follow the thread here:
 > >
-> > On Thu, Jun 27, 2024 at 1:48 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Thu, Jun 27, 2024 at 1:03 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > It didn't use the passed field separator (using -x option) when it
-> > > > prints the metric headers and always put "," between the fields.
-> > > >
-> > > > Before:
-> > > >   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
-> > > >   core,cpus,%  tma_core_bound:     <<<--- here: "core,cpus," but ":" expected
-> > > >   S0-D0-C0:2:10.5:
-> > > >   S0-D0-C1:2:14.8:
-> > > >   S0-D0-C2:2:9.9:
-> > > >   S0-D0-C3:2:13.2:
-> > > >
-> > > > After:
-> > > >   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
-> > > >   core:cpus:%  tma_core_bound:
-> > > >   S0-D0-C0:2:10.5:
-> > > >   S0-D0-C1:2:15.0:
-> > > >   S0-D0-C2:2:16.5:
-> > > >   S0-D0-C3:2:12.5:
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++--------
-> > > >  1 file changed, 29 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > > > index 91d2f7f65df7..e8673c9f6b49 100644
-> > > > --- a/tools/perf/util/stat-display.c
-> > > > +++ b/tools/perf/util/stat-display.c
-> > > > @@ -47,16 +47,27 @@ static int aggr_header_lens[] = {
-> > > >  };
-> > > >
-> > > >  static const char *aggr_header_csv[] = {
-> > > > -       [AGGR_CORE]     =       "core,cpus,",
-> > > > -       [AGGR_CACHE]    =       "cache,cpus,",
-> > > > -       [AGGR_DIE]      =       "die,cpus,",
-> > > > -       [AGGR_SOCKET]   =       "socket,cpus,",
-> > > > -       [AGGR_NONE]     =       "cpu,",
-> > > > -       [AGGR_THREAD]   =       "comm-pid,",
-> > > > -       [AGGR_NODE]     =       "node,",
-> > > > +       [AGGR_CORE]     =       "core%scpus%s",
-> > > > +       [AGGR_CACHE]    =       "cache%scpus%s",
-> > > > +       [AGGR_DIE]      =       "die%scpus%s",
-> > > > +       [AGGR_SOCKET]   =       "socket%scpus%s",
-> > > > +       [AGGR_NONE]     =       "cpu%s",
-> > > > +       [AGGR_THREAD]   =       "comm-pid%s",
-> > > > +       [AGGR_NODE]     =       "node%s",
-> > > >         [AGGR_GLOBAL]   =       ""
-> > > >  };
-> > > >
-> > > > +static int aggr_header_num[] = {
-> > > > +       [AGGR_CORE]     =       2,
-> > > > +       [AGGR_CACHE]    =       2,
-> > > > +       [AGGR_DIE]      =       2,
-> > > > +       [AGGR_SOCKET]   =       2,
-> > > > +       [AGGR_NONE]     =       1,
-> > > > +       [AGGR_THREAD]   =       1,
-> > > > +       [AGGR_NODE]     =       1,
-> > > > +       [AGGR_GLOBAL]   =       0,
-> > > > +};
-> > > > +
-> > > >  static const char *aggr_header_std[] = {
-> > > >         [AGGR_CORE]     =       "core",
-> > > >         [AGGR_CACHE]    =       "cache",
-> > > > @@ -1185,8 +1196,18 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
-> > > >  {
-> > > >         if (config->interval)
-> > > >                 fputs("time,", config->output);
-> > > > -       if (!config->iostat_run)
-> > > > +       if (config->iostat_run)
-> > > > +               return;
-> > > > +
-> > >
-> > > Having a static count of commas seems somewhat error prone, perhaps:
-> > > ```
-> > > const char *header = aggr_header_csv[config->aggr_mode];
-> > > if (config->csv_sep == ',' || !strchr(header, ',')) {
-> > >   fputs(config->output, header);
-> > > } else {
-> > >   char *tmp = strdup(header);
-> > >   char *p = tmp;
-> > >    while (p && *p) {
-> > >       if (p == ',')
-> > >         *p = config->csv_sep;
-> > >      p++;
-> > >    }
-> > >   fputs(config->output, tmp);
-> > >   free(tmp);
-> > > }
-> > > ```
+> > > > https://lore.kernel.org/linux-perf-users/20250109222109.567031-5-irogers@google.com/#r
 > >
-> > Looks good.  But I think we should handle longer separators like -x ":::".
-> > Will do in v2.
+> > > > Basically there are some events that were defined in the perf ABI.
+> >
+> > > >   PERF_COUNT_HW_CPU_CYCLES, PERF_COUNT_HW_INSTRUCTIONS, ...
+> >
+> > > > So perf tools use those (legacy) encodings with the matching names like
+> > > > "cycles" (or "cpu-cycles"), "instructions", etc.
+> >
+> > > > On the another hand, it has wildcard matching for event names in PMUs so
+> > > > that users can conveniently use events without specifying PMU names.
+> > > > For example, "event1" would expand to "pmuX/event1/", "pmuY/event1/", etc
+> > > > as long as the PMUs have the event in sysfs or JSON.
+> >
+> > > > And there are platforms where "cycles" event is defined in a (core) PMU
+> > > > (like "blah/cycles") and the event has a different behavior than the
+> > > > legacy encoding.  Then it has to choose which encoding is better for the
+> > > > given name.  But it's a general issue for the legacy event names.
+> >
+> > So we pick the "legacy" one, as always, and the one that is in a PMU
+> > needs to have its pmu name specified, no?
+> >
+> > > >   Q. what should it do with "cycles"?
+> > > >   -----------------------------------
+> > > >   1. just use the legacy encoding (PERF_COUNT_HW_CPU_CYCLES).
+> >
+> > Right
+> >
+> > > >   2. expand to (possibly multiple) PMU events (like "cpu/cycles/") and
+> > > >      use the encoding defined there.
+> >
+> > Nope
+> >
+> > > > I think the #1 is the current behavior.  The upside is it's simple and
+> > > > intuitive.  But it's different than other names and can make confusion.
+> > > > Users should use the full name ("cpu/cycles/") if they need sysfs one.
+> >
+> > Right
+> >
+> > > So the code keeps changing, for example, the removal of BPF events. I
+> >
+> > Humm, this seems like a different discussion.
+> >
+> > > think the important change and the thing that has brought us here is
+> > > the addition of what Intel call hybrid and ARM call BIG.little. ARM
+> >
+> > Right, the support for hybrid systems brought lots of problems, most
+> > people didn't have access to such systems and thus couldn't test
+> > patches, so the attempt was to keep the existing code working as it had
+> > been while allowing for the support for the new hybrid systems.
+> >
+> > As more people get access to hybrid systems we started noticing problems
+> > and working on fixing it, you did a lot of work in this area, highly
+> > appreciated.
+> >
+> > > have got architectural events and so the same event encoding on BIG
+> > > and little cores. On x86 the e-core (atom) and p-cores have different
+> > > event encodings. In the original hybrid work, pushed on for the launch
+> > > of Alderlake and reviewed by Jiri and Arnaldo with no involvement from
+> > > me, Intel wanted the event names to work transparently. So a cycles
+> >
+> > Without access to such systems, yes, see above.
+> >
+> > > event would be gathered on the e-core and p-core with a command line
+> > > option to merge the legacy event cycles on both cores. To be specific
+> > > the expected behavior of:
+> > > $ perf (stat|record) -e cycles ...
+> > > would be as if:
+> > > $ perf (stat|record) -e cpu_atom/cycles/,cpu_core/cycles/ ...
+> >
+> > Yes, and if somebody wants to profile in just one of those core types,
+> > just specify the "cpu_atom" or "cpu_core" to have it fully specified.
+> >
+> > > An unfortunate thing in the hybrid code was that it was hardcoded to
+> > > PMU names of cpu_atom and cpu_core, but what to do for metrics? The
+> >
+> > Yeah, metrics IIRC came before hybrid systems.
+> >
+> > > original proposal was that metrics would have a PMU name and all names
+> > > would be relative to that, but what about uncore events? What about
+> > > metrics that refer to other metrics? A decision was made to not to
+> > > have PMUs implicitly in metrics and the events in the metric would
+> > > match those given to perf's -e command line. This also greatly
+> > > simplifies testing events when creating a metric.
+> >
+> > > I set about rewriting the hybrid code not to use hard coded PMU names
+> > > but to discover core PMUs at runtime. This was to make the metric and
+> > > event parsing code as generic as possible, but this had an unintended
+> > > consequence. ARM's core PMU had previously not been seen as handling
+> > > legacy events like cycles, and appeared as an uncore PMU. When there
+> >
+> > > are both legacy and sysfs/json events then previously the legacy
+> > > events had priority. This broke events like cycles on Apple M
+> > > processors where the legacy events were broken and the sysfs ones not.
+> > > Yes this is a driver bug, but everybody told me a change in behavior
+> > > of the tool was needed to fix it, that fix was to make sysfs/json
+> > > events have priority over legacy events. I prioritized fixing event
+> > > parsing when a PMU was specified but given "cycles" means
+> > > "cpu_atom/cycles/ and cpu_core/cycles/" for hybrid, why would the
+> > > prioritization be different without a PMU specified?
+> >
+> > > I knew of this tech debt and separately RISC-V was also interested to
+> > > have sysfs/json be the priority so that the legacy to config encoding
+> > > could exist more in the perf tool than the PMU driver. I'm a SIG
+> >
+> > I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok as
+> > they didn't want to break the perf tooling workflow, no?
 > 
-> Hi Namhyung,
-> 
-> It looks like this has been forgotten. Did you have a v2?
+> No. The request has always been that they don't want the PMU driver to
+> do the PERF_TYPE_HARDWARE/PERF_COUNT_HW_* to PMU/config=??? mapping
+> given the diversity of hardware and to keep the PMU driver simple.
+> Here is Atish's feedback:
+> https://lore.kernel.org/lkml/CAHBxVyH1q5CRW3emWTZu1oLZEfTWWVRH6B0OVggFxt-0NRzvwQ@mail.gmail.com/
+> """
+> If the overriding legacy with JSON is available, each future vendor
+> may just provide the json file instead of modifying the driver.
+> """
 
-It's merged to v6.11, please see
+So, making users to figure out what is the best event to use for some
+specific processor was one of the major reasons for perf to come about,
+otherwise we would still be stuck with oprofile.
 
-https://lore.kernel.org/linux-perf-users/171994580797.2905908.17252651084023923233.b4-ty@kernel.org/
+While it is clear that picking some "most important event and ratios of
+events" is super difficult, that was one of the ideas that made perf to
+come about.
 
-Thanks,
-Namhyung
+I wasn´t the architect of this, Ingo and Thomas were, with Peter then
+tryhing to make the kernel part sane.
 
+I just tried to follow those principles while not getting in the way of
+people wanting to have a common ground for observability in Linux.
+
+Having all these JSON tables was in place was a major concession to that
+original vision.
+
+Changing things as we go, with all these changes in the hardware
+landscape, some fleeting, some reinforced, is super difficult and leads
+to all this pain in trying to provide a sane experience to people using
+these tools.
+
+I don't think we can have it super consistent.
+
+It is super useful as is, or at least that what people say.
+
+So we need to keep on improving it while not telling people used to its
+workflows that they should re-learn the tool because at some point a
+decision was not properly made.
+
+> Because of the pain in landing the reverted patch then RISC-V has had
+> to work with perf's behavior as it is, they need to ship products. I
+
+you can present it like that, or you can say that they wanted the API to
+be different but since it wasn't like they liked they had to comply.
+
+Differently phrased he finally understood the value of the current API,
+maybe.
+
+> think things would have been simpler in their driver and the wider
+> ecosystem if this hadn't been forced to happen.
+ 
+> > > vice-chair for RISC-V and hope to push things forward for RISC-V when
+> > > I can. Given that ARM had originally required the prioritization,
+> > > Intel signed off on this (with a huge number of Intel test
+> > > expectations updated as a consequence), RISC-V desiring consistency I
+> > > thought there was a pretty broad consensus to move forward with having
+> > > the same prioritization of legacy and sysfs/json events for event
+> > > names without PMUs as those with it.
+> >
+> > > In doing this change I made:
+> > > $ perf (stat|record) -e cycles ...
+> > > behave like:
+> > > $ perf (stat|record) -e */cycles/ ...
+> > > This is the behavior with sysfs/json events (ie not legacy). For example:
+> > > $ perf (stat|record) -e inst_retired.any ...
+> > > in the event parsing code behaves like:
+> > > $ perf (stat|record) -e */inst_retired.any/ ...
+> > > That is every PMU advertising the event inst_retired.any (in the sysfs
+> > > events directory or in json) will have it opened by the tool.
+> >
+> > > My intent was that "cycles" behaving like "*/cycles/" was that it
+> > > would match the change already done for hybrid of "cycles" behaving
+> > > like "cpu_atom/cycles/,cpu_core/cycles/". However, this change caused
+> > > an issue on ARM Neoverse that Linus couldn't tolerate and so reverted
+> > > the change. Specifically ARM Neoverse's L3 cache PMU advertises a
+> > > "cycles" event and such an event will fail to open with perf record.
+> >
+> > > Specifying the PMU with the event avoids the wild card behavior and
+> > > fixes the issue but it was put over strongly that "cycles" without a
+> > > PMU should only ever mean CPU cycles. This missed hybrid/BIG.little
+> > > type systems, but one could imagine in that case CPU means all core
+> > > PMUs.
+> >
+> > > As with not wanting hybrid PMU names hard coded, I dislike special
+> > > cases for events. Not least as there are an exciting plethora of
+> >
+> > Ok, but the desire for consistency clashes with how things have been for
+> > a long time, tools expect, scripts, etc, so we seem to need the special
+> > case for what has been called in these threads "legacy events".
+ 
+> There is only one known issue of a problem for 1 event on 1 ARM model.
+> If ARM renamed the event this wouldn't be an issue. The patch series
+> works for this event but warns about it if you try to use it with perf
+> record.
+
+Well, maybe just the event name shouldn't be what determines if it
+should be used in some cases? Maybe some other characteristic should be
+probed for in each case?
+
+Have to stop here, not enough bandwidth.
+
+- Arnaldo
