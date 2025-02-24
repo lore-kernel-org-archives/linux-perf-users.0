@@ -1,312 +1,275 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7311DB55C
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 08:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758261898ED
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 09:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386352; cv=none; b=j9RUrjQLDhjkLNO3C4GFMkS3aCXlAghaGKdYbtAvi+iifIwVFaPCyN0ei75HT3GW9ArzcYDsAvBPZdI3LMLCGwVSROJ8ykdMDKP4BcsQ+ZkIIecJ8IIjMiEc5qH9RQUM9tPVtBNBhE6vJLp5yLUDQI/+YahksJ6mG4sBnaUBgJ4=
+	t=1740389674; cv=none; b=ApinBYD8LK5tMRexnTLNbd72YAYGqbqJMVeav/ATZVvoWtbExvBJ0f2QaVyVMkoj68cEjgLwRbY3zA0cLRSH+1Ea8HutKZtGDUBwLJBLv8cc88ntpri5f/5MYWtWBlCzWZ9RmB0NzeupBOBAsykNYHKskoNLjG6NgVVMJ1Fa/Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386352; c=relaxed/simple;
-	bh=nPUxNA18dRFKw1Hf39el/o3O7fObZnn+n2YDiXOi4Ko=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=AbHgp8cWzzvvuliI04sXexxPLMN7kuNX5GIcO4ER02sIwwv+Q00isRbShrIEQq9IGUwJjSJvQTHHoqfd+5FHnyluPWQksek1hOC/cnl2KL1dYcC9eCserj53vpGxigX4x9bWuo90ooUIUdfXHMvJk5LQjz/KIXzSOkk+d6+Qlo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E3BVV1NR; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740389674; c=relaxed/simple;
+	bh=E8nU4giWTUKgyDZl2nz5vdGFPbe6n5FWQD7Os6YV7Ak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OkKuXxOUC9Jk/H47tTSCipKtf7gamNjtzBv3jOH1MAt6bBBdAzvx014dPMw/yjcue/h4zMBPF7SASOjnicVps5REIX8Y0O4mCZVz1sCEvCwlNjUbpsGsRKCq6zd7hjJGQk1pvLOSfesfM6LOYDSxniUxfx/hYtOxhPiE+YXgssk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PzXSPkCI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E3BVV1NR"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O2DZ3H020695;
-	Mon, 24 Feb 2025 08:38:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KpF9cK
-	csLSyASM9/BGkVWDKdXxHzxtKg3wQBIdnTkng=; b=E3BVV1NRJyRTxMLLgXxW5o
-	5Re639XA9lEF3tiRBYlOPzd2yBW49uFDQr5gIRJvlRUMJ9fhaCBatTDFCsLjPXM+
-	Pu6jUG7Ab2eiQmnZJnyMoJcwvjxm1KlGBS9CxLdCOyz7YcI0WY2anMhjT1nDuyk0
-	8t5nCQiQS4lidhxzdKrEKmaaNqXC/EwUDZutlorts7oLBkHqdbt2VBejE0ZmWKl/
-	mkazn3Pwx2vYy7FyOhf7+GJcPcrvGFD0FQp4XUijv4UyjVQ1oFjNDIp/2v2I27qs
-	GeDqNBeo4VQhFUkVDyzckthldjvvZdxbI9noebx8/hD5ITEhaz41E3XYcaFDP/YQ
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzXSPkCI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740389671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HdSFC/NWX5dRrWdCxqzO+/QnaU/bGpQWIT5COSO8Slo=;
+	b=PzXSPkCIfg2NGNBG7m9aWrlhV1gARcHXqEhMjEcrR5xnVfeiiif4OaLeFh9jfSM/u1Gajs
+	J0shB4Kmxbc5BYFEdRtPqoDfPNY1a7r6DcJLiL1E2zbo9bkKevpY2lM+Q3j8xhsSBJEDzE
+	O7/UV+eHBaO5VNSaUXoiEK4CD5lcJlk=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-qrSzR93cMEGFjMzvKSV2ew-1; Mon, 24 Feb 2025 04:34:29 -0500
+X-MC-Unique: qrSzR93cMEGFjMzvKSV2ew-1
+X-Mimecast-MFC-AGG-ID: qrSzR93cMEGFjMzvKSV2ew_1740389668
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fc43be27f8so14223371a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 01:34:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740389668; x=1740994468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HdSFC/NWX5dRrWdCxqzO+/QnaU/bGpQWIT5COSO8Slo=;
+        b=RY05qEpQzUsvTbz0ljW89rudQDfbaK2TDhO6oG0sO4TJYYDFLKP8TnzAPnzW66sU9V
+         wSZI6V7KHVjwcMMUVz/Bt0grv+12FSH82rtWgi+FPUrTU78nBAjHxte3bcpE8NLvjwuy
+         sMtKCwVfPBNc28El/ZAqN8BgEO2Ict0my4ABI5cc5Ck8PUPj9n5CI0ax4vdZzIcLrlbl
+         VuIUQ8mudVi/vvjXmdqYQ5sSKnD/uTIKBiyQGuXvEjsdRAuzAWTN1bbTwFLvzFjK6sgR
+         PFPjr8XXJ1M4E5td6F0qzyhVq+YpZxUEQpMM5gMkbVf9Tu3EKy1d2fqOtgsTlC+Z/ais
+         ExgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGNyc7pEm1H/2Dr7qXR+xw2Ms3fLvMECx3adxVHWncN9GpQCsL/+IaaoeOOCfysMJmBS73c+hJfVQSjFsrsHcB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz5sI7cIwRybxhLMuncMDBTk7f2PHNhXi0HZ/VYXtDZuNSX9sO
+	YjqfgD51mMjPZV36ZubWuUe3iiOn1G1j7bKqYLZCBj7qI6egXYWnkMXpDHlvdBdILElWEtL06G+
+	aGASs0yUESz3GmfMgLkJ+rWF33hKoPCJvPyTZsKpbkuS/0FRVZBQxpxEfgPHYFmPdXNUHBGAyM+
+	sLD4W7oUpuqOmgrEuDu5TRslIusErjS3LwKxHM+jMHuQ==
+X-Gm-Gg: ASbGncuxt3xbx2ki900dlV2akJjt5PDOurD8j/+GLlu1mekSKZHAOYtIUwwR+G9pa8C
+	sWP42YqiDqz/GVRjFtsA7GOQEOzaxONTQpcOCVkuxvtYf3bb25Qg5TscPEsrE1Ft8+d7WXbIX+Q
 	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 450cta1vc7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 08:38:57 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51O8TjKm031336;
-	Mon, 24 Feb 2025 08:38:56 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 450cta1vc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 08:38:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51O73qH9012918;
-	Mon, 24 Feb 2025 08:38:55 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwsefbn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 08:38:55 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51O8cpTK29491866
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 08:38:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C3EEC20040;
-	Mon, 24 Feb 2025 08:38:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5A0A92004D;
-	Mon, 24 Feb 2025 08:38:45 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.246.12])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 24 Feb 2025 08:38:44 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+X-Received: by 2002:a17:90b:2f4b:b0:2fc:3264:3657 with SMTP id 98e67ed59e1d1-2fce75e3336mr25582590a91.0.1740389667964;
+        Mon, 24 Feb 2025 01:34:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG7qGcGXKihErNmzjH+5ghfb0FKaRWncF5BZVbk0bJI4SW+bjntu2atlWJCOwbZkOMIz//Ck82rYUFF0f/j1DA=
+X-Received: by 2002:a17:90b:2f4b:b0:2fc:3264:3657 with SMTP id
+ 98e67ed59e1d1-2fce75e3336mr25582556a91.0.1740389667669; Mon, 24 Feb 2025
+ 01:34:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH] tools/perf: Pick the correct dwarf die while adding probe
- point for a function
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <Z7ULfdJXKWG0u9uY@google.com>
-Date: Mon, 24 Feb 2025 14:08:31 +0530
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>, hbathini@linux.vnet.ibm.com,
-        Aditya.Bodkhe1@ibm.com
+MIME-Version: 1.0
+References: <20241122231233.79509-1-vmolnaro@redhat.com> <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
+ <8f62887e-f3c5-4b43-8c77-897564dc971e@redhat.com> <Z4vv0_-GP5bbNPAj@google.com>
+ <CAATMXfkOjMoaOP0LTD58+R0LikpEXi+Sa7g86=6y8EWX5WBZVA@mail.gmail.com>
+In-Reply-To: <CAATMXfkOjMoaOP0LTD58+R0LikpEXi+Sa7g86=6y8EWX5WBZVA@mail.gmail.com>
+From: Qiao Zhao <qzhao@redhat.com>
+Date: Mon, 24 Feb 2025 17:34:15 +0800
+X-Gm-Features: AWEUYZknDoOyrQWp_KHoI1NXGoMC_qztdRXQuzGnLlvgbQteOK8-dx0HB0Qd-MY
+Message-ID: <CAATMXfmtSghSj1J91SVimNTLWdi-=--xpyhFn6RwY2b12y+UmQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test stat_all_pmu.sh: Correctly check 'perf stat' result
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Veronika Molnarova <vmolnaro@redhat.com>, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
+	mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <CB04064D-EF06-403A-8155-9D6B7318EE2B@linux.ibm.com>
-References: <20250212131949.68706-1-atrajeev@linux.vnet.ibm.com>
- <Z7ULfdJXKWG0u9uY@google.com>
-To: Namhyung Kim <namhyung@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XGqawxnATVerqEZfqg8isy3StmrcYaLo
-X-Proofpoint-ORIG-GUID: AhJJAekdKuPhonofBWwugz_aVm7NR-N3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_03,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 impostorscore=0 suspectscore=0 adultscore=0
- spamscore=0 priorityscore=1501 clxscore=1011 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502240061
 
+On Mon, Feb 24, 2025 at 2:59=E2=80=AFPM Qiao Zhao <qzhao@redhat.com> wrote:
+>
+> On Sun, Jan 19, 2025 at 2:15=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > On Thu, Jan 16, 2025 at 01:31:21PM +0100, Veronika Molnarova wrote:
+> > >
+> > >
+> > > On 12/10/24 16:20, Veronika Molnarova wrote:
+> > > >
+> > > >
+> > > > On 11/23/24 00:12, vmolnaro@redhat.com wrote:
+> > > >> From: Veronika Molnarova <vmolnaro@redhat.com>
+> > > >>
+> > > >> Test case "stat_all_pmu.sh" is not correctly checking 'perf stat' =
+output
+> > > >> due to a poor design. Firstly, having the 'set -e' option with a t=
+rap
+> > > >> catching the sigexit causes the shell to exit immediately if 'perf=
+ stat' ends
+> > > >> with any non-zero value, which is then caught by the trap reportin=
+g an
+> > > >> unexpected signal. This causes events that should be parsed by the=
+ if-else
+> > > >> statement to be caught by the trap handler and are reported as err=
+ors:
+> > > >>
+> > > >>     $ perf test -vv "perf all pmu"
+> > > >>     Testing i915/actual-frequency/
+> > > >>     Unexpected signal in main
+> > > >>     Error:
+> > > >>     Access to performance monitoring and observability operations =
+is limited.
+> > > >>
+> > > >> Secondly, the if-else branches are not exclusive as the checking i=
+f the
+> > > >> event is present in the output log covers also the "<not supported=
+>"
+> > > >> events, which should be accepted, and also the "Bad name events", =
+which
+> > > >> should be rejected.
+> > > >>
+> > > >> Remove the "set -e" option from the test case, correctly parse the
+> > > >> "perf stat" output log and check its return value. Add the missing
+> > > >> outputs for the 'perf stat' result and also add logs messages to
+> > > >> report the branch that parsed the event for more info.
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > is there anything that I am missing? If so would be great to know t=
+he idea
+> > > > of your patch. This issue is getting quite old so would be great to=
+ get a proper
+> > > > fix together.
+> > > >
+> > > > Thanks,
+> > > > Veronika
+> > >
+> > > Hello,
+> > >
+> > > just wanted to ping the patch. Would be great to sort it out and clos=
+e the issue.
+> >
+> > Ian, are you ok with this?
+> >
+>
+> Just ping again for this patch, can this fix be acked?
+>
+> And I already tested this patch and it works well on the ppc64le system.
+>
+> Tested-by: Qiao Zhao <qzhao@redhat.com>
 
+Revert the Tested-by, and when more tests on Intel EMR system, and show oth=
+er
+"Bad event name" and " value too big for format (umask)" errors.
+This patch needs more tests and rewrites.
 
-> On 19 Feb 2025, at 4:06=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->=20
-> Added Masami.
->=20
-> On Wed, Feb 12, 2025 at 06:49:49PM +0530, Athira Rajeev wrote:
->> Perf probe on vfs_fstatat fails as below on a powerpc system
->>=20
->> ./perf probe -nf --max-probes=3D512 -a 'vfs_fstatat $params'
->> Segmentation fault (core dumped)
->>=20
->> This is observed while running perftool-testsuite_probe testcase.
->>=20
->> While running with verbose, its observed that segfault happens
->> at:
->>=20
->>   synthesize_probe_trace_arg ()
->>   synthesize_probe_trace_command ()
->>   probe_file.add_event ()
->>   apply_perf_probe_events ()
->>   __cmd_probe ()
->>   cmd_probe ()
->>   run_builtin ()
->>   handle_internal_command ()
->>   main ()
->>=20
->> Code in synthesize_probe_trace_arg() access a null value and results =
-in
->> segfault. Data structure which is null:
->> struct probe_trace_arg arg->value
->>=20
->> We are hitting a case where arg->value is null in probe point:
->> "vfs_fstatat $params". This is happening since 'commit e896474fe485
->> ("getname_maybe_null() - the third variant of pathname copy-in")'
->> Before the commit, probe point for vfs_fstatat was getting added only
->> for one location:
->>=20
->> Writing event: p:probe/vfs_fstatat _text+6345404 dfd=3D%gpr3:s32 =
-filename=3D%gpr4:x64 stat=3D%gpr5:x64 flags=3D%gpr6:s32
->>=20
->> With this change, vfs_fstatat code is inlined for other locations in =
-the
->> code:
->> Probe point found: __do_sys_lstat64+48
->> Probe point found: __do_sys_stat64+48
->> Probe point found: __do_sys_newlstat+48
->> Probe point found: __do_sys_newstat+48
->> Probe point found: vfs_fstatat+0
->>=20
->> When trying to find matching dwarf information entry (DIE)
->> from the debuginfo, the code incorrectly picks DIE which is
->> not referring to vfs_fstatat. Snippet from dwarf entry in vmlinux
->> debuginfo file.
->>=20
->> The main abstract die is:
->> <1><4214883>: Abbrev Number: 147 (DW_TAG_subprogram)
->>    <4214885>   DW_AT_external    : 1
->>    <4214885>   DW_AT_name        : (indirect string, offset: =
-0x17b9f3): vfs_fstatat
->>=20
->> With formal parameters:
->> <2><4214896>: Abbrev Number: 51 (DW_TAG_formal_parameter)
->>    <4214897>   DW_AT_name        : dfd
->> <2><42148a3>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->>    <42148a4>   DW_AT_name        : (indirect string, offset: =
-0x8fda9): filename
->> <2><42148b0>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->>    <42148b1>   DW_AT_name        : (indirect string, offset: =
-0x16bd9c): stat
->> <2><42148bd>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->>    <42148be>   DW_AT_name        : (indirect string, offset: =
-0x39832b): flags
->>=20
->> While collecting variables/parameters for a probe point, the function
->> copy_variables_cb() also looks at dwarf debug entries based on the
->> instruction address. Snippet
->>=20
->>        if (dwarf_haspc(die_mem, vf->pf->addr))
->>                return DIE_FIND_CB_CONTINUE;
->>        else
->>                return DIE_FIND_CB_SIBLING;
->>=20
->> But incase of inlined function instance for vfs_fstatat, there are =
-two
->> entries which has the instruction address entry point as same.
->>=20
->> Instance 1: which is for vfs_fstatat and DW_AT_abstract_origin points =
-to
->> 0x4214883 (reference above for main abstract die)
->>=20
->> <3><42131fa>: Abbrev Number: 59 (DW_TAG_inlined_subroutine)
->>    <42131fb>   DW_AT_abstract_origin: <0x4214883>
->>    <42131ff>   DW_AT_entry_pc    : 0xc00000000062b1e0
->>=20
->> Instance 2: which is not for vfs_fstatat but for getname
->>=20
->> <5><4213270>: Abbrev Number: 39 (DW_TAG_inlined_subroutine)
->>    <4213271>   DW_AT_abstract_origin: <0x4215b6b>
->>    <4213275>   DW_AT_entry_pc    : 0xc00000000062b1e0
->>=20
->> But the copy_variables_cb() continues to add parameters from second
->> instance also based on the dwarf_haspc() check. This results in
->> formal parameters for getname also appended to params. But while
->> filling in the args->value for these parameters, since these args
->> are not part of dwarf with offset "42131fa". Hence value will be
->> null. This incorrect args results in segfault when value field is
->> accessed.
->>=20
->> Save the Dwarf_Die which is the actual DW_TAG_subprogram as part of
->> "struct probe_finder". In copy_variables_cb(), include check to make
->> sure the DW_AT_abstract_origin points to the correct entry if the
->> dwarf_haspc() matches the instruction address.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/util/probe-finder.c | 21 ++++++++++++++++++---
->> tools/perf/util/probe-finder.h |  1 +
->> 2 files changed, 19 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/tools/perf/util/probe-finder.c =
-b/tools/perf/util/probe-finder.c
->> index 1e769b68da37..361086a7adae 100644
->> --- a/tools/perf/util/probe-finder.c
->> +++ b/tools/perf/util/probe-finder.c
->> @@ -973,6 +973,7 @@ static int probe_point_search_cb(Dwarf_Die =
-*sp_die, void *data)
->> pr_debug("Matched function: %s [%lx]\n", dwarf_diename(sp_die),
->>  (unsigned long)dwarf_dieoffset(sp_die));
->> pf->fname =3D fname;
->> + memcpy(&pf->abstract_die, sp_die, sizeof(Dwarf_Die));
->=20
-> Maybe just saving dieoffset is fine.
->=20
-> Thanks,
-> Namhyung
-Thanks for checking the patch Namhyung.
+- Qiao
 
-Sure I will make that change in V2
-
-Hi Masami,
-Looking for your valuable comments on this fix patch, if the change =
-looks good to you ?
-
-Thanks
-Athira
->=20
->=20
->> if (pp->line) { /* Function relative line */
->> dwarf_decl_line(sp_die, &pf->lno);
->> pf->lno +=3D pp->line;
->> @@ -1179,6 +1180,8 @@ static int copy_variables_cb(Dwarf_Die =
-*die_mem, void *data)
->> struct local_vars_finder *vf =3D data;
->> struct probe_finder *pf =3D vf->pf;
->> int tag;
->> + Dwarf_Attribute attr;
->> + Dwarf_Die var_die;
->>=20
->> tag =3D dwarf_tag(die_mem);
->> if (tag =3D=3D DW_TAG_formal_parameter ||
->> @@ -1196,10 +1199,22 @@ static int copy_variables_cb(Dwarf_Die =
-*die_mem, void *data)
->> }
->> }
->>=20
->> - if (dwarf_haspc(die_mem, vf->pf->addr))
->> + if (dwarf_haspc(die_mem, vf->pf->addr)) {
->> + /*
->> +  * when DW_AT_entry_pc contains instruction address,
->> +  * also check if the DW_AT_abstract_origin of die_mem
->> +  * points to correct die.
->> +  */
->> + if (dwarf_attr(die_mem, DW_AT_abstract_origin, &attr)) {
->> + dwarf_formref_die(&attr, &var_die);
->> + if (dwarf_dieoffset(&pf->abstract_die) !=3D =
-dwarf_dieoffset(&var_die))
->> + goto out;
->> + }
->> return DIE_FIND_CB_CONTINUE;
->> - else
->> - return DIE_FIND_CB_SIBLING;
->> + }
->> +
->> +out:
->> + return DIE_FIND_CB_SIBLING;
->> }
->>=20
->> static int expand_probe_args(Dwarf_Die *sc_die, struct probe_finder =
-*pf,
->> diff --git a/tools/perf/util/probe-finder.h =
-b/tools/perf/util/probe-finder.h
->> index dcf6cc1e1cbe..b3039635c94e 100644
->> --- a/tools/perf/util/probe-finder.h
->> +++ b/tools/perf/util/probe-finder.h
->> @@ -63,6 +63,7 @@ struct probe_finder {
->> const char *fname; /* Real file name */
->> Dwarf_Die cu_die; /* Current CU */
->> Dwarf_Die sp_die;
->> + Dwarf_Die abstract_die;
->> struct intlist *lcache; /* Line cache for lazy match */
->>=20
->> /* For variable searching */
->> --=20
->> 2.43.5
-
+>
+> - Qiao
+>
+> > Thanks,
+> > Namhyung
+> >
+> > > >>
+> > > >> Fixes: 7e73ea40295620e7 ("perf test: Ignore security failures in a=
+ll PMU test")
+> > > >> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> > > >> ---
+> > > >>  tools/perf/tests/shell/stat_all_pmu.sh | 48 ++++++++++++++++++---=
+-----
+> > > >>  1 file changed, 34 insertions(+), 14 deletions(-)
+> > > >>
+> > > >> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/t=
+ests/shell/stat_all_pmu.sh
+> > > >> index 8b148b300be1131e..9c466c0efa857fc2 100755
+> > > >> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> > > >> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> > > >> @@ -2,7 +2,6 @@
+> > > >>  # perf all PMU test (exclusive)
+> > > >>  # SPDX-License-Identifier: GPL-2.0
+> > > >>
+> > > >> -set -e
+> > > >>  err=3D0
+> > > >>  result=3D""
+> > > >>
+> > > >> @@ -16,34 +15,55 @@ trap trap_cleanup EXIT TERM INT
+> > > >>  # Test all PMU events; however exclude parameterized ones (name c=
+ontains '?')
+> > > >>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:gra=
+ph:]]\+[[:space:]]//g')
+> > > >>  do
+> > > >> -  echo "Testing $p"
+> > > >> -  result=3D$(perf stat -e "$p" true 2>&1)
+> > > >> -  if echo "$result" | grep -q "$p"
+> > > >> +  echo -n "Testing $p -- "
+> > > >> +  output=3D$(perf stat -e "$p" true 2>&1)
+> > > >> +  stat_result=3D$?
+> > > >> +  if echo "$output" | grep -q "$p"
+> > > >>    then
+> > > >>      # Event seen in output.
+> > > >> -    continue
+> > > >> -  fi
+> > > >> -  if echo "$result" | grep -q "<not supported>"
+> > > >> -  then
+> > > >> -    # Event not supported, so ignore.
+> > > >> -    continue
+> > > >> +    if [ $stat_result -eq 0 ] && ! echo "$output" | grep -q "<not=
+ supported>"
+> > > >> +    then
+> > > >> +      # Event supported.
+> > > >> +      echo "supported"
+> > > >> +      continue
+> > > >> +    elif echo "$output" | grep -q "<not supported>"
+> > > >> +    then
+> > > >> +      # Event not supported, so ignore.
+> > > >> +      echo "not supported"
+> > > >> +      continue
+> > > >> +    elif echo "$output" | grep -q "No permission to enable"
+> > > >> +    then
+> > > >> +      # No permissions, so ignore.
+> > > >> +      echo "no permission to enable"
+> > > >> +      continue
+> > > >> +    elif echo "$output" | grep -q "Bad event name"
+> > > >> +    then
+> > > >> +      # Non-existent event.
+> > > >> +      echo "Error: Bad event name"
+> > > >> +      echo "$output"
+> > > >> +      err=3D1
+> > > >> +      continue
+> > > >> +    fi
+> > > >>    fi
+> > > >> -  if echo "$result" | grep -q "Access to performance monitoring a=
+nd observability operations is limited."
+> > > >> +
+> > > >> +  if echo "$output" | grep -q "Access to performance monitoring a=
+nd observability operations is limited."
+> > > >>    then
+> > > >>      # Access is limited, so ignore.
+> > > >> +    echo "access limited"
+> > > >>      continue
+> > > >>    fi
+> > > >>
+> > > >>    # We failed to see the event and it is supported. Possibly the =
+workload was
+> > > >>    # too small so retry with something longer.
+> > > >> -  result=3D$(perf stat -e "$p" perf bench internals synthesize 2>=
+&1)
+> > > >> -  if echo "$result" | grep -q "$p"
+> > > >> +  output=3D$(perf stat -e "$p" perf bench internals synthesize 2>=
+&1)
+> > > >> +  if echo "$output" | grep -q "$p"
+> > > >>    then
+> > > >>      # Event seen in output.
+> > > >> +    echo "supported"
+> > > >>      continue
+> > > >>    fi
+> > > >>    echo "Error: event '$p' not printed in:"
+> > > >> -  echo "$result"
+> > > >> +  echo "$output"
+> > > >>    err=3D1
+> > > >>  done
+> > > >>
+> > >
+> >
 
