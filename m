@@ -1,613 +1,297 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B59026562F
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 18:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17E42D7BF
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 18:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740420815; cv=none; b=EO9+kZNItb+/lGxymvPBqbcPE55Hdj62StSbRt7iZcjTxTCn0uPzC7xqZ8kZQ+MMUeF4WzU1T8E3UvOcg/W/SnE5VFEpI9Rtkd5Kk6uM0TrksoPKIk2KiDwNXKallp34wc6b1/0kfHRIWBV35yHrYbw3xywDyN9rpQ7uAKdK//s=
+	t=1740421131; cv=none; b=l35qXq4/eYPtfZlNJcsWh0JX2uiAr+q09NCPoTf9gKqk+0vz356X1dQSSoIOEo304Qvugx7uHBdeD/jEfjNyI15otiVMjEiJTfMDBiFhlh+F0/9dLSDcm+CCAECdoM+xc0fYKPqaM0XuXlQ4xd3ALKDECM+3svL4OM0NTj8pY8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740420815; c=relaxed/simple;
-	bh=Vva0gzDw0iH8+ImkgkgxkXdoRo2SxYnKyaNh7g98WLI=;
+	s=arc-20240116; t=1740421131; c=relaxed/simple;
+	bh=byxv+mlOvSHfc90q+hw4mXLTnXfG69/YARVK3lak8rM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o8pB1qVmkogftexv5sCiFpgt2cLoxS1Ohd5c7eZpbFf+F5Uny7NjhY/5idicnk7vfcsNpk5TXS8AUf7/crc1GGUxsVP0TgKQpTQ8SpjIui0ThH81d7PJv+lPiCdaiAr2z2fBYCdWIBiw+Ecr1YUbl55jwydGtkP0TuED+wbjduM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C0DGjSDz; arc=none smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=SW0r2ZnIri9FaZbr4AdfKvfQ6t5E4PcJW3VG3VKoEVUOGED5DqI/xuot4TejuBGGg3+nqx7s34fp5DucQD17TKx/DZlrUKbkx25ZtXjk1nEe+TJMmAGxtoCLFDxaMfH/XUD51eWMGklqKmrrvi0J2nvZIn5QG+Q3GhWH80ET0gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=clSfQpCp; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C0DGjSDz"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220e0575f5bso15205ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 10:13:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clSfQpCp"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22117c396baso12555ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 10:18:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740420812; x=1741025612; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740421129; x=1741025929; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XJP1u571wc7y91n+9H/dCgpjrHhOi9K3FW2vJzstGH4=;
-        b=C0DGjSDz2x8YkV5WzbguK1x4Kdj/HsyXxEETRalcPBc+jf5hhv684B0YJumvRb7QNC
-         cCUmooxKYRouVsCINharn9kCbEHoN5tngbsqZVuTdJFsZZzgo8Me9F0kQLBFI8bdH6u+
-         WZPF+OqvV2TGSyT9XOVTCDBJP9oHoclfBjCyj3LaU7TWw4XE66YqBQmrVY6DoBtLeDs9
-         t/P2rXs7rXQlNllULzjbHgX/7+iQ3jwa6cPmzpNg7ZYmxUUjiopGegv95amd8OLV3awx
-         7k6uWZZ7iCi/Rq2H8vYOiEYJIL+Qjg1ZYxe/+VJslNbo36FWwcXnGS5baUsm7F4fVKy0
-         cj5g==
+        bh=L1r0DTBemJTbWIAcMf/B1UyOUvQ5l7Xx+cguq8yf/Eo=;
+        b=clSfQpCp3q4jA2VprAPbqzzvdzI/n7C8gvfcR2GfCGRJXCYDXEjMGz9RY/28pDvplT
+         seTe4SpKQJu9ti5WMJjgD+jEIB6uaeOhBDHVgmOsGsFh2ZfX1UiSaDUusTingRxfPbLl
+         DdlhSDBcGKOIo4ubVGXJ4ANG0sWundrL4zBadSFDoXNgyZct4D5UsYtK+FNxnxCBPVbO
+         BK1NbzPMuZSlO9nUeA6oTU6KzoOx77ZMOk5YDNT7ifZxdwojfIORJVt5VDAP5zd7fbMW
+         tzMWM8drVUthpue0WkdOvEt9042rd7CE4ueDXkjbJ94DrixGeUcbcvVRYobAHmTd0+S5
+         owjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740420812; x=1741025612;
+        d=1e100.net; s=20230601; t=1740421129; x=1741025929;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XJP1u571wc7y91n+9H/dCgpjrHhOi9K3FW2vJzstGH4=;
-        b=Y2PSdcXgGef1CkIVhVqp3BgkHlZxRpk1xG245n1tvkoy6LctqoeXv4wDv6zAP6VqoJ
-         RXUE9/gKVouwJqdGrbA4+eLWYucodowtxCN/RppCg++jax9s5RQUVaDKpxU5UBge1kX5
-         TsNIij4VQYlLlXoI55udUn4QM+XAbNTR1vjERXEZ55flN916725bzgd7iKfA1DXK2dKy
-         8jn5/q0P2bfAEiEdcmhLtA+uakzh0Y3s1MO+pVvYzLDTbwAKtCiMBMJ74Z+wDnI/J4Mn
-         wRA82nrBY0VX3ghiPIa6s7goTT9tMSknyOvf/zR6ifSj2VuEpmR7E06OF/E4ZcsQe3K4
-         tZpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXD11j/YU1Q6F9V0w1jmH/vhfQu2PXRz57eqgidUYzeVXutQcchTgXUJvXMnp3GxxqBtUhDFy4YoliboP86eehu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9wV/CBDMSrgmIDIo9NnXIOSrYAP9g4s9s7rB5NIS0lIyFB/z/
-	CtaDr9tcijjWUy2MApsgg1FYhg8nhCHSnQj0ADbdGdYnsYZoFLqz55azL862pZo8dXE7CE23vK5
-	hW61c2kwHFMx+2YOJeoFa1j3HQ9FHWvXZRl/2
-X-Gm-Gg: ASbGncvt6pIjWpdbQRsqLw4WyCQdCJDHLBzTF25w0PaW6KI0q4ubsRarM2a0fvBePG7
-	9Qopykvb9KTRNPOZtvuVkM7wAO0o7wT1atX2cNuPCa0BfqWVqeXYMiGp1JfRaaO4YksOaBh8rCB
-	uOvls4TCZDKaGB5GuLyS6Z9D1Y6FDbhCP/up0=
-X-Google-Smtp-Source: AGHT+IEUzHbN5XEUn9fWFMhbYYPycbCrT/jGixYA/e4Nkv2DOeutYm8bHQUjE5V7hJ+Q0f6vJ0rQlu0Z9Xv2H06MXck=
-X-Received: by 2002:a17:902:da84:b0:216:6dab:803b with SMTP id
- d9443c01a7336-22307a97489mr272495ad.18.1740420811918; Mon, 24 Feb 2025
- 10:13:31 -0800 (PST)
+        bh=L1r0DTBemJTbWIAcMf/B1UyOUvQ5l7Xx+cguq8yf/Eo=;
+        b=wTPQytC/aTwdWWAWQrmc3fjhEhrjFyrmTAlnEdqQojYG20Y9T3312jA1VgX29ENT5V
+         MKJKdN81Fip/Rd+P6QOCwIAvH2x+z2er7RGoSkGj1uZF6XrJv9F8YpgiD+zM5p1+fQKN
+         7/+fAO6SY7Gjo4xAsscf7kea9zJscVzLtmKLsgejXTlkR9laq6H2aUhe/XO9E83lRthw
+         r2yruviJ4cNVPyqR9rrc+l2FXLMgf/nnK6nyxJeBlVZK6dfSg5gYc4TKcRQC4lEiECrr
+         HseWNeA8x0VhSIlB6uqP5V48WmBv5u5yNBvopMSevummp+CVk6ax7UxT6EtnBi9t45KU
+         Yx3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVS52X8cEvjdRnoGD31TtHH73PolAaJFPQzLqxdBIqp8LwlUaZ/pIS5QgrxjHbBnuAHl5uqNvamo/dwjlqDib5b@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaP8q+DCU1zJ+xugup4pJo5eD7lKpyQPnhCNwKFUA2+fD5SZZU
+	AaShbJH8aLFQEKzFBrKskNuTROmpYj4DPG9FiQu28LyT2tLfRFPMwtZcTJ/Ins1H867qRe7uSkM
+	CUNWQidXHk8Ub7B3D2qWFEU3ozJZI7BGfLvOC
+X-Gm-Gg: ASbGncvZr5IhGtwhb/trlG+Ei69kWjaFtT8BsGjOjcxe17au7MeHeF+M4eHMOqm2syd
+	oM9Wmp4C53dpaxDjHerlCUDbFZALdoWEYMPMdVRVfZawNqTS1H1CbB8n46CTvLfLSIIChzWl1PR
+	OesMCMG/g6f06CKMnL2AXY7s9w9ks7Lqct2N8=
+X-Google-Smtp-Source: AGHT+IHEFEZ9FZxtzjYAWGpCcbgOAoyMIes/Md1kSlYdOsjB7A+9rtZtRYeazBrgOVOotB7ncX6mp3R8Un+4ZHl4itw=
+X-Received: by 2002:a17:902:e80b:b0:21f:2828:dc82 with SMTP id
+ d9443c01a7336-22307a2fea8mr318725ad.2.1740421128666; Mon, 24 Feb 2025
+ 10:18:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221183207.560262-1-namhyung@kernel.org>
-In-Reply-To: <20250221183207.560262-1-namhyung@kernel.org>
+References: <CAP-5=fXw09MM5XyozJMM3FjMANJei1aNVmBghSEQFiCKAtJmXw@mail.gmail.com>
+ <CAP-5=fUqcykMdApHVweETg9bp2EVPJhJOj_PR8cByOOA6OyQGw@mail.gmail.com>
+ <Z6_CL0RpUUvw0lR7@x1> <Z7TvZGjVix2asYWI@x1> <Z7T1LVSLo8EEMmkM@x1>
+ <Z7UDlZKnqXRqNqQa@google.com> <Z7XsltyqUWrdKma0@x1> <Z7XvEFEZtCRZKG7Y@x1>
+ <Z7ZIqpwffQbibwL2@google.com> <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
+ <Z7gllQZeg6U2OvZE@google.com>
+In-Reply-To: <Z7gllQZeg6U2OvZE@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Feb 2025 10:13:20 -0800
-X-Gm-Features: AWEUYZkyYGOXPbBX8Yyox1pvnVFqjinS1a6sEMlHkGGfP0d-T4r7jneliTwD6kc
-Message-ID: <CAP-5=fVegzVTkir=p94u0eHN-FGN18F18j4AfbtdbnGw+EMD1A@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Implement syscall summary in BPF
+Date: Mon, 24 Feb 2025 10:18:37 -0800
+X-Gm-Features: AWEUYZkfLaCHbD8kiSJIc6pf9-FZYteh7wKLZDID1Kp-CkEcsg3AY_S-Cw_MqT4
+Message-ID: <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
+Subject: Re: [PATCH] perf report: Add 'tgid' sort key
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
 	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, Song Liu <song@kernel.org>, Howard Chu <howardchu95@gmail.com>
+	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 10:32=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+On Thu, Feb 20, 2025 at 11:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> When --summary-only option is used, it doesn't need (augmented) arguments
-> of syscalls.  Let's skip the augmentation and load another small BPF
-> program to collect the statistics in the kernel instead of copying the
-> data to the ring-buffer to calculate the stats in userspace.  This will
-> be much more light-weight than the existing approach and remove any lost
-> events.
+> On Thu, Feb 20, 2025 at 09:12:46AM -0800, Ian Rogers wrote:
+> > On Wed, Feb 19, 2025 at 1:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Feb 19, 2025 at 03:47:44PM +0100, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > On Wed, Feb 19, 2025 at 03:37:10PM +0100, Arnaldo Carvalho de Melo =
+wrote:
+> > > > > On Tue, Feb 18, 2025 at 02:03:01PM -0800, Namhyung Kim wrote:
+> > > > > > On Tue, Feb 18, 2025 at 10:01:33PM +0100, Arnaldo Carvalho de M=
+elo wrote:
+> > > > > > > On Tue, Feb 18, 2025 at 09:36:52PM +0100, Arnaldo Carvalho de=
+ Melo wrote:
+> > > > > > > > So the call to maps_fixup_end() will set maps->end_broken t=
+o false,
+> > > > > > > > since it fixed up the map ends, etc, but then we insert mor=
+e maps with
+> > > > > > > > broken ends:
+> > > > > > >
+> > > > > > > > #6  0x0000000000633d52 in check_invariants (maps=3D0xf967c0=
+) at util/maps.c:95
+> > > > > > > > 95                                            assert(map__e=
+nd(prev) <=3D map__end(map));
+> > > > > > > > (gdb) p prev->dso->name
+> > > > > > > > $1 =3D 0xfc47ab "bpf_trampoline_6442522522"
+> > > > > > >
+> > > > > > > So the above map is created overlapping a previously existing=
+ map:
+> > > > > > >
+> > > > > > > root@number:~# perf probe -l
+> > > > > > >   probe_perf:maps_fixup_end (on maps__fixup_end:1@util/maps.c=
+ in /home/acme/bin/perf with maps)
+> > > > > > >   probe_perf:maps_insert (on maps__insert:1@util/maps.c in /h=
+ome/acme/bin/perf with maps name start end)
+> > > > > > > root@number:~#
+> > > > > > >
+> > > > > > > root@number:~# perf trace --lib -e probe_perf:maps* perf reco=
+rd sleep
+> > > > > > > <SNIP>
+> > > > > > >    319.791 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_prog_6deef7357e7b4530_sd_fw_egress" start=3D0xfff=
+fffffc0160788 end=3D0xffffffffc01607c8)
+> > > > > > >    319.810 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=3D0xff=
+ffffffc01647b8 end=3D0xffffffffc01647f8)
+> > > > > > >    319.822 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_prog_6deef7357e7b4530_sd_fw_egress" start=3D0xfff=
+fffffc016482c end=3D0xffffffffc016486c)
+> > > > > > >    319.834 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_prog_6deef7357e7b4530_sd_fw_ingress" start=3D0xff=
+ffffffc01648ac end=3D0xffffffffc01648ec)
+> > > > > > >    319.845 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_prog_be31ae23198a0378_sd_devices" start=3D0xfffff=
+fffc0186388 end=3D0xffffffffc01864b2)
+> > > > > > >    319.857 perf/1732173 probe_perf:maps_insert((634e5e) maps=
+=3D0x2d9715d0 name=3D"bpf_trampoline_6442522522" start=3D0xffffffffc0147640=
+ end=3D0xffffffffc0148640)
+> > > > > > > [ perf record: Captured and wrote 0.035 MB perf.data (7 sampl=
+es) ]
+> > > > > > > perf: util/maps.c:95: check_invariants: Assertion `map__end(p=
+rev) <=3D map__end(map)' failed.
+> > > > > > > root@number:~#
+> > > > > > >
+> > > > > > > So a PERF_RECORD_KSYMBOL processing will add a map for
+> > > > > > > "bpf_trampoline_6442522522" that has its start after before t=
+he
+> > > > > > > "bpf_prog_40ddf486530245f5_sd_devices" start, ok, but ends af=
+ter
+> > > > > > > "bpf_prog_40ddf486530245f5_sd_devices", overlapping it.
+> > > > > > >
+> > > > > > > machine__process_ksymbol_register() does:
+> > > > > > >
+> > > > > > > 713                     map__set_start(map, event->ksymbol.ad=
+dr);
+> > > > > > > 714                     map__set_end(map, map__start(map) + e=
+vent->ksymbol.len);
+> > > > > > > 715                     err =3D maps__insert(machine__kernel_=
+maps(machine), map);
+> > > > > > >
+> > > > > > > And:
+> > > > > > >
+> > > > > > > (gdb) p /x event->ksymbol.addr
+> > > > > > > $2 =3D 0xffffffffc0147a2c
+> > > > > > > (gdb) p event->ksymbol.len
+> > > > > > > $3 =3D 306
+> > > > > >
+> > > > > > Hmm.. so I think the situation is like below.
+> > > > > >
+> > > > > >              (bpf_trampoline_6442522522)
+> > > > > >       +---------------------------------------+
+> > > > > >       |                                       |
+> > > > > >       |       +------------------------+      |
+> > > > > >       |       | (bpf_prog_40ddf486...) | <----+----  adding thi=
+s
+> > > > > >       |       |                        |      |
+> > > > > >       |       |                        |      |
+> > > > > >       |   c0147a2c                            |
+> > > > > >       |                                       |
+> > > > > >   c0147640                                 c0148640
+> > > > > >
+> > > > > > And it failed to add bpf_prog_40ddf486... in check_invariants()=
+ because
+> > > > > > the end address is smaller than the previous map.
+> > > > >
+> > > > > No, it didn't fail to add, it managed to do it which left the ker=
+nel
+> > > > > maps in a broken state, with overlappings while it had a cleared
+> > > > > ends_broken, then, later, when the checks_invariant is finally ca=
+lled at
+> > > > > perf record exit time:
+> > > >
+> > > > Nope, __maps__insert() should notice that the ends are broken and s=
+et
+> > > > it:
+> > > >
+> > > >         if (nr_maps =3D=3D 1) {
+> > > >                 /* If there's just 1 entry then maps are sorted. */
+> > > >                 maps__set_maps_by_address_sorted(maps, true);
+> > > >                 maps__set_maps_by_name_sorted(maps, maps_by_name !=
+=3D NULL);
+> > > >         } else {
+> > > >                 /* Sorted if maps were already sorted and this map =
+starts after the last one. */
+> > > >                 maps__set_maps_by_address_sorted(maps,
+> > > >                         maps__maps_by_address_sorted(maps) &&
+> > > >                         map__end(maps_by_address[nr_maps - 2]) <=3D=
+ map__start(new));
+> > > >                 maps__set_maps_by_name_sorted(maps, false);
+> > > >         }
+> > > >         if (map__end(new) < map__start(new))
+> > > >                 RC_CHK_ACCESS(maps)->ends_broken =3D true;
+> > > >
+> > > >
+> > > > humm, RC_CHK_ACCESS(maps)->ends_broken should be set for the case w=
+e
+> > > > have and I think it isn't being... Then the bpf trampoline map that=
+ is
+> > > > the last entry to be added is before the last entry and thus
+> > > > maps_by_address_sorted is set to false, ends_broken continues false=
+ and
+> > > > at the end maps_by_address_sorted is set to true and the last
+> > > > check_invariants triggerrs the asserts...
+> > >
+> > > Right, probably it needs to set the ends_broken when the end address =
+of
+> > > the new map is smaller than the previous (but the start address is
+> > > bigger) and fixup the end address when it sorts the maps by address.
+> >
+> > Ugh, I get git blamed for ends_broken and I was wondering what the heck=
+ it is:
+> > https://lore.kernel.org/all/20240210031746.4057262-2-irogers@google.com=
+/
+> > My memory is that when the rb-tree was built the maps put in it could
+> > be broken and ends_broken was to capture we were in this state as the
+> > sorting would get broken, invariants be off, etc.. The rb-tree
+> > constructing code would then call maps__fixup_end. Having the caller
+> > call maps__fixup_end seems error prone, as does the whole
+> > "ends_broken" thing - remember I was in the code to fix memory leaks
+> > so modifying the maps API wasn't front of mind. I added ends_broken,
+> > the original rb-tree had no notion of it, because I was trying to get
+> > the invariants right for the testing I could do and ends_broken was
+> > the pragmatic thing to do for odd cases like kernel modules before
+> > maps__fixup_end is called.
+> >
+> > The maps API has evolved and we have a pretty robust, but possibly not
+> > fast, maps__fixup_overlap_and_insert:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/maps.h?h=3Dperf-tools-next#n69
+> > I think ideally we'd make maps__insert uphold the invariants and not
+> > have ends_broken. I'm worried that making ends_broken more load
+> > bearing isn't the right thing to do, we may even be able to not have
+> > the variable for the "ifndef NDEBUG" case, which making it load
+> > bearing would completely defeat.
+> >
+> > So I think the fix here should be to understand the maps construction
+> > code for the modules, try to work out why maps__fixup_end wasn't
+> > called, perhaps migrate the code to maps__fixup_overlap_and_insert or
+> > add a missed maps__fixup_end call.
 >
-> For simplicity, it's only activated with --summary-mode=3Dtotal in system=
--
-> wide mode.  And it also skips to calculate stddev as doing it atomically
-> would add more overheads (i.e. requiring a spinlock).  It can be extended
-> to cover more use cases later, if needed.
+> IIUC module size in /proc/modules are wrong due to the reason in the
+> commit 876e80cf83d10585 ("perf tools: Fixup end address of modules") and
+> it called maps__fixup_end() for that.
 >
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Makefile.perf                      |   2 +-
->  tools/perf/builtin-trace.c                    |  41 ++++--
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/bpf-trace-summary.c           | 117 ++++++++++++++++++
->  .../perf/util/bpf_skel/syscall_summary.bpf.c  | 109 ++++++++++++++++
->  tools/perf/util/bpf_skel/syscall_summary.h    |  18 +++
->  tools/perf/util/trace.h                       |  31 +++++
->  7 files changed, 311 insertions(+), 8 deletions(-)
->  create mode 100644 tools/perf/util/bpf-trace-summary.c
->  create mode 100644 tools/perf/util/bpf_skel/syscall_summary.bpf.c
->  create mode 100644 tools/perf/util/bpf_skel/syscall_summary.h
->  create mode 100644 tools/perf/util/trace.h
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 55d6ce9ea52fb2a5..3b68a57682ca991d 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1198,7 +1198,7 @@ SKELETONS +=3D $(SKEL_OUT)/bperf_leader.skel.h $(SK=
-EL_OUT)/bperf_follower.skel.h
->  SKELETONS +=3D $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.=
-skel.h
->  SKELETONS +=3D $(SKEL_OUT)/off_cpu.skel.h $(SKEL_OUT)/lock_contention.sk=
-el.h
->  SKELETONS +=3D $(SKEL_OUT)/kwork_trace.skel.h $(SKEL_OUT)/sample_filter.=
-skel.h
-> -SKELETONS +=3D $(SKEL_OUT)/kwork_top.skel.h
-> +SKELETONS +=3D $(SKEL_OUT)/kwork_top.skel.h $(SKEL_OUT)/syscall_summary.=
-skel.h
->  SKELETONS +=3D $(SKEL_OUT)/bench_uprobe.skel.h
->  SKELETONS +=3D $(SKEL_OUT)/augmented_raw_syscalls.skel.h
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index f55a8a6481f27f99..1c7af7583bc560c4 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -55,6 +55,7 @@
->  #include "util/thread_map.h"
->  #include "util/stat.h"
->  #include "util/tool.h"
-> +#include "util/trace.h"
->  #include "util/util.h"
->  #include "trace/beauty/beauty.h"
->  #include "trace-event.h"
-> @@ -222,6 +223,7 @@ struct trace {
->         bool                    force;
->         bool                    vfs_getname;
->         bool                    force_btf;
-> +       bool                    summary_bpf;
->         int                     trace_pgfaults;
->         char                    *perfconfig_events;
->         struct {
-> @@ -4276,6 +4278,13 @@ static int trace__run(struct trace *trace, int arg=
-c, const char **argv)
->
->         trace->live =3D true;
->
-> +       if (trace->summary_bpf) {
-> +               if (trace_prepare_bpf_summary() < 0)
-> +                       goto out_delete_evlist;
-> +
-> +               goto create_maps;
-> +       }
-> +
->         if (!trace->raw_augmented_syscalls) {
->                 if (trace->trace_syscalls && trace__add_syscall_newtp(tra=
-ce))
->                         goto out_error_raw_syscalls;
-> @@ -4334,6 +4343,7 @@ static int trace__run(struct trace *trace, int argc=
-, const char **argv)
->         if (trace->cgroup)
->                 evlist__set_default_cgroup(trace->evlist, trace->cgroup);
->
-> +create_maps:
->         err =3D evlist__create_maps(evlist, &trace->opts.target);
->         if (err < 0) {
->                 fprintf(trace->output, "Problems parsing the target to tr=
-ace, check your options!\n");
-> @@ -4426,9 +4436,11 @@ static int trace__run(struct trace *trace, int arg=
-c, const char **argv)
->         if (err < 0)
->                 goto out_error_apply_filters;
->
-> -       err =3D evlist__mmap(evlist, trace->opts.mmap_pages);
-> -       if (err < 0)
-> -               goto out_error_mmap;
-> +       if (!trace->summary_bpf) {
-> +               err =3D evlist__mmap(evlist, trace->opts.mmap_pages);
-> +               if (err < 0)
-> +                       goto out_error_mmap;
-> +       }
->
->         if (!target__none(&trace->opts.target) && !trace->opts.target.ini=
-tial_delay)
->                 evlist__enable(evlist);
-> @@ -4441,6 +4453,9 @@ static int trace__run(struct trace *trace, int argc=
-, const char **argv)
->                 evlist__enable(evlist);
->         }
->
-> +       if (trace->summary_bpf)
-> +               trace_start_bpf_summary();
-> +
->         trace->multiple_threads =3D perf_thread_map__pid(evlist->core.thr=
-eads, 0) =3D=3D -1 ||
->                 perf_thread_map__nr(evlist->core.threads) > 1 ||
->                 evlist__first(evlist)->core.attr.inherit;
-> @@ -4508,12 +4523,17 @@ static int trace__run(struct trace *trace, int ar=
-gc, const char **argv)
->
->         evlist__disable(evlist);
->
-> +       if (trace->summary_bpf)
-> +               trace_end_bpf_summary();
-> +
->         if (trace->sort_events)
->                 ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
->
->         if (!err) {
->                 if (trace->summary) {
-> -                       if (trace->summary_mode =3D=3D SUMMARY__BY_TOTAL)
-> +                       if (trace->summary_bpf)
-> +                               trace_print_bpf_summary(trace->sctbl, tra=
-ce->output);
-> +                       else if (trace->summary_mode =3D=3D SUMMARY__BY_T=
-OTAL)
->                                 trace__fprintf_total_summary(trace, trace=
-->output);
->                         else
->                                 trace__fprintf_thread_summary(trace, trac=
-e->output);
-> @@ -4529,6 +4549,7 @@ static int trace__run(struct trace *trace, int argc=
-, const char **argv)
->         }
->
->  out_delete_evlist:
-> +       trace_cleanup_bpf_summary();
->         delete_syscall_stats(trace->syscall_stats);
->         trace__symbols__exit(trace);
->         evlist__free_syscall_tp_fields(evlist);
-> @@ -5446,6 +5467,15 @@ int cmd_trace(int argc, const char **argv)
->                 goto skip_augmentation;
->         }
->
-> +       if (!argc && target__none(&trace.opts.target))
-> +               trace.opts.target.system_wide =3D true;
-> +
-> +       if (trace.summary_only && trace.opts.target.system_wide &&
-> +           trace.summary_mode =3D=3D SUMMARY__BY_TOTAL && !trace.trace_p=
-gfaults) {
-> +               trace.summary_bpf =3D true;
-> +               goto skip_augmentation;
-> +       }
-> +
->         trace.skel =3D augmented_raw_syscalls_bpf__open();
->         if (!trace.skel) {
->                 pr_debug("Failed to open augmented syscalls BPF skeleton"=
-);
-> @@ -5649,9 +5679,6 @@ int cmd_trace(int argc, const char **argv)
->                 goto out_close;
->         }
->
-> -       if (!argc && target__none(&trace.opts.target))
-> -               trace.opts.target.system_wide =3D true;
-> -
->         if (input_name)
->                 err =3D trace__replay(&trace);
->         else
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 034a6603d5a8e8b0..ba4201a6f3c69753 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -171,6 +171,7 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf_off_cpu.o
->  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf-filter.o
->  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf-filter-flex.o
->  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf-filter-bison.o
-> +perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D bpf-trace-summary.o
->  perf-util-$(CONFIG_PERF_BPF_SKEL) +=3D btf.o
->
->  ifeq ($(CONFIG_LIBTRACEEVENT),y)
-> diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-tr=
-ace-summary.c
-> new file mode 100644
-> index 0000000000000000..7e8b1c9b3faeee4f
-> --- /dev/null
-> +++ b/tools/perf/util/bpf-trace-summary.c
-> @@ -0,0 +1,117 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <inttypes.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +
-> +#include "syscalltbl.h"
-> +#include "util/trace.h"
-> +#include "util/util.h"
-> +#include <bpf/bpf.h>
-> +#include <linux/time64.h>
-> +
-> +#include "bpf_skel/syscall_summary.h"
-> +#include "bpf_skel/syscall_summary.skel.h"
-> +
-> +
-> +static struct syscall_summary_bpf *skel;
-> +
-> +int trace_prepare_bpf_summary(void)
-> +{
-> +       skel =3D syscall_summary_bpf__open_and_load();
-> +       if (skel =3D=3D NULL) {
-> +               fprintf(stderr, "failed to load syscall summary bpf skele=
-ton\n");
-> +               return -1;
-> +       }
-> +
-> +       if (syscall_summary_bpf__attach(skel) < 0) {
-> +               fprintf(stderr, "failed to attach syscall summary bpf ske=
-leton\n");
-> +               return -1;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +void trace_start_bpf_summary(void)
-> +{
-> +       skel->bss->enabled =3D 1;
-> +}
-> +
-> +void trace_end_bpf_summary(void)
-> +{
-> +       skel->bss->enabled =3D 0;
-> +}
-> +
-> +struct syscall_data {
-> +       int syscall_nr;
-> +       struct syscall_stats stats;
-> +};
-> +
-> +static int datacmp(const void *a, const void *b)
-> +{
-> +       const struct syscall_data *sa =3D a;
-> +       const struct syscall_data *sb =3D b;
-> +
-> +       return sa->stats.total_time > sb->stats.total_time ? -1 : 1;
-> +}
-> +
-> +int trace_print_bpf_summary(struct syscalltbl *sctbl, FILE *fp)
-> +{
-> +       struct syscall_key *prev_key, key;
-> +       struct syscall_data *data =3D NULL;
-> +       struct bpf_map *map =3D skel->maps.syscall_stats_map;
-> +       int nr_data =3D 0;
-> +       int printed =3D 0;
-> +
-> +       /* get stats from the bpf map */
-> +       prev_key =3D NULL;
-> +       while (!bpf_map__get_next_key(map, prev_key, &key, sizeof(key))) =
-{
-> +               struct syscall_stats stat;
-> +
-> +               if (!bpf_map__lookup_elem(map, &key, sizeof(key), &stat, =
-sizeof(stat), 0)) {
-> +                       struct syscall_data *tmp, *pos;
-> +
-> +                       tmp =3D realloc(data, sizeof(*data) * (nr_data + =
-1));
-> +                       if (tmp =3D=3D NULL)
-> +                               break;
-> +
-> +                       data =3D tmp;
-> +                       pos =3D &data[nr_data++];
-> +
-> +                       pos->syscall_nr =3D key.nr;
-> +                       memcpy(&pos->stats, &stat, sizeof(stat));
-> +               }
-> +
-> +               prev_key =3D &key;
-> +       }
-> +
-> +       qsort(data, nr_data, sizeof(*data), datacmp);
-> +
-> +       printed +=3D fprintf(fp, "\n");
-> +
-> +       printed +=3D fprintf(fp, "   syscall            calls  errors  to=
-tal       min       avg       max       stddev\n");
-> +       printed +=3D fprintf(fp, "                                     (m=
-sec)    (msec)    (msec)    (msec)        (%%)\n");
-> +       printed +=3D fprintf(fp, "   --------------- --------  ------ ---=
------ --------- --------- ---------     ------\n");
-> +
-> +       for (int i =3D 0; i < nr_data; i++) {
-> +               struct syscall_data *pos =3D &data[i];
-> +               double total =3D (double)(pos->stats.total_time) / NSEC_P=
-ER_MSEC;
-> +               double min =3D (double)(pos->stats.min_time) / NSEC_PER_M=
-SEC;
-> +               double max =3D (double)(pos->stats.max_time) / NSEC_PER_M=
-SEC;
-> +               double avg =3D total / pos->stats.count;
-> +
-> +               printed +=3D fprintf(fp, "   %-15s", syscalltbl__name(sct=
-bl, pos->syscall_nr));
-> +               printed +=3D fprintf(fp, " %8u %6u %9.3f %9.3f %9.3f %9.3=
-f %9.2f%%\n",
-> +                                  pos->stats.count, pos->stats.error, to=
-tal, min, avg, max,
-> +                                  /*stddev=3D*/0.0);
-> +       }
+> But the problem is some BPF maps processed at real-time during the
+> build-id processing at the end of perf record.  One map is inside of
+> another and check_invariants() didn't expect such maps and crashed.
 
-What is the behavior here if there is greater than 1 type of system
-call ABI happening? For example, if you run a 32-bit and 64-bit binary
-simultaneously while tracing system wide. Perhaps the BPF doing the
-stats on the kernel side means this just works. Perhaps the system
-call names are going to be messed up.
-
-Ideally I'd like:
-https://lore.kernel.org/lkml/20250219185657.280286-1-irogers@google.com/
-merged to avoid a rebase on this, and trying to tackle any issues this
-change introduces for that series.
+I thought the real-time processing had to use
+maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
+events only give us VMA data and two mmaps may have been merged.
+Shouldn't doing this change be the simplest fix?
 
 Thanks,
 Ian
 
-> +
-> +       printed +=3D fprintf(fp, "\n\n");
-> +       free(data);
-> +
-> +       return printed;
-> +}
-> +
-> +void trace_cleanup_bpf_summary(void)
-> +{
-> +       syscall_summary_bpf__destroy(skel);
-> +}
-> diff --git a/tools/perf/util/bpf_skel/syscall_summary.bpf.c b/tools/perf/=
-util/bpf_skel/syscall_summary.bpf.c
-> new file mode 100644
-> index 0000000000000000..e573ce39de73eaf3
-> --- /dev/null
-> +++ b/tools/perf/util/bpf_skel/syscall_summary.bpf.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Trace raw_syscalls tracepoints to collect system call statistics.
-> + */
-> +
-> +#include "vmlinux.h"
-> +#include "syscall_summary.h"
-> +
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +/* This is to calculate a delta between sys-enter and sys-exit for each =
-thread */
-> +struct syscall_trace {
-> +       int nr; /* syscall number is only available at sys-enter */
-> +       int unused;
-> +       u64 timestamp;
-> +};
-> +
-> +#define MAX_ENTRIES    (16 * 1024)
-> +
-> +struct syscall_trace_map {
-> +       __uint(type, BPF_MAP_TYPE_HASH);
-> +       __type(key, int); /* tid */
-> +       __type(value, struct syscall_trace);
-> +       __uint(max_entries, MAX_ENTRIES);
-> +} syscall_trace_map SEC(".maps");
-> +
-> +struct syscall_stats_map {
-> +       __uint(type, BPF_MAP_TYPE_HASH);
-> +       __type(key, struct syscall_key);
-> +       __type(value, struct syscall_stats);
-> +       __uint(max_entries, MAX_ENTRIES);
-> +} syscall_stats_map SEC(".maps");
-> +
-> +int enabled; /* controlled from userspace */
-> +
-> +static void update_stats(int nr, s64 duration, long ret)
-> +{
-> +       struct syscall_key key =3D { .nr =3D nr, };
-> +       struct syscall_stats *stats;
-> +
-> +       stats =3D bpf_map_lookup_elem(&syscall_stats_map, &key);
-> +       if (stats =3D=3D NULL) {
-> +               struct syscall_stats zero =3D {};
-> +
-> +               bpf_map_update_elem(&syscall_stats_map, &key, &zero, BPF_=
-NOEXIST);
-> +               stats =3D bpf_map_lookup_elem(&syscall_stats_map, &key);
-> +               if (stats =3D=3D NULL)
-> +                       return;
-> +       }
-> +
-> +       __sync_fetch_and_add(&stats->count, 1);
-> +       if (ret < 0)
-> +               __sync_fetch_and_add(&stats->error, 1);
-> +
-> +       if (duration > 0) {
-> +               __sync_fetch_and_add(&stats->total_time, duration);
-> +               if (stats->max_time < duration)
-> +                       stats->max_time =3D duration;
-> +               if (stats->min_time > duration || stats->min_time =3D=3D =
-0)
-> +                       stats->min_time =3D duration;
-> +       }
-> +
-> +       return;
-> +}
-> +
-> +SEC("tp_btf/sys_enter")
-> +int sys_enter(u64 *ctx)
-> +{
-> +       int tid;
-> +       struct syscall_trace st;
-> +
-> +       if (!enabled)
-> +               return 0;
-> +
-> +       st.nr =3D ctx[1]; /* syscall number */
-> +       st.unused =3D 0;
-> +       st.timestamp =3D bpf_ktime_get_ns();
-> +
-> +       tid =3D bpf_get_current_pid_tgid();
-> +       bpf_map_update_elem(&syscall_trace_map, &tid, &st, BPF_ANY);
-> +
-> +       return 0;
-> +}
-> +
-> +SEC("tp_btf/sys_exit")
-> +int sys_exit(u64 *ctx)
-> +{
-> +       int tid;
-> +       long ret =3D ctx[1]; /* return value of the syscall */
-> +       struct syscall_trace *st;
-> +       s64 delta;
-> +
-> +       if (!enabled)
-> +               return 0;
-> +
-> +       tid =3D bpf_get_current_pid_tgid();
-> +       st =3D bpf_map_lookup_elem(&syscall_trace_map, &tid);
-> +       if (st =3D=3D NULL)
-> +               return 0;
-> +
-> +       delta =3D bpf_ktime_get_ns() - st->timestamp;
-> +       update_stats(st->nr, delta, ret);
-> +
-> +       bpf_map_delete_elem(&syscall_trace_map, &tid);
-> +       return 0;
-> +}
-> +
-> +char _license[] SEC("license") =3D "GPL";
-> diff --git a/tools/perf/util/bpf_skel/syscall_summary.h b/tools/perf/util=
-/bpf_skel/syscall_summary.h
-> new file mode 100644
-> index 0000000000000000..644dc7049377147e
-> --- /dev/null
-> +++ b/tools/perf/util/bpf_skel/syscall_summary.h
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +/* Data structures shared between BPF and tools. */
-> +#ifndef UTIL_BPF_SKEL_SYSCALL_SUMMARY_H
-> +#define UTIL_BPF_SKEL_SYSCALL_SUMMARY_H
-> +
-> +struct syscall_key {
-> +       int nr;
-> +};
-> +
-> +struct syscall_stats {
-> +       u64 total_time;
-> +       u64 max_time;
-> +       u64 min_time;
-> +       u32 count;
-> +       u32 error;
-> +};
-> +
-> +#endif /* UTIL_BPF_SKEL_SYSCALL_SUMMARY_H */
-> diff --git a/tools/perf/util/trace.h b/tools/perf/util/trace.h
-> new file mode 100644
-> index 0000000000000000..4d7a7c4544d94caf
-> --- /dev/null
-> +++ b/tools/perf/util/trace.h
-> @@ -0,0 +1,31 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef UTIL_TRACE_H
-> +#define UTIL_TRACE_H
-> +
-> +#include <stdio.h>  /* for FILE */
-> +
-> +struct syscalltbl;
-> +
-> +#ifdef HAVE_BPF_SKEL
-> +
-> +int trace_prepare_bpf_summary(void);
-> +void trace_start_bpf_summary(void);
-> +void trace_end_bpf_summary(void);
-> +int trace_print_bpf_summary(struct syscalltbl *sctbl, FILE *fp);
-> +void trace_cleanup_bpf_summary(void);
-> +
-> +#else /* !HAVE_BPF_SKEL */
-> +
-> +static inline int trace_prepare_bpf_summary(void) { return -1; }
-> +static inline void trace_start_bpf_summary(void) {}
-> +static inline void trace_end_bpf_summary(void) {}
-> +static inline int trace_print_bpf_summary(struct syscalltbl *sctbl __may=
-be_unused,
-> +                                         FILE *fp __maybe_unused)
-> +{
-> +       return 0;
-> +}
-> +static inline void trace_cleanup_bpf_summary(void) {}
-> +
-> +#endif /* HAVE_BPF_SKEL */
-> +
-> +#endif /* UTIL_TRACE_H */
-> --
-> 2.48.1.601.g30ceb7b040-goog
+> Maybe we can fix maps__insert() to check such condition and fix it
+> everytime.  But it means it needs to sort the maps which would add big
+> overhead we had before.  So I just wanted to set the flag quickly and
+> to fix the end address when it calls maps__find() or similar later.
 >
+> Thanks,
+> Namhyung
+>
+> >
+> > Given the blame I kind of feel responsible for this, but the real
+> > issue is adding the invariant checks has caught a latent bug that the
+> > rb-tree code would have just ignored and possibly been broken as a
+> > consequence. I lack bandwidth and a reproduction so thank you for
+> > digging into this.
+> >
+> > Thanks,
+> > Ian
