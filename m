@@ -1,212 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D5E158520;
-	Mon, 24 Feb 2025 01:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93719BE40;
+	Mon, 24 Feb 2025 01:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740361390; cv=none; b=foDlpodlQLg3nbzVjeWhIu5c2fUP7n0VXPWTh3qjR1LGoec1c9eQNkwEP2EhjxZ7UIglyfgnM5Ka82YG10rSPw+sYcMM7x++vQp1Xw7wTJa/Z6rtInXKGXtbNbSgTNL90EEJWPOAyHaTzmQAezxFCa+vxbe+uDh7IKkYaK4lrEQ=
+	t=1740361989; cv=none; b=jDoxkFoj/9IyKEtPtOHe0M2bM0udZo/9LTN9GcDwNjX5LG87oMtxtDoSN6snrnBsl4tzGgKPzA1slbKQfYukRkOGm1TM6ukKd3LHDv8eZg8dPd9n3xYttMJldHWSvU05/0i4k0v/IR8Lm10jtKcvbpiq3JieTqAomN3VfOPlkFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740361390; c=relaxed/simple;
-	bh=s8sv5qb6pgFnrR0f38MWn2U4qzSyEbnuVcoxEpRBLmM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pmXvTSHEV4SmJ13/B1ExYBTZNuBEuJNXsmnwdLP4ra9eOQs/TRftGogQOYqeVifky4iDAT1dqzLsZJZYgcHhxdvlydqihsmfCBvI2IyHCCGagank3VDbo6BX3Jh4c+SO5F0rW8uPDOeuuY5ecfUwbAZzEzSWOF1M5VSxj1++9f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QiP6zlkq; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740361989; c=relaxed/simple;
+	bh=6ikVNs1Lm/B+JSWTCi9hCbgykU2ecAZBuRwQTpMt/GA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dWIM7/vZyV5HJtJ1vdSn2a4kJwjwlvdQSFMxmmOQKxDY5adrueBzfMJb+8GRjU5Z0ndIY+GslC3ti22Zo0btPkeOw+j/2YUfrE4b2hd1dbSzKVHQuyHZxgeoXbaLjghe48hax+3KgdgCjyL0+VLVaSRGLoReA0XHz6TwmB5LA6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pBn8N8H/; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QiP6zlkq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740361388; x=1771897388;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s8sv5qb6pgFnrR0f38MWn2U4qzSyEbnuVcoxEpRBLmM=;
-  b=QiP6zlkq3inKnoE/vUku18IVO/WCzpHtMVWQJqngHLU1aSQEQJhkHC4s
-   XB67cJjlGTHYWY4zqA+OyavF9Pkki1BY4agDy2+XNBqJqsIywjsToP6gl
-   e38hkqWSAH10EyZyVSYp5t5shdxNGtLOOaEfqfRLBEhpN9KGuZ+vfRcuS
-   zDmEdpZDCh2H1/pi3QX83caLIHD9bk0dWEiMj2uLmmz7/gpJDGaE2Ifrt
-   MCUCiJcN1tWGgM6Qaifjl/E8/X1VpqyngUNx7ouM0t2+ztBsUu1/XZ8Em
-   W28V0RLw5D45CihRW6zJoGkZtsK6Iy/zRk2Y5fTTJI6cKxeaTft3sy+jP
-   Q==;
-X-CSE-ConnectionGUID: D93yo9rlRtiBrJD0nPsFfQ==
-X-CSE-MsgGUID: 5x1hqogVQ/yO05vMerhRHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="40293798"
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="40293798"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 17:43:08 -0800
-X-CSE-ConnectionGUID: eFE4hpiCR/K1rk5C9Q+wJw==
-X-CSE-MsgGUID: 4dp0fR39TUmc2iMIf6gykA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="115892919"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa006.jf.intel.com with ESMTP; 23 Feb 2025 17:43:05 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 2/2] perf tools/tests: Fix topdown groups test on hybrid platforms
-Date: Mon, 24 Feb 2025 08:33:06 +0000
-Message-Id: <20250224083306.71813-2-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250224083306.71813-1-dapeng1.mi@linux.intel.com>
-References: <20250224083306.71813-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pBn8N8H/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740361977; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=oEmpU6CxySYSJOx99iwbmfKn56SP3FGaigjsO4xV1Bw=;
+	b=pBn8N8H/9CyllR+P5VLZRJO2wTSl9KOJLODMLBgqEH8JiGt6xF07DiOVFaXMBKeNv0VbdWv8KeIgaKDGoe8MLQkxptXykcvDjZpjxT1afCrX6F0xEssPCMMrPCRSc3ilai9ON70UaMCrxqR+BPrrF+OzdLdV+wx5gTHMFauGhRM=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQ1RZA4_1740361975 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Feb 2025 09:52:56 +0800
+Message-ID: <f532b261-631f-41ac-813e-cb351eb1f8f3@linux.alibaba.com>
+Date: Mon, 24 Feb 2025 09:52:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] perf/dwc_pcie: fix some unreleased resources
+To: Yunhui Cui <cuiyunhui@bytedance.com>, renyu.zj@linux.alibaba.com,
+ will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250220121716.50324-1-cuiyunhui@bytedance.com>
+ <20250220121716.50324-2-cuiyunhui@bytedance.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250220121716.50324-2-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-When running topdown groups test on hybrid platforms like LNL/ARL, we
-see the following 2 commands fail.
 
-perf stat $cputype -e '{instructions,slots},topdown-retiring' true
-perf stat $cputype -e '{instructions,slots},{topdown-retiring}' true
 
-Take the 1st command as an example, 5 events are created on hybrid
-platform. They are cpu_atom/instructions/, cpu_core/instructions/,
-cpu_core/slots/, cpu_atom/topdown-retiring/ and
-cpu_core/topdown-retiring/ events. The former 3 events are in a group
-and the latter 2 topdown-retiring events are independent events.
+在 2025/2/20 20:17, Yunhui Cui 写道:
+> Release leaked resources, such as plat_dev and dev_info.
+> 
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
+>   1 file changed, 22 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index cccecae9823f..19fa2ba8dd67 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -572,8 +572,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+>   		return PTR_ERR(plat_dev);
+>   
+>   	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
+> -	if (!dev_info)
+> +	if (!dev_info) {
+> +		platform_device_unregister(plat_dev);
+>   		return -ENOMEM;
+> +	}
+>   
+>   	/* Cache platform device to handle pci device hotplug */
+>   	dev_info->plat_dev = plat_dev;
+> @@ -730,6 +732,15 @@ static struct platform_driver dwc_pcie_pmu_driver = {
+>   	.driver = {.name = "dwc_pcie_pmu",},
+>   };
+>   
+> +static void dwc_pcie_cleanup_devices(void)
+> +{
+> +	struct dwc_pcie_dev_info *dev_info, *tmp;
+> +
+> +	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
+> +		dwc_pcie_unregister_dev(dev_info);
+> +	}
+> +}
+> +
+>   static int __init dwc_pcie_pmu_init(void)
+>   {
+>   	struct pci_dev *pdev = NULL;
+> @@ -742,7 +753,7 @@ static int __init dwc_pcie_pmu_init(void)
+>   		ret = dwc_pcie_register_dev(pdev);
+>   		if (ret) {
+>   			pci_dev_put(pdev);
+> -			return ret;
+> +			goto err_cleanup;
+>   		}
+>   	}
+>   
+> @@ -751,35 +762,35 @@ static int __init dwc_pcie_pmu_init(void)
+>   				      dwc_pcie_pmu_online_cpu,
+>   				      dwc_pcie_pmu_offline_cpu);
+>   	if (ret < 0)
+> -		return ret;
+> +		goto err_cleanup;
+>   
+>   	dwc_pcie_pmu_hp_state = ret;
+>   
+>   	ret = platform_driver_register(&dwc_pcie_pmu_driver);
+>   	if (ret)
+> -		goto platform_driver_register_err;
+> +		goto err_remove_cpuhp;
+>   
+>   	ret = bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
+>   	if (ret)
+> -		goto platform_driver_register_err;
+> +		goto err_unregister_driver;
+>   	notify = true;
+>   
+>   	return 0;
+>   
+> -platform_driver_register_err:
+> +err_unregister_driver:
+> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
+> +err_remove_cpuhp:
+>   	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+> -
+> +err_cleanup:
+> +	dwc_pcie_cleanup_devices();
+>   	return ret;
+>   }
+>   
+>   static void __exit dwc_pcie_pmu_exit(void)
+>   {
+> -	struct dwc_pcie_dev_info *dev_info, *tmp;
+> -
+>   	if (notify)
+>   		bus_unregister_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
+> -	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node)
+> -		dwc_pcie_unregister_dev(dev_info);
+> +	dwc_pcie_cleanup_devices();
+>   	platform_driver_unregister(&dwc_pcie_pmu_driver);
+>   	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+>   }
 
-As the limitation of current implementation, the
-cpu_core/topdown-retiring/ event can't be moved into previous group as
-long as there are other events before it. That's the reason why we see
-the failure.
 
-Thus add "--cputype core" option to limit only P-core events are tested.
+LGTM. Thanks.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/perf/arch/x86/util/evlist.c | 26 +++++++++++++++++++++++---
- tools/perf/tests/shell/stat.sh    | 20 ++++++++++++++++++--
- 2 files changed, 41 insertions(+), 5 deletions(-)
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 447a734e591c..0a71ba975871 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -9,7 +9,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- {
- 	/*
- 	 * Currently the following topdown events sequence are supported to
--	 * move and regroup correctly.
-+	 * move and regroup correctly on non-hybrid platforms.
- 	 *
- 	 * a. all events in a group
- 	 *    perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
-@@ -44,7 +44,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 	 * topdown metrics events must be first event after the slots event group,
- 	 * otherwise topdown metrics events can't be regrouped correctly, e.g.
- 	 *
--	 * a. perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
-+	 * e. perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
- 	 *    WARNING: events were regrouped to match PMUs
- 	 *     Performance counter stats for 'CPU(s) 0':
- 	 *         17,923,134      slots
-@@ -56,11 +56,31 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 	 * has topdown metrics events must contain only the topdown metrics event,
- 	 * otherwise topdown metrics event can't be regrouped correctly as well, e.g.
- 	 *
--	 * a. perf stat -e "{instructions,slots},{topdown-retiring,cycles}" -C0 sleep 1
-+	 * f. perf stat -e "{instructions,slots},{topdown-retiring,cycles}" -C0 sleep 1
- 	 *    WARNING: events were regrouped to match PMUs
- 	 *    Error:
- 	 *    The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
- 	 *    event (topdown-retiring)
-+	 *
-+	 * For hybrid platforms, the sequences 'c' and 'd' are not supported as well
-+	 * besides above sequences 'e' and 'f'.
-+	 *
-+	 *    perf stat -e "{instructions,slots},topdown-retiring" -C0 sleep 1
-+	 *    perf stat -e "{instructions,slots},{topdown-retiring}" -C0 sleep 1
-+	 *
-+	 * On hybrid platforms each event would create an instance on all types of PMU
-+	 * if the event can be supported by the PMU, i.e., the "topdown-retiring" event
-+	 * would create two instances on hybrid platforms with P-cores and E-cores,
-+	 * "cpu_core/topdown-retiring/" and "cpu_atom/topdown_retiring".
-+	 *
-+	 * Take the first command as an example, the events list would be converted to
-+	 * below list in fact.
-+	 *
-+	 * "{cpu_atom/instructions/,cpu_core/instructions/,cpu_core/slots/},
-+	 *  cpu_atom/topdown-retiring/,cpu_core/topdown-retiring/"
-+	 *
-+	 * This is actually same with event list in case 'e', "cpu_core/topdown-retiring/"
-+	 * event can't be moved into previous events group.
- 	 */
- 	if (topdown_sys_has_perf_metrics() &&
- 	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 68323d636fb7..cdfe27c25528 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -5,6 +5,16 @@
- set -e
- 
- err=0
-+is_hybrid=false
-+
-+check_hybrid_platform() {
-+  pmus=$(ls /sys/bus/event_source/devices/*/cpus 2>/dev/null | wc -l)
-+  if [ "$pmus" -gt 1 ]
-+  then
-+    is_hybrid=true
-+  fi
-+}
-+
- test_default_stat() {
-   echo "Basic stat command test"
-   if ! perf stat true 2>&1 | grep -E -q "Performance counter stats for 'true':"
-@@ -62,6 +72,11 @@ test_topdown_groups() {
-   # Topdown events must be grouped with the slots event first. Test that
-   # parse-events reorders this.
-   echo "Topdown event group test"
-+  cputype=""
-+  if $is_hybrid
-+  then
-+    cputype="--cputype core"
-+  fi
-   if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
-   then
-     echo "Topdown event group test [Skipped event parsing failed]"
-@@ -85,13 +100,13 @@ test_topdown_groups() {
-     err=1
-     return
-   fi
--  if perf stat -e '{instructions,slots},topdown-retiring' true 2>&1 | grep -E -q "<not supported>"
-+  if perf stat $cputype -e '{instructions,slots},topdown-retiring' true 2>&1 | grep -E -q "<not supported>"
-   then
-     echo "Topdown event group test [Failed topdown metrics event not move into slots group]"
-     err=1
-     return
-   fi
--  if perf stat -e '{instructions,slots},{topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
-+  if perf stat $cputype -e '{instructions,slots},{topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
-   then
-     echo "Topdown event group test [Failed topdown metrics group not merge into slots group]"
-     err=1
-@@ -200,6 +215,7 @@ test_hybrid() {
-   echo "hybrid test [Success]"
- }
- 
-+check_hybrid_platform
- test_default_stat
- test_stat_record_report
- test_stat_record_script
--- 
-2.40.1
-
+Shuai
