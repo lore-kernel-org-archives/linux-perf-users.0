@@ -1,275 +1,150 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1D266184
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 18:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464326139E
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 18:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423038; cv=none; b=uzdn36NBu04NhMXFZ+geaDTJ3+ISxfeIJrRRK7nVDxakK6L4bozDeq/isDCgpK6pDqnl6jdpHXc2xJ87Y/1H2TgKwtB7Tbh8FMV57gvYP+lAmVCTiWCU+JQjfbfJSWKFoNrb7Y+CvNur/YYWyWQ0FttGvDng+XvCxNJZThPNOho=
+	t=1740423069; cv=none; b=urs/s5F2H3f0ISBIs2ZpXmdb6uaFCYPb+jNf74kol7hYu8NJ+HA4p9MwEXxuY6sI0wryHJlRwSP8huoYDLccPnq/l0J+QmlOvqqztMzSlwIrkEzyYJXcwIjoafnSxpiLN9GXBDylLV3HoNoPodi/hI9NUIMU3XVJSyuudE4Q5k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423038; c=relaxed/simple;
-	bh=5CaLqSIq4mCnOOx0MhA6jcrVXhqB1DEJiNOTtn0cTGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ruzgTEe8i9OnI/i8XGxsik40+Sk2com8BKcSvNNnI3ogFDnVJg3jrCbwmhPZd8QLZ61OEx+ZXjByq2D7VE9WWVt3wokSEV3mApux/wF2PXAArd65KTFL6jTJP9XKahDBZbgJt0CZ+LH8cNgYAeuRPe9G4f0f88t6u6VJiK42HgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VxdP2LC4; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1740423069; c=relaxed/simple;
+	bh=SLA+bDmdTB6ULu5zbTamkrhePwVhtRIJqJ5avVgZmLw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=enN/e2l1ov1I6axXryrR1WWXBQO645ls2bP/+TY2IbokKLNsSRjb8d4hCCczhO6kDQOxOoBUV86jB6CNiFiqBuiJib5gN/ORGR+Ybp0ZQYje0SXX87oSuwmy0v2IVVEFtcZb9iWXFEplA62DGw28BQMM5f2gptQgNh5JoeWmh4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WvcMtr3B; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VxdP2LC4"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22117c396baso20395ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 10:50:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WvcMtr3B"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc404aaed5so15728773a91.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 10:51:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740423036; x=1741027836; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p9zPz9Dl0COcxVGhQTNW8N2OAhun/SnyUt3wbyp6XG8=;
-        b=VxdP2LC4bPJvxzeCXZ7n/ytoFv3tkVu6JsgyKBecDU7y+/6G5xIOtptJWTie4QruEu
-         3miA30qoTNStdflA3D1YwtHXOg4Y+VxASYBXqUQeKxVoNAdfKX9XZqqhycXWL/6e57Fz
-         eqS7eWsATQGlfKkPJRuvAdIUnLkHKte5hX0fFTrJEpIWb1/nVPa0LK1L6+iEF0N9iLsV
-         UHpwUvGyAda6Su0Q1LGR5HErczHijtOCzw4SICS3m2QThHBiLbXtURlhntmQztqFqNUl
-         cbxXWfQ/sn/8yVRp2J0Q+ZRVm64l6aUlpPXY4jR4273KE9n8B6jx+VvNDHhGFZaStCrI
-         dZ6Q==
+        d=google.com; s=20230601; t=1740423067; x=1741027867; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6PFYTBhXyGigxmAagzwCn1stPWOoCBAs7wU0xTcNHU0=;
+        b=WvcMtr3BKhpwlWndhLCmA9p/SXdw8LBk8rv920dZiUXptu+fxUPfgkuVEqMGsFtn62
+         lB3nvxKNrEbYYvP3yDNi4+AxkRi9hdz5FEeshlw5j1/ZPsYvgA9wyYxY/VHximaGl4jY
+         2NNFvg8CEeolnF8BKsH+czxzPtjg8Cke7hLSnWrqXL0kaEMi0a1Grs/GVmpZGo89jaEl
+         6MEKkDdQ7p8inbdzGU0SQkfKeoBCzvO1NSPPEauwMOJLQDly0jks3e7vQp0ua9vvLkxl
+         IKYaer807SgneOy413O1zo06G954bbUvsl3dZmUwj2MNTxql5F1axXwN8oQvfvCKYxrw
+         HO7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740423036; x=1741027836;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p9zPz9Dl0COcxVGhQTNW8N2OAhun/SnyUt3wbyp6XG8=;
-        b=MJ6+9voadRzp01MXuPWXqojL2aJMS45Kf+iRY4/IYxToWxUg9wdG0NrOngAJQ9Xm69
-         Bp2zh0ue0blak+i5HgYunoH2HP0yFrRRHKQfj2we+H21YbWdVJgCZwtrdCd1B17sRoWd
-         pMRcgq6MScgynFllzsGUar2tRgaAA3WkYOqUD8UL2pV4UZnLkg0p4cNkQ1Z5hDBaalxd
-         DSVTpBuEiGMgm/NlAQjWHLuKRvKl2T+O295S814cltYrQd9P74COvL/NWlJbjYWql2Q1
-         TIUAgn2uLT944kKevxX/jaLTIY2xlZD0jwzzYf3TkN+Ec5HghA3tj3YDvkyctbzYIvpw
-         vJ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3tuWZPzG5J4e9y9kxDuTsUbUnAzYlw1+OLnsZloP1AGo46wg88/IIYYWIHa7IW1XR3SXp/vONNM46pQYGXXwC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMudpwTMjCaFna7h86lhbPikzud2nDee8HrqTO1Pxn5YzfHEsV
-	0ugSp2g/9J11kGVg6b0t5TGqga3zzTx+gKq6JXnczhEMNYyjxRoSu12u3bFwXhTkKE78cJcZd9i
-	0dRJKvhDj04Yl65aHu0Sh8kKCEft8TzWPuKhE
-X-Gm-Gg: ASbGncv8BbI5FGds+RNjeqmap79cLYTb4TlFz8gFulY6UKbjewmM4pFDHQhUWFhod7X
-	Ks5x10M0Mweca/Z6VU9nb8qbVAOegTLKIH+X3n2+i3LCUXA5Y2jmGR8bBUGOe07+/DPG6Navkr5
-	aa0NofE86+s5TrjIQ/Oaer+xg4wCjznd8mcN0=
-X-Google-Smtp-Source: AGHT+IF4iy7Cr6LyEEeDuwD4QeXjKkepRemJp0RPuKz+bUm+oM1sBypRaykIARZw7zxRPsFInMQ7EtobdxMm+8z6kEQ=
-X-Received: by 2002:a17:903:22ce:b0:212:26e:1b46 with SMTP id
- d9443c01a7336-22307a9740cmr453145ad.23.1740423035520; Mon, 24 Feb 2025
- 10:50:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740423067; x=1741027867;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6PFYTBhXyGigxmAagzwCn1stPWOoCBAs7wU0xTcNHU0=;
+        b=Ac2j3WO01esdrKlQ5bF0Xs6tPEBU1Y2rzvU9dI44Tuu7sk+rdMM/mjXyWUF5sIPg0Q
+         7up3PIydz5tDEBBEeggNGOXW1o7FF3e8rt4QEUw81jerCc45iJaP2YhhsnrlFCloOMt0
+         zdFZvKxw8lp8ymaSBK1jAluIEAY5ztY6Ic3pGHuQlw962g8+U+jQ9aF4kjdjZXqKJo5q
+         725YdHdRvnvqmWuHsln1sXqM5JtUo2ezUbHVBKZw2E0edOgctXtOM1JupkM/d31WiTdq
+         XSpkcswGvCyazj72BGbGI5kEaaGWUOr+ey+SkGqwrxPfmIT2es4fI3rM0kfRu4KpWXkD
+         abIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhD2oBtsO5lbpzARn8w+e43UoViMyuVQ0vf45VyHHrUAUAhritsjAMopPsLYput5dAEGsCqnPEebZ1ifFOXw2W@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP2x4gzHS98TmYJLbhGAMfeuzlPmrT9QRX2yvbOc9nL3aTOTzf
+	liHmqLmaOerCiB3xnTH6hhnoOy5fNM6aS08aB2sxtbsEouXTJSwN/nVZbT8ubA/xio+VOAClsKB
+	UIw==
+X-Google-Smtp-Source: AGHT+IHBJ0S/vfoZwcwLL32RzZSgNFIQA2ntgsWLkZmiVrk9sGPlhL4/XXbPVBWMgrB6QkbBP2cKfAL4f2M=
+X-Received: from pjbph4.prod.google.com ([2002:a17:90b:3bc4:b0:2fc:3022:36b4])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:2fa:1e3e:9be0
+ with SMTP id 98e67ed59e1d1-2fce78c9247mr22071548a91.19.1740423067265; Mon, 24
+ Feb 2025 10:51:07 -0800 (PST)
+Date: Mon, 24 Feb 2025 10:42:50 -0800
+In-Reply-To: <20250224184742.4144931-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240627200353.1230407-1-namhyung@kernel.org> <CAP-5=fWSpM7NL7UjXZBN8WHNAE7hGe1ghQ6_DqFe2VjTCGoA7A@mail.gmail.com>
- <CAM9d7cibrW=K=GZB_zsURB1Ff6Eok7qy3rVt83VVM6pVhv+Agg@mail.gmail.com>
-In-Reply-To: <CAM9d7cibrW=K=GZB_zsURB1Ff6Eok7qy3rVt83VVM6pVhv+Agg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Feb 2025 10:50:24 -0800
-X-Gm-Features: AWEUYZnbjIOlvNwJafq1_Xk-12VDEFP9TXTd1RynT8x8YsqpDfDJmh1ZtcqMoB8
-Message-ID: <CAP-5=fVmybd=WTKS3kvsF+VU_Lrke9hEvNyBtunAHBw-6ViZig@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf stat: Use field separator in the metric header
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Mime-Version: 1.0
+References: <20250224184742.4144931-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250224184742.4144931-4-ctshao@google.com>
+Subject: [PATCH v7 3/4] perf lock: Make rb_tree helper functions generic
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2024 at 3:24=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Thu, Jun 27, 2024 at 1:48=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Thu, Jun 27, 2024 at 1:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > It didn't use the passed field separator (using -x option) when it
-> > > prints the metric headers and always put "," between the fields.
-> > >
-> > > Before:
-> > >   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-on=
-ly true
-> > >   core,cpus,%  tma_core_bound:     <<<--- here: "core,cpus," but ":" =
-expected
-> > >   S0-D0-C0:2:10.5:
-> > >   S0-D0-C1:2:14.8:
-> > >   S0-D0-C2:2:9.9:
-> > >   S0-D0-C3:2:13.2:
-> > >
-> > > After:
-> > >   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-on=
-ly true
-> > >   core:cpus:%  tma_core_bound:
-> > >   S0-D0-C0:2:10.5:
-> > >   S0-D0-C1:2:15.0:
-> > >   S0-D0-C2:2:16.5:
-> > >   S0-D0-C3:2:12.5:
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++------=
---
-> > >  1 file changed, 29 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-di=
-splay.c
-> > > index 91d2f7f65df7..e8673c9f6b49 100644
-> > > --- a/tools/perf/util/stat-display.c
-> > > +++ b/tools/perf/util/stat-display.c
-> > > @@ -47,16 +47,27 @@ static int aggr_header_lens[] =3D {
-> > >  };
-> > >
-> > >  static const char *aggr_header_csv[] =3D {
-> > > -       [AGGR_CORE]     =3D       "core,cpus,",
-> > > -       [AGGR_CACHE]    =3D       "cache,cpus,",
-> > > -       [AGGR_DIE]      =3D       "die,cpus,",
-> > > -       [AGGR_SOCKET]   =3D       "socket,cpus,",
-> > > -       [AGGR_NONE]     =3D       "cpu,",
-> > > -       [AGGR_THREAD]   =3D       "comm-pid,",
-> > > -       [AGGR_NODE]     =3D       "node,",
-> > > +       [AGGR_CORE]     =3D       "core%scpus%s",
-> > > +       [AGGR_CACHE]    =3D       "cache%scpus%s",
-> > > +       [AGGR_DIE]      =3D       "die%scpus%s",
-> > > +       [AGGR_SOCKET]   =3D       "socket%scpus%s",
-> > > +       [AGGR_NONE]     =3D       "cpu%s",
-> > > +       [AGGR_THREAD]   =3D       "comm-pid%s",
-> > > +       [AGGR_NODE]     =3D       "node%s",
-> > >         [AGGR_GLOBAL]   =3D       ""
-> > >  };
-> > >
-> > > +static int aggr_header_num[] =3D {
-> > > +       [AGGR_CORE]     =3D       2,
-> > > +       [AGGR_CACHE]    =3D       2,
-> > > +       [AGGR_DIE]      =3D       2,
-> > > +       [AGGR_SOCKET]   =3D       2,
-> > > +       [AGGR_NONE]     =3D       1,
-> > > +       [AGGR_THREAD]   =3D       1,
-> > > +       [AGGR_NODE]     =3D       1,
-> > > +       [AGGR_GLOBAL]   =3D       0,
-> > > +};
-> > > +
-> > >  static const char *aggr_header_std[] =3D {
-> > >         [AGGR_CORE]     =3D       "core",
-> > >         [AGGR_CACHE]    =3D       "cache",
-> > > @@ -1185,8 +1196,18 @@ static void print_metric_headers_csv(struct pe=
-rf_stat_config *config,
-> > >  {
-> > >         if (config->interval)
-> > >                 fputs("time,", config->output);
-> > > -       if (!config->iostat_run)
-> > > +       if (config->iostat_run)
-> > > +               return;
-> > > +
-> >
-> > Having a static count of commas seems somewhat error prone, perhaps:
-> > ```
-> > const char *header =3D aggr_header_csv[config->aggr_mode];
-> > if (config->csv_sep =3D=3D ',' || !strchr(header, ',')) {
-> >   fputs(config->output, header);
-> > } else {
-> >   char *tmp =3D strdup(header);
-> >   char *p =3D tmp;
-> >    while (p && *p) {
-> >       if (p =3D=3D ',')
-> >         *p =3D config->csv_sep;
-> >      p++;
-> >    }
-> >   fputs(config->output, tmp);
-> >   free(tmp);
-> > }
-> > ```
->
-> Looks good.  But I think we should handle longer separators like -x ":::"=
-.
-> Will do in v2.
+The rb_tree helper functions can be reused for parsing `owner_lock_stat`
+into rb tree for sorting.
 
-Hi Namhyung,
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/builtin-lock.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
-It looks like this has been forgotten. Did you have a v2?
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5d405cd8e696..9bebc186286f 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -418,16 +418,13 @@ static void combine_lock_stats(struct lock_stat *st)
+ 	rb_insert_color(&st->rb, &sorted);
+ }
+ 
+-static void insert_to_result(struct lock_stat *st,
+-			     int (*bigger)(struct lock_stat *, struct lock_stat *))
++static void insert_to(struct rb_root *rr, struct lock_stat *st,
++		      int (*bigger)(struct lock_stat *, struct lock_stat *))
+ {
+-	struct rb_node **rb = &result.rb_node;
++	struct rb_node **rb = &rr->rb_node;
+ 	struct rb_node *parent = NULL;
+ 	struct lock_stat *p;
+ 
+-	if (combine_locks && st->combined)
+-		return;
+-
+ 	while (*rb) {
+ 		p = container_of(*rb, struct lock_stat, rb);
+ 		parent = *rb;
+@@ -439,13 +436,21 @@ static void insert_to_result(struct lock_stat *st,
+ 	}
+ 
+ 	rb_link_node(&st->rb, parent, rb);
+-	rb_insert_color(&st->rb, &result);
++	rb_insert_color(&st->rb, rr);
+ }
+ 
+-/* returns left most element of result, and erase it */
+-static struct lock_stat *pop_from_result(void)
++static inline void insert_to_result(struct lock_stat *st,
++				    int (*bigger)(struct lock_stat *,
++						  struct lock_stat *))
++{
++	if (combine_locks && st->combined)
++		return;
++	insert_to(&result, st, bigger);
++}
++
++static inline struct lock_stat *pop_from(struct rb_root *rr)
+ {
+-	struct rb_node *node = result.rb_node;
++	struct rb_node *node = rr->rb_node;
+ 
+ 	if (!node)
+ 		return NULL;
+@@ -453,8 +458,15 @@ static struct lock_stat *pop_from_result(void)
+ 	while (node->rb_left)
+ 		node = node->rb_left;
+ 
+-	rb_erase(node, &result);
++	rb_erase(node, rr);
+ 	return container_of(node, struct lock_stat, rb);
++
++}
++
++/* returns left most element of result, and erase it */
++static struct lock_stat *pop_from_result(void)
++{
++	return pop_from(&result);
+ }
+ 
+ struct trace_lock_handler {
+-- 
+2.48.1.658.g4767266eb4-goog
 
-Thanks,
-Ian
-
-> > I'm somewhat surprised that we have no metric tests in the stat output
-> > tests like tools/perf/tests/shell/stat+csv_output.sh. Perhaps we can
-> > add the following:
-> > ```
-> > diff --git a/tools/perf/tests/shell/lib/stat_output.sh
-> > b/tools/perf/tests/shell/lib/stat_output.sh
-> > index 9a176ceae4a3..a920b2d78abb 100644
-> > --- a/tools/perf/tests/shell/lib/stat_output.sh
-> > +++ b/tools/perf/tests/shell/lib/stat_output.sh
-> > @@ -148,6 +148,14 @@ check_per_socket()
-> >        echo "[Success]"
-> > }
-> >
-> > +check_metric_only()
-> > +{
-> > +        echo -n "Checking $1 output: metric only "
-> > +        perf stat --metric-only $2 -e instructions,cycles true
-> > +        commachecker --metric-only
-> > +        echo "[Success]"
-> > +}
-> > +
-> > # The perf stat options for per-socket, per-core, per-die
-> > # and -A ( no_aggr mode ) uses the info fetched from this
-> > # directory: "/sys/devices/system/cpu/cpu*/topology". For
-> > diff --git a/tools/perf/tests/shell/stat+csv_output.sh
-> > b/tools/perf/tests/shell/stat+csv_output.sh
-> > index fc2d8cc6e5e0..d6807dbab931 100755
-> > --- a/tools/perf/tests/shell/stat+csv_output.sh
-> > +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> > @@ -44,6 +44,7 @@ function commachecker()
-> >        ;; "--per-die")         exp=3D8
-> >        ;; "--per-cluster")     exp=3D8
-> >        ;; "--per-cache")       exp=3D8
-> > +        ;; "--metric-only")     exp=3D2
-> >        esac
-> >
-> >        while read line
-> > @@ -83,6 +84,7 @@ then
-> >        check_per_cluster "CSV" "$perf_cmd"
-> >        check_per_die "CSV" "$perf_cmd"
-> >        check_per_socket "CSV" "$perf_cmd"
-> > +        check_metric_only "CSV" "$perf_cmd"
-> > else
-> >        echo "[Skip] Skipping tests for system_wide_no_aggr, per_core,
-> > per_die and per_socket since
-> > socket id exposed via topology is invalid"
-> > fi
-> > ```
-> > It is using the hard coded metrics and it looks like the header
-> > printing for that is broken, but this is so often the case for stat
-> > output :-(
->
-> Right, I also noticed something in the header.  One more work
-> item to the list.
->
-> Anyway, I'll add it to the test case!
->
-> Thanks,
-> Namhyung
->
-> >
-> > > +       if (aggr_header_num[config->aggr_mode] =3D=3D 1) {
-> > > +               fprintf(config->output, aggr_header_csv[config->aggr_=
-mode],
-> > > +                       config->csv_sep);
-> > > +       } else if (aggr_header_num[config->aggr_mode] =3D=3D 2) {
-> > > +               fprintf(config->output, aggr_header_csv[config->aggr_=
-mode],
-> > > +                       config->csv_sep, config->csv_sep);
-> > > +       } else {
-> > >                 fputs(aggr_header_csv[config->aggr_mode], config->out=
-put);
-> > > +       }
-> > >  }
-> > >
-> > >  static void print_metric_headers_json(struct perf_stat_config *confi=
-g __maybe_unused,
-> > > --
-> > > 2.45.2.803.g4e1b14247a-goog
-> > >
