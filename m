@@ -1,46 +1,53 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F13DA2036EB;
-	Mon, 24 Feb 2025 16:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D89725A645
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 16:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740413150; cv=none; b=PiaDcnKjBr6IrekwBdzuetKK6A6iYlTTg+PyPAovsEkpipUrdU5X/amzHMkMKzasrGxxmY/rCYMiC4UczC/4t9wZzQzy6Q667f1mPqptjQtsQx/bc75/+mVoJpfUE5ywEVJbgIwWiX3ZA25eOwNt0e8lKk0zOS/Ql2Tmlwz4+7A=
+	t=1740413165; cv=none; b=dpnDCsGKYkF8Gmd9b0zLWEDhXJNHhIv8n3bCNpqP+ge8i7fusMatTfyS011R02SKGam2sCFgQmfyxv1PKaIk69eigM4bg85YPsaQx24Hh9VESgEFl256Yz/UvmPHol7WxP/6so9ACosFgYdRqF+Jvyyl1o+QYXzbmgGnDdM/e7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740413150; c=relaxed/simple;
-	bh=I5i93RapKVBB7nGJyYUbYjj4Pg4I16EXwIBHbvBtTVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EpEPdFgkFl1lakfgh+vnbkly1KTbaQYEVOSQ8nvMyaXjmD+fZuYJ7PZVnEZiEkzAofy7vk68C+NqJRG7B0wbi8aWiDbINUNcAxqc6vwFskUX6TzR2I/9rUcfskrT7cFUDEF5+u2aiTiwqll/m4vA0NQxI+k06VI/Wmj8fgpnCwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 074DE1477;
-	Mon, 24 Feb 2025 08:06:05 -0800 (PST)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0BE73F6A8;
-	Mon, 24 Feb 2025 08:05:45 -0800 (PST)
-Date: Mon, 24 Feb 2025 16:05:43 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
- <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
- <20250224140317.GF8144@e132581.arm.com>
+	s=arc-20240116; t=1740413165; c=relaxed/simple;
+	bh=YWUl+a5cX5KM4ikHh6TaNDaTlXnWy2RhWw3AzOjOCP0=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EIC/sB8AWPc1Dj+XPYs9BYeF6GzxN83lUI69z+Qt33QxyunJAP/OS25Z1I/8lxYZfIeikcbMQU2VV11INHkYGihBk/Su1Pvsw9QINDvg5n02+cakA6pduCVqBANna6gwkOqwvXmLDvbUZ6q5/ZeJBy1cTkI9nJ6vIl57CJcqczI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so10168525a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 08:06:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740413162; x=1741017962;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EcmrN+BYS4IRFQV/39dTbtFzO4rbtdB3L2PAycfaSYI=;
+        b=UPR7t4DwFrHXTyS1Q05lyRLH2Hb+Y7Jxim8e4NhVKbC80I/y306xuK70DMMB8MRhoJ
+         MRmJbdfEn2q4KwcxMwOSXzSfB1gb10VXrRZRcq0Iz3FRaHoFwtLpTJJER3d2YnmL3MJN
+         m83YXKB42PEyE/Vr01nlv0X6NJpkMM9mumHAqRvlfcrCZNhCZBys8jW9HBMhVhdpYQ1N
+         jH6rO1ZgU09O+/+3MB8cJpW5QdGVFxFOh+V411iWEXJOWU6H7XcayCNYkjsSjxDBbzpN
+         09E1UizMN4I2o+ARTFwoVufrhHNmI4t7c/SojYBrJUTawph9wW+TEtFKuKeGKNfr4DVG
+         regg==
+X-Gm-Message-State: AOJu0Yxmx47kq7C7tQrs1nIsfZ9yNlgjAF8C3pL9tFoHaBOLR+hggDXh
+	QBRHpbE4lR3pn5XkHPeC+Tl1cAwlIkck5b2d94CsDsnW+PpAOiuqbmFCmQ==
+X-Gm-Gg: ASbGncvNCJBufjX3F9GvhhMH1g2F63Fu5LzpBse61RfOxV28bMkjsHxbZuu86yfWm2j
+	cPtugoMWBmVkE7pqv2f1Ntu0yDJFlej1wqcfTalh9ZGPBEM6pnMywB+IN7IkuAAllQx1a9yj8Zl
+	9BY0lOfN1e/YpUFARQjiRhutL9oBNKUrEuBZDOFcBYoT7PmIo5KQI+kXZLxCmdXl1buYU1eqbV3
+	mC0wPPre2oNy9aRXQ6RLNfcCZR7d1yXZGsljNDfw3EoFnoLIgZjMKqrNpwRIsKUJNlJSfMcJOB0
+	UHY7xz175i0lmG2b
+X-Google-Smtp-Source: AGHT+IHg+gM4oKiJxkneoZZSEiuJLF3jRlkp8J7IlrG19D10gQwMUws/8drOd5JJkeRTb62lPuEMoQ==
+X-Received: by 2002:a05:6402:5241:b0:5e0:7d70:bc73 with SMTP id 4fb4d7f45d1cf-5e0b634dcd6mr12478881a12.13.1740413161642;
+        Mon, 24 Feb 2025 08:06:01 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:5::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e02ebeaaa1sm15644021a12.5.2025.02.24.08.05.59
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 08:06:00 -0800 (PST)
+Date: Mon, 24 Feb 2025 08:05:57 -0800
+From: Breno Leitao <leitao@debian.org>
+To: linux-perf-users@vger.kernel.org
+Subject: Internal error while annotating function
+Message-ID: <20250224-accurate-pigeon-of-adventure-386dcd@leitao>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,106 +57,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224140317.GF8144@e132581.arm.com>
 
-On Mon, Feb 24, 2025 at 02:03:17PM +0000, Leo Yan wrote:
-> On Mon, Feb 24, 2025 at 06:46:35AM -0600, Rob Herring wrote:
-> > On Mon, Feb 24, 2025 at 6:25 AM Leo Yan <leo.yan@arm.com> wrote:
-> > > On Tue, Feb 18, 2025 at 02:40:06PM -0600, Rob Herring (Arm) wrote:
-> > > >
-> > > > From: Anshuman Khandual <anshuman.khandual@arm.com>
-> > >
-> > > [...]
-> > >
-> > > > BRBE records are invalidated whenever events are reconfigured, a new
-> > > > task is scheduled in, or after recording is paused (and the records
-> > > > have been recorded for the event). The architecture allows branch
-> > > > records to be invalidated by the PE under implementation defined
-> > > > conditions. It is expected that these conditions are rare.
-> > >
-> > > [...]
-> > >
-> > > > +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
-> > > > +{
-> > > > +       struct arm_pmu *armpmu = *this_cpu_ptr(&cpu_armpmu);
-> > > > +       struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-> > > > +
-> > > > +       if (!hw_events->branch_users)
-> > > > +               return;
-> > > > +
-> > > > +       if (sched_in)
-> > > > +               brbe_invalidate();
-> > > > +}
-> > >
-> > > Just a minor concern.  I don't see any handling for task migration.
-> > > E.g., for a task is migrated from one CPU to another CPU, I expect we
-> > > need to save and restore branch records based on BRBE injection.  So
-> > > far, the driver simply invalidates all records.
-> > >
-> > > I think this topic is very likely discussed before.  If this is the
-> > > case, please ignore my comment.  Except this, the code looks good
-> > > to me.
-> > 
-> > Not really discussed on the list, but that was present in v18 (though
-> > not functional because .sched_task() hook wasn't actually enabled) and
-> > Mark removed it. His work is here[1].The only comment was:
-> > 
-> > Note: saving/restoring at context-switch doesn't interact well with
-> > event rotation (e.g. if filters change)
-> 
-> In the brbe_enable() function, it "Merge the permitted branch filters
-> of all events".  Based on current implementation, all events share the
-> same branch filter.
+Hello,
 
-Critically, the brbe_enable() function merges the filters of all
-*active* events which have been installed into hardware. It does not
-track all events which can be rotated, and the resulting filter is not
-the same -- it can change as a result of rotation.
+I am trying to run annotate a perf function on aarch64, and it returns
+an error. How do I get the logs for what is happening?
 
-> When event rotation happens, if without context switch, in theory we
-> should can directly use the branch record (no invalidation, no injection)
-> for all events.
+Here is what I see, in either `perf top` or `perf report`:
 
-No; that only works in *some* cases, and will produce incorrect results
-in others.
+1) Open the TUI
+2) Get on top of a specific hot function. Not all of them reproduce the
+   error. For instance, one of these functions is `finish_task_switch`
+3) Press "Annotate finish_task_switch"
+4) Got the following error:
 
-For example, consider filtering. Imagine a PMU with a single counter,
-and two events, where event-A filters for calls-and-returns and event-B
-filters for calls-only. When switching from event-A to event-B, it's
-theoretically possible to keep the existing records around, knowing that
-the returns can be filtered out later. When switching from event-B to
-event-A we cannot keep the existing records, since there are gaps
-whenever a return should have been recorded.
+	┌─Error:──────────────────────────────┐
+	│Couldn't annotate finish_task_switch:│
+	│Internal error: Invalid -1 error code│
+	│                                     │
+	│                                     │
+	│Press any key...                     │
+	└─────────────────────────────────────┘
 
-There are a number of cases of that shape given the set of configurable
-filters. In theory it's possible to retain those in some cases, but I
-don't think that the complexity is justified.
+At the bottom I also see:
 
-Similarly, whenever kernel branches are recorded it's necessary to drop
-the stale branches whenever branch recording is paused, as there's
-necessarily a blackout period and hence a gap in the records.
+	Error running objdump  --start-address=0xffff800080907fa0 --stop-address=0xffff800080908220  -d --no-show-raw-insn -S      -C "$1"
 
-Do you think that you have a case where losing branches across rotation
-*really* matters?
+If I try to run this manually, I see the following. Is this the real
+cause?
 
-> For a context-switch case, we need to save and re-inject branch record.
-> BRBE record sticks to a process context, no matter what events have been
-> enabled.
+	# objdump  --start-address=0xffff800080907fa0 --stop-address=0xffff800080908220  -d --no-show-raw-insn -S -C /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
 
-I had originally wanted to keep per-event records around, but it doesn't
-work in all cases. One reason events get discarded at context-switch
-time is that CPU-bound events can sample branches, and would
-mis-attribute stale userspace branches to the wrong context when
-switching tasks. There are explicit comments about this in
-amd_pmu_brs_sched_task() and intel_pmu_lbr_sched_task().
+	objdump: /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: unknown type [0x13] section `.relr.dyn'
+	objdump: /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: unknown type [0x13] section `.relr.dyn'
+	/boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da:     file format elf64-little
+	objdump: can't disassemble for architecture UNKNOWN!
 
-Given we discard records when reprogramming events, we *could* try to
-preserve events in some cases, but I suspect that as with the rotation
-case this'll be a lot of complexity for little gain. Note that as we
-discard events when enabling the PMU, we'd throw some task-bound records
-away anyway, and practically the gain would be limited to cpu-bound
-records.
+The file seems to be a valid aarch64 binary:
 
-Do you have a reason why you think we *must* keep events around?
+	$ file /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+	/boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: symbolic link to /lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+	$ file /lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+	/lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=be549c9fd62405a10f6b36236610cd6a57a6d3e3, with debug_info, not stripped
 
-Mark.
+Any clue how to investigate this further?
+
+Thanks
+--breno
