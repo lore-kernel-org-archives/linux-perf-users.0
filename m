@@ -1,263 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403871EDA34
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 06:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD2635949;
+	Mon, 24 Feb 2025 07:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740380381; cv=none; b=oLuXJJc994l+pMjyf+bnKoE77xHINAeW6I+jvdUJ8owSX2zrqx4sE3C8E8hT78Lr75hvVwVRX5/rXQ4kd09bzO4KZFj/cGg1ZnzIM3J5Nn46TN/QJcWsX4feCK+aQCO2Nsv38K2jFzOj0/sYXHqrcAiUAVYdktY7/31+nHLxnlI=
+	t=1740382279; cv=none; b=YXp81VjfkwdIQqARXyBB62ylYgu9t1eHGdlf1niBw6h67xLE0Luk6Urnbd7NfinsZADjobD2w9Q3xMwbRKY8DA2uQwsoXVowZycVCb+a9wVnZFJXH1WLPoqQFk7UpsJT39aEKsf6P5LHUjtNB5w0L/WKVxhpSMW99P93XJvWfTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740380381; c=relaxed/simple;
-	bh=nFEavu4Ewv/3qJrHuRj0dePzP+eIja+IoXlXLHWI6kc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rALoFIq3EH1fdbyZiDAWJZ8mZNX5ew6NjmBLNm3CiYEsZ+agI/sRZ4YdrFvkw7DeoHzMvn/pRgjCNYx94uG5ACKM7vanZVeVXw8OJkmAZE3QrzHClKCo163z6jPCHyKp0GICzp+gURRdCzuragG9/14RT43rOCctQfzvFOtT14Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c4njQr4w; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740382279; c=relaxed/simple;
+	bh=6Vux+9H8ClY2pt6ERsaHUcicqiz2Ducfgs2C7k+Rxw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SYjTQNgFYRSEjjC4hwtrzD3KovMeyoSIx2OCSIIVIAIyiSpZU9Pr2CAdFdNylx39zlQFqFpuNEHq4ESsO/27GRCweXgKAeo2I1/rmq1+oFYmux58PGb+vzEgJ0ADD51VE1ucshTMF2xVv1/g0EcgKrFZ/0QVQj+AjkJOSkSLqBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AsMt3S/Q; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c4njQr4w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740380378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Xjv6Wg61SE3BMhCZvWBcequxsAP/eykX/Cti4AqIAE=;
-	b=c4njQr4wpLHgq16KVRrb0AtCQgSns9w+9KYlTOUTsigPpAJPDzboCvbaHBTRN0YWAtaGBW
-	gcW1g2leaPelCPxycfZRDfoYjk3QH4lYEIXV3/27RfU6Vcmwaaa95sALFqFEGaGiiUQ+J8
-	edboqXFerzzfBN2jHp0jVCBd8SFQHPs=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-687-9m52nPjDM7uKJnCH9lPIbQ-1; Mon, 24 Feb 2025 01:59:36 -0500
-X-MC-Unique: 9m52nPjDM7uKJnCH9lPIbQ-1
-X-Mimecast-MFC-AGG-ID: 9m52nPjDM7uKJnCH9lPIbQ_1740380375
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fc261eca15so9828089a91.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Feb 2025 22:59:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740380375; x=1740985175;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Xjv6Wg61SE3BMhCZvWBcequxsAP/eykX/Cti4AqIAE=;
-        b=IjU8x5sK1pthh3Ykm2VnE6Sh6S7/5tUPYNF4PCxKlNOWadxAkhCyykbm9ar9AeUBzb
-         UOxaeXpQ1tsn0YrGO8fjrUNMCDa2DFIYGKwy0VVRC3fKBJ9le9dGo7XaePsfZINkJXhk
-         BvUEkyx08Iji/40w9kmXOBFIOWCcDzYkWfeTXqe+bbjr3tM5VyQb/bropnEnlJWTDyqG
-         +QbsJeaoqjVMoJoKQnOOojP0+gseJG+lU2uZCcoOykdIHPzE1+c6VKqqG3PLqff8iCYW
-         mYz2pjpEYCIUcKfPizTyGz7TFIYcN6GVaz3eBiKqGAHQ6sB/4RlSx8aUg6DbKKpf2w0j
-         zPig==
-X-Forwarded-Encrypted: i=1; AJvYcCVQgpfXquri2lC9J7WRnZj6OqegsVVqwvHC4ypNnHYRvID1LWMOsWgKuFXMb5NelbANgcjDjywpQFVxl+s7o/X7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY+GPGVA9KueK5GS55w0WDXAY5NKJgdbL+3StZHA2TyEdmsc3Z
-	Eib8T3HLsz/VCXXt5zqy/WKML74ltS/ymPZOmzoZBqqJZV1E99kit6ycM5UhbX95dBrgPJPU3jB
-	jBLPFQHmuj/XEOlbqCal/AkJh6OvCn5z5Q0t3/XXKVXwgQIWI1i7KGihKbroXgty6mmsaSuoQ4O
-	AMg5JsDzIHRNBQhSSNEPklQc3hZMSUrVC4gxXXjlRe7g==
-X-Gm-Gg: ASbGncu2F2I0rnbPhWHC8AzftgFaibj54KYFLC3mtgldV7+ozwXQySXB7DrQxzm7i8K
-	bGpxaWYZGy6Y7T1nElFKckBPkiOdCb5HHuqxEMy3Wxl+I+zh3tBle1vuPBBSCvgiNrN9zdk+Y1A
-	==
-X-Received: by 2002:a17:90b:4c04:b0:2ee:8253:9a9f with SMTP id 98e67ed59e1d1-2fccc97a25bmr27992083a91.11.1740380375065;
-        Sun, 23 Feb 2025 22:59:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFPtfDmUsGVjz5x/+BNbagxX0tEUSX8ZGxGEgkmmPjMQXpC2xI5eCWFURiqFperPzPA7OdejAp1OymiCWVQUQY=
-X-Received: by 2002:a17:90b:4c04:b0:2ee:8253:9a9f with SMTP id
- 98e67ed59e1d1-2fccc97a25bmr27992033a91.11.1740380374255; Sun, 23 Feb 2025
- 22:59:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AsMt3S/Q"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51O7UL3h542569
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 23 Feb 2025 23:30:22 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51O7UL3h542569
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740382223;
+	bh=TeiLPSpazN8lCJ+dY5HZXFK2ebNNvqeFBMhxstgbSoY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AsMt3S/QCcp4YqmtHt2CLr9mFhZdPLKPfYGWnZWAeyYpW+49DCYSWdOGlFb92fml0
+	 G3nrkrG1TkKZtowCnVP5tvKTC36kgXSLPF799IOwFKWIZzwZ1TqzkVPuPk1kyhlXG4
+	 6cCondFoQuo7uAOT/J8EqHc3cizxlWDCT4tLjCzgkEO/OKtDAqS5ofwl0NGj408DrS
+	 Z47FSQAGmgrtgn85yfAPo9VgrnaKzXMF7Qzwimn1FpBANCU8sl5SRfTa3U0Dr/MAra
+	 PW6cRW26S5wijW5Q5aRXchpRol6BvRYlT4ZvpEupHdRCw5xq9/Us5x9ctV5cgNtNyk
+	 nl0hYnNEW3hrg==
+Message-ID: <52bf4850-b66c-4692-8827-8995793607c3@zytor.com>
+Date: Sun, 23 Feb 2025 23:30:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241122231233.79509-1-vmolnaro@redhat.com> <1eeb7a39-8c75-4bc3-8be6-d3d1fc0e1a61@redhat.com>
- <8f62887e-f3c5-4b43-8c77-897564dc971e@redhat.com> <Z4vv0_-GP5bbNPAj@google.com>
-In-Reply-To: <Z4vv0_-GP5bbNPAj@google.com>
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Mon, 24 Feb 2025 14:59:21 +0800
-X-Gm-Features: AWEUYZlVx0jOvOB-zHhvanBXcWXLxrNXxXiOZBQXqA7hfTAtL_Qe12bQTyteE6I
-Message-ID: <CAATMXfkOjMoaOP0LTD58+R0LikpEXi+Sa7g86=6y8EWX5WBZVA@mail.gmail.com>
-Subject: Re: [PATCH] perf test stat_all_pmu.sh: Correctly check 'perf stat' result
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Veronika Molnarova <vmolnaro@redhat.com>, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com, 
-	mpetlan@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/5] x86/cpufeatures: Add the CPU feature bit for MSR
+ immediate form instructions
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250106070727.3211006-6-xin@zytor.com>
+ <20250222163001.GUZ7n7iRc88PTMQi9_@fat_crate.local>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250222163001.GUZ7n7iRc88PTMQi9_@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jan 19, 2025 at 2:15=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> On Thu, Jan 16, 2025 at 01:31:21PM +0100, Veronika Molnarova wrote:
-> >
-> >
-> > On 12/10/24 16:20, Veronika Molnarova wrote:
-> > >
-> > >
-> > > On 11/23/24 00:12, vmolnaro@redhat.com wrote:
-> > >> From: Veronika Molnarova <vmolnaro@redhat.com>
-> > >>
-> > >> Test case "stat_all_pmu.sh" is not correctly checking 'perf stat' ou=
-tput
-> > >> due to a poor design. Firstly, having the 'set -e' option with a tra=
-p
-> > >> catching the sigexit causes the shell to exit immediately if 'perf s=
-tat' ends
-> > >> with any non-zero value, which is then caught by the trap reporting =
-an
-> > >> unexpected signal. This causes events that should be parsed by the i=
-f-else
-> > >> statement to be caught by the trap handler and are reported as error=
-s:
-> > >>
-> > >>     $ perf test -vv "perf all pmu"
-> > >>     Testing i915/actual-frequency/
-> > >>     Unexpected signal in main
-> > >>     Error:
-> > >>     Access to performance monitoring and observability operations is=
- limited.
-> > >>
-> > >> Secondly, the if-else branches are not exclusive as the checking if =
-the
-> > >> event is present in the output log covers also the "<not supported>"
-> > >> events, which should be accepted, and also the "Bad name events", wh=
-ich
-> > >> should be rejected.
-> > >>
-> > >> Remove the "set -e" option from the test case, correctly parse the
-> > >> "perf stat" output log and check its return value. Add the missing
-> > >> outputs for the 'perf stat' result and also add logs messages to
-> > >> report the branch that parsed the event for more info.
-> > >
-> > > Hi Ian,
-> > >
-> > > is there anything that I am missing? If so would be great to know the=
- idea
-> > > of your patch. This issue is getting quite old so would be great to g=
-et a proper
-> > > fix together.
-> > >
-> > > Thanks,
-> > > Veronika
-> >
-> > Hello,
-> >
-> > just wanted to ping the patch. Would be great to sort it out and close =
-the issue.
->
-> Ian, are you ok with this?
->
+On 2/22/2025 8:30 AM, Borislav Petkov wrote:
+> On Sun, Jan 05, 2025 at 11:07:27PM -0800, Xin Li (Intel) wrote:
+>> The immediate form of MSR access instructions are primarily motivated by
+>> performance, not code size: by having the MSR number in an immediate, it
+>> is available *much* earlier in the pipeline, which allows the hardware
+>> much more leeway about how a particular MSR is handled.
+>>
+>> Add a new CPU feature word for CPUID.7.1.ECX and then the CPU feature bit
+>> for MSR immediate form.
+> 
+> Nope, scattered.c.
 
-Just ping again for this patch, can this fix be acked?
+Oh, neat.
 
-And I already tested this patch and it works well on the ppc64le system.
+>> @@ -476,6 +476,9 @@
+>>   #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
+>>   #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
+>>   
+>> +/* Intel-defined CPU features, CPUID level 0x00000007:1 (ECX), word 22 */
+>> +#define X86_FEATURE_MSR_IMM		(22*32+ 5) /* "msr_imm" MSR immediate form instructions */
+> 
+> Also no "msr_imm": Documentation/arch/x86/cpuinfo.rst
 
-Tested-by: Qiao Zhao <qzhao@redhat.com>
+My bad.
 
-- Qiao
+> 
+> In any case, this patch doesn't belong in this set.
+> 
 
-> Thanks,
-> Namhyung
->
-> > >>
-> > >> Fixes: 7e73ea40295620e7 ("perf test: Ignore security failures in all=
- PMU test")
-> > >> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> > >> ---
-> > >>  tools/perf/tests/shell/stat_all_pmu.sh | 48 ++++++++++++++++++-----=
+Right.
+
+I tried to show that we don't need to make the following changes due to
+NCAPINTS increased to 23 if this patch is based on this patch set.
+
+But if this feature is added through scattered.c, NCAPINTS is not even
+changed...
+
+Thanks!
+     Xin
+
 ---
-> > >>  1 file changed, 34 insertions(+), 14 deletions(-)
-> > >>
-> > >> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tes=
-ts/shell/stat_all_pmu.sh
-> > >> index 8b148b300be1131e..9c466c0efa857fc2 100755
-> > >> --- a/tools/perf/tests/shell/stat_all_pmu.sh
-> > >> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
-> > >> @@ -2,7 +2,6 @@
-> > >>  # perf all PMU test (exclusive)
-> > >>  # SPDX-License-Identifier: GPL-2.0
-> > >>
-> > >> -set -e
-> > >>  err=3D0
-> > >>  result=3D""
-> > >>
-> > >> @@ -16,34 +15,55 @@ trap trap_cleanup EXIT TERM INT
-> > >>  # Test all PMU events; however exclude parameterized ones (name con=
-tains '?')
-> > >>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph=
-:]]\+[[:space:]]//g')
-> > >>  do
-> > >> -  echo "Testing $p"
-> > >> -  result=3D$(perf stat -e "$p" true 2>&1)
-> > >> -  if echo "$result" | grep -q "$p"
-> > >> +  echo -n "Testing $p -- "
-> > >> +  output=3D$(perf stat -e "$p" true 2>&1)
-> > >> +  stat_result=3D$?
-> > >> +  if echo "$output" | grep -q "$p"
-> > >>    then
-> > >>      # Event seen in output.
-> > >> -    continue
-> > >> -  fi
-> > >> -  if echo "$result" | grep -q "<not supported>"
-> > >> -  then
-> > >> -    # Event not supported, so ignore.
-> > >> -    continue
-> > >> +    if [ $stat_result -eq 0 ] && ! echo "$output" | grep -q "<not s=
-upported>"
-> > >> +    then
-> > >> +      # Event supported.
-> > >> +      echo "supported"
-> > >> +      continue
-> > >> +    elif echo "$output" | grep -q "<not supported>"
-> > >> +    then
-> > >> +      # Event not supported, so ignore.
-> > >> +      echo "not supported"
-> > >> +      continue
-> > >> +    elif echo "$output" | grep -q "No permission to enable"
-> > >> +    then
-> > >> +      # No permissions, so ignore.
-> > >> +      echo "no permission to enable"
-> > >> +      continue
-> > >> +    elif echo "$output" | grep -q "Bad event name"
-> > >> +    then
-> > >> +      # Non-existent event.
-> > >> +      echo "Error: Bad event name"
-> > >> +      echo "$output"
-> > >> +      err=3D1
-> > >> +      continue
-> > >> +    fi
-> > >>    fi
-> > >> -  if echo "$result" | grep -q "Access to performance monitoring and=
- observability operations is limited."
-> > >> +
-> > >> +  if echo "$output" | grep -q "Access to performance monitoring and=
- observability operations is limited."
-> > >>    then
-> > >>      # Access is limited, so ignore.
-> > >> +    echo "access limited"
-> > >>      continue
-> > >>    fi
-> > >>
-> > >>    # We failed to see the event and it is supported. Possibly the wo=
-rkload was
-> > >>    # too small so retry with something longer.
-> > >> -  result=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1=
-)
-> > >> -  if echo "$result" | grep -q "$p"
-> > >> +  output=3D$(perf stat -e "$p" perf bench internals synthesize 2>&1=
-)
-> > >> +  if echo "$output" | grep -q "$p"
-> > >>    then
-> > >>      # Event seen in output.
-> > >> +    echo "supported"
-> > >>      continue
-> > >>    fi
-> > >>    echo "Error: event '$p' not printed in:"
-> > >> -  echo "$result"
-> > >> +  echo "$output"
-> > >>    err=3D1
-> > >>  done
-> > >>
-> >
->
+diff --git a/arch/x86/include/asm/cpufeature.h 
+b/arch/x86/include/asm/cpufeature.h
+index de1ad09fe8d7..051d006cc0c6 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -95,7 +96,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+            CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||    \
+            CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||    \
+            REQUIRED_MASK_CHECK                                    ||    \
+-          BUILD_BUG_ON_ZERO(NCAPINTS != 22))
++          BUILD_BUG_ON_ZERO(NCAPINTS != 23))
+
+  #define DISABLED_MASK_BIT_SET(feature_bit)                             \
+          ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||    \
+@@ -121,7 +122,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+            CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||    \
+            CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||    \
+            DISABLED_MASK_CHECK                                    ||    \
+-          BUILD_BUG_ON_ZERO(NCAPINTS != 22))
++          BUILD_BUG_ON_ZERO(NCAPINTS != 23))
+
+  #define cpu_has(c, bit) 
+         \
+         (__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :  \
+diff --git a/arch/x86/include/asm/disabled-features.h 
+b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..c6a1f962185c 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -156,6 +156,6 @@
+  #define DISABLED_MASK19        (DISABLE_SEV_SNP)
+  #define DISABLED_MASK20        0
+  #define DISABLED_MASK21        0
+-#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
++#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 23)
+
+  #endif /* _ASM_X86_DISABLED_FEATURES_H */
+diff --git a/arch/x86/include/asm/required-features.h 
+b/arch/x86/include/asm/required-features.h
+index e9187ddd3d1f..a346db1d078c 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -100,6 +100,6 @@
+  #define REQUIRED_MASK19        0
+  #define REQUIRED_MASK20        0
+  #define REQUIRED_MASK21        0
+-#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
++#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 23)
+
+  #endif /* _ASM_X86_REQUIRED_FEATURES_H */
+
 
