@@ -1,133 +1,146 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACADF158520
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 17:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0320919992C;
+	Tue, 25 Feb 2025 17:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504189; cv=none; b=IzuIFPYJPckfdALMuvqiRa+ppwpeUifbvlzLBEaYTOyWtqoZn5kI3UE/qgLAKZRAehwtfYxca3m+jiAw62aU2dQex8q3tUkaUS2w6HRirkTdQacaKIbkru0XXfWXcjhoTxCXfvvjtsJQ1wbn51BJZd3WMmSfkA3/OdzO3gzbDrc=
+	t=1740505691; cv=none; b=K1ypQcVKgJRLQW+71nahLEXOWMnwhTLpz8tml+hyHU/3YuTNPldb9pZ9+M38sqDJAx0PBdYW4ZewJWNxfhVKtTCAla7imKnw9TwHzpAp/WIyzIIzhYR7lxcq+Djx/SFRZ4bgOqPRJ0AMDN4MPq1mUYHbDYvAu+PhHo1hy67FoMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504189; c=relaxed/simple;
-	bh=v3AVXPBqyn/VEB9q398QPkPemqU6//8ktrFh466Eb/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y/3zqcpOPYZOIRUmD/nfGhquWamITfr4qt0HFooLGRDM0TTJOfk/7x1W4qZikrLw6j57Cs6MC5zKmO3VyIDee81vFEr2NxwAYH2zIQu9+w5f617hLCj40KQao7zHmgpniIXMQmZzHStgCqu1mH6CV+mbsYGcJ4FGH7277d4hWTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KzT4O4LQ; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KzT4O4LQ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-221ac1f849fso169505ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 09:23:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740504186; x=1741108986; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZRS7zRNsUBaTX8e7za4k3/mNtUpQo7uf5jo12sCbNZA=;
-        b=KzT4O4LQEy5fJt3mL2+Ty8w968WcvvQXtIVbGdoFQzQQbOb9IrteXum7PrX0jYcp+m
-         eYhmWtCqaKYwsgqY5oUCznjTIvyeCG1W1lWBaqnNTu5ZMTiHVg823tW7EtI7uPbBfZMc
-         LeSz9WWOr0WvpmRVwrNsB0gg4/cJVUPokIhxt+VBX8UdzvZh+NyLQqIIDLGqAQhBeGoZ
-         fGAxu/kFHGDaaH2NpcKlqpp2cIPjU4y503vbTvjSGeG+Onr/lTrlHSj8PrPpJZXtwfF7
-         PPHzUZ975+xRDxZJVY6gY8Ik3VtNsx/ZP3cx46Z70X2Hgvf2OrLqV8UV1ikc/+LzpcNn
-         Z8FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740504186; x=1741108986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZRS7zRNsUBaTX8e7za4k3/mNtUpQo7uf5jo12sCbNZA=;
-        b=eRysSruXNgzc1BVLy2RAWyMCLVCd6WjCbKgxGniykbfsSplJJncUyETRzIPwgu1ygu
-         lHYSY0C5snnvAg5J8PUryfDiH+3F+suGJA9pMPO2EgENILKGCsiudt4D09Rs3MyJBiWi
-         HrQKyzUWY9BwQNpXcJr7CwyhwY2gaMBrmKEDCvh5iH0iNxnOzHwRu0H/kkAY1WIKMuBW
-         Q51Iv8XggZIwDg5aymuXBYU/8Sjtec018M57KXN6lRNmvjWGkGZBMu+hlVGaBEw3OZfP
-         K2fwj3EZHZDmwj6b44oglFWEkjv+xU57OZWidAAB4+LFuzKOfhIcunO1t2c8iZ5lMYas
-         k//g==
-X-Gm-Message-State: AOJu0YxxTHR35/R6URffcZUtS6sx08Y6rOB0HhC6xhi6Z65eezxEktRe
-	BPYpIkCb61gnE0W6y9wkYORCaCYCZ7MYsNbwdOFbaMbUB2/U4xZGnbWUQAWprDgJHF4EDYZNVRe
-	9HsQGKMWTRSfXemGxJWQPga2mMy8cVKIdmtp6
-X-Gm-Gg: ASbGnctaqPz91S0B806ayD2h5byp0w1DZQPiFYcCJ7P6W+er4PK+B4S3h9vOvoJrG3o
-	hxDGDSwipxLhFn9QrGxJek0DEAC+qQgSXzAGjbJqcp4ROjPuPG71s95rar4Cl+R+Z4JOmvbWElI
-	3YKQxpgY+CZkCHZz56Cd725hTaDZqwpcldOqs=
-X-Google-Smtp-Source: AGHT+IGC8PbZnAX1dM7vF/eknw+nIFz4/wdvAqDFmpDDAoGSei+HpX67HLH8P4ooCjMrPXiK2pEFl5M7Fgr02/I0jU0=
-X-Received: by 2002:a17:902:d2cc:b0:215:9327:5aed with SMTP id
- d9443c01a7336-22307a98a40mr3749615ad.20.1740504185776; Tue, 25 Feb 2025
- 09:23:05 -0800 (PST)
+	s=arc-20240116; t=1740505691; c=relaxed/simple;
+	bh=UlYAL7cYAm+wK2/XoBjCh1V7JGWLMwEiAoOcbv3rOHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=soajJz4vkG6+huhPtdgGwBth8p2XGT/Dvro9orb402SK0U0HqVVxJqscrbfsn3NL98esqc4CP7n/DdjHBdbt9uArhBwfCXEsCVS2NNtoC8FyXBj9o9UM89TtOHPshw7vH5zo/PJdgRCltsad5uAGk6/FkWgBmqhSK83Q4Cu9WUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 806481BCB;
+	Tue, 25 Feb 2025 09:48:24 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48783F5A1;
+	Tue, 25 Feb 2025 09:48:07 -0800 (PST)
+Date: Tue, 25 Feb 2025 17:48:03 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <20250225174803.GB1821331@e132581.arm.com>
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
+ <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
+ <20250224122507.GE8144@e132581.arm.com>
+ <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+ <20250224140317.GF8144@e132581.arm.com>
+ <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+ <20250224180301.GI8144@e132581.arm.com>
+ <Z72xMLsd37I6X_5-@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225164639.522741-1-james.clark@linaro.org> <20250225164639.522741-4-james.clark@linaro.org>
-In-Reply-To: <20250225164639.522741-4-james.clark@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 25 Feb 2025 09:22:54 -0800
-X-Gm-Features: AWEUYZkkYjNpwQEAg6yCL_UkAsz9MOXgB0BQHPDdqu5Op5Bsw52KT0TKFYbCsoE
-Message-ID: <CAP-5=fVEQvP7viecoGzLyUv1_Dsx6FhvmrYakWgi_TrBXPGSiw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf list: Document -v option deduplication feature
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, cyy@cyyself.name, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Weilin Wang <weilin.wang@intel.com>, Junhao He <hejunhao3@huawei.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z72xMLsd37I6X_5-@J2N7QTR9R3>
 
-On Tue, Feb 25, 2025 at 8:47=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> -v disables deduplication of similarly suffixed PMUs so add it to the
-> help and doc strings.
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
+On Tue, Feb 25, 2025 at 12:01:52PM +0000, Mark Rutland wrote:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+[...]
+
+> > > Critically, the brbe_enable() function merges the filters of all
+> > > *active* events which have been installed into hardware. It does not
+> > > track all events which can be rotated, and the resulting filter is not
+> > > the same -- it can change as a result of rotation.
+> > 
+> > In a perf session has multiple events, and events have different branch
+> > filters, seems to me, a simple way is to return error for this case.
+> 
+> FWIW, I'd generally prefer to do that since it avoids a number of
+> horrible edge-cases and gets rid of the need to do SW filtering, which
+> falls somewhere between "tricky" and "not entirely possible". However,
+> that's not what LBR and others do, which is why we went with filter
+> merging.
+> 
+> If folk on the tools side are happy with the kernel rejecting
+> conflicting events, then I'd be more than happy to do that. What I don't
+> want is that we start off with that approach and people immediately
+> start to complain that the BRBE driver rejects events that the LBR
+> driver accepts.
+> 
+> See the last time this came up.
+
+Thanks for the shared links.  Based on the info, let's say we can have two
+cases:
+
+  Case 1: set different branch filters in a single perf session:
+
+    perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u \
+                -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
+
+  Case 2: set different branch filters in multiple perf sessions:
+
+    perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u ...
+
+    perf record -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
+
+In my previous reply, I was suggesting that we should reject the case 1.
+IMO, it is not quite useful to configure different filters for events in
+the same session, especially if this leads complexity in the driver due
+to the hardware limitation.
+
+For case 2, when create a new session, if the perf tool can read out the
+current branch filter setting (e.g. via sysfs node) and give suggestion
+what branch filter is compabile with existed sessions, seems to me, this
+is a feasible solution.  My understanding this is a rare case, and a
+clear guidance for users would be sufficient if this happens.  (Maybe
+we can give recommendation for how to use BRBE in the perf doc).
+
+To be clear, an important factor is the trace modes with modifier 'u'
+(user) and 'k' (kernel) should be supported for different events and for
+different sessions.  In a mixed cases (some events are userspace only
+and some are kernel only), the BRBE driver needs to filter out branch
+records for specific mode when taking a sample.
+
+> > If we can unify branch filter within a perf session, would this be
+> > much easier for handling?
+> 
+> Do you mean if the perf tool ensured that all events in a given session
+> had the same filter? From the kernel's PoV there's no such thing as a
+> "perf session", and I'm not sure whether you're suggesting doing that in
+> userspace or withing the kernel.
+
+My understanding is this would be not difficult to do such kind checking
+in the tool.  E.g., the perf tool can iterate every event and check the
+branch filter and detect incompabile issue.
+
+> Doing that in the perf tool would certianly make a stronger argument for
+> the kernel taking the "reject conflicting branch filters" option.
+> 
+> Doing that within the kernel isn't really possible.
+
+As said above, if the BRBE driver can provide a knob in sysfs to indicate
+what is the current branch filter in the existed sessions, this would be
+helpful for the tool to do the checking and remind users.
+
+I haven't done any experiments for this. If you think this is the way
+to move forward, I might do a prototype and get back to you to ensure we
+don't run into any unexpected issues.
+
+[...]
+
+To make the discussion easier, I would like reply separately regarding
+the branch record save and restore issue.
 
 Thanks,
-Ian
-
-
-> ---
->  tools/perf/Documentation/perf-list.txt | 2 +-
->  tools/perf/builtin-list.c              | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Document=
-ation/perf-list.txt
-> index c3ffd93f94d7..8914f12d2b85 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -27,7 +27,7 @@ Don't print descriptions.
->
->  -v::
->  --long-desc::
-> -Print longer event descriptions.
-> +Print longer event descriptions and all similar PMUs with alphanumeric s=
-uffixes.
->
->  --debug::
->  Enable debugging output.
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index c19826f218a0..fed482adb039 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -527,7 +527,7 @@ int cmd_list(int argc, const char **argv)
->                 OPT_BOOLEAN('d', "desc", &default_ps.desc,
->                             "Print extra event descriptions. --no-desc to=
- not print."),
->                 OPT_BOOLEAN('v', "long-desc", &default_ps.long_desc,
-> -                           "Print longer event descriptions."),
-> +                           "Print longer event descriptions and all simi=
-lar PMUs with alphanumeric suffixes."),
->                 OPT_BOOLEAN(0, "details", &default_ps.detailed,
->                             "Print information on the perf event names an=
-d expressions used internally by events."),
->                 OPT_STRING('o', "output", &output_path, "file", "output f=
-ile name"),
-> --
-> 2.34.1
->
+Leo
