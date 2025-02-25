@@ -1,168 +1,217 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEDC4A1E
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 01:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6276B367;
+	Tue, 25 Feb 2025 01:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740446770; cv=none; b=cPN5I79aX0NjU6oEYkHwsp7ru4/o/QPh9XXaR8dEvn21so/ixZKGw1Zy4J8XtweZTbasbz4UksIKVxURTujSSE/TAqlm+Rihm5ECh4s3j+ePi3ezJbg2WfwZBrPfZJTQLvjhFpIT3VuJa36Hh/fmMC2qWeZ/ipofuSRtwzoDPp8=
+	t=1740447125; cv=none; b=RHqROmJpffURQ3viUOBsUx8UMSKSWol5qHpKYq2NNqprL40mQ8vRj7vYa8gAxjzcA+BVyvyO0/S/cxhZioCIEO0dE8oc2DDwPIRpfI8VZ66qX72auPWi9B0pbR0KB6s6fT3hBOUmF4eF8NDpY5F9rS42u803Bue98cTbctrX7Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740446770; c=relaxed/simple;
-	bh=hfq5eDNioKtLkWHINnwuIrPBC9aQyX4oQ59oQWB1fDQ=;
+	s=arc-20240116; t=1740447125; c=relaxed/simple;
+	bh=oNFRiRu3B+1F4rETWzHu87g8+8lxN2QQ/bwEbS8L5/E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dGnVAhIHazGacsHFNhR/y6kJNJ1sTRwY3YppM0APCZQAbUShMO0ceoDsIP+11yefY3Mu0jeQq99xHSB2zOZ6eJdt1P4ieJD+3PW5wD6KbZF+K1IZmLxVim4ozqFvBDk6mP7/rzviCMkznlKRWAZK6VTwhVlFiSlLIFzaFbdjnTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JU0PPyRl; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=DQZaBROrzrtOqAGbz1rrmnI/Ru6DbniiLlr5oEozyWSwC2rImPQ47uytIzxhGaFbFu0UpsRlWsx/oIVPiDvk9x0SItsh1B7R853Tm/HwaFXk6wHcMsbF3NMDo3Kh5UNfHpqVaaewK3fWs0qowkL6/BfkTRv38T24x0fuutwlgIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbxO/luO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JU0PPyRl"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220e0575f5bso79255ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 17:26:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740446769; x=1741051569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JgxndzGjlSlaXDyh3XBK97TDI3RlMhgPpDRBr5d4hMQ=;
-        b=JU0PPyRlYoMp5hQIKp+hvJkENpcAPpFSLvtwlaqnzMWnoLiezocMOQicVWGwokIMwv
-         jfZv8T3ObrcrNfsRRkvdOvM+ZFBQmHUsrSO5qwX7GYPpH4iijF6N1oPKQvtiS4qNFY8C
-         rODQwR76Y28NFD+wah2TZ2sDrLfLGmXlagShpZcU+YebllSiSL5s07Tv4uh+Y4kf23BE
-         UEXHCp7m3Nis1rb5G8E/WMJLfiGU9dZDAHtWtJ3/a5QKW+6ZVJz70b+IRRPgHCtAn2qv
-         i8+TLCrdw8BNvTvmf7Hrh9Jl9Z0i7DfpAUSfTVl8PHo6SrvZNqplijsT6TW+XvwGy/O5
-         oZpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740446769; x=1741051569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JgxndzGjlSlaXDyh3XBK97TDI3RlMhgPpDRBr5d4hMQ=;
-        b=GqgnEFNcRIcCnTNZQVdH2kisHlZYH63N5lcK6iK/tP/juYOM3OWsxD9sDBg+808lXf
-         3BWdVEhd/dZalJ14CCEsc9z5CsP/xbbHvBA4aPSSbCOIg8inpzS0xdgnokqnKShL7CKe
-         WzvA+Kx/ljoCet4g6vRHG3YTRcfUca2gtpgbpAtDApS7aLxY14XMTsLDM1UGW3SguIE4
-         P/LohgL8tMD2FfDipOb7mRKLzrT/hO87mjedthMIBO3ltIZDQBLrqy0SLGKTelHnrv7M
-         oM5gApsJuZJhCO6wJ8a/iAyzuGvc4OT0wCeqxbp4C0EWw5JFW2txlEkvhYPbHvjXeqSA
-         eqNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjvTx9uHb/csnNMvZ0KmOc0FTDwXDNfMJjycn34J/Wkb35rlUFAt6pP74Mo+v9pi2td0mWLU5giJziTGvOPLNB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjevgaEzmSsXWfD+ejM4LiiwLqz7CN3SV7b+q/mMDq4A6xQ4O/
-	Tuz596y/OvmK+Ah3FRu87r28z/RdIMa0EKWwL/N5U2eRayOBR76qDm5xk3UtpCZRRPcaR131Gp0
-	vckxayzbMXMfZt1qLB1GTV6zq4FIHfJcm8nyI
-X-Gm-Gg: ASbGnctd4fh/9bxKTAD+dAW4GIdiikB3ZcOIgluU6PKZ/LpDV84bRuq2zL4pqnuIv0L
-	8PmbHfIljJGH9iFZSDnPSMrdQGUVBYpxMpgITxG1C6AwPLG/aoDAeAnZDBWlntYr5agIhClwHZR
-	KuTnjlCE3Y
-X-Google-Smtp-Source: AGHT+IEu/ac0Ot7cbDh2jJe/F41X9Vert1eIl6k/q+sXL9pVLRZb34FeW/KFffe09nTG6uJTb8mY28cNyXJPD6b/pU4=
-X-Received: by 2002:a17:903:1d1:b0:21f:3c4a:136f with SMTP id
- d9443c01a7336-22307aab649mr1697915ad.28.1740446768416; Mon, 24 Feb 2025
- 17:26:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbxO/luO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8441C4CEE8;
+	Tue, 25 Feb 2025 01:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740447124;
+	bh=oNFRiRu3B+1F4rETWzHu87g8+8lxN2QQ/bwEbS8L5/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bbxO/luOYTPR1YgMrZi0dz+o/Ag9v3NdrvsC1/fabzUkPRMuQbWnqBQyw09RuDZLw
+	 n7hqUskxHaGVIDXX491Yk9EVkngF+m116C06SoiPpZ9aCQc/dgdDYxxWjhFHH4WVbZ
+	 c2Tymn9RJVoc7HM9AsJeJL+3tALxsDOOdzwfoyK326E+jLSQszg71owGshnIY7ZTIP
+	 5xy65PXhjBi7MAfFRQE4sE1wYyUDDbJUEaNzwZELEzsKDfCC9Z/JVi0MWjBr/U6cZ+
+	 cd7S3GS8HTcclu0WIwF4/Q+PoJi/OQKqzUlAWtan0BFT9Wo711jV23OdjFCGq/UsLJ
+	 JOXweqkByieTg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dc89df7eccso9057897a12.3;
+        Mon, 24 Feb 2025 17:32:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW6Nw/QSwiRvbdvbihVSZo8ykHssDFrrSeAhtGvEyPnzfCg9Y+a80UcmuF6DxSc3CVrSLFshnf3BNo=@vger.kernel.org, AJvYcCWFliYZ++OXeCLFilff+nQyMA4XIl10M3ZH3YF2sp0HfcGIKL945X+cBf5XkNdigs8J+LeEr5snaG+DfCHl@vger.kernel.org, AJvYcCXL4IYliGw7be33VJLcJqpbXlfLSckBv3kLo2/jbeWpHT33Teqp4CkQlpxltUryq+wrJcH83LldnYcfV29M7hskzg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy097r33X80N7ZJ9pynZm7FDZFGcLb6PDCmGI4PzKQiAkSPxmyW
+	o/Od2AirNirNxae+byXEpE2ievoMGkAmenduwvV2ghgt2aRNcVpGyp8ISnhbwtLaCjvpEUK6HV1
+	QFRVSXzPVcYN2aJSXTr6Kv3eMAw==
+X-Google-Smtp-Source: AGHT+IF0oZCxiK/ZFsFb1hIDiizkSgWxjFTx6kKn+fuvN2qWJh20NtQly1HcVhyy6wmhgmp9semm1fTOfMZcyER0TDM=
+X-Received: by 2002:a05:6402:440b:b0:5de:aa54:dc30 with SMTP id
+ 4fb4d7f45d1cf-5e444481387mr1053029a12.5.1740447123387; Mon, 24 Feb 2025
+ 17:32:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250222061015.303622-1-irogers@google.com> <Z70OqFzD2JcbhFtL@google.com>
- <Z70PHtvzjHDLx42A@google.com>
-In-Reply-To: <Z70PHtvzjHDLx42A@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Feb 2025 17:25:57 -0800
-X-Gm-Features: AWEUYZlPfIbadQ9TYnETkNFQse6dMCgB4ETEKljJtCoXZLlUEI-WeE_kLBiuHmw
-Message-ID: <CAP-5=fU68UPSQUDtT860myabmYu9i4Dt5gJhtLCq2XinDjEToQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Add io_dir to avoid memory overhead from opendir
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Sam James <sam@gentoo.org>, Jesper Juhl <jesperjuhl76@gmail.com>, 
-	James Clark <james.clark@linaro.org>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Anne Macedo <retpolanne@posteo.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
+ <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org> <20250224122507.GE8144@e132581.arm.com>
+ <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+ <20250224140317.GF8144@e132581.arm.com> <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+ <20250224180301.GI8144@e132581.arm.com>
+In-Reply-To: <20250224180301.GI8144@e132581.arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 24 Feb 2025 19:31:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpZnmkKohlVKFAFaoTDPyBucm92D6dTQtNc_f9Z3M6ImuFJVuDiTExv_eA
+Message-ID: <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
+Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: Leo Yan <leo.yan@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 4:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Mon, Feb 24, 2025 at 12:03=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
 >
-> On Mon, Feb 24, 2025 at 04:28:24PM -0800, Namhyung Kim wrote:
-> > Hi Ian,
-> >
-> > On Fri, Feb 21, 2025 at 10:10:05PM -0800, Ian Rogers wrote:
-> > > glibc's opendir allocates a minimum of 32kb, when called recursively
-> > > for a directory tree the memory consumption can add up - nearly 300kb
-> > > during perf start-up when processing modules. Add a stack allocated
-> > > variant of readdir sized a little more than 1kb
-> >
-> > It's still small and hard to verify.  I've run the following command
-> > before and after the change but didn't see a difference.
-> >
-> >   $ sudo time -f %Mk ./perf record -a true
-> >   [ perf record: Woken up 1 times to write data ]
-> >   [ perf record: Captured and wrote 1.757 MB perf.data (563 samples) ]
-> >   74724k
-> >
-> > According to man time(1), %M is for max RSS.
+> On Mon, Feb 24, 2025 at 04:05:43PM +0000, Mark Rutland wrote:
 >
-> But anyway, it looks ok and build is fine now.
+> [...]
+>
+> > > > > Just a minor concern.  I don't see any handling for task migratio=
+n.
+> > > > > E.g., for a task is migrated from one CPU to another CPU, I expec=
+t we
+> > > > > need to save and restore branch records based on BRBE injection. =
+ So
+> > > > > far, the driver simply invalidates all records.
+> > > > >
+> > > > > I think this topic is very likely discussed before.  If this is t=
+he
+> > > > > case, please ignore my comment.  Except this, the code looks good
+> > > > > to me.
+> > > >
+> > > > Not really discussed on the list, but that was present in v18 (thou=
+gh
+> > > > not functional because .sched_task() hook wasn't actually enabled) =
+and
+> > > > Mark removed it. His work is here[1].The only comment was:
+> > > >
+> > > > Note: saving/restoring at context-switch doesn't interact well with
+> > > > event rotation (e.g. if filters change)
+> > >
+> > > In the brbe_enable() function, it "Merge the permitted branch filters
+> > > of all events".  Based on current implementation, all events share th=
+e
+> > > same branch filter.
+> >
+> > Critically, the brbe_enable() function merges the filters of all
+> > *active* events which have been installed into hardware. It does not
+> > track all events which can be rotated, and the resulting filter is not
+> > the same -- it can change as a result of rotation.
+>
+> In a perf session has multiple events, and events have different branch
+> filters, seems to me, a simple way is to return error for this case.
+>
+> I would argue BRBE is an IP for recording branches per CPU wise, it does
+> not support recording for event wise.  If we can unify branch filter
+> within a perf session, would this be much easier for handling?
 
-Thanks for the testing! So doing a regular build I could repeat what
-you saw - basically the opendir isn't contributing to maxrss as the
-BPF handling and so gets lost. Doing a minimal static build, that
-loses BPF support, things were clearer but not as good as I'd
-originally measured, 10880k reduced to 10696k - a 184k saving (raw
-data below). Perhaps opendir got better or perhaps there are fewer
-kernel modules. I tried heaptrack but unfortunately it wasn't able to
-instrument the allocations in glibc's allocdir function (it reported
-0). Originally heaptrack showing opendir allocations were significant
-for `perf record` was what led me to this code. At the moment BPF
-event synthesis and topdown event checking look particularly
-expensive.
+And the PMU is an IP for recording events per CPU, but that is not
+perf (only)...
 
-Thanks,
-Ian
+>
+> > > When event rotation happens, if without context switch, in theory we
+> > > should can directly use the branch record (no invalidation, no inject=
+ion)
+> > > for all events.
+> >
+> > No; that only works in *some* cases, and will produce incorrect results
+> > in others.
+> >
+> > For example, consider filtering. Imagine a PMU with a single counter,
+> > and two events, where event-A filters for calls-and-returns and event-B
+> > filters for calls-only. When switching from event-A to event-B, it's
+> > theoretically possible to keep the existing records around, knowing tha=
+t
+> > the returns can be filtered out later. When switching from event-B to
+> > event-A we cannot keep the existing records, since there are gaps
+> > whenever a return should have been recorded.
+>
+> Seems to me, the problem is not caused by event rotation.  We need to
+> calculate a correct filter in the first place - the BRBE driver should
+> calculate a superset for all filters of events for a session.  Then,
+> generate branch record based event's specific filter.
 
-Before:
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (107 samples) ]
-10880k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (106 samples) ]
-10880k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (109 samples) ]
-10880k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (102 samples) ]
-10880k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (106 samples) ]
-11008k
+The driver doesn't have enough information. If it is told to schedule
+event A, it doesn't know anything about event B. It could in theory
+try to remember event B if event B had already been scheduled, but it
+never knows when event B is gone.
 
-After:
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.473 MB perf.data (106 samples) ]
-10820k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.473 MB perf.data (109 samples) ]
-10696k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.473 MB perf.data (98 samples) ]
-10696k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.489 MB perf.data (98 samples) ]
-10696k
-$ sudo /bin/time -f %Mk /tmp/perf/perf record -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.490 MB perf.data (110 samples) ]
-10696k
+> > There are a number of cases of that shape given the set of configurable
+> > filters. In theory it's possible to retain those in some cases, but I
+> > don't think that the complexity is justified.
+> >
+> > Similarly, whenever kernel branches are recorded it's necessary to drop
+> > the stale branches whenever branch recording is paused, as there's
+> > necessarily a blackout period and hence a gap in the records.
+>
+> If we save BRBE record when a process is switched out and then restore
+> the record when a process is switched in, should we can keep a decent
+> branch record for performance profiling?
+
+Keep in mind that there's only 64 branches recorded at most. How many
+branches in a context switch plus reconfiguring the PMU? Not a small
+percentage of 64 I think. In traces where freeze on overflow was not
+working (there's an example in v18), just the interrupt entry until
+BRBE was stopped was a significant part of the trace. A context switch
+is going to be similar.
+
+> I understand it might be many things happen in the middle of a task
+> switching or migration, but it is fine for not recording branches during
+> the blackout period.  The missed branch records are not very helpful for
+> forming a flow for a profiled program itself, especially, if we
+> consider we will optimize userspace program in many cases.
+
+We can't really not record during a blackout period. The only way we
+can is with freeze on overflow.
+
+> > Do you think that you have a case where losing branches across rotation
+> > *really* matters?
+>
+> I agreed that event rotation case might be rare and complex.  Please see
+> a comment below.
+>
+> > > For a context-switch case, we need to save and re-inject branch recor=
+d.
+> > > BRBE record sticks to a process context, no matter what events have b=
+een
+> > > enabled.
+> >
+> > I had originally wanted to keep per-event records around, but it doesn'=
+t
+> > work in all cases. One reason events get discarded at context-switch
+> > time is that CPU-bound events can sample branches, and would
+> > mis-attribute stale userspace branches to the wrong context when
+> > switching tasks. There are explicit comments about this in
+> > amd_pmu_brs_sched_task() and intel_pmu_lbr_sched_task().
+> >
+> > Given we discard records when reprogramming events, we *could* try to
+> > preserve events in some cases, but I suspect that as with the rotation
+> > case this'll be a lot of complexity for little gain. Note that as we
+> > discard events when enabling the PMU, we'd throw some task-bound record=
+s
+> > away anyway, and practically the gain would be limited to cpu-bound
+> > records.
+> >
+> > Do you have a reason why you think we *must* keep events around?
+>
+> Here I am really concerned are cases when a process is preempted or
+> migrated.  The driver doesn't save and restore branch records for these
+> cases, it just invalidates all records when a task is scheduled in.
+>
+> As a result, if an event overflow is close to context switch, it is
+> likely to capture incomplete branch records.  For a userspace-only
+> tracing, it is risk to capture empty branch record after preemption
+> and migrations.
+
+There's the same risk if something else is recording kernel branches
+when you are recording userspace only. I think the user has to be
+aware if other things like context switches are perturbing their data.
+
+Rob
