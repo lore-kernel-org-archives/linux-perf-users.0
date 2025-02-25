@@ -1,203 +1,289 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9BC1A01CC;
-	Tue, 25 Feb 2025 19:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572E52054F4;
+	Tue, 25 Feb 2025 19:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740512820; cv=none; b=E64W+4OvYk9X5AfcV14NveQlbiZNPFSupJEGWLZgHxffoDLAzWmmNg7a5uxh1fR7Jaj3N7Pkgxkg3Lt7xBnstqQjZQBBC2CL/DsShXhIAdtjFhNUQa8D6Z1Ijf4/96FnTZihDQ8Q298u8PZy+2P218y3iVmGLmO2NBjwrL0UXpM=
+	t=1740512940; cv=none; b=gHnY87A2wu7drktAvwpdwWVG8W/5QnBUlANQU5BS1vUPFCNDCEil3uu2bpjw1rkdWX2UBXLJBNmFXE9Xxj4OllIfuYREiOGsALCttafOpeEbVtr7rOu7IdUK7M2TMQvuAvXRZ3Bu3h5oxVVS/tc92POgYK77XzIcIZFjtLuJSZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740512820; c=relaxed/simple;
-	bh=Yzp6lKg+7SjzmD6dfCLSBo9k8WYw3TmI0cYZCPNUKn4=;
+	s=arc-20240116; t=1740512940; c=relaxed/simple;
+	bh=Ltv58kxzfsYfdSmJzVewji73ROqlz2/+qZiGcPEyrFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAQx0WVU+yob1lyR5qo3j2wKiViHK2CP+mP3BEJh065W6kosYryYFPx4al+fKHNOu+TchjPCDAheS2LTT0VY6j51uzI4AhsEnbsc6TWfS+BLBL32b4aqLpuy+gGKhtLgGYpM7xzQAlcGaq2wnBYkfrzjSfuGWTwKCe5rWuy6kJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43906152B;
-	Tue, 25 Feb 2025 11:47:14 -0800 (PST)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E65263F5A1;
-	Tue, 25 Feb 2025 11:46:55 -0800 (PST)
-Date: Tue, 25 Feb 2025 19:46:53 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <Z74eLRTcVym4sMqh@J2N7QTR9R3.cambridge.arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
- <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
- <20250224140317.GF8144@e132581.arm.com>
- <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
- <20250224180301.GI8144@e132581.arm.com>
- <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
- <20250225123813.GA1821331@e132581.arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HvWN+4g5k3vg4+d9RcdoXC+k8NCV7ipgWXJ0S7vlxQogqWC/imXDyqcRkVandDtZZqHc7dRMB+p5O/rH9iKCfCdhpm7aQA1qkbIxVNc4SsaLW/+hS0qhiR06zMs2vXQEzbd8QbrQ+mUxIZeSFh1tWRl/o1FDOsjmPFvTTl4gGV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okDOmcI5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okDOmcI5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823F3C4CEDD;
+	Tue, 25 Feb 2025 19:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740512939;
+	bh=Ltv58kxzfsYfdSmJzVewji73ROqlz2/+qZiGcPEyrFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=okDOmcI58syu/ratG7CF2XVJqdTfqzCxI8D119C5coBGV0YRtaGyuhW+fLbBITLv4
+	 rNMETrMLgL61v5T5apWHWe8i1gaVzszUDs/MdjmMMhGqMiGDU7fESUxfrtUa5BGhrB
+	 Rg5hdxze3OazbzKpbYjpdMYTDbbPRClLUarNPr875YIu6AreNlKlHGy3sfatP2O5sV
+	 M4i884eERaPGnuNoE0oYErYpOdo+G/fQGUmvWNuxQXQHyMTTjwNusgGUeFhRJRJdOO
+	 TZ9Gzcgz7jwgPdrU5QJKnE8CUzMcDkpcwbWYObzl7Qm8EB8U8H4qT2WFYDGTNXRD3p
+	 2JzuzIHibS03A==
+Date: Tue, 25 Feb 2025 20:48:56 +0100
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf report: Add 'tgid' sort key
+Message-ID: <Z74eqEiyrzuoL6uz@x1>
+References: <Z7ZIqpwffQbibwL2@google.com>
+ <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
+ <Z7gllQZeg6U2OvZE@google.com>
+ <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
+ <Z70wHEl6Sp0H0c-3@google.com>
+ <CAP-5=fUosOVUKi5tQ3gVtHhfApk0oH3r2zHDW7-i+_qASKm+Cg@mail.gmail.com>
+ <Z712hzvv22Ni63f1@google.com>
+ <Z74U5s7Yf0f6I7Mo@x1>
+ <Z74V0hZXrTLM6VIJ@x1>
+ <Z74ZL6SUwWL_a5EK@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250225123813.GA1821331@e132581.arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z74ZL6SUwWL_a5EK@x1>
 
-On Tue, Feb 25, 2025 at 12:38:13PM +0000, Leo Yan wrote:
-> On Mon, Feb 24, 2025 at 07:31:52PM -0600, Rob Herring wrote:
-> 
-> [...]
-> 
-> > > > > When event rotation happens, if without context switch, in theory we
-> > > > > should can directly use the branch record (no invalidation, no injection)
-> > > > > for all events.
-> > > >
-> > > > No; that only works in *some* cases, and will produce incorrect results
-> > > > in others.
-> > > >
-> > > > For example, consider filtering. Imagine a PMU with a single counter,
-> > > > and two events, where event-A filters for calls-and-returns and event-B
-> > > > filters for calls-only. When switching from event-A to event-B, it's
-> > > > theoretically possible to keep the existing records around, knowing that
-> > > > the returns can be filtered out later. When switching from event-B to
-> > > > event-A we cannot keep the existing records, since there are gaps
-> > > > whenever a return should have been recorded.
-> > >
-> > > Seems to me, the problem is not caused by event rotation.  We need to
-> > > calculate a correct filter in the first place - the BRBE driver should
-> > > calculate a superset for all filters of events for a session.  Then,
-> > > generate branch record based event's specific filter.
+On Tue, Feb 25, 2025 at 08:25:35PM +0100, Arnaldo Carvalho de Melo wrote:
+> On Tue, Feb 25, 2025 at 08:11:17PM +0100, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Feb 25, 2025 at 08:07:18PM +0100, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Feb 24, 2025 at 11:51:35PM -0800, Namhyung Kim wrote:
+> > > > On Mon, Feb 24, 2025 at 08:40:37PM -0800, Ian Rogers wrote:
+> > > > > On Mon, Feb 24, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > On Mon, Feb 24, 2025 at 10:18:37AM -0800, Ian Rogers wrote:
+> > > > [SNIP]
+> > > > > > > I thought the real-time processing had to use
+> > > > > > > maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
+> > > > > > > events only give us VMA data and two mmaps may have been merged.
+> > > > > > > Shouldn't doing this change be the simplest fix?
 > > 
-> > The driver doesn't have enough information. If it is told to schedule
-> > event A, it doesn't know anything about event B. It could in theory
-> > try to remember event B if event B had already been scheduled, but it
-> > never knows when event B is gone.
-> 
-> E.g., I tried below command for enabling 10 events in a perf session:
-> 
->   perf record -e armv9_nevis/r04/ -e armv9_nevis/r05/ \
->               -e armv9_nevis/r06/ -e armv9_nevis/r07/ \
->               -e armv9_nevis/r08/ -e armv9_nevis/r09/ \
->               -e armv9_nevis/r10/ -e armv9_nevis/r11/ \
->               -e armv9_nevis/r12/ -e armv9_nevis/r13/ \
->               -- sleep 1
-> 
-> For Arm PMU, the flow below is invoked for every event on every
-> affinied CPU in initialization phase:
-> 
->   armpmu_event_init() {
->     armv8pmu_set_event_filter();
->   }
-> 
-> Shouldn't we calculate a superset branch filter for all events, store
-> it into a per-CPU data structure and then apply the filter on BRBE?
-
-Should we? No.
-
-*NONE* of the events in your example are CPU-bound, and the call to
-armpmu_event_init() can happen on an arbitrary CPU which the relevant
-event never actually runs on, while other unrelated events may run on
-that CPU.
-
-It makes no sense for armv8pmu_set_event_filter() to write to a per-cpu
-structure. That's purely there to determine what the filters *should* be
-when *that specific event* is programmed into hardware.
-
-As Rob and I have pointed out already, the *only* thing that can be
-relevant to deciding the configuration of HW filtering is the set of
-events which are *active* on that CPU.
-
-> > > > There are a number of cases of that shape given the set of configurable
-> > > > filters. In theory it's possible to retain those in some cases, but I
-> > > > don't think that the complexity is justified.
-> > > >
-> > > > Similarly, whenever kernel branches are recorded it's necessary to drop
-> > > > the stale branches whenever branch recording is paused, as there's
-> > > > necessarily a blackout period and hence a gap in the records.
-> > >
-> > > If we save BRBE record when a process is switched out and then restore
-> > > the record when a process is switched in, should we can keep a decent
-> > > branch record for performance profiling?
+> > > > > > Make sense.  How about this?
 > > 
-> > Keep in mind that there's only 64 branches recorded at most. How many
-> > branches in a context switch plus reconfiguring the PMU? Not a small
-> > percentage of 64 I think. In traces where freeze on overflow was not
-> > working (there's an example in v18), just the interrupt entry until
-> > BRBE was stopped was a significant part of the trace. A context switch
-> > is going to be similar.
-> 
-> That is true for kernel mode enabled tracing.  But we will have no
-> such kind noises for userspace only mode tracing.
-
-As mentioned elsewhere, it's not a problem for x86, so why is it
-magically a problem for arm64?
-
-> > > > Do you have a reason why you think we *must* keep events around?
-> > >
-> > > Here I am really concerned are cases when a process is preempted or
-> > > migrated.  The driver doesn't save and restore branch records for these
-> > > cases, it just invalidates all records when a task is scheduled in.
-> > >
-> > > As a result, if an event overflow is close to context switch, it is
-> > > likely to capture incomplete branch records.  For a userspace-only
-> > > tracing, it is risk to capture empty branch record after preemption
-> > > and migrations.
+> > > > > Lgtm, I have no way to test the issue. Why does maps__fixup_end need
+> > > > > to get pushed later?
 > > 
-> > There's the same risk if something else is recording kernel branches
-> > when you are recording userspace only. I think the user has to be
-> > aware if other things like context switches are perturbing their data.
+> > > > I just noticed it would add extra kernel maps after modules.  I think it
+> > > > should fixup end address of the kernel maps after adding all maps first.
+> > 
+> > > > Arnaldo, can you please test this?
+> >  
+> > > Trying it now.
+> > 
+> > Now we have something different:
+> > 
+> > root@number:~# perf record sleep
+> > sleep: missing operand
+> > Try 'sleep --help' for more information.
+> > [ perf record: Woken up 1 times to write data ]
+> > perf: util/maps.c:80: check_invariants: Assertion `RC_CHK_EQUAL(map__kmap(map)->kmaps, maps)' failed.
+> > Aborted (core dumped)
+> > root@number:~#
 > 
-> I am confused for the decription above.  Does it refer to branch
-> recording cross different sessions?  It is fine for me that the branch
-> data is interleaved by different sessions (e.g. one is global tracing
-> and another is only per-thread tracing).
-
-Imagine that there's an existing process with some pid ${PID}, and
-concurrently, the following commands are run, either by the same user or
-different users with appropriate permissions:
-
-	# Trying to record user branches only
-	perf record -j any,u -e cycles -p ${PID}
-
-	# Trying to record kernel branches only
-	perf record -j any,k -e cycles -p ${PID}
-
-Whatever you do, the task trying to record user branches only will lose
-some records:
-
-* If we make the events mutually exclusive, the branches will only be
-  recorded when the user event is installed.
-
-* If we merge the HW filters and later apply a SW filter, it's very
-  likely that kernel branches taken after exception entry have filled
-  all the records, and there are no user branches left to sample.
-
-> We might need to consider an intact branch record for the single perf
-> session case.  E.g. if userspace program calls:
+> __maps__insert() does:
 > 
->     func_a -> func_b -> func_c
+>         if (dso && dso__kernel(dso)) {
+>                 struct kmap *kmap = map__kmap(new);
 > 
-> In a case for only userspace tracing, we will have no chance to preserve
-> the call sequence of these functions after the program is switched out.
+>                 if (kmap)
+>                         kmap->kmaps = maps;
+>                 else
+>                         pr_err("Internal error: kernel dso with non kernel map\n");
+>         }
+> 
+> while maps__fixup_overlap_and_insert() doesn't.
+> 
+> It calls __maps__insert_sorted() that probably should do what
+> __maps__insert() does?
 
-If those functions are small, it's very likely that they'll all be in
-the branch history. If they're so large that they're not executed in one
-scheduling quantum, do you expect them to fall within the same event
-period?
+Ok, so I did the following patch but this case fails:
 
-I think that you're making a big deal out of an edge case that doesn't
-matter much in practice.
+@@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+                                 */
+                                map__put(maps_by_address[i]);
+                                maps_by_address[i] = map__get(new);
++                               map__set_kmap(new, maps);
+                                check_invariants(maps);
+                                return err;
+                        }
 
-Mark.
+With:
+
+perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
+
+As:
+
+106				/*
+107				 * Maps by name maps should be in maps_by_address, so
+108				 * the reference count should be higher.
+109				 */
+110				assert(refcount_read(map__refcnt(map)) > 1);
+
+Since it is just replacing the map in the maps_by_address and not
+touching on the maps_by_name? Thus the refcount is just 1:
+
+[ perf record: Woken up 1 times to write data ]
+perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
+
+Thread 1 "perf" received signal SIGABRT, Aborted.
+__pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+44	      return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
+(gdb) bt
+#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+#1  0x00007ffff6ea80a3 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:78
+#2  0x00007ffff6e4ef1e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+#3  0x00007ffff6e36902 in __GI_abort () at abort.c:79
+#4  0x00007ffff6e3681e in __assert_fail_base (fmt=0x7ffff6fc3bb8 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7bcdd0 "refcount_read(map__refcnt(map)) > 1", 
+    file=file@entry=0x7bcc53 "util/maps.c", line=line@entry=110, function=function@entry=0x7bd010 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:96
+#5  0x00007ffff6e47047 in __assert_fail (assertion=0x7bcdd0 "refcount_read(map__refcnt(map)) > 1", file=0x7bcc53 "util/maps.c", line=110, 
+    function=0x7bd010 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:105
+#6  0x0000000000633e3b in check_invariants (maps=0xf947c0) at util/maps.c:110
+#7  0x00000000006362b2 in __maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:932
+#8  0x000000000063636c in maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:954
+#9  0x000000000062920a in machine__process_ksymbol_register (machine=0xf94158, event=0x7ffff7fbaba8, sample=0x7fffffffa860) at util/machine.c:715
+#10 0x00000000006294ca in machine__process_ksymbol (machine=0xf94158, event=0x7ffff7fbaba8, sample=0x7fffffffa860) at util/machine.c:779
+#11 0x00000000005ce2fd in perf_event__process_ksymbol (tool=0xec6ce0 <record>, event=0x7ffff7fbaba8, sample=0x7fffffffa860, machine=0xf94158) at util/event.c:296
+#12 0x000000000063b76c in machines__deliver_event (machines=0xf94158, evlist=0xf501f0, event=0x7ffff7fbaba8, sample=0x7fffffffa860, tool=0xec6ce0 <record>, file_offset=35752, 
+    file_path=0xf94850 "perf.data") at util/session.c:1334
+#13 0x000000000063b951 in perf_session__deliver_event (session=0xf93f40, event=0x7ffff7fbaba8, tool=0xec6ce0 <record>, file_offset=35752, file_path=0xf94850 "perf.data")
+    at util/session.c:1367
+#14 0x000000000063c745 in perf_session__process_event (session=0xf93f40, event=0x7ffff7fbaba8, file_offset=35752, file_path=0xf94850 "perf.data") at util/session.c:1626
+#15 0x000000000063dec5 in process_simple (session=0xf93f40, event=0x7ffff7fbaba8, file_offset=35752, file_path=0xf94850 "perf.data") at util/session.c:2203
+#16 0x000000000063db7c in reader__read_event (rd=0x7fffffffafa0, session=0xf93f40, prog=0x7fffffffaf70) at util/session.c:2132
+#17 0x000000000063dd76 in reader__process_events (rd=0x7fffffffafa0, session=0xf93f40, prog=0x7fffffffaf70) at util/session.c:2181
+#18 0x000000000063e013 in __perf_session__process_events (session=0xf93f40) at util/session.c:2226
+#19 0x000000000063ea10 in perf_session__process_events (session=0xf93f40) at util/session.c:2390
+#20 0x000000000042d98b in process_buildids (rec=0xec6ce0 <record>) at builtin-record.c:1475
+#21 0x000000000042e963 in record__finish_output (rec=0xec6ce0 <record>) at builtin-record.c:1798
+#22 0x0000000000431c46 in __cmd_record (rec=0xec6ce0 <record>, argc=2, argv=0x7fffffffde80) at builtin-record.c:2841
+#23 0x000000000043513f in cmd_record (argc=2, argv=0x7fffffffde80) at builtin-record.c:4260
+#24 0x00000000004bcf65 in run_builtin (p=0xec9d60 <commands+288>, argc=3, argv=0x7fffffffde80) at perf.c:351
+#25 0x00000000004bd20c in handle_internal_command (argc=3, argv=0x7fffffffde80) at perf.c:404
+#26 0x00000000004bd365 in run_argv (argcp=0x7fffffffdc6c, argv=0x7fffffffdc60) at perf.c:448
+#27 0x00000000004bd6ae in main (argc=3, argv=0x7fffffffde80) at perf.c:556
+(gdb)
+#6  0x0000000000633e3b in check_invariants (maps=0xf947c0) at util/maps.c:110
+110				assert(refcount_read(map__refcnt(map)) > 1);
+(gdb) p map
+$2 = (struct map *) 0xfe6060
+(gdb) p map->dso
+$3 = (struct dso *) 0xfe5ea0
+(gdb) p map->dso->name
+$4 = 0xfe602b "bpf_prog_6deef7357e7b4530_sd_fw_ingress"
+(gdb) p refcount_read(map__refcnt(map))
+$5 = 1
+(gdb) fr 7
+#7  0x00000000006362b2 in __maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:932
+932					check_invariants(maps);
+(gdb) p next
+$6 = (struct map *) 0xfe4bc0
+(gdb) p next->dso
+$7 = (struct dso *) 0xfe4a00
+(gdb) p next->dso->name
+$8 = 0xfe4b8b "bpf_prog_6deef7357e7b4530_sd_fw_egress"
+(gdb) 
+(gdb) p new->dso->name
+$9 = 0xfc27ab "bpf_trampoline_6442522521"
+(gdb) p /x map__start(next)
+$12 = 0xffffffffc012b158
+(gdb) p /x map__start(new)
+$13 = 0xffffffffc0129640
+(gdb) p /x map__end(next)
+$14 = 0xffffffffc012b198
+(gdb) p /x map__end(new)
+$15 = 0xffffffffc012a640
+(gdb) 
+
+So its again that case of overlapping maps...
+
+Ah, the patch below is on top of Namhyungs.
+
+- Arnaldo
+
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 09c9cc326c08d435..e413602afaeb2e83 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -428,11 +428,29 @@ static unsigned int maps__by_name_index(const struct maps *maps, const struct ma
+ 	return -1;
+ }
+ 
++static void map__set_kmap(struct map *map, struct maps *maps)
++{
++	struct dso *dso;
++
++	if (map == NULL)
++		return;
++
++	dso = map__dso(map);
++
++	if (dso && dso__kernel(dso)) {
++                struct kmap *kmap = map__kmap(map);
++
++                if (kmap)
++                        kmap->kmaps = maps;
++                else
++                        pr_err("Internal error: kernel dso with non kernel map\n");
++        }
++}
++
+ static int __maps__insert(struct maps *maps, struct map *new)
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	const struct dso *dso = map__dso(new);
+ 	unsigned int nr_maps = maps__nr_maps(maps);
+ 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
+ 
+@@ -483,14 +501,9 @@ static int __maps__insert(struct maps *maps, struct map *new)
+ 	}
+ 	if (map__end(new) < map__start(new))
+ 		RC_CHK_ACCESS(maps)->ends_broken = true;
+-	if (dso && dso__kernel(dso)) {
+-		struct kmap *kmap = map__kmap(new);
+ 
+-		if (kmap)
+-			kmap->kmaps = maps;
+-		else
+-			pr_err("Internal error: kernel dso with non kernel map\n");
+-	}
++	map__set_kmap(new, maps);
++
+ 	return 0;
+ }
+ 
+@@ -784,7 +797,12 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
+ 			maps_by_name[nr_maps + 1] = map__get(new2);
+ 	}
+ 	RC_CHK_ACCESS(maps)->nr_maps = nr_maps + to_add;
++
+ 	maps__set_maps_by_name_sorted(maps, false);
++
++	map__set_kmap(new1, maps);
++	map__set_kmap(new2, maps);
++
+ 	check_invariants(maps);
+ 	return 0;
+ }
+@@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 				 */
+ 				map__put(maps_by_address[i]);
+ 				maps_by_address[i] = map__get(new);
++				map__set_kmap(new, maps);
+ 				check_invariants(maps);
+ 				return err;
+ 			}
