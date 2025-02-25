@@ -1,39 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00A020C47C
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 23:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34F336D
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 00:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740441431; cv=none; b=dJNwNRnFaduzMoZLxbDdF2/iupRWcBGbqPoUmrfNPItW5MnEOFbmX8l4aj+wnzal4R73VM7Dtvass7VCzpNLk56y/63AhGFS/QQ/P6+ObSl4zAqxM5TLNC/A/k5xlSpG7Daa+E6c4m87hdtUHC9PGFG0xZM9HXDqtOPve2XwjuA=
+	t=1740442284; cv=none; b=CBBo5UuPTS/YTDLcqQv/H8PY566ZSPxRnViWgyvgkvLNbmp4nzrOOY4sAVtz+zf7aUmxIgvw8TEPb0IKFaBLw5wpjHNKlRfolm0pfyQTHcIMcE4iJ2G7FcL/yXhcQi/fgQtdJAnM4EPE3if08pQSDpHuS0Gi7aLIZZkkT512wFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740441431; c=relaxed/simple;
-	bh=aw13VvD94sbikFhykj+GstmOsLfjM5bNCVdQksmMjOY=;
+	s=arc-20240116; t=1740442284; c=relaxed/simple;
+	bh=JaskOpoRxDD8dcjhSVRdXSxxLXdFlbvfueQQezwalOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ItetB7sF07JlFUXEJPTSqvx6OovPqbWkeKFAWLvxeSqA5+8qkAY14SOIlxVpslQov2nz+NPN2GohF9onGfUS9IqnTP022M60A07iwIIbsDwIPs01jUs/bcSbyHdF1NgzlQ3qHhbUBw2B+adJMnBG/UhACdHCkKMC29eC/JiVptA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVpejxiZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERhr56nZ4LGoh6s2rlzjtmOAHqfdK4V71P/a+/miKXebJlQl8RSogS/DMhTqvff8xzS7IMZaMeIhVxnf5gId3+RQrBLppbXyJWZmq1IL8cwNabWIVtISdyFyEgjcztx0+91YHCFc+jsBqA88PbmRZ8bZGzh363OrnfzX7n8ULxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ve/GNrSd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVpejxiZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB22C4CED6;
-	Mon, 24 Feb 2025 23:57:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ve/GNrSd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE82C4CED6;
+	Tue, 25 Feb 2025 00:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740441430;
-	bh=aw13VvD94sbikFhykj+GstmOsLfjM5bNCVdQksmMjOY=;
+	s=k20201202; t=1740442284;
+	bh=JaskOpoRxDD8dcjhSVRdXSxxLXdFlbvfueQQezwalOs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NVpejxiZlZxsBFG8KglmXHrb7CAF06Zv4GgvygvJri8sRQFp+qJMWRBjqoXDLYM3e
-	 Z66U5N1Oh8/E2xC/mA/L/eb+jJP2h3fao7E4uyx3dy4fhqJ2d6kNfnLshdEPdYw4nC
-	 qwVBKGcRbY0o2XosABeQx2LIpNt0XlZ4aXE5u7Tj1LxURW6wjCGg9g5k1nnJYRcDuj
-	 XeIGtli5vXelJ7n6mpWFjNlmF4pXngBmMfz4UIkb7dVLoejMIIbO6Uv6UrQZLoynF/
-	 pwLqRuY6lsPGy9nhbCHXxwkQkpUwauEd+CzmmQl/CBWHVuJKuPdSXoWH/7LsMatZu0
-	 7NcQRW4bjaBHQ==
-Date: Mon, 24 Feb 2025 15:57:07 -0800
+	b=Ve/GNrSdF3izGyWkZ6boNR7ceZTRnsUXq7IK+Rt7ZFxV6xBXktBGtZgUDf3kpf0IP
+	 75WdCkZxLoplwa/dSgQSNurY6tS3zLUlLab7AvvLcv22M60d34LmyliuX5ORRwisZH
+	 B87NP2w7mBlFbnlpNs45UbiTm6XR07WIttBRymOn/cXA9k8YIA1ZFWKoHgHkhhnarT
+	 5q1WSsnzkHSZXGgQII0nFby+40V+iDpQ8V3rqtGpjPo2T5SgDe2hoiGRkHkN0LnBYP
+	 GYm+1ZYJV10ZBGLDp+aCTrZ2qTYgQ6FnXdqZnEsAZyEJYechsRtzSrkjd4DyH64UIj
+	 6ghfe659z2KIg==
+Date: Mon, 24 Feb 2025 16:11:22 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Ian Rogers <irogers@google.com>
-Subject: Re: perf record question regarding grouped events
-Message-ID: <Z70HU3obg1ZHeutj@google.com>
-References: <e2c7e654-5608-4206-ab3a-2a63b54cbc35@linux.ibm.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: Internal error while annotating function
+Message-ID: <Z70KqrJXaVcIq8qh@google.com>
+References: <20250224-accurate-pigeon-of-adventure-386dcd@leitao>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,84 +42,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e2c7e654-5608-4206-ab3a-2a63b54cbc35@linux.ibm.com>
+In-Reply-To: <20250224-accurate-pigeon-of-adventure-386dcd@leitao>
 
 Hello,
 
-On Wed, Feb 19, 2025 at 11:57:46AM +0100, Thomas Richter wrote:
-> Hi all,
+On Mon, Feb 24, 2025 at 08:05:57AM -0800, Breno Leitao wrote:
+> Hello,
 > 
-> I have a question on the intended usage of the grouped events as
-> in test case 114 perf record tests subtest 'Basic leader sampling' test
-> where this command is executed:
+> I am trying to run annotate a perf function on aarch64, and it returns
+> an error. How do I get the logs for what is happening?
 > 
->  # perf record -vv -e '{cycles,cycles}:uS' -- ...
+> Here is what I see, in either `perf top` or `perf report`:
 > 
-> In the debug output the following 2 event are installed:
+> 1) Open the TUI
+> 2) Get on top of a specific hot function. Not all of them reproduce the
+>    error. For instance, one of these functions is `finish_task_switch`
+> 3) Press "Annotate finish_task_switch"
+> 4) Got the following error:
 > 
->  ------------------------------------------------------------
->  perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   disabled                         1
->   exclude_kernel                   1
->   exclude_hv                       1
->   freq                             1
->   sample_id_all                    1
->  ------------------------------------------------------------
->  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->  ------------------------------------------------------------
->  perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             136
->   config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   exclude_kernel                   1
->   exclude_hv                       1
->   sample_id_all                    1
->  ------------------------------------------------------------
->  sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8 = 6
+> 	┌─Error:──────────────────────────────┐
+> 	│Couldn't annotate finish_task_switch:│
+> 	│Internal error: Invalid -1 error code│
+> 	│                                     │
+> 	│                                     │
+> 	│Press any key...                     │
+> 	└─────────────────────────────────────┘
 > 
-> What puzzles me is that the first event with file descriptor 5
-> is installed for sampling. The second event with file descriptor 6
-> is installed for counting because event attribute members
-> attr::freq and attr::sample_freq are zero.
+> At the bottom I also see:
 > 
-> So of the 2 cycles events installed, the group leader is sampling
-> and the other event is counting.
+> 	Error running objdump  --start-address=0xffff800080907fa0 --stop-address=0xffff800080908220  -d --no-show-raw-insn -S      -C "$1"
 > 
-> Is this understanding correct?
-> The test then checks if the number of samples matches the count
-> from the counting event?
+> If I try to run this manually, I see the following. Is this the real
+> cause?
+> 
+> 	# objdump  --start-address=0xffff800080907fa0 --stop-address=0xffff800080908220  -d --no-show-raw-insn -S -C /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+> 
+> 	objdump: /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: unknown type [0x13] section `.relr.dyn'
+> 	objdump: /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: unknown type [0x13] section `.relr.dyn'
+> 	/boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da:     file format elf64-little
+> 	objdump: can't disassemble for architecture UNKNOWN!
+> 
+> The file seems to be a valid aarch64 binary:
+> 
+> 	$ file /boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+> 	/boot/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: symbolic link to /lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+> 	$ file /lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da
+> 	/lib/modules/6.13.2-0_fbk0_rc8_0_g925d379822da/vmlinux-6.13.2-0_fbk0_rc8_0_g925d379822da: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=be549c9fd62405a10f6b36236610cd6a57a6d3e3, with debug_info, not stripped
+> 
+> Any clue how to investigate this further?
 
-Yep, the syntax '{event1,event2}:S' is for group leader sampling which
-reduces the overhead of PMU interrupts.  The idea is that those events
-are scheduled together so sampling is enabled only for the leader
-(usually the first) event and it reads counts from the member events
-using PERF_SAMPLE_READ.
-
-So they should have the same counts if it uses the same events in a
-group.
+What's the version of binutils?  Is it old?  I don't know what's the
+problem but checking the latest version might help.
 
 Thanks,
 Namhyung
 
- 
-> Thanks a lot for your help.
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> IBM Deutschland Research & Development GmbH
-> 
-> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-> 
-> Geschäftsführung: David Faller
-> 
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
