@@ -1,141 +1,81 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8C1192B96
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 11:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85589267B14;
+	Tue, 25 Feb 2025 11:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740483142; cv=none; b=tXHJwlvRX/lhxq4TpspGZXmqIMs+ACg592PBjDQME25iSFa/kDymVKRGvyRf9xWfMwa2rNgBZbbPxoqXiV/72u0OyYNClXhPw3HDSIa2eQzJSX3E0DyiZTQCVOXsH/iX/vLT2eIR2D1+cEJo9K/hZAnz7T5Vsp9+foFbHq215lc=
+	t=1740484364; cv=none; b=pf/0kbrWp7ylkEZDn6A13t0VWml3amnFnTK459sCT/dezarSkZGl+gQcVpKruOpAVVdhTFrXZi873WzkAD7KQw1WnEw44j4un3VWJbiVX6i/7kDxLfqkxFgdywtzRVPN0YesmWj2Ch8/GLuJzepvWX1Y8MIKTxbhOm8Znewsf1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740483142; c=relaxed/simple;
-	bh=K7Db/6j8RrVLsgbUaOjjljFO5ohWgKZ34yJ8XFYg98M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jHg7ZVHVLL9ez41Z3FDl8pINIO7p8t9ord14va63BCWgrNnVwl5ykZCRMrSUMknTZshIoegQ0QLTGlOBw0MLKuFX3+iEOD52MrtzbsXeK/P/AWZ5g0Y2WdmjSmnSloIqRPvrHIWQiomW1cLrS0U4e+gY9KLfK4VHIZGxWTBqw84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c2nz6E2S; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740484364; c=relaxed/simple;
+	bh=Uq3JsbSWeE7bXtdd8QBhOL64aZ4wubBKzjD2kSi205M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9vJJW8eravoSHolIsFk5VsKC9YRc/h0OvxbNN34TsuIU5MwyeUcKjT5SiGd1czqGr5AA61Bi7xPHSR88Ex/+KBR+5wrndPb5t3quxY+Y6DGA8T0+gX+tLWtMRbcHMyC5EziGpGS83tJk7aBgtFw3KN6BnvJ10mMX/iqtyrCSPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=E4g9jOPG; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c2nz6E2S"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OMnHwv013022;
-	Tue, 25 Feb 2025 11:32:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=KOwvuY0CgjqpsCL+QoA3s0182moYZeyhuRB4GmTf/
-	uw=; b=c2nz6E2SScqWRGBOpiEhGr8NCGLF8kGaHuC935w7BVCMXD7lPxDBuU98I
-	bhUkXsdyN41FQSpesn3jjV1cIYXCOkKxvT6W/0DDZ4NIUwpGHP1UOFIlDZHMlVuf
-	CEQcy/43AHi949JQYAEEpUiUpZ/ahLh57+RqG1KEzRD3BFSipC1PUN7ZhsvmjnoH
-	5rRaSyfkwwEacNzkbFXIwnTnBr/+tbdGWmC9L+AsMm95tw34/X3GWxzAXOry4OeR
-	WERqwP3SdANenhJJEWpJJQjP7om4khhBF9rxnfjtFuh6vHsKkwkPZmkQTvMZCW31
-	3F9IcZw7bw5WIx97wYTLcLrpU6/IA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4511waax5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 11:32:13 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51PBU3W0001490;
-	Tue, 25 Feb 2025 11:32:12 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4511waax5d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 11:32:12 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51PAlsAm026964;
-	Tue, 25 Feb 2025 11:32:11 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ytdkch4u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 11:32:11 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PBW7kU58130746
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 11:32:07 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 54E9320043;
-	Tue, 25 Feb 2025 11:32:07 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F2BA020040;
-	Tue, 25 Feb 2025 11:32:00 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.248.206])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 25 Feb 2025 11:32:00 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
-        Aditya.Bodkhe1@ibm.com, Tejas.Manhas1@ibm.com
-Subject: [PATCH] tools/perf: Use perf_tool__init() to initialize default values in builtin trace
-Date: Tue, 25 Feb 2025 17:01:57 +0530
-Message-Id: <20250225113157.28836-1-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E4g9jOPG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xtFaTUHxKJW7L05UduUsh00omyWJq+zYzPlNt38BgYU=; b=E4g9jOPGyd04pwfl9laE3iJNLf
+	+FsmykAK2A6R7XBn6LSr8pP2Q60kqJK6+3VHOO3GCclnui93cOV8Uwzonj81qSitzjUX9aPyfo1g1
+	FbjvfVnweund0r7/4lgB5aS1bCPg+qroTDWAsZMerQ59OIeNKsaPVz3yrikvF5bIuaElQFcL2FCeq
+	rXrER6zqKh8JCDObbhymDUBryUQ9q94xKJ/D9ATgxcN/erwMFumPJ0fennOSWl9LVOO1pwohBMMzd
+	VFudRG/8vSoHFmGHWkNKPomTMq1n3tKX4tuxBGZktBYTTo+yXTruQFhU91p11HVqmUsqbABNxw3DW
+	l5WGAqGw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmtUE-00000003L0H-04Pt;
+	Tue, 25 Feb 2025 11:52:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4559A300472; Tue, 25 Feb 2025 12:52:29 +0100 (CET)
+Date: Tue, 25 Feb 2025 12:52:29 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v2 15/24] perf/x86/intel: Add SSP register support for
+ arch-PEBS
+Message-ID: <20250225115229.GN11590@noisy.programming.kicks-ass.net>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-16-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tmyErrajOq3rnIFzvNbrZGWkNGgSrovL
-X-Proofpoint-ORIG-GUID: A2aA0qkMZcXtBKRKqnx0Bzl0kiey4Dg4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 phishscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218152818.158614-16-dapeng1.mi@linux.intel.com>
 
-Perf trace on perf.data fails as below:
+On Tue, Feb 18, 2025 at 03:28:09PM +0000, Dapeng Mi wrote:
 
-	./perf trace record -- sleep 1
-	./perf trace -i perf.data
-	perf: Segmentation fault
-	Segmentation fault (core dumped)
+> +	if (unlikely(event->attr.sample_regs_intr & BIT_ULL(PERF_REG_X86_SSP))) {
+> +		/* Only arch-PEBS supports to capture SSP register. */
+> +		if (!x86_pmu.arch_pebs || !event->attr.precise_ip)
+> +			return -EINVAL;
+> +	}
 
-Backtrace pointed to :
-	?? ()
-	perf_session.process_user_event ()
-	reader.read_event ()
-	perf_session.process_events ()
-	cmd_trace ()
-	run_builtin ()
-	handle_internal_command ()
-	main ()
+> @@ -27,9 +27,11 @@ enum perf_event_x86_regs {
+>  	PERF_REG_X86_R13,
+>  	PERF_REG_X86_R14,
+>  	PERF_REG_X86_R15,
+> +	/* Shadow stack pointer (SSP) present on Clearwater Forest and newer models. */
+> +	PERF_REG_X86_SSP,
 
-Further debug pointed that, segmentation fault happens when
-trying to access id_index. Code snippet:
+The first comment makes more sense. Nobody knows of cares what a
+clearwater forest is, but ARCH-PEBS is something you can check.
 
-	case PERF_RECORD_ID_INDEX:
-		err = tool->id_index(session, event);
-
-Since 'commit 15d4a6f41d72 ("perf tool: Remove
-perf_tool__fill_defaults()")', perf_tool__fill_defaults is
-removed. All tools are initialized using perf_tool__init()
-prior to use. But in builtin-trace, perf_tool__init is not
-used and hence the defaults are not initialized. Use
-perf_tool__init() in perf trace to handle the initialization.
-
-Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
- tools/perf/builtin-trace.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f55a8a6481f2..092c5f6404ba 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4589,6 +4589,7 @@ static int trace__replay(struct trace *trace)
- 	struct evsel *evsel;
- 	int err = -1;
- 
-+	perf_tool__init(&trace->tool, /*ordered_events=*/true);
- 	trace->tool.sample	  = trace__process_sample;
- 	trace->tool.mmap	  = perf_event__process_mmap;
- 	trace->tool.mmap2	  = perf_event__process_mmap2;
--- 
-2.43.5
-
+Also, this hard implies that anything exposing ARCH-PEBS exposes
+CET-SS. Does virt complicate this?
