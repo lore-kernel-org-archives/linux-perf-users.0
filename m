@@ -1,289 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572E52054F4;
-	Tue, 25 Feb 2025 19:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C65FD205AB6;
+	Tue, 25 Feb 2025 19:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740512940; cv=none; b=gHnY87A2wu7drktAvwpdwWVG8W/5QnBUlANQU5BS1vUPFCNDCEil3uu2bpjw1rkdWX2UBXLJBNmFXE9Xxj4OllIfuYREiOGsALCttafOpeEbVtr7rOu7IdUK7M2TMQvuAvXRZ3Bu3h5oxVVS/tc92POgYK77XzIcIZFjtLuJSZA=
+	t=1740513505; cv=none; b=cpNE5Y+vgqb/YOVvmQCUFNIrHGxTaAKI/a1Wz42L0Br7iotb1Od1MwygkF5yGfWk58TaH/fkOjCbDU3+bzc7jEw/DfP3iymu8y6KmkijbMErcBtwo+GK9+YADcEWhPYeQURn1MySzcTtC/fpSfVItReajT9BO4eQG9yKBdjaMTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740512940; c=relaxed/simple;
-	bh=Ltv58kxzfsYfdSmJzVewji73ROqlz2/+qZiGcPEyrFY=;
+	s=arc-20240116; t=1740513505; c=relaxed/simple;
+	bh=TauguYtmPWqQDsCynGgZIXK+z1cbbQZwXFdW9dEVRF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HvWN+4g5k3vg4+d9RcdoXC+k8NCV7ipgWXJ0S7vlxQogqWC/imXDyqcRkVandDtZZqHc7dRMB+p5O/rH9iKCfCdhpm7aQA1qkbIxVNc4SsaLW/+hS0qhiR06zMs2vXQEzbd8QbrQ+mUxIZeSFh1tWRl/o1FDOsjmPFvTTl4gGV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okDOmcI5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okDOmcI5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823F3C4CEDD;
-	Tue, 25 Feb 2025 19:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740512939;
-	bh=Ltv58kxzfsYfdSmJzVewji73ROqlz2/+qZiGcPEyrFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=okDOmcI58syu/ratG7CF2XVJqdTfqzCxI8D119C5coBGV0YRtaGyuhW+fLbBITLv4
-	 rNMETrMLgL61v5T5apWHWe8i1gaVzszUDs/MdjmMMhGqMiGDU7fESUxfrtUa5BGhrB
-	 Rg5hdxze3OazbzKpbYjpdMYTDbbPRClLUarNPr875YIu6AreNlKlHGy3sfatP2O5sV
-	 M4i884eERaPGnuNoE0oYErYpOdo+G/fQGUmvWNuxQXQHyMTTjwNusgGUeFhRJRJdOO
-	 TZ9Gzcgz7jwgPdrU5QJKnE8CUzMcDkpcwbWYObzl7Qm8EB8U8H4qT2WFYDGTNXRD3p
-	 2JzuzIHibS03A==
-Date: Tue, 25 Feb 2025 20:48:56 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z74eqEiyrzuoL6uz@x1>
-References: <Z7ZIqpwffQbibwL2@google.com>
- <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
- <Z7gllQZeg6U2OvZE@google.com>
- <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
- <Z70wHEl6Sp0H0c-3@google.com>
- <CAP-5=fUosOVUKi5tQ3gVtHhfApk0oH3r2zHDW7-i+_qASKm+Cg@mail.gmail.com>
- <Z712hzvv22Ni63f1@google.com>
- <Z74U5s7Yf0f6I7Mo@x1>
- <Z74V0hZXrTLM6VIJ@x1>
- <Z74ZL6SUwWL_a5EK@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLSn1UgxhDAmvSoRTjAHpgFQAxC1D25bsHHptqi2GroKSw2IFdScxXs/B9GhJMRUK6K3TK9HSaO+2eJJEP9jQswwl7/IdgHNK+Z3z4qX8SnMapSC7yqH0lZE0K9FFAD14ODPUsaVZJtvfUf1PFY/LrsvDZApOsqgDvAzCDPP3OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 427E6152B;
+	Tue, 25 Feb 2025 11:58:39 -0800 (PST)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD9303F6A8;
+	Tue, 25 Feb 2025 11:58:20 -0800 (PST)
+Date: Tue, 25 Feb 2025 19:58:18 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <Z74g2vUT9-KtlIvo@J2N7QTR9R3.cambridge.arm.com>
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
+ <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
+ <20250224122507.GE8144@e132581.arm.com>
+ <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+ <20250224140317.GF8144@e132581.arm.com>
+ <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+ <20250224180301.GI8144@e132581.arm.com>
+ <Z72xMLsd37I6X_5-@J2N7QTR9R3>
+ <20250225174803.GB1821331@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z74ZL6SUwWL_a5EK@x1>
+In-Reply-To: <20250225174803.GB1821331@e132581.arm.com>
 
-On Tue, Feb 25, 2025 at 08:25:35PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Tue, Feb 25, 2025 at 08:11:17PM +0100, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Feb 25, 2025 at 08:07:18PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Feb 24, 2025 at 11:51:35PM -0800, Namhyung Kim wrote:
-> > > > On Mon, Feb 24, 2025 at 08:40:37PM -0800, Ian Rogers wrote:
-> > > > > On Mon, Feb 24, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > On Mon, Feb 24, 2025 at 10:18:37AM -0800, Ian Rogers wrote:
-> > > > [SNIP]
-> > > > > > > I thought the real-time processing had to use
-> > > > > > > maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
-> > > > > > > events only give us VMA data and two mmaps may have been merged.
-> > > > > > > Shouldn't doing this change be the simplest fix?
-> > 
-> > > > > > Make sense.  How about this?
-> > 
-> > > > > Lgtm, I have no way to test the issue. Why does maps__fixup_end need
-> > > > > to get pushed later?
-> > 
-> > > > I just noticed it would add extra kernel maps after modules.  I think it
-> > > > should fixup end address of the kernel maps after adding all maps first.
-> > 
-> > > > Arnaldo, can you please test this?
-> >  
-> > > Trying it now.
-> > 
-> > Now we have something different:
-> > 
-> > root@number:~# perf record sleep
-> > sleep: missing operand
-> > Try 'sleep --help' for more information.
-> > [ perf record: Woken up 1 times to write data ]
-> > perf: util/maps.c:80: check_invariants: Assertion `RC_CHK_EQUAL(map__kmap(map)->kmaps, maps)' failed.
-> > Aborted (core dumped)
-> > root@number:~#
+On Tue, Feb 25, 2025 at 05:48:03PM +0000, Leo Yan wrote:
+> On Tue, Feb 25, 2025 at 12:01:52PM +0000, Mark Rutland wrote:
 > 
-> __maps__insert() does:
+> [...]
 > 
->         if (dso && dso__kernel(dso)) {
->                 struct kmap *kmap = map__kmap(new);
+> > > > Critically, the brbe_enable() function merges the filters of all
+> > > > *active* events which have been installed into hardware. It does not
+> > > > track all events which can be rotated, and the resulting filter is not
+> > > > the same -- it can change as a result of rotation.
+> > > 
+> > > In a perf session has multiple events, and events have different branch
+> > > filters, seems to me, a simple way is to return error for this case.
+> > 
+> > FWIW, I'd generally prefer to do that since it avoids a number of
+> > horrible edge-cases and gets rid of the need to do SW filtering, which
+> > falls somewhere between "tricky" and "not entirely possible". However,
+> > that's not what LBR and others do, which is why we went with filter
+> > merging.
+> > 
+> > If folk on the tools side are happy with the kernel rejecting
+> > conflicting events, then I'd be more than happy to do that. What I don't
+> > want is that we start off with that approach and people immediately
+> > start to complain that the BRBE driver rejects events that the LBR
+> > driver accepts.
+> > 
+> > See the last time this came up.
 > 
->                 if (kmap)
->                         kmap->kmaps = maps;
->                 else
->                         pr_err("Internal error: kernel dso with non kernel map\n");
->         }
+> Thanks for the shared links.  Based on the info, let's say we can have two
+> cases:
 > 
-> while maps__fixup_overlap_and_insert() doesn't.
+>   Case 1: set different branch filters in a single perf session:
 > 
-> It calls __maps__insert_sorted() that probably should do what
-> __maps__insert() does?
+>     perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u \
+>                 -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
+> 
+>   Case 2: set different branch filters in multiple perf sessions:
+> 
+>     perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u ...
+> 
+>     perf record -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
+> 
+> In my previous reply, I was suggesting that we should reject the case 1.
 
-Ok, so I did the following patch but this case fails:
+Do you mean that the kernel should reject that, or that userspace should
+reject that.
 
-@@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
-                                 */
-                                map__put(maps_by_address[i]);
-                                maps_by_address[i] = map__get(new);
-+                               map__set_kmap(new, maps);
-                                check_invariants(maps);
-                                return err;
-                        }
+As mentioned earlier, I am ok with the idea that we reject *scheduling*
+events with mismatched filters, as we do for other resource conflicts.
+That would necessarily mean rejecting *groups* of events with
+inconsistent filters at open time.
 
-With:
+However, I do not think that we should reject indepenent events which
+happen to have mismatched filters, regardless of whether they're opened
+by the same "session".
 
-perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
+> IMO, it is not quite useful to configure different filters for events in
+> the same session, especially if this leads complexity in the driver due
+> to the hardware limitation.
 
-As:
+I generally agree, but IIRC userspace does this today.
 
-106				/*
-107				 * Maps by name maps should be in maps_by_address, so
-108				 * the reference count should be higher.
-109				 */
-110				assert(refcount_read(map__refcnt(map)) > 1);
+> For case 2, when create a new session, if the perf tool can read out the
+> current branch filter setting (e.g. via sysfs node) and give suggestion
+> what branch filter is compabile with existed sessions, seems to me, this
+> is a feasible solution.  My understanding this is a rare case, and a
+> clear guidance for users would be sufficient if this happens.  (Maybe
+> we can give recommendation for how to use BRBE in the perf doc).
 
-Since it is just replacing the map in the maps_by_address and not
-touching on the maps_by_name? Thus the refcount is just 1:
+No. We are not going to expose *dynamic* information about the PMU
+hardware via sysfs. This is not as simple as you make it out to be.
+At any point in time there can be an arbitrary number of events open,
+and some arbitrary subset currently scheduled.
 
-[ perf record: Woken up 1 times to write data ]
-perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
+I agree that ideally this should be rare, though, and hence either of
+the two options I have suggested thus far should handle that acceptably.
 
-Thread 1 "perf" received signal SIGABRT, Aborted.
-__pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-44	      return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
-(gdb) bt
-#0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-#1  0x00007ffff6ea80a3 in __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:78
-#2  0x00007ffff6e4ef1e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
-#3  0x00007ffff6e36902 in __GI_abort () at abort.c:79
-#4  0x00007ffff6e3681e in __assert_fail_base (fmt=0x7ffff6fc3bb8 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7bcdd0 "refcount_read(map__refcnt(map)) > 1", 
-    file=file@entry=0x7bcc53 "util/maps.c", line=line@entry=110, function=function@entry=0x7bd010 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:96
-#5  0x00007ffff6e47047 in __assert_fail (assertion=0x7bcdd0 "refcount_read(map__refcnt(map)) > 1", file=0x7bcc53 "util/maps.c", line=110, 
-    function=0x7bd010 <__PRETTY_FUNCTION__.6> "check_invariants") at assert.c:105
-#6  0x0000000000633e3b in check_invariants (maps=0xf947c0) at util/maps.c:110
-#7  0x00000000006362b2 in __maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:932
-#8  0x000000000063636c in maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:954
-#9  0x000000000062920a in machine__process_ksymbol_register (machine=0xf94158, event=0x7ffff7fbaba8, sample=0x7fffffffa860) at util/machine.c:715
-#10 0x00000000006294ca in machine__process_ksymbol (machine=0xf94158, event=0x7ffff7fbaba8, sample=0x7fffffffa860) at util/machine.c:779
-#11 0x00000000005ce2fd in perf_event__process_ksymbol (tool=0xec6ce0 <record>, event=0x7ffff7fbaba8, sample=0x7fffffffa860, machine=0xf94158) at util/event.c:296
-#12 0x000000000063b76c in machines__deliver_event (machines=0xf94158, evlist=0xf501f0, event=0x7ffff7fbaba8, sample=0x7fffffffa860, tool=0xec6ce0 <record>, file_offset=35752, 
-    file_path=0xf94850 "perf.data") at util/session.c:1334
-#13 0x000000000063b951 in perf_session__deliver_event (session=0xf93f40, event=0x7ffff7fbaba8, tool=0xec6ce0 <record>, file_offset=35752, file_path=0xf94850 "perf.data")
-    at util/session.c:1367
-#14 0x000000000063c745 in perf_session__process_event (session=0xf93f40, event=0x7ffff7fbaba8, file_offset=35752, file_path=0xf94850 "perf.data") at util/session.c:1626
-#15 0x000000000063dec5 in process_simple (session=0xf93f40, event=0x7ffff7fbaba8, file_offset=35752, file_path=0xf94850 "perf.data") at util/session.c:2203
-#16 0x000000000063db7c in reader__read_event (rd=0x7fffffffafa0, session=0xf93f40, prog=0x7fffffffaf70) at util/session.c:2132
-#17 0x000000000063dd76 in reader__process_events (rd=0x7fffffffafa0, session=0xf93f40, prog=0x7fffffffaf70) at util/session.c:2181
-#18 0x000000000063e013 in __perf_session__process_events (session=0xf93f40) at util/session.c:2226
-#19 0x000000000063ea10 in perf_session__process_events (session=0xf93f40) at util/session.c:2390
-#20 0x000000000042d98b in process_buildids (rec=0xec6ce0 <record>) at builtin-record.c:1475
-#21 0x000000000042e963 in record__finish_output (rec=0xec6ce0 <record>) at builtin-record.c:1798
-#22 0x0000000000431c46 in __cmd_record (rec=0xec6ce0 <record>, argc=2, argv=0x7fffffffde80) at builtin-record.c:2841
-#23 0x000000000043513f in cmd_record (argc=2, argv=0x7fffffffde80) at builtin-record.c:4260
-#24 0x00000000004bcf65 in run_builtin (p=0xec9d60 <commands+288>, argc=3, argv=0x7fffffffde80) at perf.c:351
-#25 0x00000000004bd20c in handle_internal_command (argc=3, argv=0x7fffffffde80) at perf.c:404
-#26 0x00000000004bd365 in run_argv (argcp=0x7fffffffdc6c, argv=0x7fffffffdc60) at perf.c:448
-#27 0x00000000004bd6ae in main (argc=3, argv=0x7fffffffde80) at perf.c:556
-(gdb)
-#6  0x0000000000633e3b in check_invariants (maps=0xf947c0) at util/maps.c:110
-110				assert(refcount_read(map__refcnt(map)) > 1);
-(gdb) p map
-$2 = (struct map *) 0xfe6060
-(gdb) p map->dso
-$3 = (struct dso *) 0xfe5ea0
-(gdb) p map->dso->name
-$4 = 0xfe602b "bpf_prog_6deef7357e7b4530_sd_fw_ingress"
-(gdb) p refcount_read(map__refcnt(map))
-$5 = 1
-(gdb) fr 7
-#7  0x00000000006362b2 in __maps__fixup_overlap_and_insert (maps=0xf947c0, new=0xfc27e0) at util/maps.c:932
-932					check_invariants(maps);
-(gdb) p next
-$6 = (struct map *) 0xfe4bc0
-(gdb) p next->dso
-$7 = (struct dso *) 0xfe4a00
-(gdb) p next->dso->name
-$8 = 0xfe4b8b "bpf_prog_6deef7357e7b4530_sd_fw_egress"
-(gdb) 
-(gdb) p new->dso->name
-$9 = 0xfc27ab "bpf_trampoline_6442522521"
-(gdb) p /x map__start(next)
-$12 = 0xffffffffc012b158
-(gdb) p /x map__start(new)
-$13 = 0xffffffffc0129640
-(gdb) p /x map__end(next)
-$14 = 0xffffffffc012b198
-(gdb) p /x map__end(new)
-$15 = 0xffffffffc012a640
-(gdb) 
+> To be clear, an important factor is the trace modes with modifier 'u'
+> (user) and 'k' (kernel) should be supported for different events and for
+> different sessions.  In a mixed cases (some events are userspace only
+> and some are kernel only), the BRBE driver needs to filter out branch
+> records for specific mode when taking a sample.
 
-So its again that case of overlapping maps...
+I hate to repeat myself, but the driver has *no concept whatsoever* of a
+"session". It only knows:
 
-Ah, the patch below is on top of Namhyungs.
+* Which events are currently active in hardware.
 
-- Arnaldo
+* Which events have been grouped together.
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 09c9cc326c08d435..e413602afaeb2e83 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -428,11 +428,29 @@ static unsigned int maps__by_name_index(const struct maps *maps, const struct ma
- 	return -1;
- }
- 
-+static void map__set_kmap(struct map *map, struct maps *maps)
-+{
-+	struct dso *dso;
-+
-+	if (map == NULL)
-+		return;
-+
-+	dso = map__dso(map);
-+
-+	if (dso && dso__kernel(dso)) {
-+                struct kmap *kmap = map__kmap(map);
-+
-+                if (kmap)
-+                        kmap->kmaps = maps;
-+                else
-+                        pr_err("Internal error: kernel dso with non kernel map\n");
-+        }
-+}
-+
- static int __maps__insert(struct maps *maps, struct map *new)
- {
- 	struct map **maps_by_address = maps__maps_by_address(maps);
- 	struct map **maps_by_name = maps__maps_by_name(maps);
--	const struct dso *dso = map__dso(new);
- 	unsigned int nr_maps = maps__nr_maps(maps);
- 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
- 
-@@ -483,14 +501,9 @@ static int __maps__insert(struct maps *maps, struct map *new)
- 	}
- 	if (map__end(new) < map__start(new))
- 		RC_CHK_ACCESS(maps)->ends_broken = true;
--	if (dso && dso__kernel(dso)) {
--		struct kmap *kmap = map__kmap(new);
- 
--		if (kmap)
--			kmap->kmaps = maps;
--		else
--			pr_err("Internal error: kernel dso with non kernel map\n");
--	}
-+	map__set_kmap(new, maps);
-+
- 	return 0;
- }
- 
-@@ -784,7 +797,12 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
- 			maps_by_name[nr_maps + 1] = map__get(new2);
- 	}
- 	RC_CHK_ACCESS(maps)->nr_maps = nr_maps + to_add;
-+
- 	maps__set_maps_by_name_sorted(maps, false);
-+
-+	map__set_kmap(new1, maps);
-+	map__set_kmap(new2, maps);
-+
- 	check_invariants(maps);
- 	return 0;
- }
-@@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 				 */
- 				map__put(maps_by_address[i]);
- 				maps_by_address[i] = map__get(new);
-+				map__set_kmap(new, maps);
- 				check_invariants(maps);
- 				return err;
- 			}
+* Which events have been opened for a given task or CPU context.
+
+... and *NONE* of those correspond directly to a "session" managed by
+the userspace perf tool.
+
+> > > If we can unify branch filter within a perf session, would this be
+> > > much easier for handling?
+> > 
+> > Do you mean if the perf tool ensured that all events in a given session
+> > had the same filter? From the kernel's PoV there's no such thing as a
+> > "perf session", and I'm not sure whether you're suggesting doing that in
+> > userspace or withing the kernel.
+> 
+> My understanding is this would be not difficult to do such kind checking
+> in the tool.  E.g., the perf tool can iterate every event and check the
+> branch filter and detect incompabile issue.
+
+Cool, sounds like we could do that then!
+
+> > Doing that in the perf tool would certianly make a stronger argument for
+> > the kernel taking the "reject conflicting branch filters" option.
+> > 
+> > Doing that within the kernel isn't really possible.
+> 
+> As said above, if the BRBE driver can provide a knob in sysfs to indicate
+> what is the current branch filter in the existed sessions, this would be
+> helpful for the tool to do the checking and remind users.
+
+Sorry, as above, that is not going to happen. It is not practical and
+will cause many other problems.
+
+> I haven't done any experiments for this. If you think this is the way
+> to move forward, I might do a prototype and get back to you to ensure we
+> don't run into any unexpected issues.
+
+What specifically are you proposing to prototype?
+
+Mark.
