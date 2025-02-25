@@ -1,116 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1028D182D9;
-	Tue, 25 Feb 2025 06:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5371259499
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 06:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464274; cv=none; b=G8egv6isbBV1X3UbP2Sq74/zvx9AlaayOQjJDfl+yaJ2dcuVg/UsiywGHFGCQ11bV1o/e46DwObBuHrWruU4iVT3DTF4+Hmapx2ZNe+7egcZxavIKc6ErNxAHUwseLedFw5Sx/bfSBa+Q9ewMPC9MlNAHWlNQyQdiXEosC1Z5nI=
+	t=1740465071; cv=none; b=BouagHXWmGRPtUMWK27Fe6JL7Rgk7Tn/xqHOsgIQ4Ii+n8m32bJm+baTVMHtZNR/3Z91HVuTpCub4YvcWWiRBuxsNq0sy9H1FjC2Wql5iu+KYjWLZnvjDVB83CzO7eyBlTzfVQ7yk4v4WCa/y59UYV6HaeXnyqwYgyppyDmi2SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464274; c=relaxed/simple;
-	bh=BX++zZ7wpWeIo8YSpr+54NZRUpXQKNaqas7+DSsXj0s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uUL2engGwr0nU3+MSoohQlcaG+2vw0jY/n/LgY0v1qCPWynR9E0cmcBHgu8z4KwmTpPQL1UonpNMYeysR4p3A/MZgNN5mM4xalQByc8uCEhw1DRlBAjbUusi446hY9KzNglNB/i3/CGNAVXHTeYjt2YVQ/TodcqQODe/eK6STG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rju6issL; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740465071; c=relaxed/simple;
+	bh=hObuqr58Vys7yvCIUz9aDi5+qmfGDohQ6KYOsjWCgm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pdVg01mUQaX3Q2w2XxLzXRzJ0j3LkpRxcuGVgabLYp2AFJZJceBse+04Wx6VE+l/tFU4NfPI8t1xOnfqdltBEcjGk/wA6kD33FfGF1xGNRYpRZuZcS81ZNCjMDlkHe1nEradHANYw3MNzFCYr1rVxilTViQegMAKa0z8hwSqL/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xpowKU6/; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rju6issL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740464273; x=1772000273;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BX++zZ7wpWeIo8YSpr+54NZRUpXQKNaqas7+DSsXj0s=;
-  b=Rju6issLdLVCISVXgwPhAymvMspLVmmvWr3J0xsBT3npLSlhtp1yJQNW
-   LH1HHO+sSjU1O2pqZYnHAZAMXMXX4i7IVDbMgIrpkiCYRMJ1C2mRdtEXm
-   2VhoMycCclJCBq62NKyZ3Q9X7NzRN3yVAy58V+UoiC+gNxzw/+V9SbuBm
-   N9d6a3jLqPTcX7PHnsatZpwxt0lD5M9SqMe9Zl+0okTT5GOG/VyI3oCH0
-   3dQ+/EjUf/pJ37Ob7l2lt0FgNFQ05ER/psULTIR0OSqBeiExH3+G8UxVC
-   pQuOpbg2BdjoR9fpIEOB4ZfXxkdreg40ptw93kN5IIemF+5YXF5JYaKgG
-   A==;
-X-CSE-ConnectionGUID: nYG4T1vjTkq8C15m1pgQSg==
-X-CSE-MsgGUID: aN7Cx/EKQAy9RZaoNI216Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="66624180"
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="66624180"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 22:17:52 -0800
-X-CSE-ConnectionGUID: +zrk8AMCRzelKXGCqa8j7A==
-X-CSE-MsgGUID: jFoHQj07TDiTMiflPPSkIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="116920481"
-Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 22:17:48 -0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Martin Liska <martin.liska@hey.com>
-Subject: [PATCH] perf script: Update brstack syntax documentation
-Date: Tue, 25 Feb 2025 14:17:36 +0800
-Message-Id: <20250225061736.1698175-1-yujie.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xpowKU6/"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220e0575f5bso111745ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Feb 2025 22:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740465069; x=1741069869; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B89x8UxUtUDBpdRWHV+ScsYjiWuhgi0mOW8ExhQoZ9U=;
+        b=xpowKU6/T7oJ2eo8y9xAg8xKMHK4aLFUkuOJ2TA5NtLUYFN2btN13dW650UnTOITaz
+         w1bUrpyhjxvaxaQAypMDQNYrPLR69UkDX1j3pX8hhy8DoaZqCnzKcMxzRMSTi9RqVMqZ
+         JLdHIEdo2qJzG3cCw3deM9NxOL2dmu8JQKCEMlgPE+hTCHtMFLecAFDAYVRSS/3zj62/
+         bX+6ETroJOF/PkvdHTPaqXPGUqEApNwlNAhoihMPQ0nJIorsxPmaD1e5clxI0Ju8B0Vk
+         zVybvjAXrwXtgLcobp9PIB9WomF2MSCMENu/MWtW4H4pnPh3GZJK1tDCIdOfc7Wyo9xs
+         bZFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740465069; x=1741069869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B89x8UxUtUDBpdRWHV+ScsYjiWuhgi0mOW8ExhQoZ9U=;
+        b=bk7r/K0hXn91LjuBJWAIU97xKRsuoPAgurISVi7nvAslvwqfQpaqprdBCjUo6AIuog
+         +kh5v3cCrFSuUN/5rXtzcdN/YImeaRNhi0nj36jARa70Zxf4DD0PcSGln0YONKSiBC2t
+         yosh4edHkTQj3UVcZLqvWqPzUCgNFubuTEkHZF7BHlaztqrKU+NJcX6OVhtqyfvNXmTj
+         2bakJ54dtGNvt9/6m3twK+EK+p0/UpADib7oVPQWAVRj88DDdDAWRtEioryshsJCwBZF
+         dAqARcrJv3xI7bl33KnADJiVqiEk0DYl4hcv4VZQvH18TGi+5/NlUkJCnaQLZ0BuF2n9
+         nX0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVhyrTMs4nmTqxtd/Pn/USJ1doqo/mtLgtN4XfhVicjPep6y7Fx3YVzSUpVtaU+V22GlAmbNJUXGhUR7VFQvI7D@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUsHZ7/oTWzKVqK+VX0gzO/u1g818E6ZSvBpMqFgzhf3GW1u/q
+	0Kjk71bqhqqFSzaGXjV3a7Hxcw24obWYuooUyPOoOkTnwD7588w2GqjT3MYP/aeCtUeHQZRHU9l
+	bZ7TRKU0vV3dW9lyh0t/aHUAtLKcbLlkUISy+
+X-Gm-Gg: ASbGncvcUvFtyHaTN6kLFDcZNC7NNNGevEJgf0wiuXPPiIXUA2X5DM3SKtHN3G2qhnH
+	qgTsdbESyN6uqBnIHmXhbVi9eRTHk6B7NxpAfcgmtsl+Ymv2mat8dUR+iBOMbl1z7gcxDf5LAMu
+	LAdso84ZUk
+X-Google-Smtp-Source: AGHT+IG/cVq/zgRr9ZKtB+tC0r+WKjogtfFF3yKm3sbrXczDnxrbXP6eWeymjeRSi3vk7pHFaO/1Vw/RG8zdJVtc7TQ=
+X-Received: by 2002:a17:903:2346:b0:21f:44eb:80f4 with SMTP id
+ d9443c01a7336-22307a2e210mr2213605ad.4.1740465068875; Mon, 24 Feb 2025
+ 22:31:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250109075108.7651-1-irogers@google.com> <CAP-5=fXL=nS1-m1+gJsYfWfvyn0ouikX3=RvyKdiM7+ewS9-mg@mail.gmail.com>
+ <CAP-5=fU3beskCJLQdKE8Mjdsx0wTiihh7Z9k7VQtZuJBZC5b6Q@mail.gmail.com>
+ <Z6pWj7jlH6ucKXDu@google.com> <CA+JHD90PDGA-Zbu6hUZ1DZQbSD71FBPRbBdGd1dWCxhi3q6Q1g@mail.gmail.com>
+In-Reply-To: <CA+JHD90PDGA-Zbu6hUZ1DZQbSD71FBPRbBdGd1dWCxhi3q6Q1g@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 24 Feb 2025 22:30:57 -0800
+X-Gm-Features: AWEUYZk2tqNh9d4T7EZXmVbwrzS_Mujjt2E5f47ad9PQ0SZBD4nQ3dCMAYZ25yI
+Message-ID: <CAP-5=fVu4GzCv7W1x3DBdpq2cmHKepxm7Vq96VJO27WyyhiVig@mail.gmail.com>
+Subject: Re: [PATCH v1 00/11] Python improvements for a real use of parse_events
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commits appended new fields to the end of the branch info
-list, such as branch type and branch speculation info.
+On Mon, Feb 10, 2025 at 1:52=E2=80=AFPM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+>
+>
+> On Mon, Feb 10, 2025, 4:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>>
+>> Hi Ian,
+>>
+>> On Mon, Feb 10, 2025 at 08:06:34AM -0800, Ian Rogers wrote:
+>> > On Tue, Feb 4, 2025 at 2:23=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+>> > >
+>> > > On Wed, Jan 8, 2025 at 11:51=E2=80=AFPM Ian Rogers <irogers@google.c=
+om> wrote:
+>> > > >
+>> > > > While parse_events access in python was added, it wasn't used by a=
+ny
+>> > > > python script. In enabling this for the tracepoint.py script a num=
+ber
+>> > > > of latent bugs and necessary improvements were discovered.
+>> > >
+>> > > Ping.
+>> >
+>> > Ping.
+>>
+>> Thanks for the reminder.  I'll review pending patches this week.
+>>
+>> Arnaldo, can you please help reviewing this series?
+>
+>
+> Sure, I'm getting back to doing that, more slowly than I'd like this time=
+. :-/
 
-commit 1f48989cdc7d ("perf script: Output branch sample type")
-commit 6ade6c646035 ("perf script: Show branch speculation info")
+Ping.
 
-Update brstack syntax documentation to be consistent with the latest
-branch info list. Improve the descriptions to help users interpret the
-fields accurately.
-
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
----
- tools/perf/Documentation/perf-script.txt | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index b72866ef270b..8bd105084280 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -239,13 +239,15 @@ OPTIONS
- 	i.e., -F "" is not allowed.
- 
- 	The brstack output includes branch related information with raw addresses using the
--	/v/v/v/v/cycles syntax in the following order:
--	FROM: branch source instruction
--	TO  : branch target instruction
--        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
--	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
--	A/- : A=TSX abort entry, -=not aborted region or not supported
--	cycles
-+	FROM/TO/PRED/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
-+	FROM  : branch source instruction
-+	TO    : branch target instruction
-+	PRED  : M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
-+	INTX  : X=branch inside a transactional region, -=not in transaction region or not supported
-+	ABORT : A=TSX abort entry, -=not aborted region or not supported
-+	CYCLES: the number of cycles that have elapsed since the last branch was recorded
-+	TYPE  : branch type
-+	SPEC  : branch speculation info
- 
- 	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
- 
--- 
-2.34.1
-
+Thanks,
+Ian
