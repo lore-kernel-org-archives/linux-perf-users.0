@@ -1,54 +1,58 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE5B20E713;
-	Tue, 25 Feb 2025 20:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA7C18DB04;
+	Tue, 25 Feb 2025 20:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515554; cv=none; b=Xqk9Rl142ga6xog93vkasrl5ETGq/JQ6ztZHWqv03PCHPBz3qgu2O8VlimEH2/eDjkCf2UIHDqTQLHFvPSRUDs3qCCw3dHW9qXOGxJCRqHuUBee/uQl9Umyj6vGD9ERKeWwOaWAUzDt9qfJQIYZHyo/79apl2dBQHMyPaCWz1Bs=
+	t=1740515807; cv=none; b=RetCtSdHn9RzwLfYWe/3c5VIOZeyqxtehYY9Pq+hF+F7qn8h0WNvsa2ML7mgZ2UA8IADgVhK9gc/VTc8tQX5GHZY6/79HsMuHnEJ8841G/wCP7wBuyniUIhinGksMbaZi6A4TLxAEcMN0FxHgaIngGdys5vUkPS4kcsEmvsTLkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515554; c=relaxed/simple;
-	bh=HrY16MuKJ0t/yC+/pOKrWXInfKwieWik7OdUcGsbnGs=;
+	s=arc-20240116; t=1740515807; c=relaxed/simple;
+	bh=bBsSca7iPGoKC51DbyRKuTIoqdblhn5vEaotnZn1898=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQU/84aCP0HT6WnWZYs3OTYBAVFHbsil8VBQWTe1Vfe3EYDiP8U8vOadYBTNbcbaON+DfoX4td2PlE7Q9DZV9AGDBueNGsV0zUHqCYcuRO+JrSUoC1+Ik2tI5QG7+tTC6vUIf2UM0SI+I0W5W4fH8E3jo9Sxo2lMfWj5Jws7QZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hnEW1imu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnHjH7bnJjJyKO4E1Z5FISToJJ4p24yOA9dCM+5bhzH60aQkC22OMAR0o06+1ciA2rvJxOGsb/bIIzZNd9b6sFww3mGQn9yn7vbZNzkvoyot2mBqKgB3ugHlKXbWazm4hWiRVqnWROKyYykOtuAEQh+w14tJI26JlNnfZ4jOXSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIXMuKf6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hnEW1imu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QkEbOEhQdJwQDtDmCT8g7OJdt6uh2XSoL9PZrCV3FY8=; b=hnEW1imuKDKm1OsC9ijMsjBqoZ
-	JtpHm9eGXzdKJ8pHI8pzp0msaSpUQC2O6IVgVi1dQqz5L1Y+c10+f6WtSAJq+YycW5dqRniIUVWR+
-	tcMDX6/sD583kE8VPlC6AtQQYRNB4d0reU55z93FrbY7xgjZp/1yVbwkhvQasGyTMRT5lvOxrHIQh
-	Mnlmk19XKw+oAbaOXmm3z+eTVQfZ032G0od3VGnVIXZaF/e9SFk48mNrnmtqDY3FkH1sCXVzaswYY
-	fjtAl9lCM2l7lSJ9htl7XIH2q9zRKUr1iGr2eRsPWe/YLKu2MyHJ4ivEWeBIWQXI2Qhoi46tuVScb
-	VzI9piRQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn1bM-0000000CYL0-47sC;
-	Tue, 25 Feb 2025 20:32:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8EB5F300472; Tue, 25 Feb 2025 21:32:24 +0100 (CET)
-Date: Tue, 25 Feb 2025 21:32:24 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v2 17/24] perf/core: Support to capture higher width
- vector registers
-Message-ID: <20250225203224.GB1278@noisy.programming.kicks-ass.net>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-18-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIXMuKf6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD672C4CEDD;
+	Tue, 25 Feb 2025 20:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740515806;
+	bh=bBsSca7iPGoKC51DbyRKuTIoqdblhn5vEaotnZn1898=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gIXMuKf6St13MvzpEG60kV3wue5KSI7lX03EQ/mLq6d9GN1AoPzuQjJve2DJAjNIJ
+	 syeEBlNr98VOASB/mcvUGk2naiSHu65m/DkWtUdG4Dp1DYX4ZNUZqB1N5JaaloFlv6
+	 nc1VYLS40dPYtQpS8o70/WPfs9MU+SyGX/oqULWasZAsExIwTS3jc2GoOCfPsJzYye
+	 k0zM7B5WsJddaantrmPhKMBnGS1lLPbWNUQqo3mcdJZ/qFHJWdq8lFqNF5rYmpIYxC
+	 ewWs+4PAEF24ybf4MyTN+d1MvhGw3ksAn5D/GmxDNAOd63VZPPC6JDaHfdL6VlapDn
+	 CNSNjzqLHtUsg==
+Date: Tue, 25 Feb 2025 21:36:37 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Yeo Reum Yun <YeoReum.Yun@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"acme@kernel.org" <acme@kernel.org>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	Mark Rutland <Mark.Rutland@arm.com>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] events/core: fix acoount failure for event's
+ total_enable_time
+Message-ID: <Z74p1QaMdNKQRNeu@gmail.com>
+References: <20241220100202.804062-1-yeoreum.yun@arm.com>
+ <20241220133359.GC17537@noisy.programming.kicks-ass.net>
+ <Z2V5s2JM4W7BRckR@e129823.arm.com>
+ <20241220151414.GO11133@noisy.programming.kicks-ass.net>
+ <Z2WMsnbFmqpEV5Pu@e129823.arm.com>
+ <20241220153040.GP11133@noisy.programming.kicks-ass.net>
+ <Z2WaC0CqSwU5Ux1B@e129823.arm.com>
+ <20250110163643.GB4213@noisy.programming.kicks-ass.net>
+ <GV1PR08MB105213E200ED463126D478DF1FBEF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,145 +61,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218152818.158614-18-dapeng1.mi@linux.intel.com>
+In-Reply-To: <GV1PR08MB105213E200ED463126D478DF1FBEF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
 
-On Tue, Feb 18, 2025 at 03:28:11PM +0000, Dapeng Mi wrote:
-> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
-> index 9ee9e55aed09..3851f627ca60 100644
-> --- a/arch/x86/include/uapi/asm/perf_regs.h
-> +++ b/arch/x86/include/uapi/asm/perf_regs.h
-> @@ -33,7 +33,7 @@ enum perf_event_x86_regs {
->  	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
->  	PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
->  
-> -	/* These all need two bits set because they are 128bit */
-> +	/* These all need two bits set because they are 128 bits */
->  	PERF_REG_X86_XMM0  = 32,
->  	PERF_REG_X86_XMM1  = 34,
->  	PERF_REG_X86_XMM2  = 36,
-> @@ -53,6 +53,87 @@ enum perf_event_x86_regs {
->  
->  	/* These include both GPRs and XMMX registers */
->  	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
-> +
-> +	/*
-> +	 * YMM upper bits need two bits set because they are 128 bits.
-> +	 * PERF_REG_X86_YMMH0 = 64
-> +	 */
-> +	PERF_REG_X86_YMMH0	= PERF_REG_X86_XMM_MAX,
-> +	PERF_REG_X86_YMMH1	= PERF_REG_X86_YMMH0 + 2,
-> +	PERF_REG_X86_YMMH2	= PERF_REG_X86_YMMH1 + 2,
-> +	PERF_REG_X86_YMMH3	= PERF_REG_X86_YMMH2 + 2,
-> +	PERF_REG_X86_YMMH4	= PERF_REG_X86_YMMH3 + 2,
-> +	PERF_REG_X86_YMMH5	= PERF_REG_X86_YMMH4 + 2,
-> +	PERF_REG_X86_YMMH6	= PERF_REG_X86_YMMH5 + 2,
-> +	PERF_REG_X86_YMMH7	= PERF_REG_X86_YMMH6 + 2,
-> +	PERF_REG_X86_YMMH8	= PERF_REG_X86_YMMH7 + 2,
-> +	PERF_REG_X86_YMMH9	= PERF_REG_X86_YMMH8 + 2,
-> +	PERF_REG_X86_YMMH10	= PERF_REG_X86_YMMH9 + 2,
-> +	PERF_REG_X86_YMMH11	= PERF_REG_X86_YMMH10 + 2,
-> +	PERF_REG_X86_YMMH12	= PERF_REG_X86_YMMH11 + 2,
-> +	PERF_REG_X86_YMMH13	= PERF_REG_X86_YMMH12 + 2,
-> +	PERF_REG_X86_YMMH14	= PERF_REG_X86_YMMH13 + 2,
-> +	PERF_REG_X86_YMMH15	= PERF_REG_X86_YMMH14 + 2,
-> +	PERF_REG_X86_YMMH_MAX	= PERF_REG_X86_YMMH15 + 2,
-> +
-> +	/*
-> +	 * ZMM0-15 upper bits need four bits set because they are 256 bits
-> +	 * PERF_REG_X86_ZMMH0 = 96
-> +	 */
-> +	PERF_REG_X86_ZMMH0	= PERF_REG_X86_YMMH_MAX,
-> +	PERF_REG_X86_ZMMH1	= PERF_REG_X86_ZMMH0 + 4,
-> +	PERF_REG_X86_ZMMH2	= PERF_REG_X86_ZMMH1 + 4,
-> +	PERF_REG_X86_ZMMH3	= PERF_REG_X86_ZMMH2 + 4,
-> +	PERF_REG_X86_ZMMH4	= PERF_REG_X86_ZMMH3 + 4,
-> +	PERF_REG_X86_ZMMH5	= PERF_REG_X86_ZMMH4 + 4,
-> +	PERF_REG_X86_ZMMH6	= PERF_REG_X86_ZMMH5 + 4,
-> +	PERF_REG_X86_ZMMH7	= PERF_REG_X86_ZMMH6 + 4,
-> +	PERF_REG_X86_ZMMH8	= PERF_REG_X86_ZMMH7 + 4,
-> +	PERF_REG_X86_ZMMH9	= PERF_REG_X86_ZMMH8 + 4,
-> +	PERF_REG_X86_ZMMH10	= PERF_REG_X86_ZMMH9 + 4,
-> +	PERF_REG_X86_ZMMH11	= PERF_REG_X86_ZMMH10 + 4,
-> +	PERF_REG_X86_ZMMH12	= PERF_REG_X86_ZMMH11 + 4,
-> +	PERF_REG_X86_ZMMH13	= PERF_REG_X86_ZMMH12 + 4,
-> +	PERF_REG_X86_ZMMH14	= PERF_REG_X86_ZMMH13 + 4,
-> +	PERF_REG_X86_ZMMH15	= PERF_REG_X86_ZMMH14 + 4,
-> +	PERF_REG_X86_ZMMH_MAX	= PERF_REG_X86_ZMMH15 + 4,
-> +
-> +	/*
-> +	 * ZMM16-31 need eight bits set because they are 512 bits
-> +	 * PERF_REG_X86_ZMM16 = 160
-> +	 */
-> +	PERF_REG_X86_ZMM16	= PERF_REG_X86_ZMMH_MAX,
-> +	PERF_REG_X86_ZMM17	= PERF_REG_X86_ZMM16 + 8,
-> +	PERF_REG_X86_ZMM18	= PERF_REG_X86_ZMM17 + 8,
-> +	PERF_REG_X86_ZMM19	= PERF_REG_X86_ZMM18 + 8,
-> +	PERF_REG_X86_ZMM20	= PERF_REG_X86_ZMM19 + 8,
-> +	PERF_REG_X86_ZMM21	= PERF_REG_X86_ZMM20 + 8,
-> +	PERF_REG_X86_ZMM22	= PERF_REG_X86_ZMM21 + 8,
-> +	PERF_REG_X86_ZMM23	= PERF_REG_X86_ZMM22 + 8,
-> +	PERF_REG_X86_ZMM24	= PERF_REG_X86_ZMM23 + 8,
-> +	PERF_REG_X86_ZMM25	= PERF_REG_X86_ZMM24 + 8,
-> +	PERF_REG_X86_ZMM26	= PERF_REG_X86_ZMM25 + 8,
-> +	PERF_REG_X86_ZMM27	= PERF_REG_X86_ZMM26 + 8,
-> +	PERF_REG_X86_ZMM28	= PERF_REG_X86_ZMM27 + 8,
-> +	PERF_REG_X86_ZMM29	= PERF_REG_X86_ZMM28 + 8,
-> +	PERF_REG_X86_ZMM30	= PERF_REG_X86_ZMM29 + 8,
-> +	PERF_REG_X86_ZMM31	= PERF_REG_X86_ZMM30 + 8,
-> +	PERF_REG_X86_ZMM_MAX	= PERF_REG_X86_ZMM31 + 8,
-> +
-> +	/*
-> +	 * OPMASK Registers
-> +	 * PERF_REG_X86_OPMASK0 = 288
-> +	 */
-> +	PERF_REG_X86_OPMASK0	= PERF_REG_X86_ZMM_MAX,
-> +	PERF_REG_X86_OPMASK1	= PERF_REG_X86_OPMASK0 + 1,
-> +	PERF_REG_X86_OPMASK2	= PERF_REG_X86_OPMASK1 + 1,
-> +	PERF_REG_X86_OPMASK3	= PERF_REG_X86_OPMASK2 + 1,
-> +	PERF_REG_X86_OPMASK4	= PERF_REG_X86_OPMASK3 + 1,
-> +	PERF_REG_X86_OPMASK5	= PERF_REG_X86_OPMASK4 + 1,
-> +	PERF_REG_X86_OPMASK6	= PERF_REG_X86_OPMASK5 + 1,
-> +	PERF_REG_X86_OPMASK7	= PERF_REG_X86_OPMASK6 + 1,
-> +
-> +	PERF_REG_X86_VEC_MAX	= PERF_REG_X86_OPMASK7 + 1,
->  };
->  
->  #define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 0524d541d4e3..8a17d696d78c 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -379,6 +379,10 @@ enum perf_event_read_format {
->  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
->  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
->  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
-> +#define PERF_ATTR_SIZE_VER9	168	/* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
-> +
-> +#define PERF_EXT_REGS_ARRAY_SIZE	4
-> +#define PERF_NUM_EXT_REGS		(PERF_EXT_REGS_ARRAY_SIZE * 64)
->  
->  /*
->   * Hardware event_id to monitor via a performance monitoring event:
-> @@ -531,6 +535,13 @@ struct perf_event_attr {
->  	__u64	sig_data;
->  
->  	__u64	config3; /* extension of config2 */
-> +
-> +	/*
-> +	 * Extension sets of regs to dump for each sample.
-> +	 * See asm/perf_regs.h for details.
-> +	 */
-> +	__u64	sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
-> +	__u64   sample_regs_user_ext[PERF_EXT_REGS_ARRAY_SIZE];
->  };
->  
->  /*
+* Yeo Reum Yun <YeoReum.Yun@arm.com> wrote:
 
-*groan*... so do people really need per-register (or even partial
-register) masks for all this?
+> Hi Peter,
+> 
+> Sorry to late answer. I've missed your last repsonse in this thread,
+> and waiting for in new thread:
+> https://lore.kernel.org/all/20250110163643.GB4213@noisy.programming.kicks-ass.net/
+> 
+> > > This patch doesn't work when the event is child event.
+> > > In case of parent's event, when you see the list_del_event(),
+> > > the total_enable_time is updated properly by changing state with
+> > > PERF_EVENT_STATE_OFF.
+> > >
+> > > However, child event's total_enable_time is added before list_del_event.
+> > > So, the missing total_enable_time isn't added to parents event and the
+> > > error print happens.
+> > >
+> > > So, I think it wouldn't be possible to update time with set_state.
+> > > instead I think it should update total_enable_time before
+> > > child's total_enable_time is added to parents' child_total_enable_time
+> > >
+> > > like
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 065f9188b44a..d27717c44924 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -13337,6 +13337,7 @@ static void sync_child_event(struct perf_event *child_event)
+> > >         }
+> > >
+> > >         child_val = perf_event_count(child_event, false);
+> > > +       perf_event_update_time(child_event);
+> > >
+> > >         /*
+> > >          * Add back the child's count to the parent's count:
+> >
+> > Well, that again violates the rule that we update time on state change.
+> > 
+> > AFAICT there is no issue with simply moving the perf_event_set_state()
+> > up a few lines in __perf_remove_from_context().
+> >
+> > Notably event_sched_out() will already put us in OFF state; and nothing
+> > after that cares about further states AFAICT.
+> >
+> > So isn't the below the simpler solution?
+> >
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -2438,14 +2438,13 @@ __perf_remove_from_context(struct perf_e
+> >                state = PERF_EVENT_STATE_DEAD;
+> >        }
+> >       event_sched_out(event, ctx);
+> > +       perf_event_set_state(event, min(event->state, state));
+> >       if (flags & DETACH_GROUP)
+> >                perf_group_detach(event);
+> >       if (flags & DETACH_CHILD)
+> >                perf_child_detach(event);
+> >        list_del_event(event, ctx);
+> >
+> > -       perf_event_set_state(event, min(event->state, state));
+> > -
+> >        if (!pmu_ctx->nr_events) {
+> >                pmu_ctx->rotate_necessary = 0;
+> 
+> Agree, for DETACH_EXIT case, below code in list_del_event()
+> doesn't need to be considered because
+> the all of event related to event ctx would be freed:
+> 
+>      /*
+>       * If event was in error state, then keep it
+>       * that way, otherwise bogus counts will be
+>       * returned on read(). The only way to get out
+>       * of error state is by explicit re-enabling
+>       * of the event
+>       */
+>       if (event->state > PERF_EVENT_STATE_OFF) {
+>           perf_cgroup_event_disable(event, ctx);
+>           perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+>       }
+> 
+> With your suggestion, Could I send the v4 for this?
 
-Or can we perhaps -- like XSAVE/PEBS -- do it per register group?
+Yes, please send a -v4 version.
 
-Also, we're going to be getting EGPRs, which I think just about fit in
-this 320 bit mask we now have, but it is quite insane.
+Thanks,
+
+	Ingo
