@@ -1,263 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792AD2571AD
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 12:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A12712054F1;
+	Tue, 25 Feb 2025 12:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486669; cv=none; b=YwSpeH3uceJpKFTF3WfUtUAEglquER/91T3e4MlmRFqGZF/k13alhtLygazNPNU1kxSD6hIGff9FdJbFLny94iYXjrr+Hag6YChH6ki/LDpNXe2ZdzB1a4Tzdo2i5gEnl+9dtN8hCKYXry4Ae7b5xOjAIWFxeUFARBAgxFOvX68=
+	t=1740487102; cv=none; b=oETUi+U+IfV04W38IpTJFl+B/MJZEjqJqYIoqFurN0WLdcGvAbW+RWGkNyOeQs8c1veZvfZPg4cxEy1/7qTHNyR0DB1L609PbqF0GrCveWhmmBlsQadfLn4KBvXg5Y+N5Ah7ZobxaUJDxoe34oqyQq+z/luWs8AmHQTftwE5qc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486669; c=relaxed/simple;
-	bh=JHURalPzvnhSQkQBOATBMBU0xG/Ye8Shoz5YH0qmD4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qehfaERIxZLvmAqGvdhWQh4Af++pZ7LU5NVwHXoSHp2gpLoVNLyjTMoDcFmEwIN4Yk//Vou2xKRlU5AL8bIcVn196t60B1fjBxEGiBuzMhCHHYRttzsPl9CCNdrAKRj3nC1rK2Ou32nIsbCESOj203I35EWAX6kJ1tCwUV0WsWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=imsOyH7q; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="imsOyH7q"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PBYAUQ011036;
-	Tue, 25 Feb 2025 12:30:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=28sBM1E6Hrq0LbtJC/H5U3/MzpnCPvzi37XhDsEp+
-	vE=; b=imsOyH7q6BszRmd77M/JoHI0FaIp7KQWhJGJEXzK+6FpyjvqVRMrvxscX
-	768E2EArDaDv/nPoe4vAARFxjpcWXlrOj39z/fzr2fEY1jgs3zDWJ7BgawQ9DTkY
-	UfD5OIt+1mH2PYZqDn/bwGHMcE9tIcFr/dLTEXa7X0dTlC4WtnNatFWdilro56gI
-	GoHH4Jkbgke0z0dtMDhYuXji5BWiNWm+YG6fFrFYCilhgRxe9Zd24Ta8n9J59bWK
-	b9QZkotMse0cZ7zDSmjzc4TvzW31ZeOpEd11/jhb0UUhj7O+/e4em6mUo0GZCLCr
-	cjJ98U41jUSJjdiSw3UwKdoBvqOsw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4513x9tsm9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 12:30:59 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51PCUwS7026091;
-	Tue, 25 Feb 2025 12:30:58 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4513x9tsm1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 12:30:58 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51PAAqBk026285;
-	Tue, 25 Feb 2025 12:30:57 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswncuku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 12:30:57 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PCUr3m33423942
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 12:30:53 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39D212004D;
-	Tue, 25 Feb 2025 12:30:53 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A5C82004B;
-	Tue, 25 Feb 2025 12:30:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.248.206])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 25 Feb 2025 12:30:46 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
-        Aditya.Bodkhe1@ibm.com, Tejas.Manhas1@ibm.com, mhiramat@kernel.org
-Subject: [PATCH V2] tools/perf: Pick the correct dwarf die while adding probe point for a function
-Date: Tue, 25 Feb 2025 18:00:42 +0530
-Message-Id: <20250225123042.37263-1-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	s=arc-20240116; t=1740487102; c=relaxed/simple;
+	bh=cJZ5YmdR1SNkMG2yDAirWyRRhI6uMk/du0JqcX+TaQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSy4Z9VRPlR0+tgCLfe1kFR0KfcjtqIQGh3soNYCYMLYyfQTSNggsqgBA3CJlAjOvQFlRnO8KmAi+gD7wiCCNuWqlCSS6TWJGYlBKznVE5Sej9ayACuy1NhsWihPBL9Jprduc97jem8E51rqps0Bly3I+5fBwHAiSZFhDuqdq60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FAB3152B;
+	Tue, 25 Feb 2025 04:38:35 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 813053F6A8;
+	Tue, 25 Feb 2025 04:38:18 -0800 (PST)
+Date: Tue, 25 Feb 2025 12:38:13 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <20250225123813.GA1821331@e132581.arm.com>
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
+ <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
+ <20250224122507.GE8144@e132581.arm.com>
+ <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+ <20250224140317.GF8144@e132581.arm.com>
+ <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+ <20250224180301.GI8144@e132581.arm.com>
+ <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: BIHUa8tF_oJGP7eHUyPW-eTGE6Xq3ryi
-X-Proofpoint-GUID: B3pnhfLmSvqdLJMCzbjMRhBvCsAOUQAj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502250088
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
 
-Perf probe on vfs_fstatat fails as below on a powerpc system
+On Mon, Feb 24, 2025 at 07:31:52PM -0600, Rob Herring wrote:
 
-./perf probe -nf --max-probes=512 -a 'vfs_fstatat $params'
-Segmentation fault (core dumped)
+[...]
 
-This is observed while running perftool-testsuite_probe testcase.
+> > > > When event rotation happens, if without context switch, in theory we
+> > > > should can directly use the branch record (no invalidation, no injection)
+> > > > for all events.
+> > >
+> > > No; that only works in *some* cases, and will produce incorrect results
+> > > in others.
+> > >
+> > > For example, consider filtering. Imagine a PMU with a single counter,
+> > > and two events, where event-A filters for calls-and-returns and event-B
+> > > filters for calls-only. When switching from event-A to event-B, it's
+> > > theoretically possible to keep the existing records around, knowing that
+> > > the returns can be filtered out later. When switching from event-B to
+> > > event-A we cannot keep the existing records, since there are gaps
+> > > whenever a return should have been recorded.
+> >
+> > Seems to me, the problem is not caused by event rotation.  We need to
+> > calculate a correct filter in the first place - the BRBE driver should
+> > calculate a superset for all filters of events for a session.  Then,
+> > generate branch record based event's specific filter.
+> 
+> The driver doesn't have enough information. If it is told to schedule
+> event A, it doesn't know anything about event B. It could in theory
+> try to remember event B if event B had already been scheduled, but it
+> never knows when event B is gone.
 
-While running with verbose, its observed that segfault happens
-at:
+E.g., I tried below command for enabling 10 events in a perf session:
 
-   synthesize_probe_trace_arg ()
-   synthesize_probe_trace_command ()
-   probe_file.add_event ()
-   apply_perf_probe_events ()
-   __cmd_probe ()
-   cmd_probe ()
-   run_builtin ()
-   handle_internal_command ()
-   main ()
+  perf record -e armv9_nevis/r04/ -e armv9_nevis/r05/ \
+              -e armv9_nevis/r06/ -e armv9_nevis/r07/ \
+              -e armv9_nevis/r08/ -e armv9_nevis/r09/ \
+              -e armv9_nevis/r10/ -e armv9_nevis/r11/ \
+              -e armv9_nevis/r12/ -e armv9_nevis/r13/ \
+              -- sleep 1
 
-Code in synthesize_probe_trace_arg() access a null value and results in
-segfault. Data structure which is null:
-struct probe_trace_arg arg->value
+For Arm PMU, the flow below is invoked for every event on every
+affinied CPU in initialization phase:
 
-We are hitting a case where arg->value is null in probe point:
-"vfs_fstatat $params". This is happening since 'commit e896474fe485
-("getname_maybe_null() - the third variant of pathname copy-in")'
-Before the commit, probe point for vfs_fstatat was getting added only
-for one location:
+  armpmu_event_init() {
+    armv8pmu_set_event_filter();
+  }
 
-Writing event: p:probe/vfs_fstatat _text+6345404 dfd=%gpr3:s32 filename=%gpr4:x64 stat=%gpr5:x64 flags=%gpr6:s32
+Shouldn't we calculate a superset branch filter for all events, store
+it into a per-CPU data structure and then apply the filter on BRBE?
 
-With this change, vfs_fstatat code is inlined for other locations in the
-code:
-Probe point found: __do_sys_lstat64+48
-Probe point found: __do_sys_stat64+48
-Probe point found: __do_sys_newlstat+48
-Probe point found: __do_sys_newstat+48
-Probe point found: vfs_fstatat+0
+> > > There are a number of cases of that shape given the set of configurable
+> > > filters. In theory it's possible to retain those in some cases, but I
+> > > don't think that the complexity is justified.
+> > >
+> > > Similarly, whenever kernel branches are recorded it's necessary to drop
+> > > the stale branches whenever branch recording is paused, as there's
+> > > necessarily a blackout period and hence a gap in the records.
+> >
+> > If we save BRBE record when a process is switched out and then restore
+> > the record when a process is switched in, should we can keep a decent
+> > branch record for performance profiling?
+> 
+> Keep in mind that there's only 64 branches recorded at most. How many
+> branches in a context switch plus reconfiguring the PMU? Not a small
+> percentage of 64 I think. In traces where freeze on overflow was not
+> working (there's an example in v18), just the interrupt entry until
+> BRBE was stopped was a significant part of the trace. A context switch
+> is going to be similar.
 
-When trying to find matching dwarf information entry (DIE)
-from the debuginfo, the code incorrectly picks DIE which is
-not referring to vfs_fstatat. Snippet from dwarf entry in vmlinux
-debuginfo file.
+That is true for kernel mode enabled tracing.  But we will have no
+such kind noises for userspace only mode tracing.
 
-The main abstract die is:
- <1><4214883>: Abbrev Number: 147 (DW_TAG_subprogram)
-    <4214885>   DW_AT_external    : 1
-    <4214885>   DW_AT_name        : (indirect string, offset: 0x17b9f3): vfs_fstatat
+[...]
 
-With formal parameters:
- <2><4214896>: Abbrev Number: 51 (DW_TAG_formal_parameter)
-    <4214897>   DW_AT_name        : dfd
- <2><42148a3>: Abbrev Number: 23 (DW_TAG_formal_parameter)
-    <42148a4>   DW_AT_name        : (indirect string, offset: 0x8fda9): filename
- <2><42148b0>: Abbrev Number: 23 (DW_TAG_formal_parameter)
-    <42148b1>   DW_AT_name        : (indirect string, offset: 0x16bd9c): stat
- <2><42148bd>: Abbrev Number: 23 (DW_TAG_formal_parameter)
-    <42148be>   DW_AT_name        : (indirect string, offset: 0x39832b): flags
+> > > Do you have a reason why you think we *must* keep events around?
+> >
+> > Here I am really concerned are cases when a process is preempted or
+> > migrated.  The driver doesn't save and restore branch records for these
+> > cases, it just invalidates all records when a task is scheduled in.
+> >
+> > As a result, if an event overflow is close to context switch, it is
+> > likely to capture incomplete branch records.  For a userspace-only
+> > tracing, it is risk to capture empty branch record after preemption
+> > and migrations.
+> 
+> There's the same risk if something else is recording kernel branches
+> when you are recording userspace only. I think the user has to be
+> aware if other things like context switches are perturbing their data.
 
-While collecting variables/parameters for a probe point, the function
-copy_variables_cb() also looks at dwarf debug entries based on the
-instruction address. Snippet
+I am confused for the decription above.  Does it refer to branch
+recording cross different sessions?  It is fine for me that the branch
+data is interleaved by different sessions (e.g. one is global tracing
+and another is only per-thread tracing).
 
-        if (dwarf_haspc(die_mem, vf->pf->addr))
-                return DIE_FIND_CB_CONTINUE;
-        else
-                return DIE_FIND_CB_SIBLING;
+We might need to consider an intact branch record for the single perf
+session case.  E.g. if userspace program calls:
 
-But incase of inlined function instance for vfs_fstatat, there are two
-entries which has the instruction address entry point as same.
+    func_a -> func_b -> func_c
 
-Instance 1: which is for vfs_fstatat and DW_AT_abstract_origin points to
-0x4214883 (reference above for main abstract die)
+In a case for only userspace tracing, we will have no chance to preserve
+the call sequence of these functions after the program is switched out.
 
-<3><42131fa>: Abbrev Number: 59 (DW_TAG_inlined_subroutine)
-    <42131fb>   DW_AT_abstract_origin: <0x4214883>
-    <42131ff>   DW_AT_entry_pc    : 0xc00000000062b1e0
-
-Instance 2: which is not for vfs_fstatat but for getname
-
- <5><4213270>: Abbrev Number: 39 (DW_TAG_inlined_subroutine)
-    <4213271>   DW_AT_abstract_origin: <0x4215b6b>
-    <4213275>   DW_AT_entry_pc    : 0xc00000000062b1e0
-
-But the copy_variables_cb() continues to add parameters from second
-instance also based on the dwarf_haspc() check. This results in
-formal parameters for getname also appended to params. But while
-filling in the args->value for these parameters, since these args
-are not part of dwarf with offset "42131fa". Hence value will be
-null. This incorrect args results in segfault when value field is
-accessed.
-
-Save the dwarf dieoffset of the actual DW_TAG_subprogram as part of
-"struct probe_finder". In copy_variables_cb(), include check to make
-sure the DW_AT_abstract_origin points to the correct entry if the
-dwarf_haspc() matches the instruction address.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changelog:
-v1 -> v2:
- Instead of saving the Dwarf_Die as part of "struct probe_finder",
- save the dwarf dieoffset. We only need offset while comparing to see
- if DW_AT_abstract_origin points to correct entry
- Suggested in review by Namhyung.
-
- tools/perf/util/probe-finder.c | 21 ++++++++++++++++++---
- tools/perf/util/probe-finder.h |  1 +
- 2 files changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 1e769b68da37..3cc7c40f5097 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -973,6 +973,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
- 	pr_debug("Matched function: %s [%lx]\n", dwarf_diename(sp_die),
- 		 (unsigned long)dwarf_dieoffset(sp_die));
- 	pf->fname = fname;
-+	pf->abstrace_dieoffset = dwarf_dieoffset(sp_die);
- 	if (pp->line) { /* Function relative line */
- 		dwarf_decl_line(sp_die, &pf->lno);
- 		pf->lno += pp->line;
-@@ -1179,6 +1180,8 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
- 	struct local_vars_finder *vf = data;
- 	struct probe_finder *pf = vf->pf;
- 	int tag;
-+	Dwarf_Attribute attr;
-+	Dwarf_Die var_die;
- 
- 	tag = dwarf_tag(die_mem);
- 	if (tag == DW_TAG_formal_parameter ||
-@@ -1196,10 +1199,22 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
- 		}
- 	}
- 
--	if (dwarf_haspc(die_mem, vf->pf->addr))
-+	if (dwarf_haspc(die_mem, vf->pf->addr)) {
-+		/*
-+		 * when DW_AT_entry_pc contains instruction address,
-+		 * also check if the DW_AT_abstract_origin of die_mem
-+		 * points to correct die.
-+		 */
-+		if (dwarf_attr(die_mem, DW_AT_abstract_origin, &attr)) {
-+			dwarf_formref_die(&attr, &var_die);
-+			if (pf->abstrace_dieoffset != dwarf_dieoffset(&var_die))
-+				goto out;
-+		}
- 		return DIE_FIND_CB_CONTINUE;
--	else
--		return DIE_FIND_CB_SIBLING;
-+	}
-+
-+out:
-+	return DIE_FIND_CB_SIBLING;
- }
- 
- static int expand_probe_args(Dwarf_Die *sc_die, struct probe_finder *pf,
-diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-index dcf6cc1e1cbe..ecd6d937c592 100644
---- a/tools/perf/util/probe-finder.h
-+++ b/tools/perf/util/probe-finder.h
-@@ -63,6 +63,7 @@ struct probe_finder {
- 	const char		*fname;		/* Real file name */
- 	Dwarf_Die		cu_die;		/* Current CU */
- 	Dwarf_Die		sp_die;
-+	Dwarf_Off		abstrace_dieoffset;
- 	struct intlist		*lcache;	/* Line cache for lazy match */
- 
- 	/* For variable searching */
--- 
-2.43.5
-
+Thanks,
+Leo
