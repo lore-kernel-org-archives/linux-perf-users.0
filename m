@@ -1,146 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0320919992C;
-	Tue, 25 Feb 2025 17:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F3318E34A;
+	Tue, 25 Feb 2025 17:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505691; cv=none; b=K1ypQcVKgJRLQW+71nahLEXOWMnwhTLpz8tml+hyHU/3YuTNPldb9pZ9+M38sqDJAx0PBdYW4ZewJWNxfhVKtTCAla7imKnw9TwHzpAp/WIyzIIzhYR7lxcq+Djx/SFRZ4bgOqPRJ0AMDN4MPq1mUYHbDYvAu+PhHo1hy67FoMk=
+	t=1740505799; cv=none; b=CybEA+1riQ8wCGWlvDk8Nmlg21J9yelhKpqs48JD4WG9dBIdoJ65TOG/Pw5FFNm0aM8gadx5VROHNGgbZ5NnuVSsb8K2a4Y86tb5JVbpxVONrjrHrIT3YouoNkjZn83I8RS+GbS4yI0RfH63LHCBfFBsaIJ8W32Mk9828/DhZ34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505691; c=relaxed/simple;
-	bh=UlYAL7cYAm+wK2/XoBjCh1V7JGWLMwEiAoOcbv3rOHk=;
+	s=arc-20240116; t=1740505799; c=relaxed/simple;
+	bh=AKm94b+tNe6dqRLJYUXxcm855hBDTf/Htp6Wz/SI670=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=soajJz4vkG6+huhPtdgGwBth8p2XGT/Dvro9orb402SK0U0HqVVxJqscrbfsn3NL98esqc4CP7n/DdjHBdbt9uArhBwfCXEsCVS2NNtoC8FyXBj9o9UM89TtOHPshw7vH5zo/PJdgRCltsad5uAGk6/FkWgBmqhSK83Q4Cu9WUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 806481BCB;
-	Tue, 25 Feb 2025 09:48:24 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48783F5A1;
-	Tue, 25 Feb 2025 09:48:07 -0800 (PST)
-Date: Tue, 25 Feb 2025 17:48:03 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250225174803.GB1821331@e132581.arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
- <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
- <20250224140317.GF8144@e132581.arm.com>
- <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
- <20250224180301.GI8144@e132581.arm.com>
- <Z72xMLsd37I6X_5-@J2N7QTR9R3>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SaY7y/892GZgpTSFWOWROOADTlPBtomAO5eeLDAU4QWQWMMEH4ArVSNsBHaPfLqrDfgjPVTiUHBD7h410DWWd0w5Szi6bHPcV6ZJXlWp0y2fub4T/h9URumcUppSefvWGabMaalYwi2erNF/F8sKmQvTPtSmDK7p22uqf2sfLns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=P5deP9TM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="P5deP9TM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 10EC040E01A3;
+	Tue, 25 Feb 2025 17:49:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id oakOgA1LJNYz; Tue, 25 Feb 2025 17:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740505788; bh=kzEStbJ6GTTg3i28u7wgJxFbqxP1ehrM8dP2IySrncs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P5deP9TMhtcWrQz9LoD+TsMyEKQVVXmvFx2djtF0jSizT9RdrFA7Zid2bbxeKovZ0
+	 gJJeBe5YImw5KwkTeCW8PqZ3gKXMVaOK7PmlF8RpVpzuc/icDh7FYem6yMzZNWTbpw
+	 4EsGMDZquuJkQ8McbHDMNRXDJ1HlD3mouWcLj5dHT9qkq01nT35lm/4c8v/T5LvOpG
+	 4e0wrmtv+Ejsj08CLepPY7B5pdlbmv4ca2haq0bpcudBINKHdZ/HBocp8egzrC8HI0
+	 KticnBFxk8/d2wKJ/zRfyneL20wIte6E1sGcvxLeit3VqZueHOUeYbLixgMqqGXpAo
+	 StqBHoDgkPmmg+xdhEiK5goqG/7aMPt1+JgvlRXQLqabasgMukfhwcGYwAOK3Ku4if
+	 9oUvaY5J5b2QUO+ukh0eb7Z//wwqQEoisXE1cOYUBVhWNvWcCMgLWyVzS1dN2XVMq3
+	 5p9xzx/jTTjl2fHq73Ssvkfaw1bPhLPuCUYN4ACaWX1RkzVGPFFbWq/QRTULZMtkkF
+	 uV5fRmtQiRNMj20ocvua5BdLahRTxq2u1aHmZXcpAy8kU3IT/pDCceo05jySy2PmV0
+	 5U8Bbf+qn4/dlaBcooR8hqSY45Bv0rNTwJZvKxCcoAjRIX4sBmZOR3gtDMG8S6tDPs
+	 6paz5+Y2pqs+pmi9Fg3PTVqA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C8C4140E01A0;
+	Tue, 25 Feb 2025 17:49:30 +0000 (UTC)
+Date: Tue, 25 Feb 2025 18:49:15 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Xin Li <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, will@kernel.org,
+	peterz@infradead.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+Message-ID: <20250225174915.GBZ74Cm2Xpc_WwS3oe@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
+ <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z72xMLsd37I6X_5-@J2N7QTR9R3>
+In-Reply-To: <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com>
 
-On Tue, Feb 25, 2025 at 12:01:52PM +0000, Mark Rutland wrote:
+On Tue, Feb 25, 2025 at 09:10:01AM -0800, Xin Li wrote:
+> After looking into the build issue, we think it's better to change to perl;
+> GNU awk has quite a few extended features that standard awk doesn't support,
+> e.g., BEGINFILE/FPAT/...
 
-[...]
+... which will make the kernel build depend on yet another tool. I know,
+I know, perl is everywhere but someone would crawl out of the woodwork
+complaining that building the kernel pulls in even more stuff.
 
-> > > Critically, the brbe_enable() function merges the filters of all
-> > > *active* events which have been installed into hardware. It does not
-> > > track all events which can be rotated, and the resulting filter is not
-> > > the same -- it can change as a result of rotation.
-> > 
-> > In a perf session has multiple events, and events have different branch
-> > filters, seems to me, a simple way is to return error for this case.
-> 
-> FWIW, I'd generally prefer to do that since it avoids a number of
-> horrible edge-cases and gets rid of the need to do SW filtering, which
-> falls somewhere between "tricky" and "not entirely possible". However,
-> that's not what LBR and others do, which is why we went with filter
-> merging.
-> 
-> If folk on the tools side are happy with the kernel rejecting
-> conflicting events, then I'd be more than happy to do that. What I don't
-> want is that we start off with that approach and people immediately
-> start to complain that the BRBE driver rejects events that the LBR
-> driver accepts.
-> 
-> See the last time this came up.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks for the shared links.  Based on the info, let's say we can have two
-cases:
-
-  Case 1: set different branch filters in a single perf session:
-
-    perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u \
-                -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
-
-  Case 2: set different branch filters in multiple perf sessions:
-
-    perf record -e armv8_pmuv3_0/r03,branch_type=any_call/u ...
-
-    perf record -e armv8_pmuv3_0/r04,branch_type=any_ret/k ...
-
-In my previous reply, I was suggesting that we should reject the case 1.
-IMO, it is not quite useful to configure different filters for events in
-the same session, especially if this leads complexity in the driver due
-to the hardware limitation.
-
-For case 2, when create a new session, if the perf tool can read out the
-current branch filter setting (e.g. via sysfs node) and give suggestion
-what branch filter is compabile with existed sessions, seems to me, this
-is a feasible solution.  My understanding this is a rare case, and a
-clear guidance for users would be sufficient if this happens.  (Maybe
-we can give recommendation for how to use BRBE in the perf doc).
-
-To be clear, an important factor is the trace modes with modifier 'u'
-(user) and 'k' (kernel) should be supported for different events and for
-different sessions.  In a mixed cases (some events are userspace only
-and some are kernel only), the BRBE driver needs to filter out branch
-records for specific mode when taking a sample.
-
-> > If we can unify branch filter within a perf session, would this be
-> > much easier for handling?
-> 
-> Do you mean if the perf tool ensured that all events in a given session
-> had the same filter? From the kernel's PoV there's no such thing as a
-> "perf session", and I'm not sure whether you're suggesting doing that in
-> userspace or withing the kernel.
-
-My understanding is this would be not difficult to do such kind checking
-in the tool.  E.g., the perf tool can iterate every event and check the
-branch filter and detect incompabile issue.
-
-> Doing that in the perf tool would certianly make a stronger argument for
-> the kernel taking the "reject conflicting branch filters" option.
-> 
-> Doing that within the kernel isn't really possible.
-
-As said above, if the BRBE driver can provide a knob in sysfs to indicate
-what is the current branch filter in the existed sessions, this would be
-helpful for the tool to do the checking and remind users.
-
-I haven't done any experiments for this. If you think this is the way
-to move forward, I might do a prototype and get back to you to ensure we
-don't run into any unexpected issues.
-
-[...]
-
-To make the discussion easier, I would like reply separately regarding
-the branch record save and restore issue.
-
-Thanks,
-Leo
+https://people.kernel.org/tglx/notes-about-netiquette
