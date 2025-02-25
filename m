@@ -1,112 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1FA1A2567;
-	Tue, 25 Feb 2025 19:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9BC1A01CC;
+	Tue, 25 Feb 2025 19:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740511540; cv=none; b=mEdsTKliPb6ZdrE5eczSC5ZKJIJavCbs4XiBtF4yksvUhTQ1V+OwnNl9vcepj7zMIghk51wCuYmttaUSfhEc75WSK0XFLO2Q3eJdTeg7wjfV+TLic1y8CJuIC3jq9286j7xgE5XXqPW9Hhmp62z9TRl4Y4oFAj8enfD4MfEVNmg=
+	t=1740512820; cv=none; b=E64W+4OvYk9X5AfcV14NveQlbiZNPFSupJEGWLZgHxffoDLAzWmmNg7a5uxh1fR7Jaj3N7Pkgxkg3Lt7xBnstqQjZQBBC2CL/DsShXhIAdtjFhNUQa8D6Z1Ijf4/96FnTZihDQ8Q298u8PZy+2P218y3iVmGLmO2NBjwrL0UXpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740511540; c=relaxed/simple;
-	bh=+O3EF/rxjqnHgbKvtM7VSwt9fAuuyUxJoM6cx4zF+dk=;
+	s=arc-20240116; t=1740512820; c=relaxed/simple;
+	bh=Yzp6lKg+7SjzmD6dfCLSBo9k8WYw3TmI0cYZCPNUKn4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KXKEl3et/493QkUDniukuBxvkN+Ba5PSLFucZ38eEJWVE6Xc2HpgEobO52I4l9f5xx+AQSNgf7Sw3PaSDvNHVMR8aeOr8tEAXOPuGOJfVNUJJy//Kxl2corlNq9/trJ08qrl3DWzVZBCvoooCcAGUmzabDG8GDDDTa3GvGOYa6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgfJIp4m; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgfJIp4m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A1DC4CEDD;
-	Tue, 25 Feb 2025 19:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740511539;
-	bh=+O3EF/rxjqnHgbKvtM7VSwt9fAuuyUxJoM6cx4zF+dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AgfJIp4mqO0KE8T7UZHQBYF4jIf9caPOsCewPpjBBXOZ2cLZ0kFqyPNB/Q8TJVaHo
-	 U+7Nhh9rlpEaozzD4xf31o3yzMn/HuwD3NyAbntdz2KKInhymGXba+MtYa25Czpze/
-	 PGffHzw6RFNHS19Mhi8NcA7woi85E2ZAZCLh6r0ycGgDDwE1V8BJfQf7Vu0vFVr8LW
-	 zSX4xSE13wm+jY8hJVI7QlajFuS0a3ZpLPdoUzeCo3IXMrwGhrJ/m3gyQY8DA48m3x
-	 NgE6bWqp3jlnMqv0gI9BW8MKiaYHR47CDEP9pHXEkC9A9TOhxr/omyDJ5M4h4LBWqr
-	 BVoqrigZXLTIg==
-Date: Tue, 25 Feb 2025 20:25:35 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z74ZL6SUwWL_a5EK@x1>
-References: <Z7XvEFEZtCRZKG7Y@x1>
- <Z7ZIqpwffQbibwL2@google.com>
- <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
- <Z7gllQZeg6U2OvZE@google.com>
- <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
- <Z70wHEl6Sp0H0c-3@google.com>
- <CAP-5=fUosOVUKi5tQ3gVtHhfApk0oH3r2zHDW7-i+_qASKm+Cg@mail.gmail.com>
- <Z712hzvv22Ni63f1@google.com>
- <Z74U5s7Yf0f6I7Mo@x1>
- <Z74V0hZXrTLM6VIJ@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAQx0WVU+yob1lyR5qo3j2wKiViHK2CP+mP3BEJh065W6kosYryYFPx4al+fKHNOu+TchjPCDAheS2LTT0VY6j51uzI4AhsEnbsc6TWfS+BLBL32b4aqLpuy+gGKhtLgGYpM7xzQAlcGaq2wnBYkfrzjSfuGWTwKCe5rWuy6kJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43906152B;
+	Tue, 25 Feb 2025 11:47:14 -0800 (PST)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E65263F5A1;
+	Tue, 25 Feb 2025 11:46:55 -0800 (PST)
+Date: Tue, 25 Feb 2025 19:46:53 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <Z74eLRTcVym4sMqh@J2N7QTR9R3.cambridge.arm.com>
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
+ <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
+ <20250224122507.GE8144@e132581.arm.com>
+ <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+ <20250224140317.GF8144@e132581.arm.com>
+ <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+ <20250224180301.GI8144@e132581.arm.com>
+ <CAL_JsqKNad6eEBerUOco=SDWxdp6dgRD3FDrSt5OpGQYwwstSg@mail.gmail.com>
+ <20250225123813.GA1821331@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z74V0hZXrTLM6VIJ@x1>
+In-Reply-To: <20250225123813.GA1821331@e132581.arm.com>
 
-On Tue, Feb 25, 2025 at 08:11:17PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Tue, Feb 25, 2025 at 08:07:18PM +0100, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Feb 24, 2025 at 11:51:35PM -0800, Namhyung Kim wrote:
-> > > On Mon, Feb 24, 2025 at 08:40:37PM -0800, Ian Rogers wrote:
-> > > > On Mon, Feb 24, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > On Mon, Feb 24, 2025 at 10:18:37AM -0800, Ian Rogers wrote:
-> > > [SNIP]
-> > > > > > I thought the real-time processing had to use
-> > > > > > maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
-> > > > > > events only give us VMA data and two mmaps may have been merged.
-> > > > > > Shouldn't doing this change be the simplest fix?
+On Tue, Feb 25, 2025 at 12:38:13PM +0000, Leo Yan wrote:
+> On Mon, Feb 24, 2025 at 07:31:52PM -0600, Rob Herring wrote:
 > 
-> > > > > Make sense.  How about this?
+> [...]
 > 
-> > > > Lgtm, I have no way to test the issue. Why does maps__fixup_end need
-> > > > to get pushed later?
+> > > > > When event rotation happens, if without context switch, in theory we
+> > > > > should can directly use the branch record (no invalidation, no injection)
+> > > > > for all events.
+> > > >
+> > > > No; that only works in *some* cases, and will produce incorrect results
+> > > > in others.
+> > > >
+> > > > For example, consider filtering. Imagine a PMU with a single counter,
+> > > > and two events, where event-A filters for calls-and-returns and event-B
+> > > > filters for calls-only. When switching from event-A to event-B, it's
+> > > > theoretically possible to keep the existing records around, knowing that
+> > > > the returns can be filtered out later. When switching from event-B to
+> > > > event-A we cannot keep the existing records, since there are gaps
+> > > > whenever a return should have been recorded.
+> > >
+> > > Seems to me, the problem is not caused by event rotation.  We need to
+> > > calculate a correct filter in the first place - the BRBE driver should
+> > > calculate a superset for all filters of events for a session.  Then,
+> > > generate branch record based event's specific filter.
+> > 
+> > The driver doesn't have enough information. If it is told to schedule
+> > event A, it doesn't know anything about event B. It could in theory
+> > try to remember event B if event B had already been scheduled, but it
+> > never knows when event B is gone.
 > 
-> > > I just noticed it would add extra kernel maps after modules.  I think it
-> > > should fixup end address of the kernel maps after adding all maps first.
+> E.g., I tried below command for enabling 10 events in a perf session:
 > 
-> > > Arnaldo, can you please test this?
->  
-> > Trying it now.
+>   perf record -e armv9_nevis/r04/ -e armv9_nevis/r05/ \
+>               -e armv9_nevis/r06/ -e armv9_nevis/r07/ \
+>               -e armv9_nevis/r08/ -e armv9_nevis/r09/ \
+>               -e armv9_nevis/r10/ -e armv9_nevis/r11/ \
+>               -e armv9_nevis/r12/ -e armv9_nevis/r13/ \
+>               -- sleep 1
 > 
-> Now we have something different:
+> For Arm PMU, the flow below is invoked for every event on every
+> affinied CPU in initialization phase:
 > 
-> root@number:~# perf record sleep
-> sleep: missing operand
-> Try 'sleep --help' for more information.
-> [ perf record: Woken up 1 times to write data ]
-> perf: util/maps.c:80: check_invariants: Assertion `RC_CHK_EQUAL(map__kmap(map)->kmaps, maps)' failed.
-> Aborted (core dumped)
-> root@number:~#
+>   armpmu_event_init() {
+>     armv8pmu_set_event_filter();
+>   }
+> 
+> Shouldn't we calculate a superset branch filter for all events, store
+> it into a per-CPU data structure and then apply the filter on BRBE?
 
-__maps__insert() does:
+Should we? No.
 
-        if (dso && dso__kernel(dso)) {
-                struct kmap *kmap = map__kmap(new);
+*NONE* of the events in your example are CPU-bound, and the call to
+armpmu_event_init() can happen on an arbitrary CPU which the relevant
+event never actually runs on, while other unrelated events may run on
+that CPU.
 
-                if (kmap)
-                        kmap->kmaps = maps;
-                else
-                        pr_err("Internal error: kernel dso with non kernel map\n");
-        }
+It makes no sense for armv8pmu_set_event_filter() to write to a per-cpu
+structure. That's purely there to determine what the filters *should* be
+when *that specific event* is programmed into hardware.
 
-while maps__fixup_overlap_and_insert() doesn't.
+As Rob and I have pointed out already, the *only* thing that can be
+relevant to deciding the configuration of HW filtering is the set of
+events which are *active* on that CPU.
 
-It calls __maps__insert_sorted() that probably should do what
-__maps__insert() does?
+> > > > There are a number of cases of that shape given the set of configurable
+> > > > filters. In theory it's possible to retain those in some cases, but I
+> > > > don't think that the complexity is justified.
+> > > >
+> > > > Similarly, whenever kernel branches are recorded it's necessary to drop
+> > > > the stale branches whenever branch recording is paused, as there's
+> > > > necessarily a blackout period and hence a gap in the records.
+> > >
+> > > If we save BRBE record when a process is switched out and then restore
+> > > the record when a process is switched in, should we can keep a decent
+> > > branch record for performance profiling?
+> > 
+> > Keep in mind that there's only 64 branches recorded at most. How many
+> > branches in a context switch plus reconfiguring the PMU? Not a small
+> > percentage of 64 I think. In traces where freeze on overflow was not
+> > working (there's an example in v18), just the interrupt entry until
+> > BRBE was stopped was a significant part of the trace. A context switch
+> > is going to be similar.
+> 
+> That is true for kernel mode enabled tracing.  But we will have no
+> such kind noises for userspace only mode tracing.
 
-- Arnaldo
+As mentioned elsewhere, it's not a problem for x86, so why is it
+magically a problem for arm64?
+
+> > > > Do you have a reason why you think we *must* keep events around?
+> > >
+> > > Here I am really concerned are cases when a process is preempted or
+> > > migrated.  The driver doesn't save and restore branch records for these
+> > > cases, it just invalidates all records when a task is scheduled in.
+> > >
+> > > As a result, if an event overflow is close to context switch, it is
+> > > likely to capture incomplete branch records.  For a userspace-only
+> > > tracing, it is risk to capture empty branch record after preemption
+> > > and migrations.
+> > 
+> > There's the same risk if something else is recording kernel branches
+> > when you are recording userspace only. I think the user has to be
+> > aware if other things like context switches are perturbing their data.
+> 
+> I am confused for the decription above.  Does it refer to branch
+> recording cross different sessions?  It is fine for me that the branch
+> data is interleaved by different sessions (e.g. one is global tracing
+> and another is only per-thread tracing).
+
+Imagine that there's an existing process with some pid ${PID}, and
+concurrently, the following commands are run, either by the same user or
+different users with appropriate permissions:
+
+	# Trying to record user branches only
+	perf record -j any,u -e cycles -p ${PID}
+
+	# Trying to record kernel branches only
+	perf record -j any,k -e cycles -p ${PID}
+
+Whatever you do, the task trying to record user branches only will lose
+some records:
+
+* If we make the events mutually exclusive, the branches will only be
+  recorded when the user event is installed.
+
+* If we merge the HW filters and later apply a SW filter, it's very
+  likely that kernel branches taken after exception entry have filled
+  all the records, and there are no user branches left to sample.
+
+> We might need to consider an intact branch record for the single perf
+> session case.  E.g. if userspace program calls:
+> 
+>     func_a -> func_b -> func_c
+> 
+> In a case for only userspace tracing, we will have no chance to preserve
+> the call sequence of these functions after the program is switched out.
+
+If those functions are small, it's very likely that they'll all be in
+the branch history. If they're so large that they're not executed in one
+scheduling quantum, do you expect them to fall within the same event
+period?
+
+I think that you're making a big deal out of an edge case that doesn't
+matter much in practice.
+
+Mark.
