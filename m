@@ -1,106 +1,95 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2E7156F3A
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 17:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23BE38385;
+	Tue, 25 Feb 2025 18:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506095; cv=none; b=PPKTY7iQ37uixiTUrknaYQh3NlZQqGHrrS+jadlhVlNyX8HMe+nFAQR+6bKhEA6QOVafKjfArCmD86EylLbA+7URnQ5hCj3vUvCpN2f6+P0gAO+yUw33t84Z8RFqVV6X5GhdAZ4vOmAHzzyT8dW1CoYNeF2MTAq/Tvhv8kT+/u0=
+	t=1740506482; cv=none; b=Fw7IP8FBGP3nYMSi24UNwTlvvc7Mz6F4J/Az359PQkGenXfnbO8zdRgM629LeJerJT9nmyTYHYhejrqqv2FX4WBOvXT58qaKcRjpSUdstH3n69Nget97zAKqhSLdB0qrH+YbqUMKJ7B4EPOvx3A1sm9AnDzH8zasqSVCr206tgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506095; c=relaxed/simple;
-	bh=slTRWrb0K60rij42llMj6mVKeIRUjLYwsZyy64sDf2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UtWUaUIYuK3cyiOhNiF9SYeSL18Jc8SywY4AIg4nRvTHjAucRP5KfEo8boml+3NutHyQIgu1HBjomoZ6v4+YXnGX7tThTj7UW06+0ZPHP4gOiZiUbZENIaJtYnlsgM3q+HReqm+mKCwI4BBrjy9jrrKI3Kgggts0ibbw5soQpws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dsV6zM3V; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740506482; c=relaxed/simple;
+	bh=OaUA5KG7GJsiLn/eX1jGar3uO3VKFszWeLehSmVHy4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2IRxo+lXvpDpRyYMY1x7Da6yOqnHSpM1iziTwSpD9rl+1OCeaUrJkfYHGXUPhvBV9FET+zWiwjmlHe2QCKAsRfckUGo5FlMrbKtwESGs7elLPAXUGmtS57H3jZH4PmzZ5qrM2l8yfYxikrGFqXlBtsrw5dnfSyg3zh+sYLluYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ONTjA/tD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dsV6zM3V"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abec8c122e4so256558866b.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Feb 2025 09:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740506092; x=1741110892; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=011mEZq+lEHTVl8zPiUWPXTDh62dk2zOJhBI9PwZoL4=;
-        b=dsV6zM3VZxvkpNQBf6/crt/+1J53Zbh/OW0pLF5kSQzH8DD1U6A8M7JvnMFOqfqf4e
-         zEGmFdpRk7PE7uVnTC/sDJ37tw+Wdc3Mubb0X/zmZE0Ong7mAppG2FzSYBMvyDIFgHyS
-         2n/tqC5igTG4dV2Aici6de3Vex+6GWkLbwvidqnymRAUwZ9DDdzA31l6peKskabN1SlC
-         uDtNfPAEfO/9jjvEicQL0ha2tGyUvEoRjRhakO0o8dIpE+XSlfAKhtq7ym2GooPSF7rG
-         0HuPXuN+J5W3OEQ8SL+6kPBc7CaDsnF6Ze2e9osMcceFOuuKPQIrsa1Gdr5JsEbDsUvE
-         IyGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740506092; x=1741110892;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=011mEZq+lEHTVl8zPiUWPXTDh62dk2zOJhBI9PwZoL4=;
-        b=VIaPcdcqlZiUlDmGIlCG++1FbFYWLgAKtxNEoJhGFd6nXZKy/aBzxkLBtYN2BqTI6F
-         QfsMxqRqgfEnv8TBTSq4oncGF/4mEEOHVAbRwqvoYIkKR13QI/fngxZU5x3vcYDhyRAY
-         c6Z1zOPSUQnhR9SEbc1KX3isveQ4yAgKrrysbBaQ+UdhMG//OeAmzCBtSwWkesLdVWyv
-         fFj2z94eRF7GiabmrtE2in1DpXOWSD8y0wO0NcFWMoNx2wH+P+ppfnGQG70Fl3lIBnhP
-         JuZgvgT6nK2h5sLrBO+UWHwoJuoU39FJHM4ecRLDgzIsAishhXrXpxADa3s1ahcbd2Ci
-         x4jA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhwZGFojxqpkAOtLoBf4VnB6atkib4l1g4wZ7IJujcL6tdduo38V5tlvmE+NxBdDm4jLHMWaiMGHjkcFY4oTyr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwWLdWyVvhtrBZn6wE07ohFFxZGGJonxxjzKZ7HoUt9/ieS7vb
-	4RJ7QgiN8MeZhjcwizyJfldhbTYO9wVUEmdLFA4xq1cV7YAH49L5RSuMzuDEnyH/7WhBheEAg04
-	8
-X-Gm-Gg: ASbGnct+K9DfS5sZ3DUOixPPk2DQGF3i5pr3YEf76wkjLFs1K5uXIs7wwkHf6FFh492
-	Fm+GMZgwxkzhcRj37pHjbRHRkC7VcwK8cDisKal1KPuCrvZNOgJxMVuETznITVEIZsPagv18CBi
-	U3ukmaYgz0OedjlVCpilFgOXKJ3rpty1CjW/9azdQwzPGCZfdKakpVBuWMxR8ikOOq15947evdV
-	CAZ4d17UfF7CTaL7Zib4seA5pmE7tsnL+/c0fAomBLMbzVz1DSM0BnXfZ60I6Wo8r2PZDj9wB8m
-	2YC0YH/nZ/SdJZp0qKa7g0DGS3S1yejAXN9Mf5mlZ1CzHSHTSZa0rg==
-X-Google-Smtp-Source: AGHT+IGOWzmly6boKtwKSHB9GxdOpBk2xi8IAsBkCHz8v6aKL6B3fyJuVL3+GQUEXLe6PIomZxR9Lg==
-X-Received: by 2002:a17:907:9721:b0:ab6:dbe0:d658 with SMTP id a640c23a62f3a-abeeee410b3mr9238566b.31.1740506092123;
-        Tue, 25 Feb 2025 09:54:52 -0800 (PST)
-Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [109.121.142.137])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed20121adsm178683066b.91.2025.02.25.09.54.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 09:54:51 -0800 (PST)
-Message-ID: <8973bfd4-d8b2-4dd7-ae1a-3f685dff769f@suse.com>
-Date: Tue, 25 Feb 2025 19:54:50 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ONTjA/tD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 46AF540E01AE;
+	Tue, 25 Feb 2025 18:01:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aGpFAGBqRbPm; Tue, 25 Feb 2025 18:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740506473; bh=kPJ+m0qviqj+7KaVjxLrm03uugK9+y0F+hSfBBTxARk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ONTjA/tD1lmTgd8BFl0JvFTr/SJJbZe3lSBv/alcgsQFlCGPBCUEdfS+0+qAWPmUI
+	 d7bvinqoSWlXJO23l6JayKRYjxrFLNO249GmLLa23gCtWh9xd3KuiyukFVVpgzblDG
+	 3pQq0G9uLowKV9K8o1aQI3EoN0HxaH+GjT6T14qTnB5cTh+pG+FgIK358FbVRR0LWt
+	 hCfn8GuXjR1+7vesTuo98CD4CRVsUJ8W7Xh1+qRYzU+KQZq7qn5AU7OASyfQpTrG3F
+	 x1NIIXuq3LpC393nF5Z3aGGRosaZkM6Vk6NCSfBx6SGv/Uyt2ZSnOyObiNO5UL4wHK
+	 pnVZEmj8WNFKCPYk34NyaS2C2gw4rHc+wSHbanxSaOIzKj7aJzAlA6pHDiaacEue1z
+	 q5DpbaCgln5+rrBXEnhFU3T8Vjke5ImG7OEmCJyFcm4wzqT9Cw+HVHmx36+O5szX2+
+	 TsqlCtN8sil8dmvxChF+8HZ2fSc1NaoK8WxcX+TwI3YaspdzL/qkxNQJVvHlk24K7L
+	 lPMJebnhC8NPhhvZfMOWP2Y8gVyY5Nvj48bLell9fDOYhQQt09AZMHix4n69H+q8w2
+	 W2YKNcls5fdFt0CzuofkGJbjVvTrVikINSxAuCbXbssYWmT3Q+vdiR/zBzc/60dzIQ
+	 IAOz34ljBa0P/uijUuewS5Y0=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 367DD40E01AD;
+	Tue, 25 Feb 2025 18:00:56 +0000 (UTC)
+Date: Tue, 25 Feb 2025 19:00:51 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, will@kernel.org, peterz@infradead.org,
+	yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+	namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com
+Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+Message-ID: <20250225180051.GCZ74FU-PrcosEHZb1@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
+ <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com>
+ <20250225174915.GBZ74Cm2Xpc_WwS3oe@fat_crate.local>
+ <8973bfd4-d8b2-4dd7-ae1a-3f685dff769f@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-To: Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, will@kernel.org, peterz@infradead.org,
- yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
- namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com
-References: <20250106070727.3211006-1-xin@zytor.com>
- <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
- <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com>
- <20250225174915.GBZ74Cm2Xpc_WwS3oe@fat_crate.local>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <20250225174915.GBZ74Cm2Xpc_WwS3oe@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8973bfd4-d8b2-4dd7-ae1a-3f685dff769f@suse.com>
 
-
-
-On 25.02.25 г. 19:49 ч., Borislav Petkov wrote:
-> On Tue, Feb 25, 2025 at 09:10:01AM -0800, Xin Li wrote:
->> After looking into the build issue, we think it's better to change to perl;
->> GNU awk has quite a few extended features that standard awk doesn't support,
->> e.g., BEGINFILE/FPAT/...
+On Tue, Feb 25, 2025 at 07:54:50PM +0200, Nikolay Borisov wrote:
+> But don't we use perl even now:
 > 
-> ... which will make the kernel build depend on yet another tool. I know,
-> I know, perl is everywhere but someone would crawl out of the woodwork
-> complaining that building the kernel pulls in even more stuff.
-> 
+> $ find . -iname *.pl | wc -l
+> 55
 
+You're searching wrong:
 
-But don't we use perl even now:
+$ git grep -w perl arch/x86/
+arch/x86/crypto/poly1305-x86_64-cryptogams.pl:1:#!/usr/bin/env perl
+$
 
-$ find . -iname *.pl | wc -l
-55
+That's some crypto-special thing.
 
+This'll force it on *everything*.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
