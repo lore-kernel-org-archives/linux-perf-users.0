@@ -1,238 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F651891A9
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 13:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3021B9F6
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 13:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575136; cv=none; b=Evj//jrA+cso38CZMPT6VaIdSjvqXe6FQRraGkIXN1PQBykkfM8HVqmlBLcLjtpmkusJlVRsl1xw3zlis+rdQf3ZonO2Q9QbAl769K78+YJyhx/OKJBLGEnvs6QuT5MbXSumTdezLZ8CBehx5u+udchWP48WFxWP+b8cWPdEE5U=
+	t=1740576795; cv=none; b=ogVY5DCTyUagPsxuT2kuV2mvQd1RRs3wUdj3rK89xck6hSakDR1xaBlkJgFUuXblG24vNne45G9UJ++UC51cUvg3lkztWh2NGycvjZHhGHMFTdaUuvTsPyyhJyH7ETJWxEPS3XOpJOGEygykIuCm+EKlIcAWJPsMAcIMibvgGnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740575136; c=relaxed/simple;
-	bh=ViE3G4RVFe/PtmU+1bwWgae5etl7I5adZcqavmtBBJk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Jnl5kNmTwWPovhCa0J0cmHQvbT8r4Ou9hgBBIPOjg3P8BkN4/PZHnaa7tn2YBQvCznOKeV9AgQJFbx9YMit1H5IPaTq/WshOkQbDpsQCTgNi1vlP7/wh9ErESZy9dBaGNqnk60pjoamp+SUBt+elZ+8f/wQiWwDoRTduW42zRrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdRjUtSD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740576795; c=relaxed/simple;
+	bh=4S5ii8vpsdzR3GlUzVYFWg/lI8juhZxOyAULPAaLmhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=a+mVSVe4OiVi6ZDkg+P2ZZwFfo8rOt9VOg/DB63+v54wdnkBcpod/g3titpQ2mEEKj/UUEw/GABdwyQ8s3uELF8i8g7NArojUwgIADmbpSIYiT5bXZo4Eo3zLD9xEJDY3D1T0iB18bavP9mLKA7AUjMrRIUQhlX8p8y7qDmYneU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OLmShJcn; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdRjUtSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FF8C4CED6;
-	Wed, 26 Feb 2025 13:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740575136;
-	bh=ViE3G4RVFe/PtmU+1bwWgae5etl7I5adZcqavmtBBJk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GdRjUtSDulunSchedhZQvTV59UieXOa7J6JthY5cI5CqCO2/xZy+HWxrT801xkO9A
-	 y4xtvCMgxWisfuqnm/LKLypI13+V4tu9Tm/YvcSCTTwFwP2HJ4KTcpeBMVTGqsfUoK
-	 bdqJZU37/j7qULGCVE1XSFKDvwe0rXOQud0mSnyiXIw4I7syIlwVo1IULdl+VwvE8N
-	 UWBgSub+kZ+eMIABvlYFFai4kQLZLSZDpTf5OQu6OjPEPjRtGKQ1LXzjwJ8nIPaplW
-	 QkEi/KftfjZNQfyfRRDLw7J+qeUcST5O4e8FKQq7rZCTW4NX90yS+w4ALvMTbthxMN
-	 /UIwjtEjmj0UA==
-Date: Wed, 26 Feb 2025 22:05:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- irogers@google.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
- disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
- Aditya.Bodkhe1@ibm.com, Tejas.Manhas1@ibm.com, mhiramat@kernel.org
-Subject: Re: [PATCH V2] tools/perf: Pick the correct dwarf die while adding
- probe point for a function
-Message-Id: <20250226220532.af2538bdbe0d7e3db94cc470@kernel.org>
-In-Reply-To: <20250225123042.37263-1-atrajeev@linux.ibm.com>
-References: <20250225123042.37263-1-atrajeev@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OLmShJcn"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f406e9f80so6182478f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 05:33:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740576792; x=1741181592; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0AHsRBeWrg5AIl4T2vlSKQMrg1QVH5JjtnKAUlo99n4=;
+        b=OLmShJcnzQIBPSmtNW5bgGi2xsWWZx9jtVB0Aw8esi/nvT6oBuQlB/mnTRCRxhrCmh
+         FnorDcR4Ki1G/xbEt0NV65fb+4k+Blx+qt1IzwLR5RXLBHC9nb7GAZggYbhsAt0tO9SH
+         V5QkKIt3oIXYegJCmmB6bpRQ5XC8GDf+ok1KZWK92Qg2FaXG9JTE7bC1yIAgeGCJoXkb
+         p+fZs/dOaJ9vRuHr/BYZSl/LnVSaOWKDw4njcHztLABSJMQ28VwwEhXP2p4O3u9DonJg
+         gTtUHpsa7zgNcCpWJRRf6US5Phr+iDsCU1TcZE25Lyj1eWr9AMfU2HY1EYLuSfL1s137
+         zlBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740576792; x=1741181592;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0AHsRBeWrg5AIl4T2vlSKQMrg1QVH5JjtnKAUlo99n4=;
+        b=Ec6H8ymgidrerSRK+dmdUgAUBGxWaHdz5g+Zt6g+xmlqrZflecVTqH5lS8qgpmDFcu
+         MHN/DMUPEjR8gGXHNNw7Xf6A6CwWq3b2Zr4bhDcLPUPreaBYgatJJWazVU0WrpeuvTKI
+         lTGdk/QViotG5Jf73lIyvWjYDCma3mIgiH1rQWMyolF2c4UZmjzxIh/kVvClyNpNZzhx
+         UMLvUJP2nf63RjK07S3JgS88n71w4o0jCwAykdKrn+tPXbm99Dujr9AVjP762VHbCzUj
+         62Rv9rAxYB2voMcdYKxclcmphKpOF/wHrJaAqmbkfFtXOj5kZEx34uy2N1RjPCXkBILS
+         71vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCf2e6EXyq4cdLV/oIemVIY9ON/YcqrYIm2oq3nfxIT4qkpjn9x0dALgZFgchoGPSndT9cr8dLGfLRwD27U6yz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0+KMV2B1oSrDcVVPH2LhKMkS2/ptWkZ4OeX6M2aaED7o8UwBI
+	Fwh28MQBA4XMHBr2gus/IaOzLCz8XozfEZ2QPk3ZEIlyGQ4zBS9XWZl2ZmCozYc=
+X-Gm-Gg: ASbGncv+SWphZVGbqNWZj3T90wiOfx9hSnSoxuqEqDuYDqK7OudIF2iUD23dId5X2Ub
+	vt3zoHAmzbGqWKUxtEIc35fw4bNISrsC1CgMQ9tqzPSvb7DBzt9H01oFwSFnUIgwhx6Fd+B9dGo
+	QUBH1b1uDzO6qTANQozGuy4TwZqvjNQDOjJrGhiFcsaIrMIbCoSEiBniVB8wEG/wmTISQ4R51E8
+	IX9iTtO1IYz5KF/TEwa3ZZLA1nIB79Sf/oT5Tl0w1Xd0oHB86yJwrQ+/E4R5WTDuPIx/ECDkHH3
+	NMuw0GY6aquItUjTxXWt7WHCGWf/W8DBDg==
+X-Google-Smtp-Source: AGHT+IEMwTnaV1lxB24cLJCmw9AEkuHApONnAq+Ctb9Vrt09pWCW31XxqxzLWZRAu38Bw7cikwZPiw==
+X-Received: by 2002:a05:6000:18af:b0:385:d852:29ed with SMTP id ffacd0b85a97d-390d4f8b520mr2586635f8f.36.1740576792150;
+        Wed, 26 Feb 2025 05:33:12 -0800 (PST)
+Received: from [192.168.1.247] ([145.224.66.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd882a37sm5699140f8f.51.2025.02.26.05.33.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 05:33:11 -0800 (PST)
+Message-ID: <e7fea60f-dac3-4762-9139-cf096d7bc121@linaro.org>
+Date: Wed, 26 Feb 2025 13:33:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 06/12] perf arm-spe: Fix load-store operation checking
+To: Leo Yan <leo.yan@arm.com>
+References: <20250217195908.176207-1-leo.yan@arm.com>
+ <20250217195908.176207-7-leo.yan@arm.com>
+Content-Language: en-US
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mike Leach <mike.leach@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>,
+ Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250217195908.176207-7-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Feb 2025 18:00:42 +0530
-Athira Rajeev <atrajeev@linux.ibm.com> wrote:
 
-> Perf probe on vfs_fstatat fails as below on a powerpc system
-> 
-> ./perf probe -nf --max-probes=512 -a 'vfs_fstatat $params'
-> Segmentation fault (core dumped)
-> 
-> This is observed while running perftool-testsuite_probe testcase.
-> 
-> While running with verbose, its observed that segfault happens
-> at:
-> 
->    synthesize_probe_trace_arg ()
->    synthesize_probe_trace_command ()
->    probe_file.add_event ()
->    apply_perf_probe_events ()
->    __cmd_probe ()
->    cmd_probe ()
->    run_builtin ()
->    handle_internal_command ()
->    main ()
-> 
-> Code in synthesize_probe_trace_arg() access a null value and results in
-> segfault. Data structure which is null:
-> struct probe_trace_arg arg->value
-> 
-> We are hitting a case where arg->value is null in probe point:
-> "vfs_fstatat $params". This is happening since 'commit e896474fe485
-> ("getname_maybe_null() - the third variant of pathname copy-in")'
-> Before the commit, probe point for vfs_fstatat was getting added only
-> for one location:
-> 
-> Writing event: p:probe/vfs_fstatat _text+6345404 dfd=%gpr3:s32 filename=%gpr4:x64 stat=%gpr5:x64 flags=%gpr6:s32
-> 
-> With this change, vfs_fstatat code is inlined for other locations in the
-> code:
-> Probe point found: __do_sys_lstat64+48
-> Probe point found: __do_sys_stat64+48
-> Probe point found: __do_sys_newlstat+48
-> Probe point found: __do_sys_newstat+48
-> Probe point found: vfs_fstatat+0
-> 
-> When trying to find matching dwarf information entry (DIE)
-> from the debuginfo, the code incorrectly picks DIE which is
-> not referring to vfs_fstatat. Snippet from dwarf entry in vmlinux
-> debuginfo file.
-> 
-> The main abstract die is:
->  <1><4214883>: Abbrev Number: 147 (DW_TAG_subprogram)
->     <4214885>   DW_AT_external    : 1
->     <4214885>   DW_AT_name        : (indirect string, offset: 0x17b9f3): vfs_fstatat
-> 
-> With formal parameters:
->  <2><4214896>: Abbrev Number: 51 (DW_TAG_formal_parameter)
->     <4214897>   DW_AT_name        : dfd
->  <2><42148a3>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->     <42148a4>   DW_AT_name        : (indirect string, offset: 0x8fda9): filename
->  <2><42148b0>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->     <42148b1>   DW_AT_name        : (indirect string, offset: 0x16bd9c): stat
->  <2><42148bd>: Abbrev Number: 23 (DW_TAG_formal_parameter)
->     <42148be>   DW_AT_name        : (indirect string, offset: 0x39832b): flags
-> 
-> While collecting variables/parameters for a probe point, the function
-> copy_variables_cb() also looks at dwarf debug entries based on the
-> instruction address. Snippet
-> 
->         if (dwarf_haspc(die_mem, vf->pf->addr))
->                 return DIE_FIND_CB_CONTINUE;
->         else
->                 return DIE_FIND_CB_SIBLING;
-> 
-> But incase of inlined function instance for vfs_fstatat, there are two
-> entries which has the instruction address entry point as same.
-> 
-> Instance 1: which is for vfs_fstatat and DW_AT_abstract_origin points to
-> 0x4214883 (reference above for main abstract die)
-> 
-> <3><42131fa>: Abbrev Number: 59 (DW_TAG_inlined_subroutine)
->     <42131fb>   DW_AT_abstract_origin: <0x4214883>
->     <42131ff>   DW_AT_entry_pc    : 0xc00000000062b1e0
-> 
-> Instance 2: which is not for vfs_fstatat but for getname
-> 
->  <5><4213270>: Abbrev Number: 39 (DW_TAG_inlined_subroutine)
->     <4213271>   DW_AT_abstract_origin: <0x4215b6b>
->     <4213275>   DW_AT_entry_pc    : 0xc00000000062b1e0
-> 
-> But the copy_variables_cb() continues to add parameters from second
-> instance also based on the dwarf_haspc() check. This results in
-> formal parameters for getname also appended to params. But while
-> filling in the args->value for these parameters, since these args
-> are not part of dwarf with offset "42131fa". Hence value will be
-> null. This incorrect args results in segfault when value field is
-> accessed.
-> 
-> Save the dwarf dieoffset of the actual DW_TAG_subprogram as part of
-> "struct probe_finder". In copy_variables_cb(), include check to make
-> sure the DW_AT_abstract_origin points to the correct entry if the
-> dwarf_haspc() matches the instruction address.
-> 
 
-Good catch! and this looks good to me :-)
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+On 17/02/2025 7:59 pm, Leo Yan wrote:
+> The ARM_SPE_OP_LD and ARM_SPE_OP_ST operations are secondary operation
+> type, they are overlapping with other second level's operation types
+> belonging to SVE and branch operations.  As a result, a non load-store
+> operation can be parsed for data source and memory sample.
+> 
+> To fix the issue, this commit introduces a is_ldst_op() macro for
+> checking LDST operation, and apply the checking when synthesize data
+> source and memory samples.
+> 
+> Fixes: a89dbc9b988f ("perf arm-spe: Set sample's data source field")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
-> Changelog:
-> v1 -> v2:
->  Instead of saving the Dwarf_Die as part of "struct probe_finder",
->  save the dwarf dieoffset. We only need offset while comparing to see
->  if DW_AT_abstract_origin points to correct entry
->  Suggested in review by Namhyung.
+>   tools/perf/util/arm-spe.c | 8 +++++++-
+>   1 file changed, 7 insertions(+), 1 deletion(-)
 > 
->  tools/perf/util/probe-finder.c | 21 ++++++++++++++++++---
->  tools/perf/util/probe-finder.h |  1 +
->  2 files changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 1e769b68da37..3cc7c40f5097 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -973,6 +973,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
->  	pr_debug("Matched function: %s [%lx]\n", dwarf_diename(sp_die),
->  		 (unsigned long)dwarf_dieoffset(sp_die));
->  	pf->fname = fname;
-> +	pf->abstrace_dieoffset = dwarf_dieoffset(sp_die);
->  	if (pp->line) { /* Function relative line */
->  		dwarf_decl_line(sp_die, &pf->lno);
->  		pf->lno += pp->line;
-> @@ -1179,6 +1180,8 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
->  	struct local_vars_finder *vf = data;
->  	struct probe_finder *pf = vf->pf;
->  	int tag;
-> +	Dwarf_Attribute attr;
-> +	Dwarf_Die var_die;
->  
->  	tag = dwarf_tag(die_mem);
->  	if (tag == DW_TAG_formal_parameter ||
-> @@ -1196,10 +1199,22 @@ static int copy_variables_cb(Dwarf_Die *die_mem, void *data)
->  		}
->  	}
->  
-> -	if (dwarf_haspc(die_mem, vf->pf->addr))
-> +	if (dwarf_haspc(die_mem, vf->pf->addr)) {
-> +		/*
-> +		 * when DW_AT_entry_pc contains instruction address,
-> +		 * also check if the DW_AT_abstract_origin of die_mem
-> +		 * points to correct die.
-> +		 */
-> +		if (dwarf_attr(die_mem, DW_AT_abstract_origin, &attr)) {
-> +			dwarf_formref_die(&attr, &var_die);
-> +			if (pf->abstrace_dieoffset != dwarf_dieoffset(&var_die))
-> +				goto out;
-> +		}
->  		return DIE_FIND_CB_CONTINUE;
-> -	else
-> -		return DIE_FIND_CB_SIBLING;
-> +	}
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 251d214adf7f..0e8e05c87fd7 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -37,6 +37,8 @@
+>   #include "../../arch/arm64/include/asm/cputype.h"
+>   #define MAX_TIMESTAMP (~0ULL)
+>   
+> +#define is_ldst_op(op)		(!!((op) & ARM_SPE_OP_LDST))
 > +
-> +out:
-> +	return DIE_FIND_CB_SIBLING;
->  }
->  
->  static int expand_probe_args(Dwarf_Die *sc_die, struct probe_finder *pf,
-> diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-> index dcf6cc1e1cbe..ecd6d937c592 100644
-> --- a/tools/perf/util/probe-finder.h
-> +++ b/tools/perf/util/probe-finder.h
-> @@ -63,6 +63,7 @@ struct probe_finder {
->  	const char		*fname;		/* Real file name */
->  	Dwarf_Die		cu_die;		/* Current CU */
->  	Dwarf_Die		sp_die;
-> +	Dwarf_Off		abstrace_dieoffset;
->  	struct intlist		*lcache;	/* Line cache for lazy match */
->  
->  	/* For variable searching */
-> -- 
-> 2.43.5
-> 
+>   struct arm_spe {
+>   	struct auxtrace			auxtrace;
+>   	struct auxtrace_queues		queues;
+> @@ -681,6 +683,10 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
+>   {
+>   	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
+>   
+> +	/* Only synthesize data source for LDST operations */
+> +	if (!is_ldst_op(record->op))
+> +		return 0;
+> +
+>   	if (record->op & ARM_SPE_OP_LD)
+>   		data_src.mem_op = PERF_MEM_OP_LOAD;
+>   	else if (record->op & ARM_SPE_OP_ST)
+> @@ -779,7 +785,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>   	 * When data_src is zero it means the record is not a memory operation,
+>   	 * skip to synthesize memory sample for this case.
+>   	 */
+> -	if (spe->sample_memory && data_src) {
+> +	if (spe->sample_memory && is_ldst_op(record->op)) {
+>   		err = arm_spe__synth_mem_sample(speq, spe->memory_id, data_src);
+>   		if (err)
+>   			return err;
 
+Reviewed-by: James Clark <james.clark@linaro.org>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
