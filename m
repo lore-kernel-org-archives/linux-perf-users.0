@@ -1,191 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E442248AF
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 16:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018C71DE2A9;
+	Wed, 26 Feb 2025 17:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740588786; cv=none; b=pYrJyYcCE2v6/7OTJqcwQuGw73Tr6MX6LWihdoEvPpm62b8O8Xxw8SpCnvQ8U2t2+tHTkzUh4ZVDD8kF9soZXWZtCMwkCIujZbliwZ9y1bUHf9asODj2sEVgycg/AqyDP+tYShOMarRNKllnflyOz7+SXwHlxqLcrEGP4JqQgP8=
+	t=1740589252; cv=none; b=LH7Bx7C+KHGI3nC2tD7fLWP7gwp/FAY5YQc3NgGdY8q8kDlstItWP3oDEr+GkB28BWmwVuEYeIqvBIOmgl4aJ/8RpdYOTuC6ICrz+E8MWittLczerHFoHh8i+iQW/5q0CCXZtONsvFt4PkYN/YRcBX+3RPYqxA3tTD3jzkdxXvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740588786; c=relaxed/simple;
-	bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lbSmQpA3BAWpsBoWDs8huDZpElOXyBt3+WRzF96rq6s9EPZc+rMi6xu5PwB6feA6FUkMWXx5wg1NC3gymwLzG03bAU7ddTpsDtG8iP3/5jBKmNjlc583voHj80JDrJL1+doE2WMlsW7qpgfmdmZDVxbZ/PRGKC+zEFURe6Rqt54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z/dw0KG1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740589252; c=relaxed/simple;
+	bh=MdqkHWUEtv7tjnvc1shi+RAak0dflbv0rf/oThbljPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7w5U+iHgEUv+/v3IhtZb9DMq44yovMUz0GVmXQsj1tNgeyxyzaHG+j6Qq9HJa9WCYJQB8CutzRMqh0km1z0OYtt7wBRjND2X6O7R87vo9gxY/NlgFkeBjcj86cvdDF5yWxcBMZFX8q3OvX/rLCZAE+qTuXbaP8XxPPvAuP5gJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miRfNZe+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/dw0KG1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740588783;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
-	b=Z/dw0KG134zsO4a2TKX2m3WCDrkQvwzpl4Yz4guYIBsTGu6ntdyOZbMrKTR3Gt4mcpBmDm
-	q6slYwFtHbLjReBgvyfdYAAh5VXHcEWT/KBllTykYhxd21vo4M9yaF4Lyc3IrXGNXioPTy
-	hDS9vOBn8FlorTwC/wfsKVh+oK9od6Q=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-6LoRt_5vOPKiQHJxei-AVw-1; Wed, 26 Feb 2025 11:52:55 -0500
-X-MC-Unique: 6LoRt_5vOPKiQHJxei-AVw-1
-X-Mimecast-MFC-AGG-ID: 6LoRt_5vOPKiQHJxei-AVw_1740588774
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4388eee7073so4954945e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 08:52:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740588774; x=1741193574;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
-        b=Vgcp7uK02mUDHU9AnAyaQbd9r6ZajVAxZw6xw75xiSVHfxpmB4ZPWL5BLNr/jJgYwD
-         ejYlzhuUn+RNpKmII3yyL1fi6V59WCP6mG2/dWque2DM1+GDTX7X4PIiqsUlW6h24FVQ
-         +Z7GWTUho1C6qLqxl9AKdrHt2GYnPLqoOvn8Gp/+6krVezfntqqZlDcc0Maoa85wylIo
-         rLhb3ZX7u7HxjK9TgCbnU3pIKEwrXIyYh60aywTu6GWt9vEFxQgxRIRVC9Lx50JF7zrW
-         DzGbO4vJ7IvT8Sgmr6N6MbCrE4cogsL0158EOp2PNiwPwiXzpWtr6zqQQzoeVpUq3JMo
-         4AdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgp+w9tIuN/PR57zIn8fYsHUg2D/yLwlMFptiKehcDGPIuUxG4G+GiAxo6V0EvLRMOqZTZ1+gbMxmFLTLiNkVG@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNmepDFk8K5gT/pd2ma9Lg6Br6n3AA1jV2pfytBtj5QHMqPHp3
-	WmwQWytnGw4JBQZjEw2QsYDCFmXHe5+i2joLcVVl09oNXxqE9HXTN0EVD83l9o8ytDG4JOhv/IQ
-	h0TTn1nq3jAIHXPNBLKJd+G+O39xNPHC8ZIwvRa2Z1Qod8JpQPr/v11bmXPY2sRpcxLw=
-X-Gm-Gg: ASbGnctsMRTyEl6yfFh1xL0KcNp5x/hL/Q7dhel+r/gyH6DWxXeTc/xWrbM2g72+lIz
-	90MJ5blDWwWWF7mZ0kDhYqIVF7MbBGDYGsNIlqS4tCW6U9XD5ggCb538V+8jlMIkgpInzCG83zk
-	A1qU+1VcGRFcMMiH/PAvRi3FQafA0aR4TmxfquI8H/7TexTgwChC6vLvnJKZULFOw2Y7qa5t+Xr
-	PrRab8ZLhnPJIHnAG7vuVgPN0MIVyFHwnVJElRj6FgyTFT/Fw6J6URQiYcHdOSi4zQDx4IllpVs
-	mDNszjTRYM/Fxkop4m9w3C25ESPAhjF51gcvsh5kcxy6jl3V/SS9ck8ZsAnzOaGxCfNDz7X8s2n
-	k
-X-Received: by 2002:a05:600c:ca:b0:439:91c7:895a with SMTP id 5b1f17b1804b1-43afddc6489mr797955e9.7.1740588774314;
-        Wed, 26 Feb 2025 08:52:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGWpDWParbyEFSiQubNArY/pYMHk4T+vY7Yfjqs/xu0tXoSgFv+Leti7F7TfR+hujI+3HmBjw==
-X-Received: by 2002:a05:600c:ca:b0:439:91c7:895a with SMTP id 5b1f17b1804b1-43afddc6489mr797035e9.7.1740588773857;
-        Wed, 26 Feb 2025 08:52:53 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390d98c0642sm2242326f8f.81.2025.02.26.08.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 08:52:53 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
- <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
- <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
- <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
-Date: Wed, 26 Feb 2025 17:52:50 +0100
-Message-ID: <xhsmhfrk0lkbh.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miRfNZe+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740589250; x=1772125250;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MdqkHWUEtv7tjnvc1shi+RAak0dflbv0rf/oThbljPQ=;
+  b=miRfNZe+9jnrZ3kYF0xVwFDYmwXu7UCnX1h5zSor/s5sOwyolXFV0Spp
+   AD6AKuNHah0o9IK1Fqps/bxb52hC7qZNL6jQdkImn8POLVBx7Ja8wZ8dx
+   CmrDyESDCkXzqZ4Y81Gvz1sVC5D24WHXjGKZ8kapoO6tZMEAFPouyXsif
+   NKD7qH2UABlXuDTdudSvRKlx9T/e1y7RbLYWP4SirwNqk0sJ5adSfzMPB
+   mK5DHIgiqVvEFT49mKPsxPJ0fwg9TJVJaOK0U8c3pnoNKK0qvPTpUE15c
+   kcDJexJkK8IIzKSmFikAJztnWhVaE05FyUMW5s+Qs3HeDrFQelHCP2y4N
+   w==;
+X-CSE-ConnectionGUID: b8vKBc5aTUqGBqTbMy0d7w==
+X-CSE-MsgGUID: +amB/NTSSHG9rf7UVEzldg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41577104"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="41577104"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 09:00:49 -0800
+X-CSE-ConnectionGUID: GekzjP7zTV2iLQdCigxZcw==
+X-CSE-MsgGUID: SjUIbYiwSgatyjlq00pQKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="121751950"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.220.27])
+  by orviesa004.jf.intel.com with ESMTP; 26 Feb 2025 09:00:47 -0800
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Kan Liang <kan.liang@intel.com>
+Subject: [PATCH v4] perf script: Fix output type for dynamically allocated core PMU's
+Date: Wed, 26 Feb 2025 11:00:43 -0600
+Message-ID: <20250226170043.762219-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On 20/02/25 09:38, Dave Hansen wrote:
-> On 2/20/25 09:10, Valentin Schneider wrote:
->>> The LDT and maybe the PEBS buffers are the only implicit supervisor
->>> accesses to vmalloc()'d memory that I can think of. But those are both
->>> handled specially and shouldn't ever get zapped while in use. The LDT
->>> replacement has its own IPIs separate from TLB flushing.
->>>
->>> But I'm actually not all that worried about accesses while actually
->>> running userspace. It's that "danger zone" in the kernel between entry
->>> and when the TLB might have dangerous garbage in it.
->>>
->> So say we have kPTI, thus no vmalloc() mapped in CR3 when running
->> userspace, and do a full TLB flush right before switching to userspace -
->> could the TLB still end up with vmalloc()-range-related entries when we're
->> back in the kernel and going through the danger zone?
->
-> Yes, because the danger zone includes the switch back to the kernel CR3
-> with vmalloc() fully mapped. All bets are off about what's in the TLB
-> the moment that CR3 write occurs.
->
-> Actually, you could probably use that.
->
-> If a mapping is in the PTI user page table, you can't defer the flushes
-> for it. Basically the same rule for text poking in the danger zone.
->
-> If there's a deferred flush pending, make sure that all of the
-> SWITCH_TO_KERNEL_CR3's fully flush the TLB. You'd need something similar
-> to user_pcid_flush_mask.
->
+This patch was originally posted here:
 
-Right, that's what I (roughly) had in mind...
+https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.com/
 
-> But, honestly, I'm still not sure this is worth all the trouble. If
-> folks want to avoid IPIs for TLB flushes, there are hardware features
-> that *DO* that. Just get new hardware instead of adding this complicated
-> pile of software that we have to maintain forever. In 10 years, we'll
-> still have this software *and* 95% of our hardware has the hardware
-> feature too.
+I have rebased on top of Arnaldo's patch here:
 
-... But yeah, it pretty much circumvents arch_context_tracking_work, or at
-the very least adds an early(er) flushing of the context tracking
-work... Urgh.
+https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
 
-Thank you for grounding my wild ideas into reality. I'll try to think some
-more see if I see any other way out (other than "buy hardware that does
-what you want and ditch the one that doesn't").
+The original commit message:
+"
+perf script output may show different fields on different core PMU's
+that exist on heterogeneous platforms. For example,
+
+perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=0xcd,\
+umask=0x01,ldlat=3,name=MEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+-c10000 -W -d -a -- sleep 1
+
+perf script:
+
+chromium-browse   46572 [002] 544966.882384:      10000 	cpu_core/MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+ |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+perf record -e cpu_atom/event=0xd0,umask=0x05,ldlat=3,\
+name=MEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+
+perf script:
+
+gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+Some fields, such as data_src, are not included by default.
+
+The cause is that while one PMU may be assigned a type such as
+PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+If this value does not match an existing PERF_TYPE_X value,
+output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+
+Instead search for a core PMU with a matching perf_event_attr type
+and, if one is found, return PERF_TYPE_RAW to match output of other
+core PMU's.
+"
+
+Suggested-by: Kan Liang <kan.liang@intel.com>
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+v2: restrict pmu lookup to platforms with more than one core pmu
+v3: only scan core pmu list
+v4: rebase on top of Arnaldo's patch
+---
+ tools/perf/builtin-script.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d797cec4f054..abc860d01420 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -398,10 +398,28 @@ static inline int output_type(unsigned int type)
+ 	return OUTPUT_TYPE_OTHER;
+ }
+ 
++static bool output_type_check_core_pmus(unsigned int type)
++{
++	struct perf_pmu *pmu = NULL;
++
++	if (perf_pmus__num_core_pmus() > 1) {
++		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
++			if (pmu->type == type)
++				return true;
++		}
++	}
++	return false;
++}
++
+ static inline int evsel__output_type(struct evsel *evsel)
+ {
+-	if (evsel->script_output_type == OUTPUT_TYPE_UNSET)
+-		evsel->script_output_type = output_type(evsel->core.attr.type);
++	if (evsel->script_output_type == OUTPUT_TYPE_UNSET) {
++		if (output_type(evsel->core.attr.type) == OUTPUT_TYPE_OTHER &&
++		    output_type_check_core_pmus(evsel->core.attr.type))
++			evsel->script_output_type = PERF_TYPE_RAW;
++		else
++			evsel->script_output_type = output_type(evsel->core.attr.type);
++	}
+ 
+ 	return evsel->script_output_type;
+ }
+-- 
+2.48.1
 
