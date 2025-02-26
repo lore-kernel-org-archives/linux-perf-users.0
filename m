@@ -1,38 +1,38 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C65E19EED7;
-	Wed, 26 Feb 2025 09:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8BD2459CC;
+	Wed, 26 Feb 2025 09:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563223; cv=none; b=F0oBCeTtUVMGtFcVtUbTlBnk4NqOm0+vQNqXXOnQHWpFdGOIHlEoSrF9dEFDeftNSCK7ElGIteu55wFiz/kpZJfA0gMlKHegYapPoYiCcthq5qqDXOB9Mmkc65abyRMNVlzm8V1ik4yF/oJz3/GGLpxzFP0wfS/Rt5eCX3lcspo=
+	t=1740563332; cv=none; b=ZMVWMYhxkMzgrqLE2H3yABLOUZrwM1XAWCfO7AcwLGcVjSr1hytPIYG91JriekQfTD0YvrADD4eyigK7ZUx8FY28jk8bvaZLJXcn1Jr2NX/E9Le496HJk5akfliRdD0u+Ychl0pMjEhL7cksc+DM1/yTd8w/5wG2FBTRe6ntCXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563223; c=relaxed/simple;
-	bh=65mCvrCgQ8vUabuuLrrDfQqdfH8PfOiynZ1+gS5LqcY=;
+	s=arc-20240116; t=1740563332; c=relaxed/simple;
+	bh=QP93zTpIBj69URrJI/doxAsbsvpPaRP3UufccvOM9RI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3GpXJ5reIUcl9X5akXHv6VjGZJPW9W/3KIWDzIZ85ScnWEXgUInO+3uEcxEQduya8xAs1Zb1yu1C0sJdVEyoDGS8vMX0rUp+FSW6hvvGSF2PJTbkWElr32aFRbp1WQElawgmrUngrtgxq85PXo/HSfTzehSDdamAo8tQZF5zIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GR8ZTEI2; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8YC/YuGxKnKClnV993ghAu5QfaM+9jmt7AOXBuu2iDY44uPKXc6e+syYLSy6b00iENFg28+Jgfw/YkC5YqH9zr2PlgwMGzED5wM47h/vyRelKNtjAQG2bqlw79XbS8jHx5PyAqVGIoFuV8MLJJMIIFJRFmjYNYmsQjZ8hS0yfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OAyxZ13v; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GR8ZTEI2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OAyxZ13v"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YtowJyTfySe91smR0qJ/muHbcExkBlLYkwOcrWOMYg0=; b=GR8ZTEI2cDfxbbLGLTUqMau5x8
-	QU3gurHsTGFVIe1eAvVAGwAY/J75XF8XyeaaAurSkh+fufJHMbOokeO6+4vENMZ5oVhxBWZNRLfIm
-	5Pr592CUB/oZsCmKVj0wwvv/UNx17MqjkjazitGIeaiWOi6nBrtbquf+H5dTlI6kvzduZYUctgCNg
-	EpEP71ClhZ9Z0QFbV/kRLznf26IH6lgnU+3IjQCV1+6v7RLEQaF25A8WCFtyXZ/ao6kwyUISCaJUl
-	QvhrV42Uft2Vb8mb9oETo0p1Beox4u3KSyx26qi+iOuFhuFnDzOgxZtInOK9e+icO8dlV1HU12h2E
-	q498Gy3Q==;
+	bh=871hFDdRTS+OmWOz6zBCg95pt62GNhL4S6ODQibnhm4=; b=OAyxZ13v6drg2o41uBYCpG7hpY
+	YYwg7sFxGpGwOQLo/KE1Q0SNOr+2oXD103PoW7Z1HHVk+d5+BC3jxteMpEXlS/wzDMkE1m3+grPOS
+	Ru8iG2HGLHa6XRSpxnIx5Pz6kOMJwdJyWkz7bOTEgnSgwp/V1lYewaz6bi1r6JX2e/TVtCuywrDxP
+	xbsBMClWmez6YU2/rqC8izSbVTVygxW+aKGRi57QYct//tXbzL0o658FrQkvAuXvxZNvj9nYaGW5M
+	pokONrO/k8BZbDDXakEQ9Bz2iB00aRUnG2Hh+8RLOQvEKFbWlLhew/4ggqJLkFo6i1wTGVUcU2J48
+	CHjTNZJA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnE0G-00000003ZNY-3ZXz;
-	Wed, 26 Feb 2025 09:46:57 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tnE1y-0000000Ep3b-2VNh;
+	Wed, 26 Feb 2025 09:48:42 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C9CD300677; Wed, 26 Feb 2025 10:46:56 +0100 (CET)
-Date: Wed, 26 Feb 2025 10:46:56 +0100
+	id 992A3300677; Wed, 26 Feb 2025 10:48:41 +0100 (CET)
+Date: Wed, 26 Feb 2025 10:48:41 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -46,11 +46,11 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 Subject: Re: [Patch v2 12/24] perf/x86/intel: Allocate arch-PEBS buffer and
  initialize PEBS_BASE MSR
-Message-ID: <20250226094656.GS11590@noisy.programming.kicks-ass.net>
+Message-ID: <20250226094841.GT11590@noisy.programming.kicks-ass.net>
 References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
  <20250218152818.158614-13-dapeng1.mi@linux.intel.com>
- <20250225111805.GL11590@noisy.programming.kicks-ass.net>
- <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
+ <20250225112543.GM11590@noisy.programming.kicks-ass.net>
+ <000043b8-1284-46f3-b117-9ece905f218e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,28 +59,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
+In-Reply-To: <000043b8-1284-46f3-b117-9ece905f218e@linux.intel.com>
 
-On Wed, Feb 26, 2025 at 01:48:52PM +0800, Mi, Dapeng wrote:
+On Wed, Feb 26, 2025 at 02:19:15PM +0800, Mi, Dapeng wrote:
 > 
-> On 2/25/2025 7:18 PM, Peter Zijlstra wrote:
+> On 2/25/2025 7:25 PM, Peter Zijlstra wrote:
 > > On Tue, Feb 18, 2025 at 03:28:06PM +0000, Dapeng Mi wrote:
 > >> Arch-PEBS introduces a new MSR IA32_PEBS_BASE to store the arch-PEBS
 > >> buffer physical address. This patch allocates arch-PEBS buffer and then
 > >> initialize IA32_PEBS_BASE MSR with the buffer physical address.
-> > Not loving how this patch obscures the whole DS area thing and naming.
+> > Just to clarify, parts with ARCH PEBS will not have BTS and thus not
+> > have DS?
 > 
-> arch-PEBS uses a totally independent buffer to save the PEBS records and
-> don't use the debug store area anymore. To reuse the original function as
-> much as possible and don't mislead users to think arch-PEBS has some
-> relationship with debug store, the original key word "ds" in the function
-> names are changed to "BTS_PEBS". I know the name maybe not perfect, do you
-> have any suggestion? Thanks.
+> No, DS and BTS still exist along with arch-PEBS, only the legacy DS based
+> PEBS is unavailable and replaced by arch-PEBS.
 
-Right, so I realize it has a new buffer, but why do you need to make it
-all complicated like this?
-
-Just leave the existing stuff and stick the new arch pebs buffer
-somewhere new. All that reserve nonsense shouldn't be needed anymore.
-
-Just add it to the intel_pmu_cpu_{prepare,starting,dying,dead} things.
+Joy. Is anybody still using BTS now that we have PT? I thought PT was
+supposed to be the better BTS.
