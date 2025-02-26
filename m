@@ -1,211 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3B823A9AF;
-	Wed, 26 Feb 2025 19:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8B24438B;
+	Wed, 26 Feb 2025 20:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740598455; cv=none; b=b0TqlNdOX6fzd2IPQmBi5yQJRxun6KwTwP8Ps59V3KnAFxRyTll/6ss2eV/aX4lca7O/35sYNGkDglYZ1MWLQ6Vd+W+SO2ivHXrCdy3gNGreOw66MG+CO+ptXjv12SWK9txmDKGVG9m1mHkMR9N9kt8lDuBJsCvSK3T1BnGMVrI=
+	t=1740601841; cv=none; b=bVptL0h90JwW85aamN/WZvl3ev2HVxnsCv/1DSoYuBhlX+lWBctKF8K6oYIF/dEAhQOjeuKrzf9fP/CpNyK00rjbyEQFX+xFPIBf7986nI77XB53udsMi6hg5mp3fFM+cgvjCL79Z5hxRkWj1WEUpN8MiYH7JjiWY1AE69Vip/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740598455; c=relaxed/simple;
-	bh=5vVt57PLpS5SI0SXJq5Fffg3GFA0wf+g8dSTQO2g2qM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QsREz6bcFJRfmR4ZPCr1Dm8ey7Z/DbAcw5WGH2Ww6Lf/SkoyXkoDxp1IP28rxk4gsGNKoim0kNAjmkmpk5CcdfP9SXuo/mKoUn6vgSsH+idYyd/uGOJuiTsr8MjUPRttIP+IHZM8Y1/1/q42bY28x5bdovTK/93PWia3XtrF39I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuS3tEQy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740601841; c=relaxed/simple;
+	bh=wZTCWf6ZebZc0yurgS6uOME+IY65fpn8ucRzbLvZEuc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LKQbXlrk4Cd/9POfhBMspUb79SZHYcrJsZ4kSHLuptew6EzOo5BvmZQ9WdY3xTT+v5zPuUaUMNMTXDaWJwHvypujeXqQojFOTA6h10AVV/GvtGGchUZlyeZrvg1Q5vYsCQIT4CWEv12L1y9hmrVMpw3cYWO5l2os34AxB4MTCQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bog87JRo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuS3tEQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8D5C4CED6;
-	Wed, 26 Feb 2025 19:34:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bog87JRo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B7DC4CED6;
+	Wed, 26 Feb 2025 20:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740598455;
-	bh=5vVt57PLpS5SI0SXJq5Fffg3GFA0wf+g8dSTQO2g2qM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cuS3tEQy84N7j1D0dDnHVLEEsZslz/6tYg9ulNDxecUDoFUtk2bWFeG25Qqck+EHu
-	 qNkYxd5dVgARuF5NuKu9rzkiEoi+ZdGyB80TSY6T5unUgQjNoPgSiXG7WdnglXwwcl
-	 yK0gj5bCP9LixozeHnf8iWuXUdmUlc+J8jc4xl7LbSj8NGMmnKe0h13fj8HCgVN9iw
-	 uTc3afMECWn0Xl2pMLuTrs0f4wRi/N6XIxXq+EQeM7Ewhq7Cu0Xw1XfEaUUayWnf6Z
-	 gbDtxU35sxKAnA4WBZ39/teEj7S8/dJ9p6i6LNs6FiBoG6K8BZ52o6zCvKcflB188M
-	 CLwFjuPISgYVg==
-Date: Wed, 26 Feb 2025 11:34:13 -0800
+	s=k20201202; t=1740601840;
+	bh=wZTCWf6ZebZc0yurgS6uOME+IY65fpn8ucRzbLvZEuc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bog87JRoUr35Ua+nDXLhR4CvKuyz/6jzbVtHG6XTLy/rffkOAclE36VRuoGYGVku0
+	 mojYrOdH/nGCDCVS2XVzZOBeh5idlZD2qpRpwCUF50BaR63DvO0UDUp6ISViTdIRXt
+	 ekOo6UZ5qHIXSSGqcjPRQ9+Kuyucqg9qpQs2AvbGgEikgpE4x1mHvCjVmxAG1Talau
+	 ove7itQ9i6iMIZQzrj0rEATMt4TaEFXMNMFALDYli5lb5pC4JYo41Q8a4B5P4HRKkB
+	 W1m+ObYx6KAYND2+bYmb6cD4pQl4yMQKSoZNu/0CMreELUd5I+XEHSYdlxdKLHEeJb
+	 Wrh4ZFat6zXaA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf report: Add 'tgid' sort key
-Message-ID: <Z79std66tPq-nqsD@google.com>
-References: <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
- <Z7gllQZeg6U2OvZE@google.com>
- <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
- <Z70wHEl6Sp0H0c-3@google.com>
- <CAP-5=fUosOVUKi5tQ3gVtHhfApk0oH3r2zHDW7-i+_qASKm+Cg@mail.gmail.com>
- <Z712hzvv22Ni63f1@google.com>
- <Z74U5s7Yf0f6I7Mo@x1>
- <Z74V0hZXrTLM6VIJ@x1>
- <Z74ZL6SUwWL_a5EK@x1>
- <Z74eqEiyrzuoL6uz@x1>
+	James Clark <james.clark@linaro.org>,
+	Song Liu <song@kernel.org>
+Subject: [PATCH] perf tools: Skip BPF sideband event for userspace profiling
+Date: Wed, 26 Feb 2025 12:30:39 -0800
+Message-ID: <20250226203039.1099131-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z74eqEiyrzuoL6uz@x1>
 
-On Tue, Feb 25, 2025 at 08:48:56PM +0100, Arnaldo Carvalho de Melo wrote:
-> On Tue, Feb 25, 2025 at 08:25:35PM +0100, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Feb 25, 2025 at 08:11:17PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > On Tue, Feb 25, 2025 at 08:07:18PM +0100, Arnaldo Carvalho de Melo wrote:
-> > > > On Mon, Feb 24, 2025 at 11:51:35PM -0800, Namhyung Kim wrote:
-> > > > > On Mon, Feb 24, 2025 at 08:40:37PM -0800, Ian Rogers wrote:
-> > > > > > On Mon, Feb 24, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > On Mon, Feb 24, 2025 at 10:18:37AM -0800, Ian Rogers wrote:
-> > > > > [SNIP]
-> > > > > > > > I thought the real-time processing had to use
-> > > > > > > > maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
-> > > > > > > > events only give us VMA data and two mmaps may have been merged.
-> > > > > > > > Shouldn't doing this change be the simplest fix?
-> > > 
-> > > > > > > Make sense.  How about this?
-> > > 
-> > > > > > Lgtm, I have no way to test the issue. Why does maps__fixup_end need
-> > > > > > to get pushed later?
-> > > 
-> > > > > I just noticed it would add extra kernel maps after modules.  I think it
-> > > > > should fixup end address of the kernel maps after adding all maps first.
-> > > 
-> > > > > Arnaldo, can you please test this?
-> > >  
-> > > > Trying it now.
-> > > 
-> > > Now we have something different:
-> > > 
-> > > root@number:~# perf record sleep
-> > > sleep: missing operand
-> > > Try 'sleep --help' for more information.
-> > > [ perf record: Woken up 1 times to write data ]
-> > > perf: util/maps.c:80: check_invariants: Assertion `RC_CHK_EQUAL(map__kmap(map)->kmaps, maps)' failed.
-> > > Aborted (core dumped)
-> > > root@number:~#
-> > 
-> > __maps__insert() does:
-> > 
-> >         if (dso && dso__kernel(dso)) {
-> >                 struct kmap *kmap = map__kmap(new);
-> > 
-> >                 if (kmap)
-> >                         kmap->kmaps = maps;
-> >                 else
-> >                         pr_err("Internal error: kernel dso with non kernel map\n");
-> >         }
-> > 
-> > while maps__fixup_overlap_and_insert() doesn't.
-> > 
-> > It calls __maps__insert_sorted() that probably should do what
-> > __maps__insert() does?
-> 
-> Ok, so I did the following patch but this case fails:
-> 
-> @@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
->                                  */
->                                 map__put(maps_by_address[i]);
->                                 maps_by_address[i] = map__get(new);
-> +                               map__set_kmap(new, maps);
->                                 check_invariants(maps);
->                                 return err;
->                         }
-> 
-> With:
-> 
-> perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
-> 
-> As:
-> 
-> 106				/*
-> 107				 * Maps by name maps should be in maps_by_address, so
-> 108				 * the reference count should be higher.
-> 109				 */
-> 110				assert(refcount_read(map__refcnt(map)) > 1);
-> 
-> Since it is just replacing the map in the maps_by_address and not
-> touching on the maps_by_name? Thus the refcount is just 1:
+The BPF sideband information is tracked using a separate thread and
+evlist.  But it's only useful for profiling kernel and we can skip it
+when users profile their application only.
 
-Sounds like it.  Can you add this on top?
+It seems it already fails to open the sideband event in that case.
+Let's remove the noise in the verbose output anyway.
 
-Thanks,
-Namhyung
+Cc: Song Liu <song@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-record.c |  3 +++
+ tools/perf/builtin-top.c    |  3 +++
+ tools/perf/util/evlist.c    | 14 ++++++++++++++
+ tools/perf/util/evlist.h    |  1 +
+ 4 files changed, 21 insertions(+)
 
-
----8<---
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 09c9cc326c08d435..3aee0c9e8d421cef 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -797,7 +797,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- {
- 	int err = 0;
- 	FILE *fp = debug_file();
--	unsigned int i;
-+	unsigned int i, ni;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0e45bd64185403ae..cc61f5d6c599039c 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2535,6 +2535,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		goto out_free_threads;
+ 	}
  
- 	if (!maps__maps_by_address_sorted(maps))
- 		__maps__sort_by_address(maps);
-@@ -808,6 +808,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 	 */
- 	for (i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
- 		struct map **maps_by_address = maps__maps_by_address(maps);
-+		struct map **maps_by_name = maps__maps_by_name(maps);
- 		struct map *pos = maps_by_address[i];
- 		struct map *before = NULL, *after = NULL;
- 
-@@ -827,6 +828,9 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 			map__fprintf(pos, fp);
- 		}
- 
-+		if (maps_by_name)
-+			ni = maps__by_name_index(maps, pos);
++	if (!evlist__needs_bpf_sb_event(rec->evlist))
++		opts->no_bpf_event = true;
 +
- 		/*
- 		 * Now check if we need to create new maps for areas not
- 		 * overlapped by the new map:
-@@ -871,6 +875,11 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 		if (before) {
- 			map__put(maps_by_address[i]);
- 			maps_by_address[i] = before;
-+			if (maps_by_name) {
-+				map__put(maps_by_name[ni]);
-+				maps_by_name[ni] = map__get(before);
-+			}
+ 	err = record__setup_sb_evlist(rec);
+ 	if (err)
+ 		goto out_free_threads;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 6440b5c1757d92ce..c284a384542ff822 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1833,6 +1833,9 @@ int cmd_top(int argc, const char **argv)
+ 		goto out_delete_evlist;
+ 	}
+ 
++	if (!evlist__needs_bpf_sb_event(top.evlist))
++		top.record_opts.no_bpf_event = true;
 +
- 			/* Maps are still ordered, go to next one. */
- 			i++;
- 			if (after) {
-@@ -892,6 +901,10 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 			 */
- 			map__put(maps_by_address[i]);
- 			maps_by_address[i] = map__get(new);
-+			if (maps_by_name) {
-+				map__put(maps_by_name[ni]);
-+				maps_by_name[ni] = map__get(new);
-+			}
- 			err = __maps__insert_sorted(maps, i + 1, after, NULL);
- 			map__put(after);
- 			check_invariants(maps);
-@@ -910,6 +923,10 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 				 */
- 				map__put(maps_by_address[i]);
- 				maps_by_address[i] = map__get(new);
-+				if (maps_by_name) {
-+					map__put(maps_by_name[ni]);
-+					maps_by_name[ni] = map__get(new);
-+				}
- 				check_invariants(maps);
- 				return err;
- 			}
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	if (!top.record_opts.no_bpf_event) {
+ 		top.sb_evlist = evlist__new();
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index f0dd174e2debdbe8..43adf6b3d855771a 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -2594,3 +2594,17 @@ bool evlist__has_bpf_output(struct evlist *evlist)
+ 
+ 	return false;
+ }
++
++bool evlist__needs_bpf_sb_event(struct evlist *evlist)
++{
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel__is_dummy_event(evsel))
++			continue;
++		if (!evsel->core.attr.exclude_kernel)
++			return true;
++	}
++
++	return false;
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index adddb1db1ad2b25d..edcbf1c10e92f0c4 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -435,5 +435,6 @@ void evlist__check_mem_load_aux(struct evlist *evlist);
+ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
+ void evlist__uniquify_name(struct evlist *evlist);
+ bool evlist__has_bpf_output(struct evlist *evlist);
++bool evlist__needs_bpf_sb_event(struct evlist *evlist);
+ 
+ #endif /* __PERF_EVLIST_H */
+-- 
+2.48.1.658.g4767266eb4-goog
+
