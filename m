@@ -1,140 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748FC18BC3B;
-	Wed, 26 Feb 2025 15:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E442248AF
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 16:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584717; cv=none; b=I5gGuNRDuvIl5nmR5L45MXNBzJygfK1uxTofcwRxEYq7RN7UcdE1g61VCCLdORJGWyImkjSoUHbYnygjtD+sYkG2VGItcw49YixgdGG1a4DQAAvCsiEwSNSwJVEEaYXgeqppaZPVJB4IGuq+noMSc8tL9ZPFjYCH1YBgD+VZZuo=
+	t=1740588786; cv=none; b=pYrJyYcCE2v6/7OTJqcwQuGw73Tr6MX6LWihdoEvPpm62b8O8Xxw8SpCnvQ8U2t2+tHTkzUh4ZVDD8kF9soZXWZtCMwkCIujZbliwZ9y1bUHf9asODj2sEVgycg/AqyDP+tYShOMarRNKllnflyOz7+SXwHlxqLcrEGP4JqQgP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584717; c=relaxed/simple;
-	bh=5TQxHnU3PBtTgmCj+sOng8yLc1UM9OVCIbeacuaMWx0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kaut/WA/nt8vntVVsq+IATHUyjOOBs5fWZVLu+RYzDhfHv7gfFCXN3bfq+MqD5Qq5vChg+FxusVgLZKvSJ9qacfJd4o35n/cNez/ZSGF95WQp77deptwCnIdadP+hrTpHeQs7op5oZBWQPvoCgrlcnOtttiitU+X9RCoj3ocdOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PoXEKjx2; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740588786; c=relaxed/simple;
+	bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lbSmQpA3BAWpsBoWDs8huDZpElOXyBt3+WRzF96rq6s9EPZc+rMi6xu5PwB6feA6FUkMWXx5wg1NC3gymwLzG03bAU7ddTpsDtG8iP3/5jBKmNjlc583voHj80JDrJL1+doE2WMlsW7qpgfmdmZDVxbZ/PRGKC+zEFURe6Rqt54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z/dw0KG1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PoXEKjx2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740584716; x=1772120716;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5TQxHnU3PBtTgmCj+sOng8yLc1UM9OVCIbeacuaMWx0=;
-  b=PoXEKjx2MkbF53eUBlkLpTPp68c3tqt5tuMh4o5Xlx1HDBgR4IrT9r8r
-   oil9/OuXg7xr0q0f+2Jjo6HXqCMG0O19jDkithspD9m3mjn6hBHDoZigW
-   gHbYAzuLE/vrYNa/MMmXxC50yyQPSoMJYEOtjkoEwljTmcSBLcm00E6qg
-   rQoeyXEwFkHWoZPork4NJC0iWo98FGQ4lGxME9HylzvNLrfKDKp163+0C
-   jXeTe8/qdGNHYmZZ1PySmoY4tlljJki2+MpvKMVpUU4tpP67rYMKeAy5e
-   Gf1f+LLuXncu/XQle+puMks2W5HUIK+hjLROQJl1PAtdythRiuSbDrWfe
-   w==;
-X-CSE-ConnectionGUID: evzAvKm9R8OHbxo5Zm4ZbQ==
-X-CSE-MsgGUID: EdY906JsQ1WR2PaQ1En/Vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="40615225"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="40615225"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 07:45:15 -0800
-X-CSE-ConnectionGUID: PO5srzFSSYG0iOuEhjmA2w==
-X-CSE-MsgGUID: hm4D1+xDSCSWsx30DxOf4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147662030"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 07:45:15 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0B4D920B5713;
-	Wed, 26 Feb 2025 07:45:12 -0800 (PST)
-Message-ID: <98112b48-5ca6-4077-a842-83d1407f1860@linux.intel.com>
-Date: Wed, 26 Feb 2025 10:45:11 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/dw0KG1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740588783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
+	b=Z/dw0KG134zsO4a2TKX2m3WCDrkQvwzpl4Yz4guYIBsTGu6ntdyOZbMrKTR3Gt4mcpBmDm
+	q6slYwFtHbLjReBgvyfdYAAh5VXHcEWT/KBllTykYhxd21vo4M9yaF4Lyc3IrXGNXioPTy
+	hDS9vOBn8FlorTwC/wfsKVh+oK9od6Q=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-518-6LoRt_5vOPKiQHJxei-AVw-1; Wed, 26 Feb 2025 11:52:55 -0500
+X-MC-Unique: 6LoRt_5vOPKiQHJxei-AVw-1
+X-Mimecast-MFC-AGG-ID: 6LoRt_5vOPKiQHJxei-AVw_1740588774
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4388eee7073so4954945e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 08:52:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740588774; x=1741193574;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qf/Qm0nkzf7U3vlvRsLDs3vQoV9ABJSWnA6WtOiN2ig=;
+        b=Vgcp7uK02mUDHU9AnAyaQbd9r6ZajVAxZw6xw75xiSVHfxpmB4ZPWL5BLNr/jJgYwD
+         ejYlzhuUn+RNpKmII3yyL1fi6V59WCP6mG2/dWque2DM1+GDTX7X4PIiqsUlW6h24FVQ
+         +Z7GWTUho1C6qLqxl9AKdrHt2GYnPLqoOvn8Gp/+6krVezfntqqZlDcc0Maoa85wylIo
+         rLhb3ZX7u7HxjK9TgCbnU3pIKEwrXIyYh60aywTu6GWt9vEFxQgxRIRVC9Lx50JF7zrW
+         DzGbO4vJ7IvT8Sgmr6N6MbCrE4cogsL0158EOp2PNiwPwiXzpWtr6zqQQzoeVpUq3JMo
+         4AdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgp+w9tIuN/PR57zIn8fYsHUg2D/yLwlMFptiKehcDGPIuUxG4G+GiAxo6V0EvLRMOqZTZ1+gbMxmFLTLiNkVG@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNmepDFk8K5gT/pd2ma9Lg6Br6n3AA1jV2pfytBtj5QHMqPHp3
+	WmwQWytnGw4JBQZjEw2QsYDCFmXHe5+i2joLcVVl09oNXxqE9HXTN0EVD83l9o8ytDG4JOhv/IQ
+	h0TTn1nq3jAIHXPNBLKJd+G+O39xNPHC8ZIwvRa2Z1Qod8JpQPr/v11bmXPY2sRpcxLw=
+X-Gm-Gg: ASbGnctsMRTyEl6yfFh1xL0KcNp5x/hL/Q7dhel+r/gyH6DWxXeTc/xWrbM2g72+lIz
+	90MJ5blDWwWWF7mZ0kDhYqIVF7MbBGDYGsNIlqS4tCW6U9XD5ggCb538V+8jlMIkgpInzCG83zk
+	A1qU+1VcGRFcMMiH/PAvRi3FQafA0aR4TmxfquI8H/7TexTgwChC6vLvnJKZULFOw2Y7qa5t+Xr
+	PrRab8ZLhnPJIHnAG7vuVgPN0MIVyFHwnVJElRj6FgyTFT/Fw6J6URQiYcHdOSi4zQDx4IllpVs
+	mDNszjTRYM/Fxkop4m9w3C25ESPAhjF51gcvsh5kcxy6jl3V/SS9ck8ZsAnzOaGxCfNDz7X8s2n
+	k
+X-Received: by 2002:a05:600c:ca:b0:439:91c7:895a with SMTP id 5b1f17b1804b1-43afddc6489mr797955e9.7.1740588774314;
+        Wed, 26 Feb 2025 08:52:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGWpDWParbyEFSiQubNArY/pYMHk4T+vY7Yfjqs/xu0tXoSgFv+Leti7F7TfR+hujI+3HmBjw==
+X-Received: by 2002:a05:600c:ca:b0:439:91c7:895a with SMTP id 5b1f17b1804b1-43afddc6489mr797035e9.7.1740588773857;
+        Wed, 26 Feb 2025 08:52:53 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390d98c0642sm2242326f8f.81.2025.02.26.08.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 08:52:53 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+ <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+ <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+Date: Wed, 26 Feb 2025 17:52:50 +0100
+Message-ID: <xhsmhfrk0lkbh.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 10/24] perf/x86/intel: Process arch-PEBS records or
- record fragments
-To: Peter Zijlstra <peterz@infradead.org>,
- "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-11-dapeng1.mi@linux.intel.com>
- <20250225103927.GJ11590@noisy.programming.kicks-ass.net>
- <20250225110012.GK31462@noisy.programming.kicks-ass.net>
- <c1450cf4-f367-4675-9f5e-90416a996af1@linux.intel.com>
- <20250226093558.GR11590@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250226093558.GR11590@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+On 20/02/25 09:38, Dave Hansen wrote:
+> On 2/20/25 09:10, Valentin Schneider wrote:
+>>> The LDT and maybe the PEBS buffers are the only implicit supervisor
+>>> accesses to vmalloc()'d memory that I can think of. But those are both
+>>> handled specially and shouldn't ever get zapped while in use. The LDT
+>>> replacement has its own IPIs separate from TLB flushing.
+>>>
+>>> But I'm actually not all that worried about accesses while actually
+>>> running userspace. It's that "danger zone" in the kernel between entry
+>>> and when the TLB might have dangerous garbage in it.
+>>>
+>> So say we have kPTI, thus no vmalloc() mapped in CR3 when running
+>> userspace, and do a full TLB flush right before switching to userspace -
+>> could the TLB still end up with vmalloc()-range-related entries when we're
+>> back in the kernel and going through the danger zone?
+>
+> Yes, because the danger zone includes the switch back to the kernel CR3
+> with vmalloc() fully mapped. All bets are off about what's in the TLB
+> the moment that CR3 write occurs.
+>
+> Actually, you could probably use that.
+>
+> If a mapping is in the PTI user page table, you can't defer the flushes
+> for it. Basically the same rule for text poking in the danger zone.
+>
+> If there's a deferred flush pending, make sure that all of the
+> SWITCH_TO_KERNEL_CR3's fully flush the TLB. You'd need something similar
+> to user_pcid_flush_mask.
+>
 
+Right, that's what I (roughly) had in mind...
 
-On 2025-02-26 4:35 a.m., Peter Zijlstra wrote:
-> On Wed, Feb 26, 2025 at 01:20:37PM +0800, Mi, Dapeng wrote:
-> 
->>> Also, should that workaround have been extended to also include
->>> GLOBAL_STATUS_PERF_METRICS_OVF in that mask, or was that defect fixed
->>> for every chip capable of metrics stuff?
->>
->> hmm,  per my understanding, GLOBAL_STATUS_PERF_METRICS_OVF handling should
->> only be skipped when fixed counter 3 or perf metrics are included in PEBS
->> counter group. In this case, the slots and topdown metrics have been
->> updated by PEBS handler. It should not be processed again.
->>
->> @Kan Liang, is it correct?
-> 
-> Right, so the thing is, *any* PEBS event pending will clear METRICS_OVF
-> per:
-> 
->                 status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
-> 
+> But, honestly, I'm still not sure this is worth all the trouble. If
+> folks want to avoid IPIs for TLB flushes, there are hardware features
+> that *DO* that. Just get new hardware instead of adding this complicated
+> pile of software that we have to maintain forever. In 10 years, we'll
+> still have this software *and* 95% of our hardware has the hardware
+> feature too.
 
-Yes, we have to add it for both legacy PEBS and ARCH PEBS.
+... But yeah, it pretty much circumvents arch_context_tracking_work, or at
+the very least adds an early(er) flushing of the context tracking
+work... Urgh.
 
-An alternative way may change the order of handling the overflow bit.
-
-The commit daa864b8f8e3 ("perf/x86/pebs: Fix handling of PEBS buffer
-overflows") has moved the "status &= ~cpuc->pebs_enabled;" out of PEBS
-overflow code.
-
-As long as the PEBS overflow is handled after PT, I don't think the
-above is required anymore.
-
-It should be similar to METRICS_OVF. But the PEBS counters snapshotting
-should be specially handled, since the PEBS will handle the metrics
-counter as well.
-
-@@ -3211,7 +3211,8 @@ static int handle_pmi_common(struct pt_regs *regs,
-u64 status)
- 	/*
- 	 * Intel Perf metrics
- 	 */
--	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned
-long *)&status)) {
-+	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned
-long *)&status) &&
-+	
-!is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS])) {
- 		handled++;
- 		static_call(intel_pmu_update_topdown_event)(NULL, NULL);
- 	}
-
-
-Thanks,
-Kan
-
+Thank you for grounding my wild ideas into reality. I'll try to think some
+more see if I see any other way out (other than "buy hardware that does
+what you want and ditch the one that doesn't").
 
