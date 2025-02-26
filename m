@@ -1,254 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658D1221579;
-	Wed, 26 Feb 2025 14:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A072222D4
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 14:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580009; cv=none; b=K9Tb8YHdLyfKCqbnR/PBaSnAX1YIWKrUFeSMcFEj1Zxof35gZpWpfu87IEcQbs9G8Rp0uNDcW+7HswsHPEdODhW6dSnyH5hG0pRSVA8xQtDs5KLWTnRLpWHsXqCwW+phdeTVB0dA8ujYVPZdgVvAMG9eQPQ9rj1qPqf0a3i0PM4=
+	t=1740581758; cv=none; b=jevrKDcXNx9a1x6A7ZFyIRgIegQvPGMHm6IWaDJXvkA7Z04kG3nYosfU5lyZe3uumRMXIpf6bjCIVqkA6RUIHrBNWE9jkzjWHky87tEYTKL0WYJwTGaOtsskD8IM+Nq7+tVdTMWTUNdlg3S7/26kuNoXjJS01An2hZUdZp9W4pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580009; c=relaxed/simple;
-	bh=y3IqYf4h8z56HMq1u4QOXDpo2lerEGe/MyAJAgUvtE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfp1ucq9all/ytHk5ewc7ZoDrgfIhHIBgP8mmS17EmGeDI5WitPdFTbUETTrjp/Hnb5Zcv+q1JNv/z9tg1M568tECT5vwNFHBF1oexxMtnszNorcRbJzuwYXYZLvBe86kGk1YDrJ6OrOdnC2hXzgNNKDPnHzm2BC3QuIBtJtphg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3BTg4Zn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740581758; c=relaxed/simple;
+	bh=zuIqAKgte0TNhWMQcUFuXFOS6ml4+tb80DkOVV5ygEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qEzgh8PheRijMN1R8zM3oVDC8ciMlg9ivm8c4EYud/8Ny+NYcKHkU3PDLnnKDh7y57xGz/U5iPYkqRWYQmDVQ1sZU+Zzr36/owsCcTTZKflKonG6+vY15P/7aigpe303Hh7q4p2sci6Tzh46r3JIOsMFa2HNxb1XNHUYXbYiqS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rwVvg8dt; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3BTg4Zn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12F5C4CEEC;
-	Wed, 26 Feb 2025 14:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740580009;
-	bh=y3IqYf4h8z56HMq1u4QOXDpo2lerEGe/MyAJAgUvtE4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y3BTg4ZnHmreh6smT8aoN1Ni2N5swrAc0/YGSMNKgGe3uR9C9/Kg57fTWg5A/C8Ot
-	 c40AMaY4kSp+dPc5HK84o9hzSsphiium6fn0eiDJfeSJ70cA2P4O4m6q0s6mrj/U7K
-	 t4vYS30jst6MmScs3jONjUU85/h5Ey66vntYUGxuV9HEP7WAS5AH4Aw8e5MhizhYzt
-	 Oekiz5dxVZjrnvxz3p0mN5ELlto1beh+OS5m2sKOw1Zlod6jqNKO7BzHl/q2fDlY0T
-	 Z9QJiofDQtTJxJ0ORJ3OaKBFBht4I5ych1ur+pt9pJs9NEBv0S5SGDppyVfK4R8Ehz
-	 K8fwMeL2Jphog==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dedae49c63so12334275a12.0;
-        Wed, 26 Feb 2025 06:26:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUNNzF6rAj2O9VbwG2oHMkyd1QBX+Ym+xprDO4dqVYlfLGwDLCH+8HMxuES/DrOXvwSAcGRK3Jz2ndgYPPPImrDQQ==@vger.kernel.org, AJvYcCUu7Rar4OHHcA+JdXATXal4fVed8hbRwrNiMF7WkcxMS6MT1tkOSBlHgo8H+dzPBhth71JtQupDUHHQuFrY@vger.kernel.org, AJvYcCWW0nF0Vt5Vtytrx72hm+OtquYId9DN5b4WwbMobvkTsOJ694zp65bfh8zjEei+aUeQ3EGqeJ+xMcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ1Q4G4Lsh4hHd1GQ3Hst0D2XKmkflIdKCGN6XDgND7HnoA7yc
-	2fHDyyezSbgRKfjHCZKK3+bm+1rdKucdIbkMshM59oAW9Cvh0sgXG7syyLF7KTzRyFGLUeX4Vcv
-	GgsLeY0a61nTrj+xAJeGb6RR//g==
-X-Google-Smtp-Source: AGHT+IFEgOvjT9GpNU3OvYcUgyXe7iQDfeTtmoajh3myllmUAgDUnbQ1OhXtxtPL0zlFSh5JV1Fe7myngUVyVm9/Sos=
-X-Received: by 2002:a05:6402:280d:b0:5e4:a88a:64e with SMTP id
- 4fb4d7f45d1cf-5e4a88a0790mr2752017a12.5.1740580007445; Wed, 26 Feb 2025
- 06:26:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwVvg8dt"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so3474635f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 06:55:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740581755; x=1741186555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Lh9ErM/3Q+yhun0mC3IR97PyDjsGz9W3qYuqQOhapo=;
+        b=rwVvg8dtSyjqf2cBJQZYtLAdMkjb48y/F25Ks32i8ZC6Jrw6pg1JhcNtpfjTxBUIDz
+         tqAzwdl5M56k42XPFbA0V7bRuJb2fRYb76MycjSNk8ay3mcj09DBpaEhs+cmpD105/YC
+         Bvlby+uU6pkF3nGCcEKY9FZSTInmumVDbk0s2fiIu+n42Lh550vKYTunV5f2NTcKELRi
+         rnWj1QApVPpaX8+ySKH3sImPTNAH8XzLv+PGvkx+h0/UyHunC+3Epwr82Qj5iJyJFSkk
+         NpnUBqRhwTFVSIBip0F374k9JlyqBvAs7U9WDtr2S4C3t0FqYF/VUx0iu5+arxvoKAZC
+         YJ5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740581755; x=1741186555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Lh9ErM/3Q+yhun0mC3IR97PyDjsGz9W3qYuqQOhapo=;
+        b=cabHxJMpjagkyd0eLd+FdP/H9wVljTbmh0+E1A+dKUh2mev4xligDFSfD5qbTcDcZk
+         1cxylsSWYo9oZGbhpDAQwu3o/0JaXN9Y2z9xVyWAuBDyCfHY+Zx1ikyVmepFfGAVPZOQ
+         Eb9HVLHqkMXbxYkyDZRN0c/z5b0EuOzMXN7hIBtAJwcHSfk38IBNgB/o9L6TmoZk6DEL
+         L0dyMLStDe48vQFOMos0PQK9oPodwKKP9EdfaMbUCHCaP78O6ByvPMsQTannp/mVx5m9
+         jEE5Mh5xX5FyR52Nqnqh4SuOY2u8TOJeGYssppfi3KhusOsP5bazg2Y1EnsKVP9b1gvJ
+         sDlA==
+X-Gm-Message-State: AOJu0YyCAOzTco7I4JUQp3E9+DguBdbZsXQWw3ysV/GDx74zAKyakTQQ
+	ugb28dyUtnHNlQgpIqKoRAWDxpF5Meip0FW4kr55yxznGQzYFh5DkTvwMnXXy9lnRj6ay2JZHQx
+	DXEE=
+X-Gm-Gg: ASbGncs8aQ1IzfpDLHW295c0bD8kj/dcnorNW5eLfaxK8cPdQUmAsOOr3e0PSts/w0O
+	htzbXtFB1OSHdoqk2YWkeo6az7bzTNTNSENWwQ2HRkKGgB7RYw7lAUOr51CJR+qBNTAIlpHR705
+	mSwG8BBmeOltR5Doo1osGnoe/PnZ4yP+mZ/8xjLmT9O5B+unD3kbtLvhBSXkPjpM76THTfmnItS
+	ue2YLr6ROKJ5KCDlcQGXq7jpmvdogiMeJz6iFQr+BoPpOd3IZaQYaqjBK0TgmJ3zm6UZ3kCG+2q
+	HyRMtn1ezRNkeUtt+6CTWZkFmOc=
+X-Google-Smtp-Source: AGHT+IHSR7ol++tcQ3t55KxpPADDKkuJUrc5pqPg7oVpe58mjcbGDwgbdiIc/J1H2cHUewzyAYI/RA==
+X-Received: by 2002:a05:6000:1fa3:b0:38d:d603:ff46 with SMTP id ffacd0b85a97d-38f7d1ffbfemr15478346f8f.14.1740581755300;
+        Wed, 26 Feb 2025 06:55:55 -0800 (PST)
+Received: from pop-os.lan ([145.224.66.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8e71c0sm5803309f8f.78.2025.02.26.06.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:55:54 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf stat: Fix non-uniquified hybrid legacy events
+Date: Wed, 26 Feb 2025 14:55:25 +0000
+Message-Id: <20250226145526.632380-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org> <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
- <20250224140317.GF8144@e132581.arm.com> <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
- <20250224180301.GI8144@e132581.arm.com> <Z72xMLsd37I6X_5-@J2N7QTR9R3>
- <20250225174803.GB1821331@e132581.arm.com> <Z74g2vUT9-KtlIvo@J2N7QTR9R3.cambridge.arm.com>
- <20250226134813.GC1821331@e132581.arm.com>
-In-Reply-To: <20250226134813.GC1821331@e132581.arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 26 Feb 2025 08:26:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJL_oqL2XwEiqMCz1KjYX8SwN3N+GkUBpVxKPc9GExh7A@mail.gmail.com>
-X-Gm-Features: AQ5f1JqVAYg5qWj8-HHEGM0Q9ABD1QuYj5lJjYU40vjoEH_p54d6zfRA82nKqok
-Message-ID: <CAL_JsqJL_oqL2XwEiqMCz1KjYX8SwN3N+GkUBpVxKPc9GExh7A@mail.gmail.com>
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: Leo Yan <leo.yan@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 7:48=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> On Tue, Feb 25, 2025 at 07:58:18PM +0000, Mark Rutland wrote:
-> > On Tue, Feb 25, 2025 at 05:48:03PM +0000, Leo Yan wrote:
-> > > On Tue, Feb 25, 2025 at 12:01:52PM +0000, Mark Rutland wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > Critically, the brbe_enable() function merges the filters of al=
-l
-> > > > > > *active* events which have been installed into hardware. It doe=
-s not
-> > > > > > track all events which can be rotated, and the resulting filter=
- is not
-> > > > > > the same -- it can change as a result of rotation.
-> > > > >
-> > > > > In a perf session has multiple events, and events have different =
-branch
-> > > > > filters, seems to me, a simple way is to return error for this ca=
-se.
-> > > >
-> > > > FWIW, I'd generally prefer to do that since it avoids a number of
-> > > > horrible edge-cases and gets rid of the need to do SW filtering, wh=
-ich
-> > > > falls somewhere between "tricky" and "not entirely possible". Howev=
-er,
-> > > > that's not what LBR and others do, which is why we went with filter
-> > > > merging.
-> > > >
-> > > > If folk on the tools side are happy with the kernel rejecting
-> > > > conflicting events, then I'd be more than happy to do that. What I =
-don't
-> > > > want is that we start off with that approach and people immediately
-> > > > start to complain that the BRBE driver rejects events that the LBR
-> > > > driver accepts.
-> > > >
-> > > > See the last time this came up.
-> > >
-> > > Thanks for the shared links.  Based on the info, let's say we can hav=
-e two
-> > > cases:
-> > >
-> > >   Case 1: set different branch filters in a single perf session:
-> > >
-> > >     perf record -e armv8_pmuv3_0/r03,branch_type=3Dany_call/u \
-> > >                 -e armv8_pmuv3_0/r04,branch_type=3Dany_ret/k ...
-> > >
-> > >   Case 2: set different branch filters in multiple perf sessions:
-> > >
-> > >     perf record -e armv8_pmuv3_0/r03,branch_type=3Dany_call/u ...
-> > >
-> > >     perf record -e armv8_pmuv3_0/r04,branch_type=3Dany_ret/k ...
-> > >
-> > > In my previous reply, I was suggesting that we should reject the case=
- 1.
-> >
-> > Do you mean that the kernel should reject that, or that userspace shoul=
-d
-> > reject that.
->
-> For the case 1, the userspace can reject it as it has sufficient info to
-> detect mismatched filters by iterating event list.
->
-> > As mentioned earlier, I am ok with the idea that we reject *scheduling*
-> > events with mismatched filters, as we do for other resource conflicts.
-> > That would necessarily mean rejecting *groups* of events with
-> > inconsistent filters at open time.
->
-> This rejects the case 2 in the PMU driver.
->
-> > However, I do not think that we should reject indepenent events which
-> > happen to have mismatched filters, regardless of whether they're opened
-> > by the same "session".
->
-> Can I understand "independent events" are events that are not in a event
-> group?
+Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+like plain legacy events if we only look at attr.type. But legacy events
+should still be uniquified if they were opened on a non-legacy PMU. Fix
+it by checking if the evsel is hybrid and forcing needs_uniquify
+before looking at the attr.type.
 
-Yes. The BRBE code has no concept of groups either.
+This restores PMU names on hybrid systems and also changes "perf stat
+metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+test was gated on "cycles" appearing alone which doesn't happen on
+here.
 
-> If independent events can have mismatched filters, the PMU driver can
-> activate them simultaneously, this means the BRBE driver needs to merge
-> the branch filters.  If so, I still see the complexity caused by this
-> case.
+Before:
+  $ perf stat -- true
+  ...
+     <not counted>      instructions:u                           (0.00%)
+           162,536      instructions:u            # 0.58  insn per cycle
+  ...
 
-That's exactly what the driver does. It's not even that complex. We
-have the BRBFCR and BRBCR register values for each event and just have
-to OR them together for the enabled events. For filtering we just
-compare each branch record to a mask of the enabled branch types for
-the event.
+After:
+  $ perf stat -- true
+  ...
+      <not counted>      cpu_atom/instructions/u                  (0.00%)
+            162,541      cpu_core/instructions/u   # 0.62  insn per cycle
+  ...
 
-> > > IMO, it is not quite useful to configure different filters for events=
- in
-> > > the same session, especially if this leads complexity in the driver d=
-ue
-> > > to the hardware limitation.
-> >
-> > I generally agree, but IIRC userspace does this today.
-> >
-> > > For case 2, when create a new session, if the perf tool can read out =
-the
-> > > current branch filter setting (e.g. via sysfs node) and give suggesti=
-on
-> > > what branch filter is compabile with existed sessions, seems to me, t=
-his
-> > > is a feasible solution.  My understanding this is a rare case, and a
-> > > clear guidance for users would be sufficient if this happens.  (Maybe
-> > > we can give recommendation for how to use BRBE in the perf doc).
-> >
-> > No. We are not going to expose *dynamic* information about the PMU
-> > hardware via sysfs. This is not as simple as you make it out to be.
-> > At any point in time there can be an arbitrary number of events open,
-> > and some arbitrary subset currently scheduled.
->
-> If so, the perf tool will miss info for checking the existed branch
-> filter and defer to handle the mismatched filter error until the
-> kernel reports the issue.
->
-> > I agree that ideally this should be rare, though, and hence either of
-> > the two options I have suggested thus far should handle that acceptably=
-.
-> >
-> > > To be clear, an important factor is the trace modes with modifier 'u'
-> > > (user) and 'k' (kernel) should be supported for different events and =
-for
-> > > different sessions.  In a mixed cases (some events are userspace only
-> > > and some are kernel only), the BRBE driver needs to filter out branch
-> > > records for specific mode when taking a sample.
-> >
-> > I hate to repeat myself, but the driver has *no concept whatsoever* of =
-a
-> > "session". It only knows:
-> >
-> > * Which events are currently active in hardware.
-> >
-> > * Which events have been grouped together.
-> >
-> > * Which events have been opened for a given task or CPU context.
-> >
-> > ... and *NONE* of those correspond directly to a "session" managed by
-> > the userspace perf tool.
->
-> Sorry for that.  After your reminder, I understood that the PMU driver
-> has no knowledge for perf session.
->
-> The description above does not refer to perf session.  As you said, the
-> PMU driver has its own context to track active events, and it is
-> possible that some active events might trace only user mode while others
-> trace only kernel mode.  In this case, BRBE needs to be enabled for both
-> user and kernel modes.  When capturing samples, the BRBE driver needs to
-> filter out branch records based on a specific event for its
-> corresponding mode.
+Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
 
-That's exactly what the driver does.
+Changes since V1:
+ * Move the existing evsel__is_hybrid() test earlier instead of looking
+   at the PMU of the evsel. Looking at the PMU creates a dependency that
+   the PMU is assigned which may prevent refactors in the future.
 
-> For better understanding, though we don't allow mismatched filters, I
-> still think we should set both E0BRE and ExBRE bits if there are
-> multiple active events with different modes.
+ tools/perf/util/stat-display.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-That's exactly what the driver does.
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e65c7e9f15d1..e852ac0d9847 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1688,6 +1688,12 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
++	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++		/* Unique hybrid counters necessary. */
++		counter->needs_uniquify = true;
++		return;
++	}
++
+ 	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
+ 		/* Legacy event, don't uniquify. */
+ 		return;
+@@ -1705,12 +1711,6 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
+-	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+-		/* Unique hybrid counters necessary. */
+-		counter->needs_uniquify = true;
+-		return;
+-	}
+-
+ 	/*
+ 	 * Do other non-merged events in the evlist have the same name? If so
+ 	 * uniquify is necessary.
+-- 
+2.34.1
 
-> [...]
->
-> > > I haven't done any experiments for this. If you think this is the way
-> > > to move forward, I might do a prototype and get back to you to ensure=
- we
-> > > don't run into any unexpected issues.
-> >
-> > What specifically are you proposing to prototype?
->
-> I mean, in Linux perf, we can add code to check branch filters for
-> opened events when creating a session and report an error for
-> mismatching filters.  I would suggest we implement it specifically
-> for Arm64 to avoid dispute with other archs.
-
-There's not really any such thing as mismatching filters. There's no
-mutually exclusive filters. The only effect having multiple events
-enabling branch stack is you might run out of branch records sooner. A
-CPU with a minimal number of branch records is going to have a similar
-problem as will just enabling all branches on a single event. There's
-not any way to fix that other than increasing the number of records or
-adding a mechanism to the architecture to avoid dropping records.
-
-Rob
