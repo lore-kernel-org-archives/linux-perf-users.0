@@ -1,107 +1,211 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF8821E096
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 19:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3B823A9AF;
+	Wed, 26 Feb 2025 19:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740597240; cv=none; b=PM8RXU8lTFqxoynHv/Mog1J43xgjxCltP7xNRxJdaMLCEo9qdIhaE78iYQUezLiCwsnN8mCpOTYCZiqjbK0donVNLXoUbgmKaAHivD/KDFeGX5XRheNysVbjFLsQ756qK/exD6iqsiWhKcUXsskNpBulD5wooxgwJCjsOieUla8=
+	t=1740598455; cv=none; b=b0TqlNdOX6fzd2IPQmBi5yQJRxun6KwTwP8Ps59V3KnAFxRyTll/6ss2eV/aX4lca7O/35sYNGkDglYZ1MWLQ6Vd+W+SO2ivHXrCdy3gNGreOw66MG+CO+ptXjv12SWK9txmDKGVG9m1mHkMR9N9kt8lDuBJsCvSK3T1BnGMVrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740597240; c=relaxed/simple;
-	bh=vHzrEzooH4K8CcIGUei7pRVS17MmHjHrMcmzZoer/Ec=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Vwv7/duPdovlsEbPkdl6J/PeIdmV/XpRu7pA1fEuGn1W8sJdK8XkeOmwQp70PkxMpMBtkzP4vItdXnlc2mzuoMuCwcOefEGGvl7a2d6pyQ0/nbvDJTDnbLTQS/Q9+xVbRVSMSJZJjEbiP000OwW0hWiY/bWWmnUyw0aY0pUQis8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=PrgrgjIB; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1740598455; c=relaxed/simple;
+	bh=5vVt57PLpS5SI0SXJq5Fffg3GFA0wf+g8dSTQO2g2qM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QsREz6bcFJRfmR4ZPCr1Dm8ey7Z/DbAcw5WGH2Ww6Lf/SkoyXkoDxp1IP28rxk4gsGNKoim0kNAjmkmpk5CcdfP9SXuo/mKoUn6vgSsH+idYyd/uGOJuiTsr8MjUPRttIP+IHZM8Y1/1/q42bY28x5bdovTK/93PWia3XtrF39I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuS3tEQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PrgrgjIB"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47210a94356so1068831cf.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 11:13:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1740597238; x=1741202038; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O/7HubgIS3yguXLFwagiKL0MIanaDsiXeL1ZcDJnpI0=;
-        b=PrgrgjIBDzFyuCW0/BkssmUrWr+ejDo9K2GOMxCGaRhnW6xhcbtTD1JwwVGKLo/83P
-         3dM9rKUsAMq62CVpok1RfQHA2wfcnXMzJ18qMcZcYUdGiwaEKk+ikc6U0hO+hXP5eQ2E
-         NyqwDG/QmtPKzQkkLdTGYwhvbp9CTaW2CN1tiR+JGk13bm+x5+rLq5IqlamFPgOFO8PM
-         HjoHxNDXIv68a/z/4EiqGgLE/s9X5kBDvYWorhxzCCaJ/Ef6jGrbARuL5iiZvdsP0RaR
-         Wk+ZOlH0gvpRUqepXN07eMUzObSySHsdNfhHZlo1wCex2FQyD78d2/r2De4OapeVF9iC
-         RAJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740597238; x=1741202038;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O/7HubgIS3yguXLFwagiKL0MIanaDsiXeL1ZcDJnpI0=;
-        b=o8cy6y5Sh1Pr1Yiz/Qjw9Vjp37KX3hS9IRgMHv47uGVjvUwbOcHzNB1FKnd7l1Mrnq
-         CflpRPPDc1pI8r7YEesJN8EpKXlqOOUCVUdtM12mhIK/O9qkogaJ9t+R0kSQld/Yn88b
-         Q40bzOs2ud6URNzak3WfYNZ2ts+TeZ8Ob3p8F+1jGthSEhBdMYkAazxO/+sjQiHsfEvk
-         jj0RWqlxEr9wB7a6fCoUoDQGIgX6w8FYV7IlZSHQckGU6cDL4kUvv9AsI/P7/+PrSFOP
-         CzNwv/psuYmrANmQycfx16zeD7zWvu5HtfW3OivDsb38RnjhoMCuA6uxukkVTvX/7uZo
-         ukng==
-X-Forwarded-Encrypted: i=1; AJvYcCUN3IM3nFQRuSOtFQ+dBIfzw24ZgI9Bj1pUQnfluF8/r0iEbYGqPmesMTnKumCTHlWbJvp3R2s8qfTbz+IsoEz+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYe7TnWwTEbqEE2Lr4Bj/cdiy+c5s8/uiukJ+ku4OCCkLrFXIs
-	262g5ZN+6AjXzFsUmsE+Easrl1Lqf26FojLTb9Z9yaiDIeOz9xBFXEeVjJl8Zg==
-X-Gm-Gg: ASbGnctJwJcf+12f5106lIKlEWcI7uLUAU4kY693up9Fx0vkEt7zV6637aD4vwnqHiF
-	eVcEkqFeKLwL80RfxgNZW+PPFr3Y+HmPEGo6+4zvXZ25sfpfeiq+7963FkNCn3tlL31dte/IMCL
-	nb9374ajFND/KGziR3AWlnhn9U9x1Mz90IpLNv5ERTL9mnWytL43PA4OdWpTDGo4v5amvnTZFTa
-	NYX3H0Mcs32d+6NGaGGAFMR2mjAqH7VUMNGRT2pvI3AC5BGiHJyNFZTOjTTfttkbrNooKAkFRnD
-	4ndL7YpdpXzVwKmFdbw+EZW1B9UgbwzVmRMCoxKkocYDVUM7Nmghh70ZK1SiuyatBB+PCiY=
-X-Google-Smtp-Source: AGHT+IGZKQ763FRka4tXmeqX9uwcpJ0v96pIEchafXYFD2cwhU7ih42tfW2HHRWzr2HQKaEkzBO+qA==
-X-Received: by 2002:a05:622a:1a07:b0:472:201c:aa45 with SMTP id d75a77b69052e-47377116ed2mr109013401cf.9.1740597237709;
-        Wed, 26 Feb 2025 11:13:57 -0800 (PST)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47377e1543csm28407591cf.27.2025.02.26.11.13.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 11:13:57 -0800 (PST)
-Date: Wed, 26 Feb 2025 14:13:56 -0500
-Message-ID: <41cb98ddf724ade0fc529b8c952f3efc@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuS3tEQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8D5C4CED6;
+	Wed, 26 Feb 2025 19:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740598455;
+	bh=5vVt57PLpS5SI0SXJq5Fffg3GFA0wf+g8dSTQO2g2qM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cuS3tEQy84N7j1D0dDnHVLEEsZslz/6tYg9ulNDxecUDoFUtk2bWFeG25Qqck+EHu
+	 qNkYxd5dVgARuF5NuKu9rzkiEoi+ZdGyB80TSY6T5unUgQjNoPgSiXG7WdnglXwwcl
+	 yK0gj5bCP9LixozeHnf8iWuXUdmUlc+J8jc4xl7LbSj8NGMmnKe0h13fj8HCgVN9iw
+	 uTc3afMECWn0Xl2pMLuTrs0f4wRi/N6XIxXq+EQeM7Ewhq7Cu0Xw1XfEaUUayWnf6Z
+	 gbDtxU35sxKAnA4WBZ39/teEj7S8/dJ9p6i6LNs6FiBoG6K8BZ52o6zCvKcflB188M
+	 CLwFjuPISgYVg==
+Date: Wed, 26 Feb 2025 11:34:13 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf report: Add 'tgid' sort key
+Message-ID: <Z79std66tPq-nqsD@google.com>
+References: <CAP-5=fWZXPjD3Ok5XmMwwaYt+9mL+V8t8fNSUdf-F5PPiEAvrg@mail.gmail.com>
+ <Z7gllQZeg6U2OvZE@google.com>
+ <CAP-5=fXEEMFgPF2aZhKsfrY_En+qoqX20dWfuE_ad73Uxf0ZHQ@mail.gmail.com>
+ <Z70wHEl6Sp0H0c-3@google.com>
+ <CAP-5=fUosOVUKi5tQ3gVtHhfApk0oH3r2zHDW7-i+_qASKm+Cg@mail.gmail.com>
+ <Z712hzvv22Ni63f1@google.com>
+ <Z74U5s7Yf0f6I7Mo@x1>
+ <Z74V0hZXrTLM6VIJ@x1>
+ <Z74ZL6SUwWL_a5EK@x1>
+ <Z74eqEiyrzuoL6uz@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250226_1339/pstg-lib:20250226_1339/pstg-pwork:20250226_1339
-From: Paul Moore <paul@paul-moore.com>
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, jmorris@namei.org, serge@hallyn.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, stephen.smalley.work@gmail.com, omosnace@redhat.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, luogengkun@huaweicloud.com
-Subject: Re: [PATCH 1/2] perf: Remove unnecessary parameter of security check
-References: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
-In-Reply-To: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z74eqEiyrzuoL6uz@x1>
 
-On Dec 23, 2024 Luo Gengkun <luogengkun@huaweicloud.com> wrote:
+On Tue, Feb 25, 2025 at 08:48:56PM +0100, Arnaldo Carvalho de Melo wrote:
+> On Tue, Feb 25, 2025 at 08:25:35PM +0100, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Feb 25, 2025 at 08:11:17PM +0100, Arnaldo Carvalho de Melo wrote:
+> > > On Tue, Feb 25, 2025 at 08:07:18PM +0100, Arnaldo Carvalho de Melo wrote:
+> > > > On Mon, Feb 24, 2025 at 11:51:35PM -0800, Namhyung Kim wrote:
+> > > > > On Mon, Feb 24, 2025 at 08:40:37PM -0800, Ian Rogers wrote:
+> > > > > > On Mon, Feb 24, 2025 at 6:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > On Mon, Feb 24, 2025 at 10:18:37AM -0800, Ian Rogers wrote:
+> > > > > [SNIP]
+> > > > > > > > I thought the real-time processing had to use
+> > > > > > > > maps__fixup_overlap_and_insert (rather than maps__insert) as mmap
+> > > > > > > > events only give us VMA data and two mmaps may have been merged.
+> > > > > > > > Shouldn't doing this change be the simplest fix?
+> > > 
+> > > > > > > Make sense.  How about this?
+> > > 
+> > > > > > Lgtm, I have no way to test the issue. Why does maps__fixup_end need
+> > > > > > to get pushed later?
+> > > 
+> > > > > I just noticed it would add extra kernel maps after modules.  I think it
+> > > > > should fixup end address of the kernel maps after adding all maps first.
+> > > 
+> > > > > Arnaldo, can you please test this?
+> > >  
+> > > > Trying it now.
+> > > 
+> > > Now we have something different:
+> > > 
+> > > root@number:~# perf record sleep
+> > > sleep: missing operand
+> > > Try 'sleep --help' for more information.
+> > > [ perf record: Woken up 1 times to write data ]
+> > > perf: util/maps.c:80: check_invariants: Assertion `RC_CHK_EQUAL(map__kmap(map)->kmaps, maps)' failed.
+> > > Aborted (core dumped)
+> > > root@number:~#
+> > 
+> > __maps__insert() does:
+> > 
+> >         if (dso && dso__kernel(dso)) {
+> >                 struct kmap *kmap = map__kmap(new);
+> > 
+> >                 if (kmap)
+> >                         kmap->kmaps = maps;
+> >                 else
+> >                         pr_err("Internal error: kernel dso with non kernel map\n");
+> >         }
+> > 
+> > while maps__fixup_overlap_and_insert() doesn't.
+> > 
+> > It calls __maps__insert_sorted() that probably should do what
+> > __maps__insert() does?
 > 
-> It seems that the attr parameter was never been used in security
-> checks since it was first introduced by:
+> Ok, so I did the following patch but this case fails:
 > 
-> commit da97e18458fb ("perf_event: Add support for LSM and SELinux checks")
+> @@ -910,6 +928,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+>                                  */
+>                                 map__put(maps_by_address[i]);
+>                                 maps_by_address[i] = map__get(new);
+> +                               map__set_kmap(new, maps);
+>                                 check_invariants(maps);
+>                                 return err;
+>                         }
 > 
-> so remove it.
+> With:
 > 
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  arch/x86/events/intel/bts.c     |  2 +-
->  arch/x86/events/intel/core.c    |  2 +-
->  arch/x86/events/intel/p4.c      |  2 +-
->  drivers/perf/arm_spe_pmu.c      |  4 ++--
->  include/linux/lsm_hook_defs.h   |  2 +-
->  include/linux/perf_event.h      | 10 +++++-----
->  include/linux/security.h        |  5 ++---
->  kernel/events/core.c            | 14 +++++++-------
->  kernel/trace/trace_event_perf.c |  4 ++--
->  security/security.c             |  5 ++---
->  security/selinux/hooks.c        |  2 +-
->  11 files changed, 25 insertions(+), 27 deletions(-)
+> perf: util/maps.c:110: check_invariants: Assertion `refcount_read(map__refcnt(map)) > 1' failed.
+> 
+> As:
+> 
+> 106				/*
+> 107				 * Maps by name maps should be in maps_by_address, so
+> 108				 * the reference count should be higher.
+> 109				 */
+> 110				assert(refcount_read(map__refcnt(map)) > 1);
+> 
+> Since it is just replacing the map in the maps_by_address and not
+> touching on the maps_by_name? Thus the refcount is just 1:
 
-Now that we have Ingo's Reviewed-by, I've gone ahead and merged
-patch 1/2 into lsm/dev, thanks everyone!
+Sounds like it.  Can you add this on top?
 
---
-paul-moore.com
+Thanks,
+Namhyung
+
+
+---8<---
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 09c9cc326c08d435..3aee0c9e8d421cef 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -797,7 +797,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ {
+ 	int err = 0;
+ 	FILE *fp = debug_file();
+-	unsigned int i;
++	unsigned int i, ni;
+ 
+ 	if (!maps__maps_by_address_sorted(maps))
+ 		__maps__sort_by_address(maps);
+@@ -808,6 +808,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 	 */
+ 	for (i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
+ 		struct map **maps_by_address = maps__maps_by_address(maps);
++		struct map **maps_by_name = maps__maps_by_name(maps);
+ 		struct map *pos = maps_by_address[i];
+ 		struct map *before = NULL, *after = NULL;
+ 
+@@ -827,6 +828,9 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 			map__fprintf(pos, fp);
+ 		}
+ 
++		if (maps_by_name)
++			ni = maps__by_name_index(maps, pos);
++
+ 		/*
+ 		 * Now check if we need to create new maps for areas not
+ 		 * overlapped by the new map:
+@@ -871,6 +875,11 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 		if (before) {
+ 			map__put(maps_by_address[i]);
+ 			maps_by_address[i] = before;
++			if (maps_by_name) {
++				map__put(maps_by_name[ni]);
++				maps_by_name[ni] = map__get(before);
++			}
++
+ 			/* Maps are still ordered, go to next one. */
+ 			i++;
+ 			if (after) {
+@@ -892,6 +901,10 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 			 */
+ 			map__put(maps_by_address[i]);
+ 			maps_by_address[i] = map__get(new);
++			if (maps_by_name) {
++				map__put(maps_by_name[ni]);
++				maps_by_name[ni] = map__get(new);
++			}
+ 			err = __maps__insert_sorted(maps, i + 1, after, NULL);
+ 			map__put(after);
+ 			check_invariants(maps);
+@@ -910,6 +923,10 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 				 */
+ 				map__put(maps_by_address[i]);
+ 				maps_by_address[i] = map__get(new);
++				if (maps_by_name) {
++					map__put(maps_by_name[ni]);
++					maps_by_name[ni] = map__get(new);
++				}
+ 				check_invariants(maps);
+ 				return err;
+ 			}
