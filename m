@@ -1,379 +1,197 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A315A54738
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 01:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40634174A;
+	Thu, 27 Feb 2025 02:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740618318; cv=none; b=RFMaQUphq1EoeApkvjP56UI5rRlbmI5uaaLK3n2aQpBcSUvJOnj8vIDk1l96Y4Cyhh69Eh52g4RVl3x1a4espibm7uPXGsE/jw5BbpFMcFPnBdRC1q1SL9LDv5muvZyfMJjpjzcZTj8L+mXWulIVa8N5OD8UWmkNveAso71UyXk=
+	t=1740621859; cv=none; b=TWVGy1EJ7Jh4vqLPbD0AE/VewirWhK3d0te7hJPGG8VPuRH/jt2RRF7aXRsWohP0iKnF8w+955YJetT8nvM0eYRjVCPEfI4sqRmJ27IEPHM+u6N3liojNMthsDHIP5ETnmGCZ+px98AX7y2yJJexO63YSd02kwQ+G4gmV88Qk/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740618318; c=relaxed/simple;
-	bh=GRHohmURlG1J0vCfqtMiE4OfWdA8l+xtBbsvFxNKx/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a5DQud6rwQyQlRzctf4k9lUCxpadMjOVdPZPZqGRE1dkzHpedCBe9FQ43oZeCVRpXWSe0XJEligHGfoyaI3ujmoSgaCtpUv26HN/sBcz0xBMD0sMi71QXNNhefrL5Q191lq91APRKfeoRwAxTGGPf1Vxk3dPWprqfhbUT5p/vnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=lnHLPhFi; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1740621859; c=relaxed/simple;
+	bh=WBTzOSlk9/Z04a8Ue9QXvkbbEPlD9D+SG/a81qVvzUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bqQEjvHDCM+TGT1fHimrddteidvCjbh5NIYb8iGOeIgutYdKVM/5nAJYxcYsY9Hnweq9lQjCQKfSAWpRYWwATsPfHaCkIpudnhbmZ3t1Q0Ffm85uKlrJoOpW0d6lozdbhjt+tQ9+8ASvmJyawvKXN9u8rhcoNQfnisFk7ojx8P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wl5LUt5p; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="lnHLPhFi"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22113560c57so6378605ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 17:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1740618316; x=1741223116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OPhlc9bmrf/baBUYMBCbtsRt7KZ0PJ5cb4Ib6su88Rg=;
-        b=lnHLPhFijyHRvkkOPm3MymgpuIllImcuvfCfhJpXO1Ak62eQz8A6fpJH7TDbWW5Y2h
-         5Cij8YrgzM9d/gNHPHgeL2764ukOrs9CmM+iqF7Fh6YUCCIm2uBnJrQ8hOa9BFG0ZViF
-         dqtlACZguZ2TA1xXiP4XqYLko5NNURfGYDXj9Srj37jnZEM4PsBqNOgCxp75SlzLha6Y
-         gBF5RHWp+r0W8KW/kvfcPysWDdRX0yRSmQ5w/WXLOI3n8VWP5+3rSYXP1KT1+r19kmry
-         RSgQqMjgheLe8oFoqEsRoJp3NbMAy5tnKJw8GkC3Vmhvgqer1/VRRS2viIcxzXvdImFH
-         dTgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740618316; x=1741223116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OPhlc9bmrf/baBUYMBCbtsRt7KZ0PJ5cb4Ib6su88Rg=;
-        b=Mi0Hrs4/lMr2VQanzDM/npfv5Qt/esv6Asq92wCMkkfuc4gRZXQMU8kcHswBYvQZ1L
-         27u2o5wuvn5/wILg8SRIWtsqJPlx8rIt3OazIza0Byu3a4XlIRxgLlYXMzeGsy8MXD0+
-         xtdBt8gV4qOW1mCTiswr7aoRm6x0AzEH8yJQhfCOwAuSLE27SuPLxWsuHl8FNu2F6boq
-         48naTyjeZwC8RJC6h33GKnX9GTZEhxV8O2/285HW9OSyGJqfdw1A4a5H7kSbyEtNzhhg
-         D1MTKYJZJXHrtjYD+UMtU1HoMv2a9ZWP2WNo46XFyEpnapKSKN1M8EBFrlZuBTQKnQRh
-         OARA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ZBl/Am+5gGR1JHoKaL+GufiVfq4yFdX0VzNALCOaNI6v51lIs9/UWIQkOwYKddpZSN6eYEkJ4yvY5v0fc6qW@vger.kernel.org
-X-Gm-Message-State: AOJu0YywssZ+8moaQ5GrdAURKFCnVKIuylur50uT8wycn++mRyY+B4FZ
-	dZWAtt9KcrLAWl+oktjk23tVedOA04numIplC/aEYn+1RuHqiEKKUdB1D1OmqQK19Y3UP6QgnGN
-	ZoqvSKQcJoEuOLVsGTy+kPuhZ2/G5bTSRd0zpHg==
-X-Gm-Gg: ASbGncvUMR9rSEA2xPFX6G0V70Bn3ke0QqlBpo6UpgzXgkDn7vc4IiYPz7zsMOcY6HM
-	jqsdDp7etRoR3xiET4kJ7lQvsjo0JuAivUl8oz9pMRlpgpB+Az3Ebi6nroz8kYcu75ZhIrkPRMT
-	UirbWMFA==
-X-Google-Smtp-Source: AGHT+IEmzNz0icfWLpez1BUsW/bodw4yxi3kEJGu2T9c7GZ0fGiTA+k8NPv9fX34ISAbJbxPgbyIN7vFEs0p7/UvZxk=
-X-Received: by 2002:a05:6a00:2445:b0:731:e974:f9c2 with SMTP id
- d2e1a72fcca58-73426af3a2dmr33707676b3a.0.1740618315744; Wed, 26 Feb 2025
- 17:05:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wl5LUt5p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740621858; x=1772157858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WBTzOSlk9/Z04a8Ue9QXvkbbEPlD9D+SG/a81qVvzUA=;
+  b=Wl5LUt5pNS0Ul+dFWjHeoHmFfZPWB3wG5znJMgJP3PQY7Q6PippSdGr7
+   7OSY2LkJh6AWtzF+YNjJIx8TmH+/LcrIY5GW7Eup10HemVqN/PgHSqyCt
+   4vF4ABhtATTweB4r0mWjqf0G2HtHPVduMHtaB8m2Ad/QNAWsOBn6xFaOy
+   jP7mY2Qy5ElAlRZHVouA0GmSrmFuQ/tNzgIOQfWz7sqOl51FrsgW7Ja2x
+   AOoqPrXsGMBWbM05O18qrCx2VzsHI5LL9uxcSrd+h0yRciGr1KCTY1jJd
+   Ay23LOSguijMY5cvicU9zW/OI0YCNOcyHRuI0DBSt0/3jmO5NApMASsXs
+   w==;
+X-CSE-ConnectionGUID: gohqrIe5RRCEhVRSPci1Fg==
+X-CSE-MsgGUID: zQdzrWBDQKm+kYRI9v+fFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41627785"
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="41627785"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 18:04:17 -0800
+X-CSE-ConnectionGUID: DFyAwIAfSJeIfjxrGk9vJA==
+X-CSE-MsgGUID: quHqoJ8OQle7146QuQOgew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="147706492"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 18:04:13 -0800
+Message-ID: <59321f8a-c804-4c0d-8941-3805c078d2c6@linux.intel.com>
+Date: Thu, 27 Feb 2025 10:04:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
- <20250205-counter_delegation-v4-12-835cfa88e3b1@rivosinc.com> <586dc43d-74cd-413b-86e2-545384ad796f@rivosinc.com>
-In-Reply-To: <586dc43d-74cd-413b-86e2-545384ad796f@rivosinc.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Wed, 26 Feb 2025 17:05:02 -0800
-X-Gm-Features: AQ5f1Jpcwi9qlqm9BYyz76VdGTMqDksYTZy-kqauaAcNToAAh7JyG1DiMAREibo
-Message-ID: <CAHBxVyGAtZV8mJdcLtSHKHCrtrx3ygUG16onhpPRUUPk6_WJuA@mail.gmail.com>
-Subject: Re: [PATCH v4 12/21] RISC-V: perf: Modify the counter discovery mechanism
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 10/24] perf/x86/intel: Process arch-PEBS records or
+ record fragments
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-11-dapeng1.mi@linux.intel.com>
+ <20250225103927.GJ11590@noisy.programming.kicks-ass.net>
+ <20250225110012.GK31462@noisy.programming.kicks-ass.net>
+ <c1450cf4-f367-4675-9f5e-90416a996af1@linux.intel.com>
+ <20250226093558.GR11590@noisy.programming.kicks-ass.net>
+ <98112b48-5ca6-4077-a842-83d1407f1860@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <98112b48-5ca6-4077-a842-83d1407f1860@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 7, 2025 at 2:29=E2=80=AFAM Cl=C3=A9ment L=C3=A9ger <cleger@rivo=
-sinc.com> wrote:
->
->
->
-> On 06/02/2025 08:23, Atish Patra wrote:
-> > If both counter delegation and SBI PMU is present, the counter
-> > delegation will be used for hardware pmu counters while the SBI PMU
-> > will be used for firmware counters. Thus, the driver has to probe
-> > the counters info via SBI PMU to distinguish the firmware counters.
-> >
-> > The hybrid scheme also requires improvements of the informational
-> > logging messages to indicate the user about underlying interface
-> > used for each use case.
-> >
-> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> > ---
-> >  drivers/perf/riscv_pmu_dev.c | 118 ++++++++++++++++++++++++++++++++---=
---------
-> >  1 file changed, 88 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/drivers/perf/riscv_pmu_dev.c b/drivers/perf/riscv_pmu_dev.=
-c
-> > index 6b43d844eaea..5ddf4924c5b3 100644
-> > --- a/drivers/perf/riscv_pmu_dev.c
-> > +++ b/drivers/perf/riscv_pmu_dev.c
-> > @@ -66,6 +66,10 @@ static bool sbi_v2_available;
-> >  static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
-> >  #define sbi_pmu_snapshot_available() \
-> >       static_branch_unlikely(&sbi_pmu_snapshot_available)
-> > +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
-> > +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
-> > +static bool cdeleg_available;
-> > +static bool sbi_available;
-> >
-> >  static struct attribute *riscv_arch_formats_attr[] =3D {
-> >       &format_attr_event.attr,
-> > @@ -88,7 +92,8 @@ static int sysctl_perf_user_access __read_mostly =3D =
-SYSCTL_USER_ACCESS;
-> >
-> >  /*
-> >   * This structure is SBI specific but counter delegation also require =
-counter
-> > - * width, csr mapping. Reuse it for now.
-> > + * width, csr mapping. Reuse it for now we can have firmware counters =
-for
-> > + * platfroms with counter delegation support.
-> >   * RISC-V doesn't have heterogeneous harts yet. This need to be part o=
-f
-> >   * per_cpu in case of harts with different pmu counters
-> >   */
-> > @@ -100,6 +105,8 @@ static unsigned int riscv_pmu_irq;
-> >
-> >  /* Cache the available counters in a bitmask */
-> >  static unsigned long cmask;
-> > +/* Cache the available firmware counters in another bitmask */
-> > +static unsigned long firmware_cmask;
-> >
-> >  struct sbi_pmu_event_data {
-> >       union {
-> > @@ -778,35 +785,49 @@ static int rvpmu_sbi_find_num_ctrs(void)
-> >               return sbi_err_map_linux_errno(ret.error);
-> >  }
-> >
-> > -static int rvpmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
-> > +static int rvpmu_deleg_find_ctrs(void)
-> > +{
-> > +     /* TODO */
-> > +     return -1;
-> > +}
-> > +
-> > +static int rvpmu_sbi_get_ctrinfo(int nsbi_ctr, int ndeleg_ctr)
->
-> Hi Atish,
->
-> These parameters could be unsigned I think.
->
 
-sure. Changed it to u32.
+On 2/26/2025 11:45 PM, Liang, Kan wrote:
+>
+> On 2025-02-26 4:35 a.m., Peter Zijlstra wrote:
+>> On Wed, Feb 26, 2025 at 01:20:37PM +0800, Mi, Dapeng wrote:
+>>
+>>>> Also, should that workaround have been extended to also include
+>>>> GLOBAL_STATUS_PERF_METRICS_OVF in that mask, or was that defect fixed
+>>>> for every chip capable of metrics stuff?
+>>> hmm,  per my understanding, GLOBAL_STATUS_PERF_METRICS_OVF handling should
+>>> only be skipped when fixed counter 3 or perf metrics are included in PEBS
+>>> counter group. In this case, the slots and topdown metrics have been
+>>> updated by PEBS handler. It should not be processed again.
+>>>
+>>> @Kan Liang, is it correct?
+>> Right, so the thing is, *any* PEBS event pending will clear METRICS_OVF
+>> per:
+>>
+>>                 status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+>>
+> Yes, we have to add it for both legacy PEBS and ARCH PEBS.
+>
+> An alternative way may change the order of handling the overflow bit.
+>
+> The commit daa864b8f8e3 ("perf/x86/pebs: Fix handling of PEBS buffer
+> overflows") has moved the "status &= ~cpuc->pebs_enabled;" out of PEBS
+> overflow code.
+>
+> As long as the PEBS overflow is handled after PT, I don't think the
+> above is required anymore.
+>
+> It should be similar to METRICS_OVF. But the PEBS counters snapshotting
+> should be specially handled, since the PEBS will handle the metrics
+> counter as well.
+>
+> @@ -3211,7 +3211,8 @@ static int handle_pmi_common(struct pt_regs *regs,
+> u64 status)
+>  	/*
+>  	 * Intel Perf metrics
+>  	 */
+> -	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned
+> long *)&status)) {
+> +	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned
+> long *)&status) &&
+> +	
+> !is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS])) {
+>  		handled++;
+>  		static_call(intel_pmu_update_topdown_event)(NULL, NULL);
+>  	}
 
-> >  {
-> >       struct sbiret ret;
-> > -     int i, num_hw_ctr =3D 0, num_fw_ctr =3D 0;
-> > +     int i, num_hw_ctr =3D 0, num_fw_ctr =3D 0, num_ctr =3D 0;
-> >       union sbi_pmu_ctr_info cinfo;
-> >
-> > -     pmu_ctr_list =3D kcalloc(nctr, sizeof(*pmu_ctr_list), GFP_KERNEL)=
-;
-> > -     if (!pmu_ctr_list)
-> > -             return -ENOMEM;
-> > -
-> > -     for (i =3D 0; i < nctr; i++) {
-> > +     for (i =3D 0; i < nsbi_ctr; i++) {
-> >               ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_IN=
-FO, i, 0, 0, 0, 0, 0);
-> >               if (ret.error)
-> >                       /* The logical counter ids are not expected to be=
- contiguous */
-> >                       continue;
-> >
-> > -             *mask |=3D BIT(i);
-> > -
-> >               cinfo.value =3D ret.value;
-> >               if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW)
-> >                       num_fw_ctr++;
-> > -             else
-> > +
-> > +             if (!cdeleg_available) {
->
-> What is the rationale for using additional boolean identical to the
-> static keys ? Reducing the amount of code patch site in cold path ? If
+Yes, we still need to handle METRICS_OVF if fixed counter 3 and metrics are
+not included into counter group. It ensure the metrics count can be updated
+timely once PERF_METRICS MSR overflows.
 
-yes.
+Since there were more and more bits added into  GLOBAL_CTRL_STAT MSR in
+past several years, it becomes not correct to execute the below code in
+BUFFER_OVF_BIT handling code.
 
-> so, I guess you can use static_key_enabled(&riscv_pmu_cdeleg_available).
-> But your solution is fine as well, it just duplicates two identical value=
-s.
->
+    status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
 
-good point. I will change it. Thanks!
+It unconditionally clears METRICS_OVF and other bits which could be added
+in the future. This is incorrect and could introduce potential issues.
 
-> >                       num_hw_ctr++;
-> > -             pmu_ctr_list[i].value =3D cinfo.value;
-> > +                     cmask |=3D BIT(i);
-> > +                     pmu_ctr_list[i].value =3D cinfo.value;
-> > +             } else if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW) {
-> > +                     /* Track firmware counters in a different mask */
-> > +                     firmware_cmask |=3D BIT(i);
-> > +                     pmu_ctr_list[i].value =3D cinfo.value;
-> > +             }
-> > +
-> >       }
-> >
-> > -     pr_info("%d firmware and %d hardware counters\n", num_fw_ctr, num=
-_hw_ctr);
-> > +     if (cdeleg_available) {
-> > +             pr_info("%d firmware and %d hardware counters\n", num_fw_=
-ctr, ndeleg_ctr);
-> > +             num_ctr =3D num_fw_ctr + ndeleg_ctr;
-> > +     } else {
-> > +             pr_info("%d firmware and %d hardware counters\n", num_fw_=
-ctr, num_hw_ctr);
-> > +             num_ctr =3D nsbi_ctr;
-> > +     }
-> >
-> > -     return 0;
-> > +     return num_ctr;
-> >  }
-> >
-> >  static inline void rvpmu_sbi_stop_all(struct riscv_pmu *pmu)
-> > @@ -1067,16 +1088,33 @@ static void rvpmu_ctr_stop(struct perf_event *e=
-vent, unsigned long flag)
-> >       /* TODO: Counter delegation implementation */
-> >  }
-> >
-> > -static int rvpmu_find_num_ctrs(void)
-> > +static int rvpmu_find_ctrs(void)
-> >  {
-> > -     return rvpmu_sbi_find_num_ctrs();
-> > -     /* TODO: Counter delegation implementation */
-> > -}
-> > +     int num_sbi_counters =3D 0, num_deleg_counters =3D 0, num_counter=
-s =3D 0;
-> >
-> > -static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
-> > -{
-> > -     return rvpmu_sbi_get_ctrinfo(nctr, mask);
-> > -     /* TODO: Counter delegation implementation */
-> > +     /*
-> > +      * We don't know how many firmware counters available. Just alloc=
-ate
-> > +      * for maximum counters driver can support. The default is 64 any=
-ways.
-> > +      */
-> > +     pmu_ctr_list =3D kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list=
-),
-> > +                            GFP_KERNEL);
-> > +     if (!pmu_ctr_list)
-> > +             return -ENOMEM;
-> > +
-> > +     if (cdeleg_available)
-> > +             num_deleg_counters =3D rvpmu_deleg_find_ctrs();
-> > +
-> > +     /* This is required for firmware counters even if the above is tr=
-ue */
-> > +     if (sbi_available)
-> > +             num_sbi_counters =3D rvpmu_sbi_find_num_ctrs();
-> > +
-> > +     if (num_sbi_counters >=3D RISCV_MAX_COUNTERS || num_deleg_counter=
-s >=3D RISCV_MAX_COUNTERS)
-> > +             return -ENOSPC;
->
-> Why is this using '>=3D' ? You allocated space for RISCV_MAX_COUNTERS, so
-> RISCV_MAX_COUNTERS should fit right ?
->
-Yeah. That's a typo. Thanks for catching it.
+Combining Kan's change, I think we can change the code like this.
 
-> > +
-> > +     /* cache all the information about counters now */
-> > +     num_counters =3D rvpmu_sbi_get_ctrinfo(num_sbi_counters, num_dele=
-g_counters);
-> > +
-> > +     return num_counters;
->
-> return rvpmu_sbi_get_ctrinfo(num_sbi_counters, num_deleg_counters);
->
-> >  }
-> >
-> >  static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
-> > @@ -1377,12 +1415,21 @@ static int rvpmu_device_probe(struct platform_d=
-evice *pdev)
-> >       int ret =3D -ENODEV;
-> >       int num_counters;
-> >
-> > -     pr_info("SBI PMU extension is available\n");
-> > +     if (cdeleg_available) {
-> > +             pr_info("hpmcounters will use the counter delegation ISA =
-extension\n");
-> > +             if (sbi_available)
-> > +                     pr_info("Firmware counters will be use SBI PMU ex=
-tension\n");
->
-> s/will be use/will use
->
-> > +             else
-> > +                     pr_info("Firmware counters will be not available =
-as SBI PMU extension is not present\n");
->
-> s/will be not/will not
->
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 8ef5b9a05fcc..0cf0f95b1af4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3192,7 +3192,6 @@ static int handle_pmi_common(struct pt_regs *regs,
+u64 status)
+        struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+        int bit;
+        int handled = 0;
+-       u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
 
-Fixed.
+        inc_irq_stat(apic_perf_irqs);
 
-> > +     } else if (sbi_available) {
-> > +             pr_info("Both hpmcounters and firmware counters will use =
-SBI PMU extension\n");
-> > +     }
-> > +
-> >       pmu =3D riscv_pmu_alloc();
-> >       if (!pmu)
-> >               return -ENOMEM;
-> >
-> > -     num_counters =3D rvpmu_find_num_ctrs();
-> > +     num_counters =3D rvpmu_find_ctrs();
-> >       if (num_counters < 0) {
-> >               pr_err("SBI PMU extension doesn't provide any counters\n"=
-);
-> >               goto out_free;
-> > @@ -1394,9 +1441,6 @@ static int rvpmu_device_probe(struct platform_dev=
-ice *pdev)
-> >               pr_info("SBI returned more than maximum number of counter=
-s. Limiting the number of counters to %d\n", num_counters);
-> >       }
-> >
-> > -     /* cache all the information about counters now */
-> > -     if (rvpmu_get_ctrinfo(num_counters, &cmask))
-> > -             goto out_free;
-> >
-> >       ret =3D rvpmu_setup_irqs(pmu, pdev);
-> >       if (ret < 0) {
-> > @@ -1486,13 +1530,27 @@ static int __init rvpmu_devinit(void)
-> >       int ret;
-> >       struct platform_device *pdev;
-> >
-> > -     if (sbi_spec_version < sbi_mk_version(0, 3) ||
-> > -         !sbi_probe_extension(SBI_EXT_PMU)) {
-> > -             return 0;
-> > +     if (sbi_spec_version >=3D sbi_mk_version(0, 3) &&
-> > +         sbi_probe_extension(SBI_EXT_PMU)) {
-> > +             static_branch_enable(&riscv_pmu_sbi_available);
-> > +             sbi_available =3D true;
-> >       }
-> >
-> >       if (sbi_spec_version >=3D sbi_mk_version(2, 0))
-> >               sbi_v2_available =3D true;
-> > +     /*
-> > +      * We need all three extensions to be present to access the count=
-ers
-> > +      * in S-mode via Supervisor Counter delegation.
-> > +      */
-> > +     if (riscv_isa_extension_available(NULL, SSCCFG) &&
-> > +         riscv_isa_extension_available(NULL, SMCDELEG) &&
-> > +         riscv_isa_extension_available(NULL, SSCSRIND)) {
-> > +             static_branch_enable(&riscv_pmu_cdeleg_available);
-> > +             cdeleg_available =3D true;
-> > +     }
-> > +
-> > +     if (!(sbi_available || cdeleg_available))
-> > +             return 0;
-> >
-> >       ret =3D cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_STARTING,
-> >                                     "perf/riscv/pmu:starting",
-> >
+@@ -3236,7 +3235,6 @@ static int handle_pmi_common(struct pt_regs *regs,
+u64 status)
+                handled++;
+                x86_pmu_handle_guest_pebs(regs, &data);
+                static_call(x86_pmu_drain_pebs)(regs, &data);
+-               status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+
+                /*
+                 * PMI throttle may be triggered, which stops the PEBS event.
+@@ -3269,12 +3267,17 @@ static int handle_pmi_common(struct pt_regs *regs,
+u64 status)
+
+        /*
+         * Intel Perf metrics
++        * If PEBS counter group includes fix counter 3, PEBS handler would
+update
++        * topdown events which is more accurate, it's unnecessary to
+update again.
+         */
+-       if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT,
+(unsigned long *)&status)) {
++       if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT,
+(unsigned long *)&status) &&
++          
+!is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS])) {
+                handled++;
+                static_call(intel_pmu_update_topdown_event)(NULL, NULL);
+        }
+
++       status &= hybrid(cpuc->pmu, intel_ctrl);
++
+        /*
+         * Checkpointed counters can lead to 'spurious' PMIs because the
+         * rollback caused by the PMI will have cleared the overflow status
+
+
+>
+> Thanks,
+> Kan
+>
 >
