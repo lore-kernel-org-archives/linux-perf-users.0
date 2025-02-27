@@ -1,238 +1,182 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B20D2063C0
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 05:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC6120CCE2;
+	Thu, 27 Feb 2025 05:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740634965; cv=none; b=YsNkSVMa5p6vSZK6d0ve9oomK8T1tnOoQtLGoMZ4ovLS1EXEHX/zDklMztsli2gRbsmKR2PKMQeOyP3PvnEASxZNf1N021CjS9p93cxM+Yk3CZicJ6f59pZ21phzy0ssBF1LKZqfMaCI8PnjK3s1VuCvafjErlghHxC0OErmEz0=
+	t=1740634985; cv=none; b=MRRCdfB2UfdNrS2n0d5sGOXesK3Qrm97EQHP15KjXNfqtSXnxrWSAfkw1SkDaQ/pN9lcQto5ITqx/rSMByg+B7Xh0Xk5N2MrEvuNb+SwjH1oWS9lBkghIS8RCcPSUwKrNf4vbpaE1SDBgfCnWzBxbV1X2tUNpcy/z4PkaYohP0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740634965; c=relaxed/simple;
-	bh=MUNIRlAyy6bZUgXwVYwjbDqYF5SDqilGQBQesFVrvfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=F5VrV+cPqnlq+mhsn64SgY+WhZ9s38zbMeH3itfVOhNDthYKoaa5zHRd0hy3LS5A6GKdthsH2+5ihsEQiqN9t8uPl92Q96c/HbpLqhdZ/OiTDOi35/EE/xaH9HCdYPBL0YPQRInvTV9x9jjkRZb5Lpb7/APaUlZU23JgrGH2waQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVTQcO/B; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740634985; c=relaxed/simple;
+	bh=7ioaoaFEqmOjduVcLT1zN2cDU+hoCGDa+V7RfZiay3o=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=A4ozzFj2VcGrLvRvKNgSU+XwkgKzYPmtBe7fxMvdANrBGTvxrdE25T3roL1fF9gR1eHrSAACBf3qX2HO9ohOrybHuhUNn7HAqIn7gYZT2YTRjdJCzYd9697fSXL6tIYT4chx7mpJRZ0S2QmGt+kyB4NGutbKDzgQwyH2Ppyq32g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GsbisALS; arc=none smtp.client-ip=207.54.90.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVTQcO/B"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2212222d4cdso87675ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 21:42:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740634964; x=1741239764; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jrrVETp2ZeRqDhmK60ciysHn19m9SG4Bj547yggW4HA=;
-        b=tVTQcO/B6ZWSOYmJ1/2Wbryu7PwE2MBGgYS1Hei+663m0lHRaHlS0KsXLhWa6eWYdF
-         VWgB+e6MftZI11qZlir2PnI1tk2vkJkEpkx+U9j+ym4aq8k6qvedVa2wdXDXkHVE1m7m
-         d3SEaTPKH50NVl2G9S3BxZ63tJQECmLDuzRxO5RO6aFj5fOb29hqoEXGSw4fLFxQrANL
-         PnL8ALARJhzrEKlzpw+RRtWI7EEiOFjizWbw7eYwmjdt8ysmrf9vq3fkIuCko3ilxeL5
-         TtU2bqOrTe7vgyIdPeQ5iHlCHYJgnIMic/bzE1tSfYsgZFENmU15kAcx8lTo7Q5xbpbR
-         IGlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740634964; x=1741239764;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jrrVETp2ZeRqDhmK60ciysHn19m9SG4Bj547yggW4HA=;
-        b=jAp6pvHl2PxASxceUPQvDat3MCU6Yypa8YLvetHe8MDCJ7+5To4+24Uw5hjeFbo+ln
-         mQdewjAZP1jD2w4IopO8m+Ore5nRm0aDAElpZwJdn7QwGFcwvAWNjurLPJ12dKHglM0/
-         cKvvsNYJtdiEiuUS4qw0PtpBFwwlIgqKlnIqIgro4IrwBMwtC4YmDw3Ddn7U1jKa7rbd
-         XSdMBya3HkI5jekHYJOucdd0CfXC8Ciq2uQYzwLzzxZoK5den0CF4MvK+p+v3j7fkLId
-         mE5nAUhPTe0j+CTRiXaKF4b4Xbr/7lsPA+aNhYcCj42MbOffaOVxL5fBfr3b2Ul+FPT6
-         Zj1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/DlMFPaq/7b7Hqar/ccjT4CJw7gTlbeAkgzmuqdXdGSGdQpDsD1lAypm9Rk90E7ZN3CBKXma5SrDUp7k5EUuS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtwgI8yP7r6Kgdxpzh8K1tMkUis+g9SKvSFHXlsASg6j7Ijsr1
-	JPhofaa9JmNQGdQk5cxZcWMTcn+dbKH164q4MyV4uLOR1Cb/Sw8YkxjYbdEDha4gyKRw12JxcKm
-	oeJnLvbRI207M5xuX6j9izF1esv8ymi/mY9Fq
-X-Gm-Gg: ASbGncsItmGFO7pFZsUY5rpXSLodymS5/gKDaijnn9YgxS0EnD03nkhFHg0mACY7V/L
-	18gdXy8uD5zrf0GHaHEpAQtDUBONZjJuMsl9WIaIr9vYGV7YQoIiYfFsEbpxXP6rud594Awjm2K
-	eTP25q4iNi
-X-Google-Smtp-Source: AGHT+IE04Xn7gkFQ4lTa3BOx+GUDg6KhMeHEk+2UyoPHgNBqYihVtvNqHLJ/HNtT+Go+7kzEGupsFGRFghRLUbE0tuA=
-X-Received: by 2002:a17:902:f802:b0:215:8232:5596 with SMTP id
- d9443c01a7336-2234d5c9a54mr1779645ad.16.1740634963259; Wed, 26 Feb 2025
- 21:42:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GsbisALS"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1740634984; x=1772170984;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7ioaoaFEqmOjduVcLT1zN2cDU+hoCGDa+V7RfZiay3o=;
+  b=GsbisALSQdQpyIZmo/OaeFB/e/cu42FLd6J3/flcAsok5HuNBbKByizN
+   nZL0QZu2ms6A62jp0T6pd/5wl20IrsQ71e2vGaYfYzmTjo3pwxOyOE8o+
+   nqDsxlYOwHU5Vdnn4sTCMnigqlUXBARebvApSccWgs5JuUfuxJ3vSzZEt
+   u55PWiSLTvML7mwG1UBNzlF1s43DIk6R5BMxymFsbioRnK8RRm9kAe2yw
+   cVG+nWY4Rx/ar3Ii4zEisWVFoKSvl9Pdw8LzBQ44Orw+Ra10tvHZVa5Yg
+   dzBDCrGjTj233Nin8i4CPhiGtxCGg3kQ0ueAseDqHVH5AQ9troL9jTi+o
+   w==;
+X-CSE-ConnectionGUID: Hs/UU8qKQMGiharzNw7V9A==
+X-CSE-MsgGUID: 1RkmxL6JTb+3CsLpEv6lhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="191325972"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732546800"; 
+   d="scan'208";a="191325972"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 14:41:52 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id F2D20D5019;
+	Thu, 27 Feb 2025 14:41:49 +0900 (JST)
+Received: from yto-om3.fujitsu.com (yto-om3.o.css.fujitsu.com [10.128.89.164])
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id C51F3D0925;
+	Thu, 27 Feb 2025 14:41:49 +0900 (JST)
+Received: from sm-x86-mem01.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
+	by yto-om3.fujitsu.com (Postfix) with ESMTP id 04DE54005847B;
+	Thu, 27 Feb 2025 14:41:48 +0900 (JST)
+From: Yoshihiro Furudera <fj5100bi@fujitsu.com>
+To: John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>
+Subject: [PATCH] Remove some PMU events for FUJITSU-MONAKA
+Date: Thu, 27 Feb 2025 05:40:45 +0000
+Message-Id: <20250227054045.1340090-1-fj5100bi@fujitsu.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226230109.314580-1-irogers@google.com>
-In-Reply-To: <20250226230109.314580-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 26 Feb 2025 21:42:31 -0800
-X-Gm-Features: AQ5f1JrIXT55iplQ8LQBBQWS-GNKGsTuSVSa-F8OhWM3zjtUv21ewnDvV1RWzLM
-Message-ID: <CAP-5=fUN7=cQ9X10tH1qpmzpJoSoqHH5CV5MVwhqXkQ8vkbwoA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf tests: Fix data symbol test with LTO builds
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 3:01=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> With LTO builds, although regular builds could also see this as
-> all the code is in one file, the datasym workload can realize the
-> buf1.reserved data is never accessed. The compiler moves the
-> variable to bss and only keeps the data1 and data2 parts as
-> separate variables. This causes the symbol check to fail in the
-> test. Make the variable volatile to disable the more aggressive
-> optimization. Rename the variable to make which buf1 in perf is
-> being referred to.
->
-> Before:
-> ```
-> $ perf test -vv "data symbol"
-> 126: Test data symbol:
-> --- start ---
-> test child forked, pid 299808
-> perf does not have symbol 'buf1'
-> perf is missing symbols - skipping test
-> ---- end(-2) ----
-> 126: Test data symbol                                                : Sk=
-ip
-> $ nm perf|grep buf1
-> 0000000000a5fa40 b buf1.0
-> 0000000000a5fa48 b buf1.1
-> ```
->
-> After:
-> ```
-> $ nm perf|grep buf1
-> 0000000000a53a00 d buf1
-> $ perf test -vv "data symbol"126: Test data symbol:
-> --- start ---
-> test child forked, pid 302166
->  a53a00-a53a39 l buf1
-> perf does have symbol 'buf1'
-> Recording workload...
-> Waiting for "perf record has started" message
-> OK
-> Cleaning up files...
-> ---- end(0) ----
-> 126: Test data symbol                                                : Ok
-> ```
->
-> Fixes: 3dfc01fe9d12 ("perf test: Add 'datasym' test workload")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+The following events are not counted properly:
 
-Ah, I see we're trying to force -O0 and -fno-inline in the Makefile
-(git.kernel.org is giving 403s):
-https://github.com/torvalds/linux/blob/master/tools/perf/tests/workloads/Bu=
-ild#L11
-Which LTO later undoes. I'm not seeing LTO breakages for brstack.c and
-the shell test "Check branch stack sampling". I think LTO is able to
-optimize this case as it is a variable/struct being optimized, so the
-"-O0" and "-fno-inline" mustn't be being made to apply. Not a wholly
-satisfactory reason to add the volatile, but I'm short on
-alternatives.
+0x0037 LL_CACHE_MISS_RD
+0x400B L3D_CACHE_LMISS_RD
+0x0396 L2D_CACHE_REFILL_L3D_MISS
+0x039A L2D_CACHE_REFILL_L3D_MISS_PRF
+0x039B L2D_CACHE_REFILL_L3D_MISS_HWPRF
+0x039C L2D_CACHE_REFILL_L3D_HIT
+0x03A0 L2D_CACHE_REFILL_L3D_HIT_PRF
+0x03A1 L2D_CACHE_REFILL_L3D_HIT_HWPRF
 
-Thanks,
-Ian
+Specifically, these events are always counted as misses,
+regardless of whether the L3 prefetch is a hit or a miss.
+So I remove these events in l3_cache.json, ll_cache.json
 
+Signed-off-by: Yoshihiro Furudera <fj5100bi@fujitsu.com>
+---
+ .../arch/arm64/fujitsu/monaka/l3_cache.json   | 34 -------------------
+ .../arch/arm64/fujitsu/monaka/ll_cache.json   |  4 ---
+ 2 files changed, 38 deletions(-)
 
+diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
+index 3f3e0d22ac68..917b9b5bf8bb 100644
+--- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
+@@ -37,11 +37,6 @@
+         "EventName": "L2D_CACHE_REFILL_L3D_CACHE_HWPRF",
+         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_CACHE caused by hardware prefetch access."
+     },
+-    {
+-        "EventCode": "0x0396",
+-        "EventName": "L2D_CACHE_REFILL_L3D_MISS",
+-        "BriefDescription": "This event counts operations that cause a miss of the L3 cache."
+-    },
+     {
+         "EventCode": "0x0397",
+         "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM",
+@@ -57,21 +52,6 @@
+         "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM_WR",
+         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by demand write access."
+     },
+-    {
+-        "EventCode": "0x039A",
+-        "EventName": "L2D_CACHE_REFILL_L3D_MISS_PRF",
+-        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by prefetch access."
+-    },
+-    {
+-        "EventCode": "0x039B",
+-        "EventName": "L2D_CACHE_REFILL_L3D_MISS_HWPRF",
+-        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by hardware prefetch access."
+-    },
+-    {
+-        "EventCode": "0x039C",
+-        "EventName": "L2D_CACHE_REFILL_L3D_HIT",
+-        "BriefDescription": "This event counts operations that cause a hit of the L3 cache."
+-    },
+     {
+         "EventCode": "0x039D",
+         "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM",
+@@ -87,16 +67,6 @@
+         "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM_WR",
+         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by demand write access."
+     },
+-    {
+-        "EventCode": "0x03A0",
+-        "EventName": "L2D_CACHE_REFILL_L3D_HIT_PRF",
+-        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by prefetch access."
+-    },
+-    {
+-        "EventCode": "0x03A1",
+-        "EventName": "L2D_CACHE_REFILL_L3D_HIT_HWPRF",
+-        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by hardware prefetch access."
+-    },
+     {
+         "EventCode": "0x03A2",
+         "EventName": "L2D_CACHE_REFILL_L3D_MISS_PFTGT_HIT",
+@@ -151,9 +121,5 @@
+         "EventCode": "0x03AC",
+         "EventName": "L2D_CACHE_REFILL_L3D_MISS_FR_L3",
+         "BriefDescription": "This event counts the number of L3 cache misses where the requests access L3 cache in the different socket from the requests."
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
+-        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and  a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
+index a441b84729ab..c2325855eda3 100644
+--- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
++++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
+@@ -2,9 +2,5 @@
+     {
+         "ArchStdEvent": "LL_CACHE_RD",
+         "BriefDescription": "This event counts access counted by L3D_CACHE that is a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_CACHE events."
+-    },
+-    {
+-        "ArchStdEvent": "LL_CACHE_MISS_RD",
+-        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
+     }
+ ]
+-- 
+2.43.0
 
-> ---
->  tools/perf/tests/shell/test_data_symbol.sh | 17 +++++++++--------
->  tools/perf/tests/workloads/datasym.c       | 11 ++++++-----
->  2 files changed, 15 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/test=
-s/shell/test_data_symbol.sh
-> index c86da0235059..7da606db97cb 100755
-> --- a/tools/perf/tests/shell/test_data_symbol.sh
-> +++ b/tools/perf/tests/shell/test_data_symbol.sh
-> @@ -18,7 +18,7 @@ skip_if_no_mem_event() {
->
->  skip_if_no_mem_event || exit 2
->
-> -skip_test_missing_symbol buf1
-> +skip_test_missing_symbol workload_datasym_buf1
->
->  TEST_PROGRAM=3D"perf test -w datasym"
->  PERF_DATA=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> @@ -26,18 +26,19 @@ ERR_FILE=3D$(mktemp /tmp/__perf_test.stderr.XXXXX)
->
->  check_result() {
->         # The memory report format is as below:
-> -       #    99.92%  ...  [.] buf1+0x38
-> +       #    99.92%  ...  [.] workload_datasym_buf1+0x38
->         result=3D$(perf mem report -i ${PERF_DATA} -s symbol_daddr -q 2>&=
-1 |
-> -                awk '/buf1/ { print $4 }')
-> +                awk '/workload_datasym_buf1/ { print $4 }')
->
-> -       # Testing is failed if has no any sample for "buf1"
-> +       # Testing is failed if has no any sample for "workload_datasym_bu=
-f1"
->         [ -z "$result" ] && return 1
->
->         while IFS=3D read -r line; do
-> -               # The "data1" and "data2" fields in structure "buf1" have
-> -               # offset "0x0" and "0x38", returns failure if detect any
-> -               # other offset value.
-> -               if [ "$line" !=3D "buf1+0x0" ] && [ "$line" !=3D "buf1+0x=
-38" ]; then
-> +               # The "data1" and "data2" fields in structure
-> +               # "workload_datasym_buf1" have offset "0x0" and "0x38", r=
-eturns
-> +               # failure if detect any other offset value.
-> +               if [ "$line" !=3D "workload_datasym_buf1+0x0" ] && \
-> +                  [ "$line" !=3D "workload_datasym_buf1+0x38" ]; then
->                         return 1
->                 fi
->         done <<< "$result"
-> diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/work=
-loads/datasym.c
-> index 8e08fc75a973..5074b3439835 100644
-> --- a/tools/perf/tests/workloads/datasym.c
-> +++ b/tools/perf/tests/workloads/datasym.c
-> @@ -7,7 +7,8 @@ typedef struct _buf {
->         char data2;
->  } buf __attribute__((aligned(64)));
->
-> -static buf buf1 =3D {
-> +/* volatile to try to avoid the compiler seeing reserved as unused. */
-> +static volatile buf workload_datasym_buf1 =3D {
->         /* to have this in the data section */
->         .reserved[0] =3D 1,
->  };
-> @@ -15,8 +16,8 @@ static buf buf1 =3D {
->  static int datasym(int argc __maybe_unused, const char **argv __maybe_un=
-used)
->  {
->         for (;;) {
-> -               buf1.data1++;
-> -               if (buf1.data1 =3D=3D 123) {
-> +               workload_datasym_buf1.data1++;
-> +               if (workload_datasym_buf1.data1 =3D=3D 123) {
->                         /*
->                          * Add some 'noise' in the loop to work around er=
-rata
->                          * 1694299 on Arm N1.
-> @@ -30,9 +31,9 @@ static int datasym(int argc __maybe_unused, const char =
-**argv __maybe_unused)
->                          * longer a continuous repeating pattern that int=
-eracts
->                          * badly with the bias.
->                          */
-> -                       buf1.data1++;
-> +                       workload_datasym_buf1.data1++;
->                 }
-> -               buf1.data2 +=3D buf1.data1;
-> +               workload_datasym_buf1.data2 +=3D workload_datasym_buf1.da=
-ta1;
->         }
->         return 0;
->  }
-> --
-> 2.48.1.711.g2feabab25a-goog
->
