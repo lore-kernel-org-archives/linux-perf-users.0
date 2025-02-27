@@ -1,199 +1,237 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB6F22A7F2
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 10:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C44C22FAE1;
+	Thu, 27 Feb 2025 11:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740653639; cv=none; b=jmfxo8QYn7ChoD7kDUPCh5C6BBB0QLACD0HAnCwOWPOZerXlKGVO5QVMkkIJQsl4ZLgBkrzoBQpKYb7nJNpTg20zIxa/MH6pWSl0Yq9BcD1eEltfuQF+8vXYNAcNQs2YqGAYJZMia5ZhsS9YOBuTnVU4UHqHJnInxfuAWwoZNQs=
+	t=1740654732; cv=none; b=tL2Pln2jiBiJKGy9jNcJ/67DEPNDr67qfqM4xNrIfsJI8daH7IyN4xa3rGzUEn8bGKhJB/oL+dp2k/cwjJSPv/yihuMiyyGcD5DiZaXZdQKzBKw778/F9Xn34Jrn3iu38Z2+5+33DMdx4vwZjlpHuOYXSekjmA8G8h18R20rJ6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740653639; c=relaxed/simple;
-	bh=bmyJav4h5WrqJRAB+AO8ahOcMlR1rDsern4GDgZLyTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=ZXGOce7A5uci21ZD8hpTSFCGNK60dwYGn7fVQxwVaqcwS/+zqGdEDQ6GMyXJP3Wk/t9n+Ukpw40t09NTMCfbnLov7vdIcGXrb/YNwWafKehu2ktvt/8/SwWDnClopqMqrwk9ijVpetsNmmQ55HCNI1u2o7KTFyoc6gTnRdUZedk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oqVmA9EW; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740654732; c=relaxed/simple;
+	bh=BAp6IZkgiyRD/RzyQXKxlsI0RKC6IU3pJOvuO9xE6Gk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Sm5aNK8J+DUfwmy/yZQL3wopzAywtq2gNFJ0+grQkaX0+scA6kVYTnpbbN/djhL6/NUJPlr1ntYDNwSzZHGnhahfcsAB5tGiasG+JmVmiqJY0H6DIpCuzFEC/sHupdhbQXZ8tV5ZVbkXWBdJjo1EmuSU7fbID3IHRJQGL7GzQHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QC2IN5rY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oqVmA9EW"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43995b907cfso4772745e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 02:53:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740653635; x=1741258435; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SNCv9VF2wwi5tDdk8D6Rf4AjfaKu6G8KXM9TyLJSQ84=;
-        b=oqVmA9EW1ZZhiUQDmDR2Yj10E+tdy9b2FMjAXp+NeooOGUPTYrlsFvN3m1Qg2nfXFw
-         ap9ijQnQli0KKR7d+pjIhfWXWvmJFjRPyEXgrCFU86V6YaXJfmfHa/Px/ZNtT7hm8dTJ
-         ahaQ/B/bykWzWOAAA3qtEpFzzlz/qFVHOqCUz/0VTOO+xm+F3vzTReW9tnzeKyOXrk+g
-         2sK5w7D5+CWCVQccOBogZ1CiF7Nki47hMUJ1nBgBciv7wxyQEaBMiY5v+Nk5J3aP4MbQ
-         j9TGFgrvY6LKe2MYw5kpi6lapqM5VivUGzQCi8dIvny2ZZic0OE3Iwv19Nh0RULuBd5T
-         0s/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740653635; x=1741258435;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNCv9VF2wwi5tDdk8D6Rf4AjfaKu6G8KXM9TyLJSQ84=;
-        b=rr6dj4EDrMSyQbZZ3uMUPu9JHYQMsGv0O8k3l9Mx72B6aK+mv3IhFyZSukGSuF1SO5
-         n7uxwL9UadjY7SpI20M6eKJC/ErPHqQ9Pwdej+J0qlz0qMouXog6T/8ZIcNkdtRPU0PL
-         Ss1MzB1o3xwaY81ohFygJ6RzCMWKuTtvxz5UoBeltUPhXKrNcQTJHWKpJzYLjJfSzp9x
-         6vOrjfGGXwuu7YAKHlQjZPr3zIuPvaw0Vj9AQ6QUCI1MmU/QHBHPp/JWI0xUfmg2ZVd3
-         XpFxRXPNM8Hc6xVJG4ns3XUaREqeNfDqXzUem1tiWKcA672pGNo8odY5wDAFubGpyAsc
-         1qcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/q3B+U6SWzP/AEvAuWO7ZnWX+L59cH58ybJpMd7JJ8n29Wq7PRWRhW32v9hA9onpH6PXr/XLyuAo/W4ixHL2f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMjJNVfSqS3rk/uilNMEcjjoY9VZ/YvnCgzvEgVRSFHoAN+aO4
-	uunv3mjT5qmB3pbNb0voR4HIjvjq1vbBc256qeQRqQe5JGu8iFrGkxiQDCYMaE4=
-X-Gm-Gg: ASbGncsDv/dfwhbENr+3li4QjfKkIS++DMllFnkhinNANuY5233c4WJw35lfGlqaE8r
-	rTubB57S9sC3X0Pi64dl6kXMbnHXu8EpkG+6mHF670j1KakuF7uhRkVpMQzeKcOs8OueftbVFW3
-	bSqfU+sV/A6Ca2M1JVuUcVexpp1HoJvOQkSnO8cchf0PBKDaHDloEk616a7+rmmYfOjj0vnqICN
-	vYq8tCGOd/Rfonr/O5bZGxm9hsRvFUoIVX1LR9jEm8pYwmLAlaZr8OvzUCKwrUMeqf+3WoUey5M
-	eNTv3wL+Ta66DwINEYx0oiCSfA7o2b/MCw==
-X-Google-Smtp-Source: AGHT+IE8DorXVbtCD9exKwh1tn38cojsz1Dpv/Llvugy6PqREcKYEgD8gQ8+TNIqagrt+TUmMtmKxQ==
-X-Received: by 2002:a05:600c:198e:b0:439:9e53:49d8 with SMTP id 5b1f17b1804b1-43ab0f979cdmr103876275e9.30.1740653635355;
-        Thu, 27 Feb 2025 02:53:55 -0800 (PST)
-Received: from [192.168.1.247] ([145.224.66.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab2ee361dsm51580975e9.0.2025.02.27.02.53.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 02:53:54 -0800 (PST)
-Message-ID: <96b323eb-15b2-4b60-8522-83bf2f57694b@linaro.org>
-Date: Thu, 27 Feb 2025 10:53:53 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QC2IN5rY"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R9VR8O014508;
+	Thu, 27 Feb 2025 11:11:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=VBvqaX
+	UQxcsvpwV2aX/7sxnJGxIeXk+ZIcUf4CT2b9Y=; b=QC2IN5rYDDWFE2ABCxRtcT
+	lFMnnHt/aIvwCyrOIz6oK2aHc/ktvSAQTyFS+39vqRypN8ohXp/kXsauhGhZC+hI
+	Evddbqs4+0a43bltlrgbf1OwzI07GgAxlrw1o/fUsyPy/nvB4Bfzl+tqn9cKpWbu
+	uyRUBcoOO1YV2CiMrwp25avbOmnVLnJP3NtRgkNmb2LFNJfbHpsmr2YL7BNJ0FRQ
+	juy2MjVe2TdsjoSh89m20XMQbzx0yt2B7qF264cMiFonhs/KctASCg9rXQjuFrwV
+	DQ707TUtl/MBaFI9EFmq35oAT/a1SqbRivnRU/2ZEudNB2paFuqhc4xqiaxyoBJg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a2wp1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:11:51 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51RBBpnR013432;
+	Thu, 27 Feb 2025 11:11:51 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a2wnx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:11:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51RAjVR7002570;
+	Thu, 27 Feb 2025 11:11:50 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yu4jyxhd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:11:49 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51RBBmVw17695162
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Feb 2025 11:11:48 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4767E20043;
+	Thu, 27 Feb 2025 11:11:48 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2D1E920040;
+	Thu, 27 Feb 2025 11:11:42 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.240.191])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 27 Feb 2025 11:11:41 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Remove some PMU events for FUJITSU-MONAKA
-To: Yoshihiro Furudera <fj5100bi@fujitsu.com>
-References: <20250227054045.1340090-1-fj5100bi@fujitsu.com>
-Content-Language: en-US
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250227054045.1340090-1-fj5100bi@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH v8 0/4] Tracing contention lock owner call stack
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <20250227003359.732948-1-ctshao@google.com>
+Date: Thu, 27 Feb 2025 16:41:28 +0530
+Cc: "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, nick.forrington@arm.com,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EB79B75A-896E-42B6-B206-314BA137E257@linux.ibm.com>
+References: <20250227003359.732948-1-ctshao@google.com>
+To: Chun-Tse Shao <ctshao@google.com>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: p3SUz25bm8BfibT94Qp1_itJ50ZotSFB
+X-Proofpoint-ORIG-GUID: xiDBKbydrwc80UQK6-AB1YvcbBUicya8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_05,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270083
 
 
 
-On 27/02/2025 5:40 am, Yoshihiro Furudera wrote:
-> The following events are not counted properly:
-> 
-> 0x0037 LL_CACHE_MISS_RD
-> 0x400B L3D_CACHE_LMISS_RD
+> On 27 Feb 2025, at 5:58=E2=80=AFAM, Chun-Tse Shao <ctshao@google.com> =
+wrote:
+>=20
+> For perf lock contention, the current owner tracking (-o option) only
+> works with per-thread mode (-t option). Enabling call stack mode for
+> owner can be useful for diagnosing why a system running slow in
+> lock contention.
+>=20
+> Example output:
+>  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex -E16 perf =
+bench sched pipe
+>   ...
+>   contended   total wait     max wait     avg wait         type   =
+caller
+>=20
+>         171      1.55 ms     20.26 us      9.06 us        mutex   =
+pipe_read+0x57
+>                          0xffffffffac6318e7  pipe_read+0x57
+>                          0xffffffffac623862  vfs_read+0x332
+>                          0xffffffffac62434b  ksys_read+0xbb
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>          36    193.71 us     15.27 us      5.38 us        mutex   =
+pipe_write+0x50
+>                          0xffffffffac631ee0  pipe_write+0x50
+>                          0xffffffffac6241db  vfs_write+0x3bb
+>                          0xffffffffac6244ab  ksys_write+0xbb
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>           4     51.22 us     16.47 us     12.80 us        mutex   =
+do_epoll_wait+0x24d
+>                          0xffffffffac691f0d  do_epoll_wait+0x24d
+>                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
+>                          0xffffffffac693ba5  =
+__x64_sys_epoll_pwait+0x95
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>           2     20.88 us     11.95 us     10.44 us        mutex   =
+do_epoll_wait+0x24d
+>                          0xffffffffac691f0d  do_epoll_wait+0x24d
+>                          0xffffffffac693943  __x64_sys_epoll_wait+0x73
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>           1      7.33 us      7.33 us      7.33 us        mutex   =
+do_epoll_ctl+0x6c1
+>                          0xffffffffac692e01  do_epoll_ctl+0x6c1
+>                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>           1      6.64 us      6.64 us      6.64 us        mutex   =
+do_epoll_ctl+0x3d4
+>                          0xffffffffac692b14  do_epoll_ctl+0x3d4
+>                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>=20
+>  =3D=3D=3D owner stack trace =3D=3D=3D
+>=20
+>           3     31.24 us     15.27 us     10.41 us        mutex   =
+pipe_read+0x348
+>                          0xffffffffac631bd8  pipe_read+0x348
+>                          0xffffffffac623862  vfs_read+0x332
+>                          0xffffffffac62434b  ksys_read+0xbb
+>                          0xfffffffface604b2  do_syscall_64+0x82
+>                          0xffffffffad00012f  =
+entry_SYSCALL_64_after_hwframe+0x76
+>  ...
+>=20
+> v8:
+>  Fix compilation error found by Athira Rajeev and Namhyung Kim.
 
-These two are discoverable so will still appear in 
-/sys/bus/event_source/devices/armv8_pmuv3_0/events/ if the hardware says 
-they exist. It might be better to change the json strings of these two 
-to warn that they don't work if that's the case, otherwise Perf will 
-still list them and you'll be worse off.
+Tested with v8 and compiles fine, thanks for addressing the issue.
 
-> 0x0396 L2D_CACHE_REFILL_L3D_MISS
-> 0x039A L2D_CACHE_REFILL_L3D_MISS_PRF
-> 0x039B L2D_CACHE_REFILL_L3D_MISS_HWPRF
-> 0x039C L2D_CACHE_REFILL_L3D_HIT
-> 0x03A0 L2D_CACHE_REFILL_L3D_HIT_PRF
-> 0x03A1 L2D_CACHE_REFILL_L3D_HIT_HWPRF
-> 
-> Specifically, these events are always counted as misses,
-> regardless of whether the L3 prefetch is a hit or a miss.
-> So I remove these events in l3_cache.json, ll_cache.json
-> 
-> Signed-off-by: Yoshihiro Furudera <fj5100bi@fujitsu.com>
-> ---
->   .../arch/arm64/fujitsu/monaka/l3_cache.json   | 34 -------------------
->   .../arch/arm64/fujitsu/monaka/ll_cache.json   |  4 ---
->   2 files changed, 38 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-> index 3f3e0d22ac68..917b9b5bf8bb 100644
-> --- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-> +++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-> @@ -37,11 +37,6 @@
->           "EventName": "L2D_CACHE_REFILL_L3D_CACHE_HWPRF",
->           "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_CACHE caused by hardware prefetch access."
->       },
-> -    {
-> -        "EventCode": "0x0396",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_MISS",
-> -        "BriefDescription": "This event counts operations that cause a miss of the L3 cache."
-> -    },
->       {
->           "EventCode": "0x0397",
->           "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM",
-> @@ -57,21 +52,6 @@
->           "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM_WR",
->           "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by demand write access."
->       },
-> -    {
-> -        "EventCode": "0x039A",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_MISS_PRF",
-> -        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by prefetch access."
-> -    },
-> -    {
-> -        "EventCode": "0x039B",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_MISS_HWPRF",
-> -        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by hardware prefetch access."
-> -    },
-> -    {
-> -        "EventCode": "0x039C",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_HIT",
-> -        "BriefDescription": "This event counts operations that cause a hit of the L3 cache."
-> -    },
->       {
->           "EventCode": "0x039D",
->           "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM",
-> @@ -87,16 +67,6 @@
->           "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM_WR",
->           "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by demand write access."
->       },
-> -    {
-> -        "EventCode": "0x03A0",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_HIT_PRF",
-> -        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by prefetch access."
-> -    },
-> -    {
-> -        "EventCode": "0x03A1",
-> -        "EventName": "L2D_CACHE_REFILL_L3D_HIT_HWPRF",
-> -        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by hardware prefetch access."
-> -    },
->       {
->           "EventCode": "0x03A2",
->           "EventName": "L2D_CACHE_REFILL_L3D_MISS_PFTGT_HIT",
-> @@ -151,9 +121,5 @@
->           "EventCode": "0x03AC",
->           "EventName": "L2D_CACHE_REFILL_L3D_MISS_FR_L3",
->           "BriefDescription": "This event counts the number of L3 cache misses where the requests access L3 cache in the different socket from the requests."
-> -    },
-> -    {
-> -        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
-> -        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and  a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
->       }
->   ]
-> diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-> index a441b84729ab..c2325855eda3 100644
-> --- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-> +++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-> @@ -2,9 +2,5 @@
->       {
->           "ArchStdEvent": "LL_CACHE_RD",
->           "BriefDescription": "This event counts access counted by L3D_CACHE that is a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_CACHE events."
-> -    },
-> -    {
-> -        "ArchStdEvent": "LL_CACHE_MISS_RD",
-> -        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
->       }
->   ]
+Tested-by: Athira Rajeev <atrajeev@linux.ibm.com>
+
+>=20
+> v7: lore.kernel.org/20250224184742.4144931-1-ctshao@google.com
+>  Remove duplicate contention records.
+>=20
+> v6: lore.kernel.org/20250219214400.3317548-1-ctshao@google.com
+>  Free allocated memory in error patch.
+>  Add description in man page.
+>=20
+> v5: lore.kernel.org/20250212222859.2086080-1-ctshao@google.com
+>  Move duplicated code into function.
+>  Remove code to retrieve undesired callstack at the end of =
+`contention_end()`.
+>  Other minor fix based on Namhyung's review.
+>=20
+> v4: lore.kernel.org/20250130052510.860318-1-ctshao@google.com
+>  Use `__sync_fetch_and_add()` to generate owner stackid automatically.
+>  Use `__sync_fetch_and_add(..., -1)` to workaround compiler error from
+>    `__sync_fetch_and_sub()`
+>  Remove unnecessary include headers.
+>  Dedicate on C-style comment.
+>  Other minor fix based on Namhyung's review.
+>=20
+> v3: lore.kernel.org/20250129001905.619859-1-ctshao@google.com
+>  Rename/shorten multiple variables.
+>  Implement owner stackid.
+>  Add description for lock function return code in `contention_end()`.
+>  Other minor fix based on Namhyung's review.
+>=20
+> v2: lore.kernel.org/20250113052220.2105645-1-ctshao@google.com
+>  Fix logic deficit in v1 patch 2/4.
+>=20
+> v1: lore.kernel.org/20250110051346.1507178-1-ctshao@google.com
+>=20
+> Chun-Tse Shao (4):
+>  perf lock: Add bpf maps for owner stack tracing
+>  perf lock: Retrieve owner callstack in bpf program
+>  perf lock: Make rb_tree helper functions generic
+>  perf lock: Report owner stack in usermode
+>=20
+> tools/perf/Documentation/perf-lock.txt        |   5 +-
+> tools/perf/builtin-lock.c                     |  56 +++-
+> tools/perf/util/bpf_lock_contention.c         |  85 +++++-
+> .../perf/util/bpf_skel/lock_contention.bpf.c  | 245 +++++++++++++++++-
+> tools/perf/util/bpf_skel/lock_data.h          |   7 +
+> tools/perf/util/lock-contention.h             |   7 +
+> 6 files changed, 372 insertions(+), 33 deletions(-)
+>=20
+> --
+> 2.48.1.658.g4767266eb4-goog
+>=20
+>=20
 
