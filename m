@@ -1,182 +1,86 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC6120CCE2;
-	Thu, 27 Feb 2025 05:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B6A1E5210;
+	Thu, 27 Feb 2025 05:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740634985; cv=none; b=MRRCdfB2UfdNrS2n0d5sGOXesK3Qrm97EQHP15KjXNfqtSXnxrWSAfkw1SkDaQ/pN9lcQto5ITqx/rSMByg+B7Xh0Xk5N2MrEvuNb+SwjH1oWS9lBkghIS8RCcPSUwKrNf4vbpaE1SDBgfCnWzBxbV1X2tUNpcy/z4PkaYohP0w=
+	t=1740635001; cv=none; b=N4Vw70QRy7Qy41HxyXZCLMpf7dPaiwmRX3c1cfwf7HX7hqBeT4ybQlO8omvBYJa7oRWHQwdEv0zHK1sHggvyAUXGcWHT4+aVaS201LcZ1d0snTgcxCGRMXUcQ6TjZBc/c1OP1a/5Hx1a/2BzFoxLNo6R4DA2Y4ByUpTyeunQhzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740634985; c=relaxed/simple;
-	bh=7ioaoaFEqmOjduVcLT1zN2cDU+hoCGDa+V7RfZiay3o=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=A4ozzFj2VcGrLvRvKNgSU+XwkgKzYPmtBe7fxMvdANrBGTvxrdE25T3roL1fF9gR1eHrSAACBf3qX2HO9ohOrybHuhUNn7HAqIn7gYZT2YTRjdJCzYd9697fSXL6tIYT4chx7mpJRZ0S2QmGt+kyB4NGutbKDzgQwyH2Ppyq32g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GsbisALS; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1740635001; c=relaxed/simple;
+	bh=OXEwbgBYKE8S/zM1xUw4mGVB5Z/EPkhlOj/ZKYAL2hc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V8O/YPC4jktkLjCOG6Q30ON3fA323d+jN1Qscqnx3z2t2dNVw0Cu8BWw6lCLt++Xj+B+e2GSkX1LfkUTu17JtDXyOvq4he60opunurWdLmEMA6jpgUfER9ELxKDKrDm5Y4roHO/H3IJ8xlbZPrNHfgGWpI+dNQl4XHyK56bP0P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixhpor0t; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GsbisALS"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1740634984; x=1772170984;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7ioaoaFEqmOjduVcLT1zN2cDU+hoCGDa+V7RfZiay3o=;
-  b=GsbisALSQdQpyIZmo/OaeFB/e/cu42FLd6J3/flcAsok5HuNBbKByizN
-   nZL0QZu2ms6A62jp0T6pd/5wl20IrsQ71e2vGaYfYzmTjo3pwxOyOE8o+
-   nqDsxlYOwHU5Vdnn4sTCMnigqlUXBARebvApSccWgs5JuUfuxJ3vSzZEt
-   u55PWiSLTvML7mwG1UBNzlF1s43DIk6R5BMxymFsbioRnK8RRm9kAe2yw
-   cVG+nWY4Rx/ar3Ii4zEisWVFoKSvl9Pdw8LzBQ44Orw+Ra10tvHZVa5Yg
-   dzBDCrGjTj233Nin8i4CPhiGtxCGg3kQ0ueAseDqHVH5AQ9troL9jTi+o
-   w==;
-X-CSE-ConnectionGUID: Hs/UU8qKQMGiharzNw7V9A==
-X-CSE-MsgGUID: 1RkmxL6JTb+3CsLpEv6lhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="191325972"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732546800"; 
-   d="scan'208";a="191325972"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 14:41:52 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id F2D20D5019;
-	Thu, 27 Feb 2025 14:41:49 +0900 (JST)
-Received: from yto-om3.fujitsu.com (yto-om3.o.css.fujitsu.com [10.128.89.164])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id C51F3D0925;
-	Thu, 27 Feb 2025 14:41:49 +0900 (JST)
-Received: from sm-x86-mem01.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
-	by yto-om3.fujitsu.com (Postfix) with ESMTP id 04DE54005847B;
-	Thu, 27 Feb 2025 14:41:48 +0900 (JST)
-From: Yoshihiro Furudera <fj5100bi@fujitsu.com>
-To: John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Akio Kakuno <fj3333bs@aa.jp.fujitsu.com>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>
-Subject: [PATCH] Remove some PMU events for FUJITSU-MONAKA
-Date: Thu, 27 Feb 2025 05:40:45 +0000
-Message-Id: <20250227054045.1340090-1-fj5100bi@fujitsu.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixhpor0t"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fd3b31c860so2308037b3.0;
+        Wed, 26 Feb 2025 21:43:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740634999; x=1741239799; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OXEwbgBYKE8S/zM1xUw4mGVB5Z/EPkhlOj/ZKYAL2hc=;
+        b=ixhpor0tLWPaI8rL+LXoVdrsuh699J6YbiY2jqMj3uLbzwjmDNAc+cqvRemCpCtWgO
+         9PJee09oum5G96Vq/gWsOYHOzlViivoem6D+nlr1cFaHQ6YUVNOgTaVNFd5SjZ/r1OBw
+         LqNnUiAMpvA/bMAK8h/XMFPcgop1L1H3up1I19q3lavKrERqUBGMESm0ut+H2ZByMMiu
+         w+UZi7rYEJ2/Zns4/ieclPjT3vIPTC53/FMBrFk+RNkHY8kuBbCZZbQOSVHq676NnOdx
+         s2J5C1wfxre7H85WBLrw4Q9JcftJIXSLS1S9069IjUbXoVCMAsr656DhI1CW8ZTvVhhA
+         kcOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740634999; x=1741239799;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OXEwbgBYKE8S/zM1xUw4mGVB5Z/EPkhlOj/ZKYAL2hc=;
+        b=WO1rNRw/xzup/ukrOFcozWF8KqRDoBZK9dZnSDinsfbzMdY1rmwPxARQmyz753OYxE
+         zEI/dWGbgJDruypbVR15JwQJvAO9IWZLE/8FzX3ciU9Q80XrrxRH3WYBCD6uK+iKbVJZ
+         GxUmXjg8pG0aKwzJyK7YJFm9sqBTXeRkb9kCCxdIGI2M5QUgDG3pIhjdwyqFWQzZisi1
+         aYHi+wMqkT03AbRQVgulAzFdAJLRNeKvlPG5PLrfpfgfSSBUxAAxITRP//aVZkrxXMck
+         DP2pf/7bC+oOoRgdh/xI/k2QnzNYk0/VMYqGUxSQ0QnAC9iPZZBDdCZlnLqXZqrXBocD
+         ihIg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9W/0ThR37uskKyQeNnyNgGuWy9NR+xBl+ijAUAnJo3UKAiNIJD2B6OEoOUx3zPhPW1jHvSIrq0MgmUeLnA0uEFw==@vger.kernel.org, AJvYcCXU0w52Mh17fJBTEo3QW45sGYEJYlASf1uuXhGTnhhq0YND6qim15xvgGpbGx+K/jQmsdVeJX2oL0W0/Bs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7afveW9XHBfRDDXRLD7r6zyqx8IIMwUQ6X9thohYcyDBV0TVL
+	0PyWeSvE1jp26LExYEiP+LijpzFu9LiRkQq+Id8kBeCo8UjL4MFTRAygmZEZRaOAX37l+yL7XVK
+	wAgoon1DF/FYcssBp746yElxxzCk=
+X-Gm-Gg: ASbGnctGYuJhlyS33Zz5uUGVNIc3sZvWsMIrGLUwUwwjTNauCWwonkFZHtvxDEhjSUT
+	zvt1jyNEUbli3+JNKJ3o8B2S2qIcfVP+yr1QrL31c4t5nrmZsdkCYu8lO53JWkaUv3Jgc0g9Xab
+	tFCb5Dtw==
+X-Google-Smtp-Source: AGHT+IHXCeW1GtEf/frs5lHIsyl8/RHBkGVPpFWBwqbptZeyTmTqAEzIv+ZjAXXJrzl4alptUnmoKGer2Yi9Y1t9B4c=
+X-Received: by 2002:a05:690c:46c7:b0:6fb:1c5a:80ea with SMTP id
+ 00721157ae682-6fbcc85fbd6mr238862987b3.32.1740634999130; Wed, 26 Feb 2025
+ 21:43:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250109075108.7651-1-irogers@google.com> <20250109075108.7651-4-irogers@google.com>
+In-Reply-To: <20250109075108.7651-4-irogers@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 26 Feb 2025 21:43:08 -0800
+X-Gm-Features: AQ5f1Jos-61el6BK6YgMAHGcR2psDC3RY_b_HuUBAEvJ26781ZFraSGFq86yoW4
+Message-ID: <CAH0uvogRE7hjGqKbAtUEciDh-dn4HRuCBu+AfYZ9m-tRdNvw9w@mail.gmail.com>
+Subject: Re: [PATCH v1 03/11] perf evsel: tp_format accessing improvements
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The following events are not counted properly:
+Hello,
 
-0x0037 LL_CACHE_MISS_RD
-0x400B L3D_CACHE_LMISS_RD
-0x0396 L2D_CACHE_REFILL_L3D_MISS
-0x039A L2D_CACHE_REFILL_L3D_MISS_PRF
-0x039B L2D_CACHE_REFILL_L3D_MISS_HWPRF
-0x039C L2D_CACHE_REFILL_L3D_HIT
-0x03A0 L2D_CACHE_REFILL_L3D_HIT_PRF
-0x03A1 L2D_CACHE_REFILL_L3D_HIT_HWPRF
+Thanks for fixing another bug! :) The freeing in evsel__exit() is
+present as well.
 
-Specifically, these events are always counted as misses,
-regardless of whether the L3 prefetch is a hit or a miss.
-So I remove these events in l3_cache.json, ll_cache.json
-
-Signed-off-by: Yoshihiro Furudera <fj5100bi@fujitsu.com>
----
- .../arch/arm64/fujitsu/monaka/l3_cache.json   | 34 -------------------
- .../arch/arm64/fujitsu/monaka/ll_cache.json   |  4 ---
- 2 files changed, 38 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-index 3f3e0d22ac68..917b9b5bf8bb 100644
---- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-+++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/l3_cache.json
-@@ -37,11 +37,6 @@
-         "EventName": "L2D_CACHE_REFILL_L3D_CACHE_HWPRF",
-         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_CACHE caused by hardware prefetch access."
-     },
--    {
--        "EventCode": "0x0396",
--        "EventName": "L2D_CACHE_REFILL_L3D_MISS",
--        "BriefDescription": "This event counts operations that cause a miss of the L3 cache."
--    },
-     {
-         "EventCode": "0x0397",
-         "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM",
-@@ -57,21 +52,6 @@
-         "EventName": "L2D_CACHE_REFILL_L3D_MISS_DM_WR",
-         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by demand write access."
-     },
--    {
--        "EventCode": "0x039A",
--        "EventName": "L2D_CACHE_REFILL_L3D_MISS_PRF",
--        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by prefetch access."
--    },
--    {
--        "EventCode": "0x039B",
--        "EventName": "L2D_CACHE_REFILL_L3D_MISS_HWPRF",
--        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_MISS caused by hardware prefetch access."
--    },
--    {
--        "EventCode": "0x039C",
--        "EventName": "L2D_CACHE_REFILL_L3D_HIT",
--        "BriefDescription": "This event counts operations that cause a hit of the L3 cache."
--    },
-     {
-         "EventCode": "0x039D",
-         "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM",
-@@ -87,16 +67,6 @@
-         "EventName": "L2D_CACHE_REFILL_L3D_HIT_DM_WR",
-         "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by demand write access."
-     },
--    {
--        "EventCode": "0x03A0",
--        "EventName": "L2D_CACHE_REFILL_L3D_HIT_PRF",
--        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by prefetch access."
--    },
--    {
--        "EventCode": "0x03A1",
--        "EventName": "L2D_CACHE_REFILL_L3D_HIT_HWPRF",
--        "BriefDescription": "This event counts L2D_CACHE_REFILL_L3D_HIT caused by hardware prefetch access."
--    },
-     {
-         "EventCode": "0x03A2",
-         "EventName": "L2D_CACHE_REFILL_L3D_MISS_PFTGT_HIT",
-@@ -151,9 +121,5 @@
-         "EventCode": "0x03AC",
-         "EventName": "L2D_CACHE_REFILL_L3D_MISS_FR_L3",
-         "BriefDescription": "This event counts the number of L3 cache misses where the requests access L3 cache in the different socket from the requests."
--    },
--    {
--        "ArchStdEvent": "L3D_CACHE_LMISS_RD",
--        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and  a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-index a441b84729ab..c2325855eda3 100644
---- a/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-+++ b/tools/perf/pmu-events/arch/arm64/fujitsu/monaka/ll_cache.json
-@@ -2,9 +2,5 @@
-     {
-         "ArchStdEvent": "LL_CACHE_RD",
-         "BriefDescription": "This event counts access counted by L3D_CACHE that is a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_CACHE events."
--    },
--    {
--        "ArchStdEvent": "LL_CACHE_MISS_RD",
--        "BriefDescription": "This event counts access counted by L3D_CACHE that is not completed by the L3D cache, and a Memory-read operation, as defined by the L2D_CACHE_REFILL_L3D_MISS events."
-     }
- ]
--- 
-2.43.0
-
+Thanks,
+Howard
