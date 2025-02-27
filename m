@@ -1,102 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C3C1E521C;
-	Thu, 27 Feb 2025 18:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8624726B2D5;
+	Thu, 27 Feb 2025 18:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740680948; cv=none; b=h8Hr9gKF+yAvliYJdqbu7embnoXHfzZLxDRThhA/VL9EaPX+ilHfV9Uu+ou57o0UAMP3aAsGPdW3kTeMSE42cCmEOz/4/cB19qdeMZaRbuf6F3ZnxT1zaOh+O4V4p72QIL/vsluvkd3IEYtuOlPD/1noQ8015TJig0Mq5Hjdw2M=
+	t=1740682239; cv=none; b=r6mHQnqpBZGAFbBWOa6OGZ/h3WSeZH9c6aAS51IGYdIwSmFF68tGCyLUoWlI/2lRco8F7UQyGN5EIBwghZGjA+Ipq0oRtWLC95wzP/+qQnPhGhzV0RX7ZKD53DkYNHM0Ie6e+bgltPINuMv75GXZGN5iNLPjyIjMA1BXLmFOTwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740680948; c=relaxed/simple;
-	bh=sVmoa+4UUba17FV2KXIDm1zoaJ2r3ry/WGxnUkYFfPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=myvqSFpVgxasf9UByjsaNBffj4a2aHgSAncACq/FxH72WahWAE8GqfNpwA4b5/hBTghK11G4Of/PkuFc646mNHRHK2nXDKc/uwTq5I6H29FOFp6jPfDXHOkONjromEoALUMfwWzHhpyW54nAj8+rFldqJebPbWiE7AvIKixA0SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkkOkGnE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740682239; c=relaxed/simple;
+	bh=oTVSH8ATq89gEN+7dq3E+hPTjcXNSgoWoUNOl9on9bw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G7I+Z8vTS+1tdp6fjlWl2Qi1x3Q1jKww394agBVIfqoO18ydTr661HUg0mHp2qoF5vrN5EICeB5twQGgM31DsQNvlWcPYse4uTutu3+Psyx3+y7gjLbzdl8LrDe1LgIL9HsQsLKvVzh5f53CXf7oalkL5tj8sYIpbaHGmdcx7sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovWiIEZ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkkOkGnE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB7FC4CEDD;
-	Thu, 27 Feb 2025 18:29:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovWiIEZ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D7E8C4CEE7;
+	Thu, 27 Feb 2025 18:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740680947;
-	bh=sVmoa+4UUba17FV2KXIDm1zoaJ2r3ry/WGxnUkYFfPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VkkOkGnEx56q945Szz4n+ofUXjHKm9fq0zgW1UZgiXq3ZkyFT+BNip1rviCNKJnf8
-	 RQuKIKgtdjUJ9lITpNTiK9pRPwQvF9PlkKqAEQbEtbOo98XOKgC/XaLjhxLy4Yja4N
-	 slBWxxW4f9nvMo2A0gYNIwn/ujKh5yNthy3RrzYWmm2sd6jNR8E3tEZQChALH2zcYZ
-	 hVeVwzGivPw6OrdjcOa+GGk2VKBNZWMt5LelAjL9krQ6rJ9/ljN+7fwLLW+RxkeRZl
-	 GEqW+QKYLbOYOAOtOXQl+Jjw8tee33S4MEWvvtXSmvKGPePPF0TGDW0td5abjSiq8Z
-	 c2Ynw44kbx1yQ==
-Date: Thu, 27 Feb 2025 19:28:49 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v5 0/9] Utilize cpu-type for CPU matching
-Message-ID: <Z8Cu2VJhDhum9mXd@gmail.com>
-References: <20241211-add-cpu-type-v5-0-2ae010f50370@linux.intel.com>
- <Z8BdVzJKbxheqvme@gmail.com>
- <20250227175129.v23sm56tkxcnlqvz@desk>
+	s=k20201202; t=1740682239;
+	bh=oTVSH8ATq89gEN+7dq3E+hPTjcXNSgoWoUNOl9on9bw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ovWiIEZ7pLy2cYEmwBy9IfLXnjS6VdikWxELyTrI2QDKLTCdc645ImyP1GuLNhavP
+	 765lMHOEFbwWxUChgBN0HB4KOYFfR/xHdJnWc+9rUL5FjaFaik0cZ4IxnUyv0MBiAg
+	 yQDBkUkO3WxcDDICEEhqbsBmypRrfd6Vc6stZ8EmpnZBxoTu6FUcrfiAaAwFP/GQpB
+	 +2kWeNuPZL1BpMsGVeRTVAi7hlUSBN9Nfpl9MfZYAfJU0o2frDafj8xkW6cQFKuU+s
+	 2tsCX55wezvcRolMndfUhqqaERxbOxdnX0Fo4vO6ZudDOwJowP7fVW+fp9BNWq7Vna
+	 38vOsLr4rtCtg==
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22356471820so19261275ad.0;
+        Thu, 27 Feb 2025 10:50:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU4duq3gHsx8k5Gq0ENiF0+j/7es9M4xyrGgTqWemI37zTg2h1FmbN09Ffc7fqb0lj5CZfHWGJw/wjyTGU=@vger.kernel.org, AJvYcCUvN2VXvnMTdR4dpfRpVj7yM5vWW6R3n+RGemZh2LMGMU+XizRjRwlMZtMwLU9d493POm1oGLdLD7rK+x0h2CcBgg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAIK0N86Y6+p0OFkImBQcLHDdmFf/03yV+qkmaV/v0qUUWxq1/
+	toEATA6wXmlvE2X6iRrLanl4IybgbgAuFKydYkycRBxuMFyKiwmewuaGqt66NB7rztmfsbe2eFq
+	yUieEL2HD0rLT68M1i4aCtHTRJi0=
+X-Google-Smtp-Source: AGHT+IEcT8glwiOUUxgaZKf43NgGrwojDEdFCyXWOtwjeMycyiAX4X0ZADJ2fsdkYgvLrdiPV4tdOMFvF17XUmJsHdo=
+X-Received: by 2002:a17:903:2302:b0:221:2f4:5446 with SMTP id
+ d9443c01a7336-22368fba4aemr4634515ad.25.1740682238646; Thu, 27 Feb 2025
+ 10:50:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227175129.v23sm56tkxcnlqvz@desk>
+References: <20250227051718.1176930-1-namhyung@kernel.org>
+In-Reply-To: <20250227051718.1176930-1-namhyung@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 27 Feb 2025 10:50:26 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+X-Gm-Features: AQ5f1JqKpEAia7ny_bAWJIbQCaS3pUgO-hy2zjDAKa68TfRDgM_e95e4q7iAJpY
+Message-ID: <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tools: Skip BPF sideband event for userspace profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 26, 2025 at 9:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> The BPF sideband information is tracked using a separate thread and
+> evlist.  But it's only useful for profiling kernel and we can skip it
+> when users profile their application only in userspace.
+>
+> It seems it already fails to open the sideband event in that case.
+> Let's remove the noise in the verbose output anyway.
+>
+> Cc: Song Liu <song@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-* Pawan Gupta <pawan.kumar.gupta@linux.intel.com> wrote:
+This turns out to be more complicated than I thought. I actually
+like v1 better.
 
-> On Thu, Feb 27, 2025 at 01:40:55PM +0100, Ingo Molnar wrote:
-> > 
-> > * Pawan Gupta <pawan.kumar.gupta@linux.intel.com> wrote:
-> > 
-> > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > ---
-> > > Pawan Gupta (9):
-> > >       x86/cpu: Prepend 0x to the hex values in cpu_debug_show()
-> > >       cpufreq: intel_pstate: Avoid SMP calls to get cpu-type
-> > >       perf/x86/intel: Use cache cpu-type for hybrid PMU selection
-> > >       x86/cpu: Remove get_this_hybrid_cpu_*()
-> > >       x86/cpu: Name CPU matching macro more generically (and shorten)
-> > >       x86/cpu: Add cpu_type to struct x86_cpu_id
-> > >       x86/cpu: Update x86_match_cpu() to also use cpu-type
-> > >       x86/bugs: Declutter vulnerable CPU list
-> > >       x86/rfds: Exclude P-only parts from the RFDS affected list
-> > 
-> > So it looks like this series, despite being complete, fell between the 
-> > cracks during the usual end-of-year distractions.
-> > 
-> > To get the ball rolling I have applied the first 4 patches to 
-> > tip:x86/cpu - the cpufreq one needed a small conflict resolution, and I 
-> > have adjusted the debug output of the first one to not break 
-> > pre-existing vertical tabulation.
-> 
-> Thanks for picking this up.
-> 
-> > Mind double checking the result in tip:x86/cpu and submit the remaining 
-> > 5 patches on top of it?
-> 
-> I had quick look, fixes and merge resolution LGTM. I will submit the
-> remaining 5 patches soonish.
-
-Thanks!
-
-	Ingo
+Thanks,
+Song
