@@ -1,253 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F18186E2D;
-	Thu, 27 Feb 2025 05:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801A81F585C
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 05:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740633440; cv=none; b=cYCK+B0oM+Q2Wq+wIX5z02hT178AlLqMW79sbJLkLoe60RYALJuT2zF4yyy/3QMKs7LhIWIQcKL3NmJyAlUDdLa46kE8OScVudlzr0JVEW+Mxi/5e+TGR7VGfdoB6NghUKS7NldxUHnR9HGUA37MHFCSjUMqZpCKwMhJLRTJ9VQ=
+	t=1740633869; cv=none; b=BtWz/OjRYurwoQ4h6X1/5Rm4QpQWC2M3ri24nFb3dOnT39k/2/RyeQlMVmIKB4O/J/6GlU0apJZp2PCLpKpNCX1rCndzMFCyiQnvSxHOvog7d9DI/NbnlTu5jq+d6HyIn6+4jz4lve06QTSNOOhaiFcVWAbZvtrfGkIylDqveQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740633440; c=relaxed/simple;
-	bh=oEIKXLa+lC5gpgRN/t7bIplihoQJx5CcIDuHuxDQYsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qsV5gbH6txjg6FQgZWPzVihcUZVLBmQmEDXFUvlR5x+3Y7MNeHWK2wXepcihJjvfZshnvk2oG+Z7XfxVC7DxONf6ZC8XHojaqBBlE97Q4+y1x9CIeKO8W2Dk3ScWJ1y4ayBv3WPSpzDdWKZVfquIyudTWAARbU/fyM4JhQ9ZhVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxEu948t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740633869; c=relaxed/simple;
+	bh=47ds+4hGrY28VgZ3hza+Gb+h0Ld/NmG/YiG2BZEJFxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AwKPOFn6wq5Zw3HY9dKQdSgtNI6H/L4yZ0XNPr9ZZ97l08Eu/TJhdpuOx6H1xhcI6z5H1wZIPGZ8KoDCZRhPv/iLLDYlsE1MsbMBc714GcAVGe6+4tl1NlS5gab/1QkrqGy3Ww67jFI56YOcELRkyu2WPqoVL4neCoroRIODxPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IItbCHa0; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxEu948t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD80C4CEE5;
-	Thu, 27 Feb 2025 05:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740633439;
-	bh=oEIKXLa+lC5gpgRN/t7bIplihoQJx5CcIDuHuxDQYsc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uxEu948txvDodPuxC23TYrHwvLHoqpA283ysFZi5RfyXIyK5zisx5kbvnqzAzMLAm
-	 z2ckgEQaCH8dbfJdEknns1U0xZoDWaXwByOWvBD/Kkgl1rJ5m+ecEdI6sTV5o+Mgev
-	 es8jIMCEYxFuWy3uDiwj1laPDd0yCamG2abAIPthB2JdgG4/skW/8xEIDzUUnZ0D3Q
-	 0vzI1320k0xX56RZGqbeomkfxOiVmwKQgDxDTXuCYZJF+SblxlCH+SRwZtKUGfTzn7
-	 WtUXwVuSl0x1U0MegrRinJ7jrMPUdZpkRxKALkaqCFhNuywnjNGdMlJvjkpipitsPA
-	 nHryE4OGw1R6Q==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Song Liu <song@kernel.org>
-Subject: [PATCH v2] perf tools: Skip BPF sideband event for userspace profiling
-Date: Wed, 26 Feb 2025 21:17:18 -0800
-Message-ID: <20250227051718.1176930-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IItbCHa0"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22342c56242so112615ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Feb 2025 21:24:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740633867; x=1741238667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bnEz81f237FPFDdRQFlVRCVwc99gvba5x2QOCkc+RR0=;
+        b=IItbCHa0uyx5fe4QzAMSNnHwSUfyk0nHp5n7jzYH6dClTko0A6V99uKRKYSs1dFR1t
+         kEVBj9nNc8RJp4tMozfscA7F1mKNRs9acnvu1yZPR8GNwqJX0vF97m4EdjP8XFqOCljp
+         HLORO3UYbBwQRpQIm57gtSISevHLrn79EF2TmhF7gmoUpwlaWpMQxT0++VzBG0qIpLoZ
+         UxuFIqqM+bJe0uhAnfZCk4K6UUmDnZhD4nazM7rPKv/s14GvVblAYLnSs/9YwF47u+Qz
+         D1lnsuUob66wr+BiY/ftAoDEokEE8g4W+rISMyKDL3jHdp7mlABQ+X+HIyT456XUxSOK
+         WB3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740633867; x=1741238667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bnEz81f237FPFDdRQFlVRCVwc99gvba5x2QOCkc+RR0=;
+        b=QKclLl0MSuEdJzE9oNLVso2pRiMKzi2oqDxM8JxZ+J1umq4fPZVGyK0NhMeOC8a5ew
+         5/e+pEu5WLR/e+hb4ZDqHQBmDmEpc9HKFbbhUVYDDcWu1T8+vJcC2wEWNu+hnIpj/25m
+         NaJS2HqU4L1pxyhQZBLn3Dj4glZToHkgVSjsq/5XdAAQTSttlhv808r+U5T/HvTlas1w
+         NiwGyK/GJQXfGubM8LNhDYUgXOZ2SAoJR1zZFvM90tDG6KXDtXUQAn5TiW1KW7AEfe8o
+         WLqIcgF/1j81UtSrfBpi8a4U9Ij2QgFtnqDdggsZ27tyCGUIyVm72X29Z4auFYVjxiq3
+         79Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCWHzeAgnlwY9ehpOBMveDrvRoNc1ZbIaTWakO53YQ5Npq0paGR8kug/lrkufrxZZ7DLvXK1qcbHkn5velZ9baL0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqGc+eWsXIafs3vpa/BU+nN8659oku6SlZkW6IKwM4wcGK6lfT
+	xpOJY5HIcBO5bDspHTaF815TIT9dHzF8PzCnOdIZjICKZjtROzKCMYereFZLnVGVn7qVNqA2V7l
+	Q1BN1HWrCbh9fyS1553YiZlVF+47odHUzrSl4
+X-Gm-Gg: ASbGncuv9EZGj7hgIOLWyfAnhxpu+viMpU45PaMMgXpfkFqFrr+FZDK5zPROma3TlFN
+	tIe5awDq4yAGzxtqorEUCkfrphxGnzA7R59I1p5KA9YseqOWmtGxwra3sywDhKONzOJPUMR66XI
+	MAoxQfkiw0
+X-Google-Smtp-Source: AGHT+IESGHDEUIPVrjNTh39ynN60aQSgX7N+PvnUqhcTHIKp7IZB5bqsgXo3vv32FxrjQl6qmhQtj7bSXHofxTNEMow=
+X-Received: by 2002:a17:902:f7cc:b0:200:97b5:dc2b with SMTP id
+ d9443c01a7336-223517240a4mr1111615ad.15.1740633866391; Wed, 26 Feb 2025
+ 21:24:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250219185657.280286-1-irogers@google.com> <Z702_CQ7nMx9fZQn@google.com>
+ <CAP-5=fWYiQP84BMjm69xud4vYaRrutRG-RASKbxQaGSisRm7jA@mail.gmail.com> <Z7-rN8iGUpPe6b-1@google.com>
+In-Reply-To: <Z7-rN8iGUpPe6b-1@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 26 Feb 2025 21:24:15 -0800
+X-Gm-Features: AQ5f1JpYoEre35TWzYAHXMZBSPsriPeINrD-jPxutBzlTEFdOvLRV6EZPh8_ULw
+Message-ID: <CAP-5=fVAuCF4i8HQEGYx_ApcSuBg82pXCsgk98oU9-2Gm=NOcw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] perf: Support multiple system call tables in the build
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The BPF sideband information is tracked using a separate thread and
-evlist.  But it's only useful for profiling kernel and we can skip it
-when users profile their application only in userspace.
+On Wed, Feb 26, 2025 at 4:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Mon, Feb 24, 2025 at 08:22:50PM -0800, Ian Rogers wrote:
+> > On Mon, Feb 24, 2025 at 7:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Feb 19, 2025 at 10:56:49AM -0800, Ian Rogers wrote:
+> > > > This work builds on the clean up of system call tables and removal =
+of
+> > > > libaudit by Charlie Jenkins <charlie@rivosinc.com>.
+> > > >
+> > > > The system call table in perf trace is used to map system call numb=
+ers
+> > > > to names and vice versa. Prior to these changes, a single table
+> > > > matching the perf binary's build was present. The table would be
+> > > > incorrect if tracing say a 32-bit binary from a 64-bit version of
+> > > > perf, the names and numbers wouldn't match.
+> > > >
+> > > > Change the build so that a single system call file is built and the
+> > > > potentially multiple tables are identifiable from the ELF machine t=
+ype
+> > > > of the process being examined. To determine the ELF machine type, t=
+he
+> > > > executable's header is read from /proc/pid/exe with fallbacks to us=
+ing
+> > > > the perf's binary type when unknown.
+> > >
+> > > Hmm.. then this is limited to live mode and potentially detect wrong
+> > > machine type if it reads an old data, right?
+> > >
+> > > Also IIUC fallback to the perf binary means it cannot use cross-machi=
+ne
+> > > table.  For example, it cannot process data from ARM64 on x86, no?  I=
+t
+> > > seems it should use perf_env.arch.
+> >
+> > The perf env arch is kind of horrid. On x86 it has the value x86 and
+> > then there is an extra 64bit flag, who knows how x32 should be encoded
+> > - but we barely support x32 as-is. I'd rather we added a new feature
+> > for the e_machine/e_flags of the executable and worked with those, but
+> > it is kind of weird with doing system wide mode. I didn't want to drag
+> > that into this patch series anyway as there is already enough here.
+>
+> Right, I don't know how to handle x32 properly.  Maybe we can just
+> ignore it for now.
+>
+> But anyway looking at /proc/PID for recorded data doesn't seem correct.
+> Can you please add a flag to do that only from trace__run() and just use
+> EM_HOST for trace__replay()?
 
-It seems it already fails to open the sideband event in that case.
-Let's remove the noise in the verbose output anyway.
+So I was hoping at some later point the e_machine on the thread could
+be populated from the data file - hence the accessor being on thread
+and not part of the trace code. We could add a global flag to thread
+to disable the reading from /proc but we do similar reading in
+machine.c for /proc/version, /proc/kallsyms, /proc/modules, etc. I
+think the chance a pid is recycled and the process has a different
+e_machine are remote enough that it is similar in nature. Adding the
+flag means we need to go and fix up all uses, we only need to set the
+flag in builtin-trace.c currently, but we've been historically bad at
+setting these globals and bugs creep in. I also don't think
+record/replay is working well and I didn't want the syscalltbl cleanup
+to turn into a perf trace record/replay fixing exercise.
 
-Cc: Song Liu <song@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2) add evlist__setup_sb_evlist()
+Thanks,
+Ian
 
- tools/perf/builtin-record.c       | 24 +++++++++---------------
- tools/perf/builtin-top.c          | 20 ++++----------------
- tools/perf/util/evlist.c          | 14 ++++++++++++++
- tools/perf/util/evlist.h          |  4 ++++
- tools/perf/util/sideband_evlist.c | 31 +++++++++++++++++++++++++++++++
- 5 files changed, 62 insertions(+), 31 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0e45bd64185403ae..ab6bef710a689f7f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2166,23 +2166,14 @@ static int record__setup_sb_evlist(struct record *rec)
- 		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
- 		rec->thread_id = pthread_self();
- 	}
--#ifdef HAVE_LIBBPF_SUPPORT
--	if (!opts->no_bpf_event) {
--		if (rec->sb_evlist == NULL) {
--			rec->sb_evlist = evlist__new();
--
--			if (rec->sb_evlist == NULL) {
--				pr_err("Couldn't create side band evlist.\n.");
--				return -1;
--			}
--		}
- 
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			return -1;
--		}
-+	if (rec->sb_evlist == NULL) {
-+		rec->sb_evlist = evlist__setup_sb_evlist(rec->evlist, opts,
-+							 &rec->session->header.env);
-+		if (IS_ERR(rec->sb_evlist))
-+			return PTR_ERR(rec->sb_evlist);
- 	}
--#endif
-+
- 	if (evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
- 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
- 		opts->no_bpf_event = true;
-@@ -2535,6 +2526,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_free_threads;
- 	}
- 
-+	if (!evlist__needs_bpf_sb_event(rec->evlist))
-+		opts->no_bpf_event = true;
-+
- 	err = record__setup_sb_evlist(rec);
- 	if (err)
- 		goto out_free_threads;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 6440b5c1757d92ce..f727738faa154564 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1833,23 +1833,11 @@ int cmd_top(int argc, const char **argv)
- 		goto out_delete_evlist;
- 	}
- 
--#ifdef HAVE_LIBBPF_SUPPORT
--	if (!top.record_opts.no_bpf_event) {
--		top.sb_evlist = evlist__new();
--
--		if (top.sb_evlist == NULL) {
--			pr_err("Couldn't create side band evlist.\n.");
--			status = -EINVAL;
--			goto out_delete_evlist;
--		}
--
--		if (evlist__add_bpf_sb_event(top.sb_evlist, &perf_env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			status = -EINVAL;
--			goto out_delete_evlist;
--		}
-+	top.sb_evlist = evlist__setup_sb_evlist(top.evlist, &top.record_opts, &perf_env);
-+	if (IS_ERR(top.sb_evlist)) {
-+		status = PTR_ERR(top.sb_evlist);
-+		goto out_delete_evlist;
- 	}
--#endif
- 
- 	if (evlist__start_sb_thread(top.sb_evlist, target)) {
- 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index f0dd174e2debdbe8..43adf6b3d855771a 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2594,3 +2594,17 @@ bool evlist__has_bpf_output(struct evlist *evlist)
- 
- 	return false;
- }
-+
-+bool evlist__needs_bpf_sb_event(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel__is_dummy_event(evsel))
-+			continue;
-+		if (!evsel->core.attr.exclude_kernel)
-+			return true;
-+	}
-+
-+	return false;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index adddb1db1ad2b25d..1bba5c73b1425834 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -19,6 +19,7 @@
- struct pollfd;
- struct thread_map;
- struct perf_cpu_map;
-+struct perf_env;
- struct record_opts;
- struct target;
- 
-@@ -117,6 +118,8 @@ struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide);
- int evlist__add_sb_event(struct evlist *evlist, struct perf_event_attr *attr,
- 			 evsel__sb_cb_t cb, void *data);
- void evlist__set_cb(struct evlist *evlist, evsel__sb_cb_t cb, void *data);
-+struct evlist *evlist__setup_sb_evlist(struct evlist *evlist, struct record_opts *opts,
-+				       struct perf_env *env);
- int evlist__start_sb_thread(struct evlist *evlist, struct target *target);
- void evlist__stop_sb_thread(struct evlist *evlist);
- 
-@@ -435,5 +438,6 @@ void evlist__check_mem_load_aux(struct evlist *evlist);
- void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
- void evlist__uniquify_name(struct evlist *evlist);
- bool evlist__has_bpf_output(struct evlist *evlist);
-+bool evlist__needs_bpf_sb_event(struct evlist *evlist);
- 
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
-index 388846f17bc13fb9..e75a335e11676cdc 100644
---- a/tools/perf/util/sideband_evlist.c
-+++ b/tools/perf/util/sideband_evlist.c
-@@ -1,11 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
-+#include "util/bpf-event.h"
- #include "util/debug.h"
- #include "util/evlist.h"
- #include "util/evsel.h"
- #include "util/mmap.h"
- #include "util/perf_api_probe.h"
-+#include "util/record.h"
- #include <perf/mmap.h>
-+#include <linux/err.h>
- #include <linux/perf_event.h>
- #include <limits.h>
- #include <pthread.h>
-@@ -94,6 +97,34 @@ void evlist__set_cb(struct evlist *evlist, evsel__sb_cb_t cb, void *data)
-       }
- }
- 
-+struct evlist *evlist__setup_sb_evlist(struct evlist *evlist, struct record_opts *opts,
-+				       struct perf_env *env)
-+{
-+	struct evlist *sb_evlist = NULL;
-+
-+	if (!evlist__needs_bpf_sb_event(evlist))
-+		opts->no_bpf_event = true;
-+
-+	if (opts->no_bpf_event)
-+		return NULL;
-+
-+#ifdef HAVE_LIBBPF_SUPPORT
-+	sb_evlist = evlist__new();
-+	if (sb_evlist == NULL) {
-+		pr_err("Couldn't create side band evlist.\n.");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (evlist__add_bpf_sb_event(sb_evlist, env)) {
-+		pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+		evlist__delete(sb_evlist);
-+		return ERR_PTR(-EINVAL);
-+	}
-+#endif
-+
-+	return sb_evlist;
-+}
-+
- int evlist__start_sb_thread(struct evlist *evlist, struct target *target)
- {
- 	struct evsel *counter;
--- 
-2.48.1.658.g4767266eb4-goog
-
+> Later, we may need to add a misc flag or so to PERF_RECORD_FORK (and
+> PERF_RECORD_COMM with MISC_COMM_EXEC) to indicate non-standard ABI for a
+> new thread.  But it's not clear how to make it arch-independent.
+>
+> >
+> > > One more concern is BPF.  The BPF should know about the ABI of the
+> > > current process so that it can augment the syscall arguments correctl=
+y.
+> > > Currently it only checks the syscall number but it can be different o=
+n
+> > > 32-bit and 64-bit.
+> >
+> > That's right. This change is trying to clean up
+> > tools/perf/util/syscalltbl.c and the perf trace usage. I didn't go as
+> > far as making BPF programs pair system call number with e_machine and
+> > e_flags, there is enough here and the behavior after these patches
+> > matches the behavior before - that is to assume the system call ABI
+> > matches that of the perf binary.
+>
+> Right, the next step would be adding a BPF kfunc to identify the current
+> ABI.
+>
+> Thanks,
+> Namhyung
+>
