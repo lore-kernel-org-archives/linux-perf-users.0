@@ -1,216 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C387415B102;
-	Thu, 27 Feb 2025 06:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9613B15B102
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Feb 2025 06:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740638408; cv=none; b=Kei4cwGxG4knbVVALMg974JVz4GQB4jA++r7HRdNL/PYLxmRosFg33PZkvXyL/d/qhdnja+CelBc3SErGTGHKa+VsYoLhcntFJCzpL8y/42Cph45DYcS1uiThE+/L/7H16xL8wguS9DUVDpzUlKP9cLAmXl4TYQJJ4jL9m0NDHo=
+	t=1740638571; cv=none; b=WgDTnDcquZCnpW62UmzwvlF4e4uXb4EpFCGVNw2CkdbngNkwGHlUm7vQghPuLW4yTmlGqcxRYBcvtwIN93bqQV1LLNtcNwf++5qitaDMvmKsKXPzMtkLq6G3FfTkep7GavGdlJiZk1CYLGoWZcbJUcdpDGkW7htOGl54ntasrX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740638408; c=relaxed/simple;
-	bh=bSvauKUoYmQXHHhqbyBZCe3PiphAGdh8GNCKtDECzf4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aHTd09+Isr3DZ6NHpqhDfWVIZe433yD6Wg7mxtPhYkx6uCHuQd5KZOCK0QNevec7afKw8fuo57+kt/hBG7sQZGEG35/+PQg4vQ3Af+mHTwxoBSWVRpAfaFtzwdD33W0Hxtn3F89iOkzmoeO685zpb/PrEvxVkhf191OoGgtAXEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHZ1b3oD; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740638571; c=relaxed/simple;
+	bh=uPmXOgGnBg5r9pV+YpaF0zRSH55GJhORtTVis4s5qVU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=D6051ZxXZx3bzGhJ60lsEMv8tG+zNAgUcPX1c9KEbpFNPniCkqSBREwAobAc1CwBCudJdcgAi9G2B3ZwE3p0SiBx2NvHM58dMisz4DhLpSE2Del/oqNToJ8S05jLT8V3gZpHL1qQXrn5mEv7T0aHUMHZ7xyqLdE+1WdWqHaF56k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Uenec+//; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHZ1b3oD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740638407; x=1772174407;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=bSvauKUoYmQXHHhqbyBZCe3PiphAGdh8GNCKtDECzf4=;
-  b=SHZ1b3oDx+/6UE/VCS1APW8nUusTVlh3O9bYwQwG7qr92vNUaUrzOE5Z
-   etKYqsvhfZquDs3ogou2YAxHKs5i5O0x6aMp0I2Y+oAknuVAN1c6bbv7G
-   InXAtUxCt0gyN1UU+0M4jKQh7RIcBVFiu01XZ76VWjYTz/PnqCAdhM2rk
-   B5y1G0qQOT+SX2ch9TZVdTgZfgyPTPNyUiIQjLjlLgeg7e04ckPo3DUaN
-   yndJ2pungyN0BlQ5ZWhZczJVNYJeicHcYYT52A7qqU3KuZHuU+9gY2exq
-   QSDiM06W6lFdPc2hZgaSWnr/EaLVDYyTbNVfmkGUd7Rz6eJGirPf4ghVN
-   Q==;
-X-CSE-ConnectionGUID: O4OMGS9UQEOSlPNZhuF9WA==
-X-CSE-MsgGUID: 7a7cvTw2QEqn6GzgrsgP6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="44342261"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="44342261"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 22:40:06 -0800
-X-CSE-ConnectionGUID: SFm84HD9SE2YeA/U3oyU6A==
-X-CSE-MsgGUID: HEHIlPs+RwSkxmrxRzQZQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="116706260"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 22:40:03 -0800
-Message-ID: <a62bfd22-0469-46cc-954d-8331aa2922e9@linux.intel.com>
-Date: Thu, 27 Feb 2025 14:40:00 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Uenec+//"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QMoAdK015625;
+	Thu, 27 Feb 2025 06:42:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=H9SI1+
+	oJDfsMLTWjY6/U9vD0lCb8L5OiNWbgs890E8s=; b=Uenec+//xOhh+BekPA169c
+	TfTKio8+cgV/N6Uw+FW54JBEFy/nEmwlRxiHGxRGG4qQcqlkepQO7gjBdQOAzsAK
+	Vno4jcBnJttaqx3bAf5x0X+nc7dIzTVo1+KtYvXY/hO5GJ5oDdJQOyHr3wudeBZ0
+	jVfYxe4pq2tc6bld2aJDsdNGNwL0ndgTtkFWB+M+UKbMUlfn/cHotF5LGzNnBL3U
+	3cUM3swLk7lTNMZTP2QiTYsc0igiZk9nuqu76b0NI5aoAojM0+PuFFbu2/JQGfML
+	/fTasuh4pIh/KAkHXU/yD6n21PbWPb05iEC+QOPt/2gt2XGsgwlLmimFTyzjb6kg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a1mpa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 06:42:41 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51R6cr0h018209;
+	Thu, 27 Feb 2025 06:42:41 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a1mp8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 06:42:41 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51R4CPVB012918;
+	Thu, 27 Feb 2025 06:42:40 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwsyckh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 06:42:40 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51R6gZxQ47645096
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Feb 2025 06:42:35 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 272B020043;
+	Thu, 27 Feb 2025 06:42:35 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B602B20040;
+	Thu, 27 Feb 2025 06:42:29 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.240.191])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 27 Feb 2025 06:42:29 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 18/24] perf/x86/intel: Support arch-PEBS vector
- registers group capturing
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-19-dapeng1.mi@linux.intel.com>
- <20250225153257.GQ11590@noisy.programming.kicks-ass.net>
- <bda04ccd-fa90-4f14-89cc-9835de36bcfb@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <bda04ccd-fa90-4f14-89cc-9835de36bcfb@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH] tools/perf: Use perf_tool__init() to initialize default
+ values in builtin trace
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <Z7-0DuisrMHyscDj@google.com>
+Date: Thu, 27 Feb 2025 12:12:03 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>, hbathini@linux.vnet.ibm.com,
+        Aditya.Bodkhe1@ibm.com, Tejas Manhas <Tejas.Manhas1@ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C898BD11-D2E7-4338-9549-53B4C71785FE@linux.ibm.com>
+References: <20250225113157.28836-1-atrajeev@linux.ibm.com>
+ <Z7-0DuisrMHyscDj@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NCHJplYS_bXwzLP8ThDerHmU9vQzQvL2
+X-Proofpoint-ORIG-GUID: X2LXOH1ic3JfI6O-n28jlq9TrtRZpBFE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_03,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270048
 
 
-On 2/26/2025 4:08 PM, Mi, Dapeng wrote:
-> On 2/25/2025 11:32 PM, Peter Zijlstra wrote:
->> On Tue, Feb 18, 2025 at 03:28:12PM +0000, Dapeng Mi wrote:
->>> Add x86/intel specific vector register (VECR) group capturing for
->>> arch-PEBS. Enable corresponding VECR group bits in
->>> GPx_CFG_C/FX0_CFG_C MSRs if users configures these vector registers
->>> bitmap in perf_event_attr and parse VECR group in arch-PEBS record.
->>>
->>> Currently vector registers capturing is only supported by PEBS based
->>> sampling, PMU driver would return error if PMI based sampling tries to
->>> capture these vector registers.
->>> @@ -676,6 +709,32 @@ int x86_pmu_hw_config(struct perf_event *event)
->>>  			return -EINVAL;
->>>  	}
->>>  
->>> +	/*
->>> +	 * Architectural PEBS supports to capture more vector registers besides
->>> +	 * XMM registers, like YMM, OPMASK and ZMM registers.
->>> +	 */
->>> +	if (unlikely(has_more_extended_regs(event))) {
->>> +		u64 caps = hybrid(event->pmu, arch_pebs_cap).caps;
->>> +
->>> +		if (!(event->pmu->capabilities & PERF_PMU_CAP_MORE_EXT_REGS))
->>> +			return -EINVAL;
->>> +
->>> +		if (has_opmask_regs(event) && !(caps & ARCH_PEBS_VECR_OPMASK))
->>> +			return -EINVAL;
->>> +
->>> +		if (has_ymmh_regs(event) && !(caps & ARCH_PEBS_VECR_YMM))
->>> +			return -EINVAL;
->>> +
->>> +		if (has_zmmh_regs(event) && !(caps & ARCH_PEBS_VECR_ZMMH))
->>> +			return -EINVAL;
->>> +
->>> +		if (has_h16zmm_regs(event) && !(caps & ARCH_PEBS_VECR_H16ZMM))
->>> +			return -EINVAL;
->>> +
->>> +		if (!event->attr.precise_ip)
->>> +			return -EINVAL;
->>> +	}
->>> +
->>>  	return x86_setup_perfctr(event);
->>>  }
->>>  
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index f21d9f283445..8ef5b9a05fcc 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -2963,6 +2963,18 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
->>>  			if (pebs_data_cfg & PEBS_DATACFG_XMMS)
->>>  				ext |= ARCH_PEBS_VECR_XMM & cap.caps;
->>>  
->>> +			if (pebs_data_cfg & PEBS_DATACFG_YMMS)
->>> +				ext |= ARCH_PEBS_VECR_YMM & cap.caps;
->>> +
->>> +			if (pebs_data_cfg & PEBS_DATACFG_OPMASKS)
->>> +				ext |= ARCH_PEBS_VECR_OPMASK & cap.caps;
->>> +
->>> +			if (pebs_data_cfg & PEBS_DATACFG_ZMMHS)
->>> +				ext |= ARCH_PEBS_VECR_ZMMH & cap.caps;
->>> +
->>> +			if (pebs_data_cfg & PEBS_DATACFG_H16ZMMS)
->>> +				ext |= ARCH_PEBS_VECR_H16ZMM & cap.caps;
->>> +
->>>  			if (pebs_data_cfg & PEBS_DATACFG_LBRS)
->>>  				ext |= ARCH_PEBS_LBR & cap.caps;
->>>  
->>> @@ -5115,6 +5127,9 @@ static inline void __intel_update_pmu_caps(struct pmu *pmu)
->>>  
->>>  	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_XMM)
->>>  		dest_pmu->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
->>> +
->>> +	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_EXT)
->>> +		dest_pmu->capabilities |= PERF_PMU_CAP_MORE_EXT_REGS;
->>>  }
->> There is no technical reason for it to error out, right? We can use
->> FPU/XSAVE interface to read the CPU state just fine.
-> I think it's not because of technical reason. Let me confirm if we can add
-> it for non-PEBS sampling.
 
-Hi Peter,
+> On 27 Feb 2025, at 6:08=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>=20
+> On Tue, Feb 25, 2025 at 05:01:57PM +0530, Athira Rajeev wrote:
+>> Perf trace on perf.data fails as below:
+>>=20
+>> ./perf trace record -- sleep 1
+>> ./perf trace -i perf.data
+>> perf: Segmentation fault
+>> Segmentation fault (core dumped)
+>>=20
+>> Backtrace pointed to :
+>> ?? ()
+>> perf_session.process_user_event ()
+>> reader.read_event ()
+>> perf_session.process_events ()
+>> cmd_trace ()
+>> run_builtin ()
+>> handle_internal_command ()
+>> main ()
+>>=20
+>> Further debug pointed that, segmentation fault happens when
+>> trying to access id_index. Code snippet:
+>>=20
+>> case PERF_RECORD_ID_INDEX:
+>> err =3D tool->id_index(session, event);
+>>=20
+>> Since 'commit 15d4a6f41d72 ("perf tool: Remove
+>> perf_tool__fill_defaults()")', perf_tool__fill_defaults is
+>> removed. All tools are initialized using perf_tool__init()
+>> prior to use. But in builtin-trace, perf_tool__init is not
+>> used and hence the defaults are not initialized. Use
+>> perf_tool__init() in perf trace to handle the initialization.
+>=20
+> Thanks for fixing this.  I can reproduce the problem and confirmed =
+this
+> patch fixed it.
+>=20
+> Thanks,
+> Namhyung
+Thanks Namhyung for checking the patch
 
-Just double confirm, you want only PEBS sampling supports to capture SSP
-and these vector registers for both *interrupt* and *user space*? or
-further, you want PMI based sampling can also support to capture SSP and
-these vector registers? Thanks.
+Athira
+>=20
+>>=20
+>> Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>> ---
+>> tools/perf/builtin-trace.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>=20
+>> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+>> index f55a8a6481f2..092c5f6404ba 100644
+>> --- a/tools/perf/builtin-trace.c
+>> +++ b/tools/perf/builtin-trace.c
+>> @@ -4589,6 +4589,7 @@ static int trace__replay(struct trace *trace)
+>> struct evsel *evsel;
+>> int err =3D -1;
+>>=20
+>> + perf_tool__init(&trace->tool, /*ordered_events=3D*/true);
+>> trace->tool.sample   =3D trace__process_sample;
+>> trace->tool.mmap   =3D perf_event__process_mmap;
+>> trace->tool.mmap2   =3D perf_event__process_mmap2;
+>> --=20
+>> 2.43.5
 
 
->
->
->>
->>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>> index 4b01beee15f4..7e5a4202de37 100644
->>> --- a/arch/x86/events/intel/ds.c
->>> +++ b/arch/x86/events/intel/ds.c
->>> @@ -1437,9 +1438,37 @@ static u64 pebs_update_adaptive_cfg(struct perf_event *event)
->>>  	if (gprs || (attr->precise_ip < 2) || tsx_weight)
->>>  		pebs_data_cfg |= PEBS_DATACFG_GP;
->>>  
->>> -	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
->>> -	    (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK))
->>> -		pebs_data_cfg |= PEBS_DATACFG_XMMS;
->>> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
->>> +		if (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK)
->>> +			pebs_data_cfg |= PEBS_DATACFG_XMMS;
->>> +
->>> +		for_each_set_bit_from(bit,
->>> +			(unsigned long *)event->attr.sample_regs_intr_ext,
->>> +			PERF_NUM_EXT_REGS) {
->> This is indented wrong; please use cino=(0:0
->> if you worry about indentation depth, break out in helper function.
-> Sure. would modify it.
->
->
->>> +			switch (bit + PERF_REG_EXTENDED_OFFSET) {
->>> +			case PERF_REG_X86_OPMASK0 ... PERF_REG_X86_OPMASK7:
->>> +				pebs_data_cfg |= PEBS_DATACFG_OPMASKS;
->>> +				bit = PERF_REG_X86_YMMH0 -
->>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>> +				break;
->>> +			case PERF_REG_X86_YMMH0 ... PERF_REG_X86_ZMMH0 - 1:
->>> +				pebs_data_cfg |= PEBS_DATACFG_YMMS;
->>> +				bit = PERF_REG_X86_ZMMH0 -
->>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>> +				break;
->>> +			case PERF_REG_X86_ZMMH0 ... PERF_REG_X86_ZMM16 - 1:
->>> +				pebs_data_cfg |= PEBS_DATACFG_ZMMHS;
->>> +				bit = PERF_REG_X86_ZMM16 -
->>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>> +				break;
->>> +			case PERF_REG_X86_ZMM16 ... PERF_REG_X86_ZMM_MAX - 1:
->>> +				pebs_data_cfg |= PEBS_DATACFG_H16ZMMS;
->>> +				bit = PERF_REG_X86_ZMM_MAX -
->>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>> +				break;
->>> +			}
->>> +		}
->>> +	}
->>>  
->>>  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
->>>  		/*
