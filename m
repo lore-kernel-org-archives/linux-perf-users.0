@@ -1,92 +1,142 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCCC1F4C83;
-	Fri, 28 Feb 2025 17:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7520276027;
+	Fri, 28 Feb 2025 19:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740764453; cv=none; b=tNBJVGptLzv1ww/tAAjN2wDna9upgz1P7S2FeOT1EYnKDqkA2NA8Gwksvxf9pzvAkzVgn/20C9TtO8lKSLwN/5j50bON69wbwqjmi844GELWg15V4t6mocBk5mbItXrbpVhKrhQqLmn7gL/lgUZGpjsnrxhOzhErFXrET7tBwoI=
+	t=1740772438; cv=none; b=Rvqbd8xCvnjCLTtmCM51AHKDkdvI7XATt437tztTRMi2iv8w5LIGqcN8evSy76S+vEIuHpFXHOC5ZQeHss4gMvcBwvphExu/11Qj1txw2pbqB961g9/GY7oR2KuKt6U09F8l0Uy3Dy4wCJQrwZTDq0sl+YExjQJnp5DfV9XV2z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740764453; c=relaxed/simple;
-	bh=/xteggQ4c0DV4L7SQTkKZ+j2wkJckOWoOGiJgXVIoCM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FSZtZn2AA1AYhNFE+BtKFU4m52l7r0pDKZJEtEZea1pHvbSp5Vh0MERpSatDUI8c/glBgJ7bBdmVvStaKZBFppvd5H6jHc9YGOZOXXsqulxEeDoKStT3zRBpCRtxDOC9dRUMTH88DfZyu4tOLm41S+pG0VFgKIl6RmqLpmQNdMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hi6Uu3/1; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740772438; c=relaxed/simple;
+	bh=/XH79EmqZl8K0OrxFZw/WEPOCqQyhyfy8x5Gy0s2Ggk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=niIOOcLtSquwbcAWuMaj62i8FWBLPIZ8yqHklxtD9wRsSit2vgg0mimAEW3uGlwAm0wpJRWe38atqQVbGZtd2d1rRWGwpT8ZU2J3al+8EdfhV8hTpc+2+wJBoSkXAqkcMGc7m8zqv4xuG2HnxB8Sd7Cg2yPI+p72/ctr5CNi5sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ywy/lHFD; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi6Uu3/1"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e6087a8588bso2308472276.1;
-        Fri, 28 Feb 2025 09:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740764451; x=1741369251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/xteggQ4c0DV4L7SQTkKZ+j2wkJckOWoOGiJgXVIoCM=;
-        b=Hi6Uu3/1fV2uUtFMwQH4o4IG9DuHM5QrsBD3msKmfxuXYL+ArKb2UHf7bvKhFsG4P8
-         LoahbjdODs70xvzoaDlQykNgeXRe+ztiZYyz8N3eZmh4KLy3sdlPxlEK4upukZ4oj1QU
-         LanFNN/IHm4DEdegSwbSZvnwl0+Yf+zrE2lp4mWXPLgjSWj23cA7WLkWfwaMhLku9Ve8
-         YNDWZNJipNemlrg9JV+K/wNedysGrAZAd5bfRx3f4DeI3C2z6eN6cr+8xVT8kAGBFy53
-         r6TtfAE5w6hv2sVzfz7l/cvm4ScEfXG0N6wg6Rtw00ZVs073tVNvP/XqEGmxUTKwfyqV
-         9IFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740764451; x=1741369251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/xteggQ4c0DV4L7SQTkKZ+j2wkJckOWoOGiJgXVIoCM=;
-        b=JE2l29dwdmhs1ozIqE3hHpeCk14ng8zmqDkIrn/A2vSJFtOaXkLPrlQIul/7yQBWPi
-         SDJV+wZS7HBOkOWUTevX4wK8uhYcq5DVQ3wQ6b/lEaqF1b6ljUvSloTPBZBKgaex2wuV
-         1VQ+nIL/nAtUTigAuh5Pg3oOaSAVOzVP38RyPZo7tROVpWIm34FqGhXEN8Y8ZkM3uA8Y
-         8zMaI0O+8I+m7kaPTJxCAVWlN+bwo1hhLXDlfLKOgvKbD9rd+F1ajQ0kudk1RZ19MTS9
-         PwVMoJlJNHqZRfgIpcT+weiteKHloJA8R7XdnJEyMCJWvJFf+/87WmbXI7J5XcjbYFnc
-         g3dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVweP2TnWE9nwdG/d5H49s3/YgAcL/RLjovnW8L/GxwQEF6AsQ6g3qiDtpB3CGk5WK54V4ZTuk2kwOW5XI=@vger.kernel.org, AJvYcCVxi2l1itUuX0DS8PuDkduHb0CBak8pvXk0Yr5J1TtHRDgS8mRFoWBMaJVW6IeESB6rN/wg8FY+z+kmWTThc0jQ1w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqDjVmgvnGRBMUqvTy1Y1mgGiw1v8C44v+SSVrwbETz20OWIXr
-	mlNQxFsK+0XO/6sLFOmjP0JCJJz+ZNWaR4GFcgkRf5vvOnAsR/fVYV92goVLTqsqFwDeaN95B87
-	hYN2TW6FwRMBzg0yd5moZ3BDPOAZ2J1ekPpg=
-X-Gm-Gg: ASbGnctc/Xm07/ueolLUpWZdjEJNj/PZRquPtoAlQzcDeiybyAa3MMvwyUyOF0cLq0X
-	KU3QBI2HwTKpJRIQR05Ttpigg3y1Idz+oFR6K+EYT0/FUptog77PmKxuHNlSJLSnf9FgH/aleLc
-	/P8ozZlw==
-X-Google-Smtp-Source: AGHT+IHMi+ZMKzEkN5DWcxsa2qvHX0d/6WxMOVrtadkdAVIN309S/jzHhDy85lH/eF0FYfhHwAl+DnjlRolP2ZfEjkM=
-X-Received: by 2002:a05:6902:984:b0:e60:b135:4c07 with SMTP id
- 3f1490d57ef6-e60b23f8863mr5549512276.15.1740764450922; Fri, 28 Feb 2025
- 09:40:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ywy/lHFD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740772437; x=1772308437;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/XH79EmqZl8K0OrxFZw/WEPOCqQyhyfy8x5Gy0s2Ggk=;
+  b=Ywy/lHFD6+27KBChViFakYLBoSjMGPpOJ/czhtp3gVsvPLWKPycjfFfN
+   7pW78st+ZWJw8sOO4TxMXX4pOw32QsxHA/BJhdV7i1EGPCxMbQnbULbKs
+   7KEM4L+i41bvfjY6E2t5UtEePHtcg/Hk9/ulXBbmwgdi5Yt59kWepU9BV
+   92WSYoucokCaiiR02BRhT2LhMAxDHzbqGxMvtYGz8fWGIcycVMEdM5VYi
+   419MISbavjBqYPCyDG5uN8Jpskdc2wa5qgIl7Q4x3VY3uc5kxCTvw734A
+   jTLsy1eJ6Og6KxrvM2CiCYCjwaCPzsWLEOzNjZSW863BY8uVBqJL/FXgi
+   Q==;
+X-CSE-ConnectionGUID: zffUTvGCRuK3dG6wrC2EQg==
+X-CSE-MsgGUID: jiH0pbQOSGm5Tum2EocQvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41633140"
+X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
+   d="scan'208";a="41633140"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 11:53:56 -0800
+X-CSE-ConnectionGUID: L7IzgDXOTIiV0GiWviUL/g==
+X-CSE-MsgGUID: ghGfT8WBTBShlKN3tlKBeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121553798"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.221.30])
+  by fmviesa003.fm.intel.com with ESMTP; 28 Feb 2025 11:53:54 -0800
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH] perf stat: Fix uniquify for hybrid systems
+Date: Fri, 28 Feb 2025 13:53:51 -0600
+Message-ID: <20250228195351.1160071-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213230009.1450907-1-howardchu95@gmail.com> <qzkn72zddcdvwst2a4jfeyd3lalfvaydvisx24egxjllvlf2ym@qc5ozzzeqhd4>
-In-Reply-To: <qzkn72zddcdvwst2a4jfeyd3lalfvaydvisx24egxjllvlf2ym@qc5ozzzeqhd4>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 28 Feb 2025 09:40:42 -0800
-X-Gm-Features: AQ5f1JoYKiM6jmQOr8lTUgcL2TrSePojmnODpz7nywXcd5ibB_AWuEzeKVn2_lk
-Message-ID: <CAH0uvohnik1UqGkQ1sB4t1-s=uOAaauszU4JyjLjJai+6rQ8mw@mail.gmail.com>
-Subject: Re: [PATCH v15 00/10] perf record --off-cpu: Dump off-cpu samples directly
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello Gautam,
+Currently, perf stat is omitting the pmu name for legacy events
+on hybrid systems. git bisect indicated commit 357b965deba9 as the cause:
 
-On Fri, Feb 28, 2025 at 8:37=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.c=
-om> wrote:
->
-> Tested this series on IBM Power machines (both pseries and PowerNV)
->
-> Tested-by: Gautam Menghani <gautam@linux.ibm.com>
+Bisecting: 0 revisions left to test after this (roughly 0 steps)
+[357b965deba9fb71467413e473764ec4e1694d8d] perf stat: Changes to event
+name uniquification
 
-Thanks for testing this series. :)
+Include an additional check for hybrid architectures when determining
+whether to uniquify legacy events.
 
-Thanks,
-Howard
+Before:
 
->
-> Thanks,
-> Gautam
+$ sudo ./perf stat -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       173,903,751      cycles
+       666,423,950      cycles
+
+       1.006615048 seconds time elapsed
+
+After:
+
+$ sudo ./perf stat -e cycles -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       841,496,603      cpu_atom/cycles/
+     3,308,929,412      cpu_core/cycles/
+
+       1.002483283 seconds time elapsed
+
+Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+ tools/perf/util/stat-display.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e65c7e9f15d1..df9f68080ec9 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1676,6 +1676,7 @@ static bool evlist__disable_uniquify(const struct evlist *evlist)
+ 
+ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
+ {
++	bool hybrid = (!config->hybrid_merge && evsel__is_hybrid(counter));
+ 	struct evsel *evsel;
+ 
+ 	if (counter->merged_stat) {
+@@ -1688,7 +1689,8 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
+-	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
++	if (!hybrid && counter->core.attr.type < PERF_TYPE_MAX &&
++		counter->core.attr.type != PERF_TYPE_RAW) {
+ 		/* Legacy event, don't uniquify. */
+ 		return;
+ 	}
+@@ -1705,7 +1707,7 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
+-	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++	if (hybrid) {
+ 		/* Unique hybrid counters necessary. */
+ 		counter->needs_uniquify = true;
+ 		return;
+-- 
+2.48.1
+
