@@ -1,60 +1,74 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B666076410
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2025 15:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF2726FDA6;
+	Fri, 28 Feb 2025 16:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740756804; cv=none; b=pc36iDrOkcRALsIHkVQy7AfMdfAKZ2wEXpgYc9y2nTBSn/p4/QY/aPHtdwyAI/kzsJFOB0dA2DTW0HDm8K3Xeu1wuOt0WDvYVh0GkA0HCQrgHaRbcrBb8gzd30j3DYJJLUlPvdik42LFL7hKQJ5ypvvxO0+36jvtB4vQFLHZ4jI=
+	t=1740760634; cv=none; b=nQK/B/7gnRvB1rCDTlHIvsL2VvZEYsAmt5aKekTGYXnqc6Z1uuahuoJv1JrnsXn6Eamy/Q19MDY0tHviRu6Z40hpRjB4PLqGRzmCOKbTqGIrQXaV2CW3UxmKsqn/lDGj5DOs9eSG+wFU91M5qTk/dPmf3WlHhWh1nc3fNSAiL7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740756804; c=relaxed/simple;
-	bh=uP5cllxHcBAkoxx0Kn4W8H9CqjahWgT+m4heApmQscU=;
+	s=arc-20240116; t=1740760634; c=relaxed/simple;
+	bh=IsrAoHmwRizMrAZgw1O3gBeL1nVVp1ZkGVdtljxvJTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PbkKTYsVICeyYM9JIcylRm9arFa6eg4XzMhkECKcEnl4i4IprVquiXLnK33TpX6YFj/9lss8Td74ufqCkyjGVpkZnvxvRGd2h5isLrpokhNaso9F3tnx6UQZ4rB0H7ZSKZ82SXJ6YyvYpbOfL20wffWxZv3N2/TSmTyrEBxrVts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vKo+YcgI; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=dInZus5sgQLFT8GGewqoZ98wvb800jORxI0NvSmZj+mMTffapvldP5i+FI4ZSZZVi+E5/adX+cxzKROSn1bUycCnKpPC5bK4MXeJ+x/qPdnxk5nrEo07gla4X9A+xiEwqPu7dRCVs/8nKFeYJupFfwKOsgkNt/yEZidk8QVBLJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O0khgrzr; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vKo+YcgI"
-Date: Fri, 28 Feb 2025 15:32:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740756788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n9eLJrzvCc/jZ3rhdLc/8pJEkV1JMKG56goBetbpxb4=;
-	b=vKo+YcgI7v6lDON+yTHR9woNAvbankK+1SDMyOP89t52IYlLrAIepafV5H3+8AgeYWL/pp
-	TS1LqRGd7URb1EH84E98UhU8R08SptbuJvlIbJ9mZtK4wuupGbI0JiYANqWOM+DDaj9sTC
-	yy53IqVA9z5qtTyqinZcyR4dcB12SbQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC v2 25/29] mm: asi: Restricted execution fore
- bare-metal processes
-Message-ID: <Z8HXJnhMPFPyDJW5@google.com>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-25-8419288bc805@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O0khgrzr"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51SFRSsT026697;
+	Fri, 28 Feb 2025 16:37:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=IsrAoHmwRizMrAZgw1O3gBeL1nVVp1
+	ZkGVdtljxvJTI=; b=O0khgrzrVl5nYQhzDgD/c7xgXWKb2/5qxT5D1hlbh6MJ70
+	f21rcb9Qb1KYCNEBik2HvA6VBB0qBJwKASBvZyVj/EFdkZ2FIQmx28Eiue8j3KFs
+	ZB+r4SAOPe6lh+cQJuy97VQ7dR1nnGvSh2WLzog1PJxVbhXdrIwK5UEKhu+hRKg8
+	IxjqTCqpCFcQt7ObU9hNdqK5VqRNEK8H3/SJYFHhf5D7EqHilkwby8vbRyBQpAB/
+	QhmJRYoHSW2nJSVP2JXpJ2SdA71CEi4NIFTuTE4g4VGXckEHr5Adbmlz080CCQcS
+	GLIcXqdC1cuugdEoT7CE/PzFQroG4mOCOoZ1kvYg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4538uq2m2v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 16:37:07 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51SGb7Yc007908;
+	Fri, 28 Feb 2025 16:37:07 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4538uq2m2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 16:37:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51SF3sWX002548;
+	Fri, 28 Feb 2025 16:37:06 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yu4k751c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 16:37:06 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51SGb4uV31982002
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Feb 2025 16:37:04 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E17520043;
+	Fri, 28 Feb 2025 16:37:04 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6E8F920040;
+	Fri, 28 Feb 2025 16:37:02 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.39.17.234])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 28 Feb 2025 16:37:02 +0000 (GMT)
+Date: Fri, 28 Feb 2025 22:06:57 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v15 00/10] perf record --off-cpu: Dump off-cpu samples
+ directly
+Message-ID: <qzkn72zddcdvwst2a4jfeyd3lalfvaydvisx24egxjllvlf2ym@qc5ozzzeqhd4>
+References: <20250213230009.1450907-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,347 +77,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250110-asi-rfc-v2-v2-25-8419288bc805@google.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250213230009.1450907-1-howardchu95@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PaUtBPrjR9Uwzi6RwrDp72T6LuSlHgAb
+X-Proofpoint-ORIG-GUID: gjKpFC9H8SLI2tVdj1kxRgjceKUniwcF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-28_04,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=392
+ clxscore=1011 suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502280117
 
-(Trimming the CC list as my email server refuses the number of CCs)
+Tested this series on IBM Power machines (both pseries and PowerNV)
 
-On Fri, Jan 10, 2025 at 06:40:51PM +0000, Brendan Jackman wrote:
-> Now userspace gets a restricted address space too. The critical section
-> begins on exit to userspace and ends when it makes a system call.
-> Other entries from userspace just interrupt the critical section via
-> asi_intr_enter().
-> 
-> The reason why system calls have to actually asi_relax() (i.e. fully
-> terminate the critical section instead of just interrupting it) is that
-> system calls are the type of kernel entry that can lead to transition
-> into a _different_ ASI domain, namely the KVM one: it is not supported
-> to transition into a different domain while a critical section exists
-> (i.e. while asi_state.target is not NULL), even if it has been paused by
-> asi_intr_enter() (i.e. even if asi_state.intr_nest_depth is nonzero) -
-> there must be an asi_relax() between any two asi_enter()s.
-> 
-> The restricted address space for bare-metal tasks naturally contains the
-> entire userspace address region, although the task's own memory is still
-> missing from the direct map.
-> 
-> This implementation creates new userspace-specific APIs for asi_init(),
-> asi_destroy() and asi_enter(), which seems a little ugly, maybe this
-> suggest a general rework of these APIs given that the "generic" version
-> only has one caller. For RFC code this seems good enough though.
-> 
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> ---
->  arch/x86/include/asm/asi.h   |  8 ++++++--
->  arch/x86/mm/asi.c            | 49 ++++++++++++++++++++++++++++++++++++++++----
->  include/asm-generic/asi.h    |  9 +++++++-
->  include/linux/entry-common.h | 11 ++++++++++
->  init/main.c                  |  2 ++
->  kernel/entry/common.c        |  1 +
->  kernel/fork.c                |  4 +++-
->  7 files changed, 76 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-> index e925d7d2cfc85bca8480c837548654e7a5a7009e..c3c1a57f0147ae9bd11d89c8bf7c8a4477728f51 100644
-> --- a/arch/x86/include/asm/asi.h
-> +++ b/arch/x86/include/asm/asi.h
-> @@ -140,19 +140,23 @@ DECLARE_PER_CPU_ALIGNED(struct asi *, curr_asi);
->  
->  void asi_check_boottime_disable(void);
->  
-> -void asi_init_mm_state(struct mm_struct *mm);
-> +int asi_init_mm_state(struct mm_struct *mm);
->  
->  int asi_init_class(enum asi_class_id class_id, struct asi_taint_policy *taint_policy);
-> +void asi_init_userspace_class(void);
->  void asi_uninit_class(enum asi_class_id class_id);
->  const char *asi_class_name(enum asi_class_id class_id);
->  
->  int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_asi);
->  void asi_destroy(struct asi *asi);
-> +void asi_destroy_userspace(struct mm_struct *mm);
->  void asi_clone_user_pgtbl(struct mm_struct *mm, pgd_t *pgdp);
->  
->  /* Enter an ASI domain (restricted address space) and begin the critical section. */
->  void asi_enter(struct asi *asi);
->  
-> +void asi_enter_userspace(void);
-> +
->  /*
->   * Leave the "tense" state if we are in it, i.e. end the critical section. We
->   * will stay relaxed until the next asi_enter.
-> @@ -294,7 +298,7 @@ void asi_handle_switch_mm(void);
->   */
->  static inline bool asi_maps_user_addr(enum asi_class_id class_id)
->  {
-> -	return false;
-> +	return class_id == ASI_CLASS_USERSPACE;
->  }
->  
->  #endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-> diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-> index 093103c1bc2677c81d68008aca064fab53b73a62..1e9dc568e79e8686a4dbf47f765f2c2535d025ec 100644
-> --- a/arch/x86/mm/asi.c
-> +++ b/arch/x86/mm/asi.c
-> @@ -25,6 +25,7 @@ const char *asi_class_names[] = {
->  #if IS_ENABLED(CONFIG_KVM)
->  	[ASI_CLASS_KVM] = "KVM",
->  #endif
-> +	[ASI_CLASS_USERSPACE] = "userspace",
->  };
->  
->  DEFINE_PER_CPU_ALIGNED(struct asi *, curr_asi);
-> @@ -67,6 +68,32 @@ int asi_init_class(enum asi_class_id class_id, struct asi_taint_policy *taint_po
->  }
->  EXPORT_SYMBOL_GPL(asi_init_class);
->  
-> +void __init asi_init_userspace_class(void)
-> +{
-> +	static struct asi_taint_policy policy = {
-> +		/*
-> +		 * Prevent going to userspace with sensitive data potentially
-> +		 * left in sidechannels by code running in the unrestricted
-> +		 * address space, or another MM. Note we don't check for guest
-> +		 * data here. This reflects the assumption that the guest trusts
-> +		 * its VMM (absent fancy HW features, which are orthogonal).
-> +		 */
-> +		.protect_data = ASI_TAINT_KERNEL_DATA | ASI_TAINT_OTHER_MM_DATA,
-> +		/*
-> +		 * Don't go into userspace with control flow state controlled by
-> +		 * other processes, or any KVM guest the process is running.
-> +		 * Note this bit is about protecting userspace from other parts
-> +		 * of the system, while data_taints is about protecting other
-> +		 * parts of the system from the guest.
-> +		 */
-> +		.prevent_control = ASI_TAINT_GUEST_CONTROL | ASI_TAINT_OTHER_MM_CONTROL,
-> +		.set = ASI_TAINT_USER_CONTROL | ASI_TAINT_USER_DATA,
-> +	};
-> +	int err = asi_init_class(ASI_CLASS_USERSPACE, &policy);
-> +
-> +	WARN_ON(err);
-> +}
-> +
->  void asi_uninit_class(enum asi_class_id class_id)
->  {
->  	if (!boot_cpu_has(X86_FEATURE_ASI))
-> @@ -385,7 +412,8 @@ int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_
->  	int err = 0;
->  	uint i;
->  
-> -	*out_asi = NULL;
-> +	if (out_asi)
-> +		*out_asi = NULL;
->  
->  	if (!boot_cpu_has(X86_FEATURE_ASI))
->  		return 0;
-> @@ -424,7 +452,7 @@ int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_
->  exit_unlock:
->  	if (err)
->  		__asi_destroy(asi);
-> -	else
-> +	else if (out_asi)
->  		*out_asi = asi;
->  
->  	__asi_init_user_pgds(mm, asi);
-> @@ -515,6 +543,12 @@ static __always_inline void maybe_flush_data(struct asi *next_asi)
->  	this_cpu_and(asi_taints, ~ASI_TAINTS_DATA_MASK);
->  }
->  
-> +void asi_destroy_userspace(struct mm_struct *mm)
-> +{
-> +	VM_BUG_ON(!asi_class_initialized(ASI_CLASS_USERSPACE));
-> +	asi_destroy(&mm->asi[ASI_CLASS_USERSPACE]);
-> +}
-> +
->  noinstr void __asi_enter(void)
->  {
->  	u64 asi_cr3;
-> @@ -584,6 +618,11 @@ noinstr void asi_enter(struct asi *asi)
->  }
->  EXPORT_SYMBOL_GPL(asi_enter);
->  
-> +noinstr void asi_enter_userspace(void)
-> +{
-> +	asi_enter(&current->mm->asi[ASI_CLASS_USERSPACE]);
-> +}
-> +
->  noinstr void asi_relax(void)
->  {
->  	if (static_asi_enabled()) {
-> @@ -633,13 +672,15 @@ noinstr void asi_exit(void)
->  }
->  EXPORT_SYMBOL_GPL(asi_exit);
->  
-> -void asi_init_mm_state(struct mm_struct *mm)
-> +int asi_init_mm_state(struct mm_struct *mm)
->  {
->  	if (!boot_cpu_has(X86_FEATURE_ASI))
-> -		return;
-> +		return 0;
->  
->  	memset(mm->asi, 0, sizeof(mm->asi));
->  	mutex_init(&mm->asi_init_lock);
-> +
-> +	return asi_init(mm, ASI_CLASS_USERSPACE, NULL);
+Tested-by: Gautam Menghani <gautam@linux.ibm.com>
 
-I think this call here is problematic. This can be called from
-asi_global_init().
-
-An example is:
-
-start_kernel()
-poking_init()
-mm_alloc()
-mm_init()
-asi_init_mm_state()
-
-But the same also happen through dup_mm(), for example:
-
-kernel_thread()
-kernel_clone()
-copy_process()
-copy_mm()
-dup_mm()
-
-asi_global_init() is called later from do_initcalls() (run in a kthread
-by kernel_init()). In this case, asi_init() copies the kernel PGDs from
-asi_global_nonsensitive_pgd, but those PGDs won't be initialized yet.
-
-It could be fine for the current code because all these threads created
-during init never enter userspace, but I am not sure if that's always
-true. It also makes me a bit nervous to have partially initialized ASI
-domains hanging around.
-
-I'd rather we either:
-- Move asi_global_init() earlier, but we have to be careful not to move
-  it too early before some of the mappings it clones are created (or
-  before we can make allocations). In this case, we should also add a
-  warning in asi_init() in case the code changes and it is ever called
-  before asi_global_init().
-
-- Explicitly avoid calling asi_init_mm_state() or asi_init() in these
-  cases. This may be easy-ish in the case of kthreads, but for things
-  like poking_init() we would need to plump more context through.
-  Alternatively we can just make asi_init() a noop if asi_global_init()
-  isn't called yet, but the silent failure makes me a bit worried too.
-
->  }
->  
->  void asi_handle_switch_mm(void)
-> diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-> index d103343292fad567dcd73e45e986fb3974e59898..c93f9e779ce1fa61e3df7835f5ab744cce7d667b 100644
-> --- a/include/asm-generic/asi.h
-> +++ b/include/asm-generic/asi.h
-> @@ -15,6 +15,7 @@ enum asi_class_id {
->  #if IS_ENABLED(CONFIG_KVM)
->  	ASI_CLASS_KVM,
->  #endif
-> +	ASI_CLASS_USERSPACE,
->  	ASI_MAX_NUM_CLASSES,
->  };
->  static_assert(order_base_2(X86_CR3_ASI_PCID_BITS) <= ASI_MAX_NUM_CLASSES);
-> @@ -37,8 +38,10 @@ int asi_init_class(enum asi_class_id class_id,
->  
->  static inline void asi_uninit_class(enum asi_class_id class_id) { }
->  
-> +static inline void asi_init_userspace_class(void) { }
-> +
->  struct mm_struct;
-> -static inline void asi_init_mm_state(struct mm_struct *mm) { }
-> +static inline int asi_init_mm_state(struct mm_struct *mm) { return 0; }
->  
->  static inline int asi_init(struct mm_struct *mm, enum asi_class_id class_id,
->  			   struct asi **out_asi)
-> @@ -48,8 +51,12 @@ static inline int asi_init(struct mm_struct *mm, enum asi_class_id class_id,
->  
->  static inline void asi_destroy(struct asi *asi) { }
->  
-> +static inline void asi_destroy_userspace(struct mm_struct *mm) { }
-> +
->  static inline void asi_enter(struct asi *asi) { }
->  
-> +static inline void asi_enter_userspace(void) { }
-> +
->  static inline void asi_relax(void) { }
->  
->  static inline bool asi_is_relaxed(void) { return true; }
-> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-> index 1e50cdb83ae501467ecc30ee52f1379d409f962e..f04c4c038556f84ddf3bc09b6c1dd22a9dbd2f6b 100644
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -191,6 +191,16 @@ static __always_inline long syscall_enter_from_user_mode(struct pt_regs *regs, l
->  {
->  	long ret;
->  
-> +	/*
-> +	 * End the ASI critical section for userspace. Syscalls are the only
-> +	 * place this happens - all other entry from userspace is handled via
-> +	 * ASI's interrupt-tracking. The reason syscalls are special is that's
-> +	 * where it's possible to switch to another ASI domain within the same
-> +	 * task (i.e. KVM_RUN), an asi_relax() is required here in case of an
-> +	 * upcoming asi_enter().
-> +	 */
-> +	asi_relax();
-> +
->  	enter_from_user_mode(regs);
->  
->  	instrumentation_begin();
-> @@ -355,6 +365,7 @@ static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
->   */
->  static __always_inline void exit_to_user_mode(void)
->  {
-> +
->  	instrumentation_begin();
->  	trace_hardirqs_on_prepare();
->  	lockdep_hardirqs_on_prepare();
-> diff --git a/init/main.c b/init/main.c
-> index c4778edae7972f512d5eefe8400075ac35a70d1c..d19e149d385e8321d2f3e7c28aa75802af62d09c 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -953,6 +953,8 @@ void start_kernel(void)
->  	/* Architectural and non-timekeeping rng init, before allocator init */
->  	random_init_early(command_line);
->  
-> +	asi_init_userspace_class();
-> +
->  	/*
->  	 * These use large bootmem allocations and must precede
->  	 * initalization of page allocator
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index 5b6934e23c21d36a3238dc03e391eb9e3beb4cfb..874254ed5958d62eaeaef4fe3e8c02e56deaf5ed 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -218,6 +218,7 @@ __visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
->  	__syscall_exit_to_user_mode_work(regs);
->  	instrumentation_end();
->  	exit_to_user_mode();
-> +	asi_enter_userspace();
->  }
->  
->  noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index bb73758790d08112265d398b16902ff9a4c2b8fe..54068d2415939b92409ca8a45111176783c6acbd 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -917,6 +917,7 @@ void __mmdrop(struct mm_struct *mm)
->  	/* Ensure no CPUs are using this as their lazy tlb mm */
->  	cleanup_lazy_tlbs(mm);
->  
-> +	asi_destroy_userspace(mm);
->  	WARN_ON_ONCE(mm == current->active_mm);
->  	mm_free_pgd(mm);
->  	destroy_context(mm);
-> @@ -1297,7 +1298,8 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
->  	if (mm_alloc_pgd(mm))
->  		goto fail_nopgd;
->  
-> -	asi_init_mm_state(mm);
-> +	if (asi_init_mm_state(mm))
-> +		goto fail_nocontext;
->  
->  	if (init_new_context(p, mm))
->  		goto fail_nocontext;
-> 
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
-> 
+Thanks,
+Gautam
