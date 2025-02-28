@@ -1,112 +1,101 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41205276D3B;
-	Fri, 28 Feb 2025 09:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54025C6F1;
+	Fri, 28 Feb 2025 09:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733820; cv=none; b=kJJtLMQsL9/Mq0Bc5NbPANkOHM7eMTI1rKHgDEjB3/tstyMtraa27NRElfn8QF0nxQEn/3FNecU04z1xHpDkrw2BWWw+iB7rDvtj7jzVIQQO2022xk1I5WSH0m+QrwB7nOI46uXd3Fkblyw9YCikvqgkza2WenBAkhxFnn2nabo=
+	t=1740734810; cv=none; b=iLt2ek2G0p2Tn81u5sLOIljnM9cjR/aJKwJQ9aJPI7xsDOgCu5ZCN3lP0E2V0D0qHdhBQonbh1XSAZvT/uKEjIheb/IP4GqHQE5PF9wLlgBxVej2+jdCt52eaPziWaKG0P/vhA4m3W/5s4o0EV+hfStdR8x2Ho+WsWRCmqPHiF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733820; c=relaxed/simple;
-	bh=zYuheaLRkGMKUeaIoglrA/mLPSp23bqptLq8iPOQi1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uj9Tn0IY1w50lG4sFtvkki5xcNCN9bJ8yF1VXfYqoqXSDGcNsmbHEd7zxON8T5g3RZB7ErOJxBpi1EJ/dOYP/igyde8Xeh1GU/oygzNTfyMKrPkPszEYm4NQ40PtEAV6WIcPxLD3X6TrBz03JnwKsL7yp1ZHr7fQLgH+dU4xsOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vg8qzmtZ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740734810; c=relaxed/simple;
+	bh=kmNRUDi63hoq1y/R979Fz7vtxyOlpOhEMURK3Cge2yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TE8t6A0q8EF+1bAiySEVzrZPvWjfoS3fuFy6uGgTumKonHb6Fln1QF43YdULGHA1EAb5LoCDKvZ3hAFsOlp3fvnUC4Wh3Oi+FLyT1o6eEFZofdHscy4UTuBKCu0FWMgc1vuC8M8mYi2I6ASlJrj530+flcGi5CrRrpxfxJvB7iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaKK/NBw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg8qzmtZ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43996e95114so12888085e9.3;
-        Fri, 28 Feb 2025 01:10:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740733817; x=1741338617; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qpR4ebVigelsQjVDpmMUs9XPyS7tiT52viaXvhEX3N4=;
-        b=Vg8qzmtZRs/N1IKnrNYdGcRhbdAtdh1bsmzoh0ZwnRbpveA5AkWTsz5Vn269db+9Ou
-         VvYCDqeicNVgR72vodZcC+scLVo9HoZikt7W8LHOlyElYE2eGdGrUZ8qddmAus1xKXoX
-         GTe7AyDCHo3urPeqA5E4ImdvZHL1Evz6yViY9YHvv0RtPkWU5Ooj6B9V8ZHcAVXRZXbG
-         1jgs+041IgIefsUOjQp4KexRGbXCxTpIwDQz161Xmxfg4lkZu3wqCPh02DC+mgVzNA5a
-         8IVlzYXBzN1jkRTRFZPhj0LbcT3YFw81b0uXAuWqHDt8ntFQH8ljXSli1ESz2HW80t2M
-         BBqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740733817; x=1741338617;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qpR4ebVigelsQjVDpmMUs9XPyS7tiT52viaXvhEX3N4=;
-        b=MFw9lQCzja9DhTksoQsNu4LeNpOZYe29lZu7cIqwKC3ylJE16YpAz9HdYXtcweZqn4
-         CCAd0eocaZ/4DrNNKpWz6UTAq/uS50NCkbTTdbJMzReDntg4kfBHSTlIBe5PJWzMJMFk
-         4I2bykTMFw7lrRpSUstUII8ud5Mjh7BV5PM4cNGIlQAplOwwtG1ISIiHA2TxD32IAtnO
-         jX0GHDAxvuHQ6Kq+xTuHwKO6jUsI9inRP5/yhz12jnAUd5ydJURZyL6VWEsjAQ3+SMt4
-         iAmxxvOrwSxk7Zldi6ekN6QUgnuoi44JrXKmiVkrkuKOcPE6wSkJUH54OlPuAyaS6uwI
-         B9zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi9qayc919Yz8D87j03BB72Bp8c+c/oG3PiipqWBPP3y+SSY95hz1Os2O04xzlA33zEXAMegoDfGI74gE=@vger.kernel.org, AJvYcCUt16aZtZ5+0i5CJzpTn7fSAKInTk9aAi9OGo8sLOt9TFDkwkBLo6GQv6ZMlziYzS5YND7puMveu5PYHroDvySKWg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfCf+pHGa3Jb9mwc7EnC2YSx3dqGKB9VAg/stvXd4mhX9t3/5O
-	owe2jEX+mjJoc3zKk7lEcUn5GuddUEINY7c1YupTaj3cS6CubXH/EfAml6SzZxo=
-X-Gm-Gg: ASbGncsWAr9E+KFrlsnB3TENdSZfeCGeTe8z2HxTbEHawiSbB9XLLcU+sFH6PGk6pI+
-	fcUDYseolxppT3+7LqdzWpm/6SADY+n4oeRyNNhvfrlc6Im3agb/S+uxfmlAoyOpgnrSBDvic3g
-	Bd82YQ6lkYSUEE92iNfWtQk9RGf0ZWtJZkhIF7w68ATRFn7aw1PaUiF9fIpUHpBPzJ5+TEcm5Z5
-	iaGs50S8r4AvlRt/KqIFZc6N/JnG6M3kjMsxLR8xLaKyNnGu/IQc69d6mvnKnzPiYI2qr7OrhPP
-	G1B2KOe1E+3hLCOHSzGe3ZEsPAI=
-X-Google-Smtp-Source: AGHT+IF+n4GSoo2919+P+amVD+5Ilemud3QF+MjZa9U0BBFi95q2jJ/6Ag+A6ciSJrzf8QluIAMPlg==
-X-Received: by 2002:a05:600c:4705:b0:439:a138:1d with SMTP id 5b1f17b1804b1-43ba67606cemr18066245e9.22.1740733817353;
-        Fri, 28 Feb 2025 01:10:17 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e4847e62sm4588103f8f.67.2025.02.28.01.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 01:10:16 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf test mmap-thread-lookup: Fix spelling mistake "sythesizing" -> "synthesizing"
-Date: Fri, 28 Feb 2025 09:09:41 +0000
-Message-ID: <20250228090941.680226-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaKK/NBw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031A7C4CED6;
+	Fri, 28 Feb 2025 09:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740734810;
+	bh=kmNRUDi63hoq1y/R979Fz7vtxyOlpOhEMURK3Cge2yY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BaKK/NBwdo88Afyx9Hd5lt5ZhktyVBK5rK3FiEDNihfSDT+E1exaPmE3kv3vEKSob
+	 R5hRdWaIoq9DqeXWdGe7Qn51baP+M4E2DuN0n5VHSmOvRbguoOii7GDmY8Pzf/AWfj
+	 XNrHjGMMx8+a+7r6m53ikg3z/WuwaNoq6xkXI1nZnoJfMXjdScIBaYcPZ3EMIqtDKH
+	 KbiTochLI+h3TkWYwXxtH2b77ww8NuAbXeE1yDpi+FUsh5x5LjT6sBY/6s8EdhZ5iN
+	 YVobQev5BF5Bcr4SsqVmvQV7CDAJ+zLxKtukW4R6UVtEVjijiz2ywUuvkkOQUMA2nt
+	 Ez5RFXH2btGVA==
+Date: Fri, 28 Feb 2025 10:26:35 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
+Subject: Re: [PATCH v6 0/5] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+Message-ID: <Z8GBS81JWP7dl5s2@gmail.com>
+References: <20250228082338.73859-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228082338.73859-1-xin@zytor.com>
 
-There are spelling mistakes in TEST_ASSERT_VAL messages. Fix them.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/tests/mmap-thread-lookup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+* Xin Li (Intel) <xin@zytor.com> wrote:
 
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index ddd1da9a4ba9..446a3615d720 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -229,11 +229,11 @@ static int mmap_events(synth_cb synth)
- static int test__mmap_thread_lookup(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	/* perf_event__synthesize_threads synthesize */
--	TEST_ASSERT_VAL("failed with sythesizing all",
-+	TEST_ASSERT_VAL("failed with synthesizing all",
- 			!mmap_events(synth_all));
- 
- 	/* perf_event__synthesize_thread_map synthesize */
--	TEST_ASSERT_VAL("failed with sythesizing process",
-+	TEST_ASSERT_VAL("failed with synthesizing process",
- 			!mmap_events(synth_process));
- 
- 	return 0;
--- 
-2.47.2
+> The x86 build process first generates required and disabled feature
+> masks based on current build config, and then uses these generated
+> masks to compile the source code.  When a CPU feature is not enabled
+> in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
+> flag, i.e., DISABLE_FRED, needs to be properly defined and added to
+> a specific disabled CPU features mask in <asm/disabled-features.h>,
+> as the following patch does:
+> https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
+> As a result, the FRED feature bit is surely cleared in the generated
+> kernel binary when CONFIG_X86_FRED=n.
+> 
+> Recently there is another case to repeat the same exercise for the
+> AMD SEV-SNP CPU feature:
+> https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
+> https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
+> 
+> It was one thing when there were four of CPU feature masks, but with
+> over 20 it is going to cause mistakes, e.g.,
+> https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
+> 
+> We want to eliminate the stupidly repeated exercise to manually assign
+> features to CPU feature words through introducing an AWK script to
+> automatically generate a header with required and disabled CPU feature
+> masks based on current build config, and this patch set does that.
+> 
+> Link to v5:
+> https://lore.kernel.org/lkml/20250106070727.3211006-1-xin@zytor.com/
+> 
+> 
+> H. Peter Anvin (Intel) (3):
+>   x86/cpufeatures: Rename X86_CMPXCHG64 to X86_CX8
+>   x86/cpufeatures: Add {required,disabled} feature configs
+>   x86/cpufeatures: Generate a feature mask header based on build config
+> 
+> Xin Li (Intel) (2):
+>   x86/cpufeatures: Remove {disabled,required}-features.h
+>   x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
 
+>  24 files changed, 320 insertions(+), 634 deletions(-)
+
+Very nice!
+
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
