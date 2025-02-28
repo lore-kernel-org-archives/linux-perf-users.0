@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4AB1ABED9;
-	Fri, 28 Feb 2025 22:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A831DE88B;
+	Fri, 28 Feb 2025 22:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740781501; cv=none; b=PBXZNrbqNmdUWBZmvSDbeq+c7qqS0yY6kpXAa5hArb+qVg26HAGc28Z6oa1TNLsUv5aakv1OaQF8JZyY3XwZzcB4PAo/tba426TpO3Idp6FGJCAb5eLInQXpKcLpfHn5ZZ6tov4RDWKbAz57AVMsjMiu7gLawBf1M33STccbiRI=
+	t=1740781501; cv=none; b=s+cJgGVMby0tTks2TsTD/MAvePRftYHWrrhgo7msssOxQ/yefTbrmt9AWlVMr+e4Ckf+Dl9c19z9OdHc9GedGDqgUq2WWLH/yjSepR/21GlTM982RJdeaZQQ6cWWp1I8z+2d4vIIjMjwJEITe5qCpyRhNAGQ6BCiA7h73k9SSio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740781501; c=relaxed/simple;
-	bh=2kXlfnbhJgCCmcVwsge1o5c5OEeULnQ2hcMQRvr8CTU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HTMAWks2IidMXF3/85GEtUtP7PvBsBw7EUxCCCHkEgLibL/O/oU1p0q/aiU94YAMB1Bh1s6mDNg7vYQ2825qfAQqMlD00pRqm7hzjF7VlTqIaaCDk4uoLZV72qswMIQR/XJdqdYdGtkOIjXDOB6+e92xSzMEm+Ohm+3ks2RakY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMhiwdTZ; arc=none smtp.client-ip=10.30.226.201
+	bh=nl0RxLxluqEXdwZrRYcWUvlPQj16buT8wUVR1+IW6iM=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=CHpos5PiEnc1gY4kQObM/VRDCVJPMatcz6jF8yn47ak4OTEE9HZwT7VZofC9JuYyQCr1nlU1/O4LYXYAkegfuQfMUuJYay8K+TiWhU65/3oLlbXuUJg0vuMAFmuNE4j6Rzdln1bZpmJesjyxeWDlNhMNOIM/yxzqY+ew0BWI03w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLYoa5ZD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMhiwdTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 068CAC4CED6;
-	Fri, 28 Feb 2025 22:24:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLYoa5ZD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A6CEC4CEE2;
+	Fri, 28 Feb 2025 22:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740781500;
-	bh=2kXlfnbhJgCCmcVwsge1o5c5OEeULnQ2hcMQRvr8CTU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OMhiwdTZd3BznZHG6pj0df1Y1B3N0pDcHHTAlyZUjMivDhRckhe//SFNDBl4RijB6
-	 LqXW8oKHEj3C1NtKjuczqFocTLcn7Q2KkVyYQgW1naKe4yr8y2UPXVV6ejzHM2ySOS
-	 6eSQP99hmF8dwlzniIMH0AlcvT9qpzCPPkeA9a8DOIQAi0XtLAmV79QIJAOPWfaSoh
-	 BtKPwuC7QVxvARY6MWU+OSO6YseDBuGEmxUt75F5/EivQdDa+MtaXFEg/zF/m/UQhQ
-	 ps+NWxmYeDq4uloQwS3SvMIrEuxESULjcUghbphUDLO2ikT/Yjh01TkrOehtjIPaKB
-	 BA6xNgfz7x1kA==
+	s=k20201202; t=1740781501;
+	bh=nl0RxLxluqEXdwZrRYcWUvlPQj16buT8wUVR1+IW6iM=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=kLYoa5ZD1tgEpJrzTr028axEhdyIgCeEEujQNZ+krj6mzvUouRhGZQ8em5TF2zHM7
+	 ShRDbMBadSb5IAkSXm2Lg+UFy8bZ6fqVLGJNfPTNYRonz2a/G0tf6XGq8oSpc/gyLr
+	 SBKjq2MaTK5I3RVuBQMXk5ZyKRnaS95Ubv6CJ+/SY48mLvWem58bPzLjyg5FYJbMVx
+	 aAlGcVaLYA+kJ5/aWYyuHKo4CXMQ0ZWNvDUrhfb9PeF6Qaee2pug9/lIDHB+hbBmzM
+	 30SeD0ZIw2Pw2yOnV+0t+aj7O+JEmTNFe9pfjQ2wr7bdiNnZuijUgzSESdT57CrWrF
+	 Id+Krrv4JXJ+w==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
- nick.forrington@arm.com, linux-perf-users@vger.kernel.org, 
- bpf@vger.kernel.org
-In-Reply-To: <20250227003359.732948-1-ctshao@google.com>
-References: <20250227003359.732948-1-ctshao@google.com>
-Subject: Re: [PATCH v8 0/4] Tracing contention lock owner call stack
-Message-Id: <174078149997.322575.17228936303109215.b4-ty@kernel.org>
-Date: Fri, 28 Feb 2025 14:24:59 -0800
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+ Mike Leach <mike.leach@linaro.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+In-Reply-To: <20250227085544.2154136-1-leo.yan@arm.com>
+References: <20250227085544.2154136-1-leo.yan@arm.com>
+Subject: Re: [PATCH v2] perf arm-spe: Report error if set frequency
+Message-Id: <174078150058.322575.7287434251293207744.b4-ty@kernel.org>
+Date: Fri, 28 Feb 2025 14:25:00 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,16 +51,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 26 Feb 2025 16:28:52 -0800, Chun-Tse Shao wrote:
-> For perf lock contention, the current owner tracking (-o option) only
-> works with per-thread mode (-t option). Enabling call stack mode for
-> owner can be useful for diagnosing why a system running slow in
-> lock contention.
+On Thu, 27 Feb 2025 08:55:44 +0000, Leo Yan wrote:
+> When users set the parameter '-F' to specify frequency for Arm SPE, the
+> tool reports error:
 > 
-> Example output:
->   $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex -E16 perf bench sched pipe
->    ...
->    contended   total wait     max wait     avg wait         type   caller
+>   perf record -F 1000 -e arm_spe_0// -- sleep 1
+>   Error:
+>   Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
