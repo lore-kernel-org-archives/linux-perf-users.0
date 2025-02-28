@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E32C1DED4C
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2025 22:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD681DEFD4
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2025 22:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740781435; cv=none; b=SEmqasZVjgkpcTEIRpkqt8pyjxOODDRO8zerdXQuQdQedsKashWjU57oiM5oYEOQ74cSHv5Qbx8i2IIZUZ+SkYa/AA/pM+mY7ph0KvGDZiE9uulVEnp49oTvLpv6qWOKrmK0t6gYNJoaWLMMj1tb9thH/LM0Q+olHoBaSoshZIA=
+	t=1740781437; cv=none; b=czwPfUki1m1N/0B/zc1NHh/bAeD9ixQU0xGL70rg0Xltts5z6lSwHjbJ/NEZGGQRukFyuMpMqOs5yIoWarvZUTUbl4nI3rgqpeyue5jjVagwah/V4cu4p6iSHwocatUjlzCzX1VF/DKxn/DPHXAcnrlu95FVfJua+mwANI/gLxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740781435; c=relaxed/simple;
-	bh=txn0P05cQCFrXxSXwvz56otvn2hrpJG2Johc1iskpbc=;
+	s=arc-20240116; t=1740781437; c=relaxed/simple;
+	bh=jw2JvCMwh40S1sqr4HtAsdcBJhtA5W1IjdOGgQVIXGU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=VqIH+WohADTmRQa4QJWnfVSqIHwEYtUzBGPMuFEMekDor0DIeEPU9DicoJIHw0VWwzptTBX/+lJNF3jfPHrC3SdB1fMYEEBK0Ax/8mBoYbOfcjcY3m1o+IK9fjzJuFeMqzgQh2HnqLoX0vNxu0hPsWVGITTqxbNO7Ss7T5tVrZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qPSipR7P; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=l9iFlKVGaRHexg+p1jrSeCASoPr2qZGgb+hTsQzJ9HmIFMcVJLfWuyc2uHo/S5xvStiAcs0Qx9wVCDPuTbkJ4k+YKUIpIG7+CceEBK9YHvh24fbGGI/oMbLmYi6GOe+Oosx7ofA28Y5N6pNk94aTvNCbmOwb2TzIaWJrntT3CFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z1wq6nRt; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qPSipR7P"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fb64251262so37134727b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2025 14:23:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z1wq6nRt"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6fd541f4b43so10614297b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Feb 2025 14:23:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740781433; x=1741386233; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740781435; x=1741386235; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HT+nPv2tYgupeaKy7eqEuPRMTJ57BlbBsuhS7nbNqeE=;
-        b=qPSipR7P2rgdkG/kWz8lod+lLspE/S7IGk14hKCkvsVvAe5ibXNIPErRHX7GkOGb5i
-         4+521Vrrt9YYIMgJVCV7Oq7ujgz9mk6unRvIs+fcDAgCQfWfXWmrC5Pkjqb66eZCW+TS
-         lv40dFw87VKaSmuGZgbGoQaZ2VjubNCicn7xYq+wQWwLT+Muv/VEwV8NypRwm6tNDgxq
-         qo6Cq6o8GkmtnmQm4xL2RiiNxGiMWs9W9lG8oVEBzS0GINenKctMvVq8BEU1e8QsLrD8
-         85Mn2/zNUtbZbqIXglL9QUKA04UsOvV+jOraPd17aUGzxtZ/QnWMKB2gsx7hYrk2qbfy
-         Atfw==
+        bh=deGH2VjmLT83Kk+l97C6+20x9ip/iQR0QehEJSDELbI=;
+        b=z1wq6nRtNA9tyaDFtU95Xm6NvOZ/3VfqHXJVgl/GIcv4N6UNZPeFJNfWlfkO6uiyuI
+         aEiIWtCHHO38azHEwAa8JMjPU6TqcOzi138EsoVWikJR94uaynb08ZT2nF38eX0QptZx
+         hBEVl0OiIKvOsFJQx/sI3NaBSxPkxKAFiTiEvuyEXt3awMSAmrd8BviudIiE/4cfYjV9
+         IUGM+g3UDh8fFRtlLxF65WZK6LhJsh+PIxJ8Y3BJ6stoD9//FPrBgy/3eUl5sydqXt+R
+         XctqMJVdn22Rj2ptqtDWxuECEjp6ayYv7J6yURYUlz1WnQAY4jXezzuV8aAgG88s5vd3
+         Iybg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740781433; x=1741386233;
+        d=1e100.net; s=20230601; t=1740781435; x=1741386235;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HT+nPv2tYgupeaKy7eqEuPRMTJ57BlbBsuhS7nbNqeE=;
-        b=rEXlZfFfkKrNQs1nz0qzmfWUqY01pSLl5yk8JadKpAG2rRKc3BcQRXuoWiKz/42BOD
-         0mUiFo/+IxEq8nA2q2RAD1exuARqxzzcGsrFpKI9aGmSyenqzAisO759XBvGjo+f5t05
-         nkn4p1J+CyZ2n9AS/nYayzmKjwCOlxYAqso+BBoQOTz4SVc+C3ESZ4VY1n9+G/YW1WCw
-         yzFaR/ZcMGNBOmypSHL2ICgR7GJWPvjbDMQHOaCIbfwgfoLL0YbPY8FNxt188fTNU9A8
-         nRYVlwEFTYM9hdkEdIPlSBUTrjrLWUnfH9WnLLhudyhHMotH3K4bF2CK9F8MGUqQQu2c
-         08QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNaNGU9zB/S9UXCpFh1637oqmnfrahdDM19YP2gQz9FaOKWf18MeIkP2xIFwv5LBtb5AeyRcxOaeothn3ArxAL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmVwARr17kS7QgdHn6sh1KXnVorr+/dOV+AS1QoLE/URUDjwNt
-	fbKI0xT9RCf3ZwrzPXfURofLW3DfiQSB/Fv11cjAg2iyL33RiZ0DYUp7xHnQxTaqFsRGPPYXx4R
-	bGNSuGQ==
-X-Google-Smtp-Source: AGHT+IGMXYRBfiYKFmm/2HsXNIce5dF6aVnsil7+fnx7h+OYMmaozsXrjJsnVHcWdb0mTBHmTv3e3OdlQMjP
+        bh=deGH2VjmLT83Kk+l97C6+20x9ip/iQR0QehEJSDELbI=;
+        b=LPy5ygNmTr4zGtMkCxnCj6rJ95uNo1QV9w1P4g08uDU4mKyyDdALCYDPGsWLil4AM0
+         XjBdTjv8OCkKOsfjPV9HWbPEieFQq4m9bNMIddDNJ1gKRgc6m41Hg3slRfEKBbfaKFnr
+         7QJOyaIekJssSF1lE+iHjJ3e6YHvcaAFGbwv+gMeHwJPJOwOrpOIoegoLzeopM6na8gT
+         yiHklhMEw4X6dLXlSZBNfRtxA8XFQVXtTr16KxDqI96U+xg5BRsSjP9XA6inMwvmzHJX
+         SuPSQ8Omgqc/OImFmSmpDr1vd/XTRBKcXTkNNazh1wtRGo9/RKZgbSI50gYU0wcsONNl
+         87YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKdr0kFSJJpB/os+FohCnM519bElblZzJsMjn3tYdYnqsIEr4z8I39osT8arbqfGMLLZcCvjQHaf9S1Kfe7ff3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx64Dkn7VUdbhxGmP5PD1WfsDMW+sF5IXcsBfpaAOmjx32s3Xaw
+	OtYWNlwHG42yorl4uZkMTqa4JbRRlen2zp4wEX/Do5uPeFhELBStSfA+RlIaEtVhs+H2d/QTGFF
+	Hpp3d3Q==
+X-Google-Smtp-Source: AGHT+IFE7d3v320fruJZDyKQRPxtYcFs1S4WGsj03GrTm6oN1eMjN5dQCeQksAPTYLlZWWAXkO95dI7pXbC2
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:23a3:4d43:890f:dfd7])
- (user=irogers job=sendgmr) by 2002:a25:aa90:0:b0:e60:a52a:377a with SMTP id
- 3f1490d57ef6-e60b2e817edmr57514276.2.1740781433136; Fri, 28 Feb 2025 14:23:53
- -0800 (PST)
-Date: Fri, 28 Feb 2025 14:22:58 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:528a:b0:6fb:78b2:8b70 with SMTP
+ id 00721157ae682-6fd4a10fda2mr5924667b3.7.1740781435497; Fri, 28 Feb 2025
+ 14:23:55 -0800 (PST)
+Date: Fri, 28 Feb 2025 14:22:59 -0800
 In-Reply-To: <20250228222308.626803-1-irogers@google.com>
-Message-Id: <20250228222308.626803-2-irogers@google.com>
+Message-Id: <20250228222308.626803-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250228222308.626803-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Subject: [PATCH v2 01/11] perf debug: Avoid stack overflow in recursive error message
+Subject: [PATCH v2 02/11] perf evlist: Add success path to evlist__create_syswide_maps
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,30 +75,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In debug_file, pr_warning_once is called on error. As that function
-calls debug_file the function will yield a stack overflow. Switch the
-location of the call so the recursion is avoided.
+Over various refactorings evlist__create_syswide_maps has been made to
+only ever return with -ENOMEM. Fix this so that when
+perf_evlist__set_maps is successfully called, 0 is returned.
 
 Reviewed-by: Howard Chu <howardchu95@gmail.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evlist.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index 995f6bb05b5f..f9ef7d045c92 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -46,8 +46,8 @@ int debug_type_profile;
- FILE *debug_file(void)
- {
- 	if (!_debug_file) {
--		pr_warning_once("debug_file not set");
- 		debug_set_file(stderr);
-+		pr_warning_once("debug_file not set");
- 	}
- 	return _debug_file;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index f0dd174e2deb..633df7d9204c 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1373,19 +1373,18 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
+ 	 */
+ 	cpus = perf_cpu_map__new_online_cpus();
+ 	if (!cpus)
+-		goto out;
++		return -ENOMEM;
+ 
+ 	threads = perf_thread_map__new_dummy();
+-	if (!threads)
+-		goto out_put;
++	if (!threads) {
++		perf_cpu_map__put(cpus);
++		return -ENOMEM;
++	}
+ 
+ 	perf_evlist__set_maps(&evlist->core, cpus, threads);
+-
+ 	perf_thread_map__put(threads);
+-out_put:
+ 	perf_cpu_map__put(cpus);
+-out:
+-	return -ENOMEM;
++	return 0;
  }
+ 
+ int evlist__open(struct evlist *evlist)
 -- 
 2.48.1.711.g2feabab25a-goog
 
