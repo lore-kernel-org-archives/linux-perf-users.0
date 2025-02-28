@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3337C24633C;
-	Fri, 28 Feb 2025 08:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAE02475F7;
+	Fri, 28 Feb 2025 08:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740731070; cv=none; b=pj7dxtsYrTEMJnettxk/QeTNZnIg60vhJAJG3GQZXXg296RFv80NvDNDI85eWF8ZFDWJeOHGnCevdSJxwI9pM54/42hkIhwPkLJiK7qAiI/y6XBk3RIk6NJK7M1Uztel4r2D3dRxC6y3KLaocXghr1FRBhDYkLueAuG45UUF+74=
+	t=1740731071; cv=none; b=LsAmshfQQcZAMEnfVx9jn87P4tpL7sRWjBsWVqc//nHQbjYQKMfzOLa30A08QGPXABEbpKiaYImScSAT8+NfTsZEqEjxdqWqg/hFV7YjJ8mjkMEb2y6DJCRZZ3cnauMc2/bR77wbutkCcF2KThYgTRCijf3hAychSOu1lR4ql38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740731070; c=relaxed/simple;
-	bh=5HS4lAnm5SK8GCfK2JYrkdwQ5Hj+cKWYZUX2WZ7HlxQ=;
+	s=arc-20240116; t=1740731071; c=relaxed/simple;
+	bh=4zIHaCMZS0hDa4OtHqr9qgMpS7AF52W84a6XPqM1u7Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dAgR2abCcxySJBysotDNNzjTYYO40cYsw49UpeP4GB/fiMwNUN838rHl/bgBWahL9DtPOeSzZ96QJGENw+dXs1XqNxfxBGRw1fD5jRRKlljYwDzFjNSFp5ur5WqZscybzDXCR7tCjA9l7XoFvxw0cm4ry3QbIS5EOI2CyfebmvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=DS0D95ZH; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=I6AnKzEF27E95Ak0yTFXxZILTSRDO+cWzWDGB3LuLKjioz8QCGHU7zb037IHIdHWd5UfIbgdiTNA2UI4MpLn8sK9UvgX+Az9vT+aKc6MlEovio8RhpZHa6F3I1YjtR3Hc2XNyM1W7lGgKCRfJUzet87oubD+GmezVcT4zOIDSd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Hl8oK6dU; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DS0D95ZH"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hl8oK6dU"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51S8NdZa073880
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51S8NdZW073880
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 28 Feb 2025 00:23:49 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51S8NdZa073880
+	Fri, 28 Feb 2025 00:23:45 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51S8NdZW073880
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740731030;
-	bh=7IplQBdjmAjp1LF7Bq3do3Pp/UVk/RNUvmTPzHJMuSQ=;
+	s=2025021701; t=1740731026;
+	bh=ycQixJeuBOEDa8QWxTSMTADnqo3HaIk9wTod1ikqI0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DS0D95ZHmopmDQ9KBj55YQeCMf7DudJaWv3deQjRMiTNZeS1B3u0wXn+hZPd8bPCX
-	 XY9c44Qbx+Olc9r3D3JiMBzXSgJ+PTMtWh5u+MQHoGKITtJ05SlFN6BmJtWLq6WIha
-	 U9HFp2I8P4rnlGtwpqSlrEGz5SIVr07LS+iPEAOCY/EeG/iefISn7pBgbafluGn9B7
-	 XSRZIHvbTinrA4PXlGyCYCJkpPlSoeiyCxf1EaRaQixRoVmY1TD8L9BkAlq8gEb8B5
-	 LjSQOJSl8E8iDtc8z4HT6iKVRe0O4YtN37cjGT6Zu9W+Q6HzV6OYqS1tRTIk8Ta6Vc
-	 oKjk1E3Al9uGQ==
+	b=Hl8oK6dUoF5ZhTOEckvsPfLSRfBwM2ScuFFySPAEXNTyBXVWX32T1wGOcqce0m3ou
+	 Zym7QcXHviIcfjgSkauVF49bml99mMSSP57aLhxEVM8RJSX7loJVclQQIruRp0ggHe
+	 1n5S5wxZg4f4pjFxpgJ80q84+fhs/5vzFyQBa68XLGc/xuYCuR3cfJwAyVZpS1c9hp
+	 iP43pEHVRC2j/r8n70z9T+2nGCjZds7RYn11hKBfYrhy4MbB5dMguyzh5yfHoHnMXJ
+	 2estFv6z3KyTJHtEsIKbfCqSGoqbpqX/0dhmGC0+5NDfN558qdGSA9H4UwEaSHBQma
+	 hTHq8wTYzCsDQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -39,9 +39,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
         akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
         brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: [PATCH v6 5/5] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
-Date: Fri, 28 Feb 2025 00:23:38 -0800
-Message-ID: <20250228082338.73859-6-xin@zytor.com>
+Subject: [PATCH v6 1/5] x86/cpufeatures: Rename X86_CMPXCHG64 to X86_CX8
+Date: Fri, 28 Feb 2025 00:23:34 -0800
+Message-ID: <20250228082338.73859-2-xin@zytor.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250228082338.73859-1-xin@zytor.com>
 References: <20250228082338.73859-1-xin@zytor.com>
@@ -53,124 +53,172 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
-script that generates the required and disabled feature mask header.
+From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 
-Suggested-by: Brian Gerst <brgerst@gmail.com>
+Replace X86_CMPXCHG64 with X86_CX8, as CX8 is the name of the CPUID
+flag, thus to make it consistent with X86_FEATURE_CX8 defined in
+<asm/cpufeatures.h>.
+
+No functional change intended.
+
+Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Reviewed-by: Brian Gerst <brgerst@gmail.com>
 ---
 
-Changes in v4:
-* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
-* Checking NCAPINTS isn't necessary anymore.  It was needed when these
-  macros had to be manually updated, but now if cpufeatures.h changes
-  this header will be regenerated (Brian Gerst).
+Change in v6:
+* Rename X86_CMPXCHG64 in a separate patch (Borislav Petkov).
 ---
- arch/x86/include/asm/cpufeature.h | 69 -------------------------------
- arch/x86/tools/featuremasks.awk   |  9 +++-
- 2 files changed, 8 insertions(+), 70 deletions(-)
+ arch/x86/Kconfig                               | 2 +-
+ arch/x86/Kconfig.cpu                           | 4 ++--
+ arch/x86/include/asm/asm-prototypes.h          | 2 +-
+ arch/x86/include/asm/atomic64_32.h             | 2 +-
+ arch/x86/include/asm/cmpxchg_32.h              | 2 +-
+ arch/x86/include/asm/required-features.h       | 2 +-
+ arch/x86/lib/Makefile                          | 2 +-
+ arch/x86/lib/cmpxchg8b_emu.S                   | 2 +-
+ lib/atomic64_test.c                            | 2 +-
+ tools/arch/x86/include/asm/required-features.h | 2 +-
+ 10 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 077a5bbd1cc5..b829a12eda8a 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- #define test_cpu_cap(c, bit)						\
- 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 60c2a16c7801..1e50da06ffc4 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -133,7 +133,7 @@ config X86
+ 	select ARCH_SUPPORTS_AUTOFDO_CLANG
+ 	select ARCH_SUPPORTS_PROPELLER_CLANG    if X86_64
+ 	select ARCH_USE_BUILTIN_BSWAP
+-	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CMPXCHG64
++	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CX8
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index 8fcb8ccee44b..f8b3296fe2e1 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -299,7 +299,7 @@ config X86_HAVE_PAE
+ 	def_bool y
+ 	depends on MCRUSOE || MEFFICEON || MCYRIXIII || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC7 || MATOM || X86_64
  
--/*
-- * There are 32 bits/features in each mask word.  The high bits
-- * (selected with (bit>>5) give us the word number and the low 5
-- * bits give us the bit/feature number inside the word.
-- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
-- * see if it is set in the mask word.
-- */
--#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
--	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
--
--/*
-- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
-- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
-- * header macros which use NCAPINTS need to be changed. The duplicated macro
-- * use causes the compiler to issue errors for all headers so that all usage
-- * sites can be corrected.
-- */
--#define REQUIRED_MASK_BIT_SET(feature_bit)		\
--	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
--	   REQUIRED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
--#define DISABLED_MASK_BIT_SET(feature_bit)				\
--	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
--	   DISABLED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
- #define cpu_has(c, bit)							\
- 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
- 	 test_cpu_cap(c, bit))
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-index fd3e72147157..2d9201c841cb 100755
---- a/arch/x86/tools/featuremasks.awk
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -74,7 +74,14 @@ END {
- 		for (i = 0; i < ncapints; i++)
- 			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
+-config X86_CMPXCHG64
++config X86_CX8
+ 	def_bool y
+ 	depends on X86_HAVE_PAE || M586TSC || M586MMX || MK6 || MK7 || MGEODEGX1 || MGEODE_LX
  
--		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
-+		printf "\t((\t\t\t\t\t";
-+		for (i = 0; i < ncapints; i++) {
-+			if (masks[i])
-+				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
-+		}
-+		printf " 0\t\\\n";
-+		printf "\t) & (1U << ((x) & 31)))\n\n";
- 	}
+@@ -313,7 +313,7 @@ config X86_MINIMUM_CPU_FAMILY
+ 	int
+ 	default "64" if X86_64
+ 	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
+-	default "5" if X86_32 && X86_CMPXCHG64
++	default "5" if X86_32 && X86_CX8
+ 	default "4"
  
- 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+ config X86_DEBUGCTLMSR
+diff --git a/arch/x86/include/asm/asm-prototypes.h b/arch/x86/include/asm/asm-prototypes.h
+index 3674006e3974..8d9e62725202 100644
+--- a/arch/x86/include/asm/asm-prototypes.h
++++ b/arch/x86/include/asm/asm-prototypes.h
+@@ -16,7 +16,7 @@
+ #include <asm/gsseg.h>
+ #include <asm/nospec-branch.h>
+ 
+-#ifndef CONFIG_X86_CMPXCHG64
++#ifndef CONFIG_X86_CX8
+ extern void cmpxchg8b_emu(void);
+ #endif
+ 
+diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
+index 6c6e9b9f98a4..797085ecaaa4 100644
+--- a/arch/x86/include/asm/atomic64_32.h
++++ b/arch/x86/include/asm/atomic64_32.h
+@@ -48,7 +48,7 @@ static __always_inline s64 arch_atomic64_read_nonatomic(const atomic64_t *v)
+ 	ATOMIC64_EXPORT(atomic64_##sym)
+ #endif
+ 
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ #define __alternative_atomic64(f, g, out, in...) \
+ 	asm volatile("call %c[func]" \
+ 		     : ALT_OUTPUT_SP(out) \
+diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
+index 95b5f990ca88..ee89fbc4dd4b 100644
+--- a/arch/x86/include/asm/cmpxchg_32.h
++++ b/arch/x86/include/asm/cmpxchg_32.h
+@@ -69,7 +69,7 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp,
+ 	return __arch_try_cmpxchg64(ptr, oldp, new,);
+ }
+ 
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ 
+ #define arch_cmpxchg64 __cmpxchg64
+ 
+diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
+index e9187ddd3d1f..0068133cb622 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -23,7 +23,7 @@
+ # define NEED_PAE	0
+ #endif
+ 
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ # define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
+ #else
+ # define NEED_CX8	0
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index f453507649d4..64ccecedc9f8 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -56,7 +56,7 @@ ifeq ($(CONFIG_X86_32),y)
+         lib-y += string_32.o
+         lib-y += memmove_32.o
+         lib-y += cmpxchg8b_emu.o
+-ifneq ($(CONFIG_X86_CMPXCHG64),y)
++ifneq ($(CONFIG_X86_CX8),y)
+         lib-y += atomic64_386_32.o
+ endif
+ else
+diff --git a/arch/x86/lib/cmpxchg8b_emu.S b/arch/x86/lib/cmpxchg8b_emu.S
+index 1c96be769adc..d4bb24347ff8 100644
+--- a/arch/x86/lib/cmpxchg8b_emu.S
++++ b/arch/x86/lib/cmpxchg8b_emu.S
+@@ -7,7 +7,7 @@
+ 
+ .text
+ 
+-#ifndef CONFIG_X86_CMPXCHG64
++#ifndef CONFIG_X86_CX8
+ 
+ /*
+  * Emulate 'cmpxchg8b (%esi)' on UP
+diff --git a/lib/atomic64_test.c b/lib/atomic64_test.c
+index 759ea1783cc5..d726068358c7 100644
+--- a/lib/atomic64_test.c
++++ b/lib/atomic64_test.c
+@@ -254,7 +254,7 @@ static __init int test_atomics_init(void)
+ 	pr_info("passed for %s platform %s CX8 and %s SSE\n",
+ #ifdef CONFIG_X86_64
+ 		"x86-64",
+-#elif defined(CONFIG_X86_CMPXCHG64)
++#elif defined(CONFIG_X86_CX8)
+ 		"i586+",
+ #else
+ 		"i386+",
+diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
+index e9187ddd3d1f..0068133cb622 100644
+--- a/tools/arch/x86/include/asm/required-features.h
++++ b/tools/arch/x86/include/asm/required-features.h
+@@ -23,7 +23,7 @@
+ # define NEED_PAE	0
+ #endif
+ 
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ # define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
+ #else
+ # define NEED_CX8	0
 -- 
 2.48.1
 
