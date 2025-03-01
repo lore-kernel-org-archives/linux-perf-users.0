@@ -1,79 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB224C98;
-	Sat,  1 Mar 2025 00:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC83101DE;
+	Sat,  1 Mar 2025 00:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740788442; cv=none; b=rVyMrCN7VXOxr3c0FeLmisQJqUilihm4Oliy6kg8W3iqwCkyn7trCELWpXGGFnl6KgKSwhgYi3sIVBtOz5wImskn9E/yf+xQEJ5gBnIrrtNJV9V6Voceh5Vgecf3U67N8ljxFDFyNc0zgKJEZ/myYAEsE+DGhOYxQoEeaQPJkWQ=
+	t=1740788715; cv=none; b=kBZak/tGhWWAQhU56Pg79E27vsZCKvR7jla8t/AdPniYvCVgurUz9xNZ/UWx7u78oA+xoQrAMKNCE3S/BnkxAg9sCGghhw44M/CR1gYwK8luqn5YKdDHsznhFudWL58uSsnvFfsS2/9FF9hfYu3FvNoNWwjsNJP+k8QUwy8k1jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740788442; c=relaxed/simple;
-	bh=KiD7RunlUVt0MKCXSK3YEiHcDKUWIMvyIfV1XKCBRw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fny6Dw7HZpVo++ZcQZVOt6ZgQ5YCbC08/YfBAveEulfMsbdmC+WTm2dVT9tty+Sr+ah3p5+oS/cPagQtKpm1GJ/1MTMPXYlbzfCBLsVg+LhE2TYBHgAIcpQ/8slhICB2DeZxRqgVqdYVAq1qES0yp1sNuMbzqN2O1a2xX+zJZWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zt+bFeMt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740788715; c=relaxed/simple;
+	bh=XFbCzOr8x0mc18tDs3UGrvj7/ouKNDpWSIKYwUY499s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F1a1DjG/CxHeCql832OWt5p+cqOhoXcPmHKfqwVk+iJkjkOb2dBRzACE+NY+BBOe2RYIThqKsJE2XYterjalLJRhPak8GhBJs+v3nqGmraIHEzYFvvrGfdPhKI6AO7AuEvAaMx3lV4DSdEvz4RYCnYrisHEPcK+stkaZ7vhCPmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWrRSZV3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zt+bFeMt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 932AFC4CED6;
-	Sat,  1 Mar 2025 00:20:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWrRSZV3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD26C4CEEA;
+	Sat,  1 Mar 2025 00:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740788442;
-	bh=KiD7RunlUVt0MKCXSK3YEiHcDKUWIMvyIfV1XKCBRw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zt+bFeMt5mslDlbmpCIEOyBj3iHYUrN01yrhsxl0ZKZzKG5JyepdEKZlYEIQMBvpt
-	 nf6leOGUiZ9+FSKS9v9FKfp46RcOEDN/81/1V1isHu+Es/v023dFnl+lr9ge1vey1l
-	 HH3YIF3y5Hrknnm+OLY8E/dz2olsPnWSoolS6/4RiaobCeSinWC++s8IHCYCZZKdeg
-	 8cew16nKq6ooCOMrji29xJOpy7etpwp8VOcdLkuBUfPfpvTOyIGjD9eqpJ2s88Z5BD
-	 1zGhloTdarG+EjDxTIEBVSsOfFluxvrw2pzmVUcF3QppGjiOV3PFX9pXXF8KxxWW/s
-	 zGnK6XI/qvtNA==
-Date: Fri, 28 Feb 2025 16:20:40 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v2] perf tools: Skip BPF sideband event for userspace
- profiling
-Message-ID: <Z8JS2P-QwHcPUpTV@google.com>
-References: <20250227051718.1176930-1-namhyung@kernel.org>
- <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+	s=k20201202; t=1740788715;
+	bh=XFbCzOr8x0mc18tDs3UGrvj7/ouKNDpWSIKYwUY499s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HWrRSZV3nrp7Z8h7Pt4HeIHRsCK+4268yO2gzD0BIyMp5ru+YvoE6f7LRdyu0gMXp
+	 iP1MPVSESLrvGY5vrvAXAZ1EJcuCICfqynVE9Wzx+3XpLtUdQm61PKOqlSdtgyIXGz
+	 3pRxHa3mokJ3JQqneLYqCNJFxH5f+vsPcWEYcT7gkf9RYhetxWFYzRad/nMKzduHhL
+	 PwOXR7xZXunJ9cLNU+4uNYRsNIibJJfx7dZdzjgDVxM3kikuViji8COc13MrJc9KZx
+	 Iq72Hdy2dF+qENYVVX4xBOrJhDxWaGO+kPNSK+zn7N6P36Ad9NmwCWWxpZTt9SqbQq
+	 3wQKS79KG1ZeA==
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-856295d1f6cso197336339f.3;
+        Fri, 28 Feb 2025 16:25:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmN34+rktrt1YRXNd9V2nuouxC45RjoJwtdUGi0cBmroXFCDmX1SY2JGPBrR5mYY6bpuTskraewe2ESDQ=@vger.kernel.org, AJvYcCVnujSB0rKMORMIkpLCssTROhiomANQySDtRcFwU1+rgN8skS/ArMDk6e/PwVcr3DMMX9Z3m6ERnscQgl56YetcrA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxsmx5km+raN4M5YoTI4aASoCWp0C/xOp5AwTZcxtjq6KzLu4wA
+	r1SeoWLvgeevcMemm7L37KMcl12B1GUMIAgTKMw6lia8g0UuG1hBYm7OimX3VYk+mgG9wwx6qw7
+	GOfpwIHrw4zG0C01BiRBQNBxyOCo=
+X-Google-Smtp-Source: AGHT+IGAp0GbHqRmi6hlPED+wTmAowfkgSomr4+J8+M5z34mjBfwhbZTMkguL3rXPh0edlmJoWRZwclgslkJCRmboY0=
+X-Received: by 2002:a05:6e02:13af:b0:3d3:e536:308c with SMTP id
+ e9e14a558f8ab-3d3e6e71ceemr59314225ab.8.1740788714543; Fri, 28 Feb 2025
+ 16:25:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+References: <20250227051718.1176930-1-namhyung@kernel.org> <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+ <Z8JS2P-QwHcPUpTV@google.com>
+In-Reply-To: <Z8JS2P-QwHcPUpTV@google.com>
+From: Song Liu <song@kernel.org>
+Date: Fri, 28 Feb 2025 16:25:03 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5JFP-QuE_HZBJm+RT+ytsV72ihP0g_CvByKB_S+fHV_g@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr2VUA2S9023QU5IkVaAbXI4g0PBBEnWq_T787XPOc8iygntsGUUGHqtUI
+Message-ID: <CAPhsuW5JFP-QuE_HZBJm+RT+ytsV72ihP0g_CvByKB_S+fHV_g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tools: Skip BPF sideband event for userspace profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 10:50:26AM -0800, Song Liu wrote:
-> On Wed, Feb 26, 2025 at 9:17 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, Feb 28, 2025 at 4:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Feb 27, 2025 at 10:50:26AM -0800, Song Liu wrote:
+> > On Wed, Feb 26, 2025 at 9:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > The BPF sideband information is tracked using a separate thread and
+> > > evlist.  But it's only useful for profiling kernel and we can skip it
+> > > when users profile their application only in userspace.
+> > >
+> > > It seems it already fails to open the sideband event in that case.
+> > > Let's remove the noise in the verbose output anyway.
+> > >
+> > > Cc: Song Liu <song@kernel.org>
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > >
-> > The BPF sideband information is tracked using a separate thread and
-> > evlist.  But it's only useful for profiling kernel and we can skip it
-> > when users profile their application only in userspace.
-> >
-> > It seems it already fails to open the sideband event in that case.
-> > Let's remove the noise in the verbose output anyway.
-> >
-> > Cc: Song Liu <song@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> This turns out to be more complicated than I thought. I actually
-> like v1 better.
+> > This turns out to be more complicated than I thought. I actually
+> > like v1 better.
+>
+> Sure, the complexity comes from moving the code to reduce the
+> duplication.  But either is fine to me.
+>
+> Can I add your Acked-by to v1, then?
 
-Sure, the complexity comes from moving the code to reduce the
-duplication.  But either is fine to me.
+Yes, you can add to v1:
 
-Can I add your Acked-by to v1, then?
+Acked-by: Song Liu <song@kernel.org>
 
 Thanks,
-Namhyung
-
+Song
