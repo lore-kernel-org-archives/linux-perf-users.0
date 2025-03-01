@@ -1,74 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE00EC5
-	for <linux-perf-users@vger.kernel.org>; Sat,  1 Mar 2025 05:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36897156861;
+	Sat,  1 Mar 2025 07:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740806473; cv=none; b=jWwy2esstd6nwu3mznXtJX367ekMeG3hhcxicQ/Bl1HAm6nr4ZrUXEVNSxwz5wcoi876RozffDFl9SUh1aJVsES3PiX+dOxECjO9dn39Z3k8pRHmDtKtRj8u1FGk/2zJdsRKW2kcTLbWooAzNzk0dgF0MV2t622jjTg7n/9no48=
+	t=1740812733; cv=none; b=KTrcACHQ6/lkPjErfo0hEolxIDGev91XEPU/5OEwamzLnXrSlXQRO6/W++YZ4oozpx0NkpoW5AQ4OZWo+m47Wgx3y1ArpCBch3A93hmm9HT+nODQLVURly2KLEVRS02Mxs7i02ctFuw/CY2UEGAjGD/GUnsjVe+4ef92WRFAot4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740806473; c=relaxed/simple;
-	bh=DHTX0bfvUqsDcD8AtfDgVMzBVJDRma3f5b4ZKB2BCto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1p0cW74QiKGMtxCekua97lARefn8l2VePZ3rXhZ/t7HnXrpFqiIx5oFj676R6xpiZ0SXA5ynVZxT+BvhjmPJBFEND/I48ZbM5XChaFchKPbPffE4TKCx3t2WzNLua+rT11viPLNy7IQlD91C7czRgt6MPjl0ghc5lcUQypZFSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRQzY8f/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740812733; c=relaxed/simple;
+	bh=yuV32O2uacAQPpFXxHdzerV8Z0lORjwgQUBONgdPDh4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rmKm4r3DlfuLUO8s1ajOMxkZNtsLb4JXqe1OWUpyaPDSCYD+7TTgQv45Hmmf1XItYVrQ+6lmBfIrSOTz6TrpkVy1PU7e3Fbk/7FK/OwZTVp4mcI6/wWRqTxLOuo18biewazUT4iDLv4hBIW6u6gmIxU5hDujtMy8lJVLH/buVKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vl0VyKZW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRQzY8f/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE38C4CEE5;
-	Sat,  1 Mar 2025 05:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vl0VyKZW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F14C4CEDD;
+	Sat,  1 Mar 2025 07:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740806472;
-	bh=DHTX0bfvUqsDcD8AtfDgVMzBVJDRma3f5b4ZKB2BCto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fRQzY8f/iTwtrRw/Lvv0Cz0FtE4dz+WGtMQC5zrXaF2tyZO6K63LTCjOXX1slg6yM
-	 3DpKoFOlB7Xt8i5JB8mQKh4Q0t0upq/U4sXGZyJJosqBmsu7j/+FCLgIn+4L8C1FXa
-	 D1fY/M+tEm/Wx5CZRwwOt1GKvdSsauMuk6gG7vq6/W/64emvMfFqzCi+oMSZfoDqKR
-	 GPbRC0b5pci9wfS5Vno1LkjJyPI5txES8v/FIWDwRi7UE2AdYWIeOcGktrXj5wxpiC
-	 C75RbhgWIQD1f8kqaKy2N0QDa9iG/tzLu3oeDsKCgAWP7nLyHrDFQN7hXnx///pzyA
-	 2jP3kJA2f50cw==
-Date: Sat, 1 Mar 2025 05:21:08 +0000
+	s=k20201202; t=1740812732;
+	bh=yuV32O2uacAQPpFXxHdzerV8Z0lORjwgQUBONgdPDh4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Vl0VyKZWz3vG3O12uSfoyp3OypG0rM+HcoZ7wkh5vZUgctgR/LBcFWq75Fyjt+wXL
+	 b+gNN5AWEZi0xN9VEpKICCwUPda0JkzOGFisFMDupjrCV/7n6dDbKyEQ3q43aJiLiO
+	 v4j6yJTq2OfVQEH/0bEt7+9O7anvmoUEcUnld4+/BT3yn7u3s/j4eBeh+DGSNP9uiC
+	 W/9OF3DJSngzizuIHc73DvTCsxJOO00TKBi6BJ+IJbqbqwmUQUpPwbdhPURghXbNsP
+	 5BJmoe+UD+A6LkXDt2hyPwuzYEvZokhESPx1kOiuu/Dw/BN4sY7Yk1UKXMyvOYUGJv
+	 GqbMRFqu0X2Bw==
 From: Will Deacon <will@kernel.org>
-To: Yuanjun Gong <ruc_gongyuanjun@163.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] drivers/perf: Add check to ida_alloc()
-Message-ID: <20250301052107.GA27474@willie-the-truck>
-References: <20250228031712.3743224-1-ruc_gongyuanjun@163.com>
+To: xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 0/2] Fix dwc_pcie pmu driver issues
+Date: Sat,  1 Mar 2025 07:05:23 +0000
+Message-Id: <174080955779.3218826.2678564312238293449.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250220121716.50324-1-cuiyunhui@bytedance.com>
+References: <20250220121716.50324-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228031712.3743224-1-ruc_gongyuanjun@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 11:17:12AM +0800, Yuanjun Gong wrote:
-> Check the return value of ida_alloc in case it fails.
+On Thu, 20 Feb 2025 20:17:14 +0800, Yunhui Cui wrote:
+> v1:
+> Only sent the patch titled "fix duplicate pci_dev devices".
 > 
-> Signed-off-by: Yuanjun Gong <ruc_gongyuanjun@163.com>
-> ---
->  drivers/perf/fsl_imx9_ddr_perf.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> v2:
+> 1. New patch: "fix the incorrect reference count".
+> 2. The "fix duplicate pci_dev devices" change is made in two places:
+> One is to remove the modification of the PMU name. The other is to change
+> "for_each_pci_dev" to "pci_get_domain_bus_and_slot".
 > 
-> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-> index 843f163e6c33..143103331edc 100644
-> --- a/drivers/perf/fsl_imx9_ddr_perf.c
-> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-> @@ -790,6 +790,11 @@ static int ddr_perf_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, pmu);
->  
->  	pmu->id = ida_alloc(&ddr_ida, GFP_KERNEL);
-> +	if (!pmu->id) {
-> +		ret = -ENOMEM;
-> +		goto ida_alloc_err;
-> +	}
+> [...]
 
-If ida_alloc() fails, it returns an error code, not 0.
+Applied to will (for-next/perf), thanks!
 
-What prompted you to write this patch?
+[1/2] perf/dwc_pcie: fix some unreleased resources
+      https://git.kernel.org/will/c/6eb1e8ef586a
+[2/2] perf/dwc_pcie: fix duplicate pci_dev devices
+      https://git.kernel.org/will/c/7f35b429802a
 
+Cheers,
+-- 
 Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
