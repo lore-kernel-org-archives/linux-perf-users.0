@@ -1,251 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE981B87D1;
-	Sat,  1 Mar 2025 07:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1CF1B423C
+	for <linux-perf-users@vger.kernel.org>; Sat,  1 Mar 2025 09:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740813871; cv=none; b=q/lrASCUG8cJkKL9UQ6ex7RfFT5igJmo+EJVDofq3TOGAvll6qGnYuISvMZfBMee4jGPnzvHjHAu5YagAQe1xTpTKDV2FbLnD3w4I0j4MZbCk1zWjUiQo5VouB4cYArLXrNA0MpldmuO1P14ilghOIB2inVzTRnAZ8RqnsZfUpo=
+	t=1740820912; cv=none; b=rH5xnD6XB0a7Ssl9DFWAdZZTXEJ54nwsK4nazJyLg+KPaz7DqYkieBwg93RFxmRDuHAmJZm2vm6BKbaq4Q3XCXUXzkyHcstTKd2a7aA4eB/dK+5BvP9SiAHNH3WGlhCXWgQU+iHg2jV7dN0AX3UmjozSNvW6Qe4ih4RcYq+UMk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740813871; c=relaxed/simple;
-	bh=zNyC5lhRK0Jp4F93R1ijsSaURdoFR2R28yW7mia17cM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hmIaCfSUuUyAwzhAQ0Jrs/ioobSgF7YXBKxTiSNXnXdC9wGzWPZJY4f1XYl2Bv/2NKYoYBwaNlxUtF2tvLLVfHN/A0gbk0tJXf82UJbDIIb1g3/g99XdeBrsfaKVxNMRrIYD3OhErwQVf4/ZH33dzUVlCKT64ny14jpASaQ8JRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtscTzal; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740820912; c=relaxed/simple;
+	bh=470EBXt8fl6XJkf8ZJRFwnw5P+hQer58Ix6/GEv8Ywo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KFvOsZBNfoEZ182aHY8JOHi63Tjh1O3kL/e/mszZO/iB2Z1llSxK8wkUp7KM6gIgpSXa1d3MIExZCKzwQcFMvF0dN8LbZHrQm0a7Xg0//rt7d1VXxK+/QKxX9xrrvt7Y7QVFiVoclF8BpCogSOoZ92MNgzd2H3F1XG8WjQUu7gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org; spf=pass smtp.mailfrom=atishpatra.org; dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b=ZrIwghHt; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atishpatra.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atishpatra.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtscTzal"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800D1C4CEDD;
-	Sat,  1 Mar 2025 07:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740813870;
-	bh=zNyC5lhRK0Jp4F93R1ijsSaURdoFR2R28yW7mia17cM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gtscTzalpXI+EBlbvhmEfLi9LdExvWsiMbsCojuFb6z7D6TJ+eIyI5Zu0dNVt1+Rt
-	 R7KC6887+sVZtgnQ19+IkfSlJqXOab6/YNi9aZBAtp/VgQU/JqRJpIH8eBc4GGjByG
-	 /iEET/+yluuuSKQHZY8L55Rx9HismpEadrVB6zyppH+G3FGWR/3bh3ot8dW5rcHNI7
-	 NKKycvvnkEsnUXv1eFIzBBP8cwd+jkC4/L6TStK9cq+p4BvnEfW2RzlrWF5UZglu5h
-	 /IAlH97YxPUeMyrnxQe6BmmTiig5TOwLHznM4yMtuGGFo8JCLj5r1JCg4T+JRGSA6x
-	 kS+2S3GSKmFcQ==
-Date: Sat, 1 Mar 2025 09:23:51 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 02/29] x86: Create
- CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-Message-ID: <Z8K2B3WJoICVbDj3@kernel.org>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="ZrIwghHt"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54838cd334cso3324783e87.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 01 Mar 2025 01:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google; t=1740820908; x=1741425708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0GWaeb76LjLymBzAsvZgprQtrlh/Mis5wEPFqb9KAZI=;
+        b=ZrIwghHtV1xRxUBo3+tju0AqDJqo6mX0AsNghcEftzITwuK6dgHIMQsTNSLYH5ZrKj
+         ojMgce0wY070Ftv7yqNuYYkMDGKDLXdQb0wBTo9mdPcu2+XjzHmX2YEZ5dH1rHwBMJby
+         S0kyodNSrWPv9h2+sRzuSsMRRATquRIqBeuME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740820908; x=1741425708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0GWaeb76LjLymBzAsvZgprQtrlh/Mis5wEPFqb9KAZI=;
+        b=ZLBNS9IBYckkiBCthZF5W7vqjplm3mnecCloHdchmUvqFB7uPDv2NzsfQSDwHQoG3T
+         pmc9a5AnzwlU5Ie3WLW0bmCS1vnlUHS/4QWkZDMGeF61BurbaDUF3fQf100518DMCGER
+         Y9mWtEV/Nbg9blFu+Htfs7diur/GNVgdBVBl3wtUlaomwmyicQqVh6sDjU2EDH/7KO9K
+         VmqxMDasc6syPMZ3iwetLz1wUCSy02qsOUpdjTmQDGDHDKopZb4vRfXV+QyWx2nKtnKV
+         1BZp/ujTUBsr5LsUcTKjXUp0clfG57mxHGG96HdTIUrSEN6jOhS399KLk2Jq3n3qyoBp
+         8JMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqkk3mHBdMtHSvk+3FHJELsJrPbSIiVmQcrEFSBRpnnJZesYDGbyMWxGeDk81SR9/1rWwO6jdnLvjLv+z2k/Rs@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOqLhXAx3YzPs/0xfCrinXxNlsE/B7YAYj3EtcGe8H/IsOWBxm
+	wHsar0DhunIITNOgfagUd4TgRin/lsHqn30TWUFnN8FJnvzQ6s1Pmt2hag1bsucn01mhxxpU/Ga
+	g4jLNAmTN3w22z6MyeJ57Am//nviAQLhGP6Pw
+X-Gm-Gg: ASbGnctljLAnt/qf6T+b2QikVwXyMbR9sFNhta7XlBN2mEn4F7qbMQNhnVGgpHt8zJg
+	FmM6q7KiP+TvmGpA6GisnFCiyk20Ix6t4vC+dhb1fuiB+5h+aw7KAqEBD8w+5JUCI5NmZiyEVEW
+	KXLFPO7eZwqNZlBjjw7+obFLE=
+X-Google-Smtp-Source: AGHT+IH15LwzPfPF+oS2EZqpdH0JXfZ6W3b7ZvXs4eNLlzum83DD24jadEspiQYjcnBJSYtYXwDADT20S0Zkkl9QYD0=
+X-Received: by 2002:a05:6512:2398:b0:547:6733:b5a3 with SMTP id
+ 2adb3069b0e04-5494c31955emr2721323e87.28.1740820907633; Sat, 01 Mar 2025
+ 01:21:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com>
+References: <20250213220341.3215660-1-samuel.holland@sifive.com> <Z7ZLB-wZY9wTZSBZ@google.com>
+In-Reply-To: <Z7ZLB-wZY9wTZSBZ@google.com>
+From: Atish Patra <atishp@atishpatra.org>
+Date: Sat, 1 Mar 2025 01:21:35 -0800
+X-Gm-Features: AQ5f1JqfruEFIOIrVnD5AKoYs2RXp5ctBzcsS8Mgvh9B2UED9CdH6vJZUSYebtM
+Message-ID: <CAOnJCUJYKkGXOJiLTnPOgPSnEiCeXFaoGQRiT5Au+rbvP1unZQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/7] perf vendor events riscv: Update SiFive CPU
+ PMU events
+To: Namhyung Kim <namhyung@kernel.org>, Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Ian Rogers <irogers@google.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, linux-perf-users@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Brendan,
+On Wed, Feb 19, 2025 at 1:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> On Wed, Feb 12, 2025 at 05:21:33PM -0800, Samuel Holland wrote:
+> > This series updates the PMU event JSON files to add support for newer
+> > SiFive CPUs, including those used in the HiFive Premier P550 board.
+> > Since most changes are incremental, symbolic links are used when a set
+> > of events is unchanged from the previous CPU series.
+> >
+> > I originally sent this series about a year ago[1], but received no
+> > feedback. The P550 board is now available (and I have tested this serie=
+s
+> > on it), so it would be good to get perf support for it upstream.
+> >
+> > [1]: https://lore.kernel.org/linux-perf-users/20240509021531.680920-1-s=
+amuel.holland@sifive.com/
+> >
 
-On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
-> Currently a nop config. Keeping as a separate commit for easy review of
-> the boring bits. Later commits will use and enable this new config.
-> 
-> This config is only added for non-UML x86_64 as other architectures do
-> not yet have pending implementations. It also has somewhat artificial
-> dependencies on !PARAVIRT and !KASAN which are explained in the Kconfig
-> file.
-> 
-> Co-developed-by: Junaid Shahid <junaids@google.com>
-> Signed-off-by: Junaid Shahid <junaids@google.com>
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> ---
->  arch/alpha/include/asm/Kbuild      |  1 +
->  arch/arc/include/asm/Kbuild        |  1 +
->  arch/arm/include/asm/Kbuild        |  1 +
->  arch/arm64/include/asm/Kbuild      |  1 +
->  arch/csky/include/asm/Kbuild       |  1 +
->  arch/hexagon/include/asm/Kbuild    |  1 +
->  arch/loongarch/include/asm/Kbuild  |  3 +++
->  arch/m68k/include/asm/Kbuild       |  1 +
->  arch/microblaze/include/asm/Kbuild |  1 +
->  arch/mips/include/asm/Kbuild       |  1 +
->  arch/nios2/include/asm/Kbuild      |  1 +
->  arch/openrisc/include/asm/Kbuild   |  1 +
->  arch/parisc/include/asm/Kbuild     |  1 +
->  arch/powerpc/include/asm/Kbuild    |  1 +
->  arch/riscv/include/asm/Kbuild      |  1 +
->  arch/s390/include/asm/Kbuild       |  1 +
->  arch/sh/include/asm/Kbuild         |  1 +
->  arch/sparc/include/asm/Kbuild      |  1 +
->  arch/um/include/asm/Kbuild         |  2 +-
->  arch/x86/Kconfig                   | 14 ++++++++++++++
->  arch/xtensa/include/asm/Kbuild     |  1 +
->  include/asm-generic/asi.h          |  5 +++++
->  22 files changed, 41 insertions(+), 1 deletion(-)
+Tested the patches that are part of sifive's release tree for p550.
+Both perf stat/record seems to work fine
+for a bunch of events.
 
-I don't think this all is needed. You can put asi.h with stubs used outside
-of arch/x86 in include/linux and save you the hassle of updating every
-architecture.
- 
-> diff --git a/arch/sparc/include/asm/Kbuild b/arch/sparc/include/asm/Kbuild
-> index 43b0ae4c2c2112d4d4d3cb3c60e787b175172dea..cb9062c9be17fe276cc92d2ac99d8b165f6297bf 100644
-> --- a/arch/sparc/include/asm/Kbuild
-> +++ b/arch/sparc/include/asm/Kbuild
-> @@ -4,3 +4,4 @@ generated-y += syscall_table_64.h
->  generic-y += agp.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += asi.h
+Based on that
+Tested-by: Atish Patra <atishp@rivosinc.com>
 
-sparc already has include/asm/asi.h, this will break the build
+@Samuel Holland : perf report that the following two events are not
+supported on the p550 board.
 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 7b9a7e8f39acc8e9aeb7d4213e87d71047865f5c..5a50582eb210e9d1309856a737d32b76fa1bfc85 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2519,6 +2519,20 @@ config MITIGATION_PAGE_TABLE_ISOLATION
->  
->  	  See Documentation/arch/x86/pti.rst for more details.
->  
-> +config MITIGATION_ADDRESS_SPACE_ISOLATION
-> +	bool "Allow code to run with a reduced kernel address space"
-> +	default n
-> +	depends on X86_64 && !PARAVIRT && !UML
-> +	help
-> +	  This feature provides the ability to run some kernel code
-> +	  with a reduced kernel address space. This can be used to
-> +	  mitigate some speculative execution attacks.
-> +
-> +	  The !PARAVIRT dependency is only because of lack of testing; in theory
-> +	  the code is written to work under paravirtualization. In practice
-> +	  there are likely to be unhandled cases, in particular concerning TLB
-> +	  flushes.
-> +
+cycle and instruction count:
+  core_clock_cycles
+       [Counts core clock cycles]
+  instructions_retired
+       [Counts instructions retired]
 
-If you expect other architectures might implement ASI the config would better
-fit into init/Kconfig or mm/Kconfig and in arch/x86/Kconfig will define
-ARCH_HAS_MITIGATION_ADDRESS_SPACE_ISOLATION.
+I assumed that these are raw events cycle/instruction retired events
+that can support
+perf sampling as well. Maybe I am missing something ? DT binding ?
 
->  config MITIGATION_RETPOLINE
->  	bool "Avoid speculative indirect branches in kernel"
->  	select OBJTOOL if HAVE_OBJTOOL
-> diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-> index fa07c686cbcc2153776a478ac4093846f01eddab..07cea6902f98053be244d026ed594fe7246755a6 100644
-> --- a/arch/xtensa/include/asm/Kbuild
-> +++ b/arch/xtensa/include/asm/Kbuild
-> @@ -8,3 +8,4 @@ generic-y += parport.h
->  generic-y += qrwlock.h
->  generic-y += qspinlock.h
->  generic-y += user.h
-> +generic-y += asi.h
-> diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..c4d9a5ff860a96428422a15000c622aeecc2d664
-> --- /dev/null
-> +++ b/include/asm-generic/asi.h
-> @@ -0,0 +1,5 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_GENERIC_ASI_H
-> +#define __ASM_GENERIC_ASI_H
-> +
-> +#endif
+> >
+> > Eric Lin (5):
+> >   perf vendor events riscv: Update SiFive Bullet events
+> >   perf vendor events riscv: Add SiFive Bullet version 0x07 events
+> >   perf vendor events riscv: Add SiFive Bullet version 0x0d events
+> >   perf vendor events riscv: Add SiFive P550 events
+> >   perf vendor events riscv: Add SiFive P650 events
+> >
+> > Samuel Holland (2):
+> >   perf vendor events riscv: Rename U74 to Bullet
+> >   perf vendor events riscv: Remove leading zeroes
+>
+> It'd be nice if anyone in the RISC-V community can review this.
+>
+> Thanks,
+> Namhyung
+>
+> >
+> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  6 +-
+> >  .../cycle-and-instruction-count.json          | 12 +++
+> >  .../arch/riscv/sifive/bullet-07/firmware.json |  1 +
+> >  .../riscv/sifive/bullet-07/instruction.json   |  1 +
+> >  .../arch/riscv/sifive/bullet-07/memory.json   |  1 +
+> >  .../riscv/sifive/bullet-07/microarch.json     | 62 +++++++++++++
+> >  .../riscv/sifive/bullet-07/watchpoint.json    | 42 +++++++++
+> >  .../cycle-and-instruction-count.json          |  1 +
+> >  .../arch/riscv/sifive/bullet-0d/firmware.json |  1 +
+> >  .../riscv/sifive/bullet-0d/instruction.json   |  1 +
+> >  .../arch/riscv/sifive/bullet-0d/memory.json   |  1 +
+> >  .../riscv/sifive/bullet-0d/microarch.json     | 72 +++++++++++++++
+> >  .../riscv/sifive/bullet-0d/watchpoint.json    |  1 +
+> >  .../sifive/{u74 =3D> bullet}/firmware.json      |  0
+> >  .../arch/riscv/sifive/bullet/instruction.json | 92 +++++++++++++++++++
+> >  .../arch/riscv/sifive/bullet/memory.json      | 32 +++++++
+> >  .../arch/riscv/sifive/bullet/microarch.json   | 57 ++++++++++++
+> >  .../arch/riscv/sifive/p550/firmware.json      |  1 +
+> >  .../arch/riscv/sifive/p550/instruction.json   |  1 +
+> >  .../arch/riscv/sifive/p550/memory.json        | 47 ++++++++++
+> >  .../arch/riscv/sifive/p550/microarch.json     |  1 +
+> >  .../p650/cycle-and-instruction-count.json     |  1 +
+> >  .../arch/riscv/sifive/p650/firmware.json      |  1 +
+> >  .../arch/riscv/sifive/p650/instruction.json   |  1 +
+> >  .../arch/riscv/sifive/p650/memory.json        | 57 ++++++++++++
+> >  .../arch/riscv/sifive/p650/microarch.json     | 62 +++++++++++++
+> >  .../arch/riscv/sifive/p650/watchpoint.json    |  1 +
+> >  .../arch/riscv/sifive/u74/instructions.json   | 92 -------------------
+> >  .../arch/riscv/sifive/u74/memory.json         | 32 -------
+> >  .../arch/riscv/sifive/u74/microarch.json      | 57 ------------
+> >  30 files changed, 555 insertions(+), 182 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/c=
+ycle-and-instruction-count.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/f=
+irmware.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/i=
+nstruction.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/m=
+emory.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/m=
+icroarch.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/w=
+atchpoint.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/c=
+ycle-and-instruction-count.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/f=
+irmware.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/i=
+nstruction.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/m=
+emory.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/m=
+icroarch.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/w=
+atchpoint.json
+> >  rename tools/perf/pmu-events/arch/riscv/sifive/{u74 =3D> bullet}/firmw=
+are.json (100%)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/inst=
+ruction.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/memo=
+ry.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/micr=
+oarch.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/firmwa=
+re.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/instru=
+ction.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p550/memory=
+.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/microa=
+rch.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-=
+and-instruction-count.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/firmwa=
+re.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/instru=
+ction.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/memory=
+.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/microa=
+rch.json
+> >  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/watchp=
+oint.json
+> >  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instruc=
+tions.json
+> >  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.=
+json
+> >  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microar=
+ch.json
+> >
+> > --
+> > 2.47.0
+> >
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-IMHO it should be include/linux/asi.h, with something like
 
-#infdef __LINUX_ASI_H
-#define __LINUX_ASI_H
 
-#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-
-#include <asm/asi.h>
-
-#else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-
-/* stubs for functions used outside arch/ */
-
-#endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-
-#endif /* __LINUX_ASI_H */
-
--- 
-Sincerely yours,
-Mike.
+--
+Regards,
+Atish
