@@ -1,167 +1,136 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8F7215061;
-	Mon,  3 Mar 2025 17:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4292222A5;
+	Mon,  3 Mar 2025 17:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022580; cv=none; b=gdYhNtGFF/c/RQBLdbP5O6aUbyKAVnUVvDTgWz3vHiX2ll65aTO2eIXeIn2/0HQ76F4UkjrD8zMKQmY9jJP6dT3JIwXKvHJOWpaGoPCEGhRQ0+DC7Rett5nu5nqf520b5Y7y6KPBww91DwEKDq7IFu+FWSTbXiNdy+6J56mVCxQ=
+	t=1741023488; cv=none; b=EZ16k1qddj4mOLDaDFOMBgeU3+rozigphIf2CePeqMc2Quau13yb7X3ExoCqczZxdVSyHj6jEZ1R/X85qes4UnJHlRqiaiH/c57Z83H7sJEEaJp8XFjL/WQc4SOsakQIk4o8E1Io8KD515hScCnTRAm9VoA83SGHWVStYv/IvFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741022580; c=relaxed/simple;
-	bh=BojXVM7TuWbWt/szVo1jrbABw+mVS2arDbx8q9WpoZY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6Mh6R/Y/8K93Luqa1nU3xrzItoPylyRNABwoWgHzdvDMwPTzc/VDq6k3Wqn8gVXzGllOFTgUIouHKps1MYEPVSTS9jDi7zlc4QFaFbUgA/aah08Pj05oWorHhwCjyS2rPQjqiK7VsdNW92V/zPkDQCJOJW3cckX/hI7BZ+gGrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amwY23J5; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741023488; c=relaxed/simple;
+	bh=/uZ1vyZcbGkHg8U1+Qya92Gm+x1msqE71uAh4MvNP5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mzsOkPGFl8INMLaPHgisXqRD/bu83dwM7OaI0Jt9tfANRXURLM0f4mvB8Degimjek0L1MCMdE8/qU+8LmdVAu1QnlAKYuChBUmsOqoFlWRFa7hK7cpw8HxfAzYb5g/GaBzpuO4YwInZ2yMRRuyby/lEPcIwv4efCGU+ceFD5ixM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J29zA2yb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amwY23J5"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22382657540so39851015ad.2;
-        Mon, 03 Mar 2025 09:22:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741022578; x=1741627378; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=INEL+mkWEKLq34Mczv2nLd5ND0XQsLg0DNbt4SnzHDQ=;
-        b=amwY23J5gsz1xRWkInms3FLDMAzTeRbTYqN5DBJhjmnjWucir9X3AqhED8a5BqSnOd
-         53prtB6uMxMceCGb9KaSKkiRKphtyu7s1Fc+fBzjfS6KqFn3EoClu67pQmNcg7OfXTJA
-         TuiyHW8Q9WP81zE5i+2H9Ys2mw1ek9JoFkE8Jwohc0YKcyVJowh0wffnhnXmLl+n2i1r
-         8O8WTm+Kbvdx1e0nAQ72+OARKs4zv6TcQxp1l5YT8ozAaGYCNlrdxDvsWdabv2H1Wn3z
-         JzyYTHKlxNPXUQi+jYq7DgdmUlLdg8qZR8bHP6H4VjwwRZtWIgw3UgXfWNV6Qp9pRJMz
-         3zdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741022578; x=1741627378;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=INEL+mkWEKLq34Mczv2nLd5ND0XQsLg0DNbt4SnzHDQ=;
-        b=Ozr+CuYyENEPwF2gM2g07QVQ18xWlZUBZDe/3D0zF+UtXkM8w7FcI4zufm4ECEE9RU
-         g9Ahnl75GZEnz8b/XeVHWG8x5k2PFWcM+UPtqEWARPIyNawkDX4fLf4ifjS06GXLQ3Xb
-         ckZ3XKPD+DfuD92qNKbLtBtFwujbFmpS0Z7vFtUTCiQYdhvx9BHaJftSqNkSn27gg82c
-         tmKsnhMKB0f7C46tCJkUXqXhMJZqGr8B+jtmIkJk+LIuZyMAKqRAy3E0OdX1sesg5CTx
-         e8qqlvAWOjn+tm2tDXfqUjVexJ0l2wmMn+ZjEQIE2HxwTQldALqq6d3QznffjNDEJykU
-         HL+w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/0mVeBnfLS/VfwooAM7FPAvjGUyIV9sAfPz9Ggi8ycW0hQ5f0MdtHWPY6Bo27+GfPIr5lQIWpmZc=@vger.kernel.org, AJvYcCXcjNMFIdbVct/xi7UDOCbCE2MsDxHluLVKincnYpnms2+U8isLSmHpGRfKP2Zw56v9RN+NZt7rBWYCiGQUKfaKiw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOmAQLbMXUnv50uH2pTvF1KapilnUDOJ+AidaSAdN2vVf/M4Fk
-	hrkvzEAdZVi18dwk/H9SkbxIP/EeMeSHn2L8KRldFLXJlslRqumw
-X-Gm-Gg: ASbGncs6u5+3cywXiT3sgoB46YwZcIKk0gKMnIkQM148QSqc0WbIqFQ39X53UmwBxjb
-	SajxXraIvLfmbz52/x/IaXcck+F3cijLD9eMn3Yj/FJ70UhnBxLdMMbAXzYalbDomk0Njfk3HXm
-	SwvHiKImFBlrOaeA+cRNyg8sJ0VEgGx3PuIAiCqLKZ2KlfUs/xwHNQRn/zzdNAOUrA7nOoJpbBO
-	oaVvC9pDmag1NfxfOI7q4DtmM8hYFMUmAcla0O8xnrHjBu2epWf1cnSc55c54i44b1ROaFy7Doc
-	w6W7CC++j14Nzv6P42r0MoyqATQnkg8YSKI5smrp
-X-Google-Smtp-Source: AGHT+IGYNi+2VxBOSdALmg07N0zm4mXQing5p3PqQ+CWp+YUijGcJXrzBi5jiCAbCilBAkdB5b8amA==
-X-Received: by 2002:a17:903:fa5:b0:220:f40c:71e9 with SMTP id d9443c01a7336-22368f71f0dmr184667325ad.9.1741022576289;
-        Mon, 03 Mar 2025 09:22:56 -0800 (PST)
-Received: from debian ([2607:fb90:8e63:c2b3:5405:c8bf:c1d1:41d5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c596esm80333925ad.152.2025.03.03.09.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 09:22:55 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 3 Mar 2025 09:22:50 -0800
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 2/5] PCI: dwc: Add helper to find the Vendor Specific
- Extended Capability (VSEC)
-Message-ID: <Z8XlapjLRfz44hF7@debian>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132029epcas5p1e56dd355e7ac912ceb25325595de0d24@epcas5p1.samsung.com>
- <20250221131548.59616-3-shradha.t@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J29zA2yb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7C7C4CED6;
+	Mon,  3 Mar 2025 17:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741023488;
+	bh=/uZ1vyZcbGkHg8U1+Qya92Gm+x1msqE71uAh4MvNP5I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=J29zA2ybXqy+SHwNIvznlLXYreMsURt0KgGc/Tk7RWJcwrAks+zyaaJAlqC+oXVRH
+	 Gd1k4rCqAGG6ZuW74xuSmQlQBFfp7ukc2v9UZcOm6eryBam7UeZymsGVoGHpXuq1uL
+	 yxZ7EF3HuB8Plxvu1Vx5e1YR0pfSSHlfCZhknZW7hIifoG0wjTbu64x5GCWhF/wsj0
+	 iM5JySIB89MbVIpisqNx2EnYSutJF/9tShnsutP/f4Da0GNQI+WGK90Z6oNffm4Oqh
+	 9NfxR0kYLCrB/QN8BBtEbwvrspxdfUUEhXf6/OIRbcbiyjx1W83CJRcb4uy4U6jDQJ
+	 Gi7BHoZexbStQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCHSET 0/7] perf annotate: Add --code-with-type option
+Date: Mon,  3 Mar 2025 09:38:00 -0800
+Message-ID: <20250303173807.1765098-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250221131548.59616-3-shradha.t@samsung.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 06:45:45PM +0530, Shradha Todi wrote:
-> dw_pcie_find_vsec_capability() is used by upcoming DWC APIs to find the
-How are about "Add dw_pcie_find_ext_capability(), which will be used by
-..."
+Hello,
 
-Other than that,
+There are roughly two modes in the perf annotate.  One is normal code
+anootation and the other is data type annotation.  I'm proposing a new
+way to combine the code and data annotation together.
+
+With this option, "# data-type: <name> [offset (field)]" part will be
+adeded when it found a data type for the given instruction.  This is
+for every instruction in the function regardless whether it has a
+sample or not.
+
+This will be useful to understand function level data access patterns.
+Currently it only works with --stdio, but I can add it to TUI later.
+
+Here's an example output.
+
+  $ perf annotate --code-with-type --stdio
+  ...
+ Percent |      Source code & Disassembly of elf for cpu/mem-loads,ldlat=30/P (4 samples, percent: local period)
+  ----------------------------------------------------------------------------------------------------------------
+           : 0                0xffffffff81bb7060 <__schedule>:
+      0.00 :   ffffffff81bb7060:        pushq   %rbp              # data-type: (stack operation)
+      0.00 :   ffffffff81bb7061:        movq    %rsp, %rbp
+      0.00 :   ffffffff81bb7064:        pushq   %r15              # data-type: (stack operation)
+      0.00 :   ffffffff81bb7066:        pushq   %r14              # data-type: (stack operation)
+      0.00 :   ffffffff81bb7068:        pushq   %r13              # data-type: (stack operation)
+      0.00 :   ffffffff81bb706a:        pushq   %r12              # data-type: (stack operation)
+      0.00 :   ffffffff81bb706c:        pushq   %rbx              # data-type: (stack operation)
+      0.00 :   ffffffff81bb706d:        movq    $0x33180, %rbx
+      0.00 :   ffffffff81bb7074:        movq    %rbx, %r12
+      0.00 :   ffffffff81bb7077:        subq    $0x38, %rsp
+      0.00 :   ffffffff81bb707b:        movl    %edi, -0x5c(%rbp)         # data-type: unsigned int +0
+      0.00 :   ffffffff81bb707e:        movq    %gs:0x28, %rax            # data-type: (stack canary)
+      0.00 :   ffffffff81bb7087:        movq    %rax, -0x30(%rbp)         # data-type: (stack canary)
+      0.00 :   ffffffff81bb708b:        xorl    %eax, %eax
+      0.00 :   ffffffff81bb708d:        movq    $0x0, -0x58(%rbp)         # data-type: struct rq_flags +0 (flags)
+      0.00 :   ffffffff81bb7095:        movq    $0x0, -0x50(%rbp)         # data-type: struct rq_flags +0x8 (clock_update_flags)
+      0.00 :   ffffffff81bb709d:        callq   0xffffffff81baa100 <debug_smp_processor_id>               # data-type: (stack operation)
+      0.00 :   ffffffff81bb70a2:        cltq
+      0.00 :   ffffffff81bb70a4:        addq    -0x7dcf0500(,%rax,8), %r12                # data-type: long unsigned int[] +0
+      0.00 :   ffffffff81bb70ac:        movq    0x960(%r12), %r13         # data-type: struct rq +0x960 (curr)
+      0.00 :   ffffffff81bb70b4:        movq    0x20(%r13), %rax          # data-type: struct task_struct +0x20 (stack)
+      0.00 :   ffffffff81bb70b8:        cmpq    $0x57ac6e9d, (%rax)
+      0.00 :   ffffffff81bb70bf:        jne     0xffffffff81bb7bca <__schedule+0xb6a>
+      0.00 :   ffffffff81bb70c5:        movl    %gs:0x7e47b87c(%rip), %eax  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
+      0.00 :   ffffffff81bb70cc:        andl    $0x7fffffff, %eax
+      0.00 :   ffffffff81bb70d1:        cmpl    $0x1, %eax
+      0.00 :   ffffffff81bb70d4:        jne     0xffffffff81bb79de <__schedule+0x97e>
+      0.00 :   ffffffff81bb70da:        nopl    (%rax,%rax)
+      0.00 :   ffffffff81bb70df:        cmpl    $0x2, 0xe86b3a(%rip)  # 0xffffffff82a3dc20 <prof_on>              # data-type: int +0
+      0.00 :   ffffffff81bb70e6:        movq    0x8(%rbp), %rsi
+      0.00 :   ffffffff81bb70ea:        je      0xffffffff81bb7a0b <__schedule+0x9ab>
+      0.00 :   ffffffff81bb70f0:        nopl    (%rax,%rax)
+      0.00 :   ffffffff81bb70f5:        nop
+      ...
+
+The code is also available at 'perf/annotate-code-data-v1' branch in
+git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
 
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Namhyung Kim (7):
+  perf annotate-data: Add annotated_data_type__get_member_name()
+  perf annotate: Remove unused len parameter from
+    annotation_line__print()
+  perf annotate: Pass annotation_options to annotation_line__print()
+  perf annotate: Pass hist_entry to annotate functions
+  perf annotate: Factor out __hist_entry__get_data_type()
+  perf annotate: Implement code + data type annotation
+  perf annotate: Add --code-with-type option.
 
-> VSEC capabilities like PTM, RAS etc.
-> 
-> Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 145e7f579072..a7c0671c6715 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -16,6 +16,7 @@
->  #include <linux/gpio/consumer.h>
->  #include <linux/ioport.h>
->  #include <linux/of.h>
-> +#include <linux/pcie-dwc.h>
->  #include <linux/platform_device.h>
->  #include <linux/sizes.h>
->  #include <linux/types.h>
-> @@ -283,6 +284,45 @@ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->  
-> +static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
-> +					  u16 vsec_id)
-> +{
-> +	u16 vsec = 0;
-> +	u32 header;
-> +
-> +	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
-> +		return 0;
-> +
-> +	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-> +						       PCI_EXT_CAP_ID_VNDR))) {
-> +		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
-> +		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
-> +			return vsec;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci,
-> +					const struct dwc_pcie_vsec_id *vsec_ids)
-> +{
-> +	const struct dwc_pcie_vsec_id *vid;
-> +	u16 vsec;
-> +	u32 header;
-> +
-> +	for (vid = vsec_ids; vid->vendor_id; vid++) {
-> +		vsec = __dw_pcie_find_vsec_capability(pci, vid->vendor_id,
-> +						      vid->vsec_id);
-> +		if (vsec) {
-> +			header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
-> +			if (PCI_VNDR_HEADER_REV(header) == vid->vsec_rev)
-> +				return vsec;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->  {
->  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> -- 
-> 2.17.1
-> 
+ tools/perf/Documentation/perf-annotate.txt |   4 +
+ tools/perf/builtin-annotate.c              |  19 +-
+ tools/perf/builtin-top.c                   |   2 +-
+ tools/perf/util/annotate-data.c            |  34 +++
+ tools/perf/util/annotate-data.h            |   3 +
+ tools/perf/util/annotate.c                 | 267 +++++++++++++--------
+ tools/perf/util/annotate.h                 |   8 +-
+ tools/perf/util/sort.c                     |  39 +--
+ 8 files changed, 236 insertions(+), 140 deletions(-)
+
+-- 
+2.48.1.711.g2feabab25a-goog
+
