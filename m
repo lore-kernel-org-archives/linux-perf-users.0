@@ -1,135 +1,205 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF512163A4;
-	Mon,  3 Mar 2025 16:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE44214A93;
+	Mon,  3 Mar 2025 16:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741018939; cv=none; b=t5A46dCKCeJO0d3SH0mvymOrLKgt+hwFKDuUDDNZ0E14wxZDAFZophlIUXYPhAEn5OHRkA70P+6d6uLL1LQpbu68pi9tr5PjkTSRdpzXh++ZJs/oWe4NzzKva6CUvhleD8O3qcmZOfoNegUw7g6lpb3ra8rjvoLFhYw0ih7eGYk=
+	t=1741019412; cv=none; b=kzV8rKi8P+dPu6HaBAv8YtAe9Xf5JfsIlgRToSm/BYN66KWV995xqBa1AaCMegLst1OHiCfjTbbvEFH3SZhyRhy7+CqnMoEHXaQ9dcWl94HtcCiy8ku83nMYL1aM9T38yzvTLIRBKuGc+610HWxu21T/UQ3kBn3ieFoQpYkFeMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741018939; c=relaxed/simple;
-	bh=hXNpShBlQaqGOkOBpQ3icY/mZYgECaqMzluw+vPG8xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZwBeV5w1uUbM71L2Jkf+Vdp96gxbCyM14TEGus0DseS1u+kGQWx9K4kp5VZo1EvFqGFJsvfx7xZT0dX8G2B3jiUUOhYUq0GWfuv0a3wiR3yz6YkA3SYSz0nB0pDBobBjhb1F/tbp73pdtZcpWN+8fUDIHoQGSr/V9fzoUd8uB+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B55C106F;
-	Mon,  3 Mar 2025 08:22:29 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D61B73F673;
-	Mon,  3 Mar 2025 08:22:14 -0800 (PST)
-Date: Mon, 3 Mar 2025 16:22:10 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>,
-	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/12] perf script: Make printing flags reliable
-Message-ID: <20250303162210.GH2157064@e132581.arm.com>
-References: <20250217195908.176207-1-leo.yan@arm.com>
- <20250217195908.176207-2-leo.yan@arm.com>
- <34795c29-d256-49ce-9d01-435f8cd91611@intel.com>
+	s=arc-20240116; t=1741019412; c=relaxed/simple;
+	bh=NF2lpiuV+zb9/5kJXi2x9INrbmqYdT4/C1/9pGsC+OI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j2LwlDBSbUp/iVbK++eIAuIP3CVQOXX/Zi8DovqTOdZgFERWbL0AVhfOlIKWgCz69HDwxkPDNQO7GIUv+diX5rSJKTiSey5jxZxUCWmeVgJWNDpPM6CobF4CkGz6zudnXko68ItRRhiigDsumsUWRa1U416oAwB9Nj2kg8Vc2q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7U89e/H; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7U89e/H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F5BC4CEE9;
+	Mon,  3 Mar 2025 16:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019410;
+	bh=NF2lpiuV+zb9/5kJXi2x9INrbmqYdT4/C1/9pGsC+OI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D7U89e/HVZZv92UTnamnuG1FVPeAv+2CznxxkOldtt+y2Kx3r/ICYWGu/murnSm3g
+	 rm7YrfRqAhLyCfcpt1AiYtwRJwFPqNXL+W5KQgmVx3y3sY7i0WuUJ61ehsNv4yo4uu
+	 YssxHEgxXQymDWIVxtKl1OAb2Q6MwALiDBmuN+EcYOSs40qC0dZpeums6tRlqpgcKE
+	 SNc44bE1R4RnfRATMlSRJMFcqqU1lYUxWYJIWJgtqAqvb6XNXQVjckC1smZ8H0nHg1
+	 /HK/65bEg+cHlISdZWYrk5wyTW4UM+OSoqnSNvI8q2KNeSGacCY9kAUWDQrSz8x9Oy
+	 Hl4FDwQvxJhAA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 09/17] perf/x86/intel: Use better start period for frequency mode
+Date: Mon,  3 Mar 2025 11:29:41 -0500
+Message-Id: <20250303162951.3763346-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303162951.3763346-1-sashal@kernel.org>
+References: <20250303162951.3763346-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34795c29-d256-49ce-9d01-435f8cd91611@intel.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.5
+Content-Transfer-Encoding: 8bit
 
-Hi Adrian,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On Mon, Mar 03, 2025 at 12:44:33PM +0200, Adrian Hunter wrote:
-> On 17/02/25 21:58, Leo Yan wrote:
-> > Add a check for the generated string of flags.  Print out the raw number
-> > if the string generation fails.
-> 
-> How does it fail?
+[ Upstream commit a26b24b2e21f6222635a95426b9ef9eec63d69b1 ]
 
-In practice, I agreed perf_sample__sprintf_flags() will not fail.  This
-bases on a careful calculation for every invoking snprintf().
+Freqency mode is the current default mode of Linux perf. A period of 1 is
+used as a starting period. The period is auto-adjusted on each tick or an
+overflow, to meet the frequency target.
 
-Please see comment below.
+The start period of 1 is too low and may trigger some issues:
 
-> > In another case, if the string length is longer than the aligned size,
-> > allow the completed string to be printed.
-> > 
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Reviewed-by: James Clark <james.clark@linaro.org>
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >  tools/perf/builtin-script.c   | 10 ++++++++--
-> >  tools/perf/util/trace-event.h |  2 ++
-> >  2 files changed, 10 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index d797cec4f054..2c4b1fb7dc72 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -1709,9 +1709,15 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
-> >  static int perf_sample__fprintf_flags(u32 flags, FILE *fp)
-> >  {
-> >  	char str[SAMPLE_FLAGS_BUF_SIZE];
-> > +	int ret;
-> > +
-> > +	ret = perf_sample__sprintf_flags(flags, str, sizeof(str));
-> > +	if (ret < 0)
-> 
-> AFAICT ret is always >= 0
+- Many HWs do not support period 1 well.
+  https://lore.kernel.org/lkml/875xs2oh69.ffs@tglx/
 
-Since I refactored perf_sample__sprintf_flags() in the sequential
-patches, for easier capturing and debugging, here checks the return
-value to detect any potential issues.
+- For an event that occurs frequently, period 1 is too far away from the
+  real period. Lots of samples are generated at the beginning.
+  The distribution of samples may not be even.
 
-Later when we review a perf log, a printed raw number for error cases
-can remind there must be something wrong for printing flags.
+- A low starting period for frequently occurring events also challenges
+  virtualization, which has a longer path to handle a PMI.
 
-> > +		return fprintf(fp, "  raw flags:0x%-*x ",
-> > +			       SAMPLE_FLAGS_STR_ALIGNED_SIZE - 12, flags);
-> >  
-> > -	perf_sample__sprintf_flags(flags, str, sizeof(str));
-> > -	return fprintf(fp, "  %-21s ", str);
-> > +	ret = max(ret, SAMPLE_FLAGS_STR_ALIGNED_SIZE);
-> > +	return fprintf(fp, "  %-*s ", ret, str);
-> 
-> -21 means the field width is 21 and left-justified.  It should not
-> truncate the string.
+The limit_period value only checks the minimum acceptable value for HW.
+It cannot be used to set the start period, because some events may
+need a very low period. The limit_period cannot be set too high. It
+doesn't help with the events that occur frequently.
 
-No, it does not truncate the string.
+It's hard to find a universal starting period for all events. The idea
+implemented by this patch is to only give an estimate for the popular
+HW and HW cache events. For the rest of the events, start from the lowest
+possible recommended value.
 
-It calculates a maximum value between the returned length and 21 (
-defined in SAMPLE_FLAGS_STR_ALIGNED_SIZE).  It keeps left-justified and
-can printing a complete string if the string length is bigger than 21.
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250117151913.3043942-3-kan.liang@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/intel/core.c | 85 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-Thanks,
-Leo
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 2bba1d934efb0..6651360d6a525 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3949,6 +3949,85 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
+ 	return test_bit(idx, (unsigned long *)&intel_cap->capabilities);
+ }
+ 
++static u64 intel_pmu_freq_start_period(struct perf_event *event)
++{
++	int type = event->attr.type;
++	u64 config, factor;
++	s64 start;
++
++	/*
++	 * The 127 is the lowest possible recommended SAV (sample after value)
++	 * for a 4000 freq (default freq), according to the event list JSON file.
++	 * Also, assume the workload is idle 50% time.
++	 */
++	factor = 64 * 4000;
++	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
++		goto end;
++
++	/*
++	 * The estimation of the start period in the freq mode is
++	 * based on the below assumption.
++	 *
++	 * For a cycles or an instructions event, 1GHZ of the
++	 * underlying platform, 1 IPC. The workload is idle 50% time.
++	 * The start period = 1,000,000,000 * 1 / freq / 2.
++	 *		    = 500,000,000 / freq
++	 *
++	 * Usually, the branch-related events occur less than the
++	 * instructions event. According to the Intel event list JSON
++	 * file, the SAV (sample after value) of a branch-related event
++	 * is usually 1/4 of an instruction event.
++	 * The start period of branch-related events = 125,000,000 / freq.
++	 *
++	 * The cache-related events occurs even less. The SAV is usually
++	 * 1/20 of an instruction event.
++	 * The start period of cache-related events = 25,000,000 / freq.
++	 */
++	config = event->attr.config & PERF_HW_EVENT_MASK;
++	if (type == PERF_TYPE_HARDWARE) {
++		switch (config) {
++		case PERF_COUNT_HW_CPU_CYCLES:
++		case PERF_COUNT_HW_INSTRUCTIONS:
++		case PERF_COUNT_HW_BUS_CYCLES:
++		case PERF_COUNT_HW_STALLED_CYCLES_FRONTEND:
++		case PERF_COUNT_HW_STALLED_CYCLES_BACKEND:
++		case PERF_COUNT_HW_REF_CPU_CYCLES:
++			factor = 500000000;
++			break;
++		case PERF_COUNT_HW_BRANCH_INSTRUCTIONS:
++		case PERF_COUNT_HW_BRANCH_MISSES:
++			factor = 125000000;
++			break;
++		case PERF_COUNT_HW_CACHE_REFERENCES:
++		case PERF_COUNT_HW_CACHE_MISSES:
++			factor = 25000000;
++			break;
++		default:
++			goto end;
++		}
++	}
++
++	if (type == PERF_TYPE_HW_CACHE)
++		factor = 25000000;
++end:
++	/*
++	 * Usually, a prime or a number with less factors (close to prime)
++	 * is chosen as an SAV, which makes it less likely that the sampling
++	 * period synchronizes with some periodic event in the workload.
++	 * Minus 1 to make it at least avoiding values near power of twos
++	 * for the default freq.
++	 */
++	start = DIV_ROUND_UP_ULL(factor, event->attr.sample_freq) - 1;
++
++	if (start > x86_pmu.max_period)
++		start = x86_pmu.max_period;
++
++	if (x86_pmu.limit_period)
++		x86_pmu.limit_period(event, &start);
++
++	return start;
++}
++
+ static int intel_pmu_hw_config(struct perf_event *event)
+ {
+ 	int ret = x86_pmu_hw_config(event);
+@@ -3960,6 +4039,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 	if (ret)
+ 		return ret;
+ 
++	if (event->attr.freq && event->attr.sample_freq) {
++		event->hw.sample_period = intel_pmu_freq_start_period(event);
++		event->hw.last_period = event->hw.sample_period;
++		local64_set(&event->hw.period_left, event->hw.sample_period);
++	}
++
+ 	if (event->attr.precise_ip) {
+ 		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
+ 			return -EINVAL;
+-- 
+2.39.5
 
-> 
-> >  }
-> >  
-> >  struct printer_data {
-> > diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> > index ac9fde2f980c..71e680bc3d4b 100644
-> > --- a/tools/perf/util/trace-event.h
-> > +++ b/tools/perf/util/trace-event.h
-> > @@ -145,6 +145,8 @@ int common_flags(struct scripting_context *context);
-> >  int common_lock_depth(struct scripting_context *context);
-> >  
-> >  #define SAMPLE_FLAGS_BUF_SIZE 64
-> > +#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
-> > +
-> >  int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
-> >  
-> >  #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
-> 
