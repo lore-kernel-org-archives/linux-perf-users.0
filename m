@@ -1,205 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6056A268FD0;
-	Mon,  3 Mar 2025 16:32:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE8B2206AF;
+	Mon,  3 Mar 2025 16:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019523; cv=none; b=qPJnxjFnK8uWyB+yfgoyZ3Kl3m8JAJQ9YvBnOQyEC+72Qoz4PeSP0YmZ/VX6ly1Bc5D1uRiTT5ENPGCOngwa+EAyvM3swaLSwDA2At08bIO3xjoG9GhSe9kUf/GSThizf6cIGiH9+xa95VBcd+qJX9WtI95ng8VkiH9XalbUrRQ=
+	t=1741020275; cv=none; b=sqVzxUk2pZ4uYAjnt9tOUz7iJTbz4oaOtsIj3iLQeUzIqucQcBSx5Ezmdicfu+ECQfoDppSEUWLjOP0ICB6CFrXga03HKL4q007Rx9eIpmau+7n3/0/EcfNTBgzoifNuXYd/ys9MwWXOSn9uPhFqViqNrgVfitu+epU51URVNe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019523; c=relaxed/simple;
-	bh=ie+wMRNEDefxKUryUxDs6LZ+jDYyc9gfMAR8CBwttYw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N6dlLTWXoOvu8aYTq9+E6+DYxTfKoH26vaDBvbITXXMmJAScQ3irebeuAyjRN758+9Z8hodituf4inYaLHVlOZQXTGodid2lgtMPE3D/axt3IpQqGYVOzOtsRypfQTzW+sVwVmMMU7n7Ha6fn69bbVIL8VvUbo1RRCJfvVufoA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eR0s+yIX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741020275; c=relaxed/simple;
+	bh=xihpcD+p6hJonkzJT3Ob5VMeFACGeyJ+HMFQWEbE3co=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Svg/FGpHBDNF87xqFprlozNJvRo0r64jDHHMg1U9AK+QaNuT/tasbFxduBnN8mo5rj/lynYAwL7zM2njQElP8jvsuVNtxynUkEiSIDg0AyE8R+9evar0TQimwZtsp/I1agy/lbOQPPT44cleHkXgVrONF87xUqP5qDK0C9rbKpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LqGlCvl9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eR0s+yIX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9D4C4CEE4;
-	Mon,  3 Mar 2025 16:32:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LqGlCvl9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A192C4CEEA;
+	Mon,  3 Mar 2025 16:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019523;
-	bh=ie+wMRNEDefxKUryUxDs6LZ+jDYyc9gfMAR8CBwttYw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eR0s+yIXq2d10cJMweeV0GXGxTpJc4IIENI4xqZxsoa+pj1mysXQKXXwhx62pva7N
-	 jRA+9Bm2+QkySfvNTehfbZuYit3BX34UBhYZ2wQ1adWhGWpkko/lgdm01M5lSS1rXY
-	 CDbHUSaNEUX/q6k9B2Zwc5A5QDTiPtT1Z4d97PkHd35LtlWcGwqGeYAspv5sWm0kVI
-	 peBUf+6nYTDFVP4e+t17W4BhOwUYHFFCEWHa+z43lxlloMRzmOIo5o71FKg2deo9w8
-	 TbqQ9AcaJrFdxDeaV/U5koCnzLuVEc1K+5J/B6lWLbL3cvTBsbkwoFbqCPu77kud1k
-	 DAX42eW6nTq3A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 5/9] perf/x86/intel: Use better start period for frequency mode
-Date: Mon,  3 Mar 2025 11:31:48 -0500
-Message-Id: <20250303163152.3764156-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303163152.3764156-1-sashal@kernel.org>
-References: <20250303163152.3764156-1-sashal@kernel.org>
+	s=k20201202; t=1741020274;
+	bh=xihpcD+p6hJonkzJT3Ob5VMeFACGeyJ+HMFQWEbE3co=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LqGlCvl9p9p8PhByHtBGN13f43XGlifacot+vZvS3pHIT046+NGn6uP4qMc5VhxYW
+	 FdDLx312La6TUDQogZoHr1zYrG9yeg8bbI4jBo0EJIO/zjFHmEMFshF4XCdbaW89QU
+	 hBfhXKkuQ1OpoUWXsrNeZ55/WyijVzOT1lvWDzybN7DJIkAf+DvQbmVHhYLcWNNhOr
+	 YA2q3BrMSYKWqZJM7P0pBaeYRLw5fKUOS3ZjKrZQHc6zOkuYEIIQogk2OetMH0RVDZ
+	 dIdvy2Xazn2X2YddXWXl9rWCACiHN5fTIzHWQj0qcVCZbuqDhns7jUjmWwkkJd99yq
+	 XrB7Qn1ZwDTvg==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abf628d653eso282468266b.0;
+        Mon, 03 Mar 2025 08:44:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUPQHmS79ihmQQfilMhZXBq8GscWUZGiXbjyCgCD6uyJql8K8cnzRCblqRACLehMostFP8Gdjuuu6uWfEI7Z/OePA==@vger.kernel.org, AJvYcCV35zEAKXbAPJuwtHlfSKrFx9ERw58FQWQdQt+TRxrPwDcbhsQNTMDF62NczkcLp5ZrHaimJTz0p5GBTZsG@vger.kernel.org, AJvYcCVEs/wetJcn1lhjy/dgZ42jpwTsFXVyMCf+RW42zMNwTPGszVn88D37hTgGaT5WehT1gNvOQJTqXZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCkeiFY9adntGR8PegFsuksv864GJwZVzLRBbce5Q8tndcViPT
+	59C4KJssMpnO17B+EVZYlWWcoGQCS1kiTlS3AxngbmKfUXGy5QLpcok4FSLxszbOTv6EwAXHrx2
+	2wgu69ROtNXD4enaVvtbSSNNJfQ==
+X-Google-Smtp-Source: AGHT+IFs3AxR8k5eF3cLqq0Jy6YcBJKsznbiFF0lDq6kRV8nU05db493Qg3NVLNrVPLfT0m9I9tnp+vPUCeMeelwMrk=
+X-Received: by 2002:a17:907:da5:b0:abf:7a26:c46a with SMTP id
+ a640c23a62f3a-abf7a26c5d8mr394234266b.50.1741020272581; Mon, 03 Mar 2025
+ 08:44:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.178
-Content-Transfer-Encoding: 8bit
+References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org> <174080569248.3208873.17639032755999041028.b4-ty@kernel.org>
+In-Reply-To: <174080569248.3208873.17639032755999041028.b4-ty@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 3 Mar 2025 10:44:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLijFG1PFkqKk7hXzC=aj70OLQsXwC280QsCO=PnCVZYg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqS2WChjdYpf1hur2V7GzhdVdMY_80V1LgU_ZsJaDcMPJ5xdVGvREIXSNM
+Message-ID: <CAL_JsqLijFG1PFkqKk7hXzC=aj70OLQsXwC280QsCO=PnCVZYg@mail.gmail.com>
+Subject: Re: [PATCH v20 00/11] arm64/perf: Enable branch stack sampling
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Sat, Mar 1, 2025 at 1:05=E2=80=AFAM Will Deacon <will@kernel.org> wrote:
+>
+> On Tue, 18 Feb 2025 14:39:55 -0600, Rob Herring (Arm) wrote:
+> > This series enables perf branch stack sampling support on arm64 via a
+> > v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details
+> > on BRBE can be found in the Arm ARM[1] chapter D18.
+> >
+> > I've picked up this series from Anshuman. v19 and v20 versions have bee=
+n
+> > reworked quite a bit by Mark and myself. The bulk of those changes are
+> > in patch 11.
+> >
+> > [...]
+>
+> Applied cleanups to will (for-next/perf), thanks!
+>
+> [01/11] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling c=
+ounters
+>         https://git.kernel.org/will/c/04bd15c4cbc3
+> [02/11] perf: arm_pmu: Don't disable counter in armpmu_add()
+>         https://git.kernel.org/will/c/dcca27bc1ecc
+> [03/11] perf: arm_pmuv3: Don't disable counter in armv8pmu_enable_event()
+>         https://git.kernel.org/will/c/4b0567ad0be5
+> [04/11] perf: arm_v7_pmu: Drop obvious comments for enabling/disabling co=
+unters and interrupts
+>         https://git.kernel.org/will/c/7a5387748215
+> [05/11] perf: arm_v7_pmu: Don't disable counter in (armv7|krait_|scorpion=
+_)pmu_enable_event()
+>         https://git.kernel.org/will/c/7bf1001e0d91
+> [06/11] perf: apple_m1: Don't disable counter in m1_pmu_enable_event()
+>         https://git.kernel.org/will/c/c2e793da59fc
+> [07/11] perf: arm_pmu: Move PMUv3-specific data
+>         https://git.kernel.org/will/c/dc4d58a752ea
 
-[ Upstream commit a26b24b2e21f6222635a95426b9ef9eec63d69b1 ]
+I don't know if you looked at the thread on patch 11 and said "long
+discussion, I'll assume a new version is coming. Next!" because that's
+what I would do. In this case though, there's not any changes.
 
-Freqency mode is the current default mode of Linux perf. A period of 1 is
-used as a starting period. The period is auto-adjusted on each tick or an
-overflow, to meet the frequency target.
-
-The start period of 1 is too low and may trigger some issues:
-
-- Many HWs do not support period 1 well.
-  https://lore.kernel.org/lkml/875xs2oh69.ffs@tglx/
-
-- For an event that occurs frequently, period 1 is too far away from the
-  real period. Lots of samples are generated at the beginning.
-  The distribution of samples may not be even.
-
-- A low starting period for frequently occurring events also challenges
-  virtualization, which has a longer path to handle a PMI.
-
-The limit_period value only checks the minimum acceptable value for HW.
-It cannot be used to set the start period, because some events may
-need a very low period. The limit_period cannot be set too high. It
-doesn't help with the events that occur frequently.
-
-It's hard to find a universal starting period for all events. The idea
-implemented by this patch is to only give an estimate for the popular
-HW and HW cache events. For the rest of the events, start from the lowest
-possible recommended value.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250117151913.3043942-3-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/core.c | 85 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index b70e1522a27ac..286ae1d9778d1 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3717,6 +3717,85 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
- 	return test_bit(idx, (unsigned long *)&intel_cap->capabilities);
- }
- 
-+static u64 intel_pmu_freq_start_period(struct perf_event *event)
-+{
-+	int type = event->attr.type;
-+	u64 config, factor;
-+	s64 start;
-+
-+	/*
-+	 * The 127 is the lowest possible recommended SAV (sample after value)
-+	 * for a 4000 freq (default freq), according to the event list JSON file.
-+	 * Also, assume the workload is idle 50% time.
-+	 */
-+	factor = 64 * 4000;
-+	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
-+		goto end;
-+
-+	/*
-+	 * The estimation of the start period in the freq mode is
-+	 * based on the below assumption.
-+	 *
-+	 * For a cycles or an instructions event, 1GHZ of the
-+	 * underlying platform, 1 IPC. The workload is idle 50% time.
-+	 * The start period = 1,000,000,000 * 1 / freq / 2.
-+	 *		    = 500,000,000 / freq
-+	 *
-+	 * Usually, the branch-related events occur less than the
-+	 * instructions event. According to the Intel event list JSON
-+	 * file, the SAV (sample after value) of a branch-related event
-+	 * is usually 1/4 of an instruction event.
-+	 * The start period of branch-related events = 125,000,000 / freq.
-+	 *
-+	 * The cache-related events occurs even less. The SAV is usually
-+	 * 1/20 of an instruction event.
-+	 * The start period of cache-related events = 25,000,000 / freq.
-+	 */
-+	config = event->attr.config & PERF_HW_EVENT_MASK;
-+	if (type == PERF_TYPE_HARDWARE) {
-+		switch (config) {
-+		case PERF_COUNT_HW_CPU_CYCLES:
-+		case PERF_COUNT_HW_INSTRUCTIONS:
-+		case PERF_COUNT_HW_BUS_CYCLES:
-+		case PERF_COUNT_HW_STALLED_CYCLES_FRONTEND:
-+		case PERF_COUNT_HW_STALLED_CYCLES_BACKEND:
-+		case PERF_COUNT_HW_REF_CPU_CYCLES:
-+			factor = 500000000;
-+			break;
-+		case PERF_COUNT_HW_BRANCH_INSTRUCTIONS:
-+		case PERF_COUNT_HW_BRANCH_MISSES:
-+			factor = 125000000;
-+			break;
-+		case PERF_COUNT_HW_CACHE_REFERENCES:
-+		case PERF_COUNT_HW_CACHE_MISSES:
-+			factor = 25000000;
-+			break;
-+		default:
-+			goto end;
-+		}
-+	}
-+
-+	if (type == PERF_TYPE_HW_CACHE)
-+		factor = 25000000;
-+end:
-+	/*
-+	 * Usually, a prime or a number with less factors (close to prime)
-+	 * is chosen as an SAV, which makes it less likely that the sampling
-+	 * period synchronizes with some periodic event in the workload.
-+	 * Minus 1 to make it at least avoiding values near power of twos
-+	 * for the default freq.
-+	 */
-+	start = DIV_ROUND_UP_ULL(factor, event->attr.sample_freq) - 1;
-+
-+	if (start > x86_pmu.max_period)
-+		start = x86_pmu.max_period;
-+
-+	if (x86_pmu.limit_period)
-+		x86_pmu.limit_period(event, &start);
-+
-+	return start;
-+}
-+
- static int intel_pmu_hw_config(struct perf_event *event)
- {
- 	int ret = x86_pmu_hw_config(event);
-@@ -3728,6 +3807,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	if (ret)
- 		return ret;
- 
-+	if (event->attr.freq && event->attr.sample_freq) {
-+		event->hw.sample_period = intel_pmu_freq_start_period(event);
-+		event->hw.last_period = event->hw.sample_period;
-+		local64_set(&event->hw.period_left, event->hw.sample_period);
-+	}
-+
- 	if (event->attr.precise_ip) {
- 		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
- 			return -EINVAL;
--- 
-2.39.5
-
+Rob
