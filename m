@@ -1,106 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED791EFFA3;
-	Mon,  3 Mar 2025 10:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5552A1FF5FB;
+	Mon,  3 Mar 2025 11:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998718; cv=fail; b=MAFTscYLr/yiXClNkyhuNqsI3a9Ci19xeH3SV74dQh72bNedGyAEkzTQ+l8rTu3G5hsJdB0L5RT7mXaj6fTzDNOE9QsVVy15t9NpxI+AeyQ6AcUlChi3hT07hSujcUIOMaGyAGJ4O4DoNSvFBPPHsVUmF56HytLqfcgKrNnwYZc=
+	t=1741001900; cv=fail; b=CXQRw/AkBQxZxeP+v4Fl0zpOgoqZinutEMV2lcyoweFLxYlWh6JJWkfDAfswcDwCsmiioJ0ExoK/5IT244esWOgGRtkKpv/QS083sJz56gDIdvVnVrXSW+0vgmZaeY8QIW3R9vDP7S1m7i2kKjIc6RnCV213UgU1brS8j/5IMIA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998718; c=relaxed/simple;
-	bh=Yl07lTBACqRnT5qnZl3ZRkwoRmlfqt7+hkfn2Bp/9Os=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lMft8ymadvN8V5OkvTm3jBzwPU++9xmeTkNsuI6c3NwPI+S2x8VlyyQaahqzxRzI7ivjQT7oRwklqJWD0xaKMPGTyBvHKClOByldAQraa76M5mO4kpK7YfJIS/ftrtxuegwCfDOu8eH3R46gUt28adPxtvTtkwwlnfGTi7IvZXg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=INw74Huw; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741001900; c=relaxed/simple;
+	bh=es5LyWs7oxVaKV20/F5e7YLk6wPNnkFo9e7W+GO11mQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kVboq09cWEGxMt91zuDvcXry0moVtSwdUVsrs84ORTxr471dvqxzTaU8CyuI1F2ca2We+ubo/iwcFeKQb0Tc4L55OHHwNjYXJwyy/zCy0am1vu77ktqZYGJMvLcuMXol9tKgVtj76ieShiDPDqKSLMeTenSnMWxfxf0rYM+itjs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WHmXBAfU; arc=fail smtp.client-ip=40.107.220.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="INw74Huw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740998717; x=1772534717;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=Yl07lTBACqRnT5qnZl3ZRkwoRmlfqt7+hkfn2Bp/9Os=;
-  b=INw74Huw5GDEaUH5zWbnkDYNXlfuX9Av0FJq8xRC9pL7nsgE2SoV/bG7
-   I66evqa2RgayK/4EKa93M61pX9apnteQHZreaj7VNtdvmBuZJMIDnlve/
-   FvZ3OwVEf3lNpoibsv+mK23biWblsX/nUq69Jm5lksPR7VKLlV/Ct9LS0
-   HrMoj/46Lc8LJS53DdzABvWeeWxZkM53uGR4mdQf9GqC6upUcj8D0UE2r
-   a+369yIAe1qkep4abb8ITHuBIN7XoJvTawZuHc7WFpWNurkT3R4QG5DzZ
-   ughIy2WzC5t8II8ueLew0YhzPfrBvn5bcmlmZAvgTenkZ24VFblBgR1us
-   w==;
-X-CSE-ConnectionGUID: PRMZIoxMQ7Sp0BdqEvUqTQ==
-X-CSE-MsgGUID: pCZmyj3sTeua+v6vdkyncA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41754566"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="41754566"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:45:15 -0800
-X-CSE-ConnectionGUID: a8D6vwPASIuArQdmmQtUYA==
-X-CSE-MsgGUID: jrvGDZ8TTGqm62AJLWVKRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118883303"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Mar 2025 02:45:14 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 3 Mar 2025 02:45:14 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 3 Mar 2025 02:45:14 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 3 Mar 2025 02:45:13 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WHmXBAfU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L/HBs8I6Kp1WlhypRTpJ3mYX4tPBlqwnr15IzR0U30gDpwmPIziMqWAMSSOplJyEWwKNY5F5ocfj42SBS6+WjGltYpNX16aM+HPNXXQB/52DM+DY4NFDtdaMyF6kqe6bs3STCcYHoGCYwFz23VVj0G/zNncWZgNR+VPGe2bgjfytF0CNmcAsd9n44qKvd9MtigvTuYxtw2CpPHmX+6mQ5J8OJWveL7MfENiiTDY/V7I/UEPJVpasykBFXiGEDF4KqvD6zvpGdTUkVEM+j5R6nmk+cSHihgYR1bPrtfrK5tSzClXvEcAwNkNtGWKnD3uzgXgsCTQIpmSpMe7GZPhGwg==
+ b=vVockNFJ0eZbr9tOQ4ozXUEUHdDO1qnsebgPl37ZDbwyahInvFxYRNMlyCLpo/dlWgISDQQO2aUQcr228BCh9wvvARcwvBuUI8FPaVqB2YCsKU0hzR6wHbWS2ssS2AMbsAYfApBXfz+AxJjO5N8/ZnI9WGBGfuS8AeCZXZzZl7yfrx7ogsKX3XU5hQrdPEuYVQma855N/LCvfeexFNOA5/XMm7NtwKD6qC45KpWFBLC7lnDFv/ash8S33hnXoKRgC4k0S4NNZ8IyorFwk0vszHGMBJO48emLnuDI/NtjvyOixWOYn+YJaEBF1AcaLSKlIaMM54inTZ+ZUFh/Xw2Xlg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0ddyMWDWrvdPkKrtnnxufUJeZYwcdKpcdlMiancOUjQ=;
- b=VwrXG8brGZ9BdS5W4Us32TMlQeVGFczU/eE23B5V6T2BxbjIKzlxnYeT8XUgfPjpM7/FS7+usROIZKVw2HtbEWTQ4usvkuuUr1/8UGj4XvZdy26GmfrtJC4+FHCwwMbvBR8qOE18qps5R6n+YnhsmHZj6GXmq5PcxVxrI2cb/swebhOqVZrhGAy6ixZ/TOk1adJ7BVxBE0irj8PC+tkRVMW4QONAGpOr7oCXEk4192KL24FIVne54ZZpv4dy5H5MirGGVzAdXcbw2ovtNM1MmGwh77p1fbw2OuKAY8yZexAxtvpWGnMEIYKymWAqdy+rvUnwLloKfIYintboFiYnZA==
+ bh=G17tZ3DLbfZjvX+8k/EW9YuPxFr/eeKUjfUAz68sdmA=;
+ b=Uz72rR1LeBRfkSkK6buIBPiBh/ADn13uoSmTTpabtxmyzo/nHpbn2Y5HeubJS/bfU1ZjxUH82R54MMOIHCAQZKYPC75OxGM5dmzktGwfvYXg7BlpHwyIfH1PkQjRDvpZzN5pzVUqolMrblnUK6r8AcOSzpC6nKXtlZRzRW3vlh6eQsb6t5u/3cIz3UakRzJYGwdn6yVw7hFvr/WOqUymeJZO+2zoBbObH7qcc2AurS/3oSL80+bB/sdsi/BKoL45BEDa7+4Cp+3yjErcmd8rh4f5gt6jajlBi9twDx/tA4+TOkj0bLHTw4KXvE8iDmuVoaDzC8HNO7MSvnEU/jw4Zw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G17tZ3DLbfZjvX+8k/EW9YuPxFr/eeKUjfUAz68sdmA=;
+ b=WHmXBAfU1l8lP1fFL2LfEfcPCi98J8BvK8hhTAkMYUkuWjP5fx6ycfpheyXlKRFfExZGH0YLV891vXNk/jO7EY7eKt2FzuD+NRWgLaBaDYpNxjGwu8hSugxePX9Pyw4OO9U4OnLLN8G7Txwi0RHSPF7Kh7mguJFgVlDLjmFStrc=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com (2603:10b6:a03:f5::33)
- by SN7PR11MB8044.namprd11.prod.outlook.com (2603:10b6:806:2ef::12) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
+ by LV2PR12MB5822.namprd12.prod.outlook.com (2603:10b6:408:179::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.27; Mon, 3 Mar
- 2025 10:44:44 +0000
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89]) by BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89%4]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 10:44:44 +0000
-Message-ID: <34795c29-d256-49ce-9d01-435f8cd91611@intel.com>
-Date: Mon, 3 Mar 2025 12:44:33 +0200
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
+ 2025 11:38:13 +0000
+Received: from IA1PR12MB6460.namprd12.prod.outlook.com
+ ([fe80::c819:8fc0:6563:aadf]) by IA1PR12MB6460.namprd12.prod.outlook.com
+ ([fe80::c819:8fc0:6563:aadf%7]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
+ 11:38:13 +0000
+Message-ID: <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
+Date: Mon, 3 Mar 2025 17:08:05 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/12] perf script: Make printing flags reliable
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, "James
- Clark" <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>, "Graham
- Woodward" <graham.woodward@arm.com>, <Paschalis.Mpeis@arm.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-References: <20250217195908.176207-1-leo.yan@arm.com>
- <20250217195908.176207-2-leo.yan@arm.com>
+Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
+ based on build config
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org,
+ peterz@infradead.org, yury.norov@gmail.com, akpm@linux-foundation.org,
+ acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+ andrew.cooper3@citrix.com, nik.borisov@suse.com
+References: <20250228082338.73859-1-xin@zytor.com>
+ <20250228082338.73859-4-xin@zytor.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20250217195908.176207-2-leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+From: "Aithal, Srikanth" <sraithal@amd.com>
+In-Reply-To: <20250228082338.73859-4-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0149.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:41::11) To BYAPR11MB3605.namprd11.prod.outlook.com
- (2603:10b6:a03:f5::33)
+X-ClientProxiedBy: PN3PEPF00000184.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::4a) To IA1PR12MB6460.namprd12.prod.outlook.com
+ (2603:10b6:208:3a8::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -108,153 +70,411 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3605:EE_|SN7PR11MB8044:EE_
-X-MS-Office365-Filtering-Correlation-Id: 499b6e7b-7b67-4966-a7cc-08dd5a406875
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|LV2PR12MB5822:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d40947a-7284-4f52-5fe2-08dd5a47e1d1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QU5IWG1WQkMyenJURHJkRG5NMXJjTW4vZlZUcU9QQnpkSVJOMjVoQk9JUmVm?=
- =?utf-8?B?Yy83ZUdqdmxBSjZJYjFsQmhONEpwNDVDdDh0R1RYcisxck04NitMZGpIODVT?=
- =?utf-8?B?V0xVZUtQbUp4V3B0OEFwbTQzWFdSR3JqTTFlTWQ3eWRtdE5GZWl4WElRWkRY?=
- =?utf-8?B?bTRVUWpzMWhXOVR4amh4VUNHOGFGcHJoVWVkYVQzVzFDekdJYXBzWmtBRG5G?=
- =?utf-8?B?Uy9rVzltK0I2UzAwdjdWTFZTanFmcG1mTGlha3NHNm5wcWZaakgxaGdyRzQz?=
- =?utf-8?B?WnNPYk9sYkNUT0NuVGhYL3lBTG4xdHlIQlBtVzlTamJOaGcxVXZsSnp1dy9w?=
- =?utf-8?B?K1dCSDlncDYwRDBGcUtCbEZjN1ZTN0xSUFVjWlE5ekNlam53cEZIcHd1WnR5?=
- =?utf-8?B?eFp0Q3lkdW4zN2lISjFSWnRoekxGd2dNM3BuYVZ6ODVEZjRnY2xHSndWaW5h?=
- =?utf-8?B?TDA1WUZEdzlucGF2QUwvQmRubXp6d1ZXTUdoa1lIS2pZeWovQ3BhVERzWndo?=
- =?utf-8?B?YW9qNGVvZ1VITjloSlB5VHdjaDY3VWFtZTlJb3M4d1hWaEVGMXlKTmpUb0Mv?=
- =?utf-8?B?OWo0YzNOWHRJOXhTY01jTyt2SXNocTQvYVI5UU9VVzJ3L0VsQysrYWZPKzZO?=
- =?utf-8?B?QzB0KzZGZjJaeU1BTUxGMFBMdU1PTS9FRExpR3BwTHBmQzJQUEFYUXd5M2tm?=
- =?utf-8?B?TEJtMDRZNlc1S09hNFlLSmtkdDlhSCs1cENWQ0hrUGpMazNLcmZyUnRwbjdF?=
- =?utf-8?B?RVo1VFk5NEprcEVWblZxd3JNZjl6K0NaTFU5cHlwRm00UUh1WmVFTzBtWkpU?=
- =?utf-8?B?SC9Za25td0JRZjF5TURMVWtTWGEwMTdMWFBYRUREV1BpdUFBemZrU21NTHNo?=
- =?utf-8?B?eFdkK1Q0ZGNGeXBITzVHS3hhQkFiQTFEcFE4MzJqaURTZnhPOTZaZ2t0d040?=
- =?utf-8?B?dnZpY1hMNEVsS1dxZzZrVVZBdWF3TzV5N3dXbUZTaGdiT3pQSDVYMHJhN1ZZ?=
- =?utf-8?B?QlNydzlCTlVsclM3RGxDYVNrN2Y4UHRLVTdpWWNxVzg5MDdRVEZQSStPc0dL?=
- =?utf-8?B?eWpnQ1M5S293ZUZXTzd1UlZLWGMrbGMzRUFUdDA5QjRPa0hIbnUrUWdwY3Fn?=
- =?utf-8?B?RXowNytqR0t6MkhiMTkzaW1ZaWFSc1BtditIMXVGT3ZjdTZjZnkyOU5DcUhx?=
- =?utf-8?B?aUg2azc0a3NmOGRnRGl2UlhxaU9JMlJzYjlUVlkyNFM3cGZjbkNkZFdWaFFR?=
- =?utf-8?B?UGV4VWpMTGozRW5HOEdrcEUwMzE1bUJmOVRlbVk1aSthNFVqUENYdUdGNytt?=
- =?utf-8?B?WmlTQzRkWXNTRHVka2M5ZXlZd1BMNDR5dlRsZm9mQ2dVZkxKa0R6OGJyKzJL?=
- =?utf-8?B?RlhPUmxjeFkrTnpaSmNPaFRLblh5WXFtOHhoL3dKWWhvSk5EVyswUzBjOElv?=
- =?utf-8?B?UzRhTHNhaG1NcHZNeVU2WHljOWYvMEJvZ1pvV05McGFtZkhtTTN4SlpHeS84?=
- =?utf-8?B?YW1HQWN3RldhVmpYQkxGZnRXTmg4WTFBMTB6Q013Nmo5Sk9xWGRyNWh0cmdx?=
- =?utf-8?B?MjJKaDQxOWw5b1N6Z3NhbGxqSzJlenJNdE8ybjZjRHM2SzBvWmN2WHZhd3BZ?=
- =?utf-8?B?WEFJc0lEWmxxS1JWdzJGbFdOQ0V5ZHd3c08rMUY1Z3F2RDByQ0R6MmJMQTQx?=
- =?utf-8?B?aFQxUTU1NEV2VlhQSTI4ZGpKMlM4alBPWjN3S2pMMHFvOW1IYnVxSnRYajlU?=
- =?utf-8?B?Q2tqYUQ0d2JBWmZnbnRJdlpiZG4rcDBzVkVqQmFDVDZBREdGSXk3Y1JWU3dl?=
- =?utf-8?B?VFJVeVFrK0E1WWJjeTltZ3RkWlVpalJRRDFFbk9jOUUvR0RTOU56OWpVRmFZ?=
- =?utf-8?B?b054UTBxZ2thUlZDajZpUThxRy9BRTNQaUVLWU1wQWJmOG5VL1U3SHNtY3Av?=
- =?utf-8?Q?O7jJJc91yjM=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Zi9odi9GTnJGd2dvMTh0M0g4a2hIYTBjTFVoS3NFRDZSYnJLUDVpaS9iZWZD?=
+ =?utf-8?B?VXk4bkFXN1dPbzZxdGpIRGFkNStJejF3L1Z2QW5ySEZFWnc2bFpjWXZUOFFB?=
+ =?utf-8?B?MDZvenlheGdmaDNRdzNpSzdYSUVMcmRzcXhFQWlaallIUlJYV1BHbU5nbTZR?=
+ =?utf-8?B?c0IybmZTWitaUWlmdFlRUzBHM3YzMUFBakdpYjdkVDN4TFE1MUpyS2drOWZR?=
+ =?utf-8?B?OGJxUlZkZnBZMWJPT0xKVkg5b2xTNjMwMlFMcjA2Vk41SmV4d3A4UEg1aGFX?=
+ =?utf-8?B?TUpzSmZYZSt5UG91eWRZZlZhTFVwVWlVM2pUOWRSVlk5cVpIcDkwU3grM3FX?=
+ =?utf-8?B?dkp6QllTZmhWTFpGUUpIeG14d2llZE5wOFlKeTJESmZRZVg4RFprVDE4Um9r?=
+ =?utf-8?B?SWs0aFB5TFNMUjhwcWF3aWF2OG5hVCtqUmt1dm9sMzREUmVzWlRYMWQ3eDVX?=
+ =?utf-8?B?Y21Qc3V2dFR0bzZHRDExTk1XcEx0TU1KODl2UXFZNUU4aWMrRndnZS9NVktu?=
+ =?utf-8?B?YXBMdk5SbUE5c2w4QWY1RTNUdzVObG5CRFFLYW0vWnE3a3NRWHVsTUpta2hW?=
+ =?utf-8?B?YlMvNzgrNFpicThJdDR0VHJaQStzVmUzS0RJZDZmWVRyL2ZvY3FBM25sQnFT?=
+ =?utf-8?B?cXlLOUxyMEM0VS9ZMHVEU1BXRU9SQ1BHdm9Ec3ZvZVhUMUQwU0s5WnZWOWdD?=
+ =?utf-8?B?Q1JDK05DUnBsM3VLd253T2VZMU90YVFkK0pyU2c2b3Q3aTBLZzJXa21VcTBu?=
+ =?utf-8?B?T3FBVGtiR2UySnVvVUlKRFg4YlUwcHdkL2RPQ001TXhQamg0L1lrenh0ait1?=
+ =?utf-8?B?OVkyWTlDMys5TlY5MTdVbHFyZ0ZJUVB4WWJXQVYyNWpXalJmcElDUVdRMGNq?=
+ =?utf-8?B?dTdYdVY3ZEZ2RnlEWms3dG5SVWthKzV5MC8yMFNXZ084cGVETituR1lmTXRM?=
+ =?utf-8?B?ZTVwYWpwUGgrWUxwMlFpZXNxSlNQTFR0SDhDWGZOZitkZUhBVGdMcjB3Vk5n?=
+ =?utf-8?B?azMwaE9TNmxGMzdTWkV6cm1SaDRWVWpWMFIwOWVjVktFK0lnUVkzbmw4ekdS?=
+ =?utf-8?B?VTF4alNZNzc5SG5Tbi90ZnVrQU4yaUEyVmF3WXVtRkh0RTVqdE9TMlJiRGFn?=
+ =?utf-8?B?SVRRN3FQUnU2dFVwWXo3Y1dpdTFUR1lDTUNvc0YraXBNWnRGSDJ2ZlJhRWti?=
+ =?utf-8?B?UW5LZWc1dFFCeHNuZzJ4dVVtMENBb3hkNTBJSmU5NjFqRDFtdFlYeDZrT0xS?=
+ =?utf-8?B?YUZKRTNSSnpGK281WGQ2RndlWUpCV3lDQTQyWCtnaUJjRFVwWjQydkNGcXp6?=
+ =?utf-8?B?eXRqSW40SG9WcldxaWdtd1YxcVlXNG04ekdyTkx6d2t4eFVVbjJnSG0rUUpt?=
+ =?utf-8?B?S0NxZFpLMENHSXdaOWJlQlR5SVVjdnZ3RFRNZ2dZS2krRlF5YStmUHhQWW5V?=
+ =?utf-8?B?WXgxRnJVNFVtaUYrN2hLK3Vyc2taSDVKZnlIU2g0dERNa25Sem0vcHJ0MUFQ?=
+ =?utf-8?B?V29oYWxUdEJqcHZzOVd6Sk5lbitKQStQRkJ5c0ExN3ROaERRZXJDUVFleGdC?=
+ =?utf-8?B?WHBIUnZ5Zm9xOWtuVkRlT1JOSjhwaEcvSk1ldkhSWDh5N2RWK2Z2VFdHVjlE?=
+ =?utf-8?B?YlVOZjFLUjBUOENCangzTWJxQ1hKYjZONXRiT0ZXVUFxL3pXcXZWNGgrUjBs?=
+ =?utf-8?B?R1V2ZExXcEpBOEFhZ3NDOEhDVVU0NEJReVZoZVVwaTlWdSsyUjJ6MklnUkVF?=
+ =?utf-8?B?WUhqKzBMQUZNWDd6RFMrNVNaS3BPMDdWMTRkcFpFRDZLejRpMExDUzRidUNJ?=
+ =?utf-8?B?dzNMUFFicmdHenJmVFk4d254UmFOOENucUw2SnFSdFFsZ3JGR3hvTmhTNXZ1?=
+ =?utf-8?Q?z4q9HMu4FoLVg?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGpSQlM2Sml0R25PenpOUVlYc3F5UlVma2lCSzBaZldBQmoyMmdIUTlrdTAv?=
- =?utf-8?B?WUM0Mk1pYjJVTWdrQ2lDaTNzYVREY3oyRkxOeGU4L044TzBtUG1CaHh5a3Z4?=
- =?utf-8?B?dnlqSDArcDhoMkYrVUc1bWVFQWJhanVBUktGOFdCZ25GWmluQmpZK0wramNx?=
- =?utf-8?B?Q3h0NTN2STNFNDRYdzliOWhKYzltaXRsZkVSWityemlhckp3YVEzZlczQVBF?=
- =?utf-8?B?Z3krSUpreWoyNk5QMUgwMi9TQUY5SHJpem80K0s5MWZXSkNVNHlhc1l3WjZI?=
- =?utf-8?B?UVhFRXRDL0g4c01QZEJqS2szamZjb0dpalpaRmM0S0RGN3loWmx4NEYzVXJp?=
- =?utf-8?B?OUU5enZhdi9MSGJFaUlnZXhJQytDZTBZMDJMODBuMzNUSCsraFZnbm1iREox?=
- =?utf-8?B?YkNZSkZWUHBXRkxXZlo4RmdSTk1nQW1tRzc4bFhnNVFmOUJJd3l6ZEdGaE5a?=
- =?utf-8?B?OGhpNTBNaWI3NDdyVjlYcHlMdW4rc3lDZGp0UkFrdXhqNFdHRk9QWk1rMWpv?=
- =?utf-8?B?eERlMmhESFY4VnRSa21mTVFYb3FGaU9ZSWpwVnBPVC9OWUJ5Mnl1S3VhZUpa?=
- =?utf-8?B?UmpNS3oyS0hNc0Z1dEN3ay9abU9EUTBjRjE2Q1VYeFF0WVpTZTJrcUhCUEFy?=
- =?utf-8?B?VEJlUFVsb0dEbk01c0tidGMwNXlhYVpmaFYweVRCZ3pyK1p3dlYrVFA3QlEy?=
- =?utf-8?B?YnlEd3VKVnd5dFJTa2IrbVBYaTF4MWlIeWprTXVVTlFhRTBUQVVUcGpQL1Fz?=
- =?utf-8?B?Ky9mZDhYblVTenZPTkJvQ1oyUkYrbSswZHY3Z1BQeEk4UEM2NU91S0JadjEw?=
- =?utf-8?B?Z0RiOVNUbGlVUG1KbUhRVnBSN082ZFVITEtaQkYzRkdMY05vQnVrV29vdWp2?=
- =?utf-8?B?S0FoK0t4UVpDMElFVkxiWmk3L3ZGdEN2b24rN2w3cng4dXhUYlVoMzBmU01H?=
- =?utf-8?B?dSthU3pPcE51dFhIU0ppS3FEOVprcVkvSWs0Q2lZUkdBWGV3TnJpeHplaXFH?=
- =?utf-8?B?Q2x0QVFDSklDMktFT2VkVFBiL25lSU9OSWJMcytoV2g2TGU1N0hvNDkrRWxi?=
- =?utf-8?B?VUg1YUFKbFJNbSsyQUtXNk8xMS83NHJmYURvcmJ2ZW9xZUI4dFUwS2ZTVklm?=
- =?utf-8?B?WFN6ZldXdjlTRGJXSEZ2M0NiSUR3WllvaUxwOEgyV1cyN0h2N3RFZFpRV1M3?=
- =?utf-8?B?Rlp3dmtIMVpEOTZEcEhYUzhobWNqUEVKOHBLYnpjWmtJTTR3S1dWSmlhNnhW?=
- =?utf-8?B?cTY2ZW55WVl3T2VWM0hNVlp3ZzF4UkRhRkFRTmtHWjNqSGtVWDNKcGlyM0ww?=
- =?utf-8?B?bkdObUd3blBkOTkrVkJ0eE9acktscFl4SDUxcU91Y1RLejc3bStuVnZQRVRp?=
- =?utf-8?B?S0N4cnJXd1hmQUJRK0N4MVVRUTJjczVPM0VEUEhya3BOWDRpTkREMHc2QmZQ?=
- =?utf-8?B?SEhQK21MblFwbU4rQkl6Q2ZTWDlMMUwrTEdKZUZiUkRQQU5lTWpHZmsyZDBu?=
- =?utf-8?B?WGQxQ3FLNHpid2lqNmoyaDlUSTVGUHM0Z2VQbE9jM3l3TjlSQ20rYjZTRy82?=
- =?utf-8?B?T0Vmb0hsdldTQytRUE9YSTY5VzFCczVQKzNFYWsxV3Mvb3lwZnhJMXNYMmRn?=
- =?utf-8?B?SEVjNVEyOC9ZREZDL21sVi9WdUJCL3l6SHE0RHVta2VnT3F5TWplQUQyaHVB?=
- =?utf-8?B?cEl0REhXT3k4VllTNnpoWTNLNkVFL2FNSjdLQW1GbVhjN3JSdExQZ0hMM1JK?=
- =?utf-8?B?a1hLdWZTc212enpRSjJaNWVhdmVlMDFEdTltc1lBVUIxRVFqMWhaT080REo3?=
- =?utf-8?B?MnJBTXhzMjk3V2Y0MU1PU1dLeGFYY3BkV2YzcVJ2Z25Id0lrMzd2OW0vZURS?=
- =?utf-8?B?R1hHTkhCRE1iUkhMUFV4YzlHL2lIZ0FjSGZCRU9EN0JmbVNobXpMUWExSTVa?=
- =?utf-8?B?ZjZvRUpGTHR3dFVBUHFXTThWeHVFdWhmNFYzUWlTTXRjRzlDSmQ0RWdET3Fi?=
- =?utf-8?B?YlhXYWR0Q0JPTEJyRHZOMU9ZY1pmT1ZWT1BCVlZOZXRvdk1FWW80UHJxSFY5?=
- =?utf-8?B?WDVQZVZ4Vyt6OWdqMjE2ajNmVXZldWgxMlMvVjNNNG1QN3I5K0x3Qi9Ma01B?=
- =?utf-8?B?TzdObG1rWGRyZ21lb1l6eTc4S0FHai9ad1Q2RFlJZ2c2QUx0RkRuWXJtSksz?=
- =?utf-8?B?Zmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 499b6e7b-7b67-4966-a7cc-08dd5a406875
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3605.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Z2M2eFRqR0VDQ1NyVzlGVS9KbEQzRlN3Nmd0bUFLY3g4cnp6b3JlMzN0UFk1?=
+ =?utf-8?B?QzhlTE0vU2RxYmo1V0VmOFN5eEZwRzBraEh0TFZ1UWZSd2pnUWhaWDBXc2JN?=
+ =?utf-8?B?QmtmaU5IMG02MWVFU3pOMFQvL2YybzU3M3M1aXdrMzU3dDk5Z3J1Y29UZHky?=
+ =?utf-8?B?SkEwYnd1RENWZTN0YUNOR3dVNjdxbU9BL2ZHYUI2Q09WbkdmRTFRdW9nWmY3?=
+ =?utf-8?B?dGZFRURZd0FnN3lHYjBscUk1TUdPOGJTalNOSkVlM2htUDRid1g4bUY5RTYw?=
+ =?utf-8?B?N2pYTkdUMFpuU2t1U25kWmlGa0RlZFF1ZktrZGJ5T2FGdDRZRXdtd0VQOURT?=
+ =?utf-8?B?RTY5UmJjdy9TVTFTRGFodHV5WDBrRzcrdmx0RXIrd1ZyN1A0VEdzUGxUaVY5?=
+ =?utf-8?B?RCtEdG93YkE1aGNHTHBVdjdQZUR6enRUcGJEdHljMktGYUpUVUh6Mmo1eVdQ?=
+ =?utf-8?B?eDU0cThKaHY4SnhZd2xwYmo4b28rOU1PQldUY3VHZDNaTHpLS0RzNmdQTlJ2?=
+ =?utf-8?B?N1phOXhJNzRZTWxkVWJ5YU1Mb0duVERhTnQxa0hVREFzK2hLcDRYNHFueXBi?=
+ =?utf-8?B?ZmQyS05TRHdXQnZickZsNHE0cDlienBSTEJ2WnpoVXdiWklSa1hrSjJvU2d3?=
+ =?utf-8?B?VzhlVEt4eTdLc3VrdHcxRmJMZ1F6aFZreDRQT0JnNFk4NnpJS1g3THo2a3lX?=
+ =?utf-8?B?YWpKS29wWk9JKzdGcVB4bzFXL3Q1V1NtQnJ0ek9uY29vWUF2bE15NGhYNTRU?=
+ =?utf-8?B?dDIvbVUwd1pnVllGOEVTWSs4UFlLU1ErM2pVQmlrYmphWkM1L1R4NE5pc25v?=
+ =?utf-8?B?dWVrWnhvaUt1cGR5aUo1YndCZnAxa2xKY1FtUzlIckdFbkY3ckVhUUpBeVc3?=
+ =?utf-8?B?WUJzbmQ1TG9yd3REdGYwdGJkWGFlaHo1SzBUdjdvVWQrbnc5eUdGalJDZ091?=
+ =?utf-8?B?THQvMFRnRHNxS1BLN2tCUlJyRVN3amlnL0VMcUpHMzNza2JyMldreDY4YzIv?=
+ =?utf-8?B?N21IT1MxVmFGSnhvL0IvN0duL0l5S3o4RmdVTHZHK3JKcHEveUFBYlNGS05z?=
+ =?utf-8?B?b0pRSjVEcllkZUg4Rm5tQVBxMHFpM0xlMEg0UHpUY3RLQjVjTkpocTJiWUJR?=
+ =?utf-8?B?U1l3MzNBcGZlQVlNM2RMN3YvSXNjOVJ3NzZoRC90ODZLQ2N1alhWSHZ3R0d3?=
+ =?utf-8?B?YkJpeG1xVEgwV1JOWVk5d2lxaWF2MHI1RmpESm5rdytGazROVEs4TEdVdVkx?=
+ =?utf-8?B?ellwY3pUNHhHcGQ1Mmt6aFRMRlZPelFVSlRFVlFCVEtmeVoxZzdjZHNndTRk?=
+ =?utf-8?B?V0kvL0dJd2VVbUcyTWdENHlEK3ZpczlrUCtDWlZBUHMrSFNIbjFST1FLRkRi?=
+ =?utf-8?B?YVZYSXpmL3BQUFZVamdscVZoNktEMjhZWXpFb3hMNWVla2dCQjArYWNxMGxL?=
+ =?utf-8?B?OTgyanBjb3BHNGZRUUNYK2sxaG9aaWFZZGpFRlViZ3NPSUpGVk8xWWRZT3hk?=
+ =?utf-8?B?Zmt3NUNIOHhZRWpNTGIyTUFHSGczWlJISXEwdUNIbGF0eGFuMjYrdVBtODRj?=
+ =?utf-8?B?SDhiMFUwMnpwTHNXQ2M2VEhab1lZbmRLV08zVm5jSEhPY0dSMkhTVjdoWkU1?=
+ =?utf-8?B?T0MzajZ4UFR5RVMzaGEwVWE0cjRQaGlLQnpmcVB5K0NXYWZ4SHVXY0RZbTIy?=
+ =?utf-8?B?aTNHVTF2T3VSNmU1R25iUDJDNE1SL3dINzVWaFBFQ0ZzOFQ4RVVIK1FOYncy?=
+ =?utf-8?B?NVJTMGVnWG85TUVGMmI3VS9qVFdjU1BXVk81NWR5cG92Zmp2Vjh3TVNLckxD?=
+ =?utf-8?B?NVBIOVNMSFZlSVdqVnBCdUtkODFTcTdLVm5pazMwMlI2U1dpZURIbERoOWJv?=
+ =?utf-8?B?cEVWdEF2YUN1c1NpQm1TUUFMencyU2pqWHZzSXlsUHpGS2ZBTE4zeStUUmVI?=
+ =?utf-8?B?cnZPQzl6dVVBNSttTm9MSFFvdzczVzlVK2I4WUZCVnFOeE9UTVZFZjZ5bFcy?=
+ =?utf-8?B?Ty9nTVNDd1F0eXVSZS9zR083ZjBNWVpwYm8zOVp3NmR2eVQyUGoxY081MTFU?=
+ =?utf-8?B?dHVFTzRWaXFsbDMrckhsTjFIQWZPNEdpME1Ib1V4eC9zMWw1bUwraDFhdmpt?=
+ =?utf-8?Q?c1pIb1cpUjpsd3hueLehLSVfI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d40947a-7284-4f52-5fe2-08dd5a47e1d1
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 10:44:44.0022
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 11:38:13.8541
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g2tybsl1CNnSU4YdzKadExW+7BWqPNLkmtpxaUq1J3D8JnfYO7UjL+n2jzDclqSXiVORC62USvye7jn68UB96g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8044
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2vAreuqvtcYFGUgCaasmaY/gVh1Vcj8Z27kVM8nKPgme7eAIlgW/WeUpoCwSs3NeiriIEh6Ibd3Jge2drikzlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5822
 
-On 17/02/25 21:58, Leo Yan wrote:
-> Add a check for the generated string of flags.  Print out the raw number
-> if the string generation fails.
-
-How does it fail?
-
+On 2/28/2025 1:53 PM, Xin Li (Intel) wrote:
+> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 > 
-> In another case, if the string length is longer than the aligned size,
-> allow the completed string to be printed.
+> Introduce an AWK script to auto-generate a header with required and
+> disabled feature masks based on <asm/cpufeatures.h> and current build
+> config. Thus for any CPU feature with a build config, e.g., X86_FRED,
+> simply add
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> config X86_DISABLED_FEATURE_FRED
+> 	def_bool y
+> 	depends on !X86_FRED
+> 
+> to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
+> feature disable flag, e.g., DISABLE_FRED.
+> 
+> Lastly the generated required and disabled feature masks will be added
+> to their corresponding feature masks for this particular compile-time
+> configuration.
+> 
+> [ Xin: build integration improvements ]
+> 
+> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 > ---
->  tools/perf/builtin-script.c   | 10 ++++++++--
->  tools/perf/util/trace-event.h |  2 ++
->  2 files changed, 10 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index d797cec4f054..2c4b1fb7dc72 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -1709,9 +1709,15 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
->  static int perf_sample__fprintf_flags(u32 flags, FILE *fp)
->  {
->  	char str[SAMPLE_FLAGS_BUF_SIZE];
-> +	int ret;
+> Change in v6:
+> * Make the AWK script work for mawk and BusyBox awk (Borislav Petkov).
+> 
+> Change in v5:
+> * More polishes (Nikolay Borisov).
+> 
+> Changes in v4:
+> * Add a few high-level comments to the AWK script (Nikolay Borisov).
+> * Enforce CPU feature mask values to be unsigned.
+> 
+> Changes in v3:
+> * Remove AWK code that generates extra debugging comments (Brian Gerst).
+> * Move SSE_MASK to verify_cpu.S, the only place it is used (Brian Gerst).
+> 
+> Change in v2:
+> * Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
+>    to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
+>    disabled feature for this particular compile-time configuration.
+> ---
+>   arch/x86/Makefile                  | 17 ++++++-
+>   arch/x86/boot/cpucheck.c           |  3 +-
+>   arch/x86/boot/cpuflags.c           |  1 -
+>   arch/x86/boot/mkcpustr.c           |  3 +-
+>   arch/x86/include/asm/Kbuild        |  1 +
+>   arch/x86/include/asm/cpufeature.h  |  1 +
+>   arch/x86/include/asm/cpufeatures.h |  8 ---
+>   arch/x86/kernel/verify_cpu.S       |  4 ++
+>   arch/x86/tools/featuremasks.awk    | 81 ++++++++++++++++++++++++++++++
+>   9 files changed, 105 insertions(+), 14 deletions(-)
+>   create mode 100755 arch/x86/tools/featuremasks.awk
+> 
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 6784129328f6..60583987d320 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -263,9 +263,22 @@ archscripts: scripts_basic
+>   	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
+>   
+>   ###
+> -# Syscall table generation
+> +# Feature masks header and syscall table generation
+>   
+> -archheaders:
+> +out := arch/x86/include/generated/asm
+> +featuremasks_hdr := featuremasks.h
+> +featuremasks_awk := $(srctree)/arch/x86/tools/featuremasks.awk
+> +cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
+> +quiet_cmd_gen_featuremasks = GEN     $@
+> +      cmd_gen_featuremasks = $(AWK) -f $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
 > +
-> +	ret = perf_sample__sprintf_flags(flags, str, sizeof(str));
-> +	if (ret < 0)
-
-AFAICT ret is always >= 0
-
-> +		return fprintf(fp, "  raw flags:0x%-*x ",
-> +			       SAMPLE_FLAGS_STR_ALIGNED_SIZE - 12, flags);
->  
-> -	perf_sample__sprintf_flags(flags, str, sizeof(str));
-> -	return fprintf(fp, "  %-21s ", str);
-> +	ret = max(ret, SAMPLE_FLAGS_STR_ALIGNED_SIZE);
-> +	return fprintf(fp, "  %-*s ", ret, str);
-
--21 means the field width is 21 and left-justified.  It should not
-truncate the string.
-
->  }
->  
->  struct printer_data {
-> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> index ac9fde2f980c..71e680bc3d4b 100644
-> --- a/tools/perf/util/trace-event.h
-> +++ b/tools/perf/util/trace-event.h
-> @@ -145,6 +145,8 @@ int common_flags(struct scripting_context *context);
->  int common_lock_depth(struct scripting_context *context);
->  
->  #define SAMPLE_FLAGS_BUF_SIZE 64
-> +#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
+> +$(out)/$(featuremasks_hdr): $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
+> +	$(shell mkdir -p $(out))
+> +	$(call if_changed,gen_featuremasks)
 > +
->  int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
->  
->  #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> +targets += $(out)/$(featuremasks_hdr)
+> +
+> +archheaders: $(out)/$(featuremasks_hdr)
+>   	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
+>   
+>   ###
+> diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
+> index 0aae4d4ed615..8d03a741d1b2 100644
+> --- a/arch/x86/boot/cpucheck.c
+> +++ b/arch/x86/boot/cpucheck.c
+> @@ -22,10 +22,11 @@
+>   # include "boot.h"
+>   #endif
+>   #include <linux/types.h>
+> +#include <asm/featuremasks.h>
+>   #include <asm/intel-family.h>
+>   #include <asm/processor-flags.h>
+> -#include <asm/required-features.h>
+>   #include <asm/msr-index.h>
+> +
+>   #include "string.h"
+>   #include "msr.h"
+>   
+> diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
+> index d75237ba7ce9..0cabdacb2a2f 100644
+> --- a/arch/x86/boot/cpuflags.c
+> +++ b/arch/x86/boot/cpuflags.c
+> @@ -3,7 +3,6 @@
+>   #include "bitops.h"
+>   
+>   #include <asm/processor-flags.h>
+> -#include <asm/required-features.h>
+>   #include <asm/msr-index.h>
+>   #include "cpuflags.h"
+>   
+> diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
+> index da0ccc5de538..b90110109675 100644
+> --- a/arch/x86/boot/mkcpustr.c
+> +++ b/arch/x86/boot/mkcpustr.c
+> @@ -12,8 +12,6 @@
+>   
+>   #include <stdio.h>
+>   
+> -#include "../include/asm/required-features.h"
+> -#include "../include/asm/disabled-features.h"
+>   #include "../include/asm/cpufeatures.h"
+>   #include "../include/asm/vmxfeatures.h"
+>   #include "../kernel/cpu/capflags.c"
+> @@ -23,6 +21,7 @@ int main(void)
+>   	int i, j;
+>   	const char *str;
+>   
+> +	printf("#include <asm/featuremasks.h>\n\n");
+>   	printf("static const char x86_cap_strs[] =\n");
+>   
+>   	for (i = 0; i < NCAPINTS; i++) {
+> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
+> index 58f4ddecc5fa..51022d21003e 100644
+> --- a/arch/x86/include/asm/Kbuild
+> +++ b/arch/x86/include/asm/Kbuild
+> @@ -8,6 +8,7 @@ generated-y += syscalls_x32.h
+>   generated-y += unistd_32_ia32.h
+>   generated-y += unistd_64_x32.h
+>   generated-y += xen-hypercalls.h
+> +generated-y += featuremasks.h
+>   
+>   generic-y += early_ioremap.h
+>   generic-y += fprobe.h
+> diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+> index de1ad09fe8d7..077a5bbd1cc5 100644
+> --- a/arch/x86/include/asm/cpufeature.h
+> +++ b/arch/x86/include/asm/cpufeature.h
+> @@ -9,6 +9,7 @@
+>   #include <asm/asm.h>
+>   #include <linux/bitops.h>
+>   #include <asm/alternative.h>
+> +#include <asm/featuremasks.h>
+>   
+>   enum cpuid_leafs
+>   {
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index c8701abb7752..b9b7329f4ac4 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -2,14 +2,6 @@
+>   #ifndef _ASM_X86_CPUFEATURES_H
+>   #define _ASM_X86_CPUFEATURES_H
+>   
+> -#ifndef _ASM_X86_REQUIRED_FEATURES_H
+> -#include <asm/required-features.h>
+> -#endif
+> -
+> -#ifndef _ASM_X86_DISABLED_FEATURES_H
+> -#include <asm/disabled-features.h>
+> -#endif
+> -
+>   /*
+>    * Defines x86 CPU feature bits
+>    */
+> diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
+> index 1258a5872d12..a23a65d5d177 100644
+> --- a/arch/x86/kernel/verify_cpu.S
+> +++ b/arch/x86/kernel/verify_cpu.S
+> @@ -29,8 +29,12 @@
+>    */
+>   
+>   #include <asm/cpufeatures.h>
+> +#include <asm/featuremasks.h>
+>   #include <asm/msr-index.h>
+>   
+> +#define SSE_MASK	\
+> +	(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X86_FEATURE_XMM2 & 31))))
+> +
+>   SYM_FUNC_START_LOCAL(verify_cpu)
+>   	pushf				# Save caller passed flags
+>   	push	$0			# Kill any dangerous flags
+> diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
+> new file mode 100755
+> index 000000000000..fd3e72147157
+> --- /dev/null
+> +++ b/arch/x86/tools/featuremasks.awk
+> @@ -0,0 +1,81 @@
+> +#!/usr/bin/awk
+> +#
+> +# Convert cpufeatures.h to a list of compile-time masks
+> +# Note: this blithly assumes that each word has at least one
+> +# feature defined in it; if not, something else is wrong!
+> +#
+> +
+> +BEGIN {
+> +	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
+> +	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
+> +
+> +	file = 0
+> +}
+> +
+> +FNR == 1 {
+> +	++file;
+> +
+> +	# arch/x86/include/asm/cpufeatures.h
+> +	if (file == 1)
+> +		FS = "[ \t()*+]+";
+> +
+> +	# .config
+> +	if (file == 2)
+> +		FS = "=";
+> +}
+> +
+> +# Create a dictionary of sorts, containing all defined feature bits
+> +file == 1 && $1 ~ /^#define$/ && $2 ~ /^X86_FEATURE_/ {
+> +	nfeat = $3 * $4 + $5;
+> +	feat = $2;
+> +	sub(/^X86_FEATURE_/, "", feat);
+> +	feats[nfeat] = feat;
+> +}
+> +file == 1 && $1 ~ /^#define$/ && $2 == "NCAPINTS" {
+> +	ncapints = int($3);
+> +}
+> +
+> +# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
+> +file == 2 && $1 ~ /^CONFIG_X86_(REQUIRED|DISABLED)_FEATURE_/ {
+> +	on = ($2 == "y");
+> +	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
+> +		featstat[fs[2], fs[3]] = on;
+> +}
+> +
+> +END {
+> +	sets[1] = "REQUIRED";
+> +	sets[2] = "DISABLED";
+> +
+> +	for (ns in sets) {
+> +		s = sets[ns];
+> +
+> +		printf "/*\n";
+> +		printf " * %s features:\n", s;
+> +		printf " *\n";
+> +		fstr = "";
+> +		for (i = 0; i < ncapints; i++) {
+> +			mask = 0;
+> +			for (j = 0; j < 32; j++) {
+> +				feat = feats[i*32 + j];
+> +				if (featstat[s, feat]) {
+> +					nfstr = fstr " " feat;
+> +					if (length(nfstr) > 72) {
+> +						printf " *   %s\n", fstr;
+> +						nfstr = " " feat;
+> +					}
+> +					fstr = nfstr;
+> +					mask += (2 ^ j);
+> +				}
+> +			}
+> +			masks[i] = mask;
+> +		}
+> +		printf " *   %s\n */\n", fstr;
+> +
+> +		for (i = 0; i < ncapints; i++)
+> +			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
+> +
+> +		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
+> +	}
+> +
+> +	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+> +}
 
+
+
+Building kselftests is regressing with this commit on next-20250303.
+
+# make headers
+   HOSTCC  scripts/basic/fixdep
+   HOSTCC  scripts/unifdef
+   WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+   WRAP    arch/x86/include/generated/uapi/asm/errno.h
+   WRAP    arch/x86/include/generated/uapi/asm/fcntl.h
+   WRAP    arch/x86/include/generated/uapi/asm/ioctl.h
+   WRAP    arch/x86/include/generated/uapi/asm/ioctls.h
+   WRAP    arch/x86/include/generated/uapi/asm/ipcbuf.h
+   WRAP    arch/x86/include/generated/uapi/asm/param.h
+   WRAP    arch/x86/include/generated/uapi/asm/poll.h
+   WRAP    arch/x86/include/generated/uapi/asm/resource.h
+   WRAP    arch/x86/include/generated/uapi/asm/socket.h
+   WRAP    arch/x86/include/generated/uapi/asm/sockios.h
+   WRAP    arch/x86/include/generated/uapi/asm/termbits.h
+   WRAP    arch/x86/include/generated/uapi/asm/termios.h
+   WRAP    arch/x86/include/generated/uapi/asm/types.h
+make[1]: *** No rule to make target '.config', needed by 
+'arch/x86/include/generated/asm/featuremasks.h'.  Stop.
+make: *** [Makefile:251: __sub-make] Error 2
+
+The same used to work fine until next-20250228.
+
+Recreation steps:
+1. Clone next-20250303
+2. make distclean
+3. make headers
+
+Srikanth Aithal <sraithal@amd.com>
