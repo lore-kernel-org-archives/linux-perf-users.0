@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F24925F962;
-	Mon,  3 Mar 2025 16:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BD62641D2;
+	Mon,  3 Mar 2025 16:31:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019482; cv=none; b=nusZPB54/ufFNLM9DyQX6YtwQs0nkPmYRZP9VuhfGtK1nWGj8hiApdNMyKbMLFMa2LAKq0lfeXOm+uORX3dQcTDc4ud3dbGFoyEJAKH6AF+sLX+Zp9NK31BHtIelkPYVLQxkdeMK4CXbMLC0uVAvyK0/23FinSbMBqvBZavBSz0=
+	t=1741019504; cv=none; b=rQaWAmUU3LYXoJlbMu/Df9JiBJDeMq6kdmZPloUsFDoLJzrT5v7hyNczzSwj/fEzBMXo1S93Tj2JtUFMyH0/x4UGulgDQ46sSWFooJ/CNFdpLifB49XlIOOfOtmv1FyTMjbT1grZFiJhgQe50C+cve0eo+mdfpwEcHQsl8kmfpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019482; c=relaxed/simple;
-	bh=8Sn9E8TxKuSj6lxVxnVdg7cw49srxDIZnBgETCLVltQ=;
+	s=arc-20240116; t=1741019504; c=relaxed/simple;
+	bh=VXjnbG587rc4HggCnIi/3NHckkZixU6itRyToHb8J8Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=quFfoyFGZqyVyhsei0u2+Ui988GhUXY3Qd1Lu1S3Kv3o7d2EVY/ilCwr/SKrWn5505vHG368J3dXt59S4iIjI/B4whvGS4shDpCLYscWgshYFdnL89nzQsr1HGV7ihR1u9aC9Boz+71vxahYouLfjxH/TF5JAxhR4Ir4GcqVsLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHfF6r3U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MP/9mR1YzOXJPZUCNen9proneyJAODUppn749ZEfYznVtNigMIL/3tmGqbdzZjBDKG/JPIT2QGAiJlkNDOEevj7WWcz1Di/+rU4a/gEYEJt5wf82MOmaCNK+W51YaQQYpAjuz9FEFFqZBqZe87B3JgdpQD6XQpz7aLtEXnXewAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biVoNEX0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHfF6r3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9626EC4CEEB;
-	Mon,  3 Mar 2025 16:31:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biVoNEX0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149FBC4CEE4;
+	Mon,  3 Mar 2025 16:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019482;
-	bh=8Sn9E8TxKuSj6lxVxnVdg7cw49srxDIZnBgETCLVltQ=;
+	s=k20201202; t=1741019504;
+	bh=VXjnbG587rc4HggCnIi/3NHckkZixU6itRyToHb8J8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tHfF6r3U99E/VsDtVJKOniNxagEk913xzYtl6GlPaWVvjibqnoNlB0SE75i+o9/Da
-	 xr/XX30gO7nEBXdWppzRegO5QR3RZkLWIBddovlkuScdsOFRf4tPbr/1+98AhWYDYu
-	 s+330z2GCq2nInJPCQYwWtoHp3U5AcSL3pBi1K5CWcktasP54tEQffwOxmwpUqHu2U
-	 IdLl2bNtpkbjK0hgJfLxE+g0OLF3uH5Q6+Tz2kI9/PNRk0chzr9RLhdWGn/+jZrAv3
-	 L71EBDW+wgA+zJUV1i+yzeUWH6GjVyKB1hM0lQD/QFcOgxwCmhk5sByFw0igcvVLea
-	 8Mt5xNOMWb0dA==
+	b=biVoNEX0N8bA1MvJUU58g5c5TAjN1VKQ5UxNIECSZcuAe6tQ0kVcE2foYxkww/c/G
+	 kciyYZu96JB8PciMxknkjXnrrbYWANz7r9AbqNq6DXDg80KyD1sGnP2TPLAt1YXNOP
+	 9vseTr/uqE2AuJyCr3ia+QTyxGLhzXHRs0E4nQGBH5rqDkDp+K5GWyrrKWhdWeKWJe
+	 q0AHKhBO/Ww9jCgM2mCVjtWKp2eOGjE+lfgBGAw7Ibd6gxbIHW95xz3cCq+qYlkf0i
+	 Q6N8FtXkW7jFL2QESwgg7YAHzEaKKvOehxo2NAwZmFEf8frFZRHFHXftW3HL19cmJt
+	 vIMDy1aRj/amQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -41,12 +41,12 @@ Cc: Kan Liang <kan.liang@linux.intel.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 06/11] perf/x86/intel: Use better start period for frequency mode
-Date: Mon,  3 Mar 2025 11:31:04 -0500
-Message-Id: <20250303163109.3763880-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 5/9] perf/x86/intel: Use better start period for frequency mode
+Date: Mon,  3 Mar 2025 11:31:29 -0500
+Message-Id: <20250303163133.3764032-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303163109.3763880-1-sashal@kernel.org>
-References: <20250303163109.3763880-1-sashal@kernel.org>
+In-Reply-To: <20250303163133.3764032-1-sashal@kernel.org>
+References: <20250303163133.3764032-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.80
+X-stable-base: Linux 6.1.129
 Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
@@ -98,10 +98,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 85 insertions(+)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 61ac094e26bd7..b163817ad6daf 100644
+index 117f86283183f..b9dde37694120 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3881,6 +3881,85 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
+@@ -3852,6 +3852,85 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
  	return test_bit(idx, (unsigned long *)&intel_cap->capabilities);
  }
  
@@ -187,7 +187,7 @@ index 61ac094e26bd7..b163817ad6daf 100644
  static int intel_pmu_hw_config(struct perf_event *event)
  {
  	int ret = x86_pmu_hw_config(event);
-@@ -3892,6 +3971,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
+@@ -3863,6 +3942,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
  	if (ret)
  		return ret;
  
