@@ -1,87 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9AF1FCCF7;
-	Tue,  4 Mar 2025 11:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C481A208A9;
+	Tue,  4 Mar 2025 11:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741087512; cv=none; b=V3VFPKfGHSIdmynlNWIweL3Wr14p61zj3GTbZFFfhV147VW0NihW0GpGDZH/O+8eqGmBE/R2KmA0iKtTzRuAiEcaXrRFCXVUYN4xH5WMR8qpxi04uBmPx9fUTxRbeqWDVJ2kH9R2CVhm0X0e+IBpoknRobM8r/4uwkLk9jhxsmE=
+	t=1741088043; cv=none; b=MwXx6xvpD3THhHX7QTz91QgbWgJcWLB1r02uIFZycLY5jhiOveJ4Xv6Z2VQyEElU7ms2+45jw4xjTDJvD7yOAbsZfQWn+zjka1EuzGXdbSga5i0RFHDZF1pJRC5SMK9lmQkzyxpAwVnwDlvAYbBav3Yot6RuLHz/8Q65jwr+SmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741087512; c=relaxed/simple;
-	bh=Zj99QU+1T4AumhagELbWhW6sNQ5PMl7nw6neJbMlvJM=;
+	s=arc-20240116; t=1741088043; c=relaxed/simple;
+	bh=OSaHtJELfI/aomBjHKyTEv/ZMYxODYf6bl6A6qy7Yns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FH9RUvN8i5acuUBXiB7QDn65x2rEmux87JzBfdC1t0e666GKW00UA3NUgft7yiAEdCpYXnGdL0QNxK9vZxAqhuLoVDHeK7CqyRwVdMDtCIcoOirBjkEADqdOR++8L0IC/b4Fu6KjPJ+YvM+wW34q5MujXyMdnfUGIJKADel3R8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30551C4CEE5;
-	Tue,  4 Mar 2025 11:25:08 +0000 (UTC)
-Date: Tue, 4 Mar 2025 11:25:06 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=lg5xio1AesYN61uuR7dOW2sTbM12/Crjrp4z1lj7glDJ/njp4iYelvJEAr9zb+yO2yYXu+dBDnDde3q0Zkga6rp/Te8CK+WdS9ZYpb6GNt5q7fwGfedPrdkH9hzEzA12vxOEVcTmzqqJak90UjOR9vJ+/DJFhNfWdo9GmsYckOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C189AFEC;
+	Tue,  4 Mar 2025 03:34:14 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21523F5A1;
+	Tue,  4 Mar 2025 03:34:00 -0800 (PST)
+Date: Tue, 4 Mar 2025 11:33:50 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org,
+	Mike Leach <mike.leach@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>,
+	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v20 00/11] arm64/perf: Enable branch stack sampling
-Message-ID: <Z8bjEm_neWdMBNYv@arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <174080569248.3208873.17639032755999041028.b4-ty@kernel.org>
- <CAL_JsqLijFG1PFkqKk7hXzC=aj70OLQsXwC280QsCO=PnCVZYg@mail.gmail.com>
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 00/12] perf script: Refactor branch flags for Arm SPE
+Message-ID: <20250304113350.GK2157064@e132581.arm.com>
+References: <20250217195908.176207-1-leo.yan@arm.com>
+ <20250303093853.GG2157064@e132581.arm.com>
+ <Z8YYY2Q_ZPIaZ74g@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLijFG1PFkqKk7hXzC=aj70OLQsXwC280QsCO=PnCVZYg@mail.gmail.com>
+In-Reply-To: <Z8YYY2Q_ZPIaZ74g@google.com>
 
-On Mon, Mar 03, 2025 at 10:44:21AM -0600, Rob Herring wrote:
-> On Sat, Mar 1, 2025 at 1:05 AM Will Deacon <will@kernel.org> wrote:
-> > On Tue, 18 Feb 2025 14:39:55 -0600, Rob Herring (Arm) wrote:
-> > > This series enables perf branch stack sampling support on arm64 via a
-> > > v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details
-> > > on BRBE can be found in the Arm ARM[1] chapter D18.
-> > >
-> > > I've picked up this series from Anshuman. v19 and v20 versions have been
-> > > reworked quite a bit by Mark and myself. The bulk of those changes are
-> > > in patch 11.
-> > >
-> > > [...]
-> >
-> > Applied cleanups to will (for-next/perf), thanks!
-> >
-> > [01/11] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
-> >         https://git.kernel.org/will/c/04bd15c4cbc3
-> > [02/11] perf: arm_pmu: Don't disable counter in armpmu_add()
-> >         https://git.kernel.org/will/c/dcca27bc1ecc
-> > [03/11] perf: arm_pmuv3: Don't disable counter in armv8pmu_enable_event()
-> >         https://git.kernel.org/will/c/4b0567ad0be5
-> > [04/11] perf: arm_v7_pmu: Drop obvious comments for enabling/disabling counters and interrupts
-> >         https://git.kernel.org/will/c/7a5387748215
-> > [05/11] perf: arm_v7_pmu: Don't disable counter in (armv7|krait_|scorpion_)pmu_enable_event()
-> >         https://git.kernel.org/will/c/7bf1001e0d91
-> > [06/11] perf: apple_m1: Don't disable counter in m1_pmu_enable_event()
-> >         https://git.kernel.org/will/c/c2e793da59fc
-> > [07/11] perf: arm_pmu: Move PMUv3-specific data
-> >         https://git.kernel.org/will/c/dc4d58a752ea
+On Mon, Mar 03, 2025 at 01:00:19PM -0800, Namhyung Kim wrote:
+> On Mon, Mar 03, 2025 at 09:38:53AM +0000, Leo Yan wrote:
+> > Hi Arnaldo, Namhyung,
+> > 
+> > On Mon, Feb 17, 2025 at 07:58:56PM +0000, Leo Yan wrote:
+> > > This patch series refactors branch flags for support Arm SPE.  The patch
+> > > set is divided into two parts, the first part is for refactoring common
+> > > code and the second part is for enabling Arm SPE.
+> > 
+> > James has given review tags (including the new added patch 06).  Could
+> > you kindly pick up this series?
+> > 
+> > Sorry for pushing a bit, as we have dependency on it.
 > 
-> I don't know if you looked at the thread on patch 11 and said "long
-> discussion, I'll assume a new version is coming. Next!" because that's
-> what I would do. In this case though, there's not any changes.
+> No problem, I'll add it to the tmp branch and run some tests.
 
-I do this as well ;). But I think Will is waiting for Mark R to look at
-the rest of the series.
+Thanks a lot, Namhyung!
 
--- 
-Catalin
+I saw you have picked patch series v3 in the tmp.perf-tools-next branch.
+On the other hand, to follow up on Adrian's comment, I have sent out
+v4 to remove an unnecessary change in patch 01, and the rest of the
+patches are exactly the same as v3.
+
+Please consider picking the latest change (either the whole v4 series or
+just the updated patch 01 would be fine).
+
+Thanks,
+Leo
