@@ -1,195 +1,248 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C462045B2;
-	Tue,  4 Mar 2025 14:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B787378F39;
+	Tue,  4 Mar 2025 14:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097717; cv=none; b=DfYzZRFHZB2Oo+mEOGHABiByFTGN8p585+N7+WNxnpo5JF1V0FpUpEW8eEJ5RGPzmUP6AnqSw+P1N1JE5jJG0DiRcrleGHLBYEQHxXycz8GJzS+SAvLaTU0rwvAM+/K1L+A7wqTox+XnGP55XKJeNtgNo6bW6FSA7zfN4Xpk31Q=
+	t=1741100073; cv=none; b=EuAPInipnRK0RZyk4tNReVxQEj5deh2Z7aWXEM08mSz+x+msT86YK+GNEd80gsLp13ciK+6MM9yq1v0F6GuwJs2qlPzgMMbR8QeNOvJp4Z8EMxiYmsGJwXd1/iqmAr8yC3gyQzcAJySimttrxv126l2C5LOCGz6ug1+fMIhSFsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097717; c=relaxed/simple;
-	bh=RWVL+QE/PWRG8krCkuKmboSrFi6eKsi4L4DjJqF2A18=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=jpYbnDdE+fwVRdEEJx8IzkDZ8HSIuyKRzcQXSPL3wfLmMIwHKLX993OwI1QC3n7qg1ypGhFYSPwC5SdxqYofPocXdBhToJmp8xpoW9FbgN18LVZ4OKWUIyknC7qiIjRP7lFiGeoxzU3uTBDTtcutw9T7e5mCEyCH0MyitnuIMJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oSmpQBwY; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oSmpQBwY"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5249n2xY025940;
-	Tue, 4 Mar 2025 14:15:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=jMSsk+
-	JkgIWBNZDwESlZUKU0V4aZjl605EKGO3C0ivk=; b=oSmpQBwYIs2wDnXBOlIEMp
-	PC0CDmfFIDqNk8AWVLV4Xkw+Z37d52owo2bi5XVTkH9CfVdas/idHzGe9EQ+Wfxy
-	ouVpxAW9iTFJV6jK9NcRECw9rIocB1ogS0SmDbTrI5ijN3e8TXW9Z4iToy9hCcKh
-	/Gf3E4G6uOy4Luxiv7pVOs2/G+dVYDdplRqMjKBmwGGU1c3Ik+px3tCYTQoY9KCe
-	nQ63tku1trH+Zyem2tfeyIuTHM4+qd9odu1N/NDz7Hb3WJoYQL5pxpcIuerMaz2p
-	opB5XjCRxkVXifRWqQNmIqthThkJnsAxMGW2zs/568wqFL8Hasixf+PZKIyeKk/w
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455kkpca4v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 14:15:02 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524BZ6ke020936;
-	Tue, 4 Mar 2025 14:15:01 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djndrja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 14:15:01 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524EEv8S52822334
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 14:14:57 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C53642004F;
-	Tue,  4 Mar 2025 14:14:57 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E1832004D;
-	Tue,  4 Mar 2025 14:14:53 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.255.217])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  4 Mar 2025 14:14:52 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1741100073; c=relaxed/simple;
+	bh=sVEyCtEGAOXazpVA2ds1qgcN+T0Oqk82q0Ztht3CXw0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kakRb4tozD+R4lUj6pRbH+cBnb9TAxgOp13ctYpCy4Vf8QKQQgqUSU32jzmZi7klU8yvywZPFKORzIMCyInOR2AdmDehsza4jgtAC9BAwKK+Kbmig87FvZPrYby3X4QJefY/Djk0GWrmVgxa7CUhPmnc+N6ExWIW7cQxVQF/qns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b7185d653so1010116241.0;
+        Tue, 04 Mar 2025 06:54:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741100069; x=1741704869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fpoi690aUnKUgZbv3KZKnYeAytIZyP2VWb9kHfjEXMw=;
+        b=OYQopbxqNBoCr7D7GpdVuMNfjt6FgEIYSFU4Xu8U0ZCAR69kbNRSqZgN20d/z7u+JN
+         DKowDpSX8wOHgMH691Azf3gbnNLgUGu9DFq3OmkoUXEnwuZ7HQM9HQiZoSb4jp4lYfH+
+         ojbRN0yicpR9Wm1WCMhG8UdY1sZExUTUWj6a7vsjredfyVjNS1AGhkHSrmGZ1+bnYS5w
+         MTQyOxA+v166Al97ofm02Ka7DmQGjoO627iy6JEXClF90JG2T7W4MSOV9UaLov+41ZPP
+         R1kjP/iLuZ1bFQBMAM4k8JljZdfGY9Tq5xB2UMswTpWj5acfc1GLFtY+EfB6MMgT8rM9
+         k0TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCIXRLGa8CSGR40FREC62epBVhEn/IkWCCfzmX1JlYjUbiiKIKowwMAJhy54B/vPmIfeOcoMPuNKAj@vger.kernel.org, AJvYcCVfQc2shXZdj5YmaInrZXAz3IhN05joKlX64PEm18aUKP0ZGMFg01uYhbotiHZGEbTYh8XyO8yDunzYPKFcWZzOfA==@vger.kernel.org, AJvYcCXn3gRSgPQ4aa/0ZkMx8cTE5wiKWO31023gRqFntIQLNOPfCb/GyZDCaY8NmWuDgJWcrfNruGomY8csbZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFAmIRoZtLev2RdY5m2mM4S4xdvc12W2RhYlwtxT75ooqwvU83
+	f5+EGmlTBs2+56pJunOM5e4jTZDv1zjGLVC3OO/FZU7MJ0IpFFQOvEtaCR/4
+X-Gm-Gg: ASbGncsn88Zz+t6LsPVtyESWFIoR7NPu4nARoTxPCBEKIQk3QAd9uBX/2LggyAoS99P
+	u+tHzwbC0LsuPZHTdTZXOPuMy1Rz/jAfxOqL5Hzsed8OhNzy1JkhZ7Hq9JL2wCxQ5kliS38OOuQ
+	kWDXofZZuhBXYsJiRFwTmnhfPILlNDPqsUZoG3DU9xUFem1Of/sHtsLV9v4eROVq3L4HgtkqIiK
+	888HCEPZS82qdSwbWWCvw1FSDdpweB+m9pFEPCFNrnQP6pDQcUZrFPe8qAWrsleC/ImAwkavQXV
+	uV5R8srBXh1RQpwkOZPXghhfpE6qU76YC+Qdr1oj2JPPn49j2zftG8HMeUekPdaUVBDNBbUx6p3
+	6rnW6j7U=
+X-Google-Smtp-Source: AGHT+IFoEN2r9PD3tRNXvn/TNdb+XIZlXcc57x+b2pgw7O9q6aBtHJRcsftY7LcRCguPcZbzifvppw==
+X-Received: by 2002:a05:6102:3f4f:b0:4bb:4c52:6730 with SMTP id ada2fe7eead31-4c04490eb5cmr11583572137.12.1741100069314;
+        Tue, 04 Mar 2025 06:54:29 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c16ba4f676sm2013591137.21.2025.03.04.06.54.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 06:54:29 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86b2b14303fso2345214241.2;
+        Tue, 04 Mar 2025 06:54:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVOU6rr6VEwGBzS40rnugao0IP5ZG0RpUsWOiA+g3mTfCV13n00Dzgq9b2AGmj5vlCDYRtnasO9O/FNP4o=@vger.kernel.org, AJvYcCXCGlduA+gcX6YlMyPCPLKBQSxVSlcxwA8vVelNVFwBUee2HJuzT3R/Vb8YStFGst/xlRGxCR7bWsYK@vger.kernel.org, AJvYcCXMFs7p5D5eSt68nkQk+CSViVRKgExOC5fZUj+dlazH99Sv5MDYx3pTgAsO9+/T3aKTi/Qb4JD46d72ofsj/JV/RA==@vger.kernel.org
+X-Received: by 2002:a05:6102:3ecc:b0:4bb:5d61:127e with SMTP id
+ ada2fe7eead31-4c044d4ab20mr10413122137.25.1741100068657; Tue, 04 Mar 2025
+ 06:54:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH] perf/bench: Fix perf bench syscall XXXX loop count
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <20250304092349.2618082-1-tmricht@linux.ibm.com>
-Date: Tue, 4 Mar 2025 19:44:39 +0530
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, yangtiezhu@loongson.cn,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
+MIME-Version: 1.0
+References: <20250221131548.59616-1-shradha.t@samsung.com> <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
+ <20250221131548.59616-4-shradha.t@samsung.com> <Z8XrYxP_pZr6tFU8@debian> <20250303194647.GC1552306@rocinante>
+In-Reply-To: <20250303194647.GC1552306@rocinante>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Mar 2025 15:54:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWuCJAd-mCpCoseThureCKnnep4T-Z0h1_WJ1BOf2ZeDg@mail.gmail.com>
+X-Gm-Features: AQ5f1JoqtMy8hoZL8-viYrcUOUZmi4FtvLdHdpQ6zdyS-NBLZrj7ILd0QVxTKVI
+Message-ID: <CAMuHMdWuCJAd-mCpCoseThureCKnnep4T-Z0h1_WJ1BOf2ZeDg@mail.gmail.com>
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, Jonathan.Cameron@huawei.com, 
+	a.manzanares@samsung.com, pankaj.dubey@samsung.com, cassel@kernel.org, 
+	18255117159@163.com, xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com, 
+	will@kernel.org, mark.rutland@arm.com, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.or>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <69345A2D-EF10-4530-8C95-1E7BDC0B64F1@linux.ibm.com>
-References: <20250304092349.2618082-1-tmricht@linux.ibm.com>
-To: Thomas Richter <tmricht@linux.ibm.com>
-X-Mailer: Apple Mail (2.3776.700.51)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JakZI_zIw3GI_uKmjrnOjQCcHtqooOPX
-X-Proofpoint-ORIG-GUID: JakZI_zIw3GI_uKmjrnOjQCcHtqooOPX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_05,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503040110
 
+Hi Krzysztof,
 
+This patch is now commit 1ff54f4cbaed9ec6 ("PCI: dwc: Add debugfs
+based Silicon Debug support for DWC") in pci/next (next-20250304).
 
-> On 4 Mar 2025, at 2:53=E2=80=AFPM, Thomas Richter =
-<tmricht@linux.ibm.com> wrote:
->=20
-> Command 'perf bench syscall fork -l 100000' offers option
-> -l to run for a specified number of iterations. However this
-> option is not always observed. The number is silently limited to
-> 10000 iterations as can be seen:
->=20
-> Output before:
-> # perf bench syscall fork -l 100000
-> # Running 'syscall/fork' benchmark:
-> # Executed 10,000 fork() calls
->     Total time: 23.388 [sec]
->=20
->    2338.809800 usecs/op
->            427 ops/sec
-> #
->=20
-> When explicitly specified with option -l or --loops, also observe
-> higher number of iterations:
->=20
-> Output after:
-> # perf bench syscall fork -l 100000
-> # Running 'syscall/fork' benchmark:
-> # Executed 100,000 fork() calls
->     Total time: 716.982 [sec]
->=20
->    7169.829510 usecs/op
->            139 ops/sec
-> #
->=20
+On Mon, 3 Mar 2025 at 20:47, Krzysztof Wilczy=C5=84ski <kw@linux.com> wrote=
+:
+> [...]
+> > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > > +{
+> > > +   char dirname[DWC_DEBUGFS_BUF_MAX];
+> > > +   struct device *dev =3D pci->dev;
+> > > +   struct debugfs_info *debugfs;
+> > > +   struct dentry *dir;
+> > > +   int ret;
+> > > +
+> > > +   /* Create main directory for each platform driver */
+> > > +   snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(de=
+v));
+> > > +   dir =3D debugfs_create_dir(dirname, NULL);
+> > > +   debugfs =3D devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > > +   if (!debugfs)
+> > > +           return -ENOMEM;
+> > > +
+> > > +   debugfs->debug_dir =3D dir;
+> > > +   pci->debugfs =3D debugfs;
+> > > +   ret =3D dwc_pcie_rasdes_debugfs_init(pci, dir);
+> > > +   if (ret)
+> > > +           dev_dbg(dev, "RASDES debugfs init failed\n");
+> >
+> > What will happen if ret !=3D 0? still return 0?
 
-Tested-by: Athira Rajeev <atrajeev@linux.ibm.com>
+And that is exactly what happens on Gray Hawk Single with R-Car
+V4M: dw_pcie_find_rasdes_capability() returns NULL, causing
+dwc_pcie_rasdes_debugfs_init() to return -ENODEV.
 
-Thanks
-Athira
-> This patch fixes the issue for basic execve fork and getpgid.
->=20
-> Fixes: ece7f7c0507c ("perf bench syscall: Add fork syscall benchmark")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> tools/perf/bench/syscall.c | 22 +++++++++++++---------
-> 1 file changed, 13 insertions(+), 9 deletions(-)
->=20
-> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-> index ea4dfc07cbd6..e7dc216f717f 100644
-> --- a/tools/perf/bench/syscall.c
-> +++ b/tools/perf/bench/syscall.c
-> @@ -22,8 +22,7 @@
-> #define __NR_fork -1
-> #endif
->=20
-> -#define LOOPS_DEFAULT 10000000
-> -static int loops =3D LOOPS_DEFAULT;
-> +static int loops;
->=20
-> static const struct option options[] =3D {
-> OPT_INTEGER('l', "loop", &loops, "Specify number of loops"),
-> @@ -80,6 +79,18 @@ static int bench_syscall_common(int argc, const =
-char **argv, int syscall)
-> const char *name =3D NULL;
-> int i;
->=20
-> + switch (syscall) {
-> + case __NR_fork:
-> + case __NR_execve:
-> + /* Limit default loop to 10000 times to save time */
-> + loops =3D 10000;
-> + break;
-> + default:
-> + loops =3D 10000000;
-> + break;
-> + }
-> +
-> + /* Options -l and --loops override default above */
-> argc =3D parse_options(argc, argv, options, bench_syscall_usage, 0);
->=20
-> gettimeofday(&start, NULL);
-> @@ -94,16 +105,9 @@ static int bench_syscall_common(int argc, const =
-char **argv, int syscall)
-> break;
-> case __NR_fork:
-> test_fork();
-> - /* Only loop 10000 times to save time */
-> - if (i =3D=3D 10000)
-> - loops =3D 10000;
-> break;
-> case __NR_execve:
-> test_execve();
-> - /* Only loop 10000 times to save time */
-> - if (i =3D=3D 10000)
-> - loops =3D 10000;
-> - break;
-> default:
-> break;
-> }
-> --=20
-> 2.47.0
->=20
->=20
+> Given that callers of dwc_pcie_debugfs_init() check for errors,
 
+Debugfs issues should never be propagated upstream!
+
+> this probably should correctly bubble up any failure coming from
+> dwc_pcie_rasdes_debugfs_init().
+>
+> I made updates to the code directly on the current branch, have a look:
+
+So while applying, you changed this like:
+
+            ret =3D dwc_pcie_rasdes_debugfs_init(pci, dir);
+    -       if (ret)
+    -               dev_dbg(dev, "RASDES debugfs init failed\n");
+    +       if (ret) {
+    +               dev_err(dev, "failed to initialize RAS DES debugfs\n");
+    +               return ret;
+    +       }
+
+            return 0;
+
+Hence this is now a fatal error, causing the probe to fail.
+Unfortunately something fails during cleanup:
+
+    pcie-rcar-gen4 e65d0000.pcie: failed to initialize RAS DES debugfs
+    ------------[ cut here ]------------
+    WARNING: CPU: 3 PID: 36 at kernel/irq/irqdomain.c:393
+irq_domain_remove+0xa8/0xb0
+    CPU: 3 UID: 0 PID: 36 Comm: kworker/u16:1 Not tainted
+6.14.0-rc1-arm64-renesas-00134-g12c8c1363538 #2884
+    Hardware name: Renesas Gray Hawk Single board based on r8a779h0 (DT)
+    Workqueue: async async_run_entry_fn
+    pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+    pc : irq_domain_remove+0xa8/0xb0
+    lr : irq_domain_remove+0x2c/0xb0
+    sp : ffff8000819b3b10
+    x29: ffff8000819b3b10 x28: 0000000000000000 x27: 0000000000000000
+    x26: ffff00044011d800 x25: ffff80008053294c x24: ffff000441740400
+    x23: ffff0004413a30f0 x22: ffff0004413a3130 x21: ffff0004413a3130
+    x20: ffff8000815c0ec8 x19: ffff0004415f8240 x18: 00000000ffffffff
+    x17: 6775626564205345 x16: 0000000000000020 x15: ffff8000819b37b0
+    x14: 0000000000000004 x13: ffff8000813e9dd8 x12: 0000000000000000
+    x11: ffff0004404b6448 x10: ffff800080e85400 x9 : 1fffe00088334301
+    x8 : 0000000000000001 x7 : ffff0004419a1800 x6 : ffff0004419a1808
+    x5 : ffff000441349030 x4 : fffffffffffffdc1 x3 : 0000000000000000
+    x2 : ffff0004403e0000 x1 : 0000000000000000 x0 : ffff00044134f630
+    Call trace:
+     irq_domain_remove+0xa8/0xb0 (P)
+     dw_pcie_host_init+0x394/0x710
+     rcar_gen4_pcie_probe+0x104/0x2f8
+     platform_probe+0x64/0xbc
+     really_probe+0xb8/0x294
+     __driver_probe_device+0x74/0x124
+     driver_probe_device+0x3c/0x158
+     __device_attach_driver+0xd4/0x154
+     bus_for_each_drv+0x84/0xe0
+     __device_attach_async_helper+0xac/0xd0
+     async_run_entry_fn+0x30/0xd8
+     process_one_work+0x144/0x280
+     worker_thread+0x2c4/0x3cc
+     kthread+0x128/0x1e0
+     ret_from_fork+0x10/0x20
+    ---[ end trace 0000000000000000 ]---
+
+Worse, the PCI bus is still registered, so running "lspci" causes an Oops:
+
+    Unable to handle kernel NULL pointer dereference at virtual
+address 0000000000000004
+    Mem abort info:
+      ESR =3D 0x0000000096000004
+      EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+      SET =3D 0, FnV =3D 0
+      EA =3D 0, S1PTW =3D 0
+      FSC =3D 0x04: level 0 translation fault
+    Data abort info:
+      ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
+      CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+      GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+    user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000483b53000
+    [0000000000000004] pgd=3D0000000000000000, p4d=3D0000000000000000
+    Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+    CPU: 3 UID: 0 PID: 707 Comm: lspci Tainted: G        W
+6.14.0-rc1-arm64-renesas-00134-g12c8c1363538 #2884
+    Tainted: [W]=3DWARN
+    Hardware name: Renesas Gray Hawk Single board based on r8a779h0 (DT)
+    pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+    pc : pci_generic_config_read+0x34/0xac
+    lr : pci_generic_config_read+0x20/0xac
+    sp : ffff8000825cbbf0
+    x29: ffff8000825cbbf0 x28: ffff0004491c4b84 x27: 0000000000000004
+    x26: 000000000000000f x25: ffff0004491c4b80 x24: 0000000000000040
+    x23: 0000000000000040 x22: ffff8000825cbc64 x21: ffff8000816fb4f8
+    x20: ffff8000825cbc14 x19: 0000000000000004 x18: 0000000000000000
+    x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+    x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+    x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+    x8 : 0000000000000000 x7 : ffff000442c653c0 x6 : ffff8000805163d0
+    x5 : ffff8000804f3334 x4 : ffff8000825cbc14 x3 : ffff800080531990
+    x2 : 0000000000000004 x1 : 0000000000000000 x0 : 0000000000000004
+    Call trace:
+     pci_generic_config_read+0x34/0xac (P)
+     pci_user_read_config_dword+0x78/0x118
+     pci_read_config+0xe4/0x29c
+     sysfs_kf_bin_read+0x8c/0x9c
+     kernfs_fop_read_iter+0x9c/0x19c
+     vfs_read+0x24c/0x330
+     __arm64_sys_pread64+0xac/0xc8
+     invoke_syscall+0x44/0x100
+     el0_svc_common.constprop.0+0x3c/0xd4
+     do_el0_svc+0x18/0x20
+     el0_svc+0x24/0xa8
+     el0t_64_sync_handler+0x104/0x130
+     el0t_64_sync+0x154/0x158
+    Code: 7100067f 540002a0 71000a7f 54000160 (b9400000)
+    ---[ end trace 0000000000000000 ]---
+    note: lspci[707] exited with irqs disabled
+    note: lspci[707] exited with preempt_count 1
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
