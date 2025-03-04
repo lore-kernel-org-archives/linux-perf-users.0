@@ -1,97 +1,117 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4AC1FFC4C;
-	Tue,  4 Mar 2025 10:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5891FECDB;
+	Tue,  4 Mar 2025 11:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084187; cv=none; b=WZL3vqPFPzTTpoEiuy/q/M/AAdxAB1DHmrmKhN6F46eh34HoaAunYUG1KNGjRXaua1vn3fZq2pud+Ll52SPhFNBs5c4oJAn2bcKU26Ca2LUhJOH9OVykAQQISPABK7pdrsCHNM5T64OwWrb6H3EuANNK4TJpXyXRhDv3sRkY+ec=
+	t=1741086772; cv=none; b=R96Zn6bm9NXsuoReJqo7GWbK/YTTksk4fBnG/x7J6y1sE9Y+Lb+VYcJ4xBmiRQkd116yT1skgXGiR+INIflKw2rr7cxogwCLFV+ZdS8FWqKQgoZ8Ap6eT2ineg+A6cBBYmfKzKvjnds1bY0z54yZbqo0nZogsleDAhGIYY+Otjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084187; c=relaxed/simple;
-	bh=pI0HJfwpbAZaW1922lZNHz2lBW0wLacOGRUyghQ1l8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0ETrgZGjt3ejxlk5Z4etOpntsgWluLtcZL89E2P6GZzhP/ihfnRa2tndjk1c5b8KSK/ALwSZDVZth0eYh9JECiobDTJTNsEtk/sPFlghw0uIZIZlwzaWSE6PyqpwIABJt2GED5VcT7tH4PuYAiFDQf9fYHxnakCpvSpro4u0ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UILNwCCN; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UILNwCCN"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E98C840E0216;
-	Tue,  4 Mar 2025 10:29:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CAE7udcNv7Us; Tue,  4 Mar 2025 10:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741084175; bh=qp7g7t4g+xuD39/na+PShGGbLo7cwlzyR6sGXzc71sQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UILNwCCNd9Yu8FvBz86+UZarp09ZZcfFagyUDl/8edLiIlpQlmRUqRzgIoha8fKDl
-	 lvbJlwoFqHAJZZHzxppxwaFEnmGdX0gZHKkTX1dmxGWHusbqPcYXK29pN2wpINDXq4
-	 ApIFUwU7Xa5LOewX0pUFeYpmyFyudevUAMz2E/X1esTrV5VVRY6OONZpkJVnGgKrLf
-	 avQm7q9gdu7tq1AB1YuHXZ0ztYX6sqrE3bq87zIOCd3o6wetGbLAZgH8B7sCaakdz7
-	 IMbLU3QIYYjEIRE347rkaF26V/QyRn4zLlm+fRfdoBQFAeXVNSKNKcxLIq+2Qit9LM
-	 ZCOygS2slQyojNuY7ZQ13ArM9jRSKg7avhD5aRvHFLYfzPTfebKBLjnkSsH+EFNlAN
-	 llE/629/EtehYezxEgbjkPlha13VZJc2uniFpuy0Q+fIMfwwj6Ybns/O20HwFZK1Tt
-	 kGpYy/wpq0z984cHsxS4hnTrSjKeQHNnWkLK2ARC5FtkSuWD0hL9r11RgM8EEC0haC
-	 caQGFKc8CZe4mWiJVOHPNktH+rH+ioZV2SSoSBMciAZaWv9UnMiRGyGK/tc2InFYok
-	 l1VPnIH8/FGbLELfwxqvUEbpbJ0BMO5sLPrSansDNSCwhG7m0A4DwoTIwnWjeMszkY
-	 afdelxI8J/2GjQcI5LYe56kY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEE3540E0214;
-	Tue,  4 Mar 2025 10:29:16 +0000 (UTC)
-Date: Tue, 4 Mar 2025 11:29:10 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Xin Li <xin@zytor.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, "Aithal, Srikanth" <sraithal@amd.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, will@kernel.org, peterz@infradead.org,
-	yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
-	namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
-	nik.borisov@suse.com
-Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
- based on build config
-Message-ID: <20250304102910.GAZ8bV9hXqVb5tA9rs@fat_crate.local>
-References: <20250228082338.73859-1-xin@zytor.com>
- <20250228082338.73859-4-xin@zytor.com>
- <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
- <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com>
- <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
- <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
+	s=arc-20240116; t=1741086772; c=relaxed/simple;
+	bh=TUGJO8nbHYSQLz08ZvDh94WG2mXklrFANqKdLTvSWJ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cksnc7BVd+GP2qHBRszT6p1ZbQ+HgzJ5sw6aiV1twgWK5L4176ZJ1T8HYyWgN4aVPRtYrODLppR16bkv7kBVg8wSfVooBIVnAX0AvvmPobWRQ6ztZgCG/qavRE0ZkLiCiuqih2GOCeIlXAPuxY226l1VNLmnbM+p/XOMemENpvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EC5CFEC;
+	Tue,  4 Mar 2025 03:13:03 -0800 (PST)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 635983F5A1;
+	Tue,  4 Mar 2025 03:12:47 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Paschalis.Mpeis@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 00/12] perf script: Refactor branch flags for Arm SPE
+Date: Tue,  4 Mar 2025 11:12:28 +0000
+Message-Id: <20250304111240.3378214-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 04, 2025 at 02:18:51AM -0800, Xin Li wrote:
-> It seems that 'archprepare' works, however I'm not sure if it's the best
-> choice.  Any suggestion?
+This patch series refactors branch flags for support Arm SPE.  The patch
+set is divided into two parts, the first part is for refactoring common
+code and the second part is for enabling Arm SPE.
 
-Why do you even need featuremasks_hdr as a prereq?
+For refactoring branch flags, the sample flaghs are classified as branch
+types and events.  A program branch type can be conditional branch,
+function call, return or expection taken.  A branch event happens when
+taking a branch.  This series combines branch types and the associated
+events to present a sample flag.
 
-I still don't get the dependency there.
+The second part is to enable Arm SPE's sample flags for expressing
+branch types and events, and support branch stack.
 
-In any case, you'd have to redo your patches - we've zapped them from tip.
+Patches 01 - 03 are to refactor branch types and branch events.
+Patches 04, 05 extend to support not-taken event.
 
-> Want me to add it btw?
+Patch 06 is to fix a bug for parsing ldst operations.  Without this fix,
+the seqential changes will cause breaking for memory samples.
 
-Yes pls.
+Patches 07 - 10 enables branch flags in Arm SPE.  This allows to print
+out sample flags for samples.
 
-Thx.
+Patch 11 supports branch stack for Arm SPE.  Patch 12 is an enhancement
+for PBT feature.
+
+Changes from v3:
+- Deleted unnecessary change for left-justified printing in patch 01
+  (Adrian).
+
+Changes from v2:
+- Added a new patch 06 for fixing the ldst operation bug (James).
+- Added James' review tags (except the new added patch 06).
+- Removed a wrong output result in the last patch's commit log.
+
+Changes from v1:
+- For patch 05, changed to append the 'not_taken' bit in the branch_flags.
+  This can avoid altering bit layout and cause breakage.
+- Added Ian's review tags.
+
+
+Leo Yan (12):
+  perf script: Make printing flags reliable
+  perf script: Refactor sample_flags_to_name() function
+  perf script: Separate events from branch types
+  perf script: Add not taken event for branches
+  perf script: Add not taken event for branch stack
+  perf arm-spe: Fix load-store operation checking
+  perf arm-spe: Extend branch operations
+  perf arm-spe: Decode transactional event
+  perf arm-spe: Fill branch operations and events to record
+  perf arm-spe: Set sample flags with supplement info
+  perf arm-spe: Add branch stack
+  perf arm-spe: Support previous branch target (PBT) address
+
+ tools/perf/builtin-script.c                   |  29 ++--
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |  23 ++-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  11 +-
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 +-
+ .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  12 +-
+ tools/perf/util/arm-spe.c                     | 143 +++++++++++++++++-
+ tools/perf/util/branch.h                      |   3 +-
+ tools/perf/util/event.h                       |  12 +-
+ tools/perf/util/trace-event-scripting.c       | 116 ++++++++++----
+ tools/perf/util/trace-event.h                 |   2 +
+ 10 files changed, 313 insertions(+), 52 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
