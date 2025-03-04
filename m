@@ -1,40 +1,39 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28D742077;
-	Tue,  4 Mar 2025 09:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DE41FC107;
+	Tue,  4 Mar 2025 10:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081857; cv=none; b=WnRTaKdEORq4+Z3j7FDN1QkWwwnwXAdhWuNeNHPNtn00w15mH6gTpXGag1jNbiAs7S3eD8hOHvKzDZHQdDz+wmMACoKWWAnbGkSD6yIPf8E89tgPnR9mKdhNpyHH3zRgYaXYyr5iLi7mNosNPwEPqWL+GCGf02WJUdxQWBKPqL8=
+	t=1741083575; cv=none; b=HX6iLhOKeCy2t3dcN8RWTq+dsjUqcxjJugZ3JgA50T+lEZku1Qg6HPETz+Yw94Z1rzaPb0IKzDyzJRMhtvWoeETW15MvAEy5hMvljeQ6ZA8BBpOdNiogjBVnbQo0hv3CLi8e7+H20iM+KJJR/VilHHOI+52vlOSTdxaVkYoHbQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081857; c=relaxed/simple;
-	bh=OyViGJ/xSkOScuLl8Kts553uXVJWw4tJ0x/3OkXB+JM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ljUySu8Bz8uycEUdXS7HRQrQgYePSqzXZL910u8ln3lyowj8JX/zUf0AX4CVfRoma7BL0QRcG0ayi3hsxosWaDb/3AtHZ/Y5Sp3l0ZhVJDJwoxBp4YFCyueibHd+zdhxrGN4Th8Nwpp/kaPsQKjOGuhizWX+P36P6vUA8nEsrt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MqkVENF6; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741083575; c=relaxed/simple;
+	bh=0LjOy3ExptYlSDWc+R79hQzLs5Ver27PeTWoOSJuVcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h7XvWxq+YS5wBLwuv75Qe8HvGo/OlfW96ARnpnbBd7WDKPp9SXlLqj7WG3UaYer3+df/xT2K8DihDtQGJps2ClSV/L3vHG5p272NIWei72wmXSS2Y2arFdqAtyR3oo2i/2bc/48b8Ga36nk3eLfP4Ipi9UY41yT5bDHTtjFDC88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cu+DxP4E; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MqkVENF6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741081847; x=1741686647; i=markus.elfring@web.de;
-	bh=asA99JHuFG45J+PLamKyBXsE7OPnQTEQXbgBwGkvXUY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MqkVENF66K7NM+Rdc1ebVHybRmg/N+adIGafKK9Il2hSAgU2TrzNtZgLEUq+d56c
-	 BsdFiDc5Krs3ST5UQtrXMiwTgBMLtxShCEDrcUmVt6nGxd8CNbb+jm8Nk8UBUpb8Y
-	 hoJcGToaD0OvNB/d9uXRChUlJoBCIJnqmpO2z12/E7a0MlKgx/TKVovj5hrV2Idrr
-	 2h16/SJh8AhNNkmnrenQ2Nythb2jugKPUx+7zEV4TaITCthyCR05xbGKmJyJJGGjL
-	 MOAZv2Iwl23em4EP4hIlAM2E4qMXSlPIjIszifMuYP6i/A37+8SZFVVHqTyI6B+Vy
-	 DZdJHlDtUnz3USb+lQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.64]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MbCHy-1tIFxu3iWm-00iB9R; Tue, 04
- Mar 2025 10:50:46 +0100
-Message-ID: <c69c79e4-04a3-4182-a694-809a5fa36083@web.de>
-Date: Tue, 4 Mar 2025 10:50:35 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cu+DxP4E"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 524AIqSq2089857
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 4 Mar 2025 02:18:52 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 524AIqSq2089857
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741083534;
+	bh=3zxn+WrUBS8g5foCUUkpMpybK/Hi5/TPDqiPyN+NjBM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Cu+DxP4EQneH3TSWDP624/zH+OMfC7h5DGNGi6a0668Ux0qW1Pvgj+klioKCGuD1p
+	 uM4s+8Kj79AjXwRo8ofkq3lErebXXq+ecKLc+BcbTCd8B7Rs2Yrr0Ikh6ZYyaXBiLD
+	 ZV9pCeqBRYFJ7vv9oTbAqqIsJ7y2MT+9gH+/ibxCk62k+vn6xojnPpWGgz2EKkaIId
+	 rBjm7LkVHvKF+H61e8SC2WdfBaUFK+BjyY8J2OWC0fueLxF8u2/mdyJEL/ofDaQG6n
+	 6QEskWE8SVb9sssE+UCmHO0CjqGixeWD7rxvK+VscVBxnogbD1I+c0nw3sMsAjD7vS
+	 eD10gMEryXoCg==
+Message-ID: <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
+Date: Tue, 4 Mar 2025 02:18:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,112 +41,108 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH RESEND] perf cputopo: Improve exception handling in
- build_cpu_topology()
-From: Markus Elfring <Markus.Elfring@web.de>
-To: kernel-janitors@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
- <b1c70348-6459-474e-6a0f-d956423368d5@web.de>
-Content-Language: en-GB
-In-Reply-To: <b1c70348-6459-474e-6a0f-d956423368d5@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zwnxKwlzGB6lzUwzmSXhy5SzzNCA5khP3HuvwjAnzkkTSsl+oIG
- DWOKj06jnDp9rAYXsw/PmjRcrC8kxCSzERqmbAssiny6VokvGklOFI3UVmcoUz1bKebDrR6
- jiet48jwrUEis7A8RSdOhtkr8AotZkLyqlfLHfYdYo4FAltrtYdFPdS4GdaLrrLa9Qk+X63
- 9qVgzazeoL3JAQOY5jeEw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:v/LKQqKo3yk=;2xU/kzBRtU5lDFHf7glYk9cze/y
- gg1qF5dIYCm3Nzi0/mGVb3B1sBlZth/yoVVtNWj+M19J/2pqcxNM3esgC+j6y64p/0Q6BE7mt
- 2M9Xd/4Tv3rMT5m+r1GfAHh1GP8vsTOIJ9iLRMs1qOhI5edxfAt/hxCyBh9WpkSTbOZv90AB/
- 571Q5b9Rcm28BVFAYk7ai6Wg/sTnwACL1Q3mt3/+CToiA0OfI25W4ZKS7PeUumYrJz5KqdUNk
- /9HtLExm8xEz0FwwTmREjksqHGZBetuczVsnHFuDikKLJMYgdmuMm7/aHEd8fY+kQGgsC9Jf+
- 0wBabKaYHDnWvBM8cshHa9vJdaFrMg6BLRo/mquLVX35ryWJ8+lccSZ5KwTP0CXytIEIbnE0S
- MylDHM13/8p6gD76hbpaD8bbjEuZrgTHj2Dmbr7biy45PS0D3q1uHpfBSY9o+F7DtNCMYvDvu
- lJIgSn4/J9rTRQbRXeeB+TWtMUryzTLC1rK+Z7A/svKwupl3qPdgKyrBz4cXuz0dYNpOuhr5x
- 5YXxuOt/Gfe9ljpUA6OgtLg6gynzkxkIqdLpJeSRhzvSFqEZ/DmMi9MUuVFl7Idtr0zxLvKOy
- bZ3jRPXiPcLdqcX5GBfx9YsuFaD9kqzN3zDHB1UjxifAlDo8qVHtbvhZH6FWmBYuJtK4mbxA4
- R1Cja56gQt07lOGpQXcDGbQMukfnjiLbqYS6+t8bEcOTCajtyvNaNmPmD8KNWpAknbqY83AN6
- 6IaRVfdOQV3I0I9/U1iF7mLe7N9N3vLFMv+0H7G/q6Vf/MoPU+PUB2xZ57IcA08TxqO8VIaL3
- HvL3wmzzqg9p4ZNngJu9UdLRqyZXfjb5ESP1R+M6qx/YjcMBdStz615TRQGElDIlDesJO8jKx
- Uh8QLaUBOlPdaSGfG1kwwdy1BdHIznBRD2kFF+Yw9o+dsGKwRshSIBzpYfFXUG4NIXbXlDXHo
- oiksC7f2prXB0VxgoABgjan5P3HhURYUcbsjElfzyGsYPSpw0YlZOr/szVGpLSq1OHMOsWtyO
- yOipxcqzI8ZwzBbM8RQDDG1FFG5PbNKC9lEjzW6MBSX/gww7NgroM7ss+7PVsLyqvO2KdaoHc
- xnKH/WPMGHCrQTCZg4K5r2Ta4h4Ey9jvnOsHfbJX1RbU200YsUvp34y7skAxZrbkSKu+77QjC
- yjqSUwtrjSV0AQu6iP9p9HoGWha4V++3AjN4fKg0rUYpEhtcs3wfAwU/2+wkmJukDxk1/Pxlp
- dQHeBF7phoe/a7HjoxLAo/1Be4ootv7uJ1p3aXxdt/CU5O5pXv1WwKwfUwrjEq0VH3XfitT1p
- Nd5yZAL9nJgMWhsxSbrJHSDOkPA3nPpx6P/kSNtfmxcpt2wLtHieh4oM+whMC16of06gHrJfX
- DIEPVcymD64LXUOe/1xIuQ2EK4+MbJYa357qjo93/YHcGP2koXiyp5/lC1h3J30JEMGHpfx05
- NzvA8yrnqjq8xv9FX1Hh9Kj/scg8=
+Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
+ based on build config
+To: Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Aithal, Srikanth" <sraithal@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org, will@kernel.org,
+        peterz@infradead.org, yury.norov@gmail.com, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+        andrew.cooper3@citrix.com, nik.borisov@suse.com
+References: <20250228082338.73859-1-xin@zytor.com>
+ <20250228082338.73859-4-xin@zytor.com>
+ <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
+ <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com>
+ <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 23 Mar 2023 22:00:07 +0100
+On 3/3/2025 5:25 AM, Borislav Petkov wrote:
+> On Mon, Mar 03, 2025 at 04:05:54AM -0800, H. Peter Anvin wrote:
+>> "make headers" on an unconfigured tree should presumably only produce the uapi headers, not kernel-internal ones, one could surmise?
+> 
+> Well, that's kinda a question for you guys:
+> 
+> cfc7686900a87   (H. Peter Anvin (Intel) 2025-02-28 00:23:36 -0800       281)archheaders: $(out)/$(featuremasks_hdr)
+> 1f57d5d85ba7f   (Ingo Molnar    2015-06-03 18:36:41 +0200       282)    $(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
+> 
+> and the headers target has
+> 
+> headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archscripts
+> 
+> as its prereq.
+> 
+> Judging by
+> 
+> 59b2bd05f5f4 ("kbuild: add 'headers' target to build up uapi headers in usr/include")
 
-The label =E2=80=9Cdone=E2=80=9D was used to jump to another pointer check=
- despite of
-the detail in the implementation of the function =E2=80=9Cbuild_cpu_topolo=
-gy=E2=80=9D
-that it was determined already that a corresponding variable contained
-a null pointer because of a failed call of the function =E2=80=9Cfopen=E2=
-=80=9D.
+It seems that 'archprepare' works, however I'm not sure if it's the best
+choice.  Any suggestion?
 
-1. Thus use more appropriate labels instead.
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 60583987d320..2db535958b8d 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -276,9 +276,9 @@ $(out)/$(featuremasks_hdr): $(featuremasks_awk) 
+$(cpufeatures_hdr) $(KCONFIG_CON
+	$(shell mkdir -p $(out))
+	$(call if_changed,gen_featuremasks)
 
-2. Reorder jump targets at the end.
+-targets += $(out)/$(featuremasks_hdr)
++archprepare: $(out)/$(featuremasks_hdr)
 
-3. Delete a redundant check.
+-archheaders: $(out)/$(featuremasks_hdr)
++archheaders:
+	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
 
+  ###
 
-This issue was detected by using the Coccinelle software.
+> 
+> it sure looks like "make headers" should be for uapi headers only.
+> 
+> Oh, and it should be documented in "make help" output btw.
 
-Fixes: 5135d5efcbb4 ("perf tools: Add cpu_topology object")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- tools/perf/util/cputopo.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Want me to add it btw?
 
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index e08797c3cdbc..fd185951ee2c 100644
-=2D-- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -112,10 +112,10 @@ static int build_cpu_topology(struct cpu_topology *t=
-p, int cpu)
- 	}
- 	fp =3D fopen(filename, "r");
- 	if (!fp)
--		goto done;
-+		goto exit;
+Thanks!
+     Xin
 
- 	if (getline(&buf, &len, fp) <=3D 0)
--		goto done;
-+		goto close_file;
-
- 	p =3D strchr(buf, '\n');
- 	if (p)
-@@ -131,10 +131,10 @@ static int build_cpu_topology(struct cpu_topology *t=
-p, int cpu)
- 		buf =3D NULL;
- 	}
- 	ret =3D 0;
--done:
--	if (fp)
--		fclose(fp);
- 	free(buf);
-+close_file:
-+	fclose(fp);
-+exit:
- 	return ret;
- }
-
-=2D-
-2.40.0
 
