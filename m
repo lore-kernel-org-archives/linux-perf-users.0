@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0051DDA3C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BFA1F3FED;
 	Tue,  4 Mar 2025 02:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741055321; cv=none; b=RH4AHqBr/YHta6eIpnczXDxGJM0VvGWE7fTM/OPq0h0Vdz/jTgeqaFDL2hGlM++mcDH8bjDtykUerPyunkVwNgpkmEqGfzwZNv8mVTU/QQGtQeTGtVbh71h12Ivskt7azh725gYwVVxh+9nrXYbjCZAwd/vMTek/9t2AYZZTqJY=
+	t=1741055323; cv=none; b=DwuZSF4Ddw2XRTjzMYaMtKMod0S9nIG1xQm6/cANVb2AO7eqip4w8M6D3pKcyqpvee6Y+eFdBSOrYTRNW6w7q2rPw2/+CquDo74Ufdh1yFORh8VoTVOnfUZVGauXCAL3j9zUh91e0TRmRuz8hOz7KacnR0KlXdBW0nYHLbR6NuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741055321; c=relaxed/simple;
-	bh=RzYrlM88omVGwDNYsMfqIjC0LNHDhGkdys42nQkzM6w=;
+	s=arc-20240116; t=1741055323; c=relaxed/simple;
+	bh=0hdoilLOGa6AOrQ12FPGta7eflB7cDeA1VkIKF6W4T8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZVPu6HC4Cb3noAbujLl2MThmqnykQin5jyD7+8K2v/u0ONb5D98fedKkc4zlXYeVlEMXW0OnF+8Ef1bzEAcILGqN/38D/Wcatt1it6P4WLdpEzWDf9/ExR5FCwNnwbfRJiBB7ime+voyGL+5U4a3QmNpVpMnI6+JhKQpmNbBIxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAdbDFL9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QB83wxOiyGUz4mFT3EF7nhkVRLBds7OOo65nP2uwfPYtlc63UEUTZeW7zl3pmGD5eNm4HY7P/yaRbc2T92vdC/Swi/QfT56Fn6QnwTayU4aQV3fTEXD5K6VVuhTSVifJoLlWHbSfKI/H7XdS9Nt46jsFWkWYZOJZ9OzKC+y2hsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYbRyQQj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAdbDFL9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8B4C4CEF0;
-	Tue,  4 Mar 2025 02:28:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYbRyQQj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14241C4CEEC;
+	Tue,  4 Mar 2025 02:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741055320;
-	bh=RzYrlM88omVGwDNYsMfqIjC0LNHDhGkdys42nQkzM6w=;
+	s=k20201202; t=1741055321;
+	bh=0hdoilLOGa6AOrQ12FPGta7eflB7cDeA1VkIKF6W4T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BAdbDFL9cy9IOs0L1uQQyN/wVf7j7WMlZPH/K96R53X7xYnW0YaNPpe+BolbGHDtL
-	 jAyHdmryB9k1IJsm+fWIbNF7rk8mC8quVQV7CTYlwMQoaqPc4mdAbehoPPhOVBgVRg
-	 Wy90ZDj+r8hOk3Yd2TSTLy9e+vQzG08RW0UwMPT6avlvqJcZUfJXeRbb6SKBSVfXG6
-	 3J/GD/7UZX+KFRBVzNN0EjmUk7JWGUivyHxw4vNGnf92StBTlE4VNTxIuS4BMcEBPp
-	 Yp0xPjPS4KpBGYY5Guw/5KN7UM+W+4AnuMOpjedL0M5f0iOyGH0sdXKa6cWZm7DSuQ
-	 b1DpmI6qo87iA==
+	b=DYbRyQQj/mUwkLjRakZGzLwB51Aq6kKksQIL+lcYUKXvh9pq14VsJiFPgqOmnzOxN
+	 4KksIn5QZa8so4nhsPZ949SxgXXzlu6i9heopNIGkLuqgu8EiI9KU+FJvkQN5ZTDgF
+	 BzLthqgKGgJR3PuDUlMA0kQdMJO49MxKxcrQTYih9NFLcPjcNdcVof/Ny8WkAf8nSy
+	 HOHgthgZ5FzEhyX7GIAlUQ/3np6u2J4jZNp2LaYeStudfXodjjIE1hluGLKPZTu50K
+	 NlU+cpajvUcZo0dE9wNZfeAr8MnxL8ucX//EpRD9r+vWwpqAgycHf+IrpsAyhkIYB1
+	 MBXCEyUTipYhw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Thomas Richter <tmricht@linux.ibm.com>,
 	Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 5/6] perf test: Add timeout to datasym workload
-Date: Mon,  3 Mar 2025 18:28:36 -0800
-Message-ID: <20250304022837.1877845-6-namhyung@kernel.org>
+Subject: [PATCH v2 6/6] perf test: Simplify data symbol test
+Date: Mon,  3 Mar 2025 18:28:37 -0800
+Message-ID: <20250304022837.1877845-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 In-Reply-To: <20250304022837.1877845-1-namhyung@kernel.org>
 References: <20250304022837.1877845-1-namhyung@kernel.org>
@@ -52,56 +52,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Unlike others it has an infinite loop that make it annoying to call.
-Make it finish after 1 second and handle command-line argument to change
-the setting.
+Now the workload will end after 1 second.  Just run it with perf instead
+of waiting for the background process.
 
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Leo Yan <leo.yan@arm.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/workloads/datasym.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/test_data_symbol.sh | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
-index 8e08fc75a973e5f7..8ddb2aa6a049e343 100644
---- a/tools/perf/tests/workloads/datasym.c
-+++ b/tools/perf/tests/workloads/datasym.c
-@@ -1,3 +1,6 @@
-+#include <stdlib.h>
-+#include <signal.h>
-+#include <unistd.h>
- #include <linux/compiler.h>
- #include "../tests.h"
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+index c86da02350596b35..1792b7ad4066f8cd 100755
+--- a/tools/perf/tests/shell/test_data_symbol.sh
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -5,8 +5,6 @@
+ # Leo Yan <leo.yan@linaro.org>, 2022
  
-@@ -12,9 +15,25 @@ static buf buf1 = {
- 	.reserved[0] = 1,
- };
+ shelldir=$(dirname "$0")
+-# shellcheck source=lib/waiting.sh
+-. "${shelldir}"/lib/waiting.sh
  
--static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static int datasym(int argc, const char **argv)
- {
--	for (;;) {
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done) {
- 		buf1.data1++;
- 		if (buf1.data1 == 123) {
- 			/*
+ # shellcheck source=lib/perf_has_symbol.sh
+ . "${shelldir}"/lib/perf_has_symbol.sh
+@@ -60,19 +58,10 @@ echo "Recording workload..."
+ # specific CPU and test in per-CPU mode.
+ is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
+ if (($is_amd >= 1)); then
+-	perf mem record -vvv -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM 2>"${ERR_FILE}" &
++	perf mem record -vvv -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM 2>"${ERR_FILE}"
+ else
+-	perf mem record -vvv --all-user -o ${PERF_DATA} -- $TEST_PROGRAM 2>"${ERR_FILE}" &
++	perf mem record -vvv --all-user -o ${PERF_DATA} -- $TEST_PROGRAM 2>"${ERR_FILE}"
+ fi
+ 
+-PERFPID=$!
+-
+-wait_for_perf_to_start ${PERFPID} "${ERR_FILE}"
+-
+-sleep 1
+-
+-kill $PERFPID
+-wait $PERFPID
+-
+ check_result
+ exit $?
 -- 
 2.48.1.711.g2feabab25a-goog
 
