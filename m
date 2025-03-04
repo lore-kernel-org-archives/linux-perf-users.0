@@ -1,173 +1,153 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BC23A8C1;
-	Tue,  4 Mar 2025 09:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28D742077;
+	Tue,  4 Mar 2025 09:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080254; cv=none; b=ePpNAeyRV9KIeGlePq8NRADRarpiESWw/5xp1it/TPlPSDzRCvWSdTecl5JggSrmtN0jkrbQ+/EqETwD3IcwaJz9+GgW/K+QxjWbPy2CYbgcvTA4a17GqvXEeEJbjkWeWYhdSsKVcpv7Fxhio7vEhq5kLtBIvt/+KGkGMEgjPdw=
+	t=1741081857; cv=none; b=WnRTaKdEORq4+Z3j7FDN1QkWwwnwXAdhWuNeNHPNtn00w15mH6gTpXGag1jNbiAs7S3eD8hOHvKzDZHQdDz+wmMACoKWWAnbGkSD6yIPf8E89tgPnR9mKdhNpyHH3zRgYaXYyr5iLi7mNosNPwEPqWL+GCGf02WJUdxQWBKPqL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080254; c=relaxed/simple;
-	bh=F/e+4hXqnVY/3UYtlQNmiJ+BNK12oTSj7q9mdjIBEg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bMhIvC2TUNrWIMWEhJilhvUmFWKV5Wy81vg4qTsrrz4XjIYLbGdbTc+jzdgdKUMfJku/wa+vv0F2787FVrsj18sKX1neyCr2I6sumQn0g+hpRDek+EPdIxjzfN5Ms+X+XWUbh3030bF4yZEl4sK1h64hk9aDK5yFbdJVc9Erjoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=j0mBxOg7; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741081857; c=relaxed/simple;
+	bh=OyViGJ/xSkOScuLl8Kts553uXVJWw4tJ0x/3OkXB+JM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ljUySu8Bz8uycEUdXS7HRQrQgYePSqzXZL910u8ln3lyowj8JX/zUf0AX4CVfRoma7BL0QRcG0ayi3hsxosWaDb/3AtHZ/Y5Sp3l0ZhVJDJwoxBp4YFCyueibHd+zdhxrGN4Th8Nwpp/kaPsQKjOGuhizWX+P36P6vUA8nEsrt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MqkVENF6; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j0mBxOg7"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523KaK6H026933;
-	Tue, 4 Mar 2025 09:24:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=QWY9AjfPPQBgRkeJ4WPXv2gAL8XhKLNHdc7RMavJB
-	+c=; b=j0mBxOg7y+rgdwpDHSmO3VOTDkv7H8rCKxrLql+uiQk+32pyNXyfiy8m8
-	tIRtTFinPrsPY5l3NQJty3caMZz+ZPAFEZH6wN4e++GMFOIBql7s0+LCRGHCUsFn
-	ufm9NZBCBz7oiVTf4rAZZ7eQVSwlV8QNZ492GQorO7oY/bYy3w6H5KoOE8IJ3Sqx
-	sg6K0tQqZv9tKLCSST77gCGpGEWyz3M3cmWPx6eeAR9jTIk5d7eO3kxNPvu4ArIQ
-	2fDe6DLtWdOzF8lJYFxqqhyJ9McHTo9+PaEOYdxIP1Az97AF6zPWvAKC+SgpJAci
-	GdnG/ujE1tJ9sLeW4dQtg2mdMLvaw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455kkpax6h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 09:24:00 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5247W4sL009038;
-	Tue, 4 Mar 2025 09:23:59 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454cxycs1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 09:23:59 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5249NtZ656492534
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 09:23:55 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C4A8820043;
-	Tue,  4 Mar 2025 09:23:55 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A0C120040;
-	Tue,  4 Mar 2025 09:23:55 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Mar 2025 09:23:55 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        yangtiezhu@loongson.cn
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/bench: Fix perf bench syscall XXXX loop count
-Date: Tue,  4 Mar 2025 10:23:49 +0100
-Message-ID: <20250304092349.2618082-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MqkVENF6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1741081847; x=1741686647; i=markus.elfring@web.de;
+	bh=asA99JHuFG45J+PLamKyBXsE7OPnQTEQXbgBwGkvXUY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=MqkVENF66K7NM+Rdc1ebVHybRmg/N+adIGafKK9Il2hSAgU2TrzNtZgLEUq+d56c
+	 BsdFiDc5Krs3ST5UQtrXMiwTgBMLtxShCEDrcUmVt6nGxd8CNbb+jm8Nk8UBUpb8Y
+	 hoJcGToaD0OvNB/d9uXRChUlJoBCIJnqmpO2z12/E7a0MlKgx/TKVovj5hrV2Idrr
+	 2h16/SJh8AhNNkmnrenQ2Nythb2jugKPUx+7zEV4TaITCthyCR05xbGKmJyJJGGjL
+	 MOAZv2Iwl23em4EP4hIlAM2E4qMXSlPIjIszifMuYP6i/A37+8SZFVVHqTyI6B+Vy
+	 DZdJHlDtUnz3USb+lQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.64]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MbCHy-1tIFxu3iWm-00iB9R; Tue, 04
+ Mar 2025 10:50:46 +0100
+Message-ID: <c69c79e4-04a3-4182-a694-809a5fa36083@web.de>
+Date: Tue, 4 Mar 2025 10:50:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: R4mq2LxVkMKryLZy84gAoj9OgLXqG5NN
-X-Proofpoint-ORIG-GUID: R4mq2LxVkMKryLZy84gAoj9OgLXqG5NN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_04,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503040075
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH RESEND] perf cputopo: Improve exception handling in
+ build_cpu_topology()
+From: Markus Elfring <Markus.Elfring@web.de>
+To: kernel-janitors@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+ Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <b1c70348-6459-474e-6a0f-d956423368d5@web.de>
+Content-Language: en-GB
+In-Reply-To: <b1c70348-6459-474e-6a0f-d956423368d5@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zwnxKwlzGB6lzUwzmSXhy5SzzNCA5khP3HuvwjAnzkkTSsl+oIG
+ DWOKj06jnDp9rAYXsw/PmjRcrC8kxCSzERqmbAssiny6VokvGklOFI3UVmcoUz1bKebDrR6
+ jiet48jwrUEis7A8RSdOhtkr8AotZkLyqlfLHfYdYo4FAltrtYdFPdS4GdaLrrLa9Qk+X63
+ 9qVgzazeoL3JAQOY5jeEw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:v/LKQqKo3yk=;2xU/kzBRtU5lDFHf7glYk9cze/y
+ gg1qF5dIYCm3Nzi0/mGVb3B1sBlZth/yoVVtNWj+M19J/2pqcxNM3esgC+j6y64p/0Q6BE7mt
+ 2M9Xd/4Tv3rMT5m+r1GfAHh1GP8vsTOIJ9iLRMs1qOhI5edxfAt/hxCyBh9WpkSTbOZv90AB/
+ 571Q5b9Rcm28BVFAYk7ai6Wg/sTnwACL1Q3mt3/+CToiA0OfI25W4ZKS7PeUumYrJz5KqdUNk
+ /9HtLExm8xEz0FwwTmREjksqHGZBetuczVsnHFuDikKLJMYgdmuMm7/aHEd8fY+kQGgsC9Jf+
+ 0wBabKaYHDnWvBM8cshHa9vJdaFrMg6BLRo/mquLVX35ryWJ8+lccSZ5KwTP0CXytIEIbnE0S
+ MylDHM13/8p6gD76hbpaD8bbjEuZrgTHj2Dmbr7biy45PS0D3q1uHpfBSY9o+F7DtNCMYvDvu
+ lJIgSn4/J9rTRQbRXeeB+TWtMUryzTLC1rK+Z7A/svKwupl3qPdgKyrBz4cXuz0dYNpOuhr5x
+ 5YXxuOt/Gfe9ljpUA6OgtLg6gynzkxkIqdLpJeSRhzvSFqEZ/DmMi9MUuVFl7Idtr0zxLvKOy
+ bZ3jRPXiPcLdqcX5GBfx9YsuFaD9kqzN3zDHB1UjxifAlDo8qVHtbvhZH6FWmBYuJtK4mbxA4
+ R1Cja56gQt07lOGpQXcDGbQMukfnjiLbqYS6+t8bEcOTCajtyvNaNmPmD8KNWpAknbqY83AN6
+ 6IaRVfdOQV3I0I9/U1iF7mLe7N9N3vLFMv+0H7G/q6Vf/MoPU+PUB2xZ57IcA08TxqO8VIaL3
+ HvL3wmzzqg9p4ZNngJu9UdLRqyZXfjb5ESP1R+M6qx/YjcMBdStz615TRQGElDIlDesJO8jKx
+ Uh8QLaUBOlPdaSGfG1kwwdy1BdHIznBRD2kFF+Yw9o+dsGKwRshSIBzpYfFXUG4NIXbXlDXHo
+ oiksC7f2prXB0VxgoABgjan5P3HhURYUcbsjElfzyGsYPSpw0YlZOr/szVGpLSq1OHMOsWtyO
+ yOipxcqzI8ZwzBbM8RQDDG1FFG5PbNKC9lEjzW6MBSX/gww7NgroM7ss+7PVsLyqvO2KdaoHc
+ xnKH/WPMGHCrQTCZg4K5r2Ta4h4Ey9jvnOsHfbJX1RbU200YsUvp34y7skAxZrbkSKu+77QjC
+ yjqSUwtrjSV0AQu6iP9p9HoGWha4V++3AjN4fKg0rUYpEhtcs3wfAwU/2+wkmJukDxk1/Pxlp
+ dQHeBF7phoe/a7HjoxLAo/1Be4ootv7uJ1p3aXxdt/CU5O5pXv1WwKwfUwrjEq0VH3XfitT1p
+ Nd5yZAL9nJgMWhsxSbrJHSDOkPA3nPpx6P/kSNtfmxcpt2wLtHieh4oM+whMC16of06gHrJfX
+ DIEPVcymD64LXUOe/1xIuQ2EK4+MbJYa357qjo93/YHcGP2koXiyp5/lC1h3J30JEMGHpfx05
+ NzvA8yrnqjq8xv9FX1Hh9Kj/scg8=
 
-Command 'perf bench syscall fork -l 100000' offers option
--l to run for a specified number of iterations. However this
-option is not always observed. The number is silently limited to
-10000 iterations as can be seen:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 23 Mar 2023 22:00:07 +0100
 
-Output before:
- # perf bench syscall fork -l 100000
- # Running 'syscall/fork' benchmark:
- # Executed 10,000 fork() calls
-     Total time: 23.388 [sec]
+The label =E2=80=9Cdone=E2=80=9D was used to jump to another pointer check=
+ despite of
+the detail in the implementation of the function =E2=80=9Cbuild_cpu_topolo=
+gy=E2=80=9D
+that it was determined already that a corresponding variable contained
+a null pointer because of a failed call of the function =E2=80=9Cfopen=E2=
+=80=9D.
 
-    2338.809800 usecs/op
-            427 ops/sec
- #
+1. Thus use more appropriate labels instead.
 
-When explicitly specified with option -l or --loops, also observe
-higher number of iterations:
+2. Reorder jump targets at the end.
 
-Output after:
- # perf bench syscall fork -l 100000
- # Running 'syscall/fork' benchmark:
- # Executed 100,000 fork() calls
-     Total time: 716.982 [sec]
+3. Delete a redundant check.
 
-    7169.829510 usecs/op
-            139 ops/sec
- #
 
-This patch fixes the issue for basic execve fork and getpgid.
+This issue was detected by using the Coccinelle software.
 
-Fixes: ece7f7c0507c ("perf bench syscall: Add fork syscall benchmark")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/perf/bench/syscall.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+Fixes: 5135d5efcbb4 ("perf tools: Add cpu_topology object")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ tools/perf/util/cputopo.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index ea4dfc07cbd6..e7dc216f717f 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -22,8 +22,7 @@
- #define __NR_fork -1
- #endif
- 
--#define LOOPS_DEFAULT 10000000
--static	int loops = LOOPS_DEFAULT;
-+static	int loops;
- 
- static const struct option options[] = {
- 	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
-@@ -80,6 +79,18 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 	const char *name = NULL;
- 	int i;
- 
-+	switch (syscall) {
-+	case __NR_fork:
-+	case __NR_execve:
-+		/* Limit default loop to 10000 times to save time */
-+		loops = 10000;
-+		break;
-+	default:
-+		loops = 10000000;
-+		break;
-+	}
-+
-+	/* Options -l and --loops override default above */
- 	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
- 
- 	gettimeofday(&start, NULL);
-@@ -94,16 +105,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 			break;
- 		case __NR_fork:
- 			test_fork();
--			/* Only loop 10000 times to save time */
--			if (i == 10000)
--				loops = 10000;
- 			break;
- 		case __NR_execve:
- 			test_execve();
--			/* Only loop 10000 times to save time */
--			if (i == 10000)
--				loops = 10000;
--			break;
- 		default:
- 			break;
- 		}
--- 
-2.47.0
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index e08797c3cdbc..fd185951ee2c 100644
+=2D-- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -112,10 +112,10 @@ static int build_cpu_topology(struct cpu_topology *t=
+p, int cpu)
+ 	}
+ 	fp =3D fopen(filename, "r");
+ 	if (!fp)
+-		goto done;
++		goto exit;
+
+ 	if (getline(&buf, &len, fp) <=3D 0)
+-		goto done;
++		goto close_file;
+
+ 	p =3D strchr(buf, '\n');
+ 	if (p)
+@@ -131,10 +131,10 @@ static int build_cpu_topology(struct cpu_topology *t=
+p, int cpu)
+ 		buf =3D NULL;
+ 	}
+ 	ret =3D 0;
+-done:
+-	if (fp)
+-		fclose(fp);
+ 	free(buf);
++close_file:
++	fclose(fp);
++exit:
+ 	return ret;
+ }
+
+=2D-
+2.40.0
 
