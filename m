@@ -1,101 +1,72 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72942E3362
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Mar 2025 18:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CFA2E3360;
+	Tue,  4 Mar 2025 18:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741113133; cv=none; b=egt5jirLVZvlt8oTi8+D0oYHoSqPDJsc3fJNIf1qGMAnXsDpqffMMaWLpbqSlFVYHscJN0An9f3ksQS6ALOK+FMUQ39+GUwQxUGYFnr/gYWbXNLWhu2dEal0ZOQk8heB2uopvSqIV3A6YnICJ1zvjTFJayE0c4Z0Jr40Y/1pSI0=
+	t=1741113611; cv=none; b=pa1CeCwa+0Q4IG3Xuzlu7Xrc9oMHvItH6acFkGoFqp0+paOq4cx0bUXGsRSOuweNL5dID1UASgRNKvVKJPvGl97cfb+LyiBRMC+BREypEHoWj62y/fX90OYhf08HnpiM9W3numE+6xjEPq+m37JqVqp/JrXrD9vm314mSBLhL90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741113133; c=relaxed/simple;
-	bh=vGHhoZfSBCLfhNbj+z9hq68N6pc1lruYQH9l4YRcnOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jcNr4kg6ZmCbz/oCX7IXroSnYwFTUXZ1uT1etRrxjKnp67A/vCeA/UUuSGrE5dz7OdbbznjQOkDxLNgP6jJwQtiS5813nGhIoNdG+A+W0nBhfBUMsrhovWq4eCB8OJpVvUZ3pwUy2XArZc/3W/x8VvAFhnEyvr6Ht1AdsUJgnFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xr3xqP0R; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741113611; c=relaxed/simple;
+	bh=mfs+zl35hkj1shpqCZddKjjAF0Q9bhJLEpmmMR4Wgi8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=L1Ophm3MeNYzjFQuI4B+mVPcRbPg97CRJBIMw9iSu8OhhTHRzzzVdlEwZymbkbJVQTN8JPiFvGP7n37rA1r5OB+/154LmUnbdOgukXgJkl8/MZ0hUQZVh1HZtQiWx26yJuHk16h2SQUjmZgG2YlOr8p4vWwZjz7y35ajIFgqok0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyrqGkQ1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xr3xqP0R"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741113117;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mWsz93lszhKk6kI3/ZIcSbVMk3+DGP/u5MfiIB/5Cr4=;
-	b=Xr3xqP0RlV+xDEvMzTYkPqpb+gYsJVaS2jtW3vWLTZmr28nvleP3d5GnqX8f7iHuAPkRdi
-	88TKyxjk8O2mAVI07tr9wU2OvIC7VExRIoYiAsTNMsykFihtLaAiAKxyo4PcbR3qtkg6/n
-	t0vzYkeROEcpW9gXZbus9bVfzvdOJn4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] perf/x86: Annotate struct bts_buffer with __counted_by()
-Date: Tue,  4 Mar 2025 19:30:57 +0100
-Message-ID: <20250304183056.78920-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyrqGkQ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B801C4CEE8;
+	Tue,  4 Mar 2025 18:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741113610;
+	bh=mfs+zl35hkj1shpqCZddKjjAF0Q9bhJLEpmmMR4Wgi8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=AyrqGkQ172ZIEm+HxKmFmYZFFaKQ9g9pmsU4kxLO3xgpRLjmUpSwC8QsLbRBoDhZu
+	 Qhq4NX5aUYpc6ISNdeRUTz6WuFR4Qtjr62dRx7R72/TcD/LAS1dYlQzvzQkk+4i2Nr
+	 6GCxaTlVm+TV5dFoZUbwrYEZcGNQxKVTYq/jqGDJ+V81wm+SA8y32A71St7LmAROeC
+	 pvaZarTgo8tTrJ95Ieb265gg67y2cp05mB8Xb5xUtP7Q8uldhlDu+FQKvmq5+g/GjO
+	 uzlF0N30HGoyLdt0Lzec+vbhc5CQ1Uk0rF/h9iK6YKcXHFR2j3lH7PJOVF8s30bWyM
+	 n95GVFfdBwGQQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-perf-users@vger.kernel.org, irogers@google.com, 
+ James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20250226145526.632380-1-james.clark@linaro.org>
+References: <20250226145526.632380-1-james.clark@linaro.org>
+Subject: Re: [PATCH v2] perf stat: Fix non-uniquified hybrid legacy events
+Message-Id: <174111360911.2656304.15827033005902965413.b4-ty@kernel.org>
+Date: Tue, 04 Mar 2025 10:40:09 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Add the __counted_by() compiler attribute to the flexible array member
-buf to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Wed, 26 Feb 2025 14:55:25 +0000, James Clark wrote:
+> Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+> like plain legacy events if we only look at attr.type. But legacy events
+> should still be uniquified if they were opened on a non-legacy PMU. Fix
+> it by checking if the evsel is hybrid and forcing needs_uniquify
+> before looking at the attr.type.
+> 
+> This restores PMU names on hybrid systems and also changes "perf stat
+> metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+> test was gated on "cycles" appearing alone which doesn't happen on
+> here.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Use struct_size() to calculate the number of bytes to allocate for a new
-bts_buffer. Compared to offsetof(), struct_size() has additional
-compile-time checks (e.g., __must_be_array()).
+Best regards,
+Namhyung
 
-No functional changes intended.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/x86/events/intel/bts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 8f78b0c900ef..2888edb3f7c5 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -58,7 +58,7 @@ struct bts_buffer {
- 	local_t		head;
- 	unsigned long	end;
- 	void		**data_pages;
--	struct bts_phys	buf[];
-+	struct bts_phys	buf[] __counted_by(nr_bufs);
- };
- 
- static struct pmu bts_pmu;
-@@ -101,7 +101,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 	if (overwrite && nbuf > 1)
- 		return NULL;
- 
--	buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
-+	buf = kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, node);
- 	if (!buf)
- 		return NULL;
- 
--- 
-2.48.1
 
