@@ -1,133 +1,93 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F892780F4
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Mar 2025 15:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923A127E1C9;
+	Tue,  4 Mar 2025 15:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102339; cv=none; b=ZKs0T9Hh74sOwsfVpPfctK/luD2bRNmpWG2RkFYx0seeloyKnCQGzgWGZpVVxs5lQ11Iym5q6Z5ibIh+Q9u6H3OsRWhuM6fbzVCWRGfZIuxlFftQUh5JZzVOzMdo6UUOn8NPG60enacrmuyyVVkQ8QLmxVV8B2sLehewKjHL/w8=
+	t=1741102515; cv=none; b=VdhF7VANgOcNm1IE09+GagKVLETM4V9Iiv/LLWd5OJXTl9Z0JLMhqPBa1U+NI2uKTaPU5+l2GPY5UedmC73MzPSqPOR/ZACpiJds/QzCdZGDS08VcMrraJKD8/TRTT6uOq29SrrcLDLY3+qVhu+qlUD1j124ppfi5dDuNU+tHkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102339; c=relaxed/simple;
-	bh=jHsoS/QfB3OLT+xMvFjIYwKmEM5bHtcU7LWt7y8mak8=;
+	s=arc-20240116; t=1741102515; c=relaxed/simple;
+	bh=25lxY0rRFzscOEISUUTmtF8cqJFNHESfhXic2drv9Xc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERKXbUH+eAO9/Ap88Ehe0nx7DLQWxe0cs+mUgyfiJTl8YEDy+ygOoMIgKIijREtk7tSoLZ8EpJmwC8/6PS1yZxQ8nM70fxy2TrFIHho+nVz8HgHLbIFD20v67wpAzOu5FVllFSbejNDy1ELGPuHDITHuJ8BWygqS7mv0f01QKXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PcHRxeoJ; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PcHRxeoJ"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2feb9076cdcso9872432a91.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Mar 2025 07:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741102337; x=1741707137; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9J55i6SaAxXDmk71XUiDvvdHDUMorv5pKHh75B2QGvY=;
-        b=PcHRxeoJRnnQsqqnpmTbzdbJFuUoQ6wslJvBQ1oXtZ6vlbZ6aI4+N14wW2b8UzUPxD
-         /4WdAv8otbQKOIfVurvDb67QKRHwWuADKVpEFmvbBEUzy09otdz6SB+Q1FmmKFWYnL0G
-         +Wo4JsWoPhupopYXMMzgma901JP6G5E+WHm6rQSkBFtNlhdszAnhDHFC6wxrvzEhVZDQ
-         he/qzQQIGyRHK7n+/AyUYR1/y5AZqocZfAkyin6P3kLx5K8EbTbcwJBstocmJR1tErbA
-         VrEL+Y+s0hn++WB4IUEuYsutvL+TzXzLRd1AO/UwNM6YVPJ0+vBpn7cbl0eud2eIm3XS
-         /elw==
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEg+wG2W38UCTL+mu+fOEjaSGQ8ovUwyW5lgjwszS6qpAJGNwCKqnrbveKJiTT08KqBXtGJ0c1x9QGZTcz336Uojgu9IFjVQgeZsUXBLRMxM/eX6Ngsj9CL1KGfj3MVsPIQ7rdPGhZUi3wiYcoF2M88Je6AQP2DfrRsjuvDoPos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2239c066347so52775695ad.2;
+        Tue, 04 Mar 2025 07:35:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741102337; x=1741707137;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9J55i6SaAxXDmk71XUiDvvdHDUMorv5pKHh75B2QGvY=;
-        b=JM/0L6MQLJy+tlZXT6wxr2sZSdexigQ4lkjmGraCyqqDcoER1xpTT8Ee/vB6FCU7go
-         s/GSwJbkpjVa2oJPC26m9IRd2QIHaSjW1b1EldJdwHbd9ZqqF3o42ocnBEzH4HUmDFLr
-         lsu7fxDpEnWqtFgdr5Ljt2oqYLahUYexZvJwRRdX1Rud7uk4YWdubbHScDUehXLZDSyl
-         h60kQP1brj/VwfZV0EDZxvOsuo3t9WKB02MtAz8KHA6Mkhsur3T8B3q22CLPa4PIz7tq
-         BvoeMf9/0noP5hb+pSNaD/rAoWj0qfrcubFsY3grsN91hIzAeyEVYo7jKQcFnOiuHv4m
-         uO0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXBXgUL1WjWHRnE3M4PxCB9BYhNq/Fe28TtZeEiYifmpXYjpRVzHoByeBFGCDbCvxCOyGlFFOX6W0V5gFKWKgQ+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJFsWtWbiBB4tmmAGAn2YqF1AYbNpiCn/DaTXQTwoNzfiBB2lJ
-	6lBDLJU9IjtTNty7t1VQk2it9weYFbsw0zxqajU0I0v5oGCnyVM6K2qxlHiBRw==
-X-Gm-Gg: ASbGncsIpJDZDSKLPT84NWDs8zCPgai0Zpd0R2TgxivsB+v62HVHrP8zE6RbI3xOSTY
-	1+i9YdloiTy+gvAsmqjuyTIncZhBZKt8gEETMsr7PVjMuN+hB5B6eh3+Nx9HH27b6G4FmhmA/1q
-	D2q6edFOqStv2nr2iJ/TYl58GLf83F5TVU3C+T6GbvJICepIUq4kVJrAwYyo20FcpDEBNakV0CS
-	AIrc45iNpdM1hYNJC/Zo/e+ig5BFPidD0F4t5fUooEwLDBrS0J3/k1uwTF4RBt3cXa64qXTeEsu
-	0jp7FFq85/5YymUTlZg1qGjTC7NsPf/RSHzE0LvJsZNnK3yeGigvuw4=
-X-Google-Smtp-Source: AGHT+IGGf95zBxRvPRSEYDsTC4/BBUP78sumCmzYhxc9letUVVeTQ59a5edLgdJXdoWT1eIqtoqw6w==
-X-Received: by 2002:a17:90b:2888:b0:2fe:b907:562f with SMTP id 98e67ed59e1d1-2febab5e112mr30851643a91.14.1741102336858;
-        Tue, 04 Mar 2025 07:32:16 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe8284f076sm13309640a91.42.2025.03.04.07.32.09
+        d=1e100.net; s=20230601; t=1741102513; x=1741707313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aPksOpIsWmD4LD84U/zyiEQF/6uAhUOVlj8rScJ6yGY=;
+        b=MxGyosFLpa+q5WnPDwFlu4Mf6J9WfI7gwf3+SXdVXWTHgxhc0K/Aj3Mtk6MEYfmIEY
+         NoYNeLTQRgWfoRwUft8/APav2coBkND7dVLVCW/rTUmMSkd+lKvOP5lRD0L8R/1/F9RG
+         jB/pl3LdnjuC8cOfR9/TK7NWVZMRQ61axRPoCzTmyfqYaa7MzDcmVOI1mBCEndjy9nwu
+         bOXmxpsIJhk8GMjxNHTK5WsOrp4RxKLeZZzpdRFXXyZjUNBpoKKJBljfRw43YamNcRR8
+         Xp0lNSMZSoHN7EzP21yriMLbH5usK0moyF9Glh/TPlb+LXvYQD1AlCV2i338UJnNLFLc
+         xFrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvYJ3B8hNRltxWwsO3VsvSPaz52Ib4OD2yFL8jMtsZUkbaohq9OGvESHKuLC+rzDi3U9Ha3ZKdDcFX@vger.kernel.org, AJvYcCVrWbv9WA0VHbbPcMIETCv/j0lnlIKDTu2nMK9QXfjekRjmrE39mFqHQ7bakk0EQC+xdVNxRksKmCcurtZqGjpSZw==@vger.kernel.org, AJvYcCWGAHG0brgQy2RWjwyZKFM6jMz3S9WQiCFKPvwfXmoZsRhfc4DK4dX0+vYNYX4W66SGG9sHmH1c4f0UKYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKpyGxowldE8IXSTmiMEI1hFT0hONAZOx814UZXJ9zE1EwMaxI
+	RxhZtzx3izJ4GTLGWlJn7vp3KA/o/iMw+pvRUTsJTbt06ygWs0IM
+X-Gm-Gg: ASbGncsaveqgrrwsTrqHStgY4xFjR/gYGlrHfL0VUoRZczjEU1791rPVQA5h0xVbnJp
+	bv+qUcqfDfcbk8r9k2SskNRlWRXFVvAF74mz/SNEyGoo02DuDpIB6bi3p9PD6L/QBtVLrLrTfWW
+	z/9+XlDRcD01Hzc2WUhPHDTXabKzOU5XHbFSIZfC6IHEL338+ofzPRtm28+5ohKJjkdoiJ+ckYi
+	ZRkr5iBpbOkZE8iD37YrmxjMB/62j+T/WX+HwVur1WjEPubjl+w+kBIBPvbEwOdaK9R+IVup96A
+	5p6NY9rIxZ0+NZeb62Qnyt/mTzaobuIq6V6zckGx/WFCYH0AWNmfbXyo8IiQsihw9sAE2T0mHYF
+	9FuA=
+X-Google-Smtp-Source: AGHT+IHqM19CmKxrc3+/5zghLWm7z3K7HlW9tJVgM1xGFI0z5/AxnNorz6ln5aNsioCk4N/uTqY9lA==
+X-Received: by 2002:a17:902:eccc:b0:215:6489:cfb8 with SMTP id d9443c01a7336-22368f6365emr341829405ad.10.1741102512747;
+        Tue, 04 Mar 2025 07:35:12 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2235053e41asm96451805ad.255.2025.03.04.07.35.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:32:16 -0800 (PST)
-Date: Tue, 4 Mar 2025 21:02:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Fan Ni <nifan.cxl@gmail.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+        Tue, 04 Mar 2025 07:35:12 -0800 (PST)
+Date: Wed, 5 Mar 2025 00:35:09 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
 	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
 	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
 	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
 	will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in
- DWC
-Message-ID: <20250304153206.gr7footrqrpc5uxf@thinkpad>
+Subject: Re: [PATCH v7 4/5] Add debugfs based error injection support in DWC
+Message-ID: <20250304153509.GA2310180@rocinante>
 References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
- <20250221131548.59616-6-shradha.t@samsung.com>
- <Z8XuuNb6TRevUlHH@debian>
- <20250303194228.GB1552306@rocinante>
- <Z8YZEALV71PUkXpF@debian>
+ <CGME20250221132039epcas5p31913eab0acec1eb5e7874897a084c725@epcas5p3.samsung.com>
+ <20250221131548.59616-5-shradha.t@samsung.com>
+ <20250303095200.GB1065658@rocinante>
+ <20250304152952.pal66goo2dwegevh@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z8YZEALV71PUkXpF@debian>
+In-Reply-To: <20250304152952.pal66goo2dwegevh@thinkpad>
 
-On Mon, Mar 03, 2025 at 01:03:12PM -0800, Fan Ni wrote:
-> On Tue, Mar 04, 2025 at 04:42:28AM +0900, Krzysztof Wilczyński wrote:
-> > Hello,
+Hello,
+
+[....]
+> > > +		29) Generates duplicate TLPs - duplicate_dllp
+> > > +		30) Generates Nullified TLPs - nullified_tlp
 > > 
-> > [...]
-> > > > +static ssize_t counter_value_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> > > > +{
-> > > > +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> > > > +	struct dw_pcie *pci = pdata->pci;
-> > > > +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> > > > +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> > > > +	ssize_t pos;
-> > > > +	u32 val;
-> > > > +
-> > > > +	mutex_lock(&rinfo->reg_event_lock);
-> > > > +	set_event_number(pdata, pci, rinfo);
-> > > > +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> > > > +	mutex_unlock(&rinfo->reg_event_lock);
-> > > > +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter value: %d\n", val);
-> > > > +
-> > > > +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, pos);
-> > > > +}
-> > > 
-> > > Do we need to check whether the counter is enabled or not for the event
-> > > before retrieving the counter value?
+> > Would the above field called "duplicate_dllp" for duplicate TLPs be
+> > a potential typo?  Perhaps this should be called "duplicate_tlp"?
 > > 
-> > I believe, we have a patch that aims to address, have a look at:
-> > 
-> >   https://lore.kernel.org/linux-pci/20250225171239.19574-1-manivannan.sadhasivam@linaro.org
 > 
-> Maybe I missed something, that seems to fix counter_enable_read(), but
-> here is to retrieve counter value. 
-> How dw_pcie_readl_dbi() can return something like "Counter Disabled"? 
+> Looks like a typo. As per Synopsys documentation, there is only 'duplicate TLP'
+> field.
 > 
+> Good catch!
 
-Only way to know if a counter is enabled by reading back the status. And that is
-what the patch is doing.
+Updated.  Thank you!
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+	Krzysztof
