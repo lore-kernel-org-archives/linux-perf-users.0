@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B582189BB3;
-	Tue,  4 Mar 2025 02:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B993719E83E;
+	Tue,  4 Mar 2025 02:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741055319; cv=none; b=Ptwn31ISIbUpPfAjJyPxNJ4r9dU1GNhazlb7EhhYaZFl93wqEonNwWziJ9jkyu2RagKmHCnHwHCyiudGaBJm9wMcDGaY3TAjdYsV4RHr/Rjqcin0ix7/qR56tuUIZF3b0UkLvdfTzVYOy/GmYjDZMw/Bgt4IGMa3HNmOJTYtCW4=
+	t=1741055319; cv=none; b=N0qJQBhboD/sqc21z5dMHwrlX+d9/svRrOLbQBHlj01I0HNmSdmzzCCCfZo1EuAghYzacWh03EjLQhSDYfIyZVuwmLoqDXFf2HkKalIcIS3iwzMdgdkK1esMTiQBW0E/RY7/nyQCdwVa+Cm8p5rH5vmspXDhkxcxiX4J6GCrsCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741055319; c=relaxed/simple;
-	bh=nZ8ZCLcaVnVr2jRx2sOVDA3QIxlrVukP83MzQFyKq/E=;
+	bh=nM37e+Q5uGyppMyuixp0WQG/9tKW9QwJMxGrmJqtW44=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nCocXH4iOLu+kqJImZeFjJ+wfizksDUWf/f3wAMvSAgGLnPNS6ezJc1xMWebKx4rKIR0Wkc5dwQK4FpBf61j0BTCu29o0xolZhPVIPBGC3fpDetF8YLcFEmkJTSXvkxglx5BdboTJ2PXBm5S872S7vI46gsn2P7Hs4MJZnBg9sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhWHGFC6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cwxd+XuwLAP0airBnmGlxxBo3qZlv6S4MlMwAgFpDb1YabZyCLmMoZQNESzGYFYkM4mBv4B9RvGrUSHM004jq2pRBbYdAz6jCXm9v3PPqixeuQoW0z/t47ipSyAqctVciRfqmsCPKw6vteXfPrjB8/1K2LOQDV79ty3F9G88LWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVkU52Sw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhWHGFC6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F48EC4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVkU52Sw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A59C4CEEB;
 	Tue,  4 Mar 2025 02:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741055318;
-	bh=nZ8ZCLcaVnVr2jRx2sOVDA3QIxlrVukP83MzQFyKq/E=;
+	s=k20201202; t=1741055319;
+	bh=nM37e+Q5uGyppMyuixp0WQG/9tKW9QwJMxGrmJqtW44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZhWHGFC6hdz9nQVlYOGdGbB7fNpV5qVC1Vgr3GnYhRbT++09E6fkAhqyQSDpwEkR8
-	 LP7dOe/KhRIl12EPH/lixXsIfJ6zdfvKWOElJ3VnbXmI86sIaEQKpbtWzsJ/lG0ocB
-	 imelithCpuC72BCrU0/aHhIF9CElCl0KanCPV8lfYjTjvX9rI7Zh7jQyhWCcHC441M
-	 IYq7vMYGQjvH6R5mukvadhdgSbn3MQeXaKDhPEoenuEiINHbJuUyULijiLkmVj2b/n
-	 1/QOVp/UM/5jCH/t/Otlrszpmrwh+HsO7LSr4q40Kc+8XmOYiKMt7pr74Y9PSlkYML
-	 nEQIBn//NNv1w==
+	b=SVkU52SwnhdDy7MpLrwBbMd2ZzWj69VfaQhE4kGr9YBNiqf+LV4M2ytDsc0i6wkmX
+	 M3hAqlAFwEhCGX6IcQssIPsWJCENrRW9jFEX9UcAdKGsF851ogS0CGC2zdAMJBu0a8
+	 ATzC1iMXw1IkKaiB5mAO/+rSwCdAuojsGiAxEgtSCzU7DM2PaZeot70r2KdfhCEfi4
+	 bE95AdBTMOqHpYYd9dz0bTlEiKo3vHtfN8e0H337QdCA4aLTbBYdc45+ULaKEWH2Jq
+	 Dq74LoyW6aUBH4qOVyf/ZBg95unl19DOPGC7q+v+iBkXFyOVtzArUJelCdX75stGf6
+	 N4SRjmrZ/08qw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,10 +35,11 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/6] perf test: Add --metric-only to perf stat output tests
-Date: Mon,  3 Mar 2025 18:28:32 -0800
-Message-ID: <20250304022837.1877845-2-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v2 2/6] perf test: Skip perf probe tests when running as non-root
+Date: Mon,  3 Mar 2025 18:28:33 -0800
+Message-ID: <20250304022837.1877845-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 In-Reply-To: <20250304022837.1877845-1-namhyung@kernel.org>
 References: <20250304022837.1877845-1-namhyung@kernel.org>
@@ -50,200 +51,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a test case for --metric-only for std, csv, json output mode using
-shadow IPC metric from instructions and cycles events.  It should
-produce 'insn per cycle' metric.
+perf trace requires root because it needs to use [ku]probes.
+Skip those test when it's not run as root.
 
-But currently JSON output has (none) 'GHz' as well.  It looks like a bug
-but I don't have enough time to debug it for now so I made it pass. :(
+Before:
+  $ perf test probe
+   47: Probe SDT events                                                : Ok
+  104: test perf probe of function from different CU                   : FAILED!
+  115: perftool-testsuite_probe                                        : FAILED!
+  117: Add vfs_getname probe to get syscall args filenames             : FAILED!
+  118: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+  119: Use vfs_getname probe to get syscall args filenames             : FAILED!
 
-  $ perf stat --metric-only -e instructions,cycles true
+After:
+  $ perf test probe
+   47: Probe SDT events                                                : Ok
+  104: test perf probe of function from different CU                   : Skip
+  115: perftool-testsuite_probe                                        : Skip
+  117: Add vfs_getname probe to get syscall args filenames             : Skip
+  118: probe libc's inet_pton & backtrace it with ping                 : Skip
+  119: Use vfs_getname probe to get syscall args filenames             : Skip
 
-   Performance counter stats for 'true':
-
-                    0.56
-
-         0.002127319 seconds time elapsed
-
-         0.002077000 seconds user
-         0.000000000 seconds sys
-
-  $ perf stat -x, --metric-only -e instructions,cycles true
-
-  0.55,,
-
-  $ perf stat -j --metric-only -e instructions,cycles true
-  {"insn per cycle" : "0.53", "GHz" : "none"}
-
-  $ perf test output -v
-    5: Test data source output                                         : Ok
-   31: Sort output of hist entries                                     : Ok
-   88: perf stat CSV output linter                                     : Ok
-   90: perf stat JSON output linter                                    : Ok
-   92: perf stat STD output linter                                     : Ok
-
-Suggested-by: Ian Rogers <irogers@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/shell/lib/perf_json_output_lint.py | 7 +++++++
- tools/perf/tests/shell/lib/stat_output.sh           | 8 ++++++++
- tools/perf/tests/shell/stat+csv_output.sh           | 2 ++
- tools/perf/tests/shell/stat+json_output.sh          | 9 +++++++++
- tools/perf/tests/shell/stat+std_output.sh           | 8 ++++++++
- 5 files changed, 34 insertions(+)
+ tools/perf/tests/shell/perftool-testsuite_probe.sh    |  1 +
+ tools/perf/tests/shell/probe_vfs_getname.sh           |  1 +
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh |  1 +
+ .../tests/shell/record+script_probe_vfs_getname.sh    |  1 +
+ .../perf/tests/shell/test_uprobe_from_different_cu.sh | 11 +++++------
+ 5 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index b066d721f89735df..9e772a89ce381636 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -19,6 +19,7 @@ ap.add_argument('--per-cluster', action='store_true')
- ap.add_argument('--per-die', action='store_true')
- ap.add_argument('--per-node', action='store_true')
- ap.add_argument('--per-socket', action='store_true')
-+ap.add_argument('--metric-only', action='store_true')
- ap.add_argument('--file', type=argparse.FileType('r'), default=sys.stdin)
- args = ap.parse_args()
+diff --git a/tools/perf/tests/shell/perftool-testsuite_probe.sh b/tools/perf/tests/shell/perftool-testsuite_probe.sh
+index 7b1bfd0f888fc30c..3863df16c19b9fa2 100755
+--- a/tools/perf/tests/shell/perftool-testsuite_probe.sh
++++ b/tools/perf/tests/shell/perftool-testsuite_probe.sh
+@@ -2,6 +2,7 @@
+ # perftool-testsuite_probe (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
  
-@@ -64,6 +65,8 @@ Lines = args.file.readlines()
-       'socket': lambda x: True,
-       'thread': lambda x: True,
-       'unit': lambda x: True,
-+      'insn per cycle': lambda x: isfloat(x),
-+      'GHz': lambda x: True,  # FIXME: it seems unintended for --metric-only
-   }
-   input = '[\n' + ','.join(Lines) + '\n]'
-   for item in json.loads(input):
-@@ -78,6 +81,8 @@ Lines = args.file.readlines()
-         pass
-       elif count - 1 in expected_items and 'metric-threshold' in item:
-           pass
-+      elif count in expected_items and 'insn per cycle' in item:
-+          pass
-       elif count not in expected_items:
-         raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-                            f' in \'{item}\'')
-@@ -95,6 +100,8 @@ Lines = args.file.readlines()
-     expected_items = [6, 8]
-   elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cluster or args.per_cache:
-     expected_items = [7, 9]
-+  elif args.metric_only:
-+    expected_items = [1, 2]
-   else:
-     # If no option is specified, don't check the number of items.
-     expected_items = -1
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
-index 9a176ceae4a3c3a2..4d4aac547f0109d1 100644
---- a/tools/perf/tests/shell/lib/stat_output.sh
-+++ b/tools/perf/tests/shell/lib/stat_output.sh
-@@ -148,6 +148,14 @@ check_per_socket()
- 	echo "[Success]"
- }
++[ "$(id -u)" = 0 ] || exit 2
+ test -d "$(dirname "$0")/base_probe" || exit 2
+ cd "$(dirname "$0")/base_probe" || exit 2
+ status=0
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index 0c5aacc446b3ef76..c51a32931af6313e 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -8,6 +8,7 @@
+ . "$(dirname $0)"/lib/probe.sh
  
-+check_metric_only()
-+{
-+	echo -n "Checking $1 output: metric only "
-+	perf stat --metric-only $2 -e instructions,cycles true
-+	commachecker --metric-only
-+	echo "[Success]"
-+}
+ skip_if_no_perf_probe || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname $0)"/lib/probe_vfs_getname.sh
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index d5e5193cceb625fd..c4bab5b5cc59f0b3 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -105,6 +105,7 @@ delete_libc_inet_pton_event() {
+ 
+ # Check for IPv6 interface existence
+ ip a sh lo | grep -F -q inet6 || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ skip_if_no_perf_probe && \
+ add_libc_inet_pton_event && \
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index 5940fdc1df37c502..fd5b10d469158b65 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -13,6 +13,7 @@
+ . "$(dirname "$0")/lib/probe.sh"
+ 
+ skip_if_no_perf_probe || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname "$0")/lib/probe_vfs_getname.sh"
+diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+index 33387c329f92b6ed..7adf9755d6de240e 100755
+--- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
++++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+@@ -4,12 +4,11 @@
+ 
+ set -e
+ 
+-# Skip if there's no probe command.
+-if ! perf | grep probe
+-then
+-        echo "Skip: probe command isn't present"
+-        exit 2
+-fi
++# shellcheck source=lib/probe.sh
++. "$(dirname $0)"/lib/probe.sh
 +
- # The perf stat options for per-socket, per-core, per-die
- # and -A ( no_aggr mode ) uses the info fetched from this
- # directory: "/sys/devices/system/cpu/cpu*/topology". For
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index fc2d8cc6e5e0b1e5..7a6f6e1774028322 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -44,6 +44,7 @@ function commachecker()
- 	;; "--per-die")		exp=8
- 	;; "--per-cluster")	exp=8
- 	;; "--per-cache")	exp=8
-+	;; "--metric-only")	exp=2
- 	esac
++skip_if_no_perf_probe || exit 2
++[ "$(id -u)" == 0 ] || exit 2
  
- 	while read line
-@@ -75,6 +76,7 @@ check_interval "CSV" "$perf_cmd"
- check_event "CSV" "$perf_cmd"
- check_per_thread "CSV" "$perf_cmd"
- check_per_node "CSV" "$perf_cmd"
-+check_metric_only "CSV" "$perf_cmd"
- if [ $skip_test -ne 1 ]
- then
- 	check_system_wide_no_aggr "CSV" "$perf_cmd"
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-index 6b630d33c3287899..a4f257ea839e1368 100755
---- a/tools/perf/tests/shell/stat+json_output.sh
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -173,6 +173,14 @@ check_per_socket()
- 	echo "[Success]"
- }
- 
-+check_metric_only()
-+{
-+	echo -n "Checking json output: metric only "
-+	perf stat -j --metric-only -e instructions,cycles -o "${stat_output}" true
-+	$PYTHON $pythonchecker --metric-only --file "${stat_output}"
-+	echo "[Success]"
-+}
-+
- # The perf stat options for per-socket, per-core, per-die
- # and -A ( no_aggr mode ) uses the info fetched from this
- # directory: "/sys/devices/system/cpu/cpu*/topology". For
-@@ -207,6 +215,7 @@ check_interval
- check_event
- check_per_thread
- check_per_node
-+check_metric_only
- if [ $skip_test -ne 1 ]
- then
- 	check_system_wide_no_aggr
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 0f7967be60afdc7d..6fee67693ba7a9be 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -30,6 +30,7 @@ trap trap_cleanup EXIT TERM INT
- function commachecker()
- {
- 	local prefix=1
-+	local -i metric_only=0
- 
- 	case "$1"
- 	in "--interval")	prefix=2
-@@ -41,6 +42,7 @@ function commachecker()
- 	;; "--per-die")		prefix=3
- 	;; "--per-cache")	prefix=3
- 	;; "--per-cluster")	prefix=3
-+	;; "--metric-only")	metric_only=1
- 	esac
- 
- 	while read line
-@@ -60,6 +62,9 @@ function commachecker()
- 		x=${main_body%#*}
- 		[ "$x" = "" ] && continue
- 
-+		# Check metric only - if it has a non-empty result
-+		[ $metric_only -eq 1 ] && return 0
-+
- 		# Skip metrics without event name
- 		y=${main_body#*#}
- 		for i in "${!skip_metric[@]}"; do
-@@ -84,6 +89,8 @@ function commachecker()
- 			exit 1;
- 		}
- 	done < "${stat_output}"
-+
-+	[ $metric_only -eq 1 ] && exit 1
- 	return 0
- }
- 
-@@ -95,6 +102,7 @@ check_system_wide "STD" "$perf_cmd"
- check_interval "STD" "$perf_cmd"
- check_per_thread "STD" "$perf_cmd"
- check_per_node "STD" "$perf_cmd"
-+check_metric_only "STD" "$perf_cmd"
- if [ $skip_test -ne 1 ]
- then
- 	check_system_wide_no_aggr "STD" "$perf_cmd"
+ # skip if there's no gcc
+ if ! [ -x "$(command -v gcc)" ]; then
 -- 
 2.48.1.711.g2feabab25a-goog
 
