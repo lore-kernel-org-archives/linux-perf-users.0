@@ -1,308 +1,216 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D4C253B47;
-	Wed,  5 Mar 2025 18:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7433A2E339F;
+	Wed,  5 Mar 2025 19:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200518; cv=none; b=UOpLiQOxxyH78490sHPRSviNMTrpPRvae/IKOr31NDT0OWrz28WKrjDsLWnbgvcns9+5Xf4H+m9p0OIDVnT8GL2TKUOqVs6AWcG+nTbHvTZ5iBhaYzyrc5d610wDIIgK4Js1tGRguLJgfIw9+4z+ykbZhQLr+blwEXwQSfvIums=
+	t=1741201800; cv=none; b=Rw3LJ5BTJv8QMKQ8Q8npFgTAA93LqzqCbGUz9NlMhpSFTMm7xoL5vWhUCouthtvx9bU4g/8PozzTe02iePq6fnspZUFsOCk2z6w+BhrCzcJzFtt3HO/nputvd/YAHreGJ2pRAOdmtQpKYo837jGLJhRLSVAyBK+2XY/75glVarQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200518; c=relaxed/simple;
-	bh=ALoap60e8eYMXnFhFD1lFNsNbtAEqlcl56Tb4plKg8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rzk6lCW86sdto8xlJwDfHTf+rQPL4XEYyzPPd0C5jtLw65qAB2FcWL51VFauj9fyvkqBCdZtJZyfvYVUJIye8qwC6HOT0kK84RVhbje9UAhJcGuCKhKZtw9j0cuVtxSB4VbVsmCT5OILdP8GP9eWz6AxZMICDe29daGRPWIvfrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BmP3P1e4; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BmP3P1e4"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 525IlQXu3341787
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 5 Mar 2025 10:47:32 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 525IlQXu3341787
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741200453;
-	bh=BGNQcMVK5hCto379/x9/4Vl9hYv+kX3k2clZaukpqgw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BmP3P1e4aDgQqcgOw4u4a+ji4ldYKpt9g0IPLFOk0ErpRcDPjIa1yR//1JBSZAkhj
-	 ivDSRHszWpIzuNWmBAM3Pn+N1WG0AV5ThxdGWt2NAUPzJ+MfN2xe63es6o98WQYYfH
-	 pE9PQA8HCR65lqfwjU8EIev8NsSM/EtSKC1rIekkCXmnu1Ld8J5FrRSljL6JIz7sc2
-	 dRcn88NJOA0Ia8I3MW5U5JIWIISr0qBYK/Lq3eUKFp1smi+Oih5E0HgA2F4uP4Zv6U
-	 jKUci1zTW71J/YyYF0ldtsT4PVuDRmwelg6AvNqcOkoxN1OdTGLJPGKcp3cdzcZsjP
-	 Rwf4xxiuHfitA==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
-        sraithal@amd.com, philip.li@intel.com
-Subject: [PATCH v7 1/4] x86/cpufeatures: Add {required,disabled} feature configs
-Date: Wed,  5 Mar 2025 10:47:21 -0800
-Message-ID: <20250305184725.3341760-2-xin@zytor.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305184725.3341760-1-xin@zytor.com>
-References: <20250305184725.3341760-1-xin@zytor.com>
+	s=arc-20240116; t=1741201800; c=relaxed/simple;
+	bh=KW8symAa9+ElA7tol8KYpclJp8NcgDvhtncZvNKzDks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpTNBoBS0rU415N/pBq0KRuk4MGh3TYkk55r7NcaftjBLLSw7GwIMyyiNm9EiBurGIFUurirtsjcGF62g+LCZeefeEo0ATiV0c8soHc/sgqyXR3ah8M0G/N79m6EoYFc7I5ZKXUppDoj/MtyOjv5/m4eeme3IsunRupQRo4zzYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff615a114bso306894a91.0;
+        Wed, 05 Mar 2025 11:09:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741201798; x=1741806598;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zodeiabiec4o+24nRPQhB7bjurm79o/P+gs1t8Gp0w0=;
+        b=a6qjIMSEtnzUT0DE0JD6g7ecO+bUMzqm9xFhijJqyfx+GiaSAprV5VPtfgXes09hV/
+         mwtJuGkrFPh3qagG2n9aSdpEdYZohi4QHlMqcbOAPPFs3oxe82UcNJeJwF+8OKNGPpX8
+         Jm86/biXjK2gH5eEesQQav4KpiTbAw5FB+Zh+JzBS1PvdMQ8OaIxHk8WPSBpKgdtqrt7
+         Ha9c40XlIzkObFz/ihGwm7a035eN/3jYJ9ScQyIwl9jCbj5JP2jwKa0Et9JREaz/Rdzx
+         v1lqFpG/2Q21URm3RlM/hOEGBCVikZOg9AnIVUGDQ0M//evr8FsgLNrHpMX7bBEkPEzv
+         NPeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyxAmHRBnDgjkZVJemCXEaFHgTMincMIepQixOT1FYNtZMjhHL+gF2Fuw2ha5KvQU5XCSFTI8jLDjARRU=@vger.kernel.org, AJvYcCW1g2/3le/85SCV1lQIK2p0uMPxUwZa9N5Nr6lHjZeRC1gxa1rK2t3m/n2QetXJnYFQJ1JL2zkQn8CO@vger.kernel.org, AJvYcCWEDegVTSIqphc+M0zDp3jXn5Cf2QDAn3w64iKQrBPV36zBk7RtXezEZcVCQk+H6jjWSl7S5d67z0kFGtT7aCIR4TA=@vger.kernel.org, AJvYcCXef0zkBurVqxdRS3EypgQlAFAK1D2+g9GQ2iqaiCHN89XB0DIXSJZN+or53xCvh7sPsTPDKS+PZ166LbrP4eXF3w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyshFbjHYlb/LRLlnXxidSlUW/xB7V9VEzFqQopkysjZvrKpdAL
+	ERhKWfJfrPr5AHFc0IEpeyleeBTmBAl6td0M+eg20odOQ6lnwBSo
+X-Gm-Gg: ASbGnctZvhEi/V0J7AB4tzfah+wCSyCdRhvxqj7IboqvW1caeEC8iICA/cMew3Cvy78
+	4t85P5mBYuZ8MIyadrZQhhOeBnpOk5BA9RIvmFxedw0q13Me82C08eC3mEX2uUbvcJrCb5r+Byh
+	E6umDsQhmJ18fMNCh7IOSZ8GxbN4LZwA9CznYIT/f934Y6SMGoqRq8LClxgJHdlui++vcN6xlus
+	6Bw4U2Gzywa2wqjsodrx2KpLCN9jULuL/oazg4+C8dF6LXzurkP8PUa84BM7oQsuyA5GbZFfEMK
+	cXAC0Nyd+2uDZDkfZKhzRq5t60iOcUYkZW9Sz5JagrTDmzGiXJ6MI9SW3hxinU5bLIR6nd3bGSb
+	FKlM=
+X-Google-Smtp-Source: AGHT+IGNbRJpJbMeXjomF31jB4KIZE5TJ2wjy21GKVWmGQR/3PyTIYjAGlF+BWxQ8A3iKolTn3utJQ==
+X-Received: by 2002:a17:90b:3ec5:b0:2ea:8aac:6ac1 with SMTP id 98e67ed59e1d1-2ff617b5145mr663825a91.15.1741201797566;
+        Wed, 05 Mar 2025 11:09:57 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff53eda418sm1213607a91.45.2025.03.05.11.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 11:09:57 -0800 (PST)
+Date: Thu, 6 Mar 2025 04:09:55 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250305190955.GK847772@rocinante>
+References: <20250304171154.njoygsvfd567pb66@thinkpad>
+ <20250305173826.GA303920@bhelgaas>
+ <20250305182833.cgrwbrcwzjscxmku@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305182833.cgrwbrcwzjscxmku@thinkpad>
 
-From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+Hello,
 
-Required and disabled feature masks completely rely on build configs,
-i.e., once a build config is fixed, so are the feature masks.  To
-prepare for auto-generating a header with required and disabled feature
-masks based on a build config, add feature Kconfig items:
-  - X86_REQUIRED_FEATURE_x
-  - X86_DISABLED_FEATURE_x
-each of which may be set to "y" if and only if its preconditions from
-current build config are met.
+[...]
+> > > Even though debugfs_init() failure is not supposed to fail the probe(),
+> > > dwc_pcie_rasdes_debugfs_init() has a devm_kzalloc() and propagating that
+> > > failure would be canolically correct IMO.
+> > 
+> > I'm not sure about this.  What's the requirement to propagate
+> > devm_kzalloc() failures?  I think devres will free any allocs that
+> > were successful regardless.
+> > 
+> > IIUC, we resolved the Gray Hawk Single issue by changing
+> > dwc_pcie_rasdes_debugfs_init() to return success without doing
+> > anything when there's no RAS DES Capability.
+> > 
+> > But dwc_pcie_debugfs_init() can still return failure, and that still
+> > causes dw_pcie_ep_init_registers() to fail, which breaks the "don't
+> > propagate debugfs issues upstream" rule:
+> > 
+> >   int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >   {
+> >           ...
+> >           ret = dwc_pcie_debugfs_init(pci);
+> >           if (ret)
+> >                   goto err_remove_edma;
+> > 
+> >           return 0;
+> > 
+> >   err_remove_edma:
+> >           dw_pcie_edma_remove(pci);
+> > 
+> >           return ret;
+> >   }
+> > 
+> > We can say that kzalloc() failure should "never" happen, and therefore
+> > it's OK to fail the driver probe if it happens, but that doesn't seem
+> > like a strong argument for breaking the "don't propagate debugfs
+> > issues" rule.  And someday there may be other kinds of failures from
+> > dwc_pcie_debugfs_init().
+> > 
+> 
+> Fine with me. I was not too sure about propagating failure either.
 
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
----
+What if we do this?
 
-Change in v7:
-* Collect reviewed-bys.
+diff --git i/drivers/pci/controller/dwc/pcie-designware-debugfs.c w/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index 586a9d107434..fddf71f014c4 100644
+--- i/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ w/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -162,7 +162,7 @@ void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+ 	debugfs_remove_recursive(pci->debugfs->debug_dir);
+ }
 
-Changes in v6:
-* Move changes to X86_CMPXCHG64 to a separate patch (Borislav Petkov).
-* Keep X86_{CX8,CMOV} and define X86_REQUIRED_FEATURE_{CX8,CMOV} on top
-  (Borislav Petkov).
+-int dwc_pcie_debugfs_init(struct dw_pcie *pci)
++void dwc_pcie_debugfs_init(struct dw_pcie *pci)
+ {
+ 	char dirname[DWC_DEBUGFS_BUF_MAX];
+ 	struct device *dev = pci->dev;
+@@ -174,17 +174,15 @@ int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+ 	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+ 	dir = debugfs_create_dir(dirname, NULL);
+ 	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+-	if (!debugfs)
+-		return -ENOMEM;
++	if (!debugfs) {
++		dev_err(dev, "failed to allocate memory for debugfs\n");
++		return;
++	}
 
-Changes in v2:
-* Keep the X86_{REQUIRED,DISABLED}_FEATURE_ prefixes solely in
-  arch/x86/Kconfig.cpufeatures (Borislav Petkov).
-* Explain how config option names X86_{REQUIRED,DISABLED}_FEATURE_<name>
-  are formed (Borislav Petkov).
----
- arch/x86/Kconfig             |   2 +
- arch/x86/Kconfig.cpufeatures | 197 +++++++++++++++++++++++++++++++++++
- 2 files changed, 199 insertions(+)
- create mode 100644 arch/x86/Kconfig.cpufeatures
+ 	debugfs->debug_dir = dir;
+ 	pci->debugfs = debugfs;
+ 	err = dwc_pcie_rasdes_debugfs_init(pci, dir);
+-	if (err) {
+-		dev_err(dev, "failed to initialize RAS DES debugfs, err=%d\n",
+-			err);
+-		return err;
+-	}
+-
+-	return 0;
++	if (err)
++		dev_warn(dev, "failed to initialize RAS DES debugfs, err=%d",
++			 err);
+ }
+diff --git i/drivers/pci/controller/dwc/pcie-designware-ep.c w/drivers/pci/controller/dwc/pcie-designware-ep.c
+index c6e76a07c2c9..11ff292ca87d 100644
+--- i/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ w/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -838,9 +838,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1e50da06ffc4..1b12725cac8c 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -3130,4 +3130,6 @@ config HAVE_ATOMIC_IOMAP
- 
- source "arch/x86/kvm/Kconfig"
- 
-+source "arch/x86/Kconfig.cpufeatures"
-+
- source "arch/x86/Kconfig.assembler"
-diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
-new file mode 100644
-index 000000000000..5dcc49d928c5
---- /dev/null
-+++ b/arch/x86/Kconfig.cpufeatures
-@@ -0,0 +1,197 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# x86 feature bits (see arch/x86/include/asm/cpufeatures.h) that are
-+# either REQUIRED to be enabled, or DISABLED (always ignored) for this
-+# particular compile-time configuration.  The tests for these features
-+# are turned into compile-time constants via the generated
-+# <asm/featuremasks.h>.
-+#
-+# The naming of these variables *must* match asm/cpufeatures.h, e.g.,
-+#     X86_FEATURE_ALWAYS <==> X86_REQUIRED_FEATURE_ALWAYS
-+#     X86_FEATURE_FRED   <==> X86_DISABLED_FEATURE_FRED
-+#
-+# And these REQUIRED and DISABLED config options are manipulated in an
-+# AWK script as the following example:
-+#
-+#                          +----------------------+
-+#                          |    X86_FRED = y ?    |
-+#                          +----------------------+
-+#                              /             \
-+#                           Y /               \ N
-+#  +-------------------------------------+   +-------------------------------+
-+#  | X86_DISABLED_FEATURE_FRED undefined |   | X86_DISABLED_FEATURE_FRED = y |
-+#  +-------------------------------------+   +-------------------------------+
-+#                                                        |
-+#                                                        |
-+#     +-------------------------------------------+      |
-+#     | X86_FEATURE_FRED: feature word 12, bit 17 | ---->|
-+#     +-------------------------------------------+      |
-+#                                                        |
-+#                                                        |
-+#                                     +-------------------------------+
-+#                                     | set bit 17 of DISABLED_MASK12 |
-+#                                     +-------------------------------+
-+#
-+
-+config X86_REQUIRED_FEATURE_ALWAYS
-+	def_bool y
-+
-+config X86_REQUIRED_FEATURE_NOPL
-+	def_bool y
-+	depends on X86_64 || X86_P6_NOP
-+
-+config X86_REQUIRED_FEATURE_CX8
-+	def_bool y
-+	depends on X86_CX8
-+
-+# this should be set for all -march=.. options where the compiler
-+# generates cmov.
-+config X86_REQUIRED_FEATURE_CMOV
-+	def_bool y
-+	depends on X86_CMOV
-+
-+# this should be set for all -march= options where the compiler
-+# generates movbe.
-+config X86_REQUIRED_FEATURE_MOVBE
-+	def_bool y
-+	depends on MATOM
-+
-+config X86_REQUIRED_FEATURE_CPUID
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_REQUIRED_FEATURE_UP
-+	def_bool y
-+	depends on !SMP
-+
-+config X86_REQUIRED_FEATURE_FPU
-+	def_bool y
-+	depends on !MATH_EMULATION
-+
-+config X86_REQUIRED_FEATURE_PAE
-+	def_bool y
-+	depends on X86_64 || X86_PAE
-+
-+config X86_REQUIRED_FEATURE_PSE
-+	def_bool y
-+	depends on X86_64 && !PARAVIRT_XXL
-+
-+config X86_REQUIRED_FEATURE_PGE
-+	def_bool y
-+	depends on X86_64 && !PARAVIRT_XXL
-+
-+config X86_REQUIRED_FEATURE_MSR
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_REQUIRED_FEATURE_FXSR
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_REQUIRED_FEATURE_XMM
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_REQUIRED_FEATURE_XMM2
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_REQUIRED_FEATURE_LM
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_DISABLED_FEATURE_UMIP
-+	def_bool y
-+	depends on !X86_UMIP
-+
-+config X86_DISABLED_FEATURE_VME
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_DISABLED_FEATURE_K6_MTRR
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_DISABLED_FEATURE_CYRIX_ARR
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_DISABLED_FEATURE_CENTAUR_MCR
-+	def_bool y
-+	depends on X86_64
-+
-+config X86_DISABLED_FEATURE_PCID
-+	def_bool y
-+	depends on !X86_64
-+
-+config X86_DISABLED_FEATURE_PKU
-+	def_bool y
-+	depends on !X86_INTEL_MEMORY_PROTECTION_KEYS
-+
-+config X86_DISABLED_FEATURE_OSPKE
-+	def_bool y
-+	depends on !X86_INTEL_MEMORY_PROTECTION_KEYS
-+
-+config X86_DISABLED_FEATURE_LA57
-+	def_bool y
-+	depends on !X86_5LEVEL
-+
-+config X86_DISABLED_FEATURE_PTI
-+	def_bool y
-+	depends on !MITIGATION_PAGE_TABLE_ISOLATION
-+
-+config X86_DISABLED_FEATURE_RETPOLINE
-+	def_bool y
-+	depends on !MITIGATION_RETPOLINE
-+
-+config X86_DISABLED_FEATURE_RETPOLINE_LFENCE
-+	def_bool y
-+	depends on !MITIGATION_RETPOLINE
-+
-+config X86_DISABLED_FEATURE_RETHUNK
-+	def_bool y
-+	depends on !MITIGATION_RETHUNK
-+
-+config X86_DISABLED_FEATURE_UNRET
-+	def_bool y
-+	depends on !MITIGATION_UNRET_ENTRY
-+
-+config X86_DISABLED_FEATURE_CALL_DEPTH
-+	def_bool y
-+	depends on !MITIGATION_CALL_DEPTH_TRACKING
-+
-+config X86_DISABLED_FEATURE_LAM
-+	def_bool y
-+	depends on !ADDRESS_MASKING
-+
-+config X86_DISABLED_FEATURE_ENQCMD
-+	def_bool y
-+	depends on !INTEL_IOMMU_SVM
-+
-+config X86_DISABLED_FEATURE_SGX
-+	def_bool y
-+	depends on !X86_SGX
-+
-+config X86_DISABLED_FEATURE_XENPV
-+	def_bool y
-+	depends on !XEN_PV
-+
-+config X86_DISABLED_FEATURE_TDX_GUEST
-+	def_bool y
-+	depends on !INTEL_TDX_GUEST
-+
-+config X86_DISABLED_FEATURE_USER_SHSTK
-+	def_bool y
-+	depends on !X86_USER_SHADOW_STACK
-+
-+config X86_DISABLED_FEATURE_IBT
-+	def_bool y
-+	depends on !X86_KERNEL_IBT
-+
-+config X86_DISABLED_FEATURE_FRED
-+	def_bool y
-+	depends on !X86_FRED
-+
-+config X86_DISABLED_FEATURE_SEV_SNP
-+	def_bool y
-+	depends on !KVM_AMD_SEV
--- 
-2.48.1
+ 	dw_pcie_ep_init_non_sticky_registers(pci);
 
+-	ret = dwc_pcie_debugfs_init(pci);
+-	if (ret)
+-		goto err_remove_edma;
++	dwc_pcie_debugfs_init(pci);
+
+ 	return 0;
+
+diff --git i/drivers/pci/controller/dwc/pcie-designware-host.c w/drivers/pci/controller/dwc/pcie-designware-host.c
+index 2081e8c72d12..6501fb062c70 100644
+--- i/drivers/pci/controller/dwc/pcie-designware-host.c
++++ w/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -548,9 +548,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (pp->ops->post_init)
+ 		pp->ops->post_init(pp);
+
+-	ret = dwc_pcie_debugfs_init(pci);
+-	if (ret)
+-		goto err_stop_link;
++	dwc_pcie_debugfs_init(pci);
+
+ 	return 0;
+
+diff --git i/drivers/pci/controller/dwc/pcie-designware.h w/drivers/pci/controller/dwc/pcie-designware.h
+index 7f9807d4e5de..dd129718fb41 100644
+--- i/drivers/pci/controller/dwc/pcie-designware.h
++++ w/drivers/pci/controller/dwc/pcie-designware.h
+@@ -815,12 +815,11 @@ dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+ #endif
+
+ #ifdef CONFIG_PCIE_DW_DEBUGFS
+-int dwc_pcie_debugfs_init(struct dw_pcie *pci);
++void dwc_pcie_debugfs_init(struct dw_pcie *pci);
+ void dwc_pcie_debugfs_deinit(struct dw_pcie *pci);
+ #else
+-static inline int dwc_pcie_debugfs_init(struct dw_pcie *pci)
++static inline void dwc_pcie_debugfs_init(struct dw_pcie *pci)
+ {
+-	return 0;
+ }
+ static inline void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+ {
+
+I think this would be fine, especially given the rules around debugfs and
+a quick look around Git history to see what the prefernce would be typically.
+
+Thank you!
+
+	Krzysztof
