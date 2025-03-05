@@ -1,40 +1,46 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5331FDA89;
-	Wed,  5 Mar 2025 09:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D363E205E00;
+	Wed,  5 Mar 2025 09:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168205; cv=none; b=jwt5zbbgbshNyFNCUOc5n4+ueAoUEGS2L87w/hNtucJIXC3T+gY9YOve3aFM5/as55N6phwxtcVmKg8PPjRTlOT/pH+zRjLSCf4p00/F7h97wppfxydw7e1C54rS+Q2vvChCbtUiumbCDOV+Oe8BvvQIvgtAw9KknDcQHl1f8wY=
+	t=1741168389; cv=none; b=OzHQFrre+un9VAe5sy+pe2CZ9w/KBu3if/nts17nAHd7FB28/FTmeqJj0wZz7vbUONWxSYLuGwC8Qwl6r9cuKTfxmSos+l8+RGzOJUXTyt9I/xc/1JdI4yv/LCTpnI0K+/O5HK7Q2lj+fX7wjxy21c34mMzi0R3zo/jYkPtZiAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168205; c=relaxed/simple;
-	bh=9XCwGkO1slE9cNaXGcMSpm5vtcrGZCcbvX/iUzJ0eIc=;
+	s=arc-20240116; t=1741168389; c=relaxed/simple;
+	bh=s2oJi5OGtytvWKh8J+5v3jAYAjZvG6ci4Mk+QuIm++E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SnGMWH7+aXUDJobSe81qQsSWi1+d7jaar05Q+6vuuawJ3bE7V5vC8aLIL99pz0DCsfHjFQp75mSLJ47fIyTcU8ANHmEgeN3WtqkYJKn+2/l/RKJ5sgfootHjPfsO8tHmKJrSY5QVq7xr5l4lUai9XrqW2MBqGWjsQXhrVH2xVxY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=nszwZTca1n771Us56dCepub+3VvHF5P6sxno5cka1m1DGQVNe+SnrHiM/CfOGdKFTWBortMXlzY3pDK29jU0a5ds8DN1dllN5n88QUlhqeDQPViXrZ2y8hQ5Q8KwrMsITHgBmZz04O5mgdTWW+uV88LcabhTixLdYGEzsdBmgwE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59B6BFEC;
-	Wed,  5 Mar 2025 01:50:16 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91E66FEC;
+	Wed,  5 Mar 2025 01:53:20 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FC123F673;
-	Wed,  5 Mar 2025 01:50:02 -0800 (PST)
-Date: Wed, 5 Mar 2025 09:49:58 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C98553F673;
+	Wed,  5 Mar 2025 01:53:06 -0800 (PST)
+Date: Wed, 5 Mar 2025 09:53:04 +0000
 From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
-Message-ID: <20250305094958.GE13418@e132581.arm.com>
-References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
- <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
- <20250305093545.GD13418@e132581.arm.com>
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>,
+	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 00/12] perf script: Refactor branch flags for Arm SPE
+Message-ID: <20250305095304.GF13418@e132581.arm.com>
+References: <20250217195908.176207-1-leo.yan@arm.com>
+ <20250303093853.GG2157064@e132581.arm.com>
+ <Z8YYY2Q_ZPIaZ74g@google.com>
+ <20250304113350.GK2157064@e132581.arm.com>
+ <Z8dJ00nIeVqMMncD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,67 +49,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305093545.GD13418@e132581.arm.com>
+In-Reply-To: <Z8dJ00nIeVqMMncD@google.com>
 
-On Wed, Mar 05, 2025 at 09:35:45AM +0000, Leo Yan wrote:
-> On Tue, Mar 04, 2025 at 01:49:14PM +0000, James Clark wrote:
-> > Instead of showing multiple line items with the same event name and
-> > description, show a single line and concatenate all PMUs that this
-> > event can belong to.
-> > 
-> > Don't do it for json output. Machine readable output doesn't need to be
-> > minimized, and changing the "Unit" field to a list type would break
-> > backwards compatibility.
-> > 
-> > Before:
-> >  $ perf list -v
-> >  ...
-> >  br_indirect_spec
-> >        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
-> >  br_indirect_spec
-> >        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a57]
-> > 
-> > After:
-> > 
-> >  $ perf list -v
-> >  ...
-> >  br_indirect_spec
-> >        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,armv8_cortex_a57]
+On Tue, Mar 04, 2025 at 10:43:31AM -0800, Namhyung Kim wrote:
+
+[...]
+
+> > Please consider picking the latest change (either the whole v4 series or
+> > just the updated patch 01 would be fine).
 > 
-> From my testing, based on the latest tmp.perf-tools-next branch, I
-> need to remove the option '-v'.  Otherwise, the '-v' option will
-> enable long event descriptions, in this case, it does _not_ print Unit
-> strings at all (see default_print_event() in builtin-list.c).
+> Sure, I'll add v4 to the tmp branch soon.
 
-Ah, actually I worked on the Linux master branch.  After switched to
-tmp.perf-tools-next branch, it works pretty well.
+Thanks, Namhyung!  Also thanks Adrian's review for v4!
 
-  perf list -v 2>&1 | grep br_mis_pred_retired -A 2
-  ...
-    br_mis_pred_retired
-           [Instruction architecturally executed,mispredicted branch.
-           Unit:
-                   armv9_cortex_a510,armv9_cortex_a710]
-
-Please ignore my previous comment.  The series looks good to me.
-
-Thanks,
 Leo
-
->   default_print_event()
->   {
->     ...
->     if (long_desc && print_state->long_desc) {
->             fprintf(fp, "%*s", 8, "[");
->             wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
->             fprintf(fp, "]\n");
->     } else if (desc && print_state->desc) {
->     ...
->   }
-> 
-> The command `perf list` would be sufficent.
-
-> 
-> Thanks,
-> Leo
-> 
