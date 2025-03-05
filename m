@@ -1,100 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DE7250BE1
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 16:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FF24CEF1;
+	Wed,  5 Mar 2025 16:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741191018; cv=none; b=PRxlzcgUnePrwYoKj8VLEPv7ETl/GigPgudu1+uSgLncN0IsylDIv7o4se+fo0JpfcPehoCcyl7Nl5RBUq9uF2B8/VtK5Q8bbkXn3qZH6DBlEjYTgtSWYl7ZELUHQN+meplLEaUbTSr0A9TL10hDSV+ywgUBXwPG4aK30+mdU6I=
+	t=1741191083; cv=none; b=WuKKOzph4HYj832ZI0kw0FhSzoS+cPLmLkBC2FhXgTajSUpU8AstcmAiL5ELjsaZRVldDxo6r/m+HhJOD1E6sY5vDSDCrLjSCvh/sKJ78g2cS4lYAx/BzS8ko7ft85Mzz9ACzi4cjF1DP5/kwN6IVI8T38NE2NF0cKVAFz4q1xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741191018; c=relaxed/simple;
-	bh=byX8p//Nb8GAIZt7uxJDZPnsDgSe16fw8KALHAh9H54=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B3JJOjcSbcIl2/Q0Ihax207A4yc+HfOWiMcEQX6E8mEmwIDr4YByg/EltjnmchMraZ7ZUJNknf2nu9TarWAi2AfyDvMUX6W3Zll7Qhngh4K8jqveCOrFJ+JVI3AeLxzoY5cRdBxNlxGKvNRJkBnYAvtfSThiyam+KxuCjX5xUx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0FDA175D;
-	Wed,  5 Mar 2025 08:10:29 -0800 (PST)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AEDAD3F5A1;
-	Wed,  5 Mar 2025 08:10:15 -0800 (PST)
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org
-Cc: mark.rutland@arm.com,
-	bwicaksono@nvidia.com,
-	ilkka@os.amperecomputing.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf/arm_cspmu: Add PMEVFILT2R support
-Date: Wed,  5 Mar 2025 16:10:08 +0000
-Message-Id: <b11be3f23a72bc27088b115099c8fe865b70babc.1741190362.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
-In-Reply-To: <cover.1741190362.git.robin.murphy@arm.com>
-References: <cover.1741190362.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1741191083; c=relaxed/simple;
+	bh=6QXaCKQRsaurIu3iwN0Cxq8aCQHGXHhdeI3bUW8oYCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W7W8nWEKi3OYf51Yx2J1Idf/M9D84nGjfeP6/E7HJ83CW2ceIgq6ezXujwvqo7ckzvNPL/l76eKH+aevYopuZTjN3hUKIuCAEOYpjOAOMflaBFPamjcWkyOD2qBXzsNC7fSuATvRabMYhNz+nQ6v1H4iQhTNvV7rc1iZ7/ZEO+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dJTQ41Fe; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dJTQ41Fe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741191082; x=1772727082;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6QXaCKQRsaurIu3iwN0Cxq8aCQHGXHhdeI3bUW8oYCw=;
+  b=dJTQ41FeiUK+xwmslNZE62onYlONI8FjWnTOFHSmRMkn53kKFWVeZgzU
+   C6ctLNVvk9eyMH838HGVscJn2VQbyNKKakfoN7fwKnAvO0Akg+DmlFqfP
+   1Rg9prGq8wTyFXG+s//YF3PixEtlbKMtLbM9VRw8sODrHh8XhXt0nr2Ye
+   ZY0cktGKaM0fEEeTr+91vTYNW2ejbpc3VSnopMZDnxnabwTwLNB2suik+
+   toJ2M6jHyuAeLEAdOULZNO0wUlc6eP/IHrPPcKUgZIvk6CzRIWUXFrSUE
+   7GUO+TbQbzNFNX7iQGFkk6iBriDjojYNHBGQwlRmVWfM13Yr7k+l1t2ww
+   Q==;
+X-CSE-ConnectionGUID: BUTiOH1+Se6FbpGsg/UHKg==
+X-CSE-MsgGUID: ZBzKnLB2RIiVMXiSQ+qYZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45818928"
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="45818928"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 08:11:21 -0800
+X-CSE-ConnectionGUID: QepDo20IRPG2e/dHSgWkUw==
+X-CSE-MsgGUID: bjAmI4rWQTeYYKH4z7qinQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="141972117"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.109.196]) ([10.125.109.196])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 08:11:20 -0800
+Message-ID: <293158f0-d36f-4569-bad3-6be1db938457@intel.com>
+Date: Wed, 5 Mar 2025 08:11:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel/bts: allocate bts_ctx only if necessary
+To: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <olsajiri@gmail.com>
+Cc: lirongqing <lirongqing@baidu.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ irogers@google.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250122074103.3091-1-lirongqing@baidu.com>
+ <Z8hV3WYuHxHBNoNV@krava> <Z8hXsvloKEb7ia3V@krava>
+ <d70b6f8d-0e86-4814-bf05-4c3d9acd313d@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <d70b6f8d-0e86-4814-bf05-4c3d9acd313d@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Architecturally we have two filters for each regular event counter,
-so add generic support for the second one too.
+Jiri, thanks for the report!
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/arm_cspmu/arm_cspmu.c | 7 +++++--
- drivers/perf/arm_cspmu/arm_cspmu.h | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+On 3/5/25 06:58, Adrian Hunter wrote:
+> It looks like there are 3 functions affected:
+> 
+> 	intel_bts_enable_local()
+> 	intel_bts_disable_local()
+> 	intel_bts_interrupt()
+> 
+> Perhaps make them static calls?
 
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index 053bb7920df6..efa9b229e701 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -183,6 +183,7 @@ arm_cspmu_event_attr_is_visible(struct kobject *kobj,
- static struct attribute *arm_cspmu_format_attrs[] = {
- 	ARM_CSPMU_FORMAT_EVENT_ATTR,
- 	ARM_CSPMU_FORMAT_FILTER_ATTR,
-+	ARM_CSPMU_FORMAT_FILTER2_ATTR,
- 	NULL,
- };
- 
-@@ -767,9 +768,11 @@ static void arm_cspmu_set_ev_filter(struct arm_cspmu *cspmu,
- 				    const struct perf_event *event)
- {
- 	u32 filter = event->attr.config1 & ARM_CSPMU_FILTER_MASK;
--	u32 offset = PMEVFILTR + (4 * hwc->idx);
-+	u32 filter2 = event->attr.config2 & ARM_CSPMU_FILTER_MASK;
-+	u32 offset = 4 * event->hw.idx;
- 
--	writel(filter, cspmu->base0 + offset);
-+	writel(filter, cspmu->base0 + PMEVFILTR + offset);
-+	writel(filter2, cspmu->base0 + PMEVFILT2R + offset);
- }
- 
- static void arm_cspmu_set_cc_filter(struct arm_cspmu *cspmu,
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.h b/drivers/perf/arm_cspmu/arm_cspmu.h
-index d59040d6a7e3..19684b76bd96 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.h
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.h
-@@ -47,6 +47,8 @@
- /* Default filter format */
- #define ARM_CSPMU_FORMAT_FILTER_ATTR	\
- 	ARM_CSPMU_FORMAT_ATTR(filter, "config1:0-31")
-+#define ARM_CSPMU_FORMAT_FILTER2_ATTR	\
-+	ARM_CSPMU_FORMAT_ATTR(filter2, "config2:0-31")
- 
- /*
-  * This is the default event number for cycle count, if supported, since the
-@@ -72,6 +74,7 @@
- #define PMEVCNTR_HI			0x4
- #define PMEVTYPER			0x400
- #define PMCCFILTR			0x47C
-+#define PMEVFILT2R			0x800
- #define PMEVFILTR			0xA00
- #define PMCNTENSET			0xC00
- #define PMCNTENCLR			0xC20
--- 
-2.39.2.101.g768bb238c484.dirty
+That, or a few:
 
+	if (!bts_ctx)
+		return;
+
+if you're not feeling as fancy would do.
+
+Would someone be interested in sending an actual tested patch, ideally
+the patch author of the regression? <hint, hint>
