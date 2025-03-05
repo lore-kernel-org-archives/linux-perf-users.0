@@ -1,121 +1,148 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2188B84D08;
-	Wed,  5 Mar 2025 07:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555486324;
+	Wed,  5 Mar 2025 07:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741159597; cv=none; b=fJcmP4uMiwFXx8Z4H6ThTC3gEwve7inhWSIdQI3/8ydoPGTVxZe7aJ8JcUZR8r8N9rN+wRjIOsJEV2ey5PqTNdtFw8eFZKwB7PFZ/phEgtQijDeXKG4ic53YjuQv58n/gShoGsF05KCLylM05yNr3Nj8r61ctDWKT10Ppyh6TFE=
+	t=1741159893; cv=none; b=EWxVMi5rPCu2i6/OzdYASNoM+hCqBF76DUSk7EQhkAcrdU+uEheEvd9HpfoZzJDewcZmzNBXCso7RZfULSunp6tjvL30sgKW0buNbOMrHaqI4q1tYBuJHEUQhwCMZYqhCAiaKoUQ7PReE4rHfZurJ1X51QzONlbFykt/TLWBP4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741159597; c=relaxed/simple;
-	bh=o0D0OR4ETeM6TgdeTYRWURr8ShM7XjsdgCXgPgCLuM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KU53z8t08RsV1GNY5vhKiDhKUSxtp+TJ/C2mu904iachPASXxmhB95VBI6N/5uBWtOj+fS9aJwU5a7b9/Eax9Dp1P1KBKAvte3hdC0ct+P0UB6hBcGXSx8LJEbHEqozPTCzrYpebXtF5Sw4XXXfs7dfgkgvYJ0b8uA+nXL/oVGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22185cddbffso8425615ad.1;
-        Tue, 04 Mar 2025 23:26:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741159595; x=1741764395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HNgzDD9KflnZOadx5j+UnJGC4H2dSOBqjrhq830X+Ig=;
-        b=E4qPt9Ks/f+Uvc8FREFMMebjgMcIObSLc+zefBI4uBeYI+aTlPtEPbDvXV5xwxjLu9
-         8QfaTiq6K2tGoDAjmjmDwDYW6FCP5Jc449DduRHbJ9fZWDGJ1dHNMqfNjszRIsBAmvf+
-         d2Ezhi3FZqT5HqfLwIvp8mryFCgWvPATWFVeLPG08c6vPRUK3NjDs4zrWv+HhxRMsHT0
-         4jQ6/ja7W3bWiaAfMXiAnoEFQFe77jGplE7dlmgEKHac4XlDbiX9rux2eEszTqdQIJ4K
-         1Wll+1WKtaPgs3EMoMvDjYCFU1Suq6yOU4Hp1FwWI6BOhHs1HdDYgMsbhwzd+Sg0Ipx9
-         XM/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU2CFkrOrtLjhA65HfjJJgmAqzGSjqbFr1aadGoi7TmNhXVo48Hv9pFurw5H24q+ygxsbkX4ebwaelt@vger.kernel.org, AJvYcCVHKSefhuxW6TycnHRDIF0D6PwkzHDoSPP7JBoSzt3iRkg9lF6mxhDgW4nBn+PDi5epFESscek934l2+fcoaVW8Kw==@vger.kernel.org, AJvYcCVwfSFwCMjFjoyXhz+elXRXM/AMN9uqTiCajTk5JxAJpY9WsrCWz3u5k8PM5yRVcsmFv08uotZqwfGI/PM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXkWyrQqNgT57VPOBYaNsJhH/ksLf22bpB7ZxNxBsiJn3X3iMR
-	ZL7pTMUJb/FS3/RVp3ihGB77I0QJJ6jHzO+PpAf8D1g5HKJjZ1NbLB7HQpKpAt4=
-X-Gm-Gg: ASbGncvsLLathL468EIz478vQir7pTYgd/1TW8tB/HvpqcVzJ4OEz0VIerF69quzc9E
-	oCzAdg+wFT1Z+vs37rlL4Ru/2Tak+ACFUkWzCPsQdoDVUg5tcV1mN4kGJ+OuyZ2g6ftd7RLzSJz
-	K+AaPL/DQD5KqncwtLQ6OvW1WD7/XjLdkQAW56TxImb9XQ5xfvCf6FfvfNVJUfne74z9xRhmJ1J
-	vLqpVKI2QQyvdA2gms0W4yQT3KX0+1RIgxuany4hThSAarr6cj/j+IT99X4QF5ykSQVkNPQ8P0S
-	DUC8WRoDU7eKbAXajVEy3I+at/V6s0iebI5/mtn4FoGtL8QH9l+6SNpzBsqMT9vGW3wEuXVAp14
-	bj0g=
-X-Google-Smtp-Source: AGHT+IH4t9c1giK1O3kPlJL0PRn7mp5PNA7gzv7H2Tv8w5GXPqUFHbxAbvmymLda57tcg7gd3IxW4g==
-X-Received: by 2002:a05:6a00:9a0:b0:736:38b1:51c3 with SMTP id d2e1a72fcca58-7366e75b316mr10877398b3a.10.1741159595256;
-        Tue, 04 Mar 2025 23:26:35 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736881fa8easm449243b3a.39.2025.03.04.23.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 23:26:34 -0800 (PST)
-Date: Wed, 5 Mar 2025 16:26:32 +0900
-From: 'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
-	nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 4/5] Add debugfs based error injection support in DWC
-Message-ID: <20250305072632.GB847772@rocinante>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132039epcas5p31913eab0acec1eb5e7874897a084c725@epcas5p3.samsung.com>
- <20250221131548.59616-5-shradha.t@samsung.com>
- <20250303095200.GB1065658@rocinante>
- <20250304152952.pal66goo2dwegevh@thinkpad>
- <20250304153509.GA2310180@rocinante>
- <061301db8d27$02e0ced0$08a26c70$@samsung.com>
+	s=arc-20240116; t=1741159893; c=relaxed/simple;
+	bh=95hQjzkQgPmB6GdlaDjrGS1l1Wn4Kbw4p82WGKXM0+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PlmhFOzXDkqcKDYCzltj+IHv/tPLF21C/i2uZZINFCMuQVYuh0TY2h95d0WhgKY/xUg8+whzByfLdQemxVXa5dGJMRfa9Yk1t3TgixTcV5PiOxzAg0PmY+BDcqGpxLPJUdasSadAWC+eIXnDloFChtZrwKDQkBjLM+9Y7OumOgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hnNoddCi; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hnNoddCi"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5257Uhoh3004301
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 4 Mar 2025 23:30:44 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5257Uhoh3004301
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741159845;
+	bh=liVnbeunrklLqTSuhTlsju+GyrmoYRAVBsQLrw1di6Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hnNoddCijzVWKzG3yqXdiFrIxKCdqI7oL+LIKCz9EzVmRRTdRvt4wXkECr9quuvEs
+	 ZhAIEsw4meAKUi0luhn6X8SGwu+ottMwRKwakZodxuAVmn8cp7MRxPDxXHBzPOmDOw
+	 XGlLD7qD7M1342G+PNtZJqK3tX3VEbKD1u3/sxtbgF3oR4HMMNciwRiwFgGAfcbeln
+	 UcX43u6k+F+B5/8D5ewKZlNzT6RjOIzT/Cro26X1hhwlAZ0ro7t0Fz8YpuGNe4QYw7
+	 0I8J7wcDPk5tfhdNQQF+eNYn3dHn7Te+pda5URX9cBotHmxfNmLtivYFXWmCyMkHPB
+	 lVcL9YKDFXh8Q==
+Message-ID: <81677e85-ff7f-4986-8e0a-6bf54a63ba49@zytor.com>
+Date: Tue, 4 Mar 2025 23:30:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <061301db8d27$02e0ced0$08a26c70$@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
+ based on build config
+To: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, "Aithal, Srikanth" <sraithal@amd.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+References: <20250228082338.73859-1-xin@zytor.com>
+ <20250228082338.73859-4-xin@zytor.com>
+ <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
+ <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com>
+ <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
+ <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
+ <20250304102910.GAZ8bV9hXqVb5tA9rs@fat_crate.local>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250304102910.GAZ8bV9hXqVb5tA9rs@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
-
-[...]
-> > > > > +		29) Generates duplicate TLPs - duplicate_dllp
-> > > > > +		30) Generates Nullified TLPs - nullified_tlp
-> > > >
-> > > > Would the above field called "duplicate_dllp" for duplicate TLPs be
-> > > > a potential typo?  Perhaps this should be called "duplicate_tlp"?
-> > > >
-> > >
-> > > Looks like a typo. As per Synopsys documentation, there is only 'duplicate TLP'
-> > > field.
-> > >
-> > > Good catch!
-> > 
-> > Updated.  Thank you!
-> > 
+On 3/4/2025 2:29 AM, Borislav Petkov wrote:
+> On Tue, Mar 04, 2025 at 02:18:51AM -0800, Xin Li wrote:
+>> It seems that 'archprepare' works, however I'm not sure if it's the best
+>> choice.  Any suggestion?
 > 
-> Sorry, this was a typo. Krzysztof, we need another change for this typo.
+> Why do you even need featuremasks_hdr as a prereq?
 
-Not a problem.  I am glad we caught this early.
+I'm not sure I'm calling it a prereq; it needs to be generated after we
+have a build config and before any kernel source file is built.
 
-[...]
-> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -113,7 +113,7 @@ static const struct dwc_pcie_err_inj err_inj_list[] = {
->         {"posted_tlp_data", 0x4, 0x4},
->         {"non_post_tlp_data", 0x4, 0x5},
->         {"cmpl_tlp_data", 0x4, 0x6},
-> -       {"duplicate_dllp", 0x5, 0x0},
-> +       {"duplicate_tlp", 0x5, 0x0},
->         {"nullified_tlp", 0x5, 0x1},
->  };
+"perpare" is defined as a post config build target used before starting
+building the kernel or the modules, and "archprepare" is used in arch
+Makefiles.  E.g., on x86, "archprepare" is already used for ORC header
+generation:
 
-Oh here too.  No worries.  I missed this one. :)
+ifdef CONFIG_UNWINDER_ORC
+orc_hash_h := arch/$(SRCARCH)/include/generated/asm/orc_hash.h
+orc_hash_sh := $(srctree)/scripts/orc_hash.sh
+targets += $(orc_hash_h)
+quiet_cmd_orc_hash = GEN     $@
+	cmd_orc_hash = mkdir -p $(dir $@); \
+                      $(CONFIG_SHELL) $(orc_hash_sh) < $< > $@
+$(orc_hash_h): $(srctree)/arch/x86/include/asm/orc_types.h 
+$(orc_hash_sh) FORCE
+	$(call if_changed,orc_hash)
+archprepare: $(orc_hash_h)
+endif
 
-> So sorry for the inconvenience! Should I post a patch for this?
+> 
+> In any case, you'd have to redo your patches - we've zapped them from tip.
 
-No, no need.  I will update this directly on the branch.
+Sorry for the build noise.  Ofc they should be zapped.
 
-Thank you!
+BTW, I'm asking if this build check could be added to Intel-LKP.
 
-	Krzysztof
+> 
+>> Want me to add it btw?
+> 
+> Yes pls.
+
+Sure.
+
+However it needs to change Makefile in the root directory, which is not
+maintained in tip, so I will send a separate patch to KERNEL BUILD
+maintainers and list.  Make sense?
+
+Thanks!
+     Xin
