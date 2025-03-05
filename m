@@ -1,183 +1,124 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191281A840E
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 18:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFE21DD9AC;
+	Wed,  5 Mar 2025 18:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741199325; cv=none; b=XO5qiQWaDCxGp6m1XYqmBumSTswzeRp2MBfY/rT0+AE8XIy0FF2MScsLiM8lDkTMfA1vPcFRFgGgyb/3Soy/thcpjidVe2k8EDhP6mwnhXFObcEN29ui5WCFH+b6Dx7u7p19tVZONvoW5JaoYreDnpXKPLvfgCZluQaqIfjD58s=
+	t=1741200515; cv=none; b=j6Y+bBTgUxnJeXiTMvxJSVbK7yTOa81M1YBuCPQp8flScD8ZUhXnCvpyh4eW1ut/XO/VWOfuA+pm9bbwXHjfuVfZl+rkn+1th8zcRNLVhCqW7F/bTZB+45ic9B32iavYEYq3gt1qyjLBSqRS3b7TqqLSGm0apCrbTnSTCVd51jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741199325; c=relaxed/simple;
-	bh=NXQNTWJeiSFzjPLlih2rgrST7ZU+kwSlPLsGUkO6i4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DnEwAESm+ICznqlLv+xm915BPD1JxZJA1iXU4kG8w4dxMB4pJj9+S+UJhVos5wyt6L4V7XPMEhveIBqNM0Gw20RvBIIXjiK6ikzOCwIW8dzGhZiKlcP55sND029pM/2ZUfqLJe4aIbYRZfKKT8gqZZ98e8CsW9IKd5y/8WF7A/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rawN+bV5; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741200515; c=relaxed/simple;
+	bh=IIRR0j0EA6OllIlVa1v7J4whrRpxr5hO1hZ4BQoMq6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nWRwY7wV4UTgMgvOJoCx1g7KF1MK84Q9wHHP/BHrn4KnVix+mZTggID7bpe3R/bcuROshFr24W95Q701FJz19zLbKAGIIG9xGQfbI2CbOBnyOU8hCcqO0JukG3NqFz9rbrfuaq0qjzbH074ezmUaPXaL+06sJuofN1heWhvWC8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Fc1mXLoh; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rawN+bV5"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2feb9076a1cso12447099a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Mar 2025 10:28:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741199323; x=1741804123; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IlUZuaZqa3JLI6rAH+eSKbr5zwilBRdu2UhafBOdrdc=;
-        b=rawN+bV57J1B+RzCmZ77uY16uIki+f4lQ9ppIpAkWldjdzIMnlkOIEnCKIAOSOoOGh
-         jjkd8TApQJ5n5ruGtpwgOVUfEhGfijcHsYT3n1Lgxot7HWpAEs4033eFWCbcs96WjKh4
-         Shg1NLPB9a7KkAA1MexVwFCjo2lSgPJSSk5PWnfaIKds+1qKqn60LIEYTR8TyCkrCjBy
-         I+H/B5fyojgxbNVaYXHGwkTySQA5rx9rBSLgztiGEDsiThM6W4QD0by8V20kTq2F/k7H
-         WKXJP/nejCrj4h0a4U+O+Cf8sR0SHPVoB1BemiMXZ2cUCARNCV+m5V7+laeDq2CIRyar
-         dQiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741199323; x=1741804123;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IlUZuaZqa3JLI6rAH+eSKbr5zwilBRdu2UhafBOdrdc=;
-        b=Suz6wVsMGfBILE4jQLjeXD9kyjaNjVsTlPS2qxDEuGjrzFiGrIvR20QSpewaqSgy2I
-         FIy/452KFwR3SvCyp61smZDb0UCjjUGF5pZsz4yuSoJHGqt2u2sf2hrVlXB8dmlqeqg7
-         0LJ1gAoXZ/zUikrl6uOxtCneVqhtSLowwMirTFdeyiDjcb29/GadIhg32i4gDUk4iDNR
-         Pk60Sy/E/dP+CsydMmdm9d/B785hJT9ETEqSZ5h5wKQaSCxY/rKeOANyYQi5L+RQ6rzI
-         tmge3wpLFSSTGmJtl1b91CRBDJ2bsE352oBIGffTrEiCqquYOr0CtQvJ7vkP+vhG7OND
-         8xxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoEvimnOHNexcTG/foChB77ZMmjOvjZZ9q8Ay4sy/yHoOkBufns/PLFSO5m0YWu9hgumZOSavLKgcfLWb833hK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq3eUWtru5FLj/J7011m7Bqy00kEuiov2NX+4zKl1QjtLnkZQJ
-	RFQ5SRwqCRM72djWR7cu63vq0jZM1QirRv6DJRZziORAVxY7cUcrF8fCtvzmTg==
-X-Gm-Gg: ASbGncv4+ysJ672ZXn6lInhLxY8vaU0fQAQ4/rzC/kJTyAb1KhyyNkeOH5L1VK7of8U
-	+eQbfAgiM7M4W8Sc9lWRHPEECU0BVBRb5oL22/bZYwMcbzvkh6IKPKLQg8xVRWhT+Z9lJHLuhad
-	FrSZsci+3LVje6wzr/5rhN2wOVjiJHY5YJw4+kQC2iaWuAohST1+DZIS8aYNJfTr2Kz9rHw8GWf
-	AUQPZH9S+We3l2v7ZZ7VSg18z5vz6xymnU6lB2T5hSxt9tys8necbYGdbuWKqVJWQQOcm2Qxn1F
-	tX/xl3T0Q3XvnRUZaiWLnWdbkBpLxK0uiRIioynVsp4cjnz0YdUYyMj9
-X-Google-Smtp-Source: AGHT+IF+TGwksJJjKWkdx/R8tEcgWJtus8Acn/xVNQz9+4wgbYvkHfwKDe4CHqeQdGOj/ucT3x99Xw==
-X-Received: by 2002:a05:6a21:3986:b0:1f0:e84c:866f with SMTP id adf61e73a8af0-1f3494967f1mr8474146637.21.1741199323380;
-        Wed, 05 Mar 2025 10:28:43 -0800 (PST)
-Received: from thinkpad ([120.60.140.239])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7ddf2444sm12428366a12.3.2025.03.05.10.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 10:28:42 -0800 (PST)
-Date: Wed, 5 Mar 2025 23:58:33 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
-Message-ID: <20250305182833.cgrwbrcwzjscxmku@thinkpad>
-References: <20250304171154.njoygsvfd567pb66@thinkpad>
- <20250305173826.GA303920@bhelgaas>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Fc1mXLoh"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 525IlQXt3341787
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 5 Mar 2025 10:47:31 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 525IlQXt3341787
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741200452;
+	bh=Kv2mG8/ef/H2lxxHE6kayNM8PX7zHm64gBQrRGDUHAg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Fc1mXLohNFtkW7wXQe5HLKN/knDyc2mTSzQU061jF/CVHF8z1SAj9Bce3VzPWo8Vf
+	 PgDJAAetP/lrw4zp1Ub1yjTfuCDKiyDEHVyPl4/j16wnOLjr/CWmYpZaAipq4QUc4T
+	 qs4cxklmepnKVd9bJLmh/4RazVKG7PvNNSeYZcmgAsSoWRndsGXsggwqRW219aDp7m
+	 iTjV3MixWSQ3jg5XCU9EFpvE1wkAGnkCey9B6eN1vpGKAG1evU52UUknBQ9Ghm0xy3
+	 /QaQN49vE3So8Hrq1tZkBHQsmDkVmjgj87Us6bUUv/lbYxULxWgSzDwGPQjhAma+yM
+	 mRHR87J1ufp1Q==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
+        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
+        sraithal@amd.com, philip.li@intel.com
+Subject: [PATCH v7 0/4] x86/cpufeatures: Automatically generate required and disabled feature masks
+Date: Wed,  5 Mar 2025 10:47:20 -0800
+Message-ID: <20250305184725.3341760-1-xin@zytor.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250305173826.GA303920@bhelgaas>
 
-On Wed, Mar 05, 2025 at 11:38:26AM -0600, Bjorn Helgaas wrote:
-> On Tue, Mar 04, 2025 at 10:41:54PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Mar 05, 2025 at 12:46:38AM +0900, Krzysztof Wilczyński wrote:
-> > > > On Mon, 3 Mar 2025 at 20:47, Krzysztof Wilczyński <kw@linux.com> wrote:
-> > > > > [...]
-> > > > > > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> > > > > > > +{
-> > > > > > > +   char dirname[DWC_DEBUGFS_BUF_MAX];
-> > > > > > > +   struct device *dev = pci->dev;
-> > > > > > > +   struct debugfs_info *debugfs;
-> > > > > > > +   struct dentry *dir;
-> > > > > > > +   int ret;
-> > > > > > > +
-> > > > > > > +   /* Create main directory for each platform driver */
-> > > > > > > +   snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> > > > > > > +   dir = debugfs_create_dir(dirname, NULL);
-> > > > > > > +   debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> > > > > > > +   if (!debugfs)
-> > > > > > > +           return -ENOMEM;
-> > > > > > > +
-> > > > > > > +   debugfs->debug_dir = dir;
-> > > > > > > +   pci->debugfs = debugfs;
-> > > > > > > +   ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > > > > > +   if (ret)
-> > > > > > > +           dev_dbg(dev, "RASDES debugfs init failed\n");
-> > > > > >
-> > > > > > What will happen if ret != 0? still return 0?
-> > > > 
-> > > > And that is exactly what happens on Gray Hawk Single with R-Car
-> > > > V4M: dw_pcie_find_rasdes_capability() returns NULL, causing
-> > > > dwc_pcie_rasdes_debugfs_init() to return -ENODEV.
-> > > > 
-> > > > Debugfs issues should never be propagated upstream!
-> > ...
-> 
-> > > > So while applying, you changed this like:
-> > > > 
-> > > >             ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > >     -       if (ret)
-> > > >     -               dev_dbg(dev, "RASDES debugfs init failed\n");
-> > > >     +       if (ret) {
-> > > >     +               dev_err(dev, "failed to initialize RAS DES debugfs\n");
-> > > >     +               return ret;
-> > > >     +       }
-> > > > 
-> > > >             return 0;
-> > > > 
-> > > > Hence this is now a fatal error, causing the probe to fail.
-> 
-> > Even though debugfs_init() failure is not supposed to fail the probe(),
-> > dwc_pcie_rasdes_debugfs_init() has a devm_kzalloc() and propagating that
-> > failure would be canolically correct IMO.
-> 
-> I'm not sure about this.  What's the requirement to propagate
-> devm_kzalloc() failures?  I think devres will free any allocs that
-> were successful regardless.
-> 
-> IIUC, we resolved the Gray Hawk Single issue by changing
-> dwc_pcie_rasdes_debugfs_init() to return success without doing
-> anything when there's no RAS DES Capability.
-> 
-> But dwc_pcie_debugfs_init() can still return failure, and that still
-> causes dw_pcie_ep_init_registers() to fail, which breaks the "don't
-> propagate debugfs issues upstream" rule:
-> 
->   int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->   {
->           ...
->           ret = dwc_pcie_debugfs_init(pci);
->           if (ret)
->                   goto err_remove_edma;
-> 
->           return 0;
-> 
->   err_remove_edma:
->           dw_pcie_edma_remove(pci);
-> 
->           return ret;
->   }
-> 
-> We can say that kzalloc() failure should "never" happen, and therefore
-> it's OK to fail the driver probe if it happens, but that doesn't seem
-> like a strong argument for breaking the "don't propagate debugfs
-> issues" rule.  And someday there may be other kinds of failures from
-> dwc_pcie_debugfs_init().
-> 
+The x86 build process first generates required and disabled feature
+masks based on current build config, and then uses these generated
+masks to compile the source code.  When a CPU feature is not enabled
+in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
+flag, i.e., DISABLE_FRED, needs to be properly defined and added to
+a specific disabled CPU features mask in <asm/disabled-features.h>,
+as the following patch does:
+https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
+As a result, the FRED feature bit is surely cleared in the generated
+kernel binary when CONFIG_X86_FRED=n.
 
-Fine with me. I was not too sure about propagating failure either.
+Recently there is another case to repeat the same exercise for the
+AMD SEV-SNP CPU feature:
+https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
+https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
 
-- Mani
+It was one thing when there were four of CPU feature masks, but with
+over 20 it is going to cause mistakes, e.g.,
+https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
 
+We want to eliminate the stupidly repeated exercise to manually assign
+features to CPU feature words through introducing an AWK script to
+automatically generate a header with required and disabled CPU feature
+masks based on current build config, and this patch set does that.
+
+Link to v6:
+https://lore.kernel.org/lkml/20250228082338.73859-1-xin@zytor.com/
+
+Changes in v7:
+* Fix build error with "make distclean; make headers" (Aithal, Srikanth)
+* Collect reviewed-bys.
+
+
+H. Peter Anvin (Intel) (2):
+  x86/cpufeatures: Add {required,disabled} feature configs
+  x86/cpufeatures: Generate a feature mask header based on build config
+
+Xin Li (Intel) (2):
+  x86/cpufeatures: Remove {disabled,required}-features.h
+  x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+
+ arch/x86/Kconfig                              |   2 +
+ arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
+ arch/x86/Makefile                             |  15 ++
+ arch/x86/boot/cpucheck.c                      |   3 +-
+ arch/x86/boot/cpuflags.c                      |   1 -
+ arch/x86/boot/mkcpustr.c                      |   3 +-
+ arch/x86/include/asm/Kbuild                   |   1 +
+ arch/x86/include/asm/cpufeature.h             |  70 +------
+ arch/x86/include/asm/cpufeatures.h            |   8 -
+ arch/x86/include/asm/disabled-features.h      | 161 --------------
+ arch/x86/include/asm/required-features.h      | 105 ----------
+ arch/x86/kernel/verify_cpu.S                  |   4 +
+ arch/x86/tools/featuremasks.awk               |  88 ++++++++
+ tools/arch/x86/include/asm/cpufeatures.h      |   8 -
+ .../arch/x86/include/asm/disabled-features.h  | 161 --------------
+ .../arch/x86/include/asm/required-features.h  | 105 ----------
+ tools/perf/check-headers.sh                   |   2 -
+ 17 files changed, 311 insertions(+), 623 deletions(-)
+ create mode 100644 arch/x86/Kconfig.cpufeatures
+ delete mode 100644 arch/x86/include/asm/disabled-features.h
+ delete mode 100644 arch/x86/include/asm/required-features.h
+ create mode 100755 arch/x86/tools/featuremasks.awk
+ delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
+ delete mode 100644 tools/arch/x86/include/asm/required-features.h
+
+
+base-commit: 32dc26a2f55f71907af0874468298c6ab8a8f7f9
 -- 
-மணிவண்ணன் சதாசிவம்
+2.48.1
+
