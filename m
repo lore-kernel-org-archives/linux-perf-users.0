@@ -1,198 +1,173 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FBE24BC16
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 13:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BD02505D2
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 13:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741180363; cv=none; b=vGiTvPp1P9TTOP99Hrqn9z877/3yh5/39plZwgx7EJDu9En0kRw7jUMx87dILgO1lKaKUkPvZHwZ4uXTyhbHXE9Gwd6a5rSBPEFItWekvVaL8ADwSrOcUA5n81OreUBfqstDFXYqhHQWgkdQkwBUkJGKc+tbWn14F+GCsbRw1SI=
+	t=1741182263; cv=none; b=T1Zu5IOvOkLRcLPW15bfn/rlxtA9x0Asn23ypsX2sQTDr1eQbC8QSLScJ+x/p5iMJLLRayX9hofyhiLIdNjrsiZjSHe33HMPtckQPfzMtAAWg/g6Ag8RiFGsaRmfL/WRkNqdsYPUH/MjYa4rZIS7i+7Ixsaq0ZWhX46MS38z1aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741180363; c=relaxed/simple;
-	bh=niOkZ3yknjy6O15SgZEu1bTRkBCDN86QkzY45J5nUU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DVxISFedINmvHoSK9T0A87Ea7KI91svMJ+Smfn9WyO48jQ2eJsa6AhoSaTo9XCXRZwb/FaKnwvGmyVU5lYTinY1EqNERec5TE7jk2B0x9ZGX5pYL+CMstlKlpB1TT/M5+ezOmjCzyR7uUL7nmuz5+a+Sr5cCGWred2jZ14cRXOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQnGzWp1; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741182263; c=relaxed/simple;
+	bh=xrrAddc0Dux542IExfOiJL20FzbLUh8sACsEll+OBQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=J5ibtI3ESFKkMuReclUh4Prrsu3v6S5XXb2+DUpslZuD+8k6mMqjgM7dneznxdUGYkcjKI9G/ZL2hgrY4U41j/qlMaSQzmrPDhvXBto5eAwmORajEwSKir2tUvmI3bq1QQlJxLPaIGREStY2Z6EtpMivxmikQGn0M7E66+BB8AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BkBtHD6j; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQnGzWp1"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4750a85a0ddso210761cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Mar 2025 05:12:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkBtHD6j"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso3603838f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Mar 2025 05:44:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741180358; x=1741785158; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
-        b=bQnGzWp1S5Lnz9b7S+X9iWyT1enphmYxyeyJwj5VVMYJnObuLGzhvMkG9uBL3XQ78b
-         Zo3JrmBI4ko2x+OO+iOQpQBqfBgjcS472wlJfVY900sBa3almRwnfbIdcWBcdXKwsieo
-         7k0oWhWF732whbIyH4GNsIMNo9o7b80aqltg+jU0O65LkiOSm3+oSVpH3YoRptaQnRij
-         NWBaZfEqos2npnT6v52bnbTpKCy19r6KPYKzleLdok7ZrEkR9SnnqDT5T6ABVfKQ+2Iz
-         NKN7Fajx9PPEYnKJdu5XQV9dDUNkJGUpIwD5ACAowRHjrTqUH64V59DpzL+Y1S7JzlY8
-         4rYw==
+        d=linaro.org; s=google; t=1741182260; x=1741787060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2Yuyf18O1C9beAnXo5r2fUqE9fJzKJV0tNnseaOAJ1I=;
+        b=BkBtHD6j60IDzu33eU+NVm/9jJSPtB5JKPUjFlnDy9wSCKQph1quInznsIyVl6+1y+
+         ReukChC0MRf5f4Oat03PtE+shK2Z5TBO+pC6B9rHbtCu6iE4orAXyYYSsbBirAZQh2AE
+         EJhkBH4q+EDi/hwnWxlQm8qmum+EQpyJI2Gk1vhEhc703OGsAAtb6tJrwutIjhALXiVJ
+         vhL2l8VoVjCFPDgQgtEYY/A8i0EYP1vAQVdA7/1yD111QKofYoPBEX1E/SAxmLY0c1dA
+         GdLg7DMt78AkHlIiS5WD0QgYIH2j7Iz/Kcw1xYNwHrTUxKsumU4yCC4WTi1BK5OjnGlA
+         V9AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741180358; x=1741785158;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
-        b=G9AaJxs0Ejaems0htR10Thu2AbD9THZ4iM8UxilE+TMFfLESDpA4YmH+Q/I1vFF8k+
-         63z8XEykJ5Sd1/SMtOR75rsOYESANl8GF5HVjqmsdXt8fPbis/QYhG8TTZK9yH8MN8ie
-         kLIeTTUhUuHBIzmizE47QLjLHmuiH7uPv5syvtA3WCQUSHGRlfy3BKW4hKhlKkOlc/1z
-         6VWNdV23vM0zYLGj9n+s12LZ9I5oUwF5d10uw+BWyXH7RJkWESinF2l0+9UYxoFNcs3p
-         TWcspCMMbiU8HyA1ixMLa+NZOYSCRypMC7fR1XoeWBI5DQluQmwXnu5bcAUhDE3y4KdE
-         o40w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqwXesy4VVT9AKW4toTvwt2fSCYk6MaIZMIbC7ZAP6L1eUkIgCKHFMqLFo9nTgz0kty0x75EkIIspwX1lclOjy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlHdc+Scset7Dn5jUOB24eTLlyxWC+TbE9MZfr3RW73lAwqw0z
-	FdA8T2OVFtaFvSQjEKZh/mzoQaFaWM2HdDgDG1YUaa0ROOe+qdjHFIxciuMooC8mFjDq9OTyazJ
-	VsLxa/GY2f8tdJhPqQUryehpCmCcAH8FT2ZYU
-X-Gm-Gg: ASbGncsWi4LZUFZjTed2BkzgGSsKfyYac7NWnOPJcnOJTzPIALo8ZslWXfOC7h4gOAu
-	zTGB0adzVzSViOOeVyIC82GwBUP32TRx2PZvNeW9SHfegh4nUJydNLhDG89mOVINdgS3ycZjE4e
-	ebb7CPC6k5pNJsJb61sV8KMYkLx6wVoRFDaFUwFNZ2oP75RR1ysdBzIba/
-X-Google-Smtp-Source: AGHT+IFIn6b7M1PNu9NZZ9KBzOuRO4deZPOixhL9M73rMvQkDHUtfUtYPha+8DdwHlmaLHcT+urAybKKpNAnQK1YFdU=
-X-Received: by 2002:a05:622a:110b:b0:471:f560:27dc with SMTP id
- d75a77b69052e-4750cae2127mr2406081cf.27.1741180357471; Wed, 05 Mar 2025
- 05:12:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741182260; x=1741787060;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Yuyf18O1C9beAnXo5r2fUqE9fJzKJV0tNnseaOAJ1I=;
+        b=GildBV/AEZTi+5NdkuNyX3YzbxIzS5dpnLQ9NdBK27DXIEw1NqIWNEmJNqktaidmJU
+         4UjGKWRM5TCTdeXS8gND/izMFervx45jnnwPGXEzYSx6OVQ1iQbEn/GcbITvqN0vbtKb
+         GFJHncpojAu+/hzII+IdRoEzaeqnClTOh7xdYqj2x/drXg9cV6ETUUYIU/amO9HxmKUT
+         aDrc+viFCKKEWIo1X7fOSGG6DKLkxOaWgHyxYGq1HTYSzF9Ot9YPg/tVGwAaxE7E/KwQ
+         8COi25FiCGtU5jOef6Pqq02bhCzuCaWN5L/i+E8X4bMwzUnapx1p0wyM1+nIFcff4hc0
+         WtaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqKmtxReDsUarc2lSq+4AWIeEvdCQQL5eHxXA4t4nG5xzK7OnOm6Cpp1I11BdsvsF+AL1/37XasrI0RDdduFCV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAebR7DWX4B6q4f81TfVtxHJWIftX9xaiBWaidBfQx3yfw8Z5r
+	ekX8kEVb2OjeodFv4mop65f8HxxQQFxymwNlGrPPUI6pjuHnhj7+KCmVBUO4g48wJkWwHxoPPyX
+	YZEw=
+X-Gm-Gg: ASbGncvXVg0YlyLMRL/kvY8+YgaUX/bX6mcncTGgIu/Clyl33g39ICCmIL+CnaxLzr2
+	gJFi/MlPRRfy6SK7w+c+W5jBm5HELw64aKys2gyhaqMt2mEQQOCZn1chrMwMDYyxjAbXGLS0W1W
+	nC8qUwInF+cw+o1V0VUpKatpbgOfGyXjKLtCLXOCtAU/wT/FZ3mCuP5UVaBWu0xXI2tmDwKW4mH
+	E7Kz3E3T5j7EScUT33kyFFN3MR+Tz80wqc0qNvMVb+bXepOecwz9h95P8n8HN6bCRumHrSdOJRx
+	UfM64ugK62e6r1acLZjVjUHqY0w9apefvma7wufairVpV/FeS4Jer24=
+X-Google-Smtp-Source: AGHT+IHMWvLxl1WDyzDe67fQu7NHQ3gH4J0xuhCCrvkx6C7VPkprgfxVwtlDiiEjL9nH+nz8AmxYVQ==
+X-Received: by 2002:a5d:60cc:0:b0:390:fd23:c145 with SMTP id ffacd0b85a97d-3911f7bda8fmr2112624f8f.36.1741182259933;
+        Wed, 05 Mar 2025 05:44:19 -0800 (PST)
+Received: from [192.168.1.247] ([209.198.129.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd430c2e9sm17754905e9.33.2025.03.05.05.44.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 05:44:19 -0800 (PST)
+Message-ID: <e2ea3776-12d2-41c2-9b7b-836c7c249c45@linaro.org>
+Date: Wed, 5 Mar 2025 13:44:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com> <Z8K2B3WJoICVbDj3@kernel.org>
-In-Reply-To: <Z8K2B3WJoICVbDj3@kernel.org>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Wed, 5 Mar 2025 14:12:25 +0100
-X-Gm-Features: AQ5f1JrEWoe__i5J-gwzMxiuWZ9pJYk4XLPMWAQuPYUSu5vOhjZQNejm22RSyYE
-Message-ID: <CA+i-1C06Sunj0BmFON=MbWBK6ZDt_=K4P3BHChRBYyxXqEkQ2g@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 02/29] x86: Create CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	Junaid Shahid <junaids@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] perf parse-events: Corrections to topdown sorting
+To: Ian Rogers <irogers@google.com>
+References: <20250305083735.393333-1-irogers@google.com>
+ <20250305083735.393333-2-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, Andi Kleen
+ <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250305083735.393333-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 01, 2025 at 09:23:51AM +0200, Mike Rapoport wrote:
-> Hi Brendan,
->
-> On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
-> > Currently a nop config. Keeping as a separate commit for easy review of
-> > the boring bits. Later commits will use and enable this new config.
-> >
-> > This config is only added for non-UML x86_64 as other architectures do
-> > not yet have pending implementations. It also has somewhat artificial
-> > dependencies on !PARAVIRT and !KASAN which are explained in the Kconfig
-> > file.
-> >
-> > Co-developed-by: Junaid Shahid <junaids@google.com>
-> > Signed-off-by: Junaid Shahid <junaids@google.com>
-> > Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> > ---
-> >  arch/alpha/include/asm/Kbuild      |  1 +
-> >  arch/arc/include/asm/Kbuild        |  1 +
-> >  arch/arm/include/asm/Kbuild        |  1 +
-> >  arch/arm64/include/asm/Kbuild      |  1 +
-> >  arch/csky/include/asm/Kbuild       |  1 +
-> >  arch/hexagon/include/asm/Kbuild    |  1 +
-> >  arch/loongarch/include/asm/Kbuild  |  3 +++
-> >  arch/m68k/include/asm/Kbuild       |  1 +
-> >  arch/microblaze/include/asm/Kbuild |  1 +
-> >  arch/mips/include/asm/Kbuild       |  1 +
-> >  arch/nios2/include/asm/Kbuild      |  1 +
-> >  arch/openrisc/include/asm/Kbuild   |  1 +
-> >  arch/parisc/include/asm/Kbuild     |  1 +
-> >  arch/powerpc/include/asm/Kbuild    |  1 +
-> >  arch/riscv/include/asm/Kbuild      |  1 +
-> >  arch/s390/include/asm/Kbuild       |  1 +
-> >  arch/sh/include/asm/Kbuild         |  1 +
-> >  arch/sparc/include/asm/Kbuild      |  1 +
-> >  arch/um/include/asm/Kbuild         |  2 +-
-> >  arch/x86/Kconfig                   | 14 ++++++++++++++
-> >  arch/xtensa/include/asm/Kbuild     |  1 +
-> >  include/asm-generic/asi.h          |  5 +++++
-> >  22 files changed, 41 insertions(+), 1 deletion(-)
->
-> I don't think this all is needed. You can put asi.h with stubs used outside
-> of arch/x86 in include/linux and save you the hassle of updating every
-> architecture.
 
-...
 
-> If you expect other architectures might implement ASI the config would better
-> fit into init/Kconfig or mm/Kconfig and in arch/x86/Kconfig will define
-> ARCH_HAS_MITIGATION_ADDRESS_SPACE_ISOLATION.
+On 05/03/2025 8:37 am, Ian Rogers wrote:
+> In the case of '{instructions,slots},faults,topdown-retiring' the
+> first event that must be grouped, slots, is ignored causing the
+> topdown-retiring event not to be adjacent to the group it needs to be
+> inserted into. Don't ignore the group members when computing the
+> force_grouped_index.
+> 
+> Make the force_grouped_index be for the leader of the group it is
+> within and always use it first rather than a group leader index so
+> that topdown events may be sorted from one group into another.
+> 
+> Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Closes: https://lore.kernel.org/lkml/20250224083306.71813-2-dapeng1.mi@linux.intel.com/
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-...
+Testing on Arm seems ok, but presumably this doesn't change anything 
+there because arch_evsel__must_be_in_group() is always false.
 
-> > +++ b/include/asm-generic/asi.h
-> > @@ -0,0 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __ASM_GENERIC_ASI_H
-> > +#define __ASM_GENERIC_ASI_H
-> > +
-> > +#endif
->
-> IMHO it should be include/linux/asi.h, with something like
->
-> #infdef __LINUX_ASI_H
-> #define __LINUX_ASI_H
->
-> #ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
->
-> #include <asm/asi.h>
->
-> #else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
->
-> /* stubs for functions used outside arch/ */
->
-> #endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
->
-> #endif /* __LINUX_ASI_H */
+On x86 I ran into the topdown metrics not opening on cpu_core at all, so 
+I'm not sure if I'm able to test that the original issue is fixed on my 
+machine. From looking at the link the issue is that the ungrouped 
+topdown event is "<not supported>", but I always see that regardless of 
+grouping despite perf list saying it exists:
 
-Thanks Mike! That does indeed look way tidier. I'll try to adopt it.
+  $ perf list --unit cpu_core | grep -i topdown
+   topdown-bad-spec OR cpu_core/topdown-bad-spec/     [Kernel PMU event]
+   topdown-be-bound OR cpu_core/topdown-be-bound/     [Kernel PMU event]
+   topdown-br-mispredict OR cpu_core/topdown-br-mispredict/[Kernel PMU 
+event]
+   topdown-fe-bound OR cpu_core/topdown-fe-bound/     [Kernel PMU event]
+   topdown-fetch-lat OR cpu_core/topdown-fetch-lat/   [Kernel PMU event]
+   topdown-heavy-ops OR cpu_core/topdown-heavy-ops/   [Kernel PMU event]
+   topdown-mem-bound OR cpu_core/topdown-mem-bound/   [Kernel PMU event]
+   topdown-retiring OR cpu_core/topdown-retiring/     [Kernel PMU event]
+   topdown.backend_bound_slots
+   topdown.bad_spec_slots
+   topdown.br_mispredict_slots
+   topdown.memory_bound_slots
+        [TOPDOWN.MEMORY_BOUND_SLOTS. Unit: cpu_core]
+
+
+  $ sudo perf stat -e topdown-retiring -- true
+  Performance counter stats for 'true':
+      <not counted>   cpu_atom/topdown-retiring/           (0.00%)
+    <not supported>   cpu_core/topdown-retiring/
+
+
+  $ sudo perf stat -e topdown-retiring -vvv -- true
+Control descriptor is not initialized
+Opening: topdown-retiring
+------------------------------------------------------------
+perf_event_attr:
+   type                             10 (cpu_atom)
+   size                             136
+   config                           0xc2 (topdown-retiring)
+   sample_type                      IDENTIFIER
+   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+   disabled                         1
+   inherit                          1
+   enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 151404  cpu -1  group_fd -1  flags 0x8 = 3
+Opening: topdown-retiring
+------------------------------------------------------------
+perf_event_attr:
+   type                             4 (cpu_core)
+   size                             136
+   config                           0x8000 (topdown-retiring)
+   sample_type                      IDENTIFIER
+   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+   disabled                         1
+   inherit                          1
+   enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 151404  cpu -1  group_fd -1  flags 0x8
+sys_perf_event_open failed, error -22
+switching off exclude_guest for PMU cpu_core
+Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, 
+falling back to no-inherit.
+Warning:
+topdown-retiring event is not supported by the kernel.
+
