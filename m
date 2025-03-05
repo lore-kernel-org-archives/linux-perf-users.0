@@ -1,145 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F1C4C8F;
-	Wed,  5 Mar 2025 01:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4676313D246;
+	Wed,  5 Mar 2025 02:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741138895; cv=none; b=ag4hMxXxZ4FcwSARiMbakYDt2SI+YzeqRtu4KB6FCtTovSBKB6g9bn/wpZNu3AGGakBUX9MtA16nxsdgQLAMTpdELPQ+iWgrNfK3du40VmLdrggUS5Hoh0pMEbuHb15B7R4eDaoKDajv0Yvn8qaK9nDbe6ZoirQVn/huTY0E6ZE=
+	t=1741141909; cv=none; b=hZQnwVMWt11rvOqbTv33TPVBiHIP9wF/n1cAazlJ9o54uHYeC2j3OkrXKkxw53MvwKNAfjwFCggMKj6YZ4ZQ4elhb6JyFMlWzFGjKIQKxVbI4yF1P82HqhtcEjoAQlBDAvfN37AWHHGkSSzmva1Knyb5iCoP6dOZA+tosIglODU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741138895; c=relaxed/simple;
-	bh=we7gVSDwOrHiHsKUcyKkJPqMAz8+16UeGux/dgmOjpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ur3M+Ll9xYlGH63FkHAkXV9G29gNxm0gfRPFYyGiR+r+ynR2HiA9g5PghbTQrXcaVzf6ya6mgZ+pYtG3wwWCqF3bYsUqfU/mJHSxu3UTyh/h6UHjwatYKmokOE5/1uYmWaOoTluKQJbimY48IUQPOdlHAnoL0vnh2zOlABBDYxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJTIn91g; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741141909; c=relaxed/simple;
+	bh=AyUtY8EH5UDNbyxsA8HRMam21nN63MmotaxvrpbIjW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H4OxPgC6CkXdluPdj4WOu67PvmXjWtyt8ONg0Z5Z7GqMlVpZHnEuuOQjDjSa8cSmL28ZddQyHmAcOKSvoVT3mv3YjF7+j8/yGCmCInD0cbJa8DyV/paWirsPEGJkOXYBMTKp2+54O2ct6qf3UI4NWzX+1ctQvloLDadpCTqYsqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=WgKX1Gtb; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJTIn91g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741138895; x=1772674895;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=we7gVSDwOrHiHsKUcyKkJPqMAz8+16UeGux/dgmOjpM=;
-  b=jJTIn91ghjcMGk+CeedZJh8a3XJLEVfmdqB7N62sruZioF1pn+CElGQw
-   9VXb54uLxpNglW3adAOxIcLxQAJIXj9Hj8vaB8jRKUda/aD8+2XfXsK9g
-   +g/3Dt8a37AYifNrRhgyAP//ku1AZX4T4l9+RQVrgZIc0ga/6zzwVvlv9
-   pA3xCt5pA8olfCZya3zdGmMxOS4r7r5cFSFshKi4IcqRdE4XznE/GT9oO
-   lyiKqd2NU9qy5aKXNgHM37MYf9BjI5Z0NDR69UTy+46ATPZW1oxyjXKji
-   i1QkD3Kp6J/86uAOre+vZ4WO/r4B2bXjLUvnDTXAw4KaE7zFK4rgbcZUi
-   Q==;
-X-CSE-ConnectionGUID: IT8f9VSuSVGdiq7cqq0ncQ==
-X-CSE-MsgGUID: UNj7ZPX7T6Smc6s/MeJUsg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42109144"
-X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
-   d="scan'208";a="42109144"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 17:41:34 -0800
-X-CSE-ConnectionGUID: 3szEw2DeRnKO40PJSlYBzQ==
-X-CSE-MsgGUID: k2M+gLJBTPyeqXesPisk0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119050926"
-Received: from unknown (HELO [10.238.2.135]) ([10.238.2.135])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 17:41:31 -0800
-Message-ID: <0496c7b0-098c-4b2f-9c71-a258a398c5a8@linux.intel.com>
-Date: Wed, 5 Mar 2025 09:41:27 +0800
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="WgKX1Gtb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=kh3PdUqQv4yuFnWuzC0+SLXgYE4BaGgxZrXdphcypfg=; b=WgKX1GtbiuLCealw
+	ivaJddyw16qqhG56IqKBFKjkk9qnEWfpdnQU/DSpkvNQD7VMtkKtHq9JKPnklDVZtiTnR7UgQg8Za
+	MRJB5m9/ps3m+Hq3WqcreAHTrKNkeQrNn2rMvzINnW4OlMn7WZejBB0V+g0UPk8PGJgwW5sUb/PqE
+	MFEmdXkKpn4YtIu4TiVm8IX6Ct5CxL2uuEPunLv66PvI3vyb418NKQHOmZEGfM/nuV9zg3zZmER1g
+	GmsFLbj4x9qe4jVQT2lUyA1mp8im7BwJeqEQ9Ieb6TnsZdgmHtdvOWWWKq41VgrQVNSkIlj8h1vrC
+	cPRta8Jb7ypIW7T6tg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tpeXk-002ic7-1H;
+	Wed, 05 Mar 2025 02:31:32 +0000
+From: linux@treblig.org
+To: irogers@google.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 3/6] perf util: Remove unused pstack__pop
+Date: Wed,  5 Mar 2025 02:31:17 +0000
+Message-ID: <20250305023120.155420-4-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
+References: <20250305023120.155420-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 13/24] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-14-dapeng1.mi@linux.intel.com>
- <afdc5b07-9795-4049-8941-c2e3d2bbaa87@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <afdc5b07-9795-4049-8941-c2e3d2bbaa87@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-On 2/27/2025 10:06 PM, Liang, Kan wrote:
->
-> On 2025-02-18 10:28 a.m., Dapeng Mi wrote:
->> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->> should be dynamically configured base on these counter and precise
->> distribution bitmap instead of defining them statically.
->>
->> Update event dyn_constraint base on PEBS event precise level.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 6 ++++++
->>  arch/x86/events/intel/ds.c   | 1 +
->>  2 files changed, 7 insertions(+)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 472366c3db22..c777e0531d40 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -4033,6 +4033,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>  		return ret;
->>  
->>  	if (event->attr.precise_ip) {
->> +		struct arch_pebs_cap pebs_cap = hybrid(event->pmu, arch_pebs_cap);
->> +
->>  		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
->>  			return -EINVAL;
->>  
->> @@ -4046,6 +4048,10 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>  		}
->>  		if (x86_pmu.pebs_aliases)
->>  			x86_pmu.pebs_aliases(event);
->> +
->> +		if (x86_pmu.arch_pebs)
->> +			event->hw.dyn_constraint = event->attr.precise_ip >= 3 ?
->> +						   pebs_cap.pdists : pebs_cap.counters;
->>  	}
-> The dyn_constraint is only required when the counter mask is different.
-> I think the pebs_cap.counters should be very likely the same as the
-> regular counter mask. Maybe something as below (not test).
->
-> 	if (x86_pmu.arch_pebs) {
-> 		u64 cntr_mask = event->attr.precise_ip >= 3 ?
-> 				pebs_cap.pdists : pebs_cap.counters;
-> 		if (cntr_mask != hybrid(event->pmu, intel_ctrl))
-> 			event->hw.dyn_constraint = cntr_mask;
-> 	}
+The last use of pstack__pop() was removed in 2015 by
+commit 6422184b087f ("perf hists browser: Simplify zooming code using
+pstack_peek()")
 
-Sure. Thanks.
+Remove it.
 
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ tools/perf/util/pstack.c | 14 --------------
+ tools/perf/util/pstack.h |  1 -
+ 2 files changed, 15 deletions(-)
 
->
-> Thanks,
-> Kan
->>  
->>  	if (needs_branch_stack(event)) {
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index 519767fc9180..615aefb4e52e 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -2948,6 +2948,7 @@ static void __init intel_arch_pebs_init(void)
->>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
->>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
->>  	x86_pmu.pebs_capable = ~0ULL;
->> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
->>  
->>  	x86_pmu.pebs_enable = __intel_pmu_pebs_enable;
->>  	x86_pmu.pebs_disable = __intel_pmu_pebs_disable;
->
+diff --git a/tools/perf/util/pstack.c b/tools/perf/util/pstack.c
+index a1d1e4ef6257..141ffa129c69 100644
+--- a/tools/perf/util/pstack.c
++++ b/tools/perf/util/pstack.c
+@@ -63,20 +63,6 @@ void pstack__push(struct pstack *pstack, void *key)
+ 	pstack->entries[pstack->top++] = key;
+ }
+ 
+-void *pstack__pop(struct pstack *pstack)
+-{
+-	void *ret;
+-
+-	if (pstack->top == 0) {
+-		pr_err("%s: underflow!\n", __func__);
+-		return NULL;
+-	}
+-
+-	ret = pstack->entries[--pstack->top];
+-	pstack->entries[pstack->top] = NULL;
+-	return ret;
+-}
+-
+ void *pstack__peek(struct pstack *pstack)
+ {
+ 	if (pstack->top == 0)
+diff --git a/tools/perf/util/pstack.h b/tools/perf/util/pstack.h
+index 8729b8be061d..712051b8130f 100644
+--- a/tools/perf/util/pstack.h
++++ b/tools/perf/util/pstack.h
+@@ -10,7 +10,6 @@ void pstack__delete(struct pstack *pstack);
+ bool pstack__empty(const struct pstack *pstack);
+ void pstack__remove(struct pstack *pstack, void *key);
+ void pstack__push(struct pstack *pstack, void *key);
+-void *pstack__pop(struct pstack *pstack);
+ void *pstack__peek(struct pstack *pstack);
+ 
+ #endif /* _PERF_PSTACK_ */
+-- 
+2.48.1
+
