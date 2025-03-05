@@ -1,165 +1,222 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2D019258E;
-	Wed,  5 Mar 2025 04:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8881A304A
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 04:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741148772; cv=none; b=AlHfL9xlAxyPecP9mIltsp7KyahAwQpvSE7gyrD/So8bEO9gk35I/f9hAW7WL9WnOZIm0C9ldHJVtIfDHLEIis4hTtLD991GjHH62vZRn83W4Av6ns6OrdvMkpki7N1exOwQtDhszkzJNIwZgbYou78ag/37pA13KGG56uEauVo=
+	t=1741149022; cv=none; b=nLjlFw4JVngDTblsEe7ejBcY8twT0dXC4OuFQuK03Nepb9kq635BudL1u7MXjoeZLwzUymKp+jBkaEY46onXWDhVlVeJx4tZvMOl+CZZGvijz5cAxAXqn6/K0ZorZxPQ1l2IUxSINlQBRjrN2r3xp8cIJ66ATiKvIWwJF//1VzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741148772; c=relaxed/simple;
-	bh=Ma9rbC5Lm1hcZ0TRRXqeaYpaIEccVc7d1Sur+2dI6bA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XvIxKhxEGJMx2NFysXiQe8V5L8LasOke40ic2bNZPRk+H1rl8KLX1nEazUIH2yJO+VBiYE/TQ3zccYGnOKcCEJM77t92BBqr8Vo9V0oFZE0xPt+b6qQjYqua1cfdeF/M7NYbDD+kbq8DAuBxmDpTYO6Ovq/SVvrmIad8kdXlzOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZZ5iXXn; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741149022; c=relaxed/simple;
+	bh=O6/s2m8RxEllylHpZfEA1JZvaM68FhhtYDbILLNNmqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PyXKU0mkpDICmf7HqK3Z05GkoN2Y5/pvLBbNAQq50/XgQ7kdqZIw0+xy8hVgmV30sBSppt8l+avHe3Re9WKWam3s8WMa61yn0MXWPkXAQYy9vh7I+lkvUma8HKM/UlOimST8bBC5PWaISS9wlcYKkrkzAKLuBdumkGDjQJ18RUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=na/RtRd7; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZZ5iXXn"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2232b12cd36so87521765ad.0;
-        Tue, 04 Mar 2025 20:26:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na/RtRd7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223a0da61easo96125ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Mar 2025 20:30:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741148770; x=1741753570; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lDbPu0GoIrMl1ekfCD/PMILNRbV5SLzILd3Nw6UHcyw=;
-        b=BZZ5iXXnZkls8MGlK7mGB0Vi/yERJ2Uzd4k/d9yW5GwfiSpsFny1oFxvV3wHSlbviH
-         +7exKVdMrxGmUi44mU2VEY7IOBItWyB62PtcttjSLGFDl3k1J8wZQeC+kWu0cooEG3Wm
-         4E6xUeSU2O++VkFIrURU9cPTz328Is9WLEpErRk28mv0m3NeqMHhgTO3ALXhxZBHBN+E
-         /pEo0f36HPsv1YBxEBlOLpmPdoRY8G0TlH92EmTo9WHW72apzBsPR39b/IlgyVSYbI/w
-         KzZeyIBxx18VASYFBkfH9F08lMsvSh68vUzpR+uexE/ZWFL1mBWn/M2WZQrq9m65pwao
-         SQ1w==
+        d=google.com; s=20230601; t=1741149020; x=1741753820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AqAVkWXON7xuHQOFv96KRGgH0wCs+/tXGGMj9KqfDeI=;
+        b=na/RtRd7tqfTjZRtK3g/RDptCGtcsO7XHnCbqKDG9kGIfqiMMIs+EG9mr4ktRpaNDX
+         c9ozLYEb69BUU7EDQvrGm4sQiuAoAyfyYCiV8Q3NjQziLMa6fz15fFUAbhocjnqRtShj
+         bt/FZhBuHtWCoqTdHkYNaW2cyvOxqRcIe6Jl6m3BxTkHiJYImuyymJ0oVISu9k4fwSfz
+         Q7Vp7fbeZVkAuQqA9dHtVb+XnDO5Gh/I1O6XttIPq7usUfusdw3RjbWGej+N+Kv2DEfD
+         CN5lfL/ztNS1LCR+vS/uAxy6MIlmxAyBjalC+M9XF3CwbvC8tijUsOXTAzTllKzp6sRg
+         T85Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741148770; x=1741753570;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDbPu0GoIrMl1ekfCD/PMILNRbV5SLzILd3Nw6UHcyw=;
-        b=I3t9u8B7WJ865plYyZTuxLDOy3G4wtmZjqCC1/MLQv/DqYsqm+ftspFB+jaqEcr831
-         zipaSibBmXLvYFUoAiEg3l63vTSWGsBkG3nMww+PfOeXiSq0oRt+EzRtXsexbm27skZ8
-         YvykqSwTQMoWxq7fpWFSu+LlBfPEZENY2M/W3Z4OFBf5vdhTxEMMHgqApWryMD8EHbXY
-         a58n2qvxZbUhBWOUpPFsD5D5QcH+wn4ZC2rTRCzYQ29mkhlOIVtWhQTXoBe8wFIoZgSQ
-         bfyEVARvBqZwIJkQR7cHu1efG5P8lWUw4RUNQLVo15BnMa0lySwgYxUDcAlXdHsLtJKA
-         Q31g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBKsNwWNI5//Gq6hUoBsFTUShhckCR3FLbjwstgfTw8G0m6oIRuJOgGruuLNcX1Lo45cAD9HRv+9Bt6+Y=@vger.kernel.org, AJvYcCXh5prK6wAUZcBfIyzMeVmhDWdlbWcWU2VcymUNaHy8SW29AD6UDX6kwDrxiOfXGrdNAONM5pPw0yehjHtzYhB3JA==@vger.kernel.org, AJvYcCXnfk+OTmOGsJYUCCl3iKWXiBlDlLJQcVuA7zzss3U5pE27QQPiwBRwzKCYbGT6qKQVpm39GUhdKopj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ+TU1jxbU1MSr/6KjZSfRKfLWMT/XOn+XOt87MO2AuWZSfhqj
-	3kQTzTZxcKkgpYwNr0bPaGLogKJkaFRqrHfG+Qye70ZQPEFddL8w
-X-Gm-Gg: ASbGncvn0gs9unvM5E3GI7EgzB+4duXNkpEUsxtVjNd/vXUuK+UFRuLDG/MYc8qRMjT
-	qHwlKW0FhuX+dDoeOQKPDjgDbZq8oKtW+zuwsxLT7mNSZSTsTAQvtR2sH56NvlZjgfG8e6VCplx
-	cPgN7YIudAyMbRWG8w0UGy1O3XgL8MGxWtsUf/QUAVl62MEgfUQxQXoNY6r7h+Uqr8Uqop53cZ+
-	ttK83CSex3uI9e8tMhJxRozb7XipWgnJ6Dbim4hqUDZb70UfvqgXjDWruvOWkkH67ZlRPdgsOBz
-	3ahjSpuFIUL5lUb0ehno49wfwCsB4uYlyZ1iUA==
-X-Google-Smtp-Source: AGHT+IE5O1ZVuOwmp//oQrwhNgSp7QZxuUhf3G7FCkClB32cJAQnuuVkN/3c86LEBjvOfGY+rzBunA==
-X-Received: by 2002:a05:6a00:23c4:b0:736:3f4d:4d49 with SMTP id d2e1a72fcca58-73682b8b965mr2481120b3a.8.1741148770219;
-        Tue, 04 Mar 2025 20:26:10 -0800 (PST)
-Received: from debian ([2601:646:8f03:9fee:cf74:c30d:9ff:fbc6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736560f5e6esm5099715b3a.104.2025.03.04.20.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 20:26:09 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 4 Mar 2025 20:26:01 -0800
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: 'Fan Ni' <nifan.cxl@gmail.com>,
-	'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in
- DWC
-Message-ID: <Z8fSWcR_aXyxmFEZ@debian>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
- <20250221131548.59616-6-shradha.t@samsung.com>
- <Z8XuuNb6TRevUlHH@debian>
- <20250303194228.GB1552306@rocinante>
- <Z8YZEALV71PUkXpF@debian>
- <061401db8d28$5f0a4b40$1d1ee1c0$@samsung.com>
+        d=1e100.net; s=20230601; t=1741149020; x=1741753820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AqAVkWXON7xuHQOFv96KRGgH0wCs+/tXGGMj9KqfDeI=;
+        b=ahhCR+RaZk1qqhVDn+iTB5wZGX8G4gzolru01OpFWa47FFHQn/ywV3PcztnQ2K0fh3
+         Biiu+yff2OFtRxze4q2Ijss6iRzDxxMiKvw9+OD1ZG5tDrpB094KifR6i7SaKZCcVGW2
+         wvL2QncjI/bZNrAV5npo8jiw83kW77xRF8tVHQJih9FM0p5tmDb6FbO8MtDYP7sVKgG2
+         w8xYuNvmBUJM+3CaCcX8qrHT8BFy5Rg94oFGRLMq/PEU4QsRL2kQ0qZmNrHhlSTUV6pN
+         kdJaxJXTG7BJ6OLTHT9+ghPhLdSx/crBvwrJ8IfEqe6uIpee4u+okpEF9qKf2ilR2mwn
+         5IlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrdyX7/AUPyYsHhq6otZnSeznCPfy51umUAOf+yxaffXI8R464iqCENZhpZSKHZ5cXKGh/Y2lCFDmH+g06wlaB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbdROXzHKsDEiDHmDgrYDjAjKxt1Wq2dFjoFNyTELM5FDVrfGg
+	UI198vXKRtkImIF0/zCl1wSxsKuo59t73g9pCSAlagJJo85luqGcAaWzzh69j51D0ZwmZlQdt2f
+	4TgupwDHLVNMg97aSAquffswK8HFtD2sOkmvw
+X-Gm-Gg: ASbGncuoxNbQXXSiWoqTk+CYo351V+u41MNT+MfC7YpUv0TfWVJKtxS6K5ZVfTwaqoo
+	bFF4ZfIv2jKhBsrxUzUX1BAZMIaotUUXWUsnOB1pASnzePk2P2RarhIdyBz3JdSlroIVxKK93G2
+	XavH+lVfK6S+xBJ+hL7zntmOCW1ec=
+X-Google-Smtp-Source: AGHT+IFXOo/mmL5SJ31wQtNHPUkm4JMIE8sOGmsWeE1gasbzoqgQCyR5uJ8DMXe8kraJhOzM+x9J4sLkrHLc+hRvljY=
+X-Received: by 2002:a17:903:3291:b0:212:26e:1b46 with SMTP id
+ d9443c01a7336-223f452ff4bmr1032645ad.23.1741149019562; Tue, 04 Mar 2025
+ 20:30:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <061401db8d28$5f0a4b40$1d1ee1c0$@samsung.com>
+References: <20250304013906.1393102-1-thomas.falcon@intel.com>
+In-Reply-To: <20250304013906.1393102-1-thomas.falcon@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Mar 2025 20:30:07 -0800
+X-Gm-Features: AQ5f1JrWW7mThi0-TdrkenDRcxOAjqehVtorC0CaIsHnJ3yQ2cnbxhzMHLItUls
+Message-ID: <CAP-5=fVwrG5ZViysO7qKYUw0326WFfa7nOzwe70drYfHq=AXhA@mail.gmail.com>
+Subject: Re: [PATCH v5] perf script: Fix output type for dynamically allocated
+ core PMU's
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 10:40:43PM +0530, Shradha Todi wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Fan Ni <nifan.cxl@gmail.com>
-> > Sent: 04 March 2025 02:33
-> > To: Krzysztof Wilczyński <kw@linux.com>
-> > Cc: Fan Ni <nifan.cxl@gmail.com>; Shradha Todi <shradha.t@samsung.com>; linux-kernel@vger.kernel.org; linux-
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-perf-users@vger.kernel.org; manivannan.sadhasivam@linaro.org;
-> > lpieralisi@kernel.org; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; Jonathan.Cameron@huawei.com;
-> > a.manzanares@samsung.com; pankaj.dubey@samsung.com; cassel@kernel.org; 18255117159@163.com;
-> > xueshuai@linux.alibaba.com; renyu.zj@linux.alibaba.com; will@kernel.org; mark.rutland@arm.com
-> > Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in DWC
-> > 
-> > On Tue, Mar 04, 2025 at 04:42:28AM +0900, Krzysztof Wilczyński wrote:
-> > > Hello,
-> > >
-> > > [...]
-> > > > > +static ssize_t counter_value_read(struct file *file, char __user
-> > > > > +*buf, size_t count, loff_t *ppos) {
-> > > > > +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> > > > > +	struct dw_pcie *pci = pdata->pci;
-> > > > > +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> > > > > +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> > > > > +	ssize_t pos;
-> > > > > +	u32 val;
-> > > > > +
-> > > > > +	mutex_lock(&rinfo->reg_event_lock);
-> > > > > +	set_event_number(pdata, pci, rinfo);
-> > > > > +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> > > > > +	mutex_unlock(&rinfo->reg_event_lock);
-> > > > > +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter
-> > > > > +value: %d\n", val);
-> > > > > +
-> > > > > +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf,
-> > > > > +pos); }
-> > > >
-> > > > Do we need to check whether the counter is enabled or not for the
-> > > > event before retrieving the counter value?
-> > >
-> > > I believe, we have a patch that aims to address, have a look at:
-> > >
-> > >
-> > > https://lore.kernel.org/linux-pci/20250225171239.19574-1-manivannan.sa
-> > > dhasivam@linaro.org
-> > 
-> > Maybe I missed something, that seems to fix counter_enable_read(), but here is to retrieve counter value.
-> > How dw_pcie_readl_dbi() can return something like "Counter Disabled"?
-> > 
-> > Fan
-> 
-> Hey Fan,
-> So the counter value will show 0 in case it is disabled so there will not be any issues as per say. We could add the
-> check here but I feel I have already exposed the functionality to check if a counter is enabled or disabled, (by reading the
-> counter_enable debugfs entry) so this could be handled in user space to only read the counter if it's enabled.
-Ok. 
-Returning 0 when the counter is disabled makes sense to me.
+On Mon, Mar 3, 2025 at 5:39=E2=80=AFPM Thomas Falcon <thomas.falcon@intel.c=
+om> wrote:
+>
+> This patch was originally posted here:
+>
+> https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.c=
+om/
+>
+> I have rebased on top of Arnaldo's patch here:
+>
+> https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
+>
+> The original commit message:
+> "
+> perf script output may show different fields on different core PMU's
+> that exist on heterogeneous platforms. For example,
+>
+> perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=3D0xcd,\
+> umask=3D0x01,ldlat=3D3,name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+> -c10000 -W -d -a -- sleep 1
+>
+> perf script:
+>
+> chromium-browse   46572 [002] 544966.882384:      10000         cpu_core/=
+MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+>  |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7=
+    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+>
+> perf record -e cpu_atom/event=3D0xd0,umask=3D0x05,ldlat=3D3,\
+> name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+>
+> perf script:
+>
+> gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS=
+_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.s=
+o.0.8000.3)
+>
+> Some fields, such as data_src, are not included by default.
+>
+> The cause is that while one PMU may be assigned a type such as
+> PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+> If this value does not match an existing PERF_TYPE_X value,
+> output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+>
+> Instead search for a core PMU with a matching perf_event_attr type
+> and, if one is found, return PERF_TYPE_RAW to match output of other
+> core PMU's.
+> "
+>
+> Suggested-by: Kan Liang <kan.liang@intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+> v2: restrict pmu lookup to platforms with more than one core pmu
+> v3: only scan core pmu list
+> v4: rebase on top of Arnaldo's patch
+> v5: update based on Namhyung's feedback here
+> https://lore.kernel.org/lkml/Z8YcOidenzGofq7R@google.com/
+> ---
+>  tools/perf/builtin-script.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index d797cec4f054..4d2764df48a0 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -385,6 +385,19 @@ static int evsel_script__fprintf(struct evsel_script=
+ *es, FILE *fp)
+>                        st.st_size / 1024.0 / 1024.0, es->filename, es->sa=
+mples);
+>  }
+>
+> +static bool is_core_pmu_type(unsigned int type)
+> +{
+> +       struct perf_pmu *pmu =3D NULL;
+> +
+> +       if (perf_pmus__num_core_pmus() > 1) {
 
-Just some thought.
+On ARM it isn't a given that if there is 1 core PMU the type will be
+PERF_TYPE_RAW, on x86 this is normally the case.
 
-It seems natural to me if we make "counter_value" only visiable to
-users when the counter is enabled. 
+> +               while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
+> +                       if (pmu->type =3D=3D type)
+> +                               return true;
+> +               }
+> +       }
+> +       return type =3D=3D PERF_TYPE_RAW;
+> +}
+> +
+>  static inline int output_type(unsigned int type)
+>  {
+>         switch (type) {
+> @@ -395,6 +408,9 @@ static inline int output_type(unsigned int type)
+>                         return type;
+>         }
+>
+> +       if (is_core_pmu_type(type))
 
-Fan
-> 
-> > >
-> > > Thank you!
-> > >
-> > > 	Krzysztof
-> 
-> 
+Given this is called by evsel__output_type I think you can do:
+```
+static inline int output_type(unsigned int type)
+{
+       switch (type) {
+       case PERF_TYPE_SYNTH:
+               return OUTPUT_TYPE_SYNTH;
+       default:
+               if (type < PERF_TYPE_MAX)
+                       return type;
+       }
+
+       return OUTPUT_TYPE_OTHER;
+}
+
+static inline int evsel__output_type(struct evsel *evsel)
+{
+       int output_type =3D evsel->script_output_type;
+
+       if (output_type =3D=3D OUTPUT_TYPE_UNSET) {
+               output_type =3D output_type(evsel->core.attr.type);
+               if (output_type =3D=3D OUTPUT_TYPE_OTHER) {
+                      struct perf_pmu *pmu =3D evsel__find_pmu(evsel);
+
+                      if (pmu && pmu->is_core)
+                             output_type =3D PERF_TYPE_RAW;
+               }
+               evsel->script_output_type =3D output_type;
+
+       return output_type;
+}
+```
+The evsel__find_pmu will cache the PMU for future callers.
+
+Thanks,
+Ian
+
+> +               return PERF_TYPE_RAW;
+> +
+>         return OUTPUT_TYPE_OTHER;
+>  }
+>
+> --
+> 2.48.1
+>
