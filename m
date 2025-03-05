@@ -1,172 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C242505A7;
-	Wed,  5 Mar 2025 17:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191281A840E
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Mar 2025 18:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741197289; cv=none; b=HoRKipbGGOl+tLcVjBywpOiWuTMffgapSzpHOzPHiv9+dy1FprHbgU4bCFF81UUuEQh9SsHPa1615rs6JmiJWVJPMbL8aF3ZPE/atExqHJ8rVUR5npdyuz++Afy99lC7Y/sr5pkEUSw6OWSsThuNw7pIePrSZ5j/HcCVBr858zg=
+	t=1741199325; cv=none; b=XO5qiQWaDCxGp6m1XYqmBumSTswzeRp2MBfY/rT0+AE8XIy0FF2MScsLiM8lDkTMfA1vPcFRFgGgyb/3Soy/thcpjidVe2k8EDhP6mwnhXFObcEN29ui5WCFH+b6Dx7u7p19tVZONvoW5JaoYreDnpXKPLvfgCZluQaqIfjD58s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741197289; c=relaxed/simple;
-	bh=CZvT8ToSGo3UU6++Tcrfw84ErbpHK8lmJvvMCeXw168=;
+	s=arc-20240116; t=1741199325; c=relaxed/simple;
+	bh=NXQNTWJeiSFzjPLlih2rgrST7ZU+kwSlPLsGUkO6i4Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NmeLNFN+c94bv9OnWX+RiasD226+1GhcqUb+NvrXghScenU4SbelW1EDI6GphhPH0S7V6SQxtZAr/lbgk8Ztk8PeCwz0dUAgHb1d5C9zMyff+ahgRiBSKwbZfz39Sy8zAxRSYhN6I1ILhULIlkI/RusLMko4HgLOwSUtf62/Dlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fg4oGaG0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnEwAESm+ICznqlLv+xm915BPD1JxZJA1iXU4kG8w4dxMB4pJj9+S+UJhVos5wyt6L4V7XPMEhveIBqNM0Gw20RvBIIXjiK6ikzOCwIW8dzGhZiKlcP55sND029pM/2ZUfqLJe4aIbYRZfKKT8gqZZ98e8CsW9IKd5y/8WF7A/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rawN+bV5; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fg4oGaG0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63ED8C4CEEA;
-	Wed,  5 Mar 2025 17:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741197288;
-	bh=CZvT8ToSGo3UU6++Tcrfw84ErbpHK8lmJvvMCeXw168=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fg4oGaG0y42LSBGs7V0znH7544RvMBBRiZyIo96lRJSdMqdL2sU6ArZCWg1EcNuMS
-	 1VLMz/T/LjIOfn5drQ1RHoxFkDO9c9S0MP8mD+l+8O/B6bsGboGkviFsXSaJ5Ss88T
-	 PjCAOf/rGVMsRU+Tzevtw2UctKvhE51b6/6e5cvgbuiqQu5Sem3c94gJkz1XPOUyBd
-	 fvt7koOLHNXKj5A060sLoiSGOqtN8YdhPjsP9E9CYDcfxtcNHQDEVzlIiCjsPQxx+A
-	 6+hxkxL88Kr4jriNF6uilCguTVn6v6CU+NVhsPZD1tOBM9vzUX93s9UYjX3oc59nTs
-	 rwkXoB+DCGU8A==
-Date: Wed, 5 Mar 2025 14:54:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	guoren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rawN+bV5"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2feb9076a1cso12447099a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Mar 2025 10:28:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741199323; x=1741804123; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IlUZuaZqa3JLI6rAH+eSKbr5zwilBRdu2UhafBOdrdc=;
+        b=rawN+bV57J1B+RzCmZ77uY16uIki+f4lQ9ppIpAkWldjdzIMnlkOIEnCKIAOSOoOGh
+         jjkd8TApQJ5n5ruGtpwgOVUfEhGfijcHsYT3n1Lgxot7HWpAEs4033eFWCbcs96WjKh4
+         Shg1NLPB9a7KkAA1MexVwFCjo2lSgPJSSk5PWnfaIKds+1qKqn60LIEYTR8TyCkrCjBy
+         I+H/B5fyojgxbNVaYXHGwkTySQA5rx9rBSLgztiGEDsiThM6W4QD0by8V20kTq2F/k7H
+         WKXJP/nejCrj4h0a4U+O+Cf8sR0SHPVoB1BemiMXZ2cUCARNCV+m5V7+laeDq2CIRyar
+         dQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741199323; x=1741804123;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IlUZuaZqa3JLI6rAH+eSKbr5zwilBRdu2UhafBOdrdc=;
+        b=Suz6wVsMGfBILE4jQLjeXD9kyjaNjVsTlPS2qxDEuGjrzFiGrIvR20QSpewaqSgy2I
+         FIy/452KFwR3SvCyp61smZDb0UCjjUGF5pZsz4yuSoJHGqt2u2sf2hrVlXB8dmlqeqg7
+         0LJ1gAoXZ/zUikrl6uOxtCneVqhtSLowwMirTFdeyiDjcb29/GadIhg32i4gDUk4iDNR
+         Pk60Sy/E/dP+CsydMmdm9d/B785hJT9ETEqSZ5h5wKQaSCxY/rKeOANyYQi5L+RQ6rzI
+         tmge3wpLFSSTGmJtl1b91CRBDJ2bsE352oBIGffTrEiCqquYOr0CtQvJ7vkP+vhG7OND
+         8xxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoEvimnOHNexcTG/foChB77ZMmjOvjZZ9q8Ay4sy/yHoOkBufns/PLFSO5m0YWu9hgumZOSavLKgcfLWb833hK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq3eUWtru5FLj/J7011m7Bqy00kEuiov2NX+4zKl1QjtLnkZQJ
+	RFQ5SRwqCRM72djWR7cu63vq0jZM1QirRv6DJRZziORAVxY7cUcrF8fCtvzmTg==
+X-Gm-Gg: ASbGncv4+ysJ672ZXn6lInhLxY8vaU0fQAQ4/rzC/kJTyAb1KhyyNkeOH5L1VK7of8U
+	+eQbfAgiM7M4W8Sc9lWRHPEECU0BVBRb5oL22/bZYwMcbzvkh6IKPKLQg8xVRWhT+Z9lJHLuhad
+	FrSZsci+3LVje6wzr/5rhN2wOVjiJHY5YJw4+kQC2iaWuAohST1+DZIS8aYNJfTr2Kz9rHw8GWf
+	AUQPZH9S+We3l2v7ZZ7VSg18z5vz6xymnU6lB2T5hSxt9tys8necbYGdbuWKqVJWQQOcm2Qxn1F
+	tX/xl3T0Q3XvnRUZaiWLnWdbkBpLxK0uiRIioynVsp4cjnz0YdUYyMj9
+X-Google-Smtp-Source: AGHT+IF+TGwksJJjKWkdx/R8tEcgWJtus8Acn/xVNQz9+4wgbYvkHfwKDe4CHqeQdGOj/ucT3x99Xw==
+X-Received: by 2002:a05:6a21:3986:b0:1f0:e84c:866f with SMTP id adf61e73a8af0-1f3494967f1mr8474146637.21.1741199323380;
+        Wed, 05 Mar 2025 10:28:43 -0800 (PST)
+Received: from thinkpad ([120.60.140.239])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7ddf2444sm12428366a12.3.2025.03.05.10.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 10:28:42 -0800 (PST)
+Date: Wed, 5 Mar 2025 23:58:33 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 02/11] perf dso: kernel-doc for enum dso_binary_type
-Message-ID: <Z8iP5r3nVyCG8Iai@x1>
-References: <20250304050305.901167-1-irogers@google.com>
- <20250304050305.901167-3-irogers@google.com>
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250305182833.cgrwbrcwzjscxmku@thinkpad>
+References: <20250304171154.njoygsvfd567pb66@thinkpad>
+ <20250305173826.GA303920@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250304050305.901167-3-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250305173826.GA303920@bhelgaas>
 
-On Mon, Mar 03, 2025 at 09:02:56PM -0800, Ian Rogers wrote:
-> There are many and non-obvious meanings to the dso_binary_type enum
-> values. Add kernel-doc to speed interpretting their meanings.
-
-
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/dso.h | 53 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+On Wed, Mar 05, 2025 at 11:38:26AM -0600, Bjorn Helgaas wrote:
+> On Tue, Mar 04, 2025 at 10:41:54PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Mar 05, 2025 at 12:46:38AM +0900, Krzysztof Wilczyński wrote:
+> > > > On Mon, 3 Mar 2025 at 20:47, Krzysztof Wilczyński <kw@linux.com> wrote:
+> > > > > [...]
+> > > > > > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > > > > > > +{
+> > > > > > > +   char dirname[DWC_DEBUGFS_BUF_MAX];
+> > > > > > > +   struct device *dev = pci->dev;
+> > > > > > > +   struct debugfs_info *debugfs;
+> > > > > > > +   struct dentry *dir;
+> > > > > > > +   int ret;
+> > > > > > > +
+> > > > > > > +   /* Create main directory for each platform driver */
+> > > > > > > +   snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> > > > > > > +   dir = debugfs_create_dir(dirname, NULL);
+> > > > > > > +   debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > > > > > > +   if (!debugfs)
+> > > > > > > +           return -ENOMEM;
+> > > > > > > +
+> > > > > > > +   debugfs->debug_dir = dir;
+> > > > > > > +   pci->debugfs = debugfs;
+> > > > > > > +   ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
+> > > > > > > +   if (ret)
+> > > > > > > +           dev_dbg(dev, "RASDES debugfs init failed\n");
+> > > > > >
+> > > > > > What will happen if ret != 0? still return 0?
+> > > > 
+> > > > And that is exactly what happens on Gray Hawk Single with R-Car
+> > > > V4M: dw_pcie_find_rasdes_capability() returns NULL, causing
+> > > > dwc_pcie_rasdes_debugfs_init() to return -ENODEV.
+> > > > 
+> > > > Debugfs issues should never be propagated upstream!
+> > ...
 > 
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index dfd763a0bd9d..f3ca2a5e7670 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -20,30 +20,83 @@ struct perf_env;
->  #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
->  #define DSO__NAME_KCORE		"[kernel.kcore]"
->  
-> +/**
-> + * enum dso_binary_type - The kind of DSO generally associated with a memory
-> + *                        region (struct map).
-> + */
->  enum dso_binary_type {
-> +	/** @DSO_BINARY_TYPE__KALLSYMS: Symbols from /proc/kallsyms file. */
->  	DSO_BINARY_TYPE__KALLSYMS = 0,
-> +	/** @DSO_BINARY_TYPE__GUEST_KALLSYMS: Guest /proc/kallsyms file. */
->  	DSO_BINARY_TYPE__GUEST_KALLSYMS,
-> +	/** @DSO_BINARY_TYPE__VMLINUX: Path to guest kernel /boot/vmlinux file. */
->  	DSO_BINARY_TYPE__VMLINUX,
-> +	/** @DSO_BINARY_TYPE__GUEST_VMLINUX: Path to kernel /boot/vmlinux file. */
->  	DSO_BINARY_TYPE__GUEST_VMLINUX,
-> +	/** @DSO_BINARY_TYPE__JAVA_JIT: Symbols from /tmp/perf.map file. */
->  	DSO_BINARY_TYPE__JAVA_JIT,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__DEBUGLINK: Debug file readable from the file path
-> +	 * in the .gnu_debuglink ELF section of the dso.
-> +	 */
->  	DSO_BINARY_TYPE__DEBUGLINK,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE: File named after buildid located in
-> +	 * the buildid cache with an elf filename.
-> +	 */
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO: File named after buildid
-> +	 * located in the buildid cache with a debug filename.
-> +	 */
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__FEDORA_DEBUGINFO: Debug file in /usr/lib/debug
-> +	 * with .debug suffix.
-> +	 */
->  	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__UBUNTU_DEBUGINFO: Debug file in /usr/lib/debug. */
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO: dso__long_name debuginfo
-> +	 * file in /usr/lib/debug/lib rather than the expected
-> +	 * /usr/lib/debug/usr/lib.
-> +	 */
->  	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILDID_DEBUGINFO: File named after buildid located
-> +	 * in /usr/lib/debug/.build-id/.
-> +	 */
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_DSO: A regular executable/shared-object file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-> +	/** @DSO_BINARY_TYPE__GUEST_KMODULE: Guest kernel module .ko file. */
->  	DSO_BINARY_TYPE__GUEST_KMODULE,
-> +	/** @DSO_BINARY_TYPE__GUEST_KMODULE_COMP: Guest kernel module .ko.gz file. */
->  	DSO_BINARY_TYPE__GUEST_KMODULE_COMP,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE: Kernel module .ko file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP: Kernel module .ko.gz file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
-> +	/** @DSO_BINARY_TYPE__KCORE: /proc/kcore file. */
->  	DSO_BINARY_TYPE__KCORE,
-> +	/** @DSO_BINARY_TYPE__GUEST_KCORE: Guest /proc/kcore file. */
->  	DSO_BINARY_TYPE__GUEST_KCORE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO: Openembedded/Yocto -dbg
-> +	 * package debug info.
-> +	 */
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__BPF_PROG_INFO: jitted BPF code. */
->  	DSO_BINARY_TYPE__BPF_PROG_INFO,
-> +	/** @DSO_BINARY_TYPE__BPF_IMAGE: jitted BPF trampoline or dispatcher code. */
->  	DSO_BINARY_TYPE__BPF_IMAGE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__OOL: out of line code such as kprobe-replaced
-> +	 * instructions or optimized kprobes or ftrace trampolines.
-> +	 */
->  	DSO_BINARY_TYPE__OOL,
-> +	/** @DSO_BINARY_TYPE__NOT_FOUND: Unknown DSO kind. */
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
-> -- 
-> 2.48.1.711.g2feabab25a-goog
+> > > > So while applying, you changed this like:
+> > > > 
+> > > >             ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
+> > > >     -       if (ret)
+> > > >     -               dev_dbg(dev, "RASDES debugfs init failed\n");
+> > > >     +       if (ret) {
+> > > >     +               dev_err(dev, "failed to initialize RAS DES debugfs\n");
+> > > >     +               return ret;
+> > > >     +       }
+> > > > 
+> > > >             return 0;
+> > > > 
+> > > > Hence this is now a fatal error, causing the probe to fail.
 > 
+> > Even though debugfs_init() failure is not supposed to fail the probe(),
+> > dwc_pcie_rasdes_debugfs_init() has a devm_kzalloc() and propagating that
+> > failure would be canolically correct IMO.
+> 
+> I'm not sure about this.  What's the requirement to propagate
+> devm_kzalloc() failures?  I think devres will free any allocs that
+> were successful regardless.
+> 
+> IIUC, we resolved the Gray Hawk Single issue by changing
+> dwc_pcie_rasdes_debugfs_init() to return success without doing
+> anything when there's no RAS DES Capability.
+> 
+> But dwc_pcie_debugfs_init() can still return failure, and that still
+> causes dw_pcie_ep_init_registers() to fail, which breaks the "don't
+> propagate debugfs issues upstream" rule:
+> 
+>   int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+>   {
+>           ...
+>           ret = dwc_pcie_debugfs_init(pci);
+>           if (ret)
+>                   goto err_remove_edma;
+> 
+>           return 0;
+> 
+>   err_remove_edma:
+>           dw_pcie_edma_remove(pci);
+> 
+>           return ret;
+>   }
+> 
+> We can say that kzalloc() failure should "never" happen, and therefore
+> it's OK to fail the driver probe if it happens, but that doesn't seem
+> like a strong argument for breaking the "don't propagate debugfs
+> issues" rule.  And someday there may be other kinds of failures from
+> dwc_pcie_debugfs_init().
+> 
+
+Fine with me. I was not too sure about propagating failure either.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
