@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAB442045AC;
-	Wed,  5 Mar 2025 09:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91940205505;
+	Wed,  5 Mar 2025 09:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741166816; cv=none; b=sdI1eWw/QcLnF1WdaVZqjUKoVkosJbRrrAV9kgwVeG2+28S5274WAbEbxa8yE+gIdkSFq3xtyd+7q96xzegJYy+NqSgdkYqbp6Og/lkVyGk3PcPtJHSGAZ0m9B181GYGhYxDtordqbBSyZ2o85agnwILCclAHIgpxEpzOVdmKkQ=
+	t=1741167350; cv=none; b=NZgt0nGpFHNkZo2lvn3aB4oKou3X83V+LR5tk0why6X8NvDsxj66lZ1bxMdAuRDrXCsvs+Z6MzP3K/FaQ6ZV3iP9PqMtCd4b0sgZ9xLQ6IX83JuWwqwIN5vG1a6btHfaWCdz5Bn6BCD9icogSokr+8UIgVBxgdcL8eQQ6DcOThs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741166816; c=relaxed/simple;
-	bh=b4Szx6wCBHun8gol4ce0yFWCaLJ+iO99aifcOuewJAQ=;
+	s=arc-20240116; t=1741167350; c=relaxed/simple;
+	bh=Ukm9PDMN5uHoOvSYgw3fHd9nWLgrtttVBtdqmMnfPWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SodDlJv3tmdjMtrm6jtpp3mkzkN/5ncS2nIoijklOeYmaNg22QciS81CXsYBNDTmmS4jzJkkYLqCIx/HVJs2PXUDQhsbq5BYzAX6FwBEmicj0smfmRxT+4YjUfKQ+rwaMJrqTo505uDw/TKv7trb5cgSXfVYzalL3R2Tbzj7uX0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=pB2uMAAQGKEYH+9dqNbL+9TG9N3yDq8LLKFJojmu5ARO8/8Oeip/+4LhJF9/ACRuBT4vy69XT7KVLvueq8oMuK4+5wPDFWP8Ys1ud5sx3XA6vtyHSqk3m+pcTUYQx0izYGXY+RB6v1uM0/ZtI49fIPnjy5iSk5Nx+3NlurNs+TE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9505FEC;
-	Wed,  5 Mar 2025 01:27:07 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47403FEC;
+	Wed,  5 Mar 2025 01:36:01 -0800 (PST)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE6133F66E;
-	Wed,  5 Mar 2025 01:26:53 -0800 (PST)
-Date: Wed, 5 Mar 2025 09:26:49 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D2983F66E;
+	Wed,  5 Mar 2025 01:35:47 -0800 (PST)
+Date: Wed, 5 Mar 2025 09:35:45 +0000
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -30,9 +30,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Robin Murphy <robin.murphy@arm.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] perf list: Collapse similar events across PMUs
-Message-ID: <20250305092649.GC13418@e132581.arm.com>
+Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
+Message-ID: <20250305093545.GD13418@e132581.arm.com>
 References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
+ <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,42 +42,49 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
+In-Reply-To: <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
 
-On Tue, Mar 04, 2025 at 01:49:12PM +0000, James Clark wrote:
-
-[...]
-
-> As some background, the original commit for deduplication, commit
-> 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu")
-> mentions reducing the number of duplicate PMUs, and is presumably
-> motivated by usability. But there are also other commits mentioning
-> reducing openat()s, for example lazily loading formats 504026412162
-> ("perf pmu: Make the loading of formats lazy"). Deduplicating based on
-> the contents of the events/ folder is somewhat in contention with this
-> reduction, but could be done along side some more lazy loading (like of
-> the terms) and hashing the result of readdir() without opening any of
-> the contents. JSON tables can have event name hashes calculated at build
-> time if we want to consider them for deduplication too.
+On Tue, Mar 04, 2025 at 01:49:14PM +0000, James Clark wrote:
+> Instead of showing multiple line items with the same event name and
+> description, show a single line and concatenate all PMUs that this
+> event can belong to.
 > 
-> Then with the events hash, PMU's can be sorted based on this and the
-> 'Unit:' string can be constructed with a set of values that collapses
-> adjacent suffixes to display as ranges. I believe that could remove the
-> need for any further changes to duplication based on suffix, but still
-> avoids over deduplication.
+> Don't do it for json output. Machine readable output doesn't need to be
+> minimized, and changing the "Unit" field to a list type would break
+> backwards compatibility.
+> 
+> Before:
+>  $ perf list -v
+>  ...
+>  br_indirect_spec
+>        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
+>  br_indirect_spec
+>        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a57]
+> 
+> After:
+> 
+>  $ perf list -v
+>  ...
+>  br_indirect_spec
+>        [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,armv8_cortex_a57]
 
-I did a test with a simulated platform with cortex-a510 and cortex-a710
-cores, the result looks correct to me:
+From my testing, based on the latest tmp.perf-tools-next branch, I
+need to remove the option '-v'.  Otherwise, the '-v' option will
+enable long event descriptions, in this case, it does _not_ print Unit
+strings at all (see default_print_event() in builtin-list.c).
 
-  # perf list -d 2>&1 | grep br_mis_pred_retired -A 2
-  br_mis_pred_retired
-       [Instruction architecturally executed,mispredicted branch. Unit:
-        armv9_cortex_a510,armv9_cortex_a710]
+  default_print_event()
+  {
+    ...
+    if (long_desc && print_state->long_desc) {
+            fprintf(fp, "%*s", 8, "[");
+            wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+            fprintf(fp, "]\n");
+    } else if (desc && print_state->desc) {
+    ...
+  }
 
-Tested-by: Leo Yan <leo.yan@arm.com>
-
-However, I will have minor comments on two patches and reply
-separately.  Please take a look.
+The command `perf list` would be sufficent.
 
 Thanks,
 Leo
