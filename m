@@ -1,71 +1,84 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6BA33C9;
-	Thu,  6 Mar 2025 02:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F6610E4;
+	Thu,  6 Mar 2025 04:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741229137; cv=none; b=Zqg2gzinkNCLGP/WgUW95DAfmQEcb5CAeQOtBFMbLCsxDk50t8BuTLKjF+/FAaUtdyMIxqpMI3SascpGh0tdU+9i2O1UD7if1iALh9NxpTjEEMy8bome+4fwMuFHcSCB+v/qdDW/jCQdpToNJCBjsxTQCTLJW66rxr8hNj8Yr0Q=
+	t=1741234158; cv=none; b=bizKQTz0vfyWfRibvh5Joy+K+idGmwqHm2TT3qtsGHv2mwaXK/vHScJvhJReBe5FnMqat7P1xCYIZzs2WWBdlCOxgDAHFVe2GNhWCJZnQXI4z8Lwn14uw+Cxci4kg6EWi+/KMY9Pu5hohA/FcJxrxnUPPJSjSWqs1Dn313YiVLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741229137; c=relaxed/simple;
-	bh=y4qkiHrv5YzJwTFdfke6HPG9TVpJNfR6GD7LnkavQBo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eLfzQhzYCO7IA4tPJGXI2c5PdEWM3lwwprt17HEfcqZWtUXujQNluu2dj/xrniEartFbVnBbgYfwB4L5Rw/DjvM4+KbVFEUaBS/d1dYFcfET+wjOsi3VnBDiXHaRHRUGjhayg/sZgtSpkmafOBZT2rMtPqFZbjlcmbXD2woO95w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Dave Hansen <dave.hansen@intel.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Jiri Olsa <olsajiri@gmail.com>
-CC: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>, "irogers@google.com"
-	<irogers@google.com>, "kan.liang@linux.intel.com"
-	<kan.liang@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"hpa@zytor.com" <hpa@zytor.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBwZXJmL3g4Ni9p?=
- =?utf-8?Q?ntel/bts:_allocate_bts=5Fctx_only_if_necessary?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gcGVyZi94ODYvaW50ZWwvYnRz?=
- =?utf-8?Q?:_allocate_bts=5Fctx_only_if_necessary?=
-Thread-Index: AQHbjd8ZANFZJP37eUuTV7oAm1ygsrNkMLQAgAEx3BA=
-Date: Thu, 6 Mar 2025 02:28:34 +0000
-Message-ID: <5ddaff2748344dc4ac6290f195c8758e@baidu.com>
-References: <20250122074103.3091-1-lirongqing@baidu.com>
- <Z8hV3WYuHxHBNoNV@krava> <Z8hXsvloKEb7ia3V@krava>
- <d70b6f8d-0e86-4814-bf05-4c3d9acd313d@intel.com>
- <293158f0-d36f-4569-bad3-6be1db938457@intel.com>
-In-Reply-To: <293158f0-d36f-4569-bad3-6be1db938457@intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2025-03-06 10:28:35:265
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1741234158; c=relaxed/simple;
+	bh=x74w67W34OQptxN3LPm8CIC7Z4OFwaIkZJXaQojOmCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1nvKyaWF/oavxaq3k7cQdlfjYHPATFyKymBBO4FpbHpptnsrsdNos/pWWfxF6sb7KIkn4aMIJblMpm6JL3zT567rEO/ZEpQlRTJ/3aQsKrrGKnGFo4UUKB55YmSVcwzLOBZzUDRdZXRWwd5UexQt3qqMhhzUDRWdgUsWjneZCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrK3TW6k; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrK3TW6k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A7EC4CEEC;
+	Thu,  6 Mar 2025 04:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741234157;
+	bh=x74w67W34OQptxN3LPm8CIC7Z4OFwaIkZJXaQojOmCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RrK3TW6k8jCmE9SMXm3BjkjaDgi6PjyWTU7V7i1P7my3eJbBsJ4zFSvy2J2WdJvSq
+	 LsNSt/4SNGSeoMp6ZiBfP/gC36U2RyDTqcBDqHcvGpxl02k+w0oMP6hZMQClGW76Lr
+	 hz76beGrTuP1FW/yGS74plB+SEMAsPv5QIfQgvzU71s2zRo5RukAAw6xEEfQ5GQMug
+	 +g3FU83oTgbSW5vCGfpq1k9Fab8C8i+r8CQSIl9pQd/hMklRnGDv12vfEq+F06/F0X
+	 Hl6C874N6mf+j+YXtAaOy+KHKXNPAIOTCBTJzqecNrrxpthYLlsrvr7M2OR6E4tR1B
+	 JKPaQBfYWIIMw==
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d2a8c2467eso878995ab.3;
+        Wed, 05 Mar 2025 20:09:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVFiuoCgrxedm8njx0r2DKDUoG5BXasgA5gsGV8WQbeCUHFUeE5HaRke64sSvwx+qIpgStpoS4/e5ziliWd@vger.kernel.org, AJvYcCX70D3tbrz3vcUbinHL+mX3lQey2gEanmLm5XqdLIeMr0I/FwqkkGHuSRsRFCcMOOCGImo=@vger.kernel.org, AJvYcCXGwezxaSWXMnVK/uiRwQDXzbDwqj4bWDdvxeZ8Kqf/Yv2F61M25deaE624I1EZ2Ut9zL9Q/foxCtUgOLSf2N7hWw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgfcfAP/7YPZKE73Lh64VEdiURERr1r67Le8nNe/ujUnOZsu8A
+	hMgg/JksDn1koihZ2Ev8cT/o93bneSY/qaqym9Llj/zWfYVryU3XqCSAhiKBXa9pRuR7p8AgX+A
+	c20ZRC5pyUjn7iU5nmfUN2bPyEAo=
+X-Google-Smtp-Source: AGHT+IEmDOOxeBHFQa9OZvTsVcR5AGwXqMRh1cfpfkq1/wgjcTDDOmPc1dKGpJVbfhuckJVX7xYmX+JAm58dQA+THTA=
+X-Received: by 2002:a05:6e02:194b:b0:3d3:f2cc:fb5 with SMTP id
+ e9e14a558f8ab-3d42b87f6d4mr69379005ab.2.1741234156954; Wed, 05 Mar 2025
+ 20:09:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 10.127.64.37
-X-FE-Last-Public-Client-IP: 100.100.100.38
-X-FE-Policy-ID: 52:10:53:SYSTEM
+References: <20250305232838.128692-1-namhyung@kernel.org>
+In-Reply-To: <20250305232838.128692-1-namhyung@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Wed, 5 Mar 2025 20:09:05 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW6TCv=F69gdZvdzw4wQgnHepVGW_+6gxpmXJu7RYEL9xQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JqAApBugwFi0TWTLJ3o6_IvcpgCU4HzlAsD4-0ty14Xou4kxA1bnvvaut4
+Message-ID: <CAPhsuW6TCv=F69gdZvdzw4wQgnHepVGW_+6gxpmXJu7RYEL9xQ@mail.gmail.com>
+Subject: Re: [PATCH] perf report: Do not process non-JIT BPF ksymbol events
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Kevin Nomura <nomurak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiBKaXJpLCB0aGFua3MgZm9yIHRoZSByZXBvcnQhDQo+IA0KPiBPbiAzLzUvMjUgMDY6NTgsIEFk
-cmlhbiBIdW50ZXIgd3JvdGU6DQo+ID4gSXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgMyBmdW5jdGlv
-bnMgYWZmZWN0ZWQ6DQo+ID4NCj4gPiAJaW50ZWxfYnRzX2VuYWJsZV9sb2NhbCgpDQo+ID4gCWlu
-dGVsX2J0c19kaXNhYmxlX2xvY2FsKCkNCj4gPiAJaW50ZWxfYnRzX2ludGVycnVwdCgpDQo+ID4N
-Cj4gPiBQZXJoYXBzIG1ha2UgdGhlbSBzdGF0aWMgY2FsbHM/DQo+IA0KPiBUaGF0LCBvciBhIGZl
-dzoNCj4gDQo+IAlpZiAoIWJ0c19jdHgpDQo+IAkJcmV0dXJuOw0KPiANCj4gaWYgeW91J3JlIG5v
-dCBmZWVsaW5nIGFzIGZhbmN5IHdvdWxkIGRvLg0KPiANCj4gV291bGQgc29tZW9uZSBiZSBpbnRl
-cmVzdGVkIGluIHNlbmRpbmcgYW4gYWN0dWFsIHRlc3RlZCBwYXRjaCwgaWRlYWxseSB0aGUNCj4g
-cGF0Y2ggYXV0aG9yIG9mIHRoZSByZWdyZXNzaW9uPyA8aGludCwgaGludD4NCg0KDQpJIGFtIHNv
-cnJ5IHRvIGludHJvZHVjZSB0aGlzIGJ1ZywgSSB3aWxsIHRyeSB0byBzZW5kIGEgcGF0Y2gNCg0K
-VGhhbmtzIHRvIGFsbA0KDQotTGkNCg==
+On Wed, Mar 5, 2025 at 3:28=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> The length of PERF_RECORD_KSYMBOL for BPF is a size of JITed code so
+> it'd be 0 when it's not JITed.  The ksymbol is needed to symbolize the
+> code when it gets samples in the region but non-JITed code cannot get
+> samples.  Thus it'd be ok to ignore them.
+>
+> Actually it caused a performance issue in the perf tools on old ARM
+> kernels where it can refuse to JIT some BPF codes.  It ended up
+> splitting the existing kernel map (kallsyms).  And later lookup for a
+> kernel symbol would create a new kernel map from kallsyms and then
+> split it again and again. :(
+>
+> Probably there's a bug in the kernel map/symbol handling in perf tools.
+> But I think we need to fix this anyway.
+>
+> Reported-by: Kevin Nomura <nomurak@google.com>
+> Cc: Song Liu <song@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+Acked-by: Song Liu <song@kernel.org>
