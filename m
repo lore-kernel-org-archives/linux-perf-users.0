@@ -1,359 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022098.outbound.protection.outlook.com [52.101.43.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9726325D54E;
-	Thu,  6 Mar 2025 18:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741287198; cv=none; b=r/rFYvFBuKnOqWwuZcycTTnZRRbgntdalvIUOtNsYvpRjCFG0gihMe/vWCqXQz/6fzTmH340dNCyDlC3nfKFSbVJUNy589CV4K1QmLAescTO6a+o0bVXcbGqKNKGzKv6RSMT01ie261bsHzPbppvJTG6D71tgD3xR5BX+0T9h/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741287198; c=relaxed/simple;
-	bh=HdDCCx5gwVucxugrX/FKfQDpJMt6R/cht/U/5Z0AgDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fQRumhR62bsHye+N6MmtKqh9EnJyZ9QaeVhwpRiQiLZwLfD2MDAtXcQWHiE6w15TugGP3pMaIkkGO7t91yjBXYiPhz0d0uBs51zlr+VNE1AGl9pVsOFnkqrQGxNDPm9+uRN41jwhUSou10R1Aw5fUANTORWPphB+axYBlpusx5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNrsniVJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D7B259C9F
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 23:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741303597; cv=fail; b=qqWed9/5R7U8isHfRVyfQrRJlBxk3P+jpJtx7pWhvlnwKpnyRYeDVxBG6sFcjlbMpQooiY9Z7uUVLR0vlzeLEg/hpypXA2bfxG9CxVSOvHozVZ9hgyjj5xUClb+ch8jm3JTorDPBcxFlR4mRv1t7gJBofZi0/zk8V26/xSwexug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741303597; c=relaxed/simple;
+	bh=Qz6K7qPAzGokxatdiNgGwAzKHmzO00LsRt4OgsqtoD0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=sy/+FBRJSdJl9i/E5wC9w+i+oDjMvpihkbcotPRhf//QkZrAZmZYbQSB/W3a1SfcJiYcHT1jcqb01z0Bl2KybJ7aL+e97H1JH/T29pYHlZfi21H/l4Ne6YLVjko3upR6OgONNbv74l8S9nOGr2Z/cDydy+NHCmZaYFH1uANw/JM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=ILbFZ/Gl; arc=fail smtp.client-ip=52.101.43.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNrsniVJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741287196; x=1772823196;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=HdDCCx5gwVucxugrX/FKfQDpJMt6R/cht/U/5Z0AgDU=;
-  b=GNrsniVJvW8hUJZICZSZovEZRs92259dkg4bZAP5BxEebpb5EjFuK1US
-   zBTfIPXWiTZ8TVBwbNjegIRWLf/A8sQuqA0YRWKz/x9mpi3rflnMt5Itl
-   fRVwf+IDEqLLFQUXCyBupdtO9l9o5N9AUW5uS/HyP894PJyRLci9Oy3lx
-   7lJk87ccP2yvP8GR98F23IeL0L/NJedTwzklXMfiB1sqWtTSgV6LLck+I
-   t9XMVrk0a6Nx/etFlhd6yWdt46QYAV3JbScoasQC/3otJ+BXUYHUg9ZfW
-   6f7JV96DkI7Aj9wOdHwW70aXWY5xxMtlRTOY3O6mtnM73PyIpCylb72LK
-   g==;
-X-CSE-ConnectionGUID: /tXZMGn5Q4WbADxAsYHLZw==
-X-CSE-MsgGUID: j8K8lxGDTm6OE8lRr9PvXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42175617"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="42175617"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 10:53:14 -0800
-X-CSE-ConnectionGUID: uHLTloLSSCOx0kjPCcuqSw==
-X-CSE-MsgGUID: q/Ub8q8hSsWlB9RyybGltw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="119116316"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 10:53:13 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7311120B5736;
-	Thu,  6 Mar 2025 10:53:12 -0800 (PST)
-Message-ID: <2213a8a8-cc3b-4135-90a4-7f9455375825@linux.intel.com>
-Date: Thu, 6 Mar 2025 13:53:11 -0500
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="ILbFZ/Gl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dy+CTt+AfppvZrnF6s3ZWdgiIN0bork9ksYXnBjQtWXtrcEtvYVaPHuYsNwWpqnGaJXBugDzW++940t89+ARIvR/+qbGlEv+vIF8aTd1NT4ENp1yrLjyXz17THSG80/NLI2yYp8a36Sh9XD+vEOsUG2/SB0MJy6kPSVjkdW9QVYTMTQLUQXiu16/SZkCngk2987+u3pE1g6zYD0l7Ufp+4AYVJiK2DIo+qulA7IB43XdP+yj2BjBHNDaKC7r2jS79o+AzZu9cC0EVZZhOgQ1uYYgmmjbnkWvA58VdvFzOTENi4O+HwKLyc9HJ9jMv7MfsDMtXRGcV8J+4xy+rGoe3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9/afuT174l6CZ5ozvFsvux603r8YGgMIn7LOpdtwlaM=;
+ b=WL6pu2hpTM7BFrI0LQqdeyY+ppw497Q6uZpmi4UFrP5dtXQJ/kaupusf2qk89B2VMn2Ylk5OmsyHQuze0i+Zg4VQ0Obz9a6U1Z3x9SYSiJLzX79gjYcw5Oo+O9d353YmoBbSqS0YAYYJ3z2r193H2BFnBU/jKEpecvJZH9ssBU+SUiG66x8hR3rC++Ksg3VA1XiRLL1VAeajvesNBrEarF4jC2RVnB5mvleeQvHE6gIMWwTKAaWByzjO/O2bBmWOTKAlFtAc9z9nAuEfrURsV1mcyRx82xYy+cumgkuWHbMhyRAnz0wwT6BB9GTrcF7EbfuLp67jai1Tm0+H7fEcZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9/afuT174l6CZ5ozvFsvux603r8YGgMIn7LOpdtwlaM=;
+ b=ILbFZ/GlIXU5q9eHrnW3I304RMhDoYTHEyUTTGVyoJqIyyfVmjx9a5vWEgsy4+sowXK9T7cZt+ziF/pbXsItF0XAcVnf5xl1kixgcRDxh+eUNDIhz0aeF05bhzEGUrSSBDEiYj4mi+/rwYzxJ1NEFFETgDqHjUrLw9WqnoB+oTM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ BN0PR01MB6864.prod.exchangelabs.com (2603:10b6:408:165::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.23; Thu, 6 Mar 2025 23:26:33 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 23:26:33 +0000
+Date: Thu, 6 Mar 2025 15:26:11 -0800 (PST)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>
+cc: will@kernel.org, mark.rutland@arm.com, bwicaksono@nvidia.com, 
+    ilkka@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, 
+    linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/3] perf/arm_cspmu: Add PMEVFILT2R support
+In-Reply-To: <cover.1741190362.git.robin.murphy@arm.com>
+Message-ID: <d3388738-15f5-8b97-a793-867b8d537654@os.amperecomputing.com>
+References: <cover.1741190362.git.robin.murphy@arm.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: CH5PR02CA0015.namprd02.prod.outlook.com
+ (2603:10b6:610:1ed::9) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf mem: Don't leak mem event names
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Leo Yan <leo.yan@arm.com>, Thomas Falcon <thomas.falcon@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250306175408.852130-1-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250306175408.852130-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|BN0PR01MB6864:EE_
+X-MS-Office365-Filtering-Correlation-Id: 875dd6d2-eab5-4774-8f2b-08dd5d0654a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QSy84BQpfQqbVBkml/AM9YQt7Lw+rt7PL2BoAU7qybFwvSBd9ULXMtkXWoSC?=
+ =?us-ascii?Q?8zsHfl0CII68HkQRDJ3p/6b3T5tGHo5BmdXSwoCJLz7+6JQUQ956O0UgTmQ6?=
+ =?us-ascii?Q?zUw8E1jhD21W50JfnMFd+1dqpCRlPS6tt5Mi4/GC1G2SrVsgoLcadfBWVDos?=
+ =?us-ascii?Q?i4BdBZg2y6th3Q9Gnd8MDLxOP3bnKZIPB2WEWlZ1RjbEbCOXLIJAmqr91MuQ?=
+ =?us-ascii?Q?J1whaSztI1wkwS36FGtGbak52yjDFQKBhU8s/cco2C0JMPcOFE89gFaIjze8?=
+ =?us-ascii?Q?wDiWmbWgBb22s+kQb34Obg/0vDBYhGoMHfKTBi0bbs7nF/4guxmhiOO++R03?=
+ =?us-ascii?Q?r0KEj2iPnHhHkPHR1my/dPcp6tpXl2voCzSPu1BW9Fo0s/NxBXJTxbKNPYcL?=
+ =?us-ascii?Q?2zgQ1yBENmVtz2YiFICSsfoKWD3iBTy9f9fl0mjX8meU/uKnscwgmIE+dKNJ?=
+ =?us-ascii?Q?vCkZgWbQqtpbSXxSqkBNYPTuDghoeHb6G+78oEA7J7gjQobrtkK5ocvh1KQ/?=
+ =?us-ascii?Q?+NhT8dqplXPvAoWd65Zg1nPWGUN9ksoCAj2V4OC638hfkrW+16WW1pxJUW1B?=
+ =?us-ascii?Q?hVtKjcfhr22BfXhW9qUF/F1yJYCJa/VJp+T7XayShPXXco48tidguyw8coXi?=
+ =?us-ascii?Q?oTgjHw9S3YsoMRdij8+kjEAk01rc7NcRHlolNSVLaL9/B39+CYqxZ+D39XVn?=
+ =?us-ascii?Q?anUeoGpSFSvQziSwddbjnnFq+ME02E7iQjh2s1mIIA2Aeu3lTUlqIOdtlJ2z?=
+ =?us-ascii?Q?Yvej+abV1jBNymO7pcPGHddHmsmI4ohr/771mATZ1iLvafV1syxIzZ7kDL+C?=
+ =?us-ascii?Q?qonkWNEDq6qg25lFK3nD+u+VyPsr2atKX0hvAw4HkzVbD9rNKYSCa898TZGB?=
+ =?us-ascii?Q?ly10hxABl5DojkEcxx5PknhsyR9c/fbIE2xB3mFVcrzMMpDq2lGfU/ZSpW32?=
+ =?us-ascii?Q?kQKLd10n/Sfsb14ouJZeTZRo1gNqUNAmGyJf358E38tkh3qrBqaqg31CP2X0?=
+ =?us-ascii?Q?9HK52Scp1lR1djNaypp63qtCTmyFn1LcDn9hVLJRUjc4C0e99tYbXFtT1fet?=
+ =?us-ascii?Q?OvYr7LAVxMEiRDgpTjH480ccfgucN/bGJneiNjGdO9c5VTTKGyL2nsAxFvq9?=
+ =?us-ascii?Q?M36Z6kBmwBvBNYQziBpw2pSYrt7Ms2ZPc9fW9wtfKkZtRmXDkaEfer7Kpsi+?=
+ =?us-ascii?Q?P9OAWoqOrnvLzHrSogcdOXfW04lSkm3tiiOwmA9UyrOMNAEq9DQEZkeisQMm?=
+ =?us-ascii?Q?Cf/yXev7WF00jG2nwS+Rpmh4TbJOIlqgMi2U01XWCr7sYXgzpZ22iwofVgBp?=
+ =?us-ascii?Q?4sTAe2pWfNBlsiBpf7ujcoR7+jum9MUbpihEn+NM1+MZGBQEGNIbvPnqiLpT?=
+ =?us-ascii?Q?xTSkpEg0W+bXKT3uRXVCixwTOc1KvhX+sK1POyt+nS0HEnO0fKMQWxYsemjN?=
+ =?us-ascii?Q?zJfGkj1mEAFv0uDyBLGUbgQw8kWf+OuY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8+SObt4h7LJ5nf/OC1RAIZRFmO8rpAdaTK7lbqK2a/bpXjOuDYVkNEFr2ZXy?=
+ =?us-ascii?Q?0kBwRAroileop3D6urLH2nv/7nck0s/bfC0ZZdNLDMPHth95n/mqm5Nm0NQp?=
+ =?us-ascii?Q?OeUhUYC7XB/8Sr5UVjEC3yW549PcC2c/7oCXvcnO47/uT+HQSOnxMKQOTcID?=
+ =?us-ascii?Q?rkFIxuad3AwPJiurRiyuVskLwDgptzjXsSXKNBodsCNOct9cx4nGqTyMNYd4?=
+ =?us-ascii?Q?U4RQkS0bIxX2W1y33Nu2fWwYDcYs16lciXx7ffVucjJnQAqVw61HFcvqHb07?=
+ =?us-ascii?Q?pp8tSe+a62lw9OWTKYZiAjFL77UsB7y6624Dduu/4gdJREyi0ps8/hQa1VGd?=
+ =?us-ascii?Q?Jd+8bDTkDJkdtNxFGCY7SJa223xZK1kQnNBk060vd00rAAUwqglvQgQPl8nZ?=
+ =?us-ascii?Q?t1MRpaycPI0dC5kLw4h/g4mfJK+DlXE4bWR4Uap+BYo2SoN+hYG9cG3kikeq?=
+ =?us-ascii?Q?tCp1yamKaY+DXciKM2Bi7pXgT+b104bM0sK+GbJ+iXnBQQXDpd5IDoMTqs/X?=
+ =?us-ascii?Q?QZQjtqNSUG40/C39sQHCW4kMNozERjFSWbauR5e1sxLwcWdTFLsEedV7w64j?=
+ =?us-ascii?Q?uy6IJu2PtXrBOwVGRCeQSP1yM/s4zGc1DvH/Yb9MAV5CY5HWbghwU6uvwEOx?=
+ =?us-ascii?Q?CzCxrcQvtAijNO7Wd/ghsW+d/ZddVEvvd187TWzi9bvHFB0F3ebhIGybxKoA?=
+ =?us-ascii?Q?jYRTt8lW/119ujkCJZE9fXxwIidrfThV7VZck56jmi/jRBs7J7TVmjcw03sj?=
+ =?us-ascii?Q?3CALosIC1vHgeALkzZx1suElMnWUn1IHmJ9cyhDdNb6bQv96wrkIn3Yi30VT?=
+ =?us-ascii?Q?dfm33uH36AdzUEiB8M7x49ztEIclR5Euj8sdc5TrctzncMmefZtrFNmU2yeA?=
+ =?us-ascii?Q?CllzowBXHrblaLpLP4hVUQq+cOFYuWNvi6ZggCIiKaiQC9jxHGMxcgQcnzoO?=
+ =?us-ascii?Q?1TL24dHyMpMnDqipaWeoFDfpX/ExgEGJYkuTCBdfjFmuY0rGi8bNRsqLvCBs?=
+ =?us-ascii?Q?Ua0e1f6K1ydzwhRT0QbaZDcLSvq3YMpADTkuBMkZh5yb7fJF9MmogMHVMfJk?=
+ =?us-ascii?Q?WPeDiamuIHA+ODRloHuekzx7l3vjQ859yA7S4ejR5sn6XPM7XCZ6G2K568cJ?=
+ =?us-ascii?Q?1YTjo/C554+HCWVJJHsj20RXHen/IGITahWAkxhqGjNJArKlovhekyUdfpDs?=
+ =?us-ascii?Q?97tAJm+8+3l9/jSSVez6+vht/z4iPj7Alm0UAUwph16rPMuo6z2hv8G825tX?=
+ =?us-ascii?Q?1i8zQ5K5db2vJg2uwvNRdEgt1etjvEVG1HmfoNqt5YhKk4IqLtsGwj6lhpnd?=
+ =?us-ascii?Q?jHase8bdubwcx23EnHYWnbK7xzwWoM1Luj+LYs77kPF/eqRyK/qRywCaNfyY?=
+ =?us-ascii?Q?wXxu6jca9wxHpYygRaNHPJM0XobCaNB2OwCLrbDlKzMBU39LlVx7Y32Y6XBN?=
+ =?us-ascii?Q?1BdSOYPGhViCwX0fKQuMQsh2so8IJgMEltvHV7kc8W+v4g4qM5HDBZ1csuW6?=
+ =?us-ascii?Q?tnH1Zk3Z48PlHLen/xxn5PXWyYxFDp6DtWx9a6CLNChMzg1jfcpKJ/o0wnwA?=
+ =?us-ascii?Q?wLiMb+308AqinoemJCFg3j0CLhuaoGWew+tWljUmkb45I5Ixx5O3padyAxx2?=
+ =?us-ascii?Q?Ildjtx2Y0ZY+wh4rlFfafKM=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 875dd6d2-eab5-4774-8f2b-08dd5d0654a8
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 23:26:33.2477
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PE4y7PtqqRjrgM6OZjJuDwCr9Ie7mMoFPcvoW6wQkGXs2kuiC5Djkf/lT4dLj/iStcd2hCXLZ0NMDD2++4PqNtdK67XAesXz6fcj/nzT/OIMsj6Ip6IbfJmEQT9Fc0mz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR01MB6864
 
 
 
-On 2025-03-06 12:54 p.m., Ian Rogers wrote:
-> When preparing the mem events for the argv copies are intentionally
-> made. These copies are leaked and cause runs of perf using address
-> sanitizer to fail. Rather than leak the memory allocate a chunk of
-> memory for the mem event names upfront and build the strings in this -
-> the storage is sized larger than the previous buffer size. The caller
-> is then responsible for clearing up this memory. As part of this
-> change, remove the mem_loads_name and mem_stores_name global buffers
-> then change the perf_pmu__mem_events_name to write to an out argument
-> buffer.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-c2c.c     |  4 ++-
->  tools/perf/builtin-mem.c     | 12 ++++---
->  tools/perf/util/mem-events.c | 64 +++++++++++++++++++++---------------
->  tools/perf/util/mem-events.h |  3 +-
->  4 files changed, 50 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 15e1fce71c72..5d5bb0f32334 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3239,6 +3239,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  {
->  	int rec_argc, i = 0, j;
->  	const char **rec_argv;
-> +	char *event_name_storage = NULL;
->  	int ret;
->  	bool all_user = false, all_kernel = false;
->  	bool event_set = false;
-> @@ -3300,7 +3301,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  	rec_argv[i++] = "--phys-data";
->  	rec_argv[i++] = "--sample-cpu";
->  
-> -	ret = perf_mem_events__record_args(rec_argv, &i);
-> +	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
->  	if (ret)
->  		goto out;
->  
-> @@ -3327,6 +3328,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  
->  	ret = cmd_record(i, rec_argv);
->  out:
-> +	free(event_name_storage);
->  	free(rec_argv);
->  	return ret;
->  }
-> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-> index 99d5e1491a28..5ec83cd85650 100644
-> --- a/tools/perf/builtin-mem.c
-> +++ b/tools/perf/builtin-mem.c
-> @@ -74,6 +74,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  	int rec_argc, i = 0, j;
->  	int start, end;
->  	const char **rec_argv;
-> +	char *event_name_storage = NULL;
->  	int ret;
->  	struct perf_mem_event *e;
->  	struct perf_pmu *pmu;
-> @@ -140,7 +141,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  		rec_argv[i++] = "--data-page-size";
->  
->  	start = i;
-> -	ret = perf_mem_events__record_args(rec_argv, &i);
-> +	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
->  	if (ret)
->  		goto out;
->  	end = i;
-> @@ -170,6 +171,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  
->  	ret = cmd_record(i, rec_argv);
->  out:
-> +	free(event_name_storage);
->  	free(rec_argv);
->  	return ret;
->  }
-> @@ -521,6 +523,7 @@ int cmd_mem(int argc, const char **argv)
->  		NULL,
->  		NULL
->  	};
-> +	int ret;
->  
->  	argc = parse_options_subcommand(argc, argv, mem_options, mem_subcommands,
->  					mem_usage, PARSE_OPT_STOP_AT_NON_OPTION);
-> @@ -536,14 +539,15 @@ int cmd_mem(int argc, const char **argv)
->  	}
->  
->  	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
-> -		return __cmd_record(argc, argv, &mem, record_options);
-> +		ret = __cmd_record(argc, argv, &mem, record_options);
->  	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
-> -		return __cmd_report(argc, argv, &mem, report_options);
-> +		ret = __cmd_report(argc, argv, &mem, report_options);
->  	else
->  		usage_with_options(mem_usage, mem_options);
->  
->  	/* free usage string allocated by parse_options_subcommand */
->  	free((void *)mem_usage[0]);
-> +	free(sort_order_help);
->  
-> -	return 0;
-> +	return ret;
->  }
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 0277d3e1505c..1d18a5015eea 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -31,9 +31,6 @@ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
->  
->  bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
->  
-> -static char mem_loads_name[100];
-> -static char mem_stores_name[100];
-> -
->  struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i)
->  {
->  	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
-> @@ -81,7 +78,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
->  	return num;
->  }
->  
-> -static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
-> +static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
-> +					     char *buf, size_t buf_size)
->  {
->  	struct perf_mem_event *e;
->  
-> @@ -96,31 +94,31 @@ static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
->  		if (e->ldlat) {
->  			if (!e->aux_event) {
->  				/* ARM and Most of Intel */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name,
->  					  perf_mem_events__loads_ldlat);
->  			} else {
->  				/* Intel with mem-loads-aux event */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name, pmu->name,
->  					  perf_mem_events__loads_ldlat);
->  			}
->  		} else {
->  			if (!e->aux_event) {
->  				/* AMD and POWER */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name);
-> -			} else
-> +			} else {
->  				return NULL;
-> +			}
->  		}
-> -
-> -		return mem_loads_name;
-> +		return buf;
->  	}
->  
->  	if (i == PERF_MEM_EVENTS__STORE) {
-> -		scnprintf(mem_stores_name, sizeof(mem_stores_name),
-> +		scnprintf(buf, buf_size,
->  			  e->name, pmu->name);
-> -		return mem_stores_name;
-> +		return buf;
->  	}
->  
->  	return NULL;
-> @@ -238,55 +236,66 @@ void perf_pmu__mem_events_list(struct perf_pmu *pmu)
->  	int j;
->  
->  	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> +		char buf[128];
->  		struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
->  
->  		fprintf(stderr, "%-*s%-*s%s",
->  			e->tag ? 13 : 0,
->  			e->tag ? : "",
->  			e->tag && verbose > 0 ? 25 : 0,
-> -			e->tag && verbose > 0 ? perf_pmu__mem_events_name(j, pmu) : "",
-> +			e->tag && verbose > 0
-> +			? perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf))
-> +			: "",
->  			e->supported ? ": available\n" : "");
->  	}
->  }
->  
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr, char **event_name_storage_out)
->  {
->  	const char *mnt = sysfs__mount();
->  	struct perf_pmu *pmu = NULL;
-> -	struct perf_mem_event *e;
->  	int i = *argv_nr;
-> -	const char *s;
-> -	char *copy;
->  	struct perf_cpu_map *cpu_map = NULL;
-> -	int ret;
-> +	size_t event_name_storage_size =
-> +		perf_pmu__mem_events_num_mem_pmus(NULL) * PERF_MEM_EVENTS__MAX * 128;
-> +	size_t event_name_storage_remaining = event_name_storage_size;
-> +	char *event_name_storage = malloc(event_name_storage_size);
+On Wed, 5 Mar 2025, Robin Murphy wrote:
 
-if (!event_name_storage)
-	return -ENOMEM
+> Hi all,
+>
+> This is part of something I'm working towards, but I figure it stands
+> up on its own enough to be worth getting out early. Compile-tested
+> only, but it's straightforward enough that I'm confident.
+>
+> Cheers,
+> Robin.
 
-Others look good to me.
+I ran a very quick test on Ampere AmpereOne and everything seemed to work
+as expected.
 
-Thanks,
-Kan
+Cheers, Ilkka
 
-> +	char *event_name_storage_ptr = event_name_storage;
->  
-> +	*event_name_storage_out = NULL;
->  	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
->  		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> -			e = perf_pmu__mem_events_ptr(pmu, j);
-> +			const char *s;
-> +			struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
-> +			int ret;
->  
->  			if (!perf_mem_record[j])
->  				continue;
->  
->  			if (!e->supported) {
-> +				char buf[128];
-> +
->  				pr_err("failed: event '%s' not supported\n",
-> -					perf_pmu__mem_events_name(j, pmu));
-> +					perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf)));
-> +				free(event_name_storage);
->  				return -1;
->  			}
->  
-> -			s = perf_pmu__mem_events_name(j, pmu);
-> +			s = perf_pmu__mem_events_name(pmu, j, event_name_storage_ptr,
-> +						      event_name_storage_remaining);
->  			if (!s || !perf_pmu__mem_events_supported(mnt, pmu, e))
->  				continue;
->  
-> -			copy = strdup(s);
-> -			if (!copy)
-> -				return -1;
-> -
->  			rec_argv[i++] = "-e";
-> -			rec_argv[i++] = copy;
-> +			rec_argv[i++] = event_name_storage_ptr;
-> +			event_name_storage_remaining -= strlen(event_name_storage_ptr) + 1;
-> +			event_name_storage_ptr += strlen(event_name_storage_ptr) + 1;
->  
->  			ret = perf_cpu_map__merge(&cpu_map, pmu->cpus);
-> -			if (ret < 0)
-> +			if (ret < 0) {
-> +				free(event_name_storage);
->  				return ret;
-> +			}
->  		}
->  	}
->  
-> @@ -301,6 +310,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
->  	}
->  
->  	*argv_nr = i;
-> +	*event_name_storage_out = event_name_storage;
->  	return 0;
->  }
->  
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index 8dc27db9fd52..a5c19d39ee37 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -38,7 +38,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
->  bool is_mem_loads_aux_event(struct evsel *leader);
->  
->  void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr);
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> +				 char **event_name_storage_out);
->  
->  int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
->  int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-
+> Robin Murphy (3):
+>  perf/arm_cspmu: Move register definitons to header
+>  perf/arm_cspmu: Generalise event filtering
+>  perf/arm_cspmu: Add PMEVFILT2R support
+>
+> drivers/perf/arm_cspmu/ampere_cspmu.c | 32 ++++-------
+> drivers/perf/arm_cspmu/arm_cspmu.c    | 81 ++++++---------------------
+> drivers/perf/arm_cspmu/arm_cspmu.h    | 57 +++++++++++++++++--
+> drivers/perf/arm_cspmu/nvidia_cspmu.c | 21 ++++++-
+> 4 files changed, 100 insertions(+), 91 deletions(-)
+>
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+>
+>
+>
