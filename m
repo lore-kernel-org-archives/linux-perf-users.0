@@ -1,64 +1,64 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6A418DB3F
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 09:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A421D8DE0
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 09:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741254336; cv=none; b=XBuOwCmmhw4OBrb/1qaNrtELck3d+EXfk1jGUBDfldJ1YaUj/cSqO5Ee42+yPJCq049J5drN0bJm994ObTD2TTrXsieisbCS141pFgGrRh7DXzqO3oM7Z0A/LK60LmFb+TAcZmuVSzNFOL5De/qyVVBSsWVLrViTLNslvHNCbOk=
+	t=1741254443; cv=none; b=nfkThV4Qw6CIcrADjJYIAwHyGzKGWBtY/xtgr5Qhg39f4RPv5pGcUnvvbSkjELosKask/ROGccML8GSAUbAuT088dOAPLHOuv+vXmsPNlUhVA0YIiRS0A+dHtQOnJxxkV3HuEldKnu8PndXCpHG2GV14f8e3py003Lz3dfBOx08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741254336; c=relaxed/simple;
-	bh=/Paa9Ppr3dpc3yGGhGt6blce4IOqRHPQareE3kaavvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X8Qk2gVrlb4nYHHAPUFE6sYgpAmmhsKMeiLT3iMETwJeMZ+dfd26ssOQMQOeCY372NI38Tmbm0ZTbjNmf4FvWlz/qxClGY7lT3ZrjxOqj4PScKXgSci3Jcr5g0JlfFiQF4JFAgimkZEoWLwWZXN14OUKq8bYtJkejUu/8M/1rb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ad9pku22; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1741254443; c=relaxed/simple;
+	bh=ocDWJ4p9s7n2aBiEkTNQOAwnVM+Kg49B5GiFnl8AY0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UoBMR89uSvKBmCWpWhwJjV7cfLMkvl39RZUGokUWlX5EzaV0TDRJh+v6feT/cJcD0aG6dqUXh3Eb4EindHqOYCOmJAr94MKrOjDeTwYZvChvxFupHYSK0GTLEQO0B8Oa2iES5AeGPTvLEtQtu73ehthYXqfblaLxsiYs0zkRO0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z8PaDm2i; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ad9pku22"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bc31227ecso2352415e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 01:45:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z8PaDm2i"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-438a39e659cso2189325e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 01:47:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741254333; x=1741859133; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741254440; x=1741859240; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ib6uvD1UOSB7iCE+uK87YhdmFx4Z1+LHRHqLNKyZf3U=;
-        b=Ad9pku22dJj8KAQguQn77RpGh1Fkt2GKsM9/aT7ce8unW9LsZYbx3MLbc4sKfWJpSB
-         9tGQMZCMJi5RnWjxs8XJAE/tYkHq0pY0FZkNmZaQep2cLZLghlvPvyloe+s7y9vQblTi
-         0V5JxVTXLVDZy21dW5TRtmVHpzGPNuBkAwVoINlvIs156s3vncph4oBnOxiqtSx5Ggnr
-         uFOJp0xnftZfQYs1ZEzATtSPPlYqYYnoM/Uf/tFMQckA0vStY/KJxsMdsP++67W6S8ws
-         EXftUJq1d6925en5m/BTmrp4yjhWO5e/dMqnCjZHBQ/Zamx7mqpVi4Xb4UmVJvkBCmpa
-         38Qg==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yetSAyXhU+AeT+AIBEYa1+lDd3BOD+YukfIQ29NG8n8=;
+        b=Z8PaDm2iiCk/iFv9382xCErCghfxV/Qq5xoKC1+HywE/h12cjE/BaBhevSLZ6zzeks
+         bR5Vs6bUvuN/n1wcFsGT8TZFgXhBe75z0YIAHdyB6EdgLQ/w5Qj7m2z5zPxKXPj7PL+w
+         xjhOSfXKp2aEihWcLgmfmghxG8YDwu6RHr+OpLbRKBM28mgtuCySXgqcbMPlw5x8AHFc
+         3D6hghp3JDxw7dbbSApK0526XaWN+cfkOJvNm+ZsPjEDRg7yhTpzw0zRTuDehaSpiW65
+         FKu0Kb5pj/geq4BKgOhDK8R0xMzkvr34ljwsfKQ0V0nF6G3GTCaSvcP1CEvFS/RCJdlZ
+         XvEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741254333; x=1741859133;
+        d=1e100.net; s=20230601; t=1741254440; x=1741859240;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ib6uvD1UOSB7iCE+uK87YhdmFx4Z1+LHRHqLNKyZf3U=;
-        b=fGyzSoNZOqgf22EXllZGeIAFLZJ1GdndKknBMzeqyfYhjdkc0zc3ss7svl34xAOd+B
-         RKt0KKe9hldG2DBI+zSGBvcN3p52+OVlVme8VDFHIihlyBW7FPUDAwYfj3mA72dtUX2C
-         DkaALlVMV/OqrnUzxIeQj/HdGcp//vjlxZ3v6b0rLGYERqH7CKyZt3v3qrswU1htAWzL
-         7KnccLOVVAPjZ4ZmYRJgjaktfpO7GiVxkIUu/lVYTA/WanU9mpaw+KGZPKXG2mAaGb+T
-         mrAfmYv0OFB0e2/KegJ2fCL2fLuV364FSfQuIjNQ84Fw3Mh8IXq+994uoYwSYVPNI/1l
-         YJhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoXUhMSLYvCzWPaeIcKFLYZrotBFzaHwIZS0Qw9HD8WSTDcdpWMqKw8pG8JiCOJDinLDSxKKLNoPQQtASTBV4d@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXiq17ISzIJEpJwcvI6OtDFq90jVuvVqZJZwAVJrKqTa9b79E4
-	hzIT2SLYM/5D2oT7rw3ewwInqTjfll+aFDFcG7w9kxBA9fIY5CkQ6w60VF+4vRk=
-X-Gm-Gg: ASbGnctZVTKtW4RGy1MtZPCQzaxuWRtHANREa6RYBGCAUHOINTqmKc0wvAylbgHZBox
-	eE7xYvrpJMRXKqgJqTIj0lE05dpYfqY3Kfxu5Rfl3Guxio0TYVkzOW7RImLx+BSxq0cJZpkzS2C
-	VfzQGdHBwnPR5x6SBRto4ttv1y/7Ahz4rVNGnlR9Nt0q8uFCANy5tCU3K+kNt+xsE6qEALEbbcn
-	iDEipNVVsEVqBw6BbiwY5viJtAqXs5eXoYf2CD9usDvrfkM5+5U//Cgvei/65Eh2Kl+uyKjdKoJ
-	ySWLp3q9NMaxTKGA0NewtFmOZkJtFGD2PQ+tLhb/+IthyniB7mnmpQ==
-X-Google-Smtp-Source: AGHT+IGKKY+W5AegUXBiD0ygLeBmuUSupCHLoSK0LTRbSaruyo4vSjRj8N2aVNPCWrxf/uCOb1/Erw==
-X-Received: by 2002:a05:600c:3506:b0:434:fb65:ebbb with SMTP id 5b1f17b1804b1-43bd298f535mr50704515e9.17.1741254331601;
-        Thu, 06 Mar 2025 01:45:31 -0800 (PST)
+        bh=yetSAyXhU+AeT+AIBEYa1+lDd3BOD+YukfIQ29NG8n8=;
+        b=ElmP7zq70jhb1Z/qTyglw784BUJ+Ve0nwYuPU8Z6V4ysbkp7VFhRwJ5wzog5aWc0xM
+         9PuYEo5RxXPp6RFu5JrvYasg7OZk2MS8u3a6PJio8T9UYSZxfmeoKjAYEEX5tWviwish
+         s2gl0iatie0UP9s5vIk3f0zAN2jxfstdRAUEmVjigEcUCEmvs3avgNbOydB1365aTDel
+         ePt57Bv7xGTG3odb0uRiyGSbz7VV6OIRRqjdlUbkDOWxLiS40Mr51JnaCCzQErOcHHmM
+         jJb7WDi0ac+HogPD/Azy7SeBz62fs4QpXyHWU0v73h+NfiXchX6Kq7BfgdTbbFR/UMx3
+         Sybg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeOIYJphju7SnsswFBL/xAfMxpY+f2EF5WORdX3IH/z/SWXYCpU4HNR2vNdiKupalR2tmp4szh0R1qS/5ZvrTo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbkudCjdgdu5svLwBQnfQXyUJJNROiNgCa0q0YWqmOL7DOyfSg
+	euTLr4aiQtQffEAIxmt8KgE2BqbI97COzhe7VpWgfTZS29Gqc0oGLd16rO0eNfU=
+X-Gm-Gg: ASbGncviGLd4pomiA2asZloySzidGbfKDcOixyXXmkl2FqmrBDVwN+1ap472TkVNqAG
+	tRliLc1nb5cYfNTun2LFrwSQqGS4vFg4eB+2flKh9ycTgxisSTC2roj0PcvTdD4GI1ZKeFADCYI
+	SEBtc2SjClJaYqDfpBeDtKK4aLvnVq74Y+HN+RPrDffMuDtYQjOkTKFbGVZtMXVIyILZejuMB0b
+	kGF9T+IN7oaN50Ze2Q+Zbz468Cs55BltzP2qmb2rnCvsNCVp0F20hiZW1/5EnjC8jbkHkHS3NBb
+	2sQLcp6cw5IQ2uUppclUjRVrqL0K/tNdGjj+FptaW5ZzOj5cZNkv+w==
+X-Google-Smtp-Source: AGHT+IGWRfZvc13aBacUnCiMGOUsDI0ES2OxfOypJSSVIc/MKe01QPLe7C+nLTUVOBpIc42Ba5F7jA==
+X-Received: by 2002:a5d:588c:0:b0:390:e889:d1cf with SMTP id ffacd0b85a97d-3911f7b8dbcmr5218367f8f.37.1741254440106;
+        Thu, 06 Mar 2025 01:47:20 -0800 (PST)
 Received: from [192.168.1.247] ([145.224.67.152])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4353003sm46516085e9.28.2025.03.06.01.45.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79fbsm1520863f8f.13.2025.03.06.01.47.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 01:45:31 -0800 (PST)
-Message-ID: <4484f7e8-e3c5-4488-9b1c-40d9c7124ecd@linaro.org>
-Date: Thu, 6 Mar 2025 09:45:30 +0000
+        Thu, 06 Mar 2025 01:47:19 -0800 (PST)
+Message-ID: <83fde43e-b74c-4686-8db1-9d28a60533ad@linaro.org>
+Date: Thu, 6 Mar 2025 09:47:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,30 +66,45 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf/arm_cspmu: Move register definitons to header
-To: Robin Murphy <robin.murphy@arm.com>, will@kernel.org
-Cc: mark.rutland@arm.com, bwicaksono@nvidia.com,
- ilkka@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org
-References: <cover.1741190362.git.robin.murphy@arm.com>
- <5a3c796560665b51cb63fec0d473afd8f8d0a836.1741190362.git.robin.murphy@arm.com>
+Subject: Re: [PATCH v1] perf test: Fix leak in "Synthesize attr update" test
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250305191931.604764-1-irogers@google.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <5a3c796560665b51cb63fec0d473afd8f8d0a836.1741190362.git.robin.murphy@arm.com>
+In-Reply-To: <20250305191931.604764-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 05/03/2025 4:10 pm, Robin Murphy wrote:
-> Implementations may occasionally want to refer to register offsets, so
-> for the sake of consistency move all of the register definitions to join
-> the PMIIDR fields in the private header where they can be shared. As an
-> example nicety, we can then define Ampere's imp-def filters in terms of
-> the architectural PMIMPDEF range rather than open-coded offsets.
+On 05/03/2025 7:19 pm, Ian Rogers wrote:
+> The own_cpus map variable may be non-NULL and hold a reference, in
+> particular on hybrid machines. Do a put before overwriting the
+> variable to avoid a memory leak.
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
+>   tools/perf/tests/event_update.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+> index d6b4ce3ef4ee..9301fde11366 100644
+> --- a/tools/perf/tests/event_update.c
+> +++ b/tools/perf/tests/event_update.c
+> @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+>   	TEST_ASSERT_VAL("failed to synthesize attr update name",
+>   			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
+>   
+> +	perf_cpu_map__put(evsel->core.own_cpus);
+>   	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
+>   
+>   	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 
