@@ -1,110 +1,109 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A421D8DE0
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 09:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C717B50B;
+	Thu,  6 Mar 2025 10:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741254443; cv=none; b=nfkThV4Qw6CIcrADjJYIAwHyGzKGWBtY/xtgr5Qhg39f4RPv5pGcUnvvbSkjELosKask/ROGccML8GSAUbAuT088dOAPLHOuv+vXmsPNlUhVA0YIiRS0A+dHtQOnJxxkV3HuEldKnu8PndXCpHG2GV14f8e3py003Lz3dfBOx08=
+	t=1741256159; cv=none; b=f9qyFQSJFGv6EMAVMFUt9anvh/boqo2b9nehgchV817+E2i4dDD7ZSmU1TDzT768YRAaE8TPNy9yKDZ2b7f3k4r+eHngog1qdFDrY+SbN6i2t27dGsVLXQR9ju8Fz81H/unmYXr1+sncu+JaSVGWNbOJsfNVIDMKB285/tT3zu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741254443; c=relaxed/simple;
-	bh=ocDWJ4p9s7n2aBiEkTNQOAwnVM+Kg49B5GiFnl8AY0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UoBMR89uSvKBmCWpWhwJjV7cfLMkvl39RZUGokUWlX5EzaV0TDRJh+v6feT/cJcD0aG6dqUXh3Eb4EindHqOYCOmJAr94MKrOjDeTwYZvChvxFupHYSK0GTLEQO0B8Oa2iES5AeGPTvLEtQtu73ehthYXqfblaLxsiYs0zkRO0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z8PaDm2i; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741256159; c=relaxed/simple;
+	bh=GyD5rv2egr2dMdLAzHO0FeBEFkCMJ1OAl97tzWJuVcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AALKbeI6voHNJtWx/Ps7MWW06ssQXuoy0PBWPLXxSv09MlbfCV6xr8mj+glcxnmP3C6IJBSda7r0UMwwzNrCDKIfnDZMfBEFhOLZUGDybq2fMr3tlouLFFyRf7Gi3uPr/keakXcbag2j4KQv8OGbVNEvioACD5VXUteUaZPEiL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAwOtLHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z8PaDm2i"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-438a39e659cso2189325e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 01:47:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741254440; x=1741859240; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yetSAyXhU+AeT+AIBEYa1+lDd3BOD+YukfIQ29NG8n8=;
-        b=Z8PaDm2iiCk/iFv9382xCErCghfxV/Qq5xoKC1+HywE/h12cjE/BaBhevSLZ6zzeks
-         bR5Vs6bUvuN/n1wcFsGT8TZFgXhBe75z0YIAHdyB6EdgLQ/w5Qj7m2z5zPxKXPj7PL+w
-         xjhOSfXKp2aEihWcLgmfmghxG8YDwu6RHr+OpLbRKBM28mgtuCySXgqcbMPlw5x8AHFc
-         3D6hghp3JDxw7dbbSApK0526XaWN+cfkOJvNm+ZsPjEDRg7yhTpzw0zRTuDehaSpiW65
-         FKu0Kb5pj/geq4BKgOhDK8R0xMzkvr34ljwsfKQ0V0nF6G3GTCaSvcP1CEvFS/RCJdlZ
-         XvEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741254440; x=1741859240;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yetSAyXhU+AeT+AIBEYa1+lDd3BOD+YukfIQ29NG8n8=;
-        b=ElmP7zq70jhb1Z/qTyglw784BUJ+Ve0nwYuPU8Z6V4ysbkp7VFhRwJ5wzog5aWc0xM
-         9PuYEo5RxXPp6RFu5JrvYasg7OZk2MS8u3a6PJio8T9UYSZxfmeoKjAYEEX5tWviwish
-         s2gl0iatie0UP9s5vIk3f0zAN2jxfstdRAUEmVjigEcUCEmvs3avgNbOydB1365aTDel
-         ePt57Bv7xGTG3odb0uRiyGSbz7VV6OIRRqjdlUbkDOWxLiS40Mr51JnaCCzQErOcHHmM
-         jJb7WDi0ac+HogPD/Azy7SeBz62fs4QpXyHWU0v73h+NfiXchX6Kq7BfgdTbbFR/UMx3
-         Sybg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeOIYJphju7SnsswFBL/xAfMxpY+f2EF5WORdX3IH/z/SWXYCpU4HNR2vNdiKupalR2tmp4szh0R1qS/5ZvrTo@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbkudCjdgdu5svLwBQnfQXyUJJNROiNgCa0q0YWqmOL7DOyfSg
-	euTLr4aiQtQffEAIxmt8KgE2BqbI97COzhe7VpWgfTZS29Gqc0oGLd16rO0eNfU=
-X-Gm-Gg: ASbGncviGLd4pomiA2asZloySzidGbfKDcOixyXXmkl2FqmrBDVwN+1ap472TkVNqAG
-	tRliLc1nb5cYfNTun2LFrwSQqGS4vFg4eB+2flKh9ycTgxisSTC2roj0PcvTdD4GI1ZKeFADCYI
-	SEBtc2SjClJaYqDfpBeDtKK4aLvnVq74Y+HN+RPrDffMuDtYQjOkTKFbGVZtMXVIyILZejuMB0b
-	kGF9T+IN7oaN50Ze2Q+Zbz468Cs55BltzP2qmb2rnCvsNCVp0F20hiZW1/5EnjC8jbkHkHS3NBb
-	2sQLcp6cw5IQ2uUppclUjRVrqL0K/tNdGjj+FptaW5ZzOj5cZNkv+w==
-X-Google-Smtp-Source: AGHT+IGWRfZvc13aBacUnCiMGOUsDI0ES2OxfOypJSSVIc/MKe01QPLe7C+nLTUVOBpIc42Ba5F7jA==
-X-Received: by 2002:a5d:588c:0:b0:390:e889:d1cf with SMTP id ffacd0b85a97d-3911f7b8dbcmr5218367f8f.37.1741254440106;
-        Thu, 06 Mar 2025 01:47:20 -0800 (PST)
-Received: from [192.168.1.247] ([145.224.67.152])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79fbsm1520863f8f.13.2025.03.06.01.47.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 01:47:19 -0800 (PST)
-Message-ID: <83fde43e-b74c-4686-8db1-9d28a60533ad@linaro.org>
-Date: Thu, 6 Mar 2025 09:47:18 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAwOtLHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73FC0C4CEE0;
+	Thu,  6 Mar 2025 10:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741256159;
+	bh=GyD5rv2egr2dMdLAzHO0FeBEFkCMJ1OAl97tzWJuVcE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QAwOtLHaszWKb2z40qTZfmkWj0elqbFbgDTWAWlnnJmPwsE83GHvKS39FnQV7SPYR
+	 T2zNPUk/TXzzSyelENHgIPOHOtQJlwZ0sfnqoDPq0EHzH0t8BmfHfDntuhK5UxsiaF
+	 amwC8JcF/NU+7jisf7pDtdeqOHlGmP/YTZk+h+qQYwxAzi3WJgkOxdr5rNGjUc7OfO
+	 eGcciFwbQDCh8fAlo5Jja8gYTso8yrFqO4UPHA+SP8rhSoml84JkH3JbJS/DBYnzFg
+	 1uEeH+9418DNDOK+0O0gSvKi+G10D6q6Q0cSDfQ/aaUIg9eNn4z6rWdB1vaBKl27FZ
+	 annRwzXDVmOLA==
+Date: Thu, 6 Mar 2025 11:15:38 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 3/8] ftrace: Move trace sysctls into trace.c
+Message-ID: <dekaemtglzq5el2omrusxyqntdqbzyllcalzor4jrindici25g@x2bdsiblw6iw>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+ <20250218-jag-mv_ctltables-v1-3-cd3698ab8d29@kernel.org>
+ <20250303204455.69723c20@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test: Fix leak in "Synthesize attr update" test
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250305191931.604764-1-irogers@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250305191931.604764-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303204455.69723c20@gandalf.local.home>
 
-
-
-On 05/03/2025 7:19 pm, Ian Rogers wrote:
-> The own_cpus map variable may be non-NULL and hold a reference, in
-> particular on hybrid machines. Do a put before overwriting the
-> variable to avoid a memory leak.
+On Mon, Mar 03, 2025 at 08:44:55PM -0500, Steven Rostedt wrote:
+> On Tue, 18 Feb 2025 10:56:19 +0100
+> Joel Granados <joel.granados@kernel.org> wrote:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/tests/event_update.c | 1 +
->   1 file changed, 1 insertion(+)
+> Nit, change the subject to:
 > 
-> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-> index d6b4ce3ef4ee..9301fde11366 100644
-> --- a/tools/perf/tests/event_update.c
-> +++ b/tools/perf/tests/event_update.c
-> @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
->   	TEST_ASSERT_VAL("failed to synthesize attr update name",
->   			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
->   
-> +	perf_cpu_map__put(evsel->core.own_cpus);
->   	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
->   
->   	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+>   tracing: Move trace sysctls into trace.c
+Done. Thx for the feedback 
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Best
+> 
+> as I try to only have the "ftrace:" label for modifications that affect
+> attaching to functions, and "tracing:" for everything else.
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> -- Steve
+> 
+> 
+> > Move trace ctl tables into their own const array in
+> > kernel/trace/trace.c. The sysctl table register is called with
+> > subsys_initcall placing if after its original place in proc_root_init.
+> > This is part of a greater effort to move ctl tables into their
+> > respective subsystems which will reduce the merge conflicts in
+> > kerenel/sysctl.c.
+> > 
+> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> > ---
+...
+> > +	},
+> > +};
+> > +
+> > +static int __init init_trace_sysctls(void)
+> > +{
+> > +	register_sysctl_init("kernel", trace_sysctl_table);
+> > +	return 0;
+> > +}
+> > +subsys_initcall(init_trace_sysctls);
+> >  
+> >  #ifdef CONFIG_TRACE_EVAL_MAP_FILE
+> >  /* Map of enums to their values, for "eval_map" file */
+> > 
+> 
 
+-- 
+
+Joel Granados
