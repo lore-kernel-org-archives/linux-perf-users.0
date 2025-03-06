@@ -1,365 +1,345 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58F71FF7C4
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 17:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7728325D8F4
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 17:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741281946; cv=none; b=Ik/Bb3YPcFoK2Brf9f8PNNcBTwfgMA17XB8YTW2BKTLuL4t2Ya2iqJVbriH4NoIj+po0fYq+ExrD5z3eOwKJ2FPhTxTZRBPANn/SQZiSGP+ntys51Gkc8PIKHp2MXHiaDxQAWZJaIqSrsQPzYye64FMpE5I+YTXdwz23CJ5q5Ek=
+	t=1741283658; cv=none; b=dRf6dFaXb6aIY5pi8GvUhccU/v9Y7sZTOmo+dIfLBrym9BGlUpJm34kD8Shki8SHBMKTNSmiPJODq9Yg2HPD353NVtVlsSOh+Rgsr+im0Fru/aJowmyouMxl0/OziRikWAXvMbZGb3tS77+lXjC1Fg3TVDimUU+IJuR3FjpPQBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741281946; c=relaxed/simple;
-	bh=4y5CKLOFYsgEvaUVDJFTAKqyglT/sOqbipANDWLGmbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gkoC9YSyfFwM3Up7cbXAOj1dafRjLy92Jo+2GNS4BGZE04JL58OhygEHG1vKB1PWt0TWDe32oW7POpIiDGd91tOEgRcKqjEwXA/Q/nWDHHp/1IW5GYqdo/jwOICpl01zoqkBVZhE8rjBmxjEw3mj/EWjLEBASvguSfMY5yxwfrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y8HlyCAs; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1741283658; c=relaxed/simple;
+	bh=K88Ohbta0Jmw1zMYqJvLnOmOhvYi8e/Qz/vivWaOsqc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Kg8CLISRYmcJMR5c/CEBemmD2cfWRv2Iyq/SYG2O+obiPc6MZeb5Wm29zJlTpuQDWJSfaWrLo9IVi0P/XC//S3W5MZqC8Fz/FQHVmmHqgYMqzRMIfVIEqcRkn2zs4tcN1Vvw1E10iVmH5QZgtTc4Q4eW/5cuhTpUZD2S+l2oY4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ymLSIEQ; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y8HlyCAs"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240aad70f2so194625ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 09:25:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ymLSIEQ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff64898e2aso1789189a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 09:54:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741281944; x=1741886744; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CDX5azaNCVN3xqFvG7UlweG4Vw/2ljxh71GMAIeJGvU=;
-        b=y8HlyCAsYGHjlmEUXPut0r8kmVLoUASCMV1ZOFfqgwh8G4rilUbkEaE7DON1it6Ugh
-         qpR7u6RvttdpQpMNQZAYUbmdKpR2mGEjdBE4+/LjCi947CU3ELlrcK+wDWlr885ZAFHy
-         /QNlzurzLe2COlKzZf5fcAlmmtYvKlxlT3fwXSzlyJGOnMDpaDQe2tot8zS0nrmsO1gb
-         YamuaHpzRrnwDvSHA+Y4xkwbito0YTOu2sq4oOx7TugUPQ4QkJwkWv3IauQGpZ8PxNhu
-         vV9vUTNQvLUotjYWlvTJuS2Z1fHqK5X2n5Cq966opuPqZ2de3Uvq4O3Fj+vIy/OAoHxq
-         66XQ==
+        d=google.com; s=20230601; t=1741283656; x=1741888456; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vUA6eR5Cy6R6G2yN7A0vC6xMAzc8FKK5ximtyOCtpms=;
+        b=4ymLSIEQ5tHWsyKl5ImDjiPNW4jUmD08nIVLJlqOI5eKJAxLPF9NApOMTNJ+PN5XRz
+         xNgdbnJYi8vA46JS+c3DHgjb+egpuLLDZwDvdUs21FgVkcw7AFBP+JVRurdEZ0eHd/jP
+         UZ5p+LF1TQhXDJEWC/OyyGu/srT/ZlQ0V0CSsLPw9u4aNNcv2jVUq3r4FAal6JIEG+lh
+         mvCCztEsjrm4/kVg62QYEnL7x3ZNRaj85OzLNOI8DmE7/xbPhY+y14d0qzljUykG4TO7
+         A/0dEcMN2JfqqqXbt7jTsRC31EfNrcpKqK9aMMnjPJAbXrenq3MQJiHWoOCFosJMAtia
+         gFSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741281944; x=1741886744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CDX5azaNCVN3xqFvG7UlweG4Vw/2ljxh71GMAIeJGvU=;
-        b=weiF9sj2qdOlxZSwike/pxj1QEUdjNU6OvcHnEm8zNGS+MMz+uOZrF6UcNvAinX8Bc
-         WglbmuqnafrDweuBRKMkSinRtdWO6xCgdGNQ2aumMKJB9EmmpLwz3l+XekPWTrO/yzav
-         jM0lr4WJkcYEcnLk8kamol4aY/MkMMkwveRbyVpXPar1ehysdLiTUijhQ3mhkE7/yDtT
-         +m3kA3yZRjZc5eNazYVuH6mkn2rOLOjnSt5FvdJVXkhttBibt/bk+2AN14rR4Hsf6kii
-         BP4R9ZKy6KKnt0huEV63TFxNjg96tKjsL+6f8r4AKEX4y24th+lW5ULHKWB1SVIBmjw9
-         7PHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVoqKGO2Yx6aXXB3vVEQM1aMQd69Cli2EDhtMR981eeEhZm0AZh3tjzbu008jjEjcOOOR6sH0xlsfbjd0tg+SE2@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsqf18ba0xWPLthdCYNRgo4+Aa5RZuJklXkm83XFy2X4dDh0yy
-	HftvjVvJXtm5Eev2xEvag0QRku43DttABGbgHswAxFZ+DMvep0BtJC8ICZszzozuRrribU5JYMF
-	yZaC+tHcBbo3Lt/UAVwL4SLwjElAAM3RYJjYe
-X-Gm-Gg: ASbGnctC9TLhhC/18yr1lbJOHXO/TZxr0e5J2IijEEBvJR2bJzHdEl+Ed1BfpKfU8br
-	Lc8921khmpDfQ76q2xcIyTMaZACruVuKXf6xmpN/v93j+x4uQS6BPGVF1vvC8QgQ9u5aSTOMyRG
-	Gzef0ELVHOMO5pSHd4FOuyp+PMQyWRhBdFWOze/D8NIbVyUqbUODbXkRI=
-X-Google-Smtp-Source: AGHT+IFeJDH1cIAqw7hbTU5dgSjR4VlHoqEfNoN2goaDYUdfA9Y0xYQB0s0fx7/m7JBmEgeT32YBFka1Zgk970EkZZI=
-X-Received: by 2002:a17:903:120d:b0:200:97b5:dc2b with SMTP id
- d9443c01a7336-2240e4935d3mr2630795ad.15.1741281943789; Thu, 06 Mar 2025
- 09:25:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741283656; x=1741888456;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vUA6eR5Cy6R6G2yN7A0vC6xMAzc8FKK5ximtyOCtpms=;
+        b=RzPE+0m4r3Th/751xEgvtOSx+YSN6H5WCpPW0MKOH+sn4eoFu7UYlIS2xs9+TUS36p
+         LtkntGa3jCVWg9OOQBYgVqfEZNwrDYxoN85odlBabquEuOpolO/ZQ2v0yM+uNgYKkK0P
+         1gLNCYaKLTk5ssAfIhjA2yR25QL3xl0/WrsXy2dVRMHZPQ4OjwT6bKRqVaotIRd+sgO0
+         ijjTlEbpoBgtwsZp57v8vzwrYOn+5BJ0EzNUOuJoAYd8OWgAHqHRhUqHdyWfmAN65uKk
+         cY8t9FM+YFpG9bR/yzv4NXkq/Go5Clrcww0OAauZcuy9DnYO8byCiXLcqVRPKqFJ2lRl
+         O9ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXBxL8BUzy7A7Le3ptnb6wv1yZySaY9tMb3X04wm5h/KP58A3Mre5+s+lPfzcHV9q3anJzj2Nz4xg6kWogxg/Nb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT+rGodEE+hDQhhSAB5lbib/1Wfi+kRRDBqGSf0SqFibK7JHsX
+	gplG7wtkpZzrO2XEVqJBLHEN71KaDkBdNtGAqUlYtr03P+4mQew9JNTtzUmmnZ+T52Z/kF+L5Kt
+	gVEfhug==
+X-Google-Smtp-Source: AGHT+IFPSZrd2iB3AEuiUBgwaydDdZlu2UVP4RyH2f+DgXcj8Mg5ixnqBL95g0UP+e/xgRoWFtw2nStlckYG
+X-Received: from pjg3.prod.google.com ([2002:a17:90b:3f43:b0:2f2:e97a:e77f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d4f:b0:2fa:2268:1af4
+ with SMTP id 98e67ed59e1d1-2ff6175a47dmr6777378a91.7.1741283655692; Thu, 06
+ Mar 2025 09:54:15 -0800 (PST)
+Date: Thu,  6 Mar 2025 09:54:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250305083735.393333-1-irogers@google.com> <20250305083735.393333-2-irogers@google.com>
- <f7e4f7e8-748c-4ec7-9088-0e844392c11a@linux.intel.com>
-In-Reply-To: <f7e4f7e8-748c-4ec7-9088-0e844392c11a@linux.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250306175408.852130-1-irogers@google.com>
+Subject: [PATCH v1] perf mem: Don't leak mem event names
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Mar 2025 09:25:31 -0800
-X-Gm-Features: AQ5f1Jq-9DMT9lupgZ-H-kLEeV8c0R2k1IEGyhfcRIwo6CtoSglEKmb1mGRCxKQ
-Message-ID: <CAP-5=fWvdy+_H4hv28j+N1-swfGA5Q0yHDvewvsyh3t7dQb0JA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf parse-events: Corrections to topdown sorting
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 6, 2025 at 1:17=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.c=
-om> wrote:
->
->
-> On 3/5/2025 4:37 PM, Ian Rogers wrote:
-> > In the case of '{instructions,slots},faults,topdown-retiring' the
-> > first event that must be grouped, slots, is ignored causing the
-> > topdown-retiring event not to be adjacent to the group it needs to be
-> > inserted into. Don't ignore the group members when computing the
-> > force_grouped_index.
-> >
-> > Make the force_grouped_index be for the leader of the group it is
-> > within and always use it first rather than a group leader index so
-> > that topdown events may be sorted from one group into another.
-> >
-> > Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > Closes: https://lore.kernel.org/lkml/20250224083306.71813-2-dapeng1.mi@=
-linux.intel.com/
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/parse-events.c | 54 ++++++++++++++++++----------------
-> >  1 file changed, 28 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index 35e48fe56dfa..cf32abc496e9 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1983,31 +1983,30 @@ static int evlist__cmp(void *_fg_idx, const str=
-uct list_head *l, const struct li
-> >       bool lhs_has_group, rhs_has_group;
-> >
-> >       /*
-> > -      * First sort by grouping/leader. Read the leader idx only if the=
- evsel
-> > -      * is part of a group, by default ungrouped events will be sorted
-> > -      * relative to grouped events based on where the first ungrouped =
-event
-> > -      * occurs. If both events don't have a group we want to fall-thro=
-ugh to
-> > -      * the arch specific sorting, that can reorder and fix things lik=
-e
-> > -      * Intel's topdown events.
-> > +      * Get the indexes of the 2 events to sort. If the events are
-> > +      * in groups then the leader's index is used otherwise the
-> > +      * event's index is used. Events in the same group will be
-> > +      * sorted by PMU name. An index may be forced for events that
-> > +      * must be in the same group, namely Intel topdown events.
-> > +      * When everything is identical arch specific sorting is used,
-> > +      * that can reorder and fix things like Intel's topdown
-> > +      * events.
-> >        */
-> > -     if (lhs_core->leader !=3D lhs_core || lhs_core->nr_members > 1) {
-> > -             lhs_has_group =3D true;
-> > +     lhs_has_group =3D lhs_core->leader !=3D lhs_core || lhs_core->nr_=
-members > 1;
-> > +     if (*force_grouped_idx !=3D -1 && arch_evsel__must_be_in_group(lh=
-s))
-> > +             lhs_sort_idx =3D *force_grouped_idx;
-> > +     else if (lhs_has_group)
-> >               lhs_sort_idx =3D lhs_core->leader->idx;
-> > -     } else {
-> > -             lhs_has_group =3D false;
-> > -             lhs_sort_idx =3D *force_grouped_idx !=3D -1 && arch_evsel=
-__must_be_in_group(lhs)
-> > -                     ? *force_grouped_idx
-> > -                     : lhs_core->idx;
-> > -     }
-> > -     if (rhs_core->leader !=3D rhs_core || rhs_core->nr_members > 1) {
-> > -             rhs_has_group =3D true;
-> > +     else
-> > +             lhs_sort_idx =3D lhs_core->idx;
-> > +     rhs_has_group =3D rhs_core->leader !=3D rhs_core || rhs_core->nr_=
-members > 1;
-> > +
-> > +     if (*force_grouped_idx !=3D -1 && arch_evsel__must_be_in_group(rh=
-s))
-> > +             rhs_sort_idx =3D *force_grouped_idx;
-> > +     else if (rhs_has_group)
-> >               rhs_sort_idx =3D rhs_core->leader->idx;
-> > -     } else {
-> > -             rhs_has_group =3D false;
-> > -             rhs_sort_idx =3D *force_grouped_idx !=3D -1 && arch_evsel=
-__must_be_in_group(rhs)
-> > -                     ? *force_grouped_idx
-> > -                     : rhs_core->idx;
-> > -     }
-> > +     else
-> > +             rhs_sort_idx =3D rhs_core->idx;
-> >
-> >       if (lhs_sort_idx !=3D rhs_sort_idx)
-> >               return lhs_sort_idx - rhs_sort_idx;
-> > @@ -2055,10 +2054,13 @@ static int parse_events__sort_events_and_fix_gr=
-oups(struct list_head *list)
-> >                */
-> >               pos->core.idx =3D idx++;
-> >
-> > -             /* Remember an index to sort all forced grouped events to=
-gether to. */
-> > -             if (force_grouped_idx =3D=3D -1 && pos =3D=3D pos_leader =
-&& pos->core.nr_members < 2 &&
-> > -                 arch_evsel__must_be_in_group(pos))
-> > -                     force_grouped_idx =3D pos->core.idx;
-> > +             /*
-> > +              * Remember an index to sort all forced grouped events
-> > +              * together to. Use the group leader as some events
-> > +              * must appear first within the group.
-> > +              */
-> > +             if (force_grouped_idx =3D=3D -1 && arch_evsel__must_be_in=
-_group(pos))
-> > +                     force_grouped_idx =3D pos_leader->core.idx;
-> >       }
-> >
-> >       /* Sort events. */
->
-> Hi Ian,
->
-> With this fix,  this topdown metrics sequence
-> "{instructions,slots},faults,topdown-retiring" indeed works on non-hybrid
-> platform, like SPR, but it still fails on hybrid platform.
->
-> Here is the result on Intel LNL platform.
->
-> ./perf stat -e "{instructions,slots},faults,topdown-retiring" true
-> WARNING: events were regrouped to match PMUs
->
->  Performance counter stats for 'true':
->
->    *<not supported> *     cpu_core/topdown-retiring/u
->            146,710      instructions:u
->      <not counted>
-> cpu_core/slots/u                                                        (=
-0.00%)
->      <not counted>
-> instructions:u                                                          (=
-0.00%)
->                 49      faults:u
->            195,855      cpu_atom/topdown-retiring/u
->
->        0.001367139 seconds time elapsed
->
->        0.001402000 seconds user
->        0.000000000 seconds sys
->
-> the "cpu_core/topdown-retiring/" event is incorrectly moved to the head a=
-nd
-> becomes the group leader.
->
-> To thoroughly fix this issue on hybrid platform, we need an extra below
-> change.
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 91c2b2e2c6bd..1f7772d4db6e 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2006,7 +2006,7 @@ static int evlist__cmp(void *_fg_idx, const struct
-> list_head *l, const struct li
->                 return lhs_sort_idx - rhs_sort_idx;
->
->         /* Group by PMU if there is a group. Groups can't span PMUs. */
-> -       if (lhs_has_group && rhs_has_group) {
-> +       if (lhs_has_group || rhs_has_group) {
->                 lhs_pmu_name =3D lhs->group_pmu_name;
->                 rhs_pmu_name =3D rhs->group_pmu_name;
->                 ret =3D strcmp(lhs_pmu_name, rhs_pmu_name);
->
-> Besides, since we support this new topdown events sequence regroup, the
-> comments and tests are need to be updated accordingly.
+When preparing the mem events for the argv copies are intentionally
+made. These copies are leaked and cause runs of perf using address
+sanitizer to fail. Rather than leak the memory allocate a chunk of
+memory for the mem event names upfront and build the strings in this -
+the storage is sized larger than the previous buffer size. The caller
+is then responsible for clearing up this memory. As part of this
+change, remove the mem_loads_name and mem_stores_name global buffers
+then change the perf_pmu__mem_events_name to write to an out argument
+buffer.
 
-Thanks, I was able to reproduce the problem and agree with extending
-the tests. I think this needs more comments so I'll update and repost
-the patch with those.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-c2c.c     |  4 ++-
+ tools/perf/builtin-mem.c     | 12 ++++---
+ tools/perf/util/mem-events.c | 64 +++++++++++++++++++++---------------
+ tools/perf/util/mem-events.h |  3 +-
+ 4 files changed, 50 insertions(+), 33 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 15e1fce71c72..5d5bb0f32334 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -3239,6 +3239,7 @@ static int perf_c2c__record(int argc, const char **argv)
+ {
+ 	int rec_argc, i = 0, j;
+ 	const char **rec_argv;
++	char *event_name_storage = NULL;
+ 	int ret;
+ 	bool all_user = false, all_kernel = false;
+ 	bool event_set = false;
+@@ -3300,7 +3301,7 @@ static int perf_c2c__record(int argc, const char **argv)
+ 	rec_argv[i++] = "--phys-data";
+ 	rec_argv[i++] = "--sample-cpu";
+ 
+-	ret = perf_mem_events__record_args(rec_argv, &i);
++	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -3327,6 +3328,7 @@ static int perf_c2c__record(int argc, const char **argv)
+ 
+ 	ret = cmd_record(i, rec_argv);
+ out:
++	free(event_name_storage);
+ 	free(rec_argv);
+ 	return ret;
+ }
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 99d5e1491a28..5ec83cd85650 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -74,6 +74,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
+ 	int rec_argc, i = 0, j;
+ 	int start, end;
+ 	const char **rec_argv;
++	char *event_name_storage = NULL;
+ 	int ret;
+ 	struct perf_mem_event *e;
+ 	struct perf_pmu *pmu;
+@@ -140,7 +141,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
+ 		rec_argv[i++] = "--data-page-size";
+ 
+ 	start = i;
+-	ret = perf_mem_events__record_args(rec_argv, &i);
++	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
+ 	if (ret)
+ 		goto out;
+ 	end = i;
+@@ -170,6 +171,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
+ 
+ 	ret = cmd_record(i, rec_argv);
+ out:
++	free(event_name_storage);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -521,6 +523,7 @@ int cmd_mem(int argc, const char **argv)
+ 		NULL,
+ 		NULL
+ 	};
++	int ret;
+ 
+ 	argc = parse_options_subcommand(argc, argv, mem_options, mem_subcommands,
+ 					mem_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+@@ -536,14 +539,15 @@ int cmd_mem(int argc, const char **argv)
+ 	}
+ 
+ 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+-		return __cmd_record(argc, argv, &mem, record_options);
++		ret = __cmd_record(argc, argv, &mem, record_options);
+ 	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+-		return __cmd_report(argc, argv, &mem, report_options);
++		ret = __cmd_report(argc, argv, &mem, report_options);
+ 	else
+ 		usage_with_options(mem_usage, mem_options);
+ 
+ 	/* free usage string allocated by parse_options_subcommand */
+ 	free((void *)mem_usage[0]);
++	free(sort_order_help);
+ 
+-	return 0;
++	return ret;
+ }
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 0277d3e1505c..1d18a5015eea 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -31,9 +31,6 @@ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
+ 
+ bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
+ 
+-static char mem_loads_name[100];
+-static char mem_stores_name[100];
+-
+ struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i)
+ {
+ 	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
+@@ -81,7 +78,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
+ 	return num;
+ }
+ 
+-static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
++static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
++					     char *buf, size_t buf_size)
+ {
+ 	struct perf_mem_event *e;
+ 
+@@ -96,31 +94,31 @@ static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
+ 		if (e->ldlat) {
+ 			if (!e->aux_event) {
+ 				/* ARM and Most of Intel */
+-				scnprintf(mem_loads_name, sizeof(mem_loads_name),
++				scnprintf(buf, buf_size,
+ 					  e->name, pmu->name,
+ 					  perf_mem_events__loads_ldlat);
+ 			} else {
+ 				/* Intel with mem-loads-aux event */
+-				scnprintf(mem_loads_name, sizeof(mem_loads_name),
++				scnprintf(buf, buf_size,
+ 					  e->name, pmu->name, pmu->name,
+ 					  perf_mem_events__loads_ldlat);
+ 			}
+ 		} else {
+ 			if (!e->aux_event) {
+ 				/* AMD and POWER */
+-				scnprintf(mem_loads_name, sizeof(mem_loads_name),
++				scnprintf(buf, buf_size,
+ 					  e->name, pmu->name);
+-			} else
++			} else {
+ 				return NULL;
++			}
+ 		}
+-
+-		return mem_loads_name;
++		return buf;
+ 	}
+ 
+ 	if (i == PERF_MEM_EVENTS__STORE) {
+-		scnprintf(mem_stores_name, sizeof(mem_stores_name),
++		scnprintf(buf, buf_size,
+ 			  e->name, pmu->name);
+-		return mem_stores_name;
++		return buf;
+ 	}
+ 
+ 	return NULL;
+@@ -238,55 +236,66 @@ void perf_pmu__mem_events_list(struct perf_pmu *pmu)
+ 	int j;
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
++		char buf[128];
+ 		struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
+ 
+ 		fprintf(stderr, "%-*s%-*s%s",
+ 			e->tag ? 13 : 0,
+ 			e->tag ? : "",
+ 			e->tag && verbose > 0 ? 25 : 0,
+-			e->tag && verbose > 0 ? perf_pmu__mem_events_name(j, pmu) : "",
++			e->tag && verbose > 0
++			? perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf))
++			: "",
+ 			e->supported ? ": available\n" : "");
+ 	}
+ }
+ 
+-int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
++int perf_mem_events__record_args(const char **rec_argv, int *argv_nr, char **event_name_storage_out)
+ {
+ 	const char *mnt = sysfs__mount();
+ 	struct perf_pmu *pmu = NULL;
+-	struct perf_mem_event *e;
+ 	int i = *argv_nr;
+-	const char *s;
+-	char *copy;
+ 	struct perf_cpu_map *cpu_map = NULL;
+-	int ret;
++	size_t event_name_storage_size =
++		perf_pmu__mem_events_num_mem_pmus(NULL) * PERF_MEM_EVENTS__MAX * 128;
++	size_t event_name_storage_remaining = event_name_storage_size;
++	char *event_name_storage = malloc(event_name_storage_size);
++	char *event_name_storage_ptr = event_name_storage;
+ 
++	*event_name_storage_out = NULL;
+ 	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
+ 		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+-			e = perf_pmu__mem_events_ptr(pmu, j);
++			const char *s;
++			struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
++			int ret;
+ 
+ 			if (!perf_mem_record[j])
+ 				continue;
+ 
+ 			if (!e->supported) {
++				char buf[128];
++
+ 				pr_err("failed: event '%s' not supported\n",
+-					perf_pmu__mem_events_name(j, pmu));
++					perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf)));
++				free(event_name_storage);
+ 				return -1;
+ 			}
+ 
+-			s = perf_pmu__mem_events_name(j, pmu);
++			s = perf_pmu__mem_events_name(pmu, j, event_name_storage_ptr,
++						      event_name_storage_remaining);
+ 			if (!s || !perf_pmu__mem_events_supported(mnt, pmu, e))
+ 				continue;
+ 
+-			copy = strdup(s);
+-			if (!copy)
+-				return -1;
+-
+ 			rec_argv[i++] = "-e";
+-			rec_argv[i++] = copy;
++			rec_argv[i++] = event_name_storage_ptr;
++			event_name_storage_remaining -= strlen(event_name_storage_ptr) + 1;
++			event_name_storage_ptr += strlen(event_name_storage_ptr) + 1;
+ 
+ 			ret = perf_cpu_map__merge(&cpu_map, pmu->cpus);
+-			if (ret < 0)
++			if (ret < 0) {
++				free(event_name_storage);
+ 				return ret;
++			}
+ 		}
+ 	}
+ 
+@@ -301,6 +310,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
+ 	}
+ 
+ 	*argv_nr = i;
++	*event_name_storage_out = event_name_storage;
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 8dc27db9fd52..a5c19d39ee37 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -38,7 +38,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
+ bool is_mem_loads_aux_event(struct evsel *leader);
+ 
+ void perf_pmu__mem_events_list(struct perf_pmu *pmu);
+-int perf_mem_events__record_args(const char **rec_argv, int *argv_nr);
++int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
++				 char **event_name_storage_out);
+ 
+ int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
+ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
+-- 
+2.49.0.rc0.332.g42c0ae87b1-goog
 
-> diff --git a/tools/perf/arch/x86/util/evlist.c
-> b/tools/perf/arch/x86/util/evlist.c
-> index 447a734e591c..8d7a7c4acd4b 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -39,28 +39,21 @@ int arch_evlist__cmp(const struct evsel *lhs, const
-> struct evsel *rhs)
->          *         26,319,024      slots
->          *          2,427,791      instructions
->          *          2,683,508      topdown-retiring
-> -        *
-> -        * If slots event and topdown metrics events are not in same grou=
-p, the
-> -        * topdown metrics events must be first event after the slots eve=
-nt
-> group,
-> -        * otherwise topdown metrics events can't be regrouped correctly,=
- e.g.
-> -        *
-> -        * a. perf stat -e "{instructions,slots},cycles,topdown-retiring"
-> -C0 sleep 1
-> +        * e. slots event and metrics event are in a group and not adjace=
-nt
-> +        *    perf stat -e "{instructions,slots},cycles,topdown-retiring"
-> -C0 sleep 1
->          *    WARNING: events were regrouped to match PMUs
-> -        *     Performance counter stats for 'CPU(s) 0':
-> -        *         17,923,134      slots
-> -        *          2,154,855      instructions
-> -        *          3,015,058      cycles
-> -        *    <not supported>      topdown-retiring
-> -        *
-> -        * If slots event and topdown metrics events are in two groups, t=
-he
-> group which
-> -        * has topdown metrics events must contain only the topdown metri=
-cs
-> event,
-> -        * otherwise topdown metrics event can't be regrouped correctly a=
-s
-> well, e.g.
-> -        *
-> -        * a. perf stat -e "{instructions,slots},{topdown-retiring,cycles=
-}"
-> -C0 sleep 1
-> +        *    Performance counter stats for 'true':
-> +        *         78,452,058      slots
-> +        *         10,767,929      topdown-retiring
-> +        *          9,438,226      instructions
-> +        *         13,080,988      cycles
-> +        * f. slots event and metrics event are in two groups and not adj=
-acent
-> +        *    perf stat -e "{instructions,slots},{cycles,topdown-retiring=
-}"
-> -C0 sleep 1
->          *    WARNING: events were regrouped to match PMUs
-> -        *    Error:
-> -        *    The sys_perf_event_open() syscall returned with 22 (Invalid
-> argument) for
-> -        *    event (topdown-retiring)
-> +        *         68,433,522      slots
-> +        *          8,856,102      topdown-retiring
-> +        *          7,791,494      instructions
-> +        *         11,469,513      cycles
->          */
->         if (topdown_sys_has_perf_metrics() &&
->             (arch_evsel__must_be_in_group(lhs) ||
-> arch_evsel__must_be_in_group(rhs))) {
-> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat=
-.sh
-> index 68323d636fb7..a1b847c16f07 100755
-> --- a/tools/perf/tests/shell/stat.sh
-> +++ b/tools/perf/tests/shell/stat.sh
-> @@ -97,6 +97,18 @@ test_topdown_groups() {
->      err=3D1
->      return
->    fi
-> +  if perf stat -e '{instructions,slots},cycles,topdown-retiring' true 2>=
-&1
-> | grep -E -q "<not supported>"
-> +  then
-> +    echo "Topdown event group test [Failed non-adjacent topdown metrics
-> group not move into slots group]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  if perf stat -e '{instructions,slots},{cycles,topdown-retiring}' true
-> 2>&1 | grep -E -q "<not supported>"
-> +  then
-> +    echo "Topdown event group test [Failed non-adjacent topdown metrics
-> group not merge into slots group]"
-> +    err=3D1
-> +    return
-> +  fi
->    if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<n=
-ot
-> supported>"
->    then
->      echo "Topdown event group test [Failed raw format slots not reordere=
-d
-> first]"
->
-> Thanks,
->
-> Dapeng Mi
->
->
