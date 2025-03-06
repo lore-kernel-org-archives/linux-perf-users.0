@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A89F25A627;
-	Thu,  6 Mar 2025 17:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B73825B671;
+	Thu,  6 Mar 2025 17:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741281250; cv=none; b=nHo8S33XO3se/VWpcKfCEGotwMj82ifZrmNjhOYvhvoHXOCpLEvR886TgTiDibHQwpPnC2KUxiX6YPTxjPC3wWOXmIrVOMp+PORgDm6/3AXXvjX4hg/PKfHlPeuOMO2wTVxH+UST4+pxCQhkVHahWBbH/AipiRguHa3VwCmqMUA=
+	t=1741281250; cv=none; b=ukanGO9OCMgd3gkHEO3z1am23XZ1TalROdZvnE8ao3AKx9EExpJHca6KJzp5pdDlEU72KYUQGQJk/OLVdwIvFQxAGjHuk9k/+p5A9RA57CSlnGzaIybNfOYFfELN/mKOl5+GgmC8GkBwbpAVtSgtt9dyXkci+Zl/AQzXDDQcp7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741281250; c=relaxed/simple;
-	bh=LHZaCsmiI1Xxu72j/VFZX4yF42q/3KhljENA52wVHUQ=;
+	bh=13Ku3wN3uQXnYrvmHehtgkgvGYEQWkz1kUnyMFVrpOw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qukvQWDkhzLXXiono2q2RTZPinhw02SQkvNcmzlOVJtOZlJu8EfEgcRsABIzpr6/0VpNAt8ZiJp1U6vR3Vqism5tPByqkmw+faLK+a7+qIeESWkXAUaARzEU+2AgXR1S22mjvwehRnGmTZkIoBcCGn8tZNcvAUi6PVU18jLVO8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0Hmfhh0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=daYC6AP3KIDICXrRFnaXVfHyltpcubKPxGosI+s193kDHmPqUYXKERyYFmmmUfuAmYiXyIJiE/PL3wB3B0zTgVDYLpFPBrm4iMf5expnAUOMQHI2gj/QA7uXNW/Lp9P+UtpG+OaJdTvQw0wobgPC+FfpRW+XlB/cICg0+sVxHWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCqpgRZS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0Hmfhh0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BECAC4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCqpgRZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E41C4CEE0;
 	Thu,  6 Mar 2025 17:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741281249;
-	bh=LHZaCsmiI1Xxu72j/VFZX4yF42q/3KhljENA52wVHUQ=;
+	s=k20201202; t=1741281250;
+	bh=13Ku3wN3uQXnYrvmHehtgkgvGYEQWkz1kUnyMFVrpOw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Q0Hmfhh0ygfhFsrdqbi59TPkzObXa2Z/cpC/8O+HOAQ6uRTBW7lVKywzk1kteqBVQ
-	 WIAJVFEaddth9aHGvVLBgjsfCxcXjVaz7TQiDANPTgf06P+5SjQ+z0gP1thUypE7kw
-	 VL56wzhn0/noW4LwR31sZSlLfDqhRvuNfJjpap0TweKx4Mfv18EGJOWhpKBEqosKSv
-	 bP70HQJpxZmny/9muvAEq6qS7zd0BtXhlonixF/Ulx1Eege2mYPVdVpC5z4NKGAe2J
-	 XPaaq+KqNkqpS9QQRX0qjwoZdF3Tzi7+hlljAEMCmIXzDwSTFzBXXlIeky8fm/Urgy
-	 sQU/+vNSqcF8w==
+	b=UCqpgRZSAF3buJWySWgDDI+DiBCMZMf6yKC61bDZdciurclGK40NrS83O0aDfTy80
+	 n4hfBSGyKSpXy2VJmV4rcJcUunsh3uH6F4J3UZRhpT+aJAlqtge7BNoSuoPMR9vX5q
+	 oKfxiOJnwPrieN4NFYJJ26bIUblxMs2t+kgd5x4b1aD8ZSLG5cnP9BguoriUixVFnN
+	 fxD3ZZherc0kb2ieDRS6/z8bIvwp8ZgRB+gO/URZRBkQKYueF5A4UPKBVK1DYnBrLr
+	 2Fvm9xNL7aZk8PgF1RxoaP5/c9vG040q2BJnUekyEIrAK/3K44nwL/VsOq3MVjtDCe
+	 8wOMIrhYQFi8w==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, acme@kernel.org, yangtiezhu@loongson.cn, 
- Thomas Richter <tmricht@linux.ibm.com>
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
- hca@linux.ibm.com
-In-Reply-To: <20250304092349.2618082-1-tmricht@linux.ibm.com>
-References: <20250304092349.2618082-1-tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf/bench: Fix perf bench syscall XXXX loop count
-Message-Id: <174128124901.3835280.12336231396508752051.b4-ty@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ Stephane Eranian <eranian@google.com>
+In-Reply-To: <20250228211734.33781-1-acme@kernel.org>
+References: <20250228211734.33781-1-acme@kernel.org>
+Subject: Re: [PATCH 0/6 v2] Fixups for kernel maps insertion
+Message-Id: <174128124996.3835280.12530365732339018502.b4-ty@kernel.org>
 Date: Thu, 06 Mar 2025 09:14:09 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -47,17 +51,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 04 Mar 2025 10:23:49 +0100, Thomas Richter wrote:
-> Command 'perf bench syscall fork -l 100000' offers option
-> -l to run for a specified number of iterations. However this
-> option is not always observed. The number is silently limited to
-> 10000 iterations as can be seen:
+On Fri, 28 Feb 2025 18:17:28 -0300, Arnaldo Carvalho de Melo wrote:
+>         Here are the patches from the recent session on fixing the build
+> when DEBUG=1 is used, please take a look.
 > 
-> Output before:
->  # perf bench syscall fork -l 100000
->  # Running 'syscall/fork' benchmark:
->  # Executed 10,000 fork() calls
->      Total time: 23.388 [sec]
+>         I think that since there are no reported problems and ended up
+> being a sizeable series, we better apply it to perf-tools-next,
+> 
+> Best Regards,
 > 
 > [...]
 Applied to perf-tools-next, thanks!
