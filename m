@@ -1,124 +1,106 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A990E1A08A0
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 07:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477464315F;
+	Thu,  6 Mar 2025 07:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741245441; cv=none; b=WDzpnjdAwZAmIQtpWGzvyC+Itsnlr+aLXygbP0D0AkpbX7TQ3y4thJCOUSfgCbC71Wlhea/jO9p0Pvnny1gURqTcdDuLiUPxHepw1BHS8GBJNgg6LPlEBLBMmqdwE+UCNLhzogpiLwBApF7r0xLEahcNjNbllOER4MP83fUOeQY=
+	t=1741247439; cv=none; b=hpwtgflIjF8mjIMmhojXr1sYQW/srDLvDXCcgdGz/5bUOxXqC3FAvDPHZb6o0VPHb3D22L8Pu+KmWfPWIOJAHq2RvLD3QxT6e1A8LLU3DzB1KI36OV4+O73+uzRi4TUVDvhd13ScmCodHjXSc1LfbPg1bUn02wjjWBRM0prgdkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741245441; c=relaxed/simple;
-	bh=afJfrcTUwNndzGvYlL4g8anzka4FSLZnK67S70X21Kk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C4yUE5SR2GXj6pLlCVkP1HM9j+KyjRJUqx/zL7xdRpJ2FH/3BF/VWlVwRgbzW7VPPGWTRwj0/sD0w1nWmECh2HxgQwiVUw4Gz5XLIVxWMju/0ewPtptoHcL1nJUsBddbHoFSFhVo2jGe17+yfLrTsoRIYXwMXS+itCVw6eTBIac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ofYaGgme; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741247439; c=relaxed/simple;
+	bh=+vY9chWknPilNLXzUNVH0RQBHIclGuBPcRv00El1Mic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dWVMbp++AltcGSMruzlyR93tsgx15ZZpvFZJlYXz2K5rE163prVcCOxjKy+wtr255dKoulvgdvRMgLM2+ITusTax1K7nfRgsgu9otOdj9K9Duya2N7uA3q7MAfgaBWMfCzOFKapwy62NCKPPinlwePNSALw2NNQ5B7qNZgnw8pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+76IBHS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofYaGgme"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2237a32c03aso69865ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Mar 2025 23:17:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741245439; x=1741850239; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=klvvH1kgJs0DL3h7Oo378c2WlFSu+xBYIPROUcHihHA=;
-        b=ofYaGgmeLLS2phpqsyAQV1VQV/QBIpubaxwCAmVEkkJFkOPkiHLkwaE+dqTqkTyZwy
-         4X+IOzVFkM6OSmy5IMT76h3hrpUFzzzRTAEjnC/+3b7ATzdsoPkPc+x6TZrUucu7iDTu
-         BFJAT67c8Ut08un8YTP28X6KYca0md7ZyGPsMFUUts75YRfG2CFt6dj/gLUiKwolSzsV
-         LwRuYbfANQt47fy8KmbyJmwHkVCnUgGsPpNqK0cGOEdiW079wf/oVhQ8B8Qi0aL4sMT0
-         gwTbOO1S+2vu7IGxguV7/K4kDyHEeai9wBWzEnDeWfPwuuvtelB353sEro9lT24fUZ+b
-         zuuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741245439; x=1741850239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=klvvH1kgJs0DL3h7Oo378c2WlFSu+xBYIPROUcHihHA=;
-        b=h3kY1MoJgelCEGE/4fgfRfk2ACvZio7E7seFdNh2kGVz6lRqoEwxC4l3DJLjl2yCmM
-         EeCATxi0j/Ivy94ATIJuoLXulnXjhv6KlQnKTx6ugKJx8RpEH51XnKCQzQ86C1/TBH29
-         DwwKeO3rG1XV0tWs6wpb+y7DkugoZK5AFnht0EmS368c6MgoMWJ+5uH2mbL6vDJHltmS
-         CfzxyghiVLYatQ/60JUTTVj71BH056GMT4SLK6a0XoBQuHA7RHCX0Phfv3wRi2Qwhffv
-         z6J0fzTPbYH822LDTzCZHGvBYt/8IAe0K3B7vPwe2ABaLKeQ+XQNWeimy1nIitGaWhvM
-         nN+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXJAHWEXYrPn9iyCg7UwwkCNtBneD43DbTVIMoOxt4mSXMGegv4ayN3PJCvi8DTVbA2ZDWFiQKvFBEwsNW7Dbqj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAilZQy3kn/JkCdW27IyVF0INjCOZqapY/R4IS863oyfpAtAcN
-	4o2OJj3NIJfxQSrqDs9vEFEPVoeUL139JAG92jeTRuroclikTI5eFK5lnsbeCCMi+B8T6RSdwoV
-	86jBaOXHp6BhSUT8fiU2Se+K56AYahgLyUk9t
-X-Gm-Gg: ASbGncvEIMPzu7cHFjpOEwBeYf7ALYqFvkJj6LXn5fFuy0fpqgI611o96mjIemAavAp
-	tyGMInqgN6h3OR3ZWKhcOev2Sg5zeVCMWwPgOiwQOkgzlkhfNuCqeSu4vTaMTnFWRPvrp5+Tq8G
-	ZQnfbtHjKOhnD105M6Xc3yJ08Cqyw=
-X-Google-Smtp-Source: AGHT+IG1RI8BspnyGZOOKTSThi3cd0DexZtnopn5sTHOBG5TZxLsFjjcFgrXJI3oj8/gpVr0T6PbhwYLOG00b+Cm/uU=
-X-Received: by 2002:a17:902:e884:b0:223:7f8f:439b with SMTP id
- d9443c01a7336-2240e4cb713mr1363285ad.29.1741245438515; Wed, 05 Mar 2025
- 23:17:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+76IBHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCBBC4CEE0;
+	Thu,  6 Mar 2025 07:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741247439;
+	bh=+vY9chWknPilNLXzUNVH0RQBHIclGuBPcRv00El1Mic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n+76IBHSey2Hl/uLOgeRuzvGWedhUr7g944Y+vmd9t10P+wm2qr6VjouCpOmlZ7Du
+	 4fTz/t7CiOPYIMyOlG/loK2xsH45yOKDGt01X6tqBsPXifxQ1izu/YBWQvrTNeY9VP
+	 Y3bmvgxHZMnT6uZKHRZ6cHy0n1mI0trGy0o3UH09i63Wzr7R9cvyjMjzg//gYhaHoa
+	 Okwl64Yzxnrd+DRpOCCWNQdVrLA+qT3uphstEajsaKF+jD5FMLZMnDLfhTUzoaCOo/
+	 iK5EVCDZ/57x72SE8R3ECozZmF8hrMrxI3Sw3kVSArEjxR4C/az20hJZMj5RKU7Asc
+	 TuKx4IlagHsfg==
+Date: Wed, 5 Mar 2025 23:50:37 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Kevin Nomura <nomurak@google.com>, Song Liu <song@kernel.org>
+Subject: Re: [PATCH] perf report: Do not process non-JIT BPF ksymbol events
+Message-ID: <Z8lTzROPDcoPQXFZ@google.com>
+References: <20250305232838.128692-1-namhyung@kernel.org>
+ <d962792a-c852-494b-b35c-e8f83cac7218@intel.com>
+ <Z8lEdWxt8CKepTJ3@google.com>
+ <bb2b30a1-8ce3-4565-b17a-27148234c10b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305023120.155420-1-linux@treblig.org>
-In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Mar 2025 23:17:07 -0800
-X-Gm-Features: AQ5f1Jo9VrctFJizPJWRd1IcYze4ewTJcAathfia1ysS5f1XFTZ17W_n1GsestQ
-Message-ID: <CAP-5=fUpqfWcQAi8231fdofZ-f_bOTi=t8sdLUenvvXjQ3OfGA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] perf: Deadcode - the P's
-To: linux@treblig.org
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, namhyung@kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bb2b30a1-8ce3-4565-b17a-27148234c10b@intel.com>
 
-On Tue, Mar 4, 2025 at 6:32=E2=80=AFPM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> Hi,
->   This is another set of perf deadcode, this is my set
-> all starting with 'p'.  It was built on top of
-> perf-tools-next as of a few days ago (7788ad59d1d9).
->
-> Dave
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
->
->
->
-> Dr. David Alan Gilbert (6):
->   perf core: Remove perf_event_attrs and perf_event_refresh
+On Thu, Mar 06, 2025 at 08:48:20AM +0200, Adrian Hunter wrote:
+> On 6/03/25 08:45, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Thu, Mar 06, 2025 at 08:25:01AM +0200, Adrian Hunter wrote:
+> >> On 6/03/25 01:28, Namhyung Kim wrote:
+> >>> The length of PERF_RECORD_KSYMBOL for BPF is a size of JITed code so
+> >>> it'd be 0 when it's not JITed.  The ksymbol is needed to symbolize the
+> >>> code when it gets samples in the region but non-JITed code cannot get
+> >>> samples.  Thus it'd be ok to ignore them.
+> >>>
+> >>> Actually it caused a performance issue in the perf tools on old ARM
+> >>> kernels where it can refuse to JIT some BPF codes.  It ended up
+> >>> splitting the existing kernel map (kallsyms).  And later lookup for a
+> >>> kernel symbol would create a new kernel map from kallsyms and then
+> >>> split it again and again. :(
+> >>>
+> >>> Probably there's a bug in the kernel map/symbol handling in perf tools.
+> >>> But I think we need to fix this anyway.
+> >>>
+> >>> Reported-by: Kevin Nomura <nomurak@google.com>
+> >>> Cc: Song Liu <song@kernel.org>
+> >>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> >>> ---
+> >>>  tools/perf/util/machine.c | 4 ++++
+> >>>  1 file changed, 4 insertions(+)
+> >>>
+> >>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> >>> index 3f1faf94198dbe56..c7d27384f0736408 100644
+> >>> --- a/tools/perf/util/machine.c
+> >>> +++ b/tools/perf/util/machine.c
+> >>> @@ -779,6 +779,10 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
+> >>>  	if (dump_trace)
+> >>>  		perf_event__fprintf_ksymbol(event, stdout);
+> >>>  
+> >>> +	/* no need to process non-JIT BPF as it cannot get samples */
+> >>> +	if (event->ksymbol.len == 0)
+> >>> +		return 0;
+> >>
+> >> Are all ksymbol events BPF?  Maybe it is OK
+> >> for PERF_RECORD_KSYMBOL_TYPE_OOL also.  Perhaps adjust the
+> >> comment in that case.
+> > 
+> > Probably, but I didn't see OOL with zero length yet.  Is it possible?
+> 
+> Probably not
 
-This will need to go into tip.git.
-
->   perf util: Remove unused perf_color_default_config
->   perf util: Remove unused pstack__pop
->   perf util: Remove unused perf_data__update_dir
->   perf util: Remove unused perf_pmus__default_pmu_name
->   perf util: Remove unused perf_config__refresh
-
-Reviewed-by: Ian Rogers <irogers@google.com>
+Then I think it's ok to leave the comment as is.
 
 Thanks,
-Ian
+Namhyung
 
->  include/linux/perf_event.h     | 10 ----------
->  kernel/events/core.c           | 24 ------------------------
->  tools/perf/util/color.h        |  5 -----
->  tools/perf/util/color_config.c | 11 -----------
->  tools/perf/util/config.c       |  6 ------
->  tools/perf/util/config.h       |  1 -
->  tools/perf/util/data.c         | 20 --------------------
->  tools/perf/util/data.h         |  1 -
->  tools/perf/util/pmus.c         | 29 -----------------------------
->  tools/perf/util/pmus.h         |  1 -
->  tools/perf/util/pstack.c       | 14 --------------
->  tools/perf/util/pstack.h       |  1 -
->  12 files changed, 123 deletions(-)
->
-> --
-> 2.48.1
->
