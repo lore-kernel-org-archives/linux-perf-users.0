@@ -1,167 +1,123 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2188120C478;
-	Thu,  6 Mar 2025 13:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35891481CD;
+	Thu,  6 Mar 2025 13:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266524; cv=none; b=Cj1w7MIRF8TpMrAQq0RbIXB3jhvnIENThnlru+Nq6FHMjCrprJBQeRbsaOa4Ej7addzi6ozNgK6EPBh1pLHOXXdy4cNlURfsYeA/gECR4odj9eXYghXwdqw9jjShw2XI3jTpMkH9Gar156jzzZjrSqAUJk9utZe+noA1afcYOnU=
+	t=1741266834; cv=none; b=YYFnrkH/dqLkT2Z0Pc6rivV1Wa0z5UPn13xPn8fYg5ytQn47fI4rtUDj7dkB3OINxDUHc3bJHy2pNtiKvz/JNa1FtCBwDANApO0YD4SP98+neBpcZZqpEca6ragkFZo4Kp6chEBtj34AVED+/5SZP1U5MeY+AJsMZ6rNwyT3BWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266524; c=relaxed/simple;
-	bh=UQxOtCyjjeVSI1OL9Qw+dMxFi11CeViW/vaw3V+RlBw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aa1TH/HN3nOMBAXPWznHgPeoPyBZyZ58eqNNkCX7N3tLMy6WSWE+4D6Gf/e5ay0MGAtp5F1n3Q8CZ3EhGroT3SZGCs5eXQ0TJG1g4e9/Sy57KEN81YWlLiV07s5Me4T1Ybcm/B+Cwso1uUSVVJU7JUcKVC9a+Iiv3qDoE3JYQUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvQEo0ku; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741266834; c=relaxed/simple;
+	bh=2YjvzfsrPBho1H6DlpucDv/WaTUvDWx6KTif97I7bcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcS4JE46xS/ALd2yVHLg05sIVP+p91ek++tHARYvUwxG2XHuMTYw2Cnud4odkf84NnMR0H2ih2Q8Os/HY80nYmWtYxAaNa6qkMg5ScwSQkI/dmWluoLqwbFOU1y0gtAUrbrZvaiMv3652eFup4Rjj2SNekjcYmgnrMAuJ8CUD3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ITfpgfrL; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvQEo0ku"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab771575040so349206266b.1;
-        Thu, 06 Mar 2025 05:08:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741266521; x=1741871321; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RBpr4q0/AOycCkUAiZa/BjvQ502X7W3qJqBvzu0mmtU=;
-        b=UvQEo0kuvnODkwMZ4sFiRY7sFAlsG7r1AjSkfC1QnDyU1Hs/Vhul7aWcDR8H6+Zutp
-         jAKMwGnDFK8tXZP0/g1HDLnnd82SfBJu/9mBn3jnnbmfpR9Rtq1zOl7LjSzYyGGiIl1a
-         gU6v4jM2qyBglY9TmcDC7V7KzIMHQncUtNBj+bim93cIc0LG3N5nzk/q5gbV+9zFR5Ds
-         +xvldXQk6Gsrzy9HDb6u57Pm4VrXoxpECXcqyA9sRtZ7//yyvEXZU0OA97TqgYaUQY2G
-         a2eiYhwm5awfx1Xs2zOpEBCA+SstXhGwuZYtBOdfxuXuuAWk3u/inP3y3FEHCoXObay1
-         Kr1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741266521; x=1741871321;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RBpr4q0/AOycCkUAiZa/BjvQ502X7W3qJqBvzu0mmtU=;
-        b=ZnxnrvXkpvTGMwEw5ryaClllTYGPwXAKBNP4oQUn4oK33p6jmSmKwr73RbGWxEEc1x
-         tJzYqMNit5zrZimOSKpmuRuWxB+EUD+FVC8QSQ0YE0BdRwnKow/QuJTbz+FV5bQsujw7
-         4vRY28DZ55ZYA44W1Y8vmrchGSA3APdqmmHjMBUT1PSmfJYCXZGtChJ3NTMJo8KU+1tP
-         2xT5VPfwGDSu18VFdgYxx+ZweKKLgTQ5MoiJHNMKbJrewJq/TVdFZIoTnIthKo3h0lk8
-         dwvb8KIfIpv5XUtuPzXuEYuPdjfj9xMtKjTh+OqqFTvnfBQgclzyN5eHtvp57Y/mZCq1
-         WQUw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3+vfJPe9LY3FvQMyLTu0MAa58ZJaNUyWU49EKhPyod5nm/Rtp0BMV0fbJgWwFdgXpBmmD76XHlEqSHL+VspK8pw==@vger.kernel.org, AJvYcCXB6P0BkHFR9qhZpHcg3wtgJuL96gSSRiL1YGTF+rW8nYkO9fBySR6P0ev0+mYnjm1JxHfbF2D/LECBCl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzPpd6UyzlvvFUYjCEe/slSGrjJ4XsLkqGl5CNWPu5X+MFjcO7
-	NSPL/fL8F2D/AZZzzgyDJCjcNwGUxhYNNrHFmgCVxAi+z6lLmytt
-X-Gm-Gg: ASbGncsNam8/gKbDP1IQRHiqTwI+psWwxyE7mFJO8OaUs7vKeLVhog6XBw07a89ULHc
-	BZP03VOFB5JMWlzhNg+JWr+vkLHsMHb8HTl+DZnB1lsAijxW6F92+LVyYZC5ljUbD/nj7V4rjk0
-	HWP2vCmtuR8pjkLJD06ppX8WyqofKgGhOVat9tbbN04PEBk55VM1+jCCa6qvOrcIgmWoeIVyxiL
-	uFxYRgK+KYjvcXE1fN/2I8HB9mYKPXBKLIgf/Idov1MtPKpoxnzEUHVb/LH7WxNSkFjBTerlQas
-	B3K63DaGM19yKvF/kgvuzR/8xN+Yjy1KEt+oHg==
-X-Google-Smtp-Source: AGHT+IH4d/pbcgd8COO6M8KiuoS/WI/geAVKNETRj+9XKo2UQlZOoHE8m0iodn3MMHoQ0Ft5DwTynQ==
-X-Received: by 2002:a17:907:72ce:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-ac22cb3dd85mr336391466b.15.1741266521096;
-        Thu, 06 Mar 2025 05:08:41 -0800 (PST)
-Received: from krava ([2a00:102a:401e:9b3a:b228:9e66:580a:3bc8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c768c798sm930867a12.66.2025.03.06.05.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 05:08:40 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 6 Mar 2025 14:08:38 +0100
-To: lirongqing <lirongqing@baidu.com>
-Cc: olsajiri@gmail.com, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] perf/x86/intel/bts: check if bts_ctx is allocated
- when call bts functions
-Message-ID: <Z8meVrqd-F7tf44j@krava>
-References: <20250306051102.2642-1-lirongqing@baidu.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ITfpgfrL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=7y8rhhxB5lSjyrM3hesew8uHt000MTVpnFFEqf0Dw1A=; b=ITfpgfrLtCmV2mM3
+	fFInvO2lVuVoaUbsrMCUNT933VW6xgvo+SIpL9rTFMI2eFEYx+ip5EGf3dwgbLtiqO1ot9WZlX185
+	qaDahRdNx++1Pu02y5G/LALsB0M/0IRcPChAgN5tdbVRrlr9U/fnOwR8OeOn7F2KMFKy+GuspO+6c
+	LEkLAsoa8NwKw/aKoBEU5kyjADoqYxAUVF1Q+gQF6On/Vsty/qjKCCJfPufGWfH/BUwlTna7wEBbF
+	t9fIZkI+bnalgys03OQ2PT/6gLwZ04X3bGrVIgPVnMknAEFRl3EhkL7jzlj0P23dmca568oy+Navz
+	ja01gF/C5mZPzEejtA==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tqB2e-00370y-32;
+	Thu, 06 Mar 2025 13:13:36 +0000
+Date: Thu, 6 Mar 2025 13:13:36 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Ian Rogers <irogers@google.com>
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, namhyung@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] perf: Deadcode - the P's
+Message-ID: <Z8mfgA4C26MiG54N@gallifrey>
+References: <20250305023120.155420-1-linux@treblig.org>
+ <CAP-5=fUpqfWcQAi8231fdofZ-f_bOTi=t8sdLUenvvXjQ3OfGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250306051102.2642-1-lirongqing@baidu.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUpqfWcQAi8231fdofZ-f_bOTi=t8sdLUenvvXjQ3OfGA@mail.gmail.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 13:12:48 up 302 days, 26 min,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Thu, Mar 06, 2025 at 01:11:02PM +0800, lirongqing wrote:
-> From: Li RongQing <lirongqing@baidu.com>
-> 
-> bts_ctx maybe not allocated, for example if the cpu has X86_FEATURE_PTI,
-> but intel_bts_disable/enable_local and intel_bts_interrupt are called
-> unconditionally from intel_pmu_handle_irq and exploding on accessing
-> bts_ctx
-> 
-> so check if bts_ctx is allocated when call bts functions
-> 
-> Fixes: 3acfcefa795c "(perf/x86/intel/bts: Allocate bts_ctx only if necessary)"
-> Reported-by: Jiri Olsa <olsajiri@gmail.com>
+* Ian Rogers (irogers@google.com) wrote:
+> On Tue, Mar 4, 2025 at 6:32 PM <linux@treblig.org> wrote:
 
-Tested-by: Jiri Olsa <jolsa@kernel.org>
+Hi Ian,
+  Thanks for the review,
 
-thanks,
-jirka
-
-
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> ---
->  arch/x86/events/intel/bts.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >
+> > Hi,
+> >   This is another set of perf deadcode, this is my set
+> > all starting with 'p'.  It was built on top of
+> > perf-tools-next as of a few days ago (7788ad59d1d9).
+> >
+> > Dave
+> >
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> >
+> >
+> >
+> > Dr. David Alan Gilbert (6):
+> >   perf core: Remove perf_event_attrs and perf_event_refresh
 > 
-> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-> index 8e09319..e8b3e7b 100644
-> --- a/arch/x86/events/intel/bts.c
-> +++ b/arch/x86/events/intel/bts.c
-> @@ -338,9 +338,14 @@ static void bts_event_stop(struct perf_event *event, int flags)
->  
->  void intel_bts_enable_local(void)
->  {
-> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
-> -	int state = READ_ONCE(bts->state);
-> +	struct bts_ctx *bts;
-> +	int state;
->  
-> +	if (!bts_ctx)
-> +		return;
-> +
-> +	bts = this_cpu_ptr(bts_ctx);
-> +	state = READ_ONCE(bts->state);
->  	/*
->  	 * Here we transition from INACTIVE to ACTIVE;
->  	 * if we instead are STOPPED from the interrupt handler,
-> @@ -358,7 +363,12 @@ void intel_bts_enable_local(void)
->  
->  void intel_bts_disable_local(void)
->  {
-> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
-> +	struct bts_ctx *bts;
-> +
-> +	if (!bts_ctx)
-> +		return;
-> +
-> +	bts = this_cpu_ptr(bts_ctx);
->  
->  	/*
->  	 * Here we transition from ACTIVE to INACTIVE;
-> @@ -450,12 +460,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
->  int intel_bts_interrupt(void)
->  {
->  	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
-> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
-> -	struct perf_event *event = bts->handle.event;
-> +	struct bts_ctx *bts;
-> +	struct perf_event *event;
->  	struct bts_buffer *buf;
->  	s64 old_head;
->  	int err = -ENOSPC, handled = 0;
->  
-> +	if (!bts_ctx)
-> +		return 0;
-> +
-> +	bts = this_cpu_ptr(bts_ctx);
-> +	event = bts->handle.event;
->  	/*
->  	 * The only surefire way of knowing if this NMI is ours is by checking
->  	 * the write ptr against the PMI threshold.
-> -- 
-> 2.9.4
+> This will need to go into tip.git.
+
+OK, do I need to split that out of the series, resend or do
+anything else?
+
+> >   perf util: Remove unused perf_color_default_config
+> >   perf util: Remove unused pstack__pop
+> >   perf util: Remove unused perf_data__update_dir
+> >   perf util: Remove unused perf_pmus__default_pmu_name
+> >   perf util: Remove unused perf_config__refresh
 > 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+
+Dave
+
+> 
+> Thanks,
+> Ian
+> 
+> >  include/linux/perf_event.h     | 10 ----------
+> >  kernel/events/core.c           | 24 ------------------------
+> >  tools/perf/util/color.h        |  5 -----
+> >  tools/perf/util/color_config.c | 11 -----------
+> >  tools/perf/util/config.c       |  6 ------
+> >  tools/perf/util/config.h       |  1 -
+> >  tools/perf/util/data.c         | 20 --------------------
+> >  tools/perf/util/data.h         |  1 -
+> >  tools/perf/util/pmus.c         | 29 -----------------------------
+> >  tools/perf/util/pmus.h         |  1 -
+> >  tools/perf/util/pstack.c       | 14 --------------
+> >  tools/perf/util/pstack.h       |  1 -
+> >  12 files changed, 123 deletions(-)
+> >
+> > --
+> > 2.48.1
+> >
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
