@@ -1,181 +1,131 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D61D24EF89
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Mar 2025 16:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD8825C6F7;
+	Thu,  6 Mar 2025 16:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280119; cv=none; b=Fje/SSKU47ZE5mGIuf/9DqfggxqjfS24xdjB8nLX9zekGQheKxp2AREbqd3GLwdT56BsYyPzwiViZQs3lxrNXlVdULDwMoFgTsNolnd5gedHluc3LKbATClB7f9+FxxeLnwtqYKuOgy7zShP9hDhfVITsod97kor5mUVho61boM=
+	t=1741280287; cv=none; b=I+Kag+Q5AquBXKOa8H3BS+OSDX0JY5MXXNCIdPd2ncjiBUIWw5TuC+r294zWU+v/nCHcV5vFhDIQ09W7+Vh4SWAJ8JpljTPOU+fujrav6SkjeCHWWX84RJsiEHjaG7XefSq0RwswFTqyGx687x/gmF7Hm807OXMdzAUeJ2UDekk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280119; c=relaxed/simple;
-	bh=A1cLMm/rRtTJu3o30/XbaiexFMSeVAOcT21ZnNpF9HU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BjAODbCItyZ3k9sQsZIk0useQKNmxIw1pEYu7xWrcrSj43kgPEcHNWkfpP+vgyO5KBKOK2yvy1tlNJC+NgK8NyVv/ba8CGLKKkCiToXvFI49Js/FHlXns3BsJP3ZNPXn+WaAaNhgiw64Cb76bOhr7hcaSZYkq5nZJTfufRy5fdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g30lr/yk; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741280287; c=relaxed/simple;
+	bh=iye/SSIddxiY8mSsOHtwpzr/U8xVr9GpyZGHUWgmDAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FtihvCXmOBEjtGU+I6nt/1MlmmRTqWFDLK1z/Kvotv/eTsNq0NDqUBwwe1cdDfqN/v1XiFy/bFO9fBqpNGtlTlxr1H/mKVvsRcrF3GXrDEedktgr2mEBSe4bBClrnSvaAKGnqJUAttQVf1ARG6MSBZHt2k3ocp/BlJ98Avo8vQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kE2TqQgr; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g30lr/yk"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2237a32c03aso150115ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 08:55:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741280117; x=1741884917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XGPTfeCWeF4i6ufv6n34mMSCAIJVic/m06/TER4ZKg8=;
-        b=g30lr/yk+kFGN7QTlEoaexiugPC6zifUe1VezYP8jqaHdsyrlV0nyvat01pa9gb5bD
-         9rfSpeTz+k9RYT2l1khDw5vitnpkhCIYkvYE0cxVGq9RvZZjMY7Te4IxfcPZUDxPqCEZ
-         DJGHYIvXFrvObvZQi2l8w5QtFYeFIm5C8/IM1TvoHhGMPT5LvfpqffCA4YeDIa1x0LjV
-         j+Kk+RqoxwPlWKSq+QNYOAgNHdutLEj6AkxKT4PVJNOMGh+JwkyEcvgBEUS/6VYzIZKl
-         ygsIQYsU3hT1EB1xq46VRC30/rA1XLd7A+av4xq0qTIk2PauhWMfUgnLU6dRHSNbxKw/
-         zWhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741280117; x=1741884917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XGPTfeCWeF4i6ufv6n34mMSCAIJVic/m06/TER4ZKg8=;
-        b=C6cRJEhXj3WUt7cvB3J2KyBITGkzRmi3A8xf/kzxVZ2DuHM+UMuLLDz9YJa79kXnLM
-         pgNMX6cT+f0ZmsI/bg9KxnLpjZaGT3X2Ij4mOGiBszKL24XM7jQPeIrIR4C9kQ00dYMw
-         PWFXxquocTxDe8YCfchvCwB1B8pdIjP3rhBx+w5/PuG3Rx9pN13BgJ8vNWx4hDJRYvv2
-         PmAXmuNQLl08Nysa5mOZCtBZ1XagKZIqrGpddu/lV25QwQvyKx8f9390NA+poccK9kJQ
-         PMGQ0/jxGun8C0NMEjayT8kFq7vEu65F6XTBAVo37ghCeo7d4FaUpv6UrfVM6BpTUdz7
-         q3AA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6ISUgMaehPefWBTSxK6P1jfVaV1/cX1JQiN5zTUAy8Uf5Gw/SsJVfh4hGOG/dXVAYiMP9O3EEO1Lm6D7vPCzL@vger.kernel.org
-X-Gm-Message-State: AOJu0YygV5O7GjwNxLo8rkdNdd0ne4aazqUyBguzrHpM6G+s1kwENatF
-	LYJNm+jq7Qp4675Jw3ZuLzf9G6zjiEeRkBJDC4uXz8DYQL0hlHvMCz9oP2oiJUlgrUc+LQZ4cJD
-	KdjJnm8dY74ezPSZUo4YfsCY354+NMeX25xPq
-X-Gm-Gg: ASbGncv+Jqz/EDRLgMBhPurgyk79GIJv38XOyplid8elBPwynC53c8kxD76VNMiJD2N
-	wPy46o9sM+J/cAJWoeczUpObgJeEjPeySczBi9Ds5nAAUjTOR7OMpS8EO0vJwLeGwzqYzL+lLX0
-	A5T4w4tbSl4jEBbBr3P5hCHW6Pc4yYE9d9hkVevNkLNMpLTDSTcDov+5o=
-X-Google-Smtp-Source: AGHT+IG7VYKcPSJdNPDtzXRMrhi3PHqP9/H7o2SFOhAfQZu8ErWsr2svswtqD0x0WBKS4GgmTFEyB2NO3kZnl42VbYI=
-X-Received: by 2002:a17:903:1670:b0:216:5e53:d055 with SMTP id
- d9443c01a7336-2240e496477mr2665035ad.9.1741280117182; Thu, 06 Mar 2025
- 08:55:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kE2TqQgr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741280286; x=1772816286;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iye/SSIddxiY8mSsOHtwpzr/U8xVr9GpyZGHUWgmDAI=;
+  b=kE2TqQgrHPMiIww8/j3eNQzcLvf7NDgTa44zOtNvLsbzBBOba/DieSvZ
+   UVDDzzwNf7Mw4XLplT2ZKrlCWT4Qx+lRGCf+6nfYxpseJXQQZSy9Xf8l/
+   kWPEfHzt0eMEhxu2dWzWcFEEaheEos0p2yjDZPRX8D4vhPz8OgPNYiBQT
+   vJDjqlwTpvtN7u8stsaGwzQBsFLJUFYFgItrk2Z6f5v5haulJutViaNus
+   Bnd906QGRJBYzoZrbrMmybpPTjqZW1nTHBExWG9dDyAkzn1SqxEuY2KqG
+   LkB45bjlHr4L+20VpIMaKzSof0EgwdpyRYMf0/jifVvSIMnhlaO440OTF
+   Q==;
+X-CSE-ConnectionGUID: nTvGVPz4SD69csXyOtI9IQ==
+X-CSE-MsgGUID: MB6sbF/yQTmzltyHa2ihtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52942743"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="52942743"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 08:58:05 -0800
+X-CSE-ConnectionGUID: uAIDf/VsTtO0dQ/Xd2EERA==
+X-CSE-MsgGUID: bCZGL2y2SnGL9qhLf1QKUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="142307035"
+Received: from sho10-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.178])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 08:58:04 -0800
+Date: Thu, 6 Mar 2025 08:57:57 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v6 4/5] x86/bugs: Declutter vulnerable CPU list
+Message-ID: <20250306165757.sh6azitvazhq5lxj@desk>
+References: <20250305-add-cpu-type-v6-0-4741735bcd75@linux.intel.com>
+ <20250305-add-cpu-type-v6-4-4741735bcd75@linux.intel.com>
+ <542cfd1b-65f8-4fa9-811e-d70850d0cf9a@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306075147.195435-1-namhyung@kernel.org> <20250306075147.195435-2-namhyung@kernel.org>
-In-Reply-To: <20250306075147.195435-2-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Mar 2025 08:55:05 -0800
-X-Gm-Features: AQ5f1Jro2absOUzAa1tYd-i-Ic6Yvfz43s385OY1qtm3Om5lPsqwFwr2Uif_sQY
-Message-ID: <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <542cfd1b-65f8-4fa9-811e-d70850d0cf9a@intel.com>
 
-On Wed, Mar 5, 2025 at 11:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Ian told me that there are many memory leaks in the hierarchy mode.  I
-> can easily reproduce it with the follwing command.
->
->   $ make DEBUG=3D1 EXTRA_CFLAGS=3D-fsanitize=3Dleak
->
->   $ perf record --latency -g -- ./perf test -w thloop
->
->   $ perf report -H --stdio
->   ...
->   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
->       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_=
-interceptors.cpp:75
->       #1 0x55ed3602346e in map__get util/map.h:189
->       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
->       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
->       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
->       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
->       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
->       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
->       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/=
-linux/tools/perf/builtin-report.c:735
->       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tool=
-s/perf/builtin-report.c:1119
->       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools=
-/perf/builtin-report.c:1867
->       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tool=
-s/perf/perf.c:351
->       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/projec=
-t/linux/tools/perf/perf.c:404
->       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/p=
-erf/perf.c:448
->       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/=
-perf.c:556
->       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_s=
-tart_call_main.h:58
->   ...
->
->   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
->   93
->
-> I found that hist_entry__delete() missed to release child entries in the
-> hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-> and call hist_entry__delete() recursively.
->
-> After this change:
->
->   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
->   0
->
-> Reported-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/hist.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
->  {
->         struct hist_entry_ops *ops =3D he->ops;
->
-> +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
-> +               struct rb_node *node =3D rb_first(&he->hroot_out.rb_root)=
-;
-> +               struct hist_entry *child =3D rb_entry(node, struct hist_e=
-ntry, rb_node);
-> +
-> +               rb_erase_init(node, &he->hroot_out.rb_root);
-> +
-> +               hist_entry__delete(child);
-> +       }
+On Thu, Mar 06, 2025 at 07:18:55AM -0800, Dave Hansen wrote:
+> On 3/5/25 23:13, Pawan Gupta wrote:
+> ...
+> >  #define VULNWL_INTEL(vfm, whitelist)		\
+> > -	X86_MATCH_VFM(vfm, whitelist)
+> > +	X86_MATCH_VFM(INTEL_##vfm, whitelist)
+> 
+> I think the new VFM code may have thrown you off here. Doing HASWELL_X
+> is not as nice as INTEL_HASWELL_X because, while you can grep for it, it
+> won't work when you're looking for full identifiers like with ctags or
+> cscope.
+> 
+> Also, this is just putting the "INTEL" in the macro instead of the VFM.
+> I'm not sure there's much value in doing:
+> 
+> 	VULNWL_INTEL(ALDERLAKE_L, ...)	
+> 
+> over:
+> 
+> 	X86_MATCH_VFM(INTEL_ALDERLAKE_L, ...)
 
-Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
-erase on the first entry, an O(log N) operation, means this is a O(N *
-log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/include/linux/rbtree.h?h=3Dperf-tools-next#n81
-```
- * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_roo=
-t of
- * given type allowing the backing memory of @pos to be invalidated
-```
-which is O(N). I think this code would be better something like:
-```
-struct hist_entry *pos, *tmp;
-rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_no=
-de)
-        hist_entry__delete(pos);
-```
+Ahh, right. I will fix that. Thanks for pointing this out.
 
-Thanks!
-Ian
+As one of the goal of the patch is to shorten the macro names and follow
+the VULNWL_<> pattern, would it make sense to rename VULNWL_INTEL to:
 
-> +
->         thread__zput(he->thread);
->         map_symbol__exit(&he->ms);
->
-> --
-> 2.48.1.711.g2feabab25a-goog
->
+#define VULNWL_VFM(vfm, whitelist)		\
+	X86_MATCH_VFM(vfm, whitelist)
+
+Then the table would look like:
+
+	VULNWL_VFM(INTEL_TIGERLAKE,	NO_MMIO),
+
+Simlarly for cpu_vuln_blacklist the macros become:
+
+#define VULNBL_VFM(vfm, issues)			\
+	VULNBL_VFM_STEPS(vfm, X86_STEP_MAX, issues)
+
+#define VULNBL_VFM_STEPS(vfm, max_stepping, issues)		   \
+	X86_MATCH_VFM_STEPS(vfm, X86_STEP_MIN, max_stepping, issues)
+
+#define VULNBL_VFM_TYPE(vfm, cpu_type, issues)			\
+	X86_MATCH_VFM_CPU_TYPE(vfm,				\
+			       INTEL_CPU_TYPE_##cpu_type,	\
+			       issues)
+
+And the table would look like:
+
+	VULNBL_VFM(INTEL_COMETLAKE,			MMIO | MMIO_SBDS | RETBLEED | GDS),
+	VULNBL_VFM_STEPS(INTEL_COMETLAKE_L,	0x0,	MMIO | RETBLEED),
+	...
+	VULNBL_VFM_TYPE(INTEL_ALDERLAKE,	ATOM,	RFDS),
