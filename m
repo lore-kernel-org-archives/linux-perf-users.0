@@ -1,148 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F39320468E;
-	Thu,  6 Mar 2025 10:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A9F1FC0E5;
+	Thu,  6 Mar 2025 12:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741257450; cv=none; b=DQ1NACpCpyJyWP2BRXHRgEUEz++/R2YURV0cIKzGIsYK4i8oZm94jg1Dv1ZXCYA2QPL0QfsdCDJXA/4yvYISkdLf6d7/hptWMMjWo5IyATCoS1kAFUo25cuylD2Z6y52EtPodpgis2ikCvCYCVxupRFD7KjUdAtWaTVCAvlXUMg=
+	t=1741264439; cv=none; b=WRdFQmF+/wpdJAVnBwth7ZEiRn8LwYnA1OKbUZXHrz/85ssSg6KmYOnf9lVy+tsCljeX69hsuhT6TqJFKWIGQ7g9K77u/rw6jm082o8Wunpfw1Sly0IbyofwKkTW54F+Cnoi76xOH/B0MeH88eW2EDPVTUUMRoiD7AUKvuvLtVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741257450; c=relaxed/simple;
-	bh=qevjN5tUatdD4sRyacUuX0cpfWvxaopsOVfxeABNgSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqPLSzCOKjBD4JTJL5hEbnej1a76DX7LTs+nij/uO2m6oIOoyx2Qv++zL+2MzEc8pXsNDq8MdS7SFmHFgybAwLJPsProQYpIpasE8tZ+R4DYPgJLVMOFNCROMVnCgLTCeqqTh7IH+2s6+ITF2Go2r0h3IaFBlLwYgU9UMjLt4qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FE270KjJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FE270KjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB1CC4CEE0;
-	Thu,  6 Mar 2025 10:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741257450;
-	bh=qevjN5tUatdD4sRyacUuX0cpfWvxaopsOVfxeABNgSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FE270KjJC49vsjvPwANMviQ4xzGVAwPXLtdLVrLcnC/xBC0D/nSnefHiAKdLduxHX
-	 v08BqHo2rdOAZwy0krwrM3GdzgFV4NDZ/I89Xa0Srcs38toyi5DyWr4OEGSFO+Y/mr
-	 w/KwAFMXqAzH4TqXwZ+W+ejJGinyIsVQh4Gk7NYpf+YbJg4gY0bYE9s/uTVb/3xxVA
-	 7+td4U/iJCL8RcjO9UyBSdlG/e1RcfrZfx27TEdHOdR/uyAyVZfLyBle7dKIFjFmJy
-	 H9QeBGuGwpzfhC5ei9Zi7O0bzykpAIF8kR5Sh0bwe0rTpJUsP+7xdF0kIN6W0VjrY4
-	 4ITbFAf0Y62yQ==
-Date: Thu, 6 Mar 2025 11:37:24 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 4/8] stack_tracer: move sysctl registration to
- kernel/trace/trace.c
-Message-ID: <f574knvwbip2hvyvorxcxfjrojd2bblmewvfsv6utivydljrpj@h2cryrh7cojq>
-References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
- <20250218-jag-mv_ctltables-v1-4-cd3698ab8d29@kernel.org>
- <20250303204732.1f5af40d@gandalf.local.home>
+	s=arc-20240116; t=1741264439; c=relaxed/simple;
+	bh=aGjzBpT0G0t8eJj0mKb/W8C/c3s44EYZ+Jb75+aXYak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CEoi/ke9l+wXu5Q6N11p75oFGIBgfSYpsnrCZyojNqeeWtL+mU6XgOkeuOMmP7OwCyTb35mDrjXIfp/i7kmAowrMorZqB3f6oyLwsVBJrfA61g2HlMXGOiZ4yapc9CmcNmwyZOKvA5zutA8SmN5jjKR775fiAdU85akLLINHg9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9601C1007;
+	Thu,  6 Mar 2025 04:34:09 -0800 (PST)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7FB523F673;
+	Thu,  6 Mar 2025 04:33:54 -0800 (PST)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: mingo@kernel.org,
+	peterz@infradead.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	Mark.Rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	leo.yan@arm.com,
+	james.clark@linaro.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v4] events/core: fix acoount failure for event's child_total_enable_time at task exit
+Date: Thu,  6 Mar 2025 12:33:50 +0000
+Message-Id: <20250306123350.1650114-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303204732.1f5af40d@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 08:47:32PM -0500, Steven Rostedt wrote:
-> On Tue, 18 Feb 2025 10:56:20 +0100
-> Joel Granados <joel.granados@kernel.org> wrote:
-> 
-> > Squash with ftrace:
-I'll also fix this little marker that I missed. And I'll not squash it,
-as it is now going into trace_stack.c
+The perf core code fails to account for total_enable_time of event
+when its state is inactive.
 
-> > Move stac_tracer_enabled into trace_sysctl_table while keeping the
-> > CONFIG_STACK_TRACER ifdef. This is part of a greater effort to move ctl
-I'll remove these comments from the commit message
+Here is the error case for failure to account for total_enable_time for
+core event:
 
-> > tables into their respective subsystems which will reduce the merge
-> > conflicts in kerenel/sysctl.c.
-> > 
-> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
-> > ---
-> >  kernel/sysctl.c      | 10 ----------
-> >  kernel/trace/trace.c |  9 +++++++++
-> >  2 files changed, 9 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index baa250e223a2..dc3747cc72d4 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -68,7 +68,6 @@
-> >  
-> >  #ifdef CONFIG_X86
-> >  #include <asm/nmi.h>
-> > -#include <asm/stacktrace.h>
-> >  #include <asm/io.h>
-> >  #endif
-> >  #ifdef CONFIG_SPARC
-> > @@ -1674,15 +1673,6 @@ static const struct ctl_table kern_table[] = {
-> >  		.proc_handler	= proc_dointvec,
-> >  	},
-> >  #endif
-> > -#ifdef CONFIG_STACK_TRACER
-> > -	{
-> > -		.procname	= "stack_tracer_enabled",
-> > -		.data		= &stack_tracer_enabled,
-> > -		.maxlen		= sizeof(int),
-> > -		.mode		= 0644,
-> > -		.proc_handler	= stack_trace_sysctl,
-> > -	},
-> > -#endif
-> >  #ifdef CONFIG_MODULES
-> >  	{
-> >  		.procname	= "modprobe",
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index abfc0e56173b..17b449f9e330 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> 
-> This should go into kernel/trace/trace_stack.c, and remove the #ifdef.
-Will send my V2 shortly with this modification.
-> 
-> -- Steve
-> 
-> > @@ -166,6 +166,15 @@ static const struct ctl_table trace_sysctl_table[] = {
-> >  		.mode		= 0644,
-> >  		.proc_handler	= tracepoint_printk_sysctl,
-> >  	},
-> > +#ifdef CONFIG_STACK_TRACER
-> > +	{
-> > +		.procname	= "stack_tracer_enabled",
-> > +		.data		= &stack_tracer_enabled,
-> > +		.maxlen		= sizeof(int),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= stack_trace_sysctl,
-> > +	},
-> > +#endif
-> >  };
-> >  
-> >  static int __init init_trace_sysctls(void)
-> > 
-> 
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
+...
 
-Thx for the review
+/*
+ * three number represetns each
+ *   scaled count / total_enable_time / total_total_running_time
+ */
+armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+                                      ^^^^^^^^^^
+armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+                                      ^^^^^^^^^^
 
-Best
+ Performance counter stats for 'stress-ng --pthread=2 -t 2s':
 
--- 
+     1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
+     1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
 
-Joel Granados
+Since above two events are belong to the same task context and
+mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
+the total_enable_time should be the same (marked with ^^^^^^^^^^^)
+and the summation of ratio should be 100%.
+
+This account failure of total_enable_time because of
+account failure of child_total_enable_time of child event when
+child task exit.
+
+Below table explains how the child_total_enable_time is failed to account at
+exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
+
+ - in means sched_in.
+ - out means sched_out.
+ - exit means at the exit of child task.
+   NOTE: the value is before calling list_del_event(). which mean
+         the value at exit column will be added at parent event's
+          child_total_enable_time when child task exit.
+ - ctx is the child_task_ctx,
+ - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
+   added in CPU0,
+ - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
+   added in CPU1,
+ - e0 and e1 belongs to same child_task_ctx.
+
+          CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
+          |  in | out |       | in  | out     |       | in      | exit        |
+------------------------------------------------------------------------------
+ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
+------------------------------------------------------------------------------
+e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
+------------------------------------------------------------------------------
+e0->run   |  0  | t1  |       | t1  | t1     *|       | t1      | t1 + t3     |
+------------------------------------------------------------------------------
+e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
+------------------------------------------------------------------------------
+e1->run   |  0  | 0  *|       | 0   | t2      |       | t2      | t2         X|
+------------------------------------------------------------------------------
+
+The value marked with * means it doesn't updates since event->state was
+INACTIVE.
+
+Please see the last CPU0's column with exit (marked with X).
+Since e1's state is INACTIVE its total_enable_time doesn't update
+and it remains with former value without accounting t3 time.
+
+In this situation, at __perf_remove_from_context() while exit child_task,
+sync_child_event() where adds child_event's total_enable_time to
+parent event's child_total_enable_time in perf_child_detach() is called
+before list_del_event() in which event time is updated by setting
+the event state as OFF.
+That means child_total_enable_time is added with missing
+amount of last enable time -- t3.
+
+In case of parent event's total_enable_time is updated properly in
+list_del_event() when the task exit.
+However, the child_total_enable_time is missed when child_task exited,
+the perf prints error amount of enable_time (which is summation of
+total_enable_time + child_total_enable_time).
+
+To address this, update event state via perf_event_state() in
+__perf_remove_from_context() and call it before perf_child_detach()
+where parent's total_enable_time is updated.
+
+After this patch, this problem is gone like:
+
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
+...
+armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
+armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
+
+ Performance counter stats for 'stress-ng --pthread=2 -t 10s':
+
+    15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
+    22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Suggsted-by: Peter Zijlstra <peterz@infradead.org>
+---
+ kernel/events/core.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6364319e2f88..058533a50493 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2407,6 +2407,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
+ #define DETACH_GROUP	0x01UL
+ #define DETACH_CHILD	0x02UL
+ #define DETACH_DEAD	0x04UL
++#define DETACH_EXIT	0x08UL
+
+ /*
+  * Cross CPU call to remove a performance event
+@@ -2421,6 +2422,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 			   void *info)
+ {
+ 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
++	enum perf_event_state state = PERF_EVENT_STATE_OFF;
+ 	unsigned long flags = (unsigned long)info;
+
+ 	ctx_time_update(cpuctx, ctx);
+@@ -2429,16 +2431,19 @@ __perf_remove_from_context(struct perf_event *event,
+ 	 * Ensure event_sched_out() switches to OFF, at the very least
+ 	 * this avoids raising perf_pending_task() at this time.
+ 	 */
+-	if (flags & DETACH_DEAD)
++	if (flags & DETACH_EXIT)
++		state = PERF_EVENT_STATE_EXIT;
++	if (flags & DETACH_DEAD) {
+ 		event->pending_disable = 1;
++		state = PERF_EVENT_STATE_DEAD;
++	}
+ 	event_sched_out(event, ctx);
++	perf_event_set_state(event, min(event->state, state));
+ 	if (flags & DETACH_GROUP)
+ 		perf_group_detach(event);
+ 	if (flags & DETACH_CHILD)
+ 		perf_child_detach(event);
+ 	list_del_event(event, ctx);
+-	if (flags & DETACH_DEAD)
+-		event->state = PERF_EVENT_STATE_DEAD;
+
+ 	if (!pmu_ctx->nr_events) {
+ 		pmu_ctx->rotate_necessary = 0;
+@@ -13424,12 +13429,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		mutex_lock(&parent_event->child_mutex);
+ 	}
+
+-	perf_remove_from_context(event, detach_flags);
+-
+-	raw_spin_lock_irq(&ctx->lock);
+-	if (event->state > PERF_EVENT_STATE_EXIT)
+-		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
+-	raw_spin_unlock_irq(&ctx->lock);
++	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
+
+ 	/*
+ 	 * Child events can be freed.
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
