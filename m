@@ -1,142 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08900253358;
-	Thu,  6 Mar 2025 17:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0711FC7F9;
+	Thu,  6 Mar 2025 17:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280823; cv=none; b=u5lE/nV66wjzIxduhFdkOq9nzYTcn5aZ7Ekalcc7SsNr6v0SddnIiMrvK4Kcd25wVjg4gmhkDTK4pA0VhpOaNp4/ZG7QwWkaoQOAbcBSaPRZ71/loUQzw0fHUvh6GwGqI81QFwoPFTdf9c32ecr9ZGLOT/yEs7zZgz0dFuiHGE0=
+	t=1741281249; cv=none; b=TCJNamGDCmAU0fdNeKbD7UkVNIQvBCTr2lexMjgfy2kyNu34AQTjzODXYn1GclhV3J8ggZarjf5dgmhr6P/7CHYAhUSBM0ZWdf5hwmih83MD9D0EB0m0zuwZMQ5LiXDcpkZanG+IEisPK+FUKXR6gqYzP8JKSy9Hv5PV5eHRo00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280823; c=relaxed/simple;
-	bh=shcS/h5t4/AXPPuiWKOxQ26xUXj8YayO1K1S3iDM5+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqyohjGz+ZbxeSkRMnaWxJuOEz5U59KHZHfliTTVgGvF5dBPchzxKCDrZnLcS3qmetmC1mCESEXEw6vKfUgSoL5MX/O3YLUNcEaF4RE/hlLi2Cd7xc4uZvvi/oVjOR2SvfAdPqmOgjs4xSPJ2b09APJ9Qc28yfBAJVeBSVAvWos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/lGbNGh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741281249; c=relaxed/simple;
+	bh=8FqMUatwcHUIE5A7QHIqZJOIUQ60Ux51fUTgWzW51r8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=P4rOGPS7wSgjfaVzOmaZMW+xN3SIz8L8MMTqwFziQwM7lCm08uds3s+41j61IrKXnHqR+6Y7RttvkwfgGByrFImYuKqkuN2insw9QOp8oGrqbFJVCBp/jIT2sr7ILB0MgqUcXZW4mGqE0yf+iloPFXDqlvEEYrIlDnkoCw7zzgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM0jWPmL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/lGbNGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77207C4CEE0;
-	Thu,  6 Mar 2025 17:07:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM0jWPmL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D48C4CEE0;
+	Thu,  6 Mar 2025 17:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741280822;
-	bh=shcS/h5t4/AXPPuiWKOxQ26xUXj8YayO1K1S3iDM5+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c/lGbNGh9G+mIIBlBRY4RdY4u37e1PABbdd8eh4KYr3DsY5h3mr+4kYbsMAfYN3yW
-	 ncH4VL3DQzhh0dLz/CQaI/+HszHIIFkvtR/W4nB0Lm40MSZfXUpeqzCyxFo56jJ7IP
-	 qE1brbKOI6LJrUQ4kUSxR4mpMF4XjvgYvRvKaVVorzA0yBKilFV2nRF5vOFqBIDau1
-	 2jZr4YCalas7iRTTtvs2HpIpIlMYFAbWgD8s82Mbd9Ut+iE5yTQXzge9nC8KcaCLKT
-	 QRwObHUeJh/PXo3tFK+vn96eKT+/++vpydNRpofVTj9EsiJ+7gOMSPz6smjRieJ6qf
-	 iaSFROE6Nyviw==
-Date: Thu, 6 Mar 2025 09:07:00 -0800
+	s=k20201202; t=1741281248;
+	bh=8FqMUatwcHUIE5A7QHIqZJOIUQ60Ux51fUTgWzW51r8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ZM0jWPmL5sfQrMNtXbxOlftG/8LKfS2oi3p3rjGQAOyodREiehbOWVEyz8fWDkgs0
+	 FeekZkABOS/EHE9XUhfPHw8IPhjNdSJ4YS26omOigoAbj2v6HmtDe+oV0n9cYa1ZNC
+	 uDG/PPiomI6/ccpdDJIqN7x8D4UeUhL8qsYMWRChTQclZ4xnRyeQQP1L7/WWjwcHeR
+	 mQ89chq0N1xi3NUu/aL3NKcNu4oi9sqWNIoCyYGPyEZvIinOT04iODFswKlxsyil6r
+	 AvtUnSV5CF31mCyZ1rTKuM+35ZgVLw6keoGTFuJkvObDQQgdlNVAC7C8qU/VctKzPT
+	 uOYBc0hIeKyaA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
-Message-ID: <Z8nWNBKuYc0x-sN8@google.com>
-References: <20250306075147.195435-1-namhyung@kernel.org>
- <20250306075147.195435-2-namhyung@kernel.org>
- <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20250304022837.1877845-1-namhyung@kernel.org>
+References: <20250304022837.1877845-1-namhyung@kernel.org>
+Subject: Re: [PATCH v2 0/6] perf test: Small improvements
+Message-Id: <174128124849.3835280.13347713031855117168.b4-ty@kernel.org>
+Date: Thu, 06 Mar 2025 09:14:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi Ian,
-
-On Thu, Mar 06, 2025 at 08:55:05AM -0800, Ian Rogers wrote:
-> On Wed, Mar 5, 2025 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Ian told me that there are many memory leaks in the hierarchy mode.  I
-> > can easily reproduce it with the follwing command.
-> >
-> >   $ make DEBUG=1 EXTRA_CFLAGS=-fsanitize=leak
-> >
-> >   $ perf record --latency -g -- ./perf test -w thloop
-> >
-> >   $ perf report -H --stdio
-> >   ...
-> >   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
-> >       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
-> >       #1 0x55ed3602346e in map__get util/map.h:189
-> >       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
-> >       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
-> >       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
-> >       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
-> >       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
-> >       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
-> >       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/linux/tools/perf/builtin-report.c:735
-> >       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
-> >       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
-> >       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:351
-> >       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:404
-> >       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:448
-> >       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/perf.c:556
-> >       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-> >   ...
-> >
-> >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> >   93
-> >
-> > I found that hist_entry__delete() missed to release child entries in the
-> > hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-> > and call hist_entry__delete() recursively.
-> >
-> > After this change:
-> >
-> >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> >   0
-> >
-> > Reported-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/hist.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
-> > --- a/tools/perf/util/hist.c
-> > +++ b/tools/perf/util/hist.c
-> > @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
-> >  {
-> >         struct hist_entry_ops *ops = he->ops;
-> >
-> > +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
-> > +               struct rb_node *node = rb_first(&he->hroot_out.rb_root);
-> > +               struct hist_entry *child = rb_entry(node, struct hist_entry, rb_node);
-> > +
-> > +               rb_erase_init(node, &he->hroot_out.rb_root);
-> > +
-> > +               hist_entry__delete(child);
-> > +       }
+On Mon, 03 Mar 2025 18:28:31 -0800, Namhyung Kim wrote:
+> This is an assorted list of changes in the perf test.
 > 
-> Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
-> erase on the first entry, an O(log N) operation, means this is a O(N *
-> log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/rbtree.h?h=perf-tools-next#n81
-> ```
->  * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
->  * given type allowing the backing memory of @pos to be invalidated
-> ```
-> which is O(N). I think this code would be better something like:
-> ```
-> struct hist_entry *pos, *tmp;
-> rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_node)
->         hist_entry__delete(pos);
-> ```
+> I've added perf stat --metric-only test and perf trace record and replay.
+> And other changes to skip privileged tests for non-root and simplify
+> data symbol test.
+> 
+> v2 changes)
+> * fix shellcheck errors
+> * simplify datasym test with timeout
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Thanks for your review!  I was wondering if there's something like this.
-Will update with that.
-
-Thanks,
+Best regards,
 Namhyung
+
 
