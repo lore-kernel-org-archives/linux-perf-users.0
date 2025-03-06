@@ -1,212 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A9F1FC0E5;
-	Thu,  6 Mar 2025 12:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2188120C478;
+	Thu,  6 Mar 2025 13:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741264439; cv=none; b=WRdFQmF+/wpdJAVnBwth7ZEiRn8LwYnA1OKbUZXHrz/85ssSg6KmYOnf9lVy+tsCljeX69hsuhT6TqJFKWIGQ7g9K77u/rw6jm082o8Wunpfw1Sly0IbyofwKkTW54F+Cnoi76xOH/B0MeH88eW2EDPVTUUMRoiD7AUKvuvLtVE=
+	t=1741266524; cv=none; b=Cj1w7MIRF8TpMrAQq0RbIXB3jhvnIENThnlru+Nq6FHMjCrprJBQeRbsaOa4Ej7addzi6ozNgK6EPBh1pLHOXXdy4cNlURfsYeA/gECR4odj9eXYghXwdqw9jjShw2XI3jTpMkH9Gar156jzzZjrSqAUJk9utZe+noA1afcYOnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741264439; c=relaxed/simple;
-	bh=aGjzBpT0G0t8eJj0mKb/W8C/c3s44EYZ+Jb75+aXYak=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CEoi/ke9l+wXu5Q6N11p75oFGIBgfSYpsnrCZyojNqeeWtL+mU6XgOkeuOMmP7OwCyTb35mDrjXIfp/i7kmAowrMorZqB3f6oyLwsVBJrfA61g2HlMXGOiZ4yapc9CmcNmwyZOKvA5zutA8SmN5jjKR775fiAdU85akLLINHg9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9601C1007;
-	Thu,  6 Mar 2025 04:34:09 -0800 (PST)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7FB523F673;
-	Thu,  6 Mar 2025 04:33:54 -0800 (PST)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: mingo@kernel.org,
-	peterz@infradead.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	Mark.Rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	leo.yan@arm.com,
-	james.clark@linaro.org
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v4] events/core: fix acoount failure for event's child_total_enable_time at task exit
-Date: Thu,  6 Mar 2025 12:33:50 +0000
-Message-Id: <20250306123350.1650114-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741266524; c=relaxed/simple;
+	bh=UQxOtCyjjeVSI1OL9Qw+dMxFi11CeViW/vaw3V+RlBw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aa1TH/HN3nOMBAXPWznHgPeoPyBZyZ58eqNNkCX7N3tLMy6WSWE+4D6Gf/e5ay0MGAtp5F1n3Q8CZ3EhGroT3SZGCs5eXQ0TJG1g4e9/Sy57KEN81YWlLiV07s5Me4T1Ybcm/B+Cwso1uUSVVJU7JUcKVC9a+Iiv3qDoE3JYQUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvQEo0ku; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvQEo0ku"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab771575040so349206266b.1;
+        Thu, 06 Mar 2025 05:08:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741266521; x=1741871321; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RBpr4q0/AOycCkUAiZa/BjvQ502X7W3qJqBvzu0mmtU=;
+        b=UvQEo0kuvnODkwMZ4sFiRY7sFAlsG7r1AjSkfC1QnDyU1Hs/Vhul7aWcDR8H6+Zutp
+         jAKMwGnDFK8tXZP0/g1HDLnnd82SfBJu/9mBn3jnnbmfpR9Rtq1zOl7LjSzYyGGiIl1a
+         gU6v4jM2qyBglY9TmcDC7V7KzIMHQncUtNBj+bim93cIc0LG3N5nzk/q5gbV+9zFR5Ds
+         +xvldXQk6Gsrzy9HDb6u57Pm4VrXoxpECXcqyA9sRtZ7//yyvEXZU0OA97TqgYaUQY2G
+         a2eiYhwm5awfx1Xs2zOpEBCA+SstXhGwuZYtBOdfxuXuuAWk3u/inP3y3FEHCoXObay1
+         Kr1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741266521; x=1741871321;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBpr4q0/AOycCkUAiZa/BjvQ502X7W3qJqBvzu0mmtU=;
+        b=ZnxnrvXkpvTGMwEw5ryaClllTYGPwXAKBNP4oQUn4oK33p6jmSmKwr73RbGWxEEc1x
+         tJzYqMNit5zrZimOSKpmuRuWxB+EUD+FVC8QSQ0YE0BdRwnKow/QuJTbz+FV5bQsujw7
+         4vRY28DZ55ZYA44W1Y8vmrchGSA3APdqmmHjMBUT1PSmfJYCXZGtChJ3NTMJo8KU+1tP
+         2xT5VPfwGDSu18VFdgYxx+ZweKKLgTQ5MoiJHNMKbJrewJq/TVdFZIoTnIthKo3h0lk8
+         dwvb8KIfIpv5XUtuPzXuEYuPdjfj9xMtKjTh+OqqFTvnfBQgclzyN5eHtvp57Y/mZCq1
+         WQUw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3+vfJPe9LY3FvQMyLTu0MAa58ZJaNUyWU49EKhPyod5nm/Rtp0BMV0fbJgWwFdgXpBmmD76XHlEqSHL+VspK8pw==@vger.kernel.org, AJvYcCXB6P0BkHFR9qhZpHcg3wtgJuL96gSSRiL1YGTF+rW8nYkO9fBySR6P0ev0+mYnjm1JxHfbF2D/LECBCl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzPpd6UyzlvvFUYjCEe/slSGrjJ4XsLkqGl5CNWPu5X+MFjcO7
+	NSPL/fL8F2D/AZZzzgyDJCjcNwGUxhYNNrHFmgCVxAi+z6lLmytt
+X-Gm-Gg: ASbGncsNam8/gKbDP1IQRHiqTwI+psWwxyE7mFJO8OaUs7vKeLVhog6XBw07a89ULHc
+	BZP03VOFB5JMWlzhNg+JWr+vkLHsMHb8HTl+DZnB1lsAijxW6F92+LVyYZC5ljUbD/nj7V4rjk0
+	HWP2vCmtuR8pjkLJD06ppX8WyqofKgGhOVat9tbbN04PEBk55VM1+jCCa6qvOrcIgmWoeIVyxiL
+	uFxYRgK+KYjvcXE1fN/2I8HB9mYKPXBKLIgf/Idov1MtPKpoxnzEUHVb/LH7WxNSkFjBTerlQas
+	B3K63DaGM19yKvF/kgvuzR/8xN+Yjy1KEt+oHg==
+X-Google-Smtp-Source: AGHT+IH4d/pbcgd8COO6M8KiuoS/WI/geAVKNETRj+9XKo2UQlZOoHE8m0iodn3MMHoQ0Ft5DwTynQ==
+X-Received: by 2002:a17:907:72ce:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-ac22cb3dd85mr336391466b.15.1741266521096;
+        Thu, 06 Mar 2025 05:08:41 -0800 (PST)
+Received: from krava ([2a00:102a:401e:9b3a:b228:9e66:580a:3bc8])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c768c798sm930867a12.66.2025.03.06.05.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 05:08:40 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 6 Mar 2025 14:08:38 +0100
+To: lirongqing <lirongqing@baidu.com>
+Cc: olsajiri@gmail.com, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] perf/x86/intel/bts: check if bts_ctx is allocated
+ when call bts functions
+Message-ID: <Z8meVrqd-F7tf44j@krava>
+References: <20250306051102.2642-1-lirongqing@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306051102.2642-1-lirongqing@baidu.com>
 
-The perf core code fails to account for total_enable_time of event
-when its state is inactive.
+On Thu, Mar 06, 2025 at 01:11:02PM +0800, lirongqing wrote:
+> From: Li RongQing <lirongqing@baidu.com>
+> 
+> bts_ctx maybe not allocated, for example if the cpu has X86_FEATURE_PTI,
+> but intel_bts_disable/enable_local and intel_bts_interrupt are called
+> unconditionally from intel_pmu_handle_irq and exploding on accessing
+> bts_ctx
+> 
+> so check if bts_ctx is allocated when call bts functions
+> 
+> Fixes: 3acfcefa795c "(perf/x86/intel/bts: Allocate bts_ctx only if necessary)"
+> Reported-by: Jiri Olsa <olsajiri@gmail.com>
 
-Here is the error case for failure to account for total_enable_time for
-core event:
+Tested-by: Jiri Olsa <jolsa@kernel.org>
 
-sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
-...
+thanks,
+jirka
 
-/*
- * three number represetns each
- *   scaled count / total_enable_time / total_total_running_time
- */
-armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
-                                      ^^^^^^^^^^
-armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
-                                      ^^^^^^^^^^
 
- Performance counter stats for 'stress-ng --pthread=2 -t 2s':
-
-     1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
-     1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
-
-Since above two events are belong to the same task context and
-mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
-the total_enable_time should be the same (marked with ^^^^^^^^^^^)
-and the summation of ratio should be 100%.
-
-This account failure of total_enable_time because of
-account failure of child_total_enable_time of child event when
-child task exit.
-
-Below table explains how the child_total_enable_time is failed to account at
-exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
-
- - in means sched_in.
- - out means sched_out.
- - exit means at the exit of child task.
-   NOTE: the value is before calling list_del_event(). which mean
-         the value at exit column will be added at parent event's
-          child_total_enable_time when child task exit.
- - ctx is the child_task_ctx,
- - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
-   added in CPU0,
- - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
-   added in CPU1,
- - e0 and e1 belongs to same child_task_ctx.
-
-          CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
-          |  in | out |       | in  | out     |       | in      | exit        |
-------------------------------------------------------------------------------
-ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
-------------------------------------------------------------------------------
-e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
-------------------------------------------------------------------------------
-e0->run   |  0  | t1  |       | t1  | t1     *|       | t1      | t1 + t3     |
-------------------------------------------------------------------------------
-e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
-------------------------------------------------------------------------------
-e1->run   |  0  | 0  *|       | 0   | t2      |       | t2      | t2         X|
-------------------------------------------------------------------------------
-
-The value marked with * means it doesn't updates since event->state was
-INACTIVE.
-
-Please see the last CPU0's column with exit (marked with X).
-Since e1's state is INACTIVE its total_enable_time doesn't update
-and it remains with former value without accounting t3 time.
-
-In this situation, at __perf_remove_from_context() while exit child_task,
-sync_child_event() where adds child_event's total_enable_time to
-parent event's child_total_enable_time in perf_child_detach() is called
-before list_del_event() in which event time is updated by setting
-the event state as OFF.
-That means child_total_enable_time is added with missing
-amount of last enable time -- t3.
-
-In case of parent event's total_enable_time is updated properly in
-list_del_event() when the task exit.
-However, the child_total_enable_time is missed when child_task exited,
-the perf prints error amount of enable_time (which is summation of
-total_enable_time + child_total_enable_time).
-
-To address this, update event state via perf_event_state() in
-__perf_remove_from_context() and call it before perf_child_detach()
-where parent's total_enable_time is updated.
-
-After this patch, this problem is gone like:
-
-sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
-...
-armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
-armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
-
- Performance counter stats for 'stress-ng --pthread=2 -t 10s':
-
-    15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
-    22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
-
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-Suggsted-by: Peter Zijlstra <peterz@infradead.org>
----
- kernel/events/core.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6364319e2f88..058533a50493 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2407,6 +2407,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
- #define DETACH_GROUP	0x01UL
- #define DETACH_CHILD	0x02UL
- #define DETACH_DEAD	0x04UL
-+#define DETACH_EXIT	0x08UL
-
- /*
-  * Cross CPU call to remove a performance event
-@@ -2421,6 +2422,7 @@ __perf_remove_from_context(struct perf_event *event,
- 			   void *info)
- {
- 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
-+	enum perf_event_state state = PERF_EVENT_STATE_OFF;
- 	unsigned long flags = (unsigned long)info;
-
- 	ctx_time_update(cpuctx, ctx);
-@@ -2429,16 +2431,19 @@ __perf_remove_from_context(struct perf_event *event,
- 	 * Ensure event_sched_out() switches to OFF, at the very least
- 	 * this avoids raising perf_pending_task() at this time.
- 	 */
--	if (flags & DETACH_DEAD)
-+	if (flags & DETACH_EXIT)
-+		state = PERF_EVENT_STATE_EXIT;
-+	if (flags & DETACH_DEAD) {
- 		event->pending_disable = 1;
-+		state = PERF_EVENT_STATE_DEAD;
-+	}
- 	event_sched_out(event, ctx);
-+	perf_event_set_state(event, min(event->state, state));
- 	if (flags & DETACH_GROUP)
- 		perf_group_detach(event);
- 	if (flags & DETACH_CHILD)
- 		perf_child_detach(event);
- 	list_del_event(event, ctx);
--	if (flags & DETACH_DEAD)
--		event->state = PERF_EVENT_STATE_DEAD;
-
- 	if (!pmu_ctx->nr_events) {
- 		pmu_ctx->rotate_necessary = 0;
-@@ -13424,12 +13429,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
- 		mutex_lock(&parent_event->child_mutex);
- 	}
-
--	perf_remove_from_context(event, detach_flags);
--
--	raw_spin_lock_irq(&ctx->lock);
--	if (event->state > PERF_EVENT_STATE_EXIT)
--		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
--	raw_spin_unlock_irq(&ctx->lock);
-+	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
-
- 	/*
- 	 * Child events can be freed.
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> ---
+>  arch/x86/events/intel/bts.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+> index 8e09319..e8b3e7b 100644
+> --- a/arch/x86/events/intel/bts.c
+> +++ b/arch/x86/events/intel/bts.c
+> @@ -338,9 +338,14 @@ static void bts_event_stop(struct perf_event *event, int flags)
+>  
+>  void intel_bts_enable_local(void)
+>  {
+> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+> -	int state = READ_ONCE(bts->state);
+> +	struct bts_ctx *bts;
+> +	int state;
+>  
+> +	if (!bts_ctx)
+> +		return;
+> +
+> +	bts = this_cpu_ptr(bts_ctx);
+> +	state = READ_ONCE(bts->state);
+>  	/*
+>  	 * Here we transition from INACTIVE to ACTIVE;
+>  	 * if we instead are STOPPED from the interrupt handler,
+> @@ -358,7 +363,12 @@ void intel_bts_enable_local(void)
+>  
+>  void intel_bts_disable_local(void)
+>  {
+> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+> +	struct bts_ctx *bts;
+> +
+> +	if (!bts_ctx)
+> +		return;
+> +
+> +	bts = this_cpu_ptr(bts_ctx);
+>  
+>  	/*
+>  	 * Here we transition from ACTIVE to INACTIVE;
+> @@ -450,12 +460,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+>  int intel_bts_interrupt(void)
+>  {
+>  	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
+> -	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+> -	struct perf_event *event = bts->handle.event;
+> +	struct bts_ctx *bts;
+> +	struct perf_event *event;
+>  	struct bts_buffer *buf;
+>  	s64 old_head;
+>  	int err = -ENOSPC, handled = 0;
+>  
+> +	if (!bts_ctx)
+> +		return 0;
+> +
+> +	bts = this_cpu_ptr(bts_ctx);
+> +	event = bts->handle.event;
+>  	/*
+>  	 * The only surefire way of knowing if this NMI is ours is by checking
+>  	 * the write ptr against the PMI threshold.
+> -- 
+> 2.9.4
+> 
