@@ -1,64 +1,63 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B511A23B8
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 14:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C2B21C16B
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 14:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741356519; cv=none; b=nAJsHb4ArkyAEtvWnq1vYYcSYh0kgoInHxWI3Txl2vh/UwTEO5XzJsrP1yRN7ZOxSJQi9MBQl6n/Ah4CaoU6J6WYilmqtjvNvjn43+c37VckRo8g7y241hLP057KR6fAqrzvSqrIp70TspVtLwEV9EtDvolmPwlLVaRUVqb8PaA=
+	t=1741357048; cv=none; b=X+BjX3X8w+AtBBk+J600TDxRX5+zTkRxci6HECYozEXHwLjCZvf0EdMIsgA9e960iQiQKuqiKvPNWkbbvWxY+60F6EfYBfZ9r8pAoOrj/H5sF3HWgi12OZo2cYbz6/aFlIHQ4vuyivMIbwMYcAjS+DsA9eSVSYX+9hpLnuFIiEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741356519; c=relaxed/simple;
-	bh=xm1cEY3KvwKqStAa+Yy2uWmgmfK7o+LQ5iXlmYAgpq0=;
+	s=arc-20240116; t=1741357048; c=relaxed/simple;
+	bh=qcmNYIDfA+pW4+IYn4jJnQES1wyn5oAU5tJlDI6SNI4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aARkBfpyM3AlRXppwobMLgfiRWtuJdmjHfzjM8FXD5tJfBo/0v3XC5DLCfz6YehOPdu8SR9M2HktcAt/s2ZONbLZsRfNruTjLylgbc5miBzrpJrJbhk8TszxJxzc0WmZgaqZS+na6KSkhKy1F/qVWDlOgG4GMiW7N8y01OGimLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZlO1NCGk; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:Content-Type; b=MA6mRZkfTnWoyEWEb3VemRwgEqdktrG11qus6bxjOqM1s6x6JB4U6JxTvKYstvrNsbv9NzVUZokzfrvOI/qk7TnmOmPzYaQTUeV47UrAPMhBjJbvagZ7byR+7UIq0WDNXS1jmhHFo4JWEardTT7+oaJ0AuVZSs5LpSP3+qHK2bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=os8p1b9x; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZlO1NCGk"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bcbdf79cdso11707495e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 06:08:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="os8p1b9x"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43bcc85ba13so14897945e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 06:17:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741356515; x=1741961315; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741357045; x=1741961845; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1Tt+eT6BYf0saFm5TM2MPjblnQBAgamLURcgDILGg5M=;
-        b=ZlO1NCGkc8EvSZw88zB/nWtakrcGazEbFYX0cVJH67E6QFEVASYb3tzvhBu8M99GkV
-         J7Q/N0Bw0GxpjOCGGaSu5jD3Ov30AAAuywC1wZ+WgoqxTWuTKaHEPj+KsvwVSCkxKx/q
-         /xQUtP7UtTF+BZCMp70PsFr2VdH8hhJqNNtqkKYLEx2XMAiG2b8Ht50c/YQ+T3tYG8yD
-         qUu2w14aQpZEQskAigW4KKb+Uedsf84OeEndkQi5G0BDpbZwPlY3AL4nDNI5eMHLMgs8
-         ljsHrdU3BdlcCuQxudkcB0mMbkQ0vWweLYmkfYQf3UutJwHgA8x2zoiUzdUUB/vapfCh
-         Wn5g==
+        bh=sPPfmGqMcw+FMxvKDCPOdbfmb7wwE6+oyjDmZFYMjSM=;
+        b=os8p1b9xMhvK02wC2jNil7a5lA1r7LhTWX0DIafToCEryisEv3Qey+CT4t7I5OA40g
+         WiogFBmpToSAiKI6G8/CGQIiUXpYH0Hr+Zk2nTc4OA9GJhxNh9GdGiyOecLCcGc/uKaV
+         9H7B9HcmQv9a29X/pyau6F2Z1jYFWm2DoFK7o/RbT6UKHo/wp5+68fkaLY6gQSXVf+M/
+         4a4YPieHlwo6tcvYy4c9nccWq8O1XAXIlI8SA9E4G4mTMZT/+BAWg1ik/rYPD5W4yfsF
+         hW2nHEP/Jobj7xbHQzNooNV9XVhBbSV/Ik0wsL/s5mLGSfuXkN3W/YdDQH/kopn6RcBj
+         jdkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741356515; x=1741961315;
+        d=1e100.net; s=20230601; t=1741357045; x=1741961845;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Tt+eT6BYf0saFm5TM2MPjblnQBAgamLURcgDILGg5M=;
-        b=BkkmEfOW6sn4vNFZVm6yFGLLg4zsfmj4E0DGqyYMFu75e+I6bx47Thx8oELAlkSX8J
-         cmSdFf9zlbGHYR/ufPxe1WkbnELwQ9RN1pJYjJ1lADrbCMbh27Sv0Yoxb074FUHpTQcz
-         90ovGrDJbCE3XxtJzlz7g6EzbxubstJtoPglFUQ2Ynx3Ma7WV+ecKpL90NAexllmD75/
-         fj6I2ZNrxwKt7gHXJJP1p0tU32NugxWH/KljpUKVa7LouZOQ9zczWw5dSpDL45AxvNsq
-         8jYi/xvJut/vW1FDgPOU1HIUR4EcOTCHl5Y+UZMLDgS2UhGRDycBqhu8UpKZEnFWKFHU
-         Oheg==
-X-Forwarded-Encrypted: i=1; AJvYcCXy2LK1/RkqVwHpAvD4fEe3IJCVDWXZja+MRPwgN8zkqFSC4nP3619wopKsX313AJAXlf7Sc/V22j3gBWPFgiw1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH08P+SZBzsfSomBVGpl0J7tWhKnUweXIW0rusJV6lWi0K49+F
-	4GQmvTkOUHv5grGjm6+iY+hYcDxZs1XsuvxclUSkdBSNtIEa052q/ELfQgTg7R4=
-X-Gm-Gg: ASbGncs5J+ca54EqW8dTfJzVdiWk7pGm4Uv6hb59B/u2I45TwzRUzYMEICZ74S3g3KP
-	5T5wdIyzS/N3g6pmRKR454kpn8udfkydf7Bnghej5HSrmm3EdSe+rytxhWxv3sKKB955b54HTOr
-	/GMd/xgAAPRenJfhhTLbaC9nVtgZLIccgCGKdnWA/9Up6M5307HHj/MpZCcx7/42VR97YCInYGZ
-	lQ94cW5PG8eyoIKSd/Z14Odza4fUr3A4OdV2QZAD4z01BUcWmXOhEcqYp2HiK8m+C71y3rcESCf
-	BSe4tBvzdYZoHz+aNZquVLhSFgrz71edZg3WwocJUnUAXiPnldKHbA==
-X-Google-Smtp-Source: AGHT+IFv3ZWkQBAl7pxVWHLyCnChXW5lJR6L0SvM/U2DM8kLwLDkCWqD/65ICUXzzSG1u4G37rxXMg==
-X-Received: by 2002:a05:600c:314f:b0:439:9a5b:87d4 with SMTP id 5b1f17b1804b1-43c5a60e966mr25656295e9.13.1741356514934;
-        Fri, 07 Mar 2025 06:08:34 -0800 (PST)
+        bh=sPPfmGqMcw+FMxvKDCPOdbfmb7wwE6+oyjDmZFYMjSM=;
+        b=nwF6Q3MWx7uJR14tSwg1vpRgro8dnGlNjaJ9AOtx97j/uITiuzsqpr3fHovAGweuXi
+         8pMU6v8j5dJ08I4v+kAeixIbG2rq4NKygp7EecUVBFZonbLMfYBx8Jn2RQkXgYJmF2z7
+         /TE54yyHjy9vPHhLnAk2Y2Bz+qYNStbSFbaZKVJA0o4ou/OdjpnBHV0TB4bQr+1WeE6R
+         7G0A4AiKUeNWx0CLHA+z7RSgfeyKzmo/Kg3tVr7NVapCNHyCAaI4yYAlmx4x7Fm17tBi
+         9FOFEjlkzjhpREb1dWu7J4ABEoiDUMWjxrAp0QddKxpLvuOTpwyat04omgzhE8xXyNfp
+         VPQw==
+X-Gm-Message-State: AOJu0YzzTWyAxhVRQskxWprdDwwxrKWS/x2hGuZo7hBUHrL5m30rItSz
+	MnQ95QMJcL60uXN8GUEdwLHAh4HhdcR7xeQMefSBXnRZ//Py2T4V3NSB5WC+GDg=
+X-Gm-Gg: ASbGncuyPBPmGewKYO17fgkGjNHO79BuzftDnyEFsC6sOE7CLHeWzH496ewjT5SUa53
+	7o8At5dHQuUyJBAG0QsmWnNjrx1/M9JaIBmuvjMioG00SY1iew3rOLGAZS3oKiLnv9BzGPPsYDa
+	BfLjqsMF1WX96nnEcQRNsXaCoSnIzLSbAhnDQjoVcV8P/cJKJG1byb83wD/iweMOSOcXztWRMMU
+	W45KE3cfBMUdK3dafRFiTt18+naTq9ltpPahDiDaZpnTn44uC4CzLaCIIKdW8waeVbXZtjULpCI
+	lFyByGGVs4m90eREiPciThwpdWuz1IQ4bhJTjnBFhjOmM7tAWTNyGA==
+X-Google-Smtp-Source: AGHT+IHpoNeJ9Jwip1Cdx5uUKipi0qqCHgMLrkGZ0Er+W7OmX2RBd8j0bEQTdafbhn91KFoC0mlOmQ==
+X-Received: by 2002:a05:600c:3b1e:b0:43b:c94d:e1e2 with SMTP id 5b1f17b1804b1-43c5a6355aamr22142215e9.25.1741357044717;
+        Fri, 07 Mar 2025 06:17:24 -0800 (PST)
 Received: from [192.168.1.247] ([145.224.67.152])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c1037b4sm5481987f8f.92.2025.03.07.06.08.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd831719sm55298865e9.0.2025.03.07.06.17.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 06:08:34 -0800 (PST)
-Message-ID: <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org>
-Date: Fri, 7 Mar 2025 14:08:33 +0000
+        Fri, 07 Mar 2025 06:17:24 -0800 (PST)
+Message-ID: <80432f35-e865-4186-8b92-26b25279e150@linaro.org>
+Date: Fri, 7 Mar 2025 14:17:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,267 +65,159 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [RFC] perf tools: About encodings of legacy event names
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Robin Murphy <robin.murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
- <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
- <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com>
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>
+References: <Z7Z5kv75BMML2A1q@google.com>
+ <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
+ <Z7yJ0Vpub6JeQyYo@x1>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com>
+In-Reply-To: <Z7yJ0Vpub6JeQyYo@x1>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 05/03/2025 9:40 pm, Ian Rogers wrote:
-> On Tue, Mar 4, 2025 at 5:50 AM James Clark <james.clark@linaro.org> wrote:
->>
->> Instead of showing multiple line items with the same event name and
->> description, show a single line and concatenate all PMUs that this
->> event can belong to.
->>
->> Don't do it for json output. Machine readable output doesn't need to be
->> minimized, and changing the "Unit" field to a list type would break
->> backwards compatibility.
->>
->> Before:
->>   $ perf list -v
->>   ...
->>   br_indirect_spec
->>         [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
->>   br_indirect_spec
->>         [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a57]
->>
->> After:
->>
->>   $ perf list -v
->>   ...
->>   br_indirect_spec
->>         [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,armv8_cortex_a57]
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   tools/perf/builtin-list.c      |  2 ++
->>   tools/perf/util/pmus.c         | 75 +++++++++++++++++++++++++++++++++++++-----
->>   tools/perf/util/print-events.h |  1 +
->>   3 files changed, 70 insertions(+), 8 deletions(-)
->>
->> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
->> index fed482adb039..aacd7beae2a0 100644
->> --- a/tools/perf/builtin-list.c
->> +++ b/tools/perf/builtin-list.c
->> @@ -516,6 +516,7 @@ int cmd_list(int argc, const char **argv)
->>                  .print_event = default_print_event,
->>                  .print_metric = default_print_metric,
->>                  .skip_duplicate_pmus = default_skip_duplicate_pmus,
->> +               .collapse_events = true
+On 24/02/2025 3:01 pm, Arnaldo Carvalho de Melo wrote:
+> On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
+>> On Wed, Feb 19, 2025 at 4:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>> Ian and I have been discussing the behaviors of event encodings and it's
+>>> hard to find a point so far that we can agree on.  So I'd like to hear
+>>> your opinion to resolve this.  If you happen to have some time, you can
+>>> follow the thread here:
 > 
-> So collapse_events is put in the callbacks but isn't a callback. I
-> think skipping duplicates and collapsing are the same thing, I'd
-> prefer it if there weren't two terms for the same thing. If you prefer
-> collapsing as a name then default_skip_duplicate_pmus can be
-> default_collapse_pmus.
+>>> https://lore.kernel.org/linux-perf-users/20250109222109.567031-5-irogers@google.com/#r
 > 
-
-I can use the existing callback and rename it. That does have the effect 
-of disabling this behavior in verbose mode which may be useful or may be 
-unexpected to some people. But it seems pretty 50/50 so fewer callbacks 
-are probably better.
-
->>          };
->>          const char *cputype = NULL;
->>          const char *unit_name = NULL;
->> @@ -574,6 +575,7 @@ int cmd_list(int argc, const char **argv)
->>                          .print_event = json_print_event,
->>                          .print_metric = json_print_metric,
->>                          .skip_duplicate_pmus = json_skip_duplicate_pmus,
->> +                       .collapse_events = false
->>                  };
->>                  ps = &json_ps;
->>          } else {
->> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
->> index 4d60bac2d2b9..cb1b14ade25b 100644
->> --- a/tools/perf/util/pmus.c
->> +++ b/tools/perf/util/pmus.c
->> @@ -453,17 +453,50 @@ static int cmp_sevent(const void *a, const void *b)
->>          /* Order by PMU name. */
->>          if (as->pmu == bs->pmu)
->>                  return 0;
->> -       return strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
->> +       ret = strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
->> +       if (ret)
->> +               return ret;
->> +
->> +       /* Order by remaining displayed fields for purposes of deduplication later */
->> +       ret = strcmp(as->scale_unit ?: "", bs->scale_unit ?: "");
->> +       if (ret)
->> +               return ret;
->> +       ret = !!as->deprecated - !!bs->deprecated;
->> +       if (ret)
->> +               return ret;
->> +       ret = strcmp(as->desc ?: "", bs->desc ?: "");
->> +       if (ret)
->> +               return ret;
->> +       return strcmp(as->long_desc ?: "", bs->long_desc ?: "");
->>   }
->>
->> -static bool pmu_alias_is_duplicate(struct sevent *a, struct sevent *b)
->> +enum dup_type {
->> +       UNIQUE,
->> +       DUPLICATE,
->> +       SAME_TEXT
->> +};
->> +
->> +static enum dup_type pmu_alias_duplicate_type(struct sevent *a, struct sevent *b)
->>   {
->>          /* Different names -> never duplicates */
->>          if (strcmp(a->name ?: "//", b->name ?: "//"))
->> -               return false;
->> +               return UNIQUE;
->> +
->> +       /* Duplicate PMU name and event name -> hide completely */
->> +       if (strcmp(a->pmu_name, b->pmu_name) == 0)
->> +               return DUPLICATE;
->> +
->> +       /* Any other different display text -> not duplicate */
->> +       if (strcmp(a->topic ?: "", b->topic ?: "") ||
->> +           strcmp(a->scale_unit ?: "", b->scale_unit ?: "") ||
->> +           a->deprecated != b->deprecated ||
->> +           strcmp(a->desc ?: "", b->desc ?: "") ||
->> +           strcmp(a->long_desc ?: "", b->long_desc ?: "")) {
->> +               return UNIQUE;
->> +       }
->>
->> -       /* Don't remove duplicates for different PMUs */
->> -       return strcmp(a->pmu_name, b->pmu_name) == 0;
->> +       /* Same display text but different PMU -> collapse */
->> +       return SAME_TEXT;
->>   }
->>
->>   struct events_callback_state {
->> @@ -501,6 +534,21 @@ static int perf_pmus__print_pmu_events__callback(void *vstate,
->>          return 0;
->>   }
->>
->> +static void concat_pmu_names(char *pmu_names, size_t size, const char *a, const char *b)
->> +{
->> +       size_t len = strlen(pmu_names);
->> +       size_t added;
->> +
->> +       if (len)
->> +               added = snprintf(pmu_names + len, size - len, ",%s", b);
->> +       else
->> +               added = snprintf(pmu_names, size, "%s,%s", a, b);
->> +
->> +       /* Truncate with ... */
->> +       if (added > 0 && added + len >= size)
->> +               sprintf(pmu_names + size - 4, "...");
->> +}
->> +
->>   void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
->>   {
->>          struct perf_pmu *pmu;
->> @@ -510,6 +558,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>          struct events_callback_state state;
->>          bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
->>          struct perf_pmu *(*scan_fn)(struct perf_pmu *);
->> +       char pmu_names[128] = {0};
->>
->>          if (skip_duplicate_pmus)
->>                  scan_fn = perf_pmus__scan_skip_duplicates;
->> @@ -539,12 +588,21 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>          qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
->>          for (int j = 0; j < len; j++) {
->>                  /* Skip duplicates */
->> -               if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j], &aliases[j + 1]))
->> -                       goto free;
->> +               if (j < len - 1) {
->> +                       enum dup_type dt = pmu_alias_duplicate_type(&aliases[j], &aliases[j + 1]);
->> +
->> +                       if (dt == DUPLICATE) {
->> +                               goto free;
->> +                       } else if (print_cb->collapse_events && dt == SAME_TEXT) {
->> +                               concat_pmu_names(pmu_names, sizeof(pmu_names),
->> +                                                aliases[j].pmu_name, aliases[j+1].pmu_name);
->> +                               goto free;
->> +                       }
->> +               }
+>>> Basically there are some events that were defined in the perf ABI.
 > 
-> I think a label called 'free' is a little unfortunate given the
-> function called free.
-> When I did things with sevent I was bringing over previous `perf list`
-> code mainly so that the perf list output before and after the changes
-> was identical. I wonder if this logic would be better placed in the
-> callback like default_print_event which already maintains state
-> (last_topic) to optionally print different things. This may better
-> encapsulate the behavior rather than the logic being in the PMU code.
+>>>    PERF_COUNT_HW_CPU_CYCLES, PERF_COUNT_HW_INSTRUCTIONS, ...
+> 
+>>> So perf tools use those (legacy) encodings with the matching names like
+>>> "cycles" (or "cpu-cycles"), "instructions", etc.
+> 
+>>> On the another hand, it has wildcard matching for event names in PMUs so
+>>> that users can conveniently use events without specifying PMU names.
+>>> For example, "event1" would expand to "pmuX/event1/", "pmuY/event1/", etc
+>>> as long as the PMUs have the event in sysfs or JSON.
+> 
+>>> And there are platforms where "cycles" event is defined in a (core) PMU
+>>> (like "blah/cycles") and the event has a different behavior than the
+>>> legacy encoding.  Then it has to choose which encoding is better for the
+>>> given name.  But it's a general issue for the legacy event names.
+> 
+> So we pick the "legacy" one, as always, and the one that is in a PMU
+> needs to have its pmu name specified, no?
+> 
+>>>    Q. what should it do with "cycles"?
+>>>    -----------------------------------
+>>>    1. just use the legacy encoding (PERF_COUNT_HW_CPU_CYCLES).
+> 
+> Right
+> 
+>>>    2. expand to (possibly multiple) PMU events (like "cpu/cycles/") and
+>>>       use the encoding defined there.
+> 
+> Nope
+> 
+>>> I think the #1 is the current behavior.  The upside is it's simple and
+>>> intuitive.  But it's different than other names and can make confusion.
+>>> Users should use the full name ("cpu/cycles/") if they need sysfs one.
+> 
+> Right
+>   
+>> So the code keeps changing, for example, the removal of BPF events. I
+> 
+> Humm, this seems like a different discussion.
+> 
+>> think the important change and the thing that has brought us here is
+>> the addition of what Intel call hybrid and ARM call BIG.little. ARM
+> 
+> Right, the support for hybrid systems brought lots of problems, most
+> people didn't have access to such systems and thus couldn't test
+> patches, so the attempt was to keep the existing code working as it had
+> been while allowing for the support for the new hybrid systems.
+> 
+> As more people get access to hybrid systems we started noticing problems
+> and working on fixing it, you did a lot of work in this area, highly
+> appreciated.
+> 
+>> have got architectural events and so the same event encoding on BIG
+>> and little cores. On x86 the e-core (atom) and p-cores have different
+>> event encodings. In the original hybrid work, pushed on for the launch
+>> of Alderlake and reviewed by Jiri and Arnaldo with no involvement from
+>> me, Intel wanted the event names to work transparently. So a cycles
+> 
+> Without access to such systems, yes, see above.
+> 
+>> event would be gathered on the e-core and p-core with a command line
+>> option to merge the legacy event cycles on both cores. To be specific
+>> the expected behavior of:
+>> $ perf (stat|record) -e cycles ...
+>> would be as if:
+>> $ perf (stat|record) -e cpu_atom/cycles/,cpu_core/cycles/ ...
+> 
+> Yes, and if somebody wants to profile in just one of those core types,
+> just specify the "cpu_atom" or "cpu_core" to have it fully specified.
+>   
+>> An unfortunate thing in the hybrid code was that it was hardcoded to
+>> PMU names of cpu_atom and cpu_core, but what to do for metrics? The
+> 
+> Yeah, metrics IIRC came before hybrid systems.
+> 
+>> original proposal was that metrics would have a PMU name and all names
+>> would be relative to that, but what about uncore events? What about
+>> metrics that refer to other metrics? A decision was made to not to
+>> have PMUs implicitly in metrics and the events in the metric would
+>> match those given to perf's -e command line. This also greatly
+>> simplifies testing events when creating a metric.
+> 
+>> I set about rewriting the hybrid code not to use hard coded PMU names
+>> but to discover core PMUs at runtime. This was to make the metric and
+>> event parsing code as generic as possible, but this had an unintended
+>> consequence. ARM's core PMU had previously not been seen as handling
+>> legacy events like cycles, and appeared as an uncore PMU. When there
+> 
+>> are both legacy and sysfs/json events then previously the legacy
+>> events had priority. This broke events like cycles on Apple M
+>> processors where the legacy events were broken and the sysfs ones not.
+>> Yes this is a driver bug, but everybody told me a change in behavior
+>> of the tool was needed to fix it, that fix was to make sysfs/json
+>> events have priority over legacy events. I prioritized fixing event
+>> parsing when a PMU was specified but given "cycles" means
+>> "cpu_atom/cycles/ and cpu_core/cycles/" for hybrid, why would the
+>> prioritization be different without a PMU specified?
+>   
+>> I knew of this tech debt and separately RISC-V was also interested to
+>> have sysfs/json be the priority so that the legacy to config encoding
+>> could exist more in the perf tool than the PMU driver. I'm a SIG
+> 
+> I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok as
+> they didn't want to break the perf tooling workflow, no?
 > 
 
-Yeah I can have a look at putting it in one of the callbacks. But in the 
-end builtin-list.c is the only user of perf_pmus__print_pmu_events() 
-anyway so makes you wonder if the whole thing can be moved to 
-builtin-list and open coded without the callbackyness.
+Doesn't most of the discussion stem from this particular point? I also 
+understood it that way, that risc-v folks agreed it was better to 
+support these to make all existing software work, not just Perf.
 
->>
->>                  print_cb->print_event(print_state,
->>                                  aliases[j].topic,
->> -                               aliases[j].pmu_name,
->> +                               pmu_names[0] ? pmu_names : aliases[j].pmu_name,
->>                                  aliases[j].name,
->>                                  aliases[j].alias,
->>                                  aliases[j].scale_unit,
->> @@ -553,6 +611,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>                                  aliases[j].desc,
->>                                  aliases[j].long_desc,
->>                                  aliases[j].encoding_desc);
-> 
-> The encoding_desc will have a PMU with the suffix removed as per
-> skipping duplicates:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n1954
-> So I think something like:
-> ```
->    br_mis_pred_retired
->         [Instruction architecturally executed,mispredicted branch. Unit:
->          armv9_cortex_a510,armv9_cortex_a710]
-> ```
-> Would have an encoding of `armv9_cortex_a510/.../` without the a710
-> encoding being present. That said, I'm not sure anyone cares :-)
-> 
-> Thanks,
-> Ian
-> 
+Maybe one issue was calling them 'legacy' events in the first place, and 
+I'm not sure if there is complete consensus that these are legacy. Can't 
+they continue be the short easy list of events likely to be common 
+across platforms? If there is an issue with some of them being wrong in 
+some places we can move forward from that by making sure new platforms 
+do it right, rather than changing the logic for everyone to fix that bug.
 
-Ah, in that case I'll disable it for --detailed as well as --json. I 
-could compare encoding_desc in pmu_alias_duplicate_type() but they'll 
-always be different because of the PMU name, so there's no point. And 
-displaying multiple encoding_descs would be fiddly too.
+For the argument that Google prefers to use the sysfs events because of 
+these differences, I don't think there is anything preventing that kind 
+of use today? Or at least not for the main priority flip proposed, but 
+maybe there are some smaller adjacent bugs that can be fixed up separately.
 
->> +               pmu_names[0] = '\0';
->>   free:
->>                  zfree(&aliases[j].name);
->>                  zfree(&aliases[j].alias);
->> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
->> index 445efa1636c1..e91f9f830a2a 100644
->> --- a/tools/perf/util/print-events.h
->> +++ b/tools/perf/util/print-events.h
->> @@ -27,6 +27,7 @@ struct print_callbacks {
->>                          const char *threshold,
->>                          const char *unit);
->>          bool (*skip_duplicate_pmus)(void *print_state);
->> +       bool collapse_events;
->>   };
->>
->>   /** Print all events, the default when no options are specified. */
->>
->> --
->> 2.34.1
->>
+Thanks
+James
 
