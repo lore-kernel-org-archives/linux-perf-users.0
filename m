@@ -1,152 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC83217C79;
-	Fri,  7 Mar 2025 02:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0E01624F3;
+	Fri,  7 Mar 2025 02:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741312875; cv=none; b=qTV9xD30Mw7mpi2sohvYj+n5OcNWn2Ue9TG7ZFAy4l+OCRDpgk1nxjUklfBpNfKbrhN+O6RI0iFq+s3A/mJEtoFizdJLP4nwsxy7ftFzSsmoWw8DqeOlVYO0kuRgCNlCzaYYRKhkdGrsJAL81A9OBiZjMUxTmLzrcILcnKZLtSU=
+	t=1741313240; cv=none; b=Cpr+adedxjGg6aJ5XwcBXo4CbZ9HGBbv9DeKcH0tX8IKRkvjIj+hNuB8OGsQ+j/8SwFXtcWPdw3lnMrrbBCyOnAPbncjwXkSrhi/asAZ9h0CY/up+jsoWZPjuv5V7JK4leLNF0w0gVp8RTOii13OPtNbMs6eQv6fdGNxaeHHSNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741312875; c=relaxed/simple;
-	bh=zgU5y4KBtoIrMungqTdL46dfjARdNggTQr4L8B7Nl7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awefm4Wrgpw8Cb1349tPCnYqCPAg/9vXA5P7OpRwGz4n1lXOMXGqLcTDHAzBPGazIqpBZHuut3Tl9A2bcqRzamPYv2gEsLKoENxd4fOpFVhl/apvk9yiKaRJzMqMtUnaRl70XjQUe5uYVmXuZxCY6cxotrcWW+7SQkzQAHguHH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoMsgtce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741313240; c=relaxed/simple;
+	bh=vUX2IWxwHVQnBwo2A0/9tWwdID1Albz7LWvfLeUVXRo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=awUf6eD3p1n7Afb8Lx2k9c7yw7fFlfyPJ1VhtKf2Ezel/NWBS/mL8g2g2Pp6PFduIfOX6R/Hp+modF+4sVlL5YYQ3U7Jz3DbIjCgiy8XQbYYf5ODzrhDZ/Svwp0o7e3KoquqcG2432Dcjq7B4XhI4YauyFJ83mEXK4PYck2tNxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VaVu4IJq; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoMsgtce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33C8C4CEE0;
-	Fri,  7 Mar 2025 02:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741312875;
-	bh=zgU5y4KBtoIrMungqTdL46dfjARdNggTQr4L8B7Nl7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XoMsgtceiM1XuPAbPlcP/eCAIfPK1qw9FzLEyP48MTgxb2lElLn4E8ctodVzNmVoD
-	 wANfLpGhRwFkb/alftaPU39ngmlXMKQ2MtCrNMGyfll8t89Om/qVr2R/8gFyg9My2m
-	 bKxRxSQWg01CphD2bijsRG0qoHu0uBI+R2GvHNeL0VW/QEk6ufsddJ1Nun985DruZc
-	 GRjsf06qI2MyCYxQmQHTAd3Z5wQQ5jzwHHr+qov7k4xfwppGRFuiGNTERJUexYoqxz
-	 hnfbo+ifXa5l32uGlblGXAeVvi9wRIawp6KyrwusA/Rpupm0MVfdNEgIpBnaju0smY
-	 7B9ok1Qiniiiw==
-Date: Thu, 6 Mar 2025 18:01:13 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
-Message-ID: <Z8pTaVN1uEqjrgRb@google.com>
-References: <20250306075147.195435-1-namhyung@kernel.org>
- <20250306075147.195435-2-namhyung@kernel.org>
- <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
- <Z8nWNBKuYc0x-sN8@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaVu4IJq"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f6c90b51c3so13068457b3.2;
+        Thu, 06 Mar 2025 18:07:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741313238; x=1741918038; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aBS/9/JZqxGN5EhAdsD49AocUZOuPBBYW675wVUnCvk=;
+        b=VaVu4IJq9jpAu74JgBCvQOOByyouK+IL69QhVyQ3dVBpcPeUZlpvNqN9GMNYEOoVSa
+         jy4XNB+7EAMq5ydnH2xq3JzFrbB5VXpfwtHaGgyPkx3OBVKjXoy0EDDKywMGfvS8SmiE
+         N6L8PIRT3wfNTHHom9ctI94XvlA4ZkDn54k5ytHxZvGlYfy0/uWMEV9mzaoiIG4zuu8q
+         gc4Rog89Lgrh9tP1C/zQKTmZYuY+EOa6FWHD7/n9Y9AkGV0wqDaUtfLOrqRSBopMy6Lg
+         runBkqIiw5YoByFVQYVwqaXdKcMKLCIqhuyBb9CH18N0tLqryPVG/xQlwUZpahqQitcg
+         +Tbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741313238; x=1741918038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aBS/9/JZqxGN5EhAdsD49AocUZOuPBBYW675wVUnCvk=;
+        b=YVjfESqqh3qmcsk/oeplCH/iEGC+vyIEZ9UItpkDYUsYJhm0UxCAFW7W9Xs9Wc6Imw
+         B5HydztuHvSy+0hx33UAJDnin1oi+byhsTpqRA/E1SCqzQdMABz8gOHKfcFHjAEm6ZUM
+         viQg4Fl9QmF+Ofdx7lcXeecJZCUZC0JlgAkwTz46RuKKLMgwM/HZV6/Gv12Ofk6Py+Wh
+         AxMF1E9+ExoiFVj+Ghoqpe3be8UW/LpksmilrJNgwNcNtRVbz/+dIuHo0uaGzeh0gm4M
+         Rz+b33TiqcxkCHS0Ob8HSxhk9Mt0oocNT2R/kOGO38QtSYbzZr9r/wk2P5kxkOJqigkq
+         GIXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcYbEo0xZyuxzimUbuOt65zhQSbczyATVwCn8BDp46IjIOalxxGRbnqk+nv78XDJ0OZuDokEWUHqepQDM=@vger.kernel.org, AJvYcCWb2XEtvG0hxBOTQh4j006UQHp2KVroWLSZ6B1daL2S7ck+LRd/XXo1oOYWFmLChP48cWyIIKnFuE9X7jyQhV5PLQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyukpvj1sy6OpUtAPhc37JLX8gncVerL2bi3/FA7OcgHsWx/ylt
+	sjLhjIxHPWeWUvoVvurW+jqUFwIILhkwIu0MEqNrcAPVbTnquyna5RafTf4O0Xfcaz/2ljtD7My
+	rRjoFOlilCet9B84mRXjqXxiEavI=
+X-Gm-Gg: ASbGncvxgLU3AP7g44Iv0aiCS8sZhshmfHszidBSEkKfZckH+9BvzE66QSbNiApjj0k
+	xoGmObKb8mliSBkq7StzjtUApS2Zk9NHfyum0KntOJoYAJZ9ZXODfLRNjH5XrSiyu8RJrTQgmgZ
+	0/U29hE7ZdR5oj+nwUVae0mG4I
+X-Google-Smtp-Source: AGHT+IHdiemz4ory7i/BDd2+Td5NPYBurE8U2C5eyTlufQa8fwOyusAfNvQudC8tRYbt2J8tG8bv0qXfnjNuZbI/+pQ=
+X-Received: by 2002:a05:690c:7207:b0:6ef:4a1f:36d6 with SMTP id
+ 00721157ae682-6febf3ada0dmr27042057b3.23.1741313237976; Thu, 06 Mar 2025
+ 18:07:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z8nWNBKuYc0x-sN8@google.com>
+References: <20250228222308.626803-1-irogers@google.com>
+In-Reply-To: <20250228222308.626803-1-irogers@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 6 Mar 2025 18:07:07 -0800
+X-Gm-Features: AQ5f1JqR8MZAP-74zjHdeXFBCoVuG8ywW4I5h-pbH-0OIsgngYT8rb_cU3XyExM
+Message-ID: <CAH0uvojZZR1C-NhL-ZG8WBEE+08wDaerfHQJBfe9AoPF7yNwtg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] Python improvements for a real use of parse_events
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 06, 2025 at 09:07:00AM -0800, Namhyung Kim wrote:
-> Hi Ian,
-> 
-> On Thu, Mar 06, 2025 at 08:55:05AM -0800, Ian Rogers wrote:
-> > On Wed, Mar 5, 2025 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Ian told me that there are many memory leaks in the hierarchy mode.  I
-> > > can easily reproduce it with the follwing command.
-> > >
-> > >   $ make DEBUG=1 EXTRA_CFLAGS=-fsanitize=leak
-> > >
-> > >   $ perf record --latency -g -- ./perf test -w thloop
-> > >
-> > >   $ perf report -H --stdio
-> > >   ...
-> > >   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
-> > >       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
-> > >       #1 0x55ed3602346e in map__get util/map.h:189
-> > >       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
-> > >       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
-> > >       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
-> > >       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
-> > >       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
-> > >       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
-> > >       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/linux/tools/perf/builtin-report.c:735
-> > >       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
-> > >       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
-> > >       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:351
-> > >       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:404
-> > >       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:448
-> > >       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/perf.c:556
-> > >       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-> > >   ...
-> > >
-> > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> > >   93
-> > >
-> > > I found that hist_entry__delete() missed to release child entries in the
-> > > hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-> > > and call hist_entry__delete() recursively.
-> > >
-> > > After this change:
-> > >
-> > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> > >   0
-> > >
-> > > Reported-by: Ian Rogers <irogers@google.com>
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/hist.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
-> > > --- a/tools/perf/util/hist.c
-> > > +++ b/tools/perf/util/hist.c
-> > > @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
-> > >  {
-> > >         struct hist_entry_ops *ops = he->ops;
-> > >
-> > > +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
-> > > +               struct rb_node *node = rb_first(&he->hroot_out.rb_root);
-> > > +               struct hist_entry *child = rb_entry(node, struct hist_entry, rb_node);
-> > > +
-> > > +               rb_erase_init(node, &he->hroot_out.rb_root);
-> > > +
-> > > +               hist_entry__delete(child);
-> > > +       }
-> > 
-> > Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
-> > erase on the first entry, an O(log N) operation, means this is a O(N *
-> > log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/rbtree.h?h=perf-tools-next#n81
-> > ```
-> >  * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
-> >  * given type allowing the backing memory of @pos to be invalidated
-> > ```
-> > which is O(N). I think this code would be better something like:
-> > ```
-> > struct hist_entry *pos, *tmp;
-> > rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_node)
-> >         hist_entry__delete(pos);
-> > ```
-> 
-> Thanks for your review!  I was wondering if there's something like this.
-> Will update with that.
+Hello Ian,
 
-I found that the following comments:
+On Fri, Feb 28, 2025 at 2:23=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> While parse_events access in python was added, it wasn't used by any
+> python script. In enabling this for the tracepoint.py script a number
+> of latent bugs and necessary improvements were discovered.
+>
+> v2: Fix a whitespace issue on the evlist.config patch spotted by
+>     Howard and add his reviewed-by tags.
+>
+> Ian Rogers (11):
+>   perf debug: Avoid stack overflow in recursive error message
+>   perf evlist: Add success path to evlist__create_syswide_maps
+>   perf evsel: tp_format accessing improvements
+>   perf python: Add evlist enable and disable methods
+>   perf python: Add member access to a number of evsel variables
+>   perf python: Add optional cpus and threads arguments to parse_events
+>   perf python: Update ungrouped evsel leader in clone
+>   perf python: Avoid duplicated code in get_tracepoint_field
+>   perf python: Add evlist all_cpus accessor
+>   perf python: Add evlist.config to set up record options
+>   perf python tracepoint: Switch to using parse_events
 
- * Note, however, that it cannot handle other modifications that re-order the
- * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
- * rb_erase() may rebalance the tree, causing us to miss some nodes.
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
-So I cannot use this here.
-
-Thanks,
-Namhyung
-
+>
+>  tools/perf/python/tracepoint.py |  23 +++---
+>  tools/perf/util/debug.c         |   2 +-
+>  tools/perf/util/evlist.c        |  13 ++--
+>  tools/perf/util/evsel.c         |  16 +++-
+>  tools/perf/util/python.c        | 127 ++++++++++++++++++++++++++++----
+>  5 files changed, 145 insertions(+), 36 deletions(-)
+>
+> --
+> 2.48.1.711.g2feabab25a-goog
+>
