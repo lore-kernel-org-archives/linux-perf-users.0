@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAAB19EED7;
-	Fri,  7 Mar 2025 06:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D59C28E8;
+	Fri,  7 Mar 2025 08:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741327975; cv=none; b=uSn4trCKpT1qVYTxCXRjAPAnRHMq8lvFjYBrtdqnxr7Pilh6fcQkWkzxQI2/sEhv0H4ie6mGp7yNp6gm0FAxJwcfdOnflCKBIm0JLxs12jtD+hnglnxsdVuIRKFzRSvo4sqbzXcFXtXPf9yWculmenodAVGAmjumJRuxF/DwKGk=
+	t=1741334911; cv=none; b=gqvUeGvKKkGwj87FKCorCXsmnzSvSgJcvTRmjVSuQi5Kl2JgIsUzzxisZ27A6A8C9X/cLpNb4cz95vhajUWWKDkHdu0X+Yyvcp1SgRKn+6IH31LQYBD3kKRb6zU3XbcjuBmNxLRQZ2Vo8aaCzsmVkxg5cfKoVPwkqUXhCATqqdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741327975; c=relaxed/simple;
-	bh=CLDLM74rtz+CXjGoPhg97GQkxsWQI+oSAPMLW9niFH8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AFIIAhfSQg1FdmHIpDJE8TbTNI09Gw+j21JADNqeQtIKQxWxyBNhtEjpHmMklvC17RLUlnmx2PjK/Tv819hPLUCCPMZR9UJg6ozs4zI1cOC//my3L58QiLjass85tohBPJfHO6XazktoGQYCOzMcTcVIhEZyClRt+4TLD+SJjVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGPdPBMY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741334911; c=relaxed/simple;
+	bh=R7McxMqYt7xjhm1X6S7itYmS510cv+FdsApwHps+Zm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/pMfENRwLaL6i/JOVM7oTF/50pmehMMQoNm2C/jAhZRfnlGyjwem38i9K2UxLijqDWK3Y7WmkGgXnwEtMILLvG1GZGuOlM8E356dcckMhHlTYBoGfMUvhtUMstpbrpEYaIVcIaEGU/yfVdDgSEHjERiMIEoIsjXDOjf8TqhfYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJb2y/aD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGPdPBMY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194FAC4CEEA;
-	Fri,  7 Mar 2025 06:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJb2y/aD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 557B8C4CED1;
+	Fri,  7 Mar 2025 08:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741327972;
-	bh=CLDLM74rtz+CXjGoPhg97GQkxsWQI+oSAPMLW9niFH8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bGPdPBMYh9LD68BiprBBbO2RTtwHMgKd/d2vquegjodnngZ3DZ7P0NsbYjZ6WDlIM
-	 sqvVVnB7qaotDkVtDXzZgYjO5/rwJ/wkPWHYZCGodxUijLdGqAwLu8zXf3wxsrzZ5K
-	 dW5okOP6j6MIyj5IcpJ04mrKszSnd6CM+dWV9QAGTM7tBtNCTXylDjm9l73ij+68ZT
-	 PtszuIOSgnWsCdIJDWIT+6Ka0g4QOHTb2qArKm2Zwl39ce4N9Z16kWIPfueboJ66bl
-	 M8CotaDciAKS8ZRSE25rSowcYshv73UyGk0DgdfOn6czz3Sr0p6DZFhpWtkjjTA/Qv
-	 gQTA5oKrQh76A==
+	s=k20201202; t=1741334910;
+	bh=R7McxMqYt7xjhm1X6S7itYmS510cv+FdsApwHps+Zm0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EJb2y/aDYLTRXoscwPEUrUes89HEur3zfemJFD5prS1cxcyS83hu9WoCWVuhPpBIy
+	 q22RsO9m5z6tV7GFywb2HygpWyOvM4GfWfMjPTknq50yOXL4k83kb1uVbmMzWrhM5s
+	 kYqo6k36jmNohuet02Thk1c7Z7GqfhHgYGfLw5rARB0oATdJbDBEw1h67P7Id5YVL6
+	 T1Oqx7dRiIEsdBVklc1jnrkEkw6Yusc7OwaHLm5LlGcl82tALQQleMfRMNHPO8nLWm
+	 KEpJ92cYXQyCa81gMyNkm+jmSyYtArVWqlYgVJb9WDkm+PaodOEhW+w8NGIhNlZuyc
+	 vxQ2h0gMS7Ijw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,13 +34,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/2] perf report: Fix memory leaks in the hierarchy mode
-Date: Thu,  6 Mar 2025 22:12:50 -0800
-Message-ID: <20250307061250.320849-2-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH 1/3] perf sort: Keep output fields in the same level
+Date: Fri,  7 Mar 2025 00:08:27 -0800
+Message-ID: <20250307080829.354947-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-In-Reply-To: <20250307061250.320849-1-namhyung@kernel.org>
-References: <20250307061250.320849-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,75 +48,120 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ian told me that there are many memory leaks in the hierarchy mode.  I
-can easily reproduce it with the follwing command.
+This is useful for hierarchy output mode where the first level is
+considered as output fields.  We want them in the same level so that it
+can show only the remaining groups in the hierarchy.
 
-  $ make DEBUG=1 EXTRA_CFLAGS=-fsanitize=leak
-
-  $ perf record --latency -g -- ./perf test -w thloop
-
-  $ perf report -H --stdio
+Before:
+  $ perf report -s overhead,sample,period,comm,dso -H --stdio
   ...
-  Indirect leak of 168 byte(s) in 21 object(s) allocated from:
-      #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
-      #1 0x55ed3602346e in map__get util/map.h:189
-      #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
-      #3 0x55ed36025208 in hist_entry__new util/hist.c:588
-      #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
-      #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
-      #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
-      #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
-      #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/linux/tools/perf/builtin-report.c:735
-      #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
-      #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
-      #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:351
-      #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:404
-      #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:448
-      #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/perf.c:556
-      #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+  #          Overhead  Samples / Period / Command / Shared Object
+  # .................  ..........................................
+  #
+     100.00%           4035
+        100.00%           3835883066
+           100.00%           perf
+               99.37%           perf
+                0.50%           ld-linux-x86-64.so.2
+                0.06%           [unknown]
+                0.04%           libc.so.6
+                0.02%           libLLVM-16.so.1
+
+After:
+  $ perf report -s overhead,sample,period,comm,dso -H --stdio
   ...
+  #    Overhead       Samples        Period  Command / Shared Object
+  # .......................................  .......................
+  #
+     100.00%          4035    3835883066     perf
+         99.37%          4005    3811826223     perf
+          0.50%            19      19210014     ld-linux-x86-64.so.2
+          0.06%             8       2367089     [unknown]
+          0.04%             2       1720336     libc.so.6
+          0.02%             1        759404     libLLVM-16.so.1
 
-  $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-  93
-
-I found that hist_entry__delete() missed to release child entries in the
-hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-and call hist_entry__delete() recursively.
-
-After this change:
-
-  $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-  0
-
-Reported-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v2) Use rbtree_postorder_for_each_entry_safe()  (Ian)
+ tools/perf/util/sort.c | 44 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
- tools/perf/util/hist.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index fbf131aeae7ffe9b..d65228c1141251fb 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1385,6 +1385,16 @@ void hist_entry__delete(struct hist_entry *he)
- {
- 	struct hist_entry_ops *ops = he->ops;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index f08fbc4bf0a2ce29..6b49d64854f5f986 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -3720,6 +3720,34 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+ 	return -ESRCH;
+ }
  
-+	if (symbol_conf.report_hierarchy) {
-+		struct rb_root *root = &he->hroot_out.rb_root;
-+		struct hist_entry *child, *tmp;
++/* This should match with sort_dimension__add() above */
++static bool is_hpp_sort_key(const char *key)
++{
++	unsigned i;
 +
-+		rbtree_postorder_for_each_entry_safe(child, tmp, root, rb_node)
-+			hist_entry__delete(child);
-+
-+		*root = RB_ROOT;
++	for (i = 0; i < ARRAY_SIZE(arch_specific_sort_keys); i++) {
++		if (!strcmp(arch_specific_sort_keys[i], key) &&
++		    !arch_support_sort_key(key)) {
++			return false;
++		}
 +	}
 +
- 	thread__zput(he->thread);
- 	map_symbol__exit(&he->ms);
++	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
++		struct sort_dimension *sd = &common_sort_dimensions[i];
++
++		if (sd->name && !strncasecmp(key, sd->name, strlen(key)))
++			return false;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(hpp_sort_dimensions); i++) {
++		struct hpp_dimension *hd = &hpp_sort_dimensions[i];
++
++		if (!strncasecmp(key, hd->name, strlen(key)))
++			return true;
++	}
++	return false;
++}
++
+ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 			   struct evlist *evlist)
+ {
+@@ -3727,7 +3755,9 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 	int ret = 0;
+ 	int level = 0;
+ 	int next_level = 1;
++	int prev_level = 0;
+ 	bool in_group = false;
++	bool prev_was_hpp = false;
  
+ 	do {
+ 		tok = str;
+@@ -3748,6 +3778,19 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 		}
+ 
+ 		if (*tok) {
++			if (is_hpp_sort_key(tok)) {
++				/* keep output (hpp) sort keys in the same level */
++				if (prev_was_hpp) {
++					bool next_same = (level == next_level);
++
++					level = prev_level;
++					next_level = next_same ? level : level+1;
++				}
++				prev_was_hpp = true;
++			} else {
++				prev_was_hpp = false;
++			}
++
+ 			ret = sort_dimension__add(list, tok, evlist, level);
+ 			if (ret == -EINVAL) {
+ 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
+@@ -3759,6 +3802,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 				ui__error("Unknown --sort key: `%s'", tok);
+ 				break;
+ 			}
++			prev_level = level;
+ 		}
+ 
+ 		level = next_level;
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
