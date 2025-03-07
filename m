@@ -1,50 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E56F1E1DEE;
-	Fri,  7 Mar 2025 09:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D90F1A23B8
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 14:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341160; cv=none; b=dtqMHSdwg5lFBOdZ0wS44okZc1yo+JVJzFl6wdLPKV6ww8HqZxVXjYrTBtSKIpfwpEo9pyLab0TxK76xGliS1lY78Optz6KE7VSirBrVOZAHa2m6yFGQQqmiSph9D6ToN5xZC7IQL9oJev2DJWHOi7FCxO3mWmyOjDg9wkhXmK8=
+	t=1741356507; cv=none; b=UloKfncwBLS1QgF+mggGGchRIRAkADpYG4YjtStWvTO6UFO9cTUUxm/4utrZ7cFyoxnKSLO0MYQiqgKm9q90pNyVFySwOjqyCD2+dJEsY3BYZMcP51E3m+Z+q+tLFknMzh1JkequvveXt6aSt92izEOxG8XTZv201MiJBOf640k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341160; c=relaxed/simple;
-	bh=M+281YHHKdHfMn68/HHlu54H0+BomZX22hWoyjy9IxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FsuHPgxFpWq4I8R95sc7jLumWt/u3Fp8m5GW16NsKFvzmIke0rUIa/zCylp56j/hV8+LWJBlE0LuaVVflee18zxhGnZ5f5gfTMd5e8jJTRKSuaR1pvWsj4AHWhyHPQLsojastEiTh2pfGEeJnJUHaRj1frfvKEQQ4/jsyC8Iai0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cxVt61gh; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741356507; c=relaxed/simple;
+	bh=xTJsAQjEfhkaY1kiPlh7eyQzcSk18qAvoQRgwAESJiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GloNnu1dqaLG9KmnvmoMex39APXgdsRsBKhuUK257eNuXMFkfKaW0VInUALA9YIhHitOy9tRU8YDosROymSHMrxJvkPn3yEPgTJyL7cfoJX1zjunAHUqCmpIPq1u1ErdlNSbzQdEPXLl9LAkzGQbNCjAGLODOzM5hXK5A4VOYNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CcmhBtjS; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cxVt61gh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741341160; x=1772877160;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=M+281YHHKdHfMn68/HHlu54H0+BomZX22hWoyjy9IxM=;
-  b=cxVt61ghw7EmyNa7/OxxDmG/vs10qqgWJOU08LLeYRo46YCU2AEl4bst
-   xUnObek6c/wKtQe0OIiphfuxKK/V3EatPEpi2K2F8Y+YSdSCs//ciTSSE
-   2odFVv2svuhDeemWtn390VaEGglDnl7hSwoUL2Ve1LWDzCmanhHZTgx5D
-   Yv83UJbhfs/RdB/FHaDRPD5gsVt5LfVp6Tm+dAxvuZVNBtoIXFcsNJvpB
-   /IWpZNGM04ixu/IHaKrD9cxq/CUeAm6Y9RdCCo5JUE05ErFVjlbJqbR1j
-   Flp1egqeVocwxso/auDk8owSqx3IXxPmCX9B8LckS7Z9h/FxlMSwQXZ6O
-   w==;
-X-CSE-ConnectionGUID: pOLiiHS4QUScaqxpPOLtcw==
-X-CSE-MsgGUID: SUcwpYicRXGNxqFzhvGKBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53373302"
-X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="53373302"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 01:52:39 -0800
-X-CSE-ConnectionGUID: G9NIp5EGQKSDY+3n1vsGtw==
-X-CSE-MsgGUID: ioNmOyZ8TjqfhY38evX2WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="119020581"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 01:52:35 -0800
-Message-ID: <97416612-68a4-47b4-a9b3-c8290c1088ed@linux.intel.com>
-Date: Fri, 7 Mar 2025 17:52:32 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CcmhBtjS"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so15886995e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 06:08:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741356503; x=1741961303; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R5ecyPn7/nwX7bRM6QxZMgRy3/lK1hOfCo5lNcV5pZY=;
+        b=CcmhBtjSPY5DgoF1y9CapgyQ0sfAlLULvWb+4QkbrjnDS6KwjGCUWNzD0QddnwLPu6
+         q3pLAuL4/MbKv916y0pb+jRcF4/hbrd6JBSKf39GnJGKyyxaAiPX1jiDLyA74xaA2GtP
+         hH0a/UzhMlmAkTfgkkou2jJ/2NvzYYx0eC5E0nyN8xA/BYg+YA1prtLrmnah7GKvEPqn
+         vZ+ypNC09RCDFwhetnQ5Fva85b4R6tQXK+0noKL/tHokgpzn5U6nw0JuP7b1hL95xxnu
+         CFsJw/nrYPuJqzozAF6QKe+kbG/nQYR+mmQGUYINgYfPVF7e62gPxK82TCUQh+Byng+K
+         xQVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741356503; x=1741961303;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R5ecyPn7/nwX7bRM6QxZMgRy3/lK1hOfCo5lNcV5pZY=;
+        b=WjImJ1kzjyAaF6gv6KOQGXTCruVTk6OOmqJxBj4tZVAekM+I2i0/oU8FPFHrVSNjb/
+         99mudKQwhgxowET08G1a038Y1unJIONjv+ZPrsXB6b4j9NI5cHP33sm0WLDwBwmJHgRn
+         nd7pyZc6+gZ4TXjxJEMzElwYc55S651qZLxYGFRbrEIr+LlJa0m4FJSA6MpLI/L1ZKqN
+         8rP6H8djyefY0a6ODnUtmCQC8ZNxAAaKEwq2XkDZlVvMbpVIqXOXgoX5U+HauiuNPXHy
+         uepQUDj2vYAqyHgpmJj2ojr3q2d+nsaUIolMNszafDvRsn9E/J14FHJTcBWXtn2zuKz3
+         Vymw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3FbrqHAUhcdTK5pTfMLNd5xrzv7eCATVe54L3AP8npLHKHhmnnNCN8TQ+hYLywUXasm6i8255/2s7nm9kRo/W@vger.kernel.org
+X-Gm-Message-State: AOJu0YxURXf/icktF03TVUTrtbhe1FVMfepz6+J4b6U4n9XA2tUDz0MQ
+	M3aDpRvXC2XP11rLhPJThETUdIBTinQ+UxUtCpacxLC9K3tFX8lNREH/J1fVw1c=
+X-Gm-Gg: ASbGncu7+nRUjFCy3K42qfuxlt6jtF6ofPwzuv8EjUbZxtQhOmmVwagq1KX4QRttNWc
+	5igcOgicseT4Bsjh03jrKk6SHxKDTMqTblgDDVvqs/IsVo8dbZ+HbsKdqB8g1UHiHxBMRFwPhvL
+	9lgSlzsb3ccLemHs9AA4k3lYjEIIiTkvdXrWzF1qQDNDuXHx8lUx/fWQq3QFk3x0EU55c7lf7d+
+	CJnoq7/50F0uHtVuZtno8vTKonwFwhPOs67tiiqVcczS35xaKVsCs1DV0trcl2MSq0cxaoMjBg2
+	dVeD27a5s7FZW3pr+/XgzrAK39Kt2K8EcAAF962sVDyJqdPIGy94wQ==
+X-Google-Smtp-Source: AGHT+IGNB/FF2hwXTsWwAqyKR4fwzkz5uhw+jSyQAtxugqnyV2VEQWX/qzkA+QktBmcg25uzfzp+dA==
+X-Received: by 2002:a05:600c:3586:b0:43b:c0fa:f9dc with SMTP id 5b1f17b1804b1-43c5cb69562mr28563695e9.10.1741356503065;
+        Fri, 07 Mar 2025 06:08:23 -0800 (PST)
+Received: from [192.168.1.247] ([145.224.67.152])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e222dsm5444435f8f.72.2025.03.07.06.08.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 06:08:22 -0800 (PST)
+Message-ID: <9a3cd3ea-6352-455a-b883-f8f3488002bd@linaro.org>
+Date: Fri, 7 Mar 2025 14:08:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,283 +66,148 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] perf parse-events: Corrections to topdown sorting
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+Subject: Re: [PATCH 3/3] perf list: Don't deduplicate core PMUs when listing
+ events
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
- Dominique Martinet <asmadeus@codewreck.org>, Andi Kleen
- <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>
-References: <20250307023906.1135613-1-irogers@google.com>
- <20250307023906.1135613-3-irogers@google.com>
+ Robin Murphy <robin.murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
+ <20250304-james-perf-hybrid-list-v1-3-a363ffac283c@linaro.org>
+ <CAP-5=fVHE41=RuBf2fS6anTmNOy3DXZbUSw6p+SBaCM9oD-YOA@mail.gmail.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250307023906.1135613-3-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fVHE41=RuBf2fS6anTmNOy3DXZbUSw6p+SBaCM9oD-YOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On 3/7/2025 10:39 AM, Ian Rogers wrote:
-> In the case of '{instructions,slots},faults,topdown-retiring' the
-> first event that must be grouped, slots, is ignored causing the
-> topdown-retiring event not to be adjacent to the group it needs to be
-> inserted into. Don't ignore the group members when computing the
-> force_grouped_index.
->
-> Make the force_grouped_index be for the leader of the group it is
-> within and always use it first rather than a group leader index so
-> that topdown events may be sorted from one group into another.
->
-> As the PMU name comparison applies to moving events in the same group
-> ensure the name ordering is always respected.
->
-> Change the group splitting logic to not group if there are no other
-> topdown events and to fix cases where the force group leader wasn't
-> being grouped with the other members of its group.
->
-> Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Closes: https://lore.kernel.org/lkml/20250224083306.71813-2-dapeng1.mi@linux.intel.com/
-> Closes: https://lore.kernel.org/lkml/f7e4f7e8-748c-4ec7-9088-0e844392c11a@linux.intel.com/
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/util/evlist.c |  15 ++--
->  tools/perf/util/parse-events.c    | 145 ++++++++++++++++++++----------
->  2 files changed, 105 insertions(+), 55 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index 447a734e591c..ed205d1b207d 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -76,12 +76,15 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->  		 * topdown metrics events are already in same group with slots
->  		 * event, do nothing.
->  		 */
-> -		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs) &&
-> -		    lhs->core.leader != rhs->core.leader)
-> -			return -1;
-> -		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
-> -		    lhs->core.leader != rhs->core.leader)
-> -			return 1;
-> +		if (lhs->core.leader != rhs->core.leader) {
-> +			bool lhs_topdown = arch_is_topdown_metrics(lhs);
-> +			bool rhs_topdown = arch_is_topdown_metrics(rhs);
-> +
-> +			if (lhs_topdown && !rhs_topdown)
-> +				return -1;
-> +			if (!lhs_topdown && rhs_topdown)
-> +				return 1;
-> +		}
->  	}
->  
->  	/* Retire latency event should not be group leader*/
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 35e48fe56dfa..5152fd5a6ead 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1980,48 +1980,55 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
->  	int *force_grouped_idx = _fg_idx;
->  	int lhs_sort_idx, rhs_sort_idx, ret;
->  	const char *lhs_pmu_name, *rhs_pmu_name;
-> -	bool lhs_has_group, rhs_has_group;
->  
->  	/*
-> -	 * First sort by grouping/leader. Read the leader idx only if the evsel
-> -	 * is part of a group, by default ungrouped events will be sorted
-> -	 * relative to grouped events based on where the first ungrouped event
-> -	 * occurs. If both events don't have a group we want to fall-through to
-> -	 * the arch specific sorting, that can reorder and fix things like
-> -	 * Intel's topdown events.
-> +	 * Get the indexes of the 2 events to sort. If the events are
-> +	 * in groups then the leader's index is used otherwise the
-> +	 * event's index is used. An index may be forced for events that
-> +	 * must be in the same group, namely Intel topdown events.
->  	 */
-> -	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1) {
-> -		lhs_has_group = true;
-> -		lhs_sort_idx = lhs_core->leader->idx;
-> +	if (*force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)) {
-> +		lhs_sort_idx = *force_grouped_idx;
->  	} else {
-> -		lhs_has_group = false;
-> -		lhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)
-> -			? *force_grouped_idx
-> -			: lhs_core->idx;
-> -	}
-> -	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1) {
-> -		rhs_has_group = true;
-> -		rhs_sort_idx = rhs_core->leader->idx;
-> +		bool lhs_has_group = lhs_core->leader != lhs_core || lhs_core->nr_members > 1;
-> +
-> +		lhs_sort_idx = lhs_has_group ? lhs_core->leader->idx : lhs_core->idx;
-> +	}
-> +	if (*force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)) {
-> +		rhs_sort_idx = *force_grouped_idx;
->  	} else {
-> -		rhs_has_group = false;
-> -		rhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)
-> -			? *force_grouped_idx
-> -			: rhs_core->idx;
-> +		bool rhs_has_group = rhs_core->leader != rhs_core || rhs_core->nr_members > 1;
-> +
-> +		rhs_sort_idx = rhs_has_group ? rhs_core->leader->idx : rhs_core->idx;
->  	}
->  
-> +	/* If the indices differ then respect the insertion order. */
->  	if (lhs_sort_idx != rhs_sort_idx)
->  		return lhs_sort_idx - rhs_sort_idx;
->  
-> -	/* Group by PMU if there is a group. Groups can't span PMUs. */
-> -	if (lhs_has_group && rhs_has_group) {
-> -		lhs_pmu_name = lhs->group_pmu_name;
-> -		rhs_pmu_name = rhs->group_pmu_name;
-> -		ret = strcmp(lhs_pmu_name, rhs_pmu_name);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	/*
-> +	 * Ignoring forcing, lhs_sort_idx == rhs_sort_idx so lhs and rhs should
-> +	 * be in the same group. Events in the same group need to be ordered by
-> +	 * their grouping PMU name as the group will be broken to ensure only
-> +	 * events on the same PMU are programmed together.
-> +	 *
-> +	 * With forcing the lhs_sort_idx == rhs_sort_idx shows that one or both
-> +	 * events are being forced to be at force_group_index. If only one event
-> +	 * is being forced then the other event is the group leader of the group
-> +	 * we're trying to force the event into. Ensure for the force grouped
-> +	 * case that the PMU name ordering is also respected.
-> +	 */
-> +	lhs_pmu_name = lhs->group_pmu_name;
-> +	rhs_pmu_name = rhs->group_pmu_name;
-> +	ret = strcmp(lhs_pmu_name, rhs_pmu_name);
-> +	if (ret)
-> +		return ret;
->  
-> -	/* Architecture specific sorting. */
-> +	/*
-> +	 * Architecture specific sorting, by default sort events in the same
-> +	 * group with the same PMU by their insertion index. On Intel topdown
-> +	 * constraints must be adhered to - slots first, etc.
-> +	 */
->  	return arch_evlist__cmp(lhs, rhs);
->  }
->  
-> @@ -2030,9 +2037,11 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
->  	int idx = 0, force_grouped_idx = -1;
->  	struct evsel *pos, *cur_leader = NULL;
->  	struct perf_evsel *cur_leaders_grp = NULL;
-> -	bool idx_changed = false, cur_leader_force_grouped = false;
-> +	bool idx_changed = false;
->  	int orig_num_leaders = 0, num_leaders = 0;
->  	int ret;
-> +	struct evsel *force_grouped_leader = NULL;
-> +	bool last_event_was_forced_leader = false;
->  
->  	/*
->  	 * Compute index to insert ungrouped events at. Place them where the
-> @@ -2055,10 +2064,13 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
->  		 */
->  		pos->core.idx = idx++;
->  
-> -		/* Remember an index to sort all forced grouped events together to. */
-> -		if (force_grouped_idx == -1 && pos == pos_leader && pos->core.nr_members < 2 &&
-> -		    arch_evsel__must_be_in_group(pos))
-> -			force_grouped_idx = pos->core.idx;
-> +		/*
-> +		 * Remember an index to sort all forced grouped events
-> +		 * together to. Use the group leader as some events
-> +		 * must appear first within the group.
-> +		 */
-> +		if (force_grouped_idx == -1 && arch_evsel__must_be_in_group(pos))
-> +			force_grouped_idx = pos_leader->core.idx;
->  	}
->  
->  	/* Sort events. */
-> @@ -2086,31 +2098,66 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
->  		 * Set the group leader respecting the given groupings and that
->  		 * groups can't span PMUs.
->  		 */
-> -		if (!cur_leader)
-> +		if (!cur_leader) {
->  			cur_leader = pos;
-> +			cur_leaders_grp = &pos->core;
-> +			if (pos_force_grouped)
-> +				force_grouped_leader = pos;
-> +		}
->  
->  		cur_leader_pmu_name = cur_leader->group_pmu_name;
-> -		if ((cur_leaders_grp != pos->core.leader &&
-> -		     (!pos_force_grouped || !cur_leader_force_grouped)) ||
-> -		    strcmp(cur_leader_pmu_name, pos_pmu_name)) {
-> -			/* Event is for a different group/PMU than last. */
-> +		if (strcmp(cur_leader_pmu_name, pos_pmu_name)) {
-> +			/* PMU changed so the group/leader must change. */
->  			cur_leader = pos;
-> -			/*
-> -			 * Remember the leader's group before it is overwritten,
-> -			 * so that later events match as being in the same
-> -			 * group.
-> -			 */
->  			cur_leaders_grp = pos->core.leader;
-> +			if (pos_force_grouped && force_grouped_leader == NULL)
-> +				force_grouped_leader = pos;
-> +		} else if (cur_leaders_grp != pos->core.leader) {
-> +			bool split_even_if_last_leader_was_forced = true;
-> +
->  			/*
-> -			 * Avoid forcing events into groups with events that
-> -			 * don't need to be in the group.
-> +			 * Event is for a different group. If the last event was
-> +			 * the forced group leader then subsequent group events
-> +			 * and forced events should be in the same group. If
-> +			 * there are no other forced group events then the
-> +			 * forced group leader wasn't really being forced into a
-> +			 * group, it just set arch_evsel__must_be_in_group, and
-> +			 * we don't want the group to split here.
->  			 */
-> -			cur_leader_force_grouped = pos_force_grouped;
-> +			if (force_grouped_idx != -1 && last_event_was_forced_leader) {
-> +				struct evsel *pos2 = pos;
-> +				/*
-> +				 * Search the whole list as the group leaders
-> +				 * aren't currently valid.
-> +				 */
-> +				list_for_each_entry_continue(pos2, list, core.node) {
-> +					if (pos->core.leader == pos2->core.leader &&
-> +					    arch_evsel__must_be_in_group(pos2)) {
-> +						split_even_if_last_leader_was_forced = false;
-> +						break;
-> +					}
-> +				}
-> +			}
-> +			if (!last_event_was_forced_leader || split_even_if_last_leader_was_forced) {
-> +				if (pos_force_grouped) {
-> +					if (force_grouped_leader) {
-> +						cur_leader = force_grouped_leader;
-> +						cur_leaders_grp = force_grouped_leader->core.leader;
-> +					} else {
-> +						cur_leader = force_grouped_leader = pos;
-> +						cur_leaders_grp = &pos->core;
-> +					}
-> +				} else {
-> +					cur_leader = pos;
-> +					cur_leaders_grp = pos->core.leader;
-> +				}
-> +			}
->  		}
->  		if (pos_leader != cur_leader) {
->  			/* The leader changed so update it. */
->  			evsel__set_leader(pos, cur_leader);
->  		}
-> +		last_event_was_forced_leader = (force_grouped_leader == pos);
->  	}
->  	list_for_each_entry(pos, list, core.node) {
->  		struct evsel *pos_leader = evsel__leader(pos);
 
-Perf stat and record tests pass on SPR and ARL.
+On 05/03/2025 9:51 pm, Ian Rogers wrote:
+> On Tue, Mar 4, 2025 at 5:50 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>> Commit 7afbf90ea2e2 ("perf pmu: Don't de-duplicate core PMUs") fixed a
+>> display mismatch related to deduplication within a single PMU, but it
+>> didn't fix the case where deduplicated PMUs aren't listed at all.
+>>
+>> Fix it by using the same function which takes is_core into account,
+>> except in the use_core_pmus block where it's always going to be true.
+>> Before this change, -v would be required to get the same behavior for
+>> core PMUs. Now it's no longer required:
+>>
+>> Before:
+>>   $ perf list | grep br_indirect_spec -A 1
+>>   br_indirect_spec
+>>      [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
+>>
+>> After:
+>>   $ perf list | grep br_indirect_spec -A 2
+>>      [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,
+>>       armv8_cortex_a57]
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   tools/perf/util/pmu.c  | 5 +++--
+>>   tools/perf/util/pmu.h  | 2 ++
+>>   tools/perf/util/pmus.c | 8 +++++---
+>>   3 files changed, 10 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 57450c73fb63..caff0d309012 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -834,9 +834,10 @@ static int is_sysfs_pmu_core(const char *name)
+>>    *
+>>    * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are visible
+>>    */
+>> -static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
+>> -                                  bool skip_duplicate_pmus)
+>> +size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
+>> +                           bool skip_duplicate_pmus)
+> 
+> nit: I think the name should be perf_pmu__deduped_name_len for
+> consistency with the other non-static functions.
+> 
 
-Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Will change.
 
+>>   {
+>> +       name = name ?: "";
+> 
+> nit: Should this just use pmu->name ?
+> 
+
+I can keep this part at the callsite in 
+perf_pmus__scan_skip_duplicates() to avoid any confusion about this 
+function accessing pmu->name or not. The only reason this function takes 
+a separate name parameter is to allow it to work with struct 
+pmu_event_info elsewhere as well.
+
+>>          return skip_duplicate_pmus && !pmu->is_core
+>>                  ? pmu_name_len_no_suffix(name)
+>>                  : strlen(name);
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index b93014cc3670..ce6a394a695d 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -297,5 +297,7 @@ struct perf_pmu *perf_pmus__find_core_pmu(void);
+>>
+>>   const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config);
+>>   bool perf_pmu__is_fake(const struct perf_pmu *pmu);
+>> +size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
+>> +                           bool skip_duplicate_pmus);
+>>
+>>   #endif /* __PMU_H */
+>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>> index cb1b14ade25b..1acc27af4d02 100644
+>> --- a/tools/perf/util/pmus.c
+>> +++ b/tools/perf/util/pmus.c
+>> @@ -358,12 +358,14 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+>>          if (!pmu) {
+>>                  pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
+>>                  pmu = list_prepare_entry(pmu, &core_pmus, list);
+>> -       } else
+>> -               last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+>> +       } else {
+>> +               last_pmu_name_len = pmu_deduped_name_len(pmu, pmu->name,
+>> +                                                        /*skip_duplicate_pmus=*/true);
+>> +       }
+>>
+>>          if (use_core_pmus) {
+>>                  list_for_each_entry_continue(pmu, &core_pmus, list) {
+>> -                       int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+>> +                       int pmu_name_len = strlen(pmu->name ?: "");
+>>
+>>                          if (last_pmu_name_len == pmu_name_len &&
+>>                              !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
+> 
+> Can this code be removed given there shouldn't be core PMUs with
+> identical names? ie:
+> ```
+> if (use_core_pmus) {
+>      list_for_each_entry_continue(pmu, &core_pmus, list)
+>          return pmu;
+> 
+>      pmu = NULL;
+>      pmu = list_prepare_entry(pmu, &other_pmus, list);
+> }
+> ```
+> 
+> Thanks,
+> Ian
+> 
+
+Even better, yes it probably can.
+
+Thanks
+James
+
+>>
+>> --
+>> 2.34.1
+>>
 
