@@ -1,226 +1,147 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE408634EC
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 17:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34C123F267
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 17:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741368748; cv=none; b=ujNHiOOYIHg75bhTubWMVucTb7O/69pMXp2KfqXk818HuPDICdLbgTRmAi+KdTpJKSkEoKMDnT6MmiqrI0Q6wOkmzkIsc7OzjB9axn6C25KNhONiNe/Qr4s/GNIoj8OSuEeNtu9SyMnPr2F1VPsNr7SYITZEk4vkPL3G0eOidPs=
+	t=1741368824; cv=none; b=cdI0WGMLmuZlvBmKbMzo7M6lD3epavAkZ2CzPIFOLDo6WpYAjWRh5NXAf38nYmDd7/JaqZc4gk5pU/COme+BwYB/GO2rqtIOU69X+zKuRAsaHeQZMrzCgRSJbltdMpEaWK3oxvT99ISgFdv+kXiXKRMBfctVUHeX9Ew6WW8sWSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741368748; c=relaxed/simple;
-	bh=8XxM+UXs6skvKubtvbBeE4dioGqAL/Wt21pSKFpxnL4=;
+	s=arc-20240116; t=1741368824; c=relaxed/simple;
+	bh=ahxE4JYsaxa51CeJ3ENjN1uXinapCT6nJzDtEC7DNRw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=muCUeNBa9C7ts65Jflt7Gb9afU15Aod4riIAwPN1UPOQDxVLxQO3N4Rud5m/ZjI1eEQrjwHAf1c+052mrmc7j6QNy5Hq7/SjfQKQtO0UCgWJo71fAT15mYDgYeuIZAOoVvuF/hhTfdTBTPmR3gx2pBeyP4Kab5F3kCcGlc8GzXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QiQdSgC/; arc=none smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=SPpbK+IU+iiP0Bbw/L9VAhhT9T0GJ+dglTBrHy2R9hOv+3EG3/sR79fOKsT8PHAg9uPg/yaMsHsPRe2LWKuEtLT64WxuRhRzO1eC1EOgwyNjVlDNNfaxU7dupSMmDKOngCx88sAS2QPuSVTyrp8qqS2oSUp0p/M+B7yuCIed72s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BTl893pk; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QiQdSgC/"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223a0da61easo885ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 09:32:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTl893pk"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223a0da61easo1095ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 09:33:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741368746; x=1741973546; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741368822; x=1741973622; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fqIi3eUgcKuJONzezWaTQQ5R3JceKvZT0aW4EVwXeiM=;
-        b=QiQdSgC/BFFJZH0A+udh9LIT8u2G0MiP9q2w2QeGgYhc19w3ClV29Pf2F/WBC0yb/f
-         /HzzS6vqNXJL7psZdYIgPLoaqNogC7snE1OlXuTuGUaHVLT5hiNGzlR2dTQZY3M8UN2k
-         OdVzP1XfR8xzLh6zy9sbMewdoxx3uU60tOkYzP9ef2s7CmcQ/y4hjSPbNNbZOlYRXSRf
-         m74BB55HB7Gi3+KCoJMJXDi+sfq+SKa96lOoz4hiQPWem2AMhS5m0vBEPT5NdTt94DL8
-         xRoxBe8mhmc4MzIfiMdlYNB1kAtGlomay9CMhtruyL5R7xchtWSOwaUR6yF5zEZNqZ5I
-         rfoA==
+        bh=dPRXab6DmNAusf1g00ev3mIbVuq+IYAJLTGg3hKFOiE=;
+        b=BTl893pkv0k5JeiSgEYH8lYGs+go8Edtnp9A5ikjBW/udXgbbWNScSxynZfdzvJ7kG
+         xu5aAip6oEl+dYw86iT97fXVhuGx9AI2HASziGCh2eQ+oLTYcedjv6Hq1xtDGXwkDdmc
+         IKIuBlQp4BhhhTtIqdQCAZKYgZvbKqp1pkjq06ZjZD0KM9OipzTiZ02aSvF1Ob1WvkHV
+         VnwJI0C/4eZZWaxwTNzHT0wAZCTPaldqm+N+Jp7F9cURtR95gS1gyhwARW7N9m51Pz2t
+         iOB1Z5wfcVyw3omz4UUQutwER5IblyYI3e3DtZyntCAQIZOP49LlGHl9d3Nj2a09cjlw
+         C4OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741368746; x=1741973546;
+        d=1e100.net; s=20230601; t=1741368822; x=1741973622;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fqIi3eUgcKuJONzezWaTQQ5R3JceKvZT0aW4EVwXeiM=;
-        b=QNOYLejxVehqAQiP1ddV1/2H+sp4gi2CQgYWE7ZWanjQJkaEM2LK6hL70zdcEm+/1J
-         X/lEjrObQLIVOQBZyjV+JSvNbd400G9sbqru8yDde6WxurmgNAIHaAznmRL6SBzdocEj
-         q+DOfOeFM5i2ep1ZJi2ZZxIjMr3K9lXYiM8NRCe00gMABGScowxxzrn0IKObdn/E2hEd
-         OyL+QO0Wez9Tr7Fs++KJpff7dKSIln1a6QlKixJ3JpLMEXPei2THQWYUMDfCSGadmjkc
-         bOdfWpIpuFeJ4B/MjVdzf0JApChmBTT06qjP/A9+BIQ2fY3bCh0sO8VEHEoF0Z72Qc1/
-         pHow==
-X-Forwarded-Encrypted: i=1; AJvYcCXThLavrqC1G94JAZSibaUX6gHpiMJIMTEPuq4GKXkSUMY91DcOgOP/tMAV3ce65GzSUX4YNWWkFwoVkmmMEiqv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHvQ1GCk0AE54L4mcMr0AwAClvzj7UyXZcb5bcvj/YIh0vPJnF
-	dzpT23ZjYYW5p+AmfOzSqXaFSWMweLqwHeHseBBiA9VRq5iUdfJFniQwCaQG8Enw3wWRaM6buun
-	PltF02tcVj4hgAeYBGvTtzp4zWAkjqmpHeZzk
-X-Gm-Gg: ASbGncu36hrThDqsDu/0xpPgOegkRGoSg6nUxkjLJK5KcqLKvW/wgNDNx83TSZDRoe7
-	8i9Kq+aILlFigLbMcL5JH3Ig9aDlODFZacHhZEOwvq0y3G5LwysPeC90qCpOaepfMwTq5cGWmGs
-	NWMBn+81B8jwU6lsJVDqmaPBhZB3o=
-X-Google-Smtp-Source: AGHT+IFFpfCVIaBpSWKZFwIn7l+IfdxUPFNfLp51LskZyc/+m49bu6CbiATC948quvo165zd/aagrh0KZRAGge8PVew=
-X-Received: by 2002:a17:902:ea08:b0:220:c905:689f with SMTP id
- d9443c01a7336-22434db57c2mr931045ad.25.1741368745951; Fri, 07 Mar 2025
- 09:32:25 -0800 (PST)
+        bh=dPRXab6DmNAusf1g00ev3mIbVuq+IYAJLTGg3hKFOiE=;
+        b=eM+23J8Ac3gwDhhFTwoaHdmxjrTVyl6kBLPr4uitJJkkPp4Ih6Upfdz2dD38EfRxAt
+         e2OusodzYaSPulW5yVW83ajjMyLZC3aiio+Wxje22WzxmCIcci6tidYB1mrnKtdD2Do2
+         ZnJCPSQpVLeGYWJNsCbq3u+d3o7dfU6h6dRVQEqfYlXVsU21nnSkamGI3IMxqaAFwKLd
+         KnwgDfokUR0xER54ba0/OlqYGGGmILzBrfxxrvv54lqW7pYFb13tjmroChl6ePku4Y+I
+         2yfe1O8Uddufm8Hu8XdODkCOzx0ltj9A4seMMFtl9kVRlcT6wg59Q7SqeEY0UBiNlS4C
+         YGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkTTyNNm4zsExF1xtaS9eZnOv1Ls6N7iPGhXYTCZXXtWH881MIcjKl1T1BgpB3yZ9mnyCHL9ksbCUnUhsXYNM1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw+oYlPwGmJ6ShFUPvckwISmSJMwrmkkbj4HaGd+6gueW0g/ZW
+	5l51IkPGTrtlGEGQoHNe86JRYSQpwThgWFBCimN+MgV9EJQgOjTBGBXCzRNyxFKFJzFvPan2LMp
+	FqphRMDP/yG61FXwzKASIbwkEZ0GQ5AK6LaTB
+X-Gm-Gg: ASbGncvQNjjs5GIuCxwtaZ6jYvRkPR6Ei6iIR5SIkEWfQrIfQxo/EaxpFqAa7r3357T
+	ap3xikjJ5h/B1cSkw+qpy6glSWwAwPXZRFNfKWeJE+kQIrsN7+oy2nT2SLN1bedB+owZBd2mycY
+	QTQaEb0FKSg+4PB9vOPjcBXXDauCU=
+X-Google-Smtp-Source: AGHT+IEzQZheu5TJtSATahjhZ3enat9zM63QIvoyqZ/LEtGcyx3ArOSyUNJsAyUroa9B+ujfe7MnSYf2f6Gm/bwNmMg=
+X-Received: by 2002:a17:902:ce86:b0:224:1fb:7b65 with SMTP id
+ d9443c01a7336-22434c9abd5mr926215ad.22.1741368821959; Fri, 07 Mar 2025
+ 09:33:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307153448.250871-1-acme@kernel.org>
-In-Reply-To: <20250307153448.250871-1-acme@kernel.org>
+References: <20250307061250.320849-1-namhyung@kernel.org> <20250307061250.320849-2-namhyung@kernel.org>
+ <403e3848770cef1d70357452082ddda0e92275fc.camel@intel.com>
+In-Reply-To: <403e3848770cef1d70357452082ddda0e92275fc.camel@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 7 Mar 2025 09:32:14 -0800
-X-Gm-Features: AQ5f1Jpeu53Av8JRCHrL53sKmcp1rYJ23clcd_69KjyKT-K0q8opkRjRdH0x8-I
-Message-ID: <CAP-5=fUHozmMFVCX1Sn+4gsSkXQicLqYWHLrN2DSJgAGdnd0gA@mail.gmail.com>
-Subject: Re: [PATCH 1/1 next] perf libunwind: Fixup conversion
- perf_sample->user_regs to a pointer
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Ingo Molnar <mingo@redhat.com>, John Garry <john.g.garry@oracle.com>, Leo Yan <leo.yan@linux.dev>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Tavian Barnes <tavianator@tavianator.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org
+Date: Fri, 7 Mar 2025 09:33:30 -0800
+X-Gm-Features: AQ5f1JrOnFoWT_aqgXFAIybmtf8NoAx1Ulyzs8IDlqpY5nPOnusDPd5k8O54K-M
+Message-ID: <CAP-5=fXm_T_REHgCG2ctesmCAu=An6-t-EJAupfd7-et4gGspQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf report: Fix memory leaks in the hierarchy mode
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "namhyung@kernel.org" <namhyung@kernel.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 7, 2025 at 7:35=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+On Fri, Mar 7, 2025 at 8:28=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel.=
+com> wrote:
 >
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> On Thu, 2025-03-06 at 22:12 -0800, Namhyung Kim wrote:
+> > Ian told me that there are many memory leaks in the hierarchy mode.
+> > I
+> > can easily reproduce it with the follwing command.
+> >
+> >   $ make DEBUG=3D1 EXTRA_CFLAGS=3D-fsanitize=3Dleak
+> >
+> >   $ perf record --latency -g -- ./perf test -w thloop
+> >
+> >   $ perf report -H --stdio
+> >   ...
+> >   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
+> >       #0 0x7f3414c16c65 in malloc
+> > ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
+> >       #1 0x55ed3602346e in map__get util/map.h:189
+> >       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
+> >       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
+> >       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
+> >       #5 0x55ed36027e2e in hists__hierarchy_insert_entry
+> > util/hist.c:1638
+> >       #6 0x55ed36027fa4 in hists__collapse_insert_entry
+> > util/hist.c:1685
+> >       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
+> >       #8 0x55ed35de0323 in report__collapse_hists
+> > /home/namhyung/project/linux/tools/perf/builtin-report.c:735
+> >       #9 0x55ed35de15b4 in __cmd_report
+> > /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
+> >       #10 0x55ed35de43dc in cmd_report
+> > /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
+> >       #11 0x55ed35e66767 in run_builtin
+> > /home/namhyung/project/linux/tools/perf/perf.c:351
+> >       #12 0x55ed35e66a0e in handle_internal_command
+> > /home/namhyung/project/linux/tools/perf/perf.c:404
+> >       #13 0x55ed35e66b67 in run_argv
+> > /home/namhyung/project/linux/tools/perf/perf.c:448
+> >       #14 0x55ed35e66eb0 in main
+> > /home/namhyung/project/linux/tools/perf/perf.c:556
+> >       #15 0x7f340ac33d67 in __libc_start_call_main
+> > ../sysdeps/nptl/libc_start_call_main.h:58
+> >   ...
+> >
+> >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
+> >   93
+> >
+> > I found that hist_entry__delete() missed to release child entries in
+> > the
+> > hierarchy tree (hroot_{in,out}).  It needs to iterate the child
+> > entries
+> > and call hist_entry__delete() recursively.
+> >
+> > After this change:
+> >
+> >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
+> >   0
+> >
+> > Reported-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
-> The dc6d2bc2d893a878 ("perf sample: Make user_regs and intr_regs optional=
-") misses
-> the changes to a file, resulting in this problem:
+> Tested on an Arrow Lake system.
 >
->   $ make LIBUNWIND=3D1 -C tools/perf O=3D/tmp/build/perf-tools-next insta=
-ll-bin
->   <SNIP>
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind-local.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind.o
->   <SNIP>
->   util/unwind-libunwind-local.c: In function =E2=80=98access_mem=E2=80=99=
-:
->   util/unwind-libunwind-local.c:582:56: error: =E2=80=98ui->sample->user_=
-regs=E2=80=99 is a pointer; did you mean to use =E2=80=98->=E2=80=99?
->     582 |         if (__write || !stack || !ui->sample->user_regs.regs) {
->         |                                                        ^
->         |                                                        ->
->   util/unwind-libunwind-local.c:587:38: error: passing argument 2 of =E2=
-=80=98perf_reg_value=E2=80=99 from incompatible pointer type [-Wincompatibl=
-e-pointer-types]
->     587 |         ret =3D perf_reg_value(&start, &ui->sample->user_regs,
->         |                                      ^~~~~~~~~~~~~~~~~~~~~~
->         |                                      |
->         |                                      struct regs_dump **
-> <SNIP>
->   =E2=AC=A2 [acme@toolbox perf-tools-next]$ git bisect bad
->   dc6d2bc2d893a878e7b58578ff01b4738708deb4 is the first bad commit
->   commit dc6d2bc2d893a878e7b58578ff01b4738708deb4 (HEAD)
->   Author: Ian Rogers <irogers@google.com>
->   Date:   Mon Jan 13 11:43:45 2025 -0800
->
->       perf sample: Make user_regs and intr_regs optional
->
-> Detected using:
->
->   make -C tools/perf build-test
->
-> Fixes: dc6d2bc2d893a878 ("perf sample: Make user_regs and intr_regs optio=
-nal")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: John Garry <john.g.garry@oracle.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Leo Yan <leo.yan@linux.dev>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Michael Petlan <mpetlan@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Tavian Barnes <tavianator@tavianator.com>
-> Cc: Veronika Molnarova <vmolnaro@redhat.com>
-> Cc: coresight@lists.linaro.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Sorry for the breakage, thanks for fixing this!
+> Tested-by Thomas Falcon <thomas.falcon@intel.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
+Thanks!
 Ian
-
-> ---
->  tools/perf/util/unwind-libunwind-local.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/u=
-nwind-libunwind-local.c
-> index 16c2b03831f39afc..cc0e41f2c2f2ef10 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -579,12 +579,12 @@ static int access_mem(unw_addr_space_t __maybe_unus=
-ed as,
->         int ret;
->
->         /* Don't support write, probably not needed. */
-> -       if (__write || !stack || !ui->sample->user_regs.regs) {
-> +       if (__write || !stack || !ui->sample->user_regs->regs) {
->                 *valp =3D 0;
->                 return 0;
->         }
->
-> -       ret =3D perf_reg_value(&start, &ui->sample->user_regs,
-> +       ret =3D perf_reg_value(&start, perf_sample__user_regs(ui->sample)=
-,
->                              perf_arch_reg_sp(arch));
->         if (ret)
->                 return ret;
-> @@ -628,7 +628,7 @@ static int access_reg(unw_addr_space_t __maybe_unused=
- as,
->                 return 0;
->         }
->
-> -       if (!ui->sample->user_regs.regs) {
-> +       if (!ui->sample->user_regs->regs) {
->                 *valp =3D 0;
->                 return 0;
->         }
-> @@ -637,7 +637,7 @@ static int access_reg(unw_addr_space_t __maybe_unused=
- as,
->         if (id < 0)
->                 return -EINVAL;
->
-> -       ret =3D perf_reg_value(&val, &ui->sample->user_regs, id);
-> +       ret =3D perf_reg_value(&val, perf_sample__user_regs(ui->sample), =
-id);
->         if (ret) {
->                 if (!ui->best_effort)
->                         pr_err("unwind: can't read reg %d\n", regnum);
-> @@ -741,7 +741,7 @@ static int get_entries(struct unwind_info *ui, unwind=
-_entry_cb_t cb,
->         unw_cursor_t c;
->         int ret, i =3D 0;
->
-> -       ret =3D perf_reg_value(&val, &ui->sample->user_regs,
-> +       ret =3D perf_reg_value(&val, perf_sample__user_regs(ui->sample),
->                              perf_arch_reg_ip(arch));
->         if (ret)
->                 return ret;
-> @@ -808,7 +808,7 @@ static int _unwind__get_entries(unwind_entry_cb_t cb,=
- void *arg,
->                 .best_effort  =3D best_effort
->         };
->
-> -       if (!data->user_regs.regs)
-> +       if (!data->user_regs->regs)
->                 return -EINVAL;
->
->         if (max_stack <=3D 0)
-> --
-> 2.47.0
->
