@@ -1,172 +1,238 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F8D21ADCC;
-	Fri,  7 Mar 2025 18:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8106F199FDE
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741372184; cv=none; b=LU0WnVS1CkeezINqL8vuUe2NP8xLYhmdSF2hDJ8DJRxGI9JPOYRHEGAPebtw48WDFp7hQhpU9o/70mY3FAOXvZQ6wgtd8EvKyMy+WY+pcap9AffVqMG69LXJLokCQraPP0VZSjiHMTdYMsx4uPbY0tnpwxqLm69+rYoiz97q5bI=
+	t=1741373294; cv=none; b=ur1xz5cIT6hMqZzSA+JdtGa2JlprRK4I7uQvES9htpdOIY0DMw+fmoShqqE4R11VMJI6W5cMZN1j0fTipXv5UybGX2CIYHWU6jYL4XoI4CE36hMjsTW7seosjP5ef/h9s3vieaChga+k463QiI8mtSTsZDgUFWMs1laWmzGExSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741372184; c=relaxed/simple;
-	bh=OlhjxOwchdWE24D9CVGPrF0rqVV67b2eg9n5uJuMMvk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=COCiQE+B9/E0fsIeGRf2m9wt39La5WqWJdx8AIpPfgsY0ExmB7m/kRs9pjp5Lgh9ZCLsvFalGEDVfWcX0FysHzJrBipXlf5tue9DDoj8OlPw90A5R4Rhxe8mNjCK9hy6dXDCA+H7MFT68n5aYPdSEhqXAqamCDnZftiqRND81DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=P+XOR+as; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741373294; c=relaxed/simple;
+	bh=GTfNNZvLCbOPBoM0Ai0WgtMz65rUH5c7i6UB1UGWT7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qAZYmNeKBJV1lXoY2OHW2W+z7FUbBz6ybG+ax24AQnTIuHcx7fWZY93TjiishuI6VYyvMAD9fdfcQeYwRb4QRrU5AML/6r8JRlIRWP33J2a89gsWmAhqN76UhqmbG926k/irtMu4v3cVTgL+NKgZPqpIN0aTojJSuKANW58ng+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPkXkgBp; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P+XOR+as"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527ISvgt371862
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 7 Mar 2025 10:28:57 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527ISvgt371862
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741372139;
-	bh=Kw3Sb9QMf0XT9oIXV70XQt9+tlU01Vyy+rZ6VfEByXY=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=P+XOR+ascBKH5UlIhU7GbgsYk9tqHVI5mzNuSvPKVMajt16J0Ms5atBT63dnIuPht
-	 vQOP024oaeRIMKFie4ObxLtGREKd53fIGnrwUluDPng5CxqxlfoNL5MNQgChgCdby8
-	 r5V6EtURoK7zChkfHZraJw9x9NIWneCvHWwSLX1OsSMTCINOT94/mtGdK7lXJOlgPW
-	 IVkgslx0yQxCkm8H8te349d2lpWG8kijRZG+uqS83tI7EvWjHxrguZZ3ZS7OEHAlfX
-	 P/qJs57bDniajMOJlxqBklCP9ShvFe/pjWQKqmFP1pvz1qMJyjDry+JPsS9lllPSik
-	 SsWuvrn6SQ0/A==
-Message-ID: <4b44eaec-2c45-4a68-80c5-6a8c0905b1ab@zytor.com>
-Date: Fri, 7 Mar 2025 10:28:56 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPkXkgBp"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2242aca53efso11175ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Mar 2025 10:48:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741373292; x=1741978092; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnnBLiHSipCquEBENm80tx5p5tMfaLtXbkHcXLPFAjU=;
+        b=XPkXkgBpG2Z/bl6TqPHaytNlT1VMOl4x5jpQBvxyz8CBz3WUEZb5/elJHjKYjRMQ87
+         sfnMLzQJwtcUqO2PhXCVQnp9d/Vrbj0mUhQyVMeW8MDqpnH9079IP7VMd4bpemw2iLsj
+         HRDZWHVIWtYKNHdjmpB/+3SbOsd4oqJ55XAmo7R/CLjxQ6n0JEUgxx0ry9OrqhImowzW
+         vZk25VWt3RJidaN5GopH6dya26Bw1jXvC/0WLywzHvQDbngBA8/pssjiHhJGoIt7s0z4
+         a7YeUyzEqW/KrQ+h4xX9a3if/gbxDsXyz7fjndyy9Q3w/g6RRe62ysebX2BGoBLg3SG8
+         lXrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741373292; x=1741978092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hnnBLiHSipCquEBENm80tx5p5tMfaLtXbkHcXLPFAjU=;
+        b=H6ZxL284jds3OEn4Tv9rbgEUAeUeqGpdKnJFqTmWxm5ydnszzaLbelvczymubK/vOi
+         8Og5xnlHuipQBnqlqVYLUdLMrSlNu+7WESsDIHdDcG7fb4ViOYHoq7o0qVyfGqVyJdyP
+         gHmVeeu1Xww5ZyOODyq9Q4+S8wESYZcnms5/VfB8RoH8/KiNkRam0+K2HQ1dXPKC+O0L
+         UPV4G6w+BCGJkDSXE2P4kdi7dDw3P7nf++nZXPwpC4WDTkfawSRs+vZQXoxwE/8auED2
+         8LNFuyTV3I7PVoLTBVdqbKhHmptEL+Snu90bM5MNxb496bFCOFQNtLOnKXZZIPVCkeRL
+         cu2g==
+X-Forwarded-Encrypted: i=1; AJvYcCULoNjIllgvVxrToU+DDpCfvTdtMJuok4ZpOA1FCuJdnSIu3J5mW0QaYEWJVyfIlFu32lYMsTcmILRuwQeYBdC4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzajIhUm/Tk8IH6pVRpZEB19FvrBTJAaiokXh+xbRH8Jg0vmEro
+	meHEHc+uOyZKlARjBhUiQaEgLyPE5plFN27myt00Wr8fbi6Zm90hViYuw5u4H11aik2/1m9yIUk
+	d2DHmUbpm51qjpn6aBLkhYkchWH2Mgwc3FTWQ
+X-Gm-Gg: ASbGnctzAY9hjyE1D52tYRceY1clD7HVgndbTN6H6d+jhFy0/xPHL4eC1WHDvzbGgCm
+	YObHC9R0paWVe7VEMJLAWF+8cNMMOrzXW+fN78S9K6jlmqM095JSy2DgwTbuGiiwsIucO0c5GaL
+	8FVDu4l+bn1bFLO/8wbulP5ZYMTRA=
+X-Google-Smtp-Source: AGHT+IGdT5nE+QHbJpWHzcC0wNB5abK8RgakHQzBWpxs8Ndj2pR7WbNhCjKOLLaAbeK/qow+V4wBDpPUYk2l/+ePmXg=
+X-Received: by 2002:a17:902:ccc8:b0:215:42a3:e844 with SMTP id
+ d9443c01a7336-22434b5433emr1163905ad.17.1741373291454; Fri, 07 Mar 2025
+ 10:48:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/4] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-From: Xin Li <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
-        sraithal@amd.com, philip.li@intel.com
-References: <20250305184725.3341760-1-xin@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20250305184725.3341760-1-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <Z7Z5kv75BMML2A1q@google.com> <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
+ <Z7yJ0Vpub6JeQyYo@x1> <80432f35-e865-4186-8b92-26b25279e150@linaro.org> <Z8sMcta0zTWeOso4@x1>
+In-Reply-To: <Z8sMcta0zTWeOso4@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Mar 2025 10:48:00 -0800
+X-Gm-Features: AQ5f1Jq6zGKtLrcNss-uzScSqLCab5P5rfBJprgge4TMGFWgurWy9LXP2biOgVw
+Message-ID: <CAP-5=fWytO4QkxQEu02RxTM51dtqtDXnT517tdiAe79LidT6Ww@mail.gmail.com>
+Subject: Re: [RFC] perf tools: About encodings of legacy event names
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/2025 10:47 AM, Xin Li (Intel) wrote:
-> The x86 build process first generates required and disabled feature
-> masks based on current build config, and then uses these generated
-> masks to compile the source code.  When a CPU feature is not enabled
-> in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
-> flag, i.e., DISABLE_FRED, needs to be properly defined and added to
-> a specific disabled CPU features mask in <asm/disabled-features.h>,
-> as the following patch does:
-> https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
-> As a result, the FRED feature bit is surely cleared in the generated
-> kernel binary when CONFIG_X86_FRED=n.
-> 
-> Recently there is another case to repeat the same exercise for the
-> AMD SEV-SNP CPU feature:
-> https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
-> https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
-> 
-> It was one thing when there were four of CPU feature masks, but with
-> over 20 it is going to cause mistakes, e.g.,
-> https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
-> 
-> We want to eliminate the stupidly repeated exercise to manually assign
-> features to CPU feature words through introducing an AWK script to
-> automatically generate a header with required and disabled CPU feature
-> masks based on current build config, and this patch set does that.
-> 
-> Link to v6:
-> https://lore.kernel.org/lkml/20250228082338.73859-1-xin@zytor.com/
-> 
-> Changes in v7:
-> * Fix build error with "make distclean; make headers" (Aithal, Srikanth)
-> * Collect reviewed-bys.
-> 
+On Fri, Mar 7, 2025 at 7:10=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Fri, Mar 07, 2025 at 02:17:22PM +0000, James Clark wrote:
+> > On 24/02/2025 3:01 pm, Arnaldo Carvalho de Melo wrote:
+> > > On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
+> > > > I knew of this tech debt and separately RISC-V was also interested =
+to
+> > > > have sysfs/json be the priority so that the legacy to config encodi=
+ng
+> > > > could exist more in the perf tool than the PMU driver. I'm a SIG
+>
+> > > I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok =
+as
+> > > they didn't want to break the perf tooling workflow, no?
+>
+> > Doesn't most of the discussion stem from this particular point? I also
+> > understood it that way, that risc-v folks agreed it was better to suppo=
+rt
+> > these to make all existing software work, not just Perf.
+>
+> That is my understanding, and I agree with them and with you.
 
-This version v7 can be cleanly applied on tip/x86/cpu but NOT the latest 
-tip/master.
+This is describing what RISC-V have been forced into doing:
+1) to support non-perf tooling,
+2) because the perf is inconsistent in priority with legacy and
+sysfs/json events.
 
-I guess I don't have to rebase on the latest tip/master and resend it?
+Their preference has been to move these problems into the tool not the
+PMU driver. What you are saying here is to ignore their preference.
+I've already quoted them in this thread saying this, but this keeps
+being ignored. Here is my previous message:
+https://lore.kernel.org/lkml/CAP-5=3DfXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3Qhr=
+Tg1mtBw@mail.gmail.com/
 
-Thanks!
-     Xin
+> > Maybe one issue was calling them 'legacy' events in the first place, an=
+d I'm
+> > not sure if there is complete consensus that these are legacy.
+>
+> I don't see them as "legacy".
 
-> 
-> H. Peter Anvin (Intel) (2):
->    x86/cpufeatures: Add {required,disabled} feature configs
->    x86/cpufeatures: Generate a feature mask header based on build config
-> 
-> Xin Li (Intel) (2):
->    x86/cpufeatures: Remove {disabled,required}-features.h
->    x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
-> 
->   arch/x86/Kconfig                              |   2 +
->   arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
->   arch/x86/Makefile                             |  15 ++
->   arch/x86/boot/cpucheck.c                      |   3 +-
->   arch/x86/boot/cpuflags.c                      |   1 -
->   arch/x86/boot/mkcpustr.c                      |   3 +-
->   arch/x86/include/asm/Kbuild                   |   1 +
->   arch/x86/include/asm/cpufeature.h             |  70 +------
->   arch/x86/include/asm/cpufeatures.h            |   8 -
->   arch/x86/include/asm/disabled-features.h      | 161 --------------
->   arch/x86/include/asm/required-features.h      | 105 ----------
->   arch/x86/kernel/verify_cpu.S                  |   4 +
->   arch/x86/tools/featuremasks.awk               |  88 ++++++++
->   tools/arch/x86/include/asm/cpufeatures.h      |   8 -
->   .../arch/x86/include/asm/disabled-features.h  | 161 --------------
->   .../arch/x86/include/asm/required-features.h  | 105 ----------
->   tools/perf/check-headers.sh                   |   2 -
->   17 files changed, 311 insertions(+), 623 deletions(-)
->   create mode 100644 arch/x86/Kconfig.cpufeatures
->   delete mode 100644 arch/x86/include/asm/disabled-features.h
->   delete mode 100644 arch/x86/include/asm/required-features.h
->   create mode 100755 arch/x86/tools/featuremasks.awk
->   delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
->   delete mode 100644 tools/arch/x86/include/asm/required-features.h
-> 
-> 
-> base-commit: 32dc26a2f55f71907af0874468298c6ab8a8f7f9
+So let me say this is really distracting from the intent in the
+series. The series is:
+1) trying to clean up wild carding ambiguity - not making it dependent
+on the name of the event being parsed, the behavior of `cpu_cycles`
+matches that of `cpu-cycles`
+2) trying to make the legacy vs sysfs/json prioritization consistent -
+making it so that `cpu_core/instructions/` encoding matches
+`instructions` as we display both of these as cpu_core/instructions/
+and it is confusing to a user that different encodings were used. We
+also pattern match perf_event_attr config values in places like:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/arch/x86/util/topdown.c?h=3Dperf-tools-next#n38
+so >1 config for the same event means such pattern matching needs to
+consider all cases.
 
+There is now a  "Make Legacy Events Great Again" (MLEGA) effort that
+is standing in the way of clean up work. As already stated but
+repeating, why is MLEGA a bad thing:
+1) legacy events lack descriptions and are open for interpretation.
+For example, do the events include counts for things done
+speculatively?
+2) it is unneeded. Vendors can choose to name events the same name in
+sysfs and json. ARM are achieving pretty much all of the same thing
+with architecture standard events but in their use they will have
+appropriate event descriptions for each model giving all the caveats
+for the event. When something is common we can encode it in the common
+json we don't need legacy events for this:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/arch/common/common?h=3Dperf-tools-next
+3) LLC doesn't mean L2, it nearly always means L3, the event names
+have become obsolete and confusing. More MLEGA means more of this.
+4) PMUs have only ever supported a subset of the legacy events. We
+have to make use of legacy events in `perf stat` not fail when they
+are implicitly added as default events and via the -ddd options.
+5) multiple encodings/PMU types for the same thing complicates things
+like topdown event ordering, that is a kernel/PMU restriction, and
+metric event deduplication.
+6) legacy events are broken on ARM Apple-M and have been broken on Juno boa=
+rds.
+7) architectures trying to push complexity into user land (RISC-V) are
+being forced to push it into the kernel/driver.
+
+Is MLEGA relevant here? Well if you want legacy events to be >
+sysfs/json then yes. For wild carding I don't see why MLEGA cares. Do
+I want to push on MLEGA? No, and I think the reasons above are why it
+hasn't happened in over 10 years.
+
+> > Can't they continue be the short easy list of events likely to be commo=
+n across
+> > platforms?
+>
+> That is my understanding of the original intent, yes.
+>
+> A first approximation, those who want to dig deeper, well, learn more
+> about the architecture, learn about the extensive support for
+> vendor/JSON events, sysfs ones, how to properly configure them taking
+> advantage of the high level of flexibility both perf, the tool and perf
+> the kernel subsystem allows them to be used, in groups, leader sampling,
+> multiplexing or not, etc.
+>
+> But lots of developers seem to be OK with just the default events or
+> using those aliases for expected events across architectures, sometimes
+> specifying :ppp as a hint that if there are more precise events in this
+> architecture, please use them, for instance.
+
+When and where have I said that I don't want to support events like
+instructions and cycles? See above, consistent wild carding and the
+encoding priority are the only issues here.
+
+> > If there is an issue with some of them being wrong in some places
+> > we can move forward from that by making sure new platforms do it right,
+>
+> And adding special case for broken things when we know that some event
+> named "cycles" shouldn't be used for sampling, for instance.
+
+What is this? A new framework for special casing PMUs and events,
+where we're maintaining lists of broken PMUs and changing encodings?
+And tooling like event sorting, metrics, is all supposed to just work
+with this? Are we going to write json for this? Who is writing/testing
+it for Apple-M?
+
+Special cases should be the exception and not an expected norm.
+
+> > rather than changing the logic for everyone to fix that bug.
+>
+> Right. And again, if something doesn't work for a while in some
+> architecture, its just a matter of specifying the name of the event in
+> full form, with the PMU prefix, etc.
+
+So MLEGA would like sysfs/json when they are broken? This is just
+silly, if something is broken we should just not use it. Having 2 ways
+of stating something and expecting different behaviors from them is
+clearly brittle.
+
+> > For the argument that Google prefers to use the sysfs events because of
+> > these differences, I don't think there is anything preventing that kind=
+ of
+> > use today?
+>
+> Indeed.
+
+I explained that in the context of why legacy events are wrong. I've
+repeated it above. This is not addressing the issues of wild carding
+and the encoding priority.
+
+> > Or at least not for the main priority flip proposed, but maybe
+> > there are some smaller adjacent bugs that can be fixed up separately.
+>
+> Yes, and work in this area is greatly appreciated.
+
+I don't know what your proposals are and to my eyes none of them have
+ever existed, no one has created them in over 10 years.
+I am trying to fix wild carding and the encoding priority.
+Bike shedding on MLEGA, please can we move it to a separate email thread.
+
+Thanks,
+Ian
