@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FB7F9DA;
-	Fri,  7 Mar 2025 01:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9B729408;
+	Fri,  7 Mar 2025 01:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741310091; cv=none; b=UoSbhXZEDmY/pI5NUXaFr0X4sr5RwjdHRAAoZAGzOvh8v/9GyAyKDJTI0XH4chqmPjK3B2ZhH7lfenXtkz/FKCi0sjGXvt2I8VhzgXS3CEZK8xULaP48yvaVpu12W2mkjVH169QddTXZbUtBkj/0t4bkd5vt6VitfwcKWMvBj/w=
+	t=1741310543; cv=none; b=IBBop2+Np/WmvAE45hQnAD/9P1/N3G2arjdWLqf273jsANufeV/9vr8k6odnfdLyDx12sjKvUoTDsOapfLswswM1QD4qft6PVUSo3NZYwRJYUFqA+DaC7ujSgd0pZi4HoDC5udrmM+xv+YVyxmQY72ggdkHw3dv7PQYTkBZfM6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741310091; c=relaxed/simple;
-	bh=nPxi1R9wqYshB4RGiTst8wDkKwvkQuArDF4nSaRBlDs=;
+	s=arc-20240116; t=1741310543; c=relaxed/simple;
+	bh=qoWrscZOahCo4c1kw/Xs9+mG1u4iBzWCpyeXDPmje18=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dogEEbAdEJDn8OdFHoCpqy0UUZWDbLM3XaTF0F1E3sqIm9Mt6nCggkAdWbyUOtPR8L8gY4zXONRxJdaCSExDry+H/GzRXxtOs3TzaoR3ZFVJx8MpMi/7zkxrVCHUlFN1vyDPc7WOHIGed+EB/1fbnHs+L7/qd6OBuF2xug0i8DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUBIFdar; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FVcmp0mYP7sAfoHGq9eX5nykEImR1Bfv+Ucrh9CHjAPvHxv4ah5RSOOEJMvj8qQH5NY+YmbI4gNwXABcoFgNf/DLNzXLyd+a5ByR/+nfZhTUCA6lBRRcGMtesNtZSOqUQe+jV/fOA1knfxvhQa3pysdBBzdFOvof9+4uPsQjYW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixMTgMBN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUBIFdar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338C5C4CEE0;
-	Fri,  7 Mar 2025 01:14:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixMTgMBN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD6CC4CEE0;
+	Fri,  7 Mar 2025 01:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741310091;
-	bh=nPxi1R9wqYshB4RGiTst8wDkKwvkQuArDF4nSaRBlDs=;
+	s=k20201202; t=1741310543;
+	bh=qoWrscZOahCo4c1kw/Xs9+mG1u4iBzWCpyeXDPmje18=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CUBIFdar1gT515+tHm6gO96vw+nqaC6RkPVMIA+BsRvDwqu5CnK0oZfhGQRFen92F
-	 eOUoDGJuYo7CZ34AatHnJR4uEy10PfyOOWiRpX5sCYKkn5/cRvc4moHASFKZ2fATsN
-	 2HZpL+c3/5mxhuZZXftf0ksK7gsx+Z2Ewxw6jMvkjHW4ObqSsJ9BQKwLnAxvKO8EZN
-	 KP32Jt7QF5g5aAC7NKb1O+xDPKVWw/l5WDEUGni+nrjYnDzH+4Vwkpkr2RpC9B/KXC
-	 9n+jKqEg0wE5KAV2a8f4MPIMn2zxI6s02aMYTVGe7EckwbbLXXm/3ahE3RXMlDL1dt
-	 SE60x/Ygw1kIw==
-Date: Thu, 6 Mar 2025 17:14:48 -0800
+	b=ixMTgMBN5bEz5ywSEjw16lOymw3RAJaEk2QN1yCrCQ0/VC/jp02rZwjim3bweOKU1
+	 inl9oBWKtjr0LIOvJJ6bs6vrkJexp+13IoBrLc+gxuGzZXYLMjpSjHO0WKu0udD6gi
+	 YOPtf2AUGSLOC2QVKO/Gx59xuWDmBDnu5kq8yeGzjOH790tpdJE7RNCk/maGNdbumO
+	 uOhSjdhOaiJipTJjCHQVW5CxwryBHVpxn6hXQOLyRtM72BW6Yin+U2n2XYDey1hGok
+	 GTVwxD73YcSoxwO7jfitu7qi7esTTxO+LgD8RsUgFAt3X6RldmxuxrnNqPB23LwmKf
+	 fgi8nNNzcIFRw==
+Date: Thu, 6 Mar 2025 17:22:20 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -53,10 +53,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org,
 	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
 	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 02/11] perf dso: kernel-doc for enum dso_binary_type
-Message-ID: <Z8pIiM2Z_jtNNUhN@google.com>
+Subject: Re: [PATCH v4 06/11] perf dso: Add support for reading the e_machine
+ type for a dso
+Message-ID: <Z8pKTE7tOqdqNUdA@google.com>
 References: <20250304050305.901167-1-irogers@google.com>
- <20250304050305.901167-3-irogers@google.com>
+ <20250304050305.901167-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,121 +66,113 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250304050305.901167-3-irogers@google.com>
+In-Reply-To: <20250304050305.901167-7-irogers@google.com>
 
-On Mon, Mar 03, 2025 at 09:02:56PM -0800, Ian Rogers wrote:
-> There are many and non-obvious meanings to the dso_binary_type enum
-> values. Add kernel-doc to speed interpretting their meanings.
+On Mon, Mar 03, 2025 at 09:03:00PM -0800, Ian Rogers wrote:
+> For ELF file dsos read the e_machine from the ELF header. For kernel
+> types assume the e_machine matches the perf tool. In other cases
+> return EM_NONE.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/dso.h | 53 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+>  tools/perf/util/dso.c | 54 +++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dso.h |  1 +
+>  2 files changed, 55 insertions(+)
 > 
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index dfd763a0bd9d..f3ca2a5e7670 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -20,30 +20,83 @@ struct perf_env;
->  #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
->  #define DSO__NAME_KCORE		"[kernel.kcore]"
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 5c6e85fdae0d..7f2f1af4f73b 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1170,6 +1170,60 @@ ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
+>  	return data_read_write_offset(dso, machine, offset, data, size, true);
+>  }
 >  
-> +/**
-> + * enum dso_binary_type - The kind of DSO generally associated with a memory
-> + *                        region (struct map).
-> + */
+> +uint16_t dso__e_machine(struct dso *dso, struct machine *machine)
+> +{
+> +	uint16_t e_machine = EM_NONE;
+> +	int fd;
+> +
+> +	switch (dso__binary_type(dso)) {
+> +	case DSO_BINARY_TYPE__KALLSYMS:
+> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+> +	case DSO_BINARY_TYPE__VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__KCORE:
+> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+> +	case DSO_BINARY_TYPE__OOL:
+> +	case DSO_BINARY_TYPE__JAVA_JIT:
 
-Thanks for adding these comments!
+I think some of them can be possible in recorded data.  But let's go
+simple with EM_HOST as we haven't supported cross-arch trace.
 
 
->  enum dso_binary_type {
-> +	/** @DSO_BINARY_TYPE__KALLSYMS: Symbols from /proc/kallsyms file. */
->  	DSO_BINARY_TYPE__KALLSYMS = 0,
-> +	/** @DSO_BINARY_TYPE__GUEST_KALLSYMS: Guest /proc/kallsyms file. */
->  	DSO_BINARY_TYPE__GUEST_KALLSYMS,
-> +	/** @DSO_BINARY_TYPE__VMLINUX: Path to guest kernel /boot/vmlinux file. */
->  	DSO_BINARY_TYPE__VMLINUX,
+> +		return EM_HOST;
+> +	case DSO_BINARY_TYPE__DEBUGLINK:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+> +		break;
+> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> +	default:
+> +		return EM_NONE;
+> +	}
+> +
+> +	pthread_mutex_lock(&dso__data_open_lock);
 
-It's not for guest.  Also I think the vmlinux file can come from
-different places.
+Hmm.. I'm afraid it'd slow down perf trace a bit more.  It sees
+occasional LOST events.  But it may be ok as it's cached in thread later.
 
 
-> +	/** @DSO_BINARY_TYPE__GUEST_VMLINUX: Path to kernel /boot/vmlinux file. */
->  	DSO_BINARY_TYPE__GUEST_VMLINUX,
+> +
+> +	/*
+> +	 * dso__data(dso)->fd might be closed if other thread opened another
+> +	 * file (dso) due to open file limit (RLIMIT_NOFILE).
+> +	 */
+> +	try_to_open_dso(dso, machine);
+> +	fd = dso__data(dso)->fd;
+> +	if (fd >= 0) {
+> +		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		if (pread(fd, &e_machine, sizeof(e_machine), 18) != sizeof(e_machine))
 
-This is for guest. :)
+I think it needs to check the endianess and swap the data.
 
 Thanks,
 Namhyung
 
 
-> +	/** @DSO_BINARY_TYPE__JAVA_JIT: Symbols from /tmp/perf.map file. */
->  	DSO_BINARY_TYPE__JAVA_JIT,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__DEBUGLINK: Debug file readable from the file path
-> +	 * in the .gnu_debuglink ELF section of the dso.
-> +	 */
->  	DSO_BINARY_TYPE__DEBUGLINK,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE: File named after buildid located in
-> +	 * the buildid cache with an elf filename.
-> +	 */
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO: File named after buildid
-> +	 * located in the buildid cache with a debug filename.
-> +	 */
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__FEDORA_DEBUGINFO: Debug file in /usr/lib/debug
-> +	 * with .debug suffix.
-> +	 */
->  	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__UBUNTU_DEBUGINFO: Debug file in /usr/lib/debug. */
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO: dso__long_name debuginfo
-> +	 * file in /usr/lib/debug/lib rather than the expected
-> +	 * /usr/lib/debug/usr/lib.
-> +	 */
->  	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__BUILDID_DEBUGINFO: File named after buildid located
-> +	 * in /usr/lib/debug/.build-id/.
-> +	 */
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_DSO: A regular executable/shared-object file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-> +	/** @DSO_BINARY_TYPE__GUEST_KMODULE: Guest kernel module .ko file. */
->  	DSO_BINARY_TYPE__GUEST_KMODULE,
-> +	/** @DSO_BINARY_TYPE__GUEST_KMODULE_COMP: Guest kernel module .ko.gz file. */
->  	DSO_BINARY_TYPE__GUEST_KMODULE_COMP,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE: Kernel module .ko file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
-> +	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP: Kernel module .ko.gz file. */
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
-> +	/** @DSO_BINARY_TYPE__KCORE: /proc/kcore file. */
->  	DSO_BINARY_TYPE__KCORE,
-> +	/** @DSO_BINARY_TYPE__GUEST_KCORE: Guest /proc/kcore file. */
->  	DSO_BINARY_TYPE__GUEST_KCORE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO: Openembedded/Yocto -dbg
-> +	 * package debug info.
-> +	 */
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-> +	/** @DSO_BINARY_TYPE__BPF_PROG_INFO: jitted BPF code. */
->  	DSO_BINARY_TYPE__BPF_PROG_INFO,
-> +	/** @DSO_BINARY_TYPE__BPF_IMAGE: jitted BPF trampoline or dispatcher code. */
->  	DSO_BINARY_TYPE__BPF_IMAGE,
-> +	/**
-> +	 * @DSO_BINARY_TYPE__OOL: out of line code such as kprobe-replaced
-> +	 * instructions or optimized kprobes or ftrace trampolines.
-> +	 */
->  	DSO_BINARY_TYPE__OOL,
-> +	/** @DSO_BINARY_TYPE__NOT_FOUND: Unknown DSO kind. */
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
+> +			e_machine = EM_NONE;
+> +	}
+> +	pthread_mutex_unlock(&dso__data_open_lock);
+> +	return e_machine;
+> +}
+> +
+>  /**
+>   * dso__data_read_addr - Read data from dso address
+>   * @dso: dso object
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index f3ca2a5e7670..ba9b83db061a 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -818,6 +818,7 @@ int dso__data_file_size(struct dso *dso, struct machine *machine);
+>  off_t dso__data_size(struct dso *dso, struct machine *machine);
+>  ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
+>  			      u64 offset, u8 *data, ssize_t size);
+> +uint16_t dso__e_machine(struct dso *dso, struct machine *machine);
+>  ssize_t dso__data_read_addr(struct dso *dso, struct map *map,
+>  			    struct machine *machine, u64 addr,
+>  			    u8 *data, ssize_t size);
 > -- 
 > 2.48.1.711.g2feabab25a-goog
 > 
