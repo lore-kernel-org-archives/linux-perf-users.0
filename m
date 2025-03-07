@@ -1,164 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4922538DEC;
-	Fri,  7 Mar 2025 05:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E11C185924
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Mar 2025 05:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741324752; cv=none; b=LA2XWY2gIuOM4adAzloinKT2iz/kqSUETmO2hVDUf5421DwiQKXFATs83vhHoIIHKU4Pi7kl4riLT1LT93obwLT4IOzGBAFXer0xvqvX/NWIqa8aDRsyNN/Yx9voZki2tUGEWDSWdcJnmLtUBUyLK9Fq2z17auOkS0TZBmBa/5A=
+	t=1741325111; cv=none; b=K13DxWqUZhHOMZNnm0ZGWXZYP1UzM2jPVgpoFRTivLyTyQMPPq3nHxOG/tJZT5gB/pDOeHYNWHiAysV52qESc66pL/Wnt/cLzwAC4t9xQ+KkLqICP5C0fVAkEiLg2jtJnVoYyi4go52QsYgPszlHyGXb2xNhuARJTZ++pJ4Bg1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741324752; c=relaxed/simple;
-	bh=oTV3msnFDyQULua9BT07OYqshaGZ2Ju8fMOiNnd0ekM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AedLSd3eT+bpdA+HvGhEb3EgwBuny1ocpMO1zHWqz7Se23ndKEp1xrgHZXyADZhaW8KLxTDs2+Z5PlW6hC+yPMwnsVbCmUIwiq05XmL54RU1iF6wkBrc6dL8Ke9yRojNfM2yDTTQU51K25u33L2fE42zqBc8p6IBqbVV0TasRIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRO6U2ay; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741325111; c=relaxed/simple;
+	bh=bI3OybnSxdkVjgMf7Q+ee/FOm4jiD9TYuTB8jpdlQGU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V5Ildh590QnyVb7rTq9tGq5BWE4nvd5yC9PyXue4eeW+7ptj+l0rvhQzqEQbMABuCO4SCnl7KNKMw2REUc3QC65l1KnpgeIInu/6TIUK2EVpD0/r+tW4OiA7WPlfcBDQPml79tnaL3XonrbSwM4r4auldmcVwrph3V0i2F1Rn0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ALEhraHS; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRO6U2ay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B29CC4CED1;
-	Fri,  7 Mar 2025 05:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741324751;
-	bh=oTV3msnFDyQULua9BT07OYqshaGZ2Ju8fMOiNnd0ekM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GRO6U2ayNV1PvmsoXfH3qlGyJNy3tNNv5QnLxM+w9cQaz58h5bmw8Hdd54in6qYmg
-	 HwAmSS65rhBwIJOKk42dKk+ay+KxeWpzU9DGKHrZJ+Vg9gdjEipTqNXK5GtFM+dirc
-	 QWlokc2/cQDRWZDZc9PBpvq5UPOJa6QAbRLbjozfYvkUrgxWioEo33ESHYIvSTjF6R
-	 sRpyH1l69gamht5yKRWiRPl1iVYrFblAW8kxdLLvcBAxs/xkSZF+h+TCdKki52GuaA
-	 pd2Tas7zMA7heIq2hfD1cu9m83hATtxncdASDmJDjoTpogYj1rAL+vSDpqn8nxJTcd
-	 3yXTa+7ENiO/w==
-Date: Thu, 6 Mar 2025 21:19:09 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
-Message-ID: <Z8qBzTvjQmwldwcD@google.com>
-References: <20250306075147.195435-1-namhyung@kernel.org>
- <20250306075147.195435-2-namhyung@kernel.org>
- <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
- <Z8nWNBKuYc0x-sN8@google.com>
- <Z8pTaVN1uEqjrgRb@google.com>
- <CAP-5=fV1UCF3D9rrNzMbH8CNP-UAAS13TAjm_0-3rZSLD_+PdQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ALEhraHS"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2240aad70f2so106415ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Mar 2025 21:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741325109; x=1741929909; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sWlAu5LA7bOZxdM/Sjg+8r3QT3/ix5LQ+eNaKjKWuzs=;
+        b=ALEhraHSo01EIwIZGcdsHaije/Mdo9/vDEY20i2rGp8OfCYrzHwAcdlQYuS4bfDMpY
+         ShRhrjg7EmsP1TtunRbWS45ULJvGyKeNuN0ADjUNNzfMpYs7XmatA4s2eDCBla3pRY+V
+         sH8Q59YaSSO91ylBj2PVfkQd0IbdgfUdU4f+DuhYpU77atGIYUS0cNZfXTSYXZaUu9qv
+         s63lFrAz227LZPX9UZsLnNccua/p160o9ajZiqtiZg0/LjFS+iGVFsm/iIQd1z6V6oKC
+         KrAU7BPPNlC3S3iwQRBS3ZyA8gJ9eLO9YvcuLANNN20UuEaRlk6Qr23KMB/GPkOv3X6O
+         ADhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741325109; x=1741929909;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sWlAu5LA7bOZxdM/Sjg+8r3QT3/ix5LQ+eNaKjKWuzs=;
+        b=tz+iXJoTc9dZtFgzqdDj685QsNv8mXqOBRffBXpa4wsx0eMUvc6g1ZLkn6XEp4glNV
+         Fr+siyQ9JDjV4G+14URywnSedkeUWsnDLYVLdj91fmVq7+LJPTjrfWj0GkSSBUp7PCfC
+         cXGrT9I7miKVM0HYZ1JvjwYamrN2RxG+Uk9mj3HFdY+xgP1zbyNzCqw1M6xof9uJ5AbD
+         uMm2a1IaGreiFMLLIhOUfwwrkmfUSHm1PoYFUmKHR1o1zcfV4WWsGFDguRHoS2cNnI3f
+         Lf+Iw23PJvGtoxAtDdQ0gi5+jE52yOVRHuGRABq/syuOOy/+IWUy/3zHGZuSjhR1uRfx
+         MbPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJu42Sq/8KO35PeZ0iqZhiG+YuoxCiHv4L7PcXl91DcKw1VpEg6NIU+C2RCspfcPJFDuFSAhh17vEL5Wo/76dg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHT1+Eq9xtAC5CXUw9MExF/psxLFKc/gL5YiSbVXpfq0wA6Pso
+	LAdWuxPrr3kOVrkrfZUGYHCOnlpqdqoy3lSnuyr8hdFxoTA5KZTSiSdv187rOmTJFBdJrk+fiUI
+	m/Mi6uNS3Wa8hOgyo4hKaNT/1jUq+i/A1hrBr
+X-Gm-Gg: ASbGncs0Qg82Y2Trp+s+6VzLXlrUQBlasc521Z+73fBG3ok8yE/p1PpfmQHTYNiRwTI
+	ak7JNdS6RpbJ/INcRRpAkWOuAJLfanuw0v3b4w5uvL/cm2yA/xQ5aE+Lm6B4AOhqZsL71NsOAfv
+	RrPQXY4C1cbpTvMe7hvXPGirlSwbk=
+X-Google-Smtp-Source: AGHT+IFRYVGJBUyqfEgEEPGl0XuJoVigNi9zw8+vpDfrTRYYJhLTf6i1tLXkipTYynSySNJGHrvuHKwIth5hC2cOdhc=
+X-Received: by 2002:a17:902:e810:b0:215:7ced:9d67 with SMTP id
+ d9443c01a7336-224297f2337mr1643855ad.24.1741325109250; Thu, 06 Mar 2025
+ 21:25:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV1UCF3D9rrNzMbH8CNP-UAAS13TAjm_0-3rZSLD_+PdQ@mail.gmail.com>
+References: <Z7Z5kv75BMML2A1q@google.com> <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
+ <Z7yJ0Vpub6JeQyYo@x1> <CAP-5=fXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3QhrTg1mtBw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3QhrTg1mtBw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 6 Mar 2025 21:24:58 -0800
+X-Gm-Features: AQ5f1JpJ-b0lCDiYR38BKsmRp5-QxDImcV_6P1n0_NI2oBbV65AfpBr4ZBGs4EQ
+Message-ID: <CAP-5=fX3U3JsRebOLWNQ-0n+W8aGWSLoDWYNZ9f4T7+sPa4H4g@mail.gmail.com>
+Subject: Re: [RFC] perf tools: About encodings of legacy event names
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 06, 2025 at 08:50:46PM -0800, Ian Rogers wrote:
-> On Thu, Mar 6, 2025 at 6:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Thu, Mar 06, 2025 at 09:07:00AM -0800, Namhyung Kim wrote:
-> > > Hi Ian,
-> > >
-> > > On Thu, Mar 06, 2025 at 08:55:05AM -0800, Ian Rogers wrote:
-> > > > On Wed, Mar 5, 2025 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > >
-> > > > > Ian told me that there are many memory leaks in the hierarchy mode.  I
-> > > > > can easily reproduce it with the follwing command.
-> > > > >
-> > > > >   $ make DEBUG=1 EXTRA_CFLAGS=-fsanitize=leak
-> > > > >
-> > > > >   $ perf record --latency -g -- ./perf test -w thloop
-> > > > >
-> > > > >   $ perf report -H --stdio
-> > > > >   ...
-> > > > >   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
-> > > > >       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
-> > > > >       #1 0x55ed3602346e in map__get util/map.h:189
-> > > > >       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
-> > > > >       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
-> > > > >       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
-> > > > >       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
-> > > > >       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
-> > > > >       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
-> > > > >       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/linux/tools/perf/builtin-report.c:735
-> > > > >       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
-> > > > >       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
-> > > > >       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:351
-> > > > >       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:404
-> > > > >       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:448
-> > > > >       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/perf.c:556
-> > > > >       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-> > > > >   ...
-> > > > >
-> > > > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> > > > >   93
-> > > > >
-> > > > > I found that hist_entry__delete() missed to release child entries in the
-> > > > > hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-> > > > > and call hist_entry__delete() recursively.
-> > > > >
-> > > > > After this change:
-> > > > >
-> > > > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
-> > > > >   0
-> > > > >
-> > > > > Reported-by: Ian Rogers <irogers@google.com>
-> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > ---
-> > > > >  tools/perf/util/hist.c | 9 +++++++++
-> > > > >  1 file changed, 9 insertions(+)
-> > > > >
-> > > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> > > > > index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
-> > > > > --- a/tools/perf/util/hist.c
-> > > > > +++ b/tools/perf/util/hist.c
-> > > > > @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
-> > > > >  {
-> > > > >         struct hist_entry_ops *ops = he->ops;
-> > > > >
-> > > > > +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
-> > > > > +               struct rb_node *node = rb_first(&he->hroot_out.rb_root);
-> > > > > +               struct hist_entry *child = rb_entry(node, struct hist_entry, rb_node);
-> > > > > +
-> > > > > +               rb_erase_init(node, &he->hroot_out.rb_root);
-> > > > > +
-> > > > > +               hist_entry__delete(child);
-> > > > > +       }
-> > > >
-> > > > Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
-> > > > erase on the first entry, an O(log N) operation, means this is a O(N *
-> > > > log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
-> > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/rbtree.h?h=perf-tools-next#n81
-> > > > ```
-> > > >  * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
-> > > >  * given type allowing the backing memory of @pos to be invalidated
-> > > > ```
-> > > > which is O(N). I think this code would be better something like:
-> > > > ```
-> > > > struct hist_entry *pos, *tmp;
-> > > > rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_node)
-> > > >         hist_entry__delete(pos);
-> > > > ```
-> > >
-> > > Thanks for your review!  I was wondering if there's something like this.
-> > > Will update with that.
-> >
-> > I found that the following comments:
-> >
-> >  * Note, however, that it cannot handle other modifications that re-order the
-> >  * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
-> >  * rb_erase() may rebalance the tree, causing us to miss some nodes.
-> >
-> > So I cannot use this here.
-> 
-> I thought the tree is no longer in use after the hist_entry__delete,
-> so you don't need to maintain the child/parent pointers as everything
-> is going to get freed. Here is what I think is a similar use:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_stat.c#n51
+On Mon, Feb 24, 2025 at 9:36=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> The series is trying to make "most people" happy with "no surprise"
 
-Oh, I see.  So it should not call rb_erase().  Will check again.
+So the patch [1] fixes a number of event grouping bugs present on all
+Intel CPUs post Icelake (released April 2021). I think the code isn't
+trivial, and I've tried to simplify everything as much as possible.
+Again it shows the event parsing isn't a static problem and I am
+trying to contribute fixes which this RFC on [2] is holding up.
+
+On Alderlake I see problems:
+```
+$ perf stat -vv -e
+'instructions,cpu_core/instructions/,cpu_atom/instructions/' perf test
+-w noploop
+Using CPUID GenuineIntel-6-B7-1
+...
+------------------------------------------------------------
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ size                             136
+ config                           0xa00000001
+(cpu_atom/PERF_COUNT_HW_INSTRUCTIONS/)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 1157109  cpu -1  group_fd -1  flags 0x8 =3D 5
+------------------------------------------------------------
+perf_event_attr:
+ type                             0 (PERF_TYPE_HARDWARE)
+ size                             136
+ config                           0x400000001
+(cpu_core/PERF_COUNT_HW_INSTRUCTIONS/)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 1157109  cpu -1  group_fd -1  flags 0x8 =3D 6
+------------------------------------------------------------
+perf_event_attr:
+ type                             4 (cpu_core)
+ size                             136
+ config                           0xc0 (instructions)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+------------------------------------------------------------
+sys_perf_event_open: pid 1157109  cpu -1  group_fd -1  flags 0x8 =3D 7
+------------------------------------------------------------
+perf_event_attr:
+ type                             10 (cpu_atom)
+ size                             136
+ config                           0xc0 (instructions)
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+------------------------------------------------------------
+...
+Performance counter stats for 'perf test -w noploop':
+
+   13,323,070,728      cpu_atom/instructions/
+                        (1.87%)
+   26,695,170,453      cpu_core/instructions/
+                        (98.13%)
+   26,695,170,453      cpu_core/instructions/
+                        (98.13%)
+   13,323,070,728      cpu_atom/instructions/
+                        (1.87%)
+
+      1.007358136 seconds time elapsed
+
+      1.003129000 seconds user
+      0.004012000 seconds sys
+```
+That is the instructions event, literally the 2nd legacy event after
+cycles, getting 2 different encodings but the stat output showing the
+events as if they are the same. The multiplexing numbers obviously
+look off.
+
+There is still work to do. Specifying a topdown event twice in an
+event list currently breaks (e.g. `perf stat -e "slots,slots" ..`). I
+see situations in perf-tools-next where a wildcard tries to open a
+legacy event on even uncore PMUs.
+
+Given [2] under pins so much I think merging it has to be a priority.
+I suspect it needs rebasing and checking in the light of the changes
+in [1]. Given it has extensive reviewing and testing by vendors, it
+helps RISC-V and ARM Apple-M, I hope that after 2 weeks of this thread
+that hasn't stimulated additional comment (beyond the original
+comments on the series) things can move forward and fixing things can
+continue.
 
 Thanks,
-Namhyung
+Ian
 
+[1] https://lore.kernel.org/lkml/20250307023906.1135613-3-irogers@google.co=
+m/
+[2] https://lore.kernel.org/linux-perf-users/20250109222109.567031-5-iroger=
+s@google.com/#r
