@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92CA14A8B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344F61EB5F1;
 	Sat,  8 Mar 2025 18:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741458256; cv=none; b=gQZh5GeKrt7muWCnQ7LGXQ6FYOcbO6MeBqlQnKPIyQL0/DcZEJIjcv/vXkuOBkMrFn9SLOZiwQ5pJn3M22hvEQOpYcLW6fpFR1Kui2GZDTJmRIl+ROCjDw8BqLYM/UUC90KZ6yZHSuUZPb06tq12oR+z8vxX1YeZ+7OWNC4wtsk=
+	t=1741458259; cv=none; b=jBiXF730OTP200pK9COMfZCU/FZGebnVcGglIPMbj327E9CiGJm2bdLLpaIwMlGQCD1SonA7KUHviEjoyifzx2r9r77LEhXLSOpu6LLP0z69l0ev7/ZdTKSqHVvFRzKGaHgnXIpZVk6a2IulBC9VXJVlPZbbmKgFdwGTAAQl2tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741458256; c=relaxed/simple;
-	bh=HmE/hRyVKN2DG0Sf/V/9Vwm/F9OWdq8i2cOoz8+anVg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ctcddhwFPjmyzT0DXC2ChX9eFfE7gZNxC9mArh5NY8cJeuBxmr8BuOaVQIWqPW4sZqhQdfTnlWJ3LqqbXjyeNH7M973qFizpWRsZ6PJpwxc5PjOx44F+vU4rSjbVdN09nIE1ADXa8FlCZjRVPYVGmA75JXAEdqLA/63KLuX2EqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUt4Q/V9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741458259; c=relaxed/simple;
+	bh=YeVMnWvPDD28iR+tdkp7yKIOlpYf8r1lwmNLuUyj9pU=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pfQHiK/k1rSddPoqihXPa3B6naUiePiT7kTuJdzDi2OQysNRmef47jpc8keMT+qavkMHjGIXkq3wL5PAxfVV96/Jtf10eY2+GxeCtA4EGvC77wcxjz2ghH76p4wQS5OnsbT+axOP6rPpiCrWD1lvfdP2wDxDkERvQABYrY8aYTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+TdYrq5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUt4Q/V9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC6DC4CEE0;
-	Sat,  8 Mar 2025 18:24:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+TdYrq5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C96C4CEE7;
+	Sat,  8 Mar 2025 18:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741458256;
-	bh=HmE/hRyVKN2DG0Sf/V/9Vwm/F9OWdq8i2cOoz8+anVg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=CUt4Q/V920Jvn4UNmZynM1FCFmokjCQ2OZULVGzfe54yOdqMK8vG/Qdo5pshaVPme
-	 cxbG05obIKWKBfYf9wxXZreknJJUVRWzWYyJG62a5zG38cA4BlBno8RzWybOTjNElp
-	 Q1eD9rDYohBfPd+gWmS+CxMf30KV2plLW6pSC6GKfApPq8IZmkrpDCjb8x+CgwkbxR
-	 CSvyEbw1pRgUjK3ceE+tIQet9XsWebRUzBs+Ue6dLLaGhw1M/kAdzfe9ghrvefMFeo
-	 cExZZKr+OmVkBAy3Mg/1Y4K+HMkJl2CZ0d91qvDirDRJ8u0aRQhkJQHLar0yLet3H6
-	 SJXy+18b+QjWg==
+	bh=YeVMnWvPDD28iR+tdkp7yKIOlpYf8r1lwmNLuUyj9pU=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=d+TdYrq56Y3TT7bKaJwcqC62fFnbaNZc8AgZk/Pv9Z4QFh8jAS2LNgbzaJviH0EJ+
+	 MIB0WB/zXnvr/s/1VT2qucdWnws2UMwrHds7PVUKGhgGzO+CW/iocxhL8wsrv73Ut5
+	 fhlNMsTH6TIpNn3X2TIzrBumwStNgXZR6A//nOWdqy23k4vVNK8+H7aeo06gro8qDA
+	 jlM/119q8SPIWUDDYnzMe/zv4guk5L8VIIb2FeFrvMWtEu5D5OqJqyNU01FdJCX1lR
+	 4cVARj8z6ReRPqHCCiLcL0S8w3vqEl1rznLMcd88GkULAFns5Y0vloZdFB/qNwWEu5
+	 KkwtTbyrgWDtw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20250307061250.320849-1-namhyung@kernel.org>
-References: <20250307061250.320849-1-namhyung@kernel.org>
-Subject: Re: [PATCH v2 1/2] perf report: Use map_symbol__copy() when
- copying callchians
-Message-Id: <174145825574.807676.8614250136270461800.b4-ty@kernel.org>
-Date: Sat, 08 Mar 2025 10:24:15 -0800
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Ian Rogers <irogers@google.com>
+In-Reply-To: <20250226230109.314580-1-irogers@google.com>
+References: <20250226230109.314580-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf tests: Fix data symbol test with LTO builds
+Message-Id: <174145825623.807676.12586050400195682696.b4-ty@kernel.org>
+Date: Sat, 08 Mar 2025 10:24:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,12 +50,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 06 Mar 2025 22:12:49 -0800, Namhyung Kim wrote:
-> It seems there are places to miss updating refcount of maps.
-> Let's use map_symbol__copy() helper to properly copy them with
-> refcounts updated.
+On Wed, 26 Feb 2025 15:01:09 -0800, Ian Rogers wrote:
+> With LTO builds, although regular builds could also see this as
+> all the code is in one file, the datasym workload can realize the
+> buf1.reserved data is never accessed. The compiler moves the
+> variable to bss and only keeps the data1 and data2 parts as
+> separate variables. This causes the symbol check to fail in the
+> test. Make the variable volatile to disable the more aggressive
+> optimization. Rename the variable to make which buf1 in perf is
+> being referred to.
 > 
-> 
+> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
