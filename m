@@ -1,103 +1,152 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2B81C5D78;
-	Sun,  9 Mar 2025 17:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388142E822
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Mar 2025 21:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741541589; cv=none; b=ERhTnpd/oK2hKrGDCuIUA3waSNlCgEsYe1fQ1AjcBEs4vzRWkTVXtU+mSQbPsJewGvalyhVnyMjPBk23qdDgzS1GS9l/Jthlwyhm1lLemJHuNOjfjYxooiE3paB7SwPxJEGt9rGeQ2ElZn86Qk3b39YbuzhS1YiF1YLtCJd00Ks=
+	t=1741555200; cv=none; b=JIv93Us9xkxu3evhsFn8oMFhmfh5HbSWmH5iS4WRLAoNSfo6P2nctuEWCyqu4JSfpUcMp4E5r2gNzNxQcssgxQA+OzVWWz829LnSxns5h20/goYi4md5yPHd67689upFokdOrCNRPYGukrBxVcL89kZq5P1/TutH9/rswTfOswc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741541589; c=relaxed/simple;
-	bh=DBdtiV38JvrK5apez6Z4gd9rOPGIqtIoKuhPJl81drU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmqjQ1BYxUEGsTOklJIhyBK7X9iPDt1ZEZrHbcwf3AG3MnM+eEMRoGIvFfWCMijaXdHFjcTlueO3PGm9LYpfKXBzfYrbAa49R2DaKa2/K9dX9wTWk7ZHgV0/8f6BGsyzIa3C40Iq1JvbM215cqeil/1aK15GQ8lhTYbtOXNUflA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QvmkxY6h; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741555200; c=relaxed/simple;
+	bh=dtR5CVcOAvr3fjS6ELh01V1WmVDywwgTqyYVOdVtHP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XMhxzeMAAtZ6yp0Iwzt8f0tm9TB/ybKS8UnY0NW0AEDv3zqGEsnC0pIWniEA+HzQyfWT67he1T0rHRGX0+7MrIdITD58OVPgXlcBRBLm8QGbKWI5kbmfGJlTcPpttcfsfkXSkbpycHjATPZAnPAw+pJUdbU+YhehELI0yt8eEl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BIiS1rp6; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QvmkxY6h"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4EC1A40E015D;
-	Sun,  9 Mar 2025 17:33:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WO0JmeVPD-1N; Sun,  9 Mar 2025 17:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741541580; bh=JE9z+8KfG9ic8fY+M0OmWcViQrJ70UNbKwvs4lEwbEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QvmkxY6hDXFKYcuxskX/12KIrWNIR+YqqxWLI577Z55egcc1KJ+cGlQcMcHIWYApU
-	 xhdAHZr1W18gwvjQlQpFSIhIftw/0/ZX4Uhfx0ySPR3J4vnzNCI0Iwbw1c/ByTeItT
-	 tIJsc6VSEhk4V+AE5lfDM2IWVd0dRXowF2z+lYpHyTCp7JKVs4LpzEUyZq47BxXGzY
-	 yjSB2VoHp1ObZZLL+Q3IWGuqNd/z1K6LfVXVlGCFmikcL6C2mwHyfpOByOl7H/Skc+
-	 GI761HxrbR04DgX9XNGOkgoPwbvL0aCFZrK/veUrDlTgv8G/REWZdXt74RS6IcKGgs
-	 84Zqn6WoTc2tClCZr88MLHV1xHASSVb+lLuWltPKO3iIex7fATNww+I8kPx3NTkKTM
-	 k4z29ewk8snCyFeVr6j5sJdJAcVnllr2c4zOU1PwEIHcdJA/qai6OOeyA5qwdJB6ib
-	 6PcxfDNx64FtOzjub4nAIKMdhxLthJXSJrkXsnQLTeZAk3Dam/71haGiDVNfD+1Apv
-	 pS5AwANTz5yMrcYh6tc8bO8tZ1jJKI7yXWZalkrmg+J8ImIMAZOMDmFcRFjQtKyrkW
-	 C8Uhc3EGQ/NGaoP8iQHPehIr27evpjeG3QDLHyrMwleZCLz2tWG68DFroCgTSKaOKA
-	 yNvBU/vFybgYyWjNDVUzdx9c=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 89D1240E0214;
-	Sun,  9 Mar 2025 17:32:40 +0000 (UTC)
-Date: Sun, 9 Mar 2025 18:32:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v7 2/4] x86/cpu: Add cpu_type to struct x86_cpu_id
-Message-ID: <20250309173239.GCZ83Qt2uxtPvMNxVL@fat_crate.local>
-References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
- <20250306-add-cpu-type-v7-2-f903fb022fd4@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BIiS1rp6"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240aad70f2so156125ad.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Mar 2025 14:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741555198; x=1742159998; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dtR5CVcOAvr3fjS6ELh01V1WmVDywwgTqyYVOdVtHP0=;
+        b=BIiS1rp65jwn4z3PaOWQ6CPbdV/nGuWYlSoGzi3De6kNtaGVf9x1NbBt1qX1AQVaVf
+         CigpweDmkl29ssxvQLtnen+EpOdpK8vXh9Ids50NfMAgKOxMJDUUnQ41kd3MIhCvqHoM
+         8jhXZS7KIasbW06UCUDExW2m3fVfg8LWKz9BJ7cGzz9o4eMy6HWUY2yZ3Xp1hCwB43h6
+         xGjAcm08MCd7MlaRn6l67V2ZtSZgTiiA2fuVErixoiZ30w/FnzVG/drg+NVV9uUiO1D/
+         d+F2TcTu7kHNkpvti2JAgoe87Q2G3B+PBtqazO5eCcrkh3FLeau1a/L3cfzFPSftVCWv
+         1mog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741555198; x=1742159998;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dtR5CVcOAvr3fjS6ELh01V1WmVDywwgTqyYVOdVtHP0=;
+        b=A5vTEiwa4+m8A6szD6FbT8Lhkzx4dffykA9bqkYPOHHH9+I9AtrklPdgFRSDiLNKg/
+         BGUdv/3sqVNAoY9FalcM3u3dRCTt3giXE+kmmwA1RixsrIOvibTB0EuVBP2klyanpL6u
+         iRuoTU0BTvICOpTfNOThIQGO3L4faoiX4HrZSa6A+AgmXTkLbZNEEaBtNXnshbdQj2rz
+         OX7x028PKd3Wch3sC0xL83EporWn03Mc8PYhcBjrtpR/DU0HGQnJN4EjweDKB6VJKgYa
+         KssOlhLm88Bg/UrDZ79dFryzLR7rJQd7AtMxrlUOMDwmDzPIepizb5VGRptY6gn6Q10C
+         qJiA==
+X-Gm-Message-State: AOJu0YwtrSxor1jaJaqUhDxNaPw6jbwSW3oTM5AokIlSWFXfutSBoE4R
+	M7hOzeXTJRXaFgwGCXubzoC70CMtPoQ7fc8PT9yOeLPl7MERZtCZ3trCWHSlE6OmY83KWbvC69B
+	swMgSwmTTW3LzJKBO+e/lcXQV8Sy5EKXGxZb4
+X-Gm-Gg: ASbGncuLjivHilaZpDXnMrG5RpGurSvrKps7gbwVcc6eSXqjDoUhj3abocAec1sze19
+	F8SgwsCcydDaIAkKO2OPpuX2wkiGYvfQG0r9yoOoukr/8v2bo2aBm3uGvQSzFnnIhoImjIFFKw/
+	Dc0rlWToONMJThLHe4hM+ZCpRW/VW1UzcyP3k5LQ==
+X-Google-Smtp-Source: AGHT+IEJhR3+rAaQ++E8V7FlJFmxvewAFVWUxbni6Q/weWuILkW9h8lVbhaRFIAoOBCVNK4tn41KNeajHrpHSiTrwaw=
+X-Received: by 2002:a17:903:1b6c:b0:216:4d90:47af with SMTP id
+ d9443c01a7336-22547831402mr2023965ad.29.1741555198167; Sun, 09 Mar 2025
+ 14:19:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250306-add-cpu-type-v7-2-f903fb022fd4@linux.intel.com>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
+ <ZV1AnNB2CSbAUFVg@archie.me> <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
+ <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
+In-Reply-To: <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 9 Mar 2025 14:19:46 -0700
+X-Gm-Features: AQ5f1Jr0j4M0q4yr27RXXddbvVfIfIUCYvtAcp0Yo5MNNrZjrteczA0JQZhgbJs
+Message-ID: <CAP-5=fUUn_VFKLjUV=VDby09oHRAbvUkWwheqO8Yq=7v56i12g@mail.gmail.com>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
+To: Linux regressions mailing list <regressions@lists.linux.dev>, "to: Mark Rutland" <mark.rutland@arm.com>
+Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Clark <james.clark@arm.com>, 
+	"cc: Marc Zyngier" <maz@kernel.org>, Hector Martin <marcan@marcan.st>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Asahi Linux <asahi@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 06, 2025 at 06:18:20PM -0800, Pawan Gupta wrote:
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index d67614f7b7f1..18e996acb49a 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -692,6 +692,7 @@ struct x86_cpu_id {
->  	__u16 feature;	/* bit index */
->  	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
->  	__u16 flags;
-> +	__u8  cpu_type;
+On Thu, Aug 1, 2024 at 12:05=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Wed, Dec 6, 2023 at 4:09=E2=80=AFAM Linux regression tracking #update
+> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > [TLDR: This mail in primarily relevant for Linux kernel regression
+> > tracking. See link in footer if these mails annoy you.]
+> >
+> > On 22.11.23 00:43, Bagas Sanjaya wrote:
+> > > On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
+> > >> Perf broke on all Apple ARM64 systems (tested almost everything), an=
+d
+> > >> according to maz also on Juno (so, probably all big.LITTLE) since v6=
+.5.
+> >
+> > #regzbot fix: perf parse-events: Make legacy events lower priority than
+> > sysfs/JSON
+> > #regzbot ignore-activity
+>
+> Note, this is still broken. The patch changed the priority in the case
+> that you do something like:
+>
+> $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
+>
+> but if you do:
+>
+> $ perf stat -e 'cycles' benchmark
+>
+> then the broken behavior will happen as legacy events have priority
+> over sysfs/json events in that case. To fix this you need to revert:
+> 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
+> events over legacy"
 
-The struct is called "x86_cpu_id" and all its members describe a CPU. There's
-no need to have more "cpu_" redundancy in the member names - just call that
-"type".  It is clear that it is about a CPU's type.
+This still hasn't been fixed and I'm at the point of saying I no
+longer care except I want consistency. Let's revert the prioritization
+of sysfs/json events for PMUs. I don't want to carry around patches
+like:
+https://lore.kernel.org/r/20240926144851.245903-2-james.clark@linaro.org
+If this re-opens this bug then I'm fine with that, and I'm happy to
+point to James and Arnaldo's comments [1] saying that somehow legacy
+events are better, because drill down or something (what a bit pattern
+has to do with that, no idea, we already default on Intel to
+non-legacy events and drill down just dandily for topdown). Whatever,
+I'm fed up with dealing with mine and others' comments being taken out
+of context. I'm fed up with the ambiguity of two encoding systems, one
+with and one without PMUs specified. I'm fed up with working on PMU
+and event encoding, ordering, matching, metrics, etc. where it is
+unclear what the behavior should be. I'm fed up with ARM choosing bad
+uncore event names, refusing to correct them and creating a massive
+mess they barely help clean up other than by largely reposting my
+patches. I'm fed up that all of this was done for ARM and then they
+don't seem to care about its resolution or testing the original
+regression. Yes, this sucks as user land won't be able to be a source
+for event configuration fixes. Yes, this sucks as such functionality
+would slim down PMU drivers and was a behavior requested by RISC-V
+face-to-face with a maintainer. I don't see why I should have to fight
+for this other than I unexpectedly broke things in the first place
+(this regression report) and I was trying to help RISC-V.
 
-The macro names having "CPU" - X86_CPU_TYPE_ANY - are fine I guess.
+To be specific, I don't want the event 'instructions' be encoded as
+type 'hardware' and config 'instructions', be reported as
+'cpu_core/instructions/' but then that event to be encoded as type 4
+(RAW) and config 0xc0.
 
-Thx.
+The fact with this cpu-cycles will only wild card on core PMUs, but
+cpu_cycles will wildcard on all of them. Again, why do I have to try
+to fight for sanity, let's just back everything this regression report
+created out. We check legacy events and do their behaviors, otherwise
+we fall back on sysfs/json.
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
+Ian
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[1] https://lore.kernel.org/all/Z8sMcta0zTWeOso4@x1/
