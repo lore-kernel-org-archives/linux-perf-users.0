@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC6821E0BF;
-	Mon, 10 Mar 2025 16:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E7F22D4FA;
+	Mon, 10 Mar 2025 16:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622875; cv=none; b=oC2TjdgW1mW2+psEQDujJxwIg5Nt1e6LqkuIUKct1TRaa4fmK4tKyCgXYTSQNR/z5dvQJlbvU1WgG77wuwbMgfLML2Bh+MK6kMq+1QTKi49Udvgy/ZVSdy/stQ6yghEn4/262WPCZR+aTbZ2OXGEY/eqaApDfkBlIAd3YtrfyzI=
+	t=1741623859; cv=none; b=tnGWUpY+EmdXI6W7tYrmmzcA2CbHAnHxBnSV7wFjaaEYOEFeC+HpGMpq37vboG91yJW+wD6H41zT8W8d81XzZ/SHujwatiUqcvRfpF22e6uzMfF3Lz38W8uqmkvnRxgfS/bF2Ms206P8+BoBx0gpmNt8RPQG5FTAntx3R1sb8vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622875; c=relaxed/simple;
-	bh=GfYXbXdVM2junb3FP9MdUtt3UzjUNiOmD6x2DR0SHJc=;
+	s=arc-20240116; t=1741623859; c=relaxed/simple;
+	bh=s+wjRBUMqIcGIqIJM5croAQ+6hfrceKBMzBSBv4TLDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1JGxnYHfNKGpH1H+XF6cYwoxNCOYnTOTVJWD+7g1Tv+8synXXlRmUMzO4HriUuhs6fNnaH1/kEYiV6U9s9bjizt/93jP4awe17I9oPAi7Jhhs3qjKcDSV2tZj+JC8cmOdeThXNSRqYBBPoB3cJfZN0TW1yY8mqBrsCI10hitoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UeHp2oRJ; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/YMFSmhiTQ3H8oC24gcRv2yRChsP6ADZzsR7BvgENptC1C9sO+x2mZMVv0QgpbdiaAoYjcHT0oxEob2ZAWN+g+loV350cvkxfTmpfJ57fuJDXnFuYFAxY9lPaA/m+x3XJcMUynb4YWrDjiNJzZtK3sBAuywOWYhgx1x5fyGJxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlZ+lzak; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UeHp2oRJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlZ+lzak"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741622874; x=1773158874;
+  t=1741623857; x=1773159857;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=GfYXbXdVM2junb3FP9MdUtt3UzjUNiOmD6x2DR0SHJc=;
-  b=UeHp2oRJ0bL0MnRAR6w5U0Nxny5IpZl+S3wIz6rcc01+iEERzutj7bs7
-   0b55VDoPzi9nA0YgurzEerpQts/0uuG3TfFK0noqK90b8Q9Sjq4DRWLCu
-   lsD4A5mc6WZZYE3eB+AhE4NroBgxATYEcRYS3opBl2qMaCA5hYXuQ+xRW
-   Eus4iRDfB3rye4ho7xNJZ7NiFKH9y/AkahDFrIXj3pv5zdXPQl3ZPpXi+
-   4IbwmeHxxgTBNq5cNS9kuZ+7MjUCHNds6UNkfBFxSMBGsx5X1XcH0IZLB
-   QfPTGBgY0yKTPpb+X2HlVparq4ozSBps4Pi7UCyLVjl/gyFbQGBPCS7eC
-   g==;
-X-CSE-ConnectionGUID: kLodOL+pTkGM+lCFDLoobA==
-X-CSE-MsgGUID: HR56QVZLSmijD91DO76+Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="52835384"
+  bh=s+wjRBUMqIcGIqIJM5croAQ+6hfrceKBMzBSBv4TLDE=;
+  b=BlZ+lzakLdl17JdBxOMNsv95JcrUVBHUCEL2gfFCcTEVzTbj6BzvO9Cw
+   m+sKkKcfxkRMxGiWO1jr+S5eSsuj0EOgTrkQs3aqwVuA5eSQp69Tf3/rs
+   DAzGsEJ2mFgTv1peKw1vW4nV6ElAYPyWqeiILiVyhEc548+jkMVUCuWtx
+   gnXl69vSESUx5taqKqqlGVIEpaQsGrNWlSHoARvXSrVF7UpHTk9IloQlk
+   3r2uFQQ5b5Lw0NVa04IeB8Vnkl1hmatKmIhkTueUfrEBxSRWc6tjJA9WU
+   74wwPxE4irthgkvD68JgEJAiRxHSW8jtUtX8K56DCln9TA00PxhrLYwAg
+   Q==;
+X-CSE-ConnectionGUID: Vy6qCJfwSLWLNYmW12R2LA==
+X-CSE-MsgGUID: 2OMSKKpERlCWDaeejLVLuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42508525"
 X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="52835384"
+   d="scan'208";a="42508525"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:07:16 -0700
-X-CSE-ConnectionGUID: 0qDULhEgQ7manLBV/PWGSg==
-X-CSE-MsgGUID: 1g1wHcYZRlepn4CPQeyaXQ==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:24:16 -0700
+X-CSE-ConnectionGUID: zuvTN6jrSJemMHXBIeGbQg==
+X-CSE-MsgGUID: DIZRdAo2RKKHwhexYGDqSA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="120929319"
+   d="scan'208";a="120931977"
 Received: from msridhar-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.183])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:07:16 -0700
-Date: Mon, 10 Mar 2025 09:07:09 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:24:16 -0700
+Date: Mon, 10 Mar 2025 09:24:09 -0700
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 To: Borislav Petkov <bp@alien8.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -61,11 +61,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Perry Yuan <Perry.Yuan@amd.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v7 2/4] x86/cpu: Add cpu_type to struct x86_cpu_id
-Message-ID: <20250310160709.5cxlvwv6flaeu75o@desk>
+Subject: Re: [PATCH v7 3/4] x86/cpu: Update x86_match_cpu() to also use
+ cpu-type
+Message-ID: <20250310162409.5gnesmcz4fdon5al@desk>
 References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
- <20250306-add-cpu-type-v7-2-f903fb022fd4@linux.intel.com>
- <20250309173239.GCZ83Qt2uxtPvMNxVL@fat_crate.local>
+ <20250306-add-cpu-type-v7-3-f903fb022fd4@linux.intel.com>
+ <20250310104844.GDZ87DjFQef8GaREqg@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,22 +75,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250309173239.GCZ83Qt2uxtPvMNxVL@fat_crate.local>
+In-Reply-To: <20250310104844.GDZ87DjFQef8GaREqg@fat_crate.local>
 
-On Sun, Mar 09, 2025 at 06:32:39PM +0100, Borislav Petkov wrote:
-> On Thu, Mar 06, 2025 at 06:18:20PM -0800, Pawan Gupta wrote:
-> > diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> > index d67614f7b7f1..18e996acb49a 100644
-> > --- a/include/linux/mod_devicetable.h
-> > +++ b/include/linux/mod_devicetable.h
-> > @@ -692,6 +692,7 @@ struct x86_cpu_id {
-> >  	__u16 feature;	/* bit index */
-> >  	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
-> >  	__u16 flags;
-> > +	__u8  cpu_type;
+On Mon, Mar 10, 2025 at 11:48:44AM +0100, Borislav Petkov wrote:
+> On Thu, Mar 06, 2025 at 06:18:36PM -0800, Pawan Gupta wrote:
+> > +static bool x86_match_vendor_cpu_type(struct cpuinfo_x86 *c, const struct x86_cpu_id *m)
+> > +{
+> > +	if (m->cpu_type == X86_CPU_TYPE_ANY)
+> > +		return true;
+> > +
+> > +	/* Hybrid CPUs are special, they are assumed to match all cpu-types */
+> > +	if (boot_cpu_has(X86_FEATURE_HYBRID_CPU))
 > 
-> The struct is called "x86_cpu_id" and all its members describe a CPU. There's
-> no need to have more "cpu_" redundancy in the member names - just call that
-> "type".  It is clear that it is about a CPU's type.
+> check_for_deprecated_apis: WARNING: arch/x86/kernel/cpu/match.c:25: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
 
-Makes sense, I will change it to "type".
+Will do. Thanks for the review.
