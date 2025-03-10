@@ -1,63 +1,67 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4696E15B971
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 19:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6DD1DE2B9
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 19:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741636525; cv=none; b=Dkwakg+X+mQ/7e4TJb2lmrsF4xWRN8J+4pBqMO5834PPayUNubLWCPARgzMK/GujdqW7CB/TXqHGucoFdC58Zvs6cOQYbe5soqr40tkXy+G+Tryoadbz+0OlQ5Ejso64u9bulJJAZChR40jnlrjiD2uK4IUX4qz6Z16g3WxeGCo=
+	t=1741636527; cv=none; b=GGDsyHP7VPmT8EYYl+0Zny9n7qUi32bpZXIvtzMW306LUs8iNy/Pb6XzlvZ9jWzSUrDSGYgKcUNiPo127NZKayXa/J2sm35Dcuj9683UzVvCiYuFL+i3+JZIXQHSObab8x5ubYXu4LLF1WlGOBr/nziOg8DZwRSR/9gzNKbsm6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741636525; c=relaxed/simple;
-	bh=2G5+QIi39QvRpz+Uxbs2p5hm+8aY7ikDDaUf8vmT/q8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=BLsK6172/BzgK5JcsMiY4BD/IvvvqHNBJby65SXWZvqLbKtsjXZgvyikn210ZsNPppz74gOXK2WFYooYg28qUu5o729pl5iCj8ZsB8kWiF4OPIEAjfCnr+/Ooe2JUpiFNAG4CH1Rcs34+cSF/nCWEWioaM7nBSCnSGGll09GSp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WmBv7bXO; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1741636527; c=relaxed/simple;
+	bh=PdPgmcBYIWEeNLSGXkHHbQNrOkp0XMuWoBrNvNBx1oE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=O6CSUJwaIFe1WWRISTWG5+zodV90km1enguqPbJw2BtYPHiJGvBGl6NZ5hCj5tt3biOIrt9bQS0lQ6vrFi6W32clvPeCeh8vMZe7vScZi5oTdjp40hzduryTU4XxMh4lzXNEOAN9yffrLCQT6FIoWB+QDZsBky5ja/5mOlYtSZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GTkF/7VO; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmBv7bXO"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-223477ba158so122844755ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 12:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GTkF/7VO"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-223a2770b75so82977915ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 12:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741636523; x=1742241323; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZPtTVgbo1Gc22cvvBNU7TODq9XtOwM1eBGa+Md6htLk=;
-        b=WmBv7bXOJjkaulsuIWb4CFijIu2iCbHdxF9txj3+XCXlmahB6Nonu5+VoxHlgyYpq+
-         jvNjiOA69Wf64f9sAPk2G5feHhp708seBmSwZDsK8+Gz2izQUUeC5ZND5Kyq8FSFFoWU
-         0PCmA0Zj+LMYGavc39kpFUBi49cXBUpZWprL31X3Hou9y+elK29wsK9VYLLp5QStdv+D
-         6dUPimHXmXfoG71l/gUyk7juEvRO1K9R4htOUGZdLTzcb4zgIsL6J+vULf3oJf/ktbYB
-         AQ+XsBeUabqTeNpRz800/rU92ufWhqumi60rjO1MMfMJ/JbDO7rMtz2I6wxrnMKsQVCY
-         //1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741636523; x=1742241323;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1741636525; x=1742241325; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPtTVgbo1Gc22cvvBNU7TODq9XtOwM1eBGa+Md6htLk=;
-        b=Uujjh/QjzqKdcy/SDQSKWcKUTVvueqJAngLTJ/ZPUK4u99ZykRAsZXtNOicFKv5hUB
-         x+9hZS+/q8JUWRolBFdixS4423xwJanF3fYLPTGCuqbcb40Jus6fNwkfaa9BuPlZKOYQ
-         aoBAxVWsqWHTmJ1pt/9DS7dsoD9i313pw3w3lRogY/p9jEg/m1VUzxlcKwrIKKIcQCr7
-         nev0qnEx+ypDHZO0CYc/CrQUdpkws6iYpmHtzXoJEto+kCUVB6leDWa0otjk3ygFYfEP
-         BrB57CHPwLMociUSRv/B8QjGM+6ERXoVlfCf7scs+QGAz7c8vNyvw/Pygg9S9mu6lmSs
-         jVJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgFLCVFYhiI7wa4SNAVXYENYRpMAoir0+izSmNL1viULeaygArpvoHw6FUOXtTZtm65AolBD5JO4RmJ3ScVqlm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLQXwdannJynFVDCDgf4585SkH/I3RYlt9qkOxWVB7oB9b7sYU
-	89c2Pu32fRY6spOTpVgOmbeDTcQwNBP2VrtFeo/8GorxtyR0dznQjV4u2skvw88e53yF7jW0tbW
-	GyT42yA==
-X-Google-Smtp-Source: AGHT+IEJmSQJflyxaKBwX1PYSk5UMMFRR580oxmfwEtt0gz7FirWb1HSugRKiUxFzQFc5A8V/VvGjc2oIPkN
-X-Received: from plbkf4.prod.google.com ([2002:a17:903:5c4:b0:223:3f96:a293])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b63:b0:220:e5be:29c8
- with SMTP id d9443c01a7336-22428bdee3cmr252515855ad.32.1741636523539; Mon, 10
- Mar 2025 12:55:23 -0700 (PDT)
-Date: Mon, 10 Mar 2025 12:55:16 -0700
+        bh=Mtw5A6pnErP63NBf+2oMOxljRBPUk1W+HOiO6no4Q+Y=;
+        b=GTkF/7VOrGQiew+TawzbLnyyCrEYOCyiUjfEQYSkkHgCY+XH2lnlaz0X7gmZrj9dqS
+         nFSKJBVBTuOERhWChbz20kpkNmNncYwWS2T0t5lX2J0XqryqzrXKp8t13bSVmT+tV1Kd
+         bxRxWI7DMaT8npi/EA9Vzy/dI+7vzUXlhXMwo/34VBf4GmMAehr+oDMxPv9b2etQnY5J
+         DzdjEdmHITZBdxG+YeoHuT8ZchmWeqMy7d7UM6keZaF3tCPGeITrYkkA1M8YgS66u293
+         kq7eRAsOSDKtEys0wV9a1pKFZ/IduYYizyOopFk8WGZ854tAJam/4akymZ+kIpaCcsry
+         cRTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741636525; x=1742241325;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mtw5A6pnErP63NBf+2oMOxljRBPUk1W+HOiO6no4Q+Y=;
+        b=nwCYJoac0UFUkvmPqBbDGhJhmLy0coHmGiyNZLeoY08RoiYnA2/1suaqwB2Fq90pHf
+         Y8VrU4MA9lZP8U9r29sU2s/QnvNwD7EMQIeaGAoxCokvLGN0/5PE+1rTuRh4S7tMO2Bv
+         WJrHyYeIEHo/xKFZ1wt4lPfO6jiX1Ad1rmUWh7R41wBIeV+CRsk1pV7qBGBg5IsMCrfX
+         LiPLRDUWlKxJXZaK6RRgXo7ay0wN6p7345J1ZQhI/KJtwPd5z9Q+ouiEXKnejMEuxmjB
+         2NC07DR48UvnCnVIcQ5oorRz7ZOdptXami6OLDoaIGgSmsrAFDtGNpAtAhFIV5yVLkcm
+         8tuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUM6WgT6ZzkW6F80wEtJb+1iG9uh9QYHuvA0ufwEzhZXIt0MMUUHvubIuGmqr7oD819UPnEQ5tUnrCXgjNv2eWQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr9ERlfy49hAZzDAwjWMiUnU/QysnMSx2aPGq78A02QxAytPVs
+	vRkHCi7ZBjWEi5hrbfvuMW1qOUiCPTi4jQPDMkn7gBIhk5ZSlroAIqxokBIBwutYAd/7farAJQn
+	I1BmoAQ==
+X-Google-Smtp-Source: AGHT+IFGWlShb5kIWxI+81Al+aKaRpPgOqN7dElfZLMAJXDNRxxbs9Dr7UEPZnwpTE1mHFFuj6jma5OrHpr5
+X-Received: from pllo19.prod.google.com ([2002:a17:902:7793:b0:223:5a6e:b17])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c6:b0:224:13c0:58e3
+ with SMTP id d9443c01a7336-22428bf1976mr198632485ad.51.1741636525408; Mon, 10
+ Mar 2025 12:55:25 -0700 (PDT)
+Date: Mon, 10 Mar 2025 12:55:17 -0700
+In-Reply-To: <20250310195518.2012571-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250310195518.2012571-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-Message-ID: <20250310195518.2012571-1-irogers@google.com>
-Subject: [PATCH v1 0/2] Consistently prioritize legacy events
+Message-ID: <20250310195518.2012571-2-irogers@google.com>
+Subject: [PATCH v1 1/2] perf parse-events: Make legacy events always have
+ priority over sysfs/json
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,42 +77,166 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Leo Yan <leo.yan@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Legacy events were historically the priority over sysfs/json
-events. This behavior was changed in commit a24d9d9dc096 ("perf
-parse-events: Make legacy events lower priority than sysfs/JSON") to
-fix issues on ARM Apple-M CPUs. Sysfs/json being the priority makes
-most sense, was preferred by RISC-V and gives abilities impossible
-with legacy events. Making this encoding consistent is proving
-impossible with endless bike shedding, people saying they see
-something as a fix then when that fix is provided continuing to
-object, etc. Given that in the RFC [1] legacy events are seen as being
-preferrable let's just follow up on that and make their use
-consistent.
+This reverts the behavior of commit a24d9d9dc096 ("perf parse-events:
+Make legacy events lower priority than sysfs/JSON"). That commit
+states:
 
-If it isn't clear, I think this is the wrong decision and landing [2]
-should be the priority. When I try to have this conversation it just
-gets ignored and I want consistency more than my preferred
-prioritization.
+  As part of that report Mark Rutland <mark.rutland@arm.com> requested
+  that legacy events not be higher in priority when a PMU is specified
+  reversing what has until this change been perf's default behavior.
 
-[1] https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
-[2] https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@google.com/
+with an Acked-by: Mark Rutland <mark.rutland@arm.com> tag. Mark
+expresses this preference here:
+https://lore.kernel.org/lkml/ZVzXjz_0nYbmSGPQ@FVFF77S0Q05N.cambridge.arm.com/
+On an Alderlake this commit caused `cpu_core/instructions/` to be
+encoded as:
 
-Ian Rogers (2):
-  perf parse-events: Make legacy events always have priority over
-    sysfs/json
-  Revert "perf evsel: Add alternate_hw_config and use in evsel__match"
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4 (cpu_core)
+    size                             136
+    config                           0xc0 (instructions)
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
 
- tools/perf/builtin-diff.c       |  6 +--
- tools/perf/tests/parse-events.c | 13 ++----
- tools/perf/util/evsel.c         | 21 ---------
- tools/perf/util/evsel.h         | 19 +++++++-
- tools/perf/util/parse-events.c  | 81 ++++++++++++---------------------
- tools/perf/util/parse-events.h  |  8 +---
- tools/perf/util/parse-events.y  |  2 +-
- tools/perf/util/pmu.c           |  6 +--
- tools/perf/util/pmu.h           |  2 +-
- 9 files changed, 57 insertions(+), 101 deletions(-)
+While `instructions` would be encoded as:
 
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    size                             136
+    config                           0x400000001
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+
+As the event parsing for legacy events uses parse_events_add_numeric,
+rather than the more generic PMU handling case, we end up with the
+same event name being encoded two ways. However, as instructions is
+also a cpu_atom event on Alderlake, or any hybrid system, the PMU
+prefixes are added in the stat output meaning instructions is reported
+as cpu_core/instructions/ and cpu_atom/instructions/ even though those
+events are encoded differently and potentially have different
+behaviors. We shouldn't be having the same event with two different
+encodings and I followed up the commit with changing the
+prioritization of legacy events also when no PMU is specified in
+commit 617824a7f0f7 ("perf parse-events: Prefer sysfs/JSON hardware
+events over legacy").
+
+RISC-V have been asking that legacy events also be a lower priority
+than sysfs/json to avoid driver complexity. They've since had to work
+around this issue meaning it isn't a necessity:
+
+  If the overriding legacy with JSON is available, each future vendor
+  may just provide the json file instead of modifying the driver.
+  However, it will be a matter of convenience and clutter free future
+  rather than a necessity at this point.
+
+https://lists.riscv.org/g/sig-perf-analysis/topic/110906276#msg458
+
+Landing the commit making encoding consistent and having sysfs/json a
+priority has been pushed back against by Namhyung Kim, Arnaldo
+Carvalho de Melo and James Clark. James assert the ARM drivers are now
+fixed and don't need the prioritization. RISC-V's interests have been
+ignored. The fact that legacy events are antiquated, imprecise in
+meaning, brittle, misleading and don't give us a way to fix kernel
+issues in software, have also been ignored:
+https://lore.kernel.org/lkml/Z8sMcta0zTWeOso4@x1/
+
+Given the push back against sysfs/json being a priority, contrary to
+Mark Rutland's insistence this was the sensible way to do things,
+contrary to RISC-V's wishes, and contrary to my own preference that
+legacy events do become legacy, this patch changes the priority back
+to legacy events being the priority consistently - that is
+instructions and cpu_core/instructions/ are both encoded using legacy
+events. It isn't a straight revert as clean-ups/refactorings are kept
+in place.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/parse-events.c | 13 +++----------
+ tools/perf/util/parse-events.c  | 26 +++++++++-----------------
+ 2 files changed, 12 insertions(+), 27 deletions(-)
+
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 5ec2e5607987..78e8ae825bf8 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -162,16 +162,9 @@ static int test__checkevent_numeric(struct evlist *evlist)
+ 
+ static int assert_hw(struct perf_evsel *evsel, enum perf_hw_id id, const char *name)
+ {
+-	struct perf_pmu *pmu;
+-
+-	if (evsel->attr.type == PERF_TYPE_HARDWARE) {
+-		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, id));
+-		return 0;
+-	}
+-	pmu = perf_pmus__find_by_type(evsel->attr.type);
+-
+-	TEST_ASSERT_VAL("unexpected PMU type", pmu);
+-	TEST_ASSERT_VAL("PMU missing event", perf_pmu__have_event(pmu, name));
++	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->attr.type);
++	TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, id));
++	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__hw_names[id], name));
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 35e48fe56dfa..04bb70ba4292 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1023,12 +1023,10 @@ static int config_term_pmu(struct perf_event_attr *attr,
+ 			return -EINVAL;
+ 		}
+ 		/*
+-		 * Rewrite the PMU event to a legacy cache one unless the PMU
+-		 * doesn't support legacy cache events or the event is present
+-		 * within the PMU.
++		 * Rewrite the PMU event to a legacy cache one as legacy events
++		 * take priority over sysfs/json.
+ 		 */
+-		if (perf_pmu__supports_legacy_cache(pmu) &&
+-		    !perf_pmu__have_event(pmu, term->config)) {
++		if (perf_pmu__supports_legacy_cache(pmu)) {
+ 			attr->type = PERF_TYPE_HW_CACHE;
+ 			return parse_events__decode_legacy_cache(term->config, pmu->type,
+ 								 &attr->config);
+@@ -1049,19 +1047,13 @@ static int config_term_pmu(struct perf_event_attr *attr,
+ 			return -EINVAL;
+ 		}
+ 		/*
+-		 * If the PMU has a sysfs or json event prefer it over
+-		 * legacy. ARM requires this.
++		 * Rewrite the PMU event to a legacy cache one as legacy events
++		 * take priority over sysfs/json.
+ 		 */
+-		if (perf_pmu__have_event(pmu, term->config)) {
+-			term->type_term = PARSE_EVENTS__TERM_TYPE_USER;
+-			term->no_value = true;
+-			term->alternate_hw_config = true;
+-		} else {
+-			attr->type = PERF_TYPE_HARDWARE;
+-			attr->config = term->val.num;
+-			if (perf_pmus__supports_extended_type())
+-				attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+-		}
++		attr->type = PERF_TYPE_HARDWARE;
++		attr->config = term->val.num;
++		if (perf_pmus__supports_extended_type())
++			attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+ 		return 0;
+ 	}
+ 	if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER ||
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
