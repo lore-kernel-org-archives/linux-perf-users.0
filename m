@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F5D1DF979;
-	Mon, 10 Mar 2025 20:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BEC1DED4B;
+	Mon, 10 Mar 2025 20:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741639413; cv=none; b=k6eLUbd14MVW2nhC73TjtwbCpi11c94QFlifxi3Tnhi7X2JylHDKww9oTXCzN3nITHlqKHNe+1rXJ8OAQHQDZOmfIPvBU8p06NZ7ab8zEdH0l8CVs6OJKYXeWP1jgg+Ztin8N+3hTXiMvJoZFzSCKLQ8Es3QbRjqn5TTbvl6N4o=
+	t=1741639511; cv=none; b=GrUvwOduZIZhbzV+TAIk4q1Gbhd4BVojpe5DpaGkIKw2P6z4nqLZpAYW5hVgEC3g/E/F+ihvHzOGSFRgPJMLLPoROnk333bH+l3w22riiJbSCY2O84nXGcRB+7pu319GjfgY4q18Wssm+qnWG0T1wjVe29vRY2kfGadnWnJFkhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741639413; c=relaxed/simple;
-	bh=8CPse12cMKqpOcsNkiSbBZYCP75RyjxtQ0+VEneVPcM=;
+	s=arc-20240116; t=1741639511; c=relaxed/simple;
+	bh=/B3WnIg2ObndH8I8HK2V/K97zlTEF7wowyD035iWB7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1qZPbl6hA29IqK97WHyvSdNaDVGz2oTbPtK51sWikGO0qEgKcJjiSqY/9uHSlZBvrPTbkXCur1BiyTDS9rGhotmjmJBAzDEivKWhvN6E1TcqAzlUK0wAQIswlKhEx8ZRfPZe3BZkrdLhbRENdUs2Q9YLIoXhTCPkolWP3DLjUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qt5RrX+3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISMx6AB7fkSFlww7hNIwmd/YKDGuvUFRi8voCpEh6RM+mWvqI67V9KsImjM+5U3NiOBnLefDjVBP6BcnfkDY+a6EPaF8LqKsW47JR6xU38jq1g5Kb9POnGqoXyX2pRKMPExHJTnonNTFFMdYsJn1mvd44Rfn/BkURscx6wI+V+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S50Xd0Vx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qt5RrX+3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DFCC4CEE5;
-	Mon, 10 Mar 2025 20:43:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S50Xd0Vx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414D0C4CEE5;
+	Mon, 10 Mar 2025 20:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741639412;
-	bh=8CPse12cMKqpOcsNkiSbBZYCP75RyjxtQ0+VEneVPcM=;
+	s=k20201202; t=1741639510;
+	bh=/B3WnIg2ObndH8I8HK2V/K97zlTEF7wowyD035iWB7Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qt5RrX+3/6tG2D+eIKmNFgQ7apGzgxqboQaPjxtkRAf4FU2/D/VgbJXJuZpCsNtCq
-	 UCPKEcYS2A9Qi53AaLl37T9K5o/LmUHcbmgpws1RUwxlNVGzC5nwOnHo0t4hymZxCQ
-	 b6ESvWtVBHKZUKthtvcUk3urB7kjF51lNhyFOGTiINNoxVDOattz+hCKtVN4Dk2RI7
-	 px3H58CQvlTYyYYf/Zk4uLK6FVJT2DefcG0j1iDaDTzfgkDOYI9ND89D4WYMDGPnn0
-	 aExajhhHFtD4SF9psau5+KjOEhbUh0iEMVk614E/khr0HJLE267C8Bh8twRbJNNzib
-	 M0BEwIWVPo0Ug==
-Date: Mon, 10 Mar 2025 17:43:29 -0300
+	b=S50Xd0Vxco9XfElxmqnvyU+dj4QkEcblV+Xrm/oYmKG+KE9gji1K9CywJdCtkL+VL
+	 86CuPS0c/+FDjBWcfEB2wd1F+5JuSgjRrqLTIsei7a1XwqI0x43wFfKZ41upVLoceg
+	 R+PRDNBcCWq4Dk4pWUPMkJvKUm8Vrwq8yqWzOGlVifazGASDTflgsnDYJ2aACHRppy
+	 0Bekmr0SO7WHm1R1dKGM1q4KuCOZtk0k5FSQ/pamLrAVuQA7YXl/bADfx1m8BttzJ6
+	 WJwClYS4IdtAPSyrZiRKmGP8vJWvjKt8lb5NdUdct0oUkvQXkyJxrYOSWniJQ0l6gi
+	 pDAg7F1DMGKTA==
+Date: Mon, 10 Mar 2025 17:45:08 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -43,10 +43,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 03/11] perf evsel: tp_format accessing improvements
-Message-ID: <Z89O8eaFpltNBtUG@x1>
+Subject: Re: [PATCH v2 04/11] perf python: Add evlist enable and disable
+ methods
+Message-ID: <Z89PVJMBUyfA9jdu@x1>
 References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-4-irogers@google.com>
+ <20250228222308.626803-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,18 +56,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250228222308.626803-4-irogers@google.com>
+In-Reply-To: <20250228222308.626803-5-irogers@google.com>
 
-On Fri, Feb 28, 2025 at 02:23:00PM -0800, Ian Rogers wrote:
-> Ensure evsel__clone copies the tp_sys and tp_name variables.
-> In evsel__tp_format, if tp_sys isn't set, use the config value to find
-> the tp_format. This succeeds in python code where pyrf__tracepoint has
-> already found the format.
-
-Here those two fields were introduced but evsel__clone() wasn't update
-to clone those:
-
-Fixes: 6c8310e8380d472c ("perf evsel: Allow evsel__newtp without libtraceevent")
+On Fri, Feb 28, 2025 at 02:23:01PM -0800, Ian Rogers wrote:
+> By default the evsels from parse_events will be disabled. Add access
+> to the evlist functions so they can be enabled/disabled.
 
 Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -75,42 +69,52 @@ Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > Reviewed-by: Howard Chu <howardchu95@gmail.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/evsel.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  tools/perf/util/python.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 4a0ef095db92..1974395492d7 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -521,6 +521,16 @@ struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig)
->  	}
->  	evsel->cgrp = cgroup__get(orig->cgrp);
->  #ifdef HAVE_LIBTRACEEVENT
-> +	if (orig->tp_sys) {
-> +		evsel->tp_sys = strdup(orig->tp_sys);
-> +		if (evsel->tp_sys == NULL)
-> +			goto out_err;
-> +	}
-> +	if (orig->tp_name) {
-> +		evsel->tp_name = strdup(orig->tp_name);
-> +		if (evsel->tp_name == NULL)
-> +			goto out_err;
-> +	}
->  	evsel->tp_format = orig->tp_format;
->  #endif
->  	evsel->handler = orig->handler;
-> @@ -644,7 +654,11 @@ struct tep_event *evsel__tp_format(struct evsel *evsel)
->  	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
->  		return NULL;
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index e2b9032c1311..0cf81cfcfafb 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1028,6 +1028,20 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
+>  	return Py_None;
+>  }
 >  
-> -	tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
-> +	if (!evsel->tp_sys)
-> +		tp_format = trace_event__tp_format_id(evsel->core.attr.config);
-> +	else
-> +		tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
+> +static PyObject *pyrf_evlist__disable(struct pyrf_evlist *pevlist)
+> +{
+> +	evlist__disable(&pevlist->evlist);
+> +	Py_INCREF(Py_None);
+> +	return Py_None;
+> +}
 > +
->  	if (IS_ERR(tp_format)) {
->  		int err = -PTR_ERR(evsel->tp_format);
+> +static PyObject *pyrf_evlist__enable(struct pyrf_evlist *pevlist)
+> +{
+> +	evlist__enable(&pevlist->evlist);
+> +	Py_INCREF(Py_None);
+> +	return Py_None;
+> +}
+> +
+>  static PyMethodDef pyrf_evlist__methods[] = {
+>  	{
+>  		.ml_name  = "mmap",
+> @@ -1065,6 +1079,18 @@ static PyMethodDef pyrf_evlist__methods[] = {
+>  		.ml_flags = METH_VARARGS | METH_KEYWORDS,
+>  		.ml_doc	  = PyDoc_STR("reads an event.")
+>  	},
+> +	{
+> +		.ml_name  = "disable",
+> +		.ml_meth  = (PyCFunction)pyrf_evlist__disable,
+> +		.ml_flags = METH_NOARGS,
+> +		.ml_doc	  = PyDoc_STR("Disable the evsels in the evlist.")
+> +	},
+> +	{
+> +		.ml_name  = "enable",
+> +		.ml_meth  = (PyCFunction)pyrf_evlist__enable,
+> +		.ml_flags = METH_NOARGS,
+> +		.ml_doc	  = PyDoc_STR("Enable the evsels in the evlist.")
+> +	},
+>  	{ .ml_name = NULL, }
+>  };
 >  
 > -- 
 > 2.48.1.711.g2feabab25a-goog
