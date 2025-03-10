@@ -1,171 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD912222B6;
-	Mon, 10 Mar 2025 22:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E231DE3D2
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 23:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741646970; cv=none; b=C3kVRIdSYJFV6qJAw4cQ+/fRc0bKTg0jrTrcJjBrh5SrcjP7gCDSTsKyb4BZGyq6SvY9wpomZrOZ3UmA5hx+0x9WR8VFk+1vYQHRnSN1QPVxoVOUrCwypuRMya9BLIVRnOrY9mMSWW/6cMQfuZA+Ok76LvoUa9ZHoXues9dIO1A=
+	t=1741650050; cv=none; b=LXQRU9jSjuV/7MBkjCY40UdcaeFWRwv9wZFHa0kRBhy6cfBO/C3400E8/1aEfybae5uFgBEZicAJ49lpF7neo45+fa6tUw/whBV7zq08NJ+ExuTJOCMBon2PH0ZDzhia1BOt/Gl9OoaD+y+xeVd4OqfBvi4zS4DvXx4zztVVoz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741646970; c=relaxed/simple;
-	bh=HNvlfHR0V2pVFGt4EwvjDo5lzoBJpIAbkVn4yuVk7c8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HjoFODkkgV95654lV/maKFHT4ogjl7Xm1mQl6HfzgfyQSx+Uro8fWz/2QMZw+Hd+52nMIQwuLPbNks9yHpAfcGgoBKg+5GiULitF0nNplPzLn9I1HT4ptmUtdwn7cnsZkXkdVnXTNb2qTAByTFXfTidx+V2Bi7di3SDMUP2JjJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFkVjW+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741650050; c=relaxed/simple;
+	bh=x40/ETGWHUSDRpQLwYAWfFBMNQ7ZHfZ0GBicDTi7eWc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hQDpcfHBpumd88nEHaIUMGXHlUpTVU6YAjJjNfrP2h3nUV8mp7Pjddb2iXbSzZO3E2/LwWqlv6gfjyeMxGXycgjM/GCzd5YZ1LTspDYX2c5ykPo9B2pva82rGLIhaedwMG/KQTzOoC+SLu4+rk+tZUi/ZNfPtWFtPGeSx+ryUMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qVS+DokJ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFkVjW+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1450C4CEE5;
-	Mon, 10 Mar 2025 22:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741646970;
-	bh=HNvlfHR0V2pVFGt4EwvjDo5lzoBJpIAbkVn4yuVk7c8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mFkVjW+EUyIibem3KxbHb4Y3ynTsDQrVjImpYrIc/rnu0hzNMifxAvd2hUK0jE4uu
-	 QsQoV2hYJCfddWygWbz+MDL1Sln6lIfGIONjqrT7N5GcPfQysxvo9f+js/VvXtQ9Zt
-	 yT2TKICOQFXGB6HSYQUEO6sD7AJxFIwYy+4XloKdXjhy6E1ab8Ejw0DT0jR77fyjNl
-	 Rp+DLaJD0A9HsIFUaFLqTg90lv0WqjhRoqBlLMZ63ml8wfTZS8fA6lKNTi45pX0O6b
-	 CyqB7eE5zbOH7AcgRpejSt2BybXDjqLSPftMMgLbP7FglJk7/eu+q0Y4iE4o3tvVyL
-	 r+bFx7/8d1uYQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH v2 7/7] perf annotate: Add --code-with-type option.
-Date: Mon, 10 Mar 2025 15:49:25 -0700
-Message-ID: <20250310224925.799005-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-In-Reply-To: <20250310224925.799005-1-namhyung@kernel.org>
-References: <20250310224925.799005-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qVS+DokJ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240aad70f2so41615ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 16:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741650048; x=1742254848; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3CJk04DNfcWCA8ao7G6n3tZ6Syq2WgT8HbIaJ/f+4g=;
+        b=qVS+DokJDgw3j2+hn+/XSBFwjRCgFoj8tPMHaBbgb4yYAIoHhmjXheXjb3ME3F5BEB
+         IaFk29mHYjjHIW3HJjHoCTE8EQ7qunmO83ZRioAzQW9BAVDpJHgXXiTNMIfLIMieS0ax
+         uWtVf7F5xyCai9Rgk+l6w+nx5Zo9sUqFjSdb2v7jxmTpSRdUJf6zYSSOVEMnSS2mECc8
+         +8NiLARwMnb8vxgq0iDaCZcznvrymmLJGHB+DR7hMDxKXHz7nmELxLoMZcrTq+x7YfPr
+         EQXZZpGAyZ50qF6rCzcZ7WtulvHatHHWHW+H0Fg8nZBZR5jB7Exfykz8i/Yj3VBHJ3wb
+         MlZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741650048; x=1742254848;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l3CJk04DNfcWCA8ao7G6n3tZ6Syq2WgT8HbIaJ/f+4g=;
+        b=F7dS4WzuZa/exrycglUST9GGzo7h0rPnOjfarDklyI1KAxHQ4Q31xxsZUTM7iS4jFB
+         O/WQ5NNRN3D6BRmB/5t9HZpHn/tYHjRbmHOJ7YeTaXwIfmpXo6W9yWUkKwZAeIg3LxnA
+         6vTWgDUj8j1qtnHPMF7uVtHlNovqakTFHZ9At6aAqNLlPNjgaeTX1IlUhrH93h6MyYoK
+         nP5fIs/FzytIrTDkEQBDCfX4c1bJZQrkWDrT5arRL/RsGCdBvq6dbLLGs6WqeVf/Smos
+         7t0Tq2PB6AabP+xpgY1LjZcDet8XFh55juZulWmD95CWboEHj0GxdmNyKRG8SGUCAz+d
+         4NoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUW8S16gYpei2CDj0/MfJq2C1BLh3xmOZ727lWhm6Vea2Jzx9/c4R6Wx8q7ROZi5SANv1gq23bbAJrPEZhZVFjD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpP0q5QJqqTBl3XGMQFlxgj1fBaYg7kt5wJXD3INOdJLi7U6R9
+	of1gVyEXeYvyikUgN72HU5BH2RBZbTTMoz+u7GTVNz63vk8ocx9ZkaVczcDedfAZaCeMFJe6RgL
+	8tiYk78KrBDoufJPfWVVSjaeUZabD8iskWzzl
+X-Gm-Gg: ASbGnctWaBYI0Pyu6mJViGLoRkadIUjY1bAvg7j3hc+mJDTwiipbrXgQPBS78sjhKzb
+	IC25oGinBsb2bPX4bxGVi27RLn0Tr60RTTFzF7VbPDu4DQhq+vSvRD8xid7axaCQyWjm1y23PXk
+	x1pTvpDUBMFeZX9UfoDiNY81QBoas=
+X-Google-Smtp-Source: AGHT+IG8ZbJq9d3fOC2d1WzTRzoCvLclS0qrQU2tOiogJ4Ztx6P+CKCMeJ9Eq2d7KIOBSgUw60hfwsy3X1Gl0bCqIqI=
+X-Received: by 2002:a17:902:dacc:b0:220:c905:68a2 with SMTP id
+ d9443c01a7336-2254779cef4mr5526915ad.5.1741650047858; Mon, 10 Mar 2025
+ 16:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250228222308.626803-1-irogers@google.com> <20250228222308.626803-12-irogers@google.com>
+ <Z89k6lWxRSBfCGvM@google.com>
+In-Reply-To: <Z89k6lWxRSBfCGvM@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Mar 2025 16:40:36 -0700
+X-Gm-Features: AQ5f1Jqm0hhpEhKAQajzWvx41-veMYX8cdpwcxztn5nYV3jmEU6IdvOQfPYBejM
+Message-ID: <CAP-5=fUV5yt4c-PrvTFqW6ehuudwkqdO7QuQpvbUBDm6aT6+dQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using parse_events
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This option is to show data type info in the regular (code) annotation.
-It tries to find data type for each (memory) instruction in the
-function.  It'd be useful to see function-level memory access pattern
-and also to debug the data type profiling result.
+On Mon, Mar 10, 2025 at 3:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, Feb 28, 2025 at 02:23:08PM -0800, Ian Rogers wrote:
+> > Rather than manually configuring an evsel, switch to using
+> > parse_events for greater commonality with the rest of the perf code.
+> >
+> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/python/tracepoint.py | 23 +++++++++++------------
+> >  1 file changed, 11 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracep=
+oint.py
+> > index bba68a6d4515..38b2b6d11f64 100755
+> > --- a/tools/perf/python/tracepoint.py
+> > +++ b/tools/perf/python/tracepoint.py
+> > @@ -5,24 +5,23 @@
+> >
+> >  import perf
+> >
+> > -class tracepoint(perf.evsel):
+> > -    def __init__(self, sys, name):
+> > -        config =3D perf.tracepoint(sys, name)
+> > -        perf.evsel.__init__(self,
+> > -                            type   =3D perf.TYPE_TRACEPOINT,
+> > -                            config =3D config,
+> > -                            freq =3D 0, sample_period =3D 1, wakeup_ev=
+ents =3D 1,
+> > -                            sample_type =3D perf.SAMPLE_PERIOD | perf.=
+SAMPLE_TID | perf.SAMPLE_CPU | perf.SAMPLE_RAW | perf.SAMPLE_TIME)
+> > -
+> >  def main():
+> > -    tp      =3D tracepoint("sched", "sched_switch")
+> >      cpus    =3D perf.cpu_map()
+> >      threads =3D perf.thread_map(-1)
+> > +    evlist =3D perf.parse_events("sched:sched_switch", cpus, threads)
+> > +    # Disable tracking of mmaps and similar that are unnecessary.
+> > +    for ev in evlist:
+> > +        ev.tracking =3D False
+> > +    # Configure evsels with default record options.
+> > +    evlist.config()
+>
+> I think the default option uses frequency of 4000 but tracepoints want
+> to use period of 1.  Also I'm not sure if it sets the proper sample type
+> bits namely PERF_SAMPLE_RAW.
 
-The output would be added at the end of the line and have "# data-type:"
-prefix.
+I used trace to ensure they matched. Fwiw, the sample_period for a
+tracepoint is set to 1 in evsel__newtp_idx:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/evsel.c?h=3Dperf-tools-next#n621
+and the evsel__config won't overwrite an already set sample_period:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/evsel.c?h=3Dperf-tools-next#n1341
 
-For now, it only works with --stdio mode for simplicity.  I can work on
-enabling it for TUI later.
+Thanks, Ian
 
-  $ perf annotate --stdio --code-with-type
-   Percent |      Source code & Disassembly of vmlinux for cpu/mem-loads/ppk (253 samples, percent: local period)
-  ---------------------------------------------------------------------------------------------------------------
-           : 0                0xffffffff81baa000 <check_preemption_disabled>:
-      0.00 :   ffffffff81baa000:        pushq   %r12              # data-type: (stack operation)
-      0.00 :   ffffffff81baa002:        pushq   %rbp              # data-type: (stack operation)
-      0.00 :   ffffffff81baa003:        pushq   %rbx              # data-type: (stack operation)
-      0.00 :   ffffffff81baa004:        subq    $0x8, %rsp
-     18.00 :   ffffffff81baa008:        movl    %gs:0x7e48893d(%rip), %ebx  # 0x3294c <pcpu_hot+0xc>              # data-type: struct pcpu_hot +0xc (cpu_number)
-     12.58 :   ffffffff81baa00f:        movl    %gs:0x7e488932(%rip), %eax  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa016:        testl   $0x7fffffff, %eax
-      0.00 :   ffffffff81baa01b:        je      0xffffffff81baa02c <check_preemption_disabled+0x2c>
-      0.00 :   ffffffff81baa01d:        addq    $0x8, %rsp
-      0.00 :   ffffffff81baa021:        movl    %ebx, %eax
-     14.19 :   ffffffff81baa023:        popq    %rbx              # data-type: (stack operation)
-     18.86 :   ffffffff81baa024:        popq    %rbp              # data-type: (stack operation)
-     12.10 :   ffffffff81baa025:        popq    %r12              # data-type: (stack operation)
-     17.78 :   ffffffff81baa027:        jmp     0xffffffff81bc1170 <__x86_return_thunk>
-      6.49 :   ffffffff81baa02c:        callq   *0xc9139e(%rip)  # 0xffffffff8283b3d0 <pv_ops+0xf0>               # data-type: (stack operation)
-      0.00 :   ffffffff81baa032:        testb   $0x2, %ah
-      0.00 :   ffffffff81baa035:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa037:        movq    %rdi, %rbp
-      0.00 :   ffffffff81baa03a:        movq    %gs:0x32940, %rax         # data-type: struct pcpu_hot +0 (current_task)
-      0.00 :   ffffffff81baa043:        testb   $0x4, 0x2f(%rax)          # data-type: struct task_struct +0x2f (flags)
-      0.00 :   ffffffff81baa047:        je      0xffffffff81baa052 <check_preemption_disabled+0x52>
-      0.00 :   ffffffff81baa049:        cmpl    $0x1, 0x3d0(%rax)         # data-type: struct task_struct +0x3d0 (nr_cpus_allowed)
-      0.00 :   ffffffff81baa050:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa052:        movq    %gs:0x32940, %r12         # data-type: struct pcpu_hot +0 (current_task)
-      0.00 :   ffffffff81baa05b:        cmpw    $0x0, 0x7f0(%r12)         # data-type: struct task_struct +0x7f0 (migration_disabled)
-      0.00 :   ffffffff81baa065:        movq    %rsi, (%rsp)
-      0.00 :   ffffffff81baa069:        jne     0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa06b:        movl    0xe8dd13(%rip), %eax  # 0xffffffff82a37d84 <system_state>         # data-type: enum system_states +0
-      0.00 :   ffffffff81baa071:        testl   %eax, %eax
-      0.00 :   ffffffff81baa073:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa075:        incl    %gs:0x7e4888cc(%rip)  # 0x32948 <pcpu_hot+0x8>            # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa07c:        movq    $-0x7e14a100, %rdi
-      0.00 :   ffffffff81baa083:        callq   0xffffffff81148c40 <__printk_ratelimit>           # data-type: (stack operation)
-      0.00 :   ffffffff81baa088:        testl   %eax, %eax
-      0.00 :   ffffffff81baa08a:        je      0xffffffff81baa0d5 <check_preemption_disabled+0xd5>
-      0.00 :   ffffffff81baa08c:        movl    0x958(%r12), %r9d         # data-type: struct task_struct +0x958 (pid)
-      0.00 :   ffffffff81baa094:        movq    (%rsp), %rdx              # data-type: char* +0
-      0.00 :   ffffffff81baa098:        movq    %rbp, %rsi
-      0.00 :   ffffffff81baa09b:        leaq    0xb88(%r12), %r8          # data-type: struct task_struct +0xb88 (comm)
-      0.00 :   ffffffff81baa0a3:        movl    %gs:0x7e48889e(%rip), %ecx  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa0aa:        andl    $0x7fffffff, %ecx
-      0.00 :   ffffffff81baa0b0:        movq    $-0x7dd3cdf0, %rdi
-      0.00 :   ffffffff81baa0b7:        subl    $0x1, %ecx
-      0.00 :   ffffffff81baa0ba:        callq   0xffffffff81149340 <_printk>              # data-type: (stack operation)
-      0.00 :   ffffffff81baa0bf:        movq    0x20(%rsp), %rsi
-      0.00 :   ffffffff81baa0c4:        movq    $-0x7ddb8c7e, %rdi
-      0.00 :   ffffffff81baa0cb:        callq   0xffffffff81149340 <_printk>              # data-type: (stack operation)
-      0.00 :   ffffffff81baa0d0:        callq   0xffffffff81b7ab60 <dump_stack>           # data-type: (stack operation)
-      0.00 :   ffffffff81baa0d5:        decl    %gs:0x7e48886c(%rip)  # 0x32948 <pcpu_hot+0x8>            # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa0dc:        jmp     0xffffffff81baa01d <check_preemption_disabled+0x1d>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-annotate.txt | 4 ++++
- tools/perf/builtin-annotate.c              | 9 +++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 156c5f37b05141ca..46090c5b42b4762f 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -168,6 +168,10 @@ include::itrace.txt[]
- --skip-empty::
- 	Do not display empty (or dummy) events.
- 
-+--code-with-type::
-+	Show data type info in code annotation (for memory instructions only).
-+	Currently it only works with --stdio option.
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 966950c38306d6ea..9833c2c82a2fee46 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -788,6 +788,8 @@ int cmd_annotate(int argc, const char **argv)
- 		    "Show instruction stats for the data type annotation"),
- 	OPT_BOOLEAN(0, "skip-empty", &symbol_conf.skip_empty,
- 		    "Do not display empty (or dummy) events in the output"),
-+	OPT_BOOLEAN(0, "code-with-type", &annotate_opts.code_with_type,
-+		    "Show data type info in code annotation (memory instructions only)"),
- 	OPT_END()
- 	};
- 	int ret;
-@@ -913,6 +915,13 @@ int cmd_annotate(int argc, const char **argv)
- 		annotate_opts.annotate_src = false;
- 		symbol_conf.annotate_data_member = true;
- 		symbol_conf.annotate_data_sample = true;
-+	} else if (annotate_opts.code_with_type) {
-+		symbol_conf.annotate_data_member = true;
-+
-+		if (!annotate.use_stdio) {
-+			pr_err("--code-with-type only works with --stdio.\n");
-+			goto out_delete;
-+		}
- 	}
- 
- 	setup_browser(true);
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
-
+> Thanks,
+> Namhyung
+>
+>
+> > +    # Simplify the sample_type and read_format of evsels
+> > +    for ev in evlist:
+> > +        ev.sample_type =3D ev.sample_type & ~perf.SAMPLE_IP
+> > +        ev.read_format =3D 0
+> >
+> > -    evlist =3D perf.evlist(cpus, threads)
+> > -    evlist.add(tp)
+> >      evlist.open()
+> >      evlist.mmap()
+> > +    evlist.enable();
+> >
+> >      while True:
+> >          evlist.poll(timeout =3D -1)
+> > --
+> > 2.48.1.711.g2feabab25a-goog
+> >
