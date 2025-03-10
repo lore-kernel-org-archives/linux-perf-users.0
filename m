@@ -1,331 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26DE8216392;
-	Mon, 10 Mar 2025 10:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C36722A7EA;
+	Mon, 10 Mar 2025 10:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741601557; cv=none; b=hwtWZZiQUI0DTc2M5w504+eP+XhON4S0dI32uPlPa46J1P5gkihGdPua+bkLWCupPmzQlg9FEyS1MGUCZzGBBm0Z7cRKRRO9yIqyzQhFdNpQN5FE6vnuNr8ydwgh9IIlMuZE0qxZsf3JIM4qfL9BnpIQi5uZRV8OhSpUUHyrZ3c=
+	t=1741603761; cv=none; b=ZqldcqDmfJIfMZAiWPrm1kq3XZvbBAV3ZzJ2QfzPAGep8o9WgR+boctw+Eq5RmezUu1fLBWYy5eaMj1b0hDehR8Z+sWwGilF8BCvg/8bkRiN5oDvF9pPiT2H/YstoJRJ+KCjF/y68rjTBzM5lsxmcGBz/K2SPSX5iGmTAqnY+Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741601557; c=relaxed/simple;
-	bh=4itqZ0XMCX4rFZ6kG+9ByWJVoJi6K3Y7N/XugEuyjAY=;
+	s=arc-20240116; t=1741603761; c=relaxed/simple;
+	bh=8OTdGJQCtFjQymUwSNIHy++1HlxocMtdJ+1/0VU2Id8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hw0fhXbzVZopStc+kfvvNIJ5W+ncEgCw9TmBGGGoLv6/WnHBwAPPukMqKqnQkR/vbpxWD8iB82ifq8twEdn7dhJk5rBIJGmA+8ZSCZI0bY5CD57HaQmpzvTi3puGewrSldvRuMUMmScqhmfFRjk+2TI2NbT5wUgV9QltXj+/heU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06FC4153B;
-	Mon, 10 Mar 2025 03:12:46 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 197FD3F673;
-	Mon, 10 Mar 2025 03:12:33 -0700 (PDT)
-Date: Mon, 10 Mar 2025 10:12:29 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf mem: Don't leak mem event names
-Message-ID: <20250310101229.GA9682@e132581.arm.com>
-References: <20250308012853.1384762-1-irogers@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=B8yEKjv+5yTpXloSI1rjvtZKDNJEDBW6OK8MN4430xEObGE5okmtUcDjtwve8yyZm8gJHpvIqDvClRdcHJXCyphEBCkwclBN9xgBop2ImZTZoZFdBWLufCP98LIvTE1G16snUDncgpNEvERoE37MgI/P+vwhmhIcZzinJMr35do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jr1ZkYkJ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jr1ZkYkJ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 16E9F40E0202;
+	Mon, 10 Mar 2025 10:49:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kiTctQKvuhkz; Mon, 10 Mar 2025 10:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741603752; bh=LreVgI+fx8En+wOY6PpZOizm2j4hFPvgajwvgyqZjvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jr1ZkYkJODuKKKz3ecmLV/cToLxxR+jcoEw908mhdRAHWsYl+QXE7iTeasvMKekWW
+	 6/VKPweooryO7m6pG3OE+RCL2SluTzifafzMHw2IXeEqs50Y0W7K59WP87x9R8tCy9
+	 nIs/q1flM6Io/S2D7EQl78Lg6EgKyjC9GvsZZ5ULffc7HvzyBp9TNU4G7MLeefHPwi
+	 4BPIatkELStcsTgirh8zgm7eMuSYHYmBoue9G5qF+0i3/h0TgT7Ymcvdda0TH52jL+
+	 LZJnMBD4DNO83NK1rJUAbo1iaq3+E/ouL8iWwfTCGv4ygTqKP4CinxRCOMiL2iaehV
+	 3BtKOoMGNmdMmlmbP6ZA5f6Cj3z2OC0bz3aJIsSsK3c1zNXBEqbfwmQ1Q8QAvLqC2X
+	 FlHHiz5X+yZIXP4i4oC7GpmK0PKOM2g4zw4aXSiUGCqdpV4fLGap+Nnwj7QXNkx+fh
+	 pgtDIznhegSFGLpDZVDQotdSy5qituCGbDJLpsDTBxkv8m2NIQIyvvyxdau+X47XKt
+	 Lv8Q8rVPSNVr+ItXiZyRC5+Y5ENxEm7PSqNa11df/60Wk/hdUQ+Sr6Tv3VzsTpcnOI
+	 JnMitX3W/NBWedocm/fdWJK3MvY5y7QtVbwZm6GoQRNimTPtB2vBQOCZoo89Sdua+f
+	 I3AogolXHzuv7Yy3p8oDgvoI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E0FC40E0176;
+	Mon, 10 Mar 2025 10:48:52 +0000 (UTC)
+Date: Mon, 10 Mar 2025 11:48:44 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v7 3/4] x86/cpu: Update x86_match_cpu() to also use
+ cpu-type
+Message-ID: <20250310104844.GDZ87DjFQef8GaREqg@fat_crate.local>
+References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
+ <20250306-add-cpu-type-v7-3-f903fb022fd4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250308012853.1384762-1-irogers@google.com>
+In-Reply-To: <20250306-add-cpu-type-v7-3-f903fb022fd4@linux.intel.com>
 
-On Fri, Mar 07, 2025 at 05:28:53PM -0800, Ian Rogers wrote:
-> When preparing the mem events for the argv copies are intentionally
-> made. These copies are leaked and cause runs of perf using address
-> sanitizer to fail. Rather than leak the memory allocate a chunk of
-> memory for the mem event names upfront and build the strings in this -
-> the storage is sized larger than the previous buffer size. The caller
-> is then responsible for clearing up this memory. As part of this
-> change, remove the mem_loads_name and mem_stores_name global buffers
-> then change the perf_pmu__mem_events_name to write to an out argument
-> buffer.
-> 
-> Tested-by: Thomas Falcon <thomas.falcon@intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-> ---
-> v2. Add return -ENOMEM suggested by Kan Liang.
-> ---
->  tools/perf/builtin-c2c.c     |  4 ++-
->  tools/perf/builtin-mem.c     | 12 ++++---
->  tools/perf/util/mem-events.c | 67 +++++++++++++++++++++---------------
->  tools/perf/util/mem-events.h |  3 +-
->  4 files changed, 53 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 15e1fce71c72..5d5bb0f32334 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3239,6 +3239,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  {
->  	int rec_argc, i = 0, j;
->  	const char **rec_argv;
-> +	char *event_name_storage = NULL;
->  	int ret;
->  	bool all_user = false, all_kernel = false;
->  	bool event_set = false;
-> @@ -3300,7 +3301,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  	rec_argv[i++] = "--phys-data";
->  	rec_argv[i++] = "--sample-cpu";
->  
-> -	ret = perf_mem_events__record_args(rec_argv, &i);
-> +	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
->  	if (ret)
->  		goto out;
->  
-> @@ -3327,6 +3328,7 @@ static int perf_c2c__record(int argc, const char **argv)
->  
->  	ret = cmd_record(i, rec_argv);
->  out:
-> +	free(event_name_storage);
->  	free(rec_argv);
->  	return ret;
->  }
-> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-> index 99d5e1491a28..5ec83cd85650 100644
-> --- a/tools/perf/builtin-mem.c
-> +++ b/tools/perf/builtin-mem.c
-> @@ -74,6 +74,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  	int rec_argc, i = 0, j;
->  	int start, end;
->  	const char **rec_argv;
-> +	char *event_name_storage = NULL;
->  	int ret;
->  	struct perf_mem_event *e;
->  	struct perf_pmu *pmu;
-> @@ -140,7 +141,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  		rec_argv[i++] = "--data-page-size";
->  
->  	start = i;
-> -	ret = perf_mem_events__record_args(rec_argv, &i);
-> +	ret = perf_mem_events__record_args(rec_argv, &i, &event_name_storage);
->  	if (ret)
->  		goto out;
->  	end = i;
-> @@ -170,6 +171,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
->  
->  	ret = cmd_record(i, rec_argv);
->  out:
-> +	free(event_name_storage);
->  	free(rec_argv);
->  	return ret;
->  }
-> @@ -521,6 +523,7 @@ int cmd_mem(int argc, const char **argv)
->  		NULL,
->  		NULL
->  	};
-> +	int ret;
->  
->  	argc = parse_options_subcommand(argc, argv, mem_options, mem_subcommands,
->  					mem_usage, PARSE_OPT_STOP_AT_NON_OPTION);
-> @@ -536,14 +539,15 @@ int cmd_mem(int argc, const char **argv)
->  	}
->  
->  	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
-> -		return __cmd_record(argc, argv, &mem, record_options);
-> +		ret = __cmd_record(argc, argv, &mem, record_options);
->  	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
-> -		return __cmd_report(argc, argv, &mem, report_options);
-> +		ret = __cmd_report(argc, argv, &mem, report_options);
->  	else
->  		usage_with_options(mem_usage, mem_options);
->  
->  	/* free usage string allocated by parse_options_subcommand */
->  	free((void *)mem_usage[0]);
-> +	free(sort_order_help);
->  
-> -	return 0;
-> +	return ret;
->  }
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 0277d3e1505c..9011784b950d 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -31,9 +31,6 @@ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
->  
->  bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
->  
-> -static char mem_loads_name[100];
-> -static char mem_stores_name[100];
-> -
->  struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i)
->  {
->  	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
-> @@ -81,7 +78,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
->  	return num;
->  }
->  
-> -static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
-> +static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
-> +					     char *buf, size_t buf_size)
->  {
->  	struct perf_mem_event *e;
->  
-> @@ -96,31 +94,31 @@ static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
->  		if (e->ldlat) {
->  			if (!e->aux_event) {
->  				/* ARM and Most of Intel */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name,
->  					  perf_mem_events__loads_ldlat);
->  			} else {
->  				/* Intel with mem-loads-aux event */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name, pmu->name,
->  					  perf_mem_events__loads_ldlat);
->  			}
->  		} else {
->  			if (!e->aux_event) {
->  				/* AMD and POWER */
-> -				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-> +				scnprintf(buf, buf_size,
->  					  e->name, pmu->name);
-> -			} else
-> +			} else {
->  				return NULL;
-> +			}
->  		}
-> -
-> -		return mem_loads_name;
-> +		return buf;
->  	}
->  
->  	if (i == PERF_MEM_EVENTS__STORE) {
-> -		scnprintf(mem_stores_name, sizeof(mem_stores_name),
-> +		scnprintf(buf, buf_size,
->  			  e->name, pmu->name);
-> -		return mem_stores_name;
-> +		return buf;
->  	}
->  
->  	return NULL;
-> @@ -238,55 +236,69 @@ void perf_pmu__mem_events_list(struct perf_pmu *pmu)
->  	int j;
->  
->  	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> +		char buf[128];
->  		struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
->  
->  		fprintf(stderr, "%-*s%-*s%s",
->  			e->tag ? 13 : 0,
->  			e->tag ? : "",
->  			e->tag && verbose > 0 ? 25 : 0,
-> -			e->tag && verbose > 0 ? perf_pmu__mem_events_name(j, pmu) : "",
-> +			e->tag && verbose > 0
-> +			? perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf))
-> +			: "",
->  			e->supported ? ": available\n" : "");
->  	}
->  }
->  
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr, char **event_name_storage_out)
->  {
->  	const char *mnt = sysfs__mount();
->  	struct perf_pmu *pmu = NULL;
-> -	struct perf_mem_event *e;
->  	int i = *argv_nr;
-> -	const char *s;
-> -	char *copy;
->  	struct perf_cpu_map *cpu_map = NULL;
-> -	int ret;
-> +	size_t event_name_storage_size =
-> +		perf_pmu__mem_events_num_mem_pmus(NULL) * PERF_MEM_EVENTS__MAX * 128;
-> +	size_t event_name_storage_remaining = event_name_storage_size;
-> +	char *event_name_storage = malloc(event_name_storage_size);
-> +	char *event_name_storage_ptr = event_name_storage;
+On Thu, Mar 06, 2025 at 06:18:36PM -0800, Pawan Gupta wrote:
+> +static bool x86_match_vendor_cpu_type(struct cpuinfo_x86 *c, const struct x86_cpu_id *m)
+> +{
+> +	if (m->cpu_type == X86_CPU_TYPE_ANY)
+> +		return true;
 > +
-> +	if (!event_name_storage)
-> +		return -ENOMEM;
->  
-> +	*event_name_storage_out = NULL;
->  	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
->  		for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> -			e = perf_pmu__mem_events_ptr(pmu, j);
-> +			const char *s;
-> +			struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
-> +			int ret;
->  
->  			if (!perf_mem_record[j])
->  				continue;
->  
->  			if (!e->supported) {
-> +				char buf[128];
+> +	/* Hybrid CPUs are special, they are assumed to match all cpu-types */
+> +	if (boot_cpu_has(X86_FEATURE_HYBRID_CPU))
+
+check_for_deprecated_apis: WARNING: arch/x86/kernel/cpu/match.c:25: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
+
+> +		return true;
 > +
->  				pr_err("failed: event '%s' not supported\n",
-> -					perf_pmu__mem_events_name(j, pmu));
-> +					perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf)));
-> +				free(event_name_storage);
->  				return -1;
->  			}
->  
-> -			s = perf_pmu__mem_events_name(j, pmu);
-> +			s = perf_pmu__mem_events_name(pmu, j, event_name_storage_ptr,
-> +						      event_name_storage_remaining);
->  			if (!s || !perf_pmu__mem_events_supported(mnt, pmu, e))
->  				continue;
->  
-> -			copy = strdup(s);
-> -			if (!copy)
-> -				return -1;
-> -
->  			rec_argv[i++] = "-e";
-> -			rec_argv[i++] = copy;
-> +			rec_argv[i++] = event_name_storage_ptr;
-> +			event_name_storage_remaining -= strlen(event_name_storage_ptr) + 1;
-> +			event_name_storage_ptr += strlen(event_name_storage_ptr) + 1;
->  
->  			ret = perf_cpu_map__merge(&cpu_map, pmu->cpus);
-> -			if (ret < 0)
-> +			if (ret < 0) {
-> +				free(event_name_storage);
->  				return ret;
-> +			}
->  		}
->  	}
->  
-> @@ -301,6 +313,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
->  	}
->  
->  	*argv_nr = i;
-> +	*event_name_storage_out = event_name_storage;
->  	return 0;
->  }
->  
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index 8dc27db9fd52..a5c19d39ee37 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -38,7 +38,8 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
->  bool is_mem_loads_aux_event(struct evsel *leader);
->  
->  void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr);
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> +				 char **event_name_storage_out);
->  
->  int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
->  int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-> -- 
-> 2.49.0.rc0.332.g42c0ae87b1-goog
-> 
+> +	if (c->x86_vendor == X86_VENDOR_INTEL)
+> +		return m->cpu_type == c->topo.intel_type;
+> +	if (c->x86_vendor == X86_VENDOR_AMD)
+> +		return m->cpu_type == c->topo.amd_type;
+> +
+> +	return false;
+> +}
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
