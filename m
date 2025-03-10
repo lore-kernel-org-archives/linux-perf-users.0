@@ -1,120 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7822DF8E;
-	Mon, 10 Mar 2025 15:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D7B229B1D;
+	Mon, 10 Mar 2025 16:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741621964; cv=none; b=QeqdpSa2dM0dvYnb528OW9v9rG/sf0JTI5jalDUHP8OossY9k77uOo82nvwwzoDAfL09NgFVY+VyBkA8moapIHjo4OH9eyyhnces+CcmS7NTtL5JHHtMpLdITmPrKnhySRpo1degwfRQwXFtC2s+EgIQ2Guibeu07qH1wO3ZwZc=
+	t=1741622687; cv=none; b=tqco2flimlw9UulmuyQQ27nm9STnhMLXBqV20fMDOsVFdZPhnEKLXMKQGesxU5eVYHnch4aWZ3gGYTqx+EfMLAkpQDIwBgtgEWa+bKBs/vjrHcPRk6M0knvVFjcXn5/AwFTaeY/+8yqLQ/NtXMRVGqTz0Y6V1wqDRH6YsBvBDuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741621964; c=relaxed/simple;
-	bh=FmLTooqAKYFuNZ8JOrP8B8WUym9g2dFDuhTrv/J85PA=;
+	s=arc-20240116; t=1741622687; c=relaxed/simple;
+	bh=3EK/RHDZlXScO9zJVdipiTEeCB3RB7JprJxMdp+IKmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1tz8qGChwnRyfJCg0/vWAjJICCvVkskPcXJN0UCqbc0sw6MJW25A+Dc9Ib4nsMAokD/YATz1nbuTcGgIZ8BSdZlzug5Gp77mlWSGFmyr7ynLt4hD0o4fOssip87d3USz2mSPhYVgssQTSPPHs3ooUKkfzjiWSiHUnBJdkGT8Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuDqoVF6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtVzqNKErQm6hzVHCkrAhwM98rLVFnIeurbNHiNl0NBto7xmRAd0Ua+Ih9rs3cWL21/KCTATJ2lD25qL4PE0kgpm8QMRS3oio4ed7KSPUzE8KxnXBM84YXU+5LrsOfiGo7OWQRD6cbJIuomh1An766BLdrl7DZhsSmDWZnsiL7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJpb99QQ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuDqoVF6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47268C4CEEB;
-	Mon, 10 Mar 2025 15:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741621963;
-	bh=FmLTooqAKYFuNZ8JOrP8B8WUym9g2dFDuhTrv/J85PA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nuDqoVF6sNQrhjZe+i1/fN4/jIJHNOZpd8sOR8LmmG2eF9Lr/JSgGYIkaUrWcN+9A
-	 GKEoASf28OW+ZxTMbJQ5L/FiG6KU+GC3uRnA2p3umyKOQ8tZSPGv0UTUihQzO2r3cZ
-	 ud2IHIh5B+Mer7H1nWmdqIPBVM+2sWOZRX++GmokxzQq5yLlWAPDYyKf4Tq0JIFSg2
-	 zw2LSF97kTU0HPTg4weUKuZwJ9iMJlOxOSpFwY8X6tiuIGp3/VMO2ScItSKE/oGEWn
-	 PKGSMgJKWRueJItCUjZzpohblQwOTBY5iAzVjMNXzpLlnWEMFUrgJ08sIyu41sgZyE
-	 kbR2zOVVDa1fQ==
-Date: Mon, 10 Mar 2025 12:52:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJpb99QQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741622685; x=1773158685;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3EK/RHDZlXScO9zJVdipiTEeCB3RB7JprJxMdp+IKmg=;
+  b=bJpb99QQ8xaEWoU8jn6eBQ1SvS/fQ4d9Kb/n9Vm02M/c0n9F4rISPtOb
+   3DuUmcQWHsj/NQvbZ+Eo1TNt+YuN4Scjdd9Lxj8JbikC39A5dco9/bOuM
+   rZpJfSCsThboYmM8+pNZu7gI94/u8kKNCJbVQ3Ln8k7t1EaYyWnxYvYux
+   cJ3zCWMJzxB+a3GKQPGGa2pgGKKCBvlL6WQaSFRqH8H+0J4aIMQWfOzHk
+   /SPa5yjutvmJA3JveE8IikLCyFz1QwnobKGQWH0o6Gql52IxtmdDzydOI
+   sUF7sBKbdQrcOqPa7K20YW7s7dqeVs6rI/KuSWS6aIRVZOUGO9njZJq3D
+   Q==;
+X-CSE-ConnectionGUID: IhuBqk0+RDS5ENCfPV5Tew==
+X-CSE-MsgGUID: dUEhVWLJQNKH68sxypFowA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="54003938"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="54003938"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:04:44 -0700
+X-CSE-ConnectionGUID: +TZhXV7uSBqwzp4qb5jl9g==
+X-CSE-MsgGUID: u4ep8jsaRJmC9K+ttaiq1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="143235466"
+Received: from msridhar-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.183])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:04:44 -0700
+Date: Mon, 10 Mar 2025 09:04:37 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 0/3] Support .gnu_debugdata for symbols in perf
-Message-ID: <Z88KyA4PCzhMa-fK@x1>
-References: <20250307232206.2102440-1-stephen.s.brennan@oracle.com>
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v7 1/4] x86/cpu: Name CPU matching macro more generically
+ (and shorten)
+Message-ID: <20250310160437.4o43lp53hpj7uyqj@desk>
+References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
+ <20250306-add-cpu-type-v7-1-f903fb022fd4@linux.intel.com>
+ <20250309172920.GBZ83P8ClXskqjmira@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250307232206.2102440-1-stephen.s.brennan@oracle.com>
+In-Reply-To: <20250309172920.GBZ83P8ClXskqjmira@fat_crate.local>
 
-On Fri, Mar 07, 2025 at 03:22:00PM -0800, Stephen Brennan wrote:
-> Hello all,
->
-> This series adds the ability to read symbols from the ".gnu_debugdata" section
-> of DSOs. More details are the cover letter of v1. This only has one small change
-> from v2: it adds the missing entry in dso__symtab_origin(). Its lack resulted in
-> truncating the output of symbols in "perf report -v" -- thanks to Arnaldo for
-> testing and catching that.
->
-> v2: https://lore.kernel.org/linux-perf-users/20250220185512.3357820-1-stephen.s.brennan@oracle.com/
-> v1: https://lore.kernel.org/linux-perf-users/20250213190542.3249050-1-stephen.s.brennan@oracle.com/
->
-> Stephen Brennan (3):
->   tools: perf: add dummy functions for !HAVE_LZMA_SUPPORT
->   tools: perf: add LZMA decompression from FILE
->   tools: perf: support .gnu_debugdata for symbols
-
-Next time please follow the convention on subject lines in tools/perf:
-
-36e7748d33bf6a82 (perf-tools-next/perf-tools-next) perf tests: Fix data symbol test with LTO builds
-e1f5bb18a7b25cac perf report: Fix memory leaks in the hierarchy mode
-e242df05ee5f2ab0 perf report: Use map_symbol__copy() when copying callchains
-4c3f09e35ca999f6 perf annotate: Return errors from disasm_line__parse_powerpc()
-dab8c32ece27c7d8 perf annotate: Add annotation_options.disassembler_used
-b0920abe0d529101 perf report: Do not process non-JIT BPF ksymbol events
-2c744f38da7aeae7 perf test: Fix leak in "Synthesize attr update" test
-41453107bfc30083 perf machine: Fix insertion of PERF_RECORD_KSYMBOL related kernel maps
-e0e4e0b8b7fabd8c perf maps: Add missing map__set_kmap_maps() when replacing a kernel map
-0d11fab32714a2da perf maps: Fixup maps_by_name when modifying maps_by_address
-f7a46e028c394cd4 perf machine: Fixup kernel maps ends after adding extra maps
-25d9c0301d36f4d8 perf maps: Set the kmaps for newly created/added kernel maps
-99deaf5578cd768f perf maps: Introduce map__set_kmap_maps() for kernel maps
-74fb903b212925ca perf script: Fix output type for dynamically allocated core PMU's
-957d194163bf983d perf bench: Fix perf bench syscall loop count
-b627b443ccfbdd2c perf test: Simplify data symbol test
-f04c7ef35256beea perf test: Add timeout to datasym workload
-15bcfb96d0ddbc1b perf test: Add trace record and replay test
-38672c5033c3aebc perf test: Skip perf trace tests when running as non-root
-3fb29a7514e727ca perf test: Skip perf probe tests when running as non-root
-⬢ [acme@toolbox perf-tools-next]$
-
-I.e. perf, followed by the tool or class (machine, maps, etc), followed
-by : and then the summary, starting with a capital letter.
-
-I retested and everything looks great, so please add my:
-
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Thanks,
-
-- Arnaldo
-
->  tools/perf/util/compress.h   |  20 +++++++
->  tools/perf/util/dso.c        |   3 +
->  tools/perf/util/dso.h        |   1 +
->  tools/perf/util/lzma.c       |  29 ++++++----
->  tools/perf/util/symbol-elf.c | 106 ++++++++++++++++++++++++++++++++++-
->  tools/perf/util/symbol.c     |   2 +
->  6 files changed, 148 insertions(+), 13 deletions(-)
+On Sun, Mar 09, 2025 at 06:29:20PM +0100, Borislav Petkov wrote:
+> On Thu, Mar 06, 2025 at 06:18:03PM -0800, Pawan Gupta wrote:
+> > @@ -106,13 +94,10 @@
+> >   * @_data:	Driver specific data or NULL. The internal storage
+> >   *		format is unsigned long. The supplied value, pointer
+> >   *		etc. is casted to unsigned long internally.
+> > - *
+> > - * The steppings arguments of X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE() is
+> > - * set to wildcards.
+> >   */
+> > -#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model, feature, data) \
+> > -	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(vendor, family, model, \
+> > -						X86_STEPPING_ANY, feature, data)
+> > +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model, feature, data)	\
+> > +	X86_MATCH_CPU(X86_VENDOR_##vendor, family, model, X86_STEPPING_ANY,		\
+> > +		      feature, data)
+> >  
 > 
-> -- 
-> 2.43.5
+> That one is unused. Zap it.
+
+Correct. I will remove it.
