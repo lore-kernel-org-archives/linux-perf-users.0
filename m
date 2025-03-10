@@ -1,47 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901EB36B;
-	Mon, 10 Mar 2025 21:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2D81D8DF6;
+	Mon, 10 Mar 2025 22:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741643754; cv=none; b=MDjQ+t+LOYexcK7iIM/lEqi+gjcC+xY7Q9J+2/wtoFE+1dopIU0lmd5AJNDRXvC8rIRwMGGfKmmlVYyxN+0ay4y7cMqomNNR0Fd5RKFB/UAZpl79F8Kar/1Wl/CisQMQQzeGFkUpW6Mf4O8AirPEow3pBdQnLW1HDG6rmPT8WWc=
+	t=1741644742; cv=none; b=E508iT331Nj/7RAQGz9ejFBe7f58JyVZdcybYWrlVjl906dJGuBPstAw9Z6AtGcwpsWVnzJQT7lBDiwHGo02PAmibaSY0v3mI455oauKJ1FoxIry6MwJlL7GwuR5qxoHAcc2SkAYD9/gCLdXp/uPKdz1SVyjDrN+kz2JPTT7Ra4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741643754; c=relaxed/simple;
-	bh=uSBfB1boMpaWAL9Nqt+/1XdeQZ78TGKmI1vGXi7hbZk=;
+	s=arc-20240116; t=1741644742; c=relaxed/simple;
+	bh=Sp1vvz4f13qsIj4sbuySADw8IHG7tvnIEy6zhtY+6us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1ohmImIl3h+BirFGPo7Pl2+pIyKdl8hVk+0XtoMnC03tcbgraTpxxWkM7hUAAaTl9D+ObUU1JpYNbEe0GaU8ZXeM/UnBkZUw6CSvvtgkSMiCkKXM0EaVjlM5mdM4Mew3QSWeyftKhBFYb2OqWCFsRwWDQzT89HfUAGo4W+5wIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThNSI+xM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4iRXk/eZs3GStxhtgm/DSMXqVH91D/GSYnQIR5SJdWKDKPpXR9Iw6+HhTg0Wcun5Oefmbu9zsDi4FETj4B8VeeTLBU3DekPeZ8lcclZft03CYjE8bOMcj6JA0ipuSw0PsO0C8+IaOXh37EBqtfY7nPfvkw8EKI4cUGw0akVi7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vE5GF1l9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThNSI+xM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA18C4CEE5;
-	Mon, 10 Mar 2025 21:55:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vE5GF1l9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823C7C4CEE5;
+	Mon, 10 Mar 2025 22:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741643754;
-	bh=uSBfB1boMpaWAL9Nqt+/1XdeQZ78TGKmI1vGXi7hbZk=;
+	s=k20201202; t=1741644742;
+	bh=Sp1vvz4f13qsIj4sbuySADw8IHG7tvnIEy6zhtY+6us=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ThNSI+xMeuGlCkHojeMTU1FDgoAx+XyWon4Wds/mzYL96+Rie6XUgsvQm2u7JVkzA
-	 HCJFnF1J3HpC0GIfTSty9AKV79CoKYooAoSQtmgWX121+gSgZnAlAk93l9iuYIQ/UM
-	 pPJ7yipRWsvY8reabt7XasCEDS6mjkJ29E3EN9cjSP4iOt7M8XdW9EHCUsm/WolXAs
-	 3c332I9FAx2BBkWI3iHQ1KJSonGE2iZLB8y3cDCEp7l5pbf6kFYi1OxNu/I2wZMTtH
-	 dKABU0GyytM2JcXp7Gz00dtg/g17EK5qjs5NkTPDPYTmB0cNxKA4dhkq94h9cFtun1
-	 FYixKZvtKhP7w==
-Date: Mon, 10 Mar 2025 14:55:52 -0700
+	b=vE5GF1l91CPOP9NlgoQOxAdbnQU4p0K1zd0S8dl0kasLe5/3KnaQqwxmxGS+N3GTB
+	 bDOrJih1teHesNXBNw/3wx7arwadfp83M7gJZAqdaLBWVbxJpIaZQEPTIggEW4KD2c
+	 +52GEv2ummtq6zGj1yPKrSzm6BmPfMTYxty+YK1td872uuFcjVfxqTYRJr7uwb8I7n
+	 h+uXQGi6KGo6VCNUkCJCt3G5VTn/coL+6RYcmIxRJG7MoUYAOYVI4stpk4NISt+gX4
+	 hDXWyR05YMdWg4P0rWS5f0NAgZNCFb2XnrEmgXDOsqX9l9HCHbN/GmFOnr4kUkR26O
+	 wa1iCp7/uF/jw==
+Date: Mon, 10 Mar 2025 15:12:20 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/3] perf hist stdio: Do bounds check when printing
- callchains to avoid UB with new gcc versions
-Message-ID: <Z89f6JbpZUQoi2hR@google.com>
-References: <20250310194534.265487-1-acme@kernel.org>
- <20250310194534.265487-4-acme@kernel.org>
+	Yicong Yang <yangyicong@hisilicon.com>,
+	James Clark <james.clark@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: Re: [PATCH v2 06/11] perf python: Add optional cpus and threads
+ arguments to parse_events
+Message-ID: <Z89jxAMEpYea9Qom@google.com>
+References: <20250228222308.626803-1-irogers@google.com>
+ <20250228222308.626803-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,71 +56,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250310194534.265487-4-acme@kernel.org>
+In-Reply-To: <20250228222308.626803-7-irogers@google.com>
 
-On Mon, Mar 10, 2025 at 04:45:33PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Fri, Feb 28, 2025 at 02:23:03PM -0800, Ian Rogers wrote:
+> Used for the evlist initialization.
 > 
-> Do a simple bounds check to avoid this on new gcc versions:
-> 
->   31    15.81 fedora:rawhide                : FAIL gcc version 15.0.1 20250225 (Red Hat 15.0.1-0) (GCC)
->     In function 'callchain__fprintf_left_margin',
->         inlined from 'callchain__fprintf_graph.constprop' at ui/stdio/hist.c:246:12:
->     ui/stdio/hist.c:27:39: error: iteration 2147483647 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-
-Hmm.. does it warn about a signed integer overflow?
-
-2147483647 is 0x7fffffff in hex and it should be INT_MAX.
-I'm not sure what is the problem.
-
-
->        27 |         for (i = 0; i < left_margin; i++)
->           |                                      ~^~
->     ui/stdio/hist.c:27:23: note: within this loop
->        27 |         for (i = 0; i < left_margin; i++)
->           |                     ~~^~~~~~~~~~~~~
->     cc1: all warnings being treated as errors
->     --
->     util/units.c: In function 'unit_number__scnprintf':
->     util/units.c:67:24: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
->        67 |         char unit[4] = "BKMG";
->           |                        ^~~~~~
->     cc1: all warnings being treated as errors
-
-This part belongs to the previous commit. :)
-
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/ui/stdio/hist.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/util/python.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-> index 74b2c619c56c8ba3..7ac4b98e28bca82e 100644
-> --- a/tools/perf/ui/stdio/hist.c
-> +++ b/tools/perf/ui/stdio/hist.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <limits.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <linux/string.h>
-> @@ -24,6 +25,9 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
->  	int i;
->  	int ret = fprintf(fp, "            ");
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index b600b6379b4e..4a3015e7dc83 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1339,12 +1339,18 @@ static PyObject *pyrf__parse_events(PyObject *self, PyObject *args)
+>  	struct evlist evlist = {};
+>  	struct parse_events_error err;
+>  	PyObject *result;
+> +	PyObject *pcpus = NULL, *pthreads = NULL;
+> +	struct perf_cpu_map *cpus;
+> +	struct perf_thread_map *threads;
 >  
-> +	if (left_margin > USHRT_MAX)
-> +		left_margin = USHRT_MAX;
+> -	if (!PyArg_ParseTuple(args, "s", &input))
+> +	if (!PyArg_ParseTuple(args, "s|OO", &input, &pcpus, &pthreads))
+>  		return NULL;
+>  
+> +	threads = pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
+> +	cpus = pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
+
+I wonder if it needs any type checks before accessing them.
+
+Thanks,
+Namhyung
+
 > +
->  	for (i = 0; i < left_margin; i++)
->  		ret += fprintf(fp, " ");
->  
+>  	parse_events_error__init(&err);
+> -	evlist__init(&evlist, NULL, NULL);
+> +	evlist__init(&evlist, cpus, threads);
+>  	if (parse_events(&evlist, input, &err)) {
+>  		parse_events_error__print(&err, input);
+>  		PyErr_SetFromErrno(PyExc_OSError);
 > -- 
-> 2.48.1
+> 2.48.1.711.g2feabab25a-goog
 > 
