@@ -1,110 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A592E1C54B2;
-	Mon, 10 Mar 2025 19:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4696E15B971
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 19:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741635950; cv=none; b=FZb9mewM3HaR/O0IxvMWYDqj2FtR61O/OHSiKWlYDaL1XAm+5D2gcYJzUoLTPtPVtOHPMfjgDC5wSNlUTIHGLS8VQPNe27/iY4aMZN6Z0KUnxf6+XwyVbFhvmjHkUVhAE5jAIE+7EU6g/hrG7tb5bYVo/YX7mxrcWZqkj0buPr8=
+	t=1741636525; cv=none; b=Dkwakg+X+mQ/7e4TJb2lmrsF4xWRN8J+4pBqMO5834PPayUNubLWCPARgzMK/GujdqW7CB/TXqHGucoFdC58Zvs6cOQYbe5soqr40tkXy+G+Tryoadbz+0OlQ5Ejso64u9bulJJAZChR40jnlrjiD2uK4IUX4qz6Z16g3WxeGCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741635950; c=relaxed/simple;
-	bh=eWMNKQXpfEBHkUD356t+edleLweO0zbR+YCN2pmhSoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c14MPQ6AWOi1grXIOXnYBheV+2fD/VwvlVMQSb32EzXFiDP8GgWUxp72n9IdJ/VtuY+tqba/+GnXQHtykLpCqJmRLEV54sVYnV+oDqsr2glKwT9cNZDvWSI6Cp+jJAEEagKrqX+5ck4SPwgOVU+tN/XsB7T2kEnm6vJYQeGciqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbpr7KuQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741636525; c=relaxed/simple;
+	bh=2G5+QIi39QvRpz+Uxbs2p5hm+8aY7ikDDaUf8vmT/q8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=BLsK6172/BzgK5JcsMiY4BD/IvvvqHNBJby65SXWZvqLbKtsjXZgvyikn210ZsNPppz74gOXK2WFYooYg28qUu5o729pl5iCj8ZsB8kWiF4OPIEAjfCnr+/Ooe2JUpiFNAG4CH1Rcs34+cSF/nCWEWioaM7nBSCnSGGll09GSp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WmBv7bXO; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbpr7KuQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52603C4CEEC;
-	Mon, 10 Mar 2025 19:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741635950;
-	bh=eWMNKQXpfEBHkUD356t+edleLweO0zbR+YCN2pmhSoU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fbpr7KuQpkAPVuF6BHJjglrczjMo72vIWGnyysEbBaxp3tJbO7tddCb6u2saAKRGV
-	 twvgDS5Sa/ig9WQyyV6MJzq6fegQ2qmTZUA471xlBEL1ORRYGyEqASh6HdKSXhNZDJ
-	 hZYThQUotFdSdpo7yryrJTlPHSxyR5PJmVonTN049lGW74wM7nzmzieZab5OUgCDyT
-	 OkHVI4MAPMKvOG9J6NgI8AvNGzddmMBgguTQ09WBvery/uyJEdpp2Jc0k+nbCBIKiI
-	 vqaa0+yHTbK8M3RJAz4uS1ADD2K4meqkbfQEAYe29pqR1mxhWLPXO5FKJ90x2W1/v6
-	 sUkHdnr1/v2vw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/3] perf hist stdio: Do bounds check when printing callchains to avoid UB with new gcc versions
-Date: Mon, 10 Mar 2025 16:45:33 -0300
-Message-ID: <20250310194534.265487-4-acme@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250310194534.265487-1-acme@kernel.org>
-References: <20250310194534.265487-1-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmBv7bXO"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-223477ba158so122844755ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Mar 2025 12:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741636523; x=1742241323; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZPtTVgbo1Gc22cvvBNU7TODq9XtOwM1eBGa+Md6htLk=;
+        b=WmBv7bXOJjkaulsuIWb4CFijIu2iCbHdxF9txj3+XCXlmahB6Nonu5+VoxHlgyYpq+
+         jvNjiOA69Wf64f9sAPk2G5feHhp708seBmSwZDsK8+Gz2izQUUeC5ZND5Kyq8FSFFoWU
+         0PCmA0Zj+LMYGavc39kpFUBi49cXBUpZWprL31X3Hou9y+elK29wsK9VYLLp5QStdv+D
+         6dUPimHXmXfoG71l/gUyk7juEvRO1K9R4htOUGZdLTzcb4zgIsL6J+vULf3oJf/ktbYB
+         AQ+XsBeUabqTeNpRz800/rU92ufWhqumi60rjO1MMfMJ/JbDO7rMtz2I6wxrnMKsQVCY
+         //1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741636523; x=1742241323;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZPtTVgbo1Gc22cvvBNU7TODq9XtOwM1eBGa+Md6htLk=;
+        b=Uujjh/QjzqKdcy/SDQSKWcKUTVvueqJAngLTJ/ZPUK4u99ZykRAsZXtNOicFKv5hUB
+         x+9hZS+/q8JUWRolBFdixS4423xwJanF3fYLPTGCuqbcb40Jus6fNwkfaa9BuPlZKOYQ
+         aoBAxVWsqWHTmJ1pt/9DS7dsoD9i313pw3w3lRogY/p9jEg/m1VUzxlcKwrIKKIcQCr7
+         nev0qnEx+ypDHZO0CYc/CrQUdpkws6iYpmHtzXoJEto+kCUVB6leDWa0otjk3ygFYfEP
+         BrB57CHPwLMociUSRv/B8QjGM+6ERXoVlfCf7scs+QGAz7c8vNyvw/Pygg9S9mu6lmSs
+         jVJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgFLCVFYhiI7wa4SNAVXYENYRpMAoir0+izSmNL1viULeaygArpvoHw6FUOXtTZtm65AolBD5JO4RmJ3ScVqlm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLQXwdannJynFVDCDgf4585SkH/I3RYlt9qkOxWVB7oB9b7sYU
+	89c2Pu32fRY6spOTpVgOmbeDTcQwNBP2VrtFeo/8GorxtyR0dznQjV4u2skvw88e53yF7jW0tbW
+	GyT42yA==
+X-Google-Smtp-Source: AGHT+IEJmSQJflyxaKBwX1PYSk5UMMFRR580oxmfwEtt0gz7FirWb1HSugRKiUxFzQFc5A8V/VvGjc2oIPkN
+X-Received: from plbkf4.prod.google.com ([2002:a17:903:5c4:b0:223:3f96:a293])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b63:b0:220:e5be:29c8
+ with SMTP id d9443c01a7336-22428bdee3cmr252515855ad.32.1741636523539; Mon, 10
+ Mar 2025 12:55:23 -0700 (PDT)
+Date: Mon, 10 Mar 2025 12:55:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250310195518.2012571-1-irogers@google.com>
+Subject: [PATCH v1 0/2] Consistently prioritize legacy events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Yang Jihong <yangjihong@bytedance.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Leo Yan <leo.yan@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Legacy events were historically the priority over sysfs/json
+events. This behavior was changed in commit a24d9d9dc096 ("perf
+parse-events: Make legacy events lower priority than sysfs/JSON") to
+fix issues on ARM Apple-M CPUs. Sysfs/json being the priority makes
+most sense, was preferred by RISC-V and gives abilities impossible
+with legacy events. Making this encoding consistent is proving
+impossible with endless bike shedding, people saying they see
+something as a fix then when that fix is provided continuing to
+object, etc. Given that in the RFC [1] legacy events are seen as being
+preferrable let's just follow up on that and make their use
+consistent.
 
-Do a simple bounds check to avoid this on new gcc versions:
+If it isn't clear, I think this is the wrong decision and landing [2]
+should be the priority. When I try to have this conversation it just
+gets ignored and I want consistency more than my preferred
+prioritization.
 
-  31    15.81 fedora:rawhide                : FAIL gcc version 15.0.1 20250225 (Red Hat 15.0.1-0) (GCC)
-    In function 'callchain__fprintf_left_margin',
-        inlined from 'callchain__fprintf_graph.constprop' at ui/stdio/hist.c:246:12:
-    ui/stdio/hist.c:27:39: error: iteration 2147483647 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-       27 |         for (i = 0; i < left_margin; i++)
-          |                                      ~^~
-    ui/stdio/hist.c:27:23: note: within this loop
-       27 |         for (i = 0; i < left_margin; i++)
-          |                     ~~^~~~~~~~~~~~~
-    cc1: all warnings being treated as errors
-    --
-    util/units.c: In function 'unit_number__scnprintf':
-    util/units.c:67:24: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
-       67 |         char unit[4] = "BKMG";
-          |                        ^~~~~~
-    cc1: all warnings being treated as errors
+[1] https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+[2] https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@google.com/
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/ui/stdio/hist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Ian Rogers (2):
+  perf parse-events: Make legacy events always have priority over
+    sysfs/json
+  Revert "perf evsel: Add alternate_hw_config and use in evsel__match"
 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 74b2c619c56c8ba3..7ac4b98e28bca82e 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <linux/string.h>
-@@ -24,6 +25,9 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
- 	int i;
- 	int ret = fprintf(fp, "            ");
- 
-+	if (left_margin > USHRT_MAX)
-+		left_margin = USHRT_MAX;
-+
- 	for (i = 0; i < left_margin; i++)
- 		ret += fprintf(fp, " ");
- 
+ tools/perf/builtin-diff.c       |  6 +--
+ tools/perf/tests/parse-events.c | 13 ++----
+ tools/perf/util/evsel.c         | 21 ---------
+ tools/perf/util/evsel.h         | 19 +++++++-
+ tools/perf/util/parse-events.c  | 81 ++++++++++++---------------------
+ tools/perf/util/parse-events.h  |  8 +---
+ tools/perf/util/parse-events.y  |  2 +-
+ tools/perf/util/pmu.c           |  6 +--
+ tools/perf/util/pmu.h           |  2 +-
+ 9 files changed, 57 insertions(+), 101 deletions(-)
+
 -- 
-2.48.1
+2.49.0.rc0.332.g42c0ae87b1-goog
 
