@@ -1,142 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597661DE3BA;
-	Mon, 10 Mar 2025 20:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DA51E0E0B;
+	Mon, 10 Mar 2025 21:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640395; cv=none; b=NBjuWVPJzTJ4NgAr43KxHedBg+eRwkHeUJ4Xv/4WGQZkpGjVvdUxKgp82/0lwH4kUHIsTwIqbrtFh9m1E2+czyIa8VRdRc92TIQLcYLG4eiRSXwxiRlcvWWm86Nl1JWN5gUQ/CEJLYxfjIrQlr7rV6pZWHrzUwCI1X1D+JXCewI=
+	t=1741641239; cv=none; b=upn8UEZyNUe4fy0uABe9mjy8htLsQfPBL/1GmffTLJ1vu9dYi1T+oltUeJnxZTA8gr/lMMKAVcazTTx39SSMlRBdY+snwskcPu6sIgegobqDLIKBqAhXDTGEYiG6c29q+8wB3/P1tzMlaRGPs7WoU3PyNyt1KeGLnJtPGkOn9K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640395; c=relaxed/simple;
-	bh=o80ThnfsDtVGMfVUzfNKedWb1hkkKsxCvl4E7v+/6GM=;
+	s=arc-20240116; t=1741641239; c=relaxed/simple;
+	bh=ofonAGYkuJD+XxID+8fbp4tmBpONyoJozUMiWHGHFQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XdRMY9lkoeVpXqjJKQk+tyznjj1aTA7xAJncAEG8pVLlTkMKRyEqVYnbNrsXdav4AKLWyc0cZil1YQyRLOVdaEeSK6pfYEIXAOPTKtTPAz1f82rxoFYvbqwmYxYiqGbEFgrHpxweAx9nXvFxL74mg2QBvIlufgTZqblRgRW1KrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppNQkncO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCXW3goRyaKJKMXmasOP5V2Rw5III1D7Op2TzrCywGGYFKiwwgfki4jb0I1P/iFTwIzEmvm2XKBiW+90o3nvnfCg+sJdoFXxSr69QmdMCh89y+4r6gw0uaNvzOqhq8ZmVsgiFQa6Q8CyUGztKNYl8ecSsDrpIBh/cL4cHd1G39Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNTnyBgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppNQkncO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E19C4CEE5;
-	Mon, 10 Mar 2025 20:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNTnyBgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F158C4CEE5;
+	Mon, 10 Mar 2025 21:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741640394;
-	bh=o80ThnfsDtVGMfVUzfNKedWb1hkkKsxCvl4E7v+/6GM=;
+	s=k20201202; t=1741641238;
+	bh=ofonAGYkuJD+XxID+8fbp4tmBpONyoJozUMiWHGHFQE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ppNQkncOdP8loMk0aTX943+admymqMyYoKTumSTfhgsIhL+JOMeN9CmEaN63xkVjR
-	 dmmyTC+R7W2XTmhmCqRBhx3+kIlCmWMmOSlWLG2Z56qriw+5G5WiC+b9OvTEXCfXcV
-	 gJ2w44oZYfqvO379CD1A/NZVAbvhi011iBFtBXg3snC8MgoaFWlVKfHgbH+6KLV7ex
-	 rz1gzCV3QRCeC/EBWZlEYjI4CHkPCVM4YYcbZI8NOYNJiwHxkbp7xRhnXYQME4l7cV
-	 mBO4OwAIcBSslMFEACJTpaZ3nWCiVn0UywR+8dx8K/xk0q+fnsQaGFM/tVdL/I11Xv
-	 htcK2zoIvZTww==
-Date: Mon, 10 Mar 2025 17:59:52 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+	b=FNTnyBgv5ZEXhsVleSIt/nVR2j56/f24Rg4RVedUFhX5n270mDWY6b0dr0Q0f4G14
+	 oy9OXWlXqizoY/fHnfvLTjOxr8jXxALGJYrs2jUx6n6kkltQ33LnqwQUahx04ifAEP
+	 PMrwASNRu4epFCiVK1FcJHK6xDtP9Oqi2qbGMc2BSQvCanH8uVgPEmp9d+rd9ruvTD
+	 LjaQUu/3cOx2BhU8ZdEszGUM9ZO9iFPXNXcIT02CvvpqEs8e0qdpAqION12AZ4Rgpm
+	 EiZMIx5XfgDBhx2dps5nH7w2g4OtqbfY6viJUoL9WPgkSMw3jJNEkw141OggFku+Di
+	 aIaqYbnloVKnw==
+Date: Mon, 10 Mar 2025 14:13:56 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	James Clark <james.clark@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 10/11] perf python: Add evlist.config to set up record
- options
-Message-ID: <Z89SyJNCILErEwAb@x1>
-References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-11-irogers@google.com>
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Martin Liska <martin.liska@hey.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH] perf script: Update brstack syntax documentation
+Message-ID: <Z89WFKPIxWBgN6q2@google.com>
+References: <20250225061736.1698175-1-yujie.liu@intel.com>
+ <Z8q51Mcz/9QenjnC@yujie-X299>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250228222308.626803-11-irogers@google.com>
+In-Reply-To: <Z8q51Mcz/9QenjnC@yujie-X299>
 
-On Fri, Feb 28, 2025 at 02:23:07PM -0800, Ian Rogers wrote:
-> Add access to evlist__config that is used to configure an evlist with
-> record options.
+Hello,
 
-I guess nothing precludes adding support later for passing fields as an
-optional dictionary, so I think its ok to have it with the name "config"
-but being more of a "default_config".
+On Fri, Mar 07, 2025 at 05:18:12PM +0800, Yujie Liu wrote:
+> Hi, friendly ping on this perf script doc fix. Thanks.
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sorry for the late reply.
 
-- Arnaldo
- 
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/python.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
 > 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index c55c8392bc07..69ec2ad60d98 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -9,10 +9,12 @@
->  #include <event-parse.h>
->  #endif
->  #include <perf/mmap.h>
-> +#include "callchain.h"
->  #include "evlist.h"
->  #include "evsel.h"
->  #include "event.h"
->  #include "print_binary.h"
-> +#include "record.h"
->  #include "strbuf.h"
->  #include "thread_map.h"
->  #include "trace-event.h"
-> @@ -1052,6 +1054,31 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
->  	return Py_None;
->  }
->  
-> +static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
-> +{
-> +	struct record_opts opts = {
-> +		.sample_time	     = true,
-> +		.mmap_pages	     = UINT_MAX,
-> +		.user_freq	     = UINT_MAX,
-> +		.user_interval	     = ULLONG_MAX,
-> +		.freq		     = 4000,
-> +		.target		     = {
-> +			.uses_mmap   = true,
-> +			.default_per_cpu = true,
-> +		},
-> +		.nr_threads_synthesize = 1,
-> +		.ctl_fd              = -1,
-> +		.ctl_fd_ack          = -1,
-> +		.no_buffering        = true,
-> +		.no_inherit          = true,
-> +	};
-> +	struct evlist *evlist = &pevlist->evlist;
+> On Tue, Feb 25, 2025 at 02:17:36PM +0800, Yujie Liu wrote:
+> > The following commits appended new fields to the end of the branch info
+> > list, such as branch type and branch speculation info.
+> > 
+> > commit 1f48989cdc7d ("perf script: Output branch sample type")
+> > commit 6ade6c646035 ("perf script: Show branch speculation info")
+> > 
+> > Update brstack syntax documentation to be consistent with the latest
+> > branch info list. Improve the descriptions to help users interpret the
+> > fields accurately.
 
-> +	evlist__config(evlist, &opts, &callchain_param);
-> +	Py_INCREF(Py_None);
-> +	return Py_None;
-> +}
-> +
->  static PyObject *pyrf_evlist__disable(struct pyrf_evlist *pevlist)
->  {
->  	evlist__disable(&pevlist->evlist);
-> @@ -1109,6 +1136,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
->  		.ml_flags = METH_VARARGS | METH_KEYWORDS,
->  		.ml_doc	  = PyDoc_STR("reads an event.")
->  	},
-> +	{
-> +		.ml_name  = "config",
-> +		.ml_meth  = (PyCFunction)pyrf_evlist__config,
-> +		.ml_flags = METH_NOARGS,
-> +		.ml_doc	  = PyDoc_STR("Apply default record options to the evlist.")
-> +	},
->  	{
->  		.ml_name  = "disable",
->  		.ml_meth  = (PyCFunction)pyrf_evlist__disable,
-> -- 
-> 2.48.1.711.g2feabab25a-goog
+Thanks for your work, but can you please update it again with recent
+changes from Leo?
+
+https://lore.kernel.org/linux-perf-users/20250304111240.3378214-1-leo.yan@arm.com/
+
+Thanks,
+Namhyung
+
+> > 
+> > Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+> > ---
+> >  tools/perf/Documentation/perf-script.txt | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> > index b72866ef270b..8bd105084280 100644
+> > --- a/tools/perf/Documentation/perf-script.txt
+> > +++ b/tools/perf/Documentation/perf-script.txt
+> > @@ -239,13 +239,15 @@ OPTIONS
+> >  	i.e., -F "" is not allowed.
+> >  
+> >  	The brstack output includes branch related information with raw addresses using the
+> > -	/v/v/v/v/cycles syntax in the following order:
+> > -	FROM: branch source instruction
+> > -	TO  : branch target instruction
+> > -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> > -	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
+> > -	A/- : A=TSX abort entry, -=not aborted region or not supported
+> > -	cycles
+> > +	FROM/TO/PRED/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
+> > +	FROM  : branch source instruction
+> > +	TO    : branch target instruction
+> > +	PRED  : M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> > +	INTX  : X=branch inside a transactional region, -=not in transaction region or not supported
+> > +	ABORT : A=TSX abort entry, -=not aborted region or not supported
+> > +	CYCLES: the number of cycles that have elapsed since the last branch was recorded
+> > +	TYPE  : branch type
+> > +	SPEC  : branch speculation info
+> >  
+> >  	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+> >  
+> > -- 
+> > 2.34.1
+> > 
