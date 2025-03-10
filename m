@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC36EC5;
-	Mon, 10 Mar 2025 20:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4BE1B87F0;
+	Mon, 10 Mar 2025 20:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741638169; cv=none; b=XfMmsF9ro3uGb6gp0gRkG6VT9mPp/bSE3vz5kzdob7paIx8X7dT/3fIz7LF/aOT3lHNNIfjLHqHTm2b+EBqxK9MPoXMebb50WMSeNe/p4T46dI0IVBdpU7h9F/tKBJHyPIKURSiIyERIwHc8059/uKIvBqFQzC14yqCG6tKniVE=
+	t=1741638708; cv=none; b=n8nxyCOnRqxYAK3LtTIdAjJSfp4U99CgwFdbs3+MJ54+TG52FWcr2bNTij24X/XOfXd9p3Hocq2yHpY9OrFGclgxusLlXmqEWPcVQ1Gk1meo6VsH9Uol3UA0StbRIxA3yoda4qkpJIPaW3JrKx3r9HYFUtZVILHPLY86HTzndQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741638169; c=relaxed/simple;
-	bh=noq37JP5Rq9ToLD7jW58TWDFFnYeTxmbxxmcOmoeV9Y=;
+	s=arc-20240116; t=1741638708; c=relaxed/simple;
+	bh=wqwG90EKh+JKAewBGlOY847BC5tTSk1WR1QSUCMgTLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhA29IQomRGNGe0YF2SS59MgCIGyNM+6hPoWFmk/Tsut7W4wfTsC1F9wscjIrmK6s2pH5+NSOxGkoSvhqzA3VnCOF0Xsyqx0D4F8zIy59LLgvl89P/+sLj6s1F/4VK1f+GM+XKdEWcYB60Ux31XU0LRfRN0bbAKE0qn9cRQ8B8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJtkWd7+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaltsOMoZeGsTi6NK47EhkXXWNpopQyZWnS4QxIW6nKQEHrKstlf0p/isrFWFCdF5DWVHsMDOwF2tT8SFEZ93O10GDWLz+Mhhe0Mt6HjM0UZaAbCp3JibxKCKP9Vx+WAJfi+Qgh6wd99/itLDp3lKL8bv6iKbKsbfAxEb2fR/ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIfiwtrA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJtkWd7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EEEC4CEE5;
-	Mon, 10 Mar 2025 20:22:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIfiwtrA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 226F6C4CEE5;
+	Mon, 10 Mar 2025 20:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741638169;
-	bh=noq37JP5Rq9ToLD7jW58TWDFFnYeTxmbxxmcOmoeV9Y=;
+	s=k20201202; t=1741638707;
+	bh=wqwG90EKh+JKAewBGlOY847BC5tTSk1WR1QSUCMgTLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJtkWd7+EwPayk6jsXmO+CurZdbvE2c4S2Ehd7xua7TmbrwgoaaS0+FD+CaGXACXO
-	 EaJRFhfcXdOYvy/Zg/7YLkAegKg4ume8Uly/OAS3y80R7TqV5vddApjKUfhKuGQDgs
-	 eeQ5tXBoDtEbOj2e2nL68i8sKlj987qpAr+2nB6d64flX2EE3+czs3x7wOswhoDu92
-	 RpOC6eDqN0qesYBR8jc9qni0Fo8asVuovJfiMfRZtgQeUo9wkVMvqtFYZ300LcG5qq
-	 cfVUja+4xXC1Yi5ffuZkG3vpyv4ELTedK4omB/FXOGXPgMlcdmNSKGWQEJNAm6I+f7
-	 TBLYSz8IJ7Q2g==
-Date: Mon, 10 Mar 2025 17:22:44 -0300
+	b=jIfiwtrANyeJ1aGfVsu8tw3mw+yLe4+oCX9AQZWFi0DiBq0etpJQcEKN31WmMGMnr
+	 br7WUKzs0M9HICWd0IXxIKxsi1S1wSQvuXznwwhKjR5V9R9j4cHyW+8gfpv6yY2fCU
+	 sHV3cj7osTZthJUbEQd2guV8OqV8wGahwoT+u5T5ELqzDote4ShqzcgoHFIHivkFW9
+	 irfYuZSjOWqWRYikGC7zPWRP63quWIGjyCDdvTk21qkglGHktgsa1jMTGDQ3hKwulJ
+	 gIxd+EW0P6ZyshmtqwASQ6OB/NpcpoS/kc51t+YKSnl5tCq7jiWaTEchHW/VhYYjyB
+	 Xqq5QhQxD5n8g==
+Date: Mon, 10 Mar 2025 17:31:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -43,12 +43,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 01/11] perf debug: Avoid stack overflow in recursive
- error message
-Message-ID: <Z89KFNVbh__UXjEg@x1>
+Subject: Re: [PATCH v2 02/11] perf evlist: Add success path to
+ evlist__create_syswide_maps
+Message-ID: <Z89MMMncPTvG8bdf@x1>
 References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-2-irogers@google.com>
- <Z89J9cBUR6NCMaaj@x1>
+ <20250228222308.626803-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,44 +56,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z89J9cBUR6NCMaaj@x1>
+In-Reply-To: <20250228222308.626803-3-irogers@google.com>
 
-On Mon, Mar 10, 2025 at 05:22:16PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Feb 28, 2025 at 02:22:58PM -0800, Ian Rogers wrote:
-> > In debug_file, pr_warning_once is called on error. As that function
-> > calls debug_file the function will yield a stack overflow. Switch the
-> > location of the call so the recursion is avoided.
-> > 
-> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Good to add this so that stable picks it:
-> 
-> Fixes: ec49230cf6dda704 ("perf debug: Expose debug file")
+On Fri, Feb 28, 2025 at 02:22:59PM -0800, Ian Rogers wrote:
+> Over various refactorings evlist__create_syswide_maps has been made to
+> only ever return with -ENOMEM. Fix this so that when
+> perf_evlist__set_maps is successfully called, 0 is returned.
 
-Forgot to add:
+I think this was when the problem was introduced:
+
+Fixes: 8c0498b6891d7ca5 ("perf evlist: Fix create_syswide_maps() not propagating maps")
 
 Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
- 
+
 - Arnaldo
+ 
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evlist.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
 > 
-> > ---
-> >  tools/perf/util/debug.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-> > index 995f6bb05b5f..f9ef7d045c92 100644
-> > --- a/tools/perf/util/debug.c
-> > +++ b/tools/perf/util/debug.c
-> > @@ -46,8 +46,8 @@ int debug_type_profile;
-> >  FILE *debug_file(void)
-> >  {
-> >  	if (!_debug_file) {
-> > -		pr_warning_once("debug_file not set");
-> >  		debug_set_file(stderr);
-> > +		pr_warning_once("debug_file not set");
-> >  	}
-> >  	return _debug_file;
-> >  }
-> > -- 
-> > 2.48.1.711.g2feabab25a-goog
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f0dd174e2deb..633df7d9204c 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1373,19 +1373,18 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
+>  	 */
+>  	cpus = perf_cpu_map__new_online_cpus();
+>  	if (!cpus)
+> -		goto out;
+> +		return -ENOMEM;
+>  
+>  	threads = perf_thread_map__new_dummy();
+> -	if (!threads)
+> -		goto out_put;
+> +	if (!threads) {
+> +		perf_cpu_map__put(cpus);
+> +		return -ENOMEM;
+> +	}
+>  
+>  	perf_evlist__set_maps(&evlist->core, cpus, threads);
+> -
+>  	perf_thread_map__put(threads);
+> -out_put:
+>  	perf_cpu_map__put(cpus);
+> -out:
+> -	return -ENOMEM;
+> +	return 0;
+>  }
+>  
+>  int evlist__open(struct evlist *evlist)
+> -- 
+> 2.48.1.711.g2feabab25a-goog
