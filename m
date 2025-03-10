@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6F9BA3D;
-	Mon, 10 Mar 2025 22:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9932A1EB5F9;
+	Mon, 10 Mar 2025 22:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741646967; cv=none; b=hPBJO2XU43XyK4Yn4zzMJth9Vrn/gDkX2M5gr6DRvBnKmz9UotkBIabpSH+9iuxCBS7SGcVGnmlLzpeExOT6aU2fEij6FJYw8R1h0WnkJf+KXPus6F8oUEoMkLDZLhN7F/oYlvDCA6OSG6UF3UW576V1bF4Io5Y8eYsjUxQvemE=
+	t=1741646967; cv=none; b=JtWBghp1f5cu8OBy7szXYzIkEa8Awzz/kIJIqWUiDA3V/MLC5xlyVS45IYBUAnZBihH3NBoFDcC7ncq2yb+ShjdO/JLy0p4Js0918ZQrcRgAgp4vjkmc3XGlcpj/G7PeHkm59rP2xlUCr66qOVz+5tm9ok0ulhRLzYA2T5wBhfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741646967; c=relaxed/simple;
-	bh=akOtvM7FWY4s2y49rFK+T/XvRRWQHPSpZrxGmsJZNzM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EdejAd0KhgPSclLsbG6jTxqLHuv6LOOTqJlXiUF3UdI3BCusIajGX7RGCtCmKIfXZrXGAWsMwJOp7n0Sd3F2EjQPmSItg1u9k6J7UPIyxb6xpLDft27aIrDW4Mrx8qlOBTpeR8zVa4O10g8uS8oKDofozxGNQkUB4+b9bm3+Yn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXrsxWIC; arc=none smtp.client-ip=10.30.226.201
+	bh=LyTo7sFjnogmd09szBPpG47+nMOqHTi8i38MCphK5zU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rx5SVbPb2NmNApvgQHdJVcXIYrgl8GNzEK+kl8a9H0pH/Gx2PR/uD3ligSRrJGXMqqenqRkTtcQxH31NUIa1dVyxqvOD6NR+4HVVHhUv2Zw9RUmiK1HQfUSi/2yjLV4AkQDWDpAH54gQRGX3M6eVNwV/Mb4JCBfPqfZzN+xPEic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7bt1CAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXrsxWIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C39C4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7bt1CAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F42C4CEEA;
 	Mon, 10 Mar 2025 22:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741646966;
-	bh=akOtvM7FWY4s2y49rFK+T/XvRRWQHPSpZrxGmsJZNzM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gXrsxWICrBaI6HOwMD4lU1mXjNIvDfg1UgUmAiyie34TMY+TaQqQ3L6EBVsAzH3uM
-	 I8sJRc/qT1qRbNR5WkrfkUusihCHO+OhIROEAwvxyNpJNI9+9jagfdCvlU3/VmyMsi
-	 OFVDcvH9GDwsdziv/rjkSgLsWZbmiOqT+voHrFW1/uppRZ8rrMEvVJW5CGgT9VDgnN
-	 R8kstoyLNrN0Gl8Tw9Oenguj6ODGbE5VtMK5OSGFUBvN5J3FKhypnVfL+Hpif2dW+y
-	 +oF0JeMHlltW2801AjDHsIIsECHmSOZT+smKg1whJDpdpnudWWc9siqkBYF6vhWfWT
-	 QwwR5fsoAaLvQ==
+	s=k20201202; t=1741646967;
+	bh=LyTo7sFjnogmd09szBPpG47+nMOqHTi8i38MCphK5zU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i7bt1CAVIcnTclypz5WXR70I6FWAZweVJBk0jJcoJInqwtaApCH6VM0w9JYOfbGZY
+	 IyJYnDkdpMFXaVVKJFGDWB1OfvFKISv8XIrJdJCutpUMS4J6cLIwehDLwzxjOA0tay
+	 05kWQ4dFDG7tfZ/lRZ0s0V/0rKIeKG5kU1Hsih3VTC/hauczESMTrjqqH8ggyuVyqq
+	 hUqQdYtHC6GZHWlIjO/giuJsnECj9NxomydMSwh3SzOkeZKUwqUiRn1siv/0IQOWDw
+	 7orQfy0wBdJc6Nf0nZ8zwE8EtKMo8PYYPZwsGuaPg2Tijz04t0PVMKw66aGzNzRGqB
+	 goss0WhiWfQpA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,10 +37,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCHSET v2 0/7] perf annotate: Add --code-with-type option
-Date: Mon, 10 Mar 2025 15:49:18 -0700
-Message-ID: <20250310224925.799005-1-namhyung@kernel.org>
+Subject: [PATCH v2 1/7] perf annotate-data: Add annotated_data_type__get_member_name()
+Date: Mon, 10 Mar 2025 15:49:19 -0700
+Message-ID: <20250310224925.799005-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+In-Reply-To: <20250310224925.799005-1-namhyung@kernel.org>
+References: <20250310224925.799005-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,97 +51,159 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Factor out a function to get the name of member field at the given
+offset.  This will be used in other places.
 
-There are roughly two modes in the perf annotate.  One is normal code
-annotation and the other is data type annotation.  I'm proposing a new
-way to combine the code and data annotation together.
+Also update the output of typeoff sort key a little bit.  As we know
+that some special types like (stack operation), (stack canary) and
+(unknown) won't have fields, skip printing the offset and field.
 
-With this option, "# data-type: <name> [offset (field)]" part will be
-added when it found a data type for the given instruction.  This is
-for every instruction in the function regardless whether it has a
-sample or not.
+For example, the following change is expected.
 
-This will be useful to understand function level data access patterns.
-Currently it only works with --stdio, but I can add it to TUI later.
+  "(stack operation) +0 (no field)"   ==>   "(stack operation)"
 
-v2 changes)
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate-data.c | 34 ++++++++++++++++++++++++++++
+ tools/perf/util/annotate-data.h | 13 +++++++++++
+ tools/perf/util/sort.c          | 39 ++++++---------------------------
+ 3 files changed, 54 insertions(+), 32 deletions(-)
 
- * fix typos in the cover letter  (Ian)
- * fix a build error when !HAVE_LIBDW_SUPPORT
- * add Reviewed-by from Ian
-
-v1: https://lore.kernel.org/r/20250303173807.1765098-1-namhyung@kernel.org
-
-Here's an example output.
-
-
-  $ perf annotate --code-with-type --stdio
-  ...
- Percent |      Source code & Disassembly of elf for cpu/mem-loads,ldlat=30/P (4 samples, percent: local period)
-  ----------------------------------------------------------------------------------------------------------------
-           : 0                0xffffffff81bb7060 <__schedule>:
-      0.00 :   ffffffff81bb7060:        pushq   %rbp              # data-type: (stack operation)
-      0.00 :   ffffffff81bb7061:        movq    %rsp, %rbp
-      0.00 :   ffffffff81bb7064:        pushq   %r15              # data-type: (stack operation)
-      0.00 :   ffffffff81bb7066:        pushq   %r14              # data-type: (stack operation)
-      0.00 :   ffffffff81bb7068:        pushq   %r13              # data-type: (stack operation)
-      0.00 :   ffffffff81bb706a:        pushq   %r12              # data-type: (stack operation)
-      0.00 :   ffffffff81bb706c:        pushq   %rbx              # data-type: (stack operation)
-      0.00 :   ffffffff81bb706d:        movq    $0x33180, %rbx
-      0.00 :   ffffffff81bb7074:        movq    %rbx, %r12
-      0.00 :   ffffffff81bb7077:        subq    $0x38, %rsp
-      0.00 :   ffffffff81bb707b:        movl    %edi, -0x5c(%rbp)         # data-type: unsigned int +0
-      0.00 :   ffffffff81bb707e:        movq    %gs:0x28, %rax            # data-type: (stack canary)
-      0.00 :   ffffffff81bb7087:        movq    %rax, -0x30(%rbp)         # data-type: (stack canary)
-      0.00 :   ffffffff81bb708b:        xorl    %eax, %eax
-      0.00 :   ffffffff81bb708d:        movq    $0x0, -0x58(%rbp)         # data-type: struct rq_flags +0 (flags)
-      0.00 :   ffffffff81bb7095:        movq    $0x0, -0x50(%rbp)         # data-type: struct rq_flags +0x8 (clock_update_flags)
-      0.00 :   ffffffff81bb709d:        callq   0xffffffff81baa100 <debug_smp_processor_id>               # data-type: (stack operation)
-      0.00 :   ffffffff81bb70a2:        cltq
-      0.00 :   ffffffff81bb70a4:        addq    -0x7dcf0500(,%rax,8), %r12                # data-type: long unsigned int[] +0
-      0.00 :   ffffffff81bb70ac:        movq    0x960(%r12), %r13         # data-type: struct rq +0x960 (curr)
-      0.00 :   ffffffff81bb70b4:        movq    0x20(%r13), %rax          # data-type: struct task_struct +0x20 (stack)
-      0.00 :   ffffffff81bb70b8:        cmpq    $0x57ac6e9d, (%rax)
-      0.00 :   ffffffff81bb70bf:        jne     0xffffffff81bb7bca <__schedule+0xb6a>
-      0.00 :   ffffffff81bb70c5:        movl    %gs:0x7e47b87c(%rip), %eax  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81bb70cc:        andl    $0x7fffffff, %eax
-      0.00 :   ffffffff81bb70d1:        cmpl    $0x1, %eax
-      0.00 :   ffffffff81bb70d4:        jne     0xffffffff81bb79de <__schedule+0x97e>
-      0.00 :   ffffffff81bb70da:        nopl    (%rax,%rax)
-      0.00 :   ffffffff81bb70df:        cmpl    $0x2, 0xe86b3a(%rip)  # 0xffffffff82a3dc20 <prof_on>              # data-type: int +0
-      0.00 :   ffffffff81bb70e6:        movq    0x8(%rbp), %rsi
-      0.00 :   ffffffff81bb70ea:        je      0xffffffff81bb7a0b <__schedule+0x9ab>
-      0.00 :   ffffffff81bb70f0:        nopl    (%rax,%rax)
-      0.00 :   ffffffff81bb70f5:        nop
-      ...
-
-The code is also available at 'perf/annotate-code-data-v2' branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (7):
-  perf annotate-data: Add annotated_data_type__get_member_name()
-  perf annotate: Remove unused len parameter from annotation_line__print()
-  perf annotate: Pass annotation_options to annotation_line__print()
-  perf annotate: Pass hist_entry to annotate functions
-  perf annotate: Factor out __hist_entry__get_data_type()
-  perf annotate: Implement code + data type annotation
-  perf annotate: Add --code-with-type option.
-
- tools/perf/Documentation/perf-annotate.txt |   4 +
- tools/perf/builtin-annotate.c              |  19 +-
- tools/perf/builtin-top.c                   |   2 +-
- tools/perf/util/annotate-data.c            |  34 +++
- tools/perf/util/annotate-data.h            |  13 +
- tools/perf/util/annotate.c                 | 267 +++++++++++++--------
- tools/perf/util/annotate.h                 |   8 +-
- tools/perf/util/sort.c                     |  39 +--
- 8 files changed, 246 insertions(+), 140 deletions(-)
-
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index eaf96fa80c830d05..1ef2edbc71d91a50 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -314,6 +314,40 @@ static void delete_members(struct annotated_member *member)
+ 	}
+ }
+ 
++static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
++			    int offset, bool first)
++{
++	struct annotated_member *child;
++
++	if (list_empty(&m->children))
++		return 0;
++
++	list_for_each_entry(child, &m->children, node) {
++		int len;
++
++		if (offset < child->offset || offset >= child->offset + child->size)
++			continue;
++
++		/* It can have anonymous struct/union members */
++		if (child->var_name) {
++			len = scnprintf(buf, sz, "%s%s",
++					first ? "" : ".", child->var_name);
++			first = false;
++		} else {
++			len = 0;
++		}
++
++		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
++	}
++	return 0;
++}
++
++int annotated_data_type__get_member_name(struct annotated_data_type *adt,
++					 char *buf, size_t sz, int member_offset)
++{
++	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
++}
++
+ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+ 							  Dwarf_Die *type_die)
+ {
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 98c80b2268dde889..541fee1a5f0a7af2 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -227,8 +227,13 @@ void annotated_data_type__tree_delete(struct rb_root *root);
+ /* Release all global variable information in the tree */
+ void global_var_type__tree_delete(struct rb_root *root);
+ 
++/* Print data type annotation (including members) on stdout */
+ int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+ 
++/* Get name of member field at the given offset in the data type */
++int annotated_data_type__get_member_name(struct annotated_data_type *adt,
++					 char *buf, size_t sz, int member_offset);
++
+ bool has_reg_type(struct type_state *state, int reg);
+ struct type_state_stack *findnew_stack_state(struct type_state *state,
+ 						int offset, u8 kind,
+@@ -276,6 +281,14 @@ static inline int hist_entry__annotate_data_tty(struct hist_entry *he __maybe_un
+ 	return -1;
+ }
+ 
++static inline int annotated_data_type__get_member_name(struct annotated_data_type *adt __maybe_unused,
++						       char *buf __maybe_unused,
++						       size_t sz __maybe_unused,
++						       int member_offset __maybe_unused)
++{
++	return -1;
++}
++
+ #endif /* HAVE_LIBDW_SUPPORT */
+ 
+ #ifdef HAVE_SLANG_SUPPORT
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 2b6023de7a53ae2e..6f7696b11b97a9f9 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -2403,44 +2403,19 @@ sort__typeoff_sort(struct hist_entry *left, struct hist_entry *right)
+ 	return left->mem_type_off - right->mem_type_off;
+ }
+ 
+-static void fill_member_name(char *buf, size_t sz, struct annotated_member *m,
+-			     int offset, bool first)
+-{
+-	struct annotated_member *child;
+-
+-	if (list_empty(&m->children))
+-		return;
+-
+-	list_for_each_entry(child, &m->children, node) {
+-		if (child->offset <= offset && offset < child->offset + child->size) {
+-			int len = 0;
+-
+-			/* It can have anonymous struct/union members */
+-			if (child->var_name) {
+-				len = scnprintf(buf, sz, "%s%s",
+-						first ? "" : ".", child->var_name);
+-				first = false;
+-			}
+-
+-			fill_member_name(buf + len, sz - len, child, offset, first);
+-			return;
+-		}
+-	}
+-}
+-
+ static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
+ 				     size_t size, unsigned int width __maybe_unused)
+ {
+ 	struct annotated_data_type *he_type = he->mem_type;
+ 	char buf[4096];
+ 
+-	buf[0] = '\0';
+-	if (list_empty(&he_type->self.children))
+-		snprintf(buf, sizeof(buf), "no field");
+-	else
+-		fill_member_name(buf, sizeof(buf), &he_type->self,
+-				 he->mem_type_off, true);
+-	buf[4095] = '\0';
++	if (he_type == &unknown_type || he_type == &stackop_type ||
++	    he_type == &canary_type)
++		return repsep_snprintf(bf, size, "%s", he_type->self.type_name);
++
++	if (!annotated_data_type__get_member_name(he_type, buf, sizeof(buf),
++						  he->mem_type_off))
++		scnprintf(buf, sizeof(buf), "no field");
+ 
+ 	return repsep_snprintf(bf, size, "%s +%#x (%s)", he_type->self.type_name,
+ 			       he->mem_type_off, buf);
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
