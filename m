@@ -1,248 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBBA1C1ADB;
-	Tue, 11 Mar 2025 09:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683885; cv=fail; b=mC9AUPUBfqPCyWIb46+pl316Erv+7Nd4qZvYLZ8x6syRvl918q30rxVeilgx8uIZLIKv4YuUEtHGxotjsEO/kx2NsfuyrGbAhEZx969olP5BTbA0jrxNPzRMr3lfO5/YD7N5BmHNtj0gujfquIp+1Uv4n806Xwnuzur3f2Jtw1o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683885; c=relaxed/simple;
-	bh=ezSvXbokBkOC9B8WFK/0VjqboF2ZLEWVOTEvylFX85M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AGDz6ZAgYlr1Ax8/tumEU9vfcxpOcgvjkJQWJtqWN48AupienNzRBnjCSkWRVYdzdPYrOlVN0IxcPSeA4/ekI93vyvT8AKfSXARA/bWP4Pyf9JPlF5fUoEuiP79u+8OcRg1pzPPNkw/50lHzDy5TR7wsLjQtbgmQAsPhE8jZ4iQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOLsx2yX; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1647C22B5B1
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 09:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741686887; cv=none; b=b8opLo4yx5ojtR9ZOlZAshSXvwORj91NoYHUcTixVYxhT9/XoBs1q6mcz/DdcsKAuq5A9qAo/FNUUl2kGJyQmbKNC4Bd5LGe9GM6D218waRH7MoIhKcPuwKvlXmPM8XqGjed/Ra8H37dXcBskOBofhG13idYOEGSVa02VyRExL0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741686887; c=relaxed/simple;
+	bh=YJ8aN/wvJALxLucsLU6pRlaFqpDABklnil0F7VecPHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tuw4aAxMFFD7K2nMafbrby9PwddEQS9lBJ/kiiJdGn8emrrhj+Lc61mXsGP4VBRSeuGIKdBUdnQ3Eg5RJxNenLjjLW22u8yKW1xxP51DyBMstt+pVnmG7Bs44jbsXJWWzJpR5098eEAv5fFlLY4aEiUMkvpDpqT5lMXTJZ0/VPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LtFRpUjO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOLsx2yX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741683883; x=1773219883;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ezSvXbokBkOC9B8WFK/0VjqboF2ZLEWVOTEvylFX85M=;
-  b=WOLsx2yXpCuFvs9cDgdOsG+ttR482ra8snI5ne7zJHivJkWLTmfQMnfL
-   Oii5VdOtpZ0wXAk3VrhtY8wLhdq4WFJ72mThEncnKVJu4AzyF33cN1yDE
-   y5clvINc9rPS/udUdc2Xle6NTTbY5i1xsNHmxwZ9LI6/1o+elhG5FqHBT
-   TcNCpNlkVGIRAVmWsAnOKVFVrf5q7Z0utOFkgn/VXC/RTFNO9mlZcmqSo
-   MILqExxKoW5MsezhGc/2clDiT34fgwn8BAwNnOJai+lzsPURHR+W1qbNn
-   6ugo9aXxVZz2ogbDFyWulvWJlM/MEIeXa0lEQXiEjy6U39zfVS81qwBTY
-   Q==;
-X-CSE-ConnectionGUID: 1zUhu5ZPTd27/tLX3Zu+zQ==
-X-CSE-MsgGUID: Ck3GDBjxQbSStUTXOkp44g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42563539"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="42563539"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 02:04:42 -0700
-X-CSE-ConnectionGUID: ZS1YbdEPRXett1jv0CCwNw==
-X-CSE-MsgGUID: yYCsAxP4TgCaUIvoCWUHCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="119982222"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 02:04:42 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 11 Mar 2025 02:04:41 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 11 Mar 2025 02:04:41 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 11 Mar 2025 02:04:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OQYcbxCqSzimaBjyi9DNdWrte7CWHRj6c5jykOj9dG/Cpcc90CZ7H27YOuiqesT54Wb0Hwj//4NSM2Tiy/VcScfFv7/etbB2Qn+ysS3SKf/51RMbR8deQSafnakt/HrtAd0duV1yc+GM2IoiqIAjDcxvliXXTlFxbt13M/DZYSvoXM4u7g8BvXVWHw90PNW+UHDt9tKok/R7ssK4wZ/u94Y3V247FzhCii+qIbvf5t8zC6eME1tnxxb93RXqGx4xex578+j0fE32fg5OidNzaVwR5WwaFDCuKG3jJlE4PEEEHbwVLopTG77U0NtwXQs6twnPCVJat8ZMHL1sPlEpYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k+12E1zkkyYqe+S2/mJCgMmJgbLIUqLObrYmh1hfe3E=;
- b=poGFZlZSqJ1d6/BLyZin8zD/osPELkRuMWGqhvUrE3ss/USdlKI/NJgesYa17nPtvYK8qd8nfVwWoZFD7R2wBnEFXKCq53yYC2b8fSzr/JA2ZbfNUuvXcDS8fNZkBBAz0gxz/l+5aHvSEw2x7FdmdOYMelukhDbM1pl4Iso9muAOXxANbo0iPSY6qYkbxGKW7ixLS5AIYSxqcqgKqIcHf+SosNwoNfDsEc/6sQ+L/2UZ3M/kGYKpmoXJRpOSjsxF6A7soaphsQ2JP9irdMpfGnPvESUsNyHLzesB51Vet8LFs/42wTXHAVPcrOk3Y2mWwFtfTkcr6o50gpmJ+KcnNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com (2603:10b6:806:373::21)
- by SA1PR11MB5804.namprd11.prod.outlook.com (2603:10b6:806:237::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 09:04:38 +0000
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::1835:328e:6bb5:3a45]) by SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::1835:328e:6bb5:3a45%5]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
- 09:04:38 +0000
-Date: Tue, 11 Mar 2025 17:04:28 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: Leo Yan <leo.yan@arm.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo
- Carvalho de Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	"Mark Rutland" <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
-	"Martin Liska" <martin.liska@hey.com>
-Subject: Re: [PATCH] perf script: Update brstack syntax documentation
-Message-ID: <Z8/8nBSBRj56kO87@yujie-X299>
-References: <20250225061736.1698175-1-yujie.liu@intel.com>
- <20250311081443.GI9682@e132581.arm.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250311081443.GI9682@e132581.arm.com>
-X-ClientProxiedBy: SG2PR04CA0182.apcprd04.prod.outlook.com
- (2603:1096:4:14::20) To SA1PR11MB8393.namprd11.prod.outlook.com
- (2603:10b6:806:373::21)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LtFRpUjO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741686885;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bn7ocXts0Kxe+IQiLbHVIiui5+EmHdYjljF85vWvYgI=;
+	b=LtFRpUjOTBDlvCk+kxtTccypU+t1XNI73TnhXQlpSJVdkF3M4l5aYkk6Jijno8tvzA3B8o
+	ST9LxgmLqEpCAb6FpxXWHIYn5z2X/qGg9oYg8ZHpFzLQTjw3+0TB2Vd2RPBly1c/5xap3q
+	DapfSvqyeC6yEPLln8JA9FIgESO784Q=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-551-IDp8AwyqPZe_Fid1W7w_Tg-1; Tue, 11 Mar 2025 05:54:43 -0400
+X-MC-Unique: IDp8AwyqPZe_Fid1W7w_Tg-1
+X-Mimecast-MFC-AGG-ID: IDp8AwyqPZe_Fid1W7w_Tg_1741686882
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913aaf1e32so2104803f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 02:54:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741686882; x=1742291682;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bn7ocXts0Kxe+IQiLbHVIiui5+EmHdYjljF85vWvYgI=;
+        b=kcOinO7mGSSNNtJdyO+7TS24MGAkfQzfh5wzLCuyt9A2iox8R9ZBjxSCG7+K9JUDzI
+         0T343j+q8YHwfo6B4KWzdabl1A2u8F+3LjlTK81lr1lnpQmVEahgx7M1PpZ+bmnzG+M+
+         NJ3xpw3Xx77Uy5bOeOUi1pGsMbbnlyDiiMYsUuV1BYpGIjInZlfr9zGpOpB5PWQkHAH0
+         iAYMraozywcXJR+J1lpDtO1tTg5cv3LW2DoVBAA1F/d8vlMa+4JgyZeKkeSyFPpALvH/
+         XbTqaM2dseNAeakQTPMl/xF4j0KfHH9n3IQoZgBLHyCuo1rLrEtjG2oZI8lY+DGQK1C/
+         WGdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5D+nOp++ZMT7k9ZynhfgCewOeR2yt9G+rN3VVZj8RTDH1Es+r6X4rz1g13YIj75KWloqJ0fdkt8O0nZjUXHOm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvqxRHeXFbrnql9EoUw0PPcZCX8XO2nscELNGVzB2igbGq0QiO
+	tWeo6kwve8giaFXYhhPYe+7wsTjRyfnbLIBHj8vMUcagEqvbp17t1Ei8VMZ5P3YaXWi7h6z6kb2
+	SYV/s69d3b/kCK/VKqBR9l0phkaNAaSFpbgaUn1VjcUiqHGIZL7S/heSfE6l++7GlbQw=
+X-Gm-Gg: ASbGnctcRqTohzk11AX/gyh0rKk1ADJYH3jtKxOM56ii/XwycUo1UPMZlwvpmwPG9mX
+	8XbRZbawPkaSk8J00LC/qmoDciR6/BI34JAAPt1lKw8Fej/6w6l5ePmZEIoK9CbU1BRFH9KZPf3
+	KxXoGLr9XVatVNR75kze0oPwarUPWMc68RCbicYNM+dqPHffJ8JmHYgjkihZBYPLDbcxkQXsB8U
+	2I2AdOID87w1Y5SD64NY7px98/6tx/8yrbK4vP0NzJqDbiM7osVFiOrkxha3IqLkUlAOHKbpSbL
+	EcA+2EFEpezAcH2BJNTb38hzKB6jsfvtMvbcRbZZByy9nUyDhSfrRGsqMMkTcW9zgSnZXr8X1YM
+	xRsdDgeax6B/0sI4obWuu3C/alq5LV/pPHXU3MrOOM9M=
+X-Received: by 2002:a5d:6482:0:b0:385:fc70:7f6 with SMTP id ffacd0b85a97d-39132d2affemr11212128f8f.7.1741686882510;
+        Tue, 11 Mar 2025 02:54:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZsoCOeCpGWewJyrTb/pLcsLHd5HyuNZ3aD7JZcjRg8ADFwmVZNT4u9IuiZpVVAYSVvnmFrA==
+X-Received: by 2002:a5d:6482:0:b0:385:fc70:7f6 with SMTP id ffacd0b85a97d-39132d2affemr11212099f8f.7.1741686882020;
+        Tue, 11 Mar 2025 02:54:42 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c720:ed00:a9b3:5954:823e:3427? (p200300cbc720ed00a9b35954823e3427.dip0.t-ipconnect.de. [2003:cb:c720:ed00:a9b3:5954:823e:3427])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e4065sm17854719f8f.62.2025.03.11.02.54.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 02:54:41 -0700 (PDT)
+Message-ID: <79ec5aa9-1937-436e-8cf4-436746142f7b@redhat.com>
+Date: Tue, 11 Mar 2025 10:54:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8393:EE_|SA1PR11MB5804:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a4fc57c-4498-44e5-3f20-08dd607bc098
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?G0BtN9Z1oKcjzpyjo00PLtpC9ZxMbQKfG+XCV7PuKIxvuBfE2nhPde51A2vq?=
- =?us-ascii?Q?w8KEIG2QCwcgsbBqtNZ/iXDG8h7RL/w3HYyMWG01fcTC8jZ0Gu4dVeYAwZSi?=
- =?us-ascii?Q?GpgaaUMVJw6blJlBRspV4xPjzpZGet0G2rKFe5qlr+pQrkgcQM3yaZYnwDai?=
- =?us-ascii?Q?ax6EngYhs+ZP0y4KAnTSZw/e06l3+Nv7hT0dFtYZYxpXPcOzqSpzAjo7+AXA?=
- =?us-ascii?Q?mCa8YuftlVsppHD+Kr2+ZNSvWdNPI+kCBxOiqL9fdycgNJbJyBHFWAgr95il?=
- =?us-ascii?Q?E62km6NfbFLVCN7kNZ/FAa2tXxwD2/js9AWtopIj8g1JGXEWDp61tP818MFR?=
- =?us-ascii?Q?yUdF/EhCK3ag81dQHiRhZFpS1JNKgMFSCrqUOaOUzqfgXVaE/9KfXkEyancM?=
- =?us-ascii?Q?nOJEJsICxc+1IyKeCHPaLTykeuuPeq5ceiKpbEs7prpa6o675vfXhmNRi55o?=
- =?us-ascii?Q?rzuOCxdBXkeWb530+pXo+np2bgJgy46EUsCnv8v3RDO8yDu5KWY3aagrXesz?=
- =?us-ascii?Q?HyPCEohgtClFR0CQ7CO4pRJVmophRMOBBFjHOZpUzanxtH3M+qXx4ysgx4KZ?=
- =?us-ascii?Q?7Xrsh59Ugf4HJX24YF7x7SxLB7Vq7lImoac+kHZZ6/8lGK5hC0UYD3tbLn13?=
- =?us-ascii?Q?dPct0NtOK6q6Owm/y1nOyfk9+z2pBCnbRoDqWvwKbutSQQZyWMs5CZwClbtP?=
- =?us-ascii?Q?5TDl6Y3bKx5HUuA7Jc2wSStjSD/yZDx+VWiqU/TMhnCtew7dXFDgmwj4dYnW?=
- =?us-ascii?Q?/UC7a5htDi+esPPZo2OJibd5vSM3TOE3LiPuYXGphDE3rEDfJJ2MicBbQan0?=
- =?us-ascii?Q?a8jf2dJ8YQKhUMYZxq7OwXy7LUtaZAxxQd/OGMFdU+sfBinKrcZqE0ppbia7?=
- =?us-ascii?Q?PMF13i2tzSO+DQ3RxfKCqsEtgv1IBO56Kfs/sCf5V0347fwxUP65L8gqz4dL?=
- =?us-ascii?Q?UUNoE1eI1msCi3at6tfXD9AXndEg6icycirRac2BGKO2ibmQZl5GDUcWHskS?=
- =?us-ascii?Q?i4VleKyhNftoqTbMxGCaQWw/7eBtia6U2apkq0pCKTXdyaLq9EBPIV7jBLiq?=
- =?us-ascii?Q?XIrUWE3JnjCizjOENZM2rsFo33LhrfVxvtkTNP0z73ULJyWLOwraG9F0Ika4?=
- =?us-ascii?Q?Fl1gNgNeQdu/i9VqpX7HXUOKGWy1YQR6GcNTX3H6U53h9v8zooSHtwmfTxrO?=
- =?us-ascii?Q?Zbq0ZSNbJMRmU5nIhwGtnZPs9WhAynoRhmEzgEqsAQ4dS7YazGPxsHFBTpoB?=
- =?us-ascii?Q?j4lnQnQP+h2F/9BWDaBDAG3hdt3YGixbHF+gtOXzmvsKfH8hkAiKU5X1atvs?=
- =?us-ascii?Q?vfcte+MXPfKlX5+ulxnUrjCk3WJNadBlcTgDUanTH3RtNlS5aeilLy63rRlA?=
- =?us-ascii?Q?FKjcj6eE4G2iuJvHEhp7yj2trNs7?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8393.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Se9SB8xCt0iWntaCwJ/lV5NlLxINe3OeLDFXItU7c75JOrbT6giRb8VgAWo5?=
- =?us-ascii?Q?7BO1/8W3Mk6OCils2Di4tH/nGPFcTw1dKaoiyt49LpfVMVzLcXR616ODgIsb?=
- =?us-ascii?Q?xu/1ZD8++wyOndFiSMgRaN6xkLWJQy8E1ELR2O/nv415i7ifF5cZaH0+rKlB?=
- =?us-ascii?Q?MyzBhtWDga/L2V4wcNRys98yAcuDmPaU97OH2sisF6rjtJGj+s7+k95B3ql7?=
- =?us-ascii?Q?XrDNVGIJC6Hchai/YBGE9kcdZg0PFyBu2HtuT28mEU/ju8h1wSGGoU2yWuEE?=
- =?us-ascii?Q?Vgmv5894VU2uYQGVlygU7upRhM6+s8DLjy/VRo2Z27eGtpw9+pC5N0uKK1w/?=
- =?us-ascii?Q?9VHPrxUW81kdyDO7q4+oLDjrj5Z6ktK0pvEvr+JyR50/wSLv01wyJBs/kg8e?=
- =?us-ascii?Q?yWcCo9xcVCwLd1v2IzTe0ot65C6axDIFuKkCnEsGfR7YPmLxqh70X+EQpHxL?=
- =?us-ascii?Q?WnpnW/hycbbAEUOde8Py/UiYxVsEqh+I7hMdhZJGSsxK+FT1MXZ+IhFrXcZa?=
- =?us-ascii?Q?EJIHC2fg+t41pbZHh3HTBKKQu2CG+88E8ICi4GyLVEZQQ8woGPuBb9wMrWyO?=
- =?us-ascii?Q?CYLx+duDDu7louzffwayN7OwmQ3PclI6x4ydkX5/eiQmAPgIiM0ZDaZvBAPs?=
- =?us-ascii?Q?tbeRTH1VdFZZvv2wGoazsNvy0dyTk42z3lyVMh3LSqO0jJ8vfmglK5ZoC5F/?=
- =?us-ascii?Q?ek/HodUlrjY8QhBxiqEirfNX8Vf7AscCDpVPnpA2ugSCD3FylUMLIfTk9oIA?=
- =?us-ascii?Q?UZ4GHeJajbxur+bQcybXmiCyo0zP1fy+8yvl3CI3NcyMEXPpU+97X/V8cJ4b?=
- =?us-ascii?Q?8dFvv6368+2rbo0SmuoO+vvbGePBtz+LlUvhNyeyYohb2qHbSUt6txAT+3H6?=
- =?us-ascii?Q?itw6fR4v7G0HbRBL5GMa5R+UdMCuEulRnSO3ZjwX70mPsyue2v1kqe5a/zIK?=
- =?us-ascii?Q?DrqrWoZ16BI6HS1d/xcO4ZBqskaqCSQ2nSEBXfM9ZETigtwdxEOOC0cctzfo?=
- =?us-ascii?Q?qsaZ69udhAiDGyEEDhG+r6CCybzHqiVaOawRBommCxv+TrfRRmEKcCM5v51p?=
- =?us-ascii?Q?VktMbQclpH0EtmxUNugfBy1hSIW0RHfDTHYeRwnz5j2LXKzIvrCiHQGtAjfz?=
- =?us-ascii?Q?Wjqn45RGHoNgowWfWvCdkJHbJtv/f/0kJUd0bBhbsueRCXwUUpjqh2H1noD/?=
- =?us-ascii?Q?td++Yd753QN/fNwLnp5qjet12lVk0RtdfFnVk/QA6cu4hzq7EeGrVkOhOXZ5?=
- =?us-ascii?Q?y7qMPjhw5pvP+Q/Dge4CVvXq7KSkgPIgmhgOD3To5qBKuuh8SqYcrNV0ffGH?=
- =?us-ascii?Q?7BjyiUoVvx3h6s/GDHixu6msYEq++YibcR+7uJprQxAIr/5FrLYYg4ZBqV9n?=
- =?us-ascii?Q?KODvBpb8cMDToyxVgjIs3XrYacPcoPqlv+VsZA1BeczrXRs4T47nntqOl1er?=
- =?us-ascii?Q?Wz2kdGp150Ucgy9rL1O156msucc8p/MTvfGQYoZYDUdKj80GivP890pz5BdR?=
- =?us-ascii?Q?rS6Z6qJYOHS5al3F4YOXVc5lBtXBqmSU22DoX1NvpFigH4IajxCY7z3EIYqH?=
- =?us-ascii?Q?Rb+EL/cYS/nCSZEBiP8tsY/Ch8F80Yg096V0dfwX?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a4fc57c-4498-44e5-3f20-08dd607bc098
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8393.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 09:04:38.6047
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VkXH0YySfulO7DdpiHudUtavOv9LDOWxHMR29yc3vPZirt7aJhPpxGLkgqUV0FnNVzsDZxFgkyql2FW+X0nHPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5804
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v1 3/3] kernel/events/uprobes: uprobe_write_opcode()
+ rewrite
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Tong Tiangen <tongtiangen@huawei.com>
+References: <20250304154846.1937958-1-david@redhat.com>
+ <20250304154846.1937958-4-david@redhat.com>
+ <20250310170320.GC26382@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250310170320.GC26382@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Leo,
+On 10.03.25 18:03, Oleg Nesterov wrote:
+> On 03/04, David Hildenbrand wrote:
+>>
+>> uprobe_write_opcode() does some pretty low-level things that really, it
+>> shouldn't be doing:
+> 
+> Agreed. Thanks again for doing this.
+> 
+> David, as I said, I can't review. I don't understand this mm/folio magic
+> with or without your changes.
+> 
 
-On Tue, Mar 11, 2025 at 08:14:43AM +0000, Leo Yan wrote:
-> Hi Yujie,
-> 
-> Sorry I missed this patch.
-> 
-> On Tue, Feb 25, 2025 at 02:17:36PM +0800, Yujie Liu wrote:
-> > 
-> > The following commits appended new fields to the end of the branch info
-> > list, such as branch type and branch speculation info.
-> > 
-> > commit 1f48989cdc7d ("perf script: Output branch sample type")
-> > commit 6ade6c646035 ("perf script: Show branch speculation info")
-> > 
-> > Update brstack syntax documentation to be consistent with the latest
-> > branch info list. Improve the descriptions to help users interpret the
-> > fields accurately.
-> > 
-> > Signed-off-by: Yujie Liu <yujie.liu@intel.com>
-> > ---
-> >  tools/perf/Documentation/perf-script.txt | 16 +++++++++-------
-> >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index b72866ef270b..8bd105084280 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -239,13 +239,15 @@ OPTIONS
-> >         i.e., -F "" is not allowed.
-> > 
-> >         The brstack output includes branch related information with raw addresses using the
-> > -       /v/v/v/v/cycles syntax in the following order:
-> > -       FROM: branch source instruction
-> > -       TO  : branch target instruction
-> > -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
-> > -       X/- : X=branch inside a transactional region, -=not in transaction region or not supported
-> > -       A/- : A=TSX abort entry, -=not aborted region or not supported
-> > -       cycles
-> > +       FROM/TO/PRED/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
-> > +       FROM  : branch source instruction
-> > +       TO    : branch target instruction
-> > +       PRED  : M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
-> 
-> Can we use a more generic naming (e.g., EVENT) for this field?
-> 
-> My patches have added a 'N' flag in this field, which stands for
-> "Not taken branch".  Later we might extend this field for support new
-> event types.
+No worries! Thanks for taking a look!
 
-Thank you for this feedback. Sure I'll change this field name to EVENT
-in the repsin patch.
+> However. With your changes the code looks "better" and more understandable
+> to me. So I'd vote for your patches even if I can't ack them.
+> 
+> But I'd like to ask some stupid (no, really) questions.
+> __uprobe_write_opcode() does:
+> 
+> 	/* We're done if we don't find an anonymous folio when unregistering. */
+> 	if (!folio_test_anon(folio))
+> 		return is_register ? -EFAULT : 0;
+> 
+> Yes, but we do not expect !folio_test_anon() if register == true, right?
+ > See also below.>
+> 	/* Verify that the page content is still as expected. */
+> 	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
+> 		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
+> 		return -EAGAIN;
+> 	}
+> 
+> The caller, uprobe_write_opcode(), has already called verify_opcode(),
+> why do we need to re-check?
 
-Thanks,
-Yujie
+Regarding both questions, the code is fairly racy. Nothing would stop 
+user space from (a) modifying that memory (b) zapping the anon page 
+using MADV_DONTNEED (if we don't hold the mmap lock in write mode).
+
+Regarding the latter, uprobe_write_opcode() is documented to: "Called 
+with mm->mmap_lock held for read or write.".
+
+Note that both checks are fairly cheap.
 
 > 
-> Thanks,
-> Leo
+> But whatever reason we have. Can we change uprobe_write_opcode() to
+> "delay" put_page() and instead of
+
+I was debating with myself whether we should do that and went back and 
+forth a couple of times.
+
 > 
-> > +       INTX  : X=branch inside a transactional region, -=not in transaction region or not supported
-> > +       ABORT : A=TSX abort entry, -=not aborted region or not supported
-> > +       CYCLES: the number of cycles that have elapsed since the last branch was recorded
-> > +       TYPE  : branch type
-> > +       SPEC  : branch speculation info
-> > 
-> >         The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
-> > 
-> > --
-> > 2.34.1
-> > 
-> > 
+> 	/* Walk the page tables again, to perform the actual update. */
+> 	folio = folio_walk_start(&fw, vma, vaddr, 0);
+> 	if (folio) {
+> 		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
+> 					    opcode);
+> 		folio_walk_end(&fw, vma);
+> 	} else {
+> 		ret = -EAGAIN;
+> 	}
+> 
+> do something like
+> 
+> 	/* Walk the page tables again, to perform the actual update. */
+> 	ret = -EAGAIN;
+> 	folio = folio_walk_start(&fw, vma, vaddr, 0);
+> 	if (folio) {
+> 		if (fw.page == page) {
+> 			WARN_ON(is_register && !folio_test_anon(folio));
+
+Yes, that would work (we could leave the WARN_ON in 
+__uprobe_write_opcode), but I am not sure if the end result is better 
+better. No strong opinion on the details though.
+
+> 			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
+> 					            opcode);
+> 		}
+> 		folio_walk_end(&fw, vma);
+> 	}
+> 
+> ?
+> 
+> Once again, I am not trying to review. I am trying to understand the
+> basics of your code.
+
+Any feedback is welcome, thanks!
+
+-- 
+Cheers,
+
+David / dhildenb
+
