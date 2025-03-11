@@ -1,176 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C581A5BA4;
-	Tue, 11 Mar 2025 15:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D06F2080D9;
+	Tue, 11 Mar 2025 16:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741707129; cv=none; b=YlGQ7bAwhsK4plNqy/feDqMw7CsyOAMBqZOD9MYFH27xwfVPPIW9RZ++rQtUWRqHMGiw1wjJVT8QL7e5qk9w9IRyPQLKRxXr2bGjyh/J7keKOmc45teKzCv88QMP22haSO9TcTep2SlGD6asvYFnLl69TRfz4Ta84aIaqRIA2SY=
+	t=1741709506; cv=none; b=Hd4uzM9CM2dZsi2NyjXYPPb1U3zhLlvztr3AT605xyCuN9SPX3JkFdDCRXmfSqIb6WIJCiK3D88HzqvfzpaNBs4k9qzOJIVjjxqMcRh7PrPspWqJyu1cn2jew9kLrxiAhasG5/U3igVOzcAOJlGf/cMfeoW+iFfQlyNFLy8RY2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741707129; c=relaxed/simple;
-	bh=XSzGoUU2DaCednX0FwOULdKUbQbWd5loQ7tAM92Ih1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2QbnimYM089GvGgYskt9UuvOk87SCGEhseNEIj/bcu6IZfCx0tC9MOK1jW3YHuJCvpatOGWZHdwBXdJZ3qh/NjZwYXHL0GLPpTn/VAqVOZKvqZz7cPyOCMuil/H27J5ySjYkcFAWUse4XBD5+OGZ1m3av0W9JN99zQsMs48VHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVwr5I0E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741709506; c=relaxed/simple;
+	bh=md9Z2+fthkBMzjolwYJB+69r/fQZ/xXxgBW9ZGzoS8U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MOcD/0m4Ngvyt8YRXiL6ETIlSLq4uIQNwKx3fS3zbp5HwNQV3N6We3ZOyUlzjWLXjM80zGGu3Qhjf1bZYWuf9J5vLl1R79o4KZy3td/iK0QljtsAmFsPxSTeK09SYBJ1T7p8qVF6zMleQlZZmDWs9xow2BMb/hdCYKyJ/tr5K20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4g/o/gn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVwr5I0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F62AC4CEEA;
-	Tue, 11 Mar 2025 15:32:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4g/o/gn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC95C4CEE9;
+	Tue, 11 Mar 2025 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741707128;
-	bh=XSzGoUU2DaCednX0FwOULdKUbQbWd5loQ7tAM92Ih1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sVwr5I0Er+lCb110bnzY6YJBd6Tv5Y8Rx8m2J8aWZv+Qk4lmQkXA3A5ZFKSWB2Ey8
-	 49kHfeeVtAzoX7svWTgsHdIkjN5YOH1iJDW76PdrxYcpWadHMy3j3eJCdL8WJlLE4C
-	 Nw8PabxQw4LDqIrWqJYTZzbl8DfweCHILllDwhAsxbbhyro/P1umEYx5pZm6PoA4mB
-	 CTYBt7L8iJEMlnEl4hev3r0if3XZonjYplHvSxiVcIV0l5BjkhA7j65Z5pGtK6LH5Y
-	 RT6al/ePYUnOSrVDDZ0txeEAtOEtQRwh0qkrxRkG9TlQU0yvYT9BnnLD+jogbgcCcj
-	 TPTZI6RLKetVQ==
-Date: Tue, 11 Mar 2025 12:32:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	James Clark <james.clark@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
- parse_events
-Message-ID: <Z9BXdbWnX19ua5Mr@x1>
-References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-12-irogers@google.com>
- <Z89We45bGpeJvO9C@x1>
- <Z89WvaIVyF7klGp6@x1>
- <CAP-5=fXzva636zCZR2isdfrjT6mM3o42C+oGWNkGieqGVajfHA@mail.gmail.com>
- <Z89ZYVgL_bT3ampz@x1>
+	s=k20201202; t=1741709506;
+	bh=md9Z2+fthkBMzjolwYJB+69r/fQZ/xXxgBW9ZGzoS8U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=r4g/o/gnAWB0cb1Fcs9Zc4kIqAes73cREIkksAdKtwbVma0at/tQjJeJ72dFhihOx
+	 fYYr8FvKJOvH21c8AxXFt7JHs/WUNVg2vV4hMdPjgkB9xNSw5Wx5TBVjf5NMBEZFsN
+	 aeUCMdtMfAk/wqW6wl90rr0baIRmoWzNJ2NlLXVnh7N9qdsVHiLnBbGWiJrld9fUVS
+	 LAdWwZpFOgzGLVl5HHNl/YqigGZQ0zq8d3V+0ktyzW2QFCBVOWBrVht/3tCGFgOfc3
+	 ykoW6B61eoQ227LgevLYtM9PlJ9olv9dSyfGtO6bt3LjRqjfYHxDbd6hleTg2SN2S7
+	 Vkp0E7lMLIVrw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: irogers@google.com, mark.rutland@arm.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, linux@treblig.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
+References: <20250305023120.155420-1-linux@treblig.org>
+Subject: Re: (subset) [PATCH 0/6] perf: Deadcode - the P's
+Message-Id: <174170950561.2288726.17640709737674711638.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 09:11:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z89ZYVgL_bT3ampz@x1>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, Mar 10, 2025 at 06:28:01PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Mar 10, 2025 at 02:17:59PM -0700, Ian Rogers wrote:
-> > On Mon, Mar 10, 2025 at 2:16 PM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Mar 10, 2025 at 06:15:42PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Fri, Feb 28, 2025 at 02:23:08PM -0800, Ian Rogers wrote:
-> > > > > Rather than manually configuring an evsel, switch to using
-> > > > > parse_events for greater commonality with the rest of the perf code.
-> > > > >
-> > > > > Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > Now will all in place I'm trying to test it and I am getting some
-> > > > strange results:
-> > > >
-> > > > root@number:/home/acme/git/perf-tools-next# tools/perf/python/tracepoint.py
-> > > > <SNIP lots of seemingly ok lines>
-> > > > time 78318710956557 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x1 ==> next_comm=swapper/14 next_pid=0 next_prio=120
-> > > > time 78318720082300 prev_comm=swapper/16 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=kworker/u112:8 next_pid=1752774 next_prio=120
-> > > > time 78318706232435 prev_comm=kworker/u112:17 prev_pid=1551246 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/21 next_pid=0 next_prio=120
-> > > > time 78318708202121 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x2 ==> next_comm=swapper/25 next_pid=0 next_prio=120
-> > > > time 78318748346989 prev_comm=swapper/26 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=gnome-terminal- next_pid=3551 next_prio=120
-> > > > Traceback (most recent call last):
-> > > >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 47, in <module>
-> > > >     main()
-> > > >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 42, in main
-> > > >     event.next_comm,
-> > > >     ^^^^^^^^^^^^^^^
-> > > > AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
-> > > > root@number:/home/acme/git/perf-tools-next#
-> > > >
-> > > > But it shouldn't get there as there is this check:
-> > > >
-> > > >             if not isinstance(event, perf.sample_event):
-> > > >                 continue
-> > > >
-> > > >
-> > > > :-\
-> > > >
-> > > > Trying to debug that...
-> > >
-> > > And it doesn't seem related to your series, I checked and v6.13 has the
-> > > same problem, I nuked the build dir, etc.
-> > 
-> > Right. I'd seen the same issue.
+On Wed, 05 Mar 2025 02:31:14 +0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> time 79411977132102 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x2 ==> next_comm=swapper/12 next_pid=0 next_prio=120
-> { type: sample }
-> time 79411977200343 prev_comm=kworker/u112:17 prev_pid=1551246 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/16 next_pid=0 next_prio=120
-> { type: sample }
-> time 79411964535268 prev_comm=kworker/u112:14 prev_pid=810939 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/17 next_pid=0 next_prio=120
-> { type: sample }
-> time 79411964746511 prev_comm=swapper/18 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=kworker/u112:12 next_pid=2109251 next_prio=120
-> { type: sample }
-> Traceback (most recent call last):
->   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 48, in <module>
->     main()
->   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 43, in main
->     event.next_comm,
->     ^^^^^^^^^^^^^^^
-> AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
-> root@number:/home/acme/git/perf-tools-next#
+> Hi,
+>   This is another set of perf deadcode, this is my set
+> all starting with 'p'.  It was built on top of
+> perf-tools-next as of a few days ago (7788ad59d1d9).
 > 
-> And it says it is a sample... 
-> 
-> Well, ran out of time, will try later or early tomorrow, will also try
-> to review the syscalltbl series and Howard's off cpu profiling.
+> [...]
+Applied to perf-tools-next, thanks!
 
-Its some sort of corruption, I added printing the sample_* fields and
-then up to the field before next_comm:
-
-time 2462907120158 prev_comm=swapper/8 prev_pid=0 prev_prio=120 prev_state=0x0 ==>
-next_comm=gnome-terminal- next_pid=3646 next_prio=120
-ip 0 pid=0 tid=0 cpu=12
-time 2462916970223 prev_comm=swapper/12 prev_pid=0 prev_prio=120 prev_state=0x0 ==>
-next_comm=gnome-terminal- next_pid=3646 next_prio=120
-ip 0 pid=0 tid=0 cpu=14
-time 2462902120635 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x323a32313175 ==>
-Traceback (most recent call last):
-  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
-    main()
-  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
-    event.next_comm,
-    ^^^^^^^^^^^^^^^
-AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
-root@number:/home/acme/git/perf-tools-next# 
-
-See the empty prev_comm, bogus pref_pid, ditto for prev_state and
-pref_prio and then it simple doesn't have that next_comm...
-
-Also I noticed that in tracepoint_field() (tools/perf/util/python.c) we
-can get the string tracepoint fields as a bytearray or as a string,
-ahere:
-
-                if (field->flags & TEP_FIELD_IS_STRING &&
-                    is_printable_array(data + offset, len)) {
-                        ret = PyUnicode_FromString((char *)data + offset);
-                } else {
-                        ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
-                        field->flags &= ~TEP_FIELD_IS_STRING;
-                }
+Best regards,
+Namhyung
 
 
-For some reason in sessions where bytearrays are returned, and all comes
-as bytearrays, the problem is not noticed.
-
-But when it comes as a string it breaks after a short time, /me
-scratches head...
-
-- Arnaldo
