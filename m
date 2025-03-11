@@ -1,303 +1,200 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE7025CC7F
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 14:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F59725DB0B;
+	Tue, 11 Mar 2025 15:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741702413; cv=none; b=clR9IqfrgxFRh6RR62SkeR19o40VByGesQX8FxTcAwbGzQMnzwMfYVUxuAlNThV9ynVzfJW1j0aid5CEb9LdxRNka+01i18Bu+Wf1Z/6PqVS+d3C3VrV9xDkuhqWDOXRUntIQocfEj9oD7abMzCBfv58rBr6kooe1yafzpBDLao=
+	t=1741705316; cv=none; b=DU10BNjga9DwSoHKfOsl82DqNm/sS0y7vmp+yUwY/jbRwFNKBB2hRcTlZpwG9XHHtHHtRtbMyidvKUe+d2TQgneb9AH7xYs6kgSwdLyXoNCkdcjJyAFGV4dbH/D7PoIdGXPDZu+Jn7yu5DQ5Z8Ts1X2ByNwu8cQWoLD7/CyBgOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741702413; c=relaxed/simple;
-	bh=ArKux3sa+By8S2kxsGVmvIGfUXIoRTno8CyZ4M/LSco=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NRgOpR9h/1e/xVZ+eD48ndsmGIyfbmWaQpHTINTt8z6jriAHe4CBvg/PLO8lJ5M3lmhJxZXzQ2uDSPHqRG8SSa9YZuBwzE3EMfZbYvM/4K5o4Wl/hw2J1zQeJVkDUzJofK7LM6m7M/1TnaxOSyphSLp2BhwA/3blPRdnYz+8sX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CZyyy0d4; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741705316; c=relaxed/simple;
+	bh=fuWRE5LahWg9e+Ft/lsdND0Y6JC1QqXUC2BZ/1jEt/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ph0o8lte8SWWEnSy61AGFL73TCho6g9fCTejoVXxyTFwQZgcUBJj5SY/rZhykuyCzoKX9VcpRS7VAYZveeOE2edZ8zREyNop33IeXajcze5zCr8cV9DNhem60xgiWDDOLPaI1Tu69qeLaefYvuUKsvKo+u61f+Kofnt/aW2e9yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+TjEsLe; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZyyy0d4"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39104c1cbbdso2728761f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 07:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741702410; x=1742307210; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Itt67/2JfHkiqaMAIqXre3nmprPzyRAS1yoN5mC4m5A=;
-        b=CZyyy0d4WuVMhlY29Z511BPH43AjuMNvb0BXwwJFGn87tvzaxtTmgYwLD2qZCsSxmr
-         F7PTjn6k5AgmtVubvOo/7zCbuyZizAKSATtBwMAIFDhNd0Dj9SF6sMwhI4zFrYqBtQPX
-         +C8GP1IQefb1twD5P/VdTziaKpJwuw2sBKZ4Lpnj2f9THRKuuiubaAw5KFi+CnyT0Vi5
-         oZexv9TKuwheHFAp7yaCs5PsyRB+c4RMYNnH22kx6OTQcEd/ybfXgXNjx4Zxk74Rqptq
-         iYbMOnrYZJbdGTKmMsvlbPgRc6DDpdZoDnz75+C2KLvcTpwxwbG4UbNoEAqDE6loH4jP
-         MihQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741702410; x=1742307210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Itt67/2JfHkiqaMAIqXre3nmprPzyRAS1yoN5mC4m5A=;
-        b=EVsqsIg5q9ytaay7INcNSMKC3Ct+/WouG1LOAQg4oQvWQH8nr3vgM4f7gIKSFOu4UG
-         l/kKCxke1/ztvFwul+VVRH/ub5Cf2E8WqgmrHlN9rlEBPlV/9cQ8cGfy4LEpaCiMx58m
-         z2EQsvuo6Waw5Ms8lSH9nwWI7nBldqGEBSHahP62PdOXrJ54cNcuW3JVV20fYRbBfmwt
-         vYqvIMeYgAziZ7zvQ3Ljvb47MPn6eeqeYRE71z16f1IVETSrLZcOuUp+UK0As+Si2DIi
-         RJ/FTao9t1qc+4BNonNh8guHHUYvPsqc478vr8HxJ+sn2yrkKl2FDV54yS3jJlppLnPg
-         +ufg==
-X-Forwarded-Encrypted: i=1; AJvYcCXagfFFa0ydBZrbbwQjjQwltcaxGRVzOMrnV7KgT23oBwUZH7+59U0e9qgPSSmtrBXZSX2cwzILIM3r5oo555ll@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1oiiBrJ3vELRjJqepBVTTK/wtwY3iulB58d/n8PzKDY1tP+iY
-	jfBQMCAdOIqQVepdMgQhwn/3BZddjfxhU3RvDlKSwm6Hw+C5BMBEtA4NDHfhQPc=
-X-Gm-Gg: ASbGncuZ5/CrzfueULcxcGXhkNoKaJfFM2asoPM0Y7bCLnj9nOWflLd6WMZbdtWsV9T
-	Rl4U8Bb0RtX4/gkfduH02mAAyhp+ct/ZmkwO/BGHRGX4FcjFtPaCUZtkxbkR+UoSrp32ig6+itD
-	vPCQjlqwwIreZ/3R7bj3G7Y2UsTHPzRXb1Is8h/SwBb+4NLt06yPOcp+I9fOFP4dM0soZUhIWqK
-	buU7hwHk6kDwDcwnYmzKl6gez91ku7KDS5Z03MKlNSktAxwh54pbDnpiiou3AtUNctiZKL7+JAn
-	jaKvWjuGHk8ZynYXf/+nUGUIzlLhs0hLQNNY3CMqpKIHwajkePU6
-X-Google-Smtp-Source: AGHT+IHls/TUQgoGj46tBQ4rgEriKNzc2+1Ape+0fvCY/GTWqqvwj2dMBh7MeBTYrGXLvD7zhGwqqQ==
-X-Received: by 2002:a5d:64eb:0:b0:38f:34a7:ebfb with SMTP id ffacd0b85a97d-3926c883ed3mr4143649f8f.55.1741702409541;
-        Tue, 11 Mar 2025 07:13:29 -0700 (PDT)
-Received: from [192.168.1.247] ([145.224.65.43])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e3250sm18368985f8f.61.2025.03.11.07.13.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 07:13:29 -0700 (PDT)
-Message-ID: <39f7e3ae-d274-4de4-8b8e-bcf1ad6f0932@linaro.org>
-Date: Tue, 11 Mar 2025 14:13:27 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+TjEsLe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741705314; x=1773241314;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=fuWRE5LahWg9e+Ft/lsdND0Y6JC1QqXUC2BZ/1jEt/s=;
+  b=R+TjEsLe7ZHnzmh9VA6n+DupPf7+EvIqOHVxRu/yeXVF81fhodbD2PyY
+   +KAzJfqFC2BubmlAA11zij8nFcHr9oS8dqT5nHxZifcn7QSh0NHGMfFoK
+   LZu/Ng/NFAOXIxyq3E36Odk+qVh8Ti9Hzz/EI2C60/YsF/BPqAWseNT7d
+   QGnT0gzxJ5VDz14ntm0ojyJdyPPgApQbQaHJ17Y1AD7YBpynEX3w8d4in
+   921rbktCVh4XD4lLqpyLFVKRpPQtAsoYz733KNNcQOBkrTFYlzw9Gd5P3
+   ItrO85ugBXdRHau9bdg716cD7EBlKVkiB1JZCH28WXkvcBdNyjx3QwsBd
+   w==;
+X-CSE-ConnectionGUID: jZrqZvKtTbqo7FD1LI6R+Q==
+X-CSE-MsgGUID: sSwba3otS56nRevpWP/b/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="68112561"
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="68112561"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 08:01:53 -0700
+X-CSE-ConnectionGUID: IgI9R/mFTye5HfzOOYQwtA==
+X-CSE-MsgGUID: dM44kLvEQsmfYM22H1LVgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="120850498"
+Received: from ghakimel-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.184])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 08:01:50 -0700
+Date: Tue, 11 Mar 2025 08:01:49 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH v8 0/5] Utilize cpu-type for CPU matching
+Message-ID: <20250311-add-cpu-type-v8-0-e8514dcaaff2@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIADdP0GcC/6XRwU7DMAwG4FeZcl4m20nqdCcQF44cuCEObZOwS
+ KOb2q7aNPXdyYpgqCsXODqWvz+yz6L1TfStWC/OovF9bOOuToVdLkS1Keo3L6NLtSAgDRmyLJy
+ T1f4gu9PeS+2M1+xDhcgijewbH+Jx5F7E0/3zw6N4Tc+b2Ha75jSG9Dg2570eJcjS2jy3FaDn7
+ G4b68NxFevOb1fV7n3kevpB0JSgRIScuHTeqsLBPKGuhEUzIVQiSGnMSBkCwzfEcvHn0TFdX9N
+ zBRNCJwJB25xKLkoT5gnzTSAhTghz+UXhASEYUPzLDrJ/EZ87SD2Y7iBLo5o1sjJl5djMp/NX+
+ oXIJgSPRwQVSiAKTt8SwzB8AChunb29AgAA
+X-Mailer: b4 0.14.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Robin Murphy <robin.murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
- <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
- <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com>
- <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org>
- <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+v8:
+- Zap the unused macro X86_MATCH_VENDOR_FAM_MODEL_FEATURE() (Borislav).
+- s/cpu_type/type/ in struct x86_cpu_id (Borislav).
+- s/boot_cpu_has/cpu_feature_enabled/ in x86_match_vendor_cpu_type() (Borislav).
+- Added patch to fix X86_MATCH_VFM_STEPS() documentation.
+- Rebased to tip/x86/cpu.
 
+v7: https://lore.kernel.org/r/20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com
+- Moved the CPU table cleanup patch out of the series, it does not relate
+  to cpu-type detection. Will send it separately.
 
-On 07/03/2025 5:35 pm, Ian Rogers wrote:
-> On Fri, Mar 7, 2025 at 6:08 AM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 05/03/2025 9:40 pm, Ian Rogers wrote:
->>> On Tue, Mar 4, 2025 at 5:50 AM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>> Instead of showing multiple line items with the same event name and
->>>> description, show a single line and concatenate all PMUs that this
->>>> event can belong to.
->>>>
->>>> Don't do it for json output. Machine readable output doesn't need to be
->>>> minimized, and changing the "Unit" field to a list type would break
->>>> backwards compatibility.
->>>>
->>>> Before:
->>>>    $ perf list -v
->>>>    ...
->>>>    br_indirect_spec
->>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
->>>>    br_indirect_spec
->>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a57]
->>>>
->>>> After:
->>>>
->>>>    $ perf list -v
->>>>    ...
->>>>    br_indirect_spec
->>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,armv8_cortex_a57]
->>>>
->>>> Signed-off-by: James Clark <james.clark@linaro.org>
->>>> ---
->>>>    tools/perf/builtin-list.c      |  2 ++
->>>>    tools/perf/util/pmus.c         | 75 +++++++++++++++++++++++++++++++++++++-----
->>>>    tools/perf/util/print-events.h |  1 +
->>>>    3 files changed, 70 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
->>>> index fed482adb039..aacd7beae2a0 100644
->>>> --- a/tools/perf/builtin-list.c
->>>> +++ b/tools/perf/builtin-list.c
->>>> @@ -516,6 +516,7 @@ int cmd_list(int argc, const char **argv)
->>>>                   .print_event = default_print_event,
->>>>                   .print_metric = default_print_metric,
->>>>                   .skip_duplicate_pmus = default_skip_duplicate_pmus,
->>>> +               .collapse_events = true
->>>
->>> So collapse_events is put in the callbacks but isn't a callback. I
->>> think skipping duplicates and collapsing are the same thing, I'd
->>> prefer it if there weren't two terms for the same thing. If you prefer
->>> collapsing as a name then default_skip_duplicate_pmus can be
->>> default_collapse_pmus.
->>>
->>
->> I can use the existing callback and rename it. That does have the effect
->> of disabling this behavior in verbose mode which may be useful or may be
->> unexpected to some people. But it seems pretty 50/50 so fewer callbacks
->> are probably better.
->>
->>>>           };
->>>>           const char *cputype = NULL;
->>>>           const char *unit_name = NULL;
->>>> @@ -574,6 +575,7 @@ int cmd_list(int argc, const char **argv)
->>>>                           .print_event = json_print_event,
->>>>                           .print_metric = json_print_metric,
->>>>                           .skip_duplicate_pmus = json_skip_duplicate_pmus,
->>>> +                       .collapse_events = false
->>>>                   };
->>>>                   ps = &json_ps;
->>>>           } else {
->>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
->>>> index 4d60bac2d2b9..cb1b14ade25b 100644
->>>> --- a/tools/perf/util/pmus.c
->>>> +++ b/tools/perf/util/pmus.c
->>>> @@ -453,17 +453,50 @@ static int cmp_sevent(const void *a, const void *b)
->>>>           /* Order by PMU name. */
->>>>           if (as->pmu == bs->pmu)
->>>>                   return 0;
->>>> -       return strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
->>>> +       ret = strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +       /* Order by remaining displayed fields for purposes of deduplication later */
->>>> +       ret = strcmp(as->scale_unit ?: "", bs->scale_unit ?: "");
->>>> +       if (ret)
->>>> +               return ret;
->>>> +       ret = !!as->deprecated - !!bs->deprecated;
->>>> +       if (ret)
->>>> +               return ret;
->>>> +       ret = strcmp(as->desc ?: "", bs->desc ?: "");
->>>> +       if (ret)
->>>> +               return ret;
->>>> +       return strcmp(as->long_desc ?: "", bs->long_desc ?: "");
->>>>    }
->>>>
->>>> -static bool pmu_alias_is_duplicate(struct sevent *a, struct sevent *b)
->>>> +enum dup_type {
->>>> +       UNIQUE,
->>>> +       DUPLICATE,
->>>> +       SAME_TEXT
->>>> +};
->>>> +
->>>> +static enum dup_type pmu_alias_duplicate_type(struct sevent *a, struct sevent *b)
->>>>    {
->>>>           /* Different names -> never duplicates */
->>>>           if (strcmp(a->name ?: "//", b->name ?: "//"))
->>>> -               return false;
->>>> +               return UNIQUE;
->>>> +
->>>> +       /* Duplicate PMU name and event name -> hide completely */
->>>> +       if (strcmp(a->pmu_name, b->pmu_name) == 0)
->>>> +               return DUPLICATE;
->>>> +
->>>> +       /* Any other different display text -> not duplicate */
->>>> +       if (strcmp(a->topic ?: "", b->topic ?: "") ||
->>>> +           strcmp(a->scale_unit ?: "", b->scale_unit ?: "") ||
->>>> +           a->deprecated != b->deprecated ||
->>>> +           strcmp(a->desc ?: "", b->desc ?: "") ||
->>>> +           strcmp(a->long_desc ?: "", b->long_desc ?: "")) {
->>>> +               return UNIQUE;
->>>> +       }
->>>>
->>>> -       /* Don't remove duplicates for different PMUs */
->>>> -       return strcmp(a->pmu_name, b->pmu_name) == 0;
->>>> +       /* Same display text but different PMU -> collapse */
->>>> +       return SAME_TEXT;
->>>>    }
->>>>
->>>>    struct events_callback_state {
->>>> @@ -501,6 +534,21 @@ static int perf_pmus__print_pmu_events__callback(void *vstate,
->>>>           return 0;
->>>>    }
->>>>
->>>> +static void concat_pmu_names(char *pmu_names, size_t size, const char *a, const char *b)
->>>> +{
->>>> +       size_t len = strlen(pmu_names);
->>>> +       size_t added;
->>>> +
->>>> +       if (len)
->>>> +               added = snprintf(pmu_names + len, size - len, ",%s", b);
->>>> +       else
->>>> +               added = snprintf(pmu_names, size, "%s,%s", a, b);
->>>> +
->>>> +       /* Truncate with ... */
->>>> +       if (added > 0 && added + len >= size)
->>>> +               sprintf(pmu_names + size - 4, "...");
->>>> +}
->>>> +
->>>>    void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
->>>>    {
->>>>           struct perf_pmu *pmu;
->>>> @@ -510,6 +558,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>>>           struct events_callback_state state;
->>>>           bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
->>>>           struct perf_pmu *(*scan_fn)(struct perf_pmu *);
->>>> +       char pmu_names[128] = {0};
->>>>
->>>>           if (skip_duplicate_pmus)
->>>>                   scan_fn = perf_pmus__scan_skip_duplicates;
->>>> @@ -539,12 +588,21 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->>>>           qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
->>>>           for (int j = 0; j < len; j++) {
->>>>                   /* Skip duplicates */
->>>> -               if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j], &aliases[j + 1]))
->>>> -                       goto free;
->>>> +               if (j < len - 1) {
->>>> +                       enum dup_type dt = pmu_alias_duplicate_type(&aliases[j], &aliases[j + 1]);
->>>> +
->>>> +                       if (dt == DUPLICATE) {
->>>> +                               goto free;
->>>> +                       } else if (print_cb->collapse_events && dt == SAME_TEXT) {
->>>> +                               concat_pmu_names(pmu_names, sizeof(pmu_names),
->>>> +                                                aliases[j].pmu_name, aliases[j+1].pmu_name);
->>>> +                               goto free;
->>>> +                       }
->>>> +               }
->>>
->>> I think a label called 'free' is a little unfortunate given the
->>> function called free.
->>> When I did things with sevent I was bringing over previous `perf list`
->>> code mainly so that the perf list output before and after the changes
->>> was identical. I wonder if this logic would be better placed in the
->>> callback like default_print_event which already maintains state
->>> (last_topic) to optionally print different things. This may better
->>> encapsulate the behavior rather than the logic being in the PMU code.
->>>
->>
->> Yeah I can have a look at putting it in one of the callbacks. But in the
->> end builtin-list.c is the only user of perf_pmus__print_pmu_events()
->> anyway so makes you wonder if the whole thing can be moved to
->> builtin-list and open coded without the callbackyness.
-> 
-> I wanted to hide some of the innards of pmus, so I think that's the
-> reason it is as it is. The whole `sevent` was pre-existing and
-> maintained so that the output was the same.
-> 
+v6: https://lore.kernel.org/r/20250305-add-cpu-type-v6-0-4741735bcd75@linux.intel.com
+- Use the recently added macro VULNBL_INTEL_STEPS() in the affected CPU
+  list cleanup patch.
+- Rebased to tip/x86/cpu.
 
-Looking at this a bit more it is possible to move all of 
-perf_pmus__print_pmu_events() (including its dependencies and perf list 
-specifics) out of pmus.c into print-events.c without exposing any new 
-innards of pmus. Only struct pmu_event_info would be used, but that's 
-not private and is already used elsewhere.
+This series is now the remaining last 4 patches from the original series.
+Other parts are:
 
-It's difficult to do this change only in the print_event callback 
-because it relies on having the _next_ event, not the previous event. 
-We're already tracking last_topic, and if we start passing all the 
-next_* items too it gets a bit unmanageable.
+  Part-1: 45239ba39a52 ("x86/cpu: Add CPU type to struct cpuinfo_topology")
+          is merged upstream.
 
-If it's all moved then doing display specific processing across the 
-whole list becomes quite easy.
+  Part-2: Is below list of patches that are in tip tree branch x86/cpu:
+
+        x86/cpu: Prepend 0x to the hex values in cpu_debug_show()
+        cpufreq: intel_pstate: Avoid SMP calls to get cpu-type
+        perf/x86/intel: Use cache cpu-type for hybrid PMU selection
+        x86/cpu: Remove get_this_hybrid_cpu_*()
+
+v5: https://lore.kernel.org/r/20241211-add-cpu-type-v5-0-2ae010f50370@linux.intel.com
+- Replace usages of get_this_hybrid_cpu_native_id() with its cached value
+  in CPU topology structure.
+- s/x86_match_cpu_type/x86_match_vendor_cpu_type and add vendor checks
+  in the function.
+- Some cleanups in intel_pstate.c.
+- Collected tags.
+- Rebased to v6.13-rc1.
+
+v4: https://lore.kernel.org/r/20240930-add-cpu-type-v4-0-104892b7ab5f@linux.intel.com
+- Series doesn't apply to upstream cleanly anymore, rebased to v6.12-rc1,
+  resolved the merge conflict in files:
+	arch/x86/include/asm/cpu_device_id.h
+	arch/x86/kernel/cpu/common.c
+- Remove redundant "hw_" in intel_hw_native_model_id().
+
+v3: https://lore.kernel.org/r/20240815-add-cpu-type-v3-0-234162352057@linux.intel.com
+- Add a patch to prepend "0x" to hex values in cpu_debug_show() (Borislav).
+- Add support to to also get Intel Native Model ID (Dapeng).
+- Keep similar models together in the affected processor list (Josh).
+- Add a comparison of .init.data in commit message for cpu_vuln_blacklist
+  before and after decluttering patch for affected processor list (Josh).
+- Drop the debugfs file reference in the commit message (Borislav).
+- s/cpu_type/hw_cpu_type/ (Borislav).
+- Add a union for hw_cpu_type for easy retrieval of intel_core_type and
+  intel_native_model_id.
+- Updated commit messages, collected tags.
+- Rebased to v6.11-rc3.
+
+Note, I will be off work till Tuesday, will reply to any comments then.
+
+v2: https://lore.kernel.org/r/20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com
+- Move CPU-type to the end of the CPU topology structure (Andrew).
+- Use c->cpuid_level instead of cpuid_eax(0) (Andrew).
+- Move CPU-type enum out of ifdef CONFIG_NUMA (kernel test robot).
+- Rename cpu_type to hw_cpu_type (Borislav).
+- Explain replacing get_this_hybrid_cpu_type() with topology_hw_cpu_type()
+  in the commit message (Dave).
+- Fix the alignment in cpu_vuln_whitelist (Andrew).
+- Add the obj compare note in the commit message (Dave/Tony).
+- s/X86_CPU_TYPE_INTEL_ATOM/ATOM/ in cpu_vuln_whitelist (Dave).
+
+v1: https://lore.kernel.org/r/20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com
+
+Hi,
+
+This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
+differentiate between hybrid variants P+E, P-only, E-only that share the
+same Family/Model/Stepping. One of the use case for CPU-type is the
+affected CPU table for CPU vulnerabilities, which can now use the CPU-type
+to filter the unaffected variants.
+
+* Patch 1 fixes a minor formatting issue in cpu_debug_show().
+
+* Patch 2 adds hardware cpu-type to CPU topology structure and introduces
+  topology_hw_cpu_type().
+
+* Patch 3-5 replaces usages of get_this_hybrid_cpu_type() with
+  topology_hw_cpu_type().
+
+* Patch 6-8 Updates CPU-matching infrastructure to use CPU-type.
+
+* Patch 9 cleans up the affected CPU list.
+
+* Patch 10 uses the CPU-type to exclude P-only parts from the RFDS affected
+  list.
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+Pawan Gupta (5):
+      x86/cpu: Fix the description of X86_MATCH_VFM_STEPS()
+      x86/cpu: Name CPU matching macro more generically (and shorten)
+      x86/cpu: Add cpu_type to struct x86_cpu_id
+      x86/cpu: Update x86_match_cpu() to also use cpu-type
+      x86/rfds: Exclude P-only parts from the RFDS affected list
+
+ .../admin-guide/hw-vuln/reg-file-data-sampling.rst |   8 --
+ arch/x86/include/asm/cpu_device_id.h               | 130 +++++++--------------
+ arch/x86/kernel/cpu/common.c                       |   7 +-
+ arch/x86/kernel/cpu/match.c                        |  30 +++++
+ include/linux/mod_devicetable.h                    |   2 +
+ 5 files changed, 81 insertions(+), 96 deletions(-)
+---
+base-commit: 55d9f0b05e1ca53c0884545445b7e29466679a33
+change-id: 20240617-add-cpu-type-4d5e47efc117
+
+Best regards,
+-- 
+Pawan
+
 
