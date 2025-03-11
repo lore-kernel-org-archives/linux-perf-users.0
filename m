@@ -1,348 +1,176 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3E81CAA8F
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 15:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C581A5BA4;
+	Tue, 11 Mar 2025 15:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741706105; cv=none; b=FZ68CTNJNvSy00mYoGBr8URdehka0KoQr3guNtm/fTDHilFhHgQIk3l4qArwJIDPVAWVrUUOV7yZwCf7lQMZSy6eQy9cmtJWzQWewNs3t+CxnfMv+5565aLzbQnreR2XeGqMXKSmdCYrWqdJzHn6l51HhAcefZCeHXGLKVV9q6Y=
+	t=1741707129; cv=none; b=YlGQ7bAwhsK4plNqy/feDqMw7CsyOAMBqZOD9MYFH27xwfVPPIW9RZ++rQtUWRqHMGiw1wjJVT8QL7e5qk9w9IRyPQLKRxXr2bGjyh/J7keKOmc45teKzCv88QMP22haSO9TcTep2SlGD6asvYFnLl69TRfz4Ta84aIaqRIA2SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741706105; c=relaxed/simple;
-	bh=CIC1HfwbtMyb1d03RzVbKpgNIfgLun1cSM2Jmv2uWqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OYTvFR8I9CVIBS6JIb23ai+BjyAVrNuTjWAmb5EYS/nMwPntoJUxlNfs41nHIMBFm2w0YOnirUuOFa6qb+h7dxkYC5tAf3WasOjxSgZ9xxh/KFogIPW+OBeO+JSL0j1c8ZVtnCRVFLZvjbqTcSDJZ4pjd3aSLr6aWEwqGzpLlZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uOF7z/0r; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741707129; c=relaxed/simple;
+	bh=XSzGoUU2DaCednX0FwOULdKUbQbWd5loQ7tAM92Ih1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2QbnimYM089GvGgYskt9UuvOk87SCGEhseNEIj/bcu6IZfCx0tC9MOK1jW3YHuJCvpatOGWZHdwBXdJZ3qh/NjZwYXHL0GLPpTn/VAqVOZKvqZz7cPyOCMuil/H27J5ySjYkcFAWUse4XBD5+OGZ1m3av0W9JN99zQsMs48VHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVwr5I0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uOF7z/0r"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2242aca53efso160085ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 08:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741706102; x=1742310902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ebOSxF/5fwPL3lrIbCMPyxIcROUcLKuMWeB60GH42RQ=;
-        b=uOF7z/0rr5uw1QLhYB47PD+Cdzmat2kIobcvWlVTO1uiTiy7wb6cVP6M91AXgJotX+
-         2uUwP8IAlH6e22g2dy3vSOzE5l204Id5z54xBlEnyl8Wlzql8RdowgNJmhq7Hdfo3baQ
-         Lxxx2+D4Z0cA0ZZyucs1Jm/bN6OYDf7PAnP0BIiXY7YjNuLsjuAAacQhefZFYgZi4K6v
-         DtbmpZVmnQwsxc2yDPAzay+vcN/gujgc+HWi+3vm7hEnQ3JqXhNtTS7BLSzUwGAJZIsX
-         F4m2uv0a4BIOcF1I3l9xfWCkebuY1One+XV0qCWVyRmdzQY+W0QyuOxChZ4RJaRuFn5h
-         KP1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741706102; x=1742310902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ebOSxF/5fwPL3lrIbCMPyxIcROUcLKuMWeB60GH42RQ=;
-        b=SdwwDOHe85rp8usHMSvtiKoJ2ZNjLKEOtvI6XGjobXFgf5Ku5fiX0EEVfDlK/bNsiE
-         yNALButqcMDm+j+KUdEl+DB8IEyv1Gi4h95QouHd2fuCvxmaitnNh7eD/5WiHraRq1Tt
-         hwbCiBQZ+AOnc6Y0kejOGY41oliLCEr6DC0m89UYTqeW8CDTeM4lU8wSg2CVWHPxgNtR
-         4m72sXZGGwkiu7hPj/Cr/KPJt7DHB6rH+/FYx6oCGcuQzol/zJwNIBW4ywy8LohhTSi7
-         qMqPNqqlmlc9hAwt4+9m0kaFtKZeyIGZ1JBkMIKx4m/zyJQ+1sIqmdktcyTUl+qQwOwn
-         8F/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUJJZOrk56Y+Ji5mLZy+nUFW1QxDhtoETtG437oyZnFPqohUQ8II+7OXxDKpYwkS0SoH/nlySOzE5+1NopPKZcM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ+mSv1+Sdd5HPlKLhgmUuxJorISPcOeoUT+ttWTWOS1bj+3Y0
-	MCCAF9Rr2MmsiHc+tNSInDjOKDkwrwg0vTYeRrWUHLplr6V9KZvyEvIXvRL8bmj2dyT9X3B5d+P
-	Btsaq/0NNIbtK0iBU0ABGKBhXDfWPz1cBZ65z
-X-Gm-Gg: ASbGncuJM7TUsxTnmit3NVmuAxMUPacXueXSfjzhbBDy+ZKc2/UmhgTrMT4BnKSS6du
-	1hEI2fq0ga4XTRQzngnIeZaYGVhMPMLQNf0M1Vp0UykSjbBzvLoWo5uajMxvUU5x7O0IxBgQSwM
-	5jyd7chyZosYwCsz5KvTUhnSTWEfo=
-X-Google-Smtp-Source: AGHT+IGLZt2DwtbPv+FxZ6g8sbHYe9XResEjVPXwNdeCHuxTOxWinhKYbZcjXbHKzHjqslvvOC3bHt+D4HVHVNNauk4=
-X-Received: by 2002:a17:902:db0b:b0:220:c905:689f with SMTP id
- d9443c01a7336-2254782c6ccmr7268995ad.25.1741706102160; Tue, 11 Mar 2025
- 08:15:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVwr5I0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F62AC4CEEA;
+	Tue, 11 Mar 2025 15:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741707128;
+	bh=XSzGoUU2DaCednX0FwOULdKUbQbWd5loQ7tAM92Ih1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sVwr5I0Er+lCb110bnzY6YJBd6Tv5Y8Rx8m2J8aWZv+Qk4lmQkXA3A5ZFKSWB2Ey8
+	 49kHfeeVtAzoX7svWTgsHdIkjN5YOH1iJDW76PdrxYcpWadHMy3j3eJCdL8WJlLE4C
+	 Nw8PabxQw4LDqIrWqJYTZzbl8DfweCHILllDwhAsxbbhyro/P1umEYx5pZm6PoA4mB
+	 CTYBt7L8iJEMlnEl4hev3r0if3XZonjYplHvSxiVcIV0l5BjkhA7j65Z5pGtK6LH5Y
+	 RT6al/ePYUnOSrVDDZ0txeEAtOEtQRwh0qkrxRkG9TlQU0yvYT9BnnLD+jogbgcCcj
+	 TPTZI6RLKetVQ==
+Date: Tue, 11 Mar 2025 12:32:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	James Clark <james.clark@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
+ parse_events
+Message-ID: <Z9BXdbWnX19ua5Mr@x1>
+References: <20250228222308.626803-1-irogers@google.com>
+ <20250228222308.626803-12-irogers@google.com>
+ <Z89We45bGpeJvO9C@x1>
+ <Z89WvaIVyF7klGp6@x1>
+ <CAP-5=fXzva636zCZR2isdfrjT6mM3o42C+oGWNkGieqGVajfHA@mail.gmail.com>
+ <Z89ZYVgL_bT3ampz@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
- <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
- <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com>
- <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org> <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
- <39f7e3ae-d274-4de4-8b8e-bcf1ad6f0932@linaro.org>
-In-Reply-To: <39f7e3ae-d274-4de4-8b8e-bcf1ad6f0932@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 11 Mar 2025 08:14:49 -0700
-X-Gm-Features: AQ5f1Jo9gCuDkvV5R8FYim2_RNO_j8IsokMHyiyMmLP-FYCK5mI3m9FTT7avot4
-Message-ID: <CAP-5=fU8LWyKrxn==ieO+dOCyvDML5Qnf23K=5bqHdHMvGx-eA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z89ZYVgL_bT3ampz@x1>
 
-On Tue, Mar 11, 2025 at 7:13=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 07/03/2025 5:35 pm, Ian Rogers wrote:
-> > On Fri, Mar 7, 2025 at 6:08=E2=80=AFAM James Clark <james.clark@linaro.=
-org> wrote:
-> >>
-> >>
-> >>
-> >> On 05/03/2025 9:40 pm, Ian Rogers wrote:
-> >>> On Tue, Mar 4, 2025 at 5:50=E2=80=AFAM James Clark <james.clark@linar=
-o.org> wrote:
-> >>>>
-> >>>> Instead of showing multiple line items with the same event name and
-> >>>> description, show a single line and concatenate all PMUs that this
-> >>>> event can belong to.
-> >>>>
-> >>>> Don't do it for json output. Machine readable output doesn't need to=
- be
-> >>>> minimized, and changing the "Unit" field to a list type would break
-> >>>> backwards compatibility.
-> >>>>
-> >>>> Before:
-> >>>>    $ perf list -v
-> >>>>    ...
-> >>>>    br_indirect_spec
-> >>>>          [Branch speculatively executed,indirect branch. Unit: armv8=
-_cortex_a53]
-> >>>>    br_indirect_spec
-> >>>>          [Branch speculatively executed,indirect branch. Unit: armv8=
-_cortex_a57]
-> >>>>
-> >>>> After:
-> >>>>
-> >>>>    $ perf list -v
-> >>>>    ...
-> >>>>    br_indirect_spec
-> >>>>          [Branch speculatively executed,indirect branch. Unit: armv8=
-_cortex_a53,armv8_cortex_a57]
-> >>>>
-> >>>> Signed-off-by: James Clark <james.clark@linaro.org>
-> >>>> ---
-> >>>>    tools/perf/builtin-list.c      |  2 ++
-> >>>>    tools/perf/util/pmus.c         | 75 +++++++++++++++++++++++++++++=
-++++++++-----
-> >>>>    tools/perf/util/print-events.h |  1 +
-> >>>>    3 files changed, 70 insertions(+), 8 deletions(-)
-> >>>>
-> >>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> >>>> index fed482adb039..aacd7beae2a0 100644
-> >>>> --- a/tools/perf/builtin-list.c
-> >>>> +++ b/tools/perf/builtin-list.c
-> >>>> @@ -516,6 +516,7 @@ int cmd_list(int argc, const char **argv)
-> >>>>                   .print_event =3D default_print_event,
-> >>>>                   .print_metric =3D default_print_metric,
-> >>>>                   .skip_duplicate_pmus =3D default_skip_duplicate_pm=
-us,
-> >>>> +               .collapse_events =3D true
-> >>>
-> >>> So collapse_events is put in the callbacks but isn't a callback. I
-> >>> think skipping duplicates and collapsing are the same thing, I'd
-> >>> prefer it if there weren't two terms for the same thing. If you prefe=
-r
-> >>> collapsing as a name then default_skip_duplicate_pmus can be
-> >>> default_collapse_pmus.
-> >>>
-> >>
-> >> I can use the existing callback and rename it. That does have the effe=
-ct
-> >> of disabling this behavior in verbose mode which may be useful or may =
-be
-> >> unexpected to some people. But it seems pretty 50/50 so fewer callback=
-s
-> >> are probably better.
-> >>
-> >>>>           };
-> >>>>           const char *cputype =3D NULL;
-> >>>>           const char *unit_name =3D NULL;
-> >>>> @@ -574,6 +575,7 @@ int cmd_list(int argc, const char **argv)
-> >>>>                           .print_event =3D json_print_event,
-> >>>>                           .print_metric =3D json_print_metric,
-> >>>>                           .skip_duplicate_pmus =3D json_skip_duplica=
-te_pmus,
-> >>>> +                       .collapse_events =3D false
-> >>>>                   };
-> >>>>                   ps =3D &json_ps;
-> >>>>           } else {
-> >>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> >>>> index 4d60bac2d2b9..cb1b14ade25b 100644
-> >>>> --- a/tools/perf/util/pmus.c
-> >>>> +++ b/tools/perf/util/pmus.c
-> >>>> @@ -453,17 +453,50 @@ static int cmp_sevent(const void *a, const voi=
-d *b)
-> >>>>           /* Order by PMU name. */
-> >>>>           if (as->pmu =3D=3D bs->pmu)
-> >>>>                   return 0;
-> >>>> -       return strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
-> >>>> +       ret =3D strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>> +
-> >>>> +       /* Order by remaining displayed fields for purposes of dedup=
-lication later */
-> >>>> +       ret =3D strcmp(as->scale_unit ?: "", bs->scale_unit ?: "");
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>> +       ret =3D !!as->deprecated - !!bs->deprecated;
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>> +       ret =3D strcmp(as->desc ?: "", bs->desc ?: "");
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>> +       return strcmp(as->long_desc ?: "", bs->long_desc ?: "");
-> >>>>    }
-> >>>>
-> >>>> -static bool pmu_alias_is_duplicate(struct sevent *a, struct sevent =
-*b)
-> >>>> +enum dup_type {
-> >>>> +       UNIQUE,
-> >>>> +       DUPLICATE,
-> >>>> +       SAME_TEXT
-> >>>> +};
-> >>>> +
-> >>>> +static enum dup_type pmu_alias_duplicate_type(struct sevent *a, str=
-uct sevent *b)
-> >>>>    {
-> >>>>           /* Different names -> never duplicates */
-> >>>>           if (strcmp(a->name ?: "//", b->name ?: "//"))
-> >>>> -               return false;
-> >>>> +               return UNIQUE;
-> >>>> +
-> >>>> +       /* Duplicate PMU name and event name -> hide completely */
-> >>>> +       if (strcmp(a->pmu_name, b->pmu_name) =3D=3D 0)
-> >>>> +               return DUPLICATE;
-> >>>> +
-> >>>> +       /* Any other different display text -> not duplicate */
-> >>>> +       if (strcmp(a->topic ?: "", b->topic ?: "") ||
-> >>>> +           strcmp(a->scale_unit ?: "", b->scale_unit ?: "") ||
-> >>>> +           a->deprecated !=3D b->deprecated ||
-> >>>> +           strcmp(a->desc ?: "", b->desc ?: "") ||
-> >>>> +           strcmp(a->long_desc ?: "", b->long_desc ?: "")) {
-> >>>> +               return UNIQUE;
-> >>>> +       }
-> >>>>
-> >>>> -       /* Don't remove duplicates for different PMUs */
-> >>>> -       return strcmp(a->pmu_name, b->pmu_name) =3D=3D 0;
-> >>>> +       /* Same display text but different PMU -> collapse */
-> >>>> +       return SAME_TEXT;
-> >>>>    }
-> >>>>
-> >>>>    struct events_callback_state {
-> >>>> @@ -501,6 +534,21 @@ static int perf_pmus__print_pmu_events__callbac=
-k(void *vstate,
-> >>>>           return 0;
-> >>>>    }
-> >>>>
-> >>>> +static void concat_pmu_names(char *pmu_names, size_t size, const ch=
-ar *a, const char *b)
-> >>>> +{
-> >>>> +       size_t len =3D strlen(pmu_names);
-> >>>> +       size_t added;
-> >>>> +
-> >>>> +       if (len)
-> >>>> +               added =3D snprintf(pmu_names + len, size - len, ",%s=
-", b);
-> >>>> +       else
-> >>>> +               added =3D snprintf(pmu_names, size, "%s,%s", a, b);
-> >>>> +
-> >>>> +       /* Truncate with ... */
-> >>>> +       if (added > 0 && added + len >=3D size)
-> >>>> +               sprintf(pmu_names + size - 4, "...");
-> >>>> +}
-> >>>> +
-> >>>>    void perf_pmus__print_pmu_events(const struct print_callbacks *pr=
-int_cb, void *print_state)
-> >>>>    {
-> >>>>           struct perf_pmu *pmu;
-> >>>> @@ -510,6 +558,7 @@ void perf_pmus__print_pmu_events(const struct pr=
-int_callbacks *print_cb, void *p
-> >>>>           struct events_callback_state state;
-> >>>>           bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus=
-(print_state);
-> >>>>           struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-> >>>> +       char pmu_names[128] =3D {0};
-> >>>>
-> >>>>           if (skip_duplicate_pmus)
-> >>>>                   scan_fn =3D perf_pmus__scan_skip_duplicates;
-> >>>> @@ -539,12 +588,21 @@ void perf_pmus__print_pmu_events(const struct =
-print_callbacks *print_cb, void *p
-> >>>>           qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
-> >>>>           for (int j =3D 0; j < len; j++) {
-> >>>>                   /* Skip duplicates */
-> >>>> -               if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j=
-], &aliases[j + 1]))
-> >>>> -                       goto free;
-> >>>> +               if (j < len - 1) {
-> >>>> +                       enum dup_type dt =3D pmu_alias_duplicate_typ=
-e(&aliases[j], &aliases[j + 1]);
-> >>>> +
-> >>>> +                       if (dt =3D=3D DUPLICATE) {
-> >>>> +                               goto free;
-> >>>> +                       } else if (print_cb->collapse_events && dt =
-=3D=3D SAME_TEXT) {
-> >>>> +                               concat_pmu_names(pmu_names, sizeof(p=
-mu_names),
-> >>>> +                                                aliases[j].pmu_name=
-, aliases[j+1].pmu_name);
-> >>>> +                               goto free;
-> >>>> +                       }
-> >>>> +               }
-> >>>
-> >>> I think a label called 'free' is a little unfortunate given the
-> >>> function called free.
-> >>> When I did things with sevent I was bringing over previous `perf list=
-`
-> >>> code mainly so that the perf list output before and after the changes
-> >>> was identical. I wonder if this logic would be better placed in the
-> >>> callback like default_print_event which already maintains state
-> >>> (last_topic) to optionally print different things. This may better
-> >>> encapsulate the behavior rather than the logic being in the PMU code.
-> >>>
-> >>
-> >> Yeah I can have a look at putting it in one of the callbacks. But in t=
-he
-> >> end builtin-list.c is the only user of perf_pmus__print_pmu_events()
-> >> anyway so makes you wonder if the whole thing can be moved to
-> >> builtin-list and open coded without the callbackyness.
-> >
-> > I wanted to hide some of the innards of pmus, so I think that's the
-> > reason it is as it is. The whole `sevent` was pre-existing and
-> > maintained so that the output was the same.
-> >
->
-> Looking at this a bit more it is possible to move all of
-> perf_pmus__print_pmu_events() (including its dependencies and perf list
-> specifics) out of pmus.c into print-events.c without exposing any new
-> innards of pmus. Only struct pmu_event_info would be used, but that's
-> not private and is already used elsewhere.
->
-> It's difficult to do this change only in the print_event callback
-> because it relies on having the _next_ event, not the previous event.
-> We're already tracking last_topic, and if we start passing all the
-> next_* items too it gets a bit unmanageable.
->
-> If it's all moved then doing display specific processing across the
-> whole list becomes quite easy.
+On Mon, Mar 10, 2025 at 06:28:01PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Mar 10, 2025 at 02:17:59PM -0700, Ian Rogers wrote:
+> > On Mon, Mar 10, 2025 at 2:16 PM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Mon, Mar 10, 2025 at 06:15:42PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Fri, Feb 28, 2025 at 02:23:08PM -0800, Ian Rogers wrote:
+> > > > > Rather than manually configuring an evsel, switch to using
+> > > > > parse_events for greater commonality with the rest of the perf code.
+> > > > >
+> > > > > Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > >
+> > > > Now will all in place I'm trying to test it and I am getting some
+> > > > strange results:
+> > > >
+> > > > root@number:/home/acme/git/perf-tools-next# tools/perf/python/tracepoint.py
+> > > > <SNIP lots of seemingly ok lines>
+> > > > time 78318710956557 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x1 ==> next_comm=swapper/14 next_pid=0 next_prio=120
+> > > > time 78318720082300 prev_comm=swapper/16 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=kworker/u112:8 next_pid=1752774 next_prio=120
+> > > > time 78318706232435 prev_comm=kworker/u112:17 prev_pid=1551246 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/21 next_pid=0 next_prio=120
+> > > > time 78318708202121 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x2 ==> next_comm=swapper/25 next_pid=0 next_prio=120
+> > > > time 78318748346989 prev_comm=swapper/26 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=gnome-terminal- next_pid=3551 next_prio=120
+> > > > Traceback (most recent call last):
+> > > >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 47, in <module>
+> > > >     main()
+> > > >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 42, in main
+> > > >     event.next_comm,
+> > > >     ^^^^^^^^^^^^^^^
+> > > > AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
+> > > > root@number:/home/acme/git/perf-tools-next#
+> > > >
+> > > > But it shouldn't get there as there is this check:
+> > > >
+> > > >             if not isinstance(event, perf.sample_event):
+> > > >                 continue
+> > > >
+> > > >
+> > > > :-\
+> > > >
+> > > > Trying to debug that...
+> > >
+> > > And it doesn't seem related to your series, I checked and v6.13 has the
+> > > same problem, I nuked the build dir, etc.
+> > 
+> > Right. I'd seen the same issue.
+> 
+> time 79411977132102 prev_comm=sudo prev_pid=3133818 prev_prio=120 prev_state=0x2 ==> next_comm=swapper/12 next_pid=0 next_prio=120
+> { type: sample }
+> time 79411977200343 prev_comm=kworker/u112:17 prev_pid=1551246 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/16 next_pid=0 next_prio=120
+> { type: sample }
+> time 79411964535268 prev_comm=kworker/u112:14 prev_pid=810939 prev_prio=120 prev_state=0x80 ==> next_comm=swapper/17 next_pid=0 next_prio=120
+> { type: sample }
+> time 79411964746511 prev_comm=swapper/18 prev_pid=0 prev_prio=120 prev_state=0x0 ==> next_comm=kworker/u112:12 next_pid=2109251 next_prio=120
+> { type: sample }
+> Traceback (most recent call last):
+>   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 48, in <module>
+>     main()
+>   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 43, in main
+>     event.next_comm,
+>     ^^^^^^^^^^^^^^^
+> AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
+> root@number:/home/acme/git/perf-tools-next#
+> 
+> And it says it is a sample... 
+> 
+> Well, ran out of time, will try later or early tomorrow, will also try
+> to review the syscalltbl series and Howard's off cpu profiling.
 
-I'm not sure I follow all of this. If things can be moved to a more
-obvious location, printing code in print-events.c, and we maintain
-encapsulation then that sounds great to me. I'm not clear on the next
-event issue. My hope with the print routines in builtin-list.c was
-that anyone could come along and add another for whatever rendering
-took their fancy. I didn't want it to be like the logic in
-stat-display.c, where there are multiple levels of call backs, global
-state, odd things like passing NULL meaning display column headers,
-and the whole thing being a confusing rats nest where a change nearly
-always ripples through and breaks something somewhere. Particularly
-compare the json output in stat-display.c and builtin-list.c, my hope
-was that builtin-list.c would be the model for reimplementing the
-stat-display.c one. Others may have different opinions.
+Its some sort of corruption, I added printing the sample_* fields and
+then up to the field before next_comm:
 
-Thanks,
-Ian
+time 2462907120158 prev_comm=swapper/8 prev_pid=0 prev_prio=120 prev_state=0x0 ==>
+next_comm=gnome-terminal- next_pid=3646 next_prio=120
+ip 0 pid=0 tid=0 cpu=12
+time 2462916970223 prev_comm=swapper/12 prev_pid=0 prev_prio=120 prev_state=0x0 ==>
+next_comm=gnome-terminal- next_pid=3646 next_prio=120
+ip 0 pid=0 tid=0 cpu=14
+time 2462902120635 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x323a32313175 ==>
+Traceback (most recent call last):
+  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
+    main()
+  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
+    event.next_comm,
+    ^^^^^^^^^^^^^^^
+AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
+root@number:/home/acme/git/perf-tools-next# 
+
+See the empty prev_comm, bogus pref_pid, ditto for prev_state and
+pref_prio and then it simple doesn't have that next_comm...
+
+Also I noticed that in tracepoint_field() (tools/perf/util/python.c) we
+can get the string tracepoint fields as a bytearray or as a string,
+ahere:
+
+                if (field->flags & TEP_FIELD_IS_STRING &&
+                    is_printable_array(data + offset, len)) {
+                        ret = PyUnicode_FromString((char *)data + offset);
+                } else {
+                        ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+                        field->flags &= ~TEP_FIELD_IS_STRING;
+                }
+
+
+For some reason in sessions where bytearrays are returned, and all comes
+as bytearrays, the problem is not noticed.
+
+But when it comes as a string it breaks after a short time, /me
+scratches head...
+
+- Arnaldo
