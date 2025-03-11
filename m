@@ -1,40 +1,64 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20631EEC0;
-	Tue, 11 Mar 2025 13:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE7025CC7F
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 14:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741698655; cv=none; b=CNhRTWgRCIVNWbaZjP02gj5VPbEMzypCNMtf/aYakWfqDVaf65EP7iwEjXKyucQeU/V9uClQDHEbeCcPqPZBGj1sQIsBFleG+MUbHtD22lQkeekw9dDUlfB0DbziW8X3X3Imlz0F/49RLLqShRImk2Spm8lS2vz4Vauwgj2acHA=
+	t=1741702413; cv=none; b=clR9IqfrgxFRh6RR62SkeR19o40VByGesQX8FxTcAwbGzQMnzwMfYVUxuAlNThV9ynVzfJW1j0aid5CEb9LdxRNka+01i18Bu+Wf1Z/6PqVS+d3C3VrV9xDkuhqWDOXRUntIQocfEj9oD7abMzCBfv58rBr6kooe1yafzpBDLao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741698655; c=relaxed/simple;
-	bh=x2wx83Af4auGESkptVyzXE8x4VbScnVfHSrzRSy8Sis=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=sRW0VKszPyFAexROzKeceAMWGFqlZZOYi2PDyl82h9Lq7/me6yeoLNLJK8bIwRlzEOsNd5v54CyJF7dSs04X1lZ8i9EoDUeaGqf2eSPIpScXBgHWqWSJjohpgPe6FgMBfW7G+MmadbQ31sy38O16q0AsITETKEY7TBT7KLKIb0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hXXU4nzr; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741702413; c=relaxed/simple;
+	bh=ArKux3sa+By8S2kxsGVmvIGfUXIoRTno8CyZ4M/LSco=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NRgOpR9h/1e/xVZ+eD48ndsmGIyfbmWaQpHTINTt8z6jriAHe4CBvg/PLO8lJ5M3lmhJxZXzQ2uDSPHqRG8SSa9YZuBwzE3EMfZbYvM/4K5o4Wl/hw2J1zQeJVkDUzJofK7LM6m7M/1TnaxOSyphSLp2BhwA/3blPRdnYz+8sX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CZyyy0d4; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hXXU4nzr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741698618; x=1742303418; i=markus.elfring@web.de;
-	bh=d4+v+/FFY1NFCcEvkaRdbNdq0w4BmXK0lz0GP1TGRu4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hXXU4nzro6J+l+7pD5Mes3OaAGI748t3bffQODOyUCJb8rQpiJa273PJ691hNk61
-	 FCvPFYRnuEgTU1I2e0UNuvu6toIWs/1PN/k7Ytm5Ykevyus9R3lhZ+5Nh4bUeAVp+
-	 MIp7YXaQbNDgcU+9z4MxiPxw1KffhJR4leAvAVE/vFxevDkBzk9sWPuGtssfXYE8Z
-	 p0IeZsCaLF6TMGP4fbG/JBkdUm+wWmW4X7bYSj2pdN1rUf2Ok8/eTAf6D7uTVwd3M
-	 /zFaAaVOJdpE7WESeIkd5JeyPOWDyPiu5MiSxY77nQEXXAayYcrL2UnAZ6uy0/UCI
-	 wkknlg+z3MaLUH/rog==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.40]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MBjIG-1u43eQ010e-0092uf; Tue, 11
- Mar 2025 14:10:18 +0100
-Message-ID: <d5ea4ef6-f6ca-4135-b339-fdb8b4ca1360@web.de>
-Date: Tue, 11 Mar 2025 14:10:13 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZyyy0d4"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39104c1cbbdso2728761f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Mar 2025 07:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741702410; x=1742307210; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Itt67/2JfHkiqaMAIqXre3nmprPzyRAS1yoN5mC4m5A=;
+        b=CZyyy0d4WuVMhlY29Z511BPH43AjuMNvb0BXwwJFGn87tvzaxtTmgYwLD2qZCsSxmr
+         F7PTjn6k5AgmtVubvOo/7zCbuyZizAKSATtBwMAIFDhNd0Dj9SF6sMwhI4zFrYqBtQPX
+         +C8GP1IQefb1twD5P/VdTziaKpJwuw2sBKZ4Lpnj2f9THRKuuiubaAw5KFi+CnyT0Vi5
+         oZexv9TKuwheHFAp7yaCs5PsyRB+c4RMYNnH22kx6OTQcEd/ybfXgXNjx4Zxk74Rqptq
+         iYbMOnrYZJbdGTKmMsvlbPgRc6DDpdZoDnz75+C2KLvcTpwxwbG4UbNoEAqDE6loH4jP
+         MihQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741702410; x=1742307210;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Itt67/2JfHkiqaMAIqXre3nmprPzyRAS1yoN5mC4m5A=;
+        b=EVsqsIg5q9ytaay7INcNSMKC3Ct+/WouG1LOAQg4oQvWQH8nr3vgM4f7gIKSFOu4UG
+         l/kKCxke1/ztvFwul+VVRH/ub5Cf2E8WqgmrHlN9rlEBPlV/9cQ8cGfy4LEpaCiMx58m
+         z2EQsvuo6Waw5Ms8lSH9nwWI7nBldqGEBSHahP62PdOXrJ54cNcuW3JVV20fYRbBfmwt
+         vYqvIMeYgAziZ7zvQ3Ljvb47MPn6eeqeYRE71z16f1IVETSrLZcOuUp+UK0As+Si2DIi
+         RJ/FTao9t1qc+4BNonNh8guHHUYvPsqc478vr8HxJ+sn2yrkKl2FDV54yS3jJlppLnPg
+         +ufg==
+X-Forwarded-Encrypted: i=1; AJvYcCXagfFFa0ydBZrbbwQjjQwltcaxGRVzOMrnV7KgT23oBwUZH7+59U0e9qgPSSmtrBXZSX2cwzILIM3r5oo555ll@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1oiiBrJ3vELRjJqepBVTTK/wtwY3iulB58d/n8PzKDY1tP+iY
+	jfBQMCAdOIqQVepdMgQhwn/3BZddjfxhU3RvDlKSwm6Hw+C5BMBEtA4NDHfhQPc=
+X-Gm-Gg: ASbGncuZ5/CrzfueULcxcGXhkNoKaJfFM2asoPM0Y7bCLnj9nOWflLd6WMZbdtWsV9T
+	Rl4U8Bb0RtX4/gkfduH02mAAyhp+ct/ZmkwO/BGHRGX4FcjFtPaCUZtkxbkR+UoSrp32ig6+itD
+	vPCQjlqwwIreZ/3R7bj3G7Y2UsTHPzRXb1Is8h/SwBb+4NLt06yPOcp+I9fOFP4dM0soZUhIWqK
+	buU7hwHk6kDwDcwnYmzKl6gez91ku7KDS5Z03MKlNSktAxwh54pbDnpiiou3AtUNctiZKL7+JAn
+	jaKvWjuGHk8ZynYXf/+nUGUIzlLhs0hLQNNY3CMqpKIHwajkePU6
+X-Google-Smtp-Source: AGHT+IHls/TUQgoGj46tBQ4rgEriKNzc2+1Ape+0fvCY/GTWqqvwj2dMBh7MeBTYrGXLvD7zhGwqqQ==
+X-Received: by 2002:a5d:64eb:0:b0:38f:34a7:ebfb with SMTP id ffacd0b85a97d-3926c883ed3mr4143649f8f.55.1741702409541;
+        Tue, 11 Mar 2025 07:13:29 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.65.43])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e3250sm18368985f8f.61.2025.03.11.07.13.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 07:13:29 -0700 (PDT)
+Message-ID: <39f7e3ae-d274-4de4-8b8e-bcf1ad6f0932@linaro.org>
+Date: Tue, 11 Mar 2025 14:13:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,80 +66,238 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ananth Narayan <ananth.narayan@amd.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Chen Yu <yu.c.chen@intel.com>,
- David Vernet <void@manifault.com>, "Gautham R. Shenoy"
- <gautham.shenoy@amd.com>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@arm.com>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>, Kan Liang <kan.liang@linux.intel.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>, Mark Rutland
- <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan.das@amd.com>,
- Santosh Shukla <Santosh.Shukla@amd.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, Steven Rostedt
- <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Yang Jihong <yangjihong@bytedance.com>
-References: <20250311120230.61774-2-swapnil.sapkal@amd.com>
-Subject: Re: [PATCH v3 1/8] perf sched stats: Add record and rawdump support
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250311120230.61774-2-swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Np+1EWQXjLlpql+1NDX0O7syvijYDw/2V0a0UsG9NA6ezKwhwt9
- 6PY24Nkq0vUUr5WQcf0hVaJ64TgShyyxzGp4gXJCcIu6vyl3LIO1bNE8DPFlX2IoCS9j4kj
- UGurIZQNbLS/fFvWNRXsF0EdUqi8VKMydNgphKDU+TxMcCn2hdhtN/dHisF6C1ugXBCYVJI
- y97E1MpZPm4MmhUcNP41A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BzBHoab1J0Y=;+CfozBFERwrLP4bnqCwy8YkNFSN
- j/c/Q81YjwCvZRJpgozH0R6CvSmsjalRV9FQGlHUq49Vj+y6CpGLnMd5kzJY6yUxaCAigbG4k
- ZyHlys7J6m2cBzUuw0FudGTVKxsQGAPcg/bTXL10R9AA9hdGEh7xKMcBF1C43xXeQk06vfvjt
- KFQ/sinuZmXKZWE6AbN1UNurvOWyGLykM6SowLLqKRHf83sqf9izoWR7VZjJW1RrrAX6lOsQ2
- 3hERtkntrCnURNeQP+cXk9x+J8gB9qjeTTJNS+8hKReEPnSD+g2DMBeqwUM0bGa5KZCYSfNNX
- uZ75GU2UrS46Ul1fo8tn0I1uJPd176uLIS70OjRIW4h2moi0q4vlOSzIxgr1s445mA8uhEfRl
- h/Aec1LCBDEjCa67QO2s0JJTGJosmlPehUx4yNmqwUFJqojDnZBidjE0Qmq972rf56FlicZAG
- csvotgZB4zcZIQED80x/bfP1F114lVCwQ7Id2IhNrLZ4YFtRGVURxezPkEARGEoC2lPSc3jFm
- CeQWqR+RLAhuH+pWoFA1qpI5lFCPh/dkxTWDtoAFHDUIQCkV0btKUb2CsCctTP88CB7NDBOlE
- CXOIVlNb4w63OX4Gd/DELc0qZq3sB8FS3GlqsJuoCu88h2aF8tAICG/BTRHihP1OOFBKN/zyn
- t6yjuSPbCIDHTfr5EoGdYxKGHHtneUMxsuXNh1B/iXSc+/3Yi+pcmatmo3gM9sR9+BSauZHdM
- UAiRgBDBGDaxIo3ahyDirim+WtgGxFitbj9qbFYd6K4UI8jWXsZbeIp3QELMQIAadz6UgtTK7
- F944J7PyPDx11sJTNp3vN6x+WbL1p7jMmKN+OSWcAwcwbToum2NYnguc2b37xPlNtma0TEhB+
- pLdFnrfqV4QHl+5t8CSsdbKeHNXl0YNhTMb3oaXhnDhzz7Ty/gUaYC2AfVzwRbkzlf4tQHo4B
- LBDM1/9GmQ12eDgMblRTsjT+ijG3lTf/5Zr7fDzuXb8BDJfXXLdP6WhdQR+RIo7LKS11fmtRX
- 60KInQA8dG2B7w1knAsxMF/eCfrPb9ZNJdyQrke6NgVVtSJ3NUi11laj0NsvmMmbd+qxC2APc
- Y+4vKaL9N2iBrOhXsATziGem6gjaOxKBbZO+droXAv/OpIQFJANM+5sKCmqcejq0KLTZgtFL0
- IG6Xi59VuthA2YdtXGWiQErQJk1HkPXUvPZrgA8tf//eWUYHcO9LAqvFjSIiQv1v8/Dx0dmHq
- BFrjlwFRCROJAQ/tQ3wuNT6KCbdA3a3rmpTeuN9G2r5aKt44zeu/e8bwC292FP9LTWH3nRljd
- A8nWj17HkSgIjtotnYXOzStjpHD0En9I2t5AaaRsrecxhTlMrljUi4sR3mPo/F3cD8Dx1Bpai
- uEDg73E2rkAg8yLTPBmbB14tVQlO0dGon+RSwymNuh++JIQ+gAoR/gnMjmkE/l5wThgRKaPN+
- WFBGIWamc4W9fRjVtA9c74x7lsRCpyrqzcO+9jRtkNIpC35duNgMmQQrlnHRndcc/OT97AA==
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Robin Murphy <robin.murphy@arm.com>, Leo Yan <leo.yan@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
+ <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
+ <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com>
+ <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org>
+ <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> +++ b/tools/perf/builtin-sched.c
-=E2=80=A6
-> +static int enable_sched_schedstats(int *reset)
-> +{
-=E2=80=A6
-> +	ch =3D getc(fp);
-> +	if (ch =3D=3D '0') {
-> +		*reset =3D 1;
-> +		rewind(fp);
-> +		putc('1', fp);
-> +		fclose(fp);
-> +	}
-> +	return 0;
-> +}
-=E2=80=A6
 
-Is the error detection incomplete so far?
-https://cwe.mitre.org/data/definitions/252.html
 
-Regards,
-Markus
+On 07/03/2025 5:35 pm, Ian Rogers wrote:
+> On Fri, Mar 7, 2025 at 6:08 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 05/03/2025 9:40 pm, Ian Rogers wrote:
+>>> On Tue, Mar 4, 2025 at 5:50 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>> Instead of showing multiple line items with the same event name and
+>>>> description, show a single line and concatenate all PMUs that this
+>>>> event can belong to.
+>>>>
+>>>> Don't do it for json output. Machine readable output doesn't need to be
+>>>> minimized, and changing the "Unit" field to a list type would break
+>>>> backwards compatibility.
+>>>>
+>>>> Before:
+>>>>    $ perf list -v
+>>>>    ...
+>>>>    br_indirect_spec
+>>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53]
+>>>>    br_indirect_spec
+>>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a57]
+>>>>
+>>>> After:
+>>>>
+>>>>    $ perf list -v
+>>>>    ...
+>>>>    br_indirect_spec
+>>>>          [Branch speculatively executed,indirect branch. Unit: armv8_cortex_a53,armv8_cortex_a57]
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>    tools/perf/builtin-list.c      |  2 ++
+>>>>    tools/perf/util/pmus.c         | 75 +++++++++++++++++++++++++++++++++++++-----
+>>>>    tools/perf/util/print-events.h |  1 +
+>>>>    3 files changed, 70 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+>>>> index fed482adb039..aacd7beae2a0 100644
+>>>> --- a/tools/perf/builtin-list.c
+>>>> +++ b/tools/perf/builtin-list.c
+>>>> @@ -516,6 +516,7 @@ int cmd_list(int argc, const char **argv)
+>>>>                   .print_event = default_print_event,
+>>>>                   .print_metric = default_print_metric,
+>>>>                   .skip_duplicate_pmus = default_skip_duplicate_pmus,
+>>>> +               .collapse_events = true
+>>>
+>>> So collapse_events is put in the callbacks but isn't a callback. I
+>>> think skipping duplicates and collapsing are the same thing, I'd
+>>> prefer it if there weren't two terms for the same thing. If you prefer
+>>> collapsing as a name then default_skip_duplicate_pmus can be
+>>> default_collapse_pmus.
+>>>
+>>
+>> I can use the existing callback and rename it. That does have the effect
+>> of disabling this behavior in verbose mode which may be useful or may be
+>> unexpected to some people. But it seems pretty 50/50 so fewer callbacks
+>> are probably better.
+>>
+>>>>           };
+>>>>           const char *cputype = NULL;
+>>>>           const char *unit_name = NULL;
+>>>> @@ -574,6 +575,7 @@ int cmd_list(int argc, const char **argv)
+>>>>                           .print_event = json_print_event,
+>>>>                           .print_metric = json_print_metric,
+>>>>                           .skip_duplicate_pmus = json_skip_duplicate_pmus,
+>>>> +                       .collapse_events = false
+>>>>                   };
+>>>>                   ps = &json_ps;
+>>>>           } else {
+>>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>>>> index 4d60bac2d2b9..cb1b14ade25b 100644
+>>>> --- a/tools/perf/util/pmus.c
+>>>> +++ b/tools/perf/util/pmus.c
+>>>> @@ -453,17 +453,50 @@ static int cmp_sevent(const void *a, const void *b)
+>>>>           /* Order by PMU name. */
+>>>>           if (as->pmu == bs->pmu)
+>>>>                   return 0;
+>>>> -       return strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
+>>>> +       ret = strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +
+>>>> +       /* Order by remaining displayed fields for purposes of deduplication later */
+>>>> +       ret = strcmp(as->scale_unit ?: "", bs->scale_unit ?: "");
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +       ret = !!as->deprecated - !!bs->deprecated;
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +       ret = strcmp(as->desc ?: "", bs->desc ?: "");
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +       return strcmp(as->long_desc ?: "", bs->long_desc ?: "");
+>>>>    }
+>>>>
+>>>> -static bool pmu_alias_is_duplicate(struct sevent *a, struct sevent *b)
+>>>> +enum dup_type {
+>>>> +       UNIQUE,
+>>>> +       DUPLICATE,
+>>>> +       SAME_TEXT
+>>>> +};
+>>>> +
+>>>> +static enum dup_type pmu_alias_duplicate_type(struct sevent *a, struct sevent *b)
+>>>>    {
+>>>>           /* Different names -> never duplicates */
+>>>>           if (strcmp(a->name ?: "//", b->name ?: "//"))
+>>>> -               return false;
+>>>> +               return UNIQUE;
+>>>> +
+>>>> +       /* Duplicate PMU name and event name -> hide completely */
+>>>> +       if (strcmp(a->pmu_name, b->pmu_name) == 0)
+>>>> +               return DUPLICATE;
+>>>> +
+>>>> +       /* Any other different display text -> not duplicate */
+>>>> +       if (strcmp(a->topic ?: "", b->topic ?: "") ||
+>>>> +           strcmp(a->scale_unit ?: "", b->scale_unit ?: "") ||
+>>>> +           a->deprecated != b->deprecated ||
+>>>> +           strcmp(a->desc ?: "", b->desc ?: "") ||
+>>>> +           strcmp(a->long_desc ?: "", b->long_desc ?: "")) {
+>>>> +               return UNIQUE;
+>>>> +       }
+>>>>
+>>>> -       /* Don't remove duplicates for different PMUs */
+>>>> -       return strcmp(a->pmu_name, b->pmu_name) == 0;
+>>>> +       /* Same display text but different PMU -> collapse */
+>>>> +       return SAME_TEXT;
+>>>>    }
+>>>>
+>>>>    struct events_callback_state {
+>>>> @@ -501,6 +534,21 @@ static int perf_pmus__print_pmu_events__callback(void *vstate,
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> +static void concat_pmu_names(char *pmu_names, size_t size, const char *a, const char *b)
+>>>> +{
+>>>> +       size_t len = strlen(pmu_names);
+>>>> +       size_t added;
+>>>> +
+>>>> +       if (len)
+>>>> +               added = snprintf(pmu_names + len, size - len, ",%s", b);
+>>>> +       else
+>>>> +               added = snprintf(pmu_names, size, "%s,%s", a, b);
+>>>> +
+>>>> +       /* Truncate with ... */
+>>>> +       if (added > 0 && added + len >= size)
+>>>> +               sprintf(pmu_names + size - 4, "...");
+>>>> +}
+>>>> +
+>>>>    void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
+>>>>    {
+>>>>           struct perf_pmu *pmu;
+>>>> @@ -510,6 +558,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>>>>           struct events_callback_state state;
+>>>>           bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
+>>>>           struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+>>>> +       char pmu_names[128] = {0};
+>>>>
+>>>>           if (skip_duplicate_pmus)
+>>>>                   scan_fn = perf_pmus__scan_skip_duplicates;
+>>>> @@ -539,12 +588,21 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>>>>           qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+>>>>           for (int j = 0; j < len; j++) {
+>>>>                   /* Skip duplicates */
+>>>> -               if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j], &aliases[j + 1]))
+>>>> -                       goto free;
+>>>> +               if (j < len - 1) {
+>>>> +                       enum dup_type dt = pmu_alias_duplicate_type(&aliases[j], &aliases[j + 1]);
+>>>> +
+>>>> +                       if (dt == DUPLICATE) {
+>>>> +                               goto free;
+>>>> +                       } else if (print_cb->collapse_events && dt == SAME_TEXT) {
+>>>> +                               concat_pmu_names(pmu_names, sizeof(pmu_names),
+>>>> +                                                aliases[j].pmu_name, aliases[j+1].pmu_name);
+>>>> +                               goto free;
+>>>> +                       }
+>>>> +               }
+>>>
+>>> I think a label called 'free' is a little unfortunate given the
+>>> function called free.
+>>> When I did things with sevent I was bringing over previous `perf list`
+>>> code mainly so that the perf list output before and after the changes
+>>> was identical. I wonder if this logic would be better placed in the
+>>> callback like default_print_event which already maintains state
+>>> (last_topic) to optionally print different things. This may better
+>>> encapsulate the behavior rather than the logic being in the PMU code.
+>>>
+>>
+>> Yeah I can have a look at putting it in one of the callbacks. But in the
+>> end builtin-list.c is the only user of perf_pmus__print_pmu_events()
+>> anyway so makes you wonder if the whole thing can be moved to
+>> builtin-list and open coded without the callbackyness.
+> 
+> I wanted to hide some of the innards of pmus, so I think that's the
+> reason it is as it is. The whole `sevent` was pre-existing and
+> maintained so that the output was the same.
+> 
+
+Looking at this a bit more it is possible to move all of 
+perf_pmus__print_pmu_events() (including its dependencies and perf list 
+specifics) out of pmus.c into print-events.c without exposing any new 
+innards of pmus. Only struct pmu_event_info would be used, but that's 
+not private and is already used elsewhere.
+
+It's difficult to do this change only in the print_event callback 
+because it relies on having the _next_ event, not the previous event. 
+We're already tracking last_topic, and if we start passing all the 
+next_* items too it gets a bit unmanageable.
+
+If it's all moved then doing display specific processing across the 
+whole list becomes quite easy.
+
