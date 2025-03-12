@@ -1,43 +1,40 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4EC23CF12;
-	Wed, 12 Mar 2025 09:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C395A23C8AE;
+	Wed, 12 Mar 2025 09:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741773381; cv=none; b=lGsZ+SUJGciiLGx8idsXiu61dHgBqtnXYxoXOuu/2OyhhkfQEj/aypzcOvFL6UWNuye9nD8ju0onugmLmOuw9RndhjpaJ9oNphXxxmHMy6eMCz1PPQh4AEhZ+C8nHZjPDyJGdjsWKLz4GpQBIJvKyTzkNn2AIwWwgUBPGkk46zM=
+	t=1741773421; cv=none; b=FKVGq50QeEJUle//dFIq5EO2xHcFLICkrkN1iPcPpIX/ArYrOrHkwggd4V1R/eYJx4ak3Ud267m518c6B+arn4paAxXZHWH0FqIzU2B5kjKPE97faMJjD5ri9+cVA9Ke7tP16JoDA6kFbiu9mXw+wFM8F7stLxDAx61BReygp28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741773381; c=relaxed/simple;
-	bh=IOxTtn9oEAUi55rJMUn1mdKE85G/bJiTYZGzSQh0+nU=;
+	s=arc-20240116; t=1741773421; c=relaxed/simple;
+	bh=h/0svnDzFfC36YTDA6ABydJ+DHLGj5Q9Nhr7nuAmPQ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnzjG7KNsU+VhkjirlXMOa7zZIW9iK4s94T7G7TeOItLbn0+140N2lXHKtvXStQjT3QbT8OgV1FlA1Z8Z0pR6O5Sz9ypJi2OFxiPVE4Ht5zEghJy8dqdQMbg5i0nbgk0Ho6i7WuBWLgYqWR6bRyUqPpNUmuL6rvAWG9SWdNa47g=
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgkeM3y4NGqQ2mKUQPuzZcS6ql8uEZvIKDGl2pEc98Ecg6DYjjm8q4pTjZhDSV83xUolxCF0M7onJVsvsQTjMlxI8LyWGChgnlRXsNP9C//2kp473eAGdP9RhoYwnRZbF0AkYg+4KsIr65h//blDbQsFGRTLNU6YmmXvYEaeh+A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85884152B;
-	Wed, 12 Mar 2025 02:56:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1957152B;
+	Wed, 12 Mar 2025 02:57:09 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5666A3F5A1;
-	Wed, 12 Mar 2025 02:56:18 -0700 (PDT)
-Date: Wed, 12 Mar 2025 09:56:13 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B443A3F5A1;
+	Wed, 12 Mar 2025 02:56:58 -0700 (PDT)
+Date: Wed, 12 Mar 2025 09:56:57 +0000
 From: Leo Yan <leo.yan@arm.com>
 To: Yujie Liu <yujie.liu@intel.com>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Martin Liska <martin.liska@hey.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
 	James Clark <james.clark@linaro.org>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v2] perf script: Update brstack syntax documentation
-Message-ID: <20250312095613.GL9682@e132581.arm.com>
-References: <20250312072329.419020-1-yujie.liu@intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com
+Subject: Re: [PATCH] perf script: Fix typo in branch event mask
+Message-ID: <20250312095657.GM9682@e132581.arm.com>
+References: <20250312075636.429127-1-yujie.liu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,69 +43,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312072329.419020-1-yujie.liu@intel.com>
+In-Reply-To: <20250312075636.429127-1-yujie.liu@intel.com>
 
-On Wed, Mar 12, 2025 at 03:23:29PM +0800, Yujie Liu wrote:
-> The following commits added new fields/flags to the branch stack field
-> list:
+On Wed, Mar 12, 2025 at 03:56:36PM +0800, Yujie Liu wrote:
+> BRACH -> BRANCH
 > 
-> commit 1f48989cdc7d ("perf script: Output branch sample type")
-> commit 6ade6c646035 ("perf script: Show branch speculation info")
-> commit 1e66dcff7b9b ("perf script: Add not taken event for branch stack")
-> 
-> Update brstack syntax documentation to be consistent with the latest
-> branch stack field list. Improve the descriptions to help users
-> interpret the fields accurately.
-> 
+> Fixes: 88b1473135e4 ("perf script: Separate events from branch types")
 > Signed-off-by: Yujie Liu <yujie.liu@intel.com>
 
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 
 > ---
-> Changes in v2:
-> - Add not taken event (Namhyung, Leo)
-> - Change field name from PRED to EVENT for generic use and furture
->   extension (Leo)
+>  tools/perf/util/event.h                 | 2 +-
+>  tools/perf/util/trace-event-scripting.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> v1: https://lore.kernel.org/all/20250225061736.1698175-1-yujie.liu@intel.com/
-> ---
->  tools/perf/Documentation/perf-script.txt | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index b72866ef270b..28bec7e78bc8 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -239,13 +239,22 @@ OPTIONS
->  	i.e., -F "" is not allowed.
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index c7f4b4b841ca..664bf39567ce 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -91,7 +91,7 @@ enum {
+>  	PERF_IP_FLAG_VMENTRY		|\
+>  	PERF_IP_FLAG_VMEXIT)
 >  
->  	The brstack output includes branch related information with raw addresses using the
-> -	/v/v/v/v/cycles syntax in the following order:
-> -	FROM: branch source instruction
-> -	TO  : branch target instruction
-> -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
-> -	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
-> -	A/- : A=TSX abort entry, -=not aborted region or not supported
-> -	cycles
-> +	FROM/TO/EVENT/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
-> +	FROM  : branch source instruction
-> +	TO    : branch target instruction
-> +	EVENT : M=branch target or direction was mispredicted
-> +	        P=branch target or direction was predicted
-> +	        N=branch not-taken
-> +	        -=no event or not supported
-> +	INTX  : X=branch inside a transactional region
-> +	        -=branch not in transaction region or not supported
-> +	ABORT : A=TSX abort entry
-> +	        -=not aborted region or not supported
-> +	CYCLES: the number of cycles that have elapsed since the last branch was recorded
-> +	TYPE  : branch type: COND/UNCOND/IND/CALL/IND_CALL/RET etc.
-> +	        -=not supported
-> +	SPEC  : branch speculation info: SPEC_WRONG_PATH/NON_SPEC_CORRECT_PATH/SPEC_CORRECT_PATH
-> +	        -=not supported
+> -#define PERF_IP_FLAG_BRACH_EVENT_MASK	\
+> +#define PERF_IP_FLAG_BRANCH_EVENT_MASK	\
+>  	(PERF_IP_FLAG_BRANCH_MISS |	\
+>  	 PERF_IP_FLAG_NOT_TAKEN)
 >  
->  	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+> index 29cc467be14a..72abb28b7b5a 100644
+> --- a/tools/perf/util/trace-event-scripting.c
+> +++ b/tools/perf/util/trace-event-scripting.c
+> @@ -347,7 +347,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
 >  
+>  	flags &= ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
+>  
+> -	types = flags & ~PERF_IP_FLAG_BRACH_EVENT_MASK;
+> +	types = flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
+>  	for (i = 0; sample_flags[i].name; i++) {
+>  		if (sample_flags[i].flags != types)
+>  			continue;
+> @@ -359,7 +359,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
+>  		break;
+>  	}
+>  
+> -	events = flags & PERF_IP_FLAG_BRACH_EVENT_MASK;
+> +	events = flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
+>  	for (i = 0; branch_events[i].name; i++) {
+>  		if (!(branch_events[i].flags & events))
+>  			continue;
 > 
 > base-commit: b10f74308e1305275e69ddde711ec817cc69e306
 > -- 
