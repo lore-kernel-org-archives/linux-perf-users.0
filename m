@@ -1,54 +1,43 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E9815820C;
-	Wed, 12 Mar 2025 09:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4EC23CF12;
+	Wed, 12 Mar 2025 09:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741772400; cv=none; b=dfkYaeot+WArRa7D83qlmvI4lrnHlYXXNYtNtZTvugrbgqwIWKF8VfHPOkUEU3Hf+LBWdCBFQ0+TbUaXRbuTULYZs1IwHwt+6+EbtoU2rSHTooeFieJTCjHmIJ3868TJqsEIKXTmFYjU+nY7pk05E/I/+0er3XmLF84FAcqV6n0=
+	t=1741773381; cv=none; b=lGsZ+SUJGciiLGx8idsXiu61dHgBqtnXYxoXOuu/2OyhhkfQEj/aypzcOvFL6UWNuye9nD8ju0onugmLmOuw9RndhjpaJ9oNphXxxmHMy6eMCz1PPQh4AEhZ+C8nHZjPDyJGdjsWKLz4GpQBIJvKyTzkNn2AIwWwgUBPGkk46zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741772400; c=relaxed/simple;
-	bh=o7M7fRkbCHIKzerwL4wLRbTmeINyNYlXBbL4qCtA+Lo=;
+	s=arc-20240116; t=1741773381; c=relaxed/simple;
+	bh=IOxTtn9oEAUi55rJMUn1mdKE85G/bJiTYZGzSQh0+nU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwmAtg5b9ibwCBwhwuNa5VYzSeHUjZsY8K5VYZxxnFm9IU2sLiBPi6L/a9oW3k2Q5JP2I5/4rPJxOZ4mAF3ZFwpehWLsuN7q45DhNwLAosfDunWTTjZlMp5CL1FUsrJ+dp9BUw0Hpz8ad671NTFL9y53wct25BWZNwbQeeaCW14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BvNigwEp; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BvNigwEp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+guXa85l4m8374ZSaIhSq5yBVp6GHqv8PZJqOh4Sv24=; b=BvNigwEpbh0bCumOLG+Vr9+/dk
-	qERJ6KukgwmSyjlHyfkaf82Cu43ZP2iuXg6fWsMR8W0ezR7O5Zbs5zFk3CYTMvgppOfEEmAHfb69c
-	C0n7Pqh9tWHAAnpl3bZwGnZu201gAg2KlarWBKJJYeo9loxXOh8gIxVBIcpqXjtEmP6MsPDrL5SqL
-	GLiXzMDEiP+UXH2DfHyqTUjFpjWtxJ5mDQ6XHra1VmBfqx0v+y6h5SOteD+NSr9Vr61fOtas9GwGH
-	elVbDYnyE0JQwM22kIc9rb47dPOZtS6TgI8qoGaFVRPbeQrPPzHeaQKi5T1We2oOVeUZvqmufS1UX
-	IMrUSSuQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsIZ3-00000002LRo-0MO4;
-	Wed, 12 Mar 2025 09:39:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0A096300599; Wed, 12 Mar 2025 10:39:48 +0100 (CET)
-Date: Wed, 12 Mar 2025 10:39:47 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Barnett <mark.barnett@arm.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, ben.gainey@arm.com, deepak.surti@arm.com,
-	ak@linux.intel.com, will@kernel.org, james.clark@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/5] perf: Allow adding fixed random jitter to the
- alternate sampling period
-Message-ID: <20250312093947.GJ19424@noisy.programming.kicks-ass.net>
-References: <20250307202247.648633-1-mark.barnett@arm.com>
- <20250307202247.648633-4-mark.barnett@arm.com>
- <20250311113128.GD19424@noisy.programming.kicks-ass.net>
- <431a5acb-4906-4095-8dec-b2d824adaac6@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UnzjG7KNsU+VhkjirlXMOa7zZIW9iK4s94T7G7TeOItLbn0+140N2lXHKtvXStQjT3QbT8OgV1FlA1Z8Z0pR6O5Sz9ypJi2OFxiPVE4Ht5zEghJy8dqdQMbg5i0nbgk0Ho6i7WuBWLgYqWR6bRyUqPpNUmuL6rvAWG9SWdNa47g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85884152B;
+	Wed, 12 Mar 2025 02:56:29 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5666A3F5A1;
+	Wed, 12 Mar 2025 02:56:18 -0700 (PDT)
+Date: Wed, 12 Mar 2025 09:56:13 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	James Clark <james.clark@linaro.org>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v2] perf script: Update brstack syntax documentation
+Message-ID: <20250312095613.GL9682@e132581.arm.com>
+References: <20250312072329.419020-1-yujie.liu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,37 +46,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <431a5acb-4906-4095-8dec-b2d824adaac6@arm.com>
+In-Reply-To: <20250312072329.419020-1-yujie.liu@intel.com>
 
-On Tue, Mar 11, 2025 at 05:22:16PM +0000, Mark Barnett wrote:
-
-> > @@ -9979,6 +9985,8 @@ static int __perf_event_overflow(struct perf_event *event,
-> >   				 int throttle, struct perf_sample_data *data,
-> >   				 struct pt_regs *regs)
-> >   {
-> > +	struct hw_perf_event *hwc = &event->hw;
-> > +	u64 sample_period;
-> >   	int events = atomic_read(&event->event_limit);
-> >   	int ret = 0;
-> > @@ -9989,15 +9997,50 @@ static int __perf_event_overflow(struct perf_event *event,
-> >   	if (unlikely(!is_sampling_event(event)))
-> >   		return 0;
-> > -	ret = __perf_event_account_interrupt(event, throttle);
-> > +	/*
-> > +	 * High Freq samples are injected inside the larger period:
-> > +	 *
-> > +	 *   |------------|-|------------|-|
-> > +	 *   P0          HF P1          HF
-> > +	 *
-> > +	 * By ignoring the HF samples, we measure the actual period.
-> > +	 */
-> > +	if (!(hwc->state & PERF_HES_HF_SAMPLE))
-> > +		ret = __perf_event_account_interrupt(event, throttle);
+On Wed, Mar 12, 2025 at 03:23:29PM +0800, Yujie Liu wrote:
+> The following commits added new fields/flags to the branch stack field
+> list:
 > 
-> The high-frequency samples should still contribute to interrupt
-> accounting/throttling, right? We'd just need to put guards around the
-> adaptive period stuff so that HF samples don't contribute to the frequency
-> training.
+> commit 1f48989cdc7d ("perf script: Output branch sample type")
+> commit 6ade6c646035 ("perf script: Show branch speculation info")
+> commit 1e66dcff7b9b ("perf script: Add not taken event for branch stack")
+> 
+> Update brstack syntax documentation to be consistent with the latest
+> branch stack field list. Improve the descriptions to help users
+> interpret the fields accurately.
+> 
+> Signed-off-by: Yujie Liu <yujie.liu@intel.com>
 
-Yeah, I suppose it should. This means breaking up that function but that
-isn't hard.
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+> ---
+> Changes in v2:
+> - Add not taken event (Namhyung, Leo)
+> - Change field name from PRED to EVENT for generic use and furture
+>   extension (Leo)
+> 
+> v1: https://lore.kernel.org/all/20250225061736.1698175-1-yujie.liu@intel.com/
+> ---
+>  tools/perf/Documentation/perf-script.txt | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> index b72866ef270b..28bec7e78bc8 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -239,13 +239,22 @@ OPTIONS
+>  	i.e., -F "" is not allowed.
+>  
+>  	The brstack output includes branch related information with raw addresses using the
+> -	/v/v/v/v/cycles syntax in the following order:
+> -	FROM: branch source instruction
+> -	TO  : branch target instruction
+> -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> -	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
+> -	A/- : A=TSX abort entry, -=not aborted region or not supported
+> -	cycles
+> +	FROM/TO/EVENT/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
+> +	FROM  : branch source instruction
+> +	TO    : branch target instruction
+> +	EVENT : M=branch target or direction was mispredicted
+> +	        P=branch target or direction was predicted
+> +	        N=branch not-taken
+> +	        -=no event or not supported
+> +	INTX  : X=branch inside a transactional region
+> +	        -=branch not in transaction region or not supported
+> +	ABORT : A=TSX abort entry
+> +	        -=not aborted region or not supported
+> +	CYCLES: the number of cycles that have elapsed since the last branch was recorded
+> +	TYPE  : branch type: COND/UNCOND/IND/CALL/IND_CALL/RET etc.
+> +	        -=not supported
+> +	SPEC  : branch speculation info: SPEC_WRONG_PATH/NON_SPEC_CORRECT_PATH/SPEC_CORRECT_PATH
+> +	        -=not supported
+>  
+>  	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+>  
+> 
+> base-commit: b10f74308e1305275e69ddde711ec817cc69e306
+> -- 
+> 2.34.1
+> 
