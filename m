@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E420D5684;
-	Wed, 12 Mar 2025 01:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCABA31;
+	Wed, 12 Mar 2025 01:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741744385; cv=none; b=tAQKm5q1rKfsiAuUCr7gswbs8KjgXQhwFEEH3guCwJoKSGOMtGDe5XzXy6VZ3rzLOEVXj7muBQLx7QtwA5n9NqGhxjQE9DtygOaRhKO1JnpBAP04MOGOMr5EUJtsgmrVx35hojgIgs9gBlaPBtDihpW7JgJB+Hqm6kpmlzaFCNM=
+	t=1741744500; cv=none; b=CCviQApmc3E395Nbz45uecSR8wxDbQpXfgewjbUhNLyX/GdMn3GIv2yvMrlC5YxD8/iDWKdHGOU8U7rpfiXAVwJn9oHNLpeHE9QW7yNn8QEr2OuMz9TA6qLboxnL9hMbSKe+uOueHtk2xo1StjrSvXGKnkPzhfZZtEdOxD2M2MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741744385; c=relaxed/simple;
-	bh=Z/KSnIL1/o7rcKnANxR3hR3GYWa5RGA/kviggramFs0=;
+	s=arc-20240116; t=1741744500; c=relaxed/simple;
+	bh=qaZ4Iv985ilx/3P5gaDqTSXqo1FAISK6A0fi7U1Rras=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqW30ZA17y9XtOb74DRVTkmxzEETTgAYpOv0PA8qFB0WS8qjLw/GlHVWGXgM9hXGtVLOYForF3lu0QG0KZ0UAf1/M9KuV4tEt254SPxTPyXCnQbnVoksgAMpBXYmWXJz1xYwVZegJuwPXxAlKWuJXfCyn6TdL8jtF28OPxX19ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=myIRvEH5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pd27TkfYFWQFe+o0ivPLk0z3STQyyVt0Wv9UhRf8d70aLwzLDTKKs61cdrOVdgq+b83xjKU+jPTE7IcmrQuE3iapLqQ3eq14klicAdJMJCHo3DDuY65GqTD7VnpETUPA7Dmh4Pr1OWoKEOZ7yLXMCCE3wRYUlid8UzOtYuV2+50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADiiYTGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myIRvEH5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4897C4CEE9;
-	Wed, 12 Mar 2025 01:53:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADiiYTGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9086BC4CEE9;
+	Wed, 12 Mar 2025 01:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741744384;
-	bh=Z/KSnIL1/o7rcKnANxR3hR3GYWa5RGA/kviggramFs0=;
+	s=k20201202; t=1741744500;
+	bh=qaZ4Iv985ilx/3P5gaDqTSXqo1FAISK6A0fi7U1Rras=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=myIRvEH5NIrQb8SmfbT5FACBEQsqRYRbuU+z7hL8/0xG8C1JxYNNNVghGEomlFQVq
-	 FERRXJ3aG/ro6AxnSOfGC9JRx4i40nm4vVbffnRF9i/yk6mYJZ5CI8PILW4BsrM0l/
-	 qbltiI10gRz9RFqqxDIsnOVw1KDXEiTxTl001H2Gr9v+i7gNS2hKW3qgJzNw3rSF1g
-	 15IxIyQZi0Qv+s+MQ26JdswdUJhYyvgmpg+m0yo2BWXSGj9lNvb287ORNvTD1dIBUo
-	 CitnkkPs9foygi22qmKtCMrH3QvFijaAaccUNspYGybxdKquZTt/1CYrA4Gl1ur42/
-	 +CP2AHef9Xesg==
-Date: Tue, 11 Mar 2025 18:53:01 -0700
+	b=ADiiYTGFrSPHLt4PkWui5BesTZpPdHfPe0irRykKeSqGVQQfHuLhLLRr3PphUtLrO
+	 Rvy5xzhnWslfXApBib/CXjvXQSUIksflZuL99Tf1m16Ig30c52gdvnAieQnphLwVXR
+	 tvIiarernlbUTvMQ+T2GeYaQ07O1qVhSi653vxrHDaY+ciU6vSuVj5vL1IsrLPp2yW
+	 v+91S+4e9Hcl9ENX47fFcYTYrXECOV8Z3K9YMO9GNGNLdFFH6K3QkMxrHcEIlZrX6w
+	 IRVUthubsMQb0RlwqdnMzmRSkQdj9U1qbPUZMb2LOYSue61fidO3KlR1RrjGHwiBf1
+	 Lz8s3rn/bgBoA==
+Date: Tue, 11 Mar 2025 18:54:57 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -45,11 +44,17 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Howard Chu <howardchu95@gmail.com>
 Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
  parse_events
-Message-ID: <Z9Do_ZSHuuZde4eZ@google.com>
+Message-ID: <Z9DpcfWqV7_Za3uu@google.com>
 References: <20250228222308.626803-1-irogers@google.com>
  <20250228222308.626803-12-irogers@google.com>
- <Z89k6lWxRSBfCGvM@google.com>
- <CAP-5=fUV5yt4c-PrvTFqW6ehuudwkqdO7QuQpvbUBDm6aT6+dQ@mail.gmail.com>
+ <Z89We45bGpeJvO9C@x1>
+ <Z89WvaIVyF7klGp6@x1>
+ <CAP-5=fXzva636zCZR2isdfrjT6mM3o42C+oGWNkGieqGVajfHA@mail.gmail.com>
+ <Z89ZYVgL_bT3ampz@x1>
+ <Z9BXdbWnX19ua5Mr@x1>
+ <Z9BtpXnqSUYKr1TK@x1>
+ <Z9CFwbXSGnGLn0lA@x1>
+ <Z9CwrQTEJoT_rRNA@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,80 +64,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUV5yt4c-PrvTFqW6ehuudwkqdO7QuQpvbUBDm6aT6+dQ@mail.gmail.com>
+In-Reply-To: <Z9CwrQTEJoT_rRNA@x1>
 
-On Mon, Mar 10, 2025 at 04:40:36PM -0700, Ian Rogers wrote:
-> On Mon, Mar 10, 2025 at 3:17 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Fri, Feb 28, 2025 at 02:23:08PM -0800, Ian Rogers wrote:
-> > > Rather than manually configuring an evsel, switch to using
-> > > parse_events for greater commonality with the rest of the perf code.
-> > >
-> > > Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/python/tracepoint.py | 23 +++++++++++------------
-> > >  1 file changed, 11 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
-> > > index bba68a6d4515..38b2b6d11f64 100755
-> > > --- a/tools/perf/python/tracepoint.py
-> > > +++ b/tools/perf/python/tracepoint.py
-> > > @@ -5,24 +5,23 @@
-> > >
-> > >  import perf
-> > >
-> > > -class tracepoint(perf.evsel):
-> > > -    def __init__(self, sys, name):
-> > > -        config = perf.tracepoint(sys, name)
-> > > -        perf.evsel.__init__(self,
-> > > -                            type   = perf.TYPE_TRACEPOINT,
-> > > -                            config = config,
-> > > -                            freq = 0, sample_period = 1, wakeup_events = 1,
-> > > -                            sample_type = perf.SAMPLE_PERIOD | perf.SAMPLE_TID | perf.SAMPLE_CPU | perf.SAMPLE_RAW | perf.SAMPLE_TIME)
-> > > -
-> > >  def main():
-> > > -    tp      = tracepoint("sched", "sched_switch")
-> > >      cpus    = perf.cpu_map()
-> > >      threads = perf.thread_map(-1)
-> > > +    evlist = perf.parse_events("sched:sched_switch", cpus, threads)
-> > > +    # Disable tracking of mmaps and similar that are unnecessary.
-> > > +    for ev in evlist:
-> > > +        ev.tracking = False
-> > > +    # Configure evsels with default record options.
-> > > +    evlist.config()
-> >
-> > I think the default option uses frequency of 4000 but tracepoints want
-> > to use period of 1.  Also I'm not sure if it sets the proper sample type
-> > bits namely PERF_SAMPLE_RAW.
+On Tue, Mar 11, 2025 at 06:52:45PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Mar 11, 2025 at 03:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> > So it seems to be something just in the python binding, as perf trace
+> > seems to handle it well:
+> > 
+> >  ( field 'prev_comm' ret=0x7f7c31f65110, raw_size=68 )  ( field 'prev_pid' ret=0x7f7c23b1bed0, raw_size=68 )  ( field 'prev_prio' ret=0x7f7c239c0030, raw_size=68 )  ( field 'prev_state' ret=0x7f7c239c0250, raw_size=68 ) time 14771421785867 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x303a32313175 ==>
+> >  ( XXX '��' len=16, raw_size=68)  ( field 'next_comm' ret=(nil), raw_size=68 ) Traceback (most recent call last):
+> >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
+> >     main()
+> >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
+> >     event.next_comm,
+> >     ^^^^^^^^^^^^^^^
+> > AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
+> > root@number:/home/acme/git/perf-tools-next# cat /proc/125355/comm
+> > kworker/u112:0-i915
+> > root@number:/home/acme/git/perf-tools-next# 
+> > root@number:/home/acme/git/perf-tools-next# 
+> > root@number:/home/acme/git/perf-tools-next# perf trace -e sched:sched_switch -p 125355
+> >      0.000 sched:sched_switch(prev_comm: "kworker/u112:0", prev_pid: 125355 (kworker/u112:0-), prev_prio: 120, prev_state: 128, next_comm: "swapper/6", next_prio: 120)
+> > ^Croot@number:/home/acme/git/perf-tools-next#
+> > 
+> > I.e. it chops up the prev_comm size to what is specified in the
+> > tracepoint format.
+> > 
+> > And that sample->raw_size is the same accross the sched:sched_switch
+> > raw_datas (seemingly suboptimal, most are less than 16 bytes, but
+> > probably its not guaranteed that the \0 will be there, so copy all the
+> > 16 bytes).
+> > 
+> > Now to try to figure out why simply using PyUnicode_FromStringAndSize
+> > doesn't work...
 > 
-> I used trace to ensure they matched. Fwiw, the sample_period for a
-> tracepoint is set to 1 in evsel__newtp_idx:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evsel.c?h=perf-tools-next#n621
-> and the evsel__config won't overwrite an already set sample_period:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evsel.c?h=perf-tools-next#n1341
+> Didn't manage to make progress on this, I spent more time than I
+> expected as I think this could be some sort of canary on some coal mine,
+> but with the patch below, that gives up and just avoids touching the
+> COMM fields and don't switch from string to bytearray in the binding, it
+> runs forever, this is just a data point in case somebody wants to
+> pursue.
+> 
+> That flipping from string to not string based on just one entry not
+> being acceptable is questionable, and I think it should go away, but why
+> when COMM fields are bigger what is alloted to them in the tracepoint
+> ends up tripping up just the python binding is something I couldn't
+> grasp in today's session.
+> 
+> Namhyung, this is something open, but not caused by Ian's patchset, for
+> which I give my:
+> 
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Ok, it only sets the default value and it will use the attr from
-evsel__newtp_idx().  Thanks for checking this.
+Thanks for the analysis!
+
+> 
+> In addition to the tags I provided patch by patch.
+
+Ian, can you check if it works well for you?
 
 Thanks,
 Namhyung
 
-> >
-> >
-> > > +    # Simplify the sample_type and read_format of evsels
-> > > +    for ev in evlist:
-> > > +        ev.sample_type = ev.sample_type & ~perf.SAMPLE_IP
-> > > +        ev.read_format = 0
-> > >
-> > > -    evlist = perf.evlist(cpus, threads)
-> > > -    evlist.add(tp)
-> > >      evlist.open()
-> > >      evlist.mmap()
-> > > +    evlist.enable();
-> > >
-> > >      while True:
-> > >          evlist.poll(timeout = -1)
-> > > --
-> > > 2.48.1.711.g2feabab25a-goog
-> > >
+ 
+> diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
+> index 38b2b6d11f64566a..965b50afbdafeeb2 100755
+> --- a/tools/perf/python/tracepoint.py
+> +++ b/tools/perf/python/tracepoint.py
+> @@ -33,15 +33,12 @@ def main():
+>              if not isinstance(event, perf.sample_event):
+>                  continue
+>  
+> -            print("time %u prev_comm=%s prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_comm=%s next_pid=%d next_prio=%d" % (
+> -                   event.sample_time,
+> -                   event.prev_comm,
+> -                   event.prev_pid,
+> -                   event.prev_prio,
+> -                   event.prev_state,
+> -                   event.next_comm,
+> -                   event.next_pid,
+> -                   event.next_prio))
+> +            try:
+> +                print("time %u prev_comm=%s prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_comm=%s next_pid=%d next_prio=%d" % (
+> +                       event.sample_time, event.prev_comm, event.prev_pid, event.prev_prio, event.prev_state, event.next_comm, event.next_pid, event.next_prio))
+> +            except:
+> +                print("time %u prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_pid=%d next_prio=%d" % (
+> +                       event.sample_time, event.prev_pid, event.prev_prio, event.prev_state, event.next_pid, event.next_prio))
+>  
+>  if __name__ == '__main__':
+>      main()
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 6c5bb5e8893998ae..3eb77bd270077cb3 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -318,13 +318,10 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+>  			if (tep_field_is_relative(field->flags))
+>  				offset += field->offset + field->size;
+>  		}
+> -		if (field->flags & TEP_FIELD_IS_STRING &&
+> -		    is_printable_array(data + offset, len)) {
+> +		if (field->flags & TEP_FIELD_IS_STRING)
+>  			ret = PyUnicode_FromString((char *)data + offset);
+> -		} else {
+> +		else
+>  			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+> -			field->flags &= ~TEP_FIELD_IS_STRING;
+> -		}
+>  	} else {
+>  		val = tep_read_number(pevent, data + field->offset,
+>  				      field->size);
