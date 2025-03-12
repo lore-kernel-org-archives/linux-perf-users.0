@@ -1,257 +1,282 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179FD1BCA07;
-	Wed, 12 Mar 2025 16:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06CC23F369;
+	Wed, 12 Mar 2025 17:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741795631; cv=none; b=RyIUCSXVJzax4rPVXXpRfErWKSFLQGl4MzlbMo/IkuQBg27jx807lwte6fLpoQEHYW/SmkmeI2qYdrqBFxw4xohDPvBI5PDjSWiVIDbOkUEO6piy7MAUHLqrYE7c+fkgQMWc/jhUx+UpNk/691TLQ6L24ziJPdxCg0LtnO+HU6Q=
+	t=1741802245; cv=none; b=rz9XMnmwOmUDCtlMkH24ZBK7A0FeOEe/NnmqYsF/6p7CNDZLHq+X8PU2Kn+e9mx+Shj0+nF31QB/uSnrVdZmjnA7AcxP3E9esq3gb6Yri3TZPokiIj3xnu197uVI+BZ/FTMMLnlxUyevBLLTKDD1gzGE607q53SUGe+K6BJLLIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741795631; c=relaxed/simple;
-	bh=46xRCXWbIBHRCLTqqyMeJZ3nLxdD2D7kjeMKxw12v6Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l3IfmiIH26Zm4nsFsag8cCwXsmWyXVnSvYIMM7iMPi6jeIVy9cnH66Pmy6yHnMuLeuHFNGFsD6bLASUzL9csXSxYbUrUAJp2oGxFpitSfc/VOQ5PJel5xWCgziNmA3tbGQyc0kxRXYDsI+1u2War46axg4bYXNTBWTUSh9UG8i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPNZ4Tad; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741802245; c=relaxed/simple;
+	bh=zljP+mDHAaQAZnFdNotLuiGw3OZI9tbEnF6C6rmzp7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+UbjyaZh3Qyq/LJoD9rgJ7eygZ36EWDT+lXm08i30yg4A8K8+erIT5A6T4qC7GWNUVh6UV42k2wmgGqDM2C+vL9kFNW1Uhvj7RkzPVQGESxnKopoAmt4e8CxS0k7j5wUNWfVsMTW6NfPWcZQXV00Bs8/EvTUmILy2y9amVZf6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEIcU+Uz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPNZ4Tad"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B74C4CEED;
-	Wed, 12 Mar 2025 16:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEIcU+Uz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A790C4CEDD;
+	Wed, 12 Mar 2025 17:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741795629;
-	bh=46xRCXWbIBHRCLTqqyMeJZ3nLxdD2D7kjeMKxw12v6Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PPNZ4TadNVfsXB82RIm1gm4dpfBefTbk/K0O1O2NumEKg0XOFF0CWJydijQpz+nHU
-	 X/R15ghDpWmXmlozmfZs4HfmB1iSFN3tRTTK2LbGn1dR42tKeyVYpL9b5ec8+7raK7
-	 r9eLvD4YALZ6fOOjkx7f5W+7ruJc1GksI/aqqgPl1w8k36J3jxhTQtFQPPp1Q7SiD1
-	 7kO8eQEG9MYmfIU6y4JLuN4NwA0lIdfJWypc0W414v4Ku7VGUlSJo92YzHqpBtmIgE
-	 mjgGmR7Hs63A3VZCTMQRQwzLo7A7JUkTEiH0UMBBLAxNvT72NL3c9Nelz20YCAsFJZ
-	 UpG4cT67QshBQ==
+	s=k20201202; t=1741802245;
+	bh=zljP+mDHAaQAZnFdNotLuiGw3OZI9tbEnF6C6rmzp7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nEIcU+Uz5BcICdmCXOe35LcQyckIKPgl3m2lHMHP2VQ1CnJY195bKoCiO9yxCVBkT
+	 pwER7G7WR4IGxk0JXC6fUwPRTzGaFSnKxRDkvCOTO2Gopg6Y/NA2GGzQ+kNIrBi8x9
+	 hqz/UvuRbAv/N7LHK9hjRpRfnvAnUq8mttoMckvGEgYyQsVrs8Omp6eAnG/k+TPV0W
+	 4DQBEXSc1qtteDUnxE+xgD/TrG9IUibQlaPyTdH8Nn1BfaOCuRPoEPtW/JNriM86R5
+	 IGRAdDG73EdBwnZ9DzAyypEOHpItoHvbWx7zsrPQUfu/Zi1qPAS/WtfJdmh9ooYCRv
+	 l4uH7vHeWlLgw==
+Date: Wed, 12 Mar 2025 14:57:22 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/3] perf python: Don't keep a raw_data pointer to consumed ring buffer space
-Date: Wed, 12 Mar 2025 13:06:51 -0300
-Message-ID: <20250312160651.280817-4-acme@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312160651.280817-1-acme@kernel.org>
-References: <20250312160651.280817-1-acme@kernel.org>
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 06/11] perf dso: Add support for reading the e_machine
+ type for a dso
+Message-ID: <Z9HLArg6uGiK8FzM@x1>
+References: <20250308003209.234114-1-irogers@google.com>
+ <20250308003209.234114-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308003209.234114-7-irogers@google.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Fri, Mar 07, 2025 at 04:32:04PM -0800, Ian Rogers wrote:
+> For ELF file dsos read the e_machine from the ELF header. For kernel
+> types assume the e_machine matches the perf tool. In other cases
+> return EM_NONE.
+> 
+> When reading from the ELF header use DSO__SWAP that may need
+> dso->needs_swap initializing. Factor out dso__swap_init to allow this.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/dso.c        | 88 ++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dso.h        |  3 ++
+>  tools/perf/util/symbol-elf.c | 27 -----------
+>  3 files changed, 91 insertions(+), 27 deletions(-)
 
-When processing tracepoints the perf python binding was parsing the
-event before calling perf_mmap__consume(&md->core) in
-pyrf_evlist__read_on_cpu().
+This one, due to this having already been merged:
 
-But part of this event parsing was to set the perf_sample->raw_data
-pointer to the payload of the event, which then could be overwritten by
-other event before tracepoint fields were asked for via event.prev_comm
-in a python program, for instance.
+commit b10f74308e1305275e69ddde711ec817cc69e306 (perf-tools-next/perf-tools-next)
+Author: Stephen Brennan <stephen.s.brennan@oracle.com>
+Date:   Fri Mar 7 15:22:03 2025 -0800
 
-This also happened with other fields, but strings were were problems
-were surfacing, as there is UTF-8 validation for the potentially garbled
-data.
+    perf symbol: Support .gnu_debugdata for symbols
 
-This ended up showing up as (with some added debugging messages):
+Needs this so that we read the e_machine from the ELF file:
 
-  ( field 'prev_comm' ret=0x7f7c31f65110, raw_size=68 )  ( field 'prev_pid' ret=0x7f7c23b1bed0, raw_size=68 )  ( field 'prev_prio' ret=0x7f7c239c0030, raw_size=68 )  ( field 'prev_state' ret=0x7f7c239c0250, raw_size=68 ) time 14771421785867 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x303a32313175 ==>
-  ( XXX '��' len=16, raw_size=68)  ( field 'next_comm' ret=(nil), raw_size=68 ) Traceback (most recent call last):
-   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
-     main()
-   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
-     event.next_comm,
-     ^^^^^^^^^^^^^^^
-  AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
-
-When event.next_comm was asked for, the PyUnicode_FromString() python
-API would fail and that tracepoint field wouldn't be available, stopping
-the tools/perf/python/tracepoint.py test tool.
-
-So if the event is a tracepoint, copy the raw_data before consuming the
-ring buffer for the event.
-
-This is similar to what was done in e8968e654191390a ("perf python: Fix
-pyrf_evlist__read_on_cpu event consuming"), but wasn't when adding
-support for tracepoints in bae57e3825a3dded ("perf python: Add support
-to resolve tracepoint fields"), fix it.
-
-Fixes: bae57e3825a3dded ("perf python: Add support to resolve tracepoint fields")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 8188ba4d432cd5ac..8d2d8bb22e077bea 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1203,6 +1203,7 @@ uint16_t dso__e_machine(struct dso *dso, struct machine *machine)
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
+ 		break;
+ 	case DSO_BINARY_TYPE__NOT_FOUND:
+ 	default:
+ 
 ---
- tools/perf/util/python.c | 38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index f9491b6699764fbc..e1bd8143296385fc 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -4,6 +4,7 @@
- #include <inttypes.h>
- #include <poll.h>
- #include <linux/err.h>
-+#include <linux/string.h>
- #include <perf/cpumap.h>
- #ifdef HAVE_LIBTRACEEVENT
- #include <event-parse.h>
-@@ -38,9 +39,16 @@ struct pyrf_event {
- 	PyObject_HEAD
- 	struct evsel *evsel;
- 	struct perf_sample sample;
-+	/** @raw_data_copy: read_on_cpu consumes rb, may be overwritten at get_tracepoint_field */
-+	void *raw_data_copy;
- 	union perf_event   event;
- };
- 
-+static void pyrf_event__delete(struct pyrf_event *pevent)
-+{
-+	zfree(&pevent->raw_data_copy);
-+}
-+
- #define sample_members \
- 	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),			 \
- 	sample_member_def(sample_pid, pid, T_INT, "event pid"),			 \
-@@ -94,6 +102,7 @@ static PyTypeObject pyrf_mmap_event__type = {
- 	.tp_doc		= pyrf_mmap_event__doc,
- 	.tp_members	= pyrf_mmap_event__members,
- 	.tp_repr	= (reprfunc)pyrf_mmap_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
-@@ -129,6 +138,7 @@ static PyTypeObject pyrf_task_event__type = {
- 	.tp_doc		= pyrf_task_event__doc,
- 	.tp_members	= pyrf_task_event__members,
- 	.tp_repr	= (reprfunc)pyrf_task_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
-@@ -158,6 +168,7 @@ static PyTypeObject pyrf_comm_event__type = {
- 	.tp_doc		= pyrf_comm_event__doc,
- 	.tp_members	= pyrf_comm_event__members,
- 	.tp_repr	= (reprfunc)pyrf_comm_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
-@@ -190,6 +201,7 @@ static PyTypeObject pyrf_throttle_event__type = {
- 	.tp_doc		= pyrf_throttle_event__doc,
- 	.tp_members	= pyrf_throttle_event__members,
- 	.tp_repr	= (reprfunc)pyrf_throttle_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
-@@ -225,6 +237,7 @@ static PyTypeObject pyrf_lost_event__type = {
- 	.tp_doc		= pyrf_lost_event__doc,
- 	.tp_members	= pyrf_lost_event__members,
- 	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
-@@ -255,6 +268,7 @@ static PyTypeObject pyrf_read_event__type = {
- 	.tp_doc		= pyrf_read_event__doc,
- 	.tp_members	= pyrf_read_event__members,
- 	.tp_repr	= (reprfunc)pyrf_read_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static const char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
-@@ -295,11 +309,14 @@ static PyObject*
- tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
- {
- 	struct tep_handle *pevent = field->event->tep;
--	void *data = pe->sample.raw_data;
-+	void *data = pe->raw_data_copy;
- 	PyObject *ret = NULL;
- 	unsigned long long val;
- 	unsigned int offset, len;
- 
-+	if (data == NULL)
-+		return ret;
-+
- 	if (field->flags & TEP_FIELD_IS_ARRAY) {
- 		offset = field->offset;
- 		len    = field->size;
-@@ -346,6 +363,11 @@ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
- 	field = tep_find_any_field(tp_format, str);
- 	return field ? tracepoint_field(pevent, field) : NULL;
- }
-+#else // HAVE_LIBTRACEEVENT
-+static bool is_tracepoint(const struct pyrf_event *pevent __maybe_unused)
-+{
-+	return false;
-+}
- #endif /* HAVE_LIBTRACEEVENT */
- 
- static PyObject*
-@@ -369,6 +391,7 @@ static PyTypeObject pyrf_sample_event__type = {
- 	.tp_doc		= pyrf_sample_event__doc,
- 	.tp_members	= pyrf_sample_event__members,
- 	.tp_repr	= (reprfunc)pyrf_sample_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_getattro	= (getattrofunc) pyrf_sample_event__getattro,
- };
- 
-@@ -407,6 +430,7 @@ static PyTypeObject pyrf_context_switch_event__type = {
- 	.tp_doc		= pyrf_context_switch_event__doc,
- 	.tp_members	= pyrf_context_switch_event__members,
- 	.tp_repr	= (reprfunc)pyrf_context_switch_event__repr,
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- };
- 
- static int pyrf_event__setup_types(void)
-@@ -478,8 +502,10 @@ static PyObject *pyrf_event__new(const union perf_event *event)
- 
- 	ptype = pyrf_event__type[event->header.type];
- 	pevent = PyObject_New(struct pyrf_event, ptype);
--	if (pevent != NULL)
-+	if (pevent != NULL) {
- 		memcpy(&pevent->event, event, event->header.size);
-+		pevent->raw_data_copy = NULL;
-+	}
- 	return (PyObject *)pevent;
- }
- 
-@@ -1020,6 +1046,14 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 
- 		err = evsel__parse_sample(evsel, event, &pevent->sample);
- 
-+		if (is_tracepoint(pevent) &&
-+		    pevent->sample.raw_size > 0 && !pevent->raw_data_copy) {
-+			// No need to check here, only when get_tracepoint_field gets
-+			// called, if ever, then it can fail getting the value for
-+			// a tracepoint field.
-+			pevent->raw_data_copy = memdup(pevent->sample.raw_data, pevent->sample.raw_size);
-+		}
-+
- 		/* Consume the even only after we parsed it out. */
- 		perf_mmap__consume(&md->core);
- 
--- 
-2.48.1
+Continuing the review and test.
 
+- Arnaldo
+
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 5c6e85fdae0d..00fec1bc32bc 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1170,6 +1170,67 @@ ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
+>  	return data_read_write_offset(dso, machine, offset, data, size, true);
+>  }
+>  
+> +uint16_t dso__e_machine(struct dso *dso, struct machine *machine)
+> +{
+> +	uint16_t e_machine = EM_NONE;
+> +	int fd;
+> +
+> +	switch (dso__binary_type(dso)) {
+> +	case DSO_BINARY_TYPE__KALLSYMS:
+> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+> +	case DSO_BINARY_TYPE__VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__KCORE:
+> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+> +	case DSO_BINARY_TYPE__OOL:
+> +	case DSO_BINARY_TYPE__JAVA_JIT:
+> +		return EM_HOST;
+> +	case DSO_BINARY_TYPE__DEBUGLINK:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+> +		break;
+> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> +	default:
+> +		return EM_NONE;
+> +	}
+> +
+> +	pthread_mutex_lock(&dso__data_open_lock);
+> +
+> +	/*
+> +	 * dso__data(dso)->fd might be closed if other thread opened another
+> +	 * file (dso) due to open file limit (RLIMIT_NOFILE).
+> +	 */
+> +	try_to_open_dso(dso, machine);
+> +	fd = dso__data(dso)->fd;
+> +	if (fd >= 0) {
+> +		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
+> +		if (dso__needs_swap(dso) == DSO_SWAP__UNSET) {
+> +			unsigned char eidata;
+> +
+> +			if (pread(fd, &eidata, sizeof(eidata), EI_DATA) == sizeof(eidata))
+> +				dso__swap_init(dso, eidata);
+> +		}
+> +		if (dso__needs_swap(dso) != DSO_SWAP__UNSET &&
+> +		    pread(fd, &e_machine, sizeof(e_machine), 18) == sizeof(e_machine))
+> +			e_machine = DSO__SWAP(dso, uint16_t, e_machine);
+> +	}
+> +	pthread_mutex_unlock(&dso__data_open_lock);
+> +	return e_machine;
+> +}
+> +
+>  /**
+>   * dso__data_read_addr - Read data from dso address
+>   * @dso: dso object
+> @@ -1525,6 +1586,33 @@ void dso__put(struct dso *dso)
+>  		RC_CHK_PUT(dso);
+>  }
+>  
+> +int dso__swap_init(struct dso *dso, unsigned char eidata)
+> +{
+> +	static unsigned int const endian = 1;
+> +
+> +	dso__set_needs_swap(dso, DSO_SWAP__NO);
+> +
+> +	switch (eidata) {
+> +	case ELFDATA2LSB:
+> +		/* We are big endian, DSO is little endian. */
+> +		if (*(unsigned char const *)&endian != 1)
+> +			dso__set_needs_swap(dso, DSO_SWAP__YES);
+> +		break;
+> +
+> +	case ELFDATA2MSB:
+> +		/* We are little endian, DSO is big endian. */
+> +		if (*(unsigned char const *)&endian != 0)
+> +			dso__set_needs_swap(dso, DSO_SWAP__YES);
+> +		break;
+> +
+> +	default:
+> +		pr_err("unrecognized DSO data encoding %d\n", eidata);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  void dso__set_build_id(struct dso *dso, struct build_id *bid)
+>  {
+>  	RC_CHK_ACCESS(dso)->bid = *bid;
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 4aa8c3d36566..38d9e3eac501 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -730,6 +730,8 @@ bool dso__sorted_by_name(const struct dso *dso);
+>  void dso__set_sorted_by_name(struct dso *dso);
+>  void dso__sort_by_name(struct dso *dso);
+>  
+> +int dso__swap_init(struct dso *dso, unsigned char eidata);
+> +
+>  void dso__set_build_id(struct dso *dso, struct build_id *bid);
+>  bool dso__build_id_equal(const struct dso *dso, struct build_id *bid);
+>  void dso__read_running_kernel_build_id(struct dso *dso,
+> @@ -818,6 +820,7 @@ int dso__data_file_size(struct dso *dso, struct machine *machine);
+>  off_t dso__data_size(struct dso *dso, struct machine *machine);
+>  ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
+>  			      u64 offset, u8 *data, ssize_t size);
+> +uint16_t dso__e_machine(struct dso *dso, struct machine *machine);
+>  ssize_t dso__data_read_addr(struct dso *dso, struct map *map,
+>  			    struct machine *machine, u64 addr,
+>  			    u8 *data, ssize_t size);
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 66fd1249660a..71df13a5722a 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1173,33 +1173,6 @@ int filename__read_debuglink(const char *filename, char *debuglink,
+>  
+>  #endif
+>  
+> -static int dso__swap_init(struct dso *dso, unsigned char eidata)
+> -{
+> -	static unsigned int const endian = 1;
+> -
+> -	dso__set_needs_swap(dso, DSO_SWAP__NO);
+> -
+> -	switch (eidata) {
+> -	case ELFDATA2LSB:
+> -		/* We are big endian, DSO is little endian. */
+> -		if (*(unsigned char const *)&endian != 1)
+> -			dso__set_needs_swap(dso, DSO_SWAP__YES);
+> -		break;
+> -
+> -	case ELFDATA2MSB:
+> -		/* We are little endian, DSO is big endian. */
+> -		if (*(unsigned char const *)&endian != 0)
+> -			dso__set_needs_swap(dso, DSO_SWAP__YES);
+> -		break;
+> -
+> -	default:
+> -		pr_err("unrecognized DSO data encoding %d\n", eidata);
+> -		return -EINVAL;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  bool symsrc__possibly_runtime(struct symsrc *ss)
+>  {
+>  	return ss->dynsym || ss->opdsec;
+> -- 
+> 2.49.0.rc0.332.g42c0ae87b1-goog
+> 
