@@ -1,54 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64274C81;
-	Wed, 12 Mar 2025 02:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3904A11;
+	Wed, 12 Mar 2025 02:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741744836; cv=none; b=pfcHwwjcGaZE2uDZIa5uJulqoQwwfn52l0ydUWcYQx+9PnONh+tBm/RkNmpYUB++vMOV3PFOMoJQQm5pqj+1Rf7HnaszuQtOr+UOGZ00m6DF+BYuneik5+jivVYF4K51P3Ir9v/lb7uVePZLglQnWfvyPoZV1DDM9iw+UD/w370=
+	t=1741745808; cv=none; b=gMcQ92VgvhNY3NfrWNRemEkelw0jAfMLiP7yWsfz+ht0lgruDLnyOzUxTCEz3Xm9Fr1zMTlRUOi9NZmygvhinvXkCrtfpndYP7PvWUHM/nZB/AsZ3Ca/Mg5YgXTPB690xNWF2H8YyGi0YV5dvm5XAVhPq6WUVv4ylbwQteS7deo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741744836; c=relaxed/simple;
-	bh=b2KFyzQPt62EjuLD50rsCqVAb5LhVZON3gByzj5R9z4=;
+	s=arc-20240116; t=1741745808; c=relaxed/simple;
+	bh=w3+u7zX/B0LEYX1mrYBjNhjsOVGs4fpYKClxoSt4KJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l3bqt/N9kVrscdNYa7NBB8rVLqRCHzLRySdnqMuUiK9nZ1BdktXaiWh6u5ea6Ta2o3kk1bL+9NNjDDj8mY6YhB76r94QRZ59tUUbMXrXcrjMxjE2TNGMICOtBhVZOycH3ESmWPpYP91wvtl0J8wlki7cWFRstoKAh3TcQW7GuNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xka/51xQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRqXcBFGTvmyOkP6dZiLB20jdgBAuG8Fekl87ZQvzZmqhk2oUKynlAP7oSEDxyzqb98h+AAbdhw4o4hQm6AA1plhv9y4Sykj4xB+xYE40Liqhy2A5DyZJ7kaSf7CSqXW69qBJN5Bkw+SaxpITNg3T7qgTst98PrEpPy1gK4Fx6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/9uzZ9k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xka/51xQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4DBC4CEE9;
-	Wed, 12 Mar 2025 02:00:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/9uzZ9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADA8C4CEE9;
+	Wed, 12 Mar 2025 02:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741744836;
-	bh=b2KFyzQPt62EjuLD50rsCqVAb5LhVZON3gByzj5R9z4=;
+	s=k20201202; t=1741745808;
+	bh=w3+u7zX/B0LEYX1mrYBjNhjsOVGs4fpYKClxoSt4KJQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xka/51xQCYDoUQkC8qacAZFwXEWR7+9kB9bxszPwlX4d3OqXq0P0C4UCAuVkFBR6A
-	 FC5J4NO88zqrzfdDzBTC5uF1WR6I8/LI3UNxyGfXyKuwNA9IzA5lS8dOu8p+9p+Squ
-	 FPaI0U99eYdOv9hzKelP46+kYnf2hlVZgSrfqQ3bmf5eaN+2OEfbYS/QplW5xRgDAs
-	 cenCpLHha8pbmmfpX0+8s6MK2t4NFQ1zBign7MYnwRXiQem0TW0BgFuopyq0oHQtRS
-	 z9+D6K47/exV3am8gPo+3IOoPtvJMqtHHe2BFilhvb7jlbhn6yUKIDhoAMzgAWwTSF
-	 pYVCPeLpa3rfA==
-Date: Tue, 11 Mar 2025 19:00:33 -0700
+	b=M/9uzZ9k3uqWL7g28m2Ab6LAtVwoFbNoi+pcbCcpR9p59TwXYK0qJFn0Lz9wHc58v
+	 uw7J7S4m/1y0MQzOCOfrknJHlOj25WITXUmn77KCln7t9RoT1g+3H8iBD+s7CxR0ge
+	 iMC7KEe8DnRb+qZWu6DkOaFK6+hhRhtSletzcbRW05tiN6/TRYeXmTNlOXA8XAqh2d
+	 RU5Ps+mYEVa5ggPFekVrLlwiSBExr7tTm6wnR6aMfHjiI0TdS8tnR+YahWNgFaiibW
+	 OvPc7YbpQmpIHrilNjH3etrl7+04Dt1n4DTwjoxXGCXnx2tx9+3eeBAVPu7ZcgH+gt
+	 86RdTLZ45ZnTw==
+Date: Tue, 11 Mar 2025 19:16:46 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: Re: [PATCH v2 4/5] perf x86 evlist: Update comments on topdown
- regrouping
-Message-ID: <Z9Dqwd_7pyj7Gvqj@google.com>
-References: <20250307023906.1135613-1-irogers@google.com>
- <20250307023906.1135613-4-irogers@google.com>
- <Z89Y5pUchAaJj4PY@google.com>
- <ba8dedbc-9a5f-4038-ad51-2b20baa6af65@linux.intel.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH] perf report: Fix a memory leak for perf_env on AMD
+Message-ID: <Z9DujuhfE19eeXEj@google.com>
+References: <20250311000416.817631-1-namhyung@kernel.org>
+ <CAP-5=fWSU8m1eae=5GFTpVTz1CPtwv=eDmivT1v14VjT40SptA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,88 +49,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ba8dedbc-9a5f-4038-ad51-2b20baa6af65@linux.intel.com>
+In-Reply-To: <CAP-5=fWSU8m1eae=5GFTpVTz1CPtwv=eDmivT1v14VjT40SptA@mail.gmail.com>
 
-On Tue, Mar 11, 2025 at 08:45:20AM +0800, Mi, Dapeng wrote:
-> 
-> On 3/11/2025 5:25 AM, Namhyung Kim wrote:
-> > Hello,
+On Mon, Mar 10, 2025 at 05:49:48PM -0700, Ian Rogers wrote:
+> On Mon, Mar 10, 2025 at 5:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > On Thu, Mar 06, 2025 at 06:39:05PM -0800, Ian Rogers wrote:
-> >> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>
-> >> Update to remove comments about groupings not working and with the:
-> >> ```
-> >> perf stat -e "{instructions,slots},{cycles,topdown-retiring}"
-> >> ```
-> >> case that now works.
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> > Dapeng, can I get your Signed-off-by here?
+> > The env.pmu_mapping can be leaked when it reads data from a pipe on AMD.
+> > For a pipe data, it reads the header data including pmu_mapping from
+> > PERF_RECORD_HEADER_FEATURE runtime.  But it's already set in:
 > >
-> > Thanks,
-> > Namhyung
+> >   perf_session__new()
+> >     __perf_session__new()
+> >       evlist__init_trace_event_sample_raw()
+> >         evlist__has_amd_ibs()
+> >           perf_env__nr_pmu_mappings()
 > >
-> >> ---
-> >>  tools/perf/arch/x86/util/evlist.c | 27 ++++++---------------------
-> >>  1 file changed, 6 insertions(+), 21 deletions(-)
-> >>
-> >> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> >> index ed205d1b207d..7905a28d7734 100644
-> >> --- a/tools/perf/arch/x86/util/evlist.c
-> >> +++ b/tools/perf/arch/x86/util/evlist.c
-> >> @@ -39,28 +39,13 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
-> >>  	 *         26,319,024      slots
-> >>  	 *          2,427,791      instructions
-> >>  	 *          2,683,508      topdown-retiring
-> >> -	 *
-> >> -	 * If slots event and topdown metrics events are not in same group, the
-> >> -	 * topdown metrics events must be first event after the slots event group,
-> >> -	 * otherwise topdown metrics events can't be regrouped correctly, e.g.
-> >> -	 *
-> >> -	 * a. perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
-> >> -	 *    WARNING: events were regrouped to match PMUs
-> >> -	 *     Performance counter stats for 'CPU(s) 0':
-> >> -	 *         17,923,134      slots
-> >> -	 *          2,154,855      instructions
-> >> -	 *          3,015,058      cycles
-> >> -	 *    <not supported>      topdown-retiring
-> >> -	 *
-> >> -	 * If slots event and topdown metrics events are in two groups, the group which
-> >> -	 * has topdown metrics events must contain only the topdown metrics event,
-> >> -	 * otherwise topdown metrics event can't be regrouped correctly as well, e.g.
-> >> -	 *
-> >> -	 * a. perf stat -e "{instructions,slots},{topdown-retiring,cycles}" -C0 sleep 1
-> >> +	 * e. slots event and metrics event are in a group and not adjacent
+> > Then it'll overwrite that when it processes the HEADER_FEATURE record.
+> > Here's a report from address sanitizer.
+> >
+> >   Direct leak of 2689 byte(s) in 1 object(s) allocated from:
+> >     #0 0x7fed8f814596 in realloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:98
+> >     #1 0x5595a7d416b1 in strbuf_grow util/strbuf.c:64
+> >     #2 0x5595a7d414ef in strbuf_init util/strbuf.c:25
+> >     #3 0x5595a7d0f4b7 in perf_env__read_pmu_mappings util/env.c:362
+> >     #4 0x5595a7d12ab7 in perf_env__nr_pmu_mappings util/env.c:517
+> >     #5 0x5595a7d89d2f in evlist__has_amd_ibs util/amd-sample-raw.c:315
+> >     #6 0x5595a7d87fb2 in evlist__init_trace_event_sample_raw util/sample-raw.c:23
+> >     #7 0x5595a7d7f893 in __perf_session__new util/session.c:179
+> >     #8 0x5595a7b79572 in perf_session__new util/session.h:115
+> >     #9 0x5595a7b7e9dc in cmd_report builtin-report.c:1603
+> >     #10 0x5595a7c019eb in run_builtin perf.c:351
+> >     #11 0x5595a7c01c92 in handle_internal_command perf.c:404
+> >     #12 0x5595a7c01deb in run_argv perf.c:448
+> >     #13 0x5595a7c02134 in main perf.c:556
+> >     #14 0x7fed85833d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+> >
+> > Let's free the existing pmu_mapping data if any.
 > 
-> Yes, here is my SoB.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Can we simplify `evlist__has_amd_ibs` as there seems no reason to be
+> creating/parsing strings. For example:
+> ```
+> bool evlist__has_amd_ibs(struct evlist *evlist)
+> {
+>    return perf_pmus__find("ibs_op") != NULL ||
+> perf_pmus__find("ibs_fetch") != NULL;
+> }
+> ```
 
-Thanks!
+I think the idea is to find the pmu from the recorded data file not 
+at runtime. 
 
+
+> Similarly the variables `ibs_fetch_type` and `ibs_op_type` can be
+> found with `perf_pmus__find("ibs_op")->type` and
+> `perf_pmus__find("ibs_op")->type` respectively. It probably makes more
+> sense to just cache access to the PMUs rather than do the finds all
+> the time.
 > 
-> BTW, It seems there is a typo and missed the "not" word. It should be 
-> "slots event and metrics event are not in a group and not adjacent"
- 
-Ok, will update.
+> I wonder there is a problem with the pmus alternative that currently
+> the pmus are global and not part of say the session, not loaded from
+> the perf.data file, etc. So use on a different machine than the
+> recording could be broken by what I suggest. I guess then, just
+> throwing in the free is simplest.
+
+Agreed.  It could be saved in a session or env.
+
+For now, let's free the string to fix the leak quickly.
 
 Thanks,
 Namhyung
 
 > 
-> >> +	 *    perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
-> >>  	 *    WARNING: events were regrouped to match PMUs
-> >> -	 *    Error:
-> >> -	 *    The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
-> >> -	 *    event (topdown-retiring)
-> >> +	 *         68,433,522      slots
-> >> +	 *          8,856,102      topdown-retiring
-> >> +	 *          7,791,494      instructions
-> >> +	 *         11,469,513      cycles
-> >>  	 */
-> >>  	if (topdown_sys_has_perf_metrics() &&
-> >>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
-> >> -- 
-> >> 2.49.0.rc0.332.g42c0ae87b1-goog
-> >>
+> 
+> > Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/header.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index 1900965f87527948..e3cdc3b7b4ab2409 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -2770,6 +2770,8 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
+> >                 free(name);
+> >                 pmu_num--;
+> >         }
+> > +       /* AMD may set it by evlist__has_amd_ibs() from perf_session__new() */
+> > +       free(ff->ph->env.pmu_mappings);
+> >         ff->ph->env.pmu_mappings = strbuf_detach(&sb, NULL);
+> >         return 0;
+> >
+> > --
+> > 2.49.0.rc0.332.g42c0ae87b1-goog
+> >
