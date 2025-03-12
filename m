@@ -1,68 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EE02F44;
-	Wed, 12 Mar 2025 07:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD4522DF8D;
+	Wed, 12 Mar 2025 07:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741764224; cv=none; b=QrGl1YC6C0WHiBs670Jeigig5kiXs5FBLBVytjDU1X359148WamHO7GVCNCEFVb2gmwumlHUxGRAryxKGN+Xn2NWAYglUF3MLTygLSaHk8gLau2dcZdYCbir7h/bRk136I5WwcDPHOQkwI9nd5ngqJSA1Zw0RcIJ3rZq2hvJdHg=
+	t=1741766205; cv=none; b=Ap95RYemFUmS89iHlr3YfC+2F9TNUt6o5WhJcG/xoiBQK7NgfivnDSEEW+gEDP47PztFyH55DA4pozn0ztJQ8uZohzJ73cjniJwd1mk1NTZ1miJi17ohLBMGSK2+a2qJ6R73kfFIsewn3UsKoY7vtOjUO2Tk1AWeiLUcwjweNDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741764224; c=relaxed/simple;
-	bh=V6UDUiMHT+CbaIDyrgCI71BKmZNpKmVv67K0d3756nU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E51mMh0yarFPULW/8L0uh/JXEXT2+TciSFmdABN2fdDw+sKWwxyTr2Q3D3fQVx8FiQU8Il7H5m+umg1n0zoNOz3qz8331gC+OgWucp45QD34XTX3LR6DgXAmnEdYTNFegUSONV4RXTdXQdoYzzeXyc2fXlk9qedAL1wnnZ5OJa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nRQg1ZPl; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1741766205; c=relaxed/simple;
+	bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EM0jfowc6/Opr5tSgtk4sLCMN2h5trVnt6afW9wnbHyIaxMPkRD23SXITESfso1ZqsmraP5L7E6dlgsYctH+9mQhIys0RUvytd5TGrmROWC2+1f2fPHpmMNMgrg5IaEumKEo9d78VWEIvD+8ifSElUTkSBm8gmBVzz/qmoFWj7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W60plOnT; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nRQg1ZPl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W60plOnT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741764222; x=1773300222;
+  t=1741766204; x=1773302204;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=V6UDUiMHT+CbaIDyrgCI71BKmZNpKmVv67K0d3756nU=;
-  b=nRQg1ZPlljYLc8M9ButlQCncPFyPiXJMPDGgOFvP18dLtHB9um8Z716d
-   Iudgwr6Sl5sMu7GbXY9WPUkVdSXTX4b3DgpqyLJrV4AcYWvM4M0oBL/EM
-   0N+AvDwxvts1jcHpVRB2/xu2Gm2NXhxlOPe2KNHi7PRjiCnnNdF611ieM
-   VUAMXCb0Ldhq1nmD9uNjpVNPyZc+hew1PgLl7wXUoT47UtPlICzHALlNs
-   Mi8pPxNJRXmNOTSvByIp0MHZRFJzeOwspOiq/P61l8vNFjbQDdwwQt5HP
-   jSon1xjs3KhLo/+ANCadFlEFTBRSzJ0bzXPhl/iB1Y0gdcfqALY+wQlqD
-   A==;
-X-CSE-ConnectionGUID: JU4oKm3bS3GzwuaNrIi9zg==
-X-CSE-MsgGUID: eij6kRTaTdCSl9WcFMXdKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42086111"
+  bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
+  b=W60plOnTcAat8iw+KFa6KluOl9qsIXcFZgKi1Zj8LDngmunh/sSYpMXG
+   FegwrQ6866OLaDxUpJwDnh6bYARWSmFnS6mDVtmPdFcJjGYfiRqd0PLfp
+   nRFfPRorse0OjhrvRc3D+SoDzwgRviNqXerWXzZkbsdR/gFZ2xC7uKsmN
+   6kF7R3Pn94cJccr34TMV/BeE+SU8K0diz1BGkwRCC0henkwkVN0pw5w1H
+   aL8hu+NGNGxhQ1oODVN65ow+xTThNlQO4BjEUbF4/R5Ecxl5YZov6NukH
+   A4ToMsmHAiTstlKd0PV95AcbIYRad/G5AdioFv/pa4RK738fz6dvUCImp
+   w==;
+X-CSE-ConnectionGUID: DV6sN3MuQICEO+0gpNkOcA==
+X-CSE-MsgGUID: 07aMHwYbRXyunWr9yOhtJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42869911"
 X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="42086111"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:23:41 -0700
-X-CSE-ConnectionGUID: dz3+V7+QTC+VuZLSXOwXZA==
-X-CSE-MsgGUID: WLwyEhlaRqC/lZhuCPw1NQ==
+   d="scan'208";a="42869911"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:43 -0700
+X-CSE-ConnectionGUID: je2W3usmSyC6bdqstz/sZw==
+X-CSE-MsgGUID: nhpioELPS3+NzVxrnVtM3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="124722313"
+   d="scan'208";a="125462623"
 Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:23:38 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:39 -0700
 From: Yujie Liu <yujie.liu@intel.com>
 To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Leo Yan <leo.yan@arm.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Martin Liska <martin.liska@hey.com>,
 	James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2] perf script: Update brstack syntax documentation
-Date: Wed, 12 Mar 2025 15:23:29 +0800
-Message-Id: <20250312072329.419020-1-yujie.liu@intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Paschalis.Mpeis@arm.com
+Subject: [PATCH] perf script: Fix typo in branch event mask
+Date: Wed, 12 Mar 2025 15:56:36 +0800
+Message-Id: <20250312075636.429127-1-yujie.liu@intel.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -72,63 +71,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following commits added new fields/flags to the branch stack field
-list:
+BRACH -> BRANCH
 
-commit 1f48989cdc7d ("perf script: Output branch sample type")
-commit 6ade6c646035 ("perf script: Show branch speculation info")
-commit 1e66dcff7b9b ("perf script: Add not taken event for branch stack")
-
-Update brstack syntax documentation to be consistent with the latest
-branch stack field list. Improve the descriptions to help users
-interpret the fields accurately.
-
+Fixes: 88b1473135e4 ("perf script: Separate events from branch types")
 Signed-off-by: Yujie Liu <yujie.liu@intel.com>
 ---
-Changes in v2:
-- Add not taken event (Namhyung, Leo)
-- Change field name from PRED to EVENT for generic use and furture
-  extension (Leo)
+ tools/perf/util/event.h                 | 2 +-
+ tools/perf/util/trace-event-scripting.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-v1: https://lore.kernel.org/all/20250225061736.1698175-1-yujie.liu@intel.com/
----
- tools/perf/Documentation/perf-script.txt | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index b72866ef270b..28bec7e78bc8 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -239,13 +239,22 @@ OPTIONS
- 	i.e., -F "" is not allowed.
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index c7f4b4b841ca..664bf39567ce 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -91,7 +91,7 @@ enum {
+ 	PERF_IP_FLAG_VMENTRY		|\
+ 	PERF_IP_FLAG_VMEXIT)
  
- 	The brstack output includes branch related information with raw addresses using the
--	/v/v/v/v/cycles syntax in the following order:
--	FROM: branch source instruction
--	TO  : branch target instruction
--        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
--	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
--	A/- : A=TSX abort entry, -=not aborted region or not supported
--	cycles
-+	FROM/TO/EVENT/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
-+	FROM  : branch source instruction
-+	TO    : branch target instruction
-+	EVENT : M=branch target or direction was mispredicted
-+	        P=branch target or direction was predicted
-+	        N=branch not-taken
-+	        -=no event or not supported
-+	INTX  : X=branch inside a transactional region
-+	        -=branch not in transaction region or not supported
-+	ABORT : A=TSX abort entry
-+	        -=not aborted region or not supported
-+	CYCLES: the number of cycles that have elapsed since the last branch was recorded
-+	TYPE  : branch type: COND/UNCOND/IND/CALL/IND_CALL/RET etc.
-+	        -=not supported
-+	SPEC  : branch speculation info: SPEC_WRONG_PATH/NON_SPEC_CORRECT_PATH/SPEC_CORRECT_PATH
-+	        -=not supported
+-#define PERF_IP_FLAG_BRACH_EVENT_MASK	\
++#define PERF_IP_FLAG_BRANCH_EVENT_MASK	\
+ 	(PERF_IP_FLAG_BRANCH_MISS |	\
+ 	 PERF_IP_FLAG_NOT_TAKEN)
  
- 	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index 29cc467be14a..72abb28b7b5a 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -347,7 +347,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
  
+ 	flags &= ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
+ 
+-	types = flags & ~PERF_IP_FLAG_BRACH_EVENT_MASK;
++	types = flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
+ 	for (i = 0; sample_flags[i].name; i++) {
+ 		if (sample_flags[i].flags != types)
+ 			continue;
+@@ -359,7 +359,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
+ 		break;
+ 	}
+ 
+-	events = flags & PERF_IP_FLAG_BRACH_EVENT_MASK;
++	events = flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
+ 	for (i = 0; branch_events[i].name; i++) {
+ 		if (!(branch_events[i].flags & events))
+ 			continue;
 
 base-commit: b10f74308e1305275e69ddde711ec817cc69e306
 -- 
