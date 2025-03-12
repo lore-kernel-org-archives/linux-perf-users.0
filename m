@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AD41C5F37;
-	Wed, 12 Mar 2025 16:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D87619C54B;
+	Wed, 12 Mar 2025 16:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741795623; cv=none; b=YJhQkGNVES+8QKBW2wnLkvEYCFPMHG6UIMZBRA7yL2XE+VURwVLQMWqNC6CMkV2CPtONedUSG5neGPG1twWmVXmKbrDx8XgO5WpCagPMM6Z96ftVqmvgbBDqTWGvGjAA2s/eTP6vpRuz7eHf01sueZ4fcwj7kAVTpU8ARuGSihI=
+	t=1741795626; cv=none; b=LBYWYVvkildPTCv9HLXqlIi7GsjZ7uyFcDe9MB+vgUtTJA5qzwDIHyJtibkEYRhp2Rk0A2KkU4naMIITySMIYfAO9E/sj672Hw+YxeT5KSm5kbnIKeCl5QbfSX74V1MWh+wVqSMV/PHwUyt0kIQhLOFbQs61GplM0N0qq5WExZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741795623; c=relaxed/simple;
-	bh=GqdBr8LrfZqs36fRS7w681t9jhkPCqwSChpCjCHB7zo=;
+	s=arc-20240116; t=1741795626; c=relaxed/simple;
+	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eG8tI3pGJ24G8HauUPZXPCUvvM0J2VbO3H9qsm0OuRO8VuP6AOE6xsumhz8fSO0WvZV/PWTWRo0om9KgFJhu2W5Nele/nvOU17BdSzIw8i05dJLBrVry6Z7XRcY01Nbvo4mpjTL3R51zf96APUlz7Bi/49pvocJXAbbjeIUWApo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMNOUn8m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LCcOaAOcybxAKJdk53T3c9c+D+zNi55N4xGgJFr5hD/76IwUbKcNZjuYCGNiupxBYQQpN4ngP1/aQTgby7z16FfTWAunP7PWKZbI/nUlIJzVVbHUp6207p14f2UuYbmjau06X4QFNXZMpEst3XHL8z84G6QeVJd7iu7AuKI5XLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EcdI1LuD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMNOUn8m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80651C4CEEA;
-	Wed, 12 Mar 2025 16:06:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EcdI1LuD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4A5C4CEEC;
+	Wed, 12 Mar 2025 16:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741795622;
-	bh=GqdBr8LrfZqs36fRS7w681t9jhkPCqwSChpCjCHB7zo=;
+	s=k20201202; t=1741795626;
+	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CMNOUn8m7nYE8nk+1Ar60fALXBNWzmLey12auIuWCGOPDlyABo5Ct/3b16g8CVmE0
-	 ltu3vUx3PDYgP01HRyknQIyJEP763Yr4jYSQbXzTw3pr89R0DvObHL74ec9Mw7SmKj
-	 LZN4Wq92RDag69Am6msZD+uMUt+wzxdzfRpYc4ERoyTE11k0oOEsPbX787pfLOT58l
-	 AFh9hhWRvxaETlKV2maO3vpOai2WcoPI5jAnYKJV34qiRrIfL81No7jNDRDym2GTEQ
-	 r4C9vhH8LvM93BdfXUrRVk2ldP4Iy7zsO38vUfADN69ivfeRRPMKFfx33G/HoCoF3j
-	 CNbQHT1PU2otA==
+	b=EcdI1LuDnVSw2RubwvGHOkNJzY9cKi8RAUc/81c3WwYB8yqzIaku9IfmfRBJeQ9iv
+	 y4VdG+lF5EnCbTg3QlN0rmpf3tJkK5ubio/rs3Vaj0HzXCXDALwRl1/YfmZDVBEKrq
+	 JDFmBC36b+89G0dGqS9ZngH7tJFtrz9fk+mA0D8YKH2g0bKSHVNVJNtUmHt94zOYsh
+	 FPFGSYjyli45cJW9IgSMujB6JGktEO8gUqzF13+II1eHzXZIe7kRCaJXlhl+55O5oe
+	 1Y8dgJ0KqSAKMiht8vnv/T1eXXqR7hdShf1j3HiHa7yL62pdCn0EPrkP6CwSMm/Mno
+	 46CKUZp7ziwXg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/3] perf python: Fixup description of sample.id event member
-Date: Wed, 12 Mar 2025 13:06:49 -0300
-Message-ID: <20250312160651.280817-2-acme@kernel.org>
+Subject: [PATCH 2/3] perf python: Remove some unused macros (_PyUnicode_FromString(arg), etc)
+Date: Wed, 12 Mar 2025 13:06:50 -0300
+Message-ID: <20250312160651.280817-3-acme@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250312160651.280817-1-acme@kernel.org>
 References: <20250312160651.280817-1-acme@kernel.org>
@@ -55,10 +55,11 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some old cut'n'paste error, its "ip", so the description should be
-"event ip", not "event type".
+When python2 support was removed in e7e9943c87d857da ("perf python:
+Remove python 2 scripting support"), all use of the
+_PyUnicode_FromString(arg), _PyUnicode_FromFormat(...), and
+_PyLong_FromLong(arg) macros was removed as well, so remove it.
 
-Fixes: 877108e42b1b9ba6 ("perf tools: Initial python binding")
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: James Clark <james.clark@linaro.org>
@@ -67,22 +68,27 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/python.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/python.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 69ec2ad60d98ba38..6c5bb5e8893998ae 100644
+index 6c5bb5e8893998ae..f9491b6699764fbc 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -49,7 +49,7 @@ struct pyrf_event {
- };
+@@ -22,13 +22,6 @@
+ #include "util/sample.h"
+ #include <internal/lib.h>
  
- #define sample_members \
--	sample_member_def(sample_ip, ip, T_ULONGLONG, "event type"),			 \
-+	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),			 \
- 	sample_member_def(sample_pid, pid, T_INT, "event pid"),			 \
- 	sample_member_def(sample_tid, tid, T_INT, "event tid"),			 \
- 	sample_member_def(sample_time, time, T_ULONGLONG, "event timestamp"),		 \
+-#define _PyUnicode_FromString(arg) \
+-  PyUnicode_FromString(arg)
+-#define _PyUnicode_FromFormat(...) \
+-  PyUnicode_FromFormat(__VA_ARGS__)
+-#define _PyLong_FromLong(arg) \
+-  PyLong_FromLong(arg)
+-
+ PyMODINIT_FUNC PyInit_perf(void);
+ 
+ #define member_def(type, member, ptype, help) \
 -- 
 2.48.1
 
