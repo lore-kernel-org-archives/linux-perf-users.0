@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47361C695;
-	Wed, 12 Mar 2025 20:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510401E7C25;
+	Wed, 12 Mar 2025 20:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741811507; cv=none; b=trd8bwrQg7ebWkD640H5HLivCT+1eIdpJbKcfQiFkNXfbijsgqhd4naRBMp0nXAHag7fRLVGU6w1tUq2AEmpnwIoHzzkcDO5EzdLIE2XgfK22utBGl/Y9biGGZNDkuYVbR8igwANA7CA736wOAJBU1+fT0FiQ2pWN/VYCLi7YAg=
+	t=1741811511; cv=none; b=E25lrmHL453zNlg7yupkwA9E/h2rkZto6sCekVK1uNGaFd0q9iQe8mS6n2GJudAYvC08wXhmSt2h3M3779Oyd6kl7OiQ9c9IpbBMxBSrOB0Sxc7zpEXzWnapCPBHg+fepAWg47dasF8r/BBYkkdsQi54o25bwb3WmZgQ343oLUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741811507; c=relaxed/simple;
-	bh=GB8KFaUu/1dTZ1Oo92BRSTxzePbliHZzstxfZLcIWxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kP/HloCcjHq+9hGDI4QMUt93qyY0oBYs26vGWKbncw9Icxy06zVgZLf53KEheSiLPuihLvKDrcnx1TP+de8q7yokSzFL26BE4AMv8e/eGXrqDe+tvqGFftJ0o5m6YonHfu++Z/Wip9g5zlqRwi0gTDBiolVGa1OCldX9C+Owe+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgbALUe3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741811511; c=relaxed/simple;
+	bh=GqdBr8LrfZqs36fRS7w681t9jhkPCqwSChpCjCHB7zo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fNaQwWpAMos3mCYgApMBNWNtBA3KNSDgy4Y8a4KLYvLWg0t1JUwVz8E4BoseXxUfFCqbd0zi9OLI2xFlCHRxA9I+8xXm4XwP+pomnZxpbprP625ZwHe6lypcTbAMjVERf+lQK/sQgXh0hNVHocvp/tDPOzRN032FF9cA4Krwvz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnFsZPpu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgbALUe3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D323C4CEE3;
-	Wed, 12 Mar 2025 20:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnFsZPpu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2361DC4CEEA;
+	Wed, 12 Mar 2025 20:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741811507;
-	bh=GB8KFaUu/1dTZ1Oo92BRSTxzePbliHZzstxfZLcIWxA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PgbALUe3z3q2Z9eNiWeAiP0vr5cigx9b5E4+fXOWUOvJwcj3fSWbLpPCEsGpsaP7i
-	 mRZordt8iTSZVtkrf21//0+6FID3B8JH7l9T121Gt9D8xSpSQDpH6+bXnpWKEpexbr
-	 zwrgAkK+RtuQFpEgZ0O09X37lYcFpBv7NFsYPDP5KpL/njbh8sz57i3vsd/lwGCqXe
-	 mmc/89hbndiER8UN/f/rMnGW5vpwwX/f9kjonz3mpGtRc6ASo6sXgNPtJNbzEIGQGf
-	 sl/hU3LiYbRgo2ivrOKSkim+iUR73KGSGisE4BJEHSRjySpU6Tf/OJ7H5Fm+sU+4ao
-	 gXphNyA2AF6nQ==
+	s=k20201202; t=1741811511;
+	bh=GqdBr8LrfZqs36fRS7w681t9jhkPCqwSChpCjCHB7zo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SnFsZPpuBByNeqNTTTx9GNT1X5mqPEr5UTxDbxnUCU2mgI5u6YuUP1PmMsTcmmBf1
+	 z4Km58ZUbS4AdjL+nQHNrrOK4R/70hWxd9a5wKKpnbvYv9Jkd5pR2y8WkipyM78DqA
+	 8VfZ1vjUbntaoOnrNzdrwZARywre3W58nl2S2p+LpkupjjMtHF7TIUU9ZB66h7WuSG
+	 5GqUpMuiBXjC6BYJ7/Vb/+Q34lwZdANSKxp8R8SZKI6uokj5hoajVafs7tNBibHBjZ
+	 /JTvZMQoCYH83cp3Gdm/l/zvZF+OVYKpEDrXjNDfb1orljAOBY5whUgSadfV7bVZPz
+	 aJzbAs/jfJ9UA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,60 +39,50 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 0/6] perf python binding fixes
-Date: Wed, 12 Mar 2025 17:31:35 -0300
-Message-ID: <20250312203141.285263-1-acme@kernel.org>
+Subject: [PATCH 1/6] perf python: Fixup description of sample.id event member
+Date: Wed, 12 Mar 2025 17:31:36 -0300
+Message-ID: <20250312203141.285263-2-acme@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250312203141.285263-1-acme@kernel.org>
+References: <20250312203141.285263-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi Namhyung,
+Some old cut'n'paste error, its "ip", so the description should be
+"event ip", not "event type".
 
-        So this simplifies it greatly, it almost ends up as a one-liner,
-but there is an improvement as well to mark the event as consumed to
-then parse its sample, because the copy of the whole event was done all
-along.
+Fixes: 877108e42b1b9ba6 ("perf tools: Initial python binding")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/python.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        This is brittle, as the header size can be bigger, than the
-space we use and in that case we fail to parse the event by bounds
-checking it.
-
-	Supporting larger event payloads can be done on top of this,
-possibly by deferring consuming the event in the ring buffer by parsing
-it all instead of having pre-allocated space, measurements need to be
-made to see whats best. I'd say leave this for when it proves necessary.
-
-        With this series I managed to run it for a long time without
-crashes and 'top' says it doesn't seem to be leaking anything, as its
-memory usage stays the same for as long as I looked.
-
-        Please consider applying to perf-tools-next,
-
-Best regards
-
-P.S.: In other news, the syscalltbl series from Ian built on all my
-containers, I'm now trying to go over it patch by patch.
-
-Arnaldo Carvalho de Melo (6):
-  perf python: Fixup description of sample.id event member
-  perf python: Remove some unused macros (_PyUnicode_FromString(arg), etc)
-  perf python tracepoint.py: Change the COMM using setproctitle if available
-  perf python: Decrement the refcount of just created event on failure
-  perf python: Don't keep a raw_data pointer to consumed ring buffer space
-  perf python: Check if there is space to copy all the event
-
- tools/perf/python/tracepoint.py |  8 ++++++++
- tools/perf/util/python.c        | 24 ++++++++++++------------
- 2 files changed, 20 insertions(+), 12 deletions(-)
-
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 69ec2ad60d98ba38..6c5bb5e8893998ae 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -49,7 +49,7 @@ struct pyrf_event {
+ };
+ 
+ #define sample_members \
+-	sample_member_def(sample_ip, ip, T_ULONGLONG, "event type"),			 \
++	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),			 \
+ 	sample_member_def(sample_pid, pid, T_INT, "event pid"),			 \
+ 	sample_member_def(sample_tid, tid, T_INT, "event tid"),			 \
+ 	sample_member_def(sample_time, time, T_ULONGLONG, "event timestamp"),		 \
 -- 
 2.48.1
 
