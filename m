@@ -1,122 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD4522DF8D;
-	Wed, 12 Mar 2025 07:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E9815820C;
+	Wed, 12 Mar 2025 09:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766205; cv=none; b=Ap95RYemFUmS89iHlr3YfC+2F9TNUt6o5WhJcG/xoiBQK7NgfivnDSEEW+gEDP47PztFyH55DA4pozn0ztJQ8uZohzJ73cjniJwd1mk1NTZ1miJi17ohLBMGSK2+a2qJ6R73kfFIsewn3UsKoY7vtOjUO2Tk1AWeiLUcwjweNDc=
+	t=1741772400; cv=none; b=dfkYaeot+WArRa7D83qlmvI4lrnHlYXXNYtNtZTvugrbgqwIWKF8VfHPOkUEU3Hf+LBWdCBFQ0+TbUaXRbuTULYZs1IwHwt+6+EbtoU2rSHTooeFieJTCjHmIJ3868TJqsEIKXTmFYjU+nY7pk05E/I/+0er3XmLF84FAcqV6n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766205; c=relaxed/simple;
-	bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EM0jfowc6/Opr5tSgtk4sLCMN2h5trVnt6afW9wnbHyIaxMPkRD23SXITESfso1ZqsmraP5L7E6dlgsYctH+9mQhIys0RUvytd5TGrmROWC2+1f2fPHpmMNMgrg5IaEumKEo9d78VWEIvD+8ifSElUTkSBm8gmBVzz/qmoFWj7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W60plOnT; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741772400; c=relaxed/simple;
+	bh=o7M7fRkbCHIKzerwL4wLRbTmeINyNYlXBbL4qCtA+Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IwmAtg5b9ibwCBwhwuNa5VYzSeHUjZsY8K5VYZxxnFm9IU2sLiBPi6L/a9oW3k2Q5JP2I5/4rPJxOZ4mAF3ZFwpehWLsuN7q45DhNwLAosfDunWTTjZlMp5CL1FUsrJ+dp9BUw0Hpz8ad671NTFL9y53wct25BWZNwbQeeaCW14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BvNigwEp; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W60plOnT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741766204; x=1773302204;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
-  b=W60plOnTcAat8iw+KFa6KluOl9qsIXcFZgKi1Zj8LDngmunh/sSYpMXG
-   FegwrQ6866OLaDxUpJwDnh6bYARWSmFnS6mDVtmPdFcJjGYfiRqd0PLfp
-   nRFfPRorse0OjhrvRc3D+SoDzwgRviNqXerWXzZkbsdR/gFZ2xC7uKsmN
-   6kF7R3Pn94cJccr34TMV/BeE+SU8K0diz1BGkwRCC0henkwkVN0pw5w1H
-   aL8hu+NGNGxhQ1oODVN65ow+xTThNlQO4BjEUbF4/R5Ecxl5YZov6NukH
-   A4ToMsmHAiTstlKd0PV95AcbIYRad/G5AdioFv/pa4RK738fz6dvUCImp
-   w==;
-X-CSE-ConnectionGUID: DV6sN3MuQICEO+0gpNkOcA==
-X-CSE-MsgGUID: 07aMHwYbRXyunWr9yOhtJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42869911"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="42869911"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:43 -0700
-X-CSE-ConnectionGUID: je2W3usmSyC6bdqstz/sZw==
-X-CSE-MsgGUID: nhpioELPS3+NzVxrnVtM3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="125462623"
-Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:39 -0700
-From: Yujie Liu <yujie.liu@intel.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BvNigwEp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+guXa85l4m8374ZSaIhSq5yBVp6GHqv8PZJqOh4Sv24=; b=BvNigwEpbh0bCumOLG+Vr9+/dk
+	qERJ6KukgwmSyjlHyfkaf82Cu43ZP2iuXg6fWsMR8W0ezR7O5Zbs5zFk3CYTMvgppOfEEmAHfb69c
+	C0n7Pqh9tWHAAnpl3bZwGnZu201gAg2KlarWBKJJYeo9loxXOh8gIxVBIcpqXjtEmP6MsPDrL5SqL
+	GLiXzMDEiP+UXH2DfHyqTUjFpjWtxJ5mDQ6XHra1VmBfqx0v+y6h5SOteD+NSr9Vr61fOtas9GwGH
+	elVbDYnyE0JQwM22kIc9rb47dPOZtS6TgI8qoGaFVRPbeQrPPzHeaQKi5T1We2oOVeUZvqmufS1UX
+	IMrUSSuQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsIZ3-00000002LRo-0MO4;
+	Wed, 12 Mar 2025 09:39:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0A096300599; Wed, 12 Mar 2025 10:39:48 +0100 (CET)
+Date: Wed, 12 Mar 2025 10:39:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mark Barnett <mark.barnett@arm.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, ben.gainey@arm.com, deepak.surti@arm.com,
+	ak@linux.intel.com, will@kernel.org, james.clark@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Cc: Leo Yan <leo.yan@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Paschalis.Mpeis@arm.com
-Subject: [PATCH] perf script: Fix typo in branch event mask
-Date: Wed, 12 Mar 2025 15:56:36 +0800
-Message-Id: <20250312075636.429127-1-yujie.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v3 3/5] perf: Allow adding fixed random jitter to the
+ alternate sampling period
+Message-ID: <20250312093947.GJ19424@noisy.programming.kicks-ass.net>
+References: <20250307202247.648633-1-mark.barnett@arm.com>
+ <20250307202247.648633-4-mark.barnett@arm.com>
+ <20250311113128.GD19424@noisy.programming.kicks-ass.net>
+ <431a5acb-4906-4095-8dec-b2d824adaac6@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <431a5acb-4906-4095-8dec-b2d824adaac6@arm.com>
 
-BRACH -> BRANCH
+On Tue, Mar 11, 2025 at 05:22:16PM +0000, Mark Barnett wrote:
 
-Fixes: 88b1473135e4 ("perf script: Separate events from branch types")
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
----
- tools/perf/util/event.h                 | 2 +-
- tools/perf/util/trace-event-scripting.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> > @@ -9979,6 +9985,8 @@ static int __perf_event_overflow(struct perf_event *event,
+> >   				 int throttle, struct perf_sample_data *data,
+> >   				 struct pt_regs *regs)
+> >   {
+> > +	struct hw_perf_event *hwc = &event->hw;
+> > +	u64 sample_period;
+> >   	int events = atomic_read(&event->event_limit);
+> >   	int ret = 0;
+> > @@ -9989,15 +9997,50 @@ static int __perf_event_overflow(struct perf_event *event,
+> >   	if (unlikely(!is_sampling_event(event)))
+> >   		return 0;
+> > -	ret = __perf_event_account_interrupt(event, throttle);
+> > +	/*
+> > +	 * High Freq samples are injected inside the larger period:
+> > +	 *
+> > +	 *   |------------|-|------------|-|
+> > +	 *   P0          HF P1          HF
+> > +	 *
+> > +	 * By ignoring the HF samples, we measure the actual period.
+> > +	 */
+> > +	if (!(hwc->state & PERF_HES_HF_SAMPLE))
+> > +		ret = __perf_event_account_interrupt(event, throttle);
+> 
+> The high-frequency samples should still contribute to interrupt
+> accounting/throttling, right? We'd just need to put guards around the
+> adaptive period stuff so that HF samples don't contribute to the frequency
+> training.
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index c7f4b4b841ca..664bf39567ce 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -91,7 +91,7 @@ enum {
- 	PERF_IP_FLAG_VMENTRY		|\
- 	PERF_IP_FLAG_VMEXIT)
- 
--#define PERF_IP_FLAG_BRACH_EVENT_MASK	\
-+#define PERF_IP_FLAG_BRANCH_EVENT_MASK	\
- 	(PERF_IP_FLAG_BRANCH_MISS |	\
- 	 PERF_IP_FLAG_NOT_TAKEN)
- 
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index 29cc467be14a..72abb28b7b5a 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -347,7 +347,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
- 
- 	flags &= ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
- 
--	types = flags & ~PERF_IP_FLAG_BRACH_EVENT_MASK;
-+	types = flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
- 	for (i = 0; sample_flags[i].name; i++) {
- 		if (sample_flags[i].flags != types)
- 			continue;
-@@ -359,7 +359,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
- 		break;
- 	}
- 
--	events = flags & PERF_IP_FLAG_BRACH_EVENT_MASK;
-+	events = flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
- 	for (i = 0; branch_events[i].name; i++) {
- 		if (!(branch_events[i].flags & events))
- 			continue;
-
-base-commit: b10f74308e1305275e69ddde711ec817cc69e306
--- 
-2.34.1
-
+Yeah, I suppose it should. This means breaking up that function but that
+isn't hard.
