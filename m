@@ -1,60 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCABA31;
-	Wed, 12 Mar 2025 01:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64274C81;
+	Wed, 12 Mar 2025 02:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741744500; cv=none; b=CCviQApmc3E395Nbz45uecSR8wxDbQpXfgewjbUhNLyX/GdMn3GIv2yvMrlC5YxD8/iDWKdHGOU8U7rpfiXAVwJn9oHNLpeHE9QW7yNn8QEr2OuMz9TA6qLboxnL9hMbSKe+uOueHtk2xo1StjrSvXGKnkPzhfZZtEdOxD2M2MU=
+	t=1741744836; cv=none; b=pfcHwwjcGaZE2uDZIa5uJulqoQwwfn52l0ydUWcYQx+9PnONh+tBm/RkNmpYUB++vMOV3PFOMoJQQm5pqj+1Rf7HnaszuQtOr+UOGZ00m6DF+BYuneik5+jivVYF4K51P3Ir9v/lb7uVePZLglQnWfvyPoZV1DDM9iw+UD/w370=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741744500; c=relaxed/simple;
-	bh=qaZ4Iv985ilx/3P5gaDqTSXqo1FAISK6A0fi7U1Rras=;
+	s=arc-20240116; t=1741744836; c=relaxed/simple;
+	bh=b2KFyzQPt62EjuLD50rsCqVAb5LhVZON3gByzj5R9z4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pd27TkfYFWQFe+o0ivPLk0z3STQyyVt0Wv9UhRf8d70aLwzLDTKKs61cdrOVdgq+b83xjKU+jPTE7IcmrQuE3iapLqQ3eq14klicAdJMJCHo3DDuY65GqTD7VnpETUPA7Dmh4Pr1OWoKEOZ7yLXMCCE3wRYUlid8UzOtYuV2+50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADiiYTGF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=l3bqt/N9kVrscdNYa7NBB8rVLqRCHzLRySdnqMuUiK9nZ1BdktXaiWh6u5ea6Ta2o3kk1bL+9NNjDDj8mY6YhB76r94QRZ59tUUbMXrXcrjMxjE2TNGMICOtBhVZOycH3ESmWPpYP91wvtl0J8wlki7cWFRstoKAh3TcQW7GuNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xka/51xQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADiiYTGF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9086BC4CEE9;
-	Wed, 12 Mar 2025 01:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xka/51xQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4DBC4CEE9;
+	Wed, 12 Mar 2025 02:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741744500;
-	bh=qaZ4Iv985ilx/3P5gaDqTSXqo1FAISK6A0fi7U1Rras=;
+	s=k20201202; t=1741744836;
+	bh=b2KFyzQPt62EjuLD50rsCqVAb5LhVZON3gByzj5R9z4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ADiiYTGFrSPHLt4PkWui5BesTZpPdHfPe0irRykKeSqGVQQfHuLhLLRr3PphUtLrO
-	 Rvy5xzhnWslfXApBib/CXjvXQSUIksflZuL99Tf1m16Ig30c52gdvnAieQnphLwVXR
-	 tvIiarernlbUTvMQ+T2GeYaQ07O1qVhSi653vxrHDaY+ciU6vSuVj5vL1IsrLPp2yW
-	 v+91S+4e9Hcl9ENX47fFcYTYrXECOV8Z3K9YMO9GNGNLdFFH6K3QkMxrHcEIlZrX6w
-	 IRVUthubsMQb0RlwqdnMzmRSkQdj9U1qbPUZMb2LOYSue61fidO3KlR1RrjGHwiBf1
-	 Lz8s3rn/bgBoA==
-Date: Tue, 11 Mar 2025 18:54:57 -0700
+	b=Xka/51xQCYDoUQkC8qacAZFwXEWR7+9kB9bxszPwlX4d3OqXq0P0C4UCAuVkFBR6A
+	 FC5J4NO88zqrzfdDzBTC5uF1WR6I8/LI3UNxyGfXyKuwNA9IzA5lS8dOu8p+9p+Squ
+	 FPaI0U99eYdOv9hzKelP46+kYnf2hlVZgSrfqQ3bmf5eaN+2OEfbYS/QplW5xRgDAs
+	 cenCpLHha8pbmmfpX0+8s6MK2t4NFQ1zBign7MYnwRXiQem0TW0BgFuopyq0oHQtRS
+	 z9+D6K47/exV3am8gPo+3IOoPtvJMqtHHe2BFilhvb7jlbhn6yUKIDhoAMzgAWwTSF
+	 pYVCPeLpa3rfA==
+Date: Tue, 11 Mar 2025 19:00:33 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
 	James Clark <james.clark@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
- parse_events
-Message-ID: <Z9DpcfWqV7_Za3uu@google.com>
-References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-12-irogers@google.com>
- <Z89We45bGpeJvO9C@x1>
- <Z89WvaIVyF7klGp6@x1>
- <CAP-5=fXzva636zCZR2isdfrjT6mM3o42C+oGWNkGieqGVajfHA@mail.gmail.com>
- <Z89ZYVgL_bT3ampz@x1>
- <Z9BXdbWnX19ua5Mr@x1>
- <Z9BtpXnqSUYKr1TK@x1>
- <Z9CFwbXSGnGLn0lA@x1>
- <Z9CwrQTEJoT_rRNA@x1>
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: Re: [PATCH v2 4/5] perf x86 evlist: Update comments on topdown
+ regrouping
+Message-ID: <Z9Dqwd_7pyj7Gvqj@google.com>
+References: <20250307023906.1135613-1-irogers@google.com>
+ <20250307023906.1135613-4-irogers@google.com>
+ <Z89Y5pUchAaJj4PY@google.com>
+ <ba8dedbc-9a5f-4038-ad51-2b20baa6af65@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,112 +58,88 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9CwrQTEJoT_rRNA@x1>
+In-Reply-To: <ba8dedbc-9a5f-4038-ad51-2b20baa6af65@linux.intel.com>
 
-On Tue, Mar 11, 2025 at 06:52:45PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Mar 11, 2025 at 03:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
-> > So it seems to be something just in the python binding, as perf trace
-> > seems to handle it well:
-> > 
-> >  ( field 'prev_comm' ret=0x7f7c31f65110, raw_size=68 )  ( field 'prev_pid' ret=0x7f7c23b1bed0, raw_size=68 )  ( field 'prev_prio' ret=0x7f7c239c0030, raw_size=68 )  ( field 'prev_state' ret=0x7f7c239c0250, raw_size=68 ) time 14771421785867 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x303a32313175 ==>
-> >  ( XXX '��' len=16, raw_size=68)  ( field 'next_comm' ret=(nil), raw_size=68 ) Traceback (most recent call last):
-> >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
-> >     main()
-> >   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
-> >     event.next_comm,
-> >     ^^^^^^^^^^^^^^^
-> > AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
-> > root@number:/home/acme/git/perf-tools-next# cat /proc/125355/comm
-> > kworker/u112:0-i915
-> > root@number:/home/acme/git/perf-tools-next# 
-> > root@number:/home/acme/git/perf-tools-next# 
-> > root@number:/home/acme/git/perf-tools-next# perf trace -e sched:sched_switch -p 125355
-> >      0.000 sched:sched_switch(prev_comm: "kworker/u112:0", prev_pid: 125355 (kworker/u112:0-), prev_prio: 120, prev_state: 128, next_comm: "swapper/6", next_prio: 120)
-> > ^Croot@number:/home/acme/git/perf-tools-next#
-> > 
-> > I.e. it chops up the prev_comm size to what is specified in the
-> > tracepoint format.
-> > 
-> > And that sample->raw_size is the same accross the sched:sched_switch
-> > raw_datas (seemingly suboptimal, most are less than 16 bytes, but
-> > probably its not guaranteed that the \0 will be there, so copy all the
-> > 16 bytes).
-> > 
-> > Now to try to figure out why simply using PyUnicode_FromStringAndSize
-> > doesn't work...
+On Tue, Mar 11, 2025 at 08:45:20AM +0800, Mi, Dapeng wrote:
 > 
-> Didn't manage to make progress on this, I spent more time than I
-> expected as I think this could be some sort of canary on some coal mine,
-> but with the patch below, that gives up and just avoids touching the
-> COMM fields and don't switch from string to bytearray in the binding, it
-> runs forever, this is just a data point in case somebody wants to
-> pursue.
+> On 3/11/2025 5:25 AM, Namhyung Kim wrote:
+> > Hello,
+> >
+> > On Thu, Mar 06, 2025 at 06:39:05PM -0800, Ian Rogers wrote:
+> >> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> >>
+> >> Update to remove comments about groupings not working and with the:
+> >> ```
+> >> perf stat -e "{instructions,slots},{cycles,topdown-retiring}"
+> >> ```
+> >> case that now works.
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > Dapeng, can I get your Signed-off-by here?
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >> ---
+> >>  tools/perf/arch/x86/util/evlist.c | 27 ++++++---------------------
+> >>  1 file changed, 6 insertions(+), 21 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+> >> index ed205d1b207d..7905a28d7734 100644
+> >> --- a/tools/perf/arch/x86/util/evlist.c
+> >> +++ b/tools/perf/arch/x86/util/evlist.c
+> >> @@ -39,28 +39,13 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+> >>  	 *         26,319,024      slots
+> >>  	 *          2,427,791      instructions
+> >>  	 *          2,683,508      topdown-retiring
+> >> -	 *
+> >> -	 * If slots event and topdown metrics events are not in same group, the
+> >> -	 * topdown metrics events must be first event after the slots event group,
+> >> -	 * otherwise topdown metrics events can't be regrouped correctly, e.g.
+> >> -	 *
+> >> -	 * a. perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
+> >> -	 *    WARNING: events were regrouped to match PMUs
+> >> -	 *     Performance counter stats for 'CPU(s) 0':
+> >> -	 *         17,923,134      slots
+> >> -	 *          2,154,855      instructions
+> >> -	 *          3,015,058      cycles
+> >> -	 *    <not supported>      topdown-retiring
+> >> -	 *
+> >> -	 * If slots event and topdown metrics events are in two groups, the group which
+> >> -	 * has topdown metrics events must contain only the topdown metrics event,
+> >> -	 * otherwise topdown metrics event can't be regrouped correctly as well, e.g.
+> >> -	 *
+> >> -	 * a. perf stat -e "{instructions,slots},{topdown-retiring,cycles}" -C0 sleep 1
+> >> +	 * e. slots event and metrics event are in a group and not adjacent
 > 
-> That flipping from string to not string based on just one entry not
-> being acceptable is questionable, and I think it should go away, but why
-> when COMM fields are bigger what is alloted to them in the tracepoint
-> ends up tripping up just the python binding is something I couldn't
-> grasp in today's session.
+> Yes, here is my SoB.
 > 
-> Namhyung, this is something open, but not caused by Ian's patchset, for
-> which I give my:
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Thanks for the analysis!
+Thanks!
 
 > 
-> In addition to the tags I provided patch by patch.
-
-Ian, can you check if it works well for you?
+> BTW, It seems there is a typo and missed the "not" word. It should be 
+> "slots event and metrics event are not in a group and not adjacent"
+ 
+Ok, will update.
 
 Thanks,
 Namhyung
 
- 
-> diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
-> index 38b2b6d11f64566a..965b50afbdafeeb2 100755
-> --- a/tools/perf/python/tracepoint.py
-> +++ b/tools/perf/python/tracepoint.py
-> @@ -33,15 +33,12 @@ def main():
->              if not isinstance(event, perf.sample_event):
->                  continue
->  
-> -            print("time %u prev_comm=%s prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_comm=%s next_pid=%d next_prio=%d" % (
-> -                   event.sample_time,
-> -                   event.prev_comm,
-> -                   event.prev_pid,
-> -                   event.prev_prio,
-> -                   event.prev_state,
-> -                   event.next_comm,
-> -                   event.next_pid,
-> -                   event.next_prio))
-> +            try:
-> +                print("time %u prev_comm=%s prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_comm=%s next_pid=%d next_prio=%d" % (
-> +                       event.sample_time, event.prev_comm, event.prev_pid, event.prev_prio, event.prev_state, event.next_comm, event.next_pid, event.next_prio))
-> +            except:
-> +                print("time %u prev_pid=%d prev_prio=%d prev_state=0x%x ==> next_pid=%d next_prio=%d" % (
-> +                       event.sample_time, event.prev_pid, event.prev_prio, event.prev_state, event.next_pid, event.next_prio))
->  
->  if __name__ == '__main__':
->      main()
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 6c5bb5e8893998ae..3eb77bd270077cb3 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -318,13 +318,10 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
->  			if (tep_field_is_relative(field->flags))
->  				offset += field->offset + field->size;
->  		}
-> -		if (field->flags & TEP_FIELD_IS_STRING &&
-> -		    is_printable_array(data + offset, len)) {
-> +		if (field->flags & TEP_FIELD_IS_STRING)
->  			ret = PyUnicode_FromString((char *)data + offset);
-> -		} else {
-> +		else
->  			ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
-> -			field->flags &= ~TEP_FIELD_IS_STRING;
-> -		}
->  	} else {
->  		val = tep_read_number(pevent, data + field->offset,
->  				      field->size);
+> 
+> >> +	 *    perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
+> >>  	 *    WARNING: events were regrouped to match PMUs
+> >> -	 *    Error:
+> >> -	 *    The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
+> >> -	 *    event (topdown-retiring)
+> >> +	 *         68,433,522      slots
+> >> +	 *          8,856,102      topdown-retiring
+> >> +	 *          7,791,494      instructions
+> >> +	 *         11,469,513      cycles
+> >>  	 */
+> >>  	if (topdown_sys_has_perf_metrics() &&
+> >>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
+> >> -- 
+> >> 2.49.0.rc0.332.g42c0ae87b1-goog
+> >>
