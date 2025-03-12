@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262081EDA37;
-	Wed, 12 Mar 2025 20:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4537F1EF0BA;
+	Wed, 12 Mar 2025 20:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741811516; cv=none; b=qtezKQ6XtYYcJieiKGGGh8E4IAOUYsv7lU3Fb+BFc9nq0vM1jrdik8U22Z8NWPBMhbGhTSXQ9yu4BK+lmdpALFRdKKQ8ohES/40pxbLc8vKh94v1kYqGb6pzvIpUnhdZtn5Jr8aTtavUVk7ihuS3W04N1pQogjU2HQSu4hrWlR4=
+	t=1741811518; cv=none; b=ujoMgPEser+WVNCmW6LFEuiLKFfc3HEVhtR/BzcN0E6fHi1LZsVuwE8NFw0fCc6VptQcoXys93ZN3a1yGqKBxDBw6ar/aEn7gF2YqB/WHQU4B9iw6bacG/vAuVliL5g0xy9apr9/BaM3NCcRdXWWU5b1ZfGVupBM3hugQ11YxM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741811516; c=relaxed/simple;
-	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
+	s=arc-20240116; t=1741811518; c=relaxed/simple;
+	bh=D4ZmBfnR5++/ReQIqJTxBZ11pl2EfSik2080N1gHruc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VU4+dC0JBYSTO6mOj2UhnDi/0AeP3GSRRSfh11Ex5pHjMYsShib+1oebI6JN5Jq5UrHISUbR7jnlbNyTC0hAv4VQFhh0lsizz8gFSs7tW5YNQXI30/Y+GQN25SnWI7FT7kDMhDXgYNBcVBLt2Z4+dFlrI82G34MTfo0c/P1Pyjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITL6mN7Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mvuniVx/ZfwGiEyhbgnWrRSYDgZ8QwAnKFlcTEDUnjCcw4pI485k2aAGLmBvsjMk1tfHtjDljNyUSkJQfLacI7qbWLAcq4iXGTtv3KmbZegHOChSRrY0rc8lmRB4v1nsUpBc56Mi0eRfS+Ez4eqNz4tIUr98iL/K8zRGf6bIEwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SA321C+s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITL6mN7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B43EC4CEDD;
-	Wed, 12 Mar 2025 20:31:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SA321C+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20CF4C4CEEB;
+	Wed, 12 Mar 2025 20:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741811514;
-	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
+	s=k20201202; t=1741811518;
+	bh=D4ZmBfnR5++/ReQIqJTxBZ11pl2EfSik2080N1gHruc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ITL6mN7ZyKIiSdzU6xpAwfi4Gj//pPeDyICgMDY7aa5eeM5ONpBVvx8gLyHT5AtUF
-	 Dbqm4uQMVEGsxdop8aGHlym12Wh8HBIaRAQgRi1cCCFQZ0YeDbLDGaiMtDtTpd7gSZ
-	 pB9NDDDWp0C/6eZo7W3zGtbe+jjQf9Q8F8Ho0aZkt9mHlqoFg6aqPGSBxRKUhOh3UR
-	 DYeKrnpXoAJUlgCfeORE005fPy1ua1IMHwtBkD0MgYbkFadSbs76Q9yaGNo9Y//pkC
-	 SHUPu/VE1/QoHc+JWOW6F0KFgQPI0mg0ZRMDUamJU0bV/tDOmqWpnvVSXipqybg+uV
-	 qX/rVPAxX18fA==
+	b=SA321C+sUTtud+pT+L2sgI7u8s1OaaCop/ORHtUt1z1IbbMzYkwM7O9/iUVF5nAwf
+	 8/8eC+rc4BeaOxt6Sn3du3JNLu0vK47G4zOgXcicZHCsI8EQJFZ20vA2N0K9EAHJKF
+	 SgnNvqYILB7aYQIDYcuAtv4IDlyofcq3NpV3eyRyaS2/CAFo1KSa9GSNppnSQkz7Nb
+	 4ih6qkZGpb5pnWBYtZ09sM99bdJaxusgrnEM5s8+WMqk7jqoTpYqe7W8eoyS8w3k5E
+	 IpYkBNxCPC27VHQXUe8lPKsQhZbsQcEfYHtmwmopzbELrNPmXAfL+UmpSBc20SYz5H
+	 deHYkt2MPMQmw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/6] perf python: Remove some unused macros (_PyUnicode_FromString(arg), etc)
-Date: Wed, 12 Mar 2025 17:31:37 -0300
-Message-ID: <20250312203141.285263-3-acme@kernel.org>
+Subject: [PATCH 3/6] perf python tracepoint.py: Change the COMM using setproctitle if available
+Date: Wed, 12 Mar 2025 17:31:38 -0300
+Message-ID: <20250312203141.285263-4-acme@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250312203141.285263-1-acme@kernel.org>
 References: <20250312203141.285263-1-acme@kernel.org>
@@ -55,10 +55,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When python2 support was removed in e7e9943c87d857da ("perf python:
-Remove python 2 scripting support"), all use of the
-_PyUnicode_FromString(arg), _PyUnicode_FromFormat(...), and
-_PyLong_FromLong(arg) macros was removed as well, so remove it.
+Otherwise when debugging we see just "python" in perf, top, etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
@@ -68,27 +65,29 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/python.c | 7 -------
- 1 file changed, 7 deletions(-)
+ tools/perf/python/tracepoint.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 6c5bb5e8893998ae..f9491b6699764fbc 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -22,13 +22,6 @@
- #include "util/sample.h"
- #include <internal/lib.h>
+diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
+index 38b2b6d11f64566a..15b0c82689966f23 100755
+--- a/tools/perf/python/tracepoint.py
++++ b/tools/perf/python/tracepoint.py
+@@ -5,7 +5,15 @@
  
--#define _PyUnicode_FromString(arg) \
--  PyUnicode_FromString(arg)
--#define _PyUnicode_FromFormat(...) \
--  PyUnicode_FromFormat(__VA_ARGS__)
--#define _PyLong_FromLong(arg) \
--  PyLong_FromLong(arg)
--
- PyMODINIT_FUNC PyInit_perf(void);
+ import perf
  
- #define member_def(type, member, ptype, help) \
++def change_proctitle():
++    try:
++        import setproctitle
++        setproctitle.setproctitle("tracepoint.py")
++    except:
++        print("Install the setproctitle python package to help with top and friends")
++
+ def main():
++    change_proctitle()
+     cpus    = perf.cpu_map()
+     threads = perf.thread_map(-1)
+     evlist = perf.parse_events("sched:sched_switch", cpus, threads)
 -- 
 2.48.1
 
