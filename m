@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D87619C54B;
-	Wed, 12 Mar 2025 16:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179FD1BCA07;
+	Wed, 12 Mar 2025 16:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741795626; cv=none; b=LBYWYVvkildPTCv9HLXqlIi7GsjZ7uyFcDe9MB+vgUtTJA5qzwDIHyJtibkEYRhp2Rk0A2KkU4naMIITySMIYfAO9E/sj672Hw+YxeT5KSm5kbnIKeCl5QbfSX74V1MWh+wVqSMV/PHwUyt0kIQhLOFbQs61GplM0N0qq5WExZQ=
+	t=1741795631; cv=none; b=RyIUCSXVJzax4rPVXXpRfErWKSFLQGl4MzlbMo/IkuQBg27jx807lwte6fLpoQEHYW/SmkmeI2qYdrqBFxw4xohDPvBI5PDjSWiVIDbOkUEO6piy7MAUHLqrYE7c+fkgQMWc/jhUx+UpNk/691TLQ6L24ziJPdxCg0LtnO+HU6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741795626; c=relaxed/simple;
-	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
+	s=arc-20240116; t=1741795631; c=relaxed/simple;
+	bh=46xRCXWbIBHRCLTqqyMeJZ3nLxdD2D7kjeMKxw12v6Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LCcOaAOcybxAKJdk53T3c9c+D+zNi55N4xGgJFr5hD/76IwUbKcNZjuYCGNiupxBYQQpN4ngP1/aQTgby7z16FfTWAunP7PWKZbI/nUlIJzVVbHUp6207p14f2UuYbmjau06X4QFNXZMpEst3XHL8z84G6QeVJd7iu7AuKI5XLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EcdI1LuD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=l3IfmiIH26Zm4nsFsag8cCwXsmWyXVnSvYIMM7iMPi6jeIVy9cnH66Pmy6yHnMuLeuHFNGFsD6bLASUzL9csXSxYbUrUAJp2oGxFpitSfc/VOQ5PJel5xWCgziNmA3tbGQyc0kxRXYDsI+1u2War46axg4bYXNTBWTUSh9UG8i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPNZ4Tad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EcdI1LuD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A4A5C4CEEC;
-	Wed, 12 Mar 2025 16:07:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPNZ4Tad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B74C4CEED;
+	Wed, 12 Mar 2025 16:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741795626;
-	bh=OFYIVs8S99HbB0u5/QSSewDS5CadnJF4cJmlidQbtrc=;
+	s=k20201202; t=1741795629;
+	bh=46xRCXWbIBHRCLTqqyMeJZ3nLxdD2D7kjeMKxw12v6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EcdI1LuDnVSw2RubwvGHOkNJzY9cKi8RAUc/81c3WwYB8yqzIaku9IfmfRBJeQ9iv
-	 y4VdG+lF5EnCbTg3QlN0rmpf3tJkK5ubio/rs3Vaj0HzXCXDALwRl1/YfmZDVBEKrq
-	 JDFmBC36b+89G0dGqS9ZngH7tJFtrz9fk+mA0D8YKH2g0bKSHVNVJNtUmHt94zOYsh
-	 FPFGSYjyli45cJW9IgSMujB6JGktEO8gUqzF13+II1eHzXZIe7kRCaJXlhl+55O5oe
-	 1Y8dgJ0KqSAKMiht8vnv/T1eXXqR7hdShf1j3HiHa7yL62pdCn0EPrkP6CwSMm/Mno
-	 46CKUZp7ziwXg==
+	b=PPNZ4TadNVfsXB82RIm1gm4dpfBefTbk/K0O1O2NumEKg0XOFF0CWJydijQpz+nHU
+	 X/R15ghDpWmXmlozmfZs4HfmB1iSFN3tRTTK2LbGn1dR42tKeyVYpL9b5ec8+7raK7
+	 r9eLvD4YALZ6fOOjkx7f5W+7ruJc1GksI/aqqgPl1w8k36J3jxhTQtFQPPp1Q7SiD1
+	 7kO8eQEG9MYmfIU6y4JLuN4NwA0lIdfJWypc0W414v4Ku7VGUlSJo92YzHqpBtmIgE
+	 mjgGmR7Hs63A3VZCTMQRQwzLo7A7JUkTEiH0UMBBLAxNvT72NL3c9Nelz20YCAsFJZ
+	 UpG4cT67QshBQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/3] perf python: Remove some unused macros (_PyUnicode_FromString(arg), etc)
-Date: Wed, 12 Mar 2025 13:06:50 -0300
-Message-ID: <20250312160651.280817-3-acme@kernel.org>
+Subject: [PATCH 3/3] perf python: Don't keep a raw_data pointer to consumed ring buffer space
+Date: Wed, 12 Mar 2025 13:06:51 -0300
+Message-ID: <20250312160651.280817-4-acme@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250312160651.280817-1-acme@kernel.org>
 References: <20250312160651.280817-1-acme@kernel.org>
@@ -51,15 +51,48 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When python2 support was removed in e7e9943c87d857da ("perf python:
-Remove python 2 scripting support"), all use of the
-_PyUnicode_FromString(arg), _PyUnicode_FromFormat(...), and
-_PyLong_FromLong(arg) macros was removed as well, so remove it.
+When processing tracepoints the perf python binding was parsing the
+event before calling perf_mmap__consume(&md->core) in
+pyrf_evlist__read_on_cpu().
 
+But part of this event parsing was to set the perf_sample->raw_data
+pointer to the payload of the event, which then could be overwritten by
+other event before tracepoint fields were asked for via event.prev_comm
+in a python program, for instance.
+
+This also happened with other fields, but strings were were problems
+were surfacing, as there is UTF-8 validation for the potentially garbled
+data.
+
+This ended up showing up as (with some added debugging messages):
+
+  ( field 'prev_comm' ret=0x7f7c31f65110, raw_size=68 )  ( field 'prev_pid' ret=0x7f7c23b1bed0, raw_size=68 )  ( field 'prev_prio' ret=0x7f7c239c0030, raw_size=68 )  ( field 'prev_state' ret=0x7f7c239c0250, raw_size=68 ) time 14771421785867 prev_comm= prev_pid=1919907691 prev_prio=796026219 prev_state=0x303a32313175 ==>
+  ( XXX '��' len=16, raw_size=68)  ( field 'next_comm' ret=(nil), raw_size=68 ) Traceback (most recent call last):
+   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
+     main()
+   File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 46, in main
+     event.next_comm,
+     ^^^^^^^^^^^^^^^
+  AttributeError: 'perf.sample_event' object has no attribute 'next_comm'
+
+When event.next_comm was asked for, the PyUnicode_FromString() python
+API would fail and that tracepoint field wouldn't be available, stopping
+the tools/perf/python/tracepoint.py test tool.
+
+So if the event is a tracepoint, copy the raw_data before consuming the
+ring buffer for the event.
+
+This is similar to what was done in e8968e654191390a ("perf python: Fix
+pyrf_evlist__read_on_cpu event consuming"), but wasn't when adding
+support for tracepoints in bae57e3825a3dded ("perf python: Add support
+to resolve tracepoint fields"), fix it.
+
+Fixes: bae57e3825a3dded ("perf python: Add support to resolve tracepoint fields")
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: James Clark <james.clark@linaro.org>
@@ -68,27 +101,157 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/python.c | 7 -------
- 1 file changed, 7 deletions(-)
+ tools/perf/util/python.c | 38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 6c5bb5e8893998ae..f9491b6699764fbc 100644
+index f9491b6699764fbc..e1bd8143296385fc 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -22,13 +22,6 @@
- #include "util/sample.h"
- #include <internal/lib.h>
+@@ -4,6 +4,7 @@
+ #include <inttypes.h>
+ #include <poll.h>
+ #include <linux/err.h>
++#include <linux/string.h>
+ #include <perf/cpumap.h>
+ #ifdef HAVE_LIBTRACEEVENT
+ #include <event-parse.h>
+@@ -38,9 +39,16 @@ struct pyrf_event {
+ 	PyObject_HEAD
+ 	struct evsel *evsel;
+ 	struct perf_sample sample;
++	/** @raw_data_copy: read_on_cpu consumes rb, may be overwritten at get_tracepoint_field */
++	void *raw_data_copy;
+ 	union perf_event   event;
+ };
  
--#define _PyUnicode_FromString(arg) \
--  PyUnicode_FromString(arg)
--#define _PyUnicode_FromFormat(...) \
--  PyUnicode_FromFormat(__VA_ARGS__)
--#define _PyLong_FromLong(arg) \
--  PyLong_FromLong(arg)
--
- PyMODINIT_FUNC PyInit_perf(void);
++static void pyrf_event__delete(struct pyrf_event *pevent)
++{
++	zfree(&pevent->raw_data_copy);
++}
++
+ #define sample_members \
+ 	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),			 \
+ 	sample_member_def(sample_pid, pid, T_INT, "event pid"),			 \
+@@ -94,6 +102,7 @@ static PyTypeObject pyrf_mmap_event__type = {
+ 	.tp_doc		= pyrf_mmap_event__doc,
+ 	.tp_members	= pyrf_mmap_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_mmap_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
  
- #define member_def(type, member, ptype, help) \
+ static const char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
+@@ -129,6 +138,7 @@ static PyTypeObject pyrf_task_event__type = {
+ 	.tp_doc		= pyrf_task_event__doc,
+ 	.tp_members	= pyrf_task_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_task_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static const char pyrf_comm_event__doc[] = PyDoc_STR("perf comm event object.");
+@@ -158,6 +168,7 @@ static PyTypeObject pyrf_comm_event__type = {
+ 	.tp_doc		= pyrf_comm_event__doc,
+ 	.tp_members	= pyrf_comm_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_comm_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static const char pyrf_throttle_event__doc[] = PyDoc_STR("perf throttle event object.");
+@@ -190,6 +201,7 @@ static PyTypeObject pyrf_throttle_event__type = {
+ 	.tp_doc		= pyrf_throttle_event__doc,
+ 	.tp_members	= pyrf_throttle_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_throttle_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static const char pyrf_lost_event__doc[] = PyDoc_STR("perf lost event object.");
+@@ -225,6 +237,7 @@ static PyTypeObject pyrf_lost_event__type = {
+ 	.tp_doc		= pyrf_lost_event__doc,
+ 	.tp_members	= pyrf_lost_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static const char pyrf_read_event__doc[] = PyDoc_STR("perf read event object.");
+@@ -255,6 +268,7 @@ static PyTypeObject pyrf_read_event__type = {
+ 	.tp_doc		= pyrf_read_event__doc,
+ 	.tp_members	= pyrf_read_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_read_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static const char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object.");
+@@ -295,11 +309,14 @@ static PyObject*
+ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+ {
+ 	struct tep_handle *pevent = field->event->tep;
+-	void *data = pe->sample.raw_data;
++	void *data = pe->raw_data_copy;
+ 	PyObject *ret = NULL;
+ 	unsigned long long val;
+ 	unsigned int offset, len;
+ 
++	if (data == NULL)
++		return ret;
++
+ 	if (field->flags & TEP_FIELD_IS_ARRAY) {
+ 		offset = field->offset;
+ 		len    = field->size;
+@@ -346,6 +363,11 @@ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
+ 	field = tep_find_any_field(tp_format, str);
+ 	return field ? tracepoint_field(pevent, field) : NULL;
+ }
++#else // HAVE_LIBTRACEEVENT
++static bool is_tracepoint(const struct pyrf_event *pevent __maybe_unused)
++{
++	return false;
++}
+ #endif /* HAVE_LIBTRACEEVENT */
+ 
+ static PyObject*
+@@ -369,6 +391,7 @@ static PyTypeObject pyrf_sample_event__type = {
+ 	.tp_doc		= pyrf_sample_event__doc,
+ 	.tp_members	= pyrf_sample_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_sample_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ 	.tp_getattro	= (getattrofunc) pyrf_sample_event__getattro,
+ };
+ 
+@@ -407,6 +430,7 @@ static PyTypeObject pyrf_context_switch_event__type = {
+ 	.tp_doc		= pyrf_context_switch_event__doc,
+ 	.tp_members	= pyrf_context_switch_event__members,
+ 	.tp_repr	= (reprfunc)pyrf_context_switch_event__repr,
++	.tp_dealloc	= (destructor)pyrf_event__delete,
+ };
+ 
+ static int pyrf_event__setup_types(void)
+@@ -478,8 +502,10 @@ static PyObject *pyrf_event__new(const union perf_event *event)
+ 
+ 	ptype = pyrf_event__type[event->header.type];
+ 	pevent = PyObject_New(struct pyrf_event, ptype);
+-	if (pevent != NULL)
++	if (pevent != NULL) {
+ 		memcpy(&pevent->event, event, event->header.size);
++		pevent->raw_data_copy = NULL;
++	}
+ 	return (PyObject *)pevent;
+ }
+ 
+@@ -1020,6 +1046,14 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+ 
+ 		err = evsel__parse_sample(evsel, event, &pevent->sample);
+ 
++		if (is_tracepoint(pevent) &&
++		    pevent->sample.raw_size > 0 && !pevent->raw_data_copy) {
++			// No need to check here, only when get_tracepoint_field gets
++			// called, if ever, then it can fail getting the value for
++			// a tracepoint field.
++			pevent->raw_data_copy = memdup(pevent->sample.raw_data, pevent->sample.raw_size);
++		}
++
+ 		/* Consume the even only after we parsed it out. */
+ 		perf_mmap__consume(&md->core);
+ 
 -- 
 2.48.1
 
