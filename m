@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3C51F9F75
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 05:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D981FA851
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 05:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741843798; cv=none; b=X0FwSd7ZKcn5nTaHEisP00Tm4YIFuz3rHZzCNcip9IbLnB4caXmqFTHX4bktBZpQwriBtdIn65F5MvyL10UJRL03Y6cB7x+H9fm3o1dupXv3FLvDyyQTmEb3ETBgOkR2cOvVRp00WPc/65ZsXPTAf29hsxYG9XMQTuHPLh9llIw=
+	t=1741843801; cv=none; b=mhMB7VMH2/3od7umWaE1UVhhLcaaOuhozXLgK9SF9WAa6GSrCt9im4l0FAARtmowKvnzWpbS+J57TsAyshOk0xlsNIF0AtE1mBO3p9XbvN6UJ7GFULzttRL3pJWFMSSOwR6hgAu2HSr0fGgLhGZB1guFR+sAdr6Uua2r9GA7qQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741843798; c=relaxed/simple;
-	bh=sdLqXznJGK68zHO8fVk/sYHR0jFe7nGT6u5FJtbEV1w=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=bdwWkrZpvNOGhNbVeUoTLlPKnSEN66LQRpDgR+n4/+ad18lCMJQewQOVXfQiQSmleRbirEVdbeYFjcS+4CiNodj3XtnjadwAV0kBrm0PkTZHxgY8L7u1stuoQISY5Jdbow3MUfrjlZd2sBKL2ex/JgYbRYQf2THv+LcGVGHLO1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TQWF9JJy; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1741843801; c=relaxed/simple;
+	bh=I+AitRafweBNjLK+ItMt1YQTcH9oIsWQ0Y4C9TRgoxc=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=kOcESex8MKHK3dIvq3eqoaUGW7QnU9dCBZX8AArKTuc1HF46UfSnwj7JZo/g4e05dotv5wwfLr/CjJbegu4OC9nOL5qp4Uopm2uL2qhc5dsfzJD7ZocbfX6ciQ4+//+ohKMIENMYP0p55ZNNfdM/b2YSDCPuBuW7q9BKiUIfl1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QZxxh6Zc; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TQWF9JJy"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e634a124439so890623276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Mar 2025 22:29:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZxxh6Zc"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240a96112fso18060295ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Mar 2025 22:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741843796; x=1742448596; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/pDVvPY/EbjpT1pnpzmTT+xHX0plEx2B0lP4lOauEaY=;
-        b=TQWF9JJypu9bh8GMHqj5I+u5DRQkPOobg7b31XRBjHWY0grQNqu6I5gMhoJ+sbQPsF
-         LvC/Ma6OvtQqy11dbgmOMAAbbRqOeJPH/9Ws1BCj7UPANg9ZGByz2cAgih15fbU9wk1w
-         U0t0No9VyQUeIHioveDQGZrr5tTLyWueox3vbfxl5tKx6uZfRIZ73FqnqmQ2qyJIZ2wp
-         d3aQM1XQpcRjK0hqhR2nVkzlwmzH21wg6R4K4c1VmfThiLZke42pAa3j97+AVHiWgM0V
-         L7lET28SU0gF/hlUF3gFGl8znfn1ijsFr574fA4SJC/dTUsmXyXlLm+OFjClgrz7AsIc
-         7jwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741843796; x=1742448596;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1741843799; x=1742448599; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/pDVvPY/EbjpT1pnpzmTT+xHX0plEx2B0lP4lOauEaY=;
-        b=sqTuvDbzZmtHteV84K8ZWUo08eu9KqxF8M8qd4McCqP/JVUL92VMyy5RGzkZSfRgfE
-         8zgYeFmNbg80K3ij5S4TS7tjEeRNxyzSJWsa7XS8XNwN7eawTGPLcK9W9Z4UPgtAp7U7
-         uvREZ9swgU2cQkNjwdMICRu18gxJlApkPZUcV9ZuSXEluaxB0J0ftmO0ObeNn7PjmX/x
-         vSIhtrBJjc2qhej8tnToGGKQr6D8qO/AC1vxmZ3b2ANm+HfPK4lwv6rtHw83mcVhPkHf
-         JASo/+mzpW23Tw7+CxkPy0vdiIQEmCvH0UAjbaawlt2gboHQih/WEAJCJaE9sXlGpQJJ
-         dqlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlZd1G+ai5eDyD4ydYjTVNjnXDZ0voKTLgalKjnPJWMWiUeG6JEIwBOnICY0B/Qp9l4YL1uSR4BXnjUeU2HHHu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+St1qtLyPLqIknbWv69799QQqHkB5ioz6JW5dN5MnMKYkXQMy
-	CpaQoEM7VhQtqcK+sld94BrBfkIX/bIaMNLtpOrVs0kgYPPITNqFxyi+BhUKAE0g+619abYHcyo
-	4AMCqGg==
-X-Google-Smtp-Source: AGHT+IF1TurJf/mugVTINcwkgKCiDEAD4eqFaGBlP7HyXwG+ylrY+NGAPlm2xmaQRZWtZXpeeAZKGh2b6Cvs
+        bh=jhuCtOZ0Nw0QyjR0+NS8fO75xwUE+0obsDVVi6fim1o=;
+        b=QZxxh6Zc1Ma7J1Usxb43KIrBQXzLcxIDOZgIPRh63DRru7WVnC5cZmxD0NdVnYo+ZN
+         m7Jj4C9XaoQN7wvh6h4Z0lSKA0JsAAeDHBaea3Q4Jplq2I1UrcahUc+k9jtLGsk1S5fn
+         1OkEEPDNmQj7bH1i/MRk7sIPkCTe8YWaBwkTL3hzOaVhXUv+67G6zeeaQiaQltT1pwXO
+         3dpfJSLdb4W4QByDKEvf/3xGa+bgxhyJlZq6CmKr1sUhwJAn4eEh/9SrUbE/xTxhy7QN
+         dj3eyEDfjtiAWRxlOJsR+wZzEwuidqWE+N+1Ssg7juU1PdCnea61aN/yZvovGH0ga3FQ
+         /DKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741843799; x=1742448599;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jhuCtOZ0Nw0QyjR0+NS8fO75xwUE+0obsDVVi6fim1o=;
+        b=ATLgRzosq8961mKy553cyL0dBVgWmZnEA+M6fxj+tXo/qhQ0vTzyXBhAOtF1NecCgX
+         NjLRemGQ/OPRenSdqPMoQ8LNvJi2ZCfCrr5kEzXvrkFjWrL1kYJw6ONQQEACjb9n5I/x
+         +I+eMW26xoxV1AIoNKeZ0N/UERxapbpv7T8xDiKtmtQKsE7HefLIJDDEpMUW6JIgruDv
+         m04csDleHt47vfCH8wD/cQ3yJqNxHwxRSOWXwrYxvxh3HoIEnyvMu3UG00HY6JhnFtWh
+         hJYRTLYksx3nn7ZQs/9E8HuRSozjUEuZXWgX+/Xnw+OQ5gUhHXdXNV4sSj6E63rdg5qP
+         GkgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwqU71qKd9BliZDw/MzOXkjZiybKJAc1kQwKLAacSL51CvEVhNxj1wI3pZ+3yLVwhyAT2nlaEOY4ngBp9X7AG5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw54RUcoF2lMUJdoKUKt+ys0zzmwiIbJr8lWL/DKCQ/lOhPBMoY
+	cDBk/nF2jVulGdosSmVxrs1HeNwuMrupIXoZ8ioyfRMAx8IHtcvzxiUDS4P7e7/tYDsiFXSE11X
+	uWS3rmA==
+X-Google-Smtp-Source: AGHT+IEA4yYXIJttaSID3iAibVCdp2nLabuEtam5BZ2XvBfQ8zrE7bzNl+BBpwH8uXhyZoUDyvWbtJdbTLTO
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de85:e25e:4e36:1ea5])
- (user=irogers job=sendgmr) by 2002:a25:7288:0:b0:e61:16cd:deb6 with SMTP id
- 3f1490d57ef6-e635c10176emr2336666276.2.1741843795768; Wed, 12 Mar 2025
- 22:29:55 -0700 (PDT)
-Date: Wed, 12 Mar 2025 22:29:51 -0700
-Message-Id: <20250313052952.871958-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a63:5d1b:0:b0:af5:3653:f036 with SMTP id
+ 41be03b00d2f7-af53653f07cmr10510a12.3.1741843798600; Wed, 12 Mar 2025
+ 22:29:58 -0700 (PDT)
+Date: Wed, 12 Mar 2025 22:29:52 -0700
+In-Reply-To: <20250313052952.871958-1-irogers@google.com>
+Message-Id: <20250313052952.871958-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250313052952.871958-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-Subject: [PATCH v1 1/2] perf machine: Factor creating a "live" machine out of dwarf-unwind
+Subject: [PATCH v1 2/2] perf debug: Add function symbols to dump_stack
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,178 +75,205 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Factor out for use in places other than the dwarf unwinding tests for
-libunwind.
+Symbolize stack traces by creating a live machine. Add this
+functionality to dump_stack and switch dump_stack users to use
+it. Switch TUI to use it. Add stack traces to the child test function
+which can be useful to diagnose blocked code.
+
+Example output:
+```
+  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
+^C
+Signal (2) while running tests.
+Terminating tests with the same signal
+Internal test harness failure. Completing any started tests:
+:  8: PERF_RECORD_* events & perf_sample fields:
+
+---- unexpected signal (2) ----
+    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
+    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
+    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
+    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
+    #4 0x7f4a91f01f68 in __sleep sleep.c:55
+    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
+    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
+    #7 0x5590fb5b83ab in start_command run-command.c:127
+    #8 0x5590fb621572 in start_test builtin-test.c:467
+    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
+    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
+    #11 0x5590fb5a9099 in run_builtin perf.c:351
+    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
+    #13 0x5590fb5a9499 in run_argv perf.c:451
+    #14 0x5590fb5a97e2 in main perf.c:558
+    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
+    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+    #17 0x5590fb4fd6d1 in _start perf[436d1]
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/dwarf-unwind.c | 35 ++++------------------
- tools/perf/util/machine.c       | 53 +++++++++++++++++++++++++++------
- tools/perf/util/machine.h       |  1 +
- 3 files changed, 51 insertions(+), 38 deletions(-)
+ tools/perf/tests/builtin-test.c | 15 +++++++-
+ tools/perf/ui/tui/setup.c       |  2 +-
+ tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
+ tools/perf/util/debug.h         |  1 +
+ 4 files changed, 69 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 4803ab2d97ba..525c46b7971a 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -15,7 +15,6 @@
- #include "symbol.h"
- #include "thread.h"
- #include "callchain.h"
--#include "util/synthetic-events.h"
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 14d30a5053be..358bccc75d40 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -6,6 +6,9 @@
+  */
+ #include <fcntl.h>
+ #include <errno.h>
++#ifdef HAVE_BACKTRACE_SUPPORT
++#include <execinfo.h>
++#endif
+ #include <poll.h>
+ #include <unistd.h>
+ #include <setjmp.h>
+@@ -230,6 +233,16 @@ static jmp_buf run_test_jmp_buf;
  
- /* For bsearch. We try to unwind functions in shared object. */
- #include <stdlib.h>
-@@ -37,24 +36,6 @@
- #define NO_TAIL_CALL_BARRIER __asm__ __volatile__("" : : : "memory");
- #endif
- 
--static int mmap_handler(const struct perf_tool *tool __maybe_unused,
--			union perf_event *event,
--			struct perf_sample *sample,
--			struct machine *machine)
--{
--	return machine__process_mmap2_event(machine, event, sample);
--}
--
--static int init_live_machine(struct machine *machine)
--{
--	union perf_event event;
--	pid_t pid = getpid();
--
--	memset(&event, 0, sizeof(event));
--	return perf_event__synthesize_mmap_events(NULL, &event, pid, pid,
--						  mmap_handler, machine, true);
--}
--
- /*
-  * We need to keep these functions global, despite the
-  * fact that they are used only locally in this object,
-@@ -202,8 +183,12 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 	struct machine *machine;
- 	struct thread *thread;
- 	int err = -1;
-+	pid_t pid = getpid();
- 
--	machine = machine__new_host();
-+	callchain_param.record_mode = CALLCHAIN_DWARF;
-+	dwarf_callchain_users = true;
-+
-+	machine = machine__new_live(/*kernel_maps=*/true, pid);
- 	if (!machine) {
- 		pr_err("Could not get machine\n");
- 		return -1;
-@@ -214,18 +199,10 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 		return -1;
- 	}
- 
--	callchain_param.record_mode = CALLCHAIN_DWARF;
--	dwarf_callchain_users = true;
--
--	if (init_live_machine(machine)) {
--		pr_err("Could not init machine\n");
--		goto out;
--	}
--
- 	if (verbose > 1)
- 		machine__fprintf(machine, stderr);
- 
--	thread = machine__find_thread(machine, getpid(), getpid());
-+	thread = machine__find_thread(machine, pid, pid);
- 	if (!thread) {
- 		pr_err("Could not get thread\n");
- 		goto out;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2531b373f2cf..c5e28d15323f 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -20,6 +20,7 @@
- #include "path.h"
- #include "srcline.h"
- #include "symbol.h"
-+#include "synthetic-events.h"
- #include "sort.h"
- #include "strlist.h"
- #include "target.h"
-@@ -128,23 +129,57 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	return 0;
- }
- 
--struct machine *machine__new_host(void)
-+static struct machine *__machine__new_host(bool kernel_maps)
+ static void child_test_sig_handler(int sig)
  {
- 	struct machine *machine = malloc(sizeof(*machine));
- 
--	if (machine != NULL) {
--		machine__init(machine, "", HOST_KERNEL_ID);
-+	if (!machine)
-+		return NULL;
- 
--		if (machine__create_kernel_maps(machine) < 0)
--			goto out_delete;
-+	machine__init(machine, "", HOST_KERNEL_ID);
- 
--		machine->env = &perf_env;
-+	if (kernel_maps && machine__create_kernel_maps(machine) < 0) {
-+		free(machine);
-+		return NULL;
- 	}
-+	machine->env = &perf_env;
-+	return machine;
-+}
++#ifdef HAVE_BACKTRACE_SUPPORT
++	void *stackdump[32];
++	size_t stackdump_size;
++#endif
 +
-+struct machine *machine__new_host(void)
-+{
-+	return __machine__new_host(/*kernel_maps=*/true);
-+}
-+
-+static int mmap_handler(const struct perf_tool *tool __maybe_unused,
-+			union perf_event *event,
-+			struct perf_sample *sample,
-+			struct machine *machine)
-+{
-+	return machine__process_mmap2_event(machine, event, sample);
-+}
- 
-+static int machine__init_live(struct machine *machine, pid_t pid)
-+{
-+	union perf_event event;
-+
-+	memset(&event, 0, sizeof(event));
-+	return perf_event__synthesize_mmap_events(NULL, &event, pid, pid,
-+						  mmap_handler, machine, true);
-+}
-+
-+struct machine *machine__new_live(bool kernel_maps, pid_t pid)
-+{
-+	struct machine *machine = __machine__new_host(kernel_maps);
-+
-+	if (!machine)
-+		return NULL;
-+
-+	if (machine__init_live(machine, pid)) {
-+		machine__delete(machine);
-+		return NULL;
-+	}
- 	return machine;
--out_delete:
--	free(machine);
--	return NULL;
++	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
++#ifdef HAVE_BACKTRACE_SUPPORT
++	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
++	__dump_stack(stderr, stackdump, stackdump_size);
++#endif
+ 	siglongjmp(run_test_jmp_buf, sig);
  }
  
- struct machine *machine__new_kallsyms(void)
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index b56abec84fed..180b369c366c 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -171,6 +171,7 @@ void machines__set_comm_exec(struct machines *machines, bool comm_exec);
+@@ -243,7 +256,7 @@ static int run_test_child(struct child_process *process)
  
- struct machine *machine__new_host(void);
- struct machine *machine__new_kallsyms(void);
-+struct machine *machine__new_live(bool kernel_maps, pid_t pid);
- int machine__init(struct machine *machine, const char *root_dir, pid_t pid);
- void machine__exit(struct machine *machine);
- void machine__delete_threads(struct machine *machine);
+ 	err = sigsetjmp(run_test_jmp_buf, 1);
+ 	if (err) {
+-		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
++		/* Received signal. */
+ 		err = err > 0 ? -err : -1;
+ 		goto err_out;
+ 	}
+diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+index 16c6eff4d241..022534eed68c 100644
+--- a/tools/perf/ui/tui/setup.c
++++ b/tools/perf/ui/tui/setup.c
+@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+ 
+ 	printf("-------- backtrace --------\n");
+ 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+-	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
++	__dump_stack(stdout, stackdump, size);
+ 
+ 	exit(0);
+ }
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index f9ef7d045c92..8987ac250079 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -14,11 +14,18 @@
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ #include <execinfo.h>
+ #endif
++#include "addr_location.h"
+ #include "color.h"
+-#include "event.h"
+ #include "debug.h"
++#include "event.h"
++#include "machine.h"
++#include "map.h"
+ #include "print_binary.h"
++#include "srcline.h"
++#include "symbol.h"
++#include "synthetic-events.h"
+ #include "target.h"
++#include "thread.h"
+ #include "trace-event.h"
+ #include "ui/helpline.h"
+ #include "ui/ui.h"
+@@ -298,21 +305,56 @@ void perf_debug_setup(void)
+ 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
+ }
+ 
++void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
++{
++	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
++	pid_t pid = getpid();
++	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
++	struct thread *thread = NULL;
++
++	if (machine)
++		thread = machine__find_thread(machine, pid, pid);
++
++	if (!machine || !thread) {
++		/*
++		 * Backtrace functions are async signal safe. Fall back on them
++		 * if machine/thread creation fails.
++		 */
++		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
++		machine__delete(machine);
++		return;
++	}
++
++	for (size_t i = 0; i < stackdump_size; i++) {
++		struct addr_location al;
++		u64 addr = (u64)stackdump[i];
++
++		addr_location__init(&al);
++		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al))
++			continue;
++
++		al.sym = map__find_symbol(al.map, al.addr);
++		if (al.sym)
++			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
++		else
++			fprintf(file, "    #%zd %p ", i, stackdump[i]);
++
++		map__fprintf_srcline(al.map, al.addr, "", file);
++		fprintf(file, "\n");
++		addr_location__exit(&al);
++	}
++	thread__put(thread);
++	machine__delete(machine);
++}
++
+ /* Obtain a backtrace and print it to stdout. */
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ void dump_stack(void)
+ {
+-	void *array[16];
+-	size_t size = backtrace(array, ARRAY_SIZE(array));
+-	char **strings = backtrace_symbols(array, size);
+-	size_t i;
+-
+-	printf("Obtained %zd stack frames.\n", size);
+-
+-	for (i = 0; i < size; i++)
+-		printf("%s\n", strings[i]);
++	void *stackdump[32];
++	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+ 
+-	free(strings);
++	__dump_stack(stdout, stackdump, size);
+ }
+ #else
+ void dump_stack(void) {}
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index a4026d1fd6a3..6b737e195ce1 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
+ void perf_debug_setup(void);
+ int perf_quiet_option(void);
+ 
++void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
+ void dump_stack(void);
+ void sighandler_dump_stack(int sig);
+ 
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
