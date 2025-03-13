@@ -1,160 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E71267B77
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 14:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658A2268FFC
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 16:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741875141; cv=none; b=WIKHMnriKF2jhBEGlEdhbOY2HH6smyYsRJKNaLPBhXJG+Gi0YWNlGwRrDrNptZ3LRt79jB2ZmurNZ1PCp0TyC7SW9+N0tREY6ktUGiR2tC90Pf7Ovopqt0iGSU+g6IZbYv9y85LYY7Z+GKTsobVrhp0PbN6bjugyfS0eAfnvTbI=
+	t=1741881684; cv=none; b=FsCJNOkOvzIIc4iVoD1GS3XZ+Ba5rVfrDMCTTg29U5RrvHCo9/92wgDA3NRIvSY1C9q1px6BN0ZIGUT9f9we8dxEL/SGj+AgJj5wAl+qdi0KFWn7jtck3jhADI/qTzDgOOvgEZZ6ckiEcJfgiY9XsYgJC9edqwOAF/Ko9Zwr7AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741875141; c=relaxed/simple;
-	bh=EQb0SSqK+nGH9Bh8+yrxOQuY4w2JsbtSQJQgNEbhL5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCngEtAv9h8UvavVdfm2UgRHRHEqtuoZctXnSN8CIj1R3MG8YmWuIhh6QN9rA7n+B4O4Se1At1fxjUcBDrgw1CeGKz4cC2eE4L8AcMbCWpEuwC0QLLRc4zgqh9CNSn/3srvUGwiZndbKPjf/+fLNC/qbiS1NrXX4bMb2Jf1Dzng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MvDU8a+0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741881684; c=relaxed/simple;
+	bh=He1qoD1LyuJLmPXOu6Sug+RnIL2fCie3WCh5VYdyMDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WPYiNtzGe1jeJ+U5v9kruc9XJnqLFfBXkXM0ljy/+MXCufSjzB+PSCdqewb4cux6Cu1e2Y7y/BlGpELoTUJbHVtZswiZ6fZJCLGH+Fc1l9Xu5WfByetQD5fvA/0qfuxzPHFfRxb5EYa4A7wr9B0qbQfHVyOjRG7Znqo13xEreG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pC+buNF7; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MvDU8a+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741875135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTSCTViFsCC8M3AWW7+HEFBBSa3sEutKnMAaO+/MsLQ=;
-	b=MvDU8a+0jLgMjbq4ump1yzYjjpxsx3LPnTHgmG5ho/QKHQInVLKmnbts+pB+fllFdGMVgm
-	o6JZi63lNnP7lrV+3c2CN1AqTo8Y9WuQQYUMbBhL+YBSIgB5OtzJ+lfiTmp67evL1/rlrg
-	MZpkBfqFEwt7T/XNdlYLS+ou7EtGVPc=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-8gUCB3avNLKN9SPwjjF6tA-1; Thu, 13 Mar 2025 10:12:13 -0400
-X-MC-Unique: 8gUCB3avNLKN9SPwjjF6tA-1
-X-Mimecast-MFC-AGG-ID: 8gUCB3avNLKN9SPwjjF6tA_1741875133
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e900f6dcadso23035226d6.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 07:12:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741875133; x=1742479933;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pC+buNF7"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2242ac37caeso147025ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 09:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741881681; x=1742486481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xTSCTViFsCC8M3AWW7+HEFBBSa3sEutKnMAaO+/MsLQ=;
-        b=t77zk/dHMpnHI4PAeMpUVNZTZNgrataunJ7lLpnF1pcQ7YHn6Wd1pFj6vPcR1H9z8B
-         WOuVvtOIHTXJI1+h8Z7aSw73UVA929Ii36S0mo4+KAurcW/aShFs3gM+1FWgQtIyc/Tg
-         HbgJU/mcDO+zJK4/Y8T7dueQffXqHf8U9k4R++37Uu6YRJatyuCVCp580sWSy+uQZxrj
-         ItLHuyCirAYX+B61FeGEdRaNOjgSG7XYRsxDVfok5ClB2M3txnI/qnpejj0yzCdEF879
-         zGo3seN0OUwkbPxEtIHceOuSOkcoFPGLJu/SDLKzIQDv6olyoHXmHJJtG2/21CkSHUFu
-         7ENw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvga9exX2DLhDFCkOiAXz8cE3FuI05tI2227SyEpBqQGMSPIzjDbExpUTY1cfhfpFCuk/1pAE1LXyDpSMv7Ssd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuEN8A4pTLNQYMeVPcK+T0lsnnrivaYUownF0DqErUsnZ6HrqX
-	24U8lrlEf9sfPgk/sX3D80geZ4+pcpnGEv4jlG5vz4NSBMhonw4YzR0SUDg4H51igPuMC/ZyLlv
-	DiUYSQfUa977Y0PFnbpaJMKGnkGtUNORep24kzea/yxU4jnZrb4bydaOQyG4LBKQpo6Y=
-X-Gm-Gg: ASbGncuaT19u2IkOjJkuZknV2aGxliumaXMEq3TyyP0MgAsEqVTOaB5mvXDUXncapHb
-	qWgaI3RmhmTSO9f4/ZGUBiILfAmIAyJWvP4uBA/FPEzRqkW3KVVNOYOZQ2DQueSVTbA8vcghs8R
-	3HrK+1DXsX8Q3vhrn+V7pxnf6CCOBygOSFWPWzuKzsnrApkYuoEJDQqHEWtXc+3k/zMpUoycoCw
-	WrHzog0xUQ/EO7E7ntpEgXP26swVCxQgVg3heGhJ4D245Q4vm4hEkyT6Tlsu1oJWRHonoS5AmqI
-	grvC0YU7IYM=
-X-Received: by 2002:ad4:5beb:0:b0:6e8:ed7f:1a79 with SMTP id 6a1803df08f44-6e9006773e7mr422214876d6.32.1741875133036;
-        Thu, 13 Mar 2025 07:12:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSdv1Udz8OiduVCV/r0UNSUpke1W8wSfiJZ1L2LpzbF7s+BBan2QBwjnmyG0rUa71XbBcyYw==
-X-Received: by 2002:ad4:5beb:0:b0:6e8:ed7f:1a79 with SMTP id 6a1803df08f44-6e9006773e7mr422214486d6.32.1741875132694;
-        Thu, 13 Mar 2025 07:12:12 -0700 (PDT)
-Received: from thinkpad2024 ([71.217.65.43])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade330c68sm9983166d6.82.2025.03.13.07.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 07:12:12 -0700 (PDT)
-Date: Thu, 13 Mar 2025 10:12:09 -0400
-From: "John B. Wyatt IV" <jwyatt@redhat.com>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] Introduce a C extension module to allow libperf
- usage from python
-Message-ID: <Z9LnuXCvK5P5KCiU@thinkpad2024>
-References: <20250313075126.547881-1-gautam@linux.ibm.com>
+        bh=W/yH+WMcOt8tNQM0srrtHpsC9U4iKncCQNGb3KLC61c=;
+        b=pC+buNF7gxlYWFm65eBLZnvX1MzvsibmZJ3C4MAGCKzJprEhcH7Oc6FwPHU7beCLR6
+         D6vuZBjPcFaO5+anoy+QAO/yxapJ0NCiAAKjWbGsiYGb1XCq7XAMW8uZmSwxZ0SNZ8Pr
+         pV4SuoHdLJfKxAqmlwkVE5CzX8AOPyMRpqIz6HhjHQCWGgPKcnD6HOzsz/BI+++eADee
+         j++lhFW1fOUqLuxWi5fRVyPXT+loDSBxixS4Yoismxu1oL/fQPsqnD6UV7VJAnfyqo6e
+         0GQeJEsFzMXG/LaXa0Hsa7ObfNUOp6tJJjUByzTF+4utanHsjHrGdJ7Gu9ZiInVR7+tE
+         w4og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741881681; x=1742486481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W/yH+WMcOt8tNQM0srrtHpsC9U4iKncCQNGb3KLC61c=;
+        b=e9sZ5Sz1NGQNLbiyDnu0WSSU8c+GaEK7ATdbg7HRMKnoYwksO2nZ+7boJl3Ov0+x3j
+         aVmTQbycuD+RcPq7akRPh+qMYxpxyL18VxBlV+g1jlYtKGCf2cjFwx70QjQnccNlQ6ct
+         EplHTmwn94uglD02kQgHdmab786EsYJ6KqZZ/Y8fN+ZjdfVbE3SvCzI45a3zp1rsDjBx
+         +dFPXxIs3LnkI3sgQ85nbTXyTnEIp4e6gklkSZH7MBInJhF01NLm51BBzCtTrZNpJlhq
+         aRCWlZ2hsUHkwi/rGzZ1O7/4OpmPNAPovCuQh3n9jbeHLANuFLwqw8immPuYvSLYGbkS
+         MGFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXGmgirhp+05YPsi2qGNePmc2VzWpFXgTJvSp7BqN4h6XYfW6hI1ZV0B3beGs2nJ6mR78aBkrrS7O50ubAA2K+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx30Pt/GAPKC1Aj7cG6rmuwQt4STD/2VrO6sHB1FOWXrsnbX3W2
+	iD2LOMgeZlKfhSWEN/2K9rqjPQdm0Uy75zcJwzfVzBpG/hxrcjlWJhUELkOrIQj8pe0/rbr+49+
+	dx37bmE/teQwsnQM3cgePXV3rO32EBCYnNmna
+X-Gm-Gg: ASbGnctIhjyDCcte7h+tdhJq/uDYwWsLuGBQdvQbtrPGGd5uaUlgbDXF/I3uqqlTD10
+	PfaPuKHs2xMdxdGlJd9YO0gld99Sy9q2T/+TEt542lBdegQpYxrG4F7FQotlr0QvbSx902wIFd4
+	ZxbZKW8QfwKMv5Hs3frf5oBPLcCe7wVumiXbXvChGb++QOBkv/mnsAVAA=
+X-Google-Smtp-Source: AGHT+IEfR+iXZ7BebnhxB5okisX5ERNMertQsNLMEMPpFQikCdkWp3eUopoaUifcDnJZ/HTnk/fkfvYLDMyu7hcQBE8=
+X-Received: by 2002:a17:903:19e8:b0:215:7ced:9d66 with SMTP id
+ d9443c01a7336-225c5322e12mr2999115ad.10.1741881681251; Thu, 13 Mar 2025
+ 09:01:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313075126.547881-1-gautam@linux.ibm.com>
+References: <20250313075126.547881-1-gautam@linux.ibm.com> <Z9LnuXCvK5P5KCiU@thinkpad2024>
+In-Reply-To: <Z9LnuXCvK5P5KCiU@thinkpad2024>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 13 Mar 2025 09:01:10 -0700
+X-Gm-Features: AQ5f1JrxRsSvm9uzSroxX2RwhQ6wbjbDcA0dzrSUad0a-XkWOT__3vkZ8beC4io
+Message-ID: <CAP-5=fWjca+SMBdsyPe8Ggsqrqz=ZzWqxDYhaF+pcYk0MJ12zA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] Introduce a C extension module to allow libperf
+ usage from python
+To: "John B. Wyatt IV" <jwyatt@redhat.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Gautam
+On Thu, Mar 13, 2025 at 7:12=E2=80=AFAM John B. Wyatt IV <jwyatt@redhat.com=
+> wrote:
+>
+> Hello Gautam
+>
+> On Thu, Mar 13, 2025 at 01:21:21PM +0530, Gautam Menghani wrote:
+> > In this RFC series, we are introducing a C extension module to allow
+> > python programs to call the libperf API functions. Currently libperf ca=
+n
+> > be used by C programs, but expanding the support to python is beneficia=
+l
+> > for python users.
+> >
+> > The structure of the patch series is as follows:
+> > 1. Patch 1 : Create wrappers for the perf structs which are used by
+> > examples/counting.c
+> >
+> > 2. Patch 2: Create the C extension module that maps and exposes the
+> > libperf functions to python programs
+>
+> May I ask why you are not using SWIG? With libcpupower the kernel has
+> already been using SWIG to generate Python bindings for a C user-space AP=
+I.
+>
+> This has several advantages including a much smaller footprint (you only
+> need to copy the header definitions into a .swg file), can generate for
+> several languages (Perl, Ruby, Java and C#), and SWIG is an active,
+> tested, and mature piece of software code that has been around for
+> almost as long as the Linux kernel.
+>
+> Python bindings including the makefile as an example:
+> https://elixir.bootlin.com/linux/v6.13.6/source/tools/power/cpupower/bind=
+ings/python
+>
+> How to use the bindings in a script:
+> https://elixir.bootlin.com/linux/v6.13.6/source/tools/power/cpupower/bind=
+ings/python/test_raw_pylibcpupower.py
+>
+> Original discussion:
+> https://lore.kernel.org/linux-pm/20240724221122.54601-1-jwyatt@redhat.com=
+/
+>
+> SWIG has been pretty useful as it helped me find two issues in the
+> libcpupower API that have been around for over 10 years:
+> https://lore.kernel.org/linux-pm/20240905021916.15938-1-jwyatt@redhat.com=
+/T/#mf04b4ba93f79fe68c20c1d88d8ed966164a1c7d7
+> https://lore.kernel.org/linux-pm/20250305210901.24177-1-jwyatt@redhat.com=
+/
 
-On Thu, Mar 13, 2025 at 01:21:21PM +0530, Gautam Menghani wrote:
-> In this RFC series, we are introducing a C extension module to allow
-> python programs to call the libperf API functions. Currently libperf can
-> be used by C programs, but expanding the support to python is beneficial
-> for python users.
-> 
-> The structure of the patch series is as follows:
-> 1. Patch 1 : Create wrappers for the perf structs which are used by
-> examples/counting.c
-> 
-> 2. Patch 2: Create the C extension module that maps and exposes the
-> libperf functions to python programs
+So I think we should probably get rid of libperf and re-integrate it
+back into the perf code. There are issues in the code, like removing a
+list element:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/lib/perf/evlist.c?h=3Dtmp.perf-tools-next#n58
+just leaks the removed element. Deleting the element means that the
+container evsel, rather than the libperf perf_evsel, leaks things like
+the name variable. We can add yet more call backs and complexity but
+I'm not sure what we're winning. Perhaps we can move things the other
+way, perf code into libperf, like machine, session, pmus, .. I'd
+prefer if we were to do that we refactored the code and adopted the
+same license as libbpf as both libraries have similar packaging
+issues. The viral GPLv2 on libperf is something of an issue. Perhaps
+we can also migrate this code to Rust.
 
-May I ask why you are not using SWIG? With libcpupower the kernel has
-already been using SWIG to generate Python bindings for a C user-space API.
+SWIG is fine, there is also CLIF, I'm way of dependencies as even a
+python dependency in the perf build is optional.
 
-This has several advantages including a much smaller footprint (you only
-need to copy the header definitions into a .swg file), can generate for
-several languages (Perl, Ruby, Java and C#), and SWIG is an active,
-tested, and mature piece of software code that has been around for
-almost as long as the Linux kernel.
+We already have perf python bindings, and I've been working to extend
+those for example in:
+https://lore.kernel.org/lkml/20250228222308.626803-1-irogers@google.com/
+and I've been working to expand those for things like hybrid CPUs. It
+seems a shame to reinvent all of that logic again on top of libperf.
 
-Python bindings including the makefile as an example:
-https://elixir.bootlin.com/linux/v6.13.6/source/tools/power/cpupower/bindings/python
+Thanks,
+Ian
 
-How to use the bindings in a script:
-https://elixir.bootlin.com/linux/v6.13.6/source/tools/power/cpupower/bindings/python/test_raw_pylibcpupower.py
-
-Original discussion:
-https://lore.kernel.org/linux-pm/20240724221122.54601-1-jwyatt@redhat.com/
-
-SWIG has been pretty useful as it helped me find two issues in the
-libcpupower API that have been around for over 10 years:
-https://lore.kernel.org/linux-pm/20240905021916.15938-1-jwyatt@redhat.com/T/#mf04b4ba93f79fe68c20c1d88d8ed966164a1c7d7
-https://lore.kernel.org/linux-pm/20250305210901.24177-1-jwyatt@redhat.com/
-
-> 
-> 2. Patch 3: A python variant of counting.c - counting.py to demonstrate
-> the usage of libperf from python
-> 
-> We have not added support for entire libperf, as we want to get
-> community feedback on the approach taken in this series.
-> 
-> Gautam Menghani (3):
->   libperf: Introduce wrappers for perf structs to be exposed to python
->   libperf: Introduce a C extension module for python
->   libperf: Add counting.py example to demonstrate libperf usage from
->     python
-> 
->  tools/lib/perf/Build                          |   1 +
->  .../perf/Documentation/examples/counting.py   |  74 +++
->  tools/lib/perf/Makefile                       |  12 +-
->  tools/lib/perf/include/perf/py_perf.h         | 431 ++++++++++++++++++
->  tools/lib/perf/libperf.map                    |   1 +
->  tools/lib/perf/py_perf.c                      | 262 +++++++++++
->  6 files changed, 779 insertions(+), 2 deletions(-)
->  create mode 100755 tools/lib/perf/Documentation/examples/counting.py
->  create mode 100644 tools/lib/perf/include/perf/py_perf.h
->  create mode 100644 tools/lib/perf/py_perf.c
-> 
-> -- 
-> 2.47.0
-> 
-
--- 
-Sincerely,
-John Wyatt
-Software Engineer, Core Kernel
-Red Hat
-
+> >
+> > 2. Patch 3: A python variant of counting.c - counting.py to demonstrate
+> > the usage of libperf from python
+> >
+> > We have not added support for entire libperf, as we want to get
+> > community feedback on the approach taken in this series.
+> >
+> > Gautam Menghani (3):
+> >   libperf: Introduce wrappers for perf structs to be exposed to python
+> >   libperf: Introduce a C extension module for python
+> >   libperf: Add counting.py example to demonstrate libperf usage from
+> >     python
+> >
+> >  tools/lib/perf/Build                          |   1 +
+> >  .../perf/Documentation/examples/counting.py   |  74 +++
+> >  tools/lib/perf/Makefile                       |  12 +-
+> >  tools/lib/perf/include/perf/py_perf.h         | 431 ++++++++++++++++++
+> >  tools/lib/perf/libperf.map                    |   1 +
+> >  tools/lib/perf/py_perf.c                      | 262 +++++++++++
+> >  6 files changed, 779 insertions(+), 2 deletions(-)
+> >  create mode 100755 tools/lib/perf/Documentation/examples/counting.py
+> >  create mode 100644 tools/lib/perf/include/perf/py_perf.h
+> >  create mode 100644 tools/lib/perf/py_perf.c
+> >
+> > --
+> > 2.47.0
+> >
+>
+> --
+> Sincerely,
+> John Wyatt
+> Software Engineer, Core Kernel
+> Red Hat
+>
