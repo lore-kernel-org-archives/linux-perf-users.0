@@ -1,132 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E341FBE9C;
-	Thu, 13 Mar 2025 07:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763FF136658;
+	Thu, 13 Mar 2025 07:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850947; cv=none; b=FFZsBYiUN297hh410+D2Q3ODlLlbQS45rBd6pwaTt9dBm42YfOKcOxk3QOGJLr+81INlrUTDALfS8xfEtNeQGa49TgxLGnNeMFEN2e8sS/tdz4wAhotg1mvVcuVgpZQeij3Z7kSuLogg7bn7X/bcBhsHm+qWkkt3NekD/JgFfjk=
+	t=1741852317; cv=none; b=dkUVDYdaSQ3KI51f1twFkpwCe6PPMqCFHGfPzCsNmT3ShFt4J0CZQzOydjgh8pAlw08t/usHezEz4I1hYwRneafFsu/aja/1/PqE6a0Bcpt6OOPZBrf8SB06PCW4EntwsE/NWcLIahinwheu0WlUgZGh4Bgup0/kh0VpM+U7u1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850947; c=relaxed/simple;
-	bh=bXd5Zvd7dZCJ4R1puUhsaSnoSdsh9qOuJCYZlCWoGgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jti9vEUTJoKX7SJty8uZoxC3N+F/1MwYrVlTDDwTpa4vR7pU/L6y+LjzlQDSdCoMMv53OAOWb4TD/rIa8IaOjSJoo/qIF2smC73BXWWduTm1bpRt27DAwMsvmjdciKPLz/TfxD80d+WbBJZlztqY1r2riwnor/BDoL/MSo3LwHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dw6NfMQk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741852317; c=relaxed/simple;
+	bh=tKuCtmvXOdt+AmllmsoMKicAwHKejG4OsQunB/NEQzE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XzW3Kwck1JGdF/dONfosYgDZbNpgtnQDdnjX7Z87Jr+I9PLZVLuR44JG6VhvLA4v/TpMSfdNjzJAtI6fWfYnqPzorn9C571d6jbmRIW6CEBI5QbmF69FeZJKJyJYRpNhzrSgctR7vL0MM3xdPTe/TnPCkBO6kdK35XG33bHkPlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mlRobX8o; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dw6NfMQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDF2C4CEDD;
-	Thu, 13 Mar 2025 07:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741850947;
-	bh=bXd5Zvd7dZCJ4R1puUhsaSnoSdsh9qOuJCYZlCWoGgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dw6NfMQko4STR5OR0+dkKeiLiHPVnPVIwaPlVHIXrgH/3QvFEp4FDClO9lW3KPBbo
-	 XNYNgGRRu9VX2X/iw47GZ+v8N3O0jMdxo4Egj88CjCFiLkhgBaE4EeXfm0Xt8JaT3N
-	 B4dw0g90oNdwfWgHb+tD4O7PrCxnUNEyk+Xcajep5EfUMRDuyG6HPS2IC3hGmLrVAf
-	 97+oYBs2OwbmBJU2X5xDFvUD8nqdJtSG7n3BuMf1ZPcUmSpVBNAcaJ8zz4p/gHjTia
-	 r+WZOwBAP/kdqFX1NnIFeH8q0CS6q4EkhEMD8sxpk09tAdacrLzMj0QempPAvCP+7o
-	 sK0rCcYjRT1Tg==
-Date: Thu, 13 Mar 2025 00:29:05 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/3] perf hist stdio: Do bounds check when printing
- callchains to avoid UB with new gcc versions
-Message-ID: <Z9KJQdUkEel3OP1X@google.com>
-References: <20250310194534.265487-1-acme@kernel.org>
- <20250310194534.265487-4-acme@kernel.org>
- <Z89f6JbpZUQoi2hR@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mlRobX8o"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CKpsiT001694;
+	Thu, 13 Mar 2025 07:51:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=cuS3jWuXoeuyqn3bc3ZtJaqyJqW7eyviiq59ToDvh
+	4w=; b=mlRobX8oSd4dho5GemY11hLtnfz5vX/aY5CHMbIUYOaZqMi29QW56Y9W0
+	LtzVQnPVRZzauSx/RUzRZD4fCDo+YmwJkvS6EOODjt+xM6JQ04pj1vqt/VqPzFdv
+	4Rigc7yBZSOjDPFZBTmsv8TVszFFlVAS+4HzFmVvvRuS27oI+4kYzR6Ap6eZD3c9
+	2RpapYhUuCVB0UJyf1klPnkH/5ASLZoZDf5ZvrLnmno7/P9J5hWHeNFefIhJ0IgP
+	Dm6x1TrdQqKVrtTuybnZULxZWN66BpLrmtWsRjSFZHgYZjeEzS9C2B1S4kh7dt7C
+	ZdC9kHuaPmWDMUmfKRpkkdmVn73KA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bhp5a9we-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 07:51:40 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52D7ceZe006960;
+	Thu, 13 Mar 2025 07:51:40 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bhp5a9wb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 07:51:40 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52D57tdG012259;
+	Thu, 13 Mar 2025 07:51:39 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsrgjr8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 07:51:39 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52D7pbm755116226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Mar 2025 07:51:37 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7176C2004D;
+	Thu, 13 Mar 2025 07:51:37 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0760E2004B;
+	Thu, 13 Mar 2025 07:51:35 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 13 Mar 2025 07:51:34 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] Introduce a C extension module to allow libperf usage from python
+Date: Thu, 13 Mar 2025 13:21:21 +0530
+Message-ID: <20250313075126.547881-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z89f6JbpZUQoi2hR@google.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IF02UFWGKyGJ7jdDIdZnYsaAFye6aSy_
+X-Proofpoint-ORIG-GUID: UArhdnRPi98sG5T0--iKaEKp1kXVuPIu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ impostorscore=0 adultscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ mlxlogscore=888 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503130058
 
-On Mon, Mar 10, 2025 at 02:55:52PM -0700, Namhyung Kim wrote:
-> On Mon, Mar 10, 2025 at 04:45:33PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Do a simple bounds check to avoid this on new gcc versions:
-> > 
-> >   31    15.81 fedora:rawhide                : FAIL gcc version 15.0.1 20250225 (Red Hat 15.0.1-0) (GCC)
-> >     In function 'callchain__fprintf_left_margin',
-> >         inlined from 'callchain__fprintf_graph.constprop' at ui/stdio/hist.c:246:12:
-> >     ui/stdio/hist.c:27:39: error: iteration 2147483647 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-> 
-> Hmm.. does it warn about a signed integer overflow?
-> 
-> 2147483647 is 0x7fffffff in hex and it should be INT_MAX.
-> I'm not sure what is the problem.
+In this RFC series, we are introducing a C extension module to allow
+python programs to call the libperf API functions. Currently libperf can
+be used by C programs, but expanding the support to python is beneficial
+for python users.
 
-Maybe the aggressive loop optimization can unroll the loop more than the
-INT_MAX...?  Anyway the fix is simple and makes sense.
+The structure of the patch series is as follows:
+1. Patch 1 : Create wrappers for the perf structs which are used by
+examples/counting.c
 
-> 
-> 
-> >        27 |         for (i = 0; i < left_margin; i++)
-> >           |                                      ~^~
-> >     ui/stdio/hist.c:27:23: note: within this loop
-> >        27 |         for (i = 0; i < left_margin; i++)
-> >           |                     ~~^~~~~~~~~~~~~
-> >     cc1: all warnings being treated as errors
-> >     --
-> >     util/units.c: In function 'unit_number__scnprintf':
-> >     util/units.c:67:24: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
-> >        67 |         char unit[4] = "BKMG";
-> >           |                        ^~~~~~
-> >     cc1: all warnings being treated as errors
-> 
-> This part belongs to the previous commit. :)
+2. Patch 2: Create the C extension module that maps and exposes the
+libperf functions to python programs
 
-I'll drop this part.
+2. Patch 3: A python variant of counting.c - counting.py to demonstrate
+the usage of libperf from python
 
-Thanks,
-Namhyung
+We have not added support for entire libperf, as we want to get
+community feedback on the approach taken in this series.
 
-> 
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/ui/stdio/hist.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-> > index 74b2c619c56c8ba3..7ac4b98e28bca82e 100644
-> > --- a/tools/perf/ui/stdio/hist.c
-> > +++ b/tools/perf/ui/stdio/hist.c
-> > @@ -1,4 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#include <limits.h>
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> >  #include <linux/string.h>
-> > @@ -24,6 +25,9 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
-> >  	int i;
-> >  	int ret = fprintf(fp, "            ");
-> >  
-> > +	if (left_margin > USHRT_MAX)
-> > +		left_margin = USHRT_MAX;
-> > +
-> >  	for (i = 0; i < left_margin; i++)
-> >  		ret += fprintf(fp, " ");
-> >  
-> > -- 
-> > 2.48.1
-> > 
+Gautam Menghani (3):
+  libperf: Introduce wrappers for perf structs to be exposed to python
+  libperf: Introduce a C extension module for python
+  libperf: Add counting.py example to demonstrate libperf usage from
+    python
+
+ tools/lib/perf/Build                          |   1 +
+ .../perf/Documentation/examples/counting.py   |  74 +++
+ tools/lib/perf/Makefile                       |  12 +-
+ tools/lib/perf/include/perf/py_perf.h         | 431 ++++++++++++++++++
+ tools/lib/perf/libperf.map                    |   1 +
+ tools/lib/perf/py_perf.c                      | 262 +++++++++++
+ 6 files changed, 779 insertions(+), 2 deletions(-)
+ create mode 100755 tools/lib/perf/Documentation/examples/counting.py
+ create mode 100644 tools/lib/perf/include/perf/py_perf.h
+ create mode 100644 tools/lib/perf/py_perf.c
+
+-- 
+2.47.0
+
