@@ -1,279 +1,265 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D981FA851
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 05:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9348E12B17C;
+	Thu, 13 Mar 2025 07:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741843801; cv=none; b=mhMB7VMH2/3od7umWaE1UVhhLcaaOuhozXLgK9SF9WAa6GSrCt9im4l0FAARtmowKvnzWpbS+J57TsAyshOk0xlsNIF0AtE1mBO3p9XbvN6UJ7GFULzttRL3pJWFMSSOwR6hgAu2HSr0fGgLhGZB1guFR+sAdr6Uua2r9GA7qQ4=
+	t=1741849903; cv=none; b=BObsDkaWHZ93cI9rXvCHzPxPJqiN9JLpX7niC5U7S7tMeG8wdn3bHTUsNDBWtOzT2nQvweqhJEuZsGtvPwEo2vw5fy9y0sm5m6m8YVejfWgFC8wAY1r5RNhxl3wBTlYkqxSnhNP8OrPP4TfaxpkMxBkJg5Z+8H9jCFOGvPAO9Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741843801; c=relaxed/simple;
-	bh=I+AitRafweBNjLK+ItMt1YQTcH9oIsWQ0Y4C9TRgoxc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=kOcESex8MKHK3dIvq3eqoaUGW7QnU9dCBZX8AArKTuc1HF46UfSnwj7JZo/g4e05dotv5wwfLr/CjJbegu4OC9nOL5qp4Uopm2uL2qhc5dsfzJD7ZocbfX6ciQ4+//+ohKMIENMYP0p55ZNNfdM/b2YSDCPuBuW7q9BKiUIfl1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QZxxh6Zc; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1741849903; c=relaxed/simple;
+	bh=q9Dl0FHGQmih4lZVAN04K/wTRrdLBiM11KRo6Ki9rEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CjByOSmHf83lyB598VUvH++8IVAU5uAG/nCJD8V1/HQHVV089p+Z/z8F5JzQ3BztfBoGPpXOFgDCFraDXale+N6YW7omHbkqWlOrhxpCaRgBBDYsIshc6t6DBQCWdenA3h1v6FCtLPqfU/k15TCWcSG/tErq6wXvPNVzeEKMW04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDH4wrX2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZxxh6Zc"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240a96112fso18060295ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Mar 2025 22:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741843799; x=1742448599; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jhuCtOZ0Nw0QyjR0+NS8fO75xwUE+0obsDVVi6fim1o=;
-        b=QZxxh6Zc1Ma7J1Usxb43KIrBQXzLcxIDOZgIPRh63DRru7WVnC5cZmxD0NdVnYo+ZN
-         m7Jj4C9XaoQN7wvh6h4Z0lSKA0JsAAeDHBaea3Q4Jplq2I1UrcahUc+k9jtLGsk1S5fn
-         1OkEEPDNmQj7bH1i/MRk7sIPkCTe8YWaBwkTL3hzOaVhXUv+67G6zeeaQiaQltT1pwXO
-         3dpfJSLdb4W4QByDKEvf/3xGa+bgxhyJlZq6CmKr1sUhwJAn4eEh/9SrUbE/xTxhy7QN
-         dj3eyEDfjtiAWRxlOJsR+wZzEwuidqWE+N+1Ssg7juU1PdCnea61aN/yZvovGH0ga3FQ
-         /DKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741843799; x=1742448599;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jhuCtOZ0Nw0QyjR0+NS8fO75xwUE+0obsDVVi6fim1o=;
-        b=ATLgRzosq8961mKy553cyL0dBVgWmZnEA+M6fxj+tXo/qhQ0vTzyXBhAOtF1NecCgX
-         NjLRemGQ/OPRenSdqPMoQ8LNvJi2ZCfCrr5kEzXvrkFjWrL1kYJw6ONQQEACjb9n5I/x
-         +I+eMW26xoxV1AIoNKeZ0N/UERxapbpv7T8xDiKtmtQKsE7HefLIJDDEpMUW6JIgruDv
-         m04csDleHt47vfCH8wD/cQ3yJqNxHwxRSOWXwrYxvxh3HoIEnyvMu3UG00HY6JhnFtWh
-         hJYRTLYksx3nn7ZQs/9E8HuRSozjUEuZXWgX+/Xnw+OQ5gUhHXdXNV4sSj6E63rdg5qP
-         GkgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwqU71qKd9BliZDw/MzOXkjZiybKJAc1kQwKLAacSL51CvEVhNxj1wI3pZ+3yLVwhyAT2nlaEOY4ngBp9X7AG5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw54RUcoF2lMUJdoKUKt+ys0zzmwiIbJr8lWL/DKCQ/lOhPBMoY
-	cDBk/nF2jVulGdosSmVxrs1HeNwuMrupIXoZ8ioyfRMAx8IHtcvzxiUDS4P7e7/tYDsiFXSE11X
-	uWS3rmA==
-X-Google-Smtp-Source: AGHT+IEA4yYXIJttaSID3iAibVCdp2nLabuEtam5BZ2XvBfQ8zrE7bzNl+BBpwH8uXhyZoUDyvWbtJdbTLTO
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:de85:e25e:4e36:1ea5])
- (user=irogers job=sendgmr) by 2002:a63:5d1b:0:b0:af5:3653:f036 with SMTP id
- 41be03b00d2f7-af53653f07cmr10510a12.3.1741843798600; Wed, 12 Mar 2025
- 22:29:58 -0700 (PDT)
-Date: Wed, 12 Mar 2025 22:29:52 -0700
-In-Reply-To: <20250313052952.871958-1-irogers@google.com>
-Message-Id: <20250313052952.871958-2-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDH4wrX2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A1CC4CEDD;
+	Thu, 13 Mar 2025 07:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741849903;
+	bh=q9Dl0FHGQmih4lZVAN04K/wTRrdLBiM11KRo6Ki9rEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDH4wrX262Bl/pXty7Tof6tDNbPo/AyqOM3f7eHVGWpenOwQUTomh+UZnLsJawuPR
+	 etJaZfPdMuc2JgoqLqpKWXh0sxBRNitJhbu/SLtzHqyCU8nynYpyXGmi6Zjk8wR0TZ
+	 mCF/amFQk+Y23iE0bNlSUeMXoTQifpX/TAycLijvkILamzG+uAAksftzSElsS6aJgr
+	 HBuZHnCE6/zHROd/BVVoCoGRUEDfxJE2ZzXRV1fU26svGsncAxCvLdk6QqNvNdvXJY
+	 plkWuxZdnoTsh9vDiR133bIBdp0M5znL3hRUR7tIj1DDFtDVCca9S47/7pg2GeM9B6
+	 SynX5brK73BdQ==
+Date: Thu, 13 Mar 2025 00:11:40 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9KFLGpenwOP32q3@google.com>
+References: <20250308003209.234114-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313052952.871958-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-Subject: [PATCH v1 2/2] perf debug: Add function symbols to dump_stack
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Howard Chu <howardchu95@gmail.com>, 
-	Andi Kleen <ak@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Anne Macedo <retpolanne@posteo.net>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250308003209.234114-1-irogers@google.com>
 
-Symbolize stack traces by creating a live machine. Add this
-functionality to dump_stack and switch dump_stack users to use
-it. Switch TUI to use it. Add stack traces to the child test function
-which can be useful to diagnose blocked code.
+On Fri, Mar 07, 2025 at 04:31:58PM -0800, Ian Rogers wrote:
+> This work builds on the clean up of system call tables and removal of
+> libaudit by Charlie Jenkins <charlie@rivosinc.com>.
+> 
+> The system call table in perf trace is used to map system call numbers
+> to names and vice versa. Prior to these changes, a single table
+> matching the perf binary's build was present. The table would be
+> incorrect if tracing say a 32-bit binary from a 64-bit version of
+> perf, the names and numbers wouldn't match.
+> 
+> Change the build so that a single system call file is built and the
+> potentially multiple tables are identifiable from the ELF machine type
+> of the process being examined. To determine the ELF machine type, the
+> executable's maps are searched and the associated DSOs ELF headers are
+> read. When this fails and when live, /proc/pid/exe's ELF header is
+> read. Fallback to using the perf's binary type when unknown.
 
-Example output:
-```
-  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-:  8: PERF_RECORD_* events & perf_sample fields:
+Now it works well for me!
 
----- unexpected signal (2) ----
-    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
-    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-    #4 0x7f4a91f01f68 in __sleep sleep.c:55
-    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-    #7 0x5590fb5b83ab in start_command run-command.c:127
-    #8 0x5590fb621572 in start_test builtin-test.c:467
-    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-    #11 0x5590fb5a9099 in run_builtin perf.c:351
-    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-    #13 0x5590fb5a9499 in run_argv perf.c:451
-    #14 0x5590fb5a97e2 in main perf.c:558
-    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
-    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #17 0x5590fb4fd6d1 in _start perf[436d1]
-```
+  $ sudo ./perf trace a32.out
+           ? (         ): a32.out/1267727  ... [continued]: execve())                                           = 0
+           ? (         ): a32.out/1267727  ... [continued]: brk())                                              = 0x57f33000
+       0.062 ( 0.003 ms): a32.out/1267727 access(filename: 0xf7f170cc, mode: R)                                 = -1 ENOENT (No such file or directory)
+       0.070 ( 0.011 ms): a32.out/1267727 openat(dfd: CWD, filename: 0xf7f1347f, flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+       0.070 ( 0.023 ms): a32.out/1267727  ... [continued]: close())                                            = 0
+       0.103 ( 0.009 ms): a32.out/1267727 openat(dfd: CWD, filename: 0xf7ee43e0, flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+       0.113 ( 0.002 ms): a32.out/1267727 read(fd: 3, buf: 0xff854990, count: 512)                              = 512
+       0.113 ( 0.049 ms): a32.out/1267727  ... [continued]: close())                                            = 0
+       0.113 ( 0.060 ms): a32.out/1267727  ... [continued]: set_tid_address())                                  = 1267727 (a32.out)
+       0.175 ( 0.001 ms): a32.out/1267727 set_robust_list(head: 0xf7ee556c, len: 12)                            = 
+       0.222 ( 0.005 ms): a32.out/1267727 mprotect(start: 0xf7ebc000, len: 8192, prot: READ)                    = 0
+       0.230 ( 0.004 ms): a32.out/1267727 mprotect(start: 0x565b1000, len: 4096, prot: READ)                    = 0
+       0.237 ( 0.003 ms): a32.out/1267727 mprotect(start: 0xf7f1f000, len: 8192, prot: READ)                    = 0
+       0.258 ( 0.006 ms): a32.out/1267727 munmap(addr: 0xf7ec9000, len: 108298)                                 = 0
+       0.258 ( 0.027 ms): a32.out/1267727  ... [continued]: brk())                                              = 0x57f33000
+       0.258 ( 0.031 ms): a32.out/1267727  ... [continued]: brk())                                              = 0x57f54000
+       0.258 ( 0.033 ms): a32.out/1267727  ... [continued]: brk())                                              = 0x57f55000
+       0.296 ( 0.008 ms): a32.out/1267727 openat(dfd: CWD, filename: 0x565b000a)                                = 3
+       0.316 ( 0.002 ms): a32.out/1267727 read(fd: 3, buf: 0xff8544a8, count: 4096)                             = 211
+       0.319 ( 0.001 ms): a32.out/1267727 read(fd: 3, buf: 0x57f332e0, count: 4096)                             = 0
+       0.319 ( 0.005 ms): a32.out/1267727  ... [continued]: close())                                            = 0
+       0.319 ( 0.010 ms): a32.out/1267727  ... [continued]: brk())                                              = 0x57f54000
+       0.337 (         ): a32.out/1267727 exit_group()                                                          = ?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c | 15 +++++++-
- tools/perf/ui/tui/setup.c       |  2 +-
- tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
- tools/perf/util/debug.h         |  1 +
- 4 files changed, 69 insertions(+), 13 deletions(-)
+Thanks,
+Namhyung
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 14d30a5053be..358bccc75d40 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,9 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+#include <execinfo.h>
-+#endif
- #include <poll.h>
- #include <unistd.h>
- #include <setjmp.h>
-@@ -230,6 +233,16 @@ static jmp_buf run_test_jmp_buf;
- 
- static void child_test_sig_handler(int sig)
- {
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	void *stackdump[32];
-+	size_t stackdump_size;
-+#endif
-+
-+	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-+	__dump_stack(stderr, stackdump, stackdump_size);
-+#endif
- 	siglongjmp(run_test_jmp_buf, sig);
- }
- 
-@@ -243,7 +256,7 @@ static int run_test_child(struct child_process *process)
- 
- 	err = sigsetjmp(run_test_jmp_buf, 1);
- 	if (err) {
--		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-+		/* Received signal. */
- 		err = err > 0 ? -err : -1;
- 		goto err_out;
- 	}
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 16c6eff4d241..022534eed68c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
- 
- 	printf("-------- backtrace --------\n");
- 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
--	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-+	__dump_stack(stdout, stackdump, size);
- 
- 	exit(0);
- }
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index f9ef7d045c92..8987ac250079 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -14,11 +14,18 @@
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-+#include "addr_location.h"
- #include "color.h"
--#include "event.h"
- #include "debug.h"
-+#include "event.h"
-+#include "machine.h"
-+#include "map.h"
- #include "print_binary.h"
-+#include "srcline.h"
-+#include "symbol.h"
-+#include "synthetic-events.h"
- #include "target.h"
-+#include "thread.h"
- #include "trace-event.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
-@@ -298,21 +305,56 @@ void perf_debug_setup(void)
- 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
- }
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-+{
-+	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-+	pid_t pid = getpid();
-+	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-+	struct thread *thread = NULL;
-+
-+	if (machine)
-+		thread = machine__find_thread(machine, pid, pid);
-+
-+	if (!machine || !thread) {
-+		/*
-+		 * Backtrace functions are async signal safe. Fall back on them
-+		 * if machine/thread creation fails.
-+		 */
-+		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-+		machine__delete(machine);
-+		return;
-+	}
-+
-+	for (size_t i = 0; i < stackdump_size; i++) {
-+		struct addr_location al;
-+		u64 addr = (u64)stackdump[i];
-+
-+		addr_location__init(&al);
-+		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al))
-+			continue;
-+
-+		al.sym = map__find_symbol(al.map, al.addr);
-+		if (al.sym)
-+			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-+		else
-+			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-+
-+		map__fprintf_srcline(al.map, al.addr, "", file);
-+		fprintf(file, "\n");
-+		addr_location__exit(&al);
-+	}
-+	thread__put(thread);
-+	machine__delete(machine);
-+}
-+
- /* Obtain a backtrace and print it to stdout. */
- #ifdef HAVE_BACKTRACE_SUPPORT
- void dump_stack(void)
- {
--	void *array[16];
--	size_t size = backtrace(array, ARRAY_SIZE(array));
--	char **strings = backtrace_symbols(array, size);
--	size_t i;
--
--	printf("Obtained %zd stack frames.\n", size);
--
--	for (i = 0; i < size; i++)
--		printf("%s\n", strings[i]);
-+	void *stackdump[32];
-+	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
- 
--	free(strings);
-+	__dump_stack(stdout, stackdump, size);
- }
- #else
- void dump_stack(void) {}
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index a4026d1fd6a3..6b737e195ce1 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
- void perf_debug_setup(void);
- int perf_quiet_option(void);
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
- void dump_stack(void);
- void sighandler_dump_stack(int sig);
- 
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
-
+> 
+> Remove some runtime types used by the system call tables and make
+> equivalents generated at build time.
+> 
+> v5: Add byte swap to dso__e_machine and fix comment as suggested by
+>     Namhyung.
+> 
+> v4: Add reading the e_machine from the thread's maps dsos, only read
+>     from /proc/pid/exe on failure and when live as requested by
+>     Namhyung. Add patches to add dso comments and remove unused
+>     dso_data variables that are unused without libunwind.
+> 
+> v3: Add Charlie's reviewed-by tags. Incorporate feedback from Arnd
+>     Bergmann <arnd@arndb.de> on additional optional column and MIPS
+>     system call numbering. Rebase past Namhyung's global system call
+>     statistics and add comments that they don't yet support an
+>     e_machine other than EM_HOST.
+> 
+> v2: Change the 1 element cache for the last table as suggested by
+>     Howard Chu, add Howard's reviewed-by tags.
+>     Add a comment and apology to Charlie for not doing better in
+>     guiding:
+>     https://lore.kernel.org/all/20250114-perf_syscall_arch_runtime-v1-1-5b304e408e11@rivosinc.com/
+>     After discussion on v1 and he agreed this patch series would be
+>     the better direction.
+> 
+> Ian Rogers (11):
+>   perf dso: Move libunwind dso_data variables into ifdef
+>   perf dso: kernel-doc for enum dso_binary_type
+>   perf syscalltbl: Remove syscall_table.h
+>   perf trace: Reorganize syscalls
+>   perf syscalltbl: Remove struct syscalltbl
+>   perf dso: Add support for reading the e_machine type for a dso
+>   perf thread: Add support for reading the e_machine type for a thread
+>   perf trace beauty: Add syscalltbl.sh generating all system call tables
+>   perf syscalltbl: Use lookup table containing multiple architectures
+>   perf build: Remove Makefile.syscalls
+>   perf syscalltbl: Mask off ABI type for MIPS system calls
+> 
+>  tools/perf/Makefile.perf                      |  10 +-
+>  tools/perf/arch/alpha/entry/syscalls/Kbuild   |   2 -
+>  .../alpha/entry/syscalls/Makefile.syscalls    |   5 -
+>  tools/perf/arch/alpha/include/syscall_table.h |   2 -
+>  tools/perf/arch/arc/entry/syscalls/Kbuild     |   2 -
+>  .../arch/arc/entry/syscalls/Makefile.syscalls |   3 -
+>  tools/perf/arch/arc/include/syscall_table.h   |   2 -
+>  tools/perf/arch/arm/entry/syscalls/Kbuild     |   4 -
+>  .../arch/arm/entry/syscalls/Makefile.syscalls |   2 -
+>  tools/perf/arch/arm/include/syscall_table.h   |   2 -
+>  tools/perf/arch/arm64/entry/syscalls/Kbuild   |   3 -
+>  .../arm64/entry/syscalls/Makefile.syscalls    |   6 -
+>  tools/perf/arch/arm64/include/syscall_table.h |   8 -
+>  tools/perf/arch/csky/entry/syscalls/Kbuild    |   2 -
+>  .../csky/entry/syscalls/Makefile.syscalls     |   3 -
+>  tools/perf/arch/csky/include/syscall_table.h  |   2 -
+>  .../perf/arch/loongarch/entry/syscalls/Kbuild |   2 -
+>  .../entry/syscalls/Makefile.syscalls          |   3 -
+>  .../arch/loongarch/include/syscall_table.h    |   2 -
+>  tools/perf/arch/mips/entry/syscalls/Kbuild    |   2 -
+>  .../mips/entry/syscalls/Makefile.syscalls     |   5 -
+>  tools/perf/arch/mips/include/syscall_table.h  |   2 -
+>  tools/perf/arch/parisc/entry/syscalls/Kbuild  |   3 -
+>  .../parisc/entry/syscalls/Makefile.syscalls   |   6 -
+>  .../perf/arch/parisc/include/syscall_table.h  |   8 -
+>  tools/perf/arch/powerpc/entry/syscalls/Kbuild |   3 -
+>  .../powerpc/entry/syscalls/Makefile.syscalls  |   6 -
+>  .../perf/arch/powerpc/include/syscall_table.h |   8 -
+>  tools/perf/arch/riscv/entry/syscalls/Kbuild   |   2 -
+>  .../riscv/entry/syscalls/Makefile.syscalls    |   4 -
+>  tools/perf/arch/riscv/include/syscall_table.h |   8 -
+>  tools/perf/arch/s390/entry/syscalls/Kbuild    |   2 -
+>  .../s390/entry/syscalls/Makefile.syscalls     |   5 -
+>  tools/perf/arch/s390/include/syscall_table.h  |   2 -
+>  tools/perf/arch/sh/entry/syscalls/Kbuild      |   2 -
+>  .../arch/sh/entry/syscalls/Makefile.syscalls  |   4 -
+>  tools/perf/arch/sh/include/syscall_table.h    |   2 -
+>  tools/perf/arch/sparc/entry/syscalls/Kbuild   |   3 -
+>  .../sparc/entry/syscalls/Makefile.syscalls    |   5 -
+>  tools/perf/arch/sparc/include/syscall_table.h |   8 -
+>  tools/perf/arch/x86/entry/syscalls/Kbuild     |   3 -
+>  .../arch/x86/entry/syscalls/Makefile.syscalls |   6 -
+>  tools/perf/arch/x86/include/syscall_table.h   |   8 -
+>  tools/perf/arch/xtensa/entry/syscalls/Kbuild  |   2 -
+>  .../xtensa/entry/syscalls/Makefile.syscalls   |   4 -
+>  .../perf/arch/xtensa/include/syscall_table.h  |   2 -
+>  tools/perf/builtin-trace.c                    | 290 +++++++++++-------
+>  tools/perf/scripts/Makefile.syscalls          |  61 ----
+>  tools/perf/scripts/syscalltbl.sh              |  86 ------
+>  tools/perf/trace/beauty/syscalltbl.sh         | 274 +++++++++++++++++
+>  tools/perf/util/dso.c                         |  88 ++++++
+>  tools/perf/util/dso.h                         |  58 ++++
+>  tools/perf/util/symbol-elf.c                  |  27 --
+>  tools/perf/util/syscalltbl.c                  | 148 ++++-----
+>  tools/perf/util/syscalltbl.h                  |  22 +-
+>  tools/perf/util/thread.c                      |  80 +++++
+>  tools/perf/util/thread.h                      |  14 +-
+>  57 files changed, 792 insertions(+), 536 deletions(-)
+>  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/alpha/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arm64/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/csky/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/loongarch/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/mips/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/parisc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/powerpc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/riscv/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/s390/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/sparc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/xtensa/include/syscall_table.h
+>  delete mode 100644 tools/perf/scripts/Makefile.syscalls
+>  delete mode 100755 tools/perf/scripts/syscalltbl.sh
+>  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
+> 
+> -- 
+> 2.49.0.rc0.332.g42c0ae87b1-goog
+> 
