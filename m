@@ -1,107 +1,136 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47921547FE;
-	Fri, 14 Mar 2025 05:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24E63BBE5;
+	Fri, 14 Mar 2025 05:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741930069; cv=none; b=E8gpKPQ4yXwTj2eOhfH//c4RtCZeBQNKaxV6Dzw4/u8MpsnrPG6wupaVwd+BgWLZbQiWJy2AHjDauVmwnXJcf4Mx0MVCo0wa/AlG/8K8uUeZHzl7+9ZcymXhqcDzh9z85PW0yE/FM6T1hEoZyL0O3kmguR416t+IkC4vgdDl2uw=
+	t=1741931152; cv=none; b=Rlo0JVpe22H93V6pzue26Hj83uqNE9mqWM7PJvkPeDUVT16p9BRh5GIeErYC/xI/lQj7UOK1pQ1Cw7tcA+kSelLxLeryxoHu5ip6fVT7bmfXXLnXmGbw0Y5dRznzuB/BNcVkOsjE2AQu+VN2i25bTpgZBNBgGMWQmeGJ0S+QhTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741930069; c=relaxed/simple;
-	bh=/RlrgyOfTR9+lV8sqDAKYIlgXMAjGP1oaBB2knBVdIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T2JDv1e/Kq0vfLrF//A/0p2p0rd/y7bxtz59X3utXaK0RMyIMt0LprdFNFP7eLYlvKCLmFlbYLDq7CT1ds0G+Nf4cJtuLWqpBCM6xZ9yp4xueVdcDnv/8eY/RG6Oo3rYMhRAxUNR8kWt+36PXrtU6yBHLh5+owHJC3eA+7jMf7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DARLe5rP; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1741931152; c=relaxed/simple;
+	bh=UIHoxzhPf3e+N6sft1joYHuPe2ZldXQM7xaEMHF8UQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsR8uvDzKbH/wMp0Y8yng2CE5ypPoHEl89mlkBhCb4MR0ULu2xj6Z8yEllph2bPSBzkuiY2/qNmJg/69EXzQIP1X9XGiT6hU7F5dYYzSACYq8VpyXmxppeAloNTPOs3QMP51bPpXAi8iPYyQhPVPp1Q+6uEsdwvSmSwfERslhCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9V5wLKv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DARLe5rP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=XHQX/r89tdEu/+r44z9pTYBcRICBqpqFI1LW+VGUlMs=; b=DARLe5rPwlxbVJWHqGFXJL6op5
-	Q+ourTWSJkYma8Y3Kvnc3Dm9a++q4HQbgIXVFaodRqnamxthAZzp9hTDdwEOHWFrNs3f5O7KQMKTm
-	KAeYLNAh8c8YDFC73Dypyy3Dcw57bBem0cydTklfHLyA+V2LWPY9JZl0zEukeV8R11cynF3c+kUFY
-	6hRI6CEqiITS29einh3KhyAD+rfidSyLtzdWhG8UpCFwtO+7K9EpA2PVbUeCNNnESfEwZ0+qILYrc
-	6+yvFjmkRZvFVdmalFLtHxlbuHRxZIYHZfMio/KKS69qbumHVa8xM2ws4RBWOQ5YCOqAvBPRoSjA6
-	/S1LYekw==;
-Received: from [223.233.77.29] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tsxa5-008TWs-Hx; Fri, 14 Mar 2025 06:27:43 +0100
-From: Bhupesh <bhupesh@igalia.com>
-To: akpm@linux-foundation.org
-Cc: bhupesh@igalia.com,
-	kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9V5wLKv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40296C4CEE3;
+	Fri, 14 Mar 2025 05:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741931152;
+	bh=UIHoxzhPf3e+N6sft1joYHuPe2ZldXQM7xaEMHF8UQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g9V5wLKvvzdYnmDpHxzPOfq0AxNt5QiDf5RPSpD1Z9RQFIFrZI9gA6Ga/OC4vbrhF
+	 zyDAK/ALK3zLwiZA6+/Q21+00Jl+xwDMvnbK9EKGk9+vsSta0y8nKGItKJlqK8TFK8
+	 Zmt6h+ElRvf3Xdm+rk+dFeLAJn4QCe7tdd5Bcs7zqnaInu6fdUEwMmqvuSl7jzpzlk
+	 y0LjtBD7LCjdJeUA0wCptEUIDygjsTNjui4I1ClM50r1tz72lQWQx5jEp6mYfhYszs
+	 K0h3QOuxoRTchgjOR1QZXwOpfJDwG7nh3cJRlxEKdJeH0c8hGd77+eWDt9B5y6qNkZ
+	 XKaU59OZuTVUg==
+Date: Thu, 13 Mar 2025 22:45:49 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	oliver.sang@intel.com,
-	lkp@intel.com,
-	laoar.shao@gmail.com,
-	pmladek@suse.com,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com,
-	andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl,
-	peterz@infradead.org,
-	willy@infradead.org,
-	david@redhat.com,
-	viro@zeniv.linux.org.uk,
-	keescook@chromium.org,
-	ebiederm@xmission.com,
-	brauner@kernel.org,
-	jack@suse.cz,
-	mingo@redhat.com,
-	juri.lelli@redhat.com,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com
-Subject: [PATCH RFC 2/2] fs/proc: Pass 'task->full_name' via 'proc_task_name()'
-Date: Fri, 14 Mar 2025 10:57:15 +0530
-Message-Id: <20250314052715.610377-3-bhupesh@igalia.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250314052715.610377-1-bhupesh@igalia.com>
-References: <20250314052715.610377-1-bhupesh@igalia.com>
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9PCjQ8PhOadVGQ8@google.com>
+References: <20250308003209.234114-1-irogers@google.com>
+ <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1>
+ <Z9M9-YhDJg3NgiUy@x1>
+ <Z9NEX3j_1RUvaFI0@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9NEX3j_1RUvaFI0@x1>
 
-Now that we have the get_task_full_name() implementation which allows
-the dynamically allocated and filled in task's full name to be passed
-to interested users, use it in proc_task_name() by default for
-task names so that user-land can see them through appropriate tools
-(such as 'ps').
+On Thu, Mar 13, 2025 at 05:47:27PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 13, 2025 at 05:20:09PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Still building, but noticed this on x86_64:
+> > 
+> > 105: perf trace enum augmentation tests                              : FAILED!
+> > 106: perf trace BTF general tests                                    : FAILED!
+> > 107: perf trace exit race                                            : Ok
+> > 108: perf trace record and replay                                    : FAILED!
+> > 
+> > 
+> > The first doesn´t help that much with verbose mode, haven't checked if
+> > before this series it was failing :-\
+> > 
+> > root@x1:~# perf test -vvv 105
+> > 105: perf trace enum augmentation tests:
+> > --- start ---
+> > test child forked, pid 19411
+> > Checking if vmlinux exists
+> > Tracing syscall landlock_add_rule
+> > ---- end(-1) ----
+> > 105: perf trace enum augmentation tests                              : FAILED!
+> > root@x1:~#
+> 
+> So:
+> 
+> root@x1:~# perf trace -e landlock_add_rule perf test -w landlock
+> root@x1:~# 
+> 
+> But:
+> 
+> root@x1:~# perf trace perf test -w landlock |& grep landlock_add_rule
+>     26.120 ( 0.002 ms): perf/19791 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffde75e2680, flags: 45) = -1 EINVAL (Invalid argument)
+>     26.124 ( 0.001 ms): perf/19791 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffde75e2690, flags: 45) = -1 EINVAL (Invalid argument)
+> root@x1:~# 
+> 
+> -e is having some trouble, when no event is specified, then it works.
+> 
+> Something in the changes made to:
+> 
+> static int trace__parse_events_option(const struct option *opt, const char *str,
+>                                       int unset __maybe_unused)
 
-Signed-off-by: Bhupesh <bhupesh@igalia.com>
----
- fs/proc/array.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the test, I think this should fix it:
 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index d6a0369caa931..2cbeb1584f8a4 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -109,7 +109,7 @@ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
- 	else if (p->flags & PF_KTHREAD)
- 		get_kthread_comm(tcomm, sizeof(tcomm), p);
- 	else
--		get_task_comm(tcomm, p);
-+		get_task_full_name(tcomm, sizeof(tcomm), p);
+Thanks,
+Namhyung
+
+
+---8<---
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index ace66e69c1bcde1e..67a8ec10e9e4bc8d 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -76,7 +76,7 @@ int syscalltbl__id(int e_machine, const char *name)
+ {
+        const struct syscalltbl *table = find_table(e_machine);
+        struct syscall_cmp_key key;
+-       const int *id;
++       const uint16_t *id;
  
- 	if (escape)
- 		seq_escape_str(m, tcomm, ESCAPE_SPACE | ESCAPE_SPECIAL, "\n\\");
--- 
-2.38.1
+        if (!table)
+                return -1;
 
