@@ -1,194 +1,158 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BA6204099
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Mar 2025 20:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7512F1E871;
+	Fri, 14 Mar 2025 20:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741984456; cv=none; b=IRC/9qiZHJ874gEPRbwMHMQ9LaAFC88tXvAeFkzLw3Rlm4KYizDWKHPjwd2hCk+jQ9NTSOgaR4sDVo19OiCmkQLDNCBGE60F0xpnA0A0z6YdnzYFFJkRPv/zdi/kSaGGEvX9uSH7QWOqQ/7E4JzFDgMWqA6Dd/ZbAeUGXcW3hlo=
+	t=1741985295; cv=none; b=Jj8PQSdNQhPf1k2WjyZd7WTClR6DVbagUV4dKq+WsLag5PN479/b5TZ7HZd3LrQ3hJ7g5tSnhFPbpBL9glqTqaAZvmEYQ5ukls1r7JKnxKOBNx5kgFloA1kznn2UD9te1Mzc6gdvKlkZu6eW2D9As/wkEVWOt4AHt1PhkmRH0hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741984456; c=relaxed/simple;
-	bh=c4wwXFuyd+09V8nYlFwZSaI4yQEVtJ2TGuKQbNyPRfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EqnLarVcw09EEHlwoDxlnqxZEu+l6HZ9B5+KrwOz5QnyyMX0NVzRjiUZIcN9MmB0Ckok9UdKhckDs0upTWRav/KeCoJN4FTCQYPdxI0NFRp38yZiUq44twRSZR3wqBvljxtPtFgw8zhNM35PTaUEldKgtuIxinpRVbMIfWWZi8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BiYyAKxa; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741985295; c=relaxed/simple;
+	bh=QZITLRQh5Pilrk+i/O0RCZEME5s/otaVmwmlBiRuMuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnLn0QdN+7AG9UXtmCJh2lgjbWrTCW4tGRSoTavL5ufJAF9XCg09TOnxwTRfO8cuXiIXyv5QjoSyPiMTl/9to/Cz5mNhgsv6xMHi+Q+w03MiSK3JBSWVjlDLvHMqGK+qBfp5VHpvnB8o0/jRD/KbK/YTdLlDrDGTSMSt7CV/G/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3Ixpg0H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BiYyAKxa"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2242ac37caeso39895ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Mar 2025 13:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741984452; x=1742589252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a9Yo0jce7GsP33A0Q9dWejB0soHGZhgKYNgRPCzK2O8=;
-        b=BiYyAKxaP6RgUoWVRpwm0ikmve5UwQevwQmc1fMNO/KW17GgsN1e/7j2jgp1CYLdjg
-         HcLbxlvtIRrLoNvq3BBgix8G1YclkE6vWKDZIuVi649eGgeSj8EkvclSKATSgL400q1a
-         9DIWjusN97sajLYokL+fi6fgua78fnDdgOhS3iXKcb51l3n3uI9OwPkf63OktbPmnEM9
-         4FQnyJVK97XzQoNR6Qg/MIzYU1RnX6OnjFr4nshks3+cDT2qH9UrX4oE92uxSuzmxmnu
-         F2EetlS2XwBdjAOxARhk7PYirQcVPo/7UXoDwj47dsk72p2IkQCKbESLjQFHpcDjuasj
-         Z8ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741984452; x=1742589252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a9Yo0jce7GsP33A0Q9dWejB0soHGZhgKYNgRPCzK2O8=;
-        b=FTH7nkSpFz9emPANDV6sRbIIwwiITKt9AFCtfkqzYwUzmpF3V5HgrzUmaV539XJFS0
-         debs1MSIB6Sg1eZ28WOceeymntDRnwl3IEDEMxKy+GcDE7lAK4YCk3pDblXe3qVwR9iZ
-         2p8D4y9/nt0OFTgQK6tCarg3vDiWs/Au8kDJg818YdoR/AOsxGfvoMtMi/qhX0em5gyO
-         zEKX8Eix+KmshuDvFaAMh1Lwi8ZOPSPK42wPwAXp3uswAtQ1BeuGxs9Wfq/ww/3W16QT
-         5wzpf/OJ4TRD0jNTP4vu5oiJ4NnTw8m45IGesZxPIDJsCEkgwDEdbxUwAHcTJ6yKopbb
-         jjRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWl2SMMplIIvys5E33v+utYb7lFLJjAIjdf6169P/BXS5tKbUkge/648kgWvuieuLzKgEPSOkvrVmrAPHnFa+HO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDV6aYV1DE5p1YRMs+v3rgDJCjwpKdk8GGuViBj9RzJ5F9gCUl
-	JwHuDueZ1ffS9blmK6UuhuEoy1D2c93maZCIoz1GC9oUoEf5FQurSDVJOekU8DVOV1rGKPg6wBy
-	wvJwbCiDc5LpwXm4iScUEq0Tk10oUsUKzVVpB
-X-Gm-Gg: ASbGnctWZqNiJvTyPe8URhwTsNzfqkNzpthlU+TZRdZsBNNvBWKInFVsAbjvYb9bkxG
-	6qNvhOQIJVLIVPzatJ/Bn/a5sxfQMVWqXV1yPOxfIzemrh2A+/9VUDPvcRvh02bEp+84XGQ2d6M
-	qi6FjfH+xdqJEd0faW3ZYaMarHK/8rbLPXfn5yRFHPfbLo8bdN9XNY0Xs=
-X-Google-Smtp-Source: AGHT+IH8lndJdL7NKJPYr5hvLG6zZyAsU+28Sd0KOcd1NkXO/cXOf7zDj6pw0lueMe4InFY+SymZ15Oxm8ynkeetjBg=
-X-Received: by 2002:a17:903:2f82:b0:21f:3c4a:136f with SMTP id
- d9443c01a7336-225f3eb05e9mr547905ad.28.1741984451984; Fri, 14 Mar 2025
- 13:34:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3Ixpg0H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6662EC4CEE3;
+	Fri, 14 Mar 2025 20:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741985294;
+	bh=QZITLRQh5Pilrk+i/O0RCZEME5s/otaVmwmlBiRuMuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L3Ixpg0HJRCUFTfxE27Wt1rf8UBwz/oBrqEwQ9TeF9/iO30PlBJ8WNVSSD5qv5EqV
+	 0QZowG9NQuNgXghNkjEX/Tx//JTcWhTB+KMh7ybKLX5Td2nN+NXi3lYZEhzxwVPsXr
+	 CBZvSaTK2r4/M/SSF53bjnEDUhx9cygiadLNhksopMJag21XS1RvvDrHOOiyQvC4q3
+	 KzpDNpGOq86V8Bs8t/v0iom/0v/rp39B2r7cXw8M5qtlRboDqOAiyuruu8z1dCjK62
+	 g33yb3zw2Yj9QIlS8v0fOot5OPXhLXXBjoIA7/RltVeW6qxvels5qW8AGtYIxV/Lww
+	 tropxqqdJRitQ==
+Date: Fri, 14 Mar 2025 17:48:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9SWDGsdgagMr8PV@x1>
+References: <20250308003209.234114-1-irogers@google.com>
+ <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1>
+ <Z9M9-YhDJg3NgiUy@x1>
+ <Z9NEX3j_1RUvaFI0@x1>
+ <Z9PCjQ8PhOadVGQ8@google.com>
+ <Z9RjHpEJGWtj8PAM@x1>
+ <Z9Rm0W6YLpxKIcI1@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
- <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
- <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
- <CAP-5=fV_z+Ev=wDt+QDwx8GTNXNQH30H5KXzaUXQBOG1Mb8hJg@mail.gmail.com>
- <Z9NbFqaDQMjvYxcc@google.com> <Z9RiI9yjpMUPRYZe@x1>
-In-Reply-To: <Z9RiI9yjpMUPRYZe@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 14 Mar 2025 13:34:00 -0700
-X-Gm-Features: AQ5f1Jp2oSwzsxV6loOKp3swePrskzYf2sJiobz94hX3O8DCQYyq7eJZBKLjY0k
-Message-ID: <CAP-5=fVGV=dbidHic4ae6EHV4cLF2M11wD17LsWntvhq_fcVTw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	Daniel Xu <dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9Rm0W6YLpxKIcI1@x1>
 
-On Fri, Mar 14, 2025 at 10:06=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Mar 13, 2025 at 03:24:22PM -0700, Namhyung Kim wrote:
-> > I think #ifdef placements is not a big deal, but I still don't want to
-> > pull libcapstone details into the perf tree.
->
-> > For LLVM, I think you should to build llvm-c-helpers anyway which means
-> > you still need LLVM headers and don't need to redefine the structures.
->
-> > Can we do the same for capstone?  I think it's best to use capstone
-> > headers directly and add a build option to use dlopen().
->
-> My two cents: if one wants to support some library, then have its devel
-> packages available at build time.
->
-> Then, perf nowadays has lots of dependencies, we need to rein on that,
-> making the good to have but not always used things to be dlopen'ed.
->
-> Like we did with gtk (that at this point I think is really deprecated,
-> BTW).
->
-> gdb has prior art in this area that we could use, it is not even a TUI
-> but it asks if debuginfo should be used and if so it goes on on
-> potentially lenghty updates of the local buildid cache they keep (which
-> is not the one we use, it should be).
->
-> And in the recent discussion with Dmitry Vyukov the possibility doing a
-> question to the user about a default behaviour to be set and then using
-> .perfconfig not to bother anymore the user about things is part of
-> helping the user to deal with the myriad possibilites perf offers.
->
-> gdb could use that as well, why ask at every session if debuginfod
-> should be used? Annoying.
->
-> I think perf should try to use what is available, both at build and at
-> run time, and it shouldn't change the way it output things, but should
-> warn the user about recent developments, things we over time figured out
-> are problematic and thus a new default would be better, but then obtain
-> consent if the user cares about it, and allow for backtracking, to go
-> and change .perfconfig when the user realises the old output/behaviour
-> is not really nice.
->
-> But keeping the grass green as it used to be should be the priority.
+On Fri, Mar 14, 2025 at 02:26:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> it finds the pair, but then its sc->args has a bogus pointer... I'll see
+> where this isn't being initialized...
 
-So I don't understand what you are saying. If I have libcapstone
-installed should the build link against it or just use its headers for
-dlopen? Is declaring structs/constants to avoid needing the library
-acceptable?
+Breakpoint 4, trace__find_usable_bpf_prog_entry (trace=0x7fffffffa510, sc=0x1046f10) at builtin-trace.c:3874
+3874			bool is_candidate = false;
+(gdb) n
+3876			if (pair == NULL || pair == sc ||
+(gdb) p pair
+$7 = (struct syscall *) 0x1083c50
+(gdb) p pair->name
+$8 = 0x81478e "accept4"
+(gdb) n
+3877			    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
+(gdb) p i
+$9 = 1
+(gdb) n
+3876			if (pair == NULL || pair == sc ||
+(gdb) n
+3880			printf("sc=%p\n", sc); fflush(stdout);
+(gdb) n
+sc=0x1046f10
+3881			printf("sc->name=%p\n", sc->name); fflush(stdout);
+(gdb) n
+sc->name=0x6c66202c786c3830
+3882			printf("sc->nr_args=%d, sc->args=%p\n", sc->nr_args, sc->args); fflush(stdout);
+(gdb) p sc->nr_args
+$10 = 1935635045
+(gdb) p sc->args
+$11 = (struct tep_format_field *) 0x257830203a6e656c
+(gdb) p *sc
+$12 = {e_machine = 540697702, id = 807761968, tp_format = 0x657075202c786c38, nr_args = 1935635045, args_size = 1634427759, bpf_prog = {sys_enter = 0x257830203a726464, 
+    sys_exit = 0x7075202c786c3830}, is_exit = 101, is_open = 101, nonexistent = 114, use_btf = 95, args = 0x257830203a6e656c, 
+  name = 0x6c66202c786c3830 <error: Cannot access memory at address 0x6c66202c786c3830>, fmt = 0x257830203a736761, arg_fmt = 0x786c3830}
+(gdb) 
 
-The patches as they are will link against libcapstone if it's
-installed (just as currently happens) if not it will try to use dlopen
-at runtime, if that fails then you get the current no libcapstone not
-available at build time behavior. To support this a minimal amount of
-structs and constants are necessary. See here:
-https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
-ls/perf/util/llvm.c#L21-L58
-https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
-ls/perf/util/capstone.c#L23-L132
+Ok, ran out of time, but if I simple avoid the second loop in:
 
-The patches try to make it look as though the same function exists
-with dlopen or directly calling by turning for example "cs_disasm"
-into:
-```
-static size_t perf_cs_disasm(csh handle, const uint8_t *code, size_t code_s=
-ize,
-uint64_t address, size_t count, struct cs_insn **insn)
-{
-#ifdef HAVE_LIBCAPSTONE_SUPPORT
-return cs_disasm(handle, code, code_size, address, count, insn);
-#else
-static bool fn_init;
-static enum cs_err (*fn)(csh handle, const uint8_t *code, size_t code_size,
-uint64_t address, size_t count, struct cs_insn **insn);
+static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_machine)
 
-if (!fn_init) {
-fn =3D dlsym(perf_cs_dll_handle(), "cs_disasm");
-if (!fn)
-pr_debug("dlsym failed for cs_disasm\n");
-fn_init =3D true;
-}
-if (!fn)
-return CS_ERR_HANDLE;
-return fn(handle, code, code_size, address, count, insn);
-#endif
-}
-```
-That is with the library linked it is just a direct call otherwise
-dlopen/dlsym are used. This means that the perf code using the library
-is unchanged except turning "cs_disasm" into "perf_cs_disasm" and we
-can unconditionally assume the perf_cs_disasm function will be
-available.
 
-If we don't create the structs/constants ourselves, which I think is
-where controversy lies, then any function that calls cs_disasm needs
-to handle a situation where there is no cs_disasm at build time. I was
-trying to avoid this clutter in the code and just have things at the
-library boundary. The structs/constants become necessary as we can't
-assume we have access to the header file to support perf's current
-build.
+I.e. the one that starts with:
 
-Thanks,
-Ian
+        /*
+         * Now lets do a second pass looking for enabled syscalls without
+         * an augmenter that have a signature that is a superset of another
+         * syscall with an augmenter so that we can auto-reuse it.
+
+This:
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e0434f7dc67cb988..3664bb512c70cabf 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3989,6 +3989,8 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
+                        goto out;
+        }
+ 
++       return 0;
++
+        /*
+         * Now lets do a second pass looking for enabled syscalls without
+         * an augmenter that have a signature that is a superset of another
+⬢ [acme@toolbox perf-tools-next]$ 
+
+
+Then all works, we don't reuse any BPF program, but then that is an
+heuristic anyway, that is tried becuase landlock_add_rule has a pointer
+argument:
+
+root@number:~# perf trace -e landlock_add_rule perf test -w landlock
+     0.000 ( 0.003 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff6f2bb550, flags: 45) = -1 EINVAL (Invalid argument)
+     0.004 ( 0.001 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7fff6f2bb540, flags: 45) = -1 EINVAL (Invalid argument)
+root@number:~# perf test enum
+105: perf trace enum augmentation tests                              : Ok
+root@number:~#
+
+So its some sort of syncronization on the various new tables, sorted by
+name, etc that then when iterating over the syscalls ends up using a sc
+that is not initialized.
+
+- Arnaldo
