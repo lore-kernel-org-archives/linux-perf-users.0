@@ -1,241 +1,228 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707F814884C
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Mar 2025 05:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741931711; cv=none; b=UziHoQO9cX0kA9ti0ZmmPXtrUYHJX55swz6pOEnJr1R6KCMfr0EAGwSDF4SOOWQnNmgISSg63gQ6kqHyfqBB3fdAfU3rBX635DfTuIKAxeOsDSlGEx11RUGxTC4uhjMb6C6339tOJS5IwKPfXR0GYctnjFGX1k/UwQreHd2B5BI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741931711; c=relaxed/simple;
-	bh=urZDD7SqMI1dPeUfSX17Ch/qC8OVmVTVKPjzd7UPYPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OOp9CN24/LN9juv675RX9mjy2Uk8RMhS3gjhhjaJeKjh58YFFAsFfvBnA2AvdXK2FAjBYt1tqxE93Q5VVbel2wBTgTaUrESrInFSb1NF7tMFgxetJDs6t6PlJVOQ/DFzgKoyd6Ol5V+Fm5Y597F55oOAk+O9U7SmaEkIBCErYiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T43dQIdq; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C32D17D2;
+	Fri, 14 Mar 2025 07:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741935878; cv=fail; b=fyHZGhgDjur/7pVLxwZ7qWefDseDVHXFur/zO7UHEaYYIC8rl7yRXERqrsb8zm2Pkx6vheYkpzHeaiRUZP1kwM2MmJtXPZ6/+jD7fvEqGeZ2EVZn3v1sVXcaczI3hW/CsnADf+pfysBSM2nvY9GXn0RmVqm6bp/8Eephirev31I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741935878; c=relaxed/simple;
+	bh=MCsYRxuYP4GLhy3zxhoTiXxHM1ocXnWJTvZwivA7yf0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=i+5pqUHW5EjjrXyhJDklO3CpSeR+96k5Mpx8RQSt1WECz7ehUicbCWkCrdxR8NxuT7TT+N3NFnFYhFm8lhAnWwolwVYLSsuiQtNELmELJdUv35vAbOJqTLB5S9MyhBGca1G9JlwPPNi7ucZmGIDPcQkxlEr/keTWZG+ROWwAzoc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T51wbYf5; arc=fail smtp.client-ip=40.107.237.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T43dQIdq"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2242aca53efso63375ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Mar 2025 22:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741931708; x=1742536508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tyhsHWhKQvd+JYS7FBXku46dzZupP9OzOBkxq4HnRPc=;
-        b=T43dQIdqyp3ytr1kRatF9RVwnfYguJH8eH6Z8hG5m9i5cOottoKMBaATR0yWKSq+34
-         qNVZJ6MuekSYZNME0YEHBB5R5OH5oSl3ZzjKTnt8m/moqURrMyYf/ng61i6O89aAnCgT
-         A41VwfCIKOhW8FelbyC/Htx8DCErw4vjNyv3WOTK6vVetBkdENBDqwAep00dUdVIXF2T
-         q6yU7jJlwhbJobh7poKv6wGkkIXuuzSvWGBPJhDggqvgz06dzNd0O/0OD4BFya7v2/CD
-         0YZQWdDGnPUiUqCRGBnU21y54iYhIrN4CxLfTlPn0HBZqtBKUKtGwZkCqk/v+PPRWL9m
-         O+aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741931708; x=1742536508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tyhsHWhKQvd+JYS7FBXku46dzZupP9OzOBkxq4HnRPc=;
-        b=mBoZKW7Qw9/8vYGbtqwLdPHEFjexTopTO/wHUzT5AsQ1O2k7BFjVdCddCzwmgLUtOZ
-         MWtQ/qxzUGpkZSTsdcYPMRYf6wCw210CBFRfJgjz18dUmkHElSQHq54m90f5GrcpkbAt
-         My3NXL94Bb3lhYx6jJ2bysbeDpLBwFODygASBwizU8w+7H6yiBTrDZCixI6i80zt2L74
-         5/TZ2b7LGBqdW/EPAmx+S2zskUXf0qbokCf1FNaSe/VNyaycxXpdw0seJxyny7/EXYsb
-         XXKOEogj/lyS9CPWsdL+Y3kR0mUapogMhE5d9ITf01tx6WGlIbGPNNZhd/fc6l1+uyXP
-         NrfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtNecL8K4Oyy5W93hacBblEQMXszef1NKbHro8YtcB29pmdyvUsGS/MPmddZXj0ZdVqyTXPD/oxH4NWVtb33Jf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDyN5vuodC/TNWmr0RQHFvAfuvdiej30V3oZ/gVw26AlfY+aNU
-	qeVvF83+kerfRtSbAjv3d/Yk617lVl8GehVLxcjDiy/r4cfVr/oNXSwCzvOnhI5uPU1n3D0INBF
-	8To8QssqKBxWO6Ew9fHNebhnFIR/Sidlf9El3
-X-Gm-Gg: ASbGncvmN6Q9Xats/XgtEHXCBZwxKYkOU73evyH9Ykg7RRouZ7ceYH+Hp9DSbddYUAG
-	u+OK2+56qAREab86Di9Pa4YzX/laVp1fE+ns5ZIFGArMb7zSUZlezfVJf9+DhVD43dWOnHXBYSH
-	aDjFz82S6JsVVAreAXfSLGsbmNQ7s=
-X-Google-Smtp-Source: AGHT+IEgLWIAjxCjYNH0X+NtNqkuwI/bPH4Uumyk01Hxp41RAM67Lx0FYNOYHRHcAIdc8VeJeEOB7hLlngI/eMqwcbI=
-X-Received: by 2002:a17:902:d509:b0:21f:4986:c7d5 with SMTP id
- d9443c01a7336-225de74a016mr2010415ad.8.1741931708229; Thu, 13 Mar 2025
- 22:55:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T51wbYf5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rTwj1d6MzI8pe7khVVlwQ68ge8svWCYr3Gz6/sEcM6w2p1nSZytw27OUrIKaRKAF0a7PBIxLsew+AEkuh/qmINU8w037C6llixHpCGjwLICpkj0yRQ8SgRicR0vHjqKBKU01qk8TgGkSEoLO0x/Y5rgZc+Uus1iKnNLtupoVH2LLNcxeh6YqO1eFNBBAV/FhS8ApLbcmMOTlwlqioqNOIqaQ46JajEUy0i1G7EDjEJyxU8yDlEnURVrpZXvlifUfOKiBNm0g7mTTosbAdLPMu2q0/fGP78tJKrTUHMosf1SVKlUrDk7TZ7MeK+FPfjr3AP3QAupJIVK6ttwjL0mMpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oi6U45Y0HMYCm9f77drNN7aGqi8k1tC8dfli2k31ugI=;
+ b=QvtGPN6pKeye7/GyXgN/QvGLremJ5zL72wDKjuq9CVcX513fwDAPXMy+GITbM4PoqhrUAevTMGxsKpkrJWLgIzG3gT5tASlTT1TlZbj8XJ5wQpgtn8VhKysXoSzGJGkn7vGizFHDMIRIKE7GCtlkpm3s+2G0vues7s+oykaCmv3ogrz3JoDq+htFlA8JHsIadXNWUiKx/JVQfjZGne6dWsJdaNRL2uoSOAtHFPZf3ZUKJ2dd05pLgoRmbox98wr/7DrKRFnPlQ8RHoLY5CYf7t3twckUGTp/uCzPHyVc3PRKSt9eE+z3Nn4FMHTCr5k3C5OlOVXbkOpm4hhZDSjY2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oi6U45Y0HMYCm9f77drNN7aGqi8k1tC8dfli2k31ugI=;
+ b=T51wbYf5ky8wQY5WU8MeFy9jzGmpt//aMlNzDqKWQPgGFKYEUh+pmDFtG7quLcWZpoxLHZJeGrsZuVTT2iEq64kBF79H9BJT0EgxAl7UN5yWXRf0Z738fgTb22ycNnG0Qj+4OlB9CiE7n3sVEfxcbOgdzxL7jbR+rNiNTf2jzWM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by BY5PR12MB4034.namprd12.prod.outlook.com (2603:10b6:a03:205::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Fri, 14 Mar
+ 2025 07:04:29 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291%4]) with mapi id 15.20.8511.026; Fri, 14 Mar 2025
+ 07:04:29 +0000
+Message-ID: <0259da8e-abe7-4d07-96e5-948f7685c2a1@amd.com>
+Date: Fri, 14 Mar 2025 12:34:13 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf script: Update brstack syntax documentation
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Martin Liska <martin.liska@hey.com>, James Clark <james.clark@linaro.org>,
+ Leo Yan <leo.yan@arm.com>
+References: <20250312072329.419020-1-yujie.liu@intel.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20250312072329.419020-1-yujie.liu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0109.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::22) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
- <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
- <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
- <CAP-5=fV_z+Ev=wDt+QDwx8GTNXNQH30H5KXzaUXQBOG1Mb8hJg@mail.gmail.com> <Z9NbFqaDQMjvYxcc@google.com>
-In-Reply-To: <Z9NbFqaDQMjvYxcc@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 13 Mar 2025 22:54:57 -0700
-X-Gm-Features: AQ5f1JpmtjskMcZorXzTagF_PQQ_b8arX_0AF-lPzn55eWXEmzSyGiUvOZGlAFk
-Message-ID: <CAP-5=fUdXRv512ZFiQKtxouNzN+HgommWGF3Pje1Tcuxg=J78Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
-	Daniel Xu <dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|BY5PR12MB4034:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27be5d96-6930-469e-9e65-08dd62c676d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bGZsVmxjYk03eTNiS3hoSk5DN3J3OUNjR0d1bkNFakw5ZDRMVGUwWlBRY1ha?=
+ =?utf-8?B?WFJvakdPVFVVVEZKeit4THU2V3RQRFJCQzYvVVQ2T3ZZVUwrYlhmcUZWTHo5?=
+ =?utf-8?B?S1E2dFBwRUo0cGN2L1NHNTB5N1RuRExsTG9OVWZHOTJHbjFGUjM3enlTMWVm?=
+ =?utf-8?B?azNXaGR1bmhrcjUvRDJ2VEtyTE9qRmJJN2pEU3dEdmQyMXNIV215ejNWeGx0?=
+ =?utf-8?B?RGgrRmFZcTZ1QkF0WUY1T2xEbHVzdUdFSDA3MFYvZHpSd3ZuNVd1Q3NlOVJ1?=
+ =?utf-8?B?RUtjeXdSMUtqaVRpbmlrMXkxQVB1Q09nN1ZtZU8xUU41eFB0c3ZGTUg2U2Zn?=
+ =?utf-8?B?ZEpwS3o4ekRENUdSZGlZU3JXMjdHTVJtRDZvYytETGlremRLQ1lyUDYwWnA0?=
+ =?utf-8?B?TE5LNUpZMHpETEdDc1RQNEc1NlBFMEhQZTZJaHlFOXAza3FQbjhaWGU4UGY0?=
+ =?utf-8?B?Nno0MmlBMWJZaXhEL1RpOGQweEtndFVuQWlnVjlHbFNCYWpGYjFpc2tZRmJ2?=
+ =?utf-8?B?bzlxcnY1TGJ3M2NBY3hqOHlVVDBBVUQ1SDllaDNjNVhmS2w2STdCVFQ0YUx3?=
+ =?utf-8?B?TlNEMG9Xc3pteDJjV1ZxRmo5WUsrK3Jwby9KcUNoTUJCc1ovL2pmd1F6cWdp?=
+ =?utf-8?B?UWlqS1RRYUwydDJRU3AwVHl4STlrRDZ6Mm1RaWloRVo2MU5tNXRJdkNpbWwv?=
+ =?utf-8?B?NnlEM3p4eXprTlAva1dkNEg3LzlsMjVGRFo3UzRBMkhsSURvaWxNbzh3czJy?=
+ =?utf-8?B?Q1RqUXMrcm1jM2Z1djZPb1dKWFJaZGpJQlFWclg1cnVvOEN4MXBJNDJTWEVQ?=
+ =?utf-8?B?VzRqVjdiTlNTQmNFMng1Ry9ZYjl2eW1PWnJGTnlsVG95U3ZocUdsa0RpcUZP?=
+ =?utf-8?B?MjRyZzNHUHpTam1aSnd2cWdQUUhMTUpPQXNLSVNndC93N2ZHOTNFZzVxWWpR?=
+ =?utf-8?B?bHkvWENEVXViWHpiN0dHQml0N041ZFFtRUdtT1NwQytUUkdFQWlBMWVvMTRH?=
+ =?utf-8?B?dDZEY1M2VjV0SERHUGZicXFOTEdwdEk1bE5IMzFma3EvS3psOG4zc0xsK294?=
+ =?utf-8?B?NlNGNnlmK3Q2WW13UnBFTngxeWJkUC85aU5JM2FGMVJXbkl2L3JjUHV3ZmZx?=
+ =?utf-8?B?cndyTTBOY2tsL2xGdldQM3F1MUJ3V3pTQUFZVm93N3E1VldwS3Q1VFFxSFdj?=
+ =?utf-8?B?TGVobGkwT0gwZFdobTRGTU5TS29Fc1BIL3BGWGxBdjZER0t2czVQQzFwMFda?=
+ =?utf-8?B?N1BoVWVUaW5zOWpFT3FBSG84Yjdua2FZQUYzK1FHNDhMY1NIY0JqUHR2b05H?=
+ =?utf-8?B?bTgyOWk2NTJPaGg0YUJEVUFYdStLOEFicXBhUE9QejY5Uk1McE55NVRVRGJR?=
+ =?utf-8?B?Q2piR2ptYlc0QUNnazFNMVBOVkF1d1gwOGVBc083WC9wdXltQnhUN3RRVWdZ?=
+ =?utf-8?B?UWg4V2I5U0RSUkdHWTQ1NC9CK2NOUExacmNVVHgvOTQ3aTZVVzVnWkgyaEha?=
+ =?utf-8?B?L0s4ZEpTV1kwdG5MeFdYaWtuSjAxWkRPYS8wcUZ3MHRZa2h5Y09peHdpKzg3?=
+ =?utf-8?B?MDBDbjlKamlvM2hCUjcrVFpCMmwwSUZNS2ZuejE1bzRWaTVLZTl5Qm9kd2Rj?=
+ =?utf-8?B?WDZqOHk1Vkl5c3NqdW9hSWE1OExsQlR4TkFCdDFjVlZ0ZENmNTNJRlYrT2RU?=
+ =?utf-8?B?RzhoZ09KQTVMelhUclFnVDhCc2dxaXNIWHRzT1JBSVo3UnlIR1VLek90eHVi?=
+ =?utf-8?B?ZjgvTU1hZkU2YmJlTHBLTXNPSHo0Zk1GdWU4ZXNzRHpQYTl1djVvd1Rua3lp?=
+ =?utf-8?B?bStRMkNxQ1AvQW44eERzdm5CM3I4bHQxZHIxQ3FRaElzT093Rm9ST3Z5ZDRq?=
+ =?utf-8?Q?me3HLWARerKMd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TXhvdWhCQ2E0S2lXUy9aNGg4Rm1oZHdpbFFqUnNIRHRzUlVoQUNWVGJzc2pX?=
+ =?utf-8?B?Y0ZZQlZCaG5adEI5VTJnUnJtRGdlUnZoOFh2eWhwUThMZkdCWEtkWDVYdUlJ?=
+ =?utf-8?B?R2l3ZkdwMmp2S2EwSEVaQnlCMS9YUWVtNGg5Q3YyZ3ZHcENXYjBZWmxueHpZ?=
+ =?utf-8?B?TXJ6OW5FeStmYjVVcUZQLzRYaG1GUXdObEVhS3BnNEFINzkzbkhEUkVWaWtO?=
+ =?utf-8?B?dE96Q2d0YithMUV4alE1THlURUVURUhsMkxHMGNFUWFsSWJwczlIOGJDekNL?=
+ =?utf-8?B?ZFNiYWZUNjhOUFp5TzFFbTRzSnFGN21EMnNxcGNjbE90Z29aci9HaTJNTS9Z?=
+ =?utf-8?B?M3draUcyRnd5YlYrOHlBMVNKWC9rUUJjdWVmemIxVy8wQ2JrZ041SGVUOENY?=
+ =?utf-8?B?elh6ek5kWS9SVE8yU3lRNi9IYXpLbXEycjRpUm9PZHNpa2dyTlQ0bUJFenNE?=
+ =?utf-8?B?OThVaXZ4N256VWIyRFBnNE9peFJncUZvbTdrS3dtdEdaMlh1eC9qQ3huVDRu?=
+ =?utf-8?B?Ym1ZVXJ3VUJiT29pd2VORzhnd2duc3RHZm9wdEZXNFVwbnlUL1lNV1o0U2hh?=
+ =?utf-8?B?ZVhFUHNtQkV2SXkzMWtMUExVK21qNlhXUnFzS0ZlaHVhYXE1Nlk1YnFHYnJo?=
+ =?utf-8?B?UFVnQ0FiWEJFdXdQRjEyWGRkeG5WWGtiZUpMTzI3Y01OVHVLTTU0blJEd0dx?=
+ =?utf-8?B?RXlrU3Zjc3lsS0hTazZiYTZyMjZYSm5ISnYzaVFhTk9tOHFhOEwxaXlvc0dr?=
+ =?utf-8?B?d1JJZGNNQWFTbWw4VGY1R1BlSFJxakpqaWMzMDY5MVp4R0dNTytlNVBUMW9M?=
+ =?utf-8?B?cTBoSzlDZ2hXSkRYNVFIYTFyTDZ4YTVjdTN5VUhQTXEzQ3BReTV2a1IrWS9G?=
+ =?utf-8?B?SHdNRWlXRGl6OEFjMm5Hd1RldjdGTG9iMlVwZ2IvMC9mYktCWXNobi9ubUFT?=
+ =?utf-8?B?Z0pwRVExd3ltdGd6Njg1MEd1eGxuNnJvcnZQZ1F1Rk42elpHa2J1RmVpRnlz?=
+ =?utf-8?B?MDM2RU56YlJaSXBzVDhteTI4clR6d0F5Tys0MjAzMDE1Mkh6ZkhRaGI4YmFt?=
+ =?utf-8?B?Q3hHbmRHQ1VON1owZ05qcWF4aFJob0hEVlpMMThDVVlHakNDTk85bW44Nnpm?=
+ =?utf-8?B?RzZmSkRoRlVoalJIUlR5RFJhcHllRXdvbWRTZlBvZzFwb3o2UTRkWkh3WTRq?=
+ =?utf-8?B?ZjFkVDA5K3BUR0ZoNS93bzQ3Yk5waE9kWnNZZ0VDUEJxeHVNQ21VVURJRWFD?=
+ =?utf-8?B?TmJwazBUZmxPM1I0anF4cXlOczJva0lMdnFmRHhBdC9QSWFLV1p1Y2FkcVRD?=
+ =?utf-8?B?QUppajlwNEgwN3NHUVlnakNncnhZWlpJem1mSzRHSXJROUhITHRMMXo4akNI?=
+ =?utf-8?B?SFRKb3NyTXZlejRBNnQvYWNUTHY4eWYxYkFpUGVsQVd1eHk5UkcrY2Q5WDRz?=
+ =?utf-8?B?dS9McnFXaGhqSEpmOGtIc1hnc3ZIL0Zwa0I2dGVMRFREQmVHeXkzN2FldlJE?=
+ =?utf-8?B?cXA3OGowakVaWkwvc2VRYXA5MTBQRmZHamwzVkFNQ3hLdFRueXJhdmE1MTE1?=
+ =?utf-8?B?RkhjTXIwRFlIWXZOWWdTUUE5empsZE5WUm1FUVRqSUdvQjNZVVYwNGlYN3Ju?=
+ =?utf-8?B?Z0JNcU1IbjNkSU93ZGNTeXEwam1iRTFyL2dCNUZYTStUYVVDN2w2TXF0OW80?=
+ =?utf-8?B?aWtUdXdWbTZwU3g2eEVCTFJDbUIvVXRaZVRLajh6MU5tSllMR1VpbnNWOWhi?=
+ =?utf-8?B?NzB0bDJqK2Rhcy9rcFdhNlZPVEd0RjF2WEFrNXdpOWEycUtDc0ZZa1JnR2VD?=
+ =?utf-8?B?TEpGalZmYXFuQS9DaUhoUE41Qk1mZFpLaFgyb0tjcjVYWkhWRWVKNUxxQlJz?=
+ =?utf-8?B?ZGlJREphcUFEZVp0aDBiRGYwSFBsSG5MdUlEV1dHYkZNVjU3YjhjMFpTSEZz?=
+ =?utf-8?B?cEpiY08xcjViVVppWmU0NWlISXBBQWtHdS9oU2Y1d29ua0RWaHM3V2xRZmhJ?=
+ =?utf-8?B?d3hSMWR1SnJkZkNYbkU3Mk5sbDd1V3R4REZBZlpjNzJ1NkZOL1FGbllOdXJF?=
+ =?utf-8?B?YzRFNVVKRlYxN1dsVTFlNVp1TWlNajNvMmVTbnVsTE4wRVBmbGdiSGdXVm5K?=
+ =?utf-8?Q?qGAV5GqCDAzBffWdDqPNsOH3o?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27be5d96-6930-469e-9e65-08dd62c676d8
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 07:04:29.7353
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b2P19BR/CbMxVe9UENFgupsGwLQrDW6rizwTYXANFGj/sl18f0TPqqRkBaPVw2gmSW3qCdV7wkkhvQpsvjVQqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4034
 
-On Thu, Mar 13, 2025 at 3:24=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Wed, Mar 12, 2025 at 02:04:30PM -0700, Ian Rogers wrote:
-> > On Mon, Feb 10, 2025 at 10:06=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Thu, Jan 23, 2025 at 3:36=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > > On Thu, Jan 23, 2025 at 1:59=E2=80=AFPM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > > I like changes up to this in general.  Let me take a look at the
-> > > > > patches.
-> > >
-> > > So it would be nice to make progress with this series given some leve=
-l
-> > > of happiness, I don't see any actions currently on the patch series a=
-s
-> > > is. If I may be so bold as to recap the issues that have come up:
-> > >
-> > > 1) Andi Kleen mentions that dlopen is inferior to linking against
-> > > libraries and those libraries aren't a memory overhead if unused.
-> > >
-> > > I agree but pointed-out the data center use case means that saving
-> > > size on binaries can be important to some (me). We've also been tryin=
-g
-> > > to reduce perf's dependencies for distributions as perf dragging in
-> > > say the whole of libLLVM can be annoying for making minimal
-> > > distributions that contain perf. Perhaps somebody (Arnaldo?) more
-> > > involved with distributions can confirm or deny the distribution
-> > > problem, I'm hoping it is self-evident.
-> > >
-> > > 2) Namhyung Kim was uncomfortable with the code defining
-> > > types/constants that were in header files as the two may drift over
-> > > time
-> > >
-> > > I agree but in the same way as a function name is an ABI for dlysym,
-> > > the types/constants are too. Yes a header file may change, but in
-> > > doing so the ABI has changed and so it would be an incompatible chang=
-e
-> > > and everything would be broken. We'd need to fix the code for this,
-> > > say as we did when libbpf moved to version 1.0, but using a header
-> > > file would only weakly guard against this problem. The problem with
-> > > including the header files is that then the build either breaks
-> > > without the header or we need to support a no linking against a
-> > > library and not using dlopen case. I suspect a lot of distributions
-> > > wouldn't understand the build subtlety in this, the necessary build
-> > > options and things installed, and we'd end up not using things like
-> > > libLLVM even when it is known to be a large performance win. I also
-> > > hope one day we can move from parsing text out of forked commands, as
-> > > it is slower and more brittle, to just directly using libraries.
-> > > Making dlopen the fallback (probably with a warning on failure) seems
-> > > like the right direction for this except we won't get it if we need t=
-o
-> > > drag in extra dependency header files for the build to succeed (well
-> > > we could have a no library or dlopen option, but then we'd probably
-> > > find distributions packaging this and things like perf annotate
-> > > getting broken as they don't even know how to dlopen a library).
-> > >
-> > > 3) Namhyung Kim (and I) also raises that the libcapstone patch can be
-> > > smaller by dropping the print_capstone_detail support on x86
-> > >
-> > > Note, given the similarity between capstone and libLLVM for
-> > > disassembly, it is curious that only capstone gives the extra detail.
-> > >
-> > > I agree. Given the capstone disassembly output will be compromised we
-> > > should warn for this, probably in Makefile.config to avoid running
-> > > afoul of -Werror. It isn't clear that having a warning is a good move
-> > > given the handful of structs needed to support print_capstone_detail.
-> > > I'd prefer to keep the structs so that we haven't got a warning that
-> > > looks like it needs cleaning up.
-> > >
-> > > 4) Namhyung Kim raised concerns over #if placement
-> > >
-> > > Namhyung raised that he'd prefer:
-> > > ```
-> > > #if HAVE_LIBCAPSTONE_SUPPORT
-> > > // lots of code
-> > > #else
-> > > // lots of code
-> > > #endif
-> > > ```
-> > > rather than the #ifs being inside or around individual functions. I
-> > > raised that the large #ifs is a problem in the current code as you
-> > > lose context when trying to understand a function. You may look at a
-> > > function but not realize it isn't being used because of a #if 10s or
-> > > 100s of lines above. Namhyung raised that the large #ifs is closer to
-> > > kernel style, I disagreed as I think kernel style is only doing this
-> > > when it stubs out a bunch of API functions, not when more context
-> > > would be useful. Hopefully as the person writing the patches the styl=
-e
-> > > choice I've made can be respected.
-> > >
-> > > 5) Daniel Xu raised issues with the removal of libbfd for Rust
-> > > support, as the code implies libbfd C++ demangling is a pre-requisite
-> > > of legacy rust symbol demangling
-> > >
-> > > A separate patch was posted adding Rust v0 symbol demangling with no
-> > > libbfd dependency:
-> > > https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.c=
-om/
-> > > The legacy support should work with the non-libbfd demanglers as
-> > > that's what we have today. We should really clean up Rust demangling
-> > > and have tests. This is blocked on the Rust community responding to:
-> > > https://github.com/rust-lang/rust/issues/60705
->
-> I think #ifdef placements is not a big deal, but I still don't want to
-> pull libcapstone details into the perf tree.
->
-> For LLVM, I think you should to build llvm-c-helpers anyway which means
-> you still need LLVM headers and don't need to redefine the structures.
->
-> Can we do the same for capstone?  I think it's best to use capstone
-> headers directly and add a build option to use dlopen().
+On 3/12/2025 12:53 PM, Yujie Liu wrote:
+> The following commits added new fields/flags to the branch stack field
+> list:
+> 
+> commit 1f48989cdc7d ("perf script: Output branch sample type")
+> commit 6ade6c646035 ("perf script: Show branch speculation info")
+> commit 1e66dcff7b9b ("perf script: Add not taken event for branch stack")
+> 
+> Update brstack syntax documentation to be consistent with the latest
+> branch stack field list. Improve the descriptions to help users
+> interpret the fields accurately.
+> 
+> Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+> ---
+> Changes in v2:
+> - Add not taken event (Namhyung, Leo)
+> - Change field name from PRED to EVENT for generic use and furture
+>   extension (Leo)
+> 
+> v1: https://lore.kernel.org/all/20250225061736.1698175-1-yujie.liu@intel.com/
+> ---
+>  tools/perf/Documentation/perf-script.txt | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> index b72866ef270b..28bec7e78bc8 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -239,13 +239,22 @@ OPTIONS
+>  	i.e., -F "" is not allowed.
+>  
+>  	The brstack output includes branch related information with raw addresses using the
+> -	/v/v/v/v/cycles syntax in the following order:
+> -	FROM: branch source instruction
+> -	TO  : branch target instruction
+> -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> -	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
+> -	A/- : A=TSX abort entry, -=not aborted region or not supported
+> -	cycles
+> +	FROM/TO/EVENT/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
+> +	FROM  : branch source instruction
+> +	TO    : branch target instruction
+> +	EVENT : M=branch target or direction was mispredicted
+> +	        P=branch target or direction was predicted
+> +	        N=branch not-taken
+> +	        -=no event or not supported
+> +	INTX  : X=branch inside a transactional region
+> +	        -=branch not in transaction region or not supported
+> +	ABORT : A=TSX abort entry
+> +	        -=not aborted region or not supported
+> +	CYCLES: the number of cycles that have elapsed since the last branch was recorded
+> +	TYPE  : branch type: COND/UNCOND/IND/CALL/IND_CALL/RET etc.
+> +	        -=not supported
+> +	SPEC  : branch speculation info: SPEC_WRONG_PATH/NON_SPEC_CORRECT_PATH/SPEC_CORRECT_PATH
+> +	        -=not supported
+>  
+>  	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+>  
+> 
+> base-commit: b10f74308e1305275e69ddde711ec817cc69e306
 
-So I don't disagree. If we have headers but someone wants dlopen,
-let's use the headers and let them use dlopen. Unfortunately the way
-the build is set up isn't for that. The build assumes either:
-1) you have libcapstone and its headers and want to link against it,
-2) you don't have libcapstone and support is just removed.
 
-In the changes the options become:
-1) unchanged, if you have libcapstone then use the headers and link
-against - this is Andi's preferred approach,
-2) if you don't have libcapstone dlopen is used with constants derived
-from pahole and baked into the sources - much as we do for vmlinux.h
-in BPF programs.
-
-One way to achieve what you are asking for is to make the build do:
-1) the link against libcapstone approach that needs the headers,
-2) the dlopen with capstone.h headers,
-but we need a way to build without libcapstone, so we get:
-3) possibly dlopen with pahole derived constants - but if we have that
-then why do 2?
-4) a no support option.
-
-The problem is that if we don't do (3) then (4) will become the no
-libcapstone option and frankly people who care will do (1) and so (2)
-becomes redundant.
-It was intentional doing the changes the way I have so that when you
-don't build with libcapstone, were you later to add the library you
-would gain support for it. This is with the down side of a small
-number of constants being in the code. Potentially these could change
-in the header files, but any such change is an ABI breakage and so
-unlikely to happen. So I think the way the patches have things set up
-is best.
-
-Thanks,
-Ian
+Reviewed-by: Sandipan Das <sandipan.das@amd.com>
