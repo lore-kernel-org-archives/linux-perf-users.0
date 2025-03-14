@@ -1,107 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5401953A2;
-	Fri, 14 Mar 2025 08:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C78A1DE3AD;
+	Fri, 14 Mar 2025 09:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741941546; cv=none; b=Hh32QyN6rQC7eXedhSYaDRO2mRcAET5oANRCrAxRQXIlCWVJUDVqQ3Q9yZt1ZM6RYBypM1+kB8h/gos/tBlyUVDbS1i6QTLr/s3NHKx1AWLvb/pZ3ygkxxkAZle/1G8svX4i5WRemRBZ7DDHck+wNA7kRsPBik9kZ3p/DRm0lBk=
+	t=1741943608; cv=none; b=LXyt32AlUrzRoTon0T92zD1IrCUkaIw02zodJEvM/NzwDeZY8+1nowseCUALbM2gaC1JwrWvV17FWlT3H9bCrdTZmFIKekt7Jw/J+AhsC3IG7+EpSLj8geComssD27lO+nXwWquWb+dr3q143HbIWjU76IibpC2jPlh27mbLfhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741941546; c=relaxed/simple;
-	bh=JiGYGlFRMjz25k0U6B4LZbec1CkLkM/Na0aVV6Dtx3w=;
+	s=arc-20240116; t=1741943608; c=relaxed/simple;
+	bh=WLlJgksv67r1gjn1fyE/ylFD8IWYUjpqVtcR1DHY0rs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rlzR+X5ABR2cCA9Nxa8Y0y/9TI2nh1pBnx7jv2IoHqyJkWX/UgI31x3APFg8tiHdGCQfch3Krt91hZgvZvggDvdjh4bgmxuWGL++z5DfLvznvsEgqR6LYB2KPC7JontS4gBxRSKc3vHdhzXtDQ2uYK31xu5WpIISBD/I+DYPUtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oemqRxxL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oemqRxxL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8DBC4CEE3;
-	Fri, 14 Mar 2025 08:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741941546;
-	bh=JiGYGlFRMjz25k0U6B4LZbec1CkLkM/Na0aVV6Dtx3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oemqRxxLwaMf+VZr4HX0s9mVGFYBEaelPDtxNN2uuLxdIOZaxTP3SPKQz010uKWrR
-	 Oxu1pHNvmkdMqvgT74GIMe6Fu5FxWihsYT0MZ6i0i6wIo2iRa2aj4qU2g231c4Eyfl
-	 TZyQzhdQVpWxEzpvuRbOp7nDSOFMSDopiAtRn0D0ipYO2GbN8GLIWpRtqkyOgLjY9A
-	 pk3NzpA9wzaLpJeGw8EcnSQyoh/4OLMetSpI3oneP0e9YRcFmNWacKuIREV8EgPQpj
-	 OO+BMRH/VxyCTltELcCPatLND7ESBnhtt8TFEF3Bl9O4h4UlQF98rurYKDxP9JftUK
-	 EyTA7UQ9eOilQ==
-Date: Fri, 14 Mar 2025 09:39:00 +0100
-From: Ingo Molnar <mingo@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OXPYgES+Ege0Cn4zjV4xM9bB+Fdn2/UvhziSOwSAOauOyw/dJViEIjcpU3PdxVJIcgd3XgcfRUJ5Nd0yBT9rjDK7P0Z5xt8jhlLdimqDaQc37wuWzo9rzauBuALoTV6AVCM49EUXw15h6mQ2vIiKBKwM6GH2BNQQNVrmiIlj4mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 682471424;
+	Fri, 14 Mar 2025 02:13:29 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECF303F673;
+	Fri, 14 Mar 2025 02:13:18 -0700 (PDT)
+Date: Fri, 14 Mar 2025 09:13:14 +0000
+From: Leo Yan <leo.yan@arm.com>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Tao Chen <chen.dylane@linux.dev>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux-next] perf/ring_buffer: Add EPOLLRDNORM flag for
- poll
-Message-ID: <Z9PrJGbBYcMrvLWY@gmail.com>
-References: <20250313051047.2436098-1-chen.dylane@linux.dev>
- <Z9Kt57aAC7XET7Na@gmail.com>
- <87b67a79-d97e-4f81-9bf2-aa34d613b5bf@linux.dev>
- <Z9MRWT5PWtPaY-pl@gmail.com>
- <Z9OVBCryv9Che8zJ@google.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	German Gomez <german.gomez@arm.com>
+Subject: Re: [PATCH v1] perf tests: Harden branch stack sampling test
+Message-ID: <20250314091314.GV9682@e132581.arm.com>
+References: <20250312055846.671522-1-irogers@google.com>
+ <20250312105450.GN9682@e132581.arm.com>
+ <Z9M9gK4VS199CRKh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9OVBCryv9Che8zJ@google.com>
+In-Reply-To: <Z9M9gK4VS199CRKh@google.com>
 
+Hi Namhyung,
 
-* Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Mar 13, 2025 at 01:18:08PM -0700, Namhyung Kim wrote:
 
-> Hello,
+[...]
+
+> > >  test_user_branches() {
+> > >  	echo "Testing user branch stack sampling"
+> > >  
+> > > -	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+> > > -	perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' '\n' > $TMPDIR/perf.script
+> > > +	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
+> > > +	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
+> > >  
+> > >  	# example of branch entries:
+> > >  	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
+> > >  
+> > > -	set -x
+> > > -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"		$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
+> > > -	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
+> > > -	set +x
+> > > -
+> > > +	expected=(
+> > > +		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"
+> > > +		"^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
+> > > +		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"
+> > > +		"^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
+> > > +		"^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"
+> > > +		"^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"
+> > > +		"^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"
+> > > +		"^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"
+> > > +	)
+> > > +	for x in "${expected[@]}"
+> > > +	do
+> > > +		if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$x"
+> > > +		then
+> > > +			echo "Branches missing $x"
+> > > +			if [ "x$err" == "x0" ]
+> > > +			then
+> > > +				err=2
+> > 
+> > Here it sets "err=2", as a result, if any grep command fails, the script
+> > exits while reporting to skip the test.  This seems incorrect to me.
+> > 
+> > My understanding is the regular expressions above are mandatory to be
+> > matched, otherwise, it must be something is wrong.  We should not skip
+> > the test in this case.
+> > 
+> > I can understand that 'perf record' cannot record all branch types, if
+> > this is the case, maybe we can improve the recording quality rather
+> > than reporting skip?  E.g.,
+> > 
+> >   cat <<EOF > "$TMPDIR/loop.sh"
+> >   for run in {1..5}; do perf test -w brstack; done
+> >   EOF
+> > 
+> >   perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u
+> >     -- sh $TMPDIR/loop.sh
+> > 
+> > If we run the test for 5 times, should this can allow us to ensure the
+> > branch samples are recorded?
 > 
-> On Thu, Mar 13, 2025 at 06:09:45PM +0100, Ingo Molnar wrote:
-> > 
-> > * Tao Chen <chen.dylane@linux.dev> wrote:
-> > 
-> > > 在 2025/3/13 18:05, Ingo Molnar 写道:
-> > > > 
-> > > > * Tao Chen <chen.dylane@linux.dev> wrote:
-> > > > 
-> > > > > The poll man page says POLLRDNORM is equivalent to POLLIN,
-> > > > > so add EPOLLRDNORM here.
-> > > > > 
-> > > > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> > > > > ---
-> > > > >   kernel/events/ring_buffer.c | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> > > > > index 59a52b1a1..5130b119d 100644
-> > > > > --- a/kernel/events/ring_buffer.c
-> > > > > +++ b/kernel/events/ring_buffer.c
-> > > > > @@ -19,7 +19,7 @@
-> > > > >   static void perf_output_wakeup(struct perf_output_handle *handle)
-> > > > >   {
-> > > > > -	atomic_set(&handle->rb->poll, EPOLLIN);
-> > > > > +	atomic_set(&handle->rb->poll, EPOLLIN | EPOLLRDNORM);
-> > > > 
-> > > > So what does EPOLLRDNORM mean to begin with? There doesn't seem to be
-> > > > separate/specific handling of it anywhere in the kernel that I can
-> > > > see...
-> > > > 
-> > > 
-> > > It seems that if user set pollfd with POLLRDNORM, perf_poll will not return
-> > > until timeout even if perf_output_wakeup called, whereas POLLIN returns.
-> > 
-> > Mind adding this to the changelog, and explain that this patch fixes 
-> > this particular poll() functionality and semantics for userspace?
-> 
-> Off topic, but I think it should return something (either POLLHUP or
-> POLLERR) when the event goes to an error state like pinned events are
-> not scheduled.
+> The brstack (and other workload programs) can take an argument to
+> control its duration.  For brstack, it's the number of loop iteration
+> and default is 999999.
 
-Mind sending a patch for that?
+Sorry I did not dig into the brstack workload program.
+
+If the workload has run for a large number of loops, the question is:
+why isn't the test capturing the expected branch stacks?
 
 Thanks,
-
-	Ingo
+Leo
