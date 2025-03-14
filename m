@@ -1,29 +1,29 @@
 Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271D31AAA1A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F6D1A83F2;
 	Fri, 14 Mar 2025 08:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940445; cv=none; b=nM/X5Ym5ZMpJWnDxQCNc8agUwl4PKysqAo6WbbLYdlNqJsQxAGWlws4vwdpMTpz6JcuHuglLdjFaBJ+sATU/X0YKjLKIcjrDKQdEVWMTs6sAHfU730eTR3Gwv44bu/goB2y/W+r7BY4tgwRha4+gQ6r4HDTwZZrEjPZIRClmBLE=
+	t=1741940446; cv=none; b=sK0hGIm7y9HUDodRApUDV5P25IakFEm/dbaDQdM1HWkzREZmI/Hoo/9tYQJil5Vo0yIPMU6U3qX3jRp3gNVklp+XKIkDb6n4grTBVQIoRw3z/hEL6i4gnd5wYLCJ+CRG66Jw+1COHmtcwd4PW/5g+wBZPmiUfhUP5OW8bvJ90dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940445; c=relaxed/simple;
-	bh=il+4NZp6/CIc+/doN1p81C7ZGRGabOWPMUdXgs51CeY=;
+	s=arc-20240116; t=1741940446; c=relaxed/simple;
+	bh=RwJSjxLUsvplq8xwlFW3Kbg0W+jQSq8JDjAzsQS+PSE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oq01rkql6JjuC1ejbcrhMMAr/jeJIN2ZWRlHsjxqXmh/alOy6pl+PQrFQK4Y8BhhHu3LGQnyPQJXo4hveeXhILR9zGiTr5KM5946GazQwF0yKmVIvdUggQ/Z1/suZut7S0JyLidashnuMTobnYv41RpPw+TUAY6ykTdc9WtDYpk=
+	 MIME-Version:Content-Type; b=dMNJYodu91RmAfMwwd+/04cHZw37hVpzlmQFAZ1kvxT6dX9dDl5p1M57trQjH18cA17mIrc7FiNV2qFXSLlQkZV7rNd8Gk52QAk2mBoqT6Ba0qn3g+h5rSBR7J1YvvqFaVLrLPmtyeTRPZnbM4gLW9qICC2JrubmLqD0yj+ONv4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZDcfx5lN6zCtSS;
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZDcfx0mk3zCtSP;
 	Fri, 14 Mar 2025 16:17:29 +0800 (CST)
 Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF96F1800E4;
-	Fri, 14 Mar 2025 16:20:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id EC7F2140156;
+	Fri, 14 Mar 2025 16:20:40 +0800 (CST)
 Received: from lihuafei.huawei.com (10.90.53.74) by
  kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Mar 2025 16:20:40 +0800
+ 15.2.1544.11; Fri, 14 Mar 2025 16:20:39 +0800
 From: Li Huafei <lihuafei1@huawei.com>
 To: <namhyung@kernel.org>, <acme@kernel.org>, <leo.yan@linux.dev>,
 	<james.clark@linaro.org>, <mark.rutland@arm.com>, <john.g.garry@oracle.com>,
@@ -34,9 +34,9 @@ CC: <mike.leach@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
 	<sesse@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-perf-users@vger.kernel.org>, <lihuafei1@huawei.com>
-Subject: [PATCH 5/7] perf annotate-data: Support instruction tracking for arm64
-Date: Sat, 15 Mar 2025 00:21:35 +0800
-Message-ID: <20250314162137.528204-6-lihuafei1@huawei.com>
+Subject: [PATCH 4/7] perf annotate: Support for the 'extract_reg_offset' callback function in arm64
+Date: Sat, 15 Mar 2025 00:21:34 +0800
+Message-ID: <20250314162137.528204-5-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250314162137.528204-1-lihuafei1@huawei.com>
 References: <20250314162137.528204-1-lihuafei1@huawei.com>
@@ -51,147 +51,175 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemf500004.china.huawei.com (7.202.181.242)
 
-Support for arm64 instruction tracing. This patch addresses the scenario
-where type information cannot be found during multi-level pointer
-references. For example, consider the vfs_ioctl() function:
+At present, only the following two addressing modes are supported:
 
- long vfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- {
-     int error = -ENOTTY;
+ 1. Base register only (no offset): [base{, #0}]
+ 2. Base plus offset (immediate): [base{, #imm}]
 
-     if (!filp->f_op->unlocked_ioctl)
-         goto out;
-
-     error = filp->f_op->unlocked_ioctl(filp, cmd, arg);
-     if (error == -ENOIOCTLCMD)
-         error = -ENOTTY;
- out:
-     return error;
- }
-
-The 'SYSCALL_DEFINE3(ioctl)' inlines vfs_ioctl, and the assembly
-instructions for 'if (!filp->f_op->unlocked_ioctl)' are as follows:
-
- ldr     x0, [x21, #16]
- ldr     x3, [x0, #80]
- cbz     x3, ffff80008048e9a4
-
-The first instruction loads the 'filp->f_op' pointer, and the second
-instruction loads the 'filp->f_op->unlocked_ioctl' pointer. DWARF
-generates type information for x21, but not for x0. Therefore, if
-PMU sampling occurs on the second instruction, the corresponding data
-type cannot be obtained. However, by using the type information and
-offset from x21 in the first ldr instruction, we can infer the type
-of x0 and, combined with the offset, resolve the accessed data member.
+For addressing modes where the offset needs to be calculated from the
+register value, it is difficult to know the specific value of the offset
+register, making it impossible to calculate the offset.
 
 Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 ---
- tools/perf/arch/arm64/annotate/instructions.c | 44 ++++++++++++++++++-
- tools/perf/util/annotate-data.c               |  3 +-
- tools/perf/util/annotate-data.h               |  2 +-
- tools/perf/util/disasm.c                      |  3 ++
- 4 files changed, 49 insertions(+), 3 deletions(-)
+ tools/perf/arch/arm64/annotate/instructions.c | 62 +++++++++++++++++++
+ tools/perf/util/Build                         |  1 +
+ tools/perf/util/disasm.c                      |  1 +
+ tools/perf/util/dwarf-regs-arm64.c            | 25 ++++++++
+ tools/perf/util/include/dwarf-regs.h          |  7 +++
+ 5 files changed, 96 insertions(+)
+ create mode 100644 tools/perf/util/dwarf-regs-arm64.c
 
 diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index 54497b72a5c5..f70d93001fe7 100644
+index c212eb7341bd..54497b72a5c5 100644
 --- a/tools/perf/arch/arm64/annotate/instructions.c
 +++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -215,7 +215,8 @@ extract_reg_offset_arm64(struct arch *arch __maybe_unused,
- 	static bool regex_compiled;
- 
- 	if (!regex_compiled) {
--		regcomp(&reg_off_regex, "^\\[(sp|[xw][0-9]{1,2})(, #(-?[0-9]+))?\\].*",
-+		regcomp(&reg_off_regex,
-+			"^\\[(sp|[xw][0-9]{1,2})(, #(-?[0-9]+))?\\].*",
- 			REG_EXTENDED);
- 		regex_compiled = true;
- 	}
-@@ -250,3 +251,44 @@ extract_reg_offset_arm64(struct arch *arch __maybe_unused,
- 	free(str);
- 	return 0;
+@@ -188,3 +188,65 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+ 	free(arm);
+ 	return SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP;
  }
 +
-+#ifdef HAVE_LIBDW_SUPPORT
-+static void
-+update_insn_state_arm64(struct type_state *state, struct data_loc_info *dloc,
-+			Dwarf_Die * cu_die __maybe_unused, struct disasm_line *dl)
++
++/*
++ * Get the base register number and access offset in load/store instructions.
++ * At present, only the following two addressing modes are supported:
++ *
++ *  1. Base register only (no offset): [base{, #0}]
++ *  2. Base plus offset (immediate): [base{, #imm}]
++ *
++ * For addressing modes where the offset needs to be calculated from the
++ * register value, it is difficult to know the specific value of the offset
++ * register, making it impossible to calculate the offset.
++ *
++ * Fills @reg and @offset when return 0.
++ */
++static int
++extract_reg_offset_arm64(struct arch *arch __maybe_unused,
++			 struct disasm_line *dl __maybe_unused,
++			 const char *insn_str, int insn_ops __maybe_unused,
++			 struct annotated_op_loc *op_loc)
 +{
-+	struct annotated_insn_loc loc;
-+	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
-+	struct type_state_reg *tsr;
-+	Dwarf_Die type_die;
-+	int sreg, dreg;
++	char *str;
++	regmatch_t match[4];
++	static regex_t reg_off_regex;
++	static bool regex_compiled;
 +
-+	if (strncmp(dl->ins.name, "ld", 2))
-+		return;
-+
-+	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-+		return;
-+
-+	sreg = get_arm64_regnum(dl->ops.source.raw);
-+	if (sreg < 0)
-+		return;
-+	if (!has_reg_type(state, sreg))
-+		return;
-+
-+	dreg = dst->reg1;
-+	if (has_reg_type(state, dreg) && state->regs[dreg].ok &&
-+	    state->regs[dreg].kind == TSR_KIND_TYPE &&
-+	    dwarf_tag(&state->regs[dreg].type) == DW_TAG_pointer_type &&
-+	    die_deref_ptr_type(&state->regs[dreg].type,
-+			       dst->offset, &type_die)) {
-+		tsr = &state->regs[sreg];
-+		tsr->type = type_die;
-+		tsr->kind = TSR_KIND_TYPE;
-+		tsr->ok = true;
-+
-+		pr_debug_dtp("load [%x] %#x(reg%d) -> reg%d",
-+			     (u32)dl->al.offset, dst->offset, dreg, sreg);
-+		pr_debug_type_name(&tsr->type, tsr->kind);
++	if (!regex_compiled) {
++		regcomp(&reg_off_regex, "^\\[(sp|[xw][0-9]{1,2})(, #(-?[0-9]+))?\\].*",
++			REG_EXTENDED);
++		regex_compiled = true;
 +	}
++
++	if (!op_loc->mem_ref)
++		return 0;
++
++	if (regexec(&reg_off_regex, insn_str, 4, match, 0))
++		return -1;
++
++	str = strdup(insn_str);
++	if (!str)
++		return -1;
++
++	/* Get the base register number. */
++	str[match[1].rm_eo] = '\0';
++	op_loc->reg1 = get_arm64_regnum(str + match[1].rm_so);
++
++	/*
++	 * If there is an immediate offset, match[2] records the start and end
++	 * positions of "#imm".
++	 */
++	if (match[2].rm_so == -1) {
++		free(str);
++		return 0;
++	}
++
++	/* Get the immediate offset. */
++	str[match[3].rm_eo] = '\0';
++	op_loc->offset = strtol(str + match[3].rm_so, NULL, 0);
++
++	free(str);
++	return 0;
 +}
-+#endif
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 976abedca09e..2bc8d646eedc 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1293,7 +1293,8 @@ static enum type_match_result find_data_type_insn(struct data_loc_info *dloc,
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 5ec97e8d6b6d..d408cbe94fdd 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -210,6 +210,7 @@ perf-util-$(CONFIG_LIBDW) += dwarf-regs.o
+ perf-util-$(CONFIG_LIBDW) += dwarf-regs-csky.o
+ perf-util-$(CONFIG_LIBDW) += dwarf-regs-powerpc.o
+ perf-util-$(CONFIG_LIBDW) += dwarf-regs-x86.o
++perf-util-$(CONFIG_LIBDW) += dwarf-regs-arm64.o
+ perf-util-$(CONFIG_LIBDW) += debuginfo.o
+ perf-util-$(CONFIG_LIBDW) += annotate-data.o
  
- static int arch_supports_insn_tracking(struct data_loc_info *dloc)
- {
--	if ((arch__is(dloc->arch, "x86")) || (arch__is(dloc->arch, "powerpc")))
-+	if ((arch__is(dloc->arch, "x86")) || (arch__is(dloc->arch, "powerpc")) ||
-+	    (arch__is(dloc->arch, "arm64")))
- 		return 1;
- 	return 0;
- }
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 98c80b2268dd..717f394eb8f1 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -190,7 +190,7 @@ struct type_state_stack {
- };
- 
- /* FIXME: This should be arch-dependent */
--#ifdef __powerpc__
-+#if defined(__powerpc__) || defined(__aarch64__)
- #define TYPE_STATE_MAX_REGS  32
- #else
- #define TYPE_STATE_MAX_REGS  16
 diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 1035c60a8545..540981c155f9 100644
+index 905eceb824a4..1035c60a8545 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -129,6 +129,9 @@ static struct arch architectures[] = {
+@@ -128,6 +128,7 @@ static struct arch architectures[] = {
+ 	{
  		.name = "arm64",
  		.init = arm64__annotate_init,
- 		.extract_reg_offset = extract_reg_offset_arm64,
-+#ifdef HAVE_LIBDW_SUPPORT
-+		.update_insn_state = update_insn_state_arm64,
-+#endif
++		.extract_reg_offset = extract_reg_offset_arm64,
  	},
  	{
  		.name = "csky",
+diff --git a/tools/perf/util/dwarf-regs-arm64.c b/tools/perf/util/dwarf-regs-arm64.c
+new file mode 100644
+index 000000000000..edf41c059967
+--- /dev/null
++++ b/tools/perf/util/dwarf-regs-arm64.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Mapping of DWARF debug register numbers into register names.
++ *
++ * Copyright (c) 2025  Huawei Inc, Li Huafei <lihuafei1@huawei.com>
++ */
++#include <errno.h>
++#include <string.h>
++#include <dwarf-regs.h>
++
++int get_arm64_regnum(const char *name)
++{
++	int reg;
++
++	if (!strcmp(name, "sp"))
++		return 31;
++
++	if (*name != 'x' && *name != 'w')
++		return -EINVAL;
++
++	name++;
++	reg = strtol(name, NULL, 0);
++
++	return reg >= 0 && reg <= 30 ? reg : -EINVAL;
++}
+diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
+index 6f1b9f6b2466..81cc5f69a391 100644
+--- a/tools/perf/util/include/dwarf-regs.h
++++ b/tools/perf/util/include/dwarf-regs.h
+@@ -101,6 +101,8 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine, unsigned int
+ 
+ int get_x86_regnum(const char *name);
+ 
++int get_arm64_regnum(const char *name);
++
+ #if !defined(__x86_64__) && !defined(__i386__)
+ int get_arch_regnum(const char *name);
+ #endif
+@@ -128,6 +130,11 @@ static inline void get_powerpc_regs(u32 raw_insn __maybe_unused, int is_source _
+ {
+ 	return;
+ }
++
++static inline int get_arm64_regnum(const char *name __maybe_unused)
++{
++	return -1;
++}
+ #endif
+ 
+ #endif
 -- 
 2.25.1
 
