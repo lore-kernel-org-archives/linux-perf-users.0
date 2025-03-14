@@ -1,160 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B9A17579;
-	Fri, 14 Mar 2025 17:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEAE1F957;
+	Fri, 14 Mar 2025 17:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741972259; cv=none; b=ZxPLBWDENafmIldWAHhzdyXAIKJyKCpKncpvA/gJEYIpukqrfgrPtQhx8zZf8I7FCOY9U4KNNLf82VY35XdcXxCFSlWkDm2t1Vhhvh8boH29gpygPh+VOeAXJPbTTKDeTtCBZE6cbfjD/vA6zBrTYHIXArUl+hCazbYAnT3T0Fk=
+	t=1741972733; cv=none; b=glxzpyBiQdNpUBANa72jpe8rG/LIwcQZSQaPh/3C//pl3ex7049zl1wO/+KIhDbKebdZC0/lUJyaH5qhRWNX8GPezNzx60ZkUkzpITHqckzdzrwffa+tVwmiTUs4mfjVh5fg23CmncXxtwmXZwN8CXfgnPmCXfr8clDYbNLp5WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741972259; c=relaxed/simple;
-	bh=3qP/K6PXaEbNCIbhWyqtBndfXRD1PmrR9u5qWPtx+EM=;
+	s=arc-20240116; t=1741972733; c=relaxed/simple;
+	bh=jwQ64MtOlfFBI+IjDiKt86Qngy4C9Fb/Ty8mzXTGGQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYLu7/LDfjwzpfrv0nHoY6Q+CqnVoH0Lwii0ntjWXwBGramnatUH+muFGhcrIv36DEZ16I+D++i7zY7UHmhSDUyHrZyFLcGn0/BWKMKYnRXZTzGS01ayR/G0pp4WhgoDF1eFOdSukY+A63kGnGqU8QI8CSZ0RTaMVcsZYF7s6Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5KAdulO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNOVjnRdnGE376SE2x21v+oZN0uzaJOYotqZsOKomphuGMGTH/j2p9cqax69hEj96KXmI0gem77/EdqUa0HOyX73xnaDevSIXOw2V3NP9t7onudvBjrBOSI0G5PlJDw2ckVFSmkrreIXh345hcZOeuR078r6233PIjFwaczsyT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ug36oap8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5KAdulO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A66C3C4CEE3;
-	Fri, 14 Mar 2025 17:10:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ug36oap8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118D8C4CEE3;
+	Fri, 14 Mar 2025 17:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741972257;
-	bh=3qP/K6PXaEbNCIbhWyqtBndfXRD1PmrR9u5qWPtx+EM=;
+	s=k20201202; t=1741972732;
+	bh=jwQ64MtOlfFBI+IjDiKt86Qngy4C9Fb/Ty8mzXTGGQA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i5KAdulOYgMy3ouEcbFDhjjRmX2PTm/c5kxpGiIgEd9iHVllcNGqlGQAuz2n+X2+R
-	 sD4Cz79U3Tu9xoURi0jxEuxYMt6N5HISh5IItBwW8auateSihlVnVhJ4zWCnVpQpsm
-	 /t5KrbTGd8fE1jGsk/7YGBtAsjJED9o3CeNUBNEdjQUKDF5D3f7Vq7RzcSYGQd/mFQ
-	 wcknwDegn3KZIBWPhoWw+vrP2+h8q+PoCv3uGwN2jZ5fzX+oBMP6Tvhmk2R/+7h4Bf
-	 b3CyO4xiflCXNnrTFlRdJ+lMat42gpOwSJsRMkUfQVTvknoX0VvTmCes5t+v0XOx6n
-	 O4cpFlPMbldSw==
-Date: Fri, 14 Mar 2025 14:10:54 -0300
+	b=ug36oap8ubQfJ1sGvi+JdyPFDXeHZykDoiXdoZ60VmVEYs4r0XIATWkgIjzI5olIO
+	 Y/4+g+4kLqUPb2BDrsvcQKLyhBUMM8qi5KF0pDLcAS7mWz7fd5+INlySDsfni6cW18
+	 /Dw2o8FQDnEiAhFh8Wbp3x23JoXAzj5p6O5bYHnUetNJg4W1GFwas3F2t/NRuO4Vpt
+	 yFflMQbkZY7ju2gnQR1CXJaOlBYaHvD3qJACwQc2iGa8Tlm0bCvANPcplAvH7RmN58
+	 WC0HnYrzmi2LM4rub6xLgcmrqKdW/valTcn8tI4/E+ao04eZxYTQH2/fgioyhSuz4r
+	 +02t5soX7BzPg==
+Date: Fri, 14 Mar 2025 14:18:49 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	guoren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
- the build
-Message-ID: <Z9RjHpEJGWtj8PAM@x1>
-References: <20250308003209.234114-1-irogers@google.com>
- <Z9KFLGpenwOP32q3@google.com>
- <Z9M24AJzui9lFbGo@x1>
- <Z9M9-YhDJg3NgiUy@x1>
- <Z9NEX3j_1RUvaFI0@x1>
- <Z9PCjQ8PhOadVGQ8@google.com>
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Howard Chu <howardchu95@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf machine: Factor creating a "live" machine
+ out of dwarf-unwind
+Message-ID: <Z9Rk-YdoK-fK_62d@x1>
+References: <20250313052952.871958-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9PCjQ8PhOadVGQ8@google.com>
+In-Reply-To: <20250313052952.871958-1-irogers@google.com>
 
-On Thu, Mar 13, 2025 at 10:45:49PM -0700, Namhyung Kim wrote:
-> On Thu, Mar 13, 2025 at 05:47:27PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Mar 13, 2025 at 05:20:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Still building, but noticed this on x86_64:
-> > > 
-> > > 105: perf trace enum augmentation tests                              : FAILED!
-> > > 106: perf trace BTF general tests                                    : FAILED!
-> > > 107: perf trace exit race                                            : Ok
-> > > 108: perf trace record and replay                                    : FAILED!
-> > > 
-> > > 
-> > > The first doesn´t help that much with verbose mode, haven't checked if
-> > > before this series it was failing :-\
-> > > 
-> > > root@x1:~# perf test -vvv 105
-> > > 105: perf trace enum augmentation tests:
-> > > --- start ---
-> > > test child forked, pid 19411
-> > > Checking if vmlinux exists
-> > > Tracing syscall landlock_add_rule
-> > > ---- end(-1) ----
-> > > 105: perf trace enum augmentation tests                              : FAILED!
-> > > root@x1:~#
-> > 
-> > So:
-> > 
-> > root@x1:~# perf trace -e landlock_add_rule perf test -w landlock
-> > root@x1:~# 
-> > 
-> > But:
-> > 
-> > root@x1:~# perf trace perf test -w landlock |& grep landlock_add_rule
-> >     26.120 ( 0.002 ms): perf/19791 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffde75e2680, flags: 45) = -1 EINVAL (Invalid argument)
-> >     26.124 ( 0.001 ms): perf/19791 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffde75e2690, flags: 45) = -1 EINVAL (Invalid argument)
-> > root@x1:~# 
-> > 
-> > -e is having some trouble, when no event is specified, then it works.
-> > 
-> > Something in the changes made to:
-> > 
-> > static int trace__parse_events_option(const struct option *opt, const char *str,
-> >                                       int unset __maybe_unused)
-> 
-> Thanks for the test, I think this should fix it:
-> 
+On Wed, Mar 12, 2025 at 10:29:51PM -0700, Ian Rogers wrote:
+> Factor out for use in places other than the dwarf unwinding tests for
+> libunwind.
 
-Well, not really:
+Testing with another patchset being reviewed/tested, seems to work, if
+it showed the line number would be even better!
 
-root@number:~# perf trace -e landlock_add_rule perf test -w landlock
-perf: Segmentation fault
-Obtained 10 stack frames.
-perf() [0x5be761]
-perf() [0x5be7f9]
-/lib64/libc.so.6(+0x40fd0) [0x7fe005c4efd0]
-perf() [0x491bc1]
-perf() [0x497090]
-perf() [0x4973ab]
-perf() [0x413483]
-/lib64/libc.so.6(+0x2a088) [0x7fe005c38088]
-/lib64/libc.so.6(__libc_start_main+0x8b) [0x7fe005c3814b]
-perf() [0x413ad5]
-Segmentation fault (core dumped)
-root@number:~#
-
-Time for me to test another patch from Ian, the one symbolizing the
-above backtrace...
+I'll continue working on that other case with this applied just before
+that series and finally will give my Tested-by.
 
 - Arnaldo
 
-
-> 
-> 
-> ---8<---
-> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-> index ace66e69c1bcde1e..67a8ec10e9e4bc8d 100644
-> --- a/tools/perf/util/syscalltbl.c
-> +++ b/tools/perf/util/syscalltbl.c
-> @@ -76,7 +76,7 @@ int syscalltbl__id(int e_machine, const char *name)
->  {
->         const struct syscalltbl *table = find_table(e_machine);
->         struct syscall_cmp_key key;
-> -       const int *id;
-> +       const uint16_t *id;
->  
->         if (!table)
->                 return -1;
+root@number:~# perf trace -e landlock_add_rule perf test -w landlock
+perf: Segmentation fault
+    #0 0x5be81d in dump_stack perf[5be81d]
+    #1 0x5be879 in sighandler_dump_stack perf[5be879]
+    #2 0x7f313d24efd0 in __restore_rt libc.so.6[40fd0]
+    #3 0x491bc1 in cmd_trace perf[491bc1]
+    #4 0x497090 in run_builtin perf.c:0
+    #5 0x4973ab in handle_internal_command perf.c:0
+    #6 0x413483 in main perf[413483]
+    #7 0x7f313d238088 in __libc_start_call_main libc.so.6[2a088]
+    #8 0x7f313d23814b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
+    #9 0x413ad5 in _start perf[413ad5]
+Segmentation fault (core dumped)
+root@number:~#
