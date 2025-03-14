@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028742629D;
-	Fri, 14 Mar 2025 17:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740442045A5;
+	Fri, 14 Mar 2025 17:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974222; cv=none; b=kjRvM2EiwhVnUvabC9qmxw5EmctH0SEex4dTEacveL6aQnvUP2rxj1MW1bjP2gX25+68b/jfUmHF5efi20EWWoskv6KSbL9TCu6S2gf4BhDempzRUrgfUP7A4dZevPejA+QNYy2YuW+k0zwHPvlYdRzByqgXtgea3xCksX/hLX4=
+	t=1741974222; cv=none; b=thD1/ykblT3NbDITm+SjEDn+uakWvI3CyveKVmPPF9PYuVFJwrOvZ9e8pfmFfPF5DgnlQ15Ttl1YRKMY5OotT+zk9fZdza4SaqhpUqeDQOmt2qSw6YWoSrd+0pAmrpnwnCDS0U91I4BuD0hzdMOKu3rpO/uHvadzKkZyUrYkFRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741974222; c=relaxed/simple;
-	bh=UfJrm2yCFAgVvDAibstSIiqplSzCVgfdGZqcvC0TH/o=;
+	bh=OuqUNRtR8Ao+B4jo0qU03e/ijy8C0uzMm2+jHF4asMc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Hcf2Ppm1KozZdOFQX5yC/QFx+KUJgXerGgYRCwbxjgoK9C/bAHYa1a7jn//kiuPoB4VTRgZOVWcR7OvQCU3PDQerEm0apEW4u0gS7TPQv95pJg2gMIqtVlKdJ48LzrrFBL8qF1YRZAOdKmo6I7d7EttPQpPnfgWaS/PWilcsxiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzdiXnLD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Dx6tiJFVveHcwIVH5UTMLBv/1Z3T4e71dhzAV+bQvWYY9DLy3XF8HNVWTb64ErsineXLegLoi52k5QdPLclIbaqEhzOnICeaAPXTELWJ3VqW+cKLhrNoO/wG4sFNIKQ4/+Xut5VEVHObbYTufRAnES2zzSHCFdy3ZLDxJgSX7to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ci+ncNus; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzdiXnLD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E208BC4CEE3;
-	Fri, 14 Mar 2025 17:43:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ci+ncNus"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85ED9C4CEE5;
+	Fri, 14 Mar 2025 17:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741974221;
-	bh=UfJrm2yCFAgVvDAibstSIiqplSzCVgfdGZqcvC0TH/o=;
+	s=k20201202; t=1741974222;
+	bh=OuqUNRtR8Ao+B4jo0qU03e/ijy8C0uzMm2+jHF4asMc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=MzdiXnLDnYiyc+IiiZC3WYzF3D4mo6tnnO1kek0ERsAdbr0I63piUX76szP1uEFQv
-	 LQ3atwDzS6mIvsfhNVFwNjJSHdJlJ8drU9ZUbb+uUzptDyvGXqfi2WCWgHJYtM9m0x
-	 Vk2ErzxebJgpJDcfbNdMD4ezLbwigmdt46NMXTk/Cip7PcgbIEwEHkQPQI+bDlgNB5
-	 FaZZ3fTCNVEGaQ2plJXiHa+uVRfpz8g6tmXFN8+4G5J22yxw45hdXRSDKLtQoqTsJd
-	 uKm9zP8mggbQscDuQ5vzyhbh7CWYR/BeGbb3erFFkc8qkqWfW4XMwgUqx9iv3hSLQJ
-	 myOLVRANzrNkQ==
+	b=ci+ncNusKJoXs/fb8AJbPROy3zae483imTY/Js+n81N8zgAZ+NkAtWDlu8Mu5ND4x
+	 Nvrz9sTOcoDOFJJ2TDEMH5rWGmjuXMnTmnRzEba2O9gFf+HCDR/WN5sNPBivEW5Qm2
+	 9RZSDFPx1iBVlqkbF4WWs1gDuWccM2+1P74SnDubu2jk8y107arFbOj8v+X8iRWtVF
+	 hN+MhIw1VtNNjfWYrMOZ1eVdu2FkrxUOlPt1SmeQQ9JhPF9lvvLEc0KUr/A8/lHCbP
+	 jXEs6VbwG7NbMP7Xub3YrraQ0ME/ZdG8e7nl84bgr/m8NhpG1EvEwwZWWUFlc+bPxW
+	 xOCMGNWwQ0o5Q==
 From: Namhyung Kim <namhyung@kernel.org>
 To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Yujie Liu <yujie.liu@intel.com>
-Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
- Mike Leach <mike.leach@linaro.org>, 
- Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com
-In-Reply-To: <20250312075636.429127-1-yujie.liu@intel.com>
-References: <20250312075636.429127-1-yujie.liu@intel.com>
-Subject: Re: [PATCH] perf script: Fix typo in branch event mask
-Message-Id: <174197422088.4059945.167819241578952524.b4-ty@kernel.org>
-Date: Fri, 14 Mar 2025 10:43:40 -0700
+ Yujie Liu <yujie.liu@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+ Martin Liska <martin.liska@hey.com>, James Clark <james.clark@linaro.org>, 
+ Leo Yan <leo.yan@arm.com>, Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20250312072329.419020-1-yujie.liu@intel.com>
+References: <20250312072329.419020-1-yujie.liu@intel.com>
+Subject: Re: [PATCH v2] perf script: Update brstack syntax documentation
+Message-Id: <174197422150.4059945.13925183129838797579.b4-ty@kernel.org>
+Date: Fri, 14 Mar 2025 10:43:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,10 +53,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 12 Mar 2025 15:56:36 +0800, Yujie Liu wrote:
-> BRACH -> BRANCH
+On Wed, 12 Mar 2025 15:23:29 +0800, Yujie Liu wrote:
+> The following commits added new fields/flags to the branch stack field
+> list:
 > 
+> commit 1f48989cdc7d ("perf script: Output branch sample type")
+> commit 6ade6c646035 ("perf script: Show branch speculation info")
+> commit 1e66dcff7b9b ("perf script: Add not taken event for branch stack")
 > 
+> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
