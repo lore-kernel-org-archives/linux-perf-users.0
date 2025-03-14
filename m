@@ -1,29 +1,28 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62461624FC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD6E1A317E;
 	Fri, 14 Mar 2025 08:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940447; cv=none; b=YIi3FfYBpvbr4QwUIHPRptaRRO7oGi71pA4wpeRmGT2R4ac7LjPM0nPufr/NQ1wOViF860xNXKIUH4d+RAa1n3Ysg8R+yj2GoPgn8ZRdVGxc5YJmEgnhQAwxV8dM8OLpI9Oca22d4wFaN1cSKJ8wHOfZOUXdHcX7krtrbKJ+cI4=
+	t=1741940448; cv=none; b=jotN6F4fID7cIJBWu7VAsB0EDZwbGBWwO+9TJIzs2fzfDebeD9k8X8qbemNXArf0FpJBbEjXr0mZgS+ErHhyLpS4x2XhjwDDu8empWvQYd1lTdgcEbT9RbkYscdabQED7kab2jyDEFiyIrhokWjNq46bX6v7yWdTvjEci6AqiDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940447; c=relaxed/simple;
-	bh=wE9SWS1JbvsNO/jWauT1b7kaE9hGVKSk7FUnsshtdTo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JRz4r7uG7S7KJ6h+HGxuRHBVr7Lzasj2GFUmn4k4VyP6ssXYuSdQJqAuOnnDJYbp1TQJpeUTjfxIqpF2B5TTTTUGMi9YqGkMCHZ8uL71W+AmTyo3nMK4q/ULn/32D3nS7utH6tf0WoPoRPkBntAud6i+poJCkw+rdxY8E45OBzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1741940448; c=relaxed/simple;
+	bh=L0KAlvT8zOYFQVbNDZ3m29+XPfedC8cPfoiG9dCYMNw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B7JFQlmmVK6m087BKI8nWoBz+sfSyUmWVuGn6sibjLXuL0bQtAKoMe5khAftq6pEuwKMg5C5+R5N3pysESWPPPo1dHw4V3v/OMRkhkDVu2j6tS8+0nxb6oMMqgQWyZkriwZb0Up6y51OTniUEY8jZ35KutCVUNMhslEBMt7jUYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZDcfC6PFrzvWsF;
-	Fri, 14 Mar 2025 16:16:51 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZDcfS1V3szCs8d;
+	Fri, 14 Mar 2025 16:17:04 +0800 (CST)
 Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 42B101401F3;
-	Fri, 14 Mar 2025 16:20:43 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D6A5E1800E4;
+	Fri, 14 Mar 2025 16:20:37 +0800 (CST)
 Received: from lihuafei.huawei.com (10.90.53.74) by
  kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Mar 2025 16:20:42 +0800
+ 15.2.1544.11; Fri, 14 Mar 2025 16:20:36 +0800
 From: Li Huafei <lihuafei1@huawei.com>
 To: <namhyung@kernel.org>, <acme@kernel.org>, <leo.yan@linux.dev>,
 	<james.clark@linaro.org>, <mark.rutland@arm.com>, <john.g.garry@oracle.com>,
@@ -34,12 +33,10 @@ CC: <mike.leach@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
 	<sesse@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-perf-users@vger.kernel.org>, <lihuafei1@huawei.com>
-Subject: [PATCH 7/7] perf annotate-data: Handle the access to the 'current' pointer on arm64
-Date: Sat, 15 Mar 2025 00:21:37 +0800
-Message-ID: <20250314162137.528204-8-lihuafei1@huawei.com>
+Subject: [PATCH 0/7] Add data type profiling support for arm64
+Date: Sat, 15 Mar 2025 00:21:30 +0800
+Message-ID: <20250314162137.528204-1-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250314162137.528204-1-lihuafei1@huawei.com>
-References: <20250314162137.528204-1-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,122 +48,148 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemf500004.china.huawei.com (7.202.181.242)
 
-According to the implementation of the 'current' macro on ARM64, the
-sp_el0 register stores the pointer to the current task's task_struct.
-For example:
+Hi,
 
- mrs x1, sp_el0
- ldr x2, [x1, #1896]
+This patchset supports arm64 perf data type profiling. Data type
+profiling was introduced by Namhyung [1], which associates PMU sampling
+(here referring to memory access-related event sampling) with the
+referenced data types, providing developers with an effective tool for
+analyzing the impact of memory usage and layout. For more detailed
+background, please refer to [2].
 
-We can infer that the ldr instruction is accessing a member of the
-task_struct structure at an offset of 1896. The key is to construct the
-data type for x1. The instruction 'mrs x1, sp_el0' belongs to the inline
-function get_current(). By finding the DIE of the inline function
-through its instruction address, and then obtaining the DIE for its
-return type, which should be 'struct task_struct *'. Then, we update the
-register state of x1 with this type information.
+Namhyung initially supported this feature only on x86, and later Athira
+added support for it on powerpc [3]. Unlike the x86 implementation, the
+powerpc implementation parses operands directly from raw instruction
+code instead of using the results from assembler disassembly. As Athira
+mentioned, this is mainly because not all memory access instructions on
+powerpc have explicit memory reference assembler notations '()' in their
+assembly code. On arm64, all memory access instructions have the
+notation '[]', so my implementation is similar to x86, using the
+disassembly results from objdump, llvm, or libcapstone, and parsing
+based on strings. I believe this has the advantage of reusing the
+complex instruction parsing logic of the assembler, but it may not
+perform as well as raw instruction parsing in terms of efficiency.
 
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
----
- tools/perf/arch/arm64/annotate/instructions.c | 71 +++++++++++++++----
- 1 file changed, 57 insertions(+), 14 deletions(-)
+Below is a brief description of this patchset:
+ - Patch 1 first identifies load and store instructions and provides a
+   parsing function.
+ - Patches 2-3 are refactoring patches. They primarily move the code for
+   extracting registers and offsets to specific architecture
+   implementations. Additionally, a new callback function
+   'extract_reg_offset' is introduced to avoid having too many
+   architecture-specific implementations in the function
+   'annotate_get_insn_location()'.
+ - Patch 4 implements the extract_reg_offset callback for arm64.
+   Currently, it does not support parsing instructions with register
+   pairs or register offsets in operands. Register pairs often appear in
+   stack push/pop instructions, and register offsets are common when
+   accessing per-CPU variables, both of which require special handling.
+ - Patch 5 adds support for instruction tracing on arm64, primarily
+   addressing the issue where DWARF does not generate information for
+   intermediate pointers in pointer chains.
+ - Patches 6-7 further enhance instruction tracing. Patch 6 supports
+   parsing accesses to global variables, while Patch 7 focuses on
+   resolving accesses to the kernel's current pointer.
 
-diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index f2053e7f60a8..c5a0a6381547 100644
---- a/tools/perf/arch/arm64/annotate/instructions.c
-+++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -263,6 +263,20 @@ update_insn_state_arm64(struct type_state *state, struct data_loc_info *dloc,
- 	Dwarf_Die type_die;
- 	int sreg, dreg;
- 	u32 insn_offset = dl->al.offset;
-+	static regex_t add_regex, mrs_regex;
-+	static bool regex_compiled;
-+
-+	if (!regex_compiled) {
-+		/*
-+		 * Matching the operand assembly syntax of the add instruction:
-+		 *
-+		 *  <Xd|SP>, <Xn|SP>, #<imm>
-+		 */
-+		regcomp(&add_regex, "^([xw][0-9]{1,2}|sp), ([xw][0-9]{1,2}|sp), #(0x[0-9a-f]+)",
-+			REG_EXTENDED);
-+		regcomp(&mrs_regex, "^(x[0-9]{1,2}), sp_el0", REG_EXTENDED);
-+		regex_compiled = true;
-+	}
+There are still areas for improvement in the current implementation:
+ - Support more types of memory access instructions, such as those
+   involving register pairs and register offsets.
+ - Handle all data processing instructions (e.g., mov, add), as these
+   instructions can change the state of registers and may affect the
+   accuracy of instruction tracking.
+ - Supporting parsing of special memory access scenarios like per-CPU
+   variables and arrays.
+
+The patch set is based on 6.14-rc6 (commit 80e54e84911a). After applying
+this patch set, the date type profiling results on arm64 are as follows
+(SPE support is required):
+
+ # perf mem record -a -K -- sleep 1
+ # perf annotate --data-type --type-stat --stdio
+ Only instruction-based sampling period is currently supported by Arm SPE.
+ Annotate data type stats:
+ total 556, ok 357 (64.2%), bad 199 (35.8%)
+ -----------------------------------------------------------
+         10 : no_sym
+         36 : no_insn_ops
+         65 : no_var
+         70 : no_typeinfo
+         18 : bad_offset
+         59 : insn_track
  
- 	/* Access global variables via PC relative addressing, for example:
- 	 *
-@@ -296,20 +310,6 @@ update_insn_state_arm64(struct type_state *state, struct data_loc_info *dloc,
- 		regmatch_t match[4];
- 		char *ops = strdup(dl->ops.raw);
- 		u64 offset;
--		static regex_t add_regex;
--		static bool regex_compiled;
--
--		/*
--		 * Matching the operand assembly syntax of the add instruction:
--		 *
--		 *  <Xd|SP>, <Xn|SP>, #<imm>
--		 */
--		if (!regex_compiled) {
--			regcomp(&add_regex,
--				"^([xw][0-9]{1,2}|sp), ([xw][0-9]{1,2}|sp), #(0x[0-9a-f]+)",
--				REG_EXTENDED);
--			regex_compiled = true;
--		}
- 
- 		if (!ops)
- 			return;
-@@ -351,6 +351,49 @@ update_insn_state_arm64(struct type_state *state, struct data_loc_info *dloc,
- 		return;
- 	}
- 
-+	if (!strncmp(dl->ins.name, "mrs", 3)) {
-+		regmatch_t match[2];
-+		char *ops = strdup(dl->ops.raw);
-+		Dwarf_Die func_die;
-+		Dwarf_Attribute attr;
-+		u64 ip = dloc->ms->sym->start + dl->al.offset;
-+		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
-+
-+		if (!ops)
-+			return;
-+
-+		if (regexec(&mrs_regex, dl->ops.raw, 2, match, 0))
-+			return;
-+
-+		ops[match[1].rm_eo] = '\0';
-+		sreg = get_arm64_regnum(ops + match[1].rm_so);
-+		if (sreg < 0 || !has_reg_type(state, sreg)) {
-+			free(ops);
-+			return;
-+		}
-+
-+		/*
-+		 * Find the inline function 'get_current()' Dwarf_Die and
-+		 * obtain its return value data type, which should be
-+		 * 'struct task_struct *'.
-+		 */
-+		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
-+		    !dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
-+		    !dwarf_formref_die(&attr, &type_die)) {
-+			free(ops);
-+			return;
-+		}
-+
-+		tsr = &state->regs[sreg];
-+		tsr->type = type_die;
-+		tsr->kind = TSR_KIND_TYPE;
-+		tsr->ok = true;
-+
-+		pr_debug_dtp("mrs sp_el0 [%x] -> reg%d", insn_offset, sreg);
-+		free(ops);
-+		return;
-+	}
-+
- 	if (strncmp(dl->ins.name, "ld", 2))
- 		return;
- 
+ Annotate type: 'struct rq' in [kernel.kallsyms] (29 samples):
+ ============================================================================
+  Percent     offset       size  field
+   100.00          0      0xe80  struct rq        {
+     0.00          0        0x4      raw_spinlock_t      __lock {
+     0.00          0        0x4          arch_spinlock_t raw_lock {
+     0.00          0        0x4              union        {
+     0.00          0        0x4                  atomic_t        val {
+     0.00          0        0x4                      int counter;
+                                                 };
+     0.00          0        0x2                  struct   {
+     0.00          0        0x1                      u8  locked;
+     0.00        0x1        0x1                      u8  pending;
+                                                 };
+     0.00          0        0x4                  struct   {
+     0.00          0        0x2                      u16 locked_pending;
+     0.00        0x2        0x2                      u16 tail;
+                                                 };
+                                             };
+                                         };
+                                     };
+    13.79        0x4        0x4      unsigned int        nr_running;
+    13.79        0x8        0x4      unsigned int        nr_numa_running;
+     0.00        0xc        0x4      unsigned int        nr_preferred_running;
+     0.00       0x10        0x4      unsigned int        numa_migrate_on;
+     0.00       0x18        0x8      long unsigned int   last_blocked_load_update_tick;
+     0.00       0x20        0x4      unsigned int        has_blocked_load;
+     0.00       0x40       0x20      call_single_data_t  nohz_csd {
+     0.00       0x40       0x10          struct __call_single_node       node {
+     0.00       0x40        0x8              struct llist_node   llist {
+     0.00       0x40        0x8                  struct llist_node*      next;
+                                             };
+     0.00       0x48        0x4              union        {
+     0.00       0x48        0x4                  unsigned int    u_flags;
+     0.00       0x48        0x4                  atomic_t        a_flags {
+     0.00       0x48        0x4                      int counter;
+                                                 };
+                                             };
+     ...
+
+Thanks,
+Huafei
+
+[1] https://lore.kernel.org/lkml/20231213001323.718046-1-namhyung@kernel.org/
+[2] https://lwn.net/Articles/955709/
+[3] https://lore.kernel.org/all/20240718084358.72242-1-atrajeev@linux.vnet.ibm.com/#r
+
+Li Huafei (7):
+  perf annotate: Handle arm64 load and store instructions
+  perf annotate: Advance the mem_ref check to mov__parse()
+  perf annotate: Add 'extract_reg_offset' callback function to extract
+    register number and access offset
+  perf annotate: Support for the 'extract_reg_offset' callback function
+    in arm64
+  perf annotate-data: Support instruction tracking for arm64
+  perf annotate-data: Handle arm64 global variable access
+  perf annotate-data: Handle the access to the 'current' pointer on
+    arm64
+
+ tools/perf/arch/arm64/annotate/instructions.c | 302 +++++++++++++++++-
+ .../perf/arch/powerpc/annotate/instructions.c |  10 +
+ tools/perf/arch/x86/annotate/instructions.c   |  99 ++++++
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/annotate-data.c               |  23 +-
+ tools/perf/util/annotate-data.h               |   4 +-
+ tools/perf/util/annotate.c                    | 112 +------
+ tools/perf/util/disasm.c                      |  14 +
+ tools/perf/util/disasm.h                      |   4 +
+ tools/perf/util/dwarf-regs-arm64.c            |  25 ++
+ tools/perf/util/include/dwarf-regs.h          |   7 +
+ 11 files changed, 490 insertions(+), 111 deletions(-)
+ create mode 100644 tools/perf/util/dwarf-regs-arm64.c
+
 -- 
 2.25.1
 
