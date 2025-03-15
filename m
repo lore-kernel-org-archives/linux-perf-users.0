@@ -1,169 +1,252 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B75185B5F;
-	Sat, 15 Mar 2025 07:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE51519D09C;
+	Sat, 15 Mar 2025 23:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742024630; cv=none; b=ZMUs4+ALzwKXq0HP33A2tOEyQRo/K9RM3nLpf16T5P6HCE0H4UQsFXdhugsdqDXWkzl7zW7utDxRUceQt1ktAd2GTkfuOmGKmGs6peZyA/vYuv9vtakDw9uHhAhb9lT42TDKvBDd1clA7q/v3c2SD/0Q4LYejlucSf1oO9yvgGA=
+	t=1742079758; cv=none; b=okE0UkAUN9KKqVfhCpgNJUZ/Qt7jQLsjyytPKkKRyBLiqghxTD6I+rH3Ftfi6C8DG66uqXlhpEF7vQ8HjONaR7uUaiWmH5+JVHHSNVAbThMHKNDzQt4qfQd4x+GboozsOvwPXgseZ578GSSAUfgs0PvgJKzgOwQHNKWSMBVDeyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742024630; c=relaxed/simple;
-	bh=pfYeHVsEDWveeuBl815DiEVWXdhQWhFp9D7h/1Tzfcw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JhHuv+sy73mPT9FMGBKDg3nd8vqdBJJ+wYzkZ+1Vy8fh3RMLUSG2UBbQgQzgSucq6jjIosFT3aSfDOd0KJy2HCcwBhDJvVQEyBY1sYmjgMQOtmzIlo86nmW677Ge0V9r/gHrkwcpMuRHqQSv3HnalawxbrPfiDFxGz5cfhek8aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBYFx7UW; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742079758; c=relaxed/simple;
+	bh=8XxuyM3rSXd31IYIv534Hq8h4Bllxjj9SAfhpY0z5zA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxeCcjTygWp5jfjFccOW/thCaNa0pv5nz70G+i2bdQo8+soyHwO4zRZxRPJEeyOFoWa3VR0TE4rGQ7Y5UnIKkcEolqlK/D1xLRKvAAXtDN0+e5BlP+wjB7bktMxcQr72RCx+zAWFadJAMHT5aQNcqeMflVY0E2hFFOeIBzmir6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bj7Di1nj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBYFx7UW"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22113560c57so56499785ad.2;
-        Sat, 15 Mar 2025 00:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742024628; x=1742629428; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rAmL+5CR2z6jEwd9cSjJDC4ozmAh9Z7pTmFVoqfcygM=;
-        b=cBYFx7UWnqQjhbq34R8lQfwcEUo9Oak6MvSVUwIwtBWikUu3iMRtpSHs0Rz0+qOwao
-         h6b3hbpW5fVMLybOiQrB72iVH+w44kWdHdlm8+0yEwUFkmQLo+AloWEcZZXcZfqXnqCj
-         ermO4X3MkdhFfS9ks5+gyKhSGTFCjcvA4+g+kdXUzHPWS7WjjIp8NhV09yEQN7h6uu74
-         +nl5VMnkXWgGe774/BtGyciMc33WX37W38PXsHHeJdK8AjlmID5NsfiAiUp7bJaZkPIr
-         X2+KI24LsPkD9e5uC2FCfP4y61Le6UhlNhv4Wc1VR5JknBVJ+Nc7q7pMl+R/33WvgFvr
-         Z7gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742024628; x=1742629428;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rAmL+5CR2z6jEwd9cSjJDC4ozmAh9Z7pTmFVoqfcygM=;
-        b=cLfzQMEj65Ln14ebSMDqUn9PBz+ett5hyDcMXw+6B8UdP7BTeez+mTcV3NfCrjGbb/
-         tQpZEfQJ9539mY0zYHCZ/UM2EYHXpRWVPLLuf/JEuRQuUjUfeu/sVGZRnC0X5RIt21Qz
-         BuB1ZwP5rOUO9EMFS8J05LQjYdeUnCRxg/cNgZ0IKo8DupcV6c+LKNxdPKtfGCyP6JVU
-         zZqyuY3LX5a39kvI8N7W2im5hWYeFaIdNgSwRHXN/1rfdb7LBwjqWy5DMxLCfR0sYBky
-         ky1iylIZOy6vq11jsM8rcSMHbb7NIc+VZh1FRP7AWXS/X2VKkibvgixwb3Ly3t0I43S8
-         xhRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMcYsyYhTKE1iLZH+dvvb6J4e3EBEv5/RE7KmoYYt2mXcWe6zdyHFVT298TJTtd4wehpY=@vger.kernel.org, AJvYcCVV0NV7ZWvBkKYDSS2IM71lSnS4o03eLPFCbGdamalbLXkgHSwxJtNzNJJWEC0km1bS5oypvRCl7ncquXVhD3XwQw==@vger.kernel.org, AJvYcCVb3/T+14g4BnknxAQBcdxqoRaIl+n7cMnbu5owrvtDrKiubvpec7XghkoE9n2f2MZWa2genBjthMioT4eB@vger.kernel.org, AJvYcCX+N1esY5roDlEXfku7dly2R/ddsliQUX0FIUblscXgAsm9vwmr31K6IVaT4PGsnIUpOTiKVZnOUdkwFtj51w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YygHq1oCbXzeyuSc/On2UyfeG5ZOkkq0gk8/4GXM/QT0iSo+OlU
-	bHuXfHrWiJ8opdsausJJtp4VyW16w3jKeDruPr6qY4BurEj430TQ
-X-Gm-Gg: ASbGncsqGhHGe5LTcHKFUzEjAjBNKnhWzz7A2Uq6j6QTEjeKCxfUG5mJfDnXdPN8dxc
-	3tGcyh6wspS7/5QfxhpVOdTNuQ9OSAw0kY9uyfFO7TDZsVn8pEMtyfXGqLSWHtNrxNjVYmPxdWP
-	J7M/luhzlz2In52fzXY073ktx1yOzbvZgGBxd1/dFhhGA4tIycwg9fRlqOFJDRcHEDC7OW5sDY2
-	NrtxMzX+Nxl/Y6pnc0i2RWztLSLK3g9+SxOQc2KJ5NJBP58K+0L4UUxv5Ir7MyGxQVDm4ZecgD0
-	M4imqDYPWQJN2nY5wc6cCRgdzbyW+FRPDM1AUl5Xoxtj
-X-Google-Smtp-Source: AGHT+IFNXmsiLHb1JHv7bDZUdBco+pV3oLLy0KNHvrNch7t31ViRO39JDS2byJdpYxvminRgrzVx7w==
-X-Received: by 2002:a05:6a00:2382:b0:736:4e02:c543 with SMTP id d2e1a72fcca58-7372233ae33mr6017160b3a.9.1742024627617;
-        Sat, 15 Mar 2025 00:43:47 -0700 (PDT)
-Received: from [192.168.0.164] ([50.35.39.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df97sm3965668b3a.114.2025.03.15.00.43.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Mar 2025 00:43:47 -0700 (PDT)
-Message-ID: <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
-Date: Sat, 15 Mar 2025 00:43:45 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bj7Di1nj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B62C4CEE5;
+	Sat, 15 Mar 2025 23:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742079758;
+	bh=8XxuyM3rSXd31IYIv534Hq8h4Bllxjj9SAfhpY0z5zA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bj7Di1njZVjpy/0Z52Tb50Gk3d6lh4HTnDSUTCsGBYIs1wS6mKBiWq96kFuJUFw0p
+	 yGblIEs1YuxFZkW0isR0z6Lgu4m0+XyYM639dyGvwzvVXGz80ny3yPAARlcpESzzen
+	 P+RKfVlW2Qn/filHuFtMeg/2MjgfFso2dpnrf+gjwVij0yrwBlHbvVsIpW1ISpdA/j
+	 iUfazW87RiSB3UEpLWUqTesR2F7UlQGQwbYbs8pxQB65L5ofbeukzbnVOY9ni7PARm
+	 ZgQ0SHiOT1cLht/iB3jbrcQJNWvo46UoNo/uoUHeiJBkDYeda+WoxQFqjy2GIdE8Iq
+	 GGQjIIks1wvEA==
+Date: Sat, 15 Mar 2025 16:02:35 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9YHCzINiu4uBQ8B@google.com>
+References: <20250308003209.234114-1-irogers@google.com>
+ <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1>
+ <Z9M9-YhDJg3NgiUy@x1>
+ <Z9NEX3j_1RUvaFI0@x1>
+ <Z9PCjQ8PhOadVGQ8@google.com>
+ <Z9RjHpEJGWtj8PAM@x1>
+ <Z9Rm0W6YLpxKIcI1@x1>
+ <Z9SWDGsdgagMr8PV@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] Dynamically allocate memory to store task's full
- name
-To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250314052715.610377-1-bhupesh@igalia.com>
- <202503141420.37D605B2@keescook>
-Content-Language: en-US
-From: Andres Rodriguez <andresx7@gmail.com>
-In-Reply-To: <202503141420.37D605B2@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9SWDGsdgagMr8PV@x1>
 
-
-
-On 3/14/25 14:25, Kees Cook wrote:
-> On Fri, Mar 14, 2025 at 10:57:13AM +0530, Bhupesh wrote:
->> While working with user-space debugging tools which work especially
->> on linux gaming platforms, I found that the task name is truncated due
->> to the limitation of TASK_COMM_LEN.
->>
->> For example, currently running 'ps', the task->comm value of a long
->> task name is truncated due to the limitation of TASK_COMM_LEN.
->>      create_very_lon
->>
->> This leads to the names passed from userland via pthread_setname_np()
->> being truncated.
+On Fri, Mar 14, 2025 at 05:48:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 14, 2025 at 02:26:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> > it finds the pair, but then its sc->args has a bogus pointer... I'll see
+> > where this isn't being initialized...
 > 
-> So there have been long discussions about "comm", and it mainly boils
-> down to "leave it alone". For the /proc-scraping tools like "ps" and
-> "top", they check both "comm" and "cmdline", depending on mode. The more
-> useful (and already untruncated) stuff is in "cmdline", so I suspect it
-> may make more sense to have pthread_setname_np() interact with that
-> instead. Also TASK_COMM_LEN is basically considered userspace ABI at
-> this point and we can't sanely change its length without breaking the
-> world.
+> Breakpoint 4, trace__find_usable_bpf_prog_entry (trace=0x7fffffffa510, sc=0x1046f10) at builtin-trace.c:3874
+> 3874			bool is_candidate = false;
+> (gdb) n
+> 3876			if (pair == NULL || pair == sc ||
+> (gdb) p pair
+> $7 = (struct syscall *) 0x1083c50
+> (gdb) p pair->name
+> $8 = 0x81478e "accept4"
+> (gdb) n
+> 3877			    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
+> (gdb) p i
+> $9 = 1
+> (gdb) n
+> 3876			if (pair == NULL || pair == sc ||
+> (gdb) n
+> 3880			printf("sc=%p\n", sc); fflush(stdout);
+> (gdb) n
+> sc=0x1046f10
+> 3881			printf("sc->name=%p\n", sc->name); fflush(stdout);
+> (gdb) n
+> sc->name=0x6c66202c786c3830
+> 3882			printf("sc->nr_args=%d, sc->args=%p\n", sc->nr_args, sc->args); fflush(stdout);
+> (gdb) p sc->nr_args
+> $10 = 1935635045
+> (gdb) p sc->args
+> $11 = (struct tep_format_field *) 0x257830203a6e656c
+> (gdb) p *sc
+> $12 = {e_machine = 540697702, id = 807761968, tp_format = 0x657075202c786c38, nr_args = 1935635045, args_size = 1634427759, bpf_prog = {sys_enter = 0x257830203a726464, 
+>     sys_exit = 0x7075202c786c3830}, is_exit = 101, is_open = 101, nonexistent = 114, use_btf = 95, args = 0x257830203a6e656c, 
+>   name = 0x6c66202c786c3830 <error: Cannot access memory at address 0x6c66202c786c3830>, fmt = 0x257830203a736761, arg_fmt = 0x786c3830}
+> (gdb) 
 > 
-
-Completely agree that comm is best left untouched. TASK_COMM_LEN is 
-embedded into the kernel and the pthread ABI changes here should be avoided.
-
-> Best to use /proc/$pid/task/$tid/cmdline IMO...
-
-Your recommendation works great for programs like ps and top, which are
-the examples proposed in the cover letter. However, I think the opening 
-email didn't point out use cases where the name is modified at runtime. 
-In those cases cmdline would be an unsuitable solution as it should 
-remain immutable across the process lifetime. An example of this use 
-case would be to set a thread's name for debugging purposes and then 
-trying to query it via gdb or perf.
-
-I wrote a quick and dirty example to illustrate what I mean:
-https://github.com/lostgoat/tasknames
-
-I think an alternative approach could be to have a separate entry in 
-procfs to store a tasks debug name (and leave comm completely 
-untouched), e.g. /proc/$pid/task/$tid/debug_name. This would allow 
-userspace apps to be updated with the following logic:
-
-get_task_debug_name() {
-     if ( !is_empty( debug_name ) )
-         return debug_name;
-     return comm;
-}
-
-"Legacy" userspace apps would remain ABI compatible as they would just 
-fall back to comm. And apps that want to opt in to the new behaviour can 
-be updated one at a time. Which would be work intensive, but even just 
-updating gdb and perf would be super helpful.
-
--Andres
-
+> Ok, ran out of time, but if I simple avoid the second loop in:
 > 
-> -Kees
+> static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_machine)
 > 
->> will be shown in 'ps'. For example:
->>      create_very_long_name_user_space_script.sh
->>
->> Bhupesh (2):
->>    exec: Dynamically allocate memory to store task's full name
->>    fs/proc: Pass 'task->full_name' via 'proc_task_name()'
->>
->>   fs/exec.c             | 21 ++++++++++++++++++---
->>   fs/proc/array.c       |  2 +-
->>   include/linux/sched.h |  9 +++++++++
->>   3 files changed, 28 insertions(+), 4 deletions(-)
->>
->> -- 
->> 2.38.1
->>
 > 
+> I.e. the one that starts with:
+> 
+>         /*
+>          * Now lets do a second pass looking for enabled syscalls without
+>          * an augmenter that have a signature that is a superset of another
+>          * syscall with an augmenter so that we can auto-reuse it.
+> 
+> This:
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index e0434f7dc67cb988..3664bb512c70cabf 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3989,6 +3989,8 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
+>                         goto out;
+>         }
+>  
+> +       return 0;
+> +
+>         /*
+>          * Now lets do a second pass looking for enabled syscalls without
+>          * an augmenter that have a signature that is a superset of another
+> ⬢ [acme@toolbox perf-tools-next]$ 
+> 
+> 
+> Then all works, we don't reuse any BPF program, but then that is an
+> heuristic anyway, that is tried becuase landlock_add_rule has a pointer
+> argument:
+> 
+> root@number:~# perf trace -e landlock_add_rule perf test -w landlock
+>      0.000 ( 0.003 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff6f2bb550, flags: 45) = -1 EINVAL (Invalid argument)
+>      0.004 ( 0.001 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7fff6f2bb540, flags: 45) = -1 EINVAL (Invalid argument)
+> root@number:~# perf test enum
+> 105: perf trace enum augmentation tests                              : Ok
+> root@number:~#
+> 
+> So its some sort of syncronization on the various new tables, sorted by
+> name, etc that then when iterating over the syscalls ends up using a sc
+> that is not initialized.
+
+Right, I've realized that calling trace__syscall_info() can invalidate
+the existing sc since it calls trace__find_syscall() which reallocates
+and resorts the syscall table.  That's why it was ok when no filter was
+used since it'd allocate the whole table in the first pass.  Otherwise
+it looks for a pair syscall while holding the original sc but calling
+the function would invalidate the sc.
+
+What about this (on top of my earlier fix)?
+
+Thanks,
+Namhyung
+
+
+---8<---
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 49199d753b7cafbf..da0ddc713e6b35da 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2506,10 +2506,12 @@ static struct syscall *trace__find_syscall(struct trace *trace, int e_machine, i
+ 	};
+ 	struct syscall *sc, *tmp;
+ 
+-	sc = bsearch(&key, trace->syscalls.table, trace->syscalls.table_size,
+-		     sizeof(struct syscall), syscall__cmp);
+-	if (sc)
+-		return sc;
++	if (trace->syscalls.table) {
++		sc = bsearch(&key, trace->syscalls.table, trace->syscalls.table_size,
++			     sizeof(struct syscall), syscall__cmp);
++		if (sc)
++			return sc;
++	}
+ 
+ 	tmp = reallocarray(trace->syscalls.table, trace->syscalls.table_size + 1,
+ 			   sizeof(struct syscall));
+@@ -3855,6 +3857,10 @@ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, i
+ 
+ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace, struct syscall *sc)
+ {
++	int orig_id = sc->id;
++	const char *orig_name = sc->name;
++	int e_machine = sc->e_machine;
++	struct tep_format_field *args = sc->args;
+ 	struct tep_format_field *field, *candidate_field;
+ 	/*
+ 	 * We're only interested in syscalls that have a pointer:
+@@ -3866,18 +3872,19 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 
+ 	return NULL;
+ 
++	/* calling trace__syscall_info() may invalidate 'sc' */
+ try_to_find_pair:
+-	for (int i = 0, num_idx = syscalltbl__num_idx(sc->e_machine); i < num_idx; ++i) {
+-		int id = syscalltbl__id_at_idx(sc->e_machine, i);
+-		struct syscall *pair = trace__syscall_info(trace, NULL, sc->e_machine, id);
++	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
++		int id = syscalltbl__id_at_idx(e_machine, i);
++		struct syscall *pair = trace__syscall_info(trace, NULL, e_machine, id);
+ 		struct bpf_program *pair_prog;
+ 		bool is_candidate = false;
+ 
+-		if (pair == NULL || pair == sc ||
++		if (pair == NULL || pair->id == orig_id ||
+ 		    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
+ 			continue;
+ 
+-		for (field = sc->args, candidate_field = pair->args;
++		for (field = args, candidate_field = pair->args;
+ 		     field && candidate_field; field = field->next, candidate_field = candidate_field->next) {
+ 			bool is_pointer = field->flags & TEP_FIELD_IS_POINTER,
+ 			     candidate_is_pointer = candidate_field->flags & TEP_FIELD_IS_POINTER;
+@@ -3944,7 +3951,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 				goto next_candidate;
+ 		}
+ 
+-		pr_debug("Reusing \"%s\" BPF sys_enter augmenter for \"%s\"\n", pair->name, sc->name);
++		pr_debug("Reusing \"%s\" BPF sys_enter augmenter for \"%s\"\n", pair->name, orig_name);
+ 		return pair_prog;
+ 	next_candidate:
+ 		continue;
+@@ -4041,6 +4048,11 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
+ 		if (pair_prog == NULL)
+ 			continue;
+ 
++		/*
++		 * Get syscall info again as find usable entry above might
++		 * modify the syscall table and shuffle it.
++		 */
++		sc = trace__syscall_info(trace, NULL, e_machine, key);
+ 		sc->bpf_prog.sys_enter = pair_prog;
+ 
+ 		/*
 
