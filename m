@@ -1,155 +1,169 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB2119047F;
-	Sat, 15 Mar 2025 06:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B75185B5F;
+	Sat, 15 Mar 2025 07:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742019466; cv=none; b=di5k1YguDARQbER/1cfqgFp9LwMXpKDVEMq9VzBAZd7qrcMplfHKaDsWealCjsWWmbvyvDJXEQc2vcn632Z12th+zcUhW8iLdO8MAQxaCGoW2c1C/8tYCYhS5nh51m4V4RwHyAQUPaYzE8YHiFfOXXlHxFbXkVXd5VfF2noEBiU=
+	t=1742024630; cv=none; b=ZMUs4+ALzwKXq0HP33A2tOEyQRo/K9RM3nLpf16T5P6HCE0H4UQsFXdhugsdqDXWkzl7zW7utDxRUceQt1ktAd2GTkfuOmGKmGs6peZyA/vYuv9vtakDw9uHhAhb9lT42TDKvBDd1clA7q/v3c2SD/0Q4LYejlucSf1oO9yvgGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742019466; c=relaxed/simple;
-	bh=aReZxqbqDIlPLTR0LMZveH1dNEBv83blpitHwO14rHM=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=D1yEiiS5ZBt6OJlT9PSOQR5vKicc0A3YH3fJjqDRyuTamAZy5jB1Bt6FtnyeBMB5HFsG5s/Pg7LjoCWPNSiumskn7Y86T/nluPo3SapzFBmiOVdFoBpNT+KHceFrCVMznn83yvK2jFMFSHT3q98PWtY7MEpkP2621MNm/3HbtQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZF9yB6MTWz501gZ;
-	Sat, 15 Mar 2025 14:17:38 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl2.zte.com.cn with SMTP id 52F6Ha9R055411;
-	Sat, 15 Mar 2025 14:17:36 +0800 (+08)
-	(envelope-from xie.ludan@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Sat, 15 Mar 2025 14:17:38 +0800 (CST)
-Date: Sat, 15 Mar 2025 14:17:38 +0800 (CST)
-X-Zmail-TransId: 2afc67d51b821a3-67f97
-X-Mailer: Zmail v1.0
-Message-ID: <20250315141738452lXIH39UJAXlCmcATCzcBv@zte.com.cn>
+	s=arc-20240116; t=1742024630; c=relaxed/simple;
+	bh=pfYeHVsEDWveeuBl815DiEVWXdhQWhFp9D7h/1Tzfcw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JhHuv+sy73mPT9FMGBKDg3nd8vqdBJJ+wYzkZ+1Vy8fh3RMLUSG2UBbQgQzgSucq6jjIosFT3aSfDOd0KJy2HCcwBhDJvVQEyBY1sYmjgMQOtmzIlo86nmW677Ge0V9r/gHrkwcpMuRHqQSv3HnalawxbrPfiDFxGz5cfhek8aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBYFx7UW; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBYFx7UW"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22113560c57so56499785ad.2;
+        Sat, 15 Mar 2025 00:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742024628; x=1742629428; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rAmL+5CR2z6jEwd9cSjJDC4ozmAh9Z7pTmFVoqfcygM=;
+        b=cBYFx7UWnqQjhbq34R8lQfwcEUo9Oak6MvSVUwIwtBWikUu3iMRtpSHs0Rz0+qOwao
+         h6b3hbpW5fVMLybOiQrB72iVH+w44kWdHdlm8+0yEwUFkmQLo+AloWEcZZXcZfqXnqCj
+         ermO4X3MkdhFfS9ks5+gyKhSGTFCjcvA4+g+kdXUzHPWS7WjjIp8NhV09yEQN7h6uu74
+         +nl5VMnkXWgGe774/BtGyciMc33WX37W38PXsHHeJdK8AjlmID5NsfiAiUp7bJaZkPIr
+         X2+KI24LsPkD9e5uC2FCfP4y61Le6UhlNhv4Wc1VR5JknBVJ+Nc7q7pMl+R/33WvgFvr
+         Z7gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742024628; x=1742629428;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rAmL+5CR2z6jEwd9cSjJDC4ozmAh9Z7pTmFVoqfcygM=;
+        b=cLfzQMEj65Ln14ebSMDqUn9PBz+ett5hyDcMXw+6B8UdP7BTeez+mTcV3NfCrjGbb/
+         tQpZEfQJ9539mY0zYHCZ/UM2EYHXpRWVPLLuf/JEuRQuUjUfeu/sVGZRnC0X5RIt21Qz
+         BuB1ZwP5rOUO9EMFS8J05LQjYdeUnCRxg/cNgZ0IKo8DupcV6c+LKNxdPKtfGCyP6JVU
+         zZqyuY3LX5a39kvI8N7W2im5hWYeFaIdNgSwRHXN/1rfdb7LBwjqWy5DMxLCfR0sYBky
+         ky1iylIZOy6vq11jsM8rcSMHbb7NIc+VZh1FRP7AWXS/X2VKkibvgixwb3Ly3t0I43S8
+         xhRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMcYsyYhTKE1iLZH+dvvb6J4e3EBEv5/RE7KmoYYt2mXcWe6zdyHFVT298TJTtd4wehpY=@vger.kernel.org, AJvYcCVV0NV7ZWvBkKYDSS2IM71lSnS4o03eLPFCbGdamalbLXkgHSwxJtNzNJJWEC0km1bS5oypvRCl7ncquXVhD3XwQw==@vger.kernel.org, AJvYcCVb3/T+14g4BnknxAQBcdxqoRaIl+n7cMnbu5owrvtDrKiubvpec7XghkoE9n2f2MZWa2genBjthMioT4eB@vger.kernel.org, AJvYcCX+N1esY5roDlEXfku7dly2R/ddsliQUX0FIUblscXgAsm9vwmr31K6IVaT4PGsnIUpOTiKVZnOUdkwFtj51w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YygHq1oCbXzeyuSc/On2UyfeG5ZOkkq0gk8/4GXM/QT0iSo+OlU
+	bHuXfHrWiJ8opdsausJJtp4VyW16w3jKeDruPr6qY4BurEj430TQ
+X-Gm-Gg: ASbGncsqGhHGe5LTcHKFUzEjAjBNKnhWzz7A2Uq6j6QTEjeKCxfUG5mJfDnXdPN8dxc
+	3tGcyh6wspS7/5QfxhpVOdTNuQ9OSAw0kY9uyfFO7TDZsVn8pEMtyfXGqLSWHtNrxNjVYmPxdWP
+	J7M/luhzlz2In52fzXY073ktx1yOzbvZgGBxd1/dFhhGA4tIycwg9fRlqOFJDRcHEDC7OW5sDY2
+	NrtxMzX+Nxl/Y6pnc0i2RWztLSLK3g9+SxOQc2KJ5NJBP58K+0L4UUxv5Ir7MyGxQVDm4ZecgD0
+	M4imqDYPWQJN2nY5wc6cCRgdzbyW+FRPDM1AUl5Xoxtj
+X-Google-Smtp-Source: AGHT+IFNXmsiLHb1JHv7bDZUdBco+pV3oLLy0KNHvrNch7t31ViRO39JDS2byJdpYxvminRgrzVx7w==
+X-Received: by 2002:a05:6a00:2382:b0:736:4e02:c543 with SMTP id d2e1a72fcca58-7372233ae33mr6017160b3a.9.1742024627617;
+        Sat, 15 Mar 2025 00:43:47 -0700 (PDT)
+Received: from [192.168.0.164] ([50.35.39.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df97sm3965668b3a.114.2025.03.15.00.43.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Mar 2025 00:43:47 -0700 (PDT)
+Message-ID: <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
+Date: Sat, 15 Mar 2025 00:43:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xie.ludan@zte.com.cn>
-To: <peterz@infradead.org>
-Cc: <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-        <kan.liang@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHBlcmYvY29yZTogdXNlIHN5c2ZzX2VtaXQoKSBpbnN0ZWFkIG9mIHNjbnByaW50ZigpLg==?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 52F6Ha9R055411
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67D51B82.006/4ZF9yB6MTWz501gZ
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/2] Dynamically allocate memory to store task's full
+ name
+To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
+References: <20250314052715.610377-1-bhupesh@igalia.com>
+ <202503141420.37D605B2@keescook>
+Content-Language: en-US
+From: Andres Rodriguez <andresx7@gmail.com>
+In-Reply-To: <202503141420.37D605B2@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+On 3/14/25 14:25, Kees Cook wrote:
+> On Fri, Mar 14, 2025 at 10:57:13AM +0530, Bhupesh wrote:
+>> While working with user-space debugging tools which work especially
+>> on linux gaming platforms, I found that the task name is truncated due
+>> to the limitation of TASK_COMM_LEN.
+>>
+>> For example, currently running 'ps', the task->comm value of a long
+>> task name is truncated due to the limitation of TASK_COMM_LEN.
+>>      create_very_lon
+>>
+>> This leads to the names passed from userland via pthread_setname_np()
+>> being truncated.
+> 
+> So there have been long discussions about "comm", and it mainly boils
+> down to "leave it alone". For the /proc-scraping tools like "ps" and
+> "top", they check both "comm" and "cmdline", depending on mode. The more
+> useful (and already untruncated) stuff is in "cmdline", so I suspect it
+> may make more sense to have pthread_setname_np() interact with that
+> instead. Also TASK_COMM_LEN is basically considered userspace ABI at
+> this point and we can't sanely change its length without breaking the
+> world.
+> 
 
+Completely agree that comm is best left untouched. TASK_COMM_LEN is 
+embedded into the kernel and the pthread ABI changes here should be avoided.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+> Best to use /proc/$pid/task/$tid/cmdline IMO...
 
+Your recommendation works great for programs like ps and top, which are
+the examples proposed in the cover letter. However, I think the opening 
+email didn't point out use cases where the name is modified at runtime. 
+In those cases cmdline would be an unsuitable solution as it should 
+remain immutable across the process lifetime. An example of this use 
+case would be to set a thread's name for debugging purposes and then 
+trying to query it via gdb or perf.
 
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+I wrote a quick and dirty example to illustrate what I mean:
+https://github.com/lostgoat/tasknames
 
-RnJvbTogWGllTHVkYW4gPHhpZS5sdWRhbkB6dGUuY29tLmNuPg0KDQpGb2xsb3cgdGhlIGFkdmlj
-ZSBpbiBEb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL3N5c2ZzLnJzdDoNCnNob3coKSBzaG91bGQg
-b25seSB1c2Ugc3lzZnNfZW1pdCgpIG9yIHN5c2ZzX2VtaXRfYXQoKSB3aGVuIGZvcm1hdHRpbmcN
-CnRoZSB2YWx1ZSB0byBiZSByZXR1cm5lZCB0byB1c2VyIHNwYWNlLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBYaWVMdWRhbiA8eGllLmx1ZGFuQHp0ZS5jb20uY24+DQotLS0NCiBrZXJuZWwvZXZlbnRzL2Nv
-cmUuYyB8IDYgKysrLS0tDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
-dGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2tlcm5lbC9ldmVudHMvY29yZS5jIGIva2VybmVsL2V2
-ZW50cy9jb3JlLmMNCmluZGV4IDk2Zjk1NzAzNWM2ZS4uMjA5MjUwZjQ4NTFhIDEwMDY0NA0KLS0t
-IGEva2VybmVsL2V2ZW50cy9jb3JlLmMNCisrKyBiL2tlcm5lbC9ldmVudHMvY29yZS5jDQpAQCAt
-MTE2OTgsNyArMTE2OTgsNyBAQCBzdGF0aWMgc3NpemVfdCBucl9hZGRyX2ZpbHRlcnNfc2hvdyhz
-dHJ1Y3QgZGV2aWNlICpkZXYsDQogew0KIAlzdHJ1Y3QgcG11ICpwbXUgPSBkZXZfZ2V0X2RydmRh
-dGEoZGV2KTsNCiANCi0JcmV0dXJuIHNjbnByaW50ZihwYWdlLCBQQUdFX1NJWkUgLSAxLCAiJWRc
-biIsIHBtdS0+bnJfYWRkcl9maWx0ZXJzKTsNCisJcmV0dXJuIHN5c2ZzX2VtaXQocGFnZSwgIiVk
-XG4iLCBwbXUtPm5yX2FkZHJfZmlsdGVycyk7DQogfQ0KIERFVklDRV9BVFRSX1JPKG5yX2FkZHJf
-ZmlsdGVycyk7DQogDQpAQCAtMTE3MDksNyArMTE3MDksNyBAQCB0eXBlX3Nob3coc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwgY2hhciAqcGFnZSkNCiB7
-DQogCXN0cnVjdCBwbXUgKnBtdSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KIA0KLQlyZXR1cm4g
-c2NucHJpbnRmKHBhZ2UsIFBBR0VfU0laRSAtIDEsICIlZFxuIiwgcG11LT50eXBlKTsNCisJcmV0
-dXJuIHN5c2ZzX2VtaXQocGFnZSwgIiVkXG4iLCBwbXUtPnR5cGUpOw0KIH0NCiBzdGF0aWMgREVW
-SUNFX0FUVFJfUk8odHlwZSk7DQogDQpAQCAtMTE3MjAsNyArMTE3MjAsNyBAQCBwZXJmX2V2ZW50
-X211eF9pbnRlcnZhbF9tc19zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCiB7DQogCXN0cnVjdCBw
-bXUgKnBtdSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KIA0KLQlyZXR1cm4gc2NucHJpbnRmKHBh
-Z2UsIFBBR0VfU0laRSAtIDEsICIlZFxuIiwgcG11LT5ocnRpbWVyX2ludGVydmFsX21zKTsNCisJ
-cmV0dXJuIHN5c2ZzX2VtaXQocGFnZSwgIiVkXG4iLCBwbXUtPmhydGltZXJfaW50ZXJ2YWxfbXMp
-Ow0KIH0NCiANCiBzdGF0aWMgREVGSU5FX01VVEVYKG11eF9pbnRlcnZhbF9tdXRleCk7DQotLSAN
-CjIuMjUuMQ==
+I think an alternative approach could be to have a separate entry in 
+procfs to store a tasks debug name (and leave comm completely 
+untouched), e.g. /proc/$pid/task/$tid/debug_name. This would allow 
+userspace apps to be updated with the following logic:
 
+get_task_debug_name() {
+     if ( !is_empty( debug_name ) )
+         return debug_name;
+     return comm;
+}
 
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+"Legacy" userspace apps would remain ABI compatible as they would just 
+fall back to comm. And apps that want to opt in to the new behaviour can 
+be updated one at a time. Which would be work intensive, but even just 
+updating gdb and perf would be super helpful.
 
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogQXJp
-YWwsIEhlbHZldGljYSwgJnF1b3Q7TWljcm9zb2Z0IFlhaGVpJnF1b3Q7LCBzYW5zLXNlcmlmOyBi
-YWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij5Gcm9tOiBYaWVMdWRhbiAmbHQ7
-eGllLmx1ZGFuQHp0ZS5jb20uY24mZ3Q7PC9zcGFuPjwvcD48cD48YnI+PC9wPjxwPkZvbGxvdyB0
-aGUgYWR2aWNlIGluIERvY3VtZW50YXRpb24vZmlsZXN5c3RlbXMvc3lzZnMucnN0OjwvcD48cD5z
-aG93KCkgc2hvdWxkIG9ubHkgdXNlIHN5c2ZzX2VtaXQoKSBvciBzeXNmc19lbWl0X2F0KCkgd2hl
-biBmb3JtYXR0aW5nPC9wPjxwPnRoZSB2YWx1ZSB0byBiZSByZXR1cm5lZCB0byB1c2VyIHNwYWNl
-LjwvcD48cD48YnI+PC9wPjxwPlNpZ25lZC1vZmYtYnk6IFhpZUx1ZGFuICZsdDt4aWUubHVkYW5A
-enRlLmNvbS5jbiZndDs8L3A+PHA+LS0tPC9wPjxwPiZuYnNwO2tlcm5lbC9ldmVudHMvY29yZS5j
-IHwgNiArKystLS08L3A+PHA+Jm5ic3A7MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSk8L3A+PHA+PGJyPjwvcD48cD5kaWZmIC0tZ2l0IGEva2VybmVsL2V2ZW50
-cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYzwvcD48cD5pbmRleCA5NmY5NTcwMzVjNmUu
-LjIwOTI1MGY0ODUxYSAxMDA2NDQ8L3A+PHA+LS0tIGEva2VybmVsL2V2ZW50cy9jb3JlLmM8L3A+
-PHA+KysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmM8L3A+PHA+QEAgLTExNjk4LDcgKzExNjk4LDcg
-QEAgc3RhdGljIHNzaXplX3QgbnJfYWRkcl9maWx0ZXJzX3Nob3coc3RydWN0IGRldmljZSAqZGV2
-LDwvcD48cD4mbmJzcDt7PC9wPjxwPiZuYnNwOzxzcGFuIHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUi
-Pgk8L3NwYW4+c3RydWN0IHBtdSAqcG11ID0gZGV2X2dldF9kcnZkYXRhKGRldik7PC9wPjxwPiZu
-YnNwOzwvcD48cD4tPHNwYW4gc3R5bGU9IndoaXRlLXNwYWNlOnByZSI+CTwvc3Bhbj5yZXR1cm4g
-c2NucHJpbnRmKHBhZ2UsIFBBR0VfU0laRSAtIDEsICIlZFxuIiwgcG11LSZndDtucl9hZGRyX2Zp
-bHRlcnMpOzwvcD48cD4rPHNwYW4gc3R5bGU9IndoaXRlLXNwYWNlOnByZSI+CTwvc3Bhbj5yZXR1
-cm4gc3lzZnNfZW1pdChwYWdlLCAiJWRcbiIsIHBtdS0mZ3Q7bnJfYWRkcl9maWx0ZXJzKTs8L3A+
-PHA+Jm5ic3A7fTwvcD48cD4mbmJzcDtERVZJQ0VfQVRUUl9STyhucl9hZGRyX2ZpbHRlcnMpOzwv
-cD48cD4mbmJzcDs8L3A+PHA+QEAgLTExNzA5LDcgKzExNzA5LDcgQEAgdHlwZV9zaG93KHN0cnVj
-dCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKnBhZ2Up
-PC9wPjxwPiZuYnNwO3s8L3A+PHA+Jm5ic3A7PHNwYW4gc3R5bGU9IndoaXRlLXNwYWNlOnByZSI+
-CTwvc3Bhbj5zdHJ1Y3QgcG11ICpwbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTs8L3A+PHA+Jm5i
-c3A7PC9wPjxwPi08c3BhbiBzdHlsZT0id2hpdGUtc3BhY2U6cHJlIj4JPC9zcGFuPnJldHVybiBz
-Y25wcmludGYocGFnZSwgUEFHRV9TSVpFIC0gMSwgIiVkXG4iLCBwbXUtJmd0O3R5cGUpOzwvcD48
-cD4rPHNwYW4gc3R5bGU9IndoaXRlLXNwYWNlOnByZSI+CTwvc3Bhbj5yZXR1cm4gc3lzZnNfZW1p
-dChwYWdlLCAiJWRcbiIsIHBtdS0mZ3Q7dHlwZSk7PC9wPjxwPiZuYnNwO308L3A+PHA+Jm5ic3A7
-c3RhdGljIERFVklDRV9BVFRSX1JPKHR5cGUpOzwvcD48cD4mbmJzcDs8L3A+PHA+QEAgLTExNzIw
-LDcgKzExNzIwLDcgQEAgcGVyZl9ldmVudF9tdXhfaW50ZXJ2YWxfbXNfc2hvdyhzdHJ1Y3QgZGV2
-aWNlICpkZXYsPC9wPjxwPiZuYnNwO3s8L3A+PHA+Jm5ic3A7PHNwYW4gc3R5bGU9IndoaXRlLXNw
-YWNlOnByZSI+CTwvc3Bhbj5zdHJ1Y3QgcG11ICpwbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTs8
-L3A+PHA+Jm5ic3A7PC9wPjxwPi08c3BhbiBzdHlsZT0id2hpdGUtc3BhY2U6cHJlIj4JPC9zcGFu
-PnJldHVybiBzY25wcmludGYocGFnZSwgUEFHRV9TSVpFIC0gMSwgIiVkXG4iLCBwbXUtJmd0O2hy
-dGltZXJfaW50ZXJ2YWxfbXMpOzwvcD48cD4rPHNwYW4gc3R5bGU9IndoaXRlLXNwYWNlOnByZSI+
-CTwvc3Bhbj5yZXR1cm4gc3lzZnNfZW1pdChwYWdlLCAiJWRcbiIsIHBtdS0mZ3Q7aHJ0aW1lcl9p
-bnRlcnZhbF9tcyk7PC9wPjxwPiZuYnNwO308L3A+PHA+Jm5ic3A7PC9wPjxwPiZuYnNwO3N0YXRp
-YyBERUZJTkVfTVVURVgobXV4X2ludGVydmFsX211dGV4KTs8L3A+PHA+LS0mbmJzcDs8L3A+PHA+
-Mi4yNS4xPC9wPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xp
-u5EsTWljcm9zb2Z0IFlhSGVpOyI+PGJyPjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjE0cHg7Zm9u
-dC1mYW1pbHk65b6u6L2v6ZuF6buRLE1pY3Jvc29mdCBZYUhlaTsiPjxicj48L3A+PHAgc3R5bGU9
-ImZvbnQtc2l6ZToxNHB4O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7
-Ij48YnI+PC9wPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xp
-u5EsTWljcm9zb2Z0IFlhSGVpOyI+PGJyPjwvcD48L2Rpdj4=
+-Andres
 
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
+> 
+> -Kees
+> 
+>> will be shown in 'ps'. For example:
+>>      create_very_long_name_user_space_script.sh
+>>
+>> Bhupesh (2):
+>>    exec: Dynamically allocate memory to store task's full name
+>>    fs/proc: Pass 'task->full_name' via 'proc_task_name()'
+>>
+>>   fs/exec.c             | 21 ++++++++++++++++++---
+>>   fs/proc/array.c       |  2 +-
+>>   include/linux/sched.h |  9 +++++++++
+>>   3 files changed, 28 insertions(+), 4 deletions(-)
+>>
+>> -- 
+>> 2.38.1
+>>
+> 
 
