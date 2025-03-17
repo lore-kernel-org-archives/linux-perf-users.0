@@ -1,224 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D3929CE8;
-	Mon, 17 Mar 2025 21:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E03202971
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 21:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742246393; cv=none; b=hC6B+iErIJnUQlp45/nLa9r2XRIt2YkWHFRdrLS2DG6TWzrULAebql1a9L5RNreS7motYMahJBtbsi7VbyuGJnXJ3KYflTdzBFp+OYzK/ov0UEzbLMTzgnBiNneKRad9dpYN/KvVs9Ipkp4tAX9a0tTD5Zy7mI1B5cnfKeppgH4=
+	t=1742246773; cv=none; b=trDtLsc+xY/KlXWqImhdQ6H21APELf5wd1TDABXRuQoyAbLh9rlfJE311WWMwk4S1ApQ9wAro0OYH8mv6d7z301Xb+yNihSfJCpOcw/n0dcipO8402+TUmxsIMWme1l+lgvHF1chfu5+wI9t7KrU2rde6uFbmNghVfLuSQIlgZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742246393; c=relaxed/simple;
-	bh=sJ6V7jkkaFv6f6/KnI1DYggtxUE5WU7pJdhow50px1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RG779OMAiqt7Qqzy7Up8E6IA0jjHPKF9yZ2N4vN6SONmy+7tqUfczH4CPPEuo/LBFLuJxogpezi15mEs6osh/DKjUmA2UsPFdraI10ZTQmtPKAdnrWomYxUd/VNWse4FaPn5pZY+/NuaU18vLbkvj1eQFiGX4IOVRAueYN4DoeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWCv+zb6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742246773; c=relaxed/simple;
+	bh=QV6NeSSrSuc1N9LG/u//TUlnETuTUQO6//M4Xzp8orY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=t4UjHEEYGtOqnobc08WsYJrzkBPJVCZW0toX4S+Pfpjg1zHD4fIgpHGBP497AyRV914SR6wotfgO61Mvjt6/eZl+pf1DN3CHlqI3NU6ElP+kAqsYX4CVvBoEgoxEiKe5PU6pBb8OndC0vr23vCJa9GrkNAP1vA2iWxm7NGCJWu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wnMhQeaW; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWCv+zb6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B8C8C4CEE3;
-	Mon, 17 Mar 2025 21:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742246392;
-	bh=sJ6V7jkkaFv6f6/KnI1DYggtxUE5WU7pJdhow50px1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EWCv+zb65t1erf7mNp1n3wlDSg7N1Ehr3MtQYr69qMkJx4fNJ9PsNwrjwE69hGJ3Q
-	 y0c6PtQGJ9sZOHq564nBFC53Y03F56F5/t5PKQfLk7/EFiuvUKHPH4Lg3xMu6WHEkN
-	 MP41himlDFtUSaLWdxHAH8lIBoz/00EqeX9VaIMZ59jFuxig/TycEOxsPy43dq7WEN
-	 /XUwcJQWoGM6q4JMjDTiMcbE4nADwtjGimkee72dcNZZkRhPfjEgo17vQB2AQ1OqYO
-	 dCtrOhP7C0RKkIYVtstp3RjOjs2YTICgixi7y9HsuY7KnSkdy16WlvZ8zz8G0cKaNn
-	 ZOaRpmBdUssrA==
-Date: Mon, 17 Mar 2025 18:19:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	guoren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
- the build
-Message-ID: <Z9iR9iocSKg0SPph@x1>
-References: <20250308003209.234114-1-irogers@google.com>
- <Z9KFLGpenwOP32q3@google.com>
- <Z9M24AJzui9lFbGo@x1>
- <Z9M9-YhDJg3NgiUy@x1>
- <Z9NEX3j_1RUvaFI0@x1>
- <Z9PCjQ8PhOadVGQ8@google.com>
- <Z9RjHpEJGWtj8PAM@x1>
- <Z9iKhwoj1GXvH4c9@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wnMhQeaW"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2242ac37caeso6865ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 14:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742246771; x=1742851571; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CtcFHptsmprlxPmeOniAk13c6ZRerTHBG0RZgJHM97U=;
+        b=wnMhQeaW8sQMdoVBiQfqwiBdZYdekumE9n0NqBQ7fF5tRK+IZ5O8pZZRC27TH/i+e3
+         dVsQsUw1a/83cGT9g3m6hMRh0O2xl+1ax27YJ1W232MQs+Jr8rRqiMPCS+DfiaJvAepm
+         hKCSupWvmNHpdFJzcgm5jZUN5Bvu+bRWmIGMgdGPktTkSbw3oZB53qHZgUboDHQvcmPc
+         0liK1ZEjzD4mUJwD3AfIxBDhwu+DioT0YQQkMWI8rY0XQHLm9LDp+psYPO/5zmkU+RPl
+         FGtnJQRNtz98CdnRQoNEfDj6dqqab4QxASMibKKH6t+U+m4evJvOO1BlmROvtZdo8Dc9
+         jaRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742246771; x=1742851571;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CtcFHptsmprlxPmeOniAk13c6ZRerTHBG0RZgJHM97U=;
+        b=p7nryTKJzLRmpuNROUsyKOULBDHY+f3bhedlB3ZHLmN92m4v7GgNzYuz3aKxJ+RIyJ
+         RNuAJhJ5S/YYPn/X89WQETCfy0ufC+AYRl9vTaLpE4MtxPdtwhvsdaUbKZuDun0HSTap
+         s4voHfm9FCTzYv9FxvKx/SVBwrWZLXxXmGDfZ7xjqYZF6/SyXgKp2xu/8PIkTkdO6VPk
+         JvX6sZPsLGfg8t/Rdbj1LYxgdBZtBxsLHVOqPMU4sVjE3pw/hb8AaO77qefv0wOsE/+/
+         PqWlBHR+CKsu6sh9Ooj+AusQ3vSj1Z3QKnJQ9aLbHKbUueFvLiu2sdgvtb6Gpcwk0hdc
+         Qobg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSdbfJz8FZRXUpJNBr8viDu/uf9ipOrOWLK6c8aDa7abr5B+p4IkOp7HuZzxLR08o4TT2ISAYdg//WAt89EO2l@vger.kernel.org
+X-Gm-Message-State: AOJu0YymQM+kyvyMJD4uYRAYdQZr3TkLdyHuNyTMWh5YOxM4oO3msW5n
+	uRepnFmkMAODtWfRb0UhoHV7dQLpQUZFQ9MZ66b4Wdws68KPNYji4zKSGpsnPT8MjD3ozNHQz2n
+	VZA7Vc3MDrjhUmVONMHOVzstkrexkc+29Q5y5
+X-Gm-Gg: ASbGncsr4HqDmuYn28dXpHCEWHZUZJNp0CWKeJ13NLyMVYBo0Yp+6MgPnTbj/LVbvn5
+	RJMTwXxZeowYoVtRhvkydVqlO8r2xHkOUaGsHHf3t02o/JY0cJQvcXD0HH/SQx5LPPe8cSVmuA+
+	xJGY9BYt9+V9I/lBzNCaXj5qeTn2E82LTXgHLL0O2lYS4RCA4QGWilbmU=
+X-Google-Smtp-Source: AGHT+IGIchyGjZ/inrviM0LUA3al8hizGh73RtGe6gUpvsgk8pAeBXPh8SETEHrVpJdH+kJyF8I9ZH4nKIs7ZG1cmGs=
+X-Received: by 2002:a17:903:40c9:b0:224:6c8:8d84 with SMTP id
+ d9443c01a7336-22631018660mr106935ad.4.1742246770603; Mon, 17 Mar 2025
+ 14:26:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9iKhwoj1GXvH4c9@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 17 Mar 2025 14:25:59 -0700
+X-Gm-Features: AQ5f1Jqwcxj8BNxx3Vc7N1w_2aDIUnPEv8jRsk7v8wJCPx94S2CeHFS7o1XaXfc
+Message-ID: <CAP-5=fV-t6j9SOSUHLO8H8LWEmB1E4KZtKa3fQWiMx7y12gjhQ@mail.gmail.com>
+Subject: Remove the "perf" hard lock up detector (watchdog) from the kernel?
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Doug Anderson <dianders@chromium.org>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
+	James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Vince Weaver <vincent.weaver@maine.edu>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 17, 2025 at 05:48:10PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Mar 14, 2025 at 02:10:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Mar 13, 2025 at 10:45:49PM -0700, Namhyung Kim wrote:
-> > > On Thu, Mar 13, 2025 at 05:47:27PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Thu, Mar 13, 2025 at 05:20:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > Still building, but noticed this on x86_64:
-> > > > > 
-> > > > > 105: perf trace enum augmentation tests                              : FAILED!
-> > > > > 106: perf trace BTF general tests                                    : FAILED!
-> > > > > 107: perf trace exit race                                            : Ok
-> > > > > 108: perf trace record and replay                                    : FAILED!
-> > > > > 
-> > > > > 
-> > > > > The first doesn´t help that much with verbose mode, haven't checked if
-> > > > > before this series it was failing :-\
-> > > > > 
-> > > > > root@x1:~# perf test -vvv 105
-> > > > > 105: perf trace enum augmentation tests:
-> > > > > --- start ---
-> > > > > test child forked, pid 19411
-> > > > > Checking if vmlinux exists
-> > > > > Tracing syscall landlock_add_rule
-> > > > > ---- end(-1) ----
-> > > > > 105: perf trace enum augmentation tests                              : FAILED!
-> > > > > root@x1:~#
- 
-> This one is now ok:
- 
->      0.004 ( 0.000 ms): perf/200342 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd649bd0d0, flags: 45) = -1 EINVAL (Invalid argument)
-> root@number:~# perf test enum
-> 105: perf trace enum augmentation tests                              : Ok
-> root@number:~#
- 
-> now looking at:
- 
-> root@number:~# perf test -vvvvvvvvv 106
-> 106: perf trace BTF general tests:
-> --- start ---
-> test child forked, pid 200467
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> String augmentation test failed
-> ---- end(-1) ----
-> 106: perf trace BTF general tests                                    : FAILED!
-> root@number:~#
- 
-> No clue from the test, reading its source code now to see where it is
-> failing to try and reproduce the problem.
+Hi,
 
-root@number:~# rm -f /tmp/1234567 ; touch /tmp/1234567 ; perf trace -e renameat* --max-events=1 -- mv /tmp/1234567 /tmp/abcdefg
-         ? (         ): mv/200698  ... [continued]: renameat2())                                        = -1 EEXIST (File exists)
-root@number:~# 
+The kernel tree has two hard lockup detectors. The perf one uses a
+perf counter to generate NMI interrupts and detect a lack of forward
+progress, whereas the buddy approach uses the soft lockup hrtimer to
+check the next CPU is progressing. Doug Anderson
+<dianders@chromium.org> recently questioned:
 
-At this point it works:
+https://lore.kernel.org/all/CAD=FV=WfB6inJPuwfhbw4mtFBYpr+3ot2J+SJAZ3pT3t4fW7cw@mail.gmail.com/
+  ...but I'd also have to ask: is there a reason you're using the "perf"
+  hard-lockup detector instead of the buddy one? In my mind, the "buddy"
+  watchdog is better in almost all ways (I believe it's lower power,
+  doesn't waste a "perf" controller, and doesn't suffer from frequency
+  issues). It's even crossed my mind whether the "perf" lockup detector
+  should be deprecated. ;-)
 
-⬢ [acme@toolbox perf-tools-next]$ git log -1
-commit 58f4f294b358861adaee68dfd19da1060058ec27 (HEAD)
-Author: James Clark <james.clark@linaro.org>
-Date:   Mon Jan 6 16:42:58 2025 +0000
+In the perf tool there are warnings associated with the NMI watchdog.
+The metric code also has a flag on metrics where events aren't grouped
+when the NMI watchdog is enabled. For example:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json?h=perf-tools-next#n1916
 
-    perf test trace_btf_general: Fix shellcheck warning
+The warning and breaking of groups is currently inaccurate for the
+buddy hard lockup detector as /proc/sys/kernel/nmi_watchdog is still
+present to enable or disable the buddy detector. That is the perf tool
+is currently warning and breaking event groups stating the NMI
+watchdog is a problem but the kernel is configured to use the buddy
+watchdog.
 
+I'm unaware of a way to determine if the buddy or "perf" counter based
+approach is in use and to correct perf's behavior. A patch adding such
+an ability (say a new file in /proc/sys/kernel), and perhaps new
+abilities to switch watchdog at runtime, seem less desirable than just
+deleting the "perf" counter based hard lock up detector. The perf tool
+could make the NMI warnings and breaking of event groups conditional
+on the running kernel version then.
 
-root@number:~# rm -f /tmp/1234567 ; touch /tmp/1234567 ; perf trace -e renameat* --max-events=1 -- mv /tmp/1234567 /tmp/abcdefg
-     0.000 ( 0.006 ms): mv/218282 renameat2(olddfd: CWD, oldname: "/tmp/1234567", newdfd: CWD, newname: "/tmp/abcdefg", flags: NOREPLACE) = -1 EEXIST (File exists)
-root@number:~#
+Are there objections to just deleting the "perf" hard lock up detector
+(watchdog) from the kernel tree? Are there reasons to keep it around
+but just not default?
 
-Seems like some transient problem on this test machine, didn't manage to
-bisect and now everything seems to work:
-
-Well, not always :-\
-
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : Ok
-106: perf trace BTF general tests                                    : Ok
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : Ok
-106: perf trace BTF general tests                                    : Ok
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test 105 106 107 108 
-105: perf trace enum augmentation tests                              : Ok
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# for test in 105 106 107 108 ; do perf test $test ; done
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# for test in 105 106 107 108 ; do perf test $test ; done
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : FAILED!
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~#
-
-So, overall, I think this should land and we should continue trying to
-figure out how to find out about the above failure cases, probably the
-perf trace cases, since they do set up BPF programs, etc should be done
-serially?
-
-Doesn't seem to be the case:
-
-root@number:~# for test in 105 106 107 108 ; do perf test --sequential $test ; done
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : Ok
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# for test in 105 106 107 108 ; do perf test --sequential $test ; done
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : Ok
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# perf test --sequential 105 106 107 108
-105: perf trace enum augmentation tests                              : FAILED!
-106: perf trace BTF general tests                                    : Ok
-107: perf trace exit race                                            : Ok
-108: perf trace record and replay                                    : Ok
-root@number:~# 
-
-But then if that is the case it needs some love and care to deal with
-other BPF users in the system, being more graceful in the face of
-errors.
-
-- Arnaldo
+Thanks,
+Ian
