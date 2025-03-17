@@ -1,191 +1,316 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8E923F40D;
-	Mon, 17 Mar 2025 13:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218346; cv=fail; b=YQSgy/IBSorhX6fqklXDX2RgLAbdrLDIXstbFhQqVPtg6TT6g+OIJqigwAIdyaPjxJppZDOl9c8lyUDkgECrI1NyFEH/SJoZJe2RRahh5Ai5CzlAIF/UH0DaP/YJPHf8alfYR56wcTZOCOhhWlV0rAu/HhfxwJDtzy9kr9aeNn4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218346; c=relaxed/simple;
-	bh=G3hYa7CqM/Pst5NaOE3J6nSfKCHlT39WGDk3wlpwP/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tUmS+GgGcvtY0F6afdW8q/vOS28hj1VwM8EQTSFTlBL45FifA3ctFzdC/MyGEAtblhcvGLxCJ7q2iBjLBFJ2d9hQcVWb6Ed2/s6+rUHYKQVNRhweScjT5tyZhvmD0aRa8M1A5iRLrTSUqxZWZ6AYv8YylCNpQerg1vdZ023MtE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qm6mLp8K; arc=fail smtp.client-ip=40.107.92.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AFC2236FD
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 15:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742223730; cv=none; b=DyeXuRCJOmcIWh8A1Og0XKerAtM3bMAgdTzIsuk+yulh00eok6J/+xidtjSznUw1/GW1X//akE8S2cpuflTwYKwCdUj+3bwIHfGJWa+ZFw5vUXVif+a9MA4cWv/ChNKDJv1TIHdb+8rZUPT9vgbE86w/GMiM4MuNb1po+eGoZfA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742223730; c=relaxed/simple;
+	bh=w06EUXkwlzUpH9L+Fxe4uiAMV8sDsY4AacIWe1dFuio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fe5yQV/7Zlgyuu7Yxj1CZhgcj/wdjoyiwpsj9LIk/tWbsy1unqPbZHOLXYNn8j0aApkCJZHRw+rSvKyQUGaTwNLIiQW/Zvn1mJulv5i8iEQBvz10z2vLLkVnxSFKzGhsKfyst4pK8FL7mUt6FJqCtUE69EAFZmwRHkq98VcZe1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jhNDAf2O; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qm6mLp8K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pm0AaOy1yC/5ZmAZu+Rwvx8DgUyoJ77kWsr2tE1MKw3Kj9pwSs8781UU7Kx56mtseVdPWcF5gOTwVLRaodGhqUf9V8NCzn0O7uojdey2KmX5hq32Ai6RwSMt4oklU0bRkVC7BaGekVQ9DOWIGMSwethyDroHkT2h4jQfuWSpzLL4r/xMAwsaj10qlvtzbZnfW+4SaVQwQO97xV4JdDMXWztwsZYfQbei/zwcCJkX29gvYGvd4hLqcHtE8U1qM8LxYdO3vhYTiMdDg0X+BN8xIWXcQGAowT73/P28nmlmHp4IPz5U3Kx7orFQl1dKobFmNWZNocaL5RUcDTwlJZ0cFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dxCoKv1z/6huzBJWcm+pODQanS4VwAHCBT1cfJd9s90=;
- b=dgpHB93VdSjpqTpKgMD/nLr1/iyOjH+OBSHht5wn7Oykyzz16cOtd2x9z/aKqvlTuU79ck/KpY3a/zhZKNiMNMDFngSmxmaj8v6ILrzxp/WZhoUyilRqvG5JuZt76/PAgqbTaA6yg4LNCM61GuwT5nTiNL5wWqSrCXbEPNsn2fYXi9yi7ljMw/LEgXl4q87mi2y+d+VqwCyViFpvMXiIZlU2aC57aJrDmbOb2U9MVNwYVGdFwJZqmNyC4uqQX5H5lCZtORkcFzJvhRvuBHVGvvWilmtbntxPqqIBATBPG+cC2EjLJsWYWYJrouaKGvtLbuwPncMs7vB7NI2joNvDnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxCoKv1z/6huzBJWcm+pODQanS4VwAHCBT1cfJd9s90=;
- b=Qm6mLp8Kw0HJNhTEmsaCB2eDKr9aWqI/GlrMBZvhbblEQ8U1x1LOq2kna5DBti5vlofAp+DsK8G3oXU6LMY/KTvaUtykZCEUitDQA27sP62QjfTEfmJF7K2+zf6TlO7+5J0ta9zRj80xVksTeKoxR3OGchhad6gngMSiUBbmc8Q=
-Received: from BL1PR13CA0450.namprd13.prod.outlook.com (2603:10b6:208:2c3::35)
- by IA1PR12MB7566.namprd12.prod.outlook.com (2603:10b6:208:42e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 13:32:16 +0000
-Received: from BL6PEPF00020E62.namprd04.prod.outlook.com
- (2603:10b6:208:2c3:cafe::fe) by BL1PR13CA0450.outlook.office365.com
- (2603:10b6:208:2c3::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Mon,
- 17 Mar 2025 13:32:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00020E62.mail.protection.outlook.com (10.167.249.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Mon, 17 Mar 2025 13:32:15 +0000
-Received: from [10.252.195.191] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Mar
- 2025 08:32:08 -0500
-Message-ID: <c7ebab9d-536c-4e3d-a916-30f45fb2e5f6@amd.com>
-Date: Mon, 17 Mar 2025 19:02:06 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jhNDAf2O"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-225489a0ae6so22665ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 08:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742223727; x=1742828527; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jg3YtmB4valCbm7zVC0JDdo2qYGwLpSkWEkmRJ/2RkA=;
+        b=jhNDAf2OJax0MgZCvJsPyS1bJBr9KXpHgcgtjSfxbIQjXOSEUCVoJIcptDZonQYUH/
+         oMOQF/e61I97LH0RWlDKsUm+SybIKvubca3YgE4dWHDYrKRxRNLVzThNByprpQpf9/fj
+         TyxnWoo6eFSQF8VFbfzDcfcHsIU/KM23Idj4YFu8IVyNarF81UBRtCtazHOlOblmoYyw
+         wQEyJUOhNHFFHLey8SXyGqblO6Du5bEJiLrY8ENwmywpZ9iTOgqqIziFXXr6PkfBnJRT
+         sKz0/bzwynROKuzX94CU3vC6DlWm/o7Ey8cfHH3bAuQtUWNSL1wlfnaO4DhADrY2jIpP
+         vxqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742223727; x=1742828527;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jg3YtmB4valCbm7zVC0JDdo2qYGwLpSkWEkmRJ/2RkA=;
+        b=IPpUp003iKa1zUQbpodNTDdGTOPm6xfOOI82/O6UuTsyTP8Z5mLn7haje2QkxMqYe1
+         41Z4HEQtY+X0OYWmKS1b/4pNCfSDjT4s+W3YRJcJemW/uQ9thNNXDCDs8KnF7b9zHXqI
+         4clJoy35OyNaGy44ochoaD7P7s9Jj03DzspmCC8LKN2RXYu8LGuOETyj3LnzzXNCJYvG
+         FxLIpsg3A+HUE7A4HOmFHcDSNfAr+yRNtG4BvkmlNMZ3I9Nq5nc2fqpxnHQgUwXvoNIc
+         +MCqhMIybTwru5DF9hawxbeVjtS9BUviFGOPT13DJk4cDTW+1MV0SdWgvMfdF+cBNvpZ
+         Bz3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbY5gSrx17/qjY/WIXbcpE6UYwZrBjqpyPxya2WpupROBV+Xyp9V6Fq6a69qoI5uDVo+7CD2BpZnameNAYyqdF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsLTXmZdCGXwFJloEFbmJ7zAv8Czd9lzdelKeFb771rxT4z1fB
+	r1Iyo4sQDN1zgHDNQ0SlVwj48aoxFl+AaWCPX5TYsBsNejLVd33u18zL+bdKY5jGKO5T1rTWBCU
+	M6IEJc5tyiJXGAeaPpI5ingz1bc4wyrcikH86
+X-Gm-Gg: ASbGnctRh9bdTVj98DgiNjmXAtnCFKKNuq3ivt5TMceuTIZvxzQh0TFSr1ROiYRTw7F
+	1QrpHSwggEppAQ1Nh3xzNsuHo2yetdZnE5TmWQsE8/B/6hD3EvNqaiTt+UyBY/fDEbfQZ89w2dH
+	x9B6ISRlqNu9VeBPLKZLEwDV2GmZGzsLse6806yuBhOpp5RJTw5deZlcg=
+X-Google-Smtp-Source: AGHT+IH/In9Xn9Q6fd6+GqFKulEafF8p3Jv23xNcBcIIk7P9+Kx1bGmfsiiY4ZsHsK6NikQcu964bBPbUcABTsk9x0E=
+X-Received: by 2002:a17:903:904:b0:21f:9f4:4a03 with SMTP id
+ d9443c01a7336-225f58a00d7mr3749775ad.21.1742223726726; Mon, 17 Mar 2025
+ 08:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] perf sched stats: Add schedstat v17 support
+References: <20250308003209.234114-1-irogers@google.com> <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1> <Z9M9-YhDJg3NgiUy@x1> <Z9NEX3j_1RUvaFI0@x1>
+ <Z9PCjQ8PhOadVGQ8@google.com> <Z9RjHpEJGWtj8PAM@x1> <Z9Rm0W6YLpxKIcI1@x1>
+ <Z9SWDGsdgagMr8PV@x1> <Z9YHCzINiu4uBQ8B@google.com>
+In-Reply-To: <Z9YHCzINiu4uBQ8B@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 17 Mar 2025 08:01:55 -0700
+X-Gm-Features: AQ5f1JpZJLqN-cOJTEfM6rSqHnKbXe3loO-Lb0N6y7TXpAp97Yyc9XZzYy5I-RU
+Message-ID: <CAP-5=fVoSVttcgFFxWrWAGXyXJm52LF8yaNR564HWcf0Jx4eUA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in the build
 To: Namhyung Kim <namhyung@kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<irogers@google.com>, <james.clark@arm.com>, <ravi.bangoria@amd.com>,
-	<yu.c.chen@intel.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-References: <20250311120230.61774-1-swapnil.sapkal@amd.com>
- <20250311120230.61774-4-swapnil.sapkal@amd.com> <Z9Tljo_cyid7NCgV@google.com>
-Content-Language: en-US
-From: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-In-Reply-To: <Z9Tljo_cyid7NCgV@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E62:EE_|IA1PR12MB7566:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ac114bb-f5e2-46d1-f9a4-08dd65582210
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MUpTejJyWkVVUUI1ODhDS1FTbXB2b2xtaWc4dGtZMENHd3pPK0NMZjZJSlZF?=
- =?utf-8?B?T1ZKdklybFN6LzNZeVl2R2hFVkN3UDlCUCtJT1JIdFVXdHl0aEUydnlYNUN6?=
- =?utf-8?B?cEFITVdDMDhUUnhIbFN6aUhubHFhWkYrajR6b1hSYkhrNTRMT1dlS1U2VVlN?=
- =?utf-8?B?cy9TWFRVREJzMnU1S0YybXc2SFVGUTVacGJ4T09vMDBhOVhRcUtZKzhiY2Fy?=
- =?utf-8?B?N21yaUFZTUY0UHlVZis0ay9hWGRaZ2tCd3F6S3g2K3RqYnVPSXlFbWdFblB3?=
- =?utf-8?B?d1pHTkZpWWhpM1dscVo4ZzYybld2VjFUS085Vi9QSXRRM2F1ZWdEZmlITVpw?=
- =?utf-8?B?M0dvWTJ4V1E0MkRZMWpkbUdNY3VaOVdONEplZmJZTUVWeURHSFRBWElUaFUy?=
- =?utf-8?B?ZW00SXFKWlM0Y3MyUTZIdjNWL3hmYnZIMGJ3Z2VqbG84RUtWdDhDMFZRTXNs?=
- =?utf-8?B?K1ZIeG1heTE0Nm9EeEZDVmlyWEtDVXRKR1U4c1BhZEhqWWhDMlZZaC8yTVBp?=
- =?utf-8?B?SWhlTUJSdk1TNmVmWkJYL0tGdGJCMVFGaGRUbk8rK29DemJuektOWWl5U0RX?=
- =?utf-8?B?M3IyN3dkQzgveEwrUGswaDZ5TjQyTDJZZTRGcjk0aHo2OFdBN0RlZUJDd1Bj?=
- =?utf-8?B?VVBGTjJpUlBNcnVSYVNaREtxUUI3eDM0bS9JNVIxakFiWm1ZckJjL3VzNEQ0?=
- =?utf-8?B?ZHp3cGNJdkh6cnp1VHhJam5mNFNTd3h0VU5sbzJLd1JkMTJ0NU5OaG5DdFcx?=
- =?utf-8?B?SThmanprQUtnOTRMYXh5enZ2YitXVmZJR2NpcXVCdG1hUzYxQmNwT0YzWS9R?=
- =?utf-8?B?WGpHNEFua0lWcFJNOFZ2SzFpeXJvMW03RGoxcnFSbDRwc2VKRkRnTTBqZWt6?=
- =?utf-8?B?cjBoUjVMeWdtV1MxY1lZTFViUUZxaTBBUjV4SGNqQnJEMXU4UnlkZCtnSFRn?=
- =?utf-8?B?ZWJUZmYraGxNUGlCR0srYnZNU2RyWEtMenlteE5JKzZBaDlrTzNlWmUySW1U?=
- =?utf-8?B?YkJlTmV1bFIvQzVmdFY4RlRlTzRCK1hKaENaODFQR0xwQWtqMXl5eWlmbERO?=
- =?utf-8?B?c29zczFVRjVmOFpUY29wMEljZGFFZm9IWngwQ0Q5VUNMNUJNR3hMZ3JFMEJU?=
- =?utf-8?B?SjNId0NDSEZhZDRBTy8wL2NXdTZ4dm1vUDB5c29DU1ZoMDNvVUJEZDhXZVFi?=
- =?utf-8?B?NHRLM09EMjJGMTE0QStOTWVSejdvMDRGb0orY3h6aERqQ0pieEIwY2ZNS3lr?=
- =?utf-8?B?ckZPM3RpamprZE1jdmFLM0hFdldPMSttWGdvQURaTGh5T0VvVEV4SHpOME0r?=
- =?utf-8?B?WDVKNExoeEw5ZGljZDlndFMwWUlrbU80NmwrRXhRSEo4aThBdFlVc0NHMm9j?=
- =?utf-8?B?Zm90bUNrKy92MVd2MFAwditzK1RpKzJYTC84VThtdmR2Y3B4YUF4cW1YdGRx?=
- =?utf-8?B?M1RtNHNyVG13WjA2cHk1Y1d1WkJOSjk3TG5KbzgrdTBUWWR4b2FMdjNsK2lq?=
- =?utf-8?B?NzV1VkJ5TUExcW5pdmlrSmxscndiOFFvbFFONGFGVDNOWHNsNG9DRVRFL0VM?=
- =?utf-8?B?Q2owbHB0WlJlblloTU5qdHJHeHdJam5tNVVmcVU3ZXgwWERaSWUyTFFpR0tP?=
- =?utf-8?B?SzVyQzlneEdMdUV1SnFRNU4wY1ArdWZCU0hzRFFnZHNheEFSR0cyWFBibE9z?=
- =?utf-8?B?bzdIS1pibldIRHZ3OHhBb3Z0Q2NHZDRIL1RwZ1FySFJXanZ4UjRVcXVOREM1?=
- =?utf-8?B?TVhJOE1BclR6WnBDQWkrTXhwQ1lnRTByYXVWZnNLMVJSa0hkRmFRT0xjWTZ4?=
- =?utf-8?B?eDJtd3hDL2c4VUtiNTUrenpqZDJvNjFzNldjNFlETmZJTXlJSXlHY0lzTE5n?=
- =?utf-8?B?YU9FaDdKbWpUOHJKb2NUSlhCcVVaRG9obHl3TDRWbVRWMm1QdWlLZHdTTGls?=
- =?utf-8?B?SWowS2pXYk9LSjlzSDBRSjVCblpFb1FqazIxeEVaZWp2enBoelpoVEJCdmhH?=
- =?utf-8?Q?IFWpW/SECW432X8nto761WIvkbniPU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 13:32:15.9074
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ac114bb-f5e2-46d1-f9a4-08dd65582210
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E62.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7566
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+On Sat, Mar 15, 2025 at 4:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, Mar 14, 2025 at 05:48:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Mar 14, 2025 at 02:26:41PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > it finds the pair, but then its sc->args has a bogus pointer... I'll =
+see
+> > > where this isn't being initialized...
+> >
+> > Breakpoint 4, trace__find_usable_bpf_prog_entry (trace=3D0x7fffffffa510=
+, sc=3D0x1046f10) at builtin-trace.c:3874
+> > 3874                  bool is_candidate =3D false;
+> > (gdb) n
+> > 3876                  if (pair =3D=3D NULL || pair =3D=3D sc ||
+> > (gdb) p pair
+> > $7 =3D (struct syscall *) 0x1083c50
+> > (gdb) p pair->name
+> > $8 =3D 0x81478e "accept4"
+> > (gdb) n
+> > 3877                      pair->bpf_prog.sys_enter =3D=3D trace->skel->=
+progs.syscall_unaugmented)
+> > (gdb) p i
+> > $9 =3D 1
+> > (gdb) n
+> > 3876                  if (pair =3D=3D NULL || pair =3D=3D sc ||
+> > (gdb) n
+> > 3880                  printf("sc=3D%p\n", sc); fflush(stdout);
+> > (gdb) n
+> > sc=3D0x1046f10
+> > 3881                  printf("sc->name=3D%p\n", sc->name); fflush(stdou=
+t);
+> > (gdb) n
+> > sc->name=3D0x6c66202c786c3830
+> > 3882                  printf("sc->nr_args=3D%d, sc->args=3D%p\n", sc->n=
+r_args, sc->args); fflush(stdout);
+> > (gdb) p sc->nr_args
+> > $10 =3D 1935635045
+> > (gdb) p sc->args
+> > $11 =3D (struct tep_format_field *) 0x257830203a6e656c
+> > (gdb) p *sc
+> > $12 =3D {e_machine =3D 540697702, id =3D 807761968, tp_format =3D 0x657=
+075202c786c38, nr_args =3D 1935635045, args_size =3D 1634427759, bpf_prog =
+=3D {sys_enter =3D 0x257830203a726464,
+> >     sys_exit =3D 0x7075202c786c3830}, is_exit =3D 101, is_open =3D 101,=
+ nonexistent =3D 114, use_btf =3D 95, args =3D 0x257830203a6e656c,
+> >   name =3D 0x6c66202c786c3830 <error: Cannot access memory at address 0=
+x6c66202c786c3830>, fmt =3D 0x257830203a736761, arg_fmt =3D 0x786c3830}
+> > (gdb)
+> >
+> > Ok, ran out of time, but if I simple avoid the second loop in:
+> >
+> > static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace=
+, int e_machine)
+> >
+> >
+> > I.e. the one that starts with:
+> >
+> >         /*
+> >          * Now lets do a second pass looking for enabled syscalls witho=
+ut
+> >          * an augmenter that have a signature that is a superset of ano=
+ther
+> >          * syscall with an augmenter so that we can auto-reuse it.
+> >
+> > This:
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index e0434f7dc67cb988..3664bb512c70cabf 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -3989,6 +3989,8 @@ static int trace__init_syscalls_bpf_prog_array_ma=
+ps(struct trace *trace, int e_m
+> >                         goto out;
+> >         }
+> >
+> > +       return 0;
+> > +
+> >         /*
+> >          * Now lets do a second pass looking for enabled syscalls witho=
+ut
+> >          * an augmenter that have a signature that is a superset of ano=
+ther
+> > =E2=AC=A2 [acme@toolbox perf-tools-next]$
+> >
+> >
+> > Then all works, we don't reuse any BPF program, but then that is an
+> > heuristic anyway, that is tried becuase landlock_add_rule has a pointer
+> > argument:
+> >
+> > root@number:~# perf trace -e landlock_add_rule perf test -w landlock
+> >      0.000 ( 0.003 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, ru=
+le_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff6f2bb550, flags: 45) =
+=3D -1 EINVAL (Invalid argument)
+> >      0.004 ( 0.001 ms): perf/71034 landlock_add_rule(ruleset_fd: 11, ru=
+le_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7fff6f2bb540, flags: 45) =3D =
+-1 EINVAL (Invalid argument)
+> > root@number:~# perf test enum
+> > 105: perf trace enum augmentation tests                              : =
+Ok
+> > root@number:~#
+> >
+> > So its some sort of syncronization on the various new tables, sorted by
+> > name, etc that then when iterating over the syscalls ends up using a sc
+> > that is not initialized.
+>
+> Right, I've realized that calling trace__syscall_info() can invalidate
+> the existing sc since it calls trace__find_syscall() which reallocates
+> and resorts the syscall table.  That's why it was ok when no filter was
+> used since it'd allocate the whole table in the first pass.  Otherwise
+> it looks for a pair syscall while holding the original sc but calling
+> the function would invalidate the sc.
+>
+> What about this (on top of my earlier fix)?
 
-On 3/15/2025 7:57 AM, Namhyung Kim wrote:
-> On Tue, Mar 11, 2025 at 12:02:25PM +0000, Swapnil Sapkal wrote:
->> /proc/schedstat file output is standardized with version number.
->> Add support to record and raw dump v17 version layout.
->>
->> Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
->> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
->> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
->> ---
->>   tools/lib/perf/Makefile                     |  2 +-
->>   tools/lib/perf/include/perf/event.h         | 14 +++++
->>   tools/lib/perf/include/perf/schedstat-v17.h | 61 +++++++++++++++++++++
->>   tools/perf/util/event.c                     |  6 ++
->>   tools/perf/util/synthetic-events.c          | 15 +++++
->>   5 files changed, 97 insertions(+), 1 deletion(-)
->>   create mode 100644 tools/lib/perf/include/perf/schedstat-v17.h
->>
->> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
->> index d0506a13a97f..30712ce8b6b1 100644
->> --- a/tools/lib/perf/Makefile
->> +++ b/tools/lib/perf/Makefile
->> @@ -174,7 +174,7 @@ install_lib: libs
->>   		$(call do_install_mkdir,$(libdir_SQ)); \
->>   		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
->>   
->> -HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h schedstat-v15.h schedstat-v16.h
->> +HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h schedstat-v15.h schedstat-v16.h schedstat-v17.h
-> 
-> Please put them in a separate line like
-> 
-> HDRS += schedstat-v15.h schedstat-v16.h schedstat-v17.h
-> 
+LGTM.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Sure, Will change accordingly.
+Thanks,
+Ian
 
 > Thanks,
 > Namhyung
-> 
-
---
-Thanks and Regards,
-Swapnil
-
-
+>
+>
+> ---8<---
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 49199d753b7cafbf..da0ddc713e6b35da 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2506,10 +2506,12 @@ static struct syscall *trace__find_syscall(struct=
+ trace *trace, int e_machine, i
+>         };
+>         struct syscall *sc, *tmp;
+>
+> -       sc =3D bsearch(&key, trace->syscalls.table, trace->syscalls.table=
+_size,
+> -                    sizeof(struct syscall), syscall__cmp);
+> -       if (sc)
+> -               return sc;
+> +       if (trace->syscalls.table) {
+> +               sc =3D bsearch(&key, trace->syscalls.table, trace->syscal=
+ls.table_size,
+> +                            sizeof(struct syscall), syscall__cmp);
+> +               if (sc)
+> +                       return sc;
+> +       }
+>
+>         tmp =3D reallocarray(trace->syscalls.table, trace->syscalls.table=
+_size + 1,
+>                            sizeof(struct syscall));
+> @@ -3855,6 +3857,10 @@ static int trace__bpf_sys_enter_beauty_map(struct =
+trace *trace, int e_machine, i
+>
+>  static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trac=
+e *trace, struct syscall *sc)
+>  {
+> +       int orig_id =3D sc->id;
+> +       const char *orig_name =3D sc->name;
+> +       int e_machine =3D sc->e_machine;
+> +       struct tep_format_field *args =3D sc->args;
+>         struct tep_format_field *field, *candidate_field;
+>         /*
+>          * We're only interested in syscalls that have a pointer:
+> @@ -3866,18 +3872,19 @@ static struct bpf_program *trace__find_usable_bpf=
+_prog_entry(struct trace *trace
+>
+>         return NULL;
+>
+> +       /* calling trace__syscall_info() may invalidate 'sc' */
+>  try_to_find_pair:
+> -       for (int i =3D 0, num_idx =3D syscalltbl__num_idx(sc->e_machine);=
+ i < num_idx; ++i) {
+> -               int id =3D syscalltbl__id_at_idx(sc->e_machine, i);
+> -               struct syscall *pair =3D trace__syscall_info(trace, NULL,=
+ sc->e_machine, id);
+> +       for (int i =3D 0, num_idx =3D syscalltbl__num_idx(e_machine); i <=
+ num_idx; ++i) {
+> +               int id =3D syscalltbl__id_at_idx(e_machine, i);
+> +               struct syscall *pair =3D trace__syscall_info(trace, NULL,=
+ e_machine, id);
+>                 struct bpf_program *pair_prog;
+>                 bool is_candidate =3D false;
+>
+> -               if (pair =3D=3D NULL || pair =3D=3D sc ||
+> +               if (pair =3D=3D NULL || pair->id =3D=3D orig_id ||
+>                     pair->bpf_prog.sys_enter =3D=3D trace->skel->progs.sy=
+scall_unaugmented)
+>                         continue;
+>
+> -               for (field =3D sc->args, candidate_field =3D pair->args;
+> +               for (field =3D args, candidate_field =3D pair->args;
+>                      field && candidate_field; field =3D field->next, can=
+didate_field =3D candidate_field->next) {
+>                         bool is_pointer =3D field->flags & TEP_FIELD_IS_P=
+OINTER,
+>                              candidate_is_pointer =3D candidate_field->fl=
+ags & TEP_FIELD_IS_POINTER;
+> @@ -3944,7 +3951,7 @@ static struct bpf_program *trace__find_usable_bpf_p=
+rog_entry(struct trace *trace
+>                                 goto next_candidate;
+>                 }
+>
+> -               pr_debug("Reusing \"%s\" BPF sys_enter augmenter for \"%s=
+\"\n", pair->name, sc->name);
+> +               pr_debug("Reusing \"%s\" BPF sys_enter augmenter for \"%s=
+\"\n", pair->name, orig_name);
+>                 return pair_prog;
+>         next_candidate:
+>                 continue;
+> @@ -4041,6 +4048,11 @@ static int trace__init_syscalls_bpf_prog_array_map=
+s(struct trace *trace, int e_m
+>                 if (pair_prog =3D=3D NULL)
+>                         continue;
+>
+> +               /*
+> +                * Get syscall info again as find usable entry above migh=
+t
+> +                * modify the syscall table and shuffle it.
+> +                */
+> +               sc =3D trace__syscall_info(trace, NULL, e_machine, key);
+>                 sc->bpf_prog.sys_enter =3D pair_prog;
+>
+>                 /*
+>
