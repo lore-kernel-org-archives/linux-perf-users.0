@@ -1,156 +1,101 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514CB18C00B
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 16:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F8D188907;
+	Mon, 17 Mar 2025 16:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742227842; cv=none; b=B4GJz4OKSZTsFB3dfP00P+XS7OJkTiH5/S41m2uQuGeOFp1jQyBpLeY1rwNJZvbjaAfobTsEYfgyHOREOoCKvpHP+poOlk0bNhOqLVWzczdT3yXjZVYUuNWLEhruDI3Ae/U1Z51fquD4KUnwqvQ4gSAYwflRArPe8PoyiSMPEsE=
+	t=1742228269; cv=none; b=ppmD6I+6IJF2EEGIrTC0zLsb7onL+hnft5MbCx0cT6+q75elmLYbfkJgb3SFZ3smCDNYylG6Htkiuev5pkUsyZ4ed3JzgvL2bdA5uG6Ya3l18DELjy76x9ItMZBgA7Ou/iy/5X9ptB6mtlYLDuzafdnTz/tnsb4sSa3DvvT4kWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742227842; c=relaxed/simple;
-	bh=h1HX52WVSfCd/vFf8OXw8LFNOMMTKRgfja2DL2tQ7ec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gt0FDaIo3q5yl1ZFSqKin0qLhzSAYWZqNyqksRsLpNwbLNZ4YYHctQpZoTsLNvALNvfUMyJshitN8S07k+WyjoELT+do/7EA42C7vd0FIZnjPTzc5SSd2aEwCLjikLaJFJAbZHib8Ce2ns7G1shTy87F66XHAHbvBs9rViFTUtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4SGblc43; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742228269; c=relaxed/simple;
+	bh=G42GrbRlFLadgeAorXitKrnMtX3TCyZknmA2IK3Bfk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTYMC5D2riKawAkKLIWEF+pbOYLdXsaQlFDCkAsS3OjbzOQnuFzfxMoxF5UbB2zscWTb3NwZs8jGEtKdFJK+YAUJoR/2Th+9JYcZ5OOCHW3DvnBs9WSz7TruekYuRdwUCUaa0bO2Xvv2gT99Sd/crwH9kBJrDchl0kn0TBvi1iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4XUfczs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4SGblc43"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2242aca53efso34285ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 09:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742227840; x=1742832640; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1DvKgDiFuVPnQfg+ceHEVlgMkuHE4w+BuHOV13uh3LU=;
-        b=4SGblc43thxAGEUsTA3KNeyxqD15gzRe4pnDYMza8Wevuc30p0b1u0P86w4Le/+Hnq
-         Y6y6aQXa9o8KV8jpbRlHPmy6Om2TQUNLACR7lJajfu6zVZm7FqtRledM/GOVlA9e/Gui
-         45jTWI1Uwidt27yf/03gXtjoxgX2MP2E3ioG79OKsZGHq6ZTRGB9iPqtxPzzZ/+SAG93
-         s/p4BlaClR/fGKwD2SJsl5ge3HM2MzxCWlvUL6Nu6emSS409K1qRELWVNbbMuhr98/x4
-         ZHcVge676rd6qAgomfjTm1J2IidAFDaVcAwAUbozzYqMUPrfVcz9g20mlZNSwMLHdcR6
-         ZJsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742227840; x=1742832640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1DvKgDiFuVPnQfg+ceHEVlgMkuHE4w+BuHOV13uh3LU=;
-        b=C/NmPEEMwRsSbzm8vtRfguZb3xGvsXDqvM1UT13U1m1vWVHaU91Jn4t1cNsJncsDJd
-         iM9hT1Kv81eJGcV6ECI8pBuu8HJG8fp96hjHRGduYuCxaB0ubOD9DJ/eiuvh1osGrqiY
-         nwckRSEYYxhjTTqskKDSaLLBmY5jorR2c4KgIugZZMLHukn03KaTV/YeqZAihnihQd0V
-         hyTxE/SSdJbNQxA7+S0CI/4yxgX1IMcxt3IEz9Ot7JZwimUFw0wE2vPnmGsYMkk8BUxJ
-         FQN+c5u1+nxmruKYDWxBmqGOxthWH08wWK/uznPUfz1vDWCiK96wKDUg29GnkYUUtudv
-         bC+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4ISF770NFW05tEzvSc81M3V23L76cZZ/OxyLNmlrlF6h86i/jLh49k/NxyEFkvB4ozYQK9/62STfIurmTqb/1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj4wkw8I+LILwsHW2BtTqW0peQJX68W1GE0CyIOIOWpXjTE2wW
-	gTqwChx9FVmxJ3yhWsF1D42Biq5X+iaJX5TIJHs9QyXFD5YLt0Jj8XnjLmwvyIlE4rp+SFW7GrY
-	MC5eUUXll8YmO+eW3jjgoKy5SyslbboQ2b6kf
-X-Gm-Gg: ASbGncup0MnxxEU2n97xk19BzUn+zOUJfNuF0JqgYHEFkW/IVB/698ME6GR/gyxyFMo
-	wYx9gWQ9B0esw0os2c/afnACWOWMgjZkoHkIg8+f7OBZ7iPU7vjsa240CV5tA2DXTU9qKanfhMd
-	HwK6SQfWBHms9HebtAtWsmWyzfngwVdqHoCi8tGoDWtGa1mXCzO6drnsUQaBhD4CkwzA==
-X-Google-Smtp-Source: AGHT+IGeAR+kboapMmrI0SfAf9umNYS8qxnTewPO2Hiig9OJgjhMXcEEJe7y4RMtQNgysDaOlB2OxIDqA72esNDwUIU=
-X-Received: by 2002:a17:903:41cc:b0:223:37ec:63be with SMTP id
- d9443c01a7336-225f3c14de3mr4520955ad.4.1742227840351; Mon, 17 Mar 2025
- 09:10:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4XUfczs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9201C4CEE3;
+	Mon, 17 Mar 2025 16:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742228269;
+	bh=G42GrbRlFLadgeAorXitKrnMtX3TCyZknmA2IK3Bfk0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D4XUfczseN+rrOTPQuSZejroQ55t7/R8yhHyg2TG2Tupr5raFLs5Wzetyo88H+cyn
+	 Dq3z3oW7xQB7+OZoqOyuPhfwt6PZ9OC4OT77sk9KsRuhlnGVgWScxSaxsbtSYzf4F+
+	 VXUlCcMu7o5qRPXsqX8PFkhi4gdX0gKPDkkDM+wohSpn3zAxpbaBmQ9b3gvoBEjAwh
+	 EEovcEMfbONYlKjgZy1hlYLEXmAJlbB+thdvhVnpctjxxgLvMzIR1FO10XSUR8ccLE
+	 ZWwpYFC8jLivmP8F6WyPft+wBbqhOEE+gIB39MhcTbjzS3THdb25FrAiTKCAnWBA/5
+	 TaQa5kdB86ieg==
+Date: Mon, 17 Mar 2025 13:17:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com,
+	james.clark@linaro.org, christophe.leroy@csgroup.eu,
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type
+ PERF_RECORD_COMPRESSED2
+Message-ID: <Z9hLKsZOfouM3K7H@x1>
+References: <20250303183646.327510-1-ctshao@google.com>
+ <Z9TXabugl374M3bA@google.com>
+ <Z9hFJtEKfsGGUDMg@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z1mzpfAUi8zeiFOp@x1>
-In-Reply-To: <Z1mzpfAUi8zeiFOp@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Mar 2025 09:10:29 -0700
-X-Gm-Features: AQ5f1JrEeD3OpKfZTGEdcDO24vz4DHfLcO2IC__rF2ZvyedwJ7qT6NXJ2L6tJ3Q
-Message-ID: <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
-Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
- from the ones detected when test-all.o builds
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9hFJtEKfsGGUDMg@x1>
 
-On Wed, Dec 11, 2024 at 7:45=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> We have a tools/build/feature/test-all.c that has the most common set of
-> features that perf uses and are expected to have its development files
-> available when building perf.
->
-> When we made libwunwind opt-in we forgot to remove them from the list of
-> features that are assumed to be available when test-all.c builds, remove
-> them.
->
-> Before this patch:
->
->   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=3D/tmp/b feature-=
-dump ; grep feature-libunwind-aarch64=3D /tmp/b/FEATURE-DUMP
->   feature-libunwind-aarch64=3D1
->   $
->
-> Even tho this not being test built and those header files being
-> available:
->
->   $ head -5 tools/build/feature/test-libunwind-aarch64.c
->   // SPDX-License-Identifier: GPL-2.0
->   #include <libunwind-aarch64.h>
->   #include <stdlib.h>
->
->   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
->   $
->
-> After this patch:
->
->   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
->   $
->
-> Now an audit on what is being enabled when test-all.c builds will be
-> performed.
->
-> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel=
- files by default")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Mon, Mar 17, 2025 at 12:52:09PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 14, 2025 at 06:27:05PM -0700, Namhyung Kim wrote:
+> > On Mon, Mar 03, 2025 at 10:32:40AM -0800, Chun-Tse Shao wrote:
+> > > The original PERF_RECORD_COMPRESS is not 8-byte aligned, which can cause
+> > > asan runtime error:
 
-Sorry for the delay on this.
+> > >   # Build with asan
+> > >   $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=undefined"
+> > >   # Test success with many asan runtime errors:
+> > >   $ /tmp/perf/perf test "Zstd perf.data compression/decompression" -vv
+> > >    83: Zstd perf.data compression/decompression:
+> > >   ...
+> > >   util/session.c:1959:13: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 13 byte alignment
+> > >   0x7f69e3f99653: note: pointer points here
+> > >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+> > >                 ^
+> > >   util/session.c:2163:22: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 8 byte alignment
+> > >   0x7f69e3f99653: note: pointer points here
+> > >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+> > >                 ^
+> > >   ...
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> > > Since there is no way to align compressed data in zstd compression, this
+> > > patch add a new event type `PERF_RECORD_COMPRESSED2`, which adds a field
+> > > `data_size` to specify the actual compressed data size. The
+> > > `header.size` contains the total record size, including the padding at
+> > > the end to make it 8-byte aligned.
 
-Thanks,
-Ian
+> > > Tested with `Zstd perf.data compression/decompression`
 
-> ---
->  tools/build/Makefile.feature | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index b2884bc23775e986..9cde51104c2d70ec 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -90,13 +90,6 @@ FEATURE_TESTS_EXTRA :=3D                  \
->           libbfd-liberty                 \
->           libbfd-liberty-z               \
->           libopencsd                     \
-> -         libunwind-x86                  \
-> -         libunwind-x86_64               \
-> -         libunwind-arm                  \
-> -         libunwind-aarch64              \
-> -         libunwind-debug-frame          \
-> -         libunwind-debug-frame-arm      \
-> -         libunwind-debug-frame-aarch64  \
->           cxx                            \
->           llvm                           \
->           clang                          \
-> --
-> 2.47.0
->
+> > Looks good to me.
+ 
+> > Arnaldo, are you ok with adding a new record type for this?
+ 
+> Checking the discussion and the patch.
+
+My first impression yesterday when I saw this on the smartphone was: how
+will an old perf binary handle the new PERF_RECORD_COMPRESSED2? Will it
+ignore it while emitting a warning, since it can be skipped and then
+what we will get a partial view?
+
+Having some session output showing how an older perf binary handles
+PERF_RECORD_COMPRESS2 would be informative.
+
+I'll try to reproduce/test this all...
+
+- Arnaldo
