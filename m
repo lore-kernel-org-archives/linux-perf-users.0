@@ -1,114 +1,91 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28FC24A066
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 15:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F7E17A5A4;
+	Mon, 17 Mar 2025 15:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226299; cv=none; b=B8USEu8/X9bu+n0/qXVR788YUxc37Og3Sxri/gJGJ2L2BcuY8qFbRvRz8hXG4pZDP05f1INMsRHmYsuGGSZ7wlAojmfaZMhujtCrgRfbjxSvkzsGgktXTo2Aa7IsipdFPbid/JoKFdeXTG1kDsaxfjV6aH/xy/Pkfx1Vc5OlrMQ=
+	t=1742226729; cv=none; b=lkrW6RTcp7HuPIXExo2RmPO7Drjc2BWTtmD+oBsZXFGzjWru5Ntcsgd27XoDRa4Acc2xWxofF6Ep2APZRBNCQg9JebfA9yWZzsbPKRfesVygtKYpQrAasexYuKzqY6KxwzkMPJ4MaykKAekX30K5C3lhYFzie0dTr7TTUX1CtKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226299; c=relaxed/simple;
-	bh=B7c2Y4z7IK0bBAMEZDkwYzdnnQzcprBQKAjnqLj21q4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tpXisL5FyRJb2bQd+ka4EmWqILvbvWLS4aNvg7+zDqBlkpppfquitVq2+d5SMW7zLHo+eqB3YbBxg/px1AX1CYGhmu3PUXNUoEuLKWf5tVTOx+vw2fXXUtnSAmClbGm40lZ9emH01aEomH98LeSN/ti6gtqv9h7xSWmgmJquo5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dZbCAX+1; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742226729; c=relaxed/simple;
+	bh=VkCAbDUKlok6HX3OVfIlbrktH/ntcEK64hAQas8MqYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kK82WXdoYZwyhogCNqp/Kw0rYSqiqQ+lLvJPJSD+t2M0Kp1GrNa0+QqHZultTxPG2zGmiNv3Fz6A++0dOZWo9mWo9yIZov9mx4qsK8ohBdckjdlQX/iNKXSoGEIyVHQ1wNGCK10cy3g2JsbRWuVNTdbaeI/97BQdCap0gBPJozw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1lU8VNQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZbCAX+1"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-225489a0ae6so34895ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 08:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742226297; x=1742831097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5OlWZyikCPnAOFdTXmrFoSKCph7ASBwIJqix8Eg/aE=;
-        b=dZbCAX+1sLjbXQTIk9r0UdbgZYRaprOx0pfAcMLf1Ls7dZ3mU88gwgLywjE9lWHaOf
-         bN5CfVG2u0Mglv5N33m/y0cq/ABBP9YvKNQKBcVF1ehdKkmJfwS7pMqWjZ9mD+B88dcg
-         XsLXEe03ZIwE1EkYUJWfFspOzUGhI+868fI8ra8YchkMBywLEGp81SEQybi/58A181Sy
-         qRQ61mqr9crNT2wJy3gc5NHrrnhTPCaQrcOskLWvlZoMWXI21yrQeUSNfcM2sF4t0vGu
-         oXL31eT+9qkbDEC7rPEbicIkxQBY2nMoNME8KYorF4yrXepBqIRPiv6riEtRDCLp3gOP
-         3mSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742226297; x=1742831097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5OlWZyikCPnAOFdTXmrFoSKCph7ASBwIJqix8Eg/aE=;
-        b=rtMTu6c4DA/LBP9Tl8Lc3XNf6APjBJ9d9H3wi3NNNiIx77c9jz70OzJUaKmjpqP34V
-         mTUfU0aCrmuRo4FiC6HLnkpKZCq63qPbtTG6bp1y7ME9O2rNV/u6CIiUrN63T63d/uLg
-         UWpgpqVCGL7PxNBkkx8j7ivDvcpdPvrjRAl+TmYU9BRb7AIZHGNjY7ifV2t65ZHR2D/d
-         zMZNTj1FBHpOZ5GKAaorMXXgH56fD6OAZoFaG0S/wTo259oqG96HWFBaY89ua0kyao80
-         a7EXLVD8p9XMJFuBqnzL/FIhjP8qedbFIp+GCWvMqrYD+2V7vKMIXVNpmDrUsnm7iUzq
-         Tnxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlkGLxUANkgks/TB7Un2pirpvz+imi/DuVBp6i/8IprPzi1rEWPZVtsWvD+LACt0zgwRjPx0LE3PNlPGdlVevC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHvDO/RMF2VWhAmpjQ9ee+thOCFp3UxjzZRg1l4XOvbZr63tUF
-	L9QAJzbwoqBh6P5Y2cB5q8pCnM4gd5F6J4vt5AUsBJNafioBJXJgSjAJoiNgQkjgbvcHIdV7pVD
-	l103vE/rQxfw9r8g9kmvChZLSDUv4tDmjVJsw
-X-Gm-Gg: ASbGncttXU5pEU2lDTr2U+Am7ZduBDFRMSatgygMOybgFsehA52/k2DNYWcWRZgv37i
-	0KBgpuRXp5eKhNnwY+oyAFih6JcitAH6RZbQnmHFdwfK4sVdom7P8lzfl160uKIvuGMmJkGUjSu
-	XUM3fv3UPT8zYGqGKKQPc8O3tKtLsF6EguaanViuQIyODyBR/ZI1ZR8x/KfJKV44OVpA==
-X-Google-Smtp-Source: AGHT+IGb0tr+WMR0R2Hjk0TLnVrUU7IZXnn3I3kas5Z1APzQmiaDhx10WNGGrH2KC7JMGKhAtZ+1THBL+g9PhbnHb/Y=
-X-Received: by 2002:a17:903:1ca:b0:21f:56e5:daee with SMTP id
- d9443c01a7336-225f3c14a1dmr4314055ad.6.1742226296645; Mon, 17 Mar 2025
- 08:44:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1lU8VNQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A7B3C4CEE3;
+	Mon, 17 Mar 2025 15:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742226729;
+	bh=VkCAbDUKlok6HX3OVfIlbrktH/ntcEK64hAQas8MqYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D1lU8VNQm7/iJN4O/QYEiQlYxMgMjvN6NjlchLm1CKgoyWVLyej+p1IrVa4gbptlW
+	 tzt7eIAG9BcAGNYLPWzlpUMuzryIqVGndlf/irBfeByvyBCnJTpn9/Zx3bMBQ4eApz
+	 NYihf/3DXhvWTQcY0AECBVkhcCvSgbt3ZfzAooUhQjOT+/M7zf1e/JAZt3AGwDNSXp
+	 1FDorFfvMI/R+hwoOgmeZQf9gHBZ+EmdVIpkkHcFxn1j6SBtkQyyEsnKWtQ8pskuVu
+	 BFJrriQPItq0fwHHC33Ay59sCh/drYln+rIXNPv6hpPondMXjXBx2gg8R700H2KBuC
+	 9XlGbWlxs8dOA==
+Date: Mon, 17 Mar 2025 12:52:06 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com,
+	james.clark@linaro.org, christophe.leroy@csgroup.eu,
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type
+ PERF_RECORD_COMPRESSED2
+Message-ID: <Z9hFJtEKfsGGUDMg@x1>
+References: <20250303183646.327510-1-ctshao@google.com>
+ <Z9TXabugl374M3bA@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314031013.94480-1-yangfeng59949@163.com>
-In-Reply-To: <20250314031013.94480-1-yangfeng59949@163.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Mar 2025 08:44:45 -0700
-X-Gm-Features: AQ5f1JqBFu4brBFu6Z-rnLiPVDfXVpZSM1gOcQjfzmMkaZh_omo7Liv21m0A-X0
-Message-ID: <CAP-5=fUPz9R60Lay=k-0k5Q8C9AdStAMycOgsKqA5MJ_o7Ag3Q@mail.gmail.com>
-Subject: Re: [PATCH] perf kwork: Remove unreachable judgments
-To: Feng Yang <yangfeng59949@163.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9TXabugl374M3bA@google.com>
 
-On Thu, Mar 13, 2025 at 8:10=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
-rote:
->
-> From: Feng Yang <yangfeng@kylinos.cn>
->
-> When s2[i] =3D '\0', if s1[i] !=3D '\0', it will be judged by ret,
-> and if s1[i] =3D '\0', it will be judegd by !s1[i].
-> So in reality, s2 [i] will never make a judgment
+On Fri, Mar 14, 2025 at 06:27:05PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Mar 03, 2025 at 10:32:40AM -0800, Chun-Tse Shao wrote:
+> > The original PERF_RECORD_COMPRESS is not 8-byte aligned, which can cause
+> > asan runtime error:
+> > 
+> >   # Build with asan
+> >   $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=undefined"
+> >   # Test success with many asan runtime errors:
+> >   $ /tmp/perf/perf test "Zstd perf.data compression/decompression" -vv
+> >    83: Zstd perf.data compression/decompression:
+> >   ...
+> >   util/session.c:1959:13: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 13 byte alignment
+> >   0x7f69e3f99653: note: pointer points here
+> >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+> >                 ^
+> >   util/session.c:2163:22: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 8 byte alignment
+> >   0x7f69e3f99653: note: pointer points here
+> >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+> >                 ^
+> >   ...
+> > 
+> > Since there is no way to align compressed data in zstd compression, this
+> > patch add a new event type `PERF_RECORD_COMPRESSED2`, which adds a field
+> > `data_size` to specify the actual compressed data size. The
+> > `header.size` contains the total record size, including the padding at
+> > the end to make it 8-byte aligned.
+> > 
+> > Tested with `Zstd perf.data compression/decompression`
+> 
+> Looks good to me.
+> 
+> Arnaldo, are you ok with adding a new record type for this?
 
-Sgtm. Out of curiosity, was this tripping a compiler warning? If so,
-could you provide the details?
+Checking the discussion and the patch.
 
-Thanks,
-Ian
-
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  tools/perf/util/bpf_skel/kwork_trace.bpf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/bpf_skel/kwork_trace.bpf.c b/tools/perf/util=
-/bpf_skel/kwork_trace.bpf.c
-> index cbd79bc4b330..9ce9c8dddc4b 100644
-> --- a/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-> +++ b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-> @@ -80,7 +80,7 @@ static __always_inline int local_strncmp(const char *s1=
-,
->
->         for (i =3D 0; i < sz; i++) {
->                 ret =3D (unsigned char)s1[i] - (unsigned char)s2[i];
-> -               if (ret || !s1[i] || !s2[i])
-> +               if (ret || !s1[i])
->                         break;
->         }
->
-> --
-> 2.43.0
->
+- ARnaldo
