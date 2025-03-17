@@ -1,149 +1,125 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528BA1553A3
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 17:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0251AF0B4
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 17:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742231785; cv=none; b=jw0C66qVpRiVf8dWJzkepPaPEkgkY6/pi8dVlWeSWesb5bJXcO0nkm/vtJPDdoH9ujNqEPaop4zBoD7nHA5GBaYVitPcTDxtX4pBmP9SdLXJ3bs9Zy3T8Mcuc2k8PdjjQwyJ5DtK830c9HTO6aLZ5JKvMNTkpG30KZwZsi1p5cI=
+	t=1742233303; cv=none; b=TKDhmIh60GjNrdyzAjCMacZcOunXBY0xPIoXFDPPtorZNPVuiOaUYFgdaHWz+rBaVp31/39deaijQUwo+n3OggaaSeI5ztz94nVt0bx4A7dQaAAYig2OpvvewpG5PYohutIqi5tBlkTl5AyJa7OHhUaXTCzuhUc6KjtGTF7txgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742231785; c=relaxed/simple;
-	bh=y6+fLLQ7kbH+0CzU5m2E0zr82FtMW+14mkUqDwtuBgU=;
+	s=arc-20240116; t=1742233303; c=relaxed/simple;
+	bh=2iXPJWP1z9o/7gPaz4x1Vr+Hj0p7KnhZyY2cxs4UCsQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SClKFLV8XctSSkCu4GApFatM7OrtJtks5T6HhoLWZE4hrqvhqRWZl7lnsCryz7iEtFW30j+U3Qo3OvG5ftmbFIBk5ySCmU1CNwebVgs4wR4T2/Iz828AfVheOrkWRVg0j0SZ0uf4mtDXv5FgK77Fz8vwAmVmmDggNj1IHGO7L5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ePmGmhB1; arc=none smtp.client-ip=209.85.214.170
+	 To:Cc:Content-Type; b=IWlcj0/JuBhiIHeRpWQzAlFyJLqO+nNmZevjowkWW73VVupczwUuL5cIqODNbEGwTQs4mOYzbIuyTxTApXUliRmB8icERzV95MW7ALnL/UrExoElCKLIwC6eGR1eUnTO7RD1H7+Bn3SgNbkaie9b5hu6RdTGsyXHTCBEqfgS1/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vW0OR4Wa; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ePmGmhB1"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2242ac37caeso9085ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 10:16:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vW0OR4Wa"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240aad70f2so76555ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 10:41:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742231783; x=1742836583; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742233301; x=1742838101; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DfFvXsXXQ4EwlZ+MVnsfd4i68TdMbHdFmvhxBUmT1PY=;
-        b=ePmGmhB1uKNtuXQYhldQphoFZOkE7v9H9pgnT+SuGwLzzGvJmpDJ7NpdnEPMBeFD9f
-         /eXbdWbyZExF0FhHz2NEBzuhr0vWEfb0n0qtKKF5BA9NZeuGHIT/9nSuDj6825oao94L
-         C8+EqVtGvfovKmAIfwQp4FHWXeQ3vnZvrTcu/mH6C0HrlOJZ5iPNNXyxk/gg/FoaAVQT
-         By9Rf7VNpwXbHt70fFNdM7mk7lFvnKV418JkisPm8ELeRBYUF+N+5VeAXkSQQO0dpCYe
-         VJflBM+h+a5lLmEqVW6fBnkJ1bySyPW9cruMx06RLN89pmQq3Ur68ifMDyTxXuU5nAwj
-         K7pA==
+        bh=lATWno+kXyCA9gXnRwZCNyfTyGMjQkkcrd7sBrYiKLI=;
+        b=vW0OR4WatDseN5WLlNtePnXOb50TBD2PMs85uEiD1+9aXoUuBM0SkCePQQrACHt1Gy
+         NRGrUAhGtwVRDbsZOWYHpZpZpg6U6vU7U+BSW07BFGjlCrfG58vi6NHR2C4Lwte2eCe5
+         c1FVYxZy0N2BmSrzzOVI2pEPoF+0aX8lh21IFf3hmAn94BqVffskvyXdqZ2rN8JLtn23
+         kdL+WPCN7FIIOc6as/q7/J+5MJt7U77ckzLlerj0N9MnxPAnImveFYs6TKQSolSfi87o
+         musXaB9kNE6TaqvW/5y0onRqigVmw0MW+wtXgq9lZ8fl9Pwu+RjlzMx3nDphIKsZWFcg
+         QKVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742231783; x=1742836583;
+        d=1e100.net; s=20230601; t=1742233301; x=1742838101;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DfFvXsXXQ4EwlZ+MVnsfd4i68TdMbHdFmvhxBUmT1PY=;
-        b=n40ihjCjTjb6FcRu5wNkK27UqYeQNuwCLq1mDrF/4FpdJvLRgxWuyMzJ7g5sb2s2XW
-         /UpMPBc4Zt6BpIKs5gmyJ7RgqPMguAvW42WXUTfdfQcIUA5fnf05Aj84LPp2ZDYVA7Qp
-         32wFh3PZZ2HnfEQFzOYm8rOF8cVellbcTVPvImQos0FHp9YNiRBVHMVN52bZDYy0vl5g
-         LGeeTFY0NvocsKkMJQBM/T/eL6eK53kY8xMcx5FgEtXEUJ1PKqI+sG67hs27twe+ynta
-         3SSc/L9kedgsFlibNDbM5LbcmNWf6579wPqXv/MeIsBRzGxkbjgnbWUf+N7Cam4G8x4e
-         WjeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXj4JOP38kvLf/vmBOMS24vP+XkYXTQGGGpSZJD5knxdAKKJ5fZbHHPkBT5CTqleArjM2DeF8m1khXBwi3oEq0m@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtVhHN0CNybGKqmm2huKH+IeC3pJwn0HvlNQdKlIkYiexXTC3w
-	aIdd+rYD2neIHhiYjKbj0zjGfi4vP0A8Gtl5RNZxUWGcol4IjgRaDKtWKmcu+BhVglhgJvwEPaX
-	HUZxjWlWrgtkflU7RX/YWditzYr8PY7v4WIdb
-X-Gm-Gg: ASbGncvbXn1xcyU+zk5HcrD5OmY+hXazUHG8we+ls7s2gmJx5hWQoejMrSVlffhb7cW
-	eiUsCxkxic/ikeL2Pt0l8SjGG5JMQphtAE/gKaV6geXBeOYUJcAQ/OT+gECAojh9L3X9DieUGM/
-	elABvdyE9iyJLavYojI/j2ms8FcyufontphP2x6p1vW8cNuzBof89p9IE=
-X-Google-Smtp-Source: AGHT+IFhZ062stJ/0U82tGKw9QwiiDMz/O63ruW8fttZu4gPEgpShZspW4XGSrAF3kxnv/LvZFzzf24xhBBDXgeBowk=
-X-Received: by 2002:a17:903:2441:b0:20c:f40e:6ec3 with SMTP id
- d9443c01a7336-225f3eb1adbmr4633195ad.22.1742231783195; Mon, 17 Mar 2025
- 10:16:23 -0700 (PDT)
+        bh=lATWno+kXyCA9gXnRwZCNyfTyGMjQkkcrd7sBrYiKLI=;
+        b=J1uxPHtP1RImhUXZQMqiGUonu6mJEC4VN9K0kK4YJe9eA3hM/AfJlPLUn0bezioYRX
+         6/VA/UcxF/q6NTQcHx1D/xl24IOdG2P0Gd86iiBlXPs9A8LS4naxjq+/B9aLN2haJFzS
+         hXB6S+8764pMW8ktXOk5J3rTUzv+XY5g56MpfEj8QtKXWai/sDX9302qfZt+sBXfckom
+         1gWCQkvU5RK0brlfw8btKgpReY5qdfVKYiQZXfh8nX2oOJ8Zy/8jJGw+D2TqioJtYqna
+         /M/gAyGswIT83C+bpgvetxzZPgvBGQ8ODY9S2Q3X55xP36Kbh5IIYUokyBd1ORHRGDNM
+         P3ag==
+X-Forwarded-Encrypted: i=1; AJvYcCW6ah3v4p/d5t5qpmY/ey8GsvhYkEPC+fa/CVbCnB8ySm3wCBak+7l2ujvQGUKuptpPqEFtIWLbLWDSzs1K955v@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLyzu3mVD6CEyKYINZciSxwA62f54fYETeBQlTSUls7Ckt/NYp
+	tmhUrhORER4mLxyJIivEB7SiG3gG4MYa/8kUT0z0H2w7sGQiK53BymVKggpovucQbS6bwxPZCAk
+	LXHX4jEHZTwOk9ZjBmCX8HkFm3mgQlLTCR7/i
+X-Gm-Gg: ASbGncv4/iQ8FcSNJm3nmyfpA3dqe4WKeA7Ds6f/5XeDnKDR/dwxtaZfaJUnt0Me5Fr
+	JGW/54lP/6CbrNTlyoxshioO3antsdwrKIlRQMzWCPQ9S5bRa2NkXYA3AW3A5W+FDku+/YtOa55
+	Ensv84dQCGaub54FCN0YqTiOwWGOwOkFReM1DVZj5e5O9Yn6LqHxOcJs0=
+X-Google-Smtp-Source: AGHT+IEIYL1jMu8c/jZPzJq8IxeFMMI6ydO9iAjEFwdH+QT2RkBXanYn5Iiy1WmvDd0rwttzDUNtIxDCZsUPBlHf5ow=
+X-Received: by 2002:a17:902:d54d:b0:215:7ced:9d66 with SMTP id
+ d9443c01a7336-2262e5a2abfmr16435ad.10.1742233300634; Mon, 17 Mar 2025
+ 10:41:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z1mzpfAUi8zeiFOp@x1> <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
- <Z9hWqwvNQO0GqH09@google.com>
-In-Reply-To: <Z9hWqwvNQO0GqH09@google.com>
+References: <20250312203141.285263-1-acme@kernel.org>
+In-Reply-To: <20250312203141.285263-1-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Mar 2025 10:16:11 -0700
-X-Gm-Features: AQ5f1Jp2d5UNDltp-P8jxNkRsUA61xne765QTZDlm7pFAHdCAdLEjY7qowx3yLY
-Message-ID: <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
-Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
- from the ones detected when test-all.o builds
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-devel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Quentin Monnet <qmo@kernel.org>
+Date: Mon, 17 Mar 2025 10:41:28 -0700
+X-Gm-Features: AQ5f1Jrzf0iH9xyr2lt31DxMP4FCuxmnry8MXMkcFEW3VWFnxM4d5NLukHGmsTU
+Message-ID: <CAP-5=fVp48KUB5sawBp-6t5DyzGqDfxtXReSSTQ-LDXFKMAvzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] perf python binding fixes
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 10:06=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Wed, Mar 12, 2025 at 1:31=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Hello,
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
-> > On Wed, Dec 11, 2024 at 7:45=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > We have a tools/build/feature/test-all.c that has the most common set=
- of
-> > > features that perf uses and are expected to have its development file=
-s
-> > > available when building perf.
-> > >
-> > > When we made libwunwind opt-in we forgot to remove them from the list=
- of
-> > > features that are assumed to be available when test-all.c builds, rem=
-ove
-> > > them.
-> > >
-> > > Before this patch:
-> > >
-> > >   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=3D/tmp/b feat=
-ure-dump ; grep feature-libunwind-aarch64=3D /tmp/b/FEATURE-DUMP
-> > >   feature-libunwind-aarch64=3D1
-> > >   $
-> > >
-> > > Even tho this not being test built and those header files being
-> > > available:
-> > >
-> > >   $ head -5 tools/build/feature/test-libunwind-aarch64.c
-> > >   // SPDX-License-Identifier: GPL-2.0
-> > >   #include <libunwind-aarch64.h>
-> > >   #include <stdlib.h>
-> > >
-> > >   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
-> > >   $
-> > >
-> > > After this patch:
-> > >
-> > >   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
-> > >   $
-> > >
-> > > Now an audit on what is being enabled when test-all.c builds will be
-> > > performed.
-> > >
-> > > Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind d=
-evel files by default")
-> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: James Clark <james.clark@linaro.org>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > Sorry for the delay on this.
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
+> Hi Namhyung,
 >
-> Thanks for the review, but I think this part is used by other tools like
-> BPF and tracing.  It'd be nice to get reviews from them.
+>         So this simplifies it greatly, it almost ends up as a one-liner,
+> but there is an improvement as well to mark the event as consumed to
+> then parse its sample, because the copy of the whole event was done all
+> along.
+>
+>         This is brittle, as the header size can be bigger, than the
+> space we use and in that case we fail to parse the event by bounds
+> checking it.
+>
+>         Supporting larger event payloads can be done on top of this,
+> possibly by deferring consuming the event in the ring buffer by parsing
+> it all instead of having pre-allocated space, measurements need to be
+> made to see whats best. I'd say leave this for when it proves necessary.
+>
+>         With this series I managed to run it for a long time without
+> crashes and 'top' says it doesn't seem to be leaking anything, as its
+> memory usage stays the same for as long as I looked.
+>
+>         Please consider applying to perf-tools-next,
+>
+> Best regards
+>
+> P.S.: In other news, the syscalltbl series from Ian built on all my
+> containers, I'm now trying to go over it patch by patch.
+>
+> Arnaldo Carvalho de Melo (6):
+>   perf python: Fixup description of sample.id event member
+>   perf python: Remove some unused macros (_PyUnicode_FromString(arg), etc=
+)
+>   perf python tracepoint.py: Change the COMM using setproctitle if availa=
+ble
+>   perf python: Decrement the refcount of just created event on failure
+>   perf python: Don't keep a raw_data pointer to consumed ring buffer spac=
+e
+>   perf python: Check if there is space to copy all the event
 
-Sgtm. The patch hasn't had attention for 3 months. A quick grep for
-"unwind" and "UNW_" shows only use in perf and the feature tests.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
