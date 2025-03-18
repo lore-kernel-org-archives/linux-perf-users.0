@@ -1,158 +1,113 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F61209F32;
-	Tue, 18 Mar 2025 11:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978BD1FCF47;
+	Tue, 18 Mar 2025 11:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296801; cv=none; b=NFJAod7yHFlkdPEtAcGD0a8VpW/ttnT2RMq5jtUGUJ9wdChPJJoJOKc6Hqq+tpVDgcK6ALBYsXZzlnL7lNSAMFd6V0DgrkyErbqOzpG6YXxq+MOTDbSviTX7Adi0ioS77Nw2w4dimnB9nYxNHGv+v4uQ9ZVowcCZ360E7yLQNsM=
+	t=1742297130; cv=none; b=k7Sr2p1LpYLGEqSPBtCNqNtLPxXmDW7ep2EDNd2lu071aC4bR+0bXIUalFs/UCAyXSpgtE8qmEA4Hfm1DiaKNNyJe4kybw1t+i4roXMhErXx7h5UXZa+92aY5qZAzeIzU0B4p2/vYBqyAFTKGOiOo84eeaHCVoB5QtM9tIDZWJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296801; c=relaxed/simple;
-	bh=YV1JHVxz8NuwH6aGsDylRmmy3YqPpEpoYghJFRZw8zk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G3ZhWz16UYfqhkL+f9vLFMIcx5jA0uuywQCaOXI3P61903d6KxQ9u7T7XQb5c1/brfHBgJrEyUlcDRj/pkh/NOMuc86jsJ4upRUMskEkXkx3CIz7jwFvsKjjiMGPlRcMyR3yanxfE67YKXcAIwxplf8AO2lVMwYBtXuKrxbJDY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=QVgvFXCY; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="QVgvFXCY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hgkuz267b67SX+QM0W1jzr7EXhcboJpgPAQwlzu1erE=; b=QVgvFXCYTJl4+9Vf0VRaVN892p
-	Ugnl2V4H0E7oMDa5wTSJFhD3Ic4LgwEpDzYh+XQoA30GvMLWVEbkDxDxAiR0EGku0/ObwJixGuR4U
-	EMkNFaPzZRjpv28BXwkdsrzz6pcUvomjPAXX3i5E//wOkW3o2zgeu9pcBb55rQB38pfYSC34QMPQN
-	rI21IZBslc9xdp5oTeMEwlcfnz8E4hp7WmTZEL6pVorsizA6kTgi53Lbx8zRgyiaN3DyDvfiMzNaQ
-	hr64ob7YwQFoqo/uWj8pqc94Zag3D8XQ3TLAanesyUyBimCocC/sUzmb4r+VsiEMQqyeo4xxUG1z7
-	FBt2bi+A==;
-Received: from [223.233.71.8] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tuUz1-002g2U-L9; Tue, 18 Mar 2025 12:19:43 +0100
-Message-ID: <8b11d5f6-bb16-7af6-8377-bb0951fcfb60@igalia.com>
-Date: Tue, 18 Mar 2025 16:49:28 +0530
+	s=arc-20240116; t=1742297130; c=relaxed/simple;
+	bh=j2Zg/4JEx1lWoxVpbdYsbsU0lPiBAPhAfaR8/wI9JCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YK7oZE+Fvv5cBusE9/ozp5egYjy6mxzNe1BQ/uBvWOjZhOu81wUpMUGifTtqDDr3FJKiBr695whUyuGZD9nlIXWFEIOBjS2xNozXpcy/WtlMKeUA/JT7GqFzohN7QR0krR7YABElTyRJOLZXkbsgKxFLElFpd+OVbpgz4XMG8l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 420C013D5;
+	Tue, 18 Mar 2025 04:25:36 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B0C53F694;
+	Tue, 18 Mar 2025 04:25:27 -0700 (PDT)
+Date: Tue, 18 Mar 2025 11:25:23 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	German Gomez <german.gomez@arm.com>
+Subject: Re: [PATCH v1] perf tests: Harden branch stack sampling test
+Message-ID: <20250318112523.GM2487211@e132581.arm.com>
+References: <20250312055846.671522-1-irogers@google.com>
+ <20250312105450.GN9682@e132581.arm.com>
+ <Z9M9gK4VS199CRKh@google.com>
+ <20250314091314.GV9682@e132581.arm.com>
+ <CAP-5=fWM2hqu02nNyBUBgLu01AC=C7mwxayezzs7frCyAsirPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH RFC 0/2] Dynamically allocate memory to store task's full
- name
-Content-Language: en-US
-To: Andres Rodriguez <andresx7@gmail.com>, Kees Cook <kees@kernel.org>,
- Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250314052715.610377-1-bhupesh@igalia.com>
- <202503141420.37D605B2@keescook>
- <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWM2hqu02nNyBUBgLu01AC=C7mwxayezzs7frCyAsirPg@mail.gmail.com>
 
-Hi,
+On Mon, Mar 17, 2025 at 08:38:44AM -0700, Ian Rogers wrote:
 
-Thanks for the review and inputs on the additional possible use-cases.
-Please see my replies inline.
+[...]
 
-On 3/15/25 1:13 PM, Andres Rodriguez wrote:
->
->
-> On 3/14/25 14:25, Kees Cook wrote:
->> On Fri, Mar 14, 2025 at 10:57:13AM +0530, Bhupesh wrote:
->>> While working with user-space debugging tools which work especially
->>> on linux gaming platforms, I found that the task name is truncated due
->>> to the limitation of TASK_COMM_LEN.
->>>
->>> For example, currently running 'ps', the task->comm value of a long
->>> task name is truncated due to the limitation of TASK_COMM_LEN.
->>>      create_very_lon
->>>
->>> This leads to the names passed from userland via pthread_setname_np()
->>> being truncated.
->>
->> So there have been long discussions about "comm", and it mainly boils
->> down to "leave it alone". For the /proc-scraping tools like "ps" and
->> "top", they check both "comm" and "cmdline", depending on mode. The more
->> useful (and already untruncated) stuff is in "cmdline", so I suspect it
->> may make more sense to have pthread_setname_np() interact with that
->> instead. Also TASK_COMM_LEN is basically considered userspace ABI at
->> this point and we can't sanely change its length without breaking the
->> world.
->>
->
-> Completely agree that comm is best left untouched. TASK_COMM_LEN is 
-> embedded into the kernel and the pthread ABI changes here should be 
-> avoided.
->
+> On our testing skipped == failed, I can change 2 to 1 above but I'd
+> made it 2 as it wasn't clear to me all branch filter types would be
+> supported by perf record and skipping/2 was a less terrible error
+> message.
 
-So, basically my approach _does not_ touch TASK_COMM_LEN at all. The 
-normal 'TASK_COMM_LEN' 16byte design remains untouched.
-Which means that all the legacy / existing ABi which uses 'task->comm' 
-and hence are designed / written to handle 'TASK_COMM_LEN' 16-byte name, 
-continue to work as before using '/proc/$pid/task/$tid/comm'.
+My concern is changing from returned val from 1 to 2 will lead to CI
+to never report errors.
 
-This change-set only adds a _parallel_ dynamically allocated 
-'task->full_name' which can be used by interested users via 
-'/proc/$pid/task/$tid/full_name'.
+> I'm keen to land the pulling apart of the perf command from the
+> tr/grep as if we hit say an asan error currently that is hidden by
+> code like:
+> ```
+> perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u --
+> ${TESTPROG} > /dev/null 2>&1
+> ```
+> where all the output is sent to /dev/null but the asan error code will
+> cause the "set -e" to fail. If this code fails with asan then
+> currently the first thing to do is start pulling apart the
+> expressions.
 
-[PATCH 2/2] shows only a possible use-case of the same and can be 
-dropped with only [PATCH 1/2] being considered to add the 
-'/proc/$pid/task/$tid/full_name' interface.
->> Best to use /proc/$pid/task/$tid/cmdline IMO...
->
-> Your recommendation works great for programs like ps and top, which are
-> the examples proposed in the cover letter. However, I think the 
-> opening email didn't point out use cases where the name is modified at 
-> runtime. In those cases cmdline would be an unsuitable solution as it 
-> should remain immutable across the process lifetime. An example of 
-> this use case would be to set a thread's name for debugging purposes 
-> and then trying to query it via gdb or perf.
->
-> I wrote a quick and dirty example to illustrate what I mean:
-> https://github.com/lostgoat/tasknames
->
-> I think an alternative approach could be to have a separate entry in 
-> procfs to store a tasks debug name (and leave comm completely 
-> untouched), e.g. /proc/$pid/task/$tid/debug_name. This would allow 
-> userspace apps to be updated with the following logic:
->
-> get_task_debug_name() {
->     if ( !is_empty( debug_name ) )
->         return debug_name;
->     return comm;
-> }
->
-> "Legacy" userspace apps would remain ABI compatible as they would just 
-> fall back to comm. And apps that want to opt in to the new behaviour 
-> can be updated one at a time. Which would be work intensive, but even 
-> just updating gdb and perf would be super helpful.
+Agreed the most part in this patch, except returns err=2 in
+test_user_branches() and test_filter().
 
-I am fine with adding either '/proc/$pid/task/$tid/full_name' or 
-'/proc/$pid/task/$tid/debug_name' (actually both of these achieve the same).
-The new / modified users (especially the debug applications you listed 
-above) can switch easily to using '/proc/$pid/task/$tid/full_name' 
-instead of ''/proc/$pid/task/$tid/comm'
+> Code like:
+> ```
+> perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n' |
+> grep '.' > $TMPDIR/perf.script
+> ```
+> is problematic as again we lose the asan like errors. Running the previous:
+> ```
+>  if grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$"
+> $TMPDIR/perf.script; then
+> ```
+> could fail because of an unexpected branch filter type, but was
+> failing for me just because there were blank or similar lines in the
+> output.
 
-AFAIK we already achieved for the kthreads using d6986ce24fc00 
-("kthread: dynamically allocate memory to store kthread's full name"), 
-which adds 'full_name' in parallel to 'comm' for kthread names.
+I saw you changed the command as:
+
+  tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep '.' | \
+      grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" \
+      > "$TMPDIR/perf.script-filtered" || true
+
+This is a good change for me.  After we removed the noises caused by
+spaces and empty lines, for an empty script output, I still think we
+should report error, as the test fails to capture any branch stack.
+
+> The new code doesn't change this but allows the output to be
+> dumped for later diagnostics. The '|| true' in the expression means we
+> get to dumping the diagnostics and dump just fail because some
+> sub-command mismatched its input.
+
+Yeah, agreed '|| true' is a good improvement.
 
 Thanks,
-Bhupesh
+Leo
