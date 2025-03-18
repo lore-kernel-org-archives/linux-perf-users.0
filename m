@@ -1,140 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F181A2658;
-	Tue, 18 Mar 2025 05:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F84A207A2D;
+	Tue, 18 Mar 2025 09:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742274823; cv=none; b=HZQUzSyZoK7n4d3fbNImJlXqe6aDzy84rzRY2bgF/xAiiUHHAqWmHaOg0JhLeunSgM7FflfQkV+o4EF8iVOZ80XDytVCTPf+i+pPbxzUCv7hm96XkxpMDsO03I7XaYFO8d6BoC50FQzaYI1hon879Nj9M+u0zjS4Aghupi10+3Y=
+	t=1742291522; cv=none; b=quA74S0ozaFyE+mugMcWfs27qRv+9hG4vfl2+bVS4DQbvFXobuD4fxH3qm4EHRVnMV8a+gThmgmLaQx7FftGI+GXPodn/40dvgdVfhdxvakMhpmmw/oPcVzr7c74PlJ+mxV5Mdht3R82QKo0fhQ/Gl+8BSrYPaRjH1Y4CHggzgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742274823; c=relaxed/simple;
-	bh=FpqEoMvLZZbzDNMQjsR3ddD0f7hqt+e//jLM7cJCWOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6wC7OhhP7eu+xsiDHo45S+tmsKoVuJoLDLeCjEaUYna5A2cC2Bd9o5CLnugVWlwkfOF9fAKjOuxw0kQ1MkD8Odc4Qbbr9W8qE/tc/amK4CRwaENnUZ/Yq1Jz2go97RzXusD0g0V3EwqgeSeY1vxnhJ3sH7t4XMGgbMcFz5FWT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NorVFyOh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742291522; c=relaxed/simple;
+	bh=VctXCkRtlaipoTEQaRaTImQfkXgNUXPDt05w1Jzpwwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kUqiXAYxhX+1nA+Po4mb51zjCXoLWT7Ibx3f6Uh3V02t7/mg9zgUIGcd474Bgv7hBQND1ZEKYMdCW5EBaimvyGs4oVHdmMwd4+qGGcjolOmv+m5UHyyHnhccfQbyarf+cTZy99L1pXtt74ecQ90V6jwHVAZWUfryE4RMVAfsHjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SmGyoTIy; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NorVFyOh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A6FC4CEDD;
-	Tue, 18 Mar 2025 05:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742274820;
-	bh=FpqEoMvLZZbzDNMQjsR3ddD0f7hqt+e//jLM7cJCWOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NorVFyOhoHI5PdssCyTHuQHwG1QwuCoY5c//MwEtZBzeugCKBlhRIecfGKbkB5nA0
-	 vbZF2WrVp85g9aOvIJT5rWAdu8r5IRhgCoS/g7j1gEEuw51Ac1XrBySUR9zni4ZQYS
-	 n4DBWGOEroTqH9iTNOB33ugKsNMJQWGg7GOHWVb+tuua7E2rkoj14JLlHs57i7SVDh
-	 3QKLWMsLInudcwMSzLJZaOc/W30qU/JWu7iQadWeUYfUbv8jmFv5XAirC1oZTAfI8f
-	 qh9c63YPO2WojH/F+jd5swC0pDiRYyH+NUSrxCe0+L6E8DJnDa7u4cbG1V8IhkZwPt
-	 zDPlJ3PlT7Fqg==
-Date: Mon, 17 Mar 2025 22:13:38 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com,
-	james.clark@linaro.org, christophe.leroy@csgroup.eu,
-	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type
- PERF_RECORD_COMPRESSED2
-Message-ID: <Z9kBAhEKKphn8JL6@google.com>
-References: <20250303183646.327510-1-ctshao@google.com>
- <Z9TXabugl374M3bA@google.com>
- <Z9hFJtEKfsGGUDMg@x1>
- <Z9hLKsZOfouM3K7H@x1>
- <Z9hR8M-SQ5TD2qMX@google.com>
- <Z9iHiTv_ud6GEhJh@x1>
- <CAJpZYjXwUz7x1XUF7AzgYR6PZo_igrwK9BkxGx_3N0pCs1YRvw@mail.gmail.com>
- <Z9iY7HFebiSaWZJQ@x1>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SmGyoTIy"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HNecN6021832;
+	Tue, 18 Mar 2025 09:51:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=eBOmMJB3ghmaaWbjiKmKwlSAiuexcdIyFCUKTYwPn
+	5E=; b=SmGyoTIyOoASelXNt10unNUwlJ5ztMum/uog7ZVW4mv30/VIC0VMSouCw
+	jr8wzRWmnOKHjV3WxcR9FASQj/WYrcRsKbgpp11iASXZhUxWllZ57AWXKsDDGQVk
+	JJvqA/4l96zQkwb0tIYVqWOYHUGoV9iuFSPKhp1IrqZL7e3ukW37RZcQm7iCwn8a
+	m2z0yMx3FOOhj1ceJkVWGCbDjs5RbLLRM9UyA0Ftw+QzQw+64fRNBmYKdAh76eDn
+	4TYk1zSjgt6Jtbr7ixTpVyWy4zjYdBt1DUNzS6akGbeDkcCcuGQqGHFTTW1baA3a
+	qt7L94CTw09DSzNX/oXy4xfWMMxkA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45eks9dbsc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 09:51:55 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52I9aeJZ023777;
+	Tue, 18 Mar 2025 09:51:55 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45eks9dbs6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 09:51:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52I7SVIH024449;
+	Tue, 18 Mar 2025 09:51:53 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dncm32c9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 09:51:53 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52I9pniM46530848
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Mar 2025 09:51:49 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B02BD2004B;
+	Tue, 18 Mar 2025 09:51:49 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7424220043;
+	Tue, 18 Mar 2025 09:51:49 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 18 Mar 2025 09:51:49 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com, acme@redhat.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: [PATCH 0/2] perf bench: Fix core dumps on s390 z/VM
+Date: Tue, 18 Mar 2025 10:51:30 +0100
+Message-ID: <20250318095132.1502654-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9iY7HFebiSaWZJQ@x1>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UenzEhNHi7r26mR2mQOh2732Gm5QZi_2
+X-Proofpoint-ORIG-GUID: gZDvhQU3RXmkUpbOZu9EzNk-g6Z6ONhZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-18_04,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=716 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503180068
 
-Hello,
+On s390 z/VM command 'perf bench internals pmu-scan' dumps core,
+due to a
+- double free of the same memory chunck
+- free of memory chunk located to read-only data segment
 
-On Mon, Mar 17, 2025 at 06:49:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Mar 17, 2025 at 02:45:39PM -0700, Chun-Tse Shao wrote:
-> > On Mon, Mar 17, 2025 at 1:35 PM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Mar 17, 2025 at 09:46:40AM -0700, Namhyung Kim wrote:
-> > > > On Mon, Mar 17, 2025 at 01:17:46PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > On Mon, Mar 17, 2025 at 12:52:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > Checking the discussion and the patch.
-> > > > >
-> > > > > My first impression yesterday when I saw this on the smartphone was: how
-> > > > > will an old perf binary handle the new PERF_RECORD_COMPRESSED2? Will it
-> > > > > ignore it while emitting a warning, since it can be skipped and then
-> > > > > what we will get a partial view?
-> > > > >
-> > > > > Having some session output showing how an older perf binary handles
-> > > > > PERF_RECORD_COMPRESS2 would be informative.
-> > > >
-> > > > I think it'll show the below warning:
-> > > >
-> > > >   <offset> [<size>]: failed to process type: 83
-> > >
-> > > Right that is what I got:
-> > >
-> > > ⬢ [acme@toolbox perf-tools-next]$ perf.old script -i /tmp/perf.data.ck8
-> > > 0xbf0 [0x250]: failed to process type: 83 [Invalid argument]
-> > > ⬢ [acme@toolbox perf-tools-next]$
-> > >
-> > > I think we should change that to something more informative, like:
-> > >
-> > > 0xbf0 [0x250]: failed to process unknown type 83, please update perf.
+Thomas Richter (2):
+  perf/bench: perf bench internals pmu-scan dumps core
+  perf/bench: Double free of dynamic allocated memory
 
-That would be nice, but there are cases it can fail even without new
-record formats.  So it should also check if the type number is greater
-than or equal to the max.
+ tools/perf/util/cpumap.c |  7 +------
+ tools/perf/util/pmu.c    | 11 +++++++----
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
-> > >
-> > > And then does it stop at that record it doesn't grok?
-> > >
-> > >         if ((skip = perf_session__process_event(session, event, head, "pipe")) < 0) {
-> > >                 pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-> > >                        head, event->header.size, event->header.type);
-> > >                 err = -EINVAL;
-> > >                 goto out_err;
-> > >         }
-> > >
-> > >         head += size;
-> > >
-> > > So we're stopping there.
-> > >
-> > > Maybe we can just warn and skip?
-> > 
-> > Thank you Arnaldo, it is a good suggestion and I will work on this later.
-> 
-> Thank you for considering that, really appreciated!
+-- 
+2.48.1
 
-It would be hard to process misaligned data though.  Probably we also
-want to add a check to make sure it's properly aligned.
-
-Thanks,
-Namhyung
-
-> 
-> perf deals with so much stuff and code flux that all the help that we
-> can get is what is needed for it to continue to be relevant and useful.
-> 
-> After all what is the point of a tool that produces bad results? :-)
-> 
-> - Arnaldo
-> 
-> > -CT
-> > 
-> > >
-> > > Anyway, the series as is seems ok.
-> > >
-> > > I'll test a bit more and send my Tested-by
-> > >
-> > > - Arnaldo
