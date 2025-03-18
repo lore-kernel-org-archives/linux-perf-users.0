@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523321C6FF8
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 04:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAA01CAA66
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 04:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742271298; cv=none; b=W8WfOeVVW8A4Spr9f0NTvgXd8BBFX5ULDYzQb+TjCJ1I34hWgxK/J5Hebs6WL5xi6pvwdeyzHa0PehD1S6URpimXbtjiSed1eAnPxCkkVBA4ulZ3SrDRXSs8xIn/LBErRCfkMhc3qpKzft0p3ZmR+QbYueLsDFlweiy93/EOIlY=
+	t=1742271300; cv=none; b=YTiGS2c05WqohvAnq/PICuxGdVZpU4vpxqbA960RZa08PSwPVAv9gHm0X5ssuDmZwHRuy64InjXyMGIQoFBFKbymtouufx/knPPqSYEFNdphTMbaNQqn4WOabG+9WSId1ffVogln0hFi1vvoXcKtMgQ+7VgcUk9MZPlzWa9Xclo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742271298; c=relaxed/simple;
-	bh=wkcLWmBn5YfSkrqCgjPW+KecUlbd3s8XqELqjHa497Q=;
+	s=arc-20240116; t=1742271300; c=relaxed/simple;
+	bh=nM7VLv/vcPJb8IP1hkBb7xTP6rJT9gjNNb4KuBio9Y4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=nGA+itvBvxYTnn6FIAb1Kn4E+JfyOsV0vWFWsfRZdGAhim+QChkD89kWA8OEBviGKkFMQYt8GYIusavotUTCJNKIfbpbgSV3qdL8759WmwW7Iee22AqtGWZk3jBm/oyTt+gFKEScaG63g5RlKYFPTRUR+Q3Sri/ORJb5zUvX5PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mksoWD+7; arc=none smtp.client-ip=209.85.160.73
+	 To:Content-Type; b=C7Z1aSO2D2zN5cSBsu+i7Ynxt1KjMyfedDgDoONw9rxR/jhg84KXp6bARzzXifsw5ikHIRYALWV0SQw1wpYl7mDDIs5fGuuGkbBlkrrVvBb1fknBq/UcUWB1+MnKlqzPV1iDtwKCLOBmumQcJlZbtzwV+kU6o/Jz+sidWA9MZSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eV5dO8Sv; arc=none smtp.client-ip=209.85.161.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mksoWD+7"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2c2451f5cc8so4000178fac.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 21:14:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eV5dO8Sv"
+Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-5fea6c35b34so1127514eaf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 21:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742271296; x=1742876096; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742271298; x=1742876098; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w5tqXzSB63leZ7R3ZWij8NvB4IshQW3WEuW90/a1hhI=;
-        b=mksoWD+7pjMmmFzibDQohS8FQK9ZCv01UyDUJq4KZUfi+DZVNSn6hhoYOg7+EKwvOr
-         cdh0/bKyqQz4wkkxkFVsHwcw12beoCU1ZhoWcvzW0s1h60G8vx+VYF4uy3N6R1ke+Q6u
-         hHulVuy7MA+fPy9at9fv3/wYiDwkSLDcGWCnLFwjzyW1avkPIC5k+MnmzP48v5fLwkFN
-         n6UvvM4YcVB1TBs9RQztFv2eRCJVrRdEO0Y3JvW0BT+BYEfJroMavMqPflyet03GnMUB
-         qRqgG9IssMz9fBhBSAlrAz7+4t2nJJSxF+x1pBlqHw1UHiFsC2TaLmEAk+GjkbsjkLsT
-         Eppw==
+        bh=IcTDVc7sWc+BX5SOaqTWz06HZw+0rggI949f/hqkkSw=;
+        b=eV5dO8Svo2y5cx6scAbegntfkkIeovgL7zY+a8uboV0Ftt5ma7eC0YFUS8R/6EsS9N
+         LdTj8VRvqIkz0VLFNwe4F8+7eCFeovD3enCkGwLkYHT4ZI6q4gDxcZmJY/Otz+91WqMh
+         O/wtBSoXAhqFbnhCEathU/RfRNk6OWFIBIYMAZ9rSnVC0DGX8XPndu/oCZdSYWfbRdmf
+         DoO442o5m0IaL0I81MM+QbqV3m25HBrXq4o3+JD+57ZMQyddj3h3OoeGuoV8GBYAOPEO
+         hjJ7q0DxobxGPWSgU4kIwYwQzUFR2ZyhtOnMMTkaBnoxTyt4/ZC8B7/asIQNH2gS1Xuu
+         Vqkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742271296; x=1742876096;
+        d=1e100.net; s=20230601; t=1742271298; x=1742876098;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5tqXzSB63leZ7R3ZWij8NvB4IshQW3WEuW90/a1hhI=;
-        b=SUKtJreyxwAp0IKnDSk60XaYfrO2tBaStjeqhx6h7BehtMwc/lWjrwtTDswfE0vrMW
-         86ov6AJB/X9tySW0Lq5RC0l54fdE195tZ9ELgk2NXczcCtOBE8kFT539ho1GVALD+VF4
-         39q6DE1bYVQIFA3wqyOeFNF8o6Fmwk5fTXoXdU5vV3AwE1MoOdMMQFqfxmlugCx0yRF9
-         q4ZguuTajwr21TKXlbVw9PDrm9/EqlTsSnh+ru8fx8Sxu2YnL0rpMeYKVULqQPkdO3b8
-         zU8ZEDAJp/fugZ3XkMQa8g2zb2GwdUzf6OHmaC6wdaNz37aq7Xd32Owgr0HmQEFx87xw
-         uGEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYKD1JhMPhDSNEGhBL5sCRfSrly41txL3YgkXByKZiOgmuyf6Z3A0L8ciUd5nS859RsQcif0nNZOO16Qi9Ua06@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvi18ee3qDlUMnSfcnqnigbsR4/k1zUee4RLfUGxI7afGacPVJ
-	E9DxAxFQ8mvkX7/y57PVWxI9r7DyzZ6mDESVguVhYzS86StaUjBjJjDMvC2dggthV7VjbxBg2Vs
-	hhRA7UQ==
-X-Google-Smtp-Source: AGHT+IEkyqrCGwo/Q7at+ImZvcMpDLZizAESd0WtnXKupQeighIKPBCF5RT7wqXmUuEle6WQZ28QjSW2Y1se
-X-Received: from oablv6.prod.google.com ([2002:a05:6871:4386:b0:2c1:64e4:adb9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:e40f:b0:296:a67c:d239
- with SMTP id 586e51a60fabf-2c690f3b3f0mr7815648fac.12.1742271296325; Mon, 17
- Mar 2025 21:14:56 -0700 (PDT)
-Date: Mon, 17 Mar 2025 21:14:41 -0700
+        bh=IcTDVc7sWc+BX5SOaqTWz06HZw+0rggI949f/hqkkSw=;
+        b=MwLj6B53NkWU7Chk0MT/nQZ2wO9WMOGxcX0/k5UInRRg7l0wIQu7lB/xn7tjIdlECR
+         72x9azcSqeJK07R+OBhR/qB2jvY9rdvWzta1U5TlJ/taP0t1pw53MH548lAhqd74T+ht
+         vV8TDljScbo9ZCnsDukrxr5WLLI6IBpNxcTu0YgvmgMcjfUA7UlF1Usl7fwX2Jcua9TF
+         NdWGvgmZiz4bFlEXsaGUP4GWk8wroYwpm+SxwtpbFhLYCMixzaW5nPxBoz3/08asat1W
+         woX9ZwbWHE76FkusaARo/zGtbpQ5daQv+MrDiBH7L722bPJ6UaIgFouK29bVQMGcKKU5
+         lDQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXSSTlCWt6Q8YClxPVGPBEAhScVuMes+Ufj+paz8jj5mXtlEo+iSACJVGuHotVQia6PS/p6VjVFCA9TzmkVkJi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu8HCHHxePhJkxfPYEx9xp4+LX3dCqrePFr/er6wi9Ef7pJTJG
+	8bKzWjhZo216Umufusj3G6rsbjhNyuf4BMV09WT7tOgrFpmcQ4HemEQMJhO9+H6Bg9qWiVx7ieo
+	TU9bTmg==
+X-Google-Smtp-Source: AGHT+IHbiPc7HGDa8UDDNXiyyyNYm3dPD9ip4rcffjkWbCIt+vvE/ogOPNPgJ48eQYU33l1n9NXH5ew2ke34
+X-Received: from oabhq15.prod.google.com ([2002:a05:6870:9b0f:b0:2c2:67a4:62b1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:d614:b0:2c2:d2b8:e1ab
+ with SMTP id 586e51a60fabf-2c690feb31dmr7568764fac.18.1742271298202; Mon, 17
+ Mar 2025 21:14:58 -0700 (PDT)
+Date: Mon, 17 Mar 2025 21:14:42 -0700
 In-Reply-To: <20250318041442.321230-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318041442.321230-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250318041442.321230-5-irogers@google.com>
-Subject: [PATCH v1 4/5] perf evlist: Add groups to evlist__format_evsels
+Message-ID: <20250318041442.321230-6-irogers@google.com>
+Subject: [PATCH v1 5/5] perf parse-events: Add debug dump of evlist if reordered
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,57 +74,59 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make groups visible in output:
-
-Before:
-{cycles,instructions} ->
-cpu_atom/cycles/,cpu_atom/instructions/,cpu_core/cycles/,cpu_core/instructions/
-
-After:
-{cycles,instructions} ->
-{cpu_atom/cycles/,cpu_atom/instructions/},{cpu_core/cycles/,cpu_core/instructions/}
+Add debug verbose output to show how evsels were reordered by
+parse_events__sort_events_and_fix_groups. For example:
+```
+$ perf record -v -e '{instructions,cycles}' true
+Using CPUID GenuineIntel-6-B7-1
+WARNING: events were regrouped to match PMUs
+evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evlist.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 96cfc7ed1512..b59fa407be44 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2471,19 +2471,30 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx)
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5152fd5a6ead..cb76796bc5c7 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -28,6 +28,7 @@
+ #include "util/evsel_config.h"
+ #include "util/event.h"
+ #include "util/bpf-filter.h"
++#include "util/stat.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
  
- void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb)
- {
--	struct evsel *evsel;
-+	struct evsel *evsel, *leader = NULL;
- 	bool first = true;
+@@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
+ 	if (ret2 < 0)
+ 		return ret;
  
- 	evlist__for_each_entry(evlist, evsel) {
-+		struct evsel *new_leader = evsel__leader(evsel);
+-	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
+-		pr_warning("WARNING: events were regrouped to match PMUs\n");
+-
+ 	/*
+ 	 * Add list to the evlist even with errors to allow callers to clean up.
+ 	 */
+ 	evlist__splice_list_tail(evlist, &parse_state.list);
+ 
++	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
++		pr_warning("WARNING: events were regrouped to match PMUs\n");
 +
- 		if (evsel__is_dummy_event(evsel))
- 			continue;
- 
-+		if (leader != new_leader && leader && leader->core.nr_members > 1)
-+			strbuf_addch(sb, '}');
++		if (verbose > 0) {
++			struct strbuf sb = STRBUF_INIT;
 +
- 		if (!first)
- 			strbuf_addch(sb, ',');
++			evlist__uniquify_name(evlist);
++			evlist__format_evsels(evlist, &sb);
++			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
++			strbuf_release(&sb);
++		}
++	}
+ 	if (!ret) {
+ 		struct evsel *last;
  
-+		if (leader != new_leader && new_leader->core.nr_members > 1)
-+			strbuf_addch(sb, '{');
-+
- 		strbuf_addstr(sb, evsel__name(evsel));
- 		first = false;
-+		leader = new_leader;
- 	}
-+	if (leader && leader->core.nr_members > 1)
-+		strbuf_addch(sb, '}');
- }
- 
- void evlist__check_mem_load_aux(struct evlist *evlist)
 -- 
 2.49.0.rc1.451.g8f38331e32-goog
 
