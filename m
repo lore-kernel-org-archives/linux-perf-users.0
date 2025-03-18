@@ -1,55 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6459F1E1E03;
-	Tue, 18 Mar 2025 23:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE901DD0D5;
+	Tue, 18 Mar 2025 23:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742341670; cv=none; b=jEEqcYUTvLejt82aZ0YfMCFdOzoVAozxqke8Mw3VBbqs53jrbWmJTqAseLigFmqsqMDwaHVhm7kwgBU1egYynnQjYlWNe6dHqxtR6HoJJd9xxHsNdNuCmqVQhkGDn9Zwlng0BtQhYqMIFS+4aZEFYIczS0X2pMEpiaLGcWqtI8E=
+	t=1742341916; cv=none; b=DmZ7ExQyEAl4z0eC5Ks2FkD9mbeSM3fdujjDvHVJ8Qqn80vWi67LsOFo5q/+l5ysbKo3DF8jJK6fKnxBeSxfwTvcyGlwgqfJs71VgrK0cE2/+OzwLM69UvsiMMh7ZeACGby24fCAS/L1cqn6mpTu8vM3MI+xwLF+Zyhc6eR/rk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742341670; c=relaxed/simple;
-	bh=x3rp+Z/eTbo64Q6GyZW2o56/PCgzaRs5h98VZxSVlJs=;
+	s=arc-20240116; t=1742341916; c=relaxed/simple;
+	bh=a+pnqpNwRT4t7w507JF6+EzY3Lq35cSU9gWnIZaeLEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xtzp4sXcHyuXuT9hEvz6zS0HiYGDMudLTYLoNF4UJ/gpnmZ6La/N58gt8G0G0nlBuqYgmKtvNxCnRyl31Xc+FchnluwWkhZnHQQXhaEva7zyU0BnuRnudnB59LcJnDWmfezgoxye3QSp3lG9dfX7I/aRX0AAXR6hN4yL3NxMbfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wgzrg50d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6AdDrJzH6BePZQ+XeDRFvv1QIFLRsBO0/gF3SiVJ3UZkpEpKIIZ5kWBZUjYoJPTEF2DlCCh5SPv3eO7BsEw7HBuW1xd+PXNyoipWQMODyjbimbkKR8bm44M9WaqjoLvDh075Idi9hraGXyUxoap3Cgr9kyb440JyTrLoRxjdIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7LpHAz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wgzrg50d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368E4C4CEDD;
-	Tue, 18 Mar 2025 23:47:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7LpHAz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B27C4CEDD;
+	Tue, 18 Mar 2025 23:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742341669;
-	bh=x3rp+Z/eTbo64Q6GyZW2o56/PCgzaRs5h98VZxSVlJs=;
+	s=k20201202; t=1742341915;
+	bh=a+pnqpNwRT4t7w507JF6+EzY3Lq35cSU9gWnIZaeLEE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wgzrg50dMr1PD/vmdO0fWGdTYr3eps/lN/8KBk4jcAG6i3IR1zWJPlo3+BlD1AEKa
-	 dxPx6xOL5AkFwb4x+PuqySN/fIiK52Ds2gpJP3TM5LipX8Di0kjwFFoueEfJhjgalW
-	 Rxub79Nvb6gkgSw8igZZKqY5N7I6PmU9dBMrYBdEdhHcmrJV+gsH6awqujAFNb9SGc
-	 GYc2VmbnLC+qNeAgzErTEmEpp32nRICvlgyafOehTUC8IrINpghxJTLaLoq/4EvQFv
-	 R9QTlDmLiraImceDcUSaLdFtA/ziCjUvWUFnOu6oFlSmC3w5PPvgQxcs/YPwuzzZ1U
-	 1Nw2RtS7CF0OQ==
-Date: Tue, 18 Mar 2025 16:47:47 -0700
+	b=J7LpHAz8vhG703hMFkxfgMcg9JdiQtxci4NP14cPMZXqUaNM/s9rd65q1K2OPlQJv
+	 DU0J5k043bF8y62hfal9ftdJN20BUCnFMXEXmmiP24EZd16bd3pOFjiM1lZd8911Ct
+	 O9ZLiUypI9zHWKIEvfAJqWZsR55cIJLFusSdsEVu+Dg0PiiCiOYpTnfU/V/BJGaGQ3
+	 Bdnh7xtQl8w6ANP3MF7U5zj+kF1UnP0rT1ZwyOhmDSdY8YGfciPdDQ4oAwE8xyeaWz
+	 AXh2Z1gl0VbU2CcPeTfHlp78R3z9ugsdP52mmKbXnWG5u2cHlwWOKR+3ZFMFza2D49
+	 Viu3oHELJnP6Q==
+Date: Tue, 18 Mar 2025 16:51:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Howard Chu <howardchu95@gmail.com>, Andi Kleen <ak@linux.intel.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Anne Macedo <retpolanne@posteo.net>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf machine: Factor creating a "live" machine
- out of dwarf-unwind
-Message-ID: <Z9oGI8G3cOoluIKf@google.com>
-References: <20250313052952.871958-1-irogers@google.com>
- <Z9Rk-YdoK-fK_62d@x1>
- <Z9SK96s4PAp680k6@x1>
- <Z9SLL50yuiLOGGYI@x1>
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
+ from the ones detected when test-all.o builds
+Message-ID: <Z9oHGfAffX2Bfl7a@google.com>
+References: <Z1mzpfAUi8zeiFOp@x1>
+ <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
+ <Z9hWqwvNQO0GqH09@google.com>
+ <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
+ <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,64 +54,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z9SLL50yuiLOGGYI@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
 
-On Fri, Mar 14, 2025 at 05:01:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Mar 14, 2025 at 05:00:58PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Mar 14, 2025 at 02:18:49PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Mar 12, 2025 at 10:29:51PM -0700, Ian Rogers wrote:
-> > > > Factor out for use in places other than the dwarf unwinding tests for
-> > > > libunwind.
-> > > 
-> > > Testing with another patchset being reviewed/tested, seems to work, if
-> > > it showed the line number would be even better!
+Hello,
+
+On Mon, Mar 17, 2025 at 09:19:22PM +0000, Quentin Monnet wrote:
+> 2025-03-17 10:16 UTC-0700 ~ Ian Rogers <irogers@google.com>
+> > On Mon, Mar 17, 2025 at 10:06 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >>
+> >> Hello,
+> >>
+> >> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
+> >>> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
+> >>> <acme@kernel.org> wrote:
+> >>>>
+> >>>> We have a tools/build/feature/test-all.c that has the most common set of
+> >>>> features that perf uses and are expected to have its development files
+> >>>> available when building perf.
+> >>>>
+> >>>> When we made libwunwind opt-in we forgot to remove them from the list of
+> >>>> features that are assumed to be available when test-all.c builds, remove
+> >>>> them.
+> >>>>
+> >>>> Before this patch:
+> >>>>
+> >>>>   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
+> >>>>   feature-libunwind-aarch64=1
+> >>>>   $
+> >>>>
+> >>>> Even tho this not being test built and those header files being
+> >>>> available:
+> >>>>
+> >>>>   $ head -5 tools/build/feature/test-libunwind-aarch64.c
+> >>>>   // SPDX-License-Identifier: GPL-2.0
+> >>>>   #include <libunwind-aarch64.h>
+> >>>>   #include <stdlib.h>
+> >>>>
+> >>>>   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
+> >>>>   $
+> >>>>
+> >>>> After this patch:
+> >>>>
+> >>>>   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
+> >>>>   $
+> >>>>
+> >>>> Now an audit on what is being enabled when test-all.c builds will be
+> >>>> performed.
+> >>>>
+> >>>> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
+> >>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >>>> Cc: Ian Rogers <irogers@google.com>
+> >>>> Cc: James Clark <james.clark@linaro.org>
+> >>>> Cc: Jiri Olsa <jolsa@kernel.org>
+> >>>> Cc: Kan Liang <kan.liang@linux.intel.com>
+> >>>> Cc: Namhyung Kim <namhyung@kernel.org>
+> >>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >>>
+> >>> Sorry for the delay on this.
+> >>>
+> >>> Reviewed-by: Ian Rogers <irogers@google.com>
+> >>
+> >> Thanks for the review, but I think this part is used by other tools like
+> >> BPF and tracing.  It'd be nice to get reviews from them.
 > > 
-> > But it gets the lines, at least in this secoond attempt, after applying
-> > Namhyungs fix for the previous problem (int16_t):
+> > Sgtm. The patch hasn't had attention for 3 months. A quick grep for
+> > "unwind" and "UNW_" shows only use in perf and the feature tests.
+> > 
+> > Thanks,
+> > Ian
 > 
-> Nevermind, this time I built with DEBUG=1, so DWARF, probably.
+> 
+> Indeed, bpftool does not rely on libunwind, and I don't remember other
+> BPF components doing so, either.
 
-Can I get your Tested-by?
+Right, but my concern was about the feature test itself and the related
+changes in the build files.
+
+Can I get your Acked-by then?
 
 Thanks,
 Namhyung
 
->  
-> > root@number:~# perf trace -e landlock_add_rule perf test -w landlock
-> > perf: Segmentation fault
-> >     #0 0x6698d0 in dump_stack debug.c:355
-> >     #1 0x66994c in sighandler_dump_stack debug.c:367
-> >     #2 0x7f784be95fd0 in __restore_rt libc.so.6[40fd0]
-> >     #3 0x4d0e56 in trace__find_usable_bpf_prog_entry builtin-trace.c:3882
-> >     #4 0x4cf3de in trace__init_syscalls_bpf_prog_array_maps builtin-trace.c:4040
-> >     #5 0x4bf626 in trace__run builtin-trace.c:4477
-> >     #6 0x4bb7a9 in cmd_trace builtin-trace.c:5741
-> >     #7 0x4d873f in run_builtin perf.c:351
-> >     #8 0x4d7df3 in handle_internal_command perf.c:404
-> >     #9 0x4d860f in run_argv perf.c:451
-> >     #10 0x4d7a4f in main perf.c:558
-> >     #11 0x7f784be7f088 in __libc_start_call_main libc.so.6[2a088]
-> >     #12 0x7f784be7f14b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
-> >     #13 0x410ff5 in _start perf[410ff5]
-> > Segmentation fault (core dumped)
-> > root@number:~# 
-> >  
-> > > I'll continue working on that other case with this applied just before
-> > > that series and finally will give my Tested-by.
-> > > 
-> > > - Arnaldo
-> > > 
-> > > root@number:~# perf trace -e landlock_add_rule perf test -w landlock
-> > > perf: Segmentation fault
-> > >     #0 0x5be81d in dump_stack perf[5be81d]
-> > >     #1 0x5be879 in sighandler_dump_stack perf[5be879]
-> > >     #2 0x7f313d24efd0 in __restore_rt libc.so.6[40fd0]
-> > >     #3 0x491bc1 in cmd_trace perf[491bc1]
-> > >     #4 0x497090 in run_builtin perf.c:0
-> > >     #5 0x4973ab in handle_internal_command perf.c:0
-> > >     #6 0x413483 in main perf[413483]
-> > >     #7 0x7f313d238088 in __libc_start_call_main libc.so.6[2a088]
-> > >     #8 0x7f313d23814b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
-> > >     #9 0x413ad5 in _start perf[413ad5]
-> > > Segmentation fault (core dumped)
-> > > root@number:~#
