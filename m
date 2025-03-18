@@ -1,136 +1,140 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8E11C5D6C
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 04:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F181A2658;
+	Tue, 18 Mar 2025 05:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742272324; cv=none; b=ruiY7BvWNE/9oR9gcerLKXwEZHS63Iqz0VpHZUETcTAVR1KE0rfIiW2XcwUy/Z4QwlrdERN4vusezigjyU2pqcSfgXyO2WhZxSKxKAGC8lCIxsheiqD8YRs5egMumogRN9R3ixSi2AW4B/WNLGh0NKd9pXn2AUwDdACxpVTCwz0=
+	t=1742274823; cv=none; b=HZQUzSyZoK7n4d3fbNImJlXqe6aDzy84rzRY2bgF/xAiiUHHAqWmHaOg0JhLeunSgM7FflfQkV+o4EF8iVOZ80XDytVCTPf+i+pPbxzUCv7hm96XkxpMDsO03I7XaYFO8d6BoC50FQzaYI1hon879Nj9M+u0zjS4Aghupi10+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742272324; c=relaxed/simple;
-	bh=d5/SPH6Xszn1gnN5qqSdZHDkkc8zw3ZG8Oun46aesZk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=XuLMhwDmntlM4b94gXy/vlDtALEZ4WuzRlejrFrUkkHAXgbQ6PWfPQKdiYce5XXZEX/RNsrK4c36qH4MV+DgKy6w0LektAlkbEsUSB1ctE7nybNtYxUl+xpEiVf+w5OE9ZGHKyHAd4YDVBfyioTbOC5hIBiq89GoHLV6pEDy2Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0IWX/TnC; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742274823; c=relaxed/simple;
+	bh=FpqEoMvLZZbzDNMQjsR3ddD0f7hqt+e//jLM7cJCWOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6wC7OhhP7eu+xsiDHo45S+tmsKoVuJoLDLeCjEaUYna5A2cC2Bd9o5CLnugVWlwkfOF9fAKjOuxw0kQ1MkD8Odc4Qbbr9W8qE/tc/amK4CRwaENnUZ/Yq1Jz2go97RzXusD0g0V3EwqgeSeY1vxnhJ3sH7t4XMGgbMcFz5FWT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NorVFyOh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0IWX/TnC"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6fec6c91630so73288697b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 21:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742272321; x=1742877121; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EUkAIINDzOsP+PuNVteX8o8oIwqX+sSmcLnHXIaoPro=;
-        b=0IWX/TnCQZK7vslD49s0JHa2D3hZRsB5MJ7Tl0priZ97uaPaMOt3X33rExPJZuLg9N
-         cUbvLed6Dd71o2LIgMbR/4JxPmlnt+L6DKv7WigLqAH4GyHFahZbLO1esvyWCHefxxMv
-         Tegpjb8NQJAQLj4RJSOtOqSl4RtdY7Ot2zwwfaEBDSMednD/DFyKJIfQJn3+tO6BF97b
-         gj6ieM04ttXT5gAfoU/XO8lP/Dq59k9hG4WN2dJf6auXr0jXsdvc8T7lU/kRIxcaaGwn
-         cRQPWZ8fnYfjPjNgqLwGsb81qZUkdcxhysEtHYrE57/6HAVSJ9AfJ2SyTYwWiSp4yO8H
-         ctWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742272321; x=1742877121;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EUkAIINDzOsP+PuNVteX8o8oIwqX+sSmcLnHXIaoPro=;
-        b=g7XkgkrfywE5vn8XwSaYVHaHIROEDqW9Y9paDIotLZGNL0kV8Esvsomg8pMUhwb6BE
-         n3W4Uc2ZVw4xY/ASaD8A/vMt5s2eSNVvm1jRo16qWN7/wSJpfXbphr3nJPToXYAsCbfA
-         qIK/cb2v/LaIBwQfOzWUQHbdx6IJD4OsMHAoVhU8xtrX4BXdAhqNJ0SPcevsC9sVLWlP
-         zJyCymy8MULiztA4kBAR9KSuqyJxO+GJCQ0phSeYkYRleUdBGisF0pPunpb81om1fDiv
-         s4glVuDOz0NJkRMtyEkug/Qc8xLqETiywa7FwnXyi1j4f3HiLClmxs1GcTCHz5BvRb/F
-         F9kA==
-X-Forwarded-Encrypted: i=1; AJvYcCV26wmi4GHQGflD2Q9fLvtHNujAzUvTfkBZDOs8DIcSUQN2HX/u0moDRcp72TWyiTHzKkM7AIFOXsFY5rxOtO0X@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA+Td8i4RpZTtTS+z9B88cluSSFJEM325vmrjoy6gpQQliHW+S
-	r0d4edFprOOrjdw9bqD4hNUKDTn+CsLwpRy6NHoExKowoH+MDS1flQN7PB0ivr9wUm9CaGBEgBY
-	mInG65Q==
-X-Google-Smtp-Source: AGHT+IEcfXSAohVmxzPknUUIX08jwASTAN/GzdnD1c7IYI76WLUVAzrBv5lIoiUiC2EvtM1IH2Qkcs87+T4e
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
- (user=irogers job=sendgmr) by 2002:a05:690c:2c05:b0:6fe:c5cc:e1ab with SMTP
- id 00721157ae682-6ff46024ae2mr176667b3.6.1742272321267; Mon, 17 Mar 2025
- 21:32:01 -0700 (PDT)
-Date: Mon, 17 Mar 2025 21:31:51 -0700
-In-Reply-To: <20250318043151.137973-1-irogers@google.com>
-Message-Id: <20250318043151.137973-4-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NorVFyOh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A6FC4CEDD;
+	Tue, 18 Mar 2025 05:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742274820;
+	bh=FpqEoMvLZZbzDNMQjsR3ddD0f7hqt+e//jLM7cJCWOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NorVFyOhoHI5PdssCyTHuQHwG1QwuCoY5c//MwEtZBzeugCKBlhRIecfGKbkB5nA0
+	 vbZF2WrVp85g9aOvIJT5rWAdu8r5IRhgCoS/g7j1gEEuw51Ac1XrBySUR9zni4ZQYS
+	 n4DBWGOEroTqH9iTNOB33ugKsNMJQWGg7GOHWVb+tuua7E2rkoj14JLlHs57i7SVDh
+	 3QKLWMsLInudcwMSzLJZaOc/W30qU/JWu7iQadWeUYfUbv8jmFv5XAirC1oZTAfI8f
+	 qh9c63YPO2WojH/F+jd5swC0pDiRYyH+NUSrxCe0+L6E8DJnDa7u4cbG1V8IhkZwPt
+	 zDPlJ3PlT7Fqg==
+Date: Mon, 17 Mar 2025 22:13:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com,
+	james.clark@linaro.org, christophe.leroy@csgroup.eu,
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type
+ PERF_RECORD_COMPRESSED2
+Message-ID: <Z9kBAhEKKphn8JL6@google.com>
+References: <20250303183646.327510-1-ctshao@google.com>
+ <Z9TXabugl374M3bA@google.com>
+ <Z9hFJtEKfsGGUDMg@x1>
+ <Z9hLKsZOfouM3K7H@x1>
+ <Z9hR8M-SQ5TD2qMX@google.com>
+ <Z9iHiTv_ud6GEhJh@x1>
+ <CAJpZYjXwUz7x1XUF7AzgYR6PZo_igrwK9BkxGx_3N0pCs1YRvw@mail.gmail.com>
+ <Z9iY7HFebiSaWZJQ@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250318043151.137973-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v2 3/3] perf test dso-data: Correctly free test file in read test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, James Clark <james.clark@linaro.org>, 
-	Yunseong Kim <yskelg@gmail.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9iY7HFebiSaWZJQ@x1>
 
-The DSO data read test opens a file but as dsos__exit is used the test
-file isn't closed. This causes the subsequent subtests in don't fork
-(-F) mode to fail as one more than expected file descriptor is open.
+Hello,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/dso-data.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+On Mon, Mar 17, 2025 at 06:49:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Mar 17, 2025 at 02:45:39PM -0700, Chun-Tse Shao wrote:
+> > On Mon, Mar 17, 2025 at 1:35 PM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Mon, Mar 17, 2025 at 09:46:40AM -0700, Namhyung Kim wrote:
+> > > > On Mon, Mar 17, 2025 at 01:17:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > On Mon, Mar 17, 2025 at 12:52:09PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > > Checking the discussion and the patch.
+> > > > >
+> > > > > My first impression yesterday when I saw this on the smartphone was: how
+> > > > > will an old perf binary handle the new PERF_RECORD_COMPRESSED2? Will it
+> > > > > ignore it while emitting a warning, since it can be skipped and then
+> > > > > what we will get a partial view?
+> > > > >
+> > > > > Having some session output showing how an older perf binary handles
+> > > > > PERF_RECORD_COMPRESS2 would be informative.
+> > > >
+> > > > I think it'll show the below warning:
+> > > >
+> > > >   <offset> [<size>]: failed to process type: 83
+> > >
+> > > Right that is what I got:
+> > >
+> > > ⬢ [acme@toolbox perf-tools-next]$ perf.old script -i /tmp/perf.data.ck8
+> > > 0xbf0 [0x250]: failed to process type: 83 [Invalid argument]
+> > > ⬢ [acme@toolbox perf-tools-next]$
+> > >
+> > > I think we should change that to something more informative, like:
+> > >
+> > > 0xbf0 [0x250]: failed to process unknown type 83, please update perf.
 
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index 06be7c5d8495..a1fff4203b75 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -114,6 +114,17 @@ static int dso__data_fd(struct dso *dso, struct machine *machine)
- 	return fd;
- }
- 
-+static void dsos__delete(struct dsos *dsos)
-+{
-+	for (unsigned int i = 0; i < dsos->cnt; i++) {
-+		struct dso *dso = dsos->dsos[i];
-+
-+		dso__data_close(dso);
-+		unlink(dso__name(dso));
-+	}
-+	dsos__exit(dsos);
-+}
-+
- static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct machine machine;
-@@ -172,7 +183,7 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
- 	}
- 
- 	dso__put(dso);
--	dsos__exit(&machine.dsos);
-+	dsos__delete(&machine.dsos);
- 	unlink(file);
- 	return 0;
- }
-@@ -222,17 +233,6 @@ static int dsos__create(int cnt, int size, struct dsos *dsos)
- 	return 0;
- }
- 
--static void dsos__delete(struct dsos *dsos)
--{
--	for (unsigned int i = 0; i < dsos->cnt; i++) {
--		struct dso *dso = dsos->dsos[i];
--
--		dso__data_close(dso);
--		unlink(dso__name(dso));
--	}
--	dsos__exit(dsos);
--}
--
- static int set_fd_limit(int n)
- {
- 	struct rlimit rlim;
--- 
-2.49.0.rc1.451.g8f38331e32-goog
+That would be nice, but there are cases it can fail even without new
+record formats.  So it should also check if the type number is greater
+than or equal to the max.
 
+> > >
+> > > And then does it stop at that record it doesn't grok?
+> > >
+> > >         if ((skip = perf_session__process_event(session, event, head, "pipe")) < 0) {
+> > >                 pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> > >                        head, event->header.size, event->header.type);
+> > >                 err = -EINVAL;
+> > >                 goto out_err;
+> > >         }
+> > >
+> > >         head += size;
+> > >
+> > > So we're stopping there.
+> > >
+> > > Maybe we can just warn and skip?
+> > 
+> > Thank you Arnaldo, it is a good suggestion and I will work on this later.
+> 
+> Thank you for considering that, really appreciated!
+
+It would be hard to process misaligned data though.  Probably we also
+want to add a check to make sure it's properly aligned.
+
+Thanks,
+Namhyung
+
+> 
+> perf deals with so much stuff and code flux that all the help that we
+> can get is what is needed for it to continue to be relevant and useful.
+> 
+> After all what is the point of a tool that produces bad results? :-)
+> 
+> - Arnaldo
+> 
+> > -CT
+> > 
+> > >
+> > > Anyway, the series as is seems ok.
+> > >
+> > > I'll test a bit more and send my Tested-by
+> > >
+> > > - Arnaldo
