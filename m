@@ -1,202 +1,72 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EFA20E306
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A83C20DD59
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742315841; cv=none; b=nY0OgGzmO0IXmHGSI4bPP28alumyUX/BxNi3CkSKlOtUrdLwZedjdBlqQN4lJZXb7abEaEYrSVSvg8ffNhhC1EkwFYSFVRZoJwKqsj4gTazXTZTt35UNPaqeM22H3SLeyXNZ2W/041PZzhtz9iHBVGbnvNe2yQQIiNDxIfKLMTI=
+	t=1742316031; cv=none; b=W+hM0wYqjSi26P5XSN/0StU8T2IaTbigrgEgEiaIyvKb5MpLcexl6svbXc18UmRd8m98Be0Sul78+k/Cdt2AbiKcx/e8vDlsNFI+nX60dwz5ILr5AcXmwXMCay2c3ogyM4BIZ9uS7T/bZivKRtfZErZ63+o3qguPGFT6LAHSD3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742315841; c=relaxed/simple;
-	bh=4eT1odMzMnZPwJJSc0XgEk7lC+8F9q03wpNoipGla5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sULnNQOXxEn2DM53QFSbJAnvQZMy3/TToGKoLpFwwZ6v46KptGx3Hp/gKtoepGN6mSCrs1eA7XoEwt9fs7U5JeGa6IeOovKr/necoEVzJ/XgAFHvBnNtityJLULZHRV3gN73uKQDYV6xEA+9A76NsMlPyEM/Cg7yxgBBkmioOmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ltJeuoVh; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ltJeuoVh"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2242ac37caeso169435ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 09:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742315835; x=1742920635; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2z69ehu9MYLofoS0JeQiQ0e/VE3ytjfb/z77xAUlFQ=;
-        b=ltJeuoVh0zi4JNdzW9UUjzGPslste3/5VtDEvY1a6kUE35DkascYD+89tdH/vVkckq
-         Dt/RB9zlcb1/AndZIK4am9uZjT2xXzDdtgI7I9GGrEhjuBiJJYepk8pPCT8WS6iKDA61
-         a4og5lTkRpgwfwToUnwi3gH2YFEtY0SMikH2Z+EoQpOyvFHvBKFgDjjHTOHpp2r+Crmp
-         tK8rvSh4L2cVOzQP6XsJzLWR2fAjnv5iAo4siLfwz5XmAowdyMhGZaHVdJc6DAxof9uJ
-         TTfq37b1M/nHCU9H1PyF8X+vLDwTnkhX6K6n5Q+dal17VvTH3iE6pWCd/buwl1Iid2Nq
-         4ZPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742315835; x=1742920635;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2z69ehu9MYLofoS0JeQiQ0e/VE3ytjfb/z77xAUlFQ=;
-        b=KR8cq4+hjd5378rBf1LSBT80i1tHlZQYNIfwpizFOqMeiISr6TqIWTzS17sz0Jsmrt
-         y3aSuXtanX2qeePTdw8vH8+zUoHeTU7/oNRr8n04GzZiNtUcAZj1sY0Ac1Svyg/ivniz
-         wkQ8RqIdijjDPiTmRyitUJwDrKIDd491YYDck0Ad4T6ob/5H+Kmew5jHUu+B1dpvGgZN
-         J69wNfZ2Kc3XLX/r8ZwtSQSQmhutK4KKn2+NXeVP2oSRK79DgriwBX/CfXnQ3IPNeUmZ
-         VlnEGFcbd+2HIH4vLQdyBaAxZw4KQ6ZKYdaQfnbDjB2RmMIPmatSkqkCg5HCP2K1u+dr
-         GYHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyCHfXlUW+boRQ0cGjC+4lcl0ft1MPoXQVrXZTHw+ReezBEcJn6BByUyC1mOLpWhiKvRNlf/jl7JKwDOb1Jcqj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqhG5XteuMLfF7+YCJhBzzkhBEumUPiCj41zxe/pspv59hBN7p
-	CF3ti5m+AQkh5+xfk0RiyHJj5Z0G586vZP+U1+0L+faHpqir7d0DQYgGryTOBDTv8iqVgjkvBgM
-	oVvpC04EFHYsB/G3yXAaF2BpRBazHWKWJ0xQH
-X-Gm-Gg: ASbGncu8fYVAKAR0O37zoxXyV0GZfXQtZTGx/uyx3Lvu51XOyfjwnNb+28xK0iFRjaT
-	DVgoOK1Nk21sfFQtytjiF3PqRtogHkqoL4vnRBjp6BLhS+hSoInjoZvvhSjjVpBjfHUU9GFZBrs
-	+dTq1VxBDtfhRP+aD7umUHFf449Aim9oE0OXCAdmk978oRjIwGSFqWrV7jsL+0Bg==
-X-Google-Smtp-Source: AGHT+IHnSw39H849L234BIkDc47Eq7xhSFTxT3N4fuR1hmpWc455Btyp/vc6iE1Wb2xmRZNsrCL1ynYjk4f8BKIAoHA=
-X-Received: by 2002:a17:903:228a:b0:200:97b5:dc2b with SMTP id
- d9443c01a7336-226357c807cmr2082025ad.15.1742315834907; Tue, 18 Mar 2025
- 09:37:14 -0700 (PDT)
+	s=arc-20240116; t=1742316031; c=relaxed/simple;
+	bh=vEPl/y3LgtH2QBGmF75fjZHCU3BgS4XCU7fD+4rRQ6M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iUAJhAIE5C7Y6z3t2YeG6Zla13YgWiPWcoPXxd/JfVCLTJRFjojtN/FEbD2lbZqzyeS0H4L+vmCtZlBtIDVuPBu/ehPkiEIR4R1D82YCwG+gWVZuSXbR50Tuj8LgCf9zcJgMVPI96SQN9ZijZjv8tGWbddv68wJhu/Y0QSPF1ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24B911063;
+	Tue, 18 Mar 2025 09:40:37 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 272823F673;
+	Tue, 18 Mar 2025 09:40:28 -0700 (PDT)
+Message-ID: <e1d7aee0-06e4-4aa3-be37-98b0e9b165fe@arm.com>
+Date: Tue, 18 Mar 2025 16:40:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318095132.1502654-1-tmricht@linux.ibm.com> <20250318095132.1502654-3-tmricht@linux.ibm.com>
-In-Reply-To: <20250318095132.1502654-3-tmricht@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Mar 2025 09:37:02 -0700
-X-Gm-Features: AQ5f1JpT8DCKBYPXcNNrpUEYFo_khI7jP_G1lI4QozhZPAilFvW_a6UuYt0iing
-Message-ID: <CAP-5=fXAhsDkQXVCvb5xrjLVpYG-typR23_NXwgwPDjaJS0pqg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf/bench: Double free of dynamic allocated memory
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	acme@redhat.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH Resend] perf/arm-cmn: Remove CMN-600 DTC domain special
+ case
+To: Will Deacon <will@kernel.org>
+Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org
+References: <67985e39f53b56385d79a4f1264cf7f9cacedb58.1742308248.git.robin.murphy@arm.com>
+ <20250318161744.GB13981@willie-the-truck>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250318161744.GB13981@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 18, 2025 at 2:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On s390 z/VM the command 'perf bench internals pmu-scan'
-> dumps core, as can be seen:
->
-> Output before:
->  # ./perf bench internals pmu-scan
->  # Running 'internals/pmu-scan' benchmark:
->  Computing performance of sysfs PMU event scan for 100 times
->  perf: /root/linux/tools/include/linux/refcount.h:131:
->         refcount_sub_and_test: Assertion `!(new > val)' failed.
->  Aborted (core dumped)
->  #
->
-> The root cause is in
->
-> perf_pmus__scan()
-> +--> perf_pmu__create_placeholder_core_pmu()
->      +--> cpu_map__online()
->
-> cpu_map__online() has a static variable
->
->     static struct perf_cpu_map *online;
->
->     if (!online)
->         online =3D perf_cpu_map__new_online_cpus();
->
->     return online;
->
-> which is allocated once when entered for the first time.
->
-> However perf_pmu__create_placeholder_core_pmu() is actually called
-> two times.
-> First time:
->    run_pmu_scan()
->    +--> save_result()
->         +---> perf_pmus__scan_core()
->               +--> pmu_read_sysfs()
->                    +--> perf_pmu__create_placeholder_core_pmu()
->         ...
->         +--> perf_pmus__destroy()
->
-> Second time:
->     run_pmu_scan()
->     +--> perf_pmus__scan()
->          +--> pmu_read_sysfs()
->               +--> perf_pmu__create_placeholder_core_pmu()
->         ...
->         +--> perf_pmus__destroy()
->
-> The second time the already allocated memory pointed to by variable
-> 'online' is returned. However in between the first and second call
-> of perf_pmu__create_placeholder_core_pmu()
-> function save_result() also frees all PMUs:
->
-> save_result()
-> +--> perf_pmus__destroy()
->      +--> perf_pmu__delete()
->           +--> perf_cpu_map__put()
->                +--> cpu_map__delete()
->
-> cpu_map__delete() deletes the perf_cpu_map pointed to by variable
-> online, but this static variable is not set to NULL. In the second
-> invocation of perf_pmu__create_placeholder_core_pmu() the same
-> memory locattion stored in variable online is returned.
->
-> Later on run_pmu_scan() calls perf_pmus__destroy() again and then
-> cpu_map__delete() frees the PMU "cpu->cpus" a second time causing
-> the core dump.
->
-> Avoid core dump and always allocate the online CPUs.
->
-> Output after:
->  # ./perf bench internals pmu-scan
->  # Running 'internals/pmu-scan' benchmark:
->  Computing performance of sysfs PMU event scan for 100 times
->   Average core PMU scanning took: 7.970 usec (+- 0.147 usec)
->   Average PMU scanning took: 60.415 usec (+- 3.986 usec)
->  #
->
-> Background: s390 z/VM system do not support PMUs for sampling and
-> counting. In this case dummy events are created by the perf tool
-> and the PMUs "tool" and "fake" are created and freed.
->
-> Fixes: a0c41caebab2f ("perf pmu: Add CPU map for "cpu" PMUs")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Ian Rogers <irogers@google.com>
+On 18/03/2025 4:17 pm, Will Deacon wrote:
+> Hi Robin,
+> 
+> On Tue, Mar 18, 2025 at 02:32:10PM +0000, Robin Murphy wrote:
+>> The special case for trying to infer the DTC domain for DTC-adjacent
+>> nodes on CMN-600 is fragile and buggy - currently resulting in subtly
+>> messed up DTC counter allocation - and the theoretical benefit it
+>> offers to a tiny minority of use-cases arguably doesn't outweigh the
+>> inconsistency it offers to others anyway. Just get rid of it.
+>>
+>> Fixes: ab33c66fd8f1 ("perf/arm-cmn: Enable per-DTC counter allocation")
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/perf/arm-cmn.c | 7 -------
+>>   1 file changed, 7 deletions(-)
+> 
+> You've got "Resend" in the subject, but I can't seem to find the original
+> posting :/
+> 
+> Please can you point me at it? I just want to make sure that I'm not
+> missing patches, as you're unlikely to be the only person affected if
+> that is the case.
 
-Thanks Thomas, the proposed fix breaks address sanitizer as there are
-missing puts on the freshly allocated cpu maps. I think a better fix
-would be to "get" the cpu map to increment the reference count rather
-than to keep re-reading the online CPUs. In either case we need the
-puts on the user side.
+Sorry, forgot to explain below the cut - this is a resend from my end 
+because I fat-fingered my LAKML alias the first time around, so I wasn't 
+entirely sure whether you'd get it twice. I guess the error I got was 
+actually from the SMTP server before it delivered anything, phew!
 
-Ian
-
-> ---
->  tools/perf/util/cpumap.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 5c329ad614e9..ab9e7a266af9 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -691,12 +691,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *ma=
-p, char *buf, size_t size)
->
->  struct perf_cpu_map *cpu_map__online(void) /* thread unsafe */
->  {
-> -       static struct perf_cpu_map *online;
-> -
-> -       if (!online)
-> -               online =3D perf_cpu_map__new_online_cpus(); /* from /sys/=
-devices/system/cpu/online */
-> -
-> -       return online;
-> +       return perf_cpu_map__new_online_cpus(); /* from /sys/devices/syst=
-em/cpu/online */
->  }
->
->  bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_c=
-pu_id *b)
-> --
-> 2.48.1
->
+Thanks,
+Robin.
