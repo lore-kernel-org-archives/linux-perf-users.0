@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBA71AA1E4
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEF81B87D7
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742268723; cv=none; b=p5OIfSBLG/HB0rSbvCdSAZpjMRNaUbOh84hF59lh1DZqO3VlfD8xslQ4MSzapYon91Gxyw0kvd16sdUmArligBCYpBEJe4ytrmM/g08+l0GPOCCDbVqs4n3Id35JXSFK2inc5SE+7mIjVTbBT61VFtkK437OBA1k6apJq383RVw=
+	t=1742268725; cv=none; b=Eb2gYW18UEPq5xpd5ULYpIjPCyr42rAPyGnseeHuL9S3rc3/VJyJuRfvSwHoVujxE8iEophNdM2WZwp4vbXf3bcs6UGuSUGvteOem6/8fHrEpsXgv0GlW3RosMcXRPuzf9T9qIDA5SkK/GHZgDOOcfdH1POsn/kiMX8dwuE+xDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742268723; c=relaxed/simple;
-	bh=STZw1Bjw19Q771EYbZQqedWOSrL0K7Ur9RZXt0e5AHA=;
+	s=arc-20240116; t=1742268725; c=relaxed/simple;
+	bh=V6Z1VaaZvWtk/tEXjKtJfP6Ld5lnXtv1c/u2guFja8I=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=cmx9nEandOb3Ce5lfwoz4rvqzAKXp/Q6ITM4Jmy/owGFglIjTgI/+s7ADFgGVq2OPVL4pC8PR+oqQ5PtuWfmlmNE7pJe3tjbWKNCeM7rUfUPLf4QcVYfc9cNqF9MoQS5LttzZe78Xed4P8yNp1Lpn7Kc3c5ihkgaA/kxyfsZVrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N3OPXfeQ; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=LwcCl1z2RMqsyA8QMoAhvUV/898sVGrog8PCmN3DwJyL2UEFJkjo3BEXqQJdQnKz8TJCg2ItuQIwODsKfnjI526F2x/JBA64zZJluOT75AdeRW6vtTzRFj95LcISLlbBp3fXDxwLUgmhSHojxErkEaLDf3NWM1vtpNCUdC5+clQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1HB9rrUc; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N3OPXfeQ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fda4eaca22so53061487b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1HB9rrUc"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fee461837cso73222467b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742268720; x=1742873520; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A69ioGJOUHmvkvhrZ8F6wG6aTOsdrViQselBOQOdPcE=;
-        b=N3OPXfeQu8TB2zvVLhhaGwBs3V7RbiN1ZjnzXeA8o9nTz1U3LTD15kTEiRKo1eJQe5
-         FkVt/UsJwneIzzKhwBU2lct45UCDV2pNoRVWVwIbBJRFdI0g146VPThS+1fCE2uP/XVt
-         Ilsbj3wP8Wwa5OYXmQFvjSMocAu/xPdYK/0zZJm+9uoEqorMYxNIh/iTRTkyLSSLyCIR
-         g1FDZCfG2K9lYxX4vkwSnfKHjo07cRColoJwupwr87O4y/hoTKO/+XGh6ioHgpJlq8kL
-         Be2US6LjqXwTuSIHuLzLG3tQmlR/uzsWlCtDn2jk24pRX03HywJQpsYYBu9zZORLPmnu
-         D2Sg==
+        d=google.com; s=20230601; t=1742268722; x=1742873522; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NFFalelwH8VoySEJuALgzWg3CwByqG22Rt5iA2R562U=;
+        b=1HB9rrUcUdc+HIqbHMpOX31M3gVH1VScivxuvK+FI/loiGnwI8mWkKxHAhfhe4OFFR
+         CAg6SVcSbyoYXekYXp9SsecbZmZBd/JAqLr6Rdftl8N9YSxjS9QbDCC2mMC0pB6KcTnB
+         30Z2YD6ng0P2Mrz1Nup5cBkv0sHGDYElQRTK/B+nX7WgsP0fvIUy7j05M7Rc6SfvpsCo
+         iT4aL2C0qusRxvmAyLzGGND6q/by/qlakgW86hfAvxDCoqO5JB5Yr3zYeROIBfcU6qzK
+         HNSWZSVBo0pBB8H+OscPwEDKIIwTwnS291esk8WkISdq7LYDFrxfxXz8vbWzemLyVVtv
+         LyAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742268720; x=1742873520;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A69ioGJOUHmvkvhrZ8F6wG6aTOsdrViQselBOQOdPcE=;
-        b=ki4Sujw+4x6N1TaWwDv79U3oucVIiidlr2BO3+L+UD7/GvOXsbUbspbHWAHR+QI9dg
-         cajJj9To6y63sUJqJ6SQGVOUq7fHCe3a+8T67L5Z6dtClySqgAuqhHSQLED+t5dV9Wm/
-         LvwPQh0v+brWGV7rh3eVkcU1xjr8ruewsJR92uRSKhJI9+yuD02FytZL+sbvdeNw6RIt
-         IpMMc0T0VYpoDU8pr3khirtEeCZtCNuBkHuP68LyRdbLg/48vEztllWfkvEZtjC8F/Gf
-         AfU1hZXYG9yfdrvlMv33X2zvdnMRT+XcmBe//ecOOrBlNR2DE56QklYjdf0X4CjrCrH4
-         5Y6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWGULYLY5ygWc/9sWWfyk9IxOiJ/4Do+kMFk+noz2awWu+1LF1ghg/beZ534wDN2at6J9Zj6kLsS8WbRNjlWRhj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8MFkfKQxy70w2SCSHU3+yuF5Ank/6KryA55Rv5HL46kL1AGqS
-	tUsTqO7/L3nmZmQ6r6u8cGhyHfL1PMl6ykZO03OVxJ+AnTEfSWfGvgBszmXcyjHUlJjxfWhmVTW
-	WAEB4Bg==
-X-Google-Smtp-Source: AGHT+IE3ZJL4GSNnIUYjYXin+nq3sIUiJWZsJuj2clMks5QUPBOUXFWSLFwUXVdVYx4JbmoqgLKe/pg7sAQj
+        d=1e100.net; s=20230601; t=1742268722; x=1742873522;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NFFalelwH8VoySEJuALgzWg3CwByqG22Rt5iA2R562U=;
+        b=V8cbZo9M43iJiKYHEb4+zNMqdoMzBjmNLr0F6/rXr3aFpcCKqikvDxfObjVScX7s1H
+         U1pPS3tPYuNGMdDFEXDMrRY/gKIEn76Fgg2zCdYG0GhCV2zw/HPdj/NIv/5ahzy1iGS/
+         /MI/KRyi4I9UVrZC+WzKtJ3lzPa3TLLVw/WISsEnHHn8Vax3j2sJ2NyDrXS9xtGSVc88
+         i6Cgl7WawYkDJpIgZF9TRujGgIUnACkHP99EDcgjdi5zJB2oMZwVfpMPKH5JpGHv+A94
+         nUlrpge9PKfxu44/6qeCwcNFUFJPkn+bOYTBSUCEEKdiH15biqSeXr0j8pboesoa0lXT
+         oYew==
+X-Forwarded-Encrypted: i=1; AJvYcCWQrHK+VS0A18sGwbe4mS4QTxCXMrTBslLMidrl0tQYaQ4u/98yUaE7vFoPIZfdN8d2nzrpo5s4HmJdTOFfOI9d@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXjzZ59n9byI+Fs34/3o1BOCD/o8sQuVOKQ952oiokpbOx8ORl
+	8I34M5RyJEbFPaJ7qqbYhvCoLpA6UjO1FS4dWATGapIXxtxl4Et2/KEIzHArN/k9NWnpJYfT0KK
+	OIW2TCA==
+X-Google-Smtp-Source: AGHT+IE8h21clMGypRwFdkAJ8HSsdR0DLiUdSQCYfCnO3kEzoqhIUGiKiT6x5H6nRskrGzjfDm0d53UaKClF
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
- (user=irogers job=sendgmr) by 2002:a05:690c:4043:b0:6fe:afd0:2083 with SMTP
- id 00721157ae682-6ff4600fb4amr364807b3.3.1742268720034; Mon, 17 Mar 2025
- 20:32:00 -0700 (PDT)
-Date: Mon, 17 Mar 2025 20:31:39 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:3604:b0:6f9:8797:a245 with SMTP
+ id 00721157ae682-6ff46063bfamr69497b3.3.1742268722359; Mon, 17 Mar 2025
+ 20:32:02 -0700 (PDT)
+Date: Mon, 17 Mar 2025 20:31:40 -0700
 In-Reply-To: <20250318033150.119174-1-irogers@google.com>
-Message-Id: <20250318033150.119174-3-irogers@google.com>
+Message-Id: <20250318033150.119174-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318033150.119174-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v6 02/13] perf dso: kernel-doc for enum dso_binary_type
+Subject: [PATCH v6 03/13] perf syscalltbl: Remove syscall_table.h
 From: Ian Rogers <irogers@google.com>
 To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,110 +78,242 @@ To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
 	Arnd Bergmann <arnd@arndb.de>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-There are many and non-obvious meanings to the dso_binary_type enum
-values. Add kernel-doc to speed interpretting their meanings.
+The definition of "static const char *const syscalltbl[] = {" is done
+in a generated syscalls_32.h or syscalls_64.h that is architecture
+dependent. In order to include the appropriate file a syscall_table.h
+is found via the perf include path and it includes the syscalls_32.h
+or syscalls_64.h as appropriate.
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+To support having multiple syscall tables, one for 32-bit and one for
+64-bit, or for different architectures, an include path cannot be
+used. Remove syscall_table.h because of this and inline what it does
+into syscalltbl.c.
+
+For architectures without a syscall_table.h this will cause a failure
+to include either syscalls_32.h or syscalls_64.h rather than a failure
+to include syscall_table.h. For architectures that only included one
+or other, the behavior matches BITS_PER_LONG as previously done on
+architectures supporting both syscalls_32.h and syscalls_64.h.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- tools/perf/util/dso.h | 57 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ tools/perf/arch/alpha/include/syscall_table.h     | 2 --
+ tools/perf/arch/arc/include/syscall_table.h       | 2 --
+ tools/perf/arch/arm/include/syscall_table.h       | 2 --
+ tools/perf/arch/arm64/include/syscall_table.h     | 8 --------
+ tools/perf/arch/csky/include/syscall_table.h      | 2 --
+ tools/perf/arch/loongarch/include/syscall_table.h | 2 --
+ tools/perf/arch/mips/include/syscall_table.h      | 2 --
+ tools/perf/arch/parisc/include/syscall_table.h    | 8 --------
+ tools/perf/arch/powerpc/include/syscall_table.h   | 8 --------
+ tools/perf/arch/riscv/include/syscall_table.h     | 8 --------
+ tools/perf/arch/s390/include/syscall_table.h      | 2 --
+ tools/perf/arch/sh/include/syscall_table.h        | 2 --
+ tools/perf/arch/sparc/include/syscall_table.h     | 8 --------
+ tools/perf/arch/x86/include/syscall_table.h       | 8 --------
+ tools/perf/arch/xtensa/include/syscall_table.h    | 2 --
+ tools/perf/util/syscalltbl.c                      | 8 +++++++-
+ 16 files changed, 7 insertions(+), 67 deletions(-)
+ delete mode 100644 tools/perf/arch/alpha/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/arm64/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/csky/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/loongarch/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/mips/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/parisc/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/powerpc/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/riscv/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/s390/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/sparc/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
+ delete mode 100644 tools/perf/arch/xtensa/include/syscall_table.h
 
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 14e4ac21a1d3..fcb2898e0f49 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -20,31 +20,88 @@ struct perf_env;
- #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
- #define DSO__NAME_KCORE		"[kernel.kcore]"
+diff --git a/tools/perf/arch/alpha/include/syscall_table.h b/tools/perf/arch/alpha/include/syscall_table.h
+deleted file mode 100644
+index b53e31c15805..000000000000
+--- a/tools/perf/arch/alpha/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_64.h>
+diff --git a/tools/perf/arch/arc/include/syscall_table.h b/tools/perf/arch/arc/include/syscall_table.h
+deleted file mode 100644
+index 4c942821662d..000000000000
+--- a/tools/perf/arch/arc/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_32.h>
+diff --git a/tools/perf/arch/arm/include/syscall_table.h b/tools/perf/arch/arm/include/syscall_table.h
+deleted file mode 100644
+index 4c942821662d..000000000000
+--- a/tools/perf/arch/arm/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_32.h>
+diff --git a/tools/perf/arch/arm64/include/syscall_table.h b/tools/perf/arch/arm64/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/arm64/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/csky/include/syscall_table.h b/tools/perf/arch/csky/include/syscall_table.h
+deleted file mode 100644
+index 4c942821662d..000000000000
+--- a/tools/perf/arch/csky/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_32.h>
+diff --git a/tools/perf/arch/loongarch/include/syscall_table.h b/tools/perf/arch/loongarch/include/syscall_table.h
+deleted file mode 100644
+index 9d0646d3455c..000000000000
+--- a/tools/perf/arch/loongarch/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscall_table_64.h>
+diff --git a/tools/perf/arch/mips/include/syscall_table.h b/tools/perf/arch/mips/include/syscall_table.h
+deleted file mode 100644
+index b53e31c15805..000000000000
+--- a/tools/perf/arch/mips/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_64.h>
+diff --git a/tools/perf/arch/parisc/include/syscall_table.h b/tools/perf/arch/parisc/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/parisc/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/powerpc/include/syscall_table.h b/tools/perf/arch/powerpc/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/powerpc/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/riscv/include/syscall_table.h b/tools/perf/arch/riscv/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/riscv/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/s390/include/syscall_table.h b/tools/perf/arch/s390/include/syscall_table.h
+deleted file mode 100644
+index b53e31c15805..000000000000
+--- a/tools/perf/arch/s390/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_64.h>
+diff --git a/tools/perf/arch/sh/include/syscall_table.h b/tools/perf/arch/sh/include/syscall_table.h
+deleted file mode 100644
+index 4c942821662d..000000000000
+--- a/tools/perf/arch/sh/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_32.h>
+diff --git a/tools/perf/arch/sparc/include/syscall_table.h b/tools/perf/arch/sparc/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/sparc/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/x86/include/syscall_table.h b/tools/perf/arch/x86/include/syscall_table.h
+deleted file mode 100644
+index 7ff51b783000..000000000000
+--- a/tools/perf/arch/x86/include/syscall_table.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/bitsperlong.h>
+-
+-#if __BITS_PER_LONG == 64
+-#include <asm/syscalls_64.h>
+-#else
+-#include <asm/syscalls_32.h>
+-#endif
+diff --git a/tools/perf/arch/xtensa/include/syscall_table.h b/tools/perf/arch/xtensa/include/syscall_table.h
+deleted file mode 100644
+index 4c942821662d..000000000000
+--- a/tools/perf/arch/xtensa/include/syscall_table.h
++++ /dev/null
+@@ -1,2 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscalls_32.h>
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index 928aca4cd6e9..2f76241494c8 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -7,13 +7,19 @@
  
-+/**
-+ * enum dso_binary_type - The kind of DSO generally associated with a memory
-+ *                        region (struct map).
-+ */
- enum dso_binary_type {
-+	/** @DSO_BINARY_TYPE__KALLSYMS: Symbols from /proc/kallsyms file. */
- 	DSO_BINARY_TYPE__KALLSYMS = 0,
-+	/** @DSO_BINARY_TYPE__GUEST_KALLSYMS: Guest /proc/kallsyms file. */
- 	DSO_BINARY_TYPE__GUEST_KALLSYMS,
-+	/** @DSO_BINARY_TYPE__VMLINUX: Path to kernel /boot/vmlinux file. */
- 	DSO_BINARY_TYPE__VMLINUX,
-+	/** @DSO_BINARY_TYPE__GUEST_VMLINUX: Path to guest kernel /boot/vmlinux file. */
- 	DSO_BINARY_TYPE__GUEST_VMLINUX,
-+	/** @DSO_BINARY_TYPE__JAVA_JIT: Symbols from /tmp/perf.map file. */
- 	DSO_BINARY_TYPE__JAVA_JIT,
-+	/**
-+	 * @DSO_BINARY_TYPE__DEBUGLINK: Debug file readable from the file path
-+	 * in the .gnu_debuglink ELF section of the dso.
-+	 */
- 	DSO_BINARY_TYPE__DEBUGLINK,
-+	/**
-+	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE: File named after buildid located in
-+	 * the buildid cache with an elf filename.
-+	 */
- 	DSO_BINARY_TYPE__BUILD_ID_CACHE,
-+	/**
-+	 * @DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO: File named after buildid
-+	 * located in the buildid cache with a debug filename.
-+	 */
- 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
-+	/**
-+	 * @DSO_BINARY_TYPE__FEDORA_DEBUGINFO: Debug file in /usr/lib/debug
-+	 * with .debug suffix.
-+	 */
- 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
-+	/** @DSO_BINARY_TYPE__UBUNTU_DEBUGINFO: Debug file in /usr/lib/debug. */
- 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-+	/**
-+	 * @DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO: dso__long_name debuginfo
-+	 * file in /usr/lib/debug/lib rather than the expected
-+	 * /usr/lib/debug/usr/lib.
-+	 */
- 	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
-+	/**
-+	 * @DSO_BINARY_TYPE__BUILDID_DEBUGINFO: File named after buildid located
-+	 * in /usr/lib/debug/.build-id/.
-+	 */
- 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-+	/**
-+	 * @DSO_BINARY_TYPE__GNU_DEBUGDATA: MiniDebuginfo where a compressed
-+	 * ELF file is placed in a .gnu_debugdata section.
-+	 */
- 	DSO_BINARY_TYPE__GNU_DEBUGDATA,
-+	/** @DSO_BINARY_TYPE__SYSTEM_PATH_DSO: A regular executable/shared-object file. */
- 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-+	/** @DSO_BINARY_TYPE__GUEST_KMODULE: Guest kernel module .ko file. */
- 	DSO_BINARY_TYPE__GUEST_KMODULE,
-+	/** @DSO_BINARY_TYPE__GUEST_KMODULE_COMP: Guest kernel module .ko.gz file. */
- 	DSO_BINARY_TYPE__GUEST_KMODULE_COMP,
-+	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE: Kernel module .ko file. */
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
-+	/** @DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP: Kernel module .ko.gz file. */
- 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
-+	/** @DSO_BINARY_TYPE__KCORE: /proc/kcore file. */
- 	DSO_BINARY_TYPE__KCORE,
-+	/** @DSO_BINARY_TYPE__GUEST_KCORE: Guest /proc/kcore file. */
- 	DSO_BINARY_TYPE__GUEST_KCORE,
-+	/**
-+	 * @DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO: Openembedded/Yocto -dbg
-+	 * package debug info.
-+	 */
- 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-+	/** @DSO_BINARY_TYPE__BPF_PROG_INFO: jitted BPF code. */
- 	DSO_BINARY_TYPE__BPF_PROG_INFO,
-+	/** @DSO_BINARY_TYPE__BPF_IMAGE: jitted BPF trampoline or dispatcher code. */
- 	DSO_BINARY_TYPE__BPF_IMAGE,
-+	/**
-+	 * @DSO_BINARY_TYPE__OOL: out of line code such as kprobe-replaced
-+	 * instructions or optimized kprobes or ftrace trampolines.
-+	 */
- 	DSO_BINARY_TYPE__OOL,
-+	/** @DSO_BINARY_TYPE__NOT_FOUND: Unknown DSO kind. */
- 	DSO_BINARY_TYPE__NOT_FOUND,
- };
+ #include "syscalltbl.h"
+ #include <stdlib.h>
++#include <asm/bitsperlong.h>
+ #include <linux/compiler.h>
+ #include <linux/zalloc.h>
+ 
+ #include <string.h>
+ #include "string2.h"
+ 
+-#include <syscall_table.h>
++#if __BITS_PER_LONG == 64
++  #include <asm/syscalls_64.h>
++#else
++  #include <asm/syscalls_32.h>
++#endif
++
+ const int syscalltbl_native_max_id = SYSCALLTBL_MAX_ID;
+ static const char *const *syscalltbl_native = syscalltbl;
  
 -- 
 2.49.0.rc1.451.g8f38331e32-goog
