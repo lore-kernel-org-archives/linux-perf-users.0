@@ -1,55 +1,55 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDCF210192
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FA620E70B
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742314491; cv=none; b=FlYevON5r2tM7F0ceZ5B319Y+oOcU2qjWpmpnsLJBSItkJEJpFPYqkcoLybKtZGi4tOtt04fKBGH98H4RRLmEGOgBJGXtmrcmdQsAY8d2QogY8qjeBEG8f/RlsFDPzOyx/c5ARqjXeKY6l5nz6R9bSaLrMnBQflsSJgvCywCadQ=
+	t=1742314605; cv=none; b=Px1zgm3nefe4d9MUQ117k1F4FXLczmVsyIdPcOueIqIw7tZ/K7ByTFO5fg+fEn+AQRiOu2WqBKiu/usSc2Ts50D3EP7BMGOE6V9v6zPGggNhm2AxtNuNoSuOfvhNQdaMDi7HQNfFLI2l9LgWUVeHqJ4zKekr4Rcf5Y9Op7q6dW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742314491; c=relaxed/simple;
-	bh=JtrCwaIemaIH1wZYdeXf6+kSx9FT6E+fy6V6+KJ4oWs=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=VwkSW088gHoighdUSodxrEWavUdHkQpqYf5IVqTuCXy02m7Uw6cTb3H9xrGwMO4+1sP9kHgYKAWXhN2232VDPDZGJr3CXoHQ8zdUK1RqbFaise3bkVRUGdqeDCjRmax3LJ9pe+qVcHBukPQ01rWHkm9tdWnbkhjrnjuvabQopW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jz4eTga4; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1742314605; c=relaxed/simple;
+	bh=rFZRno4D57G8sQhaSQYhCE3pJnIZ41lDTeZnqQF1khE=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ZFvj1V6bVShuzoBXplCCJ2pz1ZCSmCxGkhRnPDyDWzU2X2Uv9YF8yfZpwqXk2c6E50OYnWQMa/dJPlpv8wm8i8uoPlXk+Us77D9mOF5n3+6H0et9PqhffVe33kY387b6Zdn1OBvnOCXLVmB4N3gwojhnPnFJ/M6CA+NdgxsFzaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BnX/jZQy; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jz4eTga4"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2c7746509so88260027b3.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 09:14:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnX/jZQy"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2c7746509so88291527b3.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 09:16:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742314485; x=1742919285; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742314602; x=1742919402; darn=vger.kernel.org;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=lpgqd99OouJUfZ9Z0+GeFS3Ytd7aZfW80L/d4uD4fxM=;
-        b=jz4eTga4UbIlqwoxgWMNRIbmwAyNMtVE9UXykwIfvkHyl8BkfSDFCL2SeME4C6Koh6
-         wB6ZcyYeRhK7SEhmAgKz1DTUvHKcZYqcC8wsVSgZRqMzm41D+B6BTXIsQUQ4/1o5GNHm
-         CDDSQ3Q/TNvy/HjJmVKhyM0BIS5YL8phPY0zsMKMseQs3t8yK2iE3NC/xxQE/ubIPeNK
-         ks9EMkEN1c9ia7tiy0cDVRx+Se/b0AhgZIXjRLzXonx6FzUA1fpKyo1LByeqBz88pBlG
-         Byov5V84l9I7ztbXym/v+D/ayMNwMSAp3INu/x7vQf7L0pBi0C7dJzaGTJ6WediqLdqi
-         bh7g==
+        bh=dgZoelN/CSZE28lWFMDK6Fgb0NKV8wQtQfqMgFFcUF4=;
+        b=BnX/jZQyVS4eFUYiK011/Vnl320A6b1t6t65xMbuRiCcjUhLu5K7BzhmVxzURCRWBs
+         uEFMCif5hj2zCAiKyiKKCr5hUUaurCT0JzY+rp3UPUyCwOCUrOu7CO/4jJo8FSinhOvv
+         0imPYjCMjWOAWF9z/adCp69fETrlRJNobU7s7OvPyTj3xWxuUHpGalJ2Xp5lOlJfFs27
+         FodYWllYJvdMbJ6+A+GfUA72weB3idZMoCv2W6tW19iYWP/onjn3tTEA/VJbFUBaIB0s
+         gVGvEOsCqKa3NwIr0oZvsjQDQ7ujIPr9F+LYHLsMi5KF3Hn63g3qmCA9is5MAPpmzaUa
+         /zlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742314485; x=1742919285;
+        d=1e100.net; s=20230601; t=1742314602; x=1742919402;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lpgqd99OouJUfZ9Z0+GeFS3Ytd7aZfW80L/d4uD4fxM=;
-        b=cy5Lfw39v/fM1jRmUat2v4KY13mY92pUbdEa2b+j+djz0bYv44HBYGbu1YHSW5Cam1
-         b0NT6jBnwgx7JZz8syqbkj+kO+VNuw4TYPbbO8cJjAHtmrn4lpVYtYVmBhmBFde+vjce
-         rWsuN0IvclpmQDHmemDayhLdFOWCIm9SMkcC5NqiEbM7t5mZwS9QeEZyQySf3EUS7tbp
-         mNWF9bsoofc+2Y35/7rsMhZ9PSYzYCtzDuwbnSVpWSWe6+CRs7nILPWa3ylINGtV9fp4
-         ZbJO1qFCrHrn3YbK99huLio07SuHyPdWz2dT2euSeRKQvMb29E0/PKpA2OAm/YyI1zR0
-         8bGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSIeIzbN+HDWyy72VlvYvuO+YPO6JlExhNYIYA5QT0BJuK73C3rkf7YDDM+kVj0kOgRErgfmuXYzFkwf1cDNgi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFWKV9jf0JZ9IAHdGuaReVpJQlB45nURHbQyLOkLyIeQHiTh+T
-	47Q6moMxmqKw0Sa43BWyWHtmBEgM/m/gWDjOkYi5nl+xuRF5MqXD6DYrZ8ZCocwcpm6iVwQKdzY
-	TGjDIeA==
-X-Google-Smtp-Source: AGHT+IFMHV+fm3kiosS3IB2rFuBikoLWu/hZvCgG6GBzQmNlz+pOHPFPlzhct5SwsMpPJf/ljpE2F+wzWGZz
+        bh=dgZoelN/CSZE28lWFMDK6Fgb0NKV8wQtQfqMgFFcUF4=;
+        b=BcEUC70KEaEC2T+IaFEUdT/fbWxmOT73MFVp58ZXxOZkWJ7jBPobqRzKt/s3bqDg6M
+         n0EItty8dLxCwOzHViZUuDLAmZf7G5LpT+36pj7oRDIxoUiEpxnWa+AM1gUcLhDovgnG
+         grfIyyk9Z+zUCC5vMsQcqlVpXzUvNiPyl2K8cNpPtOjj/xAxdMjCoeRMhbZ0LI4boD/y
+         abTNWDUweDsyZ9phOHM2dfOvK4mQHLiWuhVZuds3J3314c+QRi3D+1VVk3sjaUA2lBx3
+         2pnKvuy/f2mQdSPyCrv8gettW2UbKRDCekS4QdtEFbzAfPjvuK0aN/j+Pya1d225CRlO
+         hRsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpuYl/UVc1NyWLy6TpfCFKW3AywWPy8r0KsfUCE9TZwktWeSBacgjhCTuG1hRx/bGKWslF7acD9rnwlfx5UTty@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVcGC+hs5pDQGMjKrD7UMFnW7PlUIzjVRP6eJGAf9YpCtiYsom
+	9rjSctTtBaZmRXT8FhSa459JwBqXYjWzaOeviznK7numEDYinKhCYhSFReIx5tiQhgIefyS/buB
+	nPBTuvw==
+X-Google-Smtp-Source: AGHT+IFD2VPtzXDi+HvMBlqNdDwg9+sNmUXhyahSsw4OEePKDKBj1JYCQEDW8oi84DxDa6xZeVSwhaUFyUtq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
- (user=irogers job=sendgmr) by 2002:a05:690c:450f:b0:6fe:d1b3:850a with SMTP
- id 00721157ae682-6ff460541d9mr76807b3.5.1742314485145; Tue, 18 Mar 2025
- 09:14:45 -0700 (PDT)
-Date: Tue, 18 Mar 2025 09:14:32 -0700
-Message-Id: <20250318161432.33732-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:ecc:b0:6fd:a1fa:9d58 with SMTP id
+ 00721157ae682-6ff460a7846mr74217b3.8.1742314602497; Tue, 18 Mar 2025 09:16:42
+ -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:16:39 -0700
+Message-Id: <20250318161639.34446-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v2] perf tests: Harden branch stack sampling test
+Subject: [PATCH v3] perf tests: Harden branch stack sampling test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,13 +77,14 @@ make grep and other text rewriting failures non-fatal by adding
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
+v3: Drop set -x
 v2: Change skips to errors Leo Yan.
 ---
- tools/perf/tests/shell/test_brstack.sh | 73 +++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 20 deletions(-)
+ tools/perf/tests/shell/test_brstack.sh | 72 +++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 20 deletions(-)
 
 diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index e01df7581393..a7c13a22397e 100755
+index e01df7581393..9138fa83bf36 100755
 --- a/tools/perf/tests/shell/test_brstack.sh
 +++ b/tools/perf/tests/shell/test_brstack.sh
 @@ -1,4 +1,4 @@
@@ -92,11 +93,10 @@ index e01df7581393..a7c13a22397e 100755
  # Check branch stack sampling
  
  # SPDX-License-Identifier: GPL-2.0
-@@ -17,35 +17,51 @@ fi
+@@ -17,35 +17,50 @@ fi
  
  skip_test_missing_symbol brstack_bench
  
-+set -x
 +err=0
  TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
  TESTPROG="perf test -w brstack"
@@ -158,7 +158,7 @@ index e01df7581393..a7c13a22397e 100755
  	# some branch types are still not being tested:
  	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
  }
-@@ -57,14 +73,28 @@ test_filter() {
+@@ -57,14 +72,28 @@ test_filter() {
  	test_filter_expect=$2
  
  	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
@@ -192,7 +192,7 @@ index e01df7581393..a7c13a22397e 100755
  	fi
  }
  
-@@ -80,3 +110,6 @@ test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
+@@ -80,3 +109,6 @@ test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
  test_filter "call,cond"		"CALL|SYSCALL|COND"
  test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
  test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
