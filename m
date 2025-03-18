@@ -1,87 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D579F21149C;
-	Tue, 18 Mar 2025 20:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437031F3FDC;
+	Tue, 18 Mar 2025 20:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742328829; cv=none; b=JxAZEv8P5dSYF8WgQXDbB2gEEWFMVBbIP/mbrY2N7vuxaOnvC8NKuVuqNV2e6KZbn4SZlBVQT7xHkiI4p7bIvHkwaItnQimpoE+4qdgbC2cLb+aQvMVxhEKy/eZPZfbphxZt3ZXFS3sINBlVZNP79L1fg/mGUd63FyuePcJu3Q4=
+	t=1742330934; cv=none; b=jJfq8YhVjMA7AoHP29IEEgkD97yPKw15V65eTJ12TRFKLtrrz0EeaTOJGJB47Yn3agD/j26SIb45ryLTykpKUM8hz/qdgbFOs7skt8Ced0X8IBUFMGfoYnNPOA66Po7NP9YVNoReHjdqDVmS9jIr+8aucaugNKtpguLWPRpTX/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742328829; c=relaxed/simple;
-	bh=WA+MrRBhQ2uopgtWZQB5sYYIW4Ahn0VawcQ00Sty8I4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=asBNZZjS4nPbf15uH8sUvKNqSsKnVp6Eb0tWvmSprv+YdK69e57UNWmkven2I7qmh7Up5aYWLzkRPEPasK0q1BSCcmsunIfBCsMjb6PA8uL5zjXaZmXDb+x4CgVzci0FNGGa8AMYf+Q5A56Ggr2bL5ujknJeGfN/G5jj7SxBbUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP/jvTlj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP/jvTlj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD98FC4CEEE;
-	Tue, 18 Mar 2025 20:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742328828;
-	bh=WA+MrRBhQ2uopgtWZQB5sYYIW4Ahn0VawcQ00Sty8I4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kP/jvTljT7Z+rAV1WPj90DHOSTIXuWQ+SHBJepMzIIJTplpxFI8lJfewXNcSvKlqP
-	 f4WjXFtXoKWshkNrD6t7JWJCBM6fMd6Xm3GX6NbJ+QvaBNwBmAm/Z28LD8g73pM5UU
-	 8yQBDNAmQhuFVwki9DtAiVxRF9PDEBE5p2vmz8quLehJyCt22ebvWOiEXIhTfl6n5Q
-	 JvQLnCpl4WVmDXLj6V2alD/7atN0RlahQbURzS6mbZ8sEriOtQdlzwPstJmZg3qvTk
-	 lpJf1L6B2NciUBkC6IFJL+pez4GFo515C1usflmLbr6AVsZ3xtmay7YsCbyqD1Ncel
-	 29fvcnZ+LYhxw==
-Date: Tue, 18 Mar 2025 21:13:39 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v3 00/15] Prepare for new Intel Family numbers
-Message-ID: <Z9nT8-7dPahdKgSQ@gmail.com>
-References: <20250219184133.816753-1-sohil.mehta@intel.com>
- <df1b95d7-c953-4757-b742-3072f65539f7@intel.com>
- <Z9m9B7BmoItsfjiM@gmail.com>
- <6758e958-a4d7-48b8-83ff-4bcb98f87340@intel.com>
+	s=arc-20240116; t=1742330934; c=relaxed/simple;
+	bh=Onx+0LsIZ2ltycXQSzL79FM6FqL0cWVeyD1K2eT+kq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ghzQEpH+4U+Zo+TDeCGlOi5feXgaBYTTo/jgV28wc79MvcIj7O7buZrYxvJJoYlZSQvIVi0bcdUV68yA4cEQII4KOftwQnB9rUKXoJp7hE/zeTPT4mCLyIqfPhXe/5bmC4whk+y1YUvQBBajHa+Hmyix6r53JE7X1e4m8wsnzoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E7DF13D5;
+	Tue, 18 Mar 2025 13:48:59 -0700 (PDT)
+Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97D0A3F694;
+	Tue, 18 Mar 2025 13:48:50 -0700 (PDT)
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	thiago.bauermann@linaro.org,
+	broonie@kernel.org,
+	yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com,
+	liaochang1@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH 0/7] arm64: Enable UPROBES with GCS
+Date: Tue, 18 Mar 2025 15:48:34 -0500
+Message-ID: <20250318204841.373116-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6758e958-a4d7-48b8-83ff-4bcb98f87340@intel.com>
+Content-Transfer-Encoding: 8bit
 
+Currently uprobes and the Arm Guarded Control Stack (GCS) feature are
+exclusive of each other. This restriction needs to be lifted in order
+to utilize GCS for generic Linux distro images where the expectation
+is that core debugging features like uprobes work.
 
-* Sohil Mehta <sohil.mehta@intel.com> wrote:
+This series adds some user accessors to read/push/pop the userspace
+shadow stack. It then utilizes those functions in the uprobe paths
+as needed to synchronize GCS with the changes in control flow at
+probe locations. 
 
-> > I've applied the first 13 patches to tip:x86/cpu to help move this 
-> > along. I fixed a handful of typos, but haven't noticed any 
-> > functional problems so far, so unless there's problems in -next 
-> > this might be OK for the merge window. (Famous last words.)
-> > 
-> 
-> Many thanks.. Fingers crossed!
+Along the way we fix a bug in the core gcs task handling and export
+some uprobe quality of life functionality for use in arch specific code.
 
-You are welcome, and please send the remaining patches in a day or so, 
-on top of tip:x86/cpu.
+The KCONFIG restriction is then dropped.
 
-Thanks,
+Jeremy Linton (7):
+  arm64/gcs: task_gcs_el0_enable() should use passed task
+  arm64: probes: Break ret out from bl/blr
+  arm64: uaccess: Add additional userspace GCS accessors
+  arm64: probes: Add GCS support to bl/blr/ret
+  arm64: uprobes: Add GCS support to uretprobes
+  uprobes: Allow the use of uprobe_warn() in arch code
+  arm64: Kconfig: Remove GCS restrictions on UPROBES
 
-	Ingo
+ arch/arm64/Kconfig                       |  1 -
+ arch/arm64/include/asm/gcs.h             |  2 +-
+ arch/arm64/include/asm/uaccess.h         | 42 ++++++++++++++++++++++++
+ arch/arm64/kernel/probes/decode-insn.c   |  7 ++--
+ arch/arm64/kernel/probes/simulate-insn.c | 42 +++++++++++++++++++++---
+ arch/arm64/kernel/probes/simulate-insn.h |  3 +-
+ arch/arm64/kernel/probes/uprobes.c       | 34 +++++++++++++++++++
+ include/linux/uprobes.h                  |  1 +
+ kernel/events/uprobes.c                  |  2 +-
+ 9 files changed, 122 insertions(+), 12 deletions(-)
+
+-- 
+2.48.1
+
