@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260A11C5F32
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941FC1C7010
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742268731; cv=none; b=rK2QHW8MFmZ24J1L/47+NBdhTo1rmspUeGVqVp6l7spNflfxniZIzMPyFWKt4Dtn044709xJE0uRsSUOOQnFsAhTcqZEol2C7yjjzN68FiSQy0TDVjdUKqwfwrThIfOwi7s9uqQwqyPD9G9bPBsZlpeR1Rhj83wwIQcplKgnJvM=
+	t=1742268734; cv=none; b=t14LP1xDsY3xgTYDsJOfZCY2/IK09/PvrJHAatVxm21tiKPd3YjaX5YqYn2nxwQ67jWGfJTBGEgqRaWlm/szh/8QM89mlxz39oRPRxODcXL98oajDJf9sgHsS1b1Q9w0LV6p1r5Iyae8gRFKK6cnZH/SXxUknAQ/NjCCu06pqEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742268731; c=relaxed/simple;
-	bh=qO33fTx+HqUeOfYY5NS9nwgBksuRWZC4/oEm3OxAtag=;
+	s=arc-20240116; t=1742268734; c=relaxed/simple;
+	bh=46X5snho+NC9xyHiugqSCdg1Jz8LKx2nORti21ecVVM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=BRgLDemM9aS65CHARv4VxqImHunLCVAkNntYft/PNuKzpg5VcJw8jsjKBwFtWmFBmcOsMY0QTe6FgTNdSWQxLabLxGMfEJhOs2zjNOR83E9dGcySMOcib19Uyj2cJxACBJtIJ3OG51U9DOugW1c9h+AOHGdSL3GXlfm7ewLTeW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vL9d4irp; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=K/2Lm5faNtHikXb9zdooqKw84EJpmRFSK0+PBcqcYC38BYjz+E/O4CV3j5FYc7UbAkXv/U31F+8C1J8U+IVMckVN1UA40l0BIT5TM5bh+bDOs/j4EpNpp2kujnguEDjvaw4CMbPrUrct3r+n/AMmgdpLWZqr3mbJN7PAvM7N48U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tly6pCSA; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vL9d4irp"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e6432a0dad8so2502961276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tly6pCSA"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ff0787203cso68593347b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742268729; x=1742873529; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742268731; x=1742873531; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=B0QBY2Nw3ByVw59Pz+Hx1wvCamLOjPFqTULRDEzwjio=;
-        b=vL9d4irpZtNlWZeAo9RpgEE4n97txUWe514DBzBOA+h6Kk+iucX/OR9lvGhxDo+L3P
-         aVW88T84BkcejkbiZei4cZpSiGWGDH7AeXPPYybw7Tzhlxii4R4RKzGAYhpA7/vzi8vj
-         4EySWmnizLaXC0M4jfSyN6l4+acJKOxGzha8TtBsuTKJWM9B6G1di/ZTDVCGDmh/Rwyn
-         hAYTW7p5mBxMfU1+xzEBqt9dk6cslAZQaZ5BhHMsfa984LykxjZG355+N4EzFt0f00+W
-         wGhnNUb5BlwhYLDNAFZ8MdyazwmMumYUVF1jUOUwVEBI8WxBcbDTdX1wgsRsLABXbNJI
-         /qug==
+        bh=OrHbMMe03j2h6U4ZyDmCNi4vPHSyOLjKCo4G6hr5nEQ=;
+        b=Tly6pCSAJ3wKcJcd9hcXi2iqKeOSH7jymCssjNh50NYpUuI/3jRp/A/uWqGTpSrO0/
+         G1EktNEM3CbNUZnOkDoFLAJRrvCWIBS6uFDv+H4AAgc16fdg7Zpv1ok6g0GqLjFoBoQA
+         cCOBLDgezEKWmG+0zmfdGJMClIwqaZHiNjMBldFv3R7J+ozXWuRE/raJKkINJWaBL86K
+         M8nfmYVryuz6HJOYUqxsBEB6irGDNOw1GNnR4xYJ1qm2qSNByQm8miYzDxxTy7KQ4PQr
+         ZgCXkt0VhRtV8FEXC9qE1ZYumT5kxlBvcgTEHsUmlQLUv5oUgsNvfPup5tQkrK2E1lb4
+         pG5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742268729; x=1742873529;
+        d=1e100.net; s=20230601; t=1742268731; x=1742873531;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0QBY2Nw3ByVw59Pz+Hx1wvCamLOjPFqTULRDEzwjio=;
-        b=i8e9lL3kA0UfEgzFhgY7eXsQuC7YpWWAkTIeR5doOv11ROADs2CjYgvfrcTwkAe6C1
-         UumTxhfVmTdFf6UoJyWkra5UHgQKp3vAxr58eNNooHXIMigDDbFe5dKkML7bpwGMvOEY
-         y4v0S+pN8mIOTTigv/ZzzSgsWzNXVJF/GIEhIgFsZqEXLi7PuTBJvbQz6oApumlaH12t
-         rboTobjg2MnjEmQX1QL50H/J6i0PA9WS3RWENM3Qy+p4NFeE9oxdrkE64baJTDZ0ItbO
-         f8DrROSs1jwFJvzvhww1obxwBnCqLxFl5aYT6cb4hgVxd4gjaSBgpw05HivYX3tiREsS
-         N+RA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ98C4xiUX4JWErAFdNDJoxHN1fPMM8nYLnkJcEEAO6Pqi8cUgASoVXrzF7oe5xskQYVgrRzh/liPtZKMo3LlS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzujsuH+qx86XvAujSLIm59UbPriEZK2271xjW9VNBC096YsygA
-	gMIEcLtw7HOoeJVteg+ln2ajP7YxhvRnwsAqJFdA+NYjLo5vymXnSzAJwo5JOT1UviXOjI7nc5n
-	l0iZCTw==
-X-Google-Smtp-Source: AGHT+IH3ZsA45Hh6AC985okMNJU3GA2gN9GLs2pTd3dhMU9xuvlE/Rp3C8qkGUhbDsx6HENWoPY55aGi1xZ6
+        bh=OrHbMMe03j2h6U4ZyDmCNi4vPHSyOLjKCo4G6hr5nEQ=;
+        b=LV7OddTebiMz4ikOLZvyZZ2RHvJYuyTL53N/4XzgTgUHJrjT9oSbmfYl6EvgS6efTZ
+         b2g+IMraNzMDH2+RiWbggludLQYbNyyvfmKp1ffwQFkXYD/1bdLx/Qpr2oY8RXFKgr8Y
+         0MRMZCRXOypGak/64L8m6wjulKvBfrCQykRZr5n655nJvGxF6dnfwU504AgY1CEyqY+k
+         iaCQBRtxLtJI62QsvWdYW0w/PATF8Rt2/S8IjAvICb8dQIR6x4mpl8fzUP0VQblEH+dE
+         HqJkV6QDZkjUAQXopAJsc/yls0fbCf0i337y2aaC8uTVSQHlN0zAXx6rk+wgI2VEGd9+
+         85HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPtT4E4Qq79TlzjHnpPxCexELbXuYyaXXs2iJLTUS5w/bNGbap6YT0xCXWteOzV3VbE7NnOv+GrZ+3zbkEl35+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7HX/hioqTxNsVmlpdd0NsGe2rGtLFYy18nvTvou8RP2QFmqUe
+	gFSytV79ZMI6/oUffQkY25TWOEFkGsop741ztT99K696bM+TkTJGFrVC9FdGSyF43Qs4LxmXrLA
+	KV5QCxg==
+X-Google-Smtp-Source: AGHT+IHhJaLUxqrZYMC/Tn104ovFMuRq11FqBC/xJ1lLQ1EmAEtwlx1gD7+d/OiZudPztSKPINBcDuw+hQ1G
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
- (user=irogers job=sendgmr) by 2002:a25:ae94:0:b0:e5d:a3bd:890a with SMTP id
- 3f1490d57ef6-e63f64c348fmr7905276.1.1742268729109; Mon, 17 Mar 2025 20:32:09
- -0700 (PDT)
-Date: Mon, 17 Mar 2025 20:31:43 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:6c89:b0:6fd:2b79:fb13 with SMTP
+ id 00721157ae682-6ffdcdedadamr7107b3.6.1742268731500; Mon, 17 Mar 2025
+ 20:32:11 -0700 (PDT)
+Date: Mon, 17 Mar 2025 20:31:44 -0700
 In-Reply-To: <20250318033150.119174-1-irogers@google.com>
-Message-Id: <20250318033150.119174-7-irogers@google.com>
+Message-Id: <20250318033150.119174-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318033150.119174-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v6 06/13] perf dso: Add support for reading the e_machine type
- for a dso
+Subject: [PATCH v6 07/13] perf thread: Add support for reading the e_machine
+ type for a thread
 From: Ian Rogers <irogers@google.com>
 To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,186 +81,265 @@ To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 
-For ELF file dsos read the e_machine from the ELF header. For kernel
-types assume the e_machine matches the perf tool. In other cases
-return EM_NONE.
-
-When reading from the ELF header use DSO__SWAP that may need
-dso->needs_swap initializing. Factor out dso__swap_init to allow this.
+First try to read the e_machine from the dsos associated with the
+thread's maps. If live use the executable from /proc/pid/exe and read
+the e_machine from the ELF header. On failure use EM_HOST. Change
+builtin-trace syscall functions to pass e_machine from the thread
+rather than EM_HOST, so that in later patches when syscalltbl can use
+the e_machine the system calls are specific to the architecture.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.c        | 89 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/dso.h        |  3 ++
- tools/perf/util/symbol-elf.c | 27 -----------
- 3 files changed, 92 insertions(+), 27 deletions(-)
+ tools/perf/builtin-trace.c | 43 ++++++++++----------
+ tools/perf/util/thread.c   | 80 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/thread.h   | 14 ++++++-
+ 3 files changed, 115 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7576e8e24838..45da63d7315b 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1173,6 +1173,68 @@ ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
- 	return data_read_write_offset(dso, machine, offset, data, size, true);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 3017291242cf..1c080d95c1e2 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2731,16 +2731,16 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+ 	int printed = 0;
+ 	struct thread *thread;
+ 	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+-	int augmented_args_size = 0;
++	int augmented_args_size = 0, e_machine;
+ 	void *augmented_args = NULL;
+-	/* TODO: get e_machine from thread. */
+-	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
++	struct syscall *sc;
+ 	struct thread_trace *ttrace;
+ 
+-	if (sc == NULL)
+-		return -1;
+-
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
++	e_machine = thread__e_machine(thread, trace->host);
++	sc = trace__syscall_info(trace, evsel, e_machine, id);
++	if (sc == NULL)
++		goto out_put;
+ 	ttrace = thread__trace(thread, trace);
+ 	if (ttrace == NULL)
+ 		goto out_put;
+@@ -2808,17 +2808,18 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+ 	struct thread_trace *ttrace;
+ 	struct thread *thread;
+ 	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+-	/* TODO: get e_machine from thread. */
+-	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
++	struct syscall *sc;
+ 	char msg[1024];
+ 	void *args, *augmented_args = NULL;
+-	int augmented_args_size;
++	int augmented_args_size, e_machine;
+ 	size_t printed = 0;
+ 
+-	if (sc == NULL)
+-		return -1;
+ 
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
++	e_machine = thread__e_machine(thread, trace->host);
++	sc = trace__syscall_info(trace, evsel, e_machine, id);
++	if (sc == NULL)
++		return -1;
+ 	ttrace = thread__trace(thread, trace);
+ 	/*
+ 	 * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
+@@ -2883,15 +2884,15 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	bool duration_calculated = false;
+ 	struct thread *thread;
+ 	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
+-	int alignment = trace->args_alignment;
+-	/* TODO: get e_machine from thread. */
+-	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
++	int alignment = trace->args_alignment, e_machine;
++	struct syscall *sc;
+ 	struct thread_trace *ttrace;
+ 
+-	if (sc == NULL)
+-		return -1;
+-
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
++	e_machine = thread__e_machine(thread, trace->host);
++	sc = trace__syscall_info(trace, evsel, e_machine, id);
++	if (sc == NULL)
++		goto out_put;
+ 	ttrace = thread__trace(thread, trace);
+ 	if (ttrace == NULL)
+ 		goto out_put;
+@@ -3238,8 +3239,8 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 
+ 	if (evsel == trace->syscalls.events.bpf_output) {
+ 		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
+-		/* TODO: get e_machine from thread. */
+-		struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
++		int e_machine = thread ? thread__e_machine(thread, trace->host) : EM_HOST;
++		struct syscall *sc = trace__syscall_info(trace, evsel, e_machine, id);
+ 
+ 		if (sc) {
+ 			fprintf(trace->output, "%s(", sc->name);
+@@ -4889,6 +4890,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
+ {
+ 	size_t printed = 0;
+ 	struct thread_trace *ttrace = thread__priv(thread);
++	int e_machine = thread__e_machine(thread, trace->host);
+ 	double ratio;
+ 
+ 	if (ttrace == NULL)
+@@ -4908,8 +4910,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
+ 	else if (fputc('\n', fp) != EOF)
+ 		++printed;
+ 
+-	/* TODO: get e_machine from thread. */
+-	printed += thread__dump_stats(ttrace, trace, EM_HOST, fp);
++	printed += thread__dump_stats(ttrace, trace, e_machine, fp);
+ 
+ 	return printed;
+ }
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 0ffdd52d86d7..89585f53c1d5 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <elf.h>
+ #include <errno.h>
++#include <fcntl.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -16,6 +18,7 @@
+ #include "symbol.h"
+ #include "unwind.h"
+ #include "callchain.h"
++#include "dwarf-regs.h"
+ 
+ #include <api/fs/fs.h>
+ 
+@@ -51,6 +54,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		thread__set_ppid(thread, -1);
+ 		thread__set_cpu(thread, -1);
+ 		thread__set_guest_cpu(thread, -1);
++		thread__set_e_machine(thread, EM_NONE);
+ 		thread__set_lbr_stitch_enable(thread, false);
+ 		INIT_LIST_HEAD(thread__namespaces_list(thread));
+ 		INIT_LIST_HEAD(thread__comm_list(thread));
+@@ -423,6 +427,82 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+ 	}
  }
  
-+uint16_t dso__e_machine(struct dso *dso, struct machine *machine)
++static uint16_t read_proc_e_machine_for_pid(pid_t pid)
 +{
-+	uint16_t e_machine = EM_NONE;
++	char path[6 /* "/proc/" */ + 11 /* max length of pid */ + 5 /* "/exe\0" */];
 +	int fd;
++	uint16_t e_machine = EM_NONE;
 +
-+	switch (dso__binary_type(dso)) {
-+	case DSO_BINARY_TYPE__KALLSYMS:
-+	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
-+	case DSO_BINARY_TYPE__VMLINUX:
-+	case DSO_BINARY_TYPE__GUEST_VMLINUX:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__KCORE:
-+	case DSO_BINARY_TYPE__GUEST_KCORE:
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
-+	case DSO_BINARY_TYPE__BPF_IMAGE:
-+	case DSO_BINARY_TYPE__OOL:
-+	case DSO_BINARY_TYPE__JAVA_JIT:
-+		return EM_HOST;
-+	case DSO_BINARY_TYPE__DEBUGLINK:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
-+	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-+	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
-+	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
-+	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
-+		break;
-+	case DSO_BINARY_TYPE__NOT_FOUND:
-+	default:
-+		return EM_NONE;
-+	}
-+
-+	pthread_mutex_lock(&dso__data_open_lock);
-+
-+	/*
-+	 * dso__data(dso)->fd might be closed if other thread opened another
-+	 * file (dso) due to open file limit (RLIMIT_NOFILE).
-+	 */
-+	try_to_open_dso(dso, machine);
-+	fd = dso__data(dso)->fd;
++	snprintf(path, sizeof(path), "/proc/%d/exe", pid);
++	fd = open(path, O_RDONLY);
 +	if (fd >= 0) {
 +		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
 +		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
-+		if (dso__needs_swap(dso) == DSO_SWAP__UNSET) {
-+			unsigned char eidata;
-+
-+			if (pread(fd, &eidata, sizeof(eidata), EI_DATA) == sizeof(eidata))
-+				dso__swap_init(dso, eidata);
-+		}
-+		if (dso__needs_swap(dso) != DSO_SWAP__UNSET &&
-+		    pread(fd, &e_machine, sizeof(e_machine), 18) == sizeof(e_machine))
-+			e_machine = DSO__SWAP(dso, uint16_t, e_machine);
++		if (pread(fd, &e_machine, sizeof(e_machine), 18) != sizeof(e_machine))
++			e_machine = EM_NONE;
++		close(fd);
 +	}
-+	pthread_mutex_unlock(&dso__data_open_lock);
 +	return e_machine;
 +}
 +
- /**
-  * dso__data_read_addr - Read data from dso address
-  * @dso: dso object
-@@ -1528,6 +1590,33 @@ void dso__put(struct dso *dso)
- 		RC_CHK_PUT(dso);
- }
- 
-+int dso__swap_init(struct dso *dso, unsigned char eidata)
++static int thread__e_machine_callback(struct map *map, void *machine)
 +{
-+	static unsigned int const endian = 1;
++	struct dso *dso = map__dso(map);
 +
-+	dso__set_needs_swap(dso, DSO_SWAP__NO);
++	_Static_assert(0 == EM_NONE, "Unexpected EM_NONE");
++	if (!dso)
++		return EM_NONE;
 +
-+	switch (eidata) {
-+	case ELFDATA2LSB:
-+		/* We are big endian, DSO is little endian. */
-+		if (*(unsigned char const *)&endian != 1)
-+			dso__set_needs_swap(dso, DSO_SWAP__YES);
-+		break;
-+
-+	case ELFDATA2MSB:
-+		/* We are little endian, DSO is big endian. */
-+		if (*(unsigned char const *)&endian != 0)
-+			dso__set_needs_swap(dso, DSO_SWAP__YES);
-+		break;
-+
-+	default:
-+		pr_err("unrecognized DSO data encoding %d\n", eidata);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	return dso__e_machine(dso, machine);
 +}
 +
- void dso__set_build_id(struct dso *dso, struct build_id *bid)
- {
- 	RC_CHK_ACCESS(dso)->bid = *bid;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index fcb2898e0f49..0459d4e41b14 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -735,6 +735,8 @@ bool dso__sorted_by_name(const struct dso *dso);
- void dso__set_sorted_by_name(struct dso *dso);
- void dso__sort_by_name(struct dso *dso);
- 
-+int dso__swap_init(struct dso *dso, unsigned char eidata);
++uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
++{
++	pid_t tid, pid;
++	uint16_t e_machine = RC_CHK_ACCESS(thread)->e_machine;
 +
- void dso__set_build_id(struct dso *dso, struct build_id *bid);
- bool dso__build_id_equal(const struct dso *dso, struct build_id *bid);
- void dso__read_running_kernel_build_id(struct dso *dso,
-@@ -823,6 +825,7 @@ int dso__data_file_size(struct dso *dso, struct machine *machine);
- off_t dso__data_size(struct dso *dso, struct machine *machine);
- ssize_t dso__data_read_offset(struct dso *dso, struct machine *machine,
- 			      u64 offset, u8 *data, ssize_t size);
-+uint16_t dso__e_machine(struct dso *dso, struct machine *machine);
- ssize_t dso__data_read_addr(struct dso *dso, struct map *map,
- 			    struct machine *machine, u64 addr,
- 			    u8 *data, ssize_t size);
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 3fa92697c457..fbf6d0f73af9 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1174,33 +1174,6 @@ int filename__read_debuglink(const char *filename, char *debuglink,
- 
- #endif
- 
--static int dso__swap_init(struct dso *dso, unsigned char eidata)
--{
--	static unsigned int const endian = 1;
--
--	dso__set_needs_swap(dso, DSO_SWAP__NO);
--
--	switch (eidata) {
--	case ELFDATA2LSB:
--		/* We are big endian, DSO is little endian. */
--		if (*(unsigned char const *)&endian != 1)
--			dso__set_needs_swap(dso, DSO_SWAP__YES);
--		break;
--
--	case ELFDATA2MSB:
--		/* We are little endian, DSO is big endian. */
--		if (*(unsigned char const *)&endian != 0)
--			dso__set_needs_swap(dso, DSO_SWAP__YES);
--		break;
--
--	default:
--		pr_err("unrecognized DSO data encoding %d\n", eidata);
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
- bool symsrc__possibly_runtime(struct symsrc *ss)
++	if (e_machine != EM_NONE)
++		return e_machine;
++
++	tid = thread__tid(thread);
++	pid = thread__pid(thread);
++	if (pid != tid) {
++		struct thread *parent = machine__findnew_thread(machine, pid, pid);
++
++		if (parent) {
++			e_machine = thread__e_machine(parent, machine);
++			thread__set_e_machine(thread, e_machine);
++			return e_machine;
++		}
++		/* Something went wrong, fallback. */
++	}
++	/* Reading on the PID thread. First try to find from the maps. */
++	e_machine = maps__for_each_map(thread__maps(thread),
++				       thread__e_machine_callback,
++				       machine);
++	if (e_machine == EM_NONE) {
++		/* Maps failed, perhaps we're live with map events disabled. */
++		bool is_live = machine->machines == NULL;
++
++		if (!is_live) {
++			/* Check if the session has a data file. */
++			struct perf_session *session = container_of(machine->machines,
++								    struct perf_session,
++								    machines);
++
++			is_live = !!session->data;
++		}
++		/* Read from /proc/pid/exe if live. */
++		if (is_live)
++			e_machine = read_proc_e_machine_for_pid(pid);
++	}
++	if (e_machine != EM_NONE)
++		thread__set_e_machine(thread, e_machine);
++	else
++		e_machine = EM_HOST;
++	return e_machine;
++}
++
+ struct thread *thread__main_thread(struct machine *machine, struct thread *thread)
  {
- 	return ss->dynsym || ss->opdsec;
+ 	if (thread__pid(thread) == thread__tid(thread))
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 6cbf6eb2812e..cd574a896418 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -60,7 +60,11 @@ DECLARE_RC_STRUCT(thread) {
+ 	struct srccode_state	srccode_state;
+ 	bool			filter;
+ 	int			filter_entry_depth;
+-
++	/**
++	 * @e_machine: The ELF EM_* associated with the thread. EM_NONE if not
++	 * computed.
++	 */
++	uint16_t		e_machine;
+ 	/* LBR call stack stitch */
+ 	bool			lbr_stitch_enable;
+ 	struct lbr_stitch	*lbr_stitch;
+@@ -302,6 +306,14 @@ static inline void thread__set_filter_entry_depth(struct thread *thread, int dep
+ 	RC_CHK_ACCESS(thread)->filter_entry_depth = depth;
+ }
+ 
++uint16_t thread__e_machine(struct thread *thread, struct machine *machine);
++
++static inline void thread__set_e_machine(struct thread *thread, uint16_t e_machine)
++{
++	RC_CHK_ACCESS(thread)->e_machine = e_machine;
++}
++
++
+ static inline bool thread__lbr_stitch_enable(const struct thread *thread)
+ {
+ 	return RC_CHK_ACCESS(thread)->lbr_stitch_enable;
 -- 
 2.49.0.rc1.451.g8f38331e32-goog
 
