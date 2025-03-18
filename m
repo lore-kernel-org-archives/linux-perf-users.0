@@ -1,124 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D920F078;
-	Tue, 18 Mar 2025 15:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDCF210192
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742313078; cv=none; b=WzIjMIZyA9lP/t/6fZuhNwSpNKS7spUwj7fkttLfzlbKFL2CMglE+9WGJbudXegYcxDqjGlyzU/OCBTJ7pRuVDcNcurMcGKntZ6xhGjqJa7GhV24AI6ubHhZ96zcCOhnv0Vp5Zy6cjpFm5UWqH+qa+AELCPbay/zDGm+yNUZlsc=
+	t=1742314491; cv=none; b=FlYevON5r2tM7F0ceZ5B319Y+oOcU2qjWpmpnsLJBSItkJEJpFPYqkcoLybKtZGi4tOtt04fKBGH98H4RRLmEGOgBJGXtmrcmdQsAY8d2QogY8qjeBEG8f/RlsFDPzOyx/c5ARqjXeKY6l5nz6R9bSaLrMnBQflsSJgvCywCadQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742313078; c=relaxed/simple;
-	bh=cUwvZQQ+NjakBpbZKcTfx3t1d3Z+pAZHSuUAZGVxDxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ou+ioyszzn2Kb2W/lVZwlSbzdjAljXqKGjkdOtVSvyiQQ0gfupmIZhTMsHmd0MjYUJ4KZAi+lWzAS7h+YwlLHb9tK1g2ou8nCpmWznn/rqDRl0TgWtT9J2TBdE25tuT374nXdhwZQ6MwMOMva3uasKIVK5ZE+DYq5jL/eLCFPJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDRtp2xu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742314491; c=relaxed/simple;
+	bh=JtrCwaIemaIH1wZYdeXf6+kSx9FT6E+fy6V6+KJ4oWs=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=VwkSW088gHoighdUSodxrEWavUdHkQpqYf5IVqTuCXy02m7Uw6cTb3H9xrGwMO4+1sP9kHgYKAWXhN2232VDPDZGJr3CXoHQ8zdUK1RqbFaise3bkVRUGdqeDCjRmax3LJ9pe+qVcHBukPQ01rWHkm9tdWnbkhjrnjuvabQopW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jz4eTga4; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDRtp2xu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB81C4CEDD;
-	Tue, 18 Mar 2025 15:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742313078;
-	bh=cUwvZQQ+NjakBpbZKcTfx3t1d3Z+pAZHSuUAZGVxDxE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZDRtp2xuLYROQzbQK0ZXRpd/eWbvAUBk+xosqGBpv4QyNuXbt5tWpBrOCCdXzKHRh
-	 dgnAXbktka2ZLS25yb09k+fyai7woE9wmk4uPzhKSYeDWFLAB2Du05CZBd0ujHnXOP
-	 GfRPFvWNYW0M+LiXAnL1PbpMA1haUl885t/s2xrFPKWfq6ns/MwHOuOMPmuQXZ0SwE
-	 x9RrEmMNgy4p6j5tyYwkvRHYyPj+T8oF68TqrXf5wNnDIgsKpLMCrmn4AiW7NgeitG
-	 IdNBoBHj/ri2USwpaTRwW2SaQ6fKw+AHJpm8PvrDfg9cWgqYq079CIUcfjUM8Uc3fr
-	 xW9pmgpkWQPOQ==
-Date: Tue, 18 Mar 2025 08:51:14 -0700
-From: Kees Cook <kees@kernel.org>
-To: Bhupesh Sharma <bhsharma@igalia.com>
-Cc: Andres Rodriguez <andresx7@gmail.com>, Bhupesh <bhupesh@igalia.com>,
-	akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com
-Subject: Re: [PATCH RFC 0/2] Dynamically allocate memory to store task's full
- name
-Message-ID: <202503180846.EAB79290D@keescook>
-References: <20250314052715.610377-1-bhupesh@igalia.com>
- <202503141420.37D605B2@keescook>
- <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
- <8b11d5f6-bb16-7af6-8377-bb0951fcfb60@igalia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jz4eTga4"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2c7746509so88260027b3.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 09:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742314485; x=1742919285; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lpgqd99OouJUfZ9Z0+GeFS3Ytd7aZfW80L/d4uD4fxM=;
+        b=jz4eTga4UbIlqwoxgWMNRIbmwAyNMtVE9UXykwIfvkHyl8BkfSDFCL2SeME4C6Koh6
+         wB6ZcyYeRhK7SEhmAgKz1DTUvHKcZYqcC8wsVSgZRqMzm41D+B6BTXIsQUQ4/1o5GNHm
+         CDDSQ3Q/TNvy/HjJmVKhyM0BIS5YL8phPY0zsMKMseQs3t8yK2iE3NC/xxQE/ubIPeNK
+         ks9EMkEN1c9ia7tiy0cDVRx+Se/b0AhgZIXjRLzXonx6FzUA1fpKyo1LByeqBz88pBlG
+         Byov5V84l9I7ztbXym/v+D/ayMNwMSAp3INu/x7vQf7L0pBi0C7dJzaGTJ6WediqLdqi
+         bh7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742314485; x=1742919285;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lpgqd99OouJUfZ9Z0+GeFS3Ytd7aZfW80L/d4uD4fxM=;
+        b=cy5Lfw39v/fM1jRmUat2v4KY13mY92pUbdEa2b+j+djz0bYv44HBYGbu1YHSW5Cam1
+         b0NT6jBnwgx7JZz8syqbkj+kO+VNuw4TYPbbO8cJjAHtmrn4lpVYtYVmBhmBFde+vjce
+         rWsuN0IvclpmQDHmemDayhLdFOWCIm9SMkcC5NqiEbM7t5mZwS9QeEZyQySf3EUS7tbp
+         mNWF9bsoofc+2Y35/7rsMhZ9PSYzYCtzDuwbnSVpWSWe6+CRs7nILPWa3ylINGtV9fp4
+         ZbJO1qFCrHrn3YbK99huLio07SuHyPdWz2dT2euSeRKQvMb29E0/PKpA2OAm/YyI1zR0
+         8bGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSIeIzbN+HDWyy72VlvYvuO+YPO6JlExhNYIYA5QT0BJuK73C3rkf7YDDM+kVj0kOgRErgfmuXYzFkwf1cDNgi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFWKV9jf0JZ9IAHdGuaReVpJQlB45nURHbQyLOkLyIeQHiTh+T
+	47Q6moMxmqKw0Sa43BWyWHtmBEgM/m/gWDjOkYi5nl+xuRF5MqXD6DYrZ8ZCocwcpm6iVwQKdzY
+	TGjDIeA==
+X-Google-Smtp-Source: AGHT+IFMHV+fm3kiosS3IB2rFuBikoLWu/hZvCgG6GBzQmNlz+pOHPFPlzhct5SwsMpPJf/ljpE2F+wzWGZz
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
+ (user=irogers job=sendgmr) by 2002:a05:690c:450f:b0:6fe:d1b3:850a with SMTP
+ id 00721157ae682-6ff460541d9mr76807b3.5.1742314485145; Tue, 18 Mar 2025
+ 09:14:45 -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:14:32 -0700
+Message-Id: <20250318161432.33732-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b11d5f6-bb16-7af6-8377-bb0951fcfb60@igalia.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Subject: [PATCH v2] perf tests: Harden branch stack sampling test
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, German Gomez <german.gomez@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 18, 2025 at 04:49:28PM +0530, Bhupesh Sharma wrote:
-> On 3/15/25 1:13 PM, Andres Rodriguez wrote:
-> > On 3/14/25 14:25, Kees Cook wrote:
-> > > On Fri, Mar 14, 2025 at 10:57:13AM +0530, Bhupesh wrote:
-> > > > While working with user-space debugging tools which work especially
-> > > > on linux gaming platforms, I found that the task name is truncated due
-> > > > to the limitation of TASK_COMM_LEN.
-> > > > 
-> > > > For example, currently running 'ps', the task->comm value of a long
-> > > > task name is truncated due to the limitation of TASK_COMM_LEN.
-> > > >      create_very_lon
-> > > > 
-> > > > This leads to the names passed from userland via pthread_setname_np()
-> > > > being truncated.
-> > > 
-> > > So there have been long discussions about "comm", and it mainly boils
-> > > down to "leave it alone". For the /proc-scraping tools like "ps" and
-> > > "top", they check both "comm" and "cmdline", depending on mode. The more
-> > > useful (and already untruncated) stuff is in "cmdline", so I suspect it
-> > > may make more sense to have pthread_setname_np() interact with that
-> > > instead. Also TASK_COMM_LEN is basically considered userspace ABI at
-> > > this point and we can't sanely change its length without breaking the
-> > > world.
-> > > 
-> > 
-> > Completely agree that comm is best left untouched. TASK_COMM_LEN is
-> > embedded into the kernel and the pthread ABI changes here should be
-> > avoided.
-> > 
-> 
-> So, basically my approach _does not_ touch TASK_COMM_LEN at all. The normal
-> 'TASK_COMM_LEN' 16byte design remains untouched.
-> Which means that all the legacy / existing ABi which uses 'task->comm' and
-> hence are designed / written to handle 'TASK_COMM_LEN' 16-byte name,
-> continue to work as before using '/proc/$pid/task/$tid/comm'.
-> 
-> This change-set only adds a _parallel_ dynamically allocated
-> 'task->full_name' which can be used by interested users via
-> '/proc/$pid/task/$tid/full_name'.
+On continuous testing the perf script output can be empty, or nearly
+empty, causing tr/grep to exit and due to "set -e" the test traps and
+fails. Add some empty file handling that sets the test to skip and
+make grep and other text rewriting failures non-fatal by adding
+"|| true".
 
-I don't want to add this to all processes at exec time as the existing
-solution works for those processes: read /proc/$pid/cmdline.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2: Change skips to errors Leo Yan.
+---
+ tools/perf/tests/shell/test_brstack.sh | 73 +++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 20 deletions(-)
 
-That said, adding another pointer to task_struct isn't to bad I guess,
-and it could be updated by later calls. Maybe by default it just points
-to "comm".
-
-> I am fine with adding either '/proc/$pid/task/$tid/full_name' or
-> '/proc/$pid/task/$tid/debug_name' (actually both of these achieve the same).
-> The new / modified users (especially the debug applications you listed
-> above) can switch easily to using '/proc/$pid/task/$tid/full_name' instead
-> of ''/proc/$pid/task/$tid/comm'
-> 
-> AFAIK we already achieved for the kthreads using d6986ce24fc00 ("kthread:
-> dynamically allocate memory to store kthread's full name"), which adds
-> 'full_name' in parallel to 'comm' for kthread names.
-
-If we do this for task_struct, we should remove "full_name" from kthread
-and generalize it for all processes.
-
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index e01df7581393..a7c13a22397e 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Check branch stack sampling
+ 
+ # SPDX-License-Identifier: GPL-2.0
+@@ -17,35 +17,51 @@ fi
+ 
+ skip_test_missing_symbol brstack_bench
+ 
++set -x
++err=0
+ TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+ TESTPROG="perf test -w brstack"
+ 
+ cleanup() {
+ 	rm -rf $TMPDIR
++	trap - EXIT TERM INT
+ }
+ 
+-trap cleanup EXIT TERM INT
++trap_cleanup() {
++	set +e
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
+ 
+ test_user_branches() {
+ 	echo "Testing user branch stack sampling"
+ 
+-	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' '\n' > $TMPDIR/perf.script
++	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
++	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
+ 
+ 	# example of branch entries:
+ 	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
+ 
+-	set -x
+-	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"		$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
+-	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
+-	set +x
+-
++	expected=(
++		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"
++		"^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
++		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"
++		"^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
++		"^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"
++		"^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"
++		"^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"
++		"^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"
++	)
++	for x in "${expected[@]}"
++	do
++		if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$x"
++		then
++			echo "Branches missing $x"
++			err=1
++		fi
++	done
+ 	# some branch types are still not being tested:
+ 	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
+ }
+@@ -57,14 +73,28 @@ test_filter() {
+ 	test_filter_expect=$2
+ 
+ 	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
+-
+-	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n' | grep '.' > $TMPDIR/perf.script
++	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
++	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
+ 
+ 	# fail if we find any branch type that doesn't match any of the expected ones
+ 	# also consider UNKNOWN branch types (-)
+-	if grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" $TMPDIR/perf.script; then
+-		return 1
++	if [ ! -s "$TMPDIR/perf.script" ]
++	then
++		echo "Empty script output"
++		err=1
++		return
++	fi
++	# Look for lines not matching test_filter_expect ignoring issues caused
++	# by empty output
++	tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep '.' | \
++	  grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" \
++	  > "$TMPDIR/perf.script-filtered" || true
++	if [ -s "$TMPDIR/perf.script-filtered" ]
++	then
++		echo "Unexpected branch filter in script output"
++		cat "$TMPDIR/perf.script"
++		err=1
++		return
+ 	fi
+ }
+ 
+@@ -80,3 +110,6 @@ test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
+ test_filter "call,cond"		"CALL|SYSCALL|COND"
+ test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
+ test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
++
++cleanup
++exit $err
 -- 
-Kees Cook
+2.49.0.rc1.451.g8f38331e32-goog
+
