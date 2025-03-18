@@ -1,73 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0363919F43A
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D6020E6F6
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 16:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742314671; cv=none; b=HKFkf36DXIsH3DYCoPgYwNi3Uw9aFBQhjdwPdaBL62hwQodYTBFPZiA6xbXhA1asHZG1bwb1hOIw5yuhiEBZk9Ei7NFuX2xgVLM427heP+3aW5Zjsg683MlNOgODOyQy85S8jsXG8x8Xqg5GK9NP3t6sF5XGJbHLHlKy+Tz0nT8=
+	t=1742315327; cv=none; b=stowkv6wm+XzRmES49Ihiu8QJi2a0sKz01B4qhSzwZvz4+tUlgM+gVn+2F88JBXdLhFnMHNVLoqTvnZh50LkCVrZQkO9PFNA6LOfLxpTNCW54f86A/0OkrC83l9QqkLVkDAbcniA7d8ZFRWCm09m8NxDnCBUZBATxntYg+xZSAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742314671; c=relaxed/simple;
-	bh=+fa8DsdkVEv2EwfFN1t5sni/y+6veh77iQj6yymkA8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4kmsEmgbmqHQDMfB1racEwvDQTJUOeMDmSnldVWxlpEBBCQ9MoFCt47qCuu2kj816BcJV8COReu7FiSAo5z0R9ThLcw9oD//xcW6lwzj/iDgYu5WkiSWILizuajRaVMF2to8vXRiGGjvAwTzizudu0H1i4+gmW3LT4pFCS5dTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKuiv4fq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742315327; c=relaxed/simple;
+	bh=1NImk/XKmWMy8gPUR2AAcOZj5LVRw6HPHAAJ3v25Sig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BVw7i0sCT9+CZOV85OStx0/LZjKltTx3oWmkEw+T3XDvlCf1+wvEm9uoRsYTyOROULtUdhKMRlkDb0frhufjWEoXsKsDw5ijNkFbgDNHcTb61daqotc6tWCZrxCQq/ltLr9x3Ex5zIOqNC6hUhG+a3L6ONI1D47PG8UIAwViWCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L0oVg78B; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKuiv4fq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D34C4CEDD;
-	Tue, 18 Mar 2025 16:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742314670;
-	bh=+fa8DsdkVEv2EwfFN1t5sni/y+6veh77iQj6yymkA8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nKuiv4fqNVq8iSizhXj59I6aunnpkEoeQzB6FQxsxzyV68p0P/5FlST6roMo6um2g
-	 ZaqgOZ61tv2fpOwxMiTpqxIG7pZF6KvXpEijVZtqvsCFe84fC3mExU4ZN0Gt/zR2BY
-	 UWdGqBcfKODPmCxO1mu9MEf1Qrm9ve2Kjwv2b56FIHTMsOVdiHLZzdsslcnLZsC8dn
-	 JPD7eUJ+/MAPez89CCF1g6TdJjl8a6lsmyEY8IVPp/ZNpf4s8KWr3Vg5kWjcWIPTt8
-	 tS7JoD8BiLkm2N6A7D7wccy5YHvDjOTby3QQkH+ctda4BlTUj+9x7OxBqYgRmgxsfc
-	 3zsYLSsdA+2wQ==
-Date: Tue, 18 Mar 2025 16:17:46 +0000
-From: Will Deacon <will@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH Resend] perf/arm-cmn: Remove CMN-600 DTC domain special
- case
-Message-ID: <20250318161744.GB13981@willie-the-truck>
-References: <67985e39f53b56385d79a4f1264cf7f9cacedb58.1742308248.git.robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0oVg78B"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2263428c8baso159425ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 09:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742315325; x=1742920125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rjiWpseYA4IueE/0zJY0qwQH+wE9WLGDriyYTJqITfQ=;
+        b=L0oVg78B8wifUGcqCdSH1LYw0tJp71fTcRRahE7uuXTkwL8Ceoec/M+OpkXBLwnRUt
+         dU68cq6Gxf+JjuXfHrfUj4LjEfZHn0eSIqzmt5oHT96eC7JZ+QheK4bsjI6xjqxJSUOE
+         nR14kQslIDkX3V/+NONUIaZ8pFiqKmH0eSdL5nH1ka786g4xyObmQQ32uI5q5t8Elh4c
+         K2vloZzqCEZM2uJhNNcAbk6qnOX2JNCPtjScu1rLlRN8rTEavVI9TjUiesc7SUPFwyz0
+         uj80XG7OWG2BR4KZoPKNd5ydsWAVTx0k6568EdBNxHGy9j+UBc3f6P0E1bgD415h0AWQ
+         2dJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742315325; x=1742920125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rjiWpseYA4IueE/0zJY0qwQH+wE9WLGDriyYTJqITfQ=;
+        b=KPzqFlFZ3rR7+bT8AXk2Iwe60Qf18eorPPqyuFqd/h8aGWUybBJXhZaoorMz0hHva+
+         /X9Pl42Jnv870YL7OYwfVmj2N3srz5xEOoW7oWuUH/IbWLCnrNYhTaz0q8zG8FLWH2Ti
+         fnXjMvEbbDxcUYYEgNxgxotJ5l7XA4FC1htE7LPFKM0a1oC6HO61KNc5Ed/3bRA9fOOd
+         z1UEeo5DHs/reJUdT/jsBmKz17NMTJDOErL3Ofo9pN9vWZ4EpP5LOVsFnxY9/cWKJBm2
+         8TrJCVAki2BK4kPA5voPOjEJdVSEqkh1H7JFVUekGOKGmnqwm5/q9yGNalM23vj/+AsV
+         up5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9LbrmoEKMy6mmjx+d+9DB6f+32QZ7dldhrJwJg8+kr6AOgpxfMmIdZtn3BAiBufGVSjrcU7TVKkZ+Ti4n69Di@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRhTW6MGCwUp7Kqmk4+IfjHlvPCA0POBSqlcYCB1ITKHRsOeeU
+	CNFUAw/mQwovj2GL6Jbhdyz6rJs0QSTz8vbwPy+yb1jnS2cCExQZjF1HJr3bh0FKbGfZiWO52eM
+	llwEdaOLjmCAAPm4ZJ0m/NaHn7d9Ar0bgtVha
+X-Gm-Gg: ASbGncsUKYABFAkBDMPRg9eyOFyoYw+J/oXFRG1CXG2VPa6ygQfCyiwPakRsiUvTVes
+	YhvS+kPanVKTZSsh04NzcwKQ56HgXa2ppyihl5GHovjMh6d+uJOCLxdqBrafJGlv0Wif+vv/qKn
+	kLdhTL1//mMZEN19K2Vugk/qm8IcC+CPUajxB3O4VEDpKZvb78uHg=
+X-Google-Smtp-Source: AGHT+IE2d4+OlXo4LNV4oNloXDdclW9whxswpjrXJDzywGS47OBIuzFJLqFBgStTnsAnpx6zhH3/KJM/olEA5u8xdKE=
+X-Received: by 2002:a17:903:32c1:b0:216:201e:1b63 with SMTP id
+ d9443c01a7336-226357cd4afmr2088485ad.11.1742315324425; Tue, 18 Mar 2025
+ 09:28:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67985e39f53b56385d79a4f1264cf7f9cacedb58.1742308248.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250318095132.1502654-1-tmricht@linux.ibm.com> <20250318095132.1502654-2-tmricht@linux.ibm.com>
+In-Reply-To: <20250318095132.1502654-2-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 18 Mar 2025 09:28:33 -0700
+X-Gm-Features: AQ5f1JoVZgP1EKgkQBgXOme0t3IsMoETkrh_Ar4sjRVVmL_dl-vozM9gu6ykgts
+Message-ID: <CAP-5=fV-X7YKVrd9336KP4uK8YsMs2wtfYRWEqOUvEuQuD2WdA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf/bench: Fix perf bench internals pmu-scan core dump
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	acme@redhat.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, 
+	James Clark <james.clark@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Robin,
+On Tue, Mar 18, 2025 at 2:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> On s390 z/VM systems the command 'perf bench internals pmu-scan'
+> dumps core, as can be seen:
+>
+>  # ./perf bench internals pmu-scan
+>  # Running 'internals/pmu-scan' benchmark:
+>  Computing performance of sysfs PMU event scan for 100 times
+>  double free or corruption (out)
+>  Aborted (core dumped)
+>  # gdb ./perf core.xxxx
+>  ....
+>  #9  0x00000000012fb57a in perf_pmu__delete (pmu=3D0x160e370 <tool>)
+>      at util/pmu.c:2318
+>  #10 0x00000000012fbfca in perf_pmus__destroy () at util/pmus.c:103
+>  #11 0x0000000001186f72 in save_result () at bench/pmu-scan.c:71
+>  #12 0x00000000011873c2 in run_pmu_scan () at bench/pmu-scan.c:140
+>  #13 0x00000000011876a8 in bench_pmu_scan (argc=3D0, argv=3D0x3fff3a77338=
+)
+>      at bench/pmu-scan.c:183
+>  #14 0x0000000001174556 in run_bench (coll_name=3D0x14709ba "internals",
+>      bench_name=3D0x1470700 "pmu-scan", fn=3D0x1187620 <bench_pmu_scan>,
+>      argc=3D1, argv=3D0x3fff3a77338) at builtin-bench.c:229
+>  #15 0x0000000001174a1e in cmd_bench (argc=3D2, argv=3D0x3fff3a77330)
+>      at builtin-bench.c:330
+>  ...
+>
+> The root cause is in PMU buildup. The PMUs are constructed via
+>
+>   run_bench()
+>   +--> bench_pmu_scan()
+>        +--> run_pmu_scan()
+>             +--> save_result()
+>                  +--> perf_pmus__scan()
+>                       +--> pmu_read_sysfs()
+>                            +--> perf_pmus__tool_pmu()
+>
+> perf_pmus__tool_pmu() returns a pointer to a static defined variable:
+>
+>   static struct perf_pmu tool =3D {
+>                 .name =3D "tool",
+>                 .type =3D PERF_PMU_TYPE_TOOL,
+>                 .aliases =3D LIST_HEAD_INIT(tool.aliases),
+>                 .caps =3D LIST_HEAD_INIT(tool.caps),
+>                 .format =3D LIST_HEAD_INIT(tool.format),
+>   };
+>
+> and that PMU is added to the list of other_cpus in file
+> ./util/pmus.c, function pmu_read_sysfs().
+>
+> Later on after the list of PMUs is constructed,
+> that list is removed again via:
+>
+>    save_result()
+>    +--> perf_pmus__destroy()
+>         +--> perf_pmu__delete()
+>
+> This works fine until the PMU named "tool" is deleted.
+> Its name is a constant pointer possibly located in read-only data
+> section and can not be freed using zfree().
+>
+> Remedy this and check for dynamic memory allocation for the PMU.
+>
+> Background: s390 z/VM system do not support PMUs for sampling and
+> counting. In this case dummy events are created by the perf tool
+> and the PMUs "tool" and "fake" are created and freed.
+>
+> Fixes: efe98a7a3977 ("perf pmu: Use zfree() to reduce chances of use afte=
+r free")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Ian Rogers <irogers@google.com>
 
-On Tue, Mar 18, 2025 at 02:32:10PM +0000, Robin Murphy wrote:
-> The special case for trying to infer the DTC domain for DTC-adjacent
-> nodes on CMN-600 is fragile and buggy - currently resulting in subtly
-> messed up DTC counter allocation - and the theoretical benefit it
-> offers to a tiny minority of use-cases arguably doesn't outweigh the
-> inconsistency it offers to others anyway. Just get rid of it.
-> 
-> Fixes: ab33c66fd8f1 ("perf/arm-cmn: Enable per-DTC counter allocation")
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Hi Thomas,
+
+Was this already addressed by James' patch:
+https://lore.kernel.org/linux-perf-users/20250226104111.564443-1-james.clar=
+k@linaro.org/
+
+Thanks,
+Ian
+
 > ---
->  drivers/perf/arm-cmn.c | 7 -------
->  1 file changed, 7 deletions(-)
-
-You've got "Resend" in the subject, but I can't seem to find the original
-posting :/
-
-Please can you point me at it? I just want to make sure that I'm not
-missing patches, as you're unlikely to be the only person affected if
-that is the case.
-
-Cheers,
-
-Will
+>  tools/perf/util/pmu.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 6206c8fe2bf9..59cec4d2909e 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -2315,10 +2315,13 @@ void perf_pmu__delete(struct perf_pmu *pmu)
+>
+>         perf_cpu_map__put(pmu->cpus);
+>
+> -       zfree(&pmu->name);
+> -       zfree(&pmu->alias_name);
+> -       zfree(&pmu->id);
+> -       free(pmu);
+> +       /* Static variables can not be free'ed */
+> +       if (pmu->type !=3D PERF_PMU_TYPE_TOOL && pmu->type !=3D PERF_PMU_=
+TYPE_FAKE) {
+> +               zfree(&pmu->alias_name);
+> +               zfree(&pmu->id);
+> +               zfree(&pmu->name);
+> +               free(pmu);
+> +       }
+>  }
+>
+>  const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
+> --
+> 2.48.1
+>
