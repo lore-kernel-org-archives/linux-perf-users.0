@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3126F212F83;
-	Tue, 18 Mar 2025 18:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0E9212FB8;
+	Tue, 18 Mar 2025 18:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742320939; cv=none; b=OIkxY+YGHcnupkAqg5LbtCSjbK62pT8HZgu8h10liL0yv2zM5+2S8AlGcKcVBsBQRLt5XTo2+hlGloTZQ4iWdrGiT7gxKfMCCZd0+OdpfNdvbE4H4nJ5Mvu9I3swvh4FC35ElSTydlXwBm5EtwJR8j8LCL/3DlhGUmEqbHUcgGg=
+	t=1742320939; cv=none; b=Nfb9dNQSyjRABViZXSS8dwokm0ArHw2YxxxnF4YV7msD3Jfybh4rU3nZRwyhh0H7BVjgd6dyT71oCgL57cnKDBsW1qVOcPkWSBCI7FVOz5MpNIFdIzCiU12WMSSkfWt9HooYyzsRcHwUh08+PTVMOWaQrJZxcFUnTVre1MguDf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742320939; c=relaxed/simple;
-	bh=ArXXFEcIIUZWHFEwv16mQadEjgmXy3MQ1e0LOZgVY60=;
+	bh=vE5+qH3TXp7vqXVeezqWNJ9F8OpjH3jzJMAo/m0FVkg=;
 	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BzZmYTMQ3bc7NGI5lAHn53lAY4nq7PFN4e426RHD4Xxsjmq1i1TAF9EzFI97DcLs4yGXuQY9sJNvXQTZOlgUP86Q8RbMK41eLGg+Q5UaS4A7mMom5wIL3fgX6EGDPN37sYcIxRgr+AfNHzstf5nmY44Rspoh3UyYJaSAOzfj6QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhD0AKe/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rgDZs6FzZQXrc5p7VAI0C+vtRispCr6umDrdAKDEwMaSoTNOQXUtdhHpLcVccaNQFY9M2sxQmhawJAYxqI9nVws6WYfW6m+l4QPUxWeMAi94jv+AsF1jPQWDkor/8r1/vNrC/qlybqBPNnn9sxqIiQV65EL2/z8Wp/uY6mTu7zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxBaxjJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhD0AKe/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B8EC4CEF3;
-	Tue, 18 Mar 2025 18:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxBaxjJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD61C4CEEE;
+	Tue, 18 Mar 2025 18:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742320939;
-	bh=ArXXFEcIIUZWHFEwv16mQadEjgmXy3MQ1e0LOZgVY60=;
+	s=k20201202; t=1742320937;
+	bh=vE5+qH3TXp7vqXVeezqWNJ9F8OpjH3jzJMAo/m0FVkg=;
 	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=XhD0AKe/Ax953VfGl7xzvsrt5mZlUcmSA352EjjUIHt/M5a8F3y1dFbBFo8fAUSR/
-	 b4dk8mBbDQJrxw1NRfUeyEtvpO9leFmW4eQi+MtJLo3Ju0PQPNmlTxq0IDefpPTcc9
-	 uAqSovRHfv3O+bsPVloFpbAn1q0jaJQkmWwqfNSXfvrde1S961kvjXziwnLJzZ2wBl
-	 pSNWIGkVuYgu4zJvT6/dvEupOECNgUPGbc9ndVEnES9zDIN45wi+NNBSPOEFZKowYb
-	 75p/myzS5XjPcq/MHLGFz4A591FS4tfaMK/OAuPvxPQ4gWUngUOzK44xzjRdA/ukA+
-	 OvKjFZ5aUIi9w==
+	b=DxBaxjJ9ruFnbcGcbqjvz2vUG7fp1da51MoxwaLhhrY6wliuBXMm42NMd0KX2mXb4
+	 A7PkqkTycKfRAk3v4C9fIjbLNDrsuU2SIOCfoQ7jwqbE66z+4sA1QoAHL3OE9A2us8
+	 iAHizeXdmuPxh7G3eZAsBgTGKGdXKlT02fWAqsHrJ5U7FuW147rCrz7brpTOVMKdwO
+	 kb/udSbbHEtdtoSFButFgkj91vJXR77A73308rX5e5O7bT902tiQfrJW7jRjAjP/h5
+	 aQsvvxe0aT3YNT5Mspkk5Ld954z1Uh16tTIIn+46QsOs1O/KJ1hkVc/TD5e0nnGChc
+	 kNm8W/QzBUm9g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, 
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
- Stephen Brennan <stephen.s.brennan@oracle.com>, 
- James Clark <james.clark@linaro.org>, Yunseong Kim <yskelg@gmail.com>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20250318043151.137973-1-irogers@google.com>
-References: <20250318043151.137973-1-irogers@google.com>
-Subject: Re: [PATCH v2 0/3] dso__data asan and test fixes
-Message-Id: <174232093858.2542685.4665922116149996453.b4-ty@kernel.org>
-Date: Tue, 18 Mar 2025 11:02:18 -0700
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250312001841.1515779-1-irogers@google.com>
+References: <20250312001841.1515779-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf tests diff: Fixes to variable expansion and
+ stdout
+Message-Id: <174232093760.2542685.11014481276305317263.b4-ty@kernel.org>
+Date: Tue, 18 Mar 2025 11:02:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,16 +50,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 17 Mar 2025 21:31:48 -0700, Ian Rogers wrote:
-> The dso__data logic could deadlock with itself when build with asan or
-> reference count checking due to trying to recurively take a
-> non-recursive mutex. Use clang's thread safety analysis to find/fix
-> the problem. Running the tests would fail with -F no-fork mode as a
-> file descriptor wasn't cleaned up.
+On Tue, 11 Mar 2025 17:18:41 -0700, Ian Rogers wrote:
+> When make_data fails its error message needs to go to stderr rather
+> than stdout and the stdout value is captured in a variable.  Quote the
+> $err value so that it is always a valid input for test.  This error is
+> commonly encountered if no sample data is gathered by the test.
 > 
-> v2: Remove an unnecessary if as suggested by Namhyung.
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
