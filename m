@@ -1,61 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8486A2144A6;
-	Tue, 18 Mar 2025 18:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAACC1531E1;
+	Tue, 18 Mar 2025 19:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742322961; cv=none; b=Ud7ttgJe4zIEwJo74npM0GZ9ijKpZRQ6/JpsU7yq4qH3IoBIujrser5tkxrzLS9NyOWsObV3PeudZdZ6EEuuMFJvRqNYrfrJyzpe9GDnd7l0VwWzIxXMEHXJGbIiF5ItAGU6OuCqw+aLGeJsHkS3UDw2M6ndG4jtdtsEl3N8i1Q=
+	t=1742324663; cv=none; b=kavPx6uzWfs1VZtsdlSfJ9/ykSThLnOP9JumzpNgIUj0Yi0HclCk/hieAd/ejMosrfQ7QIYsivhCTzAOpjZlbPTXsdh0Suf0SCamRRzmllXU4cDWkhNPdGBtwiUj/TDZ8GPLuypVh7s/4mBy7CqfpWPhtUFknkMJdhItlZ72P+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742322961; c=relaxed/simple;
-	bh=pwoLy758tJWHhrF4rsg554mdoSJp4CwDBOkScT2rZfs=;
+	s=arc-20240116; t=1742324663; c=relaxed/simple;
+	bh=q8oOp41cHl33YfGvOaDk6/xbHYWsX2yx6+8wUa0yDHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=coC6mJEWlkOCblyczmitxEsIwhYYnkQ1C34MXAUciwEDP5mxTNbpBb06fAnwO8h/xFepIH0m0MuLAHR23rgmKxwTetlXu5K3dOWrBFBLnzS33HiPPTbQDyaFaGMZo5Ef4UoFE+8uktIjyqHXP+bKEGkpkQV9x4RRw42GYqrtlNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGIlcnf0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uuaQHkQ0j9iushXNRNmrgNhrfp87LXdOZixhcvb8svELO4kUP2jxLM+FUZ9L3fLPv01hHDLmQxKkSF+qpvFLFCfspsqNJP1jHGW79hjywVCz1lhOiwL2qYkBYyaOJSnMMywlIBmIq19ESrTcbhscAoWpYXfTPoFP3qbr3lby+TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEJkeNyn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGIlcnf0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50958C4CEEE;
-	Tue, 18 Mar 2025 18:35:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEJkeNyn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9514CC4CEDD;
+	Tue, 18 Mar 2025 19:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742322961;
-	bh=pwoLy758tJWHhrF4rsg554mdoSJp4CwDBOkScT2rZfs=;
+	s=k20201202; t=1742324663;
+	bh=q8oOp41cHl33YfGvOaDk6/xbHYWsX2yx6+8wUa0yDHg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGIlcnf0XAs7uNt/KYI82slLCMCem5pYXQZ/akHFyMfFVheXjPEFbFWSseIpLOB1Z
-	 bFHBoXkOPL1xAWqjK6hLiron4SjTFIY4Km49fPSHxbmnZCyucg+l5URG2zWjZ8WWVn
-	 nxEvIIPd1ObqKYKbofcRWZZq6G/vbheZ4sJMy7GZEhik4D/vDGnKlr5iPVbjnaaQmp
-	 S6mGJOPfv2hY2Pg2m1Ck7tvIlMqL1+Tf6MJVHsijrmAikXLoUqoLl5Q241NWWOjIgi
-	 lo9aaTlk1YoP9tJBldVo19eY3aDzMmnKJvpqgowOnNzOYxmJHOJA0lePpoLWn0H54L
-	 5TxtMPErN05Tw==
-Date: Tue, 18 Mar 2025 19:35:51 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	b=AEJkeNyn8a4ZrsAPb8DRhFNwI2U050JwzDRxBsfpmEsMpvv9kTob/NUbhpWIIugn5
+	 4cpDRdE+pN1pJ0QvBuA3rlcH/Qzak7OZmUVOQ5BJcb1p1n5t8NKwnY8YseJ93ATUyY
+	 YyUqD3Np3LvcrBf+IlDFQB90KXtymd4mnuXx1vS56gFlTS+M2KoOS09izWC03RpDVq
+	 x6MNaW+CiHXW5tYTHhFn+hC0XYyo//h7PKFixoeb0hJOK2BGF0WNebgpWo5u1gN2VQ
+	 LABMVs/ujFoE9y9A57vJnVsPaa+W/SSmd4GIumkSbtXvoLjYoZOZvE736hJPm49vd7
+	 vs3CB19du7HEw==
+Date: Tue, 18 Mar 2025 16:04:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v3 00/15] Prepare for new Intel Family numbers
-Message-ID: <Z9m9B7BmoItsfjiM@gmail.com>
-References: <20250219184133.816753-1-sohil.mehta@intel.com>
- <df1b95d7-c953-4757-b742-3072f65539f7@intel.com>
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 13/13] perf trace: Fix BTF memory leak
+Message-ID: <Z9nDtMyoARGiHAGg@x1>
+References: <20250318033150.119174-1-irogers@google.com>
+ <20250318033150.119174-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,41 +65,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df1b95d7-c953-4757-b742-3072f65539f7@intel.com>
+In-Reply-To: <20250318033150.119174-14-irogers@google.com>
 
-
-* Sohil Mehta <sohil.mehta@intel.com> wrote:
-
-> On 2/19/2025 10:41 AM, Sohil Mehta wrote:
-> > ---Summary---
-> > Mainstream Intel processors have been using Family 6 for a couple of decades.
-> > This series is an audit of all the arch/x86 Intel Family-model checks to get
-> > ready for the upcoming Family 18 and 19 models. It also converts the last
-> > reamaining Intel x86_model checks to VFM ones.
-> > 
-> > Patch 1-8 : Include Dave Hansen's Acked-by.
-> > Patch 9-15: Almost ready to merge but don't have review tags yet.
-> > 
+On Mon, Mar 17, 2025 at 08:31:50PM -0700, Ian Rogers wrote:
+> Add missing btf__free in trace__exit.
 > 
-> Is there any additional feedback?
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-trace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index a5f31472980b..d4bbb6a1e817 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -5339,6 +5339,12 @@ static void trace__exit(struct trace *trace)
+>  		zfree(&trace->syscalls.table);
+>  	}
+>  	zfree(&trace->perfconfig_events);
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +	if (trace->btf != NULL) {
 
-Looks mostly good to me.
+No need for the check, btf__free() does:
 
-> Most patches have review tags now or are simple enough that they might
-> not need one. Patch 11 can probably use another look.
+void btf__free(struct btf *btf)
+{
+        if (IS_ERR_OR_NULL(btf))
+                return;
 
-LGTM, but I've extended the Cc: list to make more people aware.
+Up to Namhyung to turn this into the simpler:
 
-(I did the same for some of the other patches that could use extra eyes.)
+	btf__free(trace->btf);
+	trace->btf = NULL;
 
-> Patch 14 is the only one that has a minor change. Seeking additional
-> input before spinning another revision.
-
-I've applied the first 13 patches to tip:x86/cpu to help move this 
-along. I fixed a handful of typos, but haven't noticed any functional 
-problems so far, so unless there's problems in -next this might be OK
-for the merge window. (Famous last words.)
-
-Thanks,
-
-	Ingo
+> +		btf__free(trace->btf);
+> +		trace->btf = NULL;
+> +	}
+> +#endif
+>  }
+>  
+>  #ifdef HAVE_BPF_SKEL
+> -- 
+> 2.49.0.rc1.451.g8f38331e32-goog
