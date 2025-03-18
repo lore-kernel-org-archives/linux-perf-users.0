@@ -1,70 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430DC2063EC
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 22:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB731F8750
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 22:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742336106; cv=none; b=UcujNRtXYRREGt6uWtie/OtYTIKGRyyWzNw7wIPc8012WZx0ZYW6kWmI0u5rCfU+BC8ZIO8OnNKYZDJKKi59GDYHPqbsTea0tzL0TNQLijmiR+AdQf2kVXXa9GFUSstEcnqrleiAJNkNO54IDUWZ/PAOOsjNG7EKECnVJ+Y/44M=
+	t=1742336109; cv=none; b=pgjnYJC3VaiOFMeUkK/HjgvcntvpWXbmr5DED4Io3owMfYIEAdRDl+VoTrg4JeHDwDhSugj6rpmeCvTAagelT/MIKSQ6d77A56D9ZtOeBw2IGtdDHtPKp/W4WlTGb9g/3SWagpxjkx901IVSWkip9p4Cia9xty6Ix8VPYlIeiDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742336106; c=relaxed/simple;
-	bh=dmIEFpP5Vzp4R9JKUVjUJzGbQUrzscJCuLnCPzsk7xQ=;
+	s=arc-20240116; t=1742336109; c=relaxed/simple;
+	bh=9o1sGRawhMhE83lK347pgMnxLiJgYGjZ2/N4XtWqcOU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UGuXtWIt2hPnWmGuRHvbyO5cSq+JB1t8e9p8VZ6/7oBwjbw+BJex3Fbbd9ZHt7bFtWa6kSNIqf+ilN8yJKHnzmR4zQlDL+B9WyTC+1tPxg8n1pckvUnzOcmhqAKNm1g0QagqUCiszlHTt7kPBw7aq9A3xizjnPgdArUKJoHeEew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ho9cpfUF; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=PUppysGU1VjsvMdPPN19FGppf/bw++WWlO4SwWmcidDcL1JFcQewBZy+t8UsihLPQiy93782rmcZFS/gcIdkioZvhJcn+kzXdQ0lfcYubwn4nqpIOhoWRsBoW1d6nn+qlBL458epWjduOe/uUSemh6oy2VjEjW1IEZl/82MJJvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hb9nAnIz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ho9cpfUF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hb9nAnIz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742336104;
+	s=mimecast20190719; t=1742336106;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rus6kw9XsBL2c9jHGjOEjWiY0U6NqB+KHNJXO9LzuQY=;
-	b=ho9cpfUFXwd2Fny0SJer32ZaUx+q33uj+lmS2tD3QdvQ2me7xjOJZXEeupEmu+Lr7RMCh4
-	Cqb3QAxhKlJnGqvQvAMOApin8AVYUgpKOFLpbKJg+WvWTyGok80T+DNxl6hHrEKMdWUZtL
-	YgLY9LjS91KD9ZAHq1BKMQWkangI6Aw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=nBMqWWSmA8jTU5EpZWWLoWgjipzuL5yIrBN/CPUgt3Q=;
+	b=hb9nAnIz2dx7GHzfrh9bINeANaWtOFXqEIlc9CGUmg1baDt6lmyxeAFUTZeQbF3EPe5BA5
+	HfnQFLo5mnWc0bA5+DxPvNx/zWa80qRWmSgWxTxa4/Ik2skQZBtyqmXkJjsvUTJX8hIlOe
+	3fNnHRYQVCdYjoVeUhvTP/igzVOPXho=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-nWZFiaPtPKKW-1Ree-9Qvw-1; Tue, 18 Mar 2025 18:15:02 -0400
-X-MC-Unique: nWZFiaPtPKKW-1Ree-9Qvw-1
-X-Mimecast-MFC-AGG-ID: nWZFiaPtPKKW-1Ree-9Qvw_1742336102
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912580843fso4728163f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 15:15:02 -0700 (PDT)
+ us-mta-657-6VjHgScBO56A_uOUmMRSSA-1; Tue, 18 Mar 2025 18:15:05 -0400
+X-MC-Unique: 6VjHgScBO56A_uOUmMRSSA-1
+X-Mimecast-MFC-AGG-ID: 6VjHgScBO56A_uOUmMRSSA_1742336104
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-391425471d6so2527105f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 15:15:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742336102; x=1742940902;
+        d=1e100.net; s=20230601; t=1742336104; x=1742940904;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Rus6kw9XsBL2c9jHGjOEjWiY0U6NqB+KHNJXO9LzuQY=;
-        b=SBim346ba17eAfm7eF1rPb+3mMtzRHxe2wSkgNgL+fibmGsBNmCakUXCiYBsHzyNbt
-         g448Ow99S96c/LoVXMFFGRLUGcv2Tyt55ypikQOFyOT0fkcHrJFWaOmB7r2pMjgiSkVA
-         P+zyonx4cBuCeb/epC4CHJz9poUHOQ2jp8kV4uCqGqsMA8QbrdOXe4o7JDIREDs3ubxO
-         gSBQrd0OahhO0ZkgwaizTUS7+rKNZg2uoetIJvNS8ZdCDGM3sVVZCyzYxIZUDkg/QJk/
-         EAILfbdd+sH9u9/9D1/Ol6IR+LGMJrZZpMvz5OW2o7lzJdzsv4IkE7+qRg+m4NquFc4C
-         S3gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrzBTtdN64Jj0h1Opbms7QstdJ+WIw33oPRCD3HOjJz2c4FvdE0bXGXp3ruOa/BLatkNGeJRaVBOJPPOwM2ECl@vger.kernel.org
-X-Gm-Message-State: AOJu0YztBeQLb9uOoCW44BUQPXFPw8AjabvZ0S16rIZY2DItM8JPML9g
-	lQ/NfSAH761yJDMLgrAhTVySUDhOyRP+z1hR+zewLZUgTS/cdGLbDy8oCkF2EAjzZoc1rphBcZJ
-	/F6vyKYjYgvREmEGYUXFjEFttWUnAwxlUv39w4biKICjlSTvVk80m+5QYhH8KGo2quu4=
-X-Gm-Gg: ASbGncu3gcH/qZ4Kak0bhMv/nAMphEikOBrl1WQC1Xa+Ca2ZHnrdsgu8Nspna8KZ8tz
-	wUElDMEg733JMa7MQYkaHneb15QbWyATwKZsAvCCsfYEKvODrW5MRnWR7fDYHgxZJFPL7XNdPLn
-	5K5MztI2A+TFbG4umFohxgc/Ne/b2ECmYLjU79vKvuXfaC3Yxcc1EKrgoThbguhIeBwL4m37/MG
-	HUw/+ZF0g8JQWZaynP+HpZsq9RTTnq5HComPsYUGDAep377YpVrM5kJHIbM90+fAYCowIy7xsDI
-	o6vfCf7aNFBE71P916T1rtgrsx/iMVR2szommK8CWoA/pba3QdsizOeASH4aHW058AU/xt+oeh6
-	D
-X-Received: by 2002:a05:6000:2a6:b0:390:e8e4:7e3e with SMTP id ffacd0b85a97d-399739b484emr390660f8f.6.1742336101722;
-        Tue, 18 Mar 2025 15:15:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEntLQOUh/Nv/fGa/REaqlKcGpxmQ8E/qfsoQdKPfCKbsE1Lco5OztnXYuajlRpXhgshxCpw==
-X-Received: by 2002:a05:6000:2a6:b0:390:e8e4:7e3e with SMTP id ffacd0b85a97d-399739b484emr390645f8f.6.1742336101239;
-        Tue, 18 Mar 2025 15:15:01 -0700 (PDT)
+        bh=nBMqWWSmA8jTU5EpZWWLoWgjipzuL5yIrBN/CPUgt3Q=;
+        b=bi5yGKmKPaMqB/kopWvdNjltPuRtwQvbVOUh0owdYfa+SELRvbKkSPI1AhlpCjV/mn
+         EuY3C2JVVpCjgno1PJ6mhTgHtBpgLLJo7aKrb38GKwNTr5pnPVf6l3s0/+WUn4U98P9x
+         oYMJWMf4I3PgHeLPYPEP+ThWncHJ83AxedROIiC8hg/YfX9Lp1cE2v5zlCiUFUh0H2Lu
+         OE6bpwiiTj1pVac/0mMrBu0MRFuEX8M5krbNGch9JILfHn9pNVQIDKR6sjLhCOQGY5xw
+         MQvj7lroaG+kL395RsbQD6HEhNgSUXYi5tBnzHovr6bKosJHWf6Dk5fXbnxkbM1T2e6S
+         iTbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAfUJuRtPOaVTkPj71C267YMUe5BNyNhrqj0GDZz9pdLrEqG8DBY8XLTyKwMR0T9y+JpqQgUJ28Yx2Hb2TyWZR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwETxUGg8rXG0PNoquXd+9iJJ8rPpaA9dQtyPKFrErTg+LyAvSx
+	qJWceW14BfoB4Hq0skh6u88AALalWuaoJhLXaOLdggiqA7NCAe2P0UVDyDqLbPGdelCTE6+J+MY
+	ymzOtFeIvX+cL+bY+6OV/v39wSAxyac43k/z7BqkDBn6MSnSASdCsSrG+YKXFLEbTVms=
+X-Gm-Gg: ASbGncuSi/DhUfv7IOIA/YHaev9dwJ9gs41UNRaX80w1PFVg3lvLjOXyBE9H3hsBI5o
+	5zjMWtdPg98YNGXvv0HWfGJolvNpmexzjU2ZQYMaO8ygqgv97Fvr3KZJeoGhBrNCk2h1sJ58zSx
+	2mek8CLPX7WYRp6wq7Lj9A7hdMKqfyBCoWY6GM0bACnEUyNawFfA+yGdnT/0jDaK6cedccGP6N+
+	pgutRkTS1ukKjbo0NzLp2X8Yis6JzmgXkfdHNbOxK8XmY1f6PB7YyKJYAojDgNduHgD7pIvE3sQ
+	AmgA9wEg63o0FloKfMk0B4paWwY/Nj9bIjhlMw/K3kelFm0ydgbkvkjzisR/xP1ISbICOQ6P9HQ
+	F
+X-Received: by 2002:a5d:47ca:0:b0:391:47d8:de3d with SMTP id ffacd0b85a97d-399739bc959mr401430f8f.16.1742336103813;
+        Tue, 18 Mar 2025 15:15:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVLQM9GTMoKWmV/uO8RTwFHvBEBsZ0wjM+Jkn+TplyWph+3HhlRdj3hBn4fJ8DOgl1P3A6xg==
+X-Received: by 2002:a5d:47ca:0:b0:391:47d8:de3d with SMTP id ffacd0b85a97d-399739bc959mr401407f8f.16.1742336103412;
+        Tue, 18 Mar 2025 15:15:03 -0700 (PDT)
 Received: from localhost (p200300cbc72d250094b54b7dad4afd0b.dip0.t-ipconnect.de. [2003:cb:c72d:2500:94b5:4b7d:ad4a:fd0b])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb318a8bsm19682001f8f.66.2025.03.18.15.15.00
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cbbc88f2sm19281199f8f.101.2025.03.18.15.15.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 15:15:00 -0700 (PDT)
+        Tue, 18 Mar 2025 15:15:02 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -89,9 +89,9 @@ Cc: linux-mm@kvack.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Tong Tiangen <tongtiangen@huawei.com>
-Subject: [PATCH v2 1/3] kernel/events/uprobes: pass VMA instead of MM to remove_breakpoint()
-Date: Tue, 18 Mar 2025 23:14:55 +0100
-Message-ID: <20250318221457.3055598-2-david@redhat.com>
+Subject: [PATCH v2 2/3] kernel/events/uprobes: pass VMA to set_swbp(), set_orig_insn() and uprobe_write_opcode()
+Date: Tue, 18 Mar 2025 23:14:56 +0100
+Message-ID: <20250318221457.3055598-3-david@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250318221457.3055598-1-david@redhat.com>
 References: <20250318221457.3055598-1-david@redhat.com>
@@ -103,77 +103,153 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-... and remove the "MM" argument from install_breakpoint(), because it
-can easily be derived from the VMA.
+We already have the VMA, no need to look it up using
+get_user_page_vma_remote(). We can now switch to
+get_user_pages_remote().
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- kernel/events/uprobes.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ arch/arm/probes/uprobes/core.c |  4 ++--
+ include/linux/uprobes.h        |  6 +++---
+ kernel/events/uprobes.c        | 33 +++++++++++++++++----------------
+ 3 files changed, 22 insertions(+), 21 deletions(-)
 
+diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
+index f5f790c6e5f89..885e0c5e8c20d 100644
+--- a/arch/arm/probes/uprobes/core.c
++++ b/arch/arm/probes/uprobes/core.c
+@@ -26,10 +26,10 @@ bool is_swbp_insn(uprobe_opcode_t *insn)
+ 		(UPROBE_SWBP_ARM_INSN & 0x0fffffff);
+ }
+ 
+-int set_swbp(struct arch_uprobe *auprobe, struct mm_struct *mm,
++int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 	     unsigned long vaddr)
+ {
+-	return uprobe_write_opcode(auprobe, mm, vaddr,
++	return uprobe_write_opcode(auprobe, vma, vaddr,
+ 		   __opcode_to_mem_arm(auprobe->bpinsn));
+ }
+ 
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b1df7d792fa16..288a42cc40baa 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -185,13 +185,13 @@ struct uprobes_state {
+ };
+ 
+ extern void __init uprobes_init(void);
+-extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+-extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
++extern int set_swbp(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
++extern int set_orig_insn(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
+ extern bool is_swbp_insn(uprobe_opcode_t *insn);
+ extern bool is_trap_insn(uprobe_opcode_t *insn);
+ extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+-extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
++extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
+ extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+ extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+ extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 5d6f3d9d29f44..259038d099819 100644
+index 259038d099819..ac17c16f65d63 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -1134,10 +1134,10 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	return ret;
- }
- 
--static int
--install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
--			struct vm_area_struct *vma, unsigned long vaddr)
-+static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
-+		unsigned long vaddr)
+@@ -474,19 +474,19 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+  *
+  * uprobe_write_opcode - write the opcode at a given virtual address.
+  * @auprobe: arch specific probepoint information.
+- * @mm: the probed process address space.
++ * @vma: the probed virtual memory area.
+  * @vaddr: the virtual address to store the opcode.
+  * @opcode: opcode to be written at @vaddr.
+  *
+  * Called with mm->mmap_lock held for read or write.
+  * Return 0 (success) or a negative errno.
+  */
+-int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+-			unsigned long vaddr, uprobe_opcode_t opcode)
++int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
++		unsigned long vaddr, uprobe_opcode_t opcode)
  {
 +	struct mm_struct *mm = vma->vm_mm;
- 	bool first_uprobe;
- 	int ret;
+ 	struct uprobe *uprobe;
+ 	struct page *old_page, *new_page;
+-	struct vm_area_struct *vma;
+ 	int ret, is_register, ref_ctr_updated = 0;
+ 	bool orig_page_huge = false;
+ 	unsigned int gup_flags = FOLL_FORCE;
+@@ -498,9 +498,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (is_register)
+ 		gup_flags |= FOLL_SPLIT_PMD;
+ 	/* Read the page with vaddr into memory */
+-	old_page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
+-	if (IS_ERR(old_page))
+-		return PTR_ERR(old_page);
++	ret = get_user_pages_remote(mm, vaddr, 1, gup_flags, &old_page, NULL);
++	if (ret != 1)
++		return ret;
  
-@@ -1162,9 +1162,11 @@ install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
- 	return ret;
- }
- 
--static int
--remove_breakpoint(struct uprobe *uprobe, struct mm_struct *mm, unsigned long vaddr)
-+static int remove_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
+ 	ret = verify_opcode(old_page, vaddr, &opcode);
+ 	if (ret <= 0)
+@@ -590,30 +590,31 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ /**
+  * set_swbp - store breakpoint at a given address.
+  * @auprobe: arch specific probepoint information.
+- * @mm: the probed process address space.
++ * @vma: the probed virtual memory area.
+  * @vaddr: the virtual address to insert the opcode.
+  *
+  * For mm @mm, store the breakpoint instruction at @vaddr.
+  * Return 0 (success) or a negative errno.
+  */
+-int __weak set_swbp(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr)
++int __weak set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
 +		unsigned long vaddr)
  {
-+	struct mm_struct *mm = vma->vm_mm;
-+
+-	return uprobe_write_opcode(auprobe, mm, vaddr, UPROBE_SWBP_INSN);
++	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN);
+ }
+ 
+ /**
+  * set_orig_insn - Restore the original instruction.
+- * @mm: the probed process address space.
++ * @vma: the probed virtual memory area.
+  * @auprobe: arch specific probepoint information.
+  * @vaddr: the virtual address to insert the opcode.
+  *
+  * For mm @mm, restore the original opcode (opcode) at @vaddr.
+  * Return 0 (success) or a negative errno.
+  */
+-int __weak
+-set_orig_insn(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr)
++int __weak set_orig_insn(struct arch_uprobe *auprobe,
++		struct vm_area_struct *vma, unsigned long vaddr)
+ {
+-	return uprobe_write_opcode(auprobe, mm, vaddr,
++	return uprobe_write_opcode(auprobe, vma, vaddr,
+ 			*(uprobe_opcode_t *)&auprobe->insn);
+ }
+ 
+@@ -1153,7 +1154,7 @@ static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
+ 	if (first_uprobe)
+ 		set_bit(MMF_HAS_UPROBES, &mm->flags);
+ 
+-	ret = set_swbp(&uprobe->arch, mm, vaddr);
++	ret = set_swbp(&uprobe->arch, vma, vaddr);
+ 	if (!ret)
+ 		clear_bit(MMF_RECALC_UPROBES, &mm->flags);
+ 	else if (first_uprobe)
+@@ -1168,7 +1169,7 @@ static int remove_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 
  	set_bit(MMF_RECALC_UPROBES, &mm->flags);
- 	return set_orig_insn(&uprobe->arch, mm, vaddr);
+-	return set_orig_insn(&uprobe->arch, mm, vaddr);
++	return set_orig_insn(&uprobe->arch, vma, vaddr);
  }
-@@ -1296,10 +1298,10 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
- 		if (is_register) {
- 			/* consult only the "caller", new consumer. */
- 			if (consumer_filter(new, mm))
--				err = install_breakpoint(uprobe, mm, vma, info->vaddr);
-+				err = install_breakpoint(uprobe, vma, info->vaddr);
- 		} else if (test_bit(MMF_HAS_UPROBES, &mm->flags)) {
- 			if (!filter_chain(uprobe, mm))
--				err |= remove_breakpoint(uprobe, mm, info->vaddr);
-+				err |= remove_breakpoint(uprobe, vma, info->vaddr);
- 		}
  
-  unlock:
-@@ -1472,7 +1474,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
- 			continue;
- 
- 		vaddr = offset_to_vaddr(vma, uprobe->offset);
--		err |= remove_breakpoint(uprobe, mm, vaddr);
-+		err |= remove_breakpoint(uprobe, vma, vaddr);
- 	}
- 	mmap_read_unlock(mm);
- 
-@@ -1610,7 +1612,7 @@ int uprobe_mmap(struct vm_area_struct *vma)
- 		if (!fatal_signal_pending(current) &&
- 		    filter_chain(uprobe, vma->vm_mm)) {
- 			unsigned long vaddr = offset_to_vaddr(vma, uprobe->offset);
--			install_breakpoint(uprobe, vma->vm_mm, vma, vaddr);
-+			install_breakpoint(uprobe, vma, vaddr);
- 		}
- 		put_uprobe(uprobe);
- 	}
+ struct map_info {
 -- 
 2.48.1
 
