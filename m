@@ -1,69 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81028189902
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 14:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36D1199E80
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 15:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742308342; cv=none; b=skm9GwXUsr0hj/lUGA5C6LqEmrE91rOUsF8cHMckBnDMgdohH4A8UqP00SyT5g7ScJSCz+zegKgq7XyL77Zz3I/Cy7G9S/iWOCG2N1/2fr1FltFyU7RBRkASbMpvgQ0wjOYMgLaHrMCJL6ZZxcmvLfhiJwuQzagR81dGGHEHaR0=
+	t=1742312683; cv=none; b=TcsaA4OsRJaWvCtiRyNhq054KXCpm4yUhwPywoIZxICQV7NTCxxEcaiaa3LDZYDkkOx3ZP+GUnfEDba/c3Cj7e73hKMREpJygThhGyVbQx8cSIj2gQzFCWUW+xwvL0NJdof3hKFmVS24I+CxE1crE8Y+9Y7a2v8wHV6nlJ/+Az8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742308342; c=relaxed/simple;
-	bh=ZxU9+VqjJRGENIQ07ahp8xXkjFU7fLknJOtMNk2m+pU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E/qJ+GU3R8Clj2VUCNaP2G9vBYIaB6lnHKIly7y02m6uuwKAIkwRyiw/ZMUlPTf6mvu38wiqGrKDUsdpZRmiHPDPaSpdq8dYyhhw2TWyU/ynm2ksNvohIGTsWpbQzYZdYJlYJVFxnnvyyk0EcG3D8ucTTF/TutTN9bzzmuiCdqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02E4313D5;
-	Tue, 18 Mar 2025 07:32:28 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B08503F694;
-	Tue, 18 Mar 2025 07:32:18 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org
-Cc: mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH Resend] perf/arm-cmn: Remove CMN-600 DTC domain special case
-Date: Tue, 18 Mar 2025 14:32:10 +0000
-Message-Id: <67985e39f53b56385d79a4f1264cf7f9cacedb58.1742308248.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
+	s=arc-20240116; t=1742312683; c=relaxed/simple;
+	bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcAZRpKARePMC6h2rkRPhjLInIj8pUMcK4kqF57SaP6T4UcbN0LTjZYw8ijCAi+LAbTgmigHLVr3sIeFaWcK3tX9s/XUWrDRqgrpqvw3dLzbF0K0mre9CgqyxiVRhdTMCS0zbqCW2qAZWXKaOaQbRp8QL850/BBo25RZ33sIwbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P63Ka1Zv; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P63Ka1Zv"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2240aad70f2so241135ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 08:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742312681; x=1742917481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+        b=P63Ka1ZvL3jn1K/Xb1CwGuil4qQe8uYtny/8i/bQc4VuCv76w/K4I9+qzZiHqh+9rz
+         oTMkBcztHJKlRuzJy+yVUts41vg05uzJXy+dxVCw86FzaG8RmEEZcv1Ph7t02RdAaQam
+         S8xVvQrMkQePQdWGOT/IqG3sKxq3aka4p9INxaY6Zp1lYbUrGaGg4dqGzYbJuEh/QTGu
+         Y3Fl/jVjs2V1FcgZaPZ9TECAwBp8NdIS6Tx49HDDhKg2HLH+yrTDbtqxwpTUYObvcEwS
+         flI5tuvVFdcWtD10Yl6CtjQ2eJyxP1Q+M9tKmOmbkpuWBSWmTv0t/nGvTvKHJnuF+DO9
+         wmpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742312681; x=1742917481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+        b=QTuatdDIgH9AJOCS+GbOhKc4M1qQTdsIVYFrs5CtBbzp+Or6969PaBQIhtbYtNdItm
+         q6ZkIBd0P/cmf3KujYe/VdmTmtRdQjZF2pX6VIgh47awV0iLvQSCtANisSSPk+E6rG/V
+         t2fsMZ5iPsmW+h4JZdhlNF3tgzoRrz+dLhHPXhFsMIdPS1/eDdP8ODYHnon28kCt2obx
+         iFUFVDNxWO2AN+ePshV4zJucB9yeXkJPYugeCrxuv5lFHR7UXauGSY1/vf19tso8rrcm
+         blCCby81Dh9e3XgWZ9V1V+uGmR7L7uPx2205rSdTys5JuHKGWCuhpYhf5x3PTcBaF8vc
+         mdKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVctuXjv5fvk6nJsiF/R0c3gcPEjFqkkmXnAMt+Rqpe/tr4Uq60CRRKW2/ICyWyi3xJHtFXx1NIzFXLGxtdkP0D@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbHgbmqDdagCTLHSvq6IyLphXVVvn75K1CECAezd6UNW1pe+/A
+	fuqlmivFaPGHX2J5opQ4ab7JToX1FlvaMm0IEv5fwV95k9UqveJ3/H4AsTnXQjXanp6HgW1XOGL
+	fiI93XSG8PHnm5txjZRFFUOp/RzNYltqhZkKn
+X-Gm-Gg: ASbGncuwegYs/m33SnQYEwtPFRXksEIAEuBPf2EadmvOfZXS5599gVtpHyyg2N/buUC
+	34Ep4qT6M4i+5J1EZgJcVS12nFf3xhExTkwMApxXNcf2ju84G6Jm4WSGav7aJVe6UI1JHdBqYFf
+	JQBv2ndnxF9wARq5rdmnxGscFunU8tXIydgBsu3g3KNz3Q/rPbqVj0bKg=
+X-Google-Smtp-Source: AGHT+IGh+2xZ8Ms2gVdUDlDHetxkQkzf082zJP7mKnLMc3K5OnEeuJwvj28gipqOgwHRgL1ljn+HQg5UkkyHg9KmHxU=
+X-Received: by 2002:a17:902:f605:b0:215:7ced:9d66 with SMTP id
+ d9443c01a7336-22631018e82mr2453915ad.10.1742312680721; Tue, 18 Mar 2025
+ 08:44:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAP-5=fUPz9R60Lay=k-0k5Q8C9AdStAMycOgsKqA5MJ_o7Ag3Q@mail.gmail.com>
+ <20250318021703.78297-1-yangfeng59949@163.com>
+In-Reply-To: <20250318021703.78297-1-yangfeng59949@163.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 18 Mar 2025 08:44:29 -0700
+X-Gm-Features: AQ5f1JpJbsNyitrKe8-u7csMc8VsRaKxiXcnfy9KlhRdj6oGLdKKOKioQE3_iLo
+Message-ID: <CAP-5=fWuavNZv-x-t=f5-suLZHAyU-1y6PFj7WYNf6O_-RW1Ng@mail.gmail.com>
+Subject: Re: [PATCH] perf kwork: Remove unreachable judgments
+To: Feng Yang <yangfeng59949@163.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The special case for trying to infer the DTC domain for DTC-adjacent
-nodes on CMN-600 is fragile and buggy - currently resulting in subtly
-messed up DTC counter allocation - and the theoretical benefit it
-offers to a tiny minority of use-cases arguably doesn't outweigh the
-inconsistency it offers to others anyway. Just get rid of it.
+On Mon, Mar 17, 2025 at 7:17=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
+rote:
+>
+> On Mon, 17 Mar 2025 08:44:45 -0700 Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Thu, Mar 13, 2025 at 8:10 PM Feng Yang <yangfeng59949@163.com> wrote=
+:
+> > >
+> > > From: Feng Yang <yangfeng@kylinos.cn>
+> > >
+> > > When s2[i] =3D '\0', if s1[i] !=3D '\0', it will be judged by ret,
+> > > and if s1[i] =3D '\0', it will be judegd by !s1[i].
+> > > So in reality, s2 [i] will never make a judgment
+> >
+> > Sgtm. Out of curiosity, was this tripping a compiler warning? If so,
+> > could you provide the details?
+> >
+> > Thanks,
+> > Ian
+>
+> There was no warning during compilation,
+> I just accidentally discovered it while testing and analyzing this code.
 
-Fixes: ab33c66fd8f1 ("perf/arm-cmn: Enable per-DTC counter allocation")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/arm-cmn.c | 7 -------
- 1 file changed, 7 deletions(-)
+Thanks!
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index ef959e66db7c..582f0c0e1783 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -2166,13 +2166,6 @@ static int arm_cmn_init_dtcs(struct arm_cmn *cmn)
- 
- 	cmn->xps = arm_cmn_node(cmn, CMN_TYPE_XP);
- 
--	if (cmn->part == PART_CMN600 && cmn->num_dtcs > 1) {
--		/* We do at least know that a DTC's XP must be in that DTC's domain */
--		dn = arm_cmn_node(cmn, CMN_TYPE_DTC);
--		for (int i = 0; i < cmn->num_dtcs; i++)
--			arm_cmn_node_to_xp(cmn, dn + i)->dtc = i;
--	}
--
- 	for (dn = cmn->dns; dn->type; dn++) {
- 		if (dn->type == CMN_TYPE_XP)
- 			continue;
--- 
-2.39.2.101.g768bb238c484.dirty
-
+Ian
