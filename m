@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5135695;
-	Tue, 18 Mar 2025 01:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB124C7C;
+	Tue, 18 Mar 2025 01:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261153; cv=none; b=QlBuTw4vSvlN19sKJg2EQH3M3+nm8LsZAJTbMvKv24LYVEqKXlXsOgKe9ZU6nKjSAMELnjJClAGajhkbKx5cSo5EmiDL5f6udRObs6uA+bhMrEDpzy4VkFnUaeYNLyv1tyF8MR1bcvZHquRLVUzb/WMYao7xBJ78uMQQTMzxX+s=
+	t=1742261566; cv=none; b=LSRaMM3hCyOJCLTzmPDvmTwQIYZ1zII4FWWzTeg9TtmSLCPdhwKiXprefF5V/CxwoMALI9Ci8Y5C4iIzo9pwPTKD5zBksdGG5dPtazPJ8Q/uFywS77RfejAmxQnediwsuzfwjKRkR+E8lUJhIh6/Rt9SIq0y5LknojJTr1huHOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261153; c=relaxed/simple;
-	bh=lHp6pVTpIUCiohc57v40NhyrnetRRIhdmVNH2agBigI=;
+	s=arc-20240116; t=1742261566; c=relaxed/simple;
+	bh=I4iPKp8yRcIiMxB58gWCtiaL8IYeA1sBlvQ8GEEr2ro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLumSJ69Fo5FxO/ZaLBdOiPext4t7rx4KSQ2sL9PHfHYFSMR/Gwls8R7Pm2CifBv0gtP8OwQ4YKDTHJnsf0ilcsQixT829F9+5u5bjlynZMUcDhLVV+CDC8lXUd8ZSsgmh9BYyW4KJaWVIThvgR7N4GPSEo98rFw9TqUHDaYb2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eax/o7HZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBTl6kJO4Hc//7IQD6N5pcxVVfDrhBz2bQo0WF9Uo4AFQF0oMWMWYCSRVdJaIauMmVszjn59ISG2gTTkiv1USSpxfM9U/TQkXfXT/UV5bu1PiLwtVSiWwGivwZ203e1XwebUjfroCokK0PxYP19FL5a0/cqr6YiE5TEdphT460g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bz+WNGpy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eax/o7HZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9926DC4CEE3;
-	Tue, 18 Mar 2025 01:25:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bz+WNGpy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627C7C4CEE3;
+	Tue, 18 Mar 2025 01:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742261152;
-	bh=lHp6pVTpIUCiohc57v40NhyrnetRRIhdmVNH2agBigI=;
+	s=k20201202; t=1742261565;
+	bh=I4iPKp8yRcIiMxB58gWCtiaL8IYeA1sBlvQ8GEEr2ro=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eax/o7HZmLBkHWEqi+qFIHOXNlwwCEZja10xAohwwM/pWjFrS0w2yHRihmz4dnZeu
-	 FG2cR2US6Hj6Ch9CKDFwehhlupFadbUP6qFI2mIZAvxgpj+f56CaLARqfmfM4QaxqM
-	 Yr5N3LK5w3HAFSCqbSBiIPVC/fUAvrgCYSdc7oaBQHBJqAAViZ1zTLjWM0gsD78f5W
-	 UKmupaiS1qa9iS22hW8Lvvti2f2l+m1AVKBaUbObc8XL9/q8XDBpun20chPWQFwub5
-	 7bIhJ9bFA6G3FSHaICxdMtyzCyanI+OtQhVttsoSx+Nj4STkqU5ncOg9m3zLdvcewF
-	 Az4I7kVv8D0KQ==
-Date: Mon, 17 Mar 2025 18:25:50 -0700
+	b=Bz+WNGpy3DiqOcNSNNKSA8b38dxVYc3AKHHXKeGHvmFuRzrqfemSycGz7KKUSarTu
+	 u/yEXl5UzRCGGcEZjurrDvFelS2yZHF0eGW1mjjPO61Pi39MW7RAruySMk4E95xlA+
+	 fvMaJ9ZTWMeVjN2dJs9OZ0EcStk5etqcreSsdrL1CE/ff+lnK4k70cY2T/MwxZnU0B
+	 ysNJlm+C1Xu91XE/hAQjiVNBQlKLMF26+SMreJsmd0gkwHC0LSVSCB9LDiv8a5zpqC
+	 fSy5qnQ+yagTYcbh4n/WUdcxNg03iFQrumm6gfExut7KVL6YxkcIwcPhEBZq2NraBr
+	 5lnxwxvYIX0hQ==
+Date: Mon, 17 Mar 2025 18:32:42 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Li Huafei <lihuafei1@huawei.com>
 Cc: acme@kernel.org, leo.yan@linux.dev, james.clark@linaro.org,
@@ -38,9 +38,11 @@ Cc: acme@kernel.org, leo.yan@linux.dev, james.clark@linaro.org,
 	adrian.hunter@intel.com, kan.liang@linux.intel.com,
 	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/7] Add data type profiling support for arm64
-Message-ID: <Z9jLngEKQpkZdqXQ@google.com>
+Subject: Re: [PATCH 1/7] perf annotate: Handle arm64 load and store
+ instructions
+Message-ID: <Z9jNOgbZj_ZCx-9-@google.com>
 References: <20250314162137.528204-1-lihuafei1@huawei.com>
+ <20250314162137.528204-2-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,160 +51,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250314162137.528204-1-lihuafei1@huawei.com>
+In-Reply-To: <20250314162137.528204-2-lihuafei1@huawei.com>
 
-Hello,
-
-On Sat, Mar 15, 2025 at 12:21:30AM +0800, Li Huafei wrote:
-> Hi,
+On Sat, Mar 15, 2025 at 12:21:31AM +0800, Li Huafei wrote:
+> Add ldst_ops to handle load and store instructions in order to parse
+> the data types and offsets associated with PMU events for memory access
+> instructions. There are many variants of load and store instructions in
+> ARM64, making it difficult to match all of these instruction names
+> completely. Therefore, only the instruction prefixes are matched. The
+> prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
+> matches atomic instructions, and 'prf' matches memory prefetch
+> instructions.
 > 
-> This patchset supports arm64 perf data type profiling. Data type
-> profiling was introduced by Namhyung [1], which associates PMU sampling
-> (here referring to memory access-related event sampling) with the
-> referenced data types, providing developers with an effective tool for
-> analyzing the impact of memory usage and layout. For more detailed
-> background, please refer to [2].
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> ---
+>  tools/perf/arch/arm64/annotate/instructions.c | 67 ++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
+> index d465d093e7eb..c212eb7341bd 100644
+> --- a/tools/perf/arch/arm64/annotate/instructions.c
+> +++ b/tools/perf/arch/arm64/annotate/instructions.c
+> @@ -6,7 +6,8 @@
+>  
+>  struct arm64_annotate {
+>  	regex_t call_insn,
+> -		jump_insn;
+> +		jump_insn,
+> +		ldst_insn; /* load and store instruction */
+>  };
+>  
+>  static int arm64_mov__parse(struct arch *arch __maybe_unused,
+> @@ -67,6 +68,57 @@ static struct ins_ops arm64_mov_ops = {
+>  	.scnprintf = mov__scnprintf,
+>  };
+>  
+> +static int arm64_ldst__parse(struct arch *arch __maybe_unused,
+> +			     struct ins_operands *ops,
+> +			     struct map_symbol *ms __maybe_unused,
+> +			     struct disasm_line *dl __maybe_unused)
+> +{
+> +	char *s, *target;
+> +
+> +	/*
+> +	 * The part starting from the memory access annotation '[' is parsed
+> +	 * as 'target', while the part before it is parsed as 'source'.
+> +	 */
+> +	target = s = strchr(ops->raw, '[');
+> +	if (!s)
+> +		return -1;
+> +
+> +	while (s > ops->raw && *s != ',')
+> +		--s;
+> +
+> +	if (s == ops->raw)
+> +		return -1;
+> +
+> +	*s = '\0';
+> +	ops->source.raw = strdup(ops->raw);
+> +
+> +	*s = ',';
+> +	if (!ops->source.raw)
+> +		return -1;
+> +
+> +	ops->target.raw = strdup(target);
+> +	if (!ops->target.raw) {
+> +		zfree(ops->source.raw);
 
-Thanks a lot for working on this!  I'm glad to see it running on more
-architectures!  I'll review and leave comments on each patch.
+I think you need 'zfree(&ops->source.raw)' instead.
+
+
+> +		return -1;
+> +	}
+> +	ops->target.mem_ref = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ldst__scnprintf(struct ins *ins, char *bf, size_t size,
+> +			   struct ins_operands *ops, int max_ins_name)
+> +{
+> +	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
+> +			 ops->source.name ?: ops->source.raw,
+> +			 ops->target.name ?: ops->target.raw);
+> +}
+> +
+> +static struct ins_ops arm64_ldst_ops = {
+> +	.parse	   = arm64_ldst__parse,
+> +	.scnprintf = ldst__scnprintf,
+> +};
+> +
+>  static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
+>  {
+>  	struct arm64_annotate *arm = arch->priv;
+> @@ -77,6 +129,8 @@ static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const
+>  		ops = &jump_ops;
+>  	else if (!regexec(&arm->call_insn, name, 2, match, 0))
+>  		ops = &call_ops;
+> +	else if (!regexec(&arm->ldst_insn, name, 2, match, 0))
+> +		ops = &arm64_ldst_ops;
+>  	else if (!strcmp(name, "ret"))
+>  		ops = &ret_ops;
+>  	else
+> @@ -107,6 +161,15 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+>  		      REG_EXTENDED);
+>  	if (err)
+>  		goto out_free_call;
+> +	/*
+> +	 * The ARM64 architecture has many variants of load/store instructions.
+> +	 * It is quite challenging to match all of them completely. Here, we
+> +	 * only match the prefixes of these instructions.
+> +	 */
+> +	err = regcomp(&arm->ldst_insn, "^(ld|st|cas|prf|swp)",
+> +		      REG_EXTENDED);
+> +	if (err)
+> +		goto out_free_jump;
+>  
+>  	arch->initialized = true;
+>  	arch->priv	  = arm;
+> @@ -117,6 +180,8 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+>  	arch->e_flags = 0;
+>  	return 0;
+>  
+> +out_free_jump:
+> +	regfree(&arm->jump_insn);
+>  out_free_call:
+>  	regfree(&arm->call_insn);
+
+It seems we leak these on the success path.  Probably we need arch
+annotate_exit() to free the resources.
 
 Thanks,
 Namhyung
 
-> 
-> Namhyung initially supported this feature only on x86, and later Athira
-> added support for it on powerpc [3]. Unlike the x86 implementation, the
-> powerpc implementation parses operands directly from raw instruction
-> code instead of using the results from assembler disassembly. As Athira
-> mentioned, this is mainly because not all memory access instructions on
-> powerpc have explicit memory reference assembler notations '()' in their
-> assembly code. On arm64, all memory access instructions have the
-> notation '[]', so my implementation is similar to x86, using the
-> disassembly results from objdump, llvm, or libcapstone, and parsing
-> based on strings. I believe this has the advantage of reusing the
-> complex instruction parsing logic of the assembler, but it may not
-> perform as well as raw instruction parsing in terms of efficiency.
-> 
-> Below is a brief description of this patchset:
->  - Patch 1 first identifies load and store instructions and provides a
->    parsing function.
->  - Patches 2-3 are refactoring patches. They primarily move the code for
->    extracting registers and offsets to specific architecture
->    implementations. Additionally, a new callback function
->    'extract_reg_offset' is introduced to avoid having too many
->    architecture-specific implementations in the function
->    'annotate_get_insn_location()'.
->  - Patch 4 implements the extract_reg_offset callback for arm64.
->    Currently, it does not support parsing instructions with register
->    pairs or register offsets in operands. Register pairs often appear in
->    stack push/pop instructions, and register offsets are common when
->    accessing per-CPU variables, both of which require special handling.
->  - Patch 5 adds support for instruction tracing on arm64, primarily
->    addressing the issue where DWARF does not generate information for
->    intermediate pointers in pointer chains.
->  - Patches 6-7 further enhance instruction tracing. Patch 6 supports
->    parsing accesses to global variables, while Patch 7 focuses on
->    resolving accesses to the kernel's current pointer.
-> 
-> There are still areas for improvement in the current implementation:
->  - Support more types of memory access instructions, such as those
->    involving register pairs and register offsets.
->  - Handle all data processing instructions (e.g., mov, add), as these
->    instructions can change the state of registers and may affect the
->    accuracy of instruction tracking.
->  - Supporting parsing of special memory access scenarios like per-CPU
->    variables and arrays.
-> 
-> The patch set is based on 6.14-rc6 (commit 80e54e84911a). After applying
-> this patch set, the date type profiling results on arm64 are as follows
-> (SPE support is required):
-> 
->  # perf mem record -a -K -- sleep 1
->  # perf annotate --data-type --type-stat --stdio
->  Only instruction-based sampling period is currently supported by Arm SPE.
->  Annotate data type stats:
->  total 556, ok 357 (64.2%), bad 199 (35.8%)
->  -----------------------------------------------------------
->          10 : no_sym
->          36 : no_insn_ops
->          65 : no_var
->          70 : no_typeinfo
->          18 : bad_offset
->          59 : insn_track
->  
->  Annotate type: 'struct rq' in [kernel.kallsyms] (29 samples):
->  ============================================================================
->   Percent     offset       size  field
->    100.00          0      0xe80  struct rq        {
->      0.00          0        0x4      raw_spinlock_t      __lock {
->      0.00          0        0x4          arch_spinlock_t raw_lock {
->      0.00          0        0x4              union        {
->      0.00          0        0x4                  atomic_t        val {
->      0.00          0        0x4                      int counter;
->                                                  };
->      0.00          0        0x2                  struct   {
->      0.00          0        0x1                      u8  locked;
->      0.00        0x1        0x1                      u8  pending;
->                                                  };
->      0.00          0        0x4                  struct   {
->      0.00          0        0x2                      u16 locked_pending;
->      0.00        0x2        0x2                      u16 tail;
->                                                  };
->                                              };
->                                          };
->                                      };
->     13.79        0x4        0x4      unsigned int        nr_running;
->     13.79        0x8        0x4      unsigned int        nr_numa_running;
->      0.00        0xc        0x4      unsigned int        nr_preferred_running;
->      0.00       0x10        0x4      unsigned int        numa_migrate_on;
->      0.00       0x18        0x8      long unsigned int   last_blocked_load_update_tick;
->      0.00       0x20        0x4      unsigned int        has_blocked_load;
->      0.00       0x40       0x20      call_single_data_t  nohz_csd {
->      0.00       0x40       0x10          struct __call_single_node       node {
->      0.00       0x40        0x8              struct llist_node   llist {
->      0.00       0x40        0x8                  struct llist_node*      next;
->                                              };
->      0.00       0x48        0x4              union        {
->      0.00       0x48        0x4                  unsigned int    u_flags;
->      0.00       0x48        0x4                  atomic_t        a_flags {
->      0.00       0x48        0x4                      int counter;
->                                                  };
->                                              };
->      ...
-> 
-> Thanks,
-> Huafei
-> 
-> [1] https://lore.kernel.org/lkml/20231213001323.718046-1-namhyung@kernel.org/
-> [2] https://lwn.net/Articles/955709/
-> [3] https://lore.kernel.org/all/20240718084358.72242-1-atrajeev@linux.vnet.ibm.com/#r
-> 
-> Li Huafei (7):
->   perf annotate: Handle arm64 load and store instructions
->   perf annotate: Advance the mem_ref check to mov__parse()
->   perf annotate: Add 'extract_reg_offset' callback function to extract
->     register number and access offset
->   perf annotate: Support for the 'extract_reg_offset' callback function
->     in arm64
->   perf annotate-data: Support instruction tracking for arm64
->   perf annotate-data: Handle arm64 global variable access
->   perf annotate-data: Handle the access to the 'current' pointer on
->     arm64
-> 
->  tools/perf/arch/arm64/annotate/instructions.c | 302 +++++++++++++++++-
->  .../perf/arch/powerpc/annotate/instructions.c |  10 +
->  tools/perf/arch/x86/annotate/instructions.c   |  99 ++++++
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/annotate-data.c               |  23 +-
->  tools/perf/util/annotate-data.h               |   4 +-
->  tools/perf/util/annotate.c                    | 112 +------
->  tools/perf/util/disasm.c                      |  14 +
->  tools/perf/util/disasm.h                      |   4 +
->  tools/perf/util/dwarf-regs-arm64.c            |  25 ++
->  tools/perf/util/include/dwarf-regs.h          |   7 +
->  11 files changed, 490 insertions(+), 111 deletions(-)
->  create mode 100644 tools/perf/util/dwarf-regs-arm64.c
-> 
+
+>  out_free_arm:
 > -- 
 > 2.25.1
 > 
