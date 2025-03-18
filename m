@@ -1,57 +1,59 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469611CEAD6
-	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DD31D88DB
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 03:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742268738; cv=none; b=am05FqVBiHkUkPk1g74V5mb2rpCyxv47mBHMKIllruhLBlahJYCza4HOGm/WuedepqQHPxP/mu3APDlkTPryQceqhSASAQdV8+QyUddAbLXt7kLxeyQ8OUwac4PWYFwf4NdQpUs38yJMLO1FgysYOMR0Bwwe4xSb7qHEaUH/Q4g=
+	t=1742268740; cv=none; b=VdStneSU6yqCo7wGAD4tB8gdYvxhms2SuX1ZSop9J1PqKSAlaqJqyAHb4v4Q8BdsvG/plEgAoeCMBz+710jOwXW8s+a7OO5Cq9Vysg28S/l1zc0Ek6l0oh2Z5uwg7Vo96lYCXRlO3FGSK2b83UGCv800Xt3IJAgqE90S/0G0Za8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742268738; c=relaxed/simple;
-	bh=qA+1rn0lTZtkVVRz5dknjvMwBYG3fjJF4hzraRMd7UE=;
+	s=arc-20240116; t=1742268740; c=relaxed/simple;
+	bh=/+amWOIQf4AYf0dNSCSGxeQx9lPAINUCD9cqk1hu0DU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=H9ILTErnGHDBQvRnj7eefLA8rXVU9xLjrUSePU0nVDuPmqnCg+stHpiwIIttu8BOCMqgF8/sSRSSktXglP0L4stOJy+ierllrQZx6grNWFjh6g/nYYXuM8jWvm+I1gVYJxnV+dsFsNynZBmjzjwXAEbT16PoP086md4jgFhTXN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1uRV5/4d; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=U+gRbPHwNzj8MK15rqRvAptR9xtfgQEAphVhr8JAtT3OeXD0Ikg7/3k/FgkmLuLOcZuzMpuW3cy7GS6SAq6CsbsZdRbAOFvTlPA66IFK7RWJ37MrX91ZyRU3dKsXa6uErbhGyL1McBvIxSUxWOipuqQ/EzS5K0PPSrUESd45BSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hAnj5/38; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1uRV5/4d"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6fecf913cb1so65651567b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hAnj5/38"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e549b6c54a0so8244499276.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Mar 2025 20:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742268734; x=1742873534; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HZEvb9rP0/Ou5uZ1kbtDkT305lhnhit7GPgOKo0wTf8=;
-        b=1uRV5/4dS4UAeEcrb1zchHtFUOk7d4YVTmTdfAB/FD096e6p891Ra1pY0mBo6KKLok
-         l4FarrsVbKe4jCfh/o6jozWlE6SXzb0g6vVrT7UOpKtNhorU3WMfUgu2KyPHHQzRlLl3
-         O4xw0G0nCp+BRL9jjM3zdYCAsYjslyVXk2ZqdTJxqBXr6TFfC5qVVDuivZ0Xd4iZhMZF
-         X3HHe/FXgsIxsvTcvIPMjB6lZvL8IjF6ltD7BwmIesNOmLJDKaMqvn/60n/SGNAKDOtZ
-         1EYkJvBIt4YY5ng0ms8fydScJJtzRe2bWzdkiD2vOrTHL2gB43rM3N50BN84p8wpkKn/
-         sBkA==
+        d=google.com; s=20230601; t=1742268737; x=1742873537; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jXG/G1oeYM9b/alKQuuagGTfIpZAhQmz/i2palTHGhI=;
+        b=hAnj5/386LL3fIlLsbuX6C5KhGk17g2uAP2Y1/L51uJpC5whHAxQBweRi9SLPWmK/p
+         wA9/r3mvgQgiRa/G6sJ2ji67AWlEKf3fLZtotl3wvF3h/OaWcJPVG9AofKb38wqNS7EU
+         4JnufcbfUnY62Ee9XbPJ7Lu6lgySan6Qd/Do2q5dCwYQtVmIZKv88YVw9/vLctBYAfOH
+         gZ7sI9APNoWMNim5Iqjv89mkF51LrETu689+2B9+ss7ofOd3s3rg2NSPBsnUxZawlQIE
+         q+xvymXpZw/8Bdws01lkjibQeiEICZ8gQ9ZtWl7aBQs18hxASi0DC24gO/fUwij9h0sq
+         AJeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742268734; x=1742873534;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZEvb9rP0/Ou5uZ1kbtDkT305lhnhit7GPgOKo0wTf8=;
-        b=G8apR7GU240tjWSoxbqWX9etbqOSbgj87SyUOC2wdfcV9LeShqNrW8RViyE34IS5sj
-         NADLYqAmyL5twfOkxFJcZs+ZcLc8BKHv3iXYDTMpslUF36f4cI4tPLqcH7uh16LIUpOL
-         d1gBBfot8UdfR69YpBEuHJlyMrv8pJW5kkz877YJdU/KNj4FDOLgesjdJ8Z+6ywFtXFc
-         Y/1wrETLEkUPcOofv6jCdk/JFq1OILQpxnUAL0Wm6TDCk/EP5O+prK9j76dsotc4stxI
-         mRC4HQHCiIADCPiI2KpuFodwduFdozqdFzK2rmkdGek1pBErQKmm3CPfmgz5V/nroXhZ
-         WBbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhSfU4jBsv6NDUnAl6S3rW2p5UC/CglkIl1AB8wWH4GtgAvzTpmN/Z8of0VXVDTSa5ihFzo/STf3A2b/ZAV+4d@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTmrujGQwGdKm9nSqXmVu9cFXjAfYI7DTKe9oxEoGYAnkaIAyD
-	NeXfKLrlRTilFyvw9qmAKpHNlrwjjLh+3Kznok8qlsqdziNNpo5tk15NdbhUX0rXN+xRfLKWtcQ
-	iY9XQbg==
-X-Google-Smtp-Source: AGHT+IER6fnR9AvvAzl4yLV8Z9F4XaK0dfP3MnPgkW4XJ8tm86ClJfW9ouXzTMBqgm9jdWxbHmhtIlQjRsfi
+        d=1e100.net; s=20230601; t=1742268737; x=1742873537;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jXG/G1oeYM9b/alKQuuagGTfIpZAhQmz/i2palTHGhI=;
+        b=Rv0B/PCr5478ev3bvy0bCxJVJbNjKaque8hHQTwhCojiN8YLibSnxUe+utHV+ETw5j
+         cnBUVjajJjzpcU/L9X164IONBTf5jSsfM+xBUFQhu3BlmSCNUB+Q6i1PgwTCo4U/F6E7
+         ceNy51/JX0jISR5SDaXOLHsPTH3ss4aATc/b0Zmsn2QJpLPdOm3peTkrAx8kTdW3QTG9
+         3lWuamF5B2QQTZnOGVr6zfUxc+z8GC8I5MOSSPSTWAflaXU6bcUqBLUf78aG2u75mPS/
+         YYGVSnec4YO5JVL6oEGY63Cuo15R4Pc/dzXDmGpK2kMsljMHGqj1MQRyvRyraCp/EnNa
+         utZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKfMer4IjczlVhH8LxC81n0QWW0zQlvcNY3n2IPIdaVCeU3/FNbNpq8st8KSAPaSfS9LOdxU1BcJaM6NAWpx2@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv1F907rWyz0+CE+LKKcc+ezgUpB5zmB+FduJyS+Phbsu/bF2+
+	l4li4u0diiYAZkP4mctVapMLiwEQ4l6NCfIxDvGif+L2D0ZjVT8j6gBGTgilpsb86bgJSenAigM
+	FmWEsSw==
+X-Google-Smtp-Source: AGHT+IFK3ABK6U5HtYipz5jXgdpAxp1lGT0ca3WTUVrl7/FhJo74C6m9+ENmvrVwnJNqdMFmK+PzzxVIoq0T
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ef29:15ce:a42a:b69f])
- (user=irogers job=sendgmr) by 2002:a25:a4a9:0:b0:e5b:3241:79f7 with SMTP id
- 3f1490d57ef6-e63f64e00f2mr8113276.3.1742268733743; Mon, 17 Mar 2025 20:32:13
+ (user=irogers job=sendgmr) by 2002:a25:d801:0:b0:e60:89be:c33a with SMTP id
+ 3f1490d57ef6-e63f5bdea0cmr7986276.0.1742268736375; Mon, 17 Mar 2025 20:32:16
  -0700 (PDT)
-Date: Mon, 17 Mar 2025 20:31:45 -0700
+Date: Mon, 17 Mar 2025 20:31:46 -0700
 In-Reply-To: <20250318033150.119174-1-irogers@google.com>
-Message-Id: <20250318033150.119174-9-irogers@google.com>
+Message-Id: <20250318033150.119174-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +62,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318033150.119174-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v6 08/13] perf trace beauty: Add syscalltbl.sh generating all
- system call tables
+Subject: [PATCH v6 09/13] perf syscalltbl: Use lookup table containing
+ multiple architectures
 From: Ian Rogers <irogers@google.com>
 To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,339 +82,261 @@ To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
 	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rather than generating individual syscall header files generate a
-single trace/beauty/generated/syscalltbl.c. In a syscalltbls array
-have references to each architectures tables along with the
-corresponding e_machine. When the 32-bit or 64-bit table is ambiguous,
-match the perf binary's type. For ARM32 don't use the arm64 32-bit
-table which is smaller. EM_NONE is present for is no machine matches.
+Switch to use the lookup table containing all architectures rather
+than tables matching the perf binary.
 
-Conditionally compile the tables, only having the appropriate 32 and
-64-bit table. If ALL_SYSCALLTBL is defined all tables can be
-compiled.
+This fixes perf trace when executed on a 32-bit i386 binary on an
+x86-64 machine. Note in the following the system call names of the
+32-bit i386 binary as seen by an x86-64 perf.
 
-Add comment for noreturn column suggested by Arnd Bergmann:
-https://lore.kernel.org/lkml/d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com/
-and added in commit 9142be9e6443 ("x86/syscall: Mark exit[_group]
-syscall handlers __noreturn").
+Before:
+```
+         ? (         ): a.out/447296  ... [continued]: munmap())           =
+                                =3D 0
+     0.024 ( 0.001 ms): a.out/447296 recvfrom(ubuf: 0x2, size: 4160585708, =
+flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ERRQ=
+UEUE|NOSIGNAL|WAITFORONE|BATCH|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC|0=
+x91f80000, addr: 0xe30, addr_len: 0xffce438c) =3D 1475198976
+     0.042 ( 0.003 ms): a.out/447296 lgetxattr(name: "", value: 0x3, size: =
+34)                             =3D 4160344064
+     0.054 ( 0.003 ms): a.out/447296 dup2(oldfd: -134422744, newfd: 4)     =
+                                =3D -1 ENOENT (No such file or directory)
+     0.060 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct io=
+vec){.iov_base =3D (void *)0x2e646c2f6374652f,.iov_len =3D (__kernel_size_t=
+)7307199665335594867,}, vlen: 557056, pos_h: 4160585708) =3D 3
+     0.074 ( 0.004 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: =
+2)                              =3D 4160237568
+     0.080 ( 0.001 ms): a.out/447296 lstat(filename: "", statbuf: 0x193f6) =
+                                =3D 0
+     0.089 ( 0.007 ms): a.out/447296 preadv(fd: 4294967196, vec: (struct io=
+vec){.iov_base =3D (void *)0x3833692f62696c2f,.iov_len =3D (__kernel_size_t=
+)3276497845987585334,}, vlen: 557056, pos_h: 4160585708) =3D 3
+     0.097 ( 0.002 ms): a.out/447296 close(fd: 3</proc/447296/status>)     =
+                                =3D 512
+     0.103 ( 0.002 ms): a.out/447296 lgetxattr(name: "", value: 0x1, size: =
+2050)                           =3D 4157935616
+     0.107 ( 0.007 ms): a.out/447296 lgetxattr(pathname: "", name: "", valu=
+e: 0x5, size: 2066)             =3D 4158078976
+     0.116 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", valu=
+e: 0x1, size: 2066)             =3D 4159639552
+     0.121 ( 0.003 ms): a.out/447296 lgetxattr(pathname: "", name: "", valu=
+e: 0x3, size: 2066)             =3D 4160184320
+     0.129 ( 0.002 ms): a.out/447296 lgetxattr(pathname: "", name: "", valu=
+e: 0x3, size: 50)               =3D 4160196608
+     0.138 ( 0.001 ms): a.out/447296 lstat(filename: "")                   =
+                                =3D 0
+     0.145 ( 0.002 ms): a.out/447296 mq_timedreceive(mqdes: 4291706800, u_m=
+sg_ptr: 0xf7f9ea48, msg_len: 134616640, u_msg_prio: 0xf7fd7fec, u_abs_timeo=
+ut: (struct __kernel_timespec){.tv_sec =3D (__kernel_time64_t)-578174027777=
+317696,.tv_nsec =3D (long long int)4160349376,}) =3D 0
+     0.148 ( 0.001 ms): a.out/447296 mkdirat(dfd: -134617816, pathname: " =
+=EF=BF=BD=EF=BF=BD=EF=BF=BD =EF=BF=BD=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=
+=EF=BF=BD=EF=BF=BD=E2=96=92=EF=BF=BD=EF=BF=BD=EF=BF=BD", mode: IFREG|ISUID|=
+IRUSR|IWGRP|0xf7fd0000) =3D 447296
+     0.150 ( 0.001 ms): a.out/447296 process_vm_writev(pid: -134617812, lve=
+c: (struct iovec){.iov_base =3D (void *)0xf7f9e9c8f7f9e4c0,.iov_len =3D (__=
+kernel_size_t)4160349376,}, liovcnt: 4160588048, rvec: (struct iovec){}, ri=
+ovcnt: 4160585708, flags: 4291707352) =3D 0
+     0.197 ( 0.004 ms): a.out/447296 capget(header: 4160184320, dataptr: 81=
+92)                             =3D 0
+     0.202 ( 0.002 ms): a.out/447296 capget(header: 1448669184, dataptr: 40=
+96)                             =3D 0
+     0.208 ( 0.002 ms): a.out/447296 capget(header: 4160577536, dataptr: 81=
+92)                             =3D 0
+     0.220 ( 0.001 ms): a.out/447296 getxattr(pathname: "", name: "c=EF=BF=
+=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD", value: 0xf7f77e34, size:=
+ 1)  =3D 0
+     0.228 ( 0.005 ms): a.out/447296 fchmod(fd: -134729728, mode: IRUGO|IWU=
+GO|IFREG|IFIFO|ISVTX|IXUSR|0x10000) =3D 0
+     0.240 ( 0.009 ms): a.out/447296 preadv(fd: 4294967196, vec: 0x5658e008=
+, pos_h: 4160192052)            =3D 3
+     0.250 ( 0.008 ms): a.out/447296 close(fd: 3</proc/447296/status>)     =
+                                =3D 1436
+     0.260 ( 0.018 ms): a.out/447296 stat(filename: "", statbuf: 0xffce32ac=
+)                               =3D 1436
+     0.288 (1000.213 ms): a.out/447296 readlinkat(buf: 0xffce31d4, bufsiz: =
+4291703244)                       =3D 0
+```
+
+After:
+```
+         ? (         ): a.out/442930  ... [continued]: execve())           =
+                                =3D 0
+     0.023 ( 0.002 ms): a.out/442930 brk()                                 =
+                                =3D 0x57760000
+     0.052 ( 0.003 ms): a.out/442930 access(filename: 0xf7f5af28, mode: R) =
+                                =3D -1 ENOENT (No such file or directory)
+     0.059 ( 0.009 ms): a.out/442930 openat(dfd: CWD, filename: "/etc/ld.so=
+.cache", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+     0.078 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)     =
+                                =3D 0
+     0.087 ( 0.007 ms): a.out/442930 openat(dfd: CWD, filename: "/lib/i386-=
+linux-", flags: RDONLY|CLOEXEC|LARGEFILE) =3D 3
+     0.095 ( 0.002 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: =
+0xffbdbb70, count: 512)         =3D 512
+     0.135 ( 0.001 ms): a.out/442930 close(fd: 3</proc/442930/status>)     =
+                                =3D 0
+     0.148 ( 0.001 ms): a.out/442930 set_tid_address(tidptr: 0xf7f2b528)   =
+                                =3D 442930 (a.out)
+     0.150 ( 0.001 ms): a.out/442930 set_robust_list(head: 0xf7f2b52c, len:=
+ 12)                            =3D
+     0.196 ( 0.004 ms): a.out/442930 mprotect(start: 0xf7f03000, len: 8192,=
+ prot: READ)                    =3D 0
+     0.202 ( 0.002 ms): a.out/442930 mprotect(start: 0x5658e000, len: 4096,=
+ prot: READ)                    =3D 0
+     0.207 ( 0.002 ms): a.out/442930 mprotect(start: 0xf7f63000, len: 8192,=
+ prot: READ)                    =3D 0
+     0.230 ( 0.005 ms): a.out/442930 munmap(addr: 0xf7f10000, len: 103414) =
+                                =3D 0
+     0.244 ( 0.010 ms): a.out/442930 openat(dfd: CWD, filename: 0x5658d008)=
+                                =3D 3
+     0.255 ( 0.007 ms): a.out/442930 read(fd: 3</proc/442930/status>, buf: =
+0xffbdb67c, count: 4096)        =3D 1436
+     0.264 ( 0.018 ms): a.out/442930 write(fd: 1</dev/pts/4>, buf: , count:=
+ 1436)                          =3D 1436
+     0.292 (1000.173 ms): a.out/442930 clock_nanosleep(rqtp: { .tv_sec: 178=
+66546940376776704, .tv_nsec: 4159878336 }, rmtp: 0xffbdb59c) =3D 0
+  1000.478 (         ): a.out/442930 exit_group()                          =
+                                =3D ?
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Howard Chu <howardchu95@gmail.com>
 Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- tools/perf/Makefile.perf              |   9 +
- tools/perf/trace/beauty/syscalltbl.sh | 274 ++++++++++++++++++++++++++
- 2 files changed, 283 insertions(+)
- create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
+ tools/perf/util/syscalltbl.c | 89 ++++++++++++++++++++++++++----------
+ 1 file changed, 64 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d0b50ccc9d7b..f949ec72f3d2 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -559,6 +559,14 @@ beauty_ioctl_outdir := $(beauty_outdir)/ioctl
- # Create output directory if not already present
- $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
- 
-+syscall_array := $(beauty_outdir)/syscalltbl.c
-+syscall_tbl := $(srctree)/tools/perf/trace/beauty/syscalltbl.sh
-+syscall_tbl_data := $(srctree)/tools/scripts/syscall.tbl \
-+	$(wildcard $(srctree)/tools/perf/arch/*/entry/syscalls/syscall*.tbl)
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index 760ac4d0869f..4e6018e2e0b3 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -15,16 +15,39 @@
+ #include <string.h>
+ #include "string2.h"
+=20
+-#if __BITS_PER_LONG =3D=3D 64
+-  #include <asm/syscalls_64.h>
+-#else
+-  #include <asm/syscalls_32.h>
+-#endif
++#include "trace/beauty/generated/syscalltbl.c"
+=20
+-const char *syscalltbl__name(int e_machine __maybe_unused, int id)
++static const struct syscalltbl *find_table(int e_machine)
+ {
+-	if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
+-		return syscall_num_to_name[id];
++	static const struct syscalltbl *last_table;
++	static int last_table_machine =3D EM_NONE;
 +
-+$(syscall_array): $(syscall_tbl) $(syscall_tbl_data)
-+	$(Q)$(SHELL) '$(syscall_tbl)' $(srctree)/tools $@
++	/* Tables only exist for EM_SPARC. */
++	if (e_machine =3D=3D EM_SPARCV9)
++		e_machine =3D EM_SPARC;
 +
- fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
- fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
- 
-@@ -878,6 +886,7 @@ build-dir   = $(or $(__build-dir),.)
- 
- prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
- 	arm64-sysreg-defs \
-+	$(syscall_array) \
- 	$(fs_at_flags_array) \
- 	$(clone_flags_array) \
- 	$(drm_ioctl_array) \
-diff --git a/tools/perf/trace/beauty/syscalltbl.sh b/tools/perf/trace/beauty/syscalltbl.sh
-new file mode 100755
-index 000000000000..1199618dc178
---- /dev/null
-+++ b/tools/perf/trace/beauty/syscalltbl.sh
-@@ -0,0 +1,274 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Generate all syscall tables.
-+#
-+# Each line of the syscall table should have the following format:
-+#
-+# NR ABI NAME [NATIVE] [COMPAT [noreturn]]
-+#
-+# NR       syscall number
-+# ABI      ABI name
-+# NAME     syscall name
-+# NATIVE   native entry point (optional)
-+# COMPAT   compat entry point (optional)
-+# noreturn system call doesn't return (optional)
-+set -e
++	if (last_table_machine =3D=3D e_machine && last_table !=3D NULL)
++		return last_table;
 +
-+usage() {
-+       cat >&2 <<EOF
-+usage: $0 <TOOLS DIRECTORY> <OUTFILE>
++	for (size_t i =3D 0; i < ARRAY_SIZE(syscalltbls); i++) {
++		const struct syscalltbl *entry =3D &syscalltbls[i];
 +
-+  <TOOLS DIRECTORY>    path to kernel tools directory
-+  <OUTFILE>            output header file
-+EOF
-+       exit 1
++		if (entry->e_machine !=3D e_machine && entry->e_machine !=3D EM_NONE)
++			continue;
++
++		last_table =3D entry;
++		last_table_machine =3D e_machine;
++		return entry;
++	}
++	return NULL;
 +}
 +
-+if [ $# -ne 2 ]; then
-+       usage
-+fi
-+tools_dir=$1
-+outfile=$2
++const char *syscalltbl__name(int e_machine, int id)
++{
++	const struct syscalltbl *table =3D find_table(e_machine);
 +
-+build_tables() {
-+	infile="$1"
-+	outfile="$2"
-+	abis=$(echo "($3)" | tr ',' '|')
-+	e_machine="$4"
++	if (table && id >=3D 0 && id < table->num_to_name_len)
++		return table->num_to_name[id];
+ 	return NULL;
+ }
+=20
+@@ -41,38 +64,54 @@ static int syscallcmpname(const void *vkey, const void =
+*ventry)
+ 	return strcmp(key->name, key->tbl[*entry]);
+ }
+=20
+-int syscalltbl__id(int e_machine __maybe_unused, const char *name)
++int syscalltbl__id(int e_machine, const char *name)
+ {
+-	struct syscall_cmp_key key =3D {
+-		.name =3D name,
+-		.tbl =3D syscall_num_to_name,
+-	};
+-	const int *id =3D bsearch(&key, syscall_sorted_names,
+-				ARRAY_SIZE(syscall_sorted_names),
+-				sizeof(syscall_sorted_names[0]),
+-				syscallcmpname);
++	const struct syscalltbl *table =3D find_table(e_machine);
++	struct syscall_cmp_key key;
++	const uint16_t *id;
 +
-+	if [ ! -f "$infile" ]
-+	then
-+		echo "Missing file $infile"
-+		exit 1
-+	fi
-+	sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
-+	grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | sort -n > "$sorted_table"
++	if (!table)
++		return -1;
 +
-+	echo "static const char *const syscall_num_to_name_${e_machine}[] = {" >> "$outfile"
-+	# the params are: nr abi name entry compat
-+	# use _ for intentionally unused variables according to SC2034
-+	while read -r nr _ name _ _; do
-+		echo "	[$nr] = \"$name\"," >> "$outfile"
-+	done < "$sorted_table"
-+	echo "};" >> "$outfile"
++	key.name =3D name;
++	key.tbl =3D table->num_to_name;
++	id =3D bsearch(&key, table->sorted_names, table->sorted_names_len,
++		     sizeof(table->sorted_names[0]), syscallcmpname);
+=20
+ 	return id ? *id : -1;
+ }
+=20
+-int syscalltbl__num_idx(int e_machine __maybe_unused)
++int syscalltbl__num_idx(int e_machine)
+ {
+-	return ARRAY_SIZE(syscall_sorted_names);
++	const struct syscalltbl *table =3D find_table(e_machine);
 +
-+	echo "static const uint16_t syscall_sorted_names_${e_machine}[] = {" >> "$outfile"
++	if (!table)
++		return 0;
 +
-+	# When sorting by name, add a suffix of 0s upto 20 characters so that
-+	# system calls that differ with a numerical suffix don't sort before
-+	# those without. This default behavior of sort differs from that of
-+	# strcmp used at runtime. Use sed to strip the trailing 0s suffix
-+	# afterwards.
-+	grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | awk '{printf $3; for (i = length($3); i < 20; i++) { printf "0"; }; print " " $1}'| sort | sed 's/\([a-zA-Z1-9]\+\)0\+ \([0-9]\+\)/\1 \2/' > "$sorted_table"
-+	while read -r name nr; do
-+		echo "	$nr,	/* $name */" >> "$outfile"
-+	done < "$sorted_table"
-+	echo "};" >> "$outfile"
++	return table->sorted_names_len;
+ }
+=20
+-int syscalltbl__id_at_idx(int e_machine __maybe_unused, int idx)
++int syscalltbl__id_at_idx(int e_machine, int idx)
+ {
+-	return syscall_sorted_names[idx];
++	const struct syscalltbl *table =3D find_table(e_machine);
 +
-+	rm -f "$sorted_table"
-+}
++	if (!table)
++		return -1;
 +
-+rm -f "$outfile"
-+cat >> "$outfile" <<EOF
-+#include <elf.h>
-+#include <stdint.h>
-+#include <asm/bitsperlong.h>
-+#include <linux/kernel.h>
++	assert(idx >=3D 0 && idx < table->sorted_names_len);
++	return table->sorted_names[idx];
+ }
+=20
+-int syscalltbl__strglobmatch_next(int e_machine __maybe_unused, const char=
+ *syscall_glob, int *idx)
++int syscalltbl__strglobmatch_next(int e_machine, const char *syscall_glob,=
+ int *idx)
+ {
+-	for (int i =3D *idx + 1; i < (int)ARRAY_SIZE(syscall_sorted_names); ++i) =
+{
+-		const char *name =3D syscall_num_to_name[syscall_sorted_names[i]];
++	const struct syscalltbl *table =3D find_table(e_machine);
 +
-+struct syscalltbl {
-+       const char *const *num_to_name;
-+       const uint16_t *sorted_names;
-+       uint16_t e_machine;
-+       uint16_t num_to_name_len;
-+       uint16_t sorted_names_len;
-+};
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__alpha__)
-+EOF
-+build_tables "$tools_dir/perf/arch/alpha/entry/syscalls/syscall.tbl" "$outfile" common,64 EM_ALPHA
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__alpha__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
-+EOF
-+build_tables "$tools_dir/perf/arch/arm/entry/syscalls/syscall.tbl" "$outfile" common,32,oabi EM_ARM
-+build_tables "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfile" common,64,renameat,rlimit,memfd_secret EM_AARCH64
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__csky__)
-+EOF
-+build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32,csky,time32,stat64,rlimit EM_CSKY
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__csky__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-+EOF
-+build_tables "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfile" common,64,n64 EM_MIPS
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__hppa__)
-+#if __BITS_PER_LONG != 64
-+EOF
-+build_tables "$tools_dir/perf/arch/parisc/entry/syscalls/syscall.tbl" "$outfile" common,32 EM_PARISC
-+echo "#else" >> "$outfile"
-+build_tables "$tools_dir/perf/arch/parisc/entry/syscalls/syscall.tbl" "$outfile" common,64 EM_PARISC
-+cat >> "$outfile" <<EOF
-+#endif //__BITS_PER_LONG != 64
-+#endif // defined(ALL_SYSCALLTBL) || defined(__hppa__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__powerpc64__)
-+EOF
-+build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" "$outfile" common,32,nospu EM_PPC
-+build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" "$outfile" common,64,nospu EM_PPC64
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__powerpc64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__riscv)
-+#if __BITS_PER_LONG != 64
-+EOF
-+build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32,riscv,memfd_secret EM_RISCV
-+echo "#else" >> "$outfile"
-+build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,64,riscv,rlimit,memfd_secret EM_RISCV
-+cat >> "$outfile" <<EOF
-+#endif //__BITS_PER_LONG != 64
-+#endif // defined(ALL_SYSCALLTBL) || defined(__riscv)
-+#if defined(ALL_SYSCALLTBL) || defined(__s390x__)
-+EOF
-+build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl" "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__sh__)
-+EOF
-+build_tables "$tools_dir/perf/arch/sh/entry/syscalls/syscall.tbl" "$outfile" common,32 EM_SH
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__sh__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc__)
-+#if __BITS_PER_LONG != 64
-+EOF
-+build_tables "$tools_dir/perf/arch/sparc/entry/syscalls/syscall.tbl" "$outfile" common,32 EM_SPARC
-+echo "#else" >> "$outfile"
-+build_tables "$tools_dir/perf/arch/sparc/entry/syscalls/syscall.tbl" "$outfile" common,64 EM_SPARC
-+cat >> "$outfile" <<EOF
-+#endif //__BITS_PER_LONG != 64
-+#endif // defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-+EOF
-+build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tbl" "$outfile" common,32,i386 EM_386
-+build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tbl" "$outfile" common,64 EM_X86_64
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__xtensa__)
-+EOF
-+build_tables "$tools_dir/perf/arch/xtensa/entry/syscalls/syscall.tbl" "$outfile" common,32 EM_XTENSA
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__xtensa__)
-+
-+#if __BITS_PER_LONG != 64
-+EOF
-+build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,32 EM_NONE
-+echo "#else" >> "$outfile"
-+build_tables "$tools_dir/scripts/syscall.tbl" "$outfile" common,64 EM_NONE
-+echo "#endif //__BITS_PER_LONG != 64" >> "$outfile"
-+
-+build_outer_table() {
-+       e_machine=$1
-+       outfile="$2"
-+       cat >> "$outfile" <<EOF
-+       {
-+	      .num_to_name = syscall_num_to_name_$e_machine,
-+	      .sorted_names = syscall_sorted_names_$e_machine,
-+	      .e_machine = $e_machine,
-+	      .num_to_name_len = ARRAY_SIZE(syscall_num_to_name_$e_machine),
-+	      .sorted_names_len = ARRAY_SIZE(syscall_sorted_names_$e_machine),
-+       },
-+EOF
-+}
-+
-+cat >> "$outfile" <<EOF
-+static const struct syscalltbl syscalltbls[] = {
-+#if defined(ALL_SYSCALLTBL) || defined(__alpha__)
-+EOF
-+build_outer_table EM_ALPHA "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__alpha__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
-+EOF
-+build_outer_table EM_ARM "$outfile"
-+build_outer_table EM_AARCH64 "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__csky__)
-+EOF
-+build_outer_table EM_CSKY "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__csky__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-+EOF
-+build_outer_table EM_MIPS "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__hppa__)
-+EOF
-+build_outer_table EM_PARISC "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__hppa__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__powerpc64__)
-+EOF
-+build_outer_table EM_PPC "$outfile"
-+build_outer_table EM_PPC64 "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || defined(__powerpc64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__riscv)
-+EOF
-+build_outer_table EM_RISCV "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__riscv)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__s390x__)
-+EOF
-+build_outer_table EM_S390 "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__sh__)
-+EOF
-+build_outer_table EM_SH "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__sh__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc__)
-+EOF
-+build_outer_table EM_SPARC "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__sparc64__) || defined(__sparc__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-+EOF
-+build_outer_table EM_386 "$outfile"
-+build_outer_table EM_X86_64 "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-+
-+#if defined(ALL_SYSCALLTBL) || defined(__xtensa__)
-+EOF
-+build_outer_table EM_XTENSA "$outfile"
-+cat >> "$outfile" <<EOF
-+#endif // defined(ALL_SYSCALLTBL) || defined(__xtensa__)
-+EOF
-+build_outer_table EM_NONE "$outfile"
-+cat >> "$outfile" <<EOF
-+};
-+EOF
--- 
++	for (int i =3D *idx + 1; table && i < table->sorted_names_len; ++i) {
++		const char *name =3D table->num_to_name[table->sorted_names[i]];
+=20
+ 		if (strglobmatch(name, syscall_glob)) {
+ 			*idx =3D i;
+-			return syscall_sorted_names[i];
++			return table->sorted_names[i];
+ 		}
+ 	}
+=20
+--=20
 2.49.0.rc1.451.g8f38331e32-goog
 
