@@ -1,73 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9241E1DF4
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 12:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5C8372;
+	Wed, 19 Mar 2025 12:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385782; cv=none; b=gVJ5hsf9ljsP6FQX3WqXsQldQHQFARCkVc3DlMewpZn7JtUMhF4EMynPSP/XB/K3utZGp9cnWJ6QVNeRk13kVWBBsbx6896nScpWtpsT84T0I7RSuAeWVVaYroxjVU3EqVYvb8bBY7T7G9UAogTuImZmE/9fCKrYWI0IBADyFt4=
+	t=1742387293; cv=none; b=OGsgIzdeMCPCswndVC4zfTHBV6mKBegGMuwx6s+wXa2yLmtJlooI5BlCryGnxTukiLUzuj3IhTTqiIc9A00/m36UDF7aUOanlVp1CeJy93KOMcbU4IIjYYSv3ezJNx8p5UdXsH+NLzaEcE20l45/AtrPqdOV/VInAhgxyQ4VQ3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385782; c=relaxed/simple;
-	bh=0FwV0HNcL+vt4qpXO6jzr792i6b6LgV0sJ5JC4nVi0U=;
+	s=arc-20240116; t=1742387293; c=relaxed/simple;
+	bh=OPH5Nary7E9IdqycTXq/IeMpyCsF4bDGdCutnM0PKqo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RxKY2CfR8hoTZTq7uzGOMgg9bcKex6f2o581GI/LhbYz4UuW8A2F3VSIx18G/xan1y0EbCbu1xX2QF4DoL/iZV+7PkRgPx5R/xfjU1QwCIbLL0sifyaGTgeIMBXHBh4RpP/Vz8rpiLHXkwN13umgvJYqqpHuNg08lpbgLDAXchQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y20+15DA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=SkcTWllQaixFsXvV0wlP1z6lJT4eHVUdJ36s2RYi7x9u8//9fjEbvwkdjV2RJ3SyUtIvPoQghuNgqutNtf2HI/tsyhiODtyniu6D4YzhOhNYreNc3mg6rxOc8QKRz/KUDeLebYnisfyyidOiQT6GNcfwnvhx4rYRVBAtO97QfbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sEGh97zs; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y20+15DA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742385779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7gn15plHVRiqXpFBn0Z9q9dTxOPDKBEPCsHLFphLWXc=;
-	b=Y20+15DAQhAkFq3bvd7HKEgB0wHKYqiQcPn9ZtAlUqqQAYzSPTKiRUQvaRqE8r7Gof9Hgm
-	87+jiRYSjXGrPHczw+xZqy4KwY+8i2YPtcEpD08bf5eG2q9z+lqvBjT5u947CUNTL72+1M
-	QkaUrC4/Zy6/CLAy6+nQfCah4lCf6IE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629-SPDL-fy5Ora4Bmy7hpph4A-1; Wed, 19 Mar 2025 08:02:58 -0400
-X-MC-Unique: SPDL-fy5Ora4Bmy7hpph4A-1
-X-Mimecast-MFC-AGG-ID: SPDL-fy5Ora4Bmy7hpph4A_1742385777
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ced8c2eb7so32744605e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 05:02:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742385777; x=1742990577;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7gn15plHVRiqXpFBn0Z9q9dTxOPDKBEPCsHLFphLWXc=;
-        b=Ke55RYr2C4MUPLuvO7ejrll3laGftSWX6oM1PFM9HrnsBC2Z5xUmlDW4lk+oy5AQCd
-         P1VA7PNOUfMypcWdrw0eUwTi14z59y9vTWDq1/DuDQ6Nk7pjVIEV4cp5w8mVTtZ27Lnh
-         OEO6D98Dl7EpsPLyxmNJVdVWj3ndMyslB6GMjaPxsiXylwYfV8jK+/xgbH3Ph21x1kRL
-         0omcHEDKTpz9LWM06snlz858ZwODMnTWGN+qH8S670/J1Vr+i19b2FBcapedHEWZDfL+
-         5r13PuSwFGcPEayV7ZIHt5pTKKlaudKdHpnW4DeOuYhBLiSO67iXWbBSLVP5rNMH1thJ
-         haeA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2e+HvIBztWfCnrDAza+WzF7/FZFZhebp+QdoM+Tva9g9pNWIF7fpLJDvQ1JQWDchQBjbZTctoMUy8MzhHztMa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjjOupg+dH3l14w/CbizMSgxxm3xt5rI6+RulgM1A+xx9N5T8R
-	H+sglxS0jiUmnZ1ju2gxIu+VEz/YZWRFzk5qUAR3GJjVUDn/aDuPLvU7VGqXg/5awg77JO0c7iS
-	W+Cg5PQLUFebc0zU4vG4c60E35yXY6g8OmmrdOCCP7AWo6PyXXn09Sb3CLIo9lzPxvuA=
-X-Gm-Gg: ASbGncszKHscZahzk2OqG3ySmmUeXPDZ8lhKV5/s+N9AsPzRImjavYfguJIyNqPc1Yl
-	ZyAV1po1g4vWldHJB3Cjc/fY7jy2Je141rT9Wyb1hHQwGxdLKK9q2HtTbkmAIxsPZVUPL/KhQQT
-	IJtYlQpp29RISnGd+2e0hF4p5UlIvnoSJMeWj2MAqHywByGIo9nxiCUTQ+Wv+bvaFu6IHly0hSh
-	K+EM24nCJ8HA5ObXybuOXtxccZr/H/dgqKHZ9ZnHsU52p5jkKEAFyJSSBY808N7mm9c5l+U38ns
-	RT1/hI5Z6P//P29A7BjCMx2uEz/elFeWfMtzg8omMdedMq0mApe0/Q5TVmTBC7o70qj02ccqa0V
-	LMTYflq4Ci7Coyv867bySjvSNvk8aAcprUz7hgkoLr8g=
-X-Received: by 2002:a05:600c:46c6:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-43d43786292mr21442955e9.4.1742385775942;
-        Wed, 19 Mar 2025 05:02:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEO9wFO2nTkTUlJSs58/meqK0dfmIPHPe7ubDLeTE+LBbIu5UE13qcBy19o/yn3H77bmuGCZw==
-X-Received: by 2002:a05:600c:46c6:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-43d43786292mr21439295e9.4.1742385773180;
-        Wed, 19 Mar 2025 05:02:53 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:df00:67e8:5c3d:de72:4929? (p200300cbc705df0067e85c3dde724929.dip0.t-ipconnect.de. [2003:cb:c705:df00:67e8:5c3d:de72:4929])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d440ed4cbsm16960215e9.34.2025.03.19.05.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 05:02:52 -0700 (PDT)
-Message-ID: <d0f0cbb3-6284-4060-afdb-ea828b9e909d@redhat.com>
-Date: Wed, 19 Mar 2025 13:02:50 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sEGh97zs"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JCRvl5011881;
+	Wed, 19 Mar 2025 12:28:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=dvQbFM
+	sZkPWeGhu6y1+yueYG0WzOohNzsniNmgooJ3A=; b=sEGh97zsPB0L4k5xGPxZn4
+	uNrDlN/ZDMIkmbPIPqkaRQvA1ij6E/7mY/Lza+bWbIFgBZ5ZZM/u7D2lsVFa/qvY
+	R+++aCceShJchFNpZOw1LJHtEGTMroIvUd0WMw7yxEsPLqQr1CBu1E/eJ3vNDMlU
+	NlWRRQE6VIJ/+9cvirkkEHJFKXwS7gYPTqBKoa/BaiiyE2aWzEJ0HcM2G6dm49Ps
+	x9SDUVH9pXdAczT4CV78dG8h+DkPq0RZ1dGlWX9RheFzP+42Y8nyzWxzYpfxmJqW
+	b3lDH9c4teu5Y0W2b8jNXubZVj/cnsiMn+kEVjoLEek4kPo8g6S6Z89UpeCo7SzA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fwy20013-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 12:28:07 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52JCS6SM012830;
+	Wed, 19 Mar 2025 12:28:06 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fwy20010-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 12:28:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52JAQeYc005752;
+	Wed, 19 Mar 2025 12:28:05 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dpk2h4ak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 12:28:05 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52JCS2uf22872544
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Mar 2025 12:28:02 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 76F3D2004D;
+	Wed, 19 Mar 2025 12:28:02 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3AE092004B;
+	Wed, 19 Mar 2025 12:28:02 +0000 (GMT)
+Received: from [9.152.212.229] (unknown [9.152.212.229])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Mar 2025 12:28:02 +0000 (GMT)
+Message-ID: <552882a0-936d-439b-a5ed-b852bd39f9d6@linux.ibm.com>
+Date: Wed, 19 Mar 2025 13:28:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,98 +69,103 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] kernel/events/uprobes: uprobe_write_opcode()
- rewrite
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Tong Tiangen <tongtiangen@huawei.com>
-References: <20250318221457.3055598-1-david@redhat.com>
- <20250318221457.3055598-4-david@redhat.com>
- <20250319120028.GA26879@redhat.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] perf pmu: Handle memory failure in tool_pmu__new()
+To: James Clark <james.clark@linaro.org>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org, irogers@google.com
+References: <20250319092847.1192988-1-tmricht@linux.ibm.com>
+ <9f9c007a-78fe-4709-9063-eb4df72d4f63@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250319120028.GA26879@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <9f9c007a-78fe-4709-9063-eb4df72d4f63@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Tdb4LtLZuxUao68fjAk_iBdSp2ALa685
+X-Proofpoint-GUID: UM6ZQx76Gbsf5HBsZgBZeGSenWGzds2G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_04,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 mlxlogscore=918 suspectscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190085
 
-On 19.03.25 13:00, Oleg Nesterov wrote:
-> On 03/18, David Hildenbrand wrote:
+On 3/19/25 10:58, James Clark wrote:
+> 
+> 
+> On 19/03/2025 9:28 am, Thomas Richter wrote:
+>> On linux-next
+>> commit 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
+>> allocated PMU named "tool" dynamicly. However that allocation
+>> can fail and a NULL pointer is returned. That case is currently
+>> not handled and would result in an invalid address reference.
+>> Add a check for NULL pointer.
 >>
->> +	if (unlikely(!folio_test_anon(folio))) {
->> +		VM_WARN_ON_ONCE(is_register);
->> +		goto out;
->> +	}
+>> Fixes: 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Cc: Ian Rogers <irogers@google.com>
+>> Cc: James Clark <james.clark@linaro.org>
+>> ---
+>>   tools/perf/util/pmus.c     | 3 ++-
+>>   tools/perf/util/tool_pmu.c | 9 +++++++++
+>>   2 files changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>> index 9b5a63ecb249..b99292de7669 100644
+>> --- a/tools/perf/util/pmus.c
+>> +++ b/tools/perf/util/pmus.c
+>> @@ -265,7 +265,8 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+>>       if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
+>>           (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
+>>           tool_pmu = tool_pmu__new();
+>> -        list_add_tail(&tool_pmu->list, &other_pmus);
+>> +        if (tool_pmu)
+>> +            list_add_tail(&tool_pmu->list, &other_pmus);
+>>       }
+>>       if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
+>>           (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
+>> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+>> index b60ac390d52d..d764c4734be6 100644
+>> --- a/tools/perf/util/tool_pmu.c
+>> +++ b/tools/perf/util/tool_pmu.c
+>> @@ -495,12 +495,21 @@ struct perf_pmu *tool_pmu__new(void)
+>>   {
+>>       struct perf_pmu *tool = zalloc(sizeof(struct perf_pmu));
+>>   +    if (!tool)
+>> +        goto out;
+>>       tool->name = strdup("tool");
+>> +    if (!tool->name) {
+>> +        zfree(tool);
+>> +        tool = NULL;
 > 
-> Don't we need folio_put() before "goto out" ?
+> Hi Thomas,
+> 
+> zfree() already sets the thing to NULL but you need to pass a pointer to it:
+> 
+>   zfree(&tool);
+> 
+> Without doing that you only free the first u64 of the struct, which happens to be zero in this case so free() does nothing. Then zfree() sets the first u64 of the struct to zero which it already is.
+> 
+> With that fixed:
+> 
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> 
 > 
 
-Yes, thanks! ... as always, the result of some last-minute reshuffling :)
-
-> Other than that, for this series:
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> 
-
+Thanks for the finding. I'll post verion 2 soon.
 
 -- 
-Cheers,
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-David / dhildenb
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
