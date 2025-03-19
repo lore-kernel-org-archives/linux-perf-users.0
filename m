@@ -1,117 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1557F35942;
-	Wed, 19 Mar 2025 13:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F636255E44;
+	Wed, 19 Mar 2025 13:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391063; cv=none; b=S1eivqDI8edFJjbSvbgM75TfOhl8DLeSsw2cQCVunzVgHP61uP+PEYLMBZG7tqznwBhzBwHze8fjCznw6pEQkFiCtIXYGfmAFljK7cCr6EQ5AUus8OqOJaDmjMJMdSpqmgJYnoTPYr6NjmPKRvTcaRpomlARtFFZdpinaDFoCjU=
+	t=1742391173; cv=none; b=cvUoH6X9vlgURh+lCXZX050ZHJNIt4qqo27rpQWt/jTshQBW2Nf4Uz9uL6EPPBqGY6M671UMy3xwHVPZ7TLz6Np+r+DC2PH5JSD1FLe6MLX4+rYO1VloXOpKGG8oPH6P5ceO0JtpvKuxT2ezRwZx7EI58wukTzVxDtlERoO5BdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391063; c=relaxed/simple;
-	bh=0Epci9SDyt00rMVYsl2p86Xlmpbww68QfF792+rVcVw=;
+	s=arc-20240116; t=1742391173; c=relaxed/simple;
+	bh=UmbLkE3G+lImWSxYzI2cmejiT0+MhXgUb4SICK3ekoU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsD05TRHtS1uHpYatIz7E4obHihej9wWXs2zW9ppdzeso2MSO35KPD52VhzqbON4vPO3aD/3qFF5MoXqMIiC0XqrZq7cjjQGauOi1mKQZaeX+FCbtVZVKGv/Tm9vXg64/cUpqCAP47Eu4dOWoojkG/tQ0q0ek/xmV4QF6DBeWVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88026113E;
-	Wed, 19 Mar 2025 06:31:08 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F354A3F673;
-	Wed, 19 Mar 2025 06:30:59 -0700 (PDT)
-Date: Wed, 19 Mar 2025 13:30:55 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf build: Restore {0} initializer since GCC-15
-Message-ID: <20250319133055.GA3249206@e132581.arm.com>
-References: <20250319110454.3230687-1-leo.yan@arm.com>
- <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AamwK6/e3fkhANAG1zxcPYiml/Je38lt2QvkAAbfF41bgkMvvSEP52TiKEup+qvvkzWKFvf9kg4G3EQNU/s6/duzTVbcOiTIHUbBshMHC61hYzcga3Y8EGfzP0asdUzJg/WeBA1uCQlMUa8E1P1rSGabCwI9wUVhp/gl8u4yvIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7PLjoNx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7PLjoNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 162F6C4CEE9;
+	Wed, 19 Mar 2025 13:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742391173;
+	bh=UmbLkE3G+lImWSxYzI2cmejiT0+MhXgUb4SICK3ekoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i7PLjoNxeXyFkfFCxWxuKAMNTkMr/JU4cjlgnUl2p2aguKdlqPxjfHItXppQNIUI3
+	 duMcWd5cWAXRyaQXEARjGbGhnwSR0KLNoasHbonncomc1z4o+4T1sFuOYSxB5q5TL/
+	 iW37NWP134MUaADIHdvPS4eK7+9yMtqw04sUHt9a6Ygu/ojfo0rL+fRJDBfPUNqoJh
+	 THs27D1urlu6dx/g8WyQmBxBsDvpSEezWPRxnP9B3tKF/NF1UJkpl/rGM1mImruYXL
+	 Ilob95CevsfCaO8pS0pDdVaheWEmVpYYjSxNTvNOQ3ul4u7rZHlSIas1HuOwsw4Wra
+	 Jyel91WjgMh/g==
+Date: Wed, 19 Mar 2025 13:32:46 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
+	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
+Message-ID: <07499f3e-b730-444e-bd52-75bfaefef84f@sirena.org.uk>
+References: <20250318204841.373116-1-jeremy.linton@arm.com>
+ <20250318204841.373116-7-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="K9lkjfOgLHeIEjyd"
+Content-Disposition: inline
+In-Reply-To: <20250318204841.373116-7-jeremy.linton@arm.com>
+X-Cookie: Chairman of the Bored.
+
+
+--K9lkjfOgLHeIEjyd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 11:19:38AM +0000, James Clark wrote:
-> 
-> On 19/03/2025 11:04 am, Leo Yan wrote:
-> > GCC-15 release claims [1]:
-> > 
-> >   {0} initializer in C or C++ for unions no longer guarantees clearing
-> >   of the whole union (except for static storage duration initialization),
-> >   it just initializes the first union member to zero. If initialization
-> >   of the whole union including padding bits is desirable, use {} (valid
-> >   in C23 or C++) or use -fzero-init-padding-bits=unions option to
-> >   restore old GCC behavior.
-> > 
-> > This new behaviour might cause stale and unexpected data we defined in
-> > Perf.  Add the -fzero-init-padding-bits=unions option for entirely
-> > zeroing union structures.
-> > 
-> 
-> Do we need this? I don't see any unions initialized in that way. In fact
-> there is only one struct initialized with {0}, the other handful are char*s
-> but I don't think either are affected.
+On Tue, Mar 18, 2025 at 03:48:40PM -0500, Jeremy Linton wrote:
+> The uprobe_warn function is limited to the uprobe core,
+> but the functionality is useful to report arch specific errors.
+>=20
+> Drop the static so it can be used in those code paths.
 
-Though I did not found a straightforward case in Perf for initializing
-union with "{0}", the result I got:
+=2E..and also make use of it in the arm64 code.
 
-$ git grep -E "\{ *0 *\}" tools/perf/
-tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
-tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
-tools/perf/arch/x86/tests/intel-pt-test.c:      {1, {0}, 0, {INTEL_PT_PAD, 0, 0}, 0, 1 },
-tools/perf/arch/x86/tests/intel-pt-test.c:      {0, {0}, 0, {0, 0, 0}, 0, 0 },
-tools/perf/arch/x86/util/perf_regs.c:   char new_reg[SDT_REG_NAME_SIZE] = {0};
-tools/perf/arch/x86/util/perf_regs.c:   char prefix[3] = {0};
-tools/perf/builtin-kwork.c:             .nr_skipped_events   = { 0 },
-tools/perf/builtin-record.c:    u8 pad[8] = {0};
-tools/perf/python/twatch.py:                    print("cpu: {0}, pid: {1}, tid: {2} {3}".format(event.sample_cpu,
-tools/perf/tests/code-reading.c:        unsigned char buf1[BUFSZ] = {0};
-tools/perf/tests/code-reading.c:        unsigned char buf2[BUFSZ] = {0};
-tools/perf/util/bpf_counter.c:  struct bpf_map_info map_info = {0};
-tools/perf/util/bpf_kwork.c:    char name[MAX_KWORKNAME] = { 0 };
-tools/perf/util/bpf_skel/bperf_follower.bpf.c:  struct bperf_filter_value child_fval = { 0 };
-tools/perf/util/lzma.c: char buf[6] = { 0 };
-tools/perf/util/mem-events.c:bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
-tools/perf/util/mem-events.c:   char hit_miss[5] = {0};
-tools/perf/util/trace-event-scripting.c:        char xs[16] = {0};
-tools/perf/util/zlib.c: char buf[2] = { 0 };
+--K9lkjfOgLHeIEjyd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We can see the bpf structures (bpf_map_info/bperf_filter_value) are
-initialized with {0}.  For a more complex case, {0} is used for
-initialize a specific field in a structure (see the results in
-insn-x86.c and intel-pt-test.c).
+-----BEGIN PGP SIGNATURE-----
 
-> Adding options that allow people to add more non standard code doesn't feel
-> very portable or in the spirit of doing it the right way. Maybe there's an
-> argument that it guards against future mistakes, but it's not mentioned in
-> the commit message.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfax30ACgkQJNaLcl1U
+h9AkFQf/Y1q2Feg+KwP4cXtEJ9+aNY2Xsphb3PTa2oMFU3s3huFK2zT+Tw0wXrpB
+T6eywqTDqWTMi2JY07llFmpN77P3NCk/wKxM3P1wnrf4+u06SthNy8nbKyXGRL+q
+fljp81T5af2/Flj/OBFBGthbD7Dw8zRZjfn9TO1jR28NjsxcuARf7x1cX0pzQpTm
+GH9CJKjInhK3LpzmCHbMvj7l4bJ/P+bBATxHsvboTgnazmAlPN/KjEI4NlBzObhP
+n9nPZrAMVyMf4qF6q+BCOWs2rGEZ21PQFVzVzZoP8BeSwqwyq0VLvlvr7P5qQktq
+gJJDd73z2qAdKnm1HXmzg61mBGQifQ==
+=ChsK
+-----END PGP SIGNATURE-----
 
-I think Linux perf shares the same understanding with "we do expect
-initializers that always initialize the whole variable fully" (quote
-in [1]).  Furthermore, the reply mentioned:
-
- The exact same problem happens with "{ 0 }" as happens with "{ }".
- The bug is literally that some versions of clang seem to implement
- BOTH of these as "initialize the first member of the union", which
- then means that if the first member isn't the largest member, the
- rest of the union is entirely undefined.
-
-So I think it is reasonable to imposes a compiler option to make
-compiler's behavouir consistent.
-
-Thanks,
-Leo
-
-[1] https://www.spinics.net/lists/netdev/msg1007244.html
+--K9lkjfOgLHeIEjyd--
