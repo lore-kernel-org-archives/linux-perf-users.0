@@ -1,174 +1,144 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515FF2566CC;
-	Wed, 19 Mar 2025 09:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1934C20C46A
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 09:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742377666; cv=none; b=b8ZxWM4dgHgNUnoTvpT6b2u9iNJiuitpUCLNsBbuIp2Lj7QvTv2i5qPCHfZbbsdxH6OpHldZAyMc+Nn3SPkfYoXS4CM1t3mhi/nZdTOnmSHuR0L1zqCOn62HJvxVQIvT6KbB42aiDTn9MPDY02jSyziNwuWPYtP6+MzGWzLQSIE=
+	t=1742378299; cv=none; b=TsQ4+ZR3NivUEd3dvexDJi8nJmnRZsbSVzt7RZHdsybtb7sJxUtouhTybyiTM7BnVktjaj3KCgq0dYMDXgKn0NtvMRONSqsiOLYtNkREiLg+G1ovZ7pIT5Uaic7dFzSfrsGcDLRIeh0LEznMqRbL6CBbasKONCaBvmR4q3vsoCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742377666; c=relaxed/simple;
-	bh=GEjYP46691TzJJ8gbfyakXZjQK5z9OmyqU3rVbxsGmw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vu16uhX5ft8qEgk7h6rx2MhPu6zcBCvxwD+jX/TqLUk9/XSUZ7GE3llwjgoz4PlBTs4YHVnfVcOv0Zi0zQQEdjcQVxMaT64MAWXEQq4VLJBLzWuO7wwTph1evL8GOK9w7NMpeL7jFJyIlm3kbsPXH5t2UPKrXG4XLkRDOBGndIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOkLejXc; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742378299; c=relaxed/simple;
+	bh=USWnUdlqECdrR7Um+9d+S7qmu3tqiAL591URZ/mVzbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qvQz0158q9PGUMM0zzvYzVMSQpPTG0m8cn1fVLGV03EQo3gJ3jnk73mxvN4sKQa9v/tNYYK76nr3Klj+aSPbkHVmqWkwfxNvoMbJGcPrtdPAPc7wXzzyagB7+XNBFq4VM7clx6ki3SqhcmJy2pKdrOLabXSq2De0hgWul9w4zss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q9AMMj8M; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOkLejXc"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso31105465e9.0;
-        Wed, 19 Mar 2025 02:47:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q9AMMj8M"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso31182555e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 02:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742377662; x=1742982462; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
-        b=QOkLejXcWe01/J0I8RRG/trYJlGKf8FBe86lNHGxfOpKau/CdkSGWZtVgs8BPN25/Y
-         6C1KaIw2GtIrDzOx8KQfQ5vpJfLNkgVxeCaPJlXwE7enRem2pbUxQHXWHHL+h+395QRE
-         djK+8BeHfgz+C8w3QozzdBaey9CvIyDl7SlMeP4InCsPFmNEG+6fiaJSpkBFq4B5YGmG
-         Amx6+r7lzi2hL+B4lBmI0Iukkm+/pb168UVzqq+thV3ExyC4uNXFX6+gA3vyad/sPRoP
-         86mjEJc88sK/y7O0rsaZJHXA4KoWwF08BB43CAmDIV1n3TuoHKJKVpaSQu5Adqt6aGVg
-         ioGQ==
+        d=linaro.org; s=google; t=1742378296; x=1742983096; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2PqWUxX7LYlbsygC64qOjXpYerJEQjDp14rdLABmm2k=;
+        b=Q9AMMj8MjQ6Rd68Pvy9mda8QSo1qEANW18iZYDudBH4dm+Q4x1gMaTydjiLs5ig2vk
+         MX2chSuLbfzPCKCJzYascImL1feg25X8DpZMTigSAtJAQdMCaIF/5FYiXkXSwDo+tCgG
+         6bl544TxGsVDc7B8jLnftanl7szb7ZYdjXJdZJKvqBdeyqZdq4v3EOcfVsqstqXFVy9b
+         OE/06mmAFGDLx58CvhiNnT5lBjJpH+O7vCBJUi625gLpokqUjzWbE0XCe1pdIGrVK5h+
+         QMttB6xjfNv55pauaevNK8djQ3eXskkoD2HK5rV4FUTQDsRqGNmw2e68q/stmZEFeLvI
+         Zy5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742377662; x=1742982462;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20230601; t=1742378296; x=1742983096;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
-        b=AdrueQLVJH+0V1BefNeEhHO7W/yq21KvkS+XzPg8ntG+JMePb+yWWWtAAo216IsXMe
-         ign4i6z7qAGG9eq7TpnWScfxycv81lvP3tial0A8yTaAHirU6XlHCy3ZL1t3/oaPU8o9
-         eS3ghjCLBRQELvaSEZq55MRbCTiH2mjIDrkiSm/cFlrpNp836v/DxOWrnDBHYOmiDbUJ
-         MnxqK6U5w/p46t2OKO5dGlkAEoZm3bcHDtfJsLTCQFRcuIe0+0JKfedmy+N9qEoLJ7St
-         dgjicMBctsUojGG7fZGg/MIrQNSmNKEfOjgf+sfKoJQPfhVMT4/1RT+nRboATHljP7+n
-         1pWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoWCJZsTzYRHLW+ByOiqGnvZa2yuWH0ZCl/lZiLGo83nwWqENKyJlKiR0HOaq5hgwW1Fk=@vger.kernel.org, AJvYcCVEcEcvoPx0wiZHej4qC1tE27+RiIw9+4BQ6K+RbAMYfZHlWlvmvhuVTy4yKXeBjcFZCPE07XtCmzcL47hYh4nhDsM=@vger.kernel.org, AJvYcCVPEqLj7kSVhziFP1phmpa93p9lgs9HklOjKph1sHZEnWEScLUj9CeuGn4imZWj5S4C3phVu03l3PA3QvUH@vger.kernel.org, AJvYcCVg7JwYX78eaOO1zVDS8gc2nc8t6j8VcL0ZaVBEt7bHDRhw+GtcAxTo7dXSFa8ehYnfj2FL+WJ1fP4MsuS0fXLEGA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzotYN2Niwm0UDdwih3D8yqaWkyTqwId+BKR6uSNs2QKp0z8gPz
-	7iQozPuYVporF9bL7WDan2P8fA4hMYTTTwlnYEyM/cIk3kjEfrNu
-X-Gm-Gg: ASbGncsJghSC+Gpbo5PbdOnvXjPKms1Zo1DG3NTNao7ZzYXwe2uWH4ufRn9cvxOeAV6
-	iGEl9+zl+cceS2pbU6g+T08nzWbc9p5YNVBABsuUBSMeqgu3GcewqceDWmzUY8ZzySsshFWRh/i
-	N62Tp43KTIrqdhtM2mae1eQHif65/vm0n21nBHs+ZYFmMid6n3MkSP8uMYAnJcoqnwNNyxR5g01
-	uxCuj/U4BY1IPUmVv6FvpbpulzruaM9CV2+HeXNhS2EN4o/5aHQYn+0HDyf0yh5ETV+O7bEYBHG
-	9krxSHFvE/3GwESPyJJDK1I8OKDsLus=
-X-Google-Smtp-Source: AGHT+IF4OvZGanUh1jWZlL5uEktGdGZ5zMVRYf9shgP8va0gBvYxVKRQVQGxiDCBfvtWURNFZmoTug==
-X-Received: by 2002:a05:6000:2c7:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39973af9236mr1303964f8f.36.1742377662183;
-        Wed, 19 Mar 2025 02:47:42 -0700 (PDT)
-Received: from krava ([173.38.220.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b09sm20832843f8f.57.2025.03.19.02.47.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 02:47:41 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 19 Mar 2025 10:47:40 +0100
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <qmo@kernel.org>, Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
- from the ones detected when test-all.o builds
-Message-ID: <Z9qSvGTlMCzktlZJ@krava>
-References: <Z1mzpfAUi8zeiFOp@x1>
- <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
- <Z9hWqwvNQO0GqH09@google.com>
- <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
- <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
- <Z9oHGfAffX2Bfl7a@google.com>
+        bh=2PqWUxX7LYlbsygC64qOjXpYerJEQjDp14rdLABmm2k=;
+        b=fAbhuUrHszwXaD2wyJxiWTPYwgM+DTEHcPZm3U3DKkFgAGODyQY/drI8w99yxZcbmw
+         0wZwXZuZzE1w5AyovcaaDvC9QGI/I2SSxUU4qJqNppiB8edIOBx/gAXwHBJqqg/p4Jrn
+         bipqdYtmnKrIu9fflc+EPmb4fnjtSEf3KpBZJcVEF4WuxrtjD1BVVKUVu+kI5CMVrfU1
+         gZyC6e2iHsfevUENf974ISpDHKFeF6gyVUUY7b588jbG/U+kbunh5fEVQaYj1IEzto/l
+         cANNuKDc9O2v6HoXGFFtrbwr238bTHc+5qIDY+GDzYkyGhW/kJdjnZgaOZScpyt2aQzl
+         p9LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVENNauJbPxkwwq9Dbiq6j3uov4xHmOa87+ULdSDtT+cqEY+sIdCGAiVVzXatYgK6FjaoUJOy6MYCQu/ches2ZR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRCLLa7RqbpdY6Jp1rxNpnDB5iU5yKXcHlXpItWswJHryJ6uwY
+	SCTWoYm0BErIfpOCPrdOI0/fX1LnODtpLI3e7YH9ATqo1lW9V7YmIGLSSEAS6u4hUXz9OE2/Fmu
+	+
+X-Gm-Gg: ASbGncvYS/82NNOEery2jlVv8QvFzOsRNkzvaCs9fX4yGB3tu90aAYVVs/sbo/aje7h
+	FmDb1TooEbT7xRbf1z2e04oT2FxNporiBuzrnbpBAJVFi0/xTQw8Y/CXq7ltHJ5+IsPCh+g2Dpr
+	IYSr+AWdFiGaGd+Zi5q5TANs4rd7qiGDOoTpjtAPrcwmjEFwwO5C13gbZqlmTCUPTbnTETx2iWP
+	7rBGRSqLuyzKUBkW6zAeZT8KNNVu+9w1dX1NBgYuSbP17LePDanTurZe2e3aZZn1GmZs5JzpNZY
+	TbRFlpkB6kPnAltHOWKVjcWOsYG+My2dr3r6mbJ+MPu5wUxmvqUXRA==
+X-Google-Smtp-Source: AGHT+IHxkQSlupYMP4LYGGZIuEwlkxEtovdoMF1P/KgUdpQt8IWKUrUDhmouBZQv2CGhFtATx8RJEw==
+X-Received: by 2002:a5d:6481:0:b0:391:2c0c:126b with SMTP id ffacd0b85a97d-399739c93e8mr1589174f8f.23.1742378296293;
+        Wed, 19 Mar 2025 02:58:16 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.67.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c888167bsm20451233f8f.45.2025.03.19.02.58.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 02:58:15 -0700 (PDT)
+Message-ID: <9f9c007a-78fe-4709-9063-eb4df72d4f63@linaro.org>
+Date: Wed, 19 Mar 2025 09:58:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9oHGfAffX2Bfl7a@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf pmu: Handle memory failure in tool_pmu__new()
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com
+References: <20250319092847.1192988-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250319092847.1192988-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 18, 2025 at 04:51:53PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Mar 17, 2025 at 09:19:22PM +0000, Quentin Monnet wrote:
-> > 2025-03-17 10:16 UTC-0700 ~ Ian Rogers <irogers@google.com>
-> > > On Mon, Mar 17, 2025 at 10:06 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >>
-> > >> Hello,
-> > >>
-> > >> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
-> > >>> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
-> > >>> <acme@kernel.org> wrote:
-> > >>>>
-> > >>>> We have a tools/build/feature/test-all.c that has the most common set of
-> > >>>> features that perf uses and are expected to have its development files
-> > >>>> available when building perf.
-> > >>>>
-> > >>>> When we made libwunwind opt-in we forgot to remove them from the list of
-> > >>>> features that are assumed to be available when test-all.c builds, remove
-> > >>>> them.
-> > >>>>
-> > >>>> Before this patch:
-> > >>>>
-> > >>>>   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
-> > >>>>   feature-libunwind-aarch64=1
-> > >>>>   $
-> > >>>>
-> > >>>> Even tho this not being test built and those header files being
-> > >>>> available:
-> > >>>>
-> > >>>>   $ head -5 tools/build/feature/test-libunwind-aarch64.c
-> > >>>>   // SPDX-License-Identifier: GPL-2.0
-> > >>>>   #include <libunwind-aarch64.h>
-> > >>>>   #include <stdlib.h>
-> > >>>>
-> > >>>>   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
-> > >>>>   $
-> > >>>>
-> > >>>> After this patch:
-> > >>>>
-> > >>>>   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
-> > >>>>   $
-> > >>>>
-> > >>>> Now an audit on what is being enabled when test-all.c builds will be
-> > >>>> performed.
-> > >>>>
-> > >>>> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
-> > >>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > >>>> Cc: Ian Rogers <irogers@google.com>
-> > >>>> Cc: James Clark <james.clark@linaro.org>
-> > >>>> Cc: Jiri Olsa <jolsa@kernel.org>
-> > >>>> Cc: Kan Liang <kan.liang@linux.intel.com>
-> > >>>> Cc: Namhyung Kim <namhyung@kernel.org>
-> > >>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > >>>
-> > >>> Sorry for the delay on this.
-> > >>>
-> > >>> Reviewed-by: Ian Rogers <irogers@google.com>
-> > >>
-> > >> Thanks for the review, but I think this part is used by other tools like
-> > >> BPF and tracing.  It'd be nice to get reviews from them.
-> > > 
-> > > Sgtm. The patch hasn't had attention for 3 months. A quick grep for
-> > > "unwind" and "UNW_" shows only use in perf and the feature tests.
-> > > 
-> > > Thanks,
-> > > Ian
-> > 
-> > 
-> > Indeed, bpftool does not rely on libunwind, and I don't remember other
-> > BPF components doing so, either.
-> 
-> Right, but my concern was about the feature test itself and the related
-> changes in the build files.
-> 
-> Can I get your Acked-by then?
 
-hi,
-I might be missing something, but I see following commit in git already:
-  b40fbeb0b1cd tools build: Remove the libunwind feature tests from the ones detected when test-all.o builds
 
-jirka
+On 19/03/2025 9:28 am, Thomas Richter wrote:
+> On linux-next
+> commit 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
+> allocated PMU named "tool" dynamicly. However that allocation
+> can fail and a NULL pointer is returned. That case is currently
+> not handled and would result in an invalid address reference.
+> Add a check for NULL pointer.
+> 
+> Fixes: 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> ---
+>   tools/perf/util/pmus.c     | 3 ++-
+>   tools/perf/util/tool_pmu.c | 9 +++++++++
+>   2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 9b5a63ecb249..b99292de7669 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -265,7 +265,8 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+>   	if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
+>   	    (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
+>   		tool_pmu = tool_pmu__new();
+> -		list_add_tail(&tool_pmu->list, &other_pmus);
+> +		if (tool_pmu)
+> +			list_add_tail(&tool_pmu->list, &other_pmus);
+>   	}
+>   	if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
+>   	    (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
+> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+> index b60ac390d52d..d764c4734be6 100644
+> --- a/tools/perf/util/tool_pmu.c
+> +++ b/tools/perf/util/tool_pmu.c
+> @@ -495,12 +495,21 @@ struct perf_pmu *tool_pmu__new(void)
+>   {
+>   	struct perf_pmu *tool = zalloc(sizeof(struct perf_pmu));
+>   
+> +	if (!tool)
+> +		goto out;
+>   	tool->name = strdup("tool");
+> +	if (!tool->name) {
+> +		zfree(tool);
+> +		tool = NULL;
+
+Hi Thomas,
+
+zfree() already sets the thing to NULL but you need to pass a pointer to it:
+
+   zfree(&tool);
+
+Without doing that you only free the first u64 of the struct, which 
+happens to be zero in this case so free() does nothing. Then zfree() 
+sets the first u64 of the struct to zero which it already is.
+
+With that fixed:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
