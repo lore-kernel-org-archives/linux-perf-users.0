@@ -1,148 +1,174 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED1025333A;
-	Wed, 19 Mar 2025 09:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515FF2566CC;
+	Wed, 19 Mar 2025 09:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376576; cv=none; b=q04A0hVI0z/ElIcZ7jbBL5XFS+S/vGrptqU2Gpsr6/RwArNgRZEHzTN0VcvQJkSwEDw8M2il2op9tmNjsG+7/iHqIVgYqhnQ74xbrxjFfrpjwAUFuw4jQ7LXvLdzKJHnHQSb6+v+ymyivYN6VP0ZUMl355JeoYEEVUdh7QeB/q8=
+	t=1742377666; cv=none; b=b8ZxWM4dgHgNUnoTvpT6b2u9iNJiuitpUCLNsBbuIp2Lj7QvTv2i5qPCHfZbbsdxH6OpHldZAyMc+Nn3SPkfYoXS4CM1t3mhi/nZdTOnmSHuR0L1zqCOn62HJvxVQIvT6KbB42aiDTn9MPDY02jSyziNwuWPYtP6+MzGWzLQSIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376576; c=relaxed/simple;
-	bh=LU1gsbIDhdyBf4eDHN7WyT1kpp6qaf69WMlHLFZKJCU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ciw0WzGXNxeI63f0yBkU6N7ureDaeJ9hwP3m5cujwNyiU2dtwo8RWtEiY7r4xszkXlfhyaJ66Y3wGOWb2gYi2nzVZ/n9gx9I0Uh0yWVXtq9+7p33s7b1pFhXwG/oZC2y10iHX+iauSc5n8bMekir64ZQN8B1C0POZsX6spgYEgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r4eTpdqX; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742377666; c=relaxed/simple;
+	bh=GEjYP46691TzJJ8gbfyakXZjQK5z9OmyqU3rVbxsGmw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vu16uhX5ft8qEgk7h6rx2MhPu6zcBCvxwD+jX/TqLUk9/XSUZ7GE3llwjgoz4PlBTs4YHVnfVcOv0Zi0zQQEdjcQVxMaT64MAWXEQq4VLJBLzWuO7wwTph1evL8GOK9w7NMpeL7jFJyIlm3kbsPXH5t2UPKrXG4XLkRDOBGndIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOkLejXc; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r4eTpdqX"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J3k744019295;
-	Wed, 19 Mar 2025 09:29:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=YUOhoa8ilDjouEmZsFPjxh2jSt0fSWfP6/hRUBfcT
-	WQ=; b=r4eTpdqXvEEPo7EwH15smsBeRTb7KPsG8fXxqCpUT6+ij2l6pyvLAfoXn
-	J0ewiAZ9qSkE59qIvT2SsSbeUgF6PQRRffLlsnaqTT0mmfZxfiVTpe9hdCCuORS4
-	IG7QTwfmoCu79iXQMvTgqt2J9mJQoR4wGcwXFBOvf0IAK/Z+ViuQXnF6L00TAlJB
-	HaERNailhjyOf7BKk5zrbasTSX9Sud/GToWjsFgybVu2DVPxsO1LeKmEC5jWLMeU
-	8rtFZWXu6pZ97/AjuF088AsCnrl2Yp/BNfGhbOMeUPbMpGL+dxz/Dwf9mCAoqrsX
-	3a6BrazDn4sf7b1pkW6IWsRA+F6kQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fpa9hf0y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 09:29:31 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52J9STiJ020130;
-	Wed, 19 Mar 2025 09:29:31 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fpa9hf0u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 09:29:31 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52J7hkV3005579;
-	Wed, 19 Mar 2025 09:29:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dm900xsm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 09:29:29 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52J9TPxM51708248
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 09:29:26 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DBCF22004B;
-	Wed, 19 Mar 2025 09:29:25 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD42B20040;
-	Wed, 19 Mar 2025 09:29:25 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Mar 2025 09:29:25 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com, james.clark@linaro.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf pmu: Handle memory failure in tool_pmu__new()
-Date: Wed, 19 Mar 2025 10:28:47 +0100
-Message-ID: <20250319092847.1192988-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOkLejXc"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso31105465e9.0;
+        Wed, 19 Mar 2025 02:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742377662; x=1742982462; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
+        b=QOkLejXcWe01/J0I8RRG/trYJlGKf8FBe86lNHGxfOpKau/CdkSGWZtVgs8BPN25/Y
+         6C1KaIw2GtIrDzOx8KQfQ5vpJfLNkgVxeCaPJlXwE7enRem2pbUxQHXWHHL+h+395QRE
+         djK+8BeHfgz+C8w3QozzdBaey9CvIyDl7SlMeP4InCsPFmNEG+6fiaJSpkBFq4B5YGmG
+         Amx6+r7lzi2hL+B4lBmI0Iukkm+/pb168UVzqq+thV3ExyC4uNXFX6+gA3vyad/sPRoP
+         86mjEJc88sK/y7O0rsaZJHXA4KoWwF08BB43CAmDIV1n3TuoHKJKVpaSQu5Adqt6aGVg
+         ioGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742377662; x=1742982462;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
+        b=AdrueQLVJH+0V1BefNeEhHO7W/yq21KvkS+XzPg8ntG+JMePb+yWWWtAAo216IsXMe
+         ign4i6z7qAGG9eq7TpnWScfxycv81lvP3tial0A8yTaAHirU6XlHCy3ZL1t3/oaPU8o9
+         eS3ghjCLBRQELvaSEZq55MRbCTiH2mjIDrkiSm/cFlrpNp836v/DxOWrnDBHYOmiDbUJ
+         MnxqK6U5w/p46t2OKO5dGlkAEoZm3bcHDtfJsLTCQFRcuIe0+0JKfedmy+N9qEoLJ7St
+         dgjicMBctsUojGG7fZGg/MIrQNSmNKEfOjgf+sfKoJQPfhVMT4/1RT+nRboATHljP7+n
+         1pWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWCJZsTzYRHLW+ByOiqGnvZa2yuWH0ZCl/lZiLGo83nwWqENKyJlKiR0HOaq5hgwW1Fk=@vger.kernel.org, AJvYcCVEcEcvoPx0wiZHej4qC1tE27+RiIw9+4BQ6K+RbAMYfZHlWlvmvhuVTy4yKXeBjcFZCPE07XtCmzcL47hYh4nhDsM=@vger.kernel.org, AJvYcCVPEqLj7kSVhziFP1phmpa93p9lgs9HklOjKph1sHZEnWEScLUj9CeuGn4imZWj5S4C3phVu03l3PA3QvUH@vger.kernel.org, AJvYcCVg7JwYX78eaOO1zVDS8gc2nc8t6j8VcL0ZaVBEt7bHDRhw+GtcAxTo7dXSFa8ehYnfj2FL+WJ1fP4MsuS0fXLEGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzotYN2Niwm0UDdwih3D8yqaWkyTqwId+BKR6uSNs2QKp0z8gPz
+	7iQozPuYVporF9bL7WDan2P8fA4hMYTTTwlnYEyM/cIk3kjEfrNu
+X-Gm-Gg: ASbGncsJghSC+Gpbo5PbdOnvXjPKms1Zo1DG3NTNao7ZzYXwe2uWH4ufRn9cvxOeAV6
+	iGEl9+zl+cceS2pbU6g+T08nzWbc9p5YNVBABsuUBSMeqgu3GcewqceDWmzUY8ZzySsshFWRh/i
+	N62Tp43KTIrqdhtM2mae1eQHif65/vm0n21nBHs+ZYFmMid6n3MkSP8uMYAnJcoqnwNNyxR5g01
+	uxCuj/U4BY1IPUmVv6FvpbpulzruaM9CV2+HeXNhS2EN4o/5aHQYn+0HDyf0yh5ETV+O7bEYBHG
+	9krxSHFvE/3GwESPyJJDK1I8OKDsLus=
+X-Google-Smtp-Source: AGHT+IF4OvZGanUh1jWZlL5uEktGdGZ5zMVRYf9shgP8va0gBvYxVKRQVQGxiDCBfvtWURNFZmoTug==
+X-Received: by 2002:a05:6000:2c7:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39973af9236mr1303964f8f.36.1742377662183;
+        Wed, 19 Mar 2025 02:47:42 -0700 (PDT)
+Received: from krava ([173.38.220.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b09sm20832843f8f.57.2025.03.19.02.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 02:47:41 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 19 Mar 2025 10:47:40 +0100
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Quentin Monnet <qmo@kernel.org>, Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
+ from the ones detected when test-all.o builds
+Message-ID: <Z9qSvGTlMCzktlZJ@krava>
+References: <Z1mzpfAUi8zeiFOp@x1>
+ <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
+ <Z9hWqwvNQO0GqH09@google.com>
+ <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
+ <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
+ <Z9oHGfAffX2Bfl7a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NSgzYODzPye7ayUOHkpyibdnxNjJSu1z
-X-Proofpoint-ORIG-GUID: gzQNFEQn-ZERgH5BvmFQeQ_5mzgnixSs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_03,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=744
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190065
+In-Reply-To: <Z9oHGfAffX2Bfl7a@google.com>
 
-On linux-next
-commit 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
-allocated PMU named "tool" dynamicly. However that allocation
-can fail and a NULL pointer is returned. That case is currently
-not handled and would result in an invalid address reference.
-Add a check for NULL pointer.
+On Tue, Mar 18, 2025 at 04:51:53PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Mar 17, 2025 at 09:19:22PM +0000, Quentin Monnet wrote:
+> > 2025-03-17 10:16 UTC-0700 ~ Ian Rogers <irogers@google.com>
+> > > On Mon, Mar 17, 2025 at 10:06 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >>
+> > >> Hello,
+> > >>
+> > >> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
+> > >>> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
+> > >>> <acme@kernel.org> wrote:
+> > >>>>
+> > >>>> We have a tools/build/feature/test-all.c that has the most common set of
+> > >>>> features that perf uses and are expected to have its development files
+> > >>>> available when building perf.
+> > >>>>
+> > >>>> When we made libwunwind opt-in we forgot to remove them from the list of
+> > >>>> features that are assumed to be available when test-all.c builds, remove
+> > >>>> them.
+> > >>>>
+> > >>>> Before this patch:
+> > >>>>
+> > >>>>   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
+> > >>>>   feature-libunwind-aarch64=1
+> > >>>>   $
+> > >>>>
+> > >>>> Even tho this not being test built and those header files being
+> > >>>> available:
+> > >>>>
+> > >>>>   $ head -5 tools/build/feature/test-libunwind-aarch64.c
+> > >>>>   // SPDX-License-Identifier: GPL-2.0
+> > >>>>   #include <libunwind-aarch64.h>
+> > >>>>   #include <stdlib.h>
+> > >>>>
+> > >>>>   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
+> > >>>>   $
+> > >>>>
+> > >>>> After this patch:
+> > >>>>
+> > >>>>   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
+> > >>>>   $
+> > >>>>
+> > >>>> Now an audit on what is being enabled when test-all.c builds will be
+> > >>>> performed.
+> > >>>>
+> > >>>> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
+> > >>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > >>>> Cc: Ian Rogers <irogers@google.com>
+> > >>>> Cc: James Clark <james.clark@linaro.org>
+> > >>>> Cc: Jiri Olsa <jolsa@kernel.org>
+> > >>>> Cc: Kan Liang <kan.liang@linux.intel.com>
+> > >>>> Cc: Namhyung Kim <namhyung@kernel.org>
+> > >>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > >>>
+> > >>> Sorry for the delay on this.
+> > >>>
+> > >>> Reviewed-by: Ian Rogers <irogers@google.com>
+> > >>
+> > >> Thanks for the review, but I think this part is used by other tools like
+> > >> BPF and tracing.  It'd be nice to get reviews from them.
+> > > 
+> > > Sgtm. The patch hasn't had attention for 3 months. A quick grep for
+> > > "unwind" and "UNW_" shows only use in perf and the feature tests.
+> > > 
+> > > Thanks,
+> > > Ian
+> > 
+> > 
+> > Indeed, bpftool does not rely on libunwind, and I don't remember other
+> > BPF components doing so, either.
+> 
+> Right, but my concern was about the feature test itself and the related
+> changes in the build files.
+> 
+> Can I get your Acked-by then?
 
-Fixes: 72c6f57a4193 ("perf pmu: Dynamically allocate tool PMU")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
----
- tools/perf/util/pmus.c     | 3 ++-
- tools/perf/util/tool_pmu.c | 9 +++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+hi,
+I might be missing something, but I see following commit in git already:
+  b40fbeb0b1cd tools build: Remove the libunwind feature tests from the ones detected when test-all.o builds
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 9b5a63ecb249..b99292de7669 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -265,7 +265,8 @@ static void pmu_read_sysfs(unsigned int to_read_types)
- 	if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
- 	    (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
- 		tool_pmu = tool_pmu__new();
--		list_add_tail(&tool_pmu->list, &other_pmus);
-+		if (tool_pmu)
-+			list_add_tail(&tool_pmu->list, &other_pmus);
- 	}
- 	if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
- 	    (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index b60ac390d52d..d764c4734be6 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -495,12 +495,21 @@ struct perf_pmu *tool_pmu__new(void)
- {
- 	struct perf_pmu *tool = zalloc(sizeof(struct perf_pmu));
- 
-+	if (!tool)
-+		goto out;
- 	tool->name = strdup("tool");
-+	if (!tool->name) {
-+		zfree(tool);
-+		tool = NULL;
-+		goto out;
-+	}
-+
- 	tool->type = PERF_PMU_TYPE_TOOL;
- 	INIT_LIST_HEAD(&tool->aliases);
- 	INIT_LIST_HEAD(&tool->caps);
- 	INIT_LIST_HEAD(&tool->format);
- 	tool->events_table = find_core_events_table("common", "common");
- 
-+out:
- 	return tool;
- }
--- 
-2.48.1
-
+jirka
