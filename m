@@ -1,135 +1,97 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065041AF0B4
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D677D1E1DF4
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 12:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384428; cv=none; b=Nu70bodcksJmmg3qOtWgZReth32H9INd66POvCO9U9qJ8HBf7xPfqWqYWIhiCZkw8kBhnQF5S2Z6RdjxvneNdKUeMXRrWV9MVv1CKsVlMsFaI3NqMEBZg82Z4Ca4Fj4HV2ZzuFHwlZ/azb8TxDXYhZ99h/WH0PkkrYheEG88cos=
+	t=1742385683; cv=none; b=QDeg6VXIH1ufzO2A+Fsh1+J/sniemSKh6KvqcePYlZThX9YdwIu1SFGUZpLdaBiEIsnXZS0P0bagUfrJ1dp7Ggx1m8aL5Qs5sICL3relXNahQAuc5U+P32lkc+cCtaK/6WCAPoOZgujpUkrDl1lusoj3VaNkr+7IMMbOUlaoGPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384428; c=relaxed/simple;
-	bh=Z7OKUwlor6Y9CPPSkGccOzDohs/lbs3P6mrHMhcYAUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vEf17/G/GM7b7hh39s8ZdRafmSkHnmhaPZFO/uE2nouEeb322Os+ra52EDOQXkhGl9L34jJo1u7k/en52aD+AzWQWBSxpo027FmKjOSHQiILSimXMHhH+0LMMPd4Ee4zsoOtE9KP1ijprt6/WUtYchNdXGbPX6jjll1AY6mndOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WT8nvTEn; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742385683; c=relaxed/simple;
+	bh=X0xBK3bLzDuZkB26jELnSzSPI6NgmsFq0dxeZWxGeIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNm7rch1gRzcf8tBnIa3k7C82VehcKlFHk/NQgGhpg7eGB8uK/FFtRaBGV/vghu7fLJv3nAInZ1WSLABB66zWLiqAkJqkR5No4IUDqrKmTo4AY++uFguYqlumHUZ+3wwq/1siflW75TT/SEgU3CMbMzTl+XfRxrQe5AIYf62jsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PlrpLxmF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WT8nvTEn"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso31423855e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 04:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742384425; x=1742989225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
-        b=WT8nvTEnMDF9DrH2snseexcEhWibpZJoIDjVVpVTUG6SkYotLedk41by5WfmF/Q5b3
-         immeZAi6epe0b0FJVxEZ7oIwvs6ekaSYFk8oqqfDxVQ2SFEQTUKvlLm4YfVPHaBQMh10
-         rR/Bf81mnQjlB46Po0oqmD+hkBPF68XpNaZo16zPMtVlZvpwlkoevsPnRsUH5T2VKgAR
-         0v1+ToM4+Zo58iTFULN97AWoLD9P2f3KsN+bc6bI139HHw/Pc4ttsxK/YoeMlIEUnJ2W
-         WlLs/iwpAtdNgMbq+bW3xZZSPbkOJW6R4p6BxEHIjBsIF5Lssm0qK0uptQaCNbJGOy1K
-         /MPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742384425; x=1742989225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
-        b=AmCLbn8zLnQDcp6RRcephUUJktr8LWp6nMoQicFDuA/mhVrCfhdc1zuChuN7OP6HA6
-         +SFZEBnRzhUg9DRHKPF08h5VZsNyRUOQbMGATqYZwMqceAj5HjkSZHHIUtyzfeXFmgei
-         9Xkbom8GtDQATHzVQHIn0wQ5uGARI10oN1RpliA9AmvXfBnqfxRcuI5HkM0+3Rb7Ql7Y
-         zl/9ceDGLBIvIKpbxWpKAmBFRhKrSDmYahSixAxyEvx3GI0Uw849AP/owElxnxOLBjtW
-         BItLG1E1s2135o+p4B4urBB5IUTirQbTHrbLz1/toFhFik4vAu67/+DPq1rgUA2DnQRw
-         MXlg==
-X-Gm-Message-State: AOJu0Yzmv3GQKSJ2A0n2ACHIcwweTff2uWSfIhomzGs9pHM+eLNJDowm
-	weiVs/RtmH2l/ZPIIVdToLUKlnDon/iWsBX5y8+wDZp7fK8U1qy/W0qbr9xxmvGEWyavB4ys0Ym
-	Y
-X-Gm-Gg: ASbGncs0mgozjFQtpFH+cMquHIcADxO6NR/2ZwtE3zJwHgyWz/omWlz8vtrsN89igQT
-	bo8F0Aiu0ELe/sHB012kbqhWWYmyIpXf2UiOK6J4WUqB10QeNb+5yB5f8sCSGpRa6mwzTkU4SLy
-	j5PFJG0sIKMdENvs/4FcgcF1R0SWmBk91fWVnk0770XywDk/3JjYo/XCu/xNHqT4fo7TSt0GdXe
-	TFCwaTHKppNTd2Z3xemmsJ+qSmPQtoiOIxCb/pftXd/5gBjsr4PE5ZdK2zrIcEJ2mtK/tOqqPfM
-	LSgh3wAS1Fo/8hNgPMxSSUvz1Bijeco/IIJjy6TUXe+AGZ4=
-X-Google-Smtp-Source: AGHT+IHErJqbLloSDBbOuIMsGZc52pXdp8yVfNacWZgluboER0gYnZa1nw5E4AGXF/1lLUTa3d8FAw==
-X-Received: by 2002:a05:600c:358c:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-43d437c1a31mr21789045e9.14.1742384425235;
-        Wed, 19 Mar 2025 04:40:25 -0700 (PDT)
-Received: from pop-os.lan ([145.224.67.123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f58aa0sm16163745e9.21.2025.03.19.04.40.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 04:40:24 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@linaro.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PlrpLxmF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742385680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YqwTqw0LkuMJVhI7nUbav86stM0t9airgBDOJOw1FA0=;
+	b=PlrpLxmFnPY4xRbCXoW1F+lGgpgRB5Now2GST7a6VTHqVcpaOXaQ+9UuICx08WVJPhXjDM
+	NXvmIhDx3Kx/d3hNoifuQoPQiFxriF2yOzNwQkFBlrsIuQiuczcRgeNzQd53F5is9L1OU8
+	kay1JUXPUzyB2iCUDwK0lT6wnMoPmzY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-Ep91YsP_MAa5nA-2OQLbTA-1; Wed,
+ 19 Mar 2025 08:01:16 -0400
+X-MC-Unique: Ep91YsP_MAa5nA-2OQLbTA-1
+X-Mimecast-MFC-AGG-ID: Ep91YsP_MAa5nA-2OQLbTA_1742385673
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC50F180AF69;
+	Wed, 19 Mar 2025 12:01:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5D85E1801751;
+	Wed, 19 Mar 2025 12:01:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Mar 2025 13:00:39 +0100 (CET)
+Date: Wed, 19 Mar 2025 13:00:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] libperf: Don't remove -g when EXTRA_CFLAGS are used
-Date: Wed, 19 Mar 2025 11:40:09 +0000
-Message-Id: <20250319114009.417865-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	Tong Tiangen <tongtiangen@huawei.com>
+Subject: Re: [PATCH v2 3/3] kernel/events/uprobes: uprobe_write_opcode()
+ rewrite
+Message-ID: <20250319120028.GA26879@redhat.com>
+References: <20250318221457.3055598-1-david@redhat.com>
+ <20250318221457.3055598-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318221457.3055598-4-david@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-When using EXTRA_CFLAGS, for example "EXTRA_CFLAGS=-DREFCNT_CHECKING=1",
-this construct stops setting -g which you'd expect would not be affected
-by adding extra flags. Additionally, EXTRA_CFLAGS should be the last
-thing to be appended so that it can be used to undo any defaults. And no
-condition is required, just += appends to any existing CFLAGS and also
-appends or doesn't append EXTRA_CFLAGS if they are or aren't set.
+On 03/18, David Hildenbrand wrote:
+>
+> +	if (unlikely(!folio_test_anon(folio))) {
+> +		VM_WARN_ON_ONCE(is_register);
+> +		goto out;
+> +	}
 
-It's not clear why DEBUG=1 is required for -g in Perf when in libperf
-it's always on, but I don't think we need to change that behavior now
-because someone may be depending on it.
+Don't we need folio_put() before "goto out" ?
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/lib/perf/Makefile | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Other than that, for this series:
 
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa04..478fe57bf8ce 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -54,13 +54,6 @@ endif
- 
- TEST_ARGS := $(if $(V),-v)
- 
--# Set compile option CFLAGS
--ifdef EXTRA_CFLAGS
--  CFLAGS := $(EXTRA_CFLAGS)
--else
--  CFLAGS := -g -Wall
--endif
--
- INCLUDES = \
- -I$(srctree)/tools/lib/perf/include \
- -I$(srctree)/tools/lib/ \
-@@ -70,11 +63,12 @@ INCLUDES = \
- -I$(srctree)/tools/include/uapi
- 
- # Append required CFLAGS
--override CFLAGS += $(EXTRA_WARNINGS)
--override CFLAGS += -Werror -Wall
-+override CFLAGS += -g -Werror -Wall
- override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
-+override CFLAGS += $(EXTRA_WARNINGS)
-+override CFLAGS += $(EXTRA_CFLAGS)
- 
- all:
- 
--- 
-2.34.1
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
