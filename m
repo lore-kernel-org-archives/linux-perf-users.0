@@ -1,103 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5351F4E37;
-	Wed, 19 Mar 2025 13:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1557F35942;
+	Wed, 19 Mar 2025 13:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742390664; cv=none; b=pg5fcJjXgcwj5WEPrFq/yuWIYgyzbcZt9rG6jpF+nVHkgnruWo4T2cMcki8LwbLi4+8ttunRisSjodHjsITNC2CsgJ349mu7oJ5Ykb8n2RcpN+ZBP9BWFmuhTntBeM2d2SeYBoYH4evHj3HCJTomMeUEyF09OnR817mSOcmkQMg=
+	t=1742391063; cv=none; b=S1eivqDI8edFJjbSvbgM75TfOhl8DLeSsw2cQCVunzVgHP61uP+PEYLMBZG7tqznwBhzBwHze8fjCznw6pEQkFiCtIXYGfmAFljK7cCr6EQ5AUus8OqOJaDmjMJMdSpqmgJYnoTPYr6NjmPKRvTcaRpomlARtFFZdpinaDFoCjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742390664; c=relaxed/simple;
-	bh=x7BqLBdqa0Pofxy9h5kGhmOuImsx3iazNrFoBrSorSY=;
+	s=arc-20240116; t=1742391063; c=relaxed/simple;
+	bh=0Epci9SDyt00rMVYsl2p86Xlmpbww68QfF792+rVcVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JumOWhxx1PDL3kY/6wbe0EQJOnNZoB786BM5mzGxx1Jx9dT4eOjaSlCy3FXxxiEnaPO0GH56CGBxbUHpxan1dQXRSbY+ycgMgiXFzfY8ipEO538CmnN2rBqhaFXPOKhiZetrVtt07QXsmYMeFX+1F0Ier4ERIVf1f0cdHg5TbLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY0uhdBn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dY0uhdBn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71F8C4CEE9;
-	Wed, 19 Mar 2025 13:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742390663;
-	bh=x7BqLBdqa0Pofxy9h5kGhmOuImsx3iazNrFoBrSorSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dY0uhdBn28SH0CjpOoq/FAsOG2uKdYmM1HX81wMJugzVl73UsBe9PEmGw+EsyY039
-	 CGFfZbV2Sri5OVqUc8x6VGNTz+girkqdKFB8KuiIKqV7VfEBO6s/kq/vQHKHZa8d8+
-	 yoOeQcejJVgrYDV/l1QUyyZ1leb7PXxORwlGJjrY+8wCtqaMm1JsJywG/pJxQPIj6l
-	 E4xmnc7cV3HS9O9QMbTkwAV7CvfgLrpdq9EKy6LNZFQrOfGBtcN9KIkjlBYX4E8tcX
-	 +p4zFuluOehct4IwB5f9EAVzj58JvyG5pxOvnIwmXIQpR8AU+K3h2F0WuXBCkyhXsp
-	 lkTSPI+tUefEw==
-Date: Wed, 19 Mar 2025 13:24:15 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
-	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] arm64: uaccess: Add additional userspace GCS
- accessors
-Message-ID: <50a0920d-3e3d-4e96-b68a-a7a0d78c3695@sirena.org.uk>
-References: <20250318204841.373116-1-jeremy.linton@arm.com>
- <20250318204841.373116-4-jeremy.linton@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsD05TRHtS1uHpYatIz7E4obHihej9wWXs2zW9ppdzeso2MSO35KPD52VhzqbON4vPO3aD/3qFF5MoXqMIiC0XqrZq7cjjQGauOi1mKQZaeX+FCbtVZVKGv/Tm9vXg64/cUpqCAP47Eu4dOWoojkG/tQ0q0ek/xmV4QF6DBeWVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88026113E;
+	Wed, 19 Mar 2025 06:31:08 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F354A3F673;
+	Wed, 19 Mar 2025 06:30:59 -0700 (PDT)
+Date: Wed, 19 Mar 2025 13:30:55 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: Restore {0} initializer since GCC-15
+Message-ID: <20250319133055.GA3249206@e132581.arm.com>
+References: <20250319110454.3230687-1-leo.yan@arm.com>
+ <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Lrxbu3I30TVdgrcC"
-Content-Disposition: inline
-In-Reply-To: <20250318204841.373116-4-jeremy.linton@arm.com>
-X-Cookie: Chairman of the Bored.
-
-
---Lrxbu3I30TVdgrcC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
 
-On Tue, Mar 18, 2025 at 03:48:37PM -0500, Jeremy Linton wrote:
+On Wed, Mar 19, 2025 at 11:19:38AM +0000, James Clark wrote:
+> 
+> On 19/03/2025 11:04 am, Leo Yan wrote:
+> > GCC-15 release claims [1]:
+> > 
+> >   {0} initializer in C or C++ for unions no longer guarantees clearing
+> >   of the whole union (except for static storage duration initialization),
+> >   it just initializes the first union member to zero. If initialization
+> >   of the whole union including padding bits is desirable, use {} (valid
+> >   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+> >   restore old GCC behavior.
+> > 
+> > This new behaviour might cause stale and unexpected data we defined in
+> > Perf.  Add the -fzero-init-padding-bits=unions option for entirely
+> > zeroing union structures.
+> > 
+> 
+> Do we need this? I don't see any unions initialized in that way. In fact
+> there is only one struct initialized with {0}, the other handful are char*s
+> but I don't think either are affected.
 
-> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-> +{
-> +	unsigned long ret;
-> +	u64 load;
-> +
-> +	if (!access_ok((char __user *)addr, sizeof(load))) {
-> +		*err = -EFAULT;
-> +		return 0;
-> +	}
-> +
-> +	gcsb_dsync();
-> +	ret = copy_from_user(&load, addr, sizeof(load));
-> +	if (ret != 0)
-> +		*err = ret;
-> +	return load;
-> +}
+Though I did not found a straightforward case in Perf for initializing
+union with "{0}", the result I got:
 
-A GCS load done by the hardware will verify that we are loading from GCS
-memory (the accesses are marked as AccessType_GCS in the pseudocode
-which is then validated in for example S1CheckPermissions()).  Sadly
-there's no equivalent of GCSSTR so we'd need to do the permission check
-ourselves to match this behaviour.
+$ git grep -E "\{ *0 *\}" tools/perf/
+tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
+tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
+tools/perf/arch/x86/tests/intel-pt-test.c:      {1, {0}, 0, {INTEL_PT_PAD, 0, 0}, 0, 1 },
+tools/perf/arch/x86/tests/intel-pt-test.c:      {0, {0}, 0, {0, 0, 0}, 0, 0 },
+tools/perf/arch/x86/util/perf_regs.c:   char new_reg[SDT_REG_NAME_SIZE] = {0};
+tools/perf/arch/x86/util/perf_regs.c:   char prefix[3] = {0};
+tools/perf/builtin-kwork.c:             .nr_skipped_events   = { 0 },
+tools/perf/builtin-record.c:    u8 pad[8] = {0};
+tools/perf/python/twatch.py:                    print("cpu: {0}, pid: {1}, tid: {2} {3}".format(event.sample_cpu,
+tools/perf/tests/code-reading.c:        unsigned char buf1[BUFSZ] = {0};
+tools/perf/tests/code-reading.c:        unsigned char buf2[BUFSZ] = {0};
+tools/perf/util/bpf_counter.c:  struct bpf_map_info map_info = {0};
+tools/perf/util/bpf_kwork.c:    char name[MAX_KWORKNAME] = { 0 };
+tools/perf/util/bpf_skel/bperf_follower.bpf.c:  struct bperf_filter_value child_fval = { 0 };
+tools/perf/util/lzma.c: char buf[6] = { 0 };
+tools/perf/util/mem-events.c:bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
+tools/perf/util/mem-events.c:   char hit_miss[5] = {0};
+tools/perf/util/trace-event-scripting.c:        char xs[16] = {0};
+tools/perf/util/zlib.c: char buf[2] = { 0 };
 
---Lrxbu3I30TVdgrcC
-Content-Type: application/pgp-signature; name="signature.asc"
+We can see the bpf structures (bpf_map_info/bperf_filter_value) are
+initialized with {0}.  For a more complex case, {0} is used for
+initialize a specific field in a structure (see the results in
+insn-x86.c and intel-pt-test.c).
 
------BEGIN PGP SIGNATURE-----
+> Adding options that allow people to add more non standard code doesn't feel
+> very portable or in the spirit of doing it the right way. Maybe there's an
+> argument that it guards against future mistakes, but it's not mentioned in
+> the commit message.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfaxX4ACgkQJNaLcl1U
-h9B6kAf/aWTyBGHINz3SHkUd7B2qgPUiRdB16ns0/PHI44Me7B9WwzgUi4S60ku3
-k9adlWzZXOVABsny7iREC/F24FgqxbT1hBSK/TXZPGJvubnkOahLXD7iXkANnMhh
-lbnr++1qFc9tXTMuq3sFmGZA8u+RgavrZ1x7WdTkVQ/PkrY1tIOefK9+ut0RydD5
-T7inRjdUC1ee6CorJqprrnC/G/VIi/lgg+DlpkDWW1teV49ASSim7nIhlZ4U+JVQ
-Di39GgQj5uQyndh4r7fp1YuRBd5SyhjrWTce/XX06ctkUug6aZndsirvSKdQJQQL
-0slQcyJA5dGCPUeUuvDRv2ghKhJ/1g==
-=QTs9
------END PGP SIGNATURE-----
+I think Linux perf shares the same understanding with "we do expect
+initializers that always initialize the whole variable fully" (quote
+in [1]).  Furthermore, the reply mentioned:
 
---Lrxbu3I30TVdgrcC--
+ The exact same problem happens with "{ 0 }" as happens with "{ }".
+ The bug is literally that some versions of clang seem to implement
+ BOTH of these as "initialize the first member of the union", which
+ then means that if the first member isn't the largest member, the
+ rest of the union is entirely undefined.
+
+So I think it is reasonable to imposes a compiler option to make
+compiler's behavouir consistent.
+
+Thanks,
+Leo
+
+[1] https://www.spinics.net/lists/netdev/msg1007244.html
