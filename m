@@ -1,120 +1,145 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE55252917
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 05:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5078C30100;
+	Wed, 19 Mar 2025 09:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742360901; cv=none; b=s/DrYPCQv55BU+hlJRIIAkXt4dMis+sTE+dvm7v+VvhWD72ZZBrATBQ45S8wJczbAizee157Ixrx8W+QeIAb5m5C4RMX4uB4T+Wybk5+0cVg+diyUM5jAYLEbr1dh5MCyujBm30U9pEZFfMGzbw8aE0G5w3EmkzTxFlQ3rHciWg=
+	t=1742375145; cv=none; b=YhHyZT/F5YdzZpGzsOYSj61PZnWxxqKbfJEv6L9WXV3r5Fw2Fqowh1UQKKP8dhQUiPMu3HHhd/xqRbMO5LebdlZV94HPZcVGgjdxjc2uPkVBAxVwxdJPbcuW3+0B23ItqntEFtXb+Zv41royWgZcRKVqN9wMQulG96eEG/WbVvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742360901; c=relaxed/simple;
-	bh=FwwCUQYWW0iPLjUpMdjojzAG65ocZ3jEUzcBFQsWjIY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=a2QcaTiq+5SoW/REj5mu8f+uFrcq+xhW8X/kqwvsmEFqbWMsRcMt+4azHRIFjiHu9RhsKknFEQG5pKidHu4yDhyBGLrqElkF/N6pSsiNDb+ttVNHRVYe0gXyJTPC1tTIh4v8XOW0a/wlOPBzpXMdvPJz0L87CtHyv+lFweQbqIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mTs64ygf; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742375145; c=relaxed/simple;
+	bh=B8SI/lk6VlxHGjLKRcO8152aaTHZU8N4rMgBMeA3OHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=h06GqFWJszrkXPRQwxsQIKp34vQbQAfjoZAGt/lx1r8qKfpQPKIi8xAYY0KUbIlWEMtQ+p/HQ8D0d7C6/sLx+1otpsS7kMbWARUyJ86ebLcZMm9ykqBbSp+Mkdpx4byrkLLdVqECSSna/jBTafida9kMecNepVe84YyeC2zz73o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RZ10bVdE; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mTs64ygf"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fed889e353so102182527b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Mar 2025 22:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742360899; x=1742965699; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jGnh5R7F2nGjibuMN1IiOugHr5YAQ01+XconQh81ims=;
-        b=mTs64ygfkHOpOUAgupDi4Vjty844ukF4nAIVX11Ymk/TgNL93v9sOI72KOUy3ovoFx
-         6lC2l8B2Mxg6ifGjYF2tRHE3BKppM8pYNlP8b/wvRHDP3FiHEL5V64M0vtW1NkOU7SWL
-         vLtT28jgPlWb7M8PtjWtR2rJmuQIN1K3QNYTrZ8MMev9tg6ex6KeyTCb3vR8yXcz0uTj
-         jnfOWCjNQZyvzgCP2mVuwKpWA8NpwRTj8puDdMIGPLZsekKpN1TBWnSwW9pb6Oa3nPBt
-         Eq0UGGlD8h0K6c9Aesc4mLJqFL3X94OUGmiJhJ3C+1XWy2eHjwVMU6lf3LRWk7iHGJss
-         ccbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742360899; x=1742965699;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGnh5R7F2nGjibuMN1IiOugHr5YAQ01+XconQh81ims=;
-        b=Rx5kXY7R4IESSiq6QzPeGFP4EvNGl0ah/gwvGcKFhtc+wwVQ0wStTMPVCSnRWKTv+2
-         efCsz9Bomb9pG7Z80PGUpZDVE7IbqLMUJ9TvGy/ZJUQ0cs5QxyZ3/bmXr+LFQW5RvPCq
-         Sf87shKwz6JkolkFE9yXe01yIrK2wO55vJxCyqUHprqk0ph3q3kBTOA4ZZmvNfqDtOPM
-         cb02+qUCgmy3b9VCcQeIjB2/WqZHdJGXxi0IJSHoPi/cHenDfWjm7vly2q9zFdq53FmP
-         Is1BGSv3khxDin6OcIP4g1KI8/JRgZLFYRzRZKQORIrWVI0cuB+RGKesRfkBc/YoxJHX
-         q63A==
-X-Forwarded-Encrypted: i=1; AJvYcCXhWBICXRnCqrxCDZA4J51VmbVmTgq6NjHta6XFCB7rOR3JAwIHai9ifC7mbj/QEhync64Pdh+741HGzzGGEn4j@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqWbr6DF150gtqjrr2ejpQaH6b8duCkNXXDeJkAPA+KqoOTeYs
-	XHQ7IcxjTR/e1z5rfmGrubv0JwTMNtQY8WXzBrkomdPRZAo2zW9ylDRni8tFTCMaBuiO59UByHt
-	AZKha7Q==
-X-Google-Smtp-Source: AGHT+IHv1nfcfv3Ye5fOTqwhfAPWbuVvzkQzn8h4pmksBhQF9eFLTiSxCvjG8QByREOpkefDEY1DbG6A3hXY
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8a11:10b5:af90:6031])
- (user=irogers job=sendgmr) by 2002:a25:dc03:0:b0:e63:699a:4e6b with SMTP id
- 3f1490d57ef6-e667b41463bmr514276.4.1742360898600; Tue, 18 Mar 2025 22:08:18
- -0700 (PDT)
-Date: Tue, 18 Mar 2025 22:07:41 -0700
-In-Reply-To: <20250319050741.269828-1-irogers@google.com>
-Message-Id: <20250319050741.269828-15-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RZ10bVdE"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52IKa6hE014607;
+	Wed, 19 Mar 2025 09:05:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=LFySf0
+	HhRvNF0ewPNWuQXwlI+s04FaegDm9OcGnJL7s=; b=RZ10bVdE+UZDqoGsOqlTW0
+	M0u42b4qBlzQbt9D8orzJfpj/nwJxjgYomzHvycYpNIZZfCrHt65UeiOhVMoAaIK
+	fcVhRM/Bi7wz5SNn6UirUHalXC5Gwv8Fo7mOs853O0+HAr1OAuDMa5amRP78bnw1
+	kho2Umuor9uf+So/R1LLpgu1uY8w9S72uhRxo4pLPQEc5lHMbH8/shrpR8MWDJbQ
+	tFvhp8N8ainfzg/IxohKbedGePisyIQid2F3+PnM327/NUdCcA5Vfx3eJgNPEMdk
+	ztX9/aeYvq5f9SiNC5QCJFpQSKGMyiv5lJ4m3t+4CHRgsId5dr57BII6lT48fWmg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fg0ptmts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 09:05:10 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52J8nnhJ016573;
+	Wed, 19 Mar 2025 09:05:09 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fg0ptmtp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 09:05:09 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52J81H3Y031987;
+	Wed, 19 Mar 2025 09:05:08 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dkvtgwrc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 09:05:08 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52J9568a52822366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Mar 2025 09:05:06 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B34A72004D;
+	Wed, 19 Mar 2025 09:05:06 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3CC1D2004B;
+	Wed, 19 Mar 2025 09:05:06 +0000 (GMT)
+Received: from [9.152.212.229] (unknown [9.152.212.229])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Mar 2025 09:05:06 +0000 (GMT)
+Message-ID: <a27a9066-b0e3-4d8f-bbb3-2dfd080800ef@linux.ibm.com>
+Date: Wed, 19 Mar 2025 10:05:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250319050741.269828-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v7 14/14] perf trace: Fix evlist memory leak
-From: Ian Rogers <irogers@google.com>
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?=" <bjorn@rivosinc.com>, Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf cpumap: Increment reference count for online
+ cpumap
+To: Ian Rogers <irogers@google.com>,
+        Suzuki K Poulose
+ <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+        Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>,
+        "Dr. David Alan Gilbert"
+ <linux@treblig.org>,
+        Thomas Falcon <thomas.falcon@intel.com>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250318171914.145616-1-irogers@google.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20250318171914.145616-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: I80r1T9QvDC91OyiXWvXHk-cjb3UygOb
+X-Proofpoint-ORIG-GUID: n86a4sX69i71m97s0QBGGG_SNPb0hsmg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_03,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503190061
 
-Leak sanitizer was reporting a memory leak in the "perf record and
-replay" test. Add evlist__delete to trace__exit, also ensure
-trace__exit is called after trace__record.
+On 3/18/25 18:19, Ian Rogers wrote:
+> Thomas Richter <tmricht@linux.ibm.com> reported a double put on the
+> cpumap for the placeholder core PMU:
+> https://lore.kernel.org/lkml/20250318095132.1502654-3-tmricht@linux.ibm.com/
+> Requiring the caller to get the cpumap is not how these things are
+> usually done, switch cpu_map__online to do the get and then fix up any
+> use cases where a put is needed.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-trace.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Ian,
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1d4ad5d19b10..a102748bd0c9 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -5339,6 +5339,8 @@ static void trace__exit(struct trace *trace)
- 		zfree(&trace->syscalls.table);
- 	}
- 	zfree(&trace->perfconfig_events);
-+	evlist__delete(trace->evlist);
-+	trace->evlist = NULL;
- #ifdef HAVE_LIBBPF_SUPPORT
- 	btf__free(trace->btf);
- 	trace->btf = NULL;
-@@ -5719,8 +5721,10 @@ int cmd_trace(int argc, const char **argv)
- 		}
- 	}
- 
--	if ((argc >= 1) && (strcmp(argv[0], "record") == 0))
--		return trace__record(&trace, argc-1, &argv[1]);
-+	if ((argc >= 1) && (strcmp(argv[0], "record") == 0)) {
-+		err = trace__record(&trace, argc-1, &argv[1]);
-+		goto out;
-+	}
- 
- 	/* Using just --errno-summary will trigger --summary */
- 	if (trace.errno_summary && !trace.summary && !trace.summary_only)
+thanks for fixing this. Here are the results on s390 z/VM:
+
+# ./perf bench internals pmu-scan
+# Running 'internals/pmu-scan' benchmark:
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 6.340 usec (+- 0.050 usec)
+  Average PMU scanning took: 93.785 usec (+- 6.210 usec)
+# 
+
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+
 -- 
-2.49.0.rc1.451.g8f38331e32-goog
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
