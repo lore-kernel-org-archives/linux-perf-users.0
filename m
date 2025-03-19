@@ -1,184 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86201E0DF5;
-	Wed, 19 Mar 2025 22:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42E716F858;
+	Wed, 19 Mar 2025 23:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742424685; cv=none; b=Y5Gj8ues/ODio76H3nPbFph6hm+tPCb+I3y1CpnctwcJ8UVgfQCVUw76QtnXSezBfXtZ01LtQpuXp17PkAF4Vkz359GAYSQfcQfwqbp+TnIElcOqxZNUwpUkIT+GMTIbQL1LH1lknaUg/HX7xCpCDipv/MWbwl5rIchLgIUYFIY=
+	t=1742427571; cv=none; b=ZZBiF98Qe40K7HFv76AvIhVe+3wa8xq3aZ/FqyFZ3yyD3WPvVrvOF46NeYCUdIXdX3UDN6kX6bl18YXkflst3tg1gmgbNMqhlp9N0ewgct0DsY4AlJMdycnE2DDR2+sQvEuot4GwKtfny+Hr1lPtr4uxKMrKSnwlcnn59bxxZh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742424685; c=relaxed/simple;
-	bh=xV1h3Lo3+NyG6OtmsVjOMt1f5+YDo2UjANOSl80KhlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvbQohGp8EQ+vgcMNaY9P+mwIRXohAX3HnqHaeDMic2NEi/y56UdMgxIjBj8iPll5zaroyZsaw1sMqu6VftLT14tZ8zp0JSPnW93S/Xr8NajhJ8BgEJr9mSncitSOOGjlQP9PQLStmBLoCvu46oFZNLX0Nl1RsMMDXhnu3KP7RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDR8pB3e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742427571; c=relaxed/simple;
+	bh=VEvV0hAAEzuzFIisaPBMod+lE5QjWK8T2Kmf1DMtKBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ftx8XKrKJKhCGuyrhJVNEmC3XlVuNYxlFd9b8rtm+fMZ+f71s7QCsxNgiSNvKuCovmhGfQMLuogy1i6xB9K6GAKsPBoU9xHo68DkyPXjlNUl9kWDFfqvffwkGBD7WJ0sSPuiARUn4X2UCVLLtpydRWB/6bp09qiStmJb/8XFWKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMssuKX8; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDR8pB3e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA64FC4CEE4;
-	Wed, 19 Mar 2025 22:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742424684;
-	bh=xV1h3Lo3+NyG6OtmsVjOMt1f5+YDo2UjANOSl80KhlU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MDR8pB3e3nddnlu4eZg+rnvZYgCiBSfcx0jhjQ/gyO663UgFPTEAW3EbzKonMgfMv
-	 qFMENSlVGNohwkVOKNDFskQv1F4nrW2fBVwL6gpnjscZPE+hMGKtKULvPb2Yzwxu6a
-	 EsJqryJa28wf9GFT88/o+aCdFKwtA6y8mNx8x4Cpnf8dg8OE8G6eV+IZtXGhl06/9L
-	 niuBF4oWK6uzPXgjQj/0VdOoVdgJGwAK7Xd3QuZVXrYvOm4GJHzdSVhwMTKf5sTNWc
-	 Mm+yWO+dlsyEWEUXllRy9wgzGRZAZ+dixfc5v1bmdfC3wdtRqLFSywJYuhnB36B/mW
-	 p++UzTCa0ACWQ==
-Date: Wed, 19 Mar 2025 15:51:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
-	mpetlan@redhat.com, tglozar@redhat.com,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2] perf test probe_vfs_getname: Skip if no suitable line
- detected
-Message-ID: <Z9tKat6vvC1XUj0U@google.com>
-References: <20250313165824.7711-1-jbrnak@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMssuKX8"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ff0c9d1761so1901407b3.1;
+        Wed, 19 Mar 2025 16:39:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742427568; x=1743032368; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Cq23PeKRIIRaRLnVCoTwyue9MtxIvEBi1Dzwf2/unk=;
+        b=HMssuKX8Z6+Jd/DIS8vSDB/kEJKFWM9REEbf54B7TAj9wcWkif70ppEz2p3Xhe/qcC
+         54bmVWrRxUYxPdNknx1jimBa2s16rGI0316S/TwU7zR6ll+XT0pDi63V0nY0sJ4fS4R/
+         svAYqCwcIhi4mINBwGf5IUU6VNZIBrSl2cDn1ckhGQx/W2JTCbwr8cW6PybQEd9TUoCA
+         oT5Y8x8iMBTDG2lXWSYw09U2QpoVETXPVSlnzfWoDS4cEGVLlqqS7dMtPwRxPy4/AJbL
+         Co8drILnKzrin6Bjpk1VcDTo9umCJ0P0L8rgLDHvcnXP1l62CTw7xuQWhubhof3KnIJF
+         ezVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742427568; x=1743032368;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Cq23PeKRIIRaRLnVCoTwyue9MtxIvEBi1Dzwf2/unk=;
+        b=O7NSPqcfIgkUG/ieEyORRPh1G3iXujFXRYgHfFXuoLWBGIuSbioGH6phC5kv/CsDRU
+         i6ULsENMszKhG5TSUMzlcSwrrhbFs8g66M8XjFVklacR4Kvw8aipBz+gSb5V3GN5VNWr
+         EpEVJI7fz6QZhZEZTs3q6Z7MG0fY6IxDjBAnfYKVDzpUEu8SMvOWglE0sS0cAKzf2phZ
+         32YxE+8c65uGvnCLgVpqYcQfuzl8BXKnnUU4/4mxC1N4Sx/GwdcR7Uigu1uQZMGYEmur
+         /2j5kV3yqDx6gtIFH4o9Godz2j2w4VzHfHbcbVXvn+9SQc19XABDTfSCCaTC7c+g5Q8H
+         atgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDv855FLLUl2kvHBBQtv1yZLe6Zm/8jzHb/PxWMoakYIVREPo8blJjlfhyMnb/gZ33umud7jiHe5tTPDTe@vger.kernel.org, AJvYcCW/Oz7ZdLQLDzNN4mtrLiNN0HYWGtpX6cKfCmuyy+WELwKh5Gi75vmxdXa+lt05pOz1N5wHYepaD8l37EEoF9U7Ew==@vger.kernel.org, AJvYcCXgReu8AFORV5Y568LdoR+Lm7pTgTyXNh59rcMh667xvp1RvkM5qz/LNZiJ4s4aoLKiiqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQLDl8K9bnJt65PSCpSIPpKdMY/1AEqx5xa5uhm9b5b155iaT3
+	D1a6sFSKh6UzeWBW6zywqefcIwhyxwEpEXdcT0U5D/Ajc/zrF9e2jG5s6s+QL1ntzg6lqNnKGv+
+	/asVPR5nb/AaksiHl2Ay3Ywo4vheDY86ZP7E=
+X-Gm-Gg: ASbGncs543mmSRXiZgtrk64RTic71s+5c7ufX7arUnHhvBzWYBJcAlC9jYoxIpy3nif
+	j0ahffOYtQHe2MGDs9FU3iRljt3wuE8EBydP16cP/6I4PBjrFaLztPxp3Y7hFP9BjnI0IP363Cu
+	wlKXtPP87IR3/kC7Lg30Va9eeT
+X-Google-Smtp-Source: AGHT+IFAw2POQPH36yc1ixUBdy6/IY9+jU8D5hEFwscQmrtmCZgGr0myaXaQh3Wt79t66lyV5CdD+i57MOfE1GyC1Lw=
+X-Received: by 2002:a05:690c:62c3:b0:6fd:3d37:99ce with SMTP id
+ 00721157ae682-700ac5dd106mr16101017b3.17.1742427568539; Wed, 19 Mar 2025
+ 16:39:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250313165824.7711-1-jbrnak@redhat.com>
+References: <20250317180834.1862079-1-namhyung@kernel.org> <CAH0uvogx1-oz4ZjLpcTRArTb2YJOyY1h1pccMXYSgCnHYD9bPA@mail.gmail.com>
+ <Z9tABRzmYYYUyEFO@google.com> <CAH0uvog7uZL2AGyfPdSjCo0eahxDESXT3ZWSNmUCGWFc_SmFYg@mail.gmail.com>
+In-Reply-To: <CAH0uvog7uZL2AGyfPdSjCo0eahxDESXT3ZWSNmUCGWFc_SmFYg@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 19 Mar 2025 16:39:17 -0700
+X-Gm-Features: AQ5f1Jo3yarlJN9wYot80fffJ5hGYMkUS5yVrPcuTv39SUuE2b6Jr3ic3g8mBv4
+Message-ID: <CAH0uvoi_Soj=b1YdsqN=RhHMf340r1YZm72JgkyAyUi-Rox7_g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf trace: Implement syscall summary in BPF
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Namhyung,
 
-On Thu, Mar 13, 2025 at 05:58:24PM +0100, Jakub Brnak wrote:
-> In some cases when calling function add_probe_vfs_getname, line number
-> can't be detected by perf probe -L getname_flags:
-> 
->   78         atomic_set(&result->refcnt, 1);
-> 
-> 	     // one of the following lines should have line number
-> 	     // but sometimes it does not because of optimization
-> 	     result->uptr = filename;
->              result->aname = NULL;
-> 
->   81         audit_getname(result);
-> 
-> To prevent false failures, skip the affected tests
-> if no suitable line numbers can be detected.
-> 
-> 
-> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
-> ---
-> v2:
-> - check if return from add_vfs_getname equals to 1 since
-> it is only option in case of fail
-> 
-> v1: https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
-> ---
->  tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
->  tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
->  .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
->  tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
->  4 files changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 5c33ec7a5a63..89f72a4c818c 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -19,8 +19,14 @@ add_probe_vfs_getname() {
->  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
->  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
->  		fi
-> +
-> +		if [ -z "$line" ] ; then
-> +			echo "Could not find probeable line"
-> +			return 2
-> +		fi
-> +
->  		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
-> -		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-> +		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
->  	fi
->  }
->  
-> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-> index c51a32931af6..b210576f1971 100755
-> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-> @@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
->  # shellcheck source=lib/probe_vfs_getname.sh
->  . "$(dirname $0)"/lib/probe_vfs_getname.sh
->  
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -eq 1 ]] ; then
+I haven't finished the code review yet, but here are something that I
+found interesting to share:
 
-I got this error from shellcheck.
+## 1
+You used sudo ./perf trace -as --bpf-summary --summary-mode=3Dtotal -- slee=
+p 1 as
+an example
 
-  In tests/shell/probe_vfs_getname.sh line 19:
-  if [[ $err -eq 1 ]] ; then
-     ^--------------^ SC3010 (warning): In POSIX sh, [[ ]] is undefined.
-  
-  For more information:
-    https://www.shellcheck.net/wiki/SC3010 -- In POSIX sh, [[ ]] is undefined.
+If I use perf trace --bpf-summary without the '-a', that is to record
+the process / task of 'sleep 1':
+
+sudo ./perf trace -s --bpf-summary --summary-mode=3Dtotal -- sleep 1
+
+It won't be recording this one process. So there should be a sentence
+saying that bpf-summary only does system wide summaries.
+
+## 2
+there is a bug in min section, which made min always 0
+
+you can see it in the sample output you provided above:
+     syscall            calls  errors  total       min       avg
+max       stddev
+                                       (msec)    (msec)    (msec)
+(msec)        (%)
+     --------------- --------  ------ -------- --------- ---------
+---------     ------
+     futex                372     18  4373.773     0.000    11.757
+997.715    660.42%
+     poll                 241      0  2757.963     0.000    11.444
+997.758    580.34%
+     epoll_wait           161      0  2460.854     0.000    15.285
+325.189    260.73%
+     ppoll                 19      0  1298.652     0.000    68.350
+667.172    281.46%
+     clock_nanosleep        1      0  1000.093     0.000  1000.093
+1000.093      0.00%
+     epoll_pwait           16      0   192.787     0.000    12.049
+173.994    348.73%
+     nanosleep              6      0    50.926     0.000     8.488
+10.210     43.96%
+
+clock_nanosleep has only 1 call so min can never be 0, it has to be
+equal to the max and the mean.
+
+This can be resolved by adding this line (same as what you did in the BPF c=
+ode):
+
+diff --git a/tools/perf/util/bpf-trace-summary.c
+b/tools/perf/util/bpf-trace-summary.c
+index 5ae9feca244d..eb98db7d6e33 100644
+--- a/tools/perf/util/bpf-trace-summary.c
++++ b/tools/perf/util/bpf-trace-summary.c
+@@ -243,7 +243,7 @@ static int update_total_stats(struct hashmap
+*hash, struct syscall_key *map_key,
+
+  if (stat->max_time < map_data->max_time)
+  stat->max_time =3D map_data->max_time;
+- if (stat->min_time > map_data->min_time)
++ if (stat->min_time > map_data->min_time || !stat->min_time)
+  stat->min_time =3D map_data->min_time;
+
+  return 0;
+
+(sorry for the poor formatting from the gmail browser app)
+
+## 3
+Apologies for misunderstanding how the calculation of the 'standard
+deviation of mean' works. You can decide what to do with it. :) Thanks
+for the explanation in the thread of the previous version.
 
 Thanks,
-Namhyung
+Howard
 
-
-> +	skip_if_no_debuginfo
-> +	err=$?
-> +fi
-> +
->  cleanup_probe_vfs_getname
->  exit $err
-> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> index fd5b10d46915..a26248d52628 100755
-> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> @@ -35,8 +35,14 @@ perf_script_filenames() {
->  	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
->  }
->  
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -eq 1 ]] ; then
-> +        skip_if_no_debuginfo
-> +        err=$?
-> +fi
-> +
->  if [ $err -ne 0 ] ; then
->  	exit $err
->  fi
-> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> index 60fccb62c540..4956cd9be41f 100755
-> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> @@ -25,9 +25,14 @@ trace_open_vfs_getname() {
->  	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
->  }
->  
-> -
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -eq 1 ]] ; then
-> +        skip_if_no_debuginfo
-> +        err=$?
-> +fi
-> +
->  if [ $err -ne 0 ] ; then
->  	exit $err
->  fi
-> -- 
-> 2.48.1
-> 
+On Wed, Mar 19, 2025 at 3:19=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> Hi Namhyung,
+>
+> On Wed, Mar 19, 2025 at 3:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello Howard,
+> >
+> > On Wed, Mar 19, 2025 at 12:00:10PM -0700, Howard Chu wrote:
+> > > Hello Namhyung,
+> > >
+> > > Can you please rebase it? I cannot apply it, getting:
+> > >
+> > > perf $ git apply --reject --whitespace=3Dfix
+> > > ./v2_20250317_namhyung_perf_trace_implement_syscall_summary_in_bpf.mb=
+x
+> > > Checking patch tools/perf/Documentation/perf-trace.txt...
+> > > Checking patch tools/perf/Makefile.perf...
+> > > Hunk #1 succeeded at 1198 (offset -8 lines).
+> > > Checking patch tools/perf/builtin-trace.c...
+> > > error: while searching for:
+> > >         bool       hexret;
+> > > };
+> > >
+> > > enum summary_mode {
+> > >         SUMMARY__NONE =3D 0,
+> > >         SUMMARY__BY_TOTAL,
+> > >         SUMMARY__BY_THREAD,
+> > > };
+> > >
+> > > struct trace {
+> > >         struct perf_tool        tool;
+> > >         struct {
+> > >
+> > > error: patch failed: tools/perf/builtin-trace.c:140
+> >
+> > Oops, I think I forgot to say it's on top of Ian's change.
+> > Please try this first.  Sorry for the confusion.
+> >
+> > https://lore.kernel.org/r/20250319050741.269828-1-irogers@google.com
+>
+> Yep, with Ian's patches it successfully applied. :)
+>
+> Thanks,
+> Howard
+> >
+> > Thanks,
+> > Namhyung
+> >
