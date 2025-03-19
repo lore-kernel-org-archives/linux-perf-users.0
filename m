@@ -1,105 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69551DE3A9;
-	Wed, 19 Mar 2025 19:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972D61CAA89;
+	Wed, 19 Mar 2025 20:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742413603; cv=none; b=KLYy5htWzVLZJ6BOPENIYBmVYbTIwp2hX/K58znxcda9QDVcDfXmxiGFab5hlj5wkQkIMetJXp/zt+Gx6VEKbp0OncDRCLrSfrujPsq/KR9aszMHhCidgNgWDeoEtM8KRlpD7a1ZTlbD1grOWwPvAvP3wGno8I+BxaN+e2WYmGI=
+	t=1742415210; cv=none; b=otZtJpmOuq0uq8lXxRuyPErI0IDcMP6qBXrG1zZ1S1uYXzJFKJGX5aJ47aUTI7JKZcWiwQzN+VEGJF4ZWcVN4e9xQhfF1/1EFdCrhAGB+KyOI6HiA4wSTbvm3K4vR7973ptI2wA0x/yzLg5Hb6bot9I/4A+1m0von0Rcp0P9LSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742413603; c=relaxed/simple;
-	bh=IVqEgb8BU0DyEdDZvihoAosRm1nskRL3J+Fcr1ksIXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMkMVOEjCfvfxyiMREiWbqrhZV18W8u7W8aLGAdiHJfPNx1uNWI0RjbHvNMg7/iSsv29WK6uuilHkSsC74hASqcPzJwrLPa/1cBc3rBrfmWZycuaOsA0B/VXxLrJ+tvJsePkKaBckzJ3qA1JefJZxYKYfZGElyC+ilj6H9wtAtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gj1CDZbZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742415210; c=relaxed/simple;
+	bh=lOzyWTaFdm5D3cOcIb0lxqFPvrXuA8d/dvQka1kG81k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uAILrKyh7gJM5yXl2BKg0lQdY2tdIDWzII00rVfnm5woY6AVIU5/hZd1IwjVgGr9JXVgn/6ZUbZp95dli02G+CFKCWP9imNzCMmz/KeyNWxgwndMWZv46swCvjacrMOsaYpJN/xMq7t+xuj3ApM841GecULuCXceDNBJWtELMlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvrRNkLV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gj1CDZbZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819C9C4CEE4;
-	Wed, 19 Mar 2025 19:46:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvrRNkLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21487C4CEE4;
+	Wed, 19 Mar 2025 20:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742413603;
-	bh=IVqEgb8BU0DyEdDZvihoAosRm1nskRL3J+Fcr1ksIXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gj1CDZbZrJlURb9cAIa8SHs7GVNPqS147jFeleHHjizSfNH+ZNCbxUzGlJKhKlxAi
-	 fmmMxLZJwCP0mqiVB7xznE3RtbAtvoe6MrlCV82nGnL3vyM5bqcBv7IkFWCKtGmgvv
-	 FFM0tyXxFL29vofDGhSjAoqQR1Rpui7DTQ87j6D885qvXPm4KrmRyvxRN+SoWGSMl5
-	 ZY2HNxTUekKglHNDf5Ksx0HFSlrN0LquyJrblVTmWFbhE3dIi8AQ/tjJpKtt6qZI9S
-	 4k+K4tZ+UuRdnO6wDF35kWtrJGecGO7371wvAmgrwqYVaUbJe+sH017C2D8DmckRoj
-	 +inaVp36tU2Jw==
-Date: Wed, 19 Mar 2025 20:46:33 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v3 00/15] Prepare for new Intel Family numbers
-Message-ID: <Z9sfGeRhbsJkQnKP@gmail.com>
-References: <20250219184133.816753-1-sohil.mehta@intel.com>
- <df1b95d7-c953-4757-b742-3072f65539f7@intel.com>
- <Z9m9B7BmoItsfjiM@gmail.com>
- <6758e958-a4d7-48b8-83ff-4bcb98f87340@intel.com>
- <Z9nT8-7dPahdKgSQ@gmail.com>
- <b3a6493e-2dc7-4342-ad5f-9c4e91b0d35f@intel.com>
+	s=k20201202; t=1742415210;
+	bh=lOzyWTaFdm5D3cOcIb0lxqFPvrXuA8d/dvQka1kG81k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=PvrRNkLVPrV8HXySBA2gPZzGQvVfRLatWx8VKEau8dTL9eb1aLxYJREhid/7yU/5W
+	 EbSLlWwKdQxoozkSWsuAIebrS8tDQECeFHWEdHolZ5q5/gctfmzkD3mQa3kPsoKRnV
+	 sK6IuLXI5Bhk09b5/fhYIK4IFCwT59vQNSKV0I01ZItBk3LP742qD5s3VUwuU3f3rJ
+	 pvp8ga6cE/3Vo1M59WsHWdJa1BezNl5ViX3BWjYWnkKEZQNCrqC57Aa4x8+PRJJBDw
+	 kGkBln6TdTCdfTzFDtH5QRlygIcnTSf8MTCromsNADIf0YwFWc3DLNdcRHT6V2z1Z7
+	 6BryyDdJGRpFg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+In-Reply-To: <20250312203141.285263-1-acme@kernel.org>
+References: <20250312203141.285263-1-acme@kernel.org>
+Subject: Re: [PATCH v2 0/6] perf python binding fixes
+Message-Id: <174241521005.3133484.10830372265000276672.b4-ty@kernel.org>
+Date: Wed, 19 Mar 2025 13:13:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3a6493e-2dc7-4342-ad5f-9c4e91b0d35f@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-
-* Sohil Mehta <sohil.mehta@intel.com> wrote:
-
-> On 3/18/2025 1:13 PM, Ingo Molnar wrote:
-> > 
-> > * Sohil Mehta <sohil.mehta@intel.com> wrote:
-> > 
-> >>> I've applied the first 13 patches to tip:x86/cpu to help move this 
-> >>> along. I fixed a handful of typos, but haven't noticed any 
-> >>> functional problems so far, so unless there's problems in -next 
-> >>> this might be OK for the merge window. (Famous last words.)
-> >>>
-> >>
-> >> Many thanks.. Fingers crossed!
-> > 
-> > You are welcome, and please send the remaining patches in a day or so, 
-> > on top of tip:x86/cpu.
-> > 
+On Wed, 12 Mar 2025 17:31:35 -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Sent the v4 series with the couple of leftover patches. When sent, the
-> patches were based on tip:x86/cpu, but that seems to have been merged
-> into x86/core.
+> Hi Namhyung,
+> 
+>         So this simplifies it greatly, it almost ends up as a one-liner,
+> but there is an improvement as well to mark the event as consumed to
+> then parse its sample, because the copy of the whole event was done all
+> along.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Correct, we had to back out a broken patch, and a rebase of a number of 
-patches, including yours, was the cleanest option. It should be the 
-same tree content-wise.
+Best regards,
+Namhyung
 
-> I have verified that patches apply cleanly on updated tip:x86/core as 
-> well.
 
-Thank you!
-
-	Ingo
