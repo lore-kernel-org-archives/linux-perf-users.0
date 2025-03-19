@@ -1,29 +1,54 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F34901C9B6C;
-	Wed, 19 Mar 2025 14:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC681EF377
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 14:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742394873; cv=none; b=f5t4ONnSBZY1kzO7exnxCNx3P7vct3OvapQZx/qFXtsWbmqccMCOJYSDc4FBXN6yrrzZeLq9d0iEMkDJs6UK8hWxVg9oqfQUDkP+mOHjjFZ+6nGEWUeLf8JZ/rt66ExbcsL49ZiQlCULyR7D6sA18ZQXRgPy0d4dtjMK/ben0vY=
+	t=1742395928; cv=none; b=mwaPkDxSKkw42QWVcTozsKDXdWEzVf9QarDzmFT/d3Td9o7a9W/NBJioHv/oSLh9vMaaedHKnwvICwd+UW1YK+ndslfJ3td85uidIMUzxsyWspGHQm/vYQJIMTrxw9C66owxkydCjcEdhZIPjWZjLgDfjbuow1TbjPszH4c+8Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742394873; c=relaxed/simple;
-	bh=3pq6FRyIzrjv4SPWeUepBB3TqevtfuHC4XLYdOXn3XE=;
+	s=arc-20240116; t=1742395928; c=relaxed/simple;
+	bh=fmThr+0j5ZXRTB6Jpny73eJBulXT9fTCmES60M34KXI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mf0L667JsovQk3ljfxjp+AOy62PbWkPKmEAuzQHoyJenAezatpHFWfxSwASa25nomWJ7VIeF4o+hpZ91QikVtp7v4zkjuFM/Eu3kGXty//Ckdz8ZYcKtZaDhDEES0tS33kanCW3BfwhBxxtucTsf3NFOg6GbLUjI2gBqQY+GvGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AA0AFEC;
-	Wed, 19 Mar 2025 07:34:39 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 278053F673;
-	Wed, 19 Mar 2025 07:34:28 -0700 (PDT)
-Date: Wed, 19 Mar 2025 14:34:25 +0000
-From: Mark Rutland <mark.rutland@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UZYgZ6jKozd/k8OBoQVJ+ywXtM91rQzfnG8osS41u3pPKv55l3M2qri6f8tGKatDAMMxpnmkwa6C3IlzxpPFDFpU7qAAAy0eFPrpkSCGfTBtK7Qy68PVSXAEVoh98KkDemW65wTpU65RweJh30WbxTTctjoc8xSKw8ky0X3Hf68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTYTEee3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTYTEee3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742395926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rwWKRC3nWivzyNEP1S1vISXANNiFB9MsZAJYGEURD2o=;
+	b=GTYTEee3Y/19GZXFtO7XJE0PUX/9F3U/sFXNj3dGuN5siZ6YbozIYG3sVusOGgQjdsLjY+
+	aC3vDLIbQYX4cGP53xFDD+7w0SSN+GGZFL98EHiodkD7HPsvUP2r7Fu03oYlCQTzmk6F0x
+	5oZ9HwozYj7yykT7G4uJi6y7k0twd4w=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-y1tPtKyJNL6OPCxZd64RTw-1; Wed,
+ 19 Mar 2025 10:51:59 -0400
+X-MC-Unique: y1tPtKyJNL6OPCxZd64RTw-1
+X-Mimecast-MFC-AGG-ID: y1tPtKyJNL6OPCxZd64RTw_1742395916
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A6B71800349;
+	Wed, 19 Mar 2025 14:51:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C5A693001D12;
+	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Mar 2025 15:51:23 +0100 (CET)
+Date: Wed, 19 Mar 2025 15:51:13 +0100
+From: Oleg Nesterov <oleg@redhat.com>
 To: Jeremy Linton <jeremy.linton@arm.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org,
+	mhiramat@kernel.org, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
 	irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
@@ -32,7 +57,7 @@ Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	catalin.marinas@arm.com, will@kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
-Message-ID: <Z9rV8YbThvW2r69-@J2N7QTR9R3>
+Message-ID: <20250319145057.GA10753@redhat.com>
 References: <20250318204841.373116-1-jeremy.linton@arm.com>
  <20250318204841.373116-7-jeremy.linton@arm.com>
 Precedence: bulk
@@ -44,96 +69,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20250318204841.373116-7-jeremy.linton@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Mar 18, 2025 at 03:48:40PM -0500, Jeremy Linton wrote:
-> The uprobe_warn function is limited to the uprobe core,
-> but the functionality is useful to report arch specific errors.
-> 
-> Drop the static so it can be used in those code paths.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-
-NAK to the arm64 additions.
-
-There is no reason to print a warning message for something that does
-not adversely affect the kernel, and where buggy or malicious userspace
-can trigger the warning when the kernel is behaving correctly.
-
-This isn't even ratelimited.
-
-Mark.
-
-> ---
->  arch/arm64/kernel/probes/simulate-insn.c | 8 ++++++--
->  arch/arm64/kernel/probes/uprobes.c       | 4 ++++
->  include/linux/uprobes.h                  | 1 +
->  kernel/events/uprobes.c                  | 2 +-
->  4 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-> index 1fc9bb69b1eb..fe637fec8f36 100644
-> --- a/arch/arm64/kernel/probes/simulate-insn.c
-> +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> @@ -56,8 +56,10 @@ static inline void update_lr(struct pt_regs *regs, long addr)
->  
->  	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
->  		push_user_gcs(addr + 4,	 &err);
-> -		if (err)
-> +		if (err) {
-> +			uprobe_warn(current, "GCS stack push failure");
->  			force_sig(SIGSEGV);
-> +		}
->  	}
->  	procedure_link_pointer_set(regs, addr + 4);
->  }
-> @@ -160,8 +162,10 @@ simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
->  
->  	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
->  		ret_addr = pop_user_gcs(&err);
-> -		if (err || ret_addr != procedure_link_pointer(regs))
-> +		if (err || ret_addr != procedure_link_pointer(regs)) {
-> +			uprobe_warn(current, "GCS RET address mismatch");
->  			force_sig(SIGSEGV);
-> +		}
->  	}
->  
->  }
-> diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-> index 5e72409a255a..9349d521316c 100644
-> --- a/arch/arm64/kernel/probes/uprobes.c
-> +++ b/arch/arm64/kernel/probes/uprobes.c
-> @@ -54,6 +54,7 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  
->  	switch (arm_probe_decode_insn(insn, &auprobe->api)) {
->  	case INSN_REJECTED:
-> +		uprobe_warn(current, "Unsupported instruction at probe location");
->  		return -EINVAL;
->  
->  	case INSN_GOOD_NO_SLOT:
-> @@ -169,6 +170,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->  		gcspr = read_sysreg_s(SYS_GCSPR_EL0);
->  		gcs_ret_vaddr = load_user_gcs((unsigned long __user *)gcspr, &err);
->  		if (err) {
-> +			uprobe_warn(current, "GCS stack not available for retprobe");
->  			force_sig(SIGSEGV);
->  			goto out;
->  		}
-> @@ -180,11 +182,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->  		 * a GCS exception.
->  		 */
->  		if (gcs_ret_vaddr != orig_ret_vaddr)	{
-> +			uprobe_warn(current, "LR/GCS mismatch, likely due to incorrectly placed retprobe");
->  			orig_ret_vaddr = -1;
->  			goto out;
->  		}
->  		put_user_gcs(trampoline_vaddr, (unsigned long __user *) gcspr, &err);
->  		if (err) {
-> +			uprobe_warn(current, "GCS stack update failure during retprobe");
->  			force_sig(SIGSEGV);
->  			goto out;
->  		}
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index b1df7d792fa1..9578ef1ea5a3 100644
+On 03/18, Jeremy Linton wrote:
+>
 > --- a/include/linux/uprobes.h
 > +++ b/include/linux/uprobes.h
 > @@ -185,6 +185,7 @@ struct uprobes_state {
@@ -157,6 +97,11 @@ Mark.
 >  {
 >  	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
 >  }
-> -- 
-> 2.48.1
-> 
+
+Oh, no, please don't.
+
+uprobe_warn() is ugly and needs changes. If nothing else it doesn't even use
+its "t" argument.
+
+Oleg.
+
