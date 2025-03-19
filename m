@@ -1,229 +1,573 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B811B6CE0;
-	Wed, 19 Mar 2025 15:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742399656; cv=fail; b=Bfjaqy32SvOWPkA3CYBuXWSaMoWZOdapuoEzKge2M1KEXxYXYkEVK2zUAejM6Ed5qAuny431VPQ1a8n6gkCYvoywWyjha6auUiGYY82CG1auUA9s0YtN7HwUElzg3/RizXcLhhhne4+GIMlS/yPgIzsyD1zHpQuNW99MwfD/ojM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742399656; c=relaxed/simple;
-	bh=JRId6Norn6nqXoXCOl06l30f1JKXC6f9f/na1tHM/j0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QOvDcFx0gDjsqx5ZsSUqgLHQZMn0TE9f7Jzf7SVpxqwrOLn+dxlGIYsp/IoPmKxu2WvKiq7HAjoHB+EDtNCclzkWynpyGpgVquu1qxAvfnIZhnq0R8HZ3zBFED4YInmpXLRyTN2KsOjFqCJL4Nt5U+Ax7Z3NTYaDSVW7QBSEckg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cvb2ZzIK; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D552FC23
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 16:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742401260; cv=none; b=bZf+CsuI+8icnhYD5KQOG1T5nPKG58pjqBZb1fNxgr9eF3DZkmGdMxFvoG8G6CbPY4kAppKQJlgK2/XFptjNGtuCYJg5T/HpeXWF4PS1UCpIcjglWg+O+dU4o9zNbDdiyaxmnh3BE2i1VjKkBIoW33WnsefmV1qdo3Cwqag4WSk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742401260; c=relaxed/simple;
+	bh=0Q1o22ELJeWhsTZHY7Uv/A5YG9+vQYjPRNQ0hIJkPHQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=T0/hB3HBYYiXITWyR0Jj3cNUeqdw/KncD+XaM+COSLF0jNMmi/nEVdqaxVDfAZYqcLAFdmhz17tXrmUTbLDYNhDP4CP6QZ9KABGMRhNE78hcnx6S03liSVgntSJqfsBkMr02u0rYgp0n6VC2AzbndlfTBxvOz8VPdq1JuF+Ci0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v9AlJjfO; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cvb2ZzIK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742399654; x=1773935654;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=JRId6Norn6nqXoXCOl06l30f1JKXC6f9f/na1tHM/j0=;
-  b=cvb2ZzIKVj9eOX6jFgjPohDCjR5QN9fJ0LKlNLYMm2QLi/MdCYu+fsbd
-   FyLM4USlf7DTh/+3TZ4xT3xSGRPS6ALsklotmi9HkN90tHQZ+/9Mg9YM4
-   rDDH6u+YuBiT/tQP6XR0WJF4pUgRP+bNo25n1g+GcRfOPqrJ/ne83K3L5
-   Yvyt8b9ZjpiELoMGe32Q5RcEOm7xBjc7uceRwnBjrwuqskH3a1AMuca+x
-   H/vKyL3rUgAf7H8BFFEe2IfjSPSjumIL07rEdKOqivCa0UuECC2DS0K/E
-   ceFEkQiAETUVPODX2yiTutnlutL4Zk17b2TY7YYFsOZkJeQSdm0QKmURH
-   Q==;
-X-CSE-ConnectionGUID: ZwwkrQHsR8Oz4EX/4UeqHA==
-X-CSE-MsgGUID: 8TmhE4XJSwuPGMz7UP/Qzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="53812212"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="53812212"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 08:54:13 -0700
-X-CSE-ConnectionGUID: X4rmT3J5R6+G1J5e9mQZug==
-X-CSE-MsgGUID: N6BzpLgiQfOy15NeqCPIzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="123602279"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 08:54:13 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 19 Mar 2025 08:54:13 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 19 Mar 2025 08:54:13 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Mar 2025 08:54:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=imTZYV73gMsdrVbkjSkSVbJSeFuHOdc9FLjYwJdY2XygMt95/yjDv7YlxE3L85tWq6XERKbwS3pp9SV0jOXLjfN3uY6lpswrnoYijarpBuCn+ba5P2BJ85NJOCFSHqzj0MUHEv0HPRMsHByxoTz3aBX7iTP21N5t6PYwG55gqHd9OxthHvIYckYW+2YbY+uhnzFKIi1w3ge7qKtmn4K5ier2/BP4D2vUqWQYdCUOAl4XxdKJMOE4bvbVWSiZSjegds1Li4Iv49yLTnpa2hMnaDhlpKDWlgfT5Jkd9NKcEvpLyjIuSzMGiWuH7nHedWRDYO9/MPm35O8e6D7b5K127Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6Lsjki2x7VCeKWjfwVdy+zwZ0xH5es1NYRnlTq7tGKA=;
- b=udIypYkCNuTnaqrg5ZsqF6utQEMnGpCCINp6cci2xRgDb0zqNJFNl3bqO5f1iFGRWuHUBxPngwJq0hGN6of57adRlzIGpe92CenS8MunYPOZwn1dV44qdu3JLt6m+vndJIa0tO1qBMZEN9HvxSIezk7PHghOJTPIlCfpEMw4NQbqGQuPaMZWnkOJezp+BJPR8sEzyBxFBtJQ1Z8CHtajGH3AcV2RP+UxLPnqgcMGU/3OIpTtAcQbUrDAHG4HmUHvOPhNJS/mW/bLwQwb3UbdjliX6am2MWPZpSoWE35t51LAjvINiKmm3uewyQbKN6gYf8KxJFDdW0eJH0RZhC47wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by CH3PR11MB8210.namprd11.prod.outlook.com (2603:10b6:610:163::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 15:53:37 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b%5]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 15:53:37 +0000
-Message-ID: <b3a6493e-2dc7-4342-ad5f-9c4e91b0d35f@intel.com>
-Date: Wed, 19 Mar 2025 08:53:36 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/15] Prepare for new Intel Family numbers
-To: Ingo Molnar <mingo@kernel.org>
-CC: <x86@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
-	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, "Arnaldo Carvalho
- de Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
- Liang" <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "Rafael J
- . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Andy Lutomirski
-	<luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui
-	<rui.zhang@intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>, "David
- Laight" <david.laight.linux@gmail.com>, Dapeng Mi
-	<dapeng1.mi@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, Tony Luck <tony.luck@intel.com>
-References: <20250219184133.816753-1-sohil.mehta@intel.com>
- <df1b95d7-c953-4757-b742-3072f65539f7@intel.com> <Z9m9B7BmoItsfjiM@gmail.com>
- <6758e958-a4d7-48b8-83ff-4bcb98f87340@intel.com> <Z9nT8-7dPahdKgSQ@gmail.com>
-Content-Language: en-US
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <Z9nT8-7dPahdKgSQ@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR02CA0038.namprd02.prod.outlook.com
- (2603:10b6:a03:54::15) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v9AlJjfO"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff799be8f5so7941249a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Mar 2025 09:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742401258; x=1743006058; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CmOOBUdKcBV4QLV+u0HYjq2hj+rXMOzyFOvOOndFngc=;
+        b=v9AlJjfOFmTcHOfmjSb39Mf/jRJxn9wuboDMseHu7TcozQojEiiX/4tjEZWZ7aj/ld
+         As136iKhWs15W3qcPE7tboCJW9zCtmfG02Fupf6qHN3uztRyAhEmB/A79SMQJo+u0nTZ
+         iizRrv9/7MZUtfyFAnrtO9JLI+qafrxJpPjItFEPYs5lYz+HG1a3kcCU3IMmWEJtoNU4
+         MKEta7Ze2uPCe8YOOp0Wr6aei6O5LwyJRJV3w0rJlrG1zKTu4/HwMpQPvMQEpZD4GIYQ
+         7kbaqtqQqtIwRnoUPC9xFfbuUTNmyPOfNKWm326TldwExjGYduahnbNxAAi0HYY5SHs7
+         mRbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742401258; x=1743006058;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CmOOBUdKcBV4QLV+u0HYjq2hj+rXMOzyFOvOOndFngc=;
+        b=d7kvveFXqSGMRgVHJxssmR/wacvwSsYixpIxFTut3Gmsf/CpdYTsVKocMqtLkvs6L9
+         ss4hwuNeQicrbUQk6X0+NNmhBxX6kmp3+JQq5Lp0h9awRAX5Mdfs38ST+gHzEJb8escD
+         xAIJIeRRy6jiFVo7/3Pb2/ogFEl5jJM6uySD9AQRtDRzyTMcqZT/413Vg0QnFHnWO3VI
+         IzrD6nrnvDARJSXDU1jALlSPLXtj891u5XiWjS04uGI0vWaiiys6sgn3RXgSnHkx2wZx
+         jx6ywO4L1Gn2FI4QgBFqqHYS8G2IqZw5UwjMba/d+bfuWq6WeRjw+IpVPWzdhHbxXs+m
+         TH3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUz5vv3XmA+aLlnuVTXZqVS1Pf+N7Ym3t9398OJkAKdCeqoE9O+aIXVROIfKJCE9adr7GPHdCfS0evlJ1ihSaMF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBVJgEOkHk5BHlz17ozCfsH5SVYfxC3HHNS+5+8ACiP4M5/qpv
+	Rs6qvkBUtoDZv7R8AKSz3nVpbzKbPDcWcZ5/QmE+H08bmEBXNXQoHnOhYlRPMtPiK0AFkcfoXDD
+	nczsqDw==
+X-Google-Smtp-Source: AGHT+IGRBetIfbs9yFp7ojoVXbSAGnBD+kto5JDEyfGNYvlYKDP/geGo+PVvRpA1r3x5zbSJdgZ2PiTUrYLR
+X-Received: from pgbdo13.prod.google.com ([2002:a05:6a02:e8d:b0:af2:8474:f67e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d9a:b0:1f5:5b2a:f641
+ with SMTP id adf61e73a8af0-1fbece4181emr5937576637.28.1742401257773; Wed, 19
+ Mar 2025 09:20:57 -0700 (PDT)
+Date: Wed, 19 Mar 2025 09:20:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|CH3PR11MB8210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c9601ac-86d5-4f06-530a-08dd66fe3621
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VGdINlpRVk5LZEpXaFVJWmxYVjFFMjNSL0JtNXFoK3VvVk9lWlg4UU9neWNM?=
- =?utf-8?B?ZDN1aENOdGNnaHFGYUNFZCszaThSNDB6dkN1aCswSUkyb1Vtc1U3cXlGZElW?=
- =?utf-8?B?Q0lWTUpqbUZlODV0bkliM3VhNjk3RUNjbHgzZlh4RWI5MDF0QUtpcXFqK2hD?=
- =?utf-8?B?MVRmKzhQdDlzMHBnelN4TUtsZElsS09pME01aDczbDU0cTJkSGRNeTJzeEZl?=
- =?utf-8?B?V05ZN3BXb2x6UmVNY0o0QzZRcUQrWjlDSDMvcmlQVHplQmhhM3Rjb0p2WUp0?=
- =?utf-8?B?MDVaTHhSNFFndUZ1RGxiT2Q0Z0I4Z24zN2x1V0ZsUjZwNUZFRFM1UnRKVWIy?=
- =?utf-8?B?Q1huSENDL3FjSmV6Z0NmTndXNERLZVkvb3RpbTlmTFE2ZWxqMk95eGRXM1RN?=
- =?utf-8?B?WXVxdSt0N0JseGNVVDZsejZtdGQ3VlZzbTdZa2kzL0Z3dkFIOXhZYjNoam5Q?=
- =?utf-8?B?NkZSN2ZKSVRTVUMxNllUNCt3WDBNVzVoK2t5RUJOSzVCYmFmS0Vpb3JHd09y?=
- =?utf-8?B?KzN3WVRjMW5oK0gweVpKWHYwbjRZalBaK3V1dkpxNlRSaldVZFNWWnQ3NS8x?=
- =?utf-8?B?SGxONjhkaWwzTEpGY0lrZGkvQTVYL2U5dkpxS1d3Qk91Tlg3aFROdkhGQkcy?=
- =?utf-8?B?TTFjZGVacTJWVndGSWpzMmxtTnVjbW5xNHJGTGwyd0xXc0RhYUFERkxsL3M1?=
- =?utf-8?B?bE1Md0xoTTh4d3cvcHFWRGJPdXFOODM2c1RMNk1DVXR0UTY0c01qMDJ3RE1s?=
- =?utf-8?B?OHRkR2VxYjFqZVUvRWRwbXZ6U0dVNkU5NGd6Qm0xQUlHbnc1V1FvejlRUXBz?=
- =?utf-8?B?SVJBSVFjVHZPWWhUUS9NRnJ6N2dKeXNZempWZGM3a0grRHdnbTdXNWtRYTAr?=
- =?utf-8?B?S2F3NG0zaUh3emk2QnREWnVsQ2RBeExxd3pZMHE2S0QvdEFzTlRMQ2dsN24y?=
- =?utf-8?B?ZGVYY3ZGTzN5OVNCQ1VZY3FIaVQ4VzUvcDZwTUtUN3F0alNCNWptdDlQL3FZ?=
- =?utf-8?B?SzJ3dy9EUHlBYUJzdGpCcHZMcGwybkJOQ0M0SXBMNDlzUFU5eTB2cXdKNi95?=
- =?utf-8?B?U25xditmYkhoTGxPUWhmZkJwdEw0SkZPWTBhcmxzenZ4ZkxhUkJQVVRobFkv?=
- =?utf-8?B?em9mOUNyQ3pQS2IwTU1BL0R6QmwvcnBDZXpPbzM2UlI1eU42a0FCNGJwbXpE?=
- =?utf-8?B?YVVSSVQzU3pCMllMUW9RcFIrbllsSldZcUlhMzFzWi9iY2FLUGhDOUxYSXp1?=
- =?utf-8?B?NHp6REV0TDF5cVpmbjR5VVZRM2dXY3g3SndHYWhGZFpTbUFjWWlvVURMYm5C?=
- =?utf-8?B?b0JrVWQxRU51WVVSRFBRQ04xUjJHUXgwVUQzZVhsdDZueDlGbHYzSDQ4dGkr?=
- =?utf-8?B?Skl1aE4xc3c1em1PZjhoYVpLNFliM0dkMFRXRHVkc1BIQUFKM2E5bFVuOHVh?=
- =?utf-8?B?OSt5bmxZZk1vbGhiODh2M21SMEpJdUNmbmhHYW84b0tYWksrVk1velZEeTFs?=
- =?utf-8?B?K040R0pvZmY0WExXa0FrREE4MWNGZldEWGxnUkovL0tRcEtJalBXUUVCOHB3?=
- =?utf-8?B?RlREMGJhUS9XSnFWdFZBS1JYQ0hBK3pzRlBka0RQRm5kYjl4MzV5UlJ4alBw?=
- =?utf-8?B?Qm1lNkxhNUhRbXpHR0YybVlHUG1idG01ZDROdVJoNWNnb1JZZlRjQ2VBUXNn?=
- =?utf-8?B?SlpmMW13eWZVOTIwM294UlZnYytsaldQZlcraktsVEh6UzJCY1hZd2ZQT2tl?=
- =?utf-8?B?cHFCM25zS2lFNW11TXhIQmdncXhDc0RCYW9CK29RZkMwb3BFaWIrd1JzV24y?=
- =?utf-8?B?VnJIWEZFUngvYWdHTFZvazFJMTlmamJHcHRQQzNIVm1SS0tycWNkejBtZ1Fw?=
- =?utf-8?Q?CH1EOcF7P1m/4?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U1AzZ2lRNFlnaUZWYlFoMzJ3dkR5TUt6TVNXNmEzWnAwcXE4YVpyWk9uanYz?=
- =?utf-8?B?STROQk9zaUtjVEhISmxONnNRWVlTRnlWOVpJMHM3bjdhTmFMQkdYWlFxSTVU?=
- =?utf-8?B?K3JvWTJUSWFUeVdLMkFVN2UrTkVrUmxFYldqV3Z1TWZOZDVuUVhUKzlrNXVt?=
- =?utf-8?B?bUttOTBoRkg0SVNTZmJSMSs3NXJZQzMzSnZraHRJU2VXRFVHVFRsUW1NaXY1?=
- =?utf-8?B?TTdzM0lSdVRITk1WSEVwSjg3OFRXVm44NDNuNGxiK0JOMHQvQWJtMkwxNW5W?=
- =?utf-8?B?dE5PVVg1QU82QUY1Z2ZsdmJ5VjJEejdhUE5iN1JEOHpWRlJTK3NqcjdUWkxK?=
- =?utf-8?B?VmVCVnFFeTRtdWZGdWdaeHBsR25BVlRKcDU0dGlTU0p4bGdWWmdFTmRZNktu?=
- =?utf-8?B?SVUraHhtcGowWXorb2xub1MrZU1UTzAvY1hUaU9vbmY4aWY0c1lmOVB3VDRO?=
- =?utf-8?B?akRtVHU2RlUrcTRBOWxhMDJYQU5GRlY5YzcyeUtyZ002N0RZVktuUnpJOWN3?=
- =?utf-8?B?dXRSZlV3VGJaTkU5MWk0Nm1xNVMzMGRLYVhzZm1UbXhvQkdzUEQvQnM2eld1?=
- =?utf-8?B?MUwzTXVqd3ZiVE4zOFhuaktnNE1ieU9TU2dScmFOcU9iQjBaUDVnb0xQTGtR?=
- =?utf-8?B?TzhMZzhpTVRweUw4SWhYdDJCWFQxWWp0K25aZDNtUGFRTGNwbVJQT1FEWVlh?=
- =?utf-8?B?NWFCckllNlMzNEt2ekgxemhyOGdLblJ0a1dMMGZ5KzJod0RtdmFxY1k0NHFj?=
- =?utf-8?B?TktCSHZEdHZiUVdOSThIQUh2aE5GRDlqSjFpUWhINDRRSjVtSkhGVzJ4RlRE?=
- =?utf-8?B?UHdsU0I5M2RiTkd1T21UekhRZWZEbWFYVG1pdnNOSDFjbnBsc3Vzczg5YzBo?=
- =?utf-8?B?ZWlKeHp3ZDl2VDh5K1NyNE9lMEM4V1huRnFhdVVYRU0rajdoYTJOMGdYbzRW?=
- =?utf-8?B?K2VuZzA1TDIrZ1dxcjFGVU5XbFlDUkczT2cwWkU2NVAwaDQwUEx4UWw3Nm5r?=
- =?utf-8?B?aHR5WU5hZzJJc1V6ZlJIaW9JdXFKZVZlUFNNUGlIcmlpVkVWTlZKSGRuTkZx?=
- =?utf-8?B?ZEcrb1JESHhQWmVCc1lJYm5FMHl1Q3JjUzZVZmJSOUx4Uno1K0JDbkR6dHBr?=
- =?utf-8?B?bjh3eTFqRWpQZE85blNicGI0YmV5M21RLzRra2JEMTQ2TmVOazNHWEtqdUNo?=
- =?utf-8?B?Y2pSUVhCbktVV2ZSQ3hFbThuc2tIN1J1ekN6VGlkcVZORGRmUi9QUFFGeFJG?=
- =?utf-8?B?Z1dTV1FlT0tGeFNpclBvREZabDNxQUx1ZHF2REduZlFsZEJrcVRpNUk2RlZJ?=
- =?utf-8?B?UFlHQWwrQ1ZiUFJKc1FidWJtZjh0Z01lVEU2SGg4RkYwcHMyWCtBV2JtNTdW?=
- =?utf-8?B?NUV5K0JJTHFQR1didllmSnZSWUFULzJTOGhZM2F4bVZsQlBaZEYvNEpsRWha?=
- =?utf-8?B?SXcxbDlsNWt1cURPTkhjRkk5MFFUZ1kyNnhnOGNsSVhUWTM3SUhqUUhGVHQw?=
- =?utf-8?B?OGVWMW9WMU9lM2N2M3l6QkliR3YrRGdycUp3Q1kyY2w5V3FidEFydVhrRU5U?=
- =?utf-8?B?L0VHRkVJUzFyK3EwMW5SaC92Mkp0T1dCR1RDTnFjZWxQSE1zZ3daR2pLRjNm?=
- =?utf-8?B?L3Q3Vmo4M3YrMWFMbTZ0QVVGTlluTmhYaWdqbE0yL1J6Q21EZC95d2d2ZjVj?=
- =?utf-8?B?eEFCK1c3a25hWnVaMEN0K2lYMUpBMHE3bEtvQTRLM21hVWp1aDB3aDFyYTNU?=
- =?utf-8?B?VDVDd2h5U1d1U0V5OTBOT3lLdHE4WFlqUkw0bnNtbUxQOElVTmRQdTQ3eHpv?=
- =?utf-8?B?anlrTUkvaExOYlBPaFhCd2thQ1RsWDFrTS81VmxmK1R6SnFrbUt1SHgvQkdn?=
- =?utf-8?B?SUFrMGd1OFZNSW9iTXNMT0V3ZElUcjI3WUhYTC82d2hkWi9SWW44WE5LSkZR?=
- =?utf-8?B?ZisrYVZhUlhjQzNOTDlvam5hYis4bWJzcDRuajFnaVcyRGl1VW9jWE82ZENI?=
- =?utf-8?B?QkI4TUxuUXJpRUkxZGdaYW5IazFLNVd6VUJ0Q0xEMVBKdnNmTXZ5ZGVNY1Rm?=
- =?utf-8?B?a0ZiVW1wNHF5akkxUytHa01kZzZtL2s0elk3dXFWOWs5N1NwVTdWUEl3Y3Jw?=
- =?utf-8?Q?8eHrv2Xz55nfBq73fpNccOHrF?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9601ac-86d5-4f06-530a-08dd66fe3621
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 15:53:37.3915
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VFRIQ9EYMI7hxIdT0RfD6AA+hGaAOGOZpSlArEx0EcsgImfvL2vBAxPUo2UtSGqsGOXjgLvIKDnvEg8hEW7/oA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8210
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250319162053.915284-1-irogers@google.com>
+Subject: [PATCH v1] perf evlist: Make uniquifying counter names consistent
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/18/2025 1:13 PM, Ingo Molnar wrote:
-> 
-> * Sohil Mehta <sohil.mehta@intel.com> wrote:
-> 
->>> I've applied the first 13 patches to tip:x86/cpu to help move this 
->>> along. I fixed a handful of typos, but haven't noticed any 
->>> functional problems so far, so unless there's problems in -next 
->>> this might be OK for the merge window. (Famous last words.)
->>>
->>
->> Many thanks.. Fingers crossed!
-> 
-> You are welcome, and please send the remaining patches in a day or so, 
-> on top of tip:x86/cpu.
-> 
+perf stat has different uniquification logic to perf record and perf
+top. In the case of perf record and perf top all hybrid event names
+are uniquified. Perf stat is more disciplined respecting name config
+terms, libpfm4 events, etc. Perf stat will uniquify hybrid events and
+the non-core PMU cases shouldn't apply to perf record or perf top. For
+consistency, remove the uniquification for perf record and perf top
+and reuse the perf stat uniquification, making the code more globally
+visible for this.
 
-Sent the v4 series with the couple of leftover patches. When sent, the
-patches were based on tip:x86/cpu, but that seems to have been merged
-into x86/core. I have verified that patches apply cleanly on updated
-tip:x86/core as well.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-record.c    |   7 +-
+ tools/perf/builtin-top.c       |   7 +-
+ tools/perf/util/evlist.c       |  65 +++++++++-----
+ tools/perf/util/evlist.h       |   3 +-
+ tools/perf/util/evsel.c        | 113 +++++++++++++++++++++++++
+ tools/perf/util/evsel.h        |   4 +
+ tools/perf/util/stat-display.c | 149 +--------------------------------
+ 7 files changed, 175 insertions(+), 173 deletions(-)
 
-Sohil
-
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ba20bf7c011d..83f8f9728e12 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -26,6 +26,7 @@
+ #include "util/target.h"
+ #include "util/session.h"
+ #include "util/tool.h"
++#include "util/stat.h"
+ #include "util/symbol.h"
+ #include "util/record.h"
+ #include "util/cpumap.h"
+@@ -2483,7 +2484,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
+ 	}
+ 
+-	evlist__uniquify_name(rec->evlist);
++	/*
++	 * Use global stat_config that is zero meaning aggr_mode is AGGR_NONE
++	 * and hybrid_merge is false.
++	 */
++	evlist__uniquify_evsel_names(rec->evlist, &stat_config);
+ 
+ 	evlist__config(rec->evlist, opts, &callchain_param);
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1061f4eebc3f..b7c8ecafa2f2 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -35,6 +35,7 @@
+ #include "util/mmap.h"
+ #include "util/session.h"
+ #include "util/thread.h"
++#include "util/stat.h"
+ #include "util/symbol.h"
+ #include "util/synthetic-events.h"
+ #include "util/top.h"
+@@ -1309,7 +1310,11 @@ static int __cmd_top(struct perf_top *top)
+ 		}
+ 	}
+ 
+-	evlist__uniquify_name(top->evlist);
++	/*
++	 * Use global stat_config that is zero meaning aggr_mode is AGGR_NONE
++	 * and hybrid_merge is false.
++	 */
++	evlist__uniquify_evsel_names(top->evlist, &stat_config);
+ 	ret = perf_top__start_counters(top);
+ 	if (ret)
+ 		return ret;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 49e10d6981ad..e9961823e307 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -2551,34 +2551,55 @@ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_lis
+ 	perf_cpu_map__put(user_requested_cpus);
+ }
+ 
+-void evlist__uniquify_name(struct evlist *evlist)
++/* Should uniquify be disabled for the evlist? */
++static bool evlist__disable_uniquify(const struct evlist *evlist)
+ {
+-	char *new_name, empty_attributes[2] = ":", *attributes;
+-	struct evsel *pos;
++	struct evsel *counter;
++	struct perf_pmu *last_pmu = NULL;
++	bool first = true;
+ 
+-	if (perf_pmus__num_core_pmus() == 1)
+-		return;
++	evlist__for_each_entry(evlist, counter) {
++		/* If PMUs vary then uniquify can be useful. */
++		if (!first && counter->pmu != last_pmu)
++			return false;
++		first = false;
++		if (counter->pmu) {
++			/* Allow uniquify for uncore PMUs. */
++			if (!counter->pmu->is_core)
++				return false;
++			/* Keep hybrid event names uniquified for clarity. */
++			if (perf_pmus__num_core_pmus() > 1)
++				return false;
++		}
++	}
++	return true;
++}
+ 
+-	evlist__for_each_entry(evlist, pos) {
+-		if (!evsel__is_hybrid(pos))
+-			continue;
++static bool evlist__set_needs_uniquify(struct evlist *evlist, const struct perf_stat_config *config)
++{
++	struct evsel *counter;
++	bool needs_uniquify = false;
+ 
+-		if (strchr(pos->name, '/'))
+-			continue;
++	if (evlist__disable_uniquify(evlist)) {
++		evlist__for_each_entry(evlist, counter)
++			counter->uniquified_name = true;
++		return false;
++	}
++
++	evlist__for_each_entry(evlist, counter) {
++		if (evsel__set_needs_uniquify(counter, config))
++			needs_uniquify = true;
++	}
++	return needs_uniquify;
++}
+ 
+-		attributes = strchr(pos->name, ':');
+-		if (attributes)
+-			*attributes = '\0';
+-		else
+-			attributes = empty_attributes;
++void evlist__uniquify_evsel_names(struct evlist *evlist, const struct perf_stat_config *config)
++{
++	if (evlist__set_needs_uniquify(evlist, config)) {
++		struct evsel *pos;
+ 
+-		if (asprintf(&new_name, "%s/%s/%s", pos->pmu ? pos->pmu->name : "",
+-			     pos->name, attributes + 1)) {
+-			free(pos->name);
+-			pos->name = new_name;
+-		} else {
+-			*attributes = ':';
+-		}
++		evlist__for_each_entry(evlist, pos)
++			evsel__uniquify_counter(pos);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index edcbf1c10e92..7cfdaf543214 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -19,6 +19,7 @@
+ struct pollfd;
+ struct thread_map;
+ struct perf_cpu_map;
++struct perf_stat_config;
+ struct record_opts;
+ struct target;
+ 
+@@ -433,7 +434,7 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+ int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
+ void evlist__check_mem_load_aux(struct evlist *evlist);
+ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
+-void evlist__uniquify_name(struct evlist *evlist);
++void evlist__uniquify_evsel_names(struct evlist *evlist, const struct perf_stat_config *config);
+ bool evlist__has_bpf_output(struct evlist *evlist);
+ bool evlist__needs_bpf_sb_event(struct evlist *evlist);
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1974395492d7..1bc81aa604a7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3939,3 +3939,116 @@ void evsel__remove_from_group(struct evsel *evsel, struct evsel *leader)
+ 		leader->core.nr_members--;
+ 	}
+ }
++
++bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
++{
++	struct evsel *evsel;
++
++	if (counter->needs_uniquify) {
++		/* Already set. */
++		return true;
++	}
++
++	if (counter->merged_stat) {
++		/* Counter won't be shown. */
++		return false;
++	}
++
++	if (counter->use_config_name || counter->is_libpfm_event) {
++		/* Original name will be used. */
++		return false;
++	}
++
++	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++		/* Unique hybrid counters necessary. */
++		counter->needs_uniquify = true;
++		return true;
++	}
++
++	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
++		/* Legacy event, don't uniquify. */
++		return false;
++	}
++
++	if (counter->pmu && counter->pmu->is_core &&
++	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
++		/* A sysfs or json event replacing a legacy event, don't uniquify. */
++		return false;
++	}
++
++	if (config->aggr_mode == AGGR_NONE) {
++		/* Always unique with no aggregation. */
++		counter->needs_uniquify = true;
++		return true;
++	}
++
++	/*
++	 * Do other non-merged events in the evlist have the same name? If so
++	 * uniquify is necessary.
++	 */
++	evlist__for_each_entry(counter->evlist, evsel) {
++		if (evsel == counter || evsel->merged_stat)
++			continue;
++
++		if (evsel__name_is(counter, evsel__name(evsel))) {
++			counter->needs_uniquify = true;
++			return true;
++		}
++	}
++	return false;
++}
++
++void evsel__uniquify_counter(struct evsel *counter)
++{
++	const char *name, *pmu_name;
++	char *new_name, *config;
++	int ret;
++
++	/* No uniquification necessary. */
++	if (!counter->needs_uniquify)
++		return;
++
++	/* The evsel was already uniquified. */
++	if (counter->uniquified_name)
++		return;
++
++	/* Avoid checking to uniquify twice. */
++	counter->uniquified_name = true;
++
++	name = evsel__name(counter);
++	pmu_name = counter->pmu->name;
++	/* Already prefixed by the PMU name. */
++	if (!strncmp(name, pmu_name, strlen(pmu_name)))
++		return;
++
++	config = strchr(name, '/');
++	if (config) {
++		int len = config - name;
++
++		if (config[1] == '/') {
++			/* case: event// */
++			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 2);
++		} else {
++			/* case: event/.../ */
++			ret = asprintf(&new_name, "%s/%.*s,%s", pmu_name, len, name, config + 1);
++		}
++	} else {
++		config = strchr(name, ':');
++		if (config) {
++			/* case: event:.. */
++			int len = config - name;
++
++			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
++		} else {
++			/* case: event */
++			ret = asprintf(&new_name, "%s/%s/", pmu_name, name);
++		}
++	}
++	if (ret > 0) {
++		free(counter->name);
++		counter->name = new_name;
++	} else {
++		/* ENOMEM from asprintf. */
++		counter->uniquified_name = false;
++	}
++}
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index aae431d63d64..76ccb7c7e8c2 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -16,6 +16,7 @@
+ struct bpf_object;
+ struct cgroup;
+ struct perf_counts;
++struct perf_stat_config;
+ struct perf_stat_evsel;
+ union perf_event;
+ struct bpf_counter_ops;
+@@ -542,6 +543,9 @@ void evsel__remove_from_group(struct evsel *evsel, struct evsel *leader);
+ 
+ bool arch_evsel__must_be_in_group(const struct evsel *evsel);
+ 
++bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config);
++void evsel__uniquify_counter(struct evsel *counter);
++
+ /*
+  * Macro to swap the bit-field postition and size.
+  * Used when,
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e852ac0d9847..d427e0ca98a1 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -929,61 +929,6 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 	}
+ }
+ 
+-static void evsel__uniquify_counter(struct evsel *counter)
+-{
+-	const char *name, *pmu_name;
+-	char *new_name, *config;
+-	int ret;
+-
+-	/* No uniquification necessary. */
+-	if (!counter->needs_uniquify)
+-		return;
+-
+-	/* The evsel was already uniquified. */
+-	if (counter->uniquified_name)
+-		return;
+-
+-	/* Avoid checking to uniquify twice. */
+-	counter->uniquified_name = true;
+-
+-	name = evsel__name(counter);
+-	pmu_name = counter->pmu->name;
+-	/* Already prefixed by the PMU name. */
+-	if (!strncmp(name, pmu_name, strlen(pmu_name)))
+-		return;
+-
+-	config = strchr(name, '/');
+-	if (config) {
+-		int len = config - name;
+-
+-		if (config[1] == '/') {
+-			/* case: event// */
+-			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 2);
+-		} else {
+-			/* case: event/.../ */
+-			ret = asprintf(&new_name, "%s/%.*s,%s", pmu_name, len, name, config + 1);
+-		}
+-	} else {
+-		config = strchr(name, ':');
+-		if (config) {
+-			/* case: event:.. */
+-			int len = config - name;
+-
+-			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
+-		} else {
+-			/* case: event */
+-			ret = asprintf(&new_name, "%s/%s/", pmu_name, name);
+-		}
+-	}
+-	if (ret > 0) {
+-		free(counter->name);
+-		counter->name = new_name;
+-	} else {
+-		/* ENOMEM from asprintf. */
+-		counter->uniquified_name = false;
+-	}
+-}
+-
+ /**
+  * should_skip_zero_count() - Check if the event should print 0 values.
+  * @config: The perf stat configuration (including aggregation mode).
+@@ -1069,8 +1014,6 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	if (counter->merged_stat)
+ 		return;
+ 
+-	evsel__uniquify_counter(counter);
+-
+ 	val = aggr->counts.val;
+ 	ena = aggr->counts.ena;
+ 	run = aggr->counts.run;
+@@ -1650,96 +1593,6 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 		print_metric_end(config, os);
+ }
+ 
+-/* Should uniquify be disabled for the evlist? */
+-static bool evlist__disable_uniquify(const struct evlist *evlist)
+-{
+-	struct evsel *counter;
+-	struct perf_pmu *last_pmu = NULL;
+-	bool first = true;
+-
+-	evlist__for_each_entry(evlist, counter) {
+-		/* If PMUs vary then uniquify can be useful. */
+-		if (!first && counter->pmu != last_pmu)
+-			return false;
+-		first = false;
+-		if (counter->pmu) {
+-			/* Allow uniquify for uncore PMUs. */
+-			if (!counter->pmu->is_core)
+-				return false;
+-			/* Keep hybrid event names uniquified for clarity. */
+-			if (perf_pmus__num_core_pmus() > 1)
+-				return false;
+-		}
+-	}
+-	return true;
+-}
+-
+-static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
+-{
+-	struct evsel *evsel;
+-
+-	if (counter->merged_stat) {
+-		/* Counter won't be shown. */
+-		return;
+-	}
+-
+-	if (counter->use_config_name || counter->is_libpfm_event) {
+-		/* Original name will be used. */
+-		return;
+-	}
+-
+-	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+-		/* Unique hybrid counters necessary. */
+-		counter->needs_uniquify = true;
+-		return;
+-	}
+-
+-	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
+-		/* Legacy event, don't uniquify. */
+-		return;
+-	}
+-
+-	if (counter->pmu && counter->pmu->is_core &&
+-	    counter->alternate_hw_config != PERF_COUNT_HW_MAX) {
+-		/* A sysfs or json event replacing a legacy event, don't uniquify. */
+-		return;
+-	}
+-
+-	if (config->aggr_mode == AGGR_NONE) {
+-		/* Always unique with no aggregation. */
+-		counter->needs_uniquify = true;
+-		return;
+-	}
+-
+-	/*
+-	 * Do other non-merged events in the evlist have the same name? If so
+-	 * uniquify is necessary.
+-	 */
+-	evlist__for_each_entry(counter->evlist, evsel) {
+-		if (evsel == counter || evsel->merged_stat)
+-			continue;
+-
+-		if (evsel__name_is(counter, evsel__name(evsel))) {
+-			counter->needs_uniquify = true;
+-			return;
+-		}
+-	}
+-}
+-
+-static void evlist__set_needs_uniquify(struct evlist *evlist, const struct perf_stat_config *config)
+-{
+-	struct evsel *counter;
+-
+-	if (evlist__disable_uniquify(evlist)) {
+-		evlist__for_each_entry(evlist, counter)
+-			counter->uniquified_name = true;
+-		return;
+-	}
+-
+-	evlist__for_each_entry(evlist, counter)
+-		evsel__set_needs_uniquify(counter, config);
+-}
+-
+ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+ 			    struct target *_target, struct timespec *ts,
+ 			    int argc, const char **argv)
+@@ -1751,7 +1604,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		.first = true,
+ 	};
+ 
+-	evlist__set_needs_uniquify(evlist, config);
++	evlist__uniquify_evsel_names(evlist, config);
+ 
+ 	if (config->iostat_run)
+ 		evlist->selected = evlist__first(evlist);
+-- 
+2.49.0.rc1.451.g8f38331e32-goog
 
