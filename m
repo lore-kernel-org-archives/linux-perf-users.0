@@ -1,236 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2098.outbound.protection.outlook.com [40.107.93.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DCC1DA612;
-	Thu, 20 Mar 2025 16:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742487403; cv=none; b=W9l6IINCn9KC9Uvn4fbmG4C1TFVL8XF0eYLKeo/+o06kdd87yHUPLsuq46CePHk6tm2zQxteY/aUChY6SvHt5GzNUZYt7AoWSPCsep10PlOy14Fmg2MIW9+ZJ4ZpTIDY3O4TdHTiZXCEXiVhmq1K4lWaLKhBZc8bNCiW56N8vtg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742487403; c=relaxed/simple;
-	bh=QuSV0ezqDMuBA7My6kyh7ypDBxaO5u9B+e93O6me3d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GN3Otydw5WcxG9ywYzmcfJXjrdC0t6fwn0M34b2K0G7YRqBtswqiIC+pyrXI3wLzTGsaETqrFLuBUhS13IwxlAd4Q5BXu/pglqInaqnFutxjPFoEqIZGmP3AWwtaEq5AS5YJADHr2aEXK+DDJ6f5pxB2L5KSEyVyssK7mOM7RH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uow37P9O; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9C021CA00;
+	Thu, 20 Mar 2025 20:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742501421; cv=fail; b=B8/zBibWwe7wkvq1xSTRxCWnj5LWmn3cw1vT0ztTmYHuNHVbOt723QHJopsRtGlKxOUiJzXqZgfj23dePgLBR638/Uj/tUL+BCWL6JWsyJT7p3TJhgtfZzIugrYNjUTh1a9gm9ZBxGIY4NybdzfUGXTrzKGsRwW+rsYJaEo3u4E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742501421; c=relaxed/simple;
+	bh=z1AlpR80411EqjXcuf9s1M1d5cbF3ukdpdwBM+ajUdU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=LIIYPUTJl9yW1sIvTBL/Y9ymexNX+ot4YcozkAvbAVux5A/T7zh0FT1/j7jDGsNfM5K3BfuN4ozdENc+Vqialu5OkafvihwmNnJBQjZols/eLsW8G0/ZoEU4Hsz30UqorzSs65D5rdV53jY1aQg85RNWLG0uzqHjij1WYBFIAdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=Ws0sw74k; arc=fail smtp.client-ip=40.107.93.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uow37P9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0976CC4CEDD;
-	Thu, 20 Mar 2025 16:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742487402;
-	bh=QuSV0ezqDMuBA7My6kyh7ypDBxaO5u9B+e93O6me3d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uow37P9OJm56rmkd9GwQmFzJKbex31heipV4+ype8FB0c5N+hj/QLinZBsayaDFjf
-	 4ZfurOQ5zXO375a4LTSmwQVafUIbhVtqx0NHlj4hS3Qu5VFEOn4np30Qwh0sp+qBpR
-	 WRFd/sE0gBzTXKGkGVROc2u3Mw/51tRBg+5LXz9uYbCoIYdCeo2Gsc1DKyjNtMaPmF
-	 1JORdYkrAy4wv7I27ZYlLDwTLge3GqwNYuMj8vxfgnrRmM8SeTR6/0yr0qhc6+mXH6
-	 8bCP5Tk2x/ReaXbd5cWKQ8ufr115o9hncrULxhy0p1TqCxEbapuc0OH5gtdWgJvdq2
-	 BLoJiysmt/RgA==
-Date: Thu, 20 Mar 2025 09:16:40 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH 1/3] perf sort: Keep output fields in the same level
-Message-ID: <Z9w_aFlzOkoCTSqK@google.com>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="Ws0sw74k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hETXRcnny9av2xMnoD47YxglQFjfmiRYHPyFXgmtiEcJuCgNM0eL0vVW36Wbld0JPMyyvW04/AkE5087MUbrPsRW+6K2TysqICFod1npthXc6zHRGUBcNSOijQXoZ8AhYS2ZHozKoGdgxP44xncQi6g6jZGnwi8LPZsiGGvLx6WdXdhPYgZL14UW1SoRRYmecF3nx1G10yNxnDF9mdrDIBwE5+c4qpriBkf62uG2JiD0505sw0Th0sXMzXDBDyjckTRiYIA/vFNVSVLvsnr7kuG9+t7wqxE+WFrAb6thcm/hN/qppExWqnxhFnu43B4SQq0fUGEAKFkj4Fqh4BN3nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DOKtfZePp8Y2S127TiF/SWn31UOfb+CCeRKZgPvKb5U=;
+ b=dkWKMKNxo2Od795Ly9S1AziKqxyMSfeXlJ6df7w4nvEbuFwDTzxD4ZUPKXCcOPBRuWUW/qFDLEeq/fYW5yXXEM2bZ/ZDPTxhuFT+/GGQwyhZHKfeFUFVXqV+qGIfCXrS7rzcKr+3uyjJTJarEJUJXua22tPbW4Fr7s/EgyUhcf/dVMO/ggchNuVXU8xhOfQCqkbJY7bVNPGwqo31jrZ9Rzg9lKZrF1hCjyz2vY6OKO32TP3UeVwR0fKPpxYjmg7SNhe31eP2dQ1/T074sBez5+sX5yc7UONnosf0SU9C4bSB3cUw6z7dQ4g3CODT+ffUlhU1Y/lH4uUVGo6suGHcUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DOKtfZePp8Y2S127TiF/SWn31UOfb+CCeRKZgPvKb5U=;
+ b=Ws0sw74kAN5YIHjSoriNGLwErivgd2ebwSHBI4f2FUAvekxCWgiSbUWz3OThk1Q5WZbKVrmLzhG4yZilxQuXH+k2dKZ7zEg2gJgPrYEzzzhtSbnu6uK81x1C2+iCf9aMrPiWucJ5fXakIw/fJNjsn1vtzK81eHTnvWb2zY8JDn0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ CY1PR01MB9340.prod.exchangelabs.com (2603:10b6:930:108::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.34; Thu, 20 Mar 2025 20:10:16 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba%3]) with mapi id 15.20.8534.034; Thu, 20 Mar 2025
+ 20:10:15 +0000
+Date: Thu, 20 Mar 2025 13:10:09 -0700 (PDT)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: James Clark <james.clark@linaro.org>
+cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Ian Rogers <irogers@google.com>, John Garry <john.g.garry@oracle.com>, 
+    Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, 
+    Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] perf vendor events arm64: AmpereOne/AmpereOneX: Mark
+ LD_RETIRED impacted by errata
+In-Reply-To: <9fe071f9-27bb-4694-ace5-f23eb0d0e50d@linaro.org>
+Message-ID: <6a88e749-51e1-fe61-5122-f4c046dd3485@os.amperecomputing.com>
+References: <20250313201559.11332-1-ilkka@os.amperecomputing.com> <20250313201559.11332-2-ilkka@os.amperecomputing.com> <9fe071f9-27bb-4694-ace5-f23eb0d0e50d@linaro.org>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH5PR05CA0008.namprd05.prod.outlook.com
+ (2603:10b6:610:1f0::17) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9vgt1pjiNbDBDbM@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|CY1PR01MB9340:EE_
+X-MS-Office365-Filtering-Correlation-Id: f86b7f84-19ec-4f8e-1106-08dd67eb3a9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VmEeQLToA8Y6Lzb4QYAD0Ay3Oq1zHI7bbnak2WEw6E+kMHB0IaTSm4ARtkYW?=
+ =?us-ascii?Q?IDFxtUfHD9zTIL1IWKcu6fNSQG4RkJIutEbM57KoIwStPOkmh3Q2Qow7z0I4?=
+ =?us-ascii?Q?/mZyFzQfLRncbr6b0Pe9ktneIuzw+a1KTnnAQlPKaBg7hP6DHXehb1l69m0L?=
+ =?us-ascii?Q?Pu2K9VBgY15TGjvwZ/ubNWp4OJnEgw+7y3mSO6V/qJT11mE0O2Iixp47hchW?=
+ =?us-ascii?Q?QpoF1JcUm6r5Nb9W92BrFjcmPh8au/a718i6PzlPsuK4OF9FDD64xArK5Pzb?=
+ =?us-ascii?Q?csAPWrjfuWVOJtOosJa7jqQLn8cF40LCpUWdSZgEiC/nSIUjY2bp1woIctnL?=
+ =?us-ascii?Q?e0AkrdG9gVicZaGirVEl3YC2Dq0oYZeKjMBvEiLHcV24NPs9frOCYrln8vp+?=
+ =?us-ascii?Q?8VVLB3O03ZCg0x8KpOD+/S3hUf+CSYPiL9FDh+2KsSvGYl68vFWDJqyvqhPj?=
+ =?us-ascii?Q?pUOQkOkdMMQMJ0is5jarC25vBX4hNLJic6BalUwJ7PLdPKNG5pLX81iZPHsS?=
+ =?us-ascii?Q?8oPDh2xTba122Qaamuf2VXNFHBtPkS6v6rs6xveyF74MPDgEvKpCPoqQn8oo?=
+ =?us-ascii?Q?W+0+YNnpmnEnfgLsSb6B4kduD2J8sqwDjLhUMtAIlvCN8m7mEsDHjjJH0/Kq?=
+ =?us-ascii?Q?FzifUKpBquS1PIqJo++lZjGvNwvVDy2w0zb++tBDzu+ORDoN5uMYP83X1Y2k?=
+ =?us-ascii?Q?5ddUGksvWIcq5RgySU9o7LBUQI71EJHTSuc7g4Uxc64nYJUdjrx4cS86RSmc?=
+ =?us-ascii?Q?Ub3nfa+MRSMSzklaCDO/kc5G7zFW3Hceoad+O9b49MdPFj4128Gw/5eTtsFd?=
+ =?us-ascii?Q?ffuVA7abvUMOqyguvpjgnDNaU95M7zkuDqaCHpl/PvmO79yMmA/oQcIovsbz?=
+ =?us-ascii?Q?ybhIbu8aU8k4/cxxiD3ZXPkgxRwgjmbbfit5yp3gTWp+PjL9IGdGk99rHHBT?=
+ =?us-ascii?Q?NX29hFULj8hqgyUwQEKmh5cHS0QHc+AphGd7zNECEGZWD3aRPMKlWtpzl2MF?=
+ =?us-ascii?Q?GxGbKX8GNUtovX4Yruc2EhjOAeZdmoXJ9OxSLLSDtBxZZKbnjBVaygMJTTqM?=
+ =?us-ascii?Q?CCawrbHb+OoEwpgIjbJiGAbK/HHlJ6NDW3FV8M3se1ddlGjF4Fzd0/Pvtfdm?=
+ =?us-ascii?Q?guIKG7uQ+YEcjM1DPjEuFgJ+RsjO6iL7jEPixWjn9DedD4Opb0mEEcJQ1D4R?=
+ =?us-ascii?Q?VjDfYVR95F8Znn7nMFWkKrTQmL6GTgznuL/e4hMaq2vvKZ1J17sQ+a/tXDOi?=
+ =?us-ascii?Q?VhWQS1Fbu0sMJ1dSe1o17ksNMTHWCIXpmhvpPLxrEpXl7OspQE0q/lR82YKf?=
+ =?us-ascii?Q?/XZ+4nz0JPCZWb+1yGi8TxlcgZeTdJKp/QUA38552q0j9Es2Pzkff+LKPNGq?=
+ =?us-ascii?Q?1cbeXcAr8Mjcqs7qnTxGmo5Bgcup0pFOf2jLLZOdvAyCS/qwQaWMhG0Dh3SQ?=
+ =?us-ascii?Q?QnwvVLkpyiypajpVVWvmNeEfp+xcaHCG?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Qm8wrf38WumiDwKooQ9mncxnb9trwiezs3gC1f9SuqKCk/eNaVRo5qGochNS?=
+ =?us-ascii?Q?VVImQz7AAJIjCns0ztMcaZDccjwFlLGo9vtvtcu8IVWJKWKJ5Dw9u/TvSSD+?=
+ =?us-ascii?Q?jnitTVcQKp5ReCUYq2n/scyRV+/CaMmH6fNs7lj5FcIEjX/pOVY0fEb355mz?=
+ =?us-ascii?Q?TcjVmt5HMwu3FLnP4Gi238M3gbqUmZUqPerdLpLYSXOwl1U30pAgRV8TYE4b?=
+ =?us-ascii?Q?DkXhPAxeNXHmWiikmSrB0belgG5mWvkNxCJmy8JtFqCbiyu1xaqmdawdFaAq?=
+ =?us-ascii?Q?i4bX7aFNB1cx2xLbFiaoLFjMMZQxp0Y8MwULQsXOGnAgEuXzG5qZyCFXdPXq?=
+ =?us-ascii?Q?ZjDuZOR8yJ74791CgZJc5wac6TMonYMu73C58MphQfGm3OrK2ClZDUBfA3Eh?=
+ =?us-ascii?Q?5wc15urE/PuNfAx5GtR+WVUjEYxc9+3vX2C2pTflPRnBIR9DktQ/uP8TQ/gt?=
+ =?us-ascii?Q?ja0AV3uj1hlWFE92J6qjPgN+KuPM6QVSRdWEDLrW2YmaJoMibrAm4YTe0dad?=
+ =?us-ascii?Q?cPBRCC6ppvlGShskPNaL+4lOcBVOt68/ciBQ7Wp8ef0R/Ey8fCxajZGyCAbU?=
+ =?us-ascii?Q?y/yYQeAHvj7yevMgwofBaUK+/kzuM5R0CPJ3I+5ksKxFrBgZaYJL1IIjB4sD?=
+ =?us-ascii?Q?qkqFRP22p21uT+UTHQUiGRTm3r3ZUPVJ/xIf019ZxAqtG+FXquGKD3CMU/mi?=
+ =?us-ascii?Q?uIWuHFwavt0oxWbz1RbCnR1cN73XSnpAjlFwXNXrJ6b6U4QZriVX7ETXLNyP?=
+ =?us-ascii?Q?592hbTNCeN+LN/q07shXUe2UGVNHTffc0yMcy+UvBWtBh6sfAkbnH5M07m1E?=
+ =?us-ascii?Q?G/lwaMbrBy2e90nqRrzqY3wVy1/3fSlDBvQsQhY6a4MYUIEBCCH/u+e3bwzF?=
+ =?us-ascii?Q?oWZR9TQFpWbAhkx9hqI2q/CVwH4WU/rXMurZwv72n4J5TGF6V6VcgeQakxti?=
+ =?us-ascii?Q?L59YDLcToZRM5gILF3S53DCPFwwKmmayuXb/UFlUdviHi3RXnP+YbDePctos?=
+ =?us-ascii?Q?QQsyrnZZDn6EECleg2zaqZCmKms5+j116DjC1PANKXtRDK7dw8sYDD00/hde?=
+ =?us-ascii?Q?0POTirKiCYhfgBCDj44aP5RpgcSROozWhThMXYbDuYYZqf6/HM2t83sokWuP?=
+ =?us-ascii?Q?RHZs2kIcrEklm+oWLdmsJcBFc2VipDJ9CBKk0/Z1SYuVNDKBOVpyC0Sxz9Ed?=
+ =?us-ascii?Q?USLpHacy8JsGmG3Oq/RAHSQ9YzkRsJLr/mrSCbZehPnQp75YW2oMTJfwY9aZ?=
+ =?us-ascii?Q?dRi8rRW3D5ZXJf5McusdDVBdDfnypkvRlz0dYW5Viv5RB8QxDrZK1SbxdxvK?=
+ =?us-ascii?Q?v2xL1BTSG96aOeWtbGj54bB49733IPQ9h+f9u59ZvpF8fXDbe5zmd1vkxsUd?=
+ =?us-ascii?Q?zr3MPuXP2QWNLTnQ5kjwOSSUGTJ2WjFK6WP+rnBAn/BmA1xtG4R6rM4u2plL?=
+ =?us-ascii?Q?ppUKVQdsryVt+gqE4wL4owz854xgarhESwKIpqguG/1qkRI5huBxLFzMRwBs?=
+ =?us-ascii?Q?GGpl4XhZd97Qs9xOXjcXxNq9m9pAd3he04mq2AupXzLFToTLnK0L4qbAiBZW?=
+ =?us-ascii?Q?SpbMIcKOGIc/YLPehlIdThbkc9tqjZBMlBOcMPd/48MQZSDqqa26pjlOVZxW?=
+ =?us-ascii?Q?rb1if+gN9oKDm47kjwa9gI8=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f86b7f84-19ec-4f8e-1106-08dd67eb3a9d
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 20:10:15.7086
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EOa9dofjw7kaIVjGZrKU0l0dUZQHpUMvj37kPxftC3aIchgW5SY/HNvfYT2XKkUnXqq06rvpYpQCSdpLt6Pa53dCp06YEcJpZz1k9OupmkifZrKLOxGoDxZ7jmS5sm2+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR01MB9340
 
-Hi Ingo,
 
-On Thu, Mar 20, 2025 at 10:32:39AM +0100, Ingo Molnar wrote:
-> 
-> * Namhyung Kim <namhyung@kernel.org> wrote:
-> 
-> > On Fri, Mar 07, 2025 at 12:08:27AM -0800, Namhyung Kim wrote:
-> > > This is useful for hierarchy output mode where the first level is
-> > > considered as output fields.  We want them in the same level so that it
-> > > can show only the remaining groups in the hierarchy.
-> > > 
-> > > Before:
-> > >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> > >   ...
-> > >   #          Overhead  Samples / Period / Command / Shared Object
-> > >   # .................  ..........................................
-> > >   #
-> > >      100.00%           4035
-> > >         100.00%           3835883066
-> > >            100.00%           perf
-> > >                99.37%           perf
-> > >                 0.50%           ld-linux-x86-64.so.2
-> > >                 0.06%           [unknown]
-> > >                 0.04%           libc.so.6
-> > >                 0.02%           libLLVM-16.so.1
-> > > 
-> > > After:
-> > >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> > >   ...
-> > >   #    Overhead       Samples        Period  Command / Shared Object
-> > >   # .......................................  .......................
-> > >   #
-> > >      100.00%          4035    3835883066     perf
-> > >          99.37%          4005    3811826223     perf
-> > >           0.50%            19      19210014     ld-linux-x86-64.so.2
-> > >           0.06%             8       2367089     [unknown]
-> > >           0.04%             2       1720336     libc.so.6
-> > >           0.02%             1        759404     libLLVM-16.so.1
-> > > 
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > Ping!  Anybody interested in this change? :)
-> 
-> Oh yes, all such pieces of intelligent organization of textual output 
-> of profiling data are worth their weight in gold in my book. :-)
-> 
->   Acked-by: Ingo Molnar <mingo@kernel.org>
+Hi James,
 
-Thanks a lot!
+On Tue, 18 Mar 2025, James Clark wrote:
+> On 13/03/2025 8:15 pm, Ilkka Koskinen wrote:
+>> Atomic instructions are both memory-reading and memory-writing
+>> instructions and so should be counted by both LD_RETIRED and ST_RETIRED
+>> performance monitoring events. However LD_RETIRED does not count atomic
+>> instructions.
+>> 
+>> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+>> ---
+>>   tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json | 4 +++-
+>>   .../perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json  | 4 +++-
+>>   2 files changed, 6 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json 
+>> b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json
+>> index 0711782bfa6b..13382d29b25f 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json
+>> @@ -1,6 +1,8 @@
+>>   [
+>>       {
+>> -        "ArchStdEvent": "LD_RETIRED"
+>> +        "ArchStdEvent": "LD_RETIRED",
+>> +        "Errata": "Errata AC03_CPU_52",
+>> +        "BriefDescription": "Instruction architecturally executed, 
+>> condition code check pass, load. Impacted by errata -"
+>
+> I think this could also have a 'Fixes:' tag, either way:
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
 
-> 
-> 1)
-> 
-> On a related note, does anyone know why perf stat output alignment 
-> sucks so much these days:
-> 
->   starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging 2>&1 | grep elapsed
->            0.11620 +- 0.00327 seconds time elapsed  ( +-  2.81% )
->           0.120813 +- 0.000570 seconds time elapsed  ( +-  0.47% )
->           0.122280 +- 0.000443 seconds time elapsed  ( +-  0.36% )
->           0.119813 +- 0.000752 seconds time elapsed  ( +-  0.63% )
->            0.12190 +- 0.00134 seconds time elapsed  ( +-  1.10% )
->           0.119862 +- 0.000542 seconds time elapsed  ( +-  0.45% )
->           0.120075 +- 0.000608 seconds time elapsed  ( +-  0.51% )
->           0.120350 +- 0.000273 seconds time elapsed  ( +-  0.23% )
->            0.12203 +- 0.00114 seconds time elapsed  ( +-  0.93% )
->            0.12229 +- 0.00114 seconds time elapsed  ( +-  0.93% )
->            0.12032 +- 0.00115 seconds time elapsed  ( +-  0.95% )
->           0.121241 +- 0.000463 seconds time elapsed  ( +-  0.38% )
->           0.119404 +- 0.000333 seconds time elapsed  ( +-  0.28% )
->           0.119945 +- 0.000766 seconds time elapsed  ( +-  0.64% )
->           0.121215 +- 0.000879 seconds time elapsed  ( +-  0.72% )
->            0.12001 +- 0.00109 seconds time elapsed  ( +-  0.91% )
->            0.12193 +- 0.00182 seconds time elapsed  ( +-  1.49% )
->           0.119184 +- 0.000794 seconds time elapsed  ( +-  0.67% )
->           0.120062 +- 0.000439 seconds time elapsed  ( +-  0.37% )
->           0.120834 +- 0.000760 seconds time elapsed  ( +-  0.63% )
->           0.369473 +- 0.000992 seconds time elapsed  ( +-  0.27% )
-> 
-> ... see how the vertical alignment of the output goes randomly wacko - 
-> I presume because there's a trailing zero in the output number and the 
-> code for some inexplicable reason decides to shorten it to make the 
-> life of developers harder? ;-)
+Yeah, that's true. I guess, I was thinking about using 'Fixes' more on 
+broken patches rather than when adding a patch dealing with a new hw 
+errata. Well, given you're find with this, I don't think I'll resubmit it
+with a Fixes tag this time.
 
-It seems it calcuates the precision when printing the result and doesn't
-care much about the repeatations.
-
-> 
-> 2)
-> 
-> It's also incredibly hard to Ctrl-C a 'perf stat --repeat' instance:
-> 
->  starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  # Running 'sched/messaging' benchmark:
->  # 20 sender and receiver processes per group
->  # 10 groups == 400 processes run
-> 
->  ...
->  Ctrl-C
-> 
->  # Running 'sched/messaging' benchmark:
->  perf: pollperf: perf: pollperf: pollpollperf: pollperf: pollperf: : Interrupted system call
->  : Interrupted system call
->  poll: Interrupted system call
->  perf: pollperf: : Interrupted system call
->  perf: pollperf: pollpollperf: : Interrupted system call
->  pollperf: pollperf: perf: perf: pollpollpollperf: : Interrupted system call
->  pollperf: poll: Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  perf: poll: Interrupted system call
->  perf: perf: pollpoll: Interrupted system call
->  : Interrupted system call
->  perf: perf: perf: perf: perf: perf: : Interrupted system call
->  pollpollpollpollpollpoll: Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  perf: perf: pollperf: perf: perf: perf: perf: perf: pollperf: : Interrupted system call
->  pollpollpoll: Interrupted system call
-> 
-> Note how the perf stat instance actually *hangs*. I have to Ctrl-Z it, 
-> and kill -9 %1 it the hard way to clean up:
-> 
->  pollpollpoll: Interrupted system call
->  �
->  [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  starship:~/tip> kill -9 %1
-> 
->  [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  starship:~/tip> kill -9 %1
-> 
-> Does anyone use this thing for actual benchmarking work? ;-)
-
-Oh, ok.  I'll take a look.
-
-> 
-> 3)
-> 
-> It would also be nice to be able to Ctrl-C out of a 'perf top' instance 
-> that freezes the output or so. Or prints a snapshot in ASCII. Anything 
-> but what it does currently: it just exits and clears the xterm screen 
-> of all useful information...
-> 
-> I have to use 'f' (how many people know about that feature?) and copy & 
-> paste anything interesting from the screen the hard way.
-
-Actually I was not aware of 'f' key. :)  I think you can use 'P' to save
-the current screen to a file.
-
-> 
-> 4)
-> 
-> It would also be nice to have an export function to save current 'perf 
-> top' profiling data and have it available for 'perf report' et al 
-> analysis. Ie. frequently I just see an interesting snapshot and decide 
-> that it's good for further analysis, freeze the screen and are left 
-> with very few options to keep it for further look and reference.
-
-Hmm.. interesting.  I'll think about it but it seems doable.
-
-> 
-> 5)
-> 
-> Would anyone be interested in an OpenGL-ish version of perf top, with 
-> its own low level shader for font-atlas based text output and vertex 
-> based polygon graphics, double buffering, full screen support with very 
-> little Xorg interaction for the GX pathway, etc? It should be *far* 
-> faster and lower overhead than the current ncurses->xterm->Wayland 
-> levels of indirection... and it could open up a new world of on-screen 
-> profiling information as well. Basically a very simple self-sustained 
-> OpenGL game engine for the key low level graphics primitives of modern 
-> GFX hardware. I could whip up a prototype if there's interest.
-
-I'm not familiar with the fancy GFX things but it'd be interesting to
-see.  Not sure how well we can manage it in the future though, as we
-have unloved GTK2 UI as well.
-
-Thanks,
-Namhyung
-
+Cheers, Ilkka
