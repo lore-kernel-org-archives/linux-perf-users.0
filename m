@@ -1,52 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835B72066DC;
-	Thu, 20 Mar 2025 16:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAF52222A3;
+	Thu, 20 Mar 2025 16:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486442; cv=none; b=SfLKXj4UJkU9rvIM7D4OCqaNPUtH5Yd+FJYbndVeJywJHhEzGYppIvJRPHw6b9pKncJV3RLUDmh9aPSUhgbGY+oFncySQ/vObAodXXMlv31agvmeUh4DbruW04iaPArID6z2N9iyx+5/MPDM+Qqu1yrzjKTCs9jOlMdgBxOfXqQ=
+	t=1742486443; cv=none; b=q5HxgthoSPZrOKMGS02/JTEDx2brAWVslmzfr2nWSRBSZT2yl50GbWwVfecC1A4e9kEFWq9goYQxpCu2SXCZT3nOQi4Sok9AKdtEPDVKHGKZRbyiuvM24wYc/wR8iv/AwoPjjAudOz5VPJLeUDF/tDapolRED3MyB/AaAEFbM2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742486442; c=relaxed/simple;
-	bh=4jMeTtmBaorbabAAMf8Jl20J3QEuUuQqaOeS/cfvbVE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gyGwIXqFeGmV5BPdMk0uGR3I3LBg+ZA/iXSwmQtd/L9JWldODTZbf2Toym6S8JSdlQMcGWFV9W4QIHfbc9VcHFKmliZ7DEAD3HP71WzJYhUWOjcrTJz5tAToprnvu5DAVpUkBb8UHnxhIPMa76/rhimiOT9dGa7ZOIv3d5eF6oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKgqTLse; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742486443; c=relaxed/simple;
+	bh=Fg7vCbTVG/1rgA8NipdcysO3ubVRbwp1J1syqojzpyU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jSexwDA/cuZphP+pFOcU6gtECEhy2vUgDBcguHJOW7NHmNhbzV6RToQZ5yULgYY/bV526/Hha3I+jK6XAG8HpzFvwdNsjUDy6UAkWYP4mDgIQ4tLbLVarQT1In14G1i1OFcMofaLjr3j/JUcZpMY3NpLBqIe6RcKw19L8KD3kbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhvOHhil; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKgqTLse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD052C4CEEF;
-	Thu, 20 Mar 2025 16:00:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhvOHhil"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86905C4CEF7;
+	Thu, 20 Mar 2025 16:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742486442;
-	bh=4jMeTtmBaorbabAAMf8Jl20J3QEuUuQqaOeS/cfvbVE=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=bKgqTLseJXr5xwhHH7jTr31YoA+ZRf0Oud2KDRzsCc8LZoXonIx+HmEMC4z2vHL1p
-	 dcjIPnRt30XzJfzKx6q/FcqyH2jYP8cXSseJykxuRKisM4lv2VkNPxgpV3x2ctKgAI
-	 x+5rw0urbnK88dXu5ogeDMpO99Y/tDWZz4t9o5y4nhViZzU/ttCcYo2IRmi9bXAnLQ
-	 q4Xl+0NgEe13b8DD+wnw60FhJNGHfbDT8P7gbNxQaEp9vEdJ5rSOZIr5iLCcBXlM90
-	 4z7xHv+COCeUQ+4oAylIB5m+APtsFEfY4cPDiVn52Px0cJTQQKjPYVKcYstLgXHB/6
-	 ul8FkfNcRAsEQ==
+	s=k20201202; t=1742486443;
+	bh=Fg7vCbTVG/1rgA8NipdcysO3ubVRbwp1J1syqojzpyU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IhvOHhilm3bBwIA+j+375UieZRnMPuyKuv9QFtpBKf6uJPYcR+GdHKRZVzBPSdMH/
+	 t3jHw0214foxTiX7GtlTwQr8sZprJHWjvb4gETDxn5ve4+CjWd/MgsBv93+b5ihGxz
+	 rBlP5e7eNqCudEMZ2bSLPFnlowlN2Vi3HZYBmOLqD8sQwLe+qQI3EsMupcMJkleDYZ
+	 PvolOwPpkgFhpS8GJp2qhm7Bk26MZ3fRTEx0lAFfz7zqZNDPInV62DuJlhh3uUwzgn
+	 S9G0kRdEsHQ6wm8G2P/Q4tFw4QTJc4yg0YAWIHcqqxsfL/YaXLy64rvdGl+5hkGHpk
+	 yUy5PWfiLxx5Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+To: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
- Levi Yun <yeoreum.yun@arm.com>, 
- "Dr. David Alan Gilbert" <linux@treblig.org>, 
- Thomas Falcon <thomas.falcon@intel.com>, coresight@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20250318171914.145616-1-irogers@google.com>
-References: <20250318171914.145616-1-irogers@google.com>
-Subject: Re: [PATCH v1] perf cpumap: Increment reference count for online
- cpumap
-Message-Id: <174248644166.3704425.11921703615469719002.b4-ty@kernel.org>
-Date: Thu, 20 Mar 2025 09:00:41 -0700
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20250319101614.190922-1-james.clark@linaro.org>
+References: <20250319101614.190922-1-james.clark@linaro.org>
+Subject: Re: [PATCH] perf: intel-tpebs: Fix incorrect usage of zfree()
+Message-Id: <174248644250.3704425.14877550732142254406.b4-ty@kernel.org>
+Date: Thu, 20 Mar 2025 09:00:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,15 +51,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 18 Mar 2025 10:19:14 -0700, Ian Rogers wrote:
-> Thomas Richter <tmricht@linux.ibm.com> reported a double put on the
-> cpumap for the placeholder core PMU:
-> https://lore.kernel.org/lkml/20250318095132.1502654-3-tmricht@linux.ibm.com/
-> Requiring the caller to get the cpumap is not how these things are
-> usually done, switch cpu_map__online to do the get and then fix up any
-> use cases where a put is needed.
+On Wed, 19 Mar 2025 10:16:10 +0000, James Clark wrote:
+> zfree() requires an address otherwise it frees what's in name, rather
+> than name itself. Pass the address of name to fix it.
 > 
-> [...]
+> This was the only incorrect occurrence in Perf found using a search.
+> 
+> 
 Applied to perf-tools-next, thanks!
 
 Best regards,
