@@ -1,64 +1,64 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96E71E5B6A
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Mar 2025 11:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F718224B0E
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Mar 2025 11:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742470624; cv=none; b=OpGdDPiuPzJ0mZNtQL2kmfl/dKhap13tozT9TFFgxyHNaNxZTc5cbOvUi9zQx9bTzbPZ2lBaguU3VEcOKsPP4qKAyiJ1zKxjqHSHbm1rtAPjmMsjp2KSnqtahxd6KDijhAO+HDhmg0IRt5qD0jZU5OP4JW1vO/82s1V2F3ZRUqE=
+	t=1742471169; cv=none; b=emzMQQYL6kpJNZFHfLttJ9fxE15cEZxsqZFdmEpMCtW4ZM/HwO66Ak4SkawMYb35aPJPL3Nm9T/+K0nancX/RU1C1I2ys7uF0+/CAqy+5lg+xIGKypJ2kum398+Q8IPh17sBFD0SNZakh7eo7Ais4D2ZApJ73rLL1ULqNbbDD5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742470624; c=relaxed/simple;
-	bh=1C7bpo2rWiO9yyTZV75L7Qmv/xob9QKLrD1DGIBJC/o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=l1jzc2c1Zt1x19rtMAu0LybEu7VuCBb1wi/nODk0Ij5zwEgvcj/s/phfh5+dSF/kCZd7g4hUZcp0x7n1sECu/4rDhVKG+hyaWlT8c6FiwntBMkWVyEiRrKSbX4WLgPAuWGP92zg5DjnO5icrZKmOWLQoCdMlfsWlfFEV2/pFvmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f0ay9JnN; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1742471169; c=relaxed/simple;
+	bh=K3uUC4fl0Wd5qXU848rirln8bzCs66S0l5k9oxU/V9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=MjZyaMb1JT9vyiEjaCU84pV5+DYdyi09pSVM0vCfe63qugGUJKUT+wNyFjVzTW+Lb8h7RjXW63H0bxTu5LF7RPuzncH1SFWROy1xTuE5e/OLWmV9v04NHGkWCVxp4WExLI+rB2L6Q+ExqFNHPafVJwSauDoupjJooCy/hRxOGs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GJcXTcd5; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f0ay9JnN"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43948021a45so5579145e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Mar 2025 04:37:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJcXTcd5"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso569647f8f.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Mar 2025 04:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742470621; x=1743075421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mjlcvKGTiShc7ATMQRzCYdMBBkwojrXBnj0x7+vUXZY=;
-        b=f0ay9JnNbhbdoynyNW0sCykyB9xB2NdKqvJxTe3lzNBRR8Dp0VnXuxf6fQ/mT4w3VC
-         X8RlXxN9PByIXLP6X6xZFYEBWG3U5pDArTG4Uck67wNJarc2CGO2mP8951hIPmUMW0KG
-         tLvzGTCFSbodOk3gTGKRLWfL7cOM1Iq1FlRV5PFS2eW3D8JVaMBzD0zvQWSGTV2+hx4W
-         NS+pcVP3ZUmPP5SXdYa9+NpdE7GsvhJNnEXgstY11WUrCwIlGgU2x4jhiBXS8mgaYk7x
-         BIWeU8SHQTCCKwtRu7fzothWEocveCa42nT9fdmc+uJ7RRtSZ3aWGXqNGGdGGW//m7TR
-         jtiA==
+        d=linaro.org; s=google; t=1742471165; x=1743075965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7W3HPSMP4f2CiNLUVG9hzYOpX9Z/+7n96rGcD94rGNM=;
+        b=GJcXTcd5BPkvUUGYBjC3h288rLOv7u91I8sVXkQ25dlycTGtGvZSiH7IyNhCHwO2tb
+         aNWolJXfaEkKE+7m3XMZoIuCrapwbqUMLLklBWD1Igy5E/yEaaIWNfHWSD3U++cyssZE
+         0KJoBvC+ttSOREnatdnFLlb22GMnZ48Rzi46ipVZYsARDbAEPTvbp0cVbGa7SSP7Kz7o
+         f2guzb0JfJn7ojKGOS5RnZarDPsuaL4EMpXOoJI+1CEZkJ/iFeo+8oCqry5aCZk/u+UJ
+         sDdboddIVJ969haMmRCM8yA9nYZOAnL+k3u5i1BjubxkZHe06jqwEiLbWCPEkdq00vr8
+         YnKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742470621; x=1743075421;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1742471165; x=1743075965;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjlcvKGTiShc7ATMQRzCYdMBBkwojrXBnj0x7+vUXZY=;
-        b=HvpdKo2sGpzQR/tNp3hYVpCkXH97qUmtuLnuQUlE/v7dTs45U/2ULbbelwtYnWVTbl
-         OZVpanCo4MpAWVefPvFDgitoVH4gskimlsDJ5L6oVa4HQU9WnTildnZYancs4c4bh+7Z
-         Ttu2KQVc2z+iSmCZ6cI+pAUIIAmSeON0k83BVL1hxMJQnq9HD8R7Xs+Yfr+cSFUuRH8m
-         QnpBDp2ObzEtYxJTxDguvw9vXccHHpxijikKbfU+V3FQczKUlL1WqjGzmyoALaTh0/Q6
-         jUf6wRK3EK0E3jeMl3gMOwaABsXdxVoqDUgV1CMRjlxYOOH2DuhJh/Wjd/G+aEk4Bkv9
-         CSpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWV4WHj590J/IXNHBvWiRu04o1iUwRUY3xZIFNxLtp+0Rayv/ekQBgdCb2etfHp5SEutWWUBayK3Wbh2A7pKTeD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkCSql2wnr0bNqvT8H0rssEyh4opS42DwJWdFg7Sv6gTZZIhuv
-	9IiNwTnheF9LAaT9VCJEozjIaMvb7aJMwgFoGzNYwehY+fRFIbuOv/jkgEDnZi0=
-X-Gm-Gg: ASbGncteq7/HDv864SzY/AM745Xep/tCg7ElQ2mbHHOk3ZSluoX7faAR6WwLP69xwug
-	OpdQe0tR3Jx0wWo7u16vPjSYUFBcMJpeUvm2g5Pywd8kdZMHV+XmghQxaHe4Bjk61dVCSAJd9+A
-	N667cLtc9mzqBRNRWbaGxTiLOlVzm6nwEQQGUhIh6OVGrpfVKrL8/hJdB44NNbZrzw6LWwzWRs3
-	qN49mXqglmV8Tkcn+2mYzVBE+FEsE2X/03s7XXQjSAXoYnaJhsuJE2u9V48x6bW0Mtft/FqL5yw
-	jlPSJN6fjiG0BIWRy9y2Ts1DCgKte7auiztxzrEb5cWmluqLOThxXA==
-X-Google-Smtp-Source: AGHT+IEBnVrt5yF+/dpxCYgBqldTqyVcsJrb9G0+k1EV5oFyXfWLLDcJYgmLaYOt7HhudBU9kooqig==
-X-Received: by 2002:a05:600c:1e07:b0:43c:fcb1:528a with SMTP id 5b1f17b1804b1-43d4950e6b4mr25679875e9.6.1742470620859;
-        Thu, 20 Mar 2025 04:37:00 -0700 (PDT)
+        bh=7W3HPSMP4f2CiNLUVG9hzYOpX9Z/+7n96rGcD94rGNM=;
+        b=ZfoC8b5mu01niQ2Vs0byxJ+7sskb0DJeyWj4uPjqrBpRpzZbviKuja4gAra1K+KygW
+         b7rYxJNwiHMk9yBYTxeJzFWfCnDZKBu8z0VKCYUdjk2JkYegKiLL7Pis26OnilBCtaPe
+         rZJ7R4/vu5zbMfuRHg2fgMaJrHJREixR7+in8littB87R0IszXhDY79vkXqyOZsVjDTG
+         Od7fmUoDUqe+QkCofSuAGmEBpOZDX3/f0+ZY0yykuSnvQV676W579Nr1GJV/DvFMO2P/
+         wqY3ARgBBxOyYzz1sGRccIG8J7sc8hfN1inUTeyq9h6PayyGafSi9Lz6PBxH7aIshgj4
+         N9Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVTKEXEnXUIVlNqPdXSp4ce/wy22sOnq67rrsh+9suU0iGNaDI1JLXReVY6YGfNp2WLzLzwZfw13LS00ihWZ/u0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqTZaS5ZBdN7hvhWJjm5HmJyLay1q2Wu1XqUxTZUJ3ZPLFxu6e
+	v7SmpbQa4G/3afKCXL5YUXPk4QAPSz9sBk9oht4C/i2dyN8I89vmTaa9pt62wYQ=
+X-Gm-Gg: ASbGncv1jOMG94QSePreg1AA0UOBYAHgGIqfk3Ii9HK9UscV7Egx4yNZiG735xiW8Zy
+	YQIAwpP8vLpkn3n3Wp2G16/nGwz4bEHbpdTDTeN/rhDVacnqye1s3J+IRemHgbYStAnqvoZUXYv
+	j0j6r3MMNBu4XcZeFRSHbbBSG4gA6yCvv8OHK41N3xuUZjiSxi1uDyHI59w4fPj+Sb7kPnSqpUz
+	7zUa68DFaXBLCoMd91PJ9bWMM+1qV+bUf6ir3e728LDyU+BOoqKf5+/EkeGIhBngjSIZnkbHJBE
+	sJ9o8I1RPC0QWB5yvCENX0h9S0Os68VAzRgSqebRg/Ms6QAhFlvbBg==
+X-Google-Smtp-Source: AGHT+IGcFNWraQoMB1oIelQ6Jpm900cEnPwSNonv9rK3S5bnytIvFEX4bYUOeHVyZIaHtwEF8g3fiQ==
+X-Received: by 2002:a05:6000:1a87:b0:391:48d4:bd02 with SMTP id ffacd0b85a97d-399739d7c73mr5449932f8f.29.1742471165180;
+        Thu, 20 Mar 2025 04:46:05 -0700 (PDT)
 Received: from [192.168.1.247] ([145.224.67.123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4453227dsm47249775e9.40.2025.03.20.04.36.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8881213sm23046180f8f.42.2025.03.20.04.46.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 04:37:00 -0700 (PDT)
-Message-ID: <4bd59d1f-bbb6-4712-a60f-b47e3ca6a8a9@linaro.org>
-Date: Thu, 20 Mar 2025 11:36:59 +0000
+        Thu, 20 Mar 2025 04:46:04 -0700 (PDT)
+Message-ID: <06233fa3-0663-4861-8fd0-ca30806d38a3@linaro.org>
+Date: Thu, 20 Mar 2025 11:46:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,56 +66,74 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf build: Restore {0} initializer since GCC-15
-From: James Clark <james.clark@linaro.org>
-To: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v2] perf build: Use -fzero-init-padding-bits=all
+To: Leo Yan <leo.yan@arm.com>
+References: <20250320105235.3498106-1-leo.yan@arm.com>
+Content-Language: en-US
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250319110454.3230687-1-leo.yan@arm.com>
- <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
-Content-Language: en-US
-In-Reply-To: <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250320105235.3498106-1-leo.yan@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 19/03/2025 11:19 am, James Clark wrote:
+On 20/03/2025 10:52 am, Leo Yan wrote:
+> GCC-15 release claims [1]:
 > 
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+>   restore old GCC behavior.
 > 
-> On 19/03/2025 11:04 am, Leo Yan wrote:
->> GCC-15 release claims [1]:
->>
->>   {0} initializer in C or C++ for unions no longer guarantees clearing
->>   of the whole union (except for static storage duration initialization),
->>   it just initializes the first union member to zero. If initialization
->>   of the whole union including padding bits is desirable, use {} (valid
->>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
->>   restore old GCC behavior.
->>
->> This new behaviour might cause stale and unexpected data we defined in
->> Perf.  Add the -fzero-init-padding-bits=unions option for entirely
->> zeroing union structures.
->>
+> This new behaviour might cause unexpected data when we define a union
+> with using the '{ 0 }' initializer.  Currently, the perf tool has ruled
+> out these cases with the sanitizer "-fsanitize=undefined".
 > 
-> Do we need this? I don't see any unions initialized in that way. In fact 
-> there is only one struct initialized with {0}, the other handful are 
-> char*s but I don't think either are affected.
+> But the sanitizer is not enabled by default, we need to manually enable
+> it with EXTRA_CFLAGS='-fsanitize=undefined'.  This means developers
+> might encounter issues caused by the initializer with new compilers.
 > 
-> Adding options that allow people to add more non standard code doesn't 
-> feel very portable or in the spirit of doing it the right way. Maybe 
-> there's an argument that it guards against future mistakes, but it's not 
-> mentioned in the commit message.
+> Enable -fzero-init-padding-bits=all to zero padding bits in unions and
+> structures that might otherwise be left uninitialized.
 > 
+> [1] https://gcc.gnu.org/gcc-15/changes.html
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> 
+> Changes from v1:
+> - Changed to use '-fzero-init-padding-bits=all' to replace
+>    '-fzero-init-padding-bits=unions'. (Namhyung)
+> - Updated commit log for a bit background info. (Ian)
+> 
+>   tools/perf/Makefile.config | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a148ca9efca9..b4f6d656c729 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -323,6 +323,8 @@ FEATURE_CHECK_LDFLAGS-libaio = -lrt
+>   FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
+>   FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
+>   
+> +# Explicitly clear padding bits with the initializer '{ 0 }'
+> +CORE_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
+>   CORE_CFLAGS += -fno-omit-frame-pointer
+>   CORE_CFLAGS += -Wall
+>   CORE_CFLAGS += -Wextra
 
-
-After reading in a bit more detail and seeing all the extra 
-inconsistencies between compilers/versions/syntaxes etc I retract this 
-and agree that -fzero-init-padding-bits=all would be harmless and only 
-make things better.
+I don't think this makes its way to libperf. I don't have a compiler 
+that supports it, but "-std=gnu11" is in CORE_CFLAGS and that's not 
+there on any libperf compile commands so I'm assuming CORE_CFLAGS is 
+only local to Perf.
 
