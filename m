@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348792F28;
-	Thu, 20 Mar 2025 00:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7CAE555;
+	Thu, 20 Mar 2025 01:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742431020; cv=none; b=m0DAnF4/TfdYWoiVT4ifHcqTRacirTFoZAKu1lZb7bJmmfdv1EJOeTzWdb84Yfjq+S65YbPHA5Ny44W9qOmSNIRKdjR5D5vSfYTht+B7nijGc0EeW9nseGn2AdvqxzN9yTG3H+7nXa6jgxffT68rMWhiHFyzz6rDodciRreDkQE=
+	t=1742432592; cv=none; b=k+OxVXOmHWd96/oECo77YowLU+/U+3CIzqAmTMncbp22Mpf08tS6t9rBblk16xgJTGeWMSaCnj4Ce8W/HwytqWMwetgFyiol8NDGZ4saJzsz6/eV/vitl7cuO4OhBucgZkr9HIYQDseVboxWicLSwpe8KNH6ovXZX5Sn5S5qHCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742431020; c=relaxed/simple;
-	bh=YmwdLxB17tyBbP89p2h7IFyWsr1r6biPOCtAj6c7WYQ=;
+	s=arc-20240116; t=1742432592; c=relaxed/simple;
+	bh=rLVoV3SKUTmxCuAqDm86i1FuF3iLcodh0NdngaNhT1I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Asd59HZ0mgm7I3A2AK7lvg9dqR7W/303leMMt6yWM3HSgbcFr7yWpYq+FgqISkyk/tm/y6+TRsf7/tD1amAO+XF323cqkbkJXubjZMR3Mi42tBFji35LT6wfQ2D5hyG9vjh/PhIv8IY73nbeMFoO/G8aUEovg7p1u2wltZfbrPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyceVXVm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JefrIHmkXC0icktBZcbSRY3gevN31maL9jRhTvRmjQzOGbrr5MnYZgoYCwpP+fvGNDjFnOn0yEZiKb+/Bfs/lw7qJDLkc7PBUOpyT/FzZlTObJq1sn/gWVYdkb1Y5LaDgQKNXwarfa/L0m7XW35+Z5i+hV8bam3ch9qJHVjXC6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuPHIOCI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyceVXVm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF1BC4CEE4;
-	Thu, 20 Mar 2025 00:36:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuPHIOCI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B43C4CEE4;
+	Thu, 20 Mar 2025 01:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742431019;
-	bh=YmwdLxB17tyBbP89p2h7IFyWsr1r6biPOCtAj6c7WYQ=;
+	s=k20201202; t=1742432591;
+	bh=rLVoV3SKUTmxCuAqDm86i1FuF3iLcodh0NdngaNhT1I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TyceVXVmicIhEkiQaL3P71twrZ6TXeJTQktEc5t5TBEkm5x86VfnW+SZVA/2qTVbP
-	 awIozhk2qspphtSvJXhDgs7pryOGT7QTC63fc615+mjJLNabfn2JDGnN5N8zoN50R0
-	 C+dSvXGdG24Mbo2tBJ4TKyRWP9zw2lfvT67wqk2cqakDBumsJzYTokR8eMkp/y6Y1N
-	 jyo3zfeOJDZ8a1ZnJw2T4fsH4qvVMMhpgY1+GB9dQyDDV7S4+5VEWlqY/gpn08/cLW
-	 l/WRFU2EBwvm32XDqtyvO7BpES9+EhyxZyzjlrtch60ikat7yoGkN3C4yLOkrA24kK
-	 933uI0QJTSFEA==
-Date: Wed, 19 Mar 2025 17:36:57 -0700
+	b=iuPHIOCIz3nJgwX2+jRRC1pXO+QB6UYqlPUJqsBXHZf00ZbKkJkbN4MuKtPdlU9TQ
+	 0hNmRRN0MsAs9TRz5R9P8dosRcQY95H1Mz2My1kOuT1+QFFs35ha0IISdIHlwUPeJf
+	 ub0kh+txHa6soKHNly71drIAd1Ox4UbxiDna5I5qy6jsYZEbPT33bsFCs6N7EVzNxJ
+	 x6NF+YaVuGncdvD0kDvg3A7T/ro7ba7W3fpuDdRH/SF/5DZXoJMWu9Th+nxKAcOjyq
+	 P/LjcNPb3iRf/2L6resCLbvnxSmjoZGZVnCriJleeb7EhS5YfVxoh8P6ySXNNOdRiO
+	 RsGnBdTGb0lKg==
+Date: Wed, 19 Mar 2025 18:03:09 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH 1/3] perf sort: Keep output fields in the same level
-Message-ID: <Z9tjKcKvjYgbR6hb@google.com>
-References: <20250307080829.354947-1-namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: Restore {0} initializer since GCC-15
+Message-ID: <Z9tpTfHa4DquTzAT@google.com>
+References: <20250319110454.3230687-1-leo.yan@arm.com>
+ <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
+ <20250319133055.GA3249206@e132581.arm.com>
+ <CAP-5=fUp492RATRhc-OmikK7knO+PUWAt6Z-60Cax0QOJPrFgg@mail.gmail.com>
+ <20250319182806.GC3249206@e132581.arm.com>
+ <CAP-5=fVkCaX9DRokAEqDq-3Bvr8txM7oBmw63R+O2ibg2AzDuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,129 +53,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250307080829.354947-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVkCaX9DRokAEqDq-3Bvr8txM7oBmw63R+O2ibg2AzDuQ@mail.gmail.com>
 
-On Fri, Mar 07, 2025 at 12:08:27AM -0800, Namhyung Kim wrote:
-> This is useful for hierarchy output mode where the first level is
-> considered as output fields.  We want them in the same level so that it
-> can show only the remaining groups in the hierarchy.
-> 
-> Before:
->   $ perf report -s overhead,sample,period,comm,dso -H --stdio
->   ...
->   #          Overhead  Samples / Period / Command / Shared Object
->   # .................  ..........................................
->   #
->      100.00%           4035
->         100.00%           3835883066
->            100.00%           perf
->                99.37%           perf
->                 0.50%           ld-linux-x86-64.so.2
->                 0.06%           [unknown]
->                 0.04%           libc.so.6
->                 0.02%           libLLVM-16.so.1
-> 
-> After:
->   $ perf report -s overhead,sample,period,comm,dso -H --stdio
->   ...
->   #    Overhead       Samples        Period  Command / Shared Object
->   # .......................................  .......................
->   #
->      100.00%          4035    3835883066     perf
->          99.37%          4005    3811826223     perf
->           0.50%            19      19210014     ld-linux-x86-64.so.2
->           0.06%             8       2367089     [unknown]
->           0.04%             2       1720336     libc.so.6
->           0.02%             1        759404     libLLVM-16.so.1
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hello,
 
-Ping!  Anybody interested in this change? :)
+On Wed, Mar 19, 2025 at 02:05:17PM -0700, Ian Rogers wrote:
+> On Wed, Mar 19, 2025 at 11:28 AM Leo Yan <leo.yan@arm.com> wrote:
+> >
+> > On Wed, Mar 19, 2025 at 08:26:10AM -0700, Ian Rogers wrote:
+> >
+> > [...]
+> >
+> > > > > Adding options that allow people to add more non standard code doesn't feel
+> > > > > very portable or in the spirit of doing it the right way. Maybe there's an
+> > > > > argument that it guards against future mistakes, but it's not mentioned in
+> > > > > the commit message.
+> > > >
+> > > > I think Linux perf shares the same understanding with "we do expect
+> > > > initializers that always initialize the whole variable fully" (quote
+> > > > in [1]).  Furthermore, the reply mentioned:
+> > > >
+> > > >  The exact same problem happens with "{ 0 }" as happens with "{ }".
+> > > >  The bug is literally that some versions of clang seem to implement
+> > > >  BOTH of these as "initialize the first member of the union", which
+> > > >  then means that if the first member isn't the largest member, the
+> > > >  rest of the union is entirely undefined.
+> > > >
+> > > > So I think it is reasonable to imposes a compiler option to make
+> > > > compiler's behavouir consistent.
+> > >
+> > > We have encountered this problem, here is a fix for a case:
+> > > https://lore.kernel.org/r/20241119230033.115369-1-irogers@google.com
+> > > It would be nice if rather than -fzero-init-padding-bits=unions there
+> > > were some kind of warning flag we could enable, or worse use a tool
+> > > like clang-tidy to identify these problems. In the linked change the
+> > > problem was identified with -fsanitize=undefined but IIRC perf didn't
+> > > quit with a sanitizer warning message, just things broke and needed
+> > > fixing.
+> >
+> > I searched the GCC online doc [2], I found below options but none of
+> > them is used for such kind of warning:
+> >
+> >   -Wmissing-braces
+> >   -Wuninitialized
+> >   -Wmissing-field-initializers
+> >
+> > For the "-Wmissing-field-initializers" option, it says "In C this
+> > option does not warn about the universal zero initializer ‘{ 0 }’".
+> >
+> > Linux kernel has added the "-fzero-init-padding-bits=all" option in
+> > the commit:
+> >
+> >   dce4aab8441d kbuild: Use -fzero-init-padding-bits=all
+> >
+> > Maybe we can do the same thing for perf?  This could help developers
+> > and maintainers avoid endlessly struggling with potential bugs caused
+> > by "{0}".
+> 
+> It looks like clang may be just changing the default to zero
+> initialize everything:
+> https://github.com/llvm/llvm-project/pull/110051/files
+> https://github.com/llvm/llvm-project/pull/97121
+
+Then I think it's better to add "-fzero-init-padding-bits=all" for GCC
+to minimize surprises.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/sort.c | 44 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index f08fbc4bf0a2ce29..6b49d64854f5f986 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -3720,6 +3720,34 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
->  	return -ESRCH;
->  }
->  
-> +/* This should match with sort_dimension__add() above */
-> +static bool is_hpp_sort_key(const char *key)
-> +{
-> +	unsigned i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(arch_specific_sort_keys); i++) {
-> +		if (!strcmp(arch_specific_sort_keys[i], key) &&
-> +		    !arch_support_sort_key(key)) {
-> +			return false;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
-> +		struct sort_dimension *sd = &common_sort_dimensions[i];
-> +
-> +		if (sd->name && !strncasecmp(key, sd->name, strlen(key)))
-> +			return false;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(hpp_sort_dimensions); i++) {
-> +		struct hpp_dimension *hd = &hpp_sort_dimensions[i];
-> +
-> +		if (!strncasecmp(key, hd->name, strlen(key)))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
->  static int setup_sort_list(struct perf_hpp_list *list, char *str,
->  			   struct evlist *evlist)
->  {
-> @@ -3727,7 +3755,9 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
->  	int ret = 0;
->  	int level = 0;
->  	int next_level = 1;
-> +	int prev_level = 0;
->  	bool in_group = false;
-> +	bool prev_was_hpp = false;
->  
->  	do {
->  		tok = str;
-> @@ -3748,6 +3778,19 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
->  		}
->  
->  		if (*tok) {
-> +			if (is_hpp_sort_key(tok)) {
-> +				/* keep output (hpp) sort keys in the same level */
-> +				if (prev_was_hpp) {
-> +					bool next_same = (level == next_level);
-> +
-> +					level = prev_level;
-> +					next_level = next_same ? level : level+1;
-> +				}
-> +				prev_was_hpp = true;
-> +			} else {
-> +				prev_was_hpp = false;
-> +			}
-> +
->  			ret = sort_dimension__add(list, tok, evlist, level);
->  			if (ret == -EINVAL) {
->  				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
-> @@ -3759,6 +3802,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
->  				ui__error("Unknown --sort key: `%s'", tok);
->  				break;
->  			}
-> +			prev_level = level;
->  		}
->  
->  		level = next_level;
-> -- 
-> 2.49.0.rc0.332.g42c0ae87b1-goog
-> 
