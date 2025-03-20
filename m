@@ -1,47 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4D11EB198;
-	Thu, 20 Mar 2025 16:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835B72066DC;
+	Thu, 20 Mar 2025 16:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486442; cv=none; b=qsrSi0RHgpX5utlScALpfs8CXIilS9Ax3bY7YSMl1dvh003Kmdjxk+MGYXvWwLKHu2v4yyJ0+7BabwVp6y4cN1MkFA8kIAM6ajC1ZrX5wk/YeEBBVdrcN3F2ektlsWlDnXZArwQ+0Lf7ExX0spqs2cpR/920RZZqU3ynClOwsp0=
+	t=1742486442; cv=none; b=SfLKXj4UJkU9rvIM7D4OCqaNPUtH5Yd+FJYbndVeJywJHhEzGYppIvJRPHw6b9pKncJV3RLUDmh9aPSUhgbGY+oFncySQ/vObAodXXMlv31agvmeUh4DbruW04iaPArID6z2N9iyx+5/MPDM+Qqu1yrzjKTCs9jOlMdgBxOfXqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742486442; c=relaxed/simple;
-	bh=ScNqOhXWunAFAGfa06cLfLvXFeM250TqGzgCnafYnMI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mJWIzpNL7nSWsxl+C8cQBAghZNCDFOsFhWTB74vp1eypj+rwuyJeNqL/IV5yqNtJieqav74+ZM6zvKUZnZvo2oA6CTnRNQN5DMa3+0RPBE9qiG3FieTTE5SbrN4fxWJbW9T4PSPZlxRjNZBsc6ZIti+ya3Xr/QvnzgnBOg/+W3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrzX4B98; arc=none smtp.client-ip=10.30.226.201
+	bh=4jMeTtmBaorbabAAMf8Jl20J3QEuUuQqaOeS/cfvbVE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gyGwIXqFeGmV5BPdMk0uGR3I3LBg+ZA/iXSwmQtd/L9JWldODTZbf2Toym6S8JSdlQMcGWFV9W4QIHfbc9VcHFKmliZ7DEAD3HP71WzJYhUWOjcrTJz5tAToprnvu5DAVpUkBb8UHnxhIPMa76/rhimiOT9dGa7ZOIv3d5eF6oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKgqTLse; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrzX4B98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AED1C4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKgqTLse"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD052C4CEEF;
 	Thu, 20 Mar 2025 16:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742486441;
-	bh=ScNqOhXWunAFAGfa06cLfLvXFeM250TqGzgCnafYnMI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OrzX4B98T69jNgT02cY6z7qXCtPLDODKwHXpq7B1XbjfiEpOlw0dfDHwkrxcfrv38
-	 1fWqxPwZdGIbLnEJOVYHZKejuBPNnxD5KxHLuEmvLM+FbgIKKoa+JvAbqbu19mK6PD
-	 RjtQ3UFB512vRXheUBjeBIE+UqTqClx4jRbE2xXQJ+bTIAnUH4venTU7eGs8ieFYV6
-	 GKEUyLA8vWR9pnlUCCya0u2gthNdvPqBe2MSsmllyBeLqH2Rx4EWPfNnQQ2Tfk7Uxb
-	 iLPHB02xh1JrKtZQInMBqbSdaeikUwfw/z30q906Lt3qrTwm+iiMmYhL8Ym0ns1lna
-	 shgAgoCBjVbhQ==
+	s=k20201202; t=1742486442;
+	bh=4jMeTtmBaorbabAAMf8Jl20J3QEuUuQqaOeS/cfvbVE=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=bKgqTLseJXr5xwhHH7jTr31YoA+ZRf0Oud2KDRzsCc8LZoXonIx+HmEMC4z2vHL1p
+	 dcjIPnRt30XzJfzKx6q/FcqyH2jYP8cXSseJykxuRKisM4lv2VkNPxgpV3x2ctKgAI
+	 x+5rw0urbnK88dXu5ogeDMpO99Y/tDWZz4t9o5y4nhViZzU/ttCcYo2IRmi9bXAnLQ
+	 q4Xl+0NgEe13b8DD+wnw60FhJNGHfbDT8P7gbNxQaEp9vEdJ5rSOZIr5iLCcBXlM90
+	 4z7xHv+COCeUQ+4oAylIB5m+APtsFEfY4cPDiVn52Px0cJTQQKjPYVKcYstLgXHB/6
+	 ul8FkfNcRAsEQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>, 
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <20250318230012.2038790-1-stephen.s.brennan@oracle.com>
-References: <20250318230012.2038790-1-stephen.s.brennan@oracle.com>
-Subject: Re: [PATCH] perf dso: fix dso__is_kallsyms() check
-Message-Id: <174248644099.3704425.17283492904024257461.b4-ty@kernel.org>
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
+ Levi Yun <yeoreum.yun@arm.com>, 
+ "Dr. David Alan Gilbert" <linux@treblig.org>, 
+ Thomas Falcon <thomas.falcon@intel.com>, coresight@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250318171914.145616-1-irogers@google.com>
+References: <20250318171914.145616-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf cpumap: Increment reference count for online
+ cpumap
+Message-Id: <174248644166.3704425.11921703615469719002.b4-ty@kernel.org>
 Date: Thu, 20 Mar 2025 09:00:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -53,14 +57,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 18 Mar 2025 16:00:11 -0700, Stephen Brennan wrote:
-> Kernel modules for which we cannot find a file on-disk will have a
-> dso->long_name that looks like "[module_name]". Prior to the commit
-> listed in the fixes, the dso->kernel field would be zero (for user
-> space), so dso__is_kallsyms() would return false. After the commit,
-> kernel module DSOs are correctly labeled, but the result is that
-> dso__is_kallsyms() erroneously returns true for those modules without a
-> filesystem path.
+On Tue, 18 Mar 2025 10:19:14 -0700, Ian Rogers wrote:
+> Thomas Richter <tmricht@linux.ibm.com> reported a double put on the
+> cpumap for the placeholder core PMU:
+> https://lore.kernel.org/lkml/20250318095132.1502654-3-tmricht@linux.ibm.com/
+> Requiring the caller to get the cpumap is not how these things are
+> usually done, switch cpu_map__online to do the get and then fix up any
+> use cases where a put is needed.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
